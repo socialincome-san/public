@@ -1,8 +1,8 @@
 'use client';
 
 import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
-import { DonationImpactPanel } from '../components/donation-impact-panel';
-import { donationWizardStepColumnClass } from '../donation-wizard-layout';
+import { DonationImpactPanel } from '../shared/donation-impact-panel';
+import { donationWizardStepColumnClass } from '../utils/donation-wizard-layout';
 import { DonationSteps } from './donation-steps';
 import type { DonationWizardSend, DonationWizardState } from './types';
 

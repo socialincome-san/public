@@ -4,7 +4,7 @@ import { Switch } from '@/components/switch';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { CircleHelp } from 'lucide-react';
-import type { Cadence } from '../wizard/donation-amount';
+import type { Cadence } from '../../utils/donation-amount';
 
 type Props = {
 	cadence: Cadence;

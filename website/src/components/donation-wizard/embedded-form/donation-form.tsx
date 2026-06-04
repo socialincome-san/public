@@ -1,8 +1,8 @@
 'use client';
 
-import type { DonationAmountContext } from '../wizard/donation-amount';
+import { useDonationFormState } from '../hooks/use-donation-form-state';
+import type { DonationAmountContext } from '../utils/donation-amount';
 import { DonationFormFields } from './donation-form-fields';
-import { useDonationFormState } from './use-donation-form-state';
 
 type Props = {
 	showTitle?: boolean;

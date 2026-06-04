@@ -1,16 +1,16 @@
 'use client';
 
-import { MonthlyPlanStep } from '../components/monthly-plan-step';
-import { OneTimePlanStep } from '../components/one-time-plan-step';
-import { PaymentMethodStep } from '../components/payment-method-step';
-import { WizardDonationFormStep } from '../components/wizard-donation-form-step';
+import { DonationFormStep } from '../steps/step-1-amount/donation-form-step';
+import { MonthlyPlanStep } from '../steps/step-2-plan/monthly-plan-step';
+import { OneTimePlanStep } from '../steps/step-2-plan/one-time-plan-step';
+import { PaymentMethodStep } from '../steps/step-3-payment/payment-method-step';
 import type { DonationWizardStepProps, DonationWizardWithCommunityProps } from './types';
 
 type Props = DonationWizardStepProps & Pick<DonationWizardWithCommunityProps, 'communityStats'>;
 
 export const DonationSteps = ({ state, send, communityStats }: Props) => {
 	if (state.matches('step1')) {
-		return <WizardDonationFormStep state={state} send={send} />;
+		return <DonationFormStep state={state} send={send} />;
 	}
 
 	if (state.matches('step2Monthly')) {

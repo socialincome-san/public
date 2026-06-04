@@ -3,7 +3,22 @@ import {
 	getDonationDisplayAmount,
 	getInitialDonationContext,
 	getOnlineTransactionCostChf,
+	isAmountValid,
+	resolveAmount,
 } from './donation-amount';
+
+describe('donation amount', () => {
+	it('treats empty custom amount as invalid', () => {
+		const context = {
+			...getInitialDonationContext(),
+			selectedAmount: 'other' as const,
+			customAmount: null,
+		};
+
+		expect(resolveAmount(context)).toBeNull();
+		expect(isAmountValid(context)).toBe(false);
+	});
+});
 
 describe('stripe transaction costs', () => {
 	it('grosses up a typical 1% donation so fees are covered', () => {

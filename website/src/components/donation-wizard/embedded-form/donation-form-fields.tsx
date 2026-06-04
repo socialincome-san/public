@@ -4,8 +4,8 @@ import { Button } from '@/components/button';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { cn } from '@/lib/utils/cn';
-import { donationStepCardClass } from '../donation-wizard-layout';
-import type { Cadence, PresetAmount } from '../wizard/donation-amount';
+import type { Cadence, PresetAmount } from '../utils/donation-amount';
+import { donationStepCardClass } from '../utils/donation-wizard-layout';
 
 const amountOptions: { labelKey: 'currency-prefix' | 'other'; value: PresetAmount | 'other' }[] = [
 	{ labelKey: 'currency-prefix', value: 25 },
@@ -31,7 +31,7 @@ type DonationFormFieldsActions = {
 	selectOnePercent: () => void;
 	setMonthlyIncome: (value: number) => void;
 	setPresetAmount: (value: PresetAmount | 'other') => void;
-	setCustomAmount: (value: number) => void;
+	setCustomAmount: (value: number | null) => void;
 	setCadence: (value: Cadence) => void;
 };
 
@@ -134,7 +134,7 @@ export const DonationFormFields = ({ values, actions, showTitle = false, classNa
 					onChange={(e) => {
 						const raw = e.target.value;
 						if (raw === '') {
-							actions.setPresetAmount('other');
+							actions.setCustomAmount(null);
 
 							return;
 						}

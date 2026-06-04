@@ -3,12 +3,12 @@
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { cn } from '@/lib/utils/cn';
-import { donationPaymentStepCardClass } from '../donation-wizard-layout';
-import { getDonationBaseAmount, getDonationDisplayAmount, getOnlineTransactionCostChf } from '../wizard/donation-amount';
-import type { DonationWizardStepProps } from '../wizard/types';
+import { DonationStepFooter } from '../../shared/donation-step-footer';
+import { OnlinePaymentLogos, QrPaymentLogo } from '../../shared/payment-logos';
+import { getDonationBaseAmount, getDonationDisplayAmount, getOnlineTransactionCostChf } from '../../utils/donation-amount';
+import { donationPaymentStepCardClass } from '../../utils/donation-wizard-layout';
+import type { DonationWizardStepProps } from '../../wizard/types';
 import { CoverTransactionCostsToggle } from './cover-transaction-costs-toggle';
-import { DonationStepFooter } from './donation-step-footer';
-import { OnlinePaymentLogos, QrPaymentLogo } from './payment-method-logos';
 import { PaymentMethodOption } from './payment-method-option';
 
 export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {

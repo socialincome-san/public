@@ -2,18 +2,18 @@
 
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
-import { getCommunityBenefit } from '../community-stats';
-import { donationStepCardClass, donationStepTitleRowClass } from '../donation-wizard-layout';
+import { DonationStepFooter } from '../../shared/donation-step-footer';
+import { getCommunityBenefit } from '../../utils/community-stats';
 import {
 	getBeneficiaryCount,
 	getMonthlyPlanBaseAmount,
 	getTierAmounts,
 	isOnePercentPlanSelected,
-} from '../wizard/donation-amount';
-import type { DonationWizardWithCommunityProps } from '../wizard/types';
-import { DonationStepFooter } from './donation-step-footer';
+} from '../../utils/donation-amount';
+import { donationStepCardClass } from '../../utils/donation-wizard-layout';
+import type { DonationWizardWithCommunityProps } from '../../wizard/types';
+import { PlanStepHeader } from './plan-step-header';
 import { PlanTierCard } from './plan-tier-card';
-import { Step2CadenceSwitch } from './step2-cadence-switch';
 
 export const MonthlyPlanStep = ({ state, send, communityStats }: DonationWizardWithCommunityProps) => {
 	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
@@ -26,10 +26,7 @@ export const MonthlyPlanStep = ({ state, send, communityStats }: DonationWizardW
 
 	return (
 		<div className={donationStepCardClass}>
-			<div className={donationStepTitleRowClass}>
-				<h3 className="text-foreground min-w-0 text-base font-medium sm:text-lg">{t('step2.monthly-title')}</h3>
-				<Step2CadenceSwitch currentCadence="monthly" send={send} />
-			</div>
+			<PlanStepHeader titleKey="step2.monthly-title" cadence="monthly" send={send} />
 
 			<div className="mb-5 flex flex-col gap-3">
 				<PlanTierCard

@@ -1,7 +1,7 @@
 'use client';
 
-import { DonationForm } from './donation-form/donation-form';
-import { useDonationModal } from './donation-modal-provider';
+import { DonationForm } from './embedded-form/donation-form';
+import { useDonationModal } from './hooks/use-donation-modal';
 
 type Props = {
 	showTitle?: boolean;

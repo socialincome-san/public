@@ -2,12 +2,12 @@
 
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
-import { donationStepCardClass, donationStepTitleRowClass } from '../donation-wizard-layout';
-import { getMonthlyUpsellAmount, resolveAmount } from '../wizard/donation-amount';
-import type { DonationWizardStepProps } from '../wizard/types';
-import { DonationStepFooter } from './donation-step-footer';
+import { DonationStepFooter } from '../../shared/donation-step-footer';
+import { getMonthlyUpsellAmount, resolveAmount } from '../../utils/donation-amount';
+import { donationStepCardClass } from '../../utils/donation-wizard-layout';
+import type { DonationWizardStepProps } from '../../wizard/types';
+import { PlanStepHeader } from './plan-step-header';
 import { PlanTierCard } from './plan-tier-card';
-import { Step2CadenceSwitch } from './step2-cadence-switch';
 
 export const OneTimePlanStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
@@ -18,10 +18,7 @@ export const OneTimePlanStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div className={donationStepCardClass}>
-			<div className={donationStepTitleRowClass}>
-				<h3 className="text-foreground min-w-0 text-base font-medium sm:text-lg">{t('step2.one-time-title')}</h3>
-				<Step2CadenceSwitch currentCadence="one-time" send={send} />
-			</div>
+			<PlanStepHeader titleKey="step2.one-time-title" cadence="one-time" send={send} />
 
 			<div className="mb-5 flex flex-col gap-3">
 				<PlanTierCard

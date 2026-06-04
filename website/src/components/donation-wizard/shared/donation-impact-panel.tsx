@@ -5,15 +5,15 @@ import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { cn } from '@/lib/utils/cn';
 import { CircleCheckBig } from 'lucide-react';
 import Image from 'next/image';
-import { getSupportersImpactLabel } from '../community-stats';
-import { getDonationExplainerVideo } from '../donation-explainer-video';
+import { getSupportersImpactLabel } from '../utils/community-stats';
+import { getDonationExplainerVideo } from '../utils/donation-explainer-video';
 import {
 	donationImpactChecklistItemClass,
 	donationImpactExplainerClass,
 	donationImpactRowClass,
-} from '../donation-wizard-layout';
+} from '../utils/donation-wizard-layout';
 import type { DonationWizardWithCommunityProps } from '../wizard/types';
-import { ImpactPaymentLogos } from './payment-method-logos';
+import { ImpactPaymentLogos } from './payment-logos';
 
 const ZEWO_HOMEPAGE_URL = 'https://www.zewo.ch';
 

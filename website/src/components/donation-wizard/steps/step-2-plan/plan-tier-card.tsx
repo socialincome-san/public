@@ -19,7 +19,7 @@ type Props = {
 	heartCount?: 1 | 2;
 	selected: boolean;
 	benefits: Benefit[];
-	onSelect?: () => void;
+	onSelect: () => void;
 };
 
 export const PlanTierCard = ({
@@ -37,22 +37,6 @@ export const PlanTierCard = ({
 		'w-full rounded-[10px] border p-4 text-left transition-colors',
 		selected ? 'border-slate-500 bg-slate-50' : 'border-border bg-white',
 	);
-
-	if (!onSelect) {
-		return (
-			<div className={className}>
-				<PlanTierCardContent
-					amount={amount}
-					currency={currency}
-					perMonthLabel={perMonthLabel}
-					planLabel={planLabel}
-					badgeVariant={badgeVariant}
-					heartCount={heartCount}
-					benefits={benefits}
-				/>
-			</div>
-		);
-	}
 
 	return (
 		<button type="button" onClick={onSelect} className={className}>

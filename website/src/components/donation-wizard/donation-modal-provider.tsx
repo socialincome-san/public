@@ -7,29 +7,12 @@ import { websiteCurrencies } from '@/lib/i18n/utils';
 import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
 import { cn } from '@/lib/utils/cn';
 import { useMachine } from '@xstate/react';
-import { createContext, useCallback, useContext, type ReactNode } from 'react';
-import { ThankYouStep } from './components/thank-you-step';
-import { type DonationAmountContext } from './wizard/donation-amount';
+import { useCallback, type ReactNode } from 'react';
+import { DonationModalContext } from './hooks/use-donation-modal';
+import { ThankYouStep } from './steps/thank-you/thank-you-step';
+import type { DonationAmountContext } from './utils/donation-amount';
 import { donationWizardMachine } from './wizard/donation-machine';
 import { DonationWizard } from './wizard/donation-wizard';
-
-type DonationModalContextValue = {
-	/** Navbar / bare button — opens wizard step 1 in the modal. */
-	openDonationWizard: () => void;
-	/** Hero, nav flyout, etc. — skips to step 2 with amount and cadence from the embedded form. */
-	openDonationWizardFromForm: (context: DonationAmountContext) => void;
-};
-
-const DonationModalContext = createContext<DonationModalContextValue | null>(null);
-
-export const useDonationModal = (): DonationModalContextValue => {
-	const context = useContext(DonationModalContext);
-	if (!context) {
-		throw new Error('useDonationModal must be used within DonationModalProvider');
-	}
-
-	return context;
-};
 
 type Props = {
 	children: ReactNode;

@@ -8,7 +8,7 @@ import {
 	type PresetAmount,
 	getInitialDonationContext,
 	isAmountValid,
-} from './donation-amount';
+} from '../utils/donation-amount';
 
 const prepareWizardContext = (context: DonationAmountContext): DonationAmountContext => ({
 	...context,
@@ -61,7 +61,7 @@ export const donationWizardMachine = setup({
 			| { type: 'SET_MONTHLY_INCOME'; value: number }
 			| { type: 'SELECT_ONE_PERCENT' }
 			| { type: 'SET_PRESET_AMOUNT'; value: PresetAmount | 'other' }
-			| { type: 'SET_CUSTOM_AMOUNT'; value: number }
+			| { type: 'SET_CUSTOM_AMOUNT'; value: number | null }
 			| { type: 'SET_CADENCE'; value: Cadence }
 			| { type: 'SET_ONE_TIME_CHECKOUT_CHOICE'; value: OneTimeCheckoutChoice }
 			| { type: 'SET_TIER'; value: PlanTier }
@@ -82,8 +82,10 @@ export const donationWizardMachine = setup({
 		isMonthlyCadence: ({ event }) => event.type === 'SET_CADENCE' && event.value === 'monthly',
 		isOneTimeCadence: ({ event }) => event.type === 'SET_CADENCE' && event.value === 'one-time',
 		isMonthlyContext: ({ context }) => context.cadence === 'monthly',
-		isOneTimeContext: ({ context }) => context.cadence === 'one-time',
 		checkoutFromOneTimeStep: ({ context }) => context.checkoutFromOneTimeStep,
+	},
+	actions: {
+		resetContext: assign(() => getInitialDonationContext()),
 	},
 }).createMachine({
 	id: 'donationWizard',
@@ -94,7 +96,7 @@ export const donationWizardMachine = setup({
 			on: {
 				OPEN: {
 					target: 'step1',
-					actions: assign(() => getInitialDonationContext()),
+					actions: 'resetContext',
 				},
 				OPEN_FROM_FORM: [
 					{
@@ -165,7 +167,7 @@ export const donationWizardMachine = setup({
 				],
 				CLOSE: {
 					target: 'closed',
-					actions: assign(() => getInitialDonationContext()),
+					actions: 'resetContext',
 				},
 			},
 		},
@@ -197,7 +199,7 @@ export const donationWizardMachine = setup({
 				BACK: 'step1',
 				CLOSE: {
 					target: 'closed',
-					actions: assign(() => getInitialDonationContext()),
+					actions: 'resetContext',
 				},
 			},
 		},
@@ -230,7 +232,7 @@ export const donationWizardMachine = setup({
 				BACK: 'step1',
 				CLOSE: {
 					target: 'closed',
-					actions: assign(() => getInitialDonationContext()),
+					actions: 'resetContext',
 				},
 			},
 		},
@@ -265,7 +267,7 @@ export const donationWizardMachine = setup({
 				},
 				CLOSE: {
 					target: 'closed',
-					actions: assign(() => getInitialDonationContext()),
+					actions: 'resetContext',
 				},
 			},
 		},
@@ -273,7 +275,7 @@ export const donationWizardMachine = setup({
 			on: {
 				CLOSE: {
 					target: 'closed',
-					actions: assign(() => getInitialDonationContext()),
+					actions: 'resetContext',
 				},
 			},
 		},

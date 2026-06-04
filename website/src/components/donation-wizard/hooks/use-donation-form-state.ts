@@ -10,7 +10,7 @@ import {
 	isAmountValid,
 	isOnePercentPlanSelected,
 	resolveAmount,
-} from '../wizard/donation-amount';
+} from '../utils/donation-amount';
 
 export const useDonationFormState = (initial?: Partial<DonationAmountContext>) => {
 	const defaults = getInitialDonationContext();
@@ -50,12 +50,14 @@ export const useDonationFormState = (initial?: Partial<DonationAmountContext>) =
 
 	const setPresetAmount = useCallback((value: PresetAmount | 'other') => {
 		setSelectedAmount(value);
-		setCustomAmount(value === 'other' ? null : null);
+		setCustomAmount(null);
 	}, []);
 
-	const setCustomAmountValue = useCallback((value: number) => {
+	const setCustomAmountValue = useCallback((value: number | null) => {
 		setCustomAmount(value);
-		setSelectedAmount('other');
+		if (value !== null) {
+			setSelectedAmount('other');
+		}
 	}, []);
 
 	return {

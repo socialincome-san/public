@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils/cn';
 import { type KeyboardEvent, type ReactNode } from 'react';
-import { useDonationModal } from './donation-modal-provider';
+import { useDonationModal } from './hooks/use-donation-modal';
 
 type Props = {
 	children: ReactNode;
