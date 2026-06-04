@@ -79,7 +79,10 @@
 		"confirmStandingOrder": "Conferma ordine permanente",
 		"confirmOneTime": "Conferma pagamento",
 		"confirming": "Elaborazione…",
-		"confirmError": "Impossibile confermare il pagamento. Riprova."
+		"confirmError": "Impossibile confermare il pagamento. Riprova.",
+		"downloadPdf": "Scarica PDF",
+		"downloadingPdf": "Download…",
+		"downloadPdfError": "Impossibile scaricare il PDF. Riprova."
 	},
 	"stepPayment": {
 		"title": "Metodo di pagamento",

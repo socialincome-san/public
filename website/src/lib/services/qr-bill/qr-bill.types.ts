@@ -1,3 +1,4 @@
+import { type DonationAmountContext } from '@/components/donation-wizard/utils/donation-amount';
 import { type Contributor, ContributorReferralSource, CountryCode, Currency, Gender } from '@/generated/prisma/client';
 import { type BankContributorData } from '../contributor/contributor.types';
 
@@ -57,3 +58,23 @@ export type UpdateContributorReferralAfterQrPaymentInput = {
 export type UpdateContributorReferralAfterQrPaymentResult = Contributor;
 
 export type CreateWizardQrReferencesInput = QrDonorDetails;
+
+export type CreateWizardPendingContributionInput = {
+	wizardContext: DonationAmountContext;
+	contributionReferenceId: string;
+	userData: BankContributorData;
+	currency?: string;
+};
+
+export type DownloadWizardQrBillPdfInput = {
+	wizardContext: DonationAmountContext;
+	contributorReferenceId: string;
+	contributionReferenceId: string;
+	expectedEmail: string;
+	currency?: string;
+};
+
+export type DownloadWizardQrBillPdfResult = {
+	pdfBase64: string;
+	filename: string;
+};

@@ -1,38 +1,21 @@
 'use server';
 
-import { type DonationAmountContext } from '@/components/donation-wizard/utils/donation-amount';
-import { type BankContributorData } from '@/lib/services/contributor/contributor.types';
 import {
+	type CreateWizardPendingContributionInput,
 	type CreateWizardQrReferencesInput,
+	type DownloadWizardQrBillPdfInput,
 	type GetQrOnboardingPrefillInput,
 	type UpdateContributorAfterQrPaymentInput,
 	type UpdateContributorReferralAfterQrPaymentInput,
-	type WizardQrPayment,
 } from '@/lib/services/qr-bill/qr-bill.types';
-import { resolveWizardQrPayment } from '@/lib/services/qr-bill/wizard-qr-payment';
 import { services } from '@/lib/services/services';
 
 export const createWizardQrReferencesAction = async (input: CreateWizardQrReferencesInput) => {
 	return services.qrBill.getOrCreateQrReferences(input);
 };
 
-export const createWizardPendingContributionAction = async (input: {
-	wizardContext: DonationAmountContext;
-	contributionReferenceId: string;
-	userData: BankContributorData;
-	currency?: string;
-}) => {
-	const paymentResult = resolveWizardQrPayment(input.wizardContext, input.currency);
-	if (!paymentResult.success) {
-		return paymentResult;
-	}
-
-	const payment: WizardQrPayment = {
-		...paymentResult.data,
-		referenceId: input.contributionReferenceId,
-	};
-
-	return services.qrBill.createPendingContribution(payment, input.userData);
+export const createWizardPendingContributionAction = async (input: CreateWizardPendingContributionInput) => {
+	return services.qrBill.createPendingContributionFromWizard(input);
 };
 
 export const getQrOnboardingPrefillAction = async (input: GetQrOnboardingPrefillInput) => {
@@ -45,4 +28,8 @@ export const updateContributorAfterWizardQrAction = async (input: UpdateContribu
 
 export const updateContributorReferralAfterWizardQrAction = async (input: UpdateContributorReferralAfterQrPaymentInput) => {
 	return services.qrBill.updateReferralAfterQrPayment(input);
+};
+
+export const downloadWizardQrBillPdfAction = async (input: DownloadWizardQrBillPdfInput) => {
+	return services.qrBill.downloadWizardQrBillPdf(input);
 };

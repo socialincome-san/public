@@ -79,7 +79,10 @@
 		"confirmStandingOrder": "Dauerauftrag bestätigen",
 		"confirmOneTime": "Zahlung bestätigen",
 		"confirming": "Wird verarbeitet…",
-		"confirmError": "Zahlung konnte nicht bestätigt werden. Bitte erneut versuchen."
+		"confirmError": "Zahlung konnte nicht bestätigt werden. Bitte erneut versuchen.",
+		"downloadPdf": "PDF herunterladen",
+		"downloadingPdf": "Wird heruntergeladen…",
+		"downloadPdfError": "PDF konnte nicht heruntergeladen werden. Bitte erneut versuchen."
 	},
 	"stepPayment": {
 		"title": "Zahlungsmethode",

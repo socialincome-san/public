@@ -12,6 +12,7 @@ import { selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { QrWizardStepFooter } from '../step-qr-contact/qr-wizard-step-footer';
 import { QrBillPaymentCard } from './qr-bill-payment-card';
+import { QrBillPdfDownloadLink } from './qr-bill-pdf-download-link';
 
 export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
@@ -30,6 +31,8 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 
 	const donorName = qrDonor ? `${qrDonor.firstName} ${qrDonor.lastName}` : '';
 	const amountLabel = `${currency} ${displayAmount}`;
+
+	const canDownloadPdf = Boolean(qrDonor && qrContributorReferenceId && qrContributionReferenceId);
 
 	const onConfirm = async () => {
 		if (!qrDonor || !qrContributorReferenceId || !qrContributionReferenceId) {
@@ -74,7 +77,21 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div className={cn(donationPaymentStepCardClass, 'text-foreground flex w-full flex-col gap-5 overflow-visible')}>
-			<h3 className="text-lg leading-7 font-medium">{t('stepQrBill.title')}</h3>
+			<div className="flex w-full items-start gap-4">
+				<h3 className="shrink-0 text-lg leading-7 font-medium">{t('stepQrBill.title')}</h3>
+				{canDownloadPdf && qrDonor && qrContributorReferenceId && qrContributionReferenceId && (
+					<div className="flex min-w-0 flex-1 items-start justify-end">
+						<QrBillPdfDownloadLink
+							wizardContext={state.context}
+							contributorReferenceId={qrContributorReferenceId}
+							contributionReferenceId={qrContributionReferenceId}
+							qrDonor={qrDonor}
+							currency={currency}
+							disabled={confirming}
+						/>
+					</div>
+				)}
+			</div>
 
 			<QrBillPaymentCard
 				qrBillSvg={qrBillSvg}

@@ -7,6 +7,7 @@ import {
 	PrismaClient,
 } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
+import { generateQrBillPdfBuffer } from '@/lib/utils/qr-bill-pdf';
 import { DateTime } from 'luxon';
 import { CampaignReadService } from '../campaign/campaign-read.service';
 import { ContributionWriteService } from '../contribution/contribution-write.service';
@@ -17,7 +18,10 @@ import { type BankContributorData, type ContributorUpdateInput } from '../contri
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import {
+	type CreateWizardPendingContributionInput,
 	type CreateWizardQrReferencesInput,
+	type DownloadWizardQrBillPdfInput,
+	type DownloadWizardQrBillPdfResult,
 	type GetQrOnboardingPrefillInput,
 	type QrBillOnboardingPrefill,
 	type QrBillReferenceResult,
@@ -27,6 +31,7 @@ import {
 	type UpdateContributorReferralAfterQrPaymentResult,
 	type WizardQrPayment,
 } from './qr-bill.types';
+import { resolveWizardQrPayment } from './wizard-qr-payment';
 
 type QrContributorWithContact = Prisma.ContributorGetPayload<{
 	include: { contact: { include: { address: true } } };
@@ -100,6 +105,50 @@ export class QrBillService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail('Failed to store contribution');
+		}
+	}
+
+	async createPendingContributionFromWizard(input: CreateWizardPendingContributionInput): Promise<ServiceResult<string>> {
+		const paymentResult = resolveWizardQrPayment(input.wizardContext, input.currency);
+		if (!paymentResult.success) {
+			return paymentResult;
+		}
+
+		const payment: WizardQrPayment = {
+			...paymentResult.data,
+			referenceId: input.contributionReferenceId,
+		};
+
+		return this.createPendingContribution(payment, input.userData);
+	}
+
+	async downloadWizardQrBillPdf(input: DownloadWizardQrBillPdfInput): Promise<ServiceResult<DownloadWizardQrBillPdfResult>> {
+		const donorCheck = await this.verifyContributorByPaymentReference(input.contributorReferenceId, input.expectedEmail);
+		if (!donorCheck.success) {
+			return donorCheck;
+		}
+
+		const paymentResult = resolveWizardQrPayment(input.wizardContext, input.currency);
+		if (!paymentResult.success) {
+			return paymentResult;
+		}
+
+		try {
+			const pdfBuffer = await generateQrBillPdfBuffer({
+				amount: paymentResult.data.amount,
+				contributorReferenceId: input.contributorReferenceId,
+				contributionReferenceId: input.contributionReferenceId,
+				currency: paymentResult.data.currency as 'CHF' | 'EUR',
+			});
+
+			return this.resultOk({
+				pdfBase64: pdfBuffer.toString('base64'),
+				filename: 'social-income-qr-bill.pdf',
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not generate QR bill PDF');
 		}
 	}
 

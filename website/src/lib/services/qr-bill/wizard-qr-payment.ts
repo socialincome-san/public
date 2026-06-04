@@ -12,7 +12,7 @@ import { type WizardQrPayment } from './qr-bill.types';
 
 const WIZARD_QR_CURRENCIES = new Set<Currency>(['CHF', 'EUR']);
 
-export const mapCadenceToQrInterval = (cadence: DonationAmountContext['cadence']): number => (cadence === 'monthly' ? 1 : 0);
+const mapCadenceToQrInterval = (cadence: DonationAmountContext['cadence']): number => (cadence === 'monthly' ? 1 : 0);
 
 export const resolveWizardQrPayment = (
 	context: DonationAmountContext,

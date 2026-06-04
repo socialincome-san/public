@@ -79,7 +79,10 @@
 		"confirmStandingOrder": "Confirm Standing Order",
 		"confirmOneTime": "Confirm Payment",
 		"confirming": "Processing…",
-		"confirmError": "Could not confirm payment. Please try again."
+		"confirmError": "Could not confirm payment. Please try again.",
+		"downloadPdf": "Download PDF",
+		"downloadingPdf": "Downloading…",
+		"downloadPdfError": "Could not download PDF. Please try again."
 	},
 	"stepPayment": {
 		"title": "Payment Method",

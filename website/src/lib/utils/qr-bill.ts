@@ -58,7 +58,7 @@ const generateQrBillReference = (contributorCreatedAt: string, contributionCreat
 	return `${baseReference}${checkDigit}`;
 };
 
-type GenerateQrBillSvgProps = {
+export type QrBillGenerationProps = {
 	amount: number;
 	contributorReferenceId: string;
 	contributionReferenceId: string;
@@ -66,28 +66,28 @@ type GenerateQrBillSvgProps = {
 	type: 'QRCODE' | 'QRBILL';
 };
 
-export const generateQrBillSvg = ({
+export const buildQrBillData = ({
 	amount,
 	contributorReferenceId,
 	contributionReferenceId,
 	currency,
-	type,
-}: GenerateQrBillSvgProps): string => {
-	const data: Data = {
-		amount: Number(amount),
-		currency: currency,
-		creditor: {
-			account: 'CH6730000001151126386',
-			address: 'Zweierstrasse',
-			buildingNumber: 103,
-			zip: 8003,
-			city: 'Zürich',
-			country: 'CH',
-			name: 'Social Income',
-		},
-		reference: generateQrBillReference(contributorReferenceId, contributionReferenceId),
-	};
+}: Omit<QrBillGenerationProps, 'type'>): Data => ({
+	amount: Number(amount),
+	currency,
+	creditor: {
+		account: 'CH6730000001151126386',
+		address: 'Zweierstrasse',
+		buildingNumber: 103,
+		zip: 8003,
+		city: 'Zürich',
+		country: 'CH',
+		name: 'Social Income',
+	},
+	reference: generateQrBillReference(contributorReferenceId, contributionReferenceId),
+});
 
+export const generateQrBillSvg = ({ type, ...props }: QrBillGenerationProps): string => {
+	const data = buildQrBillData(props);
 	const rawSvg = type === 'QRCODE' ? new SwissQRCode(data).toString() : new SwissQRBill(data).toString();
 
 	return sanitizeQrBillSvg(rawSvg);
