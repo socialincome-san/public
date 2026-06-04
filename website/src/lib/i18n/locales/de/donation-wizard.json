@@ -50,8 +50,10 @@
 		"generate-qr-code": "QR-Code generieren",
 		"pay-online": "Online bezahlen",
 		"cover-costs-description": "Deckt Gebühren bei Online-Zahlung.",
-		"cover-costs-label-monthly": "Transaktionskosten decken (CHF 2/Monat)",
-		"cover-costs-label-one-time": "Transaktionskosten decken (CHF 2)"
+		"cover-costs-label-monthly": "Transaktionskosten decken ({{fee}}/Monat)",
+		"cover-costs-label-one-time": "Transaktionskosten decken ({{fee}})",
+		"cover-costs-tooltip-aria": "So werden die Transaktionskosten berechnet",
+		"cover-costs-tooltip": "Dein Betrag wird erhöht, damit nach der Kartengebühr (2,9 % + CHF 0.30 pro Zahlung) die volle Spende bei uns ankommt."
 	},
 	"thankYou": {
 		"message": "Danke für deine Hilfe!"

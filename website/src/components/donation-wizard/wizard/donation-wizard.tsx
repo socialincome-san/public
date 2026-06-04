@@ -1,7 +1,6 @@
 'use client';
 
 import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
-import type { HomeExplainerVideo } from '@/lib/storyblok/get-home-explainer-video';
 import { DonationImpactPanel } from '../components/donation-impact-panel';
 import { donationWizardStepColumnClass } from '../donation-wizard-layout';
 import { DonationSteps } from './donation-steps';
@@ -10,11 +9,10 @@ import type { DonationWizardSend, DonationWizardState } from './types';
 type Props = {
 	state: DonationWizardState;
 	send: DonationWizardSend;
-	explainerVideo: HomeExplainerVideo | null;
 	communityStats: ContributorCommunityStats | null;
 };
 
-export const DonationWizard = ({ state, send, explainerVideo, communityStats }: Props) => {
+export const DonationWizard = ({ state, send, communityStats }: Props) => {
 	const isPaymentStep = state.matches('step3Payment');
 
 	return (
@@ -30,7 +28,7 @@ export const DonationWizard = ({ state, send, explainerVideo, communityStats }: 
 					</div>
 					{!isPaymentStep && (
 						<div className="w-full max-w-[400px] min-w-0 md:max-w-none md:flex-1">
-							<DonationImpactPanel explainerVideo={explainerVideo} communityStats={communityStats} />
+							<DonationImpactPanel communityStats={communityStats} />
 						</div>
 					)}
 				</div>

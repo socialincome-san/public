@@ -5,7 +5,6 @@ import { DonationCurrencySelector } from '@/components/donation/currency-selecto
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';
 import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
-import type { HomeExplainerVideo } from '@/lib/storyblok/get-home-explainer-video';
 import { cn } from '@/lib/utils/cn';
 import { useMachine } from '@xstate/react';
 import { createContext, useCallback, useContext, type ReactNode } from 'react';
@@ -34,11 +33,10 @@ export const useDonationModal = (): DonationModalContextValue => {
 
 type Props = {
 	children: ReactNode;
-	explainerVideo?: HomeExplainerVideo | null;
 	communityStats?: ContributorCommunityStats | null;
 };
 
-export const DonationModalProvider = ({ children, explainerVideo = null, communityStats = null }: Props) => {
+export const DonationModalProvider = ({ children, communityStats = null }: Props) => {
 	const [state, send] = useMachine(donationWizardMachine);
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 
@@ -94,7 +92,7 @@ export const DonationModalProvider = ({ children, explainerVideo = null, communi
 									className="h-9 w-[4.75rem] shrink-0 rounded-full border-slate-300 px-2.5"
 								/>
 							</div>
-							<DonationWizard state={state} send={send} explainerVideo={explainerVideo} communityStats={communityStats} />
+							<DonationWizard state={state} send={send} communityStats={communityStats} />
 						</>
 					)}
 				</DialogContent>

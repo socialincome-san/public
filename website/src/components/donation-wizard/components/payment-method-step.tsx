@@ -4,7 +4,7 @@ import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { cn } from '@/lib/utils/cn';
 import { donationPaymentStepCardClass } from '../donation-wizard-layout';
-import { getDonationDisplayAmount } from '../wizard/donation-amount';
+import { getDonationBaseAmount, getDonationDisplayAmount, getOnlineTransactionCostChf } from '../wizard/donation-amount';
 import type { DonationWizardStepProps } from '../wizard/types';
 import { CoverTransactionCostsToggle } from './cover-transaction-costs-toggle';
 import { DonationStepFooter } from './donation-step-footer';
@@ -15,7 +15,9 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
 	const { paymentMethod, cadence, coverTransactionCosts } = state.context;
+	const baseAmount = getDonationBaseAmount(state.context);
 	const displayAmount = getDonationDisplayAmount(state.context);
+	const transactionCost = getOnlineTransactionCostChf(baseAmount);
 
 	return (
 		<div className={cn(donationPaymentStepCardClass, 'text-foreground')}>
@@ -41,6 +43,8 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 				<div className="mb-5">
 					<CoverTransactionCostsToggle
 						cadence={cadence}
+						currency={currency}
+						transactionCost={transactionCost}
 						checked={coverTransactionCosts}
 						onCheckedChange={(value) => send({ type: 'SET_COVER_TRANSACTION_COSTS', value })}
 					/>

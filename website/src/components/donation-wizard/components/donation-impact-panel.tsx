@@ -2,11 +2,11 @@
 
 import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import type { HomeExplainerVideo } from '@/lib/storyblok/get-home-explainer-video';
 import { cn } from '@/lib/utils/cn';
 import { CircleCheckBig } from 'lucide-react';
 import Image from 'next/image';
 import { getSupportersImpactLabel } from '../community-stats';
+import { getDonationExplainerVideo } from '../donation-explainer-video';
 import {
 	donationImpactChecklistItemClass,
 	donationImpactExplainerClass,
@@ -17,12 +17,12 @@ import { ImpactPaymentLogos } from './payment-method-logos';
 
 const ZEWO_HOMEPAGE_URL = 'https://www.zewo.ch';
 
-type Props = Pick<DonationWizardWithCommunityProps, 'communityStats'> & {
-	explainerVideo: HomeExplainerVideo | null;
-};
+type Props = Pick<DonationWizardWithCommunityProps, 'communityStats'>;
 
-export const DonationImpactPanel = ({ explainerVideo, communityStats }: Props) => {
+export const DonationImpactPanel = ({ communityStats }: Props) => {
 	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const explainerVideo = getDonationExplainerVideo(language);
+	const whyOnePercentLabel = t('impact.why-one-percent');
 
 	const supportersLabel = getSupportersImpactLabel(t, language, communityStats);
 	const checklist = [t('impact.tax-deductible'), t('impact.cancel-anytime'), ...(supportersLabel ? [supportersLabel] : [])];
@@ -48,19 +48,15 @@ export const DonationImpactPanel = ({ explainerVideo, communityStats }: Props) =
 					<Image src="/assets/zewo.svg" alt="" width={38} height={37} className="size-[38px] shrink-0" aria-hidden />
 					{t('impact.zewo')}
 				</a>
-				{explainerVideo ? (
-					<ExplainerVideoTrigger
-						layout="row"
-						className={donationImpactExplainerClass}
-						label={t('impact.why-one-percent')}
-						embedUrl={explainerVideo.embedUrl}
-						thumbnailSrc={explainerVideo.thumbnailSrc}
-						thumbnailAlt={explainerVideo.thumbnailAlt}
-						dialogTitle={explainerVideo.dialogTitle}
-					/>
-				) : (
-					<div className={cn('border-border border-b px-2 py-4', donationImpactRowClass)}>{t('impact.why-one-percent')}</div>
-				)}
+				<ExplainerVideoTrigger
+					layout="row"
+					className={donationImpactExplainerClass}
+					label={whyOnePercentLabel}
+					embedUrl={explainerVideo.embedUrl}
+					thumbnailSrc={explainerVideo.thumbnailSrc}
+					thumbnailAlt={whyOnePercentLabel}
+					dialogTitle={whyOnePercentLabel}
+				/>
 			</div>
 			<div className="flex flex-wrap items-center justify-center gap-2 md:justify-start">
 				<span className="text-muted-foreground text-sm">{t('impact.pay-with')}</span>

@@ -50,8 +50,10 @@
 		"generate-qr-code": "Générer le code QR",
 		"pay-online": "Payer en ligne",
 		"cover-costs-description": "Couvre les frais en ligne.",
-		"cover-costs-label-monthly": "Couvrir les frais de transaction (CHF 2/mois)",
-		"cover-costs-label-one-time": "Couvrir les frais de transaction (CHF 2)"
+		"cover-costs-label-monthly": "Couvrir les frais de transaction ({{fee}}/mois)",
+		"cover-costs-label-one-time": "Couvrir les frais de transaction ({{fee}})",
+		"cover-costs-tooltip-aria": "Comment les frais de transaction sont calculés",
+		"cover-costs-tooltip": "Nous augmentons ton paiement pour que le don complet nous parvienne après les frais de carte (2,9 % + CHF 0.30 par paiement)."
 	},
 	"thankYou": {
 		"message": "Merci pour ton aide !"

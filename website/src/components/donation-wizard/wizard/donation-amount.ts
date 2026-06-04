@@ -4,7 +4,30 @@ export type PlanTier = '1x' | '2x';
 export type PaymentMethod = 'qr' | 'online';
 export type OneTimeCheckoutChoice = 'one-time' | 'monthly-half';
 
-const ONLINE_TRANSACTION_COST_CHF = 2;
+/** Stripe card pricing for CH: 2.9% + CHF 0.30 per charge. */
+const STRIPE_CARD_FEE_RATE = 0.029;
+const STRIPE_CARD_FEE_FIXED_CHF = 0.3;
+
+const roundChf = (amount: number): number => Math.round(amount * 100) / 100;
+
+/** Gross-up so the net after Stripe fees is at least `baseAmountChf`. */
+export const getDonationAmountWithFeesCovered = (baseAmountChf: number): number => {
+	if (baseAmountChf <= 0) {
+		return 0;
+	}
+
+	const gross = (baseAmountChf + STRIPE_CARD_FEE_FIXED_CHF) / (1 - STRIPE_CARD_FEE_RATE);
+
+	return roundChf(gross);
+};
+
+export const getOnlineTransactionCostChf = (baseAmountChf: number): number => {
+	if (baseAmountChf <= 0) {
+		return 0;
+	}
+
+	return roundChf(getDonationAmountWithFeesCovered(baseAmountChf) - baseAmountChf);
+};
 
 export type DonationAmountContext = {
 	monthlyIncome: number;
@@ -81,7 +104,7 @@ const getMonthlyPlanAmount = (context: DonationAmountContext): number => {
 	return context.selectedTier === '2x' ? tier2x : tier1x;
 };
 
-const getDonationBaseAmount = (context: DonationAmountContext): number => {
+export const getDonationBaseAmount = (context: DonationAmountContext): number => {
 	if (context.cadence === 'monthly') {
 		return getMonthlyPlanAmount(context);
 	}
@@ -93,7 +116,7 @@ export const getDonationDisplayAmount = (context: DonationAmountContext): number
 	const base = getDonationBaseAmount(context);
 
 	if (context.paymentMethod === 'online' && context.coverTransactionCosts) {
-		return base + ONLINE_TRANSACTION_COST_CHF;
+		return getDonationAmountWithFeesCovered(base);
 	}
 
 	return base;

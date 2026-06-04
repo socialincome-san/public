@@ -50,8 +50,10 @@
 		"generate-qr-code": "Genera codice QR",
 		"pay-online": "Paga online",
 		"cover-costs-description": "Copre le commissioni online.",
-		"cover-costs-label-monthly": "Copri i costi di transazione (CHF 2/mese)",
-		"cover-costs-label-one-time": "Copri i costi di transazione (CHF 2)"
+		"cover-costs-label-monthly": "Copri i costi di transazione ({{fee}}/mese)",
+		"cover-costs-label-one-time": "Copri i costi di transazione ({{fee}})",
+		"cover-costs-tooltip-aria": "Come vengono calcolati i costi di transazione",
+		"cover-costs-tooltip": "Aumentiamo il pagamento così l'intera donazione ci arriva dopo la commissione sulla carta (2,9% + CHF 0,30 per pagamento)."
 	},
 	"thankYou": {
 		"message": "Grazie per il tuo aiuto!"
