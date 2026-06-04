@@ -1,10 +1,18 @@
 'use client';
 
 import { Button } from '@/components/button';
+import { Input } from '@/components/input';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { cn } from '@/lib/utils/cn';
-import type { Cadence, PresetAmount } from '../utils/donation-amount';
+import {
+	DONATION_CUSTOM_AMOUNT_MAX,
+	DONATION_CUSTOM_AMOUNT_MIN,
+	DONATION_MONTHLY_INCOME_MAX,
+	DONATION_MONTHLY_INCOME_MIN,
+	type Cadence,
+	type PresetAmount,
+} from '../utils/donation-amount';
 import { donationStepCardClass } from '../utils/donation-wizard-layout';
 
 const amountOptions: { labelKey: 'currency-prefix' | 'other'; value: PresetAmount | 'other' }[] = [
@@ -63,10 +71,11 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 					<label htmlFor={monthlyIncomeInputId} className="text-[10px] font-medium">
 						{t('step1.monthly-income-label')}
 					</label>
-					<input
+					<Input
 						id={monthlyIncomeInputId}
 						type="number"
-						min={0}
+						min={DONATION_MONTHLY_INCOME_MIN}
+						max={DONATION_MONTHLY_INCOME_MAX}
 						value={values.monthlyIncome ?? ''}
 						onFocus={actions.selectOnePercent}
 						onChange={(e) => {
@@ -78,11 +87,11 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 							}
 
 							const parsed = parseFloat(raw);
-							if (!isNaN(parsed)) {
+							if (!isNaN(parsed) && parsed <= DONATION_MONTHLY_INCOME_MAX) {
 								actions.setMonthlyIncome(parsed);
 							}
 						}}
-						className="w-full bg-transparent text-lg leading-none font-medium text-inherit outline-hidden"
+						className="h-auto w-full rounded-none border-0 bg-transparent px-0 py-0 text-lg leading-none font-medium text-inherit shadow-none focus-visible:ring-0"
 					/>
 				</div>
 				<button
@@ -129,9 +138,10 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 			</div>
 
 			{values.selectedAmount === 'other' && (
-				<input
+				<Input
 					type="number"
-					min={1}
+					min={DONATION_CUSTOM_AMOUNT_MIN}
+					max={DONATION_CUSTOM_AMOUNT_MAX}
 					placeholder={t('step1.custom-amount-placeholder')}
 					value={values.customAmount ?? ''}
 					onChange={(e) => {
@@ -142,11 +152,11 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 							return;
 						}
 						const parsed = parseFloat(raw);
-						if (!isNaN(parsed)) {
+						if (!isNaN(parsed) && parsed <= DONATION_CUSTOM_AMOUNT_MAX) {
 							actions.setCustomAmount(parsed);
 						}
 					}}
-					className="border-input -mt-2 mb-4 w-full rounded-md border px-3 py-2 text-sm outline-hidden"
+					className="-mt-2 mb-4"
 				/>
 			)}
 

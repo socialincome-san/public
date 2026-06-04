@@ -6,6 +6,11 @@ export type OneTimePlanChoice = 'one-time' | 'monthly-half';
 
 const ONLINE_TRANSACTION_FEE_RATE = 0.03;
 
+export const DONATION_MONTHLY_INCOME_MIN = 50;
+export const DONATION_MONTHLY_INCOME_MAX = 1000_000;
+export const DONATION_CUSTOM_AMOUNT_MIN = 1;
+export const DONATION_CUSTOM_AMOUNT_MAX = 1000_000;
+
 const roundChf = (amount: number): number => Math.round(amount * 100) / 100;
 
 export const getOnlineTransactionCostChf = (baseAmountChf: number): number => {
@@ -49,7 +54,11 @@ export const getOnePercentAmount = (monthlyIncome: number | null): number =>
 
 export const resolveAmount = (context: DonationAmountContext): number | null => {
 	if (context.selectedAmount === 'other') {
-		if (context.customAmount === null || context.customAmount < 1) {
+		if (
+			context.customAmount === null ||
+			context.customAmount < DONATION_CUSTOM_AMOUNT_MIN ||
+			context.customAmount > DONATION_CUSTOM_AMOUNT_MAX
+		) {
 			return null;
 		}
 
@@ -60,7 +69,11 @@ export const resolveAmount = (context: DonationAmountContext): number | null => 
 		return context.selectedAmount;
 	}
 
-	if (context.monthlyIncome !== null && context.monthlyIncome >= 1) {
+	if (
+		context.monthlyIncome !== null &&
+		context.monthlyIncome >= DONATION_MONTHLY_INCOME_MIN &&
+		context.monthlyIncome <= DONATION_MONTHLY_INCOME_MAX
+	) {
 		return getOnePercentAmount(context.monthlyIncome);
 	}
 
