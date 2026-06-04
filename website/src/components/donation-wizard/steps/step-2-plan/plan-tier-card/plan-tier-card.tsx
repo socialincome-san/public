@@ -1,5 +1,6 @@
 'use client';
 
+import { SelectableCard } from '@/components/selectable-card';
 import { cn } from '@/lib/utils/cn';
 import type { PlanTierBenefit } from './plan-tier-benefit';
 import { PlanTierCardContent } from './plan-tier-card-content';
@@ -26,23 +27,16 @@ export const PlanTierCard = ({
 	selected,
 	benefits,
 	onSelect,
-}: Props) => {
-	const className = cn(
-		'w-full rounded-[10px] border p-4 text-left transition-colors',
-		selected ? 'border-slate-500 bg-slate-50' : 'border-border bg-white',
-	);
-
-	return (
-		<button type="button" aria-pressed={selected} onClick={onSelect} className={className}>
-			<PlanTierCardContent
-				amount={amount}
-				currency={currency}
-				perMonthLabel={perMonthLabel}
-				planLabel={planLabel}
-				badgeVariant={badgeVariant}
-				heartCount={heartCount}
-				benefits={benefits}
-			/>
-		</button>
-	);
-};
+}: Props) => (
+	<SelectableCard selected={selected} onSelect={onSelect} className="w-full p-4">
+		<PlanTierCardContent
+			amount={amount}
+			currency={currency}
+			perMonthLabel={perMonthLabel}
+			planLabel={planLabel}
+			badgeVariant={badgeVariant}
+			heartCount={heartCount}
+			benefits={benefits}
+		/>
+	</SelectableCard>
+);

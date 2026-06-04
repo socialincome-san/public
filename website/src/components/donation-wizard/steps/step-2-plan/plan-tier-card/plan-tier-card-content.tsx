@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/components/badge';
 import { cn } from '@/lib/utils/cn';
 import { Check, Heart, Smile } from 'lucide-react';
 import type { PlanTierBenefit } from './plan-tier-benefit';
@@ -30,11 +31,9 @@ export const PlanTierCardContent = ({
 			</span>
 			{perMonthLabel && <span className="text-muted-foreground text-sm">{perMonthLabel}</span>}
 			{planLabel && (
-				<span
-					className={cn(
-						'inline-flex items-center gap-0.5 rounded-full border px-2 py-0.5 text-[10px] font-medium sm:ml-auto',
-						badgeVariant === 'preferred' ? 'text-foreground border-green-300 bg-green-100' : 'bg-muted border-border',
-					)}
+				<Badge
+					variant={badgeVariant === 'preferred' ? 'verified' : 'default'}
+					className="gap-0.5 px-2 py-0.5 text-[10px] sm:ml-auto"
 				>
 					{planLabel}
 					{badgeVariant === 'preferred' && <Smile className="size-2.5" aria-hidden />}
@@ -42,7 +41,7 @@ export const PlanTierCardContent = ({
 						Array.from({ length: heartCount }).map((_, index) => (
 							<Heart key={index} className="size-2 fill-current" aria-hidden />
 						))}
-				</span>
+				</Badge>
 			)}
 		</div>
 		<ul className="flex flex-col gap-2">
