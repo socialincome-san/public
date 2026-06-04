@@ -54,7 +54,6 @@ export class StoryblokService extends BaseService {
 		'downloads.documents',
 		'partnershipsCarousel.partnerships',
 		'Country.partners',
-		'Focus.studies',
 		'Local Partner.focuses',
 		'Local Partner.partners',
 	];

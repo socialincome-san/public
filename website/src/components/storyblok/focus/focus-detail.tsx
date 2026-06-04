@@ -17,7 +17,11 @@ type Props = {
 type StudyStory = ISbStoryData<Study>;
 
 const isStudyStory = (study: StudyStory | string): study is StudyStory => {
-	return typeof study === 'object' && study !== null && study.content.component === 'study';
+	if (typeof study !== 'object' || study === null || !('content' in study)) {
+		return false;
+	}
+
+	return study.content.component?.toLowerCase() === 'study';
 };
 
 export const FocusDetail = async ({ focus, lang, region }: Props) => {

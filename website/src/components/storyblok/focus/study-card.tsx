@@ -15,7 +15,8 @@ export const StudyCard = ({ study, lang, region }: Props) => {
 	const { title, description, subtitle, year, link, linkText } = study.content;
 	const metadata = [subtitle?.trim(), year?.trim()].filter(Boolean).join(', ');
 	const linkLabel = linkText?.trim();
-	const href = link ? resolveStoryblokLink(link, lang, region) : null;
+	const resolvedHref = link ? resolveStoryblokLink(link, lang, region) : null;
+	const href = resolvedHref === '#' ? null : resolvedHref;
 
 	return (
 		<article className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white px-10 py-8 shadow-[0_4px_6px_-4px_rgba(0,0,0,0.10),0_0_20px_0_rgba(0,0,0,0.05)]">
