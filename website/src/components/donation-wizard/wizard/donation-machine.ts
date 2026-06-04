@@ -1,6 +1,7 @@
 import { getContributorCommunityStatsAction } from '@/lib/server-actions/contributor-public-actions';
 import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
 import { assign, fromPromise, setup } from 'xstate';
+import { buildCompletedDonationSummary } from '../steps/step-4-stripe/map-wizard-to-stripe-checkout';
 import {
 	type Cadence,
 	type DonationAmountContext,
@@ -17,6 +18,14 @@ import {
 	wizardContextFromFormAmount,
 } from './donation-machine-logic';
 import { type DonationWizardContext, getInitialWizardContext } from './donation-wizard-context';
+
+const resetStripeCheckoutContext = {
+	stripeCheckoutSessionId: null,
+	stripeClientSecret: null,
+	stripePublishableKey: null,
+	stripeCheckoutStatus: 'idle' as const,
+	stripeCheckoutError: null,
+};
 
 export const donationWizardMachine = setup({
 	types: {} as {
@@ -37,6 +46,13 @@ export const donationWizardMachine = setup({
 			| { type: 'SUBMIT' }
 			| { type: 'PROCEED_TO_PAYMENT' }
 			| { type: 'COMPLETE' }
+			| { type: 'START_STRIPE_CHECKOUT' }
+			| { type: 'STRIPE_CHECKOUT_READY'; clientSecret: string; sessionId: string; publishableKey: string }
+			| { type: 'STRIPE_CHECKOUT_ERROR'; message: string }
+			| { type: 'STRIPE_CHECKOUT_RETRY' }
+			| { type: 'STRIPE_CHECKOUT_BACK' }
+			| { type: 'STRIPE_CHECKOUT_COMPLETE' }
+			| { type: 'DONATION_ONBOARDING_COMPLETE' }
 			| { type: 'BACK' };
 	},
 	actors: {
@@ -56,6 +72,7 @@ export const donationWizardMachine = setup({
 		isMonthlyCadence: ({ event }) => event.type === 'SET_CADENCE' && event.value === 'monthly',
 		isOneTimeCadence: ({ event }) => event.type === 'SET_CADENCE' && event.value === 'one-time',
 		isMonthlyContext: ({ context }) => context.cadence === 'monthly',
+		isOnlinePayment: ({ context }) => context.paymentMethod === 'online',
 		returnsToOneTimePlanStep: ({ context }) => context.returnsToOneTimePlanStep,
 		pendingStepIsMonthlyPlan: ({ context }) => context.pendingStep === 'step2Monthly',
 		pendingStepIsOneTimePlan: ({ context }) => context.pendingStep === 'step2OneTime',
@@ -231,6 +248,7 @@ export const donationWizardMachine = setup({
 						paymentMethod: () => 'qr' as const,
 						coverTransactionCosts: () => false,
 						...monthlyPlanStepDefaults,
+						...resetStripeCheckoutContext,
 					}),
 				},
 				BACK: 'step1',
@@ -264,6 +282,7 @@ export const donationWizardMachine = setup({
 						paymentMethod: 'qr' as const,
 						coverTransactionCosts: false,
 						...paymentContextForOneTimePlanChoice(context.oneTimePlanChoice),
+						...resetStripeCheckoutContext,
 					})),
 				},
 				BACK: 'step1',
@@ -279,6 +298,7 @@ export const donationWizardMachine = setup({
 					actions: assign({
 						paymentMethod: ({ event }) => event.value,
 						coverTransactionCosts: ({ event, context }) => (event.value === 'qr' ? false : context.coverTransactionCosts),
+						...resetStripeCheckoutContext,
 					}),
 				},
 				SET_COVER_TRANSACTION_COSTS: {
@@ -299,8 +319,16 @@ export const donationWizardMachine = setup({
 						target: 'step2OneTime',
 					},
 				],
+				START_STRIPE_CHECKOUT: {
+					guard: 'isOnlinePayment',
+					target: 'step4StripeCheckout',
+					actions: assign({
+						...resetStripeCheckoutContext,
+						stripeCheckoutStatus: () => 'loading' as const,
+					}),
+				},
 				COMPLETE: {
-					target: 'stepThankYou',
+					target: 'step6ThankYou',
 				},
 				CLOSE: {
 					target: 'closed',
@@ -308,7 +336,65 @@ export const donationWizardMachine = setup({
 				},
 			},
 		},
-		stepThankYou: {
+		step4StripeCheckout: {
+			on: {
+				STRIPE_CHECKOUT_READY: {
+					actions: assign({
+						stripeClientSecret: ({ event }) => event.clientSecret,
+						stripeCheckoutSessionId: ({ event }) => event.sessionId,
+						stripePublishableKey: ({ event }) => event.publishableKey,
+						stripeCheckoutStatus: () => 'ready' as const,
+						stripeCheckoutError: () => null,
+					}),
+				},
+				STRIPE_CHECKOUT_ERROR: {
+					actions: assign({
+						stripeCheckoutStatus: () => 'error' as const,
+						stripeCheckoutError: ({ event }) => event.message,
+						stripeClientSecret: () => null,
+						stripePublishableKey: () => null,
+					}),
+				},
+				STRIPE_CHECKOUT_RETRY: {
+					actions: assign({
+						stripeCheckoutStatus: () => 'loading' as const,
+						stripeCheckoutError: () => null,
+						stripeClientSecret: () => null,
+						stripeCheckoutSessionId: () => null,
+						stripePublishableKey: () => null,
+					}),
+				},
+				STRIPE_CHECKOUT_BACK: {
+					target: 'step3Payment',
+					actions: assign(resetStripeCheckoutContext),
+				},
+				STRIPE_CHECKOUT_COMPLETE: {
+					target: 'step5Onboarding',
+					actions: assign(({ context }) => ({
+						completedDonationSummary: buildCompletedDonationSummary(context),
+						stripeClientSecret: null,
+						stripePublishableKey: null,
+						stripeCheckoutStatus: 'idle' as const,
+					})),
+				},
+				CLOSE: {
+					target: 'closed',
+					actions: 'resetContext',
+				},
+			},
+		},
+		step5Onboarding: {
+			on: {
+				DONATION_ONBOARDING_COMPLETE: {
+					target: 'step6ThankYou',
+				},
+				CLOSE: {
+					target: 'closed',
+					actions: 'resetContext',
+				},
+			},
+		},
+		step6ThankYou: {
 			on: {
 				CLOSE: {
 					target: 'closed',

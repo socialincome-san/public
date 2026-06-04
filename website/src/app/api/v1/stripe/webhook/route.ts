@@ -27,7 +27,7 @@ export const POST = async (request: NextRequest) => {
 			return NextResponse.json({ error: result.error }, { status: 400 });
 		}
 
-		return NextResponse.json({ received: true, data: result.data });
+		return NextResponse.json({ received: true });
 	} catch (error) {
 		logger.alert('Stripe webhook error', { error }, { component: 'stripe-webhook' });
 

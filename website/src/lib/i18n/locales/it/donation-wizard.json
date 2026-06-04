@@ -1,7 +1,13 @@
 {
 	"modal": {
 		"title": "Fai una donazione",
-		"campaign-for": "Per {{title}}"
+		"campaign-for": "Per {{title}}",
+		"closeConfirm": {
+			"title": "Chiudere la donazione?",
+			"description": "Se chiudi ora, i progressi di questa donazione andranno persi.",
+			"cancel": "Continua a donare",
+			"confirm": "Chiudi"
+		}
 	},
 	"step1": {
 		"title": "Fai una donazione",
@@ -42,6 +48,11 @@
 		"back": "Indietro",
 		"choose-payment": "Scegli metodo di pagamento"
 	},
+	"step4": {
+		"loading": "Caricamento del modulo di pagamento…",
+		"payment-error": "Impossibile avviare il pagamento.",
+		"try-again": "Riprova"
+	},
 	"step3": {
 		"title": "Metodo di pagamento",
 		"qr-payment": "Pagamento QR",
@@ -57,7 +68,30 @@
 		"cover-costs-tooltip": "Aggiungiamo il 3% alla donazione così l'importo completo ci arriva dopo le commissioni della carta online."
 	},
 	"thankYou": {
-		"message": "Grazie per il tuo aiuto!"
+		"message": "Grazie per il tuo aiuto!",
+		"messageWithAmountMonthly": "Grazie per {{amount}}/mese!",
+		"messageWithAmountOneTime": "Grazie per {{amount}}!",
+		"loginPrompt": {
+			"message": "Ora puoi accedere al tuo account.",
+			"loginButton": "Accedi"
+		}
+	},
+	"onboarding": {
+		"successTitle": "Donazione riuscita",
+		"accountCardTitle": "Controlla le informazioni del tuo account",
+		"isThisYou": "Sei tu?",
+		"firstName": "Nome",
+		"lastName": "Cognome",
+		"email": "E-mail",
+		"country": "Paese",
+		"genderSectionTitle": "Come dovremmo rivolgerci a te?",
+		"genderSectionDescription": "Usiamo queste informazioni per e-mail, attestati di donazione e nel portale.",
+		"genderOtherPrivate": "Altro / Privato",
+		"submit": "Conferma le informazioni dell'account",
+		"submitting": "Salvataggio…",
+		"loading": "Caricamento dei tuoi dati…",
+		"updateError": "Si è verificato un errore durante il salvataggio. Riprova.",
+		"continue": "Continua"
 	},
 	"impact": {
 		"title": "Contanti diretti a persone in difficoltà",

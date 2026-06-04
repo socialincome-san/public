@@ -61,6 +61,7 @@ import { RecipientValidationService } from './recipient/recipient-validation.ser
 import { RecipientWriteService } from './recipient/recipient-write.service';
 import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
 import { StoryblokService } from './storyblok/storyblok.service';
+import { LegacyStripeService } from './stripe/legacy/legacy-stripe.service';
 import { StripeService } from './stripe/stripe.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
 import { SurveyImpactService } from './survey/survey-impact.service';
@@ -174,14 +175,8 @@ const donationCertificateWrite = new DonationCertificateWriteService(
 	donationCertificateRead,
 );
 const bankTransfer = new BankTransferService(prisma, contributorWrite, campaignRead, contributionWrite);
-const stripe = new StripeService(
-	prisma,
-	contributorRead,
-	contributorWrite,
-	contributionWrite,
-	campaignRead,
-	programAccessRead,
-);
+const stripe = new StripeService(prisma, contributorRead, contributorWrite, contributionWrite, campaignRead);
+const stripeLegacy = new LegacyStripeService(prisma, contributorRead, contributorWrite, campaignRead, programAccessRead);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
@@ -244,6 +239,7 @@ export const services = {
 	journal,
 	storyblok,
 	stripe,
+	stripeLegacy,
 	surveyImpact,
 	transparency,
 	twilio,

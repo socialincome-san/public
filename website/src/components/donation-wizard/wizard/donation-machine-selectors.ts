@@ -153,7 +153,7 @@ export const selectWizardShellView = (state: DonationWizardState) => {
 
 	return {
 		activeStep,
-		isPaymentStep: activeStep === 'step3Payment',
+		isPaymentStep: activeStep === 'step3Payment' || activeStep === 'step4StripeCheckout',
 		showImpactPanel: activeStep === 'step1' || activeStep === 'step2Monthly' || activeStep === 'step2OneTime',
 		communityStats: state.context.communityStats,
 	};

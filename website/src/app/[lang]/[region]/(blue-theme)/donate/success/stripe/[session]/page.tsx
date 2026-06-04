@@ -41,7 +41,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: 'website-donate' });
 
-	const sessionResult = await services.stripe.getCheckoutSession(session);
+	const sessionResult = await services.stripeLegacy.getCheckoutSession(session);
 	if (!sessionResult.success) {
 		throw new Error(sessionResult.error);
 	}
@@ -52,7 +52,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 	const divisor = ZERO_DECIMAL.has(currency) ? 1 : THREE_DECIMAL.has(currency) ? 1000 : 100;
 	const value = (checkoutSession.amount_total ?? 0) / divisor;
 
-	const contributorResult = await services.stripe.getContributorFromCheckoutSession(checkoutSession);
+	const contributorResult = await services.stripeLegacy.getContributorFromCheckoutSession(checkoutSession);
 	if (!contributorResult.success) {
 		throw new Error(contributorResult.error);
 	}

@@ -1,7 +1,13 @@
 {
 	"modal": {
 		"title": "Faire un don",
-		"campaign-for": "Pour {{title}}"
+		"campaign-for": "Pour {{title}}",
+		"closeConfirm": {
+			"title": "Fermer le don ?",
+			"description": "Si tu fermes maintenant, ta progression dans ce don sera perdue.",
+			"cancel": "Continuer le don",
+			"confirm": "Fermer"
+		}
 	},
 	"step1": {
 		"title": "Faire un don",
@@ -42,6 +48,11 @@
 		"back": "Retour",
 		"choose-payment": "Choisir le mode de paiement"
 	},
+	"step4": {
+		"loading": "Chargement du formulaire de paiement…",
+		"payment-error": "Le paiement n'a pas pu être démarré.",
+		"try-again": "Réessayer"
+	},
 	"step3": {
 		"title": "Mode de paiement",
 		"qr-payment": "Paiement QR",
@@ -57,7 +68,30 @@
 		"cover-costs-tooltip": "Nous ajoutons 3 % à ton don pour que le montant complet nous parvienne après les frais de carte en ligne."
 	},
 	"thankYou": {
-		"message": "Merci pour ton aide !"
+		"message": "Merci pour ton aide !",
+		"messageWithAmountMonthly": "Merci pour {{amount}}/mois !",
+		"messageWithAmountOneTime": "Merci pour {{amount}} !",
+		"loginPrompt": {
+			"message": "Tu peux maintenant te connecter à ton compte.",
+			"loginButton": "Se connecter"
+		}
+	},
+	"onboarding": {
+		"successTitle": "Don réussi",
+		"accountCardTitle": "Vérifie tes informations de compte",
+		"isThisYou": "Est-ce bien toi ?",
+		"firstName": "Prénom",
+		"lastName": "Nom",
+		"email": "E-mail",
+		"country": "Pays",
+		"genderSectionTitle": "Comment devons-nous nous adresser à toi ?",
+		"genderSectionDescription": "Nous utilisons ces informations pour les e-mails, les attestations de don et le portail.",
+		"genderOtherPrivate": "Autre / Privé",
+		"submit": "Confirmer les informations du compte",
+		"submitting": "Enregistrement…",
+		"loading": "Chargement de tes informations…",
+		"updateError": "Une erreur s'est produite lors de l'enregistrement. Merci de réessayer.",
+		"continue": "Continuer"
 	},
 	"impact": {
 		"title": "Argent liquide direct aux personnes dans le besoin",

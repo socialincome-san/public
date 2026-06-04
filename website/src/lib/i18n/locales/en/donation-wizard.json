@@ -1,7 +1,13 @@
 {
 	"modal": {
 		"title": "Make a donation",
-		"campaign-for": "For {{title}}"
+		"campaign-for": "For {{title}}",
+		"closeConfirm": {
+			"title": "Close donation?",
+			"description": "If you close now, your progress in this donation will be lost.",
+			"cancel": "Continue donating",
+			"confirm": "Close"
+		}
 	},
 	"step1": {
 		"title": "Make a donation",
@@ -42,6 +48,11 @@
 		"back": "Back",
 		"choose-payment": "Choose Payment Method"
 	},
+	"step4": {
+		"loading": "Loading payment form…",
+		"payment-error": "Payment could not be started.",
+		"try-again": "Try again"
+	},
 	"step3": {
 		"title": "Payment Method",
 		"qr-payment": "QR-Payment",
@@ -57,7 +68,30 @@
 		"cover-costs-tooltip": "We add 3% to your donation so the full amount reaches us after online card fees."
 	},
 	"thankYou": {
-		"message": "Thank you for your help!"
+		"message": "Thank you for your help!",
+		"messageWithAmountMonthly": "Thank you for {{amount}}/month!",
+		"messageWithAmountOneTime": "Thank you for {{amount}}!",
+		"loginPrompt": {
+			"message": "You can now log in to your account.",
+			"loginButton": "Log in"
+		}
+	},
+	"onboarding": {
+		"successTitle": "Donation successful",
+		"accountCardTitle": "Check your Account Information",
+		"isThisYou": "Is this you?",
+		"firstName": "First Name",
+		"lastName": "Last Name",
+		"email": "E-Mail",
+		"country": "Country",
+		"genderSectionTitle": "How should we address you?",
+		"genderSectionDescription": "We use this information to address you correctly in emails, donation certificates, and the portal.",
+		"genderOtherPrivate": "Other / Private",
+		"submit": "Confirm Account Information",
+		"submitting": "Saving…",
+		"loading": "Loading your details…",
+		"updateError": "There was an error saving your information. Please try again.",
+		"continue": "Continue"
 	},
 	"impact": {
 		"title": "Direct cash to people in need",

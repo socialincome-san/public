@@ -2,7 +2,7 @@
 
 import { useDonationFormState } from './hooks/use-donation-form-state';
 import { useDonationModal } from './hooks/use-donation-modal';
-import { DonationAmountFields } from './shared/donation-amount-fields';
+import { DonationAmountFields } from './steps/step-1-amount/donation-amount-fields';
 import { selectStep1FormView } from './wizard/donation-machine-selectors';
 
 type Props = {

@@ -12,8 +12,8 @@ import {
 	DONATION_MONTHLY_INCOME_MIN,
 	type Cadence,
 	type PresetAmount,
-} from '../utils/donation-amount';
-import { donationStepCardClass } from '../utils/donation-wizard-layout';
+} from '../../utils/donation-amount';
+import { donationStepCardClass } from '../../utils/donation-wizard-layout';
 
 const amountOptions: { labelKey: 'currency-prefix' | 'other'; value: PresetAmount | 'other' }[] = [
 	{ labelKey: 'currency-prefix', value: 25 },

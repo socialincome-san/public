@@ -1,7 +1,13 @@
 {
 	"modal": {
 		"title": "Spenden",
-		"campaign-for": "Für {{title}}"
+		"campaign-for": "Für {{title}}",
+		"closeConfirm": {
+			"title": "Spende schliessen?",
+			"description": "Wenn du jetzt schliesst, geht dein Fortschritt in dieser Spende verloren.",
+			"cancel": "Weiter spenden",
+			"confirm": "Schliessen"
+		}
 	},
 	"step1": {
 		"title": "Spenden",
@@ -42,6 +48,11 @@
 		"back": "Zurück",
 		"choose-payment": "Zahlungsmethode wählen"
 	},
+	"step4": {
+		"loading": "Zahlungsformular wird geladen…",
+		"payment-error": "Zahlung konnte nicht gestartet werden.",
+		"try-again": "Erneut versuchen"
+	},
 	"step3": {
 		"title": "Zahlungsmethode",
 		"qr-payment": "QR-Zahlung",
@@ -57,7 +68,30 @@
 		"cover-costs-tooltip": "Wir rechnen 3 % auf deine Spende auf, damit der volle Betrag nach den Online-Kartengebühren bei uns ankommt."
 	},
 	"thankYou": {
-		"message": "Danke für deine Hilfe!"
+		"message": "Danke für deine Hilfe!",
+		"messageWithAmountMonthly": "Danke für {{amount}}/Monat!",
+		"messageWithAmountOneTime": "Danke für {{amount}}!",
+		"loginPrompt": {
+			"message": "Du kannst dich jetzt in deinem Konto einloggen.",
+			"loginButton": "Einloggen"
+		}
+	},
+	"onboarding": {
+		"successTitle": "Spende erfolgreich",
+		"accountCardTitle": "Überprüfe deine Kontoinformationen",
+		"isThisYou": "Bist du das?",
+		"firstName": "Vorname",
+		"lastName": "Nachname",
+		"email": "E-Mail",
+		"country": "Land",
+		"genderSectionTitle": "Wie sollen wir dich ansprechen?",
+		"genderSectionDescription": "Wir nutzen diese Angaben für E-Mails, Spendenbescheinigungen und im Portal.",
+		"genderOtherPrivate": "Andere / Privat",
+		"submit": "Kontoinformationen bestätigen",
+		"submitting": "Wird gespeichert…",
+		"loading": "Deine Angaben werden geladen…",
+		"updateError": "Beim Speichern ist ein Fehler aufgetreten. Bitte versuche es erneut.",
+		"continue": "Weiter"
 	},
 	"impact": {
 		"title": "Direktes Bargeld für Menschen in Not",

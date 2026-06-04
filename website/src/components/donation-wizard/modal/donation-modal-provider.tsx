@@ -1,17 +1,18 @@
 'use client';
 
+import { Button } from '@/components/button';
 import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
 import { DonationCurrencySelector } from '@/components/donation/currency-selector';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { useMachine } from '@xstate/react';
-import { useCallback, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
 import { DonationModalContext } from '../hooks/use-donation-modal';
-import { ThankYouStep } from '../steps/thank-you/thank-you-step';
 import type { DonationAmountContext } from '../utils/donation-amount';
 import { donationWizardMachine } from '../wizard/donation-machine';
+import { DonationSteps } from '../wizard/donation-steps';
 import { DonationWizard } from '../wizard/donation-wizard';
 
 type Props = {
@@ -20,23 +21,35 @@ type Props = {
 
 export const DonationModalProvider = ({ children }: Props) => {
 	const [state, send] = useMachine(donationWizardMachine);
+	const [closeConfirmOpen, setCloseConfirmOpen] = useState(false);
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 
 	const isOpen = !state.matches('closed');
-	const isThankYou = state.value === 'stepThankYou';
+	const isThankYou = state.matches('step6ThankYou');
+	const isOnboarding = state.matches('step5Onboarding');
+	const isPostCheckoutStep = isThankYou || isOnboarding;
+	const isNarrowModal = isThankYou;
 	const campaignId = state.context.campaignId;
-	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && !isThankYou);
+	const isStripeCheckout = state.matches('step4StripeCheckout');
+	const showWizardHeader = !isPostCheckoutStep;
+	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
 
-	const openWizardAtAmountStep = useCallback(() => {
+	const openWizardAtAmountStep = () => {
 		send({ type: 'OPEN' });
-	}, [send]);
+	};
 
-	const openWizardWithFormAmount = useCallback(
-		(context: DonationAmountContext) => {
-			send({ type: 'OPEN_FROM_FORM', context });
-		},
-		[send],
-	);
+	const openWizardWithFormAmount = (context: DonationAmountContext) => {
+		send({ type: 'OPEN_FROM_FORM', context });
+	};
+
+	const requestClose = () => {
+		setCloseConfirmOpen(true);
+	};
+
+	const confirmClose = () => {
+		setCloseConfirmOpen(false);
+		send({ type: 'CLOSE' });
+	};
 
 	return (
 		<DonationModalContext.Provider value={{ openWizardAtAmountStep, openWizardWithFormAmount }}>
@@ -46,23 +59,28 @@ export const DonationModalProvider = ({ children }: Props) => {
 				open={isOpen}
 				onOpenChange={(open) => {
 					if (!open) {
-						send({ type: 'CLOSE' });
+						requestClose();
 					}
 				}}
 			>
 				<DialogContent
 					hasGradient
+					closeOnClickOutside={false}
+					closeOnEscape={false}
+					onCloseClick={requestClose}
 					className={cn(
 						'!flex flex-col gap-0 overflow-hidden overscroll-contain !p-0',
-						isThankYou
+						isNarrowModal
 							? 'sm:max-h-[90dvh] sm:min-h-[200px] sm:w-[min(320px,90vw)] sm:max-w-[320px]'
 							: 'sm:max-h-[90dvh] sm:w-[min(890px,90vw)] sm:max-w-[890px]',
 					)}
 				>
-					{isThankYou ? (
+					{isPostCheckoutStep ? (
 						<>
-							<DialogTitle className="sr-only">{t('thankYou.message')}</DialogTitle>
-							<ThankYouStep />
+							<DialogTitle className="sr-only">
+								{isThankYou ? t('thankYou.message') : t('onboarding.successTitle')}
+							</DialogTitle>
+							<DonationSteps state={state} send={send} />
 						</>
 					) : (
 						<>
@@ -77,14 +95,31 @@ export const DonationModalProvider = ({ children }: Props) => {
 										</p>
 									) : null}
 								</div>
-								<DonationCurrencySelector
-									currencies={websiteCurrencies}
-									className="h-9 w-[4.75rem] shrink-0 rounded-full border-slate-300 px-2.5"
-								/>
+								{!isStripeCheckout && (
+									<DonationCurrencySelector
+										currencies={websiteCurrencies}
+										className="h-9 w-[4.75rem] shrink-0 rounded-full border-slate-300 px-2.5"
+									/>
+								)}
 							</div>
 							<DonationWizard state={state} send={send} />
 						</>
 					)}
+				</DialogContent>
+			</Dialog>
+
+			<Dialog open={closeConfirmOpen} onOpenChange={setCloseConfirmOpen}>
+				<DialogContent className="z-[60] gap-4 sm:max-w-[400px]" overlayClassName="z-[60]">
+					<DialogTitle className="text-lg font-medium">{t('modal.closeConfirm.title')}</DialogTitle>
+					<p className="text-muted-foreground text-sm leading-normal">{t('modal.closeConfirm.description')}</p>
+					<div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+						<Button type="button" variant="outline" onClick={() => setCloseConfirmOpen(false)}>
+							{t('modal.closeConfirm.cancel')}
+						</Button>
+						<Button type="button" variant="destructive" onClick={confirmClose}>
+							{t('modal.closeConfirm.confirm')}
+						</Button>
+					</div>
 				</DialogContent>
 			</Dialog>
 		</DonationModalContext.Provider>

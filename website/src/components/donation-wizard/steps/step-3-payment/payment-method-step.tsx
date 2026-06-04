@@ -9,6 +9,7 @@ import { DonationStepFooter } from '../../shared/donation-step-footer';
 import { donationPaymentStepCardClass } from '../../utils/donation-wizard-layout';
 import { selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
+import { requestStripeEmbeddedCheckout } from '../step-4-stripe/request-stripe-embedded-checkout';
 import { CoverTransactionCostsToggle } from './cover-transaction-costs-toggle';
 import { PaymentMethodOption } from './payment-method-option';
 
@@ -51,7 +52,16 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 
 			<DonationStepFooter
 				onBack={() => send({ type: 'BACK' })}
-				onContinue={() => send({ type: 'COMPLETE' })}
+				onContinue={() => {
+					if (view.paymentMethod === 'online') {
+						send({ type: 'START_STRIPE_CHECKOUT' });
+						void requestStripeEmbeddedCheckout(state.context, currency, send);
+
+						return;
+					}
+
+					send({ type: 'COMPLETE' });
+				}}
 				continueLabel={t(view.continueLabelKey)}
 				summary={{
 					amount: view.summary.amount,

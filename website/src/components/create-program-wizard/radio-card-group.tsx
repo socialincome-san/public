@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils/cn';
 import { ReactNode } from 'react';
 
 type Props = {
-	value: string;
+	value?: string;
 	onChange: (value: string) => void;
 	layout?: 'stack' | 'grid';
 	children: ReactNode;
