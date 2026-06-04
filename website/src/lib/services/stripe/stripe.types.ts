@@ -55,6 +55,13 @@ export type UpdateContributorAfterCheckoutInput = {
 
 export type UpdateContributorAfterCheckoutResult = Contributor;
 
+export type UpdateContributorReferralAfterCheckoutInput = {
+	stripeCheckoutSessionId: string;
+	referral: ContributorReferralSource;
+};
+
+export type UpdateContributorReferralAfterCheckoutResult = Contributor;
+
 export type StripeSubscriptionRow = {
 	id: string;
 	created: Date;

@@ -91,7 +91,22 @@
 		"submitting": "Saving…",
 		"loading": "Loading your details…",
 		"updateError": "There was an error saving your information. Please try again.",
-		"continue": "Continue"
+		"continue": "Continue",
+		"referral": {
+			"cardTitle": "Helps us to focus our time on what's actually working",
+			"question": "How did you find us?",
+			"submit": "Send Feedback",
+			"submitting": "Saving…",
+			"updateError": "There was an error saving your feedback. Please try again.",
+			"options": {
+				"familyfriends": "Friends or family",
+				"socialmedia": "Social Media",
+				"events": "Events",
+				"media": "Media",
+				"preferNotToSay": "Prefer not to say",
+				"other": "Other"
+			}
+		}
 	},
 	"impact": {
 		"title": "Direct cash to people in need",

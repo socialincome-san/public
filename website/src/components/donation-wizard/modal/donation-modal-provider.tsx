@@ -25,9 +25,10 @@ export const DonationModalProvider = ({ children }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 
 	const isOpen = !state.matches('closed');
-	const isThankYou = state.matches('step6ThankYou');
-	const isOnboarding = state.matches('step5Onboarding');
-	const isPostCheckoutStep = isThankYou || isOnboarding;
+	const isThankYou = state.matches('step7ThankYou');
+	const isOnboardingPersonal = state.matches('step5OnboardingPersonal');
+	const isOnboardingReferral = state.matches('step6OnboardingReferral');
+	const isPostCheckoutStep = isThankYou || isOnboardingPersonal || isOnboardingReferral;
 	const isNarrowModal = isThankYou;
 	const campaignId = state.context.campaignId;
 	const isStripeCheckout = state.matches('step4StripeCheckout');

@@ -6,7 +6,8 @@ import { OneTimePlanStep } from '../steps/step-2-plan/one-time-plan-step';
 import { PaymentMethodStep } from '../steps/step-3-payment/payment-method-step';
 import { StripeCheckoutStep } from '../steps/step-4-stripe/stripe-checkout-step';
 import { OnboardingStep } from '../steps/step-5-onboarding/onboarding-step';
-import { ThankYouStep } from '../steps/step-6-thank-you/thank-you-step';
+import { ReferralStep } from '../steps/step-6-onboarding-referral/referral-step';
+import { ThankYouStep } from '../steps/step-7-thank-you/thank-you-step';
 import { getActiveWizardStep } from './get-active-wizard-step';
 import type { DonationWizardStepProps } from './types';
 
@@ -33,11 +34,15 @@ export const DonationSteps = ({ state, send }: DonationWizardStepProps) => {
 		return <StripeCheckoutStep state={state} send={send} />;
 	}
 
-	if (activeStep === 'step5Onboarding') {
+	if (activeStep === 'step5OnboardingPersonal') {
 		return <OnboardingStep state={state} send={send} />;
 	}
 
-	if (activeStep === 'step6ThankYou') {
+	if (activeStep === 'step6OnboardingReferral') {
+		return <ReferralStep state={state} send={send} />;
+	}
+
+	if (activeStep === 'step7ThankYou') {
 		return <ThankYouStep />;
 	}
 

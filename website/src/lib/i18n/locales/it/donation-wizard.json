@@ -91,7 +91,22 @@
 		"submitting": "Salvataggio…",
 		"loading": "Caricamento dei tuoi dati…",
 		"updateError": "Si è verificato un errore durante il salvataggio. Riprova.",
-		"continue": "Continua"
+		"continue": "Continua",
+		"referral": {
+			"cardTitle": "Ci aiuta a concentrare il nostro tempo su ciò che funziona davvero",
+			"question": "Come hai scoperto Social Income?",
+			"submit": "Invia feedback",
+			"submitting": "Salvataggio…",
+			"updateError": "Si è verificato un errore durante il salvataggio del feedback. Riprova.",
+			"options": {
+				"familyfriends": "Amici o famiglia",
+				"socialmedia": "Social media",
+				"events": "Eventi",
+				"media": "Media",
+				"preferNotToSay": "Preferisco non rispondere",
+				"other": "Altro"
+			}
+		}
 	},
 	"impact": {
 		"title": "Contanti diretti a persone in difficoltà",

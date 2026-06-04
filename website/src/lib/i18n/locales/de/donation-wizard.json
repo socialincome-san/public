@@ -91,7 +91,22 @@
 		"submitting": "Wird gespeichert…",
 		"loading": "Deine Angaben werden geladen…",
 		"updateError": "Beim Speichern ist ein Fehler aufgetreten. Bitte versuche es erneut.",
-		"continue": "Weiter"
+		"continue": "Weiter",
+		"referral": {
+			"cardTitle": "Hilft uns, unsere Zeit auf das zu konzentrieren, was wirklich wirkt",
+			"question": "Wie hast du von uns erfahren?",
+			"submit": "Feedback senden",
+			"submitting": "Wird gespeichert…",
+			"updateError": "Beim Speichern deines Feedbacks ist ein Fehler aufgetreten. Bitte versuche es erneut.",
+			"options": {
+				"familyfriends": "Familie oder Freunde",
+				"socialmedia": "Social Media",
+				"events": "Veranstaltungen",
+				"media": "Presse",
+				"preferNotToSay": "Möchte ich nicht sagen",
+				"other": "Andere"
+			}
+		}
 	},
 	"impact": {
 		"title": "Direktes Bargeld für Menschen in Not",

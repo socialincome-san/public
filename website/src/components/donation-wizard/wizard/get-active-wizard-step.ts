@@ -5,8 +5,9 @@ type ActiveDonationWizardStep =
 	| DonationWizardEntry
 	| 'step3Payment'
 	| 'step4StripeCheckout'
-	| 'step5Onboarding'
-	| 'step6ThankYou';
+	| 'step5OnboardingPersonal'
+	| 'step6OnboardingReferral'
+	| 'step7ThankYou';
 
 export const getActiveWizardStep = (state: DonationWizardState): ActiveDonationWizardStep | null => {
 	if (state.matches('loadingCommunityStats')) {
@@ -33,12 +34,16 @@ export const getActiveWizardStep = (state: DonationWizardState): ActiveDonationW
 		return 'step4StripeCheckout';
 	}
 
-	if (state.matches('step5Onboarding')) {
-		return 'step5Onboarding';
+	if (state.matches('step5OnboardingPersonal')) {
+		return 'step5OnboardingPersonal';
 	}
 
-	if (state.matches('step6ThankYou')) {
-		return 'step6ThankYou';
+	if (state.matches('step6OnboardingReferral')) {
+		return 'step6OnboardingReferral';
+	}
+
+	if (state.matches('step7ThankYou')) {
+		return 'step7ThankYou';
 	}
 
 	return null;

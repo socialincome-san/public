@@ -48,6 +48,8 @@ import {
 	type StripeWebhookResult,
 	type UpdateContributorAfterCheckoutInput,
 	type UpdateContributorAfterCheckoutResult,
+	type UpdateContributorReferralAfterCheckoutInput,
+	type UpdateContributorReferralAfterCheckoutResult,
 } from './stripe.types';
 import { resolveWizardEmbeddedCheckout } from './wizard-embedded-checkout';
 
@@ -209,7 +211,7 @@ export class StripeService extends BaseService {
 
 			const updateInput: ContributorUpdateInput = {
 				id: contributor.id,
-				referral: user.personal.referral ?? ContributorReferralSource.other,
+				...(user.personal.referral !== undefined ? { referral: user.personal.referral } : {}),
 				needsOnboarding: false,
 				contact: {
 					update: {
@@ -243,6 +245,58 @@ export class StripeService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not update contributor after checkout: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async updateContributorReferralAfterCheckout(
+		input: UpdateContributorReferralAfterCheckoutInput,
+	): Promise<ServiceResult<UpdateContributorReferralAfterCheckoutResult>> {
+		try {
+			const { stripeCheckoutSessionId, referral } = input;
+
+			const session = await this.getStripeClient().checkout.sessions.retrieve(stripeCheckoutSessionId);
+
+			const paidCheck = assertEmbeddedCheckoutSessionPaid(session);
+			if (!paidCheck.success) {
+				return paidCheck;
+			}
+
+			if (!session.customer) {
+				return this.resultFail('Checkout session has no Stripe customer');
+			}
+
+			const stripeCustomerId = typeof session.customer === 'string' ? session.customer : session.customer.id;
+			const email = session.customer_details?.email ?? undefined;
+			const existingResult = await this.contributorReadService.findByStripeCustomerOrEmail(stripeCustomerId, email);
+
+			if (!existingResult.success) {
+				return existingResult;
+			}
+
+			const contributor = existingResult.data;
+			if (!contributor) {
+				return this.resultFail('Contributor not found for checkout session');
+			}
+
+			const contributorEmail = contributor.contact?.email;
+			if (!contributorEmail) {
+				return this.resultFail('Contributor email is required');
+			}
+
+			return this.contributorWriteService.updateSelf(contributor.id, {
+				referral,
+				contact: {
+					update: {
+						data: {
+							email: contributorEmail,
+						},
+					},
+				},
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not update contributor referral after checkout: ${JSON.stringify(error)}`);
 		}
 	}
 

@@ -52,7 +52,9 @@ export const donationWizardMachine = setup({
 			| { type: 'STRIPE_CHECKOUT_RETRY' }
 			| { type: 'STRIPE_CHECKOUT_BACK' }
 			| { type: 'STRIPE_CHECKOUT_COMPLETE' }
-			| { type: 'DONATION_ONBOARDING_COMPLETE' }
+			| { type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE' }
+			| { type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU' }
+			| { type: 'DONATION_ONBOARDING_REFERRAL_COMPLETE' }
 			| { type: 'BACK' };
 	},
 	actors: {
@@ -328,7 +330,7 @@ export const donationWizardMachine = setup({
 					}),
 				},
 				COMPLETE: {
-					target: 'step6ThankYou',
+					target: 'step7ThankYou',
 				},
 				CLOSE: {
 					target: 'closed',
@@ -369,7 +371,7 @@ export const donationWizardMachine = setup({
 					actions: assign(resetStripeCheckoutContext),
 				},
 				STRIPE_CHECKOUT_COMPLETE: {
-					target: 'step5Onboarding',
+					target: 'step5OnboardingPersonal',
 					actions: assign(({ context }) => ({
 						completedDonationSummary: buildCompletedDonationSummary(context),
 						stripeClientSecret: null,
@@ -383,10 +385,13 @@ export const donationWizardMachine = setup({
 				},
 			},
 		},
-		step5Onboarding: {
+		step5OnboardingPersonal: {
 			on: {
-				DONATION_ONBOARDING_COMPLETE: {
-					target: 'step6ThankYou',
+				DONATION_ONBOARDING_PERSONAL_COMPLETE: {
+					target: 'step6OnboardingReferral',
+				},
+				DONATION_ONBOARDING_SKIP_TO_THANK_YOU: {
+					target: 'step7ThankYou',
 				},
 				CLOSE: {
 					target: 'closed',
@@ -394,7 +399,21 @@ export const donationWizardMachine = setup({
 				},
 			},
 		},
-		step6ThankYou: {
+		step6OnboardingReferral: {
+			on: {
+				DONATION_ONBOARDING_REFERRAL_COMPLETE: {
+					target: 'step7ThankYou',
+				},
+				DONATION_ONBOARDING_SKIP_TO_THANK_YOU: {
+					target: 'step7ThankYou',
+				},
+				CLOSE: {
+					target: 'closed',
+					actions: 'resetContext',
+				},
+			},
+		},
+		step7ThankYou: {
 			on: {
 				CLOSE: {
 					target: 'closed',

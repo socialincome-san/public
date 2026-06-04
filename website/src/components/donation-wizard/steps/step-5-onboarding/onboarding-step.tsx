@@ -7,7 +7,6 @@ import { RadioCardGroup } from '@/components/create-program-wizard/radio-card-gr
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { useI18n } from '@/lib/i18n/useI18n';
 import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
 import {
 	getStripeCheckoutOnboardingPrefillAction,
@@ -17,11 +16,12 @@ import { type SupportedLanguage } from '@/lib/services/sendgrid/types';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { GENDER_OPTIONS } from '@/lib/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CircleCheck, Mars, Venus, type LucideIcon } from 'lucide-react';
+import { Mars, Venus, type LucideIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
+import { OnboardingSuccessHeader, useOnboardingAmountLine } from '../../shared/onboarding-success-header';
 import type { DonationWizardStepProps } from '../../wizard/types';
 
 const GENDER_WIZARD_OPTIONS: readonly {
@@ -33,8 +33,8 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { t: tCommon } = useRouteTranslator({ namespace: 'common' });
 	const { t: tCountries } = useRouteTranslator({ namespace: 'countries' });
-	const { currency } = useI18n();
 	const { stripeCheckoutSessionId, completedDonationSummary } = state.context;
+	const amountLine = useOnboardingAmountLine(completedDonationSummary);
 
 	const [prefillStatus, setPrefillStatus] = useState<'loading' | 'ready' | 'error'>('loading');
 	const [emailFromStripe, setEmailFromStripe] = useState<string | undefined>();
@@ -81,7 +81,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 			}
 
 			if (!result.data.needsOnboarding) {
-				send({ type: 'DONATION_ONBOARDING_COMPLETE' });
+				send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU' });
 
 				return;
 			}
@@ -141,21 +141,12 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 				return;
 			}
 
-			send({ type: 'DONATION_ONBOARDING_COMPLETE' });
+			send({ type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE' });
 		} catch {
 			toast.error(t('onboarding.updateError'));
 			setSubmitting(false);
 		}
 	};
-
-	const amountLine =
-		completedDonationSummary &&
-		t(
-			completedDonationSummary.cadence === 'monthly'
-				? 'thankYou.messageWithAmountMonthly'
-				: 'thankYou.messageWithAmountOneTime',
-			{ amount: `${currency} ${completedDonationSummary.amount}` },
-		);
 
 	const isEmailLocked = Boolean(emailFromStripe);
 
@@ -163,7 +154,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 		return (
 			<div className="flex min-h-[200px] flex-col items-center justify-center gap-4 px-6 py-10">
 				<p className="text-destructive text-sm">{t('onboarding.updateError')}</p>
-				<Button type="button" onClick={() => send({ type: 'DONATION_ONBOARDING_COMPLETE' })}>
+				<Button type="button" onClick={() => send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU' })}>
 					{t('onboarding.continue')}
 				</Button>
 			</div>
@@ -182,7 +173,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 		return (
 			<div className="flex min-h-[200px] flex-col items-center justify-center gap-4 px-6 py-10">
 				<p className="text-destructive text-sm">{t('onboarding.updateError')}</p>
-				<Button type="button" onClick={() => send({ type: 'DONATION_ONBOARDING_COMPLETE' })}>
+				<Button type="button" onClick={() => send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU' })}>
 					{t('onboarding.continue')}
 				</Button>
 			</div>
@@ -191,13 +182,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div className="flex w-full flex-col gap-6 overflow-y-auto px-4 pt-6 pb-8 sm:px-9 sm:pt-6 sm:pb-11">
-			<div className="flex items-center gap-2 px-4">
-				<CircleCheck className="text-foreground size-11 shrink-0" strokeWidth={1.5} aria-hidden />
-				<div className="flex min-w-0 flex-col gap-1">
-					<p className="text-foreground text-base leading-normal font-bold">{t('onboarding.successTitle')}</p>
-					<p className="text-foreground text-sm leading-normal">{amountLine ?? t('thankYou.message')}</p>
-				</div>
-			</div>
+			<OnboardingSuccessHeader amountLine={amountLine} />
 
 			<Form {...form}>
 				<form

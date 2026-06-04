@@ -91,7 +91,22 @@
 		"submitting": "Enregistrement…",
 		"loading": "Chargement de tes informations…",
 		"updateError": "Une erreur s'est produite lors de l'enregistrement. Merci de réessayer.",
-		"continue": "Continuer"
+		"continue": "Continuer",
+		"referral": {
+			"cardTitle": "Nous aide à concentrer notre temps sur ce qui fonctionne vraiment",
+			"question": "Comment as-tu entendu parler de nous ?",
+			"submit": "Envoyer le feedback",
+			"submitting": "Enregistrement…",
+			"updateError": "Une erreur s'est produite lors de l'enregistrement de ton feedback. Merci de réessayer.",
+			"options": {
+				"familyfriends": "Amis ou famille",
+				"socialmedia": "Réseaux sociaux",
+				"events": "Événements",
+				"media": "Médias",
+				"preferNotToSay": "Je préfère ne pas répondre",
+				"other": "Autre"
+			}
+		}
 	},
 	"impact": {
 		"title": "Argent liquide direct aux personnes dans le besoin",
