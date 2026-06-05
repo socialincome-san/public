@@ -1,7 +1,12 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
-import { getProgramId, getProgramSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
+import {
+	getProgramId as getProgramPortalSlug,
+	getProgramSlug,
+	getProgramTitle,
+} from '@/components/storyblok/program/program.utils';
 import { ProgramsOverview } from '@/components/storyblok/program/programs-overview';
 import { ProgramsOverviewFilters } from '@/components/storyblok/program/programs-overview-filters';
 import { ProgramsOverviewSearch } from '@/components/storyblok/program/programs-overview-search';
@@ -9,7 +14,7 @@ import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { PublicProgramFocusMap, PublicProgramStatsMap } from '@/lib/services/program/program.types';
+import type { PublicProgramFilterDataMap, PublicProgramStatsMap } from '@/lib/services/program/program.types';
 import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { AnySearchParams } from '@/lib/types/page-props';
@@ -54,7 +59,7 @@ const normalizeSearchValue = (value: string) => value.toLowerCase();
 const programMatchesSearchQuery = (program: ProgramStory, searchQuery: string) => {
 	const keywords = [
 		getProgramTitle(program.content),
-		getProgramId(program.content),
+		getProgramPortalSlug(program.content),
 		getProgramSlug(program),
 		program.content.description,
 	]
@@ -67,121 +72,139 @@ const programMatchesSearchQuery = (program: ProgramStory, searchQuery: string) =
 
 const programMatchesCountryQuery = (
 	program: ProgramStory,
-	statsById: PublicProgramStatsMap,
-	selectedCountry: string | undefined,
+	filterDataByPortalSlug: PublicProgramFilterDataMap,
+	selectedCountryIsoCode: string | undefined,
 ) => {
-	if (!selectedCountry) {
+	if (!selectedCountryIsoCode) {
 		return true;
 	}
 
-	const programId = getProgramId(program.content);
+	const portalSlug = getProgramPortalSlug(program.content);
 
-	return Boolean(programId && statsById[programId]?.countryIsoCode === selectedCountry);
+	return Boolean(portalSlug && filterDataByPortalSlug[portalSlug]?.countryIsoCode === selectedCountryIsoCode);
 };
 
 const programMatchesFocusQuery = (
 	program: ProgramStory,
-	focusMap: PublicProgramFocusMap,
-	selectedFocus: string | undefined,
+	filterDataByPortalSlug: PublicProgramFilterDataMap,
+	selectedFocusId: string | undefined,
 ) => {
-	if (!selectedFocus) {
+	if (!selectedFocusId) {
 		return true;
 	}
 
-	const programId = getProgramId(program.content);
+	const portalSlug = getProgramPortalSlug(program.content);
 
-	return Boolean(programId && focusMap[programId]?.some((focus) => focus.id === selectedFocus));
+	return Boolean(portalSlug && filterDataByPortalSlug[portalSlug]?.focuses.some(({ id }) => id === selectedFocusId));
 };
 
-const getCountryFilterOptions = (programs: ProgramStory[], statsById: PublicProgramStatsMap): FilterOption[] => {
-	const optionsByCountry = new Map<string, FilterOption>();
+const toPortalSlugStatsMap = (
+	programs: ProgramStory[],
+	filterDataByPortalSlug: PublicProgramFilterDataMap,
+	statsByProgramId: PublicProgramStatsMap,
+): PublicProgramStatsMap => {
+	const statsByPortalSlug: PublicProgramStatsMap = {};
 
 	programs.forEach((program) => {
-		const programId = getProgramId(program.content);
-		const countryIsoCode = programId ? statsById[programId]?.countryIsoCode : undefined;
+		const portalSlug = getProgramPortalSlug(program.content);
+		const programId = filterDataByPortalSlug[portalSlug]?.programId;
+		const stats = programId ? statsByProgramId[programId] : undefined;
 
-		if (countryIsoCode) {
-			optionsByCountry.set(countryIsoCode, {
-				value: countryIsoCode,
-				label: getCountryNameByCode(countryIsoCode),
-			});
+		if (stats) {
+			statsByPortalSlug[portalSlug] = stats;
 		}
 	});
 
-	return [...optionsByCountry.values()].sort((optionA, optionB) => optionA.label.localeCompare(optionB.label));
+	return statsByPortalSlug;
 };
 
-const getFocusTitleById = (focusOptions: { id: string; name: string }[]) => {
-	const focusTitleById = new Map<string, string>();
+const getCountryFilterOptions = (filterDataByPortalSlug: PublicProgramFilterDataMap): FilterOption[] => {
+	const optionsByCountryIsoCode = new Map<string, FilterOption>();
 
-	focusOptions.forEach(({ id, name }) => {
-		focusTitleById.set(id, name);
-	});
-
-	return focusTitleById;
-};
-
-const getFocusFilterOptions = (
-	programs: ProgramStory[],
-	focusMap: PublicProgramFocusMap,
-	focusTitleById: Map<string, string>,
-): FilterOption[] => {
-	const optionsByFocus = new Map<string, FilterOption>();
-
-	programs.forEach((program) => {
-		const programId = getProgramId(program.content);
-		const focuses = programId ? focusMap[programId] : undefined;
-
-		focuses?.forEach((focus) => {
-			const focusTitle = focusTitleById.get(focus.id);
-
-			if (focusTitle) {
-				optionsByFocus.set(focus.id, {
-					value: focus.id,
-					label: focusTitle,
-				});
-			}
+	Object.values(filterDataByPortalSlug).forEach(({ countryIsoCode }) => {
+		optionsByCountryIsoCode.set(countryIsoCode, {
+			value: countryIsoCode,
+			label: getCountryNameByCode(countryIsoCode),
 		});
 	});
 
-	return [...optionsByFocus.values()].sort((optionA, optionB) => optionA.label.localeCompare(optionB.label));
+	return [...optionsByCountryIsoCode.values()].sort((optionA, optionB) => optionA.label.localeCompare(optionB.label));
+};
+
+const getFocusTitleBySlug = (focuses: FocusStory[]) => {
+	const focusTitleBySlug = new Map<string, string>();
+
+	focuses.forEach((focus) => {
+		const slug = focus.content.portalSlug?.trim();
+		const title = focus.content.title?.trim();
+
+		if (slug && title) {
+			focusTitleBySlug.set(slug, title);
+		}
+	});
+
+	return focusTitleBySlug;
+};
+
+const getFocusFilterOptions = (
+	filterDataByPortalSlug: PublicProgramFilterDataMap,
+	focusTitleBySlug: Map<string, string>,
+): FilterOption[] => {
+	const optionsByFocusId = new Map<string, FilterOption>();
+
+	Object.values(filterDataByPortalSlug).forEach(({ focuses }) => {
+		focuses.forEach((focus) => {
+			optionsByFocusId.set(focus.id, {
+				value: focus.id,
+				label: focusTitleBySlug.get(focus.slug) ?? focus.slug,
+			});
+		});
+	});
+
+	return [...optionsByFocusId.values()].sort((optionA, optionB) => optionA.label.localeCompare(optionB.label));
 };
 
 export const ProgramsOverviewPage = async ({ overview, lang, region, searchParams }: Props) => {
-	const [programsResult, focusOptionsResult] = await Promise.all([
+	const [programsResult, storyblokFocusesResult] = await Promise.all([
 		services.storyblok.getPrograms(lang),
-		services.read.focus.getOptions(),
+		services.storyblok.getFocuses(lang),
 	]);
 	const programs = (programsResult.success ? programsResult.data : []) as ProgramStory[];
-	const dbFocusOptions = focusOptionsResult.success ? focusOptionsResult.data : [];
-	const programIds = [...new Set(programs.map((program) => getProgramId(program.content)).filter(Boolean))];
-	const [statsResult, focusMapResult] = await Promise.all([
-		services.read.program.getPublicProgramStatsByIds(programIds),
-		services.read.program.getPublicProgramFocusMapByIds(programIds),
-	]);
-	const statsById = statsResult.success ? statsResult.data : {};
-	const focusMap = focusMapResult.success ? focusMapResult.data : {};
+	const storyblokFocuses = (storyblokFocusesResult.success ? storyblokFocusesResult.data : []) as FocusStory[];
+	const programPortalSlugs = [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
+	const focusTitleBySlug = getFocusTitleBySlug(storyblokFocuses);
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();
-	const breadcrumbLinks = await buildBreadcrumbLinks({
-		fullSlug: overview.full_slug,
-		currentLabel: title,
-		lang,
-		region,
-	});
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const filterDataResult = await services.read.program.getPublicProgramFilterDataByPortalSlugs(programPortalSlugs);
+	const filterDataByPortalSlug = filterDataResult.success ? filterDataResult.data : {};
+	const programIds = [...new Set(Object.values(filterDataByPortalSlug).map(({ programId }) => programId))];
+	const [statsResult, breadcrumbLinks, translator] = await Promise.all([
+		services.read.program.getPublicProgramStatsByIds(programIds),
+		buildBreadcrumbLinks({
+			fullSlug: overview.full_slug,
+			currentLabel: title,
+			lang,
+			region,
+		}),
+		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
+	]);
+	const statsByPortalSlug = toPortalSlugStatsMap(
+		programs,
+		filterDataByPortalSlug,
+		statsResult.success ? statsResult.data : {},
+	);
+	const countryOptions = getCountryFilterOptions(filterDataByPortalSlug);
+	const focusFilterOptions = getFocusFilterOptions(filterDataByPortalSlug, focusTitleBySlug);
 	const searchQuery = getSearchQuery(searchParams);
 	const countryQuery = getCountryQuery(searchParams);
 	const focusQuery = getFocusQuery(searchParams);
-	const countryOptions = getCountryFilterOptions(programs, statsById);
-	const focusFilterOptions = getFocusFilterOptions(programs, focusMap, getFocusTitleById(dbFocusOptions));
-	const selectedCountry = countryOptions.some((option) => option.value === countryQuery) ? countryQuery : undefined;
-	const selectedFocus = focusFilterOptions.some((option) => option.value === focusQuery) ? focusQuery : undefined;
+	const selectedCountryIsoCode = countryOptions.some((option) => option.value === countryQuery) ? countryQuery : undefined;
+	const selectedFocusId = focusFilterOptions.some((option) => option.value === focusQuery) ? focusQuery : undefined;
 	const countryFilteredPrograms = programs.filter((program) =>
-		programMatchesCountryQuery(program, statsById, selectedCountry),
+		programMatchesCountryQuery(program, filterDataByPortalSlug, selectedCountryIsoCode),
 	);
 	const focusFilteredPrograms = countryFilteredPrograms.filter((program) =>
-		programMatchesFocusQuery(program, focusMap, selectedFocus),
+		programMatchesFocusQuery(program, filterDataByPortalSlug, selectedFocusId),
 	);
 	const filteredPrograms = searchQuery
 		? focusFilteredPrograms.filter((program) => programMatchesSearchQuery(program, searchQuery))
@@ -196,9 +219,9 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 					allCountriesLabel={translator.t('programs-page.all-countries', { context: { count: countryOptions.length } })}
 					allFocusesLabel={translator.t('programs-page.all-focuses', { context: { count: focusFilterOptions.length } })}
 					countryOptions={countryOptions}
-					selectedCountry={selectedCountry}
+					selectedCountryIsoCode={selectedCountryIsoCode}
 					focusOptions={focusFilterOptions}
-					selectedFocus={selectedFocus}
+					selectedFocusId={selectedFocusId}
 				/>
 				<ProgramsOverviewSearch
 					defaultValue={searchQuery}
@@ -206,7 +229,7 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 					placeholder={translator.t('programs-page.search-placeholder')}
 				/>
 			</div>
-			<ProgramsOverview programs={filteredPrograms} statsById={statsById} lang={lang} region={region} />
+			<ProgramsOverview programs={filteredPrograms} statsById={statsByPortalSlug} lang={lang} region={region} />
 		</div>
 	);
 };
