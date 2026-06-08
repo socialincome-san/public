@@ -19,8 +19,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const { currency = 'CHF' } = useI18n();
 	const view = selectPaymentView(state.context);
 	const isQrAvailable = isWizardQrCurrencySupported(currency);
-	const paymentMethod =
-		view.paymentMethod === 'qr' && !isQrAvailable ? ('online' as const) : view.paymentMethod;
+	const paymentMethod = view.paymentMethod === 'qr' && !isQrAvailable ? ('online' as const) : view.paymentMethod;
 
 	return (
 		<div className={cn(donationPaymentStepCardClass, 'text-foreground')} data-testid="donation-wizard-step-payment">
@@ -70,9 +69,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 
 					send({ type: 'START_QR_FLOW' });
 				}}
-				continueLabel={t(
-					paymentMethod === 'qr' ? 'stepPayment.generate-qr-code' : 'stepPayment.pay-online',
-				)}
+				continueLabel={t(paymentMethod === 'qr' ? 'stepPayment.generate-qr-code' : 'stepPayment.pay-online')}
 				summary={{
 					amount: view.summary.amount,
 					currency,
