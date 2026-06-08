@@ -8,11 +8,13 @@ type Props = {
 	onSelect: () => void;
 	className?: string;
 	children: ReactNode;
+	testId?: string;
 };
 
-export const SelectableCard = ({ selected, onSelect, className, children }: Props) => (
+export const SelectableCard = ({ selected, onSelect, className, children, testId }: Props) => (
 	<button
 		type="button"
+		data-testid={testId}
 		aria-pressed={selected}
 		onClick={onSelect}
 		className={cn(

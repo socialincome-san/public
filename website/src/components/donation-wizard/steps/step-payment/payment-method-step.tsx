@@ -19,7 +19,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const view = selectPaymentView(state.context);
 
 	return (
-		<div className={cn(donationPaymentStepCardClass, 'text-foreground')}>
+		<div className={cn(donationPaymentStepCardClass, 'text-foreground')} data-testid="donation-wizard-step-payment">
 			<h3 className="mb-4 text-base font-medium sm:text-lg">{t('stepPayment.title')}</h3>
 
 			<div className="mb-5 flex flex-col gap-3">
@@ -29,12 +29,14 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 					selected={view.paymentMethod === 'qr'}
 					onSelect={() => send({ type: 'SET_PAYMENT_METHOD', value: 'qr' })}
 					trailing={<QrPaymentLogo />}
+					testId="donation-wizard-payment-qr"
 				/>
 				<PaymentMethodOption
 					label={t('stepPayment.online')}
 					selected={view.paymentMethod === 'online'}
 					onSelect={() => send({ type: 'SET_PAYMENT_METHOD', value: 'online' })}
 					trailing={<OnlinePaymentLogos />}
+					testId="donation-wizard-payment-online"
 				/>
 			</div>
 

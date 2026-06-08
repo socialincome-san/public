@@ -14,7 +14,7 @@ export const DonationLoginPrompt = () => {
 	const loginHref = `/${language}/${region}/login`;
 
 	return (
-		<div className="flex w-full flex-col items-center gap-6 px-9 pt-6 pb-7">
+		<div className="flex w-full flex-col items-center gap-6 px-9 pt-6 pb-7" data-testid="donation-wizard-step-thank-you">
 			<div className="flex items-center gap-2">
 				<Heart className="text-foreground size-4 fill-current" strokeWidth={1.5} aria-hidden />
 				<p className="text-foreground text-base leading-normal font-medium">{t('thankYou.message')}</p>
@@ -27,7 +27,9 @@ export const DonationLoginPrompt = () => {
 
 			<div className="flex w-full flex-col items-center gap-3">
 				<Button asChild className="min-w-32">
-					<Link href={loginHref}>{t('thankYou.loginPrompt.loginButton')}</Link>
+					<Link href={loginHref} data-testid="donation-wizard-login-link">
+						{t('thankYou.loginPrompt.loginButton')}
+					</Link>
 				</Button>
 			</div>
 

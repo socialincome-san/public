@@ -17,6 +17,7 @@ type QrWizardStepFooterProps = {
 	continueLabel: string;
 	continueDisabled?: boolean;
 	continueClassName?: string;
+	continueTestId?: string;
 	showBack?: boolean;
 	summary?: Summary;
 };
@@ -27,6 +28,7 @@ export const QrWizardStepFooter = ({
 	continueLabel,
 	continueDisabled = false,
 	continueClassName,
+	continueTestId = 'donation-wizard-continue',
 	showBack = true,
 	summary,
 }: QrWizardStepFooterProps) => {
@@ -47,13 +49,20 @@ export const QrWizardStepFooter = ({
 				className={cn('flex flex-col gap-3', showBack ? 'sm:flex-row sm:items-center sm:justify-between' : 'sm:items-end')}
 			>
 				{showBack && onBack ? (
-					<Button type="button" variant="outline" className="h-9 w-full shrink-0 rounded-full sm:w-auto" onClick={onBack}>
+					<Button
+						type="button"
+						data-testid="donation-wizard-back"
+						variant="outline"
+						className="h-9 w-full shrink-0 rounded-full sm:w-auto"
+						onClick={onBack}
+					>
 						<ChevronLeft className="size-4" aria-hidden />
 						{t('stepPlan.back')}
 					</Button>
 				) : null}
 				<Button
 					type="button"
+					data-testid={continueTestId}
 					className={cn('h-9 w-full shrink-0 rounded-full px-4 text-sm font-semibold sm:w-auto', !showBack && 'sm:ml-auto')}
 					disabled={continueDisabled}
 					onClick={onContinue}
@@ -75,7 +84,13 @@ export const QrWizardStepFooter = ({
 				className={cn('flex flex-col gap-3 md:flex-row md:items-center', showBack ? 'md:justify-between' : 'md:justify-end')}
 			>
 				{showBack && onBack ? (
-					<Button type="button" variant="outline" className="h-9 w-full shrink-0 rounded-full md:w-auto" onClick={onBack}>
+					<Button
+						type="button"
+						data-testid="donation-wizard-back"
+						variant="outline"
+						className="h-9 w-full shrink-0 rounded-full md:w-auto"
+						onClick={onBack}
+					>
 						<ChevronLeft className="size-4" aria-hidden />
 						{t('stepPlan.back')}
 					</Button>
@@ -88,6 +103,7 @@ export const QrWizardStepFooter = ({
 					</div>
 					<Button
 						type="button"
+						data-testid={continueTestId}
 						variant="default"
 						className={cn(
 							'h-9 w-full shrink-0 rounded-full px-4 text-sm font-semibold sm:max-w-none md:w-auto',

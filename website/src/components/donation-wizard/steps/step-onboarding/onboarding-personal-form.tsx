@@ -154,7 +154,7 @@ export const OnboardingPersonalForm = ({
 				</div>
 
 				<div className="flex justify-end px-6">
-					<Button type="submit" disabled={submitting || !canSubmit}>
+					<Button type="submit" data-testid="donation-wizard-onboarding-submit" disabled={submitting || !canSubmit}>
 						{submitting ? t('onboarding.submitting') : t('onboarding.submit')}
 					</Button>
 				</div>

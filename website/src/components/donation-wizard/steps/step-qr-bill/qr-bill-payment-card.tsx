@@ -18,7 +18,10 @@ export const QrBillPaymentCard = ({ qrBillSvg, donorName, amountLabel, paymentTy
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 
 	return (
-		<div className="border-border relative mx-auto w-full max-w-[771px] rounded-[10px] border">
+		<div
+			className="border-border relative mx-auto w-full max-w-[771px] rounded-[10px] border"
+			data-testid="donation-wizard-qr-code"
+		>
 			<Image
 				src="/assets/postfinance.svg"
 				alt="PostFinance"

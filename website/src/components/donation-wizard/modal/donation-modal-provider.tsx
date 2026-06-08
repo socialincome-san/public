@@ -70,6 +70,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 					closeOnClickOutside={false}
 					closeOnEscape={false}
 					onCloseClick={requestClose}
+					data-testid="donation-wizard-modal"
 					className={cn(
 						'!flex flex-col gap-0 overflow-hidden overscroll-contain !p-0',
 						isNarrowModal

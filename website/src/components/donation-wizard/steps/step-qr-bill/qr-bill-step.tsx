@@ -76,7 +76,10 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 	}
 
 	return (
-		<div className={cn(donationPaymentStepCardClass, 'text-foreground flex w-full flex-col gap-5 overflow-visible')}>
+		<div
+			className={cn(donationPaymentStepCardClass, 'text-foreground flex w-full flex-col gap-5 overflow-visible')}
+			data-testid="donation-wizard-step-qr-bill"
+		>
 			<div className="flex w-full items-start gap-4">
 				<h3 className="shrink-0 text-lg leading-7 font-medium">{t('stepQrBill.title')}</h3>
 				{canDownloadPdf && qrDonor && qrContributorReferenceId && qrContributionReferenceId && (

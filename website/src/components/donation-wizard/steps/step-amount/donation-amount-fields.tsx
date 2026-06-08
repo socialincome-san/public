@@ -56,7 +56,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 	const { currency = 'CHF' } = useI18n();
 
 	return (
-		<div className={cn(donationStepCardClass, 'text-foreground md:px-9 md:py-9')}>
+		<div className={cn(donationStepCardClass, 'text-foreground md:px-9 md:py-9')} data-testid="donation-wizard-step-amount">
 			<h3 className="text-foreground mb-5 text-xl leading-tight font-semibold text-pretty sm:text-2xl sm:leading-none">
 				{t('stepAmount.title')}
 			</h3>
@@ -73,6 +73,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 					</label>
 					<Input
 						id={monthlyIncomeInputId}
+						data-testid="donation-wizard-monthly-income"
 						type="number"
 						min={DONATION_MONTHLY_INCOME_MIN}
 						max={DONATION_MONTHLY_INCOME_MAX}
@@ -96,6 +97,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 				</div>
 				<button
 					type="button"
+					data-testid="donation-wizard-one-percent"
 					aria-pressed={values.onePercentSelected}
 					onClick={actions.selectOnePercent}
 					className={cn(
@@ -121,6 +123,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 						<button
 							key={option.value}
 							type="button"
+							data-testid={`donation-wizard-preset-${option.value}`}
 							aria-pressed={isSelected}
 							onClick={() => actions.setPresetAmount(option.value)}
 							className={cn(
@@ -140,6 +143,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 			{values.selectedAmount === 'other' && (
 				<Input
 					type="number"
+					data-testid="donation-wizard-custom-amount"
 					min={DONATION_CUSTOM_AMOUNT_MIN}
 					max={DONATION_CUSTOM_AMOUNT_MAX}
 					placeholder={t('stepAmount.custom-amount-placeholder')}
@@ -163,6 +167,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 			<div className="bg-accent mb-4 grid grid-cols-2 rounded-md p-1">
 				<button
 					type="button"
+					data-testid="donation-wizard-cadence-monthly"
 					aria-pressed={values.cadence === 'monthly'}
 					onClick={() => actions.setCadence('monthly')}
 					className={cn(
@@ -176,6 +181,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 				</button>
 				<button
 					type="button"
+					data-testid="donation-wizard-cadence-one-time"
 					aria-pressed={values.cadence === 'one-time'}
 					onClick={() => actions.setCadence('one-time')}
 					className={cn(
@@ -189,7 +195,13 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 				</button>
 			</div>
 
-			<Button type="button" className="h-10 w-full text-sm font-semibold" disabled={!values.isValid} onClick={onSubmit}>
+			<Button
+				type="button"
+				data-testid="donation-wizard-amount-continue"
+				className="h-10 w-full text-sm font-semibold"
+				disabled={!values.isValid}
+				onClick={onSubmit}
+			>
 				{values.resolvedAmount !== null
 					? t('stepAmount.donate-now-with-amount', { amount: `${currency} ${values.resolvedAmount}` })
 					: t('stepAmount.donate-now')}

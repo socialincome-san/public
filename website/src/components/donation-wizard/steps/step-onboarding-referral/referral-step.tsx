@@ -91,7 +91,10 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 	}
 
 	return (
-		<div className="flex w-full flex-col gap-6 px-4 pt-6 pb-8 sm:px-9 sm:pt-6 sm:pb-11">
+		<div
+			className="flex w-full flex-col gap-6 px-4 pt-6 pb-8 sm:px-9 sm:pt-6 sm:pb-11"
+			data-testid="donation-wizard-step-referral"
+		>
 			<OnboardingSuccessHeader amountLine={amountLine} />
 
 			<div className="bg-background border-border flex flex-col gap-5 overflow-hidden rounded-3xl border px-0 pt-5 pb-7">
@@ -122,7 +125,12 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 				</div>
 
 				<div className="flex justify-end px-6">
-					<Button type="button" disabled={selectedReferral === undefined || submitting} onClick={() => void onSubmit()}>
+					<Button
+						type="button"
+						data-testid="donation-wizard-referral-submit"
+						disabled={selectedReferral === undefined || submitting}
+						onClick={() => void onSubmit()}
+					>
 						{submitting ? t('onboarding.referral.submitting') : t('onboarding.referral.submit')}
 					</Button>
 				</div>

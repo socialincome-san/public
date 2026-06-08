@@ -27,7 +27,12 @@ export const PlanTierCard = ({
 	benefits,
 	onSelect,
 }: Props) => (
-	<SelectableCard selected={selected} onSelect={onSelect} className="w-full p-4">
+	<SelectableCard
+		selected={selected}
+		onSelect={onSelect}
+		className="w-full p-4"
+		testId={heartCount === 2 ? 'donation-wizard-plan-tier-2x' : 'donation-wizard-plan-tier-1x'}
+	>
 		<PlanTierCardContent
 			amount={amount}
 			currency={currency}

@@ -42,6 +42,7 @@ export const DonationStepFooter = ({ onBack, onContinue, continueLabel, continue
 			<div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
 				<Button
 					type="button"
+					data-testid="donation-wizard-back"
 					variant="outline"
 					className="h-10 w-full shrink-0 rounded-full sm:h-9 sm:w-auto"
 					onClick={onBack}
@@ -60,6 +61,7 @@ export const DonationStepFooter = ({ onBack, onContinue, continueLabel, continue
 
 					<Button
 						type="button"
+						data-testid="donation-wizard-continue"
 						className="h-10 w-full shrink-0 rounded-full px-4 text-sm font-semibold sm:h-9 sm:w-auto"
 						disabled={continueDisabled || !onContinue}
 						onClick={onContinue}

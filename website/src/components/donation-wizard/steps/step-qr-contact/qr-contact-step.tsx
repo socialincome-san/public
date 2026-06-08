@@ -72,7 +72,10 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 	}, [state.context.qrBillError, state.context.qrBillStatus, t]);
 
 	return (
-		<div className={cn(donationPaymentStepCardClass, 'text-foreground flex w-full flex-col gap-5')}>
+		<div
+			className={cn(donationPaymentStepCardClass, 'text-foreground flex w-full flex-col gap-5')}
+			data-testid="donation-wizard-step-qr-contact"
+		>
 			<h3 className="text-lg leading-7 font-medium">{t(titleKey)}</h3>
 
 			<Form {...form}>
@@ -122,6 +125,7 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 						onContinue={() => void form.handleSubmit(onSubmit)()}
 						continueLabel={isLoading ? t('stepQrContact.generating') : t('stepQrContact.generateCta')}
 						continueDisabled={isLoading || !canSubmit}
+						continueTestId="donation-wizard-qr-generate"
 					/>
 				</form>
 			</Form>

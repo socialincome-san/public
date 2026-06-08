@@ -12,12 +12,14 @@ type Props = {
 	onSelect: () => void;
 	badge?: string;
 	trailing?: ReactNode;
+	testId: string;
 };
 
-export const PaymentMethodOption = ({ label, selected, onSelect, badge, trailing }: Props) => (
+export const PaymentMethodOption = ({ label, selected, onSelect, badge, trailing, testId }: Props) => (
 	<SelectableCard
 		selected={selected}
 		onSelect={onSelect}
+		testId={testId}
 		className={cn(
 			'flex w-full flex-col gap-3 p-3 sm:h-16 sm:flex-row sm:items-center sm:p-4',
 			!selected && 'hover:bg-slate-50/50',
