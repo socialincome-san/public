@@ -2,16 +2,13 @@
 
 import { Button } from '@/components/button';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { useI18n } from '@/lib/i18n/useI18n';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 
 const SUPPORT_EMAIL = 'support@socialincome.org';
 
 export const DonationLoginPrompt = () => {
-	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
-	const { region } = useI18n();
-	const loginHref = `/${language}/${region}/login`;
+	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 
 	return (
 		<div className="flex w-full flex-col items-center gap-6 px-9 pt-6 pb-7" data-testid="donation-wizard-step-thank-you">
@@ -27,7 +24,7 @@ export const DonationLoginPrompt = () => {
 
 			<div className="flex w-full flex-col items-center gap-3">
 				<Button asChild className="min-w-32">
-					<Link href={loginHref} data-testid="donation-wizard-login-link">
+					<Link href="/login" data-testid="donation-wizard-login-link">
 						{t('thankYou.loginPrompt.loginButton')}
 					</Link>
 				</Button>

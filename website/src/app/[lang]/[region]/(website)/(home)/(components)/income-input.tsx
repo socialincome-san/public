@@ -23,7 +23,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 export const IncomeInput = ({ translations }: { translations: { buttonText: string } }) => {
-	const { currency, language, region, setCurrency } = useI18n();
+	const { currency, setCurrency } = useI18n();
 	const router = useRouter();
 
 	const formSchema = z.object({
@@ -46,7 +46,7 @@ export const IncomeInput = ({ translations }: { translations: { buttonText: stri
 
 	const onSubmit = (values: FormSchema) => {
 		setCurrency(values.currency);
-		router.push(`/${language}/${region}/donate/individual?amount=${values.value}`);
+		router.push(`/donate/individual?amount=${encodeURIComponent(values.value)}`);
 	};
 
 	return (
