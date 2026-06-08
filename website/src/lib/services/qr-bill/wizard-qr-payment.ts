@@ -12,6 +12,9 @@ import { type WizardQrPayment } from './qr-bill.types';
 
 const WIZARD_QR_CURRENCIES = new Set<Currency>(['CHF', 'EUR']);
 
+export const isWizardQrCurrencySupported = (currency: string): boolean =>
+	WIZARD_QR_CURRENCIES.has(currency.toUpperCase() as Currency);
+
 const mapCadenceToQrInterval = (cadence: DonationAmountContext['cadence']): number => (cadence === 'monthly' ? 1 : 0);
 
 export const resolveWizardQrPayment = (
@@ -27,7 +30,7 @@ export const resolveWizardQrPayment = (
 	}
 
 	const currencyCode = (currency ?? 'CHF').toUpperCase() as Currency;
-	if (!WIZARD_QR_CURRENCIES.has(currencyCode)) {
+	if (!isWizardQrCurrencySupported(currencyCode)) {
 		return resultFail(`Unsupported currency for QR bill: ${currency ?? ''}`);
 	}
 

@@ -4,6 +4,7 @@ import { OnlinePaymentLogos } from '@/components/payment-logos/online-payment-lo
 import { QrPaymentLogo } from '@/components/payment-logos/qr-payment-logo';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
+import { isWizardQrCurrencySupported } from '@/lib/services/qr-bill/wizard-qr-payment';
 import { cn } from '@/lib/utils/cn';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
 import { donationPaymentStepCardClass } from '../../utils/donation-wizard-layout';
@@ -17,6 +18,9 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
 	const view = selectPaymentView(state.context);
+	const isQrAvailable = isWizardQrCurrencySupported(currency);
+	const paymentMethod =
+		view.paymentMethod === 'qr' && !isQrAvailable ? ('online' as const) : view.paymentMethod;
 
 	return (
 		<div className={cn(donationPaymentStepCardClass, 'text-foreground')} data-testid="donation-wizard-step-payment">
@@ -26,21 +30,23 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 				<PaymentMethodOption
 					label={t('stepPayment.qr-payment')}
 					badge={t('stepPayment.minimal-costs')}
-					selected={view.paymentMethod === 'qr'}
+					selected={paymentMethod === 'qr'}
+					disabled={!isQrAvailable}
+					disabledReason={!isQrAvailable ? t('stepPayment.qr-payment-unavailable') : undefined}
 					onSelect={() => send({ type: 'SET_PAYMENT_METHOD', value: 'qr' })}
 					trailing={<QrPaymentLogo />}
 					testId="donation-wizard-payment-qr"
 				/>
 				<PaymentMethodOption
 					label={t('stepPayment.online')}
-					selected={view.paymentMethod === 'online'}
+					selected={paymentMethod === 'online'}
 					onSelect={() => send({ type: 'SET_PAYMENT_METHOD', value: 'online' })}
 					trailing={<OnlinePaymentLogos />}
 					testId="donation-wizard-payment-online"
 				/>
 			</div>
 
-			{view.showTransactionCostToggle && (
+			{paymentMethod === 'online' && (
 				<div className="mb-5">
 					<CoverTransactionCostsToggle
 						cadence={view.cadence}
@@ -55,7 +61,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 			<DonationStepFooter
 				onBack={() => send({ type: 'BACK' })}
 				onContinue={() => {
-					if (view.paymentMethod === 'online') {
+					if (paymentMethod === 'online') {
 						send({ type: 'START_STRIPE_CHECKOUT' });
 						void requestStripeEmbeddedCheckout(state.context, currency, send);
 
@@ -64,7 +70,9 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 
 					send({ type: 'START_QR_FLOW' });
 				}}
-				continueLabel={t(view.continueLabelKey)}
+				continueLabel={t(
+					paymentMethod === 'qr' ? 'stepPayment.generate-qr-code' : 'stepPayment.pay-online',
+				)}
 				summary={{
 					amount: view.summary.amount,
 					currency,

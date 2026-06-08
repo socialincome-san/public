@@ -87,6 +87,7 @@
 	"stepPayment": {
 		"title": "Metodo di pagamento",
 		"qr-payment": "Pagamento QR",
+		"qr-payment-unavailable": "Disponibile solo in CHF ed EUR",
 		"minimal-costs": "Costi minimi",
 		"online": "Online",
 		"your-donation": "La tua donazione",
