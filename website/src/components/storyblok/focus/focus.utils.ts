@@ -32,3 +32,7 @@ export const getFocusTitle = (focus: Focus) => {
 
 	return title || slug;
 };
+
+export const getFocusText = (focus: Focus) => {
+	return focus.text?.trim() ?? '';
+};

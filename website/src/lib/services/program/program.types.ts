@@ -60,6 +60,19 @@ export type PublicPreviewProgram = {
 	name: string;
 };
 
+type PublicProgramFilterFocus = {
+	id: string;
+	slug: string;
+};
+
+export type PublicProgramFilterData = {
+	programId: string;
+	countryIsoCode: CountryCode;
+	focuses: PublicProgramFilterFocus[];
+};
+
+export type PublicProgramFilterDataMap = Record<string, PublicProgramFilterData>;
+
 export type PublicProgramStats = {
 	campaignsCount: number;
 	recipientsCount: number;
@@ -69,12 +82,6 @@ export type PublicProgramStats = {
 };
 
 export type PublicProgramStatsMap = Record<string, PublicProgramStats>;
-
-export type PublicProgramFocus = {
-	id: string;
-};
-
-export type PublicProgramFocusMap = Record<string, PublicProgramFocus[]>;
 
 export type ProgramSettingsPayload = {
 	id: string;

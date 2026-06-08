@@ -58,6 +58,7 @@ export class StoryblokService extends BaseService {
 		'Local Partner.partners',
 	];
 	private static readonly countryRelationsToResolve = ['Country.partners'];
+	private static readonly focusRelationsToResolve = ['Focus.studies'];
 	private static readonly localPartnerRelationsToResolve = ['Local Partner.focuses', 'Local Partner.partners'];
 	private static readonly defaultPageSize = 50;
 	private static readonly contentField = 'content';
@@ -703,6 +704,7 @@ export class StoryblokService extends BaseService {
 			const params: ISbStoriesParams = {
 				...baseParams,
 				starts_with: `${StoryblokService.focusesPath}/`,
+				resolve_relations: StoryblokService.focusRelationsToResolve,
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 			let focuses = data.filter((story) => StoryblokService.isFocusStory(story));
@@ -712,6 +714,7 @@ export class StoryblokService extends BaseService {
 					...baseParams,
 					version: 'draft',
 					starts_with: `${StoryblokService.focusesPath}/`,
+					resolve_relations: StoryblokService.focusRelationsToResolve,
 				};
 				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
 				focuses = draftData.filter((story) => StoryblokService.isFocusStory(story));
