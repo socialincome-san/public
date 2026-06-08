@@ -5,18 +5,20 @@ import { Combobox } from '@/components/combo-box';
 import { RadioCard } from '@/components/create-program-wizard/radio-card';
 import { RadioCardGroup } from '@/components/create-program-wizard/radio-card-group';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/form';
+import { LongHairIcon } from '@/components/icons/long-hair-icon';
+import { ShortHairIcon } from '@/components/icons/short-hair-icon';
 import { Input } from '@/components/input';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { GENDER_OPTIONS } from '@/lib/types/user';
-import { Mars, Venus, type LucideIcon } from 'lucide-react';
 import { type UseFormReturn } from 'react-hook-form';
 import { type OnboardingPersonalFields } from '../../utils/donation-wizard-validation';
 
-const GENDER_WIZARD_OPTIONS: readonly {
-	value: (typeof GENDER_OPTIONS)[number];
-	icon?: LucideIcon;
-}[] = [{ value: 'female', icon: Venus }, { value: 'male', icon: Mars }, { value: 'private' }];
+const GENDER_WIZARD_OPTIONS: readonly { value: (typeof GENDER_OPTIONS)[number] }[] = [
+	{ value: 'female' },
+	{ value: 'male' },
+	{ value: 'private' },
+];
 
 type OnboardingPersonalFormProps = {
 	form: UseFormReturn<OnboardingPersonalFields>;
@@ -129,14 +131,15 @@ export const OnboardingPersonalForm = ({
 								<FormItem className="flex min-w-0 flex-1 flex-col gap-3">
 									<FormControl>
 										<RadioCardGroup value={field.value} onChange={field.onChange} layout="stack">
-											{GENDER_WIZARD_OPTIONS.map(({ value, icon: Icon }) => (
+											{GENDER_WIZARD_OPTIONS.map(({ value }) => (
 												<RadioCard
 													key={value}
 													value={value}
 													checked={field.value === value}
 													label={
 														<span className="text-foreground flex items-center gap-2 text-sm font-medium">
-															{Icon ? <Icon className="size-5 shrink-0" strokeWidth={1.5} aria-hidden /> : null}
+															{value === 'male' ? <ShortHairIcon className="size-5" /> : null}
+															{value === 'female' ? <LongHairIcon className="size-5" /> : null}
 															{value === 'private' ? t('onboarding.genderOtherPrivate') : tCommon(`genders.${value}`)}
 														</span>
 													}

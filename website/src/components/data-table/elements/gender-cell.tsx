@@ -1,6 +1,7 @@
 import { CellType } from '@/components/data-table/elements/types';
+import { LongHairIcon } from '@/components/icons/long-hair-icon';
+import { ShortHairIcon } from '@/components/icons/short-hair-icon';
 import { Gender } from '@/generated/prisma/enums';
-import { Mars, Venus } from 'lucide-react';
 
 export const GenderCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const value = ctx.getValue() as Gender | null;
@@ -12,7 +13,7 @@ export const GenderCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	if (value === Gender.male) {
 		return (
 			<span className="inline-flex items-center gap-1">
-				<Mars className="h-4 w-4 text-black" />
+				<ShortHairIcon className="size-4" />
 				Male
 			</span>
 		);
@@ -21,7 +22,7 @@ export const GenderCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	if (value === Gender.female) {
 		return (
 			<span className="inline-flex items-center gap-1">
-				<Venus className="h-4 w-4 text-black" />
+				<LongHairIcon className="size-4" />
 				Female
 			</span>
 		);
