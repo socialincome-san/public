@@ -73,16 +73,16 @@ variable "stripe_product_recurring" {
 }
 
 variable "stripe_secret_key" {
-	description = "Stripe secret API key"
-	type        = string
-	sensitive   = true
+  description = "Stripe secret API key"
+  type        = string
+  sensitive   = true
 }
 
 variable "stripe_publishable_key" {
-	description = "Stripe publishable API key for client-side Embedded Checkout"
-	type        = string
-	sensitive   = true
-	default     = ""
+  description = "Stripe publishable API key for client-side Embedded Checkout"
+  type        = string
+  sensitive   = true
+  default     = ""
 }
 
 variable "stripe_webhook_secret" {
