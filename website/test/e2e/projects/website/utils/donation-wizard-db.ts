@@ -197,6 +197,83 @@ const expectContributorReferral = async (email: string, referral: ContributorRef
 	expect(contributor?.referral).toBe(referral);
 };
 
+const expectContributorWithStripeCustomer = async (donor: DonationWizardDonor, options: { language?: string } = {}) => {
+	const { language = 'en' } = options;
+	const contributor = await findContributorByEmail(donor.email);
+
+	expect(contributor).not.toBeNull();
+	expect(contributor?.contact.firstName).toBe(donor.firstName);
+	expect(contributor?.contact.lastName).toBe(donor.lastName);
+	expect(contributor?.contact.email).toBe(donor.email);
+	expect(contributor?.contact.language).toBe(language);
+	expect(contributor?.paymentReferenceId).toBeNull();
+	expect(contributor?.stripeCustomerId).toBeTruthy();
+	expect(contributor?.account.firebaseAuthUserId).toBeTruthy();
+
+	await expectFirebaseAuthUser(donor.email, contributor!.account.firebaseAuthUserId);
+};
+
+export const getContributorStripeCustomerId = async (email: string) => {
+	const contributor = await findContributorByEmail(email);
+
+	if (!contributor?.stripeCustomerId) {
+		throw new Error(`No Stripe customer id for contributor ${email}`);
+	}
+
+	return contributor.stripeCustomerId;
+};
+
+const expectSucceededOneTimeStripeContribution = async (email: string, options: { amount: number; currency?: string }) => {
+	const { amount, currency = 'CHF' } = options;
+	const contributor = await findContributorByEmail(email);
+
+	expect(contributor).not.toBeNull();
+
+	const contributions = await prisma.contribution.findMany({
+		where: { contributorId: contributor!.id },
+		include: {
+			paymentEvent: true,
+			campaign: { select: { isFallback: true } },
+		},
+		orderBy: { createdAt: 'desc' },
+	});
+
+	expect(contributions.length).toBeGreaterThanOrEqual(1);
+
+	const contribution = contributions[0];
+
+	expect(contribution.status).toBe('succeeded');
+	expect(contribution.interval).toBeNull();
+	expect(contribution.currency).toBe(currency);
+	expect(Number(contribution.amount)).toBe(amount);
+	expect(Number(contribution.amountChf)).toBe(amount);
+	expect(contribution.campaign.isFallback).toBe(true);
+	expect(contribution.paymentEvent).not.toBeNull();
+	expect(contribution.paymentEvent?.type).toBe('stripe');
+	expect(contribution.paymentEvent?.contributionId).toBe(contribution.id);
+
+	return contribution;
+};
+
+export const expectCompleteOneTimeStripeDonation = async (
+	donor: DonationWizardDonor,
+	options: {
+		amount: number;
+		currency?: string;
+		language?: string;
+		gender: string;
+		country: string;
+		referral: ContributorReferralSource;
+	},
+) => {
+	const { amount, currency = 'CHF', language = 'en', gender, country, referral } = options;
+
+	await expectContributorWithStripeCustomer(donor, { language });
+	await expectSucceededOneTimeStripeContribution(donor.email, { amount, currency });
+	await expectContributorOnboardingCompleted(donor.email, { gender, country, language });
+	await expectContributorReferral(donor.email, referral);
+};
+
 export const expectCompleteMonthlyQrDonation = async (
 	donor: DonationWizardDonor,
 	options: {

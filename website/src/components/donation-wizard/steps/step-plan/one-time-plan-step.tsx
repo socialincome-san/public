@@ -21,7 +21,7 @@ export const OneTimePlanStep = ({ state, send }: DonationWizardStepProps) => {
 		descriptors.map((descriptor) => resolvePlanBenefit(descriptor, t, language));
 
 	return (
-		<div className={donationStepCardClass}>
+		<div className={donationStepCardClass} data-testid="donation-wizard-step-one-time-plan">
 			<PlanStepHeader titleKey="stepPlan.one-time-title" cadence="one-time" send={send} />
 
 			<div className="mb-5 flex flex-col gap-3">

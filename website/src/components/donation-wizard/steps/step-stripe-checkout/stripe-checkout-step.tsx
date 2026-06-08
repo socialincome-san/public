@@ -27,7 +27,7 @@ export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => 
 	};
 
 	return (
-		<div className={donationPaymentStepCardClass}>
+		<div className={donationPaymentStepCardClass} data-testid="donation-wizard-step-stripe-checkout">
 			{stripeCheckoutStatus === 'error' && (
 				<div className="flex flex-col gap-4 p-4">
 					<div className="flex gap-2">

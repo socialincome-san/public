@@ -14,20 +14,22 @@ export const DonationForm = ({ campaignId }: Props) => {
 	const form = useDonationFormState();
 
 	return (
-		<DonationAmountFields
-			values={selectStep1FormView(form.context)}
-			actions={{
-				selectOnePercent: form.selectOnePercent,
-				setMonthlyIncome: form.setMonthlyIncome,
-				setPresetAmount: form.setPresetAmount,
-				setCustomAmount: form.setCustomAmount,
-				setCadence: form.setCadence,
-			}}
-			onSubmit={() => {
-				if (form.isValid) {
-					openWizardWithFormAmount(campaignId ? { ...form.context, campaignId } : form.context);
-				}
-			}}
-		/>
+		<div data-testid="donation-wizard-hero-form">
+			<DonationAmountFields
+				values={selectStep1FormView(form.context)}
+				actions={{
+					selectOnePercent: form.selectOnePercent,
+					setMonthlyIncome: form.setMonthlyIncome,
+					setPresetAmount: form.setPresetAmount,
+					setCustomAmount: form.setCustomAmount,
+					setCadence: form.setCadence,
+				}}
+				onSubmit={() => {
+					if (form.isValid) {
+						openWizardWithFormAmount(campaignId ? { ...form.context, campaignId } : form.context);
+					}
+				}}
+			/>
+		</div>
 	);
 };

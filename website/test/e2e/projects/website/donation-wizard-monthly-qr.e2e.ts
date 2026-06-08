@@ -18,7 +18,7 @@ import {
 	completeQrPaymentMethodStep,
 	completeReferralStep,
 	confirmQrStandingOrder,
-	openDonationWizard,
+	openDonationWizardFromNav,
 } from './utils/donation-wizard-flow';
 
 const MONTHLY_INCOME = 7500;
@@ -29,7 +29,6 @@ test.beforeEach(async () => {
 });
 
 test('monthly donation via QR creates records at the right steps', async ({ page }) => {
-	test.setTimeout(120_000);
 	const donor = {
 		firstName: 'Monthly',
 		lastName: 'QrDonor',
@@ -39,7 +38,7 @@ test('monthly donation via QR creates records at the right steps', async ({ page
 	await deleteDonationWizardTestUser(donor.email);
 
 	try {
-		await openDonationWizard(page);
+		await openDonationWizardFromNav(page);
 		await completeAmountStep(page, MONTHLY_INCOME);
 		await completeMonthlyPlanStep(page);
 		await completeQrPaymentMethodStep(page);
