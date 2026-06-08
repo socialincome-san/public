@@ -129,4 +129,4 @@ export const isOnePercentPlanSelected = (context: DonationAmountContext): boolea
 const SOCIAL_INCOME_MONTHLY_CHF = 30;
 
 export const getBeneficiaryCount = (monthlyAmount: number): number =>
-	Math.max(1, Math.floor(monthlyAmount / SOCIAL_INCOME_MONTHLY_CHF));
+	Math.max(0, Math.floor(monthlyAmount / SOCIAL_INCOME_MONTHLY_CHF));

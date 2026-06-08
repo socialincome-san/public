@@ -3,6 +3,7 @@
 import { Switch } from '@/components/switch';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { CircleHelp } from 'lucide-react';
 import type { Cadence } from '../../utils/donation-amount';
 
@@ -14,16 +15,14 @@ type Props = {
 	onCheckedChange: (checked: boolean) => void;
 };
 
-const formatFee = (currency: string, amount: number): string => {
-	const formatted = Number.isInteger(amount) ? amount.toString() : amount.toFixed(2);
-
-	return `${currency} ${formatted}`;
-};
-
 export const CoverTransactionCostsToggle = ({ cadence, currency, transactionCost, checked, onCheckedChange }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const switchId = 'cover-transaction-costs';
-	const fee = formatFee(currency, transactionCost);
+	const locale = language === 'de' ? 'de-CH' : language;
+	const fee = formatCurrencyLocale(transactionCost, currency, locale, {
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 2,
+	});
 
 	return (
 		<div className="bg-accent flex flex-col gap-3 rounded-md px-4 py-2 sm:flex-row sm:items-center sm:gap-2">
