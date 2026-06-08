@@ -76,7 +76,7 @@ export const CampaignHero = ({ campaign, translator }: Props) => {
 				</div>
 
 				{campaign.daysLeft >= 0 && (
-					<div className="flex justify-center lg:justify-end">
+					<div className="flex w-full justify-center lg:justify-end">
 						<DonationForm campaignId={campaign.id} />
 					</div>
 				)}

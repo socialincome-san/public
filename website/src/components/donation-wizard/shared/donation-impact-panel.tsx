@@ -30,8 +30,8 @@ export const DonationImpactPanel = ({ communityStats }: Props) => {
 	const checklist = [t('impact.tax-deductible'), t('impact.cancel-anytime'), ...(supportersLabel ? [supportersLabel] : [])];
 
 	return (
-		<div className="mx-auto flex w-full flex-col gap-5 md:gap-6 md:px-6 md:pt-5">
-			<h3 className="text-center text-lg leading-none font-medium md:text-left md:text-xl">{t('impact.title')}</h3>
+		<div className="flex w-full flex-col gap-5 md:gap-6 md:px-6 md:pt-5">
+			<h3 className="text-left text-lg leading-none font-medium md:text-xl">{t('impact.title')}</h3>
 			<ul className="flex flex-col gap-4">
 				{checklist.map((item) => (
 					<li key={item} className={donationImpactChecklistItemClass}>
@@ -60,7 +60,7 @@ export const DonationImpactPanel = ({ communityStats }: Props) => {
 					dialogTitle={whyOnePercentLabel}
 				/>
 			</div>
-			<div className="flex flex-wrap items-center justify-center gap-2 md:justify-start">
+			<div className="flex flex-wrap items-center justify-start gap-2">
 				<span className="text-muted-foreground text-sm">{t('impact.pay-with')}</span>
 				<ImpactPaymentLogos />
 			</div>

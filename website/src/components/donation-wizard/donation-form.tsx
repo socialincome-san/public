@@ -14,8 +14,9 @@ export const DonationForm = ({ campaignId }: Props) => {
 	const form = useDonationFormState();
 
 	return (
-		<div data-testid="donation-wizard-hero-form">
+		<div data-testid="donation-wizard-hero-form" className="w-full">
 			<DonationAmountFields
+				className="mx-0 w-full max-w-none lg:mx-auto lg:max-w-[400px]"
 				values={selectStep1FormView(form.context)}
 				actions={{
 					selectOnePercent: form.selectOnePercent,

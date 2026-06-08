@@ -49,22 +49,26 @@ type Props = {
 	values: DonationAmountFieldsValues;
 	actions: DonationAmountFieldsActions;
 	onSubmit: () => void;
+	className?: string;
 };
 
-export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
+export const DonationAmountFields = ({ values, actions, onSubmit, className }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
 
 	return (
-		<div className={cn(donationStepCardClass, 'text-foreground md:px-9 md:py-9')} data-testid="donation-wizard-step-amount">
+		<div
+			className={cn(donationStepCardClass, 'text-foreground md:px-9 md:py-9', className)}
+			data-testid="donation-wizard-step-amount"
+		>
 			<h3 className="text-foreground mb-5 text-xl leading-tight font-semibold text-pretty sm:text-2xl sm:leading-none">
 				{t('stepAmount.title')}
 			</h3>
 
-			<div className="border-muted mb-3 grid grid-cols-1 overflow-hidden rounded-md border sm:grid-cols-[minmax(0,1fr)_auto]">
+			<div className="border-muted mb-3 grid grid-cols-[minmax(0,1fr)_auto] overflow-hidden rounded-md border">
 				<div
 					className={cn(
-						'border-muted bg-white px-3 py-2 transition-colors sm:border-r',
+						'border-muted border-r bg-white px-3 py-2 transition-colors',
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
@@ -115,7 +119,7 @@ export const DonationAmountFields = ({ values, actions, onSubmit }: Props) => {
 			</div>
 
 			<div className="mb-2 text-center text-[10px] font-medium">{t('stepAmount.choose-own-amount')}</div>
-			<div className="border-muted divide-muted mb-4 grid grid-cols-2 divide-y overflow-hidden rounded-xl border sm:grid-cols-4 sm:divide-x sm:divide-y-0">
+			<div className="border-muted divide-muted mb-4 grid grid-cols-4 divide-x overflow-hidden rounded-xl border">
 				{amountOptions.map((option) => {
 					const isSelected = option.value === values.selectedAmount;
 

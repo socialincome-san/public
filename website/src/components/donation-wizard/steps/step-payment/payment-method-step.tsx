@@ -4,7 +4,7 @@ import { OnlinePaymentLogos } from '@/components/payment-logos/online-payment-lo
 import { QrPaymentLogo } from '@/components/payment-logos/qr-payment-logo';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
-import { isWizardQrCurrencySupported } from '@/lib/services/qr-bill/wizard-qr-payment';
+import { isWizardQrCurrencySupported, resolveWizardPaymentMethod } from '@/lib/services/qr-bill/wizard-qr-payment';
 import { cn } from '@/lib/utils/cn';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
 import { donationPaymentStepCardClass } from '../../utils/donation-wizard-layout';
@@ -19,7 +19,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const { currency = 'CHF' } = useI18n();
 	const view = selectPaymentView(state.context);
 	const isQrAvailable = isWizardQrCurrencySupported(currency);
-	const paymentMethod = view.paymentMethod === 'qr' && !isQrAvailable ? ('online' as const) : view.paymentMethod;
+	const paymentMethod = resolveWizardPaymentMethod(view.paymentMethod, currency);
 
 	return (
 		<div className={cn(donationPaymentStepCardClass, 'text-foreground')} data-testid="donation-wizard-step-payment">

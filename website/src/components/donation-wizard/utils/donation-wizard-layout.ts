@@ -13,12 +13,8 @@ export const donationStepTitleRowClass = cn(
 	'mb-5 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3',
 );
 
-export const donationImpactChecklistItemClass = cn(
-	'flex items-center justify-center gap-2 text-center text-sm font-medium md:justify-start md:text-left',
-);
+export const donationImpactChecklistItemClass = cn('flex items-center justify-start gap-2 text-left text-sm font-medium');
 
-export const donationImpactRowClass = cn(
-	'flex items-center justify-center gap-2 text-center text-sm font-medium md:justify-start md:text-left',
-);
+export const donationImpactRowClass = cn('flex items-center justify-start gap-2 text-left text-sm font-medium');
 
-export const donationImpactExplainerClass = cn('justify-center text-center md:justify-start md:text-left');
+export const donationImpactExplainerClass = cn('justify-start text-left');
