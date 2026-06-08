@@ -131,19 +131,19 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 					},
 				});
 
-				await subscribeToNewsletterAction({
-					firstname: submitted.firstname,
-					lastname: submitted.lastname,
-					email: submitted.email,
-					language: language as SupportedLanguage,
-				});
-
 				if (!result.success) {
 					toast.error(t('onboarding.updateError'));
 					setSubmitting(false);
 
 					return;
 				}
+
+				await subscribeToNewsletterAction({
+					firstname: submitted.firstname,
+					lastname: submitted.lastname,
+					email: submitted.email,
+					language: language as SupportedLanguage,
+				});
 
 				send({ type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE' });
 			} catch {
@@ -174,19 +174,19 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 					},
 				});
 
-				await subscribeToNewsletterAction({
-					firstname: submitted.firstname,
-					lastname: submitted.lastname,
-					email: submitted.email,
-					language: language as SupportedLanguage,
-				});
-
 				if (!result.success) {
 					toast.error(t('onboarding.updateError'));
 					setSubmitting(false);
 
 					return;
 				}
+
+				await subscribeToNewsletterAction({
+					firstname: submitted.firstname,
+					lastname: submitted.lastname,
+					email: submitted.email,
+					language: language as SupportedLanguage,
+				});
 
 				send({ type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE' });
 			} catch {

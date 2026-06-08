@@ -176,7 +176,14 @@ const donationCertificateWrite = new DonationCertificateWriteService(
 	donationCertificateRead,
 );
 const qrBillLegacy = new LegacyQrBillService(prisma, contributorWrite, campaignRead, contributionWrite);
-const qrBill = new QrBillService(prisma, contributorWrite, contributorRead, campaignRead, contributionWrite);
+const qrBill = new QrBillService(
+	prisma,
+	contributorWrite,
+	contributorRead,
+	campaignRead,
+	contributionWrite,
+	exchangeRateRead,
+);
 const stripe = new StripeService(prisma, contributorRead, contributorWrite, contributionWrite, campaignRead);
 const stripeLegacy = new LegacyStripeService(prisma, contributorRead, contributorWrite, campaignRead, programAccessRead);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);

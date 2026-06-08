@@ -21,11 +21,13 @@ const clickWizardButton = async (scope: Locator, testId: string) => {
 	await button.click();
 };
 
-const applySwissTestLocale = async (page: Page) => {
+const applyTestLocaleCookies = async (page: Page, options: { region?: string; country?: string; currency: string }) => {
+	const { region = 'int', country = 'US', currency } = options;
+
 	await page.context().addCookies([
 		{
 			name: 'si_region',
-			value: 'ch',
+			value: region,
 			domain: 'localhost',
 			path: '/',
 			expires: -1,
@@ -35,7 +37,7 @@ const applySwissTestLocale = async (page: Page) => {
 		},
 		{
 			name: 'si_country',
-			value: 'CH',
+			value: country,
 			domain: 'localhost',
 			path: '/',
 			expires: -1,
@@ -45,7 +47,7 @@ const applySwissTestLocale = async (page: Page) => {
 		},
 		{
 			name: 'si_currency',
-			value: 'CHF',
+			value: currency,
 			domain: 'localhost',
 			path: '/',
 			expires: -1,
@@ -54,6 +56,10 @@ const applySwissTestLocale = async (page: Page) => {
 			sameSite: 'Lax',
 		},
 	]);
+};
+
+const applySwissTestLocale = async (page: Page) => {
+	await applyTestLocaleCookies(page, { region: 'ch', country: 'CH', currency: 'CHF' });
 };
 
 export const openDonationWizardFromNav = async (page: Page) => {

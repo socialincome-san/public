@@ -8,7 +8,7 @@ import {
 	getMonthlyPlanBaseAmount,
 	getMonthlyUpsellAmount,
 	getOnePercentAmount,
-	getOnlineTransactionCostChf,
+	getOnlineTransactionCost,
 	getTierAmounts,
 	isAmountValid,
 	isOnePercentPlanSelected,
@@ -133,7 +133,7 @@ export const selectPaymentView = (context: DonationWizardContext) => {
 		paymentMethod: context.paymentMethod,
 		cadence: context.cadence,
 		coverTransactionCosts: context.coverTransactionCosts,
-		transactionCost: getOnlineTransactionCostChf(baseAmount),
+		transactionCost: getOnlineTransactionCost(baseAmount),
 		showTransactionCostToggle: context.paymentMethod === 'online',
 		continueLabelKey:
 			context.paymentMethod === 'qr' ? ('stepPayment.generate-qr-code' as const) : ('stepPayment.pay-online' as const),

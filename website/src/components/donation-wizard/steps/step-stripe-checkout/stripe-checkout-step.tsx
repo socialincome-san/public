@@ -23,7 +23,7 @@ export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => 
 
 	const retryCheckout = () => {
 		send({ type: 'STRIPE_CHECKOUT_RETRY' });
-		void requestStripeEmbeddedCheckout(context, currency, send);
+		void requestStripeEmbeddedCheckout({ ...context, paymentMethod: 'online' }, currency, send);
 	};
 
 	return (

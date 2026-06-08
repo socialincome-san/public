@@ -11,14 +11,14 @@ export const DONATION_MONTHLY_INCOME_MAX = 1000_000;
 export const DONATION_CUSTOM_AMOUNT_MIN = 1;
 export const DONATION_CUSTOM_AMOUNT_MAX = 1000_000;
 
-const roundChf = (amount: number): number => Math.round(amount * 100) / 100;
+const roundAmount = (amount: number): number => Math.round(amount * 100) / 100;
 
-export const getOnlineTransactionCostChf = (baseAmountChf: number): number => {
-	if (baseAmountChf <= 0) {
+export const getOnlineTransactionCost = (baseAmount: number): number => {
+	if (baseAmount <= 0) {
 		return 0;
 	}
 
-	return roundChf(baseAmountChf * ONLINE_TRANSACTION_FEE_RATE);
+	return roundAmount(baseAmount * ONLINE_TRANSACTION_FEE_RATE);
 };
 
 export type DonationAmountContext = {
@@ -116,7 +116,7 @@ export const getDonationDisplayAmount = (context: DonationAmountContext): number
 	const base = getDonationBaseAmount(context);
 
 	if (context.paymentMethod === 'online' && context.coverTransactionCosts) {
-		return roundChf(base + getOnlineTransactionCostChf(base));
+		return roundAmount(base + getOnlineTransactionCost(base));
 	}
 
 	return base;

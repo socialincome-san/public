@@ -1,6 +1,7 @@
 import {
 	ContributionStatus,
 	CountryCode,
+	Currency,
 	DonationInterval,
 	PaymentEventType,
 	type Prisma,
@@ -17,6 +18,7 @@ import { ContributorWriteService } from '../contributor/contributor-write.servic
 import { type BankContributorData, type ContributorUpdateInput } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
+import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import {
 	type CreateWizardPendingContributionInput,
 	type CreateWizardQrReferencesInput,
@@ -44,6 +46,7 @@ export class QrBillService extends BaseService {
 		private readonly contributorReadService: ContributorReadService,
 		private readonly campaignService: CampaignReadService,
 		private readonly contributionService: ContributionWriteService,
+		private readonly exchangeRateService: ExchangeRateReadService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -311,6 +314,26 @@ export class QrBillService extends BaseService {
 		return this.resultOk(fallbackCampaignResult.data.id);
 	}
 
+	private async resolveAmountChf(amount: number, currency: Currency): Promise<ServiceResult<number>> {
+		if (currency === Currency.CHF) {
+			return this.resultOk(amount);
+		}
+
+		const ratesResult = await this.exchangeRateService.getLatestRates();
+		if (!ratesResult.success) {
+			return ratesResult;
+		}
+
+		const rates = ratesResult.data;
+		const rateCurrency = rates[currency];
+		const rateChf = rates.CHF;
+		if (!rateCurrency || !rateChf) {
+			return this.resultFail(`Missing exchange rate for ${currency}`);
+		}
+
+		return this.resultOk(Math.round((amount / rateCurrency) * rateChf * 100) / 100);
+	}
+
 	private async buildContribution(
 		payment: WizardQrPayment,
 		contributorId: string,
@@ -319,6 +342,11 @@ export class QrBillService extends BaseService {
 		const campaignIdResult = await this.resolveCampaignId(campaignIdFromContext ?? payment.campaignId);
 		if (!campaignIdResult.success) {
 			return campaignIdResult;
+		}
+
+		const amountChfResult = await this.resolveAmountChf(payment.amount, payment.currency);
+		if (!amountChfResult.success) {
+			return amountChfResult;
 		}
 
 		const paymentEvent: PaymentEventCreateInput = {
@@ -331,7 +359,7 @@ export class QrBillService extends BaseService {
 				create: {
 					amount: payment.amount,
 					currency: payment.currency,
-					amountChf: payment.amount,
+					amountChf: amountChfResult.data,
 					feesChf: 0,
 					interval: this.getDonationInterval(payment.interval),
 					status: ContributionStatus.pending,

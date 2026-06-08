@@ -246,7 +246,11 @@ const expectSucceededOneTimeStripeContribution = async (email: string, options: 
 	expect(contribution.interval).toBeNull();
 	expect(contribution.currency).toBe(currency);
 	expect(Number(contribution.amount)).toBe(amount);
-	expect(Number(contribution.amountChf)).toBe(amount);
+	if (currency === 'CHF') {
+		expect(Number(contribution.amountChf)).toBe(amount);
+	} else {
+		expect(Number(contribution.amountChf)).toBeGreaterThan(0);
+	}
 	expect(contribution.campaign.isFallback).toBe(true);
 	expect(contribution.paymentEvent).not.toBeNull();
 	expect(contribution.paymentEvent?.type).toBe('stripe');

@@ -61,8 +61,11 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 				onBack={() => send({ type: 'BACK' })}
 				onContinue={() => {
 					if (paymentMethod === 'online') {
+						if (view.paymentMethod !== 'online') {
+							send({ type: 'SET_PAYMENT_METHOD', value: 'online' });
+						}
 						send({ type: 'START_STRIPE_CHECKOUT' });
-						void requestStripeEmbeddedCheckout(state.context, currency, send);
+						void requestStripeEmbeddedCheckout({ ...state.context, paymentMethod: 'online' }, currency, send);
 
 						return;
 					}

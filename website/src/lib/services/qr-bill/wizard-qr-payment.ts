@@ -1,5 +1,6 @@
 import {
 	type DonationAmountContext,
+	type PaymentMethod,
 	DONATION_CUSTOM_AMOUNT_MAX,
 	DONATION_CUSTOM_AMOUNT_MIN,
 	getDonationDisplayAmount,
@@ -14,6 +15,9 @@ const WIZARD_QR_CURRENCIES = new Set<Currency>(['CHF', 'EUR']);
 
 export const isWizardQrCurrencySupported = (currency: string): boolean =>
 	WIZARD_QR_CURRENCIES.has(currency.toUpperCase() as Currency);
+
+export const resolveWizardPaymentMethod = (paymentMethod: PaymentMethod, currency: string): PaymentMethod =>
+	paymentMethod === 'qr' && !isWizardQrCurrencySupported(currency) ? 'online' : paymentMethod;
 
 const mapCadenceToQrInterval = (cadence: DonationAmountContext['cadence']): number => (cadence === 'monthly' ? 1 : 0);
 

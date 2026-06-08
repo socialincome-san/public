@@ -35,8 +35,8 @@ export const resolveWizardEmbeddedCheckout = (
 		return resultFail(`Unsupported currency: ${currency ?? ''}`);
 	}
 
-	const amountChf = getDonationDisplayAmount(context);
-	const unitAmount = Math.round(amountChf * 100);
+	const displayAmount = getDonationDisplayAmount(context);
+	const unitAmount = Math.round(displayAmount * 100);
 	const minUnitAmount = DONATION_CUSTOM_AMOUNT_MIN * 100;
 	const maxUnitAmount = DONATION_CUSTOM_AMOUNT_MAX * 100;
 

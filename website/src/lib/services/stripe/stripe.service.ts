@@ -524,21 +524,27 @@ export class StripeService extends BaseService {
 			}
 
 			const stripe = this.getStripeClient();
-
-			const price = await stripe.prices.create({
-				active: true,
-				unit_amount: amount,
-				currency: currency.toLowerCase(),
-				product: recurring ? process.env.STRIPE_PRODUCT_RECURRING : process.env.STRIPE_PRODUCT_ONETIME,
-				recurring: recurring ? { interval: 'month', interval_count: intervalCount } : undefined,
-			});
+			const productId = recurring ? process.env.STRIPE_PRODUCT_RECURRING : process.env.STRIPE_PRODUCT_ONETIME;
+			if (!productId) {
+				return this.resultFail(recurring ? 'Missing STRIPE_PRODUCT_RECURRING' : 'Missing STRIPE_PRODUCT_ONETIME');
+			}
 
 			const session = await stripe.checkout.sessions.create({
 				mode: recurring ? 'subscription' : 'payment',
 				ui_mode: 'embedded',
 				customer: stripeCustomerId ?? undefined,
 				customer_creation: !stripeCustomerId && !recurring ? 'always' : undefined,
-				line_items: [{ price: price.id, quantity: 1 }],
+				line_items: [
+					{
+						quantity: 1,
+						price_data: {
+							currency: currency.toLowerCase(),
+							unit_amount: amount,
+							product: productId,
+							...(recurring && { recurring: { interval: 'month', interval_count: intervalCount } }),
+						},
+					},
+				],
 				redirect_on_completion: 'never',
 				...(returnUrl ? { return_url: returnUrl } : {}),
 				locale: 'auto',
