@@ -12,7 +12,7 @@ import {
 	ProgramWallets,
 	PublicPreviewProgram,
 	PublicProgramDetails,
-	PublicProgramFocusMap,
+	PublicProgramFilterDataMap,
 	PublicProgramStats,
 	PublicProgramStatsMap,
 } from './program.types';
@@ -37,6 +37,57 @@ export class ProgramReadService extends BaseService {
 
 		return sum;
 	};
+
+	private readonly normalizeProgramPortalSlugs = (portalSlugs: string[]) => [
+		...new Set(portalSlugs.map((portalSlug) => portalSlug.trim()).filter(Boolean)),
+	];
+
+	async getPublicProgramFilterDataByPortalSlugs(portalSlugs: string[]): Promise<ServiceResult<PublicProgramFilterDataMap>> {
+		try {
+			const normalizedPortalSlugs = this.normalizeProgramPortalSlugs(portalSlugs);
+			if (!normalizedPortalSlugs.length) {
+				return this.resultOk({});
+			}
+
+			const programs = await this.db.program.findMany({
+				where: { slug: { in: normalizedPortalSlugs } },
+				select: {
+					id: true,
+					slug: true,
+					country: {
+						select: {
+							isoCode: true,
+						},
+					},
+					targetFocuses: {
+						select: {
+							focus: {
+								select: {
+									id: true,
+									slug: true,
+								},
+							},
+						},
+					},
+				},
+			});
+
+			const filterDataByPortalSlug: PublicProgramFilterDataMap = {};
+			for (const program of programs) {
+				filterDataByPortalSlug[program.slug] = {
+					programId: program.id,
+					countryIsoCode: program.country.isoCode,
+					focuses: program.targetFocuses.map(({ focus }) => focus),
+				};
+			}
+
+			return this.resultOk(filterDataByPortalSlug);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch program filter data: ${JSON.stringify(error)}`);
+		}
+	}
 
 	async getProgramWallets(userId: string): Promise<ServiceResult<ProgramWallets>> {
 		try {
@@ -346,40 +397,6 @@ export class ProgramReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch program stats map: ${JSON.stringify(error)}`);
-		}
-	}
-
-	async getPublicProgramFocusMapByIds(programIds: string[]): Promise<ServiceResult<PublicProgramFocusMap>> {
-		try {
-			const normalizedProgramIds = [...new Set(programIds.map((programId) => programId.trim()).filter(Boolean))];
-			if (!normalizedProgramIds.length) {
-				return this.resultOk({});
-			}
-
-			const programs = await this.db.program.findMany({
-				where: { id: { in: normalizedProgramIds } },
-				select: {
-					id: true,
-					targetFocuses: {
-						select: {
-							focusId: true,
-						},
-					},
-				},
-			});
-
-			const focusMap: PublicProgramFocusMap = {};
-			for (const program of programs) {
-				focusMap[program.id] = program.targetFocuses.map(({ focusId }) => ({
-					id: focusId,
-				}));
-			}
-
-			return this.resultOk(focusMap);
-		} catch (error) {
-			this.logger.error(error);
-
-			return this.resultFail(`Could not fetch program focus map: ${JSON.stringify(error)}`);
 		}
 	}
 

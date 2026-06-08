@@ -15,9 +15,9 @@ type ProgramsOverviewFiltersProps = {
 	allCountriesLabel: string;
 	allFocusesLabel: string;
 	countryOptions: FilterOption[];
-	selectedCountry?: string;
+	selectedCountryIsoCode?: string;
 	focusOptions: FilterOption[];
-	selectedFocus?: string;
+	selectedFocusId?: string;
 };
 
 type FilterDropdownProps = {
@@ -98,9 +98,9 @@ export const ProgramsOverviewFilters = ({
 	allCountriesLabel,
 	allFocusesLabel,
 	countryOptions,
-	selectedCountry,
+	selectedCountryIsoCode,
 	focusOptions,
-	selectedFocus,
+	selectedFocusId,
 }: ProgramsOverviewFiltersProps) => {
 	return (
 		<div className="flex min-h-10 flex-1 flex-wrap items-center gap-2">
@@ -108,13 +108,13 @@ export const ProgramsOverviewFilters = ({
 				allLabel={allCountriesLabel}
 				options={countryOptions}
 				queryKey={COUNTRY_QUERY_KEY}
-				selectedValue={selectedCountry}
+				selectedValue={selectedCountryIsoCode}
 			/>
 			<FilterDropdown
 				allLabel={allFocusesLabel}
 				options={focusOptions}
 				queryKey={FOCUS_QUERY_KEY}
-				selectedValue={selectedFocus}
+				selectedValue={selectedFocusId}
 			/>
 		</div>
 	);

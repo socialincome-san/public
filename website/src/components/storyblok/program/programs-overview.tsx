@@ -25,10 +25,10 @@ export const ProgramsOverview = async ({ programs, statsById, lang, region }: Pr
 			) : (
 				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
 					{programs.map((program) => {
-						const programId = getProgramId(program.content);
+						const portalSlug = getProgramId(program.content);
 						const programTitle = getProgramTitle(program.content);
 						const programSlug = getProgramSlug(program);
-						const stats = programId ? statsById[programId] : undefined;
+						const stats = portalSlug ? statsById[portalSlug] : undefined;
 						const primaryImageFilename = program.content.primaryImage?.filename;
 						const primaryImageAlt = program.content.primaryImage?.alt ?? programTitle;
 						const secondaryImageFilename = program.content.secondaryImage?.filename;
