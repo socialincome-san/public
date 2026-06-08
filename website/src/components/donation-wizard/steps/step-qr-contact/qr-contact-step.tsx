@@ -77,45 +77,43 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 
 			<Form {...form}>
 				<form className="flex flex-col gap-5" onSubmit={form.handleSubmit(onSubmit)}>
-					<div className="w-full max-w-[278px]">
-						<div className="flex flex-col gap-5">
-							<FormField
-								control={form.control}
-								name="firstName"
-								render={({ field }) => (
-									<FormItem className="gap-2">
-										<FormLabel className="text-sm font-medium">{t('stepQrContact.firstName')}</FormLabel>
-										<FormControl>
-											<Input {...field} autoComplete="given-name" disabled={isLoading} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="lastName"
-								render={({ field }) => (
-									<FormItem className="gap-2">
-										<FormLabel className="text-sm font-medium">{t('stepQrContact.lastName')}</FormLabel>
-										<FormControl>
-											<Input {...field} autoComplete="family-name" disabled={isLoading} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="email"
-								render={({ field }) => (
-									<FormItem className="gap-2">
-										<FormLabel className="text-sm font-medium">{t('stepQrContact.email')}</FormLabel>
-										<FormControl>
-											<Input {...field} type="email" autoComplete="email" disabled={isLoading} />
-										</FormControl>
-									</FormItem>
-								)}
-							/>
-						</div>
+					<div className="flex w-full flex-col gap-5">
+						<FormField
+							control={form.control}
+							name="firstName"
+							render={({ field }) => (
+								<FormItem className="w-full gap-2">
+									<FormLabel className="text-sm font-medium">{t('stepQrContact.firstName')}</FormLabel>
+									<FormControl>
+										<Input {...field} autoComplete="given-name" disabled={isLoading} />
+									</FormControl>
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="lastName"
+							render={({ field }) => (
+								<FormItem className="w-full gap-2">
+									<FormLabel className="text-sm font-medium">{t('stepQrContact.lastName')}</FormLabel>
+									<FormControl>
+										<Input {...field} autoComplete="family-name" disabled={isLoading} />
+									</FormControl>
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem className="w-full gap-2">
+									<FormLabel className="text-sm font-medium">{t('stepQrContact.email')}</FormLabel>
+									<FormControl>
+										<Input {...field} type="email" autoComplete="email" disabled={isLoading} />
+									</FormControl>
+								</FormItem>
+							)}
+						/>
 					</div>
 
 					<QrWizardStepFooter

@@ -215,7 +215,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 	}
 
 	return (
-		<div className="flex w-full flex-col gap-6 overflow-y-auto px-4 pt-6 pb-8 sm:px-9 sm:pt-6 sm:pb-11">
+		<div className="flex w-full flex-col gap-6 px-4 pt-6 pb-8 sm:px-9 sm:pt-6 sm:pb-11">
 			<OnboardingSuccessHeader amountLine={amountLine} />
 			<OnboardingPersonalForm
 				form={form}

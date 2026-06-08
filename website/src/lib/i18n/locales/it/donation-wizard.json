@@ -103,8 +103,10 @@
 		"messageWithAmountMonthly": "Grazie per {{amount}}/mese!",
 		"messageWithAmountOneTime": "Grazie per {{amount}}!",
 		"loginPrompt": {
-			"message": "Ora puoi accedere al tuo account.",
-			"loginButton": "Accedi"
+			"title": "Il tuo account è pronto",
+			"description": "Vai alla pagina di accesso per entrare nel tuo account.",
+			"loginButton": "Accedi",
+			"supportPrefix": "Domande? Contatta"
 		}
 	},
 	"onboarding": {

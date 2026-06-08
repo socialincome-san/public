@@ -103,8 +103,10 @@
 		"messageWithAmountMonthly": "Danke für {{amount}}/Monat!",
 		"messageWithAmountOneTime": "Danke für {{amount}}!",
 		"loginPrompt": {
-			"message": "Du kannst dich jetzt in deinem Konto einloggen.",
-			"loginButton": "Einloggen"
+			"title": "Dein Konto ist bereit",
+			"description": "Gehe zur Anmeldeseite, um auf dein Konto zuzugreifen.",
+			"loginButton": "Einloggen",
+			"supportPrefix": "Fragen? Kontaktiere"
 		}
 	},
 	"onboarding": {

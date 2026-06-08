@@ -73,7 +73,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 					className={cn(
 						'!flex flex-col gap-0 overflow-hidden overscroll-contain !p-0',
 						isNarrowModal
-							? 'sm:max-h-[90dvh] sm:min-h-[200px] sm:w-[min(320px,90vw)] sm:max-w-[320px]'
+							? 'sm:max-h-[90dvh] sm:min-h-[200px] sm:w-[min(474px,90vw)] sm:max-w-[474px]'
 							: 'sm:max-h-[90dvh] sm:w-[min(890px,90vw)] sm:max-w-[890px]',
 					)}
 				>
@@ -82,7 +82,9 @@ export const DonationModalProvider = ({ children }: Props) => {
 							<DialogTitle className="sr-only">
 								{isThankYou ? t('thankYou.message') : t('onboarding.successTitle')}
 							</DialogTitle>
-							<DonationSteps state={state} send={send} />
+							<div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
+								<DonationSteps state={state} send={send} />
+							</div>
 						</>
 					) : (
 						<>
