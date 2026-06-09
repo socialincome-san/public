@@ -7,13 +7,13 @@ import { services } from '@/lib/services/services';
 import { getProgramStoryPath, getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoryData } from '@storyblok/js';
 
-export type ProgramDbData = {
+type ProgramDbData = {
 	stats?: PublicProgramStats;
 	dashboardStats?: ProgramDashboardStats;
 	programDetails?: PublicProgramDetails;
 };
 
-export type ProgramPageData = {
+type ProgramPageData = {
 	title: string;
 	fullSlug: string;
 	heroImageFilename?: string;
