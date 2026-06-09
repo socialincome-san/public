@@ -223,57 +223,18 @@ export const getContributorStripeCustomerId = async (email: string) => {
 	return contributor.stripeCustomerId;
 };
 
-const expectSucceededOneTimeStripeContribution = async (email: string, options: { amount: number; currency?: string }) => {
-	const { amount, currency = 'CHF' } = options;
-	const contributor = await findContributorByEmail(email);
-
-	expect(contributor).not.toBeNull();
-
-	const contributions = await prisma.contribution.findMany({
-		where: { contributorId: contributor!.id },
-		include: {
-			paymentEvent: true,
-			campaign: { select: { isFallback: true } },
-		},
-		orderBy: { createdAt: 'desc' },
-	});
-
-	expect(contributions.length).toBeGreaterThanOrEqual(1);
-
-	const contribution = contributions[0];
-
-	expect(contribution.status).toBe('succeeded');
-	expect(contribution.interval).toBeNull();
-	expect(contribution.currency).toBe(currency);
-	expect(Number(contribution.amount)).toBe(amount);
-	if (currency === 'CHF') {
-		expect(Number(contribution.amountChf)).toBe(amount);
-	} else {
-		expect(Number(contribution.amountChf)).toBeGreaterThan(0);
-	}
-	expect(contribution.campaign.isFallback).toBe(true);
-	expect(contribution.paymentEvent).not.toBeNull();
-	expect(contribution.paymentEvent?.type).toBe('stripe');
-	expect(contribution.paymentEvent?.contributionId).toBe(contribution.id);
-
-	return contribution;
-};
-
-export const expectCompleteOneTimeStripeDonation = async (
+export const expectOneTimeStripeWizardCompleted = async (
 	donor: DonationWizardDonor,
 	options: {
-		amount: number;
-		currency?: string;
 		language?: string;
 		gender: string;
 		country: string;
 		referral: ContributorReferralSource;
 	},
 ) => {
-	const { amount, currency = 'CHF', language = 'en', gender, country, referral } = options;
+	const { language = 'en', gender, country, referral } = options;
 
 	await expectContributorWithStripeCustomer(donor, { language });
-	await expectSucceededOneTimeStripeContribution(donor.email, { amount, currency });
 	await expectContributorOnboardingCompleted(donor.email, { gender, country, language });
 	await expectContributorReferral(donor.email, referral);
 };

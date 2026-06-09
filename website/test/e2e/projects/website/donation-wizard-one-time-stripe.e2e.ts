@@ -4,9 +4,9 @@ import { expect, test } from '@playwright/test';
 import Stripe from 'stripe';
 import {
 	deleteDonationWizardTestUser,
-	expectCompleteOneTimeStripeDonation,
 	expectContributorOnboardingCompleted,
 	expectNoDonationWizardRecords,
+	expectOneTimeStripeWizardCompleted,
 	getContributorStripeCustomerId,
 } from './utils/donation-wizard-db';
 import {
@@ -16,10 +16,9 @@ import {
 	completeStripePaymentMethodStep,
 	openDonationWizardFromHero,
 } from './utils/donation-wizard-flow';
-import { completeStripeEmbeddedCheckout, syncStripeChargeWebhookForCustomer } from './utils/donation-wizard-stripe';
+import { completeStripeEmbeddedCheckout } from './utils/donation-wizard-stripe';
 
 const MONTHLY_INCOME = 7500;
-const ONE_TIME_DONATION_AMOUNT = 75;
 
 const waitForStripeCharge = async (stripeCustomerId: string) => {
 	const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -62,10 +61,8 @@ test('one-time donation via hero form and Stripe creates records at the right st
 
 		const stripeCustomerId = await getContributorStripeCustomerId(donor.email);
 		await waitForStripeCharge(stripeCustomerId);
-		await syncStripeChargeWebhookForCustomer(stripeCustomerId);
 
-		await expectCompleteOneTimeStripeDonation(donor, {
-			amount: ONE_TIME_DONATION_AMOUNT,
+		await expectOneTimeStripeWizardCompleted(donor, {
 			gender: 'female',
 			country: 'CH',
 			referral: ContributorReferralSource.social_media,

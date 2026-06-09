@@ -1,5 +1,4 @@
 import { expect, type FrameLocator, type Page } from '@playwright/test';
-import Stripe from 'stripe';
 import type { DonationWizardDonor } from './donation-wizard-db';
 
 const STRIPE_CHECKOUT_TIMEOUT_MS = 90_000;
@@ -26,48 +25,6 @@ const fillStripeHostedCheckoutForm = async (scope: Page | FrameLocator, donor: D
 	}
 
 	await scope.getByTestId('hosted-payment-submit-button').click();
-};
-
-export const syncStripeChargeWebhookForCustomer = async (stripeCustomerId: string, baseUrl = 'http://localhost:3000') => {
-	const secretKey = process.env.STRIPE_SECRET_KEY;
-	const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
-	if (!secretKey || !webhookSecret) {
-		throw new Error('STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET are required for webhook sync');
-	}
-
-	const stripe = new Stripe(secretKey);
-	const charges = await stripe.charges.list({ customer: stripeCustomerId, limit: 1 });
-	const charge = charges.data[0];
-
-	if (!charge) {
-		throw new Error(`No Stripe charge found for customer ${stripeCustomerId}`);
-	}
-
-	const event = {
-		id: `evt_e2e_${charge.id}`,
-		object: 'event',
-		type: 'charge.succeeded',
-		data: { object: charge },
-	};
-	const payload = JSON.stringify(event);
-	const signature = stripe.webhooks.generateTestHeaderString({
-		payload,
-		secret: webhookSecret,
-	});
-
-	const response = await fetch(`${baseUrl}/api/v1/stripe/webhook`, {
-		method: 'POST',
-		headers: {
-			'content-type': 'application/json',
-			'stripe-signature': signature,
-		},
-		body: payload,
-	});
-
-	if (!response.ok) {
-		throw new Error(`Stripe webhook sync failed: ${await response.text()}`);
-	}
 };
 
 export const completeStripeEmbeddedCheckout = async (page: Page, donor: DonationWizardDonor) => {
