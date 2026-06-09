@@ -15,12 +15,9 @@ export default function PayoutProcessOverviewPage() {
 const PayoutProcessOverviewDataLoader = async () => {
 	await getAuthenticatedUserOrRedirect();
 
-	const result = await services.read.mobileMoneyProvider.getSupportedPayoutProcessOptions();
+	const result = await services.read.mobileMoneyProvider.getPayoutProcessOverviewOptions();
 
 	return (
-		<PayoutProcessOverviewClient
-			providers={result.success ? result.data : []}
-			error={result.success ? null : result.error}
-		/>
+		<PayoutProcessOverviewClient options={result.success ? result.data : []} error={result.success ? null : result.error} />
 	);
 };

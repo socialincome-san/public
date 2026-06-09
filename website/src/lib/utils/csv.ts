@@ -119,6 +119,9 @@ const escapeCsvValue = (value: string): string => {
 	return CSV_NEEDS_QUOTES_REGEX.test(escaped) ? `"${escaped}"` : escaped;
 };
 
+export const stringifyCsvLines = (rows: string[][]): string =>
+	rows.map((row) => row.map((cell) => escapeCsvValue(cell)).join(',')).join('\n');
+
 export const stringifyCsv = (rows: CsvRow[], headers?: string[]): string => {
 	const resolvedHeaders = headers ?? (rows.length > 0 ? Object.keys(rows[0]) : []);
 	const headerLine = resolvedHeaders.map((header) => escapeCsvValue(header)).join(',');

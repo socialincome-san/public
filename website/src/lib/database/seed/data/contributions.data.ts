@@ -135,7 +135,7 @@ export const contributionsData: Contribution[] = [
 		amountChf: new Prisma.Decimal(88),
 		feesChf: new Prisma.Decimal(2),
 		contributorId: 'contributor-gh-onetime',
-		status: ContributionStatus.pending,
+		status: ContributionStatus.succeeded,
 		campaignId: 'campaign-si-education-gh-default',
 		createdAt: new Date('2024-12-20T10:00:00.000Z'),
 		updatedAt: null,
