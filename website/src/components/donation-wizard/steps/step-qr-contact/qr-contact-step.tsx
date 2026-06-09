@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils/cn';
 import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { donationPaymentStepCardClass } from '../../utils/donation-wizard-layout';
+import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import { isQrContactValid, type QrContactFields } from '../../utils/donation-wizard-validation';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { QrWizardStepFooter } from './qr-wizard-step-footer';
@@ -73,7 +73,7 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div
-			className={cn(donationPaymentStepCardClass, 'text-foreground flex w-full flex-col gap-5')}
+			className={cn(getDonationWizardCardClass('stepQrContact'), 'text-foreground flex w-full flex-col gap-5')}
 			data-testid="donation-wizard-step-qr-contact"
 		>
 			<h3 className="text-lg leading-7 font-medium">{t(titleKey)}</h3>

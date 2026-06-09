@@ -1,8 +1,10 @@
 'use client';
 
+import { cn } from '@/lib/utils/cn';
 import { useDonationFormState } from './hooks/use-donation-form-state';
 import { useDonationModal } from './hooks/use-donation-modal';
 import { DonationAmountFields } from './steps/step-amount/donation-amount-fields';
+import { getDonationWizardCardClass } from './utils/donation-wizard-layout';
 import { selectStep1FormView } from './wizard/donation-machine-selectors';
 
 type Props = {
@@ -16,7 +18,7 @@ export const DonationForm = ({ campaignId }: Props) => {
 	return (
 		<div data-testid="donation-wizard-hero-form" className="w-full">
 			<DonationAmountFields
-				className="mx-0 w-full max-w-none lg:mx-auto lg:max-w-[400px]"
+				className={cn(getDonationWizardCardClass('stepAmount'), 'mx-0 max-w-none lg:mx-auto lg:max-w-[400px]')}
 				values={selectStep1FormView(form.context)}
 				actions={{
 					selectOnePercent: form.selectOnePercent,

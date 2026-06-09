@@ -3,9 +3,10 @@
 import { Button } from '@/components/button';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
+import { cn } from '@/lib/utils/cn';
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { donationPaymentStepCardClass } from '../../utils/donation-wizard-layout';
+import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { requestStripeEmbeddedCheckout } from './request-stripe-embedded-checkout';
 
@@ -27,7 +28,10 @@ export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => 
 	};
 
 	return (
-		<div className={donationPaymentStepCardClass} data-testid="donation-wizard-step-stripe-checkout">
+		<div
+			className={cn(getDonationWizardCardClass('stepStripeCheckout'), 'flex w-full flex-col overflow-hidden')}
+			data-testid="donation-wizard-step-stripe-checkout"
+		>
 			{stripeCheckoutStatus === 'error' && (
 				<div className="flex flex-col gap-4 p-4">
 					<div className="flex gap-2">
@@ -42,7 +46,7 @@ export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => 
 			)}
 
 			{stripeCheckoutStatus !== 'error' && (
-				<div className={`relative ${stripeCheckoutFrameClass}`}>
+				<div className={cn('relative w-full', stripeCheckoutFrameClass)}>
 					{isLoading && (
 						<div className="flex items-center justify-center p-6">
 							<p className="text-muted-foreground text-sm">{t('stepStripeCheckout.loading')}</p>
@@ -50,7 +54,7 @@ export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => 
 					)}
 
 					{isSessionReady && stripePromise && stripeClientSecret && (
-						<div className="w-full p-2 sm:p-4">
+						<div className="w-full [&_iframe]:w-full [&_iframe]:max-w-none">
 							<EmbeddedCheckoutProvider
 								key={stripeClientSecret}
 								stripe={stripePromise}

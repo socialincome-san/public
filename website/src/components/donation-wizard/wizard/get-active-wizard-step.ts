@@ -1,7 +1,7 @@
 import type { DonationWizardEntry } from './donation-wizard-context';
 import type { DonationWizardState } from './types';
 
-type ActiveDonationWizardStep =
+export type ActiveDonationWizardStep =
 	| DonationWizardEntry
 	| 'stepPayment'
 	| 'stepQrContact'

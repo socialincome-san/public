@@ -7,7 +7,7 @@ import { useI18n } from '@/lib/i18n/useI18n';
 import { isWizardQrCurrencySupported, resolveWizardPaymentMethod } from '@/lib/services/qr-bill/wizard-qr-payment';
 import { cn } from '@/lib/utils/cn';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
-import { donationPaymentStepCardClass } from '../../utils/donation-wizard-layout';
+import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import { selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { requestStripeEmbeddedCheckout } from '../step-stripe-checkout/request-stripe-embedded-checkout';
@@ -22,7 +22,10 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const paymentMethod = resolveWizardPaymentMethod(view.paymentMethod, currency);
 
 	return (
-		<div className={cn(donationPaymentStepCardClass, 'text-foreground')} data-testid="donation-wizard-step-payment">
+		<div
+			className={cn(getDonationWizardCardClass('stepPayment'), 'text-foreground flex w-full flex-col')}
+			data-testid="donation-wizard-step-payment"
+		>
 			<h3 className="mb-4 text-base font-medium sm:text-lg">{t('stepPayment.title')}</h3>
 
 			<div className="mb-5 flex flex-col gap-3">

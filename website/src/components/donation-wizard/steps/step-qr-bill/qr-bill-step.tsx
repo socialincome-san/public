@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils/cn';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { getDonationDisplayAmount } from '../../utils/donation-amount';
-import { donationPaymentStepCardClass } from '../../utils/donation-wizard-layout';
+import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import { selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { QrWizardStepFooter } from '../step-qr-contact/qr-wizard-step-footer';
@@ -77,7 +77,7 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div
-			className={cn(donationPaymentStepCardClass, 'text-foreground flex w-full flex-col gap-5 overflow-visible')}
+			className={cn(getDonationWizardCardClass('stepQrBill'), 'text-foreground flex w-full flex-col gap-5 overflow-visible')}
 			data-testid="donation-wizard-step-qr-bill"
 		>
 			<div className="flex w-full items-start gap-4">

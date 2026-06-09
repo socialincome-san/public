@@ -13,7 +13,7 @@ import {
 	type Cadence,
 	type PresetAmount,
 } from '../../utils/donation-amount';
-import { donationStepCardClass } from '../../utils/donation-wizard-layout';
+import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 
 const amountOptions: { labelKey: 'currency-prefix' | 'other'; value: PresetAmount | 'other' }[] = [
 	{ labelKey: 'currency-prefix', value: 25 },
@@ -52,15 +52,17 @@ type Props = {
 	className?: string;
 };
 
-export const DonationAmountFields = ({ values, actions, onSubmit, className }: Props) => {
+export const DonationAmountFields = ({
+	values,
+	actions,
+	onSubmit,
+	className = getDonationWizardCardClass('stepAmount'),
+}: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
 
 	return (
-		<div
-			className={cn(donationStepCardClass, 'text-foreground md:px-9 md:py-9', className)}
-			data-testid="donation-wizard-step-amount"
-		>
+		<div className={cn(className, 'text-foreground md:px-9 md:py-9')} data-testid="donation-wizard-step-amount">
 			<h3 className="text-foreground mb-5 text-xl leading-tight font-semibold text-pretty sm:text-2xl sm:leading-none">
 				{t('stepAmount.title')}
 			</h3>

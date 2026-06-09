@@ -17,6 +17,7 @@ import {
 	type DonationAmountContext,
 	type PresetAmount,
 } from '../utils/donation-amount';
+import { getDonationWizardLayout } from '../utils/donation-wizard-layout';
 import type { DonationWizardContext } from './donation-wizard-context';
 import { getActiveWizardStep } from './get-active-wizard-step';
 import type { DonationWizardSend, DonationWizardState } from './types';
@@ -153,20 +154,9 @@ export const selectCadenceSwitchView = (currentCadence: Cadence) => ({
 export const selectWizardShellView = (state: DonationWizardState) => {
 	const activeStep = getActiveWizardStep(state);
 
-	const showImpactPanel =
-		activeStep === 'stepAmount' || activeStep === 'stepPlanMonthly' || activeStep === 'stepPlanOneTime';
-	const showQrContactHintsPanel = activeStep === 'stepQrContact';
-
 	return {
 		activeStep,
-		isPaymentStep:
-			activeStep === 'stepPayment' ||
-			activeStep === 'stepStripeCheckout' ||
-			activeStep === 'stepQrContact' ||
-			activeStep === 'stepQrBill',
-		showImpactPanel,
-		showQrContactHintsPanel,
-		usesSplitLayout: showImpactPanel || showQrContactHintsPanel,
 		communityStats: state.context.communityStats,
+		...getDonationWizardLayout(activeStep),
 	};
 };

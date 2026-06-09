@@ -3,7 +3,7 @@
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
-import { donationStepCardClass } from '../../utils/donation-wizard-layout';
+import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import {
 	type PlanBenefitDescriptor,
 	resolvePlanBenefit,
@@ -21,7 +21,7 @@ export const OneTimePlanStep = ({ state, send }: DonationWizardStepProps) => {
 		descriptors.map((descriptor) => resolvePlanBenefit(descriptor, t, language));
 
 	return (
-		<div className={donationStepCardClass} data-testid="donation-wizard-step-one-time-plan">
+		<div className={getDonationWizardCardClass('stepPlanOneTime')} data-testid="donation-wizard-step-one-time-plan">
 			<PlanStepHeader titleKey="stepPlan.one-time-title" cadence="one-time" send={send} />
 
 			<div className="mb-5 flex flex-col gap-3">
