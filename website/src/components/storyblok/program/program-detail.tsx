@@ -2,16 +2,16 @@ import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { getCountryDescription, getCountryTitle } from '@/components/storyblok/country/country.utils';
 import { ProgramAbout } from '@/components/storyblok/program/program-about';
-import { buildProgramDetailLabels } from '@/components/storyblok/program/program-detail-labels';
 import { ProgramCountry } from '@/components/storyblok/program/program-country';
+import { buildProgramDetailLabels } from '@/components/storyblok/program/program-detail-labels';
 import { ProgramFinances } from '@/components/storyblok/program/program-finances';
 import { ProgramRecipients } from '@/components/storyblok/program/program-recipients';
 import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
 import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { PublicProgramDetails, PublicProgramStats } from '@/lib/services/program/program.types';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
+import type { PublicProgramDetails, PublicProgramStats } from '@/lib/services/program/program.types';
 import { services } from '@/lib/services/services';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
@@ -45,8 +45,7 @@ export const ProgramDetail = async ({
 	const labels = buildProgramDetailLabels(translator);
 	const countryIsoCode = programDetails?.countryIsoCode ?? stats?.countryIsoCode;
 	const recipientsCount = dashboardStats?.recipientsCount ?? programDetails?.recipientsCount ?? stats?.recipientsCount ?? 0;
-	const completedSurveysCount =
-		dashboardStats?.completedSurveysCount ?? programDetails?.completedSurveysCount ?? 0;
+	const completedSurveysCount = dashboardStats?.completedSurveysCount ?? programDetails?.completedSurveysCount ?? 0;
 
 	const [breadcrumbLinks, countryResult, localPartnerStoryResult] = await Promise.all([
 		buildBreadcrumbLinks({
@@ -71,12 +70,11 @@ export const ProgramDetail = async ({
 		}
 	}
 
-	const countryName =
-		countryResult?.success
-			? getCountryTitle(countryResult.data.content)
-			: countryIsoCode && isValidCountryCode(countryIsoCode)
-				? getCountryNameByCode(countryIsoCode)
-				: countryIsoCode;
+	const countryName = countryResult?.success
+		? getCountryTitle(countryResult.data.content)
+		: countryIsoCode && isValidCountryCode(countryIsoCode)
+			? getCountryNameByCode(countryIsoCode)
+			: countryIsoCode;
 	const countryDescription = countryResult?.success ? getCountryDescription(countryResult.data.content) : undefined;
 
 	return (
@@ -94,14 +92,13 @@ export const ProgramDetail = async ({
 								},
 								{
 									value: stats.recipientsCount,
-									label:
-										stats.recipientsCount === 1 ? labels.recipientSingular : labels.recipientPlural,
+									label: stats.recipientsCount === 1 ? labels.recipientSingular : labels.recipientPlural,
 								},
 							]
 						: []
 				}
 			/>
-			<div className="mb-6 max-w-content 2xl:w-site-width mx-[2vw] px-8 2xl:mx-auto">
+			<div className="max-w-content 2xl:w-site-width mx-[2vw] mb-6 px-8 2xl:mx-auto">
 				<Breadcrumb links={breadcrumbLinks} />
 				<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
 					<div className="flex flex-col gap-7">

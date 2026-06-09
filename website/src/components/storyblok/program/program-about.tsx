@@ -1,8 +1,8 @@
 import type { ProgramDetailLabels } from '@/components/storyblok/program/program-detail-labels';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { PublicProgramDetails } from '@/lib/services/program/program.types';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
+import type { PublicProgramDetails } from '@/lib/services/program/program.types';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import { ExternalLink } from 'lucide-react';

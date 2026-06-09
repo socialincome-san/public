@@ -1,8 +1,8 @@
 import { MapRectangle } from '@/components/storyblok/country/map-rectangle';
-import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
 import type { ProgramDetailLabels } from '@/components/storyblok/program/program-detail-labels';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
+import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
 
 type Props = {
 	countryIsoCode: string;
