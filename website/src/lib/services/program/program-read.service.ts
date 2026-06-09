@@ -1,6 +1,5 @@
 import { PayoutStatus, PrismaClient, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
-import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
@@ -290,8 +289,7 @@ export class ProgramReadService extends BaseService {
 			}
 		}
 
-		const topLocalPartner =
-			[...localPartnerCounts.values()].sort((left, right) => right.count - left.count)[0] ?? null;
+		const topLocalPartner = [...localPartnerCounts.values()].sort((left, right) => right.count - left.count)[0] ?? null;
 		const localPartnerName = topLocalPartner?.name ?? null;
 		const localPartnerSlug = topLocalPartner?.slug ?? null;
 
@@ -316,7 +314,6 @@ export class ProgramReadService extends BaseService {
 			startedAt: earliestStart,
 		};
 	};
-
 
 	async getPublicProgramBySlug(slug: string): Promise<ServiceResult<PublicProgramDetails>> {
 		try {

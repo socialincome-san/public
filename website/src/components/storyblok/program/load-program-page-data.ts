@@ -1,8 +1,8 @@
-import { getProgramId, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
+import { getProgramId, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { PublicProgramDetails, PublicProgramStats } from '@/lib/services/program/program.types';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
+import type { PublicProgramDetails, PublicProgramStats } from '@/lib/services/program/program.types';
 import { services } from '@/lib/services/services';
 import { getProgramStoryPath, getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoryData } from '@storyblok/js';

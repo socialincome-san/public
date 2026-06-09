@@ -1,6 +1,6 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
-import { ProgramDetail } from '@/components/storyblok/program/program-detail';
 import { loadProgramPageData } from '@/components/storyblok/program/load-program-page-data';
+import { ProgramDetail } from '@/components/storyblok/program/program-detail';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { notFound } from 'next/navigation';
 

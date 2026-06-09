@@ -29,12 +29,7 @@ export const MapImage = ({
 		<div className={wrapperClassName}>
 			<div className={containerClassName}>
 				<div className="bg-muted/20 absolute inset-0 flex items-center justify-center">
-					<div
-						className={cn(
-							'bg-primary/10 flex h-[46%] w-[46%] items-center justify-center',
-							placeholderClassName,
-						)}
-					>
+					<div className={cn('bg-primary/10 flex h-[46%] w-[46%] items-center justify-center', placeholderClassName)}>
 						<div className={cn('bg-primary/15 h-[56%] w-[56%]', placeholderClassName)} />
 					</div>
 				</div>

@@ -609,7 +609,9 @@ export class StoryblokService extends BaseService {
 				return undefined;
 			}
 
-			return countries.data.find((country) => country.content.isoCode?.toString().trim().toLowerCase() === normalizedIsoCode.toLowerCase());
+			return countries.data.find(
+				(country) => country.content.isoCode?.toString().trim().toLowerCase() === normalizedIsoCode.toLowerCase(),
+			);
 		};
 
 		try {
