@@ -20,17 +20,9 @@ const fillStripeHostedCheckoutForm = async (scope: Page | FrameLocator, donor: D
 	const zipField = scope.getByRole('textbox', { name: 'ZIP' });
 
 	if (await zipField.count()) {
-		await zipField.fill('8001');
-
-		const saveCheckbox = scope.getByRole('checkbox', { name: 'Save my information for' });
-		if (await saveCheckbox.count()) {
-			await saveCheckbox.uncheck();
-		}
-	}
-
-	const phoneField = scope.getByRole('textbox', { name: 'Phone' });
-	if (await phoneField.count()) {
-		await phoneField.fill('+41791234567');
+		// Stripe form is rendered IP-dependently; CI may require ZIP (and would require phone if Link is enabled).
+		await zipField.fill('12345');
+		await scope.getByRole('checkbox', { name: 'Save my information for' }).uncheck();
 	}
 
 	await scope.getByTestId('hosted-payment-submit-button').click();
