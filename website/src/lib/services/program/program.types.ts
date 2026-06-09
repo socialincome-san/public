@@ -41,6 +41,8 @@ export type PublicProgramDetails = {
 	programName: string;
 	countryIsoCode: string;
 	ownerOrganizationName: string | null;
+	localPartnerName: string | null;
+	localPartnerSlug: string | null;
 	operatorOrganizationName: string | null;
 	targetFocuses: string[];
 	amountOfRecipientsForStart: number | null;

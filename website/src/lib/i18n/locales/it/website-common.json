@@ -175,6 +175,24 @@
 		"recipient-plural": "beneficiari",
 		"about": "Informazioni su"
 	},
+	"program-detail-page": {
+		"view-breakdown": "Vedi dettaglio",
+		"sent-to-recipients": "Versato ai beneficiari ad oggi",
+		"total-program-costs": "Costi totali del programma",
+		"available-credits": "Crediti disponibili",
+		"about-title": "Informazioni su questo programma",
+		"program-owner": "Proprietario del programma",
+		"local-program-owner": "Partner locale del programma",
+		"program-operator": "Operatore del programma",
+		"duration": "Durata",
+		"month-singular": "mese",
+		"month-plural": "mesi",
+		"start-date": "Data di inizio",
+		"view-demographics": "Vedi dati demografici",
+		"completed-surveys": "Sondaggi completati",
+		"view-impact-data": "Vedi dati sull'impatto",
+		"country-analysis": "Analisi del paese"
+	},
 	"campaigns-page": {
 		"empty": "Nessuna campagna trovata.",
 		"contribution-singular": "contributo",

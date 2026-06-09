@@ -1,6 +1,7 @@
+import { loadProgramPageDataFromStory } from '@/components/storyblok/program/load-program-page-data';
 import { ProgramDetail } from '@/components/storyblok/program/program-detail';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
-import { getProgramId, getProgramTitle } from '@/components/storyblok/program/program.utils';
+import { getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
@@ -11,12 +12,6 @@ type Props = {
 	region: WebsiteRegion;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
-};
-
-const getProgramStats = async (programId: string) => {
-	const statsResult = await services.read.program.getPublicProgramStatsById(programId);
-
-	return statsResult.success ? statsResult.data : undefined;
 };
 
 export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
@@ -32,8 +27,7 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, pre
 		},
 		renderStory: async (story) => {
 			const programTitle = getProgramTitle(story.content);
-			const programId = getProgramId(story.content);
-			const stats = programId ? await getProgramStats(programId) : undefined;
+			const { stats, dashboardStats, programDetails } = await loadProgramPageDataFromStory(story);
 
 			return (
 				<ProgramDetail
@@ -43,7 +37,10 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, pre
 					fullSlug={story.full_slug}
 					heroImageFilename={story.content.primaryImage?.filename ?? undefined}
 					heroImageAlt={story.content.primaryImage?.alt ?? programTitle}
+					description={story.content.description?.trim() || undefined}
 					stats={stats}
+					dashboardStats={dashboardStats}
+					programDetails={programDetails}
 				/>
 			);
 		},

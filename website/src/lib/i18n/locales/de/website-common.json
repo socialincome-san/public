@@ -175,6 +175,24 @@
 		"recipient-plural": "Empfänger:innen",
 		"about": "Über"
 	},
+	"program-detail-page": {
+		"view-breakdown": "Aufschlüsselung anzeigen",
+		"sent-to-recipients": "Bisher an Empfänger:innen ausbezahlt",
+		"total-program-costs": "Gesamte Programmkosten",
+		"available-credits": "Verfügbare Guthaben",
+		"about-title": "Über dieses Programm",
+		"program-owner": "Programmträger",
+		"local-program-owner": "Lokaler Programmträger",
+		"program-operator": "Programmbetreiber",
+		"duration": "Dauer",
+		"month-singular": "Monat",
+		"month-plural": "Monate",
+		"start-date": "Startdatum",
+		"view-demographics": "Demografie anzeigen",
+		"completed-surveys": "Abgeschlossene Umfragen",
+		"view-impact-data": "Wirkungsdaten anzeigen",
+		"country-analysis": "Länderanalyse"
+	},
 	"campaigns-page": {
 		"empty": "Keine Kampagnen gefunden.",
 		"contribution-singular": "Spende",
