@@ -186,16 +186,34 @@ const fillOnboardingFieldIfEmpty = async (scope: Locator, fieldName: string, val
 	}
 };
 
+const ONBOARDING_COUNTRY_LABELS: Record<string, string> = {
+	CH: 'Switzerland',
+};
+
+const selectOnboardingCountry = async (page: Page, scope: Locator, countryCode: string) => {
+	const label = ONBOARDING_COUNTRY_LABELS[countryCode];
+	if (!label) {
+		throw new Error(`Unsupported onboarding country: ${countryCode}`);
+	}
+
+	const field = scope.getByTestId('form-item-country');
+	await field.locator('button[role="combobox"]').click();
+	await page.getByRole('option', { name: label, exact: true }).click();
+};
+
 export const completeStripeOnboardingStep = async (
 	page: Page,
 	donor: DonationWizardDonor,
 	gender: 'female' | 'male' | 'private' = 'female',
+	country = 'CH',
 ) => {
 	const modal = wizard(page);
 
 	await waitForWizardStep(modal, 'donation-wizard-step-onboarding');
 	await fillOnboardingFieldIfEmpty(modal, 'firstname', donor.firstName);
 	await fillOnboardingFieldIfEmpty(modal, 'lastname', donor.lastName);
+	// Stripe checkout may prefill a non-CH country when CI fills a US ZIP code.
+	await selectOnboardingCountry(page, modal, country);
 	await modal.getByTestId(`radio-card-${gender}`).click();
 	await clickWizardButton(modal, 'donation-wizard-onboarding-submit');
 	await waitForWizardStep(modal, 'donation-wizard-step-referral');
