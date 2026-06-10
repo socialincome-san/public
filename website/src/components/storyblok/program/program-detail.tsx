@@ -1,6 +1,6 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
-import { getCountryDescription, getCountryTitle } from '@/components/storyblok/country/country.utils';
+import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramAbout } from '@/components/storyblok/program/program-about';
 import { ProgramCountry } from '@/components/storyblok/program/program-country';
 import { buildProgramDetailLabels } from '@/components/storyblok/program/program-detail-labels';
@@ -10,89 +10,53 @@ import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
 import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
-import type { PublicProgramDetails, PublicProgramStats } from '@/lib/services/program/program.types';
-import { services } from '@/lib/services/services';
-import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
-import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
+import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
-	title: string;
+	programDetailData: ProgramDetailData;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
-	fullSlug: string;
-	heroImageFilename?: string;
-	heroImageAlt: string;
-	stats?: PublicProgramStats;
-	dashboardStats?: ProgramDashboardStats;
-	programDetails?: PublicProgramDetails;
-	description?: string;
 };
 
-export const ProgramDetail = async ({
-	title,
-	lang,
-	region,
-	fullSlug,
-	heroImageFilename,
-	heroImageAlt,
-	stats,
-	dashboardStats,
-	programDetails,
-	description,
-}: Props) => {
+export const ProgramDetail = async ({ programDetailData, lang, region }: Props) => {
+	const resolvedHeroImageAlt = programDetailData.heroImageAlt ?? programDetailData.title;
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const labels = buildProgramDetailLabels(translator);
-	const countryIsoCode = programDetails?.countryIsoCode ?? stats?.countryIsoCode;
-	const recipientsCount = dashboardStats?.recipientsCount ?? programDetails?.recipientsCount ?? stats?.recipientsCount ?? 0;
-	const completedSurveysCount = dashboardStats?.completedSurveysCount ?? programDetails?.completedSurveysCount ?? 0;
+	const countryIsoCode = programDetailData.programDetails?.countryIsoCode ?? programDetailData.stats?.countryIsoCode;
+	const recipientsCount =
+		programDetailData.dashboardStats?.recipientsCount ??
+		programDetailData.programDetails?.recipientsCount ??
+		programDetailData.stats?.recipientsCount ??
+		0;
+	const completedSurveysCount =
+		programDetailData.dashboardStats?.completedSurveysCount ?? programDetailData.programDetails?.completedSurveysCount ?? 0;
 
-	const [breadcrumbLinks, countryResult, localPartnerStoryResult] = await Promise.all([
-		buildBreadcrumbLinks({
-			fullSlug,
-			currentLabel: title,
-			lang,
-			region,
-		}),
-		countryIsoCode && countryIsoCode !== '-'
-			? services.storyblok.getCountryByIsoCode(countryIsoCode, lang)
-			: Promise.resolve(undefined),
-		programDetails?.localPartnerSlug
-			? services.storyblok.getLocalPartnerBySlug(programDetails.localPartnerSlug, lang)
-			: Promise.resolve(undefined),
-	]);
-
-	let localPartnerWebsiteHref: string | undefined;
-	if (localPartnerStoryResult?.success) {
-		const resolvedHref = resolveStoryblokLink(localPartnerStoryResult.data.content.website, lang, region);
-		if (resolvedHref !== '#') {
-			localPartnerWebsiteHref = resolvedHref;
-		}
-	}
-
-	const countryName = countryResult?.success
-		? getCountryTitle(countryResult.data.content)
-		: countryIsoCode && isValidCountryCode(countryIsoCode)
-			? getCountryNameByCode(countryIsoCode)
-			: countryIsoCode;
-	const countryDescription = countryResult?.success ? getCountryDescription(countryResult.data.content) : undefined;
+	const breadcrumbLinks = await buildBreadcrumbLinks({
+		fullSlug: programDetailData.fullSlug,
+		currentLabel: programDetailData.title,
+		lang,
+		region,
+	});
 
 	return (
 		<>
 			<HeroDonationsHeader
 				lang={lang}
-				title={title}
-				heroImageFilename={heroImageFilename}
-				heroImageAlt={heroImageAlt}
+				title={programDetailData.title}
+				heroImageFilename={programDetailData.heroImageFilename}
+				heroImageAlt={resolvedHeroImageAlt}
 				stats={
-					stats
+					programDetailData.stats
 						? [
 								{
-									label: getCountryNameByCode(stats.countryIsoCode),
+									label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
 								},
 								{
-									value: stats.recipientsCount,
-									label: stats.recipientsCount === 1 ? labels.recipientSingular : labels.recipientPlural,
+									value: programDetailData.stats.recipientsCount,
+									label:
+										programDetailData.stats.recipientsCount === 1
+											? labels.recipientSingular
+											: labels.recipientPlural,
 								},
 							]
 						: []
@@ -102,27 +66,14 @@ export const ProgramDetail = async ({
 				<Breadcrumb links={breadcrumbLinks} />
 				<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
 					<div className="flex flex-col gap-7">
-						{dashboardStats ? <ProgramFinances stats={dashboardStats} labels={labels} lang={lang} /> : null}
-						{programDetails ? (
-							<ProgramAbout
-								description={description}
-								programDetails={programDetails}
-								dashboardStats={dashboardStats}
-								localPartnerWebsiteHref={localPartnerWebsiteHref}
-								labels={labels}
-								lang={lang}
-								region={region}
-							/>
+						{programDetailData.dashboardStats ? (
+							<ProgramFinances stats={programDetailData.dashboardStats} labels={labels} lang={lang} />
 						) : null}
+						<ProgramAbout programDetailData={programDetailData} labels={labels} lang={lang} region={region} />
 					</div>
 					<div className="flex flex-col gap-7">
-						{countryIsoCode && countryName ? (
-							<ProgramCountry
-								countryIsoCode={countryIsoCode}
-								countryName={countryName}
-								description={countryDescription}
-								labels={labels}
-							/>
+						{countryIsoCode ? (
+							<ProgramCountry countryIsoCode={countryIsoCode} lang={lang} labels={labels} />
 						) : null}
 						<div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
 							<ProgramRecipients count={recipientsCount} labels={labels} lang={lang} />

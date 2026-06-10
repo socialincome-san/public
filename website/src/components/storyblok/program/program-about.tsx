@@ -1,45 +1,33 @@
+import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import type { ProgramDetailLabels } from '@/components/storyblok/program/program-detail-labels';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
-import type { PublicProgramDetails } from '@/lib/services/program/program.types';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
-import { isSafeHref } from '@/lib/utils/string-utils';
-import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 type DetailRow = {
 	label: string;
 	value: string;
 	href?: string;
-	external?: boolean;
 };
 
 type Props = {
-	description?: string;
-	programDetails: PublicProgramDetails;
-	dashboardStats?: ProgramDashboardStats;
-	localPartnerWebsiteHref?: string;
+	programDetailData: ProgramDetailData;
 	labels: ProgramDetailLabels;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const ProgramAbout = ({
-	description,
-	programDetails,
-	dashboardStats,
-	localPartnerWebsiteHref,
-	labels,
-	lang,
-	region,
-}: Props) => {
+export const ProgramAbout = ({ programDetailData, labels, lang, region }: Props) => {
+	const { description, programDetails, dashboardStats } = programDetailData;
+
+	if (!programDetails) {
+		return null;
+	}
 	const durationMonths = dashboardStats?.programDurationInMonths ?? programDetails.programDurationInMonths;
 	const localPartnerHref = programDetails.localPartnerSlug
 		? `/${lang}/${region}/${NEW_WEBSITE_SLUG}/local-partners/${programDetails.localPartnerSlug}`
-		: localPartnerWebsiteHref && isSafeHref(localPartnerWebsiteHref)
-			? localPartnerWebsiteHref
-			: undefined;
+		: undefined;
 
 	const details: DetailRow[] = [];
 
@@ -52,7 +40,6 @@ export const ProgramAbout = ({
 			label: labels.localProgramOwner,
 			value: programDetails.localPartnerName,
 			href: localPartnerHref,
-			external: !programDetails.localPartnerSlug && Boolean(localPartnerHref),
 		});
 	}
 
@@ -92,21 +79,9 @@ export const ProgramAbout = ({
 						<dt className="font-bold">{row.label}</dt>
 						<dd>
 							{row.href ? (
-								row.external ? (
-									<a
-										href={row.href}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="inline-flex items-center gap-1 hover:underline"
-									>
-										{row.value}
-										<ExternalLink className="size-4" />
-									</a>
-								) : (
-									<Link href={row.href} className="hover:underline">
-										{row.value}
-									</Link>
-								)
+								<Link href={row.href} className="hover:underline">
+									{row.value}
+								</Link>
 							) : (
 								row.value
 							)}

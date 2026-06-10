@@ -7,21 +7,21 @@ import { services } from '@/lib/services/services';
 import { getProgramStoryPath, getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoryData } from '@storyblok/js';
 
-type ProgramPortalData = {
+type ProgramDetailPortalData = {
 	stats?: PublicProgramStats;
 	dashboardStats?: ProgramDashboardStats;
 	programDetails?: PublicProgramDetails;
 };
 
-type ProgramPageData = {
+export type ProgramDetailData = {
 	title: string;
 	fullSlug: string;
 	heroImageFilename?: string;
 	heroImageAlt?: string;
 	description?: string;
-} & ProgramPortalData;
+} & ProgramDetailPortalData;
 
-export const loadProgramPortalData = async (portalSlug: string): Promise<ProgramPortalData> => {
+export const loadProgramDetailPortalData = async (portalSlug: string): Promise<ProgramDetailPortalData> => {
 	const programIdResult = await services.read.program.getProgramIdByPortalSlug(portalSlug);
 	if (!programIdResult.success) {
 		return {};
@@ -41,14 +41,14 @@ export const loadProgramPortalData = async (portalSlug: string): Promise<Program
 	};
 };
 
-export const loadProgramPageData = async (urlSlug: string, lang: string): Promise<ProgramPageData | null> => {
+export const loadProgramDetailData = async (urlSlug: string, lang: string): Promise<ProgramDetailData | null> => {
 	const programResult = await services.storyblok.getProgramBySlug(urlSlug, lang);
 
 	// If the program exists in storyblok, use the portalslug from storyblok to resolve the db entry
 	if (programResult.success) {
 		const story = programResult.data;
 		const portalSlug = getProgramPortalSlug(story.content);
-		const portalData = portalSlug ? await loadProgramPortalData(portalSlug) : {};
+		const portalData = portalSlug ? await loadProgramDetailPortalData(portalSlug) : {};
 
 		return {
 			title: getProgramTitle(story.content),
@@ -70,7 +70,7 @@ export const loadProgramPageData = async (urlSlug: string, lang: string): Promis
 	}
 
 	const defaultImage = overviewResult.success ? overviewResult.data.content.programDefaultImage : undefined;
-	const portalData = await loadProgramPortalData(urlSlug);
+	const portalData = await loadProgramDetailPortalData(urlSlug);
 
 	return {
 		title: previewProgramResult.data.name,

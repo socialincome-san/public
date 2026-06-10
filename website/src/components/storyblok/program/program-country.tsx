@@ -1,20 +1,31 @@
+import { getCountryDescription, getCountryTitle } from '@/components/storyblok/country/country.utils';
 import { MapRectangle } from '@/components/storyblok/country/map-rectangle';
 import type { ProgramDetailLabels } from '@/components/storyblok/program/program-detail-labels';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
-import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { services } from '@/lib/services/services';
+import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 
 type Props = {
 	countryIsoCode: string;
-	countryName: string;
-	description?: StoryblokRichtext;
+	lang: WebsiteLanguage;
 	labels: ProgramDetailLabels;
 };
 
-export const ProgramCountry = ({ countryIsoCode, countryName, description, labels }: Props) => {
-	if (countryIsoCode === '-') {
+export const ProgramCountry = async ({ countryIsoCode, lang, labels }: Props) => {
+	if (!countryIsoCode || countryIsoCode === '-') {
 		return null;
 	}
+
+	const countryResult = await services.storyblok.getCountryByIsoCode(countryIsoCode, lang);
+
+	const countryName = countryResult.success
+		? getCountryTitle(countryResult.data.content)
+		: isValidCountryCode(countryIsoCode)
+			? getCountryNameByCode(countryIsoCode)
+			: countryIsoCode;
+	const description = countryResult.success ? getCountryDescription(countryResult.data.content) : undefined;
 
 	return (
 		<div className="flex flex-col items-stretch overflow-hidden rounded-xl bg-white p-3 shadow-lg md:flex-row md:py-3 md:pr-3 md:pl-0">
