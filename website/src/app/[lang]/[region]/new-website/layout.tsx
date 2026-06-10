@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	const { lang, region } = await params;
-
 	const sessions = await getCurrentSessions();
 
 	return (

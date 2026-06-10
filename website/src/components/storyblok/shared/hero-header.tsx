@@ -1,7 +1,8 @@
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import NextImage from 'next/image';
 import type { ReactNode } from 'react';
 
-export type HeroHeaderStat = {
+type HeroHeaderStat = {
 	value?: number;
 	label: string;
 };
@@ -15,8 +16,6 @@ type Props = {
 	titleIconAlt?: string;
 	preTitle?: ReactNode;
 	badges?: ReactNode;
-	rightSide?: ReactNode;
-	bottomContent?: ReactNode;
 };
 
 export const HeroHeader = ({
@@ -28,8 +27,6 @@ export const HeroHeader = ({
 	titleIconAlt,
 	preTitle,
 	badges,
-	rightSide,
-	bottomContent,
 }: Props) => {
 	return (
 		<section className="full-bleed-hero flex flex-col gap-6">
@@ -82,11 +79,15 @@ export const HeroHeader = ({
 						{badges ? <div className="flex flex-wrap gap-2">{badges}</div> : null}
 					</div>
 
-					{rightSide ? <div className="hidden shrink-0 lg:block">{rightSide}</div> : null}
+					<div className="hidden shrink-0 lg:block">
+						<DonationForm />
+					</div>
 				</div>
 			</div>
 
-			{bottomContent ? <div className="flex justify-center lg:hidden">{bottomContent}</div> : null}
+			<div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">
+				<DonationForm />
+			</div>
 		</section>
 	);
 };

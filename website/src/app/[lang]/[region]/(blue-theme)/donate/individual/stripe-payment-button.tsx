@@ -1,7 +1,7 @@
 'use client';
 
 import { useI18n } from '@/lib/i18n/useI18n';
-import { createStripeCheckoutAction } from '@/lib/server-actions/stripe-actions';
+import { createStripeCheckoutAction } from '@/lib/server-actions/stripe-legacy-actions';
 import { Button } from '@socialincome/ui';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

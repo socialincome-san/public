@@ -1,9 +1,9 @@
-import { BankTransferPayment } from '@/lib/services/bank-transfer/bank-transfer.types';
 import { BankContributorData } from '@/lib/services/contributor/contributor.types';
+import { type LegacyQrBillPayment } from '@/lib/services/qr-bill/legacy/legacy-qr-bill.types';
 import { generateQrBillSvg } from '@/lib/utils/qr-bill';
 import { useState, useTransition } from 'react';
 import toast from 'react-hot-toast';
-import { createContributionForContributor, getReferenceIds } from '../server-actions/bank-transfer-action';
+import { createContributionForContributor, getReferenceIds } from '../server-actions/legacy-qr-bill-actions';
 
 type UseBankTransferProps = {
 	amount: number;
@@ -74,7 +74,7 @@ export const useBankTransfer = ({ amount, intervalCount, currency, qrBillType, t
 			return;
 		}
 
-		const payment: BankTransferPayment = {
+		const payment: LegacyQrBillPayment = {
 			amount: amount,
 			currency: currency as 'CHF' | 'EUR',
 			referenceId: contributionReference,

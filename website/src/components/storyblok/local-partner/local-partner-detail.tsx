@@ -3,7 +3,7 @@ import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-l
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
 import { isFocusStory } from '@/components/storyblok/focus/focus.utils';
 import { EntityAboutSection } from '@/components/storyblok/shared/entity-about-section';
-import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
+import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { StoryDetailContent } from '@/components/storyblok/shared/story-detail-content';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
@@ -40,8 +40,7 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 
 	return (
 		<>
-			<HeroDonationsHeader
-				lang={lang}
+			<HeroHeader
 				title={localPartnerTitle}
 				heroImageFilename={localPartner.content.heroImage?.filename}
 				heroImageAlt={localPartner.content.heroImage?.alt ?? localPartnerTitle}

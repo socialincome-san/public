@@ -5,6 +5,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import {
+	ContributorCommunityStats,
 	ContributorDonationCertificate,
 	ContributorOption,
 	ContributorPaginatedTableView,
@@ -68,6 +69,45 @@ export class ContributorReadService extends BaseService {
 		});
 
 		return new Map(grouped.map((row) => [row.contributorId, Number(row._sum.amountChf ?? 0)]));
+	}
+
+	async getCommunityStats(): Promise<ServiceResult<ContributorCommunityStats>> {
+		try {
+			const contributions = await this.db.contribution.findMany({
+				where: { status: 'succeeded' },
+				distinct: ['contributorId'],
+				select: {
+					contributor: {
+						select: {
+							contact: {
+								select: {
+									address: {
+										select: { country: true },
+									},
+								},
+							},
+						},
+					},
+				},
+			});
+
+			const countries = new Set<CountryCode>();
+			for (const contribution of contributions) {
+				const country = contribution.contributor.contact?.address?.country;
+				if (country) {
+					countries.add(country);
+				}
+			}
+
+			return this.resultOk({
+				supporterCount: contributions.length,
+				countryCount: countries.size,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch contributor community stats: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async get(userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> {

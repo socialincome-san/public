@@ -3,7 +3,7 @@
 import { Button } from '@/components/button';
 import { Input } from '@/components/input';
 import { SegmentedToggle } from '@/components/segmented-toggle';
-import { createPortalProgramDonationCheckoutAction } from '@/lib/server-actions/stripe-actions';
+import { createPortalProgramDonationCheckoutAction } from '@/lib/server-actions/stripe-legacy-actions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 

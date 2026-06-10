@@ -1,25 +1,66 @@
-import { ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/client';
+import { type DonationAmountContext } from '@/components/donation-wizard/utils/donation-amount';
+import { type Contributor, ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/client';
 
-export type StripeCustomerData = {
-	id: string;
-	email: string;
-	name?: string;
-	address?: {
-		country?: CountryCode;
+export type StripeEmbeddedCheckoutSessionInput = {
+	wizardContext: DonationAmountContext;
+	currency?: string;
+	stripeCustomerId: string | null;
+};
+
+export type StripeEmbeddedCheckoutCreateInput = {
+	amount: number;
+	returnUrl?: string;
+	recurring?: boolean;
+	currency?: string;
+	intervalCount?: number;
+	stripeCustomerId?: string | null;
+	campaignId?: string;
+	accountId?: string;
+	source?: string;
+};
+
+export type StripeEmbeddedCheckoutResult = {
+	clientSecret: string;
+	sessionId: string;
+	publishableKey: string;
+};
+
+export type StripeCheckoutCustomerPrefill = {
+	email?: string;
+	firstname?: string;
+	lastname?: string;
+	country?: CountryCode;
+};
+
+export type StripeCheckoutOnboardingPrefill = StripeCheckoutCustomerPrefill & {
+	needsOnboarding: boolean;
+};
+
+export type UpdateContributorAfterCheckoutInput = {
+	stripeCheckoutSessionId: string;
+	user: {
+		email: string;
+		language: string;
+		personal: {
+			name: string;
+			lastname: string;
+			gender?: Gender;
+			referral?: ContributorReferralSource;
+		};
+		address: {
+			country: CountryCode;
+		};
 	};
 };
 
-export type CheckoutMetadata = {
-	campaignId?: string;
-	[key: string]: string | undefined;
+export type UpdateContributorAfterCheckoutResult = Contributor;
+
+export type UpdateContributorReferralAfterCheckoutInput = {
+	stripeCheckoutSessionId: string;
+	referral: ContributorReferralSource;
 };
 
-export type WebhookResult = {
-	contributionId?: string;
-	contributorId?: string;
-	isNewContributor?: boolean;
-	skipReason?: string;
-};
+export type UpdateContributorReferralAfterCheckoutResult = Contributor;
 
 export type StripeSubscriptionRow = {
 	id: string;
@@ -48,24 +89,37 @@ export type StripeSubscriptionPaginatedTableView = {
 	totalCount: number;
 };
 
-export type UpdateContributorAfterCheckoutInput = {
-	stripeCheckoutSessionId: string;
-	user: {
-		email: string;
-		language: string;
-		personal: {
-			name: string;
-			lastname: string;
-			gender?: Gender;
-			referral?: ContributorReferralSource;
-		};
-		address: {
-			country: CountryCode;
-		};
-	};
-};
-
 export type StripePaymentMethod = {
 	type: 'card' | 'other';
 	label: string;
+};
+
+export type StripeBillingPortalSessionUrl = string;
+
+export type StripeCustomerData = {
+	id: string;
+	email: string;
+	name?: string;
+	address?: {
+		country?: string;
+	};
+};
+
+export type StripeContributorNameParts = {
+	firstName: string;
+	lastName: string;
+};
+
+export type CheckoutMetadata = {
+	campaignId?: string;
+	accountId?: string;
+	source?: string;
+	[key: string]: string | undefined;
+};
+
+export type StripeWebhookResult = {
+	contributionId?: string;
+	contributorId?: string;
+	isNewContributor?: boolean;
+	skipReason?: string;
 };
