@@ -237,7 +237,13 @@ export class SurveyImpactService extends BaseService {
 			where.language = filters.language;
 		}
 
-		if (filters.programIds || filters.countryIsoCodes || filters.recipientGenders || filters.recipientAgeGroups) {
+		if (
+			filters.focusIds ||
+			filters.programIds ||
+			filters.countryIsoCodes ||
+			filters.recipientGenders ||
+			filters.recipientAgeGroups
+		) {
 			const contactWhere: Prisma.ContactWhereInput = {
 				...(filters.recipientGenders && filters.recipientGenders.length > 0
 					? { gender: { in: filters.recipientGenders } }
@@ -252,6 +258,9 @@ export class SurveyImpactService extends BaseService {
 			}
 
 			where.recipient = {
+				...(filters.focusIds && filters.focusIds.length > 0
+					? { localPartner: { focuses: { some: { focusId: { in: filters.focusIds } } } } }
+					: {}),
 				...(filters.programIds && filters.programIds.length > 0 ? { programId: { in: filters.programIds } } : {}),
 				...(filters.countryIsoCodes && filters.countryIsoCodes.length > 0
 					? { program: { country: { isoCode: { in: filters.countryIsoCodes } } } }
@@ -496,6 +505,20 @@ export class SurveyImpactService extends BaseService {
 					questionnaire: true,
 					recipient: {
 						select: {
+							localPartner: {
+								select: {
+									focuses: {
+										select: {
+											focus: {
+												select: {
+													id: true,
+													slug: true,
+												},
+											},
+										},
+									},
+								},
+							},
 							program: {
 								select: {
 									id: true,
@@ -513,11 +536,15 @@ export class SurveyImpactService extends BaseService {
 			});
 
 			const countrySet = new Set<string>();
+			const focusMap = new Map<string, string>();
 			const programMap = new Map<string, string>();
 			const questionnaireSet = new Set<string>();
 
 			for (const survey of surveys) {
 				questionnaireSet.add(survey.questionnaire);
+				for (const { focus } of survey.recipient.localPartner.focuses) {
+					focusMap.set(focus.id, focus.slug);
+				}
 				const program = survey.recipient.program;
 				if (!program) {
 					continue;
@@ -531,6 +558,9 @@ export class SurveyImpactService extends BaseService {
 			const countries = Array.from(countrySet)
 				.sort((left, right) => left.localeCompare(right))
 				.map((isoCode) => ({ value: isoCode, label: isoCode }));
+			const focuses = Array.from(focusMap.entries())
+				.sort((left, right) => left[1].localeCompare(right[1]))
+				.map(([id, name]) => ({ value: id, label: name }));
 			const programs = Array.from(programMap.entries())
 				.sort((left, right) => left[1].localeCompare(right[1]))
 				.map(([id, name]) => ({ value: id, label: name }));
@@ -540,6 +570,7 @@ export class SurveyImpactService extends BaseService {
 
 			return this.resultOk({
 				countries,
+				focuses,
 				programs,
 				questionnaires,
 			});

@@ -1,4 +1,5 @@
 import { type MultiSelectOption } from '@/components/multi-select';
+import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { SurveyQuestionnaire } from '@/generated/prisma/client';
 import { RECIPIENT_AGE_GROUPS } from '@/lib/constants/recipient-age-groups';
 import { services } from '@/lib/services/services';
@@ -13,12 +14,32 @@ type ImpactMeasurementFilterSectionProps = {
 	searchParams: ImpactFilterQueryParams;
 };
 
+const getFocusTitleBySlug = (focuses: FocusStory[]) => {
+	const focusTitleBySlug = new Map<string, string>();
+
+	focuses.forEach((focus) => {
+		const slug = focus.content.portalSlug?.trim();
+		const title = focus.content.title?.trim();
+
+		if (slug && title) {
+			focusTitleBySlug.set(slug, title);
+		}
+	});
+
+	return focusTitleBySlug;
+};
+
 export const ImpactMeasurementFilterSection = async ({ lang, searchParams }: ImpactMeasurementFilterSectionProps) => {
-	const translator = await getImpactTranslator(lang);
-	const filterOptionsResult = await services.surveyImpact.getImpactFilterOptions();
+	const [translator, filterOptionsResult, storyblokFocusesResult] = await Promise.all([
+		getImpactTranslator(lang),
+		services.surveyImpact.getImpactFilterOptions(),
+		services.storyblok.getFocuses(lang),
+	]);
 	const filterOptions = filterOptionsResult.success
 		? filterOptionsResult.data
-		: { countries: [], programs: [], questionnaires: [] };
+		: { countries: [], focuses: [], programs: [], questionnaires: [] };
+	const storyblokFocuses = (storyblokFocusesResult.success ? storyblokFocusesResult.data : []) as FocusStory[];
+	const focusTitleBySlug = getFocusTitleBySlug(storyblokFocuses);
 
 	const localizedQuestionnaireOptions = filterOptions.questionnaires.map((questionnaire) => ({
 		value: questionnaire.value,
@@ -72,6 +93,13 @@ export const ImpactMeasurementFilterSection = async ({ lang, searchParams }: Imp
 			options: filterOptions.programs.map((option) => ({
 				value: `${FILTER_PREFIX.program}${option.value}`,
 				label: option.label,
+			})),
+		},
+		{
+			heading: translator.t('survey.impactMeasurement.filters.allFocuses'),
+			options: filterOptions.focuses.map((option) => ({
+				value: `${FILTER_PREFIX.focus}${option.value}`,
+				label: focusTitleBySlug.get(option.label) ?? option.label,
 			})),
 		},
 		{

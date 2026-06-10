@@ -4,6 +4,7 @@ import { Question } from '@/lib/types/question';
 
 export type SurveyImpactFilters = {
 	questionnaires?: SurveyQuestionnaire[];
+	focusIds?: string[];
 	programIds?: string[];
 	countryIsoCodes?: CountryCode[];
 	language?: string;
@@ -65,6 +66,7 @@ export type SurveyImpactFilterOption = {
 
 export type SurveyImpactFilterOptions = {
 	countries: SurveyImpactFilterOption[];
+	focuses: SurveyImpactFilterOption[];
 	programs: SurveyImpactFilterOption[];
 	questionnaires: SurveyImpactFilterOption[];
 };
