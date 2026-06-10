@@ -1,7 +1,7 @@
 import { COUNTRY_COOKIE } from '@/app/[lang]/[region]';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
-import { type WebsiteLanguage, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import {
 	loadCountryStatisticsComparison,
 	type CountryStatisticFormat,
