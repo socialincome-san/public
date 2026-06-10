@@ -1,7 +1,7 @@
-import { loadProgramPageDataFromStory } from '@/components/storyblok/program/load-program-page-data';
+import { loadProgramPortalData } from '@/components/storyblok/program/load-program-page-data';
 import { ProgramDetail } from '@/components/storyblok/program/program-detail';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
-import { getProgramTitle } from '@/components/storyblok/program/program.utils';
+import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
@@ -27,7 +27,9 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, pre
 		},
 		renderStory: async (story) => {
 			const programTitle = getProgramTitle(story.content);
-			const { stats, dashboardStats, programDetails } = await loadProgramPageDataFromStory(story);
+			const portalSlug = getProgramPortalSlug(story.content);
+
+			const programPortalData = await loadProgramPortalData(portalSlug);
 
 			return (
 				<ProgramDetail
@@ -38,9 +40,9 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, pre
 					heroImageFilename={story.content.primaryImage?.filename ?? undefined}
 					heroImageAlt={story.content.primaryImage?.alt ?? programTitle}
 					description={story.content.description?.trim() || undefined}
-					stats={stats}
-					dashboardStats={dashboardStats}
-					programDetails={programDetails}
+					stats={programPortalData.stats}
+					dashboardStats={programPortalData.dashboardStats}
+					programDetails={programPortalData.programDetails}
 				/>
 			);
 		},

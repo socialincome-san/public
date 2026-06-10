@@ -21,7 +21,7 @@ type ProgramPageData = {
 	description?: string;
 } & ProgramPortalData;
 
-const loadProgramPortalData = async (portalSlug: string): Promise<ProgramPortalData> => {
+export const loadProgramPortalData = async (portalSlug: string): Promise<ProgramPortalData> => {
 	const programIdResult = await services.read.program.getProgramIdByPortalSlug(portalSlug);
 	if (!programIdResult.success) {
 		return {};
@@ -80,13 +80,4 @@ export const loadProgramPageData = async (urlSlug: string, lang: string): Promis
 		description: undefined,
 		...portalData,
 	};
-};
-
-export const loadProgramPageDataFromStory = async (story: ProgramStory): Promise<ProgramPortalData> => {
-	const dbSlug = getProgramPortalSlug(story.content);
-	if (!dbSlug) {
-		return {};
-	}
-
-	return loadProgramPortalData(dbSlug);
 };
