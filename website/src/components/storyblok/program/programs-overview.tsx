@@ -6,16 +6,16 @@ import type { PublicProgramStatsMap } from '@/lib/services/program/program.types
 import { getCountryNameByCode } from '@/lib/types/country';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ProgramStory } from './program.types';
-import { getProgramId, getProgramSlug, getProgramTitle } from './program.utils';
+import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from './program.utils';
 
 type Props = {
 	programs: ProgramStory[];
-	statsById: PublicProgramStatsMap;
+	statsByPortalSlug: PublicProgramStatsMap;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const ProgramsOverview = async ({ programs, statsById, lang, region }: Props) => {
+export const ProgramsOverview = async ({ programs, statsByPortalSlug: statsById, lang, region }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 
 	return (
@@ -25,9 +25,9 @@ export const ProgramsOverview = async ({ programs, statsById, lang, region }: Pr
 			) : (
 				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
 					{programs.map((program) => {
-						const portalSlug = getProgramId(program.content);
+						const portalSlug = getProgramPortalSlug(program.content);
 						const programTitle = getProgramTitle(program.content);
-						const programSlug = getProgramSlug(program);
+						const storyblokSlug = getProgramStoryblokSlug(program);
 						const stats = portalSlug ? statsById[portalSlug] : undefined;
 						const primaryImageFilename = program.content.primaryImage?.filename;
 						const primaryImageAlt = program.content.primaryImage?.alt ?? programTitle;
@@ -35,7 +35,7 @@ export const ProgramsOverview = async ({ programs, statsById, lang, region }: Pr
 						const secondaryImageAlt = program.content.secondaryImage?.alt ?? programTitle;
 						const tertiaryImageFilename = program.content.tertiaryImage?.filename;
 						const tertiaryImageAlt = program.content.tertiaryImage?.alt ?? programTitle;
-						const linkHref = `/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${programSlug}`;
+						const linkHref = `/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${storyblokSlug}`;
 						const images = primaryImageFilename
 							? {
 									primaryImage: { src: primaryImageFilename, alt: primaryImageAlt },

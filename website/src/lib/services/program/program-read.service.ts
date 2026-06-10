@@ -435,7 +435,7 @@ export class ProgramReadService extends BaseService {
 		}
 	}
 
-	async getProgramIdBySlug(slug: string): Promise<ServiceResult<string>> {
+	async getProgramIdByPortalSlug(slug: string): Promise<ServiceResult<string>> {
 		try {
 			const program = await this.db.program.findUnique({ where: { slug }, select: { id: true } });
 			if (!program) {

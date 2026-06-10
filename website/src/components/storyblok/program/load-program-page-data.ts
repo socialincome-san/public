@@ -1,5 +1,5 @@
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
-import { getProgramId, getProgramTitle } from '@/components/storyblok/program/program.utils';
+import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
 import type { PublicProgramDetails, PublicProgramStats } from '@/lib/services/program/program.types';
@@ -7,7 +7,7 @@ import { services } from '@/lib/services/services';
 import { getProgramStoryPath, getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoryData } from '@storyblok/js';
 
-type ProgramDbData = {
+type ProgramPortalData = {
 	stats?: PublicProgramStats;
 	dashboardStats?: ProgramDashboardStats;
 	programDetails?: PublicProgramDetails;
@@ -19,10 +19,10 @@ type ProgramPageData = {
 	heroImageFilename?: string;
 	heroImageAlt?: string;
 	description?: string;
-} & ProgramDbData;
+} & ProgramPortalData;
 
-const loadProgramDbData = async (dbSlug: string): Promise<ProgramDbData> => {
-	const programIdResult = await services.read.program.getProgramIdBySlug(dbSlug);
+const loadProgramPortalData = async (portalSlug: string): Promise<ProgramPortalData> => {
+	const programIdResult = await services.read.program.getProgramIdByPortalSlug(portalSlug);
 	if (!programIdResult.success) {
 		return {};
 	}
@@ -31,7 +31,7 @@ const loadProgramDbData = async (dbSlug: string): Promise<ProgramDbData> => {
 	const [statsResult, dashboardStatsResult, programDetailsResult] = await Promise.all([
 		services.read.program.getPublicProgramStatsById(programId),
 		services.programStats.getProgramDashboardStats(programId),
-		services.read.program.getPublicProgramBySlug(dbSlug),
+		services.read.program.getPublicProgramBySlug(portalSlug),
 	]);
 
 	return {
@@ -44,10 +44,11 @@ const loadProgramDbData = async (dbSlug: string): Promise<ProgramDbData> => {
 export const loadProgramPageData = async (urlSlug: string, lang: string): Promise<ProgramPageData | null> => {
 	const programResult = await services.storyblok.getProgramBySlug(urlSlug, lang);
 
+	// If the program exists in storyblok, use the portalslug from storyblok to resolve the db entry
 	if (programResult.success) {
 		const story = programResult.data;
-		const dbSlug = getProgramId(story.content);
-		const dbData = dbSlug ? await loadProgramDbData(dbSlug) : {};
+		const portalSlug = getProgramPortalSlug(story.content);
+		const portalData = portalSlug ? await loadProgramPortalData(portalSlug) : {};
 
 		return {
 			title: getProgramTitle(story.content),
@@ -55,7 +56,7 @@ export const loadProgramPageData = async (urlSlug: string, lang: string): Promis
 			heroImageFilename: story.content.primaryImage?.filename ?? undefined,
 			heroImageAlt: story.content.primaryImage?.alt ?? undefined,
 			description: story.content.description?.trim() || undefined,
-			...dbData,
+			...portalData,
 		};
 	}
 
@@ -69,7 +70,7 @@ export const loadProgramPageData = async (urlSlug: string, lang: string): Promis
 	}
 
 	const defaultImage = overviewResult.success ? overviewResult.data.content.programDefaultImage : undefined;
-	const dbData = await loadProgramDbData(urlSlug);
+	const portalData = await loadProgramPortalData(urlSlug);
 
 	return {
 		title: previewProgramResult.data.name,
@@ -77,15 +78,15 @@ export const loadProgramPageData = async (urlSlug: string, lang: string): Promis
 		heroImageFilename: defaultImage?.filename ?? undefined,
 		heroImageAlt: defaultImage?.alt ?? undefined,
 		description: undefined,
-		...dbData,
+		...portalData,
 	};
 };
 
-export const loadProgramPageDataFromStory = async (story: ProgramStory): Promise<ProgramDbData> => {
-	const dbSlug = getProgramId(story.content);
+export const loadProgramPageDataFromStory = async (story: ProgramStory): Promise<ProgramPortalData> => {
+	const dbSlug = getProgramPortalSlug(story.content);
 	if (!dbSlug) {
 		return {};
 	}
 
-	return loadProgramDbData(dbSlug);
+	return loadProgramPortalData(dbSlug);
 };
