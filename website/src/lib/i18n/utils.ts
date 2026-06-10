@@ -9,6 +9,16 @@ export const defaultLanguage: WebsiteLanguage = 'en';
 export const mainWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it'];
 export const allWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it', 'kri'];
 
+export const getSafeNumberFormatLocale = (lang: WebsiteLanguage): string => {
+	try {
+		new Intl.NumberFormat(lang);
+
+		return lang;
+	} catch {
+		return defaultLanguage;
+	}
+};
+
 export type WebsiteRegion = 'int' | 'ch' | 'sl';
 export const defaultRegion: WebsiteRegion = 'int';
 export const websiteRegions: WebsiteRegion[] = ['int', 'ch'];

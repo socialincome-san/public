@@ -125,7 +125,7 @@ export const ProgramDetail = async ({
 							/>
 						) : null}
 						<div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
-							<ProgramRecipients count={recipientsCount} labels={labels} />
+							<ProgramRecipients count={recipientsCount} labels={labels} lang={lang} />
 							<ProgramSurveys completedCount={completedSurveysCount} labels={labels} />
 						</div>
 					</div>
