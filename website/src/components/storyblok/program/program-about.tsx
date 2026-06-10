@@ -1,6 +1,6 @@
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
-import type { ProgramDetailLabels } from '@/components/storyblok/program/program-detail-labels';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
+import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import Link from 'next/link';
@@ -13,12 +13,12 @@ type DetailRow = {
 
 type Props = {
 	programDetailData: ProgramDetailData;
-	labels: ProgramDetailLabels;
+	translator: Translator;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const ProgramAbout = ({ programDetailData, labels, lang, region }: Props) => {
+export const ProgramAbout = ({ programDetailData, translator, lang, region }: Props) => {
 	const { description, programDetails, dashboardStats } = programDetailData;
 
 	if (!programDetails) {
@@ -32,12 +32,12 @@ export const ProgramAbout = ({ programDetailData, labels, lang, region }: Props)
 	const details: DetailRow[] = [];
 
 	if (programDetails.ownerOrganizationName) {
-		details.push({ label: labels.programOwner, value: programDetails.ownerOrganizationName });
+		details.push({ label: translator.t('program-detail-page.program-owner'), value: programDetails.ownerOrganizationName });
 	}
 
 	if (programDetails.localPartnerName) {
 		details.push({
-			label: labels.localProgramOwner,
+			label: translator.t('program-detail-page.local-program-owner'),
 			value: programDetails.localPartnerName,
 			href: localPartnerHref,
 		});
@@ -45,19 +45,19 @@ export const ProgramAbout = ({ programDetailData, labels, lang, region }: Props)
 
 	if (programDetails.operatorOrganizationName) {
 		details.push({
-			label: labels.programOperator,
+			label: translator.t('program-detail-page.program-operator'),
 			value: programDetails.operatorOrganizationName,
 		});
 	}
 
 	details.push({
-		label: labels.duration,
-		value: `${durationMonths} ${durationMonths === 1 ? labels.monthSingular : labels.monthPlural}`,
+		label: translator.t('program-detail-page.duration'),
+		value: `${durationMonths} ${durationMonths === 1 ? translator.t('program-detail-page.month-singular') : translator.t('program-detail-page.month-plural')}`,
 	});
 
 	if (programDetails.startedAt) {
 		details.push({
-			label: labels.startDate,
+			label: translator.t('program-detail-page.start-date'),
 			value: new Intl.DateTimeFormat(lang, { month: 'long', day: 'numeric', year: 'numeric' }).format(
 				programDetails.startedAt,
 			),
@@ -67,8 +67,8 @@ export const ProgramAbout = ({ programDetailData, labels, lang, region }: Props)
 	return (
 		<div className="flex flex-col gap-6 rounded-xl bg-white px-10 pt-8 pb-10 shadow-lg">
 			<div className="flex items-center justify-between">
-				<h2 className="text-foreground text-xl font-bold">{labels.aboutTitle}</h2>
-				<ProgramDetailPill label={labels.viewDetails} />
+				<h2 className="text-foreground text-xl font-bold">{translator.t('program-detail-page.about-title')}</h2>
+				<ProgramDetailPill label={translator.t('local-partners-page.view-details')} />
 			</div>
 
 			{description ? <p className="text-foreground text-base">{description}</p> : null}

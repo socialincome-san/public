@@ -1,7 +1,7 @@
 import { Badge } from '@/components/badge';
 import { Progress } from '@/components/progress';
-import type { ProgramDetailLabels } from '@/components/storyblok/program/program-detail-labels';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
+import type { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
@@ -9,7 +9,7 @@ import { TriangleAlert } from 'lucide-react';
 
 type Props = {
 	stats: ProgramDashboardStats;
-	labels: ProgramDetailLabels;
+	translator: Translator;
 	lang: WebsiteLanguage;
 };
 
@@ -28,7 +28,7 @@ const clampPercent = (value: number): number => {
 	return Math.min(100, Math.max(0, value));
 };
 
-export const ProgramFinances = ({ stats, labels, lang }: Props) => {
+export const ProgramFinances = ({ stats, translator, lang }: Props) => {
 	const locale = getSafeNumberFormatLocale(lang);
 	const currency = stats.payoutCurrency;
 	const sentToRecipients = formatAmount(stats.paidOutSoFarProgramCurrency, locale);
@@ -40,20 +40,20 @@ export const ProgramFinances = ({ stats, labels, lang }: Props) => {
 	return (
 		<div className="flex flex-col gap-6 rounded-xl bg-white px-10 py-8 shadow-lg">
 			<div className="flex items-center justify-between">
-				<h2 className="text-foreground text-xl font-bold">{labels.finances}</h2>
-				<ProgramDetailPill label={labels.viewBreakdown} />
+				<h2 className="text-foreground text-xl font-bold">{translator.t('navigation.finances')}</h2>
+				<ProgramDetailPill label={translator.t('program-detail-page.view-breakdown')} />
 			</div>
 
 			<div className="text-foreground flex items-end justify-between">
 				<div className="flex flex-col gap-3.5">
-					<p className="text-xs">{labels.sentToRecipients}</p>
+					<p className="text-xs">{translator.t('program-detail-page.sent-to-recipients')}</p>
 					<p>
 						<span className="text-sm font-bold">{currency}</span>{' '}
 						<span className="text-3xl font-medium">{sentToRecipients}</span>
 					</p>
 				</div>
 				<div className="flex flex-col items-end gap-3.5">
-					<p className="text-xs">{labels.totalProgramCosts}</p>
+					<p className="text-xs">{translator.t('program-detail-page.total-program-costs')}</p>
 					<p>
 						<span className="text-sm font-bold">{currency}</span>{' '}
 						<span className="text-3xl font-medium">{totalProgramCosts}</span>
@@ -64,7 +64,7 @@ export const ProgramFinances = ({ stats, labels, lang }: Props) => {
 			<Progress value={progressPercent} />
 
 			<div className="flex items-center justify-between pt-2">
-				<p className="text-foreground text-sm">{labels.availableCredits}</p>
+				<p className="text-foreground text-sm">{translator.t('program-detail-page.available-credits')}</p>
 				<div className="flex items-center gap-2">
 					{showLowCreditsWarning ? (
 						<Badge variant="secondary" className="rounded-full p-1.5">
