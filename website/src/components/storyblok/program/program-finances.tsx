@@ -47,15 +47,15 @@ export const ProgramFinances = ({ stats, translator, lang }: Props) => {
 			<div className="text-foreground flex items-end justify-between">
 				<div className="flex flex-col gap-3.5">
 					<p className="text-xs">{translator.t('program-detail-page.sent-to-recipients')}</p>
-					<p>
-						<span className="text-sm font-bold">{currency}</span>{' '}
+					<p className="flex items-baseline gap-1">
+						<span className="text-sm font-bold">{currency}</span>
 						<span className="text-3xl font-medium">{sentToRecipients}</span>
 					</p>
 				</div>
 				<div className="flex flex-col items-end gap-3.5">
 					<p className="text-xs">{translator.t('program-detail-page.total-program-costs')}</p>
-					<p>
-						<span className="text-sm font-bold">{currency}</span>{' '}
+					<p className="flex items-baseline gap-1">
+						<span className="text-sm font-bold">{currency}</span>
 						<span className="text-3xl font-medium">{totalProgramCosts}</span>
 					</p>
 				</div>
