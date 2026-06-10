@@ -15,10 +15,6 @@ export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug
 	}
 
 	return (
-		<ProgramDetail
-			programDetailData={programDetailData}
-			lang={lang as WebsiteLanguage}
-			region={region as WebsiteRegion}
-		/>
+		<ProgramDetail programDetailData={programDetailData} lang={lang as WebsiteLanguage} region={region as WebsiteRegion} />
 	);
 }

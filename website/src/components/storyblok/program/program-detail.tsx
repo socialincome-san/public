@@ -53,10 +53,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 								},
 								{
 									value: programDetailData.stats.recipientsCount,
-									label:
-										programDetailData.stats.recipientsCount === 1
-											? labels.recipientSingular
-											: labels.recipientPlural,
+									label: programDetailData.stats.recipientsCount === 1 ? labels.recipientSingular : labels.recipientPlural,
 								},
 							]
 						: []
@@ -72,9 +69,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						<ProgramAbout programDetailData={programDetailData} labels={labels} lang={lang} region={region} />
 					</div>
 					<div className="flex flex-col gap-7">
-						{countryIsoCode ? (
-							<ProgramCountry countryIsoCode={countryIsoCode} lang={lang} labels={labels} />
-						) : null}
+						{countryIsoCode ? <ProgramCountry countryIsoCode={countryIsoCode} lang={lang} labels={labels} /> : null}
 						<div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
 							<ProgramRecipients count={recipientsCount} labels={labels} lang={lang} />
 							<ProgramSurveys completedCount={completedSurveysCount} labels={labels} />
