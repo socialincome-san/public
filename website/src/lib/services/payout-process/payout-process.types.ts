@@ -6,6 +6,7 @@ export type PayoutRecipient = {
 	paymentInformation: {
 		code: string | null;
 		phone: { number: string } | null;
+		mobileMoneyProvider: { name: string } | null;
 	} | null;
 	program: {
 		payoutPerInterval: number;

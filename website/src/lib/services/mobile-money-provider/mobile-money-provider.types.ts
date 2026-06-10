@@ -35,9 +35,3 @@ export type MobileMoneyProviderOption = {
 	id: string;
 	name: string;
 };
-
-export type MobileMoneyProviderPayoutProcessOption = {
-	id: string;
-	name: string;
-	payoutProcess: string;
-};

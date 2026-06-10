@@ -2,9 +2,9 @@
 
 import { Button } from '@/components/button';
 import { DatePicker, normalizeToNoon } from '@/components/date-picker';
-import { getPayoutRecipientCountsByProviderAction } from '@/lib/server-actions/payout-process-actions';
-import type { MobileMoneyProviderPayoutProcessOption } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
+import { getPayoutRecipientCountsAction } from '@/lib/server-actions/payout-process-actions';
 import { formatPayoutProcessLabel } from '@/lib/services/mobile-money-provider/payout-process-options';
+import type { PayoutProcessOverviewOption } from '@/lib/services/payout-process/payout-process-overview.types';
 import { cn } from '@/lib/utils/cn';
 import { now } from '@/lib/utils/now';
 import { format } from 'date-fns';
@@ -12,46 +12,46 @@ import { CalendarIcon, CircleDollarSignIcon, FileSpreadsheet } from 'lucide-reac
 import { useEffect, useState } from 'react';
 import { StartPayoutProcessDialog } from './start-payout-process-dialog';
 
-const groupByPayoutProcess = (providers: MobileMoneyProviderPayoutProcessOption[]) => {
-	const groups: Record<string, MobileMoneyProviderPayoutProcessOption[]> = {};
+const groupByPayoutProcess = (options: PayoutProcessOverviewOption[]) => {
+	const groups: Record<string, PayoutProcessOverviewOption[]> = {};
 
-	for (const provider of providers) {
-		(groups[provider.payoutProcess] ??= []).push(provider);
+	for (const option of options) {
+		(groups[option.payoutProcess] ??= []).push(option);
 	}
 
-	return Object.entries(groups).map(([process, processProviders]) => ({
+	return Object.entries(groups).map(([process, processOptions]) => ({
 		process,
 		label: formatPayoutProcessLabel(process) ?? process,
-		providers: processProviders,
+		options: processOptions,
 	}));
 };
 
-const PayoutProviderGrid = ({
-	providers,
+const PayoutProcessGrid = ({
+	options,
 	selectedDate,
 	selectedMonthLabel,
-	onStartProvider,
+	onStartOption,
 }: {
-	providers: MobileMoneyProviderPayoutProcessOption[];
+	options: PayoutProcessOverviewOption[];
 	selectedDate: Date;
 	selectedMonthLabel: string;
-	onStartProvider: (provider: MobileMoneyProviderPayoutProcessOption) => void;
+	onStartOption: (option: PayoutProcessOverviewOption) => void;
 }) => {
 	const [recipientCounts, setRecipientCounts] = useState<Record<string, number>>({});
-	const [loading, setLoading] = useState(() => providers.length > 0);
 	const [countsError, setCountsError] = useState<string | null>(null);
-	const processGroups = groupByPayoutProcess(providers);
+	const requestKey = `${format(selectedDate, 'yyyy-MM')}-${options.map((option) => option.id).join(',')}`;
+	const [loadedRequestKey, setLoadedRequestKey] = useState<string | null>(null);
+	const loading = options.length > 0 && loadedRequestKey !== requestKey;
+	const processGroups = groupByPayoutProcess(options);
 
 	useEffect(() => {
-		const providerIds = providers.map((provider) => provider.id);
-
-		if (providerIds.length === 0) {
+		if (options.length === 0) {
 			return;
 		}
 
 		let cancelled = false;
 
-		void getPayoutRecipientCountsByProviderAction(providerIds, selectedDate).then((result) => {
+		void getPayoutRecipientCountsAction(selectedDate).then((result) => {
 			if (cancelled) {
 				return;
 			}
@@ -64,15 +64,15 @@ const PayoutProviderGrid = ({
 				setCountsError(result.error);
 			}
 
-			setLoading(false);
+			setLoadedRequestKey(requestKey);
 		});
 
 		return () => {
 			cancelled = true;
 		};
-	}, [providers, selectedDate]);
+	}, [options, selectedDate, requestKey]);
 
-	if (providers.length === 0) {
+	if (options.length === 0) {
 		return <p className="text-muted-foreground text-sm">No payout processes available.</p>;
 	}
 
@@ -81,43 +81,46 @@ const PayoutProviderGrid = ({
 			{countsError ? <p className="text-destructive mb-6 text-sm">{countsError}</p> : null}
 
 			<div className="flex flex-col gap-10">
-				{processGroups.map(({ process, label, providers: processProviders }) => (
+				{processGroups.map(({ process, label, options: processOptions }) => (
 					<section key={process} className="space-y-4" aria-labelledby={`payout-process-${process}`}>
 						<div className="flex flex-wrap items-center gap-2">
 							<FileSpreadsheet className="text-muted-foreground h-5 w-5 shrink-0" aria-hidden />
 							<h2 id={`payout-process-${process}`} className="text-lg font-medium text-pretty">
 								{label}
 							</h2>
-							<span className="text-muted-foreground text-sm">
-								{processProviders.length} provider{processProviders.length === 1 ? '' : 's'}
-							</span>
 						</div>
 
-						<ul
-							className={cn('grid list-none gap-4 p-0', 'sm:grid-cols-2', processProviders.length >= 3 && 'xl:grid-cols-3')}
-						>
-							{processProviders.map((provider) => (
-								<li key={provider.id}>
-									<article className="flex h-full flex-col justify-between gap-5 rounded-2xl bg-slate-100 p-5">
-										<div className="space-y-1">
-											<h3 className="text-base font-medium text-pretty">{provider.name}</h3>
-											<p className="text-muted-foreground text-sm" data-testid={`payout-recipient-count-${provider.id}`}>
-												{loading
-													? 'Loading recipient count…'
-													: `${recipientCounts[provider.id] ?? 0} recipient${recipientCounts[provider.id] === 1 ? '' : 's'} would receive a payout in ${selectedMonthLabel}`}
-											</p>
-										</div>
-										<Button
-											data-testid={`start-payout-process-${provider.id}`}
-											className="w-full"
-											onClick={() => onStartProvider(provider)}
-										>
-											<CircleDollarSignIcon className="h-4 w-4" aria-hidden />
-											Start process
-										</Button>
-									</article>
-								</li>
-							))}
+						<ul className={cn('grid list-none gap-4 p-0', 'sm:grid-cols-2', processOptions.length >= 3 && 'xl:grid-cols-3')}>
+							{processOptions.map((option) => {
+								const recipientCount = recipientCounts[option.id] ?? 0;
+								const canStartProcess = !loading && recipientCount > 0;
+
+								return (
+									<li key={option.id}>
+										<article className="flex h-full flex-col justify-between gap-5 rounded-2xl bg-slate-100 p-5">
+											<div className="space-y-1">
+												<h3 className="text-base font-medium text-pretty">
+													{option.kind === 'telecel_csv' ? option.providerNames.join(', ') : option.name}
+												</h3>
+												<p className="text-muted-foreground text-sm" data-testid={`payout-recipient-count-${option.id}`}>
+													{loading
+														? 'Loading recipient count…'
+														: `${recipientCount} recipient${recipientCount === 1 ? '' : 's'} would receive a payout in ${selectedMonthLabel}`}
+												</p>
+											</div>
+											<Button
+												data-testid={`start-payout-process-${option.id}`}
+												className="w-full"
+												disabled={!canStartProcess}
+												onClick={() => onStartOption(option)}
+											>
+												<CircleDollarSignIcon className="h-4 w-4" aria-hidden />
+												Start process
+											</Button>
+										</article>
+									</li>
+								);
+							})}
 						</ul>
 					</section>
 				))}
@@ -127,14 +130,14 @@ const PayoutProviderGrid = ({
 };
 
 export const PayoutProcessOverviewClient = ({
-	providers,
+	options,
 	error,
 }: {
-	providers: MobileMoneyProviderPayoutProcessOption[];
+	options: PayoutProcessOverviewOption[];
 	error: string | null;
 }) => {
 	const [selectedDate, setSelectedDate] = useState(() => normalizeToNoon(now()));
-	const [activeProvider, setActiveProvider] = useState<MobileMoneyProviderPayoutProcessOption | null>(null);
+	const [activeOption, setActiveOption] = useState<PayoutProcessOverviewOption | null>(null);
 	const [gridKey, setGridKey] = useState(0);
 
 	const selectedMonthLabel = format(selectedDate, 'MMMM yyyy');
@@ -164,24 +167,23 @@ export const PayoutProcessOverviewClient = ({
 				</div>
 			</div>
 
-			<PayoutProviderGrid
+			<PayoutProcessGrid
 				key={`${monthKey}-${gridKey}`}
-				providers={providers}
+				options={options}
 				selectedDate={selectedDate}
 				selectedMonthLabel={selectedMonthLabel}
-				onStartProvider={setActiveProvider}
+				onStartOption={setActiveOption}
 			/>
 
-			{activeProvider ? (
+			{activeOption ? (
 				<StartPayoutProcessDialog
-					key={`${activeProvider.id}-${monthKey}`}
-					providerId={activeProvider.id}
-					providerName={activeProvider.name}
+					key={`${activeOption.id}-${monthKey}`}
+					option={activeOption}
 					selectedDate={selectedDate}
 					selectedMonthLabel={selectedMonthLabel}
 					open
 					onClose={() => {
-						setActiveProvider(null);
+						setActiveOption(null);
 						setGridKey((key) => key + 1);
 					}}
 				/>
