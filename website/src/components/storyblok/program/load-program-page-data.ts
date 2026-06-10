@@ -1,4 +1,3 @@
-import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
