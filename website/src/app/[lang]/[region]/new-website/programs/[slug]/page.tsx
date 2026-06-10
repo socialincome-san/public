@@ -21,7 +21,7 @@ export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug
 			region={region as WebsiteRegion}
 			fullSlug={data.fullSlug}
 			heroImageFilename={data.heroImageFilename}
-			heroImageAlt={data.heroImageAlt ?? data.title}
+			heroImageAlt={data.heroImageAlt || data.title}
 			description={data.description}
 			stats={data.stats}
 			dashboardStats={data.dashboardStats}
