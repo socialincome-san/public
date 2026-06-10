@@ -70,9 +70,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						<ProgramAbout programDetailData={programDetailData} translator={translator} lang={lang} region={region} />
 					</div>
 					<div className="flex flex-col gap-7">
-						{countryIsoCode ? (
-							<ProgramCountry countryIsoCode={countryIsoCode} lang={lang} translator={translator} />
-						) : null}
+						{countryIsoCode ? <ProgramCountry countryIsoCode={countryIsoCode} lang={lang} translator={translator} /> : null}
 						<div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
 							<ProgramRecipients count={recipientsCount} translator={translator} lang={lang} />
 							<ProgramSurveys completedCount={completedSurveysCount} translator={translator} />
