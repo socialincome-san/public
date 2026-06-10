@@ -1,6 +1,6 @@
 import { Button } from '@/components/button';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
-import { getProgramId } from '@/components/storyblok/program/program.utils';
+import { getProgramPortalSlug } from '@/components/storyblok/program/program.utils';
 import { ProgramsOverview } from '@/components/storyblok/program/programs-overview';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const ProgramGridView = async ({ programs, blok, lang, region }: Props) => {
-	const programIds = [...new Set(programs.map((program) => getProgramId(program.content)).filter(Boolean))];
+	const programIds = [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
 	const statsResult = await services.read.program.getPublicProgramStatsByIds(programIds);
 	const statsById = statsResult.success ? statsResult.data : {};
 	const button = blok.button?.[0];
@@ -24,7 +24,7 @@ export const ProgramGridView = async ({ programs, blok, lang, region }: Props) =
 
 	return (
 		<>
-			<ProgramsOverview programs={programs} statsById={statsById} lang={lang} region={region} />
+			<ProgramsOverview programs={programs} statsByPortalSlug={statsById} lang={lang} region={region} />
 			{button && buttonHref && (
 				<div className="mt-10 flex justify-center">
 					<Button variant="outline" asChild>

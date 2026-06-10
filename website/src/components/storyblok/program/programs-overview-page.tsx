@@ -3,8 +3,8 @@ import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-l
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import {
-	getProgramId as getProgramPortalSlug,
-	getProgramSlug,
+	getProgramPortalSlug,
+	getProgramStoryblokSlug,
 	getProgramTitle,
 } from '@/components/storyblok/program/program.utils';
 import { ProgramsOverview } from '@/components/storyblok/program/programs-overview';
@@ -60,7 +60,7 @@ const programMatchesSearchQuery = (program: ProgramStory, searchQuery: string) =
 	const keywords = [
 		getProgramTitle(program.content),
 		getProgramPortalSlug(program.content),
-		getProgramSlug(program),
+		getProgramStoryblokSlug(program),
 		program.content.description,
 	]
 		.map((value) => normalizeSearchValue(value))
@@ -229,7 +229,7 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 					placeholder={translator.t('programs-page.search-placeholder')}
 				/>
 			</div>
-			<ProgramsOverview programs={filteredPrograms} statsById={statsByPortalSlug} lang={lang} region={region} />
+			<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} lang={lang} region={region} />
 		</div>
 	);
 };

@@ -1,7 +1,7 @@
 import { COUNTRY_COOKIE } from '@/app/[lang]/[region]';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
-import { type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import {
 	loadCountryStatisticsComparison,
 	type CountryStatisticFormat,
@@ -15,16 +15,6 @@ type Props = {
 	countryIsoCode: string;
 	countryName: string;
 	lang: WebsiteLanguage;
-};
-
-const getSafeLocale = (lang: WebsiteLanguage) => {
-	try {
-		new Intl.NumberFormat(lang);
-
-		return lang;
-	} catch {
-		return 'en';
-	}
 };
 
 const formatStatisticValue = (value: number, format: CountryStatisticFormat, locale: string, yearsLabel: string): string => {
@@ -120,7 +110,7 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const visitorCountryName = getCountryNameByCode(visitorCountryCode);
-	const locale = getSafeLocale(lang);
+	const locale = getSafeNumberFormatLocale(lang);
 	const yearsLabel = translator.t('countries-page.statistics.years');
 
 	const formattedRows = rows.map((row) => ({
