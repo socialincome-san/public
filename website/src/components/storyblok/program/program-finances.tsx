@@ -2,6 +2,7 @@ import { Badge } from '@/components/badge';
 import { Progress } from '@/components/progress';
 import type { ProgramDetailLabels } from '@/components/storyblok/program/program-detail-labels';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
+import { type WebsiteLanguage, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { TriangleAlert } from 'lucide-react';
@@ -9,10 +10,11 @@ import { TriangleAlert } from 'lucide-react';
 type Props = {
 	stats: ProgramDashboardStats;
 	labels: ProgramDetailLabels;
+	lang: WebsiteLanguage;
 };
 
-const formatAmount = (amount: number, maximumFractionDigits = 0): string => {
-	return formatNumberLocale(amount, 'de-CH', {
+const formatAmount = (amount: number, locale: string, maximumFractionDigits = 0): string => {
+	return formatNumberLocale(amount, locale, {
 		minimumFractionDigits: maximumFractionDigits,
 		maximumFractionDigits,
 	});
@@ -26,11 +28,12 @@ const clampPercent = (value: number): number => {
 	return Math.min(100, Math.max(0, value));
 };
 
-export const ProgramFinances = ({ stats, labels }: Props) => {
+export const ProgramFinances = ({ stats, labels, lang }: Props) => {
+	const locale = getSafeNumberFormatLocale(lang);
 	const currency = stats.payoutCurrency;
-	const sentToRecipients = formatAmount(stats.paidOutSoFarProgramCurrency);
-	const totalProgramCosts = formatAmount(stats.totalProgramCostsProgramCurrency);
-	const availableCredits = formatAmount(stats.availableCreditsProgramCurrency, 2);
+	const sentToRecipients = formatAmount(stats.paidOutSoFarProgramCurrency, locale);
+	const totalProgramCosts = formatAmount(stats.totalProgramCostsProgramCurrency, locale);
+	const availableCredits = formatAmount(stats.availableCreditsProgramCurrency, locale, 2);
 	const progressPercent = clampPercent(stats.payoutProgressPercent);
 	const showLowCreditsWarning = stats.availableCreditsInIntervals <= 3;
 

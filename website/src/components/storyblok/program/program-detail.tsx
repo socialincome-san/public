@@ -102,7 +102,7 @@ export const ProgramDetail = async ({
 				<Breadcrumb links={breadcrumbLinks} />
 				<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
 					<div className="flex flex-col gap-7">
-						{dashboardStats ? <ProgramFinances stats={dashboardStats} labels={labels} /> : null}
+						{dashboardStats ? <ProgramFinances stats={dashboardStats} labels={labels} lang={lang} /> : null}
 						{programDetails ? (
 							<ProgramAbout
 								description={description}
