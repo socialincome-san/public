@@ -21,21 +21,18 @@ type Props = {
 export const ProgramAbout = ({ programDetailData, translator, lang, region }: Props) => {
 	const { description, programDetails, dashboardStats } = programDetailData;
 
-	if (!programDetails) {
-		return null;
-	}
-	const durationMonths = dashboardStats?.programDurationInMonths ?? programDetails.programDurationInMonths;
-	const localPartnerHref = programDetails.localPartnerSlug
+	const durationMonths = dashboardStats?.programDurationInMonths ?? programDetails?.programDurationInMonths ?? 0;
+	const localPartnerHref = programDetails?.localPartnerSlug
 		? `/${lang}/${region}/${NEW_WEBSITE_SLUG}/local-partners/${programDetails.localPartnerSlug}`
 		: undefined;
 
 	const details: DetailRow[] = [];
 
-	if (programDetails.ownerOrganizationName) {
+	if (programDetails?.ownerOrganizationName) {
 		details.push({ label: translator.t('program-detail-page.program-owner'), value: programDetails.ownerOrganizationName });
 	}
 
-	if (programDetails.localPartnerName) {
+	if (programDetails?.localPartnerName) {
 		details.push({
 			label: translator.t('program-detail-page.local-program-owner'),
 			value: programDetails.localPartnerName,
@@ -43,7 +40,7 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region }: Pr
 		});
 	}
 
-	if (programDetails.operatorOrganizationName) {
+	if (programDetails?.operatorOrganizationName) {
 		details.push({
 			label: translator.t('program-detail-page.program-operator'),
 			value: programDetails.operatorOrganizationName,
@@ -55,7 +52,7 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region }: Pr
 		value: `${durationMonths} ${durationMonths === 1 ? translator.t('program-detail-page.month-singular') : translator.t('program-detail-page.month-plural')}`,
 	});
 
-	if (programDetails.startedAt) {
+	if (programDetails?.startedAt) {
 		details.push({
 			label: translator.t('program-detail-page.start-date'),
 			value: new Intl.DateTimeFormat(lang, { month: 'long', day: 'numeric', year: 'numeric' }).format(
