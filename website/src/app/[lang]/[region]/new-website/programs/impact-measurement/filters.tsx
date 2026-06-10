@@ -25,6 +25,9 @@ export const ImpactMeasurementFilters = ({
 		const countries = values
 			.filter((value) => value.startsWith(FILTER_PREFIX.country))
 			.map((value) => value.replace(FILTER_PREFIX.country, ''));
+		const focuses = values
+			.filter((value) => value.startsWith(FILTER_PREFIX.focus))
+			.map((value) => value.replace(FILTER_PREFIX.focus, ''));
 		const programs = values
 			.filter((value) => value.startsWith(FILTER_PREFIX.program))
 			.map((value) => value.replace(FILTER_PREFIX.program, ''));
@@ -39,6 +42,11 @@ export const ImpactMeasurementFilters = ({
 			nextParams.set(IMPACT_FILTER_QUERY_KEYS.country, countries.join(','));
 		} else {
 			nextParams.delete(IMPACT_FILTER_QUERY_KEYS.country);
+		}
+		if (focuses.length > 0) {
+			nextParams.set(IMPACT_FILTER_QUERY_KEYS.focus, focuses.join(','));
+		} else {
+			nextParams.delete(IMPACT_FILTER_QUERY_KEYS.focus);
 		}
 		if (programs.length > 0) {
 			nextParams.set(IMPACT_FILTER_QUERY_KEYS.program, programs.join(','));
