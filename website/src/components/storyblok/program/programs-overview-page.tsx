@@ -3,7 +3,7 @@ import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-l
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import {
-	getProgramPortalSlug as getProgramPortalSlug,
+	getProgramPortalSlug,
 	getProgramStoryblokSlug,
 	getProgramTitle,
 } from '@/components/storyblok/program/program.utils';
