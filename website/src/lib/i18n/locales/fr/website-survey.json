@@ -132,6 +132,7 @@
 			"filters": {
 				"allCountries": "Tous les pays",
 				"allPrograms": "Tous les programmes",
+				"allFocuses": "Tous les axes",
 				"allSurveys": "Toutes les enquêtes",
 				"allRecipients": "Tous les bénéficiaires",
 				"allFilters": "Tous les filtres",
