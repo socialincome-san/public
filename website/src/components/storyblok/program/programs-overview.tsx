@@ -15,7 +15,7 @@ type Props = {
 	region: WebsiteRegion;
 };
 
-export const ProgramsOverview = async ({ programs, statsByPortalSlug: statsById, lang, region }: Props) => {
+export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, region }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 
 	return (
@@ -28,7 +28,7 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug: statsById,
 						const portalSlug = getProgramPortalSlug(program.content);
 						const programTitle = getProgramTitle(program.content);
 						const storyblokSlug = getProgramStoryblokSlug(program);
-						const stats = portalSlug ? statsById[portalSlug] : undefined;
+						const stats = portalSlug ? statsByPortalSlug[portalSlug] : undefined;
 						const primaryImageFilename = program.content.primaryImage?.filename;
 						const primaryImageAlt = program.content.primaryImage?.alt ?? programTitle;
 						const secondaryImageFilename = program.content.secondaryImage?.filename;

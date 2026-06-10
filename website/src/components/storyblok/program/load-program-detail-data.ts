@@ -43,7 +43,6 @@ export const loadProgramDetailPortalData = async (portalSlug: string): Promise<P
 export const loadProgramDetailData = async (urlSlug: string, lang: string): Promise<ProgramDetailData | null> => {
 	const programResult = await services.storyblok.getProgramBySlug(urlSlug, lang);
 
-	// If the program exists in storyblok, use the portalslug from storyblok to resolve the db entry
 	if (programResult.success) {
 		const story = programResult.data;
 		const portalSlug = getProgramPortalSlug(story.content);

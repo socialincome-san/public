@@ -29,7 +29,7 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, pre
 			const programTitle = getProgramTitle(story.content);
 			const portalSlug = getProgramPortalSlug(story.content);
 
-			const programDetailPortalData = await loadProgramDetailPortalData(portalSlug);
+			const programDetailPortalData = portalSlug ? await loadProgramDetailPortalData(portalSlug) : {};
 
 			return (
 				<ProgramDetail

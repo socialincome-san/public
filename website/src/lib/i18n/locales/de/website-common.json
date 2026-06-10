@@ -176,6 +176,7 @@
 		"about": "Über"
 	},
 	"program-detail-page": {
+		"view-details": "Details anzeigen",
 		"view-breakdown": "Aufschlüsselung anzeigen",
 		"sent-to-recipients": "Bisher an Empfänger:innen ausbezahlt",
 		"total-program-costs": "Gesamte Programmkosten",

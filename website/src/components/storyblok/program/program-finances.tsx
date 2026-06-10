@@ -13,12 +13,11 @@ type Props = {
 	lang: WebsiteLanguage;
 };
 
-const formatAmount = (amount: number, locale: string, maximumFractionDigits = 0): string => {
-	return formatNumberLocale(amount, locale, {
-		minimumFractionDigits: maximumFractionDigits,
-		maximumFractionDigits,
+const formatAmount = (amount: number, locale: string, fractionDigits = 0): string =>
+	formatNumberLocale(amount, locale, {
+		minimumFractionDigits: fractionDigits,
+		maximumFractionDigits: fractionDigits,
 	});
-};
 
 const clampPercent = (value: number): number => {
 	if (!Number.isFinite(value)) {

@@ -6,9 +6,9 @@ type Props = {
 
 export const ProgramDetailPill = ({ label }: Props) => {
 	return (
-		<button type="button" className="flex items-center gap-1.5 rounded-full bg-slate-100 py-1.5 pr-2 pl-3">
-			<span className="text-foreground text-xs font-bold">{label}</span>
-			<ChevronRight className="text-foreground size-4" />
-		</button>
+		<span className="text-foreground inline-flex items-center gap-1.5 rounded-full bg-slate-100 py-1.5 pr-2 pl-3 text-xs font-bold">
+			{label}
+			<ChevronRight className="size-4 shrink-0" aria-hidden="true" />
+		</span>
 	);
 };

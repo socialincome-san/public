@@ -65,7 +65,7 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region }: Pr
 		<div className="flex flex-col gap-6 rounded-xl bg-white px-10 pt-8 pb-10 shadow-lg">
 			<div className="flex items-center justify-between">
 				<h2 className="text-foreground text-xl font-bold">{translator.t('program-detail-page.about-title')}</h2>
-				<ProgramDetailPill label={translator.t('local-partners-page.view-details')} />
+				<ProgramDetailPill label={translator.t('program-detail-page.view-details')} />
 			</div>
 
 			{description ? <p className="text-foreground text-base">{description}</p> : null}

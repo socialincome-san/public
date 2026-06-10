@@ -176,6 +176,7 @@
 		"about": "About"
 	},
 	"program-detail-page": {
+		"view-details": "View details",
 		"view-breakdown": "View breakdown",
 		"sent-to-recipients": "Sent to recipients to date",
 		"total-program-costs": "Total program costs",

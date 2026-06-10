@@ -73,7 +73,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						{countryIsoCode ? <ProgramCountry countryIsoCode={countryIsoCode} lang={lang} translator={translator} /> : null}
 						<div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
 							<ProgramRecipients count={recipientsCount} translator={translator} lang={lang} />
-							<ProgramSurveys completedCount={completedSurveysCount} translator={translator} />
+							<ProgramSurveys completedCount={completedSurveysCount} translator={translator} lang={lang} />
 						</div>
 					</div>
 				</div>
