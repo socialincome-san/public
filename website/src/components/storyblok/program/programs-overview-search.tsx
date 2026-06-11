@@ -4,17 +4,18 @@ import { Input } from '@/components/input';
 import { SearchIcon } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
+import { applyQueryParamOverrides, SEARCH_QUERY_KEY, type QueryParamOverride } from './programs-overview-query';
 
 type Props = {
 	defaultValue: string;
 	label: string;
 	placeholder: string;
+	queryParamOverrides?: QueryParamOverride[];
 };
 
-const SEARCH_QUERY_KEY = 'search';
 const SEARCH_DEBOUNCE_MS = 300;
 
-export const ProgramsOverviewSearch = ({ defaultValue, label, placeholder }: Props) => {
+export const ProgramsOverviewSearch = ({ defaultValue, label, placeholder, queryParamOverrides }: Props) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -43,6 +44,8 @@ export const ProgramsOverviewSearch = ({ defaultValue, label, placeholder }: Pro
 			} else {
 				nextParams.delete(SEARCH_QUERY_KEY);
 			}
+
+			applyQueryParamOverrides(nextParams, queryParamOverrides);
 
 			const nextQuery = nextParams.toString();
 			router.replace(nextQuery.length > 0 ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
