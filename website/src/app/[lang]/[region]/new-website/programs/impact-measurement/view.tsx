@@ -28,31 +28,29 @@ export const ImpactMeasurementView = async ({ lang, searchParams, variant = 'sta
 		<div
 			className={
 				variant === 'embedded'
-					? 'w-full space-y-3 px-4 py-6'
+					? 'w-full space-y-3'
 					: 'w-site-width max-w-content mx-auto space-y-3 px-4 py-6 sm:px-0 sm:py-10'
 			}
 		>
-			<div className="space-y-5">
-				{variant === 'standalone' ? (
-					<>
-						<h1 className="text-4xl leading-tight font-bold text-cyan-900 sm:text-5xl">
-							{translator.t('survey.impactMeasurement.title')}
-						</h1>
-						<p className="text-base leading-6 text-cyan-950 sm:text-lg sm:leading-7">
-							{translator.t('survey.impactMeasurement.description')}
-						</p>
-						<div className="flex w-full justify-end">
-							<div className="w-full sm:w-auto">
-								<ImpactMeasurementFilterSection lang={lang} searchParams={normalizedSearchParams} />
-							</div>
+			{variant === 'standalone' ? (
+				<div className="space-y-5">
+					<h1 className="text-4xl leading-tight font-bold text-cyan-900 sm:text-5xl">
+						{translator.t('survey.impactMeasurement.title')}
+					</h1>
+					<p className="text-base leading-6 text-cyan-950 sm:text-lg sm:leading-7">
+						{translator.t('survey.impactMeasurement.description')}
+					</p>
+					<div className="flex w-full justify-end">
+						<div className="w-full sm:w-auto">
+							<ImpactMeasurementFilterSection lang={lang} searchParams={normalizedSearchParams} />
 						</div>
-					</>
-				) : null}
+					</div>
 
-				<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>
-					<ImpactMeasurementStudyDetails lang={lang} searchParams={normalizedSearchParams} />
-				</Suspense>
-			</div>
+					<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>
+						<ImpactMeasurementStudyDetails lang={lang} searchParams={normalizedSearchParams} />
+					</Suspense>
+				</div>
+			) : null}
 			<Suspense key={suspenseKey} fallback={<ImpactMeasurementResultsSkeleton />}>
 				<ImpactMeasurementResults lang={lang} searchParams={normalizedSearchParams} />
 			</Suspense>

@@ -3,9 +3,11 @@ import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-l
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { Study } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { services } from '@/lib/services/services';
 import type { ISbStoryData } from '@storyblok/js';
 import type { FocusStory } from './focus.types';
-import { getFocusText, getFocusTitle } from './focus.utils';
+import { getFocusSlug, getFocusText, getFocusTitle } from './focus.utils';
+import { ImpactMeasurementPreviewWrapper } from './impact-measurement-preview-wrapper';
 import { StudyCard } from './study-card';
 
 type Props = {
@@ -24,21 +26,45 @@ const isStudyStory = (study: StudyStory | string): study is StudyStory => {
 	return study.content.component?.toLowerCase() === 'study';
 };
 
+const getImpactMeasurementFocusId = async (focus: FocusStory) => {
+	const focusSlugs = new Set(
+		[focus.content.portalSlug, getFocusSlug(focus), focus.slug]
+			.map((slug) => slug?.trim())
+			.filter((slug): slug is string => Boolean(slug)),
+	);
+
+	if (focusSlugs.size === 0) {
+		return '';
+	}
+
+	const filterOptionsResult = await services.surveyImpact.getImpactFilterOptions();
+	if (!filterOptionsResult.success) {
+		return '';
+	}
+
+	return filterOptionsResult.data.focuses.find((option) => focusSlugs.has(option.label.trim()))?.value ?? '';
+};
+
 export const FocusDetail = async ({ focus, lang, region }: Props) => {
 	const title = getFocusTitle(focus.content);
 	const text = getFocusText(focus.content);
-	const { studiesTitle, studies } = focus.content;
+	const { impactMeasurementTeaserButtonLabel, impactMeasurementTeaserText, impactMeasurementTitle, studiesTitle, studies } =
+		focus.content;
 	const studyStories = studies?.filter(isStudyStory) ?? [];
 	const hasStudiesSection = Boolean(studiesTitle) || studyStories.length > 0;
-	const breadcrumbLinks = await buildBreadcrumbLinks({
-		fullSlug: focus.full_slug,
-		currentLabel: title,
-		lang,
-		region,
-	});
+	const hasImpactMeasurementSection = Boolean(impactMeasurementTitle);
+	const [breadcrumbLinks, impactMeasurementFocusId] = await Promise.all([
+		buildBreadcrumbLinks({
+			fullSlug: focus.full_slug,
+			currentLabel: title,
+			lang,
+			region,
+		}),
+		hasImpactMeasurementSection ? getImpactMeasurementFocusId(focus) : '',
+	]);
 
 	return (
-		<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
+		<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8 pb-16">
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
 			<div className="space-y-5">
 				{title && <h1 className="text-4xl leading-tight font-bold text-cyan-900 sm:text-5xl">{title}</h1>}
@@ -58,6 +84,25 @@ export const FocusDetail = async ({ focus, lang, region }: Props) => {
 								<StudyCard key={study.uuid} study={study} lang={lang} region={region} />
 							))}
 						</div>
+					)}
+				</section>
+			)}
+
+			{hasImpactMeasurementSection && (
+				<section className="flex flex-col gap-10">
+					{impactMeasurementTitle && (
+						<h2 className="text-5xl leading-tight font-normal text-cyan-900">
+							<StoryblokMarkdown>{impactMeasurementTitle}</StoryblokMarkdown>
+						</h2>
+					)}
+					{impactMeasurementFocusId && (
+						<ImpactMeasurementPreviewWrapper
+							focusId={impactMeasurementFocusId}
+							lang={lang}
+							region={region}
+							teaserText={impactMeasurementTeaserText}
+							teaserButtonLabel={impactMeasurementTeaserButtonLabel}
+						/>
 					)}
 				</section>
 			)}
