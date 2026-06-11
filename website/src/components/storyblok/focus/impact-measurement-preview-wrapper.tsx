@@ -19,7 +19,9 @@ export const ImpactMeasurementPreviewWrapper = ({ focusId, lang, region, teaserB
 	return (
 		<div className={hasTeaser ? 'relative pb-24 sm:pb-16' : undefined}>
 			<div className="relative h-96 overflow-hidden rounded-3xl bg-white shadow-[0_4px_6px_-4px_rgba(0,0,0,0.10),0_0_20px_0_rgba(0,0,0,0.05)] after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-1/2 after:bg-white after:mask-[linear-gradient(to_bottom,transparent_0%,black_100%)] after:backdrop-blur-[100px] after:content-[''] after:[-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_100%)]">
-				<ImpactMeasurementView lang={lang} searchParams={{ focus: focusId }} variant="embedded" />
+				<div className="-mx-4 -my-6">
+					<ImpactMeasurementView lang={lang} searchParams={{ focus: focusId }} showStudyDetails={false} variant="embedded" />
+				</div>
 			</div>
 
 			{hasTeaser && (
