@@ -10,6 +10,7 @@ type Props = {
 	stats: HeroHeaderStat[];
 	titleIcon?: string;
 	titleIconAlt?: string;
+	showDonationForm?: boolean;
 };
 
 export const HeroDonationsHeader = ({
@@ -20,6 +21,7 @@ export const HeroDonationsHeader = ({
 	stats,
 	titleIcon,
 	titleIconAlt,
+	showDonationForm = true,
 }: Props) => {
 	return (
 		<HeroHeader
@@ -29,8 +31,8 @@ export const HeroDonationsHeader = ({
 			stats={stats}
 			titleIcon={titleIcon}
 			titleIconAlt={titleIconAlt}
-			rightSide={<MakeDonationForm lang={lang} />}
-			bottomContent={<MakeDonationForm lang={lang} />}
+			rightSide={showDonationForm && <MakeDonationForm lang={lang} />}
+			bottomContent={showDonationForm && <MakeDonationForm lang={lang} />}
 		/>
 	);
 };
