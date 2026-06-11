@@ -5,6 +5,7 @@ import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import { isSafeHref } from '@/lib/utils/string-utils';
 import Link from 'next/link';
 
 type ExternalLink = {
@@ -62,9 +63,9 @@ export const LocalPartnerAboutMetaCard = ({
 }: AboutMetaCardProps) => {
 	const resolvedExternalLinks = externalLinks
 		.map(({ label, link }) => {
-			const href = resolveStoryblokLink(link, lang, region);
+			const resolvedHref = resolveStoryblokLink(link, lang, region);
 
-			return href !== '#' ? { label, href } : null;
+			return resolvedHref && resolvedHref !== '#' && isSafeHref(resolvedHref) ? { label, href: resolvedHref } : null;
 		})
 		.filter((value): value is { label: string; href: string } => value !== null);
 
