@@ -31,6 +31,6 @@ export const StoryblokPreviewFocusPage = async ({
 
 			return storyResult.success ? storyResult.data : null;
 		},
-		renderStory: (focus) => <FocusDetail focus={focus} lang={lang} region={region} />,
+		renderStory: (focus) => <FocusDetail focus={focus} lang={lang} region={region} searchParams={searchParams} />,
 	});
 };
