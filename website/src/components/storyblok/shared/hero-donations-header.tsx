@@ -1,12 +1,11 @@
 import { MakeDonationForm } from '@/components/make-donation-form';
-import { HeroHeader, type HeroHeaderStat } from '@/components/storyblok/shared/hero-header';
+import { HeroHeader, type HeroHeaderImage, type HeroHeaderStat } from '@/components/storyblok/shared/hero-header';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 
 type Props = {
 	lang: WebsiteLanguage;
 	title: string;
-	heroImageFilename?: string | null;
-	heroImageAlt?: string | null;
+	heroImage?: HeroHeaderImage | null;
 	stats: HeroHeaderStat[];
 	titleIcon?: string;
 	titleIconAlt?: string;
@@ -16,8 +15,7 @@ type Props = {
 export const HeroDonationsHeader = ({
 	lang,
 	title,
-	heroImageFilename,
-	heroImageAlt,
+	heroImage,
 	stats,
 	titleIcon,
 	titleIconAlt,
@@ -26,8 +24,7 @@ export const HeroDonationsHeader = ({
 	return (
 		<HeroHeader
 			title={title}
-			heroImageFilename={heroImageFilename}
-			heroImageAlt={heroImageAlt}
+			heroImage={heroImage}
 			stats={stats}
 			titleIcon={titleIcon}
 			titleIconAlt={titleIconAlt}

@@ -1,6 +1,7 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
+import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { PublicProgramStats } from '@/lib/services/program/program.types';
@@ -11,12 +12,11 @@ type Props = {
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	fullSlug: string;
-	heroImageFilename?: string;
-	heroImageAlt: string;
+	heroImage?: HeroHeaderImage | null;
 	stats?: PublicProgramStats;
 };
 
-export const ProgramDetail = async ({ title, lang, region, fullSlug, heroImageFilename, heroImageAlt, stats }: Props) => {
+export const ProgramDetail = async ({ title, lang, region, fullSlug, heroImage, stats }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug,
@@ -30,8 +30,7 @@ export const ProgramDetail = async ({ title, lang, region, fullSlug, heroImageFi
 			<HeroDonationsHeader
 				lang={lang}
 				title={title}
-				heroImageFilename={heroImageFilename}
-				heroImageAlt={heroImageAlt}
+				heroImage={heroImage}
 				stats={
 					stats
 						? [

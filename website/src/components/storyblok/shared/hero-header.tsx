@@ -1,15 +1,21 @@
+import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
+import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
 import NextImage from 'next/image';
 import type { ReactNode } from 'react';
+
+const HERO_HEADER_IMAGE_WIDTH = 1920;
+const HERO_HEADER_IMAGE_HEIGHT = 1080;
 
 export type HeroHeaderStat = {
 	value?: number;
 	label: string;
 };
 
+export type HeroHeaderImage = Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'>;
+
 type Props = {
 	title: string;
-	heroImageFilename?: string | null;
-	heroImageAlt?: string | null;
+	heroImage?: HeroHeaderImage | null;
 	stats: HeroHeaderStat[];
 	titleIcon?: string;
 	titleIconAlt?: string;
@@ -21,8 +27,7 @@ type Props = {
 
 export const HeroHeader = ({
 	title,
-	heroImageFilename,
-	heroImageAlt,
+	heroImage,
 	stats,
 	titleIcon,
 	titleIconAlt,
@@ -31,18 +36,16 @@ export const HeroHeader = ({
 	rightSide,
 	bottomContent,
 }: Props) => {
+	const heroImageSrc = heroImage?.filename
+		? formatStoryblokUrl(heroImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, heroImage.focus)
+		: null;
+	const heroImageAlt = heroImage?.alt ?? title;
+
 	return (
 		<section className="full-bleed-hero flex flex-col gap-6">
 			<div className="relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden rounded-b-3xl bg-black md:min-h-160 md:rounded-b-[56px]">
-				{heroImageFilename ? (
-					<NextImage
-						src={heroImageFilename}
-						alt={heroImageAlt ?? title}
-						fill
-						sizes="100vw"
-						className="object-cover"
-						priority
-					/>
+				{heroImageSrc ? (
+					<NextImage src={heroImageSrc} alt={heroImageAlt} fill sizes="100vw" className="object-cover" priority />
 				) : (
 					<div className="bg-primary/20 absolute inset-0" />
 				)}
