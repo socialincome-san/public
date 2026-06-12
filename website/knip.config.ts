@@ -1,7 +1,7 @@
 import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
-	ignoreFiles: ['test/e2e/setup/*.ts', 'src/lib/utils/storyblock-image-loader.ts'],
+	ignoreFiles: ['test/e2e/setup/*.ts'],
 	ignoreIssues: {
 		'src/app/api/v1/models.ts': ['exports'],
 	},

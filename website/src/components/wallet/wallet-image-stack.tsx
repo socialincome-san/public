@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils/cn';
+import { WALLET_IMAGE_SIZES } from './wallet-image-utils';
 import { WalletLayerImage } from './wallet-layer-image';
 import type { WalletImages } from './wallet.types';
 
@@ -29,23 +30,19 @@ export const WalletImageStack = ({ images }: WalletImageStackProps) => {
 				{hasPrimaryImage && primaryImage ? (
 					<>
 						{hoverEffectImage2?.src ? (
-							<WalletLayerImage
-								image={hoverEffectImage2}
-								sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
-								decorative
-							/>
+							<WalletLayerImage image={hoverEffectImage2} sizes={WALLET_IMAGE_SIZES} decorative />
 						) : null}
 						{hoverEffectImage1?.src ? (
 							<WalletLayerImage
 								image={hoverEffectImage1}
-								sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+								sizes={WALLET_IMAGE_SIZES}
 								decorative
 								className="transition duration-300 ease-out will-change-transform group-hover:translate-x-1 group-hover:-translate-y-5 group-hover:rotate-[5deg] motion-reduce:transform-none motion-reduce:transition-none"
 							/>
 						) : null}
 						<WalletLayerImage
 							image={primaryImage}
-							sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+							sizes={WALLET_IMAGE_SIZES}
 							className="transition duration-300 ease-out will-change-transform group-hover:-translate-x-1 group-hover:-translate-y-7 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
 						/>
 					</>
