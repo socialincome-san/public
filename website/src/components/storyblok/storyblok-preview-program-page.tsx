@@ -41,8 +41,7 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, pre
 					lang={lang}
 					region={region}
 					fullSlug={story.full_slug}
-					heroImageFilename={story.content.primaryImage?.filename ?? undefined}
-					heroImageAlt={story.content.primaryImage?.alt ?? programTitle}
+					heroImage={story.content.primaryImage}
 					stats={stats}
 				/>
 			);

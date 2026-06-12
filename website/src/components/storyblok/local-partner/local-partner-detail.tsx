@@ -43,8 +43,7 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 			<HeroDonationsHeader
 				lang={lang}
 				title={localPartnerTitle}
-				heroImageFilename={localPartner.content.heroImage?.filename}
-				heroImageAlt={localPartner.content.heroImage?.alt ?? localPartnerTitle}
+				heroImage={localPartner.content.heroImage}
 				titleIcon={isoCode ? `/assets/flags/${isoCode.toLowerCase()}.svg` : undefined}
 				titleIconAlt={isoCode ? `${isoCode} flag` : undefined}
 				showDonationForm={false}
