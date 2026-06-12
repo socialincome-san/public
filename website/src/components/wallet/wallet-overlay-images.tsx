@@ -42,6 +42,7 @@ export const WalletOverlayImages = ({ images }: WalletOverlayImagesProps) => {
 				<WalletLayerImage
 					image={primaryImage}
 					sizes={WALLET_IMAGE_SIZES}
+					decorative
 					className="transition duration-300 ease-out will-change-transform group-hover:-translate-x-1 group-hover:-translate-y-7 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
 				/>
 			</div>
