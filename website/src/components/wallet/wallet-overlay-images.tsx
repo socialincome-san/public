@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils/cn';
+import { WalletLayerImage } from './wallet-layer-image';
 import type { WalletImages } from './wallet.types';
 
 type WalletOverlayImagesProps = {
@@ -25,22 +26,22 @@ export const WalletOverlayImages = ({ images }: WalletOverlayImagesProps) => {
 		>
 			<div
 				className={cn(
-					'h-full w-full overflow-visible rounded-sm',
+					'relative h-full w-full overflow-visible rounded-sm',
 					'[clip-path:inset(calc(-4*var(--shadow-size))_calc(-2*var(--shadow-size))_calc(2*var(--shadow-size))_calc(-2*var(--shadow-size))_round_2px)]',
 				)}
 			>
 				{hoverEffectImage1?.src ? (
-					<div
-						className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:translate-x-1 group-hover:-translate-y-4 group-hover:rotate-[5deg] motion-reduce:transform-none motion-reduce:transition-none"
-						style={{ backgroundImage: `url(${hoverEffectImage1.src})` }}
-						aria-label=""
+					<WalletLayerImage
+						image={hoverEffectImage1}
+						sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+						decorative
+						className="transition duration-300 ease-out will-change-transform group-hover:translate-x-1 group-hover:-translate-y-4 group-hover:rotate-[5deg] motion-reduce:transform-none motion-reduce:transition-none"
 					/>
 				) : null}
-				<div
-					className="h-full w-full origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:-translate-x-1 group-hover:-translate-y-7 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
-					style={{ backgroundImage: `url(${primaryImage.src})` }}
-					aria-label={primaryImage.alt}
-					role={primaryImage.alt ? 'img' : undefined}
+				<WalletLayerImage
+					image={primaryImage}
+					sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+					className="transition duration-300 ease-out will-change-transform group-hover:-translate-x-1 group-hover:-translate-y-7 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
 				/>
 			</div>
 		</div>

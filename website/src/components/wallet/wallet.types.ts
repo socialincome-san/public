@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 export type WalletImage = {
 	src: string;
 	alt: string;
+	focus?: string | null;
 };
 
 export type WalletImages = {

@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils/cn';
+import { WalletLayerImage } from './wallet-layer-image';
 import type { WalletImages } from './wallet.types';
 
 type WalletImageStackProps = {
@@ -28,24 +29,24 @@ export const WalletImageStack = ({ images }: WalletImageStackProps) => {
 				{hasPrimaryImage && primaryImage ? (
 					<>
 						{hoverEffectImage2?.src ? (
-							<div
-								className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center"
-								style={{ backgroundImage: `url(${hoverEffectImage2.src})` }}
-								aria-label=""
+							<WalletLayerImage
+								image={hoverEffectImage2}
+								sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+								decorative
 							/>
 						) : null}
 						{hoverEffectImage1?.src ? (
-							<div
-								className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:translate-x-1 group-hover:-translate-y-5 group-hover:rotate-[5deg] motion-reduce:transform-none motion-reduce:transition-none"
-								style={{ backgroundImage: `url(${hoverEffectImage1.src})` }}
-								aria-label=""
+							<WalletLayerImage
+								image={hoverEffectImage1}
+								sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+								decorative
+								className="transition duration-300 ease-out will-change-transform group-hover:translate-x-1 group-hover:-translate-y-5 group-hover:rotate-[5deg] motion-reduce:transform-none motion-reduce:transition-none"
 							/>
 						) : null}
-						<div
-							className="absolute inset-0 origin-bottom rounded-sm bg-cover bg-center transition duration-300 ease-out will-change-transform group-hover:-translate-x-1 group-hover:-translate-y-7 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
-							style={{ backgroundImage: `url(${primaryImage.src})` }}
-							aria-label={primaryImage.alt}
-							role={primaryImage.alt ? 'img' : undefined}
+						<WalletLayerImage
+							image={primaryImage}
+							sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+							className="transition duration-300 ease-out will-change-transform group-hover:-translate-x-1 group-hover:-translate-y-7 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
 						/>
 					</>
 				) : null}

@@ -1,5 +1,5 @@
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
-import { resolveStoryblokLink } from './storyblok.utils';
+import { formatStoryblokUrl, resolveStoryblokLink } from './storyblok.utils';
 
 describe('resolveStoryblokLink', () => {
 	it('resolves unset internal Storyblok links to a placeholder', () => {
@@ -12,5 +12,25 @@ describe('resolveStoryblokLink', () => {
 		};
 
 		expect(resolveStoryblokLink(link, 'en', 'int')).toBe('#');
+	});
+});
+
+describe('formatStoryblokUrl', () => {
+	const imageUrl = 'https://a.storyblok.com/f/123456/1200x800/program.jpg';
+
+	it('annotates Storyblok image URLs with focal point crop data', () => {
+		const result = formatStoryblokUrl(imageUrl, 760, 400, '100x120:300x320');
+		const url = new URL(result);
+
+		expect(url.searchParams.get('_crop')).toBe('100x120:300x320');
+		expect(url.searchParams.get('_ratio')).toBe('0.5263');
+	});
+
+	it('uses smart crop metadata when no focal point is provided', () => {
+		const result = formatStoryblokUrl(imageUrl, 760, 400, null);
+		const url = new URL(result);
+
+		expect(url.searchParams.get('_crop')).toBe('smart');
+		expect(url.searchParams.get('_ratio')).toBe('0.5263');
 	});
 });
