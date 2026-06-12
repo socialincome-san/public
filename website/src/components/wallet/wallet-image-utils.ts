@@ -10,9 +10,17 @@ export const createWalletImageFromStoryblokAsset = (
 	asset: Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'> | undefined,
 	fallbackAlt: string,
 	fallbackImage?: WalletImage | null,
+	options?: { preserveFallbackAlt?: boolean },
 ): WalletImage | null => {
 	if (!asset?.filename) {
-		return fallbackImage ? { ...fallbackImage, alt: asset?.alt ?? fallbackAlt } : null;
+		if (!fallbackImage) {
+			return null;
+		}
+
+		return {
+			...fallbackImage,
+			alt: options?.preserveFallbackAlt ? fallbackImage.alt : (asset?.alt ?? fallbackAlt),
+		};
 	}
 
 	return {

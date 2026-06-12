@@ -35,11 +35,13 @@ export const ProgramsOverview = async ({ programs, statsById, lang, region }: Pr
 							program.content.secondaryImage,
 							programTitle,
 							primaryImage,
+							{ preserveFallbackAlt: true },
 						);
 						const hoverEffectImage2 = createWalletImageFromStoryblokAsset(
 							program.content.tertiaryImage,
 							programTitle,
 							primaryImage,
+							{ preserveFallbackAlt: true },
 						);
 						const linkHref = `/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${programSlug}`;
 						const images = primaryImage
