@@ -36,6 +36,10 @@ export default async function ManagementLayout({ children }: ManagementLayoutPro
 		{ href: `/portal/management/contributions`, label: 'Contributions' },
 		{ href: `/portal/management/donation-certificates`, label: 'Donation Certificates' },
 		{ href: `/portal/management/campaigns`, label: 'Campaigns' },
+
+		// Messaging
+		{ href: `/portal/management/message-templates`, label: 'Message Templates' },
+		{ href: `/portal/management/messages`, label: 'Messages' },
 	];
 
 	return (

@@ -36,6 +36,15 @@ import { JournalService } from './journal/journal.service';
 import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
 import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
 import { LocalPartnerWriteService } from './local-partner/local-partner-write.service';
+import { MessageLogReadService } from './messaging/message-log-read.service';
+import { MessageTemplateReadService } from './messaging/message-template-read.service';
+import { MessageTemplateValidationService } from './messaging/message-template-validation.service';
+import { MessageTemplateWriteService } from './messaging/message-template-write.service';
+import { MessagingService } from './messaging/messaging.service';
+import { MessageProviderRegistry } from './messaging/providers/message-provider-registry';
+import { SendGridEmailProvider } from './messaging/providers/sendgrid-email.provider';
+import { TwilioSmsProvider } from './messaging/providers/twilio-sms.provider';
+import { TwilioWhatsAppProvider } from './messaging/providers/twilio-whatsapp.provider';
 import { MobileMoneyProviderReadService } from './mobile-money-provider/mobile-money-provider-read.service';
 import { MobileMoneyProviderValidationService } from './mobile-money-provider/mobile-money-provider-validation.service';
 import { MobileMoneyProviderWriteService } from './mobile-money-provider/mobile-money-provider-write.service';
@@ -197,6 +206,16 @@ const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
 const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAdmin, surveyRead, surveyValidation);
 
+const messageLogRead = new MessageLogReadService(prisma);
+const messageProviderRegistry = new MessageProviderRegistry();
+messageProviderRegistry.register(new TwilioSmsProvider(prisma));
+messageProviderRegistry.register(new TwilioWhatsAppProvider(prisma));
+messageProviderRegistry.register(new SendGridEmailProvider(prisma));
+const messageTemplateValidation = new MessageTemplateValidationService(prisma);
+const messageTemplateRead = new MessageTemplateReadService(prisma);
+const messageTemplateWrite = new MessageTemplateWriteService(prisma, messageTemplateValidation);
+const messaging = new MessagingService(prisma, messageProviderRegistry, messageTemplateRead, messageTemplateValidation);
+
 const createPaymentFileImport = (bucketName: string) =>
 	new PaymentFileImportService(bucketName, prisma, contributorRead, contributionWrite, campaignRead);
 
@@ -206,6 +225,8 @@ export const services = {
 		campaign: campaignRead,
 		campaignPublicWebsite,
 		focus: focusRead,
+		messageLog: messageLogRead,
+		messageTemplate: messageTemplateRead,
 		contribution: contributionRead,
 		contributor: contributorRead,
 		country: countryRead,
@@ -225,6 +246,7 @@ export const services = {
 		candidate: candidateWrite,
 		campaign: campaignWrite,
 		focus: focusWrite,
+		messageTemplate: messageTemplateWrite,
 		contribution: contributionWrite,
 		contributor: contributorWrite,
 		country: countryWrite,
@@ -258,5 +280,6 @@ export const services = {
 	stripe,
 	surveyImpact,
 	transparency,
+	messaging,
 	twilio,
 };

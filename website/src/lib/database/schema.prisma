@@ -119,6 +119,26 @@ enum PayoutProcess {
   telecel_csv
 }
 
+enum MessageChannel {
+  sms
+  whatsapp
+  email
+}
+
+enum MessageStatus {
+  pending
+  sent
+  delivered
+  failed
+}
+
+enum MessageRecipientType {
+  recipient
+  contributor
+  local_partner
+  user
+}
+
 // ISO 3166-1 alpha-2 country codes
 enum CountryCode {
   AF
@@ -1064,6 +1084,49 @@ model CountryMobileMoneyProviderMapping {
 
   @@unique([countryId, mobileMoneyProviderId])
   @@map("country_mobile_money_provider_mapping")
+}
+
+model MessageTemplate {
+  id          String         @id @default(cuid()) @map("id")
+  name        String         @unique @map("name")
+  channel     MessageChannel @map("channel")
+  subject     String?        @map("subject")
+  body        String         @map("body")
+  description String?        @map("description")
+  isActive    Boolean        @default(true) @map("is_active")
+
+  messages Message[]
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("message_template")
+}
+
+model Message {
+  id            String                @id @default(cuid()) @map("id")
+  channel       MessageChannel        @map("channel")
+  subject       String?               @map("subject")
+  body          String                @map("body")
+  recipientType MessageRecipientType? @map("recipient_type")
+  recipientId   String?               @map("recipient_id")
+  addressee     String                @map("addressee")
+  status        MessageStatus         @default(pending) @map("status")
+  externalId    String?               @map("external_id")
+  errorMessage  String?               @map("error_message")
+  sentAt        DateTime?             @map("sent_at") @db.Timestamptz(3)
+  sentByUserId  String                @map("sent_by_user_id")
+
+  templateId String?          @map("template_id")
+  template   MessageTemplate? @relation(fields: [templateId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([recipientId])
+  @@index([status])
+  @@index([sentByUserId])
+  @@map("message")
 }
 
 model SourceLink {
