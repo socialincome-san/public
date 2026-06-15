@@ -14,6 +14,7 @@ import {
 	STORYBLOK_FAQ_FOLDER,
 	STORYBLOK_FOCUSES_FOLDER,
 	STORYBLOK_LOCAL_PARTNERS_FOLDER,
+	STORYBLOK_PAGES_FOLDER,
 	STORYBLOK_PROGRAMS_FOLDER,
 	getJournalArticleStoryPath,
 	getJournalTagStoryPath,
@@ -34,6 +35,22 @@ export type StoryTitleData = {
 		title?: string;
 		isoCode?: number | string;
 	};
+};
+
+export type StoryblokLinkAlternate = {
+	lang: string;
+	path: string;
+	name: string | null;
+	published: boolean | null;
+	translated_slug: string;
+};
+
+export type StoryblokPublishedLink = {
+	uuid: string;
+	slug: string;
+	is_folder: boolean;
+	published: boolean;
+	alternates?: StoryblokLinkAlternate[];
 };
 
 export class StoryblokService extends BaseService {
@@ -64,6 +81,7 @@ export class StoryblokService extends BaseService {
 	private static readonly contentField = 'content';
 	private static readonly leadTextField = 'leadText';
 	private static readonly storiesPath = 'cdn/stories';
+	private static readonly linksPath = 'cdn/links';
 	private static readonly countriesPath = STORYBLOK_COUNTRIES_FOLDER;
 	private static readonly focusesPath = STORYBLOK_FOCUSES_FOLDER;
 	private static readonly localPartnersPath = STORYBLOK_LOCAL_PARTNERS_FOLDER;
@@ -395,6 +413,32 @@ export class StoryblokService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultOk([]);
+		}
+	}
+
+	async getPublishedPageLinks(): Promise<ServiceResult<StoryblokPublishedLink[]>> {
+		try {
+			const data = await getStoryblokApi().getAll(StoryblokService.linksPath, {
+				version: 'published',
+				starts_with: `${STORYBLOK_PAGES_FOLDER}/`,
+			});
+
+			const links = Array.isArray(data)
+				? data.filter(
+						(link): link is StoryblokPublishedLink =>
+							typeof link === 'object' &&
+							link !== null &&
+							typeof link.slug === 'string' &&
+							typeof link.is_folder === 'boolean' &&
+							typeof link.published === 'boolean',
+					)
+				: [];
+
+			return this.resultOk(links);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch page links: ${JSON.stringify(error)}`);
 		}
 	}
 
