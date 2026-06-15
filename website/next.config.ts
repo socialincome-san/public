@@ -15,6 +15,11 @@ let nextConfig: NextConfig = {
 				hostname: 'a.storyblok.com',
 				pathname: '/**',
 			},
+			{
+				protocol: 'https',
+				hostname: 'avatars.githubusercontent.com',
+				pathname: '/**',
+			},
 		],
 		loader: 'custom',
 		loaderFile: './src/lib/utils/storyblock-image-loader.ts',
