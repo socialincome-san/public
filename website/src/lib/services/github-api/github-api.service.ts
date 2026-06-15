@@ -1,12 +1,7 @@
 import { BaseService } from '@/lib/services/core/base.service';
 import type { ServiceResult } from '@/lib/services/core/base.types';
 import { now } from '@/lib/utils/now';
-import type {
-	GithubContributor,
-	GithubIssue,
-	GithubOpenSourcePageData,
-	GithubRepoStats,
-} from './github-api.types';
+import type { GithubContributor, GithubIssue, GithubOpenSourcePageData, GithubRepoStats } from './github-api.types';
 
 const OWNER = 'socialincome-san';
 const REPO = 'public';

@@ -34,9 +34,7 @@ export const IssuesList = ({
 	const [showAll, setShowAll] = useState(false);
 
 	const filteredIssues =
-		filteredLabel === ALL_FILTER_VALUE
-			? issues
-			: issues.filter((issue) => issue.labels.includes(filteredLabel));
+		filteredLabel === ALL_FILTER_VALUE ? issues : issues.filter((issue) => issue.labels.includes(filteredLabel));
 	const displayedIssues = showAll ? filteredIssues : filteredIssues.slice(0, INITIAL_VISIBLE_COUNT);
 
 	const handleFilterChange = (label: string) => {
@@ -79,12 +77,7 @@ export const IssuesList = ({
 				{displayedIssues.length > 0 ? (
 					<div className="divide-y divide-gray-200">
 						{displayedIssues.map((issue) => (
-							<IssueRow
-								key={issue.id}
-								title={issue.title}
-								url={issue.url}
-								issueLinkLabel={issueLinkLabel}
-							/>
+							<IssueRow key={issue.id} title={issue.title} url={issue.url} issueLinkLabel={issueLinkLabel} />
 						))}
 					</div>
 				) : (

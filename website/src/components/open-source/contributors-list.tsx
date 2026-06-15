@@ -15,13 +15,7 @@ type Props = {
 	commitPluralLabel: string;
 };
 
-export const ContributorsList = ({
-	contributors,
-	heading,
-	showAllLabel,
-	commitSingularLabel,
-	commitPluralLabel,
-}: Props) => {
+export const ContributorsList = ({ contributors, heading, showAllLabel, commitSingularLabel, commitPluralLabel }: Props) => {
 	const [showAll, setShowAll] = useState(false);
 	const totalContributors = contributors.length;
 	const displayedContributors = showAll ? contributors : contributors.slice(0, INITIAL_VISIBLE_COUNT);
