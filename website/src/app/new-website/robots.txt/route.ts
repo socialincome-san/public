@@ -1,6 +1,5 @@
 import { websiteRegions } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
-import type { MetadataRoute } from 'next';
 
 export const revalidate = 86400;
 
@@ -19,12 +18,14 @@ const disallow = [
 	]),
 ];
 
-const robots = (): MetadataRoute.Robots => ({
-	rules: {
-		userAgent: '*',
-		disallow,
-	},
-	sitemap: `${SITE_URL}/${NEW_WEBSITE_SLUG}/sitemap.xml`,
-});
+const robotsTxt = [
+	'User-Agent: *',
+	...disallow.map((path) => `Disallow: ${path}`),
+	'',
+	`Sitemap: ${SITE_URL}/${NEW_WEBSITE_SLUG}/sitemap.xml`,
+].join('\n');
 
-export default robots;
+export const GET = () =>
+	new Response(robotsTxt, {
+		headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+	});
