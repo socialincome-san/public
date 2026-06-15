@@ -1,7 +1,7 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
-import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
+import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { PublicProgramStats } from '@/lib/services/program/program.types';
@@ -27,8 +27,7 @@ export const ProgramDetail = async ({ title, lang, region, fullSlug, heroImage, 
 
 	return (
 		<>
-			<HeroDonationsHeader
-				lang={lang}
+			<HeroHeader
 				title={title}
 				heroImage={heroImage}
 				stats={

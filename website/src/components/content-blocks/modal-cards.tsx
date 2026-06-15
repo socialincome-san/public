@@ -2,6 +2,7 @@
 
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
+import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
 import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
@@ -10,7 +11,7 @@ import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { VimeoVideoMatchAndExtract } from '@/lib/utils/UrlVideoParser';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
-import { PlayIcon, PlusIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import NextImage from 'next/image';
 import { useState } from 'react';
 
@@ -25,13 +26,11 @@ const vimeoMatcher = new VimeoVideoMatchAndExtract();
 export const ModalCardsBlock = ({ blok, lang, region }: Props) => {
 	const { heading, cards, explainerVideoThumbnail, labelForExplainerVideo, linkToExplainerVideo } = blok;
 	const [openCardId, setOpenCardId] = useState<string | null>(null);
-	const [isExplainerVideoOpen, setIsExplainerVideoOpen] = useState(false);
 	const explainerVideoLabel = labelForExplainerVideo?.trim();
 	const resolvedExplainerVideoUrl = linkToExplainerVideo ? resolveStoryblokLink(linkToExplainerVideo, lang, region) : null;
 	const explainerVideoEmbedUrl = resolvedExplainerVideoUrl ? vimeoMatcher.parseUrl(resolvedExplainerVideoUrl) : null;
 	const hasExplainerVideo = Boolean(explainerVideoLabel && explainerVideoEmbedUrl);
 	const explainerVideoThumbnailSrc = explainerVideoThumbnail?.filename;
-	const explainerVideoAccessibleLabel = explainerVideoLabel ?? 'Explainer video';
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
@@ -41,55 +40,18 @@ export const ModalCardsBlock = ({ blok, lang, region }: Props) => {
 						<StoryblokMarkdown>{heading}</StoryblokMarkdown>
 					</SectionHeading>
 				)}
-				{hasExplainerVideo &&
-					(explainerVideoThumbnailSrc ? (
-						<button
-							type="button"
-							onClick={() => setIsExplainerVideoOpen(true)}
-							className="group flex flex-col items-center gap-4 self-center text-sm"
-						>
-							<span className="relative aspect-video h-16 overflow-hidden rounded-full shadow-md">
-								<NextImage
-									src={explainerVideoThumbnailSrc}
-									alt={explainerVideoThumbnail?.alt ?? explainerVideoAccessibleLabel}
-									fill
-									sizes="176px"
-									className="object-cover"
-								/>
-								<span className="absolute inset-0 bg-black/10" />
-								<span className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/35 transition-transform duration-200 ease-out group-hover:scale-105">
-									<PlayIcon className="size-6 text-white" />
-								</span>
-							</span>
-							<span className="group-hover:underline">{explainerVideoLabel}</span>
-						</button>
-					) : (
-						<button
-							type="button"
-							onClick={() => setIsExplainerVideoOpen(true)}
-							className="inline-flex items-center gap-2 self-center text-sm hover:underline"
-						>
-							<PlayIcon className="size-6" />
-							{explainerVideoLabel}
-						</button>
-					))}
+				{hasExplainerVideo && (
+					<ExplainerVideoTrigger
+						layout="stacked"
+						label={explainerVideoLabel!}
+						embedUrl={explainerVideoEmbedUrl!}
+						thumbnailSrc={explainerVideoThumbnailSrc ?? undefined}
+						thumbnailAlt={explainerVideoThumbnail?.alt ?? undefined}
+						dialogTitle={explainerVideoLabel}
+						className="self-center"
+					/>
+				)}
 			</div>
-
-			{hasExplainerVideo && (
-				<Dialog open={isExplainerVideoOpen} onOpenChange={setIsExplainerVideoOpen}>
-					<DialogContent className="sm:max-w-content overflow-hidden rounded-3xl border-none p-0">
-						<DialogTitle className="sr-only">{explainerVideoLabel}</DialogTitle>
-						<iframe
-							src={explainerVideoEmbedUrl!}
-							title={explainerVideoLabel}
-							sandbox="allow-scripts allow-same-origin allow-presentation"
-							allow="fullscreen; autoplay"
-							loading="lazy"
-							className="aspect-video w-full border-0"
-						/>
-					</DialogContent>
-				</Dialog>
-			)}
 
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 				{cards?.map(({ image, heading, modalContent, _uid }) => {

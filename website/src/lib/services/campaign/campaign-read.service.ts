@@ -266,6 +266,37 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
+	async getPublicTitleById(campaignId: string): Promise<ServiceResult<{ title: string }>> {
+		try {
+			const normalizedId = campaignId.trim();
+			if (!normalizedId) {
+				return this.resultFail('Missing campaign id');
+			}
+
+			const campaign = await this.db.campaign.findFirst({
+				where: {
+					AND: [
+						{ OR: [{ id: normalizedId }, { legacyFirestoreId: normalizedId }] },
+						{ isActive: true },
+						{ slug: { not: null } },
+						{ OR: [{ public: true }, { public: null }] },
+					],
+				},
+				select: { title: true },
+			});
+
+			if (!campaign) {
+				return this.resultFail('Campaign not found');
+			}
+
+			return this.resultOk({ title: campaign.title });
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch campaign title: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getPublicCampaigns(): Promise<ServiceResult<PublicCampaignCard[]>> {
 		try {
 			const campaigns = await this.db.campaign.findMany({

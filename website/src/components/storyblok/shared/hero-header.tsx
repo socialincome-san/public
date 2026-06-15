@@ -1,3 +1,4 @@
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
 import NextImage from 'next/image';
@@ -21,8 +22,7 @@ type Props = {
 	titleIconAlt?: string;
 	preTitle?: ReactNode;
 	badges?: ReactNode;
-	rightSide?: ReactNode;
-	bottomContent?: ReactNode;
+	showDonationForm?: boolean;
 };
 
 export const HeroHeader = ({
@@ -33,8 +33,7 @@ export const HeroHeader = ({
 	titleIconAlt,
 	preTitle,
 	badges,
-	rightSide,
-	bottomContent,
+	showDonationForm = true,
 }: Props) => {
 	const heroImageSrc = heroImage?.filename
 		? formatStoryblokUrl(heroImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, heroImage.focus)
@@ -85,11 +84,19 @@ export const HeroHeader = ({
 						{badges ? <div className="flex flex-wrap gap-2">{badges}</div> : null}
 					</div>
 
-					{rightSide ? <div className="hidden shrink-0 lg:block">{rightSide}</div> : null}
+					{showDonationForm ? (
+						<div className="hidden shrink-0 lg:block">
+							<DonationForm />
+						</div>
+					) : null}
 				</div>
 			</div>
 
-			{bottomContent ? <div className="flex justify-center lg:hidden">{bottomContent}</div> : null}
+			{showDonationForm ? (
+				<div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">
+					<DonationForm />
+				</div>
+			) : null}
 		</section>
 	);
 };

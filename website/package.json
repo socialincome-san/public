@@ -64,6 +64,8 @@
 		"@sentry/nextjs": "^10.39.0",
 		"@storyblok/js": "^4.4.5",
 		"@storyblok/react": "^5.4.22",
+		"@stripe/react-stripe-js": "^6.6.0",
+		"@stripe/stripe-js": "^9.7.0",
 		"@tanstack/react-table": "^8.21.3",
 		"@types/js-cookie": "^3.0.6",
 		"@vimeo/player": "^2.30.2",

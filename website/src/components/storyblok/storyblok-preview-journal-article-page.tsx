@@ -26,7 +26,7 @@ export const StoryblokPreviewJournalArticlePage = async ({
 }: Props) => {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-donate'],
+		namespaces: ['website-journal', 'common', 'website-newsletter'],
 	});
 
 	return await StoryblokPreviewStory<ISbStoryData<ResolvedArticle>>({

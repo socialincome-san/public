@@ -1,6 +1,5 @@
 import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
-import { BankTransferService } from './bank-transfer/bank-transfer.service';
 import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
@@ -56,6 +55,8 @@ import { ProgramStatsService } from './program-stats/program-stats.service';
 import { ProgramReadService } from './program/program-read.service';
 import { ProgramValidationService } from './program/program-validation.service';
 import { ProgramWriteService } from './program/program-write.service';
+import { LegacyQrBillService } from './qr-bill/legacy/legacy-qr-bill.service';
+import { QrBillService } from './qr-bill/qr-bill.service';
 import { RecipientImportService } from './recipient/recipient-import.service';
 import { RecipientReadService } from './recipient/recipient-read.service';
 import { RecipientStatusService } from './recipient/recipient-status.service';
@@ -63,6 +64,7 @@ import { RecipientValidationService } from './recipient/recipient-validation.ser
 import { RecipientWriteService } from './recipient/recipient-write.service';
 import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
 import { StoryblokService } from './storyblok/storyblok.service';
+import { LegacyStripeService } from './stripe/legacy/legacy-stripe.service';
 import { StripeService } from './stripe/stripe.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
 import { SurveyImpactService } from './survey/survey-impact.service';
@@ -183,15 +185,17 @@ const donationCertificateWrite = new DonationCertificateWriteService(
 	contributionRead,
 	donationCertificateRead,
 );
-const bankTransfer = new BankTransferService(prisma, contributorWrite, campaignRead, contributionWrite);
-const stripe = new StripeService(
+const qrBillLegacy = new LegacyQrBillService(prisma, contributorWrite, campaignRead, contributionWrite);
+const qrBill = new QrBillService(
 	prisma,
-	contributorRead,
 	contributorWrite,
-	contributionWrite,
+	contributorRead,
 	campaignRead,
-	programAccessRead,
+	contributionWrite,
+	exchangeRateRead,
 );
+const stripe = new StripeService(prisma, contributorRead, contributorWrite, contributionWrite, campaignRead);
+const stripeLegacy = new LegacyStripeService(prisma, contributorRead, contributorWrite, campaignRead, programAccessRead);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
@@ -241,7 +245,8 @@ export const services = {
 		user: userWrite,
 	},
 	appReviewMode,
-	bankTransfer,
+	qrBill,
+	qrBillLegacy,
 	createPaymentFileImport,
 	exchangeRateImport,
 	candidateImport,
@@ -256,6 +261,7 @@ export const services = {
 	journal,
 	storyblok,
 	stripe,
+	stripeLegacy,
 	surveyImpact,
 	transparency,
 	twilio,
