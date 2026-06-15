@@ -1,5 +1,10 @@
 import { Address, ContributorReferralSource, CountryCode, Gender, Phone, Prisma } from '@/generated/prisma/client';
 
+export type ContributorCommunityStats = {
+	supporterCount: number;
+	countryCount: number;
+};
+
 export type ContributorTableViewRow = {
 	id: string;
 	firstName: string;

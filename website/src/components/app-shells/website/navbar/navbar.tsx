@@ -3,7 +3,7 @@ import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout
 import { MenuDesktop } from '@/components/app-shells/website/navbar/menu-desktop';
 import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
 import { displaySession, type Scope } from '@/components/app-shells/website/navbar/utils';
-import { Button } from '@/components/button';
+import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { Session } from '@/lib/firebase/current-account';
@@ -54,9 +54,10 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 					{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
 				</div>
 				{!session && (
-					<Button className="rounded-full px-5 text-sm font-semibold lg:h-11">
-						{translator.t('donation-form.donate-now')}
-					</Button>
+					<OpenDonationWizardButton
+						label={translator.t('donation-form.donate-now')}
+						className="rounded-full px-5 text-sm font-semibold lg:h-11"
+					/>
 				)}
 				{showWebsiteMenu && <MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />}
 			</div>

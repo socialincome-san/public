@@ -78,6 +78,13 @@ variable "stripe_secret_key" {
   sensitive   = true
 }
 
+variable "stripe_publishable_key" {
+  description = "Stripe publishable API key for client-side Embedded Checkout"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 variable "stripe_webhook_secret" {
   description = "Stripe webhook signing secret"
   type        = string

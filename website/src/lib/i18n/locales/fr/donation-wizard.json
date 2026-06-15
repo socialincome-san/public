@@ -1,0 +1,155 @@
+{
+	"modal": {
+		"title": "Faire un don",
+		"campaign-for": "Pour {{title}}",
+		"closeConfirm": {
+			"title": "Fermer le don ?",
+			"description": "Si tu fermes maintenant, ta progression dans ce don sera perdue.",
+			"cancel": "Continuer le don",
+			"confirm": "Fermer"
+		}
+	},
+	"stepAmount": {
+		"title": "Faire un don",
+		"monthly-income-label": "Votre revenu mensuel (CHF)",
+		"choose-own-amount": "Ou choisis ton propre montant",
+		"your-one-percent": "Votre 1%",
+		"other": "Autre",
+		"monthly": "Mensuel",
+		"one-time": "Unique",
+		"donate-now": "Donner maintenant",
+		"donate-now-with-amount": "Donner {{amount}} maintenant",
+		"custom-amount-placeholder": "Montant"
+	},
+	"stepPlan": {
+		"monthly-title": "Don mensuel",
+		"one-time-title": "Don unique",
+		"switch-to-one-time": "Unique",
+		"switch-to-monthly": "Mensuel",
+		"amount-label": "Montant",
+		"one-time-option-label": "Unique",
+		"one-time-option-hint": "Paiement unique",
+		"upsell-title": "Souhaitez-vous passer au plan mensuel ?",
+		"upsell-subtitle": "La moitié du montant, chaque mois. Cela nous aide encore plus.",
+		"monthly-half-note": "Les plans mensuels sont basés sur la moitié de votre don unique.",
+		"upsell-preferred": "Recommandé",
+		"upsell-benefit-stability": "Aide Social Income à être financièrement stable et à planifier",
+		"upsell-benefit-impact": "Impact maximal",
+		"upsell-benefit-cancel": "Annulable à tout moment",
+		"switch-to-monthly-plan": "Passer au plan mensuel",
+		"per-month": "/mois",
+		"plan-1x": "Plan 1%",
+		"plan-2x": "Plan 2%",
+		"monthly-plan": "Plan mensuel",
+		"benefit-beneficiaries": "{{count}} bénéficiaires directs et indirects",
+		"benefit-fees": "Frais de transaction couverts",
+		"benefit-community": "Rejoignez une communauté de {{count}} supporters",
+		"benefit-double-impact": "Doublez l'impact",
+		"back": "Retour",
+		"choose-payment": "Choisir le mode de paiement"
+	},
+	"stepStripeCheckout": {
+		"loading": "Chargement du formulaire de paiement…",
+		"payment-error": "Le paiement n'a pas pu être démarré.",
+		"try-again": "Réessayer"
+	},
+	"stepQrContact": {
+		"hintsTitle": "À savoir",
+		"titleStandingOrder": "Générer le code QR pour ordre permanent",
+		"titleOneTime": "Générer le code QR pour le paiement",
+		"firstName": "Prénom",
+		"lastName": "Nom",
+		"email": "E-mail",
+		"accountCreateHint": "S'il n'existe pas encore de compte avec cet e-mail, nous en créerons un pour toi.",
+		"noBackAfterGenerateHint": "Après la génération du code QR, tu ne pourras plus modifier le montant, le mode de paiement ni les coordonnées dans ce parcours.",
+		"generateCta": "Générer le code QR pour le paiement",
+		"generating": "Génération…",
+		"generateError": "Impossible de générer la facture QR. Réessaie."
+	},
+	"stepQrBill": {
+		"title": "Paiement QR",
+		"scanHint": "Scanne avec ton application bancaire",
+		"paymentToLabel": "Paiement à",
+		"paymentToValue": "Social Income, Postfinance AG, 8000 Zürich",
+		"fromLabel": "De",
+		"amountLabel": "Montant",
+		"paymentTypeLabel": "Type de paiement",
+		"paymentTypeStandingOrder": "Ordre permanent (mensuel)",
+		"paymentTypeOneTime": "Paiement unique",
+		"confirmStandingOrder": "Confirmer l'ordre permanent",
+		"confirmOneTime": "Confirmer le paiement",
+		"confirming": "Traitement…",
+		"confirmError": "Impossible de confirmer le paiement. Réessaie.",
+		"downloadPdf": "Télécharger le PDF",
+		"downloadingPdf": "Téléchargement…",
+		"downloadPdfError": "Impossible de télécharger le PDF. Réessaie."
+	},
+	"stepPayment": {
+		"title": "Mode de paiement",
+		"qr-payment": "Paiement QR",
+		"qr-payment-unavailable": "Disponible uniquement en CHF et EUR",
+		"minimal-costs": "Coûts minimaux",
+		"online": "En ligne",
+		"your-donation": "Votre don",
+		"generate-qr-code": "Générer le code QR",
+		"pay-online": "Payer en ligne",
+		"cover-costs-description": "Couvre les frais en ligne.",
+		"cover-costs-label-monthly": "Couvrir les frais de transaction ({{fee}}/mois)",
+		"cover-costs-label-one-time": "Couvrir les frais de transaction ({{fee}})",
+		"cover-costs-tooltip-aria": "Comment les frais de transaction sont calculés",
+		"cover-costs-tooltip": "Nous ajoutons 3 % à ton don pour que le montant complet nous parvienne après les frais de carte en ligne."
+	},
+	"thankYou": {
+		"message": "Merci pour ton aide !",
+		"messageWithAmountMonthly": "Merci pour {{amount}}/mois !",
+		"messageWithAmountOneTime": "Merci pour {{amount}} !",
+		"loginPrompt": {
+			"title": "Ton compte est prêt",
+			"description": "Va sur la page de connexion pour accéder à ton compte.",
+			"loginButton": "Se connecter",
+			"supportPrefix": "Des questions ? Contacte"
+		}
+	},
+	"onboarding": {
+		"successTitle": "Don réussi",
+		"accountCardTitle": "Vérifie tes informations de compte",
+		"isThisYou": "Est-ce bien toi ?",
+		"firstName": "Prénom",
+		"lastName": "Nom",
+		"email": "E-mail",
+		"country": "Pays",
+		"genderSectionTitle": "Comment devons-nous nous adresser à toi ?",
+		"genderSectionDescription": "Nous utilisons ces informations pour les e-mails, les attestations de don et le portail.",
+		"genderOtherPrivate": "Autre / Privé",
+		"submit": "Confirmer les informations du compte",
+		"submitting": "Enregistrement…",
+		"loading": "Chargement de tes informations…",
+		"updateError": "Une erreur s'est produite lors de l'enregistrement. Merci de réessayer.",
+		"continue": "Continuer",
+		"referral": {
+			"cardTitle": "Nous aide à concentrer notre temps sur ce qui fonctionne vraiment",
+			"question": "Comment as-tu entendu parler de nous ?",
+			"submit": "Envoyer le feedback",
+			"submitting": "Enregistrement…",
+			"updateError": "Une erreur s'est produite lors de l'enregistrement de ton feedback. Merci de réessayer.",
+			"options": {
+				"familyfriends": "Amis ou famille",
+				"socialmedia": "Réseaux sociaux",
+				"events": "Événements",
+				"media": "Médias",
+				"preferNotToSay": "Je préfère ne pas répondre",
+				"other": "Autre"
+			}
+		}
+	},
+	"impact": {
+		"title": "Argent liquide direct aux personnes dans le besoin",
+		"tax-deductible": "Déductible des impôts",
+		"cancel-anytime": "Annulable à tout moment",
+		"supporters": "{{supporterCount}} supporters de {{countryCount}} pays",
+		"supporters-no-countries": "{{supporterCount}} supporters dans le monde",
+		"zewo": "Certifié ZEWO",
+		"why-one-percent": "Pourquoi 1 % ?",
+		"pay-with": "Payer avec"
+	}
+}
