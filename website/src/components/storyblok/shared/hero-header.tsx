@@ -16,6 +16,7 @@ type Props = {
 	titleIconAlt?: string;
 	preTitle?: ReactNode;
 	badges?: ReactNode;
+	showDonationForm?: boolean;
 };
 
 export const HeroHeader = ({
@@ -27,6 +28,7 @@ export const HeroHeader = ({
 	titleIconAlt,
 	preTitle,
 	badges,
+	showDonationForm = true,
 }: Props) => {
 	return (
 		<section className="full-bleed-hero flex flex-col gap-6">
@@ -79,15 +81,19 @@ export const HeroHeader = ({
 						{badges ? <div className="flex flex-wrap gap-2">{badges}</div> : null}
 					</div>
 
-					<div className="hidden shrink-0 lg:block">
-						<DonationForm />
-					</div>
+					{showDonationForm ? (
+						<div className="hidden shrink-0 lg:block">
+							<DonationForm />
+						</div>
+					) : null}
 				</div>
 			</div>
 
-			<div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">
-				<DonationForm />
-			</div>
+			{showDonationForm ? (
+				<div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">
+					<DonationForm />
+				</div>
+			) : null}
 		</section>
 	);
 };
