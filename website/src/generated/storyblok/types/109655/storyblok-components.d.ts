@@ -314,6 +314,14 @@ export interface NewsletterSignup {
   [k: string]: unknown;
 }
 
+export interface OpenSource {
+  title?: string;
+  description?: string;
+  component: "openSource";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Page {
   content: (
     | DonationsTotal
@@ -333,6 +341,7 @@ export interface Page {
     | TwoColumnText
     | VideoText
     | Transparency
+    | OpenSource
   )[];
   component: "page";
   _uid: string;
