@@ -1,0 +1,49 @@
+{
+	"metadata": {
+		"title": "Open Source en chiffres ",
+		"heading": "Contributeurs"
+	},
+	"contributors": {
+		"heading": "Contributeurs",
+		"showAll": "Afficher les {count} contributeurs",
+		"commitSingular": "commit",
+		"commitPlural": "commits"
+	},
+	"hero": {
+		"title-1": [
+			{
+				"text": "Des outils pour le changement. "
+			},
+			{
+				"text": "Ouverts à tous.",
+				"color": "accent"
+			}
+		],
+		"subtitle": "Tout ce que nous construisons est open source — libre d'utilisation, d'adaptation et d'amélioration. Rejoignez notre communauté de bénévoles qui crée des outils pour l'égalité et le changement."
+	},
+	"overview": {
+		"forks": {
+			"title": "Forks",
+			"time": "le mois dernier"
+		},
+		"commits": {
+			"title": "Commits",
+			"time": "le mois dernier"
+		},
+		"stars": {
+			"title": "Étoiles GitHub",
+			"time": "le mois dernier"
+		}
+	},
+	"issues": {
+		"title": "Issues ouvertes",
+		"header": "Titre de l'issue",
+		"link": "Voir sur GitHub",
+		"filter": "Toutes les issues",
+		"showAll": "Afficher les {count} issues",
+		"empty": "Aucune issue ouverte"
+	},
+	"error": {
+		"unavailable": "Les données GitHub ne sont pas disponibles pour le moment. Veuillez réessayer plus tard."
+	}
+}
