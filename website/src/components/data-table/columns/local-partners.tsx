@@ -46,6 +46,11 @@ export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[]
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
+			accessorKey: 'candidatesCount',
+			header: 'Candidates',
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
 			accessorKey: 'createdAt',
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
 			cell: (ctx) => <DateCell ctx={ctx} />,
