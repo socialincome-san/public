@@ -22,7 +22,7 @@ type Props = {
 	disableAutoplay?: boolean;
 };
 
-export type HeroVideoTranslations = {
+type HeroVideoTranslations = {
 	playVideo: string;
 	pauseVideo: string;
 	muteVideo: string;
