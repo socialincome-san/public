@@ -342,7 +342,7 @@ export class LocalPartnerReadService extends BaseService {
 					contactNumber: partner.contact?.phone?.number ?? null,
 					focuses: partner.focuses.map((focus) => focus.focus.name).join(', '),
 					recipientsCount,
-					candidatesCount: partner._count.recipients - recipientsCount,
+					candidatesCount: Math.max(0, partner._count.recipients - recipientsCount),
 					createdAt: partner.createdAt,
 				};
 			});
