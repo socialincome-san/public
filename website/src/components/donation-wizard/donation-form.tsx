@@ -9,9 +9,10 @@ import { selectStep1FormView } from './wizard/donation-machine-selectors';
 
 type Props = {
 	campaignId?: string;
+	onBeforeOpen?: () => void;
 };
 
-export const DonationForm = ({ campaignId }: Props) => {
+export const DonationForm = ({ campaignId, onBeforeOpen }: Props) => {
 	const { openWizardWithFormAmount } = useDonationModal();
 	const form = useDonationFormState();
 
@@ -29,6 +30,7 @@ export const DonationForm = ({ campaignId }: Props) => {
 				}}
 				onSubmit={() => {
 					if (form.isValid) {
+						onBeforeOpen?.();
 						openWizardWithFormAmount(campaignId ? { ...form.context, campaignId } : form.context);
 					}
 				}}

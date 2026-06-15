@@ -114,7 +114,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 			</Dialog>
 
 			<Dialog open={closeConfirmOpen} onOpenChange={setCloseConfirmOpen}>
-				<DialogContent className="z-[60] gap-4 sm:max-w-[400px]" overlayClassName="z-[60]">
+				<DialogContent className="z-[120] gap-4 sm:max-w-[400px]" overlayClassName="z-[120]">
 					<DialogTitle className="text-lg font-medium">{t('modal.closeConfirm.title')}</DialogTitle>
 					<p className="text-muted-foreground text-sm leading-normal">{t('modal.closeConfirm.description')}</p>
 					<div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
