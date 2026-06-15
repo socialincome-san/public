@@ -6,6 +6,7 @@ import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
+import { OpenSourceBlock } from '@/components/content-blocks/open-source';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
@@ -31,6 +32,7 @@ const storyblokComponents = {
 	faqSelection: FaqSelectionBlock,
 	imageText: ImageTextBlock,
 	modalCards: ModalCardsBlock,
+	openSource: OpenSourceBlock,
 	journalTeasers: JournalTeasersBlock,
 	partnershipsCarousel: PartnershipsCarouselBlock,
 	programGrid: ProgramGridBlock,

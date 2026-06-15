@@ -31,6 +31,7 @@ import { FirebaseSessionService } from './firebase/firebase-session.service';
 import { FocusReadService } from './focus/focus-read.service';
 import { FocusValidationService } from './focus/focus-validation.service';
 import { FocusWriteService } from './focus/focus-write.service';
+import { GithubApiService } from './github-api/github-api.service';
 import { JournalService } from './journal/journal.service';
 import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
 import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
@@ -88,6 +89,7 @@ const userValidation = new UserValidationService(prisma);
 const exchangeRateImport = new ExchangeRateImportService(prisma);
 const surveySchedule = new SurveyScheduleService(prisma);
 const transparency = new TransparencyService(prisma);
+const githubApi = new GithubApiService(prisma);
 const storyblok = new StoryblokService(prisma);
 const journal = new JournalService(prisma, storyblok);
 const sendgrid = new SendgridSubscriptionService();
@@ -264,5 +266,6 @@ export const services = {
 	stripeLegacy,
 	surveyImpact,
 	transparency,
+	githubApi,
 	twilio,
 };
