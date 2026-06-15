@@ -47,7 +47,6 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region }: Pr
 		});
 	}
 
-
 	if (durationMonths !== undefined) {
 		details.push({
 			label: translator.t('program-detail-page.duration'),
