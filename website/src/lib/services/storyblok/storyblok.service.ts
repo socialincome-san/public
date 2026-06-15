@@ -53,6 +53,20 @@ export type StoryblokPublishedLink = {
 	alternates?: StoryblokLinkAlternate[];
 };
 
+const isStoryblokPublishedLink = (value: unknown): value is StoryblokPublishedLink => {
+	if (!value || typeof value !== 'object') {
+		return false;
+	}
+
+	if (!('slug' in value) || !('is_folder' in value) || !('published' in value)) {
+		return false;
+	}
+
+	const link = value as { slug: unknown; is_folder: unknown; published: unknown };
+
+	return typeof link.slug === 'string' && typeof link.is_folder === 'boolean' && typeof link.published === 'boolean';
+};
+
 export class StoryblokService extends BaseService {
 	static readonly journalTeaserLimit = 3;
 
@@ -423,16 +437,7 @@ export class StoryblokService extends BaseService {
 				starts_with: `${STORYBLOK_PAGES_FOLDER}/`,
 			});
 
-			const links = Array.isArray(data)
-				? data.filter(
-						(link): link is StoryblokPublishedLink =>
-							typeof link === 'object' &&
-							link !== null &&
-							typeof link.slug === 'string' &&
-							typeof link.is_folder === 'boolean' &&
-							typeof link.published === 'boolean',
-					)
-				: [];
+			const links = Array.isArray(data) ? data.filter(isStoryblokPublishedLink) : [];
 
 			return this.resultOk(links);
 		} catch (error) {

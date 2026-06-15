@@ -154,10 +154,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 			throw new Error(linksResult.error ?? 'Failed to fetch Storyblok page links');
 		}
 
-		const entries = dedupeEntries([
-			...collectStoryblokEntries(linksResult.data),
-			...(await collectCampaignEntries()),
-		]);
+		const entries = dedupeEntries([...collectStoryblokEntries(linksResult.data), ...(await collectCampaignEntries())]);
 
 		ensureJournalIndex(entries);
 
