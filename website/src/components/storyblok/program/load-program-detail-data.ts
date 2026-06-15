@@ -5,6 +5,7 @@ import type { PublicProgramDetails, PublicProgramStats } from '@/lib/services/pr
 import { services } from '@/lib/services/services';
 import { getProgramStoryPath, getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoryData } from '@storyblok/js';
+import { HeroHeaderImage } from '../shared/hero-header';
 
 type ProgramDetailPortalData = {
 	stats?: PublicProgramStats;
@@ -15,8 +16,7 @@ type ProgramDetailPortalData = {
 export type ProgramDetailData = {
 	title: string;
 	fullSlug: string;
-	heroImageFilename?: string;
-	heroImageAlt?: string;
+	heroImage?: HeroHeaderImage | null;
 	description?: string;
 } & ProgramDetailPortalData;
 
@@ -51,8 +51,7 @@ export const loadProgramDetailData = async (urlSlug: string, lang: string): Prom
 		return {
 			title: getProgramTitle(story.content),
 			fullSlug: story.full_slug,
-			heroImageFilename: story.content.primaryImage?.filename ?? undefined,
-			heroImageAlt: story.content.primaryImage?.alt ?? undefined,
+			heroImage: story.content.primaryImage,
 			description: story.content.description?.trim() || undefined,
 			...portalData,
 		};
@@ -73,8 +72,7 @@ export const loadProgramDetailData = async (urlSlug: string, lang: string): Prom
 	return {
 		title: previewProgramResult.data.name,
 		fullSlug: getProgramStoryPath(urlSlug),
-		heroImageFilename: defaultImage?.filename ?? undefined,
-		heroImageAlt: defaultImage?.alt ?? undefined,
+		heroImage: defaultImage,
 		description: undefined,
 		...portalData,
 	};
