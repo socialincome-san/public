@@ -2,29 +2,27 @@
 
 import { Button } from '@/components/button';
 import { DonationForm } from '@/components/donation-wizard/donation-form';
+import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
 import { VideoControlButton } from '@/components/video-control-button';
 import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { ArrowsPointingInIcon, ArrowsPointingOutIcon, ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/outline';
 import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import MuxVideo from '@mux/mux-video-react';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
-import NextLink from 'next/link';
 import { useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 
 type Props = {
 	blok: HeroVideo;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	subtitleUrl?: string;
-	translations: HeroVideoControlTranslations;
+	translations: HeroVideoTranslations;
 	disableAutoplay?: boolean;
 };
 
-export type HeroVideoControlTranslations = {
+export type HeroVideoTranslations = {
 	playVideo: string;
 	pauseVideo: string;
 	muteVideo: string;
@@ -33,10 +31,12 @@ export type HeroVideoControlTranslations = {
 	hideCaptions: string;
 	expandVideoView: string;
 	exitExpandedVideoView: string;
+	donateNow: string;
 };
 
-export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations, disableAutoplay = false }: Props) => {
-	const { heading, description, muxPlaybackId, button } = blok;
+export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, disableAutoplay = false }: Props) => {
+	const { heading, description, muxPlaybackId } = blok;
+	const { openWizardAtAmountStep } = useDonationModal();
 	const videoRef = useRef<HTMLVideoElement>(null);
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isPlaying, setIsPlaying] = useState(!disableAutoplay);
@@ -155,19 +155,17 @@ export const HeroVideoBlock = ({ blok, lang, region, subtitleUrl, translations, 
 								</h1>
 							)}
 							{description && <p className="text-xl">{description}</p>}
-							{button && (
-								<div>
-									{button.map(({ _uid, label, link }) => {
-										const href = resolveStoryblokLink(link, lang, region);
-
-										return (
-											<Button key={_uid} variant="outline" size="lg" asChild>
-												<NextLink href={href}>{label}</NextLink>
-											</Button>
-										);
-									})}
-								</div>
-							)}
+							<div>
+								<Button
+									type="button"
+									variant="outline"
+									size="lg"
+									aria-haspopup="dialog"
+									onClick={() => openWizardAtAmountStep()}
+								>
+									{translations.donateNow}
+								</Button>
+							</div>
 						</div>
 						<div className="hidden shrink-0 lg:block">
 							<DonationForm />
