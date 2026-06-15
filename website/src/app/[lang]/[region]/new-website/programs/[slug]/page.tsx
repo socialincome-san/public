@@ -26,8 +26,7 @@ export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug
 				lang={lang as WebsiteLanguage}
 				region={region as WebsiteRegion}
 				fullSlug={program.full_slug}
-				heroImageFilename={program.content.primaryImage?.filename ?? undefined}
-				heroImageAlt={program.content.primaryImage?.alt ?? programTitle}
+				heroImage={program.content.primaryImage}
 				stats={statsResult?.success ? statsResult.data : undefined}
 			/>
 		);
@@ -55,8 +54,7 @@ export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
 			fullSlug={getProgramStoryPath(slug)}
-			heroImageFilename={defaultImage?.filename ?? undefined}
-			heroImageAlt={defaultImage?.alt ?? programTitle}
+			heroImage={defaultImage}
 			stats={statsResult.data}
 		/>
 	);
