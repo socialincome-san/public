@@ -7,7 +7,7 @@ import type { ReactNode } from 'react';
 const HERO_HEADER_IMAGE_WIDTH = 1920;
 const HERO_HEADER_IMAGE_HEIGHT = 1080;
 
-export type HeroHeaderStat = {
+type HeroHeaderStat = {
 	value?: number;
 	label: string;
 };
