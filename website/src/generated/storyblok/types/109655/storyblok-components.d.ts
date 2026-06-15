@@ -163,6 +163,9 @@ export interface Focus {
   text?: string;
   studiesTitle?: string;
   studies?: (ISbStoryData<Study> | string)[];
+  impactMeasurementTitle?: string;
+  impactMeasurementTeaserText?: string;
+  impactMeasurementTeaserButtonLabel?: string;
   component: "Focus";
   _uid: string;
   [k: string]: unknown;

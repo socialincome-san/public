@@ -1,5 +1,6 @@
 export const IMPACT_FILTER_QUERY_KEYS = {
 	country: 'country',
+	focus: 'focus',
 	program: 'program',
 	questionnaire: 'questionnaire',
 	recipientFilters: 'recipientFilters',
@@ -7,6 +8,7 @@ export const IMPACT_FILTER_QUERY_KEYS = {
 
 export const FILTER_PREFIX = {
 	country: 'country:',
+	focus: 'focus:',
 	program: 'program:',
 	questionnaire: 'questionnaire:',
 	recipient: 'recipient:',

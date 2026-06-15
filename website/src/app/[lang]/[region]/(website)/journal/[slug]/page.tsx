@@ -181,10 +181,6 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 						languageName={translator.t('language-name.' + articleData.originalLanguage)}
 					/>
 
-					<Typography weight="medium" size="2xl" color="foreground" className="leading-snug">
-						{articleData.leadText}
-					</Typography>
-
 					<Typography as="div" size="xl" className="text-black">
 						<RichTextRenderer
 							richTextDocument={articleData.content as StoryblokRichtext}

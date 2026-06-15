@@ -116,6 +116,7 @@ enum SanctionRegime {
 
 enum PayoutProcess {
   orange_money_csv
+  telecel_csv
 }
 
 // ISO 3166-1 alpha-2 country codes

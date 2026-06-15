@@ -43,7 +43,9 @@ import { OrganizationReadService } from './organization/organization-read.servic
 import { OrganizationValidationService } from './organization/organization-validation.service';
 import { OrganizationWriteService } from './organization/organization-write.service';
 import { PaymentFileImportService } from './payment-file-import/payment-file-import.service';
-import { PayoutProcessService } from './payout-process/payout-process.service';
+import { OrangeMoneyCsvPayoutProcessService } from './payout-process/orange-money-csv-payout-process.service';
+import { PayoutProcessCoreService } from './payout-process/payout-process-core.service';
+import { TelecelCsvPayoutProcessService } from './payout-process/telecel-csv-payout-process.service';
 import { PayoutReadService } from './payout/payout-read.service';
 import { PayoutValidationService } from './payout/payout-validation.service';
 import { PayoutWriteService } from './payout/payout-write.service';
@@ -168,7 +170,15 @@ const programWrite = new ProgramWriteService(
 	programValidation,
 );
 const payoutRead = new PayoutReadService(prisma, programAccessRead, exchangeRateRead, recipientStatus);
-const payoutProcess = new PayoutProcessService(prisma, programAccessRead, programStats, exchangeRateRead, recipientStatus);
+const payoutProcessCore = new PayoutProcessCoreService(
+	prisma,
+	programAccessRead,
+	programStats,
+	exchangeRateRead,
+	recipientStatus,
+);
+const orangeMoneyCsvPayoutProcess = new OrangeMoneyCsvPayoutProcessService(prisma, payoutProcessCore);
+const telecelCsvPayoutProcess = new TelecelCsvPayoutProcessService(prisma, payoutProcessCore);
 const donationCertificateWrite = new DonationCertificateWriteService(
 	prisma,
 	contributorRead,
@@ -242,7 +252,9 @@ export const services = {
 	candidateImport,
 	firebaseAdmin,
 	firebaseSession,
-	payoutProcess,
+	payoutProcessCore,
+	orangeMoneyCsvPayoutProcess,
+	telecelCsvPayoutProcess,
 	programStats,
 	recipientImport,
 	sendgrid,

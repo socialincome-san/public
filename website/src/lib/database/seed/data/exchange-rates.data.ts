@@ -46,6 +46,15 @@ const latestExchangeRatesData: ExchangeRate[] = [
 		createdAt: new Date('2024-03-12T12:00:00.000Z'),
 		updatedAt: null,
 	},
+	{
+		id: 'exchange-rate-6',
+		legacyFirestoreId: null,
+		currency: 'GHS',
+		rate: new Prisma.Decimal(13.64),
+		timestamp: new Date('2025-01-01T00:00:00Z'),
+		createdAt: new Date('2024-03-12T12:00:00.000Z'),
+		updatedAt: null,
+	},
 ];
 
 export const exchangeRatesData: ExchangeRate[] = [...latestExchangeRatesData];
@@ -56,6 +65,7 @@ const historicalRateByCurrency = [
 	{ currency: 'EUR' as const, rate: 0.95 },
 	{ currency: 'SLE' as const, rate: 24 },
 	{ currency: 'LRD' as const, rate: 203 },
+	{ currency: 'GHS' as const, rate: 13.64 },
 ];
 
 for (let i = 0; i < 3000; i += 1) {
