@@ -21,7 +21,7 @@ type Props = {
 export const ProgramAbout = ({ programDetailData, translator, lang, region }: Props) => {
 	const { description, programDetails, dashboardStats } = programDetailData;
 
-	const durationMonths = dashboardStats?.programDurationInMonths ?? programDetails?.programDurationInMonths ?? 0;
+	const durationMonths = dashboardStats?.programDurationInMonths ?? programDetails?.programDurationInMonths ?? undefined;
 	const localPartnerHref = programDetails?.localPartnerSlug
 		? `/${lang}/${region}/${NEW_WEBSITE_SLUG}/local-partners/${programDetails.localPartnerSlug}`
 		: undefined;
@@ -47,10 +47,13 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region }: Pr
 		});
 	}
 
-	details.push({
-		label: translator.t('program-detail-page.duration'),
-		value: `${durationMonths} ${durationMonths === 1 ? translator.t('program-detail-page.month-singular') : translator.t('program-detail-page.month-plural')}`,
-	});
+
+	if (durationMonths !== undefined) {
+		details.push({
+			label: translator.t('program-detail-page.duration'),
+			value: `${durationMonths} ${durationMonths === 1 ? translator.t('program-detail-page.month-singular') : translator.t('program-detail-page.month-plural')}`,
+		});
+	}
 
 	if (programDetails?.startedAt) {
 		details.push({
