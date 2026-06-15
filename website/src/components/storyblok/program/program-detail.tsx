@@ -6,7 +6,8 @@ import { ProgramCountry } from '@/components/storyblok/program/program-country';
 import { ProgramFinances } from '@/components/storyblok/program/program-finances';
 import { ProgramRecipients } from '@/components/storyblok/program/program-recipients';
 import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
-import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
+import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
+import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getCountryNameByCode } from '@/lib/types/country';
@@ -18,7 +19,6 @@ type Props = {
 };
 
 export const ProgramDetail = async ({ programDetailData, lang, region }: Props) => {
-	const resolvedHeroImageAlt = programDetailData.heroImageAlt ?? programDetailData.title;
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const countryIsoCode = programDetailData.programDetails?.countryIsoCode ?? programDetailData.stats?.countryIsoCode;
 	const recipientsCount =
@@ -38,11 +38,9 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 
 	return (
 		<>
-			<HeroDonationsHeader
-				lang={lang}
+			<HeroHeader
 				title={programDetailData.title}
-				heroImageFilename={programDetailData.heroImageFilename}
-				heroImageAlt={resolvedHeroImageAlt}
+				heroImage={programDetailData.heroImage}
 				stats={
 					programDetailData.stats
 						? [

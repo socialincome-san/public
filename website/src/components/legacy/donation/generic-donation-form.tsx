@@ -6,7 +6,7 @@ import { DonationInterval } from '@/components/legacy/donation/donation-interval
 import { CurrencySelector } from '@/components/legacy/ui/currency-selector';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { createStripeCheckoutAction } from '@/lib/server-actions/stripe-actions';
+import { createStripeCheckoutAction } from '@/lib/server-actions/stripe-legacy-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	Button,

@@ -97,6 +97,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"
+          value = var.stripe_publishable_key
+        }
+
+        env {
           name  = "STRIPE_WEBHOOK_SECRET"
           value = var.stripe_webhook_secret
         }

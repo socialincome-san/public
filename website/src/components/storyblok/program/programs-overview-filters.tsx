@@ -5,6 +5,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@socialincome/ui';
 import { ChevronDown } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import {
+	applyQueryParamOverrides,
+	COUNTRY_QUERY_KEY,
+	FOCUS_QUERY_KEY,
+	type QueryParamOverride,
+} from './programs-overview-query';
 
 type FilterOption = {
 	value: string;
@@ -18,6 +24,8 @@ type ProgramsOverviewFiltersProps = {
 	selectedCountryIsoCode?: string;
 	focusOptions: FilterOption[];
 	selectedFocusId?: string;
+	showFocusFilter?: boolean;
+	queryParamOverrides?: QueryParamOverride[];
 };
 
 type FilterDropdownProps = {
@@ -25,10 +33,8 @@ type FilterDropdownProps = {
 	options: FilterOption[];
 	queryKey: string;
 	selectedValue?: string;
+	queryParamOverrides?: QueryParamOverride[];
 };
-
-const COUNTRY_QUERY_KEY = 'country';
-const FOCUS_QUERY_KEY = 'focus';
 
 const updateFilterQuery = ({
 	pathname,
@@ -36,12 +42,14 @@ const updateFilterQuery = ({
 	searchParams,
 	queryKey,
 	value,
+	queryParamOverrides,
 }: {
 	pathname: string;
 	router: ReturnType<typeof useRouter>;
 	searchParams: ReturnType<typeof useSearchParams>;
 	queryKey: string;
 	value: string | undefined;
+	queryParamOverrides?: QueryParamOverride[];
 }) => {
 	const nextParams = new URLSearchParams(searchParams.toString());
 
@@ -51,11 +59,13 @@ const updateFilterQuery = ({
 		nextParams.delete(queryKey);
 	}
 
+	applyQueryParamOverrides(nextParams, queryParamOverrides);
+
 	const nextQuery = nextParams.toString();
 	router.replace(nextQuery.length > 0 ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
 };
 
-const FilterDropdown = ({ allLabel, options, queryKey, selectedValue }: FilterDropdownProps) => {
+const FilterDropdown = ({ allLabel, options, queryKey, selectedValue, queryParamOverrides }: FilterDropdownProps) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -64,7 +74,7 @@ const FilterDropdown = ({ allLabel, options, queryKey, selectedValue }: FilterDr
 	const buttonLabel = selectedOption?.label ?? allLabel;
 
 	const updateFilter = (value: string | undefined) => {
-		updateFilterQuery({ pathname, router, searchParams, queryKey, value });
+		updateFilterQuery({ pathname, router, searchParams, queryKey, value, queryParamOverrides });
 	};
 
 	return (
@@ -101,6 +111,8 @@ export const ProgramsOverviewFilters = ({
 	selectedCountryIsoCode,
 	focusOptions,
 	selectedFocusId,
+	showFocusFilter = true,
+	queryParamOverrides,
 }: ProgramsOverviewFiltersProps) => {
 	return (
 		<div className="flex min-h-10 flex-1 flex-wrap items-center gap-2">
@@ -109,13 +121,17 @@ export const ProgramsOverviewFilters = ({
 				options={countryOptions}
 				queryKey={COUNTRY_QUERY_KEY}
 				selectedValue={selectedCountryIsoCode}
+				queryParamOverrides={queryParamOverrides}
 			/>
-			<FilterDropdown
-				allLabel={allFocusesLabel}
-				options={focusOptions}
-				queryKey={FOCUS_QUERY_KEY}
-				selectedValue={selectedFocusId}
-			/>
+			{showFocusFilter && (
+				<FilterDropdown
+					allLabel={allFocusesLabel}
+					options={focusOptions}
+					queryKey={FOCUS_QUERY_KEY}
+					selectedValue={selectedFocusId}
+					queryParamOverrides={queryParamOverrides}
+				/>
+			)}
 		</div>
 	);
 };

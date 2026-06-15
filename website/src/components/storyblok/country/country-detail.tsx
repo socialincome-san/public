@@ -1,7 +1,7 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
-import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
+import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { StoryDetailContent } from '@/components/storyblok/shared/story-detail-content';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -37,11 +37,9 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 
 	return (
 		<>
-			<HeroDonationsHeader
-				lang={lang}
+			<HeroHeader
 				title={countryTitle}
-				heroImageFilename={country.content.heroImage?.filename}
-				heroImageAlt={country.content.heroImage?.alt ?? countryTitle}
+				heroImage={country.content.heroImage}
 				titleIcon={isoCode === '-' ? undefined : `/assets/flags/${isoCode.toLowerCase()}.svg`}
 				titleIconAlt={isoCode === '-' ? undefined : `${isoCode} flag`}
 				stats={[

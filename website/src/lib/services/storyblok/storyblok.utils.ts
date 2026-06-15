@@ -190,6 +190,11 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
 	if (link.linktype === 'story') {
 		// cached_url is the Storyblok full_slug, e.g. "new-website/pages/about"
 		const cachedUrlRaw = link.cached_url?.trim() ?? '';
+
+		if (!cachedUrlRaw) {
+			return '#';
+		}
+
 		const cachedUrlWithoutLeadingSlashes = cachedUrlRaw.replace(/^\/+/, '');
 		const cachedUrlWithoutLangPrefix =
 			cachedUrlWithoutLeadingSlashes.toLowerCase() === lang.toLowerCase()

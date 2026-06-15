@@ -1,5 +1,6 @@
 import { Wallet } from '@/components/wallet/wallet';
 import { formatWalletAmount } from '@/components/wallet/wallet-format';
+import { createWalletImageFromStoryblokAsset } from '@/components/wallet/wallet-image-utils';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { PublicProgramStatsMap } from '@/lib/services/program/program.types';
@@ -29,24 +30,24 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 						const programTitle = getProgramTitle(program.content);
 						const storyblokSlug = getProgramStoryblokSlug(program);
 						const stats = portalSlug ? statsByPortalSlug[portalSlug] : undefined;
-						const primaryImageFilename = program.content.primaryImage?.filename;
-						const primaryImageAlt = program.content.primaryImage?.alt ?? programTitle;
-						const secondaryImageFilename = program.content.secondaryImage?.filename;
-						const secondaryImageAlt = program.content.secondaryImage?.alt ?? programTitle;
-						const tertiaryImageFilename = program.content.tertiaryImage?.filename;
-						const tertiaryImageAlt = program.content.tertiaryImage?.alt ?? programTitle;
-						const linkHref = `/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${storyblokSlug}`;
-						const images = primaryImageFilename
+						const primaryImage = createWalletImageFromStoryblokAsset(program.content.primaryImage, programTitle);
+						const hoverEffectImage1 = createWalletImageFromStoryblokAsset(
+							program.content.secondaryImage,
+							programTitle,
+							primaryImage,
+							{ preserveFallbackAlt: true },
+						);
+						const hoverEffectImage2 = createWalletImageFromStoryblokAsset(
+							program.content.tertiaryImage,
+							programTitle,
+							primaryImage,
+							{ preserveFallbackAlt: true },
+						);
+						const linkHref = `/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${storyblokSlug}`;						const images = primaryImage
 							? {
-									primaryImage: { src: primaryImageFilename, alt: primaryImageAlt },
-									hoverEffectImage1: {
-										src: secondaryImageFilename ?? primaryImageFilename,
-										alt: secondaryImageAlt ?? primaryImageAlt,
-									},
-									hoverEffectImage2: {
-										src: tertiaryImageFilename ?? primaryImageFilename,
-										alt: tertiaryImageAlt ?? primaryImageAlt,
-									},
+									primaryImage,
+									hoverEffectImage1: hoverEffectImage1 ?? primaryImage,
+									hoverEffectImage2: hoverEffectImage2 ?? primaryImage,
 								}
 							: undefined;
 
