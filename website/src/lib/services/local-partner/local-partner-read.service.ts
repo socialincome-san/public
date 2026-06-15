@@ -130,7 +130,7 @@ export class LocalPartnerReadService extends BaseService {
 
 			const [recipientsCount, completedSurveysCount] = await Promise.all([
 				this.db.recipient.count({
-					where: { localPartnerId: localPartner.id },
+					where: { localPartnerId: localPartner.id, programId: { not: null } },
 				}),
 				this.db.survey.count({
 					where: {
@@ -157,7 +157,6 @@ export class LocalPartnerReadService extends BaseService {
 			'email',
 			'firebaseAuthUserId',
 			'contactNumber',
-			'recipientsCount',
 			'createdAt',
 		] as const);
 		switch (sortBy) {
@@ -173,8 +172,6 @@ export class LocalPartnerReadService extends BaseService {
 				return [{ account: { firebaseAuthUserId: direction } }];
 			case 'contactNumber':
 				return [{ contact: { phone: { number: direction } } }];
-			case 'recipientsCount':
-				return [{ recipients: { _count: direction } }];
 			case 'createdAt':
 				return [{ createdAt: direction }];
 			default:
@@ -319,17 +316,36 @@ export class LocalPartnerReadService extends BaseService {
 				this.db.localPartner.count({ where }),
 			]);
 
-			const tableRows: LocalPartnerTableViewRow[] = partners.map((partner) => ({
-				id: partner.id,
-				name: partner.name,
-				contactPerson: `${partner.contact?.firstName ?? ''} ${partner.contact?.lastName ?? ''}`.trim(),
-				email: partner.contact?.email ?? null,
-				firebaseAuthUserId: partner.account.firebaseAuthUserId,
-				contactNumber: partner.contact?.phone?.number ?? null,
-				focuses: partner.focuses.map((focus) => focus.focus.name).join(', '),
-				recipientsCount: partner._count.recipients,
-				createdAt: partner.createdAt,
-			}));
+			const assignedRecipientGroups = partners.length
+				? await this.db.recipient.groupBy({
+						by: ['localPartnerId'],
+						where: {
+							localPartnerId: { in: partners.map((partner) => partner.id) },
+							programId: { not: null },
+						},
+						_count: { _all: true },
+					})
+				: [];
+			const recipientsCountByPartnerId = new Map(
+				assignedRecipientGroups.map((group) => [group.localPartnerId, group._count._all]),
+			);
+
+			const tableRows: LocalPartnerTableViewRow[] = partners.map((partner) => {
+				const recipientsCount = recipientsCountByPartnerId.get(partner.id) ?? 0;
+
+				return {
+					id: partner.id,
+					name: partner.name,
+					contactPerson: `${partner.contact?.firstName ?? ''} ${partner.contact?.lastName ?? ''}`.trim(),
+					email: partner.contact?.email ?? null,
+					firebaseAuthUserId: partner.account.firebaseAuthUserId,
+					contactNumber: partner.contact?.phone?.number ?? null,
+					focuses: partner.focuses.map((focus) => focus.focus.name).join(', '),
+					recipientsCount,
+					candidatesCount: Math.max(0, partner._count.recipients - recipientsCount),
+					createdAt: partner.createdAt,
+				};
+			});
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {

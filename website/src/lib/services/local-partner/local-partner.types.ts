@@ -9,6 +9,7 @@ export type LocalPartnerTableViewRow = {
 	contactNumber: string | null;
 	focuses: string;
 	recipientsCount: number;
+	candidatesCount: number;
 	createdAt: Date;
 };
 
