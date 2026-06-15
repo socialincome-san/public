@@ -1,5 +1,5 @@
 import { mainWebsiteLanguages, websiteRegions } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SITEMAP_PATH } from '@/lib/sitemap/new-website-sitemap';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { pathsForStory } from './revalidation';
 
 const localeCount = mainWebsiteLanguages.length * websiteRegions.length;
@@ -24,7 +24,7 @@ describe('pathsForStory', () => {
 		expectPathsForLocales('/journal', result);
 		expectPathsForLocales('/impact-measurement', result);
 		expect(result).toContain('/sitemap.xml');
-		expect(result).toContain(NEW_WEBSITE_SITEMAP_PATH);
+		expect(result).toContain(`/${NEW_WEBSITE_SLUG}/sitemap.xml`);
 	});
 
 	it('includes only aggregates + sitemap for unknown slug prefixes', () => {

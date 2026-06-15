@@ -1,5 +1,5 @@
 import { mainWebsiteLanguages, websiteRegions } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SITEMAP_PATH } from '@/lib/sitemap/new-website-sitemap';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import {
 	getHomeStoryPath,
 	getNewWebsiteRelativePathFromStoryblokSlug,
@@ -70,7 +70,7 @@ export const pathsForStory = (fullSlug: string | undefined | null): string[] => 
 		}
 	}
 	paths.add('/sitemap.xml');
-	paths.add(NEW_WEBSITE_SITEMAP_PATH);
+	paths.add(`/${NEW_WEBSITE_SLUG}/sitemap.xml`);
 
 	return [...paths].sort();
 };
