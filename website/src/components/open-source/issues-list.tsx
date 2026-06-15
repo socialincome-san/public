@@ -41,6 +41,7 @@ export const IssuesList = ({
 		if (label === ALL_FILTER_VALUE) {
 			setFilteredLabel(ALL_FILTER_VALUE);
 			setShowAll(true);
+
 			return;
 		}
 
