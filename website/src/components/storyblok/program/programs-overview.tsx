@@ -43,7 +43,8 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 							primaryImage,
 							{ preserveFallbackAlt: true },
 						);
-						const linkHref = `/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${storyblokSlug}`;						const images = primaryImage
+						const linkHref = `/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${storyblokSlug}`;
+						const images = primaryImage
 							? {
 									primaryImage,
 									hoverEffectImage1: hoverEffectImage1 ?? primaryImage,

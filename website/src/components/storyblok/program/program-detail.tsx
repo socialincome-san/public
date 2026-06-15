@@ -6,7 +6,6 @@ import { ProgramCountry } from '@/components/storyblok/program/program-country';
 import { ProgramFinances } from '@/components/storyblok/program/program-finances';
 import { ProgramRecipients } from '@/components/storyblok/program/program-recipients';
 import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
-import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
