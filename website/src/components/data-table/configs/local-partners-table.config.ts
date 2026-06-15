@@ -12,7 +12,6 @@ export const localPartnersTableConfig: DataTableConfig<LocalPartnerTableViewRow>
 		{ id: 'contactPerson', label: 'Contact person' },
 		{ id: 'email', label: 'Email' },
 		{ id: 'contactNumber', label: 'Contact number' },
-		{ id: 'recipientsCount', label: 'Recipients' },
 		{ id: 'createdAt', label: 'Created' },
 	],
 	makeColumns: makeLocalPartnerColumns,
