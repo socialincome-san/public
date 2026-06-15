@@ -106,7 +106,7 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 					queryParamOverrides={fixedQueryParams}
 				/>
 			</div>
-			<ProgramsOverview programs={filteredPrograms} statsById={statsByPortalSlug} lang={lang} region={region} />
+			<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} lang={lang} region={region} />
 		</>
 	);
 };
