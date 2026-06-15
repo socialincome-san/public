@@ -4,7 +4,7 @@ import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
 import type { FocusStory } from '../focus/focus.types';
 import type { ProgramStory } from './program.types';
-import { getProgramId as getProgramPortalSlug } from './program.utils';
+import { getProgramPortalSlug } from './program.utils';
 import { ProgramsOverview } from './programs-overview';
 import { ProgramsOverviewFilters } from './programs-overview-filters';
 import { FOCUS_QUERY_KEY } from './programs-overview-query';
