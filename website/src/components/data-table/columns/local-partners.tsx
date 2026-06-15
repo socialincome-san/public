@@ -42,7 +42,7 @@ export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[]
 		},
 		{
 			accessorKey: 'recipientsCount',
-			header: (ctx) => <SortableHeader ctx={ctx}>Recipients</SortableHeader>,
+			header: 'Recipients',
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
