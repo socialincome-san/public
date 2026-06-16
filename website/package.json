@@ -134,6 +134,7 @@
 		"eslint": "9.39.2",
 		"eslint-config-next": "^16.1.7",
 		"eslint-plugin-react": "^7.37.5",
+		"firebase-tools": "15.6.0",
 		"jest": "30.2.0",
 		"knip": "5.84.1",
 		"next-openapi-gen": "0.8.9",

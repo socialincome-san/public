@@ -13,7 +13,6 @@ const config: KnipConfig = {
 		'@google-cloud/storage',
 		'storyblok',
 	],
-	ignoreBinaries: ['firebase'],
 };
 
 export default config;
