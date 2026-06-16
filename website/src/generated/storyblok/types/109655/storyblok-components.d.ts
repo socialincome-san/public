@@ -182,7 +182,6 @@ export interface FocusOverview {
 export interface HeroVideo {
   heading?: string;
   description?: string;
-  button?: Button[];
   muxPlaybackId: string;
   component: "heroVideo";
   _uid: string;
@@ -479,8 +478,8 @@ export interface TeamGrid {
 }
 
 export interface Testimonial {
-  quote: string;
   name: string;
+  quote: string;
   country?: string;
   image: StoryblokAsset;
   component: "testimonial";
@@ -489,8 +488,8 @@ export interface Testimonial {
 }
 
 export interface TestimonialCarousel {
-  testimonials: Testimonial[];
   heading?: string;
+  testimonials: Testimonial[];
   autoplay?: boolean;
   component: "testimonialCarousel";
   _uid: string;
