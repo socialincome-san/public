@@ -1,10 +1,10 @@
+@import './styles/fonts.css';
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
 @plugin '@tailwindcss/typography';
 
 @import './styles/theme.css';
-@import './styles/fonts.css';
 @import './styles/utilities.css';
 @import './styles/tokens.css';
 @import './styles/base.css';

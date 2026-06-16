@@ -1,6 +1,7 @@
 @layer base {
+	html,
 	body {
-		@apply font-sans antialiased text-primary;
+		-webkit-font-feature-settings: 'ss04' on;
 		font-feature-settings: 'ss04' on;
 	}
 
@@ -26,5 +27,7 @@
 		--tw-prose-headings: hsl(var(--foreground));
 		--tw-prose-quotes: hsl(var(--accent));
 		--tw-prose-links: hsl(var(--foreground));
+		-webkit-font-feature-settings: 'ss04' on;
+		font-feature-settings: 'ss04' on;
 	}
 }

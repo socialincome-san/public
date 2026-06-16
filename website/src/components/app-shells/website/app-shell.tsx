@@ -19,7 +19,7 @@ export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: Web
 
 	return (
 		<DonationModalProvider>
-			<div className="bg-website-gradient flex min-h-screen w-full flex-col">
+			<div className="bg-website-gradient text-primary flex min-h-screen w-full flex-col antialiased">
 				<Navbar sessions={sessions} lang={lang} region={region} scope={scope} />
 				<div
 					className={

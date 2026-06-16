@@ -1,5 +1,6 @@
 @theme inline {
 	--font-sans: 'Unica77', ui-sans-serif, system-ui, sans-serif;
+	--font-sans--font-feature-settings: 'ss04' on;
 
 	--color-border: hsl(var(--border));
 	--color-input: hsl(var(--input));
