@@ -68,7 +68,6 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --no-audit --no-fund
-      - run: npm run website:build-paths
       - run: npm run typecheck
 
   unit-test:

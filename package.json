@@ -14,7 +14,6 @@
 		"firebase:export": "firebase emulators:export --project demo-social-income-local --force ./seed",
 		"firebase:serve": "firebase emulators:start --project demo-social-income-local --config firebase.json --import ./seed",
 		"format-code": "prettier --write .",
-		"website:build-paths": "npm --workspace=@socialincome/website run build-paths",
 		"website:build": "npm --workspace=@socialincome/website run build",
 		"website:build:emulator": "npm --workspace=@socialincome/website run build:emulator",
 		"website:lint": "npm --workspace=@socialincome/website run lint",

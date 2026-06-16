@@ -33,7 +33,6 @@ WORKDIR /app/website
 
 COPY --from=deps /app/node_modules ../node_modules
 COPY --from=deps /app/website ./
-COPY --from=deps /app/ui ../ui
 COPY --from=deps /app/recipients_selection ../recipients_selection
 COPY --from=base /app/.env /app/.env
 
