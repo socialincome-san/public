@@ -1,135 +1,173 @@
-import type { Article, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
-import { defaultLanguage, defaultRegion, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
+import {
+	defaultLanguage,
+	mainWebsiteLanguages,
+	type WebsiteLanguage,
+	type WebsiteRegion,
+	websiteRegions,
+} from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-import { toDateObject } from '@/lib/services/storyblok/storyblok.utils';
-import type { ISbStoryData } from '@storyblok/js';
+import type { StoryblokPublishedLink } from '@/lib/services/storyblok/storyblok.service';
+import {
+	getNewWebsitePublicPath,
+	getWebsitePathTailFromStoryblokSlug,
+	isRoutableNewWebsiteStoryblokSlug,
+	WEBSITE_JOURNAL_PATH_SEGMENT,
+} from '@/lib/storyblok/storyblok-paths';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { MetadataRoute } from 'next';
-import rawStaticRoutes from './static-pages.json';
 
-export const revalidate = 86400; // per day
-const url = 'https://socialincome.org';
+export const revalidate = 86400;
 
-const SUPPORTED_LANGUAGES: WebsiteLanguage[] = ['de', 'fr', 'it'];
+const SITE_URL = 'https://socialincome.org';
 
-const parseStaticRoutes = (input: unknown): string[] => {
-	if (!Array.isArray(input)) {
+type PathTailByLanguage = Map<WebsiteLanguage, string>;
+
+const absoluteUrl = (lang: WebsiteLanguage, region: WebsiteRegion, pathTail: string) =>
+	`${SITE_URL}${getNewWebsitePublicPath(lang, region, pathTail)}`;
+
+const isInvalidPathTail = (pathTail: string) =>
+	mainWebsiteLanguages.some((websiteLang) => pathTail === websiteLang || pathTail.startsWith(`${websiteLang}/`));
+
+const toPathTail = (slug: string): string | undefined => {
+	if (!isRoutableNewWebsiteStoryblokSlug(slug)) {
+		return undefined;
+	}
+
+	const pathTail = getWebsitePathTailFromStoryblokSlug(slug);
+	if (pathTail.startsWith('auth/') || isInvalidPathTail(pathTail)) {
+		return undefined;
+	}
+
+	return pathTail;
+};
+
+const collectLanguagesForLink = (link: StoryblokPublishedLink): PathTailByLanguage => {
+	const languages = new Map<WebsiteLanguage, string>();
+	const enAlternate = link.alternates?.find((alternate) => alternate.lang === defaultLanguage);
+	const defaultPathTail = toPathTail(link.slug);
+
+	if (defaultPathTail && enAlternate?.published !== false) {
+		languages.set(defaultLanguage, defaultPathTail);
+	}
+
+	for (const alternate of link.alternates ?? []) {
+		if (!mainWebsiteLanguages.includes(alternate.lang as WebsiteLanguage) || alternate.published === false) {
+			continue;
+		}
+
+		const pathTail = toPathTail(alternate.translated_slug);
+		if (pathTail) {
+			languages.set(alternate.lang as WebsiteLanguage, pathTail);
+		}
+	}
+
+	return languages;
+};
+
+const collectStoryblokEntries = (links: StoryblokPublishedLink[]): PathTailByLanguage[] => {
+	const entries: PathTailByLanguage[] = [];
+
+	for (const link of links) {
+		if (link.is_folder || !link.published) {
+			continue;
+		}
+
+		const languages = collectLanguagesForLink(link);
+		if (languages.size > 0) {
+			entries.push(languages);
+		}
+	}
+
+	return entries;
+};
+
+const collectCampaignEntries = async (): Promise<PathTailByLanguage[]> => {
+	const result = await services.read.campaign.getPublicCampaigns();
+	if (!result.success) {
 		return [];
 	}
 
-	return input.filter((route): route is string => typeof route === 'string');
+	return result.data.map((campaign) => {
+		const pathTail = `campaigns/${campaign.slug}`;
+
+		return new Map(mainWebsiteLanguages.map((lang) => [lang, pathTail]));
+	});
 };
 
-const staticRoutes = parseStaticRoutes(rawStaticRoutes);
-
-const articleUrl = (slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) => {
-	return `${url}/${lang}/${region}/journal/${slug}`;
-};
-
-const tagUrl = (slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) => {
-	return `${url}/${lang}/${region}/journal/tag/${slug}`;
-};
-
-const authorUrl = (slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) => {
-	return `${url}/${lang}/${region}/person/${slug}`;
-};
-
-const generateAlternativeLanguages = (alternativeArticles: Record<string, string[]>, slug: string) => {
-	return Object.fromEntries(
-		SUPPORTED_LANGUAGES.filter((lang) => alternativeArticles[lang].includes(slug)).map((lang) => [
-			lang,
-			articleUrl(slug, lang),
-		]),
+const ensureJournalIndex = (entries: PathTailByLanguage[]) => {
+	const hasJournalIndex = entries.some((languages) =>
+		[...languages.values()].some((pathTail) => pathTail === WEBSITE_JOURNAL_PATH_SEGMENT),
 	);
-};
 
-const generateStoryblokArticlesSitemap = (
-	articles: ISbStoryData<Article>[],
-	articlesAlternativeLanguages: { lang: WebsiteLanguage; stories: ISbStoryData<Article>[] }[],
-): MetadataRoute.Sitemap => {
-	const alternativeArticles = Object.fromEntries(
-		articlesAlternativeLanguages.map(({ lang, stories }) => [lang, stories.map((it) => it.slug)]),
-	) as Record<string, string[]>;
-
-	return articles.map((article) => ({
-		url: articleUrl(article.slug, defaultLanguage),
-		alternates: {
-			languages: generateAlternativeLanguages(alternativeArticles, article.slug),
-		},
-		changeFrequency: 'monthly',
-		lastModified: toDateObject(article.updated_at ?? article.created_at, defaultLanguage).toString(),
-	}));
-};
-
-const generateStoryblokAuthorsSitemap = (authors: ISbStoryData<Person>[]): MetadataRoute.Sitemap => {
-	return authors.map((author) => ({
-		url: authorUrl(author.slug, defaultLanguage),
-		alternates: {
-			languages: Object.fromEntries(SUPPORTED_LANGUAGES.map((lang) => [lang, authorUrl(author.slug, lang)])),
-		},
-		changeFrequency: 'weekly',
-	}));
-};
-
-const generateStoryblokTagSitemap = (tags: ISbStoryData<Tag>[]): MetadataRoute.Sitemap => {
-	return tags.map((tag) => ({
-		url: tagUrl(tag.slug, defaultLanguage),
-		alternates: {
-			languages: Object.fromEntries(SUPPORTED_LANGUAGES.map((lang) => [lang, tagUrl(tag.slug, lang)])),
-		},
-		changeFrequency: 'weekly',
-	}));
-};
-
-const staticPageUrl = (route: string, lang: WebsiteLanguage, region: WebsiteRegion) => {
-	return `${url}/${lang}/${region}/${route}`;
-};
-
-const generateStaticPagesSitemap = (): MetadataRoute.Sitemap => {
-	return staticRoutes.flatMap((route) =>
-		websiteRegions.map((region) => ({
-			url: staticPageUrl(route, defaultLanguage, region),
-			alternates: {
-				languages: Object.fromEntries(SUPPORTED_LANGUAGES.map((lang) => [lang, staticPageUrl(route, lang, region)])),
-			},
-		})),
-	);
-};
-
-const storyblokService = services.storyblok;
-
-const getArticlesInAlternativeLanguages = async () => {
-	return Promise.all(
-		SUPPORTED_LANGUAGES.map(async (lang) => {
-			const res = await storyblokService.getOverviewArticles(lang);
-
-			return { lang, stories: res.success ? res.data : [] };
-		}),
-	);
-};
-
-const STATIC_SITEMAP = generateStaticPagesSitemap();
-
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-	try {
-		const [articlesRes, articlesAlternativeLanguages, authorsRes, tagsRes] = await Promise.all([
-			storyblokService.getOverviewArticles(defaultLanguage),
-			getArticlesInAlternativeLanguages(),
-			storyblokService.getOverviewAuthors(defaultLanguage),
-			storyblokService.getOverviewTags(defaultLanguage),
-		]);
-
-		const articles = articlesRes.success ? articlesRes.data : [];
-		const authors = authorsRes.success ? authorsRes.data : [];
-		const tags = tagsRes.success ? tagsRes.data : [];
-
-		return STATIC_SITEMAP.concat(
-			generateStoryblokArticlesSitemap(articles, articlesAlternativeLanguages),
-			generateStoryblokAuthorsSitemap(authors),
-			generateStoryblokTagSitemap(tags),
-		);
-	} catch (error) {
-		console.error('Failed to generate full sitemap', error);
-
-		return STATIC_SITEMAP;
+	if (!hasJournalIndex) {
+		entries.push(new Map(mainWebsiteLanguages.map((lang) => [lang, WEBSITE_JOURNAL_PATH_SEGMENT])));
 	}
-}
+};
+
+const getPrimaryEntry = (languages: PathTailByLanguage) => {
+	if (languages.has(defaultLanguage)) {
+		return { lang: defaultLanguage, pathTail: languages.get(defaultLanguage)! };
+	}
+
+	const [lang, pathTail] = languages.entries().next().value ?? [];
+	if (!lang || !pathTail) {
+		return undefined;
+	}
+
+	return { lang, pathTail };
+};
+
+const dedupeEntries = (entries: PathTailByLanguage[]) => {
+	const byPathTail = new Map<string, PathTailByLanguage>();
+
+	for (const languages of entries) {
+		const primary = getPrimaryEntry(languages);
+		if (primary && !byPathTail.has(primary.pathTail)) {
+			byPathTail.set(primary.pathTail, languages);
+		}
+	}
+
+	return [...byPathTail.values()];
+};
+
+const buildRegionalEntries = (languages: PathTailByLanguage): MetadataRoute.Sitemap => {
+	const primary = getPrimaryEntry(languages);
+	if (!primary) {
+		return [];
+	}
+
+	return websiteRegions.map((region) => ({
+		url: absoluteUrl(primary.lang, region, primary.pathTail),
+		alternates: {
+			languages: Object.fromEntries(
+				[...languages.entries()].map(([lang, pathTail]) => [lang, absoluteUrl(lang, region, pathTail)]),
+			),
+		},
+		changeFrequency: primary.pathTail.startsWith('journal/') ? 'monthly' : 'weekly',
+	}));
+};
+
+const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
+	try {
+		const linksResult = await services.storyblok.getPublishedPageLinks();
+		if (!linksResult.success) {
+			throw new Error(linksResult.error ?? 'Failed to fetch Storyblok page links');
+		}
+
+		const entries = dedupeEntries([...collectStoryblokEntries(linksResult.data), ...(await collectCampaignEntries())]);
+
+		ensureJournalIndex(entries);
+
+		entries.sort((left, right) =>
+			(getPrimaryEntry(left)?.pathTail ?? '').localeCompare(getPrimaryEntry(right)?.pathTail ?? ''),
+		);
+
+		return entries.flatMap(buildRegionalEntries);
+	} catch (error) {
+		console.error(`Failed to generate ${NEW_WEBSITE_SLUG} sitemap`, error);
+
+		return [];
+	}
+};
+
+export default sitemap;
