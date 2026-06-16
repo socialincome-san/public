@@ -1,61 +1,20 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
+import { loadProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramDetail } from '@/components/storyblok/program/program-detail';
-import { getProgramId, getProgramTitle } from '@/components/storyblok/program/program.utils';
-import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import { getProgramStoryPath, getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
-import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
 export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug) {
 	const { slug, lang, region } = await params;
-	const programResult = await services.storyblok.getProgramBySlug(slug, lang);
+	const programDetailData = await loadProgramDetailData(slug, lang);
 
-	if (programResult.success) {
-		const program = programResult.data;
-		const programTitle = getProgramTitle(program.content);
-		const programId = getProgramId(program.content);
-		const statsResult = programId ? await services.read.program.getPublicProgramStatsById(programId) : undefined;
-
-		return (
-			<ProgramDetail
-				title={programTitle}
-				lang={lang as WebsiteLanguage}
-				region={region as WebsiteRegion}
-				fullSlug={program.full_slug}
-				heroImage={program.content.primaryImage}
-				stats={statsResult?.success ? statsResult.data : undefined}
-			/>
-		);
-	}
-
-	const [previewProgramResult, overviewResult] = await Promise.all([
-		services.read.program.getPublicPreviewProgramBySlug(slug),
-		services.storyblok.getStoryWithFallback<ISbStoryData<ProgramOverview>>(getProgramsOverviewStoryPath(), lang),
-	]);
-	if (!previewProgramResult.success) {
+	if (!programDetailData) {
 		return notFound();
 	}
-
-	const statsResult = await services.read.program.getPublicProgramStatsById(previewProgramResult.data.id);
-	if (!statsResult.success) {
-		return notFound();
-	}
-
-	const programTitle = previewProgramResult.data.name;
-	const defaultImage = overviewResult.success ? overviewResult.data.content.programDefaultImage : undefined;
 
 	return (
-		<ProgramDetail
-			title={programTitle}
-			lang={lang as WebsiteLanguage}
-			region={region as WebsiteRegion}
-			fullSlug={getProgramStoryPath(slug)}
-			heroImage={defaultImage}
-			stats={statsResult.data}
-		/>
+		<ProgramDetail programDetailData={programDetailData} lang={lang as WebsiteLanguage} region={region as WebsiteRegion} />
 	);
 }
