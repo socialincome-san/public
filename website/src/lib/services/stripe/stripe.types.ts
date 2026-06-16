@@ -19,6 +19,26 @@ export type StripeEmbeddedCheckoutCreateInput = {
 	source?: string;
 };
 
+export type StripeHostedCheckoutCreateInput = {
+	amount: number;
+	successUrl: string;
+	recurring?: boolean;
+	currency?: string;
+	intervalCount?: number;
+	stripeCustomerId?: string | null;
+	campaignId?: string;
+	accountId?: string;
+	source?: string;
+};
+
+export type PortalProgramDonationCheckoutInput = {
+	amount: number;
+	programId: string;
+	currency?: string;
+	intervalCount?: number;
+	recurring?: boolean;
+};
+
 export type StripeEmbeddedCheckoutResult = {
 	clientSecret: string;
 	sessionId: string;

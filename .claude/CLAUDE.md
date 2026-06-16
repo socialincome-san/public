@@ -16,8 +16,6 @@ npm workspaces monorepo with Node 22.
 **Workspaces:**
 
 - `website/` - Main Next.js 16 app (public site, portal, dashboard, API)
-- `ui/` - Storybook component library (legacy, being migrated to
-  website)
 - `recipients_app/` - Flutter mobile app
 - `recipients_selection/` - Cryptographic recipient draw
 

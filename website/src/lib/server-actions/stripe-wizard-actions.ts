@@ -1,12 +1,23 @@
 'use server';
 
 import { type DonationAmountContext } from '@/components/donation-wizard/utils/donation-amount';
+import { getSessionByType } from '@/lib/firebase/current-account';
 import { services } from '@/lib/services/services';
 import {
+	type PortalProgramDonationCheckoutInput,
 	type UpdateContributorAfterCheckoutInput,
 	type UpdateContributorReferralAfterCheckoutInput,
 } from '@/lib/services/stripe/stripe.types';
 import { getOptionalContributor } from '../firebase/current-contributor';
+
+export const createPortalProgramDonationCheckoutAction = async (input: PortalProgramDonationCheckoutInput) => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	return services.stripe.createPortalProgramDonationCheckout(sessionResult.data.id, input);
+};
 
 export const createStripeEmbeddedCheckoutAction = async (input: {
 	wizardContext: DonationAmountContext;

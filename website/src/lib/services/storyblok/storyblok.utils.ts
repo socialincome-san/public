@@ -111,7 +111,7 @@ const formatStoryblokUrlDirect = (url: string, width: number, height: number, fo
  * Storyblok returns date fields in the following format "yyyy-MM-dd HH:mm" without timezone.
  * Nevertheless, the fields `first_published_at` and 'published_at' are returned in proper ISO8601 format.
  */
-export const toDateObject = (date: string, lang: string) => {
+const toDateObject = (date: string, lang: string) => {
 	let dateObject = DateTime.fromISO(date).setLocale(lang);
 	if (!dateObject.isValid) {
 		dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' }).setLocale(lang);
@@ -165,13 +165,6 @@ export const createWebsitePersonLink = (slug: string, lang: string, region: stri
 
 export const createWebsiteJournalArticleCanonicalUrl = (slug: string, lang: string) =>
 	`https://socialincome.org/${lang}/journal/${slug}`;
-
-/**
- * Create a link URL for a journal article on the legacy website.
- */
-export const createLinkForArticle = (slug: string, lang: string, region: string) => {
-	return `/${lang}/${region}/journal/${slug}`;
-};
 
 /**
  * Resolve a StoryblokMultilink to a URL string.
