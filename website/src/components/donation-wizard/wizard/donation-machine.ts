@@ -26,8 +26,6 @@ import {
 } from './donation-wizard-context';
 
 export const donationWizardMachine = setup({
-	// This is an xstate v5 typing helper. The cast itself isn't semantically redundant.
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 	types: {} as {
 		context: DonationWizardContext;
 		events:
