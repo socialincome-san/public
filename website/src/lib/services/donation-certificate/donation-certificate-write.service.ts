@@ -1,6 +1,5 @@
 import { PrismaClient } from '@/generated/prisma/client';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE, LANGUAGE_CODES, LanguageCode } from '@/lib/types/language';
 import { logger } from '@/lib/utils/logger';
 import { withFile } from 'tmp-promise';
@@ -98,7 +97,7 @@ export class DonationCertificateWriteService extends BaseService {
 			await this.db.donationCertificate.createMany({
 				data: {
 					year: year,
-					language: lang as WebsiteLanguage,
+					language: lang,
 					storagePath: destinationFilePath,
 					contributorId: contributor.id,
 				},

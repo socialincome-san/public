@@ -62,7 +62,7 @@ const isStoryblokPublishedLink = (value: unknown): value is StoryblokPublishedLi
 		return false;
 	}
 
-	const link = value as { slug: unknown; is_folder: unknown; published: unknown };
+	const link = value;
 
 	return typeof link.slug === 'string' && typeof link.is_folder === 'boolean' && typeof link.published === 'boolean';
 };

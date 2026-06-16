@@ -114,13 +114,13 @@ export default function DataTable<Row>({
 	const activeQuery = query ?? null;
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
 		showEntityIdColumn
-			? ({
+			? {
 					id: false,
 					firebaseAuthUserId: false,
-				} as VisibilityState)
-			: ({
+				}
+			: {
 					firebaseAuthUserId: false,
-				} as VisibilityState),
+				},
 	);
 	const displayedData = data;
 	const isDatasetEmpty = activeQuery ? activeQuery.totalRows === 0 : data.length === 0;

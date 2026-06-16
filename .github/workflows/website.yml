@@ -32,6 +32,7 @@ jobs:
           echo "$HOME/.safe-chain/bin" >> $GITHUB_PATH
 
       - name: Install dependencies (protected by Safe Chain)
+        working-directory: website
         run: npm ci --no-audit --no-fund
 
   lint:
@@ -43,8 +44,10 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run website:lint
+      - working-directory: website
+        run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run lint
 
   check-unused:
     name: "✂️ Check unused Code"
@@ -55,8 +58,10 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run website:check:unused
+      - working-directory: website
+        run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run check:unused
 
   typecheck:
     name: "🔍 Type Check"
@@ -67,8 +72,10 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run typecheck
+      - working-directory: website
+        run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run typecheck
 
   unit-test:
     name: "🧪 Unit Tests"
@@ -79,8 +86,10 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run website:test:unit
+      - working-directory: website
+        run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run test:unit
 
   terraform:
     name: "📐 Terraform Validation"

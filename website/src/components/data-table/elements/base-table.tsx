@@ -62,6 +62,9 @@ export const BaseTable = <TData, TValue>({
 	const resolvedColumnVisibility = columnVisibility ?? internalColumnVisibility;
 	const resolvedSorting = isServerSorting ? activeServerSorting.sorting : sorting;
 
+	// TanStack Table's `useReactTable()` returns functions that React Compiler can warn about.
+	// We keep the call here and silence the specific rule to avoid false positives.
+	// eslint-disable-next-line react-hooks/incompatible-library
 	const table = useReactTable({
 		data,
 		columns,

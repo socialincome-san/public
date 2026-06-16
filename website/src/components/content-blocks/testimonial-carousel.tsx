@@ -12,7 +12,7 @@ import type {
 import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import Autoplay from 'embla-carousel-autoplay';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 type Props = {
 	blok: TestimonialCarousel;
@@ -32,7 +32,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 
 	const [api, setApi] = useState<CarouselApi>();
 	const [activeIndex, setActiveIndex] = useState(0);
-	const autoplayPlugin = useRef(Autoplay({ delay: AUTOPLAY_DELAY_MS, stopOnInteraction: false }));
+	const autoplayPlugin = useMemo(() => Autoplay({ delay: AUTOPLAY_DELAY_MS, stopOnInteraction: false }), []);
 	const progressBarRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
 	useEffect(() => {
@@ -151,7 +151,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 						align: 'center',
 						loop: true,
 					}}
-					plugins={autoplayEnabled ? [autoplayPlugin.current] : []}
+					plugins={autoplayEnabled ? [autoplayPlugin] : []}
 				>
 					<CarouselContent>
 						{entries.map((entry, index) => (

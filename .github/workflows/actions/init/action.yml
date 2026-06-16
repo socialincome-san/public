@@ -39,7 +39,7 @@ runs:
     - name: Install dependencies
       if: ${{ inputs.installDependencies == 'true' }}
       shell: bash
-      run: npm ci
+      run: cd website && npm ci
 
     - name: Create credentials JSON file
       if: inputs.firebaseServiceAccountJSON

@@ -28,7 +28,7 @@ const countryMiddleware = (request: NextRequest, response: NextResponse) => {
 	if (country) {
 		response.cookies.set({
 			name: COUNTRY_COOKIE,
-			value: country as CountryCode,
+			value: country,
 			path: '/',
 			maxAge: 60 * 60 * 24 * 7,
 		});

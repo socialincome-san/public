@@ -17,26 +17,30 @@ RUN --mount=type=secret,id=NEXT_PUBLIC_APP_VERSION \
     --mount=type=secret,id=NEXT_PUBLIC_LINKEDIN_TRACKING_ID \
     --mount=type=secret,id=SENTRY_AUTH_TOKEN \
     --mount=type=secret,id=STORYBLOK_PREVIEW_TOKEN \
-    sh -c 'for f in /run/secrets/*; do echo "$(basename $f)=$(cat $f)" >> /app/.env; done'
+    sh -c 'for f in /run/secrets/*; do [ -e "$f" ] || continue; echo "$(basename "$f")=$(cat "$f")" >> /app/.env; done'
 
 # -------- Dependencies Layer --------
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 
-COPY . .
+WORKDIR /app/website
 
+COPY website/package.json website/package-lock.json ./
+COPY website/.npmrc ./
 RUN npm ci
+
+COPY website ./
 
 # -------- Build Layer --------
 FROM base AS builder
 WORKDIR /app/website
 
-COPY --from=deps /app/node_modules ../node_modules
+COPY --from=deps /app/website/node_modules ./node_modules
 COPY --from=deps /app/website ./
-COPY --from=deps /app/recipients_selection ../recipients_selection
+COPY recipients_selection /app/recipients_selection
 COPY --from=base /app/.env /app/.env
 
-RUN set -a && . /app/.env && set +a && \
+RUN set -a && [ -f /app/.env ] && . /app/.env || true && set +a && \
     npx prisma generate \
       --schema=./src/lib/database/schema.prisma \
       --config=./prisma.config.ts && \

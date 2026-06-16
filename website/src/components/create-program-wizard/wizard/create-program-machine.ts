@@ -11,6 +11,8 @@ import { assign, fromPromise, setup } from 'xstate';
 import type { ProgramManagementType, RecipientApproachType } from './types';
 
 export const createProgramWizardMachine = setup({
+	// This is an xstate v5 typing helper. The cast itself isn't semantically redundant.
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 	types: {} as {
 		context: {
 			// step 1
