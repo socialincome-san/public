@@ -6,7 +6,6 @@
 		"node": "24"
 	},
 	"workspaces": [
-		"ui",
 		"website"
 	],
 	"type": "module",
@@ -28,8 +27,6 @@
 		"website:test:unit": "npm --workspace=@socialincome/website run test:unit",
 		"website:extract-translations": "npm --workspace=@socialincome/website run extract-translations",
 		"website:check-translations": "npm --workspace=@socialincome/website run check-translations",
-		"ui:serve": "npm --workspace=@socialincome/ui run storybook",
-		"ui:build": "npm --workspace=@socialincome/ui run build-storybook",
 		"db:generate": "npm --workspace=@socialincome/website run db:generate",
 		"db:migrate:deploy": "npm --workspace=@socialincome/website run db:migrate:deploy",
 		"db:migrate:dev": "npm --workspace=@socialincome/website run db:migrate:dev",

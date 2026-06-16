@@ -1,9 +1,10 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { Button } from '@/components/button';
 import { SILogo } from '@/components/logos/si-logo';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { cn } from '@/lib/utils/cn';
 import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
-import { BaseContainer, Button } from '@socialincome/ui';
 import { PropsWithChildren } from 'react';
 import { I18nDialog } from './i18n-dialog';
 
@@ -27,7 +28,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Sur
 	return (
 		<div className="bg-muted min-h-screen">
 			<nav className="bg-white">
-				<BaseContainer className="flex h-16 items-center justify-between">
+				<div className={cn('mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8', 'flex h-16 items-center justify-between')}>
 					<SILogo className="h-4" />
 					<I18nDialog
 						languages={[
@@ -47,7 +48,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Sur
 							<GlobeEuropeAfricaIcon className="h-4 w-4" />
 						</Button>
 					</I18nDialog>
-				</BaseContainer>
+				</div>
 			</nav>
 			<main className="mx-auto max-w-5xl py-4">{children}</main>
 		</div>

@@ -1,6 +1,6 @@
 import { CellType } from '@/components/data-table/elements/types';
+import { cn } from '@/lib/utils/cn';
 import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
-import { cn } from '@socialincome/ui';
 
 type Props<TData, TValue> = CellType<TData, TValue> & {
 	translatedValue?: string;

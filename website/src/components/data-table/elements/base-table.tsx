@@ -4,7 +4,7 @@ import { Button } from '@/components/button';
 import { TABLE_PAGE_SIZE_OPTIONS } from '@/components/data-table/query-state';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 import {
 	ColumnDef,
 	flexRender,

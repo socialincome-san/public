@@ -4,9 +4,11 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 import * as React from 'react';
 
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 
 const Dialog = DialogPrimitive.Root;
+
+const DialogTrigger = DialogPrimitive.Trigger;
 
 const DialogPortal = DialogPrimitive.Portal;
 
@@ -144,4 +146,4 @@ const DialogTitle = React.forwardRef<
 ));
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
-export { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle };
+export { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger };

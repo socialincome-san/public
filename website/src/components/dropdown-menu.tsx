@@ -1,7 +1,7 @@
 'use client';
 
+import { cn } from '@/lib/utils/cn';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import { cn } from '@socialincome/ui';
 import { Check, ChevronRight, Circle } from 'lucide-react';
 import * as React from 'react';
 

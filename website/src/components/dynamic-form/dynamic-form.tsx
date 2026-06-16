@@ -9,7 +9,7 @@ import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SpinnerIcon } from '@socialincome/ui';
+import { Loader2 } from 'lucide-react';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
@@ -300,7 +300,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 			{/* TODO: add proper loading state */}
 			{isLoading && (
 				<div className="absolute top-0 right-0 flex h-full w-full items-center justify-center bg-white opacity-80">
-					<SpinnerIcon />
+					<Loader2 className="h-6 w-6 animate-spin" aria-label="Loading" />
 				</div>
 			)}
 		</Form>

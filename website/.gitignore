@@ -17,7 +17,6 @@
 # misc
 .DS_Store
 *.pem
-**/static-pages.json
 
 # debug
 npm-debug.log*

@@ -3,7 +3,7 @@ import type { NextConfig } from 'next';
 import path from 'path';
 
 let nextConfig: NextConfig = {
-	transpilePackages: ['@socialincome/ui', 'storyblok-rich-text-react-renderer'],
+	transpilePackages: ['storyblok-rich-text-react-renderer'],
 	reactStrictMode: true,
 	turbopack: {
 		root: path.join(process.cwd(), '..'),

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 
 export const Input = ({ className, type, ...props }: React.ComponentProps<'input'>) => {
 	return (

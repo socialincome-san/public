@@ -1,5 +1,5 @@
 import { createWebsiteJournalArticleLink } from '@/lib/services/storyblok/storyblok.utils';
-import { linkCn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';
 
 type Props = {
@@ -20,7 +20,7 @@ export const OriginalLanguageLink = ({ originalLanguage, slug, lang, region, tex
 		<p className="text-muted-foreground text-sm">
 			{text}
 			<Link
-				className={linkCn({ arrow: 'external', underline: 'none' })}
+				className={cn('text-primary font-medium underline-offset-4 hover:underline')}
 				href={createWebsiteJournalArticleLink(slug, originalLanguage, region)}
 				rel="noopener noreferrer"
 			>

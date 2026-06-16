@@ -1,5 +1,7 @@
 'use client';
 
+import { Dialog, DialogContent, DialogTrigger } from '@/components/dialog';
+import { Select, SelectContent, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/select';
 import { Currency } from '@/generated/prisma/enums';
 import { useIsPage } from '@/lib/hooks/useIsPage';
 import { useI18n } from '@/lib/i18n/useI18n';
@@ -7,18 +9,6 @@ import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/util
 import { LanguageCode } from '@/lib/types/language';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
-import {
-	Dialog,
-	DialogContent,
-	DialogTrigger,
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from '@socialincome/ui';
 import _ from 'lodash';
 import { PropsWithChildren, useState } from 'react';
 
@@ -64,14 +54,12 @@ export const I18nDialog = ({
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectGroup>
-								<SelectLabel>{translations.language}</SelectLabel>
-								{languages.map((lang, index) => (
-									<SelectItem key={index} value={lang.code}>
-										{lang.translation}
-									</SelectItem>
-								))}
-							</SelectGroup>
+							<SelectLabel>{translations.language}</SelectLabel>
+							{languages.map((lang, index) => (
+								<SelectItem key={index} value={lang.code}>
+									{lang.translation}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 				)}
@@ -83,14 +71,12 @@ export const I18nDialog = ({
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectGroup>
-								<SelectLabel>{translations.region}</SelectLabel>
-								{regions.map((country, index) => (
-									<SelectItem key={index} value={country.code}>
-										{country.translation}
-									</SelectItem>
-								))}
-							</SelectGroup>
+							<SelectLabel>{translations.region}</SelectLabel>
+							{regions.map((country, index) => (
+								<SelectItem key={index} value={country.code}>
+									{country.translation}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 				)}
@@ -108,14 +94,12 @@ export const I18nDialog = ({
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectGroup>
-								<SelectLabel>{translations.currency}</SelectLabel>
-								{currencies.map((currency, index) => (
-									<SelectItem key={index} value={currency.code}>
-										{currency.translation}
-									</SelectItem>
-								))}
-							</SelectGroup>
+							<SelectLabel>{translations.currency}</SelectLabel>
+							{currencies.map((currency, index) => (
+								<SelectItem key={index} value={currency.code}>
+									{currency.translation}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 				)}
