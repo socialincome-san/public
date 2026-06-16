@@ -22,8 +22,11 @@ runs:
 
     - name: Setup Node.js
       uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3
+      env:
+        MISE_TRUSTED_CONFIG_PATHS: ${{ github.workspace }}/website
       with:
         version: 2026.2.13
+        working_directory: website
         install: ${{ inputs.installDependencies == 'true' }}
         cache: true
 

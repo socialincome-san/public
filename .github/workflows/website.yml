@@ -10,7 +10,6 @@ on:
       - main
     paths-ignore:
       - "recipients_app/**"
-
 jobs:
   safe-chain:
     name: "🔒 Safe Chain Dependency Check"
@@ -22,6 +21,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
+          cache-dependency-path: website/package-lock.json
 
       - name: Install Safe Chain (CI)
         run: |
@@ -44,6 +44,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
+          cache-dependency-path: website/package-lock.json
       - working-directory: website
         run: npm ci --no-audit --no-fund
       - working-directory: website
@@ -58,6 +59,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
+          cache-dependency-path: website/package-lock.json
       - working-directory: website
         run: npm ci --no-audit --no-fund
       - working-directory: website
@@ -72,6 +74,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
+          cache-dependency-path: website/package-lock.json
       - working-directory: website
         run: npm ci --no-audit --no-fund
       - working-directory: website
@@ -86,6 +89,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
+          cache-dependency-path: website/package-lock.json
       - working-directory: website
         run: npm ci --no-audit --no-fund
       - working-directory: website
