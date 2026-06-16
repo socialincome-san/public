@@ -8,6 +8,7 @@ import {
 	WEBSITE_JOURNAL_PATH_SEGMENT,
 	WEBSITE_PERSON_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 /**
  * Paths (without `/{lang}/{region}` prefix) that should be revalidated on any Storyblok webhook.
@@ -69,6 +70,7 @@ export const pathsForStory = (fullSlug: string | undefined | null): string[] => 
 		}
 	}
 	paths.add('/sitemap.xml');
+	paths.add(`/${NEW_WEBSITE_SLUG}/sitemap.xml`);
 
 	return [...paths].sort();
 };

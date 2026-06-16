@@ -1,3 +1,4 @@
+import { mainWebsiteLanguages } from '@/lib/i18n/utils';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 export const STORYBLOK_PAGES_FOLDER = 'pages';
@@ -84,6 +85,17 @@ export const getJournalTagWebsitePathTail = (tagSlug: string) => `${WEBSITE_JOUR
 const isJournalGlobalsReferenceSlug = (slug: string) =>
 	slug.startsWith(`${STORYBLOK_JOURNAL_TAGS_FOLDER}/`) || slug.startsWith(`${STORYBLOK_JOURNAL_ARTICLE_TYPES_FOLDER}/`);
 
+const stripStoryblokLanguagePrefix = (slug: string) => {
+	for (const lang of mainWebsiteLanguages) {
+		const langPrefix = `${lang}/`;
+		if (slug.startsWith(langPrefix)) {
+			return slug.slice(langPrefix.length);
+		}
+	}
+
+	return slug;
+};
+
 /**
  * Normalizes slugs from Storyblok preview URLs or legacy paths to current space paths.
  * e.g. `new-website/programs/foo` → `pages/programs/foo`
@@ -95,6 +107,8 @@ export const normalizeStoryblokSlug = (rawSlug: string): string => {
 	if (slug.startsWith(newWebsitePrefix)) {
 		slug = slug.slice(newWebsitePrefix.length);
 	}
+
+	slug = stripStoryblokLanguagePrefix(slug);
 
 	if (slug === STORYBLOK_PROGRAMS_OVERVIEW_SLUG || slug === STORYBLOK_PROGRAMS_FOLDER) {
 		return getProgramsOverviewStoryPath();
