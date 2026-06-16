@@ -125,7 +125,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 									})}
 								</ul>
 								<div className="mt-4">
-									<DonationForm />
+									<DonationForm onBeforeOpen={() => handleOpenChange(false)} />
 								</div>
 							</div>
 
