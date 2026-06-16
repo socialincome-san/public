@@ -1,18 +1,16 @@
 import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 export const revalidate = 86400;
 
 const SITE_URL = 'https://socialincome.org';
 
-const pageUrl = (pathTail = '') =>
-	`${SITE_URL}/${defaultLanguage}/${defaultRegion}/${NEW_WEBSITE_SLUG}${pathTail ? `/${pathTail}` : ''}`;
+const pageUrl = (pathTail = '') => `${SITE_URL}/${defaultLanguage}/${defaultRegion}${pathTail ? `/${pathTail}` : ''}`;
 
 const llmsTxt = `# Social Income
 
 > Social Income is a nonprofit that provides unconditional cash transfers to people living in poverty.
 
-Public pages are available in English, German, French, and Italian, under \`/{lang}/{region}/${NEW_WEBSITE_SLUG}/\` URLs. Use \`int\` for international or \`ch\` for Switzerland.
+Public pages are available in English, German, French, and Italian, under \`/{lang}/{region}/\` URLs. Use \`int\` for international or \`ch\` for Switzerland.
 
 ## Core pages
 
@@ -28,8 +26,8 @@ Portal, contributor dashboard, and partner space require login and are not publi
 
 ## Optional
 
-- [Sitemap](${SITE_URL}/${NEW_WEBSITE_SLUG}/sitemap.xml): Machine-readable list of public URLs
-- [Robots](${SITE_URL}/${NEW_WEBSITE_SLUG}/robots.txt): Crawler rules for this site section
+- [Sitemap](${SITE_URL}/sitemap.xml): Machine-readable list of public URLs
+- [Robots](${SITE_URL}/robots.txt): Crawler rules for this site section
 `;
 
 export const GET = () =>

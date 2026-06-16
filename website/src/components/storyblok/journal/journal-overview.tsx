@@ -7,7 +7,7 @@ import { JournalPageShell } from '@/components/storyblok/journal/journal-page-sh
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
 import { PersonCarousel } from '@/components/storyblok/shared/person-carousel';
 import type { Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
-import { createNewWebsiteJournalTagLink, ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
+import { createWebsiteJournalTagLink, ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';
@@ -64,7 +64,7 @@ export const JournalOverview = ({
 			{tags.map((tag) => (
 				<Link
 					key={tag.slug}
-					href={createNewWebsiteJournalTagLink(tag.slug, lang, region)}
+					href={createWebsiteJournalTagLink(tag.slug, lang, region)}
 					className={tagFilterClassName(activeTagSlug === tag.slug)}
 				>
 					{tag.content?.value}

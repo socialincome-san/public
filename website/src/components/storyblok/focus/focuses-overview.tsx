@@ -1,7 +1,6 @@
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import Link from 'next/link';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusTitle } from './focus.utils';
@@ -30,7 +29,7 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text }: Pr
 
 						return (
 							<li key={focus.uuid}>
-								<Link href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/focuses/${focusSlug}`}>{focusTitle}</Link>
+								<Link href={`/${lang}/${region}/focuses/${focusSlug}`}>{focusTitle}</Link>
 							</li>
 						);
 					})}

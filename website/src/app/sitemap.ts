@@ -8,12 +8,11 @@ import {
 import { services } from '@/lib/services/services';
 import type { StoryblokPublishedLink } from '@/lib/services/storyblok/storyblok.service';
 import {
-	getNewWebsitePublicPath,
 	getWebsitePathTailFromStoryblokSlug,
-	isRoutableNewWebsiteStoryblokSlug,
+	getWebsitePublicPath,
+	isRoutableWebsiteStoryblokSlug,
 	WEBSITE_JOURNAL_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { MetadataRoute } from 'next';
 
 export const revalidate = 86400;
@@ -23,13 +22,13 @@ const SITE_URL = 'https://socialincome.org';
 type PathTailByLanguage = Map<WebsiteLanguage, string>;
 
 const absoluteUrl = (lang: WebsiteLanguage, region: WebsiteRegion, pathTail: string) =>
-	`${SITE_URL}${getNewWebsitePublicPath(lang, region, pathTail)}`;
+	`${SITE_URL}${getWebsitePublicPath(lang, region, pathTail)}`;
 
 const isInvalidPathTail = (pathTail: string) =>
 	mainWebsiteLanguages.some((websiteLang) => pathTail === websiteLang || pathTail.startsWith(`${websiteLang}/`));
 
 const toPathTail = (slug: string): string | undefined => {
-	if (!isRoutableNewWebsiteStoryblokSlug(slug)) {
+	if (!isRoutableWebsiteStoryblokSlug(slug)) {
 		return undefined;
 	}
 
@@ -164,7 +163,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 
 		return entries.flatMap(buildRegionalEntries);
 	} catch (error) {
-		console.error(`Failed to generate ${NEW_WEBSITE_SLUG} sitemap`, error);
+		console.error('Failed to generate sitemap', error);
 
 		return [];
 	}

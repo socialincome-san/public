@@ -18,7 +18,6 @@ import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowRight, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
 import NextLink from 'next/link';
@@ -68,7 +67,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 						<Dialog.Title className="sr-only">{commonTranslator?.t('menu.title') ?? 'Menu'}</Dialog.Title>
 						<div className="border-muted mb-4 flex h-18 shrink-0 items-center justify-between border-b px-4">
 							<NextLink
-								href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}`}
+								href={`/${lang}/${region}`}
 								className="text-accent-foreground"
 								onClick={() => handleOpenChange(false)}
 							>

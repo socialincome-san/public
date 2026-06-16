@@ -20,10 +20,10 @@ export const TITLE_CASE_UNDERSCORE_REGEX = /^_*(.)|_+(.)/g;
 export const START_CHARACTER_REGEX = /^./;
 
 export const WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX = /\/auth\/confirm-login\/?$/;
-export const NEW_WEBSITE_CONFIRM_LOGIN_PATH_REGEX = /\/confirm-login\/?$/;
+export const CONFIRM_LOGIN_PATH_REGEX = /\/confirm-login\/?$/;
 
 const escapeRegex = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export const makeLanguagePrefixRegex = (language: string): RegExp => new RegExp(`^${escapeRegex(language)}(/|$)`, 'i');
 
-export const makeNewWebsiteSlugPrefixRegex = (slug: string): RegExp => new RegExp(`^${escapeRegex(slug)}/`);
+export const makeSlugPrefixRegex = (slug: string): RegExp => new RegExp(`^${escapeRegex(slug)}/`);

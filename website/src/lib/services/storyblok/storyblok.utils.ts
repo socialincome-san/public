@@ -2,11 +2,10 @@ import type { Article, ArticleType, Person, Tag } from '@/generated/storyblok/ty
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import {
-	getNewWebsitePublicPath,
 	getWebsitePathTailFromStoryblokSlug,
+	getWebsitePublicPath,
 	WEBSITE_PERSON_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import { Metadata } from 'next';
@@ -147,25 +146,25 @@ const formatStoryblokDateToIso = (date: string | null | undefined) => {
 
 // ==================== URL Utilities ====================
 
-/**
- * Build a path under /{lang}/{region}/new-website/…
- */
-const createNewWebsitePath = (lang: string, region: string, ...segments: string[]) =>
-	`/${lang}/${region}/${NEW_WEBSITE_SLUG}/${segments.join('/')}`;
+const createWebsitePath = (lang: string, region: string, ...segments: string[]) => {
+	const pathTail = segments.join('/');
 
-export const createNewWebsiteJournalPath = (lang: string, region: string) => createNewWebsitePath(lang, region, 'journal');
+	return `/${lang}/${region}${pathTail ? `/${pathTail}` : ''}`;
+};
 
-export const createNewWebsiteJournalArticleLink = (slug: string, lang: string, region: string) =>
-	createNewWebsitePath(lang, region, 'journal', slug);
+export const createWebsiteJournalPath = (lang: string, region: string) => createWebsitePath(lang, region, 'journal');
 
-export const createNewWebsiteJournalTagLink = (tagSlug: string, lang: string, region: string) =>
-	`${createNewWebsiteJournalPath(lang, region)}?tag=${encodeURIComponent(tagSlug)}`;
+export const createWebsiteJournalArticleLink = (slug: string, lang: string, region: string) =>
+	createWebsitePath(lang, region, 'journal', slug);
 
-export const createNewWebsitePersonLink = (slug: string, lang: string, region: string) =>
-	createNewWebsitePath(lang, region, WEBSITE_PERSON_PATH_SEGMENT, slug);
+export const createWebsiteJournalTagLink = (tagSlug: string, lang: string, region: string) =>
+	`${createWebsiteJournalPath(lang, region)}?tag=${encodeURIComponent(tagSlug)}`;
 
-export const createNewWebsiteJournalArticleCanonicalUrl = (slug: string, lang: string) =>
-	`https://socialincome.org/${lang}/${NEW_WEBSITE_SLUG}/journal/${slug}`;
+export const createWebsitePersonLink = (slug: string, lang: string, region: string) =>
+	createWebsitePath(lang, region, WEBSITE_PERSON_PATH_SEGMENT, slug);
+
+export const createWebsiteJournalArticleCanonicalUrl = (slug: string, lang: string) =>
+	`https://socialincome.org/${lang}/journal/${slug}`;
 
 /**
  * Create a link URL for a journal article on the legacy website.
@@ -188,7 +187,7 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
 	}
 
 	if (link.linktype === 'story') {
-		// cached_url is the Storyblok full_slug, e.g. "new-website/pages/about"
+		// cached_url is the Storyblok full_slug, e.g. "pages/about"
 		const cachedUrlRaw = link.cached_url?.trim() ?? '';
 
 		if (!cachedUrlRaw) {
@@ -203,7 +202,7 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
 
 		const websitePathTail = getWebsitePathTailFromStoryblokSlug(cachedUrlWithoutLangPrefix);
 
-		return getNewWebsitePublicPath(lang, region, websitePathTail);
+		return getWebsitePublicPath(lang, region, websitePathTail);
 	}
 
 	return '#';

@@ -1,4 +1,4 @@
-import { createNewWebsiteJournalArticleLink } from '@/lib/services/storyblok/storyblok.utils';
+import { createWebsiteJournalArticleLink } from '@/lib/services/storyblok/storyblok.utils';
 import { linkCn } from '@socialincome/ui';
 import Link from 'next/link';
 
@@ -21,7 +21,7 @@ export const OriginalLanguageLink = ({ originalLanguage, slug, lang, region, tex
 			{text}
 			<Link
 				className={linkCn({ arrow: 'external', underline: 'none' })}
-				href={createNewWebsiteJournalArticleLink(slug, originalLanguage, region)}
+				href={createWebsiteJournalArticleLink(slug, originalLanguage, region)}
 				rel="noopener noreferrer"
 			>
 				{languageName}

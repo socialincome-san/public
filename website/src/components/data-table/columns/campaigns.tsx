@@ -48,18 +48,13 @@ export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 		{
-			id: 'newWebsiteLink',
+			id: 'link',
 			accessorFn: (row) => {
 				const origin = typeof window !== 'undefined' ? window.location.origin : '';
 
-				return `${origin}/de/ch/new-website/campaigns/${slugify(row.title)}`;
+				return `${origin}/de/ch/campaigns/${slugify(row.title)}`;
 			},
 			header: (ctx) => <SortableHeader ctx={ctx}>Link</SortableHeader>,
-			cell: (ctx) => <CopyUrlCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'link',
-			header: (ctx) => <SortableHeader ctx={ctx}>Legacy link</SortableHeader>,
 			cell: (ctx) => <CopyUrlCell ctx={ctx} />,
 		},
 		{

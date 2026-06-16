@@ -4,7 +4,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import {
-	createNewWebsiteJournalArticleCanonicalUrl,
+	createWebsiteJournalArticleCanonicalUrl,
 	generateMetaDataForArticle,
 } from '@/lib/services/storyblok/storyblok.utils';
 import { notFound } from 'next/navigation';
@@ -23,7 +23,7 @@ export const generateMetadata = async (props: DefaultLayoutPropsWithSlug) => {
 
 	return generateMetaDataForArticle(
 		articleResponse.data,
-		createNewWebsiteJournalArticleCanonicalUrl(articleResponse.data.slug, lang),
+		createWebsiteJournalArticleCanonicalUrl(articleResponse.data.slug, lang),
 	);
 };
 

@@ -5,7 +5,6 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { PublicProgramStatsMap } from '@/lib/services/program/program.types';
 import { getCountryNameByCode } from '@/lib/types/country';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from './program.utils';
 
@@ -43,7 +42,7 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 							primaryImage,
 							{ preserveFallbackAlt: true },
 						);
-						const linkHref = `/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${storyblokSlug}`;
+						const linkHref = `/${lang}/${region}/programs/${storyblokSlug}`;
 						const images = primaryImage
 							? {
 									primaryImage,

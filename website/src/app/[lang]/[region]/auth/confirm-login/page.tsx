@@ -3,12 +3,12 @@
 import { Button } from '@/components/button';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_CONFIRM_LOGIN_PATH_REGEX } from '@/lib/utils/regex';
+import { CONFIRM_LOGIN_PATH_REGEX } from '@/lib/utils/regex';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 /**
- * Interstitial for new-website email sign-in links (e.g. from navbar login flyout).
+ * Interstitial for email sign-in links (e.g. from navbar login flyout).
  * We do NOT consume the Firebase token here—we only show a "Click to continue" step.
  * This avoids link scanners (e.g. Microsoft Safe Links, Outlook) consuming the one-time
  * token when they pre-fetch the URL; the token is only used when the user clicks through
@@ -20,7 +20,7 @@ export default function ConfirmLoginPage() {
 	const translator = useTranslator(lang, 'website-login');
 
 	const continueToFinish = () => {
-		const path = window.location.pathname.replace(NEW_WEBSITE_CONFIRM_LOGIN_PATH_REGEX, '/finish-login');
+		const path = window.location.pathname.replace(CONFIRM_LOGIN_PATH_REGEX, '/finish-login');
 		window.location.href = path + window.location.search;
 	};
 

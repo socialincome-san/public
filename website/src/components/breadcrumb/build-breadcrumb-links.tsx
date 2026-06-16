@@ -5,9 +5,9 @@ import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { StoryTitleData } from '@/lib/services/storyblok/storyblok.service';
 import {
-	getNewWebsitePublicPath,
 	getPageStoryPath,
 	getWebsitePathTailFromStoryblokSlug,
+	getWebsitePublicPath,
 	STORYBLOK_PAGES_FOLDER,
 } from '@/lib/storyblok/storyblok-paths';
 
@@ -83,7 +83,7 @@ export const buildBreadcrumbLinks = async ({
 
 	const links: BreadcrumbLink[] = [
 		{
-			href: getNewWebsitePublicPath(lang, region, ''),
+			href: getWebsitePublicPath(lang, region, ''),
 			label: capitalizeLabel(translator.t('breadcrumb.home')),
 		},
 	];
@@ -97,7 +97,7 @@ export const buildBreadcrumbLinks = async ({
 				const label = await fetchStoryLabel(storyblokPath, lang, segment);
 
 				return {
-					href: getNewWebsitePublicPath(lang, region, getWebsitePathTailFromStoryblokSlug(storyblokPath)),
+					href: getWebsitePublicPath(lang, region, getWebsitePathTailFromStoryblokSlug(storyblokPath)),
 					label: capitalizeLabel(label),
 				};
 			}),

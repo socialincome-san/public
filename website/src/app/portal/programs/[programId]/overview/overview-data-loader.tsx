@@ -1,5 +1,4 @@
 import { services } from '@/lib/services/services';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { FirstIntervalFundingSection } from './components/first-interval-funding-section';
@@ -35,7 +34,7 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 
 	const readyForFirstPayoutResult = await services.programStats.isReadyForFirstPayoutInterval(programId);
 	const readyForFirstPayout = readyForFirstPayoutResult.success ? readyForFirstPayoutResult.data : false;
-	const publicUrl = `/${NEW_WEBSITE_SLUG}/programs/${programSlug}`;
+	const publicUrl = `/programs/${programSlug}`;
 
 	return (
 		<div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
