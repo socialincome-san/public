@@ -1,19 +1,21 @@
-import { getCountryDescription, getCountryTitle } from '@/components/storyblok/country/country.utils';
+import { getCountryDescription, getCountrySlug, getCountryTitle } from '@/components/storyblok/country/country.utils';
 import { MapRectangle } from '@/components/storyblok/country/map-rectangle';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
+import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 type Props = {
 	countryIsoCode: string;
 	lang: WebsiteLanguage;
+	region: WebsiteRegion;
 	translator: Translator;
 };
 
-export const ProgramCountry = async ({ countryIsoCode, lang, translator }: Props) => {
+export const ProgramCountry = async ({ countryIsoCode, lang, region, translator }: Props) => {
 	if (!countryIsoCode || countryIsoCode === '-') {
 		return null;
 	}
@@ -26,6 +28,9 @@ export const ProgramCountry = async ({ countryIsoCode, lang, translator }: Props
 			? getCountryNameByCode(countryIsoCode)
 			: countryIsoCode;
 	const description = countryResult.success ? getCountryDescription(countryResult.data.content) : undefined;
+	const countryHref = countryResult.success
+		? `/${lang}/${region}/${NEW_WEBSITE_SLUG}/countries/${getCountrySlug(countryResult.data)}`
+		: undefined;
 
 	return (
 		<div className="flex flex-col items-stretch overflow-hidden rounded-xl bg-white p-3 shadow-lg md:flex-row md:py-3 md:pr-3 md:pl-0">
@@ -36,7 +41,9 @@ export const ProgramCountry = async ({ countryIsoCode, lang, translator }: Props
 						<RichTextRenderer richTextDocument={description} />
 					</div>
 				) : null}
-				<ProgramDetailPill label={translator.t('program-detail-page.country-analysis')} />
+				{countryHref ? (
+					<ProgramDetailPill href={countryHref} label={translator.t('program-detail-page.country-analysis')} />
+				) : null}
 			</div>
 			<div className="mt-5 h-[341px] w-full shrink-0 md:mt-0 md:w-[274px]">
 				<MapRectangle isoCode={countryIsoCode} countryName={countryName} />
