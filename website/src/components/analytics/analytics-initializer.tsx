@@ -1,8 +1,8 @@
 'use client';
 
-import { FacebookTracking } from '@/components/legacy/analytics/facebook-tracking';
-import { GoogleTagManager } from '@/components/legacy/analytics/google-tag-manager';
-import { LinkedInTracking } from '@/components/legacy/analytics/linkedin-tracking';
+import { FacebookTracking } from '@/components/analytics/facebook-tracking';
+import { GoogleTagManager } from '@/components/analytics/google-tag-manager';
+import { LinkedInTracking } from '@/components/analytics/linkedin-tracking';
 import { useFirebaseApp } from '@/lib/firebase/hooks/useFirebaseApp';
 import { initializeAnalytics } from '@firebase/analytics';
 import { ConsentSettings, ConsentStatusString, setConsent } from 'firebase/analytics';

@@ -1,4 +1,4 @@
-import { AnalyticsInitializer } from '@/components/legacy/analytics/analytics-initializer';
+import { AnalyticsInitializer } from '@/components/analytics/analytics-initializer';
 import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
 import { getMetadata } from '@/lib/utils/metadata';
 import type { Viewport } from 'next';

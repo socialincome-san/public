@@ -1,11 +1,11 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { I18nDialog } from '@/components/legacy/i18n-dialog';
-import { SILogo } from '@/components/legacy/logos/si-logo';
+import { SILogo } from '@/components/logos/si-logo';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
 import { BaseContainer, Button } from '@socialincome/ui';
 import { PropsWithChildren } from 'react';
+import { I18nDialog } from './i18n-dialog';
 
 type SurveyPageParams = {
 	recipient: string;
