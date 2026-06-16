@@ -1,0 +1,37 @@
+@layer base {
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 197 79% 15%;
+		--card: 0 0% 100%;
+		--card-foreground: 197 79% 15%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 197 79% 15%;
+		--primary: 197 79% 15%;
+		--primary-foreground: 210 40% 98%;
+		--secondary: 210 40% 96%;
+		--secondary-foreground: 197 79% 15%;
+		--muted: 210 40% 96%;
+		--muted-foreground: 215 16% 47%;
+		--accent: 210 40% 96%;
+		--accent-foreground: 197 79% 15%;
+		--destructive: 0 84% 60%;
+		--destructive-foreground: 0 86% 97%;
+		--border: 214 32% 91%;
+		--input: 213 27% 84%;
+		--ring: 215 20% 65%;
+		--radius: 0.625rem;
+		--chart-1: 189 94% 43%;
+		--chart-2: 193 86% 30%;
+		--chart-3: 193 36% 47%;
+		--chart-4: 190 21% 50%;
+		--chart-5: 163 19% 65%;
+		--gradient-button-from: 201 90% 27%;
+		--gradient-button-to: 160 16% 66%;
+		--gradient-background-from: rgba(251, 237, 209, 0.6);
+		--gradient-background-to: rgba(202, 221, 233, 0.6);
+		--confirm: 142 76% 36%;
+		--confirm-foreground: 141 84% 93%;
+		--gradient-card-from: 203 40% 53%;
+		--gradient-card-to: 96 10% 81%;
+	}
+}

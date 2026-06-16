@@ -13,7 +13,7 @@ const Switch = ({ className, ...props }: React.ComponentProps<typeof SwitchPrimi
 				'border border-transparent shadow-xs outline-hidden transition-all',
 				'focus-visible:ring-ring/50 focus-visible:ring-[3px]',
 				'disabled:cursor-not-allowed disabled:opacity-50',
-				'bg-input dark:bg-input/80',
+				'bg-input',
 				className,
 			)}
 			// eslint-disable-next-line react/forbid-component-props

@@ -1,0 +1,30 @@
+@layer base {
+	body {
+		@apply font-sans antialiased text-primary;
+		font-feature-settings: 'ss04' on;
+	}
+
+	button:not([disabled]),
+	[role='button']:not([disabled]) {
+		cursor: pointer;
+	}
+
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentColor);
+	}
+
+	/* Typography plugin customization (prose colors) */
+	.prose,
+	.prose h1 {
+		color: hsl(var(--foreground));
+	}
+	.prose {
+		--tw-prose-headings: hsl(var(--foreground));
+		--tw-prose-quotes: hsl(var(--accent));
+		--tw-prose-links: hsl(var(--foreground));
+	}
+}
