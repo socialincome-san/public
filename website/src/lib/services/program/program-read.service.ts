@@ -1,6 +1,5 @@
 import { PayoutStatus, PrismaClient, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
-import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
@@ -203,94 +202,131 @@ export class ProgramReadService extends BaseService {
 		}
 	}
 
+	private readonly publicProgramSelect = {
+		id: true,
+		name: true,
+		targetFocuses: {
+			select: {
+				focusId: true,
+			},
+		},
+		amountOfRecipientsForStart: true,
+		programDurationInMonths: true,
+		payoutPerInterval: true,
+		payoutInterval: true,
+		country: {
+			select: { isoCode: true, currency: true },
+		},
+		programAccesses: {
+			select: {
+				permission: true,
+				organization: { select: { name: true } },
+			},
+		},
+		recipients: {
+			select: {
+				startDate: true,
+				localPartner: { select: { name: true, slug: true } },
+				payouts: {
+					where: {
+						status: {
+							in: [PayoutStatus.paid, PayoutStatus.confirmed],
+						},
+					},
+					select: { amount: true },
+				},
+				surveys: {
+					where: { status: SurveyStatus.completed },
+					select: { id: true },
+				},
+			},
+		},
+	};
+
+	private readonly toPublicProgramDetails = (program: {
+		id: string;
+		name: string;
+		targetFocuses: { focusId: string }[];
+		amountOfRecipientsForStart: number | null;
+		programDurationInMonths: number;
+		payoutPerInterval: unknown;
+		payoutInterval: PublicProgramDetails['payoutInterval'];
+		country: { isoCode: string; currency: PublicProgramDetails['payoutCurrency'] };
+		programAccesses: { permission: ProgramPermission; organization: { name: string } }[];
+		recipients: {
+			startDate: Date | null;
+			localPartner: { name: string; slug: string } | null;
+			payouts: { amount: unknown }[];
+			surveys: { id: string }[];
+		}[];
+	}): PublicProgramDetails => {
+		const ownerAccess = program.programAccesses.find((access) => access.permission === ProgramPermission.owner);
+		const operatorAccess = program.programAccesses.find((access) => access.permission === ProgramPermission.operator);
+
+		let totalPayoutsSum = 0;
+		let totalPayoutsCount = 0;
+		let completedSurveysCount = 0;
+		let earliestStart: Date | null = null;
+		const localPartnerCounts = new Map<string, { name: string; slug: string; count: number }>();
+
+		for (const recipient of program.recipients) {
+			if (recipient.startDate && (!earliestStart || recipient.startDate < earliestStart)) {
+				earliestStart = recipient.startDate;
+			}
+
+			totalPayoutsSum += this.sumPayoutAmounts([recipient]);
+			totalPayoutsCount += recipient.payouts.length;
+			completedSurveysCount += recipient.surveys.length;
+
+			const localPartner = recipient.localPartner;
+			if (localPartner) {
+				const currentCount = localPartnerCounts.get(localPartner.slug);
+				localPartnerCounts.set(localPartner.slug, {
+					name: localPartner.name,
+					slug: localPartner.slug,
+					count: (currentCount?.count ?? 0) + 1,
+				});
+			}
+		}
+
+		const topLocalPartner = [...localPartnerCounts.values()].sort((left, right) => right.count - left.count)[0] ?? null;
+		const localPartnerName = topLocalPartner?.name ?? null;
+		const localPartnerSlug = topLocalPartner?.slug ?? null;
+
+		return {
+			programId: program.id,
+			programName: program.name,
+			countryIsoCode: program.country.isoCode,
+			ownerOrganizationName: ownerAccess?.organization.name ?? null,
+			localPartnerName,
+			localPartnerSlug,
+			operatorOrganizationName: operatorAccess?.organization.name ?? null,
+			targetFocuses: program.targetFocuses.map((focus) => focus.focusId),
+			amountOfRecipientsForStart: program.amountOfRecipientsForStart,
+			programDurationInMonths: program.programDurationInMonths,
+			payoutPerInterval: Number(program.payoutPerInterval),
+			payoutCurrency: program.country.currency,
+			payoutInterval: program.payoutInterval,
+			recipientsCount: program.recipients.length,
+			totalPayoutsCount,
+			totalPayoutsSum,
+			completedSurveysCount,
+			startedAt: earliestStart,
+		};
+	};
+
 	async getPublicProgramBySlug(slug: string): Promise<ServiceResult<PublicProgramDetails>> {
 		try {
-			const programs = await this.db.program.findMany({
-				select: {
-					id: true,
-					name: true,
-					targetFocuses: {
-						select: {
-							focusId: true,
-						},
-					},
-					amountOfRecipientsForStart: true,
-					programDurationInMonths: true,
-					payoutPerInterval: true,
-					payoutInterval: true,
-					country: {
-						select: { isoCode: true, currency: true },
-					},
-					programAccesses: {
-						select: {
-							permission: true,
-							organization: { select: { name: true } },
-						},
-					},
-					recipients: {
-						select: {
-							startDate: true,
-							payouts: {
-								where: {
-									status: {
-										in: [PayoutStatus.paid, PayoutStatus.confirmed],
-									},
-								},
-								select: { amount: true },
-							},
-							surveys: {
-								where: { status: SurveyStatus.completed },
-								select: { id: true },
-							},
-						},
-					},
-				},
+			const program = await this.db.program.findUnique({
+				where: { slug },
+				select: this.publicProgramSelect,
 			});
-
-			const program = programs.find((p) => slugify(p.name) === slug);
 
 			if (!program) {
 				return this.resultFail('Program not found');
 			}
 
-			const ownerAccess = program.programAccesses.find((a) => a.permission === ProgramPermission.owner);
-
-			const operatorAccess = program.programAccesses.find((a) => a.permission === ProgramPermission.operator);
-
-			let totalPayoutsSum = 0;
-			let totalPayoutsCount = 0;
-			let completedSurveysCount = 0;
-			let earliestStart: Date | null = null;
-
-			for (const r of program.recipients) {
-				if (r.startDate && (!earliestStart || r.startDate < earliestStart)) {
-					earliestStart = r.startDate;
-				}
-
-				totalPayoutsSum += this.sumPayoutAmounts([r]);
-				totalPayoutsCount += r.payouts.length;
-
-				completedSurveysCount += r.surveys.length;
-			}
-
-			return this.resultOk({
-				programId: program.id,
-				programName: program.name,
-				countryIsoCode: program.country.isoCode,
-				ownerOrganizationName: ownerAccess?.organization.name ?? null,
-				operatorOrganizationName: operatorAccess?.organization.name ?? null,
-				targetFocuses: program.targetFocuses.map((focus) => focus.focusId),
-				amountOfRecipientsForStart: program.amountOfRecipientsForStart,
-				programDurationInMonths: program.programDurationInMonths,
-				payoutPerInterval: Number(program.payoutPerInterval),
-				payoutCurrency: program.country.currency,
-				payoutInterval: program.payoutInterval,
-				recipientsCount: program.recipients.length,
-				totalPayoutsCount,
-				totalPayoutsSum,
-				completedSurveysCount,
-				startedAt: earliestStart,
-			});
+			return this.resultOk(this.toPublicProgramDetails(program));
 		} catch (error) {
 			this.logger.error(error);
 
@@ -300,15 +336,14 @@ export class ProgramReadService extends BaseService {
 
 	async getPublicPreviewProgramBySlug(slug: string): Promise<ServiceResult<PublicPreviewProgram>> {
 		try {
-			const programs = await this.db.program.findMany({
+			const program = await this.db.program.findUnique({
+				where: { slug },
 				select: {
 					id: true,
 					name: true,
 					slug: true,
 				},
 			});
-
-			const program = programs.find((currentProgram) => currentProgram.slug === slug);
 
 			if (!program) {
 				return this.resultFail('Program not found');
@@ -400,7 +435,7 @@ export class ProgramReadService extends BaseService {
 		}
 	}
 
-	async getProgramIdBySlug(slug: string): Promise<ServiceResult<string>> {
+	async getProgramIdByPortalSlug(slug: string): Promise<ServiceResult<string>> {
 		try {
 			const program = await this.db.program.findUnique({ where: { slug }, select: { id: true } });
 			if (!program) {

@@ -175,6 +175,25 @@
 		"recipient-plural": "recipients",
 		"about": "About"
 	},
+	"program-detail-page": {
+		"view-details": "View details",
+		"view-breakdown": "View breakdown",
+		"sent-to-recipients": "Sent to recipients to date",
+		"total-program-costs": "Total program costs",
+		"available-credits": "Available credits",
+		"about-title": "About this program",
+		"program-owner": "Program Owner",
+		"local-program-owner": "Local Program Owner",
+		"program-operator": "Program Operator",
+		"duration": "Duration",
+		"month-singular": "month",
+		"month-plural": "months",
+		"start-date": "Start date",
+		"view-demographics": "View demographics",
+		"completed-surveys": "Completed surveys",
+		"view-impact-data": "View impact data",
+		"country-analysis": "Country analysis"
+	},
 	"campaigns-page": {
 		"empty": "No campaigns found.",
 		"contribution-singular": "contribution",

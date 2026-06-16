@@ -3,7 +3,7 @@ import type { PublicProgramFilterDataMap, PublicProgramStatsMap } from '@/lib/se
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { AnySearchParams } from '@/lib/types/page-props';
 import type { ProgramStory } from './program.types';
-import { getProgramId as getProgramPortalSlug, getProgramSlug, getProgramTitle } from './program.utils';
+import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from './program.utils';
 import { COUNTRY_QUERY_KEY, FOCUS_QUERY_KEY, SEARCH_QUERY_KEY } from './programs-overview-query';
 
 type FilterOption = {
@@ -36,7 +36,7 @@ export const programMatchesSearchQuery = (program: ProgramStory, searchQuery: st
 	const keywords = [
 		getProgramTitle(program.content),
 		getProgramPortalSlug(program.content),
-		getProgramSlug(program),
+		getProgramStoryblokSlug(program),
 		program.content.description,
 	]
 		.map((value) => normalizeSearchValue(value))

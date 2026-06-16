@@ -1,26 +1,36 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
-import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
+import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
+import { ProgramAbout } from '@/components/storyblok/program/program-about';
+import { ProgramCountry } from '@/components/storyblok/program/program-country';
+import { ProgramFinances } from '@/components/storyblok/program/program-finances';
+import { ProgramRecipients } from '@/components/storyblok/program/program-recipients';
+import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { PublicProgramStats } from '@/lib/services/program/program.types';
 import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
-	title: string;
+	programDetailData: ProgramDetailData;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
-	fullSlug: string;
-	heroImage?: HeroHeaderImage | null;
-	stats?: PublicProgramStats;
 };
 
-export const ProgramDetail = async ({ title, lang, region, fullSlug, heroImage, stats }: Props) => {
+export const ProgramDetail = async ({ programDetailData, lang, region }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const countryIsoCode = programDetailData.programDetails?.countryIsoCode ?? programDetailData.stats?.countryIsoCode;
+	const recipientsCount =
+		programDetailData.dashboardStats?.recipientsCount ??
+		programDetailData.programDetails?.recipientsCount ??
+		programDetailData.stats?.recipientsCount ??
+		0;
+	const completedSurveysCount =
+		programDetailData.dashboardStats?.completedSurveysCount ?? programDetailData.programDetails?.completedSurveysCount ?? 0;
+
 	const breadcrumbLinks = await buildBreadcrumbLinks({
-		fullSlug,
-		currentLabel: title,
+		fullSlug: programDetailData.fullSlug,
+		currentLabel: programDetailData.title,
 		lang,
 		region,
 	});
@@ -28,18 +38,18 @@ export const ProgramDetail = async ({ title, lang, region, fullSlug, heroImage, 
 	return (
 		<>
 			<HeroHeader
-				title={title}
-				heroImage={heroImage}
+				title={programDetailData.title}
+				heroImage={programDetailData.heroImage}
 				stats={
-					stats
+					programDetailData.stats
 						? [
 								{
-									label: getCountryNameByCode(stats.countryIsoCode),
+									label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
 								},
 								{
-									value: stats.recipientsCount,
+									value: programDetailData.stats.recipientsCount,
 									label:
-										stats.recipientsCount === 1
+										programDetailData.stats.recipientsCount === 1
 											? translator.t('programs-page.recipient-singular')
 											: translator.t('programs-page.recipient-plural'),
 								},
@@ -47,8 +57,23 @@ export const ProgramDetail = async ({ title, lang, region, fullSlug, heroImage, 
 						: []
 				}
 			/>
-			<div className="max-w-content 2xl:w-site-width ml-[2vw] pl-8 2xl:mx-auto">
+			<div className="max-w-content 2xl:w-site-width mx-[2vw] mb-6 px-8 2xl:mx-auto">
 				<Breadcrumb links={breadcrumbLinks} />
+				<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
+					<div className="flex flex-col gap-7">
+						{programDetailData.dashboardStats ? (
+							<ProgramFinances stats={programDetailData.dashboardStats} translator={translator} lang={lang} />
+						) : null}
+						<ProgramAbout programDetailData={programDetailData} translator={translator} lang={lang} region={region} />
+					</div>
+					<div className="flex flex-col gap-7">
+						{countryIsoCode ? <ProgramCountry countryIsoCode={countryIsoCode} lang={lang} translator={translator} /> : null}
+						<div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
+							<ProgramRecipients count={recipientsCount} translator={translator} lang={lang} />
+							<ProgramSurveys completedCount={completedSurveysCount} translator={translator} lang={lang} />
+						</div>
+					</div>
+				</div>
 			</div>
 		</>
 	);
