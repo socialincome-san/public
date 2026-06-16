@@ -4,6 +4,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
+		"postinstall": "prisma generate",
 		"serve": "npm run openapi:generate && next dev -p 3000",
 		"serve:ssl": "npm run openapi:generate && next dev --experimental-https -p 3000",
 		"build": "next build",
