@@ -8,6 +8,7 @@ import type { ISbStoryData } from '@storyblok/js';
 import { HeroHeaderImage } from '../shared/hero-header';
 
 type ProgramDetailPortalData = {
+	programId?: string;
 	stats?: PublicProgramStats;
 	dashboardStats?: ProgramDashboardStats;
 	programDetails?: PublicProgramDetails;
@@ -34,6 +35,7 @@ export const loadProgramDetailPortalData = async (portalSlug: string): Promise<P
 	]);
 
 	return {
+		programId,
 		stats: statsResult.success ? statsResult.data : undefined,
 		dashboardStats: dashboardStatsResult.success ? dashboardStatsResult.data : undefined,
 		programDetails: programDetailsResult.success ? programDetailsResult.data : undefined,
