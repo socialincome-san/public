@@ -49,14 +49,7 @@
 		"prettier-plugin-tailwindcss": "0.7.2",
 		"typescript": "5.9.3"
 	},
-	"dependencies": {
-		"@xstate/react": "^6.0.0",
-		"glob": "^13.0.0",
-		"react": "19.2.4",
-		"react-dom": "19.2.4",
-		"xstate": "^5.28.0",
-		"zod": "^3.23.8"
-	},
+	"dependencies": {},
 	"overrides": {
 		"fast-xml-builder": "^1.1.7",
 		"protobufjs": "7.5.6",
