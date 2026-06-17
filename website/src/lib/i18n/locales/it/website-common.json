@@ -192,7 +192,16 @@
 		"view-demographics": "Vedi dati demografici",
 		"completed-surveys": "Sondaggi completati",
 		"view-impact-data": "Vedi dati sull'impatto",
-		"country-analysis": "Analisi del paese"
+		"country-analysis": "Analisi del paese",
+		"parties-involved": "Parti coinvolte",
+		"program-design": "Progettazione del programma",
+		"delivery": "Erogazione",
+		"country": "Paese",
+		"payment-amount": "Importo del pagamento",
+		"launch-program": "Avvia programma con lo stesso design",
+		"payout-interval-monthly": "mensile",
+		"payout-interval-quarterly": "trimestrale",
+		"payout-interval-yearly": "annuale"
 	},
 	"campaigns-page": {
 		"empty": "Nessuna campagna trovata.",

@@ -192,7 +192,16 @@
 		"view-demographics": "View demographics",
 		"completed-surveys": "Completed surveys",
 		"view-impact-data": "View impact data",
-		"country-analysis": "Country analysis"
+		"country-analysis": "Country analysis",
+		"parties-involved": "Parties involved",
+		"program-design": "Program Design",
+		"delivery": "Delivery",
+		"country": "Country",
+		"payment-amount": "Payment amount",
+		"launch-program": "Launch program with the same design",
+		"payout-interval-monthly": "monthly",
+		"payout-interval-quarterly": "quarterly",
+		"payout-interval-yearly": "yearly"
 	},
 	"campaigns-page": {
 		"empty": "No campaigns found.",
