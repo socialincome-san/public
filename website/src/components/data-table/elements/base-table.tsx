@@ -63,6 +63,7 @@ export const BaseTable = <TData, TValue>({
 	const isServerSorting = activeServerSorting !== null;
 	const resolvedColumnVisibility = columnVisibility ?? internalColumnVisibility;
 	const resolvedSorting = isServerSorting ? activeServerSorting.sorting : sorting;
+	const useClientPagination = !isServerPagination && !compact;
 
 	// TanStack Table's `useReactTable()` returns functions that React Compiler can warn about.
 	// We keep the call here and silence the specific rule to avoid false positives.
@@ -71,7 +72,7 @@ export const BaseTable = <TData, TValue>({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: isServerPagination ? undefined : getPaginationRowModel(),
+		getPaginationRowModel: useClientPagination ? getPaginationRowModel() : undefined,
 		onSortingChange: (next) => {
 			const resolved = functionalUpdate(next, resolvedSorting);
 			if (isServerSorting) {
@@ -91,7 +92,7 @@ export const BaseTable = <TData, TValue>({
 		state: { sorting: resolvedSorting, columnVisibility: resolvedColumnVisibility },
 		initialState: {
 			pagination: {
-				pageSize: 10,
+				pageSize: compact ? Math.max(data.length, 1) : 10,
 			},
 		},
 	});
