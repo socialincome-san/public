@@ -5,8 +5,7 @@ const LoginPage = async ({ params, searchParams }: DefaultPageProps) => {
 	const { lang, region } = await params;
 	const resolvedSearchParams = await searchParams;
 
-	const isFirebaseEmailLink =
-		resolvedSearchParams.mode === 'signIn' || typeof resolvedSearchParams.oobCode === 'string';
+	const isFirebaseEmailLink = resolvedSearchParams.mode === 'signIn' || typeof resolvedSearchParams.oobCode === 'string';
 
 	if (isFirebaseEmailLink) {
 		const query = new URLSearchParams(resolvedSearchParams).toString();
