@@ -17,7 +17,7 @@ type Props = {
 	region: WebsiteRegion;
 };
 
-export const ProgramGridView = async ({ programs, allProgramsCount, blok, lang, region }: Props) => {
+export const ProgramGridView = async ({ programs, allProgramsCount = 0, blok, lang, region }: Props) => {
 	const programIds = [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
 	const statsResult = await services.read.program.getPublicProgramStatsByIds(programIds);
 	const statsById = statsResult.success ? statsResult.data : {};
