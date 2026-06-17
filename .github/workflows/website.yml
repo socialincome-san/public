@@ -49,6 +49,8 @@ jobs:
       - working-directory: website
         run: npm ci --no-audit --no-fund
       - working-directory: website
+        run: npm run db:generate
+      - working-directory: website
         run: npm run lint
 
   check-unused:
@@ -63,6 +65,8 @@ jobs:
           cache-dependency-path: website/package-lock.json
       - working-directory: website
         run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run db:generate
       - working-directory: website
         run: npm run check:unused
 
@@ -79,6 +83,8 @@ jobs:
       - working-directory: website
         run: npm ci --no-audit --no-fund
       - working-directory: website
+        run: npm run db:generate
+      - working-directory: website
         run: npm run typecheck
 
   unit-test:
@@ -93,6 +99,8 @@ jobs:
           cache-dependency-path: website/package-lock.json
       - working-directory: website
         run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run db:generate
       - working-directory: website
         run: npm run test:unit
 
