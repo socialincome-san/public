@@ -169,6 +169,7 @@
 		"search-placeholder": "Search",
 		"all-countries": "All countries ({{count}})",
 		"all-focuses": "All focuses ({{count}})",
+		"view-all": "View all {{count}} programs",
 		"campaign-singular": "campaign",
 		"campaign-plural": "campaigns",
 		"recipient-singular": "recipient",
