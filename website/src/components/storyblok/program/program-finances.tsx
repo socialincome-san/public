@@ -29,9 +29,7 @@ export const ProgramFinances = async ({ stats, payoutForecast, programId, transl
 						dialogTitle={translator.t('program-detail-page.program-finances-title')}
 						viewBreakdownLabel={translator.t('program-detail-page.view-breakdown')}
 						manageLabel={
-							isLoggedIn
-								? translator.t('program-detail-page.manage')
-								: translator.t('program-detail-page.login-to-manage')
+							isLoggedIn ? translator.t('program-detail-page.manage') : translator.t('program-detail-page.login-to-manage')
 						}
 						manageHref={`/portal/programs/${programId}/payout-forecast`}
 						payoutForecastInfoTooltip={translator.t('program-detail-page.payout-forecast-info')}

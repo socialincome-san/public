@@ -4,6 +4,7 @@ import { PAYOUT_FORECAST_MONTHS_AHEAD } from '@/lib/services/payout/payout-forec
 import type { PayoutForecastTableView } from '@/lib/services/payout/payout.types';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
 import type { PublicProgramDetails, PublicProgramStats } from '@/lib/services/program/program.types';
+import type { PublicRecipientTableView } from '@/lib/services/recipient/recipient-table.types';
 import { services } from '@/lib/services/services';
 import { getProgramStoryPath, getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoryData } from '@storyblok/js';
@@ -15,6 +16,7 @@ type ProgramDetailPortalData = {
 	dashboardStats?: ProgramDashboardStats;
 	programDetails?: PublicProgramDetails;
 	payoutForecast?: PayoutForecastTableView;
+	recipientsTable?: PublicRecipientTableView;
 };
 
 export type ProgramDetailData = {
@@ -31,12 +33,14 @@ export const loadProgramDetailPortalData = async (portalSlug: string): Promise<P
 	}
 
 	const programId = programIdResult.data;
-	const [statsResult, dashboardStatsResult, programDetailsResult, payoutForecastResult] = await Promise.all([
-		services.read.program.getPublicProgramStatsById(programId),
-		services.programStats.getProgramDashboardStats(programId),
-		services.read.program.getPublicProgramBySlug(portalSlug),
-		services.read.payout.getPublicForecastTableView(programId, PAYOUT_FORECAST_MONTHS_AHEAD),
-	]);
+	const [statsResult, dashboardStatsResult, programDetailsResult, payoutForecastResult, recipientsTableResult] =
+		await Promise.all([
+			services.read.program.getPublicProgramStatsById(programId),
+			services.programStats.getProgramDashboardStats(programId),
+			services.read.program.getPublicProgramBySlug(portalSlug),
+			services.read.payout.getPublicForecastTableView(programId, PAYOUT_FORECAST_MONTHS_AHEAD),
+			services.read.recipient.getPublicRecipientsTableView(programId),
+		]);
 
 	return {
 		programId,
@@ -44,6 +48,7 @@ export const loadProgramDetailPortalData = async (portalSlug: string): Promise<P
 		dashboardStats: dashboardStatsResult.success ? dashboardStatsResult.data : undefined,
 		programDetails: programDetailsResult.success ? programDetailsResult.data : undefined,
 		payoutForecast: payoutForecastResult.success ? payoutForecastResult.data : undefined,
+		recipientsTable: recipientsTableResult.success ? recipientsTableResult.data : undefined,
 	};
 };
 

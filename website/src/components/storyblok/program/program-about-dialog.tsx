@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type {
 	ProgramAboutContent,
@@ -7,7 +8,7 @@ import type {
 	ProgramAboutOverlaySection,
 } from '@/components/storyblok/program/build-program-about-content';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -62,9 +63,22 @@ export const ProgramAboutDialog = ({ aboutTitle, viewDetailsLabel, content }: Pr
 			<ProgramDetailPill label={viewDetailsLabel} isOpen={isOpen} onClick={() => setIsOpen(true)} />
 
 			<Dialog open={isOpen} onOpenChange={setIsOpen}>
-				<DialogContent className="flex max-h-[85vh] flex-col gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-2xl">
-					<DialogHeader className="border-border bg-background sticky top-0 z-10 shrink-0 space-y-0 border-b px-9 py-6">
+				<DialogContent
+					hideCloseButton
+					className="flex max-h-[85vh] flex-col gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-2xl"
+				>
+					<DialogHeader className="border-border bg-background sticky top-0 z-10 mx-0 flex shrink-0 flex-row items-center justify-between gap-4 space-y-0 rounded-t-3xl border-b px-12 py-6">
 						<DialogTitle className="text-2xl leading-none font-medium">{aboutTitle}</DialogTitle>
+						<Button
+							type="button"
+							size="icon"
+							variant="ghost"
+							className="size-8 rounded-full"
+							onClick={() => setIsOpen(false)}
+							aria-label="Close"
+						>
+							<X aria-hidden="true" />
+						</Button>
 					</DialogHeader>
 
 					<div className="overflow-y-auto px-12 pt-8 pb-12">

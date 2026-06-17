@@ -50,6 +50,11 @@ export type RecipientPaginatedTableView = {
 	programFilterOptions: RecipientProgramFilterOption[];
 };
 
+export type PublicRecipientTableView = {
+	tableRows: RecipientTableViewRow[];
+	totalCount: number;
+};
+
 export type UpcomingOnboardingTableViewRow = {
 	id: string;
 	recipientName: string;

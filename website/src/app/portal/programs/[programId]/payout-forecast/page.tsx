@@ -4,10 +4,7 @@ import { payoutForecastTableConfig } from '@/components/data-table/configs/payou
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import {
-	PAYOUT_FORECAST_INFO_TOOLTIP,
-	PAYOUT_FORECAST_MONTHS_AHEAD,
-} from '@/lib/services/payout/payout-forecast.constants';
+import { PAYOUT_FORECAST_INFO_TOOLTIP, PAYOUT_FORECAST_MONTHS_AHEAD } from '@/lib/services/payout/payout-forecast.constants';
 import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';

@@ -102,3 +102,12 @@ export const makeRecipientColumns = (
 
 	return columns;
 };
+
+export const makePublicRecipientColumns = (): ColumnDef<RecipientTableViewRow>[] =>
+	makeRecipientColumns(true, false, undefined, true).filter((column) => {
+		if (!('accessorKey' in column)) {
+			return true;
+		}
+
+		return column.accessorKey !== 'firebaseAuthUserId' && column.accessorKey !== 'paymentCode';
+	});
