@@ -37,12 +37,10 @@ export const resolveProgramCountry = async (
 			};
 		}
 	} finally {
-		if (!resolvedCountry) {
-			resolvedCountry = {
-				isoCode: countryIsoCode,
-				name: getCountryNameFromIsoCode(countryIsoCode),
-			};
-		}
+		resolvedCountry ??= {
+			isoCode: countryIsoCode,
+			name: getCountryNameFromIsoCode(countryIsoCode),
+		};
 	}
 
 	return resolvedCountry;
