@@ -218,7 +218,7 @@ export const buildProgramAboutContent = ({
 	}
 
 	return {
-		description: description?.trim() || undefined,
+		description: description?.trim() ?? undefined,
 		cardRows,
 		overlaySections,
 	};
