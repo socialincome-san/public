@@ -154,6 +154,8 @@
 		"typescript-eslint": "8.57.0"
 	},
 	"overrides": {
+		"@radix-ui/react-dismissable-layer": "1.1.12",
+		"@radix-ui/react-focus-scope": "1.1.9",
 		"axios": "1.13.5",
 		"body-parser": "2.2.1",
 		"fast-xml-builder": "^1.1.7",
