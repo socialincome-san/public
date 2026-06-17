@@ -50,8 +50,20 @@ export type RecipientPaginatedTableView = {
 	programFilterOptions: RecipientProgramFilterOption[];
 };
 
+export type PublicRecipientTableViewRow = {
+	country: CountryCode | null;
+	firstName: string;
+	lastName: string;
+	dateOfBirth: Date | typeof OBFUSCATED_SENTINEL | null;
+	startDate: Date | null;
+	localPartnerName: string | null;
+	payoutsProgressPercent: number;
+	createdAt: Date;
+	status: RecipientLifecycleStatus;
+};
+
 export type PublicRecipientTableView = {
-	tableRows: RecipientTableViewRow[];
+	tableRows: PublicRecipientTableViewRow[];
 	totalCount: number;
 };
 

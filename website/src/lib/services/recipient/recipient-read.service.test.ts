@@ -115,7 +115,7 @@ describe('RecipientReadService public table view', () => {
 		expect(data.totalCount).toBe(0);
 	});
 
-	test('getPublicRecipientsTableView obfuscates name, age, and payment code', async () => {
+	test('getPublicRecipientsTableView obfuscates name and age', async () => {
 		const { service } = createService();
 
 		const result = await service.getPublicRecipientsTableView('program-1');
@@ -126,12 +126,27 @@ describe('RecipientReadService public table view', () => {
 			firstName: OBFUSCATED_SENTINEL,
 			lastName: '',
 			dateOfBirth: OBFUSCATED_SENTINEL,
-			paymentCode: OBFUSCATED_SENTINEL,
-			firebaseAuthUserId: '',
 		});
 		expect(data.tableRows[0]?.firstName).not.toBe('Jane');
 		expect(data.tableRows[0]?.lastName).not.toBe('Doe');
 		expect(data.tableRows[0]?.dateOfBirth).not.toEqual(baseRecipient.contact.dateOfBirth);
+	});
+
+	test('getPublicRecipientsTableView excludes sensitive fields', async () => {
+		const { service } = createService();
+
+		const result = await service.getPublicRecipientsTableView('program-1');
+		const data = expectSuccess(result);
+		const row = data.tableRows[0];
+
+		expect(row).toBeDefined();
+		expect(row).not.toHaveProperty('id');
+		expect(row).not.toHaveProperty('firebaseAuthUserId');
+		expect(row).not.toHaveProperty('paymentCode');
+		expect(row).not.toHaveProperty('suspendedAt');
+		expect(row).not.toHaveProperty('suspensionReason');
+		expect(row).not.toHaveProperty('programId');
+		expect(row).not.toHaveProperty('programName');
 	});
 
 	test('getPublicRecipientsTableView caps fetched rows but reports full total count', async () => {

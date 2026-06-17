@@ -4,7 +4,7 @@ import { Button } from '@/components/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import { ProgramRecipientsTable } from '@/components/storyblok/program/program-recipients-table';
-import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import type { PublicRecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -14,7 +14,7 @@ type Props = {
 	viewDemographicsLabel: string;
 	manageLabel: string;
 	manageHref: string;
-	rows: RecipientTableViewRow[];
+	rows: PublicRecipientTableViewRow[];
 	totalCount: number;
 };
 

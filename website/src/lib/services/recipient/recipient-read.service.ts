@@ -15,6 +15,7 @@ import { PUBLIC_RECIPIENTS_MAX_ROWS } from './recipient-public.constants';
 import { RecipientStatusService } from './recipient-status.service';
 import {
 	PublicRecipientTableView,
+	PublicRecipientTableViewRow,
 	RecipientPaginatedTableView,
 	RecipientProgramFilterOption,
 	RecipientTableQuery,
@@ -404,13 +405,59 @@ export class RecipientReadService extends BaseService {
 	}
 
 	private mapToPublicRecipientTableRows(
-		recipients: Parameters<RecipientReadService['mapToRecipientTableRows']>[0],
+		recipients: {
+			startDate: Date | null;
+			suspendedAt: Date | null;
+			createdAt: Date;
+			contact: {
+				firstName: string;
+				lastName: string;
+				dateOfBirth: Date | null;
+				address: { country: PublicRecipientTableViewRow['country'] } | null;
+			} | null;
+			program: {
+				programDurationInMonths: number;
+				payoutInterval: PayoutInterval;
+			} | null;
+			localPartner: {
+				name?: string | null;
+				contact: { address: { country: PublicRecipientTableViewRow['country'] } | null } | null;
+			} | null;
+			payouts: { status: PayoutStatus }[];
+		}[],
 		getLocalPartnerName: (recipient: { localPartner: { name?: string | null } | null }) => string | null,
 		nowDate: Date,
-	): RecipientTableViewRow[] {
-		return this.mapToRecipientTableRows(recipients, () => ProgramPermission.owner, getLocalPartnerName, nowDate).map(
-			(row) => ({ ...row, firebaseAuthUserId: '' }),
-		);
+	): PublicRecipientTableViewRow[] {
+		return recipients.map((recipient) => {
+			const payoutsReceived = recipient.payouts.length;
+			const payoutsTotal = recipient.program?.programDurationInMonths ?? 0;
+			const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
+			const paidOrConfirmedCountResult = this.recipientStatusService.countPaidOrConfirmedPayouts(recipient.payouts);
+			const paidOrConfirmedCount = paidOrConfirmedCountResult.success ? paidOrConfirmedCountResult.data : 0;
+			const statusResult = recipient.program
+				? this.recipientStatusService.getRecipientLifecycleStatus({
+						startDate: recipient.startDate,
+						suspendedAt: recipient.suspendedAt,
+						paidOrConfirmedCount,
+						programDurationInMonths: recipient.program.programDurationInMonths,
+						payoutInterval: recipient.program.payoutInterval,
+						nowDate,
+					})
+				: this.resultOk<RecipientLifecycleStatus>('future');
+			const status = statusResult.success ? statusResult.data : 'future';
+
+			return {
+				country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
+				firstName: OBFUSCATED_SENTINEL,
+				lastName: '',
+				dateOfBirth: OBFUSCATED_SENTINEL,
+				startDate: recipient.startDate ?? null,
+				localPartnerName: getLocalPartnerName(recipient),
+				payoutsProgressPercent,
+				createdAt: recipient.createdAt,
+				status,
+			};
+		});
 	}
 
 	async getPublicRecipientsTableView(programId: string): Promise<ServiceResult<PublicRecipientTableView>> {
@@ -426,15 +473,8 @@ export class RecipientReadService extends BaseService {
 
 			const where: Prisma.RecipientWhereInput = { programId };
 			const recipientSelect = {
-				id: true,
 				startDate: true,
 				suspendedAt: true,
-				suspensionReason: true,
-				paymentInformation: {
-					select: {
-						code: true,
-					},
-				},
 				contact: {
 					select: {
 						firstName: true,
@@ -449,8 +489,6 @@ export class RecipientReadService extends BaseService {
 				},
 				program: {
 					select: {
-						id: true,
-						name: true,
 						programDurationInMonths: true,
 						payoutInterval: true,
 					},
@@ -458,11 +496,6 @@ export class RecipientReadService extends BaseService {
 				localPartner: {
 					select: {
 						name: true,
-						account: {
-							select: {
-								firebaseAuthUserId: true,
-							},
-						},
 						contact: {
 							select: {
 								address: {

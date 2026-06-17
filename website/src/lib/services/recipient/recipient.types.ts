@@ -1,5 +1,6 @@
 import { Address, Gender, PayoutInterval, Phone, Prisma } from '@/generated/prisma/client';
 export type {
+	PublicRecipientTableViewRow,
 	RecipientProgramFilterOption,
 	RecipientTableViewRow,
 	UpcomingOnboardingTableViewRow,
