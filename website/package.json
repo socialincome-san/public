@@ -74,7 +74,7 @@
 		"@stripe/stripe-js": "9.7.0",
 		"@tanstack/react-table": "8.21.3",
 		"@types/js-cookie": "3.0.6",
-		"@xmldom/xmldom": "0.8.11",
+		"@xmldom/xmldom": "0.8.13",
 		"@xstate/react": "^6.0.0",
 		"accept-language-parser": "1.5.0",
 		"class-variance-authority": "0.7.1",
