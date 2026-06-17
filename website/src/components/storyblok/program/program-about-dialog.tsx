@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type {
 	ProgramAboutContent,
@@ -15,7 +14,6 @@ import { useState } from 'react';
 type Props = {
 	aboutTitle: string;
 	viewDetailsLabel: string;
-	launchProgramLabel: string;
 	content: ProgramAboutContent;
 };
 
@@ -47,42 +45,17 @@ const OverlayDetailRows = ({ rows }: { rows: ProgramAboutDetailRow[] }) => (
 	</dl>
 );
 
-const LaunchProgramButton = ({ label }: { label: string }) => (
-	<div className="pt-6">
-		<Button
-			type="button"
-			variant="outline"
-			size="lg"
-			aria-disabled="true"
-			tabIndex={0}
-			className="pointer-events-none opacity-50"
-		>
-			{label}
-		</Button>
-	</div>
-);
-
-const OverlaySection = ({
-	section,
-	launchProgramLabel,
-	showLaunchButton,
-}: {
-	section: ProgramAboutOverlaySection;
-	launchProgramLabel: string;
-	showLaunchButton: boolean;
-}) => (
+const OverlaySection = ({ section }: { section: ProgramAboutOverlaySection }) => (
 	<div>
 		<div className="border-border border-b pt-8 pb-2 first:pt-6">
 			<h3 className="font-bold">{section.title}</h3>
 		</div>
 		<OverlayDetailRows rows={section.rows} />
-		{showLaunchButton ? <LaunchProgramButton label={launchProgramLabel} /> : null}
 	</div>
 );
 
-export const ProgramAboutDialog = ({ aboutTitle, viewDetailsLabel, launchProgramLabel, content }: Props) => {
+export const ProgramAboutDialog = ({ aboutTitle, viewDetailsLabel, content }: Props) => {
 	const [isOpen, setIsOpen] = useState(false);
-	const hasProgramDesignSection = content.overlaySections.some((section) => section.id === 'program-design');
 
 	return (
 		<>
@@ -98,15 +71,8 @@ export const ProgramAboutDialog = ({ aboutTitle, viewDetailsLabel, launchProgram
 						{content.description ? <p className="text-foreground text-base leading-6">{content.description}</p> : null}
 
 						{content.overlaySections.map((section) => (
-							<OverlaySection
-								key={section.id}
-								section={section}
-								launchProgramLabel={launchProgramLabel}
-								showLaunchButton={section.id === 'program-design'}
-							/>
+							<OverlaySection key={section.id} section={section} />
 						))}
-
-						{!hasProgramDesignSection ? <LaunchProgramButton label={launchProgramLabel} /> : null}
 					</div>
 				</DialogContent>
 			</Dialog>

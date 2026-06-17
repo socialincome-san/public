@@ -33,7 +33,6 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region, reso
 					<ProgramAboutDialog
 						aboutTitle={aboutTitle}
 						viewDetailsLabel={translator.t('program-detail-page.view-details')}
-						launchProgramLabel={translator.t('program-detail-page.launch-program')}
 						content={content}
 					/>
 				) : null}

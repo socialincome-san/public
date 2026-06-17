@@ -198,7 +198,6 @@
 		"delivery": "Distribution",
 		"country": "Pays",
 		"payment-amount": "Montant du versement",
-		"launch-program": "Lancer un programme avec la même conception",
 		"payout-interval-monthly": "mensuel",
 		"payout-interval-quarterly": "trimestriel",
 		"payout-interval-yearly": "annuel"

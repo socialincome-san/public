@@ -198,7 +198,6 @@
 		"delivery": "Delivery",
 		"country": "Country",
 		"payment-amount": "Payment amount",
-		"launch-program": "Launch program with the same design",
 		"payout-interval-monthly": "monthly",
 		"payout-interval-quarterly": "quarterly",
 		"payout-interval-yearly": "yearly"
