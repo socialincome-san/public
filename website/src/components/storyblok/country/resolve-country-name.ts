@@ -23,16 +23,18 @@ export const resolveProgramCountry = async (
 		return undefined;
 	}
 
-	const countryResult = await services.storyblok.getCountryByIsoCode(countryIsoCode, lang);
+	try {
+		const countryResult = await services.storyblok.getCountryByIsoCode(countryIsoCode, lang);
 
-	if (countryResult.success) {
-		return {
-			isoCode: countryIsoCode,
-			name: getCountryTitle(countryResult.data.content),
-			description: getCountryDescription(countryResult.data.content),
-			href: `/${lang}/${region}/countries/${getCountrySlug(countryResult.data)}`,
-		};
-	}
+		if (countryResult.success) {
+			return {
+				isoCode: countryIsoCode,
+				name: getCountryTitle(countryResult.data.content),
+				description: getCountryDescription(countryResult.data.content),
+				href: `/${lang}/${region}/countries/${getCountrySlug(countryResult.data)}`,
+			};
+		}
+	} catch {}
 
 	return {
 		isoCode: countryIsoCode,
