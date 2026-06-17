@@ -1,5 +1,6 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { resolveProgramCountry } from '@/components/storyblok/country/resolve-country-name';
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramAbout } from '@/components/storyblok/program/program-about';
 import { ProgramCountry } from '@/components/storyblok/program/program-country';
@@ -28,12 +29,15 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 	const completedSurveysCount =
 		programDetailData.dashboardStats?.completedSurveysCount ?? programDetailData.programDetails?.completedSurveysCount ?? 0;
 
-	const breadcrumbLinks = await buildBreadcrumbLinks({
-		fullSlug: programDetailData.fullSlug,
-		currentLabel: programDetailData.title,
-		lang,
-		region,
-	});
+	const [breadcrumbLinks, resolvedCountry] = await Promise.all([
+		buildBreadcrumbLinks({
+			fullSlug: programDetailData.fullSlug,
+			currentLabel: programDetailData.title,
+			lang,
+			region,
+		}),
+		resolveProgramCountry(countryIsoCode, lang, region),
+	]);
 
 	return (
 		<>
@@ -64,12 +68,16 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						{programDetailData.dashboardStats ? (
 							<ProgramFinances stats={programDetailData.dashboardStats} translator={translator} lang={lang} />
 						) : null}
-						<ProgramAbout programDetailData={programDetailData} translator={translator} lang={lang} region={region} />
+						<ProgramAbout
+							programDetailData={programDetailData}
+							translator={translator}
+							lang={lang}
+							region={region}
+							resolvedCountry={resolvedCountry}
+						/>
 					</div>
 					<div className="flex flex-col gap-7">
-						{countryIsoCode ? (
-							<ProgramCountry countryIsoCode={countryIsoCode} lang={lang} region={region} translator={translator} />
-						) : null}
+						{resolvedCountry ? <ProgramCountry resolvedCountry={resolvedCountry} translator={translator} /> : null}
 						<div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
 							<ProgramRecipients count={recipientsCount} translator={translator} lang={lang} />
 							<ProgramSurveys

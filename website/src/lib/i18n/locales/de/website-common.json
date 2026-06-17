@@ -193,7 +193,15 @@
 		"view-demographics": "Demografie anzeigen",
 		"completed-surveys": "Abgeschlossene Umfragen",
 		"view-impact-data": "Wirkungsdaten anzeigen",
-		"country-analysis": "Länderanalyse"
+		"country-analysis": "Länderanalyse",
+		"parties-involved": "Beteiligte Parteien",
+		"program-design": "Programmdesign",
+		"delivery": "Auszahlung",
+		"country": "Land",
+		"payment-amount": "Auszahlungsbetrag",
+		"payout-interval-monthly": "monatlich",
+		"payout-interval-quarterly": "vierteljährlich",
+		"payout-interval-yearly": "jährlich"
 	},
 	"campaigns-page": {
 		"empty": "Keine Kampagnen gefunden.",
