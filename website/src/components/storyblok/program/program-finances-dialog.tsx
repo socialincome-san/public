@@ -4,10 +4,11 @@ import { Button } from '@/components/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import { ProgramPayoutForecastTable } from '@/components/storyblok/program/program-payout-forecast-table';
+import { getPublicPayoutForecastTableAction } from '@/lib/server-actions/program-detail-public-actions';
 import type { PayoutForecastTableViewRow } from '@/lib/services/payout/payout.types';
 import { X } from 'lucide-react';
 import Link from 'next/link';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
 type Props = {
 	dialogTitle: string;
@@ -16,7 +17,7 @@ type Props = {
 	manageHref: string;
 	payoutForecastInfoTooltip: string;
 	financesCard: ReactNode;
-	rows: PayoutForecastTableViewRow[];
+	programId: string;
 };
 
 export const ProgramFinancesDialog = ({
@@ -26,9 +27,47 @@ export const ProgramFinancesDialog = ({
 	manageHref,
 	payoutForecastInfoTooltip,
 	financesCard,
-	rows,
+	programId,
 }: Props) => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [rows, setRows] = useState<PayoutForecastTableViewRow[] | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		if (!isOpen || rows !== null) {
+			return;
+		}
+
+		let isCancelled = false;
+
+		const loadForecast = async () => {
+			setIsLoading(true);
+			setError(null);
+
+			const result = await getPublicPayoutForecastTableAction(programId);
+
+			if (isCancelled) {
+				return;
+			}
+
+			setIsLoading(false);
+
+			if (!result.success) {
+				setError(result.error);
+
+				return;
+			}
+
+			setRows(result.data.tableRows);
+		};
+
+		void loadForecast();
+
+		return () => {
+			isCancelled = true;
+		};
+	}, [isOpen, programId, rows]);
 
 	return (
 		<>
@@ -60,7 +99,16 @@ export const ProgramFinancesDialog = ({
 
 					<div className="flex flex-col gap-8 overflow-y-auto px-12 pt-8 pb-12">
 						{financesCard}
-						<ProgramPayoutForecastTable rows={rows} titleInfoTooltip={payoutForecastInfoTooltip} />
+						{isLoading ? (
+							<p className="text-muted-foreground text-sm">Loading...</p>
+						) : error ? (
+							<div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
+								<p className="font-medium">Could not load payout forecast.</p>
+								<p className="mt-1 text-sm">{error}</p>
+							</div>
+						) : rows ? (
+							<ProgramPayoutForecastTable rows={rows} titleInfoTooltip={payoutForecastInfoTooltip} />
+						) : null}
 					</div>
 				</DialogContent>
 			</Dialog>

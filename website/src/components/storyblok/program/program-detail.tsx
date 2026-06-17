@@ -65,10 +65,9 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				<Breadcrumb links={breadcrumbLinks} />
 				<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
 					<div className="flex flex-col gap-7">
-						{programDetailData.dashboardStats ? (
+						{programDetailData.dashboardStats && programDetailData.programId ? (
 							<ProgramFinances
 								stats={programDetailData.dashboardStats}
-								payoutForecast={programDetailData.payoutForecast}
 								programId={programDetailData.programId}
 								translator={translator}
 								lang={lang}
@@ -87,7 +86,6 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						<div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
 							<ProgramRecipients
 								count={recipientsCount}
-								recipientsTable={programDetailData.recipientsTable}
 								programId={programDetailData.programId}
 								translator={translator}
 								lang={lang}

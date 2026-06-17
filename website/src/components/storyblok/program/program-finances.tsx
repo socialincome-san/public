@@ -3,40 +3,35 @@ import { ProgramFinancesDialog } from '@/components/storyblok/program/program-fi
 import { getCurrentUser } from '@/lib/firebase/current-user';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import type { PayoutForecastTableView } from '@/lib/services/payout/payout.types';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
 
 type Props = {
 	stats: ProgramDashboardStats;
-	payoutForecast?: PayoutForecastTableView;
-	programId?: string;
+	programId: string;
 	translator: Translator;
 	lang: WebsiteLanguage;
 };
 
-export const ProgramFinances = async ({ stats, payoutForecast, programId, translator, lang }: Props) => {
+export const ProgramFinances = async ({ stats, programId, translator, lang }: Props) => {
 	const user = await getCurrentUser();
 	const isLoggedIn = user !== null;
-	const hasDialogContent = payoutForecast !== undefined && programId !== undefined;
 	const financesCard = <ProgramFinancesCard stats={stats} translator={translator} lang={lang} embedded />;
 
 	return (
 		<div className="flex flex-col gap-6 rounded-xl bg-white px-10 py-8 shadow-lg">
 			<div className="flex items-center justify-between">
 				<h2 className="text-foreground text-xl font-bold">{translator.t('navigation.finances')}</h2>
-				{hasDialogContent ? (
-					<ProgramFinancesDialog
-						dialogTitle={translator.t('program-detail-page.program-finances-title')}
-						viewBreakdownLabel={translator.t('program-detail-page.view-breakdown')}
-						manageLabel={
-							isLoggedIn ? translator.t('program-detail-page.manage') : translator.t('program-detail-page.login-to-manage')
-						}
-						manageHref={`/portal/programs/${programId}/payout-forecast`}
-						payoutForecastInfoTooltip={translator.t('program-detail-page.payout-forecast-info')}
-						financesCard={financesCard}
-						rows={payoutForecast.tableRows}
-					/>
-				) : null}
+				<ProgramFinancesDialog
+					dialogTitle={translator.t('program-detail-page.program-finances-title')}
+					viewBreakdownLabel={translator.t('program-detail-page.view-breakdown')}
+					manageLabel={
+						isLoggedIn ? translator.t('program-detail-page.manage') : translator.t('program-detail-page.login-to-manage')
+					}
+					manageHref={`/portal/programs/${programId}/payout-forecast`}
+					payoutForecastInfoTooltip={translator.t('program-detail-page.payout-forecast-info')}
+					financesCard={financesCard}
+					programId={programId}
+				/>
 			</div>
 
 			{financesCard}
