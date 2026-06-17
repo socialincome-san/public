@@ -62,7 +62,7 @@ export class ExchangeRateReadService extends BaseService {
 					return null;
 				}
 
-				return Object.fromEntries(latestRates.map((r) => [r.currency, Number(r.rate)])) as ExchangeRates;
+				return Object.fromEntries(latestRates.map((r) => [r.currency, Number(r.rate)]));
 			});
 
 			if (!result) {

@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/button';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { Typography } from '@socialincome/ui';
 
 type Props = {
 	onGoToLogin: () => void;
@@ -14,10 +13,8 @@ export const SuccessStep = ({ onGoToLogin }: Props) => {
 	return (
 		<div className="mx-auto max-w-2xl space-y-5 py-2 text-center">
 			<div className="space-y-2">
-				<Typography size="xl" weight="bold">
-					{t('step5.title')}
-				</Typography>
-				<Typography className="text-muted-foreground">{t('step5.description')}</Typography>
+				<h2 className="text-3xl font-bold">{t('step5.title')}</h2>
+				<p className="text-muted-foreground">{t('step5.description')}</p>
 			</div>
 
 			<div className="flex justify-center">

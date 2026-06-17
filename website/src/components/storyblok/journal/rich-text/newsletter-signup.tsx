@@ -1,11 +1,12 @@
 'use client';
 
 import { Button } from '@/components/button';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
+import { Input } from '@/components/input';
 import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
 import type { CreateNewsletterSubscription } from '@/lib/services/sendgrid/types';
 import type { LanguageCode } from '@/lib/types/language';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormField, FormItem, FormMessage, Input } from '@socialincome/ui';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';

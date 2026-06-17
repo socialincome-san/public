@@ -1,0 +1,14 @@
+@layer utilities {
+	.bg-website-gradient {
+		background: repeating-linear-gradient(
+			330deg,
+			var(--gradient-background-from) 0px,
+			var(--gradient-background-to) 600px,
+			var(--gradient-background-from) 1200px
+		);
+	}
+
+	.bg-donation-modal-gradient {
+		background: linear-gradient(-17deg, var(--gradient-background-from) 19%, var(--gradient-background-to) 50%), white;
+	}
+}

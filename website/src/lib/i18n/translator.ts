@@ -1,4 +1,4 @@
-import { LanguageCode } from '@socialincome/website/src/lib/types/language';
+import { LanguageCode } from '@/lib/types/language';
 import i18next, { i18n } from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 
@@ -34,7 +34,7 @@ export class Translator {
 		await translator.instance
 			.use(
 				resourcesToBackend((lng: string, ns: string) => {
-					return import(`@socialincome/website/src/lib/i18n/locales/${lng}/${ns}.json`);
+					return import(`@/lib/i18n/locales/${lng}/${ns}.json`);
 				}),
 			)
 			.init({

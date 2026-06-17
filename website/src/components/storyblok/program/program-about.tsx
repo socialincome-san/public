@@ -2,7 +2,6 @@ import type { ProgramDetailData } from '@/components/storyblok/program/load-prog
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import Link from 'next/link';
 
 type DetailRow = {
@@ -23,7 +22,7 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region }: Pr
 
 	const durationMonths = dashboardStats?.programDurationInMonths ?? programDetails?.programDurationInMonths ?? undefined;
 	const localPartnerHref = programDetails?.localPartnerSlug
-		? `/${lang}/${region}/${NEW_WEBSITE_SLUG}/local-partners/${programDetails.localPartnerSlug}`
+		? `/${lang}/${region}/local-partners/${programDetails.localPartnerSlug}`
 		: undefined;
 
 	const details: DetailRow[] = [];

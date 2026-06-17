@@ -479,7 +479,7 @@ export class RecipientReadService extends BaseService {
 				return this.resultFail('Permission denied');
 			}
 
-			return this.resultOk(recipient as RecipientPayload);
+			return this.resultOk(recipient);
 		} catch (error) {
 			this.logger.error(error);
 

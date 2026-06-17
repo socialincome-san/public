@@ -12,7 +12,6 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
 import { cn } from '@/lib/utils/cn';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { ISbStoryData } from '@storyblok/js';
 import NextLink from 'next/link';
 
@@ -39,7 +38,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 				'lg:w-site-width lg:absolute lg:top-5 lg:h-14 lg:rounded-full lg:px-2 lg:shadow-[0_0_28px_rgba(0,0,0,0.05)]',
 			)}
 		>
-			<NextLink href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}`} className="text-accent-foreground lg:ml-4">
+			<NextLink href={`/${lang}/${region}`} className="text-accent-foreground lg:ml-4">
 				<SocialIncomeLogo />
 			</NextLink>
 

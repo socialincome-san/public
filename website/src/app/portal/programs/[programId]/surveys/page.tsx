@@ -1,4 +1,4 @@
-import { ImpactMeasurementView } from '@/app/[lang]/[region]/new-website/programs/impact-measurement/view';
+import { ImpactMeasurementView } from '@/app/[lang]/[region]/programs/impact-measurement/view';
 import { Card } from '@/components/card';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';

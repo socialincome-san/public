@@ -5,6 +5,7 @@ import { ActionButtonBlock } from '@/components/storyblok/journal/rich-text/acti
 import { EmbeddedVideoPlayer } from '@/components/storyblok/journal/rich-text/embedded-video';
 import { ImageWithCaption } from '@/components/storyblok/journal/rich-text/image-with-caption';
 import { NewsletterSignup, type NewsletterSignupLabels } from '@/components/storyblok/journal/rich-text/newsletter-signup';
+import { QuotedText } from '@/components/storyblok/journal/rich-text/quoted-text';
 import { ReferencesGroupBlock } from '@/components/storyblok/journal/rich-text/references-group';
 import {
 	storyblokRichTextMarkResolvers,
@@ -13,7 +14,6 @@ import {
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { QuotedText } from '@socialincome/ui';
 import { ComponentProps, ReactNode } from 'react';
 import { render, type StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 

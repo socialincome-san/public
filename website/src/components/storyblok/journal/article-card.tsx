@@ -1,7 +1,7 @@
 import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
 import {
-	createNewWebsiteJournalArticleLink,
-	createNewWebsiteJournalPath,
+	createWebsiteJournalArticleLink,
+	createWebsiteJournalPath,
 	formatStoryblokDate,
 	formatStoryblokUrl,
 	getArticleTitle,
@@ -33,8 +33,8 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid' }: 
 	const { content } = article;
 	const author = content.author;
 	const href = article.slug
-		? createNewWebsiteJournalArticleLink(article.slug, lang, region)
-		: createNewWebsiteJournalPath(lang, region);
+		? createWebsiteJournalArticleLink(article.slug, lang, region)
+		: createWebsiteJournalPath(lang, region);
 
 	const imageWidth = variant === 'secondary' ? SECONDARY_IMAGE_WIDTH : GRID_IMAGE_WIDTH;
 	const imageHeight = variant === 'secondary' ? SECONDARY_IMAGE_HEIGHT : GRID_IMAGE_HEIGHT;

@@ -2,11 +2,10 @@ import type { Article, ArticleType, Person, Tag } from '@/generated/storyblok/ty
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import {
-	getNewWebsitePublicPath,
 	getWebsitePathTailFromStoryblokSlug,
+	getWebsitePublicPath,
 	WEBSITE_PERSON_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import { Metadata } from 'next';
@@ -112,7 +111,7 @@ const formatStoryblokUrlDirect = (url: string, width: number, height: number, fo
  * Storyblok returns date fields in the following format "yyyy-MM-dd HH:mm" without timezone.
  * Nevertheless, the fields `first_published_at` and 'published_at' are returned in proper ISO8601 format.
  */
-export const toDateObject = (date: string, lang: string) => {
+const toDateObject = (date: string, lang: string) => {
 	let dateObject = DateTime.fromISO(date).setLocale(lang);
 	if (!dateObject.isValid) {
 		dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' }).setLocale(lang);
@@ -147,32 +146,25 @@ const formatStoryblokDateToIso = (date: string | null | undefined) => {
 
 // ==================== URL Utilities ====================
 
-/**
- * Build a path under /{lang}/{region}/new-website/…
- */
-const createNewWebsitePath = (lang: string, region: string, ...segments: string[]) =>
-	`/${lang}/${region}/${NEW_WEBSITE_SLUG}/${segments.join('/')}`;
+const createWebsitePath = (lang: string, region: string, ...segments: string[]) => {
+	const pathTail = segments.join('/');
 
-export const createNewWebsiteJournalPath = (lang: string, region: string) => createNewWebsitePath(lang, region, 'journal');
-
-export const createNewWebsiteJournalArticleLink = (slug: string, lang: string, region: string) =>
-	createNewWebsitePath(lang, region, 'journal', slug);
-
-export const createNewWebsiteJournalTagLink = (tagSlug: string, lang: string, region: string) =>
-	`${createNewWebsiteJournalPath(lang, region)}?tag=${encodeURIComponent(tagSlug)}`;
-
-export const createNewWebsitePersonLink = (slug: string, lang: string, region: string) =>
-	createNewWebsitePath(lang, region, WEBSITE_PERSON_PATH_SEGMENT, slug);
-
-export const createNewWebsiteJournalArticleCanonicalUrl = (slug: string, lang: string) =>
-	`https://socialincome.org/${lang}/${NEW_WEBSITE_SLUG}/journal/${slug}`;
-
-/**
- * Create a link URL for a journal article on the legacy website.
- */
-export const createLinkForArticle = (slug: string, lang: string, region: string) => {
-	return `/${lang}/${region}/journal/${slug}`;
+	return `/${lang}/${region}${pathTail ? `/${pathTail}` : ''}`;
 };
+
+export const createWebsiteJournalPath = (lang: string, region: string) => createWebsitePath(lang, region, 'journal');
+
+export const createWebsiteJournalArticleLink = (slug: string, lang: string, region: string) =>
+	createWebsitePath(lang, region, 'journal', slug);
+
+export const createWebsiteJournalTagLink = (tagSlug: string, lang: string, region: string) =>
+	`${createWebsiteJournalPath(lang, region)}?tag=${encodeURIComponent(tagSlug)}`;
+
+export const createWebsitePersonLink = (slug: string, lang: string, region: string) =>
+	createWebsitePath(lang, region, WEBSITE_PERSON_PATH_SEGMENT, slug);
+
+export const createWebsiteJournalArticleCanonicalUrl = (slug: string, lang: string) =>
+	`https://socialincome.org/${lang}/journal/${slug}`;
 
 /**
  * Resolve a StoryblokMultilink to a URL string.
@@ -188,7 +180,7 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
 	}
 
 	if (link.linktype === 'story') {
-		// cached_url is the Storyblok full_slug, e.g. "new-website/pages/about"
+		// cached_url is the Storyblok full_slug, e.g. "pages/about"
 		const cachedUrlRaw = link.cached_url?.trim() ?? '';
 
 		if (!cachedUrlRaw) {
@@ -203,7 +195,7 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
 
 		const websitePathTail = getWebsitePathTailFromStoryblokSlug(cachedUrlWithoutLangPrefix);
 
-		return getNewWebsitePublicPath(lang, region, websitePathTail);
+		return getWebsitePublicPath(lang, region, websitePathTail);
 	}
 
 	return '#';

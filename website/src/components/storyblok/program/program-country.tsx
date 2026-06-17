@@ -6,7 +6,6 @@ import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 type Props = {
 	countryIsoCode: string;
@@ -29,7 +28,7 @@ export const ProgramCountry = async ({ countryIsoCode, lang, region, translator 
 			: countryIsoCode;
 	const description = countryResult.success ? getCountryDescription(countryResult.data.content) : undefined;
 	const countryHref = countryResult.success
-		? `/${lang}/${region}/${NEW_WEBSITE_SLUG}/countries/${getCountrySlug(countryResult.data)}`
+		? `/${lang}/${region}/countries/${getCountrySlug(countryResult.data)}`
 		: undefined;
 
 	return (

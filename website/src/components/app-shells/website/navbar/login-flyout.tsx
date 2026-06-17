@@ -8,7 +8,6 @@ import { Label } from '@/components/label';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 import { UserRound } from 'lucide-react';
@@ -50,7 +49,7 @@ export const LoginFlyout = ({ lang }: Props) => {
 			localStorage.setItem('loginEmail', email);
 
 			const actionCodeSettings = {
-				url: `${window.location.origin}/${NEW_WEBSITE_SLUG}/auth/confirm-login`,
+				url: `${window.location.origin}/auth/confirm-login`,
 				handleCodeInApp: true,
 			};
 

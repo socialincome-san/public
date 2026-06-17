@@ -1,12 +1,12 @@
 import {
 	CAMEL_CASE_BOUNDARY_REGEX,
+	CONFIRM_LOGIN_PATH_REGEX,
 	CSV_DOUBLE_QUOTES_REGEX,
 	CSV_NEEDS_QUOTES_REGEX,
 	DATA_TABLE_FETCH_PREFIX_REGEX,
 	E164_OPTIONAL_PHONE_REGEX,
 	EMAIL_REGEX,
 	LEADING_TRAILING_DASHES_REGEX,
-	NEW_WEBSITE_CONFIRM_LOGIN_PATH_REGEX,
 	NON_ALPHANUMERIC_DASH_REGEX,
 	SLUG_REGEX,
 	START_CHARACTER_REGEX,
@@ -18,7 +18,7 @@ import {
 	WHITESPACE_REGEX,
 	WHITESPACE_SPLIT_REGEX,
 	makeLanguagePrefixRegex,
-	makeNewWebsiteSlugPrefixRegex,
+	makeSlugPrefixRegex,
 } from './regex';
 
 describe('regex utils', () => {
@@ -99,9 +99,9 @@ describe('regex utils', () => {
 		expect(WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX.test('/en/int/login')).toBe(false);
 	});
 
-	test('NEW_WEBSITE_CONFIRM_LOGIN_PATH_REGEX matches new website confirm path', () => {
-		expect(NEW_WEBSITE_CONFIRM_LOGIN_PATH_REGEX.test('/en/int/new-website/auth/confirm-login')).toBe(true);
-		expect(NEW_WEBSITE_CONFIRM_LOGIN_PATH_REGEX.test('/en/int/new-website/auth/finish-login')).toBe(false);
+	test('WEBSITE_CONFIRM_LOGIN_PATH_REGEX matches confirm-login path', () => {
+		expect(CONFIRM_LOGIN_PATH_REGEX.test('/en/int/auth/confirm-login')).toBe(true);
+		expect(CONFIRM_LOGIN_PATH_REGEX.test('/en/int/auth/finish-login')).toBe(false);
 	});
 
 	test('makeLanguagePrefixRegex escapes language and removes prefix', () => {
@@ -109,8 +109,8 @@ describe('regex utils', () => {
 		expect('en/journal'.replace(regex, '')).toBe('journal');
 	});
 
-	test('makeNewWebsiteSlugPrefixRegex escapes slug and removes prefix', () => {
-		const regex = makeNewWebsiteSlugPrefixRegex('new-website');
-		expect('new-website/about'.replace(regex, '')).toBe('about');
+	test('makeSlugPrefixRegex escapes slug and removes prefix', () => {
+		const regex = makeSlugPrefixRegex('prefix');
+		expect('prefix/about'.replace(regex, '')).toBe('about');
 	});
 });

@@ -1,19 +1,18 @@
 import { mainWebsiteLanguages, websiteRegions } from '@/lib/i18n/utils';
 import {
 	getHomeStoryPath,
-	getNewWebsiteRelativePathFromStoryblokSlug,
 	getWebsitePathTailFromStoryblokSlug,
-	isRoutableNewWebsiteStoryblokSlug,
+	getWebsiteRelativePathFromStoryblokSlug,
+	isRoutableWebsiteStoryblokSlug,
 	STORYBLOK_LAYOUT_PATH,
 	WEBSITE_JOURNAL_PATH_SEGMENT,
 	WEBSITE_PERSON_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 /**
  * Paths (without `/{lang}/{region}` prefix) that should be revalidated on any Storyblok webhook.
  */
-const aggregateRelativePaths = ['/new-website', '/new-website/journal', '/journal', '/impact-measurement'] as const;
+const aggregateRelativePaths = ['/', '/journal', '/impact-measurement'] as const;
 
 const STORYBLOK_SLUGS_WITHOUT_PUBLIC_PAGE = new Set([getHomeStoryPath(), STORYBLOK_LAYOUT_PATH]);
 
@@ -33,16 +32,16 @@ const relativePathForSlug = (fullSlug: string): string | null => {
 		return `/${websitePathTail}`;
 	}
 
-	if (!isRoutableNewWebsiteStoryblokSlug(fullSlug)) {
+	if (!isRoutableWebsiteStoryblokSlug(fullSlug)) {
 		return null;
 	}
 
-	return getNewWebsiteRelativePathFromStoryblokSlug(fullSlug);
+	return getWebsiteRelativePathFromStoryblokSlug(fullSlug);
 };
 
 /**
  * Returns the sorted list of absolute Next.js paths to revalidate when a Storyblok story changes.
- * Always includes aggregate pages (new-website home, journal index, impact-measurement) across all locales,
+ * Always includes aggregate pages (home, journal index, impact-measurement) across all locales,
  * plus the story's own path across all locales when the slug maps to a known route, plus `/sitemap.xml`.
  */
 export const pathsForStory = (fullSlug: string | undefined | null): string[] => {
@@ -51,26 +50,18 @@ export const pathsForStory = (fullSlug: string | undefined | null): string[] => 
 	const storyPath = slug ? relativePathForSlug(slug) : null;
 	if (storyPath) {
 		relativePaths.add(storyPath);
-		if (storyPath.startsWith('/journal/tag/')) {
-			relativePaths.add('/new-website/journal');
-		} else if (storyPath.startsWith('/journal')) {
-			relativePaths.add(storyPath.replace('/journal', '/new-website/journal'));
-		}
-		if (storyPath.startsWith('/person/')) {
-			relativePaths.add(storyPath.replace('/person/', '/new-website/person/'));
-		}
 	}
 
 	const paths = new Set<string>();
 	for (const relativePath of relativePaths) {
 		for (const lang of mainWebsiteLanguages) {
 			for (const region of websiteRegions) {
-				paths.add(`/${lang}/${region}${relativePath}`);
+				const normalizedRelativePath = relativePath === '/' ? '' : relativePath;
+				paths.add(`/${lang}/${region}${normalizedRelativePath}`);
 			}
 		}
 	}
 	paths.add('/sitemap.xml');
-	paths.add(`/${NEW_WEBSITE_SLUG}/sitemap.xml`);
 
 	return [...paths].sort();
 };

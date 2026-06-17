@@ -1,7 +1,6 @@
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { ChevronRightIcon } from 'lucide-react';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
@@ -23,7 +22,7 @@ export const LocalPartnerTeaserCard = ({ localPartner, lang, region, viewDetails
 	const title = getLocalPartnerTitle(localPartner.content);
 	const description = getLocalPartnerDescription(localPartner.content);
 	const slug = getLocalPartnerSlug(localPartner);
-	const href = `/${lang}/${region}/${NEW_WEBSITE_SLUG}/local-partners/${slug}`;
+	const href = `/${lang}/${region}/local-partners/${slug}`;
 	const heroImage = localPartner.content.heroImage;
 	const imageSource = heroImage?.filename
 		? formatStoryblokUrl(heroImage.filename, CARD_IMAGE_WIDTH, CARD_IMAGE_HEIGHT, heroImage.focus)

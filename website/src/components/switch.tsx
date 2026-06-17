@@ -1,7 +1,7 @@
 'use client';
 
+import { cn } from '@/lib/utils/cn';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
-import { cn } from '@socialincome/ui';
 import * as React from 'react';
 
 const Switch = ({ className, ...props }: React.ComponentProps<typeof SwitchPrimitive.Root>) => {
@@ -13,7 +13,7 @@ const Switch = ({ className, ...props }: React.ComponentProps<typeof SwitchPrimi
 				'border border-transparent shadow-xs outline-hidden transition-all',
 				'focus-visible:ring-ring/50 focus-visible:ring-[3px]',
 				'disabled:cursor-not-allowed disabled:opacity-50',
-				'bg-input dark:bg-input/80',
+				'bg-input',
 				className,
 			)}
 			// eslint-disable-next-line react/forbid-component-props

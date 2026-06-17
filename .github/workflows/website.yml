@@ -8,9 +8,9 @@ on:
   push:
     branches:
       - main
+      - develop
     paths-ignore:
       - "recipients_app/**"
-
 jobs:
   safe-chain:
     name: "🔒 Safe Chain Dependency Check"
@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
+          cache-dependency-path: website/package-lock.json
 
       - name: Install Safe Chain (CI)
         run: |
@@ -32,6 +33,7 @@ jobs:
           echo "$HOME/.safe-chain/bin" >> $GITHUB_PATH
 
       - name: Install dependencies (protected by Safe Chain)
+        working-directory: website
         run: npm ci --no-audit --no-fund
 
   lint:
@@ -43,8 +45,11 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run website:lint
+          cache-dependency-path: website/package-lock.json
+      - working-directory: website
+        run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run lint
 
   check-unused:
     name: "✂️ Check unused Code"
@@ -55,8 +60,11 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run website:check:unused
+          cache-dependency-path: website/package-lock.json
+      - working-directory: website
+        run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run check:unused
 
   typecheck:
     name: "🔍 Type Check"
@@ -67,9 +75,11 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run website:build-paths
-      - run: npm run typecheck
+          cache-dependency-path: website/package-lock.json
+      - working-directory: website
+        run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run typecheck
 
   unit-test:
     name: "🧪 Unit Tests"
@@ -80,8 +90,11 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run website:test:unit
+          cache-dependency-path: website/package-lock.json
+      - working-directory: website
+        run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run test:unit
 
   terraform:
     name: "📐 Terraform Validation"

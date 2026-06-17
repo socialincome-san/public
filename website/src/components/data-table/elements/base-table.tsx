@@ -4,7 +4,7 @@ import { Button } from '@/components/button';
 import { TABLE_PAGE_SIZE_OPTIONS } from '@/components/data-table/query-state';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 import {
 	ColumnDef,
 	flexRender,
@@ -62,6 +62,9 @@ export const BaseTable = <TData, TValue>({
 	const resolvedColumnVisibility = columnVisibility ?? internalColumnVisibility;
 	const resolvedSorting = isServerSorting ? activeServerSorting.sorting : sorting;
 
+	// TanStack Table's `useReactTable()` returns functions that React Compiler can warn about.
+	// We keep the call here and silence the specific rule to avoid false positives.
+	// eslint-disable-next-line react-hooks/incompatible-library
 	const table = useReactTable({
 		data,
 		columns,

@@ -3,7 +3,7 @@
 import * as SeparatorPrimitive from '@radix-ui/react-separator';
 import * as React from 'react';
 
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 
 export const Separator = ({
 	className,

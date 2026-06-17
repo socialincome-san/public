@@ -16,9 +16,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { cn } from '@/lib/utils/cn';
 import { DATA_TABLE_FETCH_PREFIX_REGEX } from '@/lib/utils/regex';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
-import { cn } from '@socialincome/ui';
 import type { ColumnDef, SortingState, VisibilityState } from '@tanstack/react-table';
 import { functionalUpdate } from '@tanstack/react-table';
 import DOMPurify from 'isomorphic-dompurify';
@@ -114,13 +114,13 @@ export default function DataTable<Row>({
 	const activeQuery = query ?? null;
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
 		showEntityIdColumn
-			? ({
+			? {
 					id: false,
 					firebaseAuthUserId: false,
-				} as VisibilityState)
-			: ({
+				}
+			: {
 					firebaseAuthUserId: false,
-				} as VisibilityState),
+				},
 	);
 	const displayedData = data;
 	const isDatasetEmpty = activeQuery ? activeQuery.totalRows === 0 : data.length === 0;

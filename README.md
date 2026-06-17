@@ -8,9 +8,9 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 
 ### ![SDG Icon](https://i.imgur.com/LHoR8Et.png) [SDG 1](https://sdgs.un.org/goals/goal1) &nbsp;&nbsp; ![SDG Icon](https://i.imgur.com/LHoR8Et.png) [SDG 10](https://sdgs.un.org/goals/goal10)
 
-# Social Income – Monorepo Overview
+# Social Income – Repository Overview
 
-Welcome to the **Social Income monorepo**.
+Welcome to the **Social Income repository**.
 
 ---
 
@@ -21,7 +21,6 @@ Welcome to the **Social Income monorepo**.
 ├─ recipients_app/        → Mobile app for recipients
 ├─ recipients_selection/  → Verifiable draw process for selecting recipients
 ├─ seed/                  → Firebase emulator seed data
-├─ ui/                    → Legacy Storybook component library
 └─ website/               → Next.js (public site, portal, dashboard, infra, backend services)
 ```
 
@@ -77,20 +76,6 @@ npm run db:seed
 
 This populates the local PostgreSQL instance with representative example
 data.
-
----
-
-# 🎨 ui (Storybook Components)
-
-Legacy UI component package using:
-
-- Tailwind CSS
-- shadcn/ui
-
-📘 Storybook preview: **http://design.socialincome.org**
-
-The long‑term plan is to phase this out and maintain all components
-inside `/website`.
 
 ---
 
@@ -211,6 +196,9 @@ We use:
 - **Node.js + npm**
 - **Terraform** (infra work only)
 
+All Node-related tooling for the web app is scoped to the `website/`
+folder (dependencies, `mise.toml`, formatting config, etc.).
+
 ---
 
 ## 1. Install mise
@@ -224,6 +212,7 @@ brew install mise
 ## 2. Install all required tool versions
 
 ```
+cd website
 mise install
 ```
 
@@ -244,6 +233,7 @@ Edit values as necessary.
 ## 4. Start the complete local dev environment
 
 ```
+cd website
 mise dev
 ```
 
@@ -344,13 +334,20 @@ import type { Page } from '@storyblok/types/{SPACE_ID}/storyblok-components';
 
 ```
 rm -rf website/.next
+cd website
 mise dev
 ```
 
 ### Firebase seed not updating?
 
+The Firebase emulators load seed data from `seed/` (see the `--import ../seed`
+flags in `website/package.json`). If you changed the seed data and want a fresh
+start:
+
 ```
-npm run firebase:export
+docker compose -f website/docker-compose.yml down --remove-orphans --volumes
+cd website
+mise dev
 ```
 
 ### Docker environment “stuck” (migrations, leftover containers, weird DB state)?
