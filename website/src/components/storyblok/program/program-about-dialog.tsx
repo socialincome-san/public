@@ -72,7 +72,7 @@ const OverlaySection = ({
 	showLaunchButton: boolean;
 }) => (
 	<div>
-		<div className="border-border border-b pb-2 pt-8 first:pt-6">
+		<div className="border-border border-b pt-8 pb-2 first:pt-6">
 			<h3 className="font-bold">{section.title}</h3>
 		</div>
 		<OverlayDetailRows rows={section.rows} />

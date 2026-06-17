@@ -1,7 +1,4 @@
-import {
-	getCountryNameFromIsoCode,
-	type ResolvedProgramCountry,
-} from '@/components/storyblok/country/resolve-country-name';
+import { getCountryNameFromIsoCode, type ResolvedProgramCountry } from '@/components/storyblok/country/resolve-country-name';
 import { buildProgramAboutContent } from '@/components/storyblok/program/build-program-about-content';
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramAboutDialog } from '@/components/storyblok/program/program-about-dialog';

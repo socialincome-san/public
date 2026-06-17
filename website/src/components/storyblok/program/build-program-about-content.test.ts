@@ -1,6 +1,6 @@
+import type { TranslateFunction } from '../../../lib/i18n/translator';
 import { buildProgramAboutContent } from './build-program-about-content';
 import type { ProgramDetailData } from './load-program-detail-data';
-import type { TranslateFunction } from '../../../lib/i18n/translator';
 
 const translator = {
 	t: ((key: string) => key) as TranslateFunction,

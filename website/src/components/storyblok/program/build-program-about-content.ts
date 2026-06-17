@@ -157,7 +157,9 @@ const programDesignRowsToOverlayArray = (programDesignRows: ProgramDesignRows): 
 
 const deriveCardRows = (partyRowsByRole: PartyRowsByRole, programDesignRows: ProgramDesignRows): ProgramAboutDetailRow[] => [
 	...partyRowsToOrderedArray(partyRowsByRole, CARD_PARTY_ORDER),
-	...[programDesignRows.duration, programDesignRows.startDate].filter((row): row is ProgramAboutDetailRow => row !== undefined),
+	...[programDesignRows.duration, programDesignRows.startDate].filter(
+		(row): row is ProgramAboutDetailRow => row !== undefined,
+	),
 ];
 
 export const buildProgramAboutContent = ({
