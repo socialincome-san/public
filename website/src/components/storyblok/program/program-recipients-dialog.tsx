@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/d
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import { ProgramRecipientsTable } from '@/components/storyblok/program/program-recipients-table';
 import { getPublicRecipientsTableAction } from '@/lib/server-actions/program-detail-public-actions';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import type { PublicRecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { X } from 'lucide-react';
 import Link from 'next/link';
@@ -25,6 +26,7 @@ export const ProgramRecipientsDialog = ({
 	manageHref,
 	programId,
 }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'website-common' });
 	const [isOpen, setIsOpen] = useState(false);
 	const [rows, setRows] = useState<PublicRecipientTableViewRow[] | null>(null);
 	const [totalCount, setTotalCount] = useState<number | null>(null);
@@ -89,7 +91,7 @@ export const ProgramRecipientsDialog = ({
 								variant="ghost"
 								className="size-8 rounded-full"
 								onClick={() => setIsOpen(false)}
-								aria-label="Close"
+								aria-label={t('program-detail-page.close')}
 							>
 								<X aria-hidden="true" />
 							</Button>
@@ -98,10 +100,10 @@ export const ProgramRecipientsDialog = ({
 
 					<div className="min-w-0 overflow-y-auto px-12 pt-8 pb-12">
 						{isLoading ? (
-							<p className="text-muted-foreground text-sm">Loading...</p>
+							<p className="text-muted-foreground text-sm">{t('program-detail-page.loading')}</p>
 						) : error ? (
 							<div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
-								<p className="font-medium">Could not load recipients.</p>
+								<p className="font-medium">{t('program-detail-page.load-recipients-error')}</p>
 								<p className="mt-1 text-sm">{error}</p>
 							</div>
 						) : rows && totalCount !== null ? (

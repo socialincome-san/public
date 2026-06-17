@@ -39,6 +39,7 @@ type BaseTableProps<TData, TValue> = {
 		onSortingChange: (sorting: SortingState) => void;
 	};
 	compact?: boolean;
+	emptyMessage?: string;
 };
 
 export const BaseTable = <TData, TValue>({
@@ -53,6 +54,7 @@ export const BaseTable = <TData, TValue>({
 	serverPagination,
 	serverSorting,
 	compact = false,
+	emptyMessage = 'No results.',
 }: BaseTableProps<TData, TValue>) => {
 	const stableTableMinHeightClass = compact ? undefined : 'min-h-[680px] md:min-h-[760px]';
 	const [sorting, setSorting] = useState<SortingState>(initialSorting);
@@ -170,7 +172,7 @@ export const BaseTable = <TData, TValue>({
 						) : (
 							<TableRow className="h-16">
 								<TableCell colSpan={columns.length} className="border-b text-center">
-									No results.
+									{emptyMessage}
 								</TableCell>
 							</TableRow>
 						)}

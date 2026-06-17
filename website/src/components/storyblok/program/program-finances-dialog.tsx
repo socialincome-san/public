@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/d
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import { ProgramPayoutForecastTable } from '@/components/storyblok/program/program-payout-forecast-table';
 import { getPublicPayoutForecastTableAction } from '@/lib/server-actions/program-detail-public-actions';
+import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import type { PayoutForecastTableViewRow } from '@/lib/services/payout/payout.types';
 import { X } from 'lucide-react';
 import Link from 'next/link';
@@ -29,6 +30,7 @@ export const ProgramFinancesDialog = ({
 	financesCard,
 	programId,
 }: Props) => {
+	const { t } = useRouteTranslator({ namespace: 'website-common' });
 	const [isOpen, setIsOpen] = useState(false);
 	const [rows, setRows] = useState<PayoutForecastTableViewRow[] | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
@@ -90,7 +92,7 @@ export const ProgramFinancesDialog = ({
 								variant="ghost"
 								className="size-8 rounded-full"
 								onClick={() => setIsOpen(false)}
-								aria-label="Close"
+								aria-label={t('program-detail-page.close')}
 							>
 								<X aria-hidden="true" />
 							</Button>
@@ -100,10 +102,10 @@ export const ProgramFinancesDialog = ({
 					<div className="flex flex-col gap-8 overflow-y-auto px-12 pt-8 pb-12">
 						{financesCard}
 						{isLoading ? (
-							<p className="text-muted-foreground text-sm">Loading...</p>
+							<p className="text-muted-foreground text-sm">{t('program-detail-page.loading')}</p>
 						) : error ? (
 							<div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
-								<p className="font-medium">Could not load payout forecast.</p>
+								<p className="font-medium">{t('program-detail-page.load-payout-forecast-error')}</p>
 								<p className="mt-1 text-sm">{error}</p>
 							</div>
 						) : rows ? (

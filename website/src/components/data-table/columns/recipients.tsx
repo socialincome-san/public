@@ -13,14 +13,20 @@ import type { Translator } from '@/lib/i18n/translator';
 import type { PublicRecipientTableViewRow, RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
+const columnLabel = (
+	localizeLabels: boolean,
+	translator: Translator | undefined,
+	key: string,
+	fallback: string,
+) => (localizeLabels && translator ? translator.t(`program-detail-page.${key}`) : fallback);
+
 export const makeRecipientColumns = (
 	hideProgramName = false,
 	hideLocalPartner = false,
 	translator?: Translator,
 	readOnly = false,
+	localizeLabels = false,
 ): ColumnDef<RecipientTableViewRow>[] => {
-	void translator;
-
 	const columns: ColumnDef<RecipientTableViewRow>[] = [
 		{
 			accessorKey: 'firebaseAuthUserId',
@@ -30,19 +36,25 @@ export const makeRecipientColumns = (
 		{
 			id: 'recipient',
 			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
-			header: (ctx) => <SortableHeader ctx={ctx}>Recipient</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'column-recipient', 'Recipient')}</SortableHeader>
+			),
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
 			id: 'country',
 			accessorFn: (row) => row.country ?? '',
-			header: (ctx) => <SortableHeader ctx={ctx}>Country</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'country', 'Country')}</SortableHeader>
+			),
 			cell: ({ row }) => <CountryFlagCell country={row.original.country} />,
 		},
 		{
 			id: 'status',
 			accessorFn: (row) => row.status,
-			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'column-status', 'Status')}</SortableHeader>
+			),
 			cell: (ctx) => <StatusCell ctx={ctx} variant="recipient" />,
 		},
 		{
@@ -52,7 +64,9 @@ export const makeRecipientColumns = (
 		},
 		{
 			accessorKey: 'dateOfBirth',
-			header: (ctx) => <SortableHeader ctx={ctx}>Age</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'column-age', 'Age')}</SortableHeader>
+			),
 			cell: (ctx) => <AgeCell ctx={ctx} />,
 		},
 	];
@@ -60,7 +74,11 @@ export const makeRecipientColumns = (
 	if (!hideLocalPartner) {
 		columns.push({
 			accessorKey: 'localPartnerName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Local Partner</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx}>
+					{columnLabel(localizeLabels, translator, 'column-local-partner', 'Local Partner')}
+				</SortableHeader>
+			),
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		});
 	}
@@ -68,7 +86,9 @@ export const makeRecipientColumns = (
 	if (!hideProgramName) {
 		columns.push({
 			accessorKey: 'programName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'column-program', 'Program')}</SortableHeader>
+			),
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		});
 	}
@@ -76,17 +96,23 @@ export const makeRecipientColumns = (
 	columns.push(
 		{
 			accessorKey: 'startDate',
-			header: (ctx) => <SortableHeader ctx={ctx}>Start date</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'start-date', 'Start date')}</SortableHeader>
+			),
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 		{
 			accessorKey: 'payoutsProgressPercent',
-			header: (ctx) => <SortableHeader ctx={ctx}>Progress</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'column-progress', 'Progress')}</SortableHeader>
+			),
 			cell: (ctx) => <ProgressCell ctx={ctx} />,
 		},
 		{
 			accessorKey: 'createdAt',
-			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'column-created', 'Created')}</SortableHeader>
+			),
 			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 	);
@@ -103,8 +129,8 @@ export const makeRecipientColumns = (
 	return columns;
 };
 
-export const makePublicRecipientColumns = (): ColumnDef<PublicRecipientTableViewRow>[] =>
-	makeRecipientColumns(true, false, undefined, true).filter((column) => {
+export const makePublicRecipientColumns = (translator?: Translator): ColumnDef<PublicRecipientTableViewRow>[] =>
+	makeRecipientColumns(true, false, translator, true, true).filter((column) => {
 		if (!('accessorKey' in column)) {
 			return true;
 		}
