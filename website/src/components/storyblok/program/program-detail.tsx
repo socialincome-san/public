@@ -66,7 +66,13 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
 					<div className="flex flex-col gap-7">
 						{programDetailData.dashboardStats ? (
-							<ProgramFinances stats={programDetailData.dashboardStats} translator={translator} lang={lang} />
+							<ProgramFinances
+								stats={programDetailData.dashboardStats}
+								payoutForecast={programDetailData.payoutForecast}
+								programId={programDetailData.programId}
+								translator={translator}
+								lang={lang}
+							/>
 						) : null}
 						<ProgramAbout
 							programDetailData={programDetailData}

@@ -4,12 +4,15 @@ import { payoutForecastTableConfig } from '@/components/data-table/configs/payou
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
+import {
+	PAYOUT_FORECAST_INFO_TOOLTIP,
+	PAYOUT_FORECAST_MONTHS_AHEAD,
+} from '@/lib/services/payout/payout-forecast.constants';
 import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { Suspense } from 'react';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
-const MONTHS_AHEAD = 6;
 
 export default function FinancesPageProgramScoped({ params, searchParams }: Props) {
 	return (
@@ -27,7 +30,12 @@ const FinancesProgramScopedDataLoader = async ({ params, searchParams }: Props) 
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const result = await services.read.payout.getPaginatedForecastTableView(user.id, programId, MONTHS_AHEAD, tableQuery);
+	const result = await services.read.payout.getPaginatedForecastTableView(
+		user.id,
+		programId,
+		PAYOUT_FORECAST_MONTHS_AHEAD,
+		tableQuery,
+	);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];
@@ -36,7 +44,7 @@ const FinancesProgramScopedDataLoader = async ({ params, searchParams }: Props) 
 	return (
 		<ConfiguredDataTableClient
 			config={payoutForecastTableConfig}
-			titleInfoTooltip="Forecast is calculated from currently eligible recipients, remaining payout duration, and latest exchange rates."
+			titleInfoTooltip={PAYOUT_FORECAST_INFO_TOOLTIP}
 			rows={rows}
 			error={error}
 			query={{ ...tableQuery, totalRows }}

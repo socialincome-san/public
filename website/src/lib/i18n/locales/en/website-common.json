@@ -178,6 +178,10 @@
 	"program-detail-page": {
 		"view-details": "View details",
 		"view-breakdown": "View breakdown",
+		"program-finances-title": "Program Finances",
+		"login-to-manage": "Login to Manage",
+		"manage": "Manage",
+		"payout-forecast-info": "Forecast is calculated from currently eligible recipients, remaining payout duration, and latest exchange rates.",
 		"sent-to-recipients": "Sent to recipients to date",
 		"total-program-costs": "Total program costs",
 		"available-credits": "Available credits",

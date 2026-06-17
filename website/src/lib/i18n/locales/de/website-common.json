@@ -178,6 +178,10 @@
 	"program-detail-page": {
 		"view-details": "Details anzeigen",
 		"view-breakdown": "Aufschlüsselung anzeigen",
+		"program-finances-title": "Programmfinanzen",
+		"login-to-manage": "Zum Verwalten anmelden",
+		"manage": "Verwalten",
+		"payout-forecast-info": "Die Prognose basiert auf derzeit berechtigten Empfänger:innen, verbleibender Auszahlungsdauer und aktuellen Wechselkursen.",
 		"sent-to-recipients": "Bisher an Empfänger:innen ausbezahlt",
 		"total-program-costs": "Gesamte Programmkosten",
 		"available-credits": "Verfügbare Guthaben",

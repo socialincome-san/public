@@ -178,6 +178,10 @@
 	"program-detail-page": {
 		"view-details": "Voir les détails",
 		"view-breakdown": "Voir le détail",
+		"program-finances-title": "Finances du programme",
+		"login-to-manage": "Se connecter pour gérer",
+		"manage": "Gérer",
+		"payout-forecast-info": "La prévision est calculée à partir des bénéficiaires actuellement éligibles, de la durée de versement restante et des derniers taux de change.",
 		"sent-to-recipients": "Versé aux bénéficiaires à ce jour",
 		"total-program-costs": "Coûts totaux du programme",
 		"available-credits": "Crédits disponibles",
