@@ -46,6 +46,4 @@ export const resolveProgramCountry = async (
 	}
 
 	return resolvedCountry;
-
-
 };
