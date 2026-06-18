@@ -1,4 +1,5 @@
 import { AccountMenu } from '@/components/app-shells/website/navbar/account-menu';
+import { LocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/locale-currency-switcher';
 import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout';
 import { MenuDesktop } from '@/components/app-shells/website/navbar/menu-desktop';
 import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
@@ -44,6 +45,9 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 			</div>
 
 			<div className="flex items-center gap-4">
+				<div className="hidden lg:block">
+					<LocaleCurrencySwitcher lang={lang} region={region} />
+				</div>
 				<div className="hidden lg:block">
 					{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
 				</div>
