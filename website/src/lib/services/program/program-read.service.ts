@@ -42,7 +42,6 @@ export class ProgramReadService extends BaseService {
 	];
 
 	private readonly publicProgramStatsSelect = {
-		id: true,
 		slug: true,
 		country: {
 			select: { isoCode: true, currency: true },
@@ -419,9 +418,7 @@ export class ProgramReadService extends BaseService {
 		programPortalSlugs: string[],
 	): Promise<ServiceResult<PublicProgramStatsMap>> {
 		try {
-			const normalizedProgramPortalSlugs = [
-				...new Set(programPortalSlugs.map((programPortalSlug) => programPortalSlug.trim()).filter(Boolean)),
-			];
+			const normalizedProgramPortalSlugs = this.normalizeProgramPortalSlugs(programPortalSlugs);
 			if (!normalizedProgramPortalSlugs.length) {
 				return this.resultOk({});
 			}
