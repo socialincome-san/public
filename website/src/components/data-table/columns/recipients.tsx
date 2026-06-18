@@ -98,10 +98,7 @@ const buildRecipientTailColumns = <TRow extends PublicRecipientTableViewRow>(
 	return columns;
 };
 
-const buildRecipientProgramColumn = (
-	translator?: Translator,
-	localizeLabels = false,
-): ColumnDef<RecipientTableViewRow> => ({
+const buildRecipientProgramColumn = (translator?: Translator, localizeLabels = false): ColumnDef<RecipientTableViewRow> => ({
 	accessorKey: 'programName',
 	header: (ctx) => (
 		<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'column-program', 'Program')}</SortableHeader>
