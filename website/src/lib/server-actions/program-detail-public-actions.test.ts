@@ -2,17 +2,17 @@ import type { ServiceResult } from '@/lib/services/core/base.types';
 import type { PayoutForecastTableView } from '@/lib/services/payout/payout.types';
 import type { PublicRecipientTableView } from '@/lib/services/recipient/recipient-table.types';
 
-const getPublicForecastTableView = jest.fn<Promise<ServiceResult<PayoutForecastTableView>>, [string, number]>();
-const getPublicRecipientsTableView = jest.fn<Promise<ServiceResult<PublicRecipientTableView>>, [string]>();
+const mockGetPublicForecastTableView = jest.fn<Promise<ServiceResult<PayoutForecastTableView>>, [string, number]>();
+const mockGetPublicRecipientsTableView = jest.fn<Promise<ServiceResult<PublicRecipientTableView>>, [string]>();
 
 jest.mock('@/lib/services/services', () => ({
 	services: {
 		read: {
 			payout: {
-				getPublicForecastTableView,
+				getPublicForecastTableView: mockGetPublicForecastTableView,
 			},
 			recipient: {
-				getPublicRecipientsTableView,
+				getPublicRecipientsTableView: mockGetPublicRecipientsTableView,
 			},
 		},
 	},
@@ -42,7 +42,7 @@ describe('program detail public actions', () => {
 			const result = await getPublicPayoutForecastTableAction('   ');
 
 			expectFailure(result, 'Invalid program id');
-			expect(getPublicForecastTableView).not.toHaveBeenCalled();
+			expect(mockGetPublicForecastTableView).not.toHaveBeenCalled();
 		});
 
 		test('delegates to payout read service with trimmed program id', async () => {
@@ -50,11 +50,11 @@ describe('program detail public actions', () => {
 				success: true,
 				data: { tableRows: [] },
 			};
-			getPublicForecastTableView.mockResolvedValue(forecastResult);
+			mockGetPublicForecastTableView.mockResolvedValue(forecastResult);
 
 			const result = await getPublicPayoutForecastTableAction('  program-1  ');
 
-			expect(getPublicForecastTableView).toHaveBeenCalledWith('program-1', PAYOUT_FORECAST_MONTHS_AHEAD);
+			expect(mockGetPublicForecastTableView).toHaveBeenCalledWith('program-1', PAYOUT_FORECAST_MONTHS_AHEAD);
 			expect(result).toEqual(forecastResult);
 		});
 	});
@@ -64,7 +64,7 @@ describe('program detail public actions', () => {
 			const result = await getPublicRecipientsTableAction(null as unknown as string);
 
 			expectFailure(result, 'Invalid program id');
-			expect(getPublicRecipientsTableView).not.toHaveBeenCalled();
+			expect(mockGetPublicRecipientsTableView).not.toHaveBeenCalled();
 		});
 
 		test('delegates to recipient read service with trimmed program id', async () => {
@@ -72,11 +72,11 @@ describe('program detail public actions', () => {
 				success: true,
 				data: { tableRows: [], totalCount: 0 },
 			};
-			getPublicRecipientsTableView.mockResolvedValue(recipientsResult);
+			mockGetPublicRecipientsTableView.mockResolvedValue(recipientsResult);
 
 			const result = await getPublicRecipientsTableAction(' program-2 ');
 
-			expect(getPublicRecipientsTableView).toHaveBeenCalledWith('program-2');
+			expect(mockGetPublicRecipientsTableView).toHaveBeenCalledWith('program-2');
 			expect(result).toEqual(recipientsResult);
 		});
 	});
