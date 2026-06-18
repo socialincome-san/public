@@ -7,12 +7,8 @@ import type { Translator } from '@/lib/i18n/translator';
 import type { PayoutForecastTableViewRow } from '@/lib/services/payout/payout.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-const columnLabel = (
-	localizeLabels: boolean,
-	translator: Translator | undefined,
-	key: string,
-	fallback: string,
-) => (localizeLabels && translator ? translator.t(`program-detail-page.${key}`) : fallback);
+const columnLabel = (localizeLabels: boolean, translator: Translator | undefined, key: string, fallback: string) =>
+	localizeLabels && translator ? translator.t(`program-detail-page.${key}`) : fallback;
 
 export const makePayoutForecastColumns = (
 	_hideProgramName?: boolean,
@@ -31,7 +27,9 @@ export const makePayoutForecastColumns = (
 		{
 			accessorKey: 'numberOfRecipients',
 			header: (ctx) => (
-				<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'column-recipients', 'Recipients')}</SortableHeader>
+				<SortableHeader ctx={ctx}>
+					{columnLabel(localizeLabels, translator, 'column-recipients', 'Recipients')}
+				</SortableHeader>
 			),
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},

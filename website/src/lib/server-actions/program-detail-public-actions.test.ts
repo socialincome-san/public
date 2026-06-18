@@ -2,10 +2,7 @@ import type { ServiceResult } from '@/lib/services/core/base.types';
 import type { PayoutForecastTableView } from '@/lib/services/payout/payout.types';
 import type { PublicRecipientTableView } from '@/lib/services/recipient/recipient-table.types';
 
-const getPublicForecastTableView = jest.fn<
-	Promise<ServiceResult<PayoutForecastTableView>>,
-	[string, number]
->();
+const getPublicForecastTableView = jest.fn<Promise<ServiceResult<PayoutForecastTableView>>, [string, number]>();
 const getPublicRecipientsTableView = jest.fn<Promise<ServiceResult<PublicRecipientTableView>>, [string]>();
 
 jest.mock('@/lib/services/services', () => ({

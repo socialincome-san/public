@@ -3,8 +3,8 @@
 import { Button } from '@/components/button';
 import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramPayoutForecastTable } from '@/components/storyblok/program/program-payout-forecast-table';
-import { getPublicPayoutForecastTableAction } from '@/lib/server-actions/program-detail-public-actions';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { getPublicPayoutForecastTableAction } from '@/lib/server-actions/program-detail-public-actions';
 import type { PayoutForecastTableViewRow } from '@/lib/services/payout/payout.types';
 import Link from 'next/link';
 import { type ReactNode, useEffect, useState } from 'react';

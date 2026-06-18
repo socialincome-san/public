@@ -3,8 +3,8 @@
 import { Button } from '@/components/button';
 import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramRecipientsTable } from '@/components/storyblok/program/program-recipients-table';
-import { getPublicRecipientsTableAction } from '@/lib/server-actions/program-detail-public-actions';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { getPublicRecipientsTableAction } from '@/lib/server-actions/program-detail-public-actions';
 import type { PublicRecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
