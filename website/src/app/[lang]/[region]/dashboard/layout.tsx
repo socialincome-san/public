@@ -1,4 +1,3 @@
-import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
@@ -10,7 +9,7 @@ import type { PropsWithChildren } from 'react';
 import { DefaultLayoutProps } from '..';
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
-	const { lang, region } = await params;
+	const { lang } = await params;
 	const sessions = await getSessionsOrRedirect();
 	if (!sessions.find((s) => s.type === 'contributor')) {
 		redirect('/login');
@@ -34,13 +33,13 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	];
 
 	return (
-		<WebsiteAppShell sessions={sessions} lang={lang as WebsiteLanguage} region={region} scope="dashboard">
+		<div className="w-site-width max-w-content mx-auto flex-1 pb-8">
 			<Breadcrumb links={breadcrumbLinks} />
 			<h1 data-testid="welcome-message-dashboard" className="py-8 text-5xl">
 				{translator.t('title.dashboard')}
 			</h1>
 			<TabNavigation sections={sections} />
 			<Card>{children}</Card>
-		</WebsiteAppShell>
+		</div>
 	);
 }

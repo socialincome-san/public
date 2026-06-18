@@ -169,6 +169,7 @@
 		"search-placeholder": "Suchen",
 		"all-countries": "Alle Länder ({{count}})",
 		"all-focuses": "Alle Schwerpunkte ({{count}})",
+		"view-all": "Alle {{count}} Programme anzeigen",
 		"campaign-singular": "Kampagne",
 		"campaign-plural": "Kampagnen",
 		"recipient-singular": "Empfänger:in",

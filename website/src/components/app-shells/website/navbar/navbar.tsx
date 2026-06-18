@@ -24,11 +24,8 @@ type Props = {
 
 export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 	const session = displaySession(sessions, scope);
-	const showWebsiteMenu = scope === 'website';
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate'] });
-	const result = showWebsiteMenu
-		? await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(STORYBLOK_LAYOUT_PATH, lang)
-		: null;
+	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(STORYBLOK_LAYOUT_PATH, lang);
 	const menu = result?.success ? result.data.content.menu : [];
 
 	return (
@@ -42,11 +39,9 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 				<SocialIncomeLogo />
 			</NextLink>
 
-			{showWebsiteMenu && (
-				<div className="hidden lg:block">
-					<MenuDesktop menu={menu} lang={lang} region={region} />
-				</div>
-			)}
+			<div className="hidden lg:block">
+				<MenuDesktop menu={menu} lang={lang} region={region} />
+			</div>
 
 			<div className="flex items-center gap-4">
 				<div className="hidden lg:block">
@@ -58,7 +53,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 						className="rounded-full px-5 text-sm font-semibold lg:h-11"
 					/>
 				)}
-				{showWebsiteMenu && <MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />}
+				<MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />
 			</div>
 		</nav>
 	);
