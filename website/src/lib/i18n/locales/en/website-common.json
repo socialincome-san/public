@@ -58,6 +58,16 @@
 		"title": "Menu",
 		"back": "Back"
 	},
+	"locale-currency-switcher": {
+		"aria-label": "Change language, region, and currency",
+		"language": "Language",
+		"region": "Region",
+		"currency": "Currency",
+		"regions": {
+			"int": "International",
+			"ch": "Switzerland"
+		}
+	},
 	"sdg": {
 		"sdg": "SDG",
 		"sdg1-title": "No Poverty",

@@ -5,6 +5,7 @@ import { CountryFlag } from '@/components/country-flag';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
 import { Tabs, TabsList, TabsTrigger } from '@/components/tabs';
 import { type CountryCode } from '@/generated/prisma/enums';
+import { useTranslator } from '@/lib/hooks/useTranslator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import {
 	mainWebsiteLanguages,
@@ -20,18 +21,6 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 const SWISS_COUNTRY_CODE: CountryCode = 'CH';
-
-const languageOptions: { value: WebsiteLanguage; label: string }[] = [
-	{ value: 'en', label: 'EN' },
-	{ value: 'de', label: 'DE' },
-	{ value: 'fr', label: 'FR' },
-	{ value: 'it', label: 'IT' },
-];
-
-const regionOptions: { value: WebsiteRegion; label: string }[] = [
-	{ value: 'int', label: 'International' },
-	{ value: 'ch', label: 'Switzerland' },
-];
 
 const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
 	mainWebsiteLanguages.some((language) => language === value);
@@ -79,12 +68,17 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
+	const translator = useTranslator(lang, 'website-common');
 	const { language, setLanguage, region: selectedRegion, setRegion, currency, setCurrency } = useI18n();
 
 	const initialRegion = isWebsiteRegion(region) ? region : 'int';
 	const currentLanguage = language ?? lang;
 	const currentRegion = selectedRegion ?? initialRegion;
 	const currentCurrency = currency ?? getDefaultCurrency(currentRegion);
+	const regionOptions: { value: WebsiteRegion; label: string }[] = [
+		{ value: 'int', label: translator?.t('locale-currency-switcher.regions.int') ?? 'International' },
+		{ value: 'ch', label: translator?.t('locale-currency-switcher.regions.ch') ?? 'Switzerland' },
+	];
 
 	const navigateToLocale = (nextLanguage: WebsiteLanguage, nextRegion: WebsiteRegion) => {
 		setOpen(false);
@@ -123,7 +117,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 					type="button"
 					variant="ghost"
 					className={cn('h-10 gap-2 rounded-full px-3 text-sm font-semibold lg:h-11', className)}
-					aria-label="Change language, region, and currency"
+					aria-label={translator?.t('locale-currency-switcher.aria-label') ?? 'Change language, region, and currency'}
 				>
 					{currentRegion === 'ch' ? <CountryFlag country={SWISS_COUNTRY_CODE} size="sm" /> : <Globe className="size-4" />}
 					<span>{currentCurrency}</span>
@@ -135,12 +129,12 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 				className="z-[110] w-72 space-y-4 rounded-3xl bg-white p-4 shadow-[0_24px_48px_rgba(15,23,42,0.16)]"
 			>
 				<div className="space-y-2">
-					<div className="text-sm font-semibold">Language</div>
+					<div className="text-sm font-semibold">{translator?.t('locale-currency-switcher.language') ?? 'Language'}</div>
 					<Tabs value={currentLanguage} onValueChange={handleLanguageChange}>
 						<TabsList className="grid h-10 w-full grid-cols-4 rounded-full">
-							{languageOptions.map((option) => (
-								<TabsTrigger key={option.value} value={option.value} className="rounded-full">
-									{option.label}
+							{mainWebsiteLanguages.map((language) => (
+								<TabsTrigger key={language} value={language} className="rounded-full">
+									{language.toUpperCase()}
 								</TabsTrigger>
 							))}
 						</TabsList>
@@ -148,7 +142,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 				</div>
 
 				<div className="space-y-2">
-					<div className="text-sm font-semibold">Region</div>
+					<div className="text-sm font-semibold">{translator?.t('locale-currency-switcher.region') ?? 'Region'}</div>
 					<Tabs value={currentRegion} onValueChange={handleRegionChange}>
 						<TabsList className="grid h-10 w-full grid-cols-2 rounded-full">
 							{regionOptions.map((option) => (
@@ -166,7 +160,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 				</div>
 
 				<div className="space-y-2">
-					<div className="text-sm font-semibold">Currency</div>
+					<div className="text-sm font-semibold">{translator?.t('locale-currency-switcher.currency') ?? 'Currency'}</div>
 					<Tabs value={currentCurrency} onValueChange={handleCurrencyChange}>
 						<TabsList className="grid h-10 w-full grid-cols-3 rounded-full">
 							{websiteCurrencies.map((currency) => (

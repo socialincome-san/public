@@ -17,6 +17,8 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Building2, LayoutDashboard, LogOut, User, Users } from 'lucide-react';
 import Link from 'next/link';
 
+const DISPLAY_NAME_MAX_LENGTH = 10;
+
 type Props = {
 	sessions: Session[];
 	scope: Scope;
@@ -87,10 +89,14 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 			break;
 	}
 
+	const displayName = `${session.firstName} ${session.lastName}`.trim();
+	const renderedDisplayName =
+		displayName.length > DISPLAY_NAME_MAX_LENGTH ? `${displayName.slice(0, DISPLAY_NAME_MAX_LENGTH)}...` : displayName;
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="outline" className="flex h-10 items-center gap-2 rounded-full px-3">
+				<Button variant="outline" className="flex h-10 min-w-0 items-center gap-2 rounded-full px-3">
 					<Avatar className="h-7 w-7">
 						<AvatarFallback className="text-sm">
 							{session.firstName?.[0]}
@@ -98,8 +104,8 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 						</AvatarFallback>
 					</Avatar>
 
-					<span className="text-sm font-medium">
-						{session.firstName} {session.lastName}
+					<span className="truncate text-sm font-medium" title={displayName}>
+						{renderedDisplayName}
 					</span>
 				</Button>
 			</DropdownMenuTrigger>
