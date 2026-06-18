@@ -124,7 +124,7 @@ export const makeRecipientColumns = (
 	if (!publicView) {
 		columns.push({
 			accessorKey: 'firebaseAuthUserId',
-			header: 'Firebase Auth User ID',
+			header: columnLabel(localizeLabels, translator, 'column-firebase-auth-user-id', 'Firebase Auth User ID'),
 			cell: (ctx) => <IdCell ctx={ctx} />,
 		});
 	}
@@ -134,7 +134,11 @@ export const makeRecipientColumns = (
 	if (!publicView) {
 		columns.push({
 			accessorKey: 'paymentCode',
-			header: (ctx) => <SortableHeader ctx={ctx}>Payment code</SortableHeader>,
+			header: (ctx) => (
+				<SortableHeader ctx={ctx}>
+					{columnLabel(localizeLabels, translator, 'column-payment-code', 'Payment code')}
+				</SortableHeader>
+			),
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		});
 	}

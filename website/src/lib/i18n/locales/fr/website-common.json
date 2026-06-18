@@ -226,7 +226,9 @@
 		"column-local-partner": "Partenaire local",
 		"column-program": "Programme",
 		"column-progress": "Progression",
-		"column-created": "Créé"
+		"column-created": "Créé",
+		"column-firebase-auth-user-id": "Firebase Auth User ID",
+		"column-payment-code": "Code de paiement"
 	},
 	"campaigns-page": {
 		"empty": "Aucune campagne trouvée.",
