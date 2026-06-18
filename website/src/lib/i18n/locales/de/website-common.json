@@ -215,6 +215,7 @@
 		"recipient-count-of": "{{shown}} von {{total}}",
 		"load-payout-forecast-error": "Auszahlungsprognose konnte nicht geladen werden.",
 		"load-recipients-error": "Empfänger:innen konnten nicht geladen werden.",
+		"try-again": "Erneut versuchen",
 		"column-period": "Zeitraum",
 		"column-recipients": "Empfänger:innen",
 		"column-amount": "Betrag",

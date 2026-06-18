@@ -215,6 +215,7 @@
 		"recipient-count-of": "{{shown}} di {{total}}",
 		"load-payout-forecast-error": "Impossibile caricare la previsione dei pagamenti.",
 		"load-recipients-error": "Impossibile caricare i beneficiari.",
+		"try-again": "Riprova",
 		"column-period": "Periodo",
 		"column-recipients": "Beneficiari",
 		"column-amount": "Importo",

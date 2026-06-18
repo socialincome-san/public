@@ -215,6 +215,7 @@
 		"recipient-count-of": "{{shown}} sur {{total}}",
 		"load-payout-forecast-error": "Impossible de charger la prévision des versements.",
 		"load-recipients-error": "Impossible de charger les bénéficiaires.",
+		"try-again": "Réessayer",
 		"column-period": "Période",
 		"column-recipients": "Bénéficiaires",
 		"column-amount": "Montant",

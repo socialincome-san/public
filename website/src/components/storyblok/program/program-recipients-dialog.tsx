@@ -30,6 +30,7 @@ export const ProgramRecipientsDialog = ({
 	const [totalCount, setTotalCount] = useState<number | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [hasError, setHasError] = useState(false);
+	const [retryKey, setRetryKey] = useState(0);
 
 	useEffect(() => {
 		if (!isOpen || rows !== null) {
@@ -65,7 +66,7 @@ export const ProgramRecipientsDialog = ({
 		return () => {
 			isCancelled = true;
 		};
-	}, [isOpen, programId, rows]);
+	}, [isOpen, programId, rows, retryKey]);
 
 	return (
 		<ProgramDetailDialog
@@ -83,8 +84,19 @@ export const ProgramRecipientsDialog = ({
 			{isLoading ? (
 				<p className="text-muted-foreground text-sm">{t('program-detail-page.loading')}</p>
 			) : hasError ? (
-				<div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
+				<div className="flex flex-col gap-4 rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
 					<p className="font-medium">{t('program-detail-page.load-recipients-error')}</p>
+					<Button
+						type="button"
+						variant="outline"
+						className="self-start border-red-300 bg-white text-red-900 hover:bg-red-100"
+						onClick={() => {
+							setHasError(false);
+							setRetryKey((current) => current + 1);
+						}}
+					>
+						{t('program-detail-page.try-again')}
+					</Button>
 				</div>
 			) : rows && totalCount !== null ? (
 				<ProgramRecipientsTable rows={rows} totalCount={totalCount} />

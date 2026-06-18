@@ -215,6 +215,7 @@
 		"recipient-count-of": "{{shown}} of {{total}}",
 		"load-payout-forecast-error": "Could not load payout forecast.",
 		"load-recipients-error": "Could not load recipients.",
+		"try-again": "Try again",
 		"column-period": "Period",
 		"column-recipients": "Recipients",
 		"column-amount": "Amount",
