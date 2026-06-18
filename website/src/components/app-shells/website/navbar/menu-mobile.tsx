@@ -21,7 +21,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowRight, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FC, useState, type ReactNode } from 'react';
+import { FC, useState } from 'react';
 
 const FALLBACK_BADGE_COUNT = 23;
 
@@ -31,10 +31,9 @@ type Props = {
 	menu: Layout['menu'];
 	lang: WebsiteLanguage;
 	region: string;
-	donationForm: ReactNode;
 };
 
-export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region, donationForm }) => {
+export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) => {
 	const session = displaySession(sessions, scope);
 	const commonTranslator = useTranslator(lang, 'website-common');
 	const donateTranslator = useTranslator(lang, 'website-donate');
@@ -123,7 +122,6 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region, don
 										return null;
 									})}
 								</ul>
-								<div className="mt-4">{donationForm}</div>
 							</div>
 
 							<div

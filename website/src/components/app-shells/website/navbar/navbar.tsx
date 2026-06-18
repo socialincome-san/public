@@ -54,14 +54,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 						className="rounded-full px-5 text-sm font-semibold lg:h-11"
 					/>
 				)}
-				<MenuMobile
-					sessions={sessions}
-					scope={scope}
-					lang={lang}
-					menu={menu}
-					region={region}
-					donationForm={<DonationFormServer lang={lang} />}
-				/>
+				<MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />
 			</div>
 		</nav>
 	);
