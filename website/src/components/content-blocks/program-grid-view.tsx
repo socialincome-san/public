@@ -18,9 +18,9 @@ type Props = {
 };
 
 export const ProgramGridView = async ({ programs, allProgramsCount = 0, blok, lang, region }: Props) => {
-	const programIds = [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
-	const statsResult = await services.read.program.getPublicProgramStatsByIds(programIds);
-	const statsById = statsResult.success ? statsResult.data : {};
+	const programPortalSlugs = [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
+	const statsResult = await services.read.program.getPublicProgramStatsByProgramPortalSlugs(programPortalSlugs);
+	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const button = blok.button?.[0];
 	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, region) : null;
@@ -28,7 +28,7 @@ export const ProgramGridView = async ({ programs, allProgramsCount = 0, blok, la
 
 	return (
 		<>
-			<ProgramsOverview programs={programs} statsByPortalSlug={statsById} lang={lang} region={region} />
+			<ProgramsOverview programs={programs} statsByPortalSlug={statsByPortalSlug} lang={lang} region={region} />
 			{button && buttonHref && (
 				<div className="mt-10 flex justify-center">
 					<Button variant="outline" asChild>
