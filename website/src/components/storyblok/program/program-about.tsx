@@ -33,6 +33,7 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region, reso
 					<ProgramAboutDialog
 						aboutTitle={aboutTitle}
 						viewDetailsLabel={translator.t('program-detail-page.view-details')}
+						closeAriaLabel={translator.t('program-detail-page.close')}
 						content={content}
 					/>
 				) : null}

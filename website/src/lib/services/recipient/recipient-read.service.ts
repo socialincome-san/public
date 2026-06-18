@@ -410,8 +410,6 @@ export class RecipientReadService extends BaseService {
 			suspendedAt: Date | null;
 			createdAt: Date;
 			contact: {
-				firstName: string;
-				lastName: string;
 				dateOfBirth: Date | null;
 				address: { country: PublicRecipientTableViewRow['country'] } | null;
 			} | null;
@@ -477,8 +475,6 @@ export class RecipientReadService extends BaseService {
 				suspendedAt: true,
 				contact: {
 					select: {
-						firstName: true,
-						lastName: true,
 						dateOfBirth: true,
 						address: {
 							select: {

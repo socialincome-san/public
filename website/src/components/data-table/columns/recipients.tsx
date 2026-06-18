@@ -1,5 +1,6 @@
 'use client';
 
+import { columnLabel } from '@/components/data-table/columns/column-label';
 import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { AgeCell } from '@/components/data-table/elements/age-cell';
 import { CountryFlagCell } from '@/components/data-table/elements/country-flag-cell';
@@ -13,22 +14,25 @@ import type { Translator } from '@/lib/i18n/translator';
 import type { PublicRecipientTableViewRow, RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-const columnLabel = (localizeLabels: boolean, translator: Translator | undefined, key: string, fallback: string) =>
-	localizeLabels && translator ? translator.t(`program-detail-page.${key}`) : fallback;
-
 export const makeRecipientColumns = (
 	hideProgramName = false,
 	hideLocalPartner = false,
 	translator?: Translator,
 	readOnly = false,
 	localizeLabels = false,
+	publicView = false,
 ): ColumnDef<RecipientTableViewRow>[] => {
-	const columns: ColumnDef<RecipientTableViewRow>[] = [
-		{
+	const columns: ColumnDef<RecipientTableViewRow>[] = [];
+
+	if (!publicView) {
+		columns.push({
 			accessorKey: 'firebaseAuthUserId',
 			header: 'Firebase Auth User ID',
 			cell: (ctx) => <IdCell ctx={ctx} />,
-		},
+		});
+	}
+
+	columns.push(
 		{
 			id: 'recipient',
 			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
@@ -53,19 +57,23 @@ export const makeRecipientColumns = (
 			),
 			cell: (ctx) => <StatusCell ctx={ctx} variant="recipient" />,
 		},
-		{
+	);
+
+	if (!publicView) {
+		columns.push({
 			accessorKey: 'paymentCode',
 			header: (ctx) => <SortableHeader ctx={ctx}>Payment code</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'dateOfBirth',
-			header: (ctx) => (
-				<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'column-age', 'Age')}</SortableHeader>
-			),
-			cell: (ctx) => <AgeCell ctx={ctx} />,
-		},
-	];
+		});
+	}
+
+	columns.push({
+		accessorKey: 'dateOfBirth',
+		header: (ctx) => (
+			<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'column-age', 'Age')}</SortableHeader>
+		),
+		cell: (ctx) => <AgeCell ctx={ctx} />,
+	});
 
 	if (!hideLocalPartner) {
 		columns.push({
@@ -126,10 +134,4 @@ export const makeRecipientColumns = (
 };
 
 export const makePublicRecipientColumns = (translator?: Translator): ColumnDef<PublicRecipientTableViewRow>[] =>
-	makeRecipientColumns(true, false, translator, true, true).filter((column) => {
-		if (!('accessorKey' in column)) {
-			return true;
-		}
-
-		return column.accessorKey !== 'firebaseAuthUserId' && column.accessorKey !== 'paymentCode';
-	}) as ColumnDef<PublicRecipientTableViewRow>[];
+	makeRecipientColumns(true, false, translator, true, true, true) as ColumnDef<PublicRecipientTableViewRow>[];

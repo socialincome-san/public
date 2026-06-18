@@ -12,6 +12,7 @@ import Link from 'next/link';
 type Props = {
 	aboutTitle: string;
 	viewDetailsLabel: string;
+	closeAriaLabel: string;
 	content: ProgramAboutContent;
 };
 
@@ -52,8 +53,8 @@ const OverlaySection = ({ section }: { section: ProgramAboutOverlaySection }) =>
 	</div>
 );
 
-export const ProgramAboutDialog = ({ aboutTitle, viewDetailsLabel, content }: Props) => (
-	<ProgramDetailDialog title={aboutTitle} triggerLabel={viewDetailsLabel}>
+export const ProgramAboutDialog = ({ aboutTitle, viewDetailsLabel, closeAriaLabel, content }: Props) => (
+	<ProgramDetailDialog title={aboutTitle} triggerLabel={viewDetailsLabel} closeAriaLabel={closeAriaLabel}>
 		{content.description ? <p className="text-foreground text-base leading-6">{content.description}</p> : null}
 
 		{content.overlaySections.map((section) => (
