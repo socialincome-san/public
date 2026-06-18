@@ -1,5 +1,5 @@
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
-import type { PublicProgramFilterDataMap, PublicProgramStatsMap } from '@/lib/services/program/program.types';
+import type { PublicProgramFilterDataMap } from '@/lib/services/program/program.types';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { AnySearchParams } from '@/lib/types/page-props';
 import type { ProgramStory } from './program.types';
@@ -72,26 +72,6 @@ export const programMatchesFocusQuery = (
 	const portalSlug = getProgramPortalSlug(program.content);
 
 	return Boolean(portalSlug && filterDataByPortalSlug[portalSlug]?.focuses.some(({ id }) => id === selectedFocusId));
-};
-
-export const toPortalSlugStatsMap = (
-	programs: ProgramStory[],
-	filterDataByPortalSlug: PublicProgramFilterDataMap,
-	statsByProgramId: PublicProgramStatsMap,
-): PublicProgramStatsMap => {
-	const statsByPortalSlug: PublicProgramStatsMap = {};
-
-	programs.forEach((program) => {
-		const portalSlug = getProgramPortalSlug(program.content);
-		const programId = filterDataByPortalSlug[portalSlug]?.programId;
-		const stats = programId ? statsByProgramId[programId] : undefined;
-
-		if (stats) {
-			statsByPortalSlug[portalSlug] = stats;
-		}
-	});
-
-	return statsByPortalSlug;
 };
 
 export const getFilterDataForPrograms = (

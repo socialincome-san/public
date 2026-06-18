@@ -21,7 +21,6 @@ import {
 	programMatchesCountryQuery,
 	programMatchesFocusQuery,
 	programMatchesSearchQuery,
-	toPortalSlugStatsMap,
 } from './programs-overview.server';
 
 type Props = {
@@ -50,17 +49,12 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 		: programs;
 	const focusScopedFilterData = getFilterDataForPrograms(focusScopedPrograms, filterDataByPortalSlug);
 	const statsFilterData = hasFixedFocus ? focusScopedFilterData : filterDataByPortalSlug;
-	const statsPrograms = hasFixedFocus ? focusScopedPrograms : programs;
-	const programIds = [...new Set(Object.values(statsFilterData).map(({ programId }) => programId))];
+	const statsPortalSlugs = Object.keys(statsFilterData);
 	const [statsResult, translator] = await Promise.all([
-		services.read.program.getPublicProgramStatsByIds(programIds),
+		services.read.program.getPublicProgramStatsByProgramPortalSlugs(statsPortalSlugs),
 		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
 	]);
-	const statsByPortalSlug = toPortalSlugStatsMap(
-		statsPrograms,
-		statsFilterData,
-		statsResult.success ? statsResult.data : {},
-	);
+	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 	const countryOptions = getCountryFilterOptions(focusScopedFilterData);
 	const focusTitleBySlug = getFocusTitleBySlug(storyblokFocuses);
 	const focusFilterOptions = hasFixedFocus ? [] : getFocusFilterOptions(filterDataByPortalSlug, focusTitleBySlug);

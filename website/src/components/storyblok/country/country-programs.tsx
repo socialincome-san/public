@@ -3,7 +3,6 @@ import { StoryblokProgramGrid } from '@/components/storyblok/shared/storyblok-pr
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { CountryStory } from './country.types';
-import { getCountryIsoCode } from './country.utils';
 
 type Props = {
 	country: CountryStory;
@@ -17,10 +16,17 @@ export const CountryPrograms = async ({ country, lang, region }: Props) => {
 		return null;
 	}
 
-	const isoCode = getCountryIsoCode(country.content);
-	const programsResult = await services.storyblok.getCountryPrograms(lang, isoCode);
+	const programsResult = await services.storyblok.getPrograms(lang);
 	const allPrograms = programsResult.success ? programsResult.data : [];
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
 
-	return <StoryblokProgramGrid blok={blok} programs={programs} lang={lang} region={region} />;
+	return (
+		<StoryblokProgramGrid
+			blok={blok}
+			programs={programs}
+			allProgramsCount={allPrograms.length}
+			lang={lang}
+			region={region}
+		/>
+	);
 };
