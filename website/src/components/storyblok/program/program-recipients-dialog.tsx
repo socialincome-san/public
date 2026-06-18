@@ -29,7 +29,7 @@ export const ProgramRecipientsDialog = ({
 	const [rows, setRows] = useState<PublicRecipientTableViewRow[] | null>(null);
 	const [totalCount, setTotalCount] = useState<number | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+	const [hasError, setHasError] = useState(false);
 
 	useEffect(() => {
 		if (!isOpen || rows !== null) {
@@ -40,7 +40,7 @@ export const ProgramRecipientsDialog = ({
 
 		const loadRecipients = async () => {
 			setIsLoading(true);
-			setError(null);
+			setHasError(false);
 
 			const result = await getPublicRecipientsTableAction(programId);
 
@@ -51,7 +51,7 @@ export const ProgramRecipientsDialog = ({
 			setIsLoading(false);
 
 			if (!result.success) {
-				setError(result.error);
+				setHasError(true);
 
 				return;
 			}
@@ -82,10 +82,9 @@ export const ProgramRecipientsDialog = ({
 		>
 			{isLoading ? (
 				<p className="text-muted-foreground text-sm">{t('program-detail-page.loading')}</p>
-			) : error ? (
+			) : hasError ? (
 				<div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
 					<p className="font-medium">{t('program-detail-page.load-recipients-error')}</p>
-					<p className="mt-1 text-sm">{error}</p>
 				</div>
 			) : rows && totalCount !== null ? (
 				<ProgramRecipientsTable rows={rows} totalCount={totalCount} />

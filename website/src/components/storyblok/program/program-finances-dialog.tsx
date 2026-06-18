@@ -32,7 +32,7 @@ export const ProgramFinancesDialog = ({
 	const [isOpen, setIsOpen] = useState(false);
 	const [rows, setRows] = useState<PayoutForecastTableViewRow[] | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+	const [hasError, setHasError] = useState(false);
 
 	useEffect(() => {
 		if (!isOpen || rows !== null) {
@@ -43,7 +43,7 @@ export const ProgramFinancesDialog = ({
 
 		const loadForecast = async () => {
 			setIsLoading(true);
-			setError(null);
+			setHasError(false);
 
 			const result = await getPublicPayoutForecastTableAction(programId);
 
@@ -54,7 +54,7 @@ export const ProgramFinancesDialog = ({
 			setIsLoading(false);
 
 			if (!result.success) {
-				setError(result.error);
+				setHasError(true);
 
 				return;
 			}
@@ -85,10 +85,9 @@ export const ProgramFinancesDialog = ({
 			{financesCard}
 			{isLoading ? (
 				<p className="text-muted-foreground text-sm">{t('program-detail-page.loading')}</p>
-			) : error ? (
+			) : hasError ? (
 				<div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
 					<p className="font-medium">{t('program-detail-page.load-payout-forecast-error')}</p>
-					<p className="mt-1 text-sm">{error}</p>
 				</div>
 			) : rows ? (
 				<ProgramPayoutForecastTable rows={rows} titleInfoTooltip={payoutForecastInfoTooltip} />
