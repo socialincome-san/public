@@ -46,6 +46,8 @@ export const ProgramRecipientsDialog = ({
 			const result = await getPublicRecipientsTableAction(programId);
 
 			if (isCancelled) {
+				setIsLoading(false);
+
 				return;
 			}
 

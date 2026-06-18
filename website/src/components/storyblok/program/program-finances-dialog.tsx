@@ -49,6 +49,8 @@ export const ProgramFinancesDialog = ({
 			const result = await getPublicPayoutForecastTableAction(programId);
 
 			if (isCancelled) {
+				setIsLoading(false);
+
 				return;
 			}
 
