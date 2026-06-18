@@ -9,7 +9,6 @@ import {
 	isMenuItem,
 	Scope,
 } from '@/components/app-shells/website/navbar/utils';
-import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import type { DropdownItem, Layout } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -123,9 +122,6 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 										return null;
 									})}
 								</ul>
-								<div className="mt-4">
-									<DonationForm onBeforeOpen={() => handleOpenChange(false)} />
-								</div>
 							</div>
 
 							<div

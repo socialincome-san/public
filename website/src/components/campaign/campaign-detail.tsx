@@ -33,7 +33,7 @@ export const CampaignDetail = async ({ campaign, campaignSlug, lang, region }: P
 
 	return (
 		<>
-			<CampaignHero campaign={campaign} translator={translator} />
+			<CampaignHero campaign={campaign} translator={translator} lang={lang} />
 			{campaign.secondDescription && campaign.thirdDescription && <CampaignExtraText campaign={campaign} />}
 			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
 			<CampaignAboutSection translator={translator} />

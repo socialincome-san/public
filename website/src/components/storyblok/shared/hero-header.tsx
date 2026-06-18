@@ -1,5 +1,6 @@
-import { DonationForm } from '@/components/donation-wizard/donation-form';
+import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
 import NextImage from 'next/image';
 import type { ReactNode } from 'react';
@@ -15,6 +16,7 @@ type HeroHeaderStat = {
 export type HeroHeaderImage = Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'>;
 
 type Props = {
+	lang: WebsiteLanguage;
 	title: string;
 	heroImage?: HeroHeaderImage | null;
 	stats: HeroHeaderStat[];
@@ -26,6 +28,7 @@ type Props = {
 };
 
 export const HeroHeader = ({
+	lang,
 	title,
 	heroImage,
 	stats,
@@ -86,7 +89,7 @@ export const HeroHeader = ({
 
 					{showDonationForm ? (
 						<div className="hidden shrink-0 lg:block">
-							<DonationForm />
+							<DonationFormServer lang={lang} />
 						</div>
 					) : null}
 				</div>
@@ -94,7 +97,7 @@ export const HeroHeader = ({
 
 			{showDonationForm ? (
 				<div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">
-					<DonationForm />
+					<DonationFormServer lang={lang} />
 				</div>
 			) : null}
 		</section>

@@ -1,14 +1,16 @@
-import { DonationForm } from '@/components/donation-wizard/donation-form';
+import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { Progress } from '@/components/progress';
 import type { Translator } from '@/lib/i18n/translator';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 
 type Props = {
 	campaign: CampaignPage;
 	translator: Translator;
+	lang: WebsiteLanguage;
 };
 
-export const CampaignHero = ({ campaign, translator }: Props) => {
+export const CampaignHero = ({ campaign, translator, lang }: Props) => {
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
 	const showProgress = campaign.percentageCollected !== null && campaign.percentageCollected !== undefined;
 
@@ -77,7 +79,7 @@ export const CampaignHero = ({ campaign, translator }: Props) => {
 
 				{campaign.daysLeft >= 0 && (
 					<div className="flex w-full justify-center lg:justify-end">
-						<DonationForm campaignId={campaign.id} />
+						<DonationFormServer lang={lang} campaignId={campaign.id} />
 					</div>
 				)}
 			</div>

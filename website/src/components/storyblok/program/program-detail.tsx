@@ -42,6 +42,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 	return (
 		<>
 			<HeroHeader
+				lang={lang}
 				title={programDetailData.title}
 				heroImage={programDetailData.heroImage}
 				stats={
