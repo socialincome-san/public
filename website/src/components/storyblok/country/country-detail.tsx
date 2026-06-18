@@ -38,6 +38,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 	return (
 		<>
 			<HeroHeader
+				lang={lang}
 				title={countryTitle}
 				heroImage={country.content.heroImage}
 				titleIcon={isoCode === '-' ? undefined : `/assets/flags/${isoCode.toLowerCase()}.svg`}
