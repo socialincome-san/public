@@ -277,6 +277,9 @@ Storyblok content through the Content Delivery API. A public token is enough
 for external contributors working on frontend/UI changes against published
 content.
 
+If you are an external contributor and need a token, contact
+`support@socialincome.org`.
+
 Maintainers who need Storyblok preview, webhooks, or schema/type generation
 may also need:
 
