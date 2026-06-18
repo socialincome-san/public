@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/button';
 import { Input } from '@/components/input';
-import { useI18n } from '@/lib/i18n/useI18n';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import type { DonationAmountFieldsTranslations } from '../../i18n/donation-amount-fields-translations';
 import {
@@ -51,6 +51,7 @@ type Props = {
 	onSubmit: () => void;
 	className?: string;
 	translations: DonationAmountFieldsTranslations;
+	currency: WebsiteCurrency;
 };
 
 export const DonationAmountFields = ({
@@ -59,9 +60,8 @@ export const DonationAmountFields = ({
 	onSubmit,
 	className = getDonationWizardCardClass('stepAmount'),
 	translations,
+	currency,
 }: Props) => {
-	const { currency = 'CHF' } = useI18n();
-
 	return (
 		<div className={cn(className, 'text-foreground md:px-9 md:py-9')} data-testid="donation-wizard-step-amount">
 			<h3 className="text-foreground mb-5 text-xl leading-tight font-semibold text-pretty sm:text-2xl sm:leading-none">

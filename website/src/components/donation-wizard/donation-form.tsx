@@ -1,5 +1,6 @@
 'use client';
 
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { useDonationFormState } from './hooks/use-donation-form-state';
 import { useDonationModal } from './hooks/use-donation-modal';
@@ -12,9 +13,10 @@ type Props = {
 	campaignId?: string;
 	onBeforeOpen?: () => void;
 	translations: DonationAmountFieldsTranslations;
+	currency: WebsiteCurrency;
 };
 
-export const DonationForm = ({ campaignId, onBeforeOpen, translations }: Props) => {
+export const DonationForm = ({ campaignId, onBeforeOpen, translations, currency }: Props) => {
 	const { openWizardWithFormAmount } = useDonationModal();
 	const form = useDonationFormState();
 
@@ -23,6 +25,7 @@ export const DonationForm = ({ campaignId, onBeforeOpen, translations }: Props) 
 			<DonationAmountFields
 				className={cn(getDonationWizardCardClass('stepAmount'), 'mx-0 max-w-none lg:mx-auto lg:max-w-[400px]')}
 				translations={translations}
+				currency={currency}
 				values={selectStep1FormView(form.context)}
 				actions={{
 					selectOnePercent: form.selectOnePercent,
