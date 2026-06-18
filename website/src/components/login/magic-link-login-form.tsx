@@ -7,7 +7,6 @@ import { Label } from '@/components/label';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useState } from 'react';
@@ -24,11 +23,9 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 type Props = {
 	lang: WebsiteLanguage;
-	/** When true, omits top margin (title is rendered in the parent card, e.g. login page). */
-	embedded?: boolean;
 };
 
-export const MagicLinkLoginForm = ({ lang, embedded = false }: Props) => {
+export const MagicLinkLoginForm = ({ lang }: Props) => {
 	const { auth } = useAuth();
 	const translator = useTranslator(lang, 'website-login');
 
@@ -71,7 +68,7 @@ export const MagicLinkLoginForm = ({ lang, embedded = false }: Props) => {
 		<>
 			{status === 'idle' && (
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(handleSend)} className={cn(!embedded && 'mt-4', 'space-y-4')}>
+					<form onSubmit={form.handleSubmit(handleSend)} className="space-y-4">
 						<FormField
 							control={form.control}
 							name="email"
@@ -95,12 +92,10 @@ export const MagicLinkLoginForm = ({ lang, embedded = false }: Props) => {
 				</Form>
 			)}
 
-			{status === 'sending' && (
-				<div className={cn(!embedded && 'mt-4', 'text-center text-sm')}>{translator?.t('flyout.sending')}</div>
-			)}
+			{status === 'sending' && <div className="text-center text-sm">{translator?.t('flyout.sending')}</div>}
 
 			{status === 'sent' && (
-				<div className={cn(!embedded && 'mt-4', 'space-y-4 text-center')}>
+				<div className="space-y-4 text-center">
 					<p className="text-sm">{translator?.t('flyout.sent-message', { context: { email: submittedEmail } })}</p>
 
 					<Button variant="outline" onClick={retry} className="w-full">

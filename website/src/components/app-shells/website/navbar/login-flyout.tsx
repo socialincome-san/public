@@ -30,7 +30,9 @@ export const LoginFlyout = ({ lang }: Props) => {
 						<DialogTitle>{translator?.t('flyout.title')}</DialogTitle>
 					</DialogHeader>
 
-					<MagicLinkLoginForm key={open ? 'open' : 'closed'} lang={lang} />
+					<div className="mt-4">
+						<MagicLinkLoginForm key={open ? 'open' : 'closed'} lang={lang} />
+					</div>
 				</DialogContent>
 			</Dialog>
 		</>
