@@ -189,7 +189,9 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 								/>
 							)}
 							<div className="flex min-w-0 items-center gap-2">
-								<LocaleCurrencySwitcher lang={lang} region={region} className="border-input h-11 border px-3" />
+								{scope === 'website' && (
+									<LocaleCurrencySwitcher lang={lang} region={region} className="border-input h-11 border px-3" />
+								)}
 								{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
 							</div>
 						</div>

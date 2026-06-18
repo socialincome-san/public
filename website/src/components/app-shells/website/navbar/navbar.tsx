@@ -46,9 +46,11 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 			</div>
 
 			<div className="flex items-center gap-4">
-				<div className="hidden lg:block">
-					<LocaleCurrencySwitcher lang={lang} region={region} />
-				</div>
+				{scope === 'website' && (
+					<div className="hidden lg:block">
+						<LocaleCurrencySwitcher lang={lang} region={region} />
+					</div>
+				)}
 				<div className="hidden lg:block">
 					{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
 				</div>
