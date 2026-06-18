@@ -19,7 +19,7 @@ const loadCurrentUser = async (): Promise<UserSession | null> => {
 	return result.success ? result.data : null;
 };
 
-const getCurrentUser = cache(loadCurrentUser);
+export const getCurrentUser = cache(loadCurrentUser);
 
 export const getAuthenticatedUserOrRedirect = async (): Promise<UserSession> => {
 	const user = await getCurrentUser();

@@ -41,6 +41,39 @@ export class ProgramReadService extends BaseService {
 		...new Set(portalSlugs.map((portalSlug) => portalSlug.trim()).filter(Boolean)),
 	];
 
+	private readonly publicProgramStatsSelect = {
+		slug: true,
+		country: {
+			select: { isoCode: true, currency: true },
+		},
+		_count: {
+			select: {
+				campaigns: true,
+				recipients: true,
+			},
+		},
+		recipients: {
+			select: {
+				payouts: {
+					where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
+					select: { amount: true },
+				},
+			},
+		},
+	};
+
+	private readonly toPublicProgramStats = (program: {
+		country: { isoCode: PublicProgramStats['countryIsoCode']; currency: PublicProgramStats['payoutCurrency'] };
+		_count: { campaigns: number; recipients: number };
+		recipients: { payouts: { amount: unknown }[] }[];
+	}): PublicProgramStats => ({
+		campaignsCount: program._count.campaigns,
+		recipientsCount: program._count.recipients,
+		countryIsoCode: program.country.isoCode,
+		payoutCurrency: program.country.currency,
+		totalPayoutsSum: this.sumPayoutAmounts(program.recipients),
+	});
+
 	async getPublicProgramFilterDataByPortalSlugs(portalSlugs: string[]): Promise<ServiceResult<PublicProgramFilterDataMap>> {
 		try {
 			const normalizedPortalSlugs = this.normalizeProgramPortalSlugs(portalSlugs);
@@ -364,17 +397,16 @@ export class ProgramReadService extends BaseService {
 				return this.resultFail('Missing program id');
 			}
 
-			const statsMapResult = await this.getPublicProgramStatsByIds([normalizedProgramId]);
-			if (!statsMapResult.success) {
-				return this.resultFail(statsMapResult.error);
-			}
+			const program = await this.db.program.findUnique({
+				where: { id: normalizedProgramId },
+				select: this.publicProgramStatsSelect,
+			});
 
-			const stats = statsMapResult.data[normalizedProgramId];
-			if (!stats) {
+			if (!program) {
 				return this.resultFail('Program not found');
 			}
 
-			return this.resultOk(stats);
+			return this.resultOk(this.toPublicProgramStats(program));
 		} catch (error) {
 			this.logger.error(error);
 
@@ -382,52 +414,26 @@ export class ProgramReadService extends BaseService {
 		}
 	}
 
-	async getPublicProgramStatsByIds(programIds: string[]): Promise<ServiceResult<PublicProgramStatsMap>> {
+	async getPublicProgramStatsByProgramPortalSlugs(
+		programPortalSlugs: string[],
+	): Promise<ServiceResult<PublicProgramStatsMap>> {
 		try {
-			const normalizedProgramIds = [...new Set(programIds.map((programId) => programId.trim()).filter(Boolean))];
-			if (!normalizedProgramIds.length) {
+			const normalizedProgramPortalSlugs = this.normalizeProgramPortalSlugs(programPortalSlugs);
+			if (!normalizedProgramPortalSlugs.length) {
 				return this.resultOk({});
 			}
 
 			const programs = await this.db.program.findMany({
-				where: { id: { in: normalizedProgramIds } },
-				select: {
-					id: true,
-					country: {
-						select: { isoCode: true, currency: true },
-					},
-					_count: {
-						select: {
-							campaigns: true,
-							recipients: true,
-						},
-					},
-					recipients: {
-						select: {
-							payouts: {
-								where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
-								select: { amount: true },
-							},
-						},
-					},
-				},
+				where: { slug: { in: normalizedProgramPortalSlugs } },
+				select: this.publicProgramStatsSelect,
 			});
 
-			const statsById: PublicProgramStatsMap = {};
+			const statsByProgramPortalSlug: PublicProgramStatsMap = {};
 			for (const program of programs) {
-				const totalPayoutsSum = this.sumPayoutAmounts(program.recipients);
-
-				const stats: PublicProgramStats = {
-					campaignsCount: program._count.campaigns,
-					recipientsCount: program._count.recipients,
-					countryIsoCode: program.country.isoCode,
-					payoutCurrency: program.country.currency,
-					totalPayoutsSum,
-				};
-				statsById[program.id] = stats;
+				statsByProgramPortalSlug[program.slug] = this.toPublicProgramStats(program);
 			}
 
-			return this.resultOk(statsById);
+			return this.resultOk(statsByProgramPortalSlug);
 		} catch (error) {
 			this.logger.error(error);
 

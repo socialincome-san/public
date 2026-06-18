@@ -1,19 +1,18 @@
 'use client';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type {
 	ProgramAboutContent,
 	ProgramAboutDetailRow,
 	ProgramAboutOverlaySection,
 } from '@/components/storyblok/program/build-program-about-content';
-import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
+import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
 
 type Props = {
 	aboutTitle: string;
 	viewDetailsLabel: string;
+	closeAriaLabel: string;
 	content: ProgramAboutContent;
 };
 
@@ -54,28 +53,12 @@ const OverlaySection = ({ section }: { section: ProgramAboutOverlaySection }) =>
 	</div>
 );
 
-export const ProgramAboutDialog = ({ aboutTitle, viewDetailsLabel, content }: Props) => {
-	const [isOpen, setIsOpen] = useState(false);
+export const ProgramAboutDialog = ({ aboutTitle, viewDetailsLabel, closeAriaLabel, content }: Props) => (
+	<ProgramDetailDialog title={aboutTitle} triggerLabel={viewDetailsLabel} closeAriaLabel={closeAriaLabel}>
+		{content.description ? <p className="text-foreground text-base leading-6">{content.description}</p> : null}
 
-	return (
-		<>
-			<ProgramDetailPill label={viewDetailsLabel} isOpen={isOpen} onClick={() => setIsOpen(true)} />
-
-			<Dialog open={isOpen} onOpenChange={setIsOpen}>
-				<DialogContent className="flex max-h-[85vh] flex-col gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-2xl">
-					<DialogHeader className="border-border bg-background sticky top-0 z-10 shrink-0 space-y-0 border-b px-9 py-6">
-						<DialogTitle className="text-2xl leading-none font-medium">{aboutTitle}</DialogTitle>
-					</DialogHeader>
-
-					<div className="overflow-y-auto px-12 pt-8 pb-12">
-						{content.description ? <p className="text-foreground text-base leading-6">{content.description}</p> : null}
-
-						{content.overlaySections.map((section) => (
-							<OverlaySection key={section.id} section={section} />
-						))}
-					</div>
-				</DialogContent>
-			</Dialog>
-		</>
-	);
-};
+		{content.overlaySections.map((section) => (
+			<OverlaySection key={section.id} section={section} />
+		))}
+	</ProgramDetailDialog>
+);
