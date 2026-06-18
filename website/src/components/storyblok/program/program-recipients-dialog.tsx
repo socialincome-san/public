@@ -43,24 +43,28 @@ export const ProgramRecipientsDialog = ({
 			setIsLoading(true);
 			setHasError(false);
 
-			const result = await getPublicRecipientsTableAction(programId);
+			try {
+				const result = await getPublicRecipientsTableAction(programId);
 
-			if (isCancelled) {
+				if (isCancelled) {
+					return;
+				}
+
+				if (!result.success) {
+					setHasError(true);
+
+					return;
+				}
+
+				setRows(result.data.tableRows);
+				setTotalCount(result.data.totalCount);
+			} catch {
+				if (!isCancelled) {
+					setHasError(true);
+				}
+			} finally {
 				setIsLoading(false);
-
-				return;
 			}
-
-			setIsLoading(false);
-
-			if (!result.success) {
-				setHasError(true);
-
-				return;
-			}
-
-			setRows(result.data.tableRows);
-			setTotalCount(result.data.totalCount);
 		};
 
 		void loadRecipients();
