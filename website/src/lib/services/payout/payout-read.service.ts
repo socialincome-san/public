@@ -465,6 +465,10 @@ export class PayoutReadService extends BaseService {
 		}
 	}
 
+	async getPublicForecastTableView(programId: string, monthsAhead: number): Promise<ServiceResult<PayoutForecastTableView>> {
+		return this.buildForecastTableView(programId, monthsAhead);
+	}
+
 	async getForecastTableView(
 		userId: string,
 		programId: string,
@@ -481,6 +485,19 @@ export class PayoutReadService extends BaseService {
 				return this.resultFail('Access denied for this program');
 			}
 
+			return this.buildForecastTableView(programId, monthsAhead);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not generate payout forecast: ${JSON.stringify(error)}`);
+		}
+	}
+
+	private async buildForecastTableView(
+		programId: string,
+		monthsAhead: number,
+	): Promise<ServiceResult<PayoutForecastTableView>> {
+		try {
 			const program = await this.db.program.findUnique({
 				where: { id: programId },
 				select: {

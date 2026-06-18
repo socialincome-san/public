@@ -1,0 +1,1 @@
+export const PUBLIC_RECIPIENTS_MAX_ROWS = 1000;

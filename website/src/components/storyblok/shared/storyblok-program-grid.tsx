@@ -10,11 +10,12 @@ import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 type Props = {
 	blok: ProgramGrid;
 	programs: ProgramStory[];
+	allProgramsCount?: number;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const StoryblokProgramGrid = ({ blok, programs, lang, region }: Props) => {
+export const StoryblokProgramGrid = ({ blok, programs, allProgramsCount = 0, lang, region }: Props) => {
 	if (programs.length === 0) {
 		return null;
 	}
@@ -31,7 +32,7 @@ export const StoryblokProgramGrid = ({ blok, programs, lang, region }: Props) =>
 					<StoryblokMarkdown>{blok.description}</StoryblokMarkdown>
 				</div>
 			)}
-			<ProgramGridView programs={programs} blok={blok} lang={lang} region={region} />
+			<ProgramGridView programs={programs} allProgramsCount={allProgramsCount} blok={blok} lang={lang} region={region} />
 		</BlockWrapper>
 	);
 };
