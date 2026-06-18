@@ -266,11 +266,27 @@ pg_restore   --clean --if-exists   --no-owner   -d "postgresql://staging-website
 # 🧩 Storyblok Development
 
 1. Read the Storyblok docs → https://www.storyblok.com/docs
-2. Set env vars in `website/.env.local`:
-   - `STORYBLOK_PREVIEW_TOKEN`
-   - `STORYBLOK_PREVIEW_SECRET`
-   - `STORYBLOK_WEBHOOK_SECRET` (must match the **Secret key** on the
-     Storyblok webhook; used to verify the `webhook-signature` header)
+2. Set the public Content Delivery API token in `website/.env.local`:
+
+```
+STORYBLOK_PREVIEW_TOKEN="<public-content-delivery-api-token>"
+```
+
+Despite the name, `STORYBLOK_PREVIEW_TOKEN` is used by the website to load
+Storyblok content through the Content Delivery API. A public token is enough
+for external contributors working on frontend/UI changes against published
+content.
+
+Maintainers who need Storyblok preview, webhooks, or schema/type generation
+may also need:
+
+- `STORYBLOK_PREVIEW_SECRET`
+- `STORYBLOK_WEBHOOK_SECRET` (must match the **Secret key** on the Storyblok
+  webhook; used to verify the `webhook-signature` header)
+- `STORYBLOK_PERSONAL_ACCESS_TOKEN`
+- `STORYBLOK_SPACE_ID`
+
+
 3. Optional: start local dev with HTTPS for live preview
 
 ```
