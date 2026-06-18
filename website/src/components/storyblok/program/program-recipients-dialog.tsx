@@ -1,13 +1,11 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
+import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramRecipientsTable } from '@/components/storyblok/program/program-recipients-table';
 import { getPublicRecipientsTableAction } from '@/lib/server-actions/program-detail-public-actions';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import type { PublicRecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import { X } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -70,48 +68,28 @@ export const ProgramRecipientsDialog = ({
 	}, [isOpen, isLoading, programId, rows]);
 
 	return (
-		<>
-			<ProgramDetailPill label={viewDemographicsLabel} isOpen={isOpen} onClick={() => setIsOpen(true)} />
-
-			<Dialog open={isOpen} onOpenChange={setIsOpen}>
-				<DialogContent
-					variant="large"
-					hideCloseButton
-					className="w-site-width flex max-h-[85vh] max-w-none flex-col gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-none"
-				>
-					<DialogHeader className="border-border bg-background sticky top-0 z-10 mx-0 flex shrink-0 flex-row items-center justify-between gap-4 space-y-0 rounded-t-3xl border-b px-12 py-6">
-						<DialogTitle className="text-2xl leading-none font-medium">{dialogTitle}</DialogTitle>
-						<div className="flex items-center gap-2">
-							<Button asChild size="sm" variant="outline">
-								<Link href={manageHref}>{manageLabel}</Link>
-							</Button>
-							<Button
-								type="button"
-								size="icon"
-								variant="ghost"
-								className="size-8 rounded-full"
-								onClick={() => setIsOpen(false)}
-								aria-label={t('program-detail-page.close')}
-							>
-								<X aria-hidden="true" />
-							</Button>
-						</div>
-					</DialogHeader>
-
-					<div className="min-w-0 overflow-y-auto px-12 pt-8 pb-12">
-						{isLoading ? (
-							<p className="text-muted-foreground text-sm">{t('program-detail-page.loading')}</p>
-						) : error ? (
-							<div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
-								<p className="font-medium">{t('program-detail-page.load-recipients-error')}</p>
-								<p className="mt-1 text-sm">{error}</p>
-							</div>
-						) : rows && totalCount !== null ? (
-							<ProgramRecipientsTable rows={rows} totalCount={totalCount} />
-						) : null}
-					</div>
-				</DialogContent>
-			</Dialog>
-		</>
+		<ProgramDetailDialog
+			title={dialogTitle}
+			triggerLabel={viewDemographicsLabel}
+			closeAriaLabel={t('program-detail-page.close')}
+			bodyClassName="min-w-0"
+			onOpenChange={setIsOpen}
+			headerActions={
+				<Button asChild size="sm" variant="outline">
+					<Link href={manageHref}>{manageLabel}</Link>
+				</Button>
+			}
+		>
+			{isLoading ? (
+				<p className="text-muted-foreground text-sm">{t('program-detail-page.loading')}</p>
+			) : error ? (
+				<div className="rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
+					<p className="font-medium">{t('program-detail-page.load-recipients-error')}</p>
+					<p className="mt-1 text-sm">{error}</p>
+				</div>
+			) : rows && totalCount !== null ? (
+				<ProgramRecipientsTable rows={rows} totalCount={totalCount} />
+			) : null}
+		</ProgramDetailDialog>
 	);
 };
