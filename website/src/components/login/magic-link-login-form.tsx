@@ -10,7 +10,6 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { sendSignInLinkToEmail } from 'firebase/auth';
-import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -116,15 +115,6 @@ export const MagicLinkLoginForm = ({ lang, embedded = false }: Props) => {
 					</p>
 				</div>
 			)}
-
-			<div className="mt-6 border-t pt-4 text-center">
-				<p className="text-sm">
-					{translator?.t('flyout.no-account')}{' '}
-					<Link href="/get-started" className="underline">
-						{translator?.t('flyout.get-started')}
-					</Link>
-				</p>
-			</div>
 		</>
 	);
 };
