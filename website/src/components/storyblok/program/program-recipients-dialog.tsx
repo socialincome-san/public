@@ -32,7 +32,7 @@ export const ProgramRecipientsDialog = ({
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		if (!isOpen || rows !== null || isLoading) {
+		if (!isOpen || rows !== null) {
 			return;
 		}
 
@@ -65,7 +65,7 @@ export const ProgramRecipientsDialog = ({
 		return () => {
 			isCancelled = true;
 		};
-	}, [isOpen, isLoading, programId, rows]);
+	}, [isOpen, programId, rows]);
 
 	return (
 		<ProgramDetailDialog
