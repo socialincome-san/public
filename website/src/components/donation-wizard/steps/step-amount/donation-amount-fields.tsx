@@ -2,9 +2,9 @@
 
 import { Button } from '@/components/button';
 import { Input } from '@/components/input';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { cn } from '@/lib/utils/cn';
+import type { DonationAmountFieldsTranslations } from '../../i18n/donation-amount-fields-translations';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
 	DONATION_CUSTOM_AMOUNT_MIN,
@@ -45,25 +45,12 @@ type DonationAmountFieldsActions = {
 	setCadence: (value: Cadence) => void;
 };
 
-export type DonationAmountFieldsTranslations = {
-	title: string;
-	monthlyIncomeLabel: string;
-	yourOnePercent: string;
-	chooseOwnAmount: string;
-	other: string;
-	customAmountPlaceholder: string;
-	monthly: string;
-	oneTime: string;
-	donateNow: string;
-	donateNowWithAmount: string;
-};
-
 type Props = {
 	values: DonationAmountFieldsValues;
 	actions: DonationAmountFieldsActions;
 	onSubmit: () => void;
 	className?: string;
-	translations?: DonationAmountFieldsTranslations;
+	translations: DonationAmountFieldsTranslations;
 };
 
 export const DonationAmountFields = ({
@@ -73,25 +60,12 @@ export const DonationAmountFields = ({
 	className = getDonationWizardCardClass('stepAmount'),
 	translations,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
-	const labels = translations ?? {
-		title: t('stepAmount.title'),
-		monthlyIncomeLabel: t('stepAmount.monthly-income-label'),
-		yourOnePercent: t('stepAmount.your-one-percent'),
-		chooseOwnAmount: t('stepAmount.choose-own-amount'),
-		other: t('stepAmount.other'),
-		customAmountPlaceholder: t('stepAmount.custom-amount-placeholder'),
-		monthly: t('stepAmount.monthly'),
-		oneTime: t('stepAmount.one-time'),
-		donateNow: t('stepAmount.donate-now'),
-		donateNowWithAmount: t('stepAmount.donate-now-with-amount'),
-	};
 
 	return (
 		<div className={cn(className, 'text-foreground md:px-9 md:py-9')} data-testid="donation-wizard-step-amount">
 			<h3 className="text-foreground mb-5 text-xl leading-tight font-semibold text-pretty sm:text-2xl sm:leading-none">
-				{labels.title}
+				{translations.title}
 			</h3>
 
 			<div className="border-muted mb-3 grid grid-cols-[minmax(0,1fr)_auto] overflow-hidden rounded-md border">
@@ -102,7 +76,7 @@ export const DonationAmountFields = ({
 					)}
 				>
 					<label htmlFor={monthlyIncomeInputId} className="text-[10px] font-medium">
-						{labels.monthlyIncomeLabel}
+						{translations.monthlyIncomeLabel}
 					</label>
 					<Input
 						id={monthlyIncomeInputId}
@@ -140,14 +114,14 @@ export const DonationAmountFields = ({
 							: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground bg-white',
 					)}
 				>
-					<div className="text-[10px] font-medium">{labels.yourOnePercent}</div>
+					<div className="text-[10px] font-medium">{translations.yourOnePercent}</div>
 					<div className="text-lg leading-none font-medium whitespace-nowrap">
 						{currency} {values.onePercent}
 					</div>
 				</button>
 			</div>
 
-			<div className="mb-2 text-center text-[10px] font-medium">{labels.chooseOwnAmount}</div>
+			<div className="mb-2 text-center text-[10px] font-medium">{translations.chooseOwnAmount}</div>
 			<div className="border-muted divide-muted mb-4 grid grid-cols-4 divide-x overflow-hidden rounded-xl border">
 				{amountOptions.map((option) => {
 					const isSelected = option.value === values.selectedAmount;
@@ -165,7 +139,7 @@ export const DonationAmountFields = ({
 							)}
 						>
 							<span className={cn(option.labelKey === 'other' ? 'text-base' : 'text-[10px]')}>
-								{option.labelKey === 'other' ? labels.other : currency}
+								{option.labelKey === 'other' ? translations.other : currency}
 							</span>
 							{option.value !== 'other' && <span>{option.value}</span>}
 						</button>
@@ -179,7 +153,7 @@ export const DonationAmountFields = ({
 					data-testid="donation-wizard-custom-amount"
 					min={DONATION_CUSTOM_AMOUNT_MIN}
 					max={DONATION_CUSTOM_AMOUNT_MAX}
-					placeholder={labels.customAmountPlaceholder}
+					placeholder={translations.customAmountPlaceholder}
 					value={values.customAmount ?? ''}
 					onChange={(e) => {
 						const raw = e.target.value;
@@ -210,7 +184,7 @@ export const DonationAmountFields = ({
 							: 'text-muted-foreground hover:text-foreground',
 					)}
 				>
-					{labels.monthly}
+					{translations.monthly}
 				</button>
 				<button
 					type="button"
@@ -224,7 +198,7 @@ export const DonationAmountFields = ({
 							: 'text-muted-foreground hover:text-foreground',
 					)}
 				>
-					{labels.oneTime}
+					{translations.oneTime}
 				</button>
 			</div>
 
@@ -236,8 +210,8 @@ export const DonationAmountFields = ({
 				onClick={onSubmit}
 			>
 				{values.resolvedAmount !== null
-					? labels.donateNowWithAmount.replace('{{amount}}', `${currency} ${values.resolvedAmount}`)
-					: labels.donateNow}
+					? translations.donateNowWithAmount.replace('{{amount}}', `${currency} ${values.resolvedAmount}`)
+					: translations.donateNow}
 			</Button>
 		</div>
 	);

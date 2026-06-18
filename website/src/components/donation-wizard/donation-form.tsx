@@ -3,14 +3,15 @@
 import { cn } from '@/lib/utils/cn';
 import { useDonationFormState } from './hooks/use-donation-form-state';
 import { useDonationModal } from './hooks/use-donation-modal';
-import { DonationAmountFields, type DonationAmountFieldsTranslations } from './steps/step-amount/donation-amount-fields';
+import type { DonationAmountFieldsTranslations } from './i18n/donation-amount-fields-translations';
+import { DonationAmountFields } from './steps/step-amount/donation-amount-fields';
 import { getDonationWizardCardClass } from './utils/donation-wizard-layout';
 import { selectStep1FormView } from './wizard/donation-machine-selectors';
 
 type Props = {
 	campaignId?: string;
 	onBeforeOpen?: () => void;
-	translations?: DonationAmountFieldsTranslations;
+	translations: DonationAmountFieldsTranslations;
 };
 
 export const DonationForm = ({ campaignId, onBeforeOpen, translations }: Props) => {

@@ -1,7 +1,6 @@
 'use client';
 
 import { hasDropdownChildren, isDropdownItem, isMenuItem } from '@/components/app-shells/website/navbar/utils';
-import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
@@ -9,14 +8,16 @@ import { cn } from '@/lib/utils/cn';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import NextLink from 'next/link';
+import type { ReactNode } from 'react';
 
 type Props = {
 	menu: Layout['menu'];
 	lang: WebsiteLanguage;
 	region: string;
+	donationForm: ReactNode;
 };
 
-export const MenuDesktop = ({ menu, lang, region }: Props) => (
+export const MenuDesktop = ({ menu, lang, region, donationForm }: Props) => (
 	<NavigationMenu.Root>
 		<NavigationMenu.List className="flex items-center gap-1">
 			{menu.map((item) => {
@@ -97,9 +98,7 @@ export const MenuDesktop = ({ menu, lang, region }: Props) => (
 										</div>
 									))}
 								</div>
-								<div className="w-96 shrink-0">
-									<DonationForm />
-								</div>
+								<div className="w-96 shrink-0">{donationForm}</div>
 							</div>
 						</NavigationMenu.Content>
 					</NavigationMenu.Item>

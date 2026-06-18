@@ -1,6 +1,5 @@
 'use client';
 
-import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { ActionButtonBlock } from '@/components/storyblok/journal/rich-text/action-button';
 import { EmbeddedVideoPlayer } from '@/components/storyblok/journal/rich-text/embedded-video';
 import { ImageWithCaption } from '@/components/storyblok/journal/rich-text/image-with-caption';
@@ -22,6 +21,7 @@ type StoryblokBlockProps = Record<string, unknown>;
 type Props = {
 	document: StoryblokRichtext;
 	lang: WebsiteLanguage;
+	donationForm: ReactNode;
 };
 
 const buildNewsletterLabels = (translator: Translator): NewsletterSignupLabels => ({
@@ -41,7 +41,7 @@ const buildReferenceLabels = (translator: Translator) => ({
 	context: (contextKey: string) => translator.t(`reference-article.context.${contextKey}`),
 });
 
-export const ArticleRichText = ({ document, lang }: Props) => {
+export const ArticleRichText = ({ document, lang, donationForm }: Props) => {
 	const journalTranslator = useTranslator(lang, 'website-journal');
 	const newsletterTranslator = useTranslator(lang, 'website-newsletter');
 
@@ -74,11 +74,7 @@ export const ArticleRichText = ({ document, lang }: Props) => {
 				<ActionButtonBlock {...(props as ComponentProps<typeof ActionButtonBlock>)} />
 			),
 			newsletterSignup: () => <NewsletterSignup lang={lang} labels={newsletterLabels} />,
-			campaignDonate: () => (
-				<div className="my-10">
-					<DonationForm />
-				</div>
-			),
+			campaignDonate: () => <div className="my-10">{donationForm}</div>,
 		},
 	}) as ReactNode;
 };

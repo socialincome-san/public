@@ -3,6 +3,7 @@ import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout
 import { MenuDesktop } from '@/components/app-shells/website/navbar/menu-desktop';
 import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
 import { displaySession, type Scope } from '@/components/app-shells/website/navbar/utils';
+import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -40,7 +41,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 			</NextLink>
 
 			<div className="hidden lg:block">
-				<MenuDesktop menu={menu} lang={lang} region={region} />
+				<MenuDesktop menu={menu} lang={lang} region={region} donationForm={<DonationFormServer lang={lang} />} />
 			</div>
 
 			<div className="flex items-center gap-4">
@@ -53,7 +54,14 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 						className="rounded-full px-5 text-sm font-semibold lg:h-11"
 					/>
 				)}
-				<MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />
+				<MenuMobile
+					sessions={sessions}
+					scope={scope}
+					lang={lang}
+					menu={menu}
+					region={region}
+					donationForm={<DonationFormServer lang={lang} />}
+				/>
 			</div>
 		</nav>
 	);

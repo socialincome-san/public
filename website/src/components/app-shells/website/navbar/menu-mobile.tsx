@@ -9,7 +9,6 @@ import {
 	isMenuItem,
 	Scope,
 } from '@/components/app-shells/website/navbar/utils';
-import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import type { DropdownItem, Layout } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -22,7 +21,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowRight, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FC, useState } from 'react';
+import { FC, useState, type ReactNode } from 'react';
 
 const FALLBACK_BADGE_COUNT = 23;
 
@@ -32,9 +31,10 @@ type Props = {
 	menu: Layout['menu'];
 	lang: WebsiteLanguage;
 	region: string;
+	donationForm: ReactNode;
 };
 
-export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) => {
+export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region, donationForm }) => {
 	const session = displaySession(sessions, scope);
 	const commonTranslator = useTranslator(lang, 'website-common');
 	const donateTranslator = useTranslator(lang, 'website-donate');
@@ -123,9 +123,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 										return null;
 									})}
 								</ul>
-								<div className="mt-4">
-									<DonationForm onBeforeOpen={() => handleOpenChange(false)} />
-								</div>
+								<div className="mt-4">{donationForm}</div>
 							</div>
 
 							<div

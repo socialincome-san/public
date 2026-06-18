@@ -1,3 +1,4 @@
+import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { ArticleRichText } from '@/components/storyblok/journal/article-rich-text';
 import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
 import { OriginalLanguageLink } from '@/components/storyblok/journal/original-language-link';
@@ -33,12 +34,20 @@ export const ArticleDetailBody = ({ story, slug, lang, region, translator }: Pro
 			/>
 
 			<div className="prose prose-neutral text-foreground prose-headings:font-semibold prose-a:text-primary max-w-none">
-				<ArticleRichText document={article.content as StoryblokRichtext} lang={lang} />
+				<ArticleRichText
+					document={article.content as StoryblokRichtext}
+					lang={lang}
+					donationForm={<DonationFormServer lang={lang} />}
+				/>
 			</div>
 
 			{article.footnotes && (
 				<div className="prose prose-neutral text-muted-foreground max-w-none text-sm">
-					<ArticleRichText document={article.footnotes as StoryblokRichtext} lang={lang} />
+					<ArticleRichText
+						document={article.footnotes as StoryblokRichtext}
+						lang={lang}
+						donationForm={<DonationFormServer lang={lang} />}
+					/>
 				</div>
 			)}
 
