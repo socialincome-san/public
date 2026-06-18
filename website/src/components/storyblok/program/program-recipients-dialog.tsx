@@ -84,7 +84,9 @@ export const ProgramRecipientsDialog = ({
 			}
 		>
 			{isLoading ? (
-				<p className="text-muted-foreground text-sm">{t('program-detail-page.loading')}</p>
+				<p className="text-muted-foreground text-sm" role="status" aria-live="polite">
+					{t('program-detail-page.loading')}
+				</p>
 			) : hasError ? (
 				<div className="flex flex-col gap-4 rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
 					<p className="font-medium">{t('program-detail-page.load-recipients-error')}</p>
