@@ -21,13 +21,13 @@ export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: Web
 		<DonationModalProvider>
 			<div className="bg-website-gradient text-primary flex min-h-screen w-full flex-col antialiased">
 				<Navbar sessions={sessions} lang={lang} region={region} scope={scope} />
-				<div
+				<main
 					className={
 						isContained ? 'w-site-width max-w-content mx-auto mt-20 flex-1 pb-8' : '[&:not(:has(>.full-bleed-hero))]:mt-20'
 					}
 				>
 					{children}
-				</div>
+				</main>
 				<Footer lang={lang} region={region} />
 			</div>
 		</DonationModalProvider>
