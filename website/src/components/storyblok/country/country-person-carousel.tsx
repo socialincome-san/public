@@ -29,7 +29,7 @@ export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 
 	return (
 		<BlockWrapper>
-			<div className="grid gap-8 lg:grid-cols-3 lg:items-center">
+			<div className="grid gap-8 pl-8 lg:grid-cols-3 lg:items-center">
 				<div className="space-y-4 pr-8 lg:col-span-1 lg:pr-0">
 					{countryOfficeTitle ? (
 						<p className="text-foreground mb-0 text-4xl font-bold break-words">{countryOfficeTitle}</p>
