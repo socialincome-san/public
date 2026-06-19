@@ -8,6 +8,35 @@ export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'fr' | 'it' | 
 export const defaultLanguage: WebsiteLanguage = 'en';
 export const mainWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it'];
 export const allWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it', 'kri'];
+export const WEBSITE_LANGUAGE_HEADER = 'x-website-language';
+
+const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
+	allWebsiteLanguages.includes(value as WebsiteLanguage);
+
+export const getLanguageFromPathname = (pathname: string): WebsiteLanguage | undefined => {
+	const detectedLanguage = pathname.split('/').at(1) ?? '';
+
+	return isWebsiteLanguage(detectedLanguage) ? detectedLanguage : undefined;
+};
+
+export const resolveWebsiteLanguage = ({
+	pathnameLanguage,
+	cookieLanguage,
+	preferCookie = false,
+}: {
+	pathnameLanguage?: string;
+	cookieLanguage?: string;
+	preferCookie?: boolean;
+}): WebsiteLanguage => {
+	const fromPathname = pathnameLanguage && isWebsiteLanguage(pathnameLanguage) ? pathnameLanguage : undefined;
+	const fromCookie = cookieLanguage && isWebsiteLanguage(cookieLanguage) ? cookieLanguage : undefined;
+
+	if (preferCookie) {
+		return fromCookie ?? fromPathname ?? defaultLanguage;
+	}
+
+	return fromPathname ?? fromCookie ?? defaultLanguage;
+};
 
 export const getSafeNumberFormatLocale = (lang: WebsiteLanguage): string => {
 	try {
