@@ -13,11 +13,9 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const formSchema = z.object({
-	email: z.string().trim().email('Please enter a valid email address.'),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = {
+	email: string;
+};
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -28,6 +26,13 @@ type Props = {
 export const MagicLinkLoginForm = ({ lang }: Props) => {
 	const { auth } = useAuth();
 	const translator = useTranslator(lang, 'website-login');
+
+	const formSchema = z.object({
+		email: z
+			.string()
+			.trim()
+			.email(translator?.t('error.invalid-email') ?? 'Invalid email address'),
+	});
 
 	const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
 	const [submittedEmail, setSubmittedEmail] = useState('');
