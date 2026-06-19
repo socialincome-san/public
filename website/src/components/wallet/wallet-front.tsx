@@ -38,7 +38,7 @@ const WalletFrontContent = ({ variant, title, subtitle, badge, footerLeft, foote
 			{variant === 'default' ? (
 				<div className="flex h-full w-full flex-col items-start justify-between gap-2">
 					<div>
-						<h3 className="mb-3 text-4xl leading-none font-normal">{title}</h3>
+						<h2 className="mb-3 text-4xl leading-none font-normal">{title}</h2>
 						<p className="mb-3 line-clamp-1 text-base leading-6 font-medium">{subtitle}</p>
 						{badge && <div className="mt-1">{badge}</div>}
 					</div>

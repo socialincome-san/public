@@ -86,7 +86,7 @@ export const Footer = async ({ lang, region }: Props) => {
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
 					{footerMenu.map((menuGroup) => (
 						<div key={menuGroup._uid}>
-							<h5 className="text-lg font-bold text-white">{menuGroup.label}</h5>
+							<h2 className="text-lg font-bold text-white">{menuGroup.label}</h2>
 							<ul className="mt-4 space-y-3">
 								{menuGroup.items?.map((item) => {
 									const Icon = item.icon ? IconMap[item.icon] : null;

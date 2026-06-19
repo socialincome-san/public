@@ -77,9 +77,9 @@ export const ModalCardsBlock = ({ blok, lang, region }: Props) => {
 								<div className="text-primary absolute top-5 right-5 flex size-11 items-center justify-center rounded-full bg-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-110 md:top-10 md:right-10">
 									<PlusIcon className="size-6" />
 								</div>
-								<h3 className="absolute right-5 bottom-5 left-5 text-3xl leading-tight text-white md:right-10 md:bottom-10 md:left-10 md:text-4xl">
+								<h2 className="absolute right-5 bottom-5 left-5 text-3xl leading-tight text-white md:right-10 md:bottom-10 md:left-10 md:text-4xl">
 									{heading}
-								</h3>
+								</h2>
 							</button>
 							<DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
 								<DialogTitle>{heading}</DialogTitle>
