@@ -1,6 +1,7 @@
 'use client';
 
 import { AccountMenu } from '@/components/app-shells/website/navbar/account-menu';
+import { LocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/locale-currency-switcher';
 import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout';
 import {
 	displaySession,
@@ -179,13 +180,20 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 								)}
 							</div>
 						</div>
-						<div className="border-muted flex h-18 shrink-0 items-center justify-between border-t px-4 shadow-[0_-3px_14px_rgba(0,0,0,0.05)]">
-							<OpenDonationWizardButton
-								label={donateTranslator?.t('donation-form.donate-now') ?? 'Donate now'}
-								className="h-11 rounded-full px-5 text-sm font-medium"
-								onBeforeOpen={() => handleOpenChange(false)}
-							/>
-							{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
+						<div className="border-muted flex h-18 shrink-0 items-center justify-between gap-2 border-t px-4 shadow-[0_-3px_14px_rgba(0,0,0,0.05)]">
+							{!session && (
+								<OpenDonationWizardButton
+									label={donateTranslator?.t('donation-form.donate-now') ?? 'Donate now'}
+									className="h-11 rounded-full px-4 text-sm font-medium"
+									onBeforeOpen={() => handleOpenChange(false)}
+								/>
+							)}
+							<div className="flex min-w-0 items-center gap-2">
+								{scope === 'website' && (
+									<LocaleCurrencySwitcher lang={lang} region={region} className="border-input h-11 border px-3" />
+								)}
+								{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
+							</div>
 						</div>
 					</Dialog.Content>
 				</Dialog.Overlay>
