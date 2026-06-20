@@ -1,3 +1,4 @@
+import { ContactIcon } from '@/components/svg/contact';
 import { FacebookIcon } from '@/components/svg/facebook';
 import { GithubIcon } from '@/components/svg/github';
 import { InstagramIcon } from '@/components/svg/instagram';
@@ -25,6 +26,7 @@ const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.Componen
 	facebook: FacebookIcon,
 	github: GithubIcon,
 	newsletter: PaperPlaneIcon,
+	contact: ContactIcon,
 };
 
 export const Footer = async ({ lang, region }: Props) => {
