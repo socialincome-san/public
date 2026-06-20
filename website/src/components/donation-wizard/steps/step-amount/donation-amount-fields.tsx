@@ -76,7 +76,7 @@ export const DonationAmountFields = ({
 					)}
 				>
 					<label htmlFor={monthlyIncomeInputId} className="text-[10px] font-medium">
-						{translations.monthlyIncomeLabel}
+						{translations.monthlyIncomeLabel}({currency})
 					</label>
 					<Input
 						id={monthlyIncomeInputId}

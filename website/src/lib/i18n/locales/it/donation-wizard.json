@@ -11,7 +11,7 @@
 	},
 	"stepAmount": {
 		"title": "Fai una donazione",
-		"monthly-income-label": "Il tuo reddito mensile (CHF)",
+		"monthly-income-label": "Il tuo reddito mensile ",
 		"choose-own-amount": "Oppure scegli un importo personalizzato",
 		"your-one-percent": "Il tuo 1%",
 		"other": "Altro",
