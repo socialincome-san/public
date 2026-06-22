@@ -1,4 +1,5 @@
 import {
+	formatCompactNumberLocale,
 	formatCurrency,
 	formatCurrencyLocale,
 	formatDate,
@@ -161,6 +162,41 @@ describe('string-utils', () => {
 
 		test('normalizes swiss thousands separator apostrophe', () => {
 			expect(formatNumberLocale(4650, 'de-CH')).toBe("4'650");
+		});
+	});
+
+	describe('formatCompactNumberLocale', () => {
+		test('keeps values below 1,000 unabbreviated', () => {
+			expect(formatCompactNumberLocale(999, 'en')).toBe('999');
+			expect(formatCompactNumberLocale(500, 'de')).toBe('500');
+		});
+
+		test('abbreviates thousands in English', () => {
+			expect(formatCompactNumberLocale(1_234, 'en')).toBe('1.2K');
+			expect(formatCompactNumberLocale(123_456, 'en')).toBe('123K');
+		});
+
+		test('abbreviates thousands in French', () => {
+			expect(formatCompactNumberLocale(123_456, 'fr')).toBe('123\u00a0k');
+		});
+
+		test('abbreviates thousands in German with Tsd. suffix', () => {
+			expect(formatCompactNumberLocale(123_456, 'de')).toBe('123 Tsd.');
+		});
+
+		test('abbreviates thousands in Italian with k suffix', () => {
+			expect(formatCompactNumberLocale(123_456, 'it')).toBe('123k');
+		});
+
+		test('uses short-form millions with locale-specific labels', () => {
+			expect(formatCompactNumberLocale(1_234_567, 'en')).toBe('1.23M');
+			expect(formatCompactNumberLocale(1_234_567, 'de')).toBe('1,23\u00a0Mio.');
+			expect(formatCompactNumberLocale(1_234_567, 'fr')).toBe('1,23\u00a0M');
+			expect(formatCompactNumberLocale(1_234_567, 'it')).toBe('1,23\u00a0Mln');
+		});
+
+		test('returns 0 for non-finite values', () => {
+			expect(formatCompactNumberLocale(Number.NaN, 'en')).toBe('0');
 		});
 	});
 
