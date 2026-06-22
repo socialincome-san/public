@@ -19,7 +19,5 @@ export const ProgramPayoutsTotal = ({ programDetailData, lang, region }: Props) 
 		images: programDetailData.images,
 	};
 
-	// console.log("images", blok.images);
-
 	return <StoryblokPayoutsTotal blok={blok} totalChf={totalChf} lang={lang} region={region} />;
 };

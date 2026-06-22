@@ -51,7 +51,7 @@ export const loadProgramDetailData = async (urlSlug: string, lang: string): Prom
 		const story = programResult.data;
 		const portalSlug = getProgramPortalSlug(story.content);
 		const portalData = portalSlug ? await loadProgramDetailPortalData(portalSlug) : {};
-		console.log("images", [story.content.primaryImage, story.content.secondaryImage, story.content.tertiaryImage]);
+
 		return {
 			title: getProgramTitle(story.content),
 			fullSlug: story.full_slug,
