@@ -1,21 +1,6 @@
 {
-	"titleOnboarding": "Onboarding Umfrage",
-	"titleCheckin": "Check-in Umfrage",
-	"titleOffboarding": "Offboarding Umfrage",
-	"titleFollowup": "Follow-up Umfrage",
 	"select": "Auswählen",
-	"save": "Speichern",
-	"freetext": "Gib deine Antwort ein",
-	"demo": "Im Demomodus kann die Umfrage nicht gespeichert werden",
 	"survey": {
-		"login": {
-			"message": "Bitte gib deine Telefonnummer und den Zugangscode ein, den wir dir geschickt haben.",
-			"phoneNumber": "Mobile-Money-Nummer",
-			"accessCode": "Zugangscode für die Umfrage",
-			"loadSurvey": "Umfrage laden",
-			"loading": "Lädt...",
-			"error": "Wir konnten die Umfrage nicht finden. Bitte überprüfe erneut deine Telefonnummer und den Zugangscode. Bitte kontaktiere das Team von Social Income, falls der Fehler weiterhin auftritt."
-		},
 		"common": {
 			"start": "Starten",
 			"previous": "Zurück",
@@ -24,11 +9,6 @@
 			"preview": "Vorschau",
 			"edit": "Bearbeiten",
 			"loading": "Lädt...",
-			"missingCredentials": "Es fehlen Anmeldedaten für die Umfrage. Bitte kontaktiere das Team von Social Income.",
-			"authError": "Fehler beim Login. Bitte kontaktiere das Team von Social Income.",
-			"loadingError": "Fehler beim Laden der Umfrage. Bitte kontaktiere das Team von Social Income.",
-			"progressSavingSuccess": "Deine Antwort wurde erfolgreich gespeichert.",
-			"progressSavingError": "Deine Antwort konnte nicht gespeichert werden. Erneuter Versuch... Bitte kontaktiere das Team von Social Income, wenn das Problem weiterhin besteht.",
 			"completed": "Vielen Dank für das Ausfüllen der Umfrage.",
 			"alreadyCompleted": "Diese Umfrage wurde bereits ausgefüllt. Vielen Dank.",
 			"hello": "Hallo",
@@ -121,28 +101,13 @@
 			"description": "Alle auf dieser Seite gezeigten Daten werden in Echtzeit aus Umfragen mit unseren Empfängerinnen und Empfängern aktualisiert.",
 			"loadError": "Die Wirkungsdaten konnten derzeit nicht geladen werden.",
 			"notAvailable": "N/A",
-			"breadcrumb": {
-				"home": "Startseite",
-				"programs": "Programme",
-				"impactMeasurement": "Wirkungsmessung"
-			},
 			"filters": {
 				"allCountries": "Alle Länder",
 				"allPrograms": "Alle Programme",
 				"allFocuses": "Alle Schwerpunkte",
 				"allSurveys": "Alle Umfragen",
-				"allRecipients": "Alle Empfängerinnen und Empfänger",
-				"allFilters": "Alle Filter",
-				"filter": "Filter",
-				"apply": "Anwenden",
-				"reset": "Zurücksetzen"
+				"filter": "Filter"
 			},
-			"downloadCsv": "CSV herunterladen",
-			"comingSoon": "Demnächst",
-			"downloadFilteredCsv": "Gefilterte CSV herunterladen",
-			"studyDetails": "Studien-Details",
-			"sampleSize": "Stichprobengrösse",
-			"uniqueIndividuals": "Eindeutige Personen",
 			"countryHeading": "Land",
 			"ageHeading": "Alter",
 			"genderHeading": "Geschlecht",

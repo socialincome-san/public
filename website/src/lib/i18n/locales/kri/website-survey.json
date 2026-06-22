@@ -1,13 +1,5 @@
 {
 	"survey": {
-		"login": {
-			"message": "Duya put yu fon nɔmba ɛn di lili tin we wi bin sɛn to yu.",
-			"phoneNumber": "Mobayl Mɔni Nɔmba",
-			"accessCode": "Di kod fɔ di sɔve",
-			"loadSurvey": "Lod sɔve",
-			"loading": "I de lod...",
-			"error": "Wi nɔ ebul si di sɔve. Duya chɛk di fon nɔmba ɛn di lili tin we wi bin gi yu bak. If yu stil de gɛt prɔblɛm na fɔ kɔl di Social Income Tim."
-		},
 		"common": {
 			"start": "Stat",
 			"previous": "Go biyɛn",
@@ -16,11 +8,6 @@
 			"preview": "Fɔ Wach",
 			"edit": "Chenj Di Ansa",
 			"loading": "I de lod ...",
-			"missingCredentials": "Yu nɔ ebul go insay di sɔve. Duya rich awt to di Social Income tim.",
-			"authError": "Yu de gɛt prɔblɛm fɔ lɔg-in? Duya rich awt to di Social Income tim.",
-			"loadingError": "Yu de gɛt prɔblɛm fɔ opin di sɔve. Duya rich awt to di Social Income tim.",
-			"progressSavingSuccess": "Yu ansa dɔn sev faynali.",
-			"progressSavingError": "Wi nɔ ebul sev yu ansa. Tray bak...,, If di prɔblɛm de kam fas fas, duya rich awt to di Social Income tim.",
 			"completed": "Plɛnti tɛnki we yu dɔn dɔn dis sɔve.",
 			"alreadyCompleted": "Faynali yu dɔn dɔn dis sɔve. Tɛnki tɛnki ɔ.",
 			"hello": "Kabɔ",
@@ -81,7 +68,6 @@
 			"debtHouseholdWhoRepaysTitleV1": "Na yu de pe fɔ dis pɔsin?",
 			"otherSupportTitleV1": "Ɛni ɔda say de we dɛn de ɛp yu wit mɔni?",
 			"plannedAchievementTitleV1": "Wetin yu op fɔ du wit Social Income oba di nɛks 3 iya?",
-
 			"spendingTitleV1": "Wetin na di men tin dɛn we yu de yus yu Social Income mɔni fɔ?",
 			"spendingChoices": {
 				"education": "Buk lanin (skul fi, not buk ɛn pɛn, tɛksbuk ...)",
@@ -95,10 +81,8 @@
 			"spendingRankingTitleV1": "Duya, rayt di nɔmba dɛn we de niya dɛn katɛgɔri we yu de yus yu mɔni pan, fɔ sho wi di wan dɛm we impɔtant pas ɔl fɔ yu",
 			"spendingRankingDescV1": "Yu kin drɛg di katɛgori ɛn put am ya.",
 			"plannedAchievementRemainingTitleV1": "Wetin yu op fɔ gɛt wit Social Income ɛnitɛm dɛn kam yu we?",
-
 			"financialIndependenceTitleV1": "Social Income dɔn mek yu fil se bɛtɛ de ɛn nɔbɔdi nɔ go put an ɔnda yu?",
 			"impactLifeGeneralTitleV1": "Ɔmɔs Social Income dɔn chenj yu layf?",
-
 			"longEnoughTitleV1": "Di tri iya we yu dɔn gɛt Social Income mɔni dɔn du fɔ manej pe fɔ wetin yu nid?",
 			"achievementsAchievedTitleV1": "Yu dɔn manej fɔ du wetin yu bin op fɔ du dɛn las tri iya?",
 			"achievementsNotAchievedCommentTitleV1": "Wetin mek yu nɔ bin ebul du am? Yu tink se wi bin ebul du sɔm ɔda tin fɔ sɔpɔt yu? (Fɔ ɛgzampul: tich yu sɔm skil dɛm, kɔnɛkt yu wit ɔda savis dɛm)",

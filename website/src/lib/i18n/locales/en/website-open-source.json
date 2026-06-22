@@ -1,47 +1,6 @@
 {
 	"metadata": {
-		"title": "Open-Source Insights ",
-		"heading": "Contributors"
-	},
-	"contributors": {
-		"heading": "Contributors",
-		"showAll": "Show all {count} contributors",
-		"commitSingular": "commit",
-		"commitPlural": "commits"
-	},
-	"hero": {
-		"title-1": [
-			{
-				"text": "Tools for Change. "
-			},
-			{
-				"text": "Open to All.",
-				"color": "accent"
-			}
-		],
-		"subtitle": "Everything we build is open source—free to use, adapt, and improve. Join our volunteer community creating tools for equality and change."
-	},
-	"overview": {
-		"forks": {
-			"title": "Forks",
-			"time": "last month"
-		},
-		"commits": {
-			"title": "Commits",
-			"time": "last month"
-		},
-		"stars": {
-			"title": "GitHub Stars",
-			"time": "last month"
-		}
-	},
-	"issues": {
-		"title": "Open Issues",
-		"header": "Issue Title",
-		"link": "View on GitHub",
-		"filter": "All Issues",
-		"showAll": "Show all {count} issues",
-		"empty": "No open issues"
+		"title": "Open-Source Insights "
 	},
 	"error": {
 		"unavailable": "GitHub data is currently unavailable. Please try again later."
