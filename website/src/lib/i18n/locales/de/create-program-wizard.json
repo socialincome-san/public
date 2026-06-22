@@ -15,7 +15,8 @@
 			"monthly": "Monatlich",
 			"quarterly": "Quartalsweise",
 			"yearly": "Jährlich"
-		}
+		},
+		"error": "Fehler"
 	},
 	"error": {
 		"generic": "Etwas ist schiefgelaufen"

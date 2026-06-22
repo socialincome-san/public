@@ -3,32 +3,5 @@
 	"amount": "Amount",
 	"donation-form": {
 		"donate-now": "Donate now"
-<<<<<<< Updated upstream
-	},
-	"success": {
-		"title": "Thank you for your contribution",
-		"user-form": {
-			"title": "Review your contact details",
-			"firstname": "First Name",
-			"lastname": "Last Name",
-			"email": "Email",
-			"country": "Country",
-			"gender": "Gender",
-			"referral": "How did you hear about us?",
-			"accept-terms-and-conditions": "I accept the <a href='/legal/donations' target='_blank' class='underline'>Terms and Conditions</a> and <a href='/legal/privacy/' target='_blank' class='underline'>Privacy Policy</a>.",
-			"referrals": {
-				"familyfriends": "Family & Friends",
-				"socialmedia": "Social Media",
-				"work": "Work",
-				"media": "Media",
-				"presentation": "Presentation",
-				"other": "Other"
-			},
-			"submit-button": "Confirm",
-			"update-user-error": "There was an error updating your information. Please try again.",
-			"activate-your-account": "Please check your email and click the link we sent to activate your account."
-		}
-=======
->>>>>>> Stashed changes
 	}
 }

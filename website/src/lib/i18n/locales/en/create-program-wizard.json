@@ -15,7 +15,8 @@
 			"monthly": "Monthly",
 			"quarterly": "Quarterly",
 			"yearly": "Yearly"
-		}
+		},
+		"error": "Error"
 	},
 	"error": {
 		"generic": "Something went wrong"

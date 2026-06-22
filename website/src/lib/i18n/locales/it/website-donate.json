@@ -6,32 +6,5 @@
 	"amount": "Importo",
 	"donation-form": {
 		"donate-now": "Dona ora"
-<<<<<<< Updated upstream
-	},
-	"success": {
-		"title": "Grazie per il tuo contributo",
-		"user-form": {
-			"title": "Rivedi i tuoi dati di contatto",
-			"firstname": "Nome",
-			"lastname": "Cognome",
-			"email": "Email",
-			"country": "Paese",
-			"gender": "Genere",
-			"referral": "Come hai scoperto Social Income?",
-			"accept-terms-and-conditions": "Accetto i <a href='/terms-and-conditions/' target='_blank' class='underline'>Termini e Condizioni</a> and <a href='/privacy/' target='_blank' class='underline'>Privacy Policy</a>.",
-			"referrals": {
-				"familyfriends": "Famiglia e Amici",
-				"socialmedia": "Social Media",
-				"work": "Lavoro",
-				"media": "Media",
-				"presentation": "Evento",
-				"other": "Altro"
-			},
-			"submit-button": "Conferma",
-			"update-user-error": "Si è verificato un errore durante l'aggiornamento delle tue informazioni. Per favore riprova.",
-			"activate-your-account": "Per favore controlla la tua email e clicca sul link che ti abbiamo inviato per attivare il tuo account."
-		}
-=======
->>>>>>> Stashed changes
 	}
 }

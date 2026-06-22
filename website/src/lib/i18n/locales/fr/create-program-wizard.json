@@ -15,7 +15,8 @@
 			"monthly": "Mensuel",
 			"quarterly": "Trimestriel",
 			"yearly": "Annuel"
-		}
+		},
+		"error": "Erreur"
 	},
 	"error": {
 		"generic": "Une erreur est survenue"

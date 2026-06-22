@@ -3,32 +3,5 @@
 	"amount": "Betrag",
 	"donation-form": {
 		"donate-now": "Jetzt spenden"
-<<<<<<< Updated upstream
-	},
-	"success": {
-		"title": "Herzlichen Dank für deine Spende",
-		"user-form": {
-			"title": "Überprüfe deine Kontaktdaten",
-			"firstname": "Vorname",
-			"lastname": "Nachname",
-			"email": "E-Mail",
-			"country": "Land",
-			"gender": "Geschlecht",
-			"referral": "Wie hast du von uns erfahren?",
-			"accept-terms-and-conditions": "Ich akzeptiere die <a href='/legal/donations/' target='_blank' class='underline'>Teilnahmebedingungen</a> und die <a href='/legal/privacy/' target='_blank' class='underline'>Datenschutzrichtlinie</a>.",
-			"referrals": {
-				"familyfriends": "Familie oder Freunde",
-				"socialmedia": "Social Media",
-				"work": "Arbeitskolleg:innen",
-				"media": "Presse",
-				"presentation": "Präsentation",
-				"other": "Von woanders"
-			},
-			"submit-button": "Bestätigen",
-			"update-user-error": "Es gab einen Fehler beim Aktualisieren deiner Informationen. Bitte versuche es erneut.",
-			"activate-your-account": "Bitte überprüfe deine E-Mails und klicke auf den Link, den wir dir gesendet haben, um dein Konto zu aktivieren."
-		}
-=======
->>>>>>> Stashed changes
 	}
 }
