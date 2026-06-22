@@ -14,16 +14,6 @@ type Props = {
 
 const RELATED_PROGRAMS_COUNT = 3;
 
-const pickRandomPrograms = (programs: ProgramStory[], count: number) => {
-	const shuffled = [...programs];
-	for (let i = shuffled.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
-		[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-	}
-
-	return shuffled.slice(0, count);
-};
-
 export const ProgramDetailRelatedGrid = async ({ currentProgramFullSlug, lang, region }: Props) => {
 	const [programsResult, translator] = await Promise.all([
 		services.storyblok.getPrograms(lang),
@@ -36,7 +26,14 @@ export const ProgramDetailRelatedGrid = async ({ currentProgramFullSlug, lang, r
 		return null;
 	}
 
-	const relatedPrograms = pickRandomPrograms(otherPrograms, RELATED_PROGRAMS_COUNT);
+	const relatedPrograms = [...otherPrograms]
+		.sort(
+			(programA, programB) =>
+				(programB.first_published_at ?? programB.published_at ?? programB.created_at).localeCompare(
+					programA.first_published_at ?? programA.published_at ?? programA.created_at,
+				),
+		)
+		.slice(0, RELATED_PROGRAMS_COUNT);
 
 	const button: Button = {
 		component: 'button',
