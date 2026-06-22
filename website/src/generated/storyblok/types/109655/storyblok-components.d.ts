@@ -393,6 +393,7 @@ export interface Program {
   primaryImage: StoryblokAsset;
   secondaryImage: StoryblokAsset;
   tertiaryImage: StoryblokAsset;
+  fourthImage: StoryblokAsset;
   component: "program";
   _uid: string;
   [k: string]: unknown;
