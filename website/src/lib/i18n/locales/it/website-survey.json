@@ -1,21 +1,6 @@
 {
-	"titleOnboarding": "Questionario di onboarding",
-	"titleCheckin": "Questionario di check-in",
-	"titleOffboarding": "Questionario di offboarding",
-	"titleFollowup": "Questionario di follow-up",
 	"select": "Seleziona",
-	"save": "Salva",
-	"freetext": "Inserisci la tua risposta",
-	"demo": "In modalità demo il questionario non può essere salvato",
 	"survey": {
-		"login": {
-			"message": "Inserisci il tuo numero di telefono e il token di accesso che ti abbiamo inviato.",
-			"phoneNumber": "Numero Mobile Money",
-			"accessCode": "Codice di accesso al questionario",
-			"loadSurvey": "Carica questionario",
-			"loading": "Caricamento in corso...",
-			"error": "Non siamo riusciti a trovare il questionario. Controlla di nuovo il numero di telefono e il token di accesso. Contatta il team di Social Income se l'errore persiste."
-		},
 		"common": {
 			"start": "Inizia",
 			"previous": "Precedente",
@@ -24,11 +9,6 @@
 			"preview": "Anteprima",
 			"edit": "Modifica",
 			"loading": "Caricamento in corso...",
-			"missingCredentials": "Credenziali mancanti per il questionario. Contatta il team di Social Income.",
-			"authError": "Errore durante l'accesso. Contatta il team di Social Income.",
-			"loadingError": "Errore durante il caricamento del questionario. Contatta il team di Social Income.",
-			"progressSavingSuccess": "La tua risposta è stata salvata con successo.",
-			"progressSavingError": "Impossibile salvare la tua risposta. Riprovo... Contatta il team di Social Income se l'errore persiste.",
 			"completed": "Grazie mille per aver completato il questionario.",
 			"alreadyCompleted": "Questo questionario è già stato completato. Grazie mille.",
 			"hello": "Ciao",
@@ -121,28 +101,13 @@
 			"description": "Tutti i dati mostrati in questa pagina vengono aggiornati in tempo reale dai questionari svolti con i nostri recipient.",
 			"loadError": "Impossibile caricare i dati di misurazione dell'impatto in questo momento.",
 			"notAvailable": "N/D",
-			"breadcrumb": {
-				"home": "Home",
-				"programs": "Programmi",
-				"impactMeasurement": "Misurazione dell'impatto"
-			},
 			"filters": {
 				"allCountries": "Tutti i paesi",
 				"allPrograms": "Tutti i programmi",
 				"allFocuses": "Tutti i focus",
 				"allSurveys": "Tutti i questionari",
-				"allRecipients": "Tutti i recipient",
-				"allFilters": "Tutti i filtri",
-				"filter": "Filtro",
-				"apply": "Applica",
-				"reset": "Reimposta"
+				"filter": "Filtro"
 			},
-			"downloadCsv": "Scarica CSV",
-			"comingSoon": "Prossimamente",
-			"downloadFilteredCsv": "Scarica CSV filtrato",
-			"studyDetails": "Dettagli dello studio",
-			"sampleSize": "Dimensione del campione",
-			"uniqueIndividuals": "Individui unici",
 			"countryHeading": "Paese",
 			"ageHeading": "Età",
 			"genderHeading": "Genere",

@@ -4,27 +4,15 @@
 	},
 	"title": "Sign in to your account",
 	"email": "Email",
-	"confirm-email": "Please confirm your email address",
-	"back-to-login": "Back to login",
 	"signing-in": "Signing in...",
 	"password": "Password",
-	"required-field": "This field is required",
 	"submit-button": "Send login link",
-	"check-email": "You should have received an email with a link to sign in.",
-	"confirm-email-title": "Confirm your email address",
 	"confirm-login": {
 		"title": "Complete sign in",
 		"body": "Click the button below to complete sign in.",
 		"cta": "Complete sign in",
 		"return-home": "Return home"
 	},
-	"error": {
-		"user-not-found": "User not found",
-		"invalid-email": "Invalid email address",
-		"unknown": "Login failed"
-	},
-	"detect-account-type": "Detecting account type...",
-	"invalid-account-type": "Invalid account type, please try again or contact support.",
 	"flyout": {
 		"login-button": "Login",
 		"title": "Sign in",

@@ -14,25 +14,14 @@
 			"collected-amount_other": "{{ amount, currency }} von {{count}} Spender:innen",
 			"goal-amount": "{{ amount, currency }}"
 		},
-		"days-left_zero": "Letzter Tag",
-		"days-left_one": "Noch einen Tag bis zum Spendeschluss",
-		"days-left_other": "{{ count }} verbleibende Tage",
 		"ended": "Die Kampagne ist beendet. Für reguläre Spenden verwende bitte die Hauptspendeseite.",
-		"card-title": "Mein Beitrag",
 		"about-si-title": "Über Social Income",
 		"about-si-text-1": "Social Income ist eine NGO mit Sitz in der Schweiz, die bedingungslose Geldüberweisungen per Mobiltelefon an Menschen in multidimensionaler Armut in Westafrika bereitstellt.",
 		"about-si-text-2": "Seit 2020 führt Social Income ein zeitlich unbegrenztes Programm für ein universelles Grundeinkommen in Sierra Leone durch.",
-		"more-faq": "<a href='/faq' target=\"_blank\">Mehr Fragen</a>",
-		"badge-highlight": "Aktuelle Kampagne",
 		"other-campaigns": {
 			"heading-prefix": "Entdecke andere ",
 			"heading-emphasis": "Kampagnen",
 			"show-all": "Alle Kampagnen anzeigen"
 		}
-	},
-	"badges": {
-		"by": "Von",
-		"contributors": "Spender:innen",
-		"loading": "Suche aktuelle Fundraisers"
 	}
 }
