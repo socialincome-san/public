@@ -11,7 +11,7 @@
 		"recipients": "Empfänger:innen"
 	},
 	"cookie-consent-banner": {
-		"text": "Wir verwenden <a href='/legal' class='underline'>Cookies</a>.",
+		"text": "Wir verwenden <a href='/legal/privacy' class='underline'>Cookies</a>.",
 		"button-accept": "Akzeptieren",
 		"button-refuse": "Ablehnen"
 	},
