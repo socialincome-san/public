@@ -6,7 +6,7 @@ import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { useEffect } from 'react';
 import { Model } from 'survey-core';
-import 'survey-core/defaultV2.min.css';
+import 'survey-core/survey-core.min.css';
 import { Survey as SurveyReact } from 'survey-react-ui';
 import { settings } from './common';
 import { getQuestionnaire } from './questionnaires';
