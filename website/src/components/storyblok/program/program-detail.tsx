@@ -111,7 +111,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						</div>
 					</div>
 				</div>
-				{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0  ? (
+				{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0 ? (
 					<ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} />
 				) : null}
 				<CampaignJournalTeaser lang={lang} region={region} />
