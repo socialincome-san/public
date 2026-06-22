@@ -56,9 +56,12 @@ export const loadProgramDetailData = async (urlSlug: string, lang: string): Prom
 			title: getProgramTitle(story.content),
 			fullSlug: story.full_slug,
 			heroImage: story.content.primaryImage,
-			images: [story.content.primaryImage, story.content.secondaryImage, story.content.tertiaryImage, story.content.fourthImage].filter(
-				(image): image is StoryblokAsset => Boolean(image?.filename),
-			),
+			images: [
+				story.content.primaryImage,
+				story.content.secondaryImage,
+				story.content.tertiaryImage,
+				story.content.fourthImage,
+			].filter((image): image is StoryblokAsset => Boolean(image?.filename)),
 			description: story.content.description?.trim() || undefined,
 			...portalData,
 		};
