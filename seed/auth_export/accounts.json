@@ -716,6 +716,26 @@
       "phoneNumber": "+23177100012",
       "validSince": "1735736400",
       "disabled": false
+    },
+    {
+      "localId": "auth-survey-candidate-sl-1",
+      "createdAt": "1735736400000",
+      "lastLoginAt": "1735736400000",
+      "passwordHash": "fakeHash:salt=fakeSaltSeedData000000000000:password=seed-survey-pw",
+      "salt": "fakeSaltSeedData000000000000",
+      "passwordUpdatedAt": 1735736400000,
+      "providerUserInfo": [
+        {
+          "providerId": "password",
+          "email": "candidate-sl-1@survey.test",
+          "federatedId": "candidate-sl-1@survey.test",
+          "rawId": "candidate-sl-1@survey.test"
+        }
+      ],
+      "validSince": "1735736400",
+      "email": "candidate-sl-1@survey.test",
+      "emailVerified": true,
+      "disabled": false
     }
   ]
 }

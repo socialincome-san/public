@@ -7,10 +7,10 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { useEffect } from 'react';
 import { Model } from 'survey-core';
 import 'survey-core/survey-core.min.css';
+import { BorderlessLightPanelless } from 'survey-core/themes';
 import { Survey as SurveyReact } from 'survey-react-ui';
 import { settings } from './common';
 import { getQuestionnaire } from './questionnaires';
-import './survey.css';
 import { useSurvey } from './use-survey';
 
 export type SurveyLanguage = Extract<WebsiteLanguage, 'en' | 'kri'>;
@@ -40,12 +40,13 @@ export const Survey = ({ surveyId, recipientId, lang }: SurveyProps) => {
 			...settings(translator.t),
 			pages: getQuestionnaire(survey.questionnaire, translator.t, survey.nameOfRecipient),
 		});
+		model.applyTheme(BorderlessLightPanelless);
 		model.currentPageNo = (survey.data as Model).pageNo;
 
 		model.onPartialSend.add((data) => saveSurvey(surveyId, data, SurveyStatus.in_progress));
 		model.onComplete.add((data) => saveSurvey(surveyId, data, SurveyStatus.completed));
 
-		return <SurveyReact id="react-survey" model={model} />;
+		return <SurveyReact model={model} />;
 	} else if (hasError) {
 		return <div>Error loading survey. Please try again later.</div>;
 	}
