@@ -8,10 +8,12 @@ import { ProgramFinances } from '@/components/storyblok/program/program-finances
 import { ProgramPayoutsTotal } from '@/components/storyblok/program/program-payouts-total';
 import { ProgramRecipients } from '@/components/storyblok/program/program-recipients';
 import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
+import { ProgramDetailRelatedGrid } from '@/components/storyblok/program/program-detail-related-grid';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getCountryNameByCode } from '@/lib/types/country';
+import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
 
 type Props = {
 	programDetailData: ProgramDetailData;
@@ -50,17 +52,17 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				stats={
 					programDetailData.stats
 						? [
-								{
-									label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
-								},
-								{
-									value: programDetailData.stats.recipientsCount,
-									label:
-										programDetailData.stats.recipientsCount === 1
-											? translator.t('programs-page.recipient-singular')
-											: translator.t('programs-page.recipient-plural'),
-								},
-							]
+							{
+								label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
+							},
+							{
+								value: programDetailData.stats.recipientsCount,
+								label:
+									programDetailData.stats.recipientsCount === 1
+										? translator.t('programs-page.recipient-singular')
+										: translator.t('programs-page.recipient-plural'),
+							},
+						]
 						: []
 				}
 			/>
@@ -105,6 +107,8 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				</div>
 			</div>
 			{programDetailData.stats?.totalPayoutsSum && programDetailData.stats.totalPayoutsSum > 0 ? <ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} /> : null}
+			<CampaignJournalTeaser lang={lang} region={region} />
+			<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
 		</>
 	);
 };
