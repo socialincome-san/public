@@ -14,7 +14,7 @@ export type SurveyImpactFilters = {
 
 export type SurveyImpactRecipientAgeGroup = RecipientAgeGroup;
 
-export type SurveyImpactOption = {
+type SurveyImpactOption = {
 	value: string;
 	count: number;
 	percentage: number;
@@ -59,7 +59,7 @@ export type SurveyImpactStudyDetails = {
 	ageBreakdown: SurveyImpactStudyDetailItem[];
 };
 
-export type SurveyImpactFilterOption = {
+type SurveyImpactFilterOption = {
 	value: string;
 	label: string;
 };

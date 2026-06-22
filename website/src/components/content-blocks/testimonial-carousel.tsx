@@ -123,15 +123,13 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 	if (entries.length === 1) {
 		return (
 			<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
-				<div className="space-y-8">
-					{blok.heading && (
-						<SectionHeading className="mb-0 md:mb-0">
-							<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
-						</SectionHeading>
-					)}
-					<div className="mx-auto w-full max-w-4xl">
-						<Testimonial entry={entries[0]} />
-					</div>
+				{blok.heading && (
+					<SectionHeading>
+						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
+					</SectionHeading>
+				)}
+				<div className="mx-auto w-full max-w-4xl">
+					<Testimonial entry={entries[0]} />
 				</div>
 			</BlockWrapper>
 		);
@@ -139,51 +137,49 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
-			<div className="space-y-8">
-				{blok.heading && (
-					<SectionHeading className="mb-0 md:mb-0">
-						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
-					</SectionHeading>
-				)}
-				<Carousel
-					setApi={setApi}
-					opts={{
-						align: 'center',
-						loop: true,
-					}}
-					plugins={autoplayEnabled ? [autoplayPlugin] : []}
-				>
-					<CarouselContent>
-						{entries.map((entry, index) => (
-							<CarouselItem key={entry._uid ?? `${entry.name}-${index}`} className="basis-full md:basis-4/5 lg:basis-3/5">
-								<Testimonial entry={entry} />
-							</CarouselItem>
-						))}
-					</CarouselContent>
-				</Carousel>
-
-				<div className="flex items-center justify-center gap-4">
+			{blok.heading && (
+				<SectionHeading>
+					<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
+				</SectionHeading>
+			)}
+			<Carousel
+				setApi={setApi}
+				opts={{
+					align: 'center',
+					loop: true,
+				}}
+				plugins={autoplayEnabled ? [autoplayPlugin] : []}
+			>
+				<CarouselContent>
 					{entries.map((entry, index) => (
-						<button
-							key={`${entry.name}-${index}`}
-							type="button"
-							onClick={() => handleSelectTestimonialItem(index)}
-							className={cn('bg-primary/25 relative h-1.5 w-16 overflow-hidden rounded-full')}
-							aria-label={`Show testimonial ${index + 1}`}
-						>
-							<span
-								ref={(element) => {
-									progressBarRefs.current[index] = element;
-								}}
-								className="bg-primary absolute inset-0 origin-left transition-transform duration-100"
-								style={{
-									transform: `scaleX(${index === activeIndex && !autoplayEnabled ? 1 : 0})`,
-								}}
-								aria-hidden="true"
-							/>
-						</button>
+						<CarouselItem key={entry._uid ?? `${entry.name}-${index}`} className="basis-full md:basis-4/5 lg:basis-3/5">
+							<Testimonial entry={entry} />
+						</CarouselItem>
 					))}
-				</div>
+				</CarouselContent>
+			</Carousel>
+
+			<div className="mt-8 flex items-center justify-center gap-4">
+				{entries.map((entry, index) => (
+					<button
+						key={`${entry.name}-${index}`}
+						type="button"
+						onClick={() => handleSelectTestimonialItem(index)}
+						className={cn('bg-primary/25 relative h-1.5 w-16 overflow-hidden rounded-full')}
+						aria-label={`Show testimonial ${index + 1}`}
+					>
+						<span
+							ref={(element) => {
+								progressBarRefs.current[index] = element;
+							}}
+							className="bg-primary absolute inset-0 origin-left transition-transform duration-100"
+							style={{
+								transform: `scaleX(${index === activeIndex && !autoplayEnabled ? 1 : 0})`,
+							}}
+							aria-hidden="true"
+						/>
+					</button>
+				))}
 			</div>
 		</BlockWrapper>
 	);

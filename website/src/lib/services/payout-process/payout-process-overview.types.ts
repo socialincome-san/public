@@ -1,13 +1,13 @@
 import type { PayoutProcess } from '@/generated/prisma/enums';
 
-export type MobileMoneyProviderPayoutProcessOption = {
+type MobileMoneyProviderPayoutProcessOption = {
 	kind: 'mobile_money_provider';
 	id: string;
 	name: string;
 	payoutProcess: PayoutProcess;
 };
 
-export type TelecelCsvPayoutProcessOption = {
+type TelecelCsvPayoutProcessOption = {
 	kind: 'telecel_csv';
 	id: 'telecel_csv';
 	name: string;

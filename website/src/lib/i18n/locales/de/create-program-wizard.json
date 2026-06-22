@@ -15,7 +15,8 @@
 			"monthly": "Monatlich",
 			"quarterly": "Quartalsweise",
 			"yearly": "Jährlich"
-		}
+		},
+		"error": "Fehler"
 	},
 	"error": {
 		"generic": "Etwas ist schiefgelaufen"
@@ -28,7 +29,6 @@
 		"no_active_programs": "Keine aktiven Programme",
 		"country_stats": "{{programCount}} Programme - {{recipientCount}} Empfänger",
 		"table": {
-			"country": "Land",
 			"cash": "Eignung für Bargeld",
 			"mobile_money": "Mobile Money",
 			"mobile_network": "Netzabdeckung",
@@ -87,7 +87,6 @@
 			"targeted": {
 				"label": "Gezielter Ansatz",
 				"description": "Unterstützung erhalten Empfänger, die zu ausgewählten Schwerpunkten und Profilen passen.",
-				"matching_count": "{{matched}} von {{total}} Empfängern entsprechen dem ausgewählten Land und den Filtern",
 				"matching": "Empfänger entsprechen dem ausgewählten Land und den Filtern",
 				"empty_error": "Bitte passen Sie die Filter an, damit mindestens ein Empfänger passt."
 			},
@@ -97,12 +96,6 @@
 				"label": "Empfänger selbst auswählen",
 				"description": "Einzelne Empfänger manuell auswählen und verwalten."
 			}
-		},
-		"focuses": {
-			"poverty": "Armut",
-			"health": "Gesundheit",
-			"gender_based_violence": "Geschlechtsbezogene Gewalt",
-			"climate": "Klima"
 		},
 		"profiles": {
 			"male": "Männlich",

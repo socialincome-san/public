@@ -15,7 +15,7 @@ import { UserSession } from '@/lib/services/user/user.types';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
-import { Resolver, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { MultiSelect, MultiSelectOption } from '../multi-select';
 import { buildDefaultValues } from './defaults';
@@ -34,7 +34,7 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 	const [focusOptions, setFocusOptions] = useState<MultiSelectOption[]>([]);
 
 	const form = useForm<ProfileFormInput, unknown, ProfileFormOutput>({
-		resolver: zodResolver(profileFormSchema) as unknown as Resolver<ProfileFormInput, unknown, ProfileFormOutput>,
+		resolver: zodResolver(profileFormSchema),
 		defaultValues: buildDefaultValues(session, isNewsletterSubscribed),
 	});
 

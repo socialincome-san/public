@@ -555,7 +555,7 @@ export class StripeService extends BaseService {
 	}
 
 	private parseCheckoutCustomerDetails(
-		details: Stripe.Checkout.Session.CustomerDetails | null | undefined,
+		details: Stripe.Checkout.Session['customer_details'] | undefined,
 	): StripeCheckoutCustomerPrefill {
 		const email = details?.email ?? undefined;
 		const rawName = details?.name?.trim();
@@ -617,7 +617,7 @@ export class StripeService extends BaseService {
 
 			const session = await stripe.checkout.sessions.create({
 				mode: recurring ? 'subscription' : 'payment',
-				ui_mode: 'embedded',
+				ui_mode: 'embedded_page',
 				customer: stripeCustomerId ?? undefined,
 				customer_creation: !stripeCustomerId && !recurring ? 'always' : undefined,
 				line_items: [

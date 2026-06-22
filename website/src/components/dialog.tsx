@@ -8,8 +8,6 @@ import { cn } from '@/lib/utils/cn';
 
 const Dialog = DialogPrimitive.Root;
 
-const DialogTrigger = DialogPrimitive.Trigger;
-
 const DialogPortal = DialogPrimitive.Portal;
 
 const DialogOverlay = React.forwardRef<
@@ -146,4 +144,4 @@ const DialogTitle = React.forwardRef<
 ));
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
-export { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger };
+export { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle };

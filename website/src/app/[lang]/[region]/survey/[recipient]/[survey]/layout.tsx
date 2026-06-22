@@ -1,12 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { Button } from '@/components/button';
-import { SILogo } from '@/components/logos/si-logo';
-import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
-import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
-import { PropsWithChildren } from 'react';
-import { I18nDialog } from './i18n-dialog';
+import { type PropsWithChildren } from 'react';
 
 type SurveyPageParams = {
 	recipient: string;
@@ -17,40 +10,12 @@ export type SurveyPageProps = {
 	params: Promise<SurveyPageParams>;
 };
 
-export default async function Layout({ children, params }: PropsWithChildren<SurveyPageProps>) {
-	const { lang } = await params;
-
-	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
-		namespaces: ['common', 'website-common', 'website-me'],
-	});
-
+export default function Layout({ children }: PropsWithChildren<SurveyPageProps>) {
 	return (
-		<div className="bg-muted min-h-screen">
-			<nav className="bg-white">
-				<div className={cn('mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8', 'flex h-16 items-center justify-between')}>
-					<SILogo className="h-4" />
-					<I18nDialog
-						languages={[
-							{ code: 'en', translation: 'English' },
-							{ code: 'kri', translation: 'Krio' },
-						]}
-						regions={[{ code: 'int', translation: 'International' }]}
-						currencies={[]}
-						translations={{
-							language: translator.t('language'),
-							region: translator.t('region'),
-							currency: translator.t('currency'),
-						}}
-					>
-						<Button variant="ghost" className="flex max-w-md space-x-2">
-							<LanguageIcon className="h-4 w-4" />
-							<GlobeEuropeAfricaIcon className="h-4 w-4" />
-						</Button>
-					</I18nDialog>
-				</div>
-			</nav>
-			<main className="mx-auto max-w-5xl py-4">{children}</main>
-		</div>
+		<section className="w-site-width max-w-content mx-auto px-4 py-6 sm:py-10 lg:py-14">
+			<div className="overflow-hidden rounded-[2rem] bg-white/95 shadow-[0_24px_80px_rgba(31,65,101,0.12)] ring-1 ring-black/5 backdrop-blur">
+				<div className="px-4 py-6 sm:px-8 sm:py-8 lg:px-10">{children}</div>
+			</div>
+		</section>
 	);
 }

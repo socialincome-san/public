@@ -269,7 +269,7 @@ export interface LocalPartnersOverview {
 export interface MenuItem {
   label?: string;
   link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
-  icon?: "" | "instagram" | "linkedin" | "facebook" | "github" | "newsletter";
+  icon?: "" | "instagram" | "linkedin" | "facebook" | "github" | "newsletter" | "contact";
   newTab?: boolean;
   component: "menuItem";
   _uid: string;

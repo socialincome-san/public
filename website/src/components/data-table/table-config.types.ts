@@ -2,7 +2,7 @@ import { TableQueryState } from '@/components/data-table/query-state';
 import { Translator } from '@/lib/i18n/translator';
 import type { ColumnDef, SortingState } from '@tanstack/react-table';
 
-export type TableFilterOption = {
+type TableFilterOption = {
 	value: string;
 	label: string;
 };
