@@ -67,7 +67,7 @@ type PublicProgramFilterFocus = {
 	slug: string;
 };
 
-export type PublicProgramFilterData = {
+type PublicProgramFilterData = {
 	programId: string;
 	countryIsoCode: CountryCode;
 	focuses: PublicProgramFilterFocus[];

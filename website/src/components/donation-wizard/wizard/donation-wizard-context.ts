@@ -4,11 +4,11 @@ import { type DonationAmountContext, getInitialDonationContext } from '../utils/
 
 export type DonationWizardEntry = 'stepAmount' | 'stepPlanMonthly' | 'stepPlanOneTime';
 
-export type StripeCheckoutStatus = 'idle' | 'loading' | 'ready' | 'error';
+type StripeCheckoutStatus = 'idle' | 'loading' | 'ready' | 'error';
 
-export type QrBillStatus = 'idle' | 'loading' | 'ready' | 'error';
+type QrBillStatus = 'idle' | 'loading' | 'ready' | 'error';
 
-export type WizardPaymentSource = 'stripe' | 'qr' | null;
+type WizardPaymentSource = 'stripe' | 'qr' | null;
 
 export type QrDonorContext = {
 	firstName: string;
