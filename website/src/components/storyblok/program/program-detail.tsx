@@ -111,7 +111,9 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						</div>
 					</div>
 				</div>
-				{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0 ? (
+	
+			</div>
+			{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0 ? (
 					<ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} />
 				) : null}
 				<CampaignJournalTeaser lang={lang} region={region} />
@@ -121,7 +123,6 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						<FaqSelectionContent heading={translator.t('title-long', { namespace: 'website-faq' })} items={faqItems} />
 					</BlockWrapper>
 				)}
-			</div>
 		</>
 	);
 };
