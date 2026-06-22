@@ -16,7 +16,12 @@ export const resolveFaqItems = (questions: FaqSelection['questions'] | ISbStoryD
 		}
 
 		const question = questionReference.content.question?.trim();
+
 		if (!question) {
+			continue;
+		}
+
+		if (typeof questionReference.content.answer !== 'string') {
 			continue;
 		}
 

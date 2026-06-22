@@ -43,8 +43,8 @@ describe('storyblok-paths', () => {
 		expect(getCampaignsOverviewStoryPath()).toBe('pages/campaigns/campaigns');
 	});
 
-	it('uses pages/faq for faq stories', () => {
-		expect(STORYBLOK_FAQ_FOLDER).toBe('pages/faq');
+	it('uses globals/faqs for faq stories', () => {
+		expect(STORYBLOK_FAQ_FOLDER).toBe('globals/faqs');
 	});
 
 	it('builds country story paths under pages/countries', () => {

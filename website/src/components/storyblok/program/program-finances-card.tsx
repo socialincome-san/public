@@ -3,7 +3,7 @@ import { Progress } from '@/components/progress';
 import type { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
-import { formatNumberLocale } from '@/lib/utils/string-utils';
+import { formatCompactNumberLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import { TriangleAlert } from 'lucide-react';
 
 type Props = {
@@ -30,8 +30,8 @@ const clampPercent = (value: number): number => {
 export const ProgramFinancesCard = ({ stats, translator, lang, embedded = false }: Props) => {
 	const locale = getSafeNumberFormatLocale(lang);
 	const currency = stats.payoutCurrency;
-	const sentToRecipients = formatAmount(stats.paidOutSoFarProgramCurrency, locale);
-	const totalProgramCosts = formatAmount(stats.totalProgramCostsProgramCurrency, locale);
+	const sentToRecipients = formatCompactNumberLocale(stats.paidOutSoFarProgramCurrency, locale);
+	const totalProgramCosts = formatCompactNumberLocale(stats.totalProgramCostsProgramCurrency, locale);
 	const availableCredits = formatAmount(stats.availableCreditsProgramCurrency, locale, 2);
 	const progressPercent = clampPercent(stats.payoutProgressPercent);
 	const showLowCreditsWarning = stats.availableCreditsInIntervals <= 3;
@@ -43,14 +43,14 @@ export const ProgramFinancesCard = ({ stats, translator, lang, embedded = false 
 					<p className="text-xs">{translator.t('program-detail-page.sent-to-recipients')}</p>
 					<p className="flex items-baseline gap-1">
 						<span className="text-sm font-bold">{currency}</span>
-						<span className="text-3xl font-medium">{sentToRecipients}</span>
+						<span className="text-xl">{sentToRecipients}</span>
 					</p>
 				</div>
 				<div className="flex flex-col items-end gap-3.5">
 					<p className="text-xs">{translator.t('program-detail-page.total-program-costs')}</p>
 					<p className="flex items-baseline gap-1">
 						<span className="text-sm font-bold">{currency}</span>
-						<span className="text-3xl font-medium">{totalProgramCosts}</span>
+						<span className="text-xl">{totalProgramCosts}</span>
 					</p>
 				</div>
 			</div>

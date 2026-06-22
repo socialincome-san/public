@@ -1,15 +1,22 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
+import { FaqSelectionContent } from '@/components/content-blocks/faq-selection-content';
+import { resolveFaqItems } from '@/components/content-blocks/faq-selection.utils';
 import { resolveProgramCountry } from '@/components/storyblok/country/resolve-country-name';
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramAbout } from '@/components/storyblok/program/program-about';
 import { ProgramCountry } from '@/components/storyblok/program/program-country';
+import { ProgramDetailRelatedGrid } from '@/components/storyblok/program/program-detail-related-grid';
 import { ProgramFinances } from '@/components/storyblok/program/program-finances';
+import { ProgramPayoutsTotal } from '@/components/storyblok/program/program-payouts-total';
 import { ProgramRecipients } from '@/components/storyblok/program/program-recipients';
 import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
@@ -19,7 +26,7 @@ type Props = {
 };
 
 export const ProgramDetail = async ({ programDetailData, lang, region }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common', 'website-faq'] });
 	const countryIsoCode = programDetailData.programDetails?.countryIsoCode ?? programDetailData.stats?.countryIsoCode;
 	const recipientsCount =
 		programDetailData.dashboardStats?.recipientsCount ??
@@ -29,7 +36,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 	const completedSurveysCount =
 		programDetailData.dashboardStats?.completedSurveysCount ?? programDetailData.programDetails?.completedSurveysCount ?? 0;
 
-	const [breadcrumbLinks, resolvedCountry] = await Promise.all([
+	const [breadcrumbLinks, resolvedCountry, faqsResult] = await Promise.all([
 		buildBreadcrumbLinks({
 			fullSlug: programDetailData.fullSlug,
 			currentLabel: programDetailData.title,
@@ -37,7 +44,10 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 			region,
 		}),
 		resolveProgramCountry(countryIsoCode, lang, region),
+		services.storyblok.getFaqs(lang, 5),
 	]);
+
+	const faqItems = resolveFaqItems(faqsResult.success ? faqsResult.data : []);
 
 	return (
 		<>
@@ -102,6 +112,16 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 					</div>
 				</div>
 			</div>
+			{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0 ? (
+				<ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} />
+			) : null}
+			<CampaignJournalTeaser lang={lang} region={region} />
+			<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
+			{faqItems.length > 0 && (
+				<BlockWrapper>
+					<FaqSelectionContent heading={translator.t('title', { namespace: 'website-faq' })} items={faqItems} />
+				</BlockWrapper>
+			)}
 		</>
 	);
 };
