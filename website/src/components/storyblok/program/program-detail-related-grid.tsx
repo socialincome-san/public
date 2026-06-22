@@ -20,6 +20,7 @@ const pickRandomPrograms = (programs: ProgramStory[], count: number) => {
 		const j = Math.floor(Math.random() * (i + 1));
 		[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
 	}
+
 	return shuffled.slice(0, count);
 };
 
@@ -59,11 +60,5 @@ export const ProgramDetailRelatedGrid = async ({ currentProgramFullSlug, lang, r
 		button: [button],
 	};
 
-	return (
-		<ProgramGridBlock
-			blok={blok}
-			lang={lang}
-			region={region}
-		/>
-	);
+	return <ProgramGridBlock blok={blok} lang={lang} region={region} />;
 };

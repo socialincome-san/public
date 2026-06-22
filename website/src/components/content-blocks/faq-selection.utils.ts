@@ -9,19 +9,19 @@ export type FaqItem = {
 
 export const resolveFaqItems = (questions: FaqSelection['questions'] | ISbStoryData<Faq>[]): FaqItem[] => {
 	const items: FaqItem[] = [];
-	console.log("questions", questions);
+
 	for (const questionReference of questions) {
 		if (typeof questionReference === 'string') {
 			continue;
 		}
 
 		const question = questionReference.content.question?.trim();
-		
+
 		if (!question) {
 			continue;
 		}
 
-		if (typeof questionReference.content.answer != 'string') {
+		if (typeof questionReference.content.answer !== 'string') {
 			continue;
 		}
 

@@ -1,23 +1,23 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
 import { FaqSelectionContent } from '@/components/content-blocks/faq-selection-content';
 import { resolveFaqItems } from '@/components/content-blocks/faq-selection.utils';
 import { resolveProgramCountry } from '@/components/storyblok/country/resolve-country-name';
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramAbout } from '@/components/storyblok/program/program-about';
 import { ProgramCountry } from '@/components/storyblok/program/program-country';
+import { ProgramDetailRelatedGrid } from '@/components/storyblok/program/program-detail-related-grid';
 import { ProgramFinances } from '@/components/storyblok/program/program-finances';
 import { ProgramPayoutsTotal } from '@/components/storyblok/program/program-payouts-total';
 import { ProgramRecipients } from '@/components/storyblok/program/program-recipients';
 import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
-import { ProgramDetailRelatedGrid } from '@/components/storyblok/program/program-detail-related-grid';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getCountryNameByCode } from '@/lib/types/country';
 import { services } from '@/lib/services/services';
-import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
+import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
 	programDetailData: ProgramDetailData;
@@ -46,10 +46,8 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 		resolveProgramCountry(countryIsoCode, lang, region),
 		services.storyblok.getFaqs(lang, 5),
 	]);
-	console.log("faqsResult", faqsResult);
 
 	const faqItems = resolveFaqItems(faqsResult.success ? faqsResult.data : []);
-	console.log("faqItems", faqItems);
 
 	return (
 		<>
@@ -60,17 +58,17 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				stats={
 					programDetailData.stats
 						? [
-							{
-								label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
-							},
-							{
-								value: programDetailData.stats.recipientsCount,
-								label:
-									programDetailData.stats.recipientsCount === 1
-										? translator.t('programs-page.recipient-singular')
-										: translator.t('programs-page.recipient-plural'),
-							},
-						]
+								{
+									label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
+								},
+								{
+									value: programDetailData.stats.recipientsCount,
+									label:
+										programDetailData.stats.recipientsCount === 1
+											? translator.t('programs-page.recipient-singular')
+											: translator.t('programs-page.recipient-plural'),
+								},
+							]
 						: []
 				}
 			/>
@@ -113,7 +111,9 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						</div>
 					</div>
 				</div>
-				{programDetailData.stats?.totalPayoutsSum && programDetailData.stats.totalPayoutsSum > 0 ? <ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} /> : null}
+				{programDetailData.stats?.totalPayoutsSum && programDetailData.stats.totalPayoutsSum > 0 ? (
+					<ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} />
+				) : null}
 				<CampaignJournalTeaser lang={lang} region={region} />
 				<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
 				{faqItems.length > 0 && (
@@ -122,7 +122,6 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 					</BlockWrapper>
 				)}
 			</div>
-
 		</>
 	);
 };

@@ -155,9 +155,7 @@ const formatThousandsCompact = (value: number, locale: string): string => {
 			maximumFractionDigits,
 		}).format(abs),
 	);
-	const fullFormatted = normalizeIntlOutput(
-		new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(abs),
-	);
+	const fullFormatted = normalizeIntlOutput(new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(abs));
 
 	if (intlCompact !== fullFormatted) {
 		return `${sign}${intlCompact}`;
