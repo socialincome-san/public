@@ -111,18 +111,17 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						</div>
 					</div>
 				</div>
-	
 			</div>
 			{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0 ? (
-					<ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} />
-				) : null}
-				<CampaignJournalTeaser lang={lang} region={region} />
-				<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
-				{faqItems.length > 0 && (
-					<BlockWrapper>
-						<FaqSelectionContent heading={translator.t('title-long', { namespace: 'website-faq' })} items={faqItems} />
-					</BlockWrapper>
-				)}
+				<ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} />
+			) : null}
+			<CampaignJournalTeaser lang={lang} region={region} />
+			<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
+			{faqItems.length > 0 && (
+				<BlockWrapper>
+					<FaqSelectionContent heading={translator.t('title-long', { namespace: 'website-faq' })} items={faqItems} />
+				</BlockWrapper>
+			)}
 		</>
 	);
 };
