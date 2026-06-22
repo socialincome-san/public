@@ -2,9 +2,9 @@
 
 import { Button } from '@/components/button';
 import { Input } from '@/components/input';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { useI18n } from '@/lib/i18n/useI18n';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
+import type { DonationAmountFieldsTranslations } from '../../i18n/donation-amount-fields-translations';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
 	DONATION_CUSTOM_AMOUNT_MIN,
@@ -50,6 +50,8 @@ type Props = {
 	actions: DonationAmountFieldsActions;
 	onSubmit: () => void;
 	className?: string;
+	translations: DonationAmountFieldsTranslations;
+	currency: WebsiteCurrency;
 };
 
 export const DonationAmountFields = ({
@@ -57,15 +59,14 @@ export const DonationAmountFields = ({
 	actions,
 	onSubmit,
 	className = getDonationWizardCardClass('stepAmount'),
+	translations,
+	currency,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
-	const { currency = 'CHF' } = useI18n();
-
 	return (
 		<div className={cn(className, 'text-foreground md:px-9 md:py-9')} data-testid="donation-wizard-step-amount">
-			<h3 className="text-foreground mb-5 text-xl leading-tight font-semibold text-pretty sm:text-2xl sm:leading-none">
-				{t('stepAmount.title')}
-			</h3>
+			<h2 className="text-foreground mb-5 text-xl leading-tight font-semibold text-pretty sm:text-2xl sm:leading-none">
+				{translations.title}
+			</h2>
 
 			<div className="border-muted mb-3 grid grid-cols-[minmax(0,1fr)_auto] overflow-hidden rounded-md border">
 				<div
@@ -75,7 +76,7 @@ export const DonationAmountFields = ({
 					)}
 				>
 					<label htmlFor={monthlyIncomeInputId} className="text-[10px] font-medium">
-						{t('stepAmount.monthly-income-label')}
+						{translations.monthlyIncomeLabel}
 					</label>
 					<Input
 						id={monthlyIncomeInputId}
@@ -113,14 +114,14 @@ export const DonationAmountFields = ({
 							: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground bg-white',
 					)}
 				>
-					<div className="text-[10px] font-medium">{t('stepAmount.your-one-percent')}</div>
+					<div className="text-[10px] font-medium">{translations.yourOnePercent}</div>
 					<div className="text-lg leading-none font-medium whitespace-nowrap">
 						{currency} {values.onePercent}
 					</div>
 				</button>
 			</div>
 
-			<div className="mb-2 text-center text-[10px] font-medium">{t('stepAmount.choose-own-amount')}</div>
+			<div className="mb-2 text-center text-[10px] font-medium">{translations.chooseOwnAmount}</div>
 			<div className="border-muted divide-muted mb-4 grid grid-cols-4 divide-x overflow-hidden rounded-xl border">
 				{amountOptions.map((option) => {
 					const isSelected = option.value === values.selectedAmount;
@@ -138,7 +139,7 @@ export const DonationAmountFields = ({
 							)}
 						>
 							<span className={cn(option.labelKey === 'other' ? 'text-base' : 'text-[10px]')}>
-								{option.labelKey === 'other' ? t('stepAmount.other') : currency}
+								{option.labelKey === 'other' ? translations.other : currency}
 							</span>
 							{option.value !== 'other' && <span>{option.value}</span>}
 						</button>
@@ -152,7 +153,7 @@ export const DonationAmountFields = ({
 					data-testid="donation-wizard-custom-amount"
 					min={DONATION_CUSTOM_AMOUNT_MIN}
 					max={DONATION_CUSTOM_AMOUNT_MAX}
-					placeholder={t('stepAmount.custom-amount-placeholder')}
+					placeholder={translations.customAmountPlaceholder}
 					value={values.customAmount ?? ''}
 					onChange={(e) => {
 						const raw = e.target.value;
@@ -183,7 +184,7 @@ export const DonationAmountFields = ({
 							: 'text-muted-foreground hover:text-foreground',
 					)}
 				>
-					{t('stepAmount.monthly')}
+					{translations.monthly}
 				</button>
 				<button
 					type="button"
@@ -197,7 +198,7 @@ export const DonationAmountFields = ({
 							: 'text-muted-foreground hover:text-foreground',
 					)}
 				>
-					{t('stepAmount.one-time')}
+					{translations.oneTime}
 				</button>
 			</div>
 
@@ -209,8 +210,8 @@ export const DonationAmountFields = ({
 				onClick={onSubmit}
 			>
 				{values.resolvedAmount !== null
-					? t('stepAmount.donate-now-with-amount', { amount: `${currency} ${values.resolvedAmount}` })
-					: t('stepAmount.donate-now')}
+					? translations.donateNowWithAmount.replace('{{amount}}', `${currency} ${values.resolvedAmount}`)
+					: translations.donateNow}
 			</Button>
 		</div>
 	);

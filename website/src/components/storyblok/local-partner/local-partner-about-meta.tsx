@@ -4,7 +4,6 @@ import { getFocusSlug, getFocusTitle } from '@/components/storyblok/focus/focus.
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import Link from 'next/link';
 
@@ -31,7 +30,7 @@ export const LocalPartnerFocusBadges = ({ lang, region, focuses }: FocusBadgesPr
 				const focusSlug = getFocusSlug(focusStory);
 
 				return (
-					<Link key={focusStory.uuid} href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/focuses/${focusSlug}`}>
+					<Link key={focusStory.uuid} href={`/${lang}/${region}/focuses/${focusSlug}`}>
 						<Badge variant="outline" className="border-sky-300 bg-sky-50 text-sky-700 transition-colors hover:bg-sky-100">
 							{focusTitle}
 						</Badge>

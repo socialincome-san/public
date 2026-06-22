@@ -1,7 +1,8 @@
 'use client';
 
 import { Survey, SurveyLanguage } from '@/app/[lang]/[region]/survey/[recipient]/[survey]/survey';
-import { Button, Input } from '@socialincome/ui';
+import { Button } from '@/components/button';
+import { Input } from '@/components/input';
 import { useSearchParams } from 'next/navigation';
 import { FormEvent, use, useEffect, useState } from 'react';
 import { SurveyPageProps } from './layout';
@@ -38,11 +39,11 @@ export default function Page({ params }: SurveyPageProps) {
 	}
 
 	if (hasError) {
-		return <div className="theme-new mx-auto max-w-md">Error logging in. Please check your credentials.</div>;
+		return <div className="mx-auto max-w-md">Error logging in. Please check your credentials.</div>;
 	}
 
 	return (
-		<form className="theme-new mx-auto flex max-w-md flex-col space-y-2" method="post" onSubmit={handleSubmit}>
+		<form className="mx-auto flex max-w-md flex-col space-y-2" method="post" onSubmit={handleSubmit}>
 			<Input name="email" type="text" placeholder="Email" />
 			<Input name="password" type="password" placeholder="Password" />
 			<Button type="submit" className="btn btn-primary mx-auto">

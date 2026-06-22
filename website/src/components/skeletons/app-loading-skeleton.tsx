@@ -1,5 +1,5 @@
 import { AnimatedSILogoIcon } from '@/components/svg/animated-si-logo-icon';
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 
 type AppLoadingSkeletonProps = {
 	message?: string;

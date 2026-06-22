@@ -1,0 +1,7 @@
+node_modules/
+.user/
+seed/
+dist/
+.next/
+*.hbs
+src/generated/

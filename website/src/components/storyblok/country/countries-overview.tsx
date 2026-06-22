@@ -1,7 +1,6 @@
 import { LandingPageCard } from '@/components/storyblok/shared/landing-page-card';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import NextImage from 'next/image';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountrySlug, getCountryTitle } from './country.utils';
@@ -46,7 +45,7 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, regio
 						return (
 							<LandingPageCard
 								key={country.uuid}
-								href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/countries/${countrySlug}`}
+								href={`/${lang}/${region}/countries/${countrySlug}`}
 								title={countryTitle}
 								heroImageFilename={heroImageFilename}
 								heroImageAlt={heroImageAlt}

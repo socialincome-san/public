@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
 import { VideoControlButton } from '@/components/video-control-button';
 import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -11,7 +10,7 @@ import { ArrowsPointingInIcon, ArrowsPointingOutIcon, ChatBubbleBottomCenterText
 import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import MuxVideo from '@mux/mux-video-react';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
-import { useRef, useState } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import Markdown from 'react-markdown';
 
 type Props = {
@@ -19,6 +18,7 @@ type Props = {
 	lang: WebsiteLanguage;
 	subtitleUrl?: string;
 	translations: HeroVideoTranslations;
+	donationForm: ReactNode;
 	disableAutoplay?: boolean;
 };
 
@@ -34,7 +34,7 @@ type HeroVideoTranslations = {
 	donateNow: string;
 };
 
-export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, disableAutoplay = false }: Props) => {
+export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donationForm, disableAutoplay = false }: Props) => {
 	const { heading, description, muxPlaybackId } = blok;
 	const { openWizardAtAmountStep } = useDonationModal();
 	const videoRef = useRef<HTMLVideoElement>(null);
@@ -167,17 +167,11 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, disableA
 								</Button>
 							</div>
 						</div>
-						<div className="hidden shrink-0 lg:block">
-							<DonationForm />
-						</div>
+						<div className="hidden shrink-0 lg:block">{donationForm}</div>
 					</div>
 				)}
 			</div>
-			{!isExpanded && (
-				<div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">
-					<DonationForm />
-				</div>
-			)}
+			{!isExpanded && <div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">{donationForm}</div>}
 		</div>
 	);
 };

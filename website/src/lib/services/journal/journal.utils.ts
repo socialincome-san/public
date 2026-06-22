@@ -1,9 +1,9 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
 import type { Article, Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import {
-	createNewWebsiteJournalPath,
-	createNewWebsiteJournalTagLink,
-	createNewWebsitePersonLink,
+	createWebsiteJournalPath,
+	createWebsiteJournalTagLink,
+	createWebsitePersonLink,
 	formatStoryblokUrl,
 } from '@/lib/services/storyblok/storyblok.utils';
 import type { ISbStoryData } from '@storyblok/js';
@@ -32,7 +32,7 @@ export const buildJournalOverviewBreadcrumbs = (
 	tag
 		? [
 				{ label: journalLabel, href: journalPath },
-				{ label: tag.label, href: createNewWebsiteJournalTagLink(tag.slug, lang, region) },
+				{ label: tag.label, href: createWebsiteJournalTagLink(tag.slug, lang, region) },
 			]
 		: [{ label: journalLabel, href: journalPath }];
 
@@ -83,7 +83,7 @@ export const getArticleHeroImageSrc = (article: Pick<Article, 'image'>) => {
 };
 
 export const getJournalPersonPagePaths = (slug: string, lang: string, region: string) => {
-	const pathname = createNewWebsitePersonLink(slug, lang, region);
+	const pathname = createWebsitePersonLink(slug, lang, region);
 
-	return { pathname, journalPath: createNewWebsiteJournalPath(lang, region) };
+	return { pathname, journalPath: createWebsiteJournalPath(lang, region) };
 };

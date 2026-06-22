@@ -1,4 +1,4 @@
-import { NetworkTechnology, PrismaClient, SanctionRegime } from '@/generated/prisma/client';
+import { PrismaClient, SanctionRegime } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -46,9 +46,7 @@ export class CountryWriteService extends BaseService {
 					cashConditionOverride: validatedInput.cashConditionOverride,
 					populationCoverage: validatedInput.populationCoverage ?? undefined,
 					latestSurveyDate: validatedInput.latestSurveyDate ?? undefined,
-					networkTechnology: validatedInput.networkTechnology
-						? (validatedInput.networkTechnology as NetworkTechnology)
-						: undefined,
+					networkTechnology: validatedInput.networkTechnology ?? undefined,
 					mobileMoneyProviders: validatedInput.mobileMoneyProviderIds?.length
 						? {
 								createMany: {
@@ -160,9 +158,7 @@ export class CountryWriteService extends BaseService {
 					cashConditionOverride: validatedInput.cashConditionOverride,
 					populationCoverage: validatedInput.populationCoverage,
 					latestSurveyDate: validatedInput.latestSurveyDate,
-					networkTechnology: validatedInput.networkTechnology
-						? (validatedInput.networkTechnology as NetworkTechnology)
-						: undefined,
+					networkTechnology: validatedInput.networkTechnology ?? undefined,
 					mobileMoneyProviders:
 						validatedInput.mobileMoneyProviderIds !== undefined
 							? {

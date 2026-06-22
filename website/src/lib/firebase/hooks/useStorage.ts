@@ -24,24 +24,17 @@ export const useStorage = () => {
 
 export const useStorageDownloadURL = (storageRef: StorageReference | undefined) => {
 	const [url, setUrl] = useState<string | undefined>(undefined);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(() => Boolean(storageRef));
 	const [error, setError] = useState<Error | undefined>(undefined);
 	useEffect(() => {
-		if (storageRef) {
-			setLoading(true);
-
-			setError(undefined);
-			getDownloadURL(storageRef)
-				.then(setUrl)
-				.catch(setError)
-				.finally(() => setLoading(false));
-		} else {
-			setLoading(false);
-
-			setUrl(undefined);
-
-			setError(undefined);
+		if (!storageRef) {
+			return;
 		}
+
+		getDownloadURL(storageRef)
+			.then(setUrl)
+			.catch(setError)
+			.finally(() => setLoading(false));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

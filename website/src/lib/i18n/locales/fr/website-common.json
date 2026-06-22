@@ -58,6 +58,22 @@
 		"title": "Menu",
 		"back": "Retour"
 	},
+	"logo": {
+		"home-link-aria": "Accueil Social Income"
+	},
+	"footer": {
+		"supported-by-link-aria": "Site web Plattform Partner"
+	},
+	"locale-currency-switcher": {
+		"aria-label": "Modifier la langue, la région et la devise",
+		"language": "Langue",
+		"region": "Région",
+		"currency": "Devise",
+		"regions": {
+			"int": "International",
+			"ch": "Suisse"
+		}
+	},
 	"sdg": {
 		"sdg": "ODD",
 		"sdg1-title": "Pas de Pauvreté",
@@ -169,6 +185,7 @@
 		"search-placeholder": "Rechercher",
 		"all-countries": "Tous les pays ({{count}})",
 		"all-focuses": "Tous les axes ({{count}})",
+		"view-all": "Voir les {{count}} programmes",
 		"campaign-singular": "campagne",
 		"campaign-plural": "campagnes",
 		"recipient-singular": "bénéficiaire",
@@ -178,6 +195,10 @@
 	"program-detail-page": {
 		"view-details": "Voir les détails",
 		"view-breakdown": "Voir le détail",
+		"program-finances-title": "Finances du programme",
+		"login-to-manage": "Se connecter pour gérer",
+		"manage": "Gérer",
+		"payout-forecast-info": "La prévision est calculée à partir des bénéficiaires actuellement éligibles, de la durée de versement restante et des derniers taux de change.",
 		"sent-to-recipients": "Versé aux bénéficiaires à ce jour",
 		"total-program-costs": "Coûts totaux du programme",
 		"available-credits": "Crédits disponibles",
@@ -190,9 +211,40 @@
 		"month-plural": "mois",
 		"start-date": "Date de début",
 		"view-demographics": "Voir les données démographiques",
+		"program-recipients-title": "Bénéficiaires du programme",
 		"completed-surveys": "Enquêtes complétées",
 		"view-impact-data": "Voir les données d'impact",
-		"country-analysis": "Analyse du pays"
+		"country-analysis": "Analyse du pays",
+		"parties-involved": "Parties impliquées",
+		"program-design": "Conception du programme",
+		"delivery": "Distribution",
+		"country": "Pays",
+		"payment-amount": "Montant du versement",
+		"payout-interval-monthly": "mensuel",
+		"payout-interval-quarterly": "trimestriel",
+		"payout-interval-yearly": "annuel",
+		"close": "Fermer",
+		"loading": "Chargement...",
+		"table-information": "Informations sur le tableau",
+		"no-results": "Aucun résultat.",
+		"payout-forecast-title": "Prévision des versements",
+		"recipient-count-of": "{{shown}} sur {{total}}",
+		"load-payout-forecast-error": "Impossible de charger la prévision des versements.",
+		"load-recipients-error": "Impossible de charger les bénéficiaires.",
+		"try-again": "Réessayer",
+		"column-period": "Période",
+		"column-recipients": "Bénéficiaires",
+		"column-amount": "Montant",
+		"column-amount-usd": "Montant (USD)",
+		"column-recipient": "Bénéficiaire",
+		"column-status": "Statut",
+		"column-age": "Âge",
+		"column-local-partner": "Partenaire local",
+		"column-program": "Programme",
+		"column-progress": "Progression",
+		"column-created": "Créé",
+		"column-firebase-auth-user-id": "Firebase Auth User ID",
+		"column-payment-code": "Code de paiement"
 	},
 	"campaigns-page": {
 		"empty": "Aucune campagne trouvée.",

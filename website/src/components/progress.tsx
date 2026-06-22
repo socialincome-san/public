@@ -1,4 +1,4 @@
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 
 type ProgressVariant = 'default' | 'urgent';
 

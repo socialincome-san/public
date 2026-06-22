@@ -13,21 +13,21 @@ jobs:
         with:
           # Make sure the actual branch is checked out when running on pull requests, required for prettify
           ref: ${{ github.head_ref }}
-          # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
-          persist-credentials: false
+          token: ${{ secrets.WORKFLOW_TOKEN }}
 
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
         with:
-          installDependencies: "false"
-
-      - name: Install Prettier
-        run: npm install --no-save prettier@3.8.1 prettier-plugin-organize-imports@4.3.0 prettier-plugin-tailwindcss@0.7.2
+          installDependencies: "true"
 
       - name: Prettify code
-        uses: creyD/prettier_action@8c18391fdc98ed0d884c6345f03975edac71b8f0 # v4.6
+        working-directory: website
+        run: npx prettier --write . --config prettier.config.cjs --ignore-path .prettierignore
+
+      - name: Commit prettified code
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7
         with:
-          prettier_version: 3.8.1
-          prettier_plugins: prettier-plugin-organize-imports@4.3.0 prettier-plugin-tailwindcss@0.7.2
-          prettier_options: --write ./
-          github_token: ${{ secrets.WORKFLOW_TOKEN }}
+          commit_message: "style: prettify code [skip ci]"
+          branch: ${{ github.head_ref }}
+          commit_user_name: github-actions
+          commit_user_email: actions@github.com

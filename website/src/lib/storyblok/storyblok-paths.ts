@@ -1,5 +1,4 @@
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 export const STORYBLOK_PAGES_FOLDER = 'pages';
 
@@ -98,15 +97,9 @@ const stripStoryblokLanguagePrefix = (slug: string) => {
 
 /**
  * Normalizes slugs from Storyblok preview URLs or legacy paths to current space paths.
- * e.g. `new-website/programs/foo` → `pages/programs/foo`
  */
 export const normalizeStoryblokSlug = (rawSlug: string): string => {
 	let slug = rawSlug.trim();
-	const newWebsitePrefix = `${NEW_WEBSITE_SLUG}/`;
-
-	if (slug.startsWith(newWebsitePrefix)) {
-		slug = slug.slice(newWebsitePrefix.length);
-	}
 
 	slug = stripStoryblokLanguagePrefix(slug);
 
@@ -204,7 +197,7 @@ export const normalizeStoryblokSlug = (rawSlug: string): string => {
 };
 
 /**
- * Maps a Storyblok `full_slug` to the URL segment after `/new-website/`.
+ * Maps a Storyblok `full_slug` to the URL segment after `/{lang}/{region}/`.
  * `pages/about` → `about`; `pages/programs/foo` → `programs/foo`.
  */
 export const getWebsitePathTailFromStoryblokSlug = (storyblokSlug: string): string => {
@@ -253,19 +246,19 @@ export const getWebsitePathTailFromStoryblokSlug = (storyblokSlug: string): stri
 	return slug;
 };
 
-export const getNewWebsiteRelativePathFromStoryblokSlug = (storyblokSlug: string): string => {
+export const getWebsiteRelativePathFromStoryblokSlug = (storyblokSlug: string): string => {
 	const tail = getWebsitePathTailFromStoryblokSlug(storyblokSlug);
 
-	return tail ? `/${NEW_WEBSITE_SLUG}/${tail}` : `/${NEW_WEBSITE_SLUG}`;
+	return tail ? `/${tail}` : '/';
 };
 
-export const getNewWebsitePublicPath = (lang: string, region: string, websitePathTail: string) => {
-	const relativePath = websitePathTail ? `/${NEW_WEBSITE_SLUG}/${websitePathTail}` : `/${NEW_WEBSITE_SLUG}`;
+export const getWebsitePublicPath = (lang: string, region: string, websitePathTail: string) => {
+	const relativePath = websitePathTail ? `/${websitePathTail}` : '';
 
 	return `/${lang}/${region}${relativePath}`;
 };
 
-export const isRoutableNewWebsiteStoryblokSlug = (storyblokSlug: string) => {
+export const isRoutableWebsiteStoryblokSlug = (storyblokSlug: string) => {
 	const slug = normalizeStoryblokSlug(storyblokSlug);
 
 	return slug.startsWith(pagesPrefix);

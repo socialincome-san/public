@@ -1,4 +1,3 @@
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { UserSession } from '@/lib/services/user/user.types';
@@ -22,7 +21,7 @@ export const buildDefaultValues = (
 			firstName: session.firstName ?? '',
 			lastName: session.lastName ?? '',
 			email: session.email ?? '',
-			language: (session.language ?? 'en') as WebsiteLanguage,
+			language: session.language ?? 'en',
 			gender: session.gender ?? undefined,
 			referral: session.referral ?? undefined,
 			address: address,
@@ -38,7 +37,7 @@ export const buildDefaultValues = (
 			firstName: session.firstName ?? '',
 			lastName: session.lastName ?? '',
 			email: session.email ?? '',
-			language: (session.language ?? 'en') as WebsiteLanguage,
+			language: session.language ?? 'en',
 			gender: session.gender ?? undefined,
 			address,
 		};
@@ -50,7 +49,7 @@ export const buildDefaultValues = (
 		firstName: session.firstName ?? '',
 		lastName: session.lastName ?? '',
 		email: session.email ?? '',
-		language: (session.language ?? 'en') as WebsiteLanguage,
+		language: session.language ?? 'en',
 		gender: session.gender ?? undefined,
 		address,
 	};

@@ -16,9 +16,9 @@ import {
 } from '@/lib/services/journal/journal.utils';
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import {
-	createNewWebsiteJournalArticleLink,
-	createNewWebsiteJournalPath,
-	createNewWebsitePersonLink,
+	createWebsiteJournalArticleLink,
+	createWebsiteJournalPath,
+	createWebsitePersonLink,
 	getArticleTitle,
 	getPersonDisplayName,
 } from '@/lib/services/storyblok/storyblok.utils';
@@ -43,7 +43,7 @@ export class JournalService extends BaseService {
 		labels: JournalOverviewLabels,
 		tagSlug?: string,
 	): Promise<ServiceResult<JournalOverviewPageData>> {
-		const journalPath = createNewWebsiteJournalPath(lang, region);
+		const journalPath = createWebsiteJournalPath(lang, region);
 		const pathname = buildJournalOverviewPathname(journalPath, tagSlug);
 
 		const [authorsResult, tagsResult] = await Promise.all([
@@ -123,7 +123,7 @@ export class JournalService extends BaseService {
 			JOURNAL_RELATED_ARTICLES_COUNT,
 		);
 
-		const journalPath = createNewWebsiteJournalPath(lang, region);
+		const journalPath = createWebsiteJournalPath(lang, region);
 
 		return this.resultOk({
 			story,
@@ -132,7 +132,7 @@ export class JournalService extends BaseService {
 				journalLabel,
 				journalPath,
 				getArticleTitle(story),
-				createNewWebsiteJournalArticleLink(slug, lang, region),
+				createWebsiteJournalArticleLink(slug, lang, region),
 			),
 		});
 	}
@@ -167,7 +167,7 @@ export class JournalService extends BaseService {
 				journalLabel,
 				journalPath,
 				personName,
-				createNewWebsitePersonLink(slug, lang, region),
+				createWebsitePersonLink(slug, lang, region),
 			),
 		});
 	}

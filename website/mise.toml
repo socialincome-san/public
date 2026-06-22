@@ -1,0 +1,27 @@
+[tools]
+node = "24"
+java = "23"
+
+[tasks.install]
+run = "npm ci"
+
+[tasks.db]
+run = "npm run db:up"
+
+[tasks.firebase]
+run = "npm run emulator:start"
+depends = ["install"]
+
+[tasks.website]
+run = "npm run serve"
+depends = ["install", "db"]
+
+[tasks.website-ssl]
+run = "npm run serve:ssl"
+depends = ["install", "db"]
+
+[tasks.dev]
+depends = ["firebase", "website"]
+
+[tasks.dev-ssl]
+depends = ["firebase", "website-ssl"]

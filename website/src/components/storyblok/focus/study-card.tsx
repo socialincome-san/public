@@ -22,7 +22,7 @@ export const StudyCard = ({ study, lang, region }: Props) => {
 	return (
 		<article className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white px-10 py-8 shadow-[0_4px_6px_-4px_rgba(0,0,0,0.10),0_0_20px_0_rgba(0,0,0,0.05)]">
 			<h3 className="text-foreground line-clamp-3 text-2xl font-bold">{title}</h3>
-			<p className="text-foreground line-clamp-3 font-sans text-base font-normal">{description}</p>
+			<p className="text-foreground line-clamp-3 text-base font-normal">{description}</p>
 			{metadata && <p className="text-foreground text-base font-light">{metadata}</p>}
 			{href && linkLabel && (
 				<Link

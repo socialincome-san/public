@@ -31,7 +31,7 @@ export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
 					<StoryblokMarkdown>{blok.description}</StoryblokMarkdown>
 				</p>
 			)}
-			<ProgramGridView programs={programs} blok={blok} lang={lang} region={region} />
+			<ProgramGridView programs={programs} allProgramsCount={allPrograms.length} blok={blok} lang={lang} region={region} />
 		</BlockWrapper>
 	);
 };

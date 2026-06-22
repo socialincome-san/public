@@ -91,7 +91,7 @@ const MobileStatisticRow = ({ label, value, showLabel = true }: { label: string;
 			>
 				{label}
 			</p>
-			<p className="text-primary font-sans text-sm leading-5 font-normal">{value}</p>
+			<p className="text-primary text-sm leading-5 font-normal">{value}</p>
 		</div>
 	);
 };
@@ -174,12 +174,12 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 										<CountryHeader
 											countryCode={normalizedCountryIsoCode}
 											countryName={countryName}
-											nameClassName="font-sans text-2xl font-medium"
+											nameClassName="text-2xl font-medium"
 										/>
 									</div>
 									<div className="mt-8 flex flex-col gap-4">
 										{formattedRows.map((row) => (
-											<p key={row.key} className="text-primary font-sans text-base leading-6 font-bold">
+											<p key={row.key} className="text-primary text-base leading-6 font-bold">
 												{row.label}
 											</p>
 										))}
@@ -189,11 +189,11 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 									<CountryHeader
 										countryCode={normalizedCountryIsoCode}
 										countryName={countryName}
-										nameClassName="font-sans text-2xl font-medium"
+										nameClassName="text-2xl font-medium"
 									/>
 									<div className="mt-8 flex flex-col gap-4">
 										{formattedRows.map((row) => (
-											<p key={row.key} className="text-primary font-sans text-base leading-6 font-normal">
+											<p key={row.key} className="text-primary text-base leading-6 font-normal">
 												{row.countryValue}
 											</p>
 										))}
@@ -203,11 +203,11 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 									<CountryHeader
 										countryCode={visitorCountryCode}
 										countryName={visitorCountryName}
-										nameClassName="font-sans text-2xl font-medium"
+										nameClassName="text-2xl font-medium"
 									/>
 									<div className="mt-8 flex flex-col gap-4">
 										{formattedRows.map((row) => (
-											<p key={row.key} className="text-primary font-sans text-base leading-6 font-normal">
+											<p key={row.key} className="text-primary text-base leading-6 font-normal">
 												{row.visitorValue}
 											</p>
 										))}

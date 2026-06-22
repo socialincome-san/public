@@ -1,4 +1,4 @@
-import { ImpactMeasurementView } from '@/app/[lang]/[region]/new-website/programs/impact-measurement/view';
+import { ImpactMeasurementView } from '@/app/[lang]/[region]/programs/impact-measurement/view';
 import { Button } from '@/components/button';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import Link from 'next/link';

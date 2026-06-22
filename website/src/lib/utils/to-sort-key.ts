@@ -6,5 +6,5 @@ export const toSortKey = <TKeys extends readonly string[]>(
 		return undefined;
 	}
 
-	return allowedKeys.find((key) => key === value) as TKeys[number] | undefined;
+	return allowedKeys.find((key) => key === value);
 };

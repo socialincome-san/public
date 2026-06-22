@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 import { type ComponentProps, type ReactNode } from 'react';
 
 type Props = {

@@ -4,9 +4,11 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 import * as React from 'react';
 
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 
 const Dialog = DialogPrimitive.Root;
+
+const DialogTrigger = DialogPrimitive.Trigger;
 
 const DialogPortal = DialogPrimitive.Portal;
 
@@ -71,7 +73,7 @@ const DialogContent = React.forwardRef<
 				<DialogPrimitive.Content
 					ref={ref}
 					className={cn(
-						'max-w-site-width data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 theme-new fixed top-[50%] left-[50%] z-50 grid translate-x-[-50%] translate-y-[-50%] gap-4 p-6 duration-200',
+						'max-w-site-width data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid translate-x-[-50%] translate-y-[-50%] gap-4 p-6 duration-200',
 						surfaceClasses,
 						sizeClasses,
 						mobileFullscreenClasses,
@@ -144,4 +146,4 @@ const DialogTitle = React.forwardRef<
 ));
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
-export { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle };
+export { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger };

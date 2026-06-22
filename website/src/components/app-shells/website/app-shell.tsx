@@ -19,16 +19,16 @@ export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: Web
 
 	return (
 		<DonationModalProvider>
-			<div className="theme-new bg-website-gradient text-primary flex min-h-screen w-full flex-col antialiased">
+			<div className="bg-website-gradient text-primary flex min-h-screen w-full flex-col antialiased">
 				<Navbar sessions={sessions} lang={lang} region={region} scope={scope} />
-				<div
+				<main
 					className={
 						isContained ? 'w-site-width max-w-content mx-auto mt-20 flex-1 pb-8' : '[&:not(:has(>.full-bleed-hero))]:mt-20'
 					}
 				>
 					{children}
-				</div>
-				{scope === 'website' && <Footer lang={lang} region={region} />}
+				</main>
+				<Footer lang={lang} region={region} />
 			</div>
 		</DonationModalProvider>
 	);

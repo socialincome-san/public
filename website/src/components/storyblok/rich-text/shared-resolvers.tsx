@@ -1,7 +1,7 @@
 'use client';
 
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/table';
 import { cn } from '@/lib/utils/cn';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/ui';
 import NextLink from 'next/link';
 import { createElement, ReactNode } from 'react';
 import {

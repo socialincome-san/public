@@ -6,6 +6,7 @@ import { LinkedinIcon } from '@/components/svg/linkedin';
 import { PaperPlaneIcon } from '@/components/svg/paper-plane';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import { Layout, MenuItem } from '@/generated/storyblok/types/109655/storyblok-components';
+import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
@@ -30,6 +31,7 @@ const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.Componen
 };
 
 export const Footer = async ({ lang, region }: Props) => {
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(STORYBLOK_LAYOUT_PATH, lang);
 	const layoutContent = result.success ? result.data.content : undefined;
 	const footerMenu = layoutContent?.footerMenu ?? [];
@@ -53,9 +55,6 @@ export const Footer = async ({ lang, region }: Props) => {
 					rel: supportedByLink?.target === '_blank' ? 'noopener noreferrer' : undefined,
 				}
 			: null;
-	const supportedByLogoNode = supportedByDetails ? (
-		<NextImage src={supportedByDetails.logoFilename} alt={supportedByDetails.logoAlt} width={120} height={22} />
-	) : null;
 
 	return (
 		<div className="bg-primary max-w-content mx-auto grid w-full grid-cols-1 gap-4 rounded-t-3xl px-8 pt-10 pb-8 text-white sm:px-16 sm:pt-14 lg:mb-10 lg:grid-cols-[334px_auto] lg:rounded-3xl">
@@ -70,11 +69,17 @@ export const Footer = async ({ lang, region }: Props) => {
 								target={supportedByLinkProps.target}
 								rel={supportedByLinkProps.rel}
 								className="w-fit"
+								aria-label={translator.t('footer.supported-by-link-aria')}
 							>
-								{supportedByLogoNode}
+								<NextImage src={supportedByDetails.logoFilename} alt="" width={120} height={22} />
 							</NextLink>
 						) : (
-							supportedByLogoNode
+							<NextImage
+								src={supportedByDetails.logoFilename}
+								alt={supportedByDetails.logoAlt !== '' ? supportedByDetails.logoAlt : supportedByDetails.label}
+								width={120}
+								height={22}
+							/>
 						)}
 					</div>
 				)}
@@ -83,7 +88,7 @@ export const Footer = async ({ lang, region }: Props) => {
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
 					{footerMenu.map((menuGroup) => (
 						<div key={menuGroup._uid}>
-							<h5 className="text-lg font-bold text-white">{menuGroup.label}</h5>
+							<h2 className="text-lg font-bold text-white">{menuGroup.label}</h2>
 							<ul className="mt-4 space-y-3">
 								{menuGroup.items?.map((item) => {
 									const Icon = item.icon ? IconMap[item.icon] : null;

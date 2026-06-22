@@ -3,7 +3,7 @@ import { TagBadge } from '@/components/storyblok/journal/tag-badge';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { ARTICLE_HERO_IMAGE_HEIGHT, ARTICLE_HERO_IMAGE_WIDTH } from '@/lib/services/journal/journal.utils';
 import {
-	createNewWebsitePersonLink,
+	createWebsitePersonLink,
 	formatStoryblokDate,
 	getPersonDisplayName,
 	ResolvedArticle,
@@ -57,7 +57,7 @@ export const ArticleDetailHeader = ({ story, hasHero, lang, region }: Props) => 
 			</div>
 
 			<Link
-				href={createNewWebsitePersonLink(author.slug, lang, region)}
+				href={createWebsitePersonLink(author.slug, lang, region)}
 				className="flex w-fit items-center gap-3 transition-opacity hover:opacity-80"
 			>
 				<AuthorAvatar author={author} size="lg" />

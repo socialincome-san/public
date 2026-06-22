@@ -5,7 +5,6 @@ import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { formatStoryblokDate } from '@/lib/services/storyblok/storyblok.utils';
 import type { LanguageCode } from '@/lib/types/language';
 import { cn } from '@/lib/utils/cn';
-import { linkCn } from '@socialincome/ui';
 import Link from 'next/link';
 
 const defaultThumbnail = { filename: '/assets/metadata/placeholder/news-outlet.svg', alt: 'news-outlet' };
@@ -45,7 +44,7 @@ export const ReferencesGroupBlock = ({ references, context, lang, labels }: Prop
 									href={reference.url}
 									target="_blank"
 									rel="noopener noreferrer"
-									className={cn(linkCn({ arrow: 'external', underline: 'none' }), 'font-medium')}
+									className={cn('text-primary font-medium underline-offset-4 hover:underline')}
 								>
 									{reference.title}
 								</Link>

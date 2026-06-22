@@ -4,7 +4,7 @@ import { Button } from '@/components/button';
 import { TABLE_PAGE_SIZE_OPTIONS } from '@/components/data-table/query-state';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 import {
 	ColumnDef,
 	flexRender,
@@ -38,6 +38,8 @@ type BaseTableProps<TData, TValue> = {
 		sorting: SortingState;
 		onSortingChange: (sorting: SortingState) => void;
 	};
+	compact?: boolean;
+	emptyMessage?: string;
 };
 
 export const BaseTable = <TData, TValue>({
@@ -51,8 +53,10 @@ export const BaseTable = <TData, TValue>({
 	onColumnVisibilityChange,
 	serverPagination,
 	serverSorting,
+	compact = false,
+	emptyMessage = 'No results.',
 }: BaseTableProps<TData, TValue>) => {
-	const stableTableMinHeightClass = 'min-h-[680px] md:min-h-[760px]';
+	const stableTableMinHeightClass = compact ? undefined : 'min-h-[680px] md:min-h-[760px]';
 	const [sorting, setSorting] = useState<SortingState>(initialSorting);
 	const [internalColumnVisibility, setInternalColumnVisibility] = useState<VisibilityState>({});
 	const activeServerPagination = serverPagination ?? null;
@@ -61,12 +65,16 @@ export const BaseTable = <TData, TValue>({
 	const isServerSorting = activeServerSorting !== null;
 	const resolvedColumnVisibility = columnVisibility ?? internalColumnVisibility;
 	const resolvedSorting = isServerSorting ? activeServerSorting.sorting : sorting;
+	const useClientPagination = !isServerPagination && !compact;
 
+	// TanStack Table's `useReactTable()` returns functions that React Compiler can warn about.
+	// We keep the call here and silence the specific rule to avoid false positives.
+	// eslint-disable-next-line react-hooks/incompatible-library
 	const table = useReactTable({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: isServerPagination ? undefined : getPaginationRowModel(),
+		getPaginationRowModel: useClientPagination ? getPaginationRowModel() : undefined,
 		onSortingChange: (next) => {
 			const resolved = functionalUpdate(next, resolvedSorting);
 			if (isServerSorting) {
@@ -86,7 +94,7 @@ export const BaseTable = <TData, TValue>({
 		state: { sorting: resolvedSorting, columnVisibility: resolvedColumnVisibility },
 		initialState: {
 			pagination: {
-				pageSize: 10,
+				pageSize: compact ? Math.max(data.length, 1) : 10,
 			},
 		},
 	});
@@ -164,7 +172,7 @@ export const BaseTable = <TData, TValue>({
 						) : (
 							<TableRow className="h-16">
 								<TableCell colSpan={columns.length} className="border-b text-center">
-									No results.
+									{emptyMessage}
 								</TableCell>
 							</TableRow>
 						)}
@@ -172,51 +180,53 @@ export const BaseTable = <TData, TValue>({
 				</Table>
 			</div>
 
-			<div className="mt-auto flex items-center justify-between gap-4 py-4" data-testid="data-table-pagination">
-				<div className="flex items-center gap-2">
-					{showRowsPerPageSelector ? (
-						<>
-							<span className="text-muted-foreground text-sm">Rows per page</span>
-							<Select value={`${pageSize}`} onValueChange={handlePageSizeChange}>
-								<SelectTrigger className="h-8 w-[80px]" data-testid="data-table-page-size-trigger">
-									<SelectValue />
-								</SelectTrigger>
-								<SelectContent>
-									{pageSizeOptions.map((size) => (
-										<SelectItem key={size} value={`${size}`}>
-											{size}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</>
-					) : null}
-				</div>
+			{compact ? null : (
+				<div className="mt-auto flex items-center justify-between gap-4 py-4" data-testid="data-table-pagination">
+					<div className="flex items-center gap-2">
+						{showRowsPerPageSelector ? (
+							<>
+								<span className="text-muted-foreground text-sm">Rows per page</span>
+								<Select value={`${pageSize}`} onValueChange={handlePageSizeChange}>
+									<SelectTrigger className="h-8 w-[80px]" data-testid="data-table-page-size-trigger">
+										<SelectValue />
+									</SelectTrigger>
+									<SelectContent>
+										{pageSizeOptions.map((size) => (
+											<SelectItem key={size} value={`${size}`}>
+												{size}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</>
+						) : null}
+					</div>
 
-				<div className="flex items-center gap-4">
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={goToPreviousPage}
-						disabled={!canPreviousPage}
-						data-testid="data-table-pagination-previous"
-					>
-						Previous
-					</Button>
-					<span className="text-muted-foreground text-sm" data-testid="data-table-pagination-range">
-						{startRow}-{endRow} of {totalRows}
-					</span>
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={goToNextPage}
-						disabled={!canNextPage}
-						data-testid="data-table-pagination-next"
-					>
-						Next
-					</Button>
+					<div className="flex items-center gap-4">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={goToPreviousPage}
+							disabled={!canPreviousPage}
+							data-testid="data-table-pagination-previous"
+						>
+							Previous
+						</Button>
+						<span className="text-muted-foreground text-sm" data-testid="data-table-pagination-range">
+							{startRow}-{endRow} of {totalRows}
+						</span>
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={goToNextPage}
+							disabled={!canNextPage}
+							data-testid="data-table-pagination-next"
+						>
+							Next
+						</Button>
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 };

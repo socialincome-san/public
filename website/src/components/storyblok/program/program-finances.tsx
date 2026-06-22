@@ -1,80 +1,40 @@
-import { Badge } from '@/components/badge';
-import { Progress } from '@/components/progress';
-import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
+import { ProgramFinancesCard } from '@/components/storyblok/program/program-finances-card';
+import { ProgramFinancesDialog } from '@/components/storyblok/program/program-finances-dialog';
+import { getCurrentUser } from '@/lib/firebase/current-user';
 import type { Translator } from '@/lib/i18n/translator';
-import { type WebsiteLanguage, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
-import { formatNumberLocale } from '@/lib/utils/string-utils';
-import { TriangleAlert } from 'lucide-react';
 
 type Props = {
 	stats: ProgramDashboardStats;
+	programId: string;
 	translator: Translator;
 	lang: WebsiteLanguage;
 };
 
-const formatAmount = (amount: number, locale: string, fractionDigits = 0): string =>
-	formatNumberLocale(amount, locale, {
-		minimumFractionDigits: fractionDigits,
-		maximumFractionDigits: fractionDigits,
-	});
-
-const clampPercent = (value: number): number => {
-	if (!Number.isFinite(value)) {
-		return 0;
-	}
-
-	return Math.min(100, Math.max(0, value));
-};
-
-export const ProgramFinances = ({ stats, translator, lang }: Props) => {
-	const locale = getSafeNumberFormatLocale(lang);
-	const currency = stats.payoutCurrency;
-	const sentToRecipients = formatAmount(stats.paidOutSoFarProgramCurrency, locale);
-	const totalProgramCosts = formatAmount(stats.totalProgramCostsProgramCurrency, locale);
-	const availableCredits = formatAmount(stats.availableCreditsProgramCurrency, locale, 2);
-	const progressPercent = clampPercent(stats.payoutProgressPercent);
-	const showLowCreditsWarning = stats.availableCreditsInIntervals <= 3;
+export const ProgramFinances = async ({ stats, programId, translator, lang }: Props) => {
+	const user = await getCurrentUser();
+	const isLoggedIn = user !== null;
+	const financesCard = <ProgramFinancesCard stats={stats} translator={translator} lang={lang} embedded />;
 
 	return (
 		<div className="flex flex-col gap-6 rounded-xl bg-white px-10 py-8 shadow-lg">
 			<div className="flex items-center justify-between">
 				<h2 className="text-foreground text-xl font-bold">{translator.t('navigation.finances')}</h2>
-				<ProgramDetailPill label={translator.t('program-detail-page.view-breakdown')} />
+				<ProgramFinancesDialog
+					dialogTitle={translator.t('program-detail-page.program-finances-title')}
+					viewBreakdownLabel={translator.t('program-detail-page.view-breakdown')}
+					manageLabel={
+						isLoggedIn ? translator.t('program-detail-page.manage') : translator.t('program-detail-page.login-to-manage')
+					}
+					manageHref={`/portal/programs/${programId}/payout-forecast`}
+					payoutForecastInfoTooltip={translator.t('program-detail-page.payout-forecast-info')}
+					financesCard={financesCard}
+					programId={programId}
+				/>
 			</div>
 
-			<div className="text-foreground flex items-end justify-between">
-				<div className="flex flex-col gap-3.5">
-					<p className="text-xs">{translator.t('program-detail-page.sent-to-recipients')}</p>
-					<p className="flex items-baseline gap-1">
-						<span className="text-sm font-bold">{currency}</span>
-						<span className="text-3xl font-medium">{sentToRecipients}</span>
-					</p>
-				</div>
-				<div className="flex flex-col items-end gap-3.5">
-					<p className="text-xs">{translator.t('program-detail-page.total-program-costs')}</p>
-					<p className="flex items-baseline gap-1">
-						<span className="text-sm font-bold">{currency}</span>
-						<span className="text-3xl font-medium">{totalProgramCosts}</span>
-					</p>
-				</div>
-			</div>
-
-			<Progress value={progressPercent} />
-
-			<div className="flex items-center justify-between pt-2">
-				<p className="text-foreground text-sm">{translator.t('program-detail-page.available-credits')}</p>
-				<div className="flex items-center gap-2">
-					{showLowCreditsWarning ? (
-						<Badge variant="secondary" className="rounded-full p-1.5">
-							<TriangleAlert className="size-3" />
-						</Badge>
-					) : null}
-					<p className="text-foreground text-sm font-bold">
-						{currency} {availableCredits}
-					</p>
-				</div>
-			</div>
+			{financesCard}
 		</div>
 	);
 };
