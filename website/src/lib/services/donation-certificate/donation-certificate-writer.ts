@@ -2,7 +2,6 @@ import { Translator } from '@/lib/i18n/translator';
 import { LanguageCode } from '@/lib/types/language';
 import { now } from '@/lib/utils/now';
 import { createWriteStream } from 'fs';
-import _ from 'lodash';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
 import { ContributionDonationEntry } from '../contribution/contribution.types';
@@ -23,10 +22,15 @@ export class DonationCertificateWriter {
 	}
 
 	private groupContributionsByCurrency = (contributions: ContributionDonationEntry[], year: number) => {
-		return _(contributions)
-			.filter((contribution) => contribution.createdAt.getFullYear() === year)
-			.groupBy((contribution) => contribution.currency)
-			.mapValues((contributions) => _.sumBy(contributions, (contribution) => contribution.amount));
+		return contributions.reduce<Record<string, number>>((totals, contribution) => {
+			if (contribution.createdAt.getFullYear() !== year) {
+				return totals;
+			}
+
+			totals[contribution.currency] = (totals[contribution.currency] ?? 0) + contribution.amount;
+
+			return totals;
+		}, {});
 	};
 
 	/**
@@ -115,14 +119,15 @@ export class DonationCertificateWriter {
 				pdfDocument.text(text1);
 				pdfDocument.moveDown();
 
-				if (contributionsByCurrency.size() === 0) {
+				const currencyContributions = Object.entries(contributionsByCurrency);
+				if (currencyContributions.length === 0) {
 					pdfDocument.text(translator.t('no-contributions'), { underline: true });
 				} else {
-					contributionsByCurrency.keys().forEach((currency) => {
+					currencyContributions.forEach(([currency, amount]) => {
 						pdfDocument.text(
 							'– ' +
 								translator.t('contribution', {
-									context: { currency, amount: contributionsByCurrency.get(currency), locale: 'de-CH' },
+									context: { currency, amount, locale: 'de-CH' },
 								}),
 						);
 					});

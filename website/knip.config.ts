@@ -5,14 +5,7 @@ const config: KnipConfig = {
 	ignoreIssues: {
 		'src/app/api/v1/models.ts': ['exports'],
 	},
-	ignoreDependencies: [
-		'@sendgrid/mail',
-		'@prisma/client',
-		'@firebase/analytics',
-		'@sendgrid/client',
-		'@google-cloud/storage',
-		'storyblok',
-	],
+	ignoreDependencies: ['@prisma/client', 'storyblok'],
 };
 
 export default config;

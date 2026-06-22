@@ -2,7 +2,7 @@ import { COUNTRY_CODES } from '@/lib/types/country';
 import { GENDER_OPTIONS } from '@/lib/types/user';
 import * as z from 'zod';
 
-export const qrContactSchema = z.object({
+const qrContactSchema = z.object({
 	firstName: z.string().trim().min(1),
 	lastName: z.string().trim().min(1),
 	email: z.string().trim().email(),
@@ -14,7 +14,7 @@ export const isQrContactValid = (values: QrContactFields): boolean => qrContactS
 
 const [firstCountry, ...restCountries] = COUNTRY_CODES;
 
-export const onboardingPersonalSchema = z.object({
+const onboardingPersonalSchema = z.object({
 	firstname: z.string().trim().min(1),
 	lastname: z.string().trim().min(1),
 	email: z.string().trim().email(),

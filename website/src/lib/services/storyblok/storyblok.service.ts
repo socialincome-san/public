@@ -37,7 +37,7 @@ export type StoryTitleData = {
 	};
 };
 
-export type StoryblokLinkAlternate = {
+type StoryblokLinkAlternate = {
 	lang: string;
 	path: string;
 	name: string | null;
