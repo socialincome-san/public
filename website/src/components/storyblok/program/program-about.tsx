@@ -4,6 +4,7 @@ import type { ProgramDetailData } from '@/components/storyblok/program/load-prog
 import { ProgramAboutDialog } from '@/components/storyblok/program/program-about-dialog';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 type Props = {
@@ -47,9 +48,12 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region, reso
 						<dt className="font-bold">{row.label}</dt>
 						<dd>
 							{row.href ? (
-								<Link href={row.href} className="hover:underline">
-									{row.value}
-								</Link>
+								<span className="inline-flex items-center gap-1">
+									<Link href={row.href} className="hover:underline">
+										{row.value}
+									</Link>
+									<ExternalLink className="size-4 shrink-0" aria-hidden="true" />
+								</span>
 							) : (
 								row.value
 							)}

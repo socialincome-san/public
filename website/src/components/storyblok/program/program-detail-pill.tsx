@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, ExternalLink } from 'lucide-react';
 import type { LinkProps } from 'next/link';
 import Link from 'next/link';
 
@@ -18,7 +18,7 @@ export const ProgramDetailPill = ({ label, href, onClick, isOpen = false }: Prop
 		return (
 			<Link href={href} className={interactivePillClassName}>
 				{label}
-				<ChevronRight className="size-4 shrink-0" aria-hidden="true" />
+				<ExternalLink className="size-4 shrink-0" aria-hidden="true" />
 			</Link>
 		);
 	}
