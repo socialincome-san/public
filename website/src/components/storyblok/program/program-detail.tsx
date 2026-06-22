@@ -5,6 +5,7 @@ import type { ProgramDetailData } from '@/components/storyblok/program/load-prog
 import { ProgramAbout } from '@/components/storyblok/program/program-about';
 import { ProgramCountry } from '@/components/storyblok/program/program-country';
 import { ProgramFinances } from '@/components/storyblok/program/program-finances';
+import { ProgramPayoutsTotal } from '@/components/storyblok/program/program-payouts-total';
 import { ProgramRecipients } from '@/components/storyblok/program/program-recipients';
 import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
@@ -38,6 +39,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 		}),
 		resolveProgramCountry(countryIsoCode, lang, region),
 	]);
+
 
 	return (
 		<>
@@ -102,6 +104,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 					</div>
 				</div>
 			</div>
+			{programDetailData.stats?.totalPayoutsSum && programDetailData.stats.totalPayoutsSum > 0 ? <ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} /> : null}
 		</>
 	);
 };
