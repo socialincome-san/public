@@ -49,7 +49,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 	console.log("faqsResult", faqsResult);
 
 	const faqItems = resolveFaqItems(faqsResult.success ? faqsResult.data : []);
-console.log("faqItems", faqItems);
+	console.log("faqItems", faqItems);
 
 	return (
 		<>
@@ -113,15 +113,16 @@ console.log("faqItems", faqItems);
 						</div>
 					</div>
 				</div>
+				{programDetailData.stats?.totalPayoutsSum && programDetailData.stats.totalPayoutsSum > 0 ? <ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} /> : null}
+				<CampaignJournalTeaser lang={lang} region={region} />
+				<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
+				{faqItems.length > 0 && (
+					<BlockWrapper>
+						<FaqSelectionContent heading={translator.t('title-long', { namespace: 'website-faq' })} items={faqItems} />
+					</BlockWrapper>
+				)}
 			</div>
-			{programDetailData.stats?.totalPayoutsSum && programDetailData.stats.totalPayoutsSum > 0 ? <ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} /> : null}
-			<CampaignJournalTeaser lang={lang} region={region} />
-			<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
-			{faqItems.length > 0 && (
-				<BlockWrapper>
-					<FaqSelectionContent heading={translator.t('title-long', { namespace: 'website-faq' })} items={faqItems} />
-				</BlockWrapper>
-			)}
+
 		</>
 	);
 };
