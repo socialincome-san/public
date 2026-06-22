@@ -58,6 +58,12 @@
 		"title": "Menu",
 		"back": "Indietro"
 	},
+	"logo": {
+		"home-link-aria": "Home Social Income"
+	},
+	"footer": {
+		"supported-by-link-aria": "Sito web Plattform Partner"
+	},
 	"locale-currency-switcher": {
 		"aria-label": "Cambia lingua, regione e valuta",
 		"language": "Lingua",

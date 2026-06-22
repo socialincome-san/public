@@ -58,6 +58,12 @@
 		"title": "Menu",
 		"back": "Back"
 	},
+	"logo": {
+		"home-link-aria": "Social Income home"
+	},
+	"footer": {
+		"supported-by-link-aria": "Platform Partner website"
+	},
 	"locale-currency-switcher": {
 		"aria-label": "Change language, region, and currency",
 		"language": "Language",

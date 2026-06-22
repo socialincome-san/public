@@ -58,6 +58,12 @@
 		"title": "Menu",
 		"back": "Retour"
 	},
+	"logo": {
+		"home-link-aria": "Accueil Social Income"
+	},
+	"footer": {
+		"supported-by-link-aria": "Site web Plattform Partner"
+	},
 	"locale-currency-switcher": {
 		"aria-label": "Modifier la langue, la région et la devise",
 		"language": "Langue",

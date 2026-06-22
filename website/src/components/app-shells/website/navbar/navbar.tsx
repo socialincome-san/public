@@ -26,7 +26,7 @@ type Props = {
 
 export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 	const session = displaySession(sessions, scope);
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate'] });
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate', 'website-common'] });
 	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(STORYBLOK_LAYOUT_PATH, lang);
 	const menu = result?.success ? result.data.content.menu : [];
 
@@ -37,8 +37,12 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 				'lg:w-site-width lg:absolute lg:top-5 lg:h-14 lg:rounded-full lg:px-2 lg:shadow-[0_0_28px_rgba(0,0,0,0.05)]',
 			)}
 		>
-			<NextLink href={`/${lang}/${region}`} className="text-accent-foreground lg:ml-4">
-				<SocialIncomeLogo />
+			<NextLink
+				href={`/${lang}/${region}`}
+				className="text-accent-foreground lg:ml-4"
+				aria-label={translator.t('logo.home-link-aria')}
+			>
+				<SocialIncomeLogo decorative />
 			</NextLink>
 
 			<div className="hidden lg:block">

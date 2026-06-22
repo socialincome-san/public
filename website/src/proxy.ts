@@ -1,5 +1,11 @@
 import { COUNTRY_COOKIE, CURRENCY_COOKIE } from '@/app/[lang]/[region]';
-import { allWebsiteLanguages, findBestLocale, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
+import {
+	findBestLocale,
+	getLanguageFromPathname,
+	WEBSITE_LANGUAGE_HEADER,
+	WebsiteRegion,
+	websiteRegions,
+} from '@/lib/i18n/utils';
 import { isValidCountryCode } from '@/lib/types/country';
 import { NextRequest, NextResponse } from 'next/server';
 import { CountryCode } from './generated/prisma/enums';
@@ -98,15 +104,15 @@ const redirectMiddleware = (request: NextRequest) => {
 const i18nRedirectMiddleware = (request: NextRequest) => {
 	// Checks if the language and country in the URL are supported, and redirects to the best locale if not.
 	const segments = request.nextUrl.pathname.split('/');
-	const detectedLanguage = segments.at(1) ?? '';
+	const pathnameLanguage = getLanguageFromPathname(request.nextUrl.pathname);
 	const detectedCountry = segments.at(2) ?? '';
 
-	const pathnameIsMissingLanguage = !allWebsiteLanguages.includes(detectedLanguage as WebsiteLanguage);
+	const pathnameIsMissingLanguage = !pathnameLanguage;
 	const pathnameIsMissingCountry = !websiteRegions.includes(detectedCountry as WebsiteRegion);
 
 	if (pathnameIsMissingCountry || pathnameIsMissingLanguage) {
 		let { language, region } = findBestLocale(request);
-		language = pathnameIsMissingLanguage ? language : (detectedLanguage as WebsiteLanguage);
+		language = pathnameIsMissingLanguage ? language : pathnameLanguage;
 		region = pathnameIsMissingCountry ? region : (detectedCountry as WebsiteRegion);
 
 		const url = request.nextUrl.clone();
@@ -126,8 +132,13 @@ export const proxy = (request: NextRequest) => {
 		return response;
 	}
 
-	// If no redirect was triggered, we continue with the country and currency middleware.
-	response = NextResponse.next();
+	const requestHeaders = new Headers(request.headers);
+	const language = getLanguageFromPathname(request.nextUrl.pathname);
+	if (language) {
+		requestHeaders.set(WEBSITE_LANGUAGE_HEADER, language);
+	}
+
+	response = NextResponse.next({ request: { headers: requestHeaders } });
 	response = countryMiddleware(request, response);
 	response = currencyMiddleware(request, response);
 

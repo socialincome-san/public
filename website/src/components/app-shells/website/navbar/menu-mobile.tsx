@@ -69,9 +69,10 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 							<NextLink
 								href={`/${lang}/${region}`}
 								className="text-accent-foreground"
+								aria-label={commonTranslator?.t('logo.home-link-aria') ?? 'Social Income home'}
 								onClick={() => handleOpenChange(false)}
 							>
-								<SocialIncomeLogo />
+								<SocialIncomeLogo decorative />
 							</NextLink>
 							<Dialog.Close aria-label={commonTranslator?.t('menu.close') ?? 'Close menu'}>
 								<X className="size-6" />

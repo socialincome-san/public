@@ -5,9 +5,15 @@ import { COUNTRY_COOKIE, CURRENCY_COOKIE, LANGUAGE_COOKIE, REGION_COOKIE } from 
 import { CountryCode } from '@/generated/prisma/enums';
 import { useCookieState } from '@/lib/hooks/useCookieState';
 import { useI18n } from '@/lib/i18n/useI18n';
-import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import {
+	getLanguageFromPathname,
+	resolveWebsiteLanguage,
+	WebsiteCurrency,
+	WebsiteLanguage,
+	WebsiteRegion,
+} from '@/lib/i18n/utils';
 import _ from 'lodash';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { createContext, PropsWithChildren, Suspense, useEffect } from 'react';
 
 type I18nContextProps = {
@@ -28,9 +34,18 @@ const I18nUrlUpdater = () => {
 	// It's a separate component because it uses the useSearchParams hook, and needs to be wrapped in a Suspense
 	// boundary (https://nextjs.org/docs/messages/deopted-into-client-rendering).
 	const router = useRouter();
+	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const searchParamsString = searchParams.toString();
 	const { language, setLanguage, region, setRegion } = useI18n();
+
+	useEffect(() => {
+		document.documentElement.lang = resolveWebsiteLanguage({
+			pathnameLanguage: getLanguageFromPathname(pathname),
+			cookieLanguage: language,
+			preferCookie: true,
+		});
+	}, [language, pathname]);
 
 	useEffect(() => {
 		const urlSegments = window.location.pathname.split('/');
