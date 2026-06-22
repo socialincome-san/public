@@ -138,9 +138,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 				<div className="space-y-2">
 					<div className="text-sm font-semibold">{translator?.t('locale-currency-switcher.language') ?? 'Language'}</div>
 					<Tabs value={currentSwitcherLanguage} onValueChange={handleLanguageChange}>
-						<TabsList
-							className={cn('grid h-10 w-full rounded-full', isSurveyPage ? 'grid-cols-2' : 'grid-cols-4')}
-						>
+						<TabsList className={cn('grid h-10 w-full rounded-full', isSurveyPage ? 'grid-cols-2' : 'grid-cols-4')}>
 							{languageOptions.map((language) => (
 								<TabsTrigger key={language} value={language} className="rounded-full">
 									{language.toUpperCase()}
