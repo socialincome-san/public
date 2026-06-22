@@ -58,6 +58,8 @@
 	"contributions": {
 		"amount": "Betrag",
 		"date": "Datum",
+		"created": "Erstellt",
+		"updated": "Aktualisiert",
 		"currency": "Währung",
 		"campaign": "Kampagne",
 		"sources": {

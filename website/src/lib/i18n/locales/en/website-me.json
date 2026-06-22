@@ -58,6 +58,8 @@
 	"contributions": {
 		"amount": "Amount",
 		"date": "Date",
+		"created": "Created",
+		"updated": "Updated",
 		"currency": "Currency",
 		"campaign": "Campaign",
 		"sources": {

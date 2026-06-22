@@ -81,9 +81,11 @@ export type PaymentEventCreateInput = Prisma.PaymentEventCreateInput;
 
 export type YourContributionsTableViewRow = {
 	createdAt: Date;
+	updatedAt: Date | null;
 	amount: number;
 	currency: Currency;
 	campaignTitle: string;
+	status: ContributionStatus;
 };
 
 export type YourContributionsTableQuery = {
