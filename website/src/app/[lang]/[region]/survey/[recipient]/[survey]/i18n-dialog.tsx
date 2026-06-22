@@ -9,7 +9,6 @@ import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/util
 import { LanguageCode } from '@/lib/types/language';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
-import _ from 'lodash';
 import { PropsWithChildren, useState } from 'react';
 
 type I18nDialogProps = {
@@ -47,7 +46,7 @@ export const I18nDialog = ({
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className="max-w-sm p-12">
-				{!_.isEmpty(languages) && (
+				{languages.length > 0 && (
 					<Select value={language} onValueChange={(l: WebsiteLanguage) => setLanguage(l)}>
 						<SelectTrigger className="space-x-2">
 							<LanguageIcon className="h-4 w-4" />
@@ -64,7 +63,7 @@ export const I18nDialog = ({
 					</Select>
 				)}
 
-				{!_.isEmpty(regions) && !isSurveyPage && (
+				{regions.length > 0 && !isSurveyPage && (
 					<Select value={region} onValueChange={(c: WebsiteRegion) => setRegion(c)}>
 						<SelectTrigger className="space-x-2">
 							<GlobeEuropeAfricaIcon className="h-4 w-4" />
@@ -81,7 +80,7 @@ export const I18nDialog = ({
 					</Select>
 				)}
 
-				{!_.isEmpty(currencies) && (
+				{currencies.length > 0 && (
 					<Select
 						value={currency}
 						onValueChange={(currency: WebsiteCurrency) => {

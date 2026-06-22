@@ -4,8 +4,7 @@ import { FacebookTracking } from '@/components/analytics/facebook-tracking';
 import { GoogleTagManager } from '@/components/analytics/google-tag-manager';
 import { LinkedInTracking } from '@/components/analytics/linkedin-tracking';
 import { useFirebaseApp } from '@/lib/firebase/hooks/useFirebaseApp';
-import { initializeAnalytics } from '@firebase/analytics';
-import { ConsentSettings, ConsentStatusString, setConsent } from 'firebase/analytics';
+import { ConsentSettings, ConsentStatusString, initializeAnalytics, setConsent } from 'firebase/analytics';
 import { useEffect, useState } from 'react';
 
 const getAnalyticsCookieConsent = (mode: ConsentStatusString) =>

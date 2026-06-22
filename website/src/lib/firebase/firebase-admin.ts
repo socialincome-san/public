@@ -1,4 +1,3 @@
-import { Bucket } from '@google-cloud/storage';
 import admin, { ServiceAccount } from 'firebase-admin';
 import { App, AppOptions, getApps, initializeApp } from 'firebase-admin/app';
 import { Auth, getAuth } from 'firebase-admin/auth';
@@ -24,7 +23,7 @@ const getOrInitializeFirebaseAdmin = (options?: AppOptions, name?: string): App 
 };
 
 type UploadProps = {
-	bucket?: Bucket;
+	bucket?: ReturnType<Storage['bucket']>;
 	sourceFilePath: string;
 	destinationFilePath: string;
 };

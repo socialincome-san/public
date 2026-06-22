@@ -12,7 +12,6 @@ import {
 	WebsiteLanguage,
 	WebsiteRegion,
 } from '@/lib/i18n/utils';
-import _ from 'lodash';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { createContext, PropsWithChildren, Suspense, useEffect } from 'react';
 
@@ -50,7 +49,7 @@ const I18nUrlUpdater = () => {
 	useEffect(() => {
 		const urlSegments = window.location.pathname.split('/');
 		const languageInUrl = urlSegments[1] as WebsiteLanguage;
-		if (_.isUndefined(language)) {
+		if (language === undefined) {
 			setLanguage(languageInUrl);
 		} else if (languageInUrl !== language) {
 			urlSegments[1] = language;
@@ -61,7 +60,7 @@ const I18nUrlUpdater = () => {
 	useEffect(() => {
 		const urlSegments = window.location.pathname.split('/');
 		const regionInUrl = urlSegments[2] as WebsiteRegion;
-		if (_.isUndefined(region)) {
+		if (region === undefined) {
 			setRegion(regionInUrl);
 		} else if (regionInUrl !== region) {
 			urlSegments[2] = region;

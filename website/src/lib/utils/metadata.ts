@@ -1,6 +1,5 @@
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import _ from 'lodash';
 import { Metadata } from 'next';
 
 /**
@@ -44,7 +43,26 @@ export const getMetadata = async (language: WebsiteLanguage, namespace: string, 
 			creator: '@so_income',
 			images: translator.t('metadata.twitter-image'),
 		},
-	};
+	} satisfies Metadata;
 
-	return _.merge(defaultMetadata, metadata);
+	return {
+		...defaultMetadata,
+		...metadata,
+		alternates: {
+			...defaultMetadata.alternates,
+			...metadata?.alternates,
+			languages: {
+				...defaultMetadata.alternates.languages,
+				...metadata?.alternates?.languages,
+			},
+		},
+		openGraph: {
+			...defaultMetadata.openGraph,
+			...metadata?.openGraph,
+		},
+		twitter: {
+			...defaultMetadata.twitter,
+			...metadata?.twitter,
+		},
+	};
 };

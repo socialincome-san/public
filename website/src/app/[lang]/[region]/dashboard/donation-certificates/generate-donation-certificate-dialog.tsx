@@ -9,10 +9,10 @@ import { generateDonationCertificateForCurrentUser } from '@/lib/server-actions/
 import { DonationCertificateError } from '@/lib/services/donation-certificate/types';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, LanguageCode } from '@/lib/types/language';
 import { now } from '@/lib/utils/now';
-import _ from 'lodash';
 import { useState, useTransition } from 'react';
 
 const CURRENT_YEAR = now().getFullYear();
+const CERTIFICATE_YEARS = Array.from({ length: 6 }, (_value, index) => CURRENT_YEAR - 5 + index);
 const LANGUAGES: LanguageCode[] = ['en', 'de', 'fr', 'it'];
 export default function GenerateDonationCertificateDialog({
 	open,
@@ -78,7 +78,7 @@ export default function GenerateDonationCertificateDialog({
 								<SelectValue placeholder={translator?.t('donation-certificates.generate-dialog.placeholder_year')} />
 							</SelectTrigger>
 							<SelectContent>
-								{_.range(CURRENT_YEAR - 5, CURRENT_YEAR + 1).map((year) => (
+								{CERTIFICATE_YEARS.map((year) => (
 									<SelectItem value={year.toString()} key={year}>
 										{year}
 									</SelectItem>
