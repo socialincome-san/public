@@ -5,9 +5,11 @@ import { CountryFlag } from '@/components/country-flag';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
 import { Tabs, TabsList, TabsTrigger } from '@/components/tabs';
 import { type CountryCode } from '@/generated/prisma/enums';
+import { useIsPage } from '@/lib/hooks/useIsPage';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import {
+	allWebsiteLanguages,
 	mainWebsiteLanguages,
 	websiteCurrencies,
 	websiteRegions,
@@ -21,9 +23,10 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 const SWISS_COUNTRY_CODE: CountryCode = 'CH';
+const surveyLanguages: WebsiteLanguage[] = ['en', 'kri'];
 
 const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
-	mainWebsiteLanguages.some((language) => language === value);
+	allWebsiteLanguages.some((language) => language === value);
 
 const isWebsiteRegion = (value: string): value is WebsiteRegion => websiteRegions.some((region) => region === value);
 
@@ -68,6 +71,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
+	const isSurveyPage = useIsPage('survey');
 	const translator = useTranslator(lang, 'website-common');
 	const { language, setLanguage, region: selectedRegion, setRegion, currency, setCurrency } = useI18n();
 
@@ -75,6 +79,8 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 	const currentLanguage = language ?? lang;
 	const currentRegion = selectedRegion ?? initialRegion;
 	const currentCurrency = currency ?? getDefaultCurrency(currentRegion);
+	const languageOptions = isSurveyPage ? surveyLanguages : mainWebsiteLanguages;
+	const currentSwitcherLanguage = languageOptions.includes(currentLanguage) ? currentLanguage : (languageOptions[0] ?? 'en');
 	const regionOptions: { value: WebsiteRegion; label: string }[] = [
 		{ value: 'int', label: translator?.t('locale-currency-switcher.regions.int') ?? 'International' },
 		{ value: 'ch', label: translator?.t('locale-currency-switcher.regions.ch') ?? 'Switzerland' },
@@ -86,7 +92,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 	};
 
 	const handleLanguageChange = (value: string) => {
-		if (!isWebsiteLanguage(value)) {
+		if (!isWebsiteLanguage(value) || !languageOptions.includes(value)) {
 			return;
 		}
 
@@ -107,6 +113,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 		if (isWebsiteCurrency(value)) {
 			setCurrency(value);
 			setOpen(false);
+			router.refresh();
 		}
 	};
 
@@ -130,9 +137,9 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 			>
 				<div className="space-y-2">
 					<div className="text-sm font-semibold">{translator?.t('locale-currency-switcher.language') ?? 'Language'}</div>
-					<Tabs value={currentLanguage} onValueChange={handleLanguageChange}>
-						<TabsList className="grid h-10 w-full grid-cols-4 rounded-full">
-							{mainWebsiteLanguages.map((language) => (
+					<Tabs value={currentSwitcherLanguage} onValueChange={handleLanguageChange}>
+						<TabsList className={cn('grid h-10 w-full rounded-full', isSurveyPage ? 'grid-cols-2' : 'grid-cols-4')}>
+							{languageOptions.map((language) => (
 								<TabsTrigger key={language} value={language} className="rounded-full">
 									{language.toUpperCase()}
 								</TabsTrigger>
