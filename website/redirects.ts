@@ -94,6 +94,12 @@ const redirects: Redirects = [
 	},
 	{ source: '/transparency/reporting', destination: '/en/int/transparency', permanent: true },
 	{
+		source: '/:lang(en|de|fr|it)/:region(int|ch)/transparency/recipient-selection',
+		destination: '/:lang/:region/recipient-selection',
+		permanent: true,
+	},
+	{ source: '/transparency/recipient-selection', destination: '/en/int/recipient-selection', permanent: true },
+	{
 		source: '/:lang(en|de|fr|it)/:region(int|ch)/journal/tag/direct-cash',
 		destination: '/:lang/:region/journal?tag=direct-cash',
 		permanent: true,
