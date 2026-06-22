@@ -240,3 +240,11 @@ export const completeReferralStep = async (
 
 	await waitForWizardStep(modal, 'donation-wizard-step-thank-you');
 };
+
+export const closeCompletedDonationWizard = async (page: Page) => {
+	const modal = wizard(page);
+
+	await waitForWizardStep(modal, 'donation-wizard-step-thank-you');
+	await modal.getByRole('button', { name: 'Close' }).click();
+	await expect(modal).toBeHidden();
+};
