@@ -107,6 +107,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 		if (isWebsiteCurrency(value)) {
 			setCurrency(value);
 			setOpen(false);
+			router.refresh();
 		}
 	};
 
