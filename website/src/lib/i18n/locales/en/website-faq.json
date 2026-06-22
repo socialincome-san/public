@@ -3,6 +3,7 @@
 		"title": "FAQ | Social Income"
 	},
 	"title": "FAQ",
+<<<<<<< Updated upstream
 	"title-long": "Frequently asked questions",
 	"fighting-poverty": {
 		"title": "Fighting Poverty",
@@ -256,5 +257,9 @@
 				"answer": "Should the fundraising goal be met, all 156 Ebola survivors registered by the Sierra Leone Association of Ebola Survivors in Kenema will be selected as recipients. In this scenario, no further selection is required. However, if the fundraising target isn't achieved, we will conduct a random selection from the candidates. This approach serves two key purposes: Firstly, it helps ensure impartiality in choosing recipients, preventing favoritism towards relatives or acquaintances of those involved in the process. Secondly, it aims to minimize any potential conflicts or tensions, both between those who receive aid and those who don't, and between recipients and the organizations involved."
 			}
 		]
+=======
+	"campaign": {
+		"title": "Frequently asked questions"
+>>>>>>> Stashed changes
 	}
 }

@@ -3,6 +3,7 @@
 		"title": "FAQ | Social Income"
 	},
 	"title": "FAQ",
+<<<<<<< Updated upstream
 	"title-long": "Oft gestellte Fragen",
 	"fighting-poverty": {
 		"title": "Armut bekämpfen",
@@ -260,5 +261,9 @@
 				"answer": "Wenn wir das Spendenziel erreichen, erhalten alle 156 von der Sierra Leone Association of Ebola Survivors in Kenema registrierten Überlebenden Unterstützung. Eine zusätzliche Auswahl ist dann nicht nötig. Verfehlen wir das Ziel, wählen wir Empfänger:innen zufällig aus. Diese Methode sichert Fairness und vermeidet Bevorzugungen."
 			}
 		]
+=======
+	"campaign": {
+		"title": "Fragen und Antworten"
+>>>>>>> Stashed changes
 	}
 }

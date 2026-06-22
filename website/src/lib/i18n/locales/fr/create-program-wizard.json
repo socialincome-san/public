@@ -28,7 +28,6 @@
 		"no_active_programs": "Aucun programme actif",
 		"country_stats": "{{programCount}} programmes - {{recipientCount}} beneficiaires",
 		"table": {
-			"country": "Pays",
 			"cash": "Adequation du cash",
 			"mobile_money": "Mobile money",
 			"mobile_network": "Couverture reseau",
@@ -87,7 +86,6 @@
 			"targeted": {
 				"label": "Approche ciblee",
 				"description": "Le soutien est fourni aux beneficiaires qui correspondent aux axes et profils selectionnes.",
-				"matching_count": "{{matched}} sur {{total}} beneficiaires correspondent au pays et aux filtres selectionnes",
 				"matching": "beneficiaires correspondent au pays et aux filtres selectionnes",
 				"empty_error": "Veuillez ajuster les filtres afin qu'au moins un beneficiaire corresponde."
 			},
@@ -97,12 +95,6 @@
 				"label": "Choisir vos propres beneficiaires",
 				"description": "Selectionnez et gerez manuellement des beneficiaires individuels."
 			}
-		},
-		"focuses": {
-			"poverty": "Pauvrete",
-			"health": "Sante",
-			"gender_based_violence": "Violence basee sur le genre",
-			"climate": "Climat"
 		},
 		"profiles": {
 			"male": "Homme",

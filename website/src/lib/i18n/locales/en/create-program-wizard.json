@@ -28,7 +28,6 @@
 		"no_active_programs": "No active programs",
 		"country_stats": "{{programCount}} programs - {{recipientCount}} recipients",
 		"table": {
-			"country": "Country",
 			"cash": "Suitability of cash",
 			"mobile_money": "Mobile money",
 			"mobile_network": "Network coverage",
@@ -87,7 +86,6 @@
 			"targeted": {
 				"label": "Targeted approach",
 				"description": "Support is provided to recipients who match selected focuses and profiles.",
-				"matching_count": "{{matched}} of {{total}} recipients match the selected country and filters",
 				"matching": "recipients match the selected country and filters",
 				"empty_error": "Please adjust the filters so at least one recipient matches."
 			},
@@ -97,12 +95,6 @@
 				"label": "Choose your own recipients",
 				"description": "Manually select and manage individual recipients."
 			}
-		},
-		"focuses": {
-			"poverty": "Poverty",
-			"health": "Health",
-			"gender_based_violence": "Gender based violence",
-			"climate": "Climate"
 		},
 		"profiles": {
 			"male": "Male",

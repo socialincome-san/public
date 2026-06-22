@@ -3,6 +3,7 @@
 		"title": "FAQ | Social Income"
 	},
 	"title": "FAQ",
+<<<<<<< Updated upstream
 	"title-long": "Domande frequenti",
 	"fighting-poverty": {
 		"title": "Lotta alla povertà",
@@ -260,5 +261,9 @@
 				"answer": "Se l'obiettivo della raccolta fondi verrà raggiunto, tutti i 156 sopravvissuti all'Ebola registrati dall'Associazione dei Sopravvissuti all'Ebola della Sierra Leone a Kenema saranno selezionati come beneficiari. In questo caso, non sarà necessaria alcuna ulteriore selezione. Tuttavia, se l'obiettivo della raccolta fondi non verrà raggiunto, procederemo a una selezione casuale tra i candidati. Questo approccio ha due scopi principali: in primo luogo, aiuta a garantire l'imparzialità nella scelta dei beneficiari, prevenendo favoritismi verso parenti o conoscenti delle persone coinvolte nel processo. In secondo luogo, mira a ridurre al minimo potenziali conflitti o tensioni, sia tra coloro che ricevono aiuti e coloro che non li ricevono, sia tra i beneficiari e le organizzazioni coinvolte."
 			}
 		]
+=======
+	"campaign": {
+		"title": "Domande frequenti"
+>>>>>>> Stashed changes
 	}
 }
