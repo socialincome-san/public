@@ -21,7 +21,8 @@
 		"paths": {
 			"@/*": ["./src/*"]
 		},
-		"allowJs": true
+		"allowJs": true,
+		"types": ["jest", "node"]
 	},
 	"include": [
 		"next-env.d.ts",

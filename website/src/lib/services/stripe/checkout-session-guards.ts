@@ -4,7 +4,7 @@ import { resultFail, resultOk } from '../core/service-result';
 import { normalizeCheckoutEmail } from './wizard-embedded-checkout';
 
 export const assertEmbeddedCheckoutSessionPaid = (session: Stripe.Checkout.Session): ServiceResult<void> => {
-	if (session.ui_mode !== 'embedded') {
+	if (session.ui_mode !== 'embedded_page') {
 		return resultFail('Invalid checkout session type');
 	}
 

@@ -210,7 +210,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 	// TODO: move to recursive function
 	// get values from Zod Schema and map back to form schema
 	const beforeSubmit = (values: z.infer<typeof zodSchema>) => {
-		const v = values as Record<string, unknown>;
+		const v = values;
 		const schema = JSON.parse(JSON.stringify(formSchema)) as FormSchema;
 
 		for (const key in schema.fields) {
