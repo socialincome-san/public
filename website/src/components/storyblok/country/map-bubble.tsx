@@ -11,7 +11,7 @@ export const MapBubble = ({ isoCode, countryName }: MapBubbleProps) => {
 	const { main: mainMapUrl, inset: insetMapUrl } = buildMapUrls(isoCode);
 
 	return (
-		<div className="relative aspect-square w-full max-w-104">
+		<div className="relative aspect-square w-full max-w-72 lg:max-w-104">
 			<div className="absolute inset-0 flex items-start justify-start">
 				<MapImage
 					src={mainMapUrl}
