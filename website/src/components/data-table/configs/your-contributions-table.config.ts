@@ -16,7 +16,9 @@ export const getYourContributionsTableConfig = ({
 	emptyMessage,
 	searchKeys: enableSearch ? ['campaignTitle', 'currency'] : [],
 	sortOptions: [
-		{ id: 'createdAt', label: 'Date' },
+		{ id: 'updatedAt', label: 'Updated' },
+		{ id: 'createdAt', label: 'Created' },
+		{ id: 'status', label: 'Status' },
 		{ id: 'amount', label: 'Amount' },
 		{ id: 'currency', label: 'Currency' },
 		{ id: 'campaignTitle', label: 'Campaign' },

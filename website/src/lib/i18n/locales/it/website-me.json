@@ -58,6 +58,8 @@
 	"contributions": {
 		"amount": "Importo",
 		"date": "Data",
+		"created": "Creato",
+		"updated": "Aggiornato",
 		"currency": "Valuta",
 		"campaign": "Campagna",
 		"sources": {
