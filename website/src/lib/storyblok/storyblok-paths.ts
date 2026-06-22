@@ -144,7 +144,7 @@ export const normalizeStoryblokSlug = (rawSlug: string): string => {
 	}
 
 	if (slug.startsWith('faq/') && !slug.startsWith(`${STORYBLOK_FAQ_FOLDER}/`)) {
-		return `${STORYBLOK_PAGES_FOLDER}/${slug}`;
+		return `${STORYBLOK_FAQ_FOLDER}/${slug}`;
 	}
 
 	if (slug.startsWith('partnerships/') && !slug.startsWith(`${STORYBLOK_PAGES_FOLDER}/partnerships/`)) {
