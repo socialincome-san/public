@@ -68,6 +68,8 @@
 	"contributions": {
 		"amount": "Paiements",
 		"date": "Date",
+		"created": "Créé",
+		"updated": "Mis à jour",
 		"source": "Source",
 		"total": "Total",
 		"one-time-payment": "Nouveau don unique",

@@ -68,6 +68,8 @@
 	"contributions": {
 		"amount": "Importo",
 		"date": "Data",
+		"created": "Creato",
+		"updated": "Aggiornato",
 		"source": "Fonte",
 		"total": "Totale",
 		"one-time-payment": "Nuova donazione una tantum",

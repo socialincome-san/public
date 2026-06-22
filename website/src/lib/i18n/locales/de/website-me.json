@@ -68,6 +68,8 @@
 	"contributions": {
 		"amount": "Betrag",
 		"date": "Datum",
+		"created": "Erstellt",
+		"updated": "Aktualisiert",
 		"source": "Quelle",
 		"total": "Total",
 		"one-time-payment": "Neue einmalige Spende",
