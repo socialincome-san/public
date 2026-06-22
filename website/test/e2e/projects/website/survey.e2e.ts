@@ -4,10 +4,21 @@ import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, type Page, test } from '@playwright/test';
 import { expectToHaveScreenshot } from '../../utils';
 
-const SEEDED_SURVEY_URL =
-	'/en/int/survey/candidate-sl-1/survey-recipient-candidate-sl-1-intake?email=candidate-sl-1%40survey.test&pw=seed-survey-pw';
+const SEEDED_SURVEY_PATH = '/en/int/survey/candidate-sl-1/survey-recipient-candidate-sl-1-intake';
+const SEEDED_SURVEY_URL = `${SEEDED_SURVEY_PATH}?email=candidate-sl-1%40survey.test&pw=seed-survey-pw`;
 const SEEDED_SURVEY_ID = 'survey-recipient-candidate-sl-1-intake';
+const SEEDED_SURVEY_EMAIL = 'candidate-sl-1@survey.test';
+const SEEDED_SURVEY_PASSWORD = 'seed-survey-pw';
 const plannedAchievement = 'I want to use Social Income to grow my business and support my family.';
+
+const expectSurveyWelcomePage = async (page: Page) => {
+	await expect(page.getByText('Hello candidate_sl-1 candidate_pool')).toBeVisible();
+	await expect(
+		page.getByText(
+			'The goal of this survey is to find out the impact of a Social Income for you. Takes around 5 minutes to complete.',
+		),
+	).toBeVisible();
+};
 
 const advanceSeededSurveyToSecondStep = async (page: Page) => {
 	await page.goto(SEEDED_SURVEY_URL);
@@ -27,12 +38,24 @@ test.beforeEach(async () => {
 test('seeded survey link opens the welcome page', async ({ page }) => {
 	await page.goto(SEEDED_SURVEY_URL);
 
-	await expect(page.getByText('Hello candidate_sl-1 candidate_pool')).toBeVisible();
-	await expect(
-		page.getByText(
-			'The goal of this survey is to find out the impact of a Social Income for you. Takes around 5 minutes to complete.',
-		),
-	).toBeVisible();
+	await expectSurveyWelcomePage(page);
+});
+
+test('survey access shows an error for invalid credentials', async ({ page }) => {
+	await page.goto(`${SEEDED_SURVEY_PATH}?email=${encodeURIComponent(SEEDED_SURVEY_EMAIL)}&pw=wrong-password`);
+
+	await expect(page.getByText('Error logging in. Please check your credentials.')).toBeVisible();
+});
+
+test('survey access form opens the survey with valid credentials', async ({ page }) => {
+	await page.goto(SEEDED_SURVEY_PATH);
+
+	await expect(page.getByRole('heading', { name: 'Open your survey' })).toBeVisible();
+	await page.getByPlaceholder('Email').fill(SEEDED_SURVEY_EMAIL);
+	await page.getByPlaceholder('Password').fill(SEEDED_SURVEY_PASSWORD);
+	await page.getByRole('button', { name: 'Open survey' }).click();
+
+	await expectSurveyWelcomePage(page);
 });
 
 test('survey saves progress when advancing to the next step', async ({ page }) => {
