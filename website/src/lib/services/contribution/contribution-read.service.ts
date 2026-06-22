@@ -61,7 +61,14 @@ export class ContributionReadService extends BaseService {
 
 	private buildYourContributionOrderBy(query: YourContributionsTableQuery): Prisma.ContributionOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, ['amount', 'currency', 'campaignTitle', 'createdAt'] as const);
+		const sortBy = toSortKey(query.sortBy, [
+			'amount',
+			'currency',
+			'campaignTitle',
+			'createdAt',
+			'updatedAt',
+			'status',
+		] as const);
 		switch (sortBy) {
 			case 'amount':
 				return [{ amount: direction }];
@@ -71,8 +78,12 @@ export class ContributionReadService extends BaseService {
 				return [{ campaign: { title: direction } }];
 			case 'createdAt':
 				return [{ createdAt: direction }];
+			case 'updatedAt':
+				return [{ updatedAt: direction }];
+			case 'status':
+				return [{ status: direction }];
 			default:
-				return [{ createdAt: 'desc' }];
+				return [{ updatedAt: 'desc' }];
 		}
 	}
 
@@ -345,8 +356,10 @@ export class ContributionReadService extends BaseService {
 					where,
 					select: {
 						createdAt: true,
+						updatedAt: true,
 						amount: true,
 						currency: true,
+						status: true,
 						campaign: {
 							select: { title: true },
 						},
@@ -360,9 +373,11 @@ export class ContributionReadService extends BaseService {
 
 			const tableRows = contributions.map((c) => ({
 				createdAt: c.createdAt,
+				updatedAt: c.updatedAt,
 				amount: c.amount ? Number(c.amount) : 0,
 				currency: c.currency ?? '',
 				campaignTitle: c.campaign?.title ?? '',
+				status: c.status,
 			}));
 
 			return this.resultOk({ tableRows, totalCount });

@@ -58,6 +58,8 @@
 	"contributions": {
 		"amount": "Paiements",
 		"date": "Date",
+		"created": "Créé",
+		"updated": "Mis à jour",
 		"currency": "Devise",
 		"campaign": "Campagne",
 		"sources": {
