@@ -56,16 +56,6 @@ export interface Button {
   [k: string]: unknown;
 }
 
-export interface Campaign {
-  id: string;
-  title: string;
-  heroImage: StoryblokAsset;
-  description: string;
-  component: "campaign";
-  _uid: string;
-  [k: string]: unknown;
-}
-
 export interface CampaignDonate {
   campaignId?: string;
   component: "campaignDonate";
@@ -73,10 +63,10 @@ export interface CampaignDonate {
   [k: string]: unknown;
 }
 
-export interface CampaignGrid {
-  showAllCampaigns?: boolean;
-  campaigns?: (ISbStoryData<Campaign> | string)[];
-  component: "campaignGrid";
+export interface CampaignOverview {
+  title?: string;
+  text?: string;
+  component: "Campaign Overview";
   _uid: string;
   [k: string]: unknown;
 }
@@ -84,22 +74,22 @@ export interface CampaignGrid {
 export interface Country {
   isoCode: number | string;
   title: string;
-  description: string;
+  description: StoryblokRichtext;
   heroImage: StoryblokAsset;
   countryOfficeTitle?: string;
   countryOfficeDescription?: string;
   partners?: (ISbStoryData<LocalPartner> | string)[];
-  donations?: DonationsTotal[];
+  payouts?: DonationsTotal[];
   programs?: ProgramGrid[];
   component: "Country";
   _uid: string;
   [k: string]: unknown;
 }
 
-export interface CountryGrid {
-  showAllCountries?: boolean;
-  countries?: (ISbStoryData<Country> | string)[];
-  component: "countryGrid";
+export interface CountryOverview {
+  title?: string;
+  text?: string;
+  component: "Country Overview";
   _uid: string;
   [k: string]: unknown;
 }
@@ -168,19 +158,23 @@ export interface FaqSelection {
 }
 
 export interface Focus {
-  id: string;
-  heroImage: StoryblokAsset;
+  portalSlug: string;
   title: string;
-  description: string;
+  text?: string;
+  studiesTitle?: string;
+  studies?: (ISbStoryData<Study> | string)[];
+  impactMeasurementTitle?: string;
+  impactMeasurementTeaserText?: string;
+  impactMeasurementTeaserButtonLabel?: string;
   component: "Focus";
   _uid: string;
   [k: string]: unknown;
 }
 
-export interface FocusGrid {
-  showAllFocuses?: boolean;
-  focuses?: (ISbStoryData<Focus> | string)[];
-  component: "focusGrid";
+export interface FocusOverview {
+  title?: string;
+  text?: string;
+  component: "focus overview";
   _uid: string;
   [k: string]: unknown;
 }
@@ -188,7 +182,6 @@ export interface FocusGrid {
 export interface HeroVideo {
   heading?: string;
   description?: string;
-  button?: Button[];
   muxPlaybackId: string;
   component: "heroVideo";
   _uid: string;
@@ -241,19 +234,34 @@ export interface Layout {
 }
 
 export interface LocalPartner {
-  id: string;
+  portalSlug?: string;
+  countryIsoCode?: number | string;
+  focuses?: (ISbStoryData<Focus> | string)[];
   heroImage: StoryblokAsset;
   title: string;
-  description: string;
+  description: StoryblokRichtext;
+  mission?: string;
+  partnerSince?: string;
+  foundingYear?: string;
+  location?: string;
+  website?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  linkedin?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  instagram?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  facebook?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  youtube?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  payouts?: DonationsTotal[];
+  programs?: ProgramGrid[];
+  partners?: (ISbStoryData<LocalPartner> | string)[];
+  testimonial?: TestimonialCarousel[];
   component: "Local Partner";
   _uid: string;
   [k: string]: unknown;
 }
 
-export interface LocalPartnerGrid {
-  showAllLocalPartners?: boolean;
-  localPartners?: (ISbStoryData<LocalPartner> | string)[];
-  component: "localPartnerGrid";
+export interface LocalPartnersOverview {
+  title?: string;
+  text?: string;
+  component: "local partners overview";
   _uid: string;
   [k: string]: unknown;
 }
@@ -305,19 +313,23 @@ export interface NewsletterSignup {
   [k: string]: unknown;
 }
 
+export interface OpenSource {
+  title?: string;
+  description?: string;
+  component: "openSource";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Page {
   content: (
-    | CampaignGrid
-    | CountryGrid
     | DonationsTotal
     | Downloads
     | FaqSelection
-    | FocusGrid
     | HeroVideo
     | ImageText
     | ImpactMeasurement
     | JournalTeasers
-    | LocalPartnerGrid
     | ModalCards
     | PartnershipsCarousel
     | ProgramGrid
@@ -327,6 +339,8 @@ export interface Page {
     | Text
     | TwoColumnText
     | VideoText
+    | Transparency
+    | OpenSource
   )[];
   component: "page";
   _uid: string;
@@ -373,7 +387,7 @@ export interface Person {
 }
 
 export interface Program {
-  id: string;
+  portalSlug: string;
   title: string;
   description: string;
   primaryImage: StoryblokAsset;
@@ -391,6 +405,15 @@ export interface ProgramGrid {
   programs?: (ISbStoryData<Program> | string)[];
   button?: Button[];
   component: "programGrid";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface ProgramOverview {
+  title?: string;
+  text?: string;
+  programDefaultImage: StoryblokAsset;
+  component: "programOverview";
   _uid: string;
   [k: string]: unknown;
 }
@@ -424,6 +447,18 @@ export interface ReferencesGroup {
   [k: string]: unknown;
 }
 
+export interface Study {
+  title: string;
+  description: string;
+  subtitle?: string;
+  year?: string;
+  link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  linkText?: string;
+  component: "study";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Tag {
   value: string;
   description?: string;
@@ -443,8 +478,8 @@ export interface TeamGrid {
 }
 
 export interface Testimonial {
-  quote: string;
   name: string;
+  quote: string;
   country?: string;
   image: StoryblokAsset;
   component: "testimonial";
@@ -453,8 +488,8 @@ export interface Testimonial {
 }
 
 export interface TestimonialCarousel {
-  testimonials: Testimonial[];
   heading?: string;
+  testimonials: Testimonial[];
   autoplay?: boolean;
   component: "testimonialCarousel";
   _uid: string;
@@ -464,6 +499,12 @@ export interface TestimonialCarousel {
 export interface Text {
   content?: StoryblokRichtext;
   component: "text";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Transparency {
+  component: "transparency";
   _uid: string;
   [k: string]: unknown;
 }
@@ -489,16 +530,21 @@ export type ContentType =
   | ActionButton
   | Article
   | ArticleType
-  | Campaign
+  | CampaignOverview
   | Country
+  | CountryOverview
   | Document
   | Faq
   | Focus
+  | FocusOverview
   | Layout
   | LocalPartner
+  | LocalPartnersOverview
   | Page
   | Partnership
   | Person
   | Program
+  | ProgramOverview
   | ReferenceArticle
+  | Study
   | Tag;

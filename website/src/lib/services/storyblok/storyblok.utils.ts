@@ -1,8 +1,12 @@
 import type { Article, ArticleType, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultLanguage } from '@/lib/i18n/utils';
+import {
+	getNewWebsitePublicPath,
+	getWebsitePathTailFromStoryblokSlug,
+	WEBSITE_PERSON_PATH_SEGMENT,
+} from '@/lib/storyblok/storyblok-paths';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
-import { makeNewWebsiteSlugPrefixRegex } from '@/lib/utils/regex';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import { Metadata } from 'next';
@@ -23,6 +27,24 @@ export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>) => {
 
 	return subtitle ? `${article.content.title} ${subtitle}` : article.content.title;
 };
+
+const PERSON_AVATAR_SIZE = 300;
+
+export const getPersonDisplayName = (person: ISbStoryData<Person>) =>
+	`${person.content.firstName} ${person.content.lastName}`.trim() || person.content.fullName;
+
+export const getPersonAvatarSrc = (person: ISbStoryData<Person>) => {
+	const filename = person.content.avatar?.filename;
+	if (!filename) {
+		return null;
+	}
+
+	return formatStoryblokUrl(filename, PERSON_AVATAR_SIZE, PERSON_AVATAR_SIZE, person.content.avatar.focus);
+};
+
+export const getPersonLinkedInUrl = (handle: string) => `https://www.linkedin.com/in/${encodeURIComponent(handle)}`;
+
+export const getPersonGitHubUrl = (username: string) => `https://github.com/${encodeURIComponent(username)}`;
 
 // ==================== Image Utilities ====================
 
@@ -126,7 +148,27 @@ const formatStoryblokDateToIso = (date: string | null | undefined) => {
 // ==================== URL Utilities ====================
 
 /**
- * Create a link URL for a journal article.
+ * Build a path under /{lang}/{region}/new-website/…
+ */
+const createNewWebsitePath = (lang: string, region: string, ...segments: string[]) =>
+	`/${lang}/${region}/${NEW_WEBSITE_SLUG}/${segments.join('/')}`;
+
+export const createNewWebsiteJournalPath = (lang: string, region: string) => createNewWebsitePath(lang, region, 'journal');
+
+export const createNewWebsiteJournalArticleLink = (slug: string, lang: string, region: string) =>
+	createNewWebsitePath(lang, region, 'journal', slug);
+
+export const createNewWebsiteJournalTagLink = (tagSlug: string, lang: string, region: string) =>
+	`${createNewWebsiteJournalPath(lang, region)}?tag=${encodeURIComponent(tagSlug)}`;
+
+export const createNewWebsitePersonLink = (slug: string, lang: string, region: string) =>
+	createNewWebsitePath(lang, region, WEBSITE_PERSON_PATH_SEGMENT, slug);
+
+export const createNewWebsiteJournalArticleCanonicalUrl = (slug: string, lang: string) =>
+	`https://socialincome.org/${lang}/${NEW_WEBSITE_SLUG}/journal/${slug}`;
+
+/**
+ * Create a link URL for a journal article on the legacy website.
  */
 export const createLinkForArticle = (slug: string, lang: string, region: string) => {
 	return `/${lang}/${region}/journal/${slug}`;
@@ -146,11 +188,22 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
 	}
 
 	if (link.linktype === 'story') {
-		// cached_url contains the full Storyblok slug, e.g. "new-website/about"
-		// Strip the "new-website/" prefix to get the page slug
-		const slug = link.cached_url?.replace(makeNewWebsiteSlugPrefixRegex(NEW_WEBSITE_SLUG), '') || '';
+		// cached_url is the Storyblok full_slug, e.g. "new-website/pages/about"
+		const cachedUrlRaw = link.cached_url?.trim() ?? '';
 
-		return `/${lang}/${region}/${NEW_WEBSITE_SLUG}/${slug}`;
+		if (!cachedUrlRaw) {
+			return '#';
+		}
+
+		const cachedUrlWithoutLeadingSlashes = cachedUrlRaw.replace(/^\/+/, '');
+		const cachedUrlWithoutLangPrefix =
+			cachedUrlWithoutLeadingSlashes.toLowerCase() === lang.toLowerCase()
+				? ''
+				: cachedUrlWithoutLeadingSlashes.replace(new RegExp(`^${lang}/`, 'i'), '');
+
+		const websitePathTail = getWebsitePathTailFromStoryblokSlug(cachedUrlWithoutLangPrefix);
+
+		return getNewWebsitePublicPath(lang, region, websitePathTail);
 	}
 
 	return '#';

@@ -110,6 +110,44 @@ export class LocalPartnerReadService extends BaseService {
 		}
 	}
 
+	async getPublicLocalPartnerDashboardStatsBySlug(
+		localPartnerSlug: string,
+	): Promise<ServiceResult<{ recipientsCount: number; completedSurveysCount: number }>> {
+		try {
+			const normalizedSlug = localPartnerSlug.trim();
+			if (!normalizedSlug) {
+				return this.resultFail('Missing local partner slug');
+			}
+
+			const localPartner = await this.db.localPartner.findUnique({
+				where: { slug: normalizedSlug },
+				select: { id: true },
+			});
+
+			if (!localPartner) {
+				return this.resultFail('Local partner not found');
+			}
+
+			const [recipientsCount, completedSurveysCount] = await Promise.all([
+				this.db.recipient.count({
+					where: { localPartnerId: localPartner.id, programId: { not: null } },
+				}),
+				this.db.survey.count({
+					where: {
+						completedAt: { not: null },
+						recipient: { localPartnerId: localPartner.id },
+					},
+				}),
+			]);
+
+			return this.resultOk({ recipientsCount, completedSurveysCount });
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch local partner dashboard stats: ${JSON.stringify(error)}`);
+		}
+	}
+
 	private buildLocalPartnerOrderBy(query: LocalPartnerTableQuery): Prisma.LocalPartnerOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
 		const sortBy = toSortKey(query.sortBy, [
@@ -119,7 +157,6 @@ export class LocalPartnerReadService extends BaseService {
 			'email',
 			'firebaseAuthUserId',
 			'contactNumber',
-			'recipientsCount',
 			'createdAt',
 		] as const);
 		switch (sortBy) {
@@ -135,8 +172,6 @@ export class LocalPartnerReadService extends BaseService {
 				return [{ account: { firebaseAuthUserId: direction } }];
 			case 'contactNumber':
 				return [{ contact: { phone: { number: direction } } }];
-			case 'recipientsCount':
-				return [{ recipients: { _count: direction } }];
 			case 'createdAt':
 				return [{ createdAt: direction }];
 			default:
@@ -157,6 +192,7 @@ export class LocalPartnerReadService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					slug: true,
 					focuses: { select: { focusId: true } },
 					contact: {
 						select: {
@@ -183,6 +219,7 @@ export class LocalPartnerReadService extends BaseService {
 			return this.resultOk({
 				id: partner.id,
 				name: partner.name,
+				slug: partner.slug,
 				focuses: partner.focuses.map((focus) => focus.focusId),
 				contact: partner.contact,
 			});
@@ -279,17 +316,36 @@ export class LocalPartnerReadService extends BaseService {
 				this.db.localPartner.count({ where }),
 			]);
 
-			const tableRows: LocalPartnerTableViewRow[] = partners.map((partner) => ({
-				id: partner.id,
-				name: partner.name,
-				contactPerson: `${partner.contact?.firstName ?? ''} ${partner.contact?.lastName ?? ''}`.trim(),
-				email: partner.contact?.email ?? null,
-				firebaseAuthUserId: partner.account.firebaseAuthUserId,
-				contactNumber: partner.contact?.phone?.number ?? null,
-				focuses: partner.focuses.map((focus) => focus.focus.name).join(', '),
-				recipientsCount: partner._count.recipients,
-				createdAt: partner.createdAt,
-			}));
+			const assignedRecipientGroups = partners.length
+				? await this.db.recipient.groupBy({
+						by: ['localPartnerId'],
+						where: {
+							localPartnerId: { in: partners.map((partner) => partner.id) },
+							programId: { not: null },
+						},
+						_count: { _all: true },
+					})
+				: [];
+			const recipientsCountByPartnerId = new Map(
+				assignedRecipientGroups.map((group) => [group.localPartnerId, group._count._all]),
+			);
+
+			const tableRows: LocalPartnerTableViewRow[] = partners.map((partner) => {
+				const recipientsCount = recipientsCountByPartnerId.get(partner.id) ?? 0;
+
+				return {
+					id: partner.id,
+					name: partner.name,
+					contactPerson: `${partner.contact?.firstName ?? ''} ${partner.contact?.lastName ?? ''}`.trim(),
+					email: partner.contact?.email ?? null,
+					firebaseAuthUserId: partner.account.firebaseAuthUserId,
+					contactNumber: partner.contact?.phone?.number ?? null,
+					focuses: partner.focuses.map((focus) => focus.focus.name).join(', '),
+					recipientsCount,
+					candidatesCount: Math.max(0, partner._count.recipients - recipientsCount),
+					createdAt: partner.createdAt,
+				};
+			});
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {

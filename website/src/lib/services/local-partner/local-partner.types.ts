@@ -9,6 +9,7 @@ export type LocalPartnerTableViewRow = {
 	contactNumber: string | null;
 	focuses: string;
 	recipientsCount: number;
+	candidatesCount: number;
 	createdAt: Date;
 };
 
@@ -32,6 +33,7 @@ export type LocalPartnerPaginatedTableView = {
 export type LocalPartnerPayload = {
 	id: string;
 	name: string;
+	slug: string;
 	focuses: string[];
 	contact: {
 		id: string;

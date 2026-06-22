@@ -42,6 +42,14 @@ export class LocalPartnerValidationService extends BaseService {
 			return this.resultFail('A local partner with this name already exists.');
 		}
 
+		const slugConflict = await this.db.localPartner.findUnique({
+			where: { slug: input.slug },
+			select: { id: true },
+		});
+		if (slugConflict) {
+			return this.resultFail('A local partner with this slug already exists.');
+		}
+
 		const emailConflict = await this.db.contact.findUnique({
 			where: { email: input.contact.email },
 			select: { id: true },
@@ -74,6 +82,16 @@ export class LocalPartnerValidationService extends BaseService {
 			});
 			if (nameConflict && nameConflict.id !== context.partnerId) {
 				return this.resultFail('A local partner with this name already exists.');
+			}
+		}
+
+		if (input.slug !== context.existingSlug) {
+			const slugConflict = await this.db.localPartner.findUnique({
+				where: { slug: input.slug },
+				select: { id: true },
+			});
+			if (slugConflict && slugConflict.id !== context.partnerId) {
+				return this.resultFail('A local partner with this slug already exists.');
 			}
 		}
 

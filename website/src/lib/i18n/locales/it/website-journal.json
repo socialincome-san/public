@@ -11,11 +11,16 @@
 		"editors": "Redattori collaboratori",
 		"more-articles": "Ci sono altri articoli disponibili in inglese"
 	},
+	"person": {
+		"articles": "Articoli"
+	},
 	"article": {
 		"keep-reading": "Continua a leggere",
 		"from-original-language": "Tradotto da"
 	},
 	"teasers": {
+		"heading-prefix": "Storie e aggiornamenti dal ",
+		"heading-emphasis": "nostro journal",
 		"goToJournal": "Vai al giornale"
 	},
 	"reference-article": {

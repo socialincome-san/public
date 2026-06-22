@@ -3,7 +3,7 @@ name: Website / Deploy with Terraform to GCP / Staging
 on:
   push:
     branches:
-      - main
+      - develop
 
 concurrency:
   group: deploy-terraform-gcp-staging
@@ -56,7 +56,6 @@ jobs:
           echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" > secrets/NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
           echo "${{ secrets.TF_STAGING_SENTRY_AUTH_TOKEN }}" > secrets/SENTRY_AUTH_TOKEN
           echo "${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
-          echo "true" > secrets/FEATURE_ENABLE_NEW_WEBSITE
 
       - name: 📤 Build and Push Docker Image
         env:
@@ -97,6 +96,7 @@ jobs:
           TF_VAR_stripe_product_onetime: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }}
           TF_VAR_stripe_product_recurring: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }}
           TF_VAR_stripe_secret_key: ${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }}
+          TF_VAR_stripe_publishable_key: ${{ secrets.TF_STAGING_STRIPE_PUBLISHABLE_KEY }}
           TF_VAR_stripe_webhook_secret: ${{ secrets.TF_STAGING_STRIPE_WEBHOOK_SECRET }}
           TF_VAR_sendgrid_api_key: ${{ secrets.TF_STAGING_SENDGRID_API_KEY }}
           TF_VAR_sendgrid_list_id: ${{ secrets.TF_STAGING_SENDGRID_LIST_ID }}

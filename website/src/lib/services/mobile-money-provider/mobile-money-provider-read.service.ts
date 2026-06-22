@@ -1,14 +1,14 @@
-import { Prisma, PrismaClient } from '@/generated/prisma/client';
+import { PayoutProcess, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import type { PayoutProcessOverviewOption } from '../payout-process/payout-process-overview.types';
 import { UserReadService } from '../user/user-read.service';
 import {
 	MobileMoneyProviderOption,
 	MobileMoneyProviderPaginatedTableView,
 	MobileMoneyProviderPayload,
-	MobileMoneyProviderPayoutProcessOption,
 	MobileMoneyProviderTableQuery,
 	MobileMoneyProviderTableViewRow,
 } from './mobile-money-provider.types';
@@ -188,7 +188,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 		}
 	}
 
-	async getSupportedPayoutProcessOptions(): Promise<ServiceResult<MobileMoneyProviderPayoutProcessOption[]>> {
+	async getPayoutProcessOverviewOptions(): Promise<ServiceResult<PayoutProcessOverviewOption[]>> {
 		try {
 			const providers = await this.db.mobileMoneyProvider.findMany({
 				where: { payoutProcess: { not: null } },
@@ -196,17 +196,38 @@ export class MobileMoneyProviderReadService extends BaseService {
 				orderBy: { name: 'asc' },
 			});
 
-			return this.resultOk(
-				providers.map((provider) => ({
+			const options: PayoutProcessOverviewOption[] = [];
+			const telecelCsvProviderNames: string[] = [];
+
+			for (const provider of providers) {
+				if (provider.payoutProcess === PayoutProcess.telecel_csv) {
+					telecelCsvProviderNames.push(provider.name);
+					continue;
+				}
+
+				options.push({
+					kind: 'mobile_money_provider',
 					id: provider.id,
 					name: provider.name,
 					payoutProcess: provider.payoutProcess!,
-				})),
-			);
+				});
+			}
+
+			if (telecelCsvProviderNames.length > 0) {
+				options.push({
+					kind: 'telecel_csv',
+					id: 'telecel_csv',
+					name: formatPayoutProcessLabel(PayoutProcess.telecel_csv) ?? 'Telecel CSV upload',
+					payoutProcess: PayoutProcess.telecel_csv,
+					providerNames: telecelCsvProviderNames,
+				});
+			}
+
+			return this.resultOk(options);
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(`Could not fetch supported payout process providers: ${JSON.stringify(error)}`);
+			return this.resultFail(`Could not fetch payout process overview options: ${JSON.stringify(error)}`);
 		}
 	}
 }

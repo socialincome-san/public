@@ -8,6 +8,7 @@ import { services } from '@/lib/services/services';
 import { LanguageCode } from '@/lib/types/language';
 import { BaseContainer, linkCn, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
@@ -37,7 +38,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 
 	const personResult = await services.storyblok.getPerson(slug, lang);
 	if (!personResult.success) {
-		return null;
+		notFound();
 	}
 	const person = personResult.data;
 

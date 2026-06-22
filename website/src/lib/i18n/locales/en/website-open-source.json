@@ -4,7 +4,10 @@
 		"heading": "Contributors"
 	},
 	"contributors": {
-		"title": "Contributors"
+		"heading": "Contributors",
+		"showAll": "Show all {count} contributors",
+		"commitSingular": "commit",
+		"commitPlural": "commits"
 	},
 	"hero": {
 		"title-1": [
@@ -36,6 +39,11 @@
 		"title": "Open Issues",
 		"header": "Issue Title",
 		"link": "View on GitHub",
-		"filter": "All Issues"
+		"filter": "All Issues",
+		"showAll": "Show all {count} issues",
+		"empty": "No open issues"
+	},
+	"error": {
+		"unavailable": "GitHub data is currently unavailable. Please try again later."
 	}
 }

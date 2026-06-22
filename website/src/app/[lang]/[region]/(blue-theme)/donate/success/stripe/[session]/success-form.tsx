@@ -3,9 +3,9 @@ import { ContributorReferralSource, CountryCode } from '@/generated/prisma/enums
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
-import { updateContributorAfterCheckoutAction } from '@/lib/server-actions/stripe-actions';
+import { updateContributorAfterCheckoutAction } from '@/lib/server-actions/stripe-legacy-actions';
 import { SupportedLanguage } from '@/lib/services/sendgrid/types';
-import { UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/stripe.types';
+import { type UpdateContributorAfterCheckoutInput } from '@/lib/services/stripe/legacy/legacy-stripe.types';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { GENDER_OPTIONS } from '@/lib/types/user';
 import { zodResolver } from '@hookform/resolvers/zod';

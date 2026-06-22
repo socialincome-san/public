@@ -3,7 +3,7 @@ import type { NextConfig } from 'next';
 import path from 'path';
 
 let nextConfig: NextConfig = {
-	transpilePackages: ['@socialincome/ui'],
+	transpilePackages: ['@socialincome/ui', 'storyblok-rich-text-react-renderer'],
 	reactStrictMode: true,
 	turbopack: {
 		root: path.join(process.cwd(), '..'),
@@ -13,6 +13,11 @@ let nextConfig: NextConfig = {
 			{
 				protocol: 'https',
 				hostname: 'a.storyblok.com',
+				pathname: '/**',
+			},
+			{
+				protocol: 'https',
+				hostname: 'avatars.githubusercontent.com',
 				pathname: '/**',
 			},
 		],

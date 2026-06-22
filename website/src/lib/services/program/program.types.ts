@@ -41,6 +41,8 @@ export type PublicProgramDetails = {
 	programName: string;
 	countryIsoCode: string;
 	ownerOrganizationName: string | null;
+	localPartnerName: string | null;
+	localPartnerSlug: string | null;
 	operatorOrganizationName: string | null;
 	targetFocuses: string[];
 	amountOfRecipientsForStart: number | null;
@@ -60,6 +62,19 @@ export type PublicPreviewProgram = {
 	name: string;
 };
 
+type PublicProgramFilterFocus = {
+	id: string;
+	slug: string;
+};
+
+export type PublicProgramFilterData = {
+	programId: string;
+	countryIsoCode: CountryCode;
+	focuses: PublicProgramFilterFocus[];
+};
+
+export type PublicProgramFilterDataMap = Record<string, PublicProgramFilterData>;
+
 export type PublicProgramStats = {
 	campaignsCount: number;
 	recipientsCount: number;
@@ -73,6 +88,7 @@ export type PublicProgramStatsMap = Record<string, PublicProgramStats>;
 export type ProgramSettingsPayload = {
 	id: string;
 	name: string;
+	slug: string;
 	countryId: string;
 	country: {
 		isoCode: CountryCode;
@@ -96,6 +112,7 @@ export type ProgramSettingsPayload = {
 export type ProgramSettingsUpdateInput = {
 	id: string;
 	name: string;
+	slug: string;
 	countryId: string;
 	coveredByReserves: boolean;
 	programDurationInMonths: number;

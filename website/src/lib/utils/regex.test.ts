@@ -1,6 +1,5 @@
 import {
 	CAMEL_CASE_BOUNDARY_REGEX,
-	CAMPAIGN_SLUG_REGEX,
 	CSV_DOUBLE_QUOTES_REGEX,
 	CSV_NEEDS_QUOTES_REGEX,
 	DATA_TABLE_FETCH_PREFIX_REGEX,
@@ -9,6 +8,7 @@ import {
 	LEADING_TRAILING_DASHES_REGEX,
 	NEW_WEBSITE_CONFIRM_LOGIN_PATH_REGEX,
 	NON_ALPHANUMERIC_DASH_REGEX,
+	SLUG_REGEX,
 	START_CHARACTER_REGEX,
 	TITLE_CASE_UNDERSCORE_REGEX,
 	TRAILING_SLASHES_REGEX,
@@ -34,8 +34,8 @@ describe('regex utils', () => {
 	});
 
 	test('CAMPAIGN_SLUG_REGEX validates slug format', () => {
-		expect(CAMPAIGN_SLUG_REGEX.test('my-campaign_1')).toBe(true);
-		expect(CAMPAIGN_SLUG_REGEX.test('Invalid Slug')).toBe(false);
+		expect(SLUG_REGEX.test('my-campaign_1')).toBe(true);
+		expect(SLUG_REGEX.test('Invalid Slug')).toBe(false);
 	});
 
 	test('TRAILING_SLASHES_REGEX removes trailing slashes', () => {

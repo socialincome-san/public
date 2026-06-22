@@ -40,3 +40,4 @@ ignored/
 tags
 AGENTS.md
 .ai-playbook/
+.agents/

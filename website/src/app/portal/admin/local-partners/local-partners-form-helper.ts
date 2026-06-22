@@ -16,6 +16,7 @@ export const buildUpdateLocalPartnerInput = (
 	return {
 		id: localPartner.id,
 		name: schema.fields.name.value,
+		slug: schema.fields.slug.value,
 		focuses: schema.fields.focuses.value ?? [],
 		contact: mapContactFormFields(contactFields, { email: 'required' }),
 	};
@@ -27,6 +28,7 @@ export const buildCreateLocalPartnerInput = (
 ): LocalPartnerFormCreateInput => {
 	return {
 		name: schema.fields.name.value,
+		slug: schema.fields.slug.value,
 		focuses: schema.fields.focuses.value ?? [],
 		contact: mapContactFormFields(contactFields, { email: 'required' }),
 	};

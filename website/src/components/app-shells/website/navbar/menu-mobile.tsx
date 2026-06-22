@@ -9,8 +9,8 @@ import {
 	isMenuItem,
 	Scope,
 } from '@/components/app-shells/website/navbar/utils';
-import { Button } from '@/components/button';
-import { MakeDonationForm } from '@/components/make-donation-form';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
+import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import type { DropdownItem, Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Session } from '@/lib/firebase/current-account';
@@ -125,7 +125,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 									})}
 								</ul>
 								<div className="mt-4">
-									<MakeDonationForm lang={lang} />
+									<DonationForm onBeforeOpen={() => handleOpenChange(false)} />
 								</div>
 							</div>
 
@@ -185,9 +185,11 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 							</div>
 						</div>
 						<div className="border-muted flex h-18 shrink-0 items-center justify-between border-t px-4 shadow-[0_-3px_14px_rgba(0,0,0,0.05)]">
-							<Button className="h-11 rounded-full px-5 text-sm font-medium">
-								{donateTranslator?.t('donation-form.donate-now') ?? 'Donate now'}
-							</Button>
+							<OpenDonationWizardButton
+								label={donateTranslator?.t('donation-form.donate-now') ?? 'Donate now'}
+								className="h-11 rounded-full px-5 text-sm font-medium"
+								onBeforeOpen={() => handleOpenChange(false)}
+							/>
 							{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
 						</div>
 					</Dialog.Content>

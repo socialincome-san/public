@@ -1,6 +1,5 @@
 import { services } from '@/lib/services/services';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
-import { slugify } from '@/lib/utils/string-utils';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { FirstIntervalFundingSection } from './components/first-interval-funding-section';
@@ -16,6 +15,11 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 	const { programId } = await params;
 
 	const programNameResult = await services.read.program.getProgramNameById(programId);
+	const programSlugResult = await services.read.program.getProgramSlugById(programId);
+	if (!programSlugResult.success || !programSlugResult.data) {
+		return <div className="p-4">Error loading the program overview</div>;
+	}
+	const programSlug = programSlugResult.success ? programSlugResult.data : undefined;
 
 	if (!programNameResult.success || !programNameResult.data) {
 		return <div className="p-4">Error loading the program overview</div>;
@@ -31,8 +35,6 @@ export default async function OverviewProgramScopedDataLoader({ params }: Props)
 
 	const readyForFirstPayoutResult = await services.programStats.isReadyForFirstPayoutInterval(programId);
 	const readyForFirstPayout = readyForFirstPayoutResult.success ? readyForFirstPayoutResult.data : false;
-
-	const programSlug = slugify(programNameResult.data);
 	const publicUrl = `/${NEW_WEBSITE_SLUG}/programs/${programSlug}`;
 
 	return (

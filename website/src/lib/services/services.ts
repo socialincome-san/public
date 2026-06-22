@@ -1,6 +1,6 @@
 import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
-import { BankTransferService } from './bank-transfer/bank-transfer.service';
+import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
 import { CampaignWriteService } from './campaign/campaign-write.service';
@@ -31,6 +31,8 @@ import { FirebaseSessionService } from './firebase/firebase-session.service';
 import { FocusReadService } from './focus/focus-read.service';
 import { FocusValidationService } from './focus/focus-validation.service';
 import { FocusWriteService } from './focus/focus-write.service';
+import { GithubApiService } from './github-api/github-api.service';
+import { JournalService } from './journal/journal.service';
 import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
 import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
 import { LocalPartnerWriteService } from './local-partner/local-partner-write.service';
@@ -42,7 +44,9 @@ import { OrganizationReadService } from './organization/organization-read.servic
 import { OrganizationValidationService } from './organization/organization-validation.service';
 import { OrganizationWriteService } from './organization/organization-write.service';
 import { PaymentFileImportService } from './payment-file-import/payment-file-import.service';
-import { PayoutProcessService } from './payout-process/payout-process.service';
+import { OrangeMoneyCsvPayoutProcessService } from './payout-process/orange-money-csv-payout-process.service';
+import { PayoutProcessCoreService } from './payout-process/payout-process-core.service';
+import { TelecelCsvPayoutProcessService } from './payout-process/telecel-csv-payout-process.service';
 import { PayoutReadService } from './payout/payout-read.service';
 import { PayoutValidationService } from './payout/payout-validation.service';
 import { PayoutWriteService } from './payout/payout-write.service';
@@ -52,6 +56,8 @@ import { ProgramStatsService } from './program-stats/program-stats.service';
 import { ProgramReadService } from './program/program-read.service';
 import { ProgramValidationService } from './program/program-validation.service';
 import { ProgramWriteService } from './program/program-write.service';
+import { LegacyQrBillService } from './qr-bill/legacy/legacy-qr-bill.service';
+import { QrBillService } from './qr-bill/qr-bill.service';
 import { RecipientImportService } from './recipient/recipient-import.service';
 import { RecipientReadService } from './recipient/recipient-read.service';
 import { RecipientStatusService } from './recipient/recipient-status.service';
@@ -59,6 +65,7 @@ import { RecipientValidationService } from './recipient/recipient-validation.ser
 import { RecipientWriteService } from './recipient/recipient-write.service';
 import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
 import { StoryblokService } from './storyblok/storyblok.service';
+import { LegacyStripeService } from './stripe/legacy/legacy-stripe.service';
 import { StripeService } from './stripe/stripe.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
 import { SurveyImpactService } from './survey/survey-impact.service';
@@ -82,7 +89,9 @@ const userValidation = new UserValidationService(prisma);
 const exchangeRateImport = new ExchangeRateImportService(prisma);
 const surveySchedule = new SurveyScheduleService(prisma);
 const transparency = new TransparencyService(prisma);
+const githubApi = new GithubApiService(prisma);
 const storyblok = new StoryblokService(prisma);
+const journal = new JournalService(prisma, storyblok);
 const sendgrid = new SendgridSubscriptionService();
 const recipientStatus = new RecipientStatusService(prisma);
 
@@ -150,6 +159,7 @@ const donationCertificateRead = new DonationCertificateReadService(prisma, progr
 
 const programStats = new ProgramStatsService(prisma, exchangeRateRead, recipientStatus);
 const campaignRead = new CampaignReadService(prisma, programAccessRead, exchangeRateRead);
+const campaignPublicWebsite = new CampaignPublicWebsiteService(prisma, storyblok, campaignRead);
 const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
 const programValidation = new ProgramValidationService(prisma);
 const programWrite = new ProgramWriteService(
@@ -162,22 +172,32 @@ const programWrite = new ProgramWriteService(
 	programValidation,
 );
 const payoutRead = new PayoutReadService(prisma, programAccessRead, exchangeRateRead, recipientStatus);
-const payoutProcess = new PayoutProcessService(prisma, programAccessRead, programStats, exchangeRateRead, recipientStatus);
+const payoutProcessCore = new PayoutProcessCoreService(
+	prisma,
+	programAccessRead,
+	programStats,
+	exchangeRateRead,
+	recipientStatus,
+);
+const orangeMoneyCsvPayoutProcess = new OrangeMoneyCsvPayoutProcessService(prisma, payoutProcessCore);
+const telecelCsvPayoutProcess = new TelecelCsvPayoutProcessService(prisma, payoutProcessCore);
 const donationCertificateWrite = new DonationCertificateWriteService(
 	prisma,
 	contributorRead,
 	contributionRead,
 	donationCertificateRead,
 );
-const bankTransfer = new BankTransferService(prisma, contributorWrite, campaignRead, contributionWrite);
-const stripe = new StripeService(
+const qrBillLegacy = new LegacyQrBillService(prisma, contributorWrite, campaignRead, contributionWrite);
+const qrBill = new QrBillService(
 	prisma,
-	contributorRead,
 	contributorWrite,
-	contributionWrite,
+	contributorRead,
 	campaignRead,
-	programAccessRead,
+	contributionWrite,
+	exchangeRateRead,
 );
+const stripe = new StripeService(prisma, contributorRead, contributorWrite, contributionWrite, campaignRead);
+const stripeLegacy = new LegacyStripeService(prisma, contributorRead, contributorWrite, campaignRead, programAccessRead);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
@@ -190,6 +210,7 @@ export const services = {
 	read: {
 		candidate: candidateRead,
 		campaign: campaignRead,
+		campaignPublicWebsite,
 		focus: focusRead,
 		contribution: contributionRead,
 		contributor: contributorRead,
@@ -226,19 +247,25 @@ export const services = {
 		user: userWrite,
 	},
 	appReviewMode,
-	bankTransfer,
+	qrBill,
+	qrBillLegacy,
 	createPaymentFileImport,
 	exchangeRateImport,
 	candidateImport,
 	firebaseAdmin,
 	firebaseSession,
-	payoutProcess,
+	payoutProcessCore,
+	orangeMoneyCsvPayoutProcess,
+	telecelCsvPayoutProcess,
 	programStats,
 	recipientImport,
 	sendgrid,
+	journal,
 	storyblok,
 	stripe,
+	stripeLegacy,
 	surveyImpact,
 	transparency,
+	githubApi,
 	twilio,
 };

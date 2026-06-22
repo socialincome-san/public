@@ -14,6 +14,7 @@ import {
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { ProgramSettingsPayload } from '@/lib/services/program/program.types';
 import { getCountryNameByCode } from '@/lib/types/country';
+import { SLUG_REGEX } from '@/lib/utils/regex';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -32,6 +33,7 @@ type ProgramSettingsFormSchema = {
 	fields: {
 		id: FormField;
 		name: FormField;
+		slug: FormField;
 		country: FormField;
 		coveredByReserves: FormField;
 		programDurationInMonths: FormField;
@@ -57,6 +59,11 @@ const initialFormSchema: ProgramSettingsFormSchema = {
 			label: 'Name',
 			placeholder: 'Program name',
 			zodSchema: z.string().trim().min(2, 'Program name must be at least 2 characters.'),
+		},
+		slug: {
+			label: 'Slug (URL Identifier)',
+			placeholder: 'program-slug',
+			zodSchema: z.string().trim().min(1, 'Slug is required.').regex(SLUG_REGEX, 'Invalid slug format.'),
 		},
 		country: {
 			label: 'Country (currency)',
@@ -142,6 +149,7 @@ const fillFormSchema = (
 		fields: {
 			id: { ...formSchema.fields.id },
 			name: { ...formSchema.fields.name },
+			slug: { ...formSchema.fields.slug },
 			country: { ...formSchema.fields.country },
 			coveredByReserves: { ...formSchema.fields.coveredByReserves },
 			programDurationInMonths: { ...formSchema.fields.programDurationInMonths },
@@ -159,6 +167,7 @@ const fillFormSchema = (
 	nextSchema.fields.id.value = settings.id;
 	nextSchema.fields.id.disabled = true;
 	nextSchema.fields.name.value = settings.name;
+	nextSchema.fields.slug.value = settings.slug;
 	nextSchema.fields.country.value = settings.countryId;
 	nextSchema.fields.coveredByReserves.value = settings.coveredByReserves;
 	nextSchema.fields.country.options = countryOptions;
@@ -176,6 +185,7 @@ const fillFormSchema = (
 	nextSchema.fields.operatorOrganizations.value = settings.operatorOrganizationIds;
 
 	nextSchema.fields.name.disabled = readOnlyFields;
+	nextSchema.fields.slug.disabled = readOnlyFields;
 	nextSchema.fields.country.disabled = readOnlyFields;
 	nextSchema.fields.coveredByReserves.disabled = readOnlyFields;
 	nextSchema.fields.programDurationInMonths.disabled = readOnlyFields;

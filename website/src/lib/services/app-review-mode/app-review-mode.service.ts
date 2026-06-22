@@ -48,6 +48,7 @@ export class AppReviewModeService extends BaseService {
 				accountId: 'stark-industries-account',
 				legacyFirestoreId: null,
 				name: 'Stark Industries',
+				slug: 'stark-industries',
 				contactId: 'stark-industries-contact',
 				createdAt: now(),
 				updatedAt: now(),
@@ -78,6 +79,7 @@ export class AppReviewModeService extends BaseService {
 			program: {
 				id: 'avengers-program',
 				name: 'Avengers Initiative',
+				slug: 'avengers-initiative',
 				amountOfRecipientsForStart: 6,
 				coveredByReserves: false,
 				programDurationInMonths: 60,

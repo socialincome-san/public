@@ -441,7 +441,7 @@ export const recipientContactDefinitions: readonly RecipientContactDefinition[] 
 		country: 'sl',
 		program: 'core',
 		state: 'suspended',
-		phoneId: 'ph-recipient-core-sl-suspended',
+		phoneId: 'ph-recipient-core-sl-suspended-contact',
 		firstName: 'recipient_sl_core_suspended',
 		lastName: 'recipient_suspended',
 		contactId: 'ct-recipient-core-sl-suspended',

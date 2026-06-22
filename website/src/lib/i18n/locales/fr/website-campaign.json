@@ -23,7 +23,12 @@
 		"about-si-text-1": "Social Income est une ONG basée en Suisse qui assure des transferts d’argent inconditionnels par téléphone mobile à des personnes vivant dans une pauvreté multidimensionnelle en Afrique de l’Ouest.",
 		"about-si-text-2": "Depuis 2020, Social Income gère un programme de revenu de base universel non limité dans le temps en Sierra Leone.",
 		"more-faq": "<a href='/faq' target=\"_blank\">Plus de questions</a>",
-		"badge-highlight": "Campagne actuelle"
+		"badge-highlight": "Campagne actuelle",
+		"other-campaigns": {
+			"heading-prefix": "Découvre d'autres ",
+			"heading-emphasis": "campagnes",
+			"show-all": "Voir toutes les campagnes"
+		}
 	},
 	"badges": {
 		"by": "Par",

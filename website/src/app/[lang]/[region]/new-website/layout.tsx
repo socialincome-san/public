@@ -2,18 +2,15 @@ import { DefaultLayoutProps } from '@/app/[lang]/[region]';
 import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { getCurrentSessions } from '@/lib/firebase/current-account';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
 
-const ENABLE_NEW_WEBSITE = process.env.FEATURE_ENABLE_NEW_WEBSITE === 'true';
+export const metadata: Metadata = {
+	robots: { index: false, follow: false },
+};
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	const { lang, region } = await params;
-
-	if (!ENABLE_NEW_WEBSITE) {
-		notFound();
-	}
-
 	const sessions = await getCurrentSessions();
 
 	return (

@@ -8,7 +8,6 @@ import NextImage from 'next/image';
 
 import type { Person, TeamGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { ISbStoryData } from '@storyblok/js';
-import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 const PERSON_IMAGE_SIZE = 300;
 
@@ -31,7 +30,7 @@ export const TeamGridBlock = async ({ blok, lang }: Props) => {
 			{blok.title && <h2 className="text-3xl font-bold">{blok.title}</h2>}
 			{blok.description && (
 				<div className="mt-4 text-lg text-black">
-					<RichTextRenderer richTextDocument={blok.description as StoryblokRichtext} />
+					<RichTextRenderer richTextDocument={blok.description} />
 				</div>
 			)}
 

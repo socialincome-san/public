@@ -4,24 +4,28 @@ export const focusesData: Focus[] = [
 	{
 		id: 'focus-poverty',
 		name: 'poverty',
+		slug: 'poverty',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
 	},
 	{
 		id: 'focus-health',
 		name: 'health',
+		slug: 'health',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
 	},
 	{
 		id: 'focus-gender-based-violence',
 		name: 'gender_based_violence',
+		slug: 'gender-based-violence',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
 	},
 	{
 		id: 'focus-climate',
 		name: 'climate',
+		slug: 'climate',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
 	},

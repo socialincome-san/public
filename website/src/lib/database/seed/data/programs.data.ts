@@ -4,6 +4,7 @@ export const programsData: Program[] = [
 	{
 		id: 'program-si-core-sl',
 		name: 'SI Core Program SL',
+		slug: 'si-core-program-sl',
 		amountOfRecipientsForStart: null,
 		coveredByReserves: false,
 		programDurationInMonths: 12,
@@ -17,6 +18,7 @@ export const programsData: Program[] = [
 	{
 		id: 'program-si-women-support-sl',
 		name: 'SI Women Support SL',
+		slug: 'si-women-support-sl',
 		amountOfRecipientsForStart: null,
 		coveredByReserves: true,
 		programDurationInMonths: 10,
@@ -30,6 +32,7 @@ export const programsData: Program[] = [
 	{
 		id: 'program-si-education-sl',
 		name: 'SI Education SL',
+		slug: 'si-education-sl',
 		amountOfRecipientsForStart: null,
 		coveredByReserves: false,
 		programDurationInMonths: 9,
@@ -43,6 +46,7 @@ export const programsData: Program[] = [
 	{
 		id: 'program-si-livelihood-gh',
 		name: 'SI Livelihood GH',
+		slug: 'si-livelihood-gh',
 		amountOfRecipientsForStart: null,
 		coveredByReserves: true,
 		programDurationInMonths: 12,
@@ -56,6 +60,7 @@ export const programsData: Program[] = [
 	{
 		id: 'program-si-education-gh',
 		name: 'SI Education GH',
+		slug: 'si-education-gh',
 		amountOfRecipientsForStart: null,
 		coveredByReserves: false,
 		programDurationInMonths: 10,
@@ -69,6 +74,7 @@ export const programsData: Program[] = [
 	{
 		id: 'program-si-resilience-lr',
 		name: 'SI Resilience LR',
+		slug: 'si-resilience-lr',
 		amountOfRecipientsForStart: null,
 		coveredByReserves: true,
 		programDurationInMonths: 12,
@@ -82,6 +88,7 @@ export const programsData: Program[] = [
 	{
 		id: 'program-si-health-lr',
 		name: 'SI Health Access LR',
+		slug: 'si-health-access-lr',
 		amountOfRecipientsForStart: null,
 		coveredByReserves: false,
 		programDurationInMonths: 8,
@@ -95,6 +102,7 @@ export const programsData: Program[] = [
 	{
 		id: 'program-somaha-community-lr',
 		name: 'Somaha Community Bridge LR',
+		slug: 'somaha-community-bridge-lr',
 		amountOfRecipientsForStart: null,
 		coveredByReserves: true,
 		programDurationInMonths: 12,

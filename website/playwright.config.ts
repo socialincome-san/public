@@ -1,10 +1,22 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, type BrowserContext } from '@playwright/test';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.test', quiet: true });
+dotenv.config({ path: '.env.local', quiet: true });
 
-const cookieConsentState = {
-	cookies: [],
+const e2eStorageState: Awaited<ReturnType<BrowserContext['storageState']>> = {
+	cookies: [
+		{
+			name: 'si_currency',
+			value: 'CHF',
+			domain: 'localhost',
+			path: '/',
+			expires: -1,
+			httpOnly: false,
+			secure: false,
+			sameSite: 'Lax',
+		},
+	],
 	origins: [
 		{
 			origin: 'http://localhost:3000',
@@ -47,14 +59,14 @@ export default defineConfig({
 			name: 'setup-infra',
 			testMatch: /setup-infra\.ts/,
 			use: {
-				storageState: cookieConsentState,
+				storageState: e2eStorageState,
 			},
 		},
 		{
 			name: 'setup-auth',
 			testMatch: /setup-auth\.ts/,
 			use: {
-				storageState: cookieConsentState,
+				storageState: e2eStorageState,
 			},
 			dependencies: ['setup-infra'],
 		},
@@ -86,7 +98,15 @@ export default defineConfig({
 			name: 'mobile-app-api',
 			testMatch: /projects\/mobile-app-api\/.*\.e2e\.ts/,
 			use: {
-				storageState: cookieConsentState,
+				storageState: e2eStorageState,
+			},
+			dependencies: ['setup-infra'],
+		},
+		{
+			name: 'website',
+			testMatch: /projects\/website\/.*\.e2e\.ts/,
+			use: {
+				storageState: e2eStorageState,
 			},
 			dependencies: ['setup-infra'],
 		},

@@ -1,7 +1,7 @@
 import type { CountryCode } from '@/generated/prisma/enums';
 import type {
-	Campaign,
 	Country,
+	Faq,
 	Focus,
 	LocalPartner,
 	Person,
@@ -9,7 +9,17 @@ import type {
 	Tag,
 } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
+import {
+	STORYBLOK_COUNTRIES_FOLDER,
+	STORYBLOK_FAQ_FOLDER,
+	STORYBLOK_FOCUSES_FOLDER,
+	STORYBLOK_LOCAL_PARTNERS_FOLDER,
+	STORYBLOK_PAGES_FOLDER,
+	STORYBLOK_PROGRAMS_FOLDER,
+	getJournalArticleStoryPath,
+	getJournalTagStoryPath,
+	getPersonStoryPath,
+} from '@/lib/storyblok/storyblok-paths';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -27,10 +37,41 @@ export type StoryTitleData = {
 	};
 };
 
+export type StoryblokLinkAlternate = {
+	lang: string;
+	path: string;
+	name: string | null;
+	published: boolean | null;
+	translated_slug: string;
+};
+
+export type StoryblokPublishedLink = {
+	uuid: string;
+	slug: string;
+	is_folder: boolean;
+	published: boolean;
+	alternates?: StoryblokLinkAlternate[];
+};
+
+const isStoryblokPublishedLink = (value: unknown): value is StoryblokPublishedLink => {
+	if (!value || typeof value !== 'object') {
+		return false;
+	}
+
+	if (!('slug' in value) || !('is_folder' in value) || !('published' in value)) {
+		return false;
+	}
+
+	const link = value as { slug: unknown; is_folder: unknown; published: unknown };
+
+	return typeof link.slug === 'string' && typeof link.is_folder === 'boolean' && typeof link.published === 'boolean';
+};
+
 export class StoryblokService extends BaseService {
+	static readonly journalTeaserLimit = 3;
+
 	private static readonly contentType = {
 		article: 'article',
-		campaign: 'campaign',
 		country: 'Country',
 		focus: 'Focus',
 		localPartner: 'Local Partner',
@@ -44,17 +85,22 @@ export class StoryblokService extends BaseService {
 		'downloads.documents',
 		'partnershipsCarousel.partnerships',
 		'Country.partners',
+		'Local Partner.focuses',
+		'Local Partner.partners',
 	];
 	private static readonly countryRelationsToResolve = ['Country.partners'];
+	private static readonly focusRelationsToResolve = ['Focus.studies'];
+	private static readonly localPartnerRelationsToResolve = ['Local Partner.focuses', 'Local Partner.partners'];
 	private static readonly defaultPageSize = 50;
 	private static readonly contentField = 'content';
 	private static readonly leadTextField = 'leadText';
 	private static readonly storiesPath = 'cdn/stories';
-	private static readonly countriesPath = `${NEW_WEBSITE_SLUG}/countries`;
-	private static readonly campaignsPath = `${NEW_WEBSITE_SLUG}/campaigns`;
-	private static readonly focusesPath = `${NEW_WEBSITE_SLUG}/focuses`;
-	private static readonly localPartnersPath = `${NEW_WEBSITE_SLUG}/local-partners`;
-	private static readonly programsPath = `${NEW_WEBSITE_SLUG}/programs`;
+	private static readonly linksPath = 'cdn/links';
+	private static readonly countriesPath = STORYBLOK_COUNTRIES_FOLDER;
+	private static readonly focusesPath = STORYBLOK_FOCUSES_FOLDER;
+	private static readonly localPartnersPath = STORYBLOK_LOCAL_PARTNERS_FOLDER;
+	private static readonly programsPath = STORYBLOK_PROGRAMS_FOLDER;
+	private static readonly faqsPath = STORYBLOK_FAQ_FOLDER;
 	private static readonly excludedFieldsForCounting = [StoryblokService.contentField, StoryblokService.leadTextField].join(
 		',',
 	);
@@ -89,7 +135,7 @@ export class StoryblokService extends BaseService {
 		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.program.toLowerCase();
 	}
 
-	private static isCampaignStory(story: unknown): story is ISbStoryData<Campaign> {
+	private static isFaqStory(story: unknown): story is ISbStoryData<Faq> {
 		if (!story || typeof story !== 'object' || !('content' in story)) {
 			return false;
 		}
@@ -101,7 +147,7 @@ export class StoryblokService extends BaseService {
 
 		const contentWithComponent = storyWithContent.content as { component?: string };
 
-		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.campaign.toLowerCase();
+		return contentWithComponent.component?.toLowerCase() === 'faq';
 	}
 
 	private static isLocalPartnerStory(story: unknown): story is ISbStoryData<LocalPartner> {
@@ -291,6 +337,20 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	async resolveArticleCountInDefaultLanguage(
+		lang: string,
+		countInSelectedLanguage: number,
+		fetchDefaultLanguageCount: () => Promise<ServiceResult<number>>,
+	): Promise<number> {
+		if (lang === defaultLanguage) {
+			return countInSelectedLanguage;
+		}
+
+		const result = await fetchDefaultLanguageCount();
+
+		return result.success ? result.data : countInSelectedLanguage;
+	}
+
 	async getPersonsByUuids(lang: string, personUuids: string[]): Promise<ServiceResult<ISbStoryData<Person>[]>> {
 		try {
 			const uuids = [...new Set(personUuids.map((u) => u.trim()).filter(Boolean))];
@@ -370,10 +430,27 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	async getPublishedPageLinks(): Promise<ServiceResult<StoryblokPublishedLink[]>> {
+		try {
+			const data = await getStoryblokApi().getAll(StoryblokService.linksPath, {
+				version: 'published',
+				starts_with: `${STORYBLOK_PAGES_FOLDER}/`,
+			});
+
+			const links = Array.isArray(data) ? data.filter(isStoryblokPublishedLink) : [];
+
+			return this.resultOk(links);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch page links: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getTag(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Tag>>> {
 		try {
 			const res = await this.withLanguageFallback(
-				async (l, s) => getStoryblokApi().get(`cdn/stories/tag/${s}`, await this.getStoryParams(l)),
+				async (l, s) => getStoryblokApi().get(`cdn/stories/${getJournalTagStoryPath(s)}`, await this.getStoryParams(l)),
 				lang,
 				slug,
 			);
@@ -511,63 +588,33 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	async getCampaigns(lang: string): Promise<ServiceResult<ISbStoryData<Campaign>[]>> {
+	async getFaqs(lang: string, limit = 5): Promise<ServiceResult<ISbStoryData<Faq>[]>> {
 		try {
 			const baseParams = await this.getStoryParams(lang);
 			const params: ISbStoriesParams = {
 				...baseParams,
-				starts_with: `${StoryblokService.campaignsPath}/`,
+				starts_with: `${StoryblokService.faqsPath}/`,
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
-			let campaigns = data.filter((story) => StoryblokService.isCampaignStory(story));
+			let faqs = data.filter((story) => StoryblokService.isFaqStory(story));
 
-			if (campaigns.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
+			if (faqs.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
 				const draftParams: ISbStoriesParams = {
 					...baseParams,
 					version: 'draft',
-					starts_with: `${StoryblokService.campaignsPath}/`,
+					starts_with: `${StoryblokService.faqsPath}/`,
 				};
 				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
-				campaigns = draftData.filter((story) => StoryblokService.isCampaignStory(story));
+				faqs = draftData.filter((story) => StoryblokService.isFaqStory(story));
 			}
 
-			return this.resultOk(campaigns);
+			const sortedFaqs = [...faqs].sort((left, right) => (left.position ?? 0) - (right.position ?? 0));
+
+			return this.resultOk(sortedFaqs.slice(0, limit));
 		} catch (error) {
 			this.logger.error(error);
 
 			return this.resultOk([]);
-		}
-	}
-
-	async getCampaignBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Campaign>>> {
-		const loadCampaign = async (language: string) => {
-			const campaigns = await this.getCampaigns(language);
-			if (!campaigns.success) {
-				return undefined;
-			}
-
-			return campaigns.data.find((campaign) => {
-				const fullSlugTail = campaign.full_slug?.split('/').at(-1);
-
-				return campaign.slug === slug || fullSlugTail === slug;
-			});
-		};
-
-		try {
-			let story = await loadCampaign(lang);
-			if (!story && lang !== defaultLanguage) {
-				story = await loadCampaign(defaultLanguage);
-			}
-
-			if (!story) {
-				return this.resultFail(`Failed to fetch campaign: not found for slug '${slug}'`);
-			}
-
-			return this.resultOk(story);
-		} catch (error) {
-			this.logger.error(error);
-
-			return this.resultFail(`Failed to fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -603,12 +650,44 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	async getCountryByIsoCode(isoCode: string, lang: string): Promise<ServiceResult<ISbStoryData<Country>>> {
+		const normalizedIsoCode = isoCode.trim();
+		const loadCountry = async (language: string) => {
+			const countries = await this.getCountries(language);
+			if (!countries.success) {
+				return undefined;
+			}
+
+			return countries.data.find(
+				(country) => country.content.isoCode?.toString().trim().toLowerCase() === normalizedIsoCode.toLowerCase(),
+			);
+		};
+
+		try {
+			let story = await loadCountry(lang);
+			if (!story && lang !== defaultLanguage) {
+				story = await loadCountry(defaultLanguage);
+			}
+
+			if (!story) {
+				return this.resultFail(`Failed to fetch country: not found for isoCode '${isoCode}'`);
+			}
+
+			return this.resultOk(story);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch country: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getLocalPartners(lang: string): Promise<ServiceResult<ISbStoryData<LocalPartner>[]>> {
 		try {
 			const baseParams = await this.getStoryParams(lang);
 			const params: ISbStoriesParams = {
 				...baseParams,
 				starts_with: `${StoryblokService.localPartnersPath}/`,
+				resolve_relations: StoryblokService.localPartnerRelationsToResolve,
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 			let localPartners = data.filter((story) => StoryblokService.isLocalPartnerStory(story));
@@ -618,6 +697,7 @@ export class StoryblokService extends BaseService {
 					...baseParams,
 					version: 'draft',
 					starts_with: `${StoryblokService.localPartnersPath}/`,
+					resolve_relations: StoryblokService.localPartnerRelationsToResolve,
 				};
 				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
 				localPartners = draftData.filter((story) => StoryblokService.isLocalPartnerStory(story));
@@ -675,6 +755,7 @@ export class StoryblokService extends BaseService {
 			const params: ISbStoriesParams = {
 				...baseParams,
 				starts_with: `${StoryblokService.focusesPath}/`,
+				resolve_relations: StoryblokService.focusRelationsToResolve,
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 			let focuses = data.filter((story) => StoryblokService.isFocusStory(story));
@@ -684,6 +765,7 @@ export class StoryblokService extends BaseService {
 					...baseParams,
 					version: 'draft',
 					starts_with: `${StoryblokService.focusesPath}/`,
+					resolve_relations: StoryblokService.focusRelationsToResolve,
 				};
 				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
 				focuses = draftData.filter((story) => StoryblokService.isFocusStory(story));
@@ -702,9 +784,9 @@ export class StoryblokService extends BaseService {
 		const findFocus = (focuses: ISbStoryData<Focus>[]) => {
 			return focuses.find((focus) => {
 				const fullSlugTail = focus.full_slug?.split('/').at(-1);
-				const focusId = focus.content.id?.trim();
+				const contentSlug = focus.content.portalSlug?.trim();
 
-				return focus.slug === normalizedSlug || fullSlugTail === normalizedSlug || focusId === normalizedSlug;
+				return focus.slug === normalizedSlug || fullSlugTail === normalizedSlug || contentSlug === normalizedSlug;
 			});
 		};
 
@@ -739,7 +821,7 @@ export class StoryblokService extends BaseService {
 	async getPerson(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Person>>> {
 		try {
 			const res = await this.withLanguageFallback(
-				async (l, s) => getStoryblokApi().get(`cdn/stories/person/${s}`, await this.getStoryParams(l)),
+				async (l, s) => getStoryblokApi().get(`cdn/stories/${getPersonStoryPath(s)}`, await this.getStoryParams(l)),
 				lang,
 				slug,
 			);
@@ -827,6 +909,12 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	async getLatestJournalArticles(lang: string, limit = StoryblokService.journalTeaserLimit) {
+		const result = await this.getOverviewArticles(lang, undefined, limit);
+
+		return this.resultOk(result.success ? result.data.slice(0, limit) : []);
+	}
+
 	async getArticlesByUuids(lang: string, articleUuids: string[]): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> {
 		try {
 			const uuids = [...new Set(articleUuids.filter(Boolean))];
@@ -862,7 +950,7 @@ export class StoryblokService extends BaseService {
 						resolve_relations: StoryblokService.standardArticleRelationsToResolve,
 					};
 
-					return getStoryblokApi().get(`cdn/stories/journal/${s}`, params);
+					return getStoryblokApi().get(`cdn/stories/${getJournalArticleStoryPath(s)}`, params);
 				},
 				lang,
 				slug,

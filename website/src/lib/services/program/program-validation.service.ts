@@ -1,5 +1,6 @@
 import { PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
+import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramSettingsFormUpdateInput, programSettingsUpdateInputSchema } from './program-settings-form-input';
@@ -25,6 +26,14 @@ export class ProgramValidationService extends BaseService {
 		});
 		if (existingByName && existingByName.id !== input.id) {
 			return this.resultFail('A program with this name already exists.');
+		}
+
+		const existingBySlug = await this.db.program.findUnique({
+			where: { slug: slugify(input.slug) },
+			select: { id: true },
+		});
+		if (existingBySlug && existingBySlug.id !== input.id) {
+			return this.resultFail('A program with this slug already exists.');
 		}
 
 		return this.resultOk(undefined);

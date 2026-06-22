@@ -9,6 +9,7 @@ const toTypedImpactFilters = (searchParams: ImpactFilterQueryParams) => {
 	const selectedCountries = parseCsvParam(searchParams.country).filter((value): value is CountryCode =>
 		isEnumValue(CountryCode, value),
 	);
+	const selectedFocuses = parseCsvParam(searchParams.focus);
 	const selectedPrograms = parseCsvParam(searchParams.program);
 	const selectedQuestionnaires = parseCsvParam(searchParams.questionnaire).filter((value): value is SurveyQuestionnaire =>
 		isEnumValue(SurveyQuestionnaire, value),
@@ -23,6 +24,7 @@ const toTypedImpactFilters = (searchParams: ImpactFilterQueryParams) => {
 
 	return {
 		selectedCountries,
+		selectedFocuses,
 		selectedPrograms,
 		selectedQuestionnaires,
 		selectedRecipientFilters,
@@ -34,6 +36,7 @@ const toTypedImpactFilters = (searchParams: ImpactFilterQueryParams) => {
 export const toImpactServiceFilters = (searchParams: ImpactFilterQueryParams) => {
 	const {
 		selectedCountries,
+		selectedFocuses,
 		selectedPrograms,
 		selectedQuestionnaires,
 		selectedRecipientGenders,
@@ -42,6 +45,7 @@ export const toImpactServiceFilters = (searchParams: ImpactFilterQueryParams) =>
 
 	return {
 		...(selectedCountries.length > 0 ? { countryIsoCodes: selectedCountries } : {}),
+		...(selectedFocuses.length > 0 ? { focusIds: selectedFocuses } : {}),
 		...(selectedPrograms.length > 0 ? { programIds: selectedPrograms } : {}),
 		...(selectedQuestionnaires.length > 0 ? { questionnaires: selectedQuestionnaires } : {}),
 		...(selectedRecipientGenders.length > 0 ? { recipientGenders: selectedRecipientGenders } : {}),
@@ -50,11 +54,12 @@ export const toImpactServiceFilters = (searchParams: ImpactFilterQueryParams) =>
 };
 
 export const toSelectedFilterTokens = (searchParams: ImpactFilterQueryParams): string[] => {
-	const { selectedCountries, selectedPrograms, selectedQuestionnaires, selectedRecipientFilters } =
+	const { selectedCountries, selectedFocuses, selectedPrograms, selectedQuestionnaires, selectedRecipientFilters } =
 		toTypedImpactFilters(searchParams);
 
 	return [
 		...selectedCountries.map((country) => `${FILTER_PREFIX.country}${country}`),
+		...selectedFocuses.map((focus) => `${FILTER_PREFIX.focus}${focus}`),
 		...selectedPrograms.map((program) => `${FILTER_PREFIX.program}${program}`),
 		...selectedQuestionnaires.map((questionnaire) => `${FILTER_PREFIX.questionnaire}${questionnaire}`),
 		...selectedRecipientFilters.map((value) => `${FILTER_PREFIX.recipient}${value}`),

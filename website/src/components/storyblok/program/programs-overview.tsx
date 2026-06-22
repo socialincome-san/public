@@ -1,20 +1,22 @@
 import { Wallet } from '@/components/wallet/wallet';
+import { formatWalletAmount } from '@/components/wallet/wallet-format';
+import { createWalletImageFromStoryblokAsset } from '@/components/wallet/wallet-image-utils';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { PublicProgramStatsMap } from '@/lib/services/program/program.types';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import type { ProgramStory } from './program.types';
-import { getProgramId, getProgramSlug, getProgramTitle } from './program.utils';
+import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from './program.utils';
 
 type Props = {
 	programs: ProgramStory[];
-	statsById: PublicProgramStatsMap;
+	statsByPortalSlug: PublicProgramStatsMap;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const ProgramsOverview = async ({ programs, statsById, lang, region }: Props) => {
+export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, region }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 
 	return (
@@ -24,28 +26,29 @@ export const ProgramsOverview = async ({ programs, statsById, lang, region }: Pr
 			) : (
 				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
 					{programs.map((program) => {
-						const programId = getProgramId(program.content);
+						const portalSlug = getProgramPortalSlug(program.content);
 						const programTitle = getProgramTitle(program.content);
-						const programSlug = getProgramSlug(program);
-						const stats = programId ? statsById[programId] : undefined;
-						const primaryImageFilename = program.content.primaryImage?.filename;
-						const primaryImageAlt = program.content.primaryImage?.alt ?? programTitle;
-						const secondaryImageFilename = program.content.secondaryImage?.filename;
-						const secondaryImageAlt = program.content.secondaryImage?.alt ?? programTitle;
-						const tertiaryImageFilename = program.content.tertiaryImage?.filename;
-						const tertiaryImageAlt = program.content.tertiaryImage?.alt ?? programTitle;
-						const linkHref = `/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${programSlug}`;
-						const images = primaryImageFilename
+						const storyblokSlug = getProgramStoryblokSlug(program);
+						const stats = portalSlug ? statsByPortalSlug[portalSlug] : undefined;
+						const primaryImage = createWalletImageFromStoryblokAsset(program.content.primaryImage, programTitle);
+						const hoverEffectImage1 = createWalletImageFromStoryblokAsset(
+							program.content.secondaryImage,
+							programTitle,
+							primaryImage,
+							{ preserveFallbackAlt: true },
+						);
+						const hoverEffectImage2 = createWalletImageFromStoryblokAsset(
+							program.content.tertiaryImage,
+							programTitle,
+							primaryImage,
+							{ preserveFallbackAlt: true },
+						);
+						const linkHref = `/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${storyblokSlug}`;
+						const images = primaryImage
 							? {
-									primaryImage: { src: primaryImageFilename, alt: primaryImageAlt },
-									hoverEffectImage1: {
-										src: secondaryImageFilename ?? primaryImageFilename,
-										alt: secondaryImageAlt ?? primaryImageAlt,
-									},
-									hoverEffectImage2: {
-										src: tertiaryImageFilename ?? primaryImageFilename,
-										alt: tertiaryImageAlt ?? primaryImageAlt,
-									},
+									primaryImage,
+									hoverEffectImage1: hoverEffectImage1 ?? primaryImage,
+									hoverEffectImage2: hoverEffectImage2 ?? primaryImage,
 								}
 							: undefined;
 
@@ -55,18 +58,20 @@ export const ProgramsOverview = async ({ programs, statsById, lang, region }: Pr
 									href={linkHref}
 									title={programTitle}
 									subtitle={stats ? getCountryNameByCode(stats.countryIsoCode) : undefined}
-									paidOut={
+									footerLeft={
 										stats
 											? {
-													currency: stats.payoutCurrency,
-													amount: stats.totalPayoutsSum,
+													label: translator.t('wallet.paid-out'),
+													prefix: stats.payoutCurrency,
+													value: formatWalletAmount(stats.totalPayoutsSum),
 												}
 											: undefined
 									}
-									amountOfRecipients={
+									footerRight={
 										stats
 											? {
-													amount: stats.recipientsCount,
+													label: translator.t('wallet.recipients'),
+													value: formatWalletAmount(stats.recipientsCount),
 												}
 											: undefined
 									}

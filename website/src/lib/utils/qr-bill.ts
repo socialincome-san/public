@@ -10,8 +10,17 @@ import {
 	CONTRIBUTION_REFERENCE_ID_LENGTH,
 	CONTRIBUTOR_REFERENCE_ID_LENGTH,
 } from '@/lib/services/bank-transfer/bank-transfer-config';
+import DOMPurify from 'isomorphic-dompurify';
 import { SwissQRBill, SwissQRCode } from 'swissqrbill/svg';
 import { Data } from 'swissqrbill/types';
+
+const assertDigitsReferenceId = (value: string, maxLength: number, name: string) => {
+	if (!/^\d+$/.test(value) || value.length === 0 || value.length > maxLength) {
+		throw new Error(`${name} must be 1–${maxLength} digits`);
+	}
+};
+
+const sanitizeQrBillSvg = (svg: string) => DOMPurify.sanitize(svg, { USE_PROFILES: { svg: true, svgFilters: true } });
 
 /**
  * Calculates the modulo 10 recursive check digit for the QR bill reference
@@ -37,12 +46,8 @@ const calculateCheckDigit = (reference: string): number => {
  * @returns The complete QR bill reference with check digit
  */
 const generateQrBillReference = (contributorCreatedAt: string, contributionCreatedAt: string): string => {
-	if (contributorCreatedAt.length > CONTRIBUTOR_REFERENCE_ID_LENGTH) {
-		throw new Error('contributorCreatedAt too long');
-	}
-	if (contributionCreatedAt.length > CONTRIBUTION_REFERENCE_ID_LENGTH) {
-		throw new Error('contributionCreatedAt too long, should be timestamp in seconds');
-	}
+	assertDigitsReferenceId(contributorCreatedAt, CONTRIBUTOR_REFERENCE_ID_LENGTH, 'contributorReferenceId');
+	assertDigitsReferenceId(contributionCreatedAt, CONTRIBUTION_REFERENCE_ID_LENGTH, 'contributionReferenceId');
 
 	// Create the base reference without check digit
 	const baseReference = `000${contributorCreatedAt}${contributionCreatedAt}`;
@@ -53,7 +58,7 @@ const generateQrBillReference = (contributorCreatedAt: string, contributionCreat
 	return `${baseReference}${checkDigit}`;
 };
 
-type GenerateQrBillSvgProps = {
+export type QrBillGenerationProps = {
 	amount: number;
 	contributorReferenceId: string;
 	contributionReferenceId: string;
@@ -61,27 +66,29 @@ type GenerateQrBillSvgProps = {
 	type: 'QRCODE' | 'QRBILL';
 };
 
-export const generateQrBillSvg = ({
+export const buildQrBillData = ({
 	amount,
 	contributorReferenceId,
 	contributionReferenceId,
 	currency,
-	type,
-}: GenerateQrBillSvgProps): string => {
-	const data: Data = {
-		amount: Number(amount),
-		currency: currency,
-		creditor: {
-			account: 'CH6730000001151126386',
-			address: 'Zweierstrasse',
-			buildingNumber: 103,
-			zip: 8003,
-			city: 'Zürich',
-			country: 'CH',
-			name: 'Social Income',
-		},
-		reference: generateQrBillReference(contributorReferenceId, contributionReferenceId),
-	};
+}: Omit<QrBillGenerationProps, 'type'>): Data => ({
+	amount: Number(amount),
+	currency,
+	creditor: {
+		account: 'CH6730000001151126386',
+		address: 'Zweierstrasse',
+		buildingNumber: 103,
+		zip: 8003,
+		city: 'Zürich',
+		country: 'CH',
+		name: 'Social Income',
+	},
+	reference: generateQrBillReference(contributorReferenceId, contributionReferenceId),
+});
 
-	return type === 'QRCODE' ? new SwissQRCode(data).toString() : new SwissQRBill(data).toString();
+export const generateQrBillSvg = ({ type, ...props }: QrBillGenerationProps): string => {
+	const data = buildQrBillData(props);
+	const rawSvg = type === 'QRCODE' ? new SwissQRCode(data).toString() : new SwissQRBill(data).toString();
+
+	return sanitizeQrBillSvg(rawSvg);
 };

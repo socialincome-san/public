@@ -1,50 +1,80 @@
-import { LandingPageDetail } from '@/components/storyblok/shared/landing-page-detail';
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
+import { ProgramAbout } from '@/components/storyblok/program/program-about';
+import { ProgramCountry } from '@/components/storyblok/program/program-country';
+import { ProgramFinances } from '@/components/storyblok/program/program-finances';
+import { ProgramRecipients } from '@/components/storyblok/program/program-recipients';
+import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
+import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import type { ProgramStory } from './program.types';
-import { getProgramDescription, getProgramTitle } from './program.utils';
+import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
-	program: ProgramStory;
+	programDetailData: ProgramDetailData;
 	lang: WebsiteLanguage;
-	campaignsCount?: number;
-	recipientsCount?: number;
+	region: WebsiteRegion;
 };
 
-export const ProgramDetail = async ({ program, lang, campaignsCount, recipientsCount }: Props) => {
+export const ProgramDetail = async ({ programDetailData, lang, region }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
-	const programTitle = getProgramTitle(program.content);
-	const programDescription = getProgramDescription(program.content);
-	const heroImageFilename = program.content.primaryImage?.filename;
-	const heroImageAlt = program.content.primaryImage?.alt ?? programTitle;
+	const countryIsoCode = programDetailData.programDetails?.countryIsoCode ?? programDetailData.stats?.countryIsoCode;
+	const recipientsCount =
+		programDetailData.dashboardStats?.recipientsCount ??
+		programDetailData.programDetails?.recipientsCount ??
+		programDetailData.stats?.recipientsCount ??
+		0;
+	const completedSurveysCount =
+		programDetailData.dashboardStats?.completedSurveysCount ?? programDetailData.programDetails?.completedSurveysCount ?? 0;
+
+	const breadcrumbLinks = await buildBreadcrumbLinks({
+		fullSlug: programDetailData.fullSlug,
+		currentLabel: programDetailData.title,
+		lang,
+		region,
+	});
 
 	return (
-		<LandingPageDetail
-			title={programTitle}
-			description={programDescription}
-			heroImageFilename={heroImageFilename}
-			heroImageAlt={heroImageAlt}
-			stats={
-				campaignsCount !== undefined && recipientsCount !== undefined
-					? [
-							{
-								value: campaignsCount,
-								label:
-									campaignsCount === 1
-										? translator.t('programs-page.campaign-singular')
-										: translator.t('programs-page.campaign-plural'),
-							},
-							{
-								value: recipientsCount,
-								label:
-									recipientsCount === 1
-										? translator.t('programs-page.recipient-singular')
-										: translator.t('programs-page.recipient-plural'),
-							},
-						]
-					: []
-			}
-			descriptionHeading={`${translator.t('programs-page.about')} ${programTitle}`}
-		/>
+		<>
+			<HeroHeader
+				title={programDetailData.title}
+				heroImage={programDetailData.heroImage}
+				stats={
+					programDetailData.stats
+						? [
+								{
+									label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
+								},
+								{
+									value: programDetailData.stats.recipientsCount,
+									label:
+										programDetailData.stats.recipientsCount === 1
+											? translator.t('programs-page.recipient-singular')
+											: translator.t('programs-page.recipient-plural'),
+								},
+							]
+						: []
+				}
+			/>
+			<div className="max-w-content 2xl:w-site-width mx-[2vw] mb-6 px-8 2xl:mx-auto">
+				<Breadcrumb links={breadcrumbLinks} />
+				<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
+					<div className="flex flex-col gap-7">
+						{programDetailData.dashboardStats ? (
+							<ProgramFinances stats={programDetailData.dashboardStats} translator={translator} lang={lang} />
+						) : null}
+						<ProgramAbout programDetailData={programDetailData} translator={translator} lang={lang} region={region} />
+					</div>
+					<div className="flex flex-col gap-7">
+						{countryIsoCode ? <ProgramCountry countryIsoCode={countryIsoCode} lang={lang} translator={translator} /> : null}
+						<div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
+							<ProgramRecipients count={recipientsCount} translator={translator} lang={lang} />
+							<ProgramSurveys completedCount={completedSurveysCount} translator={translator} lang={lang} />
+						</div>
+					</div>
+				</div>
+			</div>
+		</>
 	);
 };

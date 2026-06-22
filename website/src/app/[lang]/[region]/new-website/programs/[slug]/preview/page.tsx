@@ -1,6 +1,7 @@
 import { DefaultLayoutProps, DefaultParams } from '@/app/[lang]/[region]';
 import { StoryblokPreviewProgramPage } from '@/components/storyblok/storyblok-preview-program-page';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getProgramStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 type PreviewPageProps = DefaultLayoutProps<DefaultParams & { slug: string }> & {
@@ -13,8 +14,9 @@ export default async function PreviewProgramPage({ params, searchParams }: Previ
 
 	return (
 		<StoryblokPreviewProgramPage
-			storyPath={`${NEW_WEBSITE_SLUG}/programs/${slug}`}
+			storyPath={getProgramStoryPath(slug)}
 			lang={lang as WebsiteLanguage}
+			region={region as WebsiteRegion}
 			previewRoutePath={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/programs/${slug}/preview`}
 			searchParams={resolvedSearchParams}
 		/>

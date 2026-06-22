@@ -1,48 +1,20 @@
-import { cn } from '@/lib/utils/cn';
-import NextLink from 'next/link';
-import { ReactNode } from 'react';
+'use client';
+
 import {
-	MARK_LINK,
-	NODE_HEADING,
-	NODE_LI,
-	NODE_PARAGRAPH,
-	render,
-	StoryblokRichtext,
-} from 'storyblok-rich-text-react-renderer';
+	storyblokRichTextBasicNodeResolvers,
+	storyblokRichTextMarkResolvers,
+} from '@/components/storyblok/rich-text/shared-resolvers';
+import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
+import { ReactNode } from 'react';
+import { render } from 'storyblok-rich-text-react-renderer';
 
 type RichTextRendererProps = {
 	richTextDocument: StoryblokRichtext;
 };
 
-export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) => {
-	return render(richTextDocument, {
-		markResolvers: {
-			[MARK_LINK]: (children: ReactNode, props: { href?: string }) => (
-				<NextLink href={props.href ?? '#'} className="font-normal underline">
-					{children}
-				</NextLink>
-			),
-		},
-		nodeResolvers: {
-			[NODE_HEADING]: (children, { level }) => {
-				// Todo: Probably move those to separate heading components
-				const Tag = `h${level}` as const;
-				const styles: Record<number, string> = {
-					1: 'text-4xl font-bold',
-					2: 'text-3xl font-bold',
-					3: 'text-2xl font-semibold',
-					4: 'text-xl font-semibold',
-					5: 'text-lg font-medium',
-					6: 'text-base font-medium',
-				};
-
-				return <Tag className={cn(styles[level], 'my-4')}>{children}</Tag>;
-			},
-			[NODE_LI]: (children) => <li className="m-0.5 p-0.5 *:m-0 *:p-0 [&::marker]:text-black">{children}</li>,
-			[NODE_PARAGRAPH]: (children) => <p className="my-4">{children}</p>,
-		},
-		blokResolvers: {
-			// Todo: Add blocks as soon as we have them ready in the Storyblok schema
-		},
+export const RichTextRenderer = ({ richTextDocument }: RichTextRendererProps) =>
+	render(richTextDocument, {
+		markResolvers: storyblokRichTextMarkResolvers,
+		nodeResolvers: storyblokRichTextBasicNodeResolvers,
+		blokResolvers: {},
 	}) as ReactNode;
-};

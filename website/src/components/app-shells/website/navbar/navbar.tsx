@@ -3,19 +3,18 @@ import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout
 import { MenuDesktop } from '@/components/app-shells/website/navbar/menu-desktop';
 import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
 import { displaySession, type Scope } from '@/components/app-shells/website/navbar/utils';
-import { Button } from '@/components/button';
+import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { Session } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
 import { cn } from '@/lib/utils/cn';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { ISbStoryData } from '@storyblok/js';
 import NextLink from 'next/link';
-
-const ENABLE_NEW_WEBSITE = process.env.FEATURE_ENABLE_NEW_WEBSITE === 'true';
 
 type Props = {
 	sessions: Session[];
@@ -26,9 +25,12 @@ type Props = {
 
 export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 	const session = displaySession(sessions, scope);
+	const showWebsiteMenu = scope === 'website';
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate'] });
-	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(`${NEW_WEBSITE_SLUG}/layout`, lang);
-	const menu = result.success ? result.data.content.menu : [];
+	const result = showWebsiteMenu
+		? await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(STORYBLOK_LAYOUT_PATH, lang)
+		: null;
+	const menu = result?.success ? result.data.content.menu : [];
 
 	return (
 		<nav
@@ -41,7 +43,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 				<SocialIncomeLogo />
 			</NextLink>
 
-			{ENABLE_NEW_WEBSITE && (
+			{showWebsiteMenu && (
 				<div className="hidden lg:block">
 					<MenuDesktop menu={menu} lang={lang} region={region} />
 				</div>
@@ -52,11 +54,12 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 					{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
 				</div>
 				{!session && (
-					<Button className="rounded-full px-5 text-sm font-semibold lg:h-11">
-						{translator.t('donation-form.donate-now')}
-					</Button>
+					<OpenDonationWizardButton
+						label={translator.t('donation-form.donate-now')}
+						className="rounded-full px-5 text-sm font-semibold lg:h-11"
+					/>
 				)}
-				{ENABLE_NEW_WEBSITE && <MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />}
+				{showWebsiteMenu && <MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />}
 			</div>
 		</nav>
 	);

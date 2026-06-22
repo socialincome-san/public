@@ -1,0 +1,155 @@
+{
+	"modal": {
+		"title": "Make a donation",
+		"campaign-for": "For {{title}}",
+		"closeConfirm": {
+			"title": "Close donation?",
+			"description": "If you close now, your progress in this donation will be lost.",
+			"cancel": "Continue donating",
+			"confirm": "Close"
+		}
+	},
+	"stepAmount": {
+		"title": "Make a donation",
+		"monthly-income-label": "Your monthly income (CHF)",
+		"choose-own-amount": "Or choose own amount",
+		"your-one-percent": "Your 1%",
+		"other": "Other",
+		"monthly": "Monthly",
+		"one-time": "One-time",
+		"donate-now": "Donate now",
+		"donate-now-with-amount": "Donate {{amount}} now",
+		"custom-amount-placeholder": "Amount"
+	},
+	"stepPlan": {
+		"monthly-title": "Monthly Donation",
+		"one-time-title": "One-time Donation",
+		"switch-to-one-time": "One-time",
+		"switch-to-monthly": "Monthly",
+		"amount-label": "Amount",
+		"one-time-option-label": "One-time",
+		"one-time-option-hint": "Single payment",
+		"upsell-title": "Would you like to switch to the monthly plan?",
+		"upsell-subtitle": "Half the amount, paid monthly. It helps us even more.",
+		"monthly-half-note": "Monthly plans based on half your one-time amount.",
+		"upsell-preferred": "Preferred",
+		"upsell-benefit-stability": "Helps Social Income being financial stable and plan ahead",
+		"upsell-benefit-impact": "Biggest impact",
+		"upsell-benefit-cancel": "Cancel anytime",
+		"switch-to-monthly-plan": "Switch to monthly plan",
+		"per-month": "/month",
+		"plan-1x": "1% Plan",
+		"plan-2x": "2% Plan",
+		"monthly-plan": "Monthly plan",
+		"benefit-beneficiaries": "{{count}} direct and indirect beneficiaries",
+		"benefit-fees": "Transaction costs covered",
+		"benefit-community": "Join a community of {{count}} supporters",
+		"benefit-double-impact": "Double the impact",
+		"back": "Back",
+		"choose-payment": "Choose Payment Method"
+	},
+	"stepStripeCheckout": {
+		"loading": "Loading payment form…",
+		"payment-error": "Payment could not be started.",
+		"try-again": "Try again"
+	},
+	"stepQrContact": {
+		"hintsTitle": "Good to know",
+		"titleStandingOrder": "Generate QR-Code for Standing Order",
+		"titleOneTime": "Generate QR-Code for Payment",
+		"firstName": "First Name",
+		"lastName": "Last Name",
+		"email": "E-Mail",
+		"accountCreateHint": "If no account exists for this email yet, we'll create one for you.",
+		"noBackAfterGenerateHint": "After you generate the QR code, you can't change the amount, payment method, or contact details in this flow.",
+		"generateCta": "Generate QR-Code for payment",
+		"generating": "Generating…",
+		"generateError": "Could not generate QR bill. Please try again."
+	},
+	"stepQrBill": {
+		"title": "QR-Payment",
+		"scanHint": "Scan with your banking app",
+		"paymentToLabel": "Payment to",
+		"paymentToValue": "Social Income, Postfinance AG, 8000 Zürich",
+		"fromLabel": "From",
+		"amountLabel": "Amount",
+		"paymentTypeLabel": "Payment Type",
+		"paymentTypeStandingOrder": "Standing Order (monthly)",
+		"paymentTypeOneTime": "One-time payment",
+		"confirmStandingOrder": "Confirm Standing Order",
+		"confirmOneTime": "Confirm Payment",
+		"confirming": "Processing…",
+		"confirmError": "Could not confirm payment. Please try again.",
+		"downloadPdf": "Download PDF",
+		"downloadingPdf": "Downloading…",
+		"downloadPdfError": "Could not download PDF. Please try again."
+	},
+	"stepPayment": {
+		"title": "Payment Method",
+		"qr-payment": "QR-Payment",
+		"qr-payment-unavailable": "Only available for CHF and EUR",
+		"minimal-costs": "Minimal Costs",
+		"online": "Online",
+		"your-donation": "Your donation",
+		"generate-qr-code": "Generate QR-Code",
+		"pay-online": "Pay online",
+		"cover-costs-description": "Helps cover online payment fees.",
+		"cover-costs-label-monthly": "Cover transaction costs ({{fee}}/month)",
+		"cover-costs-label-one-time": "Cover transaction costs ({{fee}})",
+		"cover-costs-tooltip-aria": "How transaction costs are calculated",
+		"cover-costs-tooltip": "We add 3% to your donation so the full amount reaches us after online card fees."
+	},
+	"thankYou": {
+		"message": "Thank you for your help!",
+		"messageWithAmountMonthly": "Thank you for {{amount}}/month!",
+		"messageWithAmountOneTime": "Thank you for {{amount}}!",
+		"loginPrompt": {
+			"title": "Your account is ready",
+			"description": "Go to the login page to access your account.",
+			"loginButton": "Log in",
+			"supportPrefix": "Questions? Reach"
+		}
+	},
+	"onboarding": {
+		"successTitle": "Donation successful",
+		"accountCardTitle": "Check your Account Information",
+		"isThisYou": "Is this you?",
+		"firstName": "First Name",
+		"lastName": "Last Name",
+		"email": "E-Mail",
+		"country": "Country",
+		"genderSectionTitle": "How should we address you?",
+		"genderSectionDescription": "We use this information to address you correctly in emails, donation certificates, and the portal.",
+		"genderOtherPrivate": "Other / Private",
+		"submit": "Confirm Account Information",
+		"submitting": "Saving…",
+		"loading": "Loading your details…",
+		"updateError": "There was an error saving your information. Please try again.",
+		"continue": "Continue",
+		"referral": {
+			"cardTitle": "Helps us to focus our time on what's actually working",
+			"question": "How did you find us?",
+			"submit": "Send Feedback",
+			"submitting": "Saving…",
+			"updateError": "There was an error saving your feedback. Please try again.",
+			"options": {
+				"familyfriends": "Friends or family",
+				"socialmedia": "Social Media",
+				"events": "Events",
+				"media": "Media",
+				"preferNotToSay": "Prefer not to say",
+				"other": "Other"
+			}
+		}
+	},
+	"impact": {
+		"title": "Direct cash to people in need",
+		"tax-deductible": "Tax-deductible",
+		"cancel-anytime": "Cancel anytime",
+		"supporters": "{{supporterCount}} supporters from {{countryCount}} countries",
+		"supporters-no-countries": "{{supporterCount}} supporters worldwide",
+		"zewo": "ZEWO certified",
+		"why-one-percent": "Why 1%?",
+		"pay-with": "Pay with"
+	}
+}

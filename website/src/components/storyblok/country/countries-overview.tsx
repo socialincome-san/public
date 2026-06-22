@@ -11,23 +11,35 @@ type Props = {
 	statsByIsoCode: Record<string, { programsCount: number; recipientsCount: number } | undefined>;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
+	title?: string;
+	text?: string;
 };
 
-export const CountriesOverview = async ({ countries, statsByIsoCode, lang, region }: Props) => {
+export const CountriesOverview = async ({ countries, statsByIsoCode, lang, region, title, text }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const hasCmsHeader = Boolean(title?.trim()) || Boolean(text?.trim());
 
 	return (
-		<div className="flex w-full flex-col gap-6">
+		<div className="flex w-full flex-col gap-8">
+			{hasCmsHeader ? (
+				<div className="space-y-5">
+					{title?.trim() ? (
+						<h1 className="text-4xl leading-tight font-bold text-cyan-900 sm:text-5xl">{title.trim()}</h1>
+					) : null}
+					{text?.trim() ? <p className="text-base leading-6 text-cyan-950 sm:text-lg sm:leading-7">{text.trim()}</p> : null}
+				</div>
+			) : null}
 			{countries.length === 0 ? (
 				<p className="text-muted-foreground">{translator.t('countries-page.empty')}</p>
 			) : (
 				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					{countries.map((country) => {
 						const countryIsoCode = getCountryIsoCode(country.content);
-						const countryIsoCodeLower = countryIsoCode.toLowerCase();
+						const normalizedIsoCode = countryIsoCode.trim().toUpperCase();
+						const countryIsoCodeLower = normalizedIsoCode.toLowerCase();
 						const countryTitle = getCountryTitle(country.content);
 						const countrySlug = getCountrySlug(country);
-						const stats = statsByIsoCode[countryIsoCode] ?? { programsCount: 0, recipientsCount: 0 };
+						const stats = statsByIsoCode[normalizedIsoCode] ?? { programsCount: 0, recipientsCount: 0 };
 						const heroImageFilename = country.content.heroImage?.filename;
 						const heroImageAlt = country.content.heroImage?.alt ?? countryTitle;
 
@@ -41,7 +53,7 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, regio
 								titleVisual={
 									<NextImage
 										src={`/assets/flags/${countryIsoCodeLower}.svg`}
-										alt={`${countryIsoCode} flag`}
+										alt={`${normalizedIsoCode} flag`}
 										width={36}
 										height={26}
 										className="h-6 w-auto rounded-sm"

@@ -64,6 +64,7 @@ export class LocalPartnerWriteService extends BaseService {
 			const partner = await this.db.localPartner.create({
 				data: {
 					name: validatedInput.name,
+					slug: validatedInput.slug,
 					focuses: {
 						create: validatedInput.focuses.map((focusId) => ({ focusId })),
 					},
@@ -104,6 +105,7 @@ export class LocalPartnerWriteService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					slug: true,
 					account: true,
 					contact: {
 						select: {
@@ -152,6 +154,7 @@ export class LocalPartnerWriteService extends BaseService {
 			const uniquenessResult = await this.localPartnerValidationService.validateUpdateUniqueness(validatedInput, {
 				partnerId,
 				existingName: existing.name,
+				existingSlug: existing.slug,
 				existingContactId: existing.contact.id,
 				existingEmail: oldEmail,
 				existingPhoneId: existing.contact.phone?.id ?? null,
@@ -178,6 +181,7 @@ export class LocalPartnerWriteService extends BaseService {
 				where: { id: partnerId },
 				data: {
 					name: validatedInput.name,
+					slug: validatedInput.slug,
 					focuses: {
 						deleteMany: {},
 						create: validatedInput.focuses.map((focusId) => ({ focusId })),

@@ -1,12 +1,13 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
-import { HeroDonationsHeader } from '@/components/storyblok/shared/hero-donations-header';
+import { HeroHeader } from '@/components/storyblok/shared/hero-header';
+import { StoryDetailContent } from '@/components/storyblok/shared/story-detail-content';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Suspense } from 'react';
-import { CountryDonationsTotal } from './country-donations-total';
 import { CountryMap } from './country-map';
+import { CountryPayoutsTotal } from './country-payouts-total';
 import { CountryPersonCarousel } from './country-person-carousel';
 import { CountryPrograms } from './country-programs';
 import { CountryStatistics } from './country-statistics';
@@ -36,11 +37,9 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 
 	return (
 		<>
-			<HeroDonationsHeader
-				lang={lang}
+			<HeroHeader
 				title={countryTitle}
-				heroImageFilename={country.content.heroImage?.filename}
-				heroImageAlt={country.content.heroImage?.alt ?? countryTitle}
+				heroImage={country.content.heroImage}
 				titleIcon={isoCode === '-' ? undefined : `/assets/flags/${isoCode.toLowerCase()}.svg`}
 				titleIconAlt={isoCode === '-' ? undefined : `${isoCode} flag`}
 				stats={[
@@ -60,11 +59,11 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 					},
 				]}
 			/>
-			<div className="max-w-content 2xl:w-site-width ml-[2vw] pl-8 2xl:mx-auto">
+			<StoryDetailContent>
 				<Breadcrumb links={breadcrumbLinks} />
 				<CountryMap country={country} lang={lang} />
 				<CountryPersonCarousel country={country} lang={lang} />
-				<CountryDonationsTotal country={country} lang={lang} region={region} />
+				<CountryPayoutsTotal country={country} lang={lang} region={region} />
 				{isoCode !== '-' && (
 					<Suspense fallback={<CountryStatisticsSkeleton lang={lang} />}>
 						<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
@@ -74,7 +73,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 				{localPartners.length > 0 && (
 					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
 				)}
-			</div>
+			</StoryDetailContent>
 		</>
 	);
 };

@@ -6,7 +6,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 
-import { StripeSubscriptionRow } from '@/lib/services/stripe/stripe.types';
+import { type StripeSubscriptionRow } from '@/lib/services/stripe/stripe.types';
 import { CreditCardIcon, PlusIcon } from 'lucide-react';
 
 export const SubscriptionsTable = async ({

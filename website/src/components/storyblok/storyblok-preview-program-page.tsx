@@ -1,24 +1,20 @@
+import { loadProgramDetailPortalData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramDetail } from '@/components/storyblok/program/program-detail';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
-import { getProgramId } from '@/components/storyblok/program/program.utils';
+import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 
 type Props = {
 	storyPath: string;
 	lang: WebsiteLanguage;
+	region: WebsiteRegion;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
 
-const getProgramStats = async (programId: string) => {
-	const statsResult = await services.read.program.getPublicProgramStatsById(programId);
-
-	return statsResult.success ? statsResult.data : undefined;
-};
-
-export const StoryblokPreviewProgramPage = async ({ storyPath, lang, previewRoutePath, searchParams }: Props) => {
+export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
 	return await StoryblokPreviewStory<ProgramStory>({
 		storyPath,
 		lang,
@@ -30,15 +26,22 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, previewRout
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async (story) => {
-			const programId = getProgramId(story.content);
-			const stats = programId ? await getProgramStats(programId) : undefined;
+			const programTitle = getProgramTitle(story.content);
+			const portalSlug = getProgramPortalSlug(story.content);
+
+			const programDetailPortalData = portalSlug ? await loadProgramDetailPortalData(portalSlug) : {};
 
 			return (
 				<ProgramDetail
-					program={story}
+					programDetailData={{
+						title: programTitle,
+						fullSlug: story.full_slug,
+						heroImage: story.content.primaryImage,
+						description: story.content.description?.trim() || undefined,
+						...programDetailPortalData,
+					}}
 					lang={lang}
-					campaignsCount={stats?.campaignsCount}
-					recipientsCount={stats?.recipientsCount}
+					region={region}
 				/>
 			);
 		},

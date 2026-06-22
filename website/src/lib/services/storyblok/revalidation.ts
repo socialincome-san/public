@@ -1,27 +1,43 @@
 import { mainWebsiteLanguages, websiteRegions } from '@/lib/i18n/utils';
+import {
+	getHomeStoryPath,
+	getNewWebsiteRelativePathFromStoryblokSlug,
+	getWebsitePathTailFromStoryblokSlug,
+	isRoutableNewWebsiteStoryblokSlug,
+	STORYBLOK_LAYOUT_PATH,
+	WEBSITE_JOURNAL_PATH_SEGMENT,
+	WEBSITE_PERSON_PATH_SEGMENT,
+} from '@/lib/storyblok/storyblok-paths';
 import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 /**
  * Paths (without `/{lang}/{region}` prefix) that should be revalidated on any Storyblok webhook.
  */
-const aggregateRelativePaths = ['/new-website', '/journal', '/impact-measurement'] as const;
+const aggregateRelativePaths = ['/new-website', '/new-website/journal', '/journal', '/impact-measurement'] as const;
+
+const STORYBLOK_SLUGS_WITHOUT_PUBLIC_PAGE = new Set([getHomeStoryPath(), STORYBLOK_LAYOUT_PATH]);
 
 /**
  * Maps a Storyblok `full_slug` to its Next.js relative path (without `/{lang}/{region}` prefix).
- * Returns `null` if the slug is not tied to a specific page (e.g. root or unsupported prefix).
+ * Returns `null` if the slug is not tied to a specific page (e.g. home or layout).
  */
 const relativePathForSlug = (fullSlug: string): string | null => {
-	if (fullSlug === NEW_WEBSITE_SLUG) {
+	if (STORYBLOK_SLUGS_WITHOUT_PUBLIC_PAGE.has(fullSlug)) {
 		return null;
 	}
-	if (fullSlug.startsWith(`${NEW_WEBSITE_SLUG}/`) || fullSlug.startsWith('journal/') || fullSlug.startsWith('person/')) {
-		return `/${fullSlug}`;
+	const websitePathTail = getWebsitePathTailFromStoryblokSlug(fullSlug);
+	if (websitePathTail.startsWith(`${WEBSITE_JOURNAL_PATH_SEGMENT}/`)) {
+		return `/${websitePathTail}`;
 	}
-	if (fullSlug.startsWith('tag/')) {
-		return `/journal/${fullSlug}`;
+	if (websitePathTail.startsWith(`${WEBSITE_PERSON_PATH_SEGMENT}/`)) {
+		return `/${websitePathTail}`;
 	}
 
-	return null;
+	if (!isRoutableNewWebsiteStoryblokSlug(fullSlug)) {
+		return null;
+	}
+
+	return getNewWebsiteRelativePathFromStoryblokSlug(fullSlug);
 };
 
 /**
@@ -35,6 +51,14 @@ export const pathsForStory = (fullSlug: string | undefined | null): string[] => 
 	const storyPath = slug ? relativePathForSlug(slug) : null;
 	if (storyPath) {
 		relativePaths.add(storyPath);
+		if (storyPath.startsWith('/journal/tag/')) {
+			relativePaths.add('/new-website/journal');
+		} else if (storyPath.startsWith('/journal')) {
+			relativePaths.add(storyPath.replace('/journal', '/new-website/journal'));
+		}
+		if (storyPath.startsWith('/person/')) {
+			relativePaths.add(storyPath.replace('/person/', '/new-website/person/'));
+		}
 	}
 
 	const paths = new Set<string>();
@@ -46,6 +70,7 @@ export const pathsForStory = (fullSlug: string | undefined | null): string[] => 
 		}
 	}
 	paths.add('/sitemap.xml');
+	paths.add(`/${NEW_WEBSITE_SLUG}/sitemap.xml`);
 
 	return [...paths].sort();
 };

@@ -2,6 +2,8 @@
 
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/carousel';
+import { SectionHeading } from '@/components/section-heading';
+import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { Testimonial } from '@/components/testimonial';
 import type {
 	Testimonial as StoryblokTestimonial,
@@ -11,7 +13,6 @@ import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import Autoplay from 'embla-carousel-autoplay';
 import { useEffect, useRef, useState } from 'react';
-import Markdown from 'react-markdown';
 
 type Props = {
 	blok: TestimonialCarousel;
@@ -119,13 +120,30 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 		return null;
 	}
 
+	if (entries.length === 1) {
+		return (
+			<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+				<div className="space-y-8">
+					{blok.heading && (
+						<SectionHeading className="mb-0 md:mb-0">
+							<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
+						</SectionHeading>
+					)}
+					<div className="mx-auto w-full max-w-4xl">
+						<Testimonial entry={entries[0]} />
+					</div>
+				</div>
+			</BlockWrapper>
+		);
+	}
+
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<div className="space-y-8">
 				{blok.heading && (
-					<h2 className="text-center text-4xl xl:text-5xl [&_strong]:font-bold">
-						<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.heading}</Markdown>
-					</h2>
+					<SectionHeading className="mb-0 md:mb-0">
+						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
+					</SectionHeading>
 				)}
 				<Carousel
 					setApi={setApi}

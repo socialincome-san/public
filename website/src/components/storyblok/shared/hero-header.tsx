@@ -1,0 +1,102 @@
+import { DonationForm } from '@/components/donation-wizard/donation-form';
+import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
+import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import NextImage from 'next/image';
+import type { ReactNode } from 'react';
+
+const HERO_HEADER_IMAGE_WIDTH = 1920;
+const HERO_HEADER_IMAGE_HEIGHT = 1080;
+
+type HeroHeaderStat = {
+	value?: number;
+	label: string;
+};
+
+export type HeroHeaderImage = Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'>;
+
+type Props = {
+	title: string;
+	heroImage?: HeroHeaderImage | null;
+	stats: HeroHeaderStat[];
+	titleIcon?: string;
+	titleIconAlt?: string;
+	preTitle?: ReactNode;
+	badges?: ReactNode;
+	showDonationForm?: boolean;
+};
+
+export const HeroHeader = ({
+	title,
+	heroImage,
+	stats,
+	titleIcon,
+	titleIconAlt,
+	preTitle,
+	badges,
+	showDonationForm = true,
+}: Props) => {
+	const heroImageSrc = heroImage?.filename
+		? formatStoryblokUrl(heroImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, heroImage.focus)
+		: null;
+	const heroImageAlt = heroImage?.alt ?? title;
+
+	return (
+		<section className="full-bleed-hero flex flex-col gap-6">
+			<div className="relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden rounded-b-3xl bg-black md:min-h-160 md:rounded-b-[56px]">
+				{heroImageSrc ? (
+					<NextImage src={heroImageSrc} alt={heroImageAlt} fill sizes="100vw" className="object-cover" priority />
+				) : (
+					<div className="bg-primary/20 absolute inset-0" />
+				)}
+
+				<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-black/15" />
+
+				<div className="max-w-content 2xl:w-site-width absolute inset-0 z-20 ml-[2vw] flex flex-row items-end justify-between gap-4 pr-24 pb-24 pl-8 text-white 2xl:mx-auto 2xl:pr-0">
+					<div className="flex max-w-2xl flex-col gap-4 text-white">
+						{preTitle ? <div className="flex flex-wrap gap-2">{preTitle}</div> : null}
+						<div className="flex items-center gap-4">
+							{titleIcon ? (
+								<NextImage
+									src={titleIcon}
+									alt={titleIconAlt ?? title}
+									width={44}
+									height={32}
+									className="h-8 w-11 rounded-sm"
+								/>
+							) : null}
+							<h1 className="text-4xl font-bold xl:text-6xl">{title}</h1>
+						</div>
+
+						{stats.length > 0 ? (
+							<div className="flex flex-wrap gap-2">
+								{stats.map((stat) => (
+									<span
+										key={stat.label}
+										className="inline-flex items-center justify-center rounded-full border border-white/50 bg-black/40 px-3 py-1 text-xs leading-none font-medium text-white"
+									>
+										{stat.value !== undefined ? `${stat.value} ` : ''}
+										{stat.label}
+									</span>
+								))}
+							</div>
+						) : null}
+
+						{badges ? <div className="flex flex-wrap gap-2">{badges}</div> : null}
+					</div>
+
+					{showDonationForm ? (
+						<div className="hidden shrink-0 lg:block">
+							<DonationForm />
+						</div>
+					) : null}
+				</div>
+			</div>
+
+			{showDonationForm ? (
+				<div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">
+					<DonationForm />
+				</div>
+			) : null}
+		</section>
+	);
+};

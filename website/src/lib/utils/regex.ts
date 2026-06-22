@@ -1,7 +1,7 @@
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const E164_OPTIONAL_PHONE_REGEX = /^$|^\+[1-9]\d{1,14}$/;
-export const CAMPAIGN_SLUG_REGEX = /^[a-z0-9]+(?:[_-][a-z0-9]+)*$/;
+export const SLUG_REGEX = /^[a-z0-9]+(?:[_-][a-z0-9]+)*$/;
 
 export const TRAILING_SLASHES_REGEX = /\/+$/;
 export const UNDERSCORE_REGEX = /_/g;
