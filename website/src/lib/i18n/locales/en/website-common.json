@@ -39,7 +39,7 @@
 		"transparency": "Transparency"
 	},
 	"cookie-consent-banner": {
-		"text": "We use <a href='/legal/privacy' class='underline'>cookies</a>.",
+		"text": "We use <a href='/legal' class='underline'>cookies</a>.",
 		"button-accept": "Accept",
 		"button-refuse": "Refuse"
 	},

@@ -3,7 +3,7 @@
 		"title": "Conditions de participation | Social Income"
 	},
 	"title": "Conditions de participation",
-	"comment": "Les présentes conditions de participation sont une traduction de l'anglais. En cas de divergence entre la présente traduction et les <a href=\"/legal/donations\">Terms and Conditions</a> en anglais, ces dernières prévalent.",
+	"comment": "Les présentes conditions de participation sont une traduction de l'anglais. En cas de divergence entre la présente traduction et les <a href=\"/legal\">Terms and Conditions</a> en anglais, ces dernières prévalent.",
 	"general": {
 		"title": "Généralités",
 		"section-1": "Ces conditions de participation pour les paiements de dons (ci-après \"conditions de participation\") régissent les contributions financières en faveur de Social Income, une organisation à but non lucratif basée à Zurich, Suisse (ci-après \"Social Income\").",
@@ -21,8 +21,8 @@
 	},
 	"data": {
 		"title": "Vos données personnelles et l'utilisation du site",
-		"section-1": "La transmission, la collecte et le traitement des données personnelles via le site sont soumis à notre <a href='/legal/privacy'>politique de confidentialité</a>.",
-		"section-2": "L'accès et l'utilisation du site sont également soumis aux <a href='/legal/site-use'>conditions d'utilisation</a>.",
+		"section-1": "La transmission, la collecte et le traitement des données personnelles via le site sont soumis à notre <a href='/legal'>politique de confidentialité</a>.",
+		"section-2": "L'accès et l'utilisation du site sont également soumis aux <a href='/legal'>conditions d'utilisation</a>.",
 		"section-3": "Nous vous recommandons de lire attentivement ces politiques mentionnées. Si vous avez des questions, n'hésitez pas à nous les poser. Vous pouvez nous contacter à <a href='mailto:legal@socialincome.org'>legal@socialincome.org</a>."
 	},
 	"liability": {

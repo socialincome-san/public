@@ -98,7 +98,7 @@
 			"country": "Paese",
 			"gender": "Genere",
 			"referral": "Come hai scoperto Social Income?",
-			"accept-terms-and-conditions": "Accetto i <a href='/terms-and-conditions/' target='_blank' class='underline'>Termini e Condizioni</a> and <a href='/privacy/' target='_blank' class='underline'>Privacy Policy</a>.",
+			"accept-terms-and-conditions": "Accetto i <a href='/legal/' target='_blank' class='underline'>Termini e Condizioni</a> and <a href='/legal/' target='_blank' class='underline'>Privacy Policy</a>.",
 			"referrals": {
 				"familyfriends": "Famiglia e Amici",
 				"socialmedia": "Social Media",

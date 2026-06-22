@@ -95,7 +95,7 @@
 			"country": "Pays",
 			"gender": "Genre",
 			"referral": "Comment as-tu entendu parler de nous?",
-			"accept-terms-and-conditions": "J'accepte <a href='/legal/donations/' target='_blank' class='underline'>les conditions de participation</a> et <a href='/legal/privacy/' target='_blank' class='underline'>la politique de protection des données</a>.",
+			"accept-terms-and-conditions": "J'accepte <a href='/legal/' target='_blank' class='underline'>les conditions de participation</a> et <a href='/legal/' target='_blank' class='underline'>la politique de protection des données</a>.",
 			"referrals": {
 				"familyfriends": "Famille ou amis",
 				"socialmedia": "Médias sociaux",

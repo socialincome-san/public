@@ -17,11 +17,11 @@
 						"links": [
 							{
 								"label": "Local Partners",
-								"url": "https://socialincome.org/partners"
+								"url": "https://socialincome.org/en/int/local-partners"
 							},
 							{
 								"label": "Local Staff",
-								"url": "https://socialincome.org/about-us#team"
+								"url": "https://socialincome.org/en/int/team"
 							}
 						]
 					},
@@ -31,11 +31,11 @@
 						"links": [
 							{
 								"label": "Local Partners",
-								"url": "https://socialincome.org/partners"
+								"url": "https://socialincome.org/en/int/local-partners"
 							},
 							{
 								"label": "Local Staff",
-								"url": "https://socialincome.org/about-us#team"
+								"url": "https://socialincome.org/en/int/team"
 							}
 						]
 					},
@@ -45,7 +45,7 @@
 						"links": [
 							{
 								"label": "Local Staff",
-								"url": "https://socialincome.org/about-us#team"
+								"url": "https://socialincome.org/en/int/team"
 							}
 						]
 					}
@@ -60,7 +60,7 @@
 						"links": [
 							{
 								"label": "Recipient Selection",
-								"url": "https://socialincome.org/transparency/recipient-selection"
+								"url": "https://socialincome.org/en/int/recipient-selection"
 							}
 						]
 					},
@@ -70,7 +70,7 @@
 						"links": [
 							{
 								"label": "Local Partners",
-								"url": "https://socialincome.org/partners"
+								"url": "https://socialincome.org/en/int/local-partners"
 							}
 						]
 					}
@@ -85,7 +85,7 @@
 						"links": [
 							{
 								"label": "Recipient Selection",
-								"url": "https://socialincome.org/transparency/recipient-selection"
+								"url": "https://socialincome.org/en/int/recipient-selection"
 							}
 						]
 					},
@@ -95,11 +95,11 @@
 						"links": [
 							{
 								"label": "Recipient Selection",
-								"url": "https://socialincome.org/transparency/recipient-selection"
+								"url": "https://socialincome.org/en/int/recipient-selection"
 							},
 							{
 								"label": "Local Partners",
-								"url": "https://socialincome.org/partners"
+								"url": "https://socialincome.org/en/int/local-partners"
 							}
 						]
 					},

@@ -4,7 +4,7 @@
 		"description": "Ici sont expliquées les règles avec lesquelles vous acceptez de vous conformer lorsque vous utilisez nos services."
 	},
 	"title": "Conditions d'utilisation",
-	"comment": "Les présentes conditions d'utilisation sont une traduction de l'anglais. En cas de divergence entre la présente traduction et les <a href=\"/legal/site-use\">Terms of Use</a> en anglais, ces dernières prévalent.",
+	"comment": "Les présentes conditions d'utilisation sont une traduction de l'anglais. En cas de divergence entre la présente traduction et les <a href=\"/legal\">Terms of Use</a> en anglais, ces dernières prévalent.",
 	"general": {
 		"title": "Généralités",
 		"section-1": "Le site socialincome.org (ci-après \"site\") est exploité par Social Income, une association à but non lucratif basée à Zurich, Suisse (ci-après \"Social Income\"). En accédant au site et en l'utilisant, vous déclarez avoir lu, compris et accepté les présentes conditions d'utilisation et toutes les autres informations légales disponibles sur ce site, qui régissent l'utilisation du site (ci-après dénommées collectivement \"conditions d'utilisation\").",
@@ -17,8 +17,8 @@
 	},
 	"data": {
 		"title": "Vos données personnelles et l'utilisation du site",
-		"section-1": "La transmission, la collecte et le traitement des données personnelles via le site sont soumis à notre <a href='/legal/privacy'>politique de confidentialité</a>.",
-		"section-2": "Si vous décidez de faire une contribution à Social Income, nous vous demanderons d'accepter les <a href='/legal/donations'>conditions de participation</a>."
+		"section-1": "La transmission, la collecte et le traitement des données personnelles via le site sont soumis à notre <a href='/legal'>politique de confidentialité</a>.",
+		"section-2": "Si vous décidez de faire une contribution à Social Income, nous vous demanderons d'accepter les <a href='/legal'>conditions de participation</a>."
 	},
 	"liability": {
 		"title": "Exclusion de garantie",
