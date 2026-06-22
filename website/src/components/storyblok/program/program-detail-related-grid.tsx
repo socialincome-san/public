@@ -27,11 +27,10 @@ export const ProgramDetailRelatedGrid = async ({ currentProgramFullSlug, lang, r
 	}
 
 	const relatedPrograms = [...otherPrograms]
-		.sort(
-			(programA, programB) =>
-				(programB.first_published_at ?? programB.published_at ?? programB.created_at).localeCompare(
-					programA.first_published_at ?? programA.published_at ?? programA.created_at,
-				),
+		.sort((programA, programB) =>
+			(programB.first_published_at ?? programB.published_at ?? programB.created_at).localeCompare(
+				programA.first_published_at ?? programA.published_at ?? programA.created_at,
+			),
 		)
 		.slice(0, RELATED_PROGRAMS_COUNT);
 
