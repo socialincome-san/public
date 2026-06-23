@@ -41,7 +41,7 @@ export const StepResultBox = ({ id, value, filename, onClear }: Props) => {
 		<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
 			<div className="mb-1 flex items-center justify-end gap-1">
 				<Button size="icon" variant="ghost" onClick={handleCopy} title="Copy to clipboard">
-					{copied ? <CheckIcon className="h-3 w-3 text-green-600" /> : <CopyIcon className="h-3 w-3" />}
+					{copied ? <CheckIcon className="text-confirm h-3 w-3" /> : <CopyIcon className="h-3 w-3" />}
 				</Button>
 
 				<Button size="icon" variant="ghost" onClick={handleDownload} title="Download file">

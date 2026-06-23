@@ -36,7 +36,7 @@ export const IdCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
 				onClick={onCopy}
 				aria-label={copied ? 'ID copied' : 'Copy ID to clipboard'}
 			>
-				{copied ? <Check className="h-3.5 w-3.5 text-green-600" /> : <Copy className="h-3.5 w-3.5" />}
+				{copied ? <Check className="text-confirm h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
 			</Button>
 		</div>
 	);

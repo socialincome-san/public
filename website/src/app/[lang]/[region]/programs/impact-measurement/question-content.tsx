@@ -49,8 +49,8 @@ const renderOptionsProgressBars = (
 				return (
 					<div key={`${keyPrefix}-${option.value}`} className="space-y-1">
 						<div className="flex items-baseline justify-between gap-3">
-							<p className="text-base font-medium text-cyan-950">{optionLabel}</p>
-							<p className="text-sm font-medium text-cyan-900">{option.percentage.toFixed(1)}%</p>
+							<p className="text-foreground text-base font-medium">{optionLabel}</p>
+							<p className="text-foreground text-sm font-medium">{option.percentage.toFixed(1)}%</p>
 						</div>
 						<Progress value={option.percentage} />
 					</div>
@@ -75,11 +75,11 @@ export const ImpactMeasurementQuestionContent = async ({
 	if (question.options.length === 0) {
 		return (
 			<div className="space-y-3">
-				<div className="flex items-center gap-2 text-sm font-medium text-cyan-950">
+				<div className="text-foreground flex items-center gap-2 text-sm font-medium">
 					<span>{translate('survey.impactMeasurement.textResponseInsights')}</span>
 					<ImpactMeasurementPrivacyTooltip message={translate('survey.impactMeasurement.textResponsePrivacyTooltip')} />
 				</div>
-				<p className="text-sm text-cyan-950">
+				<p className="text-foreground text-sm">
 					{question.answeredCount === 0
 						? translate('survey.impactMeasurement.noTextResponsesYet')
 						: `${question.answeredCount} ${translate('survey.impactMeasurement.textResponsesCollected')}`}

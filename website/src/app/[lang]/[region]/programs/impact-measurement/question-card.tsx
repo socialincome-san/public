@@ -24,12 +24,12 @@ export const ImpactMeasurementQuestionCard = async ({
 			<Card variant="noPadding" className="rounded-none border-b border-slate-200 bg-white p-0 shadow-none">
 				<div className="grid gap-6 px-4 pt-6 pb-8 sm:px-6 sm:pt-8 sm:pb-12 lg:grid-cols-2">
 					<div className="space-y-5">
-						<p className="text-sm text-cyan-950">
+						<p className="text-foreground text-sm">
 							{translator.t('survey.impactMeasurement.questionLabel').replace('{{number}}', String(index + 1))} (
 							{translator.t(questionTypeLabelKey)})
 						</p>
-						<h2 className="text-2xl leading-8 font-bold text-cyan-950">{translator.t(question.translationKey)}</h2>
-						<p className="text-sm text-cyan-950">
+						<h2 className="text-foreground text-2xl leading-8 font-bold">{translator.t(question.translationKey)}</h2>
+						<p className="text-foreground text-sm">
 							{question.answeredCount} {translator.t('survey.impactMeasurement.responsesIn')}{' '}
 							<span className="underline decoration-dotted">
 								{question.surveyCount} {translator.t('survey.impactMeasurement.surveys')}

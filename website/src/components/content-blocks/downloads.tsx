@@ -58,7 +58,7 @@ export const DownloadsBlock = ({ blok }: Props) => {
 									<div className="col-span-2 md:col-span-1">
 										<p className="font-medium">{content.title}</p>
 									</div>
-									<div className="text-gray-600 md:text-gray-900">
+									<div className="text-muted-foreground md:text-foreground">
 										<p>{content.language ?? '-'}</p>
 									</div>
 									<div className="justify-self-end">

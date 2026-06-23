@@ -40,10 +40,10 @@ export const ImpactMeasurementView = async ({
 		>
 			{variant === 'standalone' ? (
 				<div className="space-y-5">
-					<h1 className="text-4xl leading-tight font-bold text-cyan-900 sm:text-5xl">
+					<h1 className="text-foreground text-4xl leading-tight font-bold sm:text-5xl">
 						{translator.t('survey.impactMeasurement.title')}
 					</h1>
-					<p className="text-base leading-6 text-cyan-950 sm:text-lg sm:leading-7">
+					<p className="text-foreground text-base leading-6 sm:text-lg sm:leading-7">
 						{translator.t('survey.impactMeasurement.description')}
 					</p>
 					<div className="flex w-full justify-end">

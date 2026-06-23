@@ -41,7 +41,7 @@ export const PersonProfile = ({
 		{articles.length > 0 && (
 			<section className="space-y-8">
 				<Separator />
-				<SectionHeading align="left" size="medium" className="mb-4 text-cyan-900 md:mb-6">
+				<SectionHeading align="left" size="medium" className="text-foreground mb-4 md:mb-6">
 					{articlesHeading}
 				</SectionHeading>
 				<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

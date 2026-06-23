@@ -47,7 +47,7 @@ export const ImageTextBlock = ({ blok }: Props) => {
 		<BlockWrapper
 			{...storyblokEditable(blok as SbBlokData)}
 			className={cn(
-				'flex flex-col gap-14 text-lg text-black md:flex-row md:items-center',
+				'text-foreground flex flex-col gap-14 text-lg md:flex-row md:items-center',
 				blok.layout === 'imageRight' && 'md:flex-row-reverse',
 			)}
 		>

@@ -158,7 +158,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 																onClick={() => handleOpenChange(false)}
 															>
 																{child.label}
-																<span className="rounded-full border border-slate-300 px-2 py-0.5 text-[10px] leading-none font-semibold text-slate-500">
+																<span className="text-muted-foreground rounded-full border border-slate-300 px-2 py-0.5 text-[10px] leading-none font-semibold">
 																	{FALLBACK_BADGE_COUNT}
 																</span>
 															</NextLink>

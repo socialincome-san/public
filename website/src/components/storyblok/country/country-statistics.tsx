@@ -214,7 +214,7 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 									</div>
 								</div>
 							</div>
-							<div className="absolute top-20 left-[calc(50%+160px)] z-20 flex size-10 -translate-x-1/2 items-center justify-center rounded-full bg-slate-100 text-xs font-normal text-slate-600 uppercase">
+							<div className="text-muted-foreground absolute top-20 left-[calc(50%+160px)] z-20 flex size-10 -translate-x-1/2 items-center justify-center rounded-full bg-slate-100 text-xs font-normal uppercase">
 								{translator.t('countries-page.statistics.vs')}
 							</div>
 						</div>

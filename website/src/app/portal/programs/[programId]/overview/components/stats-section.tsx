@@ -52,16 +52,16 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 
 	const getCreditIcon = (creditsInIntervals: number, totalExpected: number) => {
 		if (creditsInIntervals < 1) {
-			return { Icon: TriangleAlert, color: 'text-red-600' };
+			return { Icon: TriangleAlert, color: 'text-destructive' };
 		}
 		if (creditsInIntervals >= totalExpected) {
-			return { Icon: CheckCircle, color: 'text-green-600' };
+			return { Icon: CheckCircle, color: 'text-confirm' };
 		}
 		if (creditsInIntervals > 3) {
-			return { Icon: CheckCircle, color: 'text-green-600' };
+			return { Icon: CheckCircle, color: 'text-confirm' };
 		}
 		if (creditsInIntervals >= 1) {
-			return { Icon: AlertCircle, color: 'text-amber-600' };
+			return { Icon: AlertCircle, color: 'text-warning' };
 		}
 
 		return { Icon: AlertCircle, color: 'text-muted-foreground' };

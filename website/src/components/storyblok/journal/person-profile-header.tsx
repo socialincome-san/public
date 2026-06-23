@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const socialLinkClassName =
-	'inline-flex items-center gap-1.5 text-sm font-medium text-cyan-900 underline-offset-4 hover:underline';
+	'text-foreground inline-flex items-center gap-1.5 text-sm font-medium underline-offset-4 hover:underline';
 
 type Props = {
 	person: ISbStoryData<Person>;
@@ -41,13 +41,13 @@ export const PersonProfileHeader = ({ person, name, portraitSrc }: Props) => {
 						as="h1"
 						align="left"
 						bold
-						className="mb-0 text-4xl leading-tight text-cyan-900 sm:text-5xl md:mb-0"
+						className="text-foreground mb-0 text-4xl leading-tight sm:text-5xl md:mb-0"
 					>
 						{name}
 					</SectionHeading>
-					{role && <p className="text-base text-cyan-800 capitalize sm:text-lg">{role}</p>}
+					{role && <p className="text-muted-foreground text-base capitalize sm:text-lg">{role}</p>}
 				</div>
-				{bioText && <p className="text-base leading-7 text-cyan-950 sm:text-lg sm:leading-8">{bioText}</p>}
+				{bioText && <p className="text-foreground text-base leading-7 sm:text-lg sm:leading-8">{bioText}</p>}
 				{(linkedinName ?? githubName) && (
 					<div className="flex flex-wrap justify-center gap-4 sm:justify-start">
 						{linkedinName && (

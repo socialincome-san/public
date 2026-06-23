@@ -84,7 +84,7 @@ export const ModalCardsBlock = ({ blok, lang, region }: Props) => {
 							<DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
 								<DialogTitle>{heading}</DialogTitle>
 								{modalContent && (
-									<div className="text-base text-black">
+									<div className="text-foreground text-base">
 										<RichTextRenderer richTextDocument={modalContent} />
 									</div>
 								)}

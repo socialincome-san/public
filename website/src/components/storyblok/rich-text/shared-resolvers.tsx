@@ -67,9 +67,9 @@ const headingStyles: Record<number, string> = {
 
 export const storyblokRichTextBasicNodeResolvers = {
 	[NODE_HEADING]: (children: ReactNode, { level }: { level: number }) =>
-		createElement(`h${level}`, { className: cn(headingStyles[level], 'my-4') }, children),
+		createElement(`h${level}`, { className: cn(headingStyles[level], 'text-foreground my-4') }, children),
 	[NODE_LI]: (children: ReactNode) => <li className="[&::marker]:text-foreground my-1 *:m-0 *:p-0">{children}</li>,
-	[NODE_PARAGRAPH]: (children: ReactNode) => <p className="my-4">{children}</p>,
+	[NODE_PARAGRAPH]: (children: ReactNode) => <p className="text-foreground my-4">{children}</p>,
 };
 
 const storyblokRichTextTableNodeResolvers = {

@@ -29,10 +29,10 @@ export const ProgramCostsHeader = ({
 	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 
 	return (
-		<div className="flex items-start justify-between text-cyan-900">
+		<div className="text-foreground flex items-start justify-between">
 			<div className="space-y-1">
 				<div className="flex items-center gap-2">
-					<p className="text-sm font-medium text-black">{t('step3.total_costs.title')}</p>
+					<p className="text-sm font-medium">{t('step3.total_costs.title')}</p>
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<button
@@ -84,9 +84,9 @@ export const ProgramCostsHeader = ({
 					</SelectContent>
 				</Select>
 				{isCalculatingBudget ? (
-					<span className="text-xs text-cyan-800">{t('step3.total_costs.updating')}</span>
+					<span className="text-muted-foreground text-xs">{t('step3.total_costs.updating')}</span>
 				) : (
-					exchangeRateText && <span className="text-xs text-cyan-800">{exchangeRateText}</span>
+					exchangeRateText && <span className="text-muted-foreground text-xs">{exchangeRateText}</span>
 				)}
 			</div>
 		</div>

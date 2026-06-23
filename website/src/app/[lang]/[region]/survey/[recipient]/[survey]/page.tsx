@@ -40,7 +40,7 @@ export default function Page({ params }: SurveyPageProps) {
 
 	if (hasError) {
 		return (
-			<div className="mx-auto max-w-md rounded-2xl bg-red-50 px-5 py-4 text-sm text-red-900">
+			<div className="text-destructive mx-auto max-w-md rounded-2xl bg-red-50 px-5 py-4 text-sm">
 				Error logging in. Please check your credentials.
 			</div>
 		);
