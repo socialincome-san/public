@@ -1,7 +1,7 @@
+import { cn } from '@/lib/utils/cn';
 import { ChevronRight, ExternalLink } from 'lucide-react';
 import type { LinkProps } from 'next/link';
 import Link from 'next/link';
-import { cn } from '@/lib/utils/cn';
 
 const pillClassName = cn(
 	'text-foreground bg-muted inline-flex items-center gap-1.5 rounded-full py-1.5 pr-2 pl-3 text-xs font-bold',

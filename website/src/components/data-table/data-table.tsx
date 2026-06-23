@@ -223,7 +223,9 @@ export default function DataTable<Row>({
 				<div className="flex items-center gap-2">
 					<h2 className="text-3xl">
 						{title}{' '}
-						<span className="text-muted-foreground text-lg">({activeQuery ? activeQuery.totalRows : displayedData.length})</span>
+						<span className="text-muted-foreground text-lg">
+							({activeQuery ? activeQuery.totalRows : displayedData.length})
+						</span>
 					</h2>
 					{titleInfoTooltip ? (
 						<Tooltip>
