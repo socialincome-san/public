@@ -19,6 +19,7 @@ import {
 	getJournalArticleStoryPath,
 	getJournalTagStoryPath,
 	getPersonStoryPath,
+	getProgramStoryPath,
 } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
@@ -82,6 +83,7 @@ export class StoryblokService extends BaseService {
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
 	private static readonly standardStoryRelationsToResolve = [
 		'faqSelection.questions',
+		'program.faq',
 		'downloads.documents',
 		'partnershipsCarousel.partnerships',
 		'Country.partners',
@@ -557,30 +559,27 @@ export class StoryblokService extends BaseService {
 	}
 
 	async getProgramBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Program>>> {
-		const loadProgram = async (language: string) => {
-			const programs = await this.getPrograms(language);
-			if (!programs.success) {
-				return undefined;
-			}
-
-			return programs.data.find((program) => {
-				const fullSlugTail = program.full_slug?.split('/').at(-1);
-
-				return program.slug === slug || fullSlugTail === slug;
-			});
-		};
+		const storyPath = getProgramStoryPath(slug);
 
 		try {
-			let story = await loadProgram(lang);
-			if (!story && lang !== defaultLanguage) {
-				story = await loadProgram(defaultLanguage);
-			}
+			const data = await this.withOptionalLanguageFallback(
+				async (language: string) => {
+					const response = await getStoryblokApi().get(`cdn/stories/${storyPath}`, {
+						...(await this.getStoryParams(language)),
+						resolve_relations: StoryblokService.standardStoryRelationsToResolve,
+					});
 
-			if (!story) {
+					return (response.data as { story: ISbStoryData<Program> }).story;
+				},
+				lang,
+				storyPath,
+			);
+
+			if (!data) {
 				return this.resultFail(`Failed to fetch program: not found for slug '${slug}'`);
 			}
 
-			return this.resultOk(story);
+			return this.resultOk(data);
 		} catch (error) {
 			this.logger.error(error);
 

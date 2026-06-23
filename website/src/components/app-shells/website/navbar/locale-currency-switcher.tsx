@@ -10,6 +10,7 @@ import { useTranslator } from '@/lib/hooks/useTranslator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import {
 	allWebsiteLanguages,
+	isWebsiteCurrency,
 	mainWebsiteLanguages,
 	websiteCurrencies,
 	websiteRegions,
@@ -29,9 +30,6 @@ const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
 	allWebsiteLanguages.some((language) => language === value);
 
 const isWebsiteRegion = (value: string): value is WebsiteRegion => websiteRegions.some((region) => region === value);
-
-const isWebsiteCurrency = (value: string): value is WebsiteCurrency =>
-	websiteCurrencies.some((currency) => currency === value);
 
 const getDefaultCurrency = (region: WebsiteRegion): WebsiteCurrency => (region === 'ch' ? 'CHF' : 'USD');
 
