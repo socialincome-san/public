@@ -17,7 +17,6 @@ npm workspaces monorepo with Node 22.
 
 - `website/` - Main Next.js 16 app (public site, portal, dashboard, API)
 - `recipients_app/` - Flutter mobile app
-- `recipients_selection/` - Cryptographic recipient draw
 
 ## Architecture Patterns
 

@@ -19,7 +19,6 @@ Welcome to the **Social Income repository**.
 ```
 /
 ├─ recipients_app/        → Mobile app for recipients
-├─ recipients_selection/  → Verifiable draw process for selecting recipients
 ├─ seed/                  → Firebase emulator seed data
 └─ website/               → Next.js (public site, portal, dashboard, infra, backend services)
 ```
@@ -35,22 +34,6 @@ Mobile app where recipients can:
 - Complete surveys
 
 See `/recipients_app/README.md` for platform‑specific setup.
-
----
-
-# 🎲 recipients_selection
-
-Implements the **cryptographically verifiable and bias‑proof recipient
-draw**:
-
-- Raw recipient lists → salted → hashed → committed to `/lists`
-- GitHub Action triggers `draw.sh`
-- Draw randomness comes from **drand** → https://drand.love
-- Results written to `/draws`
-- Draws are reproducible using **dchoose** →
-  https://github.com/drand/dchoose
-- Full transparency explanation:
-  https://socialincome.org/transparency/recipient-selection
 
 ---
 
