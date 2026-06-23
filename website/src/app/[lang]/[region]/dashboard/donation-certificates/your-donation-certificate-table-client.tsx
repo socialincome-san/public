@@ -37,13 +37,13 @@ export const YourDonationCertificateTable = ({
 				rows={rows}
 				error={error}
 				query={query}
-				toolbarPrimaryAction={
+				actionMenuItems={[
 					{
 						label: translator?.t('donation-certificates.generate-certificate') ?? '',
 						icon: <FileTextIcon />,
 						onSelect: () => setOpen(true),
-					}
-				}
+					},
+				]}
 				lang={lang}
 			/>
 		</>

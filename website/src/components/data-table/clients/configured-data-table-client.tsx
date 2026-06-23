@@ -6,7 +6,6 @@ import { TableQueryState } from '@/components/data-table/query-state';
 import { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { ActionMenuItem } from '../elements/action-menu';
-import { ToolbarPrimaryAction } from '../elements/data-table-toolbar';
 
 type ConfiguredDataTableClientProps<Row> = {
 	config: DataTableConfig<Row>;
@@ -16,7 +15,6 @@ type ConfiguredDataTableClientProps<Row> = {
 	query?: TableQueryState & { totalRows: number };
 	toolbarFilters?: TableFilterConfig[];
 	actionMenuItems?: ActionMenuItem[];
-	toolbarPrimaryAction?: ToolbarPrimaryAction;
 	onRowClick?: (row: Row) => void;
 	hideProgramName?: boolean;
 	hideLocalPartner?: boolean;
@@ -33,7 +31,6 @@ export const ConfiguredDataTableClient = <Row,>({
 	query,
 	toolbarFilters = [],
 	actionMenuItems,
-	toolbarPrimaryAction,
 	onRowClick,
 	hideProgramName = false,
 	hideLocalPartner = false,
@@ -63,7 +60,6 @@ export const ConfiguredDataTableClient = <Row,>({
 			lang={lang}
 			hideProgramName={hideProgramName}
 			hideLocalPartner={hideLocalPartner}
-			toolbarPrimaryAction={toolbarPrimaryAction}
 			actionMenuItems={actionMenuItems}
 			onRowClick={onRowClick}
 			initialSorting={config.initialSorting}

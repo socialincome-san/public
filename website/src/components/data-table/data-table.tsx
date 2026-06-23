@@ -5,7 +5,6 @@ import { BaseTable } from '@/components/data-table/elements/base-table';
 import { DataTableEmptyState } from '@/components/data-table/elements/data-table-empty-state';
 import {
 	DataTableToolbar,
-	ToolbarPrimaryAction,
 	type ToolbarFilter,
 	type ToolbarSortOption,
 } from '@/components/data-table/elements/data-table-toolbar';
@@ -32,7 +31,6 @@ type DataTableProps<Row> = {
 	error?: string | null;
 	emptyMessage: string;
 	actionMenuItems?: ActionMenuItem[];
-	toolbarPrimaryAction?: ToolbarPrimaryAction;
 	data: Row[];
 	makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, translator?: Translator) => ColumnDef<Row>[];
 	hideProgramName?: boolean;
@@ -73,7 +71,6 @@ export default function DataTable<Row>({
 	titleInfoTooltip,
 	error,
 	emptyMessage,
-	toolbarPrimaryAction,
 	actionMenuItems,
 	data,
 	makeColumns,
@@ -258,7 +255,6 @@ export default function DataTable<Row>({
 					columns={toolbarColumns}
 					onClearFilters={clearAllToolbarFilters}
 					actionMenuItems={actionMenuItems}
-					primaryAction={toolbarPrimaryAction}
 				/>
 			</div>
 
