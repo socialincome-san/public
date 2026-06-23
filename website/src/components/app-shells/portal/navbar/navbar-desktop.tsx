@@ -2,20 +2,10 @@
 
 import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-navbar-links';
 import { ProgramDropdown } from '@/components/app-shells/portal/navbar/program-dropdown';
-import { useLogout } from '@/components/app-shells/use-logout';
-import { Avatar, AvatarFallback } from '@/components/avatar';
-import { Button } from '@/components/button';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from '@/components/dropdown-menu';
+import { UserMenu } from '@/components/app-shells/portal/navbar/user-menu';
 import { SILogo } from '@/components/svg/si-logo';
 import type { Session } from '@/lib/firebase/current-account';
 import type { UserSession } from '@/lib/services/user/user.types';
-import { ChevronsUpDown, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
@@ -27,8 +17,7 @@ type NavbarDesktopProps = {
 export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 	const pathname = usePathname();
 	const user = sessions.find((s): s is UserSession => s.type === 'user');
-	const { mainNavLinks, userMenuNavLinks, isActiveLink } = useNavbarLinks(sessions);
-	const { logout } = useLogout();
+	const { mainNavLinks, isActiveLink } = useNavbarLinks(sessions);
 
 	if (!user) {
 		return null;
@@ -69,50 +58,7 @@ export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 				</nav>
 			</div>
 
-			{/* USER MENU */}
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button variant="outline" className="flex h-12 items-center gap-2 rounded-full px-3">
-						<Avatar>
-							<AvatarFallback className="bg-primary text-background">
-								{user.firstName?.[0]}
-								{user.lastName?.[0]}
-							</AvatarFallback>
-						</Avatar>
-						<div className="text-left">
-							<p className="text-sm font-medium">
-								{user.firstName} {user.lastName}
-							</p>
-							<p className="text-muted-foreground text-xs">{user.activeOrganization?.name ?? 'No active organization'}</p>
-						</div>
-						<ChevronsUpDown className="h-4 w-4 opacity-50" />
-					</Button>
-				</DropdownMenuTrigger>
-
-				<DropdownMenuContent align="end" className="w-64">
-					{userMenuNavLinks.map(({ href, label, icon: Icon }) => (
-						<DropdownMenuItem asChild key={href}>
-							<Link href={href} className="flex items-center gap-2">
-								{Icon && <Icon className="h-4 w-4" />}
-								<span>{label}</span>
-							</Link>
-						</DropdownMenuItem>
-					))}
-
-					<DropdownMenuSeparator />
-
-					<DropdownMenuItem
-						onSelect={(e: Event) => {
-							e.preventDefault();
-							void logout();
-						}}
-						className="text-destructive focus:text-destructive"
-					>
-						<LogOut className="mr-2 h-4 w-4" />
-						<span>Sign out</span>
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
+			<UserMenu sessions={sessions} triggerClassName="h-12" />
 		</nav>
 	);
 };
