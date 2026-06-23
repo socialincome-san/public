@@ -34,7 +34,7 @@ export const LandingPageCard = ({ href, title, heroImageFilename, heroImageAlt, 
 					<div className="text-primary-foreground absolute inset-x-5 bottom-5 flex flex-col gap-3">
 						<div className="flex items-center gap-3">
 							{titleVisual}
-							<p className="text-lg font-semibold">{title}</p>
+							<p className="text-lg font-bold">{title}</p>
 						</div>
 						<div className="text-primary-foreground/90 flex flex-wrap gap-x-6 gap-y-1 text-sm">
 							{stats.map((stat) => (

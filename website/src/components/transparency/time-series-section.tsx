@@ -40,7 +40,7 @@ export const TimeSeriesSection = ({ timeRanges }: TimeSeriesSectionProps) => {
 
 	return (
 		<section>
-			<h2 className="mb-6 text-2xl font-semibold">Monthly Contributions</h2>
+			<h2 className="mb-6 text-2xl font-bold">Monthly Contributions</h2>
 			<Card>
 				<div className="flex h-64 items-end gap-2">
 					{convertedRanges.map((range, index) => {

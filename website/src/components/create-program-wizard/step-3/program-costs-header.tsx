@@ -51,7 +51,7 @@ export const ProgramCostsHeader = ({
 
 				<div className="flex items-end gap-4" aria-busy={isCalculatingBudget}>
 					<div className="flex items-baseline gap-2">
-						<span className="text-sm font-semibold">{currency}</span>
+						<span className="text-sm font-bold">{currency}</span>
 						<span
 							data-testid={`total-budget-${totalBudget}`}
 							className={cn('text-6xl', isCalculatingBudget && 'opacity-60')}

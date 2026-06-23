@@ -51,7 +51,7 @@ export const IssuesList = ({
 
 	return (
 		<section>
-			<h2 className="mb-6 text-2xl font-semibold">{title}</h2>
+			<h2 className="mb-6 text-2xl font-bold">{title}</h2>
 
 			{issues.length > 0 ? (
 				<div className="mb-6 max-w-44">

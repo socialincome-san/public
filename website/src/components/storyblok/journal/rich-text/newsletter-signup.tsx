@@ -49,7 +49,7 @@ export const NewsletterSignup = ({ lang, labels }: Props) => {
 
 	return (
 		<div className="bg-card border-border my-10 rounded-2xl border p-6 md:p-8">
-			<h3 className="text-foreground mb-6 text-center text-2xl font-semibold">{labels.title}</h3>
+			<h3 className="text-foreground mb-6 text-center text-2xl font-bold">{labels.title}</h3>
 			<Form {...form}>
 				<form className="mx-auto flex w-full max-w-md flex-col gap-3 sm:flex-row" onSubmit={form.handleSubmit(onSubmit)}>
 					<FormField

@@ -22,7 +22,7 @@ const formatNumber = (value: number, lang: WebsiteLanguage): string => {
 export const CountriesSection = ({ countries, lang }: CountriesSectionProps) => {
 	return (
 		<section>
-			<h2 className="mb-6 text-2xl font-semibold">Top Contributing Countries</h2>
+			<h2 className="mb-6 text-2xl font-bold">Top Contributing Countries</h2>
 			<Card>
 				<div className="space-y-6">
 					{countries.map((country) => {
@@ -36,7 +36,7 @@ export const CountriesSection = ({ countries, lang }: CountriesSectionProps) => 
 										<span className="font-medium">{country.country}</span>
 									</div>
 									<div className="text-right">
-										<span className="font-semibold">{formatChf(totalConverted)}</span>
+										<span className="font-bold">{formatChf(totalConverted)}</span>
 										<span className="text-muted-foreground ml-2 text-sm">
 											({formatNumber(country.contributorCount, lang)} contributors)
 										</span>

@@ -14,7 +14,7 @@ export const SuccessBanner = ({ title, description, action }: Props) => {
 				<CheckCircle className="text-confirm mt-1 h-5 w-5" />
 
 				<div>
-					<p className="text-confirm font-semibold">{title}</p>
+					<p className="text-confirm font-bold">{title}</p>
 
 					{description && <p className="text-confirm/80 text-sm">{description}</p>}
 				</div>

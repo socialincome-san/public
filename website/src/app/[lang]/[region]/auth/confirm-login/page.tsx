@@ -26,7 +26,7 @@ export default function ConfirmLoginPage() {
 
 	return (
 		<div className="flex min-h-[40vh] flex-1 flex-col items-center justify-center gap-6 px-4 text-center">
-			<h1 className="text-xl font-semibold">{translator?.t('confirm-login.title')}</h1>
+			<h1 className="text-xl font-bold">{translator?.t('confirm-login.title')}</h1>
 			<p className="text-muted-foreground max-w-sm">{translator?.t('confirm-login.body')}</p>
 			<Button data-testid="confirm-login-button" onClick={continueToFinish}>
 				{translator?.t('confirm-login.cta')}

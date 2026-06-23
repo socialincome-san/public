@@ -8,7 +8,7 @@ export const QuotedText = ({ text, author, authorTitle }: Props) => {
 			<blockquote className="text-foreground text-lg leading-relaxed font-medium">“{text}”</blockquote>
 			{author ? (
 				<figcaption className="text-muted-foreground mt-4 text-sm">
-					<span className="font-semibold">{author}</span>
+					<span className="font-bold">{author}</span>
 					{authorTitle ? <span>{` · ${authorTitle}`}</span> : null}
 				</figcaption>
 			) : null}

@@ -158,7 +158,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 																onClick={() => handleOpenChange(false)}
 															>
 																{child.label}
-																<span className="text-muted-foreground border-input rounded-full border px-2 py-0.5 text-[10px] leading-none font-semibold">
+																<span className="text-muted-foreground border-input rounded-full border px-2 py-0.5 text-[10px] leading-none font-bold">
 																	{FALLBACK_BADGE_COUNT}
 																</span>
 															</NextLink>
@@ -168,7 +168,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 												{group.overviewLink && group.overviewLabel ? (
 													<NextLink
 														href={resolveStoryblokLink(group.overviewLink, lang, region)}
-														className="text-muted-foreground hover:text-foreground group mt-4 inline-flex items-center gap-1.5 text-sm font-semibold transition-colors"
+														className="text-muted-foreground hover:text-foreground group mt-4 inline-flex items-center gap-1.5 text-sm font-bold transition-colors"
 														onClick={() => handleOpenChange(false)}
 													>
 														<span>{group.overviewLabel}</span>

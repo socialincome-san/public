@@ -49,13 +49,13 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 
 		return (
 			<div className="space-y-2">
-				<p className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">{label}</p>
+				<p className="text-muted-foreground text-xs font-bold tracking-wide uppercase">{label}</p>
 				<div className="space-y-2">
 					{topBreakdownItems.map((item) => (
 						<div key={`${label}-${item.value}`} className="grid grid-cols-[minmax(120px,1fr)_100px_auto] items-center gap-3">
 							<p className="text-foreground truncate text-sm">{formatter(item.value)}</p>
 							<Progress value={item.percentage} className="bg-border h-1.5" />
-							<p className="text-foreground text-xs font-semibold tabular-nums">{item.count}</p>
+							<p className="text-foreground text-xs font-bold tabular-nums">{item.count}</p>
 						</div>
 					))}
 				</div>
@@ -70,7 +70,7 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 				className="hover:bg-muted/50 flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 transition-colors marker:hidden [&::-webkit-details-marker]:hidden"
 			>
 				<div className="text-foreground flex min-w-0 flex-wrap items-center gap-2 text-sm leading-5 font-medium">
-					<span className="text-3xl leading-none font-semibold">
+					<span className="text-3xl leading-none font-bold">
 						{formatNumberLocale(details.totalCompletedSurveys, 'de-CH')}
 					</span>
 					<span>{translator.t('survey.impactMeasurement.surveyResponsesFrom')}</span>
@@ -84,10 +84,10 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 			<div className="border-border space-y-5 border-t px-5 pt-4 pb-5">
 				<p className="text-muted-foreground text-sm font-medium">{lastResponseLabel}</p>
 				<div className="space-y-1">
-					<p className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+					<p className="text-muted-foreground text-xs font-bold tracking-wide uppercase">
 						{translator.t('survey.impactMeasurement.timeFrame')}
 					</p>
-					<p className="text-foreground text-base font-semibold">{timeFrameLabel}</p>
+					<p className="text-foreground text-base font-bold">{timeFrameLabel}</p>
 					<p className="text-muted-foreground text-sm">{timeFrameDaysLabel}</p>
 				</div>
 				<div className="grid gap-5 md:grid-cols-3">

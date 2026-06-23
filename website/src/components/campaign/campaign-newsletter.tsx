@@ -61,7 +61,7 @@ export const CampaignNewsletter = ({ lang, translations }: Props) => {
 						<div className="bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-lg">
 							<Mail className="size-4" strokeWidth={2} aria-hidden />
 						</div>
-						<p className="text-primary text-left text-base leading-snug font-semibold">{translations.title}</p>
+						<p className="text-primary text-left text-base leading-snug font-bold">{translations.title}</p>
 					</div>
 
 					<Form {...form}>

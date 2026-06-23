@@ -62,7 +62,7 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid' }: 
 					<h3 className="text-foreground text-2xl md:text-3xl">{title}</h3>
 					<div className="flex items-center gap-2">
 						<AuthorAvatar author={author} size="sm" />
-						<span className="text-sm font-semibold">{getPersonDisplayName(author)}</span>
+						<span className="text-sm font-bold">{getPersonDisplayName(author)}</span>
 					</div>
 				</div>
 			</Link>
@@ -82,7 +82,7 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid' }: 
 					<h3 className="text-foreground text-xl md:text-2xl lg:text-3xl">{title}</h3>
 					<div className="flex items-center gap-2">
 						<AuthorAvatar author={author} size="sm" />
-						<span className="text-sm font-semibold">{getPersonDisplayName(author)}</span>
+						<span className="text-sm font-bold">{getPersonDisplayName(author)}</span>
 					</div>
 				</div>
 				{imageSrc && (
@@ -121,10 +121,10 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid' }: 
 						{formatStoryblokDate(article.first_published_at, lang)}
 					</time>
 				</div>
-				<h3 className="text-foreground line-clamp-3 text-xl font-semibold md:text-2xl">{title}</h3>
+				<h3 className="text-foreground line-clamp-3 text-xl font-bold md:text-2xl">{title}</h3>
 				<div className="mt-auto flex items-center gap-2">
 					<AuthorAvatar author={author} size="sm" />
-					<span className="text-sm font-semibold">{getPersonDisplayName(author)}</span>
+					<span className="text-sm font-bold">{getPersonDisplayName(author)}</span>
 				</div>
 				{content.leadText && (
 					<p className="text-muted-foreground line-clamp-4 text-sm leading-relaxed">{content.leadText}</p>

@@ -61,7 +61,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 				{!session && (
 					<OpenDonationWizardButton
 						label={translator.t('donation-form.donate-now')}
-						className="rounded-full px-5 text-sm font-semibold lg:h-11"
+						className="rounded-full px-5 text-sm font-bold lg:h-11"
 					/>
 				)}
 				<MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />

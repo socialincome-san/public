@@ -25,7 +25,7 @@ export const CampaignHero = ({ campaign, translator, lang }: Props) => {
 					<p className="text-foreground text-lg">{campaign.description}</p>
 
 					{!hasGoal && (
-						<p className="text-primary text-xl font-semibold">
+						<p className="text-primary text-xl font-bold">
 							{translator.t('campaign.without-goal.collected', {
 								context: {
 									count: campaign.numberOfContributions,

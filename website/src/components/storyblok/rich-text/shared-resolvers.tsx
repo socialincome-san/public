@@ -59,8 +59,8 @@ export const storyblokRichTextMarkResolvers = {
 const headingStyles: Record<number, string> = {
 	1: 'text-4xl font-bold',
 	2: 'text-3xl font-bold',
-	3: 'text-2xl font-semibold',
-	4: 'text-xl font-semibold',
+	3: 'text-2xl font-bold',
+	4: 'text-xl font-bold',
 	5: 'text-lg font-medium',
 	6: 'text-base font-medium',
 };
@@ -78,7 +78,7 @@ const storyblokRichTextTableNodeResolvers = {
 			<TableBody>{children}</TableBody>
 		</Table>
 	),
-	[NODE_TABLE_HEADER]: (children: ReactNode) => <TableHead className="font-semibold">{children}</TableHead>,
+	[NODE_TABLE_HEADER]: (children: ReactNode) => <TableHead className="font-bold">{children}</TableHead>,
 	[NODE_TABLE_ROW]: (children: ReactNode) => <TableRow>{children}</TableRow>,
 	[NODE_TABLE_CELL]: (children: ReactNode) => <TableCell>{children}</TableCell>,
 };

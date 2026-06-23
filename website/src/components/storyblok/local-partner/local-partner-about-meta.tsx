@@ -31,7 +31,10 @@ export const LocalPartnerFocusBadges = ({ lang, region, focuses }: FocusBadgesPr
 
 				return (
 					<Link key={focusStory.uuid} href={`/${lang}/${region}/focuses/${focusSlug}`}>
-						<Badge variant="outline" className="border-accent bg-accent text-accent-foreground transition-colors hover:bg-accent/80">
+						<Badge
+							variant="outline"
+							className="border-accent bg-accent text-accent-foreground hover:bg-accent/80 transition-colors"
+						>
 							{focusTitle}
 						</Badge>
 					</Link>
@@ -83,7 +86,7 @@ export const LocalPartnerAboutMetaCard = ({
 			<div className="grid gap-6 lg:grid-cols-2">
 				{mission ? (
 					<div className="lg:col-span-2">
-						<p className="text-muted-foreground text-sm font-semibold">Mission</p>
+						<p className="text-muted-foreground text-sm font-bold">Mission</p>
 						<p className="text-foreground mt-2 text-base">{mission}</p>
 					</div>
 				) : null}
@@ -111,7 +114,7 @@ export const LocalPartnerAboutMetaCard = ({
 
 				{resolvedExternalLinks.length > 0 ? (
 					<div>
-						<p className="text-muted-foreground text-sm font-semibold">Online</p>
+						<p className="text-muted-foreground text-sm font-bold">Online</p>
 						<div className="mt-3 flex flex-wrap gap-2">
 							{resolvedExternalLinks.map(({ label, href }) => (
 								<Link
