@@ -141,8 +141,8 @@ export interface EmbeddedVideo {
 }
 
 export interface Faq {
-  question: string;
-  answer?: string;
+  question: StoryblokRichtext;
+  answer?: StoryblokRichtext;
   component: "faq";
   _uid: string;
   [k: string]: unknown;
