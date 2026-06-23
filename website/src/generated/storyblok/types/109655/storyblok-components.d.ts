@@ -394,6 +394,7 @@ export interface Program {
   secondaryImage: StoryblokAsset;
   tertiaryImage: StoryblokAsset;
   fourthImage: StoryblokAsset;
+  faq?: (ISbStoryData<Faq> | string)[];
   component: "program";
   _uid: string;
   [k: string]: unknown;

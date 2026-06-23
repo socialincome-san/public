@@ -1,9 +1,11 @@
 import { ProgramFinancesCard } from '@/components/storyblok/program/program-finances-card';
 import { ProgramFinancesDialog } from '@/components/storyblok/program/program-finances-dialog';
 import { getCurrentUser } from '@/lib/firebase/current-user';
+import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
+import { services } from '@/lib/services/services';
 
 type Props = {
 	stats: ProgramDashboardStats;
@@ -13,9 +15,12 @@ type Props = {
 };
 
 export const ProgramFinances = async ({ stats, programId, translator, lang }: Props) => {
-	const user = await getCurrentUser();
+	const [user, displayCurrency] = await Promise.all([getCurrentUser(), getWebsiteCurrencyFromCookie()]);
 	const isLoggedIn = user !== null;
-	const financesCard = <ProgramFinancesCard stats={stats} translator={translator} lang={lang} embedded />;
+	const displayAmounts = await services.programStats.resolveDisplayAmounts(stats, displayCurrency);
+	const financesCard = (
+		<ProgramFinancesCard stats={stats} displayAmounts={displayAmounts} translator={translator} lang={lang} embedded />
+	);
 
 	return (
 		<div className="bg-card flex flex-col gap-6 rounded-xl px-10 py-8 shadow-lg">
