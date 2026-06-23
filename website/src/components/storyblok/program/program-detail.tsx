@@ -16,7 +16,6 @@ import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
 
 type Props = {
@@ -36,7 +35,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 	const completedSurveysCount =
 		programDetailData.dashboardStats?.completedSurveysCount ?? programDetailData.programDetails?.completedSurveysCount ?? 0;
 
-	const [breadcrumbLinks, resolvedCountry, faqsResult] = await Promise.all([
+	const [breadcrumbLinks, resolvedCountry] = await Promise.all([
 		buildBreadcrumbLinks({
 			fullSlug: programDetailData.fullSlug,
 			currentLabel: programDetailData.title,
@@ -44,10 +43,11 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 			region,
 		}),
 		resolveProgramCountry(countryIsoCode, lang, region),
-		services.storyblok.getFaqs(lang, 5),
 	]);
 
-	const faqItems = resolveFaqItems(faqsResult.success ? faqsResult.data : []);
+	console.log("programDetailData.faq", programDetailData.faq);
+
+	const faqItems = resolveFaqItems(programDetailData.faq ?? []);
 
 	return (
 		<>

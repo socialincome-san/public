@@ -9,7 +9,7 @@ export const revalidate = 900;
 export default async function ProgramPage({ params }: DefaultLayoutPropsWithSlug) {
 	const { slug, lang, region } = await params;
 	const programDetailData = await loadProgramDetailData(slug, lang);
-
+	console.log("programDetailData", programDetailData);
 	if (!programDetailData) {
 		return notFound();
 	}
