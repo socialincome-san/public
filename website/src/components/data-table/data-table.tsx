@@ -260,7 +260,7 @@ export default function DataTable<Row>({
 
 			{error ? (
 				<div className={cn('flex items-center', stableTableMinHeightClass)}>
-					<div className="text-destructive w-full rounded-md border border-red-200 bg-red-50 p-4">
+					<div className="text-destructive border-destructive/20 bg-destructive-foreground w-full rounded-md border p-4">
 						<p className="font-medium">Could not load table data.</p>
 						<p className="mt-1 text-sm">{formatTableError(error)}</p>
 					</div>

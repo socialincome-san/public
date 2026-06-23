@@ -77,5 +77,5 @@ export const ProgramFinancesCard = ({ stats, translator, lang, embedded = false 
 		return <div className="flex flex-col gap-6">{content}</div>;
 	}
 
-	return <div className="flex flex-col gap-6 rounded-xl bg-white px-10 py-8 shadow-lg">{content}</div>;
+	return <div className="bg-card flex flex-col gap-6 rounded-xl px-10 py-8 shadow-lg">{content}</div>;
 };

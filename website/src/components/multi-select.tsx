@@ -833,7 +833,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 													}),
 													...(customStyle?.gradient && {
 														background: customStyle.gradient,
-														color: 'white',
+														color: 'hsl(var(--primary-foreground))',
 													}),
 												};
 
@@ -843,7 +843,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 														className={cn(
 															getBadgeAnimationClass(),
 															multiSelectVariants({ variant }),
-															customStyle?.gradient && 'border-transparent text-white',
+															customStyle?.gradient && 'border-transparent text-primary-foreground',
 															responsiveSettings.compactMode && 'px-1.5 py-0.5 text-xs',
 															screenSize === 'mobile' && 'max-w-[120px] truncate',
 															singleLine && 'shrink-0 whitespace-nowrap',
@@ -884,7 +884,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 																}
 															}}
 															aria-label={`Remove ${option.label} from selection`}
-															className="-m-0.5 ml-2 h-4 w-4 cursor-pointer rounded-sm p-0.5 hover:bg-white/20 focus:ring-1 focus:ring-white/50 focus:outline-hidden"
+															className="-m-0.5 ml-2 h-4 w-4 cursor-pointer rounded-sm p-0.5 hover:bg-primary-foreground/20 focus:ring-1 focus:ring-primary-foreground/50 focus:outline-hidden"
 														>
 															<XCircle className={cn('h-3 w-3', responsiveSettings.compactMode && 'h-2.5 w-2.5')} />
 														</div>

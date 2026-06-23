@@ -12,7 +12,7 @@ export const IndirectImpactNotice = ({ recipients }: Props) => {
 	const indirect = recipients * 5;
 
 	return (
-		<div className="flex items-center gap-3 rounded-b-xl bg-green-200/70 px-6 py-4 text-sm">
+		<div className="bg-confirm-foreground flex items-center gap-3 rounded-b-xl px-6 py-4 text-sm">
 			<span className="text-lg">🎉</span>
 
 			<p>

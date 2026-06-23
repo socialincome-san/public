@@ -31,7 +31,7 @@ export const LocalPartnerFocusBadges = ({ lang, region, focuses }: FocusBadgesPr
 
 				return (
 					<Link key={focusStory.uuid} href={`/${lang}/${region}/focuses/${focusSlug}`}>
-						<Badge variant="outline" className="border-sky-300 bg-sky-50 text-foreground transition-colors hover:bg-sky-100">
+						<Badge variant="outline" className="border-accent bg-accent text-accent-foreground transition-colors hover:bg-accent/80">
 							{focusTitle}
 						</Badge>
 					</Link>
@@ -79,7 +79,7 @@ export const LocalPartnerAboutMetaCard = ({
 	}
 
 	return (
-		<div className="mt-2 rounded-2xl border border-slate-200 bg-white p-6">
+		<div className="border-border bg-card mt-2 rounded-2xl border p-6">
 			<div className="grid gap-6 lg:grid-cols-2">
 				{mission ? (
 					<div className="lg:col-span-2">
@@ -119,7 +119,7 @@ export const LocalPartnerAboutMetaCard = ({
 									href={href}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-foreground rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium transition-colors hover:bg-slate-100"
+									className="text-foreground border-border bg-muted/50 hover:bg-muted rounded-full border px-3 py-1 text-sm font-medium transition-colors"
 								>
 									{label}
 								</Link>

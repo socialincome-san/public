@@ -46,7 +46,7 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid' }: 
 		return (
 			<Link
 				href={href}
-				className="bg-card flex flex-col overflow-hidden rounded-xl border border-black/5 p-3 shadow-sm transition-transform hover:scale-[1.01]"
+				className="bg-card border-border flex flex-col overflow-hidden rounded-xl border p-3 shadow-sm transition-transform hover:scale-[1.01]"
 			>
 				{imageSrc && (
 					<Image
@@ -74,7 +74,7 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid' }: 
 			<Link
 				href={href}
 				className={cn(
-					'bg-card grid overflow-hidden rounded-xl border border-black/5 p-3 shadow-sm transition-transform hover:scale-[1.01]',
+					'bg-card border-border grid overflow-hidden rounded-xl border p-3 shadow-sm transition-transform hover:scale-[1.01]',
 					imageSrc ? 'grid-cols-2' : 'grid-cols-1',
 				)}
 			>
@@ -102,7 +102,7 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid' }: 
 	return (
 		<Link
 			href={href}
-			className="bg-card group flex flex-col overflow-hidden rounded-xl border border-black/5 shadow-sm transition-transform hover:scale-[1.01]"
+			className="bg-card border-border group flex flex-col overflow-hidden rounded-xl border shadow-sm transition-transform hover:scale-[1.01]"
 		>
 			{imageSrc && (
 				<Image

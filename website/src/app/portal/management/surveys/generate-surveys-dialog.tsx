@@ -72,7 +72,7 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 
 				<div className="flex flex-col gap-5">
 					{steps.map((step) => (
-						<div key={step.id} className="flex flex-col gap-2 rounded-2xl bg-slate-100 p-4">
+						<div key={step.id} className="bg-muted flex flex-col gap-2 rounded-2xl p-4">
 							<p className="font-medium">
 								Step {step.id}: {step.title}
 							</p>

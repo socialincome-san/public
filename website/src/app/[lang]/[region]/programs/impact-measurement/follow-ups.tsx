@@ -43,7 +43,7 @@ export const renderFollowUpSections = async ({
 		sections.push(
 			<div
 				key={`${question.name}-${followUp.childName}`}
-				className="border-t border-slate-200 px-4 pt-5 pb-8 sm:px-6 sm:pt-6 sm:pb-10"
+				className="border-border border-t px-4 pt-5 pb-8 sm:px-6 sm:pt-6 sm:pb-10"
 			>
 				<div className="grid gap-6 lg:grid-cols-2">
 					<div className="text-foreground space-y-4">

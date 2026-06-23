@@ -73,11 +73,11 @@ export const ModalCardsBlock = ({ blok, lang, region }: Props) => {
 									sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
 									className="scale-105 object-cover transition-transform duration-300 ease-out group-hover:scale-100"
 								/>
-								<div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/10 to-transparent" />
-								<div className="text-primary absolute top-5 right-5 flex size-11 items-center justify-center rounded-full bg-white shadow-sm transition-transform duration-300 ease-out group-hover:scale-110 md:top-10 md:right-10">
+								<div className="from-foreground/65 via-foreground/10 absolute inset-0 bg-linear-to-t to-transparent" />
+								<div className="text-primary bg-primary-foreground absolute top-5 right-5 flex size-11 items-center justify-center rounded-full shadow-sm transition-transform duration-300 ease-out group-hover:scale-110 md:top-10 md:right-10">
 									<PlusIcon className="size-6" />
 								</div>
-								<span className="absolute right-5 bottom-5 left-5 text-3xl leading-tight text-white md:right-10 md:bottom-10 md:left-10 md:text-4xl">
+								<span className="text-primary-foreground absolute right-5 bottom-5 left-5 text-3xl leading-tight md:right-10 md:bottom-10 md:left-10 md:text-4xl">
 									{heading}
 								</span>
 							</button>

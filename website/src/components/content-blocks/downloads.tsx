@@ -34,13 +34,13 @@ export const DownloadsBlock = ({ blok }: Props) => {
 						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 					</SectionHeading>
 				)}
-				<div className="overflow-hidden rounded-md border border-gray-200">
-					<div className="hidden grid-cols-[minmax(0,1fr)_8rem_5rem] gap-12 border-b border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium md:grid">
+				<div className="border-border overflow-hidden rounded-md border">
+					<div className="border-border bg-muted/50 hidden grid-cols-[minmax(0,1fr)_8rem_5rem] gap-12 border-b px-4 py-3 text-sm font-medium md:grid">
 						<div>{blok.tableHeaderLabelFilename}</div>
 						<div>{blok.tableHeaderLabelInfo}</div>
 						<div className="justify-self-end">{blok.tableHeaderLabelLink}</div>
 					</div>
-					<div className="divide-y divide-gray-200">
+					<div className="divide-border divide-y">
 						{blok.documents.map((document) => {
 							const content = getDocumentContent(document);
 							if (!content) {

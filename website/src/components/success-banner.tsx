@@ -9,7 +9,7 @@ type Props = {
 
 export const SuccessBanner = ({ title, description, action }: Props) => {
 	return (
-		<div className="flex items-center justify-between rounded-xl border bg-green-50 px-6 py-4">
+		<div className="bg-confirm-foreground border-confirm/20 flex items-center justify-between rounded-xl border px-6 py-4">
 			<div className="flex items-start gap-3">
 				<CheckCircle className="text-confirm mt-1 h-5 w-5" />
 

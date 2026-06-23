@@ -22,7 +22,7 @@ const amountOptions: { labelKey: 'currency-prefix' | 'other'; value: PresetAmoun
 	{ labelKey: 'other', value: 'other' },
 ];
 
-const segmentActive = 'bg-white shadow-xs';
+const segmentActive = 'bg-card shadow-xs';
 
 const monthlyIncomeInputId = 'donation-monthly-income';
 
@@ -71,7 +71,7 @@ export const DonationAmountFields = ({
 			<div className="border-muted mb-3 grid grid-cols-[minmax(0,1fr)_auto] overflow-hidden rounded-md border">
 				<div
 					className={cn(
-						'border-muted border-r bg-white px-3 py-2 transition-colors',
+						'border-muted bg-card border-r px-3 py-2 transition-colors',
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
@@ -111,7 +111,7 @@ export const DonationAmountFields = ({
 						'px-3 py-2 text-left transition-colors',
 						values.onePercentSelected
 							? 'bg-muted text-foreground'
-							: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground bg-white',
+							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
 					)}
 				>
 					<div className="text-[10px] font-medium">{translations.yourOnePercent}</div>

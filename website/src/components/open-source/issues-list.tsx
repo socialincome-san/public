@@ -71,12 +71,12 @@ export const IssuesList = ({
 				</div>
 			) : null}
 
-			<div className="overflow-hidden rounded-md border border-gray-200">
-				<div className="hidden border-b border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium md:grid md:grid-cols-[minmax(0,1fr)_auto] md:gap-12">
+			<div className="border-border overflow-hidden rounded-md border">
+				<div className="border-border bg-muted/50 hidden border-b px-4 py-3 text-sm font-medium md:grid md:grid-cols-[minmax(0,1fr)_auto] md:gap-12">
 					<div>{tableHeaderLabel}</div>
 				</div>
 				{displayedIssues.length > 0 ? (
-					<div className="divide-y divide-gray-200">
+					<div className="divide-border divide-y">
 						{displayedIssues.map((issue) => (
 							<IssueRow key={issue.id} title={issue.title} url={issue.url} issueLinkLabel={issueLinkLabel} />
 						))}

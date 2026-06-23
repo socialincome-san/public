@@ -62,7 +62,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 			)}
 
 			<Dialog.Portal>
-				<Dialog.Overlay className="text-foreground fixed inset-0 z-100 overflow-y-auto bg-white lg:hidden">
+				<Dialog.Overlay className="text-foreground bg-background fixed inset-0 z-100 overflow-y-auto lg:hidden">
 					<Dialog.Content className="flex min-h-full flex-col">
 						<Dialog.Title className="sr-only">{commonTranslator?.t('menu.title') ?? 'Menu'}</Dialog.Title>
 						<div className="border-muted mb-4 flex h-18 shrink-0 items-center justify-between border-b px-4">
@@ -158,7 +158,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 																onClick={() => handleOpenChange(false)}
 															>
 																{child.label}
-																<span className="text-muted-foreground rounded-full border border-slate-300 px-2 py-0.5 text-[10px] leading-none font-semibold">
+																<span className="text-muted-foreground border-input rounded-full border px-2 py-0.5 text-[10px] leading-none font-semibold">
 																	{FALLBACK_BADGE_COUNT}
 																</span>
 															</NextLink>

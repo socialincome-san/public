@@ -133,7 +133,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 			</PopoverTrigger>
 			<PopoverContent
 				align="end"
-				className="z-[110] w-72 space-y-4 rounded-3xl bg-white p-4 shadow-[0_24px_48px_rgba(15,23,42,0.16)]"
+				className="bg-popover z-[110] w-72 space-y-4 rounded-3xl p-4 shadow-[0_24px_48px_rgba(15,23,42,0.16)]"
 			>
 				<div className="space-y-2">
 					<div className="text-sm font-semibold">{translator?.t('locale-currency-switcher.language') ?? 'Language'}</div>

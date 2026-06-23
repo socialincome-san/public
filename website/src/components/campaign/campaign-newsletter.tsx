@@ -55,7 +55,7 @@ export const CampaignNewsletter = ({ lang, translations }: Props) => {
 
 	return (
 		<BlockWrapper className="my-8 md:my-12 lg:my-16">
-			<div className="border-border rounded-2xl border bg-white px-4 py-4 shadow-[0_2px_4px_rgba(0,0,0,0.05)] sm:px-5 sm:py-5">
+			<div className="border-border bg-card rounded-2xl border px-4 py-4 shadow-[0_2px_4px_rgba(0,0,0,0.05)] sm:px-5 sm:py-5">
 				<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
 					<div className="flex items-center gap-3 sm:min-w-0 sm:flex-1">
 						<div className="bg-primary/10 text-primary flex size-9 shrink-0 items-center justify-center rounded-lg">
@@ -74,7 +74,7 @@ export const CampaignNewsletter = ({ lang, translations }: Props) => {
 								name="email"
 								render={({ field }) => (
 									<FormItem className="w-full">
-										<div className="border-input/80 flex w-full flex-col gap-1.5 rounded-xl border bg-white p-1.5 sm:flex-row sm:items-center sm:rounded-full">
+										<div className="border-input/80 bg-card flex w-full flex-col gap-1.5 rounded-xl border p-1.5 sm:flex-row sm:items-center sm:rounded-full">
 											<label htmlFor={emailInputId} className="sr-only">
 												{translations.emailLabel}
 											</label>

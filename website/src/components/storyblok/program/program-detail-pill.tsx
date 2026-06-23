@@ -1,10 +1,15 @@
 import { ChevronRight, ExternalLink } from 'lucide-react';
 import type { LinkProps } from 'next/link';
 import Link from 'next/link';
+import { cn } from '@/lib/utils/cn';
 
-const pillClassName =
-	'text-foreground inline-flex items-center gap-1.5 rounded-full bg-slate-100 py-1.5 pr-2 pl-3 text-xs font-bold';
-const interactivePillClassName = `${pillClassName} focus-visible:ring-ring transition-colors hover:bg-slate-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none`;
+const pillClassName = cn(
+	'text-foreground bg-muted inline-flex items-center gap-1.5 rounded-full py-1.5 pr-2 pl-3 text-xs font-bold',
+);
+const interactivePillClassName = cn(
+	pillClassName,
+	'focus-visible:ring-ring transition-colors hover:bg-muted/80 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+);
 
 type Props = {
 	label: string;
