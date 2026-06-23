@@ -104,7 +104,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 				</Button>
 			</DropdownMenuTrigger>
 
-			<DropdownMenuContent align="end" className="w-64">
+			<DropdownMenuContent align="end" className="z-[110] w-64">
 				{items.map((item) => {
 					const Icon = item.icon;
 
