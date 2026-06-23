@@ -93,7 +93,7 @@
 		"luxon": "3.7.2",
 		"motion": "12.40.0",
 		"next": "16.2.9",
-		"pdfkit": "0.19.0",
+		"pdfkit": "0.19.1",
 		"react": "19.2.7",
 		"react-day-picker": "10.0.1",
 		"react-dom": "19.2.7",
