@@ -303,7 +303,7 @@ export const DataTableToolbar = ({
 				) : null}
 				{showControls ? <ActionMenu items={actionMenuItems} /> : null}
 			</div>
-			{primaryAction ? (
+			{showControls && primaryAction ? (
 				<Button
 					type="button"
 					variant="default"
