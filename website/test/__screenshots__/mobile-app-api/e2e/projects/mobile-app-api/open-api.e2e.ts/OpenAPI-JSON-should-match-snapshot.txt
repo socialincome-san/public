@@ -163,11 +163,15 @@
         "required": [
           "id",
           "amount",
+          "amountChf",
           "currency",
           "paymentAt",
           "status",
+          "phoneNumber",
+          "comments",
           "recipientId",
-          "createdAt"
+          "createdAt",
+          "updatedAt"
         ]
       },
       "ContestPayoutBody": {
@@ -255,11 +259,20 @@
         "required": [
           "id",
           "contactId",
+          "suspendedAt",
+          "suspensionReason",
+          "startDate",
+          "successorName",
           "termsAccepted",
+          "paymentInformationId",
+          "programId",
           "localPartnerId",
           "contact",
+          "program",
           "localPartner",
-          "createdAt"
+          "paymentInformation",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "RecipientSelfUpdate": {
@@ -267,17 +280,14 @@
         "properties": {
           "firstName": {
             "type": "string",
-            "minLength": 1,
-            "nullable": true
+            "minLength": 1
           },
           "lastName": {
             "type": "string",
-            "minLength": 1,
-            "nullable": true
+            "minLength": 1
           },
           "callingName": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "gender": {
             "type": "string",
@@ -286,41 +296,33 @@
               "female",
               "other",
               "private"
-            ],
-            "nullable": true
+            ]
           },
           "dateOfBirth": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "language": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "email": {
             "type": "string",
-            "format": "email",
-            "nullable": true
+            "format": "email"
           },
           "termsAccepted": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           },
           "contactPhone": {
             "type": "string",
             "nullable": true
           },
           "paymentPhone": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "paymentProvider": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "successorName": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         }
       },
@@ -379,9 +381,12 @@
         },
         "required": [
           "id",
+          "mobileMoneyProvider",
+          "code",
           "phoneId",
           "phone",
-          "createdAt"
+          "createdAt",
+          "updatedAt"
         ]
       },
       "Contact": {
@@ -448,8 +453,17 @@
           "id",
           "firstName",
           "lastName",
+          "callingName",
+          "phoneId",
+          "phone",
+          "email",
+          "gender",
+          "language",
+          "dateOfBirth",
+          "profession",
           "isInstitution",
-          "createdAt"
+          "createdAt",
+          "updatedAt"
         ]
       },
       "LocalPartner": {
@@ -476,7 +490,8 @@
           "id",
           "name",
           "contact",
-          "createdAt"
+          "createdAt",
+          "updatedAt"
         ]
       },
       "Country": {
@@ -550,7 +565,8 @@
           "payoutInterval",
           "coveredByReserves",
           "programDurationInMonths",
-          "createdAt"
+          "createdAt",
+          "updatedAt"
         ]
       },
       "Survey": {
@@ -621,11 +637,14 @@
           "questionnaire",
           "language",
           "dueAt",
+          "completedAt",
           "status",
           "data",
           "accessEmail",
           "accessPw",
-          "createdAt"
+          "surveyScheduleId",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "Phone": {
@@ -652,7 +671,8 @@
           "id",
           "number",
           "hasWhatsApp",
-          "createdAt"
+          "createdAt",
+          "updatedAt"
         ]
       }
     },
@@ -780,13 +800,13 @@
     }
   },
   "paths": {
-    "/v1/auth/request-otp": {
+    "/auth/request-otp": {
       "post": {
-        "operationId": "post-v1-auth-request-otp",
+        "operationId": "post-auth-request-otp",
         "summary": "Request OTP",
         "description": "Requests an OTP via Twilio SMS for the given phone number. Requires a valid Firebase App Check token.",
         "tags": [
-          "V1"
+          "Auth"
         ],
         "parameters": [],
         "requestBody": {
@@ -800,14 +820,7 @@
         },
         "responses": {
           "204": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/No Content"
-                }
-              }
-            }
+            "description": "No Content"
           },
           "400": {
             "$ref": "#/components/responses/400"
@@ -827,13 +840,13 @@
         }
       }
     },
-    "/v1/auth/verify-otp": {
+    "/auth/verify-otp": {
       "post": {
-        "operationId": "post-v1-auth-verify-otp",
+        "operationId": "post-auth-verify-otp",
         "summary": "Verify OTP",
         "description": "Verifies an OTP sent via Twilio and returns a Firebase custom token for authentication. Requires a valid Firebase App Check token.",
         "tags": [
-          "V1"
+          "Auth"
         ],
         "parameters": [],
         "requestBody": {
@@ -874,13 +887,13 @@
         }
       }
     },
-    "/v1/recipients/me": {
+    "/recipients/me": {
       "get": {
-        "operationId": "get-v1-recipients-me",
+        "operationId": "get-recipients-me",
         "summary": "Get recipient",
         "description": "Returns the authenticated recipient with all related data. Requires a valid Firebase App Check token.",
         "tags": [
-          "V1"
+          "Recipients"
         ],
         "parameters": [],
         "responses": {
@@ -912,13 +925,18 @@
         }
       },
       "patch": {
-        "operationId": "patch-v1-recipients-me",
+        "operationId": "patch-recipients-me",
         "summary": "Update recipient",
         "description": "Updates the authenticated recipient’s personal information, contact details, and mobile money payment information. Requires a valid Firebase App Check token.",
         "tags": [
-          "V1"
+          "Recipients"
         ],
         "parameters": [],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -957,15 +975,20 @@
         }
       }
     },
-    "/v1/recipients/me/payouts": {
+    "/recipients/me/payouts": {
       "get": {
-        "operationId": "get-v1-recipients-me-payouts",
+        "operationId": "get-recipients-me-payouts",
         "summary": "List payouts",
         "description": "Returns all payouts belonging to the authenticated recipient. Requires a valid Firebase App Check token.",
         "tags": [
-          "V1"
+          "Recipients"
         ],
         "parameters": [],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -995,15 +1018,20 @@
         }
       }
     },
-    "/v1/recipients/me/surveys": {
+    "/recipients/me/surveys": {
       "get": {
-        "operationId": "get-v1-recipients-me-surveys",
+        "operationId": "get-recipients-me-surveys",
         "summary": "Get surveys",
         "description": "Returns all surveys belonging to the authenticated recipient. Requires a valid Firebase App Check token.",
         "tags": [
-          "V1"
+          "Recipients"
         ],
         "parameters": [],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -1033,13 +1061,13 @@
         }
       }
     },
-    "/v1/recipients/me/payouts/{payoutId}": {
+    "/recipients/me/payouts/{payoutId}": {
       "get": {
-        "operationId": "get-v1-recipients-me-payouts-{payoutId}",
+        "operationId": "get-recipients-me-payouts-{payoutId}",
         "summary": "Get payout by ID",
         "description": "Returns a specific payout belonging to the authenticated recipient. Requires a valid Firebase App Check token.",
         "tags": [
-          "V1"
+          "Recipients"
         ],
         "parameters": [
           {
@@ -1052,6 +1080,11 @@
             "required": true,
             "description": "Payout ID",
             "example": "123"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
           }
         ],
         "responses": {
@@ -1083,13 +1116,13 @@
         }
       }
     },
-    "/v1/recipients/me/payouts/{payoutId}/confirm": {
+    "/recipients/me/payouts/{payoutId}/confirm": {
       "post": {
-        "operationId": "post-v1-recipients-me-payouts-{payoutId}-confirm",
+        "operationId": "post-recipients-me-payouts-{payoutId}-confirm",
         "summary": "Confirm payout",
         "description": "Marks a specific payout as confirmed by the authenticated recipient. Requires a valid Firebase App Check token.",
         "tags": [
-          "V1"
+          "Recipients"
         ],
         "parameters": [
           {
@@ -1102,6 +1135,11 @@
             "required": true,
             "description": "Payout ID",
             "example": "123"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
           }
         ],
         "requestBody": {
@@ -1142,13 +1180,13 @@
         }
       }
     },
-    "/v1/recipients/me/payouts/{payoutId}/contest": {
+    "/recipients/me/payouts/{payoutId}/contest": {
       "post": {
-        "operationId": "post-v1-recipients-me-payouts-{payoutId}-contest",
+        "operationId": "post-recipients-me-payouts-{payoutId}-contest",
         "summary": "Contest payout",
         "description": "Marks a specific payout as contested by the authenticated recipient. Requires a valid Firebase App Check token.",
         "tags": [
-          "V1"
+          "Recipients"
         ],
         "parameters": [
           {
@@ -1161,6 +1199,11 @@
             "required": true,
             "description": "Payout ID",
             "example": "123"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
           }
         ],
         "requestBody": {
