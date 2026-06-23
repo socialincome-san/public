@@ -101,12 +101,7 @@ export class ProgramStatsService extends BaseService {
 		}
 
 		if (displayCurrency === 'CHF') {
-			return {
-				currency: 'CHF',
-				paidOutSoFar: stats.paidOutSoFarChf,
-				totalProgramCosts: stats.totalProgramCostsChf,
-				availableCredits: stats.availableCreditsChf,
-			};
+			return this.toChfAmounts(stats);
 		}
 
 		const rates = await this.getLatestRatesOrUndefined();
@@ -123,6 +118,15 @@ export class ProgramStatsService extends BaseService {
 			paidOutSoFar,
 			totalProgramCosts,
 			availableCredits,
+		};
+	}
+
+	private toChfAmounts(stats: ProgramDashboardStats): ProgramFinancesDisplayAmounts {
+		return {
+			currency: 'CHF',
+			paidOutSoFar: stats.paidOutSoFarChf,
+			totalProgramCosts: stats.totalProgramCostsChf,
+			availableCredits: stats.availableCreditsChf,
 		};
 	}
 

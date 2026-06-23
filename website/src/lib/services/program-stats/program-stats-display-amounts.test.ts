@@ -52,10 +52,19 @@ const baseStats: ProgramDashboardStats = {
 	recipientsCount: 1,
 };
 
+const payoutCurrencyFallback = {
+	currency: 'SLE',
+	paidOutSoFar: 24000,
+	totalProgramCosts: 28800,
+	availableCredits: 4800,
+} as const;
+
 const createService = (exchangeRates?: Record<string, number>) => {
-	const getLatestRates = jest.fn().mockResolvedValue(
-		exchangeRates ? { success: true as const, data: exchangeRates } : { success: false as const, error: 'No rates' },
-	);
+	const getLatestRates = jest
+		.fn()
+		.mockResolvedValue(
+			exchangeRates ? { success: true as const, data: exchangeRates } : { success: false as const, error: 'No rates' },
+		);
 	const exchangeRateService = { getLatestRates };
 
 	const recipientStatusService = {} as RecipientStatusService;
@@ -116,11 +125,6 @@ describe('ProgramStatsService.resolveDisplayAmounts', () => {
 
 		const result = await service.resolveDisplayAmounts(baseStats, 'EUR');
 
-		expect(result).toEqual({
-			currency: 'SLE',
-			paidOutSoFar: 24000,
-			totalProgramCosts: 28800,
-			availableCredits: 4800,
-		});
+		expect(result).toEqual(payoutCurrencyFallback);
 	});
 });

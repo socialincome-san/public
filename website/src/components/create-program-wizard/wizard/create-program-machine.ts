@@ -11,7 +11,6 @@ import { assign, fromPromise, setup } from 'xstate';
 import type { ProgramManagementType, RecipientApproachType } from './types';
 
 export const createProgramWizardMachine = setup({
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- XState uses this empty object to carry machine types.
 	types: {} as {
 		context: {
 			// step 1
