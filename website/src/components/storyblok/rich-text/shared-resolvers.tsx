@@ -8,11 +8,13 @@ import {
 	MARK_LINK,
 	NODE_HEADING,
 	NODE_LI,
+	NODE_OL,
 	NODE_PARAGRAPH,
 	NODE_TABLE,
 	NODE_TABLE_CELL,
 	NODE_TABLE_HEADER,
 	NODE_TABLE_ROW,
+	NODE_UL,
 } from 'storyblok-rich-text-react-renderer';
 
 type RichTextLinkProps = {
@@ -68,6 +70,8 @@ const headingStyles: Record<number, string> = {
 export const storyblokRichTextBasicNodeResolvers = {
 	[NODE_HEADING]: (children: ReactNode, { level }: { level: number }) =>
 		createElement(`h${level}`, { className: cn(headingStyles[level], 'my-4') }, children),
+	[NODE_UL]: (children: ReactNode) => <ul className="my-4 list-disc space-y-1 pl-6">{children}</ul>,
+	[NODE_OL]: (children: ReactNode) => <ol className="my-4 list-decimal space-y-1 pl-6">{children}</ol>,
 	[NODE_LI]: (children: ReactNode) => <li className="[&::marker]:text-foreground my-1 *:m-0 *:p-0">{children}</li>,
 	[NODE_PARAGRAPH]: (children: ReactNode) => <p className="my-4">{children}</p>,
 };
