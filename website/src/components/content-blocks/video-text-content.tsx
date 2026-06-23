@@ -13,7 +13,7 @@ type Props = {
 export const VideoTextContent = ({ content, vimeoEmbedUrl, layout = 'videoRight' }: Props) => (
 	<div
 		className={cn(
-			'flex flex-col items-center gap-14 text-lg text-black md:flex-row',
+			'text-foreground flex flex-col items-center gap-14 text-lg md:flex-row',
 			layout === 'videoLeft' && 'md:flex-row-reverse',
 		)}
 	>

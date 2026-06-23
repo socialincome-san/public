@@ -15,6 +15,10 @@
 	--color-secondary-foreground: hsl(var(--secondary-foreground));
 	--color-destructive: hsl(var(--destructive));
 	--color-destructive-foreground: hsl(var(--destructive-foreground));
+	--color-confirm: hsl(var(--confirm));
+	--color-confirm-foreground: hsl(var(--confirm-foreground));
+	--color-warning: hsl(var(--warning));
+	--color-warning-foreground: hsl(var(--warning-foreground));
 	--color-accent: hsl(var(--accent));
 	--color-accent-foreground: hsl(var(--accent-foreground));
 	--color-popover: hsl(var(--popover));

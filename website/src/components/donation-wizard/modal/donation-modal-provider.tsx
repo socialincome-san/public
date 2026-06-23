@@ -113,7 +113,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 								{showCurrencySelector ? (
 									<DonationCurrencySelector
 										currencies={websiteCurrencies}
-										className="h-9 w-[4.75rem] shrink-0 rounded-full border-slate-300 px-2.5"
+										className="border-input h-9 w-[4.75rem] shrink-0 rounded-full px-2.5"
 									/>
 								) : null}
 							</div>

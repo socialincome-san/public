@@ -21,7 +21,7 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 	const detailsResult = await services.surveyImpact.getImpactStudyDetails(filters);
 	if (!detailsResult.success) {
 		return (
-			<p className="text-sm leading-5 font-medium text-cyan-900">{translator.t('survey.impactMeasurement.loadError')}</p>
+			<p className="text-foreground text-sm leading-5 font-medium">{translator.t('survey.impactMeasurement.loadError')}</p>
 		);
 	}
 
@@ -49,13 +49,13 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 
 		return (
 			<div className="space-y-2">
-				<p className="text-xs font-semibold tracking-wide text-slate-500 uppercase">{label}</p>
+				<p className="text-muted-foreground text-xs font-bold tracking-wide uppercase">{label}</p>
 				<div className="space-y-2">
 					{topBreakdownItems.map((item) => (
 						<div key={`${label}-${item.value}`} className="grid grid-cols-[minmax(120px,1fr)_100px_auto] items-center gap-3">
-							<p className="truncate text-sm text-cyan-950">{formatter(item.value)}</p>
-							<Progress value={item.percentage} className="h-1.5 bg-slate-200" />
-							<p className="text-xs font-semibold text-cyan-900 tabular-nums">{item.count}</p>
+							<p className="text-foreground truncate text-sm">{formatter(item.value)}</p>
+							<Progress value={item.percentage} className="bg-border h-1.5" />
+							<p className="text-foreground text-xs font-bold tabular-nums">{item.count}</p>
 						</div>
 					))}
 				</div>
@@ -64,31 +64,31 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 	};
 
 	return (
-		<details className="group w-full overflow-hidden rounded-3xl border border-slate-200 bg-white">
+		<details className="border-border bg-card group w-full overflow-hidden rounded-3xl border">
 			<summary
 				data-testid="impact-measurement-study-details-trigger"
-				className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 transition-colors marker:hidden hover:bg-slate-50 [&::-webkit-details-marker]:hidden"
+				className="hover:bg-muted/50 flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 transition-colors marker:hidden [&::-webkit-details-marker]:hidden"
 			>
-				<div className="flex min-w-0 flex-wrap items-center gap-2 text-sm leading-5 font-medium text-cyan-900">
-					<span className="text-3xl leading-none font-semibold text-cyan-950">
+				<div className="text-foreground flex min-w-0 flex-wrap items-center gap-2 text-sm leading-5 font-medium">
+					<span className="text-3xl leading-none font-bold">
 						{formatNumberLocale(details.totalCompletedSurveys, 'de-CH')}
 					</span>
 					<span>{translator.t('survey.impactMeasurement.surveyResponsesFrom')}</span>
-					<span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-sm font-medium">
+					<span className="border-border bg-muted/50 rounded-full border px-2.5 py-0.5 text-sm font-medium">
 						{details.totalRecipients} {translator.t('survey.impactMeasurement.recipients')}
 					</span>
 				</div>
-				<ChevronDown className="size-5 text-cyan-900 transition-transform group-open:rotate-180" />
+				<ChevronDown className="text-foreground size-5 transition-transform group-open:rotate-180" />
 			</summary>
 
-			<div className="space-y-5 border-t border-slate-200 px-5 pt-4 pb-5">
-				<p className="text-sm font-medium text-slate-600">{lastResponseLabel}</p>
+			<div className="border-border space-y-5 border-t px-5 pt-4 pb-5">
+				<p className="text-muted-foreground text-sm font-medium">{lastResponseLabel}</p>
 				<div className="space-y-1">
-					<p className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
+					<p className="text-muted-foreground text-xs font-bold tracking-wide uppercase">
 						{translator.t('survey.impactMeasurement.timeFrame')}
 					</p>
-					<p className="text-base font-semibold text-cyan-950">{timeFrameLabel}</p>
-					<p className="text-sm text-slate-600">{timeFrameDaysLabel}</p>
+					<p className="text-foreground text-base font-bold">{timeFrameLabel}</p>
+					<p className="text-muted-foreground text-sm">{timeFrameDaysLabel}</p>
 				</div>
 				<div className="grid gap-5 md:grid-cols-3">
 					{renderBreakdown(translator.t('survey.impactMeasurement.countryHeading'), details.countryBreakdown, (value) => {

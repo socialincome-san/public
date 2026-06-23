@@ -1,8 +1,9 @@
 import { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
+import { cn } from '@/lib/utils/cn';
 
 const SkeletonBar = ({ className }: { className: string }) => (
-	<div className={`animate-pulse rounded-full bg-slate-200 ${className}`} />
+	<div className={cn('bg-border animate-pulse rounded-full', className)} />
 );
 
 const SKELETON_ROW_COUNT = 5;

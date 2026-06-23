@@ -223,14 +223,16 @@ export default function DataTable<Row>({
 				<div className="flex items-center gap-2">
 					<h2 className="text-3xl">
 						{title}{' '}
-						<span className="text-lg text-gray-500">({activeQuery ? activeQuery.totalRows : displayedData.length})</span>
+						<span className="text-muted-foreground text-lg">
+							({activeQuery ? activeQuery.totalRows : displayedData.length})
+						</span>
 					</h2>
 					{titleInfoTooltip ? (
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<button
 									type="button"
-									className="inline-flex items-center rounded-full p-1 text-gray-500 hover:text-gray-700"
+									className="text-muted-foreground hover:text-foreground inline-flex items-center rounded-full p-1"
 									aria-label="Table information"
 								>
 									<InfoIcon className="size-4" />
@@ -260,7 +262,7 @@ export default function DataTable<Row>({
 
 			{error ? (
 				<div className={cn('flex items-center', stableTableMinHeightClass)}>
-					<div className="w-full rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
+					<div className="text-destructive border-destructive/20 bg-destructive-foreground w-full rounded-md border p-4">
 						<p className="font-medium">Could not load table data.</p>
 						<p className="mt-1 text-sm">{formatTableError(error)}</p>
 					</div>
@@ -276,7 +278,7 @@ export default function DataTable<Row>({
 			) : isEmpty ? (
 				<div className={cn('flex items-start pt-2', stableTableMinHeightClass)}>
 					<div
-						className="w-full p-4 text-gray-500"
+						className="text-muted-foreground w-full p-4"
 						dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}
 					></div>
 				</div>

@@ -14,7 +14,7 @@ export const TwoColumnTextContent = ({ leftText, rightText }: Props) => {
 	}
 
 	return (
-		<div className="flex flex-col gap-6 text-lg text-black sm:flex-row sm:gap-14">
+		<div className="text-foreground flex flex-col gap-6 text-lg sm:flex-row sm:gap-14">
 			<div className="sm:w-1/3">{leftText && <RichTextRenderer richTextDocument={leftText} />}</div>
 			<div className="sm:w-2/3">{rightText && <RichTextRenderer richTextDocument={rightText} />}</div>
 		</div>

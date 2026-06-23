@@ -97,7 +97,7 @@ const PayoutProcessGrid = ({
 
 								return (
 									<li key={option.id}>
-										<article className="flex h-full flex-col justify-between gap-5 rounded-2xl bg-slate-100 p-5">
+										<article className="bg-muted flex h-full flex-col justify-between gap-5 rounded-2xl p-5">
 											<div className="space-y-1">
 												<h3 className="text-base font-medium text-pretty">
 													{option.kind === 'telecel_csv' ? option.providerNames.join(', ') : option.name}
@@ -149,7 +149,7 @@ export const PayoutProcessOverviewClient = ({
 
 	return (
 		<>
-			<div className="mb-10 rounded-2xl bg-slate-100 p-5 sm:p-6" data-testid="payout-overview-month-picker">
+			<div className="bg-muted mb-10 rounded-2xl p-5 sm:p-6" data-testid="payout-overview-month-picker">
 				<div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
 					<div className="min-w-0 space-y-1">
 						<p className="flex items-center gap-2 text-sm font-medium">

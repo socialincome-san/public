@@ -29,7 +29,7 @@ export const MapRectangle = ({ isoCode, countryName, className }: MapRectanglePr
 					alt={`Map showing where ${countryName} is located on the continent`}
 					sizes="(max-width: 1024px) 30vw, 80px"
 					wrapperClassName="relative h-full w-full"
-					containerClassName="relative h-full w-full overflow-hidden rounded-full border-4 border-white bg-white shadow-[0_0_22px_rgba(0,0,0,0.45)]"
+					containerClassName="relative h-full w-full overflow-hidden rounded-full border-4 border-primary-foreground bg-primary-foreground shadow-[0_0_22px_rgba(0,0,0,0.45)]"
 					imageClassName="object-cover"
 				/>
 			</div>

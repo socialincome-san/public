@@ -36,14 +36,14 @@ export const ExplainerVideoTrigger = ({
 			)}
 		>
 			<NextImage src={thumbnailSrc} alt={accessibleLabel} fill sizes="176px" className="object-cover" />
-			<span className="absolute inset-0 bg-black/10" />
+			<span className="bg-foreground/10 absolute inset-0" />
 			<span
 				className={cn(
-					'absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/35 transition-transform duration-200 ease-out group-hover:scale-105',
+					'bg-foreground/35 absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition-transform duration-200 ease-out group-hover:scale-105',
 					layout === 'row' ? 'h-8 w-8' : 'h-12 w-12',
 				)}
 			>
-				<PlayIcon className={cn('text-white', layout === 'row' ? 'size-4' : 'size-6')} />
+				<PlayIcon className={cn('text-primary-foreground', layout === 'row' ? 'size-4' : 'size-6')} />
 			</span>
 		</span>
 	) : (

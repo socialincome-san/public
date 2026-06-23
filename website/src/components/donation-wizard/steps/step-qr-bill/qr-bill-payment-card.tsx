@@ -44,7 +44,7 @@ export const QrBillPaymentCard = ({ qrBillSvg, donorName, amountLabel, paymentTy
 				</div>
 			</div>
 
-			<div className="flex items-center gap-2 rounded-b-[10px] bg-green-200 px-4 py-3">
+			<div className="bg-confirm-foreground flex items-center gap-2 rounded-b-[10px] px-4 py-3">
 				<Scan className="text-foreground size-4 shrink-0" strokeWidth={1.75} aria-hidden />
 				<p className="text-foreground text-sm leading-5 font-medium">{t('stepQrBill.scanHint')}</p>
 			</div>

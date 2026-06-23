@@ -29,7 +29,7 @@ export const StatProgressCard = ({
 
 	return (
 		<div className="space-y-4">
-			<h2 className="text-lg font-semibold">{title}</h2>
+			<h2 className="text-lg font-bold">{title}</h2>
 
 			<div className="text-muted-foreground flex justify-between text-xs">
 				<div className="flex items-center gap-1">
@@ -72,7 +72,7 @@ export const StatProgressCard = ({
 				</div>
 			</div>
 
-			<div className="flex justify-between text-xl font-semibold">
+			<div className="flex justify-between text-xl font-bold">
 				<span>{leftValue}</span>
 				<span>{rightValue}</span>
 			</div>

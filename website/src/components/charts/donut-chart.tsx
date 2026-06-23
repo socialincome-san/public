@@ -49,18 +49,18 @@ export const DonutChart = ({ options, emptyLabel }: DonutChartProps) => {
 				className="relative grid size-32 place-items-center rounded-full sm:size-40"
 				style={{ backgroundImage: donutBackground }}
 			>
-				<div className="grid size-20 place-items-center rounded-full bg-white sm:size-24">
+				<div className="bg-card grid size-20 place-items-center rounded-full sm:size-24">
 					<div className="text-center">
-						<div className="text-3xl leading-none font-medium text-cyan-950 sm:text-4xl">
+						<div className="text-foreground text-3xl leading-none font-medium sm:text-4xl">
 							{Math.round(topOption?.percentage ?? 0)}%
 						</div>
-						<div className="text-sm text-cyan-950">{topOption?.label ?? emptyLabel}</div>
+						<div className="text-foreground text-sm">{topOption?.label ?? emptyLabel}</div>
 					</div>
 				</div>
 			</div>
 			<div className="w-full space-y-3 sm:w-auto sm:space-y-4">
 				{options.map((option, index) => (
-					<div key={option.id} className="grid grid-cols-3 items-center gap-3 text-sm text-cyan-950 sm:flex sm:gap-6">
+					<div key={option.id} className="text-foreground grid grid-cols-3 items-center gap-3 text-sm sm:flex sm:gap-6">
 						<div className="size-2 rounded-sm" style={{ backgroundColor: chartColors[index % chartColors.length] }} />
 						<div className="min-w-0 sm:min-w-24">{option.label}</div>
 						<div className="w-auto text-right font-medium sm:w-10">{Math.round(option.percentage)}%</div>

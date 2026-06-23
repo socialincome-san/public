@@ -119,11 +119,11 @@ export default function GenerateDonationCertificateDialog({
 					{Boolean(success ?? error) && (
 						<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
 							{success && (
-								<p className="text-sm text-green-700">
+								<p className="text-confirm text-sm">
 									{translator?.t('donation-certificates.generate-dialog.status_success')}
 								</p>
 							)}
-							{error && <p className="text-sm text-red-700">{getErrorMessage(error)}</p>}
+							{error && <p className="text-destructive text-sm">{getErrorMessage(error)}</p>}
 						</div>
 					)}
 				</div>

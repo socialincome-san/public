@@ -61,7 +61,7 @@ const Slider = ({
 					data-slot="slider-thumb"
 					key={index}
 					className={cn(
-						'block size-4 shrink-0 rounded-full bg-white',
+						'bg-primary-foreground block size-4 shrink-0 rounded-full',
 						'border-primary border shadow-xs',
 						'transition-shadow',
 						'ring-ring/50 hover:ring-4',

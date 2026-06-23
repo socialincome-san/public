@@ -52,7 +52,7 @@ export const PartnershipsCarouselBlock = ({ blok }: Props) => {
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			{blok.heading && <h2 className="text-3xl font-bold">{blok.heading}</h2>}
 			{blok.description && (
-				<div className="mt-4 text-lg text-black">
+				<div className="text-foreground mt-4 text-lg">
 					<Markdown components={{ p: ({ children }) => <>{children}</> }}>{blok.description}</Markdown>
 				</div>
 			)}
