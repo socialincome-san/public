@@ -55,6 +55,9 @@ export const websiteRegions: WebsiteRegion[] = ['int', 'ch'];
 export type WebsiteCurrency = Extract<Currency, 'USD' | 'EUR' | 'CHF' | 'SLE'>;
 export const websiteCurrencies: WebsiteCurrency[] = ['USD', 'EUR', 'CHF'];
 
+export const isWebsiteCurrency = (value: string | undefined): value is WebsiteCurrency =>
+	value !== undefined && websiteCurrencies.includes(value as WebsiteCurrency);
+
 /**
  * Check if the user has set a language and region cookie, and if they are valid. If so, return them.
  * Otherwise, try to find the best locale from the Accept-Language header, and if that fails, return the default locale.

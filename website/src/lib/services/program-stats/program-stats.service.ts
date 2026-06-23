@@ -7,6 +7,7 @@ import {
 	PrismaClient,
 	SurveyStatus,
 } from '@/generated/prisma/client';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
@@ -18,6 +19,7 @@ import {
 	ProgramBudgetCalculation,
 	ProgramBudgetCalculationInput,
 	ProgramDashboardStats,
+	ProgramFinancesDisplayAmounts,
 	ProgramForDashboard,
 } from './program-stats.types';
 
@@ -88,6 +90,49 @@ export class ProgramStatsService extends BaseService {
 
 			return this.resultFail(`Could not calculate program budget preview: ${JSON.stringify(error)}`);
 		}
+	}
+
+	async resolveDisplayAmounts(
+		stats: ProgramDashboardStats,
+		displayCurrency: WebsiteCurrency,
+	): Promise<ProgramFinancesDisplayAmounts> {
+		if (displayCurrency === stats.payoutCurrency) {
+			return this.toPayoutCurrencyAmounts(stats);
+		}
+
+		if (displayCurrency === 'CHF') {
+			return {
+				currency: 'CHF',
+				paidOutSoFar: stats.paidOutSoFarChf,
+				totalProgramCosts: stats.totalProgramCostsChf,
+				availableCredits: stats.availableCreditsChf,
+			};
+		}
+
+		const rates = await this.getLatestRatesOrUndefined();
+		const paidOutSoFar = this.convertCurrencyAmount(stats.paidOutSoFarChf, 'CHF', displayCurrency, rates);
+		const totalProgramCosts = this.convertCurrencyAmount(stats.totalProgramCostsChf, 'CHF', displayCurrency, rates);
+		const availableCredits = this.convertCurrencyAmount(stats.availableCreditsChf, 'CHF', displayCurrency, rates);
+
+		if (paidOutSoFar === undefined || totalProgramCosts === undefined || availableCredits === undefined) {
+			return this.toPayoutCurrencyAmounts(stats);
+		}
+
+		return {
+			currency: displayCurrency,
+			paidOutSoFar,
+			totalProgramCosts,
+			availableCredits,
+		};
+	}
+
+	private toPayoutCurrencyAmounts(stats: ProgramDashboardStats): ProgramFinancesDisplayAmounts {
+		return {
+			currency: stats.payoutCurrency,
+			paidOutSoFar: stats.paidOutSoFarProgramCurrency,
+			totalProgramCosts: stats.totalProgramCostsProgramCurrency,
+			availableCredits: stats.availableCreditsProgramCurrency,
+		};
 	}
 
 	async getProgramDashboardStats(programId: string): Promise<ServiceResult<ProgramDashboardStats>> {

@@ -1,5 +1,12 @@
 import { Currency, PaymentEventType, PayoutInterval, PayoutStatus, SurveyStatus } from '@/generated/prisma/client';
 
+export type ProgramFinancesDisplayAmounts = {
+	currency: Currency;
+	paidOutSoFar: number;
+	totalProgramCosts: number;
+	availableCredits: number;
+};
+
 export type ProgramDashboardStats = {
 	contributedToProgramSoFarChf: number;
 	contributedViaStripeChf: number;
