@@ -44,13 +44,23 @@ export const DonationModalProvider = ({ children }: Props) => {
 		send({ type: 'OPEN_FROM_FORM', context });
 	};
 
+	const closeWizard = () => {
+		setCloseConfirmOpen(false);
+		send({ type: 'CLOSE' });
+	};
+
 	const requestClose = () => {
+		if (isThankYou) {
+			closeWizard();
+
+			return;
+		}
+
 		setCloseConfirmOpen(true);
 	};
 
 	const confirmClose = () => {
-		setCloseConfirmOpen(false);
-		send({ type: 'CLOSE' });
+		closeWizard();
 	};
 
 	return (
