@@ -6,6 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
 import { ArrowUpDownIcon, Columns3Icon, FilterIcon, SearchIcon } from 'lucide-react';
+import { ReactNode } from 'react';
 import { Input } from '../../input';
 
 type ToolbarFilterOption = {
@@ -20,6 +21,13 @@ export type ToolbarFilter = {
 	value?: string;
 	options: ToolbarFilterOption[];
 	onChange: (value: string | undefined) => void;
+};
+
+export type ToolbarPrimaryAction = {
+	label: string;
+	icon?: ReactNode;
+	onSelect?: () => void;
+	disabled?: boolean;
 };
 
 type ToolbarColumn = {
@@ -40,6 +48,7 @@ type DataTableToolbarProps = {
 	searchValue?: string;
 	onSearchChange: (value: string) => void;
 	actionMenuItems?: ActionMenuItem[];
+	primaryAction?: ToolbarPrimaryAction;
 	filters?: ToolbarFilter[];
 	columns?: ToolbarColumn[];
 	sortOptions?: ToolbarSortOption[];
@@ -55,6 +64,7 @@ export const DataTableToolbar = ({
 	searchValue,
 	onSearchChange,
 	actionMenuItems,
+	primaryAction,
 	filters = [],
 	columns = [],
 	sortOptions = [],
@@ -293,6 +303,19 @@ export const DataTableToolbar = ({
 				) : null}
 				{showControls ? <ActionMenu items={actionMenuItems} /> : null}
 			</div>
+			{primaryAction ? (
+				<Button
+					type="button"
+					variant="default"
+					onClick={primaryAction.onSelect}
+					disabled={primaryAction.disabled}
+					data-testid={'data-table-toolbar-primary-action'}
+					aria-label={primaryAction.label}
+				>
+					{primaryAction.icon}
+					<span>{primaryAction.label}</span>
+				</Button>
+			) : null}
 		</div>
 	);
 };

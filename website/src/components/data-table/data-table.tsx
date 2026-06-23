@@ -5,6 +5,7 @@ import { BaseTable } from '@/components/data-table/elements/base-table';
 import { DataTableEmptyState } from '@/components/data-table/elements/data-table-empty-state';
 import {
 	DataTableToolbar,
+	ToolbarPrimaryAction,
 	type ToolbarFilter,
 	type ToolbarSortOption,
 } from '@/components/data-table/elements/data-table-toolbar';
@@ -31,6 +32,7 @@ type DataTableProps<Row> = {
 	error?: string | null;
 	emptyMessage: string;
 	actionMenuItems?: ActionMenuItem[];
+	toolbarPrimaryAction?: ToolbarPrimaryAction;
 	data: Row[];
 	makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, translator?: Translator) => ColumnDef<Row>[];
 	hideProgramName?: boolean;
@@ -71,6 +73,7 @@ export default function DataTable<Row>({
 	titleInfoTooltip,
 	error,
 	emptyMessage,
+	toolbarPrimaryAction,
 	actionMenuItems,
 	data,
 	makeColumns,
@@ -95,32 +98,32 @@ export default function DataTable<Row>({
 	const baseColumns = makeColumns(hideProgramName, hideLocalPartner, translator);
 	const columns = showEntityIdColumn
 		? ([
-				{
-					id: 'id',
-					header: 'ID',
-					accessorFn: (row: Row) => {
-						const value = (row as { id?: unknown }).id;
-						if (typeof value === 'string' || typeof value === 'number') {
-							return String(value);
-						}
+			{
+				id: 'id',
+				header: 'ID',
+				accessorFn: (row: Row) => {
+					const value = (row as { id?: unknown }).id;
+					if (typeof value === 'string' || typeof value === 'number') {
+						return String(value);
+					}
 
-						return '';
-					},
-					cell: (ctx) => <IdCell ctx={ctx} />,
+					return '';
 				},
-				...baseColumns,
-			] as ColumnDef<Row>[])
+				cell: (ctx) => <IdCell ctx={ctx} />,
+			},
+			...baseColumns,
+		] as ColumnDef<Row>[])
 		: baseColumns;
 	const activeQuery = query ?? null;
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
 		showEntityIdColumn
 			? {
-					id: false,
-					firebaseAuthUserId: false,
-				}
+				id: false,
+				firebaseAuthUserId: false,
+			}
 			: {
-					firebaseAuthUserId: false,
-				},
+				firebaseAuthUserId: false,
+			},
 	);
 	const displayedData = data;
 	const isDatasetEmpty = activeQuery ? activeQuery.totalRows === 0 : data.length === 0;
@@ -160,50 +163,50 @@ export default function DataTable<Row>({
 	const resolvedToolbarFilters: ToolbarFilter[] =
 		onQueryChange && toolbarFilters.length > 0
 			? toolbarFilters.map((filter) => ({
-					id: filter.id,
-					label: filter.label,
-					placeholder: filter.placeholder,
-					value: filter.value,
-					options: filter.options,
-					onChange: (value) => {
-						const patch: Partial<TableQueryState> = { page: 1 };
-						patch[filter.queryKey] = value as never;
-						onQueryChange(patch);
-					},
-				}))
+				id: filter.id,
+				label: filter.label,
+				placeholder: filter.placeholder,
+				value: filter.value,
+				options: filter.options,
+				onChange: (value) => {
+					const patch: Partial<TableQueryState> = { page: 1 };
+					patch[filter.queryKey] = value as never;
+					onQueryChange(patch);
+				},
+			}))
 			: [];
 	const clearAllToolbarFilters =
 		onQueryChange && toolbarFilters.length > 0
 			? () => {
-					const patch: Partial<TableQueryState> = { page: 1 };
-					toolbarFilters.forEach((filter) => {
-						patch[filter.queryKey] = undefined;
-					});
-					onQueryChange(patch);
-				}
+				const patch: Partial<TableQueryState> = { page: 1 };
+				toolbarFilters.forEach((filter) => {
+					patch[filter.queryKey] = undefined;
+				});
+				onQueryChange(patch);
+			}
 			: undefined;
 	const toolbarColumns = showColumnVisibilitySelector
 		? columns
-				.map((column) => {
-					const hasAccessorKey = 'accessorKey' in column;
-					const fallbackId = hasAccessorKey && typeof column.accessorKey === 'string' ? column.accessorKey : column.id;
-					if (!fallbackId || column.enableHiding === false) {
-						return null;
-					}
-					const label = typeof column.header === 'string' ? column.header : humanizeIdentifier(String(fallbackId));
+			.map((column) => {
+				const hasAccessorKey = 'accessorKey' in column;
+				const fallbackId = hasAccessorKey && typeof column.accessorKey === 'string' ? column.accessorKey : column.id;
+				if (!fallbackId || column.enableHiding === false) {
+					return null;
+				}
+				const label = typeof column.header === 'string' ? column.header : humanizeIdentifier(String(fallbackId));
 
-					return {
-						id: String(fallbackId),
-						label,
-						visible: columnVisibility[String(fallbackId)] !== false,
-						onToggle: (visible: boolean) =>
-							setColumnVisibility((previous) => ({
-								...previous,
-								[String(fallbackId)]: visible,
-							})),
-					};
-				})
-				.filter((column): column is NonNullable<typeof column> => Boolean(column))
+				return {
+					id: String(fallbackId),
+					label,
+					visible: columnVisibility[String(fallbackId)] !== false,
+					onToggle: (visible: boolean) =>
+						setColumnVisibility((previous) => ({
+							...previous,
+							[String(fallbackId)]: visible,
+						})),
+				};
+			})
+			.filter((column): column is NonNullable<typeof column> => Boolean(column))
 		: [];
 	const toolbarSortOptions: ToolbarSortOption[] = sortOptions;
 	const onSortToolbarChange = (sortBy?: string, sortDirection?: 'asc' | 'desc') => {
@@ -255,6 +258,7 @@ export default function DataTable<Row>({
 					columns={toolbarColumns}
 					onClearFilters={clearAllToolbarFilters}
 					actionMenuItems={actionMenuItems}
+					primaryAction={toolbarPrimaryAction}
 				/>
 			</div>
 
@@ -293,20 +297,20 @@ export default function DataTable<Row>({
 					serverSorting={
 						activeQuery && onQueryChange
 							? {
-									sorting: serverSortingState,
-									onSortingChange: onServerSortingChange,
-								}
+								sorting: serverSortingState,
+								onSortingChange: onServerSortingChange,
+							}
 							: undefined
 					}
 					serverPagination={
 						activeQuery && onQueryChange
 							? {
-									page: activeQuery.page,
-									pageSize: activeQuery.pageSize,
-									totalRows: activeQuery.totalRows,
-									onPageChange: (page) => onQueryChange({ page }),
-									onPageSizeChange: (pageSize) => onQueryChange({ page: 1, pageSize }),
-								}
+								page: activeQuery.page,
+								pageSize: activeQuery.pageSize,
+								totalRows: activeQuery.totalRows,
+								onPageChange: (page) => onQueryChange({ page }),
+								onPageSizeChange: (pageSize) => onQueryChange({ page: 1, pageSize }),
+							}
 							: undefined
 					}
 				/>

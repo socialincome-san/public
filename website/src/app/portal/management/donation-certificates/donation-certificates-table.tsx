@@ -28,13 +28,11 @@ export const DonationCertificateTable = ({
 				rows={rows}
 				error={error}
 				query={query}
-				actionMenuItems={[
-					{
-						label: 'Generate Donation Certificates',
-						icon: <FileTextIcon />,
-						onSelect: () => setOpen(true),
-					},
-				]}
+				toolbarPrimaryAction={{
+					label: 'Generate Donation Certificates',
+					icon: <FileTextIcon />,
+					onSelect: () => setOpen(true),
+				}}
 			/>
 		</>
 	);
