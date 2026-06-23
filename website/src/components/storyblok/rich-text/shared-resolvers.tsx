@@ -57,12 +57,12 @@ export const storyblokRichTextMarkResolvers = {
 };
 
 const headingStyles: Record<number, string> = {
-	1: 'text-4xl font-bold',
-	2: 'text-3xl font-bold',
-	3: 'text-2xl font-bold',
-	4: 'text-xl font-bold',
-	5: 'text-lg font-medium',
-	6: 'text-base font-medium',
+	1: 'text-4xl',
+	2: 'text-3xl',
+	3: 'text-2xl',
+	4: 'text-xl',
+	5: 'text-lg',
+	6: 'text-base',
 };
 
 export const storyblokRichTextBasicNodeResolvers = {
