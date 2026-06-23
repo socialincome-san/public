@@ -19,6 +19,7 @@ import {
 	getJournalArticleStoryPath,
 	getJournalTagStoryPath,
 	getPersonStoryPath,
+	getProgramStoryPath,
 } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
@@ -82,6 +83,7 @@ export class StoryblokService extends BaseService {
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
 	private static readonly standardStoryRelationsToResolve = [
 		'faqSelection.questions',
+		'program.faq',
 		'downloads.documents',
 		'partnershipsCarousel.partnerships',
 		'Country.partners',
@@ -91,7 +93,6 @@ export class StoryblokService extends BaseService {
 	private static readonly countryRelationsToResolve = ['Country.partners'];
 	private static readonly focusRelationsToResolve = ['Focus.studies'];
 	private static readonly localPartnerRelationsToResolve = ['Local Partner.focuses', 'Local Partner.partners'];
-	private static readonly programRelationsToResolve = ['program.faq'];
 	private static readonly defaultPageSize = 50;
 	private static readonly contentField = 'content';
 	private static readonly leadTextField = 'leadText';
@@ -500,7 +501,6 @@ export class StoryblokService extends BaseService {
 			const params: ISbStoriesParams = {
 				...baseParams,
 				starts_with: `${StoryblokService.programsPath}/`,
-				resolve_relations: StoryblokService.programRelationsToResolve,
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 			let programs = data.filter((story) => StoryblokService.isProgramStory(story));
@@ -510,7 +510,6 @@ export class StoryblokService extends BaseService {
 					...baseParams,
 					version: 'draft',
 					starts_with: `${StoryblokService.programsPath}/`,
-					resolve_relations: StoryblokService.programRelationsToResolve,
 				};
 				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
 				programs = draftData.filter((story) => StoryblokService.isProgramStory(story));
@@ -560,35 +559,7 @@ export class StoryblokService extends BaseService {
 	}
 
 	async getProgramBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Program>>> {
-		const loadProgram = async (language: string) => {
-			const programs = await this.getPrograms(language);
-			if (!programs.success) {
-				return undefined;
-			}
-
-			return programs.data.find((program) => {
-				const fullSlugTail = program.full_slug?.split('/').at(-1);
-
-				return program.slug === slug || fullSlugTail === slug;
-			});
-		};
-
-		try {
-			let story = await loadProgram(lang);
-			if (!story && lang !== defaultLanguage) {
-				story = await loadProgram(defaultLanguage);
-			}
-
-			if (!story) {
-				return this.resultFail(`Failed to fetch program: not found for slug '${slug}'`);
-			}
-
-			return this.resultOk(story);
-		} catch (error) {
-			this.logger.error(error);
-
-			return this.resultFail(`Failed to fetch program: ${JSON.stringify(error)}`);
-		}
+		return this.getStoryWithFallback<ISbStoryData<Program>>(getProgramStoryPath(slug), lang);
 	}
 
 	async getFaqs(lang: string, limit = 5): Promise<ServiceResult<ISbStoryData<Faq>[]>> {

@@ -1,4 +1,4 @@
-import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
+import { getProgramImages, getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import type { Program, ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
@@ -52,17 +52,12 @@ export const loadProgramDetailData = async (urlSlug: string, lang: string): Prom
 		const story = programResult.data;
 		const portalSlug = getProgramPortalSlug(story.content);
 		const portalData = portalSlug ? await loadProgramDetailPortalData(portalSlug) : {};
-		console.log("story.content.faq", story.content.faq);
+
 		return {
 			title: getProgramTitle(story.content),
 			fullSlug: story.full_slug,
 			heroImage: story.content.primaryImage,
-			images: [
-				story.content.primaryImage,
-				story.content.secondaryImage,
-				story.content.tertiaryImage,
-				story.content.fourthImage,
-			].filter((image): image is StoryblokAsset => Boolean(image?.filename)),
+			images: getProgramImages(story.content),
 			description: story.content.description?.trim() || undefined,
 			faq: story.content.faq,
 			...portalData,

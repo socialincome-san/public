@@ -45,8 +45,6 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 		resolveProgramCountry(countryIsoCode, lang, region),
 	]);
 
-	console.log("programDetailData.faq", programDetailData.faq);
-
 	const faqItems = resolveFaqItems(programDetailData.faq ?? []);
 
 	return (

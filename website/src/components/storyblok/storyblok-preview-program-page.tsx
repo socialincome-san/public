@@ -1,7 +1,7 @@
 import { loadProgramDetailPortalData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramDetail } from '@/components/storyblok/program/program-detail';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
-import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
+import { getProgramImages, getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
@@ -37,7 +37,9 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, pre
 						title: programTitle,
 						fullSlug: story.full_slug,
 						heroImage: story.content.primaryImage,
+						images: getProgramImages(story.content),
 						description: story.content.description?.trim() || undefined,
+						faq: story.content.faq,
 						...programDetailPortalData,
 					}}
 					lang={lang}
