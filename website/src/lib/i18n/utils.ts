@@ -56,7 +56,7 @@ export type WebsiteCurrency = Extract<Currency, 'USD' | 'EUR' | 'CHF' | 'SLE'>;
 export const websiteCurrencies: WebsiteCurrency[] = ['USD', 'EUR', 'CHF'];
 
 export const isWebsiteCurrency = (value: string | undefined): value is WebsiteCurrency =>
-	value !== undefined && websiteCurrencies.includes(value as WebsiteCurrency);
+	value !== undefined && websiteCurrencies.some((currency) => currency === value);
 
 /**
  * Check if the user has set a language and region cookie, and if they are valid. If so, return them.

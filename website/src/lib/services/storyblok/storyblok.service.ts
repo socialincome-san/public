@@ -559,7 +559,32 @@ export class StoryblokService extends BaseService {
 	}
 
 	async getProgramBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Program>>> {
-		return this.getStoryWithFallback<ISbStoryData<Program>>(getProgramStoryPath(slug), lang);
+		const storyPath = getProgramStoryPath(slug);
+
+		try {
+			const data = await this.withOptionalLanguageFallback(
+				async (language: string) => {
+					const response = await getStoryblokApi().get(`cdn/stories/${storyPath}`, {
+						...(await this.getStoryParams(language)),
+						resolve_relations: StoryblokService.standardStoryRelationsToResolve,
+					});
+
+					return (response.data as { story: ISbStoryData<Program> }).story;
+				},
+				lang,
+				storyPath,
+			);
+
+			if (!data) {
+				return this.resultFail(`Failed to fetch program: not found for slug '${slug}'`);
+			}
+
+			return this.resultOk(data);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch program: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async getFaqs(lang: string, limit = 5): Promise<ServiceResult<ISbStoryData<Faq>[]>> {

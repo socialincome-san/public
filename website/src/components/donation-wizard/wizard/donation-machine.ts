@@ -26,6 +26,7 @@ import {
 } from './donation-wizard-context';
 
 export const donationWizardMachine = setup({
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- XState uses this empty object to carry machine types.
 	types: {} as {
 		context: DonationWizardContext;
 		events:
