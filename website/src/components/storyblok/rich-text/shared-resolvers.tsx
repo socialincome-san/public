@@ -21,7 +21,7 @@ type RichTextLinkProps = {
 	rel?: string;
 };
 
-const linkClassName = 'text-primary font-medium underline-offset-4';
+const linkClassName = 'text-primary font-medium underline underline-offset-4';
 
 const buildLinkRel = (target?: string, rel?: string) => {
 	if (target !== '_blank') {
