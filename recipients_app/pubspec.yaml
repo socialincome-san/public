@@ -16,7 +16,7 @@ dependencies:
   connectivity_plus: ^6.1.1
   dart_mappable: ^4.7.0
   drift: ^2.31.0
-  drift_flutter: ^0.2.8
+  drift_flutter: ^0.3.0
   firebase_analytics: ^12.1.3 # Is required to use Firebase Remote Config.
   firebase_app_check: ^0.4.1+3
   firebase_auth: ^6.2.0
