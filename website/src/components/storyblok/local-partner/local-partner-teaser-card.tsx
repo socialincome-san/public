@@ -33,7 +33,7 @@ export const LocalPartnerTeaserCard = ({ localPartner, lang, region, viewDetails
 			href={href}
 			aria-label={`${title}, ${viewDetailsLabel}`}
 			className={cn(
-				'group flex h-full w-full max-w-[305px] flex-col overflow-hidden rounded-xl bg-white p-3',
+				'bg-card group flex h-full w-full max-w-[305px] flex-col overflow-hidden rounded-xl p-3',
 				className,
 				'shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]',
 				'transition-[box-shadow,transform] duration-200 ease-out',
@@ -55,7 +55,7 @@ export const LocalPartnerTeaserCard = ({ localPartner, lang, region, viewDetails
 			<div className="flex flex-1 flex-col gap-3 px-2 pt-4 pb-2">
 				<h2 className="text-foreground text-xl leading-7 font-bold">{title}</h2>
 				{description ? <p className="text-muted-foreground line-clamp-4 flex-1 text-sm leading-6">{description}</p> : null}
-				<span className="text-foreground mt-auto inline-flex w-fit items-center gap-1.5 rounded-full bg-slate-100 py-1.5 pr-2 pl-3 text-xs leading-none font-bold transition-colors group-hover:bg-slate-200/80">
+				<span className="text-foreground bg-muted group-hover:bg-muted/80 mt-auto inline-flex w-fit items-center gap-1.5 rounded-full py-1.5 pr-2 pl-3 text-xs leading-none font-bold transition-colors">
 					{viewDetailsLabel}
 					<ChevronRightIcon className="size-[15px] shrink-0" aria-hidden="true" />
 				</span>

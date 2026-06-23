@@ -13,7 +13,7 @@ export const ImpactMeasurementPrivacyTooltip = ({ message }: ImpactMeasurementPr
 			<button
 				type="button"
 				aria-label={message}
-				className="inline-flex text-cyan-800"
+				className="text-muted-foreground hover:text-foreground inline-flex"
 				onClick={(event) => event.preventDefault()}
 			>
 				<Info className="size-4" />

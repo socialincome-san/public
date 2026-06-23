@@ -31,7 +31,10 @@ export const LocalPartnerFocusBadges = ({ lang, region, focuses }: FocusBadgesPr
 
 				return (
 					<Link key={focusStory.uuid} href={`/${lang}/${region}/focuses/${focusSlug}`}>
-						<Badge variant="outline" className="border-sky-300 bg-sky-50 text-sky-700 transition-colors hover:bg-sky-100">
+						<Badge
+							variant="outline"
+							className="border-accent bg-accent text-accent-foreground hover:bg-accent/80 transition-colors"
+						>
 							{focusTitle}
 						</Badge>
 					</Link>
@@ -79,39 +82,39 @@ export const LocalPartnerAboutMetaCard = ({
 	}
 
 	return (
-		<div className="mt-2 rounded-2xl border border-slate-200 bg-white p-6">
+		<div className="border-border bg-card mt-2 rounded-2xl border p-6">
 			<div className="grid gap-6 lg:grid-cols-2">
 				{mission ? (
 					<div className="lg:col-span-2">
-						<p className="text-sm font-semibold text-slate-600">Mission</p>
-						<p className="mt-2 text-base text-slate-900">{mission}</p>
+						<p className="text-muted-foreground text-sm font-bold">Mission</p>
+						<p className="text-foreground mt-2 text-base">{mission}</p>
 					</div>
 				) : null}
 
 				<div className="space-y-3">
 					{partnerSince ? (
 						<div className="flex items-baseline justify-between gap-4">
-							<p className="text-sm text-slate-600">Partner since</p>
-							<p className="text-sm font-medium text-slate-900">{partnerSince}</p>
+							<p className="text-muted-foreground text-sm">Partner since</p>
+							<p className="text-foreground text-sm font-medium">{partnerSince}</p>
 						</div>
 					) : null}
 					{foundingYear ? (
 						<div className="flex items-baseline justify-between gap-4">
-							<p className="text-sm text-slate-600">Founded</p>
-							<p className="text-sm font-medium text-slate-900">{foundingYear}</p>
+							<p className="text-muted-foreground text-sm">Founded</p>
+							<p className="text-foreground text-sm font-medium">{foundingYear}</p>
 						</div>
 					) : null}
 					{location ? (
 						<div className="flex items-baseline justify-between gap-4">
-							<p className="text-sm text-slate-600">Location</p>
-							<p className="text-sm font-medium text-slate-900">{location}</p>
+							<p className="text-muted-foreground text-sm">Location</p>
+							<p className="text-foreground text-sm font-medium">{location}</p>
 						</div>
 					) : null}
 				</div>
 
 				{resolvedExternalLinks.length > 0 ? (
 					<div>
-						<p className="text-sm font-semibold text-slate-600">Online</p>
+						<p className="text-muted-foreground text-sm font-bold">Online</p>
 						<div className="mt-3 flex flex-wrap gap-2">
 							{resolvedExternalLinks.map(({ label, href }) => (
 								<Link
@@ -119,7 +122,7 @@ export const LocalPartnerAboutMetaCard = ({
 									href={href}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium text-slate-900 transition-colors hover:bg-slate-100"
+									className="text-foreground border-border bg-muted/50 hover:bg-muted rounded-full border px-3 py-1 text-sm font-medium transition-colors"
 								>
 									{label}
 								</Link>

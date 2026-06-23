@@ -40,7 +40,7 @@ export default function Page({ params }: SurveyPageProps) {
 
 	if (hasError) {
 		return (
-			<div className="mx-auto max-w-md rounded-2xl bg-red-50 px-5 py-4 text-sm text-red-900">
+			<div className="text-destructive bg-destructive-foreground mx-auto max-w-md rounded-2xl px-5 py-4 text-sm">
 				Error logging in. Please check your credentials.
 			</div>
 		);
@@ -49,7 +49,7 @@ export default function Page({ params }: SurveyPageProps) {
 	return (
 		<form className="mx-auto flex max-w-md flex-col gap-4" method="post" onSubmit={handleSubmit}>
 			<div className="space-y-1 text-center">
-				<h1 className="text-2xl font-semibold tracking-tight">Open your survey</h1>
+				<h1 className="text-2xl font-bold tracking-tight">Open your survey</h1>
 				<p className="text-muted-foreground text-sm">Enter the access details from your survey link.</p>
 			</div>
 			<div className="space-y-3">

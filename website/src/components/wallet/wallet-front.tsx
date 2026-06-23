@@ -29,7 +29,7 @@ const WalletFrontContent = ({ variant, title, subtitle, badge, footerLeft, foote
 	<div
 		className={cn(
 			'flex-1 pt-9',
-			'text-[color:var(--text-color)]',
+			variant === 'default' ? 'text-primary-foreground' : 'text-card-foreground',
 			'[background:var(--wallet-front-bg)]',
 			'[clip-path:polygon(100%_0%,_100%_100%,_0%_100%,_0%_0%,_var(--slant-shift)_0%,_var(--slant-position)_var(--slant-height),_calc(100%_-_var(--slant-position))_var(--slant-height),_calc(100%_-_var(--slant-shift))_0%)]',
 		)}

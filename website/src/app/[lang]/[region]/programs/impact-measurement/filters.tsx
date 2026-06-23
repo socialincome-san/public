@@ -77,11 +77,11 @@ export const ImpactMeasurementFilters = ({
 				onValueChange={updateMultiFilter}
 				placeholder={allFiltersPlaceholder}
 				placeholderIcon={Funnel}
-				placeholderClassName="text-cyan-950"
+				placeholderClassName="text-foreground"
 				hideSelectAll
 				searchable={false}
 				maxCount={3}
-				className="h-10 min-w-52 border-slate-200 bg-white px-2 text-sm font-medium text-cyan-950 sm:min-w-72"
+				className="text-foreground border-border bg-card h-10 min-w-52 px-2 text-sm font-medium sm:min-w-72"
 				popoverClassName="max-w-sm"
 				popoverAlign="end"
 			/>

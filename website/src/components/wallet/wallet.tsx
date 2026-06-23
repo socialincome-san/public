@@ -52,7 +52,6 @@ export const Wallet = ({
 					? '0 0 0 var(--shadow-size) rgba(255,255,255,0.3)'
 					: '0 0 0 var(--shadow-size) rgba(255,255,255,0.5), 0 0 0 calc(2* var(--shadow-size)) rgba(255,255,255,0.3)'
 				: 'none',
-		'--text-color': variant === 'default' ? 'hsl(var(--card))' : 'inherit',
 	};
 
 	const content = (

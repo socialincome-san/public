@@ -22,7 +22,7 @@ export const TotalsSection = ({ totals, lang }: TotalsSectionProps) => {
 
 	return (
 		<section>
-			<h2 className="mb-6 text-2xl font-semibold">Overview</h2>
+			<h2 className="mb-6 text-2xl font-bold">Overview</h2>
 			<div className="grid gap-6 md:grid-cols-3">
 				<Card>
 					<div className="space-y-2">

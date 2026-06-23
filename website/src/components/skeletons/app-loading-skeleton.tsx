@@ -23,7 +23,7 @@ export const AppLoadingSkeleton = ({ message }: AppLoadingSkeletonProps) => {
 
 	return (
 		<div
-			className={cn('flex w-full items-center justify-center rounded-xl bg-white', 'min-h-[680px] md:min-h-[760px]')}
+			className={cn('bg-card flex w-full items-center justify-center rounded-xl', 'min-h-[680px] md:min-h-[760px]')}
 			data-testid="app-loading-skeleton"
 		>
 			<div className="flex flex-col items-center gap-3 px-6 text-center">

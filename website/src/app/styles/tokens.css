@@ -31,6 +31,8 @@
 		--gradient-background-to: rgba(202, 221, 233, 0.6);
 		--confirm: 142 76% 36%;
 		--confirm-foreground: 141 84% 93%;
+		--warning: 38 92% 50%;
+		--warning-foreground: 48 96% 89%;
 		--gradient-card-from: 203 40% 53%;
 		--gradient-card-to: 96 10% 81%;
 	}

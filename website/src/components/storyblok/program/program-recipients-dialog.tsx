@@ -92,12 +92,12 @@ export const ProgramRecipientsDialog = ({
 					{t('program-detail-page.loading')}
 				</p>
 			) : hasError ? (
-				<div className="flex flex-col gap-4 rounded-md border border-red-200 bg-red-50 p-4 text-red-900">
+				<div className="text-destructive border-destructive/20 bg-destructive-foreground flex flex-col gap-4 rounded-md border p-4">
 					<p className="font-medium">{t('program-detail-page.load-recipients-error')}</p>
 					<Button
 						type="button"
 						variant="outline"
-						className="self-start border-red-300 bg-white text-red-900 hover:bg-red-100"
+						className="text-destructive border-destructive/30 bg-card hover:bg-destructive-foreground self-start"
 						onClick={() => {
 							setHasError(false);
 							setRetryKey((current) => current + 1);

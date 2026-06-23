@@ -72,7 +72,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 		<div {...storyblokEditable(blok as SbBlokData)} className="storyblok__outline full-bleed-hero flex flex-col gap-6">
 			<div
 				className={cn(
-					'relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden bg-black transition-[border-radius] duration-300 ease-out md:min-h-160',
+					'bg-foreground relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden transition-[border-radius] duration-300 ease-out md:min-h-160',
 					isExpanded ? 'z-60' : 'rounded-b-3xl md:rounded-b-[56px]',
 				)}
 			>
@@ -92,8 +92,8 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 					{subtitleUrl && <track kind="captions" src={subtitleUrl} srcLang={lang} label={lang.toUpperCase()} default />}
 					<style>{`
             video::cue {
-              background-color: rgba(0, 0, 0, 0.8);
-              color: white;
+              background-color: hsl(var(--foreground) / 0.8);
+              color: hsl(var(--primary-foreground));
               font-size: 24px;
               opacity: ${isExpanded && showCaptions ? 1 : 0};
             }
@@ -147,7 +147,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 				)}
 
 				{!isExpanded && (
-					<div className="w-site-width max-w-content absolute inset-0 z-20 mx-auto flex flex-row items-center justify-between gap-4 text-white">
+					<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto flex flex-row items-center justify-between gap-4">
 						<div className="flex max-w-2xl flex-col gap-6">
 							{heading && (
 								<h1 className="text-4xl font-light xl:text-6xl [&_strong]:font-bold">
