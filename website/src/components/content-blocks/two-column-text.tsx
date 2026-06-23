@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const TwoColumnTextBlock = ({ blok }: Props) => {
-	const { leftText, rightText } = blok;
+	const { leftText, rightText, columnRatio } = blok;
 
 	if (!leftText && !rightText) {
 		return null;
@@ -16,7 +16,7 @@ export const TwoColumnTextBlock = ({ blok }: Props) => {
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
-			<TwoColumnTextContent leftText={leftText} rightText={rightText} />
+			<TwoColumnTextContent leftText={leftText} rightText={rightText} columnRatio={columnRatio} />
 		</BlockWrapper>
 	);
 };

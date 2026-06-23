@@ -514,6 +514,7 @@ export interface Transparency {
 export interface TwoColumnText {
   leftText: StoryblokRichtext;
   rightText: StoryblokRichtext;
+  columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
   component: "twoColumnText";
   _uid: string;
   [k: string]: unknown;
