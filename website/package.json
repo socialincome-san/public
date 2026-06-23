@@ -123,7 +123,7 @@
 		"@types/accept-language-parser": "1.5.8",
 		"@types/jest": "30.0.0",
 		"@types/js-cookie": "3.0.6",
-		"@types/luxon": "3.7.1",
+		"@types/luxon": "3.7.2",
 		"@types/node": "25.9.4",
 		"@types/pdfkit": "0.17.6",
 		"@types/react": "19.2.17",
