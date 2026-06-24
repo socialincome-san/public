@@ -23,7 +23,35 @@ type RichTextLinkProps = {
 	rel?: string;
 };
 
+type RichTextAlignment = 'left' | 'center' | 'middle' | 'right';
+
+type RichTextAlignmentProps = {
+	textAlign?: unknown;
+	align?: unknown;
+	alignment?: unknown;
+};
+
+type RichTextHeadingProps = RichTextAlignmentProps & {
+	level: number;
+};
+
 const linkClassName = 'text-primary font-medium underline underline-offset-4';
+
+const alignmentClassNames: Record<RichTextAlignment, string> = {
+	left: 'text-left',
+	center: 'text-center',
+	middle: 'text-center',
+	right: 'text-right',
+};
+
+const isRichTextAlignment = (value: unknown): value is RichTextAlignment =>
+	value === 'left' || value === 'center' || value === 'middle' || value === 'right';
+
+const getRichTextAlignmentClassName = ({ textAlign, align, alignment }: RichTextAlignmentProps = {}) => {
+	const value = textAlign ?? align ?? alignment;
+
+	return isRichTextAlignment(value) ? alignmentClassNames[value] : undefined;
+};
 
 const buildLinkRel = (target?: string, rel?: string) => {
 	if (target !== '_blank') {
@@ -70,12 +98,18 @@ const headingStyles: Record<number, string> = {
 };
 
 export const storyblokRichTextBasicNodeResolvers = {
-	[NODE_HEADING]: (children: ReactNode, { level }: { level: number }) =>
-		createElement(`h${level}`, { className: cn(headingStyles[level], 'my-4') }, children),
+	[NODE_HEADING]: (children: ReactNode, props: RichTextHeadingProps) =>
+		createElement(
+			`h${props.level}`,
+			{ className: cn(headingStyles[props.level], 'my-4', getRichTextAlignmentClassName(props)) },
+			children,
+		),
 	[NODE_UL]: (children: ReactNode) => <ul className="text-foreground my-4 list-disc space-y-1 pl-6">{children}</ul>,
 	[NODE_OL]: (children: ReactNode) => <ol className="text-foreground my-4 list-decimal space-y-1 pl-6">{children}</ol>,
 	[NODE_LI]: (children: ReactNode) => <li className="[&::marker]:text-foreground my-1 *:m-0 *:p-0">{children}</li>,
-	[NODE_PARAGRAPH]: (children: ReactNode) => <p className="text-foreground my-4">{children}</p>,
+	[NODE_PARAGRAPH]: (children: ReactNode, props?: RichTextAlignmentProps) => (
+		<p className={cn('text-foreground my-4', getRichTextAlignmentClassName(props))}>{children}</p>
+	),
 };
 
 const storyblokRichTextTableNodeResolvers = {
