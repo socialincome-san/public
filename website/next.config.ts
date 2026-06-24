@@ -2,11 +2,20 @@ import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
 import path from 'path';
 import { getRedirects } from './redirects';
+import { securityHeaders } from './security-headers';
 
 let nextConfig: NextConfig = {
 	transpilePackages: ['storyblok-rich-text-react-renderer'],
 	reactStrictMode: true,
 	redirects: getRedirects,
+	headers() {
+		return [
+			{
+				source: '/:path*',
+				headers: securityHeaders,
+			},
+		];
+	},
 	turbopack: {
 		root: path.join(process.cwd(), '..'),
 	},
