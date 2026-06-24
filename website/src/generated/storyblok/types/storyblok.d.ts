@@ -71,7 +71,7 @@ interface StoryblokMultilinkUrl {
     url: string;
     full_slug: string;
 }
-interface StoryblokMultilinkBase {
+interface StoryblokMultilink {
     fieldtype: 'multilink';
     id: string;
     url: string;
@@ -81,18 +81,10 @@ interface StoryblokMultilinkBase {
     rel?: string;
     title?: string;
     prep?: string;
-}
-type StoryblokMultilink = (StoryblokMultilinkBase & {
-    linktype: 'story';
+    linktype: 'story' | 'url' | 'email' | 'asset';
     story?: StoryblokMultilinkStory | StoryblokMultilinkLink | StoryblokMultilinkUrl;
-}) | (StoryblokMultilinkBase & {
-    linktype: 'url';
-}) | (StoryblokMultilinkBase & {
-    linktype: 'email';
-    email: string;
-}) | (StoryblokMultilinkBase & {
-    linktype: 'asset';
-});
+    email?: string;
+}
 interface StoryblokTable {
     fieldtype: 'table';
     thead: Array<{
