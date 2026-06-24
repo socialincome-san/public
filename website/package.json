@@ -158,7 +158,7 @@
 		"fast-xml-builder": "1.2.0",
 		"protobufjs": "8.6.4",
 		"uuid": "14.0.1",
-		"tabbable": "6.4.0",
+		"tabbable": "6.5.0",
 		"nanoid": "5.1.15"
 	}
 }
