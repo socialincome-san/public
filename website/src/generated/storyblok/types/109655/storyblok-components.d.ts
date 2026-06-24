@@ -453,7 +453,7 @@ export interface ReferencesGroup {
 }
 
 export interface Spacer {
-  size?: "" | "xs" | "s" | "m" | "l" | "xl";
+  size: "" | "xs" | "s" | "m" | "l" | "xl";
   component: "spacer";
   _uid: string;
   [k: string]: unknown;
