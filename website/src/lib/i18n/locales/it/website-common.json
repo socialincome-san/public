@@ -78,6 +78,14 @@
 	},
 	"focuses-page": {
 		"empty": "Nessun focus trovato.",
+		"no-results": "Nessun focus corrisponde ai filtri selezionati.",
+		"load-stats-error": "Impossibile caricare le statistiche dei focus.",
+		"search-label": "Cerca focus",
+		"search-placeholder": "Cerca",
+		"all-countries": "Tutti i paesi ({{count}})",
+		"recipients": "Beneficiari",
+		"programs": "Programmi",
+		"sdgs": "SDG",
 		"program-singular": "programma",
 		"program-plural": "programmi",
 		"active-program-singular": "programma attivo",
@@ -86,6 +94,8 @@
 		"recipient-in-program-plural": "beneficiari in un programma",
 		"candidate-singular": "candidato",
 		"candidate-plural": "candidati",
+		"candidates-ready-to-enroll_one": "{{count}} candidato pronto per l'iscrizione",
+		"candidates-ready-to-enroll_other": "{{count}} candidati pronti per l'iscrizione",
 		"about": "Informazioni su"
 	},
 	"programs-page": {

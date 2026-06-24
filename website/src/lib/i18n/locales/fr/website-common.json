@@ -78,6 +78,14 @@
 	},
 	"focuses-page": {
 		"empty": "Aucun axe trouvé.",
+		"no-results": "Aucun axe ne correspond aux filtres sélectionnés.",
+		"load-stats-error": "Impossible de charger les statistiques des axes.",
+		"search-label": "Rechercher des axes",
+		"search-placeholder": "Rechercher",
+		"all-countries": "Tous les pays ({{count}})",
+		"recipients": "Bénéficiaires",
+		"programs": "Programmes",
+		"sdgs": "ODD",
 		"program-singular": "programme",
 		"program-plural": "programmes",
 		"active-program-singular": "programme actif",
@@ -86,6 +94,8 @@
 		"recipient-in-program-plural": "bénéficiaires dans un programme",
 		"candidate-singular": "candidat",
 		"candidate-plural": "candidats",
+		"candidates-ready-to-enroll_one": "{{count}} candidat prêt à s'inscrire",
+		"candidates-ready-to-enroll_other": "{{count}} candidats prêts à s'inscrire",
 		"about": "À propos de"
 	},
 	"programs-page": {

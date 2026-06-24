@@ -9,8 +9,9 @@ import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
-export default async function FocusesOverviewRoute({ params }: DefaultPageProps) {
+export default async function FocusesOverviewRoute({ params, searchParams }: DefaultPageProps) {
 	const { lang, region } = await params;
+	const resolvedSearchParams = await searchParams;
 	const overviewResult = await services.storyblok.getStoryWithFallback<ISbStoryData<FocusOverview>>(
 		getFocusesOverviewStoryPath(),
 		lang,
@@ -21,6 +22,11 @@ export default async function FocusesOverviewRoute({ params }: DefaultPageProps)
 	}
 
 	return (
-		<FocusesOverviewPage overview={overviewResult.data} lang={lang as WebsiteLanguage} region={region as WebsiteRegion} />
+		<FocusesOverviewPage
+			overview={overviewResult.data}
+			lang={lang as WebsiteLanguage}
+			region={region as WebsiteRegion}
+			searchParams={resolvedSearchParams}
+		/>
 	);
 }
