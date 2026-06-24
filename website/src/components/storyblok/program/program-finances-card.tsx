@@ -2,12 +2,13 @@ import { Badge } from '@/components/badge';
 import { Progress } from '@/components/progress';
 import type { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
-import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
+import type { ProgramDashboardStats, ProgramFinancesDisplayAmounts } from '@/lib/services/program-stats/program-stats.types';
 import { formatCompactNumberLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import { TriangleAlert } from 'lucide-react';
 
 type Props = {
 	stats: ProgramDashboardStats;
+	displayAmounts: ProgramFinancesDisplayAmounts;
 	translator: Translator;
 	lang: WebsiteLanguage;
 	embedded?: boolean;
@@ -27,12 +28,12 @@ const clampPercent = (value: number): number => {
 	return Math.min(100, Math.max(0, value));
 };
 
-export const ProgramFinancesCard = ({ stats, translator, lang, embedded = false }: Props) => {
+export const ProgramFinancesCard = ({ stats, displayAmounts, translator, lang, embedded = false }: Props) => {
 	const locale = getSafeNumberFormatLocale(lang);
-	const currency = stats.payoutCurrency;
-	const sentToRecipients = formatCompactNumberLocale(stats.paidOutSoFarProgramCurrency, locale);
-	const totalProgramCosts = formatCompactNumberLocale(stats.totalProgramCostsProgramCurrency, locale);
-	const availableCredits = formatAmount(stats.availableCreditsProgramCurrency, locale, 2);
+	const currency = displayAmounts.currency;
+	const sentToRecipients = formatCompactNumberLocale(displayAmounts.paidOutSoFar, locale);
+	const totalProgramCosts = formatCompactNumberLocale(displayAmounts.totalProgramCosts, locale);
+	const availableCredits = formatAmount(displayAmounts.availableCredits, locale, 2);
 	const progressPercent = clampPercent(stats.payoutProgressPercent);
 	const showLowCreditsWarning = stats.availableCreditsInIntervals <= 3;
 
@@ -77,5 +78,5 @@ export const ProgramFinancesCard = ({ stats, translator, lang, embedded = false 
 		return <div className="flex flex-col gap-6">{content}</div>;
 	}
 
-	return <div className="flex flex-col gap-6 rounded-xl bg-white px-10 py-8 shadow-lg">{content}</div>;
+	return <div className="bg-card flex flex-col gap-6 rounded-xl px-10 py-8 shadow-lg">{content}</div>;
 };

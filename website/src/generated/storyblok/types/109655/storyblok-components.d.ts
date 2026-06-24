@@ -141,8 +141,8 @@ export interface EmbeddedVideo {
 }
 
 export interface Faq {
-  question: string;
-  answer?: string;
+  question: StoryblokRichtext;
+  answer?: StoryblokRichtext;
   component: "faq";
   _uid: string;
   [k: string]: unknown;
@@ -394,6 +394,7 @@ export interface Program {
   secondaryImage: StoryblokAsset;
   tertiaryImage: StoryblokAsset;
   fourthImage: StoryblokAsset;
+  faq?: (ISbStoryData<Faq> | string)[];
   component: "program";
   _uid: string;
   [k: string]: unknown;
@@ -513,6 +514,7 @@ export interface Transparency {
 export interface TwoColumnText {
   leftText: StoryblokRichtext;
   rightText: StoryblokRichtext;
+  columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
   component: "twoColumnText";
   _uid: string;
   [k: string]: unknown;

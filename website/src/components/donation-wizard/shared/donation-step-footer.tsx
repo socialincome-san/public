@@ -62,7 +62,7 @@ export const DonationStepFooter = ({ onBack, onContinue, continueLabel, continue
 					<Button
 						type="button"
 						data-testid="donation-wizard-continue"
-						className="h-10 w-full shrink-0 rounded-full px-4 text-sm font-semibold sm:h-9 sm:w-auto"
+						className="h-10 w-full shrink-0 rounded-full px-4 text-sm font-bold sm:h-9 sm:w-auto"
 						disabled={continueDisabled || !onContinue}
 						onClick={onContinue}
 					>

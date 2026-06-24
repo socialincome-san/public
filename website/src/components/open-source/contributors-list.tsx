@@ -22,7 +22,7 @@ export const ContributorsList = ({ contributors, heading, showAllLabel, commitSi
 
 	return (
 		<section>
-			<h2 className="mb-6 text-2xl font-semibold">
+			<h2 className="mb-6 text-2xl font-bold">
 				{totalContributors} {heading}
 			</h2>
 

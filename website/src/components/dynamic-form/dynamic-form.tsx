@@ -262,7 +262,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 						>
 							<AccordionItem
 								value={`accordion-${option}`}
-								className="rounded-xl border border-slate-200 bg-slate-100 px-2 [&[data-state=closed]>div]:h-0"
+								className="border-border bg-muted rounded-xl border px-2 [&[data-state=closed]>div]:h-0"
 							>
 								<AccordionTrigger data-testid={`form-accordion-trigger-${option}`}>
 									{formSchema.fields[option].label}
@@ -299,7 +299,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 			</form>
 			{/* TODO: add proper loading state */}
 			{isLoading && (
-				<div className="absolute top-0 right-0 flex h-full w-full items-center justify-center bg-white opacity-80">
+				<div className="bg-card absolute top-0 right-0 flex h-full w-full items-center justify-center opacity-80">
 					<Loader2 className="h-6 w-6 animate-spin" aria-label="Loading" />
 				</div>
 			)}

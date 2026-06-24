@@ -63,7 +63,7 @@ export const QrWizardStepFooter = ({
 				<Button
 					type="button"
 					data-testid={continueTestId}
-					className={cn('h-9 w-full shrink-0 rounded-full px-4 text-sm font-semibold sm:w-auto', !showBack && 'sm:ml-auto')}
+					className={cn('h-9 w-full shrink-0 rounded-full px-4 text-sm font-bold sm:w-auto', !showBack && 'sm:ml-auto')}
 					disabled={continueDisabled}
 					onClick={onContinue}
 				>
@@ -106,7 +106,7 @@ export const QrWizardStepFooter = ({
 						data-testid={continueTestId}
 						variant="default"
 						className={cn(
-							'h-9 w-full shrink-0 rounded-full px-4 text-sm font-semibold sm:max-w-none md:w-auto',
+							'h-9 w-full shrink-0 rounded-full px-4 text-sm font-bold sm:max-w-none md:w-auto',
 							'text-center whitespace-normal sm:whitespace-nowrap',
 							continueClassName,
 						)}

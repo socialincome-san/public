@@ -23,7 +23,7 @@ export const TagBadge = ({ tag, lang, region, variant = 'default' }: Props) => {
 			className={cn(
 				'inline-flex rounded-full px-3 py-1 text-sm font-medium capitalize transition-colors',
 				variant === 'hero'
-					? 'border border-white/40 text-white hover:bg-white/10'
+					? 'text-primary-foreground border-primary-foreground/40 hover:bg-primary-foreground/10 border'
 					: 'bg-muted text-foreground hover:bg-muted/80',
 			)}
 		>

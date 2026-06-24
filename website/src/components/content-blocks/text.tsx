@@ -13,7 +13,7 @@ export const TextBlock = ({ blok }: Props) => {
 	}
 
 	return (
-		<BlockWrapper className="text-lg text-black" {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper className="text-foreground text-lg" {...storyblokEditable(blok as SbBlokData)}>
 			<RichTextRenderer richTextDocument={blok.content} />
 		</BlockWrapper>
 	);

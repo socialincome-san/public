@@ -13,7 +13,7 @@ type Props = {
 };
 
 export const Testimonial = ({ entry }: Props) => (
-	<div className="overflow-hidden rounded-xl bg-white p-3">
+	<div className="bg-card overflow-hidden rounded-xl p-3">
 		<div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_281px]">
 			<div className="flex flex-col justify-between gap-8 p-8 md:p-10">
 				<Quote className="text-primary h-12 w-12" aria-hidden="true" />

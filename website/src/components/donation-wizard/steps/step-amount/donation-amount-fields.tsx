@@ -22,7 +22,7 @@ const amountOptions: { labelKey: 'currency-prefix' | 'other'; value: PresetAmoun
 	{ labelKey: 'other', value: 'other' },
 ];
 
-const segmentActive = 'bg-white shadow-xs';
+const segmentActive = 'bg-card shadow-xs';
 
 const monthlyIncomeInputId = 'donation-monthly-income';
 
@@ -64,14 +64,14 @@ export const DonationAmountFields = ({
 }: Props) => {
 	return (
 		<div className={cn(className, 'text-foreground md:px-9 md:py-9')} data-testid="donation-wizard-step-amount">
-			<h2 className="text-foreground mb-5 text-xl leading-tight font-semibold text-pretty sm:text-2xl sm:leading-none">
+			<h2 className="text-foreground mb-5 text-xl leading-tight font-bold text-pretty sm:text-2xl sm:leading-none">
 				{translations.title}
 			</h2>
 
 			<div className="border-muted mb-3 grid grid-cols-[minmax(0,1fr)_auto] overflow-hidden rounded-md border">
 				<div
 					className={cn(
-						'border-muted border-r bg-white px-3 py-2 transition-colors',
+						'border-muted bg-card border-r px-3 py-2 transition-colors',
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
@@ -111,7 +111,7 @@ export const DonationAmountFields = ({
 						'px-3 py-2 text-left transition-colors',
 						values.onePercentSelected
 							? 'bg-muted text-foreground'
-							: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground bg-white',
+							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
 					)}
 				>
 					<div className="text-[10px] font-medium">{translations.yourOnePercent}</div>
@@ -178,7 +178,7 @@ export const DonationAmountFields = ({
 					aria-pressed={values.cadence === 'monthly'}
 					onClick={() => actions.setCadence('monthly')}
 					className={cn(
-						'cursor-pointer rounded-md px-3 py-2 text-sm font-semibold transition-colors',
+						'cursor-pointer rounded-md px-3 py-2 text-sm font-bold transition-colors',
 						values.cadence === 'monthly'
 							? cn(segmentActive, 'text-foreground')
 							: 'text-muted-foreground hover:text-foreground',
@@ -192,7 +192,7 @@ export const DonationAmountFields = ({
 					aria-pressed={values.cadence === 'one-time'}
 					onClick={() => actions.setCadence('one-time')}
 					className={cn(
-						'cursor-pointer rounded-md px-3 py-2 text-sm font-semibold transition-colors',
+						'cursor-pointer rounded-md px-3 py-2 text-sm font-bold transition-colors',
 						values.cadence === 'one-time'
 							? cn(segmentActive, 'text-foreground')
 							: 'text-muted-foreground hover:text-foreground',
@@ -205,7 +205,7 @@ export const DonationAmountFields = ({
 			<Button
 				type="button"
 				data-testid="donation-wizard-amount-continue"
-				className="h-10 w-full text-sm font-semibold"
+				className="h-10 w-full text-sm font-bold"
 				disabled={!values.isValid}
 				onClick={onSubmit}
 			>

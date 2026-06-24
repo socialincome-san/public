@@ -37,7 +37,6 @@ WORKDIR /app/website
 
 COPY --from=deps /app/website/node_modules ./node_modules
 COPY --from=deps /app/website ./
-COPY recipients_selection /app/recipients_selection
 COPY --from=base /app/.env /app/.env
 
 RUN set -a && [ -f /app/.env ] && . /app/.env || true && set +a && \
@@ -56,7 +55,6 @@ RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/website/node_modules ./node_modules
-COPY --from=builder /app/recipients_selection ./recipients_selection
 COPY --from=builder /app/website/.next/standalone ./
 COPY --from=builder /app/website/src ./src
 COPY --from=builder /app/website/prisma.config.ts ./prisma.config.ts

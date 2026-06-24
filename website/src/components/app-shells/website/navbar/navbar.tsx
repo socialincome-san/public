@@ -33,7 +33,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 	return (
 		<nav
 			className={cn(
-				'max-w-content static inset-x-0 top-5 z-50 mx-auto flex h-18 w-full items-center justify-between bg-white px-4 py-2',
+				'bg-card max-w-content static inset-x-0 top-5 z-50 mx-auto flex h-18 w-full items-center justify-between px-4 py-2',
 				'lg:w-site-width lg:absolute lg:top-5 lg:h-14 lg:rounded-full lg:px-2 lg:shadow-[0_0_28px_rgba(0,0,0,0.05)]',
 			)}
 		>
@@ -61,7 +61,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 				{!session && (
 					<OpenDonationWizardButton
 						label={translator.t('donation-form.donate-now')}
-						className="rounded-full px-5 text-sm font-semibold lg:h-11"
+						className="rounded-full px-5 text-sm font-bold lg:h-11"
 					/>
 				)}
 				<MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />

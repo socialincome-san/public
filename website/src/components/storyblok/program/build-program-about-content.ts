@@ -102,7 +102,7 @@ const buildPartyRowsByRole = (
 
 	if (programDetails.localPartnerName) {
 		partyRowsByRole.localPartner = {
-			label: translator.t('program-detail-page.local-program-owner'),
+			label: translator.t('program-detail-page.local-program-partner'),
 			value: programDetails.localPartnerName,
 			href: localPartnerHref,
 		};

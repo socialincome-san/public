@@ -35,7 +35,7 @@ export const MenuDesktop = ({ menu, lang, region, donationForm }: Props) => (
 									href={href}
 									target={item.newTab ? '_blank' : '_self'}
 									rel={item.newTab ? 'noopener noreferrer' : undefined}
-									className="hover:bg-muted flex items-center rounded-sm px-3 py-2 text-sm font-semibold transition-colors"
+									className="hover:bg-muted flex items-center rounded-sm px-3 py-2 text-sm font-bold transition-colors"
 								>
 									{item.label}
 								</NextLink>
@@ -56,7 +56,7 @@ export const MenuDesktop = ({ menu, lang, region, donationForm }: Props) => (
 					<NavigationMenu.Item key={item._uid}>
 						<NavigationMenu.Trigger
 							className={cn(
-								'hover:bg-muted group flex items-center gap-1.5 rounded-sm px-3 py-2 text-sm font-semibold transition-colors',
+								'hover:bg-muted group flex items-center gap-1.5 rounded-sm px-3 py-2 text-sm font-bold transition-colors',
 								'data-[state=open]:bg-muted',
 							)}
 						>
@@ -87,7 +87,7 @@ export const MenuDesktop = ({ menu, lang, region, donationForm }: Props) => (
 													<NavigationMenu.Link asChild>
 														<NextLink
 															href={resolveStoryblokLink(group.overviewLink, lang, region)}
-															className="text-muted-foreground hover:text-foreground group mt-3 inline-flex w-fit items-center gap-1.5 text-sm font-semibold transition-colors"
+															className="text-muted-foreground hover:text-foreground group mt-3 inline-flex w-fit items-center gap-1.5 text-sm font-bold transition-colors"
 														>
 															<span>{group.overviewLabel}</span>
 															<ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />

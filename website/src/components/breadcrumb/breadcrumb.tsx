@@ -13,7 +13,7 @@ export type { BreadcrumbLink as BreadcrumbLinkType } from '@/components/breadcru
 
 export const Breadcrumb = ({ links, className }: { links: BreadcrumbLinkItem[]; className?: string }) => {
 	return (
-		<div className={cn('py-9', className)}>
+		<div className={cn('py-9 pl-4 lg:pl-0', className)}>
 			<BreadcrumbElements>
 				<BreadcrumbList>
 					{links.map((link: BreadcrumbLinkItem, index: number) => {

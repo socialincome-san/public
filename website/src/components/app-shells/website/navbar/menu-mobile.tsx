@@ -62,7 +62,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 			)}
 
 			<Dialog.Portal>
-				<Dialog.Overlay className="text-foreground fixed inset-0 z-100 overflow-y-auto bg-white lg:hidden">
+				<Dialog.Overlay className="text-foreground bg-background fixed inset-0 z-100 overflow-y-auto lg:hidden">
 					<Dialog.Content className="flex min-h-full flex-col">
 						<Dialog.Title className="sr-only">{commonTranslator?.t('menu.title') ?? 'Menu'}</Dialog.Title>
 						<div className="border-muted mb-4 flex h-18 shrink-0 items-center justify-between border-b px-4">
@@ -158,7 +158,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 																onClick={() => handleOpenChange(false)}
 															>
 																{child.label}
-																<span className="rounded-full border border-slate-300 px-2 py-0.5 text-[10px] leading-none font-semibold text-slate-500">
+																<span className="text-muted-foreground border-input rounded-full border px-2 py-0.5 text-[10px] leading-none font-bold">
 																	{FALLBACK_BADGE_COUNT}
 																</span>
 															</NextLink>
@@ -168,7 +168,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 												{group.overviewLink && group.overviewLabel ? (
 													<NextLink
 														href={resolveStoryblokLink(group.overviewLink, lang, region)}
-														className="text-muted-foreground hover:text-foreground group mt-4 inline-flex items-center gap-1.5 text-sm font-semibold transition-colors"
+														className="text-muted-foreground hover:text-foreground group mt-4 inline-flex items-center gap-1.5 text-sm font-bold transition-colors"
 														onClick={() => handleOpenChange(false)}
 													>
 														<span>{group.overviewLabel}</span>

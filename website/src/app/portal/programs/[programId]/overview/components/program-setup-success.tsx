@@ -13,7 +13,7 @@ export const ProgramSetupSuccess = ({ programId, publicUrl }: ProgramSetupSucces
 	return (
 		<Card>
 			<div className="space-y-6">
-				<h1 className="text-2xl font-semibold">Great! You initiated a new program</h1>
+				<h1 className="text-2xl font-bold">Great! You initiated a new program</h1>
 
 				<SuccessBanner
 					title="Recipient selection complete"

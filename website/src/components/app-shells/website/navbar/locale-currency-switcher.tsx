@@ -10,6 +10,7 @@ import { useTranslator } from '@/lib/hooks/useTranslator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import {
 	allWebsiteLanguages,
+	isWebsiteCurrency,
 	mainWebsiteLanguages,
 	websiteCurrencies,
 	websiteRegions,
@@ -29,9 +30,6 @@ const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
 	allWebsiteLanguages.some((language) => language === value);
 
 const isWebsiteRegion = (value: string): value is WebsiteRegion => websiteRegions.some((region) => region === value);
-
-const isWebsiteCurrency = (value: string): value is WebsiteCurrency =>
-	websiteCurrencies.some((currency) => currency === value);
 
 const getDefaultCurrency = (region: WebsiteRegion): WebsiteCurrency => (region === 'ch' ? 'CHF' : 'USD');
 
@@ -123,7 +121,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 				<Button
 					type="button"
 					variant="ghost"
-					className={cn('h-10 gap-2 rounded-full px-3 text-sm font-semibold lg:h-11', className)}
+					className={cn('h-10 gap-2 rounded-full px-3 text-sm font-bold lg:h-11', className)}
 					aria-label={translator?.t('locale-currency-switcher.aria-label') ?? 'Change language, region, and currency'}
 				>
 					{currentRegion === 'ch' ? <CountryFlag country={SWISS_COUNTRY_CODE} size="sm" /> : <Globe className="size-4" />}
@@ -133,10 +131,10 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 			</PopoverTrigger>
 			<PopoverContent
 				align="end"
-				className="z-[110] w-72 space-y-4 rounded-3xl bg-white p-4 shadow-[0_24px_48px_rgba(15,23,42,0.16)]"
+				className="bg-popover z-[110] w-72 space-y-4 rounded-3xl p-4 shadow-[0_24px_48px_rgba(15,23,42,0.16)]"
 			>
 				<div className="space-y-2">
-					<div className="text-sm font-semibold">{translator?.t('locale-currency-switcher.language') ?? 'Language'}</div>
+					<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.language') ?? 'Language'}</div>
 					<Tabs value={currentSwitcherLanguage} onValueChange={handleLanguageChange}>
 						<TabsList className={cn('grid h-10 w-full rounded-full', isSurveyPage ? 'grid-cols-2' : 'grid-cols-4')}>
 							{languageOptions.map((language) => (
@@ -149,7 +147,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 				</div>
 
 				<div className="space-y-2">
-					<div className="text-sm font-semibold">{translator?.t('locale-currency-switcher.region') ?? 'Region'}</div>
+					<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.region') ?? 'Region'}</div>
 					<Tabs value={currentRegion} onValueChange={handleRegionChange}>
 						<TabsList className="grid h-10 w-full grid-cols-2 rounded-full">
 							{regionOptions.map((option) => (
@@ -167,7 +165,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 				</div>
 
 				<div className="space-y-2">
-					<div className="text-sm font-semibold">{translator?.t('locale-currency-switcher.currency') ?? 'Currency'}</div>
+					<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.currency') ?? 'Currency'}</div>
 					<Tabs value={currentCurrency} onValueChange={handleCurrencyChange}>
 						<TabsList className="grid h-10 w-full grid-cols-3 rounded-full">
 							{websiteCurrencies.map((currency) => (

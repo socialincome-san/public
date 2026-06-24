@@ -10,6 +10,17 @@
 		cursor: pointer;
 	}
 
+	::selection {
+		background-color: hsl(var(--primary));
+		color: hsl(var(--primary-foreground));
+	}
+
+	.text-primary-foreground::selection,
+	.text-primary-foreground *::selection {
+		background-color: hsl(var(--primary-foreground));
+		color: hsl(var(--primary));
+	}
+
 	*,
 	::after,
 	::before,

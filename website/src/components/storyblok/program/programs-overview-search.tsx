@@ -61,7 +61,7 @@ export const ProgramsOverviewSearch = ({ defaultValue, label, placeholder, query
 				placeholder={placeholder}
 				defaultValue={currentValue}
 				onChange={(event) => updateSearch(event.target.value)}
-				className="bg-white pl-9"
+				className="bg-card pl-9"
 			/>
 		</div>
 	);
