@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@/generated/prisma/client';
+import { Prisma, PrismaClient, type CountryCode } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
@@ -11,8 +11,17 @@ import {
 	FocusTableQuery,
 	FocusTableViewRow,
 	PublicFocusStats,
+	PublicFocusStatsBySlugMap,
 	PublicFocusStatsMap,
 } from './focus.types';
+
+type PublicFocusStatsSource = {
+	id: string;
+	slug?: string;
+	_count: { programs: number };
+	programs: { programId: string; program?: { country: { isoCode: CountryCode } } }[];
+	localPartners: { localPartnerId: string }[];
+};
 
 export class FocusReadService extends BaseService {
 	constructor(
@@ -48,6 +57,55 @@ export class FocusReadService extends BaseService {
 		}
 
 		return this.resultOk(true);
+	}
+
+	private async buildPublicFocusStatsMap(
+		focuses: PublicFocusStatsSource[],
+		getKey: (focus: PublicFocusStatsSource) => string,
+	): Promise<PublicFocusStatsMap> {
+		const statsByKey: PublicFocusStatsMap = {};
+
+		await Promise.all(
+			focuses.map(async (focus) => {
+				const programIds = [...new Set(focus.programs.map(({ programId }) => programId))];
+				const localPartnerIds = [...new Set(focus.localPartners.map(({ localPartnerId }) => localPartnerId))];
+				const countryIsoCodes = [
+					...new Set(
+						focus.programs
+							.map(({ program }) => program?.country.isoCode)
+							.filter((countryIsoCode): countryIsoCode is CountryCode => Boolean(countryIsoCode)),
+					),
+				];
+				const hasLocalPartners = localPartnerIds.length > 0;
+				const [recipientsInProgramsCount, candidatesCount] = await Promise.all([
+					hasLocalPartners && programIds.length > 0
+						? this.db.recipient.count({
+								where: {
+									programId: { in: programIds },
+									localPartnerId: { in: localPartnerIds },
+								},
+							})
+						: 0,
+					hasLocalPartners
+						? this.db.recipient.count({
+								where: {
+									programId: null,
+									localPartnerId: { in: localPartnerIds },
+								},
+							})
+						: 0,
+				]);
+
+				statsByKey[getKey(focus)] = {
+					programsCount: focus._count.programs,
+					recipientsInProgramsCount,
+					candidatesCount,
+					countryIsoCodes,
+				};
+			}),
+		);
+
+		return statsByKey;
 	}
 
 	async get(userId: string, id: string): Promise<ServiceResult<FocusPayload>> {
@@ -158,6 +216,41 @@ export class FocusReadService extends BaseService {
 		}
 	}
 
+	async getPublicFocusStatsBySlugs(focusSlugs: string[]): Promise<ServiceResult<PublicFocusStatsBySlugMap>> {
+		try {
+			const normalizedFocusSlugs = [...new Set(focusSlugs.map((focusSlug) => focusSlug.trim()).filter(Boolean))];
+			if (!normalizedFocusSlugs.length) {
+				return this.resultOk({});
+			}
+
+			const focuses = await this.db.focus.findMany({
+				where: { slug: { in: normalizedFocusSlugs } },
+				select: {
+					id: true,
+					slug: true,
+					_count: {
+						select: {
+							programs: true,
+						},
+					},
+					programs: {
+						select: {
+							programId: true,
+							program: { select: { country: { select: { isoCode: true } } } },
+						},
+					},
+					localPartners: { select: { localPartnerId: true } },
+				},
+			});
+
+			return this.resultOk(await this.buildPublicFocusStatsMap(focuses, (focus) => focus.slug ?? focus.id));
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch focus stats by slug: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getPublicFocusStatsByIds(focusIds: string[]): Promise<ServiceResult<PublicFocusStatsMap>> {
 		try {
 			const normalizedFocusIds = [...new Set(focusIds.map((focusId) => focusId.trim()).filter(Boolean))];
@@ -174,46 +267,17 @@ export class FocusReadService extends BaseService {
 							programs: true,
 						},
 					},
-					// Note: `programs`/`localPartners` are relation tables (ProgramTargetFocus / LocalPartnerFocus).
-					programs: { select: { programId: true } },
+					programs: {
+						select: {
+							programId: true,
+							program: { select: { country: { select: { isoCode: true } } } },
+						},
+					},
 					localPartners: { select: { localPartnerId: true } },
 				},
 			});
 
-			const statsById: PublicFocusStatsMap = {};
-
-			for (const focus of focuses) {
-				const programIds = focus.programs.map((p) => p.programId);
-				const localPartnerIds = focus.localPartners.map((lp) => lp.localPartnerId);
-				const hasLocalPartners = localPartnerIds.length > 0;
-
-				const recipientsInProgramsCount =
-					hasLocalPartners && programIds.length > 0
-						? await this.db.recipient.count({
-								where: {
-									programId: { in: programIds },
-									localPartnerId: { in: localPartnerIds },
-								},
-							})
-						: 0;
-
-				const candidatesCount = hasLocalPartners
-					? await this.db.recipient.count({
-							where: {
-								programId: null,
-								localPartnerId: { in: localPartnerIds },
-							},
-						})
-					: 0;
-
-				statsById[focus.id] = {
-					programsCount: focus._count.programs,
-					recipientsInProgramsCount,
-					candidatesCount,
-				};
-			}
-
-			return this.resultOk(statsById);
+			return this.resultOk(await this.buildPublicFocusStatsMap(focuses, (focus) => focus.id));
 		} catch (error) {
 			this.logger.error(error);
 
