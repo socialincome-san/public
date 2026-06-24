@@ -21,7 +21,6 @@
 		"sent-message": "Se esiste un account per {{ email }}, riceverai a breve un link di accesso.",
 		"retry": "Riprova",
 		"support-prefix": "Se non arriva, contatta",
-		"no-account": "Non hai un account?",
-		"get-started": "Scopri come iniziare"
+		"no-account": "Non hai un account?"
 	}
 }
