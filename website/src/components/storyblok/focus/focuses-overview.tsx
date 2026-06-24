@@ -91,9 +91,12 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 										sdgs: translator.t('focuses-page.sdgs'),
 										candidatesReady:
 											stats.candidatesCount > 0
-												? translator.t('focuses-page.candidates-ready-to-enroll', {
-														context: { count: stats.candidatesCount },
-													})
+												? translator.t(
+														stats.candidatesCount === 1
+															? 'focuses-page.candidates-ready-to-enroll_one'
+															: 'focuses-page.candidates-ready-to-enroll_other',
+														{ context: { count: stats.candidatesCount } },
+													)
 												: undefined,
 									}}
 								/>

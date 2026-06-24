@@ -94,7 +94,8 @@
 		"recipient-in-program-plural": "Empfänger:innen in einem Programm",
 		"candidate-singular": "Kandidat:in",
 		"candidate-plural": "Kandidat:innen",
-		"candidates-ready-to-enroll": "{{count}} Kandidat:innen bereit für die Einschreibung",
+		"candidates-ready-to-enroll_one": "{{count}} Kandidat:in bereit für die Einschreibung",
+		"candidates-ready-to-enroll_other": "{{count}} Kandidat:innen bereit für die Einschreibung",
 		"about": "Über"
 	},
 	"programs-page": {

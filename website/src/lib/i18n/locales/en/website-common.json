@@ -94,7 +94,8 @@
 		"recipient-in-program-plural": "recipients in a program",
 		"candidate-singular": "candidate",
 		"candidate-plural": "candidates",
-		"candidates-ready-to-enroll": "{{count}} candidates ready to enroll",
+		"candidates-ready-to-enroll_one": "{{count}} candidate ready to enroll",
+		"candidates-ready-to-enroll_other": "{{count}} candidates ready to enroll",
 		"about": "About"
 	},
 	"programs-page": {

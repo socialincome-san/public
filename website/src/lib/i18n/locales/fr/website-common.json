@@ -94,7 +94,8 @@
 		"recipient-in-program-plural": "bénéficiaires dans un programme",
 		"candidate-singular": "candidat",
 		"candidate-plural": "candidats",
-		"candidates-ready-to-enroll": "{{count}} candidats prêts à s'inscrire",
+		"candidates-ready-to-enroll_one": "{{count}} candidat prêt à s'inscrire",
+		"candidates-ready-to-enroll_other": "{{count}} candidats prêts à s'inscrire",
 		"about": "À propos de"
 	},
 	"programs-page": {
