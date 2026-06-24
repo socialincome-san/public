@@ -193,6 +193,8 @@ export interface ImageText {
   image: StoryblokAsset;
   layout: "" | "imageLeft" | "imageRight";
   imageToTextRatio?: "" | "1/3" | "1/2" | "2/3";
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "imageText";
   _uid: string;
   [k: string]: unknown;
@@ -339,6 +341,7 @@ export interface Page {
     | VideoText
     | Transparency
     | OpenSource
+    | Spacer
   )[];
   component: "page";
   _uid: string;
@@ -447,6 +450,13 @@ export interface ReferencesGroup {
   [k: string]: unknown;
 }
 
+export interface Spacer {
+  size: "" | "xs" | "s" | "m" | "l" | "xl";
+  component: "spacer";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Study {
   title: string;
   description: string;
@@ -499,6 +509,8 @@ export interface TestimonialCarousel {
 export interface Text {
   content?: StoryblokRichtext;
   widthRatio?: "" | "full" | "fourFifths" | "twoThirds" | "half" | "third";
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "text";
   _uid: string;
   [k: string]: unknown;
@@ -514,6 +526,8 @@ export interface TwoColumnText {
   leftText: StoryblokRichtext;
   rightText: StoryblokRichtext;
   columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "twoColumnText";
   _uid: string;
   [k: string]: unknown;
