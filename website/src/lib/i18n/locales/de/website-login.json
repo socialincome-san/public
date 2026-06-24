@@ -21,7 +21,6 @@
 		"sent-message": "Wenn ein Konto für {{ email }} existiert, erhältst du in Kürze einen Anmeldelink.",
 		"retry": "Erneut versuchen",
 		"support-prefix": "Wenn sie nicht ankommt, kontaktiere",
-		"no-account": "Du hast noch kein Konto?",
-		"get-started": "Erfahre, wie du loslegen kannst"
+		"no-account": "Du hast noch kein Konto?"
 	}
 }
