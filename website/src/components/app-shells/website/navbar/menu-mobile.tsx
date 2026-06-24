@@ -24,8 +24,6 @@ import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FC, useState } from 'react';
 
-const FALLBACK_BADGE_COUNT = 23;
-
 type Props = {
 	sessions: Session[];
 	scope: Scope;
@@ -158,9 +156,6 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 																onClick={() => handleOpenChange(false)}
 															>
 																{child.label}
-																<span className="text-muted-foreground border-input rounded-full border px-2 py-0.5 text-[10px] leading-none font-bold">
-																	{FALLBACK_BADGE_COUNT}
-																</span>
 															</NextLink>
 														</li>
 													))}
