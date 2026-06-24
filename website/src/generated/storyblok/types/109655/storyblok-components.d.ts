@@ -140,6 +140,19 @@ export interface EmbeddedVideo {
   [k: string]: unknown;
 }
 
+export interface ExplainerVideoHeader {
+  heading?: string;
+  explainerVideo?: unknown;
+  labelForExplainerVideo?: string;
+  linkToExplainerVideo?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  explainerVideoThumbnail?: StoryblokAsset;
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
+  component: "explainerVideoHeader";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Faq {
   question: StoryblokRichtext;
   answer?: StoryblokRichtext;
@@ -298,16 +311,14 @@ export interface ModalCard {
 }
 
 export interface ModalCards {
-  heading?: string;
-  explainerVideo?: unknown;
-  labelForExplainerVideo?: string;
-  linkToExplainerVideo?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   cards?: ModalCard[];
-  explainerVideoThumbnail?: StoryblokAsset;
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "modalCards";
   _uid: string;
   [k: string]: unknown;
 }
+
 
 export interface NewsletterSignup {
   component: "newsletterSignup";
@@ -341,6 +352,7 @@ export interface Page {
     | VideoText
     | Transparency
     | OpenSource
+    | ExplainerVideoHeader
     | Spacer
   )[];
   component: "page";
