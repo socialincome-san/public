@@ -2,7 +2,6 @@ import { BlockWrapper } from '@/components/block-wrapper';
 import { ContributorsList } from '@/components/open-source/contributors-list';
 import { IssuesList } from '@/components/open-source/issues-list';
 import { StatsOverview } from '@/components/open-source/stats-overview';
-import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import type { OpenSource } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
@@ -54,8 +53,6 @@ export const OpenSourceBlock = async ({ blok, lang }: Props) => {
 
 	return (
 		<BlockWrapper className="space-y-12 md:space-y-16" {...storyblokEditable(blok as SbBlokData)}>
-			<CmsHeader title={blok.title} text={blok.description} />
-
 			{!githubResult.success ? (
 				<p className="text-muted-foreground text-center" role="status">
 					{errorMessage}
