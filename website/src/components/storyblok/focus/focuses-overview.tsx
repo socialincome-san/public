@@ -7,12 +7,16 @@ import { FocusDetailCard } from './focus-detail-card';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusTitle } from './focus.utils';
 import { FocusesOverviewCountryFilter } from './focuses-overview-country-filter';
+import { FocusesOverviewSdgFilter } from './focuses-overview-sdg-filter';
 import { FocusesOverviewSearch } from './focuses-overview-search';
 import {
 	focusMatchesCountryQuery,
+	focusMatchesSdgQuery,
 	focusMatchesSearchQuery,
 	getCountryFilterOptions,
 	getCountryQuery,
+	getSdgFilterOptions,
+	getSdgQuery,
 	getSearchQuery,
 } from './focuses-overview.server';
 
@@ -33,27 +37,40 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 	const hasStatsError = !statsResult.success;
 	const searchQuery = getSearchQuery(searchParams);
 	const countryQuery = getCountryQuery(searchParams);
+	const sdgQuery = getSdgQuery(searchParams);
 	const countryOptions = getCountryFilterOptions(focuses, statsBySlug);
+	const sdgOptions = getSdgFilterOptions(focuses);
 	const selectedCountryIsoCode = countryOptions.some((option) => option.value === countryQuery) ? countryQuery : undefined;
-	const hasActiveFilters = Boolean(searchQuery || selectedCountryIsoCode);
+	const selectedSdg = sdgOptions.some((option) => option.value === sdgQuery) ? sdgQuery : undefined;
+	const hasActiveFilters = Boolean(searchQuery) || Boolean(selectedCountryIsoCode) || Boolean(selectedSdg);
 	const countryFilteredFocuses = focuses.filter((focus) =>
 		focusMatchesCountryQuery(focus, statsBySlug, selectedCountryIsoCode),
 	);
+	const sdgFilteredFocuses = countryFilteredFocuses.filter((focus) => focusMatchesSdgQuery(focus, selectedSdg));
 	const filteredFocuses = searchQuery
-		? countryFilteredFocuses.filter((focus) => focusMatchesSearchQuery(focus, searchQuery))
-		: countryFilteredFocuses;
+		? sdgFilteredFocuses.filter((focus) => focusMatchesSearchQuery(focus, searchQuery))
+		: sdgFilteredFocuses;
 
 	return (
 		<div className="flex w-full flex-col gap-8">
 			<CmsHeader title={title} text={text} />
 			<div className="flex flex-wrap items-center justify-between gap-4">
-				<FocusesOverviewCountryFilter
-					allCountriesLabel={translator.t('focuses-page.all-countries', {
-						context: { count: countryOptions.length },
-					})}
-					countryOptions={countryOptions}
-					selectedCountryIsoCode={selectedCountryIsoCode}
-				/>
+				<div className="flex min-h-10 flex-1 flex-wrap items-center gap-2">
+					<FocusesOverviewCountryFilter
+						allCountriesLabel={translator.t('focuses-page.all-countries', {
+							context: { count: countryOptions.length },
+						})}
+						countryOptions={countryOptions}
+						selectedCountryIsoCode={selectedCountryIsoCode}
+					/>
+					<FocusesOverviewSdgFilter
+						allSdgsLabel={translator.t('focuses-page.all-sdgs', {
+							context: { count: sdgOptions.length },
+						})}
+						sdgOptions={sdgOptions}
+						selectedSdg={selectedSdg}
+					/>
+				</div>
 				<FocusesOverviewSearch
 					defaultValue={searchQuery}
 					label={translator.t('focuses-page.search-label')}
@@ -84,7 +101,7 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 									focusTitle={focusTitle}
 									recipientsCount={stats.recipientsInProgramsCount}
 									programsCount={stats.programsCount}
-									sdgsValue="-"
+									sdgValues={focus.content.sdgs}
 									labels={{
 										recipients: translator.t('focuses-page.recipients'),
 										programs: translator.t('focuses-page.programs'),

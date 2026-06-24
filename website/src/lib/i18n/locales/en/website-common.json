@@ -83,6 +83,7 @@
 		"search-label": "Search focuses",
 		"search-placeholder": "Search",
 		"all-countries": "All countries ({{count}})",
+		"all-sdgs": "All SDGs ({{count}})",
 		"recipients": "Recipients",
 		"programs": "Programs",
 		"sdgs": "SDGs",

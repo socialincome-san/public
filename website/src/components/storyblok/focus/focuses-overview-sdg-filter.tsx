@@ -5,30 +5,30 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils/cn';
 import { ChevronDown } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { COUNTRY_QUERY_KEY } from './focuses-overview-query';
+import { SDG_QUERY_KEY } from './focuses-overview-query';
 import type { FilterOption } from './focuses-overview.server';
 
 type Props = {
-	allCountriesLabel: string;
-	countryOptions: FilterOption[];
-	selectedCountryIsoCode?: string;
+	allSdgsLabel: string;
+	sdgOptions: FilterOption[];
+	selectedSdg?: string;
 };
 
-export const FocusesOverviewCountryFilter = ({ allCountriesLabel, countryOptions, selectedCountryIsoCode }: Props) => {
+export const FocusesOverviewSdgFilter = ({ allSdgsLabel, sdgOptions, selectedSdg }: Props) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
-	const selectedOption = countryOptions.find((option) => option.value === selectedCountryIsoCode);
+	const selectedOption = sdgOptions.find((option) => option.value === selectedSdg);
 	const isActive = Boolean(selectedOption);
-	const buttonLabel = selectedOption?.label ?? allCountriesLabel;
+	const buttonLabel = selectedOption?.label ?? allSdgsLabel;
 
 	const updateFilter = (value: string | undefined) => {
 		const nextParams = new URLSearchParams(searchParams.toString());
 
 		if (value) {
-			nextParams.set(COUNTRY_QUERY_KEY, value);
+			nextParams.set(SDG_QUERY_KEY, value);
 		} else {
-			nextParams.delete(COUNTRY_QUERY_KEY);
+			nextParams.delete(SDG_QUERY_KEY);
 		}
 
 		const nextQuery = nextParams.toString();
@@ -51,8 +51,8 @@ export const FocusesOverviewCountryFilter = ({ allCountriesLabel, countryOptions
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="start" className="bg-popover w-56">
-				<DropdownMenuItem onSelect={() => updateFilter(undefined)}>{allCountriesLabel}</DropdownMenuItem>
-				{countryOptions.map((option) => (
+				<DropdownMenuItem onSelect={() => updateFilter(undefined)}>{allSdgsLabel}</DropdownMenuItem>
+				{sdgOptions.map((option) => (
 					<DropdownMenuItem key={option.value} onSelect={() => updateFilter(option.value)}>
 						{option.label}
 					</DropdownMenuItem>

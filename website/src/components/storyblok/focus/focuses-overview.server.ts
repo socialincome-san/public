@@ -3,7 +3,8 @@ import { getCountryNameByCode } from '@/lib/types/country';
 import type { AnySearchParams } from '@/lib/types/page-props';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusText, getFocusTitle } from './focus.utils';
-import { COUNTRY_QUERY_KEY, SEARCH_QUERY_KEY } from './focuses-overview-query';
+import { COUNTRY_QUERY_KEY, SDG_QUERY_KEY, SEARCH_QUERY_KEY } from './focuses-overview-query';
+import { getSdg } from './sdgs';
 
 export type FilterOption = {
 	value: string;
@@ -23,6 +24,10 @@ export const getSearchQuery = (searchParams?: AnySearchParams) => {
 
 export const getCountryQuery = (searchParams?: AnySearchParams) => {
 	return getQueryValue(searchParams, COUNTRY_QUERY_KEY);
+};
+
+export const getSdgQuery = (searchParams?: AnySearchParams) => {
+	return getQueryValue(searchParams, SDG_QUERY_KEY);
 };
 
 const normalizeSearchValue = (value: string) => value.toLowerCase();
@@ -52,6 +57,14 @@ export const focusMatchesCountryQuery = (
 	);
 };
 
+export const focusMatchesSdgQuery = (focus: FocusStory, selectedSdg: string | undefined) => {
+	if (!selectedSdg) {
+		return true;
+	}
+
+	return focus.content.sdgs?.some((value) => String(getSdg(value)?.number) === selectedSdg) ?? false;
+};
+
 export const getCountryFilterOptions = (focuses: FocusStory[], statsBySlug: PublicFocusStatsBySlugMap): FilterOption[] => {
 	const optionsByCountryIsoCode = new Map<string, FilterOption>();
 
@@ -68,4 +81,23 @@ export const getCountryFilterOptions = (focuses: FocusStory[], statsBySlug: Publ
 	});
 
 	return [...optionsByCountryIsoCode.values()].sort((optionA, optionB) => optionA.label.localeCompare(optionB.label));
+};
+
+export const getSdgFilterOptions = (focuses: FocusStory[]): FilterOption[] => {
+	const optionsBySdgNumber = new Map<number, FilterOption>();
+
+	focuses.forEach((focus) => {
+		focus.content.sdgs?.forEach((value) => {
+			const sdg = getSdg(value);
+
+			if (sdg) {
+				optionsBySdgNumber.set(sdg.number, {
+					value: String(sdg.number),
+					label: `SDG ${sdg.number}: ${sdg.title}`,
+				});
+			}
+		});
+	});
+
+	return [...optionsBySdgNumber.entries()].sort(([numberA], [numberB]) => numberA - numberB).map(([, option]) => option);
 };

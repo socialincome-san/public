@@ -2,13 +2,24 @@ import type { PublicFocusStatsBySlugMap } from '@/lib/services/focus/focus.types
 import type { FocusStory } from './focus.types';
 import {
 	focusMatchesCountryQuery,
+	focusMatchesSdgQuery,
 	focusMatchesSearchQuery,
 	getCountryFilterOptions,
 	getCountryQuery,
+	getSdgFilterOptions,
+	getSdgQuery,
 	getSearchQuery,
 } from './focuses-overview.server';
 
-const createFocus = ({ slug, portalSlug, title, text }: { slug: string; portalSlug: string; title: string; text: string }) =>
+type CreateFocusInput = {
+	slug: string;
+	portalSlug: string;
+	title: string;
+	text: string;
+	sdgs?: (number | string)[];
+};
+
+const createFocus = ({ slug, portalSlug, title, text, sdgs }: CreateFocusInput) =>
 	({
 		uuid: slug,
 		slug,
@@ -19,6 +30,7 @@ const createFocus = ({ slug, portalSlug, title, text }: { slug: string; portalSl
 			portalSlug,
 			title,
 			text,
+			sdgs,
 		},
 	}) as unknown as FocusStory;
 
@@ -28,12 +40,14 @@ const focuses = [
 		portalSlug: 'health',
 		title: 'Healthcare access',
 		text: 'Cash transfers for medical support',
+		sdgs: [3, '1', 'unknown'],
 	}),
 	createFocus({
 		slug: 'education',
 		portalSlug: 'education',
 		title: 'Education',
 		text: 'School access support',
+		sdgs: ['4', 3],
 	}),
 ];
 
@@ -56,6 +70,7 @@ describe('focuses overview server helpers', () => {
 	it('reads search and country query params', () => {
 		expect(getSearchQuery({ search: ' health ' })).toBe('health');
 		expect(getCountryQuery({ country: ['KE', 'CH'] })).toBe('KE');
+		expect(getSdgQuery({ sdg: ' 3 ' })).toBe('3');
 	});
 
 	it('derives country options from focus stats', () => {
@@ -64,10 +79,28 @@ describe('focuses overview server helpers', () => {
 		expect(countryOptions.map((option) => option.value).sort()).toEqual(['CH', 'KE', 'SL']);
 	});
 
+	it('derives SDG options from assigned focus SDGs', () => {
+		const sdgOptions = getSdgFilterOptions(focuses);
+
+		expect(sdgOptions).toEqual([
+			{ value: '1', label: 'SDG 1: No Poverty' },
+			{ value: '3', label: 'SDG 3: Good Health and Well-being' },
+			{ value: '4', label: 'SDG 4: Quality Education' },
+		]);
+	});
+
 	it('filters focuses by assigned program country', () => {
 		const kenyaFocuses = focuses.filter((focus) => focusMatchesCountryQuery(focus, statsBySlug, 'KE'));
 
 		expect(kenyaFocuses.map((focus) => focus.content.portalSlug)).toEqual(['health']);
+	});
+
+	it('filters focuses by assigned SDG', () => {
+		const healthFocuses = focuses.filter((focus) => focusMatchesSdgQuery(focus, '1'));
+		const sharedSdgFocuses = focuses.filter((focus) => focusMatchesSdgQuery(focus, '3'));
+
+		expect(healthFocuses.map((focus) => focus.content.portalSlug)).toEqual(['health']);
+		expect(sharedSdgFocuses.map((focus) => focus.content.portalSlug)).toEqual(['health', 'education']);
 	});
 
 	it('searches focus title, slug, portal slug, and text', () => {
