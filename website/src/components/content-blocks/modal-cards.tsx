@@ -5,7 +5,6 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { ModalCards } from '@/generated/storyblok/types/109655/storyblok-components';
-import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { PlusIcon } from 'lucide-react';
 import NextImage from 'next/image';
@@ -21,7 +20,8 @@ export const ModalCardsBlock = ({ blok }: Props) => {
 
 	return (
 		<BlockWrapper
-			className={cn(disableMarginTop && 'mt-0 md:mt-0 lg:mt-0', disableMarginBottom && 'mb-0 md:mb-0 lg:mb-0')}
+			disableMarginBottom={disableMarginBottom}
+			disableMarginTop={disableMarginTop}
 			{...storyblokEditable(blok as SbBlokData)}
 		>
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

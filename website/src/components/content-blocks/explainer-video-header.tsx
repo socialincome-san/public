@@ -6,7 +6,6 @@ import type { ExplainerVideoHeader } from '@/generated/storyblok/types/109655/st
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { VimeoVideoMatchAndExtract } from '@/lib/utils/UrlVideoParser';
-import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
@@ -39,7 +38,8 @@ export const ExplainerVideoHeaderBlock = ({ blok, lang, region }: Props) => {
 
 	return (
 		<BlockWrapper
-			className={cn(disableMarginTop && 'mt-0 md:mt-0 lg:mt-0', disableMarginBottom && 'mb-0 md:mb-0 lg:mb-0')}
+			disableMarginBottom={disableMarginBottom}
+			disableMarginTop={disableMarginTop}
 			{...storyblokEditable(blok as SbBlokData)}
 		>
 			<div className="flex flex-col items-start justify-between gap-4 md:flex-row">
