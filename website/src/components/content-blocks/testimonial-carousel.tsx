@@ -27,6 +27,7 @@ type TestimonialWithImage = StoryblokTestimonial & {
 const AUTOPLAY_DELAY_MS = 4000;
 
 export const TestimonialCarouselBlock = ({ blok }: Props) => {
+	const { disableMarginBottom, disableMarginTop } = blok;
 	const entries = blok.testimonials.filter((entry): entry is TestimonialWithImage => Boolean(entry.image?.filename));
 	const autoplayEnabled = Boolean(blok.autoplay);
 
@@ -122,7 +123,11 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 
 	if (entries.length === 1) {
 		return (
-			<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+			<BlockWrapper
+				disableMarginBottom={disableMarginBottom}
+				disableMarginTop={disableMarginTop}
+				{...storyblokEditable(blok as SbBlokData)}
+			>
 				{blok.heading && (
 					<SectionHeading>
 						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
@@ -136,7 +141,11 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper
+			disableMarginBottom={disableMarginBottom}
+			disableMarginTop={disableMarginTop}
+			{...storyblokEditable(blok as SbBlokData)}
+		>
 			{blok.heading && (
 				<SectionHeading>
 					<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>

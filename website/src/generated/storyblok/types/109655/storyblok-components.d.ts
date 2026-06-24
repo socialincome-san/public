@@ -107,6 +107,8 @@ export interface DonationsTotal {
   heading: string;
   images?: StoryblokMultiasset;
   button?: Button[];
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "donationsTotal";
   _uid: string;
   [k: string]: unknown;
@@ -231,6 +233,8 @@ export interface JournalTeasers {
   heading?: string;
   articlesDisplayMode: "latest" | "selected";
   selectedArticles?: (ISbStoryData<Article> | string)[];
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "journalTeasers";
   _uid: string;
   [k: string]: unknown;
@@ -319,7 +323,6 @@ export interface ModalCards {
   [k: string]: unknown;
 }
 
-
 export interface NewsletterSignup {
   component: "newsletterSignup";
   _uid: string;
@@ -352,8 +355,8 @@ export interface Page {
     | VideoText
     | Transparency
     | OpenSource
-    | ExplainerVideoHeader
     | Spacer
+    | ExplainerVideoHeader
   )[];
   component: "page";
   _uid: string;
@@ -419,6 +422,8 @@ export interface ProgramGrid {
   showAllPrograms?: boolean;
   programs?: (ISbStoryData<Program> | string)[];
   button?: Button[];
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "programGrid";
   _uid: string;
   [k: string]: unknown;
@@ -513,6 +518,8 @@ export interface TestimonialCarousel {
   heading?: string;
   testimonials: Testimonial[];
   autoplay?: boolean;
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "testimonialCarousel";
   _uid: string;
   [k: string]: unknown;
