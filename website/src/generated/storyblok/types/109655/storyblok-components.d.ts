@@ -500,6 +500,7 @@ export interface TestimonialCarousel {
 
 export interface Text {
   content?: StoryblokRichtext;
+  widthRatio?: "" | "full" | "fourFifths" | "twoThirds" | "half" | "third";
   component: "text";
   _uid: string;
   [k: string]: unknown;
