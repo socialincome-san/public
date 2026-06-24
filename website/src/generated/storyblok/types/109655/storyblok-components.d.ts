@@ -314,8 +314,6 @@ export interface NewsletterSignup {
 }
 
 export interface OpenSource {
-  title?: string;
-  description?: string;
   component: "openSource";
   _uid: string;
   [k: string]: unknown;
