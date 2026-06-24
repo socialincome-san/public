@@ -32,7 +32,10 @@ const LoginPage = async ({ params, searchParams }: DefaultPageProps) => {
 		}
 	}
 
-	return <LoginPageContent lang={lang as WebsiteLanguage} />;
+	const emailParam = resolvedSearchParams.email;
+	const prefilledEmail = typeof emailParam === 'string' ? emailParam : '';
+
+	return <LoginPageContent lang={lang as WebsiteLanguage} prefilledEmail={prefilledEmail} />;
 };
 
 export default LoginPage;

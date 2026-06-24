@@ -78,6 +78,14 @@
 	},
 	"focuses-page": {
 		"empty": "No focuses found.",
+		"no-results": "No focuses match the selected filters.",
+		"load-stats-error": "Could not load focus statistics.",
+		"search-label": "Search focuses",
+		"search-placeholder": "Search",
+		"all-countries": "All countries ({{count}})",
+		"recipients": "Recipients",
+		"programs": "Programs",
+		"sdgs": "SDGs",
 		"program-singular": "program",
 		"program-plural": "programs",
 		"active-program-singular": "active program",
@@ -86,6 +94,8 @@
 		"recipient-in-program-plural": "recipients in a program",
 		"candidate-singular": "candidate",
 		"candidate-plural": "candidates",
+		"candidates-ready-to-enroll_one": "{{count}} candidate ready to enroll",
+		"candidates-ready-to-enroll_other": "{{count}} candidates ready to enroll",
 		"about": "About"
 	},
 	"programs-page": {

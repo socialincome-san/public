@@ -26,6 +26,7 @@ export type DonationWizardContext = DonationAmountContext & {
 	stripeCheckoutStatus: StripeCheckoutStatus;
 	stripeCheckoutError: string | null;
 	completedDonationSummary: CompletedDonationSummary | null;
+	loginEmail: string | null;
 	wizardPaymentSource: WizardPaymentSource;
 	qrDonor: QrDonorContext | null;
 	qrContributorReferenceId: string | null;
@@ -58,6 +59,7 @@ export const getInitialWizardContext = (): DonationWizardContext => ({
 	pendingStep: null,
 	...resetStripeCheckoutContext,
 	completedDonationSummary: null,
+	loginEmail: null,
 	wizardPaymentSource: null,
 	...resetQrBillContext,
 });

@@ -78,6 +78,14 @@
 	},
 	"focuses-page": {
 		"empty": "Keine Schwerpunkte gefunden.",
+		"no-results": "Keine Schwerpunkte entsprechen den ausgewählten Filtern.",
+		"load-stats-error": "Statistiken zu den Schwerpunkten konnten nicht geladen werden.",
+		"search-label": "Schwerpunkte suchen",
+		"search-placeholder": "Suchen",
+		"all-countries": "Alle Länder ({{count}})",
+		"recipients": "Empfänger:innen",
+		"programs": "Programme",
+		"sdgs": "SDGs",
 		"program-singular": "Programm",
 		"program-plural": "Programme",
 		"active-program-singular": "aktives Programm",
@@ -86,6 +94,8 @@
 		"recipient-in-program-plural": "Empfänger:innen in einem Programm",
 		"candidate-singular": "Kandidat:in",
 		"candidate-plural": "Kandidat:innen",
+		"candidates-ready-to-enroll_one": "{{count}} Kandidat:in bereit für die Einschreibung",
+		"candidates-ready-to-enroll_other": "{{count}} Kandidat:innen bereit für die Einschreibung",
 		"about": "Über"
 	},
 	"programs-page": {

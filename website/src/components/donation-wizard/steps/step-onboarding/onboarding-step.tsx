@@ -39,7 +39,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 
 	const values = useWatch({ control: form.control });
 	const canSubmit = isOnboardingPersonalValid(values ?? {});
-	const skipToThankYou = () => send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU' });
+	const skipToThankYou = () => send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU', email: emailLocked });
 
 	const hasStripeOnboardingContext = wizardPaymentSource === 'stripe' && Boolean(stripeCheckoutSessionId);
 	const hasQrOnboardingContext = wizardPaymentSource === 'qr' && Boolean(qrContributorReferenceId);
@@ -74,7 +74,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 			}
 
 			if (!result.data.needsOnboarding) {
-				send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU' });
+				send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU', email: result.data.email });
 
 				return;
 			}
@@ -145,7 +145,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 					language: language as SupportedLanguage,
 				});
 
-				send({ type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE' });
+				send({ type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE', email: submitted.email });
 			} catch {
 				toast.error(t('onboarding.updateError'));
 				setSubmitting(false);
@@ -188,7 +188,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 					language: language as SupportedLanguage,
 				});
 
-				send({ type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE' });
+				send({ type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE', email: submitted.email });
 			} catch {
 				toast.error(t('onboarding.updateError'));
 				setSubmitting(false);

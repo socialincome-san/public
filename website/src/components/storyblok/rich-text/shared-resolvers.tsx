@@ -37,6 +37,8 @@ const buildLinkRel = (target?: string, rel?: string) => {
 	return [...tokens].join(' ');
 };
 
+const removeStoryblokPagesFolder = (href: string) => href.replace(/^(https?:\/\/[^/]+)?\/?pages(?=\/|$)/, '$1');
+
 export const storyblokRichTextMarkResolvers = {
 	[MARK_LINK]: (children: ReactNode, props: RichTextLinkProps) => {
 		const href = props.href?.trim();
@@ -47,7 +49,7 @@ export const storyblokRichTextMarkResolvers = {
 
 		return (
 			<NextLink
-				href={href}
+				href={removeStoryblokPagesFolder(href)}
 				className={cn(linkClassName, 'hover:underline')}
 				target={props.target}
 				rel={buildLinkRel(props.target, props.rel)}

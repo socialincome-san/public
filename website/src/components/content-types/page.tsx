@@ -10,6 +10,7 @@ import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceBlock } from '@/components/content-blocks/open-source';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
+import { SpacerBlock } from '@/components/content-blocks/spacer';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
 import { TestimonialBlock } from '@/components/content-blocks/testimonial-entry';
@@ -62,6 +63,8 @@ const renderPageBlock = (
 			return <PartnershipsCarouselBlock blok={block} />;
 		case 'programGrid':
 			return <ProgramGridBlock blok={block} lang={lang} region={region} />;
+		case 'spacer':
+			return <SpacerBlock blok={block} />;
 		case 'teamGrid':
 			return <TeamGridBlock blok={block} lang={lang} />;
 		case 'testimonial':

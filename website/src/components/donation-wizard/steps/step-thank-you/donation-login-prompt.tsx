@@ -7,8 +7,14 @@ import Link from 'next/link';
 
 const SUPPORT_EMAIL = 'support@socialincome.org';
 
-export const DonationLoginPrompt = () => {
+type Props = {
+	prefilledEmail: string;
+	onLoginClick: () => void;
+};
+
+export const DonationLoginPrompt = ({ prefilledEmail, onLoginClick }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const loginHref = prefilledEmail ? `/login?email=${encodeURIComponent(prefilledEmail)}` : '/login';
 
 	return (
 		<div className="flex w-full flex-col items-center gap-6 px-9 pt-6 pb-7" data-testid="donation-wizard-step-thank-you">
@@ -24,7 +30,7 @@ export const DonationLoginPrompt = () => {
 
 			<div className="flex w-full flex-col items-center gap-3">
 				<Button asChild className="min-w-32">
-					<Link href="/login" data-testid="donation-wizard-login-link">
+					<Link href={loginHref} onClick={onLoginClick} data-testid="donation-wizard-login-link">
 						{t('thankYou.loginPrompt.loginButton')}
 					</Link>
 				</Button>

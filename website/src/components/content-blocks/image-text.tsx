@@ -19,17 +19,19 @@ const isSvgAsset = (filename: string, contentType?: string) => {
 };
 
 export const ImageTextBlock = ({ blok }: Props) => {
-	if (!blok.content) {
+	const { content, disableMarginBottom, disableMarginTop, image, imageToTextRatio, layout } = blok;
+
+	if (!content) {
 		return null;
 	}
 
-	const imageFilename = blok.image.filename;
-	const isSvg = imageFilename ? isSvgAsset(imageFilename, blok.image.content_type) : false;
+	const imageFilename = image.filename;
+	const isSvg = imageFilename ? isSvgAsset(imageFilename, image.content_type) : false;
 	const dimensions =
 		imageFilename && !isSvg
 			? (getScaledDimensions(imageFilename, IMAGE_MAX_WIDTH) ?? {
-					width: blok.image.width ?? IMAGE_MAX_WIDTH,
-					height: blok.image.height ?? IMAGE_MAX_WIDTH,
+					width: image.width ?? IMAGE_MAX_WIDTH,
+					height: image.height ?? IMAGE_MAX_WIDTH,
 				})
 			: null;
 	const widthClassesByRatio = {
@@ -39,16 +41,18 @@ export const ImageTextBlock = ({ blok }: Props) => {
 		'2/3': { image: 'md:w-2/3', text: 'md:w-1/3' },
 	};
 
-	const imageToTextRatio = blok.imageToTextRatio ?? '1/2';
+	const resolvedImageToTextRatio = imageToTextRatio ?? '1/2';
 
-	const widthClasses = widthClassesByRatio[imageToTextRatio] ?? widthClassesByRatio['1/2'];
+	const widthClasses = widthClassesByRatio[resolvedImageToTextRatio] ?? widthClassesByRatio['1/2'];
 
 	return (
 		<BlockWrapper
 			{...storyblokEditable(blok as SbBlokData)}
+			disableMarginBottom={disableMarginBottom}
+			disableMarginTop={disableMarginTop}
 			className={cn(
 				'text-foreground flex flex-col gap-14 text-lg md:flex-row md:items-center',
-				blok.layout === 'imageRight' && 'md:flex-row-reverse',
+				layout === 'imageRight' && 'md:flex-row-reverse',
 			)}
 		>
 			{imageFilename && (
@@ -58,16 +62,16 @@ export const ImageTextBlock = ({ blok }: Props) => {
 						// eslint-disable-next-line @next/next/no-img-element
 						<img
 							src={imageFilename}
-							alt={blok.image.alt ?? ''}
-							width={blok.image.width ?? undefined}
-							height={blok.image.height ?? undefined}
+							alt={image.alt ?? ''}
+							width={image.width ?? undefined}
+							height={image.height ?? undefined}
 							className="h-auto w-full rounded-2xl"
 						/>
 					) : (
 						dimensions && (
 							<NextImage
 								src={imageFilename}
-								alt={blok.image.alt ?? ''}
+								alt={image.alt ?? ''}
 								width={dimensions.width}
 								height={dimensions.height}
 								className="h-auto w-full rounded-2xl"
@@ -77,7 +81,7 @@ export const ImageTextBlock = ({ blok }: Props) => {
 				</div>
 			)}
 			<div className={cn('order-1 flex-1 md:order-none', widthClasses.text)}>
-				<RichTextRenderer richTextDocument={blok.content} />
+				<RichTextRenderer richTextDocument={content} />
 			</div>
 		</BlockWrapper>
 	);
