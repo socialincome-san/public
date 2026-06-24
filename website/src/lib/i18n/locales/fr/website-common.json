@@ -78,6 +78,9 @@
 	},
 	"focuses-page": {
 		"empty": "Aucun axe trouvé.",
+		"recipients": "Bénéficiaires",
+		"programs": "Programmes",
+		"sdgs": "ODD",
 		"program-singular": "programme",
 		"program-plural": "programmes",
 		"active-program-singular": "programme actif",
@@ -86,6 +89,7 @@
 		"recipient-in-program-plural": "bénéficiaires dans un programme",
 		"candidate-singular": "candidat",
 		"candidate-plural": "candidats",
+		"candidates-ready-to-enroll": "{{count}} candidats prêts à s'inscrire",
 		"about": "À propos de"
 	},
 	"programs-page": {

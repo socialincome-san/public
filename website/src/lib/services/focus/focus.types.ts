@@ -37,3 +37,4 @@ export type PublicFocusStats = {
 };
 
 export type PublicFocusStatsMap = Record<string, PublicFocusStats>;
+export type PublicFocusStatsBySlugMap = Record<string, PublicFocusStats>;

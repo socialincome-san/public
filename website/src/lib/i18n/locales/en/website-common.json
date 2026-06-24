@@ -78,6 +78,9 @@
 	},
 	"focuses-page": {
 		"empty": "No focuses found.",
+		"recipients": "Recipients",
+		"programs": "Programs",
+		"sdgs": "SDGs",
 		"program-singular": "program",
 		"program-plural": "programs",
 		"active-program-singular": "active program",
@@ -86,6 +89,7 @@
 		"recipient-in-program-plural": "recipients in a program",
 		"candidate-singular": "candidate",
 		"candidate-plural": "candidates",
+		"candidates-ready-to-enroll": "{{count}} candidates ready to enroll",
 		"about": "About"
 	},
 	"programs-page": {

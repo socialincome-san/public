@@ -78,6 +78,9 @@
 	},
 	"focuses-page": {
 		"empty": "Nessun focus trovato.",
+		"recipients": "Beneficiari",
+		"programs": "Programmi",
+		"sdgs": "SDG",
 		"program-singular": "programma",
 		"program-plural": "programmi",
 		"active-program-singular": "programma attivo",
@@ -86,6 +89,7 @@
 		"recipient-in-program-plural": "beneficiari in un programma",
 		"candidate-singular": "candidato",
 		"candidate-plural": "candidati",
+		"candidates-ready-to-enroll": "{{count}} candidati pronti per l'iscrizione",
 		"about": "Informazioni su"
 	},
 	"programs-page": {
