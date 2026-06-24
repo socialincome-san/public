@@ -2,9 +2,19 @@ import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import type { AnySearchParams } from '@/lib/types/page-props';
 import { FocusDetailCard } from './focus-detail-card';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusTitle } from './focus.utils';
+import { FocusesOverviewCountryFilter } from './focuses-overview-country-filter';
+import { FocusesOverviewSearch } from './focuses-overview-search';
+import {
+	focusMatchesCountryQuery,
+	focusMatchesSearchQuery,
+	getCountryFilterOptions,
+	getCountryQuery,
+	getSearchQuery,
+} from './focuses-overview.server';
 
 type Props = {
 	focuses: FocusStory[];
@@ -12,28 +22,54 @@ type Props = {
 	region: WebsiteRegion;
 	title?: string;
 	text?: string;
+	searchParams?: AnySearchParams;
 };
 
-export const FocusesOverview = async ({ focuses, lang, region, title, text }: Props) => {
+export const FocusesOverview = async ({ focuses, lang, region, title, text, searchParams }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const focusSlugs = focuses.map((focus) => getFocusSlug(focus));
 	const statsResult = await services.read.focus.getPublicFocusStatsBySlugs(focusSlugs);
 	const statsBySlug = statsResult.success ? statsResult.data : {};
+	const searchQuery = getSearchQuery(searchParams);
+	const countryQuery = getCountryQuery(searchParams);
+	const countryOptions = getCountryFilterOptions(focuses, statsBySlug);
+	const selectedCountryIsoCode = countryOptions.some((option) => option.value === countryQuery) ? countryQuery : undefined;
+	const countryFilteredFocuses = focuses.filter((focus) =>
+		focusMatchesCountryQuery(focus, statsBySlug, selectedCountryIsoCode),
+	);
+	const filteredFocuses = searchQuery
+		? countryFilteredFocuses.filter((focus) => focusMatchesSearchQuery(focus, searchQuery))
+		: countryFilteredFocuses;
 
 	return (
 		<div className="flex w-full flex-col gap-8">
 			<CmsHeader title={title} text={text} />
-			{focuses.length === 0 ? (
+			<div className="flex flex-wrap items-center justify-between gap-4">
+				<FocusesOverviewCountryFilter
+					allCountriesLabel={translator.t('focuses-page.all-countries', {
+						context: { count: countryOptions.length },
+					})}
+					countryOptions={countryOptions}
+					selectedCountryIsoCode={selectedCountryIsoCode}
+				/>
+				<FocusesOverviewSearch
+					defaultValue={searchQuery}
+					label={translator.t('focuses-page.search-label')}
+					placeholder={translator.t('focuses-page.search-placeholder')}
+				/>
+			</div>
+			{filteredFocuses.length === 0 ? (
 				<p className="text-muted-foreground">{translator.t('focuses-page.empty')}</p>
 			) : (
 				<ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
-					{focuses.map((focus) => {
+					{filteredFocuses.map((focus) => {
 						const focusSlug = getFocusSlug(focus);
 						const focusTitle = getFocusTitle(focus.content);
 						const stats = statsBySlug[focusSlug] ?? {
 							programsCount: 0,
 							recipientsInProgramsCount: 0,
 							candidatesCount: 0,
+							countryIsoCodes: [],
 						};
 
 						return (

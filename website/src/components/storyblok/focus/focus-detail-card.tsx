@@ -26,7 +26,7 @@ type FocusDetailCardStatProps = {
 const FocusDetailCardStat = ({ value, label }: FocusDetailCardStatProps) => (
 	<div className="flex flex-col gap-0">
 		<div className="text-2xl font-semibold text-slate-600">{value}</div>
-		<div className="text-sm font-bold text-slate-600">{label}</div>
+		<div className="text-sm font-medium text-slate-600">{label}</div>
 	</div>
 );
 

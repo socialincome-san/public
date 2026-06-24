@@ -22,13 +22,17 @@ const createService = ({
 		{
 			id: 'focus-health',
 			slug: 'health',
-			programs: [{ programId: 'program-1' }, { programId: 'program-1' }, { programId: 'program-2' }],
+			programs: [
+				{ programId: 'program-1', program: { country: { isoCode: 'KE' } } },
+				{ programId: 'program-1', program: { country: { isoCode: 'KE' } } },
+				{ programId: 'program-2', program: { country: { isoCode: 'SL' } } },
+			],
 		},
 	],
 	recipientsInProgramsCount = 7,
 	candidatesCount = 3,
 }: {
-	focuses?: { id: string; slug: string; programs: { programId: string }[] }[];
+	focuses?: { id: string; slug: string; programs: { programId: string; program?: { country: { isoCode: string } } }[] }[];
 	recipientsInProgramsCount?: number;
 	candidatesCount?: number;
 } = {}) => {
@@ -55,7 +59,12 @@ describe('FocusReadService public focus stats', () => {
 			select: {
 				id: true,
 				slug: true,
-				programs: { select: { programId: true } },
+				programs: {
+					select: {
+						programId: true,
+						program: { select: { country: { select: { isoCode: true } } } },
+					},
+				},
 			},
 		});
 		expect(data).toEqual({
@@ -63,6 +72,7 @@ describe('FocusReadService public focus stats', () => {
 				programsCount: 2,
 				recipientsInProgramsCount: 7,
 				candidatesCount: 3,
+				countryIsoCodes: ['KE', 'SL'],
 			},
 		});
 		expect(count).toHaveBeenCalledWith({

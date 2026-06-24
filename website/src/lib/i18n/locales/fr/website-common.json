@@ -78,6 +78,9 @@
 	},
 	"focuses-page": {
 		"empty": "Aucun axe trouvé.",
+		"search-label": "Rechercher des axes",
+		"search-placeholder": "Rechercher",
+		"all-countries": "Tous les pays ({{count}})",
 		"recipients": "Bénéficiaires",
 		"programs": "Programmes",
 		"sdgs": "ODD",

@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@/generated/prisma/client';
+import { Prisma, PrismaClient, type CountryCode } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
@@ -18,7 +18,7 @@ import {
 type PublicFocusStatsSource = {
 	id: string;
 	slug?: string;
-	programs: { programId: string }[];
+	programs: { programId: string; program?: { country: { isoCode: CountryCode } } }[];
 };
 
 export class FocusReadService extends BaseService {
@@ -66,6 +66,13 @@ export class FocusReadService extends BaseService {
 		await Promise.all(
 			focuses.map(async (focus) => {
 				const programIds = [...new Set(focus.programs.map(({ programId }) => programId))];
+				const countryIsoCodes = [
+					...new Set(
+						focus.programs
+							.map(({ program }) => program?.country.isoCode)
+							.filter((countryIsoCode): countryIsoCode is CountryCode => Boolean(countryIsoCode)),
+					),
+				];
 				const [recipientsInProgramsCount, candidatesCount] = await Promise.all([
 					programIds.length > 0
 						? this.db.recipient.count({
@@ -92,6 +99,7 @@ export class FocusReadService extends BaseService {
 					programsCount: programIds.length,
 					recipientsInProgramsCount,
 					candidatesCount,
+					countryIsoCodes,
 				};
 			}),
 		);
@@ -219,7 +227,12 @@ export class FocusReadService extends BaseService {
 				select: {
 					id: true,
 					slug: true,
-					programs: { select: { programId: true } },
+					programs: {
+						select: {
+							programId: true,
+							program: { select: { country: { select: { isoCode: true } } } },
+						},
+					},
 				},
 			});
 
@@ -242,7 +255,12 @@ export class FocusReadService extends BaseService {
 				where: { id: { in: normalizedFocusIds } },
 				select: {
 					id: true,
-					programs: { select: { programId: true } },
+					programs: {
+						select: {
+							programId: true,
+							program: { select: { country: { select: { isoCode: true } } } },
+						},
+					},
 				},
 			});
 

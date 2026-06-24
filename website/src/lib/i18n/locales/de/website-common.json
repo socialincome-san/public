@@ -78,6 +78,9 @@
 	},
 	"focuses-page": {
 		"empty": "Keine Schwerpunkte gefunden.",
+		"search-label": "Schwerpunkte suchen",
+		"search-placeholder": "Suchen",
+		"all-countries": "Alle Länder ({{count}})",
 		"recipients": "Empfänger:innen",
 		"programs": "Programme",
 		"sdgs": "SDGs",

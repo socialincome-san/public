@@ -78,6 +78,9 @@
 	},
 	"focuses-page": {
 		"empty": "No focuses found.",
+		"search-label": "Search focuses",
+		"search-placeholder": "Search",
+		"all-countries": "All countries ({{count}})",
 		"recipients": "Recipients",
 		"programs": "Programs",
 		"sdgs": "SDGs",
