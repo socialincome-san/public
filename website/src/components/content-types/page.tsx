@@ -1,5 +1,6 @@
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
+import { ExplainerVideoHeaderBlock } from '@/components/content-blocks/explainer-video-header';
 import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
@@ -41,6 +42,8 @@ const renderPageBlock = (
 			return <DonationsTotalBlockServer blok={block} lang={lang} region={region} />;
 		case 'downloads':
 			return <DownloadsBlock blok={block} />;
+		case 'explainerVideoHeader':
+			return <ExplainerVideoHeaderBlock blok={block} lang={lang} region={region} />;
 		case 'faqSelection':
 			return <FaqSelectionBlock blok={block} lang={lang} region={region} />;
 		case 'heroVideo':
@@ -52,7 +55,7 @@ const renderPageBlock = (
 		case 'journalTeasers':
 			return <JournalTeasersBlock blok={block} lang={lang} region={region} />;
 		case 'modalCards':
-			return <ModalCardsBlock blok={block} lang={lang} region={region} />;
+			return <ModalCardsBlock blok={block} />;
 		case 'openSource':
 			return <OpenSourceBlock blok={block} lang={lang} />;
 		case 'partnershipsCarousel':
