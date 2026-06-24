@@ -90,7 +90,7 @@ type SdgKey = keyof typeof sdgs;
 
 export type SdgValue = number | string;
 
-const isSdgKey = (value: string): value is SdgKey => value in sdgs;
+const isSdgKey = (value: string): value is SdgKey => Object.prototype.hasOwnProperty.call(sdgs, value);
 
 export const getSdg = (value: SdgValue) => {
 	const key = String(value).trim();
