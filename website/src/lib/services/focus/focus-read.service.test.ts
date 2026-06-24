@@ -22,17 +22,25 @@ const createService = ({
 		{
 			id: 'focus-health',
 			slug: 'health',
+			_count: { programs: 3 },
 			programs: [
 				{ programId: 'program-1', program: { country: { isoCode: 'KE' } } },
 				{ programId: 'program-1', program: { country: { isoCode: 'KE' } } },
 				{ programId: 'program-2', program: { country: { isoCode: 'SL' } } },
 			],
+			localPartners: [{ localPartnerId: 'partner-1' }, { localPartnerId: 'partner-2' }],
 		},
 	],
 	recipientsInProgramsCount = 7,
 	candidatesCount = 3,
 }: {
-	focuses?: { id: string; slug: string; programs: { programId: string; program?: { country: { isoCode: string } } }[] }[];
+	focuses?: {
+		id: string;
+		slug: string;
+		_count: { programs: number };
+		programs: { programId: string; program?: { country: { isoCode: string } } }[];
+		localPartners: { localPartnerId: string }[];
+	}[];
 	recipientsInProgramsCount?: number;
 	candidatesCount?: number;
 } = {}) => {
@@ -59,17 +67,23 @@ describe('FocusReadService public focus stats', () => {
 			select: {
 				id: true,
 				slug: true,
+				_count: {
+					select: {
+						programs: true,
+					},
+				},
 				programs: {
 					select: {
 						programId: true,
 						program: { select: { country: { select: { isoCode: true } } } },
 					},
 				},
+				localPartners: { select: { localPartnerId: true } },
 			},
 		});
 		expect(data).toEqual({
 			health: {
-				programsCount: 2,
+				programsCount: 3,
 				recipientsInProgramsCount: 7,
 				candidatesCount: 3,
 				countryIsoCodes: ['KE', 'SL'],
@@ -78,18 +92,13 @@ describe('FocusReadService public focus stats', () => {
 		expect(count).toHaveBeenCalledWith({
 			where: {
 				programId: { in: ['program-1', 'program-2'] },
+				localPartnerId: { in: ['partner-1', 'partner-2'] },
 			},
 		});
 		expect(count).toHaveBeenCalledWith({
 			where: {
 				programId: null,
-				localPartner: {
-					focuses: {
-						some: {
-							focusId: 'focus-health',
-						},
-					},
-				},
+				localPartnerId: { in: ['partner-1', 'partner-2'] },
 			},
 		});
 	});

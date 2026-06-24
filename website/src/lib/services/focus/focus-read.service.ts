@@ -18,7 +18,9 @@ import {
 type PublicFocusStatsSource = {
 	id: string;
 	slug?: string;
+	_count: { programs: number };
 	programs: { programId: string; program?: { country: { isoCode: CountryCode } } }[];
+	localPartners: { localPartnerId: string }[];
 };
 
 export class FocusReadService extends BaseService {
@@ -66,6 +68,7 @@ export class FocusReadService extends BaseService {
 		await Promise.all(
 			focuses.map(async (focus) => {
 				const programIds = [...new Set(focus.programs.map(({ programId }) => programId))];
+				const localPartnerIds = [...new Set(focus.localPartners.map(({ localPartnerId }) => localPartnerId))];
 				const countryIsoCodes = [
 					...new Set(
 						focus.programs
@@ -73,30 +76,28 @@ export class FocusReadService extends BaseService {
 							.filter((countryIsoCode): countryIsoCode is CountryCode => Boolean(countryIsoCode)),
 					),
 				];
+				const hasLocalPartners = localPartnerIds.length > 0;
 				const [recipientsInProgramsCount, candidatesCount] = await Promise.all([
-					programIds.length > 0
+					hasLocalPartners && programIds.length > 0
 						? this.db.recipient.count({
 								where: {
 									programId: { in: programIds },
+									localPartnerId: { in: localPartnerIds },
 								},
 							})
 						: 0,
-					this.db.recipient.count({
-						where: {
-							programId: null,
-							localPartner: {
-								focuses: {
-									some: {
-										focusId: focus.id,
-									},
+					hasLocalPartners
+						? this.db.recipient.count({
+								where: {
+									programId: null,
+									localPartnerId: { in: localPartnerIds },
 								},
-							},
-						},
-					}),
+							})
+						: 0,
 				]);
 
 				statsByKey[getKey(focus)] = {
-					programsCount: programIds.length,
+					programsCount: focus._count.programs,
 					recipientsInProgramsCount,
 					candidatesCount,
 					countryIsoCodes,
@@ -227,12 +228,18 @@ export class FocusReadService extends BaseService {
 				select: {
 					id: true,
 					slug: true,
+					_count: {
+						select: {
+							programs: true,
+						},
+					},
 					programs: {
 						select: {
 							programId: true,
 							program: { select: { country: { select: { isoCode: true } } } },
 						},
 					},
+					localPartners: { select: { localPartnerId: true } },
 				},
 			});
 
@@ -255,12 +262,18 @@ export class FocusReadService extends BaseService {
 				where: { id: { in: normalizedFocusIds } },
 				select: {
 					id: true,
+					_count: {
+						select: {
+							programs: true,
+						},
+					},
 					programs: {
 						select: {
 							programId: true,
 							program: { select: { country: { select: { isoCode: true } } } },
 						},
 					},
+					localPartners: { select: { localPartnerId: true } },
 				},
 			});
 

@@ -78,6 +78,8 @@
 	},
 	"focuses-page": {
 		"empty": "Aucun axe trouvé.",
+		"no-results": "Aucun axe ne correspond aux filtres sélectionnés.",
+		"load-stats-error": "Impossible de charger les statistiques des axes.",
 		"search-label": "Rechercher des axes",
 		"search-placeholder": "Rechercher",
 		"all-countries": "Tous les pays ({{count}})",

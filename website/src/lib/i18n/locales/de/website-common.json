@@ -78,6 +78,8 @@
 	},
 	"focuses-page": {
 		"empty": "Keine Schwerpunkte gefunden.",
+		"no-results": "Keine Schwerpunkte entsprechen den ausgewählten Filtern.",
+		"load-stats-error": "Statistiken zu den Schwerpunkten konnten nicht geladen werden.",
 		"search-label": "Schwerpunkte suchen",
 		"search-placeholder": "Suchen",
 		"all-countries": "Alle Länder ({{count}})",

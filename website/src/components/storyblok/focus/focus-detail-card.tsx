@@ -6,7 +6,7 @@ type FocusDetailCardLabels = {
 	recipients: string;
 	programs: string;
 	sdgs: string;
-	candidatesReady: string;
+	candidatesReady?: string;
 };
 
 type FocusDetailCardProps = {
@@ -50,7 +50,7 @@ export const FocusDetailCard = ({
 			href={href}
 			className="border-border flex min-w-0 flex-1 flex-col gap-3 rounded-2xl border bg-white p-6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-950"
 		>
-			<h2 className="line-clamp-2 min-h-18 min-w-0 font-sans text-3xl leading-9 font-medium break-words text-cyan-950">
+			<h2 className="line-clamp-2 min-h-18 min-w-0 font-sans text-3xl leading-9 font-medium wrap-break-word text-cyan-950">
 				{focusTitle}
 			</h2>
 			<div className="grid grid-cols-3 gap-3">
@@ -59,6 +59,6 @@ export const FocusDetailCard = ({
 				<FocusDetailCardStat value={sdgsValue} label={labels.sdgs} />
 			</div>
 		</NextLink>
-		<AlertSection text={labels.candidatesReady} />
+		{labels.candidatesReady ? <AlertSection text={labels.candidatesReady} /> : null}
 	</div>
 );

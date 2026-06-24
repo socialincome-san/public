@@ -30,10 +30,12 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 	const focusSlugs = focuses.map((focus) => getFocusSlug(focus));
 	const statsResult = await services.read.focus.getPublicFocusStatsBySlugs(focusSlugs);
 	const statsBySlug = statsResult.success ? statsResult.data : {};
+	const hasStatsError = !statsResult.success;
 	const searchQuery = getSearchQuery(searchParams);
 	const countryQuery = getCountryQuery(searchParams);
 	const countryOptions = getCountryFilterOptions(focuses, statsBySlug);
 	const selectedCountryIsoCode = countryOptions.some((option) => option.value === countryQuery) ? countryQuery : undefined;
+	const hasActiveFilters = Boolean(searchQuery || selectedCountryIsoCode);
 	const countryFilteredFocuses = focuses.filter((focus) =>
 		focusMatchesCountryQuery(focus, statsBySlug, selectedCountryIsoCode),
 	);
@@ -58,8 +60,11 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 					placeholder={translator.t('focuses-page.search-placeholder')}
 				/>
 			</div>
+			{hasStatsError ? <p className="text-destructive">{translator.t('focuses-page.load-stats-error')}</p> : null}
 			{filteredFocuses.length === 0 ? (
-				<p className="text-muted-foreground">{translator.t('focuses-page.empty')}</p>
+				<p className="text-muted-foreground">
+					{translator.t(hasActiveFilters ? 'focuses-page.no-results' : 'focuses-page.empty')}
+				</p>
 			) : (
 				<ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
 					{filteredFocuses.map((focus) => {
@@ -84,9 +89,12 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 										recipients: translator.t('focuses-page.recipients'),
 										programs: translator.t('focuses-page.programs'),
 										sdgs: translator.t('focuses-page.sdgs'),
-										candidatesReady: translator.t('focuses-page.candidates-ready-to-enroll', {
-											context: { count: stats.candidatesCount },
-										}),
+										candidatesReady:
+											stats.candidatesCount > 0
+												? translator.t('focuses-page.candidates-ready-to-enroll', {
+														context: { count: stats.candidatesCount },
+													})
+												: undefined,
 									}}
 								/>
 							</li>

@@ -78,6 +78,8 @@
 	},
 	"focuses-page": {
 		"empty": "No focuses found.",
+		"no-results": "No focuses match the selected filters.",
+		"load-stats-error": "Could not load focus statistics.",
 		"search-label": "Search focuses",
 		"search-placeholder": "Search",
 		"all-countries": "All countries ({{count}})",
