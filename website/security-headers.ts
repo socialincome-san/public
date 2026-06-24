@@ -1,3 +1,7 @@
+import type { NextConfig } from 'next';
+
+type SecurityHeaders = Awaited<ReturnType<NonNullable<NextConfig['headers']>>>[number]['headers'];
+
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 const contentSecurityPolicy = [
@@ -22,4 +26,4 @@ export const securityHeaders = [
 		key: 'Content-Security-Policy',
 		value: contentSecurityPolicy,
 	},
-];
+] satisfies SecurityHeaders;
