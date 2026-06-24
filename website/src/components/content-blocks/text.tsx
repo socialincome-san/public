@@ -19,7 +19,7 @@ const widthClassesByRatio = {
 };
 
 export const TextBlock = ({ blok }: Props) => {
-	const { content, widthRatio } = blok;
+	const { content, disableMarginBottom, disableMarginTop, widthRatio } = blok;
 
 	if (!content) {
 		return null;
@@ -28,7 +28,12 @@ export const TextBlock = ({ blok }: Props) => {
 	const widthClass = widthClassesByRatio[widthRatio ?? defaultWidthRatio];
 
 	return (
-		<BlockWrapper className="text-foreground text-lg" {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper
+			className="text-foreground text-lg"
+			disableMarginBottom={disableMarginBottom}
+			disableMarginTop={disableMarginTop}
+			{...storyblokEditable(blok as SbBlokData)}
+		>
 			<div className={widthClass}>
 				<RichTextRenderer richTextDocument={content} />
 			</div>
