@@ -21,9 +21,10 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 type Props = {
 	lang: WebsiteLanguage;
+	prefilledEmail?: string;
 };
 
-export const MagicLinkLoginForm = ({ lang }: Props) => {
+export const MagicLinkLoginForm = ({ lang, prefilledEmail = '' }: Props) => {
 	const { auth } = useAuth();
 	const translator = useTranslator(lang, 'website-login');
 
@@ -39,7 +40,7 @@ export const MagicLinkLoginForm = ({ lang }: Props) => {
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
-		defaultValues: { email: '' },
+		defaultValues: { email: prefilledEmail },
 	});
 
 	const handleSend = async ({ email }: FormValues) => {
