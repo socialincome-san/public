@@ -69,13 +69,9 @@ const FocusDetailCardSdgs = ({ values = [], label }: FocusDetailCardSdgsProps) =
 				{validSdgs.length > 0 ? (
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<button
-								type="button"
-								className="inline-flex text-slate-600 hover:text-slate-950"
-								aria-label={`${label} information`}
-							>
+							<span className="inline-flex cursor-help text-slate-600 hover:text-slate-950">
 								<InfoIcon className="size-[12px]" aria-hidden />
-							</button>
+							</span>
 						</TooltipTrigger>
 						<TooltipContent sideOffset={8} className="max-w-[280px]">
 							<ul>

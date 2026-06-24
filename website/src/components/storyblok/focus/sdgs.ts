@@ -1,4 +1,4 @@
-export const sdgs = {
+const sdgs = {
 	'1': {
 		number: 1,
 		title: 'No Poverty',
