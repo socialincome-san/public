@@ -47,7 +47,7 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 			};
 		}),
 	);
-	const timeSeriesCurrency = resolvedTimeRanges[0]?.currency ?? 'CHF';
+	const timeSeriesCurrency = resolvedTimeRanges[0]?.currency ?? displayCurrency;
 
 	return (
 		<div className="w-site-width max-w-content mx-auto space-y-12 py-12" {...storyblokEditable(blok as SbBlokData)}>
