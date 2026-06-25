@@ -21,7 +21,7 @@ export const CampaignHero = ({ campaign, translator, lang }: Props) => {
 					<p className="text-muted-foreground text-lg">
 						{translator.t('campaign.by', { context: { creator: campaign.creatorName } })}
 					</p>
-					<h1 className="text-primary text-4xl font-bold xl:text-5xl">{campaign.title}</h1>
+					<h1 className="text-primary text-5xl font-bold md:text-6xl">{campaign.title}</h1>
 					<p className="text-foreground text-lg">{campaign.description}</p>
 
 					{!hasGoal && (

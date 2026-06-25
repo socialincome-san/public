@@ -23,7 +23,7 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, regio
 			{hasCmsHeader ? (
 				<div className="space-y-5">
 					{title?.trim() ? (
-						<h1 className="text-foreground text-4xl leading-tight font-bold sm:text-5xl">{title.trim()}</h1>
+						<h1 className="text-foreground text-5xl leading-tight font-bold md:text-6xl">{title.trim()}</h1>
 					) : null}
 					{text?.trim() ? (
 						<p className="text-foreground text-base leading-6 sm:text-lg sm:leading-7">{text.trim()}</p>

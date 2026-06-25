@@ -73,7 +73,7 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
 			<div className="pt-8">
 				<div className="space-y-5">
-					{title && <h1 className="text-foreground text-4xl leading-tight font-bold sm:text-5xl">{title}</h1>}
+					{title && <h1 className="text-foreground text-5xl leading-tight font-bold md:text-6xl">{title}</h1>}
 					{text && <p className="text-foreground text-base leading-6 sm:text-lg sm:leading-7">{text}</p>}
 				</div>
 

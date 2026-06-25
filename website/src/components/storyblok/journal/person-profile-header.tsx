@@ -37,12 +37,7 @@ export const PersonProfileHeader = ({ person, name, portraitSrc }: Props) => {
 
 			<div className="min-w-0 flex-1 space-y-4 text-center sm:text-left">
 				<div className="space-y-2">
-					<SectionHeading
-						as="h1"
-						align="left"
-						bold
-						className="text-foreground mb-0 text-4xl leading-tight sm:text-5xl md:mb-0"
-					>
+					<SectionHeading as="h1" size={1} align="left" bold className="text-foreground mb-0 leading-tight md:mb-0">
 						{name}
 					</SectionHeading>
 					{role && <p className="text-muted-foreground text-base capitalize sm:text-lg">{role}</p>}

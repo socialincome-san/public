@@ -1,5 +1,6 @@
 'use client';
 
+import { headingStyles, type HeadingSize } from '@/components/heading-styles';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/table';
 import { cn } from '@/lib/utils/cn';
 import NextLink from 'next/link';
@@ -32,7 +33,7 @@ type RichTextAlignmentProps = {
 };
 
 type RichTextHeadingProps = RichTextAlignmentProps & {
-	level: number;
+	level: HeadingSize;
 };
 
 const linkClassName = 'text-primary font-medium underline underline-offset-4';
@@ -86,15 +87,6 @@ export const storyblokRichTextMarkResolvers = {
 			</NextLink>
 		);
 	},
-};
-
-const headingStyles: Record<number, string> = {
-	1: 'text-5xl md:text-6xl',
-	2: 'text-4xl md:text-5xl',
-	3: 'text-3xl md:text-4xl',
-	4: 'text-2xl md:text-3xl',
-	5: 'text-xl md:text-2xl',
-	6: 'text-lg md:text-xl',
 };
 
 export const storyblokRichTextBasicNodeResolvers = {

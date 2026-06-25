@@ -49,7 +49,7 @@ export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, tran
 
 			{article.showRelativeArticles && relatedArticles.length > 0 && (
 				<section className="w-site-width max-w-content mx-auto px-4 pb-16 sm:px-0">
-					<SectionHeading size="medium" className="text-foreground">
+					<SectionHeading size={4} bold className="text-foreground">
 						{translator.t('article.keep-reading')}
 					</SectionHeading>
 					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

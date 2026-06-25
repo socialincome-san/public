@@ -13,7 +13,7 @@ type ImpactMeasurementViewProps = {
 	variant?: 'standalone' | 'embedded';
 };
 
-export const ImpactMeasurementView = async ({
+export const ImpactMeasurementView = ({
 	lang,
 	searchParams,
 	showStudyDetails = true,
