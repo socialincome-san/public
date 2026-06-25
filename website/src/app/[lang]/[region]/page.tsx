@@ -32,6 +32,7 @@ export default async function HomePage({ params, searchParams }: DefaultPageProp
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
 			searchParams={resolvedSearchParams}
+			richtextButtonHeaderAction="createProgram"
 		/>
 	);
 }

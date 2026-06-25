@@ -37,6 +37,17 @@ export class ProgramReadService extends BaseService {
 		return sum;
 	};
 
+	private readonly sumPayoutAmountsChf = (recipients: { payouts: { amountChf: unknown }[] }[]): number => {
+		let sum = 0;
+		for (const recipient of recipients) {
+			for (const payout of recipient.payouts) {
+				sum += Number(payout.amountChf ?? 0);
+			}
+		}
+
+		return sum;
+	};
+
 	private readonly normalizeProgramPortalSlugs = (portalSlugs: string[]) => [
 		...new Set(portalSlugs.map((portalSlug) => portalSlug.trim()).filter(Boolean)),
 	];
@@ -56,7 +67,7 @@ export class ProgramReadService extends BaseService {
 			select: {
 				payouts: {
 					where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
-					select: { amount: true },
+					select: { amount: true, amountChf: true },
 				},
 			},
 		},
@@ -65,13 +76,14 @@ export class ProgramReadService extends BaseService {
 	private readonly toPublicProgramStats = (program: {
 		country: { isoCode: PublicProgramStats['countryIsoCode']; currency: PublicProgramStats['payoutCurrency'] };
 		_count: { campaigns: number; recipients: number };
-		recipients: { payouts: { amount: unknown }[] }[];
+		recipients: { payouts: { amount: unknown; amountChf: unknown }[] }[];
 	}): PublicProgramStats => ({
 		campaignsCount: program._count.campaigns,
 		recipientsCount: program._count.recipients,
 		countryIsoCode: program.country.isoCode,
 		payoutCurrency: program.country.currency,
 		totalPayoutsSum: this.sumPayoutAmounts(program.recipients),
+		totalPayoutsSumChf: this.sumPayoutAmountsChf(program.recipients),
 	});
 
 	async getPublicProgramFilterDataByPortalSlugs(portalSlugs: string[]): Promise<ServiceResult<PublicProgramFilterDataMap>> {

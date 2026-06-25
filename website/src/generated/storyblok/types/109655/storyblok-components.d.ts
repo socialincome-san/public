@@ -477,8 +477,10 @@ export interface ReferencesGroup {
 }
 
 export interface RichtextButtonHeader {
-  Heading?: StoryblokRichtext;
-  Button?: Button[];
+  heading?: StoryblokRichtext;
+  button?: Button[];
+  disableMarginBottom?: boolean;
+  disableMarginTop?: boolean;
   component: "richtextButtonHeader";
   _uid: string;
   [k: string]: unknown;
