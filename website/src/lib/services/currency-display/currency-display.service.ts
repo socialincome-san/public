@@ -16,7 +16,14 @@ export class CurrencyDisplayService {
 		}
 		const fromRate = rates[fromCurrency];
 		const toRate = rates[toCurrency];
-		if (!fromRate || !toRate) {
+		if (
+			fromRate === undefined ||
+			toRate === undefined ||
+			!Number.isFinite(fromRate) ||
+			!Number.isFinite(toRate) ||
+			fromRate <= 0 ||
+			toRate <= 0
+		) {
 			return undefined;
 		}
 

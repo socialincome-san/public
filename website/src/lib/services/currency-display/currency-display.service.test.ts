@@ -157,4 +157,15 @@ describe('CurrencyDisplayService.convertAmount', () => {
 
 		expect(service.convertAmount(500, 'CHF', 'USD')).toBeUndefined();
 	});
+
+	it.each([
+		{ label: 'zero from rate', rates: { CHF: 0, USD: 1.1 } },
+		{ label: 'zero to rate', rates: { CHF: 1, USD: 0 } },
+		{ label: 'negative rate', rates: { CHF: 1, USD: -1.1 } },
+		{ label: 'non-finite rate', rates: { CHF: 1, USD: Number.NaN } },
+	])('returns undefined for invalid rates ($label)', ({ rates }) => {
+		const { service } = createService();
+
+		expect(service.convertAmount(500, 'CHF', 'USD', rates)).toBeUndefined();
+	});
 });
