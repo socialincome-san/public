@@ -11,7 +11,7 @@
 	},
 	"stepAmount": {
 		"title": "Spenden",
-		"monthly-income-label": "Ihr monatliches Einkommen (CHF)",
+		"monthly-income-label": "Ihr monatliches Einkommen ",
 		"choose-own-amount": "Oder eigenen Betrag wählen",
 		"your-one-percent": "Ihr 1%",
 		"other": "Andere",
