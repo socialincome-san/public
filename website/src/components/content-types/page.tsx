@@ -3,6 +3,7 @@ import { DownloadsBlock } from '@/components/content-blocks/downloads';
 import { ExplainerVideoHeaderBlock } from '@/components/content-blocks/explainer-video-header';
 import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
+import { HomePageRichtextButtonHeaderBlock } from '@/components/content-blocks/home-page-richtext-button-header';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
@@ -10,6 +11,7 @@ import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceBlock } from '@/components/content-blocks/open-source';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
+import { RichtextButtonHeaderBlock } from '@/components/content-blocks/richtext-button-header';
 import { SpacerBlock } from '@/components/content-blocks/spacer';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
@@ -24,12 +26,14 @@ import type { ParsedUrlQueryInput } from 'querystring';
 import { Fragment } from 'react';
 
 type PageBlock = Page['content'][number];
+type RichtextButtonHeaderAction = 'createProgram';
 
 type PageContentTypeProps = {
 	blok: Page;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	searchParams?: ParsedUrlQueryInput;
+	richtextButtonHeaderAction?: RichtextButtonHeaderAction;
 };
 
 const renderPageBlock = (
@@ -37,6 +41,7 @@ const renderPageBlock = (
 	lang: WebsiteLanguage,
 	region: WebsiteRegion,
 	searchParams?: ParsedUrlQueryInput,
+	richtextButtonHeaderAction?: RichtextButtonHeaderAction,
 ) => {
 	switch (block.component) {
 		case 'donationsTotal':
@@ -63,6 +68,12 @@ const renderPageBlock = (
 			return <PartnershipsCarouselBlock blok={block} />;
 		case 'programGrid':
 			return <ProgramGridBlock blok={block} lang={lang} region={region} />;
+		case 'richtextButtonHeader':
+			if (richtextButtonHeaderAction === 'createProgram') {
+				return <HomePageRichtextButtonHeaderBlock blok={block} lang={lang} region={region} />;
+			}
+
+			return <RichtextButtonHeaderBlock blok={block} lang={lang} region={region} />;
 		case 'spacer':
 			return <SpacerBlock blok={block} />;
 		case 'teamGrid':
@@ -86,10 +97,18 @@ const renderPageBlock = (
 	}
 };
 
-export default function PageContentType({ blok, lang, region, searchParams }: PageContentTypeProps) {
+export default function PageContentType({
+	blok,
+	lang,
+	region,
+	searchParams,
+	richtextButtonHeaderAction,
+}: PageContentTypeProps) {
 	return (
 		blok.content?.map((currentBlock) => (
-			<Fragment key={currentBlock._uid}>{renderPageBlock(currentBlock, lang, region, searchParams)}</Fragment>
+			<Fragment key={currentBlock._uid}>
+				{renderPageBlock(currentBlock, lang, region, searchParams, richtextButtonHeaderAction)}
+			</Fragment>
 		)) ?? null
 	);
 }
