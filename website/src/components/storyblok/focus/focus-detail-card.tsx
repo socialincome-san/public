@@ -71,7 +71,7 @@ const FocusDetailCardSdgs = ({ values = [], label }: FocusDetailCardSdgsProps) =
 						<TooltipTrigger asChild>
 							<button
 								type="button"
-								className="relative z-10 inline-flex text-slate-600 hover:text-slate-950"
+								className="pointer-events-auto relative z-10 inline-flex text-slate-600 hover:text-slate-950"
 								aria-label={`${label} information`}
 							>
 								<InfoIcon className="size-[12px]" aria-hidden />
@@ -116,16 +116,18 @@ export const FocusDetailCard = ({
 					className="absolute inset-0 z-0 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-950"
 					aria-labelledby={titleId}
 				/>
-				<h2
-					id={titleId}
-					className="relative line-clamp-2 min-h-18 min-w-0 font-sans text-3xl leading-9 font-medium wrap-break-word text-cyan-950"
-				>
-					{focusTitle}
-				</h2>
-				<div className="relative grid grid-cols-3 gap-3">
-					<FocusDetailCardStat value={recipientsCount} label={labels.recipients} />
-					<FocusDetailCardStat value={programsCount} label={labels.programs} />
-					<FocusDetailCardSdgs values={sdgValues} label={labels.sdgs} />
+				<div className="pointer-events-none relative flex flex-col gap-3">
+					<h2
+						id={titleId}
+						className="line-clamp-2 min-h-18 min-w-0 font-sans text-3xl leading-9 font-medium wrap-break-word text-cyan-950"
+					>
+						{focusTitle}
+					</h2>
+					<div className="grid grid-cols-3 gap-3">
+						<FocusDetailCardStat value={recipientsCount} label={labels.recipients} />
+						<FocusDetailCardStat value={programsCount} label={labels.programs} />
+						<FocusDetailCardSdgs values={sdgValues} label={labels.sdgs} />
+					</div>
 				</div>
 			</div>
 			{labels.candidatesReady ? <AlertSection text={labels.candidatesReady} /> : null}
