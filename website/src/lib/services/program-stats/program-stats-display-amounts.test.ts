@@ -1,4 +1,5 @@
 import { type PrismaClient } from '@/generated/prisma/client';
+import { CurrencyDisplayService } from '../currency-display/currency-display.service';
 import type { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import type { RecipientStatusService } from '../recipient/recipient-status.service';
 import { ProgramStatsService } from './program-stats.service';
@@ -66,12 +67,12 @@ const createService = (exchangeRates?: Record<string, number>) => {
 			exchangeRates ? { success: true as const, data: exchangeRates } : { success: false as const, error: 'No rates' },
 		);
 	const exchangeRateService = { getLatestRates };
-
+	const currencyDisplay = new CurrencyDisplayService(exchangeRateService as unknown as ExchangeRateReadService);
 	const recipientStatusService = {} as RecipientStatusService;
 	const db = {} as PrismaClient;
 
 	return {
-		service: new ProgramStatsService(db, exchangeRateService as unknown as ExchangeRateReadService, recipientStatusService),
+		service: new ProgramStatsService(db, currencyDisplay, recipientStatusService),
 		getLatestRates,
 	};
 };

@@ -5,7 +5,7 @@ import { useInView, useMotionValue, useSpring, type MotionValue } from 'motion/r
 import { useEffect, useRef } from 'react';
 
 type Params = {
-	totalChf: number;
+	totalAmount: number;
 	disableAnimation?: boolean;
 };
 
@@ -17,13 +17,13 @@ type Result = {
 	smoothMouseY: MotionValue<number>;
 };
 
-export const useDonationTotalAnimations = ({ totalChf, disableAnimation = false }: Params): Result => {
+export const useDonationTotalAnimations = ({ totalAmount, disableAnimation = false }: Params): Result => {
 	const sectionRef = useRef<HTMLDivElement>(null);
 	const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
 	const shouldAnimate = isInView && !disableAnimation;
 
-	const animatedValue = useCountUp(totalChf, shouldAnimate);
-	const displayValue = shouldAnimate ? animatedValue : totalChf;
+	const animatedValue = useCountUp(totalAmount, shouldAnimate);
+	const displayValue = shouldAnimate ? animatedValue : totalAmount;
 
 	const mouseX = useMotionValue(0);
 	const mouseY = useMotionValue(0);
