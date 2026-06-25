@@ -65,6 +65,14 @@ export const focusMatchesSdgQuery = (focus: FocusStory, selectedSdg: string | un
 	return focus.content.sdgs?.some((value) => String(getSdg(value)?.number) === selectedSdg) ?? false;
 };
 
+export const sortFocusesByCandidatesCountDesc = (focuses: FocusStory[], statsBySlug: PublicFocusStatsBySlugMap) =>
+	[...focuses].sort((focusA, focusB) => {
+		const candidatesCountA = statsBySlug[getFocusSlug(focusA)]?.candidatesCount ?? 0;
+		const candidatesCountB = statsBySlug[getFocusSlug(focusB)]?.candidatesCount ?? 0;
+
+		return candidatesCountB - candidatesCountA;
+	});
+
 export const getCountryFilterOptions = (focuses: FocusStory[], statsBySlug: PublicFocusStatsBySlugMap): FilterOption[] => {
 	const optionsByCountryIsoCode = new Map<string, FilterOption>();
 

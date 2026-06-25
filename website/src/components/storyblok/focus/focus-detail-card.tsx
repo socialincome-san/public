@@ -1,7 +1,10 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
+import { cn } from '@/lib/utils/cn';
 import { InfoIcon } from 'lucide-react';
 import NextLink from 'next/link';
 import { getSdg, type SdgValue } from './sdgs';
+
+type AlertVariant = 'confirm' | 'secondary';
 
 type FocusDetailCardLabels = {
 	recipients: string;
@@ -16,6 +19,7 @@ type FocusDetailCardProps = {
 	recipientsCount: number;
 	programsCount: number;
 	sdgValues?: SdgValue[];
+	alertVariant?: AlertVariant;
 	labels: FocusDetailCardLabels;
 };
 
@@ -91,12 +95,14 @@ const FocusDetailCardSdgs = ({ values = [], label }: FocusDetailCardSdgsProps) =
 	);
 };
 
-const AlertSection = ({ text }: { text: string }) => (
+const AlertSection = ({ text, variant }: { text: string; variant: AlertVariant }) => (
 	<div className="flex items-center gap-2 rounded-b-2xl px-4 py-2">
-		<span className="relative flex size-2 shrink-0" aria-hidden>
-			<span className="bg-confirm animation-duration-[2s] absolute inline-flex size-full animate-ping rounded-full opacity-75" />
-			<span className="bg-confirm relative inline-flex size-2 rounded-full" />
-		</span>
+		{variant === 'confirm' ? (
+			<span className="relative flex size-2 shrink-0" aria-hidden>
+				<span className="bg-confirm animation-duration-[2s] absolute inline-flex size-full animate-ping rounded-full opacity-75" />
+				<span className="bg-confirm relative inline-flex size-2 rounded-full" />
+			</span>
+		) : null}
 		<p className="text-xs font-semibold text-slate-950">{text}</p>
 	</div>
 );
@@ -107,12 +113,18 @@ export const FocusDetailCard = ({
 	recipientsCount,
 	programsCount,
 	sdgValues,
+	alertVariant = 'confirm',
 	labels,
 }: FocusDetailCardProps) => {
 	const titleId = `focus-card-title-${href}`;
 
 	return (
-		<div className="bg-confirm-foreground flex h-full flex-col rounded-2xl drop-shadow-md">
+		<div
+			className={cn(
+				'flex h-full flex-col rounded-2xl drop-shadow-md',
+				alertVariant === 'confirm' ? 'bg-confirm-foreground' : 'bg-secondary',
+			)}
+		>
 			<div className="border-border relative flex min-w-0 flex-1 flex-col gap-3 rounded-2xl border bg-white p-6">
 				<NextLink
 					href={href}
@@ -133,7 +145,7 @@ export const FocusDetailCard = ({
 					</div>
 				</div>
 			</div>
-			{labels.candidatesReady ? <AlertSection text={labels.candidatesReady} /> : null}
+			{labels.candidatesReady ? <AlertSection text={labels.candidatesReady} variant={alertVariant} /> : null}
 		</div>
 	);
 };
