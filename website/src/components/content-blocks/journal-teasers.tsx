@@ -43,7 +43,7 @@ const getArticles = async (blok: JournalTeasers, lang: WebsiteLanguage) => {
 };
 
 export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
-	const { heading } = blok;
+	const { disableMarginBottom, disableMarginTop, heading } = blok;
 	const [translator, articles] = await Promise.all([
 		Translator.getInstance({ language: lang, namespaces: ['website-journal'] }),
 		getArticles(blok, lang),
@@ -61,6 +61,8 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 			region={region}
 			journalCtaLabel={translator.t('teasers.goToJournal')}
 			blok={blok as SbBlokData}
+			disableMarginBottom={disableMarginBottom}
+			disableMarginTop={disableMarginTop}
 		/>
 	);
 };
