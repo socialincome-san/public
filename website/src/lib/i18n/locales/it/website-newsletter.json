@@ -6,7 +6,7 @@
 		"email": "Email"
 	},
 	"popup": {
-		"information-label": "La nostra newsletter mensile (in inglese) ti aggiorna su Social Income, il reddito di base universale e i trasferimenti diretti di denaro.",
+		"information-label": "Iscriviti alla nostra newsletter.",
 		"toast-success": "Grazie per iscriverti alla nostra newsletter!",
 		"toast-failure": "Qualcosa è andato storto. Prova di nuovo o contattaci a hello@socialincome.org",
 		"email-placeholder": "La tua email",

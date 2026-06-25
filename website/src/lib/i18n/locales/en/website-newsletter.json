@@ -6,7 +6,7 @@
 		"email": "Email"
 	},
 	"popup": {
-		"information-label": "Our monthly newsletter updates you on Social Income, UBI and Direct Cash Transfers.",
+		"information-label": "Subscribe to our newsletter.",
 		"toast-success": "Thank you for subscribing to our newsletter!",
 		"toast-failure": "Something went wrong. Try again or contact us at hello@socialincome.org",
 		"email-placeholder": "Your email",

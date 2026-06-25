@@ -298,9 +298,9 @@ export interface MenuItem {
 
 export interface MenuItemGroup {
   label: string;
-  items?: MenuItem[];
-  overviewLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   overviewLabel?: string;
+  overviewLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  items?: MenuItem[];
   component: "menuItemGroup";
   _uid: string;
   [k: string]: unknown;
@@ -320,6 +320,12 @@ export interface ModalCards {
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
   component: "modalCards";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface NewsletterForm {
+  component: "newsletterForm";
   _uid: string;
   [k: string]: unknown;
 }
@@ -358,6 +364,8 @@ export interface Page {
     | OpenSource
     | Spacer
     | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
   )[];
   component: "page";
   _uid: string;
@@ -464,6 +472,14 @@ export interface ReferencesGroup {
   context?: "" | "related" | "original";
   references?: ReferenceArticle[];
   component: "referencesGroup";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface RichtextButtonHeader {
+  Heading?: StoryblokRichtext;
+  Button?: Button[];
+  component: "richtextButtonHeader";
   _uid: string;
   [k: string]: unknown;
 }

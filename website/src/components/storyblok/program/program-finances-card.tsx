@@ -34,7 +34,9 @@ export const ProgramFinancesCard = ({ stats, displayAmounts, translator, lang, e
 	const sentToRecipients = formatCompactNumberLocale(displayAmounts.paidOutSoFar, locale);
 	const totalProgramCosts = formatCompactNumberLocale(displayAmounts.totalProgramCosts, locale);
 	const availableCredits = formatAmount(displayAmounts.availableCredits, locale, 2);
-	const progressPercent = clampPercent(stats.payoutProgressPercent);
+	const progressPercent = clampPercent(
+		displayAmounts.totalProgramCosts > 0 ? (displayAmounts.paidOutSoFar / displayAmounts.totalProgramCosts) * 100 : 0,
+	);
 	const showLowCreditsWarning = stats.availableCreditsInIntervals <= 3;
 
 	const content = (
