@@ -55,7 +55,12 @@ export const NewsletterSignup = ({ lang }: Props) => {
 						render={({ field }) => (
 							<FormItem className="flex-1">
 								<FormControl>
-									<Input type="email" autoComplete="email" placeholder={translator.t('popup.email-placeholder')} {...field} />
+									<Input
+										type="email"
+										autoComplete="email"
+										placeholder={translator.t('popup.email-placeholder')}
+										{...field}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
