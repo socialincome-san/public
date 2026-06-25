@@ -5,7 +5,6 @@ import { ImpactMeasurementResults } from './results';
 import { ImpactMeasurementResultsSkeleton } from './results-skeleton';
 import { ImpactMeasurementStudyDetailsSkeleton } from './study-details-skeleton';
 import { ImpactMeasurementStudyDetails } from './summary';
-import { getImpactTranslator } from './translator';
 
 type ImpactMeasurementViewProps = {
 	lang: string;
@@ -14,7 +13,7 @@ type ImpactMeasurementViewProps = {
 	variant?: 'standalone' | 'embedded';
 };
 
-export const ImpactMeasurementView = async ({
+export const ImpactMeasurementView = ({
 	lang,
 	searchParams,
 	showStudyDetails = true,
@@ -28,7 +27,6 @@ export const ImpactMeasurementView = async ({
 		.sort(([leftKey], [rightKey]) => leftKey.localeCompare(rightKey))
 		.map(([key, value]) => `${key}=${value}`)
 		.join('&');
-	const translator = await getImpactTranslator(lang);
 
 	return (
 		<div
@@ -40,12 +38,6 @@ export const ImpactMeasurementView = async ({
 		>
 			{variant === 'standalone' ? (
 				<div className="space-y-5">
-					<h1 className="text-foreground text-4xl leading-tight font-bold sm:text-5xl">
-						{translator.t('survey.impactMeasurement.title')}
-					</h1>
-					<p className="text-foreground text-base leading-6 sm:text-lg sm:leading-7">
-						{translator.t('survey.impactMeasurement.description')}
-					</p>
 					<div className="flex w-full justify-end">
 						<div className="w-full sm:w-auto">
 							<ImpactMeasurementFilterSection lang={lang} searchParams={normalizedSearchParams} />

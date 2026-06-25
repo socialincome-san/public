@@ -51,7 +51,7 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency,
 
 			<div className="relative z-10 flex flex-col items-center justify-center py-16 text-center md:py-24 lg:py-32">
 				{blok.heading && (
-					<SectionHeading className="mb-6 text-2xl leading-tight whitespace-pre-wrap md:mb-6 md:text-3xl lg:text-5xl">
+					<SectionHeading className="mb-6 leading-tight whitespace-pre-wrap md:mb-6">
 						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 					</SectionHeading>
 				)}

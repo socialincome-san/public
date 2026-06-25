@@ -97,8 +97,6 @@
 			"notHappierCommentTitleV1": "Puoi dirci il perché?"
 		},
 		"impactMeasurement": {
-			"title": "Misurazione dell'impatto",
-			"description": "Tutti i dati mostrati in questa pagina vengono aggiornati in tempo reale dai questionari svolti con i nostri recipient.",
 			"loadError": "Impossibile caricare i dati di misurazione dell'impatto in questo momento.",
 			"notAvailable": "N/D",
 			"filters": {

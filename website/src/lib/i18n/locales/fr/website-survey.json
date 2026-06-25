@@ -97,8 +97,6 @@
 			"notHappierCommentTitleV1": "Pouvez-vous nous dire pourquoi ?"
 		},
 		"impactMeasurement": {
-			"title": "Mesure d'impact",
-			"description": "Toutes les données affichées sur cette page sont mises à jour en temps réel à partir des enquêtes menées auprès de nos bénéficiaires.",
 			"loadError": "Impossible de charger les données de mesure d'impact pour le moment.",
 			"notAvailable": "N/D",
 			"filters": {
