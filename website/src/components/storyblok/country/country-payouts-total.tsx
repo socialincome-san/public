@@ -1,6 +1,6 @@
 import { StoryblokPayoutsTotal } from '@/components/storyblok/shared/storyblok-payouts-total';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode } from './country.utils';
