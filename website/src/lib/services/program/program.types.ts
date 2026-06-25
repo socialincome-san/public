@@ -81,6 +81,7 @@ export type PublicProgramStats = {
 	countryIsoCode: CountryCode;
 	payoutCurrency: Currency;
 	totalPayoutsSum: number;
+	totalPayoutsSumChf: number;
 };
 
 export type PublicProgramStatsMap = Record<string, PublicProgramStats>;

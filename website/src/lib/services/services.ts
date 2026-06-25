@@ -18,6 +18,7 @@ import { ContributorWriteService } from './contributor/contributor-write.service
 import { CountryReadService } from './country/country-read.service';
 import { CountryValidationService } from './country/country-validation.service';
 import { CountryWriteService } from './country/country-write.service';
+import { CurrencyDisplayService } from './currency-display/currency-display.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
 import { DonationCertificateWriteService } from './donation-certificate/donation-certificate-write.service';
 import { ExchangeRateImportService } from './exchange-rate/exchange-rate-import.service';
@@ -155,7 +156,8 @@ const focusRead = new FocusReadService(prisma, userRead);
 const focusWrite = new FocusWriteService(prisma, userRead, focusValidation);
 const donationCertificateRead = new DonationCertificateReadService(prisma, programAccessRead);
 
-const programStats = new ProgramStatsService(prisma, exchangeRateRead, recipientStatus);
+const currencyDisplay = new CurrencyDisplayService(exchangeRateRead);
+const programStats = new ProgramStatsService(prisma, currencyDisplay, recipientStatus);
 const campaignRead = new CampaignReadService(prisma, programAccessRead, exchangeRateRead);
 const campaignPublicWebsite = new CampaignPublicWebsiteService(prisma, storyblok, campaignRead);
 const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
@@ -259,6 +261,7 @@ export const services = {
 	payoutProcessCore,
 	orangeMoneyCsvPayoutProcess,
 	telecelCsvPayoutProcess,
+	currencyDisplay,
 	programStats,
 	recipientImport,
 	sendgrid,

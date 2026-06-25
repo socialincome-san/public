@@ -1,9 +1,12 @@
 import { Wallet } from '@/components/wallet/wallet';
 import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { createWalletImageFromStoryblokAsset } from '@/components/wallet/wallet-image-utils';
+import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { PublicProgramStatsMap } from '@/lib/services/program/program.types';
+import type { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { ExchangeRates } from '@/lib/services/exchange-rate/exchange-rate.types';
+import type { PublicProgramStats, PublicProgramStatsMap } from '@/lib/services/program/program.types';
+import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from './program.utils';
@@ -15,8 +18,27 @@ type Props = {
 	region: WebsiteRegion;
 };
 
+const resolveWalletDisplay = (
+	stats: PublicProgramStats,
+	displayCurrency: WebsiteCurrency,
+	rates: ExchangeRates | undefined,
+) =>
+	services.currencyDisplay.resolveWalletPayoutDisplay(
+		{
+			totalPayoutsSum: stats.totalPayoutsSum,
+			totalPayoutsSumChf: stats.totalPayoutsSumChf,
+			payoutCurrency: stats.payoutCurrency,
+			displayCurrency,
+		},
+		rates,
+	);
+
 export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, region }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const [displayCurrency, translator] = await Promise.all([
+		getWebsiteCurrencyFromCookie(),
+		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
+	]);
+	const rates = await services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency);
 
 	return (
 		<div className="flex w-full flex-col gap-6">
@@ -29,6 +51,7 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 						const programTitle = getProgramTitle(program.content);
 						const storyblokSlug = getProgramStoryblokSlug(program);
 						const stats = portalSlug ? statsByPortalSlug[portalSlug] : undefined;
+						const walletDisplay = stats ? resolveWalletDisplay(stats, displayCurrency, rates) : undefined;
 						const primaryImage = createWalletImageFromStoryblokAsset(program.content.primaryImage, programTitle);
 						const hoverEffectImage1 = createWalletImageFromStoryblokAsset(
 							program.content.secondaryImage,
@@ -58,11 +81,11 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 									title={programTitle}
 									subtitle={stats ? getCountryNameByCode(stats.countryIsoCode) : undefined}
 									footerLeft={
-										stats
+										stats && walletDisplay
 											? {
 													label: translator.t('wallet.paid-out'),
-													prefix: stats.payoutCurrency,
-													value: formatWalletAmount(stats.totalPayoutsSum),
+													prefix: walletDisplay.currency,
+													value: formatWalletAmount(walletDisplay.amount),
 												}
 											: undefined
 									}

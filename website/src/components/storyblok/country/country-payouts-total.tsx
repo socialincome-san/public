@@ -1,4 +1,5 @@
 import { StoryblokPayoutsTotal } from '@/components/storyblok/shared/storyblok-payouts-total';
+import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { CountryStory } from './country.types';
@@ -13,8 +14,12 @@ type Props = {
 export const CountryPayoutsTotal = async ({ country, lang, region }: Props) => {
 	const blok = country.content.payouts?.[0];
 	const isoCode = getCountryIsoCode(country.content);
-	const totalsResult = await services.read.payout.getPayoutTotalsForCountry(isoCode);
+	const [displayCurrency, totalsResult] = await Promise.all([
+		getWebsiteCurrencyFromCookie(),
+		services.read.payout.getPayoutTotalsForCountry(isoCode),
+	]);
 	const totalChf = totalsResult.success ? totalsResult.data.totalPayoutsChf : 0;
+	const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(totalChf, displayCurrency);
 
-	return <StoryblokPayoutsTotal blok={blok} totalChf={totalChf} lang={lang} region={region} />;
+	return <StoryblokPayoutsTotal blok={blok} totalAmount={totalAmount} currency={currency} lang={lang} region={region} />;
 };

@@ -1,4 +1,5 @@
 import { StoryblokPayoutsTotal } from '@/components/storyblok/shared/storyblok-payouts-total';
+import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { LocalPartnerStory } from './local-partner.types';
@@ -12,12 +13,19 @@ type Props = {
 export const LocalPartnerPayoutsTotal = async ({ localPartner, lang, region }: Props) => {
 	const blok = localPartner.content.payouts?.[0];
 	const localPartnerSlug = localPartner.content.portalSlug?.trim();
+	const [displayCurrency, totalsResult] = await Promise.all([
+		getWebsiteCurrencyFromCookie(),
+		localPartnerSlug ? services.read.payout.getPayoutTotalsForLocalPartnerSlug(localPartnerSlug) : Promise.resolve(null),
+	]);
+
 	if (!localPartnerSlug) {
-		return <StoryblokPayoutsTotal blok={blok} totalChf={0} lang={lang} region={region} />;
+		const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(0, displayCurrency);
+
+		return <StoryblokPayoutsTotal blok={blok} totalAmount={totalAmount} currency={currency} lang={lang} region={region} />;
 	}
 
-	const totalsResult = await services.read.payout.getPayoutTotalsForLocalPartnerSlug(localPartnerSlug);
-	const totalChf = totalsResult.success ? totalsResult.data.totalPayoutsChf : 0;
+	const totalChf = totalsResult?.success ? totalsResult.data.totalPayoutsChf : 0;
+	const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(totalChf, displayCurrency);
 
-	return <StoryblokPayoutsTotal blok={blok} totalChf={totalChf} lang={lang} region={region} />;
+	return <StoryblokPayoutsTotal blok={blok} totalAmount={totalAmount} currency={currency} lang={lang} region={region} />;
 };
