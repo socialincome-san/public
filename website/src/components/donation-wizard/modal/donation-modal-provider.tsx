@@ -44,13 +44,23 @@ export const DonationModalProvider = ({ children }: Props) => {
 		send({ type: 'OPEN_FROM_FORM', context });
 	};
 
+	const closeWizard = () => {
+		setCloseConfirmOpen(false);
+		send({ type: 'CLOSE' });
+	};
+
 	const requestClose = () => {
+		if (isThankYou) {
+			closeWizard();
+
+			return;
+		}
+
 		setCloseConfirmOpen(true);
 	};
 
 	const confirmClose = () => {
-		setCloseConfirmOpen(false);
-		send({ type: 'CLOSE' });
+		closeWizard();
 	};
 
 	return (
@@ -103,7 +113,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 								{showCurrencySelector ? (
 									<DonationCurrencySelector
 										currencies={websiteCurrencies}
-										className="h-9 w-[4.75rem] shrink-0 rounded-full border-slate-300 px-2.5"
+										className="border-input h-9 w-[4.75rem] shrink-0 rounded-full px-2.5"
 									/>
 								) : null}
 							</div>

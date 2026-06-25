@@ -18,6 +18,7 @@ import { ContributorWriteService } from './contributor/contributor-write.service
 import { CountryReadService } from './country/country-read.service';
 import { CountryValidationService } from './country/country-validation.service';
 import { CountryWriteService } from './country/country-write.service';
+import { CurrencyDisplayService } from './currency-display/currency-display.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
 import { DonationCertificateWriteService } from './donation-certificate/donation-certificate-write.service';
 import { ExchangeRateImportService } from './exchange-rate/exchange-rate-import.service';
@@ -56,7 +57,6 @@ import { ProgramStatsService } from './program-stats/program-stats.service';
 import { ProgramReadService } from './program/program-read.service';
 import { ProgramValidationService } from './program/program-validation.service';
 import { ProgramWriteService } from './program/program-write.service';
-import { LegacyQrBillService } from './qr-bill/legacy/legacy-qr-bill.service';
 import { QrBillService } from './qr-bill/qr-bill.service';
 import { RecipientImportService } from './recipient/recipient-import.service';
 import { RecipientReadService } from './recipient/recipient-read.service';
@@ -65,7 +65,6 @@ import { RecipientValidationService } from './recipient/recipient-validation.ser
 import { RecipientWriteService } from './recipient/recipient-write.service';
 import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
 import { StoryblokService } from './storyblok/storyblok.service';
-import { LegacyStripeService } from './stripe/legacy/legacy-stripe.service';
 import { StripeService } from './stripe/stripe.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
 import { SurveyImpactService } from './survey/survey-impact.service';
@@ -157,7 +156,8 @@ const focusRead = new FocusReadService(prisma, userRead);
 const focusWrite = new FocusWriteService(prisma, userRead, focusValidation);
 const donationCertificateRead = new DonationCertificateReadService(prisma, programAccessRead);
 
-const programStats = new ProgramStatsService(prisma, exchangeRateRead, recipientStatus);
+const currencyDisplay = new CurrencyDisplayService(exchangeRateRead);
+const programStats = new ProgramStatsService(prisma, currencyDisplay, recipientStatus);
 const campaignRead = new CampaignReadService(prisma, programAccessRead, exchangeRateRead);
 const campaignPublicWebsite = new CampaignPublicWebsiteService(prisma, storyblok, campaignRead);
 const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
@@ -187,7 +187,6 @@ const donationCertificateWrite = new DonationCertificateWriteService(
 	contributionRead,
 	donationCertificateRead,
 );
-const qrBillLegacy = new LegacyQrBillService(prisma, contributorWrite, campaignRead, contributionWrite);
 const qrBill = new QrBillService(
 	prisma,
 	contributorWrite,
@@ -196,8 +195,14 @@ const qrBill = new QrBillService(
 	contributionWrite,
 	exchangeRateRead,
 );
-const stripe = new StripeService(prisma, contributorRead, contributorWrite, contributionWrite, campaignRead);
-const stripeLegacy = new LegacyStripeService(prisma, contributorRead, contributorWrite, campaignRead, programAccessRead);
+const stripe = new StripeService(
+	prisma,
+	contributorRead,
+	contributorWrite,
+	contributionWrite,
+	campaignRead,
+	programAccessRead,
+);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
@@ -248,7 +253,6 @@ export const services = {
 	},
 	appReviewMode,
 	qrBill,
-	qrBillLegacy,
 	createPaymentFileImport,
 	exchangeRateImport,
 	candidateImport,
@@ -257,13 +261,13 @@ export const services = {
 	payoutProcessCore,
 	orangeMoneyCsvPayoutProcess,
 	telecelCsvPayoutProcess,
+	currencyDisplay,
 	programStats,
 	recipientImport,
 	sendgrid,
 	journal,
 	storyblok,
 	stripe,
-	stripeLegacy,
 	surveyImpact,
 	transparency,
 	githubApi,

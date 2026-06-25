@@ -21,7 +21,7 @@ export const SelectableCard = ({ selected, onSelect, disabled = false, className
 		onClick={onSelect}
 		className={cn(
 			'rounded-[10px] border text-left transition-colors',
-			selected ? 'border-slate-500 bg-slate-50' : 'border-border bg-white',
+			selected ? 'border-ring bg-muted/50' : 'border-border bg-card',
 			disabled && 'cursor-not-allowed opacity-60',
 			className,
 		)}

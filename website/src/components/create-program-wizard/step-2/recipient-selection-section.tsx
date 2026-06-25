@@ -5,7 +5,7 @@ import { RecipientApproachType } from '@/components/create-program-wizard/wizard
 import { Profile } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { cn } from '@/lib/utils/cn';
-import { SpinnerIcon } from '@socialincome/ui';
+import { Loader2 } from 'lucide-react';
 import { RadioCard } from '../radio-card';
 import { RadioCardGroup } from '../radio-card-group';
 import { PillMultiSelect } from './pill-multi-select';
@@ -63,7 +63,7 @@ export const RecipientSelectionSection = ({
 				>
 					<div className={cn('text-sm', noUniversalRecipients ? 'text-destructive' : 'text-muted-foreground')}>
 						{isCountingRecipients ? (
-							<SpinnerIcon />
+							<Loader2 className="inline-block h-4 w-4 animate-spin" aria-label="Loading" />
 						) : (
 							<>
 								<span>
@@ -103,7 +103,7 @@ export const RecipientSelectionSection = ({
 
 						<div className={cn('text-sm', noTargetedRecipients ? 'text-destructive' : 'text-muted-foreground')}>
 							{isCountingRecipients ? (
-								<SpinnerIcon />
+								<Loader2 className="inline-block h-4 w-4 animate-spin" aria-label="Loading" />
 							) : (
 								<>
 									<span>

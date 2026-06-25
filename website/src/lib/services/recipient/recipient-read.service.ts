@@ -11,8 +11,11 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
+import { PUBLIC_RECIPIENTS_MAX_ROWS } from './recipient-public.constants';
 import { RecipientStatusService } from './recipient-status.service';
 import {
+	PublicRecipientTableView,
+	PublicRecipientTableViewRow,
 	RecipientPaginatedTableView,
 	RecipientProgramFilterOption,
 	RecipientTableQuery,
@@ -401,6 +404,135 @@ export class RecipientReadService extends BaseService {
 		});
 	}
 
+	private mapToPublicRecipientTableRows(
+		recipients: {
+			startDate: Date | null;
+			suspendedAt: Date | null;
+			createdAt: Date;
+			contact: {
+				dateOfBirth: Date | null;
+				address: { country: PublicRecipientTableViewRow['country'] } | null;
+			} | null;
+			program: {
+				programDurationInMonths: number;
+				payoutInterval: PayoutInterval;
+			} | null;
+			localPartner: {
+				name?: string | null;
+				contact: { address: { country: PublicRecipientTableViewRow['country'] } | null } | null;
+			} | null;
+			payouts: { status: PayoutStatus }[];
+		}[],
+		getLocalPartnerName: (recipient: { localPartner: { name?: string | null } | null }) => string | null,
+		nowDate: Date,
+	): PublicRecipientTableViewRow[] {
+		return recipients.map((recipient) => {
+			const payoutsReceived = recipient.payouts.length;
+			const payoutsTotal = recipient.program?.programDurationInMonths ?? 0;
+			const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
+			const paidOrConfirmedCountResult = this.recipientStatusService.countPaidOrConfirmedPayouts(recipient.payouts);
+			const paidOrConfirmedCount = paidOrConfirmedCountResult.success ? paidOrConfirmedCountResult.data : 0;
+			const statusResult = recipient.program
+				? this.recipientStatusService.getRecipientLifecycleStatus({
+						startDate: recipient.startDate,
+						suspendedAt: recipient.suspendedAt,
+						paidOrConfirmedCount,
+						programDurationInMonths: recipient.program.programDurationInMonths,
+						payoutInterval: recipient.program.payoutInterval,
+						nowDate,
+					})
+				: this.resultOk<RecipientLifecycleStatus>('future');
+			const status = statusResult.success ? statusResult.data : 'future';
+
+			return {
+				country: recipient.contact?.address?.country ?? recipient.localPartner?.contact?.address?.country ?? null,
+				firstName: OBFUSCATED_SENTINEL,
+				lastName: '',
+				dateOfBirth: OBFUSCATED_SENTINEL,
+				startDate: recipient.startDate ?? null,
+				localPartnerName: getLocalPartnerName(recipient),
+				payoutsProgressPercent,
+				createdAt: recipient.createdAt,
+				status,
+			};
+		});
+	}
+
+	async getPublicRecipientsTableView(programId: string): Promise<ServiceResult<PublicRecipientTableView>> {
+		try {
+			const program = await this.db.program.findUnique({
+				where: { id: programId },
+				select: { id: true },
+			});
+
+			if (!program) {
+				return this.resultFail('Program not found');
+			}
+
+			const where: Prisma.RecipientWhereInput = { programId };
+			const recipientSelect = {
+				startDate: true,
+				suspendedAt: true,
+				contact: {
+					select: {
+						dateOfBirth: true,
+						address: {
+							select: {
+								country: true,
+							},
+						},
+					},
+				},
+				program: {
+					select: {
+						programDurationInMonths: true,
+						payoutInterval: true,
+					},
+				},
+				localPartner: {
+					select: {
+						name: true,
+						contact: {
+							select: {
+								address: {
+									select: {
+										country: true,
+									},
+								},
+							},
+						},
+					},
+				},
+				payouts: {
+					select: { status: true },
+				},
+				createdAt: true,
+			} satisfies Prisma.RecipientSelect;
+
+			const [recipients, totalCount] = await Promise.all([
+				this.db.recipient.findMany({
+					where,
+					select: recipientSelect,
+					orderBy: [{ startDate: 'asc' }],
+					take: PUBLIC_RECIPIENTS_MAX_ROWS,
+				}),
+				this.db.recipient.count({ where }),
+			]);
+
+			const tableRows = this.mapToPublicRecipientTableRows(
+				recipients,
+				(recipient) => recipient.localPartner?.name ?? null,
+				now(),
+			);
+
+			return this.resultOk({ tableRows, totalCount });
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch public recipients: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async get(session: Session, recipientId: string): Promise<ServiceResult<RecipientPayload>> {
 		try {
 			const recipient = await this.db.recipient.findUnique({
@@ -479,7 +611,7 @@ export class RecipientReadService extends BaseService {
 				return this.resultFail('Permission denied');
 			}
 
-			return this.resultOk(recipient as RecipientPayload);
+			return this.resultOk(recipient);
 		} catch (error) {
 			this.logger.error(error);
 

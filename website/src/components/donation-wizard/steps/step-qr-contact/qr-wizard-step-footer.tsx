@@ -4,6 +4,7 @@ import { Button } from '@/components/button';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { cn } from '@/lib/utils/cn';
 import { ChevronLeft } from 'lucide-react';
+import { formatDonationCurrencyAmount } from '../../utils/donation-formatting';
 
 type Summary = {
 	amount: number;
@@ -37,7 +38,7 @@ export const QrWizardStepFooter = ({
 	const amountLine = summary ? (
 		<span className="text-foreground inline-flex flex-wrap items-baseline gap-1 tabular-nums">
 			<span className="text-lg leading-none font-medium">
-				{summary.currency} {summary.amount}
+				{formatDonationCurrencyAmount(summary.currency, summary.amount)}
 			</span>
 			{summary.showPerMonth && <span className="text-muted-foreground text-sm">{t('stepPlan.per-month')}</span>}
 		</span>
@@ -63,7 +64,7 @@ export const QrWizardStepFooter = ({
 				<Button
 					type="button"
 					data-testid={continueTestId}
-					className={cn('h-9 w-full shrink-0 rounded-full px-4 text-sm font-semibold sm:w-auto', !showBack && 'sm:ml-auto')}
+					className={cn('h-9 w-full shrink-0 rounded-full px-4 text-sm font-bold sm:w-auto', !showBack && 'sm:ml-auto')}
 					disabled={continueDisabled}
 					onClick={onContinue}
 				>
@@ -106,7 +107,7 @@ export const QrWizardStepFooter = ({
 						data-testid={continueTestId}
 						variant="default"
 						className={cn(
-							'h-9 w-full shrink-0 rounded-full px-4 text-sm font-semibold sm:max-w-none md:w-auto',
+							'h-9 w-full shrink-0 rounded-full px-4 text-sm font-bold sm:max-w-none md:w-auto',
 							'text-center whitespace-normal sm:whitespace-nowrap',
 							continueClassName,
 						)}

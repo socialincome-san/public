@@ -17,15 +17,30 @@ type Props = {
 	heading?: ReactNode;
 	journalCtaLabel: string;
 	blok?: SbBlokData;
+	disableMarginTop?: boolean;
+	disableMarginBottom?: boolean;
 };
 
-export const JournalTeasersSection = ({ articles, lang, region, heading, journalCtaLabel, blok }: Props) => {
+export const JournalTeasersSection = ({
+	articles,
+	lang,
+	region,
+	heading,
+	journalCtaLabel,
+	blok,
+	disableMarginTop,
+	disableMarginBottom,
+}: Props) => {
 	const [featuredArticle, ...secondaryArticles] = articles;
 	const hasSecondaryArticles = secondaryArticles.length > 0;
 
 	return (
-		<BlockWrapper {...(blok ? storyblokEditable(blok) : {})}>
-			<div className="mb-6 flex flex-col justify-between gap-4 md:mb-8 md:flex-row md:items-center">
+		<BlockWrapper
+			disableMarginBottom={disableMarginBottom}
+			disableMarginTop={disableMarginTop}
+			{...(blok ? storyblokEditable(blok) : {})}
+		>
+			<div className="mb-8 flex flex-col justify-between gap-4 md:mb-10 md:flex-row md:items-center">
 				{heading && (
 					<SectionHeading align="left" className="mb-0 md:mb-0">
 						{heading}

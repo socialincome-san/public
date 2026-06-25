@@ -1,10 +1,11 @@
 'use client';
 
 import { Survey, SurveyLanguage } from '@/app/[lang]/[region]/survey/[recipient]/[survey]/survey';
-import { Button, Input } from '@socialincome/ui';
+import { Button } from '@/components/button';
+import { Input } from '@/components/input';
 import { useSearchParams } from 'next/navigation';
-import { FormEvent, use, useEffect, useState } from 'react';
-import { SurveyPageProps } from './layout';
+import { type FormEvent, use, useEffect, useState } from 'react';
+import { type SurveyPageProps } from './layout';
 import { useSurvey } from './use-survey';
 
 export default function Page({ params }: SurveyPageProps) {
@@ -38,15 +39,25 @@ export default function Page({ params }: SurveyPageProps) {
 	}
 
 	if (hasError) {
-		return <div className="theme-new mx-auto max-w-md">Error logging in. Please check your credentials.</div>;
+		return (
+			<div className="text-destructive bg-destructive-foreground mx-auto max-w-md rounded-2xl px-5 py-4 text-sm">
+				Error logging in. Please check your credentials.
+			</div>
+		);
 	}
 
 	return (
-		<form className="theme-new mx-auto flex max-w-md flex-col space-y-2" method="post" onSubmit={handleSubmit}>
-			<Input name="email" type="text" placeholder="Email" />
-			<Input name="password" type="password" placeholder="Password" />
-			<Button type="submit" className="btn btn-primary mx-auto">
-				Save
+		<form className="mx-auto flex max-w-md flex-col gap-4" method="post" onSubmit={handleSubmit}>
+			<div className="space-y-1 text-center">
+				<h1 className="text-2xl font-bold tracking-tight">Open your survey</h1>
+				<p className="text-muted-foreground text-sm">Enter the access details from your survey link.</p>
+			</div>
+			<div className="space-y-3">
+				<Input name="email" type="email" placeholder="Email" />
+				<Input name="password" type="password" placeholder="Password" />
+			</div>
+			<Button type="submit" className="mx-auto rounded-full px-6">
+				Open survey
 			</Button>
 		</form>
 	);

@@ -4,7 +4,6 @@ import {
 	normalizeStoryblokSlug,
 	STORYBLOK_LAYOUT_PATH,
 } from '@/lib/storyblok/storyblok-paths';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import { makeLanguagePrefixRegex } from '@/lib/utils/regex';
 import { cookies, draftMode } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
@@ -47,12 +46,12 @@ const toPreviewPath = (rawStoryblokSlug: string) => {
 	const storyblokSlug = normalizeStoryblokSlug(rawStoryblokSlug);
 
 	if (storyblokSlug === STORYBLOK_LAYOUT_PATH) {
-		return `${NEW_WEBSITE_SLUG}/preview`;
+		return 'preview';
 	}
 
 	const websitePathTail = getWebsitePathTailFromStoryblokSlug(storyblokSlug);
 
-	return `${NEW_WEBSITE_SLUG}${websitePathTail ? `/${websitePathTail}` : ''}/preview`;
+	return `${websitePathTail ? `${websitePathTail}/` : ''}preview`;
 };
 
 const enableDraftModeAndAdaptCookie = async () => {

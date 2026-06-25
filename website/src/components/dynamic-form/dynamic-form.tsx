@@ -9,7 +9,7 @@ import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SpinnerIcon } from '@socialincome/ui';
+import { Loader2 } from 'lucide-react';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
@@ -210,7 +210,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 	// TODO: move to recursive function
 	// get values from Zod Schema and map back to form schema
 	const beforeSubmit = (values: z.infer<typeof zodSchema>) => {
-		const v = values as Record<string, unknown>;
+		const v = values;
 		const schema = JSON.parse(JSON.stringify(formSchema)) as FormSchema;
 
 		for (const key in schema.fields) {
@@ -262,7 +262,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 						>
 							<AccordionItem
 								value={`accordion-${option}`}
-								className="rounded-xl border border-slate-200 bg-slate-100 px-2 [&[data-state=closed]>div]:h-0"
+								className="border-border bg-muted rounded-xl border px-2 [&[data-state=closed]>div]:h-0"
 							>
 								<AccordionTrigger data-testid={`form-accordion-trigger-${option}`}>
 									{formSchema.fields[option].label}
@@ -299,8 +299,8 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 			</form>
 			{/* TODO: add proper loading state */}
 			{isLoading && (
-				<div className="absolute top-0 right-0 flex h-full w-full items-center justify-center bg-white opacity-80">
-					<SpinnerIcon />
+				<div className="bg-card absolute top-0 right-0 flex h-full w-full items-center justify-center opacity-80">
+					<Loader2 className="h-6 w-6 animate-spin" aria-label="Loading" />
 				</div>
 			)}
 		</Form>

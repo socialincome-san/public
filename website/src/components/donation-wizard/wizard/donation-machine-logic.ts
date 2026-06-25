@@ -7,7 +7,7 @@ export const wizardContextFromFormAmount = (context: DonationAmountContext): Don
 	selectedTier: '1x',
 	paymentMethod: 'qr',
 	chargeMonthlyHalfOfOneTimeAmount: false,
-	coverTransactionCosts: false,
+	coverTransactionCosts: true,
 	oneTimePlanChoice: 'one-time',
 	returnsToOneTimePlanStep: false,
 	campaignId: context.campaignId,

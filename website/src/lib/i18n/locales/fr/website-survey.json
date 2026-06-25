@@ -1,21 +1,6 @@
 {
-	"titleOnboarding": "Enquête d'intégration",
-	"titleCheckin": "Enquête de check-in",
-	"titleOffboarding": "Enquête de fin de participation",
-	"titleFollowup": "Enquête de suivi",
 	"select": "Sélectionner",
-	"save": "Enregistrer",
-	"freetext": "Entrez votre réponse",
-	"demo": "En mode démo, l'enquête ne peut pas être sauvegardée",
 	"survey": {
-		"login": {
-			"message": "Veuillez entrer votre numéro de téléphone ainsi que le code d'accès que nous vous avons envoyé.",
-			"phoneNumber": "Numéro Mobile Money",
-			"accessCode": "Code d'accès pour l'enquête",
-			"loadSurvey": "Charger l'enquête",
-			"loading": "Chargement...",
-			"error": "Nous n'avons pas trouvé l'enquête. Veuillez vérifier à nouveau votre numéro de téléphone et votre code d'accès. Contactez l'équipe Social Income si l'erreur persiste."
-		},
 		"common": {
 			"start": "Démarrer",
 			"previous": "Précédent",
@@ -24,11 +9,6 @@
 			"preview": "Aperçu",
 			"edit": "Modifier",
 			"loading": "Chargement...",
-			"missingCredentials": "Identifiants manquants pour l'enquête. Veuillez contacter l'équipe Social Income.",
-			"authError": "Erreur lors de la connexion. Veuillez contacter l'équipe Social Income.",
-			"loadingError": "Erreur lors du chargement de l'enquête. Veuillez contacter l'équipe Social Income.",
-			"progressSavingSuccess": "Votre réponse a été enregistrée avec succès.",
-			"progressSavingError": "Impossible d'enregistrer votre réponse. Nouvel essai... Veuillez contacter l'équipe Social Income si l'erreur persiste.",
 			"completed": "Merci beaucoup d'avoir complété l'enquête.",
 			"alreadyCompleted": "Cette enquête est déjà terminée. Merci beaucoup.",
 			"hello": "Bonjour",
@@ -93,7 +73,6 @@
 			"debtHouseholdWhoRepaysTitleV1": "Êtes-vous la principale personne qui rembourse ces dettes ?",
 			"otherSupportTitleV1": "Recevez-vous actuellement une autre forme d'aide financière d'ailleurs ?",
 			"plannedAchievementTitleV1": "Qu'espérez-vous accomplir au cours des 3 prochaines années grâce à Social Income ?",
-
 			"spendingTitleV1": "Quelles sont les principales catégories de dépenses pour lesquelles vous utilisez votre Social Income ?",
 			"spendingDescV1": "Éducation : frais de scolarité, fournitures, manuels, etc. // Alimentation : pour vous ou votre foyer // Logement : loyer, entretien de la maison, etc. // Santé : médecin, hôpital, médicaments, etc. // Transport : bus, taxi, poda poda, keke, etc. // Épargne : compte bancaire ou compte Mobile Money, etc. // Investissement : engrais, outils, carburant pour machines, etc.",
 			"spendingChoices": {
@@ -108,10 +87,8 @@
 			"spendingRankingTitleV1": "Veuillez classer les catégories de dépenses sélectionnées, de la plus importante à la moins importante.",
 			"spendingRankingDescV1": "Vous pouvez déplacer les catégories par glisser-déposer.",
 			"plannedAchievementRemainingTitleV1": "Que souhaitez-vous accomplir pendant le temps qu’il vous reste dans le programme Social Income ?",
-
 			"financialIndependenceTitleV1": "Social Income vous a-t-il permis de vous sentir plus en sécurité financièrement et plus indépendant(e) ?",
 			"impactLifeGeneralTitleV1": "Quel impact Social Income a-t-il eu sur votre vie ?",
-
 			"longEnoughTitleV1": "Trois ans de paiements Social Income étaient-ils suffisants pour atteindre une stabilité financière ?",
 			"achievementsAchievedTitleV1": "Avez-vous réalisé ce que vous espériez au cours de ces trois dernières années ?",
 			"achievementsNotAchievedCommentTitleV1": "Qu'est-ce qui vous a empêché d'atteindre cet objectif ? Y a-t-il quelque chose que nous aurions pu faire pour mieux vous soutenir ? (par exemple : mentorat, mises en relation)",
@@ -120,32 +97,15 @@
 			"notHappierCommentTitleV1": "Pouvez-vous nous dire pourquoi ?"
 		},
 		"impactMeasurement": {
-			"title": "Mesure d'impact",
-			"description": "Toutes les données affichées sur cette page sont mises à jour en temps réel à partir des enquêtes menées auprès de nos bénéficiaires.",
 			"loadError": "Impossible de charger les données de mesure d'impact pour le moment.",
 			"notAvailable": "N/D",
-			"breadcrumb": {
-				"home": "Accueil",
-				"programs": "Programmes",
-				"impactMeasurement": "Mesure d'impact"
-			},
 			"filters": {
 				"allCountries": "Tous les pays",
 				"allPrograms": "Tous les programmes",
 				"allFocuses": "Tous les axes",
 				"allSurveys": "Toutes les enquêtes",
-				"allRecipients": "Tous les bénéficiaires",
-				"allFilters": "Tous les filtres",
-				"filter": "Filtre",
-				"apply": "Appliquer",
-				"reset": "Réinitialiser"
+				"filter": "Filtre"
 			},
-			"downloadCsv": "Télécharger CSV",
-			"comingSoon": "Bientot disponible",
-			"downloadFilteredCsv": "Telecharger le CSV filtre",
-			"studyDetails": "Détails de l'étude",
-			"sampleSize": "Taille de l'échantillon",
-			"uniqueIndividuals": "Individus uniques",
 			"countryHeading": "Pays",
 			"ageHeading": "Âge",
 			"genderHeading": "Genre",

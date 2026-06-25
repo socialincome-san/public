@@ -29,7 +29,7 @@ const WalletFrontContent = ({ variant, title, subtitle, badge, footerLeft, foote
 	<div
 		className={cn(
 			'flex-1 pt-9',
-			'text-[color:var(--text-color)]',
+			variant === 'default' ? 'text-primary-foreground' : 'text-card-foreground',
 			'[background:var(--wallet-front-bg)]',
 			'[clip-path:polygon(100%_0%,_100%_100%,_0%_100%,_0%_0%,_var(--slant-shift)_0%,_var(--slant-position)_var(--slant-height),_calc(100%_-_var(--slant-position))_var(--slant-height),_calc(100%_-_var(--slant-shift))_0%)]',
 		)}
@@ -38,7 +38,7 @@ const WalletFrontContent = ({ variant, title, subtitle, badge, footerLeft, foote
 			{variant === 'default' ? (
 				<div className="flex h-full w-full flex-col items-start justify-between gap-2">
 					<div>
-						<h3 className="mb-3 text-4xl leading-none font-normal">{title}</h3>
+						<h2 className="mb-3 text-4xl leading-none font-normal">{title}</h2>
 						<p className="mb-3 line-clamp-1 text-base leading-6 font-medium">{subtitle}</p>
 						{badge && <div className="mt-1">{badge}</div>}
 					</div>

@@ -14,25 +14,14 @@
 			"collected-amount_other": "{{ amount, currency }} by {{count}} contributors",
 			"goal-amount": "{{ amount, currency }}"
 		},
-		"days-left_zero": "Last day left to contribute",
-		"days-left_one": "1 day left to contribute",
-		"days-left_other": "{{ count }} days left to contribute",
 		"ended": "The campaign has ended.  For regular donations, please use the main donation page.",
-		"card-title": "My Contribution",
 		"about-si-title": "About Social Income",
 		"about-si-text-1": "Social Income is a nonprofit organization based in Switzerland that provides unconditional cash transfers via mobile phone to people living in multidimensional poverty in West Africa.",
 		"about-si-text-2": "Since 2020, Social Income has been running an open-ended universal basic income program in Sierra Leone.",
-		"more-faq": "<a href='/faq' target=\"_blank\">More questions</a>",
-		"badge-highlight": "Ongoing Campaign",
 		"other-campaigns": {
 			"heading-prefix": "Discover other ",
 			"heading-emphasis": "campaigns",
 			"show-all": "Show all campaigns"
 		}
-	},
-	"badges": {
-		"by": "By",
-		"contributors": "contributors",
-		"loading": "Searching current fundraisers"
 	}
 }

@@ -4,7 +4,6 @@ import { Wallet } from '@/components/wallet/wallet';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { PublicCampaignCard, PublicCampaignStatsMap } from '@/lib/services/campaign/campaign.types';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 type Props = {
 	campaigns: PublicCampaignCard[];
@@ -30,7 +29,7 @@ export const CampaignsOverview = async ({ campaigns, statsById, lang, region, ti
 					{campaigns.map((campaign) => (
 						<li key={campaign.id} className="h-full">
 							<Wallet
-								href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/campaigns/${campaign.slug}`}
+								href={`/${lang}/${region}/campaigns/${campaign.slug}`}
 								title={campaign.title}
 								{...getCampaignWalletFooterProps(statsById[campaign.id], t)}
 							/>

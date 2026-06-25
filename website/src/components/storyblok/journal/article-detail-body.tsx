@@ -1,10 +1,11 @@
+import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { ArticleRichText } from '@/components/storyblok/journal/article-rich-text';
 import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
 import { OriginalLanguageLink } from '@/components/storyblok/journal/original-language-link';
 import { TagBadge } from '@/components/storyblok/journal/tag-badge';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { createNewWebsitePersonLink, getPersonDisplayName, ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
+import { createWebsitePersonLink, getPersonDisplayName, ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';
 import type { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
@@ -32,13 +33,21 @@ export const ArticleDetailBody = ({ story, slug, lang, region, translator }: Pro
 				languageName={translator.t('language-name.' + article.originalLanguage)}
 			/>
 
-			<div className="prose prose-neutral text-foreground prose-headings:font-semibold prose-a:text-primary max-w-none">
-				<ArticleRichText document={article.content as StoryblokRichtext} lang={lang} />
+			<div className="prose prose-neutral text-foreground prose-a:text-primary max-w-none">
+				<ArticleRichText
+					document={article.content as StoryblokRichtext}
+					lang={lang}
+					donationForm={<DonationFormServer lang={lang} />}
+				/>
 			</div>
 
 			{article.footnotes && (
 				<div className="prose prose-neutral text-muted-foreground max-w-none text-sm">
-					<ArticleRichText document={article.footnotes as StoryblokRichtext} lang={lang} />
+					<ArticleRichText
+						document={article.footnotes as StoryblokRichtext}
+						lang={lang}
+						donationForm={<DonationFormServer lang={lang} />}
+					/>
 				</div>
 			)}
 
@@ -51,7 +60,7 @@ export const ArticleDetailBody = ({ story, slug, lang, region, translator }: Pro
 			)}
 
 			<Link
-				href={createNewWebsitePersonLink(author.slug, lang, region)}
+				href={createWebsitePersonLink(author.slug, lang, region)}
 				className="flex w-fit items-center gap-3 transition-opacity hover:opacity-80"
 			>
 				<AuthorAvatar author={author} size="lg" />

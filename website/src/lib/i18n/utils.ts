@@ -1,13 +1,42 @@
-import { LANGUAGE_COOKIE, REGION_COOKIE } from '@socialincome/website/src/app/[lang]/[region]';
+import { LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
 import langParser from 'accept-language-parser';
 import { NextRequest } from 'next/server';
-import { CountryCode, Currency } from '../../generated/prisma/enums';
+import { Currency } from '../../generated/prisma/enums';
 import { LanguageCode } from '../types/language';
 
 export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'fr' | 'it' | 'kri'>;
 export const defaultLanguage: WebsiteLanguage = 'en';
 export const mainWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it'];
 export const allWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it', 'kri'];
+export const WEBSITE_LANGUAGE_HEADER = 'x-website-language';
+
+const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
+	allWebsiteLanguages.includes(value as WebsiteLanguage);
+
+export const getLanguageFromPathname = (pathname: string): WebsiteLanguage | undefined => {
+	const detectedLanguage = pathname.split('/').at(1) ?? '';
+
+	return isWebsiteLanguage(detectedLanguage) ? detectedLanguage : undefined;
+};
+
+export const resolveWebsiteLanguage = ({
+	pathnameLanguage,
+	cookieLanguage,
+	preferCookie = false,
+}: {
+	pathnameLanguage?: string;
+	cookieLanguage?: string;
+	preferCookie?: boolean;
+}): WebsiteLanguage => {
+	const fromPathname = pathnameLanguage && isWebsiteLanguage(pathnameLanguage) ? pathnameLanguage : undefined;
+	const fromCookie = cookieLanguage && isWebsiteLanguage(cookieLanguage) ? cookieLanguage : undefined;
+
+	if (preferCookie) {
+		return fromCookie ?? fromPathname ?? defaultLanguage;
+	}
+
+	return fromPathname ?? fromCookie ?? defaultLanguage;
+};
 
 export const getSafeNumberFormatLocale = (lang: WebsiteLanguage): string => {
 	try {
@@ -26,11 +55,8 @@ export const websiteRegions: WebsiteRegion[] = ['int', 'ch'];
 export type WebsiteCurrency = Extract<Currency, 'USD' | 'EUR' | 'CHF' | 'SLE'>;
 export const websiteCurrencies: WebsiteCurrency[] = ['USD', 'EUR', 'CHF'];
 
-/**
- * We use the files from GitHub instead of the package so that donations from new countries are automatically supported.
- */
-export const getFlagImageURL = (country: CountryCode | Exclude<WebsiteRegion, 'int'>) =>
-	`https://raw.githubusercontent.com/lipis/flag-icons/a87d8b256743c9b0df05f20de2c76a7975119045/flags/1x1/${country.toLowerCase()}.svg`;
+export const isWebsiteCurrency = (value: string | undefined): value is WebsiteCurrency =>
+	value !== undefined && websiteCurrencies.some((currency) => currency === value);
 
 /**
  * Check if the user has set a language and region cookie, and if they are valid. If so, return them.

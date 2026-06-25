@@ -1,4 +1,4 @@
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';

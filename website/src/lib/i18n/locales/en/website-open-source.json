@@ -1,47 +1,34 @@
 {
 	"metadata": {
-		"title": "Open-Source Insights ",
-		"heading": "Contributors"
+		"title": "Open-Source Insights"
+	},
+	"overview": {
+		"commits": {
+			"title": "Commits",
+			"time": "in the last 12 months"
+		},
+		"stars": {
+			"title": "Stars",
+			"time": "in the last 12 months"
+		},
+		"forks": {
+			"title": "Forks",
+			"time": "in the last 12 months"
+		}
 	},
 	"contributors": {
-		"heading": "Contributors",
+		"heading": "contributors",
 		"showAll": "Show all {count} contributors",
 		"commitSingular": "commit",
 		"commitPlural": "commits"
 	},
-	"hero": {
-		"title-1": [
-			{
-				"text": "Tools for Change. "
-			},
-			{
-				"text": "Open to All.",
-				"color": "accent"
-			}
-		],
-		"subtitle": "Everything we build is open source—free to use, adapt, and improve. Join our volunteer community creating tools for equality and change."
-	},
-	"overview": {
-		"forks": {
-			"title": "Forks",
-			"time": "last month"
-		},
-		"commits": {
-			"title": "Commits",
-			"time": "last month"
-		},
-		"stars": {
-			"title": "GitHub Stars",
-			"time": "last month"
-		}
-	},
 	"issues": {
-		"title": "Open Issues",
-		"header": "Issue Title",
-		"link": "View on GitHub",
-		"filter": "All Issues",
+		"title": "Good first issues",
+		"header": "Issue",
+		"link": "View issue",
+		"filter": "All labels",
 		"showAll": "Show all {count} issues",
-		"empty": "No open issues"
+		"empty": "No issues found."
 	},
 	"error": {
 		"unavailable": "GitHub data is currently unavailable. Please try again later."

@@ -14,6 +14,7 @@ import type { CountryCode } from '@/generated/prisma/enums';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { isValidCurrency } from '@/lib/types/currency';
 import { logger } from '@/lib/utils/logger';
+import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { titleCase } from '@/lib/utils/string-utils';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import Stripe from 'stripe';
@@ -29,9 +30,11 @@ import {
 } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { assertContributorEmailMatchesCheckout, assertEmbeddedCheckoutSessionPaid } from './checkout-session-guards';
 import {
 	type CheckoutMetadata,
+	type PortalProgramDonationCheckoutInput,
 	type StripeBillingPortalSessionUrl,
 	type StripeCheckoutCustomerPrefill,
 	type StripeCheckoutOnboardingPrefill,
@@ -40,6 +43,7 @@ import {
 	type StripeEmbeddedCheckoutCreateInput,
 	type StripeEmbeddedCheckoutResult,
 	type StripeEmbeddedCheckoutSessionInput,
+	type StripeHostedCheckoutCreateInput,
 	type StripePaymentMethod,
 	type StripeSubscriptionPaginatedTableView,
 	type StripeSubscriptionRow,
@@ -62,9 +66,91 @@ export class StripeService extends BaseService {
 		private readonly contributorWriteService: ContributorWriteService,
 		private readonly contributionWriteService: ContributionWriteService,
 		private readonly campaignReadService: CampaignReadService,
+		private readonly programAccessReadService: ProgramAccessReadService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
+	}
+
+	async createPortalProgramDonationCheckout(
+		userId: string,
+		input: PortalProgramDonationCheckoutInput,
+	): Promise<ServiceResult<string>> {
+		try {
+			const accessResult = await this.programAccessReadService.getAccessiblePrograms(userId);
+			if (!accessResult.success || !accessResult.data.some((program) => program.programId === input.programId)) {
+				return this.resultFail('Program not found or access denied');
+			}
+
+			const user = await this.db.user.findUnique({
+				where: { id: userId },
+				select: {
+					accountId: true,
+					contactId: true,
+					contact: {
+						select: { id: true, email: true, firstName: true, lastName: true },
+					},
+				},
+			});
+			if (!user) {
+				return this.resultFail('User account not found');
+			}
+
+			let stripeCustomerId: string | null = null;
+			const contributor = await this.db.contributor.findUnique({
+				where: { accountId: user.accountId },
+				select: { stripeCustomerId: true },
+			});
+
+			if (contributor?.stripeCustomerId) {
+				stripeCustomerId = contributor.stripeCustomerId;
+			} else {
+				const email = user.contact?.email ?? null;
+				if (!email) {
+					return this.resultFail('User contact email is required for portal donations');
+				}
+
+				const name = [user.contact?.firstName, user.contact?.lastName].filter(Boolean).join(' ') || undefined;
+				const createCustomerResult = await this.createStripeCustomerForPortal(email, name);
+				if (!createCustomerResult.success) {
+					return createCustomerResult;
+				}
+
+				stripeCustomerId = createCustomerResult.data;
+				const contributorResult = await this.contributorWriteService.getOrCreateContributorForAccount(
+					user.accountId,
+					stripeCustomerId,
+					user.contactId,
+				);
+				if (!contributorResult.success) {
+					return this.resultFail(contributorResult.error);
+				}
+			}
+
+			const campaignResult = await this.campaignReadService.getActiveCampaignForProgram(input.programId);
+			if (!campaignResult.success) {
+				return this.resultFail(campaignResult.error);
+			}
+
+			const baseUrl = (process.env.BASE_URL ?? '').replace(TRAILING_SLASHES_REGEX, '');
+			const successUrl = `${baseUrl}/portal/programs/${input.programId}/overview?donation=success`;
+
+			return this.createHostedCheckoutSession({
+				amount: input.amount,
+				currency: input.currency ?? 'CHF',
+				intervalCount: input.intervalCount ?? 1,
+				recurring: input.recurring ?? false,
+				successUrl,
+				campaignId: campaignResult.data.id,
+				accountId: user.accountId,
+				source: 'portal',
+				stripeCustomerId,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not create portal donation checkout session: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async createEmbeddedCheckoutSession(
@@ -469,7 +555,7 @@ export class StripeService extends BaseService {
 	}
 
 	private parseCheckoutCustomerDetails(
-		details: Stripe.Checkout.Session.CustomerDetails | null | undefined,
+		details: Stripe.Checkout.Session['customer_details'] | undefined,
 	): StripeCheckoutCustomerPrefill {
 		const email = details?.email ?? undefined;
 		const rawName = details?.name?.trim();
@@ -531,7 +617,7 @@ export class StripeService extends BaseService {
 
 			const session = await stripe.checkout.sessions.create({
 				mode: recurring ? 'subscription' : 'payment',
-				ui_mode: 'embedded',
+				ui_mode: 'embedded_page',
 				customer: stripeCustomerId ?? undefined,
 				customer_creation: !stripeCustomerId && !recurring ? 'always' : undefined,
 				line_items: [
@@ -570,6 +656,90 @@ export class StripeService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not create Stripe checkout session: ${JSON.stringify(error)}`);
+		}
+	}
+
+	private async createHostedCheckoutSession(data: StripeHostedCheckoutCreateInput): Promise<ServiceResult<string>> {
+		try {
+			const {
+				amount,
+				successUrl,
+				currency = 'USD',
+				intervalCount = 1,
+				recurring = false,
+				stripeCustomerId,
+				campaignId,
+				accountId,
+				source,
+			} = data;
+
+			const metadata: Record<string, string> = {};
+			if (campaignId) {
+				metadata.campaignId = campaignId;
+			}
+			if (accountId) {
+				metadata.accountId = accountId;
+			}
+			if (source) {
+				metadata.source = source;
+			}
+
+			const stripe = this.getStripeClient();
+			const productId = recurring ? process.env.STRIPE_PRODUCT_RECURRING : process.env.STRIPE_PRODUCT_ONETIME;
+			if (!productId) {
+				return this.resultFail(recurring ? 'Missing STRIPE_PRODUCT_RECURRING' : 'Missing STRIPE_PRODUCT_ONETIME');
+			}
+
+			const session = await stripe.checkout.sessions.create({
+				mode: recurring ? 'subscription' : 'payment',
+				customer: stripeCustomerId ?? undefined,
+				customer_creation: !stripeCustomerId && !recurring ? 'always' : undefined,
+				line_items: [
+					{
+						quantity: 1,
+						price_data: {
+							currency: currency.toLowerCase(),
+							unit_amount: amount,
+							product: productId,
+							...(recurring && { recurring: { interval: 'month', interval_count: intervalCount } }),
+						},
+					},
+				],
+				success_url: successUrl,
+				locale: 'auto',
+				...(Object.keys(metadata).length > 0 && { metadata }),
+				...(recurring &&
+					campaignId && {
+						subscription_data: {
+							metadata: { campaignId },
+						},
+					}),
+			});
+
+			if (!session.url) {
+				return this.resultFail('Hosted checkout session has no redirect URL');
+			}
+
+			return this.resultOk(session.url);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not create Stripe checkout session: ${JSON.stringify(error)}`);
+		}
+	}
+
+	private async createStripeCustomerForPortal(email: string, name?: string): Promise<ServiceResult<string>> {
+		try {
+			const customer = await this.getStripeClient().customers.create({
+				email,
+				name: name ?? undefined,
+			});
+
+			return this.resultOk(customer.id);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not create Stripe customer: ${JSON.stringify(error)}`);
 		}
 	}
 

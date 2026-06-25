@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 import { ChevronDown } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -84,7 +84,7 @@ const FilterDropdown = ({ allLabel, options, queryKey, selectedValue, queryParam
 					type="button"
 					variant="outline"
 					className={cn(
-						'text-foreground h-10 border-slate-200 bg-white px-4 text-sm font-medium hover:bg-white',
+						'text-foreground border-border bg-card hover:bg-card h-10 px-4 text-sm font-medium',
 						isActive && 'bg-input hover:bg-input',
 					)}
 				>
@@ -92,7 +92,7 @@ const FilterDropdown = ({ allLabel, options, queryKey, selectedValue, queryParam
 					<ChevronDown className="text-foreground size-4 opacity-70" />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="start" className="w-56 bg-white">
+			<DropdownMenuContent align="start" className="bg-popover w-56">
 				<DropdownMenuItem onSelect={() => updateFilter(undefined)}>{allLabel}</DropdownMenuItem>
 				{options.map((option) => (
 					<DropdownMenuItem key={option.value} onSelect={() => updateFilter(option.value)}>

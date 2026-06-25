@@ -27,7 +27,7 @@ export const DonationImpactPanel = ({ communityStats }: Props) => {
 	const whyOnePercentLabel = t('impact.why-one-percent');
 
 	const supportersLabel = getSupportersImpactLabel(t, language, communityStats);
-	const checklist = [t('impact.tax-deductible'), t('impact.cancel-anytime'), ...(supportersLabel ? [supportersLabel] : [])];
+	const checklist = [t('impact.cancel-anytime'), ...(supportersLabel ? [supportersLabel] : [])];
 
 	return (
 		<div className="flex w-full flex-col gap-5 md:gap-6 md:px-6 md:pt-5">

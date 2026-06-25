@@ -1,6 +1,7 @@
 'use client';
 
 import { AccountMenu } from '@/components/app-shells/website/navbar/account-menu';
+import { LocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/locale-currency-switcher';
 import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout';
 import {
 	displaySession,
@@ -9,7 +10,6 @@ import {
 	isMenuItem,
 	Scope,
 } from '@/components/app-shells/website/navbar/utils';
-import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import type { DropdownItem, Layout } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -18,14 +18,11 @@ import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowRight, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FC, useState } from 'react';
-
-const FALLBACK_BADGE_COUNT = 23;
 
 type Props = {
 	sessions: Session[];
@@ -63,16 +60,17 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 			)}
 
 			<Dialog.Portal>
-				<Dialog.Overlay className="theme-new text-foreground fixed inset-0 z-100 overflow-y-auto bg-white lg:hidden">
+				<Dialog.Overlay className="text-foreground bg-background fixed inset-0 z-100 overflow-y-auto lg:hidden">
 					<Dialog.Content className="flex min-h-full flex-col">
 						<Dialog.Title className="sr-only">{commonTranslator?.t('menu.title') ?? 'Menu'}</Dialog.Title>
 						<div className="border-muted mb-4 flex h-18 shrink-0 items-center justify-between border-b px-4">
 							<NextLink
-								href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}`}
+								href={`/${lang}/${region}`}
 								className="text-accent-foreground"
+								aria-label={commonTranslator?.t('logo.home-link-aria') ?? 'Social Income home'}
 								onClick={() => handleOpenChange(false)}
 							>
-								<SocialIncomeLogo />
+								<SocialIncomeLogo decorative />
 							</NextLink>
 							<Dialog.Close aria-label={commonTranslator?.t('menu.close') ?? 'Close menu'}>
 								<X className="size-6" />
@@ -124,9 +122,6 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 										return null;
 									})}
 								</ul>
-								<div className="mt-4">
-									<DonationForm onBeforeOpen={() => handleOpenChange(false)} />
-								</div>
 							</div>
 
 							<div
@@ -161,9 +156,6 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 																onClick={() => handleOpenChange(false)}
 															>
 																{child.label}
-																<span className="rounded-full border border-slate-300 px-2 py-0.5 text-[10px] leading-none font-semibold text-slate-500">
-																	{FALLBACK_BADGE_COUNT}
-																</span>
 															</NextLink>
 														</li>
 													))}
@@ -171,7 +163,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 												{group.overviewLink && group.overviewLabel ? (
 													<NextLink
 														href={resolveStoryblokLink(group.overviewLink, lang, region)}
-														className="text-muted-foreground hover:text-foreground group mt-4 inline-flex items-center gap-1.5 text-sm font-semibold transition-colors"
+														className="text-muted-foreground hover:text-foreground group mt-4 inline-flex items-center gap-1.5 text-sm font-bold transition-colors"
 														onClick={() => handleOpenChange(false)}
 													>
 														<span>{group.overviewLabel}</span>
@@ -184,13 +176,20 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 								)}
 							</div>
 						</div>
-						<div className="border-muted flex h-18 shrink-0 items-center justify-between border-t px-4 shadow-[0_-3px_14px_rgba(0,0,0,0.05)]">
-							<OpenDonationWizardButton
-								label={donateTranslator?.t('donation-form.donate-now') ?? 'Donate now'}
-								className="h-11 rounded-full px-5 text-sm font-medium"
-								onBeforeOpen={() => handleOpenChange(false)}
-							/>
-							{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
+						<div className="border-muted flex h-18 shrink-0 items-center justify-between gap-2 border-t px-4 shadow-[0_-3px_14px_rgba(0,0,0,0.05)]">
+							{!session && (
+								<OpenDonationWizardButton
+									label={donateTranslator?.t('donation-form.donate-now') ?? 'Donate now'}
+									className="h-11 rounded-full px-4 text-sm font-medium"
+									onBeforeOpen={() => handleOpenChange(false)}
+								/>
+							)}
+							<div className="flex min-w-0 items-center gap-2">
+								{scope === 'website' && (
+									<LocaleCurrencySwitcher lang={lang} region={region} className="border-input h-11 border px-3" />
+								)}
+								{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
+							</div>
 						</div>
 					</Dialog.Content>
 				</Dialog.Overlay>

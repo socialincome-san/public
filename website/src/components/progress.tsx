@@ -1,4 +1,4 @@
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 
 type ProgressVariant = 'default' | 'urgent';
 
@@ -19,7 +19,7 @@ const clampPercent = (value: number): number => {
 const Progress = ({ className, value = 0, variant = 'default' }: ProgressProps) => {
 	const indicatorClass =
 		variant === 'urgent'
-			? 'bg-rose-400'
+			? 'bg-destructive'
 			: 'bg-[linear-gradient(to_right,hsl(var(--gradient-button-from)),hsl(var(--gradient-button-to)))]';
 
 	return (

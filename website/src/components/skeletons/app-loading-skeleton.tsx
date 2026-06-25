@@ -1,8 +1,9 @@
 import { AnimatedSILogoIcon } from '@/components/svg/animated-si-logo-icon';
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 
 type AppLoadingSkeletonProps = {
 	message?: string;
+	variant?: 'card' | 'page';
 };
 
 const LOADING_MESSAGES = [
@@ -18,12 +19,17 @@ const LOADING_MESSAGES = [
 	'Good things are loading...',
 ] as const;
 
-export const AppLoadingSkeleton = ({ message }: AppLoadingSkeletonProps) => {
+export const AppLoadingSkeleton = ({ message, variant = 'card' }: AppLoadingSkeletonProps) => {
 	const defaultMessage = LOADING_MESSAGES[0];
 
 	return (
 		<div
-			className={cn('flex w-full items-center justify-center rounded-xl bg-white', 'min-h-[680px] md:min-h-[760px]')}
+			className={cn(
+				'flex w-full items-center justify-center',
+				variant === 'page'
+					? 'bg-website-gradient min-h-screen rounded-none'
+					: 'bg-card min-h-[680px] rounded-xl md:min-h-[760px]',
+			)}
 			data-testid="app-loading-skeleton"
 		>
 			<div className="flex flex-col items-center gap-3 px-6 text-center">

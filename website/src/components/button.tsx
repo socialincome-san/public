@@ -1,5 +1,5 @@
+import { cn } from '@/lib/utils/cn';
 import { Slot } from '@radix-ui/react-slot';
-import { cn } from '@socialincome/ui';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
@@ -18,8 +18,7 @@ const buttonVariants = cva(
 				secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
 				ghost: 'hover:bg-accent hover:text-accent-foreground',
 				link: 'text-primary underline-offset-4 hover:underline',
-				confirmed:
-					'bg-[hsl(var(--confirm))] text-[hsl(var(--confirm-foreground))] shadow-xs hover:bg-[hsl(var(--confirm)/0.9)]',
+				confirmed: 'bg-confirm text-confirm-foreground shadow-xs hover:bg-confirm/90',
 			},
 			size: {
 				default: 'px-6 py-3',

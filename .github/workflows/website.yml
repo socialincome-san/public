@@ -8,20 +8,21 @@ on:
   push:
     branches:
       - main
+      - develop
     paths-ignore:
       - "recipients_app/**"
-
 jobs:
   safe-chain:
     name: "🔒 Safe Chain Dependency Check"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
-      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: 24
           cache: npm
+          cache-dependency-path: website/package-lock.json
 
       - name: Install Safe Chain (CI)
         run: |
@@ -32,63 +33,83 @@ jobs:
           echo "$HOME/.safe-chain/bin" >> $GITHUB_PATH
 
       - name: Install dependencies (protected by Safe Chain)
+        working-directory: website
         run: npm ci --no-audit --no-fund
 
   lint:
     name: "✨ Lint"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run website:lint
+          cache-dependency-path: website/package-lock.json
+      - working-directory: website
+        run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run db:generate
+      - working-directory: website
+        run: npm run lint
 
   check-unused:
     name: "✂️ Check unused Code"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run website:check:unused
+          cache-dependency-path: website/package-lock.json
+      - working-directory: website
+        run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run db:generate
+      - working-directory: website
+        run: npm run check:unused
 
   typecheck:
     name: "🔍 Type Check"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run website:build-paths
-      - run: npm run typecheck
+          cache-dependency-path: website/package-lock.json
+      - working-directory: website
+        run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run db:generate
+      - working-directory: website
+        run: npm run typecheck
 
   unit-test:
     name: "🧪 Unit Tests"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run website:test:unit
+          cache-dependency-path: website/package-lock.json
+      - working-directory: website
+        run: npm ci --no-audit --no-fund
+      - working-directory: website
+        run: npm run db:generate
+      - working-directory: website
+        run: npm run test:unit
 
   terraform:
     name: "📐 Terraform Validation"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4
         with:
           terraform_version: 1.6.6
       - run: terraform -chdir=website/infra init -backend=false
@@ -107,11 +128,11 @@ jobs:
       - terraform
 
     container:
-      image: mcr.microsoft.com/playwright:v1.58.2-jammy@sha256:4698a73749c5848d3f5fcd42a2174d172fcad2b2283e087843b115424303a565
+      image: mcr.microsoft.com/playwright:v1.60.0-jammy@sha256:e1529a04087193966ea15d4a1617345bdaa0791690a24ab2c42b65f9ce5b2cdc
 
     services:
       postgres:
-        image: postgres:18-alpine@sha256:035b9ab53cfa147d7202b61f5f7782b939ae815b7d6bc81c96b7b42ff1fca950
+        image: postgres:18-alpine@sha256:1b1689b20d16a014a3d195653381cf2caa75a41a92d93b255a9d6ea29fd353aa
         env:
           POSTGRES_USER: social-income
           POSTGRES_PASSWORD: social-income
@@ -138,9 +159,9 @@ jobs:
       HOME: /root
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: true
 
       - name: Initialize repository
@@ -166,7 +187,7 @@ jobs:
 
       - name: Upload Test Report (only if failure)
         if: failure()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: playwright-report-${{ github.sha }}
           path: |

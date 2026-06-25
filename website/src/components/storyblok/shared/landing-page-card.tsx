@@ -18,9 +18,9 @@ type Props = {
 
 export const LandingPageCard = ({ href, title, heroImageFilename, heroImageAlt, stats, titleVisual }: Props) => {
 	return (
-		<li className="overflow-hidden rounded-3xl border bg-black">
+		<li className="bg-foreground overflow-hidden rounded-3xl border">
 			<NextLink href={href} className="group block">
-				<div className="relative aspect-[16/10] bg-black">
+				<div className="bg-foreground relative aspect-[16/10]">
 					{heroImageFilename && (
 						<NextImage
 							src={heroImageFilename}
@@ -29,14 +29,14 @@ export const LandingPageCard = ({ href, title, heroImageFilename, heroImageAlt, 
 							className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
 						/>
 					)}
-					<div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10 transition-opacity duration-300 group-hover:opacity-90" />
+					<div className="from-foreground/80 via-foreground/35 to-foreground/10 absolute inset-0 bg-gradient-to-t transition-opacity duration-300 group-hover:opacity-90" />
 
-					<div className="absolute inset-x-5 bottom-5 flex flex-col gap-3 text-white">
+					<div className="text-primary-foreground absolute inset-x-5 bottom-5 flex flex-col gap-3">
 						<div className="flex items-center gap-3">
 							{titleVisual}
-							<p className="text-lg font-semibold">{title}</p>
+							<p className="text-lg font-bold">{title}</p>
 						</div>
-						<div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-white/90">
+						<div className="text-primary-foreground/90 flex flex-wrap gap-x-6 gap-y-1 text-sm">
 							{stats.map((stat) => (
 								<p key={stat.label} className="font-medium">
 									{stat.value} {stat.label}

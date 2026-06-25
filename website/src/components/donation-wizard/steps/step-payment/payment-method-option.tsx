@@ -34,7 +34,7 @@ export const PaymentMethodOption = ({
 		testId={testId}
 		className={cn(
 			'flex w-full flex-col gap-3 p-3 sm:h-16 sm:flex-row sm:items-center sm:p-4',
-			!selected && !disabled && 'hover:bg-slate-50/50',
+			!selected && !disabled && 'hover:bg-muted/50',
 		)}
 	>
 		<div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">

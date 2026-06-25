@@ -1,0 +1,36 @@
+{
+	"metadata": {
+		"title": "Open-Source-Einblicke"
+	},
+	"overview": {
+		"commits": {
+			"title": "Commits",
+			"time": "in den letzten 12 Monaten"
+		},
+		"stars": {
+			"title": "Stars",
+			"time": "in den letzten 12 Monaten"
+		},
+		"forks": {
+			"title": "Forks",
+			"time": "in den letzten 12 Monaten"
+		}
+	},
+	"contributors": {
+		"heading": "Mitwirkende",
+		"showAll": "Alle {count} Mitwirkenden anzeigen",
+		"commitSingular": "Commit",
+		"commitPlural": "Commits"
+	},
+	"issues": {
+		"title": "Einsteigerfreundliche Issues",
+		"header": "Issue",
+		"link": "Issue ansehen",
+		"filter": "Alle Labels",
+		"showAll": "Alle {count} Issues anzeigen",
+		"empty": "Keine Issues gefunden."
+	},
+	"error": {
+		"unavailable": "GitHub-Daten sind derzeit nicht verfügbar. Bitte versuche es später erneut."
+	}
+}

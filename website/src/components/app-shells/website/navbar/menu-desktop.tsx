@@ -1,7 +1,6 @@
 'use client';
 
 import { hasDropdownChildren, isDropdownItem, isMenuItem } from '@/components/app-shells/website/navbar/utils';
-import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
@@ -9,14 +8,20 @@ import { cn } from '@/lib/utils/cn';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import NextLink from 'next/link';
+import type { PointerEvent, ReactNode } from 'react';
+
+const preventHoverOpen = (event: PointerEvent) => {
+	event.preventDefault();
+};
 
 type Props = {
 	menu: Layout['menu'];
 	lang: WebsiteLanguage;
 	region: string;
+	donationForm: ReactNode;
 };
 
-export const MenuDesktop = ({ menu, lang, region }: Props) => (
+export const MenuDesktop = ({ menu, lang, region, donationForm }: Props) => (
 	<NavigationMenu.Root>
 		<NavigationMenu.List className="flex items-center gap-1">
 			{menu.map((item) => {
@@ -34,7 +39,7 @@ export const MenuDesktop = ({ menu, lang, region }: Props) => (
 									href={href}
 									target={item.newTab ? '_blank' : '_self'}
 									rel={item.newTab ? 'noopener noreferrer' : undefined}
-									className="hover:bg-muted flex items-center rounded-sm px-3 py-2 text-sm font-semibold transition-colors"
+									className="hover:bg-muted flex items-center rounded-sm px-3 py-2 text-sm font-bold transition-colors"
 								>
 									{item.label}
 								</NextLink>
@@ -54,8 +59,10 @@ export const MenuDesktop = ({ menu, lang, region }: Props) => (
 				return (
 					<NavigationMenu.Item key={item._uid}>
 						<NavigationMenu.Trigger
+							onPointerMove={preventHoverOpen}
+							onPointerLeave={preventHoverOpen}
 							className={cn(
-								'hover:bg-muted group flex items-center gap-1.5 rounded-sm px-3 py-2 text-sm font-semibold transition-colors',
+								'hover:bg-muted group flex items-center gap-1.5 rounded-sm px-3 py-2 text-sm font-bold transition-colors',
 								'data-[state=open]:bg-muted',
 							)}
 						>
@@ -63,7 +70,11 @@ export const MenuDesktop = ({ menu, lang, region }: Props) => (
 							<ChevronDown className="size-3.5 transition-transform duration-150 group-data-[state=open]:rotate-180" />
 						</NavigationMenu.Trigger>
 
-						<NavigationMenu.Content className="bg-muted rounded-3xl p-8 shadow-[0_24px_48px_rgba(15,23,42,0.16)]">
+						<NavigationMenu.Content
+							onPointerEnter={preventHoverOpen}
+							onPointerLeave={preventHoverOpen}
+							className="bg-muted rounded-3xl p-8 shadow-[0_24px_48px_rgba(15,23,42,0.16)]"
+						>
 							<div className="flex items-start gap-10">
 								<div className="grid flex-1 grid-cols-3 gap-8 p-8">
 									{item.menuItemGroups.map((group) => (
@@ -86,7 +97,7 @@ export const MenuDesktop = ({ menu, lang, region }: Props) => (
 													<NavigationMenu.Link asChild>
 														<NextLink
 															href={resolveStoryblokLink(group.overviewLink, lang, region)}
-															className="text-muted-foreground hover:text-foreground group mt-3 inline-flex w-fit items-center gap-1.5 text-sm font-semibold transition-colors"
+															className="text-muted-foreground hover:text-foreground group mt-3 inline-flex w-fit items-center gap-1.5 text-sm font-bold transition-colors"
 														>
 															<span>{group.overviewLabel}</span>
 															<ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -97,15 +108,17 @@ export const MenuDesktop = ({ menu, lang, region }: Props) => (
 										</div>
 									))}
 								</div>
-								<div className="w-96 shrink-0">
-									<DonationForm />
-								</div>
+								<div className="w-96 shrink-0">{donationForm}</div>
 							</div>
 						</NavigationMenu.Content>
 					</NavigationMenu.Item>
 				);
 			})}
 		</NavigationMenu.List>
-		<NavigationMenu.Viewport className="data-[state=closed]:animate-fade-out data-[state=open]:animate-enter-from-top absolute inset-x-0 top-[calc(100%+1rem)] z-50 w-full" />
+		<NavigationMenu.Viewport
+			onPointerEnter={preventHoverOpen}
+			onPointerLeave={preventHoverOpen}
+			className="data-[state=closed]:animate-fade-out data-[state=open]:animate-enter-from-top absolute inset-x-0 top-[calc(100%+1rem)] z-50 w-full"
+		/>
 	</NavigationMenu.Root>
 );

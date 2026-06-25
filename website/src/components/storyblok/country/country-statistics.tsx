@@ -7,6 +7,7 @@ import {
 	type CountryStatisticFormat,
 } from '@/lib/services/country/world-bank-country-statistics';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
+import { cn } from '@/lib/utils/cn';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { cookies, headers } from 'next/headers';
 import NextImage from 'next/image';
@@ -68,7 +69,7 @@ const CountryHeader = ({ countryCode, countryName, align = 'left', nameClassName
 	const alignmentClassName = align === 'right' ? 'items-end text-right' : 'items-start text-left';
 
 	return (
-		<div className={`flex flex-col gap-3 ${alignmentClassName}`}>
+		<div className={cn('flex flex-col gap-3', alignmentClassName)}>
 			<NextImage
 				src={`/assets/flags/${countryCode.toLowerCase()}.svg`}
 				alt={`${countryCode} flag`}
@@ -77,7 +78,9 @@ const CountryHeader = ({ countryCode, countryName, align = 'left', nameClassName
 				className="h-7 w-7 rounded-full object-cover"
 			/>
 			<div className="space-y-1">
-				<p className={`text-primary leading-tight font-medium ${nameClassName ?? 'text-2xl md:text-3xl'}`}>{countryName}</p>
+				<p className={cn('text-primary leading-tight font-medium', nameClassName ?? 'text-2xl md:text-3xl')}>
+					{countryName}
+				</p>
 			</div>
 		</div>
 	);
@@ -87,11 +90,11 @@ const MobileStatisticRow = ({ label, value, showLabel = true }: { label: string;
 	return (
 		<div className="flex flex-col gap-0">
 			<p
-				className={`text-primary text-sm leading-5 font-bold ${showLabel ? '' : 'pointer-events-none invisible select-none'}`}
+				className={cn('text-primary text-sm leading-5 font-bold', !showLabel && 'pointer-events-none invisible select-none')}
 			>
 				{label}
 			</p>
-			<p className="text-primary font-sans text-sm leading-5 font-normal">{value}</p>
+			<p className="text-primary text-sm leading-5 font-normal">{value}</p>
 		</div>
 	);
 };
@@ -174,12 +177,12 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 										<CountryHeader
 											countryCode={normalizedCountryIsoCode}
 											countryName={countryName}
-											nameClassName="font-sans text-2xl font-medium"
+											nameClassName="text-2xl font-medium"
 										/>
 									</div>
 									<div className="mt-8 flex flex-col gap-4">
 										{formattedRows.map((row) => (
-											<p key={row.key} className="text-primary font-sans text-base leading-6 font-bold">
+											<p key={row.key} className="text-primary text-base leading-6 font-bold">
 												{row.label}
 											</p>
 										))}
@@ -189,11 +192,11 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 									<CountryHeader
 										countryCode={normalizedCountryIsoCode}
 										countryName={countryName}
-										nameClassName="font-sans text-2xl font-medium"
+										nameClassName="text-2xl font-medium"
 									/>
 									<div className="mt-8 flex flex-col gap-4">
 										{formattedRows.map((row) => (
-											<p key={row.key} className="text-primary font-sans text-base leading-6 font-normal">
+											<p key={row.key} className="text-primary text-base leading-6 font-normal">
 												{row.countryValue}
 											</p>
 										))}
@@ -203,18 +206,18 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 									<CountryHeader
 										countryCode={visitorCountryCode}
 										countryName={visitorCountryName}
-										nameClassName="font-sans text-2xl font-medium"
+										nameClassName="text-2xl font-medium"
 									/>
 									<div className="mt-8 flex flex-col gap-4">
 										{formattedRows.map((row) => (
-											<p key={row.key} className="text-primary font-sans text-base leading-6 font-normal">
+											<p key={row.key} className="text-primary text-base leading-6 font-normal">
 												{row.visitorValue}
 											</p>
 										))}
 									</div>
 								</div>
 							</div>
-							<div className="absolute top-20 left-[calc(50%+160px)] z-20 flex size-10 -translate-x-1/2 items-center justify-center rounded-full bg-slate-100 text-xs font-normal text-slate-600 uppercase">
+							<div className="text-muted-foreground bg-muted absolute top-20 left-[calc(50%+160px)] z-20 flex size-10 -translate-x-1/2 items-center justify-center rounded-full text-xs font-normal uppercase">
 								{translator.t('countries-page.statistics.vs')}
 							</div>
 						</div>

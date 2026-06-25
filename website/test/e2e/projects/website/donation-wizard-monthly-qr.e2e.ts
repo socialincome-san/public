@@ -11,6 +11,7 @@ import {
 	expectPendingMonthlyContribution,
 } from './utils/donation-wizard-db';
 import {
+	closeCompletedDonationWizard,
 	completeAmountStep,
 	completeMonthlyPlanStep,
 	completeOnboardingStep,
@@ -62,6 +63,7 @@ test('monthly donation via QR creates records at the right steps', async ({ page
 			country: 'CH',
 			referral: ContributorReferralSource.social_media,
 		});
+		await closeCompletedDonationWizard(page);
 	} finally {
 		await deleteDonationWizardTestUser(donor.email);
 	}

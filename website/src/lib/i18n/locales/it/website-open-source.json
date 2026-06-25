@@ -1,0 +1,36 @@
+{
+	"metadata": {
+		"title": "Approfondimenti open source"
+	},
+	"overview": {
+		"commits": {
+			"title": "Commit",
+			"time": "negli ultimi 12 mesi"
+		},
+		"stars": {
+			"title": "Star",
+			"time": "negli ultimi 12 mesi"
+		},
+		"forks": {
+			"title": "Fork",
+			"time": "negli ultimi 12 mesi"
+		}
+	},
+	"contributors": {
+		"heading": "contributori",
+		"showAll": "Mostra tutti i {count} contributori",
+		"commitSingular": "commit",
+		"commitPlural": "commit"
+	},
+	"issues": {
+		"title": "Issue per iniziare",
+		"header": "Issue",
+		"link": "Visualizza issue",
+		"filter": "Tutti i label",
+		"showAll": "Mostra tutte le {count} issue",
+		"empty": "Nessuna issue trovata."
+	},
+	"error": {
+		"unavailable": "I dati GitHub non sono attualmente disponibili. Riprova più tardi."
+	}
+}

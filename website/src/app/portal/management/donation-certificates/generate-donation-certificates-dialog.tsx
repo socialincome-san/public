@@ -7,11 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/switch';
 import { generateDonationCertificates, getContributorOptions } from '@/lib/server-actions/donation-certificates-actions';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, LanguageCode } from '@/lib/types/language';
-import _ from 'lodash';
 import { useRef, useState, useTransition } from 'react';
 
 import { now } from '@/lib/utils/now';
 const CURRENT_YEAR = now().getFullYear();
+const CERTIFICATE_YEARS = Array.from({ length: 6 }, (_value, index) => CURRENT_YEAR - 5 + index);
 const LANGUAGES: LanguageCode[] = ['en', 'de', 'fr', 'it'];
 export default function GenerateDonationCertificatesDialog({
 	open,
@@ -80,7 +80,7 @@ export default function GenerateDonationCertificatesDialog({
 								<SelectValue placeholder={'Select Year'} />
 							</SelectTrigger>
 							<SelectContent>
-								{_.range(CURRENT_YEAR - 5, CURRENT_YEAR + 1).map((year) => (
+								{CERTIFICATE_YEARS.map((year) => (
 									<SelectItem value={year.toString()} key={year}>
 										{year}
 									</SelectItem>
@@ -133,8 +133,8 @@ export default function GenerateDonationCertificatesDialog({
 					</Button>
 					{Boolean(success ?? error) && (
 						<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
-							{success && <p className="text-sm text-green-700">{success}</p>}
-							{error && <p className="text-sm text-red-700">{error}</p>}
+							{success && <p className="text-confirm text-sm">{success}</p>}
+							{error && <p className="text-destructive text-sm">{error}</p>}
 						</div>
 					)}
 				</div>

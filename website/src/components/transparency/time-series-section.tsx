@@ -1,36 +1,34 @@
 'use client';
 
 import { Card } from '@/components/card';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { Currency } from '@/generated/prisma/client';
+import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
+import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 
 type SerializedTimeRange = {
 	startIso: string;
-	totalChf: number;
+	total: number;
 };
 
 type TimeSeriesSectionProps = {
 	timeRanges: SerializedTimeRange[];
+	currency: Currency;
 	lang: WebsiteLanguage;
 };
 
-const formatChf = (value: number) => {
-	const number = new Intl.NumberFormat('de-CH', { maximumFractionDigits: 0 }).format(value);
-
-	return `CHF ${number}`;
-};
-
-export const TimeSeriesSection = ({ timeRanges }: TimeSeriesSectionProps) => {
+export const TimeSeriesSection = ({ timeRanges, currency, lang }: TimeSeriesSectionProps) => {
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+	const locale = getSafeNumberFormatLocale(lang);
 
 	const convertedRanges = timeRanges.map((range) => {
 		const start = DateTime.fromISO(range.startIso, { setZone: true });
 
 		return {
 			startIso: range.startIso,
-			total: range.totalChf,
+			total: range.total,
 			label: start.toFormat('MMM'),
 			fullLabel: start.toFormat('MMMM yyyy'),
 		};
@@ -40,7 +38,7 @@ export const TimeSeriesSection = ({ timeRanges }: TimeSeriesSectionProps) => {
 
 	return (
 		<section>
-			<h2 className="mb-6 text-2xl font-semibold">Monthly Contributions</h2>
+			<h2 className="mb-6 text-2xl font-bold">Monthly Contributions</h2>
 			<Card>
 				<div className="flex h-64 items-end gap-2">
 					{convertedRanges.map((range, index) => {
@@ -57,7 +55,7 @@ export const TimeSeriesSection = ({ timeRanges }: TimeSeriesSectionProps) => {
 								{isHovered && (
 									<div className="bg-popover text-popover-foreground absolute -top-16 z-10 rounded-md border px-3 py-2 text-sm shadow-md">
 										<div className="font-medium">{range.fullLabel}</div>
-										<div>{formatChf(range.total)}</div>
+										<div>{formatCurrencyLocale(range.total, currency, locale, { maximumFractionDigits: 0 })}</div>
 									</div>
 								)}
 								<div className="relative flex h-48 w-full items-end justify-center">

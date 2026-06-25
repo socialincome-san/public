@@ -1,3 +1,0 @@
-{
-	"content": "Dear {{ name }}, you should receive your monthly Social Income ({{ currency}} {{amount}}) shortly. Thanks you for confirming the payment immediately."
-}

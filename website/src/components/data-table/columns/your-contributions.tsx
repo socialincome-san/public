@@ -2,6 +2,7 @@
 
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
+import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import { Translator } from '@/lib/i18n/translator';
 import type { YourContributionsTableViewRow } from '@/lib/services/contribution/contribution.types';
@@ -18,9 +19,19 @@ export const makeYourContributionsColumns = (
 
 	return [
 		{
-			accessorKey: 'createdAt',
-			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('contributions.date')}</SortableHeader>,
+			accessorKey: 'updatedAt',
+			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('contributions.updated')}</SortableHeader>,
 			cell: (ctx) => <DateCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'createdAt',
+			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('contributions.created')}</SortableHeader>,
+			cell: (ctx) => <DateCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'status',
+			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('contributions.status-title')}</SortableHeader>,
+			cell: (ctx) => <StatusCell ctx={ctx} variant="contribution" />,
 		},
 		{
 			accessorKey: 'amount',

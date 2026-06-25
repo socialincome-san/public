@@ -1,4 +1,5 @@
 import { HeroVideoBlock } from '@/components/content-blocks/hero-video';
+import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import type { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -28,6 +29,7 @@ export const HeroVideoBlockServer = async ({ blok, lang }: Props) => {
 				exitExpandedVideoView: translator.t('video-controls.exit-expanded-video-view'),
 				donateNow: translator.t('donate-now'),
 			}}
+			donationForm={<DonationFormServer lang={lang} />}
 		/>
 	);
 };

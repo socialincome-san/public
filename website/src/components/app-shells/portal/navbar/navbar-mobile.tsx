@@ -2,8 +2,7 @@
 
 import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-navbar-links';
 import { ProgramDropdown } from '@/components/app-shells/portal/navbar/program-dropdown';
-import { useLogout } from '@/components/app-shells/use-logout';
-import { Avatar, AvatarFallback } from '@/components/avatar';
+import { UserMenu } from '@/components/app-shells/portal/navbar/user-menu';
 import { Separator } from '@/components/breadcrumb/separator';
 import { Button } from '@/components/button';
 import { SILogo } from '@/components/svg/si-logo';
@@ -23,31 +22,13 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const pathname = usePathname();
 	const user = sessions.find((s): s is UserSession => s.type === 'user');
-	const { mainNavLinks, userMenuNavLinks, isActiveLink } = useNavbarLinks(sessions);
-	const { logout } = useLogout();
+	const { mainNavLinks, isActiveLink } = useNavbarLinks(sessions);
 
 	if (!user) {
 		return null;
 	}
 
 	const toggleMenu = () => setIsMenuOpen((v) => !v);
-
-	const profileName = (
-		<div className="flex items-center space-x-3">
-			<Avatar>
-				<AvatarFallback className="bg-primary text-background">
-					{user.firstName?.charAt(0)}
-					{user.lastName?.charAt(0)}
-				</AvatarFallback>
-			</Avatar>
-			<div className="text-left">
-				<p className="text-foreground text-sm font-medium">
-					{user.firstName} {user.lastName}
-				</p>
-				<p className="text-muted-foreground text-xs">{user.activeOrganization?.name ?? 'No active organization'}</p>
-			</div>
-		</div>
-	);
 
 	return (
 		<nav className="mb-4 lg:hidden">
@@ -111,29 +92,12 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 						<Separator />
 
 						<div className="p-2">
-							{profileName}
-
-							<div className="mt-3 grid gap-1 p-2">
-								{userMenuNavLinks.map(({ href, label }) => (
-									<Link
-										key={href}
-										href={href}
-										onClick={() => setIsMenuOpen(false)}
-										className="text-muted-foreground hover:bg-accent rounded-md px-2 py-2 font-medium"
-									>
-										{label}
-									</Link>
-								))}
-
-								<Separator className="my-2" />
-
-								<button
-									onClick={logout}
-									className="text-destructive hover:bg-accent/50 rounded-md px-2 py-2 text-left font-medium"
-								>
-									Sign out
-								</button>
-							</div>
+							<UserMenu
+								sessions={sessions}
+								align="start"
+								triggerClassName="h-auto w-full justify-start gap-3 rounded-xl p-3"
+								onNavigate={() => setIsMenuOpen(false)}
+							/>
 						</div>
 					</div>
 				</div>

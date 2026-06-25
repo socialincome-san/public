@@ -43,7 +43,7 @@ export const getInitialDonationContext = (): DonationAmountContext => ({
 	selectedTier: '1x',
 	paymentMethod: 'qr',
 	chargeMonthlyHalfOfOneTimeAmount: false,
-	coverTransactionCosts: false,
+	coverTransactionCosts: true,
 	oneTimePlanChoice: 'one-time',
 	returnsToOneTimePlanStep: false,
 	campaignId: undefined,
@@ -127,6 +127,13 @@ export const isAmountValid = (context: DonationAmountContext): boolean => resolv
 export const isOnePercentPlanSelected = (context: DonationAmountContext): boolean => context.selectedAmount === null;
 
 const SOCIAL_INCOME_MONTHLY_CHF = 30;
+const INDIRECT_BENEFICIARY_FACTOR = 6;
 
-export const getBeneficiaryCount = (monthlyAmount: number): number =>
-	Math.max(0, Math.floor(monthlyAmount / SOCIAL_INCOME_MONTHLY_CHF));
+export const getBeneficiaryImpact = (monthlyAmount: number): { directCount: number; indirectCount: number } => {
+	const directCount = Math.max(1, Math.floor(monthlyAmount / SOCIAL_INCOME_MONTHLY_CHF));
+
+	return {
+		directCount,
+		indirectCount: directCount * INDIRECT_BENEFICIARY_FACTOR,
+	};
+};

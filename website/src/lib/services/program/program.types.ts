@@ -67,7 +67,7 @@ type PublicProgramFilterFocus = {
 	slug: string;
 };
 
-export type PublicProgramFilterData = {
+type PublicProgramFilterData = {
 	programId: string;
 	countryIsoCode: CountryCode;
 	focuses: PublicProgramFilterFocus[];
@@ -81,6 +81,7 @@ export type PublicProgramStats = {
 	countryIsoCode: CountryCode;
 	payoutCurrency: Currency;
 	totalPayoutsSum: number;
+	totalPayoutsSumChf: number;
 };
 
 export type PublicProgramStatsMap = Record<string, PublicProgramStats>;

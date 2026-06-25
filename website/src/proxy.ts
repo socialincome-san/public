@@ -1,5 +1,11 @@
 import { COUNTRY_COOKIE, CURRENCY_COOKIE } from '@/app/[lang]/[region]';
-import { allWebsiteLanguages, findBestLocale, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
+import {
+	findBestLocale,
+	getLanguageFromPathname,
+	WEBSITE_LANGUAGE_HEADER,
+	WebsiteRegion,
+	websiteRegions,
+} from '@/lib/i18n/utils';
 import { isValidCountryCode } from '@/lib/types/country';
 import { NextRequest, NextResponse } from 'next/server';
 import { CountryCode } from './generated/prisma/enums';
@@ -11,7 +17,7 @@ const CLOUDFLARE_IP_COUNTRY_HEADER = 'cf-ipcountry';
 export const config = {
 	matcher: [
 		// Skip internal paths (_next)
-		'/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|portal|partner-space|v1/api-docs|openapi.json|sitemap.xml|new-website/sitemap.xml|new-website/robots.txt|new-website/llms.txt).*)',
+		'/((?!api|_next/static|_next/image|assets|fonts|favicon.ico|sw.js|portal|partner-space|v1/api-docs|openapi.json|sitemap.xml|robots.txt|llms.txt).*)',
 	],
 };
 
@@ -28,7 +34,7 @@ const countryMiddleware = (request: NextRequest, response: NextResponse) => {
 	if (country) {
 		response.cookies.set({
 			name: COUNTRY_COOKIE,
-			value: country as CountryCode,
+			value: country,
 			path: '/',
 			maxAge: 60 * 60 * 24 * 7,
 		});
@@ -55,58 +61,18 @@ const currencyMiddleware = (request: NextRequest, response: NextResponse) => {
 	return response;
 };
 
-const redirectMiddleware = (request: NextRequest) => {
-	switch (request.nextUrl.pathname) {
-		// For pages that were communicated with a different URL in the past
-		case '/twint':
-			return NextResponse.redirect('https://socialincome.org/donate/one-time');
-		case '/erklaert':
-			return NextResponse.redirect('https://socialincome.org/explainer-video');
-		case '/privacy':
-			return NextResponse.redirect('https://socialincome.org/legal/privacy');
-		case '/terms-and-conditions':
-			return NextResponse.redirect('https://socialincome.org/legal/donations');
-		case '/terms-of-use':
-			return NextResponse.redirect('https://socialincome.org/legal/site-use');
-		case '/explained':
-			return NextResponse.redirect('https://socialincome.org/explainer-video');
-		case '/press':
-			return NextResponse.redirect('https://socialincome.org/journal/tag/media-coverage');
-		case '/newsletter-archive':
-			return NextResponse.redirect('https://socialincome.org/journal/tag/newsletter');
-		case '/github':
-			return NextResponse.redirect('https://github.com/socialincome-san/public');
-		case '/thinkcell':
-			return NextResponse.redirect('https://socialincome.webdisc.ch/');
-		// For blog posts that were originally standard pages and used in ads
-		case '/world-poverty-statistics-2022':
-			return NextResponse.redirect('https://socialincome.org/journal/world-poverty-statistics-2024');
-		case '/world-poverty-statistics-2023':
-			return NextResponse.redirect('https://socialincome.org/journal/world-poverty-statistics-2024');
-		case '/world-poverty-statistics-2024':
-			return NextResponse.redirect('https://socialincome.org/journal/world-poverty-statistics-2024');
-		case '/how-to-reduce-income-inequality':
-			return NextResponse.redirect('https://socialincome.org/journal/how-to-reduce-income-inequality');
-		case '/what-is-poverty':
-			return NextResponse.redirect('https://socialincome.org/journal/what-is-poverty');
-		// For fundraisers that were communicated with a short URL
-		case '/ismatu':
-			return NextResponse.redirect('https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW');
-	}
-};
-
 const i18nRedirectMiddleware = (request: NextRequest) => {
 	// Checks if the language and country in the URL are supported, and redirects to the best locale if not.
 	const segments = request.nextUrl.pathname.split('/');
-	const detectedLanguage = segments.at(1) ?? '';
+	const pathnameLanguage = getLanguageFromPathname(request.nextUrl.pathname);
 	const detectedCountry = segments.at(2) ?? '';
 
-	const pathnameIsMissingLanguage = !allWebsiteLanguages.includes(detectedLanguage as WebsiteLanguage);
+	const pathnameIsMissingLanguage = !pathnameLanguage;
 	const pathnameIsMissingCountry = !websiteRegions.includes(detectedCountry as WebsiteRegion);
 
 	if (pathnameIsMissingCountry || pathnameIsMissingLanguage) {
 		let { language, region } = findBestLocale(request);
-		language = pathnameIsMissingLanguage ? language : (detectedLanguage as WebsiteLanguage);
+		language = pathnameIsMissingLanguage ? language : pathnameLanguage;
 		region = pathnameIsMissingCountry ? region : (detectedCountry as WebsiteRegion);
 
 		const url = request.nextUrl.clone();
@@ -121,13 +87,18 @@ const i18nRedirectMiddleware = (request: NextRequest) => {
 };
 
 export const proxy = (request: NextRequest) => {
-	let response = redirectMiddleware(request) ?? i18nRedirectMiddleware(request);
+	let response = i18nRedirectMiddleware(request);
 	if (response) {
 		return response;
 	}
 
-	// If no redirect was triggered, we continue with the country and currency middleware.
-	response = NextResponse.next();
+	const requestHeaders = new Headers(request.headers);
+	const language = getLanguageFromPathname(request.nextUrl.pathname);
+	if (language) {
+		requestHeaders.set(WEBSITE_LANGUAGE_HEADER, language);
+	}
+
+	response = NextResponse.next({ request: { headers: requestHeaders } });
 	response = countryMiddleware(request, response);
 	response = currencyMiddleware(request, response);
 

@@ -17,7 +17,6 @@
 # misc
 .DS_Store
 *.pem
-**/static-pages.json
 
 # debug
 npm-debug.log*
@@ -54,6 +53,7 @@ terraform.tfvars
 terraform.tfvars.json
 
 /public/openapi.json
+/.openapi-gen/
 
 # Storyblok CLI
 src/generated/storyblok/components

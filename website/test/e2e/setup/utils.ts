@@ -45,9 +45,13 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 
 	const { email, testId, expectedPath, state } = ACTORS[actor];
 
-	await page.goto('/en/int/login');
-	await page.fill('input[type="email"]', email);
-	await page.click('button[type="submit"]');
+	await page.goto('/en/int');
+	await page.getByTestId('login-button').click();
+
+	const dialog = page.getByRole('dialog');
+	await expect(dialog).toBeVisible();
+	await dialog.locator('input[type="email"]').fill(email);
+	await dialog.locator('button[type="submit"]').click();
 	await expect
 		.poll(
 			async () => {

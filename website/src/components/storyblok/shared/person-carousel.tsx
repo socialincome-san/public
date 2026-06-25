@@ -4,7 +4,7 @@ import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/com
 import { SectionHeading } from '@/components/section-heading';
 import { PersonCard } from '@/components/storyblok/shared/person-card';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
-import { createNewWebsitePersonLink } from '@/lib/services/storyblok/storyblok.utils';
+import { createWebsitePersonLink } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import { ChevronRightIcon } from 'lucide-react';
@@ -19,7 +19,7 @@ type PersonCarouselSidebar = {
 type Props = {
 	persons: ISbStoryData<Person>[];
 	sidebar?: PersonCarouselSidebar;
-	/** When set, each card links to the person profile under new-website. */
+	/** When set, each card links to the person profile. */
 	personLink?: { lang: string; region: string };
 	size?: 'default' | 'small';
 };
@@ -54,7 +54,7 @@ export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default' 
 								<PersonCard
 									person={person}
 									size={size}
-									href={personLink ? createNewWebsitePersonLink(person.slug, personLink.lang, personLink.region) : undefined}
+									href={personLink ? createWebsitePersonLink(person.slug, personLink.lang, personLink.region) : undefined}
 								/>
 							</CarouselItem>
 						))}
@@ -65,7 +65,7 @@ export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default' 
 						type="button"
 						onClick={() => api?.scrollNext()}
 						aria-label="Show next person"
-						className="absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_4px_28px_0px_rgba(0,30,101,0.12)]"
+						className="bg-primary-foreground absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full shadow-[0px_4px_28px_0px_rgba(0,30,101,0.12)]"
 					>
 						<ChevronRightIcon className="size-5" aria-hidden="true" />
 					</button>

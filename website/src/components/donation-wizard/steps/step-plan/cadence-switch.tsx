@@ -19,7 +19,7 @@ export const CadenceSwitch = ({ currentCadence, send }: Props) => {
 		<button
 			type="button"
 			onClick={() => send({ type: 'SET_CADENCE', value: targetCadence })}
-			className="text-muted-foreground flex w-fit max-w-full items-center gap-1 self-start border-b border-slate-400 pb-0.5 text-left text-xs sm:self-auto sm:text-sm"
+			className="text-muted-foreground border-muted-foreground flex w-fit max-w-full items-center gap-1 self-start border-b pb-0.5 text-left text-xs sm:self-auto sm:text-sm"
 		>
 			<ArrowLeftRight className="size-3.5" aria-hidden />
 			{t(labelKey)}

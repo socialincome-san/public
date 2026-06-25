@@ -15,14 +15,19 @@ type Props = {
 };
 
 export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
+	const { disableMarginBottom, disableMarginTop } = blok;
 	const programsResult = await services.storyblok.getPrograms(lang);
 	const allPrograms = programsResult.success ? programsResult.data : [];
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper
+			disableMarginBottom={disableMarginBottom}
+			disableMarginTop={disableMarginTop}
+			{...storyblokEditable(blok as SbBlokData)}
+		>
 			{blok.heading && (
-				<SectionHeading size="large">
+				<SectionHeading size={3} className="leading-[1.2] whitespace-pre-line">
 					<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 				</SectionHeading>
 			)}
@@ -31,7 +36,7 @@ export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
 					<StoryblokMarkdown>{blok.description}</StoryblokMarkdown>
 				</p>
 			)}
-			<ProgramGridView programs={programs} blok={blok} lang={lang} region={region} />
+			<ProgramGridView programs={programs} allProgramsCount={allPrograms.length} blok={blok} lang={lang} region={region} />
 		</BlockWrapper>
 	);
 };

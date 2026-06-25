@@ -4,11 +4,11 @@ import { type DonationAmountContext, getInitialDonationContext } from '../utils/
 
 export type DonationWizardEntry = 'stepAmount' | 'stepPlanMonthly' | 'stepPlanOneTime';
 
-export type StripeCheckoutStatus = 'idle' | 'loading' | 'ready' | 'error';
+type StripeCheckoutStatus = 'idle' | 'loading' | 'ready' | 'error';
 
-export type QrBillStatus = 'idle' | 'loading' | 'ready' | 'error';
+type QrBillStatus = 'idle' | 'loading' | 'ready' | 'error';
 
-export type WizardPaymentSource = 'stripe' | 'qr' | null;
+type WizardPaymentSource = 'stripe' | 'qr' | null;
 
 export type QrDonorContext = {
 	firstName: string;
@@ -26,6 +26,7 @@ export type DonationWizardContext = DonationAmountContext & {
 	stripeCheckoutStatus: StripeCheckoutStatus;
 	stripeCheckoutError: string | null;
 	completedDonationSummary: CompletedDonationSummary | null;
+	loginEmail: string | null;
 	wizardPaymentSource: WizardPaymentSource;
 	qrDonor: QrDonorContext | null;
 	qrContributorReferenceId: string | null;
@@ -58,6 +59,7 @@ export const getInitialWizardContext = (): DonationWizardContext => ({
 	pendingStep: null,
 	...resetStripeCheckoutContext,
 	completedDonationSummary: null,
+	loginEmail: null,
 	wizardPaymentSource: null,
 	...resetQrBillContext,
 });

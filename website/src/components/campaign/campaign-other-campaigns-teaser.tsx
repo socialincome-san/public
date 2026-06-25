@@ -3,7 +3,6 @@ import { CampaignsGridSection } from '@/components/campaign/campaigns-grid-secti
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 
 const TEASER_LIMIT = 3;
 
@@ -36,7 +35,7 @@ export const CampaignOtherCampaignsTeaser = async ({ currentCampaignSlug, lang, 
 				lang={lang}
 				region={region}
 				cta={{
-					href: `/${lang}/${region}/${NEW_WEBSITE_SLUG}/campaigns`,
+					href: `/${lang}/${region}/campaigns`,
 					label: translator.t('campaign.other-campaigns.show-all'),
 				}}
 			/>

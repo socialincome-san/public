@@ -26,6 +26,7 @@ import {
 } from './donation-wizard-context';
 
 export const donationWizardMachine = setup({
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- XState uses this empty object to carry machine types.
 	types: {} as {
 		context: DonationWizardContext;
 		events:
@@ -55,8 +56,8 @@ export const donationWizardMachine = setup({
 			| { type: 'STRIPE_CHECKOUT_RETRY' }
 			| { type: 'STRIPE_CHECKOUT_BACK' }
 			| { type: 'STRIPE_CHECKOUT_COMPLETE' }
-			| { type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE' }
-			| { type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU' }
+			| { type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE'; email: string }
+			| { type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU'; email?: string }
 			| { type: 'DONATION_ONBOARDING_REFERRAL_COMPLETE' }
 			| { type: 'BACK' };
 	},
@@ -251,7 +252,7 @@ export const donationWizardMachine = setup({
 					target: 'stepPayment',
 					actions: assign({
 						paymentMethod: () => 'qr' as const,
-						coverTransactionCosts: () => false,
+						coverTransactionCosts: () => true,
 						...monthlyPlanStepDefaults,
 						...resetStripeCheckoutContext,
 						...resetQrBillContext,
@@ -287,7 +288,7 @@ export const donationWizardMachine = setup({
 					target: 'stepPayment',
 					actions: assign(({ context }) => ({
 						paymentMethod: 'qr' as const,
-						coverTransactionCosts: false,
+						coverTransactionCosts: true,
 						...paymentContextForOneTimePlanChoice(context.oneTimePlanChoice),
 						...resetStripeCheckoutContext,
 						...resetQrBillContext,
@@ -304,9 +305,9 @@ export const donationWizardMachine = setup({
 		stepPayment: {
 			on: {
 				SET_PAYMENT_METHOD: {
-					actions: assign(({ event, context }) => ({
+					actions: assign(({ event }) => ({
 						paymentMethod: event.value,
-						coverTransactionCosts: event.value === 'qr' ? false : context.coverTransactionCosts,
+						coverTransactionCosts: event.value === 'online' ? true : false,
 						...resetStripeCheckoutContext,
 						...(event.value === 'online' ? resetQrBillContext : {}),
 					})),
@@ -459,9 +460,15 @@ export const donationWizardMachine = setup({
 			on: {
 				DONATION_ONBOARDING_PERSONAL_COMPLETE: {
 					target: 'stepOnboardingReferral',
+					actions: assign({
+						loginEmail: ({ event }) => event.email,
+					}),
 				},
 				DONATION_ONBOARDING_SKIP_TO_THANK_YOU: {
 					target: 'stepThankYou',
+					actions: assign({
+						loginEmail: ({ context, event }) => event.email ?? context.loginEmail,
+					}),
 				},
 				CLOSE: {
 					target: 'closed',
@@ -476,6 +483,9 @@ export const donationWizardMachine = setup({
 				},
 				DONATION_ONBOARDING_SKIP_TO_THANK_YOU: {
 					target: 'stepThankYou',
+					actions: assign({
+						loginEmail: ({ context, event }) => event.email ?? context.loginEmail,
+					}),
 				},
 				CLOSE: {
 					target: 'closed',

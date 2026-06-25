@@ -52,16 +52,16 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 
 	const getCreditIcon = (creditsInIntervals: number, totalExpected: number) => {
 		if (creditsInIntervals < 1) {
-			return { Icon: TriangleAlert, color: 'text-red-600' };
+			return { Icon: TriangleAlert, color: 'text-destructive' };
 		}
 		if (creditsInIntervals >= totalExpected) {
-			return { Icon: CheckCircle, color: 'text-green-600' };
+			return { Icon: CheckCircle, color: 'text-confirm' };
 		}
 		if (creditsInIntervals > 3) {
-			return { Icon: CheckCircle, color: 'text-green-600' };
+			return { Icon: CheckCircle, color: 'text-confirm' };
 		}
 		if (creditsInIntervals >= 1) {
-			return { Icon: AlertCircle, color: 'text-amber-600' };
+			return { Icon: AlertCircle, color: 'text-warning' };
 		}
 
 		return { Icon: AlertCircle, color: 'text-muted-foreground' };
@@ -229,8 +229,8 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 						<SectionBox href={`/portal/programs/${programId}/payout-forecast`} className="h-full">
 							<div className="flex h-full flex-col">
 								<div className="flex-1 space-y-6">
-									<h2 className="text-lg font-semibold">Available Credits</h2>
-									<div className="flex items-center gap-2 text-xl font-semibold">
+									<h2 className="text-lg font-bold">Available Credits</h2>
+									<div className="flex items-center gap-2 text-xl font-bold">
 										<span>{`${formatNumber(stats.availableCreditsInIntervals, 1)} intervals`}</span>
 										<Tooltip>
 											<TooltipTrigger asChild>
@@ -300,8 +300,8 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 					<div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
 						<SectionBox href={`/portal/programs/${programId}/recipients`}>
 							<div className="space-y-6">
-								<h2 className="text-lg font-semibold">Recipient Status</h2>
-								<div className="flex items-center gap-2 text-xl font-semibold">
+								<h2 className="text-lg font-bold">Recipient Status</h2>
+								<div className="flex items-center gap-2 text-xl font-bold">
 									<span>{formatNumber(stats.recipientsCount)} recipients</span>
 									<Tooltip>
 										<TooltipTrigger asChild>

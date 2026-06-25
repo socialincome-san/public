@@ -94,12 +94,22 @@ const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 				return;
 			}
 
-			onSelect(api);
+			let didCancel = false;
+
+			queueMicrotask(() => {
+				if (didCancel) {
+					return;
+				}
+
+				onSelect(api);
+			});
 			api.on('reInit', onSelect);
 			api.on('select', onSelect);
 
 			return () => {
+				didCancel = true;
 				api?.off('select', onSelect);
+				api?.off('reInit', onSelect);
 			};
 		}, [api, onSelect]);
 
@@ -190,7 +200,7 @@ const CarouselScrollNextButton = React.forwardRef<HTMLButtonElement, CarouselScr
 					onClick?.(event);
 				}}
 				className={cn(
-					'absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0px_4px_28px_0px_rgba(0,30,101,0.12)] disabled:pointer-events-none disabled:opacity-50',
+					'bg-primary-foreground absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full shadow-[0px_4px_28px_0px_rgba(0,30,101,0.12)] disabled:pointer-events-none disabled:opacity-50',
 					className,
 				)}
 				{...props}

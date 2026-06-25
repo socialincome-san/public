@@ -1,10 +1,11 @@
 import type { Faq, FaqSelection } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
 import type { ISbStoryData } from '@storyblok/js';
 
 export type FaqItem = {
 	id: string;
-	question: string;
-	answer?: string;
+	question: StoryblokRichtext;
+	answer?: StoryblokRichtext;
 };
 
 export const resolveFaqItems = (questions: FaqSelection['questions'] | ISbStoryData<Faq>[]): FaqItem[] => {
@@ -15,7 +16,8 @@ export const resolveFaqItems = (questions: FaqSelection['questions'] | ISbStoryD
 			continue;
 		}
 
-		const question = questionReference.content.question?.trim();
+		const { answer, question } = questionReference.content;
+
 		if (!question) {
 			continue;
 		}
@@ -23,7 +25,7 @@ export const resolveFaqItems = (questions: FaqSelection['questions'] | ISbStoryD
 		items.push({
 			id: questionReference.uuid,
 			question,
-			answer: questionReference.content.answer?.trim(),
+			answer,
 		});
 	}
 

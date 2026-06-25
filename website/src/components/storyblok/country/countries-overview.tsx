@@ -1,7 +1,6 @@
 import { LandingPageCard } from '@/components/storyblok/shared/landing-page-card';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { NEW_WEBSITE_SLUG } from '@/lib/utils/const';
 import NextImage from 'next/image';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountrySlug, getCountryTitle } from './country.utils';
@@ -24,9 +23,11 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, regio
 			{hasCmsHeader ? (
 				<div className="space-y-5">
 					{title?.trim() ? (
-						<h1 className="text-4xl leading-tight font-bold text-cyan-900 sm:text-5xl">{title.trim()}</h1>
+						<h1 className="text-foreground text-5xl leading-tight font-bold md:text-6xl">{title.trim()}</h1>
 					) : null}
-					{text?.trim() ? <p className="text-base leading-6 text-cyan-950 sm:text-lg sm:leading-7">{text.trim()}</p> : null}
+					{text?.trim() ? (
+						<p className="text-foreground text-base leading-6 sm:text-lg sm:leading-7">{text.trim()}</p>
+					) : null}
 				</div>
 			) : null}
 			{countries.length === 0 ? (
@@ -46,7 +47,7 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, regio
 						return (
 							<LandingPageCard
 								key={country.uuid}
-								href={`/${lang}/${region}/${NEW_WEBSITE_SLUG}/countries/${countrySlug}`}
+								href={`/${lang}/${region}/countries/${countrySlug}`}
 								title={countryTitle}
 								heroImageFilename={heroImageFilename}
 								heroImageAlt={heroImageAlt}

@@ -15,7 +15,7 @@ import { UserSession } from '@/lib/services/user/user.types';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
-import { Resolver, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { MultiSelect, MultiSelectOption } from '../multi-select';
 import { buildDefaultValues } from './defaults';
@@ -34,7 +34,7 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 	const [focusOptions, setFocusOptions] = useState<MultiSelectOption[]>([]);
 
 	const form = useForm<ProfileFormInput, unknown, ProfileFormOutput>({
-		resolver: zodResolver(profileFormSchema) as unknown as Resolver<ProfileFormInput, unknown, ProfileFormOutput>,
+		resolver: zodResolver(profileFormSchema),
 		defaultValues: buildDefaultValues(session, isNewsletterSubscribed),
 	});
 
@@ -72,7 +72,7 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 			<form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-y-6 md:grid-cols-2 md:gap-x-8">
 				{isLocalPartner && (
 					<>
-						<h3 className="text-lg font-semibold md:col-span-2">Organization Details</h3>
+						<h3 className="text-lg font-bold md:col-span-2">Organization Details</h3>
 
 						<FormField
 							control={form.control}
@@ -110,7 +110,7 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 
 				{isUser && (
 					<>
-						<h3 className="text-lg font-semibold md:col-span-2">Account</h3>
+						<h3 className="text-lg font-bold md:col-span-2">Account</h3>
 
 						<div className="flex md:col-span-2 md:justify-start">
 							<div className="w-full md:w-1/2">
@@ -143,7 +143,7 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 					</>
 				)}
 
-				<h3 className="text-lg font-semibold md:col-span-2">{translations.personalInfoTitle}</h3>
+				<h3 className="text-lg font-bold md:col-span-2">{translations.personalInfoTitle}</h3>
 
 				<FormField
 					control={form.control}
@@ -297,7 +297,7 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 					/>
 				)}
 
-				<h3 className="mt-4 text-lg font-semibold md:col-span-2">{translations.addressTitle}</h3>
+				<h3 className="mt-4 text-lg font-bold md:col-span-2">{translations.addressTitle}</h3>
 
 				{(['street', 'number', 'city', 'zip'] as const).map((f) => (
 					<FormField

@@ -13,7 +13,7 @@ export const PreviewMessage = () => {
 	return (
 		<aside className="border-border bg-card fixed top-24 left-4 z-50 max-w-[200px] rounded-xl border p-3 shadow-lg">
 			<div className="flex items-start justify-between gap-2">
-				<p className="text-sm font-semibold">Preview mode</p>
+				<p className="text-sm font-bold">Preview mode</p>
 				<button
 					type="button"
 					className="text-muted-foreground hover:text-foreground"

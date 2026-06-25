@@ -5,10 +5,11 @@ import { Button } from '@/components/button';
 import { FloatingImage } from '@/components/floating-image';
 import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
+import type { Currency } from '@/generated/prisma/client';
 import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { useDonationTotalAnimations } from '@/lib/hooks/use-donation-total-animations';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
@@ -18,15 +19,18 @@ type Props = {
 	blok: DonationsTotal;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
-	totalChf: number;
+	totalAmount: number;
+	currency: Currency;
 	disableAnimation?: boolean;
 };
 
-export const DonationsTotalBlock = ({ blok, lang, region, totalChf, disableAnimation = false }: Props) => {
+export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency, disableAnimation = false }: Props) => {
 	const hasFilename = (image: StoryblokAsset): image is StoryblokAsset & { filename: string } => Boolean(image.filename);
+	const locale = getSafeNumberFormatLocale(lang);
+	const { disableMarginBottom, disableMarginTop } = blok;
 
 	const { sectionRef, displayValue, smoothMouseX, smoothMouseY } = useDonationTotalAnimations({
-		totalChf,
+		totalAmount,
 		disableAnimation,
 	});
 
@@ -35,22 +39,27 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalChf, disableAnima
 	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, region) : null;
 
 	return (
-		<BlockWrapper ref={sectionRef} {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper
+			ref={sectionRef}
+			disableMarginBottom={disableMarginBottom}
+			disableMarginTop={disableMarginTop}
+			{...storyblokEditable(blok as SbBlokData)}
+		>
 			{images.map((image, index) => (
 				<FloatingImage key={image.id} image={image} index={index} smoothMouseX={smoothMouseX} smoothMouseY={smoothMouseY} />
 			))}
 
 			<div className="relative z-10 flex flex-col items-center justify-center py-16 text-center md:py-24 lg:py-32">
 				{blok.heading && (
-					<SectionHeading className="mb-6 text-2xl leading-tight whitespace-pre-wrap md:mb-6 md:text-3xl lg:text-5xl">
+					<SectionHeading className="mb-6 leading-tight whitespace-pre-wrap md:mb-6">
 						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 					</SectionHeading>
 				)}
 
 				<div className="text-primary mb-8 flex items-baseline justify-center gap-3">
-					<span className="text-xl md:text-2xl">CHF</span>
+					<span className="text-xl md:text-2xl">{currency}</span>
 					<span className="text-6xl font-light tracking-tight md:text-8xl lg:text-[10rem]">
-						{formatNumberLocale(displayValue, 'de-CH')}
+						{formatNumberLocale(displayValue, locale)}
 					</span>
 				</div>
 

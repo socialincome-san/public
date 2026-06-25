@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
 import { VideoControlButton } from '@/components/video-control-button';
 import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -11,7 +10,7 @@ import { ArrowsPointingInIcon, ArrowsPointingOutIcon, ChatBubbleBottomCenterText
 import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import MuxVideo from '@mux/mux-video-react';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
-import { useRef, useState } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import Markdown from 'react-markdown';
 
 type Props = {
@@ -19,6 +18,7 @@ type Props = {
 	lang: WebsiteLanguage;
 	subtitleUrl?: string;
 	translations: HeroVideoTranslations;
+	donationForm: ReactNode;
 	disableAutoplay?: boolean;
 };
 
@@ -34,7 +34,7 @@ type HeroVideoTranslations = {
 	donateNow: string;
 };
 
-export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, disableAutoplay = false }: Props) => {
+export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donationForm, disableAutoplay = false }: Props) => {
 	const { heading, description, muxPlaybackId } = blok;
 	const { openWizardAtAmountStep } = useDonationModal();
 	const videoRef = useRef<HTMLVideoElement>(null);
@@ -72,7 +72,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, disableA
 		<div {...storyblokEditable(blok as SbBlokData)} className="storyblok__outline full-bleed-hero flex flex-col gap-6">
 			<div
 				className={cn(
-					'relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden bg-black transition-[border-radius] duration-300 ease-out md:min-h-160',
+					'bg-foreground relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden transition-[border-radius] duration-300 ease-out md:min-h-160',
 					isExpanded ? 'z-60' : 'rounded-b-3xl md:rounded-b-[56px]',
 				)}
 			>
@@ -92,8 +92,8 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, disableA
 					{subtitleUrl && <track kind="captions" src={subtitleUrl} srcLang={lang} label={lang.toUpperCase()} default />}
 					<style>{`
             video::cue {
-              background-color: rgba(0, 0, 0, 0.8);
-              color: white;
+              background-color: hsl(var(--foreground) / 0.8);
+              color: hsl(var(--primary-foreground));
               font-size: 24px;
               opacity: ${isExpanded && showCaptions ? 1 : 0};
             }
@@ -147,7 +147,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, disableA
 				)}
 
 				{!isExpanded && (
-					<div className="w-site-width max-w-content absolute inset-0 z-20 mx-auto flex flex-row items-center justify-between gap-4 text-white">
+					<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto flex flex-row items-center justify-between gap-4">
 						<div className="flex max-w-2xl flex-col gap-6">
 							{heading && (
 								<h1 className="text-4xl font-light xl:text-6xl [&_strong]:font-bold">
@@ -167,17 +167,11 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, disableA
 								</Button>
 							</div>
 						</div>
-						<div className="hidden shrink-0 lg:block">
-							<DonationForm />
-						</div>
+						<div className="hidden shrink-0 lg:block">{donationForm}</div>
 					</div>
 				)}
 			</div>
-			{!isExpanded && (
-				<div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">
-					<DonationForm />
-				</div>
-			)}
+			{!isExpanded && <div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">{donationForm}</div>}
 		</div>
 	);
 };

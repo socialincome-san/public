@@ -1,4 +1,5 @@
 import type { Transparency } from '@/generated/storyblok/types/109655/storyblok-components';
+import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
@@ -23,7 +24,11 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 		return { start, end };
 	});
 
-	const dataResult = await services.transparency.getTransparencyData(timeRanges);
+	const displayCurrency = await getWebsiteCurrencyFromCookie();
+	const [dataResult, rates] = await Promise.all([
+		services.transparency.getTransparencyData(timeRanges),
+		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
+	]);
 
 	if (!dataResult.success) {
 		return null;
@@ -31,16 +36,25 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 
 	const data = dataResult.data;
 
-	const serializedTimeRanges = data.timeRanges.map((range) => ({
+	const { currency: timeSeriesCurrency } = services.currencyDisplay.resolveFromChf(
+		data.timeRanges[0]?.totalChf ?? 0,
+		displayCurrency,
+		rates,
+	);
+	const resolvedTimeRanges = data.timeRanges.map((range) => ({
 		startIso: range.start.toISO()!,
-		totalChf: range.totalChf,
+		total: services.currencyDisplay.resolveFromChf(range.totalChf, displayCurrency, rates).amount,
 	}));
 
 	return (
 		<div className="w-site-width max-w-content mx-auto space-y-12 py-12" {...storyblokEditable(blok as SbBlokData)}>
-			<TotalsSection totals={data.totals} lang={lang} />
-			<TimeSeriesSection timeRanges={serializedTimeRanges} lang={lang} />
-			<CountriesSection countries={data.topCountries} lang={lang} />
+			<TotalsSection totals={data.totals} lang={lang} displayCurrency={displayCurrency} rates={rates} />
+			<TimeSeriesSection
+				timeRanges={resolvedTimeRanges.map(({ startIso, total }) => ({ startIso, total }))}
+				currency={timeSeriesCurrency}
+				lang={lang}
+			/>
+			<CountriesSection countries={data.topCountries} lang={lang} displayCurrency={displayCurrency} rates={rates} />
 		</div>
 	);
 };

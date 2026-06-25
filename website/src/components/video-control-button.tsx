@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { cn } from '@socialincome/ui';
+import { cn } from '@/lib/utils/cn';
 import { type ComponentProps, type ReactNode } from 'react';
 
 type Props = {
@@ -15,7 +15,7 @@ export const VideoControlButton = ({ children, className, type = 'button', ...pr
 			type={type}
 			variant="secondary"
 			size="icon"
-			className={cn('size-10 rounded-full bg-black/45 text-white hover:bg-black/60', className)}
+			className={cn('text-primary-foreground bg-foreground/45 hover:bg-foreground/60 size-10 rounded-full', className)}
 			{...props}
 		>
 			{children}

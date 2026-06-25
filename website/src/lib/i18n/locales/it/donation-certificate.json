@@ -14,7 +14,6 @@
 	"location": "Zurigo, {{ date, datetime }}",
 	"no-contributions": "Nessuna donazione",
 	"title-kerrin": "Responsabile Finanze",
-	"title-sandino": "Direttore",
 	"text-1": "Confermiamo alle autorita fiscali che Social Income ha ricevuto le seguenti donazioni da {{ firstname }} {{ lastname }} nell'anno {{ year }}:",
 	"text-2": "Sono state considerate tutte le donazioni ricevute tra il {{ start, datetime }} e il {{ end, datetime }}.",
 	"text-3": "Per un'eventuale deduzione fiscale, consulta la normativa fiscale locale.",

@@ -73,8 +73,8 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
 			<div className="pt-8">
 				<div className="space-y-5">
-					{title && <h1 className="text-4xl leading-tight font-bold text-cyan-900 sm:text-5xl">{title}</h1>}
-					{text && <p className="text-base leading-6 text-cyan-950 sm:text-lg sm:leading-7">{text}</p>}
+					{title && <h1 className="text-foreground text-5xl leading-tight font-bold md:text-6xl">{title}</h1>}
+					{text && <p className="text-foreground text-base leading-6 sm:text-lg sm:leading-7">{text}</p>}
 				</div>
 
 				<section className="mt-8 flex flex-col gap-6">
@@ -91,7 +91,7 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 						{hasStudiesSection && (
 							<section className="flex flex-col gap-10">
 								{studiesTitle && (
-									<h2 className="text-5xl leading-tight font-normal text-cyan-900">
+									<h2 className="text-foreground text-5xl leading-tight font-normal">
 										<StoryblokMarkdown>{studiesTitle}</StoryblokMarkdown>
 									</h2>
 								)}
@@ -107,7 +107,7 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 						{hasImpactMeasurementSection && (
 							<section className="flex flex-col gap-10">
 								{impactMeasurementTitle && (
-									<h2 className="text-5xl leading-tight font-normal text-cyan-900">
+									<h2 className="text-foreground text-5xl leading-tight font-normal">
 										<StoryblokMarkdown>{impactMeasurementTitle}</StoryblokMarkdown>
 									</h2>
 								)}

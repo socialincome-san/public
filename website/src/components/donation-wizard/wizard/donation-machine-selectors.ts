@@ -2,7 +2,7 @@ import type { LanguageCode } from '@/lib/types/language';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import type { PlanTierBenefit } from '../steps/step-plan/plan-tier-card/plan-tier-benefit';
 import {
-	getBeneficiaryCount,
+	getBeneficiaryImpact,
 	getDonationBaseAmount,
 	getDonationDisplayAmount,
 	getMonthlyPlanBaseAmount,
@@ -30,11 +30,9 @@ const formatCommunityCount = (value: number, language: LanguageCode): string =>
 type Translate = (key: string, context?: Record<string, unknown>) => string;
 
 export type PlanBenefitDescriptor =
-	| { id: string; type: 'beneficiaries'; count: number }
-	| { id: string; type: 'fees' }
+	| { id: string; type: 'beneficiaries'; directCount: number; indirectCount: number }
 	| { id: string; type: 'double-impact' }
 	| { id: string; type: 'community'; supporterCount: number }
-	| { id: string; type: 'one-time-hint' }
 	| { id: string; type: 'upsell-subtitle' }
 	| { id: string; type: 'upsell-cancel' };
 
@@ -45,9 +43,13 @@ export const resolvePlanBenefit = (
 ): PlanTierBenefit => {
 	switch (descriptor.type) {
 		case 'beneficiaries':
-			return { id: descriptor.id, label: t('stepPlan.benefit-beneficiaries', { count: descriptor.count }) };
-		case 'fees':
-			return { id: descriptor.id, label: t('stepPlan.benefit-fees') };
+			return {
+				id: descriptor.id,
+				label: t('stepPlan.benefit-beneficiaries', {
+					directCount: descriptor.directCount,
+					indirectCount: descriptor.indirectCount,
+				}),
+			};
 		case 'double-impact':
 			return { id: descriptor.id, label: t('stepPlan.benefit-double-impact') };
 		case 'community':
@@ -59,8 +61,6 @@ export const resolvePlanBenefit = (
 				icon: 'heart',
 				emphasis: true,
 			};
-		case 'one-time-hint':
-			return { id: descriptor.id, label: t('stepPlan.one-time-option-hint') };
 		case 'upsell-subtitle':
 			return { id: descriptor.id, label: t('stepPlan.upsell-subtitle') };
 		case 'upsell-cancel':
@@ -90,6 +90,8 @@ export const createStep1Actions = (send: DonationWizardSend) => ({
 export const selectMonthlyPlanView = (context: DonationWizardContext) => {
 	const baseAmount = getMonthlyPlanBaseAmount(context);
 	const { tier1x, tier2x } = getTierAmounts(baseAmount);
+	const tier1Impact = getBeneficiaryImpact(tier1x);
+	const tier2Impact = getBeneficiaryImpact(tier2x);
 	const supporterCount = context.communityStats?.supporterCount ?? 0;
 	const communityBenefit: PlanBenefitDescriptor[] =
 		supporterCount > 0 ? [{ id: 'community', type: 'community', supporterCount }] : [];
@@ -99,26 +101,26 @@ export const selectMonthlyPlanView = (context: DonationWizardContext) => {
 		showPlanBadges: isOnePercentPlanSelected(context),
 		tier1x,
 		tier2x,
-		tier1Benefits: [
-			{ id: 'beneficiaries', type: 'beneficiaries' as const, count: getBeneficiaryCount(tier1x) },
-			{ id: 'fees', type: 'fees' as const },
-			...communityBenefit,
-		],
+		tier1Benefits: [{ id: 'beneficiaries', type: 'beneficiaries' as const, ...tier1Impact }, ...communityBenefit],
 		tier2Benefits: [
 			{ id: 'double', type: 'double-impact' as const },
-			{ id: 'beneficiaries', type: 'beneficiaries' as const, count: getBeneficiaryCount(tier2x) },
+			{ id: 'beneficiaries', type: 'beneficiaries' as const, ...tier2Impact },
 		],
 	};
 };
 
 export const selectOneTimePlanView = (context: DonationWizardContext) => {
 	const oneTimeAmount = resolveAmount(context) ?? 0;
+	const oneTimeImpact = getBeneficiaryImpact(oneTimeAmount);
+	const supporterCount = context.communityStats?.supporterCount ?? 0;
+	const communityBenefit: PlanBenefitDescriptor[] =
+		supporterCount > 0 ? [{ id: 'community', type: 'community', supporterCount }] : [];
 
 	return {
 		oneTimePlanChoice: context.oneTimePlanChoice,
 		oneTimeAmount,
 		monthlyUpsellAmount: getMonthlyUpsellAmount(oneTimeAmount),
-		oneTimeBenefits: [{ id: 'once', type: 'one-time-hint' as const }],
+		oneTimeBenefits: [{ id: 'beneficiaries', type: 'beneficiaries' as const, ...oneTimeImpact }, ...communityBenefit],
 		upsellBenefits: [
 			{ id: 'help', type: 'upsell-subtitle' as const },
 			{ id: 'cancel', type: 'upsell-cancel' as const },

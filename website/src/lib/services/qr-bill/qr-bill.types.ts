@@ -2,7 +2,7 @@ import { type DonationAmountContext } from '@/components/donation-wizard/utils/d
 import { type Contributor, ContributorReferralSource, CountryCode, Currency, Gender } from '@/generated/prisma/client';
 import { type BankContributorData } from '../contributor/contributor.types';
 
-export type QrDonorDetails = Pick<BankContributorData, 'email' | 'firstName' | 'lastName' | 'language'>;
+type QrDonorDetails = Pick<BankContributorData, 'email' | 'firstName' | 'lastName' | 'language'>;
 
 export type WizardQrPayment = {
 	amount: number;

@@ -1,5 +1,5 @@
 import type { Tag } from '@/generated/storyblok/types/109655/storyblok-components';
-import { createNewWebsiteJournalTagLink } from '@/lib/services/storyblok/storyblok.utils';
+import { createWebsiteJournalTagLink } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';
@@ -19,11 +19,11 @@ export const TagBadge = ({ tag, lang, region, variant = 'default' }: Props) => {
 
 	return (
 		<Link
-			href={createNewWebsiteJournalTagLink(tag.slug, lang, region)}
+			href={createWebsiteJournalTagLink(tag.slug, lang, region)}
 			className={cn(
 				'inline-flex rounded-full px-3 py-1 text-sm font-medium capitalize transition-colors',
 				variant === 'hero'
-					? 'border border-white/40 text-white hover:bg-white/10'
+					? 'text-primary-foreground border-primary-foreground/40 hover:bg-primary-foreground/10 border'
 					: 'bg-muted text-foreground hover:bg-muted/80',
 			)}
 		>

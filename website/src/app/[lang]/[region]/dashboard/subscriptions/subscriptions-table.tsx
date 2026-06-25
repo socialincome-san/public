@@ -3,7 +3,7 @@ import { getYourSubscriptionsTableConfig } from '@/components/data-table/configs
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 
 import { type StripeSubscriptionRow } from '@/lib/services/stripe/stripe.types';
@@ -11,9 +11,11 @@ import { CreditCardIcon, PlusIcon } from 'lucide-react';
 
 export const SubscriptionsTable = async ({
 	lang,
+	region,
 	searchParams,
 }: {
 	lang: WebsiteLanguage;
+	region: WebsiteRegion;
 	searchParams: Promise<Record<string, string>>;
 }) => {
 	const contributor = await getAuthenticatedContributorOrRedirect();
@@ -53,7 +55,7 @@ export const SubscriptionsTable = async ({
 				{
 					label: translator.t('subscriptions.new-subscription'),
 					icon: <PlusIcon />,
-					href: '/donate/individual',
+					href: `/${lang}/${region}`,
 				},
 
 				...(billingPortalUrl

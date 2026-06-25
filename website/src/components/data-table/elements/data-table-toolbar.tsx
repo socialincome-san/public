@@ -8,7 +8,7 @@ import { Switch } from '@/components/switch';
 import { ArrowUpDownIcon, Columns3Icon, FilterIcon, SearchIcon } from 'lucide-react';
 import { Input } from '../../input';
 
-export type ToolbarFilterOption = {
+type ToolbarFilterOption = {
 	value: string;
 	label: string;
 };

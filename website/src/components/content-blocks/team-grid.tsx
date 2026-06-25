@@ -29,7 +29,7 @@ export const TeamGridBlock = async ({ blok, lang }: Props) => {
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			{blok.title && <h2 className="text-3xl font-bold">{blok.title}</h2>}
 			{blok.description && (
-				<div className="mt-4 text-lg text-black">
+				<div className="text-foreground mt-4 text-lg">
 					<RichTextRenderer richTextDocument={blok.description} />
 				</div>
 			)}

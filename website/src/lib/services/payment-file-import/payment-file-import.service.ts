@@ -17,6 +17,9 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { BankContribution } from './payment-file-import.types';
 
+type XPathSelectableNode = Parameters<ReturnType<typeof xpath.useNamespaces>>[1];
+type XmlSerializableNode = Parameters<InstanceType<typeof xmldom.XMLSerializer>['serializeToString']>[0];
+
 export class PaymentFileImportService extends BaseService {
 	private readonly bucketName;
 	private readonly xmlSelectExpression = '//ns:BkToCstmrDbtCdtNtfctn/ns:Ntfctn/ns:Ntry/ns:NtryDtls/ns:TxDtls';
@@ -105,12 +108,18 @@ export class PaymentFileImportService extends BaseService {
 			const xml = fs.readFileSync(file, 'utf8');
 			const xmlDoc = new xmldom.DOMParser().parseFromString(xml, 'text/xml');
 			const select = xpath.useNamespaces({ ns: 'urn:iso:std:iso:20022:tech:xsd:camt.054.001.08' });
-			const nodes = select(this.xmlSelectExpression, xmlDoc) as Node[];
+			const nodes = select(
+				this.xmlSelectExpression,
+				xmlDoc as unknown as XPathSelectableNode,
+			) as unknown as XmlSerializableNode[];
 
 			const contributions: BankContribution[] = [];
 
 			for (const node of nodes) {
-				const referenceId = select('string(.//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
+				const referenceId = select(
+					'string(.//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)',
+					node as unknown as XPathSelectableNode,
+				) as string;
 
 				const rawNode = new xmldom.XMLSerializer().serializeToString(node);
 				if (!referenceId) {
@@ -118,8 +127,11 @@ export class PaymentFileImportService extends BaseService {
 					continue;
 				}
 
-				const amountStr = select('string(ancestor::ns:Ntry/ns:Amt)', node) as string;
-				const currencyStr = select('string(ancestor::ns:Ntry/ns:Amt/@Ccy)', node) as string;
+				const amountStr = select('string(ancestor::ns:Ntry/ns:Amt)', node as unknown as XPathSelectableNode) as string;
+				const currencyStr = select(
+					'string(ancestor::ns:Ntry/ns:Amt/@Ccy)',
+					node as unknown as XPathSelectableNode,
+				) as string;
 
 				contributions.push({
 					referenceId,

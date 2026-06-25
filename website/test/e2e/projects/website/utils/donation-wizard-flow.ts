@@ -63,7 +63,7 @@ const applySwissTestLocale = async (page: Page) => {
 };
 
 export const openDonationWizardFromNav = async (page: Page) => {
-	await page.goto('/en/int/new-website');
+	await page.goto('/en/int');
 	await page.getByTestId('donation-wizard-trigger').click();
 	await expect(wizard(page)).toBeVisible();
 	await waitForWizardStep(wizard(page), 'donation-wizard-step-amount');
@@ -92,7 +92,7 @@ export const openDonationWizardFromHero = async (
 	const { cadence = 'monthly' } = options;
 
 	await applySwissTestLocale(page);
-	await page.goto('/en/ch/new-website');
+	await page.goto('/en/ch');
 
 	const heroForm = page.getByTestId('donation-wizard-hero-form').first();
 	await expect(heroForm).toBeVisible();
@@ -239,4 +239,12 @@ export const completeReferralStep = async (
 	await submit.click();
 
 	await waitForWizardStep(modal, 'donation-wizard-step-thank-you');
+};
+
+export const closeCompletedDonationWizard = async (page: Page) => {
+	const modal = wizard(page);
+
+	await waitForWizardStep(modal, 'donation-wizard-step-thank-you');
+	await modal.getByRole('button', { name: 'Close' }).click();
+	await expect(modal).toBeHidden();
 };

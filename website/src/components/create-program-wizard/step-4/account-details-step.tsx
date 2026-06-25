@@ -4,7 +4,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/input';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Typography } from '@socialincome/ui';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -47,10 +46,8 @@ export const AccountDetailsStep = ({
 	return (
 		<div className="mx-auto max-w-2xl space-y-5 py-2">
 			<div className="space-y-2">
-				<Typography size="xl" weight="bold">
-					{t('step4.title')}
-				</Typography>
-				<Typography className="text-muted-foreground">{t('step4.description')}</Typography>
+				<h2 className="text-3xl font-bold">{t('step4.title')}</h2>
+				<p className="text-muted-foreground">{t('step4.description')}</p>
 			</div>
 
 			<Form {...form}>

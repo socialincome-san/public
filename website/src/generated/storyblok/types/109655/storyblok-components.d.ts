@@ -107,6 +107,8 @@ export interface DonationsTotal {
   heading: string;
   images?: StoryblokMultiasset;
   button?: Button[];
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "donationsTotal";
   _uid: string;
   [k: string]: unknown;
@@ -140,9 +142,22 @@ export interface EmbeddedVideo {
   [k: string]: unknown;
 }
 
+export interface ExplainerVideoHeader {
+  heading?: string;
+  explainerVideo?: unknown;
+  labelForExplainerVideo?: string;
+  linkToExplainerVideo?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  explainerVideoThumbnail?: StoryblokAsset;
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
+  component: "explainerVideoHeader";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Faq {
-  question: string;
-  answer?: string;
+  question: StoryblokRichtext;
+  answer?: StoryblokRichtext;
   component: "faq";
   _uid: string;
   [k: string]: unknown;
@@ -166,6 +181,7 @@ export interface Focus {
   impactMeasurementTitle?: string;
   impactMeasurementTeaserText?: string;
   impactMeasurementTeaserButtonLabel?: string;
+  sdgs?: (number | string)[];
   component: "Focus";
   _uid: string;
   [k: string]: unknown;
@@ -193,6 +209,8 @@ export interface ImageText {
   image: StoryblokAsset;
   layout: "" | "imageLeft" | "imageRight";
   imageToTextRatio?: "" | "1/3" | "1/2" | "2/3";
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "imageText";
   _uid: string;
   [k: string]: unknown;
@@ -216,6 +234,8 @@ export interface JournalTeasers {
   heading?: string;
   articlesDisplayMode: "latest" | "selected";
   selectedArticles?: (ISbStoryData<Article> | string)[];
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "journalTeasers";
   _uid: string;
   [k: string]: unknown;
@@ -269,7 +289,7 @@ export interface LocalPartnersOverview {
 export interface MenuItem {
   label?: string;
   link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
-  icon?: "" | "instagram" | "linkedin" | "facebook" | "github" | "newsletter";
+  icon?: "" | "instagram" | "linkedin" | "facebook" | "github" | "newsletter" | "contact";
   newTab?: boolean;
   component: "menuItem";
   _uid: string;
@@ -278,9 +298,9 @@ export interface MenuItem {
 
 export interface MenuItemGroup {
   label: string;
-  items?: MenuItem[];
-  overviewLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   overviewLabel?: string;
+  overviewLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  items?: MenuItem[];
   component: "menuItemGroup";
   _uid: string;
   [k: string]: unknown;
@@ -296,13 +316,16 @@ export interface ModalCard {
 }
 
 export interface ModalCards {
-  heading?: string;
-  explainerVideo?: unknown;
-  labelForExplainerVideo?: string;
-  linkToExplainerVideo?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   cards?: ModalCard[];
-  explainerVideoThumbnail?: StoryblokAsset;
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "modalCards";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface NewsletterForm {
+  component: "newsletterForm";
   _uid: string;
   [k: string]: unknown;
 }
@@ -314,8 +337,6 @@ export interface NewsletterSignup {
 }
 
 export interface OpenSource {
-  title?: string;
-  description?: string;
   component: "openSource";
   _uid: string;
   [k: string]: unknown;
@@ -341,6 +362,10 @@ export interface Page {
     | VideoText
     | Transparency
     | OpenSource
+    | Spacer
+    | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
   )[];
   component: "page";
   _uid: string;
@@ -393,6 +418,8 @@ export interface Program {
   primaryImage: StoryblokAsset;
   secondaryImage: StoryblokAsset;
   tertiaryImage: StoryblokAsset;
+  fourthImage: StoryblokAsset;
+  faq?: (ISbStoryData<Faq> | string)[];
   component: "program";
   _uid: string;
   [k: string]: unknown;
@@ -404,6 +431,8 @@ export interface ProgramGrid {
   showAllPrograms?: boolean;
   programs?: (ISbStoryData<Program> | string)[];
   button?: Button[];
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "programGrid";
   _uid: string;
   [k: string]: unknown;
@@ -443,6 +472,23 @@ export interface ReferencesGroup {
   context?: "" | "related" | "original";
   references?: ReferenceArticle[];
   component: "referencesGroup";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface RichtextButtonHeader {
+  heading?: StoryblokRichtext;
+  button?: Button[];
+  disableMarginBottom?: boolean;
+  disableMarginTop?: boolean;
+  component: "richtextButtonHeader";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Spacer {
+  size: "" | "xs" | "s" | "m" | "l" | "xl";
+  component: "spacer";
   _uid: string;
   [k: string]: unknown;
 }
@@ -491,6 +537,8 @@ export interface TestimonialCarousel {
   heading?: string;
   testimonials: Testimonial[];
   autoplay?: boolean;
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "testimonialCarousel";
   _uid: string;
   [k: string]: unknown;
@@ -498,6 +546,9 @@ export interface TestimonialCarousel {
 
 export interface Text {
   content?: StoryblokRichtext;
+  widthRatio?: "" | "full" | "fourFifths" | "twoThirds" | "half" | "third";
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "text";
   _uid: string;
   [k: string]: unknown;
@@ -512,6 +563,9 @@ export interface Transparency {
 export interface TwoColumnText {
   leftText: StoryblokRichtext;
   rightText: StoryblokRichtext;
+  columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "twoColumnText";
   _uid: string;
   [k: string]: unknown;

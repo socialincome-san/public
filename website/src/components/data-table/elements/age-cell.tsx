@@ -1,8 +1,8 @@
 'use client';
 
+import { cn } from '@/lib/utils/cn';
 import { now } from '@/lib/utils/now';
 import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
-import { cn } from '@socialincome/ui';
 import { CellContext } from '@tanstack/react-table';
 import { differenceInYears } from 'date-fns';
 

@@ -30,6 +30,8 @@ export const StoryblokPreviewFocusesOverviewPage = async ({
 
 			return storyResult.success ? storyResult.data : null;
 		},
-		renderStory: (overview) => <FocusesOverviewPage overview={overview} lang={lang} region={region} />,
+		renderStory: (overview) => (
+			<FocusesOverviewPage overview={overview} lang={lang} region={region} searchParams={searchParams} />
+		),
 	});
 };

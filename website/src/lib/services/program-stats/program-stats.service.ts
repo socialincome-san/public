@@ -7,24 +7,26 @@ import {
 	PrismaClient,
 	SurveyStatus,
 } from '@/generated/prisma/client';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
+import { CurrencyDisplayService } from '../currency-display/currency-display.service';
 import { RecipientStatusService } from '../recipient/recipient-status.service';
 import {
 	ProgramBudgetCalculation,
 	ProgramBudgetCalculationInput,
 	ProgramDashboardStats,
+	ProgramFinancesDisplayAmounts,
 	ProgramForDashboard,
 } from './program-stats.types';
 
 export class ProgramStatsService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly exchangeRateService: ExchangeRateReadService,
+		private readonly currencyDisplayService: CurrencyDisplayService,
 		private readonly recipientStatusService: RecipientStatusService,
 		loggerInstance = logger,
 	) {
@@ -57,9 +59,9 @@ export class ProgramStatsService extends BaseService {
 
 			const payoutPerInterval = Number(program.payoutPerInterval);
 			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(cohorts.activeRecipientsCount, payoutPerInterval);
-			const rates = await this.getLatestRatesOrUndefined();
+			const rates = await this.currencyDisplayService.getLatestRatesOrUndefined();
 			const costPerIntervalChf =
-				this.convertCurrencyAmount(costPerIntervalProgramCurrency, program.country.currency, 'CHF', rates) ??
+				this.currencyDisplayService.convertAmount(costPerIntervalProgramCurrency, program.country.currency, 'CHF', rates) ??
 				costPerIntervalProgramCurrency;
 
 			let totalContributionsChf = 0;
@@ -79,7 +81,7 @@ export class ProgramStatsService extends BaseService {
 
 	async calculateProgramBudget(input: ProgramBudgetCalculationInput): Promise<ServiceResult<ProgramBudgetCalculation>> {
 		try {
-			const rates = await this.getLatestRatesOrUndefined();
+			const rates = await this.currencyDisplayService.getLatestRatesOrUndefined();
 			const calculation = this.calculateProgramBudgetWithRates(input, rates);
 
 			return this.resultOk(calculation);
@@ -88,6 +90,63 @@ export class ProgramStatsService extends BaseService {
 
 			return this.resultFail(`Could not calculate program budget preview: ${JSON.stringify(error)}`);
 		}
+	}
+
+	async resolveDisplayAmounts(
+		stats: ProgramDashboardStats,
+		displayCurrency: WebsiteCurrency,
+	): Promise<ProgramFinancesDisplayAmounts> {
+		if (displayCurrency === stats.payoutCurrency) {
+			return this.toPayoutCurrencyAmounts(stats);
+		}
+
+		if (displayCurrency === 'CHF') {
+			return this.toChfAmounts(stats);
+		}
+
+		const rates = await this.currencyDisplayService.getLatestRatesOrUndefined();
+		const paidOutSoFar = this.currencyDisplayService.convertAmount(stats.paidOutSoFarChf, 'CHF', displayCurrency, rates);
+		const totalProgramCosts = this.currencyDisplayService.convertAmount(
+			stats.totalProgramCostsChf,
+			'CHF',
+			displayCurrency,
+			rates,
+		);
+		const availableCredits = this.currencyDisplayService.convertAmount(
+			stats.availableCreditsChf,
+			'CHF',
+			displayCurrency,
+			rates,
+		);
+
+		if (paidOutSoFar === undefined || totalProgramCosts === undefined || availableCredits === undefined) {
+			return this.toPayoutCurrencyAmounts(stats);
+		}
+
+		return {
+			currency: displayCurrency,
+			paidOutSoFar,
+			totalProgramCosts,
+			availableCredits,
+		};
+	}
+
+	private toChfAmounts(stats: ProgramDashboardStats): ProgramFinancesDisplayAmounts {
+		return {
+			currency: 'CHF',
+			paidOutSoFar: stats.paidOutSoFarChf,
+			totalProgramCosts: stats.totalProgramCostsChf,
+			availableCredits: stats.availableCreditsChf,
+		};
+	}
+
+	private toPayoutCurrencyAmounts(stats: ProgramDashboardStats): ProgramFinancesDisplayAmounts {
+		return {
+			currency: stats.payoutCurrency,
+			paidOutSoFar: stats.paidOutSoFarProgramCurrency,
+			totalProgramCosts: stats.totalProgramCostsProgramCurrency,
+			availableCredits: stats.availableCreditsProgramCurrency,
+		};
 	}
 
 	async getProgramDashboardStats(programId: string): Promise<ServiceResult<ProgramDashboardStats>> {
@@ -110,11 +169,11 @@ export class ProgramStatsService extends BaseService {
 			const totalExpectedIntervals = totalExpectedIntervalsResult.data;
 			const cohorts = this.splitRecipientCohorts(program, nowDate, totalExpectedIntervals);
 
-			const rates = await this.getLatestRatesOrUndefined();
+			const rates = await this.currencyDisplayService.getLatestRatesOrUndefined();
 
 			const costPerIntervalProgramCurrency = this.calculateCostPerInterval(cohorts.activeRecipientsCount, payoutPerInterval);
 			const costPerIntervalChf =
-				this.convertCurrencyAmount(costPerIntervalProgramCurrency, program.country.currency, 'CHF', rates) ??
+				this.currencyDisplayService.convertAmount(costPerIntervalProgramCurrency, program.country.currency, 'CHF', rates) ??
 				costPerIntervalProgramCurrency;
 			const payoutProgressExchangeRateText = this.getExchangeRateText('CHF', program.country.currency, rates);
 
@@ -127,8 +186,12 @@ export class ProgramStatsService extends BaseService {
 			});
 			const projectedRemainingProgramCurrency = projection.projectedRemainingProgramCurrency;
 			const projectedRemainingChf =
-				this.convertCurrencyAmount(projectedRemainingProgramCurrency, program.country.currency, 'CHF', rates) ??
-				projectedRemainingProgramCurrency;
+				this.currencyDisplayService.convertAmount(
+					projectedRemainingProgramCurrency,
+					program.country.currency,
+					'CHF',
+					rates,
+				) ?? projectedRemainingProgramCurrency;
 
 			const totalProgramCostsProgramCurrency = payouts.paidOutSoFarProgramCurrency + projectedRemainingProgramCurrency;
 			const totalProgramCostsChf = payouts.paidOutSoFarChf + projectedRemainingChf;
@@ -145,7 +208,7 @@ export class ProgramStatsService extends BaseService {
 				totalExpectedIntervals,
 			);
 			const availableCreditsProgramCurrency =
-				this.convertCurrencyAmount(credits.availableCreditsChf, 'CHF', program.country.currency, rates) ??
+				this.currencyDisplayService.convertAmount(credits.availableCreditsChf, 'CHF', program.country.currency, rates) ??
 				credits.availableCreditsChf;
 			const surveys = this.computeSurveys(program);
 
@@ -430,12 +493,6 @@ export class ProgramStatsService extends BaseService {
 		return this.resultOk(isEligibleResult.data);
 	}
 
-	private async getLatestRatesOrUndefined(): Promise<Partial<Record<Currency, number>> | undefined> {
-		const latestRatesResult = await this.exchangeRateService.getLatestRates();
-
-		return latestRatesResult.success ? latestRatesResult.data : undefined;
-	}
-
 	private getNumberOfIntervals(programDurationInMonths: number, interval: PayoutInterval): number {
 		if (interval === 'quarterly') {
 			return Math.ceil(programDurationInMonths / 3);
@@ -473,33 +530,12 @@ export class ProgramStatsService extends BaseService {
 		return recipients * payoutPerInterval;
 	}
 
-	private convertCurrencyAmount(
-		amount: number,
-		fromCurrency: Currency,
-		toCurrency: Currency,
-		rates?: Partial<Record<Currency, number>>,
-	): number | undefined {
-		if (fromCurrency === toCurrency) {
-			return amount;
-		}
-		if (!rates) {
-			return undefined;
-		}
-		const fromRate = rates[fromCurrency];
-		const toRate = rates[toCurrency];
-		if (!fromRate || !toRate) {
-			return undefined;
-		}
-
-		return amount * (toRate / fromRate);
-	}
-
 	private getExchangeRateText(
 		fromCurrency: Currency,
 		toCurrency: Currency,
 		rates?: Partial<Record<Currency, number>>,
 	): string | undefined {
-		const converted = this.convertCurrencyAmount(1, fromCurrency, toCurrency, rates);
+		const converted = this.currencyDisplayService.convertAmount(1, fromCurrency, toCurrency, rates);
 		if (converted === undefined) {
 			return undefined;
 		}
@@ -525,8 +561,18 @@ export class ProgramStatsService extends BaseService {
 		let exchangeRateText: string | undefined = `1 ${input.payoutCurrency} = 1 ${input.displayCurrency}`;
 
 		if (input.displayCurrency !== input.payoutCurrency) {
-			const convertedTotal = this.convertCurrencyAmount(totalBudget, input.payoutCurrency, input.displayCurrency, rates);
-			const convertedMonthly = this.convertCurrencyAmount(monthlyCost, input.payoutCurrency, input.displayCurrency, rates);
+			const convertedTotal = this.currencyDisplayService.convertAmount(
+				totalBudget,
+				input.payoutCurrency,
+				input.displayCurrency,
+				rates,
+			);
+			const convertedMonthly = this.currencyDisplayService.convertAmount(
+				monthlyCost,
+				input.payoutCurrency,
+				input.displayCurrency,
+				rates,
+			);
 			exchangeRateText = this.getExchangeRateText(input.payoutCurrency, input.displayCurrency, rates);
 			if (convertedTotal !== undefined && convertedMonthly !== undefined && exchangeRateText) {
 				calculatedTotalBudget = convertedTotal;
@@ -550,7 +596,7 @@ export class ProgramStatsService extends BaseService {
 			`${totalBudget.toLocaleString('de-CH')} ${input.payoutCurrency}`;
 
 		if (input.displayCurrency !== input.payoutCurrency && exchangeRateText) {
-			const factor = this.convertCurrencyAmount(1, input.payoutCurrency, input.displayCurrency, rates);
+			const factor = this.currencyDisplayService.convertAmount(1, input.payoutCurrency, input.displayCurrency, rates);
 			totalBudgetTooltipText +=
 				` | Currency conversion: ${totalBudget.toLocaleString('de-CH')} ${input.payoutCurrency} x ` +
 				`${Number((factor ?? 1).toFixed(4))} = ${calculatedTotalBudget.toLocaleString('de-CH')} ${input.displayCurrency}`;
