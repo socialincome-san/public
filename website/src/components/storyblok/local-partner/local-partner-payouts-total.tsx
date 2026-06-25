@@ -19,18 +19,8 @@ export const LocalPartnerPayoutsTotal = async ({ localPartner, lang, region }: P
 		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
 	]);
 
-	if (!localPartnerSlug) {
-		const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(0, displayCurrency, rates);
-
-		return <StoryblokPayoutsTotal blok={blok} totalAmount={totalAmount} currency={currency} lang={lang} region={region} />;
-	}
-
-	const totalChf = totalsResult?.success ? totalsResult.data.totalPayoutsChf : 0;
-	const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(
-		totalChf,
-		displayCurrency,
-		rates,
-	);
+	const totalChf = localPartnerSlug && totalsResult?.success ? totalsResult.data.totalPayoutsChf : 0;
+	const { amount: totalAmount, currency } = services.currencyDisplay.resolveFromChf(totalChf, displayCurrency, rates);
 
 	return <StoryblokPayoutsTotal blok={blok} totalAmount={totalAmount} currency={currency} lang={lang} region={region} />;
 };

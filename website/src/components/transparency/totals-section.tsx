@@ -16,8 +16,8 @@ const formatNumber = (value: number, lang: WebsiteLanguage): string => {
 	return new Intl.NumberFormat(lang).format(value);
 };
 
-export const TotalsSection = async ({ totals, lang, displayCurrency, rates }: TotalsSectionProps) => {
-	const { amount: totalContributions, currency } = await services.currencyDisplay.resolveFromChf(
+export const TotalsSection = ({ totals, lang, displayCurrency, rates }: TotalsSectionProps) => {
+	const { amount: totalContributions, currency } = services.currencyDisplay.resolveFromChf(
 		totals.totalContributionsChf,
 		displayCurrency,
 		rates,

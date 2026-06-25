@@ -16,48 +16,31 @@ const createService = (exchangeRates?: Record<string, number>) => {
 };
 
 describe('CurrencyDisplayService.resolveFromChf', () => {
-	it('returns CHF without fetching rates when display currency is CHF', async () => {
-		const { service, getLatestRates } = createService();
-
-		const result = await service.resolveFromChf(1000, 'CHF');
-
-		expect(result).toEqual({ amount: 1000, currency: 'CHF' });
-		expect(getLatestRates).not.toHaveBeenCalled();
-	});
-
-	it('converts CHF to USD when rates are provided', async () => {
-		const { service, getLatestRates } = createService();
-
-		const result = await service.resolveFromChf(1000, 'USD', { CHF: 1, USD: 1.1, EUR: 0.9 });
-
-		expect(result.currency).toBe('USD');
-		expect(result.amount).toBeCloseTo(1100);
-		expect(getLatestRates).not.toHaveBeenCalled();
-	});
-
-	it('converts CHF to USD when rates are available', async () => {
-		const { service } = createService({ CHF: 1, USD: 1.1, EUR: 0.9 });
-
-		const result = await service.resolveFromChf(1000, 'USD');
-
-		expect(result.currency).toBe('USD');
-		expect(result.amount).toBeCloseTo(1100);
-	});
-
-	it('falls back to CHF when exchange rates are missing', async () => {
+	it('returns CHF when display currency is CHF', () => {
 		const { service } = createService();
 
-		const result = await service.resolveFromChf(1000, 'EUR');
-
-		expect(result).toEqual({ amount: 1000, currency: 'CHF' });
+		expect(service.resolveFromChf(1000, 'CHF')).toEqual({ amount: 1000, currency: 'CHF' });
 	});
 
-	it('falls back to CHF when target currency rate is missing', async () => {
-		const { service } = createService({ CHF: 1, USD: 1.1 });
+	it('converts CHF to USD when rates are provided', () => {
+		const { service } = createService();
 
-		const result = await service.resolveFromChf(1000, 'EUR');
+		const result = service.resolveFromChf(1000, 'USD', { CHF: 1, USD: 1.1, EUR: 0.9 });
 
-		expect(result).toEqual({ amount: 1000, currency: 'CHF' });
+		expect(result.currency).toBe('USD');
+		expect(result.amount).toBeCloseTo(1100);
+	});
+
+	it('falls back to CHF when exchange rates are missing', () => {
+		const { service } = createService();
+
+		expect(service.resolveFromChf(1000, 'EUR')).toEqual({ amount: 1000, currency: 'CHF' });
+	});
+
+	it('falls back to CHF when target currency rate is missing', () => {
+		const { service } = createService();
+
+		expect(service.resolveFromChf(1000, 'EUR', { CHF: 1, USD: 1.1 })).toEqual({ amount: 1000, currency: 'CHF' });
 	});
 });
 

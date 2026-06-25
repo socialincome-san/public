@@ -17,11 +17,7 @@ export const DonationsTotalBlockServer = async ({ blok, lang, region }: Props) =
 		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
 	]);
 	const totalChf = totalsResult.success ? totalsResult.data.totalContributionsChf : 0;
-	const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(
-		totalChf,
-		displayCurrency,
-		rates,
-	);
+	const { amount: totalAmount, currency } = services.currencyDisplay.resolveFromChf(totalChf, displayCurrency, rates);
 
 	return <DonationsTotalBlock blok={blok} lang={lang} region={region} totalAmount={totalAmount} currency={currency} />;
 };

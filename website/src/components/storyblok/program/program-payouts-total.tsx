@@ -15,11 +15,7 @@ export const ProgramPayoutsTotal = async ({ programDetailData, lang, region }: P
 	const totalChf = programDetailData.dashboardStats?.paidOutSoFarChf ?? 0;
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
 	const rates = await services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency);
-	const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(
-		totalChf,
-		displayCurrency,
-		rates,
-	);
+	const { amount: totalAmount, currency } = services.currencyDisplay.resolveFromChf(totalChf, displayCurrency, rates);
 
 	const blok: DonationsTotal = {
 		component: 'donationsTotal',

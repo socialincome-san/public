@@ -18,16 +18,14 @@ const formatNumber = (value: number, lang: WebsiteLanguage): string => {
 	return new Intl.NumberFormat(lang).format(value);
 };
 
-export const CountriesSection = async ({ countries, lang, displayCurrency, rates }: CountriesSectionProps) => {
+export const CountriesSection = ({ countries, lang, displayCurrency, rates }: CountriesSectionProps) => {
 	const locale = getSafeNumberFormatLocale(lang);
 
-	const countryDisplays = await Promise.all(
-		countries.map(async (country) => {
-			const { amount, currency } = await services.currencyDisplay.resolveFromChf(country.totalChf, displayCurrency, rates);
+	const countryDisplays = countries.map((country) => {
+		const { amount, currency } = services.currencyDisplay.resolveFromChf(country.totalChf, displayCurrency, rates);
 
-			return { country, amount, currency };
-		}),
-	);
+		return { country, amount, currency };
+	});
 
 	return (
 		<section>

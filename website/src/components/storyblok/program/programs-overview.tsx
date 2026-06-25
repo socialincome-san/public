@@ -3,9 +3,8 @@ import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { createWalletImageFromStoryblokAsset } from '@/components/wallet/wallet-image-utils';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { ExchangeRates } from '@/lib/services/exchange-rate/exchange-rate.types';
-import type { PublicProgramStats, PublicProgramStatsMap } from '@/lib/services/program/program.types';
+import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { PublicProgramStatsMap } from '@/lib/services/program/program.types';
 import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { ProgramStory } from './program.types';
@@ -17,21 +16,6 @@ type Props = {
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
-
-const resolveWalletDisplay = (
-	stats: PublicProgramStats,
-	displayCurrency: WebsiteCurrency,
-	rates: ExchangeRates | undefined,
-) =>
-	services.currencyDisplay.resolveWalletPayoutDisplay(
-		{
-			totalPayoutsSum: stats.totalPayoutsSum,
-			totalPayoutsSumChf: stats.totalPayoutsSumChf,
-			payoutCurrency: stats.payoutCurrency,
-			displayCurrency,
-		},
-		rates,
-	);
 
 export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, region }: Props) => {
 	const [displayCurrency, translator] = await Promise.all([
@@ -51,7 +35,17 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 						const programTitle = getProgramTitle(program.content);
 						const storyblokSlug = getProgramStoryblokSlug(program);
 						const stats = portalSlug ? statsByPortalSlug[portalSlug] : undefined;
-						const walletDisplay = stats ? resolveWalletDisplay(stats, displayCurrency, rates) : undefined;
+						const walletDisplay = stats
+							? services.currencyDisplay.resolveWalletPayoutDisplay(
+									{
+										totalPayoutsSum: stats.totalPayoutsSum,
+										totalPayoutsSumChf: stats.totalPayoutsSumChf,
+										payoutCurrency: stats.payoutCurrency,
+										displayCurrency,
+									},
+									rates,
+								)
+							: undefined;
 						const primaryImage = createWalletImageFromStoryblokAsset(program.content.primaryImage, programTitle);
 						const hoverEffectImage1 = createWalletImageFromStoryblokAsset(
 							program.content.secondaryImage,

@@ -36,18 +36,15 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 
 	const data = dataResult.data;
 
-	const resolvedTimeRanges = await Promise.all(
-		data.timeRanges.map(async (range) => {
-			const { amount, currency } = await services.currencyDisplay.resolveFromChf(range.totalChf, displayCurrency, rates);
-
-			return {
-				startIso: range.start.toISO()!,
-				total: amount,
-				currency,
-			};
-		}),
+	const { currency: timeSeriesCurrency } = services.currencyDisplay.resolveFromChf(
+		data.timeRanges[0]?.totalChf ?? 0,
+		displayCurrency,
+		rates,
 	);
-	const timeSeriesCurrency = resolvedTimeRanges[0]?.currency ?? displayCurrency;
+	const resolvedTimeRanges = data.timeRanges.map((range) => ({
+		startIso: range.start.toISO()!,
+		total: services.currencyDisplay.resolveFromChf(range.totalChf, displayCurrency, rates).amount,
+	}));
 
 	return (
 		<div className="w-site-width max-w-content mx-auto space-y-12 py-12" {...storyblokEditable(blok as SbBlokData)}>

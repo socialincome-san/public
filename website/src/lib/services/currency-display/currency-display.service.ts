@@ -36,13 +36,12 @@ export class CurrencyDisplayService {
 		return latestRatesResult.success ? latestRatesResult.data : undefined;
 	}
 
-	async resolveFromChf(amountChf: number, displayCurrency: WebsiteCurrency, rates?: ExchangeRates): Promise<DisplayAmount> {
+	resolveFromChf(amountChf: number, displayCurrency: WebsiteCurrency, rates?: ExchangeRates): DisplayAmount {
 		if (displayCurrency === 'CHF') {
 			return { amount: amountChf, currency: 'CHF' };
 		}
 
-		const resolvedRates = rates ?? (await this.getLatestRatesOrUndefined());
-		const converted = this.convertAmount(amountChf, 'CHF', displayCurrency, resolvedRates);
+		const converted = this.convertAmount(amountChf, 'CHF', displayCurrency, rates);
 		if (converted === undefined) {
 			return { amount: amountChf, currency: 'CHF' };
 		}

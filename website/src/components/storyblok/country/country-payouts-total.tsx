@@ -20,11 +20,7 @@ export const CountryPayoutsTotal = async ({ country, lang, region }: Props) => {
 		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
 	]);
 	const totalChf = totalsResult.success ? totalsResult.data.totalPayoutsChf : 0;
-	const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(
-		totalChf,
-		displayCurrency,
-		rates,
-	);
+	const { amount: totalAmount, currency } = services.currencyDisplay.resolveFromChf(totalChf, displayCurrency, rates);
 
 	return <StoryblokPayoutsTotal blok={blok} totalAmount={totalAmount} currency={currency} lang={lang} region={region} />;
 };
