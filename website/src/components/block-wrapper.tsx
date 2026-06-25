@@ -1,18 +1,28 @@
 import { cn } from '@/lib/utils/cn';
-import { ComponentPropsWithoutRef, forwardRef } from 'react';
+import { type ComponentPropsWithoutRef, forwardRef } from 'react';
 
-type Props = ComponentPropsWithoutRef<'div'>;
+type Props = ComponentPropsWithoutRef<'div'> & {
+	disableMarginTop?: boolean;
+	disableMarginBottom?: boolean;
+};
 
-export const BlockWrapper = forwardRef<HTMLDivElement, Props>(({ children, className, ...rest }, ref) => {
-	return (
-		<div
-			className={cn('storyblok__outline w-site-width max-w-content relative mx-auto my-12 md:my-24 lg:my-32', className)}
-			ref={ref}
-			{...rest}
-		>
-			{children}
-		</div>
-	);
-});
+export const BlockWrapper = forwardRef<HTMLDivElement, Props>(
+	({ children, className, disableMarginTop = false, disableMarginBottom = false, ...rest }, ref) => {
+		return (
+			<div
+				className={cn(
+					'storyblok__outline w-site-width max-w-content relative mx-auto',
+					disableMarginTop ? 'mt-0' : 'mt-12 md:mt-24 lg:mt-32',
+					disableMarginBottom ? 'mb-0' : 'mb-12 md:mb-24 lg:mb-32',
+					className,
+				)}
+				ref={ref}
+				{...rest}
+			>
+				{children}
+			</div>
+		);
+	},
+);
 
 BlockWrapper.displayName = 'BlockWrapper';

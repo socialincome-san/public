@@ -83,6 +83,7 @@
 		"search-label": "Schwerpunkte suchen",
 		"search-placeholder": "Suchen",
 		"all-countries": "Alle Länder ({{count}})",
+		"all-sdgs": "Alle SDGs ({{count}})",
 		"recipients": "Empfänger:innen",
 		"programs": "Programme",
 		"sdgs": "SDGs",

@@ -83,6 +83,7 @@
 		"search-label": "Cerca focus",
 		"search-placeholder": "Cerca",
 		"all-countries": "Tutti i paesi ({{count}})",
+		"all-sdgs": "Tutti gli SDG ({{count}})",
 		"recipients": "Beneficiari",
 		"programs": "Programmi",
 		"sdgs": "SDG",

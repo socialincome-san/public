@@ -83,6 +83,7 @@
 		"search-label": "Rechercher des axes",
 		"search-placeholder": "Rechercher",
 		"all-countries": "Tous les pays ({{count}})",
+		"all-sdgs": "Tous les ODD ({{count}})",
 		"recipients": "Bénéficiaires",
 		"programs": "Programmes",
 		"sdgs": "ODD",

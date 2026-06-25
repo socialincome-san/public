@@ -2,14 +2,9 @@
 
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
-import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
-import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { ModalCards } from '@/generated/storyblok/types/109655/storyblok-components';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
-import { VimeoVideoMatchAndExtract } from '@/lib/utils/UrlVideoParser';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { PlusIcon } from 'lucide-react';
 import NextImage from 'next/image';
@@ -17,42 +12,18 @@ import { useState } from 'react';
 
 type Props = {
 	blok: ModalCards;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
-const vimeoMatcher = new VimeoVideoMatchAndExtract();
-
-export const ModalCardsBlock = ({ blok, lang, region }: Props) => {
-	const { heading, cards, explainerVideoThumbnail, labelForExplainerVideo, linkToExplainerVideo } = blok;
+export const ModalCardsBlock = ({ blok }: Props) => {
+	const { cards, disableMarginBottom, disableMarginTop } = blok;
 	const [openCardId, setOpenCardId] = useState<string | null>(null);
-	const explainerVideoLabel = labelForExplainerVideo?.trim();
-	const resolvedExplainerVideoUrl = linkToExplainerVideo ? resolveStoryblokLink(linkToExplainerVideo, lang, region) : null;
-	const explainerVideoEmbedUrl = resolvedExplainerVideoUrl ? vimeoMatcher.parseUrl(resolvedExplainerVideoUrl) : null;
-	const hasExplainerVideo = Boolean(explainerVideoLabel && explainerVideoEmbedUrl);
-	const explainerVideoThumbnailSrc = explainerVideoThumbnail?.filename;
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
-			<div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row lg:mb-14">
-				{heading && (
-					<SectionHeading as="h1" align="left" size="large" className="mb-0 md:mb-0">
-						<StoryblokMarkdown>{heading}</StoryblokMarkdown>
-					</SectionHeading>
-				)}
-				{hasExplainerVideo && (
-					<ExplainerVideoTrigger
-						layout="stacked"
-						label={explainerVideoLabel!}
-						embedUrl={explainerVideoEmbedUrl!}
-						thumbnailSrc={explainerVideoThumbnailSrc ?? undefined}
-						thumbnailAlt={explainerVideoThumbnail?.alt ?? undefined}
-						dialogTitle={explainerVideoLabel}
-						className="self-center"
-					/>
-				)}
-			</div>
-
+		<BlockWrapper
+			disableMarginBottom={disableMarginBottom}
+			disableMarginTop={disableMarginTop}
+			{...storyblokEditable(blok as SbBlokData)}
+		>
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 				{cards?.map(({ image, heading, modalContent, _uid }) => {
 					if (!image.filename) {
@@ -78,11 +49,13 @@ export const ModalCardsBlock = ({ blok, lang, region }: Props) => {
 									<PlusIcon className="size-6" />
 								</div>
 								<span className="text-primary-foreground absolute right-5 bottom-5 left-5 text-3xl leading-tight md:right-10 md:bottom-10 md:left-10 md:text-4xl">
-									{heading}
+									<StoryblokMarkdown>{heading}</StoryblokMarkdown>
 								</span>
 							</button>
 							<DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
-								<DialogTitle>{heading}</DialogTitle>
+								<DialogTitle>
+									<StoryblokMarkdown>{heading}</StoryblokMarkdown>
+								</DialogTitle>
 								{modalContent && (
 									<div className="text-foreground text-base">
 										<RichTextRenderer richTextDocument={modalContent} />

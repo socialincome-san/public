@@ -53,7 +53,7 @@ export const DonationSteps = ({ state, send }: DonationWizardStepProps) => {
 	}
 
 	if (activeStep === 'stepThankYou') {
-		return <ThankYouStep />;
+		return <ThankYouStep state={state} send={send} />;
 	}
 
 	return null;

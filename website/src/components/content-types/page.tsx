@@ -1,5 +1,6 @@
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
+import { ExplainerVideoHeaderBlock } from '@/components/content-blocks/explainer-video-header';
 import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
@@ -9,6 +10,7 @@ import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceBlock } from '@/components/content-blocks/open-source';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
+import { SpacerBlock } from '@/components/content-blocks/spacer';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
 import { TestimonialBlock } from '@/components/content-blocks/testimonial-entry';
@@ -41,6 +43,8 @@ const renderPageBlock = (
 			return <DonationsTotalBlockServer blok={block} lang={lang} region={region} />;
 		case 'downloads':
 			return <DownloadsBlock blok={block} />;
+		case 'explainerVideoHeader':
+			return <ExplainerVideoHeaderBlock blok={block} lang={lang} region={region} />;
 		case 'faqSelection':
 			return <FaqSelectionBlock blok={block} lang={lang} region={region} />;
 		case 'heroVideo':
@@ -52,13 +56,15 @@ const renderPageBlock = (
 		case 'journalTeasers':
 			return <JournalTeasersBlock blok={block} lang={lang} region={region} />;
 		case 'modalCards':
-			return <ModalCardsBlock blok={block} lang={lang} region={region} />;
+			return <ModalCardsBlock blok={block} />;
 		case 'openSource':
 			return <OpenSourceBlock blok={block} lang={lang} />;
 		case 'partnershipsCarousel':
 			return <PartnershipsCarouselBlock blok={block} />;
 		case 'programGrid':
 			return <ProgramGridBlock blok={block} lang={lang} region={region} />;
+		case 'spacer':
+			return <SpacerBlock blok={block} />;
 		case 'teamGrid':
 			return <TeamGridBlock blok={block} lang={lang} />;
 		case 'testimonial':
