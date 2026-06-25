@@ -97,8 +97,6 @@
 			"notHappierCommentTitleV1": "Kannst du uns sagen, warum?"
 		},
 		"impactMeasurement": {
-			"title": "Wirkungsmessung",
-			"description": "Alle auf dieser Seite gezeigten Daten werden in Echtzeit aus Umfragen mit unseren Empfängerinnen und Empfängern aktualisiert.",
 			"loadError": "Die Wirkungsdaten konnten derzeit nicht geladen werden.",
 			"notAvailable": "N/A",
 			"filters": {

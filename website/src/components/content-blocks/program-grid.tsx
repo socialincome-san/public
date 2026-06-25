@@ -27,7 +27,7 @@ export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
 			{...storyblokEditable(blok as SbBlokData)}
 		>
 			{blok.heading && (
-				<SectionHeading size="large">
+				<SectionHeading size={3} className="leading-[1.2] whitespace-pre-line">
 					<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 				</SectionHeading>
 			)}

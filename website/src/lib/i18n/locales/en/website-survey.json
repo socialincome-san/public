@@ -97,8 +97,6 @@
 			"notHappierCommentTitleV1": "Can you tell us why?"
 		},
 		"impactMeasurement": {
-			"title": "Impact Measurement",
-			"description": "All data shown on this page is updated in real time from surveys conducted with our recipients.",
 			"loadError": "Unable to load impact measurement data right now.",
 			"notAvailable": "N/A",
 			"filters": {

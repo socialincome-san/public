@@ -43,7 +43,7 @@ export const ArticleDetailHeader = ({ story, hasHero, lang, region }: Props) => 
 			<div className="space-y-3">
 				<h1
 					className={cn(
-						'text-4xl font-bold tracking-tight wrap-break-word hyphens-auto md:text-5xl',
+						'text-5xl font-bold tracking-tight wrap-break-word hyphens-auto md:text-6xl',
 						hasHero ? 'text-accent' : 'text-foreground',
 					)}
 				>

@@ -1,6 +1,5 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
-import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ExplainerVideoHeader } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -42,11 +41,11 @@ export const ExplainerVideoHeaderBlock = ({ blok, lang, region }: Props) => {
 			disableMarginTop={disableMarginTop}
 			{...storyblokEditable(blok as SbBlokData)}
 		>
-			<div className="flex flex-col items-start justify-between gap-4 md:flex-row">
+			<div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
 				{headingText && (
-					<SectionHeading as="h1" align="left" className="mb-0 whitespace-pre-line md:mb-0">
+					<div className="text-primary text-4xl whitespace-pre-line md:text-5xl [&_strong]:font-bold">
 						<StoryblokMarkdown>{headingText}</StoryblokMarkdown>
-					</SectionHeading>
+					</div>
 				)}
 				{explainerVideoLabel && explainerVideoEmbedUrl && (
 					<ExplainerVideoTrigger

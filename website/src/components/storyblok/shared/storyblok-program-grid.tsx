@@ -23,7 +23,7 @@ export const StoryblokProgramGrid = ({ blok, programs, allProgramsCount = 0, lan
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			{blok.heading && (
-				<SectionHeading size="large">
+				<SectionHeading size={3} className="leading-[1.2] whitespace-pre-line">
 					<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 				</SectionHeading>
 			)}
