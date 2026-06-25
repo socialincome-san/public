@@ -358,6 +358,7 @@ export interface Page {
     | OpenSource
     | Spacer
     | ExplainerVideoHeader
+    | RichtextButtonHeader
   )[];
   component: "page";
   _uid: string;
@@ -464,6 +465,16 @@ export interface ReferencesGroup {
   context?: "" | "related" | "original";
   references?: ReferenceArticle[];
   component: "referencesGroup";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface RichtextButtonHeader {
+  heading?: StoryblokRichtext;
+  button?: Button[];
+  disableMarginBottom?: boolean;
+  disableMarginTop?: boolean;
+  component: "richtextButtonHeader";
   _uid: string;
   [k: string]: unknown;
 }
