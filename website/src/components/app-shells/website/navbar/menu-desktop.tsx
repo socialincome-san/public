@@ -8,7 +8,11 @@ import { cn } from '@/lib/utils/cn';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import NextLink from 'next/link';
-import type { ReactNode } from 'react';
+import type { PointerEvent, ReactNode } from 'react';
+
+const preventHoverOpen = (event: PointerEvent) => {
+	event.preventDefault();
+};
 
 type Props = {
 	menu: Layout['menu'];
@@ -55,6 +59,8 @@ export const MenuDesktop = ({ menu, lang, region, donationForm }: Props) => (
 				return (
 					<NavigationMenu.Item key={item._uid}>
 						<NavigationMenu.Trigger
+							onPointerMove={preventHoverOpen}
+							onPointerLeave={preventHoverOpen}
 							className={cn(
 								'hover:bg-muted group flex items-center gap-1.5 rounded-sm px-3 py-2 text-sm font-bold transition-colors',
 								'data-[state=open]:bg-muted',
@@ -64,7 +70,11 @@ export const MenuDesktop = ({ menu, lang, region, donationForm }: Props) => (
 							<ChevronDown className="size-3.5 transition-transform duration-150 group-data-[state=open]:rotate-180" />
 						</NavigationMenu.Trigger>
 
-						<NavigationMenu.Content className="bg-muted rounded-3xl p-8 shadow-[0_24px_48px_rgba(15,23,42,0.16)]">
+						<NavigationMenu.Content
+							onPointerEnter={preventHoverOpen}
+							onPointerLeave={preventHoverOpen}
+							className="bg-muted rounded-3xl p-8 shadow-[0_24px_48px_rgba(15,23,42,0.16)]"
+						>
 							<div className="flex items-start gap-10">
 								<div className="grid flex-1 grid-cols-3 gap-8 p-8">
 									{item.menuItemGroups.map((group) => (
@@ -105,6 +115,10 @@ export const MenuDesktop = ({ menu, lang, region, donationForm }: Props) => (
 				);
 			})}
 		</NavigationMenu.List>
-		<NavigationMenu.Viewport className="data-[state=closed]:animate-fade-out data-[state=open]:animate-enter-from-top absolute inset-x-0 top-[calc(100%+1rem)] z-50 w-full" />
+		<NavigationMenu.Viewport
+			onPointerEnter={preventHoverOpen}
+			onPointerLeave={preventHoverOpen}
+			className="data-[state=closed]:animate-fade-out data-[state=open]:animate-enter-from-top absolute inset-x-0 top-[calc(100%+1rem)] z-50 w-full"
+		/>
 	</NavigationMenu.Root>
 );
