@@ -179,6 +179,7 @@ export interface Focus {
   impactMeasurementTitle?: string;
   impactMeasurementTeaserText?: string;
   impactMeasurementTeaserButtonLabel?: string;
+  sdgs?: (number | string)[];
   component: "Focus";
   _uid: string;
   [k: string]: unknown;
