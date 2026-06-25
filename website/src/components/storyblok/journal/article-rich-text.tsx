@@ -3,7 +3,7 @@
 import { ActionButtonBlock } from '@/components/storyblok/journal/rich-text/action-button';
 import { EmbeddedVideoPlayer } from '@/components/storyblok/journal/rich-text/embedded-video';
 import { ImageWithCaption } from '@/components/storyblok/journal/rich-text/image-with-caption';
-import { NewsletterSignup, type NewsletterSignupLabels } from '@/components/storyblok/journal/rich-text/newsletter-signup';
+import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsletter-signup';
 import { QuotedText } from '@/components/storyblok/journal/rich-text/quoted-text';
 import { ReferencesGroupBlock } from '@/components/storyblok/journal/rich-text/references-group';
 import {
@@ -24,14 +24,6 @@ type Props = {
 	donationForm: ReactNode;
 };
 
-const buildNewsletterLabels = (translator: Translator): NewsletterSignupLabels => ({
-	title: translator.t('popup.information-label'),
-	emailPlaceholder: translator.t('popup.email-placeholder'),
-	submitLabel: translator.t('popup.button-subscribe'),
-	successMessage: translator.t('popup.toast-success'),
-	errorMessage: translator.t('popup.toast-failure'),
-});
-
 const buildReferenceLabels = (translator: Translator) => ({
 	showMore: translator.t('reference-article.show-more'),
 	showLess: translator.t('reference-article.show-less'),
@@ -43,13 +35,11 @@ const buildReferenceLabels = (translator: Translator) => ({
 
 export const ArticleRichText = ({ document, lang, donationForm }: Props) => {
 	const journalTranslator = useTranslator(lang, 'website-journal');
-	const newsletterTranslator = useTranslator(lang, 'website-newsletter');
 
-	if (!journalTranslator || !newsletterTranslator) {
+	if (!journalTranslator) {
 		return null;
 	}
 
-	const newsletterLabels = buildNewsletterLabels(newsletterTranslator);
 	const referenceLabels = buildReferenceLabels(journalTranslator);
 
 	return render(document, {
@@ -73,7 +63,7 @@ export const ArticleRichText = ({ document, lang, donationForm }: Props) => {
 			actionButton: (props: StoryblokBlockProps) => (
 				<ActionButtonBlock {...(props as ComponentProps<typeof ActionButtonBlock>)} />
 			),
-			newsletterSignup: () => <NewsletterSignup lang={lang} labels={newsletterLabels} />,
+			newsletterSignup: () => <NewsletterSignup lang={lang} />,
 			campaignDonate: () => <div className="my-10">{donationForm}</div>,
 		},
 	}) as ReactNode;

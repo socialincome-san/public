@@ -1,5 +1,5 @@
 import {
-	getBeneficiaryCount,
+	getBeneficiaryImpact,
 	getDonationBaseAmount,
 	getDonationDisplayAmount,
 	getInitialDonationContext,
@@ -123,10 +123,11 @@ describe('donation-amount', () => {
 		});
 	});
 
-	describe('getBeneficiaryCount', () => {
-		test('counts beneficiaries in 30 CHF steps', () => {
-			expect(getBeneficiaryCount(75)).toBe(2);
-			expect(getBeneficiaryCount(29)).toBe(0);
+	describe('getBeneficiaryImpact', () => {
+		test('counts direct beneficiaries with one minimum and indirect beneficiaries by factor six', () => {
+			expect(getBeneficiaryImpact(29)).toEqual({ directCount: 1, indirectCount: 6 });
+			expect(getBeneficiaryImpact(60)).toEqual({ directCount: 2, indirectCount: 12 });
+			expect(getBeneficiaryImpact(90)).toEqual({ directCount: 3, indirectCount: 18 });
 		});
 	});
 });

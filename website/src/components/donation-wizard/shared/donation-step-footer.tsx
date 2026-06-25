@@ -3,6 +3,7 @@
 import { Button } from '@/components/button';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { ChevronLeft } from 'lucide-react';
+import { formatDonationCurrencyAmount } from '../utils/donation-formatting';
 
 type Summary = {
 	amount: number;
@@ -24,7 +25,7 @@ export const DonationStepFooter = ({ onBack, onContinue, continueLabel, continue
 	const summaryAmount = summary ? (
 		<>
 			<span className="text-lg leading-none font-medium tabular-nums">
-				{summary.currency} {summary.amount}
+				{formatDonationCurrencyAmount(summary.currency, summary.amount)}
 			</span>
 			{summary.showPerMonth && <span className="text-muted-foreground shrink-0 text-sm">{t('stepPlan.per-month')}</span>}
 		</>

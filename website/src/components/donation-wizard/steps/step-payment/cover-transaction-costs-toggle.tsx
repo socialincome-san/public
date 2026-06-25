@@ -3,9 +3,9 @@
 import { Switch } from '@/components/switch';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { CircleHelp } from 'lucide-react';
 import type { Cadence } from '../../utils/donation-amount';
+import { formatDonationCurrencyAmount } from '../../utils/donation-formatting';
 
 type Props = {
 	cadence: Cadence;
@@ -16,13 +16,9 @@ type Props = {
 };
 
 export const CoverTransactionCostsToggle = ({ cadence, currency, transactionCost, checked, onCheckedChange }: Props) => {
-	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const switchId = 'cover-transaction-costs';
-	const locale = language === 'de' ? 'de-CH' : language;
-	const fee = formatCurrencyLocale(transactionCost, currency, locale, {
-		minimumFractionDigits: 0,
-		maximumFractionDigits: 2,
-	});
+	const fee = formatDonationCurrencyAmount(currency, transactionCost);
 
 	return (
 		<div className="bg-accent flex flex-col gap-3 rounded-md px-4 py-2 sm:flex-row sm:items-center sm:gap-2">

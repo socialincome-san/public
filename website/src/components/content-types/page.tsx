@@ -20,6 +20,7 @@ import { TextBlock } from '@/components/content-blocks/text';
 import { TransparencyBlock } from '@/components/content-blocks/transparency';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
+import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsletter-signup';
 import type { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { ParsedUrlQueryInput } from 'querystring';
@@ -62,6 +63,8 @@ const renderPageBlock = (
 			return <JournalTeasersBlock blok={block} lang={lang} region={region} />;
 		case 'modalCards':
 			return <ModalCardsBlock blok={block} />;
+		case 'newsletterForm':
+			return <NewsletterSignup lang={lang} />;
 		case 'openSource':
 			return <OpenSourceBlock blok={block} lang={lang} />;
 		case 'partnershipsCarousel':

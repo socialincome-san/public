@@ -18,9 +18,7 @@ export const ProgramFinances = async ({ stats, programId, translator, lang }: Pr
 	const [user, displayCurrency] = await Promise.all([getCurrentUser(), getWebsiteCurrencyFromCookie()]);
 	const isLoggedIn = user !== null;
 	const displayAmounts = await services.programStats.resolveDisplayAmounts(stats, displayCurrency);
-	const financesCard = (
-		<ProgramFinancesCard stats={stats} displayAmounts={displayAmounts} translator={translator} lang={lang} embedded />
-	);
+	const financesCard = <ProgramFinancesCard displayAmounts={displayAmounts} translator={translator} lang={lang} embedded />;
 
 	return (
 		<div className="bg-card flex flex-col gap-6 rounded-xl px-10 py-8 shadow-lg">

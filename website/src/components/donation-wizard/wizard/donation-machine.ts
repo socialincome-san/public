@@ -252,7 +252,7 @@ export const donationWizardMachine = setup({
 					target: 'stepPayment',
 					actions: assign({
 						paymentMethod: () => 'qr' as const,
-						coverTransactionCosts: () => false,
+						coverTransactionCosts: () => true,
 						...monthlyPlanStepDefaults,
 						...resetStripeCheckoutContext,
 						...resetQrBillContext,
@@ -288,7 +288,7 @@ export const donationWizardMachine = setup({
 					target: 'stepPayment',
 					actions: assign(({ context }) => ({
 						paymentMethod: 'qr' as const,
-						coverTransactionCosts: false,
+						coverTransactionCosts: true,
 						...paymentContextForOneTimePlanChoice(context.oneTimePlanChoice),
 						...resetStripeCheckoutContext,
 						...resetQrBillContext,
@@ -305,9 +305,9 @@ export const donationWizardMachine = setup({
 		stepPayment: {
 			on: {
 				SET_PAYMENT_METHOD: {
-					actions: assign(({ event, context }) => ({
+					actions: assign(({ event }) => ({
 						paymentMethod: event.value,
-						coverTransactionCosts: event.value === 'qr' ? false : context.coverTransactionCosts,
+						coverTransactionCosts: event.value === 'online' ? true : false,
 						...resetStripeCheckoutContext,
 						...(event.value === 'online' ? resetQrBillContext : {}),
 					})),

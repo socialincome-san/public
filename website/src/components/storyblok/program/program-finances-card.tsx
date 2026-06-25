@@ -1,24 +1,15 @@
-import { Badge } from '@/components/badge';
 import { Progress } from '@/components/progress';
 import type { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
-import type { ProgramDashboardStats, ProgramFinancesDisplayAmounts } from '@/lib/services/program-stats/program-stats.types';
-import { formatCompactNumberLocale, formatNumberLocale } from '@/lib/utils/string-utils';
-import { TriangleAlert } from 'lucide-react';
+import type { ProgramFinancesDisplayAmounts } from '@/lib/services/program-stats/program-stats.types';
+import { formatCompactNumberLocale } from '@/lib/utils/string-utils';
 
 type Props = {
-	stats: ProgramDashboardStats;
 	displayAmounts: ProgramFinancesDisplayAmounts;
 	translator: Translator;
 	lang: WebsiteLanguage;
 	embedded?: boolean;
 };
-
-const formatAmount = (amount: number, locale: string, fractionDigits = 0): string =>
-	formatNumberLocale(amount, locale, {
-		minimumFractionDigits: fractionDigits,
-		maximumFractionDigits: fractionDigits,
-	});
 
 const clampPercent = (value: number): number => {
 	if (!Number.isFinite(value)) {
@@ -28,14 +19,14 @@ const clampPercent = (value: number): number => {
 	return Math.min(100, Math.max(0, value));
 };
 
-export const ProgramFinancesCard = ({ stats, displayAmounts, translator, lang, embedded = false }: Props) => {
+export const ProgramFinancesCard = ({ displayAmounts, translator, lang, embedded = false }: Props) => {
 	const locale = getSafeNumberFormatLocale(lang);
 	const currency = displayAmounts.currency;
 	const sentToRecipients = formatCompactNumberLocale(displayAmounts.paidOutSoFar, locale);
 	const totalProgramCosts = formatCompactNumberLocale(displayAmounts.totalProgramCosts, locale);
-	const availableCredits = formatAmount(displayAmounts.availableCredits, locale, 2);
-	const progressPercent = clampPercent(stats.payoutProgressPercent);
-	const showLowCreditsWarning = stats.availableCreditsInIntervals <= 3;
+	const progressPercent = clampPercent(
+		displayAmounts.totalProgramCosts > 0 ? (displayAmounts.paidOutSoFar / displayAmounts.totalProgramCosts) * 100 : 0,
+	);
 
 	const content = (
 		<>
@@ -57,20 +48,6 @@ export const ProgramFinancesCard = ({ stats, displayAmounts, translator, lang, e
 			</div>
 
 			<Progress value={progressPercent} />
-
-			<div className="flex items-center justify-between pt-2">
-				<p className="text-foreground text-sm">{translator.t('program-detail-page.available-credits')}</p>
-				<div className="flex items-center gap-2">
-					{showLowCreditsWarning ? (
-						<Badge variant="secondary" className="rounded-full p-1.5">
-							<TriangleAlert className="size-3" />
-						</Badge>
-					) : null}
-					<p className="text-foreground text-sm font-bold">
-						{currency} {availableCredits}
-					</p>
-				</div>
-			</div>
 		</>
 	);
 

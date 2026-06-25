@@ -6,7 +6,7 @@
 		"email": "Ton adresse E-Mail"
 	},
 	"popup": {
-		"information-label": "Reçois des informations mensuelles sur Social Income, ainsi que des informations actuelles sur le revenu de base et les paiements directs.",
+		"information-label": "Abonne-toi à notre newsletter.",
 		"toast-success": "Merci de t’être abonné à la newsletter de Social Income!",
 		"toast-failure": "Oups! Ça n’a pas marché. Essaie encore une fois ou prend contact avec nous (hello@socialincome.org)",
 		"email-placeholder": "Ton adresse E-Mail",
