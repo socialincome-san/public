@@ -13,19 +13,24 @@ type Props = {
 export const LocalPartnerPayoutsTotal = async ({ localPartner, lang, region }: Props) => {
 	const blok = localPartner.content.payouts?.[0];
 	const localPartnerSlug = localPartner.content.portalSlug?.trim();
-	const [displayCurrency, totalsResult] = await Promise.all([
-		getWebsiteCurrencyFromCookie(),
+	const displayCurrency = await getWebsiteCurrencyFromCookie();
+	const [totalsResult, rates] = await Promise.all([
 		localPartnerSlug ? services.read.payout.getPayoutTotalsForLocalPartnerSlug(localPartnerSlug) : Promise.resolve(null),
+		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
 	]);
 
 	if (!localPartnerSlug) {
-		const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(0, displayCurrency);
+		const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(0, displayCurrency, rates);
 
 		return <StoryblokPayoutsTotal blok={blok} totalAmount={totalAmount} currency={currency} lang={lang} region={region} />;
 	}
 
 	const totalChf = totalsResult?.success ? totalsResult.data.totalPayoutsChf : 0;
-	const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(totalChf, displayCurrency);
+	const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(
+		totalChf,
+		displayCurrency,
+		rates,
+	);
 
 	return <StoryblokPayoutsTotal blok={blok} totalAmount={totalAmount} currency={currency} lang={lang} region={region} />;
 };

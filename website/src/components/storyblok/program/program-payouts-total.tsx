@@ -14,7 +14,12 @@ type Props = {
 export const ProgramPayoutsTotal = async ({ programDetailData, lang, region }: Props) => {
 	const totalChf = programDetailData.dashboardStats?.paidOutSoFarChf ?? 0;
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(totalChf, displayCurrency);
+	const rates = await services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency);
+	const { amount: totalAmount, currency } = await services.currencyDisplay.resolveFromChf(
+		totalChf,
+		displayCurrency,
+		rates,
+	);
 
 	const blok: DonationsTotal = {
 		component: 'donationsTotal',
