@@ -18,6 +18,7 @@ import {
 	getSdgFilterOptions,
 	getSdgQuery,
 	getSearchQuery,
+	sortFocusesByCandidatesCountDesc,
 } from './focuses-overview.server';
 
 type Props = {
@@ -50,6 +51,7 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 	const filteredFocuses = searchQuery
 		? sdgFilteredFocuses.filter((focus) => focusMatchesSearchQuery(focus, searchQuery))
 		: sdgFilteredFocuses;
+	const sortedFocuses = sortFocusesByCandidatesCountDesc(filteredFocuses, statsBySlug);
 
 	return (
 		<div className="flex w-full flex-col gap-8">
@@ -78,13 +80,13 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 				/>
 			</div>
 			{hasStatsError ? <p className="text-destructive">{translator.t('focuses-page.load-stats-error')}</p> : null}
-			{filteredFocuses.length === 0 ? (
+			{sortedFocuses.length === 0 ? (
 				<p className="text-muted-foreground">
 					{translator.t(hasActiveFilters ? 'focuses-page.no-results' : 'focuses-page.empty')}
 				</p>
 			) : (
 				<ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
-					{filteredFocuses.map((focus) => {
+					{sortedFocuses.map((focus) => {
 						const focusSlug = getFocusSlug(focus);
 						const focusTitle = getFocusTitle(focus.content);
 						const stats = statsBySlug[focusSlug] ?? {
@@ -102,6 +104,7 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 									recipientsCount={stats.recipientsInProgramsCount}
 									programsCount={stats.programsCount}
 									sdgValues={focus.content.sdgs}
+									alertVariant={stats.candidatesCount > 0 ? 'confirm' : 'secondary'}
 									labels={{
 										recipients: translator.t('focuses-page.recipients'),
 										programs: translator.t('focuses-page.programs'),
@@ -114,7 +117,7 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 															: 'focuses-page.candidates-ready-to-enroll_other',
 														{ context: { count: stats.candidatesCount } },
 													)
-												: undefined,
+												: translator.t('focuses-page.no-candidates'),
 									}}
 								/>
 							</li>
