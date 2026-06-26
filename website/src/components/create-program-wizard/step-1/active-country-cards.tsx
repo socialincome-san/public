@@ -25,10 +25,15 @@ export const ActiveCountryCards = ({ rows, selectedCountryId, onSelectCountry }:
 			{rows.length > 0 && (
 				<RadioCardGroup value={selectedCountryId ?? ''} onChange={onSelectCountry} layout="grid">
 					{rows.map((row) => {
-						const candidatesCount = row.stats.candidateCount ?? 0;
+						const candidatesCount = row.stats.candidateCount;
 						const hasCandidates = candidatesCount > 0;
 						const candidateAlertText = hasCandidates
-							? t('step1.candidates_ready_to_enroll', { candidatesCount })
+							? t(
+									candidatesCount === 1 ? 'step1.candidates_ready_to_enroll_one' : 'step1.candidates_ready_to_enroll_other',
+									{
+										count: candidatesCount,
+									},
+								)
 							: t('step1.no_candidates');
 
 						return (

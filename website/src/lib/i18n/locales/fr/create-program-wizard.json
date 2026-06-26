@@ -29,7 +29,8 @@
 		"no_active_programs": "Aucun programme actif",
 		"programs": "Programmes",
 		"recipients": "Beneficiaires",
-		"candidates_ready_to_enroll": "{{candidatesCount}} candidats prets a etre inscrits",
+		"candidates_ready_to_enroll_one": "{{count}} candidat prêt à s'inscrire",
+		"candidates_ready_to_enroll_other": "{{count}} candidats prêts à s'inscrire",
 		"no_candidates": "Il n'y a actuellement aucun candidat",
 		"table": {
 			"cash": "Adequation du cash",

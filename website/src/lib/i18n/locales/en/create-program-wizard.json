@@ -29,7 +29,8 @@
 		"no_active_programs": "No active programs",
 		"programs": "Programs",
 		"recipients": "Recipients",
-		"candidates_ready_to_enroll": "{{candidatesCount}} candidates ready to enroll",
+		"candidates_ready_to_enroll_one": "{{count}} candidate ready to enroll",
+		"candidates_ready_to_enroll_other": "{{count}} candidates ready to enroll",
 		"no_candidates": "There are currently no candidates",
 		"table": {
 			"cash": "Suitability of cash",
