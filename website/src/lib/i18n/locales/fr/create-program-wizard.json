@@ -27,7 +27,10 @@
 		"all_conditions_met": "Toutes les conditions sont remplies",
 		"no_countries_match": "Aucun pays ne correspond aux filtres actuels",
 		"no_active_programs": "Aucun programme actif",
-		"country_stats": "{{programCount}} programmes - {{recipientCount}} beneficiaires",
+		"programs": "Programmes",
+		"recipients": "Beneficiaires",
+		"candidates_ready_to_enroll": "{{candidatesCount}} candidats prets a etre inscrits",
+		"no_candidates": "Il n'y a actuellement aucun candidat",
 		"table": {
 			"cash": "Adequation du cash",
 			"mobile_money": "Mobile money",

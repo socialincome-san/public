@@ -13,7 +13,13 @@ type Props = {
 };
 
 export const CountrySelectionStep = ({ rows, selectedCountryId, openRowIds, onSelectCountry, onToggleRow }: Props) => {
-	const active = rows.filter((r) => r.country.isActive).sort((a, b) => b.stats.programCount - a.stats.programCount);
+	const active = rows
+		.filter((r) => r.country.isActive)
+		.sort((a, b) => {
+			const candidatesDiff = (b.stats.candidateCount ?? 0) - (a.stats.candidateCount ?? 0);
+
+			return candidatesDiff || b.stats.programCount - a.stats.programCount;
+		});
 
 	return (
 		<div className="space-y-6">
