@@ -6,7 +6,7 @@ version: 2.0.0+1 # The build number is set in Codemagic automatically.
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
-  flutter: 3.41.4
+  flutter: 3.44.4
 
 dependencies:
   animations: ^2.1.1
