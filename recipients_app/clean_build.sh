@@ -34,4 +34,9 @@ dart run build_runner build --delete-conflicting-outputs
 echo "Generating localizations..."
 flutter gen-l10n
 
+echo "Running pod install..."
+cd ios
+pod install --repo-update
+cd ..
+
 echo "Build completed successfully!"
