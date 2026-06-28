@@ -29,12 +29,13 @@ echo "Getting dependencies..."
 flutter pub get
 
 echo "Running build runner..."
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 
 echo "Generating localizations..."
 flutter gen-l10n
 
 echo "Running pod install..."
+flutter precache --ios
 cd ios
 pod install --repo-update
 cd ..

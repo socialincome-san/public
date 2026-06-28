@@ -6,14 +6,14 @@ version: 2.0.0+1 # The build number is set in Codemagic automatically.
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
-  flutter: 3.41.4
+  flutter: 3.44.4
 
 dependencies:
   animations: ^2.2.0
   another_flushbar: ^2.2.4
   cloud_functions: ^6.3.3
   collection: ^1.19.1
-  connectivity_plus: ^6.1.5
+  connectivity_plus: ^7.2.0
   dart_mappable: ^4.8.0
   drift: ^2.34.0
   drift_flutter: ^0.3.0
@@ -28,7 +28,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_localizations:
     sdk: flutter
-  flutter_native_splash: ^2.4.7
+  flutter_native_splash: ^2.4.8
   force_update_helper: ^0.3.0
   http: ^1.6.0
   intl: ^0.20.2
@@ -41,7 +41,6 @@ dependencies:
   path: ^1.9.1
   path_provider: ^2.1.6
   sentry_flutter: ^9.22.0
-  sqlite3_flutter_libs: ^0.6.0+eol
   url_launcher: ^6.3.2
   webview_flutter: ^4.14.0
 
@@ -50,8 +49,7 @@ dev_dependencies:
   bloc_test: ^10.0.0
   build_runner: ^2.15.0
   dart_mappable_builder: ^4.8.0
-  drift_dev: ^2.32.0
-
+  drift_dev: ^2.34.0
   flutter_test:
     sdk: flutter
   lint: ^2.8.0
