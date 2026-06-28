@@ -673,9 +673,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.8.0"
-      resolved-ref: d10eb21c5010cde3cc833ef9a759b606831acf0d
-      url: "https://github.com/natintosh/intl_phone_number_input.git"
+      ref: fixListTileFlutterError
+      resolved-ref: a0721f09b31fa610440dc5baa337454659f34e9f
+      url: "https://github.com/KarinBerg/intl_phone_number_input.git"
     source: git
     version: "0.7.5"
   io:

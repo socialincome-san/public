@@ -35,8 +35,8 @@ dependencies:
   # v0.8.0 is not publish on pub.dev but it is released on Github. This version fixes the build error on iOS with the message "Cannot find type 'PhoneNumberKit' in scope".
   intl_phone_number_input:
     git:
-      url: https://github.com/natintosh/intl_phone_number_input.git
-      ref: v0.8.0
+      url: https://github.com/KarinBerg/intl_phone_number_input.git
+      ref: fixListTileFlutterError
   package_info_plus: ^9.0.1
   path: ^1.9.1
   path_provider: ^2.1.6
