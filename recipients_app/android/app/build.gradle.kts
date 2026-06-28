@@ -18,8 +18,9 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "org.socialincome.app"
-    compileSdk = 36
     ndkVersion = "28.2.13676358"
+    compileSdk = 37
+    compileSdkMinor = 0
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -37,7 +38,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled = true
