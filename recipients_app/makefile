@@ -36,11 +36,8 @@ flavor-stage:
 flavor-prod:
 	flutterfire config --project=social-income-prod --out=lib/firebase_options_prod.dart --ios-bundle-id=org.socialincome.app  --ios-out=ios/flavors/prod/GoogleService-Info.plist  --android-package-name=org.socialincome.app  --android-out=android/app/src/prod/google-services.json
 
-pod-install:
-	fvm flutter precache --ios && cd ios && pod install --repo-update && cd ..
-
 clean-build:
-	make clean && make get && make generate && make translations && make pod-install
+	make clean && make get && make generate && make translations
 
 # After this initial running of "flutterfire configure", you need to re-run the command any time that you:
 # - Start supporting a new platform in your Flutter app.

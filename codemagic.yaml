@@ -6,7 +6,6 @@ definitions:
   env_versions: &env_versions
     flutter: 3.44.4
     xcode: 26.6
-    cocoapods: 1.16.2
     java: 21
 
   scripts:
@@ -275,7 +274,7 @@ workflows:
     cache:
       cache_paths:
         - $HOME/.pub-cache
-        - $HOME/Library/Caches/CocoaPods
+        - $HOME/Library/Caches/org.swift.swiftpm
 
     scripts:
       - name: Set build number automatically from App Store Connect
@@ -334,13 +333,12 @@ workflows:
 
           dart pub global activate flutterfire_cli
         working_directory: recipients_app
-      - name: Get Flutter packages & Install pods
+      - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
           flutter pub get
-          find . -name "Podfile" -execdir pod install \;
         working_directory: recipients_app
       - name: Flutter build ipa
         script: |
@@ -405,7 +403,7 @@ workflows:
     cache:
       cache_paths:
         - $HOME/.pub-cache
-        - $HOME/Library/Caches/CocoaPods
+        - $HOME/Library/Caches/org.swift.swiftpm
 
     scripts:
       # - name: Set up keychain to be used for code signing using Codemagic CLI 'keychain' command
@@ -473,13 +471,12 @@ workflows:
 
           dart pub global activate flutterfire_cli
         working_directory: recipients_app
-      - name: Get Flutter packages & Install pods
+      - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
           flutter pub get
-          find . -name "Podfile" -execdir pod install \;
         working_directory: recipients_app
       - name: Flutter build ipa
         script: |
@@ -544,7 +541,7 @@ workflows:
     cache:
       cache_paths:
         - $HOME/.pub-cache
-        - $HOME/Library/Caches/CocoaPods
+        - $HOME/Library/Caches/org.swift.swiftpm
 
     scripts:
       - name: Set build number automatically from App Store Connect
@@ -603,13 +600,12 @@ workflows:
 
           dart pub global activate flutterfire_cli
         working_directory: recipients_app
-      - name: Get Flutter packages & Install pods
+      - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
           flutter pub get
-          find . -name "Podfile" -execdir pod install \;
         working_directory: recipients_app
       - name: Flutter build ipa
         script: |

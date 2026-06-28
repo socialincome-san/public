@@ -34,10 +34,4 @@ dart run build_runner build
 echo "Generating localizations..."
 flutter gen-l10n
 
-echo "Running pod install..."
-flutter precache --ios
-cd ios
-pod install --repo-update
-cd ..
-
 echo "Build completed successfully!"
