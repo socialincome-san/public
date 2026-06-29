@@ -112,11 +112,7 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 
 								return (
 									<div key={value} className="flex items-center gap-3">
-										<RadioGroupItem
-											id={optionId}
-											value={value}
-											data-testid={`radio-card-${value}`}
-										/>
+										<RadioGroupItem id={optionId} value={value} data-testid={`radio-card-${value}`} />
 										<label htmlFor={optionId} className="text-foreground cursor-pointer text-sm font-medium">
 											{t(`onboarding.referral.options.${labelKey}`)}
 										</label>
