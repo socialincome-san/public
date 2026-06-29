@@ -57,6 +57,9 @@ import {
 } from './stripe.types';
 import { resolveWizardEmbeddedCheckout } from './wizard-embedded-checkout';
 
+const STRIPE_CHECKOUT_SESSION_ID_PARAM = 'donation_checkout_session_id';
+const CHECKOUT_SESSION_ID_PLACEHOLDER = '{CHECKOUT_SESSION_ID}';
+
 export class StripeService extends BaseService {
 	private static stripeClient: Stripe | undefined;
 
@@ -171,11 +174,17 @@ export class StripeService extends BaseService {
 				}
 			}
 
+			const returnUrlResult = this.resolveEmbeddedCheckoutReturnUrl(input.returnPath);
+			if (!returnUrlResult.success) {
+				return returnUrlResult;
+			}
+
 			const result = await this.createEmbeddedCheckout({
 				amount: unitAmount,
 				currency,
 				recurring,
 				intervalCount: 1,
+				returnUrl: returnUrlResult.data,
 				stripeCustomerId: input.stripeCustomerId,
 				campaignId,
 				source: 'donation-wizard',
@@ -195,6 +204,29 @@ export class StripeService extends BaseService {
 
 			return this.resultFail(`Could not create embedded checkout session: ${JSON.stringify(error)}`);
 		}
+	}
+
+	private resolveEmbeddedCheckoutReturnUrl(returnPath: string | undefined): ServiceResult<string | undefined> {
+		if (!returnPath) {
+			return this.resultOk(undefined);
+		}
+
+		if (!returnPath.startsWith('/') || returnPath.startsWith('//')) {
+			return this.resultFail('Invalid Stripe checkout return path');
+		}
+
+		const baseUrl = process.env.BASE_URL?.replace(TRAILING_SLASHES_REGEX, '');
+		if (!baseUrl) {
+			return this.resultFail('Missing BASE_URL');
+		}
+
+		const url = new URL(returnPath, baseUrl);
+		url.search = '';
+		url.searchParams.set(STRIPE_CHECKOUT_SESSION_ID_PARAM, CHECKOUT_SESSION_ID_PLACEHOLDER);
+
+		return this.resultOk(
+			url.toString().replace(encodeURIComponent(CHECKOUT_SESSION_ID_PLACEHOLDER), CHECKOUT_SESSION_ID_PLACEHOLDER),
+		);
 	}
 
 	async getCheckoutOnboardingPrefill(sessionId: string): Promise<ServiceResult<StripeCheckoutOnboardingPrefill>> {
@@ -631,7 +663,7 @@ export class StripeService extends BaseService {
 						},
 					},
 				],
-				redirect_on_completion: 'never',
+				redirect_on_completion: returnUrl ? 'if_required' : 'never',
 				...(returnUrl ? { return_url: returnUrl } : {}),
 				locale: 'auto',
 				...(Object.keys(metadata).length > 0 && { metadata }),

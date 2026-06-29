@@ -7,9 +7,14 @@ import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { useMachine } from '@xstate/react';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
 import { DonationModalContext } from '../hooks/use-donation-modal';
+import {
+	clearStoredStripeCheckoutContext,
+	readStoredStripeCheckoutContext,
+	STRIPE_CHECKOUT_SESSION_ID_PARAM,
+} from '../steps/step-stripe-checkout/stripe-checkout-return';
 import type { DonationAmountContext } from '../utils/donation-amount';
 import { donationWizardMachine } from '../wizard/donation-machine';
 import { DonationSteps } from '../wizard/donation-steps';
@@ -35,6 +40,21 @@ export const DonationModalProvider = ({ children }: Props) => {
 		state.matches('stepAmount') || state.matches('stepPlanMonthly') || state.matches('stepPlanOneTime');
 	const showWizardHeader = !isPostCheckoutStep;
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
+
+	useEffect(() => {
+		const url = new URL(window.location.href);
+		const sessionId = url.searchParams.get(STRIPE_CHECKOUT_SESSION_ID_PARAM);
+		if (!sessionId) {
+			return;
+		}
+
+		const context = readStoredStripeCheckoutContext(sessionId);
+
+		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId });
+		clearStoredStripeCheckoutContext(sessionId);
+		url.searchParams.delete(STRIPE_CHECKOUT_SESSION_ID_PARAM);
+		window.history.replaceState(null, '', url);
+	}, [send]);
 
 	const openWizardAtAmountStep = () => {
 		send({ type: 'OPEN' });

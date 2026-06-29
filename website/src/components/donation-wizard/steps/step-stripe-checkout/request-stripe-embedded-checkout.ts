@@ -1,5 +1,6 @@
 import { createStripeEmbeddedCheckoutAction } from '@/lib/server-actions/stripe-wizard-actions';
 import type { DonationWizardContext } from '../../wizard/donation-wizard-context';
+import { buildStripeCheckoutReturnPath, storeStripeCheckoutContext } from './stripe-checkout-return';
 
 type StripeCheckoutSend = {
 	(event: { type: 'STRIPE_CHECKOUT_READY'; clientSecret: string; sessionId: string; publishableKey: string }): void;
@@ -14,6 +15,7 @@ export const requestStripeEmbeddedCheckout = async (
 	const result = await createStripeEmbeddedCheckoutAction({
 		wizardContext: context,
 		currency,
+		returnPath: buildStripeCheckoutReturnPath(),
 	});
 
 	if (!result.success) {
@@ -21,6 +23,8 @@ export const requestStripeEmbeddedCheckout = async (
 
 		return;
 	}
+
+	storeStripeCheckoutContext(result.data.sessionId, context);
 
 	send({
 		type: 'STRIPE_CHECKOUT_READY',
