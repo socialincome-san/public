@@ -55,7 +55,7 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 						<div key={`${label}-${item.value}`} className="grid grid-cols-[minmax(120px,1fr)_100px_auto] items-center gap-3">
 							<p className="text-foreground truncate text-sm">{formatter(item.value)}</p>
 							<Progress value={item.percentage} className="bg-border h-1.5" />
-							<p className="text-foreground text-xs font-bold tabular-nums">{item.count}</p>
+							<p className="text-foreground text-xs font-bold">{item.count}</p>
 						</div>
 					))}
 				</div>

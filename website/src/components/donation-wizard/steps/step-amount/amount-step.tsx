@@ -19,6 +19,7 @@ export const AmountStep = ({ state, send }: DonationWizardStepProps) => {
 			currency={currency}
 			values={selectStep1FormView(state.context)}
 			actions={createStep1Actions(send)}
+			showTitle={false}
 			onSubmit={() => send({ type: 'SUBMIT' })}
 		/>
 	);

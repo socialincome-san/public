@@ -4,6 +4,7 @@ import { type Contributor, ContributorReferralSource, CountryCode, Gender } from
 export type StripeEmbeddedCheckoutSessionInput = {
 	wizardContext: DonationAmountContext;
 	currency?: string;
+	returnPath?: string;
 	stripeCustomerId: string | null;
 };
 

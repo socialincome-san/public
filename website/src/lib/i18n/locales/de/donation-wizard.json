@@ -13,7 +13,7 @@
 		"title": "Spenden",
 		"monthly-income-label": "Ihr monatliches Einkommen",
 		"choose-own-amount": "Oder eigenen Betrag wählen",
-		"your-one-percent": "Ihr 1%",
+		"your-one-percent": "Ihr 1 %",
 		"other": "Andere",
 		"monthly": "Monatlich",
 		"one-time": "Einmalig",
@@ -30,8 +30,9 @@
 		"upsell-preferred": "Empfohlen",
 		"upsell-benefit-cancel": "Jederzeit kündbar",
 		"per-month": "/Monat",
-		"plan-1x": "1%-Plan",
-		"plan-2x": "2%-Plan",
+		"plan-1x": "1 %-Plan",
+		"plan-2x": "2 %-Plan",
+		"double-impact-badge": "Wirkung verdoppeln",
 		"benefit-beneficiaries": "{{directCount}} direkte, {{indirectCount}} indirekte Begünstigte",
 		"benefit-community": "Werde Teil einer Community mit {{count}} Unterstützern",
 		"benefit-double-impact": "Verdoppeln Sie die Wirkung",
@@ -101,6 +102,7 @@
 	},
 	"onboarding": {
 		"successTitle": "Spende erfolgreich",
+		"accountCreatedDescription": "Wir haben soeben ein Konto für dich erstellt. Bitte überprüfe deine Angaben.",
 		"accountCardTitle": "Überprüfe deine Kontoinformationen",
 		"isThisYou": "Bist du das?",
 		"firstName": "Vorname",
@@ -118,6 +120,7 @@
 		"referral": {
 			"cardTitle": "Hilft uns, unsere Zeit auf das zu konzentrieren, was wirklich wirkt",
 			"question": "Wie hast du von uns erfahren?",
+			"skip": "Überspringen",
 			"submit": "Feedback senden",
 			"submitting": "Wird gespeichert…",
 			"updateError": "Beim Speichern deines Feedbacks ist ein Fehler aufgetreten. Bitte versuche es erneut.",
@@ -137,7 +140,7 @@
 		"supporters": "{{supporterCount}} Unterstützer aus {{countryCount}} Ländern",
 		"supporters-no-countries": "{{supporterCount}} Unterstützer weltweit",
 		"zewo": "ZEWO zertifiziert",
-		"why-one-percent": "Warum 1%?",
+		"why-one-percent": "Warum 1 %?",
 		"pay-with": "Bezahlen mit"
 	}
 }

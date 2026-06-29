@@ -13,7 +13,7 @@
 		"title": "Fai una donazione",
 		"monthly-income-label": "Il tuo reddito mensile",
 		"choose-own-amount": "Oppure scegli un importo personalizzato",
-		"your-one-percent": "Il tuo 1%",
+		"your-one-percent": "Il tuo 1 %",
 		"other": "Altro",
 		"monthly": "Mensile",
 		"one-time": "Una tantum",
@@ -30,8 +30,9 @@
 		"upsell-preferred": "Consigliato",
 		"upsell-benefit-cancel": "Annullabile in qualsiasi momento",
 		"per-month": "/mese",
-		"plan-1x": "Piano 1%",
-		"plan-2x": "Piano 2%",
+		"plan-1x": "Piano 1 %",
+		"plan-2x": "Piano 2 %",
+		"double-impact-badge": "Raddoppia l'impatto",
 		"benefit-beneficiaries": "{{directCount}} beneficiari diretti, {{indirectCount}} indiretti",
 		"benefit-community": "Unisciti a una community di {{count}} sostenitori",
 		"benefit-double-impact": "Raddoppia l'impatto",
@@ -86,7 +87,7 @@
 		"cover-costs-label-monthly": "Copri le commissioni di transazione di {{fee}}/mese",
 		"cover-costs-label-one-time": "Copri le commissioni di transazione di {{fee}}",
 		"cover-costs-tooltip-aria": "Come vengono calcolati i costi di transazione",
-		"cover-costs-tooltip": "I fornitori di pagamento applicano una commissione di elaborazione (circa 3%). Coprendola, una parte maggiore della tua donazione va direttamente alla nostra missione."
+		"cover-costs-tooltip": "I fornitori di pagamento applicano una commissione di elaborazione (circa 3 %). Coprendola, una parte maggiore della tua donazione va direttamente alla nostra missione."
 	},
 	"thankYou": {
 		"message": "Grazie per il tuo aiuto!",
@@ -101,6 +102,7 @@
 	},
 	"onboarding": {
 		"successTitle": "Donazione riuscita",
+		"accountCreatedDescription": "Abbiamo appena creato un account per te. Controlla i tuoi dati.",
 		"accountCardTitle": "Controlla le informazioni del tuo account",
 		"isThisYou": "Sei tu?",
 		"firstName": "Nome",
@@ -118,6 +120,7 @@
 		"referral": {
 			"cardTitle": "Ci aiuta a concentrare il nostro tempo su ciò che funziona davvero",
 			"question": "Come hai scoperto Social Income?",
+			"skip": "Salta",
 			"submit": "Invia feedback",
 			"submitting": "Salvataggio…",
 			"updateError": "Si è verificato un errore durante il salvataggio del feedback. Riprova.",
@@ -137,7 +140,7 @@
 		"supporters": "{{supporterCount}} sostenitori da {{countryCount}} paesi",
 		"supporters-no-countries": "{{supporterCount}} sostenitori in tutto il mondo",
 		"zewo": "Certificato ZEWO",
-		"why-one-percent": "Perché l'1%?",
+		"why-one-percent": "Perché l'1 %?",
 		"pay-with": "Paga con"
 	}
 }

@@ -13,7 +13,7 @@
 		"title": "Make a donation",
 		"monthly-income-label": "Your monthly income",
 		"choose-own-amount": "Or choose own amount",
-		"your-one-percent": "Your 1%",
+		"your-one-percent": "Your 1 %",
 		"other": "Other",
 		"monthly": "Monthly",
 		"one-time": "One-time",
@@ -30,8 +30,9 @@
 		"upsell-preferred": "Preferred",
 		"upsell-benefit-cancel": "Cancel anytime",
 		"per-month": "/month",
-		"plan-1x": "1% Plan",
-		"plan-2x": "2% Plan",
+		"plan-1x": "1 % Plan",
+		"plan-2x": "2 % Plan",
+		"double-impact-badge": "Double the impact",
 		"benefit-beneficiaries": "{{directCount}} direct, {{indirectCount}} indirect beneficiaries",
 		"benefit-community": "Join a community of {{count}} supporters",
 		"benefit-double-impact": "Double the impact",
@@ -86,7 +87,7 @@
 		"cover-costs-label-monthly": "Cover transaction fees of {{fee}}/month",
 		"cover-costs-label-one-time": "Cover transaction fees of {{fee}}",
 		"cover-costs-tooltip-aria": "How transaction costs are calculated",
-		"cover-costs-tooltip": "Payment providers charge a processing fee (approx. 3%). By covering it, more of your donation goes directly to our mission."
+		"cover-costs-tooltip": "Payment providers charge a processing fee (approx. 3 %). By covering it, more of your donation goes directly to our mission."
 	},
 	"thankYou": {
 		"message": "Thank you for your help!",
@@ -101,6 +102,7 @@
 	},
 	"onboarding": {
 		"successTitle": "Donation successful",
+		"accountCreatedDescription": "We have just created an account for you. Please check your details.",
 		"accountCardTitle": "Check your Account Information",
 		"isThisYou": "Is this you?",
 		"firstName": "First Name",
@@ -118,6 +120,7 @@
 		"referral": {
 			"cardTitle": "Helps us to focus our time on what's actually working",
 			"question": "How did you find us?",
+			"skip": "Skip",
 			"submit": "Send Feedback",
 			"submitting": "Saving…",
 			"updateError": "There was an error saving your feedback. Please try again.",
@@ -137,7 +140,7 @@
 		"supporters": "{{supporterCount}} supporters from {{countryCount}} countries",
 		"supporters-no-countries": "{{supporterCount}} supporters worldwide",
 		"zewo": "ZEWO certified",
-		"why-one-percent": "Why 1%?",
+		"why-one-percent": "Why 1 %?",
 		"pay-with": "Pay with"
 	}
 }

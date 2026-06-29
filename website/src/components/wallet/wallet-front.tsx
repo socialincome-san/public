@@ -56,7 +56,7 @@ const WalletFrontContent = ({ variant, title, subtitle, badge, footerLeft, foote
 											{footerLeft.prefix ? (
 												<span className="shrink-0 text-base leading-6 font-medium">{footerLeft.prefix}</span>
 											) : null}
-											<span className="tabular-nums">{footerLeft.value}</span>
+											<span>{footerLeft.value}</span>
 										</p>
 									</>
 								) : null}
@@ -65,7 +65,7 @@ const WalletFrontContent = ({ variant, title, subtitle, badge, footerLeft, foote
 								{footerRight ? (
 									<>
 										<p className="text-base leading-6 font-medium">{footerRight.label}</p>
-										<p className="text-4xl leading-none font-normal tabular-nums">{footerRight.value}</p>
+										<p className="text-4xl leading-none font-normal">{footerRight.value}</p>
 									</>
 								) : null}
 							</div>
