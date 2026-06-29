@@ -32,7 +32,7 @@ export const ExplainerVideoTrigger = ({
 		<span
 			className={cn(
 				'relative shrink-0 overflow-hidden shadow-md',
-				layout === 'row' ? 'aspect-video h-10 w-16 rounded-full' : 'aspect-video h-12 md:h-16 rounded-full',
+				layout === 'row' ? 'aspect-video h-10 w-16 rounded-full' : 'aspect-video h-12 rounded-full md:h-16',
 			)}
 		>
 			<NextImage src={thumbnailSrc} alt={accessibleLabel} fill sizes="176px" className="object-cover" />
