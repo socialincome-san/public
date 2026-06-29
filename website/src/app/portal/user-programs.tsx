@@ -30,7 +30,7 @@ export const UserPrograms = async ({ userId }: Props) => {
 			{operatedPrograms.length > 0 && (
 				<div>
 					<h2 className="py-6 text-3xl font-medium">Operated Programs</h2>
-					<div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-8 pb-8">
+					<div className="grid grid-cols-1 gap-8 pb-8 sm:grid-cols-2 lg:grid-cols-3">
 						{operatedPrograms.map((program) => (
 							<Wallet
 								key={program.id}
@@ -54,7 +54,7 @@ export const UserPrograms = async ({ userId }: Props) => {
 			)}
 			<div>
 				<h2 className="py-6 text-3xl font-medium">Owned Programs</h2>
-				<div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-8 pb-8">
+				<div className="grid grid-cols-1 gap-8 pb-8 sm:grid-cols-2 lg:grid-cols-3">
 					{ownedPrograms.map((program) => (
 						<Wallet
 							key={program.id}

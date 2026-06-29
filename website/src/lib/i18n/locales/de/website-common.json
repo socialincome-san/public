@@ -97,6 +97,7 @@
 		"candidate-plural": "Kandidat:innen",
 		"candidates-ready-to-enroll_one": "{{count}} Kandidat:in bereit für die Einschreibung",
 		"candidates-ready-to-enroll_other": "{{count}} Kandidat:innen bereit für die Einschreibung",
+		"no-candidates": "Derzeit gibt es keine Kandidat:innen",
 		"about": "Über"
 	},
 	"programs-page": {
