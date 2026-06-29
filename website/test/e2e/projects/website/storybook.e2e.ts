@@ -6,5 +6,5 @@ test('storybook design system page is served from the website and marked as noin
 	expect(response?.ok()).toBeTruthy();
 	expect(response?.headers()['x-robots-tag']).toBe('noindex, nofollow');
 	await expect(page).toHaveTitle(/Storybook/);
-	await expect(page.getByRole('heading', { name: 'Design System' })).toBeVisible();
+	await expect(page.frameLocator('#storybook-preview-iframe').getByRole('heading', { name: 'Design System' })).toBeVisible();
 });
