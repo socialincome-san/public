@@ -7,6 +7,17 @@ let nextConfig: NextConfig = {
 	transpilePackages: ['storyblok-rich-text-react-renderer'],
 	reactStrictMode: true,
 	redirects: getRedirects,
+	headers: () =>
+		Promise.resolve([
+			{
+				source: '/storybook',
+				headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+			},
+			{
+				source: '/storybook/:path*',
+				headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+			},
+		]),
 	turbopack: {
 		root: path.join(process.cwd(), '..'),
 	},

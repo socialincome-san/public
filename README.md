@@ -120,6 +120,12 @@ This starts:
 - PostgreSQL in Docker
 - Firebase emulators for Auth and Firestore
 - Next.js at `http://localhost:3000`
+- Storybook at `http://localhost:6006`
+
+We use Storybook for reusable website UI components. It is started locally by
+`mise dev` and is available on staging and production at
+`https://staging.socialincome.org/storybook` and
+`https://socialincome.org/storybook`.
 
 The Firebase emulator UI is available at:
 

@@ -6,7 +6,14 @@ const smartiveNextConfig = config('nextjs');
 
 export default [
 	{
-		ignores: ['eslint.config.mjs', 'prettier.config.cjs', 'src/generated/**', '**/playwright-report/**'],
+		ignores: [
+			'eslint.config.mjs',
+			'prettier.config.cjs',
+			'public/storybook/**',
+			'src/generated/**',
+			'storybook-static/**',
+			'**/playwright-report/**',
+		],
 	},
 	...smartiveNextConfig,
 	{

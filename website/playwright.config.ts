@@ -112,7 +112,7 @@ export default defineConfig({
 		},
 	],
 	webServer: {
-		command: 'npm run build && npm run start',
+		command: 'npm run build-storybook:website && npm run build && npm run start',
 		url: 'http://localhost:3000',
 		reuseExistingServer: true,
 		timeout: 180_000,

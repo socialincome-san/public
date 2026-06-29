@@ -43,6 +43,7 @@ RUN set -a && [ -f /app/.env ] && . /app/.env || true && set +a && \
     npx prisma generate \
       --schema=./src/lib/database/schema.prisma \
       --config=./prisma.config.ts && \
+    npm run build-storybook:website && \
     npm run build --loglevel verbose || (echo "🚨 Build failed. Printing log:" && cat /root/.npm/_logs/*-debug-0.log && false)
 # -------- Runtime Layer --------
 FROM node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd AS runner
