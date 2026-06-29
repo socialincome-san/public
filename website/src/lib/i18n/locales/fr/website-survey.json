@@ -1,5 +1,10 @@
 {
+	"titleOnboarding": "Enquête d'onboarding",
+	"titleCheckin": "Enquête de check-in",
+	"titleOffboarding": "Enquête d'offboarding",
+	"titleFollowup": "Enquête de follow-up",
 	"select": "Sélectionner",
+	"demo": "En mode démo, l'enquête ne peut pas être sauvegardée",
 	"survey": {
 		"common": {
 			"start": "Démarrer",

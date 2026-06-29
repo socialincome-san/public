@@ -1,5 +1,10 @@
 {
+	"titleOnboarding": "Onboarding Umfrage",
+	"titleCheckin": "Check-in Umfrage",
+	"titleOffboarding": "Offboarding Umfrage",
+	"titleFollowup": "Follow-up Umfrage",
 	"select": "Auswählen",
+	"demo": "Im Demomodus kann die Umfrage nicht gespeichert werden",
 	"survey": {
 		"common": {
 			"start": "Starten",
