@@ -68,7 +68,7 @@
 		"@radix-ui/react-tabs": "1.1.15",
 		"@radix-ui/react-toggle-group": "1.1.13",
 		"@radix-ui/react-tooltip": "1.2.10",
-		"@scalar/api-reference-react": "0.9.48",
+		"@scalar/api-reference-react": "0.9.49",
 		"@sendgrid/client": "8.1.6",
 		"@sentry/nextjs": "10.59.0",
 		"@storyblok/js": "5.1.10",
@@ -88,7 +88,7 @@
 		"embla-carousel-react": "8.6.0",
 		"firebase": "12.15.0",
 		"firebase-admin": "13.10.0",
-		"i18next": "26.3.1",
+		"i18next": "26.3.3",
 		"i18next-resources-to-backend": "1.2.1",
 		"isomorphic-dompurify": "3.18.0",
 		"js-cookie": "3.0.8",
@@ -114,7 +114,7 @@
 		"tmp-promise": "3.0.3",
 		"twilio": "6.0.2",
 		"xpath": "0.0.34",
-		"xstate": "5.32.1",
+		"xstate": "5.32.2",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
@@ -144,7 +144,7 @@
 		"next-openapi-gen": "0.8.9",
 		"npm-run-all": "4.1.5",
 		"postcss": "8.5.15",
-		"prettier": "3.8.4",
+		"prettier": "3.8.5",
 		"prettier-plugin-organize-imports": "4.3.0",
 		"prettier-plugin-tailwindcss": "0.8.0",
 		"prisma": "7.8.0",
@@ -164,9 +164,9 @@
 		"axios": "1.18.1",
 		"body-parser": "2.3.0",
 		"fast-xml-builder": "1.2.0",
-		"protobufjs": "8.6.4",
+		"protobufjs": "8.6.5",
 		"uuid": "14.0.1",
 		"tabbable": "6.5.0",
-		"nanoid": "5.1.15"
+		"nanoid": "5.1.16"
 	}
 }
