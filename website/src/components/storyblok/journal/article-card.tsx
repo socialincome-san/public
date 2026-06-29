@@ -1,4 +1,7 @@
+'use client';
+
 import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
+import { useScreenSize } from '@/lib/hooks/use-screen-size';
 import {
 	createWebsiteJournalArticleLink,
 	createWebsiteJournalPath,
@@ -30,19 +33,21 @@ type Props = {
 };
 
 export const JournalArticleCard = ({ article, lang, region, variant = 'grid' }: Props) => {
+	const screenSize = useScreenSize();
+	const effectiveVariant = screenSize === 'xs' || screenSize === 'sm' ? 'featured' : variant;
 	const { content } = article;
 	const author = content.author;
 	const href = article.slug
 		? createWebsiteJournalArticleLink(article.slug, lang, region)
 		: createWebsiteJournalPath(lang, region);
 
-	const imageWidth = variant === 'secondary' ? SECONDARY_IMAGE_WIDTH : GRID_IMAGE_WIDTH;
-	const imageHeight = variant === 'secondary' ? SECONDARY_IMAGE_HEIGHT : GRID_IMAGE_HEIGHT;
+	const imageWidth = effectiveVariant === 'secondary' ? SECONDARY_IMAGE_WIDTH : GRID_IMAGE_WIDTH;
+	const imageHeight = effectiveVariant === 'secondary' ? SECONDARY_IMAGE_HEIGHT : GRID_IMAGE_HEIGHT;
 	const image = content.image;
 	const imageSrc = image?.filename ? formatStoryblokUrl(image.filename, imageWidth, imageHeight, image.focus) : null;
 	const title = getArticleTitle(article);
 
-	if (variant === 'featured') {
+	if (effectiveVariant === 'featured') {
 		return (
 			<Link
 				href={href}
@@ -69,7 +74,7 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid' }: 
 		);
 	}
 
-	if (variant === 'secondary') {
+	if (effectiveVariant === 'secondary') {
 		return (
 			<Link
 				href={href}
