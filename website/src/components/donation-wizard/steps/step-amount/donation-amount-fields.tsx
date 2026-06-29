@@ -205,7 +205,7 @@ export const DonationAmountFields = ({
 			<Button
 				type="button"
 				data-testid="donation-wizard-amount-continue"
-				className="h-10 w-full text-sm font-bold"
+				className="h-11 rounded-full px-4 text-sm font-medium w-full"
 				disabled={!values.isValid}
 				onClick={onSubmit}
 			>
