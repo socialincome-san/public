@@ -12,8 +12,7 @@ type TooltipContextValue = {
 
 const TooltipContext = React.createContext<TooltipContextValue | null>(null);
 
-const isCoarsePointer = () =>
-	typeof window !== 'undefined' && window.matchMedia('(hover: none), (pointer: coarse)').matches;
+const isCoarsePointer = () => typeof window !== 'undefined' && window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
 const TooltipProvider = ({ delayDuration = 0, ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>) => {
 	return <TooltipPrimitive.Provider data-slot="tooltip-provider" delayDuration={delayDuration} {...props} />;

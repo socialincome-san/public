@@ -8,7 +8,10 @@ type OnboardingSuccessHeaderProps = {
 	showAccountCreatedDescription?: boolean;
 };
 
-export const OnboardingSuccessHeader = ({ amountLine, showAccountCreatedDescription = false }: OnboardingSuccessHeaderProps) => {
+export const OnboardingSuccessHeader = ({
+	amountLine,
+	showAccountCreatedDescription = false,
+}: OnboardingSuccessHeaderProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 
 	return (

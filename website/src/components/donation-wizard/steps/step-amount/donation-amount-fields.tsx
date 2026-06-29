@@ -138,7 +138,13 @@ export const DonationAmountFields = ({
 				<div className="text-center text-[10px] font-medium">{translations.chooseOwnAmount}</div>
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
 			</div>
-			<div className={cn(amountFieldBorder, amountFieldDivider, 'mb-4 grid grid-cols-4 divide-x overflow-hidden rounded-xl border')}>
+			<div
+				className={cn(
+					amountFieldBorder,
+					amountFieldDivider,
+					'mb-4 grid grid-cols-4 divide-x overflow-hidden rounded-xl border',
+				)}
+			>
 				{amountOptions.map((option) => {
 					const isSelected = option.value === values.selectedAmount;
 

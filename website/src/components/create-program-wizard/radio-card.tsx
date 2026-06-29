@@ -38,10 +38,7 @@ export const RadioCard = ({
 			<RadioGroupItem
 				value={value}
 				disabled={disabled}
-				className={cn(
-					'absolute right-3',
-					indicatorAlignment === 'center' ? 'top-1/2 -translate-y-1/2' : 'top-3',
-				)}
+				className={cn('absolute right-3', indicatorAlignment === 'center' ? 'top-1/2 -translate-y-1/2' : 'top-3')}
 			/>
 
 			<div className="flex-1 space-y-1 pr-6">
