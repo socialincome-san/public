@@ -36,7 +36,7 @@ export type DonationAmountContext = {
 };
 
 export const getInitialDonationContext = (): DonationAmountContext => ({
-	monthlyIncome: 6000,
+	monthlyIncome: 5000,
 	selectedAmount: null,
 	customAmount: null,
 	cadence: 'monthly',

@@ -32,6 +32,7 @@ export const donationWizardMachine = setup({
 		events:
 			| { type: 'OPEN' }
 			| { type: 'OPEN_FROM_FORM'; context: DonationAmountContext }
+			| { type: 'OPEN_FROM_STRIPE_RETURN'; context: DonationAmountContext | null; sessionId: string }
 			| { type: 'CLOSE' }
 			| { type: 'SET_MONTHLY_INCOME'; value: number | null }
 			| { type: 'SELECT_ONE_PERCENT' }
@@ -124,6 +125,17 @@ export const donationWizardMachine = setup({
 						})),
 					},
 				],
+				OPEN_FROM_STRIPE_RETURN: {
+					target: 'stepOnboardingPersonal',
+					actions: assign(({ event }) => ({
+						...getInitialWizardContext(),
+						...(event.context ?? {}),
+						paymentMethod: 'online' as const,
+						stripeCheckoutSessionId: event.sessionId,
+						completedDonationSummary: event.context ? buildCompletedDonationSummary(event.context) : null,
+						wizardPaymentSource: 'stripe' as const,
+					})),
+				},
 			},
 		},
 		loadingCommunityStats: {

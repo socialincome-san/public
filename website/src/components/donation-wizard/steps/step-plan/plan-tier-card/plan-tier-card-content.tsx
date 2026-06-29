@@ -25,8 +25,8 @@ export const PlanTierCardContent = ({
 	benefits,
 }: Props) => (
 	<>
-		<div className="mb-2.5 flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
-			<span className="text-lg leading-none font-medium tabular-nums">
+		<div className="text-foreground mb-2.5 flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
+			<span className="text-lg leading-none font-medium">
 				{currency} {amount}
 			</span>
 			{perMonthLabel && <span className="text-muted-foreground text-sm">{perMonthLabel}</span>}
@@ -44,7 +44,7 @@ export const PlanTierCardContent = ({
 				</Badge>
 			)}
 		</div>
-		<ul className="flex flex-col gap-2">
+		<ul className="text-foreground flex flex-col gap-2">
 			{benefits.map((benefit) => (
 				<li key={benefit.id} className="flex gap-1.5 text-sm">
 					{benefit.icon === 'heart' ? (

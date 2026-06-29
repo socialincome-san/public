@@ -42,9 +42,7 @@ export const getDonationWizardLayout = (step: ActiveDonationWizardStep | null) =
 
 export const getDonationWizardCardClass = (step: ActiveDonationWizardStep) => getDonationWizardLayout(step).cardClass;
 
-export const donationStepTitleRowClass = cn(
-	'mb-5 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3',
-);
+export const donationStepTitleRowClass = cn('mb-5 flex items-start justify-between gap-3');
 
 export const donationImpactChecklistItemClass = cn('flex items-center justify-start gap-2 text-left text-sm font-medium');
 

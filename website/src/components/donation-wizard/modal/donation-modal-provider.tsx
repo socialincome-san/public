@@ -7,9 +7,14 @@ import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { useMachine } from '@xstate/react';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
 import { DonationModalContext } from '../hooks/use-donation-modal';
+import {
+	clearStoredStripeCheckoutContext,
+	readStoredStripeCheckoutContext,
+	STRIPE_CHECKOUT_SESSION_ID_PARAM,
+} from '../steps/step-stripe-checkout/stripe-checkout-return';
 import type { DonationAmountContext } from '../utils/donation-amount';
 import { donationWizardMachine } from '../wizard/donation-machine';
 import { DonationSteps } from '../wizard/donation-steps';
@@ -35,6 +40,21 @@ export const DonationModalProvider = ({ children }: Props) => {
 		state.matches('stepAmount') || state.matches('stepPlanMonthly') || state.matches('stepPlanOneTime');
 	const showWizardHeader = !isPostCheckoutStep;
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
+
+	useEffect(() => {
+		const url = new URL(window.location.href);
+		const sessionId = url.searchParams.get(STRIPE_CHECKOUT_SESSION_ID_PARAM);
+		if (!sessionId) {
+			return;
+		}
+
+		const context = readStoredStripeCheckoutContext(sessionId);
+
+		send({ type: 'OPEN_FROM_STRIPE_RETURN', context, sessionId });
+		clearStoredStripeCheckoutContext(sessionId);
+		url.searchParams.delete(STRIPE_CHECKOUT_SESSION_ID_PARAM);
+		window.history.replaceState(null, '', url);
+	}, [send]);
 
 	const openWizardAtAmountStep = () => {
 		send({ type: 'OPEN' });
@@ -124,14 +144,22 @@ export const DonationModalProvider = ({ children }: Props) => {
 			</Dialog>
 
 			<Dialog open={closeConfirmOpen} onOpenChange={setCloseConfirmOpen}>
-				<DialogContent className="z-[120] gap-4 sm:max-w-[400px]" overlayClassName="z-[120]">
-					<DialogTitle className="text-lg font-medium">{t('modal.closeConfirm.title')}</DialogTitle>
-					<p className="text-muted-foreground text-sm leading-normal">{t('modal.closeConfirm.description')}</p>
-					<div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-						<Button type="button" variant="outline" onClick={() => setCloseConfirmOpen(false)}>
+				<DialogContent
+					hideCloseButton
+					className="z-[120] max-sm:inset-x-4 max-sm:top-auto max-sm:bottom-4 max-sm:h-auto max-sm:min-h-0 max-sm:w-auto max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-2xl max-sm:p-5 sm:max-w-[400px]"
+					overlayClassName="z-[120]"
+				>
+					<div className="flex flex-col gap-2">
+						<DialogTitle className="text-foreground text-xl leading-tight font-medium sm:text-lg">
+							{t('modal.closeConfirm.title')}
+						</DialogTitle>
+						<p className="text-muted-foreground text-sm leading-6">{t('modal.closeConfirm.description')}</p>
+					</div>
+					<div className="mt-2 flex flex-col gap-2 sm:flex-row sm:justify-end">
+						<Button type="button" variant="outline" className="w-full sm:w-auto" onClick={() => setCloseConfirmOpen(false)}>
 							{t('modal.closeConfirm.cancel')}
 						</Button>
-						<Button type="button" variant="destructive" onClick={confirmClose}>
+						<Button type="button" variant="destructive" className="w-full sm:w-auto" onClick={confirmClose}>
 							{t('modal.closeConfirm.confirm')}
 						</Button>
 					</div>

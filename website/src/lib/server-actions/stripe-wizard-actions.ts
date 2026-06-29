@@ -22,12 +22,14 @@ export const createPortalProgramDonationCheckoutAction = async (input: PortalPro
 export const createStripeEmbeddedCheckoutAction = async (input: {
 	wizardContext: DonationAmountContext;
 	currency?: string;
+	returnPath?: string;
 }) => {
 	const contributor = await getOptionalContributor();
 
 	return services.stripe.createEmbeddedCheckoutSession({
 		wizardContext: input.wizardContext,
 		currency: input.currency,
+		returnPath: input.returnPath,
 		stripeCustomerId: contributor?.stripeCustomerId ?? null,
 	});
 };

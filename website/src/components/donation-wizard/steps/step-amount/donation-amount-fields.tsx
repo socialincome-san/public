@@ -24,6 +24,10 @@ const amountOptions: { labelKey: 'currency-prefix' | 'other'; value: PresetAmoun
 
 const segmentActive = 'bg-card shadow-xs';
 
+const amountFieldBorder = 'border-input/60';
+const amountFieldDivider = 'divide-input/60';
+const monthlyAmountTextClass = 'text-lg leading-none font-medium md:text-lg';
+
 const monthlyIncomeInputId = 'donation-monthly-income';
 
 type DonationAmountFieldsValues = {
@@ -52,6 +56,7 @@ type Props = {
 	className?: string;
 	translations: DonationAmountFieldsTranslations;
 	currency: WebsiteCurrency;
+	showTitle?: boolean;
 };
 
 export const DonationAmountFields = ({
@@ -61,17 +66,21 @@ export const DonationAmountFields = ({
 	className = getDonationWizardCardClass('stepAmount'),
 	translations,
 	currency,
+	showTitle = true,
 }: Props) => {
 	return (
 		<div className={cn(className, 'text-foreground md:px-9 md:py-9')} data-testid="donation-wizard-step-amount">
-			<h2 className="text-foreground mb-5 text-xl leading-tight font-bold text-pretty sm:text-2xl sm:leading-none">
-				{translations.title}
-			</h2>
+			{showTitle && (
+				<h2 className="text-foreground mb-5 text-xl leading-tight font-bold text-pretty sm:text-2xl sm:leading-none">
+					{translations.title}
+				</h2>
+			)}
 
-			<div className="border-muted mb-3 grid grid-cols-[minmax(0,1fr)_auto] overflow-hidden rounded-md border">
+			<div className={cn(amountFieldBorder, 'mb-3 grid grid-cols-[minmax(0,1fr)_auto] rounded-md border')}>
 				<div
 					className={cn(
-						'border-muted bg-card border-r px-3 py-2 transition-colors',
+						amountFieldBorder,
+						'bg-card focus-within:border-ring focus-within:ring-ring/50 relative -m-px rounded-l-md border px-3 py-2 transition-[border-color,box-shadow,color] focus-within:z-10 focus-within:ring-[3px]',
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
@@ -99,7 +108,10 @@ export const DonationAmountFields = ({
 								actions.setMonthlyIncome(parsed);
 							}
 						}}
-						className="h-auto w-full rounded-none border-0 bg-transparent px-0 py-0 text-lg leading-none font-medium text-inherit shadow-none focus-visible:ring-0"
+						className={cn(
+							monthlyAmountTextClass,
+							'h-auto w-full rounded-none border-0 bg-transparent px-0 py-0 text-inherit shadow-none focus-visible:ring-0',
+						)}
 					/>
 				</div>
 				<button
@@ -108,21 +120,31 @@ export const DonationAmountFields = ({
 					aria-pressed={values.onePercentSelected}
 					onClick={actions.selectOnePercent}
 					className={cn(
-						'px-3 py-2 text-left transition-colors',
+						'rounded-r-md px-3 py-2 text-left transition-colors',
 						values.onePercentSelected
 							? 'bg-muted text-foreground'
 							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
 					)}
 				>
 					<div className="text-[10px] font-medium">{translations.yourOnePercent}</div>
-					<div className="text-lg leading-none font-medium whitespace-nowrap">
+					<div className={cn(monthlyAmountTextClass, 'whitespace-nowrap')}>
 						{currency} {values.onePercent}
 					</div>
 				</button>
 			</div>
 
-			<div className="mb-2 text-center text-[10px] font-medium">{translations.chooseOwnAmount}</div>
-			<div className="border-muted divide-muted mb-4 grid grid-cols-4 divide-x overflow-hidden rounded-xl border">
+			<div className="mb-3 flex items-center gap-4">
+				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
+				<div className="text-center text-[10px] font-medium">{translations.chooseOwnAmount}</div>
+				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
+			</div>
+			<div
+				className={cn(
+					amountFieldBorder,
+					amountFieldDivider,
+					'mb-4 grid grid-cols-4 divide-x overflow-hidden rounded-xl border',
+				)}
+			>
 				{amountOptions.map((option) => {
 					const isSelected = option.value === values.selectedAmount;
 
@@ -205,7 +227,7 @@ export const DonationAmountFields = ({
 			<Button
 				type="button"
 				data-testid="donation-wizard-amount-continue"
-				className="h-11 w-full rounded-full px-4 text-sm font-medium"
+				className="w-full font-bold"
 				disabled={!values.isValid}
 				onClick={onSubmit}
 			>

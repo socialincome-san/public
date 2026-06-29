@@ -95,10 +95,12 @@ export const selectMonthlyPlanView = (context: DonationWizardContext) => {
 	const supporterCount = context.communityStats?.supporterCount ?? 0;
 	const communityBenefit: PlanBenefitDescriptor[] =
 		supporterCount > 0 ? [{ id: 'community', type: 'community', supporterCount }] : [];
+	const usesMonthlyIncomeAmount = context.selectedAmount === null;
 
 	return {
 		selectedTier: context.selectedTier,
-		showPlanBadges: isOnePercentPlanSelected(context),
+		showPlanBadges: usesMonthlyIncomeAmount,
+		showDoubleImpactBadge: !usesMonthlyIncomeAmount,
 		tier1x,
 		tier2x,
 		tier1Benefits: [{ id: 'beneficiaries', type: 'beneficiaries' as const, ...tier1Impact }, ...communityBenefit],
