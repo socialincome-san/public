@@ -136,7 +136,6 @@ export const OnboardingPersonalForm = ({
 													key={value}
 													value={value}
 													checked={field.value === value}
-													indicatorAlignment="center"
 													label={
 														<span className="text-foreground flex items-center gap-2 text-sm font-medium">
 															{value === 'male' ? <ShortHairIcon className="size-5" /> : null}
