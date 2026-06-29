@@ -92,6 +92,7 @@ export type ProgramCountryFeasibilityRow = {
 	stats: {
 		programCount: number;
 		recipientCount: number;
+		candidateCount: number;
 	};
 
 	cash: CountryFeasibility;

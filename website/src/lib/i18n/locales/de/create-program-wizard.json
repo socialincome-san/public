@@ -27,7 +27,11 @@
 		"all_conditions_met": "Alle Bedingungen erfüllt",
 		"no_countries_match": "Keine Länder entsprechen den aktuellen Filtern",
 		"no_active_programs": "Keine aktiven Programme",
-		"country_stats": "{{programCount}} Programme - {{recipientCount}} Empfänger",
+		"programs": "Programme",
+		"recipients": "Empfänger",
+		"candidates_ready_to_enroll_one": "{{count}} Kandidat:in bereit für die Einschreibung",
+		"candidates_ready_to_enroll_other": "{{count}} Kandidat:innen bereit für die Einschreibung",
+		"no_candidates": "Derzeit gibt es keine Kandidat:innen",
 		"table": {
 			"cash": "Eignung für Bargeld",
 			"mobile_money": "Mobile Money",
