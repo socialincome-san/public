@@ -39,7 +39,14 @@ export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
 					amount={view.tier2x}
 					currency={currency}
 					perMonthLabel={t('stepPlan.per-month')}
-					planLabel={view.showPlanBadges ? t('stepPlan.plan-2x') : undefined}
+					planLabel={
+						view.showPlanBadges
+							? t('stepPlan.plan-2x')
+							: view.showDoubleImpactBadge
+								? t('stepPlan.double-impact-badge')
+								: undefined
+					}
+					badgeVariant={view.showDoubleImpactBadge ? 'preferred' : 'plan'}
 					heartCount={2}
 					selected={view.selectedTier === '2x'}
 					onSelect={() => send({ type: 'SET_TIER', value: '2x' })}

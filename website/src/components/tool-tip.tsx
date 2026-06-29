@@ -4,20 +4,80 @@ import { cn } from '@/lib/utils/cn';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import * as React from 'react';
 
+type TooltipContextValue = {
+	open: boolean;
+	openRef: React.MutableRefObject<boolean>;
+	setOpen: (open: boolean) => void;
+};
+
+const TooltipContext = React.createContext<TooltipContextValue | null>(null);
+
+const isCoarsePointer = () =>
+	typeof window !== 'undefined' && window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
 const TooltipProvider = ({ delayDuration = 0, ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>) => {
 	return <TooltipPrimitive.Provider data-slot="tooltip-provider" delayDuration={delayDuration} {...props} />;
 };
 
-const Tooltip = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Root>) => {
+const Tooltip = ({
+	open,
+	defaultOpen = false,
+	onOpenChange,
+	...props
+}: React.ComponentProps<typeof TooltipPrimitive.Root>) => {
+	const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+	const isControlled = open !== undefined;
+	const currentOpen = open ?? uncontrolledOpen;
+	const openRef = React.useRef(currentOpen);
+
+	const setOpen = React.useCallback(
+		(nextOpen: boolean) => {
+			openRef.current = nextOpen;
+
+			if (!isControlled) {
+				setUncontrolledOpen(nextOpen);
+			}
+
+			onOpenChange?.(nextOpen);
+		},
+		[isControlled, onOpenChange],
+	);
+
+	React.useEffect(() => {
+		openRef.current = currentOpen;
+	}, [currentOpen]);
+
 	return (
 		<TooltipProvider>
-			<TooltipPrimitive.Root data-slot="tooltip" {...props} />
+			<TooltipContext.Provider value={{ open: currentOpen, openRef, setOpen }}>
+				<TooltipPrimitive.Root data-slot="tooltip" open={currentOpen} onOpenChange={setOpen} {...props} />
+			</TooltipContext.Provider>
 		</TooltipProvider>
 	);
 };
 
-const TooltipTrigger = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) => {
-	return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
+const TooltipTrigger = ({ onClick, onPointerDown, ...props }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) => {
+	const tooltip = React.useContext(TooltipContext);
+
+	return (
+		<TooltipPrimitive.Trigger
+			data-slot="tooltip-trigger"
+			onPointerDown={(event) => {
+				onPointerDown?.(event);
+
+				if (event.defaultPrevented || !tooltip || !isCoarsePointer()) {
+					return;
+				}
+
+				event.preventDefault();
+				tooltip.setOpen(!tooltip.openRef.current);
+			}}
+			onClick={(event) => {
+				onClick?.(event);
+			}}
+			{...props}
+		/>
+	);
 };
 
 const TooltipContent = ({

@@ -12,9 +12,19 @@ type Props = {
 	description?: string;
 	badge?: ReactNode;
 	children?: ReactNode;
+	indicatorAlignment?: 'top' | 'center';
 };
 
-export const RadioCard = ({ value, checked, disabled, label, description, badge, children }: Props) => {
+export const RadioCard = ({
+	value,
+	checked,
+	disabled,
+	label,
+	description,
+	badge,
+	children,
+	indicatorAlignment = 'top',
+}: Props) => {
 	return (
 		<label
 			data-testid={`radio-card-${value}`}
@@ -25,7 +35,14 @@ export const RadioCard = ({ value, checked, disabled, label, description, badge,
 				disabled && 'cursor-not-allowed opacity-60',
 			)}
 		>
-			<RadioGroupItem value={value} disabled={disabled} className="absolute top-3 right-3" />
+			<RadioGroupItem
+				value={value}
+				disabled={disabled}
+				className={cn(
+					'absolute right-3',
+					indicatorAlignment === 'center' ? 'top-1/2 -translate-y-1/2' : 'top-3',
+				)}
+			/>
 
 			<div className="flex-1 space-y-1 pr-6">
 				<div className="flex items-center gap-2">
