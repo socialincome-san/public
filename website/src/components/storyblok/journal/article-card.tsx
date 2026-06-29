@@ -1,7 +1,7 @@
 'use client';
 
 import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
-import { useScreenSize } from '@/lib/hooks/use-screen-size';
+import { useIsMobile } from '@/lib/hooks/use-is-mobile';
 import {
 	createWebsiteJournalArticleLink,
 	createWebsiteJournalPath,
@@ -33,8 +33,8 @@ type Props = {
 };
 
 export const JournalArticleCard = ({ article, lang, region, variant = 'grid' }: Props) => {
-	const screenSize = useScreenSize();
-	const effectiveVariant = screenSize === 'xs' || screenSize === 'sm' ? 'featured' : variant;
+	const isMobile = useIsMobile();
+	const effectiveVariant = isMobile ? 'featured' : variant;
 	const { content } = article;
 	const author = content.author;
 	const href = article.slug
