@@ -62,13 +62,7 @@ export const QrWizardStepFooter = ({
 					{continueLabel}
 				</Button>
 				{showBack && onBack ? (
-					<Button
-						type="button"
-						data-testid="donation-wizard-back"
-						variant="outline"
-						className="sm:order-1"
-						onClick={onBack}
-					>
+					<Button type="button" data-testid="donation-wizard-back" variant="outline" className="sm:order-1" onClick={onBack}>
 						<ChevronLeft className="size-4" aria-hidden />
 						{t('stepPlan.back')}
 					</Button>
@@ -107,13 +101,7 @@ export const QrWizardStepFooter = ({
 					</Button>
 				</div>
 				{showBack && onBack ? (
-					<Button
-						type="button"
-						data-testid="donation-wizard-back"
-						variant="outline"
-						className="md:order-1"
-						onClick={onBack}
-					>
+					<Button type="button" data-testid="donation-wizard-back" variant="outline" className="md:order-1" onClick={onBack}>
 						<ChevronLeft className="size-4" aria-hidden />
 						{t('stepPlan.back')}
 					</Button>

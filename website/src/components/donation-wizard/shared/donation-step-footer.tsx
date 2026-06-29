@@ -59,13 +59,7 @@ export const DonationStepFooter = ({ onBack, onContinue, continueLabel, continue
 					</Button>
 				</div>
 
-				<Button
-					type="button"
-					data-testid="donation-wizard-back"
-					variant="outline"
-					className="sm:order-1"
-					onClick={onBack}
-				>
+				<Button type="button" data-testid="donation-wizard-back" variant="outline" className="sm:order-1" onClick={onBack}>
 					<ChevronLeft className="size-4" aria-hidden />
 					{t('stepPlan.back')}
 				</Button>
