@@ -1,4 +1,9 @@
 {
+	"titleOnboarding": "Onboarding Sɔve",
+	"titleCheckin": "Check-in Sɔve",
+	"titleOffboarding": "Offboarding Sɔve",
+	"titleFollowup": "Follow-up Sɔve",
+	"demo": "Na demo mode, di sɔve nɔ go sev",
 	"survey": {
 		"common": {
 			"start": "Stat",
