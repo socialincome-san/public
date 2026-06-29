@@ -48,7 +48,7 @@ export const OnboardingPersonalForm = ({
 				<div className="border-border border-b pb-2">
 					<p className="text-foreground px-6 text-lg leading-normal font-medium">{t('onboarding.accountCardTitle')}</p>
 
-					<div className="border-border flex flex-col gap-6 border-t border-b p-6 lg:flex-row lg:gap-6">
+					<div className="border-border mt-4 flex flex-col gap-6 border-t border-b p-6 lg:flex-row lg:gap-6">
 						<p className="text-foreground shrink-0 text-base leading-none font-medium lg:w-1/2">
 							{t('onboarding.isThisYou')}
 						</p>

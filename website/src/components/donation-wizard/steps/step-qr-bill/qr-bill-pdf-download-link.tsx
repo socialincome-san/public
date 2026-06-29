@@ -7,7 +7,7 @@ import { Download } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import type { DonationAmountContext } from '../../utils/donation-amount';
-import { downloadBase64File } from '../../utils/download-base64-file';
+import { openBase64FileInNewTab } from '../../utils/download-base64-file';
 import type { QrDonorContext } from '../../wizard/donation-wizard-context';
 
 type QrBillPdfDownloadLinkProps = {
@@ -31,6 +31,8 @@ export const QrBillPdfDownloadLink = ({
 	const [downloading, setDownloading] = useState(false);
 
 	const onDownload = async () => {
+		const pdfWindow = window.open('', '_blank');
+
 		setDownloading(true);
 
 		try {
@@ -43,13 +45,17 @@ export const QrBillPdfDownloadLink = ({
 			});
 
 			if (!result.success) {
+				pdfWindow?.close();
 				toast.error(t('stepQrBill.downloadPdfError'));
 
 				return;
 			}
 
-			downloadBase64File(result.data.pdfBase64, 'application/pdf', result.data.filename);
+			if (!openBase64FileInNewTab(result.data.pdfBase64, 'application/pdf', result.data.filename, pdfWindow)) {
+				toast.error(t('stepQrBill.downloadPdfError'));
+			}
 		} catch {
+			pdfWindow?.close();
 			toast.error(t('stepQrBill.downloadPdfError'));
 		} finally {
 			setDownloading(false);

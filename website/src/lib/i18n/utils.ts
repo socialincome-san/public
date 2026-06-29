@@ -53,7 +53,7 @@ export const defaultRegion: WebsiteRegion = 'int';
 export const websiteRegions: WebsiteRegion[] = ['int', 'ch'];
 
 export type WebsiteCurrency = Extract<Currency, 'USD' | 'EUR' | 'CHF' | 'SLE'>;
-export const websiteCurrencies: WebsiteCurrency[] = ['USD', 'EUR', 'CHF'];
+export const websiteCurrencies: WebsiteCurrency[] = ['CHF', 'EUR', 'USD'];
 
 export const isWebsiteCurrency = (value: string | undefined): value is WebsiteCurrency =>
 	value !== undefined && websiteCurrencies.some((currency) => currency === value);
