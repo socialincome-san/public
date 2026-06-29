@@ -20,7 +20,7 @@ import NextLink from 'next/link';
 const MOBILE_IMAGE_MAX_WIDTH = 140;
 
 type MobileImageRowProps = {
-	images: Array<StoryblokAsset & { filename: string }>;
+	images: (StoryblokAsset & { filename: string })[];
 	className?: string;
 };
 
