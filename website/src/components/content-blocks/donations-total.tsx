@@ -95,11 +95,15 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency,
 					</SectionHeading>
 				)}
 
-				<div className="text-primary mb-8 flex items-baseline justify-center gap-3">
-					<span className="text-xl md:text-2xl">{currency}</span>
-					<span className="text-6xl font-light tracking-tight md:text-8xl lg:text-[10rem]">
-						{formatNumberLocale(displayValue, locale)}
-					</span>
+				<div className="mb-8 flex justify-center">
+					<div className="relative">
+						<span className="text-primary text-6xl font-light tracking-tight md:text-8xl lg:text-[10rem]">
+							{formatNumberLocale(displayValue, locale)}
+						</span>
+						<span className="text-primary absolute right-full bottom-0 mr-3 text-xl leading-none md:text-2xl">
+							{currency}
+						</span>
+					</div>
 				</div>
 
 				{button && buttonHref && (
