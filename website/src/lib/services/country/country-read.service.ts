@@ -207,24 +207,64 @@ export class CountryReadService extends BaseService {
 
 	async getProgramCountryFeasibility(): Promise<ServiceResult<ProgramCountryFeasibilityView>> {
 		try {
-			const countries = await this.db.country.findMany({
-				include: {
-					microfinanceSourceLink: true,
-					networkSourceLink: true,
-					mobileMoneyProviders: { include: { mobileMoneyProvider: { select: { id: true, name: true } } } },
-					programs: {
-						include: {
-							_count: {
-								select: { recipients: true },
+			const [countries, candidates] = await Promise.all([
+				this.db.country.findMany({
+					include: {
+						microfinanceSourceLink: true,
+						networkSourceLink: true,
+						mobileMoneyProviders: { include: { mobileMoneyProvider: { select: { id: true, name: true } } } },
+						programs: {
+							include: {
+								_count: {
+									select: { recipients: true },
+								},
+							},
+						},
+						_count: {
+							select: { programs: true },
+						},
+					},
+					orderBy: { isoCode: 'asc' },
+				}),
+				this.db.recipient.findMany({
+					where: { programId: null },
+					select: {
+						contact: {
+							select: {
+								address: {
+									select: {
+										country: true,
+									},
+								},
+							},
+						},
+						localPartner: {
+							select: {
+								contact: {
+									select: {
+										address: {
+											select: {
+												country: true,
+											},
+										},
+									},
+								},
 							},
 						},
 					},
-					_count: {
-						select: { programs: true },
-					},
-				},
-				orderBy: { isoCode: 'asc' },
-			});
+				}),
+			]);
+
+			const candidateCountsByCountry = new Map<CountryCode, number>();
+			for (const candidate of candidates) {
+				const candidateCountry =
+					candidate.contact?.address?.country ?? candidate.localPartner?.contact?.address?.country ?? null;
+				if (!candidateCountry) {
+					continue;
+				}
+
+				candidateCountsByCountry.set(candidateCountry, (candidateCountsByCountry.get(candidateCountry) ?? 0) + 1);
+			}
 
 			const rows: ProgramCountryFeasibilityRow[] = countries.map((country) => {
 				const microfinanceIndex = this.toNumber(country.microfinanceIndex);
@@ -275,6 +315,7 @@ export class CountryReadService extends BaseService {
 					stats: {
 						programCount,
 						recipientCount,
+						candidateCount: candidateCountsByCountry.get(country.isoCode) ?? 0,
 					},
 					cash: {
 						condition: cashCondition,
