@@ -1,5 +1,10 @@
 {
+	"titleOnboarding": "Questionario di onboarding",
+	"titleCheckin": "Questionario di check-in",
+	"titleOffboarding": "Questionario di offboarding",
+	"titleFollowup": "Questionario di follow-up",
 	"select": "Seleziona",
+	"demo": "In modalità demo il questionario non può essere salvato",
 	"survey": {
 		"common": {
 			"start": "Inizia",

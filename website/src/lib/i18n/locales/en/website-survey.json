@@ -1,5 +1,10 @@
 {
+	"titleOnboarding": "Onboarding Survey",
+	"titleCheckin": "Check-in Survey",
+	"titleOffboarding": "Offboarding Survey",
+	"titleFollowup": "Follow-up Survey",
 	"select": "Select",
+	"demo": "In demo mode the survey can't be saved",
 	"survey": {
 		"common": {
 			"start": "Start",
