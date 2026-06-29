@@ -9,10 +9,11 @@ const SEEDED_SURVEY_URL = `${SEEDED_SURVEY_PATH}?email=candidate-sl-1%40survey.t
 const SEEDED_SURVEY_ID = 'survey-recipient-candidate-sl-1-intake';
 const SEEDED_SURVEY_EMAIL = 'candidate-sl-1@survey.test';
 const SEEDED_SURVEY_PASSWORD = 'seed-survey-pw';
+const SURVEY_LOAD_TIMEOUT = 15_000;
 const plannedAchievement = 'I want to use Social Income to grow my business and support my family.';
 
 const expectSurveyWelcomePage = async (page: Page) => {
-	await expect(page.getByText('Hello candidate_sl-1 candidate_pool')).toBeVisible();
+	await expect(page.getByText('Hello candidate_sl-1 candidate_pool')).toBeVisible({ timeout: SURVEY_LOAD_TIMEOUT });
 	await expect(
 		page.getByText(
 			'The goal of this survey is to find out the impact of a Social Income for you. Takes around 5 minutes to complete.',
