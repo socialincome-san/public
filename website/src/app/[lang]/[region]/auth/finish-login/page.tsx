@@ -7,6 +7,21 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+const getEmailFromLoginUrl = (url: string): string | null => {
+	const searchParams = new URL(url).searchParams;
+	const email = searchParams.get('email');
+	if (email) {
+		return email;
+	}
+
+	const continueUrl = searchParams.get('continueUrl');
+	if (!continueUrl) {
+		return null;
+	}
+
+	return new URL(continueUrl).searchParams.get('email');
+};
+
 export default function FinishLoginPage() {
 	const { auth } = useAuth();
 	const router = useRouter();
@@ -25,19 +40,13 @@ export default function FinishLoginPage() {
 
 			setStatus('signing-in');
 
-			// only allow login from same device
-			const email = localStorage.getItem('loginEmail');
-
-			if (!email) {
-				setStatus('error');
-
-				return;
-			}
-
 			try {
-				await signInWithEmailLink(auth, email, url);
+				const email = getEmailFromLoginUrl(url);
+				if (!email) {
+					throw new Error('Missing email in login URL');
+				}
 
-				localStorage.removeItem('loginEmail');
+				await signInWithEmailLink(auth, email, url);
 
 				const user = auth.currentUser;
 				if (!user) {

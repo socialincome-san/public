@@ -48,10 +48,8 @@ export const MagicLinkLoginForm = ({ lang, prefilledEmail = '' }: Props) => {
 		setSubmittedEmail(email);
 
 		try {
-			localStorage.setItem('loginEmail', email);
-
 			const actionCodeSettings = {
-				url: `${window.location.origin}/auth/confirm-login`,
+				url: `${window.location.origin}/auth/confirm-login?email=${encodeURIComponent(email)}`,
 				handleCodeInApp: true,
 			};
 
