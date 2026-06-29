@@ -55,10 +55,10 @@ export const Wallet = ({
 	};
 
 	const content = (
-		<div className="group relative h-full" style={walletStyle} data-testid="wallet">
+		<div className="group relative h-full w-full min-w-0" style={walletStyle} data-testid="wallet">
 			<Card
 				variant="noPadding"
-				className="flex h-full max-w-full flex-col overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl"
+				className="flex h-full max-w-full min-w-0 flex-col overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl"
 			>
 				<WalletImageStack images={images} />
 				<WalletFront
@@ -75,7 +75,7 @@ export const Wallet = ({
 	);
 
 	return href ? (
-		<Link href={href} className="block h-full">
+		<Link href={href} className="block h-full w-full min-w-0">
 			{content}
 		</Link>
 	) : (

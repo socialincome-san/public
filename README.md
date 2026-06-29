@@ -172,24 +172,24 @@ http://localhost:4000/logs
 
 ## Development Flow
 
-The main integration branch for active development is `develop`.
+The main integration branch for active development is `main`.
 
-1. Create your feature branch from `develop`.
+1. Create your feature branch from `main`.
 2. Keep your changes focused on one issue or feature.
 3. Run the relevant checks locally.
-4. Open a pull request back into `develop`.
+4. Open a pull request back into `main`.
 5. Wait for CI and review.
 
 Example:
 
 ```bash
-git checkout develop
+git checkout main
 git pull
 git checkout -b fix/issue-2064-short-description
 ```
 
-Website checks run for pull requests and for pushes to `develop` and `main`.
-Staging deployment is connected to `develop`; production releases are handled
+Website checks run for pull requests and for pushes to `main`.
+Staging deployment is connected to `main`; production releases are handled
 by maintainers.
 
 Useful local checks for website changes:

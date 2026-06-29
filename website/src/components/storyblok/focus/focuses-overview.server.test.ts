@@ -9,6 +9,7 @@ import {
 	getSdgFilterOptions,
 	getSdgQuery,
 	getSearchQuery,
+	sortFocusesByCandidatesCountDesc,
 } from './focuses-overview.server';
 
 type CreateFocusInput = {
@@ -107,5 +108,17 @@ describe('focuses overview server helpers', () => {
 		const searchFilteredFocuses = focuses.filter((focus) => focusMatchesSearchQuery(focus, 'medical health'));
 
 		expect(searchFilteredFocuses.map((focus) => focus.content.portalSlug)).toEqual(['health']);
+	});
+
+	it('sorts focuses by candidates count descending', () => {
+		const missingStatsFocus = createFocus({
+			slug: 'livelihood',
+			portalSlug: 'livelihood',
+			title: 'Livelihood',
+			text: 'Cash transfers for livelihood support',
+		});
+		const sortedFocuses = sortFocusesByCandidatesCountDesc([...focuses, missingStatsFocus], statsBySlug);
+
+		expect(sortedFocuses.map((focus) => focus.content.portalSlug)).toEqual(['health', 'education', 'livelihood']);
 	});
 });
