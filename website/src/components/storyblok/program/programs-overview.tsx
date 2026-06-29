@@ -29,7 +29,7 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 			{programs.length === 0 ? (
 				<p className="text-muted-foreground">{translator.t('programs-page.empty')}</p>
 			) : (
-				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					{programs.map((program) => {
 						const portalSlug = getProgramPortalSlug(program.content);
 						const programTitle = getProgramTitle(program.content);

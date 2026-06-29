@@ -25,7 +25,7 @@ export const CampaignsOverview = async ({ campaigns, statsById, lang, region, ti
 			{campaigns.length === 0 ? (
 				<p className="text-muted-foreground">{t('campaigns-page.empty')}</p>
 			) : (
-				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					{campaigns.map((campaign) => (
 						<li key={campaign.id} className="h-full">
 							<Wallet
