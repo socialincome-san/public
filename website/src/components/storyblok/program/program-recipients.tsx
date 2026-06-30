@@ -17,7 +17,7 @@ export const ProgramRecipients = async ({ count, programId, translator, lang }: 
 	const isLoggedIn = user !== null;
 
 	return (
-		<div className="bg-card flex h-full flex-col items-start gap-8 rounded-xl px-10 pt-8 pb-10 shadow-lg">
+		<div className="bg-card flex h-full flex-col items-start gap-8 rounded-xl p-4 lg:p-6 shadow-lg">
 			<h2 className="text-foreground text-xl font-bold">{translator.t('navigation.recipients')}</h2>
 			<p className="text-foreground text-6xl font-light">{formatNumberLocale(count, locale)}</p>
 			{programId ? (

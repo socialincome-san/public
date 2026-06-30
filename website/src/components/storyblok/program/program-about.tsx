@@ -27,7 +27,7 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region, reso
 	const hasDialogContent = content.overlaySections.length > 0;
 
 	return (
-		<div className="bg-card flex flex-col gap-6 rounded-xl px-10 pt-8 pb-10 shadow-lg">
+		<div className="bg-card flex flex-col gap-6 rounded-xl p-4 lg:p-6 shadow-lg">
 			<h2 className="text-foreground text-xl font-bold">{aboutTitle}</h2>
 
 			{content.description ? <p className="text-foreground text-base">{content.description}</p> : null}

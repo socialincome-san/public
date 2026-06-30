@@ -21,7 +21,7 @@ export const ProgramFinances = async ({ stats, programId, translator, lang }: Pr
 	const financesCard = <ProgramFinancesCard displayAmounts={displayAmounts} translator={translator} lang={lang} embedded />;
 
 	return (
-		<div className="bg-card flex flex-col gap-6 rounded-xl px-10 py-8 shadow-lg">
+		<div className="bg-card flex flex-col gap-6 rounded-xl p-4 lg:p-6 shadow-lg">
 			<div className="flex items-center justify-between">
 				<h2 className="text-foreground text-xl font-bold">{translator.t('navigation.finances')}</h2>
 				
