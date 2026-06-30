@@ -21,7 +21,11 @@ export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'ty
 	tags?: ISbStoryData<Tag>[];
 };
 
-export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>) => {
+export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>, includeSubtitle = false) => {
+	if (!includeSubtitle) {
+		return article.content.title;
+	}
+
 	const subtitle = article.content.subtitle?.trim();
 
 	return subtitle ? `${article.content.title} ${subtitle}` : article.content.title;
