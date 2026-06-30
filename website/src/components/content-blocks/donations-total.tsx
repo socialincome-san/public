@@ -85,7 +85,7 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency,
 				<FloatingImage key={image.id} image={image} index={index} smoothMouseX={smoothMouseX} smoothMouseY={smoothMouseY} />
 			))}
 
-			<div className="relative z-10 flex flex-col items-center justify-center py-16 text-center md:py-24 lg:py-32">
+			<div className="relative z-10 flex flex-col items-center justify-center py-8 text-center md:py-24 lg:py-32">
 				<MobileImageRow images={images.slice(0, 2)} className="mb-6" />
 
 				{blok.heading && (
