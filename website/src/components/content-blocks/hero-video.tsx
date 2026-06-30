@@ -147,7 +147,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 				)}
 
 				{!isExpanded && (
-					<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto flex flex-row items-center justify-between gap-4">
+					<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto mb-8 flex flex-row items-end justify-between gap-4 md:mb-0 md:items-center">
 						<div className="flex max-w-2xl flex-col gap-6">
 							{heading && (
 								<h1 className="text-4xl font-light xl:text-6xl [&_strong]:font-bold">

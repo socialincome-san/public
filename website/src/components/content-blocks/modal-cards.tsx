@@ -52,12 +52,12 @@ export const ModalCardsBlock = ({ blok }: Props) => {
 									<StoryblokMarkdown>{heading}</StoryblokMarkdown>
 								</span>
 							</button>
-							<DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
-								<DialogTitle>
+							<DialogContent className="flex max-h-[85vh] flex-col gap-0 overflow-y-auto sm:max-w-2xl">
+								<DialogTitle className="pr-10">
 									<StoryblokMarkdown>{heading}</StoryblokMarkdown>
 								</DialogTitle>
 								{modalContent && (
-									<div className="text-foreground text-base">
+									<div className="text-foreground mt-4 text-base [&>*:first-child]:mt-0">
 										<RichTextRenderer richTextDocument={modalContent} />
 									</div>
 								)}
