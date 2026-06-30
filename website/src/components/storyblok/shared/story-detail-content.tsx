@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
 
 export const StoryDetailContent = ({ children }: PropsWithChildren) => (
-	<div className="max-w-content 2xl:w-site-width ml-[2vw] pl-2 xl:pl-8 2xl:mx-auto">{children}</div>
+	<div className="w-site-width max-w-content mx-auto">{children}</div>
 );
