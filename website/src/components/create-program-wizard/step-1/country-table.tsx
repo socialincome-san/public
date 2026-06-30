@@ -54,7 +54,7 @@ export const CountryTable = ({ rows, value, openIds, onValueChange, onToggleRow 
 
 	return (
 		<RadioGroup value={value ?? ''} onValueChange={onValueChange}>
-			<div className="space-y-3">
+			<div className="min-w-0 space-y-3">
 				<CountryTableHeader
 					search={search}
 					onSearchChange={setSearch}

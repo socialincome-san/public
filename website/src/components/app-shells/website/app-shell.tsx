@@ -23,7 +23,9 @@ export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: Web
 				<Navbar sessions={sessions} lang={lang} region={region} scope={scope} />
 				<main
 					className={
-						isContained ? 'w-site-width max-w-content mx-auto mt-20 flex-1 pb-8' : '[&:not(:has(>.full-bleed-hero))]:mt-20'
+						isContained
+							? 'w-site-width max-w-content mx-auto mt-20 flex-1 pb-8'
+							: '[&:not(:has(>.full-bleed-hero))]:lg:mt-20'
 					}
 				>
 					{children}
