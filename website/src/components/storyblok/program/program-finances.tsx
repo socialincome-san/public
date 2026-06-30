@@ -24,7 +24,11 @@ export const ProgramFinances = async ({ stats, programId, translator, lang }: Pr
 		<div className="bg-card flex flex-col gap-6 rounded-xl px-10 py-8 shadow-lg">
 			<div className="flex items-center justify-between">
 				<h2 className="text-foreground text-xl font-bold">{translator.t('navigation.finances')}</h2>
-				<ProgramFinancesDialog
+				
+			</div>
+
+			{financesCard}
+			<ProgramFinancesDialog
 					dialogTitle={translator.t('program-detail-page.program-finances-title')}
 					viewBreakdownLabel={translator.t('program-detail-page.view-breakdown')}
 					manageLabel={
@@ -35,9 +39,6 @@ export const ProgramFinances = async ({ stats, programId, translator, lang }: Pr
 					financesCard={financesCard}
 					programId={programId}
 				/>
-			</div>
-
-			{financesCard}
 		</div>
 	);
 };

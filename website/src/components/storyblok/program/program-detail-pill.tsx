@@ -4,7 +4,7 @@ import type { LinkProps } from 'next/link';
 import Link from 'next/link';
 
 const pillClassName = cn(
-	'text-foreground bg-muted inline-flex items-center gap-1.5 rounded-full py-1.5 pr-2 pl-3 text-xs font-bold',
+	'text-foreground bg-muted inline-flex w-fit items-center gap-1.5 rounded-full py-1.5 pr-2 pl-3 text-xs font-bold',
 );
 const interactivePillClassName = cn(
 	pillClassName,
