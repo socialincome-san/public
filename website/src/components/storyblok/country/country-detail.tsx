@@ -1,5 +1,6 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { StoryDetailContent } from '@/components/storyblok/shared/story-detail-content';
@@ -41,6 +42,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 				lang={lang}
 				title={countryTitle}
 				heroImage={country.content.heroImage}
+				showDonationsFormMobile={false}
 				titleIcon={isoCode === '-' ? undefined : `/assets/flags/${isoCode.toLowerCase()}.svg`}
 				titleIconAlt={isoCode === '-' ? undefined : `${isoCode} flag`}
 				stats={[
@@ -62,6 +64,9 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 			/>
 			<StoryDetailContent>
 				<Breadcrumb links={breadcrumbLinks} />
+				<div className="px-4 pb-6 lg:hidden">
+					<DonationFormServer lang={lang} />
+				</div>
 				<CountryMap country={country} lang={lang} />
 				<CountryPersonCarousel country={country} lang={lang} />
 				<CountryPayoutsTotal country={country} lang={lang} region={region} />
