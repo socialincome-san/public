@@ -10,7 +10,7 @@ import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblo
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { useDonationTotalAnimations } from '@/lib/hooks/use-donation-total-animations';
 import { getSafeNumberFormatLocale, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getScaledDimensions, resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokResizeUrl, getScaledAssetDimensions, resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
@@ -30,20 +30,19 @@ const MobileImageRow = ({ images, className }: MobileImageRowProps) => {
 	}
 
 	return (
-		<div className={cn('flex justify-center gap-4 md:hidden', className)}>
+		<div className={cn('flex items-center justify-center gap-4 md:hidden', className)}>
 			{images.map((image) => {
-				const dimensions = getScaledDimensions(image.filename, MOBILE_IMAGE_MAX_WIDTH) ?? {
-					width: MOBILE_IMAGE_MAX_WIDTH,
-					height: MOBILE_IMAGE_MAX_WIDTH,
-				};
+				const dimensions = getScaledAssetDimensions(image, MOBILE_IMAGE_MAX_WIDTH);
+				const imageSrc = formatStoryblokResizeUrl(image.filename, dimensions.width, dimensions.height);
 
 				return (
 					<NextImage
 						key={image.id}
-						src={image.filename}
+						src={imageSrc}
 						alt={image.alt ?? ''}
 						width={dimensions.width}
 						height={dimensions.height}
+						sizes={`${MOBILE_IMAGE_MAX_WIDTH}px`}
 						className="rounded-3xl"
 					/>
 				);
