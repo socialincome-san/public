@@ -43,27 +43,15 @@ export const ProgramDetailDialog = ({
 					hideCloseButton
 					className="w-site-width flex max-h-[85vh] max-w-none flex-col gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-none"
 				>
-					<DialogHeader className="border-border bg-background sticky top-0 z-10 mx-0 flex shrink-0 flex-col gap-4 space-y-0 rounded-t-3xl border-b px-12 py-6 sm:flex-row sm:items-center sm:justify-between">
-						<div className="flex items-center justify-between gap-4 sm:min-w-0 sm:flex-1">
-							<DialogTitle className="min-w-0 text-2xl leading-none font-medium">{title}</DialogTitle>
-							<Button
-								type="button"
-								size="icon"
-								variant="ghost"
-								className="size-8 shrink-0 rounded-full sm:hidden"
-								onClick={() => handleOpenChange(false)}
-								aria-label={closeAriaLabel}
-							>
-								<X aria-hidden="true" />
-							</Button>
-						</div>
-						<div className={cn('flex items-center gap-2 sm:shrink-0 sm:justify-end', !headerActions && 'hidden sm:flex')}>
+					<DialogHeader className="border-border bg-background sticky top-0 z-10 mx-0 flex shrink-0 items-start gap-4 space-y-0 rounded-t-3xl border-b px-12 py-6">
+						<DialogTitle className="min-w-0 text-2xl mt-2 leading-none font-medium">{title}</DialogTitle>
+						<div className="ml-auto flex flex-col-reverse items-end gap-2 sm:flex-row sm:items-center">
 							{headerActions}
 							<Button
 								type="button"
 								size="icon"
 								variant="ghost"
-								className="hidden size-8 shrink-0 rounded-full sm:inline-flex"
+								className="size-8 shrink-0 rounded-full"
 								onClick={() => handleOpenChange(false)}
 								aria-label={closeAriaLabel}
 							>
