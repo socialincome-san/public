@@ -28,17 +28,7 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region, reso
 
 	return (
 		<div className="bg-card flex flex-col gap-6 rounded-xl px-10 pt-8 pb-10 shadow-lg">
-			<div className="flex items-center justify-between">
-				<h2 className="text-foreground text-xl font-bold">{aboutTitle}</h2>
-				{hasDialogContent ? (
-					<ProgramAboutDialog
-						aboutTitle={aboutTitle}
-						viewDetailsLabel={translator.t('program-detail-page.view-details')}
-						closeAriaLabel={translator.t('program-detail-page.close')}
-						content={content}
-					/>
-				) : null}
-			</div>
+			<h2 className="text-foreground text-xl font-bold">{aboutTitle}</h2>
 
 			{content.description ? <p className="text-foreground text-base">{content.description}</p> : null}
 
@@ -61,6 +51,15 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region, reso
 					</div>
 				))}
 			</dl>
+
+			{hasDialogContent ? (
+				<ProgramAboutDialog
+					aboutTitle={aboutTitle}
+					viewDetailsLabel={translator.t('program-detail-page.view-details')}
+					closeAriaLabel={translator.t('program-detail-page.close')}
+					content={content}
+				/>
+			) : null}
 		</div>
 	);
 };
