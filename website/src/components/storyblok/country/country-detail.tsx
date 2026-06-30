@@ -1,7 +1,7 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
+import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { StoryDetailContent } from '@/components/storyblok/shared/story-detail-content';
 import { Translator } from '@/lib/i18n/translator';

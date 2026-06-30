@@ -10,7 +10,11 @@ import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblo
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { useDonationTotalAnimations } from '@/lib/hooks/use-donation-total-animations';
 import { getSafeNumberFormatLocale, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { formatStoryblokResizeUrl, getScaledAssetDimensions, resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
+import {
+	formatStoryblokResizeUrl,
+	getScaledAssetDimensions,
+	resolveStoryblokLink,
+} from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';

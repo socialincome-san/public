@@ -25,7 +25,7 @@ export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, regio
 
 	return (
 		<BlockWrapper className="max-2xl:overflow-visible">
-			<div className="grid max-2xl:w-[calc(100%+max(0px,calc((100vw-100%)/2)))] gap-8 lg:grid-cols-3 lg:items-center">
+			<div className="grid gap-8 max-2xl:w-[calc(100%+max(0px,calc((100vw-100%)/2)))] lg:grid-cols-3 lg:items-center">
 				<div className="pr-8 lg:col-span-1 lg:pr-0">
 					<LocalPartnersTeaserIntro lang={lang} />
 				</div>

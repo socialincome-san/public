@@ -1,5 +1,10 @@
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
-import { formatStoryblokResizeUrl, formatStoryblokUrl, getScaledAssetDimensions, resolveStoryblokLink } from './storyblok.utils';
+import {
+	formatStoryblokResizeUrl,
+	formatStoryblokUrl,
+	getScaledAssetDimensions,
+	resolveStoryblokLink,
+} from './storyblok.utils';
 
 describe('resolveStoryblokLink', () => {
 	it('resolves unset internal Storyblok links to a placeholder', () => {
@@ -37,10 +42,7 @@ describe('formatStoryblokUrl', () => {
 
 describe('getScaledAssetDimensions', () => {
 	it('scales dimensions from the asset metadata when the URL has no dimensions', () => {
-		const result = getScaledAssetDimensions(
-			{ filename: 'https://example.com/photo.jpg', width: 800, height: 600 },
-			175,
-		);
+		const result = getScaledAssetDimensions({ filename: 'https://example.com/photo.jpg', width: 800, height: 600 }, 175);
 
 		expect(result).toEqual({ width: 175, height: 131 });
 	});

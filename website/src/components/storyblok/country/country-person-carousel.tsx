@@ -52,9 +52,7 @@ export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 								</CarouselItem>
 							))}
 						</CarouselContent>
-						{hasMultiplePersons ? (
-							<CarouselScrollNextButton aria-label={nextButtonAriaLabel} />
-						) : null}
+						{hasMultiplePersons ? <CarouselScrollNextButton aria-label={nextButtonAriaLabel} /> : null}
 					</Carousel>
 				</div>
 			</div>
