@@ -89,12 +89,12 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency,
 				<MobileImageRow images={images.slice(0, 2)} className="mb-6" />
 
 				{blok.heading && (
-					<SectionHeading className="mb-6 leading-tight whitespace-pre-wrap md:mb-6">
+					<SectionHeading className="mb-6 leading-tight whitespace-pre-wrap md:mb-6" size={3}>
 						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 					</SectionHeading>
 				)}
 
-				<div className="mb-8 flex justify-center">
+				<div className="mb-6 flex justify-center">
 					<div className="relative">
 						<span className="text-primary text-6xl font-light tracking-tight md:text-8xl lg:text-[10rem]">
 							{formatNumberLocale(displayValue, locale)}
@@ -111,7 +111,7 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency,
 					</Button>
 				)}
 
-				<MobileImageRow images={images.slice(2, 4)} className="mt-8" />
+				<MobileImageRow images={images.slice(2, 4)} />
 			</div>
 		</BlockWrapper>
 	);
