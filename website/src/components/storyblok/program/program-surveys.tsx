@@ -18,7 +18,7 @@ export const ProgramSurveys = ({ completedCount, translator, lang, region, progr
 		: undefined;
 
 	return (
-		<div className="bg-card flex h-full flex-col items-start gap-8 rounded-xl p-4 lg:p-6 shadow-lg">
+		<div className="bg-card flex h-full flex-col items-start gap-8 rounded-xl p-4 shadow-lg lg:p-6">
 			<h2 className="text-foreground text-xl font-bold">{translator.t('program-detail-page.completed-surveys')}</h2>
 			<p className="text-foreground text-6xl font-light">{formatNumberLocale(completedCount, locale)}</p>
 			{impactHref ? (

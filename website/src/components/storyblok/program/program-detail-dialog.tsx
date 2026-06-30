@@ -44,7 +44,7 @@ export const ProgramDetailDialog = ({
 					className="w-site-width flex max-h-[85vh] max-w-none flex-col gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-none"
 				>
 					<DialogHeader className="border-border bg-background sticky top-0 z-10 mx-0 flex shrink-0 items-start gap-4 space-y-0 rounded-t-3xl border-b p-4 lg:p-6">
-						<DialogTitle className="min-w-0 text-2xl mt-2 leading-none font-medium">{title}</DialogTitle>
+						<DialogTitle className="mt-2 min-w-0 text-2xl leading-none font-medium">{title}</DialogTitle>
 						<div className="ml-auto flex flex-col-reverse items-end gap-2 sm:flex-row sm:items-center">
 							{headerActions}
 							<Button
