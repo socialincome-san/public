@@ -24,8 +24,12 @@ export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 	const countryName = getCountryTitle(country.content);
 	const countryOfficeTitle = country.content.countryOfficeTitle?.trim();
 	const countryOfficeDescription = country.content.countryOfficeDescription?.trim();
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
-	const nextButtonAriaLabel = translator.t('countries-page.person-carousel-next-button-aria');
+	const hasMultiplePersons = persons.length > 1;
+	const nextButtonAriaLabel = hasMultiplePersons
+		? (await Translator.getInstance({ language: lang, namespaces: ['website-common'] })).t(
+				'countries-page.person-carousel-next-button-aria',
+			)
+		: '';
 
 	return (
 		<BlockWrapper>
@@ -48,7 +52,9 @@ export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 								</CarouselItem>
 							))}
 						</CarouselContent>
-						<CarouselScrollNextButton aria-label={nextButtonAriaLabel} />
+						{hasMultiplePersons ? (
+							<CarouselScrollNextButton aria-label={nextButtonAriaLabel} />
+						) : null}
 					</Carousel>
 				</div>
 			</div>
