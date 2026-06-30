@@ -131,7 +131,7 @@ export class JournalService extends BaseService {
 			breadcrumbs: buildJournalArticleBreadcrumbs(
 				journalLabel,
 				journalPath,
-				getArticleTitle(story),
+				getArticleTitle(story, true),
 				createWebsiteJournalArticleLink(slug, lang, region),
 			),
 		});
