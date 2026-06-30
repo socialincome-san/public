@@ -25,6 +25,7 @@ type Props = {
 	preTitle?: ReactNode;
 	badges?: ReactNode;
 	showDonationForm?: boolean;
+	showDonationsFormMobile?: boolean;
 };
 
 export const HeroHeader = ({
@@ -37,6 +38,7 @@ export const HeroHeader = ({
 	preTitle,
 	badges,
 	showDonationForm = true,
+	showDonationsFormMobile = true,
 }: Props) => {
 	const heroImageSrc = heroImage?.filename
 		? formatStoryblokUrl(heroImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, heroImage.focus)
@@ -95,7 +97,7 @@ export const HeroHeader = ({
 				</div>
 			</div>
 
-			{showDonationForm ? (
+			{showDonationsFormMobile ? (
 				<div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">
 					<DonationFormServer lang={lang} />
 				</div>
