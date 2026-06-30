@@ -54,21 +54,21 @@ export const HeroHeader = ({
 
 				<div className="from-foreground/70 via-foreground/35 to-foreground/15 absolute inset-0 bg-gradient-to-t" />
 
-				<div className="text-primary-foreground max-w-content 2xl:w-site-width absolute inset-0 z-20 ml-[2vw] flex flex-row items-end justify-between gap-4 pr-24 pb-24 pl-8 2xl:mx-auto 2xl:pr-0">
+				<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto mb-8 flex flex-row items-end justify-between gap-4 md:mb-24">
 					<div className="text-primary-foreground flex max-w-2xl flex-col gap-4">
 						{preTitle ? <div className="flex flex-wrap gap-2">{preTitle}</div> : null}
-						<div className="flex items-center gap-4">
+						<h1 className="text-5xl leading-tight font-bold md:text-6xl">
+							{title}
 							{titleIcon ? (
 								<NextImage
 									src={titleIcon}
 									alt={titleIconAlt ?? title}
 									width={44}
 									height={32}
-									className="h-8 w-11 rounded-sm"
+									className="ml-3 inline-block h-8 w-11 rounded-sm align-baseline md:ml-4"
 								/>
 							) : null}
-							<h1 className="text-5xl font-bold md:text-6xl">{title}</h1>
-						</div>
+						</h1>
 
 						{stats.length > 0 ? (
 							<div className="flex flex-wrap gap-2">
