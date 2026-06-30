@@ -24,7 +24,7 @@ export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: Web
 				<main
 					className={
 						isContained
-							? 'overflow-x-clip w-site-width max-w-content mx-auto mt-20 flex-1 pb-8'
+							? 'w-site-width max-w-content mx-auto mt-20 flex-1 overflow-x-clip pb-8'
 							: 'overflow-x-clip [&:not(:has(>.full-bleed-hero))]:lg:mt-20'
 					}
 				>
