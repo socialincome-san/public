@@ -43,7 +43,7 @@ export const ProgramDetailDialog = ({
 					hideCloseButton
 					className="w-site-width flex max-h-[85vh] max-w-none flex-col gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-none"
 				>
-					<DialogHeader className="border-border bg-background sticky top-0 z-10 mx-0 flex shrink-0 items-start gap-4 space-y-0 rounded-t-3xl border-b px-12 py-6">
+					<DialogHeader className="border-border bg-background sticky top-0 z-10 mx-0 flex shrink-0 items-start gap-4 space-y-0 rounded-t-3xl border-b p-4 lg:p-6">
 						<DialogTitle className="min-w-0 text-2xl mt-2 leading-none font-medium">{title}</DialogTitle>
 						<div className="ml-auto flex flex-col-reverse items-end gap-2 sm:flex-row sm:items-center">
 							{headerActions}
@@ -60,7 +60,7 @@ export const ProgramDetailDialog = ({
 						</div>
 					</DialogHeader>
 
-					<div className={cn('overflow-y-auto px-12 pt-8 pb-12', bodyClassName)}>{children}</div>
+					<div className={cn('overflow-y-auto p-4 lg:p-6', bodyClassName)}>{children}</div>
 				</DialogContent>
 			</Dialog>
 		</>
