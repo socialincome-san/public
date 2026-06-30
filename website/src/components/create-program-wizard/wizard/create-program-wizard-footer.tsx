@@ -14,7 +14,7 @@ export const CreateProgramWizardFooter = ({ state, send }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 
 	return (
-		<div className="flex items-center justify-between border-t pt-4 gap-4">
+		<div className="flex items-center justify-between gap-4 border-t pt-4">
 			<Button variant="outline" onClick={() => send({ type: 'BACK' })} disabled={!state.can({ type: 'BACK' })}>
 				{t('common.back')}
 			</Button>

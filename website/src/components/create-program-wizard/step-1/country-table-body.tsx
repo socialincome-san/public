@@ -26,7 +26,7 @@ export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) =
 	return (
 		<div
 			data-testid="country-table"
-			className="max-h-96 min-w-0 w-full max-w-full overflow-x-auto overflow-y-auto rounded-xl border"
+			className="max-h-96 w-full max-w-full min-w-0 overflow-x-auto overflow-y-auto rounded-xl border"
 		>
 			<Table className="min-w-[820px]">
 				<TableHeader className="bg-muted/40">
