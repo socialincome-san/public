@@ -26,6 +26,7 @@
 		"types": ["jest", "node"]
 	},
 	"include": [
+		".storybook/**/*.ts",
 		"next-env.d.ts",
 		"**/*.ts",
 		"**/*.tsx",

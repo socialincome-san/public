@@ -20,8 +20,12 @@ depends = ["install", "db"]
 run = "npm run serve:ssl"
 depends = ["install", "db"]
 
+[tasks.storybook]
+run = "npm run storybook"
+depends = ["install"]
+
 [tasks.dev]
-depends = ["firebase", "website"]
+depends = ["firebase", "website", "storybook"]
 
 [tasks.dev-ssl]
-depends = ["firebase", "website-ssl"]
+depends = ["firebase", "website-ssl", "storybook"]
