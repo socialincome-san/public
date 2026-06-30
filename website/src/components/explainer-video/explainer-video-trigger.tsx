@@ -32,7 +32,7 @@ export const ExplainerVideoTrigger = ({
 		<span
 			className={cn(
 				'relative shrink-0 overflow-hidden shadow-md',
-				layout === 'row' ? 'aspect-video h-10 w-16 rounded-full' : 'aspect-video h-16 rounded-full',
+				layout === 'row' ? 'aspect-video h-10 w-16 rounded-full' : 'aspect-video h-12 rounded-full md:h-16',
 			)}
 		>
 			<NextImage src={thumbnailSrc} alt={accessibleLabel} fill sizes="176px" className="object-cover" />
@@ -40,7 +40,7 @@ export const ExplainerVideoTrigger = ({
 			<span
 				className={cn(
 					'bg-foreground/35 absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition-transform duration-200 ease-out group-hover:scale-105',
-					layout === 'row' ? 'h-8 w-8' : 'h-12 w-12',
+					layout === 'row' ? 'h-8 w-8' : 'h-8 w-8 md:h-12 md:w-12',
 				)}
 			>
 				<PlayIcon className={cn('text-primary-foreground', layout === 'row' ? 'size-4' : 'size-6')} />
@@ -59,7 +59,7 @@ export const ExplainerVideoTrigger = ({
 					'group text-left text-sm font-medium transition-colors',
 					layout === 'row'
 						? 'border-border hover:bg-muted/50 flex w-full items-center gap-2 border-b px-2 py-4'
-						: 'flex flex-col items-center gap-4 self-center',
+						: 'flex items-center gap-2 self-center md:flex-col md:items-center md:gap-4',
 					className,
 				)}
 			>

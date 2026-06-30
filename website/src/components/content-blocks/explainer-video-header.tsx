@@ -55,7 +55,7 @@ export const ExplainerVideoHeaderBlock = ({ blok, lang, region }: Props) => {
 						thumbnailSrc={explainerVideoThumbnailSrc ?? undefined}
 						thumbnailAlt={explainerVideoThumbnail?.alt ?? undefined}
 						dialogTitle={explainerVideoLabel}
-						className="self-center"
+						className="self-start md:self-center"
 					/>
 				)}
 			</div>
