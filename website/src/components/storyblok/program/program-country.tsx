@@ -13,11 +13,11 @@ export const ProgramCountry = ({ resolvedCountry, translator }: Props) => {
 	const { isoCode, name, description, href } = resolvedCountry;
 
 	return (
-		<div className="bg-card flex flex-col items-stretch overflow-hidden rounded-xl p-3 shadow-lg md:flex-row md:py-3 md:pr-3 md:pl-0">
-			<div className="flex flex-1 flex-col items-start gap-5 px-7 pt-5 pb-2 md:px-10 md:pt-8">
+		<div className="bg-card flex flex-col items-stretch overflow-hidden rounded-xl p-4 shadow-lg md:flex-row">
+			<div className="flex flex-1 flex-col items-start gap-5 lg:p-2">
 				<h2 className="text-foreground text-xl font-bold">{name}</h2>
 				{description ? (
-					<div className="text-foreground prose line-clamp-9 max-w-none flex-1 text-base">
+					<div className="text-foreground prose line-clamp-13 max-w-none flex-1 text-base">
 						<RichTextRenderer richTextDocument={description} />
 					</div>
 				) : null}

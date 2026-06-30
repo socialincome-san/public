@@ -66,7 +66,7 @@ export const CreateProgramStepIndicator = ({ state }: Props) => {
 							{index + 1}
 						</div>
 
-						{index < stepCount - 1 && <div className="bg-muted h-px w-6" />}
+						{index < stepCount - 1 && <div className="bg-muted h-px w-0 md:w-6" />}
 					</div>
 				);
 			})}

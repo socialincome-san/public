@@ -16,10 +16,10 @@ export const CountryTableHeader = ({ search, onSearchChange, onlyAllMet, onOnlyA
 	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 
 	return (
-		<div className="flex items-center justify-between">
+		<div className="flex flex-wrap items-center justify-between gap-3">
 			<p className="text-sm font-medium">{t('step1.feasibility_title')}</p>
 
-			<div className="flex items-center gap-3">
+			<div className="flex min-w-0 flex-wrap items-center gap-3">
 				<div className="flex items-center gap-2">
 					<Switch checked={onlyAllMet} onCheckedChange={onOnlyAllMetChange} id="filter-all-met" />
 					<Label htmlFor="filter-all-met" className="text-sm whitespace-nowrap">
@@ -31,7 +31,7 @@ export const CountryTableHeader = ({ search, onSearchChange, onlyAllMet, onOnlyA
 					placeholder={t('common.search')}
 					value={search}
 					onChange={(e) => onSearchChange(e.target.value)}
-					className="h-8 w-40"
+					className="h-8 w-40 max-w-full"
 				/>
 			</div>
 		</div>
