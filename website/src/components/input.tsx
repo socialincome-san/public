@@ -8,7 +8,7 @@ export const Input = ({ className, type, ...props }: React.ComponentProps<'input
 			type={type}
 			data-slot="input"
 			className={cn(
-				'placeholder:text-muted-foreground border-border text-foreground h-10 w-full min-w-0 rounded-full border bg-transparent px-3 text-base shadow-xs outline-hidden transition-[color,box-shadow] disabled:opacity-50 text-sm',
+				'placeholder:text-muted-foreground border-border text-foreground h-10 w-full min-w-0 rounded-full border bg-transparent px-3 text-base text-sm shadow-xs outline-hidden transition-[color,box-shadow] disabled:opacity-50',
 				'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
 				'aria-invalid:ring-destructive/20 aria-invalid:border-destructive',
 				type === 'number' &&
