@@ -39,11 +39,11 @@ export const CountriesSection = ({ countries, lang, displayCurrency, rates }: Co
 									<CountryFlag country={country.countryCode} size="sm" />
 									<span className="font-medium">{country.country}</span>
 								</div>
-								<div className="text-right">
+								<div className="flex flex-col items-end md:flex-row md:items-baseline">
 									<span className="font-bold">
 										{formatCurrencyLocale(amount, currency, locale, { maximumFractionDigits: 0 })}
 									</span>
-									<span className="text-muted-foreground ml-2 text-sm">
+									<span className="text-muted-foreground text-sm md:ml-2">
 										({formatNumber(country.contributorCount, lang)} contributors)
 									</span>
 								</div>
