@@ -7,12 +7,14 @@ import { FILTER_PREFIX, IMPACT_FILTER_QUERY_KEYS } from './filters.constants';
 
 type ImpactMeasurementFiltersProps = {
 	allFiltersPlaceholder: string;
+	selectedCountLabel: string;
 	filterGroups: { heading: string; options: MultiSelectOption[] }[];
 	selectedFilters: string[];
 };
 
 export const ImpactMeasurementFilters = ({
 	allFiltersPlaceholder,
+	selectedCountLabel,
 	filterGroups,
 	selectedFilters,
 }: ImpactMeasurementFiltersProps) => {
@@ -76,6 +78,7 @@ export const ImpactMeasurementFilters = ({
 				defaultValue={selectedFilters}
 				onValueChange={updateMultiFilter}
 				placeholder={allFiltersPlaceholder}
+				selectedCountLabel={selectedCountLabel}
 				placeholderIcon={Funnel}
 				placeholderClassName="text-foreground"
 				hideSelectAll

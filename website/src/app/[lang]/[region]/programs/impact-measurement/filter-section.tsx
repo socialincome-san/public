@@ -115,6 +115,7 @@ export const ImpactMeasurementFilterSection = async ({ lang, searchParams }: Imp
 	return (
 		<ImpactMeasurementFilters
 			allFiltersPlaceholder={translator.t('survey.impactMeasurement.filters.filter')}
+			selectedCountLabel={translator.t('survey.impactMeasurement.filters.selectedCount')}
 			filterGroups={filterGroups}
 			selectedFilters={toSelectedFilterTokens(searchParams)}
 		/>

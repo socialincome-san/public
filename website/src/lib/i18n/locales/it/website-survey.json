@@ -109,7 +109,8 @@
 				"allPrograms": "Tutti i programmi",
 				"allFocuses": "Tutti i focus",
 				"allSurveys": "Tutti i questionari",
-				"filter": "Filtro"
+				"filter": "Filtro",
+				"selectedCount": "{{count}} selezionati"
 			},
 			"countryHeading": "Paese",
 			"ageHeading": "Età",
