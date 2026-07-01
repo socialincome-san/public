@@ -46,12 +46,12 @@ export const DonutChart = ({ options, emptyLabel }: DonutChartProps) => {
 	return (
 		<div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-10">
 			<div
-				className="relative grid size-32 place-items-center rounded-full sm:size-40"
+				className="relative grid size-34 place-items-center rounded-full sm:size-40"
 				style={{ backgroundImage: donutBackground }}
 			>
-				<div className="bg-card grid size-20 place-items-center rounded-full sm:size-24">
+				<div className="bg-card grid place-items-center rounded-full size-24">
 					<div className="text-center">
-						<div className="text-foreground text-3xl leading-none font-medium sm:text-4xl">
+						<div className="text-foreground text-2xl leading-none font-medium sm:text-3xl">
 							{Math.round(topOption?.percentage ?? 0)}%
 						</div>
 						<div className="text-foreground text-sm">{topOption?.label ?? emptyLabel}</div>
