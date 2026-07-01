@@ -1,4 +1,5 @@
 import { DefaultLayoutPropsWithSlug, DefaultPageProps } from '@/app/[lang]/[region]';
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import PageContentType from '@/components/content-types/page';
@@ -33,9 +34,9 @@ export default async function ContentPage({ params, searchParams }: DefaultLayou
 
 	return (
 		<>
-			<div className="w-site-width max-w-content">
-				<Breadcrumb links={breadcrumbLinks} className="pb-0" />
-			</div>
+			<BlockWrapper disableMarginTop disableMarginBottom>
+				<Breadcrumb links={breadcrumbLinks} className="pb-0 pl-0" />
+			</BlockWrapper>
 			<PageContentType
 				blok={story.content}
 				lang={lang as WebsiteLanguage}
