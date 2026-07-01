@@ -845,6 +845,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 					{selectedValues.length > 0 && (
 						<div data-slot="multi-select-badges" className="mt-2 flex w-full flex-wrap items-center gap-1">
 							{selectedValues
+								.slice(0, responsiveSettings.maxCount)
 								.map((value) => {
 									const option = getOptionByValue(value);
 									const IconComponent = option?.icon;
@@ -918,6 +919,17 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 									);
 								})
 								.filter(Boolean)}
+							{selectedValues.length > responsiveSettings.maxCount && (
+								<Badge
+									className={cn(
+										multiSelectVariants({ variant }),
+										responsiveSettings.compactMode && 'px-1.5 py-0.5 text-xs',
+										singleLine && 'shrink-0 whitespace-nowrap',
+									)}
+								>
+									{`+${selectedValues.length - responsiveSettings.maxCount} more`}
+								</Badge>
+							)}
 						</div>
 					)}
 					<PopoverContent
