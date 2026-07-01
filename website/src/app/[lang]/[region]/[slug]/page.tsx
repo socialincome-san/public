@@ -34,7 +34,7 @@ export default async function ContentPage({ params, searchParams }: DefaultLayou
 	return (
 		<>
 			<div className="w-site-width max-w-content">
-				<Breadcrumb links={breadcrumbLinks} />
+				<Breadcrumb links={breadcrumbLinks} className="pb-0" />
 			</div>
 			<PageContentType
 				blok={story.content}
