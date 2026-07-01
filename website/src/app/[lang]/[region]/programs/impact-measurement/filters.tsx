@@ -71,7 +71,7 @@ export const ImpactMeasurementFilters = ({
 	};
 
 	return (
-		<div className="flex flex-wrap items-center gap-2">
+		<div className="flex w-full flex-col items-end gap-2 [&_[data-slot=multi-select-badges]]:mt-0 [&_[data-slot=multi-select-badges]]:w-auto [&_[data-slot=multi-select-badges]]:max-w-full [&_[data-slot=multi-select-badges]]:justify-end">
 			<MultiSelect
 				data-testid="impact-measurement-filters-trigger"
 				options={filterGroups}
@@ -84,6 +84,7 @@ export const ImpactMeasurementFilters = ({
 				hideSelectAll
 				searchable={false}
 				maxCount={3}
+				autoSize
 				className="text-foreground border-border bg-card h-10 min-w-52 px-2 text-sm font-medium sm:min-w-72"
 				popoverClassName="max-w-sm"
 				popoverAlign="end"

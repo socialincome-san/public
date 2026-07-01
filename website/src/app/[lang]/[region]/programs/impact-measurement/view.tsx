@@ -34,10 +34,8 @@ export const ImpactMeasurementView = ({
 		>
 			{variant === 'standalone' ? (
 				<div className="space-y-5">
-					<div className="flex w-full justify-end">
-						<div className="w-full sm:w-auto">
-							<ImpactMeasurementFilterSection lang={lang} searchParams={normalizedSearchParams} />
-						</div>
+					<div className="w-full">
+						<ImpactMeasurementFilterSection lang={lang} searchParams={normalizedSearchParams} />
 					</div>
 
 					<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>
