@@ -33,7 +33,7 @@ export const ImpactMeasurementView = ({
 			className={
 				variant === 'embedded'
 					? 'w-full space-y-3 px-4 py-6'
-					: 'w-site-width max-w-content mx-auto space-y-3 px-0 md:py-6 sm:py-10'
+					: 'w-site-width max-w-content mx-auto space-y-3 py-6'
 			}
 		>
 			{variant === 'standalone' ? (
