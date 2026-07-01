@@ -10,7 +10,11 @@ import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblo
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { useDonationTotalAnimations } from '@/lib/hooks/use-donation-total-animations';
 import { getSafeNumberFormatLocale, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getScaledDimensions, resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
+import {
+	formatStoryblokResizeUrl,
+	getScaledAssetDimensions,
+	resolveStoryblokLink,
+} from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
@@ -30,20 +34,19 @@ const MobileImageRow = ({ images, className }: MobileImageRowProps) => {
 	}
 
 	return (
-		<div className={cn('flex justify-center gap-4 md:hidden', className)}>
+		<div className={cn('flex items-center justify-center gap-4 md:hidden', className)}>
 			{images.map((image) => {
-				const dimensions = getScaledDimensions(image.filename, MOBILE_IMAGE_MAX_WIDTH) ?? {
-					width: MOBILE_IMAGE_MAX_WIDTH,
-					height: MOBILE_IMAGE_MAX_WIDTH,
-				};
+				const dimensions = getScaledAssetDimensions(image, MOBILE_IMAGE_MAX_WIDTH);
+				const imageSrc = formatStoryblokResizeUrl(image.filename, dimensions.width, dimensions.height);
 
 				return (
 					<NextImage
 						key={image.id}
-						src={image.filename}
+						src={imageSrc}
 						alt={image.alt ?? ''}
 						width={dimensions.width}
 						height={dimensions.height}
+						sizes={`${MOBILE_IMAGE_MAX_WIDTH}px`}
 						className="rounded-3xl"
 					/>
 				);
@@ -86,16 +89,16 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency,
 				<FloatingImage key={image.id} image={image} index={index} smoothMouseX={smoothMouseX} smoothMouseY={smoothMouseY} />
 			))}
 
-			<div className="relative z-10 flex flex-col items-center justify-center py-16 text-center md:py-24 lg:py-32">
+			<div className="relative z-10 flex flex-col items-center justify-center py-8 text-center md:py-24 lg:py-32">
 				<MobileImageRow images={images.slice(0, 2)} className="mb-6" />
 
 				{blok.heading && (
-					<SectionHeading className="mb-6 leading-tight whitespace-pre-wrap md:mb-6">
+					<SectionHeading className="mb-6 leading-tight whitespace-pre-wrap md:mb-6" size={3}>
 						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 					</SectionHeading>
 				)}
 
-				<div className="mb-8 flex justify-center">
+				<div className="mb-6 flex justify-center">
 					<div className="relative">
 						<span className="text-primary text-6xl font-light tracking-tight md:text-8xl lg:text-[10rem]">
 							{formatNumberLocale(displayValue, locale)}
@@ -112,7 +115,7 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency,
 					</Button>
 				)}
 
-				<MobileImageRow images={images.slice(2, 4)} className="mt-8" />
+				<MobileImageRow images={images.slice(2, 4)} />
 			</div>
 		</BlockWrapper>
 	);

@@ -24,8 +24,8 @@ export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, regio
 	const nextButtonAriaLabel = translator.t('local-partners-page.teaser-next-button-aria');
 
 	return (
-		<BlockWrapper>
-			<div className="grid gap-8 lg:grid-cols-3 lg:items-center">
+		<BlockWrapper className="max-2xl:overflow-visible">
+			<div className="grid gap-8 max-2xl:w-[calc(100%+max(0px,calc((100vw-100%)/2)))] lg:grid-cols-3 lg:items-center">
 				<div className="pr-8 lg:col-span-1 lg:pr-0">
 					<LocalPartnersTeaserIntro lang={lang} />
 				</div>

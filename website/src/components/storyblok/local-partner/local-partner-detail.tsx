@@ -47,6 +47,7 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 				titleIcon={isoCode ? `/assets/flags/${isoCode.toLowerCase()}.svg` : undefined}
 				titleIconAlt={isoCode ? `${isoCode} flag` : undefined}
 				showDonationForm={false}
+				showDonationsFormMobile={false}
 				stats={[
 					{
 						value: recipientsCount,

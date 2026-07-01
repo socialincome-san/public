@@ -84,6 +84,38 @@ export const getScaledDimensions = (url: string, maxWidth: number): { width: num
 	};
 };
 
+type ScalableStoryblokAsset = {
+	filename: string;
+	width?: number | null;
+	height?: number | null;
+};
+
+/**
+ * Resolve display dimensions from a Storyblok asset URL, falling back to asset metadata.
+ */
+export const getScaledAssetDimensions = (
+	asset: ScalableStoryblokAsset,
+	maxWidth: number,
+): { width: number; height: number } => {
+	const fromUrl = getScaledDimensions(asset.filename, maxWidth);
+	if (fromUrl) {
+		return fromUrl;
+	}
+
+	if (asset.width && asset.height) {
+		if (asset.width <= maxWidth) {
+			return { width: asset.width, height: asset.height };
+		}
+
+		return {
+			width: maxWidth,
+			height: Math.round((asset.height / asset.width) * maxWidth),
+		};
+	}
+
+	return { width: maxWidth, height: maxWidth };
+};
+
 /**
  * Annotates a Storyblok image URL with focal point or smart cropping metadata.
  * The actual image transformation is handled by the custom image loader.
@@ -94,6 +126,16 @@ export const formatStoryblokUrl = (url: string, width: number, height: number, f
 	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
 
 	return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;
+};
+
+/**
+ * Annotates a Storyblok image URL with aspect ratio only (no cropping).
+ * Use for images that should keep their full frame at the target aspect ratio.
+ */
+export const formatStoryblokResizeUrl = (url: string, width: number, height: number) => {
+	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
+
+	return `${url}?_ratio=${ratio}`;
 };
 
 /**
