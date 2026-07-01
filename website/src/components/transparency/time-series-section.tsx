@@ -39,8 +39,8 @@ export const TimeSeriesSection = ({ timeRanges, currency, lang }: TimeSeriesSect
 	return (
 		<section>
 			<h2 className="mb-6 text-2xl font-bold">Monthly Contributions</h2>
-			<Card className="max-sm:px-1">
-				<div className="flex h-64 items-end gap-1 sm:gap-2">
+			<Card className="max-sm:px-4 max-sm:py-8">
+				<div className="flex h-64 items-end gap-0.5 sm:gap-2">
 					{convertedRanges.map((range, index) => {
 						const heightPercent = (range.total / maxValue) * 100;
 						const isHovered = hoveredIndex === index;
