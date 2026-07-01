@@ -806,7 +806,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 							}}
 						>
 							<div className="mx-auto flex w-full items-center justify-between">
-								<div className={cn('text-muted-foreground mx-3 flex min-w-0 items-center gap-2 text-sm', placeholderClassName)}>
+								<div
+									className={cn('text-muted-foreground mx-3 flex min-w-0 items-center gap-2 text-sm', placeholderClassName)}
+								>
 									{PlaceholderIcon ? <PlaceholderIcon className={cn('h-4 w-4 shrink-0', placeholderClassName)} /> : null}
 									<span className="truncate">{placeholder}</span>
 									{selectedValues.length > 0 ? (

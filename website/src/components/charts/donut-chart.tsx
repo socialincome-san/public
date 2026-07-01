@@ -49,7 +49,7 @@ export const DonutChart = ({ options, emptyLabel }: DonutChartProps) => {
 				className="relative grid size-34 place-items-center rounded-full sm:size-40"
 				style={{ backgroundImage: donutBackground }}
 			>
-				<div className="bg-card grid place-items-center rounded-full size-24">
+				<div className="bg-card grid size-24 place-items-center rounded-full">
 					<div className="text-center">
 						<div className="text-foreground text-2xl leading-none font-medium sm:text-3xl">
 							{Math.round(topOption?.percentage ?? 0)}%
@@ -58,7 +58,7 @@ export const DonutChart = ({ options, emptyLabel }: DonutChartProps) => {
 					</div>
 				</div>
 			</div>
-			<div className="space-y-3 sm:w-full sm:w-auto sm:space-y-4">
+			<div className="space-y-3 sm:w-auto sm:w-full sm:space-y-4">
 				{options.map((option, index) => (
 					<div key={option.id} className="text-foreground grid grid-cols-3 items-center gap-3 text-sm sm:flex sm:gap-6">
 						<div className="size-2 rounded-sm" style={{ backgroundColor: chartColors[index % chartColors.length] }} />
