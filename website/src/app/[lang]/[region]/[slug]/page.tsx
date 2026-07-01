@@ -1,4 +1,6 @@
 import { DefaultLayoutPropsWithSlug, DefaultPageProps } from '@/app/[lang]/[region]';
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import PageContentType from '@/components/content-types/page';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -21,13 +23,25 @@ export default async function ContentPage({ params, searchParams }: DefaultLayou
 	}
 
 	const story = storyResult.data;
+	const title = typeof story.content.title === 'string' ? story.content.title.trim() : story.name;
+	const breadcrumbLinks = await buildBreadcrumbLinks({
+		fullSlug: story.full_slug,
+		currentLabel: title,
+		lang: lang as WebsiteLanguage,
+		region: region as WebsiteRegion,
+	});
 
 	return (
-		<PageContentType
-			blok={story.content}
-			lang={lang as WebsiteLanguage}
-			region={region as WebsiteRegion}
-			searchParams={resolvedSearchParams}
-		/>
+		<>
+			<div className="w-site-width max-w-content">
+				<Breadcrumb links={breadcrumbLinks} />
+			</div>
+			<PageContentType
+				blok={story.content}
+				lang={lang as WebsiteLanguage}
+				region={region as WebsiteRegion}
+				searchParams={resolvedSearchParams}
+			/>
+		</>
 	);
 }
