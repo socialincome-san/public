@@ -30,7 +30,7 @@ export const CountriesSection = ({ countries, lang, displayCurrency, rates }: Co
 	return (
 		<section>
 			<h2 className="mb-6 text-2xl font-bold">Top Contributing Countries</h2>
-			<Card>
+			<Card className="max-sm:px-4 max-sm:py-6">
 				<div className="space-y-6">
 					{countryDisplays.map(({ country, amount, currency }) => (
 						<div key={country.countryCode} className="space-y-2">
