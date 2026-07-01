@@ -10,7 +10,7 @@ environment:
 
 dependencies:
   animations: ^2.1.1
-  another_flushbar: ^1.12.32
+  another_flushbar: ^2.0.0
   cloud_functions: ^6.0.7
   collection: ^1.19.1
   connectivity_plus: ^6.1.1
