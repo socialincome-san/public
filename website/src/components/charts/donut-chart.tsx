@@ -58,7 +58,7 @@ export const DonutChart = ({ options, emptyLabel }: DonutChartProps) => {
 					</div>
 				</div>
 			</div>
-			<div className="w-full space-y-3 sm:w-auto sm:space-y-4">
+			<div className="space-y-3 sm:w-full sm:w-auto sm:space-y-4">
 				{options.map((option, index) => (
 					<div key={option.id} className="text-foreground grid grid-cols-3 items-center gap-3 text-sm sm:flex sm:gap-6">
 						<div className="size-2 rounded-sm" style={{ backgroundColor: chartColors[index % chartColors.length] }} />
