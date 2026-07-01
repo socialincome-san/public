@@ -25,7 +25,7 @@ export const ImpactMeasurementPreviewWrapper = ({ focusId, lang, region, teaserB
 			</div>
 
 			{hasTeaser && (
-				<div className="bg-card absolute inset-x-4 bottom-24 mx-auto flex max-w-3xl translate-y-1/2 flex-col items-stretch gap-4 rounded-[160px] px-6 py-6 shadow-[0_4px_100px_0_hsl(var(--border))] sm:bottom-16 sm:flex-row sm:items-center sm:justify-between sm:gap-16 sm:px-12 sm:py-10">
+				<div className="bg-card absolute inset-x-4 bottom-24 mx-auto flex max-w-3xl translate-y-1/2 flex-col gap-4 rounded-3xl p-6 shadow-[0_4px_100px_0_hsl(var(--border))] sm:bottom-16 sm:flex-row sm:items-center sm:justify-between sm:gap-16 sm:p-10">
 					{trimmedTeaserText && (
 						<p className="text-foreground min-w-0 text-center text-xl font-bold sm:text-left">{trimmedTeaserText}</p>
 					)}

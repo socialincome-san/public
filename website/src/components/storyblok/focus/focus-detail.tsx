@@ -91,7 +91,7 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 						{hasStudiesSection && (
 							<section className="flex flex-col gap-10">
 								{studiesTitle && (
-									<h2 className="text-foreground text-5xl leading-tight font-normal">
+									<h2 className="text-foreground text-3xl leading-tight font-normal">
 										<StoryblokMarkdown>{studiesTitle}</StoryblokMarkdown>
 									</h2>
 								)}
@@ -107,7 +107,7 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 						{hasImpactMeasurementSection && (
 							<section className="flex flex-col gap-10">
 								{impactMeasurementTitle && (
-									<h2 className="text-foreground text-5xl leading-tight font-normal">
+									<h2 className="text-foreground text-3xl leading-tight font-normal">
 										<StoryblokMarkdown>{impactMeasurementTitle}</StoryblokMarkdown>
 									</h2>
 								)}
