@@ -26,7 +26,7 @@ const segmentActive = 'bg-card shadow-xs';
 
 const amountFieldBorder = 'border-input/60';
 const amountFieldDivider = 'divide-input/60';
-const monthlyAmountTextClass = 'text-lg leading-none font-medium md:text-lg';
+const monthlyAmountTextClass = 'text-lg leading-none font-medium';
 
 const monthlyIncomeInputId = 'donation-monthly-income';
 
@@ -110,7 +110,7 @@ export const DonationAmountFields = ({
 						}}
 						className={cn(
 							monthlyAmountTextClass,
-							'h-auto w-full rounded-none border-0 bg-transparent px-0 py-0 text-inherit shadow-none focus-visible:ring-0',
+							'h-auto w-full rounded-none border-0 bg-transparent px-0 py-0 shadow-none focus-visible:ring-0',
 						)}
 					/>
 				</div>
