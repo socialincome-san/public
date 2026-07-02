@@ -1,4 +1,5 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"extends": ["github>smartive/renovate-config:best-practices-lib"]
+	"extends": ["github>smartive/renovate-config:best-practices-lib"],
+	"ignorePaths": ["recipients_app/**"]
 }
