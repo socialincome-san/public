@@ -843,7 +843,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 						</Button>
 					</PopoverTrigger>
 					{selectedValues.length > 0 && (
-						<div data-slot="multi-select-badges" className="mt-2 flex w-full flex-wrap items-center gap-1">
+						<div className="mt-2 flex w-full flex-wrap items-center gap-1">
 							{selectedValues
 								.slice(0, responsiveSettings.maxCount)
 								.map((value) => {
