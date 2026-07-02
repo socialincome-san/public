@@ -14,6 +14,11 @@ type Props = {
 	blok: ModalCards;
 };
 
+const focusDialogTitleOnOpen = (event: Event) => {
+	event.preventDefault();
+	(event.currentTarget as HTMLElement).querySelector('h2')?.focus();
+};
+
 export const ModalCardsBlock = ({ blok }: Props) => {
 	const { cards, disableMarginBottom, disableMarginTop } = blok;
 	const [openCardId, setOpenCardId] = useState<string | null>(null);
@@ -52,8 +57,11 @@ export const ModalCardsBlock = ({ blok }: Props) => {
 									<StoryblokMarkdown>{heading}</StoryblokMarkdown>
 								</span>
 							</button>
-							<DialogContent className="flex max-h-[85vh] flex-col gap-0 overflow-y-auto sm:max-w-2xl">
-								<DialogTitle className="pr-10">
+							<DialogContent
+								className="flex max-h-[85vh] flex-col gap-0 overflow-y-auto sm:max-w-2xl"
+								onOpenAutoFocus={focusDialogTitleOnOpen}
+							>
+								<DialogTitle tabIndex={-1} className="pr-10 outline-none">
 									<StoryblokMarkdown>{heading}</StoryblokMarkdown>
 								</DialogTitle>
 								{modalContent && (
