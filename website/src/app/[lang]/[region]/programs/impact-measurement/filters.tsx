@@ -82,7 +82,7 @@ export const ImpactMeasurementFilters = ({
 				hideSelectAll
 				searchable={false}
 				maxCount={3}
-				className="text-foreground border-border bg-card hover:bg-muted data-[state=open]:bg-muted h-10 min-w-52 px-2 text-sm font-medium sm:min-w-72"
+				className="!text-foreground border-border bg-card hover:bg-muted data-[state=open]:bg-muted h-10 min-w-52 px-2 text-sm font-medium sm:min-w-72"
 				popoverClassName="max-w-sm"
 				popoverAlign="end"
 			/>
