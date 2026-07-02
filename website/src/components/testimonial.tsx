@@ -1,5 +1,5 @@
-import type { Testimonial as StoryblokTestimonial } from '@/generated/storyblok/types/109655/storyblok-components';
 import { QuoteIcon } from '@/components/svg/quote';
+import type { Testimonial as StoryblokTestimonial } from '@/generated/storyblok/types/109655/storyblok-components';
 import NextImage from 'next/image';
 
 export type TestimonialEntry = StoryblokTestimonial & {
