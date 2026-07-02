@@ -62,8 +62,7 @@ const getDef = (key: string, zodSchema: z.ZodObject<any>, parentKey?: string) =>
 		return zodShape[String(key)]?._def;
 	}
 	const nestedShapeFactory = (zodShape[parentKey]?._def as { shape?: unknown })?.shape as
-		| (() => Record<string, { _def?: unknown }>)
-		| undefined;
+		(() => Record<string, { _def?: unknown }>) | undefined;
 	const nestedShape = nestedShapeFactory ? nestedShapeFactory() : undefined;
 
 	return nestedShape?.[String(key)]?._def;

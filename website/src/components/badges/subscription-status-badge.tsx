@@ -4,14 +4,7 @@ import { Badge } from '@/components/badge';
 import { HourglassIcon, RefreshCcw, RefreshCwOff, TriangleAlert } from 'lucide-react';
 import { ComponentType } from 'react';
 export type SubscriptionStatus =
-	| 'active'
-	| 'canceled'
-	| 'paused'
-	| 'unpaid'
-	| 'past_due'
-	| 'incomplete'
-	| 'incomplete_expired'
-	| 'default';
+	'active' | 'canceled' | 'paused' | 'unpaid' | 'past_due' | 'incomplete' | 'incomplete_expired' | 'default';
 type SubscriptionStatusBadgeProps = {
 	status: SubscriptionStatus;
 	label: string;
