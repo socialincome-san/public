@@ -121,13 +121,6 @@ type MultiSelectProps = {
 	placeholderClassName?: string;
 
 	/**
-	 * Label template for selected count text in trigger button.
-	 * Use "{{count}}" placeholder for the selected count.
-	 * Optional, defaults to "{{count}} selected".
-	 */
-	selectedCountLabel?: string;
-
-	/**
 	 * Animation duration in seconds for the visual effects (e.g., bouncing badges).
 	 * Optional, defaults to 0 (no animation).
 	 */
@@ -315,7 +308,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			placeholder = 'Select options',
 			placeholderIcon: PlaceholderIcon,
 			placeholderClassName,
-			selectedCountLabel = '{{count}} selected',
 			animation = 0,
 			animationConfig,
 			maxCount = 3,
