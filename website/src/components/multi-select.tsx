@@ -443,7 +443,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			};
 		}, []);
 
-		const getResponsiveSettings = () => {
+		const getResponsiveSettings = (maxCount: number) => {
 			if (!responsive) {
 				return {
 					maxCount: maxCount,
@@ -453,9 +453,9 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			}
 			if (responsive === true) {
 				const defaultResponsive = {
-					mobile: { maxCount: 2, hideIcons: false, compactMode: true },
-					tablet: { maxCount: 4, hideIcons: false, compactMode: false },
-					desktop: { maxCount: 6, hideIcons: false, compactMode: false },
+					mobile: { maxCount: 1, hideIcons: false, compactMode: true },
+					tablet: { maxCount: maxCount, hideIcons: false, compactMode: false },
+					desktop: { maxCount: maxCount, hideIcons: false, compactMode: false },
 				};
 				const currentSettings = defaultResponsive[screenSize];
 
@@ -473,8 +473,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 				compactMode: currentSettings?.compactMode ?? false,
 			};
 		};
-
-		const responsiveSettings = getResponsiveSettings();
+	
+		const responsiveSettings = getResponsiveSettings(maxCount);
 
 		const getBadgeAnimationClass = () => {
 			if (animationConfig?.badgeAnimation) {
