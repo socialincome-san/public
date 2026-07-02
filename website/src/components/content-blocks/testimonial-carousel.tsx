@@ -24,7 +24,7 @@ type TestimonialWithImage = StoryblokTestimonial & {
 	};
 };
 
-const AUTOPLAY_DELAY_MS = 4000;
+const AUTOPLAY_DELAY_MS = 14000;
 
 export const TestimonialCarouselBlock = ({ blok }: Props) => {
 	const { disableMarginBottom, disableMarginTop } = blok;
