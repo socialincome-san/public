@@ -78,6 +78,7 @@ export const ImpactMeasurementFilters = ({
 				placeholder={allFiltersPlaceholder}
 				placeholderIcon={Funnel}
 				placeholderClassName="text-foreground"
+				responsive={true}
 				hideSelectAll
 				searchable={false}
 				maxCount={3}

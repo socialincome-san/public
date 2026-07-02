@@ -8,6 +8,7 @@ import {
 	getPageStoryPath,
 	getWebsitePathTailFromStoryblokSlug,
 	getWebsitePublicPath,
+	normalizeStoryblokSlug,
 	STORYBLOK_PAGES_FOLDER,
 } from '@/lib/storyblok/storyblok-paths';
 
@@ -75,7 +76,8 @@ export const buildBreadcrumbLinks = async ({
 	region,
 }: BuildBreadcrumbLinksParams): Promise<BreadcrumbLink[]> => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
-	const segments = fullSlug.split('/').filter(Boolean);
+	const normalizedFullSlug = normalizeStoryblokSlug(fullSlug);
+	const segments = normalizedFullSlug.split('/').filter(Boolean);
 
 	if (segments.length === 0) {
 		return [];
@@ -88,7 +90,7 @@ export const buildBreadcrumbLinks = async ({
 		},
 	];
 
-	const ancestorStoryblokPaths = getAncestorStoryblokPaths(fullSlug);
+	const ancestorStoryblokPaths = getAncestorStoryblokPaths(normalizedFullSlug);
 
 	links.push(
 		...(await Promise.all(
