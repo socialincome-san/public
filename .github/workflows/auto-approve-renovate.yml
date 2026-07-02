@@ -12,6 +12,8 @@ jobs:
     name: "✅ Auto-approve Renovate PR"
     runs-on: ubuntu-latest
     if: github.actor == 'renovate[bot]'
+    permissions:
+      pull-requests: write
     steps:
       - name: Approve PR
         run: gh pr review --approve "${{ github.event.pull_request.html_url }}"
