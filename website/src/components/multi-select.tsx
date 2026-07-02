@@ -473,7 +473,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 				compactMode: currentSettings?.compactMode ?? false,
 			};
 		};
-	
+
 		const responsiveSettings = getResponsiveSettings(maxCount);
 
 		const getBadgeAnimationClass = () => {
