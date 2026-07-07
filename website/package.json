@@ -73,7 +73,7 @@
 		"@sentry/nextjs": "10.63.0",
 		"@storyblok/js": "5.1.10",
 		"@storyblok/react": "7.0.1",
-		"@stripe/react-stripe-js": "6.6.0",
+		"@stripe/react-stripe-js": "6.7.0",
 		"@stripe/stripe-js": "9.9.0",
 		"@tanstack/react-table": "8.21.3",
 		"@xmldom/xmldom": "0.9.10",
