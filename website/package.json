@@ -109,7 +109,7 @@
 		"stripe": "22.3.0",
 		"survey-core": "2.5.32",
 		"survey-react-ui": "2.5.32",
-		"swissqrbill": "4.3.0",
+		"swissqrbill": "4.4.0",
 		"tailwind-merge": "3.6.0",
 		"tmp-promise": "3.0.3",
 		"twilio": "6.0.2",
