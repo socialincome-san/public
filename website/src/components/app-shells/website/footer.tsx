@@ -55,13 +55,49 @@ export const Footer = async ({ lang, region }: Props) => {
 					rel: supportedByLink?.target === '_blank' ? 'noopener noreferrer' : undefined,
 				}
 			: null;
+	const copyrightText = copyrightNotice?.replace('%YEAR%', now().getFullYear().toString());
 
 	return (
-		<div className="bg-primary text-primary-foreground max-w-content mx-auto grid w-full grid-cols-1 gap-4 rounded-t-3xl px-8 pt-10 pb-8 sm:px-16 sm:pt-14 lg:mb-10 lg:grid-cols-[334px_auto] lg:rounded-3xl">
-			<div className="flex flex-col">
+		<div className="bg-primary text-primary-foreground max-w-content mx-auto grid w-full grid-cols-1 gap-4 rounded-t-3xl px-8 pt-10 pb-8 sm:px-16 sm:pt-14 lg:mb-10 lg:grid-cols-[334px_auto] lg:grid-rows-[auto_1fr] lg:rounded-3xl">
+			<div className="order-1 lg:col-start-1 lg:row-start-1">
 				<SocialIncomeLogo width={222} height={22} />
+			</div>
+			<div className="order-2 mt-8 flex flex-col lg:contents">
+				<div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-16">
+					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+						{footerMenu.map((menuGroup) => (
+							<div key={menuGroup._uid}>
+								<h2 className="text-primary-foreground text-lg font-bold">{menuGroup.label}</h2>
+								<ul className="mt-4 space-y-3">
+									{menuGroup.items?.map((item) => {
+										const Icon = item.icon ? IconMap[item.icon] : null;
+
+										return (
+											<li key={item._uid}>
+												<NextLink
+													href={resolveStoryblokLink(item.link, lang, region)}
+													target={item.newTab ? '_blank' : '_self'}
+													rel={item.newTab ? 'noopener noreferrer' : undefined}
+													className="text-primary-foreground/50 hover:text-primary-foreground flex items-center gap-3 font-medium transition-colors"
+												>
+													{Icon && <Icon className="text-input" />}
+													{item.label}
+												</NextLink>
+											</li>
+										);
+									})}
+								</ul>
+							</div>
+						))}
+					</div>
+					{copyrightText && (
+						<div className="mt-16 max-lg:hidden">
+							<p className="text-primary-foreground/50 text-xs font-medium">{copyrightText}</p>
+						</div>
+					)}
+				</div>
 				{supportedByDetails && (
-					<div className="mt-8 flex flex-col gap-2 lg:mt-auto">
+					<div className="mt-8 flex flex-col gap-2 lg:col-start-1 lg:row-start-2 lg:mt-auto">
 						<p className="text-primary-foreground/50 text-xs leading-normal font-medium">{supportedByDetails.label}</p>
 						{supportedByLinkProps ? (
 							<NextLink
@@ -83,39 +119,9 @@ export const Footer = async ({ lang, region }: Props) => {
 						)}
 					</div>
 				)}
-			</div>
-			<div className="mt-8 lg:mt-16">
-				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-					{footerMenu.map((menuGroup) => (
-						<div key={menuGroup._uid}>
-							<h2 className="text-primary-foreground text-lg font-bold">{menuGroup.label}</h2>
-							<ul className="mt-4 space-y-3">
-								{menuGroup.items?.map((item) => {
-									const Icon = item.icon ? IconMap[item.icon] : null;
-
-									return (
-										<li key={item._uid}>
-											<NextLink
-												href={resolveStoryblokLink(item.link, lang, region)}
-												target={item.newTab ? '_blank' : '_self'}
-												rel={item.newTab ? 'noopener noreferrer' : undefined}
-												className="text-primary-foreground/50 hover:text-primary-foreground flex items-center gap-3 font-medium transition-colors"
-											>
-												{Icon && <Icon className="text-input" />}
-												{item.label}
-											</NextLink>
-										</li>
-									);
-								})}
-							</ul>
-						</div>
-					))}
-				</div>
-				{copyrightNotice && (
-					<div className="mt-16">
-						<p className="text-primary-foreground/50 text-xs font-medium">
-							{copyrightNotice.replace('%YEAR%', now().getFullYear().toString())}
-						</p>
+				{copyrightText && (
+					<div className="mt-16 lg:hidden">
+						<p className="text-primary-foreground/50 text-xs font-medium">{copyrightText}</p>
 					</div>
 				)}
 			</div>
