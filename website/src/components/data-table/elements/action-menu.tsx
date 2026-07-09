@@ -40,35 +40,60 @@ export const ActionMenu = ({ items = [] }: ActionMenuProps) => {
 		}
 	};
 
-	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button
-					type="button"
-					variant="outline"
-					size="icon"
-					aria-label="Table actions"
-					data-testid="data-table-actions-button"
-				>
-					<MoreHorizontalIcon />
-				</Button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end" className="w-56" data-testid="data-table-actions-menu">
-				{items.map((item, index) => (
-					<DropdownMenuItem
-						key={`${item.label}-${index}`}
-						disabled={item.disabled}
-						data-testid={`data-table-action-item-${toTestIdSlug(item.label)}`}
-						onSelect={(event) => {
-							event.preventDefault();
-							runAction(item);
-						}}
+	const renderPrimaryButton = () => {
+		const item = items[0];
+
+		return (
+			<Button
+				type="button"
+				variant="default"
+				onClick={(event) => {
+					event.preventDefault();
+					runAction(item);
+				}}
+				disabled={item.disabled}
+				data-testid={'data-table-toolbar-primary-action'}
+				aria-label={item.label}
+			>
+				{item.icon}
+				<span>{item.label}</span>
+			</Button>
+		);
+	};
+
+	const renderDropdownMenu = () => {
+		return (
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<Button
+						type="button"
+						variant="outline"
+						size="icon"
+						aria-label="Table actions"
+						data-testid="data-table-actions-button"
 					>
-						{item.icon}
-						<span>{item.label}</span>
-					</DropdownMenuItem>
-				))}
-			</DropdownMenuContent>
-		</DropdownMenu>
-	);
+						<MoreHorizontalIcon />
+					</Button>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align="end" className="w-56" data-testid="data-table-actions-menu">
+					{items.map((item, index) => (
+						<DropdownMenuItem
+							key={`${item.label}-${index}`}
+							disabled={item.disabled}
+							data-testid={`data-table-action-item-${toTestIdSlug(item.label)}`}
+							onSelect={(event) => {
+								event.preventDefault();
+								runAction(item);
+							}}
+						>
+							{item.icon}
+							<span>{item.label}</span>
+						</DropdownMenuItem>
+					))}
+				</DropdownMenuContent>
+			</DropdownMenu>
+		);
+	};
+
+	return items.length === 1 ? renderPrimaryButton() : renderDropdownMenu();
 };
