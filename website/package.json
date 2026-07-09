@@ -164,7 +164,7 @@
 		"axios": "1.18.1",
 		"body-parser": "2.3.0",
 		"fast-xml-builder": "1.2.1",
-		"protobufjs": "8.6.6",
+		"protobufjs": "8.7.0",
 		"uuid": "14.0.1",
 		"tabbable": "6.5.0",
 		"nanoid": "5.1.16"
