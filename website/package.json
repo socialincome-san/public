@@ -148,7 +148,7 @@
 		"prettier-plugin-organize-imports": "4.3.0",
 		"prettier-plugin-tailwindcss": "0.8.0",
 		"prisma": "7.8.0",
-		"storyblok": "4.18.2",
+		"storyblok": "4.18.3",
 		"storybook": "10.4.6",
 		"tailwindcss": "4.3.2",
 		"ts-jest": "29.4.11",
