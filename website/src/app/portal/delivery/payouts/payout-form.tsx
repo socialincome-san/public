@@ -60,7 +60,7 @@ const initialFormSchema: PayoutFormSchema = {
 		amountChf: {
 			placeholder: 'Amount in CHF',
 			label: 'Amount (CHF)',
-			zodSchema: z.coerce.number().nonnegative().optional(),
+			zodSchema: z.coerce.number().nonnegative('CHF amount must be non-negative.').optional(),
 		},
 		phoneNumber: {
 			placeholder: '+223...',
