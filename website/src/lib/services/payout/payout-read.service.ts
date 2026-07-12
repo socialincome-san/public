@@ -723,6 +723,7 @@ export class PayoutReadService extends BaseService {
 				select: {
 					id: true,
 					amount: true,
+					amountChf: true,
 					currency: true,
 					status: true,
 					paymentAt: true,
@@ -758,6 +759,7 @@ export class PayoutReadService extends BaseService {
 			return this.resultOk({
 				id: payout.id,
 				amount: Number(payout.amount),
+				amountChf: payout.amountChf === null ? null : Number(payout.amountChf),
 				currency: payout.currency,
 				status: payout.status,
 				paymentAt: payout.paymentAt,

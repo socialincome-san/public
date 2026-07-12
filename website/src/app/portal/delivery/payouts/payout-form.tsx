@@ -31,6 +31,7 @@ export type PayoutFormSchema = {
 		recipientId: FormField;
 		amount: FormField;
 		currency: FormField;
+		amountChf: FormField;
 		phoneNumber: FormField;
 		paymentAt: FormField;
 		status: FormField;
@@ -55,6 +56,11 @@ const initialFormSchema: PayoutFormSchema = {
 			label: 'Currency Code',
 			useCombobox: true,
 			zodSchema: z.nativeEnum(getZodEnum(allCurrencies.map((c) => ({ id: c, label: c })))),
+		},
+		amountChf: {
+			placeholder: 'Amount in CHF',
+			label: 'Amount (CHF)',
+			zodSchema: z.coerce.number().nonnegative().optional(),
 		},
 		phoneNumber: {
 			placeholder: '+223...',
@@ -96,6 +102,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 								...next.fields,
 								recipientId: { ...next.fields.recipientId, value: data.recipient.id },
 								amount: { ...next.fields.amount, value: data.amount },
+								amountChf: { ...next.fields.amountChf, value: data.amountChf ?? undefined },
 								currency: { ...next.fields.currency, value: data.currency },
 								phoneNumber: { ...next.fields.phoneNumber, value: data.phoneNumber ?? undefined },
 								paymentAt: { ...next.fields.paymentAt, value: new Date(data.paymentAt) },
