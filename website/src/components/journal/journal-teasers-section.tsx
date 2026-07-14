@@ -27,19 +27,12 @@ export const JournalTeasersSection = ({
 	region,
 	heading,
 	journalCtaLabel,
-	blok,
-	disableMarginTop,
-	disableMarginBottom,
 }: Props) => {
 	const [featuredArticle, ...secondaryArticles] = articles;
 	const hasSecondaryArticles = secondaryArticles.length > 0;
 
 	return (
-		<BlockWrapper
-			disableMarginBottom={disableMarginBottom}
-			disableMarginTop={disableMarginTop}
-			{...(blok ? storyblokEditable(blok) : {})}
-		>
+		<div>
 			<div className="mb-8 flex flex-col justify-between gap-4 md:mb-10 md:flex-row md:items-center">
 				{heading && (
 					<SectionHeading align="left" className="mb-0 md:mb-0">
@@ -63,6 +56,6 @@ export const JournalTeasersSection = ({
 					</div>
 				)}
 			</div>
-		</BlockWrapper>
+		</div>
 	);
 };

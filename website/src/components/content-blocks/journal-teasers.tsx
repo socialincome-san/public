@@ -6,6 +6,8 @@ import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import type { SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '../block-wrapper';
+import { storyblokEditable } from '@storyblok/js';
 
 type Props = {
 	blok: JournalTeasers;
@@ -54,15 +56,18 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 	}
 
 	return (
-		<JournalTeasersSection
-			heading={heading ? <StoryblokMarkdown>{heading}</StoryblokMarkdown> : undefined}
-			articles={articles}
-			lang={lang}
-			region={region}
-			journalCtaLabel={translator.t('teasers.goToJournal')}
-			blok={blok as SbBlokData}
+		<BlockWrapper
 			disableMarginBottom={disableMarginBottom}
 			disableMarginTop={disableMarginTop}
-		/>
+			{...(blok ? storyblokEditable(blok as SbBlokData) : {})}
+		>
+			<JournalTeasersSection
+				heading={heading ? <StoryblokMarkdown>{heading}</StoryblokMarkdown> : undefined}
+				articles={articles}
+				lang={lang}
+				region={region}
+				journalCtaLabel={translator.t('teasers.goToJournal')}
+			/></BlockWrapper>
+
 	);
 };

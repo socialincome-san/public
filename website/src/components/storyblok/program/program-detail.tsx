@@ -4,6 +4,7 @@ import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-l
 import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
 import { FaqSelectionContent } from '@/components/content-blocks/faq-selection-content';
 import { resolveFaqItems } from '@/components/content-blocks/faq-selection.utils';
+import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { resolveProgramCountry } from '@/components/storyblok/country/resolve-country-name';
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramAbout } from '@/components/storyblok/program/program-about';
@@ -51,27 +52,31 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 		<>
 			<HeroHeader
 				lang={lang}
+				showDonationsFormMobile={false}
 				title={programDetailData.title}
 				heroImage={programDetailData.heroImage}
 				stats={
 					programDetailData.stats
 						? [
-								{
-									label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
-								},
-								{
-									value: programDetailData.stats.recipientsCount,
-									label:
-										programDetailData.stats.recipientsCount === 1
-											? translator.t('programs-page.recipient-singular')
-											: translator.t('programs-page.recipient-plural'),
-								},
-							]
+							{
+								label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
+							},
+							{
+								value: programDetailData.stats.recipientsCount,
+								label:
+									programDetailData.stats.recipientsCount === 1
+										? translator.t('programs-page.recipient-singular')
+										: translator.t('programs-page.recipient-plural'),
+							},
+						]
 						: []
 				}
 			/>
-			<div className="max-w-content 2xl:w-site-width mx-[2vw] mb-6 px-8 2xl:mx-auto">
+			<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
 				<Breadcrumb links={breadcrumbLinks} />
+				<div className="pb-6 lg:hidden">
+					<DonationFormServer lang={lang} />
+				</div>
 				<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
 					<div className="flex flex-col gap-7">
 						{programDetailData.dashboardStats && programDetailData.programId ? (
@@ -113,13 +118,15 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 			{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0 ? (
 				<ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} />
 			) : null}
-			<CampaignJournalTeaser lang={lang} region={region} />
-			<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
-			{faqItems.length > 0 && (
-				<BlockWrapper>
-					<FaqSelectionContent heading={translator.t('title', { namespace: 'website-faq' })} items={faqItems} />
-				</BlockWrapper>
-			)}
+			<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
+				<CampaignJournalTeaser lang={lang} region={region} />
+				<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
+				{faqItems.length > 0 && (
+					<BlockWrapper>
+						<FaqSelectionContent heading={translator.t('title', { namespace: 'website-faq' })} items={faqItems} />
+					</BlockWrapper>
+				)}
+			</div>
 		</>
 	);
 };
