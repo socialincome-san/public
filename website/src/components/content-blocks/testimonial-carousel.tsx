@@ -18,17 +18,11 @@ type Props = {
 	blok: TestimonialCarousel;
 };
 
-type TestimonialWithImage = StoryblokTestimonial & {
-	image: NonNullable<StoryblokTestimonial['image']> & {
-		filename: string;
-	};
-};
-
 const AUTOPLAY_DELAY_MS = 14000;
 
 export const TestimonialCarouselBlock = ({ blok }: Props) => {
 	const { disableMarginBottom, disableMarginTop } = blok;
-	const entries = blok.testimonials.filter((entry): entry is TestimonialWithImage => Boolean(entry.image?.filename));
+	const entries = blok.testimonials;
 	const autoplayEnabled = Boolean(blok.autoplay);
 
 	const [api, setApi] = useState<CarouselApi>();
