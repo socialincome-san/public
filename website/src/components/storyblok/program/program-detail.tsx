@@ -73,7 +73,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				}
 			/>
 			<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
-				<Breadcrumb links={breadcrumbLinks} />
+				<Breadcrumb className='py-0' links={breadcrumbLinks} />
 				<div className="pb-6 lg:hidden">
 					<DonationFormServer lang={lang} />
 				</div>
