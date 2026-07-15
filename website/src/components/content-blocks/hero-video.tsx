@@ -171,7 +171,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 					</div>
 				)}
 			</div>
-			{!isExpanded && <div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">{donationForm}</div>}
+			{!isExpanded && <div className="lg:hidden">{donationForm}</div>}
 		</div>
 	);
 };
