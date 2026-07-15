@@ -99,7 +99,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						</div>
 						<div className="flex flex-col gap-7">
 							{resolvedCountry ? <ProgramCountry resolvedCountry={resolvedCountry} translator={translator} /> : null}
-							<div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
+							<div className="flex-1 grid grid-cols-1 gap-7 sm:grid-cols-2">
 								<ProgramRecipients
 									count={recipientsCount}
 									programId={programDetailData.programId}
