@@ -20,7 +20,7 @@ export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
 
 	return (
-		<div>
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 			{blok.heading && (
 				<SectionHeading size={3} className="leading-[1.2] whitespace-pre-line">
 					<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
@@ -32,6 +32,6 @@ export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
 				</p>
 			)}
 			<ProgramGridView programs={programs} allProgramsCount={allPrograms.length} blok={blok} lang={lang} region={region} />
-		</div>
+		</BlockWrapper>
 	);
 };

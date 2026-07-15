@@ -72,53 +72,56 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						: []
 				}
 			/>
-			<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
+			<div className="flex flex-col gap-8 py-8">
 				<Breadcrumb className='py-0' links={breadcrumbLinks} />
-				<div className="pb-6 lg:hidden">
+				<div className="lg:hidden">
 					<DonationFormServer lang={lang} />
 				</div>
-				<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
-					<div className="flex flex-col gap-7">
-						{programDetailData.dashboardStats && programDetailData.programId ? (
-							<ProgramFinances
-								stats={programDetailData.dashboardStats}
-								programId={programDetailData.programId}
-								translator={translator}
-								lang={lang}
-							/>
-						) : null}
-						<ProgramAbout
-							programDetailData={programDetailData}
-							translator={translator}
-							lang={lang}
-							region={region}
-							resolvedCountry={resolvedCountry}
-						/>
-					</div>
-					<div className="flex flex-col gap-7">
-						{resolvedCountry ? <ProgramCountry resolvedCountry={resolvedCountry} translator={translator} /> : null}
-						<div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
-							<ProgramRecipients
-								count={recipientsCount}
-								programId={programDetailData.programId}
-								translator={translator}
-								lang={lang}
-							/>
-							<ProgramSurveys
-								completedCount={completedSurveysCount}
+				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+
+					<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
+						<div className="flex flex-col gap-7">
+							{programDetailData.dashboardStats && programDetailData.programId ? (
+								<ProgramFinances
+									stats={programDetailData.dashboardStats}
+									programId={programDetailData.programId}
+									translator={translator}
+									lang={lang}
+								/>
+							) : null}
+							<ProgramAbout
+								programDetailData={programDetailData}
 								translator={translator}
 								lang={lang}
 								region={region}
-								programId={programDetailData.programId}
+								resolvedCountry={resolvedCountry}
 							/>
 						</div>
+						<div className="flex flex-col gap-7">
+							{resolvedCountry ? <ProgramCountry resolvedCountry={resolvedCountry} translator={translator} /> : null}
+							<div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
+								<ProgramRecipients
+									count={recipientsCount}
+									programId={programDetailData.programId}
+									translator={translator}
+									lang={lang}
+								/>
+								<ProgramSurveys
+									completedCount={completedSurveysCount}
+									translator={translator}
+									lang={lang}
+									region={region}
+									programId={programDetailData.programId}
+								/>
+							</div>
+						</div>
 					</div>
-				</div>
+				</BlockWrapper>
 			</div>
 			{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0 ? (
 				<ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} />
 			) : null}
-			<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
+			<div className="flex flex-col gap-8 py-8">
 				<CampaignJournalTeaser lang={lang} region={region} />
 				<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
 				{faqItems.length > 0 && (

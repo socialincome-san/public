@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import {
 	BreadcrumbElements,
 	BreadcrumbItem,
@@ -13,7 +14,7 @@ export type { BreadcrumbLink as BreadcrumbLinkType } from '@/components/breadcru
 
 export const Breadcrumb = ({ links, className }: { links: BreadcrumbLinkItem[]; className?: string }) => {
 	return (
-		<div className={cn('py-9', className)}>
+		<BlockWrapper className={cn('py-9', className)} disableMarginTop={true} disableMarginBottom={true}>
 			<BreadcrumbElements>
 				<BreadcrumbList>
 					{links.map((link: BreadcrumbLinkItem, index: number) => {
@@ -30,6 +31,6 @@ export const Breadcrumb = ({ links, className }: { links: BreadcrumbLinkItem[]; 
 					})}
 				</BreadcrumbList>
 			</BreadcrumbElements>
-		</div>
+		</BlockWrapper>
 	);
 };

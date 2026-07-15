@@ -136,6 +136,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 
 	return (
 		<BlockWrapper
+			className='overflow-visible md:px-0 md:w-full'
 			disableMarginBottom={disableMarginBottom}
 			disableMarginTop={disableMarginTop}
 			{...storyblokEditable(blok as SbBlokData)}

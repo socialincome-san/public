@@ -3,6 +3,7 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { DonationForm } from './donation-form';
 import { getDonationAmountFieldsTranslations } from './i18n/donation-amount-fields-translations';
+import { BlockWrapper } from '../block-wrapper';
 
 type Props = {
 	lang: WebsiteLanguage;
@@ -14,10 +15,12 @@ export const DonationFormServer = async ({ lang, campaignId }: Props) => {
 	const currency = await getWebsiteCurrencyFromCookie();
 
 	return (
-		<DonationForm
-			campaignId={campaignId}
-			translations={getDonationAmountFieldsTranslations(translator.t)}
-			currency={currency}
-		/>
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<DonationForm
+				campaignId={campaignId}
+				translations={getDonationAmountFieldsTranslations(translator.t)}
+				currency={currency}
+			/>
+		</BlockWrapper>
 	);
 };

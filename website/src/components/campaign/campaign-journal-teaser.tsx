@@ -2,6 +2,7 @@ import { JournalTeasersSection } from '@/components/journal/journal-teasers-sect
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { BlockWrapper } from '../block-wrapper';
 
 type Props = {
 	lang: WebsiteLanguage;
@@ -21,17 +22,19 @@ export const CampaignJournalTeaser = async ({ lang, region }: Props) => {
 	}
 
 	return (
-		<JournalTeasersSection
-			heading={
-				<>
-					{translator.t('teasers.heading-prefix')}
-					<strong>{translator.t('teasers.heading-emphasis')}</strong>
-				</>
-			}
-			articles={articles}
-			lang={lang}
-			region={region}
-			journalCtaLabel={translator.t('teasers.goToJournal')}
-		/>
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<JournalTeasersSection
+				heading={
+					<>
+						{translator.t('teasers.heading-prefix')}
+						<strong>{translator.t('teasers.heading-emphasis')}</strong>
+					</>
+				}
+				articles={articles}
+				lang={lang}
+				region={region}
+				journalCtaLabel={translator.t('teasers.goToJournal')}
+			/>
+		</BlockWrapper>
 	);
 };
