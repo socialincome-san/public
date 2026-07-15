@@ -124,6 +124,7 @@
 		"manage": "Manage",
 		"payout-forecast-info": "Forecast is calculated from currently eligible recipients, remaining payout duration, and latest exchange rates.",
 		"sent-to-recipients": "Sent to recipients to date",
+		"payouts-total-title": "Paid to recipients through this program",
 		"total-program-costs": "Total program costs",
 		"available-credits": "Available credits",
 		"about-title": "About this program",

@@ -119,7 +119,12 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				</BlockWrapper>
 			</div>
 			{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0 ? (
-				<ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} />
+				<ProgramPayoutsTotal
+					programDetailData={programDetailData}
+					translator={translator}
+					lang={lang}
+					region={region}
+				/>
 			) : null}
 			<div className="flex flex-col gap-8 py-8">
 				<CampaignJournalTeaser lang={lang} region={region} />

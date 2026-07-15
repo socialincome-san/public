@@ -93,7 +93,7 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency,
 				<MobileImageRow images={images.slice(0, 2)} className="mb-6" />
 
 				{blok.heading && (
-					<SectionHeading className="mb-6 leading-tight whitespace-pre-wrap md:mb-6" size={3}>
+					<SectionHeading className="mb-6 max-w-sm leading-tight whitespace-pre-wrap md:mb-6" size={3}>
 						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 					</SectionHeading>
 				)}
