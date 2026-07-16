@@ -64,7 +64,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 			/>
 			<StoryDetailContent>
 				<Breadcrumb links={breadcrumbLinks} />
-				<div className="px-4 pb-6 lg:hidden">
+				<div className="lg:hidden">
 					<DonationFormServer lang={lang} />
 				</div>
 				<CountryMap country={country} lang={lang} />
