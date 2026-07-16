@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { COUNTRY_COOKIE } from '@/app/[lang]/[region]';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
@@ -124,106 +125,109 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 	}));
 
 	return (
-		<section className="w-site-width max-w-content mx-auto px-6 py-8 lg:py-12">
-			<div className="flex flex-col items-center gap-6">
-				<h2 className="text-primary text-center text-4xl leading-tight font-bold md:text-5xl">
-					{translator.t('countries-page.statistics.title')}
-				</h2>
-				<div className="border-border bg-background w-full overflow-hidden rounded-[calc(var(--radius)+4px)] border shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]">
-					<div className="lg:hidden">
-						<div className="bg-accent relative overflow-hidden">
-							<div className="bg-border absolute inset-y-0 left-1/2 z-10 w-px -translate-x-1/2" aria-hidden="true" />
-							<div className="grid grid-cols-2 items-stretch">
-								<div className="bg-background rounded-l-[calc(var(--radius)+4px)] px-6 py-6">
-									<CountryHeader
-										countryCode={normalizedCountryIsoCode}
-										countryName={countryName}
-										nameClassName="text-[16px]"
-									/>
-									<div className="mt-8 flex flex-col gap-7">
-										{formattedRows.map((row) => (
-											<MobileStatisticRow key={row.key} label={row.label} value={row.countryValue} />
-										))}
+		<BlockWrapper>
+			<section className="mx-auto max-w-4xl">
+				<div className="flex flex-col items-center gap-6">
+					<h2 className="text-primary text-center text-4xl leading-tight font-bold md:text-5xl">
+						{translator.t('countries-page.statistics.title')}
+					</h2>
+					<div className="border-border bg-background w-full overflow-hidden rounded-[calc(var(--radius)+4px)] border shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]">
+						<div className="lg:hidden">
+							<div className="bg-accent relative overflow-hidden">
+								<div className="bg-border absolute inset-y-0 left-1/2 z-10 w-px -translate-x-1/2" aria-hidden="true" />
+								<div className="grid grid-cols-2 items-stretch">
+									<div className="bg-background rounded-l-[calc(var(--radius)+4px)] px-6 py-6">
+										<CountryHeader
+											countryCode={normalizedCountryIsoCode}
+											countryName={countryName}
+											nameClassName="text-[16px]"
+										/>
+										<div className="mt-8 flex flex-col gap-7">
+											{formattedRows.map((row) => (
+												<MobileStatisticRow key={row.key} label={row.label} value={row.countryValue} />
+											))}
+										</div>
+									</div>
+									<div className="bg-background px-6 py-6">
+										<CountryHeader
+											countryCode={visitorCountryCode}
+											countryName={visitorCountryName}
+											nameClassName="text-[16px]"
+										/>
+										<div className="mt-8 flex flex-col gap-7">
+											{formattedRows.map((row) => (
+												<MobileStatisticRow key={row.key} label={row.label} value={row.visitorValue} showLabel={false} />
+											))}
+										</div>
 									</div>
 								</div>
-								<div className="bg-background px-6 py-6">
-									<CountryHeader
-										countryCode={visitorCountryCode}
-										countryName={visitorCountryName}
-										nameClassName="text-[16px]"
-									/>
-									<div className="mt-8 flex flex-col gap-7">
-										{formattedRows.map((row) => (
-											<MobileStatisticRow key={row.key} label={row.label} value={row.visitorValue} showLabel={false} />
-										))}
-									</div>
+								<div className="bg-muted text-muted-foreground absolute top-16 left-1/2 z-20 flex size-5 -translate-x-1/2 items-center justify-center rounded-full text-[8px] font-bold uppercase">
+									{translator.t('countries-page.statistics.vs')}
 								</div>
-							</div>
-							<div className="bg-muted text-muted-foreground absolute top-16 left-1/2 z-20 flex size-5 -translate-x-1/2 items-center justify-center rounded-full text-[8px] font-bold uppercase">
-								{translator.t('countries-page.statistics.vs')}
 							</div>
 						</div>
-					</div>
 
-					<div className="hidden lg:block">
-						<div className="bg-accent relative overflow-hidden">
-							<div
-								className="bg-border absolute inset-y-0 left-[calc(50%+160px)] z-10 w-px -translate-x-1/2"
-								aria-hidden="true"
-							/>
-							<div className="grid grid-cols-[320px_minmax(0,1fr)_minmax(0,1fr)] items-stretch">
-								<div className="bg-accent p-12">
-									<div className="pointer-events-none invisible select-none">
+						<div className="hidden lg:block">
+							<div className="bg-accent relative overflow-hidden">
+								<div
+									className="bg-border absolute inset-y-0 left-[calc(50%+160px)] z-10 w-px -translate-x-1/2"
+									aria-hidden="true"
+								/>
+								<div className="grid grid-cols-[320px_minmax(0,1fr)_minmax(0,1fr)] items-stretch">
+									<div className="bg-accent p-12">
+										<div className="pointer-events-none invisible select-none">
+											<CountryHeader
+												countryCode={normalizedCountryIsoCode}
+												countryName={countryName}
+												nameClassName="text-2xl font-medium"
+											/>
+										</div>
+										<div className="mt-8 flex flex-col gap-4">
+											{formattedRows.map((row) => (
+												<p key={row.key} className="text-primary text-base leading-6 font-bold">
+													{row.label}
+												</p>
+											))}
+										</div>
+									</div>
+									<div className="border-border bg-background rounded-l-[calc(var(--radius)+4px)] border-l p-12">
 										<CountryHeader
 											countryCode={normalizedCountryIsoCode}
 											countryName={countryName}
 											nameClassName="text-2xl font-medium"
 										/>
+										<div className="mt-8 flex flex-col gap-4">
+											{formattedRows.map((row) => (
+												<p key={row.key} className="text-primary text-base leading-6 font-normal">
+													{row.countryValue}
+												</p>
+											))}
+										</div>
 									</div>
-									<div className="mt-8 flex flex-col gap-4">
-										{formattedRows.map((row) => (
-											<p key={row.key} className="text-primary text-base leading-6 font-bold">
-												{row.label}
-											</p>
-										))}
-									</div>
-								</div>
-								<div className="border-border bg-background rounded-l-[calc(var(--radius)+4px)] border-l p-12">
-									<CountryHeader
-										countryCode={normalizedCountryIsoCode}
-										countryName={countryName}
-										nameClassName="text-2xl font-medium"
-									/>
-									<div className="mt-8 flex flex-col gap-4">
-										{formattedRows.map((row) => (
-											<p key={row.key} className="text-primary text-base leading-6 font-normal">
-												{row.countryValue}
-											</p>
-										))}
-									</div>
-								</div>
-								<div className="bg-background p-12">
-									<CountryHeader
-										countryCode={visitorCountryCode}
-										countryName={visitorCountryName}
-										nameClassName="text-2xl font-medium"
-									/>
-									<div className="mt-8 flex flex-col gap-4">
-										{formattedRows.map((row) => (
-											<p key={row.key} className="text-primary text-base leading-6 font-normal">
-												{row.visitorValue}
-											</p>
-										))}
+									<div className="bg-background p-12">
+										<CountryHeader
+											countryCode={visitorCountryCode}
+											countryName={visitorCountryName}
+											nameClassName="text-2xl font-medium"
+										/>
+										<div className="mt-8 flex flex-col gap-4">
+											{formattedRows.map((row) => (
+												<p key={row.key} className="text-primary text-base leading-6 font-normal">
+													{row.visitorValue}
+												</p>
+											))}
+										</div>
 									</div>
 								</div>
-							</div>
-							<div className="text-muted-foreground bg-muted absolute top-20 left-[calc(50%+160px)] z-20 flex size-10 -translate-x-1/2 items-center justify-center rounded-full text-xs font-normal uppercase">
-								{translator.t('countries-page.statistics.vs')}
+								<div className="text-muted-foreground bg-muted absolute top-20 left-[calc(50%+160px)] z-20 flex size-10 -translate-x-1/2 items-center justify-center rounded-full text-xs font-normal uppercase">
+									{translator.t('countries-page.statistics.vs')}
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</section>
+			</section>
+		</BlockWrapper>
+
 	);
 };
