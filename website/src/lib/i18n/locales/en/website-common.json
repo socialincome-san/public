@@ -51,7 +51,7 @@
 		"statistics": {
 			"title": "Key statistics",
 			"population": "Population",
-			"growth-rate": "Growth Rate",
+			"growth-rate": "Population Growth",
 			"literacy-rate": "Literacy Rate",
 			"poverty-level": "Poverty Level",
 			"life-expectancy": "Life Expectancy",
