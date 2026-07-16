@@ -99,12 +99,10 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency,
 				)}
 
 				<div className="mb-6 flex justify-center">
-					<div className="relative">
+					<div className="flex items-baseline">
+						<span className="text-primary text-xl md:text-2xl">{currency}</span>
 						<span className="text-primary text-6xl font-light tracking-tight md:text-8xl lg:text-[10rem]">
 							{formatNumberLocale(displayValue, locale)}
-						</span>
-						<span className="text-primary absolute right-full bottom-0 mr-3 text-xl leading-none md:text-2xl">
-							{currency}
 						</span>
 					</div>
 				</div>
