@@ -51,8 +51,7 @@ Mobile App for Recipients of a Social Income.
   - Set is as default via `sudo xcode-select -s <path/to/>Xcode.app`
   - To agree to the Xcode license from the command line, you can use the
     following command: `sudo xcodebuild -license accept`
-- Install CocoaPods
-  - Install via Homebrew `brew install cocoapods`
+
 
 ## Optionally: Use the version manager [asdf](https://asdf-vm.com/)
 
@@ -222,7 +221,7 @@ locations as well:
 - pubspec.yaml
   - Under 'environment' adjust the 'sdk' and 'flutter' versions
 - .tool-versions (version file for version manager ASDF)
-  - If you use 'asdf' run the comman `asdf set flutter x.y.z` #Replace
+  - If you use 'asdf' run the command `asdf set flutter x.y.z` #Replace
     x.y.z with the new Flutter version.
   - Otherwise just update the version number in the file with the text
     editor
