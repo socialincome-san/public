@@ -60,6 +60,7 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 			lang={lang}
 			region={region}
 			journalCtaLabel={translator.t('teasers.goToJournal')}
+			videoLabel={translator.t('badge.video')}
 			blok={blok as SbBlokData}
 			disableMarginBottom={disableMarginBottom}
 			disableMarginTop={disableMarginTop}

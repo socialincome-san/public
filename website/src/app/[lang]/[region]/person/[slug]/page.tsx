@@ -27,6 +27,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 			lang={lang}
 			region={region}
 			moreArticlesLabel={translator.t('overview.more-articles')}
+			videoLabel={translator.t('badge.video')}
 		/>
 	);
 }
