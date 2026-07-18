@@ -60,7 +60,7 @@ export const journalRichTextNodeResolvers = {
 	[NODE_HEADING]: (children: ReactNode, props: RichTextHeadingProps) =>
 		createElement(
 			`h${props.level}`,
-			{ className: cn(journalHeadingStyles[props.level], 'my-4 !text-foreground', getRichTextAlignmentClassName(props)) },
+			{ className: cn(journalHeadingStyles[props.level], 'my-4 text-foreground!', getRichTextAlignmentClassName(props)) },
 			children,
 		),
 	[NODE_PARAGRAPH]: (children: ReactNode, props?: RichTextAlignmentProps) => (
