@@ -73,7 +73,7 @@ npm run format-code           # Prettier
 ## File Naming
 
 - All files: `kebab-case`
-- Semantic suffixes: `*.service.ts`, `*-actions.ts`, `*.types.ts`,
+- Semantic suffixes: `*.service.ts`, `*-actions.ts`, `*.twilio.messaging.types.ts`,
   `*-form.tsx`, `*-helpers.ts`
 - Default exports for pages, named exports for utilities
 

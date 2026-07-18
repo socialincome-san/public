@@ -72,7 +72,14 @@ import { SurveyReadService } from './survey/survey-read.service';
 import { SurveyValidationService } from './survey/survey-validation.service';
 import { SurveyWriteService } from './survey/survey-write.service';
 import { TransparencyService } from './transparency/transparency.service';
-import { TwilioService } from './twilio/twilio.service';
+import { MessagingChannelPreviewService } from './twilio/messaging/channel-preview.service';
+import { MessagingDispatchService } from './twilio/messaging/dispatch.service';
+import { MessagingLogService } from './twilio/messaging/log.service';
+import type { MessagingRecipientType, SelectionState } from './twilio/messaging/recipients.types';
+import { MessagingWebhookService } from './twilio/messaging/webhook.service';
+import { resolveSelectionToIds } from './twilio/messaging/resolve-selection';
+import { TwilioMessagingService } from './twilio/messaging/twilio-messaging.service';
+import { TwilioOtpService } from './twilio/otp/twilio-otp.service';
 import { UserReadService } from './user/user-read.service';
 import { UserValidationService } from './user/user-validation.service';
 import { UserWriteService } from './user/user-write.service';
@@ -114,7 +121,64 @@ const recipientWrite = new RecipientWriteService(
 const recipientImport = new RecipientImportService(recipientWrite, recipientValidation);
 const payoutValidation = new PayoutValidationService(prisma);
 const payoutWrite = new PayoutWriteService(prisma, programAccessRead, payoutValidation);
-const twilio = new TwilioService(prisma, firebaseAdmin, appReviewMode);
+const twilioOtp = new TwilioOtpService(prisma, firebaseAdmin, appReviewMode);
+const twilioMessaging = new TwilioMessagingService(prisma);
+
+async function translateEntityIdsToContactIds(type: MessagingRecipientType, entityIds: string[]): Promise<string[]> {
+	if (entityIds.length === 0) return [];
+	if (type === 'contributor') {
+		const rows = await prisma.contributor.findMany({ where: { id: { in: entityIds } }, select: { contactId: true } });
+
+		return rows.map((r) => r.contactId);
+	}
+	if (type === 'recipient') {
+		const rows = await prisma.recipient.findMany({ where: { id: { in: entityIds } }, select: { contactId: true } });
+
+		return rows.map((r) => r.contactId);
+	}
+	const rows = await prisma.localPartner.findMany({ where: { id: { in: entityIds } }, select: { contactId: true } });
+
+	return rows.map((r) => r.contactId);
+}
+
+class WiredMessagingDispatchService extends MessagingDispatchService {
+	protected async resolveContactIdsForType(
+		type: MessagingRecipientType,
+		selection: SelectionState,
+		currentUserId: string,
+	): Promise<string[]> {
+		const fetcher = async (page: number, pageSize: number, search: string) => {
+			const baseQuery = { page, pageSize, search };
+			if (type === 'contributor') {
+				const r = await services.read.contributor.getPaginatedTableView(currentUserId, baseQuery);
+				if (!r.success) throw new Error(r.error);
+
+				return { ids: r.data.tableRows.map((row) => row.id), totalCount: r.data.totalCount };
+			}
+			if (type === 'recipient') {
+				const r = await services.read.recipient.getPaginatedTableView(currentUserId, baseQuery);
+				if (!r.success) throw new Error(r.error);
+
+				return { ids: r.data.tableRows.map((row) => row.id), totalCount: r.data.totalCount };
+			}
+			const r = await services.read.localPartner.getPaginatedTableView(currentUserId, baseQuery);
+			if (!r.success) throw new Error(r.error);
+
+			return { ids: r.data.tableRows.map((row) => row.id), totalCount: r.data.totalCount };
+		};
+
+		const entityIds = await resolveSelectionToIds(selection, fetcher);
+
+		return translateEntityIdsToContactIds(type, entityIds);
+	}
+}
+
+export const messagingTranslateEntityIdsToContactIds = translateEntityIdsToContactIds;
+
+const twilioMessagingDispatch = new WiredMessagingDispatchService(prisma, userRead, twilioMessaging);
+const twilioMessagingChannelPreview = new MessagingChannelPreviewService(prisma, userRead);
+const twilioMessagingWebhook = new MessagingWebhookService(prisma);
+const messagingLog = new MessagingLogService(prisma, userRead);
 const contributionRead = new ContributionReadService(prisma, programAccessRead);
 const contributionValidation = new ContributionValidationService(prisma);
 const contributionWrite = new ContributionWriteService(prisma, programAccessRead, contributionValidation);
@@ -271,5 +335,33 @@ export const services = {
 	surveyImpact,
 	transparency,
 	githubApi,
-	twilio,
+	twilioOtp,
+	twilioMessaging,
+	twilioMessagingDispatch,
+	twilioMessagingChannelPreview,
+	twilioMessagingWebhook,
+	messagingLog,
 };
+
+const INTERRUPTED_AFTER_MS = 10 * 60 * 1000;
+
+async function markOrphanedMessagingJobs() {
+	try {
+		const cutoff = new Date(Date.now() - INTERRUPTED_AFTER_MS);
+		const result = await prisma.messagingJob.updateMany({
+			where: { status: 'running', updatedAt: { lt: cutoff } },
+			data: { status: 'interrupted', finishedAt: new Date() },
+		});
+		if (result.count > 0) {
+			// eslint-disable-next-line no-console
+			console.warn(`Marked ${result.count} orphaned messaging jobs as interrupted`);
+		}
+	} catch (error) {
+		// eslint-disable-next-line no-console
+		console.warn('Failed to mark orphaned messaging jobs', error);
+	}
+}
+
+if (process.env.NODE_ENV !== 'test') {
+	void markOrphanedMessagingJobs();
+}
