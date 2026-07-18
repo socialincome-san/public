@@ -1,5 +1,6 @@
 import { services } from '@/lib/services/services';
 import { logger } from '@/lib/utils/logger';
+import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { NextRequest, NextResponse } from 'next/server';
 import twilio from 'twilio';
 
@@ -14,7 +15,17 @@ import twilio from 'twilio';
 export async function POST(request: NextRequest) {
 	const signature = request.headers.get('x-twilio-signature');
 	const authToken = process.env.TWILIO_AUTH_TOKEN;
-	const url = `${process.env.BASE_URL}/api/v1/twilio/messaging/status`;
+
+	// Twilio signs the exact callback URL, so BASE_URL must be present and free of
+	// a trailing slash — otherwise the reconstructed URL won't match and
+	// validateRequest would reject legitimate webhooks.
+	const baseUrl = process.env.BASE_URL?.replace(TRAILING_SLASHES_REGEX, '');
+	if (!baseUrl) {
+		logger.error('Missing BASE_URL for Twilio messaging status webhook');
+
+		return NextResponse.json({ error: 'internal' }, { status: 500 });
+	}
+	const url = `${baseUrl}/api/v1/twilio/messaging/status`;
 
 	const form = await request.formData();
 	const params: Record<string, string> = {};
