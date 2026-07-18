@@ -22,6 +22,9 @@ type MessagingSend = {
 	phase: SendPhase;
 	status: MessagingJobStatusView | null;
 	error: string | null;
+	// True when dispatch succeeded but the follow-up status fetch failed: the send went out, we just
+	// couldn't load its result summary. Distinct from `error`, which means the send itself failed.
+	resultsUnavailable: boolean;
 	start: (input: StartInput) => void;
 };
 
@@ -36,6 +39,7 @@ export const useMessagingSend = (): MessagingSend => {
 	const [phase, setPhase] = useState<SendPhase>('idle');
 	const [status, setStatus] = useState<MessagingJobStatusView | null>(null);
 	const [error, setError] = useState<string | null>(null);
+	const [resultsUnavailable, setResultsUnavailable] = useState(false);
 	const activeRef = useRef(true);
 	const startedRef = useRef(false);
 
@@ -57,6 +61,7 @@ export const useMessagingSend = (): MessagingSend => {
 		setPhase('running');
 		setError(null);
 		setStatus(null);
+		setResultsUnavailable(false);
 
 		void (async () => {
 			try {
@@ -78,7 +83,9 @@ export const useMessagingSend = (): MessagingSend => {
 				if (statusResult.success) {
 					setStatus(statusResult.data);
 				} else {
-					setError(statusResult.error);
+					// Dispatch already succeeded; only the result summary is missing. Surface this as a
+					// results-unavailable warning rather than a failed send, so nobody re-sends the batch.
+					setResultsUnavailable(true);
 				}
 				setPhase('results');
 			} catch (err) {
@@ -91,5 +98,5 @@ export const useMessagingSend = (): MessagingSend => {
 		})();
 	}, []);
 
-	return { phase, status, error, start };
+	return { phase, status, error, resultsUnavailable, start };
 };

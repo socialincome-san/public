@@ -159,7 +159,11 @@ export async function previewMessagingChannelAction(
 		return session;
 	}
 
-	const contactIds = await services.messagingRecipients.resolveContactIds(type, selection, session.data.id);
+	try {
+		const contactIds = await services.messagingRecipients.resolveContactIds(type, selection, session.data.id);
 
-	return services.messagingChannelPreview.previewByContactIds(contactIds, channel, session.data.id);
+		return await services.messagingChannelPreview.previewByContactIds(contactIds, channel, session.data.id);
+	} catch (error) {
+		return resultFail(error instanceof Error ? error.message : 'Failed to preview channel');
+	}
 }

@@ -155,7 +155,13 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 
 			<div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
 				{isSending && channel ? (
-					<SendProgress phase={send.phase} status={send.status} error={send.error} channel={channel} />
+					<SendProgress
+						phase={send.phase}
+						status={send.status}
+						error={send.error}
+						resultsUnavailable={send.resultsUnavailable}
+						channel={channel}
+					/>
 				) : (
 					<div className={cn('space-y-5', currentStep === 2 && 'flex min-h-0 flex-1 flex-col space-y-3')}>
 						<div className="space-y-1">

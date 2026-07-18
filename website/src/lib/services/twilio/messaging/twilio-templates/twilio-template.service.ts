@@ -20,7 +20,10 @@ export class TwilioTemplateService extends TwilioBaseService {
 
 			const summaries: TwilioTemplateSummary[] = templates
 				.map((template) => {
-					const contentType = Object.keys(template.types ?? {})[0] ?? null;
+					// A template can carry several content types; surface it as a text template whenever it
+					// includes `twilio/text` rather than depending on key order.
+					const types = template.types ?? {};
+					const contentType = TEXT_CONTENT_TYPE in types ? TEXT_CONTENT_TYPE : (Object.keys(types)[0] ?? null);
 					const approval = (template.approvalRequests ?? {}) as { status?: string; category?: string };
 
 					return {
@@ -51,8 +54,13 @@ export class TwilioTemplateService extends TwilioBaseService {
 
 			const template = await twilioClientResult.data.content.v1.contents(sid).fetch();
 
-			const contentType = Object.keys(template.types ?? {})[0] ?? null;
-			const body = (Object.values(template.types ?? {})[0] as { body?: string } | undefined)?.body ?? null;
+			// Prefer the `twilio/text` entry rather than the first key so multi-type templates
+			// resolve to their text body instead of a media/quick-reply payload.
+			const types = template.types ?? {};
+			const textContent = types[TEXT_CONTENT_TYPE] as { body?: string } | undefined;
+			const firstContent = Object.values(types)[0] as { body?: string } | undefined;
+			const contentType = textContent ? TEXT_CONTENT_TYPE : (Object.keys(types)[0] ?? null);
+			const body = (textContent ?? firstContent)?.body ?? null;
 			const examples = (template.variables ?? {}) as Record<string, unknown>;
 			const whatsappStatus = await this.fetchWhatsappApprovalStatus(twilioClientResult.data, sid);
 

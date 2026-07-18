@@ -25,6 +25,9 @@ export const MessagingJobsTable = ({ rows, error, page, pageSize, totalCount }: 
 	}
 
 	const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+	// When `page` is past the end (e.g. a stale/hand-edited URL), send "Prev" to the last real page
+	// instead of decrementing one step at a time through empty pages.
+	const prevPage = Math.min(page, totalPages) - 1;
 
 	return (
 		<div className="space-y-3">
@@ -70,8 +73,8 @@ export const MessagingJobsTable = ({ rows, error, page, pageSize, totalCount }: 
 					Page {page} of {totalPages} ({totalCount} job{totalCount === 1 ? '' : 's'})
 				</p>
 				<div className="flex gap-2">
-					{page > 1 && (
-						<Link href={`/portal/messaging/delivery-log?page=${page - 1}`} className="hover:underline">
+					{prevPage >= 1 && (
+						<Link href={`/portal/messaging/delivery-log?page=${prevPage}`} className="hover:underline">
 							Prev
 						</Link>
 					)}

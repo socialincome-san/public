@@ -10,6 +10,7 @@ type SendProgressProps = {
 	phase: SendPhase;
 	status: MessagingJobStatusView | null;
 	error: string | null;
+	resultsUnavailable: boolean;
 	channel: MessagingChannel;
 };
 
@@ -26,7 +27,7 @@ const toneDot: Record<ResultRow['tone'], string> = {
 	muted: 'bg-muted-foreground/40',
 };
 
-export const SendProgress = ({ phase, status, error, channel }: SendProgressProps) => {
+export const SendProgress = ({ phase, status, error, resultsUnavailable, channel }: SendProgressProps) => {
 	if (phase === 'running') {
 		return (
 			<div className="flex flex-col items-center gap-4 py-12 text-center">
@@ -73,6 +74,12 @@ export const SendProgress = ({ phase, status, error, channel }: SendProgressProp
 				<h3 className="text-base font-medium">Send complete</h3>
 				<p className="text-muted-foreground text-sm">Your message was dispatched via {channel.toUpperCase()}.</p>
 			</div>
+			{resultsUnavailable && (
+				<p className="text-muted-foreground text-sm">
+					The send went out, but its result summary couldn’t be loaded. Check the delivery log for the outcome — don’t
+					re-send.
+				</p>
+			)}
 			{status && (
 				<dl className="divide-border divide-y overflow-hidden rounded-lg border">
 					{rows.map((row) => (

@@ -7,6 +7,7 @@ import { ExternalLink } from 'lucide-react';
 type SummaryCardProps = {
 	job: MessagingJobDetailView['job'];
 	templateBody: string | null;
+	templateError: string | null;
 	twilioAccountSid: string | null;
 };
 
@@ -15,7 +16,7 @@ const formatDate = (d: Date | null) =>
 		? '—'
 		: d.toLocaleString(undefined, { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
 
-export const SummaryCard = ({ job, templateBody, twilioAccountSid }: SummaryCardProps) => {
+export const SummaryCard = ({ job, templateBody, templateError, twilioAccountSid }: SummaryCardProps) => {
 	return (
 		<section className="space-y-6">
 			<header className="flex items-start justify-between gap-4">
@@ -91,6 +92,8 @@ export const SummaryCard = ({ job, templateBody, twilioAccountSid }: SummaryCard
 				<h3 className="text-muted-foreground text-xs">Message body</h3>
 				{templateBody ? (
 					<pre className="bg-muted rounded-md p-4 text-sm whitespace-pre-wrap">{templateBody}</pre>
+				) : templateError ? (
+					<p className="text-destructive text-sm">Couldn’t load template body: {templateError}</p>
 				) : (
 					<p className="text-muted-foreground text-sm">(no body)</p>
 				)}

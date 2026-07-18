@@ -14,7 +14,8 @@ const INTERRUPTED_AFTER_MS = 10 * 60 * 1000;
 const STATUS_SYNC_CONCURRENCY = 10;
 
 // Statuses Twilio never moves out of, so there is nothing to sync for these rows.
-const TERMINAL_STATUSES = ['delivered', 'failed', 'undelivered'];
+// `read` is the terminal state for WhatsApp/RCS messages (it follows `delivered`).
+const TERMINAL_STATUSES = ['delivered', 'read', 'failed', 'undelivered'];
 
 export class MessagingLogService extends TwilioBaseService {
 	constructor(

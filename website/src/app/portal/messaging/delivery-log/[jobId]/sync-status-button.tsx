@@ -20,14 +20,19 @@ export const SyncStatusButton = ({ jobId }: SyncStatusButtonProps) => {
 		startTransition(async () => {
 			setMessage(null);
 			setError(null);
-			const result = await syncMessagingJobStatusesAction(jobId);
-			if (!result.success) {
-				setError(result.error);
+			try {
+				const result = await syncMessagingJobStatusesAction(jobId);
+				if (!result.success) {
+					setError(result.error);
 
-				return;
+					return;
+				}
+				setMessage(`Updated ${result.data.updated} of ${result.data.checked}`);
+				router.refresh();
+			} catch {
+				// A transport or unexpected server failure rejects the action rather than returning a result.
+				setError('Could not refresh status. Please try again.');
 			}
-			setMessage(`Updated ${result.data.updated} of ${result.data.checked}`);
-			router.refresh();
 		});
 	};
 

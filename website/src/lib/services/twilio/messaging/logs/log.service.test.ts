@@ -362,7 +362,7 @@ describe('MessagingLogService.syncJobStatuses', () => {
 		expect(findManyCalls[0].where).toEqual({
 			jobId: 'j1',
 			twilioMessageSid: { not: null },
-			twilioStatus: { notIn: ['delivered', 'failed', 'undelivered'] },
+			twilioStatus: { notIn: ['delivered', 'read', 'failed', 'undelivered'] },
 		});
 	});
 

@@ -45,6 +45,7 @@ const MessagingJobDetailDataLoader = async ({ params, searchParams }: MessagingJ
 
 	const templateResult = await services.messagingTwilioTemplates.getTwilioTemplate(result.data.job.templateSid);
 	const templateBody = templateResult.success ? templateResult.data.body : null;
+	const templateError = templateResult.success ? null : templateResult.error;
 
 	return (
 		<div className="space-y-6">
@@ -52,7 +53,12 @@ const MessagingJobDetailDataLoader = async ({ params, searchParams }: MessagingJ
 				← Back to delivery log
 			</Link>
 
-			<SummaryCard job={result.data.job} templateBody={templateBody} twilioAccountSid={twilioAccountSid} />
+			<SummaryCard
+				job={result.data.job}
+				templateBody={templateBody}
+				templateError={templateError}
+				twilioAccountSid={twilioAccountSid}
+			/>
 			<div className="space-y-3">
 				<div className="flex items-center justify-between gap-4">
 					<h3 className="text-sm font-medium">Message recipients</h3>

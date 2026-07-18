@@ -1,4 +1,4 @@
-import { PrismaClient } from '@/generated/prisma/client';
+import { MessagingJob, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { ServiceResult } from '../../../core/base.types';
 import { UserReadService } from '../../../user/user-read.service';
@@ -77,80 +77,93 @@ export class MessagingDispatchService extends TwilioBaseService {
 			return this.resultFail('Template has no body');
 		}
 
-		const ids = await this.resolveContactIdsForType(input.recipientType, input.selection, currentUserId);
-		const contacts = await this.db.contact.findMany({
-			where: { id: { in: ids } },
-			include: { phone: true },
-		});
-
-		const plan: PlanRow[] = contacts.map((c) => {
-			const phoneNumber = c.phone?.number ?? null;
-			const hasWhatsApp = c.phone?.hasWhatsApp ?? false;
-			const resolved = resolveChannel({ requested: input.channel, phoneNumber, hasWhatsApp });
-			const renderable: RenderableContact = {
-				firstName: c.firstName,
-				lastName: c.lastName,
-				callingName: c.callingName,
-				email: c.email,
-				gender: c.gender,
-				language: c.language,
-				dateOfBirth: c.dateOfBirth,
-				profession: c.profession,
-			};
-			const renderedBody = renderTemplateBody(template.body!, template.variables, input.assignments, renderable);
-			const contentVariables = buildContentVariables(template.variables, input.assignments, renderable);
-
-			return {
-				contactId: c.id,
-				contact: renderable,
-				phoneNumber,
-				hasWhatsApp,
-				channelUsed: resolved.channelUsed,
-				fellBack: resolved.fellBack,
-				skippedReason: resolved.skippedReason,
-				renderedBody,
-				contentVariables,
-			};
-		});
-
-		const skippedCount = plan.filter((p) => p.channelUsed === null).length;
-		const fallbackCount = plan.filter((p) => p.fellBack).length;
-
-		const job = await this.db.$transaction(async (tx) => {
-			const created = await tx.messagingJob.create({
-				data: {
-					templateSid: input.templateSid,
-					templateFriendlyName: template.friendlyName,
-					channelRequested: input.channel,
-					recipientType: input.recipientType,
-					assignments: input.assignments,
-					totalSelected: plan.length,
-					sentCount: 0,
-					failedCount: 0,
-					skippedCount,
-					fallbackCount,
-					deliveredCount: 0,
-					status: 'running',
-					createdById: currentUserId,
-					startedAt: new Date(),
-				},
-			});
-			await tx.messageLog.createMany({
-				data: plan.map((p) => ({
-					jobId: created.id,
-					contactId: p.contactId,
-					phoneNumber: p.phoneNumber,
-					channelRequested: input.channel,
-					channelUsed: p.channelUsed,
-					fellBack: p.fellBack,
-					renderedBody: p.renderedBody,
-					twilioStatus: p.channelUsed === null ? null : 'queued',
-					skippedReason: p.skippedReason,
-				})),
+		// Recipient resolution, contact loading, template rendering and job creation can all throw.
+		// These run before any job row exists, so a failure here is returned as a ServiceResult rather
+		// than being allowed to reject the action (which would leave the caller's review step hanging).
+		let job: MessagingJob;
+		let plan: PlanRow[];
+		let skippedCount: number;
+		let fallbackCount: number;
+		try {
+			const ids = await this.resolveContactIdsForType(input.recipientType, input.selection, currentUserId);
+			const contacts = await this.db.contact.findMany({
+				where: { id: { in: ids } },
+				include: { phone: true },
 			});
 
-			return created;
-		});
+			plan = contacts.map((c) => {
+				const phoneNumber = c.phone?.number ?? null;
+				const hasWhatsApp = c.phone?.hasWhatsApp ?? false;
+				const resolved = resolveChannel({ requested: input.channel, phoneNumber, hasWhatsApp });
+				const renderable: RenderableContact = {
+					firstName: c.firstName,
+					lastName: c.lastName,
+					callingName: c.callingName,
+					email: c.email,
+					gender: c.gender,
+					language: c.language,
+					dateOfBirth: c.dateOfBirth,
+					profession: c.profession,
+				};
+				const renderedBody = renderTemplateBody(template.body!, template.variables, input.assignments, renderable);
+				const contentVariables = buildContentVariables(template.variables, input.assignments, renderable);
+
+				return {
+					contactId: c.id,
+					contact: renderable,
+					phoneNumber,
+					hasWhatsApp,
+					channelUsed: resolved.channelUsed,
+					fellBack: resolved.fellBack,
+					skippedReason: resolved.skippedReason,
+					renderedBody,
+					contentVariables,
+				};
+			});
+
+			skippedCount = plan.filter((p) => p.channelUsed === null).length;
+			fallbackCount = plan.filter((p) => p.fellBack).length;
+
+			job = await this.db.$transaction(async (tx) => {
+				const created = await tx.messagingJob.create({
+					data: {
+						templateSid: input.templateSid,
+						templateFriendlyName: template.friendlyName,
+						channelRequested: input.channel,
+						recipientType: input.recipientType,
+						assignments: input.assignments,
+						totalSelected: plan.length,
+						sentCount: 0,
+						failedCount: 0,
+						skippedCount,
+						fallbackCount,
+						deliveredCount: 0,
+						status: 'running',
+						createdById: currentUserId,
+						startedAt: new Date(),
+					},
+				});
+				await tx.messageLog.createMany({
+					data: plan.map((p) => ({
+						jobId: created.id,
+						contactId: p.contactId,
+						phoneNumber: p.phoneNumber,
+						channelRequested: input.channel,
+						channelUsed: p.channelUsed,
+						fellBack: p.fellBack,
+						renderedBody: p.renderedBody,
+						twilioStatus: p.channelUsed === null ? null : 'queued',
+						skippedReason: p.skippedReason,
+					})),
+				});
+
+				return created;
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Failed to prepare messaging job');
+		}
 
 		try {
 			const logs = await this.db.messageLog.findMany({ where: { jobId: job.id } });
@@ -160,12 +173,17 @@ export class MessagingDispatchService extends TwilioBaseService {
 			let failedCount = 0;
 			let sinceFlush = 0;
 			const sendable = plan.filter((p) => p.channelUsed !== null);
+			// A counter flush is a progress optimization only — never let it abort a send in flight.
 			const flushCounters = async () => {
-				await this.db.messagingJob.update({
-					where: { id: job.id },
-					data: { sentCount, failedCount },
-				});
 				sinceFlush = 0;
+				try {
+					await this.db.messagingJob.update({
+						where: { id: job.id },
+						data: { sentCount, failedCount },
+					});
+				} catch (error) {
+					this.logger.error(error);
+				}
 			};
 
 			const baseUrl = process.env.BASE_URL ?? '';
@@ -177,6 +195,8 @@ export class MessagingDispatchService extends TwilioBaseService {
 					return;
 				}
 				const to = p.channelUsed === 'whatsapp' ? `whatsapp:${p.phoneNumber}` : p.phoneNumber;
+
+				let msgSid: string;
 				try {
 					const msg = await clientResult.data.messages.create({
 						messagingServiceSid,
@@ -185,12 +205,9 @@ export class MessagingDispatchService extends TwilioBaseService {
 						to,
 						...(statusCallback ? { statusCallback } : {}),
 					});
-					await this.db.messageLog.update({
-						where: { id: log.id },
-						data: { twilioMessageSid: msg.sid, twilioStatus: 'queued' },
-					});
-					sentCount += 1;
+					msgSid = msg.sid;
 				} catch (error) {
+					// The send itself failed — this row genuinely did not go out, so mark it failed.
 					const errAny = error as { code?: number | string; message?: string };
 					try {
 						await this.db.messageLog.update({
@@ -206,6 +223,25 @@ export class MessagingDispatchService extends TwilioBaseService {
 					}
 					failedCount += 1;
 					this.logger.error(error);
+					sinceFlush += 1;
+					if (sinceFlush >= COUNTER_FLUSH_EVERY) {
+						await flushCounters();
+					}
+
+					return;
+				}
+
+				// Twilio accepted the message. Persisting the SID is best-effort: if it fails the message
+				// is still sent, so it must NOT be marked failed. The row stays `queued` and the status
+				// webhook / manual sync reconciles it later; count it as sent either way.
+				sentCount += 1;
+				try {
+					await this.db.messageLog.update({
+						where: { id: log.id },
+						data: { twilioMessageSid: msgSid, twilioStatus: 'queued' },
+					});
+				} catch (dbError) {
+					this.logger.error(dbError);
 				}
 				sinceFlush += 1;
 				if (sinceFlush >= COUNTER_FLUSH_EVERY) {
@@ -213,9 +249,16 @@ export class MessagingDispatchService extends TwilioBaseService {
 				}
 			};
 
+			// allSettled so one unexpected worker rejection can't abandon its siblings mid-batch;
+			// dispatch already handles its own errors, so a rejection here is truly exceptional.
 			for (let i = 0; i < sendable.length; i += DISPATCH_CONCURRENCY) {
 				const chunk = sendable.slice(i, i + DISPATCH_CONCURRENCY);
-				await Promise.all(chunk.map(dispatch));
+				const settled = await Promise.allSettled(chunk.map(dispatch));
+				for (const outcome of settled) {
+					if (outcome.status === 'rejected') {
+						this.logger.error(outcome.reason);
+					}
+				}
 			}
 
 			await this.db.messagingJob.update({

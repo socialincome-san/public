@@ -49,6 +49,15 @@ const SearchInput = ({ value, onDebouncedChange, placeholder, className }: Searc
 		setLocal(value);
 	}
 
+	// When the controlled value changes externally (e.g. a reset), cancel any pending debounce so a
+	// stale keystroke can't fire afterwards and undo the reset.
+	useEffect(() => {
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+			timeoutRef.current = null;
+		}
+	}, [value]);
+
 	useEffect(() => {
 		return () => {
 			if (timeoutRef.current) {
@@ -229,6 +238,9 @@ export const RecipientsTable = ({
 	const [isPending, startTransition] = useTransition();
 
 	useEffect(() => {
+		// Concurrent search/filter/page requests can resolve out of order; ignore any response that
+		// arrives after the query has already changed so an older result can't overwrite the current one.
+		let active = true;
 		startTransition(async () => {
 			setError(null);
 			const result = await listMessagingRecipientsAction(query.type, {
@@ -237,6 +249,9 @@ export const RecipientsTable = ({
 				search: query.search,
 				filters: query.filters,
 			});
+			if (!active) {
+				return;
+			}
 			if (result.success) {
 				setData(result.data);
 				setFilterOptions(result.data.filterOptions);
@@ -246,6 +261,10 @@ export const RecipientsTable = ({
 				setError(result.error);
 			}
 		});
+
+		return () => {
+			active = false;
+		};
 	}, [query, onTotalCountChange]);
 
 	const filterDefs = buildFilterDefs(query.type, query.filters, filterOptions);
