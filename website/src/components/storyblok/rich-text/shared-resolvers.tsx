@@ -1,6 +1,12 @@
 'use client';
 
-import { headingStyles, type HeadingSize } from '@/components/heading-styles';
+import { headingStyles } from '@/components/heading-styles';
+import type {
+	RichTextAlignment,
+	RichTextAlignmentProps,
+	RichTextHeadingProps,
+	RichTextLinkProps,
+} from '@/components/storyblok/rich-text/rich-text.types';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/table';
 import { cn } from '@/lib/utils/cn';
 import NextLink from 'next/link';
@@ -17,24 +23,6 @@ import {
 	NODE_TABLE_ROW,
 	NODE_UL,
 } from 'storyblok-rich-text-react-renderer';
-
-type RichTextLinkProps = {
-	href?: string;
-	target?: string;
-	rel?: string;
-};
-
-type RichTextAlignment = 'left' | 'center' | 'middle' | 'right';
-
-export type RichTextAlignmentProps = {
-	textAlign?: unknown;
-	align?: unknown;
-	alignment?: unknown;
-};
-
-export type RichTextHeadingProps = RichTextAlignmentProps & {
-	level: HeadingSize;
-};
 
 const linkClassName = 'text-primary font-medium underline underline-offset-4';
 
