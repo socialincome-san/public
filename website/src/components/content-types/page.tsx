@@ -7,6 +7,7 @@ import { HomePageRichtextButtonHeaderBlock } from '@/components/content-blocks/h
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
+import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceBlock } from '@/components/content-blocks/open-source';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
@@ -61,6 +62,8 @@ const renderPageBlock = (
 			return <ImpactMeasurementBlock blok={block} lang={lang} searchParams={searchParams} />;
 		case 'journalTeasers':
 			return <JournalTeasersBlock blok={block} lang={lang} region={region} />;
+		case 'lottie':
+			return <LottieBlock blok={block} />;
 		case 'modalCards':
 			return <ModalCardsBlock blok={block} />;
 		case 'newsletterForm':
