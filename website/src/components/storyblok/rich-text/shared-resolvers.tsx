@@ -26,13 +26,13 @@ type RichTextLinkProps = {
 
 type RichTextAlignment = 'left' | 'center' | 'middle' | 'right';
 
-type RichTextAlignmentProps = {
+export type RichTextAlignmentProps = {
 	textAlign?: unknown;
 	align?: unknown;
 	alignment?: unknown;
 };
 
-type RichTextHeadingProps = RichTextAlignmentProps & {
+export type RichTextHeadingProps = RichTextAlignmentProps & {
 	level: HeadingSize;
 };
 
@@ -48,13 +48,13 @@ const alignmentClassNames: Record<RichTextAlignment, string> = {
 const isRichTextAlignment = (value: unknown): value is RichTextAlignment =>
 	value === 'left' || value === 'center' || value === 'middle' || value === 'right';
 
-const getRichTextAlignmentClassName = ({ textAlign, align, alignment }: RichTextAlignmentProps = {}) => {
+export const getRichTextAlignmentClassName = ({ textAlign, align, alignment }: RichTextAlignmentProps = {}) => {
 	const value = textAlign ?? align ?? alignment;
 
 	return isRichTextAlignment(value) ? alignmentClassNames[value] : undefined;
 };
 
-const buildLinkRel = (target?: string, rel?: string) => {
+export const buildLinkRel = (target?: string, rel?: string) => {
 	if (target !== '_blank') {
 		return rel;
 	}
@@ -66,7 +66,7 @@ const buildLinkRel = (target?: string, rel?: string) => {
 	return [...tokens].join(' ');
 };
 
-const removeStoryblokPagesFolder = (href: string) => href.replace(/^(https?:\/\/[^/]+)?\/?pages(?=\/|$)/, '$1');
+export const removeStoryblokPagesFolder = (href: string) => href.replace(/^(https?:\/\/[^/]+)?\/?pages(?=\/|$)/, '$1');
 
 export const storyblokRichTextMarkResolvers = {
 	[MARK_LINK]: (children: ReactNode, props: RichTextLinkProps) => {
