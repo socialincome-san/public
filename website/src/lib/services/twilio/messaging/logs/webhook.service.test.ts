@@ -13,7 +13,7 @@ function makeService(opts: { existingLog?: { id: string; jobId: string; twilioSt
 		updateMany: ({ where, data }: { where: { twilioStatus?: { notIn?: string[] } }; data: Record<string, unknown> }) => {
 			// Model the atomic guard: the row matches only if its current status is not in the blocked set.
 			const blocked = where.twilioStatus?.notIn ?? [];
-			const matches = !blocked.includes(opts.existingLog!.twilioStatus as string);
+			const matches = !blocked.includes(opts.existingLog!.twilioStatus!);
 			if (matches) {
 				updates.push({ table: 'messageLog', data });
 			}
