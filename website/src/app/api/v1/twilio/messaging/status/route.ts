@@ -3,6 +3,14 @@ import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import twilio from 'twilio';
 
+/**
+ * Twilio status callback webhook (POST /api/v1/twilio/messaging/status).
+ *
+ * Twilio POSTs delivery-status updates here for messages we've sent (e.g.
+ * `sent`, `delivered`, `failed`, `undelivered`). We verify the request is
+ * genuinely from Twilio via the `x-twilio-signature` header, then forward the
+ * status to the messaging webhook service to update our records.
+ */
 export async function POST(request: NextRequest) {
 	const signature = request.headers.get('x-twilio-signature');
 	const authToken = process.env.TWILIO_AUTH_TOKEN;
