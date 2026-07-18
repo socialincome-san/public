@@ -14,7 +14,7 @@ export const StoryblokAssetThumbnail = ({ asset }: Props) => {
 	const dimensions = getDimensionsFromStoryblokImageUrl(asset.filename);
 
 	return (
-		<div className="flex size-20 shrink-0 items-center justify-center overflow-hidden">
+		<div className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-xs">
 			<Image
 				src={asset.filename}
 				alt={asset.alt ?? 'Thumbnail'}
