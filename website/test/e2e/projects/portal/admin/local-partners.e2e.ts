@@ -1,7 +1,12 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { deleteFirebaseEmailsIfExist, expectToHaveScreenshot, getFirebaseAdminService } from '../../../utils';
+import {
+	clickDataTableActionItem,
+	deleteFirebaseEmailsIfExist,
+	expectToHaveScreenshot,
+	getFirebaseAdminService,
+} from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -35,8 +40,7 @@ test('add new local partner', async ({ page }) => {
 
 	try {
 		await page.goto('/portal/admin/local-partners');
-		await page.getByTestId('data-table-actions-button').click();
-		await page.getByTestId('data-table-action-item-add-new-local-partner').click();
+		await clickDataTableActionItem(page, 'data-table-action-item-add-new-local-partner');
 
 		await page.getByTestId('form-item-name').locator('input').fill(partnerName);
 		await page.getByTestId('form-item-slug').locator('input').fill(slug);
@@ -75,8 +79,7 @@ test('shows uniqueness error when email already exists', async ({ page }) => {
 	const unique = Date.now();
 
 	await page.goto('/portal/admin/local-partners');
-	await page.getByTestId('data-table-actions-button').click();
-	await page.getByTestId('data-table-action-item-add-new-local-partner').click();
+	await clickDataTableActionItem(page, 'data-table-action-item-add-new-local-partner');
 
 	await page.getByTestId('form-item-name').locator('input').fill(`e2e-duplicate-email-${unique}`);
 	await page.getByTestId('form-item-slug').locator('input').fill(`e2e-duplicate-email-slug-${unique}`);
@@ -295,8 +298,7 @@ test('local partner create update delete keeps Firebase user in sync', async ({ 
 
 	try {
 		await page.goto('/portal/admin/local-partners');
-		await page.getByTestId('data-table-actions-button').click();
-		await page.getByTestId('data-table-action-item-add-new-local-partner').click();
+		await clickDataTableActionItem(page, 'data-table-action-item-add-new-local-partner');
 		await page.getByTestId('form-item-name').locator('input').fill(partnerName);
 		await page.getByTestId('form-item-slug').locator('input').fill(slug);
 		await page.getByTestId('form-accordion-trigger-contact').click();
