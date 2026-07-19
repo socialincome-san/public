@@ -52,7 +52,7 @@ export const ActionMenu = ({ items = [] }: ActionMenuProps) => {
 					runAction(item);
 				}}
 				disabled={item.disabled}
-				data-testid={'data-table-toolbar-primary-action'}
+				data-testid={`data-table-action-item-${toTestIdSlug(item.label)}`}
 				aria-label={item.label}
 			>
 				{item.icon}
