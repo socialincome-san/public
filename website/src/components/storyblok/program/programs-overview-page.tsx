@@ -6,6 +6,7 @@ import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { AnySearchParams } from '@/lib/types/page-props';
 import type { ISbStoryData } from '@storyblok/js';
 import { ProgramsOverviewSection } from './programs-overview-section';
+import { BlockWrapper } from '@/components/block-wrapper';
 
 type Props = {
 	overview: ISbStoryData<ProgramOverview>;
@@ -25,9 +26,11 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 	});
 
 	return (
-		<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
+		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
-			<CmsHeader title={title} text={text} />
+			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<CmsHeader title={title} text={text} />
+			</BlockWrapper>
 			<ProgramsOverviewSection lang={lang} region={region} searchParams={searchParams} />
 		</div>
 	);

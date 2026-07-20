@@ -1,4 +1,5 @@
 import { Translator } from '@/lib/i18n/translator';
+import { BlockWrapper } from '@/components/block-wrapper';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
@@ -73,15 +74,15 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 	const focusFilteredPrograms = hasFixedFocus
 		? countryFilteredPrograms
 		: countryFilteredPrograms.filter((program) =>
-				programMatchesFocusQuery(program, filterDataByPortalSlug, selectedFocusId),
-			);
+			programMatchesFocusQuery(program, filterDataByPortalSlug, selectedFocusId),
+		);
 	const filteredPrograms = searchQuery
 		? focusFilteredPrograms.filter((program) => programMatchesSearchQuery(program, searchQuery))
 		: focusFilteredPrograms;
 	const fixedQueryParams = hasFixedFocus ? [{ key: FOCUS_QUERY_KEY, value: fixedFocusId }] : [];
 
 	return (
-		<>
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 			<div className="flex flex-wrap items-center justify-between gap-4">
 				<ProgramsOverviewFilters
 					allCountriesLabel={translator.t('programs-page.all-countries', { context: { count: countryOptions.length } })}
@@ -99,8 +100,8 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 					placeholder={translator.t('programs-page.search-placeholder')}
 					queryParamOverrides={fixedQueryParams}
 				/>
+				<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} lang={lang} region={region} />
 			</div>
-			<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} lang={lang} region={region} />
-		</>
+		</BlockWrapper>
 	);
 };
