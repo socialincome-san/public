@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { LocalPartnersGrid } from '@/components/storyblok/local-partner/local-partners-grid';
 import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/local-partners-teaser-intro';
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
@@ -16,9 +17,12 @@ export const LocalPartnersOverview = ({ localPartners, lang, region, title, text
 	const hasCmsHeader = Boolean(title?.trim()) || Boolean(text?.trim());
 
 	return (
-		<div className="flex w-full flex-col gap-8">
-			{hasCmsHeader ? <CmsHeader title={title} text={text} /> : <LocalPartnersTeaserIntro lang={lang} />}
-			<LocalPartnersGrid localPartners={localPartners} lang={lang} region={region} />
-		</div>
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<div className="flex w-full flex-col gap-8">
+				{hasCmsHeader ? <CmsHeader title={title} text={text} /> : <LocalPartnersTeaserIntro lang={lang} />}
+				<LocalPartnersGrid localPartners={localPartners} lang={lang} region={region} />
+			</div>
+		</BlockWrapper>
+
 	);
 };
