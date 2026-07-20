@@ -1,4 +1,5 @@
 import { services } from '@/lib/services/services';
+import { BlockWrapper } from '@/components/block-wrapper';
 import { followUpConfigs, highlightedQuestionOrder, questionTypeLabelKeys } from './config';
 import { toImpactServiceFilters } from './filters.server';
 import { renderFollowUpSections } from './follow-ups';
@@ -33,7 +34,7 @@ export const ImpactMeasurementResults = async ({ lang, searchParams }: ImpactMea
 	];
 
 	return (
-		<div className="space-y-10">
+		<BlockWrapper className="space-y-10">
 			{await Promise.all(
 				orderedQuestions.map(async (question, index) => (
 					<ImpactMeasurementQuestionCard
@@ -53,6 +54,6 @@ export const ImpactMeasurementResults = async ({ lang, searchParams }: ImpactMea
 					/>
 				)),
 			)}
-		</div>
+		</BlockWrapper>
 	);
 };
