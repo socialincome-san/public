@@ -14,6 +14,7 @@ import { CountryStatistics } from './country-statistics';
 import { CountryStatisticsSkeleton } from './country-statistics-skeleton';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './country.utils';
+import { BlockWrapper } from '@/components/block-wrapper';
 
 type Props = {
 	country: CountryStory;
@@ -64,7 +65,9 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 
 			<Breadcrumb links={breadcrumbLinks} />
 			<div className="lg:hidden">
-				<DonationFormServer lang={lang} />
+				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+					<DonationFormServer lang={lang} />
+				</BlockWrapper>
 			</div>
 			<CountryMap country={country} lang={lang} />
 			<CountryPersonCarousel country={country} lang={lang} />

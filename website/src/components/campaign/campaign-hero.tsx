@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { Progress } from '@/components/progress';
 import type { Translator } from '@/lib/i18n/translator';
@@ -78,9 +79,12 @@ export const CampaignHero = ({ campaign, translator, lang }: Props) => {
 				</div>
 
 				{campaign.daysLeft >= 0 && (
-					<div className="flex w-full justify-center lg:justify-end">
-						<DonationFormServer lang={lang} campaignId={campaign.id} />
-					</div>
+					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+						<div className="flex w-full justify-center lg:justify-end">
+							<DonationFormServer lang={lang} campaignId={campaign.id} />
+						</div>
+					</BlockWrapper>
+
 				)}
 			</div>
 		</section>

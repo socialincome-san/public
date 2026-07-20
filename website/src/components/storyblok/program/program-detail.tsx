@@ -58,24 +58,26 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				stats={
 					programDetailData.stats
 						? [
-								{
-									label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
-								},
-								{
-									value: programDetailData.stats.recipientsCount,
-									label:
-										programDetailData.stats.recipientsCount === 1
-											? translator.t('programs-page.recipient-singular')
-											: translator.t('programs-page.recipient-plural'),
-								},
-							]
+							{
+								label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
+							},
+							{
+								value: programDetailData.stats.recipientsCount,
+								label:
+									programDetailData.stats.recipientsCount === 1
+										? translator.t('programs-page.recipient-singular')
+										: translator.t('programs-page.recipient-plural'),
+							},
+						]
 						: []
 				}
 			/>
 			<div className="flex flex-col gap-8 py-8">
 				<Breadcrumb className="py-0" links={breadcrumbLinks} />
 				<div className="lg:hidden">
-					<DonationFormServer lang={lang} />
+					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+						<DonationFormServer lang={lang} />
+					</BlockWrapper>
 				</div>
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 					<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">

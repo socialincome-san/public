@@ -1,5 +1,6 @@
 'use client';
 
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button';
 import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
 import { VideoControlButton } from '@/components/video-control-button';
@@ -171,7 +172,11 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 					</div>
 				)}
 			</div>
-			{!isExpanded && <div className="lg:hidden">{donationForm}</div>}
+			{!isExpanded && <div className="lg:hidden">
+				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+					{donationForm}
+				</BlockWrapper>
+			</div>}
 		</div>
 	);
 };
