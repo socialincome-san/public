@@ -40,7 +40,7 @@ export const FaqSelectionContent = ({ heading, items, cta }: Props) => {
 	}
 
 	return (
-		<div className="mx-auto w-site-width max-w-4xl px-6">
+		<div className="mx-auto max-w-4xl">
 			{heading && <SectionHeading bold>{heading}</SectionHeading>}
 			<RadixAccordion.Root type="single" collapsible className="border-input w-full border-b">
 				{items.map((item) => (
