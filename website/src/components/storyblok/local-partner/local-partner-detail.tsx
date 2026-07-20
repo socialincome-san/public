@@ -4,7 +4,6 @@ import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonia
 import { isFocusStory } from '@/components/storyblok/focus/focus.utils';
 import { EntityAboutSection } from '@/components/storyblok/shared/entity-about-section';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
-import { StoryDetailContent } from '@/components/storyblok/shared/story-detail-content';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -65,7 +64,6 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 					},
 				]}
 			/>
-			<StoryDetailContent>
 				<Breadcrumb links={breadcrumbLinks} />
 				<EntityAboutSection
 					isoCode={isoCode}
@@ -99,7 +97,6 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 					: null}
 				<LocalPartnerPrograms localPartner={localPartner} lang={lang} region={region} />
 				<LocalPartnerPartners localPartner={localPartner} lang={lang} region={region} />
-			</StoryDetailContent>
 		</>
 	);
 };

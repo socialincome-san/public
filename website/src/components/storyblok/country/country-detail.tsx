@@ -3,7 +3,6 @@ import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-l
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
-import { StoryDetailContent } from '@/components/storyblok/shared/story-detail-content';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Suspense } from 'react';
@@ -62,7 +61,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 					},
 				]}
 			/>
-			<StoryDetailContent>
+			
 				<Breadcrumb links={breadcrumbLinks} />
 				<div className="lg:hidden">
 					<DonationFormServer lang={lang} />
@@ -79,7 +78,6 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 				{localPartners.length > 0 && (
 					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
 				)}
-			</StoryDetailContent>
 		</>
 	);
 };
