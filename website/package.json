@@ -23,7 +23,7 @@
 		"test:e2e:verbose": "DEBUG=pw:webserver npm run test:e2e",
 		"test:e2e:ui:verbose": "DEBUG=pw:webserver npm run test:e2e:ui",
 		"copy-static-files": "cp -r public .next/standalone/website && cp -r .next/static .next/standalone/website/.next/",
-		"emulator:start": "firebase emulators:start --project demo-social-income-local --only firestore,auth --config ../firebase.json --import ../seed",
+		"emulator:start": "firebase emulators:start --project demo-social-income-local --only firestore,auth,storage --config ../firebase.json --import ../seed",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"openapi:generate": "next-openapi-gen generate",
