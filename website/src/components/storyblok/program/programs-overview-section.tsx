@@ -1,5 +1,5 @@
-import { Translator } from '@/lib/i18n/translator';
 import { BlockWrapper } from '@/components/block-wrapper';
+import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
@@ -74,8 +74,8 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 	const focusFilteredPrograms = hasFixedFocus
 		? countryFilteredPrograms
 		: countryFilteredPrograms.filter((program) =>
-			programMatchesFocusQuery(program, filterDataByPortalSlug, selectedFocusId),
-		);
+				programMatchesFocusQuery(program, filterDataByPortalSlug, selectedFocusId),
+			);
 	const filteredPrograms = searchQuery
 		? focusFilteredPrograms.filter((program) => programMatchesSearchQuery(program, searchQuery))
 		: focusFilteredPrograms;

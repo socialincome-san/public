@@ -1,5 +1,5 @@
-import { Translator } from '@/lib/i18n/translator';
 import { BlockWrapper } from '@/components/block-wrapper';
+import { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 
@@ -97,6 +97,5 @@ export const CountryStatisticsSkeleton = async ({ lang }: Props) => {
 				</div>
 			</section>
 		</BlockWrapper>
-
 	);
 };

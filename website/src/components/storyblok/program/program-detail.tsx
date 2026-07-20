@@ -58,17 +58,17 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				stats={
 					programDetailData.stats
 						? [
-							{
-								label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
-							},
-							{
-								value: programDetailData.stats.recipientsCount,
-								label:
-									programDetailData.stats.recipientsCount === 1
-										? translator.t('programs-page.recipient-singular')
-										: translator.t('programs-page.recipient-plural'),
-							},
-						]
+								{
+									label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
+								},
+								{
+									value: programDetailData.stats.recipientsCount,
+									label:
+										programDetailData.stats.recipientsCount === 1
+											? translator.t('programs-page.recipient-singular')
+											: translator.t('programs-page.recipient-plural'),
+								},
+							]
 						: []
 				}
 			/>

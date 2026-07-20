@@ -84,7 +84,6 @@ export const CampaignHero = ({ campaign, translator, lang }: Props) => {
 							<DonationFormServer lang={lang} campaignId={campaign.id} />
 						</div>
 					</BlockWrapper>
-
 				)}
 			</div>
 		</section>

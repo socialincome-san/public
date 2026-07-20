@@ -172,11 +172,13 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 					</div>
 				)}
 			</div>
-			{!isExpanded && <div className="lg:hidden">
-				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
-					{donationForm}
-				</BlockWrapper>
-			</div>}
+			{!isExpanded && (
+				<div className="lg:hidden">
+					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+						{donationForm}
+					</BlockWrapper>
+				</div>
+			)}
 		</div>
 	);
 };

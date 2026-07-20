@@ -1,8 +1,8 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-import { BlockWrapper } from '@/components/block-wrapper';
 
 type Props = {
 	lang: WebsiteLanguage;

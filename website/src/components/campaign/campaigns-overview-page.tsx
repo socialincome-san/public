@@ -38,7 +38,6 @@ export const CampaignsOverviewPage = async ({ overview, lang, region }: Props) =
 					text={text}
 				/>
 			</BlockWrapper>
-
 		</div>
 	);
 };

@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
@@ -14,7 +15,6 @@ import { CountryStatistics } from './country-statistics';
 import { CountryStatisticsSkeleton } from './country-statistics-skeleton';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './country.utils';
-import { BlockWrapper } from '@/components/block-wrapper';
 
 type Props = {
 	country: CountryStory;

@@ -20,7 +20,11 @@ export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
 
 	return (
-		<BlockWrapper disableMarginTop={blok.disableMarginTop} disableMarginBottom={blok.disableMarginBottom} {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper
+			disableMarginTop={blok.disableMarginTop}
+			disableMarginBottom={blok.disableMarginBottom}
+			{...storyblokEditable(blok as SbBlokData)}
+		>
 			{blok.heading && (
 				<SectionHeading size={3} className="leading-[1.2] whitespace-pre-line">
 					<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>

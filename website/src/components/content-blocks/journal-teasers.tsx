@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -7,7 +8,6 @@ import { services } from '@/lib/services/services';
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import { storyblokEditable } from '@storyblok/js';
 import type { SbBlokData } from '@storyblok/react';
-import { BlockWrapper } from '@/components/block-wrapper';
 
 type Props = {
 	blok: JournalTeasers;
