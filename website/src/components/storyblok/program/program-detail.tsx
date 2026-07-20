@@ -126,7 +126,9 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				<CampaignJournalTeaser lang={lang} region={region} />
 				<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
 				{faqItems.length > 0 && (
-					<FaqSelectionContent heading={translator.t('title', { namespace: 'website-faq' })} items={faqItems} />
+					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+						<FaqSelectionContent heading={translator.t('title', { namespace: 'website-faq' })} items={faqItems} />
+					</BlockWrapper>
 				)}
 			</div>
 		</>

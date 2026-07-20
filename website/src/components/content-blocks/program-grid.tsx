@@ -6,6 +6,7 @@ import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { SbBlokData, storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: ProgramGrid;
@@ -19,7 +20,7 @@ export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
 
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+		<BlockWrapper disableMarginTop={blok.disableMarginTop} disableMarginBottom={blok.disableMarginBottom} {...storyblokEditable(blok as SbBlokData)}>
 			{blok.heading && (
 				<SectionHeading size={3} className="leading-[1.2] whitespace-pre-line">
 					<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
