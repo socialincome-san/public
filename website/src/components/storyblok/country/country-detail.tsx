@@ -61,23 +61,23 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 					},
 				]}
 			/>
-			
-				<Breadcrumb links={breadcrumbLinks} />
-				<div className="lg:hidden">
-					<DonationFormServer lang={lang} />
-				</div>
-				<CountryMap country={country} lang={lang} />
-				<CountryPersonCarousel country={country} lang={lang} />
-				<CountryPayoutsTotal country={country} lang={lang} region={region} />
-				{isoCode !== '-' && (
-					<Suspense fallback={<CountryStatisticsSkeleton lang={lang} />}>
-						<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
-					</Suspense>
-				)}
-				<CountryPrograms country={country} lang={lang} region={region} />
-				{localPartners.length > 0 && (
-					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
-				)}
+
+			<Breadcrumb links={breadcrumbLinks} />
+			<div className="lg:hidden">
+				<DonationFormServer lang={lang} />
+			</div>
+			<CountryMap country={country} lang={lang} />
+			<CountryPersonCarousel country={country} lang={lang} />
+			<CountryPayoutsTotal country={country} lang={lang} region={region} />
+			{isoCode !== '-' && (
+				<Suspense fallback={<CountryStatisticsSkeleton lang={lang} />}>
+					<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
+				</Suspense>
+			)}
+			<CountryPrograms country={country} lang={lang} region={region} />
+			{localPartners.length > 0 && (
+				<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
+			)}
 		</>
 	);
 };

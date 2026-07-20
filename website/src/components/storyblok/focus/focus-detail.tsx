@@ -1,6 +1,6 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
-import { BlockWrapper } from '@/components/block-wrapper';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { ProgramsOverviewSection } from '@/components/storyblok/program/programs-overview-section';
 import type { Study } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -8,11 +8,11 @@ import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
 import type { ISbStoryData } from '@storyblok/js';
+import { CmsHeader } from '../shared/cms-header';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusText, getFocusTitle } from './focus.utils';
 import { ImpactMeasurementPreviewWrapper } from './impact-measurement-preview-wrapper';
 import { StudyCard } from './study-card';
-import { CmsHeader } from '../shared/cms-header';
 
 type Props = {
 	focus: FocusStory;
@@ -126,7 +126,6 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 					)}
 				</div>
 			</BlockWrapper>
-
 		</div>
 	);
 };

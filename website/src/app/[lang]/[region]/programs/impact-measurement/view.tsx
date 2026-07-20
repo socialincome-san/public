@@ -1,6 +1,6 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { ParsedUrlQueryInput } from 'querystring';
 import { Suspense } from 'react';
-import { BlockWrapper } from '@/components/block-wrapper';
 import { ImpactMeasurementFilterSection } from './filter-section';
 import { ImpactMeasurementResults } from './results';
 import { ImpactMeasurementResultsSkeleton } from './results-skeleton';
@@ -47,7 +47,6 @@ export const ImpactMeasurementView = ({
 						</Suspense>
 					</div>
 				</BlockWrapper>
-
 			) : null}
 			{variant === 'embedded' && showStudyDetails ? (
 				<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>

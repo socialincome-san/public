@@ -19,7 +19,7 @@ export const LoginFlyout = ({ lang }: Props) => {
 
 	return (
 		<>
-			<Button className='text-sm' data-testid="login-button" onClick={() => setOpen(true)} variant="ghost" size="sm">
+			<Button className="text-sm" data-testid="login-button" onClick={() => setOpen(true)} variant="ghost" size="sm">
 				<UserRound />
 				{translator?.t('flyout.login-button')}
 			</Button>

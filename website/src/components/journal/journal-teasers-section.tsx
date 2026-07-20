@@ -20,13 +20,7 @@ type Props = {
 	disableMarginBottom?: boolean;
 };
 
-export const JournalTeasersSection = ({
-	articles,
-	lang,
-	region,
-	heading,
-	journalCtaLabel,
-}: Props) => {
+export const JournalTeasersSection = ({ articles, lang, region, heading, journalCtaLabel }: Props) => {
 	const [featuredArticle, ...secondaryArticles] = articles;
 	const hasSecondaryArticles = secondaryArticles.length > 0;
 

@@ -5,9 +5,9 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import { storyblokEditable } from '@storyblok/js';
 import type { SbBlokData } from '@storyblok/react';
 import { BlockWrapper } from '../block-wrapper';
-import { storyblokEditable } from '@storyblok/js';
 
 type Props = {
 	blok: JournalTeasers;
@@ -67,7 +67,7 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 				lang={lang}
 				region={region}
 				journalCtaLabel={translator.t('teasers.goToJournal')}
-			/></BlockWrapper>
-
+			/>
+		</BlockWrapper>
 	);
 };

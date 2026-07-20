@@ -1,5 +1,5 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { COUNTRY_COOKIE } from '@/app/[lang]/[region]';
+import { BlockWrapper } from '@/components/block-wrapper';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
@@ -128,7 +128,7 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 		<BlockWrapper>
 			<section className="mx-auto max-w-4xl">
 				<div className="flex flex-col items-center gap-6">
-					<h2 className="text-primary text-center text-3xl leading-tight font-bold text-4xl">
+					<h2 className="text-primary text-center text-3xl text-4xl leading-tight font-bold">
 						{translator.t('countries-page.statistics.title')}
 					</h2>
 					<div className="border-border bg-background w-full overflow-hidden rounded-[calc(var(--radius)+4px)] border shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]">
@@ -228,6 +228,5 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 				</div>
 			</section>
 		</BlockWrapper>
-
 	);
 };

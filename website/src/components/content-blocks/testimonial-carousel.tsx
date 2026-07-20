@@ -5,10 +5,7 @@ import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/com
 import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { Testimonial } from '@/components/testimonial';
-import type {
-	Testimonial as StoryblokTestimonial,
-	TestimonialCarousel,
-} from '@/generated/storyblok/types/109655/storyblok-components';
+import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
 import { cn } from '@/lib/utils/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import Autoplay from 'embla-carousel-autoplay';
@@ -136,7 +133,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 
 	return (
 		<BlockWrapper
-			className='overflow-visible md:px-0 md:w-full'
+			className="overflow-visible md:w-full md:px-0"
 			disableMarginBottom={disableMarginBottom}
 			disableMarginTop={disableMarginTop}
 			{...storyblokEditable(blok as SbBlokData)}

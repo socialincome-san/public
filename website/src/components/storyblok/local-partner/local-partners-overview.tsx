@@ -23,6 +23,5 @@ export const LocalPartnersOverview = ({ localPartners, lang, region, title, text
 				<LocalPartnersGrid localPartners={localPartners} lang={lang} region={region} />
 			</div>
 		</BlockWrapper>
-
 	);
 };

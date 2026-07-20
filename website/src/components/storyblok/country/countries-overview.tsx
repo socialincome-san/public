@@ -85,6 +85,5 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, regio
 				)}
 			</div>
 		</BlockWrapper>
-
 	);
 };

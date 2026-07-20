@@ -1,13 +1,13 @@
+import { BlockWrapper } from '@/components/block-wrapper';
+import { CountriesSection } from '@/components/transparency/countries-section';
+import { TimeSeriesSection } from '@/components/transparency/time-series-section';
+import { TotalsSection } from '@/components/transparency/totals-section';
 import type { Transparency } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { DateTime } from 'luxon';
-import { BlockWrapper } from '@/components/block-wrapper';
-import { CountriesSection } from '@/components/transparency/countries-section';
-import { TimeSeriesSection } from '@/components/transparency/time-series-section';
-import { TotalsSection } from '@/components/transparency/totals-section';
 
 type Props = {
 	blok: Transparency;

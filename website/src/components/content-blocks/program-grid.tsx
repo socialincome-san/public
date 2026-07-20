@@ -6,7 +6,6 @@ import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
 	blok: ProgramGrid;

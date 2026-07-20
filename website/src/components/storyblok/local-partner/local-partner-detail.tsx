@@ -64,39 +64,39 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 					},
 				]}
 			/>
-				<Breadcrumb links={breadcrumbLinks} />
-				<EntityAboutSection
-					isoCode={isoCode}
-					mapLabel={localPartnerTitle}
-					aboutHeading={`${translator.t('local-partners-page.about')} ${localPartnerTitle}`}
-					description={localPartner.content.description}
-					preDescription={<LocalPartnerFocusBadges lang={lang} region={region} focuses={focuses} />}
-					postDescription={
-						<LocalPartnerAboutMetaCard
-							lang={lang}
-							region={region}
-							mission={mission}
-							partnerSince={partnerSince}
-							foundingYear={foundingYear}
-							location={location}
-							externalLinks={[
-								{ label: 'Website', link: website },
-								{ label: 'LinkedIn', link: linkedin },
-								{ label: 'Instagram', link: instagram },
-								{ label: 'Facebook', link: facebook },
-								{ label: 'YouTube', link: youtube },
-							]}
-						/>
-					}
-				/>
-				<LocalPartnerPayoutsTotal localPartner={localPartner} lang={lang} region={region} />
-				{Array.isArray(localPartner.content.testimonial)
-					? localPartner.content.testimonial.map((blok: TestimonialCarousel) => (
-							<TestimonialCarouselBlock key={blok._uid} blok={blok} />
-						))
-					: null}
-				<LocalPartnerPrograms localPartner={localPartner} lang={lang} region={region} />
-				<LocalPartnerPartners localPartner={localPartner} lang={lang} region={region} />
+			<Breadcrumb links={breadcrumbLinks} />
+			<EntityAboutSection
+				isoCode={isoCode}
+				mapLabel={localPartnerTitle}
+				aboutHeading={`${translator.t('local-partners-page.about')} ${localPartnerTitle}`}
+				description={localPartner.content.description}
+				preDescription={<LocalPartnerFocusBadges lang={lang} region={region} focuses={focuses} />}
+				postDescription={
+					<LocalPartnerAboutMetaCard
+						lang={lang}
+						region={region}
+						mission={mission}
+						partnerSince={partnerSince}
+						foundingYear={foundingYear}
+						location={location}
+						externalLinks={[
+							{ label: 'Website', link: website },
+							{ label: 'LinkedIn', link: linkedin },
+							{ label: 'Instagram', link: instagram },
+							{ label: 'Facebook', link: facebook },
+							{ label: 'YouTube', link: youtube },
+						]}
+					/>
+				}
+			/>
+			<LocalPartnerPayoutsTotal localPartner={localPartner} lang={lang} region={region} />
+			{Array.isArray(localPartner.content.testimonial)
+				? localPartner.content.testimonial.map((blok: TestimonialCarousel) => (
+						<TestimonialCarouselBlock key={blok._uid} blok={blok} />
+					))
+				: null}
+			<LocalPartnerPrograms localPartner={localPartner} lang={lang} region={region} />
+			<LocalPartnerPartners localPartner={localPartner} lang={lang} region={region} />
 		</>
 	);
 };

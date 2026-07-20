@@ -58,27 +58,26 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				stats={
 					programDetailData.stats
 						? [
-							{
-								label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
-							},
-							{
-								value: programDetailData.stats.recipientsCount,
-								label:
-									programDetailData.stats.recipientsCount === 1
-										? translator.t('programs-page.recipient-singular')
-										: translator.t('programs-page.recipient-plural'),
-							},
-						]
+								{
+									label: getCountryNameByCode(programDetailData.stats.countryIsoCode),
+								},
+								{
+									value: programDetailData.stats.recipientsCount,
+									label:
+										programDetailData.stats.recipientsCount === 1
+											? translator.t('programs-page.recipient-singular')
+											: translator.t('programs-page.recipient-plural'),
+								},
+							]
 						: []
 				}
 			/>
 			<div className="flex flex-col gap-8 py-8">
-				<Breadcrumb className='py-0' links={breadcrumbLinks} />
+				<Breadcrumb className="py-0" links={breadcrumbLinks} />
 				<div className="lg:hidden">
 					<DonationFormServer lang={lang} />
 				</div>
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
-
 					<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
 						<div className="flex flex-col gap-7">
 							{programDetailData.dashboardStats && programDetailData.programId ? (
@@ -99,7 +98,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 						</div>
 						<div className="flex flex-col gap-7">
 							{resolvedCountry ? <ProgramCountry resolvedCountry={resolvedCountry} translator={translator} /> : null}
-							<div className="flex-1 grid grid-cols-1 gap-7 sm:grid-cols-2">
+							<div className="grid flex-1 grid-cols-1 gap-7 sm:grid-cols-2">
 								<ProgramRecipients
 									count={recipientsCount}
 									programId={programDetailData.programId}
@@ -119,12 +118,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				</BlockWrapper>
 			</div>
 			{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0 ? (
-				<ProgramPayoutsTotal
-					programDetailData={programDetailData}
-					translator={translator}
-					lang={lang}
-					region={region}
-				/>
+				<ProgramPayoutsTotal programDetailData={programDetailData} translator={translator} lang={lang} region={region} />
 			) : null}
 			<div className="flex flex-col gap-8 py-8">
 				<CampaignJournalTeaser lang={lang} region={region} />
