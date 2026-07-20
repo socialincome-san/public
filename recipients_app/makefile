@@ -1,13 +1,16 @@
 .PHONY: generate watch test clean get translations fontsize-smallest fontsize-regular fontsize-largest flavor-stage flavor-prod
 
 generate:
-	fvm dart run build_runner build --delete-conflicting-outputs
+	fvm dart run build_runner build
 
 watch:
-	fvm dart run build_runner watch --delete-conflicting-outputs
+	fvm dart run build_runner watch
 
-test: 
+run-tests: 
 	fvm flutter test
+
+update-tests:
+	fvm flutter test --update-goldens
 
 clean:
 	fvm flutter clean
@@ -15,7 +18,7 @@ clean:
 get: 
 	fvm flutter pub get
 
-cleanget:
+clean-get:
 	make clean && make get
 
 translations:
@@ -35,6 +38,9 @@ flavor-stage:
 
 flavor-prod:
 	flutterfire config --project=social-income-prod --out=lib/firebase_options_prod.dart --ios-bundle-id=org.socialincome.app  --ios-out=ios/flavors/prod/GoogleService-Info.plist  --android-package-name=org.socialincome.app  --android-out=android/app/src/prod/google-services.json
+
+clean-build:
+	make clean && make get && make generate && make translations
 
 # After this initial running of "flutterfire configure", you need to re-run the command any time that you:
 # - Start supporting a new platform in your Flutter app.

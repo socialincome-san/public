@@ -5,7 +5,6 @@ Mobile App for Recipients of a Social Income.
 ## Tools needed for building the app on an Apple Silicon Mac
 
 - [Homebrew](https://brew.sh/de/)
-- Flutter (Version see file .tool-versions)
 - Java JDK 21
 - Android Studio LadyBug or later
 - Latest vscode
@@ -26,7 +25,15 @@ Mobile App for Recipients of a Social Income.
     export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
     ```
   - Restart your terminal so that these changes take effect
-- Optional: Pin Flutter's JDK version and do not use the JDK from
+- Install Xcode
+  - Set is as default via `sudo xcode-select -s <path/to/>Xcode.app`
+  - To agree to the Xcode license from the command line, you can use the
+    following command: `sudo xcodebuild -license accept`
+- Install vscode
+  - Install Flutter extension
+- Install [FVM (Flutter Version Manager)](https://fvm.app/)
+  - Install it via `brew install fvm`
+- Optional, but recommended: Pin Flutter's JDK version and do not use the JDK from
   Android Studio by default
   - Install Java 21 via Homebrew `brew install openjdk@21`
     - Homebrew is telling you to execute a symlink command, so that the
@@ -38,37 +45,8 @@ Mobile App for Recipients of a Social Income.
       export JAVA_HOME=$(/usr/libexec/java_home -v21)
       export PATH="$PATH:$JAVA_HOME/bin"
       ```
-    - Restart your terminal so that these changes take effect
-  - Install Flutter
-    - Tell Flutter to use our Java 21 JDK and not the one bundle with
-      Android Studio via `flutter config --jdk-dir "$JAVA_HOME"`.
-      Otherwise, you will get the error "Unsupported class file major
-      version XX" when building the app for Android.
+    - Tell Flutter to use our Java 21 JDK and not the one bundle with Android Studio via `fvm flutter config --jdk-dir "$JAVA_HOME"`. Otherwise, you will get the error "Unsupported class file major version XX" when building the app for Android.
     - Restart your terminal and IDE so that these changes take effect
-- Install vscode
-  - Install Flutter extension
-- Install Xcode
-  - Set is as default via `sudo xcode-select -s <path/to/>Xcode.app`
-  - To agree to the Xcode license from the command line, you can use the
-    following command: `sudo xcodebuild -license accept`
-- Install CocoaPods
-  - Install via Homebrew `brew install cocoapods`
-
-## Optionally: Use the version manager [asdf](https://asdf-vm.com/)
-
-- Install [asdf](https://asdf-vm.com/) via Homebrew with
-  `brew install asdf`
-- Install flutter plugin for asdf via `asdf plugin-add flutter`
-- Add the following lines in your .zshrc file:
-  ```shell
-  export FLUTTER_ROOT="$(asdf where flutter)"
-  ### asdf stuff ############
-  source $(brew --prefix asdf)/libexec/asdf.sh
-  export ASDF_NODEJS_LEGACY_FILE_DYNAMIC_STRATEGY=latest_available
-  # This is optional. It installs tools defined in .tool-versions on terminal start
-  asdf install
-  ###########################
-  ```
 
 ## Build and run the app the first time with vscode
 
@@ -85,11 +63,8 @@ Mobile App for Recipients of a Social Income.
   - Decide which flavor and backend environment you want to use and
     change it if necessary. (Normally we use "Stage" for development)
 - Open `recipients_app` project folder in vscode
-- Open a terminal inside of vscode and check `flutter --version` is
-  listing the right flutter version (See above or pubspec.yaml).
-- Add executable permissions to the script clean_build.sh via
-  `chmod +x clean_build.sh`
-- Run `./clean_build.sh`
+- Open a terminal inside of vscode and run `fvm install` to install our specified Flutter version from file `.fvmrc`
+- Run `make clean-build`
 - Run `dart pub global activate flutterfire_cli`
 - Copy and rename the file "key.properties.example.debug" into
   "key.properties" to be able to sign the Android app for debugging.
@@ -192,13 +167,13 @@ setup.
 ### Rebuilding JSON Serialization
 
 ```
-dart run build_runner watch --delete-conflicting-outputs
+make watch
 ```
 
 or
 
 ```
-dart run build_runner build --delete-conflicting-outputs
+make generate
 ```
 
 ### Rebuilding Translations
@@ -207,7 +182,7 @@ Translations are stored in lib/l10n/app_en.arb. To rebuild the
 translations after you changed something run:
 
 ```
-flutter gen-l10n
+make translations
 ```
 
 To use a translated string in the code use: `context.l10n.helloWorld`
@@ -221,13 +196,13 @@ locations as well:
 
 - pubspec.yaml
   - Under 'environment' adjust the 'sdk' and 'flutter' versions
-- .tool-versions (version file for version manager ASDF)
-  - If you use 'asdf' run the comman `asdf set flutter x.y.z` #Replace
+- .fvmrc (version file for Flutter version manager FVM)
+  - If you use 'FVM' run the command `fvm use x.y.z` #Replace
     x.y.z with the new Flutter version.
   - Otherwise just update the version number in the file with the text
-    editor
-- Update Flutter and dependent tool versions like Xcode, Java, etc.
-  "env_versions" in codemagic.yaml
+    editor and restart the terminal and IDE. Then run `fvm install` to install the new flutter version.
+- Update also dependent tool versions like Xcode, Java, etc. 
+  Update versions at "env_versions" in codemagic.yaml
 
 ## CI/CD Pipelines
 
@@ -286,8 +261,8 @@ See [How to test](./docu/app_testing_guides/how_to_test.md)
 
 ### Golden tests
 
-- Run `flutter test` to run all tests incl. all golden tests.
-- Run `flutter test --update-goldens` to update golden files.
+- Run `make run-tests` to run all tests incl. all golden tests.
+- Run `make update-tests` to update golden files.
 
 ## Releasing
 
