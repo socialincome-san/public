@@ -7,7 +7,7 @@ import { services } from '@/lib/services/services';
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import { storyblokEditable } from '@storyblok/js';
 import type { SbBlokData } from '@storyblok/react';
-import { BlockWrapper } from '../block-wrapper';
+import { BlockWrapper } from '@/components/block-wrapper';
 
 type Props = {
 	blok: JournalTeasers;
