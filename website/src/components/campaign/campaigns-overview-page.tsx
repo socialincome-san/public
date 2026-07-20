@@ -5,6 +5,7 @@ import type { CampaignOverview } from '@/generated/storyblok/types/109655/storyb
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { ISbStoryData } from '@storyblok/js';
+import { BlockWrapper } from '../block-wrapper';
 
 type Props = {
 	overview: ISbStoryData<CampaignOverview>;
@@ -25,16 +26,19 @@ export const CampaignsOverviewPage = async ({ overview, lang, region }: Props) =
 	});
 
 	return (
-		<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
+		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
-			<CampaignsOverview
-				campaigns={campaignsData.campaigns}
-				statsById={campaignsData.statsById}
-				lang={lang}
-				region={region}
-				title={title}
-				text={text}
-			/>
+			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<CampaignsOverview
+					campaigns={campaignsData.campaigns}
+					statsById={campaignsData.statsById}
+					lang={lang}
+					region={region}
+					title={title}
+					text={text}
+				/>
+			</BlockWrapper>
+
 		</div>
 	);
 };
