@@ -287,14 +287,8 @@ abstract class AppLocalizations {
   /// No description provided for @contactNumberError.
   ///
   /// In en, this message translates to:
-  /// **'Please enter your contact phone number'**
-  String get contactNumberError;
-
-  /// No description provided for @contactNumberError2.
-  ///
-  /// In en, this message translates to:
   /// **'Please enter a valid phone number. Only numbers are allowed'**
-  String get contactNumberError2;
+  String get contactNumberError;
 
   /// No description provided for @inCaseOfDeathTitle.
   ///
@@ -1549,18 +1543,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unknown payment phone number'**
   String get unknownPaymentPhoneNumber;
-
-  /// No description provided for @myProfile.
-  ///
-  /// In en, this message translates to:
-  /// **'My Profile'**
-  String get myProfile;
-
-  /// No description provided for @contactPhoneQuestion.
-  ///
-  /// In en, this message translates to:
-  /// **'Is your payment phone number ({paymentPhoneNumber}) also your contact phone number?'**
-  String contactPhoneQuestion(String paymentPhoneNumber);
 
   /// No description provided for @noInternetConnection.
   ///

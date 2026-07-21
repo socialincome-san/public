@@ -435,17 +435,23 @@ class AccountPageState extends State<AccountPage> {
                   controller: _contactNumberController,
                   keyboardType: TextInputType.number,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
+                    if (value != null && value.isNotEmpty && int.tryParse(value) == null) {
                       return context.l10n.contactNumberError;
-                    }
-                    if (int.tryParse(value) == null) {
-                      return context.l10n.contactNumberError2;
                     }
                     return null;
                   },
                   onFocusLostAndValueChanged: () {
                     final value = _contactNumberController.text;
-                    if (value.isNotEmpty) {
+                    if (value.isNotEmpty && int.tryParse(value) == null) {
+                      return;
+                    }
+
+                    var paymentNumber = widget.recipient.paymentInformation?.phone.number ?? "";
+                    if (paymentNumber.isNotEmpty && paymentNumber.startsWith("+") && !value.startsWith("+")) {
+                      paymentNumber = paymentNumber.substring(1);
+                    }
+
+                    if (value != paymentNumber) {
                       context.read<AuthCubit>().updateRecipient(
                         selfUpdate: RecipientSelfUpdate(contactPhone: value),
                       );
