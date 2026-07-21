@@ -30,8 +30,10 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
 			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 				<CmsHeader title={title} text={text} />
+				<section className="mt-8 flex flex-col gap-6">
+					<ProgramsOverviewSection lang={lang} region={region} searchParams={searchParams} />
+				</section>
 			</BlockWrapper>
-			<ProgramsOverviewSection lang={lang} region={region} searchParams={searchParams} />
 		</div>
 	);
 };
