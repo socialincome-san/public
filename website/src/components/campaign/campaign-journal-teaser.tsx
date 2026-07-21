@@ -22,18 +22,20 @@ export const CampaignJournalTeaser = async ({ lang, region }: Props) => {
 	}
 
 	return (
-		<JournalTeasersSection
-			heading={
-				<>
-					{translator.t('teasers.heading-prefix')}
-					<strong>{translator.t('teasers.heading-emphasis')}</strong>
-				</>
-			}
-			articles={articles}
-			lang={lang}
-			region={region}
-			journalCtaLabel={translator.t('teasers.goToJournal')}
-			videoLabel={translator.t('badge.video')}
-		/>
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<JournalTeasersSection
+				heading={
+					<>
+						{translator.t('teasers.heading-prefix')}
+						<strong>{translator.t('teasers.heading-emphasis')}</strong>
+					</>
+				}
+				articles={articles}
+				lang={lang}
+				region={region}
+				journalCtaLabel={translator.t('teasers.goToJournal')}
+				videoLabel={translator.t('badge.video')}
+			/>
+		</BlockWrapper>
 	);
 };
