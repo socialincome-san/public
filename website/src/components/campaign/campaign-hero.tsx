@@ -79,11 +79,9 @@ export const CampaignHero = ({ campaign, translator, lang }: Props) => {
 				</div>
 
 				{campaign.daysLeft >= 0 && (
-					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
-						<div className="flex w-full justify-center lg:justify-end">
-							<DonationFormServer lang={lang} campaignId={campaign.id} />
-						</div>
-					</BlockWrapper>
+					<div className="flex w-full justify-center lg:justify-end">
+						<DonationFormServer lang={lang} campaignId={campaign.id} />
+					</div>
 				)}
 			</div>
 		</section>
