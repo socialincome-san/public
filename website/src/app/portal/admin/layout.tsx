@@ -1,5 +1,5 @@
-import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { BlockWrapper } from '@/components/block-wrapper';
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
 
@@ -44,7 +44,6 @@ export default async function DeliveryLayout({ children }: MonitoringLayoutProps
 					<div>{children}</div>
 				</Card>
 			</BlockWrapper>
-
 		</>
 	);
 }

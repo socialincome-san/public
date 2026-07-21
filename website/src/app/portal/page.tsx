@@ -34,7 +34,6 @@ const PortalDataLoader = async () => {
 					<UserPrograms userId={user.id} />
 				</div>
 			</BlockWrapper>
-
 		</>
 	);
 };
