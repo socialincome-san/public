@@ -52,8 +52,8 @@ jobs:
       - working-directory: website
         run: npm run lint
 
-  format:
-    name: "💅 Format"
+  format-check:
+    name: "💅 Format Check"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
@@ -151,7 +151,7 @@ jobs:
     needs:
       - safe-chain
       - lint
-      - format
+      - format-check
       - check-unused
       - typecheck
       - storybook-build
