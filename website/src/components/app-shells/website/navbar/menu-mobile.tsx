@@ -98,6 +98,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 														target={item.newTab ? '_blank' : undefined}
 														rel={item.newTab ? 'noopener noreferrer' : undefined}
 														className="block py-5 text-xl font-medium"
+														onClick={() => handleOpenChange(false)}
 													>
 														{item.label}
 													</NextLink>

@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -54,77 +55,79 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 	const sortedFocuses = sortFocusesByCandidatesCountDesc(filteredFocuses, statsBySlug);
 
 	return (
-		<div className="flex w-full flex-col gap-8">
-			<CmsHeader title={title} text={text} />
-			<div className="flex flex-wrap items-center justify-between gap-4">
-				<div className="flex min-h-10 flex-1 flex-wrap items-center gap-2">
-					<FocusesOverviewCountryFilter
-						allCountriesLabel={translator.t('focuses-page.all-countries', {
-							context: { count: countryOptions.length },
-						})}
-						countryOptions={countryOptions}
-						selectedCountryIsoCode={selectedCountryIsoCode}
-					/>
-					<FocusesOverviewSdgFilter
-						allSdgsLabel={translator.t('focuses-page.all-sdgs', {
-							context: { count: sdgOptions.length },
-						})}
-						sdgOptions={sdgOptions}
-						selectedSdg={selectedSdg}
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<div className="flex w-full flex-col gap-8">
+				<CmsHeader title={title} text={text} />
+				<div className="flex flex-wrap items-center justify-between gap-4">
+					<div className="flex min-h-10 flex-1 flex-wrap items-center gap-2">
+						<FocusesOverviewCountryFilter
+							allCountriesLabel={translator.t('focuses-page.all-countries', {
+								context: { count: countryOptions.length },
+							})}
+							countryOptions={countryOptions}
+							selectedCountryIsoCode={selectedCountryIsoCode}
+						/>
+						<FocusesOverviewSdgFilter
+							allSdgsLabel={translator.t('focuses-page.all-sdgs', {
+								context: { count: sdgOptions.length },
+							})}
+							sdgOptions={sdgOptions}
+							selectedSdg={selectedSdg}
+						/>
+					</div>
+					<FocusesOverviewSearch
+						defaultValue={searchQuery}
+						label={translator.t('focuses-page.search-label')}
+						placeholder={translator.t('focuses-page.search-placeholder')}
 					/>
 				</div>
-				<FocusesOverviewSearch
-					defaultValue={searchQuery}
-					label={translator.t('focuses-page.search-label')}
-					placeholder={translator.t('focuses-page.search-placeholder')}
-				/>
-			</div>
-			{hasStatsError ? <p className="text-destructive">{translator.t('focuses-page.load-stats-error')}</p> : null}
-			{sortedFocuses.length === 0 ? (
-				<p className="text-muted-foreground">
-					{translator.t(hasActiveFilters ? 'focuses-page.no-results' : 'focuses-page.empty')}
-				</p>
-			) : (
-				<ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
-					{sortedFocuses.map((focus) => {
-						const focusSlug = getFocusSlug(focus);
-						const focusTitle = getFocusTitle(focus.content);
-						const stats = statsBySlug[focusSlug] ?? {
-							programsCount: 0,
-							recipientsInProgramsCount: 0,
-							candidatesCount: 0,
-							countryIsoCodes: [],
-						};
+				{hasStatsError ? <p className="text-destructive">{translator.t('focuses-page.load-stats-error')}</p> : null}
+				{sortedFocuses.length === 0 ? (
+					<p className="text-muted-foreground">
+						{translator.t(hasActiveFilters ? 'focuses-page.no-results' : 'focuses-page.empty')}
+					</p>
+				) : (
+					<ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
+						{sortedFocuses.map((focus) => {
+							const focusSlug = getFocusSlug(focus);
+							const focusTitle = getFocusTitle(focus.content);
+							const stats = statsBySlug[focusSlug] ?? {
+								programsCount: 0,
+								recipientsInProgramsCount: 0,
+								candidatesCount: 0,
+								countryIsoCodes: [],
+							};
 
-						return (
-							<li key={focus.uuid} className="h-full">
-								<FocusDetailCard
-									href={`/${lang}/${region}/focuses/${focusSlug}`}
-									focusTitle={focusTitle}
-									recipientsCount={stats.recipientsInProgramsCount}
-									programsCount={stats.programsCount}
-									sdgValues={focus.content.sdgs}
-									alertVariant={stats.candidatesCount > 0 ? 'confirm' : 'secondary'}
-									labels={{
-										recipients: translator.t('focuses-page.recipients'),
-										programs: translator.t('focuses-page.programs'),
-										sdgs: translator.t('focuses-page.sdgs'),
-										candidatesReady:
-											stats.candidatesCount > 0
-												? translator.t(
-														stats.candidatesCount === 1
-															? 'focuses-page.candidates-ready-to-enroll_one'
-															: 'focuses-page.candidates-ready-to-enroll_other',
-														{ context: { count: stats.candidatesCount } },
-													)
-												: translator.t('focuses-page.no-candidates'),
-									}}
-								/>
-							</li>
-						);
-					})}
-				</ul>
-			)}
-		</div>
+							return (
+								<li key={focus.uuid} className="h-full">
+									<FocusDetailCard
+										href={`/${lang}/${region}/focuses/${focusSlug}`}
+										focusTitle={focusTitle}
+										recipientsCount={stats.recipientsInProgramsCount}
+										programsCount={stats.programsCount}
+										sdgValues={focus.content.sdgs}
+										alertVariant={stats.candidatesCount > 0 ? 'confirm' : 'secondary'}
+										labels={{
+											recipients: translator.t('focuses-page.recipients'),
+											programs: translator.t('focuses-page.programs'),
+											sdgs: translator.t('focuses-page.sdgs'),
+											candidatesReady:
+												stats.candidatesCount > 0
+													? translator.t(
+															stats.candidatesCount === 1
+																? 'focuses-page.candidates-ready-to-enroll_one'
+																: 'focuses-page.candidates-ready-to-enroll_other',
+															{ context: { count: stats.candidatesCount } },
+														)
+													: translator.t('focuses-page.no-candidates'),
+										}}
+									/>
+								</li>
+							);
+						})}
+					</ul>
+				)}
+			</div>
+		</BlockWrapper>
 	);
 };

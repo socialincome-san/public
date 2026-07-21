@@ -1,5 +1,4 @@
 import { ImpactMeasurementView } from '@/app/[lang]/[region]/programs/impact-measurement/view';
-import { Card } from '@/components/card';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
 
@@ -10,15 +9,13 @@ export default async function ProgramSurveysPage({ params, searchParams }: Props
 	const resolvedSearchParams = await searchParams;
 
 	return (
-		<Card>
-			<ImpactMeasurementView
-				lang={defaultLanguage}
-				variant="embedded"
-				searchParams={{
-					...resolvedSearchParams,
-					program: programId,
-				}}
-			/>
-		</Card>
+		<ImpactMeasurementView
+			lang={defaultLanguage}
+			variant="embedded"
+			searchParams={{
+				...resolvedSearchParams,
+				program: programId,
+			}}
+		/>
 	);
 }
