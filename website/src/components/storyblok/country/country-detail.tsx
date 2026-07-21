@@ -1,9 +1,9 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
-import { StoryDetailContent } from '@/components/storyblok/shared/story-detail-content';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Suspense } from 'react';
@@ -62,24 +62,25 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 					},
 				]}
 			/>
-			<StoryDetailContent>
-				<Breadcrumb links={breadcrumbLinks} />
-				<div className="px-4 pb-6 lg:hidden">
+
+			<Breadcrumb links={breadcrumbLinks} />
+			<div className="lg:hidden">
+				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 					<DonationFormServer lang={lang} />
-				</div>
-				<CountryMap country={country} lang={lang} />
-				<CountryPersonCarousel country={country} lang={lang} />
-				<CountryPayoutsTotal country={country} lang={lang} region={region} />
-				{isoCode !== '-' && (
-					<Suspense fallback={<CountryStatisticsSkeleton lang={lang} />}>
-						<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
-					</Suspense>
-				)}
-				<CountryPrograms country={country} lang={lang} region={region} />
-				{localPartners.length > 0 && (
-					<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
-				)}
-			</StoryDetailContent>
+				</BlockWrapper>
+			</div>
+			<CountryMap country={country} lang={lang} />
+			<CountryPersonCarousel country={country} lang={lang} />
+			<CountryPayoutsTotal country={country} lang={lang} region={region} />
+			{isoCode !== '-' && (
+				<Suspense fallback={<CountryStatisticsSkeleton lang={lang} />}>
+					<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
+				</Suspense>
+			)}
+			<CountryPrograms country={country} lang={lang} region={region} />
+			{localPartners.length > 0 && (
+				<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
+			)}
 		</>
 	);
 };

@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Card } from '@/components/card';
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
@@ -13,11 +14,13 @@ type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
 
 export default function RecipientsPageProgramScoped({ params, searchParams }: Props) {
 	return (
-		<Card>
-			<Suspense fallback={<AppLoadingSkeleton />}>
-				<RecipientsProgramScopedDataLoader params={params} searchParams={searchParams} />
-			</Suspense>
-		</Card>
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<Card>
+				<Suspense fallback={<AppLoadingSkeleton />}>
+					<RecipientsProgramScopedDataLoader params={params} searchParams={searchParams} />
+				</Suspense>
+			</Card>
+		</BlockWrapper>
 	);
 }
 

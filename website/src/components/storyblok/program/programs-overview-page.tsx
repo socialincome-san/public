@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
@@ -25,10 +26,14 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 	});
 
 	return (
-		<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
+		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
-			<CmsHeader title={title} text={text} />
-			<ProgramsOverviewSection lang={lang} region={region} searchParams={searchParams} />
+			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<CmsHeader title={title} text={text} />
+				<section className="mt-8 flex flex-col gap-6">
+					<ProgramsOverviewSection lang={lang} region={region} searchParams={searchParams} />
+				</section>
+			</BlockWrapper>
 		</div>
 	);
 };

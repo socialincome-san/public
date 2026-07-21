@@ -527,7 +527,7 @@ export interface Testimonial {
   name: string;
   quote: string;
   country?: string;
-  image: StoryblokAsset;
+  image?: StoryblokAsset;
   component: "testimonial";
   _uid: string;
   [k: string]: unknown;
