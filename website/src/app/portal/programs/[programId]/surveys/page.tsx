@@ -10,13 +10,13 @@ export default async function ProgramSurveysPage({ params, searchParams }: Props
 
 	return (
 		<ImpactMeasurementView
-				lang={defaultLanguage}
-				variant="embedded"
-				searchParams={{
-					...resolvedSearchParams,
-					program: programId,
-				}}
-				showStudyDetails={false}
-			/>
+			lang={defaultLanguage}
+			variant="embedded"
+			searchParams={{
+				...resolvedSearchParams,
+				program: programId,
+			}}
+			showStudyDetails={false}
+		/>
 	);
 }

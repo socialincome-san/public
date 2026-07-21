@@ -1,5 +1,5 @@
-import { Card } from '@/components/card';
 import { BlockWrapper } from '@/components/block-wrapper';
+import { Card } from '@/components/card';
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
