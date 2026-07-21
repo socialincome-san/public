@@ -6,8 +6,11 @@ generate:
 watch:
 	fvm dart run build_runner watch
 
-test: 
+run-tests: 
 	fvm flutter test
+
+update-tests:
+	fvm flutter test --update-goldens
 
 clean:
 	fvm flutter clean
@@ -15,7 +18,7 @@ clean:
 get: 
 	fvm flutter pub get
 
-cleanget:
+clean-get:
 	make clean && make get
 
 translations:
