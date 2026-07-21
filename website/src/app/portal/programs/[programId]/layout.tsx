@@ -1,4 +1,5 @@
 import { CountryBadge } from '@/components/badges/country-badge';
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
 import { ProgramPermission } from '@/generated/prisma/enums';
@@ -40,17 +41,18 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
-				<h1 className="py-8 text-5xl">{programName}</h1>
+			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
+					<h1 className="py-8 text-5xl">{programName}</h1>
 
-				<CountryBadge country={country} />
+					<CountryBadge country={country} />
 
-				<div className="ml-auto">
-					<ProgramSettingsDialog programId={programId} readOnly={result.data.permission === ProgramPermission.owner} />
+					<div className="ml-auto">
+						<ProgramSettingsDialog programId={programId} readOnly={result.data.permission === ProgramPermission.owner} />
+					</div>
 				</div>
-			</div>
-
-			<TabNavigation sections={sections} />
+				<TabNavigation sections={sections} />
+			</BlockWrapper>
 
 			{children}
 		</>

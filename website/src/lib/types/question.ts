@@ -235,6 +235,7 @@ const RANKING: Question = {
 	choices: [],
 	translationKey: 'survey.questions.spendingRankingTitleV1',
 	descriptionTranslationKey: 'survey.questions.spendingRankingDescV1',
+	choicesTranslationKey: 'survey.questions.spendingChoices',
 };
 
 export const QUESTIONS: Question[] = [

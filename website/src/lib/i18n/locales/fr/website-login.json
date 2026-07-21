@@ -18,7 +18,7 @@
 		"title": "Se connecter",
 		"magic-link-description": "Nous t’enverrons un lien magique pour te connecter.",
 		"sending": "Envoi en cours...",
-		"sent-message": "Si un compte existe pour {{ email }}, tu recevras bientôt un lien de connexion.",
+		"sent-message": "Si un compte existe pour {{ email }}, tu recevras bientôt un lien de connexion par e-mail.",
 		"retry": "Réessayer",
 		"support-prefix": "Si tu ne le reçois pas, contacte",
 		"no-account": "Tu n’as pas de compte ?"

@@ -50,7 +50,7 @@ const renderOptionsProgressBars = (
 					<div key={`${keyPrefix}-${option.value}`} className="space-y-1">
 						<div className="flex items-baseline justify-between gap-3">
 							<p className="text-foreground text-base font-medium">{optionLabel}</p>
-							<p className="text-foreground text-sm font-medium">{option.percentage.toFixed(1)}%</p>
+							<p className="text-foreground text-sm font-medium">{option.percentage.toFixed(1)} %</p>
 						</div>
 						<Progress value={option.percentage} />
 					</div>

@@ -17,7 +17,7 @@ export const ProgramCountry = ({ resolvedCountry, translator }: Props) => {
 			<div className="flex flex-1 flex-col items-start gap-5 lg:p-2">
 				<h2 className="text-foreground text-xl font-bold">{name}</h2>
 				{description ? (
-					<div className="text-foreground prose line-clamp-13 max-w-none flex-1 text-base">
+					<div className="text-foreground prose line-clamp-8 max-w-none text-base">
 						<RichTextRenderer richTextDocument={description} />
 					</div>
 				) : null}

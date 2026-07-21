@@ -1,4 +1,4 @@
-import { Testimonial, type TestimonialEntry } from '@/components/testimonial';
+import { Testimonial } from '@/components/testimonial';
 import type { Testimonial as StoryblokTestimonial } from '@/generated/storyblok/types/109655/storyblok-components';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { BlockWrapper } from '../block-wrapper';
@@ -14,7 +14,7 @@ export const TestimonialBlock = ({ blok }: Props) => {
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
-			<Testimonial entry={blok as TestimonialEntry} />
+			<Testimonial entry={blok} />
 		</BlockWrapper>
 	);
 };
