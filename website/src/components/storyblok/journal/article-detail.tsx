@@ -54,7 +54,13 @@ export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, tran
 					</SectionHeading>
 					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 						{relatedArticles.map((related) => (
-							<JournalArticleCard key={related.uuid} lang={lang} region={region} article={related} />
+							<JournalArticleCard
+								key={related.uuid}
+								lang={lang}
+								region={region}
+								article={related}
+								videoLabel={translator.t('badge.video')}
+							/>
 						))}
 					</div>
 				</section>

@@ -38,6 +38,7 @@ export default async function Page({ params, searchParams }: DefaultPageProps) {
 			editorsHeading={translator.t('overview.editors')}
 			allTagsLabel={translator.t('overview.all')}
 			moreArticlesLabel={translator.t('overview.more-articles')}
+			videoLabel={translator.t('badge.video')}
 			lang={lang}
 			region={region}
 		/>
