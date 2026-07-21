@@ -35,14 +35,14 @@ export const ProgramFinancesCard = ({ displayAmounts, translator, lang, embedded
 					<p className="text-xs">{translator.t('program-detail-page.sent-to-recipients')}</p>
 					<p className="flex items-baseline gap-1">
 						<span className="text-sm font-bold">{currency}</span>
-						<span className="text-xl">{sentToRecipients}</span>
+						<span className="text-2xl">{sentToRecipients}</span>
 					</p>
 				</div>
 				<div className="flex flex-col items-end gap-3.5">
 					<p className="text-xs">{translator.t('program-detail-page.total-program-costs')}</p>
 					<p className="flex items-baseline gap-1">
 						<span className="text-sm font-bold">{currency}</span>
-						<span className="text-xl">{totalProgramCosts}</span>
+						<span className="text-2xl">{totalProgramCosts}</span>
 					</p>
 				</div>
 			</div>
