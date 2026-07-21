@@ -18,7 +18,7 @@
 		"title": "Accedi",
 		"magic-link-description": "Ti invieremo un link magico per accedere.",
 		"sending": "Invio in corso...",
-		"sent-message": "Se esiste un account per {{ email }}, riceverai a breve un link di accesso.",
+		"sent-message": "Se esiste un account per {{ email }}, ti invieremo a breve un link di accesso via e-mail.",
 		"retry": "Riprova",
 		"support-prefix": "Se non arriva, contatta",
 		"no-account": "Non hai un account?"

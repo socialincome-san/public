@@ -18,7 +18,7 @@ export const MapBubble = ({ isoCode, countryName }: MapBubbleProps) => {
 					alt={`Map of ${countryName}`}
 					sizes="(max-width: 1024px) calc(100vw - 3rem), 416px"
 					wrapperClassName="relative aspect-square w-[88%] max-w-full"
-					containerClassName="relative h-full w-full overflow-hidden rounded-full border-4 border-primary-foreground shadow-[0_0_28px_rgba(0,0,0,0.45)]"
+					containerClassName="relative h-full w-full overflow-hidden rounded-full border-4 border-primary-foreground shadow-[0_0_28px_rgba(0,0,0,0.25)]"
 					imageClassName="object-cover"
 				/>
 			</div>
@@ -28,7 +28,7 @@ export const MapBubble = ({ isoCode, countryName }: MapBubbleProps) => {
 					alt={`Map showing where ${countryName} is located on the continent`}
 					sizes="(max-width: 1024px) 30vw, 120px"
 					wrapperClassName="relative h-full w-full"
-					containerClassName="relative h-full w-full overflow-hidden rounded-full border-4 border-primary-foreground bg-primary-foreground shadow-[0_0_22px_rgba(0,0,0,0.45)]"
+					containerClassName="relative h-full w-full overflow-hidden rounded-full border-4 border-primary-foreground bg-primary-foreground shadow-[0_0_22px_rgba(0,0,0,0.25)]"
 					imageClassName="object-cover"
 				/>
 			</div>

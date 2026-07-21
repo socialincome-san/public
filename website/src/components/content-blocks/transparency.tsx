@@ -1,13 +1,13 @@
+import { BlockWrapper } from '@/components/block-wrapper';
+import { CountriesSection } from '@/components/transparency/countries-section';
+import { TimeSeriesSection } from '@/components/transparency/time-series-section';
+import { TotalsSection } from '@/components/transparency/totals-section';
 import type { Transparency } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { DateTime } from 'luxon';
-
-import { CountriesSection } from '@/components/transparency/countries-section';
-import { TimeSeriesSection } from '@/components/transparency/time-series-section';
-import { TotalsSection } from '@/components/transparency/totals-section';
 
 type Props = {
 	blok: Transparency;
@@ -47,7 +47,7 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 	}));
 
 	return (
-		<div className="w-site-width max-w-content mx-auto space-y-12 py-12" {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper className="space-y-12" {...storyblokEditable(blok as SbBlokData)}>
 			<TotalsSection totals={data.totals} lang={lang} displayCurrency={displayCurrency} rates={rates} />
 			<TimeSeriesSection
 				timeRanges={resolvedTimeRanges.map(({ startIso, total }) => ({ startIso, total }))}
@@ -55,6 +55,6 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 				lang={lang}
 			/>
 			<CountriesSection countries={data.topCountries} lang={lang} displayCurrency={displayCurrency} rates={rates} />
-		</div>
+		</BlockWrapper>
 	);
 };

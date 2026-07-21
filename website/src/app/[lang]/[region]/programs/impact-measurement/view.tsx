@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { ParsedUrlQueryInput } from 'querystring';
 import { Suspense } from 'react';
 import { ImpactMeasurementFilterSection } from './filter-section';
@@ -29,26 +30,28 @@ export const ImpactMeasurementView = ({
 		.join('&');
 
 	return (
-		<div
-			className={variant === 'embedded' ? 'w-full space-y-3 px-4 py-6' : 'w-site-width max-w-content mx-auto space-y-3 py-6'}
-		>
+		<div className="space-y-3">
 			{variant === 'standalone' ? (
-				<div className="space-y-5">
-					<div className="flex w-full justify-end">
-						<div className="w-full sm:w-auto">
-							<ImpactMeasurementFilterSection lang={lang} searchParams={normalizedSearchParams} />
+				<BlockWrapper className="pb-6" disableMarginTop={true} disableMarginBottom={true}>
+					<div className="space-y-5">
+						<div className="flex w-full justify-end">
+							<div className="w-full sm:w-auto">
+								<ImpactMeasurementFilterSection lang={lang} searchParams={normalizedSearchParams} />
+							</div>
 						</div>
-					</div>
 
+						<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>
+							<ImpactMeasurementStudyDetails lang={lang} searchParams={normalizedSearchParams} />
+						</Suspense>
+					</div>
+				</BlockWrapper>
+			) : null}
+			{variant === 'embedded' && showStudyDetails ? (
+				<BlockWrapper className="pb-6" disableMarginTop={true} disableMarginBottom={true}>
 					<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>
 						<ImpactMeasurementStudyDetails lang={lang} searchParams={normalizedSearchParams} />
 					</Suspense>
-				</div>
-			) : null}
-			{variant === 'embedded' && showStudyDetails ? (
-				<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>
-					<ImpactMeasurementStudyDetails lang={lang} searchParams={normalizedSearchParams} />
-				</Suspense>
+				</BlockWrapper>
 			) : null}
 			<Suspense key={suspenseKey} fallback={<ImpactMeasurementResultsSkeleton />}>
 				<ImpactMeasurementResults lang={lang} searchParams={normalizedSearchParams} />

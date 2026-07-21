@@ -26,7 +26,7 @@ export const LocalPartnersOverviewPage = async ({ overview, lang, region }: Prop
 	});
 
 	return (
-		<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
+		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
 			<LocalPartnersOverview localPartners={localPartners} lang={lang} region={region} title={title} text={text} />
 		</div>

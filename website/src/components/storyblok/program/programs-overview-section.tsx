@@ -81,26 +81,24 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 	const fixedQueryParams = hasFixedFocus ? [{ key: FOCUS_QUERY_KEY, value: fixedFocusId }] : [];
 
 	return (
-		<>
-			<div className="flex flex-wrap items-center justify-between gap-4">
-				<ProgramsOverviewFilters
-					allCountriesLabel={translator.t('programs-page.all-countries', { context: { count: countryOptions.length } })}
-					allFocusesLabel={translator.t('programs-page.all-focuses', { context: { count: focusFilterOptions.length } })}
-					countryOptions={countryOptions}
-					selectedCountryIsoCode={selectedCountryIsoCode}
-					focusOptions={focusFilterOptions}
-					selectedFocusId={selectedFocusId}
-					showFocusFilter={!hasFixedFocus}
-					queryParamOverrides={fixedQueryParams}
-				/>
-				<ProgramsOverviewSearch
-					defaultValue={searchQuery}
-					label={translator.t('programs-page.search-label')}
-					placeholder={translator.t('programs-page.search-placeholder')}
-					queryParamOverrides={fixedQueryParams}
-				/>
-			</div>
+		<div className="flex flex-wrap items-center justify-between gap-4">
+			<ProgramsOverviewFilters
+				allCountriesLabel={translator.t('programs-page.all-countries', { context: { count: countryOptions.length } })}
+				allFocusesLabel={translator.t('programs-page.all-focuses', { context: { count: focusFilterOptions.length } })}
+				countryOptions={countryOptions}
+				selectedCountryIsoCode={selectedCountryIsoCode}
+				focusOptions={focusFilterOptions}
+				selectedFocusId={selectedFocusId}
+				showFocusFilter={!hasFixedFocus}
+				queryParamOverrides={fixedQueryParams}
+			/>
+			<ProgramsOverviewSearch
+				defaultValue={searchQuery}
+				label={translator.t('programs-page.search-label')}
+				placeholder={translator.t('programs-page.search-placeholder')}
+				queryParamOverrides={fixedQueryParams}
+			/>
 			<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} lang={lang} region={region} />
-		</>
+		</div>
 	);
 };

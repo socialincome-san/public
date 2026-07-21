@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { services } from '@/lib/services/services';
 import { followUpConfigs, highlightedQuestionOrder, questionTypeLabelKeys } from './config';
 import { toImpactServiceFilters } from './filters.server';
@@ -33,7 +34,7 @@ export const ImpactMeasurementResults = async ({ lang, searchParams }: ImpactMea
 	];
 
 	return (
-		<div className="space-y-10">
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true} className="space-y-10 py-0">
 			{await Promise.all(
 				orderedQuestions.map(async (question, index) => (
 					<ImpactMeasurementQuestionCard
@@ -53,6 +54,6 @@ export const ImpactMeasurementResults = async ({ lang, searchParams }: ImpactMea
 					/>
 				)),
 			)}
-		</div>
+		</BlockWrapper>
 	);
 };
