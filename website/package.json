@@ -26,6 +26,8 @@
 		"emulator:start": "firebase emulators:start --project demo-social-income-local --only firestore,auth,storage --config ../firebase.json --import ../seed",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
+		"format:check": "prettier --check . --config prettier.config.cjs --ignore-path .prettierignore",
+		"format:fix": "prettier --write . --config prettier.config.cjs --ignore-path .prettierignore",
 		"openapi:generate": "next-openapi-gen generate",
 		"typecheck": "tsc --noEmit",
 		"db:generate": "prisma generate",
