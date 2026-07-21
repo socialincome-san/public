@@ -70,7 +70,7 @@
 		"@radix-ui/react-tabs": "1.1.17",
 		"@radix-ui/react-toggle-group": "1.1.15",
 		"@radix-ui/react-tooltip": "1.2.12",
-		"@scalar/api-reference-react": "0.9.54",
+		"@scalar/api-reference-react": "0.9.58",
 		"@sendgrid/client": "8.1.6",
 		"@sentry/nextjs": "10.64.0",
 		"@storyblok/js": "6.1.0",
