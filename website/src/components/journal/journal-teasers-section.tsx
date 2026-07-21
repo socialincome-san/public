@@ -15,22 +15,9 @@ type Props = {
 	heading?: ReactNode;
 	journalCtaLabel: string;
 	videoLabel: string;
-	blok?: SbBlokData;
-	disableMarginTop?: boolean;
-	disableMarginBottom?: boolean;
 };
 
-export const JournalTeasersSection = ({
-	articles,
-	lang,
-	region,
-	heading,
-	journalCtaLabel,
-	videoLabel,
-	blok,
-	disableMarginTop,
-	disableMarginBottom,
-}: Props) => {
+export const JournalTeasersSection = ({ articles, lang, region, heading, journalCtaLabel, videoLabel }: Props) => {
 	const [featuredArticle, ...secondaryArticles] = articles;
 	const hasSecondaryArticles = secondaryArticles.length > 0;
 
