@@ -1,4 +1,5 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { getSessionByType } from '@/lib/firebase/current-account';
@@ -41,13 +42,16 @@ export default async function ManagementLayout({ children }: ManagementLayoutPro
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<h1 className="py-8 text-5xl">Management</h1>
+			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<h1 className="py-8 text-5xl">Management</h1>
 
-			<TabNavigation sections={sections} />
+				<TabNavigation sections={sections} />
 
-			<Card>
-				<div>{children}</div>
-			</Card>
+				<Card>
+					<div>{children}</div>
+				</Card>
+			</BlockWrapper>
+
 		</>
 	);
 }
