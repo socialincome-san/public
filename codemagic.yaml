@@ -4,7 +4,7 @@ definitions:
     max_build_duration: 30
 
   env_versions: &env_versions
-    flutter: 3.44.4
+    # Flutter version is managed by FVM (Flutter Version Manager) and specified in .fvmrc
     xcode: 26.6
     java: 21
 
@@ -15,9 +15,9 @@ definitions:
         # Verify Flutter version
         echo "Verify Flutter version..."
 
-        REQUIRED_VERSION=$(grep flutter .tool-versions | awk '{print $2}')
+        REQUIRED_VERSION=$(jq -r '.flutter' .fvmrc)
         echo "REQUIRED_VERSION: $REQUIRED_VERSION"
-        CURRENT_VERSION=$(flutter --version | grep -m 1 "^Flutter" | awk '{print $2}')
+        CURRENT_VERSION=$(fvm flutter --version | grep -m 1 "^Flutter" | awk '{print $2}')
         echo "CURRENT_VERSION: $CURRENT_VERSION"
 
         if [ "$CURRENT_VERSION" != "$REQUIRED_VERSION" ]; then
@@ -86,14 +86,18 @@ workflows:
       # - name: Decode Google credentials
       #   script: |
       #     echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT > $GOOGLE_APPLICATION_CREDENTIALS
-      # Define reusable section 'verify_flutter_version'
+      - name: Configure FVM
+        script: |
+          brew tap leoafarias/fvm && brew install fvm
+          cd $CM_BUILD_DIR/recipients_app
+          fvm install && fvm use
       - *verify_flutter_version
       - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          flutter pub get
+          make get
         working_directory: recipients_app
       - name: Build AAB with Flutter
         script: |
@@ -101,7 +105,7 @@ workflows:
           set -e # exit on first failed command
 
           # Build the Flutter app
-          flutter build appbundle --release \
+          fvm flutter build appbundle --release \
             --flavor stage \
             -t lib/main_stage.dart \
             --dart-define=BASE_URL=$BASE_URL \
@@ -206,13 +210,17 @@ workflows:
           mkdir -p $CM_BUILD_DIR/recipients_app/android/app/src/prod
           cd $CM_BUILD_DIR/recipients_app/android/app/src/prod
           printf '%s' "$ANDROID_FIREBASE_SECRET" > google-services.json
+      - name: Configure FVM
+        script: |
+          brew tap leoafarias/fvm && brew install fvm
+          cd $CM_BUILD_DIR/recipients_app
+          fvm install && fvm use
       - *verify_flutter_version
       - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
-
-          flutter pub get
+          make get
         working_directory: recipients_app
       - name: Build AAB with Flutter
         script: |
@@ -220,7 +228,7 @@ workflows:
           set -e # exit on first failed command
 
           # Build the Flutter AAB app
-          flutter build appbundle --release \
+          fvm flutter build appbundle --release \
             --flavor prod \
             -t lib/main_prod.dart \
             --dart-define=BASE_URL=$BASE_URL \
@@ -325,20 +333,24 @@ workflows:
 
           # Print the export options plist
           more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
+      - name: Configure FVM
+        script: |
+          brew tap leoafarias/fvm && brew install fvm
+          cd $CM_BUILD_DIR/recipients_app
+          fvm install && fvm use
       - *verify_flutter_version
       - name: Install FlutterFire CLI
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          dart pub global activate flutterfire_cli
+          fvm dart pub global activate flutterfire_cli
         working_directory: recipients_app
       - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
-
-          flutter pub get
+          make get
         working_directory: recipients_app
       - name: Flutter build ipa
         script: |
@@ -346,7 +358,7 @@ workflows:
           set -e # exit on first failed command
 
           # Build the Flutter iOS app
-          flutter build ipa --release \
+          fvm flutter build ipa --release \
             --flavor stage \
             -t lib/main_stage.dart \
             --dart-define=BASE_URL=$BASE_URL \
@@ -463,20 +475,24 @@ workflows:
 
           # Print the export options plist
           more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
+      - name: Configure FVM
+        script: |
+          brew tap leoafarias/fvm && brew install fvm
+          cd $CM_BUILD_DIR/recipients_app
+          fvm install && fvm use
       - *verify_flutter_version
       - name: Install FlutterFire CLI
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          dart pub global activate flutterfire_cli
+          fvm dart pub global activate flutterfire_cli
         working_directory: recipients_app
       - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
-
-          flutter pub get
+          make get
         working_directory: recipients_app
       - name: Flutter build ipa
         script: |
@@ -484,7 +500,7 @@ workflows:
           set -e # exit on first failed command
 
           # Build the Flutter iOS app
-          flutter build ipa --release \
+          fvm flutter build ipa --release \
             --flavor stage \
             -t lib/main_stage.dart \
             --dart-define=BASE_URL=$BASE_URL \
@@ -592,20 +608,24 @@ workflows:
 
           # Print the export options plist
           more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
+      - name: Configure FVM
+        script: |
+          brew tap leoafarias/fvm && brew install fvm
+          cd $CM_BUILD_DIR/recipients_app
+          fvm install && fvm use
       - *verify_flutter_version
       - name: Install FlutterFire CLI
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          dart pub global activate flutterfire_cli
+          fvm dart pub global activate flutterfire_cli
         working_directory: recipients_app
       - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
-
-          flutter pub get
+          make get
         working_directory: recipients_app
       - name: Flutter build ipa
         script: |
@@ -613,7 +633,7 @@ workflows:
           set -e # exit on first failed command
 
           # Build the Flutter iOS app
-          flutter build ipa --release \
+          fvm flutter build ipa --release \
             --flavor prod \
             -t lib/main_prod.dart \
             --dart-define=BASE_URL=$BASE_URL \
