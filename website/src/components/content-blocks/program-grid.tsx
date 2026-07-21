@@ -6,7 +6,7 @@ import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { SbBlokData, storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: ProgramGrid;
@@ -15,15 +15,14 @@ type Props = {
 };
 
 export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
-	const { disableMarginBottom, disableMarginTop } = blok;
 	const programsResult = await services.storyblok.getPrograms(lang);
 	const allPrograms = programsResult.success ? programsResult.data : [];
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
 
 	return (
 		<BlockWrapper
-			disableMarginBottom={disableMarginBottom}
-			disableMarginTop={disableMarginTop}
+			disableMarginTop={blok.disableMarginTop}
+			disableMarginBottom={blok.disableMarginBottom}
 			{...storyblokEditable(blok as SbBlokData)}
 		>
 			{blok.heading && (

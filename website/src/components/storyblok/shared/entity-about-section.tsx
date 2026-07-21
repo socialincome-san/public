@@ -28,7 +28,7 @@ export const EntityAboutSection = ({
 		<BlockWrapper>
 			<div className={cn('flex flex-col gap-8', showMap && 'lg:grid lg:grid-cols-2 lg:items-start lg:gap-12')}>
 				{showMap && isoCode ? (
-					<div className="flex justify-center lg:justify-start">
+					<div className="flex justify-center">
 						<MapBubble isoCode={isoCode} countryName={mapLabel} />
 					</div>
 				) : null}
