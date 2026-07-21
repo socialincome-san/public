@@ -86,7 +86,7 @@
 		"dotenv": "17.4.2",
 		"embla-carousel-autoplay": "8.6.0",
 		"embla-carousel-react": "8.6.0",
-		"firebase": "12.15.0",
+		"firebase": "12.16.0",
 		"firebase-admin": "13.10.0",
 		"i18next": "26.3.6",
 		"i18next-resources-to-backend": "1.2.1",
