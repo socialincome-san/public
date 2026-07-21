@@ -1,4 +1,5 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
 
@@ -23,10 +24,12 @@ export default function ProfileLayout({ children }: ProfileLayoutProps) {
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<h1 className="py-8 text-5xl">Profile</h1>
-			<TabNavigation sections={sections} />
+			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<h1 className="py-8 text-5xl">Profile</h1>
+				<TabNavigation sections={sections} />
 
-			<Card>{children}</Card>
+				<Card>{children}</Card>
+			</BlockWrapper>
 		</>
 	);
 }
