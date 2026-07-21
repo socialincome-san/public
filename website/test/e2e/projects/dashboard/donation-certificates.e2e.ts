@@ -31,9 +31,7 @@ test('dashboard donation certificates has downloadable PDF links', async ({ page
 		'/en/int/dashboard/donation-certificates?page=1&pageSize=10&sortBy=createdAt&sortDirection=desc&search=2024',
 	);
 	await expect(page.getByRole('cell', { name: '2024' }).first()).toBeVisible();
-	const downloadLink = page.getByRole('link', { name: 'Download' }).first();
+	const downloadLink = page.getByTestId('data-table').getByRole('link', { name: 'Download', exact: true });
 	await expect(downloadLink).toBeVisible();
-	const href = await downloadLink.getAttribute('href');
-	expect(href).toBeTruthy();
-	expect(href).toContain('http');
+	await expect(downloadLink).toHaveAttribute('href', /http/);
 });
