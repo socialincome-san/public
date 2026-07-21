@@ -16,7 +16,6 @@ export default async function ProgramSurveysPage({ params, searchParams }: Props
 				...resolvedSearchParams,
 				program: programId,
 			}}
-			showStudyDetails={false}
 		/>
 	);
 }
