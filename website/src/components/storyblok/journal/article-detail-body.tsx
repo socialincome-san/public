@@ -33,7 +33,7 @@ export const ArticleDetailBody = ({ story, slug, lang, region, translator }: Pro
 				languageName={translator.t('language-name.' + article.originalLanguage)}
 			/>
 
-			<div className="prose prose-neutral text-foreground prose-a:text-primary max-w-none [&_a]:![font-size:inherit] [&_a]:![font-weight:inherit] [&_a]:![color:inherit]">
+			<div className="prose prose-neutral text-foreground prose-a:text-primary max-w-none [&_a]:[font-size:inherit]! [&_a]:[font-weight:inherit]! [&_a]:[color:inherit]!">
 				<ArticleRichText
 					document={article.content as StoryblokRichtext}
 					lang={lang}

@@ -1,13 +1,12 @@
 'use client';
 
 import type { HeadingSize } from '@/components/heading-styles';
+import type { RichTextAlignmentProps, RichTextHeadingProps } from '@/components/storyblok/rich-text/rich-text.types';
 import {
 	buildLinkRel,
 	getRichTextAlignmentClassName,
 	removeStoryblokPagesFolder,
 	storyblokRichTextNodeResolvers,
-	type RichTextAlignmentProps,
-	type RichTextHeadingProps,
 } from '@/components/storyblok/rich-text/shared-resolvers';
 import { cn } from '@/lib/utils/cn';
 import NextLink from 'next/link';
@@ -60,7 +59,7 @@ export const journalRichTextNodeResolvers = {
 	[NODE_HEADING]: (children: ReactNode, props: RichTextHeadingProps) =>
 		createElement(
 			`h${props.level}`,
-			{ className: cn(journalHeadingStyles[props.level], 'my-4 !text-foreground', getRichTextAlignmentClassName(props)) },
+			{ className: cn(journalHeadingStyles[props.level], 'my-4 text-foreground!', getRichTextAlignmentClassName(props)) },
 			children,
 		),
 	[NODE_PARAGRAPH]: (children: ReactNode, props?: RichTextAlignmentProps) => (
