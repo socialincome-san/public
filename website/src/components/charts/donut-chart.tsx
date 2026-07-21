@@ -52,7 +52,7 @@ export const DonutChart = ({ options, emptyLabel }: DonutChartProps) => {
 				<div className="bg-card grid size-24 place-items-center rounded-full">
 					<div className="text-center">
 						<div className="text-foreground text-2xl leading-none font-medium sm:text-3xl">
-							{Math.round(topOption?.percentage ?? 0)} %
+							{Math.round(topOption?.percentage ?? 0)}%
 						</div>
 						<div className="text-foreground text-sm">{topOption?.label ?? emptyLabel}</div>
 					</div>
