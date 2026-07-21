@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils/cn';
 import { BlockWrapper } from '@/components/block-wrapper';
+import { cn } from '@/lib/utils/cn';
 
 const SkeletonBar = ({ className }: { className: string }) => (
 	<div className={cn('bg-border animate-pulse rounded-full', className)} />
@@ -27,7 +27,6 @@ const SkeletonCard = () => (
 			</div>
 		</div>
 	</BlockWrapper>
-
 );
 
 export const ImpactMeasurementResultsSkeleton = () => (

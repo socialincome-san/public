@@ -1,5 +1,5 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { BlockWrapper } from '@/components/block-wrapper';
+import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { Suspense } from 'react';
 import { DonationSuccessDialog } from './components/donation-success-dialog';
 import OverviewProgramScopedDataLoader from './overview-data-loader';
@@ -16,6 +16,5 @@ export default function OverviewPageProgramScoped({ params }: Props) {
 				<DonationSuccessDialog />
 			</Suspense>
 		</BlockWrapper>
-
 	);
 }

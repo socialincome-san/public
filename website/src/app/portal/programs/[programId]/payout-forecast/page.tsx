@@ -1,5 +1,5 @@
-import { Card } from '@/components/card';
 import { BlockWrapper } from '@/components/block-wrapper';
+import { Card } from '@/components/card';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { payoutForecastTableConfig } from '@/components/data-table/configs/payout-forecast-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
@@ -23,7 +23,6 @@ export default function FinancesPageProgramScoped({ params, searchParams }: Prop
 				</Suspense>
 			</Card>
 		</BlockWrapper>
-
 	);
 }
 
