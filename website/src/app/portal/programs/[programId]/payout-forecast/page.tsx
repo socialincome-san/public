@@ -1,4 +1,5 @@
 import { Card } from '@/components/card';
+import { BlockWrapper } from '@/components/block-wrapper';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { payoutForecastTableConfig } from '@/components/data-table/configs/payout-forecast-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
@@ -15,11 +16,14 @@ type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
 
 export default function FinancesPageProgramScoped({ params, searchParams }: Props) {
 	return (
-		<Card>
-			<Suspense fallback={<AppLoadingSkeleton />}>
-				<FinancesProgramScopedDataLoader params={params} searchParams={searchParams} />
-			</Suspense>
-		</Card>
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<Card>
+				<Suspense fallback={<AppLoadingSkeleton />}>
+					<FinancesProgramScopedDataLoader params={params} searchParams={searchParams} />
+				</Suspense>
+			</Card>
+		</BlockWrapper>
+
 	);
 }
 

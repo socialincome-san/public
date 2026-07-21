@@ -1,4 +1,5 @@
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Suspense } from 'react';
 import { DonationSuccessDialog } from './components/donation-success-dialog';
 import OverviewProgramScopedDataLoader from './overview-data-loader';
@@ -9,9 +10,12 @@ type Props = {
 
 export default function OverviewPageProgramScoped({ params }: Props) {
 	return (
-		<Suspense fallback={<AppLoadingSkeleton />}>
-			<OverviewProgramScopedDataLoader params={params} />
-			<DonationSuccessDialog />
-		</Suspense>
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<Suspense fallback={<AppLoadingSkeleton />}>
+				<OverviewProgramScopedDataLoader params={params} />
+				<DonationSuccessDialog />
+			</Suspense>
+		</BlockWrapper>
+
 	);
 }
