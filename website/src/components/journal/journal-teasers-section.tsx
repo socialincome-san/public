@@ -5,7 +5,6 @@ import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
-import { type SbBlokData } from '@storyblok/react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 

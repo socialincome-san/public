@@ -73,8 +73,8 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 	const focusFilteredPrograms = hasFixedFocus
 		? countryFilteredPrograms
 		: countryFilteredPrograms.filter((program) =>
-			programMatchesFocusQuery(program, filterDataByPortalSlug, selectedFocusId),
-		);
+				programMatchesFocusQuery(program, filterDataByPortalSlug, selectedFocusId),
+			);
 	const filteredPrograms = searchQuery
 		? focusFilteredPrograms.filter((program) => programMatchesSearchQuery(program, searchQuery))
 		: focusFilteredPrograms;

@@ -1,4 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { Progress } from '@/components/progress';
 import type { Translator } from '@/lib/i18n/translator';
