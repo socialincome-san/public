@@ -30,11 +30,9 @@ export const ImpactMeasurementView = ({
 		.join('&');
 
 	return (
-		<div
-			className={variant === 'embedded' ? 'w-full space-y-3 px-4 py-6' : 'w-site-width max-w-content mx-auto space-y-3 py-6'}
-		>
+		<div className="space-y-3">
 			{variant === 'standalone' ? (
-				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<BlockWrapper className="pb-6" disableMarginTop={true} disableMarginBottom={true}>
 					<div className="space-y-5">
 						<div className="flex w-full justify-end">
 							<div className="w-full sm:w-auto">
@@ -49,9 +47,11 @@ export const ImpactMeasurementView = ({
 				</BlockWrapper>
 			) : null}
 			{variant === 'embedded' && showStudyDetails ? (
-				<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>
-					<ImpactMeasurementStudyDetails lang={lang} searchParams={normalizedSearchParams} />
-				</Suspense>
+				<BlockWrapper className="pb-6" disableMarginTop={true} disableMarginBottom={true}>
+					<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>
+						<ImpactMeasurementStudyDetails lang={lang} searchParams={normalizedSearchParams} />
+					</Suspense>
+				</BlockWrapper>
 			) : null}
 			<Suspense key={suspenseKey} fallback={<ImpactMeasurementResultsSkeleton />}>
 				<ImpactMeasurementResults lang={lang} searchParams={normalizedSearchParams} />

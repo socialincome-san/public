@@ -34,7 +34,7 @@ export const ImpactMeasurementResults = async ({ lang, searchParams }: ImpactMea
 	];
 
 	return (
-		<BlockWrapper className="space-y-10">
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true} className="space-y-10 py-0">
 			{await Promise.all(
 				orderedQuestions.map(async (question, index) => (
 					<ImpactMeasurementQuestionCard
