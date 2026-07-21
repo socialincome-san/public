@@ -18,7 +18,7 @@
 		"title": "Anmelden",
 		"magic-link-description": "Wir senden dir einen Magic Link zum Anmelden.",
 		"sending": "Wird gesendet...",
-		"sent-message": "Wenn ein Konto für {{ email }} existiert, erhältst du in Kürze einen Anmeldelink.",
+		"sent-message": "Wenn ein Konto für {{ email }} existiert, senden wir dir in Kürze einen Anmeldelink per E-Mail.",
 		"retry": "Erneut versuchen",
 		"support-prefix": "Wenn sie nicht ankommt, kontaktiere",
 		"no-account": "Du hast noch kein Konto?"
