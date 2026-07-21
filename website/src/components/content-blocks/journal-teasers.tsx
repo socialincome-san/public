@@ -56,14 +56,7 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 	}
 
 	return (
-		<JournalTeasersSection
-			heading={heading ? <StoryblokMarkdown>{heading}</StoryblokMarkdown> : undefined}
-			articles={articles}
-			lang={lang}
-			region={region}
-			journalCtaLabel={translator.t('teasers.goToJournal')}
-			videoLabel={translator.t('badge.video')}
-			blok={blok as SbBlokData}
+		<BlockWrapper
 			disableMarginBottom={disableMarginBottom}
 			disableMarginTop={disableMarginTop}
 			{...(blok ? storyblokEditable(blok as SbBlokData) : {})}
@@ -74,6 +67,7 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 				lang={lang}
 				region={region}
 				journalCtaLabel={translator.t('teasers.goToJournal')}
+				videoLabel={translator.t('badge.video')}
 			/>
 		</BlockWrapper>
 	);
