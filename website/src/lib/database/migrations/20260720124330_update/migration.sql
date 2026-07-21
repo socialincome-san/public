@@ -1,0 +1,5 @@
+-- RenameForeignKey
+ALTER TABLE "country_mobile_money_provider_mapping" RENAME CONSTRAINT "country_mobile_money_provider_mapping_mobile_money_provider_id_" TO "country_mobile_money_provider_mapping_mobile_money_provide_fkey";
+
+-- RenameIndex
+ALTER INDEX "country_mobile_money_provider_mapping_country_id_mobile_money_p" RENAME TO "country_mobile_money_provider_mapping_country_id_mobile_mon_key";
