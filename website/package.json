@@ -92,7 +92,7 @@
 		"i18next-resources-to-backend": "1.2.1",
 		"isomorphic-dompurify": "3.18.0",
 		"js-cookie": "3.0.8",
-		"lucide-react": "1.23.0",
+		"lucide-react": "1.25.0",
 		"luxon": "3.7.2",
 		"motion": "12.42.2",
 		"next": "16.2.10",
