@@ -15,9 +15,6 @@ type Props = {
 	region: WebsiteRegion;
 	heading?: ReactNode;
 	journalCtaLabel: string;
-	blok?: SbBlokData;
-	disableMarginTop?: boolean;
-	disableMarginBottom?: boolean;
 };
 
 export const JournalTeasersSection = ({ articles, lang, region, heading, journalCtaLabel }: Props) => {
