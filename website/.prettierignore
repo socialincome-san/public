@@ -5,3 +5,8 @@ dist/
 .next/
 *.hbs
 src/generated/
+next-env.d.ts
+public/openapi.json
+playwright-report/
+test-results/
+playwright/.auth/

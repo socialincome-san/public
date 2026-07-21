@@ -22,7 +22,7 @@ export const ShowMoreToggle = ({ children, initialCount = 3, showMoreLabel, show
 				<Button
 					type="button"
 					variant="link"
-					className="mt-4 h-auto p-0 text-sm"
+					className="mt-6 h-auto p-0 text-sm"
 					onClick={() => setExpanded((value) => !value)}
 				>
 					{expanded ? showLessLabel : showMoreLabel}

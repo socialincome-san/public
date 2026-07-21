@@ -14,9 +14,10 @@ type Props = {
 	region: WebsiteRegion;
 	heading?: ReactNode;
 	journalCtaLabel: string;
+	videoLabel: string;
 };
 
-export const JournalTeasersSection = ({ articles, lang, region, heading, journalCtaLabel }: Props) => {
+export const JournalTeasersSection = ({ articles, lang, region, heading, journalCtaLabel, videoLabel }: Props) => {
 	const [featuredArticle, ...secondaryArticles] = articles;
 	const hasSecondaryArticles = secondaryArticles.length > 0;
 
@@ -36,11 +37,24 @@ export const JournalTeasersSection = ({ articles, lang, region, heading, journal
 			</div>
 
 			<div className={cn('grid grid-cols-1 gap-4 lg:gap-8', hasSecondaryArticles && 'lg:grid-cols-2')}>
-				<JournalArticleCard article={featuredArticle} lang={lang} region={region} variant="featured" />
+				<JournalArticleCard
+					article={featuredArticle}
+					lang={lang}
+					region={region}
+					variant="featured"
+					videoLabel={videoLabel}
+				/>
 				{hasSecondaryArticles && (
 					<div className={cn('grid h-full grid-cols-1 gap-4 lg:gap-8', secondaryArticles.length > 1 && 'lg:grid-rows-2')}>
 						{secondaryArticles.map((article) => (
-							<JournalArticleCard key={article.uuid} article={article} lang={lang} region={region} variant="secondary" />
+							<JournalArticleCard
+								key={article.uuid}
+								article={article}
+								lang={lang}
+								region={region}
+								variant="secondary"
+								videoLabel={videoLabel}
+							/>
 						))}
 					</div>
 				)}

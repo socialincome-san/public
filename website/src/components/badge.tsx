@@ -12,6 +12,7 @@ const badgeVariants = cva('inline-flex items-center rounded-full border py-1 px-
 			destructive: 'bg-destructive-foreground border-destructive/30 text-destructive',
 			verified: 'bg-confirm-foreground border-confirm/30 text-confirm',
 			country: 'bg-background border-border text-foreground',
+			video: 'bg-black/60 border-white/40 text-white backdrop-blur-sm',
 		},
 	},
 	defaultVariants: {

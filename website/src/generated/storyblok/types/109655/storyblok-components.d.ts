@@ -221,6 +221,7 @@ export interface ImageWithCaption {
   layout?: "" | "wide" | "sideBySide";
   image: StoryblokAsset;
   caption?: string;
+  layout?: "" | "wide" | "sideBySide";
   image2?: StoryblokAsset;
   caption2?: string;
   component: "imageWithCaption";
