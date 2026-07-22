@@ -42,16 +42,16 @@ export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Prop
 					className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.35)_30%,rgb(8,51,68)_58%,rgb(8,51,68)_100%)]"
 					aria-hidden
 				/>
-				<div className="relative min-h-[191px] flex-1" aria-hidden />
+				<div className="min-h-[191px] flex-1" aria-hidden />
 				<div className="relative z-10 px-6 pt-6 pb-8 text-white">
 					{campaign.creatorName ? (
 						<p className="text-sm leading-5 font-medium drop-shadow-sm">{campaign.creatorName}</p>
 					) : null}
-					<h3 className="mt-2 text-4xl leading-10 font-medium break-words drop-shadow-sm">{campaign.title}</h3>
+					<h3 className="mt-2 text-4xl font-medium break-words drop-shadow-sm">{campaign.title}</h3>
 					<div className="mt-6 flex items-end justify-between gap-4">
 						<div className="min-w-0">
 							{showProgress ? (
-								<p className="text-sm leading-5 font-medium drop-shadow-sm">
+								<p className="text-sm font-medium drop-shadow-sm">
 									{t('campaigns-page.raised-percentage', {
 										context: { percentage: stats?.percentageCollected, currency: campaign.currency },
 									})}
@@ -64,7 +64,7 @@ export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Prop
 							) : null}
 						</div>
 						{stats ? (
-							<div className="shrink-0 text-right text-sm leading-5 font-medium drop-shadow-sm">
+							<div className="shrink-0 text-right text-sm font-medium drop-shadow-sm">
 								<p>{`${stats.contributionsCount} ${contributionLabel}`}</p>
 								<p>{`${stats.daysLeft} ${daysLabel}`}</p>
 							</div>
