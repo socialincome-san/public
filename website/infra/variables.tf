@@ -125,6 +125,16 @@ variable "twilio_verify_service_sid" {
   sensitive = true
 }
 
+variable "twilio_messaging_service_sid" {
+  type      = string
+  sensitive = true
+}
+
+variable "twilio_auth_token" {
+  type      = string
+  sensitive = true
+}
+
 variable "base_url" {
   description = "Base URL of the website"
   type        = string

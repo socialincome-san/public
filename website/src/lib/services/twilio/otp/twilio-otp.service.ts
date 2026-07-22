@@ -1,14 +1,13 @@
 import { PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { UserRecord } from 'firebase-admin/auth';
-import { Twilio } from 'twilio';
-import { AppReviewModeService } from '../app-review-mode/app-review-mode.service';
-import { BaseService } from '../core/base.service';
-import { ServiceResult } from '../core/base.types';
-import { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import { VerifyOtpRequest, VerifyOtpResult } from './twilio.types';
+import { AppReviewModeService } from '../../app-review-mode/app-review-mode.service';
+import { ServiceResult } from '../../core/base.types';
+import { FirebaseAdminService } from '../../firebase/firebase-admin.service';
+import { TwilioBaseService } from '../twilio-base.service';
+import { VerifyOtpRequest, VerifyOtpResult } from './twilio-otp.types';
 
-export class TwilioService extends BaseService {
+export class TwilioOtpService extends TwilioBaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly firebaseAdminService: FirebaseAdminService,
@@ -18,16 +17,11 @@ export class TwilioService extends BaseService {
 		super(db, loggerInstance);
 	}
 
-	private twilioClient?: Twilio;
-
-	private readonly twilioAccountSid = process.env.TWILIO_ACCOUNT_SID;
-	private readonly twilioApiKeySid = process.env.TWILIO_API_KEY_SID;
-	private readonly twilioApiKeySecret = process.env.TWILIO_API_KEY_SECRET;
 	private readonly twilioVerifyServiceSid = process.env.TWILIO_VERIFY_SERVICE_SID;
 
 	async requestOtp(phoneNumber: string): Promise<ServiceResult<boolean>> {
 		try {
-			const envCheck = this.requireTwilioEnvVars();
+			const envCheck = this.requireOtpEnvVars();
 			if (!envCheck.success) {
 				return envCheck;
 			}
@@ -62,13 +56,13 @@ export class TwilioService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(`Failed to request OTP: ${JSON.stringify(error)}`);
+			return this.resultFail(`Failed to request OTP: ${this.formatError(error)}`);
 		}
 	}
 
 	async verifyOtp(request: VerifyOtpRequest): Promise<ServiceResult<VerifyOtpResult>> {
 		try {
-			const envCheck = this.requireTwilioEnvVars();
+			const envCheck = this.requireOtpEnvVars();
 			if (!envCheck.success) {
 				return envCheck;
 			}
@@ -123,7 +117,7 @@ export class TwilioService extends BaseService {
 
 			this.logger.error(error);
 
-			return this.resultFail(`Failed to verify OTP: ${JSON.stringify(error)}`);
+			return this.resultFail(`Failed to verify OTP: ${this.formatError(error)}`);
 		}
 	}
 
@@ -155,21 +149,18 @@ export class TwilioService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(`Failed to generate custom token: ${JSON.stringify(error)}`);
+			return this.resultFail(`Failed to generate custom token: ${this.formatError(error)}`);
 		}
 	}
 
-	private requireTwilioEnvVars(): ServiceResult<void> {
-		if (!this.twilioAccountSid || !this.twilioApiKeySid || !this.twilioApiKeySecret || !this.twilioVerifyServiceSid) {
-			return this.resultFail('Missing Twilio environment variables');
+	private requireOtpEnvVars(): ServiceResult<void> {
+		const baseCheck = this.requireTwilioBaseEnvVars();
+		if (!baseCheck.success) {
+			return baseCheck;
 		}
 
-		if (!this.twilioAccountSid.startsWith('AC')) {
-			return this.resultFail('Invalid TWILIO_ACCOUNT_SID format');
-		}
-
-		if (!this.twilioApiKeySid.startsWith('SK')) {
-			return this.resultFail('Invalid TWILIO_API_KEY_SID format');
+		if (!this.twilioVerifyServiceSid) {
+			return this.resultFail('Missing TWILIO_VERIFY_SERVICE_SID');
 		}
 
 		if (!this.twilioVerifyServiceSid.startsWith('VA')) {
@@ -177,29 +168,6 @@ export class TwilioService extends BaseService {
 		}
 
 		return this.resultOk(undefined);
-	}
-
-	private getTwilioClient(): ServiceResult<Twilio> {
-		if (this.twilioClient) {
-			return this.resultOk(this.twilioClient);
-		}
-
-		const envCheck = this.requireTwilioEnvVars();
-		if (!envCheck.success) {
-			return envCheck;
-		}
-
-		try {
-			this.twilioClient = new Twilio(this.twilioApiKeySid, this.twilioApiKeySecret, {
-				accountSid: this.twilioAccountSid,
-			});
-
-			return this.resultOk(this.twilioClient);
-		} catch (error) {
-			this.logger.error(error);
-
-			return this.resultFail('Failed to initialize Twilio client');
-		}
 	}
 
 	private requireValidPhoneNumber(phoneNumber?: string): ServiceResult<string> {
