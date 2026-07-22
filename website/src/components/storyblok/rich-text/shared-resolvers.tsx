@@ -1,6 +1,12 @@
 'use client';
 
-import { headingStyles, type HeadingSize } from '@/components/heading-styles';
+import { headingStyles } from '@/components/heading-styles';
+import type {
+	RichTextAlignment,
+	RichTextAlignmentProps,
+	RichTextHeadingProps,
+	RichTextLinkProps,
+} from '@/components/storyblok/rich-text/rich-text.types';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/table';
 import { cn } from '@/lib/utils/cn';
 import NextLink from 'next/link';
@@ -18,24 +24,6 @@ import {
 	NODE_UL,
 } from 'storyblok-rich-text-react-renderer';
 
-type RichTextLinkProps = {
-	href?: string;
-	target?: string;
-	rel?: string;
-};
-
-type RichTextAlignment = 'left' | 'center' | 'middle' | 'right';
-
-type RichTextAlignmentProps = {
-	textAlign?: unknown;
-	align?: unknown;
-	alignment?: unknown;
-};
-
-type RichTextHeadingProps = RichTextAlignmentProps & {
-	level: HeadingSize;
-};
-
 const linkClassName = 'text-primary font-medium underline underline-offset-4';
 
 const alignmentClassNames: Record<RichTextAlignment, string> = {
@@ -48,13 +36,13 @@ const alignmentClassNames: Record<RichTextAlignment, string> = {
 const isRichTextAlignment = (value: unknown): value is RichTextAlignment =>
 	value === 'left' || value === 'center' || value === 'middle' || value === 'right';
 
-const getRichTextAlignmentClassName = ({ textAlign, align, alignment }: RichTextAlignmentProps = {}) => {
+export const getRichTextAlignmentClassName = ({ textAlign, align, alignment }: RichTextAlignmentProps = {}) => {
 	const value = textAlign ?? align ?? alignment;
 
 	return isRichTextAlignment(value) ? alignmentClassNames[value] : undefined;
 };
 
-const buildLinkRel = (target?: string, rel?: string) => {
+export const buildLinkRel = (target?: string, rel?: string) => {
 	if (target !== '_blank') {
 		return rel;
 	}
@@ -66,7 +54,7 @@ const buildLinkRel = (target?: string, rel?: string) => {
 	return [...tokens].join(' ');
 };
 
-const removeStoryblokPagesFolder = (href: string) => href.replace(/^(https?:\/\/[^/]+)?\/?pages(?=\/|$)/, '$1');
+export const removeStoryblokPagesFolder = (href: string) => href.replace(/^(https?:\/\/[^/]+)?\/?pages(?=\/|$)/, '$1');
 
 export const storyblokRichTextMarkResolvers = {
 	[MARK_LINK]: (children: ReactNode, props: RichTextLinkProps) => {

@@ -53,6 +53,7 @@ export const StoryblokPreviewPersonPage = async ({
 					lang={lang}
 					region={region}
 					moreArticlesLabel={translator.t('overview.more-articles')}
+					videoLabel={translator.t('badge.video')}
 				/>
 			);
 		},
