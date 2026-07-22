@@ -122,7 +122,7 @@
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
-		"@playwright/test": "1.60.0",
+		"@playwright/test": "1.61.1",
 		"@smartive/eslint-config": "7.0.1",
 		"@smartive/prettier-config": "3.1.2",
 		"@storybook/addon-a11y": "10.4.6",
