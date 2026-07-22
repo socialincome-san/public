@@ -1,18 +1,3 @@
-/**
- * Content-Security-Policy for the Social Income website.
- *
- * This is a static allowlist policy (no nonces) so ISR-cached marketing pages keep working.
- *
- * When adding a new third-party integration, extend the relevant directive below and verify
- * in the browser console (with cookie consent granted for marketing tags). GTM container tags
- * configured in the GTM UI can load origins not listed in this repo — add those origins here
- * when new tags are introduced.
- *
- * @see website/src/components/analytics/ — GTM, Facebook, LinkedIn (inline script bootstraps)
- * @see website/src/components/donation-wizard/ — Stripe Embedded Checkout
- * @see website/src/lib/firebase/ — Firebase Auth + Storage
- */
-
 type CspOptions = {
 	isDevelopment?: boolean;
 };
@@ -77,15 +62,10 @@ const PRODUCTION_CONNECT_SRC = [
 	'https://a.storyblok.com',
 ] as const;
 
-const DEVELOPMENT_CONNECT_SRC_EXTRA = ['http://localhost:*', 'ws://localhost:*'] as const;
+const LOCALHOST_CONNECT_SRC = ['http://localhost:*', 'ws://localhost:*'] as const;
 
-/** Firebase Auth/Storage/Functions emulators used by local/e2e production builds. */
-const EMULATOR_CONNECT_SRC_EXTRA = [
-	'http://localhost:*',
-	'ws://localhost:*',
-	'http://127.0.0.1:*',
-	'ws://127.0.0.1:*',
-] as const;
+/** Extra hosts for Firebase Auth/Storage/Functions emulators (local/e2e production builds). */
+const EMULATOR_CONNECT_SRC_EXTRA = ['http://127.0.0.1:*', 'ws://127.0.0.1:*'] as const;
 
 const FRAME_SRC = [
 	"'self'",
@@ -109,11 +89,11 @@ const FRAME_ANCESTORS = ["'self'", 'https://app.storyblok.com'] as const;
 
 export const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== 'production' }: CspOptions = {}) => {
 	const isUsingFirebaseEmulators = Boolean(process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL);
-	const scriptSrc = isDevelopment ? [...PRODUCTION_SCRIPT_SRC, ...DEVELOPMENT_SCRIPT_SRC_EXTRA] : [...PRODUCTION_SCRIPT_SRC];
+	const scriptSrc = isDevelopment ? [...PRODUCTION_SCRIPT_SRC, ...DEVELOPMENT_SCRIPT_SRC_EXTRA] : PRODUCTION_SCRIPT_SRC;
 
 	const connectSrc = [
 		...PRODUCTION_CONNECT_SRC,
-		...(isDevelopment ? DEVELOPMENT_CONNECT_SRC_EXTRA : []),
+		...(isDevelopment || isUsingFirebaseEmulators ? LOCALHOST_CONNECT_SRC : []),
 		...(isUsingFirebaseEmulators ? EMULATOR_CONNECT_SRC_EXTRA : []),
 	];
 
