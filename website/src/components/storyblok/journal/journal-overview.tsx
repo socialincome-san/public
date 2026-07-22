@@ -19,6 +19,7 @@ type Props = {
 	editorsHeading: string;
 	allTagsLabel: string;
 	moreArticlesLabel: string;
+	videoLabel: string;
 	pathname: string;
 	journalPath: string;
 	activeTagSlug?: string;
@@ -43,6 +44,7 @@ export const JournalOverview = ({
 	editorsHeading,
 	allTagsLabel,
 	moreArticlesLabel,
+	videoLabel,
 	pathname,
 	journalPath,
 	activeTagSlug,
@@ -74,7 +76,7 @@ export const JournalOverview = ({
 
 		<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{articles.map((article) => (
-				<JournalArticleCard key={article.uuid} lang={lang} region={region} article={article} />
+				<JournalArticleCard key={article.uuid} lang={lang} region={region} article={article} videoLabel={videoLabel} />
 			))}
 		</div>
 

@@ -34,6 +34,7 @@ export const CampaignJournalTeaser = async ({ lang, region }: Props) => {
 				lang={lang}
 				region={region}
 				journalCtaLabel={translator.t('teasers.goToJournal')}
+				videoLabel={translator.t('badge.video')}
 			/>
 		</BlockWrapper>
 	);

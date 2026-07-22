@@ -7,9 +7,9 @@ import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsl
 import { QuotedText } from '@/components/storyblok/journal/rich-text/quoted-text';
 import { ReferencesGroupBlock } from '@/components/storyblok/journal/rich-text/references-group';
 import {
-	storyblokRichTextMarkResolvers,
-	storyblokRichTextNodeResolvers,
-} from '@/components/storyblok/rich-text/shared-resolvers';
+	journalRichTextMarkResolvers as storyblokRichTextMarkResolvers,
+	journalRichTextNodeResolvers as storyblokRichTextNodeResolvers,
+} from '@/components/storyblok/rich-text/journal-resolvers';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
