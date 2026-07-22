@@ -72,7 +72,13 @@ import { SurveyReadService } from './survey/survey-read.service';
 import { SurveyValidationService } from './survey/survey-validation.service';
 import { SurveyWriteService } from './survey/survey-write.service';
 import { TransparencyService } from './transparency/transparency.service';
-import { TwilioService } from './twilio/twilio.service';
+import { MessagingChannelPreviewService } from './twilio/messaging/dispatch/channel-preview.service';
+import { MessagingDispatchService } from './twilio/messaging/dispatch/dispatch.service';
+import { MessagingLogService } from './twilio/messaging/logs/log.service';
+import { MessagingWebhookService } from './twilio/messaging/logs/webhook.service';
+import { MessagingRecipientsService } from './twilio/messaging/recipients/recipients.service';
+import { TwilioTemplateService } from './twilio/messaging/twilio-templates/twilio-template.service';
+import { TwilioOtpService } from './twilio/otp/twilio-otp.service';
 import { UserReadService } from './user/user-read.service';
 import { UserValidationService } from './user/user-validation.service';
 import { UserWriteService } from './user/user-write.service';
@@ -114,7 +120,12 @@ const recipientWrite = new RecipientWriteService(
 const recipientImport = new RecipientImportService(recipientWrite, recipientValidation);
 const payoutValidation = new PayoutValidationService(prisma);
 const payoutWrite = new PayoutWriteService(prisma, programAccessRead, payoutValidation);
-const twilio = new TwilioService(prisma, firebaseAdmin, appReviewMode);
+const twilioOtp = new TwilioOtpService(prisma, firebaseAdmin, appReviewMode);
+const messagingTwilioTemplates = new TwilioTemplateService(prisma);
+
+const messagingChannelPreview = new MessagingChannelPreviewService(prisma, userRead);
+const messagingWebhook = new MessagingWebhookService(prisma);
+const messagingLog = new MessagingLogService(prisma, userRead, messagingWebhook);
 const contributionRead = new ContributionReadService(prisma, programAccessRead);
 const contributionValidation = new ContributionValidationService(prisma);
 const contributionWrite = new ContributionWriteService(prisma, programAccessRead, contributionValidation);
@@ -149,6 +160,8 @@ const contributorWrite = new ContributorWriteService(
 	contributorValidation,
 	contactRelations,
 );
+const messagingRecipients = new MessagingRecipientsService(prisma, contributorRead, recipientRead, localPartnerRead);
+const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
 const campaignValidation = new CampaignValidationService(prisma);
 const campaignWrite = new CampaignWriteService(prisma, programAccessRead, campaignValidation);
 const focusValidation = new FocusValidationService(prisma);
@@ -271,5 +284,11 @@ export const services = {
 	surveyImpact,
 	transparency,
 	githubApi,
-	twilio,
+	twilioOtp,
+	messagingTwilioTemplates,
+	messagingDispatch,
+	messagingChannelPreview,
+	messagingWebhook,
+	messagingRecipients,
+	messagingLog,
 };

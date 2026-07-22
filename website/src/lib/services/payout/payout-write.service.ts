@@ -94,6 +94,7 @@ export class PayoutWriteService extends BaseService {
 				data: {
 					recipient: { connect: { id: validatedInput.recipientId } },
 					amount: validatedInput.amount,
+					amountChf: validatedInput.amountChf,
 					currency: validatedInput.currency,
 					status: validatedInput.status,
 					paymentAt: validatedInput.paymentAt,
@@ -114,6 +115,7 @@ export class PayoutWriteService extends BaseService {
 			return this.resultOk({
 				id: created.id,
 				amount: Number(created.amount),
+				amountChf: created.amountChf === null ? null : Number(created.amountChf),
 				currency: created.currency,
 				status: created.status,
 				paymentAt: created.paymentAt,
@@ -180,6 +182,7 @@ export class PayoutWriteService extends BaseService {
 				where: { id: validatedInput.id },
 				data: {
 					amount: validatedInput.amount,
+					amountChf: validatedInput.amountChf,
 					currency: validatedInput.currency,
 					status: validatedInput.status,
 					paymentAt: validatedInput.paymentAt,
@@ -201,6 +204,7 @@ export class PayoutWriteService extends BaseService {
 			return this.resultOk({
 				id: updated.id,
 				amount: Number(updated.amount),
+				amountChf: updated.amountChf === null ? null : Number(updated.amountChf),
 				currency: updated.currency,
 				status: updated.status,
 				paymentAt: updated.paymentAt,

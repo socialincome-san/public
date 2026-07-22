@@ -218,6 +218,7 @@ export interface ImageText {
 }
 
 export interface ImageWithCaption {
+  layout?: "" | "wide" | "sideBySide";
   image: StoryblokAsset;
   caption?: string;
   layout?: "" | "wide" | "sideBySide";
@@ -377,6 +378,7 @@ export interface Page {
     | ExplainerVideoHeader
     | RichtextButtonHeader
     | NewsletterForm
+    | Lottie
   )[];
   component: "page";
   _uid: string;

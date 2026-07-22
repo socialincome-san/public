@@ -14,6 +14,7 @@ export const useNavbarLinks = (sessions: Session[]) => {
 	const user = sessions.find((s): s is UserSession => s.type === 'user');
 	const hasContributor = sessions.some((s) => s.type === 'contributor');
 	const canAccessOperatorSections = Boolean(user?.hasAnyOperatorProgramAccess);
+	const isAdmin = user?.role === 'admin';
 	const mainNavLinks: NavLink[] = [
 		{
 			href: '/portal/programs',
@@ -40,6 +41,15 @@ export const useNavbarLinks = (sessions: Session[]) => {
 					},
 				] satisfies NavLink[])
 			: []),
+		...(isAdmin
+			? ([
+					{
+						href: '/portal/messaging/templates',
+						activeBase: '/portal/messaging',
+						label: 'Messaging',
+					},
+				] satisfies NavLink[])
+			: []),
 	];
 
 	const userMenuNavLinks: NavLink[] = [
@@ -58,7 +68,7 @@ export const useNavbarLinks = (sessions: Session[]) => {
 					},
 				]
 			: []),
-		...(user?.role === 'admin'
+		...(isAdmin
 			? [
 					{
 						href: '/portal/admin/organizations',

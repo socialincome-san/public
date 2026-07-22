@@ -25,7 +25,7 @@ export const POST = withAppCheck(async (request: Request) => {
 		return new Response(parsed.error.message, { status: 400 });
 	}
 
-	const result = await services.twilio.verifyOtp(parsed.data);
+	const result = await services.twilioOtp.verifyOtp(parsed.data);
 
 	if (!result.success) {
 		return new Response(result.error, { status: result.status ?? 400 });

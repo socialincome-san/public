@@ -573,6 +573,7 @@ model User {
   role      UserRole @map("role")
 
   organizationAccesses OrganizationAccess[]
+  messagingJobs        MessagingJob[]
 
   activeOrganizationId String?       @map("active_organization_id")
   activeOrganization   Organization? @relation(fields: [activeOrganizationId], references: [id])
@@ -973,6 +974,7 @@ model Contact {
   recipient    Recipient?
   user         User?
   localPartner LocalPartner?
+  messages     MessageLog[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -992,6 +994,69 @@ model Phone {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
 
   @@map("phone")
+}
+
+enum MessagingChannel {
+  sms
+  whatsapp
+}
+
+enum MessagingJobStatus {
+  running
+  completed
+  interrupted
+  failed
+}
+
+model MessagingJob {
+  id                   String              @id @default(cuid()) @map("id")
+  templateSid          String              @map("template_sid")
+  templateFriendlyName String              @map("template_friendly_name")
+  channelRequested     MessagingChannel    @map("channel_requested")
+  recipientType        String              @map("recipient_type")
+  assignments          Json                @map("assignments")
+  totalSelected        Int                 @map("total_selected")
+  sentCount            Int                 @default(0) @map("sent_count")
+  failedCount          Int                 @default(0) @map("failed_count")
+  skippedCount         Int                 @default(0) @map("skipped_count")
+  fallbackCount        Int                 @default(0) @map("fallback_count")
+  deliveredCount       Int                 @default(0) @map("delivered_count")
+  status               MessagingJobStatus  @map("status")
+  createdById          String              @map("created_by_id")
+  createdBy            User                @relation(fields: [createdById], references: [id])
+  startedAt            DateTime            @map("started_at") @db.Timestamptz(3)
+  finishedAt           DateTime?           @map("finished_at") @db.Timestamptz(3)
+  messages             MessageLog[]
+  createdAt            DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([createdById])
+  @@index([status])
+  @@map("messaging_job")
+}
+
+model MessageLog {
+  id                 String            @id @default(cuid()) @map("id")
+  jobId              String            @map("job_id")
+  job                MessagingJob      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  contactId          String            @map("contact_id")
+  contact            Contact           @relation(fields: [contactId], references: [id])
+  phoneNumber        String?           @map("phone_number")
+  channelRequested   MessagingChannel  @map("channel_requested")
+  channelUsed        MessagingChannel? @map("channel_used")
+  fellBack           Boolean           @default(false) @map("fell_back")
+  renderedBody       String            @map("rendered_body")
+  twilioMessageSid   String?           @unique @map("twilio_message_sid")
+  twilioStatus       String?           @map("twilio_status")
+  twilioErrorCode    String?           @map("twilio_error_code")
+  twilioErrorMessage String?           @map("twilio_error_message")
+  skippedReason      String?           @map("skipped_reason")
+  createdAt          DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([jobId])
+  @@index([contactId])
+  @@map("message_log")
 }
 
 model ExchangeRate {
