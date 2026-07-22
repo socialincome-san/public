@@ -14,6 +14,7 @@ const PRODUCTION_SCRIPT_SRC = [
 	'https://js.stripe.com',
 	'https://checkout.stripe.com',
 	'https://app.storyblok.com',
+	'https://static.cloudflareinsights.com',
 ] as const;
 
 const DEVELOPMENT_SCRIPT_SRC_EXTRA = ["'unsafe-eval'"] as const;
@@ -59,7 +60,10 @@ const PRODUCTION_CONNECT_SRC = [
 	'https://o4507045017026560.ingest.us.sentry.io',
 	'https://*.mux.com',
 	'https://*.edgemv.mux.com',
+	'https://*.litix.io',
 	'https://a.storyblok.com',
+	'https://static.cloudflareinsights.com',
+	'https://cloudflareinsights.com',
 ] as const;
 
 const LOCALHOST_CONNECT_SRC = ['http://localhost:*', 'ws://localhost:*'] as const;
