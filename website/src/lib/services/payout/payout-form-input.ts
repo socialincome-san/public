@@ -14,6 +14,13 @@ const payoutDate = z.preprocess((value) => {
 export const payoutCreateInputSchema = z.object({
 	recipientId: requiredId,
 	amount: z.coerce.number().nonnegative('Amount must be non-negative.'),
+	amountChf: z.preprocess((value) => {
+		if (value === '' || value === null || value === undefined) {
+			return null;
+		}
+
+		return value;
+	}, z.coerce.number().nonnegative('CHF amount must be non-negative.').nullable()),
 	currency: z.nativeEnum(Currency),
 	status: z.nativeEnum(PayoutStatus),
 	paymentAt: payoutDate,

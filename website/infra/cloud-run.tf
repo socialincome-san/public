@@ -142,6 +142,16 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "TWILIO_MESSAGING_SERVICE_SID"
+          value = var.twilio_messaging_service_sid
+        }
+
+        env {
+          name  = "TWILIO_AUTH_TOKEN"
+          value = var.twilio_auth_token
+        }
+
+        env {
           name  = "BASE_URL"
           value = var.base_url
         }

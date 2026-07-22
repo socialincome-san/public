@@ -152,6 +152,7 @@ export type PayoutPayload = {
 		programName: string | null;
 	};
 	amount: number;
+	amountChf: number | null;
 	currency: Currency;
 	status: PayoutStatus;
 	paymentAt: Date;
