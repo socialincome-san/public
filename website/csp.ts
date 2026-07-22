@@ -96,9 +96,7 @@ const FORM_ACTION = ["'self'"] as const;
 const FRAME_ANCESTORS = ["'self'", 'https://app.storyblok.com'] as const;
 
 export const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== 'production' }: CspOptions = {}) => {
-	const scriptSrc = isDevelopment
-		? [...PRODUCTION_SCRIPT_SRC, ...DEVELOPMENT_SCRIPT_SRC_EXTRA]
-		: [...PRODUCTION_SCRIPT_SRC];
+	const scriptSrc = isDevelopment ? [...PRODUCTION_SCRIPT_SRC, ...DEVELOPMENT_SCRIPT_SRC_EXTRA] : [...PRODUCTION_SCRIPT_SRC];
 
 	const connectSrc = isDevelopment
 		? [...PRODUCTION_CONNECT_SRC, ...DEVELOPMENT_CONNECT_SRC_EXTRA]
