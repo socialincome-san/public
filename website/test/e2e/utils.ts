@@ -107,6 +107,13 @@ export const selectOptionByTestId = async (page: Page, fieldName: string, option
 export const clickDataTableActionItem = async (page: Page, actionItemTestId: string) => {
 	const actionButton = page.getByTestId('data-table-actions-button');
 
+	// If there's only one action, we render a primary button directly instead of the dropdown
+	if ((await actionButton.count()) === 0) {
+		await page.getByTestId(actionItemTestId).click();
+
+		return;
+	}
+
 	await actionButton.click();
 	try {
 		await page.getByTestId(actionItemTestId).click({ timeout: 3000 });

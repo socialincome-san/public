@@ -25,6 +25,7 @@ ignored/
 .env.development.local
 .env.test.local
 .env.production.local
+.claude/CLAUDE.local.md
 
 # JetBrains
 .idea/

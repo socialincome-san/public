@@ -1,5 +1,6 @@
 'use client';
 
+import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ActionButtonBlock } from '@/components/storyblok/journal/rich-text/action-button';
 import { EmbeddedVideoPlayer } from '@/components/storyblok/journal/rich-text/embedded-video';
 import { ImageWithCaption } from '@/components/storyblok/journal/rich-text/image-with-caption';
@@ -10,6 +11,7 @@ import {
 	journalRichTextMarkResolvers as storyblokRichTextMarkResolvers,
 	journalRichTextNodeResolvers as storyblokRichTextNodeResolvers,
 } from '@/components/storyblok/rich-text/journal-resolvers';
+import type { Lottie } from '@/generated/storyblok/types/109655/storyblok-components';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
@@ -63,6 +65,7 @@ export const ArticleRichText = ({ document, lang, donationForm }: Props) => {
 			actionButton: (props: StoryblokBlockProps) => (
 				<ActionButtonBlock {...(props as ComponentProps<typeof ActionButtonBlock>)} />
 			),
+			lottie: (props: StoryblokBlockProps) => <LottieBlock blok={props as Lottie} />,
 			newsletterSignup: () => <NewsletterSignup lang={lang} />,
 			campaignDonate: () => <div className="my-10">{donationForm}</div>,
 		},
