@@ -72,7 +72,8 @@ const PRODUCTION_CONNECT_SRC = [
 	'https://r.stripe.com',
 	'https://q.stripe.com',
 	'https://o4507045017026560.ingest.us.sentry.io',
-	'https://stream.mux.com',
+	'https://*.mux.com',
+	'https://*.edgemv.mux.com',
 	'https://a.storyblok.com',
 ] as const;
 
@@ -98,7 +99,7 @@ const FRAME_SRC = [
 	'https://player.mux.com',
 ] as const;
 
-const MEDIA_SRC = ["'self'", 'blob:', 'https://stream.mux.com', 'https://a.storyblok.com'] as const;
+const MEDIA_SRC = ["'self'", 'blob:', 'https://*.mux.com', 'https://*.edgemv.mux.com', 'https://a.storyblok.com'] as const;
 
 const WORKER_SRC = ["'self'", 'blob:'] as const;
 

@@ -88,7 +88,8 @@ describe('buildContentSecurityPolicy', () => {
 			expect(policy).toContain('https://snap.licdn.com');
 			expect(policy).toContain('https://identitytoolkit.googleapis.com');
 			expect(policy).toContain('https://o4507045017026560.ingest.us.sentry.io');
-			expect(policy).toContain('https://stream.mux.com');
+			expect(policy).toContain('https://*.mux.com');
+			expect(policy).toContain('https://*.edgemv.mux.com');
 			expect(policy).toContain('https://app.storyblok.com');
 			expect(policy).toContain('https://player.mux.com');
 		});
