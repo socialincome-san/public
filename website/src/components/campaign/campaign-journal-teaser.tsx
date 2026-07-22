@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -21,17 +22,20 @@ export const CampaignJournalTeaser = async ({ lang, region }: Props) => {
 	}
 
 	return (
-		<JournalTeasersSection
-			heading={
-				<>
-					{translator.t('teasers.heading-prefix')}
-					<strong>{translator.t('teasers.heading-emphasis')}</strong>
-				</>
-			}
-			articles={articles}
-			lang={lang}
-			region={region}
-			journalCtaLabel={translator.t('teasers.goToJournal')}
-		/>
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<JournalTeasersSection
+				heading={
+					<>
+						{translator.t('teasers.heading-prefix')}
+						<strong>{translator.t('teasers.heading-emphasis')}</strong>
+					</>
+				}
+				articles={articles}
+				lang={lang}
+				region={region}
+				journalCtaLabel={translator.t('teasers.goToJournal')}
+				videoLabel={translator.t('badge.video')}
+			/>
+		</BlockWrapper>
 	);
 };

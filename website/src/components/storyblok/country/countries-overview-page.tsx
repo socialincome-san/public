@@ -30,7 +30,7 @@ export const CountriesOverviewPage = async ({ overview, lang, region }: Props) =
 	});
 
 	return (
-		<div className="w-site-width max-w-content mx-auto flex flex-col gap-8 px-6 py-8">
+		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
 			<CountriesOverview
 				countries={countries}

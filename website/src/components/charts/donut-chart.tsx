@@ -63,7 +63,7 @@ export const DonutChart = ({ options, emptyLabel }: DonutChartProps) => {
 					<div key={option.id} className="text-foreground grid grid-cols-3 items-center gap-3 text-sm sm:flex sm:gap-6">
 						<div className="size-2 rounded-sm" style={{ backgroundColor: chartColors[index % chartColors.length] }} />
 						<div className="min-w-0 sm:min-w-24">{option.label}</div>
-						<div className="w-auto text-right font-medium sm:w-10">{Math.round(option.percentage)}%</div>
+						<div className="w-auto text-right font-medium sm:w-10">{Math.round(option.percentage)} %</div>
 					</div>
 				))}
 			</div>

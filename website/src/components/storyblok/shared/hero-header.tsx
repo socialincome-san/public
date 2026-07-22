@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
@@ -98,9 +99,9 @@ export const HeroHeader = ({
 			</div>
 
 			{showDonationsFormMobile ? (
-				<div className="w-site-width max-w-content mx-auto w-full px-4 lg:hidden">
+				<BlockWrapper className="lg:hidden" disableMarginTop={true} disableMarginBottom={true}>
 					<DonationFormServer lang={lang} />
-				</div>
+				</BlockWrapper>
 			) : null}
 		</section>
 	);

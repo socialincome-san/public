@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -5,6 +6,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
+import { storyblokEditable } from '@storyblok/js';
 import type { SbBlokData } from '@storyblok/react';
 
 type Props = {
@@ -54,15 +56,19 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 	}
 
 	return (
-		<JournalTeasersSection
-			heading={heading ? <StoryblokMarkdown>{heading}</StoryblokMarkdown> : undefined}
-			articles={articles}
-			lang={lang}
-			region={region}
-			journalCtaLabel={translator.t('teasers.goToJournal')}
-			blok={blok as SbBlokData}
+		<BlockWrapper
 			disableMarginBottom={disableMarginBottom}
 			disableMarginTop={disableMarginTop}
-		/>
+			{...(blok ? storyblokEditable(blok as SbBlokData) : {})}
+		>
+			<JournalTeasersSection
+				heading={heading ? <StoryblokMarkdown>{heading}</StoryblokMarkdown> : undefined}
+				articles={articles}
+				lang={lang}
+				region={region}
+				journalCtaLabel={translator.t('teasers.goToJournal')}
+				videoLabel={translator.t('badge.video')}
+			/>
+		</BlockWrapper>
 	);
 };
