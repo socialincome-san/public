@@ -1,6 +1,7 @@
 import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
 import path from 'path';
+import { getSecurityHeaders } from './csp';
 import { getRedirects } from './redirects';
 
 let nextConfig: NextConfig = {
@@ -9,6 +10,10 @@ let nextConfig: NextConfig = {
 	redirects: getRedirects,
 	headers: () =>
 		Promise.resolve([
+			{
+				source: '/:path*',
+				headers: [...getSecurityHeaders()],
+			},
 			{
 				source: '/storybook',
 				headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
