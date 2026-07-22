@@ -64,9 +64,6 @@ CREATE INDEX "message_log_job_id_idx" ON "message_log"("job_id");
 -- CreateIndex
 CREATE INDEX "message_log_contact_id_idx" ON "message_log"("contact_id");
 
--- RenameForeignKey
-ALTER TABLE "country_mobile_money_provider_mapping" RENAME CONSTRAINT "country_mobile_money_provider_mapping_mobile_money_provider_id_" TO "country_mobile_money_provider_mapping_mobile_money_provide_fkey";
-
 -- AddForeignKey
 ALTER TABLE "messaging_job" ADD CONSTRAINT "messaging_job_created_by_id_fkey" FOREIGN KEY ("created_by_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -75,6 +72,3 @@ ALTER TABLE "message_log" ADD CONSTRAINT "message_log_job_id_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "message_log" ADD CONSTRAINT "message_log_contact_id_fkey" FOREIGN KEY ("contact_id") REFERENCES "contact"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- RenameIndex
-ALTER INDEX "country_mobile_money_provider_mapping_country_id_mobile_money_p" RENAME TO "country_mobile_money_provider_mapping_country_id_mobile_mon_key";
