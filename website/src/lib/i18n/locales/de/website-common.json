@@ -177,6 +177,7 @@
 		"contribution-plural": "Spenden",
 		"day-left-singular": "Tag verbleibend",
 		"day-left-plural": "Tage verbleibend",
+		"raised-percentage": "{{ percentage }}% gesammelt ({{ currency }})",
 		"about": "Über"
 	},
 	"breadcrumb": {

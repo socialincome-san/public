@@ -70,11 +70,15 @@ export type PublicCampaignCard = {
 	id: string;
 	title: string;
 	slug: string;
+	creatorName: string | null;
+	currency: Currency;
 };
 
 export type PublicCampaignStats = {
 	contributionsCount: number;
 	daysLeft: number;
+	amountCollected: number;
+	percentageCollected: number | null;
 };
 
 export type PublicCampaignStatsMap = Record<string, PublicCampaignStats>;

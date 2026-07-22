@@ -177,6 +177,7 @@
 		"contribution-plural": "contributions",
 		"day-left-singular": "jour restant",
 		"day-left-plural": "jours restants",
+		"raised-percentage": "{{ percentage }}% collectés ({{ currency }})",
 		"about": "À propos de"
 	},
 	"breadcrumb": {
