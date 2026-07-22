@@ -75,7 +75,7 @@
 		"@sendgrid/client": "8.1.6",
 		"@sentry/nextjs": "10.64.0",
 		"@storyblok/js": "6.1.0",
-		"@storyblok/react": "7.0.1",
+		"@storyblok/react": "7.2.1",
 		"@stripe/react-stripe-js": "6.7.0",
 		"@stripe/stripe-js": "9.9.0",
 		"@tanstack/react-table": "8.21.3",
