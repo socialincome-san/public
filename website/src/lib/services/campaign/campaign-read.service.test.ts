@@ -1,4 +1,4 @@
-import { type PrismaClient } from '@/generated/prisma/client';
+import { type Currency, type PrismaClient } from '@/generated/prisma/client';
 import type { ServiceResult } from '../core/base.types';
 import type { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import type { ProgramAccessReadService } from '../program-access/program-access-read.service';
@@ -27,7 +27,7 @@ const expectSuccess = <T>(result: ServiceResult<T>) => {
 const createService = ({
 	campaigns = [],
 	statsCampaigns = [],
-	exchangeRate = 1,
+	exchangeRates = { CHF: 1, EUR: 1 },
 }: {
 	campaigns?: {
 		id: string;
@@ -46,7 +46,7 @@ const createService = ({
 		additionalAmountChf: number | null;
 		contributions: { amountChf: number }[];
 	}[];
-	exchangeRate?: number;
+	exchangeRates?: Partial<Record<Currency, number>>;
 } = {}) => {
 	const campaignFindMany = jest.fn().mockResolvedValue(campaigns);
 	const db = {
@@ -56,11 +56,13 @@ const createService = ({
 	};
 
 	const exchangeRateService = {
-		getLatestRateForCurrency: jest.fn().mockResolvedValue({
-			success: true,
-			data: { currency: 'CHF', rate: exchangeRate },
+		getLatestRateForCurrency: jest.fn(async (currency: Currency) => {
+			const rate = exchangeRates[currency];
+			return rate === undefined
+				? { success: false as const, error: 'No exchange rate found' }
+				: { success: true as const, data: { currency, rate } };
 		}),
-	} satisfies Partial<ExchangeRateReadService>;
+	};
 
 	const programAccessService = {} satisfies Partial<ProgramAccessReadService>;
 	const service = new CampaignReadService(
@@ -146,6 +148,88 @@ describe('CampaignReadService public campaign preview data', () => {
 				amountCollected: 8_233,
 				percentageCollected: 82,
 			},
+		});
+	});
+
+	test('getPublicCampaignStatsByIds converts collected amounts using the campaign currency exchange rate', async () => {
+		const endDate = new Date('2025-07-15T12:00:00.000Z');
+		const { service, campaignFindMany, exchangeRateService } = createService({
+			exchangeRates: { EUR: 0.8 },
+		});
+
+		campaignFindMany.mockResolvedValueOnce([
+			{
+				id: 'campaign-1',
+				endDate,
+				goal: 4_000,
+				currency: 'EUR',
+				additionalAmountChf: 500,
+				contributions: [{ amountChf: 2_000 }],
+			},
+		]);
+
+		const statsById = expectSuccess(await service.getPublicCampaignStatsByIds(['campaign-1']));
+
+		expect(exchangeRateService.getLatestRateForCurrency).toHaveBeenCalledWith('EUR');
+		expect(statsById['campaign-1']).toEqual({
+			contributionsCount: 1,
+			daysLeft: 30,
+			amountCollected: 2_000,
+			percentageCollected: 50,
+		});
+	});
+
+	test('getPublicCampaignStatsByIds reuses an exchange rate for campaigns with the same currency', async () => {
+		const endDate = new Date('2025-07-15T12:00:00.000Z');
+		const { service, campaignFindMany, exchangeRateService } = createService({
+			exchangeRates: { EUR: 0.8 },
+		});
+
+		campaignFindMany.mockResolvedValueOnce([
+			{
+				id: 'campaign-1',
+				endDate,
+				goal: null,
+				currency: 'EUR',
+				additionalAmountChf: null,
+				contributions: [],
+			},
+			{
+				id: 'campaign-2',
+				endDate,
+				goal: null,
+				currency: 'EUR',
+				additionalAmountChf: null,
+				contributions: [],
+			},
+		]);
+
+		expectSuccess(await service.getPublicCampaignStatsByIds(['campaign-1', 'campaign-2']));
+
+		expect(exchangeRateService.getLatestRateForCurrency).toHaveBeenCalledTimes(1);
+		expect(exchangeRateService.getLatestRateForCurrency).toHaveBeenCalledWith('EUR');
+	});
+
+	test('getPublicCampaignStatsByIds falls back to an exchange rate of one when none is available', async () => {
+		const endDate = new Date('2025-07-15T12:00:00.000Z');
+		const { service, campaignFindMany } = createService({ exchangeRates: {} });
+
+		campaignFindMany.mockResolvedValueOnce([
+			{
+				id: 'campaign-1',
+				endDate,
+				goal: 2_000,
+				currency: 'EUR',
+				additionalAmountChf: null,
+				contributions: [{ amountChf: 1_000 }],
+			},
+		]);
+
+		const statsById = expectSuccess(await service.getPublicCampaignStatsByIds(['campaign-1']));
+
+		expect(statsById['campaign-1']).toMatchObject({
+			amountCollected: 1_000,
+			percentageCollected: 50,
 		});
 	});
 
