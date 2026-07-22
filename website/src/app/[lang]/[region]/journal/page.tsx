@@ -14,13 +14,14 @@ export default async function Page({ params, searchParams }: DefaultPageProps) {
 
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
-		namespaces: ['website-journal', 'common'],
+		namespaces: ['website-journal', 'common', 'website-common'],
 	});
 
 	const pageResult = await services.journal.getOverviewPageData(
 		lang,
 		region,
 		{
+			homeLabel: translator.t('breadcrumb.home', { namespace: 'website-common' }),
 			journalLabel: translator.t('overview.title'),
 			overviewTitle: translator.t('overview.title'),
 			overviewDescription: translator.t('overview.description'),

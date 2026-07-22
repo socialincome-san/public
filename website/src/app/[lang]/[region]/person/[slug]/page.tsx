@@ -11,10 +11,16 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-journal', 'common'],
+		namespaces: ['website-journal', 'common', 'website-common'],
 	});
 
-	const pageResult = await services.journal.getPersonPageData(lang, region, slug, translator.t('overview.title'));
+	const pageResult = await services.journal.getPersonPageData(
+		lang,
+		region,
+		slug,
+		translator.t('overview.title'),
+		translator.t('breadcrumb.home', { namespace: 'website-common' }),
+	);
 
 	if (!pageResult.success) {
 		notFound();
