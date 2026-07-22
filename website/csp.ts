@@ -78,6 +78,14 @@ const PRODUCTION_CONNECT_SRC = [
 
 const DEVELOPMENT_CONNECT_SRC_EXTRA = ['http://localhost:*', 'ws://localhost:*'] as const;
 
+/** Firebase Auth/Storage/Functions emulators used by local/e2e production builds. */
+const EMULATOR_CONNECT_SRC_EXTRA = [
+	'http://localhost:*',
+	'ws://localhost:*',
+	'http://127.0.0.1:*',
+	'ws://127.0.0.1:*',
+] as const;
+
 const FRAME_SRC = [
 	"'self'",
 	'https://www.googletagmanager.com',
@@ -99,11 +107,14 @@ const FORM_ACTION = ["'self'"] as const;
 const FRAME_ANCESTORS = ["'self'", 'https://app.storyblok.com'] as const;
 
 export const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== 'production' }: CspOptions = {}) => {
+	const isUsingFirebaseEmulators = Boolean(process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL);
 	const scriptSrc = isDevelopment ? [...PRODUCTION_SCRIPT_SRC, ...DEVELOPMENT_SCRIPT_SRC_EXTRA] : [...PRODUCTION_SCRIPT_SRC];
 
-	const connectSrc = isDevelopment
-		? [...PRODUCTION_CONNECT_SRC, ...DEVELOPMENT_CONNECT_SRC_EXTRA]
-		: [...PRODUCTION_CONNECT_SRC];
+	const connectSrc = [
+		...PRODUCTION_CONNECT_SRC,
+		...(isDevelopment ? DEVELOPMENT_CONNECT_SRC_EXTRA : []),
+		...(isUsingFirebaseEmulators ? EMULATOR_CONNECT_SRC_EXTRA : []),
+	];
 
 	const directives = [
 		`default-src 'self'`,
@@ -119,7 +130,8 @@ export const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_EN
 		`frame-ancestors ${joinSources(FRAME_ANCESTORS)}`,
 		`object-src 'none'`,
 		`base-uri 'self'`,
-		`upgrade-insecure-requests`,
+		// HTTP emulators break when the browser upgrades all requests to HTTPS.
+		...(isUsingFirebaseEmulators ? [] : ['upgrade-insecure-requests']),
 	];
 
 	return directives.join('; ');
