@@ -31,13 +31,13 @@ export const ReferencesGroupBlock = ({ references, context, lang, labels }: Prop
 	const showThumbnails = items.some((item) => Boolean(item.thumbnail?.filename));
 
 	return (
-		<div className="bg-muted/50 border-border my-8 w-full rounded-2xl border p-6">
-			{hasContext && <p className="text-foreground mb-4 text-sm font-medium">{labels.context(context!)}</p>}
+		<div className="bg-card border-border not-prose my-8 w-full rounded-2xl border p-6">
+			{hasContext && <p className="text-foreground mb-4 text-lg">{labels.context(context!)}</p>}
 			<ShowMoreToggle showMoreLabel={labels.showMore} showLessLabel={labels.showLess}>
 				{items.map((reference, index) => (
 					<div key={reference._uid}>
 						{(index > 0 || hasContext) && <hr className="border-border my-4 opacity-60" />}
-						<div className="flex items-center gap-4">
+						<div className="flex items-center gap-3 text-lg">
 							{showThumbnails && <StoryblokAssetThumbnail asset={getThumbnail(reference)} />}
 							<div className="flex min-w-0 flex-col gap-1">
 								<Link
@@ -48,11 +48,17 @@ export const ReferencesGroupBlock = ({ references, context, lang, labels }: Prop
 								>
 									{reference.title}
 								</Link>
-								<p className="text-muted-foreground text-sm">
-									{reference.author && <span>{labels.author(reference.author)}</span>}
+								<p className="text-muted-foreground">
+									{reference.author && (
+										<span>
+											{labels.author(reference.author)}
+											{reference.mediaOutlet && ` (${reference.mediaOutlet})`}
+										</span>
+									)}
+									{!reference.author && reference.mediaOutlet && <span>{reference.mediaOutlet}</span>}
 									{reference.publicationDate && (
 										<span>
-											{reference.author ? ' ' : ''}
+											{reference.author || reference.mediaOutlet ? ' ' : ''}
 											{labels.publicationDate(formatStoryblokDate(reference.publicationDate, lang))}
 										</span>
 									)}

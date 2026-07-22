@@ -20,6 +20,7 @@ type Props = {
 	region: string;
 	pathname: string;
 	moreArticlesLabel: string;
+	videoLabel: string;
 	showMoreArticlesLink: boolean;
 };
 
@@ -32,6 +33,7 @@ export const PersonProfile = ({
 	region,
 	pathname,
 	moreArticlesLabel,
+	videoLabel,
 	showMoreArticlesLink,
 }: Props) => (
 	<JournalPageShell>
@@ -46,7 +48,7 @@ export const PersonProfile = ({
 				</SectionHeading>
 				<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 					{articles.map((article) => (
-						<JournalArticleCard key={article.uuid} lang={lang} region={region} article={article} />
+						<JournalArticleCard key={article.uuid} lang={lang} region={region} article={article} videoLabel={videoLabel} />
 					))}
 				</div>
 			</section>

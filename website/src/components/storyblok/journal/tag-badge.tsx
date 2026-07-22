@@ -24,7 +24,7 @@ export const TagBadge = ({ tag, lang, region, variant = 'default' }: Props) => {
 				'inline-flex rounded-full px-3 py-1 text-sm font-medium capitalize transition-colors',
 				variant === 'hero'
 					? 'text-primary-foreground border-primary-foreground/40 hover:bg-primary-foreground/10 border'
-					: 'bg-muted text-foreground hover:bg-muted/80',
+					: 'text-foreground border-border hover:bg-muted/50 border',
 			)}
 		>
 			{label}
