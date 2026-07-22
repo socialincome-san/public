@@ -27,6 +27,7 @@ const PRODUCTION_SCRIPT_SRC = [
 	'https://connect.facebook.net',
 	'https://snap.licdn.com',
 	'https://js.stripe.com',
+	'https://checkout.stripe.com',
 	'https://app.storyblok.com',
 ] as const;
 
@@ -67,6 +68,7 @@ const PRODUCTION_CONNECT_SRC = [
 	'https://connect.facebook.net',
 	'https://px.ads.linkedin.com',
 	'https://api.stripe.com',
+	'https://checkout.stripe.com',
 	'https://r.stripe.com',
 	'https://q.stripe.com',
 	'https://o4507045017026560.ingest.us.sentry.io',
@@ -80,6 +82,7 @@ const FRAME_SRC = [
 	"'self'",
 	'https://www.googletagmanager.com',
 	'https://js.stripe.com',
+	'https://checkout.stripe.com',
 	'https://hooks.stripe.com',
 	'https://player.vimeo.com',
 	'https://www.youtube.com',

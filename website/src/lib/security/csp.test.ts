@@ -47,6 +47,7 @@ describe('buildContentSecurityPolicy', () => {
 		const policy = buildContentSecurityPolicy({ isDevelopment: false });
 
 		expect(policy).toContain('https://js.stripe.com');
+		expect(policy).toContain('https://checkout.stripe.com');
 		expect(policy).toContain('https://www.googletagmanager.com');
 		expect(policy).toContain('https://connect.facebook.net');
 		expect(policy).toContain('https://snap.licdn.com');
