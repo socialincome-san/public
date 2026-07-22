@@ -35,14 +35,14 @@ export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, tran
 				</div>
 			) : (
 				<div className="w-site-width max-w-content mx-auto space-y-8 px-4 pt-8 sm:px-0 sm:pt-10">
-					<JournalBreadcrumb links={breadcrumbs} />
+					<JournalBreadcrumb links={breadcrumbs} className="mb-8 pl-0" />
 					<ArticleDetailHeader story={story} hasHero={false} lang={lang} region={region} />
 				</div>
 			)}
 
 			<div className="w-site-width max-w-content mx-auto px-4 py-8 sm:px-0 sm:py-10">
 				<div className="mx-auto max-w-2xl space-y-10">
-					{hasHero && heroImageSrc && <JournalBreadcrumb links={breadcrumbs} />}
+					{hasHero && heroImageSrc && <JournalBreadcrumb links={breadcrumbs} className="mb-10 pl-0" />}
 					<ArticleDetailBody story={story} slug={slug} lang={lang} region={region} translator={translator} />
 				</div>
 			</div>
