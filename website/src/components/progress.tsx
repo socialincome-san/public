@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils/cn';
 
-type ProgressVariant = 'default' | 'urgent';
+type ProgressVariant = 'default' | 'urgent' | 'onDark';
 
 type ProgressProps = {
 	value?: number;
@@ -20,10 +20,13 @@ const Progress = ({ className, value = 0, variant = 'default' }: ProgressProps) 
 	const indicatorClass =
 		variant === 'urgent'
 			? 'bg-destructive'
-			: 'bg-[linear-gradient(to_right,hsl(var(--gradient-button-from)),hsl(var(--gradient-button-to)))]';
+			: variant === 'onDark'
+				? 'bg-white'
+				: 'bg-[linear-gradient(to_right,hsl(var(--gradient-button-from)),hsl(var(--gradient-button-to)))]';
+	const trackClass = variant === 'onDark' ? 'bg-white/40' : 'bg-primary/20';
 
 	return (
-		<div data-slot="progress" className={cn('bg-primary/20 relative h-2 w-full overflow-hidden rounded-full', className)}>
+		<div data-slot="progress" className={cn('relative h-2 w-full overflow-hidden rounded-full', trackClass, className)}>
 			<div
 				data-slot="progress-indicator"
 				className={cn('h-full transition-all', indicatorClass)}

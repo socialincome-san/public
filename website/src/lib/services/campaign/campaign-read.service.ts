@@ -1,4 +1,4 @@
-import { Campaign, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { Campaign, Currency, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
 import { nowMs } from '@/lib/utils/now';
@@ -69,6 +69,38 @@ export class CampaignReadService extends BaseService {
 		const diffInMs = ts.getTime() - nowMs();
 
 		return Math.ceil(diffInMs / (24 * 60 * 60 * 1000));
+	}
+
+	private async getExchangeRate(currency: Currency, cache: Map<Currency, number>): Promise<number> {
+		const cachedRate = cache.get(currency);
+		if (cachedRate !== undefined) {
+			return cachedRate;
+		}
+
+		const exchangeRateResult = await this.exchangeRateService.getLatestRateForCurrency(currency);
+		const rate = exchangeRateResult.success ? exchangeRateResult.data.rate : 1.0;
+		cache.set(currency, rate);
+
+		return rate;
+	}
+
+	private async computeCollectedAmount(
+		contributions: { amountChf: unknown }[],
+		additionalAmountChf: unknown,
+		currency: Currency,
+		goal: unknown,
+		cache: Map<Currency, number>,
+	): Promise<{ amountCollected: number; percentageCollected: number | null }> {
+		const exchangeRate = await this.getExchangeRate(currency, cache);
+
+		let amountCollected = contributions.reduce((sum, contribution) => sum + Number(contribution.amountChf), 0);
+		amountCollected += Number(additionalAmountChf) || 0;
+		amountCollected *= exchangeRate;
+
+		const goalAmount = goal ? Number(goal) : null;
+		const percentageCollected = goalAmount ? Math.round((amountCollected / goalAmount) * 100) : null;
+
+		return { amountCollected, percentageCollected };
 	}
 
 	async get(userId: string, campaignId: string): Promise<ServiceResult<CampaignPayload>> {
@@ -309,6 +341,8 @@ export class CampaignReadService extends BaseService {
 					id: true,
 					title: true,
 					slug: true,
+					creatorName: true,
+					currency: true,
 					featured: true,
 					createdAt: true,
 				},
@@ -327,6 +361,8 @@ export class CampaignReadService extends BaseService {
 					id: campaign.id,
 					title: campaign.title,
 					slug: campaignSlug,
+					creatorName: campaign.creatorName,
+					currency: campaign.currency,
 				});
 			}
 
@@ -350,19 +386,28 @@ export class CampaignReadService extends BaseService {
 				select: {
 					id: true,
 					endDate: true,
-					_count: {
-						select: {
-							contributions: true,
-						},
-					},
+					goal: true,
+					currency: true,
+					additionalAmountChf: true,
+					contributions: { select: { amountChf: true } },
 				},
 			});
 
+			const exchangeRateCache = new Map<Currency, number>();
 			const statsById: PublicCampaignStatsMap = {};
 			for (const campaign of campaigns) {
+				const { amountCollected, percentageCollected } = await this.computeCollectedAmount(
+					campaign.contributions,
+					campaign.additionalAmountChf,
+					campaign.currency,
+					campaign.goal,
+					exchangeRateCache,
+				);
 				const stats: PublicCampaignStats = {
-					contributionsCount: campaign._count.contributions,
+					contributionsCount: campaign.contributions.length,
 					daysLeft: Math.max(0, this.daysUntilTs(campaign.endDate)),
+					amountCollected,
+					percentageCollected,
 				};
 				statsById[campaign.id] = stats;
 			}
