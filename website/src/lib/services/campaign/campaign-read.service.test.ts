@@ -6,6 +6,7 @@ import { CampaignReadService } from './campaign-read.service';
 
 jest.mock('@/generated/prisma/client', () => ({
 	Currency: { CHF: 'CHF', EUR: 'EUR' },
+	ContributionStatus: { succeeded: 'succeeded' },
 	Prisma: {},
 	PrismaClient: class {},
 	ProgramPermission: { operator: 'operator', owner: 'owner' },
@@ -210,9 +211,61 @@ describe('CampaignReadService public campaign preview data', () => {
 		expect(exchangeRateService.getLatestRateForCurrency).toHaveBeenCalledWith('EUR');
 	});
 
-	test('getPublicCampaignStatsByIds falls back to an exchange rate of one when none is available', async () => {
+	test('getPublicCampaignStatsByIds omits monetary stats when a non-CHF exchange rate is unavailable', async () => {
 		const endDate = new Date('2025-07-15T12:00:00.000Z');
-		const { service, campaignFindMany } = createService({ exchangeRates: {} });
+		const { service, campaignFindMany, exchangeRateService } = createService({ exchangeRates: {} });
+
+		campaignFindMany.mockResolvedValueOnce([
+			{
+				id: 'campaign-1',
+				endDate,
+				goal: 2_000,
+				currency: 'EUR',
+				additionalAmountChf: null,
+				contributions: [{ amountChf: 1_000 }],
+			},
+		]);
+
+		const statsById = expectSuccess(await service.getPublicCampaignStatsByIds(['campaign-1']));
+
+		expect(exchangeRateService.getLatestRateForCurrency).toHaveBeenCalledWith('EUR');
+		expect(statsById['campaign-1']).toEqual({
+			contributionsCount: 1,
+			daysLeft: 30,
+			amountCollected: null,
+			percentageCollected: null,
+		});
+	});
+
+	test('getPublicCampaignStatsByIds uses rate one for CHF without an exchange-rate lookup', async () => {
+		const endDate = new Date('2025-07-15T12:00:00.000Z');
+		const { service, campaignFindMany, exchangeRateService } = createService({ exchangeRates: {} });
+
+		campaignFindMany.mockResolvedValueOnce([
+			{
+				id: 'campaign-1',
+				endDate,
+				goal: 2_000,
+				currency: 'CHF',
+				additionalAmountChf: null,
+				contributions: [{ amountChf: 1_000 }],
+			},
+		]);
+
+		const statsById = expectSuccess(await service.getPublicCampaignStatsByIds(['campaign-1']));
+
+		expect(exchangeRateService.getLatestRateForCurrency).not.toHaveBeenCalled();
+		expect(statsById['campaign-1']).toEqual({
+			contributionsCount: 1,
+			daysLeft: 30,
+			amountCollected: 1_000,
+			percentageCollected: 50,
+		});
+	});
+
+	test('getPublicCampaignStatsByIds omits monetary stats when a non-CHF exchange rate is invalid', async () => {
+		const endDate = new Date('2025-07-15T12:00:00.000Z');
+		const { service, campaignFindMany } = createService({ exchangeRates: { EUR: 0 } });
 
 		campaignFindMany.mockResolvedValueOnce([
 			{
@@ -228,8 +281,8 @@ describe('CampaignReadService public campaign preview data', () => {
 		const statsById = expectSuccess(await service.getPublicCampaignStatsByIds(['campaign-1']));
 
 		expect(statsById['campaign-1']).toMatchObject({
-			amountCollected: 1_000,
-			percentageCollected: 50,
+			amountCollected: null,
+			percentageCollected: null,
 		});
 	});
 

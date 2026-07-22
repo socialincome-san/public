@@ -78,14 +78,25 @@ export class CampaignReadService extends BaseService {
 		return Math.ceil(diffInMs / (24 * 60 * 60 * 1000));
 	}
 
-	private async getExchangeRate(currency: Currency, cache: Map<Currency, number>): Promise<number> {
+	private isValidExchangeRate(rate: number): boolean {
+		return Number.isFinite(rate) && rate > 0;
+	}
+
+	private async getExchangeRate(currency: Currency, cache: Map<Currency, number | null>): Promise<number | null> {
+		if (currency === Currency.CHF) {
+			return 1;
+		}
+
 		const cachedRate = cache.get(currency);
 		if (cachedRate !== undefined) {
 			return cachedRate;
 		}
 
 		const exchangeRateResult = await this.exchangeRateService.getLatestRateForCurrency(currency);
-		const rate = exchangeRateResult.success ? exchangeRateResult.data.rate : 1.0;
+		const rate =
+			exchangeRateResult.success && this.isValidExchangeRate(exchangeRateResult.data.rate)
+				? exchangeRateResult.data.rate
+				: null;
 		cache.set(currency, rate);
 
 		return rate;
@@ -96,9 +107,12 @@ export class CampaignReadService extends BaseService {
 		additionalAmountChf: unknown,
 		currency: Currency,
 		goal: unknown,
-		cache: Map<Currency, number>,
-	): Promise<{ amountCollected: number; percentageCollected: number | null }> {
+		cache: Map<Currency, number | null>,
+	): Promise<{ amountCollected: number | null; percentageCollected: number | null }> {
 		const exchangeRate = await this.getExchangeRate(currency, cache);
+		if (exchangeRate === null) {
+			return { amountCollected: null, percentageCollected: null };
+		}
 
 		let amountCollected = contributions.reduce((sum, contribution) => sum + Number(contribution.amountChf), 0);
 		amountCollected += Number(additionalAmountChf) || 0;
@@ -209,14 +223,13 @@ export class CampaignReadService extends BaseService {
 				return this.resultFail('Campaign not found');
 			}
 
-			const exchangeRateRes = await this.exchangeRateService.getLatestRateForCurrency(campaign.currency);
-			const exchangeRate = exchangeRateRes.success ? exchangeRateRes.data.rate : 1.0;
-
-			let amountCollected = campaign.contributions?.reduce((sum, c) => sum + Number(c.amountChf), 0) || 0;
-			amountCollected += Number(campaign.additionalAmountChf) || 0;
-			amountCollected *= exchangeRate;
-
-			const percentageCollected = campaign.goal ? Math.round((amountCollected / Number(campaign.goal)) * 100) : null;
+			const { amountCollected, percentageCollected } = await this.computeCollectedAmount(
+				campaign.contributions,
+				campaign.additionalAmountChf,
+				campaign.currency,
+				campaign.goal,
+				new Map(),
+			);
 			const daysLeft = this.daysUntilTs(campaign.endDate);
 
 			return this.resultOk({
@@ -279,14 +292,13 @@ export class CampaignReadService extends BaseService {
 				return this.resultFail('Campaign not found');
 			}
 
-			const exchangeRateRes = await this.exchangeRateService.getLatestRateForCurrency(campaign.currency);
-			const exchangeRate = exchangeRateRes.success ? exchangeRateRes.data.rate : 1.0;
-
-			let amountCollected = campaign.contributions?.reduce((sum, c) => sum + Number(c.amountChf), 0) || 0;
-			amountCollected += Number(campaign.additionalAmountChf) || 0;
-			amountCollected *= exchangeRate;
-
-			const percentageCollected = campaign.goal ? Math.round((amountCollected / Number(campaign.goal)) * 100) : null;
+			const { amountCollected, percentageCollected } = await this.computeCollectedAmount(
+				campaign.contributions,
+				campaign.additionalAmountChf,
+				campaign.currency,
+				campaign.goal,
+				new Map(),
+			);
 			const daysLeft = this.daysUntilTs(campaign.endDate);
 
 			return this.resultOk({
@@ -403,7 +415,7 @@ export class CampaignReadService extends BaseService {
 				},
 			});
 
-			const exchangeRateCache = new Map<Currency, number>();
+			const exchangeRateCache = new Map<Currency, number | null>();
 			const statsById: PublicCampaignStatsMap = {};
 			for (const campaign of campaigns) {
 				const { amountCollected, percentageCollected } = await this.computeCollectedAmount(

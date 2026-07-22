@@ -59,7 +59,7 @@ export type CampaignPayload = {
 
 export type CampaignPage = CampaignPayload & {
 	numberOfContributions: number;
-	amountCollected: number;
+	amountCollected: number | null;
 	percentageCollected: number | null;
 	daysLeft: number;
 };
@@ -77,7 +77,7 @@ export type PublicCampaignCard = {
 export type PublicCampaignStats = {
 	contributionsCount: number;
 	daysLeft: number;
-	amountCollected: number;
+	amountCollected: number | null;
 	percentageCollected: number | null;
 };
 

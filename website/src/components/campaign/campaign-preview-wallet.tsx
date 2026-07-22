@@ -57,7 +57,7 @@ export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Prop
 									})}
 								</p>
 							) : null}
-							{stats ? (
+							{stats?.amountCollected != null ? (
 								<p className="text-4xl font-normal drop-shadow-sm lg:text-5xl xl:text-6xl">
 									{formatNumberLocale(stats.amountCollected, locale)}
 								</p>
