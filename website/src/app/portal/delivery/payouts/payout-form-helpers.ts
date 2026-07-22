@@ -7,6 +7,7 @@ export const buildCreatePayoutInput = (schema: PayoutFormSchema): PayoutFormCrea
 	return {
 		recipientId: schema.fields.recipientId.value,
 		amount: schema.fields.amount.value,
+		amountChf: schema.fields.amountChf.value ?? null,
 		currency: schema.fields.currency.value,
 		paymentAt: schema.fields.paymentAt.value,
 		status: schema.fields.status.value,
@@ -20,6 +21,7 @@ export const buildUpdatePayoutInput = (schema: PayoutFormSchema, existing: Payou
 		id: existing.id,
 		recipientId: existing.recipient.id,
 		amount: schema.fields.amount.value,
+		amountChf: schema.fields.amountChf.value ?? null,
 		currency: schema.fields.currency.value,
 		paymentAt: schema.fields.paymentAt.value,
 		status: schema.fields.status.value,
