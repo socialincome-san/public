@@ -110,7 +110,7 @@ export const clickDataTableActionItem = async (page: Page, actionItemTestId: str
 	// If there's only one action, we render a primary button directly instead of the dropdown
 	if ((await actionButton.count()) === 0) {
 		await page.getByTestId(actionItemTestId).click();
-		
+
 		return;
 	}
 
