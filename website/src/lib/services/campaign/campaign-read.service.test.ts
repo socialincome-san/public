@@ -404,17 +404,6 @@ describe('CampaignReadService public campaign preview data', () => {
 	test('getPublicCampaignsWithStats returns empty stats map when stats query fails', async () => {
 		const { service, campaignFindMany } = createService();
 
-		campaignFindMany.mockResolvedValueOnce([
-			{
-				id: 'campaign-1',
-				title: 'Holiday Fundraiser',
-				slug: 'holiday-fundraiser',
-				creatorName: 'smartive AG',
-				currency: 'CHF',
-				featured: true,
-				createdAt: new Date('2025-01-01T00:00:00.000Z'),
-			},
-		]);
 		campaignFindMany.mockRejectedValueOnce(new Error('stats unavailable'));
 
 		const allResult = expectSuccess(
