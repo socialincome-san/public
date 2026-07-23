@@ -9,8 +9,9 @@ import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
-export default async function CampaignsOverviewRoute({ params }: DefaultPageProps) {
+export default async function CampaignsOverviewRoute({ params, searchParams }: DefaultPageProps) {
 	const { lang, region } = await params;
+	const resolvedSearchParams = await searchParams;
 	const overviewResult = await services.storyblok.getStoryWithFallback<ISbStoryData<CampaignOverview>>(
 		getCampaignsOverviewStoryPath(),
 		lang,
@@ -21,6 +22,11 @@ export default async function CampaignsOverviewRoute({ params }: DefaultPageProp
 	}
 
 	return (
-		<CampaignsOverviewPage overview={overviewResult.data} lang={lang as WebsiteLanguage} region={region as WebsiteRegion} />
+		<CampaignsOverviewPage
+			overview={overviewResult.data}
+			lang={lang as WebsiteLanguage}
+			region={region as WebsiteRegion}
+			searchParams={resolvedSearchParams}
+		/>
 	);
 }
