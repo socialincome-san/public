@@ -59,22 +59,29 @@ export type CampaignPayload = {
 
 export type CampaignPage = CampaignPayload & {
 	numberOfContributions: number;
-	amountCollected: number;
+	amountCollected: number | null;
 	percentageCollected: number | null;
 	daysLeft: number;
 };
 
 export type CampaignOption = { id: string; name: string };
 
+export type PublicCampaignActivity = 'active' | 'inactive' | 'all';
+
 export type PublicCampaignCard = {
 	id: string;
 	title: string;
 	slug: string;
+	creatorName: string | null;
+	currency: Currency;
+	isActive: boolean;
 };
 
 export type PublicCampaignStats = {
 	contributionsCount: number;
 	daysLeft: number;
+	amountCollected: number | null;
+	percentageCollected: number | null;
 };
 
 export type PublicCampaignStatsMap = Record<string, PublicCampaignStats>;
