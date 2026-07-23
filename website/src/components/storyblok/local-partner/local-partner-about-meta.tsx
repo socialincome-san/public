@@ -5,6 +5,7 @@ import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
+import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
 type ExternalLink = {
@@ -113,18 +114,19 @@ export const LocalPartnerAboutMetaCard = ({
 				</div>
 
 				{resolvedExternalLinks.length > 0 ? (
-					<div>
-						<p className="text-muted-foreground text-sm font-bold">Online</p>
-						<div className="mt-3 flex flex-wrap gap-2">
+					<div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+						<p className="text-muted-foreground text-sm">Learn more</p>
+						<div className="flex flex-wrap gap-2">
 							{resolvedExternalLinks.map(({ label, href }) => (
 								<Link
 									key={label}
 									href={href}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-foreground border-border bg-muted/50 hover:bg-muted rounded-full border px-3 py-1 text-sm font-medium transition-colors"
+									className="text-foreground border-border bg-muted/50 hover:bg-muted flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium transition-colors"
 								>
 									{label}
+									<ArrowUpRight className="size-3" aria-hidden="true" />
 								</Link>
 							))}
 						</div>
