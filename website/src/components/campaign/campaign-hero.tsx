@@ -13,6 +13,7 @@ type Props = {
 export const CampaignHero = ({ campaign, translator, lang }: Props) => {
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
 	const showProgress = campaign.percentageCollected !== null && campaign.percentageCollected !== undefined;
+	const showAmount = campaign.amountCollected !== null;
 
 	return (
 		<section className="w-site-width max-w-content mx-auto px-6 py-12 md:py-16">
@@ -24,7 +25,7 @@ export const CampaignHero = ({ campaign, translator, lang }: Props) => {
 					<h1 className="text-primary text-5xl font-bold md:text-6xl">{campaign.title}</h1>
 					<p className="text-foreground text-lg">{campaign.description}</p>
 
-					{!hasGoal && (
+					{!hasGoal && showAmount && (
 						<p className="text-primary text-xl font-bold">
 							{translator.t('campaign.without-goal.collected', {
 								context: {
