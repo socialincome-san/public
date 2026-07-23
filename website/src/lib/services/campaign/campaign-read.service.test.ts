@@ -27,7 +27,6 @@ const expectSuccess = <T>(result: ServiceResult<T>) => {
 
 const createService = ({
 	campaigns = [],
-	statsCampaigns = [],
 	exchangeRates = { CHF: 1, EUR: 1 },
 }: {
 	campaigns?: {
@@ -40,14 +39,6 @@ const createService = ({
 		createdAt: Date;
 		isActive: boolean;
 	}[];
-	statsCampaigns?: {
-		id: string;
-		endDate: Date;
-		goal: number | null;
-		currency: 'CHF' | 'EUR';
-		additionalAmountChf: number | null;
-		contributions: { amountChf: number }[];
-	}[];
 	exchangeRates?: Partial<Record<Currency, number>>;
 } = {}) => {
 	const campaignFindMany = jest.fn().mockResolvedValue(campaigns);
@@ -58,11 +49,14 @@ const createService = ({
 	};
 
 	const exchangeRateService = {
-		getLatestRateForCurrency: jest.fn(async (currency: Currency) => {
+		getLatestRateForCurrency: jest.fn((currency: Currency) => {
 			const rate = exchangeRates[currency];
-			return rate === undefined
-				? { success: false as const, error: 'No exchange rate found' }
-				: { success: true as const, data: { currency, rate } };
+
+			return Promise.resolve(
+				rate === undefined
+					? { success: false as const, error: 'No exchange rate found' }
+					: { success: true as const, data: { currency, rate } },
+			);
 		}),
 	};
 
@@ -73,7 +67,7 @@ const createService = ({
 		exchangeRateService as unknown as ExchangeRateReadService,
 	);
 
-	return { service, campaignFindMany, exchangeRateService, statsCampaigns };
+	return { service, campaignFindMany, exchangeRateService };
 };
 
 describe('CampaignReadService public campaign preview data', () => {
@@ -105,11 +99,8 @@ describe('CampaignReadService public campaign preview data', () => {
 
 		const campaigns = expectSuccess(await service.getPublicCampaigns());
 
-		expect(campaignFindMany).toHaveBeenCalledWith(
-			expect.objectContaining({
-				where: expect.objectContaining({ isActive: true }),
-			}),
-		);
+		const [[callArg]] = campaignFindMany.mock.calls as unknown as [{ where?: Record<string, unknown> }][];
+		expect(callArg.where).toMatchObject({ isActive: true });
 		expect(campaigns).toEqual([
 			{
 				id: 'campaign-1',
@@ -150,11 +141,8 @@ describe('CampaignReadService public campaign preview data', () => {
 
 		const campaigns = expectSuccess(await service.getPublicCampaigns({ activity: 'all' }));
 
-		expect(campaignFindMany).toHaveBeenCalledWith(
-			expect.objectContaining({
-				where: expect.not.objectContaining({ isActive: expect.anything() }),
-			}),
-		);
+		const [[callArg]] = campaignFindMany.mock.calls as unknown as [{ where?: Record<string, unknown> }][];
+		expect(callArg.where).not.toHaveProperty('isActive');
 		expect(campaigns).toEqual([
 			{
 				id: 'campaign-1',
@@ -193,11 +181,8 @@ describe('CampaignReadService public campaign preview data', () => {
 
 		const campaigns = expectSuccess(await service.getPublicCampaigns({ activity: 'inactive' }));
 
-		expect(campaignFindMany).toHaveBeenCalledWith(
-			expect.objectContaining({
-				where: expect.objectContaining({ isActive: false }),
-			}),
-		);
+		const [[callArg]] = campaignFindMany.mock.calls as unknown as [{ where?: Record<string, unknown> }][];
+		expect(callArg.where).toMatchObject({ isActive: false });
 		expect(campaigns).toEqual([
 			{
 				id: 'campaign-2',
@@ -212,18 +197,7 @@ describe('CampaignReadService public campaign preview data', () => {
 
 	test('getPublicCampaignStatsByIds computes collected amount and percentage', async () => {
 		const endDate = new Date('2025-07-15T12:00:00.000Z');
-		const { service, campaignFindMany } = createService({
-			statsCampaigns: [
-				{
-					id: 'campaign-1',
-					endDate,
-					goal: 10_000,
-					currency: 'CHF',
-					additionalAmountChf: 500,
-					contributions: [{ amountChf: 2_000 }, { amountChf: 5_733 }],
-				},
-			],
-		});
+		const { service, campaignFindMany } = createService();
 
 		campaignFindMany.mockResolvedValueOnce([
 			{

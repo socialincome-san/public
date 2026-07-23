@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils/cn';
 import { ChevronDown } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-export type FilterOption = {
+type FilterOption = {
 	value: string;
 	label: string;
 };

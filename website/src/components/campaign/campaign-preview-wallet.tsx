@@ -2,6 +2,7 @@ import { Progress } from '@/components/progress';
 import type { TranslateFunction } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import type { PublicCampaignCard, PublicCampaignStats } from '@/lib/services/campaign/campaign.types';
+import { cn } from '@/lib/utils/cn';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import NextImage from 'next/image';
 import Link from 'next/link';
@@ -27,9 +28,10 @@ export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Prop
 
 	const content = (
 		<article
-			className={`relative flex h-full min-h-[400px] flex-col overflow-hidden rounded-xl shadow-lg${
-				campaign.isActive ? ' transition-transform group-hover:-translate-y-1 group-hover:shadow-xl' : ''
-			}`}
+			className={cn(
+				'relative flex h-full min-h-[400px] flex-col overflow-hidden rounded-xl shadow-lg',
+				campaign.isActive && 'transition-transform group-hover:-translate-y-1 group-hover:shadow-xl',
+			)}
 			data-testid="campaign-preview-wallet"
 		>
 			<NextImage
@@ -58,7 +60,7 @@ export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Prop
 								})}
 							</p>
 						) : null}
-						{stats?.amountCollected != null ? (
+						{stats?.amountCollected !== null && stats?.amountCollected !== undefined ? (
 							<p className="text-4xl font-normal drop-shadow-sm lg:text-5xl xl:text-6xl">
 								{formatNumberLocale(stats.amountCollected, locale)}
 							</p>

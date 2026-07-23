@@ -1,11 +1,4 @@
-import {
-	Campaign,
-	ContributionStatus,
-	Currency,
-	Prisma,
-	PrismaClient,
-	ProgramPermission,
-} from '@/generated/prisma/client';
+import { Campaign, ContributionStatus, Currency, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
 import { nowMs } from '@/lib/utils/now';

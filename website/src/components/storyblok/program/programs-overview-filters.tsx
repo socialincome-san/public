@@ -1,11 +1,7 @@
 'use client';
 
 import { FilterDropdown } from '@/components/filters/filter-dropdown';
-import {
-	COUNTRY_QUERY_KEY,
-	FOCUS_QUERY_KEY,
-	type QueryParamOverride,
-} from './programs-overview-query';
+import { COUNTRY_QUERY_KEY, FOCUS_QUERY_KEY, type QueryParamOverride } from './programs-overview-query';
 
 type FilterOption = {
 	value: string;
