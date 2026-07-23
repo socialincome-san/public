@@ -1,10 +1,13 @@
+import { AppStoreIcon } from '@/components/svg/app-store';
 import { ContactIcon } from '@/components/svg/contact';
 import { FacebookIcon } from '@/components/svg/facebook';
 import { GithubIcon } from '@/components/svg/github';
+import { GooglePlayIcon } from '@/components/svg/google-play';
 import { InstagramIcon } from '@/components/svg/instagram';
 import { LinkedinIcon } from '@/components/svg/linkedin';
 import { PaperPlaneIcon } from '@/components/svg/paper-plane';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
+import { YoutubeIcon } from '@/components/svg/youtube';
 import { Layout, MenuItem } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
@@ -28,6 +31,9 @@ const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.Componen
 	github: GithubIcon,
 	newsletter: PaperPlaneIcon,
 	contact: ContactIcon,
+	'google-play': GooglePlayIcon,
+	'app-store': AppStoreIcon,
+	youtube: YoutubeIcon,
 };
 
 export const Footer = async ({ lang, region }: Props) => {
