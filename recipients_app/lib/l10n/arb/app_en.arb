@@ -311,5 +311,6 @@
     "offlineBanner": "No internet connection",
     "offlineMutationError": "This action requires an internet connection",
     "offlineBannerMessage": "You are offline. Showing cached data.",
-    "openGoogleSupportPageUpdatePlayStore" : "Open Support Page"
+    "openGoogleSupportPageUpdatePlayStore" : "Open Support Page",
+    "appAttestationFailedError" : "Firebase AppCheck: App attestation failed."
 }

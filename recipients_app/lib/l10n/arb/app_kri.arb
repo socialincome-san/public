@@ -317,5 +317,6 @@
     "offlineBanner": "Nɔ intanɛt kɔnɛkshɔn",
     "offlineMutationError": "Dis akshɔn nid intanɛt kɔnɛkshɔn",
     "offlineBannerMessage": "Yu de ɔflayna. Sho di data we dɛn dɔn kech.",
-    "openGoogleSupportPageUpdatePlayStore" : "Opin Sɔpɔt Pej"
+    "openGoogleSupportPageUpdatePlayStore" : "Opin Sɔpɔt Pej",
+    "appAttestationFailedError" : "Firebase AppCheck: App attestation failed."
 }

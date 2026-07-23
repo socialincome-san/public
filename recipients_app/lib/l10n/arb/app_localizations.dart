@@ -1573,6 +1573,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open Support Page'**
   String get openGoogleSupportPageUpdatePlayStore;
+
+  /// No description provided for @appAttestationFailedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Firebase AppCheck: App attestation failed.'**
+  String get appAttestationFailedError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
