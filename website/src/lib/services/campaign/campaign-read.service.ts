@@ -209,7 +209,10 @@ export class CampaignReadService extends BaseService {
 					program: { select: { id: true, name: true } },
 					createdAt: true,
 					updatedAt: true,
-					contributions: { select: { id: true, amount: true, amountChf: true } },
+					contributions: {
+						where: { status: ContributionStatus.succeeded },
+						select: { id: true, amount: true, amountChf: true },
+					},
 				},
 			});
 
@@ -278,7 +281,10 @@ export class CampaignReadService extends BaseService {
 					program: { select: { id: true, name: true } },
 					createdAt: true,
 					updatedAt: true,
-					contributions: { select: { id: true, amount: true, amountChf: true } },
+					contributions: {
+						where: { status: ContributionStatus.succeeded },
+						select: { id: true, amount: true, amountChf: true },
+					},
 				},
 			});
 
