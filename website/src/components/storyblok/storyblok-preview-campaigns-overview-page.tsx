@@ -30,6 +30,8 @@ export const StoryblokPreviewCampaignsOverviewPage = async ({
 
 			return storyResult.success ? storyResult.data : null;
 		},
-		renderStory: (overview) => <CampaignsOverviewPage overview={overview} lang={lang} region={region} />,
+		renderStory: (overview) => (
+			<CampaignsOverviewPage overview={overview} lang={lang} region={region} searchParams={searchParams} />
+		),
 	});
 };
