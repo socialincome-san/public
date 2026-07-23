@@ -177,7 +177,13 @@
 		"contribution-plural": "contributions",
 		"day-left-singular": "day left",
 		"day-left-plural": "days left",
-		"about": "About"
+		"raised-percentage": "{{ percentage }}% raised ({{ currency }})",
+		"about": "About",
+		"all-states": "All",
+		"state-active": "Active",
+		"state-inactive": "Inactive",
+		"create-campaign": "Create campaign",
+		"coming-soon": "Coming soon"
 	},
 	"breadcrumb": {
 		"home": "Home"
