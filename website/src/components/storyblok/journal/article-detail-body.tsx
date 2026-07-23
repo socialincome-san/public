@@ -42,7 +42,7 @@ export const ArticleDetailBody = ({ story, slug, lang, region, translator }: Pro
 			</div>
 
 			{article.footnotes && (
-				<div className="prose prose-neutral text-muted-foreground max-w-none text-sm">
+				<div className="prose prose-neutral text-muted-foreground [&_li::marker]:text-muted-foreground! **:text-md! max-w-none **:leading-snug! [&_a]:[font-weight:inherit]! [&_a]:text-inherit! [&_ol]:my-1! [&_p]:my-1! [&_ul]:my-1!">
 					<ArticleRichText
 						document={article.footnotes as StoryblokRichtext}
 						lang={lang}
