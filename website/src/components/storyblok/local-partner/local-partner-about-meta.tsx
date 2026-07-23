@@ -127,6 +127,7 @@ export const LocalPartnerAboutMetaCard = ({
 								>
 									{label}
 									<ArrowUpRight className="size-3" aria-hidden="true" />
+									<span className="sr-only"> (opens in a new tab)</span>
 								</Link>
 							))}
 						</div>
