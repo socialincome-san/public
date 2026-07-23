@@ -81,8 +81,8 @@ export const FilterDropdown = ({
 						isHighlighted && 'bg-input hover:bg-input',
 					)}
 				>
-					<span className="truncate">{buttonLabel}</span>
-					<ChevronDown className="text-foreground size-4 opacity-70" />
+					<span className="min-w-0 truncate">{buttonLabel}</span>
+					<ChevronDown className="text-foreground size-4 shrink-0 opacity-70" />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="start" className="bg-popover w-56">
