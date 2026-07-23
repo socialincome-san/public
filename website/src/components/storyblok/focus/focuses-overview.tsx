@@ -59,7 +59,7 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 			<div className="flex w-full flex-col gap-8">
 				<CmsHeader title={title} text={text} />
 				<div className="flex flex-wrap items-center justify-between gap-4">
-					<div className="flex min-h-10 flex-1 flex-wrap items-center gap-2">
+					<div className="flex min-h-10 flex-1 flex-nowrap items-center gap-2">
 						<FocusesOverviewCountryFilter
 							allCountriesLabel={translator.t('focuses-page.all-countries', {
 								context: { count: countryOptions.length },
