@@ -87,6 +87,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 					muted={isMuted}
 					autoPlay={!disableAutoplay}
 					playsInline
+					crossOrigin="anonymous"
 					onPlay={() => setIsPlaying(true)}
 					onPause={() => setIsPlaying(false)}
 				>

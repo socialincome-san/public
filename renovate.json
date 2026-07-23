@@ -1,6 +1,10 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"extends": ["github>smartive/renovate-config:best-practices-lib"],
+	"extends": [
+		"github>smartive/renovate-config:best-practices-lib",
+		"schedule:nonOfficeHours"
+	],
+	"timezone": "Europe/Zurich",
 	"ignorePaths": ["recipients_app/**"],
 	"automerge": true,
 	"automergeType": "pr",
