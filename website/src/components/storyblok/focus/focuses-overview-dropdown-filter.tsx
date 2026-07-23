@@ -42,11 +42,11 @@ export const FocusesOverviewDropdownFilter = ({ allOptionsLabel, options, queryK
 					type="button"
 					variant="outline"
 					className={cn(
-						'text-foreground border-border bg-card hover:bg-card h-10 px-4 text-sm font-medium',
+						'text-foreground border-border bg-card hover:bg-card h-10 min-w-0 flex-auto justify-between px-4 text-sm font-medium',
 						isActive && 'bg-input hover:bg-input',
 					)}
 				>
-					{buttonLabel}
+					<span className="truncate">{buttonLabel}</span>
 					<ChevronDown className="text-foreground size-4 opacity-70" />
 				</Button>
 			</DropdownMenuTrigger>
