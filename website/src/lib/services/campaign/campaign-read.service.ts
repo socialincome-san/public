@@ -22,6 +22,7 @@ import {
 	CampaignPayload,
 	CampaignTableQuery,
 	CampaignTableViewRow,
+	PublicCampaignActivity,
 	PublicCampaignCard,
 	PublicCampaignStats,
 	PublicCampaignStatsMap,
@@ -348,11 +349,23 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
-	async getPublicCampaigns(): Promise<ServiceResult<PublicCampaignCard[]>> {
+	private buildPublicCampaignActivityWhere(
+		activity: PublicCampaignActivity = 'active',
+	): Pick<Prisma.CampaignWhereInput, 'isActive'> {
+		if (activity === 'all') {
+			return {};
+		}
+
+		return { isActive: activity === 'active' };
+	}
+
+	async getPublicCampaigns(options?: { activity?: PublicCampaignActivity }): Promise<ServiceResult<PublicCampaignCard[]>> {
+		const activity = options?.activity ?? 'active';
+
 		try {
 			const campaigns = await this.db.campaign.findMany({
 				where: {
-					isActive: true,
+					...this.buildPublicCampaignActivityWhere(activity),
 					slug: { not: null },
 					OR: [{ public: true }, { public: null }],
 				},
@@ -364,6 +377,7 @@ export class CampaignReadService extends BaseService {
 					currency: true,
 					featured: true,
 					createdAt: true,
+					isActive: true,
 				},
 				orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
 			});
@@ -382,6 +396,7 @@ export class CampaignReadService extends BaseService {
 					slug: campaignSlug,
 					creatorName: campaign.creatorName,
 					currency: campaign.currency,
+					isActive: campaign.isActive,
 				});
 			}
 
@@ -452,8 +467,10 @@ export class CampaignReadService extends BaseService {
 		});
 	}
 
-	async getAllPublicCampaignsWithStats(): Promise<ServiceResult<PublicCampaignsWithStats>> {
-		const campaignsResult = await this.getPublicCampaigns();
+	async getAllPublicCampaignsWithStats(options?: {
+		activity?: PublicCampaignActivity;
+	}): Promise<ServiceResult<PublicCampaignsWithStats>> {
+		const campaignsResult = await this.getPublicCampaigns(options);
 		if (!campaignsResult.success) {
 			return this.resultFail(campaignsResult.error);
 		}

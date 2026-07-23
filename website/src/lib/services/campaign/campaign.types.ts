@@ -66,12 +66,15 @@ export type CampaignPage = CampaignPayload & {
 
 export type CampaignOption = { id: string; name: string };
 
+export type PublicCampaignActivity = 'active' | 'inactive' | 'all';
+
 export type PublicCampaignCard = {
 	id: string;
 	title: string;
 	slug: string;
 	creatorName: string | null;
 	currency: Currency;
+	isActive: boolean;
 };
 
 export type PublicCampaignStats = {

@@ -178,7 +178,12 @@
 		"day-left-singular": "Tag verbleibend",
 		"day-left-plural": "Tage verbleibend",
 		"raised-percentage": "{{ percentage }}% gesammelt ({{ currency }})",
-		"about": "Über"
+		"about": "Über",
+		"all-states": "Alle",
+		"state-active": "Aktiv",
+		"state-inactive": "Inaktiv",
+		"create-campaign": "Kampagne erstellen",
+		"coming-soon": "Demnächst verfügbar"
 	},
 	"breadcrumb": {
 		"home": "Startseite"

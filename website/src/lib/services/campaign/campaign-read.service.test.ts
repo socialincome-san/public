@@ -38,6 +38,7 @@ const createService = ({
 		currency: 'CHF' | 'EUR';
 		featured: boolean;
 		createdAt: Date;
+		isActive: boolean;
 	}[];
 	statsCampaigns?: {
 		id: string;
@@ -87,6 +88,7 @@ describe('CampaignReadService public campaign preview data', () => {
 					currency: 'CHF',
 					featured: true,
 					createdAt: new Date('2025-01-01T00:00:00.000Z'),
+					isActive: true,
 				},
 				{
 					id: 'campaign-2',
@@ -96,13 +98,18 @@ describe('CampaignReadService public campaign preview data', () => {
 					currency: 'EUR',
 					featured: false,
 					createdAt: new Date('2025-01-02T00:00:00.000Z'),
+					isActive: true,
 				},
 			],
 		});
 
 		const campaigns = expectSuccess(await service.getPublicCampaigns());
 
-		expect(campaignFindMany).toHaveBeenCalled();
+		expect(campaignFindMany).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: expect.objectContaining({ isActive: true }),
+			}),
+		);
 		expect(campaigns).toEqual([
 			{
 				id: 'campaign-1',
@@ -110,6 +117,95 @@ describe('CampaignReadService public campaign preview data', () => {
 				slug: 'holiday-fundraiser',
 				creatorName: 'smartive AG',
 				currency: 'CHF',
+				isActive: true,
+			},
+		]);
+	});
+
+	test('getPublicCampaigns with activity all includes inactive campaigns', async () => {
+		const { service, campaignFindMany } = createService({
+			campaigns: [
+				{
+					id: 'campaign-1',
+					title: 'Active Campaign',
+					slug: 'active-campaign',
+					creatorName: 'smartive AG',
+					currency: 'CHF',
+					featured: true,
+					createdAt: new Date('2025-01-01T00:00:00.000Z'),
+					isActive: true,
+				},
+				{
+					id: 'campaign-2',
+					title: 'Inactive Campaign',
+					slug: 'inactive-campaign',
+					creatorName: null,
+					currency: 'EUR',
+					featured: false,
+					createdAt: new Date('2025-01-02T00:00:00.000Z'),
+					isActive: false,
+				},
+			],
+		});
+
+		const campaigns = expectSuccess(await service.getPublicCampaigns({ activity: 'all' }));
+
+		expect(campaignFindMany).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: expect.not.objectContaining({ isActive: expect.anything() }),
+			}),
+		);
+		expect(campaigns).toEqual([
+			{
+				id: 'campaign-1',
+				title: 'Active Campaign',
+				slug: 'active-campaign',
+				creatorName: 'smartive AG',
+				currency: 'CHF',
+				isActive: true,
+			},
+			{
+				id: 'campaign-2',
+				title: 'Inactive Campaign',
+				slug: 'inactive-campaign',
+				creatorName: null,
+				currency: 'EUR',
+				isActive: false,
+			},
+		]);
+	});
+
+	test('getPublicCampaigns with activity inactive filters to inactive campaigns', async () => {
+		const { service, campaignFindMany } = createService({
+			campaigns: [
+				{
+					id: 'campaign-2',
+					title: 'Inactive Campaign',
+					slug: 'inactive-campaign',
+					creatorName: null,
+					currency: 'EUR',
+					featured: false,
+					createdAt: new Date('2025-01-02T00:00:00.000Z'),
+					isActive: false,
+				},
+			],
+		});
+
+		const campaigns = expectSuccess(await service.getPublicCampaigns({ activity: 'inactive' }));
+
+		expect(campaignFindMany).toHaveBeenCalledWith(
+			expect.objectContaining({
+				where: expect.objectContaining({ isActive: false }),
+			}),
+		);
+		expect(campaigns).toEqual([
+			{
+				id: 'campaign-2',
+				title: 'Inactive Campaign',
+				slug: 'inactive-campaign',
+				creatorName: null,
+				currency: 'EUR',
+				isActive: false,
 			},
 		]);
 	});
@@ -355,6 +451,7 @@ describe('CampaignReadService public campaign preview data', () => {
 					slug: 'holiday-fundraiser',
 					creatorName: 'smartive AG',
 					currency: 'CHF',
+					isActive: true,
 				},
 			]),
 		);
