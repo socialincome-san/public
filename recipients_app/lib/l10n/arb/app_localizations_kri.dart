@@ -770,4 +770,7 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get openGoogleSupportPageUpdatePlayStore => 'Opin Sɔpɔt Pej';
+
+  @override
+  String get appAttestationFailedError => 'Firebase AppCheck: App attestation failed.';
 }

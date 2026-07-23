@@ -769,4 +769,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openGoogleSupportPageUpdatePlayStore => 'Open Support Page';
+
+  @override
+  String get appAttestationFailedError => 'Firebase AppCheck: App attestation failed.';
 }
