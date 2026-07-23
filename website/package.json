@@ -74,7 +74,7 @@
 		"@radix-ui/react-tooltip": "1.2.12",
 		"@scalar/api-reference-react": "0.9.58",
 		"@sendgrid/client": "8.1.6",
-		"@sentry/nextjs": "10.64.0",
+		"@sentry/nextjs": "10.66.0",
 		"@storyblok/js": "6.1.0",
 		"@storyblok/react": "7.0.1",
 		"@stripe/react-stripe-js": "6.7.0",
