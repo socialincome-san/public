@@ -37,8 +37,7 @@ https://staging.socialincome.org/en/int/login.
   not do this change at the moment.
 - Payment phone number and mobile money provider can not be changed in
   the mobile app. Fields are read-only.
-- Test contact phone is missing. A DashboardCard is visible and asks for
-  using the payment number as contact phone number.
+- Test contact phone: Contact number can be empty or another phone number than the payment number. If you try to set the payment number as contact number, the value will not be saved.
 - Test language settings
 
 ## Payments
@@ -81,7 +80,6 @@ https://staging.socialincome.org/en/int/login.
 - Offline and want to change data
   - Give payment feedback
   - Do recipient changes
-  - Add missing contact number via dashboard
   - Accept Terms
 
 ## OS Permission stuff

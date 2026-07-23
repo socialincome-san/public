@@ -32,8 +32,7 @@
     "paymentProviderError": "Please select a payment provider",
     "contactPhone": "Contact Phone",
     "contactNumber": "Contact Number",
-    "contactNumberError": "Please enter your contact phone number",
-    "contactNumberError2": "Please enter a valid phone number. Only numbers are allowed",
+    "contactNumberError": "Please enter a valid phone number. Only numbers are allowed",
     "inCaseOfDeathTitle": "⁠In Case of Death",
     "inCaseOfDeathDescription": "Who should be the recipient of your Social Income payments if you pass away during the program?",
     "successorName": "Successor Name",
@@ -308,15 +307,6 @@
     "country": "Country",
     "recipientNotFound": "No recipient account found for this phone number. Please check your phone number or contact your local partner.",
 	"unknownPaymentPhoneNumber": "Unknown payment phone number",
-	"myProfile": "My Profile",
-	"contactPhoneQuestion": "Is your payment phone number ({paymentPhoneNumber}) also your contact phone number?",
-	"@contactPhoneQuestion": {
-		"placeholders": {
-			"paymentPhoneNumber": {
-				"type": "String"
-			}
-		}
-	},
 	"noInternetConnection": "No internet connection. Cannot refresh data.",
     "offlineBanner": "No internet connection",
     "offlineMutationError": "This action requires an internet connection",

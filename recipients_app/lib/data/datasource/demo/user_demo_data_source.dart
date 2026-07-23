@@ -30,7 +30,7 @@ class UserDemoDataSource implements UserDataSource {
       phoneId: "demo",
       phone: Phone(
         id: "demo",
-        number: "23271118897",
+        number: "",
         hasWhatsApp: true,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
