@@ -25,7 +25,11 @@ export const FaqSelectionBlock = ({ blok, lang, region }: Props) => {
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper
+			disableMarginTop={blok.disableMarginTop}
+			disableMarginBottom={blok.disableMarginBottom}
+			{...storyblokEditable(blok as SbBlokData)}
+		>
 			<FaqSelectionContent heading={blok.heading} items={items} cta={cta} />
 		</BlockWrapper>
 	);
