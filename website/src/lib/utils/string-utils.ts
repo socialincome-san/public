@@ -9,10 +9,10 @@ import {
 	WHITESPACE_SPLIT_REGEX,
 } from './regex';
 
-const LOCALE_APOSTROPHE_REGEX = /[\u2018\u2019\u02BC]/g;
+const LOCALE_APOSTROPHE_REGEX = /['\u2018\u2019\u02BC]/g;
 
 const normalizeIntlOutput = (value: string): string => {
-	return value.replace(LOCALE_APOSTROPHE_REGEX, "'");
+	return value.replace(LOCALE_APOSTROPHE_REGEX, ',');
 };
 
 export const slugify = (value: string): string => {
