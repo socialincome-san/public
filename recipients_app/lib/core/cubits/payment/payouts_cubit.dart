@@ -140,8 +140,8 @@ class PayoutsCubit extends Cubit<PayoutsState> {
           confirmedPaymentsCount++;
         case PayoutStatus.contested:
           paymentUiStatus = PayoutUiStatus.contested;
-        // TODO: check what to show in case of those statuses
         case PayoutStatus.failed:
+          paymentUiStatus = PayoutUiStatus.failed;
         case PayoutStatus.other:
           paymentUiStatus = PayoutUiStatus.empty;
       }
