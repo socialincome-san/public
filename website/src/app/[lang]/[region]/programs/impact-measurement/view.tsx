@@ -30,7 +30,7 @@ export const ImpactMeasurementView = ({
 		.join('&');
 
 	return (
-		<div className="space-y-3">
+		<div className="space-y-3 pb-16">
 			{variant === 'standalone' ? (
 				<BlockWrapper className="pb-6" disableMarginTop={true} disableMarginBottom={true}>
 					<div className="space-y-5">
