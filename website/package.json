@@ -91,7 +91,7 @@
 		"embla-carousel-autoplay": "8.6.0",
 		"embla-carousel-react": "8.6.0",
 		"firebase": "12.16.0",
-		"firebase-admin": "13.10.0",
+		"firebase-admin": "14.2.0",
 		"i18next": "26.3.6",
 		"i18next-resources-to-backend": "1.2.1",
 		"isomorphic-dompurify": "3.18.0",
