@@ -257,8 +257,8 @@ class PayoutsCubit extends Cubit<PayoutsState> {
     final daysToPayment = DateUtils.dateOnly(nextPaymentDate).difference(DateUtils.dateOnly(DateTime.now())).inDays;
 
     return NextPayoutData(
-      amount: nextPayment?.payout.amount ?? 0,
-      currency: nextPayment?.payout.currency ?? "???",
+      amount: nextPayment?.payout.amount ?? recipient.program.payoutPerInterval,
+      currency: nextPayment?.payout.currency ?? recipient.program.country.currency,
       daysToPayout: daysToPayment,
     );
   }

@@ -50,6 +50,7 @@ class BalanceCardContainer extends DashboardItem {
                       BalanceCardHeader(
                         daysTo: payoutsUiState?.nextPayout.daysToPayout ?? 0,
                         amount: payoutsUiState?.nextPayout.amount ?? 0,
+                        currency: payoutsUiState?.nextPayout.currency ?? "???",
                         balanceCardStatus: payoutsUiState?.status ?? BalanceCardStatus.allConfirmed,
                       ),
                       const SizedBox(height: 16),
