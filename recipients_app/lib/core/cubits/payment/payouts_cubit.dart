@@ -48,10 +48,17 @@ class PayoutsCubit extends Cubit<PayoutsState> {
 
     _payoutsSubscription = paymentRepository.fetchPayouts().listen(
       (payouts) async {
+        // Sort payouts by paymentAt date descending, so that the most recent payout is first in the list
+        payouts.sort((a, b) => b.paymentAt.compareTo(a.paymentAt));
+
+        // Map payouts to UI state
+        final payoutsUiState = await _mapPayoutsUiState(payouts);
+        
+        // Emit the new state with the updated payouts UI state
         emit(
           state.copyWith(
             status: PayoutsStatus.success,
-            payoutsUiState: await _mapPayoutsUiState(payouts),
+            payoutsUiState: payoutsUiState,
           ),
         );
       },
