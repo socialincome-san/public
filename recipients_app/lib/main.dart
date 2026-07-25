@@ -108,7 +108,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
     firebaseRemoteConfig: FirebaseRemoteConfig.instance,
     packageInfo: packageInfo,
     crashReportingRepository: crashReportingRepository,
-    minimumFetchInterval: appFlavor == "prod" ? const Duration(hours: 1) : Duration.zero,
+    minimumFetchInterval: kDebugMode ? Duration.zero : const Duration(hours: 1),
   );
 
   await firebaseRemoteConfigService.init();
@@ -116,32 +116,37 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
 
   Bloc.observer = CustomBlocObserver();
 
-  await SentryFlutter.init(
-    (options) {
-      options.dsn = const String.fromEnvironment("SENTRY_URL");
-      options.tracesSampleRate = 1.0;
-      // ignore: experimental_member_use
-      options.profilesSampleRate = 1.0;
-      options.environment = appFlavor;
-      options.enableTombstone = true;
-    },
-    appRunner: () => runApp(
-      MyApp(
-        messaging: messaging,
-        demoManager: demoManager,
-        userRemoteDataSource: userRemoteDataSource,
-        userDemoDataSource: userDemoDataSource,
-        payoutRemoteDataSource: payoutRemoteDataSource,
-        payoutDemoDataSource: payoutDemoDataSource,
-        surveyRemoteDataSource: surveyRemoteDataSource,
-        surveyDemoDataSource: surveyDemoDataSource,
-        authService: authService,
-        firebaseRemoteConfigService: firebaseRemoteConfigService,
-        crashReportingRepository: crashReportingRepository,
-        appVersionInfo: appVersionInfo,
-        cacheDatabase: cacheDatabase,
-        connectivityService: connectivityService,
-      ),
-    ),
+  final myApp = MyApp(
+    messaging: messaging,
+    demoManager: demoManager,
+    userRemoteDataSource: userRemoteDataSource,
+    userDemoDataSource: userDemoDataSource,
+    payoutRemoteDataSource: payoutRemoteDataSource,
+    payoutDemoDataSource: payoutDemoDataSource,
+    surveyRemoteDataSource: surveyRemoteDataSource,
+    surveyDemoDataSource: surveyDemoDataSource,
+    authService: authService,
+    firebaseRemoteConfigService: firebaseRemoteConfigService,
+    crashReportingRepository: crashReportingRepository,
+    appVersionInfo: appVersionInfo,
+    cacheDatabase: cacheDatabase,
+    connectivityService: connectivityService,
   );
+
+  if (!kDebugMode) {
+    await SentryFlutter.init(
+      (options) {
+        options.dsn = const String.fromEnvironment("SENTRY_URL");
+        options.tracesSampleRate = 1.0;
+        // ignore: experimental_member_use
+        options.profilesSampleRate = 1.0;
+        options.environment = appFlavor;
+        options.enableTombstone = true;
+      },
+      appRunner: () => runApp(myApp),
+    );
+  } else {
+    // Sentry not initialized in debug
+    runApp(myApp);
+  }
 }
