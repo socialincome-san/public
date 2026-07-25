@@ -21,7 +21,7 @@ part "payouts_state.dart";
 
 const int kMaxReviewDays = 10;
 
-const _kOnHoldCandidateStates = [PayoutStatus.paid, PayoutStatus.contested];
+const _kOnHoldCandidateStates = [PayoutStatus.paid, PayoutStatus.contested, PayoutStatus.failed];
 
 class PayoutsCubit extends Cubit<PayoutsState> {
   final Recipient recipient;
@@ -228,7 +228,7 @@ class PayoutsCubit extends Cubit<PayoutsState> {
       return false;
     }
 
-    // checks if days between payment date and now are less than 5
+    // checks if days between payment date and now are less than 10
     return ((payout.paymentAt.difference(DateTime.now()).inDays) * -1) < kMaxReviewDays;
   }
 
