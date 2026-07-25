@@ -17,7 +17,7 @@ class BalanceCardGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final paymentsFromOldest = payments.reversed.toList();
+    final paymentsFromOldest = payments.toList();
     return GridView.count(
       shrinkWrap: true,
       crossAxisCount: kMonthsPerYear,

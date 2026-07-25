@@ -105,10 +105,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get contactNumber => 'Nɔmba we fɔ kɔl yu';
 
   @override
-  String get contactNumberError => 'Duya put yu fon nɔmba ya';
-
-  @override
-  String get contactNumberError2 => 'Put di fon nɔmba prɔpa wan ɛn tayp di nɔmba dɛm nɔmɔ.';
+  String get contactNumberError => 'Put di fon nɔmba prɔpa wan ɛn tayp di nɔmba dɛm nɔmɔ.';
 
   @override
   String get inCaseOfDeathTitle => '⁠If yu day';
@@ -760,14 +757,6 @@ class AppLocalizationsKri extends AppLocalizations {
   String get unknownPaymentPhoneNumber => 'Di fon nɔmba we yu nɔ no bɔt fɔ pe';
 
   @override
-  String get myProfile => 'Ɔltin Bɔt Mi';
-
-  @override
-  String contactPhoneQuestion(String paymentPhoneNumber) {
-    return 'Di fon nɔmba we dɛn fɔ pe yu ($paymentPhoneNumber) na in sɛm wan we fɔ kɔl yu?';
-  }
-
-  @override
   String get noInternetConnection => 'Nɔ intanɛt kɔnɛkshɔn. Nɔ ebul fɔ rifrɛsh data.';
 
   @override
@@ -781,4 +770,7 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get openGoogleSupportPageUpdatePlayStore => 'Opin Sɔpɔt Pej';
+
+  @override
+  String get appAttestationFailedError => 'Firebase AppCheck: App attestation failed.';
 }

@@ -32,8 +32,7 @@
     "paymentProviderError": "Duya pik di wan we fɔ pe yu",
     "contactPhone": "Fon we fɔ kɔl yu",
     "contactNumber": "Nɔmba we fɔ kɔl yu",
-    "contactNumberError": "Duya put yu fon nɔmba ya",
-    "contactNumberError2": "Put di fon nɔmba prɔpa wan ɛn tayp di nɔmba dɛm nɔmɔ.",
+    "contactNumberError": "Put di fon nɔmba prɔpa wan ɛn tayp di nɔmba dɛm nɔmɔ.",
     "inCaseOfDeathTitle": "⁠If yu day",
     "inCaseOfDeathDescription": "Udat na di pɔsin we wi fɔ gi yu Social Income pemɛnt if yu day we di program nɔ dɔn yet? Yu wɛf, pikin, mama, papa, brɔda ɔ sista",
     "successorName": "Wetin na in nem?",
@@ -314,18 +313,10 @@
     "country": "Kɔntri",
     "recipientNotFound": "No risipiɛnt akɔn nɔ fɛn fɔ dis fon nɔmba. Duya chɛk yu fon nɔmba ɔ kɔntak yu lokal patna.",
 	"unknownPaymentPhoneNumber": "Di fon nɔmba we yu nɔ no bɔt fɔ pe",
-	"myProfile": "Ɔltin Bɔt Mi",
-	"contactPhoneQuestion": "Di fon nɔmba we dɛn fɔ pe yu ({paymentPhoneNumber}) na in sɛm wan we fɔ kɔl yu?",
-	"@contactPhoneQuestion": {
-		"placeholders": {
-			"paymentPhoneNumber": {
-				"type": "String"
-			}
-		}
-	},
 	"noInternetConnection": "Nɔ intanɛt kɔnɛkshɔn. Nɔ ebul fɔ rifrɛsh data.",
     "offlineBanner": "Nɔ intanɛt kɔnɛkshɔn",
     "offlineMutationError": "Dis akshɔn nid intanɛt kɔnɛkshɔn",
     "offlineBannerMessage": "Yu de ɔflayna. Sho di data we dɛn dɔn kech.",
-    "openGoogleSupportPageUpdatePlayStore" : "Opin Sɔpɔt Pej"
+    "openGoogleSupportPageUpdatePlayStore" : "Opin Sɔpɔt Pej",
+    "appAttestationFailedError" : "Firebase AppCheck: App attestation failed."
 }
