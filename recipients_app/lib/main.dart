@@ -85,7 +85,7 @@ Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
   final payoutRemoteDataSource = PayoutRemoteDataSource(
     authenticatedClient: authenticatedClient,
   );
-  final payoutDemoDataSource = PayoutDemoDataSource();
+  final payoutDemoDataSource = PayoutDemoDataSource(userDemoDataSource.recipient);
 
   final surveyRemoteDataSource = SurveyRemoteDataSource(
     authenticatedClient: authenticatedClient,
