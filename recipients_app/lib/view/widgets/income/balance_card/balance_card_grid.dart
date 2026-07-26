@@ -17,7 +17,7 @@ class BalanceCardGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final paymentsFromOldest = payments.toList();
+    final paymentsStartingFromOldest = payments.toList();
     return GridView.count(
       shrinkWrap: true,
       crossAxisCount: kMonthsPerYear,
@@ -27,17 +27,17 @@ class BalanceCardGrid extends StatelessWidget {
       children: List.generate(
         programTotalCountOfPayments,
         (index) {
-          if (index < paymentsFromOldest.length) {
-            final payment = paymentsFromOldest[index];
+          if (index < paymentsStartingFromOldest.length) {
+            final payment = paymentsStartingFromOldest[index];
             return PaymentStatusIcon(
               status: payment.uiStatus,
             );
           }
 
-          if (!paymentsFromOldest.any(
+          if (!paymentsStartingFromOldest.any(
                 (element) => element.uiStatus == PayoutUiStatus.toBePaid,
               ) &&
-              index == (paymentsFromOldest.length)) {
+              index == (paymentsStartingFromOldest.length)) {
             return const PaymentStatusIcon(
               status: PayoutUiStatus.toBePaid,
             );

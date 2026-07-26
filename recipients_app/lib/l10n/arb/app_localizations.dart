@@ -566,12 +566,6 @@ abstract class AppLocalizations {
   /// **'Duration'**
   String get duration;
 
-  /// No description provided for @nextMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'Next month'**
-  String get nextMonth;
-
   /// No description provided for @today.
   ///
   /// In en, this message translates to:
@@ -625,6 +619,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'My Payments'**
   String get myPayments;
+
+  /// No description provided for @programCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Program Completed'**
+  String get programCompleted;
+
+  /// No description provided for @programCompletedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'All payments have been made and confirmed. Thank you for being part of Social Income.'**
+  String get programCompletedDescription;
 
   /// No description provided for @contestPayment.
   ///
