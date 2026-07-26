@@ -195,7 +195,7 @@ class PayoutsCubit extends Cubit<PayoutsState> {
       case PayoutInterval.monthly:
         return programDurationInMonths;
       case PayoutInterval.quarterly:
-        return (programDurationInMonths / 4).ceil();
+        return (programDurationInMonths / 3).ceil();
       case PayoutInterval.yearly:
         return (programDurationInMonths / 12).ceil();
     }
