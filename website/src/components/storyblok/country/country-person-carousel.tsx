@@ -14,8 +14,12 @@ type Props = {
 
 export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 	const isoCode = getCountryIsoCode(country.content);
-	const countryOfficePersonsResult = await services.storyblok.getPersonsByCountryOffice(lang, isoCode);
+	const [countryOfficePersonsResult, roleLabelsResult] = await Promise.all([
+		services.storyblok.getPersonsByCountryOffice(lang, [isoCode]),
+		services.storyblok.getPrimaryRoleLabels(lang),
+	]);
 	const persons = countryOfficePersonsResult.success ? countryOfficePersonsResult.data : [];
+	const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 
 	if (persons.length === 0) {
 		return null;
@@ -48,7 +52,7 @@ export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 						<CarouselContent className="-ml-6">
 							{persons.map((person) => (
 								<CarouselItem key={person.uuid} className="basis-[305px] pl-6">
-									<PersonCard person={person} />
+									<PersonCard person={person} roleLabels={roleLabels} />
 								</CarouselItem>
 							))}
 						</CarouselContent>

@@ -191,5 +191,33 @@
 	"wallet": {
 		"paid-out": "Versé",
 		"recipients": "Bénéficiaires"
+	},
+	"person-grid": {
+		"search-placeholder": "Rechercher par nom",
+		"sort-aria-label": "Trier",
+		"sort-random": "Aléatoire",
+		"sort-alphabetical": "Alphabétique",
+		"sort-start-date": "Par date de début",
+		"filter-all-roles": "Tous les rôles ({{count}})",
+		"filter-all-statuses": "Tous les statuts ({{count}})",
+		"filter-all-countries": "Tous les pays ({{count}})",
+		"filter-multiple-selected": "{{count}} sélectionnés",
+		"filter-select-all": "Tout sélectionner",
+		"filter-clear-all": "Réinitialiser",
+		"status-active": "Actif",
+		"status-inactive": "Ancien",
+		"duration-started-today": "Commencé aujourd'hui",
+		"duration-day-singular": "{{count}} jour",
+		"duration-day-plural": "{{count}} jours",
+		"duration-month-singular": "{{count}} mois",
+		"duration-month-plural": "{{count}} mois",
+		"duration-year-singular": "{{count}} an +",
+		"duration-year-plural": "{{count}} ans +",
+		"duration-month-anniversary-singular": "{{count}} mois aujourd'hui 🎉",
+		"duration-month-anniversary-plural": "{{count}} mois aujourd'hui 🎉",
+		"duration-year-anniversary-singular": "{{count}} an aujourd'hui 🎉",
+		"duration-year-anniversary-plural": "{{count}} ans aujourd'hui 🎉",
+		"duration-since": "Depuis {{date}}",
+		"no-results": "Aucune personne ne correspond à votre recherche."
 	}
 }

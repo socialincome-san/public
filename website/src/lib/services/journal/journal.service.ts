@@ -46,13 +46,15 @@ export class JournalService extends BaseService {
 		const journalPath = createWebsiteJournalPath(lang, region);
 		const pathname = buildJournalOverviewPathname(journalPath, tagSlug);
 
-		const [authorsResult, tagsResult] = await Promise.all([
+		const [authorsResult, tagsResult, roleLabelsResult] = await Promise.all([
 			this.storyblok.getOverviewAuthors(lang),
 			this.storyblok.getOverviewTags(lang),
+			this.storyblok.getPrimaryRoleLabels(lang),
 		]);
 
 		const authors = authorsResult.success ? authorsResult.data : [];
 		const tags = tagsResult.success ? tagsResult.data : [];
+		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 
 		if (tagSlug) {
 			const tagResult = await this.storyblok.getTag(tagSlug, lang);
@@ -80,6 +82,7 @@ export class JournalService extends BaseService {
 					slug: tagSlug,
 					label: tagResult.data.content.value,
 				}),
+				roleLabels,
 			});
 		}
 
@@ -99,6 +102,7 @@ export class JournalService extends BaseService {
 			journalPath,
 			pathname,
 			breadcrumbs: buildJournalOverviewBreadcrumbs(labels.journalLabel, journalPath, lang, region),
+			roleLabels,
 		});
 	}
 
@@ -149,8 +153,12 @@ export class JournalService extends BaseService {
 		}
 
 		const person = personResult.data;
-		const articlesResult = await this.storyblok.getArticlesByAuthor(person.uuid, lang);
+		const [articlesResult, roleLabelsResult] = await Promise.all([
+			this.storyblok.getArticlesByAuthor(person.uuid, lang),
+			this.storyblok.getPrimaryRoleLabels(lang),
+		]);
 		const articles = articlesResult.success ? articlesResult.data : [];
+		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 		const totalInDefault = await this.storyblok.resolveArticleCountInDefaultLanguage(lang, articles.length, () =>
 			this.storyblok.getArticleCountByAuthorForDefaultLang(person.uuid),
 		);
@@ -169,6 +177,7 @@ export class JournalService extends BaseService {
 				personName,
 				createWebsitePersonLink(slug, lang, region),
 			),
+			roleLabels,
 		});
 	}
 }

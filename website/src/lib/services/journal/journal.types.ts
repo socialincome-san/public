@@ -14,6 +14,7 @@ export type JournalOverviewPageData = {
 	journalPath: string;
 	pathname: string;
 	breadcrumbs: BreadcrumbLinkType[];
+	roleLabels: Record<string, string>;
 };
 
 export type JournalArticlePageData = {
@@ -28,4 +29,5 @@ export type JournalPersonPageData = {
 	showMoreArticlesLink: boolean;
 	pathname: string;
 	breadcrumbs: BreadcrumbLinkType[];
+	roleLabels: Record<string, string>;
 };
