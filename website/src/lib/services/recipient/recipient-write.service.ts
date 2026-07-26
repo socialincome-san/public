@@ -607,6 +607,56 @@ export class RecipientWriteService extends BaseService {
 		}
 	}
 
+	async removeFromProgram(session: Session, recipientId: string): Promise<ServiceResult<{ id: string }>> {
+		try {
+			const existing = await this.db.recipient.findUnique({
+				where: { id: recipientId },
+				select: {
+					id: true,
+					programId: true,
+					_count: { select: { payouts: true } },
+				},
+			});
+
+			if (!existing) {
+				return this.resultFail('Recipient not found');
+			}
+			if (!existing.programId) {
+				return this.resultFail('Recipient is already in the pool');
+			}
+
+			if (session.type === 'user') {
+				const accessResult = await this.programAccessService.getAccessiblePrograms(session.id);
+				if (!accessResult.success) {
+					return this.resultFail(accessResult.error);
+				}
+				if (!this.programAccessService.hasOperatorAccess(accessResult.data, existing.programId)) {
+					return this.resultFail('Permission denied');
+				}
+			} else {
+				return this.resultFail('Permission denied');
+			}
+
+			if (existing._count.payouts > 0) {
+				return this.resultFail('Recipient has payouts and cannot be removed from the program.');
+			}
+
+			await this.db.recipient.update({
+				where: { id: recipientId },
+				data: {
+					program: { disconnect: true },
+					startDate: null,
+				},
+			});
+
+			return this.resultOk({ id: recipientId });
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not remove recipient from program: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async delete(session: Session, recipientId: string): Promise<ServiceResult<{ id: string }>> {
 		try {
 			const existing = await this.db.recipient.findUnique({
