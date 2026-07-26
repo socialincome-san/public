@@ -109,6 +109,8 @@
     "month": "month",
     "months": "months",
     "myPayments": "My Payments",
+    "programCompleted": "Program Completed",
+    "programCompletedDescription": "All payments have been made and confirmed. Thank you for being part of Social Income.",
     "contestPayment": "Contest Payment",
     "contestPaymentInfo": "A payment has not reached you. What happened?",
     "submit": "Submit",

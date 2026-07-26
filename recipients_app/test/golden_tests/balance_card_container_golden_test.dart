@@ -339,5 +339,59 @@ void main() {
         builder: () => const BalanceCardContainer(),
       ),
     );
+
+    goldenTest(
+      "renders correctly",
+      fileName: "balance_card_program_completed",
+      pumpWidget: (tester, widget) {
+        when(() => mockPayoutsCubit.state).thenReturn(
+          PayoutsState(
+            payoutsUiState: PayoutsUiState(
+              status: BalanceCardStatus.allConfirmed,
+              nextPayout: const NextPayoutData(
+                amount: 0,
+                currency: "SLE",
+                daysToPayout: 1,
+              ),
+              confirmedPayoutsCount: 2,
+              unconfirmedPayoutsCount: 0,
+              programTotalCountOfPayments: 2,
+              payouts: [
+                MappedPayout(
+                  payout: Payout(
+                    id: "1",
+                    paymentAt: DateTime(2023, 7),
+                    amount: 100,
+                    currency: "SLE",
+                    status: PayoutStatus.confirmed,
+                    recipientId: "1",
+                    createdAt: DateTime(2023, 7),
+                  ),
+                  uiStatus: PayoutUiStatus.confirmed,
+                ),
+                MappedPayout(
+                  payout: Payout(
+                    id: "2",
+                    paymentAt: DateTime(2023, 8),
+                    amount: 100,
+                    currency: "SLE",
+                    status: PayoutStatus.confirmed,
+                    recipientId: "2",
+                    createdAt: DateTime(2023, 8),
+                  ),
+                  uiStatus: PayoutUiStatus.confirmed,
+                ),
+              ],
+            ),
+          ),
+        );
+
+        return tester.pumpApp(widget, paymentsCubit: mockPayoutsCubit);
+      },
+      builder: () => GoldenTestDeviceScenario(
+        name: "program completed",
+        builder: () => const BalanceCardContainer(),
+      ),
+    );
   });
 }

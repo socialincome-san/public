@@ -280,6 +280,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myPayments => 'My Payments';
 
   @override
+  String get programCompleted => 'Program Completed';
+
+  @override
+  String get programCompletedDescription =>
+      'All payments have been made and confirmed. Thank you for being part of Social Income.';
+
+  @override
   String get contestPayment => 'Contest Payment';
 
   @override

@@ -281,6 +281,13 @@ class AppLocalizationsKri extends AppLocalizations {
   String get myPayments => 'Mi Pemɛnt Dɛm';
 
   @override
+  String get programCompleted => 'Dɛn dɔn dɔn di program';
+
+  @override
+  String get programCompletedDescription =>
+      'Dɛn dɔn mek ɔl di pemɛnt dɛn ɛn dɛn dɔn kɔnfyus dɛn. Tank yu fɔ bi pat pan Sɔshial Inkam.';
+
+  @override
   String get contestPayment => 'Pemɛnt we yu nɔ gri wit';
 
   @override

@@ -620,6 +620,18 @@ abstract class AppLocalizations {
   /// **'My Payments'**
   String get myPayments;
 
+  /// No description provided for @programCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Program Completed'**
+  String get programCompleted;
+
+  /// No description provided for @programCompletedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'All payments have been made and confirmed. Thank you for being part of Social Income.'**
+  String get programCompletedDescription;
+
   /// No description provided for @contestPayment.
   ///
   /// In en, this message translates to:
