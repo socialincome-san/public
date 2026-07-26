@@ -52,7 +52,7 @@
 		"@heroicons/react": "2.2.0",
 		"@hookform/resolvers": "5.4.0",
 		"@lottiefiles/dotlottie-react": "^0.19.10",
-		"@mux/mux-video-react": "0.31.0",
+		"@mux/mux-video-react": "0.31.2",
 		"@prisma/adapter-pg": "7.8.0",
 		"@prisma/client": "7.8.0",
 		"@radix-ui/react-accordion": "1.2.17",
