@@ -15,7 +15,7 @@ import type { CardLink } from '@/components/storyblok/shared/person-card-grid';
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getRoleLabel, personHasRole } from '@/lib/services/storyblok/storyblok.utils';
+import { getRoleCode, getRoleLabel, personHasRole } from '@/lib/services/storyblok/storyblok.utils';
 import { getCountryNameFromIsoCode } from '@/lib/types/country';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
@@ -197,9 +197,7 @@ export const PersonGridInteractive = ({
 		const relevant = persons.filter(
 			(person) => matchesStatus(person, selectedStatuses) && matchesCountry(person, selectedCountries),
 		);
-		const values = relevant
-			.map((person) => person.content.primaryRole)
-			.filter((role): role is string => typeof role === 'string' && role.trim().length > 0);
+		const values = relevant.map((person) => getRoleCode(person.content.primaryRole)).filter(Boolean);
 
 		return Array.from(new Set(values)).sort((a, b) => roleLabelFor(a).localeCompare(roleLabelFor(b)));
 	}, [persons, selectedStatuses, selectedCountries, roleLabelFor]);

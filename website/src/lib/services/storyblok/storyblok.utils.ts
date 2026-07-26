@@ -61,11 +61,18 @@ export const getPersonLinkedInUrl = (handle: string) => `https://www.linkedin.co
 export const getPersonGitHubUrl = (username: string) => `https://github.com/${encodeURIComponent(username)}`;
 
 /**
+ * Normalizes a Person.primaryRole value to its string code — Storyblok option fields can hold a
+ * numeric datasource id as well as a string value. Returns '' when the role is unset.
+ */
+export const getRoleCode = (role: Person['primaryRole']): string =>
+	role === undefined || role === null ? '' : String(role).trim();
+
+/**
  * Display label for a Person.primaryRole value: the datasource label when available,
  * a humanized version of the stored value otherwise. Returns '' for an unset role.
  */
 export const getRoleLabel = (role: Person['primaryRole'], roleLabels?: Record<string, string>): string => {
-	const code = typeof role === 'string' ? role.trim() : '';
+	const code = getRoleCode(role);
 	if (!code) {
 		return '';
 	}
@@ -73,8 +80,11 @@ export const getRoleLabel = (role: Person['primaryRole'], roleLabels?: Record<st
 	return roleLabels?.[code] ?? humanizeIdentifier(code);
 };
 
-export const personHasRole = (person: ISbStoryData<Person>, roleCodes: string[]): boolean =>
-	typeof person.content.primaryRole === 'string' && roleCodes.includes(person.content.primaryRole);
+export const personHasRole = (person: ISbStoryData<Person>, roleCodes: string[]): boolean => {
+	const code = getRoleCode(person.content.primaryRole);
+
+	return code.length > 0 && roleCodes.includes(code);
+};
 
 // ==================== Image Utilities ====================
 
