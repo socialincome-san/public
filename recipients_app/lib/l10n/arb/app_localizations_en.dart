@@ -249,9 +249,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get duration => 'Duration';
 
   @override
-  String get nextMonth => 'Next month';
-
-  @override
   String get today => 'Today';
 
   @override

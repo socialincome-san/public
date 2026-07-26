@@ -566,12 +566,6 @@ abstract class AppLocalizations {
   /// **'Duration'**
   String get duration;
 
-  /// No description provided for @nextMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'Next month'**
-  String get nextMonth;
-
   /// No description provided for @today.
   ///
   /// In en, this message translates to:

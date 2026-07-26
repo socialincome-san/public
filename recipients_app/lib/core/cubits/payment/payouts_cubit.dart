@@ -232,35 +232,36 @@ class PayoutsCubit extends Cubit<PayoutsState> {
     return ((payout.paymentAt.difference(DateTime.now()).inDays) * -1) < kMaxReviewDays;
   }
 
-  NextPayoutData _getNextPaymentData(
-    List<MappedPayout> mappedPayments,
-  ) {
-    final nextPayment = mappedPayments.firstWhereOrNull(
-      (element) => element.uiStatus == PayoutUiStatus.toBePaid,
+  // Calculate the next payment date based on the previous payment date and the payout interval
+  NextPayoutData _getNextPaymentData(List<MappedPayout> mappedPayments) {
+    final previousPaymentDate = mappedPayments.last.payout.paymentAt;
+    final monthsToAdd = _getPayoutIntervalInMonths();
+    final nextPaymentDate = DateTime(
+      previousPaymentDate.year,
+      previousPaymentDate.month + monthsToAdd,
+      previousPaymentDate.day,
     );
 
-    final previousPaymentDate = mappedPayments
-        .firstWhereOrNull(
-          (element) => element.uiStatus != PayoutUiStatus.toBePaid,
-        )
-        ?.payout
-        .paymentAt;
-
-    // TODO: Fallback values leak to the UI — year ?? 2023 and currency ?? "???" are user-visible in an empty-payouts state. Treat the empty case explicitly instead.
-    final nextPaymentDate =
-        nextPayment?.payout.paymentAt ??
-        DateTime(
-          previousPaymentDate?.year ?? 2023,
-          (previousPaymentDate?.month ?? 1) + 1,
-          previousPaymentDate?.day ?? 15,
-        );
-    final daysToPayment = DateUtils.dateOnly(nextPaymentDate).difference(DateUtils.dateOnly(DateTime.now())).inDays;
+    final daysToPayment =
+        DateUtils.dateOnly(nextPaymentDate).difference(DateUtils.dateOnly(DateTime.now())).inDays;
 
     return NextPayoutData(
-      amount: nextPayment?.payout.amount ?? recipient.program.payoutPerInterval,
-      currency: nextPayment?.payout.currency ?? recipient.program.country.currency,
+      amount: recipient.program.payoutPerInterval,
+      currency: recipient.program.country.currency,
       daysToPayout: daysToPayment,
     );
+  }
+
+  int _getPayoutIntervalInMonths() {
+    if (recipient.program.payoutInterval == PayoutInterval.monthly) {
+      return 1;
+    } else if (recipient.program.payoutInterval == PayoutInterval.quarterly) {
+      return 3;
+    } else if (recipient.program.payoutInterval == PayoutInterval.yearly) {
+      return 12;
+    } else {
+      throw Exception("Unsupported payout interval: ${recipient.program.payoutInterval}");
+    }
   }
 
   PayoutUiStatus _getOnHoldStatus(Payout payout) {
@@ -280,20 +281,6 @@ class PayoutsCubit extends Cubit<PayoutsState> {
   }
 
   MappedPayout? _getLastPaidPayment(List<MappedPayout> payments) {
-    final MappedPayout? lastPaidPayment;
-    final lastPayment = payments.firstOrNull;
-    if (lastPayment == null) {
-      lastPaidPayment = null;
-    } else if (lastPayment.uiStatus != PayoutUiStatus.toBePaid) {
-      // last payment is different then scheduled next payment (to be paid) so we get it
-      lastPaidPayment = lastPayment;
-    } else if (payments.length > 1) {
-      // last payment is scheduled to be paid, so we are trying to get previous paid
-      lastPaidPayment = payments.elementAt(1);
-    } else {
-      lastPaidPayment = null;
-    }
-
-    return lastPaidPayment;
+    return payments.lastOrNull;
   }
 }

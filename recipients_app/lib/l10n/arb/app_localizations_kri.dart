@@ -250,9 +250,6 @@ class AppLocalizationsKri extends AppLocalizations {
   String get duration => 'Ɔmɔs tɛm';
 
   @override
-  String get nextMonth => 'Nɛks mɔnt';
-
-  @override
   String get today => 'Tide';
 
   @override
