@@ -25,7 +25,7 @@ import { useCallback, useMemo, useState } from 'react';
 type SortOption = 'random' | 'alphabetical' | 'startDate';
 type PersonStatus = 'active' | 'inactive';
 
-export type PersonGridTranslations = {
+type PersonGridTranslations = {
 	searchPlaceholder: string;
 	sortAriaLabel: string;
 	sortRandom: string;
