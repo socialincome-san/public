@@ -146,7 +146,7 @@
 		"jest": "30.4.2",
 		"knip": "6.29.0",
 		"next-openapi-gen": "0.8.9",
-		"npm-run-all2": "5.0.0",
+		"npm-run-all2": "5.0.2",
 		"postcss": "8.5.22",
 		"prettier": "3.9.6",
 		"prettier-plugin-organize-imports": "4.3.0",
