@@ -195,7 +195,6 @@
 	"person-grid": {
 		"search-placeholder": "Search by name",
 		"sort-aria-label": "Sort",
-		"sort-random": "Random",
 		"sort-alphabetical": "Alphabetical",
 		"sort-start-date": "By start date",
 		"filter-all-roles": "All roles ({{count}})",

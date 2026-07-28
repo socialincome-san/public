@@ -21,13 +21,12 @@ import type { ISbStoryData } from '@storyblok/js';
 import { ArrowUpDownIcon, ChevronDown, SearchIcon } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
-type SortOption = 'random' | 'alphabetical' | 'startDate';
+type SortOption = 'alphabetical' | 'startDate';
 type PersonStatus = 'active' | 'inactive';
 
 type PersonGridTranslations = {
 	searchPlaceholder: string;
 	sortAriaLabel: string;
-	sortRandom: string;
 	sortAlphabetical: string;
 	sortStartDate: string;
 	filterAllRoles: string;
@@ -80,16 +79,6 @@ const matchesStatus = (person: ISbStoryData<Person>, selectedStatuses: PersonSta
 
 const matchesCountry = (person: ISbStoryData<Person>, selectedCountries: string[]) =>
 	selectedCountries.length === 0 || selectedCountries.includes(getPersonCountryCode(person));
-
-const hashToUnitInterval = (value: string) => {
-	let hash = 0;
-	for (let index = 0; index < value.length; index += 1) {
-		hash = (hash << 5) - hash + value.charCodeAt(index);
-		hash |= 0;
-	}
-
-	return (hash >>> 0) / 4294967295;
-};
 
 type FilterDropdownProps<T extends string> = {
 	triggerLabel: string;
@@ -174,7 +163,6 @@ export const PersonGridInteractive = ({
 }: Props) => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [sortBy, setSortBy] = useState<SortOption>('alphabetical');
-	const [shuffleSeed, setShuffleSeed] = useState(0);
 	const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
 	const [selectedStatuses, setSelectedStatuses] = useState<PersonStatus[]>([]);
 	const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
@@ -232,13 +220,6 @@ export const PersonGridInteractive = ({
 		);
 	};
 
-	const randomOrder = useMemo(() => {
-		const order = new Map<string, number>();
-		persons.forEach((person) => order.set(person.uuid, hashToUnitInterval(`${shuffleSeed}:${person.uuid}`)));
-
-		return order;
-	}, [persons, shuffleSeed]);
-
 	const startTimes = useMemo(
 		() =>
 			new Map(
@@ -249,11 +230,6 @@ export const PersonGridInteractive = ({
 			),
 		[persons],
 	);
-
-	const reshuffle = () => {
-		setSortBy('random');
-		setShuffleSeed((seed) => seed + 1);
-	};
 
 	const filteredPersons = useMemo(() => {
 		const search = searchTerm.trim().toLowerCase();
@@ -269,20 +245,14 @@ export const PersonGridInteractive = ({
 			);
 		});
 
-		const sorted = [...filtered].sort((a, b) => {
-			if (sortBy === 'random') {
-				return (randomOrder.get(a.uuid) ?? 0) - (randomOrder.get(b.uuid) ?? 0);
-			}
-
+		return [...filtered].sort((a, b) => {
 			if (sortBy === 'startDate') {
 				return (startTimes.get(a.uuid) ?? Infinity) - (startTimes.get(b.uuid) ?? Infinity);
 			}
 
 			return getSortableName(a).localeCompare(getSortableName(b));
 		});
-
-		return sorted;
-	}, [persons, searchTerm, selectedRoles, selectedStatuses, selectedCountries, sortBy, randomOrder, startTimes]);
+	}, [persons, searchTerm, selectedRoles, selectedStatuses, selectedCountries, sortBy, startTimes]);
 
 	// "All X (n)" when nothing (or everything) is selected, the item's own label for a single
 	// selection, and "n selected" for a partial multi-selection.
@@ -335,7 +305,6 @@ export const PersonGridInteractive = ({
 			<DropdownMenuContent align="start">
 				<DropdownMenuItem onSelect={() => setSortBy('alphabetical')}>{translations.sortAlphabetical}</DropdownMenuItem>
 				<DropdownMenuItem onSelect={() => setSortBy('startDate')}>{translations.sortStartDate}</DropdownMenuItem>
-				<DropdownMenuItem onSelect={reshuffle}>{translations.sortRandom}</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	) : null;

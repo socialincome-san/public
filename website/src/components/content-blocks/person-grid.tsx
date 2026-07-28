@@ -113,7 +113,6 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 				translations={{
 					searchPlaceholder: translator.t('person-grid.search-placeholder'),
 					sortAriaLabel: translator.t('person-grid.sort-aria-label'),
-					sortRandom: translator.t('person-grid.sort-random'),
 					sortAlphabetical: translator.t('person-grid.sort-alphabetical'),
 					sortStartDate: translator.t('person-grid.sort-start-date'),
 					filterAllRoles: translator.t('person-grid.filter-all-roles'),
