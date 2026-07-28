@@ -53,7 +53,6 @@ type Props = {
 	showSearch: boolean;
 	showSort: boolean;
 	showFilterPills: boolean;
-	limit: number;
 	translations: PersonGridTranslations;
 };
 
@@ -173,7 +172,6 @@ export const PersonGridInteractive = ({
 	showSearch,
 	showSort,
 	showFilterPills,
-	limit,
 	translations,
 }: Props) => {
 	const [searchTerm, setSearchTerm] = useState('');
@@ -285,8 +283,8 @@ export const PersonGridInteractive = ({
 			return getSortableName(a).localeCompare(getSortableName(b));
 		});
 
-		return limit > 0 ? sorted.slice(0, limit) : sorted;
-	}, [persons, searchTerm, selectedRoles, selectedStatuses, selectedCountries, sortBy, limit, randomOrder, startTimes]);
+		return sorted;
+	}, [persons, searchTerm, selectedRoles, selectedStatuses, selectedCountries, sortBy, randomOrder, startTimes]);
 
 	// "All X (n)" when nothing (or everything) is selected, the item's own label for a single
 	// selection, and "n selected" for a partial multi-selection.

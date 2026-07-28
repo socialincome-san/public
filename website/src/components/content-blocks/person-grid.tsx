@@ -43,7 +43,6 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 	const excludeCountryOfficeMembers = blok.excludeCountryOfficeMembers ?? false;
 
 	const statusFilter = blok.statusFilter ?? 'all';
-	const limit = Number(blok.limit) || 0;
 	const centerLastRow = blok.centerLastRow ?? false;
 	const smallCards = blok.smallCards ?? false;
 	const linkToPersonPage = blok.linkToPersonPage ?? false;
@@ -73,9 +72,8 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 	const persons = manualUuids.length
 		? allPersons
 		: allPersons.filter((person) => matchesRoleFilter(person, roleFilterCodes) && matchesStatusFilter(person, statusFilter));
-	const limitedPersons = !isInteractive && limit > 0 ? persons.slice(0, limit) : persons;
 
-	if (limitedPersons.length === 0) {
+	if (persons.length === 0) {
 		return null;
 	}
 
@@ -103,7 +101,7 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 	const content =
 		isInteractive && translator ? (
 			<PersonGridInteractive
-				persons={limitedPersons}
+				persons={persons}
 				lang={lang}
 				region={region}
 				centerLastRow={centerLastRow}
@@ -114,7 +112,6 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 				showSearch={showSearch}
 				showSort={showSort}
 				showFilterPills={showFilterPills}
-				limit={limit}
 				translations={{
 					searchPlaceholder: translator.t('person-grid.search-placeholder'),
 					sortAriaLabel: translator.t('person-grid.sort-aria-label'),
@@ -134,7 +131,7 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 			/>
 		) : (
 			<PersonCardGrid
-				persons={limitedPersons}
+				persons={persons}
 				lang={lang}
 				region={region}
 				centerLastRow={centerLastRow}

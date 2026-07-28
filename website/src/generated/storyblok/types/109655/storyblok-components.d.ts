@@ -20,10 +20,10 @@ export interface Article {
   subtitle?: string;
   leadText?: string;
   content: StoryblokRichtext;
-  author: ISbStoryData<Person> | string;
+  author: ISbStoryData<Author> | ISbStoryData<Person> | string;
   displayInOverviewPage?: boolean;
   originalLanguage?: "" | "en" | "fr" | "de" | "it";
-  type: ISbStoryData<ArticleType> | string;
+  type: ISbStoryData<ArticleType> | ISbStoryData<ArticleType> | string;
   tags?: (ISbStoryData<Tag> | string)[];
   showRelativeArticles?: boolean;
   footnotes?: StoryblokRichtext;
@@ -434,7 +434,6 @@ export interface PersonGrid {
   excludeCountryOfficeMembers?: boolean;
   linkToPersonPage?: boolean;
   smallCards?: boolean;
-  limit?: string;
   showFilterPills?: boolean;
   showSort?: boolean;
   showSearch?: boolean;
