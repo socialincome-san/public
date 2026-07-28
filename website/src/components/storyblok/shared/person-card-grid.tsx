@@ -5,8 +5,6 @@ import { createWebsitePersonLink } from '@/lib/services/storyblok/storyblok.util
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
 
-export type CardLink = 'none' | 'personPage' | 'dialog';
-
 type Props = {
 	persons: ISbStoryData<Person>[];
 	lang: WebsiteLanguage;
@@ -14,7 +12,8 @@ type Props = {
 	centerLastRow?: boolean;
 	// Switches the grid from the default medium cards to the denser compact ones.
 	smallCards?: boolean;
-	cardLink?: CardLink;
+	// Turns each card into a link to the person's page; cards stay unlinked otherwise.
+	linkToPersonPage?: boolean;
 	// Presence enables the "volunteering since" pill on the cards.
 	volunteerDurationTranslations?: VolunteerDurationTranslations;
 	roleLabels?: Record<string, string>;
@@ -45,14 +44,13 @@ export const PersonCardGrid = ({
 	region,
 	centerLastRow = false,
 	smallCards = false,
-	cardLink = 'personPage',
+	linkToPersonPage = false,
 	volunteerDurationTranslations,
 	roleLabels,
 }: Props) => {
 	const { personCardSize, gridCols, flexItemWidth } = smallCards ? SMALL_CARDS : MEDIUM_CARDS;
-	// 'dialog' isn't implemented yet — falls back to no link until that's built.
 	const getHref = (person: ISbStoryData<Person>) =>
-		cardLink === 'personPage' ? createWebsitePersonLink(person.slug, lang, region) : undefined;
+		linkToPersonPage ? createWebsitePersonLink(person.slug, lang, region) : undefined;
 	const volunteerDuration = volunteerDurationTranslations
 		? { lang, translations: volunteerDurationTranslations }
 		: undefined;

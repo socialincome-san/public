@@ -46,7 +46,7 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 	const limit = Number(blok.limit) || 0;
 	const centerLastRow = blok.centerLastRow ?? false;
 	const smallCards = blok.smallCards ?? false;
-	const cardLink = blok.cardLink === 'none' || blok.cardLink === 'dialog' ? blok.cardLink : 'personPage';
+	const linkToPersonPage = blok.linkToPersonPage ?? false;
 	const showVolunteerDuration = blok.showVolunteerDuration ?? false;
 	const showSearch = blok.showSearch ?? false;
 	const showSort = blok.showSort ?? false;
@@ -111,7 +111,7 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 				region={region}
 				centerLastRow={centerLastRow}
 				smallCards={smallCards}
-				cardLink={cardLink}
+				linkToPersonPage={linkToPersonPage}
 				volunteerDurationTranslations={volunteerDurationTranslations}
 				roleLabels={roleLabels}
 				showSearch={showSearch}
@@ -143,7 +143,7 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 				region={region}
 				centerLastRow={centerLastRow}
 				smallCards={smallCards}
-				cardLink={cardLink}
+				linkToPersonPage={linkToPersonPage}
 				volunteerDurationTranslations={volunteerDurationTranslations}
 				roleLabels={roleLabels}
 			/>

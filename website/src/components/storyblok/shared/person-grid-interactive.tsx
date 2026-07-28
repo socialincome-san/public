@@ -11,7 +11,6 @@ import {
 } from '@/components/dropdown-menu';
 import { Input } from '@/components/input';
 import type { VolunteerDurationTranslations } from '@/components/storyblok/shared/person-card';
-import type { CardLink } from '@/components/storyblok/shared/person-card-grid';
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -48,7 +47,7 @@ type Props = {
 	region: WebsiteRegion;
 	centerLastRow: boolean;
 	smallCards: boolean;
-	cardLink: CardLink;
+	linkToPersonPage: boolean;
 	volunteerDurationTranslations?: VolunteerDurationTranslations;
 	roleLabels?: Record<string, string>;
 	showSearch: boolean;
@@ -169,7 +168,7 @@ export const PersonGridInteractive = ({
 	region,
 	centerLastRow,
 	smallCards,
-	cardLink,
+	linkToPersonPage,
 	volunteerDurationTranslations,
 	roleLabels,
 	showSearch,
@@ -427,7 +426,7 @@ export const PersonGridInteractive = ({
 					region={region}
 					centerLastRow={centerLastRow}
 					smallCards={smallCards}
-					cardLink={cardLink}
+					linkToPersonPage={linkToPersonPage}
 					volunteerDurationTranslations={volunteerDurationTranslations}
 					roleLabels={roleLabels}
 				/>

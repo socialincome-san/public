@@ -426,6 +426,13 @@ export interface Person {
 }
 
 export interface PersonGrid {
+  persons?: (ISbStoryData<Person> | string)[];
+  statusFilter?: "" | "all" | "active" | "inactive";
+  roleFilter?: (number | string)[];
+  countryOffice?: (number | string)[];
+  roleExcludeFilter?: (number | string)[];
+  excludeCountryOfficeMembers?: boolean;
+  linkToPersonPage?: boolean;
   smallCards?: boolean;
   limit?: string;
   showFilterPills?: boolean;
@@ -434,13 +441,6 @@ export interface PersonGrid {
   centerLastRow?: boolean;
   showVolunteerDuration?: boolean;
   button?: Button[];
-  persons?: (ISbStoryData<Person> | string)[];
-  statusFilter?: "" | "all" | "active" | "inactive";
-  roleFilter?: (number | string)[];
-  countryOffice?: (number | string)[];
-  roleExcludeFilter?: (number | string)[];
-  excludeCountryOfficeMembers?: boolean;
-  cardLink?: "" | "none" | "personPage" | "dialog";
   disableMarginBottom?: boolean;
   disableMarginTop?: boolean;
   component: "personGrid";
