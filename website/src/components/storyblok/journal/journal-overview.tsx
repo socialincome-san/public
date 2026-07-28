@@ -58,7 +58,7 @@ export const JournalOverview = ({
 	roleLabels,
 }: Props) => (
 	<JournalPageShell>
-		<JournalBreadcrumb links={breadcrumbs} />
+		<JournalBreadcrumb links={breadcrumbs} className="mb-8 pl-0" />
 		<JournalPageHeader title={pageTitle} description={pageDescription} />
 
 		<section className="flex flex-wrap gap-2">
