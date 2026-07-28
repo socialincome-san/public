@@ -25,7 +25,7 @@ type CardSizeConfig = {
 
 const MEDIUM_CARDS: CardSizeConfig = {
 	personCardSize: 'small',
-	gridCols: 'grid-cols-2 lg:grid-cols-4 xl:grid-cols-5',
+	gridCols: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5',
 };
 
 const SMALL_CARDS: CardSizeConfig = {
