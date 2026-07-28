@@ -42,6 +42,7 @@ class _MainAppPageState extends State<MainAppPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        toolbarHeight: 70,
         title: Row(
           children: [
             Visibility(
