@@ -168,6 +168,8 @@ export interface FaqSelection {
   heading?: string;
   questions: (ISbStoryData<Faq> | string)[];
   button?: Button[];
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
   component: "faqSelection";
   _uid: string;
   [k: string]: unknown;

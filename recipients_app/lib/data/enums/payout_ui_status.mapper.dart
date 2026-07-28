@@ -41,6 +41,8 @@ class PayoutUiStatusMapper extends EnumMapper<PayoutUiStatus> {
         return PayoutUiStatus.onHoldToReview;
       case r'toBePaid':
         return PayoutUiStatus.toBePaid;
+      case r'failed':
+        return PayoutUiStatus.failed;
       case r'empty':
         return PayoutUiStatus.empty;
       default:
@@ -65,6 +67,8 @@ class PayoutUiStatusMapper extends EnumMapper<PayoutUiStatus> {
         return r'onHoldToReview';
       case PayoutUiStatus.toBePaid:
         return r'toBePaid';
+      case PayoutUiStatus.failed:
+        return r'failed';
       case PayoutUiStatus.empty:
         return r'empty';
     }

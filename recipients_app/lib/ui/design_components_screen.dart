@@ -52,6 +52,10 @@ class DesignComponentsScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 5),
                 PaymentStatusIcon(
+                  status: PayoutUiStatus.failed,
+                ),
+                SizedBox(height: 5),
+                PaymentStatusIcon(
                   status: PayoutUiStatus.empty,
                 ),
                 SizedBox(height: 5),
