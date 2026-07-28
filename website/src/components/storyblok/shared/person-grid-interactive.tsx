@@ -47,7 +47,7 @@ type Props = {
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	centerLastRow: boolean;
-	cardSize: 'large' | 'medium' | 'small';
+	smallCards: boolean;
 	cardLink: CardLink;
 	volunteerDurationTranslations?: VolunteerDurationTranslations;
 	roleLabels?: Record<string, string>;
@@ -168,7 +168,7 @@ export const PersonGridInteractive = ({
 	lang,
 	region,
 	centerLastRow,
-	cardSize,
+	smallCards,
 	cardLink,
 	volunteerDurationTranslations,
 	roleLabels,
@@ -426,7 +426,7 @@ export const PersonGridInteractive = ({
 					lang={lang}
 					region={region}
 					centerLastRow={centerLastRow}
-					cardSize={cardSize}
+					smallCards={smallCards}
 					cardLink={cardLink}
 					volunteerDurationTranslations={volunteerDurationTranslations}
 					roleLabels={roleLabels}

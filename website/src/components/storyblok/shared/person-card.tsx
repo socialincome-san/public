@@ -45,7 +45,7 @@ type Props = {
 	person: ISbStoryData<Person>;
 	href?: string;
 	// 'small' and 'compact' are this component's own visual tiers (also used by the person carousel);
-	// the person grid's "medium"/"small" cardSize options map onto them — see PersonCardGrid's CARD_SIZE_CONFIG.
+	// the person grid's medium/small cards map onto them — see PersonCardGrid's MEDIUM_CARDS/SMALL_CARDS.
 	size?: 'default' | 'small' | 'compact';
 	className?: string;
 	// Presence enables the "volunteering since" pill (on active volunteers with a start date).
