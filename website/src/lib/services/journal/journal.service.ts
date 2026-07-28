@@ -103,6 +103,7 @@ export class JournalService extends BaseService {
 			journalPath,
 			pathname,
 			breadcrumbs: buildJournalOverviewBreadcrumbs(labels.homeLabel, labels.journalLabel, journalPath, lang, region),
+			roleLabels,
 		});
 	}
 

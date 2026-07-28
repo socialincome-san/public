@@ -24,16 +24,10 @@ const matchesStatusFilter = (person: ISbStoryData<Person>, statusFilter: string)
 const matchesRoleFilter = (person: ISbStoryData<Person>, roleFilterCodes: string[]) =>
 	roleFilterCodes.length === 0 || personHasRole(person, roleFilterCodes);
 
-// Excluded roles are enforced ahead of every other branch (manual picks, country office, role/status
-// filters) so a role placed here — e.g. board members — can never surface regardless of how the rest
-// of the block is configured or how a visitor toggles the interactive filter pills.
-const matchesRoleExcludeFilter = (person: ISbStoryData<Person>, roleExcludeCodes: string[]) =>
-	roleExcludeCodes.length === 0 || !personHasRole(person, roleExcludeCodes);
+const isRoleExcluded = (person: ISbStoryData<Person>, roleExcludeCodes: string[]) =>
+	roleExcludeCodes.length > 0 && personHasRole(person, roleExcludeCodes);
 
-// Excludes anyone affiliated with a country office, regardless of which one — e.g. for a global/HQ
-// team grid that should only show people without a country-office affiliation.
-const matchesCountryOfficeExcludeFilter = (person: ISbStoryData<Person>, excludeCountryOfficeMembers: boolean) =>
-	!excludeCountryOfficeMembers || (person.content.countryOffice?.length ?? 0) === 0;
+const isCountryOfficeMember = (person: ISbStoryData<Person>) => Boolean(person.content.countryOffice?.length);
 
 export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 	const manualUuids = getStoryUuids(blok.persons);
@@ -61,10 +55,10 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 		services.storyblok.getPrimaryRoleLabels(lang),
 	]);
 	const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
+	// Exclusions run before everything else — manual picks, role/status filters and the interactive
+	// filter pills all work on this set, so a role excluded here can never surface.
 	const allPersons = (personsResult.success ? personsResult.data : []).filter(
-		(person) =>
-			matchesRoleExcludeFilter(person, roleExcludeCodes) &&
-			matchesCountryOfficeExcludeFilter(person, excludeCountryOfficeMembers),
+		(person) => !isRoleExcluded(person, roleExcludeCodes) && !(excludeCountryOfficeMembers && isCountryOfficeMember(person)),
 	);
 
 	// Manual picks bypass the role/status filters — an explicitly chosen person always shows up.
