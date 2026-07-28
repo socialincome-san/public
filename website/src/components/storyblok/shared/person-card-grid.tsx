@@ -9,7 +9,6 @@ type Props = {
 	persons: ISbStoryData<Person>[];
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
-	centerLastRow?: boolean;
 	// Switches the grid from the default medium cards to the denser compact ones.
 	smallCards?: boolean;
 	// Turns each card into a link to the person's page; cards stay unlinked otherwise.
@@ -22,33 +21,28 @@ type Props = {
 type CardSizeConfig = {
 	personCardSize: 'small' | 'compact';
 	gridCols: string;
-	flexItemWidth: string;
 };
 
 const MEDIUM_CARDS: CardSizeConfig = {
 	personCardSize: 'small',
 	gridCols: 'grid-cols-2 lg:grid-cols-4 xl:grid-cols-5',
-	flexItemWidth: 'w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)] xl:w-[calc(20%-1.2rem)]',
 };
 
 const SMALL_CARDS: CardSizeConfig = {
 	personCardSize: 'compact',
 	gridCols: 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8',
-	flexItemWidth:
-		'w-[calc(50%-0.75rem)] sm:w-[calc(25%-1.125rem)] lg:w-[calc(16.6667%-1.25rem)] xl:w-[calc(12.5%-1.3125rem)]',
 };
 
 export const PersonCardGrid = ({
 	persons,
 	lang,
 	region,
-	centerLastRow = false,
 	smallCards = false,
 	linkToPersonPage = false,
 	volunteerDurationTranslations,
 	roleLabels,
 }: Props) => {
-	const { personCardSize, gridCols, flexItemWidth } = smallCards ? SMALL_CARDS : MEDIUM_CARDS;
+	const { personCardSize, gridCols } = smallCards ? SMALL_CARDS : MEDIUM_CARDS;
 	const getHref = (person: ISbStoryData<Person>) =>
 		linkToPersonPage ? createWebsitePersonLink(person.slug, lang, region) : undefined;
 	const volunteerDuration = volunteerDurationTranslations
@@ -56,14 +50,14 @@ export const PersonCardGrid = ({
 		: undefined;
 
 	return (
-		<ul className={centerLastRow ? 'flex flex-wrap justify-center gap-6' : cn('grid gap-6', gridCols)}>
+		<ul className={cn('grid gap-6', gridCols)}>
 			{persons.map((person) => (
-				<li key={person.uuid} className={centerLastRow ? flexItemWidth : undefined}>
+				<li key={person.uuid}>
 					<PersonCard
 						person={person}
 						href={getHref(person)}
 						size={personCardSize}
-						className={cn('max-w-none', centerLastRow && 'w-full')}
+						className="w-full max-w-none"
 						volunteerDuration={volunteerDuration}
 						roleLabels={roleLabels}
 					/>

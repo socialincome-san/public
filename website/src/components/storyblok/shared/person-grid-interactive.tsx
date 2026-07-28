@@ -45,7 +45,6 @@ type Props = {
 	persons: ISbStoryData<Person>[];
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
-	centerLastRow: boolean;
 	smallCards: boolean;
 	linkToPersonPage: boolean;
 	volunteerDurationTranslations?: VolunteerDurationTranslations;
@@ -164,7 +163,6 @@ export const PersonGridInteractive = ({
 	persons,
 	lang,
 	region,
-	centerLastRow,
 	smallCards,
 	linkToPersonPage,
 	volunteerDurationTranslations,
@@ -418,7 +416,6 @@ export const PersonGridInteractive = ({
 					persons={filteredPersons}
 					lang={lang}
 					region={region}
-					centerLastRow={centerLastRow}
 					smallCards={smallCards}
 					linkToPersonPage={linkToPersonPage}
 					volunteerDurationTranslations={volunteerDurationTranslations}

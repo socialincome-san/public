@@ -437,7 +437,6 @@ export interface PersonGrid {
   showFilterPills?: boolean;
   showSort?: boolean;
   showSearch?: boolean;
-  centerLastRow?: boolean;
   showVolunteerDuration?: boolean;
   button?: Button[];
   disableMarginBottom?: boolean;
