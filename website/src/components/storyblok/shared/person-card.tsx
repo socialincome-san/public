@@ -154,9 +154,11 @@ export const PersonCard = ({ person, href, size = 'default', className, voluntee
 					/>
 				</svg>
 			</div>
+			{/* Wrapping lets the role drop onto its own left-aligned line when the name needs the full
+			    width — otherwise a long last name is squeezed to a sliver and spills under the role. */}
 			<div
 				className={cn(
-					'relative z-20 flex items-end justify-between gap-4 rounded-b-lg px-2 pb-3',
+					'relative z-20 flex flex-wrap items-end justify-between gap-x-4 gap-y-1 rounded-b-lg px-2 pb-3',
 					isSmall ? '-mt-5 pt-2.5' : '-mt-6 pt-3',
 				)}
 			>
@@ -175,7 +177,7 @@ export const PersonCard = ({ person, href, size = 'default', className, voluntee
 					) : null}
 				</h3>
 				{showRole ? (
-					<p className={cn('relative max-w-[45%] shrink-0 truncate pb-1 leading-none', isSmall ? 'text-xs' : 'text-sm')}>
+					<p className={cn('relative max-w-full shrink-0 truncate pb-1 leading-none', isSmall ? 'text-xs' : 'text-sm')}>
 						{roleLabel}
 					</p>
 				) : null}
