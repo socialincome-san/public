@@ -77,12 +77,12 @@ export const FilterDropdown = ({
 					type="button"
 					variant="outline"
 					className={cn(
-						'text-foreground border-border bg-card hover:bg-card h-10 px-4 text-sm font-medium',
+						'text-foreground border-border bg-card hover:bg-card h-10 min-w-0 flex-auto justify-between px-4 text-sm font-medium',
 						isHighlighted && 'bg-input hover:bg-input',
 					)}
 				>
-					{buttonLabel}
-					<ChevronDown className="text-foreground size-4 opacity-70" />
+					<span className="min-w-0 truncate">{buttonLabel}</span>
+					<ChevronDown className="text-foreground size-4 shrink-0 opacity-70" />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="start" className="bg-popover w-56">
