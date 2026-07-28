@@ -104,7 +104,7 @@ export const PersonCard = ({ person, href, size = 'default', className, voluntee
 	const card = (
 		<div
 			className={cn(
-				'bg-card w-full overflow-hidden rounded-xl shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]',
+				'bg-card flex h-full w-full flex-col overflow-hidden rounded-xl shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]',
 				isSmall ? 'max-w-[260px] p-2.5' : 'max-w-[305px] p-3',
 				href && 'transition-transform hover:scale-[1.01]',
 				className,
@@ -155,17 +155,23 @@ export const PersonCard = ({ person, href, size = 'default', className, voluntee
 				</svg>
 			</div>
 			{/* Wrapping lets the role drop onto its own left-aligned line when the name needs the full
-			    width — otherwise a long last name is squeezed to a sliver and spills under the role. */}
+			    width — otherwise a long last name is squeezed to a sliver and spills under the role. The card
+			    stretches to its grid row and `mb-auto` parks the slack below, so wrapping never changes the
+			    card's height relative to its neighbours. */}
 			<div
 				className={cn(
-					'relative z-20 flex flex-wrap items-end justify-between gap-x-4 gap-y-1 rounded-b-lg px-2 pb-3',
+					'relative z-20 mb-auto flex flex-wrap items-end justify-between gap-x-4 gap-y-1 rounded-b-lg px-2 pb-3',
 					isSmall ? '-mt-5 pt-2.5' : '-mt-6 pt-3',
 				)}
 			>
 				<h3
 					className={cn(
 						'relative line-clamp-2 min-w-0 font-bold',
-						isCompact ? 'text-base leading-5' : isSmall ? 'text-xl leading-7' : 'text-2xl leading-8',
+						isCompact
+							? 'text-base leading-5'
+							: isSmall
+								? 'text-lg leading-6 sm:text-xl sm:leading-7'
+								: 'text-xl leading-7 sm:text-2xl sm:leading-8',
 					)}
 				>
 					{firstName || fullName}
@@ -190,7 +196,7 @@ export const PersonCard = ({ person, href, size = 'default', className, voluntee
 	}
 
 	return (
-		<NextLink href={href} className={cn('block w-full', isSmall ? 'max-w-[260px]' : 'max-w-[305px]', className)}>
+		<NextLink href={href} className={cn('block h-full w-full', isSmall ? 'max-w-[260px]' : 'max-w-[305px]', className)}>
 			{card}
 		</NextLink>
 	);
