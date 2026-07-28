@@ -139,6 +139,7 @@ String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
             ? localizations.failedSentVerificationCodeError("")
             : localizations.failedSentVerificationCodeError(ex.message ?? ""),
       "failed-code-verification" => localizations.failedCodeVerificationCodeError,
+      "app-attestation-failed" => localizations.appAttestationFailedError,
       "invalid-verification-code" => localizations.invalidVerificationCodeError,
       "invalid-app-check-token" => localizations.invalidAppCheckTokenError,
       "play-integrity-unavailable" => localizations.playIntegrityUnavailableError,
