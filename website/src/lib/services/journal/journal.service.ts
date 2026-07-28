@@ -24,6 +24,7 @@ import {
 } from '@/lib/services/storyblok/storyblok.utils';
 
 type JournalOverviewLabels = {
+	homeLabel: string;
 	journalLabel: string;
 	overviewTitle: string;
 	overviewDescription: string;
@@ -78,7 +79,7 @@ export class JournalService extends BaseService {
 				activeTagSlug: tagSlug,
 				journalPath,
 				pathname,
-				breadcrumbs: buildJournalOverviewBreadcrumbs(labels.journalLabel, journalPath, lang, region, {
+				breadcrumbs: buildJournalOverviewBreadcrumbs(labels.homeLabel, labels.journalLabel, journalPath, lang, region, {
 					slug: tagSlug,
 					label: tagResult.data.content.value,
 				}),
@@ -101,8 +102,7 @@ export class JournalService extends BaseService {
 			pageDescription: labels.overviewDescription,
 			journalPath,
 			pathname,
-			breadcrumbs: buildJournalOverviewBreadcrumbs(labels.journalLabel, journalPath, lang, region),
-			roleLabels,
+			breadcrumbs: buildJournalOverviewBreadcrumbs(labels.homeLabel, labels.journalLabel, journalPath, lang, region),
 		});
 	}
 
@@ -111,6 +111,7 @@ export class JournalService extends BaseService {
 		region: string,
 		slug: string,
 		journalLabel: string,
+		homeLabel: string,
 	): Promise<ServiceResult<JournalArticlePageData>> {
 		const articleResult = await this.storyblok.getArticle(lang, slug);
 		if (!articleResult.success) {
@@ -133,10 +134,13 @@ export class JournalService extends BaseService {
 			story,
 			relatedArticles: relatedResult.success ? relatedResult.data : [],
 			breadcrumbs: buildJournalArticleBreadcrumbs(
+				homeLabel,
 				journalLabel,
 				journalPath,
 				getArticleTitle(story, true),
 				createWebsiteJournalArticleLink(slug, lang, region),
+				lang,
+				region,
 			),
 		});
 	}
@@ -146,6 +150,7 @@ export class JournalService extends BaseService {
 		region: string,
 		slug: string,
 		journalLabel: string,
+		homeLabel: string,
 	): Promise<ServiceResult<JournalPersonPageData>> {
 		const personResult = await this.storyblok.getPerson(slug, lang);
 		if (!personResult.success) {
@@ -172,10 +177,13 @@ export class JournalService extends BaseService {
 			showMoreArticlesLink: totalInDefault > articles.length,
 			pathname,
 			breadcrumbs: buildJournalPersonBreadcrumbs(
+				homeLabel,
 				journalLabel,
 				journalPath,
 				personName,
 				createWebsitePersonLink(slug, lang, region),
+				lang,
+				region,
 			),
 			roleLabels,
 		});
