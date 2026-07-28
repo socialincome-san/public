@@ -53,7 +53,6 @@ type Props = {
 	showSearch: boolean;
 	showSort: boolean;
 	showFilterPills: boolean;
-	defaultStatus: string;
 	limit: number;
 	translations: PersonGridTranslations;
 };
@@ -174,7 +173,6 @@ export const PersonGridInteractive = ({
 	showSearch,
 	showSort,
 	showFilterPills,
-	defaultStatus,
 	limit,
 	translations,
 }: Props) => {
@@ -182,16 +180,14 @@ export const PersonGridInteractive = ({
 	const [sortBy, setSortBy] = useState<SortOption>('alphabetical');
 	const [shuffleSeed, setShuffleSeed] = useState(0);
 	const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
-	const [selectedStatuses, setSelectedStatuses] = useState<PersonStatus[]>(
-		defaultStatus === 'active' || defaultStatus === 'inactive' ? [defaultStatus] : [],
-	);
+	const [selectedStatuses, setSelectedStatuses] = useState<PersonStatus[]>([]);
 	const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
 
 	const roleLabelFor = useCallback((role: string) => getRoleLabel(role, roleLabels), [roleLabels]);
 
 	// Each dimension's available options are scoped to persons matching the OTHER dimensions' current
-	// selections (faceted filtering) — otherwise a grid pre-scoped to e.g. inactive volunteers would
-	// still surface roles/countries that only exist among active volunteers hidden in the same fetch.
+	// selections (faceted filtering) — otherwise selecting a role would still offer countries that
+	// only exist among the people that role just filtered out.
 	const roles = useMemo(() => {
 		const relevant = persons.filter(
 			(person) => matchesStatus(person, selectedStatuses) && matchesCountry(person, selectedCountries),
@@ -320,9 +316,9 @@ export const PersonGridInteractive = ({
 		getCountryNameFromIsoCode,
 	);
 
-	// When the block is locked to a single status (statusFilter !== 'all'), there's nothing to
-	// toggle — the status dropdown only makes sense when visitors can actually narrow between them.
-	const showStatusFilter = statuses.length > 0 && defaultStatus === 'all';
+	// The block's statusFilter is already applied server-side, so a single remaining status leaves
+	// nothing to toggle — the dropdown only makes sense when visitors can narrow between them.
+	const showStatusFilter = statuses.length > 1;
 
 	const hasToolbar = showFilterPills || showSort || showSearch;
 	const hasFilters = showFilterPills && (roles.length > 0 || showStatusFilter || countries.length > 0);

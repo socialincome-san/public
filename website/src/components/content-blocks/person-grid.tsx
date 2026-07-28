@@ -69,13 +69,10 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 			matchesCountryOfficeExcludeFilter(person, excludeCountryOfficeMembers),
 	);
 
+	// Manual picks bypass the role/status filters — an explicitly chosen person always shows up.
 	const persons = manualUuids.length
 		? allPersons
-		: isInteractive
-			? allPersons.filter((person) => matchesRoleFilter(person, roleFilterCodes))
-			: allPersons.filter(
-					(person) => matchesRoleFilter(person, roleFilterCodes) && matchesStatusFilter(person, statusFilter),
-				);
+		: allPersons.filter((person) => matchesRoleFilter(person, roleFilterCodes) && matchesStatusFilter(person, statusFilter));
 	const limitedPersons = !isInteractive && limit > 0 ? persons.slice(0, limit) : persons;
 
 	if (limitedPersons.length === 0) {
@@ -117,7 +114,6 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 				showSearch={showSearch}
 				showSort={showSort}
 				showFilterPills={showFilterPills}
-				defaultStatus={statusFilter}
 				limit={limit}
 				translations={{
 					searchPlaceholder: translator.t('person-grid.search-placeholder'),
