@@ -105,10 +105,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contactNumber => 'Contact Number';
 
   @override
-  String get contactNumberError => 'Please enter your contact phone number';
-
-  @override
-  String get contactNumberError2 => 'Please enter a valid phone number. Only numbers are allowed';
+  String get contactNumberError => 'Please enter a valid phone number. Only numbers are allowed';
 
   @override
   String get inCaseOfDeathTitle => '⁠In Case of Death';
@@ -252,9 +249,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get duration => 'Duration';
 
   @override
-  String get nextMonth => 'Next month';
-
-  @override
   String get today => 'Today';
 
   @override
@@ -284,6 +278,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get myPayments => 'My Payments';
+
+  @override
+  String get programCompleted => 'Program Completed';
+
+  @override
+  String get programCompletedDescription =>
+      'All payments have been made and confirmed. Thank you for being part of Social Income.';
 
   @override
   String get contestPayment => 'Contest Payment';
@@ -759,14 +760,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unknownPaymentPhoneNumber => 'Unknown payment phone number';
 
   @override
-  String get myProfile => 'My Profile';
-
-  @override
-  String contactPhoneQuestion(String paymentPhoneNumber) {
-    return 'Is your payment phone number ($paymentPhoneNumber) also your contact phone number?';
-  }
-
-  @override
   String get noInternetConnection => 'No internet connection. Cannot refresh data.';
 
   @override
@@ -780,4 +773,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openGoogleSupportPageUpdatePlayStore => 'Open Support Page';
+
+  @override
+  String get appAttestationFailedError => 'Firebase AppCheck: App attestation failed.';
 }
