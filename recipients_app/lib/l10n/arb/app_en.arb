@@ -32,8 +32,7 @@
     "paymentProviderError": "Please select a payment provider",
     "contactPhone": "Contact Phone",
     "contactNumber": "Contact Number",
-    "contactNumberError": "Please enter your contact phone number",
-    "contactNumberError2": "Please enter a valid phone number. Only numbers are allowed",
+    "contactNumberError": "Please enter a valid phone number. Only numbers are allowed",
     "inCaseOfDeathTitle": "⁠In Case of Death",
     "inCaseOfDeathDescription": "Who should be the recipient of your Social Income payments if you pass away during the program?",
     "successorName": "Successor Name",
@@ -87,7 +86,6 @@
     "amount": "Amount",
     "interval": "Interval",
     "duration": "Duration",
-    "nextMonth": "Next month",
     "today": "Today",
     "oneDay": "1 day",
     "daysAgo": "{number} days ago",
@@ -111,6 +109,8 @@
     "month": "month",
     "months": "months",
     "myPayments": "My Payments",
+    "programCompleted": "Program Completed",
+    "programCompletedDescription": "All payments have been made and confirmed. Thank you for being part of Social Income.",
     "contestPayment": "Contest Payment",
     "contestPaymentInfo": "A payment has not reached you. What happened?",
     "submit": "Submit",
@@ -308,18 +308,10 @@
     "country": "Country",
     "recipientNotFound": "No recipient account found for this phone number. Please check your phone number or contact your local partner.",
 	"unknownPaymentPhoneNumber": "Unknown payment phone number",
-	"myProfile": "My Profile",
-	"contactPhoneQuestion": "Is your payment phone number ({paymentPhoneNumber}) also your contact phone number?",
-	"@contactPhoneQuestion": {
-		"placeholders": {
-			"paymentPhoneNumber": {
-				"type": "String"
-			}
-		}
-	},
 	"noInternetConnection": "No internet connection. Cannot refresh data.",
     "offlineBanner": "No internet connection",
     "offlineMutationError": "This action requires an internet connection",
     "offlineBannerMessage": "You are offline. Showing cached data.",
-    "openGoogleSupportPageUpdatePlayStore" : "Open Support Page"
+    "openGoogleSupportPageUpdatePlayStore" : "Open Support Page",
+    "appAttestationFailedError" : "Firebase AppCheck: App attestation failed."
 }

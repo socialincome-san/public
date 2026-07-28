@@ -1,7 +1,6 @@
 import "dart:io";
 
 import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/core/cubits/dashboard_card_manager/dashboard_card_manager_cubit.dart";
 import "package:app/core/cubits/payment/payouts_cubit.dart";
 import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
@@ -34,12 +33,6 @@ class DashboardPage extends StatelessWidget {
           )..loadPayments(),
         ),
         BlocProvider(
-          create: (context) => DashboardCardManagerCubit(
-            crashReportingRepository: context.read<CrashReportingRepository>(),
-            authCubit: context.read<AuthCubit>(),
-          )..fetchCards(),
-        ),
-        BlocProvider(
           create: (context) => SurveyCubit(
             recipient: authCubit.state.recipient!,
             surveyRepository: context.read<SurveyRepository>(),
@@ -66,13 +59,6 @@ class _DashboardViewState extends State<_DashboardView> {
   Widget build(BuildContext context) {
     final surveys = context.watch<SurveyCubit>().state.mappedSurveys;
 
-    final List<DashboardItem> dashboardCardItems = context
-        .watch<DashboardCardManagerCubit>()
-        .state
-        .cards
-        .map<DashboardItem>((card) => card)
-        .toList();
-
     final List<DashboardItem> surveysItems = context
         .watch<SurveyCubit>()
         .state
@@ -82,8 +68,6 @@ class _DashboardViewState extends State<_DashboardView> {
         )
         .toList();
 
-    final dynamicItemsCount = dashboardCardItems.length + surveysItems.length;
-
     final List<DashboardItem> headerItems = [
       const BalanceCardContainer(),
       SurveysOverviewCard(mappedSurveys: surveys),
@@ -91,8 +75,8 @@ class _DashboardViewState extends State<_DashboardView> {
 
     List<DashboardItem> items;
 
-    if (dynamicItemsCount > 0) {
-      items = headerItems + dashboardCardItems + surveysItems;
+    if (surveysItems.isNotEmpty) {
+      items = headerItems + surveysItems;
     } else {
       items = headerItems + [const EmptyItem()];
     }
@@ -107,22 +91,6 @@ class _DashboardViewState extends State<_DashboardView> {
           },
           child: MultiBlocListener(
             listeners: [
-              BlocListener<DashboardCardManagerCubit, DashboardCardManagerState>(
-                listener: (context, state) {
-                  if (state.status == DashboardCardManagerStatus.error) {
-                    FlushbarHelper.showFlushbar(
-                      context,
-                      message: state.exception?.toString() ?? context.l10n.anErrorOccurred,
-                      type: FlushbarType.error,
-                    );
-                  } else if (state.status == DashboardCardManagerStatus.updated) {
-                    FlushbarHelper.showFlushbar(
-                      context,
-                      message: context.l10n.profileUpdateSuccess,
-                    );
-                  }
-                },
-              ),
               BlocListener<PayoutsCubit, PayoutsState>(
                 listener: (context, state) {
                   if (state.status == PayoutsStatus.failure) {

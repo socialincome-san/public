@@ -26,7 +26,7 @@ export const StoryblokPreviewJournalArticlePage = async ({
 }: Props) => {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-journal', 'common', 'website-newsletter'],
+		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-common'],
 	});
 
 	return await StoryblokPreviewStory<ISbStoryData<ResolvedArticle>>({
@@ -40,7 +40,13 @@ export const StoryblokPreviewJournalArticlePage = async ({
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async (story) => {
-			const pageResult = await services.journal.getArticlePageData(lang, region, slug, translator.t('overview.title'));
+			const pageResult = await services.journal.getArticlePageData(
+				lang,
+				region,
+				slug,
+				translator.t('overview.title'),
+				translator.t('breadcrumb.home', { namespace: 'website-common' }),
+			);
 
 			if (!pageResult.success) {
 				return notFound();
