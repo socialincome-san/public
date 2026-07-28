@@ -93,6 +93,9 @@ class AuthenticatedClient extends http.BaseClient {
       if (message.contains("integrity api is not available") || message.contains("integrityserviceexception: -1")) {
         throw AuthException(code: "play-integrity-unavailable", message: e.toString());
       }
+      if (message.contains("app attestation failed")) {
+        throw AuthException(code: "app-attestation-failed", message: e.toString());
+      }
       rethrow;
     }
   }
