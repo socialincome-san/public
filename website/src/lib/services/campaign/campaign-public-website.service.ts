@@ -23,7 +23,7 @@ export class CampaignPublicWebsiteService extends BaseService {
 	}
 
 	async getMetadataForSlug(slug: string, lang: WebsiteLanguage) {
-		const result = await this.campaignRead.getBySlug(slug);
+		const result = await this.campaignRead.getByPortalSlug(slug);
 		if (!result.success || !result.data?.isActive) {
 			return this.getFallbackMetadata(lang);
 		}

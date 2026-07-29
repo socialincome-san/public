@@ -245,9 +245,9 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
-	async getBySlug(slug: string): Promise<ServiceResult<CampaignPage>> {
+	async getByPortalSlug(portalSlug: string): Promise<ServiceResult<CampaignPage>> {
 		try {
-			const normalizedSlug = slug.trim();
+			const normalizedSlug = portalSlug.trim();
 			if (!normalizedSlug) {
 				return this.resultFail('Missing campaign slug');
 			}

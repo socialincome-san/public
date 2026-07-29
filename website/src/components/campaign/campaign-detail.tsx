@@ -11,12 +11,14 @@ import { services } from '@/lib/services/services';
 
 type Props = {
 	campaign: CampaignPage;
+	title: string;
+	description: string;
 	campaignSlug: string;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const CampaignDetail = async ({ campaign, campaignSlug, lang, region }: Props) => {
+export const CampaignDetail = async ({ campaign, title, description, campaignSlug, lang, region }: Props) => {
 	const pageContentResult = await services.read.campaignPublicWebsite.getPageContent(lang);
 	if (!pageContentResult.success) {
 		throw new Error(pageContentResult.error);
@@ -33,7 +35,7 @@ export const CampaignDetail = async ({ campaign, campaignSlug, lang, region }: P
 
 	return (
 		<>
-			<CampaignHero campaign={campaign} translator={translator} lang={lang} />
+			<CampaignHero campaign={campaign} title={title} description={description} translator={translator} lang={lang} />
 			{campaign.secondDescription && campaign.thirdDescription && <CampaignExtraText campaign={campaign} />}
 			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
 			<CampaignAboutSection translator={translator} />

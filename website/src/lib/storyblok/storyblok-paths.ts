@@ -54,6 +54,8 @@ const STORYBLOK_CAMPAIGNS_OVERVIEW_SLUG = 'campaigns';
 
 export const getCampaignsOverviewStoryPath = () => `${STORYBLOK_CAMPAIGNS_FOLDER}/${STORYBLOK_CAMPAIGNS_OVERVIEW_SLUG}`;
 
+export const getCampaignStoryPath = (campaignSlug: string) => `${STORYBLOK_CAMPAIGNS_FOLDER}/${campaignSlug}`;
+
 export const STORYBLOK_FAQ_FOLDER = `${STORYBLOK_GLOBALS_FOLDER}/faqs`;
 
 const STORYBLOK_PERSONS_FOLDER = `${STORYBLOK_PAGES_FOLDER}/persons`;

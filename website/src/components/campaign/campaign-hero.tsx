@@ -6,11 +6,13 @@ import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 
 type Props = {
 	campaign: CampaignPage;
+	title: string;
+	description: string;
 	translator: Translator;
 	lang: WebsiteLanguage;
 };
 
-export const CampaignHero = ({ campaign, translator, lang }: Props) => {
+export const CampaignHero = ({ campaign, title, description, translator, lang }: Props) => {
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
 	const showProgress = campaign.percentageCollected !== null && campaign.percentageCollected !== undefined;
 	const showAmount = campaign.amountCollected !== null;
@@ -22,8 +24,8 @@ export const CampaignHero = ({ campaign, translator, lang }: Props) => {
 					<p className="text-muted-foreground text-lg">
 						{translator.t('campaign.by', { context: { creator: campaign.creatorName } })}
 					</p>
-					<h1 className="text-primary text-5xl font-bold md:text-6xl">{campaign.title}</h1>
-					<p className="text-foreground text-lg">{campaign.description}</p>
+					<h1 className="text-primary text-5xl font-bold md:text-6xl">{title}</h1>
+					<p className="text-foreground text-lg">{description}</p>
 
 					{!hasGoal && showAmount && (
 						<p className="text-primary text-xl font-bold">

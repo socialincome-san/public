@@ -1,5 +1,6 @@
 import type { CountryCode } from '@/generated/prisma/enums';
 import type {
+	Campaign,
 	Country,
 	Faq,
 	Focus,
@@ -16,6 +17,7 @@ import {
 	STORYBLOK_LOCAL_PARTNERS_FOLDER,
 	STORYBLOK_PAGES_FOLDER,
 	STORYBLOK_PROGRAMS_FOLDER,
+	getCampaignStoryPath,
 	getJournalArticleStoryPath,
 	getJournalTagStoryPath,
 	getPersonStoryPath,
@@ -643,6 +645,35 @@ export class StoryblokService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Failed to fetch program: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getCampaignBySlug(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<Campaign>>> {
+		const storyPath = getCampaignStoryPath(slug);
+
+		try {
+			const data = await this.withOptionalLanguageFallback(
+				async (language: string) => {
+					const response = await getStoryblokApi().get(`cdn/stories/${storyPath}`, {
+						...(await this.getStoryParams(language)),
+						resolve_relations: StoryblokService.standardStoryRelationsToResolve,
+					});
+
+					return (response.data as { story: ISbStoryData<Campaign> }).story;
+				},
+				lang,
+				storyPath,
+			);
+
+			if (!data) {
+				return this.resultFail(`Failed to fetch campaign: not found for slug '${slug}'`);
+			}
+
+			return this.resultOk(data);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch campaign: ${JSON.stringify(error)}`);
 		}
 	}
 

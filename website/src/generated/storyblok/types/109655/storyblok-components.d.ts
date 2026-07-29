@@ -57,6 +57,16 @@ export interface Button {
   [k: string]: unknown;
 }
 
+export interface Campaign {
+  portalSlug: string;
+  title: string;
+  description: string;
+  primaryImage: StoryblokAsset;
+  component: "Campaign";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface CampaignDonate {
   campaignId?: string;
   component: "campaignDonate";
@@ -168,8 +178,6 @@ export interface FaqSelection {
   heading?: string;
   questions: (ISbStoryData<Faq> | string)[];
   button?: Button[];
-  disableMarginTop?: boolean;
-  disableMarginBottom?: boolean;
   component: "faqSelection";
   _uid: string;
   [k: string]: unknown;
@@ -621,6 +629,7 @@ export type ContentType =
   | ActionButton
   | Article
   | ArticleType
+  | Campaign
   | CampaignOverview
   | Country
   | CountryOverview
