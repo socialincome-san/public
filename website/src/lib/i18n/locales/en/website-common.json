@@ -191,5 +191,32 @@
 	"wallet": {
 		"paid-out": "Paid out",
 		"recipients": "Recipients"
+	},
+	"person-grid": {
+		"search-placeholder": "Search by name",
+		"sort-aria-label": "Sort",
+		"sort-alphabetical": "Alphabetical",
+		"sort-start-date": "By start date",
+		"filter-all-roles": "All roles ({{count}})",
+		"filter-all-statuses": "All statuses ({{count}})",
+		"filter-all-countries": "All countries ({{count}})",
+		"filter-multiple-selected": "{{count}} selected",
+		"filter-select-all": "Select all",
+		"filter-clear-all": "Clear",
+		"status-active": "Active",
+		"status-inactive": "Former",
+		"duration-started-today": "Started today",
+		"duration-day-singular": "{{count}} day",
+		"duration-day-plural": "{{count}} days",
+		"duration-month-singular": "{{count}} month",
+		"duration-month-plural": "{{count}} months",
+		"duration-year-singular": "{{count}} year +",
+		"duration-year-plural": "{{count}} years +",
+		"duration-month-anniversary-singular": "{{count}} month today 🎉",
+		"duration-month-anniversary-plural": "{{count}} months today 🎉",
+		"duration-year-anniversary-singular": "{{count}} year today 🎉",
+		"duration-year-anniversary-plural": "{{count}} years today 🎉",
+		"duration-since": "Since {{date}}",
+		"no-results": "No people match your search."
 	}
 }

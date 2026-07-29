@@ -8,7 +8,6 @@ type Props = {
 const defaultSize = 'm';
 
 const sizeClasses = {
-	'': 'h-12 md:h-24 lg:h-32',
 	xs: 'h-4 md:h-6 lg:h-8',
 	s: 'h-8 md:h-12 lg:h-16',
 	m: 'h-12 md:h-24 lg:h-32',
@@ -17,7 +16,9 @@ const sizeClasses = {
 } satisfies Record<NonNullable<Spacer['size']>, string>;
 
 export const SpacerBlock = ({ blok }: Props) => {
-	const size = blok.size ?? defaultSize;
+	// Stored content can still carry an empty size from before the field dropped its blank option,
+	// so fall back on any falsy value rather than only on null/undefined.
+	const size = blok.size || defaultSize;
 
 	return (
 		<div

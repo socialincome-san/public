@@ -191,5 +191,32 @@
 	"wallet": {
 		"paid-out": "Versato",
 		"recipients": "Beneficiari"
+	},
+	"person-grid": {
+		"search-placeholder": "Cerca per nome",
+		"sort-aria-label": "Ordina",
+		"sort-alphabetical": "Alfabetico",
+		"sort-start-date": "Per data di inizio",
+		"filter-all-roles": "Tutti i ruoli ({{count}})",
+		"filter-all-statuses": "Tutti gli stati ({{count}})",
+		"filter-all-countries": "Tutti i paesi ({{count}})",
+		"filter-multiple-selected": "{{count}} selezionati",
+		"filter-select-all": "Seleziona tutto",
+		"filter-clear-all": "Reimposta",
+		"status-active": "Attivo",
+		"status-inactive": "Ex",
+		"duration-started-today": "Iniziato oggi",
+		"duration-day-singular": "{{count}} giorno",
+		"duration-day-plural": "{{count}} giorni",
+		"duration-month-singular": "{{count}} mese",
+		"duration-month-plural": "{{count}} mesi",
+		"duration-year-singular": "{{count}} anno +",
+		"duration-year-plural": "{{count}} anni +",
+		"duration-month-anniversary-singular": "Oggi {{count}} mese 🎉",
+		"duration-month-anniversary-plural": "Oggi {{count}} mesi 🎉",
+		"duration-year-anniversary-singular": "Oggi {{count}} anno 🎉",
+		"duration-year-anniversary-plural": "Oggi {{count}} anni 🎉",
+		"duration-since": "Dal {{date}}",
+		"no-results": "Nessuna persona corrisponde alla tua ricerca."
 	}
 }
