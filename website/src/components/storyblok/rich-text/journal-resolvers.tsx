@@ -8,6 +8,7 @@ import {
 	removeStoryblokPagesFolder,
 	storyblokRichTextNodeResolvers,
 } from '@/components/storyblok/rich-text/shared-resolvers';
+import { Table, TableBody } from '@/components/table';
 import { cn } from '@/lib/utils/cn';
 import NextLink from 'next/link';
 import { createElement, ReactNode } from 'react';
@@ -18,6 +19,7 @@ import {
 	NODE_LI,
 	NODE_OL,
 	NODE_PARAGRAPH,
+	NODE_TABLE,
 	NODE_UL,
 } from 'storyblok-rich-text-react-renderer';
 
@@ -77,10 +79,26 @@ export const journalRichTextNodeResolvers = {
 	[NODE_UL]: (children: ReactNode) => <ul className="my-4 list-disc space-y-1 pl-6 text-lg md:text-xl">{children}</ul>,
 	[NODE_OL]: (children: ReactNode) => <ol className="my-4 list-decimal space-y-1 pl-6 text-lg md:text-xl">{children}</ol>,
 	[NODE_LI]: (children: ReactNode) => <li className="[&::marker]:text-foreground my-1 *:m-0 *:p-0">{children}</li>,
+	[NODE_TABLE]: (children: ReactNode) => (
+		<Table
+			className={cn(
+				'text-foreground my-6',
+				// Cell content is rendered by the paragraph/list resolvers above, so scale it
+				// down here to keep tables smaller than the article body text.
+				'[&_li]:my-0 [&_ol]:my-0 [&_p]:my-0 [&_ul]:my-0',
+				'text-base [&_ol]:text-base [&_p]:text-base [&_ul]:text-base',
+				'md:text-lg md:[&_ol]:text-lg md:[&_p]:text-lg md:[&_ul]:text-lg',
+			)}
+		>
+			<TableBody>{children}</TableBody>
+		</Table>
+	),
 };
 
 export const footnoteRichTextNodeResolvers = {
 	...journalRichTextNodeResolvers,
+	// Footnotes are already small, so keep the default table sizing instead of the article one.
+	[NODE_TABLE]: storyblokRichTextNodeResolvers[NODE_TABLE],
 	[NODE_HEADING]: (children: ReactNode, props: RichTextHeadingProps) =>
 		createElement(
 			`h${props.level}`,
