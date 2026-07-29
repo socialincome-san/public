@@ -31,8 +31,8 @@ const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.Componen
 	github: GithubIcon,
 	newsletter: PaperPlaneIcon,
 	contact: ContactIcon,
-	'google-play': GooglePlayIcon,
-	'app-store': AppStoreIcon,
+	googleplay: GooglePlayIcon,
+	appstore: AppStoreIcon,
 	youtube: YoutubeIcon,
 };
 
