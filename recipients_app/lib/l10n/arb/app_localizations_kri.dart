@@ -250,9 +250,6 @@ class AppLocalizationsKri extends AppLocalizations {
   String get duration => 'Ɔmɔs tɛm';
 
   @override
-  String get nextMonth => 'Nɛks mɔnt';
-
-  @override
   String get today => 'Tide';
 
   @override
@@ -282,6 +279,13 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get myPayments => 'Mi Pemɛnt Dɛm';
+
+  @override
+  String get programCompleted => 'Dɛn dɔn dɔn di program';
+
+  @override
+  String get programCompletedDescription =>
+      'Dɛn dɔn mek ɔl di pemɛnt dɛn ɛn dɛn dɔn kɔnfyus dɛn. Tank yu fɔ bi pat pan Sɔshial Inkam.';
 
   @override
   String get contestPayment => 'Pemɛnt we yu nɔ gri wit';
@@ -770,4 +774,7 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get openGoogleSupportPageUpdatePlayStore => 'Opin Sɔpɔt Pej';
+
+  @override
+  String get appAttestationFailedError => 'Firebase AppCheck: App attestation failed.';
 }

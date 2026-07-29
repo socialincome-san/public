@@ -7,12 +7,14 @@ import "package:flutter/material.dart";
 class BalanceCardHeader extends StatelessWidget {
   final int daysTo;
   final int amount;
+  final String currency;
   final BalanceCardStatus balanceCardStatus;
 
   const BalanceCardHeader({
     super.key,
     required this.daysTo,
     required this.amount,
+    required this.currency,
     required this.balanceCardStatus,
   });
 
@@ -52,7 +54,7 @@ class BalanceCardHeader extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                "SLE $amount",
+                "$currency $amount",
                 style: dynamicTextStyle,
               ),
             ],
@@ -75,7 +77,7 @@ class BalanceCardHeader extends StatelessWidget {
     if (balanceCardStatus == BalanceCardStatus.onHold) {
       daysText = localizations.paymentsSuspended;
     } else if (daysTo < 0) {
-      daysText = localizations.nextMonth;
+      daysText = "-";
     } else if (daysTo == 0) {
       daysText = localizations.today;
     } else if (daysTo == 1) {

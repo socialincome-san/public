@@ -249,9 +249,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get duration => 'Duration';
 
   @override
-  String get nextMonth => 'Next month';
-
-  @override
   String get today => 'Today';
 
   @override
@@ -281,6 +278,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get myPayments => 'My Payments';
+
+  @override
+  String get programCompleted => 'Program Completed';
+
+  @override
+  String get programCompletedDescription =>
+      'All payments have been made and confirmed. Thank you for being part of Social Income.';
 
   @override
   String get contestPayment => 'Contest Payment';
@@ -769,4 +773,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openGoogleSupportPageUpdatePlayStore => 'Open Support Page';
+
+  @override
+  String get appAttestationFailedError => 'Firebase AppCheck: App attestation failed.';
 }

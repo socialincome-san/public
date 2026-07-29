@@ -37,7 +37,7 @@ export const PersonProfile = ({
 	showMoreArticlesLink,
 }: Props) => (
 	<JournalPageShell>
-		<JournalBreadcrumb links={breadcrumbs} />
+		<JournalBreadcrumb links={breadcrumbs} className="mb-8 pl-0" />
 		<PersonProfileHeader person={person} name={getPersonDisplayName(person)} portraitSrc={getPersonPortraitSrc(person)} />
 
 		{articles.length > 0 && (

@@ -86,7 +86,6 @@
     "amount": "Ɔmɔs",
     "interval": "Intaval",
     "duration": "Ɔmɔs tɛm",
-    "nextMonth": "Nɛks mɔnt",
     "today": "Tide",
     "oneDay": "1 de",
     "daysAgo": "I dɔn pas {number} de",
@@ -110,6 +109,8 @@
     "month": "mɔnt",
     "months": "mɔnt dɛn",
     "myPayments": "Mi Pemɛnt Dɛm",
+    "programCompleted": "Dɛn dɔn dɔn di program",
+    "programCompletedDescription": "Dɛn dɔn mek ɔl di pemɛnt dɛn ɛn dɛn dɔn kɔnfyus dɛn. Tank yu fɔ bi pat pan Sɔshial Inkam.",
     "contestPayment": "Pemɛnt we yu nɔ gri wit",
     "contestPaymentInfo": "Di pemɛnt nɔ rich yu. Wetin apin?",
     "submit": "Put am insay",
@@ -317,5 +318,6 @@
     "offlineBanner": "Nɔ intanɛt kɔnɛkshɔn",
     "offlineMutationError": "Dis akshɔn nid intanɛt kɔnɛkshɔn",
     "offlineBannerMessage": "Yu de ɔflayna. Sho di data we dɛn dɔn kech.",
-    "openGoogleSupportPageUpdatePlayStore" : "Opin Sɔpɔt Pej"
+    "openGoogleSupportPageUpdatePlayStore" : "Opin Sɔpɔt Pej",
+    "appAttestationFailedError" : "Firebase AppCheck: App attestation failed."
 }

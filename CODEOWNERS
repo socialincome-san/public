@@ -5,10 +5,17 @@ firestore.rules raphael@socialincome.org manuel@socialincome.org nando@socialinc
 package.json raphael@socialincome.org manuel@socialincome.org nando@socialincome.org kevin@socialincome.org fabrice@socialincome.org marco@socialincome.org michael@socialincome.org
 storage.rules raphael@socialincome.org manuel@socialincome.org nando@socialincome.org kevin@socialincome.org fabrice@socialincome.org marco@socialincome.org michael@socialincome.org
 
+# Mobile app
 recipients_app/ verena@socialincome.org mikolaj@socialincome.org sandino@socialincome.org karin@socialincome.org
 codemagic.yaml verena@socialincome.org mikolaj@socialincome.org sandino@socialincome.org karin@socialincome.org
+
+# Website
 website/ raphael@socialincome.org manuel@socialincome.org nando@socialincome.org kevin@socialincome.org fabrice@socialincome.org marco@socialincome.org michael@socialincome.org sandino@socialincome.org dev@socialincome.org
 ui/ raphael@socialincome.org manuel@socialincome.org nando@socialincome.org kevin@socialincome.org fabrice@socialincome.org marco@socialincome.org michael@socialincome.org sandino@socialincome.org
 .github/workflows/ui.yml raphael@socialincome.org manuel@socialincome.org nando@socialincome.org kevin@socialincome.org fabrice@socialincome.org marco@socialincome.org michael@socialincome.org sandino@socialincome.org
 
+# General md files
 *.md sandino@socialincome.org raphael@socialincome.org manuel@socialincome.org nando@socialincome.org kevin@socialincome.org fabrice@socialincome.org marco@socialincome.org michael@socialincome.org
+
+# Mobile md files
+recipients_app/*.md verena@socialincome.org mikolaj@socialincome.org sandino@socialincome.org karin@socialincome.org
