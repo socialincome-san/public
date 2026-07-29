@@ -8,6 +8,8 @@ import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsl
 import { QuotedText } from '@/components/storyblok/journal/rich-text/quoted-text';
 import { ReferencesGroupBlock } from '@/components/storyblok/journal/rich-text/references-group';
 import {
+	footnoteRichTextMarkResolvers,
+	footnoteRichTextNodeResolvers,
 	journalRichTextMarkResolvers as storyblokRichTextMarkResolvers,
 	journalRichTextNodeResolvers as storyblokRichTextNodeResolvers,
 } from '@/components/storyblok/rich-text/journal-resolvers';
@@ -24,6 +26,7 @@ type Props = {
 	document: StoryblokRichtext;
 	lang: WebsiteLanguage;
 	donationForm: ReactNode;
+	variant?: 'article' | 'footnotes';
 };
 
 const buildReferenceLabels = (translator: Translator) => ({
@@ -35,7 +38,7 @@ const buildReferenceLabels = (translator: Translator) => ({
 	context: (contextKey: string) => translator.t(`reference-article.context.${contextKey}`),
 });
 
-export const ArticleRichText = ({ document, lang, donationForm }: Props) => {
+export const ArticleRichText = ({ document, lang, donationForm, variant = 'article' }: Props) => {
 	const journalTranslator = useTranslator(lang, 'website-journal');
 
 	if (!journalTranslator) {
@@ -43,10 +46,11 @@ export const ArticleRichText = ({ document, lang, donationForm }: Props) => {
 	}
 
 	const referenceLabels = buildReferenceLabels(journalTranslator);
+	const isFootnotes = variant === 'footnotes';
 
 	return render(document, {
-		markResolvers: storyblokRichTextMarkResolvers,
-		nodeResolvers: storyblokRichTextNodeResolvers,
+		markResolvers: isFootnotes ? footnoteRichTextMarkResolvers : storyblokRichTextMarkResolvers,
+		nodeResolvers: isFootnotes ? footnoteRichTextNodeResolvers : storyblokRichTextNodeResolvers,
 		blokResolvers: {
 			quotedText: (props: StoryblokBlockProps) => <QuotedText {...(props as ComponentProps<typeof QuotedText>)} />,
 			imageWithCaption: (props: StoryblokBlockProps) => (

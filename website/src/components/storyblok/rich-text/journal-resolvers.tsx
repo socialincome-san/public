@@ -31,27 +31,36 @@ const journalHeadingStyles: Record<HeadingSize, string> = {
 };
 
 const journalLinkClassName = 'text-primary underline underline-offset-4';
+const footnoteLinkClassName = 'text-inherit underline underline-offset-4';
 
-export const journalRichTextMarkResolvers = {
-	[MARK_BOLD]: (children: ReactNode) => <strong className="font-medium text-inherit!">{children}</strong>,
-	[MARK_LINK]: (children: ReactNode, props: { href?: string; target?: string; rel?: string }) => {
+const createLinkResolver =
+	(className: string) => (children: ReactNode, props: { href?: string; target?: string; rel?: string }) => {
 		const href = props.href?.trim();
 
 		if (!href) {
-			return <span className={journalLinkClassName}>{children}</span>;
+			return <span className={className}>{children}</span>;
 		}
 
 		return (
 			<NextLink
 				href={removeStoryblokPagesFolder(href)}
-				className={cn(journalLinkClassName, 'hover:underline')}
+				className={cn(className, 'hover:underline')}
 				target={props.target}
 				rel={buildLinkRel(props.target, props.rel)}
 			>
 				{children}
 			</NextLink>
 		);
-	},
+	};
+
+export const journalRichTextMarkResolvers = {
+	[MARK_BOLD]: (children: ReactNode) => <strong className="font-medium text-inherit!">{children}</strong>,
+	[MARK_LINK]: createLinkResolver(journalLinkClassName),
+};
+
+export const footnoteRichTextMarkResolvers = {
+	...journalRichTextMarkResolvers,
+	[MARK_LINK]: createLinkResolver(footnoteLinkClassName),
 };
 
 export const journalRichTextNodeResolvers = {
@@ -68,4 +77,22 @@ export const journalRichTextNodeResolvers = {
 	[NODE_UL]: (children: ReactNode) => <ul className="my-4 list-disc space-y-1 pl-6 text-lg md:text-xl">{children}</ul>,
 	[NODE_OL]: (children: ReactNode) => <ol className="my-4 list-decimal space-y-1 pl-6 text-lg md:text-xl">{children}</ol>,
 	[NODE_LI]: (children: ReactNode) => <li className="[&::marker]:text-foreground my-1 *:m-0 *:p-0">{children}</li>,
+};
+
+export const footnoteRichTextNodeResolvers = {
+	...journalRichTextNodeResolvers,
+	[NODE_HEADING]: (children: ReactNode, props: RichTextHeadingProps) =>
+		createElement(
+			`h${props.level}`,
+			{ className: cn('my-1 text-muted-foreground leading-snug', getRichTextAlignmentClassName(props)) },
+			children,
+		),
+	[NODE_PARAGRAPH]: (children: ReactNode, props?: RichTextAlignmentProps) => (
+		<p className={cn('text-muted-foreground my-1 leading-snug', getRichTextAlignmentClassName(props))}>{children}</p>
+	),
+	[NODE_UL]: (children: ReactNode) => <ul className="text-muted-foreground my-1 list-disc pl-6 leading-snug">{children}</ul>,
+	[NODE_OL]: (children: ReactNode) => (
+		<ol className="text-muted-foreground my-1 list-decimal pl-6 leading-snug">{children}</ol>
+	),
+	[NODE_LI]: (children: ReactNode) => <li className="[&::marker]:text-muted-foreground">{children}</li>,
 };
