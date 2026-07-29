@@ -22,6 +22,7 @@ type Props = {
 	moreArticlesLabel: string;
 	videoLabel: string;
 	showMoreArticlesLink: boolean;
+	roleLabels: Record<string, string>;
 };
 
 export const PersonProfile = ({
@@ -35,10 +36,16 @@ export const PersonProfile = ({
 	moreArticlesLabel,
 	videoLabel,
 	showMoreArticlesLink,
+	roleLabels,
 }: Props) => (
 	<JournalPageShell>
-		<JournalBreadcrumb links={breadcrumbs} className="mb-8 pl-0" />
-		<PersonProfileHeader person={person} name={getPersonDisplayName(person)} portraitSrc={getPersonPortraitSrc(person)} />
+		<JournalBreadcrumb links={breadcrumbs} />
+		<PersonProfileHeader
+			person={person}
+			name={getPersonDisplayName(person)}
+			portraitSrc={getPersonPortraitSrc(person)}
+			roleLabels={roleLabels}
+		/>
 
 		{articles.length > 0 && (
 			<section className="space-y-8">

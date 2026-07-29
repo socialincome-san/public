@@ -24,10 +24,29 @@ import {
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { cache } from 'react';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { getStoryblokApi } from './storyblok.config';
 import type { ResolvedArticle } from './storyblok.utils';
+
+type StoryblokDatasourceEntry = {
+	value: string;
+	name: string;
+	dimension_value?: string | null;
+};
+
+// Deduplicates identical datasource fetches within a single request render pass — several
+// components on one page (person grids, carousels, person profiles) request the same datasource.
+const fetchDatasourceEntries = cache(async (datasourceSlug: string, lang: string) => {
+	const params: ISbStoriesParams = {
+		datasource: datasourceSlug,
+		dimension: lang,
+		per_page: 100,
+	};
+
+	return (await getStoryblokApi().getAll('cdn/datasource_entries', params)) as StoryblokDatasourceEntry[];
+});
 
 export type StoryTitleData = {
 	name?: string;
@@ -98,6 +117,9 @@ export class StoryblokService extends BaseService {
 	private static readonly leadTextField = 'leadText';
 	private static readonly storiesPath = 'cdn/stories';
 	private static readonly linksPath = 'cdn/links';
+	private static readonly datasourceSlug = {
+		primaryRoles: 'primaryroles',
+	} as const;
 	private static readonly countriesPath = STORYBLOK_COUNTRIES_FOLDER;
 	private static readonly focusesPath = STORYBLOK_FOCUSES_FOLDER;
 	private static readonly localPartnersPath = STORYBLOK_LOCAL_PARTNERS_FOLDER;
@@ -393,17 +415,17 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	async getPersonsByCountryOffice(lang: string, isoCode: string): Promise<ServiceResult<ISbStoryData<Person>[]>> {
+	async getPersonsByCountryOffice(lang: string, isoCodes: string[]): Promise<ServiceResult<ISbStoryData<Person>[]>> {
 		try {
-			const countryOfficeCode = isoCode?.trim() ?? '';
-			if (!countryOfficeCode) {
+			const countryOfficeCodes = isoCodes.map((code) => code.trim()).filter(Boolean);
+			if (!countryOfficeCodes.length) {
 				return this.resultOk([]);
 			}
 
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(lang)),
 				content_type: StoryblokService.contentType.person,
-				filter_query: { countryOffice: { any_in_array: countryOfficeCode } },
+				filter_query: { countryOffice: { any_in_array: countryOfficeCodes.join(',') } },
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 
@@ -412,6 +434,43 @@ export class StoryblokService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Failed to fetch persons by country office: ${JSON.stringify(error)}`);
+		}
+	}
+
+	// Datasource entries carry both a technical `value` (what's stored on the content field, e.g.
+	// "board-member") and a `name` — the datasource's default label, or its translated `dimension_value`
+	// when a `dimension` (language code) is requested and that entry has a translation for it.
+	async getDatasourceEntries(datasourceSlug: string, lang: string): Promise<ServiceResult<Record<string, string>>> {
+		try {
+			const data = await fetchDatasourceEntries(datasourceSlug, lang);
+			const labelsByValue = Object.fromEntries(data.map((entry) => [entry.value, entry.dimension_value ?? entry.name]));
+
+			return this.resultOk(labelsByValue);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch datasource entries: ${JSON.stringify(error)}`);
+		}
+	}
+
+	// Labels for the datasource backing the Person.primaryRole field, keyed by stored value.
+	async getPrimaryRoleLabels(lang: string): Promise<ServiceResult<Record<string, string>>> {
+		return this.getDatasourceEntries(StoryblokService.datasourceSlug.primaryRoles, lang);
+	}
+
+	async getAllPersons(lang: string): Promise<ServiceResult<ISbStoryData<Person>[]>> {
+		try {
+			const params: ISbStoriesParams = {
+				...(await this.getStoryParams(lang)),
+				content_type: StoryblokService.contentType.person,
+			};
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+
+			return this.resultOk(data);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch persons: ${JSON.stringify(error)}`);
 		}
 	}
 

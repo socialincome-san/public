@@ -29,6 +29,7 @@ type Props = {
 	authors: ISbStoryData<Person>[];
 	tags: ISbStoryData<Tag>[];
 	showMoreArticlesLink: boolean;
+	roleLabels: Record<string, string>;
 };
 
 const tagFilterClassName = (active: boolean) =>
@@ -54,6 +55,7 @@ export const JournalOverview = ({
 	authors,
 	tags,
 	showMoreArticlesLink,
+	roleLabels,
 }: Props) => (
 	<JournalPageShell>
 		<JournalBreadcrumb links={breadcrumbs} className="mb-8 pl-0" />
@@ -86,7 +88,13 @@ export const JournalOverview = ({
 
 		{authors.length > 0 && (
 			<section>
-				<PersonCarousel persons={authors} sidebar={{ heading: editorsHeading }} personLink={{ lang, region }} size="small" />
+				<PersonCarousel
+					persons={authors}
+					sidebar={{ heading: editorsHeading }}
+					personLink={{ lang, region }}
+					size="small"
+					roleLabels={roleLabels}
+				/>
 			</section>
 		)}
 	</JournalPageShell>
