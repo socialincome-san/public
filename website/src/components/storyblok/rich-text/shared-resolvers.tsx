@@ -95,7 +95,7 @@ export const storyblokRichTextBasicNodeResolvers = {
 
 // Storyblok stores merged cells as a single cell carrying colspan/rowspan, so these have to be
 // forwarded to the DOM or the merged content collapses into one column and the row looks empty.
-export const getRichTextTableCellSpanProps = ({ colspan, rowspan }: RichTextTableCellProps = {}) => ({
+const getRichTextTableCellSpanProps = ({ colspan, rowspan }: RichTextTableCellProps = {}) => ({
 	colSpan: colspan && colspan > 1 ? colspan : undefined,
 	rowSpan: rowspan && rowspan > 1 ? rowspan : undefined,
 });
