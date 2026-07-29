@@ -1,7 +1,8 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { CampaignsOverview } from '@/components/campaign/campaigns-overview';
-import { getStateQuery } from '@/components/campaign/campaigns-overview.server';
+import { getStateQuery, resolveCampaignsWithCmsEntries } from '@/components/campaign/campaigns-overview.server';
+import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import type { CampaignOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
@@ -18,8 +19,17 @@ type Props = {
 
 export const CampaignsOverviewPage = async ({ overview, lang, region, searchParams }: Props) => {
 	const selectedState = getStateQuery(searchParams);
-	const campaignsResult = await services.read.campaign.getAllPublicCampaignsWithStats({ activity: selectedState });
+	const [campaignStoriesResult, campaignsResult] = await Promise.all([
+		services.storyblok.getCampaigns(lang),
+		services.read.campaign.getAllPublicCampaignsWithStats({ activity: selectedState }),
+	]);
+	const campaignStories = (campaignStoriesResult.success ? campaignStoriesResult.data : []) as CampaignStory[];
 	const campaignsData = campaignsResult.success ? campaignsResult.data : { campaigns: [], statsById: {} };
+	const { campaigns, statsById } = resolveCampaignsWithCmsEntries(
+		campaignStories,
+		campaignsData.campaigns,
+		campaignsData.statsById,
+	);
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();
 	const breadcrumbLinks = await buildBreadcrumbLinks({
@@ -34,8 +44,8 @@ export const CampaignsOverviewPage = async ({ overview, lang, region, searchPara
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
 			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 				<CampaignsOverview
-					campaigns={campaignsData.campaigns}
-					statsById={campaignsData.statsById}
+					campaigns={campaigns}
+					statsById={statsById}
 					lang={lang}
 					region={region}
 					title={title}

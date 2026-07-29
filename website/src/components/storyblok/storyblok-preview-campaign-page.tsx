@@ -1,5 +1,6 @@
 import { CampaignDetail } from '@/components/campaign/campaign-detail';
-import { type CampaignStory } from '@/components/storyblok/campaign/load-campaign-detail-data';
+import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
+import { getCampaignPortalSlug, getCampaignTitle } from '@/components/storyblok/campaign/campaign.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
@@ -25,7 +26,7 @@ export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, pr
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async (story) => {
-			const portalSlug = story.content.portalSlug?.trim();
+			const portalSlug = getCampaignPortalSlug(story.content);
 			if (!portalSlug) {
 				return notFound();
 			}
@@ -38,9 +39,9 @@ export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, pr
 			return (
 				<CampaignDetail
 					campaign={campaignResult.data}
-					title={story.content.title}
+					title={getCampaignTitle(story.content)}
 					description={story.content.description}
-					campaignSlug={portalSlug}
+					campaignSlug={story.slug}
 					lang={lang}
 					region={region}
 				/>

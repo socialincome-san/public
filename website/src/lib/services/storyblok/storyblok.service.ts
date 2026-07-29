@@ -11,6 +11,7 @@ import type {
 } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import {
+	STORYBLOK_CAMPAIGNS_FOLDER,
 	STORYBLOK_COUNTRIES_FOLDER,
 	STORYBLOK_FAQ_FOLDER,
 	STORYBLOK_FOCUSES_FOLDER,
@@ -94,6 +95,7 @@ export class StoryblokService extends BaseService {
 
 	private static readonly contentType = {
 		article: 'article',
+		campaign: 'Campaign',
 		country: 'Country',
 		focus: 'Focus',
 		localPartner: 'Local Partner',
@@ -126,6 +128,7 @@ export class StoryblokService extends BaseService {
 	private static readonly focusesPath = STORYBLOK_FOCUSES_FOLDER;
 	private static readonly localPartnersPath = STORYBLOK_LOCAL_PARTNERS_FOLDER;
 	private static readonly programsPath = STORYBLOK_PROGRAMS_FOLDER;
+	private static readonly campaignsPath = STORYBLOK_CAMPAIGNS_FOLDER;
 	private static readonly faqsPath = STORYBLOK_FAQ_FOLDER;
 	private static readonly excludedFieldsForCounting = [StoryblokService.contentField, StoryblokService.leadTextField].join(
 		',',
@@ -159,6 +162,21 @@ export class StoryblokService extends BaseService {
 		const contentWithComponent = storyWithContent.content as { component?: string };
 
 		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.program.toLowerCase();
+	}
+
+	private static isCampaignStory(story: unknown): story is ISbStoryData<Campaign> {
+		if (!story || typeof story !== 'object' || !('content' in story)) {
+			return false;
+		}
+
+		const storyWithContent = story as { content?: unknown };
+		if (!storyWithContent.content || typeof storyWithContent.content !== 'object') {
+			return false;
+		}
+
+		const contentWithComponent = storyWithContent.content as { component?: string };
+
+		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.campaign.toLowerCase();
 	}
 
 	private static isFaqStory(story: unknown): story is ISbStoryData<Faq> {
@@ -577,6 +595,34 @@ export class StoryblokService extends BaseService {
 			}
 
 			return this.resultOk(programs);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultOk([]);
+		}
+	}
+
+	async getCampaigns(lang: string): Promise<ServiceResult<ISbStoryData<Campaign>[]>> {
+		try {
+			const baseParams = await this.getStoryParams(lang);
+			const params: ISbStoriesParams = {
+				...baseParams,
+				starts_with: `${StoryblokService.campaignsPath}/`,
+			};
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+			let campaigns = data.filter((story) => StoryblokService.isCampaignStory(story));
+
+			if (campaigns.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
+				const draftParams: ISbStoriesParams = {
+					...baseParams,
+					version: 'draft',
+					starts_with: `${StoryblokService.campaignsPath}/`,
+				};
+				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
+				campaigns = draftData.filter((story) => StoryblokService.isCampaignStory(story));
+			}
+
+			return this.resultOk(campaigns);
 		} catch (error) {
 			this.logger.error(error);
 

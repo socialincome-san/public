@@ -1,33 +1,17 @@
-import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
+import type { CampaignDetailData } from '@/components/storyblok/campaign/campaign.types';
+import { getCampaignPortalSlug, getCampaignTitle } from '@/components/storyblok/campaign/campaign.utils';
 import { services } from '@/lib/services/services';
-import type { ISbStoryData } from '@storyblok/js';
 
-export type CampaignDetailData = {
-	title: string;
-	description: string;
-	fullSlug: string;
-	campaign: CampaignPage;
-};
+export type { CampaignDetailData, CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 
-export type CampaignStory = ISbStoryData<Campaign>;
-
-const getPortalSlug = (content: Campaign): string | undefined => {
-	const slug = content.portalSlug?.trim();
-	return slug || undefined;
-};
-
-export const loadCampaignDetailData = async (
-	urlSlug: string,
-	lang: string,
-): Promise<CampaignDetailData | null> => {
+export const loadCampaignDetailData = async (urlSlug: string, lang: string): Promise<CampaignDetailData | null> => {
 	const storyResult = await services.storyblok.getCampaignBySlug(urlSlug, lang);
 	if (!storyResult.success) {
 		return null;
 	}
 
 	const story = storyResult.data;
-	const portalSlug = getPortalSlug(story.content);
+	const portalSlug = getCampaignPortalSlug(story.content);
 	if (!portalSlug) {
 		return null;
 	}
@@ -38,7 +22,7 @@ export const loadCampaignDetailData = async (
 	}
 
 	return {
-		title: story.content.title,
+		title: getCampaignTitle(story.content),
 		description: story.content.description,
 		fullSlug: story.full_slug,
 		campaign: campaignResult.data,
