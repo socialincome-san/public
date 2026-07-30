@@ -50,7 +50,7 @@
 	},
 	"dependencies": {
 		"@heroicons/react": "2.2.0",
-		"@hookform/resolvers": "5.4.1",
+		"@hookform/resolvers": "5.5.7",
 		"@lottiefiles/dotlottie-react": "^0.19.10",
 		"@mux/mux-video-react": "0.31.2",
 		"@prisma/adapter-pg": "7.8.0",
