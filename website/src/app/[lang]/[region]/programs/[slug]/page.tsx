@@ -3,7 +3,12 @@ import { loadProgramDetailData, type ProgramDetailData } from '@/components/stor
 import { ProgramDetail } from '@/components/storyblok/program/program-detail';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokUrlDirect } from '@/lib/services/storyblok/storyblok.utils';
-import { getMetadata } from '@/lib/utils/metadata';
+import {
+	DEFAULT_OPEN_GRAPH_IMAGE_URL,
+	DEFAULT_TWITTER_IMAGE_URL,
+	getMetadata,
+	toProductionMetadataUrl,
+} from '@/lib/utils/metadata';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
@@ -15,22 +20,33 @@ const PROGRAM_METADATA_IMAGE_HEIGHT = 630;
 
 const getProgramDetailData = cache(loadProgramDetailData);
 
-const getProgramMetadataImage = (programDetailData: ProgramDetailData) => {
+const getProgramMetadataImage = (programDetailData: ProgramDetailData, fallback: string) => {
 	const heroImage = programDetailData.heroImage;
 	if (!heroImage?.filename) {
 		return undefined;
 	}
 
-	return {
-		url: formatStoryblokUrlDirect(
+	const url = toProductionMetadataUrl(
+		formatStoryblokUrlDirect(
 			heroImage.filename,
 			PROGRAM_METADATA_IMAGE_WIDTH,
 			PROGRAM_METADATA_IMAGE_HEIGHT,
 			heroImage.focus,
 		),
+		fallback,
+	);
+
+	if (url === fallback) {
+		return fallback;
+	}
+
+	const alt = heroImage.alt?.trim() ? heroImage.alt : programDetailData.title;
+
+	return {
+		url,
 		width: PROGRAM_METADATA_IMAGE_WIDTH,
 		height: PROGRAM_METADATA_IMAGE_HEIGHT,
-		alt: heroImage.alt || programDetailData.title,
+		alt,
 	};
 };
 
@@ -43,7 +59,8 @@ export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug): 
 	}
 
 	const description = programDetailData.description;
-	const image = getProgramMetadataImage(programDetailData);
+	const openGraphImage = getProgramMetadataImage(programDetailData, DEFAULT_OPEN_GRAPH_IMAGE_URL);
+	const twitterImage = getProgramMetadataImage(programDetailData, DEFAULT_TWITTER_IMAGE_URL);
 
 	return getMetadata(lang as WebsiteLanguage, 'website-common', {
 		title: programDetailData.title,
@@ -51,12 +68,12 @@ export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug): 
 		openGraph: {
 			title: programDetailData.title,
 			...(description ? { description } : {}),
-			...(image ? { images: image } : {}),
+			...(openGraphImage ? { images: openGraphImage } : {}),
 		},
 		twitter: {
 			title: programDetailData.title,
 			...(description ? { description } : {}),
-			...(image ? { images: image } : {}),
+			...(twitterImage ? { images: twitterImage } : {}),
 		},
 	});
 };

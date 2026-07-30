@@ -6,7 +6,7 @@ import {
 	getWebsitePublicPath,
 	WEBSITE_PERSON_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
-import { DEFAULT_OPEN_GRAPH_IMAGE_URL, DEFAULT_TWITTER_IMAGE_URL } from '@/lib/utils/metadata';
+import { DEFAULT_OPEN_GRAPH_IMAGE_URL, DEFAULT_TWITTER_IMAGE_URL, toProductionMetadataUrl } from '@/lib/utils/metadata';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
@@ -352,6 +352,18 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, lang:
 
 // ==================== Metadata Utilities ====================
 
+type ImageMetaData = { url: string; width?: number; height?: number };
+
+const toSafeImageMetaData = (imageMetaData: ImageMetaData | undefined, fallback: string) => {
+	if (!imageMetaData) {
+		return fallback;
+	}
+
+	const url = toProductionMetadataUrl(imageMetaData.url, fallback);
+
+	return url === fallback ? fallback : { ...imageMetaData, url };
+};
+
 /**
  * Generate Next.js Metadata for a Storyblok article.
  */
@@ -363,7 +375,7 @@ export const generateMetaDataForArticle = (storyblokStory: ISbStoryData<Resolved
 	const imageFilename = storyblokArticle.image?.filename;
 	const tags = storyblokArticle.tags?.map((it) => it.content.value).join(', ');
 
-	let imageMetaData: { url: string; width?: number; height?: number } | undefined;
+	let imageMetaData: ImageMetaData | undefined;
 	if (imageFilename) {
 		const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
 		if (dimensions.width && dimensions.height) {
@@ -382,8 +394,8 @@ export const generateMetaDataForArticle = (storyblokStory: ISbStoryData<Resolved
 		}
 	}
 
-	const openGraphImages = imageMetaData ?? DEFAULT_OPEN_GRAPH_IMAGE_URL;
-	const twitterImages = imageMetaData ?? DEFAULT_TWITTER_IMAGE_URL;
+	const openGraphImages = toSafeImageMetaData(imageMetaData, DEFAULT_OPEN_GRAPH_IMAGE_URL);
+	const twitterImages = toSafeImageMetaData(imageMetaData, DEFAULT_TWITTER_IMAGE_URL);
 
 	return {
 		title: title,
