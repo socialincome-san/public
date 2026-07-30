@@ -7,7 +7,8 @@ import {
 	DEFAULT_OPEN_GRAPH_IMAGE_URL,
 	DEFAULT_TWITTER_IMAGE_URL,
 	getMetadata,
-	toProductionMetadataUrl,
+	toProductionMetadataImage,
+	type MetadataImage,
 } from '@/lib/utils/metadata';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -26,28 +27,20 @@ const getProgramMetadataImage = (programDetailData: ProgramDetailData, fallback:
 		return undefined;
 	}
 
-	const url = toProductionMetadataUrl(
-		formatStoryblokUrlDirect(
+	const alt = heroImage.alt?.trim() ? heroImage.alt : programDetailData.title;
+	const imageMetadata: MetadataImage = {
+		url: formatStoryblokUrlDirect(
 			heroImage.filename,
 			PROGRAM_METADATA_IMAGE_WIDTH,
 			PROGRAM_METADATA_IMAGE_HEIGHT,
 			heroImage.focus,
 		),
-		fallback,
-	);
-
-	if (url === fallback) {
-		return fallback;
-	}
-
-	const alt = heroImage.alt?.trim() ? heroImage.alt : programDetailData.title;
-
-	return {
-		url,
 		width: PROGRAM_METADATA_IMAGE_WIDTH,
 		height: PROGRAM_METADATA_IMAGE_HEIGHT,
 		alt,
 	};
+
+	return toProductionMetadataImage(imageMetadata, fallback);
 };
 
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug): Promise<Metadata> => {

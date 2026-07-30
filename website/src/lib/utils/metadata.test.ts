@@ -1,4 +1,9 @@
-import { DEFAULT_OPEN_GRAPH_IMAGE_URL, DEFAULT_TWITTER_IMAGE_URL, toProductionMetadataUrl } from './metadata';
+import {
+	DEFAULT_OPEN_GRAPH_IMAGE_URL,
+	DEFAULT_TWITTER_IMAGE_URL,
+	toProductionMetadataImage,
+	toProductionMetadataUrl,
+} from './metadata';
 
 describe('metadata utils', () => {
 	describe('toProductionMetadataUrl', () => {
@@ -42,6 +47,47 @@ describe('metadata utils', () => {
 			'https://socialincome-git-demo.vercel.app./assets/metadata/og/default.jpg',
 		])('falls back for blocked metadata URL %s', (url) => {
 			expect(toProductionMetadataUrl(url, fallback)).toBe(fallback);
+		});
+	});
+
+	describe('toProductionMetadataImage', () => {
+		const fallback = DEFAULT_OPEN_GRAPH_IMAGE_URL;
+
+		it('falls back when no image metadata exists', () => {
+			expect(toProductionMetadataImage(undefined, fallback)).toBe(fallback);
+		});
+
+		it('falls back when image metadata has a blocked URL', () => {
+			expect(
+				toProductionMetadataImage(
+					{
+						url: 'https://localhost/assets/metadata/og/default.jpg',
+						width: 1200,
+						height: 630,
+						alt: 'Social Income',
+					},
+					fallback,
+				),
+			).toBe(fallback);
+		});
+
+		it('normalizes image metadata URLs and preserves image fields', () => {
+			expect(
+				toProductionMetadataImage(
+					{
+						url: '/assets/metadata/og/custom.jpg',
+						width: 1200,
+						height: 630,
+						alt: 'Social Income',
+					},
+					fallback,
+				),
+			).toEqual({
+				url: 'https://socialincome.org/assets/metadata/og/custom.jpg',
+				width: 1200,
+				height: 630,
+				alt: 'Social Income',
+			});
 		});
 	});
 });

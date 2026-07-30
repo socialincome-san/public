@@ -117,6 +117,18 @@ export const toProductionMetadataUrl = (url: string | null | undefined, fallback
 	}
 };
 
+export type MetadataImage = { url: string; width?: number; height?: number; alt?: string };
+
+export const toProductionMetadataImage = (imageMetadata: MetadataImage | null | undefined, fallback: string) => {
+	if (!imageMetadata) {
+		return fallback;
+	}
+
+	const url = toProductionMetadataUrl(imageMetadata.url, fallback);
+
+	return url === fallback ? fallback : { ...imageMetadata, url };
+};
+
 /**
  * Get metadata for a page. The metadata is read from the i18n translation file. If a key is missing in the translation file,
  * the default metadata from the 'website-common' namespace is used.
