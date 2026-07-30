@@ -28,19 +28,23 @@ const getProgramMetadataImage = (programDetailData: ProgramDetailData, fallback:
 	}
 
 	const alt = heroImage.alt?.trim() ? heroImage.alt : programDetailData.title;
-	const imageMetadata: MetadataImage = {
-		url: formatStoryblokUrlDirect(
-			heroImage.filename,
-			PROGRAM_METADATA_IMAGE_WIDTH,
-			PROGRAM_METADATA_IMAGE_HEIGHT,
-			heroImage.focus,
-		),
-		width: PROGRAM_METADATA_IMAGE_WIDTH,
-		height: PROGRAM_METADATA_IMAGE_HEIGHT,
-		alt,
-	};
+	try {
+		const imageMetadata: MetadataImage = {
+			url: formatStoryblokUrlDirect(
+				heroImage.filename,
+				PROGRAM_METADATA_IMAGE_WIDTH,
+				PROGRAM_METADATA_IMAGE_HEIGHT,
+				heroImage.focus,
+			),
+			width: PROGRAM_METADATA_IMAGE_WIDTH,
+			height: PROGRAM_METADATA_IMAGE_HEIGHT,
+			alt,
+		};
 
-	return toProductionMetadataImage(imageMetadata, fallback);
+		return toProductionMetadataImage(imageMetadata, fallback);
+	} catch {
+		return fallback;
+	}
 };
 
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug): Promise<Metadata> => {

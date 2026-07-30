@@ -370,20 +370,24 @@ export const generateMetaDataForArticle = (storyblokStory: ISbStoryData<Resolved
 
 	let imageMetaData: MetadataImage | undefined;
 	if (imageFilename) {
-		const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
-		if (dimensions.width && dimensions.height) {
-			// Use direct URL for OG metadata since it doesn't go through the Next.js image loader
-			const imageUrl = formatStoryblokUrlDirect(
-				imageFilename,
-				dimensions.width,
-				dimensions.height,
-				storyblokArticle.image.focus ?? undefined,
-			);
-			imageMetaData = {
-				url: imageUrl,
-				width: dimensions.width,
-				height: dimensions.height,
-			};
+		try {
+			const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
+			if (dimensions.width && dimensions.height) {
+				// Use direct URL for OG metadata since it doesn't go through the Next.js image loader
+				const imageUrl = formatStoryblokUrlDirect(
+					imageFilename,
+					dimensions.width,
+					dimensions.height,
+					storyblokArticle.image.focus ?? undefined,
+				);
+				imageMetaData = {
+					url: imageUrl,
+					width: dimensions.width,
+					height: dimensions.height,
+				};
+			}
+		} catch {
+			imageMetaData = undefined;
 		}
 	}
 

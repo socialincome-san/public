@@ -10,7 +10,7 @@ describe('metadata utils', () => {
 		const fallback = DEFAULT_OPEN_GRAPH_IMAGE_URL;
 
 		it('uses the Open Graph fallback for Twitter fallback metadata', () => {
-			expect(DEFAULT_TWITTER_IMAGE_URL).toBe(DEFAULT_OPEN_GRAPH_IMAGE_URL);
+			expect(DEFAULT_TWITTER_IMAGE_URL).toBe('https://socialincome.org/assets/metadata/og/default.jpg');
 		});
 
 		it('resolves relative metadata paths against the production origin', () => {

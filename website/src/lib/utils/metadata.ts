@@ -147,8 +147,7 @@ export const getMetadata = async (language: WebsiteLanguage, namespace: string, 
 		title,
 		description,
 		keywords,
-		// If VERCEL_URL is detected: https://${process.env.VERCEL_URL} otherwise it falls back to http://localhost:${process.env.PORT || 3000}.
-		// https://nextjs.org/docs/app/api-reference/functions/generate-metadata
+		// Resolve relative metadata URLs against the production origin.
 		metadataBase: new URL(WEBSITE_ORIGIN),
 		alternates: {
 			canonical: '/en/int',
