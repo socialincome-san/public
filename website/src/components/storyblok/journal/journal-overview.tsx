@@ -6,12 +6,8 @@ import { JournalPageHeader } from '@/components/storyblok/journal/journal-page-h
 import { JournalPageShell } from '@/components/storyblok/journal/journal-page-shell';
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
 import { PersonCarousel } from '@/components/storyblok/shared/person-carousel';
-import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
-import {
-	createWebsiteJournalArticleTypeLink,
-	getArticleTypeLabel,
-	ResolvedArticle,
-} from '@/lib/services/storyblok/storyblok.utils';
+import type { Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
+import { createWebsiteJournalTagLink, ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';
@@ -21,28 +17,25 @@ type Props = {
 	pageTitle: string;
 	pageDescription?: string;
 	editorsHeading: string;
-	allArticleTypesLabel: string;
+	allTagsLabel: string;
 	moreArticlesLabel: string;
 	videoLabel: string;
 	pathname: string;
 	journalPath: string;
 	activeTagSlug?: string;
-	activeArticleTypeSlug?: string;
 	lang: string;
 	region: string;
 	articles: ISbStoryData<ResolvedArticle>[];
 	authors: ISbStoryData<Person>[];
-	articleTypes: ISbStoryData<ArticleType>[];
+	tags: ISbStoryData<Tag>[];
 	showMoreArticlesLink: boolean;
 	roleLabels: Record<string, string>;
 };
 
-const articleTypeFilterClassName = (active: boolean) =>
+const tagFilterClassName = (active: boolean) =>
 	cn(
-		'inline-flex rounded-full border bg-transparent px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors',
-		active
-			? 'border-foreground text-foreground'
-			: 'border-border text-muted-foreground hover:text-foreground hover:bg-muted/50',
+		'inline-flex rounded-full px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors',
+		active ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground hover:bg-muted/80',
 	);
 
 export const JournalOverview = ({
@@ -50,18 +43,17 @@ export const JournalOverview = ({
 	pageTitle,
 	pageDescription,
 	editorsHeading,
-	allArticleTypesLabel,
+	allTagsLabel,
 	moreArticlesLabel,
 	videoLabel,
 	pathname,
 	journalPath,
 	activeTagSlug,
-	activeArticleTypeSlug,
 	lang,
 	region,
 	articles,
 	authors,
-	articleTypes,
+	tags,
 	showMoreArticlesLink,
 	roleLabels,
 }: Props) => (
@@ -70,16 +62,16 @@ export const JournalOverview = ({
 		<JournalPageHeader title={pageTitle} description={pageDescription} />
 
 		<section className="flex flex-wrap gap-2">
-			<Link href={journalPath} className={articleTypeFilterClassName(!activeTagSlug && !activeArticleTypeSlug)}>
-				{allArticleTypesLabel}
+			<Link href={journalPath} className={tagFilterClassName(!activeTagSlug)}>
+				{allTagsLabel}
 			</Link>
-			{articleTypes.map((articleType) => (
+			{tags.map((tag) => (
 				<Link
-					key={articleType.slug}
-					href={createWebsiteJournalArticleTypeLink(articleType.slug, lang, region)}
-					className={articleTypeFilterClassName(activeArticleTypeSlug === articleType.slug)}
+					key={tag.slug}
+					href={createWebsiteJournalTagLink(tag.slug, lang, region)}
+					className={tagFilterClassName(activeTagSlug === tag.slug)}
 				>
-					{getArticleTypeLabel(articleType)}
+					{tag.content?.value}
 				</Link>
 			))}
 		</section>

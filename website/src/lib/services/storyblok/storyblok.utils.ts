@@ -42,16 +42,6 @@ export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>, includeS
 	return subtitle ? `${article.content.title} ${subtitle}` : article.content.title;
 };
 
-export const getArticleTypeLabel = (articleType: ISbStoryData<ArticleType>) => {
-	const value = articleType.content?.value?.trim();
-
-	if (value) {
-		return value;
-	}
-
-	return articleType.name;
-};
-
 const PERSON_AVATAR_SIZE = 300;
 
 export const getPersonDisplayName = (person: ISbStoryData<Person>) =>
@@ -317,9 +307,6 @@ export const createWebsiteJournalArticleLink = (slug: string, lang: string, regi
 
 export const createWebsiteJournalTagLink = (tagSlug: string, lang: string, region: string) =>
 	`${createWebsiteJournalPath(lang, region)}?tag=${encodeURIComponent(tagSlug)}`;
-
-export const createWebsiteJournalArticleTypeLink = (articleTypeSlug: string, lang: string, region: string) =>
-	`${createWebsiteJournalPath(lang, region)}?type=${encodeURIComponent(articleTypeSlug)}`;
 
 export const createWebsitePersonLink = (slug: string, lang: string, region: string) =>
 	createWebsitePath(lang, region, WEBSITE_PERSON_PATH_SEGMENT, slug);
