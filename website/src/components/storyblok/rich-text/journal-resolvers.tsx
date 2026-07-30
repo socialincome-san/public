@@ -31,7 +31,7 @@ const journalHeadingStyles: Record<HeadingSize, string> = {
 };
 
 const journalLinkClassName = 'text-primary underline underline-offset-4';
-const footnoteLinkClassName = 'text-inherit underline underline-offset-4';
+const inheritColorLinkClassName = 'text-inherit underline underline-offset-4';
 
 const createLinkResolver =
 	(className: string) => (children: ReactNode, props: { href?: string; target?: string; rel?: string }) => {
@@ -60,7 +60,12 @@ export const journalRichTextMarkResolvers = {
 
 export const footnoteRichTextMarkResolvers = {
 	...journalRichTextMarkResolvers,
-	[MARK_LINK]: createLinkResolver(footnoteLinkClassName),
+	[MARK_LINK]: createLinkResolver(inheritColorLinkClassName),
+};
+
+export const bannerRichTextMarkResolvers = {
+	...journalRichTextMarkResolvers,
+	[MARK_LINK]: createLinkResolver(inheritColorLinkClassName),
 };
 
 export const journalRichTextNodeResolvers = {
@@ -77,6 +82,14 @@ export const journalRichTextNodeResolvers = {
 	[NODE_UL]: (children: ReactNode) => <ul className="my-4 list-disc space-y-1 pl-6 text-lg md:text-xl">{children}</ul>,
 	[NODE_OL]: (children: ReactNode) => <ol className="my-4 list-decimal space-y-1 pl-6 text-lg md:text-xl">{children}</ol>,
 	[NODE_LI]: (children: ReactNode) => <li className="[&::marker]:text-foreground my-1 *:m-0 *:p-0">{children}</li>,
+};
+
+// Font size stays on the banner itself, which switches it on the `smallText` flag.
+export const bannerRichTextNodeResolvers = {
+	...journalRichTextNodeResolvers,
+	[NODE_PARAGRAPH]: (children: ReactNode, props?: RichTextAlignmentProps) => (
+		<p className={cn('my-4 leading-normal first:mt-0 last:mb-0', getRichTextAlignmentClassName(props))}>{children}</p>
+	),
 };
 
 export const footnoteRichTextNodeResolvers = {
