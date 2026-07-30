@@ -2,6 +2,7 @@ import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
 import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
+import { CampaignSubmissionService } from './campaign/campaign-submission.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
 import { CampaignWriteService } from './campaign/campaign-write.service';
 import { CandidateImportService } from './candidate/candidate-import.service';
@@ -54,9 +55,11 @@ import { PayoutWriteService } from './payout/payout-write.service';
 import { ProgramAccessReadService } from './program-access/program-access-read.service';
 import { ProgramAccessWriteService } from './program-access/program-access-write.service';
 import { ProgramStatsService } from './program-stats/program-stats.service';
+import { ProgramPublicSubmissionService } from './program/program-public-submission.service';
 import { ProgramReadService } from './program/program-read.service';
 import { ProgramValidationService } from './program/program-validation.service';
 import { ProgramWriteService } from './program/program-write.service';
+import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { QrBillService } from './qr-bill/qr-bill.service';
 import { RecipientImportService } from './recipient/recipient-import.service';
 import { RecipientReadService } from './recipient/recipient-read.service';
@@ -164,6 +167,14 @@ const messagingRecipients = new MessagingRecipientsService(prisma, contributorRe
 const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
 const campaignValidation = new CampaignValidationService(prisma);
 const campaignWrite = new CampaignWriteService(prisma, programAccessRead, campaignValidation);
+const programPublicSubmission = new ProgramPublicSubmissionService(prisma);
+const storyblokManagement = new StoryblokManagementService();
+const campaignSubmission = new CampaignSubmissionService(
+	prisma,
+	programPublicSubmission,
+	campaignValidation,
+	storyblokManagement,
+);
 const focusValidation = new FocusValidationService(prisma);
 const focusRead = new FocusReadService(prisma, userRead);
 const focusWrite = new FocusWriteService(prisma, userRead, focusValidation);
@@ -280,6 +291,9 @@ export const services = {
 	sendgrid,
 	journal,
 	storyblok,
+	storyblokManagement,
+	campaignSubmission,
+	programPublicSubmission,
 	stripe,
 	surveyImpact,
 	transparency,

@@ -30,6 +30,22 @@ export const CampaignsOverview = async ({
 }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const hasCmsHeader = Boolean(title?.trim()) || Boolean(text?.trim());
+	const submissionLabels = {
+		title: translator.t('campaigns-page.submission.title'),
+		description: translator.t('campaigns-page.submission.description'),
+		goal: translator.t('campaigns-page.submission.goal'),
+		currency: translator.t('campaigns-page.submission.currency'),
+		endDate: translator.t('campaigns-page.submission.end-date'),
+		program: translator.t('campaigns-page.submission.program'),
+		primaryImage: translator.t('campaigns-page.submission.primary-image'),
+		submit: translator.t('campaigns-page.submission.submit'),
+		submitting: translator.t('campaigns-page.submission.submitting'),
+		success: translator.t('campaigns-page.submission.success'),
+		error: translator.t('campaigns-page.submission.error'),
+		programPlaceholder: translator.t('campaigns-page.submission.program-placeholder'),
+		currencyPlaceholder: translator.t('campaigns-page.submission.currency-placeholder'),
+		imageHint: translator.t('campaigns-page.submission.image-hint'),
+	};
 
 	return (
 		<div className="flex w-full flex-col gap-8">
@@ -44,7 +60,8 @@ export const CampaignsOverview = async ({
 					/>
 					<CreateCampaignButton
 						label={translator.t('campaigns-page.create-campaign')}
-						comingSoonLabel={translator.t('campaigns-page.coming-soon')}
+						dialogTitle={translator.t('campaigns-page.submission.dialog-title')}
+						labels={submissionLabels}
 					/>
 				</div>
 			) : null}

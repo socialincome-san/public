@@ -358,6 +358,65 @@ export class CampaignReadService extends BaseService {
 		return { isActive: activity === 'active' };
 	}
 
+	async getCampaignsForCmsJoin(options?: { activity?: PublicCampaignActivity }): Promise<ServiceResult<PublicCampaignCard[]>> {
+		const activity = options?.activity ?? 'active';
+
+		try {
+			const campaigns = await this.db.campaign.findMany({
+				where: {
+					...this.buildPublicCampaignActivityWhere(activity),
+					slug: { not: null },
+				},
+				select: {
+					id: true,
+					title: true,
+					slug: true,
+					creatorName: true,
+					currency: true,
+					featured: true,
+					createdAt: true,
+					isActive: true,
+				},
+				orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
+			});
+
+			const cmsCampaigns: PublicCampaignCard[] = [];
+
+			for (const campaign of campaigns) {
+				const campaignSlug = campaign.slug?.trim();
+				if (!campaignSlug) {
+					continue;
+				}
+
+				cmsCampaigns.push({
+					id: campaign.id,
+					title: campaign.title,
+					slug: campaignSlug,
+					creatorName: campaign.creatorName,
+					currency: campaign.currency,
+					isActive: campaign.isActive,
+				});
+			}
+
+			return this.resultOk(cmsCampaigns);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch campaigns for CMS join: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getAllCampaignsForCmsJoinWithStats(options?: {
+		activity?: PublicCampaignActivity;
+	}): Promise<ServiceResult<PublicCampaignsWithStats>> {
+		const campaignsResult = await this.getCampaignsForCmsJoin(options);
+		if (!campaignsResult.success) {
+			return this.resultFail(campaignsResult.error);
+		}
+
+		return this.getPublicCampaignsWithStats(campaignsResult.data);
+	}
+
 	async getPublicCampaigns(options?: { activity?: PublicCampaignActivity }): Promise<ServiceResult<PublicCampaignCard[]>> {
 		const activity = options?.activity ?? 'active';
 

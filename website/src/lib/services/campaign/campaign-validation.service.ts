@@ -45,6 +45,23 @@ export class CampaignValidationService extends BaseService {
 		return this.resultOk(undefined);
 	}
 
+	async validateSlugUniqueness(slug: string): Promise<ServiceResult<void>> {
+		const normalizedSlug = slug.trim();
+		if (!normalizedSlug) {
+			return this.resultFail('Slug is required.');
+		}
+
+		const slugConflict = await this.db.campaign.findFirst({
+			where: { slug: normalizedSlug },
+			select: { id: true },
+		});
+		if (slugConflict) {
+			return this.resultFail('A campaign with this slug already exists.');
+		}
+
+		return this.resultOk(undefined);
+	}
+
 	async validateUpdateUniqueness(
 		input: CampaignFormUpdateInput,
 		context: CampaignUpdateUniquenessContext,

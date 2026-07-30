@@ -183,7 +183,24 @@
 		"state-active": "Aktiv",
 		"state-inactive": "Inaktiv",
 		"create-campaign": "Kampagne erstellen",
-		"coming-soon": "Demnächst verfügbar"
+		"coming-soon": "Demnächst verfügbar",
+		"submission": {
+			"dialog-title": "Kampagne erstellen",
+			"title": "Titel",
+			"description": "Beschreibung",
+			"goal": "Fundraising-Ziel",
+			"currency": "Währung",
+			"end-date": "Enddatum",
+			"program": "Programm",
+			"primary-image": "Hauptbild",
+			"submit": "Kampagne einreichen",
+			"submitting": "Wird eingereicht…",
+			"success": "Vielen Dank. Ihre Kampagne wurde eingereicht und wird vor der Veröffentlichung geprüft.",
+			"error": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
+			"program-placeholder": "Programm auswählen",
+			"currency-placeholder": "Währung auswählen",
+			"image-hint": "JPEG, PNG oder WebP bis 5 MB."
+		}
 	},
 	"breadcrumb": {
 		"home": "Startseite"

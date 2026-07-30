@@ -183,7 +183,24 @@
 		"state-active": "Attiva",
 		"state-inactive": "Inattiva",
 		"create-campaign": "Crea campagna",
-		"coming-soon": "Prossimamente"
+		"coming-soon": "Prossimamente",
+		"submission": {
+			"dialog-title": "Crea una campagna",
+			"title": "Titolo",
+			"description": "Descrizione",
+			"goal": "Obiettivo di raccolta",
+			"currency": "Valuta",
+			"end-date": "Data di fine",
+			"program": "Programma",
+			"primary-image": "Immagine principale",
+			"submit": "Invia campagna",
+			"submitting": "Invio in corso…",
+			"success": "Grazie. La tua campagna è stata inviata e verrà revisionata prima della pubblicazione.",
+			"error": "Qualcosa è andato storto. Riprova.",
+			"program-placeholder": "Seleziona un programma",
+			"currency-placeholder": "Seleziona una valuta",
+			"image-hint": "JPEG, PNG o WebP fino a 5 MB."
+		}
 	},
 	"breadcrumb": {
 		"home": "Inizio"
