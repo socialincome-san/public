@@ -32,12 +32,15 @@ const legacyBannerColors: Record<string, BannerColor> = {
 	'#cadde9': 'blue',
 };
 
+const isBannerColor = (value: string): value is BannerColor =>
+	Object.prototype.hasOwnProperty.call(bannerColorClassNames, value);
+
 const resolveBannerColor = (color: string): BannerColor => {
-	if (color in bannerColorClassNames) {
-		return color as BannerColor;
+	if (isBannerColor(color)) {
+		return color;
 	}
 
-	return legacyBannerColors[color] ?? DEFAULT_BANNER_COLOR;
+	return Object.prototype.hasOwnProperty.call(legacyBannerColors, color) ? legacyBannerColors[color] : DEFAULT_BANNER_COLOR;
 };
 
 export const BannerSectionBlock = ({ text, color, smallText }: Props) => {
