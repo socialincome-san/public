@@ -1,7 +1,12 @@
 import type { Faq } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getMetadata } from '@/lib/utils/metadata';
+import {
+	DEFAULT_OPEN_GRAPH_IMAGE_URL,
+	DEFAULT_TWITTER_IMAGE_URL,
+	getMetadata,
+	toProductionMetadataUrl,
+} from '@/lib/utils/metadata';
 import type { ISbStoryData } from '@storyblok/js';
 import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
@@ -52,27 +57,22 @@ export class CampaignPublicWebsiteService extends BaseService {
 		lang: WebsiteLanguage,
 		campaign: Pick<CampaignPage, 'title' | 'metadataDescription' | 'metadataOgImage' | 'metadataTwitterImage'>,
 	) {
-		const campaignMetadata =
-			campaign.metadataDescription && campaign.metadataOgImage && campaign.metadataTwitterImage
-				? {
-						title: campaign.title,
-						description: campaign.metadataDescription,
-						openGraph: {
-							title: campaign.title,
-							description: campaign.metadataDescription,
-							images: campaign.metadataOgImage,
-						},
-						twitter: {
-							title: campaign.title,
-							card: 'summary_large_image' as const,
-							site: '@so_income',
-							creator: '@so_income',
-							images: campaign.metadataTwitterImage,
-						},
-					}
-				: undefined;
+		const description = campaign.metadataDescription?.trim();
 
-		return getMetadata(lang, 'website-campaign', campaignMetadata);
+		return getMetadata(lang, 'website-campaign', {
+			title: campaign.title,
+			...(description ? { description } : {}),
+			openGraph: {
+				title: campaign.title,
+				...(description ? { description } : {}),
+				images: toProductionMetadataUrl(campaign.metadataOgImage, DEFAULT_OPEN_GRAPH_IMAGE_URL),
+			},
+			twitter: {
+				title: campaign.title,
+				...(description ? { description } : {}),
+				images: toProductionMetadataUrl(campaign.metadataTwitterImage, DEFAULT_TWITTER_IMAGE_URL),
+			},
+		});
 	}
 
 	getFallbackMetadata(lang: WebsiteLanguage) {

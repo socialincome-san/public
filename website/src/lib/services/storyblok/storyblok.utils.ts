@@ -6,10 +6,11 @@ import {
 	getWebsitePublicPath,
 	WEBSITE_PERSON_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
+import { DEFAULT_OPEN_GRAPH_IMAGE_URL, DEFAULT_TWITTER_IMAGE_URL } from '@/lib/utils/metadata';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 // Helper type to remove index signature from a type
 type RemoveIndexSignature<T> = {
@@ -180,7 +181,7 @@ export const formatStoryblokResizeUrl = (url: string, width: number, height: num
  * Unlike formatStoryblokUrl, this returns a URL that can be fetched directly without
  * going through the Next.js image loader.
  */
-const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) => {
+export const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) => {
 	let imageSource = url + `/m/${width}x${height}`;
 	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
 
@@ -381,6 +382,9 @@ export const generateMetaDataForArticle = (storyblokStory: ISbStoryData<Resolved
 		}
 	}
 
+	const openGraphImages = imageMetaData ?? DEFAULT_OPEN_GRAPH_IMAGE_URL;
+	const twitterImages = imageMetaData ?? DEFAULT_TWITTER_IMAGE_URL;
+
 	return {
 		title: title,
 		description: description,
@@ -389,14 +393,14 @@ export const generateMetaDataForArticle = (storyblokStory: ISbStoryData<Resolved
 		openGraph: {
 			title: title,
 			description: description,
-			images: imageMetaData,
+			images: openGraphImages,
 			url: url,
 			type: 'article',
 		},
 		twitter: {
 			title: title,
 			description: description,
-			images: imageMetaData,
+			images: twitterImages,
 			card: 'summary_large_image',
 			site: '@so_income',
 			creator: '@so_income',

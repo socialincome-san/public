@@ -1,6 +1,38 @@
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
+
+export const WEBSITE_ORIGIN = 'https://socialincome.org';
+export const DEFAULT_OPEN_GRAPH_IMAGE_URL = `${WEBSITE_ORIGIN}/assets/metadata/og/default.jpg`;
+export const DEFAULT_TWITTER_IMAGE_URL = `${WEBSITE_ORIGIN}/assets/metadata/twitter/default.jpg`;
+
+const BLOCKED_METADATA_HOST_PATTERNS = [/^localhost$/i, /^127(?:\.\d{1,3}){3}$/, /^0\.0\.0\.0$/, /\.vercel\.app$/i];
+
+/*
+ * Convert a metadata URL to a production URL. If the URL is invalid or blocked, return the fallback URL.
+ * @param url - The metadata URL to convert
+ * @param fallback - The fallback URL to return if the metadata URL is invalid or blocked
+ * @returns The production URL or the fallback URL
+ */
+export const toProductionMetadataUrl = (url: string | null | undefined, fallback: string) => {
+	const value = url?.trim();
+	if (!value) {
+		return fallback;
+	}
+
+	try {
+		const metadataUrl = new URL(value, WEBSITE_ORIGIN);
+		const isBlockedHost = BLOCKED_METADATA_HOST_PATTERNS.some((pattern) => pattern.test(metadataUrl.hostname));
+
+		if (metadataUrl.protocol !== 'https:' || isBlockedHost) {
+			return fallback;
+		}
+
+		return metadataUrl.toString();
+	} catch {
+		return fallback;
+	}
+};
 
 /**
  * Get metadata for a page. The metadata is read from the i18n translation file. If a key is missing in the translation file,
@@ -22,7 +54,7 @@ export const getMetadata = async (language: WebsiteLanguage, namespace: string, 
 		keywords,
 		// If VERCEL_URL is detected: https://${process.env.VERCEL_URL} otherwise it falls back to http://localhost:${process.env.PORT || 3000}.
 		// https://nextjs.org/docs/app/api-reference/functions/generate-metadata
-		metadataBase: null,
+		metadataBase: new URL(WEBSITE_ORIGIN),
 		alternates: {
 			canonical: '/en/int',
 			languages: {
@@ -34,14 +66,14 @@ export const getMetadata = async (language: WebsiteLanguage, namespace: string, 
 		openGraph: {
 			title,
 			description,
-			images: translator.t('metadata.og-image'),
+			images: toProductionMetadataUrl(translator.t('metadata.og-image'), DEFAULT_OPEN_GRAPH_IMAGE_URL),
 		},
 		twitter: {
 			title,
 			card: 'summary_large_image',
 			site: '@so_income',
 			creator: '@so_income',
-			images: translator.t('metadata.twitter-image'),
+			images: toProductionMetadataUrl(translator.t('metadata.twitter-image'), DEFAULT_TWITTER_IMAGE_URL),
 		},
 	} satisfies Metadata;
 
