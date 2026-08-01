@@ -191,5 +191,32 @@
 	"wallet": {
 		"paid-out": "Ausbezahlt",
 		"recipients": "Empfänger:innen"
+	},
+	"person-grid": {
+		"search-placeholder": "Nach Namen suchen",
+		"sort-aria-label": "Sortieren",
+		"sort-alphabetical": "Alphabetisch",
+		"sort-start-date": "Nach Startdatum",
+		"filter-all-roles": "Alle Rollen ({{count}})",
+		"filter-all-statuses": "Alle Status ({{count}})",
+		"filter-all-countries": "Alle Länder ({{count}})",
+		"filter-multiple-selected": "{{count}} ausgewählt",
+		"filter-select-all": "Alle auswählen",
+		"filter-clear-all": "Zurücksetzen",
+		"status-active": "Aktiv",
+		"status-inactive": "Ehemalig",
+		"duration-started-today": "Heute gestartet",
+		"duration-day-singular": "{{count}} Tag",
+		"duration-day-plural": "{{count}} Tage",
+		"duration-month-singular": "{{count}} Monat",
+		"duration-month-plural": "{{count}} Monate",
+		"duration-year-singular": "{{count}} Jahr +",
+		"duration-year-plural": "{{count}} Jahre +",
+		"duration-month-anniversary-singular": "Heute {{count}} Monat 🎉",
+		"duration-month-anniversary-plural": "Heute {{count}} Monate 🎉",
+		"duration-year-anniversary-singular": "Heute {{count}} Jahr 🎉",
+		"duration-year-anniversary-plural": "Heute {{count}} Jahre 🎉",
+		"duration-since": "Seit {{date}}",
+		"no-results": "Keine Personen entsprechen Ihrer Suche."
 	}
 }
