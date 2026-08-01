@@ -76,7 +76,7 @@ export const getJournalArticleStoryPath = (articleSlug: string) => `${STORYBLOK_
 
 export const getJournalTagStoryPath = (tagSlug: string) => `${STORYBLOK_JOURNAL_TAGS_FOLDER}/${tagSlug}`;
 
-const getJournalArticleTypeStoryPath = (articleTypeSlug: string) =>
+export const getJournalArticleTypeStoryPath = (articleTypeSlug: string) =>
 	`${STORYBLOK_JOURNAL_ARTICLE_TYPES_FOLDER}/${articleTypeSlug}`;
 
 export const getJournalTagWebsitePathTail = (tagSlug: string) => `${WEBSITE_JOURNAL_PATH_SEGMENT}/tag/${tagSlug}`;
