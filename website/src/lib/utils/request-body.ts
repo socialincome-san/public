@@ -13,7 +13,7 @@ export class RequestBodyTimeoutError extends Error {
 }
 
 /** Overall deadline for draining the request body stream. */
-export const DEFAULT_REQUEST_BODY_READ_TIMEOUT_MS = 30_000;
+const DEFAULT_REQUEST_BODY_READ_TIMEOUT_MS = 30_000;
 
 const emptyArrayBuffer = (): ArrayBuffer => new ArrayBuffer(0);
 

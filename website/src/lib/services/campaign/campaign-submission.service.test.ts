@@ -19,7 +19,7 @@ jest.mock('@/generated/prisma/client', () => ({
 	PrismaClient: class {},
 }));
 
-const { Prisma } = jest.requireMock('@/generated/prisma/client') as {
+type PrismaMock = {
 	Prisma: {
 		PrismaClientKnownRequestError: new (
 			message: string,
@@ -27,6 +27,8 @@ const { Prisma } = jest.requireMock('@/generated/prisma/client') as {
 		) => Error & { code: string; meta?: { target?: string | string[] } };
 	};
 };
+
+const { Prisma } = jest.requireMock<PrismaMock>('@/generated/prisma/client');
 
 describe('CampaignSubmissionService', () => {
 	type CampaignCreateInput = {

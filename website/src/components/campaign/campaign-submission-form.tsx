@@ -17,7 +17,7 @@ import type { PublicSubmissionProgramOption } from '@/lib/services/program/progr
 import { cn } from '@/lib/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, format } from 'date-fns';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -193,9 +193,13 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 		return <p className="text-foreground text-sm">{labels.success}</p>;
 	}
 
+	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+		void form.handleSubmit(onSubmit)(event);
+	};
+
 	return (
 		<Form {...form}>
-			<form className="flex flex-col gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+			<form className="flex flex-col gap-4" onSubmit={handleSubmit}>
 				<FormField
 					control={form.control}
 					name="title"
