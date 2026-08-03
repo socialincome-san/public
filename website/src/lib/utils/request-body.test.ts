@@ -1,4 +1,9 @@
-import { parseMultipartFormDataWithLimit, readRequestBodyWithLimit, RequestBodyTooLargeError } from './request-body';
+import {
+	parseMultipartFormDataWithLimit,
+	readRequestBodyWithLimit,
+	RequestBodyTimeoutError,
+	RequestBodyTooLargeError,
+} from './request-body';
 
 const toArrayBuffer = (bytes: Uint8Array): ArrayBuffer => {
 	const copy = new Uint8Array(bytes.byteLength);
@@ -7,11 +12,14 @@ const toArrayBuffer = (bytes: Uint8Array): ArrayBuffer => {
 	return copy.buffer;
 };
 
-const createStreamRequest = (body: ArrayBuffer, headers: HeadersInit = {}) =>
+const createStreamRequest = (body: BodyInit, headers: HeadersInit = {}) =>
 	new Request('http://localhost/test', {
 		method: 'POST',
 		headers,
 		body,
+		// Allow duplex streaming for slow ReadableStream bodies in Node's fetch Request.
+		// @ts-expect-error duplex is required by undici for streaming request bodies
+		duplex: 'half',
 	});
 
 describe('request-body', () => {
@@ -52,6 +60,17 @@ describe('request-body', () => {
 			const result = await readRequestBodyWithLimit(request, 10);
 
 			expect(result.byteLength).toBe(0);
+		});
+
+		test('aborts a never-ending stream after the read deadline', async () => {
+			const hangingStream = new ReadableStream<Uint8Array>({
+				start() {
+					// Intentionally never enqueues or closes so the read stays pending.
+				},
+			});
+			const request = createStreamRequest(hangingStream);
+
+			await expect(readRequestBodyWithLimit(request, 100, 50)).rejects.toBeInstanceOf(RequestBodyTimeoutError);
 		});
 	});
 
