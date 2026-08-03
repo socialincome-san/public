@@ -5,6 +5,7 @@ import { logger } from '@/lib/utils/logger';
 import { randomUUID } from 'crypto';
 
 const MANAGEMENT_API_BASE = 'https://mapi.storyblok.com/v1';
+const MANAGEMENT_FETCH_TIMEOUT_MS = 30_000;
 
 export class StoryblokManagementError extends Error {
 	constructor(
@@ -75,6 +76,7 @@ const requestManagement = async (path: string, init: RequestInit): Promise<unkno
 			Authorization: token,
 			...(init.headers ?? {}),
 		},
+		signal: AbortSignal.timeout(MANAGEMENT_FETCH_TIMEOUT_MS),
 	});
 
 	const body = await parseManagementResponse(response);
@@ -111,6 +113,7 @@ const uploadSignedAsset = async (signed: SignedUploadResponse, fileBuffer: Buffe
 	const response = await fetch(signed.post_url, {
 		method: 'POST',
 		body: formData,
+		signal: AbortSignal.timeout(MANAGEMENT_FETCH_TIMEOUT_MS),
 	});
 
 	if (!response.ok) {
