@@ -17,7 +17,7 @@ import type { PublicSubmissionProgramOption } from '@/lib/services/program/progr
 import { cn } from '@/lib/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, format } from 'date-fns';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -54,6 +54,7 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [submitSuccess, setSubmitSuccess] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const primaryImageInputRef = useRef<HTMLInputElement>(null);
 
 	const resolveError = useCallback(
 		(code: string) => {
@@ -177,6 +178,9 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 				programId: '',
 			});
 			setPrimaryImage(null);
+			if (primaryImageInputRef.current) {
+				primaryImageInputRef.current.value = '';
+			}
 			onSuccess?.();
 		} catch {
 			setSubmitError(labels.error);
@@ -311,6 +315,7 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 					<Label htmlFor="campaign-primary-image">{labels.primaryImage}</Label>
 					<Input
 						id="campaign-primary-image"
+						ref={primaryImageInputRef}
 						type="file"
 						accept={campaignSubmissionConfig.permittedImageMimeTypes.join(',')}
 						onChange={(event) => {
