@@ -47,12 +47,12 @@ type StoryCreateResponse = {
 };
 
 const getManagementToken = (): string => {
-	const token = process.env.STORYBLOK_MANAGEMENT_TOKEN ?? process.env.STORYBLOK_PERSONAL_ACCESS_TOKEN;
-	if (!token?.trim()) {
+	const token = process.env.STORYBLOK_MANAGEMENT_TOKEN?.trim();
+	if (!token) {
 		throw new StoryblokManagementError('Storyblok management token is not configured.', 503, false);
 	}
 
-	return token.trim();
+	return token;
 };
 
 const parseManagementResponse = async (response: Response): Promise<unknown> => {
