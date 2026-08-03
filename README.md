@@ -253,7 +253,13 @@ Visitors can submit campaigns from the public `/campaigns` page. Submissions:
 - link database and CMS entries through `Campaign.slug` ↔ `Storyblok.content.portalSlug`
 
 Publication happens manually in Storyblok. Published Storyblok stories are the
-sole public visibility gate for campaign pages.
+sole public visibility gate for campaign pages (detail load and overview join).
+
+Public **active** vs **inactive** is derived from campaign end date and goal
+progress (not the database `isActive` flag): a campaign is inactive when its
+finish date has passed or its goal amount has been reached. The overview filter
+and card linkability use that derived state; deep links to published stories
+still work after a campaign becomes inactive.
 
 Server-only configuration lives in
 `website/src/lib/config/campaign-submission.config.ts`. Set the Management API

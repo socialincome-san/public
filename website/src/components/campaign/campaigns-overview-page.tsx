@@ -21,7 +21,8 @@ export const CampaignsOverviewPage = async ({ overview, lang, region, searchPara
 	const selectedState = getStateQuery(searchParams);
 	const [campaignStoriesResult, campaignsResult] = await Promise.all([
 		services.storyblok.getCampaigns(lang),
-		services.read.campaign.getAllCampaignsForCmsJoinWithStats({ activity: selectedState }),
+		// Activity filter is applied in CampaignsOverview via isCampaignPubliclyActive.
+		services.read.campaign.getAllCampaignsForCmsJoinWithStats({ activity: 'all' }),
 	]);
 	const campaignStories = (campaignStoriesResult.success ? campaignStoriesResult.data : []) as CampaignStory[];
 	const campaignsData = campaignsResult.success ? campaignsResult.data : { campaigns: [], statsById: {} };

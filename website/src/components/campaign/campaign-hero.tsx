@@ -2,6 +2,7 @@ import { DonationFormServer } from '@/components/donation-wizard/donation-form-s
 import { Progress } from '@/components/progress';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { isCampaignPubliclyActive } from '@/lib/services/campaign/campaign-public-activity';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 
 type Props = {
@@ -16,6 +17,11 @@ export const CampaignHero = ({ campaign, title, description, translator, lang }:
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
 	const showProgress = campaign.percentageCollected !== null && campaign.percentageCollected !== undefined;
 	const showAmount = campaign.amountCollected !== null;
+	const isActive = isCampaignPubliclyActive({
+		endDate: campaign.endDate,
+		goal: campaign.goal,
+		amountCollected: campaign.amountCollected,
+	});
 
 	return (
 		<section className="w-site-width max-w-content mx-auto px-6 py-12 md:py-16">
@@ -73,14 +79,14 @@ export const CampaignHero = ({ campaign, title, description, translator, lang }:
 						</div>
 					)}
 
-					{campaign.daysLeft < 0 && (
+					{!isActive && (
 						<p className="text-destructive text-lg font-medium">
 							{translator.t('campaign.ended', { context: { count: campaign.daysLeft } })}
 						</p>
 					)}
 				</div>
 
-				{campaign.daysLeft >= 0 && (
+				{isActive && (
 					<div className="flex w-full justify-center lg:justify-end">
 						<DonationFormServer lang={lang} campaignId={campaign.id} />
 					</div>

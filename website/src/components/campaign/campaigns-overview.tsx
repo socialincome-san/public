@@ -4,6 +4,10 @@ import { CreateCampaignButton } from '@/components/campaign/create-campaign-butt
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import {
+	isCampaignPubliclyActive,
+	matchesPublicCampaignActivity,
+} from '@/lib/services/campaign/campaign-public-activity';
 import type { PublicCampaignCard, PublicCampaignStatsMap } from '@/lib/services/campaign/campaign.types';
 import type { CampaignStateFilter } from './campaigns-overview-query';
 
@@ -30,6 +34,19 @@ export const CampaignsOverview = async ({
 }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const hasCmsHeader = Boolean(title?.trim()) || Boolean(text?.trim());
+	const filteredCampaigns = campaigns
+		.map((campaign) => {
+			const isActive = isCampaignPubliclyActive({
+				endDate: campaign.endDate,
+				goal: campaign.goal,
+				amountCollected: statsById[campaign.id]?.amountCollected ?? null,
+			});
+
+			console.log('campaign end date', campaign.endDate);
+
+			return { ...campaign, isActive };
+		})
+		.filter((campaign) => matchesPublicCampaignActivity(campaign.isActive, selectedState));
 	const submissionLabels = {
 		title: translator.t('campaigns-page.submission.title'),
 		description: translator.t('campaigns-page.submission.description'),
@@ -65,11 +82,11 @@ export const CampaignsOverview = async ({
 					/>
 				</div>
 			) : null}
-			{campaigns.length === 0 ? (
+			{filteredCampaigns.length === 0 ? (
 				<p className="text-muted-foreground">{translator.t('campaigns-page.empty')}</p>
 			) : (
 				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-					{campaigns.map((campaign) => (
+					{filteredCampaigns.map((campaign) => (
 						<li key={campaign.id} className="h-full">
 							<CampaignPreviewWallet
 								campaign={campaign}

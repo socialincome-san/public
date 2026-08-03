@@ -22,6 +22,8 @@ const createDbCampaign = (slug: string): PublicCampaignCard => ({
 	slug,
 	creatorName: null,
 	currency: 'CHF',
+	endDate: new Date('2025-12-31T00:00:00.000Z'),
+	goal: 10_000,
 	isActive: false,
 });
 
