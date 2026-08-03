@@ -104,6 +104,17 @@ export class CampaignSubmissionService extends BaseService {
 			}
 
 			if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+				const target = error.meta?.target;
+				const conflictFields = Array.isArray(target)
+					? target.map(String)
+					: typeof target === 'string'
+						? [target]
+						: [];
+
+				if (conflictFields.includes('slug')) {
+					return this.resultFail('similar-title-exists', 400);
+				}
+
 				return this.resultFail('title-exists', 400);
 			}
 

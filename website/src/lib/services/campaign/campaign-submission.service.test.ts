@@ -6,11 +6,27 @@ import { CampaignValidationService } from './campaign-validation.service';
 jest.mock('@/generated/prisma/client', () => ({
 	Prisma: {
 		PrismaClientKnownRequestError: class PrismaClientKnownRequestError extends Error {
-			code = 'P2002';
+			code: string;
+			meta?: { target?: string | string[] };
+
+			constructor(message: string, { code, meta }: { code: string; meta?: { target?: string | string[] } }) {
+				super(message);
+				this.code = code;
+				this.meta = meta;
+			}
 		},
 	},
 	PrismaClient: class {},
 }));
+
+const { Prisma } = jest.requireMock('@/generated/prisma/client') as {
+	Prisma: {
+		PrismaClientKnownRequestError: new (
+			message: string,
+			options: { code: string; meta?: { target?: string | string[] } },
+		) => Error & { code: string; meta?: { target?: string | string[] } };
+	};
+};
 
 describe('CampaignSubmissionService', () => {
 	type CampaignCreateInput = {
@@ -194,5 +210,73 @@ describe('CampaignSubmissionService', () => {
 			expect(result.error).toBe('similar-title-exists');
 		}
 		expect(db.campaign.create).not.toHaveBeenCalled();
+	});
+
+	test('submit returns title-exists when campaign create hits a title unique constraint', async () => {
+		const { service, create } = createService();
+		create.mockRejectedValueOnce(
+			new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+				code: 'P2002',
+				meta: { target: ['title'] },
+			}),
+		);
+
+		const result = await service.submit(
+			{
+				title: 'My Campaign',
+				description: 'Description',
+				goal: 500,
+				currency: 'CHF',
+				endDate: new Date('2030-06-01'),
+				programId: 'program-1',
+			},
+			{
+				buffer: Buffer.from([0x89, 0x50, 0x4e, 0x47]),
+				mimeType: 'image/png',
+				filename: 'cover.png',
+				size: 4,
+			},
+			['program-slug'],
+		);
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('title-exists');
+			expect(result.status).toBe(400);
+		}
+	});
+
+	test('submit returns similar-title-exists when campaign create hits a slug unique constraint', async () => {
+		const { service, create } = createService();
+		create.mockRejectedValueOnce(
+			new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+				code: 'P2002',
+				meta: { target: ['slug'] },
+			}),
+		);
+
+		const result = await service.submit(
+			{
+				title: 'My Campaign',
+				description: 'Description',
+				goal: 500,
+				currency: 'CHF',
+				endDate: new Date('2030-06-01'),
+				programId: 'program-1',
+			},
+			{
+				buffer: Buffer.from([0x89, 0x50, 0x4e, 0x47]),
+				mimeType: 'image/png',
+				filename: 'cover.png',
+				size: 4,
+			},
+			['program-slug'],
+		);
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('similar-title-exists');
+			expect(result.status).toBe(400);
+		}
 	});
 });
