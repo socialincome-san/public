@@ -10,6 +10,7 @@ import { campaignSubmissionDefaultCurrency } from '@/lib/services/campaign/campa
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import { cn } from '@/lib/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { addDays, format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -227,7 +228,12 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 						<FormItem>
 							<FormLabel>{labels.endDate}</FormLabel>
 							<FormControl>
-								<Input {...field} type="date" />
+								<Input
+									{...field}
+									type="date"
+									min={format(addDays(new Date(), campaignSubmissionConfig.minCampaignDurationDays), 'yyyy-MM-dd')}
+									max={format(addDays(new Date(), campaignSubmissionConfig.maxCampaignDurationDays), 'yyyy-MM-dd')}
+								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>

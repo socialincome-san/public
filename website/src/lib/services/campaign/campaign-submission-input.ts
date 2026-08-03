@@ -5,7 +5,7 @@ import {
 	type CampaignSubmissionPermittedImageMimeType,
 } from '@/lib/config/campaign-submission.config';
 import { slugify } from '@/lib/utils/string-utils';
-import { addDays, startOfDay } from 'date-fns';
+import { addDays, format, isValid, parse, startOfDay } from 'date-fns';
 import z from 'zod';
 
 // Intentional: strip ASCII control characters from untrusted text fields.
@@ -40,7 +40,17 @@ const campaignSubmissionFieldsSchema = z.object({
 		.string()
 		.transform((value) => value.trim().toUpperCase())
 		.refine(isAllowedCurrency, 'Currency is not supported.'),
-	endDate: z.coerce.date().refine((date) => !Number.isNaN(date.getTime()), 'End date is invalid.'),
+	// Parse YYYY-MM-DD as a local calendar day (z.coerce.date uses UTC midnight and breaks min/max checks).
+	endDate: z.string().transform((value, ctx) => {
+		const date = parse(value.trim(), 'yyyy-MM-dd', new Date());
+		if (!isValid(date) || format(date, 'yyyy-MM-dd') !== value.trim()) {
+			ctx.addIssue({ code: 'custom', message: 'End date is invalid.' });
+
+			return z.NEVER;
+		}
+
+		return startOfDay(date);
+	}),
 	programId: z.string().trim().min(1, 'Program is required.'),
 });
 

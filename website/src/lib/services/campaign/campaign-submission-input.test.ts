@@ -1,20 +1,20 @@
+import { addDays, format, startOfDay } from 'date-fns';
 import {
 	parseCampaignSubmissionFields,
 	validateCampaignSubmissionEndDate,
 	validateCampaignSubmissionImageBuffer,
 } from './campaign-submission-input';
 
+const validEndDateString = () => format(addDays(startOfDay(new Date()), 30), 'yyyy-MM-dd');
+
 describe('campaign-submission-input', () => {
 	test('parseCampaignSubmissionFields validates required fields', () => {
-		const endDate = new Date();
-		endDate.setDate(endDate.getDate() + 30);
-
 		const formData = new FormData();
 		formData.set('title', '  My Campaign  ');
 		formData.set('description', 'A description');
 		formData.set('goal', '1000');
 		formData.set('currency', 'chf');
-		formData.set('endDate', endDate.toISOString().slice(0, 10));
+		formData.set('endDate', validEndDateString());
 		formData.set('programId', 'program-1');
 
 		const result = parseCampaignSubmissionFields(formData);
@@ -27,15 +27,12 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('parseCampaignSubmissionFields rejects unsupported currency', () => {
-		const endDate = new Date();
-		endDate.setDate(endDate.getDate() + 30);
-
 		const formData = new FormData();
 		formData.set('title', 'Campaign');
 		formData.set('description', 'Description');
 		formData.set('goal', '100');
 		formData.set('currency', 'JPY');
-		formData.set('endDate', endDate.toISOString().slice(0, 10));
+		formData.set('endDate', validEndDateString());
 		formData.set('programId', 'program-1');
 
 		const result = parseCampaignSubmissionFields(formData);
@@ -43,15 +40,12 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('parseCampaignSubmissionFields rejects titles that cannot be slugified', () => {
-		const endDate = new Date();
-		endDate.setDate(endDate.getDate() + 30);
-
 		const formData = new FormData();
 		formData.set('title', '!!! 🎉');
 		formData.set('description', 'Description');
 		formData.set('goal', '100');
 		formData.set('currency', 'CHF');
-		formData.set('endDate', endDate.toISOString().slice(0, 10));
+		formData.set('endDate', validEndDateString());
 		formData.set('programId', 'program-1');
 
 		const result = parseCampaignSubmissionFields(formData);
@@ -62,10 +56,18 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('validateCampaignSubmissionEndDate enforces minimum duration', () => {
-		const tomorrow = new Date();
-		tomorrow.setDate(tomorrow.getDate() + 1);
+		const tomorrow = startOfDay(addDays(new Date(), 1));
 
 		expect(validateCampaignSubmissionEndDate(tomorrow)).toMatch(/at least/);
+	});
+
+	test('validateCampaignSubmissionEndDate accepts min and max calendar bounds', () => {
+		const today = startOfDay(new Date());
+		const minEndDate = addDays(today, 7);
+		const maxEndDate = addDays(today, 365);
+
+		expect(validateCampaignSubmissionEndDate(minEndDate)).toBeNull();
+		expect(validateCampaignSubmissionEndDate(maxEndDate)).toBeNull();
 	});
 
 	test('validateCampaignSubmissionImageBuffer detects png contents', () => {
