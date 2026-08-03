@@ -42,6 +42,25 @@ describe('campaign-submission-input', () => {
 		expect(result.success).toBe(false);
 	});
 
+	test('parseCampaignSubmissionFields rejects titles that cannot be slugified', () => {
+		const endDate = new Date();
+		endDate.setDate(endDate.getDate() + 30);
+
+		const formData = new FormData();
+		formData.set('title', '!!! 🎉');
+		formData.set('description', 'Description');
+		formData.set('goal', '100');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', endDate.toISOString().slice(0, 10));
+		formData.set('programId', 'program-1');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('Title must contain letters or numbers.');
+		}
+	});
+
 	test('validateCampaignSubmissionEndDate enforces minimum duration', () => {
 		const tomorrow = new Date();
 		tomorrow.setDate(tomorrow.getDate() + 1);

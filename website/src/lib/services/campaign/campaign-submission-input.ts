@@ -4,6 +4,7 @@ import {
 	type CampaignSubmissionAllowedCurrency,
 	type CampaignSubmissionPermittedImageMimeType,
 } from '@/lib/config/campaign-submission.config';
+import { slugify } from '@/lib/utils/string-utils';
 import { addDays, startOfDay } from 'date-fns';
 import z from 'zod';
 
@@ -23,7 +24,13 @@ const campaignSubmissionFieldsSchema = z.object({
 	title: z
 		.string()
 		.transform(sanitizeText)
-		.pipe(z.string().min(1, 'Title is required.').max(campaignSubmissionConfig.maxTitleLength)),
+		.pipe(
+			z
+				.string()
+				.min(1, 'Title is required.')
+				.max(campaignSubmissionConfig.maxTitleLength)
+				.refine((title) => Boolean(slugify(title)), 'Title must contain letters or numbers.'),
+		),
 	description: z
 		.string()
 		.transform(sanitizeText)

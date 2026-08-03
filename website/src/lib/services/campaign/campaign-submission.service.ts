@@ -53,7 +53,11 @@ export class CampaignSubmissionService extends BaseService {
 			return this.resultFail('A campaign with this title already exists.', 400);
 		}
 
-		const slug = await this.generateUniqueSlug(fields.title);
+		const slugResult = await this.generateUniqueSlug(fields.title);
+		if (!slugResult.success) {
+			return this.resultFail(slugResult.error, slugResult.status);
+		}
+		const slug = slugResult.data;
 		const cleanupState: SubmissionCleanupState = {};
 
 		try {
@@ -130,25 +134,25 @@ export class CampaignSubmissionService extends BaseService {
 		}
 	}
 
-	private async generateUniqueSlug(title: string): Promise<string> {
+	private async generateUniqueSlug(title: string): Promise<ServiceResult<string>> {
 		const baseSlug = slugify(title);
 		if (!baseSlug) {
-			throw new Error('Could not generate campaign slug.');
+			return this.resultFail('Title must contain letters or numbers.', 400);
 		}
 
 		const uniquenessResult = await this.campaignValidationService.validateSlugUniqueness(baseSlug);
 		if (uniquenessResult.success) {
-			return baseSlug;
+			return this.resultOk(baseSlug);
 		}
 
 		for (let suffix = 2; suffix <= 20; suffix += 1) {
 			const candidate = `${baseSlug}-${suffix}`;
 			const candidateResult = await this.campaignValidationService.validateSlugUniqueness(candidate);
 			if (candidateResult.success) {
-				return candidate;
+				return this.resultOk(candidate);
 			}
 		}
 
-		throw new Error('Could not generate a unique campaign slug.');
+		return this.resultFail('A campaign with a similar title already exists. Please choose a different title.', 409);
 	}
 }
