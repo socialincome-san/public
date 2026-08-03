@@ -1,7 +1,6 @@
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { logger } from '@/lib/utils/logger';
 import { randomUUID } from 'crypto';
 
@@ -237,10 +236,6 @@ export class StoryblokManagementService {
 		} catch (error) {
 			logger.error(error, { storyId });
 		}
-	}
-
-	getStoryPathForSlug(slug: string): string {
-		return getCampaignStoryPath(slug);
 	}
 }
 
