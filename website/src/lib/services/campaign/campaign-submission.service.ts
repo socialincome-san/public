@@ -4,15 +4,9 @@ import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramPublicSubmissionService } from '../program/program-public-submission.service';
-import {
-	type CampaignSubmissionFields,
-	type CampaignSubmissionImageValidation,
-} from './campaign-submission-input';
+import { isStoryblokManagementError, StoryblokManagementService } from '../storyblok/storyblok-management.service';
+import { type CampaignSubmissionFields, type CampaignSubmissionImageValidation } from './campaign-submission-input';
 import { CampaignValidationService } from './campaign-validation.service';
-import {
-	isStoryblokManagementError,
-	StoryblokManagementService,
-} from '../storyblok/storyblok-management.service';
 
 export type CampaignSubmissionResult = {
 	slug: string;

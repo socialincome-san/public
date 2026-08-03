@@ -358,7 +358,9 @@ export class CampaignReadService extends BaseService {
 		return { isActive: activity === 'active' };
 	}
 
-	async getCampaignsForCmsJoin(options?: { activity?: PublicCampaignActivity }): Promise<ServiceResult<PublicCampaignCard[]>> {
+	async getCampaignsForCmsJoin(options?: {
+		activity?: PublicCampaignActivity;
+	}): Promise<ServiceResult<PublicCampaignCard[]>> {
 		const activity = options?.activity ?? 'active';
 
 		try {

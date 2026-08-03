@@ -1,6 +1,6 @@
-import { resolveCampaignsWithCmsEntries } from './campaigns-overview.server';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import type { PublicCampaignCard } from '@/lib/services/campaign/campaign.types';
+import { resolveCampaignsWithCmsEntries } from './campaigns-overview.server';
 
 const createStory = (portalSlug: string, storySlug: string): CampaignStory =>
 	({
@@ -38,10 +38,7 @@ describe('resolveCampaignsWithCmsEntries', () => {
 	});
 
 	test('skips stories without portalSlug or missing DB match', () => {
-		const stories = [
-			createStory('', 'missing-portal-slug'),
-			createStory('unknown-slug', 'unknown-slug'),
-		];
+		const stories = [createStory('', 'missing-portal-slug'), createStory('unknown-slug', 'unknown-slug')];
 		const databaseCampaigns = [createDbCampaign('known-slug')];
 
 		const result = resolveCampaignsWithCmsEntries(stories, databaseCampaigns, {});

@@ -1,7 +1,6 @@
 import { type DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { CampaignDetail } from '@/components/campaign/campaign-detail';
 import { loadCampaignDetailData } from '@/components/storyblok/campaign/load-campaign-detail-data';
-import { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { notFound } from 'next/navigation';

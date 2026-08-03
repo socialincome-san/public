@@ -2,8 +2,6 @@ import type { CampaignDetailData } from '@/components/storyblok/campaign/campaig
 import { getCampaignPortalSlug, getCampaignTitle } from '@/components/storyblok/campaign/campaign.utils';
 import { services } from '@/lib/services/services';
 
-export type { CampaignDetailData, CampaignStory } from '@/components/storyblok/campaign/campaign.types';
-
 export const loadCampaignDetailData = async (urlSlug: string, lang: string): Promise<CampaignDetailData | null> => {
 	const storyResult = await services.storyblok.getCampaignBySlug(urlSlug, lang);
 	if (!storyResult.success) {

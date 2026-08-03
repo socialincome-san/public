@@ -1,7 +1,7 @@
 'use client';
 
-import { CampaignSubmissionForm, type SubmissionLabels } from '@/components/campaign/campaign-submission-form';
 import { Button } from '@/components/button';
+import { CampaignSubmissionForm, type SubmissionLabels } from '@/components/campaign/campaign-submission-form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { useState } from 'react';
 

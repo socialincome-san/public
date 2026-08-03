@@ -59,7 +59,6 @@ import { ProgramPublicSubmissionService } from './program/program-public-submiss
 import { ProgramReadService } from './program/program-read.service';
 import { ProgramValidationService } from './program/program-validation.service';
 import { ProgramWriteService } from './program/program-write.service';
-import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { QrBillService } from './qr-bill/qr-bill.service';
 import { RecipientImportService } from './recipient/recipient-import.service';
 import { RecipientReadService } from './recipient/recipient-read.service';
@@ -67,6 +66,7 @@ import { RecipientStatusService } from './recipient/recipient-status.service';
 import { RecipientValidationService } from './recipient/recipient-validation.service';
 import { RecipientWriteService } from './recipient/recipient-write.service';
 import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
+import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { StoryblokService } from './storyblok/storyblok.service';
 import { StripeService } from './stripe/stripe.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';

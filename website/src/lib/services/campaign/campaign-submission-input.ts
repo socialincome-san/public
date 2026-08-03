@@ -7,6 +7,8 @@ import {
 import { addDays, startOfDay } from 'date-fns';
 import z from 'zod';
 
+// Intentional: strip ASCII control characters from untrusted text fields.
+// eslint-disable-next-line no-control-regex -- sanitizes form input
 const CONTROL_CHARACTERS_REGEX = /[\u0000-\u001F\u007F]/;
 
 const sanitizeText = (value: string) => value.replace(CONTROL_CHARACTERS_REGEX, '').trim();
@@ -17,7 +19,7 @@ const isAllowedCurrency = (value: string): value is CampaignSubmissionAllowedCur
 const isPermittedImageMimeType = (value: string): value is CampaignSubmissionPermittedImageMimeType =>
 	campaignSubmissionConfig.permittedImageMimeTypes.includes(value as CampaignSubmissionPermittedImageMimeType);
 
-export const campaignSubmissionFieldsSchema = z.object({
+const campaignSubmissionFieldsSchema = z.object({
 	title: z
 		.string()
 		.transform(sanitizeText)
@@ -80,32 +82,6 @@ export const validateCampaignSubmissionEndDate = (endDate: Date): string | null 
 	}
 
 	return null;
-};
-
-export const validateCampaignSubmissionImage = (
-	file: File | null | undefined,
-): { success: true; data: CampaignSubmissionImageValidation } | { success: false; error: string } => {
-	if (!file || !(file instanceof File)) {
-		return { success: false, error: 'Primary image is required.' };
-	}
-
-	if (!isPermittedImageMimeType(file.type)) {
-		return { success: false, error: 'Image must be JPEG, PNG, or WebP.' };
-	}
-
-	if (file.size > campaignSubmissionConfig.maxImageBytes) {
-		return { success: false, error: 'Image exceeds the maximum allowed size.' };
-	}
-
-	return {
-		success: true,
-		data: {
-			buffer: Buffer.alloc(0),
-			mimeType: file.type,
-			filename: file.name.trim() || 'campaign-image',
-			size: file.size,
-		},
-	};
 };
 
 export const validateCampaignSubmissionImageBuffer = (

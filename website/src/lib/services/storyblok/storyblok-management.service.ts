@@ -95,9 +95,11 @@ const unwrapAsset = (body: unknown): ManagementAsset | null => {
 	}
 
 	const nested = (body as { asset?: unknown }).asset;
-	const candidate = nested && typeof nested === 'object' ? nested : body;
+	if (nested && typeof nested === 'object') {
+		return nested;
+	}
 
-	return candidate as ManagementAsset;
+	return body;
 };
 
 const uploadSignedAsset = async (signed: SignedUploadResponse, fileBuffer: Buffer, mimeType: string): Promise<void> => {
@@ -120,7 +122,11 @@ const uploadSignedAsset = async (signed: SignedUploadResponse, fileBuffer: Buffe
 export class StoryblokManagementService {
 	private readonly spaceId = campaignSubmissionConfig.storyblokSpaceId;
 
-	async uploadAsset(fileBuffer: Buffer, filename: string, mimeType: string): Promise<{ assetId: number; asset: StoryblokAsset }> {
+	async uploadAsset(
+		fileBuffer: Buffer,
+		filename: string,
+		mimeType: string,
+	): Promise<{ assetId: number; asset: StoryblokAsset }> {
 		const signedResponse = await requestManagement(`/spaces/${this.spaceId}/assets/`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -145,10 +151,9 @@ export class StoryblokManagementService {
 		);
 
 		// The minimal asset from `finish_upload` may omit the CDN filename that asset fields require.
-		const resolvedAsset =
-			finishedAsset?.filename ?
-				finishedAsset
-			:	unwrapAsset(await requestManagement(`/spaces/${this.spaceId}/assets/${signed.id}`, { method: 'GET' }));
+		const resolvedAsset = finishedAsset?.filename
+			? finishedAsset
+			: unwrapAsset(await requestManagement(`/spaces/${this.spaceId}/assets/${signed.id}`, { method: 'GET' }));
 
 		const assetUrl = resolvedAsset?.filename ?? signed.pretty_url;
 		if (!assetUrl) {

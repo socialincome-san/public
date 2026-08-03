@@ -1,11 +1,11 @@
 import { getProgramPortalSlug } from '@/components/storyblok/program/program.utils';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import { defaultLanguage } from '@/lib/i18n/utils';
 import {
 	parseCampaignSubmissionFields,
 	validateCampaignSubmissionImageBuffer,
 } from '@/lib/services/campaign/campaign-submission-input';
 import { services } from '@/lib/services/services';
-import { defaultLanguage } from '@/lib/i18n/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
@@ -16,13 +16,7 @@ const getPublishedProgramPortalSlugs = async (): Promise<string[]> => {
 		return [];
 	}
 
-	return [
-		...new Set(
-			programsResult.data
-				.map((program) => getProgramPortalSlug(program.content))
-				.filter(Boolean),
-		),
-	];
+	return [...new Set(programsResult.data.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
 };
 
 export const POST = async (request: NextRequest) => {
@@ -62,10 +56,7 @@ export const POST = async (request: NextRequest) => {
 	);
 
 	if (!submissionResult.success) {
-		return NextResponse.json(
-			{ error: submissionResult.error },
-			{ status: submissionResult.status ?? 400 },
-		);
+		return NextResponse.json({ error: submissionResult.error }, { status: submissionResult.status ?? 400 });
 	}
 
 	return NextResponse.json({ slug: submissionResult.data.slug }, { status: 201 });
