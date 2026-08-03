@@ -144,35 +144,41 @@ export class StoryblokManagementService {
 			throw new StoryblokManagementError('Storyblok did not return a signed upload response.', 502, true);
 		}
 
-		await uploadSignedAsset(signed, fileBuffer, mimeType);
+		const assetId = signed.id;
+		try {
+			await uploadSignedAsset(signed, fileBuffer, mimeType);
 
-		const finishedAsset = unwrapAsset(
-			await requestManagement(`/spaces/${this.spaceId}/assets/${signed.id}/finish_upload`, { method: 'GET' }),
-		);
+			const finishedAsset = unwrapAsset(
+				await requestManagement(`/spaces/${this.spaceId}/assets/${assetId}/finish_upload`, { method: 'GET' }),
+			);
 
-		// The minimal asset from `finish_upload` may omit the CDN filename that asset fields require.
-		const resolvedAsset = finishedAsset?.filename
-			? finishedAsset
-			: unwrapAsset(await requestManagement(`/spaces/${this.spaceId}/assets/${signed.id}`, { method: 'GET' }));
+			// The minimal asset from `finish_upload` may omit the CDN filename that asset fields require.
+			const resolvedAsset = finishedAsset?.filename
+				? finishedAsset
+				: unwrapAsset(await requestManagement(`/spaces/${this.spaceId}/assets/${assetId}`, { method: 'GET' }));
 
-		const assetUrl = resolvedAsset?.filename ?? signed.pretty_url;
-		if (!assetUrl) {
-			throw new StoryblokManagementError('Storyblok did not return an asset URL after upload.', 502, true);
+			const assetUrl = resolvedAsset?.filename ?? signed.pretty_url;
+			if (!assetUrl) {
+				throw new StoryblokManagementError('Storyblok did not return an asset URL after upload.', 502, true);
+			}
+
+			return {
+				assetId,
+				asset: {
+					id: resolvedAsset?.id ?? assetId,
+					filename: assetUrl,
+					fieldtype: 'asset',
+					alt: resolvedAsset?.alt ?? '',
+					name: resolvedAsset?.name ?? '',
+					title: resolvedAsset?.title ?? '',
+					focus: resolvedAsset?.focus ?? '',
+					copyright: resolvedAsset?.copyright ?? '',
+				},
+			};
+		} catch (error) {
+			await this.deleteAsset(assetId);
+			throw error;
 		}
-
-		return {
-			assetId: signed.id,
-			asset: {
-				id: resolvedAsset?.id ?? signed.id,
-				filename: assetUrl,
-				fieldtype: 'asset',
-				alt: resolvedAsset?.alt ?? '',
-				name: resolvedAsset?.name ?? '',
-				title: resolvedAsset?.title ?? '',
-				focus: resolvedAsset?.focus ?? '',
-				copyright: resolvedAsset?.copyright ?? '',
-			},
-		};
 	}
 
 	async createPublishedCampaignStory(input: {
