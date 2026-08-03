@@ -13,11 +13,22 @@ jest.mock('@/generated/prisma/client', () => ({
 }));
 
 describe('CampaignSubmissionService', () => {
+	type CampaignCreateInput = {
+		data: {
+			isActive: boolean;
+			public: boolean;
+			slug: string;
+		};
+	};
+
 	const createService = () => {
+		const create = jest.fn().mockResolvedValue({ id: 'campaign-1', slug: 'my-campaign' }) as jest.MockedFunction<
+			(input: CampaignCreateInput) => Promise<{ id: string; slug: string }>
+		>;
 		const db = {
 			campaign: {
 				findUnique: jest.fn().mockResolvedValue(null),
-				create: jest.fn().mockResolvedValue({ id: 'campaign-1', slug: 'my-campaign' }),
+				create,
 				delete: jest.fn().mockResolvedValue(undefined),
 			},
 		};
@@ -50,6 +61,7 @@ describe('CampaignSubmissionService', () => {
 		return {
 			service,
 			db,
+			create,
 			deleteAsset,
 			createPublishedCampaignStory,
 			campaignValidationService,
@@ -57,7 +69,7 @@ describe('CampaignSubmissionService', () => {
 	};
 
 	test('submit creates public DB campaign and published Storyblok story', async () => {
-		const { service, db, createPublishedCampaignStory } = createService();
+		const { service, create, createPublishedCampaignStory } = createService();
 
 		const result = await service.submit(
 			{
@@ -81,15 +93,11 @@ describe('CampaignSubmissionService', () => {
 		if (result.success) {
 			expect(result.data.slug).toBe('my-campaign');
 		}
-		expect(db.campaign.create).toHaveBeenCalledWith(
-			expect.objectContaining({
-				data: expect.objectContaining({
-					isActive: true,
-					public: true,
-					slug: 'my-campaign',
-				}),
-			}),
-		);
+		expect(create).toHaveBeenCalledTimes(1);
+		const createArg = create.mock.calls[0]?.[0];
+		expect(createArg?.data.isActive).toBe(true);
+		expect(createArg?.data.public).toBe(true);
+		expect(createArg?.data.slug).toBe('my-campaign');
 		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
 			expect.objectContaining({
 				slug: 'my-campaign',

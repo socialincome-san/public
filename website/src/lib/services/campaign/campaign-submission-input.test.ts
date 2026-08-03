@@ -1,3 +1,4 @@
+import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { addDays, format, startOfDay } from 'date-fns';
 import {
 	parseCampaignSubmissionFields,
@@ -5,7 +6,6 @@ import {
 	validateCampaignSubmissionImageBuffer,
 	validateCampaignSubmissionImageMeta,
 } from './campaign-submission-input';
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 
 const validEndDateString = () => format(addDays(startOfDay(new Date()), 30), 'yyyy-MM-dd');
 

@@ -68,10 +68,7 @@ const campaignSubmissionFieldsSchema = z.object({
 		.string()
 		.transform(sanitizeText)
 		.pipe(
-			z
-				.string()
-				.min(1, 'description-required')
-				.max(campaignSubmissionConfig.maxDescriptionLength, 'description-too-long'),
+			z.string().min(1, 'description-required').max(campaignSubmissionConfig.maxDescriptionLength, 'description-too-long'),
 		),
 	goal: z.coerce.number().positive('goal-positive'),
 	currency: z
@@ -123,7 +120,7 @@ const detectImageMimeType = (buffer: Buffer): CampaignSubmissionPermittedImageMi
 	return null;
 };
 
-export const parseCampaignSubmissionEndDate = (value: string): Date | null => {
+const parseCampaignSubmissionEndDate = (value: string): Date | null => {
 	const trimmed = value.trim();
 	const date = parse(trimmed, 'yyyy-MM-dd', new Date());
 	if (!isValid(date) || format(date, 'yyyy-MM-dd') !== trimmed) {
@@ -150,10 +147,7 @@ export const validateCampaignSubmissionEndDate = (endDate: Date): CampaignSubmis
 };
 
 /** Shared size/MIME checks for both client File prechecks and server buffer validation. */
-export const validateCampaignSubmissionImageMeta = (
-	size: number,
-	mimeType: string,
-): CampaignSubmissionErrorCode | null => {
+export const validateCampaignSubmissionImageMeta = (size: number, mimeType: string): CampaignSubmissionErrorCode | null => {
 	if (size > campaignSubmissionConfig.maxImageBytes) {
 		return 'image-too-large';
 	}
@@ -169,9 +163,7 @@ export const validateCampaignSubmissionImageBuffer = (
 	buffer: Buffer,
 	declaredMimeType: string,
 	filename: string,
-):
-	| { success: true; data: CampaignSubmissionImageValidation }
-	| { success: false; error: CampaignSubmissionErrorCode } => {
+): { success: true; data: CampaignSubmissionImageValidation } | { success: false; error: CampaignSubmissionErrorCode } => {
 	const metaError = validateCampaignSubmissionImageMeta(buffer.length, declaredMimeType);
 	if (metaError) {
 		return { success: false, error: metaError };
@@ -199,9 +191,7 @@ export const validateCampaignSubmissionImageBuffer = (
 
 export const parseCampaignSubmissionFields = (
 	formData: FormData,
-):
-	| { success: true; data: CampaignSubmissionFields }
-	| { success: false; error: CampaignSubmissionErrorCode } => {
+): { success: true; data: CampaignSubmissionFields } | { success: false; error: CampaignSubmissionErrorCode } => {
 	const parsed = campaignSubmissionFieldsSchema.safeParse({
 		title: formData.get('title'),
 		description: formData.get('description'),
@@ -214,7 +204,9 @@ export const parseCampaignSubmissionFields = (
 	if (!parsed.success) {
 		const message = parsed.error.issues[0]?.message;
 		const errorCode =
-			message && isCampaignSubmissionErrorCode(message) ? message : ('invalid-submission' satisfies CampaignSubmissionErrorCode);
+			message && isCampaignSubmissionErrorCode(message)
+				? message
+				: ('invalid-submission' satisfies CampaignSubmissionErrorCode);
 
 		return { success: false, error: errorCode };
 	}
@@ -244,19 +236,22 @@ export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmi
 		currency: z.enum(campaignSubmissionConfig.allowedCurrencies, {
 			errorMap: () => ({ message: message('currency-unsupported') }),
 		}),
-		endDate: z.string().min(1, message('end-date-required')).superRefine((value, ctx) => {
-			const date = parseCampaignSubmissionEndDate(value);
-			if (!date) {
-				ctx.addIssue({ code: 'custom', message: message('end-date-invalid') });
+		endDate: z
+			.string()
+			.min(1, message('end-date-required'))
+			.superRefine((value, ctx) => {
+				const date = parseCampaignSubmissionEndDate(value);
+				if (!date) {
+					ctx.addIssue({ code: 'custom', message: message('end-date-invalid') });
 
-				return;
-			}
+					return;
+				}
 
-			const endDateError = validateCampaignSubmissionEndDate(date);
-			if (endDateError) {
-				ctx.addIssue({ code: 'custom', message: message(endDateError) });
-			}
-		}),
+				const endDateError = validateCampaignSubmissionEndDate(date);
+				if (endDateError) {
+					ctx.addIssue({ code: 'custom', message: message(endDateError) });
+				}
+			}),
 		programId: z.string().trim().min(1, message('program-required')),
 	});
 

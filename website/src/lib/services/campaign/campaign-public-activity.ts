@@ -2,7 +2,7 @@ import { nowMs } from '@/lib/utils/now';
 
 type CampaignPublicActivityInput = {
 	endDate: Date;
-	goal?: number | null | unknown;
+	goal?: unknown;
 	amountCollected?: number | null;
 	now?: number;
 };
@@ -17,16 +17,11 @@ export const isCampaignPubliclyActive = ({
 	amountCollected,
 	now = nowMs(),
 }: CampaignPublicActivityInput): boolean => {
-	const dateNow = new Date(now);
-	console.log('dateNow', dateNow);
-	console.log('Difference in ms', (now - (endDate.getTime())));
 	if (endDate.getTime() <= now) {
-		console.log('endDate', endDate.getTime());
-		console.log('now', now);
 		return false;
 	}
 
-	if (goal == null || amountCollected == null) {
+	if (goal === null || goal === undefined || amountCollected === null || amountCollected === undefined) {
 		return true;
 	}
 
@@ -38,10 +33,7 @@ export const isCampaignPubliclyActive = ({
 	return amountCollected < goalAmount;
 };
 
-export const matchesPublicCampaignActivity = (
-	isActive: boolean,
-	activity: 'active' | 'inactive' | 'all',
-): boolean => {
+export const matchesPublicCampaignActivity = (isActive: boolean, activity: 'active' | 'inactive' | 'all'): boolean => {
 	if (activity === 'all') {
 		return true;
 	}

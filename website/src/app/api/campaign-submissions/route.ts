@@ -61,9 +61,7 @@ export const POST = async (request: NextRequest) => {
 	);
 
 	if (!submissionResult.success) {
-		const errorCode = isCampaignSubmissionErrorCode(submissionResult.error)
-			? submissionResult.error
-			: 'submission-failed';
+		const errorCode = isCampaignSubmissionErrorCode(submissionResult.error) ? submissionResult.error : 'submission-failed';
 
 		return errorResponse(errorCode, submissionResult.status ?? 400);
 	}

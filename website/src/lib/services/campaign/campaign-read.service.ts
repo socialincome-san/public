@@ -327,10 +327,7 @@ export class CampaignReadService extends BaseService {
 
 			const campaign = await this.db.campaign.findFirst({
 				where: {
-					AND: [
-						{ OR: [{ id: normalizedId }, { legacyFirestoreId: normalizedId }] },
-						{ slug: { not: null } },
-					],
+					AND: [{ OR: [{ id: normalizedId }, { legacyFirestoreId: normalizedId }] }, { slug: { not: null } }],
 				},
 				select: { title: true },
 			});
@@ -387,7 +384,7 @@ export class CampaignReadService extends BaseService {
 				continue;
 			}
 
-			const goal = campaign.goal != null ? Number(campaign.goal) : null;
+			const goal = campaign.goal !== null && campaign.goal !== undefined ? Number(campaign.goal) : null;
 
 			publicCampaigns.push({
 				id: campaign.id,
