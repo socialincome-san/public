@@ -175,7 +175,7 @@ export class StoryblokManagementService {
 		};
 	}
 
-	async createDraftCampaignStory(input: {
+	async createPublishedCampaignStory(input: {
 		slug: string;
 		title: string;
 		description: string;
@@ -201,7 +201,7 @@ export class StoryblokManagementService {
 					parent_id: campaignSubmissionConfig.storyblokCampaignsFolderId || undefined,
 					content,
 				},
-				publish: 0,
+				publish: 1,
 			}),
 		});
 

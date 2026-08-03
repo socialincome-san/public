@@ -68,8 +68,8 @@ export class CampaignSubmissionService extends BaseService {
 					goal: fields.goal,
 					currency: fields.currency,
 					endDate: fields.endDate,
-					isActive: false,
-					public: false,
+					isActive: true,
+					public: true,
 					slug,
 					program: { connect: { id: fields.programId } },
 				},
@@ -84,7 +84,7 @@ export class CampaignSubmissionService extends BaseService {
 			);
 			cleanupState.assetId = assetId;
 
-			const { storyId } = await this.storyblokManagementService.createDraftCampaignStory({
+			const { storyId } = await this.storyblokManagementService.createPublishedCampaignStory({
 				slug,
 				title: fields.title,
 				description: fields.description,

@@ -31,11 +31,11 @@ describe('CampaignSubmissionService', () => {
 		} as unknown as CampaignValidationService;
 
 		const deleteAsset = jest.fn().mockResolvedValue(undefined);
-		const createDraftCampaignStory = jest.fn().mockResolvedValue({ storyId: 20, storyUuid: 'uuid' });
+		const createPublishedCampaignStory = jest.fn().mockResolvedValue({ storyId: 20, storyUuid: 'uuid' });
 
 		const storyblokManagementService = {
 			uploadAsset: jest.fn().mockResolvedValue({ assetId: 10, asset: { filename: 'image.jpg' } }),
-			createDraftCampaignStory,
+			createPublishedCampaignStory,
 			deleteAsset,
 			deleteStory: jest.fn().mockResolvedValue(undefined),
 		} as unknown as StoryblokManagementService;
@@ -51,13 +51,13 @@ describe('CampaignSubmissionService', () => {
 			service,
 			db,
 			deleteAsset,
-			createDraftCampaignStory,
+			createPublishedCampaignStory,
 			campaignValidationService,
 		};
 	};
 
-	test('submit creates DB campaign and draft Storyblok story', async () => {
-		const { service } = createService();
+	test('submit creates public DB campaign and published Storyblok story', async () => {
+		const { service, db, createPublishedCampaignStory } = createService();
 
 		const result = await service.submit(
 			{
@@ -81,11 +81,27 @@ describe('CampaignSubmissionService', () => {
 		if (result.success) {
 			expect(result.data.slug).toBe('my-campaign');
 		}
+		expect(db.campaign.create).toHaveBeenCalledWith(
+			expect.objectContaining({
+				data: expect.objectContaining({
+					isActive: true,
+					public: true,
+					slug: 'my-campaign',
+				}),
+			}),
+		);
+		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
+			expect.objectContaining({
+				slug: 'my-campaign',
+				title: 'My Campaign',
+				portalSlug: 'my-campaign',
+			}),
+		);
 	});
 
 	test('submit cleans up created resources when Storyblok story creation fails', async () => {
-		const { service, db, deleteAsset, createDraftCampaignStory } = createService();
-		createDraftCampaignStory.mockRejectedValueOnce(new Error('story failed'));
+		const { service, db, deleteAsset, createPublishedCampaignStory } = createService();
+		createPublishedCampaignStory.mockRejectedValueOnce(new Error('story failed'));
 
 		const result = await service.submit(
 			{
