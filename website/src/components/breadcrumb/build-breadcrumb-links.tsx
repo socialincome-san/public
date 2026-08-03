@@ -22,6 +22,7 @@ type BuildBreadcrumbLinksParams = {
 	currentLabel: string;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
+	includeCurrentLabel?: boolean;
 };
 
 const humanizeSlugSegment = (segment: string) => {
@@ -74,6 +75,7 @@ export const buildBreadcrumbLinks = async ({
 	currentLabel,
 	lang,
 	region,
+	includeCurrentLabel = true,
 }: BuildBreadcrumbLinksParams): Promise<BreadcrumbLink[]> => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const normalizedFullSlug = normalizeStoryblokSlug(fullSlug);
@@ -105,11 +107,12 @@ export const buildBreadcrumbLinks = async ({
 			}),
 		)),
 	);
-
-	links.push({
-		href: '',
-		label: currentLabel,
-	});
+	if (includeCurrentLabel) {
+		links.push({
+			href: '',
+			label: currentLabel,
+		});
+	}
 
 	return links;
 };

@@ -23,6 +23,7 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 		currentLabel: title,
 		lang,
 		region,
+		includeCurrentLabel: false,
 	});
 
 	return (
