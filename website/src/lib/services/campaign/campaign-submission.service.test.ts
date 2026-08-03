@@ -149,7 +149,7 @@ describe('CampaignSubmissionService', () => {
 
 		expect(result.success).toBe(false);
 		if (!result.success) {
-			expect(result.error).toBe('Title must contain letters or numbers.');
+			expect(result.error).toBe('title-not-slugifiable');
 			expect(result.status).toBe(400);
 		}
 		expect(db.campaign.create).not.toHaveBeenCalled();
@@ -183,7 +183,7 @@ describe('CampaignSubmissionService', () => {
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			expect(result.status).toBe(409);
-			expect(result.error).toMatch(/similar title/);
+			expect(result.error).toBe('similar-title-exists');
 		}
 		expect(db.campaign.create).not.toHaveBeenCalled();
 	});

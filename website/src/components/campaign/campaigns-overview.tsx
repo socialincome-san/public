@@ -2,12 +2,17 @@ import { CampaignPreviewWallet } from '@/components/campaign/campaign-preview-wa
 import { CampaignsOverviewFilters } from '@/components/campaign/campaigns-overview-filters';
 import { CreateCampaignButton } from '@/components/campaign/create-campaign-button';
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
+import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import {
 	isCampaignPubliclyActive,
 	matchesPublicCampaignActivity,
 } from '@/lib/services/campaign/campaign-public-activity';
+import {
+	campaignSubmissionErrorCodes,
+	type CampaignSubmissionErrorCode,
+} from '@/lib/services/campaign/campaign-submission-input';
 import type { PublicCampaignCard, PublicCampaignStatsMap } from '@/lib/services/campaign/campaign.types';
 import type { CampaignStateFilter } from './campaigns-overview-query';
 
@@ -47,6 +52,17 @@ export const CampaignsOverview = async ({
 			return { ...campaign, isActive };
 		})
 		.filter((campaign) => matchesPublicCampaignActivity(campaign.isActive, selectedState));
+	const errorContext = {
+		minDays: campaignSubmissionConfig.minCampaignDurationDays,
+		maxDays: campaignSubmissionConfig.maxCampaignDurationDays,
+		maxImageMb: campaignSubmissionConfig.maxImageBytes / (1024 * 1024),
+	};
+	const submissionErrors = Object.fromEntries(
+		campaignSubmissionErrorCodes.map((code) => [
+			code,
+			translator.t(`campaigns-page.submission.errors.${code}`, { context: errorContext }),
+		]),
+	) as Record<CampaignSubmissionErrorCode, string>;
 	const submissionLabels = {
 		title: translator.t('campaigns-page.submission.title'),
 		description: translator.t('campaigns-page.submission.description'),
@@ -62,6 +78,7 @@ export const CampaignsOverview = async ({
 		programPlaceholder: translator.t('campaigns-page.submission.program-placeholder'),
 		currencyPlaceholder: translator.t('campaigns-page.submission.currency-placeholder'),
 		imageHint: translator.t('campaigns-page.submission.image-hint'),
+		errors: submissionErrors,
 	};
 
 	return (

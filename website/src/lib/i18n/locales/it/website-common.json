@@ -199,7 +199,32 @@
 			"error": "Qualcosa è andato storto. Riprova.",
 			"program-placeholder": "Seleziona un programma",
 			"currency-placeholder": "Seleziona una valuta",
-			"image-hint": "JPEG, PNG o WebP fino a 5 MB."
+			"image-hint": "JPEG, PNG o WebP fino a 5 MB.",
+			"errors": {
+				"title-required": "Il titolo è obbligatorio.",
+				"title-too-long": "Il titolo è troppo lungo.",
+				"title-not-slugifiable": "Il titolo deve contenere lettere o numeri.",
+				"description-required": "La descrizione è obbligatoria.",
+				"description-too-long": "La descrizione è troppo lunga.",
+				"goal-positive": "L'obiettivo deve essere un numero positivo.",
+				"currency-unsupported": "La valuta non è supportata.",
+				"end-date-required": "La data di fine è obbligatoria.",
+				"end-date-invalid": "La data di fine non è valida.",
+				"end-date-too-soon": "La data di fine deve essere almeno {{minDays}} giorni da oggi.",
+				"end-date-too-late": "La data di fine deve essere entro {{maxDays}} giorni da oggi.",
+				"program-required": "Il programma è obbligatorio.",
+				"image-required": "L'immagine principale è obbligatoria.",
+				"image-too-large": "L'immagine deve essere di massimo {{maxImageMb}} MB.",
+				"image-format-unsupported": "L'immagine deve essere JPEG, PNG o WebP.",
+				"image-type-mismatch": "Il tipo di immagine non corrisponde al contenuto del file.",
+				"payload-too-large": "Il caricamento è troppo grande.",
+				"invalid-form-data": "Dati del modulo non validi.",
+				"invalid-submission": "Invio non valido.",
+				"program-not-eligible": "Il programma selezionato non è idoneo.",
+				"title-exists": "Esiste già una campagna con questo titolo.",
+				"similar-title-exists": "Esiste già una campagna con un titolo simile. Scegli un titolo diverso.",
+				"submission-failed": "Non siamo riusciti a completare l'invio. Riprova tra qualche minuto."
+			}
 		}
 	},
 	"breadcrumb": {

@@ -6,12 +6,18 @@ import { Input } from '@/components/input';
 import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { campaignSubmissionDefaultCurrency } from '@/lib/services/campaign/campaign-submission-input';
+import {
+	campaignSubmissionDefaultCurrency,
+	createCampaignSubmissionFormSchema,
+	isCampaignSubmissionErrorCode,
+	validateCampaignSubmissionImageMeta,
+	type CampaignSubmissionErrorCode,
+} from '@/lib/services/campaign/campaign-submission-input';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import { cn } from '@/lib/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addDays, format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -30,6 +36,7 @@ type SubmissionLabels = {
 	programPlaceholder: string;
 	currencyPlaceholder: string;
 	imageHint: string;
+	errors: Record<CampaignSubmissionErrorCode, string>;
 };
 
 type Props = {
@@ -37,16 +44,7 @@ type Props = {
 	onSuccess?: () => void;
 };
 
-const formSchema = z.object({
-	title: z.string().trim().min(1).max(campaignSubmissionConfig.maxTitleLength),
-	description: z.string().trim().min(1).max(campaignSubmissionConfig.maxDescriptionLength),
-	goal: z.coerce.number().positive(),
-	currency: z.enum(campaignSubmissionConfig.allowedCurrencies),
-	endDate: z.string().min(1),
-	programId: z.string().trim().min(1),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<ReturnType<typeof createCampaignSubmissionFormSchema>>;
 
 export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 	const [programs, setPrograms] = useState<PublicSubmissionProgramOption[]>([]);
@@ -56,6 +54,19 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [submitSuccess, setSubmitSuccess] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const resolveError = useCallback(
+		(code: string) => {
+			if (isCampaignSubmissionErrorCode(code)) {
+				return labels.errors[code];
+			}
+
+			return labels.error;
+		},
+		[labels.error, labels.errors],
+	);
+
+	const formSchema = useMemo(() => createCampaignSubmissionFormSchema(resolveError), [resolveError]);
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -89,13 +100,34 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 		void loadPrograms();
 	}, [labels.error]);
 
+	const onImageChange = (file: File | null) => {
+		setPrimaryImage(file);
+		setImageError(null);
+
+		if (!file) {
+			return;
+		}
+
+		const metaError = validateCampaignSubmissionImageMeta(file.size, file.type);
+		if (metaError) {
+			setImageError(resolveError(metaError));
+		}
+	};
+
 	const onSubmit = async (values: FormValues) => {
 		setSubmitError(null);
 		setImageError(null);
 		setSubmitSuccess(false);
 
 		if (!primaryImage) {
-			setImageError(labels.primaryImage);
+			setImageError(resolveError('image-required'));
+
+			return;
+		}
+
+		const metaError = validateCampaignSubmissionImageMeta(primaryImage.size, primaryImage.type);
+		if (metaError) {
+			setImageError(resolveError(metaError));
 
 			return;
 		}
@@ -118,8 +150,19 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 			});
 
 			if (!response.ok) {
-				const payload = (await response.json().catch(() => null)) as { error?: string } | null;
-				setSubmitError(payload?.error ?? labels.error);
+				const payload = (await response.json().catch(() => null)) as { errorCode?: string } | null;
+				const errorMessage = payload?.errorCode ? resolveError(payload.errorCode) : labels.error;
+				const isImageError =
+					payload?.errorCode === 'image-required' ||
+					payload?.errorCode === 'image-too-large' ||
+					payload?.errorCode === 'image-format-unsupported' ||
+					payload?.errorCode === 'image-type-mismatch';
+
+				if (isImageError) {
+					setImageError(errorMessage);
+				} else {
+					setSubmitError(errorMessage);
+				}
 
 				return;
 			}
@@ -271,8 +314,7 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 						type="file"
 						accept={campaignSubmissionConfig.permittedImageMimeTypes.join(',')}
 						onChange={(event) => {
-							setImageError(null);
-							setPrimaryImage(event.target.files?.[0] ?? null);
+							onImageChange(event.target.files?.[0] ?? null);
 						}}
 					/>
 					<p className="text-muted-foreground text-xs">{labels.imageHint}</p>

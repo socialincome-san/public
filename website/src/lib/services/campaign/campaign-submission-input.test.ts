@@ -3,7 +3,9 @@ import {
 	parseCampaignSubmissionFields,
 	validateCampaignSubmissionEndDate,
 	validateCampaignSubmissionImageBuffer,
+	validateCampaignSubmissionImageMeta,
 } from './campaign-submission-input';
+import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 
 const validEndDateString = () => format(addDays(startOfDay(new Date()), 30), 'yyyy-MM-dd');
 
@@ -37,6 +39,9 @@ describe('campaign-submission-input', () => {
 
 		const result = parseCampaignSubmissionFields(formData);
 		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('currency-unsupported');
+		}
 	});
 
 	test('parseCampaignSubmissionFields rejects titles that cannot be slugified', () => {
@@ -51,14 +56,30 @@ describe('campaign-submission-input', () => {
 		const result = parseCampaignSubmissionFields(formData);
 		expect(result.success).toBe(false);
 		if (!result.success) {
-			expect(result.error).toBe('Title must contain letters or numbers.');
+			expect(result.error).toBe('title-not-slugifiable');
+		}
+	});
+
+	test('parseCampaignSubmissionFields rejects end dates outside the configured window', () => {
+		const formData = new FormData();
+		formData.set('title', 'Campaign');
+		formData.set('description', 'Description');
+		formData.set('goal', '100');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', format(addDays(startOfDay(new Date()), 1), 'yyyy-MM-dd'));
+		formData.set('programId', 'program-1');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('end-date-too-soon');
 		}
 	});
 
 	test('validateCampaignSubmissionEndDate enforces minimum duration', () => {
 		const tomorrow = startOfDay(addDays(new Date(), 1));
 
-		expect(validateCampaignSubmissionEndDate(tomorrow)).toMatch(/at least/);
+		expect(validateCampaignSubmissionEndDate(tomorrow)).toBe('end-date-too-soon');
 	});
 
 	test('validateCampaignSubmissionEndDate accepts min and max calendar bounds', () => {
@@ -68,6 +89,14 @@ describe('campaign-submission-input', () => {
 
 		expect(validateCampaignSubmissionEndDate(minEndDate)).toBeNull();
 		expect(validateCampaignSubmissionEndDate(maxEndDate)).toBeNull();
+	});
+
+	test('validateCampaignSubmissionImageMeta enforces size and mime type', () => {
+		expect(validateCampaignSubmissionImageMeta(campaignSubmissionConfig.maxImageBytes + 1, 'image/png')).toBe(
+			'image-too-large',
+		);
+		expect(validateCampaignSubmissionImageMeta(100, 'image/gif')).toBe('image-format-unsupported');
+		expect(validateCampaignSubmissionImageMeta(100, 'image/png')).toBeNull();
 	});
 
 	test('validateCampaignSubmissionImageBuffer detects png contents', () => {

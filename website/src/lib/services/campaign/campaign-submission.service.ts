@@ -39,10 +39,10 @@ export class CampaignSubmissionService extends BaseService {
 			publishedProgramPortalSlugs,
 		);
 		if (!eligibilityResult.success) {
-			return this.resultFail(eligibilityResult.error, eligibilityResult.status);
+			return this.resultFail('submission-failed', eligibilityResult.status ?? 503);
 		}
 		if (!eligibilityResult.data) {
-			return this.resultFail('Selected program is not eligible.', 400);
+			return this.resultFail('program-not-eligible', 400);
 		}
 
 		const titleConflict = await this.db.campaign.findUnique({
@@ -50,7 +50,7 @@ export class CampaignSubmissionService extends BaseService {
 			select: { id: true },
 		});
 		if (titleConflict) {
-			return this.resultFail('A campaign with this title already exists.', 400);
+			return this.resultFail('title-exists', 400);
 		}
 
 		const slugResult = await this.generateUniqueSlug(fields.title);
@@ -100,19 +100,16 @@ export class CampaignSubmissionService extends BaseService {
 			if (isStoryblokManagementError(error)) {
 				this.logger.error(error, { slug, retryable: error.retryable, statusCode: error.statusCode });
 
-				return this.resultFail(
-					'We could not complete your submission. Please try again in a few minutes.',
-					error.retryable ? 503 : 502,
-				);
+				return this.resultFail('submission-failed', error.retryable ? 503 : 502);
 			}
 
 			if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-				return this.resultFail('A campaign with this title already exists.', 400);
+				return this.resultFail('title-exists', 400);
 			}
 
 			this.logger.error(error, { slug });
 
-			return this.resultFail('We could not complete your submission. Please try again in a few minutes.', 503);
+			return this.resultFail('submission-failed', 503);
 		}
 	}
 
@@ -137,7 +134,7 @@ export class CampaignSubmissionService extends BaseService {
 	private async generateUniqueSlug(title: string): Promise<ServiceResult<string>> {
 		const baseSlug = slugify(title);
 		if (!baseSlug) {
-			return this.resultFail('Title must contain letters or numbers.', 400);
+			return this.resultFail('title-not-slugifiable', 400);
 		}
 
 		const uniquenessResult = await this.campaignValidationService.validateSlugUniqueness(baseSlug);
@@ -153,6 +150,6 @@ export class CampaignSubmissionService extends BaseService {
 			}
 		}
 
-		return this.resultFail('A campaign with a similar title already exists. Please choose a different title.', 409);
+		return this.resultFail('similar-title-exists', 409);
 	}
 }
