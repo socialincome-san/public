@@ -6,6 +6,7 @@ import {
 	validateCampaignSubmissionImageBuffer,
 } from '@/lib/services/campaign/campaign-submission-input';
 import { services } from '@/lib/services/services';
+import { parseMultipartFormDataWithLimit, RequestBodyTooLargeError } from '@/lib/utils/request-body';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
@@ -20,15 +21,14 @@ const getPublishedProgramPortalSlugs = async (): Promise<string[]> => {
 };
 
 export const POST = async (request: NextRequest) => {
-	const contentLength = Number(request.headers.get('content-length') ?? 0);
-	if (contentLength > campaignSubmissionConfig.maxMultipartBodyBytes) {
-		return NextResponse.json({ error: 'Payload too large.' }, { status: 413 });
-	}
-
 	let formData: FormData;
 	try {
-		formData = await request.formData();
-	} catch {
+		formData = await parseMultipartFormDataWithLimit(request, campaignSubmissionConfig.maxMultipartBodyBytes);
+	} catch (error) {
+		if (error instanceof RequestBodyTooLargeError) {
+			return NextResponse.json({ error: 'Payload too large.' }, { status: 413 });
+		}
+
 		return NextResponse.json({ error: 'Invalid form data.' }, { status: 400 });
 	}
 
