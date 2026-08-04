@@ -310,7 +310,7 @@ export interface Lottie {
 export interface MenuItem {
   label?: string;
   link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
-  icon?: "" | "instagram" | "linkedin" | "facebook" | "github" | "newsletter" | "contact";
+  icon?: "" | "instagram" | "linkedin" | "facebook" | "github" | "newsletter" | "contact" | "googleplay" | "appstore" | "youtube";
   newTab?: boolean;
   component: "menuItem";
   _uid: string;
