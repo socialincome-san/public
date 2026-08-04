@@ -201,6 +201,7 @@
 			"image-hint": "JPEG, PNG, or WebP up to 5 MB.",
 			"continue": "Continue",
 			"back": "Back",
+			"all-countries": "All Countries",
 			"errors": {
 				"title-required": "Title is required.",
 				"title-too-long": "Title is too long.",

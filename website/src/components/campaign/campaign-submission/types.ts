@@ -24,6 +24,7 @@ export type SubmissionLabels = {
 	imageHint: string;
 	continue: string;
 	back: string;
+	allCountries: string;
 	errors: Record<CampaignSubmissionErrorCode, string>;
 };
 

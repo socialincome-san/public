@@ -1,4 +1,4 @@
-import { PrismaClient } from '@/generated/prisma/client';
+import { type CountryCode, PrismaClient } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -6,6 +6,8 @@ import { ServiceResult } from '../core/base.types';
 export type PublicSubmissionProgramOption = {
 	id: string;
 	name: string;
+	countryId: string;
+	countryIsoCode: CountryCode;
 };
 
 export class ProgramPublicSubmissionService extends BaseService {
@@ -28,11 +30,24 @@ export class ProgramPublicSubmissionService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					countryId: true,
+					country: {
+						select: {
+							isoCode: true,
+						},
+					},
 				},
 				orderBy: { name: 'asc' },
 			});
 
-			return this.resultOk(programs);
+			return this.resultOk(
+				programs.map(({ id, name, countryId, country }) => ({
+					id,
+					name,
+					countryId,
+					countryIsoCode: country.isoCode,
+				})),
+			);
 		} catch (error) {
 			this.logger.error(error);
 

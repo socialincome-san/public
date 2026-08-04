@@ -75,6 +75,7 @@ export const CampaignsOverview = async ({
 		imageHint: translator.t('campaigns-page.submission.image-hint'),
 		continue: translator.t('campaigns-page.submission.continue'),
 		back: translator.t('campaigns-page.submission.back'),
+		allCountries: translator.t('campaigns-page.submission.all-countries'),
 		errors: submissionErrors,
 	};
 
