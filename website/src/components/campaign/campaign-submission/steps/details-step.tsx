@@ -2,16 +2,23 @@
 
 import { FormField, FormItem } from '@/components/form';
 import { Input } from '@/components/input';
-import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { cn } from '@/lib/utils/cn';
 import { addDays, format } from 'date-fns';
+import { FieldLabel } from '../field-label';
 import type { CampaignSubmissionStepProps } from '../types';
 
 type Props = Pick<
 	CampaignSubmissionStepProps,
-	'form' | 'labels' | 'primaryImageInputRef' | 'onImageChange' | 'imageError' | 'submitError'
+	| 'form'
+	| 'labels'
+	| 'primaryImageInputRef'
+	| 'onImageChange'
+	| 'imageError'
+	| 'showImageRequired'
+	| 'showDetailsErrors'
+	| 'submitError'
 >;
 
 export const DetailsStep = ({
@@ -20,6 +27,8 @@ export const DetailsStep = ({
 	primaryImageInputRef,
 	onImageChange,
 	imageError,
+	showImageRequired,
+	showDetailsErrors,
 	submitError,
 }: Props) => {
 	return (
@@ -27,9 +36,11 @@ export const DetailsStep = ({
 			<FormField
 				control={form.control}
 				name="title"
-				render={({ field }) => (
+				render={({ field, fieldState }) => (
 					<FormItem>
-						<Label htmlFor={field.name}>{labels.title}</Label>
+						<FieldLabel htmlFor={field.name} showRequired={showDetailsErrors && Boolean(fieldState.error)}>
+							{labels.title}
+						</FieldLabel>
 						<Input {...field} id={field.name} autoComplete="off" />
 					</FormItem>
 				)}
@@ -37,9 +48,11 @@ export const DetailsStep = ({
 			<FormField
 				control={form.control}
 				name="description"
-				render={({ field }) => (
+				render={({ field, fieldState }) => (
 					<FormItem>
-						<Label htmlFor={field.name}>{labels.description}</Label>
+						<FieldLabel htmlFor={field.name} showRequired={showDetailsErrors && Boolean(fieldState.error)}>
+							{labels.description}
+						</FieldLabel>
 						<textarea
 							{...field}
 							id={field.name}
@@ -56,19 +69,23 @@ export const DetailsStep = ({
 				<FormField
 					control={form.control}
 					name="goal"
-					render={({ field }) => (
+					render={({ field, fieldState }) => (
 						<FormItem>
-							<Label htmlFor={field.name}>{labels.goal}</Label>
-							<Input {...field} id={field.name} type="number" min={1} step="0.01" />
+							<FieldLabel htmlFor={field.name} showRequired={showDetailsErrors && Boolean(fieldState.error)}>
+								{labels.goal}
+							</FieldLabel>
+							<Input {...field} id={field.name} type="number" min={1} step="0.01" value={field.value ?? ''} />
 						</FormItem>
 					)}
 				/>
 				<FormField
 					control={form.control}
 					name="currency"
-					render={({ field }) => (
+					render={({ field, fieldState }) => (
 						<FormItem>
-							<Label htmlFor={field.name}>{labels.currency}</Label>
+							<FieldLabel htmlFor={field.name} showRequired={showDetailsErrors && Boolean(fieldState.error)}>
+								{labels.currency}
+							</FieldLabel>
 							<Select onValueChange={field.onChange} value={field.value}>
 								<SelectTrigger id={field.name}>
 									<SelectValue placeholder={labels.currencyPlaceholder} />
@@ -88,9 +105,11 @@ export const DetailsStep = ({
 			<FormField
 				control={form.control}
 				name="endDate"
-				render={({ field }) => (
+				render={({ field, fieldState }) => (
 					<FormItem>
-						<Label htmlFor={field.name}>{labels.endDate}</Label>
+						<FieldLabel htmlFor={field.name} showRequired={showDetailsErrors && Boolean(fieldState.error)}>
+							{labels.endDate}
+						</FieldLabel>
 						<Input
 							{...field}
 							id={field.name}
@@ -102,7 +121,9 @@ export const DetailsStep = ({
 				)}
 			/>
 			<div className="flex flex-col gap-2">
-				<Label htmlFor="campaign-primary-image">{labels.primaryImage}</Label>
+				<FieldLabel htmlFor="campaign-primary-image" showRequired={showImageRequired}>
+					{labels.primaryImage}
+				</FieldLabel>
 				<Input
 					id="campaign-primary-image"
 					ref={primaryImageInputRef}

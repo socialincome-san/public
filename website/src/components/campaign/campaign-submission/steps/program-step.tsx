@@ -1,8 +1,8 @@
 'use client';
 
 import { FormField, FormItem } from '@/components/form';
-import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { FieldLabel } from '../field-label';
 import type { CampaignSubmissionStepProps } from '../types';
 
 type Props = Pick<CampaignSubmissionStepProps, 'form' | 'labels' | 'programs' | 'programsError'>;
@@ -13,10 +13,18 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 			<FormField
 				control={form.control}
 				name="programId"
-				render={({ field }) => (
+				render={({ field, fieldState }) => (
 					<FormItem>
-						<Label htmlFor={field.name}>{labels.program}</Label>
-						<Select onValueChange={field.onChange} value={field.value || undefined}>
+						<FieldLabel htmlFor={field.name} showRequired={Boolean(fieldState.error)}>
+							{labels.program}
+						</FieldLabel>
+						<Select
+							onValueChange={(value) => {
+								field.onChange(value);
+								form.clearErrors('programId');
+							}}
+							value={field.value || undefined}
+						>
 							<SelectTrigger id={field.name}>
 								<SelectValue placeholder={labels.programPlaceholder} />
 							</SelectTrigger>

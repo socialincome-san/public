@@ -8,20 +8,20 @@ type Props = {
 	currentStep: CampaignSubmissionStepId;
 	labels: SubmissionLabels;
 	programsError: string | null;
-	canContinue: boolean;
 	isSubmitting: boolean;
 	onContinue: () => void;
 	onBack: () => void;
+	onSubmit: () => void;
 };
 
 export const CampaignSubmissionFooter = ({
 	currentStep,
 	labels,
 	programsError,
-	canContinue,
 	isSubmitting,
 	onContinue,
 	onBack,
+	onSubmit,
 }: Props) => {
 	const isFirstStep = currentStep === 'program';
 	const isLastStep = currentStep === 'details';
@@ -40,11 +40,12 @@ export const CampaignSubmissionFooter = ({
 
 			<div className="flex min-w-0 flex-1 justify-end">
 				{isLastStep ? (
-					<Button type="submit" disabled={isSubmitting}>
+					// Always type="button": swapping Continue → type="submit" mid-click submits step 2 immediately
+					<Button type="button" disabled={isSubmitting} onClick={onSubmit}>
 						{isSubmitting ? labels.submitting : labels.submit}
 					</Button>
 				) : (
-					<Button type="button" disabled={!canContinue || Boolean(programsError)} onClick={onContinue}>
+					<Button type="button" disabled={Boolean(programsError)} onClick={onContinue}>
 						{labels.continue}
 					</Button>
 				)}
@@ -52,3 +53,4 @@ export const CampaignSubmissionFooter = ({
 		</div>
 	);
 };
+

@@ -11,7 +11,7 @@ import {
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { CampaignSubmissionFooter } from './campaign-submission-footer';
 import { CampaignSubmissionSteps } from './campaign-submission-steps';
 import type { CampaignSubmissionFormValues, CampaignSubmissionStepId, SubmissionLabels } from './types';
@@ -27,6 +27,8 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 	const [programsError, setProgramsError] = useState<string | null>(null);
 	const [primaryImage, setPrimaryImage] = useState<File | null>(null);
 	const [imageError, setImageError] = useState<string | null>(null);
+	const [showImageRequired, setShowImageRequired] = useState(false);
+	const [showDetailsErrors, setShowDetailsErrors] = useState(false);
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [submitSuccess, setSubmitSuccess] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,9 +61,6 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 		},
 	});
 
-	const selectedProgramId = useWatch({ control: form.control, name: 'programId' });
-	const canContinue = Boolean(selectedProgramId?.trim());
-
 	useEffect(() => {
 		let cancelled = false;
 
@@ -91,6 +90,7 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 	const onImageChange = (file: File | null) => {
 		setPrimaryImage(file);
 		setImageError(null);
+		setShowImageRequired(false);
 
 		if (!file) {
 			return;
@@ -105,11 +105,18 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 	const onContinue = () => {
 		const programId = form.getValues('programId').trim();
 		if (!programId) {
+			form.setError('programId', {
+				type: 'manual',
+				message: resolveError('program-required'),
+			});
+
 			return;
 		}
 
 		form.clearErrors();
 		setImageError(null);
+		setShowImageRequired(false);
+		setShowDetailsErrors(false);
 		setSubmitError(null);
 		setCurrentStep('details');
 	};
@@ -117,16 +124,19 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 	const onBack = () => {
 		form.clearErrors();
 		setImageError(null);
+		setShowImageRequired(false);
+		setShowDetailsErrors(false);
 		setSubmitError(null);
 		setCurrentStep('program');
 	};
 
 	const onSubmit = async (values: CampaignSubmissionFormValues) => {
 		setSubmitError(null);
-		setImageError(null);
 		setSubmitSuccess(false);
 
 		if (!primaryImage) {
+			setShowImageRequired(true);
+
 			return;
 		}
 
@@ -137,6 +147,8 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 			return;
 		}
 
+		setImageError(null);
+		setShowImageRequired(false);
 		setIsSubmitting(true);
 
 		try {
@@ -163,7 +175,9 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 					payload?.errorCode === 'image-format-unsupported' ||
 					payload?.errorCode === 'image-type-mismatch';
 
-				if (isImageError) {
+				if (payload?.errorCode === 'image-required') {
+					setShowImageRequired(true);
+				} else if (isImageError) {
 					setImageError(errorMessage);
 				} else {
 					setSubmitError(errorMessage);
@@ -199,13 +213,23 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 	}
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		if (currentStep !== 'details') {
-			event.preventDefault();
+		event.preventDefault();
 
+		if (currentStep !== 'details') {
 			return;
 		}
 
-		void form.handleSubmit(onSubmit)(event);
+		submitDetails();
+	};
+
+	const submitDetails = () => {
+		setShowDetailsErrors(true);
+
+		if (!primaryImage) {
+			setShowImageRequired(true);
+		}
+
+		void form.handleSubmit(onSubmit)();
 	};
 
 	return (
@@ -221,6 +245,8 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 						primaryImageInputRef={primaryImageInputRef}
 						onImageChange={onImageChange}
 						imageError={imageError}
+						showImageRequired={showImageRequired}
+						showDetailsErrors={showDetailsErrors}
 						submitError={submitError}
 					/>
 				</div>
@@ -228,10 +254,10 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 					currentStep={currentStep}
 					labels={labels}
 					programsError={programsError}
-					canContinue={canContinue}
 					isSubmitting={isSubmitting}
 					onContinue={onContinue}
 					onBack={onBack}
+					onSubmit={submitDetails}
 				/>
 			</form>
 		</Form>
