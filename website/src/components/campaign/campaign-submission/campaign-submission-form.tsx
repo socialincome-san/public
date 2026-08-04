@@ -1,6 +1,7 @@
 'use client';
 
 import { Form } from '@/components/form';
+import { getEligiblePublicSubmissionProgramsAction } from '@/lib/server-actions/campaign-public-actions';
 import {
 	campaignSubmissionDefaultCurrency,
 	createCampaignSubmissionFormSchema,
@@ -62,23 +63,29 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 	const canContinue = Boolean(selectedProgramId?.trim());
 
 	useEffect(() => {
+		let cancelled = false;
+
 		const loadPrograms = async () => {
-			try {
-				const response = await fetch('/api/campaign-submissions/programs');
-				if (!response.ok) {
-					setProgramsError(labels.error);
-
-					return;
-				}
-
-				const data = (await response.json()) as { programs: PublicSubmissionProgramOption[] };
-				setPrograms(data.programs);
-			} catch {
-				setProgramsError(labels.error);
+			const result = await getEligiblePublicSubmissionProgramsAction();
+			if (cancelled) {
+				return;
 			}
+
+			if (!result.success) {
+				setProgramsError(labels.error);
+
+				return;
+			}
+
+			setPrograms(result.data);
+			setProgramsError(null);
 		};
 
 		void loadPrograms();
+
+		return () => {
+			cancelled = true;
+		};
 	}, [labels.error]);
 
 	const onImageChange = (file: File | null) => {
