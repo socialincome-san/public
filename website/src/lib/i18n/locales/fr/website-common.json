@@ -199,6 +199,8 @@
 			"program-placeholder": "Sélectionner un programme",
 			"currency-placeholder": "Sélectionner une devise",
 			"image-hint": "JPEG, PNG ou WebP jusqu'à 5 Mo.",
+			"continue": "Continuer",
+			"back": "Retour",
 			"errors": {
 				"title-required": "Le titre est obligatoire.",
 				"title-too-long": "Le titre est trop long.",
