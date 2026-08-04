@@ -74,6 +74,8 @@ export type PublicCampaignCard = {
 	slug: string;
 	creatorName: string | null;
 	currency: Currency;
+	endDate: Date;
+	goal: number | null;
 	isActive: boolean;
 };
 

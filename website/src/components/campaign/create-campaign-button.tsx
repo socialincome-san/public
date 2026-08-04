@@ -1,15 +1,17 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
+import { CampaignSubmissionForm, type SubmissionLabels } from '@/components/campaign/campaign-submission-form';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { useState } from 'react';
 
 type Props = {
 	label: string;
-	comingSoonLabel: string;
+	dialogTitle: string;
+	labels: SubmissionLabels;
 };
 
-export const CreateCampaignButton = ({ label, comingSoonLabel }: Props) => {
+export const CreateCampaignButton = ({ label, dialogTitle, labels }: Props) => {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -18,8 +20,11 @@ export const CreateCampaignButton = ({ label, comingSoonLabel }: Props) => {
 				{label}
 			</Button>
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent>
-					<DialogTitle>{comingSoonLabel}</DialogTitle>
+				<DialogContent variant="large">
+					<DialogHeader>
+						<DialogTitle>{dialogTitle}</DialogTitle>
+					</DialogHeader>
+					<CampaignSubmissionForm labels={labels} />
 				</DialogContent>
 			</Dialog>
 		</>
