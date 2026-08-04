@@ -1,3 +1,4 @@
+import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 import type { ISbStoryData } from '@storyblok/js';
@@ -8,5 +9,6 @@ export type CampaignDetailData = {
 	title: string;
 	description: string;
 	fullSlug: string;
+	primaryImage?: HeroHeaderImage | null;
 	campaign: CampaignPage;
 };

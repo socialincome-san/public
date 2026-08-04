@@ -5,6 +5,7 @@ import { CampaignHero } from '@/components/campaign/campaign-hero';
 import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
 import { CampaignNewsletter } from '@/components/campaign/campaign-newsletter';
 import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-other-campaigns-teaser';
+import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 import { services } from '@/lib/services/services';
@@ -13,12 +14,21 @@ type Props = {
 	campaign: CampaignPage;
 	title: string;
 	description: string;
+	primaryImage?: HeroHeaderImage | null;
 	campaignSlug: string;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const CampaignDetail = async ({ campaign, title, description, campaignSlug, lang, region }: Props) => {
+export const CampaignDetail = async ({
+	campaign,
+	title,
+	description,
+	primaryImage,
+	campaignSlug,
+	lang,
+	region,
+}: Props) => {
 	const pageContentResult = await services.read.campaignPublicWebsite.getPageContent(lang);
 	if (!pageContentResult.success) {
 		throw new Error(pageContentResult.error);
@@ -35,7 +45,14 @@ export const CampaignDetail = async ({ campaign, title, description, campaignSlu
 
 	return (
 		<>
-			<CampaignHero campaign={campaign} title={title} description={description} translator={translator} lang={lang} />
+			<CampaignHero
+				campaign={campaign}
+				title={title}
+				description={description}
+				primaryImage={primaryImage}
+				translator={translator}
+				lang={lang}
+			/>
 			{campaign.secondDescription && campaign.thirdDescription && <CampaignExtraText campaign={campaign} />}
 			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
 			<CampaignAboutSection translator={translator} />
