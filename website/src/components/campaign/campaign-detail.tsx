@@ -20,15 +20,7 @@ type Props = {
 	region: WebsiteRegion;
 };
 
-export const CampaignDetail = async ({
-	campaign,
-	title,
-	description,
-	primaryImage,
-	campaignSlug,
-	lang,
-	region,
-}: Props) => {
+export const CampaignDetail = async ({ campaign, title, description, primaryImage, campaignSlug, lang, region }: Props) => {
 	const pageContentResult = await services.read.campaignPublicWebsite.getPageContent(lang);
 	if (!pageContentResult.success) {
 		throw new Error(pageContentResult.error);
