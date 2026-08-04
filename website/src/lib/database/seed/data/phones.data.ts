@@ -1,4 +1,5 @@
 import { Phone } from '@/generated/prisma/client';
+import { extraProgramRecipientPhonesData } from './program-recipient-extras.data';
 
 const createdAt = new Date('2025-01-01T13:00:00.000Z');
 
@@ -63,10 +64,13 @@ const phoneSeeds: readonly PhoneSeed[] = [
 	{ id: 'ph-recipient-somaha-lr-suspended', number: '+23177100012' },
 ];
 
-export const phonesData: Phone[] = phoneSeeds.map(({ id, number }) => ({
-	id,
-	number,
-	hasWhatsApp: true,
-	createdAt,
-	updatedAt: null,
-}));
+export const phonesData: Phone[] = [
+	...phoneSeeds.map(({ id, number }) => ({
+		id,
+		number,
+		hasWhatsApp: true,
+		createdAt,
+		updatedAt: null,
+	})),
+	...extraProgramRecipientPhonesData,
+];
