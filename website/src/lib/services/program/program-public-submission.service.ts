@@ -1,8 +1,7 @@
 import { type CountryCode, PrismaClient } from '@/generated/prisma/client';
-import type { Focus, Program } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Program } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
-import type { ISbStoryData } from '@storyblok/js';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import type { StoryblokService } from '../storyblok/storyblok.service';
@@ -10,11 +9,6 @@ import { formatStoryblokUrl } from '../storyblok/storyblok.utils';
 
 const PROGRAM_DETAILS_IMAGE_WIDTH = 248;
 const PROGRAM_DETAILS_IMAGE_HEIGHT = 140;
-
-type PublicSubmissionProgramFocus = {
-	slug: string;
-	name: string;
-};
 
 export type PublicSubmissionProgramOption = {
 	id: string;
@@ -28,28 +22,11 @@ export type PublicSubmissionProgramOption = {
 	tags: string[];
 };
 
-type EligibleProgramRow = Omit<PublicSubmissionProgramOption, 'description' | 'imageUrl' | 'tags'> & {
-	focuses: PublicSubmissionProgramFocus[];
-};
+type EligibleProgramRow = Omit<PublicSubmissionProgramOption, 'description' | 'imageUrl'>;
 
 const getProgramPortalSlug = (program: Program) => program.portalSlug.trim();
 
 const getProgramTitle = (program: Program) => program.title.trim() || getProgramPortalSlug(program);
-
-const getFocusTitleBySlug = (focuses: ISbStoryData<Focus>[]) => {
-	const focusTitleBySlug = new Map<string, string>();
-
-	focuses.forEach((focus) => {
-		const slug = focus.content.portalSlug?.trim();
-		const title = focus.content.title?.trim();
-
-		if (slug && title) {
-			focusTitleBySlug.set(slug, title);
-		}
-	});
-
-	return focusTitleBySlug;
-};
 
 export class ProgramPublicSubmissionService extends BaseService {
 	constructor(
@@ -65,10 +42,9 @@ export class ProgramPublicSubmissionService extends BaseService {
 	): Promise<ServiceResult<PublicSubmissionProgramOption[]>> {
 		const needsLocalizedEnrichment = lang !== defaultLanguage;
 
-		const [eligibilityProgramsResult, enrichmentProgramsResult, focusesResult] = await Promise.all([
+		const [eligibilityProgramsResult, enrichmentProgramsResult] = await Promise.all([
 			this.storyblok.getPrograms(defaultLanguage),
 			needsLocalizedEnrichment ? this.storyblok.getPrograms(lang) : Promise.resolve(null),
-			this.storyblok.getFocuses(lang),
 		]);
 
 		if (!eligibilityProgramsResult.success) {
@@ -93,7 +69,6 @@ export class ProgramPublicSubmissionService extends BaseService {
 				return [[portalSlug, program] as const];
 			}),
 		);
-		const focusTitleBySlug = focusesResult.success ? getFocusTitleBySlug(focusesResult.data) : new Map<string, string>();
 
 		const eligibleResult = await this.getEligibleProgramOptions(publishedPortalSlugs);
 		if (!eligibleResult.success) {
@@ -116,7 +91,6 @@ export class ProgramPublicSubmissionService extends BaseService {
 							primaryImage.focus,
 						)
 					: null;
-				const tags = program.focuses.map((focus) => focusTitleBySlug.get(focus.slug) ?? focus.name);
 
 				return {
 					id: program.id,
@@ -127,7 +101,7 @@ export class ProgramPublicSubmissionService extends BaseService {
 					recipientsCount: program.recipientsCount,
 					description,
 					imageUrl,
-					tags,
+					tags: program.tags,
 				};
 			}),
 		);
@@ -160,7 +134,6 @@ export class ProgramPublicSubmissionService extends BaseService {
 							focus: {
 								select: {
 									name: true,
-									slug: true,
 								},
 							},
 						},
@@ -182,10 +155,7 @@ export class ProgramPublicSubmissionService extends BaseService {
 					countryId,
 					countryIsoCode: country.isoCode,
 					recipientsCount: _count.recipients,
-					focuses: targetFocuses.map(({ focus }) => ({
-						slug: focus.slug,
-						name: focus.name,
-					})),
+					tags: targetFocuses.map(({ focus }) => focus.name),
 				})),
 			);
 		} catch (error) {

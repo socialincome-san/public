@@ -3,7 +3,6 @@
 import { DialogHeader, DialogTitle } from '@/components/dialog';
 import { Form } from '@/components/form';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getEligiblePublicSubmissionProgramsAction } from '@/lib/server-actions/campaign-public-actions';
 import {
 	campaignSubmissionDefaultCurrency,
 	createCampaignSubmissionFormSchema,
@@ -18,6 +17,10 @@ import { CampaignSubmissionFooter } from './campaign-submission-footer';
 import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
 import { CampaignSubmissionSteps } from './campaign-submission-steps';
 import { getE2EMockEligibleCampaignPrograms } from './e2e-eligible-programs';
+import {
+	getCachedEligiblePublicSubmissionPrograms,
+	peekCachedEligiblePublicSubmissionPrograms,
+} from './eligible-programs-session-cache';
 import type { CampaignSubmissionFormValues, CampaignSubmissionStepId, SubmissionLabels } from './types';
 
 type Props = {
@@ -28,8 +31,10 @@ type Props = {
 
 export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [currentStep, setCurrentStep] = useState<CampaignSubmissionStepId>('program');
-	const [programs, setPrograms] = useState<PublicSubmissionProgramOption[]>([]);
-	const [programsLoading, setProgramsLoading] = useState(true);
+	const [programs, setPrograms] = useState<PublicSubmissionProgramOption[]>(
+		() => peekCachedEligiblePublicSubmissionPrograms(lang) ?? [],
+	);
+	const [programsLoading, setProgramsLoading] = useState(() => peekCachedEligiblePublicSubmissionPrograms(lang) === null);
 	const [programsError, setProgramsError] = useState<string | null>(null);
 	const [primaryImage, setPrimaryImage] = useState<File | null>(null);
 	const [imageError, setImageError] = useState<string | null>(null);
@@ -69,9 +74,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		let cancelled = false;
 
 		const loadPrograms = async () => {
-			setProgramsLoading(true);
-			setProgramsError(null);
-
 			const e2eMockPrograms = getE2EMockEligibleCampaignPrograms();
 			if (e2eMockPrograms) {
 				setPrograms(e2eMockPrograms);
@@ -81,8 +83,20 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				return;
 			}
 
+			const cachedPrograms = peekCachedEligiblePublicSubmissionPrograms(lang);
+			if (cachedPrograms) {
+				setPrograms(cachedPrograms);
+				setProgramsError(null);
+				setProgramsLoading(false);
+
+				return;
+			}
+
+			setProgramsLoading(true);
+			setProgramsError(null);
+
 			try {
-				const result = await getEligiblePublicSubmissionProgramsAction(lang);
+				const result = await getCachedEligiblePublicSubmissionPrograms(lang);
 				if (cancelled) {
 					return;
 				}

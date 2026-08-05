@@ -65,14 +65,13 @@ const eligibleRow = {
 	countryId: 'country-sl',
 	countryIsoCode: 'SL' as const,
 	recipientsCount: 8,
-	focuses: [{ slug: 'poverty', name: 'Poverty' }],
+	tags: ['Poverty'],
 };
 
 const createService = () => {
 	const findMany = jest.fn();
 	const findFirst = jest.fn();
 	const getPrograms = jest.fn();
-	const getFocuses = jest.fn();
 	const db = {
 		program: {
 			findMany,
@@ -81,12 +80,11 @@ const createService = () => {
 	};
 	const storyblok = {
 		getPrograms,
-		getFocuses,
 	} as unknown as StoryblokService;
 	const logger = { error: jest.fn() };
 	const service = new ProgramPublicSubmissionService(db as unknown as PrismaClient, storyblok, logger as never);
 
-	return { service, findMany, findFirst, getPrograms, getFocuses, logger };
+	return { service, findMany, findFirst, getPrograms, logger };
 };
 
 describe('ProgramPublicSubmissionService', () => {
@@ -96,17 +94,13 @@ describe('ProgramPublicSubmissionService', () => {
 		});
 
 		test('uses default-language Storyblok slugs for eligibility even when enriching another locale', async () => {
-			const { service, findMany, getPrograms, getFocuses } = createService();
+			const { service, findMany, getPrograms } = createService();
 			getPrograms.mockImplementation(async (lang: string) => {
 				if (lang === 'en') {
 					return { success: true, data: [enProgram('si-core-sl', 'Core EN'), enProgram('only-en', 'Only EN')] };
 				}
 
 				return { success: true, data: [deProgram('si-core-sl', 'Core DE'), deProgram('only-de', 'Only DE')] };
-			});
-			getFocuses.mockResolvedValue({
-				success: true,
-				data: [{ content: { portalSlug: 'poverty', title: 'Poverty alleviation' } }],
 			});
 			findMany.mockResolvedValue([
 				{
@@ -115,7 +109,7 @@ describe('ProgramPublicSubmissionService', () => {
 					slug: 'si-core-sl',
 					countryId: 'country-sl',
 					country: { isoCode: 'SL' },
-					targetFocuses: [{ focus: { name: 'Poverty', slug: 'poverty' } }],
+					targetFocuses: [{ focus: { name: 'Poverty' } }],
 					_count: { recipients: 8 },
 				},
 			]);
@@ -124,6 +118,7 @@ describe('ProgramPublicSubmissionService', () => {
 
 			expect(getPrograms).toHaveBeenCalledWith('en');
 			expect(getPrograms).toHaveBeenCalledWith('de');
+			expect(getPrograms).toHaveBeenCalledTimes(2);
 			expect(findMany).toHaveBeenCalledWith(
 				expect.objectContaining({
 					where: {
@@ -137,26 +132,22 @@ describe('ProgramPublicSubmissionService', () => {
 				name: 'Core DE',
 				description: 'Core DE DE description',
 				imageUrl: 'https://img.test/si-core-sl-de.jpg',
-				tags: ['Poverty alleviation'],
+				tags: ['Poverty'],
 			} satisfies Partial<PublicSubmissionProgramOption>);
 		});
 
 		test('falls back to DB name and null media when Storyblok enrichment is missing', async () => {
-			const { service, findMany, getPrograms, getFocuses } = createService();
+			const { service, findMany, getPrograms } = createService();
 			getPrograms.mockResolvedValue({
 				success: true,
 				data: [enProgram('other-program', 'Other')],
-			});
-			getFocuses.mockResolvedValue({
-				success: true,
-				data: [{ content: { portalSlug: 'poverty', title: 'Poverty alleviation' } }],
 			});
 			findMany.mockResolvedValue([
 				{
 					...eligibleRow,
 					slug: 'missing-in-storyblok',
 					country: { isoCode: 'SL' },
-					targetFocuses: [{ focus: { name: 'Poverty', slug: 'poverty' } }],
+					targetFocuses: [{ focus: { name: 'Poverty' } }],
 					_count: { recipients: 8 },
 				},
 			]);
@@ -167,14 +158,13 @@ describe('ProgramPublicSubmissionService', () => {
 				name: 'DB Name',
 				description: null,
 				imageUrl: null,
-				tags: ['Poverty alleviation'],
+				tags: ['Poverty'],
 			});
 		});
 
 		test('propagates eligibility service failures', async () => {
-			const { service, findMany, getPrograms, getFocuses, logger } = createService();
+			const { service, findMany, getPrograms, logger } = createService();
 			getPrograms.mockResolvedValue({ success: true, data: [enProgram('si-core-sl', 'Core EN')] });
-			getFocuses.mockResolvedValue({ success: true, data: [] });
 			findMany.mockRejectedValue(new Error('db down'));
 
 			const result = await service.getEligibleProgramsForPublicSubmission('en');
@@ -199,7 +189,7 @@ describe('ProgramPublicSubmissionService', () => {
 	});
 
 	describe('getEligibleProgramOptions', () => {
-		test('maps country, recipient count, and focuses for matching published slugs', async () => {
+		test('maps country, recipient count, and focus names as tags for matching published slugs', async () => {
 			const { service, findMany } = createService();
 			findMany.mockResolvedValue([
 				{
@@ -208,10 +198,7 @@ describe('ProgramPublicSubmissionService', () => {
 					slug: 'si-core-sl',
 					countryId: 'country-sl',
 					country: { isoCode: 'SL' },
-					targetFocuses: [
-						{ focus: { name: 'Poverty', slug: 'poverty' } },
-						{ focus: { name: 'Health', slug: 'health' } },
-					],
+					targetFocuses: [{ focus: { name: 'Poverty' } }, { focus: { name: 'Health' } }],
 					_count: { recipients: 12 },
 				},
 			]);
@@ -234,10 +221,7 @@ describe('ProgramPublicSubmissionService', () => {
 					countryId: 'country-sl',
 					countryIsoCode: 'SL',
 					recipientsCount: 12,
-					focuses: [
-						{ slug: 'poverty', name: 'Poverty' },
-						{ slug: 'health', name: 'Health' },
-					],
+					tags: ['Poverty', 'Health'],
 				},
 			]);
 		});
