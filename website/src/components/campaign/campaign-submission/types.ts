@@ -44,7 +44,5 @@ export type CampaignSubmissionStepProps = {
 	primaryImageInputRef: RefObject<HTMLInputElement | null>;
 	onImageChange: (file: File | null) => void;
 	imageError: string | null;
-	showImageRequired: boolean;
-	showDetailsErrors: boolean;
 	submitError: string | null;
 };

@@ -31,8 +31,6 @@ export const CampaignSubmissionSteps = ({ currentStep, ...stepProps }: Props) =>
 					primaryImageInputRef={stepProps.primaryImageInputRef}
 					onImageChange={stepProps.onImageChange}
 					imageError={stepProps.imageError}
-					showImageRequired={stepProps.showImageRequired}
-					showDetailsErrors={stepProps.showDetailsErrors}
 					submitError={stepProps.submitError}
 				/>
 			</div>

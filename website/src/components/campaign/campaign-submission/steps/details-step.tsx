@@ -1,24 +1,17 @@
 'use client';
 
-import { FormField, FormItem } from '@/components/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input';
+import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { cn } from '@/lib/utils/cn';
 import { addDays, format } from 'date-fns';
-import { FieldLabel } from '../field-label';
 import type { CampaignSubmissionStepProps } from '../types';
 
 type Props = Pick<
 	CampaignSubmissionStepProps,
-	| 'form'
-	| 'labels'
-	| 'primaryImageInputRef'
-	| 'onImageChange'
-	| 'imageError'
-	| 'showImageRequired'
-	| 'showDetailsErrors'
-	| 'submitError'
+	'form' | 'labels' | 'primaryImageInputRef' | 'onImageChange' | 'imageError' | 'submitError'
 >;
 
 export const DetailsStep = ({
@@ -27,8 +20,6 @@ export const DetailsStep = ({
 	primaryImageInputRef,
 	onImageChange,
 	imageError,
-	showImageRequired,
-	showDetailsErrors,
 	submitError,
 }: Props) => {
 	return (
@@ -36,32 +27,33 @@ export const DetailsStep = ({
 			<FormField
 				control={form.control}
 				name="title"
-				render={({ field, fieldState }) => (
+				render={({ field }) => (
 					<FormItem>
-						<FieldLabel htmlFor={field.name} showRequired={showDetailsErrors && Boolean(fieldState.error)}>
-							{labels.title}
-						</FieldLabel>
-						<Input {...field} id={field.name} autoComplete="off" />
+						<FormLabel>{labels.title}</FormLabel>
+						<FormControl>
+							<Input {...field} autoComplete="off" />
+						</FormControl>
+						<FormMessage />
 					</FormItem>
 				)}
 			/>
 			<FormField
 				control={form.control}
 				name="description"
-				render={({ field, fieldState }) => (
+				render={({ field }) => (
 					<FormItem>
-						<FieldLabel htmlFor={field.name} showRequired={showDetailsErrors && Boolean(fieldState.error)}>
-							{labels.description}
-						</FieldLabel>
-						<textarea
-							{...field}
-							id={field.name}
-							rows={4}
-							className={cn(
-								'placeholder:text-muted-foreground border-border text-foreground w-full min-w-0 rounded-2xl border bg-transparent px-3 py-2 text-sm shadow-xs outline-hidden',
-								'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
-							)}
-						/>
+						<FormLabel>{labels.description}</FormLabel>
+						<FormControl>
+							<textarea
+								{...field}
+								rows={4}
+								className={cn(
+									'placeholder:text-muted-foreground border-border text-foreground w-full min-w-0 rounded-2xl border bg-transparent px-3 py-2 text-sm shadow-xs outline-hidden',
+									'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+								)}
+							/>
+						</FormControl>
+						<FormMessage />
 					</FormItem>
 				)}
 			/>
@@ -69,27 +61,28 @@ export const DetailsStep = ({
 				<FormField
 					control={form.control}
 					name="goal"
-					render={({ field, fieldState }) => (
+					render={({ field }) => (
 						<FormItem>
-							<FieldLabel htmlFor={field.name} showRequired={showDetailsErrors && Boolean(fieldState.error)}>
-								{labels.goal}
-							</FieldLabel>
-							<Input {...field} id={field.name} type="number" min={1} step="0.01" value={field.value ?? ''} />
+							<FormLabel>{labels.goal}</FormLabel>
+							<FormControl>
+								<Input {...field} type="number" min={1} step="0.01" value={field.value ?? ''} />
+							</FormControl>
+							<FormMessage />
 						</FormItem>
 					)}
 				/>
 				<FormField
 					control={form.control}
 					name="currency"
-					render={({ field, fieldState }) => (
+					render={({ field }) => (
 						<FormItem>
-							<FieldLabel htmlFor={field.name} showRequired={showDetailsErrors && Boolean(fieldState.error)}>
-								{labels.currency}
-							</FieldLabel>
+							<FormLabel>{labels.currency}</FormLabel>
 							<Select onValueChange={field.onChange} value={field.value}>
-								<SelectTrigger id={field.name}>
-									<SelectValue placeholder={labels.currencyPlaceholder} />
-								</SelectTrigger>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue placeholder={labels.currencyPlaceholder} />
+									</SelectTrigger>
+								</FormControl>
 								<SelectContent>
 									{campaignSubmissionConfig.allowedCurrencies.map((currency) => (
 										<SelectItem key={currency} value={currency}>
@@ -98,6 +91,7 @@ export const DetailsStep = ({
 									))}
 								</SelectContent>
 							</Select>
+							<FormMessage />
 						</FormItem>
 					)}
 				/>
@@ -105,25 +99,25 @@ export const DetailsStep = ({
 			<FormField
 				control={form.control}
 				name="endDate"
-				render={({ field, fieldState }) => (
+				render={({ field }) => (
 					<FormItem>
-						<FieldLabel htmlFor={field.name} showRequired={showDetailsErrors && Boolean(fieldState.error)}>
-							{labels.endDate}
-						</FieldLabel>
-						<Input
-							{...field}
-							id={field.name}
-							type="date"
-							min={format(addDays(new Date(), campaignSubmissionConfig.minCampaignDurationDays), 'yyyy-MM-dd')}
-							max={format(addDays(new Date(), campaignSubmissionConfig.maxCampaignDurationDays), 'yyyy-MM-dd')}
-						/>
+						<FormLabel>{labels.endDate}</FormLabel>
+						<FormControl>
+							<Input
+								{...field}
+								type="date"
+								min={format(addDays(new Date(), campaignSubmissionConfig.minCampaignDurationDays), 'yyyy-MM-dd')}
+								max={format(addDays(new Date(), campaignSubmissionConfig.maxCampaignDurationDays), 'yyyy-MM-dd')}
+							/>
+						</FormControl>
+						<FormMessage />
 					</FormItem>
 				)}
 			/>
 			<div className="flex flex-col gap-2">
-				<FieldLabel htmlFor="campaign-primary-image" showRequired={showImageRequired}>
+				<Label htmlFor="campaign-primary-image" className={cn(imageError && 'text-destructive')}>
 					{labels.primaryImage}
-				</FieldLabel>
+				</Label>
 				<Input
 					id="campaign-primary-image"
 					ref={primaryImageInputRef}

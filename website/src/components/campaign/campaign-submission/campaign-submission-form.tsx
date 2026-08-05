@@ -31,8 +31,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [programsError, setProgramsError] = useState<string | null>(null);
 	const [primaryImage, setPrimaryImage] = useState<File | null>(null);
 	const [imageError, setImageError] = useState<string | null>(null);
-	const [showImageRequired, setShowImageRequired] = useState(false);
-	const [showDetailsErrors, setShowDetailsErrors] = useState(false);
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [submitSuccess, setSubmitSuccess] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -94,7 +92,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const onImageChange = (file: File | null) => {
 		setPrimaryImage(file);
 		setImageError(null);
-		setShowImageRequired(false);
 
 		if (!file) {
 			return;
@@ -119,8 +116,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 
 		form.clearErrors();
 		setImageError(null);
-		setShowImageRequired(false);
-		setShowDetailsErrors(false);
 		setSubmitError(null);
 		setCurrentStep('details');
 	};
@@ -128,8 +123,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const onBack = () => {
 		form.clearErrors();
 		setImageError(null);
-		setShowImageRequired(false);
-		setShowDetailsErrors(false);
 		setSubmitError(null);
 		setCurrentStep('program');
 	};
@@ -139,7 +132,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		setSubmitSuccess(false);
 
 		if (!primaryImage) {
-			setShowImageRequired(true);
+			setImageError(resolveError('image-required'));
 
 			return;
 		}
@@ -152,7 +145,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		}
 
 		setImageError(null);
-		setShowImageRequired(false);
 		setIsSubmitting(true);
 
 		try {
@@ -179,9 +171,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 					payload?.errorCode === 'image-format-unsupported' ||
 					payload?.errorCode === 'image-type-mismatch';
 
-				if (payload?.errorCode === 'image-required') {
-					setShowImageRequired(true);
-				} else if (isImageError) {
+				if (isImageError) {
 					setImageError(errorMessage);
 				} else {
 					setSubmitError(errorMessage);
@@ -234,10 +224,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	};
 
 	const submitDetails = () => {
-		setShowDetailsErrors(true);
-
 		if (!primaryImage) {
-			setShowImageRequired(true);
+			setImageError(resolveError('image-required'));
 		}
 
 		void form.handleSubmit(onSubmit)();
@@ -264,8 +252,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 						primaryImageInputRef={primaryImageInputRef}
 						onImageChange={onImageChange}
 						imageError={imageError}
-						showImageRequired={showImageRequired}
-						showDetailsErrors={showDetailsErrors}
 						submitError={submitError}
 					/>
 				</div>
