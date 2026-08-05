@@ -5,7 +5,7 @@ import type { CampaignSubmissionStepId } from './types';
 
 const STEP_ORDER: CampaignSubmissionStepId[] = ['program', 'details'];
 
-const stepClasses = {
+const circleClasses = {
 	base: 'flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium transition-colors',
 	active: [
 		'relative isolate z-10',
@@ -21,14 +21,42 @@ const stepClasses = {
 
 type Props = {
 	currentStep: CampaignSubmissionStepId;
+	variant?: 'circles' | 'bars';
+	className?: string;
 };
 
-export const CampaignSubmissionStepIndicator = ({ currentStep }: Props) => {
+export const CampaignSubmissionStepIndicator = ({ currentStep, variant = 'circles', className }: Props) => {
 	const activeIndex = STEP_ORDER.indexOf(currentStep);
 	const stepCount = STEP_ORDER.length;
 
+	if (variant === 'bars') {
+		return (
+			<div className={cn('flex items-center gap-2', className)} role="list" aria-label="Form steps">
+				{Array.from({ length: stepCount }).map((_, index) => {
+					const isActiveOrCompleted = index <= activeIndex;
+					const stepNumber = index + 1;
+
+					return (
+						<div
+							key={stepNumber}
+							className={cn(
+								'h-2 min-w-0 flex-1 rounded-full transition-colors',
+								isActiveOrCompleted
+									? 'bg-[linear-gradient(to_right,hsl(var(--gradient-button-from)),hsl(var(--gradient-button-to)))]'
+									: 'bg-muted',
+							)}
+							role="listitem"
+							aria-current={index === activeIndex ? 'step' : undefined}
+							aria-label={`Step ${stepNumber}`}
+						/>
+					);
+				})}
+			</div>
+		);
+	}
+
 	return (
-		<div className="flex items-center gap-3" role="list" aria-label="Form steps">
+		<div className={cn('flex items-center gap-3', className)} role="list" aria-label="Form steps">
 			{Array.from({ length: stepCount }).map((_, index) => {
 				const isActive = index === activeIndex;
 				const isCompleted = index < activeIndex;
@@ -38,10 +66,10 @@ export const CampaignSubmissionStepIndicator = ({ currentStep }: Props) => {
 					<div key={stepNumber} className="flex items-center gap-3" role="listitem">
 						<div
 							className={cn(
-								stepClasses.base,
-								isActive && stepClasses.active,
-								isCompleted && stepClasses.completed,
-								!isActive && !isCompleted && stepClasses.inactive,
+								circleClasses.base,
+								isActive && circleClasses.active,
+								isCompleted && circleClasses.completed,
+								!isActive && !isCompleted && circleClasses.inactive,
 							)}
 							aria-current={isActive ? 'step' : undefined}
 							aria-label={`Step ${stepNumber}`}

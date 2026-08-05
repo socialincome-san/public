@@ -26,7 +26,7 @@ export const CreateCampaignButton = ({ label, dialogTitle, labels, lang }: Props
 					variant="large"
 					className="flex h-[90dvh] max-h-[90dvh] flex-col overflow-hidden max-sm:h-dvh max-sm:max-h-dvh"
 				>
-					<DialogHeader className="shrink-0">
+					<DialogHeader className="shrink-0 max-sm:sr-only">
 						<DialogTitle>{dialogTitle}</DialogTitle>
 					</DialogHeader>
 					<CampaignSubmissionForm labels={labels} lang={lang} />

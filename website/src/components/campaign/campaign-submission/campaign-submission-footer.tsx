@@ -36,7 +36,7 @@ export const CampaignSubmissionFooter = ({
 				) : null}
 			</div>
 
-			<CampaignSubmissionStepIndicator currentStep={currentStep} />
+			<CampaignSubmissionStepIndicator currentStep={currentStep} className="hidden sm:flex" />
 
 			<div className="flex min-w-0 flex-1 justify-end">
 				{isLastStep ? (
