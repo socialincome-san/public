@@ -66,7 +66,7 @@ export const getEligiblePublicSubmissionProgramsAction = async (
 			const storyblokProgram = storyblokByPortalSlug.get(program.slug);
 			const name = storyblokProgram ? getProgramTitle(storyblokProgram.content) : program.name;
 			const trimmedDescription = storyblokProgram?.content.description?.trim();
-			const description = trimmedDescription || null;
+			const description = trimmedDescription !== undefined && trimmedDescription.length > 0 ? trimmedDescription : null;
 			const primaryImage = storyblokProgram?.content.primaryImage;
 			const imageUrl = primaryImage?.filename
 				? formatStoryblokUrl(
