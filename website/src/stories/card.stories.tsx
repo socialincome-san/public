@@ -1,7 +1,7 @@
+import { SectionHeading } from '@/components/section-heading';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect } from 'storybook/test';
-import { Avatar, AvatarFallback } from '../components/avatar'
-import { SectionHeading } from '@/components/section-heading';
+import { Avatar, AvatarFallback } from '../components/avatar';
 
 import { Card } from '../components/card';
 
@@ -22,9 +22,9 @@ const meta = {
 			control: 'select',
 			options: ['default', 'noPadding'],
 		},
-		className : {
-			control: 'text'
-		}
+		className: {
+			control: 'text',
+		},
 	},
 } satisfies Meta<typeof Card>;
 
@@ -32,7 +32,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {	
+export const Default: Story = {
 	args: {
 		href: '/',
 		children: 'Test',
