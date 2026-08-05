@@ -1,3 +1,4 @@
+import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { type CountryCode, PrismaClient } from '@/generated/prisma/client';
 import type { Program } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
@@ -23,10 +24,6 @@ export type PublicSubmissionProgramOption = {
 };
 
 type EligibleProgramRow = Omit<PublicSubmissionProgramOption, 'description' | 'imageUrl'>;
-
-const getProgramPortalSlug = (program: Program) => program.portalSlug.trim();
-
-const getProgramTitle = (program: Program) => program.title.trim() || getProgramPortalSlug(program);
 
 export class ProgramPublicSubmissionService extends BaseService {
 	constructor(
