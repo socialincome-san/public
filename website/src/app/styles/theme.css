@@ -25,6 +25,7 @@
 	--color-popover-foreground: hsl(var(--popover-foreground));
 	--color-card: hsl(var(--card));
 	--color-card-foreground: hsl(var(--card-foreground));
+	--color-banner-blue: hsl(var(--banner-blue));
 
 	--radius-lg: var(--radius);
 	--radius-md: calc(var(--radius) - 2px);
