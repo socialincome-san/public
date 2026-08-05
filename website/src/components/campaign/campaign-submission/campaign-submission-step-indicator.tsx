@@ -21,17 +21,34 @@ const circleClasses = {
 
 type Props = {
 	currentStep: CampaignSubmissionStepId;
+	formStepsLabel: string;
+	stepLabel: string;
+	programLabel: string;
+	detailsLabel: string;
 	variant?: 'circles' | 'bars';
 	className?: string;
 };
 
-export const CampaignSubmissionStepIndicator = ({ currentStep, variant = 'circles', className }: Props) => {
+export const CampaignSubmissionStepIndicator = ({
+	currentStep,
+	formStepsLabel,
+	stepLabel,
+	programLabel,
+	detailsLabel,
+	variant = 'circles',
+	className,
+}: Props) => {
 	const activeIndex = STEP_ORDER.indexOf(currentStep);
 	const stepCount = STEP_ORDER.length;
 
+	const getStepName = (stepId: CampaignSubmissionStepId) => (stepId === 'program' ? programLabel : detailsLabel);
+
+	const getStepAriaLabel = (index: number) =>
+		stepLabel.replace('{{number}}', String(index + 1)).replace('{{name}}', getStepName(STEP_ORDER[index]));
+
 	if (variant === 'bars') {
 		return (
-			<div className={cn('flex items-center gap-2', className)} role="list" aria-label="Form steps">
+			<div className={cn('flex items-center gap-2', className)} role="list" aria-label={formStepsLabel}>
 				{Array.from({ length: stepCount }).map((_, index) => {
 					const isActiveOrCompleted = index <= activeIndex;
 					const stepNumber = index + 1;
@@ -47,7 +64,7 @@ export const CampaignSubmissionStepIndicator = ({ currentStep, variant = 'circle
 							)}
 							role="listitem"
 							aria-current={index === activeIndex ? 'step' : undefined}
-							aria-label={`Step ${stepNumber}`}
+							aria-label={getStepAriaLabel(index)}
 						/>
 					);
 				})}
@@ -56,7 +73,7 @@ export const CampaignSubmissionStepIndicator = ({ currentStep, variant = 'circle
 	}
 
 	return (
-		<div className={cn('flex items-center gap-3', className)} role="list" aria-label="Form steps">
+		<div className={cn('flex items-center gap-3', className)} role="list" aria-label={formStepsLabel}>
 			{Array.from({ length: stepCount }).map((_, index) => {
 				const isActive = index === activeIndex;
 				const isCompleted = index < activeIndex;
@@ -72,7 +89,7 @@ export const CampaignSubmissionStepIndicator = ({ currentStep, variant = 'circle
 								!isActive && !isCompleted && circleClasses.inactive,
 							)}
 							aria-current={isActive ? 'step' : undefined}
-							aria-label={`Step ${stepNumber}`}
+							aria-label={getStepAriaLabel(index)}
 						>
 							{stepNumber}
 						</div>

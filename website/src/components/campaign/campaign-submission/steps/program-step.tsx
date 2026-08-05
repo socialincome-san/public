@@ -1,6 +1,6 @@
 'use client';
 
-import { FormField, FormItem } from '@/components/form';
+import { FormControl, FormField, FormItem, FormMessage } from '@/components/form';
 import { RadioGroup } from '@/components/radio-group';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { useMemo, useState } from 'react';
@@ -79,6 +79,7 @@ export const ProgramStep = ({ form, labels, programs, programsLoading, programsE
 				<div className="shrink-0 px-6">
 					<ProgramCountryFilter
 						allCountriesLabel={labels.allCountries}
+						filterByCountryLabel={labels.filterByCountry}
 						options={countryOptions}
 						selectedCountryId={selectedCountryId}
 						onCountryChange={onCountryChange}
@@ -88,7 +89,7 @@ export const ProgramStep = ({ form, labels, programs, programsLoading, programsE
 			<FormField
 				control={form.control}
 				name="programId"
-				render={({ field, fieldState }) => (
+				render={({ field }) => (
 					<FormItem className="flex min-h-0 flex-1 flex-col gap-0">
 						<div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
 							{statusMessage ? (
@@ -99,38 +100,41 @@ export const ProgramStep = ({ form, labels, programs, programsLoading, programsE
 									{statusMessage}
 								</p>
 							) : (
-								<RadioGroup
-									value={field.value || undefined}
-									onValueChange={(value) => {
-										field.onChange(value);
-										form.clearErrors('programId');
-									}}
-									className="min-w-0 gap-0"
-									aria-label={labels.program}
-									aria-invalid={Boolean(fieldState.error)}
-								>
-									{filteredPrograms.map((program) => (
-										<ProgramOptionRow
-											key={program.id}
-											value={program.id}
-											name={program.name}
-											selected={field.value === program.id}
-											recipientsLabel={getRecipientsLabel(program.recipientsCount)}
-											detailsLabel={labels.details}
-											countryIsoCodes={[program.countryIsoCode]}
-											expanded={expandedProgramId === program.id}
-											onDetailsToggle={() => onDetailsToggle(program.id)}
-											description={program.description}
-											imageUrl={program.imageUrl}
-											tags={program.tags}
-										/>
-									))}
-								</RadioGroup>
+								<FormControl>
+									<RadioGroup
+										ref={field.ref}
+										name={field.name}
+										value={field.value || undefined}
+										onValueChange={(value) => {
+											field.onChange(value);
+											form.clearErrors('programId');
+										}}
+										className="min-w-0 gap-0"
+										aria-label={labels.program}
+									>
+										{filteredPrograms.map((program) => (
+											<ProgramOptionRow
+												key={program.id}
+												value={program.id}
+												name={program.name}
+												selected={field.value === program.id}
+												recipientsLabel={getRecipientsLabel(program.recipientsCount)}
+												detailsLabel={labels.details}
+												countryIsoCodes={[program.countryIsoCode]}
+												expanded={expandedProgramId === program.id}
+												onDetailsToggle={() => onDetailsToggle(program.id)}
+												description={program.description}
+												imageUrl={program.imageUrl}
+												tags={program.tags}
+											/>
+										))}
+									</RadioGroup>
+								</FormControl>
 							)}
 						</div>
-						{fieldState.error ? (
-							<p className="text-destructive mt-2 shrink-0 px-6 text-sm">{fieldState.error.message}</p>
-						) : null}
+						<div className="shrink-0 px-6">
+							<FormMessage />
+						</div>
 					</FormItem>
 				)}
 			/>

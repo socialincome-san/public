@@ -13,18 +13,25 @@ export type ProgramCountryFilterOption = {
 
 type Props = {
 	allCountriesLabel: string;
+	filterByCountryLabel: string;
 	options: readonly ProgramCountryFilterOption[];
 	selectedCountryId: string | null;
 	onCountryChange: (countryId: string | null) => void;
 };
 
-export const ProgramCountryFilter = ({ allCountriesLabel, options, selectedCountryId, onCountryChange }: Props) => {
+export const ProgramCountryFilter = ({
+	allCountriesLabel,
+	filterByCountryLabel,
+	options,
+	selectedCountryId,
+	onCountryChange,
+}: Props) => {
 	if (options.length === 0) {
 		return null;
 	}
 
 	return (
-		<div className="flex flex-wrap gap-2" role="group" aria-label={allCountriesLabel}>
+		<div className="flex flex-wrap gap-2" role="group" aria-label={filterByCountryLabel}>
 			<button
 				type="button"
 				aria-pressed={selectedCountryId === null}

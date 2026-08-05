@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { cn } from '@/lib/utils/cn';
 import { addDays, format } from 'date-fns';
+import { useEffect, useId, useRef } from 'react';
 import type { CampaignSubmissionStepProps } from '../types';
 
 type Props = Pick<
@@ -15,6 +16,26 @@ type Props = Pick<
 >;
 
 export const DetailsStep = ({ form, labels, primaryImageInputRef, onImageChange, imageError, submitError }: Props) => {
+	const imageHintId = useId();
+	const imageErrorId = useId();
+	const submitErrorRef = useRef<HTMLParagraphElement>(null);
+
+	useEffect(() => {
+		if (imageError) {
+			primaryImageInputRef.current?.scrollIntoView({ block: 'nearest' });
+			primaryImageInputRef.current?.focus();
+
+			return;
+		}
+
+		if (submitError) {
+			submitErrorRef.current?.scrollIntoView({ block: 'nearest' });
+			submitErrorRef.current?.focus();
+		}
+	}, [imageError, primaryImageInputRef, submitError]);
+
+	const imageDescribedBy = [imageHintId, imageError ? imageErrorId : null].filter(Boolean).join(' ');
+
 	return (
 		<div className="flex flex-col gap-4 px-6">
 			<FormField
@@ -116,14 +137,26 @@ export const DetailsStep = ({ form, labels, primaryImageInputRef, onImageChange,
 					ref={primaryImageInputRef}
 					type="file"
 					accept={campaignSubmissionConfig.permittedImageMimeTypes.join(',')}
+					aria-invalid={Boolean(imageError)}
+					aria-describedby={imageDescribedBy}
 					onChange={(event) => {
 						onImageChange(event.target.files?.[0] ?? null);
 					}}
 				/>
-				<p className="text-muted-foreground text-xs">{labels.imageHint}</p>
-				{imageError ? <p className="text-destructive text-sm">{imageError}</p> : null}
+				<p id={imageHintId} className="text-muted-foreground text-xs">
+					{labels.imageHint}
+				</p>
+				{imageError ? (
+					<p id={imageErrorId} className="text-destructive text-sm" role="alert">
+						{imageError}
+					</p>
+				) : null}
 			</div>
-			{submitError ? <p className="text-destructive text-sm">{submitError}</p> : null}
+			{submitError ? (
+				<p ref={submitErrorRef} className="text-destructive text-sm outline-none" role="alert" tabIndex={-1}>
+					{submitError}
+				</p>
+			) : null}
 		</div>
 	);
 };

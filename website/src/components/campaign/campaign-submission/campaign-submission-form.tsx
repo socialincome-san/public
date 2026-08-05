@@ -37,6 +37,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [submitSuccess, setSubmitSuccess] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const primaryImageInputRef = useRef<HTMLInputElement>(null);
+	const stepTitleRef = useRef<HTMLHeadingElement>(null);
+	const hasMountedStep = useRef(false);
 
 	const resolveError = useCallback(
 		(code: string) => {
@@ -117,6 +119,16 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		};
 	}, [labels.error, lang]);
 
+	useEffect(() => {
+		if (!hasMountedStep.current) {
+			hasMountedStep.current = true;
+
+			return;
+		}
+
+		stepTitleRef.current?.focus();
+	}, [currentStep]);
+
 	const isContinueDisabled = programsLoading || programs.length === 0 || Boolean(programsError);
 
 	const onImageChange = (file: File | null) => {
@@ -140,6 +152,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				type: 'manual',
 				message: resolveError('program-required'),
 			});
+			form.setFocus('programId');
 
 			return;
 		}
@@ -256,6 +269,9 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const submitDetails = () => {
 		if (!primaryImage) {
 			setImageError(resolveError('image-required'));
+			void form.trigger();
+
+			return;
 		}
 
 		void form.handleSubmit(onSubmit)();
@@ -267,10 +283,20 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		<Form {...form}>
 			<form className="flex min-h-0 flex-1 flex-col" noValidate onSubmit={handleSubmit}>
 				<div className="-mt-6 flex h-[52px] shrink-0 items-center border-b pr-12 pl-6 sm:hidden">
-					<CampaignSubmissionStepIndicator currentStep={currentStep} variant="bars" className="min-w-0 flex-1" />
+					<CampaignSubmissionStepIndicator
+						currentStep={currentStep}
+						formStepsLabel={labels.formSteps}
+						stepLabel={labels.stepLabel}
+						programLabel={labels.program}
+						detailsLabel={labels.details}
+						variant="bars"
+						className="min-w-0 flex-1"
+					/>
 				</div>
 				<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left max-sm:border-b-0 max-sm:pt-4 max-sm:pb-0">
-					<DialogTitle className="leading-snug text-balance">{stepTitle}</DialogTitle>
+					<DialogTitle ref={stepTitleRef} tabIndex={-1} className="leading-snug text-balance outline-none">
+						{stepTitle}
+					</DialogTitle>
 				</DialogHeader>
 				<div className="flex min-h-0 flex-1 flex-col overflow-hidden pt-4 pb-4">
 					<CampaignSubmissionSteps

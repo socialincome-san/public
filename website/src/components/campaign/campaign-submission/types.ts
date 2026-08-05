@@ -27,6 +27,9 @@ export type SubmissionLabels = {
 	continue: string;
 	back: string;
 	allCountries: string;
+	filterByCountry: string;
+	formSteps: string;
+	stepLabel: string;
 	recipientsCount: string;
 	details: string;
 	programsLoading: string;
