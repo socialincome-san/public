@@ -42,4 +42,4 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(({ className, variant, 
 
 Card.displayName = 'Card';
 
-	export { Card };
+export { Card };
