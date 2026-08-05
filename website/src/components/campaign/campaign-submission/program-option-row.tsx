@@ -117,7 +117,7 @@ export const ProgramOptionRow = ({
 			ref={rowRef}
 			data-testid={`program-option-${value}`}
 			className={cn(
-				'border-border hover:bg-muted/30 border-b px-6 transition-colors last:border-b-0',
+				'border-border hover:bg-muted/30 min-w-0 border-b px-6 transition-colors last:border-b-0',
 				selected && 'bg-muted/20',
 			)}
 		>
@@ -132,9 +132,10 @@ export const ProgramOptionRow = ({
 							onDetailsToggle();
 						}
 					}}
+					className="min-w-0"
 				>
-					<RadixAccordion.Item value={value}>
-						<div className="flex items-center gap-3 py-4">
+					<RadixAccordion.Item value={value} className="min-w-0">
+						<div className="flex min-w-0 items-center gap-3 py-4">
 							{programLabel}
 							<RadixAccordion.Header asChild>
 								<div className="flex shrink-0">
@@ -197,7 +198,7 @@ export const ProgramOptionRow = ({
 					</RadixAccordion.Item>
 				</RadixAccordion.Root>
 			) : (
-				<div className="flex items-center gap-3 py-4">{programLabel}</div>
+				<div className="flex min-w-0 items-center gap-3 py-4">{programLabel}</div>
 			)}
 		</div>
 	);

@@ -86,14 +86,14 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 				name="programId"
 				render={({ field, fieldState }) => (
 					<FormItem className="flex min-h-0 flex-1 flex-col gap-0">
-						<div className="min-h-0 flex-1 overflow-y-auto">
+						<div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
 							<RadioGroup
 								value={field.value || undefined}
 								onValueChange={(value) => {
 									field.onChange(value);
 									form.clearErrors('programId');
 								}}
-								className="gap-0"
+								className="min-w-0 gap-0"
 								aria-label={labels.program}
 								aria-invalid={Boolean(fieldState.error)}
 							>
