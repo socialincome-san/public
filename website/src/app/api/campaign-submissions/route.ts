@@ -16,13 +16,16 @@ export const runtime = 'nodejs';
 const errorResponse = (errorCode: CampaignSubmissionErrorCode, status: number) =>
 	NextResponse.json({ errorCode }, { status });
 
-const getPublishedProgramPortalSlugs = async (): Promise<string[]> => {
+const getPublishedProgramPortalSlugs = async () => {
 	const programsResult = await services.storyblok.getPrograms(defaultLanguage);
 	if (!programsResult.success) {
-		return [];
+		return programsResult;
 	}
 
-	return [...new Set(programsResult.data.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
+	return {
+		success: true as const,
+		data: [...new Set(programsResult.data.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))],
+	};
 };
 
 export const POST = async (request: NextRequest) => {
@@ -53,11 +56,15 @@ export const POST = async (request: NextRequest) => {
 		return errorResponse(imageResult.error, 400);
 	}
 
-	const publishedProgramPortalSlugs = await getPublishedProgramPortalSlugs();
+	const publishedProgramPortalSlugsResult = await getPublishedProgramPortalSlugs();
+	if (!publishedProgramPortalSlugsResult.success) {
+		return errorResponse('submission-failed', publishedProgramPortalSlugsResult.status ?? 503);
+	}
+
 	const submissionResult = await services.campaignSubmission.submit(
 		fieldsResult.data,
 		{ ...imageResult.data, buffer: imageBuffer },
-		publishedProgramPortalSlugs,
+		publishedProgramPortalSlugsResult.data,
 	);
 
 	if (!submissionResult.success) {
