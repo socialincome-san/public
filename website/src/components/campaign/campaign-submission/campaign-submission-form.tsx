@@ -17,7 +17,6 @@ import { useForm } from 'react-hook-form';
 import { CampaignSubmissionFooter } from './campaign-submission-footer';
 import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
 import { CampaignSubmissionSteps } from './campaign-submission-steps';
-import { getE2EMockEligibleCampaignPrograms } from './e2e-eligible-programs';
 import type { CampaignSubmissionFormValues, CampaignSubmissionStepId, SubmissionLabels } from './types';
 
 type Props = {
@@ -72,15 +71,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		let cancelled = false;
 
 		const loadPrograms = async () => {
-			const e2eMockPrograms = getE2EMockEligibleCampaignPrograms();
-			if (e2eMockPrograms) {
-				setPrograms(e2eMockPrograms);
-				setProgramsError(null);
-				setProgramsLoading(false);
-
-				return;
-			}
-
 			setProgramsLoading(true);
 			setProgramsError(null);
 

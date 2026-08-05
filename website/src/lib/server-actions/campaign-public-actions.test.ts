@@ -11,7 +11,7 @@ jest.mock('@/lib/services/services', () => ({
 	},
 }));
 
-import { getEligiblePublicSubmissionProgramsAction } from '@/lib/server-actions/campaign-public-actions';
+import { getEligiblePublicSubmissionProgramsAction } from './campaign-public-actions';
 
 describe('getEligiblePublicSubmissionProgramsAction', () => {
 	beforeEach(() => {
