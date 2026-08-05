@@ -184,7 +184,8 @@
 		"state-inactive": "Inactive",
 		"create-campaign": "Create campaign",
 		"submission": {
-			"dialog-title": "Create a campaign",
+			"program-step-title": "Which program would you like to create a campaign for?",
+			"details-step-title": "Campaign Details",
 			"title": "Title",
 			"description": "Description",
 			"goal": "Fundraising goal",

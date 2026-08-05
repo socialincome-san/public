@@ -8,6 +8,8 @@ import type { UseFormReturn } from 'react-hook-form';
 import type { z } from 'zod';
 
 export type SubmissionLabels = {
+	programStepTitle: string;
+	detailsStepTitle: string;
 	title: string;
 	description: string;
 	goal: string;

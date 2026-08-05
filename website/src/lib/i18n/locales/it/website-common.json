@@ -184,7 +184,8 @@
 		"state-inactive": "Inattiva",
 		"create-campaign": "Crea campagna",
 		"submission": {
-			"dialog-title": "Crea una campagna",
+			"program-step-title": "Per quale programma vorresti creare una campagna?",
+			"details-step-title": "Dettagli della campagna",
 			"title": "Titolo",
 			"description": "Descrizione",
 			"goal": "Obiettivo di raccolta",

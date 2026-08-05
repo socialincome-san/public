@@ -59,6 +59,8 @@ export const CampaignsOverview = async ({
 		]),
 	) as Record<CampaignSubmissionErrorCode, string>;
 	const submissionLabels = {
+		programStepTitle: translator.t('campaigns-page.submission.program-step-title'),
+		detailsStepTitle: translator.t('campaigns-page.submission.details-step-title'),
 		title: translator.t('campaigns-page.submission.title'),
 		description: translator.t('campaigns-page.submission.description'),
 		goal: translator.t('campaigns-page.submission.goal'),
@@ -94,7 +96,6 @@ export const CampaignsOverview = async ({
 					/>
 					<CreateCampaignButton
 						label={translator.t('campaigns-page.create-campaign')}
-						dialogTitle={translator.t('campaigns-page.submission.dialog-title')}
 						labels={submissionLabels}
 						lang={lang}
 					/>

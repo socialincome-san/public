@@ -1,5 +1,6 @@
 'use client';
 
+import { DialogHeader, DialogTitle } from '@/components/dialog';
 import { Form } from '@/components/form';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getEligiblePublicSubmissionProgramsAction } from '@/lib/server-actions/campaign-public-actions';
@@ -212,7 +213,14 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	};
 
 	if (submitSuccess) {
-		return <p className="text-foreground px-6 text-sm">{labels.success}</p>;
+		return (
+			<div className="flex min-h-0 flex-1 flex-col">
+				<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left">
+					<DialogTitle className="text-balance leading-snug">{labels.detailsStepTitle}</DialogTitle>
+				</DialogHeader>
+				<p className="text-foreground px-6 text-sm">{labels.success}</p>
+			</div>
+		);
 	}
 
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -235,10 +243,15 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		void form.handleSubmit(onSubmit)();
 	};
 
+	const stepTitle = currentStep === 'program' ? labels.programStepTitle : labels.detailsStepTitle;
+
 	return (
 		<Form {...form}>
 			<form className="flex min-h-0 flex-1 flex-col" noValidate onSubmit={handleSubmit}>
-				<div className="-mt-6 flex h-[52px] shrink-0 items-center border-b pr-12 pl-6 sm:hidden">
+				<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left">
+					<DialogTitle className="text-balance leading-snug">{stepTitle}</DialogTitle>
+				</DialogHeader>
+				<div className="flex h-[52px] shrink-0 items-center border-b px-6 sm:hidden">
 					<CampaignSubmissionStepIndicator currentStep={currentStep} variant="bars" className="min-w-0 flex-1" />
 				</div>
 				<div className="flex min-h-0 flex-1 flex-col overflow-hidden pb-4 max-sm:pt-4">
