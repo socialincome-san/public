@@ -53,7 +53,7 @@ export const ProgramOptionRow = ({
 	tags = [],
 }: Props) => {
 	const rowRef = useRef<HTMLDivElement>(null);
-	const hasExpandableDetails = Boolean(description || imageUrl || tags.length > 0);
+	const hasExpandableDetails = Boolean(description) || Boolean(imageUrl) || tags.length > 0;
 	const detailsContentId = `program-details-${value}`;
 
 	useEffect(() => {

@@ -1,6 +1,7 @@
 'use client';
 
 import { Form } from '@/components/form';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getEligiblePublicSubmissionProgramsAction } from '@/lib/server-actions/campaign-public-actions';
 import {
 	campaignSubmissionDefaultCurrency,
@@ -8,7 +9,6 @@ import {
 	isCampaignSubmissionErrorCode,
 	validateCampaignSubmissionImageMeta,
 } from '@/lib/services/campaign/campaign-submission-input';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';

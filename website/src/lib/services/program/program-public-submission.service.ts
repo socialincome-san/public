@@ -3,7 +3,7 @@ import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 
-export type PublicSubmissionProgramFocus = {
+type PublicSubmissionProgramFocus = {
 	slug: string;
 	name: string;
 };

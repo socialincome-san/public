@@ -8,7 +8,7 @@ import { ProgramCountryFilter, type ProgramCountryFilterOption } from '../progra
 import { ProgramOptionRow } from '../program-option-row';
 import type { CampaignSubmissionStepProps } from '../types';
 
-export const SOCIAL_INCOME_ALL_PROGRAMS_OPTION_ID = 'social-income-all-programs';
+const SOCIAL_INCOME_ALL_PROGRAMS_OPTION_ID = 'social-income-all-programs';
 
 type Props = Pick<CampaignSubmissionStepProps, 'form' | 'labels' | 'programs' | 'programsError'>;
 

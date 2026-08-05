@@ -206,7 +206,7 @@ type ExtraProgramRecipientDefinition = {
 	paymentCode: string | null;
 };
 
-export const extraProgramRecipientDefinitions: readonly ExtraProgramRecipientDefinition[] = programsData.flatMap(
+const extraProgramRecipientDefinitions: readonly ExtraProgramRecipientDefinition[] = programsData.flatMap(
 	(program) => {
 		const programId = program.id;
 		if (!isSeedProgramId(programId)) {

@@ -1,7 +1,7 @@
 'use server';
 
-import { getFocusTitleBySlug } from '@/components/storyblok/program/programs-overview.server';
 import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
+import { getFocusTitleBySlug } from '@/components/storyblok/program/programs-overview.server';
 import { allWebsiteLanguages, defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail } from '@/lib/services/core/service-result';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
@@ -65,7 +65,8 @@ export const getEligiblePublicSubmissionProgramsAction = async (
 		data: eligibleResult.data.map((program): PublicSubmissionProgramOption => {
 			const storyblokProgram = storyblokByPortalSlug.get(program.slug);
 			const name = storyblokProgram ? getProgramTitle(storyblokProgram.content) : program.name;
-			const description = storyblokProgram?.content.description?.trim() || null;
+			const trimmedDescription = storyblokProgram?.content.description?.trim();
+			const description = trimmedDescription ? trimmedDescription : null;
 			const primaryImage = storyblokProgram?.content.primaryImage;
 			const imageUrl = primaryImage?.filename
 				? formatStoryblokUrl(
