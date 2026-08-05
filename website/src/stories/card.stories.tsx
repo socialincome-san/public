@@ -78,7 +78,7 @@ export const WithContent: Story = {
 						<span className="font-semibold text-slate-800">Sandino Scheidegger</span>
 					</div>
 				</div>
-				<Image
+				<img
 					src="https://a.storyblok.com/f/109655/3000x2001/0b43ecee20/alligator-crocodile.jpg/m/640x524/filters:focal(380x1154:381x1155):format(webp)"
 					alt="Alligator"
 					className="w-80 rounded-2xl object-cover"
