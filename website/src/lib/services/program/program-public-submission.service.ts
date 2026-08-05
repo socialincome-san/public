@@ -54,9 +54,7 @@ export class ProgramPublicSubmissionService extends BaseService {
 		const eligibilityPrograms = eligibilityProgramsResult.data;
 		const enrichmentPrograms =
 			needsLocalizedEnrichment && enrichmentProgramsResult?.success ? enrichmentProgramsResult.data : eligibilityPrograms;
-		const publishedPortalSlugs = [
-			...new Set(eligibilityPrograms.map((program) => getProgramPortalSlug(program.content)).filter(Boolean)),
-		];
+		const publishedPortalSlugs = this.extractPublishedPortalSlugs(eligibilityPrograms);
 		const storyblokByPortalSlug = new Map(
 			enrichmentPrograms.flatMap((program) => {
 				const portalSlug = getProgramPortalSlug(program.content);
@@ -104,7 +102,29 @@ export class ProgramPublicSubmissionService extends BaseService {
 		);
 	}
 
-	async getEligibleProgramOptions(publishedPortalSlugs: string[]): Promise<ServiceResult<EligibleProgramRow[]>> {
+	async isProgramEligibleForPublicSubmission(programId: string): Promise<ServiceResult<boolean>> {
+		const publishedPortalSlugsResult = await this.getPublishedProgramPortalSlugs();
+		if (!publishedPortalSlugsResult.success) {
+			return publishedPortalSlugsResult;
+		}
+
+		return this.isProgramEligible(programId, publishedPortalSlugsResult.data);
+	}
+
+	private async getPublishedProgramPortalSlugs(): Promise<ServiceResult<string[]>> {
+		const programsResult = await this.storyblok.getPrograms(defaultLanguage);
+		if (!programsResult.success) {
+			return programsResult;
+		}
+
+		return this.resultOk(this.extractPublishedPortalSlugs(programsResult.data));
+	}
+
+	private extractPublishedPortalSlugs(programs: Array<{ content: Program }>): string[] {
+		return [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
+	}
+
+	private async getEligibleProgramOptions(publishedPortalSlugs: string[]): Promise<ServiceResult<EligibleProgramRow[]>> {
 		try {
 			const normalizedSlugs = [...new Set(publishedPortalSlugs.map((slug) => slug.trim()).filter(Boolean))];
 			if (!normalizedSlugs.length) {
@@ -162,7 +182,7 @@ export class ProgramPublicSubmissionService extends BaseService {
 		}
 	}
 
-	async isProgramEligible(programId: string, publishedPortalSlugs: string[]): Promise<ServiceResult<boolean>> {
+	private async isProgramEligible(programId: string, publishedPortalSlugs: string[]): Promise<ServiceResult<boolean>> {
 		try {
 			const normalizedProgramId = programId.trim();
 			if (!normalizedProgramId) {

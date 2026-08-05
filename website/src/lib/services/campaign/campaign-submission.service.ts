@@ -32,11 +32,9 @@ export class CampaignSubmissionService extends BaseService {
 	async submit(
 		fields: CampaignSubmissionFields,
 		image: CampaignSubmissionImageValidation,
-		publishedProgramPortalSlugs: string[],
 	): Promise<ServiceResult<CampaignSubmissionResult>> {
-		const eligibilityResult = await this.programPublicSubmissionService.isProgramEligible(
+		const eligibilityResult = await this.programPublicSubmissionService.isProgramEligibleForPublicSubmission(
 			fields.programId,
-			publishedProgramPortalSlugs,
 		);
 		if (!eligibilityResult.success) {
 			return this.resultFail('submission-failed', eligibilityResult.status ?? 503);

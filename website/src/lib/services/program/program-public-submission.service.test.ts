@@ -142,6 +142,49 @@ describe('ProgramPublicSubmissionService', () => {
 			} satisfies Partial<PublicSubmissionProgramOption>);
 		});
 
+		test('maps country, recipient count, and focus names as tags for matching published slugs', async () => {
+			const { service, findMany, getPrograms } = createService();
+			getPrograms.mockResolvedValue({
+				success: true,
+				data: [enProgram('si-core-sl', 'Core EN'), enProgram('', 'Blank')],
+			});
+			findMany.mockResolvedValue([
+				{
+					id: 'program-1',
+					name: 'Core SL',
+					slug: 'si-core-sl',
+					countryId: 'country-sl',
+					country: { isoCode: 'SL' },
+					targetFocuses: [{ focus: { name: 'Poverty' } }, { focus: { name: 'Health' } }],
+					_count: { recipients: 12 },
+				},
+			]);
+
+			const data = expectSuccess(await service.getEligibleProgramsForPublicSubmission('en'));
+
+			expect(findMany).toHaveBeenCalledWith(
+				expect.objectContaining({
+					where: {
+						slug: { in: ['si-core-sl'] },
+						recipients: { some: {} },
+					},
+				}),
+			);
+			expect(data).toEqual([
+				{
+					id: 'program-1',
+					name: 'Core EN',
+					slug: 'si-core-sl',
+					countryId: 'country-sl',
+					countryIsoCode: 'SL',
+					recipientsCount: 12,
+					description: 'Core EN EN description',
+					imageUrl: 'https://img.test/si-core-sl.jpg',
+					tags: ['Poverty', 'Health'],
+				},
+			]);
+		});
+
 		test('falls back to DB name and null media when Storyblok enrichment is missing', async () => {
 			const { service, findMany, getPrograms } = createService();
 			getPrograms.mockResolvedValue({
@@ -166,6 +209,19 @@ describe('ProgramPublicSubmissionService', () => {
 				imageUrl: null,
 				tags: ['Poverty'],
 			});
+		});
+
+		test('returns an empty list when no published slugs remain', async () => {
+			const { service, findMany, getPrograms } = createService();
+			getPrograms.mockResolvedValue({
+				success: true,
+				data: [enProgram('  ', 'Blank'), enProgram('', 'Also blank')],
+			});
+
+			const data = expectSuccess(await service.getEligibleProgramsForPublicSubmission('en'));
+
+			expect(data).toEqual([]);
+			expect(findMany).not.toHaveBeenCalled();
 		});
 
 		test('propagates eligibility service failures', async () => {
@@ -194,89 +250,42 @@ describe('ProgramPublicSubmissionService', () => {
 		});
 	});
 
-	describe('getEligibleProgramOptions', () => {
-		test('maps country, recipient count, and focus names as tags for matching published slugs', async () => {
-			const { service, findMany } = createService();
-			findMany.mockResolvedValue([
-				{
-					id: 'program-1',
-					name: 'Core SL',
-					slug: 'si-core-sl',
-					countryId: 'country-sl',
-					country: { isoCode: 'SL' },
-					targetFocuses: [{ focus: { name: 'Poverty' } }, { focus: { name: 'Health' } }],
-					_count: { recipients: 12 },
-				},
-			]);
-
-			const data = expectSuccess(await service.getEligibleProgramOptions([' si-core-sl ', 'si-core-sl', '']));
-
-			expect(findMany).toHaveBeenCalledWith(
-				expect.objectContaining({
-					where: {
-						slug: { in: ['si-core-sl'] },
-						recipients: { some: {} },
-					},
-				}),
-			);
-			expect(data).toEqual([
-				{
-					id: 'program-1',
-					name: 'Core SL',
-					slug: 'si-core-sl',
-					countryId: 'country-sl',
-					countryIsoCode: 'SL',
-					recipientsCount: 12,
-					tags: ['Poverty', 'Health'],
-				},
-			]);
+	describe('isProgramEligibleForPublicSubmission', () => {
+		beforeEach(() => {
+			jest.clearAllMocks();
 		});
 
-		test('short-circuits to an empty list when no published slugs remain', async () => {
-			const { service, findMany } = createService();
+		test('returns false for blank program ids without querying the database', async () => {
+			const { service, findFirst, getPrograms } = createService();
+			getPrograms.mockResolvedValue({ success: true, data: [enProgram('si-core-sl', 'Core EN')] });
 
-			const data = expectSuccess(await service.getEligibleProgramOptions(['  ', '']));
-
-			expect(data).toEqual([]);
-			expect(findMany).not.toHaveBeenCalled();
-		});
-
-		test('returns a failure result when Prisma throws', async () => {
-			const { service, findMany, logger } = createService();
-			findMany.mockRejectedValue(new Error('db down'));
-
-			const result = await service.getEligibleProgramOptions(['si-core-sl']);
-
-			expectFailure(result, 'Could not load programs.');
-			expect(logger.error).toHaveBeenCalled();
-		});
-	});
-
-	describe('isProgramEligible', () => {
-		test('returns false for blank program ids without querying', async () => {
-			const { service, findFirst } = createService();
-
-			const data = expectSuccess(await service.isProgramEligible('   ', ['si-core-sl']));
+			const data = expectSuccess(await service.isProgramEligibleForPublicSubmission('   '));
 
 			expect(data).toBe(false);
 			expect(findFirst).not.toHaveBeenCalled();
 		});
 
-		test('returns false when no published slugs remain', async () => {
-			const { service, findFirst } = createService();
+		test('returns false when Storyblok yields no published slugs', async () => {
+			const { service, findFirst, getPrograms } = createService();
+			getPrograms.mockResolvedValue({ success: true, data: [enProgram('', 'Blank')] });
 
-			const data = expectSuccess(await service.isProgramEligible('program-1', ['']));
+			const data = expectSuccess(await service.isProgramEligibleForPublicSubmission('program-1'));
 
 			expect(data).toBe(false);
 			expect(findFirst).not.toHaveBeenCalled();
 		});
 
-		test('returns true when an eligible program exists', async () => {
-			const { service, findFirst } = createService();
+		test('returns true when an eligible program exists for default-language published slugs', async () => {
+			const { service, findFirst, getPrograms } = createService();
+			getPrograms.mockResolvedValue({
+				success: true,
+				data: [enProgram(' si-core-sl ', 'Core EN'), enProgram('si-core-sl', 'Duplicate')],
+			});
 			findFirst.mockResolvedValue({ id: 'program-1' });
 
-			const data = expectSuccess(await service.isProgramEligible(' program-1 ', ['si-core-sl']));
+			const data = expectSuccess(await service.isProgramEligibleForPublicSubmission(' program-1 '));
 
+			expect(getPrograms).toHaveBeenCalledWith('en');
 			expect(data).toBe(true);
 			expect(findFirst).toHaveBeenCalledWith(
 				expect.objectContaining({
@@ -287,6 +296,32 @@ describe('ProgramPublicSubmissionService', () => {
 					},
 				}),
 			);
+		});
+
+		test('propagates Storyblok failures instead of treating them as ineligible', async () => {
+			const { service, findFirst, getPrograms } = createService();
+			const failure: ServiceResult<never> = {
+				success: false,
+				error: 'Failed to fetch programs: {"message":"down"}',
+				status: 503,
+			};
+			getPrograms.mockResolvedValue(failure);
+
+			const result = await service.isProgramEligibleForPublicSubmission('program-1');
+
+			expect(result).toEqual(failure);
+			expect(findFirst).not.toHaveBeenCalled();
+		});
+
+		test('returns a failure result when Prisma throws', async () => {
+			const { service, findFirst, getPrograms, logger } = createService();
+			getPrograms.mockResolvedValue({ success: true, data: [enProgram('si-core-sl', 'Core EN')] });
+			findFirst.mockRejectedValue(new Error('db down'));
+
+			const result = await service.isProgramEligibleForPublicSubmission('program-1');
+
+			expectFailure(result, 'Could not verify program eligibility.');
+			expect(logger.error).toHaveBeenCalled();
 		});
 	});
 });

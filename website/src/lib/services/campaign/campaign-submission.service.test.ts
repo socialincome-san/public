@@ -52,7 +52,7 @@ describe('CampaignSubmissionService', () => {
 		};
 
 		const programPublicSubmissionService = {
-			isProgramEligible: jest.fn().mockResolvedValue({ success: true, data: true }),
+			isProgramEligibleForPublicSubmission: jest.fn().mockResolvedValue({ success: true, data: true }),
 		} as unknown as ProgramPublicSubmissionService;
 
 		const campaignValidationService = {
@@ -89,7 +89,7 @@ describe('CampaignSubmissionService', () => {
 
 	test('submit returns program-not-eligible when the program is not eligible', async () => {
 		const { service, db, programPublicSubmissionService } = createService();
-		(programPublicSubmissionService.isProgramEligible as jest.Mock).mockResolvedValue({
+		(programPublicSubmissionService.isProgramEligibleForPublicSubmission as jest.Mock).mockResolvedValue({
 			success: true,
 			data: false,
 		});
@@ -109,13 +109,45 @@ describe('CampaignSubmissionService', () => {
 				filename: 'cover.png',
 				size: 4,
 			},
-			['program-slug'],
 		);
 
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			expect(result.error).toBe('program-not-eligible');
 			expect(result.status).toBe(400);
+		}
+		expect(db.campaign.create).not.toHaveBeenCalled();
+	});
+
+	test('submit returns submission-failed when eligibility verification fails', async () => {
+		const { service, db, programPublicSubmissionService } = createService();
+		(programPublicSubmissionService.isProgramEligibleForPublicSubmission as jest.Mock).mockResolvedValue({
+			success: false,
+			error: 'Failed to fetch programs: {"message":"down"}',
+			status: 503,
+		});
+
+		const result = await service.submit(
+			{
+				title: 'My Campaign',
+				description: 'Description',
+				goal: 500,
+				currency: 'CHF',
+				endDate: new Date('2030-06-01'),
+				programId: 'program-1',
+			},
+			{
+				buffer: Buffer.from([0x89, 0x50, 0x4e, 0x47]),
+				mimeType: 'image/png',
+				filename: 'cover.png',
+				size: 4,
+			},
+		);
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('submission-failed');
+			expect(result.status).toBe(503);
 		}
 		expect(db.campaign.create).not.toHaveBeenCalled();
 	});
@@ -138,7 +170,6 @@ describe('CampaignSubmissionService', () => {
 				filename: 'cover.png',
 				size: 4,
 			},
-			['program-slug'],
 		);
 
 		expect(result.success).toBe(true);
@@ -178,7 +209,6 @@ describe('CampaignSubmissionService', () => {
 				filename: 'cover.png',
 				size: 4,
 			},
-			['program-slug'],
 		);
 
 		expect(result.success).toBe(false);
@@ -204,7 +234,6 @@ describe('CampaignSubmissionService', () => {
 				filename: 'cover.png',
 				size: 4,
 			},
-			['program-slug'],
 		);
 
 		expect(result.success).toBe(false);
@@ -237,7 +266,6 @@ describe('CampaignSubmissionService', () => {
 				filename: 'cover.png',
 				size: 4,
 			},
-			['program-slug'],
 		);
 
 		expect(result.success).toBe(false);
@@ -272,7 +300,6 @@ describe('CampaignSubmissionService', () => {
 				filename: 'cover.png',
 				size: 4,
 			},
-			['program-slug'],
 		);
 
 		expect(result.success).toBe(false);
@@ -306,7 +333,6 @@ describe('CampaignSubmissionService', () => {
 				filename: 'cover.png',
 				size: 4,
 			},
-			['program-slug'],
 		);
 
 		expect(result.success).toBe(false);
