@@ -9,6 +9,7 @@ import {
 	isCampaignSubmissionErrorCode,
 	validateCampaignSubmissionImageMeta,
 } from '@/lib/services/campaign/campaign-submission-input';
+import { getEligiblePublicSubmissionProgramsAction } from '@/lib/server-actions/campaign-public-actions';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
@@ -17,10 +18,6 @@ import { CampaignSubmissionFooter } from './campaign-submission-footer';
 import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
 import { CampaignSubmissionSteps } from './campaign-submission-steps';
 import { getE2EMockEligibleCampaignPrograms } from './e2e-eligible-programs';
-import {
-	getCachedEligiblePublicSubmissionPrograms,
-	peekCachedEligiblePublicSubmissionPrograms,
-} from './eligible-programs-session-cache';
 import type { CampaignSubmissionFormValues, CampaignSubmissionStepId, SubmissionLabels } from './types';
 
 type Props = {
@@ -31,10 +28,8 @@ type Props = {
 
 export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [currentStep, setCurrentStep] = useState<CampaignSubmissionStepId>('program');
-	const [programs, setPrograms] = useState<PublicSubmissionProgramOption[]>(
-		() => peekCachedEligiblePublicSubmissionPrograms(lang) ?? [],
-	);
-	const [programsLoading, setProgramsLoading] = useState(() => peekCachedEligiblePublicSubmissionPrograms(lang) === null);
+	const [programs, setPrograms] = useState<PublicSubmissionProgramOption[]>([]);
+	const [programsLoading, setProgramsLoading] = useState(true);
 	const [programsError, setProgramsError] = useState<string | null>(null);
 	const [primaryImage, setPrimaryImage] = useState<File | null>(null);
 	const [imageError, setImageError] = useState<string | null>(null);
@@ -83,20 +78,11 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				return;
 			}
 
-			const cachedPrograms = peekCachedEligiblePublicSubmissionPrograms(lang);
-			if (cachedPrograms) {
-				setPrograms(cachedPrograms);
-				setProgramsError(null);
-				setProgramsLoading(false);
-
-				return;
-			}
-
 			setProgramsLoading(true);
 			setProgramsError(null);
 
 			try {
-				const result = await getCachedEligiblePublicSubmissionPrograms(lang);
+				const result = await getEligiblePublicSubmissionProgramsAction(lang);
 				if (cancelled) {
 					return;
 				}
