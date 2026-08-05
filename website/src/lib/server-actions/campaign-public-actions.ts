@@ -33,18 +33,24 @@ export const getEligiblePublicSubmissionProgramsAction = async (
 	{ success: true; data: PublicSubmissionProgramOption[] } | { success: false; error: string; status?: number }
 > => {
 	const language = isWebsiteLanguage(lang) ? lang : defaultLanguage;
+	const needsLocalizedEnrichment = language !== defaultLanguage;
 
-	const [programsResult, focusesResult] = await Promise.all([
-		services.storyblok.getPrograms(language),
+	const [eligibilityProgramsResult, enrichmentProgramsResult, focusesResult] = await Promise.all([
+		services.storyblok.getPrograms(defaultLanguage),
+		needsLocalizedEnrichment ? services.storyblok.getPrograms(language) : Promise.resolve(null),
 		services.storyblok.getFocuses(language),
 	]);
 
-	const storyblokPrograms = programsResult.success ? programsResult.data : [];
+	const eligibilityPrograms = eligibilityProgramsResult.success ? eligibilityProgramsResult.data : [];
+	const enrichmentPrograms =
+		needsLocalizedEnrichment && enrichmentProgramsResult?.success
+			? enrichmentProgramsResult.data
+			: eligibilityPrograms;
 	const publishedPortalSlugs = [
-		...new Set(storyblokPrograms.map((program) => getProgramPortalSlug(program.content)).filter(Boolean)),
+		...new Set(eligibilityPrograms.map((program) => getProgramPortalSlug(program.content)).filter(Boolean)),
 	];
 	const storyblokByPortalSlug = new Map(
-		storyblokPrograms.flatMap((program) => {
+		enrichmentPrograms.flatMap((program) => {
 			const portalSlug = getProgramPortalSlug(program.content);
 			if (!portalSlug) {
 				return [];
