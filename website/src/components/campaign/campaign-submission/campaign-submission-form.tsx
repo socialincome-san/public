@@ -236,7 +236,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		return (
 			<div className="flex min-h-0 flex-1 flex-col">
 				<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left">
-					<DialogTitle className="leading-snug text-balance">{labels.detailsStepTitle}</DialogTitle>
+					<DialogTitle className="leading-snug text-balance">{labels.successTitle}</DialogTitle>
 				</DialogHeader>
 				<p className="text-foreground px-6 text-sm">{labels.success}</p>
 			</div>

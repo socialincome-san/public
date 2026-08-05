@@ -195,6 +195,7 @@
 			"primary-image": "Primary image",
 			"submit": "Submit campaign",
 			"submitting": "Submitting…",
+			"success-title": "Campaign submitted",
 			"success": "Thank you. Your campaign was submitted and will be reviewed before publication.",
 			"error": "Something went wrong. Please try again.",
 			"currency-placeholder": "Select a currency",

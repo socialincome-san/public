@@ -195,6 +195,7 @@
 			"primary-image": "Immagine principale",
 			"submit": "Invia campagna",
 			"submitting": "Invio in corso…",
+			"success-title": "Campagna inviata",
 			"success": "Grazie. La tua campagna è stata inviata e verrà revisionata prima della pubblicazione.",
 			"error": "Qualcosa è andato storto. Riprova.",
 			"currency-placeholder": "Seleziona una valuta",

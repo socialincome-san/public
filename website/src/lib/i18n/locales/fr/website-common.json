@@ -195,6 +195,7 @@
 			"primary-image": "Image principale",
 			"submit": "Soumettre la campagne",
 			"submitting": "Envoi en cours…",
+			"success-title": "Campagne soumise",
 			"success": "Merci. Votre campagne a été soumise et sera examinée avant publication.",
 			"error": "Une erreur s'est produite. Veuillez réessayer.",
 			"currency-placeholder": "Sélectionner une devise",

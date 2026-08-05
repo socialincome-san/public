@@ -70,6 +70,7 @@ export const CampaignsOverview = async ({
 		primaryImage: translator.t('campaigns-page.submission.primary-image'),
 		submit: translator.t('campaigns-page.submission.submit'),
 		submitting: translator.t('campaigns-page.submission.submitting'),
+		successTitle: translator.t('campaigns-page.submission.success-title'),
 		success: translator.t('campaigns-page.submission.success'),
 		error: translator.t('campaigns-page.submission.error'),
 		currencyPlaceholder: translator.t('campaigns-page.submission.currency-placeholder'),

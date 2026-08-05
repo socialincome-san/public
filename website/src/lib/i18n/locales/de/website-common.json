@@ -195,6 +195,7 @@
 			"primary-image": "Hauptbild",
 			"submit": "Kampagne einreichen",
 			"submitting": "Wird eingereicht…",
+			"success-title": "Kampagne eingereicht",
 			"success": "Vielen Dank. Ihre Kampagne wurde eingereicht und wird vor der Veröffentlichung geprüft.",
 			"error": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
 			"currency-placeholder": "Währung auswählen",

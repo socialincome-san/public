@@ -19,6 +19,7 @@ export type SubmissionLabels = {
 	primaryImage: string;
 	submit: string;
 	submitting: string;
+	successTitle: string;
 	success: string;
 	error: string;
 	currencyPlaceholder: string;
