@@ -17,6 +17,7 @@ import { useForm } from 'react-hook-form';
 import { CampaignSubmissionFooter } from './campaign-submission-footer';
 import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
 import { CampaignSubmissionSteps } from './campaign-submission-steps';
+import { getE2EMockEligibleCampaignPrograms } from './e2e-eligible-programs';
 import type { CampaignSubmissionFormValues, CampaignSubmissionStepId, SubmissionLabels } from './types';
 
 type Props = {
@@ -28,6 +29,7 @@ type Props = {
 export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [currentStep, setCurrentStep] = useState<CampaignSubmissionStepId>('program');
 	const [programs, setPrograms] = useState<PublicSubmissionProgramOption[]>([]);
+	const [programsLoading, setProgramsLoading] = useState(true);
 	const [programsError, setProgramsError] = useState<string | null>(null);
 	const [primaryImage, setPrimaryImage] = useState<File | null>(null);
 	const [imageError, setImageError] = useState<string | null>(null);
@@ -67,19 +69,45 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		let cancelled = false;
 
 		const loadPrograms = async () => {
-			const result = await getEligiblePublicSubmissionProgramsAction(lang);
-			if (cancelled) {
-				return;
-			}
-
-			if (!result.success) {
-				setProgramsError(labels.error);
-
-				return;
-			}
-
-			setPrograms(result.data);
+			setProgramsLoading(true);
 			setProgramsError(null);
+
+			const e2eMockPrograms = getE2EMockEligibleCampaignPrograms();
+			if (e2eMockPrograms) {
+				setPrograms(e2eMockPrograms);
+				setProgramsError(null);
+				setProgramsLoading(false);
+
+				return;
+			}
+
+			try {
+				const result = await getEligiblePublicSubmissionProgramsAction(lang);
+				if (cancelled) {
+					return;
+				}
+
+				if (!result.success) {
+					setPrograms([]);
+					setProgramsError(labels.error);
+
+					return;
+				}
+
+				setPrograms(result.data);
+				setProgramsError(null);
+			} catch {
+				if (cancelled) {
+					return;
+				}
+
+				setPrograms([]);
+				setProgramsError(labels.error);
+			} finally {
+				if (!cancelled) {
+					setProgramsLoading(false);
+				}
+			}
 		};
 
 		void loadPrograms();
@@ -88,6 +116,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			cancelled = true;
 		};
 	}, [labels.error, lang]);
+
+	const isContinueDisabled = programsLoading || programs.length === 0 || Boolean(programsError);
 
 	const onImageChange = (file: File | null) => {
 		setPrimaryImage(file);
@@ -248,6 +278,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 						form={form}
 						labels={labels}
 						programs={programs}
+						programsLoading={programsLoading}
 						programsError={programsError}
 						primaryImageInputRef={primaryImageInputRef}
 						onImageChange={onImageChange}
@@ -259,7 +290,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 					<CampaignSubmissionFooter
 						currentStep={currentStep}
 						labels={labels}
-						programsError={programsError}
+						isContinueDisabled={isContinueDisabled}
 						isSubmitting={isSubmitting}
 						onContinue={onContinue}
 						onBack={onBack}

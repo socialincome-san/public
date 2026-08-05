@@ -29,6 +29,8 @@ export type SubmissionLabels = {
 	allCountries: string;
 	recipientsCount: string;
 	details: string;
+	programsLoading: string;
+	programsEmpty: string;
 	errors: Record<CampaignSubmissionErrorCode, string>;
 };
 
@@ -40,6 +42,7 @@ export type CampaignSubmissionStepProps = {
 	form: UseFormReturn<CampaignSubmissionFormValues>;
 	labels: SubmissionLabels;
 	programs: PublicSubmissionProgramOption[];
+	programsLoading: boolean;
 	programsError: string | null;
 	primaryImageInputRef: RefObject<HTMLInputElement | null>;
 	onImageChange: (file: File | null) => void;

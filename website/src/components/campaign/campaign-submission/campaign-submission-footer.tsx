@@ -7,7 +7,7 @@ import type { CampaignSubmissionStepId, SubmissionLabels } from './types';
 type Props = {
 	currentStep: CampaignSubmissionStepId;
 	labels: SubmissionLabels;
-	programsError: string | null;
+	isContinueDisabled: boolean;
 	isSubmitting: boolean;
 	onContinue: () => void;
 	onBack: () => void;
@@ -17,7 +17,7 @@ type Props = {
 export const CampaignSubmissionFooter = ({
 	currentStep,
 	labels,
-	programsError,
+	isContinueDisabled,
 	isSubmitting,
 	onContinue,
 	onBack,
@@ -45,7 +45,7 @@ export const CampaignSubmissionFooter = ({
 						{isSubmitting ? labels.submitting : labels.submit}
 					</Button>
 				) : (
-					<Button type="button" disabled={Boolean(programsError)} onClick={onContinue}>
+					<Button type="button" disabled={isContinueDisabled} onClick={onContinue}>
 						{labels.continue}
 					</Button>
 				)}

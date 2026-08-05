@@ -205,6 +205,8 @@
 			"all-countries": "Tutti i paesi",
 			"recipients-count": "{{count}} beneficiari",
 			"details": "Dettagli",
+			"programs-loading": "Caricamento dei programmi…",
+			"programs-empty": "Al momento non ci sono programmi disponibili.",
 			"errors": {
 				"title-required": "Il titolo è obbligatorio.",
 				"title-too-long": "Il titolo è troppo lungo.",

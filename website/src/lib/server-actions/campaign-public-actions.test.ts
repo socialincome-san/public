@@ -148,4 +148,17 @@ describe('getEligiblePublicSubmissionProgramsAction', () => {
 
 		expect(result).toEqual(failure);
 	});
+
+	test('propagates Storyblok eligibility failures instead of returning an empty list', async () => {
+		const failure: ServiceResult<never> = {
+			success: false,
+			error: 'Failed to fetch programs: {"message":"down"}',
+		};
+		mockGetPrograms.mockResolvedValue(failure);
+
+		const result = await getEligiblePublicSubmissionProgramsAction('en');
+
+		expect(result).toEqual(failure);
+		expect(mockGetEligibleProgramOptions).not.toHaveBeenCalled();
+	});
 });

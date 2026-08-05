@@ -205,6 +205,8 @@
 			"all-countries": "Alle Länder",
 			"recipients-count": "{{count}} Empfänger:innen",
 			"details": "Details",
+			"programs-loading": "Programme werden geladen…",
+			"programs-empty": "Derzeit sind keine Programme verfügbar.",
 			"errors": {
 				"title-required": "Titel ist erforderlich.",
 				"title-too-long": "Titel ist zu lang.",

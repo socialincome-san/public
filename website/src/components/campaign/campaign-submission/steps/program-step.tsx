@@ -8,9 +8,9 @@ import { ProgramCountryFilter, type ProgramCountryFilterOption } from '../progra
 import { ProgramOptionRow } from '../program-option-row';
 import type { CampaignSubmissionStepProps } from '../types';
 
-type Props = Pick<CampaignSubmissionStepProps, 'form' | 'labels' | 'programs' | 'programsError'>;
+type Props = Pick<CampaignSubmissionStepProps, 'form' | 'labels' | 'programs' | 'programsLoading' | 'programsError'>;
 
-export const ProgramStep = ({ form, labels, programs, programsError }: Props) => {
+export const ProgramStep = ({ form, labels, programs, programsLoading, programsError }: Props) => {
 	const [selectedCountryId, setSelectedCountryId] = useState<string | null>(null);
 	const [expandedProgramId, setExpandedProgramId] = useState<string | null>(null);
 
@@ -69,6 +69,14 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 
 	const getRecipientsLabel = (count: number) => labels.recipientsCount.replace('{{count}}', String(count));
 
+	const statusMessage = programsLoading
+		? labels.programsLoading
+		: programsError
+			? programsError
+			: programs.length === 0
+				? labels.programsEmpty
+				: null;
+
 	return (
 		<div className="flex min-h-0 flex-1 flex-col gap-4">
 			{countryOptions.length > 0 ? (
@@ -87,38 +95,46 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 				render={({ field, fieldState }) => (
 					<FormItem className="flex min-h-0 flex-1 flex-col gap-0">
 						<div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
-							<RadioGroup
-								value={field.value || undefined}
-								onValueChange={(value) => {
-									field.onChange(value);
-									form.clearErrors('programId');
-								}}
-								className="min-w-0 gap-0"
-								aria-label={labels.program}
-								aria-invalid={Boolean(fieldState.error)}
-							>
-								{filteredPrograms.map((program) => (
-									<ProgramOptionRow
-										key={program.id}
-										value={program.id}
-										name={program.name}
-										selected={field.value === program.id}
-										recipientsLabel={getRecipientsLabel(program.recipientsCount)}
-										detailsLabel={labels.details}
-										countryIsoCodes={[program.countryIsoCode]}
-										expanded={expandedProgramId === program.id}
-										onDetailsToggle={() => onDetailsToggle(program.id)}
-										description={program.description}
-										imageUrl={program.imageUrl}
-										tags={program.tags}
-									/>
-								))}
-							</RadioGroup>
+							{statusMessage ? (
+								<p
+									className={`px-6 text-sm ${programsError ? 'text-destructive' : 'text-muted-foreground'}`}
+									role={programsError ? 'alert' : 'status'}
+								>
+									{statusMessage}
+								</p>
+							) : (
+								<RadioGroup
+									value={field.value || undefined}
+									onValueChange={(value) => {
+										field.onChange(value);
+										form.clearErrors('programId');
+									}}
+									className="min-w-0 gap-0"
+									aria-label={labels.program}
+									aria-invalid={Boolean(fieldState.error)}
+								>
+									{filteredPrograms.map((program) => (
+										<ProgramOptionRow
+											key={program.id}
+											value={program.id}
+											name={program.name}
+											selected={field.value === program.id}
+											recipientsLabel={getRecipientsLabel(program.recipientsCount)}
+											detailsLabel={labels.details}
+											countryIsoCodes={[program.countryIsoCode]}
+											expanded={expandedProgramId === program.id}
+											onDetailsToggle={() => onDetailsToggle(program.id)}
+											description={program.description}
+											imageUrl={program.imageUrl}
+											tags={program.tags}
+										/>
+									))}
+								</RadioGroup>
+							)}
 						</div>
 						{fieldState.error ? (
 							<p className="text-destructive mt-2 shrink-0 px-6 text-sm">{fieldState.error.message}</p>
 						) : null}
-						{programsError ? <p className="text-destructive mt-2 shrink-0 px-6 text-sm">{programsError}</p> : null}
 					</FormItem>
 				)}
 			/>

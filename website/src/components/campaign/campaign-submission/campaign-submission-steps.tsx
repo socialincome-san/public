@@ -16,6 +16,7 @@ export const CampaignSubmissionSteps = ({ currentStep, ...stepProps }: Props) =>
 					form={stepProps.form}
 					labels={stepProps.labels}
 					programs={stepProps.programs}
+					programsLoading={stepProps.programsLoading}
 					programsError={stepProps.programsError}
 				/>
 			</div>

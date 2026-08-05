@@ -80,6 +80,8 @@ export const CampaignsOverview = async ({
 		allCountries: translator.t('campaigns-page.submission.all-countries'),
 		recipientsCount: translator.t('campaigns-page.submission.recipients-count'),
 		details: translator.t('campaigns-page.submission.details'),
+		programsLoading: translator.t('campaigns-page.submission.programs-loading'),
+		programsEmpty: translator.t('campaigns-page.submission.programs-empty'),
 		errors: submissionErrors,
 	};
 

@@ -41,7 +41,11 @@ export const getEligiblePublicSubmissionProgramsAction = async (
 		services.storyblok.getFocuses(language),
 	]);
 
-	const eligibilityPrograms = eligibilityProgramsResult.success ? eligibilityProgramsResult.data : [];
+	if (!eligibilityProgramsResult.success) {
+		return eligibilityProgramsResult;
+	}
+
+	const eligibilityPrograms = eligibilityProgramsResult.data;
 	const enrichmentPrograms =
 		needsLocalizedEnrichment && enrichmentProgramsResult?.success
 			? enrichmentProgramsResult.data

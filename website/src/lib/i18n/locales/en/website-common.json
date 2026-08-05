@@ -205,6 +205,8 @@
 			"all-countries": "All Countries",
 			"recipients-count": "{{count}} Recipients",
 			"details": "Details",
+			"programs-loading": "Loading programs…",
+			"programs-empty": "No programs are available right now.",
 			"errors": {
 				"title-required": "Title is required.",
 				"title-too-long": "Title is too long.",

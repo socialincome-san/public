@@ -598,7 +598,7 @@ export class StoryblokService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultOk([]);
+			return this.resultFail(`Failed to fetch programs: ${JSON.stringify(error)}`);
 		}
 	}
 
