@@ -8,6 +8,22 @@ import type { CountryCode } from '@/generated/prisma/client';
 import { cn } from '@/lib/utils/cn';
 import { ChevronDown } from 'lucide-react';
 import NextImage from 'next/image';
+import { useEffect, useRef } from 'react';
+
+const getScrollParent = (element: HTMLElement): HTMLElement | null => {
+	let parent = element.parentElement;
+
+	while (parent) {
+		const { overflowY } = getComputedStyle(parent);
+		if (overflowY === 'auto' || overflowY === 'scroll') {
+			return parent;
+		}
+
+		parent = parent.parentElement;
+	}
+
+	return null;
+};
 
 type Props = {
 	value: string;
@@ -36,11 +52,47 @@ export const ProgramOptionRow = ({
 	imageUrl = null,
 	tags = [],
 }: Props) => {
+	const rowRef = useRef<HTMLDivElement>(null);
 	const hasExpandableDetails = Boolean(description || imageUrl || tags.length > 0);
 	const detailsContentId = `program-details-${value}`;
 
+	useEffect(() => {
+		if (!expanded || !hasExpandableDetails) {
+			return;
+		}
+
+		const row = rowRef.current;
+		if (!row) {
+			return;
+		}
+
+		// Wait for the expanded layout to paint so the full height is included.
+		const frameId = requestAnimationFrame(() => {
+			const scrollParent = getScrollParent(row);
+			if (!scrollParent) {
+				row.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+
+				return;
+			}
+
+			const rowRect = row.getBoundingClientRect();
+			const parentRect = scrollParent.getBoundingClientRect();
+			const overflowBottom = rowRect.bottom - parentRect.bottom;
+			const overflowTop = parentRect.top - rowRect.top;
+
+			if (overflowBottom > 0) {
+				scrollParent.scrollBy({ top: overflowBottom + 12, behavior: 'smooth' });
+			} else if (overflowTop > 0) {
+				scrollParent.scrollBy({ top: -overflowTop - 12, behavior: 'smooth' });
+			}
+		});
+
+		return () => cancelAnimationFrame(frameId);
+	}, [expanded, hasExpandableDetails]);
+
 	return (
 		<div
+			ref={rowRef}
 			data-testid={`program-option-${value}`}
 			className={cn(
 				'border-border hover:bg-muted/30 border-b px-1 transition-colors last:border-b-0',
