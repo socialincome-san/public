@@ -95,12 +95,18 @@ describe('ProgramPublicSubmissionService', () => {
 
 		test('uses default-language Storyblok slugs for eligibility even when enriching another locale', async () => {
 			const { service, findMany, getPrograms } = createService();
-			getPrograms.mockImplementation(async (lang: string) => {
+			getPrograms.mockImplementation((lang: string) => {
 				if (lang === 'en') {
-					return { success: true, data: [enProgram('si-core-sl', 'Core EN'), enProgram('only-en', 'Only EN')] };
+					return Promise.resolve({
+						success: true,
+						data: [enProgram('si-core-sl', 'Core EN'), enProgram('only-en', 'Only EN')],
+					});
 				}
 
-				return { success: true, data: [deProgram('si-core-sl', 'Core DE'), deProgram('only-de', 'Only DE')] };
+				return Promise.resolve({
+					success: true,
+					data: [deProgram('si-core-sl', 'Core DE'), deProgram('only-de', 'Only DE')],
+				});
 			});
 			findMany.mockResolvedValue([
 				{

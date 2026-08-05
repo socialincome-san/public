@@ -3,8 +3,7 @@ import type { PublicSubmissionProgramOption } from '@/lib/services/program/progr
 const mockGetEligiblePublicSubmissionProgramsAction = jest.fn();
 
 jest.mock('@/lib/server-actions/campaign-public-actions', () => ({
-	getEligiblePublicSubmissionProgramsAction: (...args: unknown[]) =>
-		mockGetEligiblePublicSubmissionProgramsAction(...args),
+	getEligiblePublicSubmissionProgramsAction: mockGetEligiblePublicSubmissionProgramsAction,
 }));
 
 describe('getCachedEligiblePublicSubmissionPrograms', () => {
@@ -29,9 +28,8 @@ describe('getCachedEligiblePublicSubmissionPrograms', () => {
 		];
 		mockGetEligiblePublicSubmissionProgramsAction.mockResolvedValue({ success: true, data: programs });
 
-		const { getCachedEligiblePublicSubmissionPrograms, peekCachedEligiblePublicSubmissionPrograms } = await import(
-			'./eligible-programs-session-cache'
-		);
+		const { getCachedEligiblePublicSubmissionPrograms, peekCachedEligiblePublicSubmissionPrograms } =
+			await import('./eligible-programs-session-cache');
 
 		expect(peekCachedEligiblePublicSubmissionPrograms('en')).toBeNull();
 

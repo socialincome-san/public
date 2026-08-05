@@ -7,9 +7,8 @@ type EligibleProgramsActionResult = Awaited<ReturnType<typeof getEligiblePublicS
 const inFlightByLang = new Map<WebsiteLanguage, Promise<EligibleProgramsActionResult>>();
 const successByLang = new Map<WebsiteLanguage, PublicSubmissionProgramOption[]>();
 
-export const peekCachedEligiblePublicSubmissionPrograms = (
-	lang: WebsiteLanguage,
-): PublicSubmissionProgramOption[] | null => successByLang.get(lang) ?? null;
+export const peekCachedEligiblePublicSubmissionPrograms = (lang: WebsiteLanguage): PublicSubmissionProgramOption[] | null =>
+	successByLang.get(lang) ?? null;
 
 export const getCachedEligiblePublicSubmissionPrograms = async (
 	lang: WebsiteLanguage,

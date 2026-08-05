@@ -53,9 +53,7 @@ export class ProgramPublicSubmissionService extends BaseService {
 
 		const eligibilityPrograms = eligibilityProgramsResult.data;
 		const enrichmentPrograms =
-			needsLocalizedEnrichment && enrichmentProgramsResult?.success
-				? enrichmentProgramsResult.data
-				: eligibilityPrograms;
+			needsLocalizedEnrichment && enrichmentProgramsResult?.success ? enrichmentProgramsResult.data : eligibilityPrograms;
 		const publishedPortalSlugs = [
 			...new Set(eligibilityPrograms.map((program) => getProgramPortalSlug(program.content)).filter(Boolean)),
 		];
@@ -80,8 +78,7 @@ export class ProgramPublicSubmissionService extends BaseService {
 				const storyblokProgram = storyblokByPortalSlug.get(program.slug);
 				const name = storyblokProgram ? getProgramTitle(storyblokProgram.content) : program.name;
 				const trimmedDescription = storyblokProgram?.content.description?.trim();
-				const description =
-					trimmedDescription !== undefined && trimmedDescription.length > 0 ? trimmedDescription : null;
+				const description = trimmedDescription !== undefined && trimmedDescription.length > 0 ? trimmedDescription : null;
 				const primaryImage = storyblokProgram?.content.primaryImage;
 				const imageUrl = primaryImage?.filename
 					? formatStoryblokUrl(

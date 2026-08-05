@@ -71,11 +71,7 @@ export const ProgramStep = ({ form, labels, programs, programsLoading, programsE
 
 	const statusMessage = programsLoading
 		? labels.programsLoading
-		: programsError
-			? programsError
-			: programs.length === 0
-				? labels.programsEmpty
-				: null;
+		: (programsError ?? (programs.length === 0 ? labels.programsEmpty : null));
 
 	return (
 		<div className="flex min-h-0 flex-1 flex-col gap-4">

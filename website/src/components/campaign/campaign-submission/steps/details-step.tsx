@@ -14,14 +14,7 @@ type Props = Pick<
 	'form' | 'labels' | 'primaryImageInputRef' | 'onImageChange' | 'imageError' | 'submitError'
 >;
 
-export const DetailsStep = ({
-	form,
-	labels,
-	primaryImageInputRef,
-	onImageChange,
-	imageError,
-	submitError,
-}: Props) => {
+export const DetailsStep = ({ form, labels, primaryImageInputRef, onImageChange, imageError, submitError }: Props) => {
 	return (
 		<div className="flex flex-col gap-4 px-6">
 			<FormField
