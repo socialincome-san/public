@@ -117,7 +117,7 @@ export class ProgramPublicSubmissionService extends BaseService {
 		return this.resultOk(this.extractPublishedPortalSlugs(programsResult.data));
 	}
 
-	private extractPublishedPortalSlugs(programs: Array<{ content: Program }>): string[] {
+	private extractPublishedPortalSlugs(programs: { content: Program }[]): string[] {
 		return [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
 	}
 

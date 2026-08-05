@@ -58,7 +58,7 @@ describe('POST /api/campaign-submissions', () => {
 		});
 
 		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
-		const body = await response.json();
+		const body: unknown = await response.json();
 
 		expect(response.status).toBe(503);
 		expect(body).toEqual({ errorCode: 'submission-failed' });
@@ -72,7 +72,7 @@ describe('POST /api/campaign-submissions', () => {
 		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
 
 		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
-		const body = await response.json();
+		const body: unknown = await response.json();
 
 		expect(response.status).toBe(201);
 		expect(body).toEqual({ slug: 'my-campaign' });
