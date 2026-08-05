@@ -167,7 +167,7 @@ const messagingRecipients = new MessagingRecipientsService(prisma, contributorRe
 const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
 const campaignValidation = new CampaignValidationService(prisma);
 const campaignWrite = new CampaignWriteService(prisma, programAccessRead, campaignValidation);
-const programPublicSubmission = new ProgramPublicSubmissionService(prisma);
+const programPublicSubmission = new ProgramPublicSubmissionService(prisma, storyblok);
 const storyblokManagement = new StoryblokManagementService();
 const campaignSubmission = new CampaignSubmissionService(
 	prisma,

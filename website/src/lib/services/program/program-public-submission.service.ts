@@ -1,7 +1,15 @@
 import { type CountryCode, PrismaClient } from '@/generated/prisma/client';
+import type { Focus, Program } from '@/generated/storyblok/types/109655/storyblok-components';
+import { defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
+import type { ISbStoryData } from '@storyblok/js';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import type { StoryblokService } from '../storyblok/storyblok.service';
+import { formatStoryblokUrl } from '../storyblok/storyblok.utils';
+
+const PROGRAM_DETAILS_IMAGE_WIDTH = 248;
+const PROGRAM_DETAILS_IMAGE_HEIGHT = 140;
 
 type PublicSubmissionProgramFocus = {
 	slug: string;
@@ -24,9 +32,105 @@ type EligibleProgramRow = Omit<PublicSubmissionProgramOption, 'description' | 'i
 	focuses: PublicSubmissionProgramFocus[];
 };
 
+const getProgramPortalSlug = (program: Program) => program.portalSlug.trim();
+
+const getProgramTitle = (program: Program) => program.title.trim() || getProgramPortalSlug(program);
+
+const getFocusTitleBySlug = (focuses: ISbStoryData<Focus>[]) => {
+	const focusTitleBySlug = new Map<string, string>();
+
+	focuses.forEach((focus) => {
+		const slug = focus.content.portalSlug?.trim();
+		const title = focus.content.title?.trim();
+
+		if (slug && title) {
+			focusTitleBySlug.set(slug, title);
+		}
+	});
+
+	return focusTitleBySlug;
+};
+
 export class ProgramPublicSubmissionService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
+	constructor(
+		db: PrismaClient,
+		private readonly storyblok: StoryblokService,
+		loggerInstance = logger,
+	) {
 		super(db, loggerInstance);
+	}
+
+	async getEligibleProgramsForPublicSubmission(
+		lang: WebsiteLanguage = defaultLanguage,
+	): Promise<ServiceResult<PublicSubmissionProgramOption[]>> {
+		const needsLocalizedEnrichment = lang !== defaultLanguage;
+
+		const [eligibilityProgramsResult, enrichmentProgramsResult, focusesResult] = await Promise.all([
+			this.storyblok.getPrograms(defaultLanguage),
+			needsLocalizedEnrichment ? this.storyblok.getPrograms(lang) : Promise.resolve(null),
+			this.storyblok.getFocuses(lang),
+		]);
+
+		if (!eligibilityProgramsResult.success) {
+			return eligibilityProgramsResult;
+		}
+
+		const eligibilityPrograms = eligibilityProgramsResult.data;
+		const enrichmentPrograms =
+			needsLocalizedEnrichment && enrichmentProgramsResult?.success
+				? enrichmentProgramsResult.data
+				: eligibilityPrograms;
+		const publishedPortalSlugs = [
+			...new Set(eligibilityPrograms.map((program) => getProgramPortalSlug(program.content)).filter(Boolean)),
+		];
+		const storyblokByPortalSlug = new Map(
+			enrichmentPrograms.flatMap((program) => {
+				const portalSlug = getProgramPortalSlug(program.content);
+				if (!portalSlug) {
+					return [];
+				}
+
+				return [[portalSlug, program] as const];
+			}),
+		);
+		const focusTitleBySlug = focusesResult.success ? getFocusTitleBySlug(focusesResult.data) : new Map<string, string>();
+
+		const eligibleResult = await this.getEligibleProgramOptions(publishedPortalSlugs);
+		if (!eligibleResult.success) {
+			return eligibleResult;
+		}
+
+		return this.resultOk(
+			eligibleResult.data.map((program): PublicSubmissionProgramOption => {
+				const storyblokProgram = storyblokByPortalSlug.get(program.slug);
+				const name = storyblokProgram ? getProgramTitle(storyblokProgram.content) : program.name;
+				const trimmedDescription = storyblokProgram?.content.description?.trim();
+				const description =
+					trimmedDescription !== undefined && trimmedDescription.length > 0 ? trimmedDescription : null;
+				const primaryImage = storyblokProgram?.content.primaryImage;
+				const imageUrl = primaryImage?.filename
+					? formatStoryblokUrl(
+							primaryImage.filename,
+							PROGRAM_DETAILS_IMAGE_WIDTH,
+							PROGRAM_DETAILS_IMAGE_HEIGHT,
+							primaryImage.focus,
+						)
+					: null;
+				const tags = program.focuses.map((focus) => focusTitleBySlug.get(focus.slug) ?? focus.name);
+
+				return {
+					id: program.id,
+					name,
+					slug: program.slug,
+					countryId: program.countryId,
+					countryIsoCode: program.countryIsoCode,
+					recipientsCount: program.recipientsCount,
+					description,
+					imageUrl,
+					tags,
+				};
+			}),
+		);
 	}
 
 	async getEligibleProgramOptions(publishedPortalSlugs: string[]): Promise<ServiceResult<EligibleProgramRow[]>> {
