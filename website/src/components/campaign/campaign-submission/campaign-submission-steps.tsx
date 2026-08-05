@@ -11,27 +11,31 @@ type Props = Omit<CampaignSubmissionStepProps, 'onContinue' | 'onBack' | 'isSubm
 export const CampaignSubmissionSteps = ({ currentStep, ...stepProps }: Props) => {
 	if (currentStep === 'program') {
 		return (
-			<ProgramStep
-				form={stepProps.form}
-				labels={stepProps.labels}
-				programs={stepProps.programs}
-				programsError={stepProps.programsError}
-			/>
+			<div className="flex min-h-0 flex-1 flex-col">
+				<ProgramStep
+					form={stepProps.form}
+					labels={stepProps.labels}
+					programs={stepProps.programs}
+					programsError={stepProps.programsError}
+				/>
+			</div>
 		);
 	}
 
 	if (currentStep === 'details') {
 		return (
-			<DetailsStep
-				form={stepProps.form}
-				labels={stepProps.labels}
-				primaryImageInputRef={stepProps.primaryImageInputRef}
-				onImageChange={stepProps.onImageChange}
-				imageError={stepProps.imageError}
-				showImageRequired={stepProps.showImageRequired}
-				showDetailsErrors={stepProps.showDetailsErrors}
-				submitError={stepProps.submitError}
-			/>
+			<div className="min-h-0 flex-1 overflow-y-auto">
+				<DetailsStep
+					form={stepProps.form}
+					labels={stepProps.labels}
+					primaryImageInputRef={stepProps.primaryImageInputRef}
+					onImageChange={stepProps.onImageChange}
+					imageError={stepProps.imageError}
+					showImageRequired={stepProps.showImageRequired}
+					showDetailsErrors={stepProps.showDetailsErrors}
+					submitError={stepProps.submitError}
+				/>
+			</div>
 		);
 	}
 

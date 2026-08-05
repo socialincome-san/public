@@ -202,6 +202,9 @@
 			"continue": "Continuer",
 			"back": "Retour",
 			"all-countries": "Tous les pays",
+			"all-programs": "Social Income (Tous les programmes)",
+			"recipients-count": "{{count}} bénéficiaires",
+			"details": "Détails",
 			"errors": {
 				"title-required": "Le titre est obligatoire.",
 				"title-too-long": "Le titre est trop long.",

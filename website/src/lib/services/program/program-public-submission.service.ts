@@ -8,6 +8,7 @@ export type PublicSubmissionProgramOption = {
 	name: string;
 	countryId: string;
 	countryIsoCode: CountryCode;
+	recipientsCount: number;
 };
 
 export class ProgramPublicSubmissionService extends BaseService {
@@ -36,16 +37,22 @@ export class ProgramPublicSubmissionService extends BaseService {
 							isoCode: true,
 						},
 					},
+					_count: {
+						select: {
+							recipients: true,
+						},
+					},
 				},
 				orderBy: { name: 'asc' },
 			});
 
 			return this.resultOk(
-				programs.map(({ id, name, countryId, country }) => ({
+				programs.map(({ id, name, countryId, country, _count }) => ({
 					id,
 					name,
 					countryId,
 					countryIsoCode: country.isoCode,
+					recipientsCount: _count.recipients,
 				})),
 			);
 		} catch (error) {

@@ -20,8 +20,11 @@ export const CreateCampaignButton = ({ label, dialogTitle, labels }: Props) => {
 				{label}
 			</Button>
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent variant="large">
-					<DialogHeader>
+				<DialogContent
+					variant="large"
+					className="flex h-[90dvh] max-h-[90dvh] flex-col overflow-hidden max-sm:h-dvh max-sm:max-h-dvh"
+				>
+					<DialogHeader className="shrink-0">
 						<DialogTitle>{dialogTitle}</DialogTitle>
 					</DialogHeader>
 					<CampaignSubmissionForm labels={labels} />

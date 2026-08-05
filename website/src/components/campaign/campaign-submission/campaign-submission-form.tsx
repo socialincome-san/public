@@ -235,7 +235,7 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 	return (
 		<Form {...form}>
 			<form className="flex min-h-0 flex-1 flex-col" noValidate onSubmit={handleSubmit}>
-				<div className="flex-1 overflow-y-auto pb-4">
+				<div className="flex min-h-0 flex-1 flex-col overflow-hidden pb-4">
 					<CampaignSubmissionSteps
 						currentStep={currentStep}
 						form={form}
@@ -250,15 +250,17 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 						submitError={submitError}
 					/>
 				</div>
-				<CampaignSubmissionFooter
-					currentStep={currentStep}
-					labels={labels}
-					programsError={programsError}
-					isSubmitting={isSubmitting}
-					onContinue={onContinue}
-					onBack={onBack}
-					onSubmit={submitDetails}
-				/>
+				<div className="shrink-0">
+					<CampaignSubmissionFooter
+						currentStep={currentStep}
+						labels={labels}
+						programsError={programsError}
+						isSubmitting={isSubmitting}
+						onContinue={onContinue}
+						onBack={onBack}
+						onSubmit={submitDetails}
+					/>
+				</div>
 			</form>
 		</Form>
 	);
