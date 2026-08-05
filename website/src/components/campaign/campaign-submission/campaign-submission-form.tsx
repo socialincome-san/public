@@ -36,6 +36,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [submitSuccess, setSubmitSuccess] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const isSubmittingRef = useRef(false);
 	const primaryImageInputRef = useRef<HTMLInputElement>(null);
 	const stepTitleRef = useRef<HTMLHeadingElement>(null);
 	const hasMountedStep = useRef(false);
@@ -171,6 +172,10 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	};
 
 	const onSubmit = async (values: CampaignSubmissionFormValues) => {
+		if (isSubmittingRef.current) {
+			return;
+		}
+
 		setSubmitError(null);
 		setSubmitSuccess(false);
 
@@ -187,6 +192,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			return;
 		}
 
+		isSubmittingRef.current = true;
 		setImageError(null);
 		setIsSubmitting(true);
 
@@ -241,6 +247,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		} catch {
 			setSubmitError(labels.error);
 		} finally {
+			isSubmittingRef.current = false;
 			setIsSubmitting(false);
 		}
 	};
