@@ -83,8 +83,42 @@ describe('CampaignSubmissionService', () => {
 			deleteAsset,
 			createPublishedCampaignStory,
 			campaignValidationService,
+			programPublicSubmissionService,
 		};
 	};
+
+	test('submit returns program-not-eligible when the program is not eligible', async () => {
+		const { service, db, programPublicSubmissionService } = createService();
+		(programPublicSubmissionService.isProgramEligible as jest.Mock).mockResolvedValue({
+			success: true,
+			data: false,
+		});
+
+		const result = await service.submit(
+			{
+				title: 'My Campaign',
+				description: 'Description',
+				goal: 500,
+				currency: 'CHF',
+				endDate: new Date('2030-06-01'),
+				programId: 'program-1',
+			},
+			{
+				buffer: Buffer.from([0x89, 0x50, 0x4e, 0x47]),
+				mimeType: 'image/png',
+				filename: 'cover.png',
+				size: 4,
+			},
+			['program-slug'],
+		);
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('program-not-eligible');
+			expect(result.status).toBe(400);
+		}
+		expect(db.campaign.create).not.toHaveBeenCalled();
+	});
 
 	test('submit creates public DB campaign and published Storyblok story', async () => {
 		const { service, create, createPublishedCampaignStory } = createService();
