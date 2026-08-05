@@ -72,7 +72,6 @@ export const CampaignsOverview = async ({
 		submitting: translator.t('campaigns-page.submission.submitting'),
 		success: translator.t('campaigns-page.submission.success'),
 		error: translator.t('campaigns-page.submission.error'),
-		programPlaceholder: translator.t('campaigns-page.submission.program-placeholder'),
 		currencyPlaceholder: translator.t('campaigns-page.submission.currency-placeholder'),
 		imageHint: translator.t('campaigns-page.submission.image-hint'),
 		continue: translator.t('campaigns-page.submission.continue'),

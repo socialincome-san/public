@@ -197,7 +197,6 @@
 			"submitting": "Envoi en cours…",
 			"success": "Merci. Votre campagne a été soumise et sera examinée avant publication.",
 			"error": "Une erreur s'est produite. Veuillez réessayer.",
-			"program-placeholder": "Sélectionner un programme",
 			"currency-placeholder": "Sélectionner une devise",
 			"image-hint": "JPEG, PNG ou WebP jusqu'à 5 Mo.",
 			"continue": "Continuer",

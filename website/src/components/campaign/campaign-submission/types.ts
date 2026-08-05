@@ -21,7 +21,6 @@ export type SubmissionLabels = {
 	submitting: string;
 	success: string;
 	error: string;
-	programPlaceholder: string;
 	currencyPlaceholder: string;
 	imageHint: string;
 	continue: string;
