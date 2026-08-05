@@ -25,7 +25,6 @@ export type SubmissionLabels = {
 	continue: string;
 	back: string;
 	allCountries: string;
-	allPrograms: string;
 	recipientsCount: string;
 	details: string;
 	errors: Record<CampaignSubmissionErrorCode, string>;

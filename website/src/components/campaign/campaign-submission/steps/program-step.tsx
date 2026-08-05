@@ -8,8 +8,6 @@ import { ProgramCountryFilter, type ProgramCountryFilterOption } from '../progra
 import { ProgramOptionRow } from '../program-option-row';
 import type { CampaignSubmissionStepProps } from '../types';
 
-const SOCIAL_INCOME_ALL_PROGRAMS_OPTION_ID = 'social-income-all-programs';
-
 type Props = Pick<CampaignSubmissionStepProps, 'form' | 'labels' | 'programs' | 'programsError'>;
 
 export const ProgramStep = ({ form, labels, programs, programsError }: Props) => {
@@ -38,15 +36,6 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 		);
 	}, [programs]);
 
-	const allProgramsSummary = useMemo(() => {
-		const totalRecipients = programs.reduce((sum, program) => sum + program.recipientsCount, 0);
-		const countryIsoCodes = [
-			...new Map(programs.map((program) => [program.countryIsoCode, program.countryIsoCode] as const)).values(),
-		].sort((left, right) => getCountryNameByCode(left).localeCompare(getCountryNameByCode(right)));
-
-		return { totalRecipients, countryIsoCodes };
-	}, [programs]);
-
 	const filteredPrograms = useMemo(() => {
 		if (!selectedCountryId) {
 			return programs;
@@ -55,23 +44,12 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 		return programs.filter((program) => program.countryId === selectedCountryId);
 	}, [programs, selectedCountryId]);
 
-	const showAllProgramsOption = selectedCountryId === null && programs.length > 0;
-
 	const onCountryChange = (countryId: string | null) => {
 		setSelectedCountryId(countryId);
 		setExpandedProgramId(null);
 
 		const selectedProgramId = form.getValues('programId');
 		if (!selectedProgramId) {
-			return;
-		}
-
-		if (selectedProgramId === SOCIAL_INCOME_ALL_PROGRAMS_OPTION_ID) {
-			if (countryId !== null) {
-				form.setValue('programId', '');
-				form.clearErrors('programId');
-			}
-
 			return;
 		}
 
@@ -119,18 +97,6 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 								aria-label={labels.program}
 								aria-invalid={Boolean(fieldState.error)}
 							>
-								{showAllProgramsOption ? (
-									<ProgramOptionRow
-										value={SOCIAL_INCOME_ALL_PROGRAMS_OPTION_ID}
-										name={labels.allPrograms}
-										selected={field.value === SOCIAL_INCOME_ALL_PROGRAMS_OPTION_ID}
-										recipientsLabel={getRecipientsLabel(allProgramsSummary.totalRecipients)}
-										detailsLabel={labels.details}
-										countryIsoCodes={allProgramsSummary.countryIsoCodes}
-										expanded={expandedProgramId === SOCIAL_INCOME_ALL_PROGRAMS_OPTION_ID}
-										onDetailsToggle={() => onDetailsToggle(SOCIAL_INCOME_ALL_PROGRAMS_OPTION_ID)}
-									/>
-								) : null}
 								{filteredPrograms.map((program) => (
 									<ProgramOptionRow
 										key={program.id}

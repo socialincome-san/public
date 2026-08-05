@@ -76,7 +76,6 @@ export const CampaignsOverview = async ({
 		continue: translator.t('campaigns-page.submission.continue'),
 		back: translator.t('campaigns-page.submission.back'),
 		allCountries: translator.t('campaigns-page.submission.all-countries'),
-		allPrograms: translator.t('campaigns-page.submission.all-programs'),
 		recipientsCount: translator.t('campaigns-page.submission.recipients-count'),
 		details: translator.t('campaigns-page.submission.details'),
 		errors: submissionErrors,
