@@ -4,7 +4,7 @@ import { DetailsStep } from './steps/details-step';
 import { ProgramStep } from './steps/program-step';
 import type { CampaignSubmissionStepId, CampaignSubmissionStepProps } from './types';
 
-type Props = Omit<CampaignSubmissionStepProps, 'onContinue' | 'onBack' | 'isSubmitting'> & {
+type Props = CampaignSubmissionStepProps & {
 	currentStep: CampaignSubmissionStepId;
 };
 
