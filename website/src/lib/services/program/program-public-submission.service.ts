@@ -3,12 +3,25 @@ import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 
+export type PublicSubmissionProgramFocus = {
+	slug: string;
+	name: string;
+};
+
 export type PublicSubmissionProgramOption = {
 	id: string;
 	name: string;
+	slug: string;
 	countryId: string;
 	countryIsoCode: CountryCode;
 	recipientsCount: number;
+	description: string | null;
+	imageUrl: string | null;
+	tags: string[];
+};
+
+type EligibleProgramRow = Omit<PublicSubmissionProgramOption, 'description' | 'imageUrl' | 'tags'> & {
+	focuses: PublicSubmissionProgramFocus[];
 };
 
 export class ProgramPublicSubmissionService extends BaseService {
@@ -16,7 +29,7 @@ export class ProgramPublicSubmissionService extends BaseService {
 		super(db, loggerInstance);
 	}
 
-	async getEligibleProgramOptions(publishedPortalSlugs: string[]): Promise<ServiceResult<PublicSubmissionProgramOption[]>> {
+	async getEligibleProgramOptions(publishedPortalSlugs: string[]): Promise<ServiceResult<EligibleProgramRow[]>> {
 		try {
 			const normalizedSlugs = [...new Set(publishedPortalSlugs.map((slug) => slug.trim()).filter(Boolean))];
 			if (!normalizedSlugs.length) {
@@ -31,10 +44,21 @@ export class ProgramPublicSubmissionService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					slug: true,
 					countryId: true,
 					country: {
 						select: {
 							isoCode: true,
+						},
+					},
+					targetFocuses: {
+						select: {
+							focus: {
+								select: {
+									name: true,
+									slug: true,
+								},
+							},
 						},
 					},
 					_count: {
@@ -47,12 +71,17 @@ export class ProgramPublicSubmissionService extends BaseService {
 			});
 
 			return this.resultOk(
-				programs.map(({ id, name, countryId, country, _count }) => ({
+				programs.map(({ id, name, slug, countryId, country, targetFocuses, _count }) => ({
 					id,
 					name,
+					slug,
 					countryId,
 					countryIsoCode: country.isoCode,
 					recipientsCount: _count.recipients,
+					focuses: targetFocuses.map(({ focus }) => ({
+						slug: focus.slug,
+						name: focus.name,
+					})),
 				})),
 			);
 		} catch (error) {

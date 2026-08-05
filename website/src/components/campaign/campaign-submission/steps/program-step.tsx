@@ -14,6 +14,7 @@ type Props = Pick<CampaignSubmissionStepProps, 'form' | 'labels' | 'programs' | 
 
 export const ProgramStep = ({ form, labels, programs, programsError }: Props) => {
 	const [selectedCountryId, setSelectedCountryId] = useState<string | null>(null);
+	const [expandedProgramId, setExpandedProgramId] = useState<string | null>(null);
 
 	const countryOptions = useMemo((): ProgramCountryFilterOption[] => {
 		const countsByCountryId = new Map<string, ProgramCountryFilterOption>();
@@ -58,6 +59,7 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 
 	const onCountryChange = (countryId: string | null) => {
 		setSelectedCountryId(countryId);
+		setExpandedProgramId(null);
 
 		const selectedProgramId = form.getValues('programId');
 		if (!selectedProgramId) {
@@ -81,6 +83,10 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 			form.setValue('programId', '');
 			form.clearErrors('programId');
 		}
+	};
+
+	const onDetailsToggle = (programId: string) => {
+		setExpandedProgramId((current) => (current === programId ? null : programId));
 	};
 
 	const getRecipientsLabel = (count: number) => labels.recipientsCount.replace('{{count}}', String(count));
@@ -121,6 +127,8 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 										recipientsLabel={getRecipientsLabel(allProgramsSummary.totalRecipients)}
 										detailsLabel={labels.details}
 										countryIsoCodes={allProgramsSummary.countryIsoCodes}
+										expanded={expandedProgramId === SOCIAL_INCOME_ALL_PROGRAMS_OPTION_ID}
+										onDetailsToggle={() => onDetailsToggle(SOCIAL_INCOME_ALL_PROGRAMS_OPTION_ID)}
 									/>
 								) : null}
 								{filteredPrograms.map((program) => (
@@ -132,6 +140,11 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 										recipientsLabel={getRecipientsLabel(program.recipientsCount)}
 										detailsLabel={labels.details}
 										countryIsoCodes={[program.countryIsoCode]}
+										expanded={expandedProgramId === program.id}
+										onDetailsToggle={() => onDetailsToggle(program.id)}
+										description={program.description}
+										imageUrl={program.imageUrl}
+										tags={program.tags}
 									/>
 								))}
 							</RadioGroup>

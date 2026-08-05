@@ -8,6 +8,7 @@ import {
 	isCampaignSubmissionErrorCode,
 	validateCampaignSubmissionImageMeta,
 } from '@/lib/services/campaign/campaign-submission-input';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
@@ -18,10 +19,11 @@ import type { CampaignSubmissionFormValues, CampaignSubmissionStepId, Submission
 
 type Props = {
 	labels: SubmissionLabels;
+	lang: WebsiteLanguage;
 	onSuccess?: () => void;
 };
 
-export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
+export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [currentStep, setCurrentStep] = useState<CampaignSubmissionStepId>('program');
 	const [programs, setPrograms] = useState<PublicSubmissionProgramOption[]>([]);
 	const [programsError, setProgramsError] = useState<string | null>(null);
@@ -65,7 +67,7 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 		let cancelled = false;
 
 		const loadPrograms = async () => {
-			const result = await getEligiblePublicSubmissionProgramsAction();
+			const result = await getEligiblePublicSubmissionProgramsAction(lang);
 			if (cancelled) {
 				return;
 			}
@@ -85,7 +87,7 @@ export const CampaignSubmissionForm = ({ labels, onSuccess }: Props) => {
 		return () => {
 			cancelled = true;
 		};
-	}, [labels.error]);
+	}, [labels.error, lang]);
 
 	const onImageChange = (file: File | null) => {
 		setPrimaryImage(file);

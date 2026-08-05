@@ -3,15 +3,17 @@
 import { Button } from '@/components/button';
 import { CampaignSubmissionForm, type SubmissionLabels } from '@/components/campaign/campaign-submission-form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { useState } from 'react';
 
 type Props = {
 	label: string;
 	dialogTitle: string;
 	labels: SubmissionLabels;
+	lang: WebsiteLanguage;
 };
 
-export const CreateCampaignButton = ({ label, dialogTitle, labels }: Props) => {
+export const CreateCampaignButton = ({ label, dialogTitle, labels, lang }: Props) => {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -27,7 +29,7 @@ export const CreateCampaignButton = ({ label, dialogTitle, labels }: Props) => {
 					<DialogHeader className="shrink-0">
 						<DialogTitle>{dialogTitle}</DialogTitle>
 					</DialogHeader>
-					<CampaignSubmissionForm labels={labels} />
+					<CampaignSubmissionForm labels={labels} lang={lang} />
 				</DialogContent>
 			</Dialog>
 		</>

@@ -97,6 +97,7 @@ export const CampaignsOverview = async ({
 						label={translator.t('campaigns-page.create-campaign')}
 						dialogTitle={translator.t('campaigns-page.submission.dialog-title')}
 						labels={submissionLabels}
+						lang={lang}
 					/>
 				</div>
 			) : null}
