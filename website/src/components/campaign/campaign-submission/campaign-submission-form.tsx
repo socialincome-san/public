@@ -216,7 +216,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		return (
 			<div className="flex min-h-0 flex-1 flex-col">
 				<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left">
-					<DialogTitle className="text-balance leading-snug">{labels.detailsStepTitle}</DialogTitle>
+					<DialogTitle className="leading-snug text-balance">{labels.detailsStepTitle}</DialogTitle>
 				</DialogHeader>
 				<p className="text-foreground px-6 text-sm">{labels.success}</p>
 			</div>
@@ -252,7 +252,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 					<CampaignSubmissionStepIndicator currentStep={currentStep} variant="bars" className="min-w-0 flex-1" />
 				</div>
 				<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left max-sm:border-b-0 max-sm:pt-4 max-sm:pb-0">
-					<DialogTitle className="text-balance leading-snug">{stepTitle}</DialogTitle>
+					<DialogTitle className="leading-snug text-balance">{stepTitle}</DialogTitle>
 				</DialogHeader>
 				<div className="flex min-h-0 flex-1 flex-col overflow-hidden pt-4 pb-4">
 					<CampaignSubmissionSteps

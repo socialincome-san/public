@@ -182,11 +182,7 @@ export const ProgramOptionRow = ({
 									{tags.length > 0 ? (
 										<div className="flex flex-wrap items-center gap-2">
 											{tags.map((tag) => (
-												<Badge
-													key={tag}
-													variant="default"
-													className="border-transparent px-3 py-1.5 text-xs font-medium"
-												>
+												<Badge key={tag} variant="default" className="border-transparent px-3 py-1.5 text-xs font-medium">
 													{tag}
 												</Badge>
 											))}
