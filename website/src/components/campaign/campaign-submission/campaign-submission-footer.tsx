@@ -27,7 +27,7 @@ export const CampaignSubmissionFooter = ({
 	const isLastStep = currentStep === 'details';
 
 	return (
-		<div className="flex items-center justify-between gap-4 border-t pt-4">
+		<div className="flex items-center justify-between gap-4 border-t px-6 pt-4">
 			<div className="flex min-w-0 flex-1 justify-start">
 				{!isFirstStep ? (
 					<Button type="button" variant="outline" onClick={onBack}>

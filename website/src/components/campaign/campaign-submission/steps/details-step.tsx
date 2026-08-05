@@ -32,7 +32,7 @@ export const DetailsStep = ({
 	submitError,
 }: Props) => {
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex flex-col gap-4 px-6">
 			<FormField
 				control={form.control}
 				name="title"

@@ -95,7 +95,7 @@ export const ProgramOptionRow = ({
 			ref={rowRef}
 			data-testid={`program-option-${value}`}
 			className={cn(
-				'border-border hover:bg-muted/30 border-b px-1 transition-colors last:border-b-0',
+				'border-border hover:bg-muted/30 border-b px-6 transition-colors last:border-b-0',
 				selected && 'bg-muted/20',
 				expanded && hasExpandableDetails ? 'flex flex-col gap-6 pt-4 pb-6' : null,
 			)}
@@ -103,14 +103,18 @@ export const ProgramOptionRow = ({
 			<div className={cn('flex items-center gap-3', !(expanded && hasExpandableDetails) && 'py-4')}>
 				<label className="flex min-w-0 flex-1 cursor-pointer items-center gap-3">
 					<RadioGroupItem value={value} className="shrink-0" />
-					<span className="text-foreground min-w-0 flex-1 truncate text-base font-medium">{name}</span>
-					<span className="text-foreground shrink-0 text-sm">{recipientsLabel}</span>
-					<span className="flex shrink-0 items-center -space-x-1">
-						{countryIsoCodes.map((countryIsoCode) => (
-							<span key={countryIsoCode} className="ring-background inline-flex rounded-full ring-2">
-								<CountryFlag country={countryIsoCode} size="sm" />
+					<span className="flex min-w-0 flex-1 flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-3">
+						<span className="text-foreground min-w-0 truncate text-base font-medium sm:flex-1">{name}</span>
+						<span className="flex shrink-0 items-center gap-2">
+							<span className="text-foreground text-sm">{recipientsLabel}</span>
+							<span className="flex items-center -space-x-1">
+								{countryIsoCodes.map((countryIsoCode) => (
+									<span key={countryIsoCode} className="ring-background inline-flex rounded-full ring-2">
+										<CountryFlag country={countryIsoCode} size="sm" />
+									</span>
+								))}
 							</span>
-						))}
+						</span>
 					</span>
 				</label>
 				{hasExpandableDetails ? (
@@ -138,12 +142,18 @@ export const ProgramOptionRow = ({
 			{hasExpandableDetails && expanded ? (
 				<div
 					id={detailsContentId}
-					className="flex flex-col gap-6 pl-7 sm:flex-row sm:items-start"
+					className="flex flex-col gap-6 sm:flex-row sm:items-start sm:pl-7"
 					data-testid={`program-details-${value}`}
 				>
 					{imageUrl ? (
-						<div className="relative h-[140px] w-full max-w-[248px] shrink-0 overflow-hidden rounded-md">
-							<NextImage src={imageUrl} alt={name} fill className="object-cover" sizes="248px" />
+						<div className="relative h-[160px] w-full overflow-hidden rounded-md sm:h-[140px] sm:max-w-[248px] sm:shrink-0">
+							<NextImage
+								src={imageUrl}
+								alt={name}
+								fill
+								className="object-cover"
+								sizes="(max-width: 639px) 100vw, 248px"
+							/>
 						</div>
 					) : null}
 					<div className="flex min-w-0 flex-1 flex-col gap-4">

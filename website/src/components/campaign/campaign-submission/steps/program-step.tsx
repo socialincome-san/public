@@ -94,7 +94,7 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 	return (
 		<div className="flex min-h-0 flex-1 flex-col gap-4">
 			{countryOptions.length > 0 ? (
-				<div className="shrink-0">
+				<div className="shrink-0 px-6">
 					<ProgramCountryFilter
 						allCountriesLabel={labels.allCountries}
 						options={countryOptions}
@@ -108,14 +108,14 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 				name="programId"
 				render={({ field, fieldState }) => (
 					<FormItem className="flex min-h-0 flex-1 flex-col gap-0">
-						<div className="border-border min-h-0 flex-1 overflow-y-auto rounded-lg border">
+						<div className="min-h-0 flex-1 overflow-y-auto">
 							<RadioGroup
 								value={field.value || undefined}
 								onValueChange={(value) => {
 									field.onChange(value);
 									form.clearErrors('programId');
 								}}
-								className="gap-0 px-3"
+								className="gap-0"
 								aria-label={labels.program}
 								aria-invalid={Boolean(fieldState.error)}
 							>
@@ -149,8 +149,10 @@ export const ProgramStep = ({ form, labels, programs, programsError }: Props) =>
 								))}
 							</RadioGroup>
 						</div>
-						{fieldState.error ? <p className="text-destructive mt-2 shrink-0 text-sm">{fieldState.error.message}</p> : null}
-						{programsError ? <p className="text-destructive mt-2 shrink-0 text-sm">{programsError}</p> : null}
+						{fieldState.error ? (
+							<p className="text-destructive mt-2 shrink-0 px-6 text-sm">{fieldState.error.message}</p>
+						) : null}
+						{programsError ? <p className="text-destructive mt-2 shrink-0 px-6 text-sm">{programsError}</p> : null}
 					</FormItem>
 				)}
 			/>
