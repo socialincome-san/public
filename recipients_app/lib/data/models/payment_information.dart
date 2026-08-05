@@ -8,9 +8,8 @@ part "payment_information.mapper.dart";
 @MappableClass()
 class PaymentInformation with PaymentInformationMappable {
   final String id;
-  final String mobileMoneyProviderId;
-  final MobileMoneyProvider mobileMoneyProvider;
-  final String code;
+  final String? mobileMoneyProviderId;
+  final MobileMoneyProvider? mobileMoneyProvider;
   final String phoneId;
   final Phone phone;
   @MappableField(hook: DateTimeHook())
@@ -20,12 +19,11 @@ class PaymentInformation with PaymentInformationMappable {
 
   const PaymentInformation({
     required this.id,
-    required this.mobileMoneyProviderId,
-    required this.mobileMoneyProvider,
-    required this.code,
     required this.phoneId,
     required this.phone,
     required this.createdAt,
+    this.mobileMoneyProviderId,
+    this.mobileMoneyProvider,
     this.updatedAt,
   });
 }
