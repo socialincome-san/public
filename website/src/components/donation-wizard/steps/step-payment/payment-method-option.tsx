@@ -3,7 +3,6 @@
 import { Badge } from '@/components/badge';
 import { SelectableCard } from '@/components/selectable-card';
 import { cn } from '@/lib/utils/cn';
-import { Smile } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 type Props = {
@@ -44,7 +43,6 @@ export const PaymentMethodOption = ({
 					{badge && (
 						<Badge variant="verified" className="shrink-0 gap-0.5 px-2 py-0.5 text-[10px]">
 							{badge}
-							<Smile className="size-2.5" aria-hidden />
 						</Badge>
 					)}
 				</div>

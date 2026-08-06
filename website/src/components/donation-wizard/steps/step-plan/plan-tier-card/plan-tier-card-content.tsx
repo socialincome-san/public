@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/badge';
 import { cn } from '@/lib/utils/cn';
-import { Check, Heart, Smile } from 'lucide-react';
+import { Check, Heart } from 'lucide-react';
 import type { PlanTierBenefit } from './plan-tier-benefit';
 
 type Props = {
@@ -36,7 +36,7 @@ export const PlanTierCardContent = ({
 					className="gap-0.5 px-2 py-0.5 text-[10px] sm:ml-auto"
 				>
 					{planLabel}
-					{badgeVariant === 'preferred' && <Smile className="size-2.5" aria-hidden />}
+
 					{badgeVariant === 'plan' &&
 						Array.from({ length: heartCount }).map((_, index) => (
 							<Heart key={index} className="size-2 fill-current" aria-hidden />
