@@ -1,5 +1,6 @@
 import { SectionHeading } from '@/components/section-heading';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import Image from 'next/image';
 import { expect } from 'storybook/test';
 import { Avatar, AvatarFallback } from '../components/avatar';
 
@@ -78,10 +79,13 @@ export const WithContent: Story = {
 						<span className="font-semibold text-slate-800">Sandino Scheidegger</span>
 					</div>
 				</div>
-				<img
+
+				<Image
 					src="https://a.storyblok.com/f/109655/3000x2001/0b43ecee20/alligator-crocodile.jpg/m/640x524/filters:focal(380x1154:381x1155):format(webp)"
 					alt="Alligator"
-					className="w-80 rounded-2xl object-cover"
+					width={300}
+					height={200}
+					className="rounded-2xl object-cover"
 				/>
 			</div>
 		),
