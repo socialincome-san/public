@@ -117,6 +117,7 @@
 		"continue": "Continue",
 		"referral": {
 			"question": "How did you find us?",
+			"description": "This helps us understand what works so we can spend less on outreach and more on impact.",
 			"skip": "Skip",
 			"submit": "Send Feedback",
 			"submitting": "Saving…",

@@ -117,6 +117,7 @@
 		"continue": "Weiter",
 		"referral": {
 			"question": "Wie hast du von uns erfahren?",
+			"description": "Das hilft uns zu verstehen, was wirkt, damit wir weniger für Outreach und mehr für Wirkung ausgeben können.",
 			"skip": "Überspringen",
 			"submit": "Feedback senden",
 			"submitting": "Wird gespeichert…",

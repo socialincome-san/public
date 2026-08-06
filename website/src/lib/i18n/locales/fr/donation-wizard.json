@@ -117,6 +117,7 @@
 		"continue": "Continuer",
 		"referral": {
 			"question": "Comment as-tu entendu parler de nous ?",
+			"description": "Cela nous aide à comprendre ce qui fonctionne pour dépenser moins en sensibilisation et plus pour l'impact.",
 			"skip": "Ignorer",
 			"submit": "Envoyer le feedback",
 			"submitting": "Enregistrement…",

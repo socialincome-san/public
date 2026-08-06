@@ -117,6 +117,7 @@
 		"continue": "Continua",
 		"referral": {
 			"question": "Come hai scoperto Social Income?",
+			"description": "Questo ci aiuta a capire cosa funziona, così possiamo spendere meno in outreach e più per l'impatto.",
 			"skip": "Salta",
 			"submit": "Invia feedback",
 			"submitting": "Salvataggio…",

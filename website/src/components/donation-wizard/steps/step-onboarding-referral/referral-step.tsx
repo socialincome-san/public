@@ -93,7 +93,10 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 
 			<div className="bg-background border-border flex flex-col gap-5 overflow-hidden rounded-3xl border px-0 pb-7">
 				<div className="border-border grid gap-6 border-b p-6 sm:grid-cols-[minmax(0,1fr)_minmax(220px,1fr)]">
-					<p className="text-foreground text-base leading-none font-medium">{t('onboarding.referral.question')}</p>
+					<div className="flex flex-col gap-2">
+						<p className="text-foreground text-base leading-none font-medium">{t('onboarding.referral.question')}</p>
+						<p className="text-muted-foreground text-sm leading-normal">{t('onboarding.referral.description')}</p>
+					</div>
 					<RadioGroup
 						value={selectedReferral}
 						onValueChange={(value) => {
