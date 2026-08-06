@@ -110,9 +110,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 				>
 					{isPostCheckoutStep ? (
 						<>
-							<DialogTitle className="sr-only">
-								{isThankYou ? t('thankYou.message') : t('onboarding.accountCreatedDescription')}
-							</DialogTitle>
+							<DialogTitle className="sr-only">{t('thankYou.message')}</DialogTitle>
 							<div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
 								<DonationSteps state={state} send={send} />
 							</div>
@@ -127,7 +125,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 									{showCurrencySelector ? (
 										<DonationCurrencySelector
 											currencies={websiteCurrencies}
-											className="border-input h-9 w-[4.75rem] shrink-0 self-center rounded-full px-2.5"
+											className="border-input w-[4.75rem] shrink-0 px-2.5"
 										/>
 									) : null}
 								</div>

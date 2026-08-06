@@ -30,7 +30,9 @@ export const PlanTierCardContent = ({
 				<span className="text-lg leading-none font-medium whitespace-nowrap">
 					{currency} {amount}
 				</span>
-				{perMonthLabel ? <span className="text-muted-foreground text-sm leading-none whitespace-nowrap">{perMonthLabel}</span> : null}
+				{perMonthLabel ? (
+					<span className="text-muted-foreground text-sm leading-none whitespace-nowrap">{perMonthLabel}</span>
+				) : null}
 			</div>
 			{planLabel ? (
 				<Badge

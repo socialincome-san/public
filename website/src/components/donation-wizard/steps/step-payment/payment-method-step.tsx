@@ -31,7 +31,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div
-			className={cn(getDonationWizardCardClass('stepPayment'), 'text-foreground flex w-full min-w-0 max-w-full flex-col')}
+			className={cn(getDonationWizardCardClass('stepPayment'), 'text-foreground flex w-full max-w-full min-w-0 flex-col')}
 			data-testid="donation-wizard-step-payment"
 		>
 			<h3 className="mb-4 text-base font-medium sm:text-lg">{t('stepPayment.title')}</h3>
@@ -72,11 +72,21 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 				onBack={() => send({ type: 'BACK' })}
 				onContinue={() => {
 					if (view.paymentMethod === 'online') {
+						const checkoutContext = {
+							...state.context,
+							paymentMethod: 'online' as const,
+							coverTransactionCosts: view.coverTransactionCosts,
+						};
+
 						if (state.context.paymentMethod !== 'online') {
 							send({ type: 'SET_PAYMENT_METHOD', value: 'online' });
 						}
+						if (state.context.coverTransactionCosts !== view.coverTransactionCosts) {
+							send({ type: 'SET_COVER_TRANSACTION_COSTS', value: view.coverTransactionCosts });
+						}
+
 						send({ type: 'START_STRIPE_CHECKOUT' });
-						void requestStripeEmbeddedCheckout({ ...state.context, paymentMethod: 'online' }, currency, send);
+						void requestStripeEmbeddedCheckout(checkoutContext, currency, send);
 
 						return;
 					}

@@ -46,9 +46,7 @@ export const OnboardingPersonalForm = ({
 				onSubmit={form.handleSubmit(onSubmit)}
 			>
 				<div className="border-border flex flex-col gap-6 border-b p-6 lg:flex-row lg:gap-6">
-					<p className="text-foreground shrink-0 text-base leading-none font-medium lg:w-1/2">
-						{t('onboarding.isThisYou')}
-					</p>
+					<p className="text-foreground shrink-0 text-base leading-none font-medium lg:w-1/2">{t('onboarding.isThisYou')}</p>
 					<div className="flex min-w-0 flex-1 flex-col gap-7">
 						<FormField
 							control={form.control}

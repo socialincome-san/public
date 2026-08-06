@@ -1,5 +1,5 @@
-import type { LanguageCode } from '@/lib/types/language';
 import { resolveWizardPaymentMethod } from '@/lib/services/qr-bill/wizard-qr-payment';
+import type { LanguageCode } from '@/lib/types/language';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import type { PlanTierBenefit } from '../steps/step-plan/plan-tier-card/plan-tier-benefit';
 import {
@@ -132,9 +132,7 @@ export const selectOneTimePlanView = (context: DonationWizardContext) => {
 };
 
 export const selectPaymentView = (context: DonationWizardContext, currency?: string) => {
-	const paymentMethod = currency
-		? resolveWizardPaymentMethod(context.paymentMethod, currency)
-		: context.paymentMethod;
+	const paymentMethod = currency ? resolveWizardPaymentMethod(context.paymentMethod, currency) : context.paymentMethod;
 	const effectiveContext: DonationWizardContext =
 		paymentMethod === context.paymentMethod
 			? context

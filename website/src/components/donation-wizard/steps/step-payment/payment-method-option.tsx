@@ -32,7 +32,7 @@ export const PaymentMethodOption = ({
 		disabled={disabled}
 		testId={testId}
 		className={cn(
-			'flex w-full min-w-0 max-w-full flex-col gap-2 p-3 sm:min-h-16 sm:justify-center sm:p-4',
+			'flex w-full max-w-full min-w-0 flex-col gap-2 p-3 sm:min-h-16 sm:justify-center sm:p-4',
 			!selected && !disabled && 'hover:bg-muted/50',
 		)}
 	>
@@ -50,7 +50,7 @@ export const PaymentMethodOption = ({
 					<p className="text-muted-foreground min-w-0 text-sm leading-snug break-words">{disabledReason}</p>
 				) : null}
 			</div>
-			{trailing ? <div className="min-w-0 max-w-full">{trailing}</div> : null}
+			{trailing ? <div className="max-w-full min-w-0">{trailing}</div> : null}
 		</div>
 	</SelectableCard>
 );

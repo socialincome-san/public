@@ -52,8 +52,11 @@ export const QrBillPdfDownloadLink = ({
 			const link = document.createElement('a');
 			link.href = url;
 			link.download = result.data.filename;
+			link.rel = 'noopener';
+			document.body.append(link);
 			link.click();
-			URL.revokeObjectURL(url);
+			link.remove();
+			window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
 		} catch {
 			toast.error(t('stepQrBill.downloadPdfError'));
 		} finally {
