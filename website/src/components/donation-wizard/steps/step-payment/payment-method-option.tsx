@@ -32,12 +32,12 @@ export const PaymentMethodOption = ({
 		disabled={disabled}
 		testId={testId}
 		className={cn(
-			'flex w-full flex-col gap-3 p-3 sm:h-16 sm:flex-row sm:items-center sm:p-4',
+			'flex w-full min-w-0 max-w-full flex-col gap-2 p-3 sm:min-h-16 sm:justify-center sm:p-4',
 			!selected && !disabled && 'hover:bg-muted/50',
 		)}
 	>
-		<div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-			<div className="flex min-w-0 flex-1 flex-col gap-1">
+		<div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-2">
+			<div className="flex min-w-0 flex-col gap-1">
 				<div className="flex min-w-0 flex-wrap items-center gap-2">
 					<span className="text-base leading-snug font-medium sm:text-lg sm:leading-none">{label}</span>
 					{badge && (
@@ -46,9 +46,11 @@ export const PaymentMethodOption = ({
 						</Badge>
 					)}
 				</div>
-				{disabledReason ? <p className="text-muted-foreground text-sm leading-snug">{disabledReason}</p> : null}
+				{disabledReason ? (
+					<p className="text-muted-foreground min-w-0 text-sm leading-snug break-words">{disabledReason}</p>
+				) : null}
 			</div>
-			{trailing && <div className="flex shrink-0 items-center justify-start sm:justify-end">{trailing}</div>}
+			{trailing ? <div className="min-w-0 max-w-full">{trailing}</div> : null}
 		</div>
 	</SelectableCard>
 );

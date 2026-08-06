@@ -11,7 +11,7 @@ export const DonationWizard = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div className="flex min-h-0 flex-1 flex-col overflow-hidden" role="region" aria-label="Donation wizard">
-			<div className="flex-1 overflow-y-auto overscroll-contain px-4 pb-6 sm:px-6 sm:pb-9 md:px-9">
+			<div className="flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-4 pb-6 sm:px-6 sm:pb-9 md:px-9">
 				<div className="mx-auto flex w-full max-w-[890px] flex-col items-stretch gap-8 md:flex-row md:items-start">
 					<div className={shell.columnClass}>
 						<DonationSteps state={state} send={send} />

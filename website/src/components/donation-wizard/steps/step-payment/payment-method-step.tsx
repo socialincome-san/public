@@ -23,7 +23,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<div
-			className={cn(getDonationWizardCardClass('stepPayment'), 'text-foreground flex w-full flex-col')}
+			className={cn(getDonationWizardCardClass('stepPayment'), 'text-foreground flex w-full min-w-0 max-w-full flex-col')}
 			data-testid="donation-wizard-step-payment"
 		>
 			<h3 className="mb-4 text-base font-medium sm:text-lg">{t('stepPayment.title')}</h3>

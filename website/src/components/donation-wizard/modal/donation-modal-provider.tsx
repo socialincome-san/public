@@ -102,7 +102,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 					onCloseClick={requestClose}
 					data-testid="donation-wizard-modal"
 					className={cn(
-						'!flex flex-col gap-0 overflow-hidden overscroll-contain !p-0',
+						'!flex min-w-0 flex-col gap-0 overflow-hidden overscroll-contain !p-0',
 						isNarrowModal
 							? 'sm:max-h-[90dvh] sm:min-h-[200px] sm:w-[min(474px,90vw)] sm:max-w-[474px]'
 							: 'sm:max-h-[90dvh] sm:w-[min(890px,90vw)] sm:max-w-[890px]',
