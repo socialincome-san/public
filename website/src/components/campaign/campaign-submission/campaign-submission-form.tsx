@@ -223,6 +223,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	}, [currentStep]);
 
 	const isContinueDisabled = programsLoading || programs.length === 0 || Boolean(programsError);
+	const isSubmitDisabled =
+		isSubmitting || (defaultImagesLoading && imageSelection?.type !== 'upload');
 
 	const onSelectDefaultImage = (id: number) => {
 		revokeUploadPreview();
@@ -296,6 +298,10 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 
 	const onSubmit = async (values: CampaignSubmissionFormValues) => {
 		if (isSubmittingRef.current) {
+			return;
+		}
+
+		if (defaultImagesLoading && imageSelection?.type !== 'upload') {
 			return;
 		}
 
@@ -401,6 +407,10 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	};
 
 	const submitDetails = () => {
+		if (defaultImagesLoading && imageSelection?.type !== 'upload') {
+			return;
+		}
+
 		if (!imageSelection) {
 			setImageError(resolveError('image-required'));
 			void form.trigger();
@@ -457,6 +467,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 						currentStep={currentStep}
 						labels={labels}
 						isContinueDisabled={isContinueDisabled}
+						isSubmitDisabled={isSubmitDisabled}
 						isSubmitting={isSubmitting}
 						onContinue={onContinue}
 						onBack={onBack}
