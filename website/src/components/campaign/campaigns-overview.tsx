@@ -59,6 +59,8 @@ export const CampaignsOverview = async ({
 		]),
 	) as Record<CampaignSubmissionErrorCode, string>;
 	const submissionLabels = {
+		programStepTitle: translator.t('campaigns-page.submission.program-step-title'),
+		detailsStepTitle: translator.t('campaigns-page.submission.details-step-title'),
 		title: translator.t('campaigns-page.submission.title'),
 		description: translator.t('campaigns-page.submission.description'),
 		goal: translator.t('campaigns-page.submission.goal'),
@@ -68,11 +70,21 @@ export const CampaignsOverview = async ({
 		primaryImage: translator.t('campaigns-page.submission.primary-image'),
 		submit: translator.t('campaigns-page.submission.submit'),
 		submitting: translator.t('campaigns-page.submission.submitting'),
+		successTitle: translator.t('campaigns-page.submission.success-title'),
 		success: translator.t('campaigns-page.submission.success'),
 		error: translator.t('campaigns-page.submission.error'),
-		programPlaceholder: translator.t('campaigns-page.submission.program-placeholder'),
 		currencyPlaceholder: translator.t('campaigns-page.submission.currency-placeholder'),
 		imageHint: translator.t('campaigns-page.submission.image-hint'),
+		continue: translator.t('campaigns-page.submission.continue'),
+		back: translator.t('campaigns-page.submission.back'),
+		allCountries: translator.t('campaigns-page.submission.all-countries'),
+		filterByCountry: translator.t('campaigns-page.submission.filter-by-country'),
+		formSteps: translator.t('campaigns-page.submission.form-steps'),
+		stepLabel: translator.t('campaigns-page.submission.step-label'),
+		recipientsCount: translator.t('campaigns-page.submission.recipients-count'),
+		details: translator.t('campaigns-page.submission.details'),
+		programsLoading: translator.t('campaigns-page.submission.programs-loading'),
+		programsEmpty: translator.t('campaigns-page.submission.programs-empty'),
 		errors: submissionErrors,
 	};
 
@@ -89,8 +101,8 @@ export const CampaignsOverview = async ({
 					/>
 					<CreateCampaignButton
 						label={translator.t('campaigns-page.create-campaign')}
-						dialogTitle={translator.t('campaigns-page.submission.dialog-title')}
 						labels={submissionLabels}
+						lang={lang}
 					/>
 				</div>
 			) : null}

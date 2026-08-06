@@ -1,6 +1,4 @@
-import { getProgramPortalSlug } from '@/components/storyblok/program/program.utils';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { defaultLanguage } from '@/lib/i18n/utils';
 import {
 	isCampaignSubmissionErrorCode,
 	parseCampaignSubmissionFields,
@@ -15,15 +13,6 @@ export const runtime = 'nodejs';
 
 const errorResponse = (errorCode: CampaignSubmissionErrorCode, status: number) =>
 	NextResponse.json({ errorCode }, { status });
-
-const getPublishedProgramPortalSlugs = async (): Promise<string[]> => {
-	const programsResult = await services.storyblok.getPrograms(defaultLanguage);
-	if (!programsResult.success) {
-		return [];
-	}
-
-	return [...new Set(programsResult.data.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
-};
 
 export const POST = async (request: NextRequest) => {
 	let formData: FormData;
@@ -53,12 +42,10 @@ export const POST = async (request: NextRequest) => {
 		return errorResponse(imageResult.error, 400);
 	}
 
-	const publishedProgramPortalSlugs = await getPublishedProgramPortalSlugs();
-	const submissionResult = await services.campaignSubmission.submit(
-		fieldsResult.data,
-		{ ...imageResult.data, buffer: imageBuffer },
-		publishedProgramPortalSlugs,
-	);
+	const submissionResult = await services.campaignSubmission.submit(fieldsResult.data, {
+		...imageResult.data,
+		buffer: imageBuffer,
+	});
 
 	if (!submissionResult.success) {
 		const errorCode = isCampaignSubmissionErrorCode(submissionResult.error) ? submissionResult.error : 'submission-failed';

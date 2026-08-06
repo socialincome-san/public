@@ -1,6 +1,7 @@
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { addDays, format, startOfDay } from 'date-fns';
 import {
+	createCampaignSubmissionFormSchema,
 	parseCampaignSubmissionFields,
 	validateCampaignSubmissionEndDate,
 	validateCampaignSubmissionImageBuffer,
@@ -104,5 +105,38 @@ describe('campaign-submission-input', () => {
 		const result = validateCampaignSubmissionImageBuffer(pngHeader, 'image/png', 'cover.png');
 
 		expect(result.success).toBe(true);
+	});
+
+	test('parseCampaignSubmissionFields rejects a blank programId', () => {
+		const formData = new FormData();
+		formData.set('title', 'Campaign');
+		formData.set('description', 'Description');
+		formData.set('goal', '100');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', validEndDateString());
+		formData.set('programId', '   ');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('program-required');
+		}
+	});
+
+	test('createCampaignSubmissionFormSchema requires a non-blank programId', () => {
+		const schema = createCampaignSubmissionFormSchema((code) => code);
+		const result = schema.safeParse({
+			title: 'Campaign',
+			description: 'Description',
+			goal: 100,
+			currency: 'CHF',
+			endDate: validEndDateString(),
+			programId: '   ',
+		});
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error.issues[0]?.message).toBe('program-required');
+		}
 	});
 });
