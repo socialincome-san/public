@@ -103,7 +103,7 @@
 	"onboarding": {
 		"successTitle": "Spende erfolgreich",
 		"accountCreatedDescription": "Wir haben soeben ein Konto für dich erstellt. Bitte überprüfe deine Angaben.",
-		"isThisYou": "Bist du das?",
+		"isThisYou": "Bitte überprüfe deine Kontodaten",
 		"firstName": "Vorname",
 		"lastName": "Nachname",
 		"email": "E-Mail",

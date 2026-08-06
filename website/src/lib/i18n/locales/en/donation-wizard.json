@@ -103,7 +103,7 @@
 	"onboarding": {
 		"successTitle": "Donation successful",
 		"accountCreatedDescription": "We have just created an account for you. Please check your details.",
-		"isThisYou": "Is this you?",
+		"isThisYou": "Please review your account details",
 		"firstName": "First Name",
 		"lastName": "Last Name",
 		"email": "E-Mail",

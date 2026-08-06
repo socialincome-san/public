@@ -103,7 +103,7 @@
 	"onboarding": {
 		"successTitle": "Don réussi",
 		"accountCreatedDescription": "Nous venons de créer un compte pour toi. Vérifie tes informations.",
-		"isThisYou": "Est-ce bien toi ?",
+		"isThisYou": "Vérifie tes informations de compte",
 		"firstName": "Prénom",
 		"lastName": "Nom",
 		"email": "E-mail",
