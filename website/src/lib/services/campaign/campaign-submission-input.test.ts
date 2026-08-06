@@ -2,6 +2,8 @@ import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.confi
 import { addDays, format, startOfDay } from 'date-fns';
 import {
 	createCampaignSubmissionFormSchema,
+	endDateFromDurationPreset,
+	parseCampaignSubmissionDefaultImageId,
 	parseCampaignSubmissionFields,
 	validateCampaignSubmissionEndDate,
 	validateCampaignSubmissionImageBuffer,
@@ -19,6 +21,7 @@ describe('campaign-submission-input', () => {
 		formData.set('currency', 'chf');
 		formData.set('endDate', validEndDateString());
 		formData.set('programId', 'program-1');
+		formData.set('public', 'true');
 
 		const result = parseCampaignSubmissionFields(formData);
 		expect(result.success).toBe(true);
@@ -26,6 +29,25 @@ describe('campaign-submission-input', () => {
 			expect(result.data.title).toBe('My Campaign');
 			expect(result.data.currency).toBe('CHF');
 			expect(result.data.goal).toBe(1000);
+			expect(result.data.public).toBe(true);
+		}
+	});
+
+	test('parseCampaignSubmissionFields accepts empty goal as null', () => {
+		const formData = new FormData();
+		formData.set('title', 'Campaign');
+		formData.set('description', 'Description');
+		formData.set('goal', '');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', validEndDateString());
+		formData.set('programId', 'program-1');
+		formData.set('public', 'false');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.goal).toBeNull();
+			expect(result.data.public).toBe(false);
 		}
 	});
 
@@ -123,20 +145,37 @@ describe('campaign-submission-input', () => {
 		}
 	});
 
-	test('createCampaignSubmissionFormSchema requires a non-blank programId', () => {
+	test('parseCampaignSubmissionDefaultImageId validates positive integers', () => {
+		expect(parseCampaignSubmissionDefaultImageId('42').success).toBe(true);
+		expect(parseCampaignSubmissionDefaultImageId('abc').success).toBe(false);
+		expect(parseCampaignSubmissionDefaultImageId(null).success).toBe(false);
+	});
+
+	test('endDateFromDurationPreset returns a date within campaign bounds', () => {
+		const endDate = endDateFromDurationPreset('30');
+		const parsed = startOfDay(new Date(endDate));
+		expect(validateCampaignSubmissionEndDate(parsed)).toBeNull();
+	});
+
+	test('createCampaignSubmissionFormSchema requires a non-blank programId and goal when enabled', () => {
 		const schema = createCampaignSubmissionFormSchema((code) => code);
 		const result = schema.safeParse({
 			title: 'Campaign',
 			description: 'Description',
-			goal: 100,
+			hasGoal: true,
+			goal: '',
 			currency: 'CHF',
+			durationPreset: '30',
 			endDate: validEndDateString(),
+			isPublic: true,
 			programId: '   ',
 		});
 
 		expect(result.success).toBe(false);
 		if (!result.success) {
-			expect(result.error.issues[0]?.message).toBe('program-required');
+			const messages = result.error.issues.map((issue) => issue.message);
+			expect(messages).toContain('program-required');
+			expect(messages).toContain('goal-positive');
 		}
 	});
 });

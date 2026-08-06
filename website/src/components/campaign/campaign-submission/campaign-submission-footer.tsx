@@ -8,6 +8,7 @@ type Props = {
 	currentStep: CampaignSubmissionStepId;
 	labels: SubmissionLabels;
 	isContinueDisabled: boolean;
+	isSubmitDisabled: boolean;
 	isSubmitting: boolean;
 	onContinue: () => void;
 	onBack: () => void;
@@ -18,6 +19,7 @@ export const CampaignSubmissionFooter = ({
 	currentStep,
 	labels,
 	isContinueDisabled,
+	isSubmitDisabled,
 	isSubmitting,
 	onContinue,
 	onBack,
@@ -48,7 +50,7 @@ export const CampaignSubmissionFooter = ({
 			<div className="flex min-w-0 flex-1 justify-end">
 				{isLastStep ? (
 					// Always type="button": swapping Continue → type="submit" mid-click submits step 2 immediately
-					<Button type="button" disabled={isSubmitting} onClick={onSubmit}>
+					<Button type="button" disabled={isSubmitDisabled} onClick={onSubmit}>
 						{isSubmitting ? labels.submitting : labels.submit}
 					</Button>
 				) : (
