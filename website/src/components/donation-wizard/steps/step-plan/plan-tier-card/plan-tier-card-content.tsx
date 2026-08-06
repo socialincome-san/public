@@ -33,7 +33,7 @@ export const PlanTierCardContent = ({
 			{planLabel && (
 				<Badge
 					variant={badgeVariant === 'preferred' ? 'verified' : 'default'}
-					className="gap-0.5 px-2 py-0.5 text-[10px] sm:ml-auto"
+					className="ml-auto gap-0.5 px-2 py-0.5 text-[10px]"
 				>
 					{planLabel}
 
