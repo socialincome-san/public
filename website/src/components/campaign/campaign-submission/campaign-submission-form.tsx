@@ -156,7 +156,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	}, [labels.error, lang]);
 
 	useEffect(() => {
-		if (currentStep !== 'details') {
+		if (currentStep !== 'details' || defaultImages.length > 0) {
 			return;
 		}
 
@@ -210,7 +210,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		return () => {
 			cancelled = true;
 		};
-	}, [currentStep, labels.defaultImagesError]);
+	}, [currentStep, defaultImages.length, labels.defaultImagesError]);
 
 	useEffect(() => {
 		if (!hasMountedStep.current) {
@@ -291,10 +291,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const onBack = () => {
 		form.clearErrors();
 		setSubmitError(null);
-		clearImageSelection();
-		setDefaultImages([]);
-		setDefaultImagesError(null);
-		setDefaultImagesLoading(false);
 		setCurrentStep('program');
 	};
 
