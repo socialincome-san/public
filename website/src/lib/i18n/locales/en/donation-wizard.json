@@ -103,7 +103,6 @@
 	"onboarding": {
 		"successTitle": "Donation successful",
 		"accountCreatedDescription": "We have just created an account for you. Please check your details.",
-		"accountCardTitle": "Check your Account Information",
 		"isThisYou": "Is this you?",
 		"firstName": "First Name",
 		"lastName": "Last Name",
@@ -118,7 +117,6 @@
 		"updateError": "There was an error saving your information. Please try again.",
 		"continue": "Continue",
 		"referral": {
-			"cardTitle": "Helps us to focus our time on what's actually working",
 			"question": "How did you find us?",
 			"skip": "Skip",
 			"submit": "Send Feedback",

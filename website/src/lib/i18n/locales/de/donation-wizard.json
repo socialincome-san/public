@@ -103,7 +103,6 @@
 	"onboarding": {
 		"successTitle": "Spende erfolgreich",
 		"accountCreatedDescription": "Wir haben soeben ein Konto für dich erstellt. Bitte überprüfe deine Angaben.",
-		"accountCardTitle": "Überprüfe deine Kontoinformationen",
 		"isThisYou": "Bist du das?",
 		"firstName": "Vorname",
 		"lastName": "Nachname",
@@ -118,7 +117,6 @@
 		"updateError": "Beim Speichern ist ein Fehler aufgetreten. Bitte versuche es erneut.",
 		"continue": "Weiter",
 		"referral": {
-			"cardTitle": "Hilft uns, unsere Zeit auf das zu konzentrieren, was wirklich wirkt",
 			"question": "Wie hast du von uns erfahren?",
 			"skip": "Überspringen",
 			"submit": "Feedback senden",

@@ -103,7 +103,6 @@
 	"onboarding": {
 		"successTitle": "Don réussi",
 		"accountCreatedDescription": "Nous venons de créer un compte pour toi. Vérifie tes informations.",
-		"accountCardTitle": "Vérifie tes informations de compte",
 		"isThisYou": "Est-ce bien toi ?",
 		"firstName": "Prénom",
 		"lastName": "Nom",
@@ -118,7 +117,6 @@
 		"updateError": "Une erreur s'est produite lors de l'enregistrement. Merci de réessayer.",
 		"continue": "Continuer",
 		"referral": {
-			"cardTitle": "Nous aide à concentrer notre temps sur ce qui fonctionne vraiment",
 			"question": "Comment as-tu entendu parler de nous ?",
 			"skip": "Ignorer",
 			"submit": "Envoyer le feedback",

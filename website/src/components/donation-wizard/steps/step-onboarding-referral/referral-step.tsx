@@ -91,31 +91,27 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 		>
 			<OnboardingSuccessHeader amountLine={amountLine} showAccountCreatedDescription />
 
-			<div className="bg-background border-border flex flex-col gap-5 overflow-hidden rounded-3xl border px-0 pt-5 pb-7">
-				<div className="border-border border-b pb-2">
-					<p className="text-foreground px-6 text-lg leading-normal font-medium">{t('onboarding.referral.cardTitle')}</p>
+			<div className="bg-background border-border flex flex-col gap-5 overflow-hidden rounded-3xl border px-0 pb-7">
+				<div className="border-border border-b grid gap-6 p-6 sm:grid-cols-[minmax(0,1fr)_minmax(220px,1fr)]">
+					<p className="text-foreground text-base leading-none font-medium">{t('onboarding.referral.question')}</p>
+					<RadioGroup
+						value={selectedReferral}
+						onValueChange={(value) => setSelectedReferral(value as ContributorReferralSource)}
+						className="gap-4"
+					>
+						{WIZARD_REFERRAL_OPTIONS.map(({ value, labelKey }) => {
+							const optionId = `donation-wizard-referral-${value}`;
 
-					<div className="border-border mt-4 grid gap-6 border-t p-6 sm:grid-cols-[minmax(0,1fr)_minmax(220px,1fr)]">
-						<p className="text-foreground text-base leading-none font-medium">{t('onboarding.referral.question')}</p>
-						<RadioGroup
-							value={selectedReferral}
-							onValueChange={(value) => setSelectedReferral(value as ContributorReferralSource)}
-							className="gap-4"
-						>
-							{WIZARD_REFERRAL_OPTIONS.map(({ value, labelKey }) => {
-								const optionId = `donation-wizard-referral-${value}`;
-
-								return (
-									<div key={value} className="flex items-center gap-3">
-										<RadioGroupItem id={optionId} value={value} data-testid={`radio-card-${value}`} />
-										<label htmlFor={optionId} className="text-foreground cursor-pointer text-sm font-medium">
-											{t(`onboarding.referral.options.${labelKey}`)}
-										</label>
-									</div>
-								);
-							})}
-						</RadioGroup>
-					</div>
+							return (
+								<div key={value} className="flex items-center gap-3">
+									<RadioGroupItem id={optionId} value={value} data-testid={`radio-card-${value}`} />
+									<label htmlFor={optionId} className="text-foreground cursor-pointer text-sm font-medium">
+										{t(`onboarding.referral.options.${labelKey}`)}
+									</label>
+								</div>
+							);
+						})}
+					</RadioGroup>
 				</div>
 
 				<div className="flex flex-col gap-3 px-6 sm:flex-row sm:items-center sm:justify-between">

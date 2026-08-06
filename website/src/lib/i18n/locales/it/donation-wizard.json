@@ -103,7 +103,6 @@
 	"onboarding": {
 		"successTitle": "Donazione riuscita",
 		"accountCreatedDescription": "Abbiamo appena creato un account per te. Controlla i tuoi dati.",
-		"accountCardTitle": "Controlla le informazioni del tuo account",
 		"isThisYou": "Sei tu?",
 		"firstName": "Nome",
 		"lastName": "Cognome",
@@ -118,7 +117,6 @@
 		"updateError": "Si è verificato un errore durante il salvataggio. Riprova.",
 		"continue": "Continua",
 		"referral": {
-			"cardTitle": "Ci aiuta a concentrare il nostro tempo su ciò che funziona davvero",
 			"question": "Come hai scoperto Social Income?",
 			"skip": "Salta",
 			"submit": "Invia feedback",
