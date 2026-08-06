@@ -91,8 +91,6 @@
 	},
 	"thankYou": {
 		"message": "Thank you for your help!",
-		"messageWithAmountMonthly": "Thank you for {{amount}}/month!",
-		"messageWithAmountOneTime": "Thank you for {{amount}}!",
 		"loginPrompt": {
 			"title": "Your account is ready",
 			"description": "Go to the login page to access your account.",
@@ -101,8 +99,9 @@
 		}
 	},
 	"onboarding": {
-		"successTitle": "Donation successful",
-		"accountCreatedDescription": "We have just created an account for you. Please check your details.",
+		"donatedThankYouMonthly": "{{currency}} {{amount}}/month donated. Thank you.",
+		"donatedThankYouOneTime": "{{currency}} {{amount}} donated. Thank you.",
+		"accountCreatedDescription": "We've setup your account.",
 		"isThisYou": "Please review your account details",
 		"firstName": "First Name",
 		"lastName": "Last Name",

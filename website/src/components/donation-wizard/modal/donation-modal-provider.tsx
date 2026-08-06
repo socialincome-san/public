@@ -111,7 +111,7 @@ export const DonationModalProvider = ({ children }: Props) => {
 					{isPostCheckoutStep ? (
 						<>
 							<DialogTitle className="sr-only">
-								{isThankYou ? t('thankYou.message') : t('onboarding.successTitle')}
+								{isThankYou ? t('thankYou.message') : t('onboarding.accountCreatedDescription')}
 							</DialogTitle>
 							<div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
 								<DonationSteps state={state} send={send} />

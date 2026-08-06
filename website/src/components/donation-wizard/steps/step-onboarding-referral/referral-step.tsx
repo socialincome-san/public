@@ -89,7 +89,7 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 			className="flex w-full flex-col gap-6 px-4 pt-6 pb-8 sm:px-9 sm:pt-6 sm:pb-11"
 			data-testid="donation-wizard-step-referral"
 		>
-			<OnboardingSuccessHeader amountLine={amountLine} showAccountCreatedDescription />
+			<OnboardingSuccessHeader amountLine={amountLine} />
 
 			<div className="bg-background border-border flex flex-col gap-5 overflow-hidden rounded-3xl border px-0 pb-7">
 				<div className="border-border border-b grid gap-6 p-6 sm:grid-cols-[minmax(0,1fr)_minmax(220px,1fr)]">
