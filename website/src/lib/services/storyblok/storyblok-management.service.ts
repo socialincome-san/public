@@ -145,6 +145,83 @@ const isImageAsset = (asset: ManagementAsset): boolean => {
 	return /\.(jpe?g|png|webp)(\?|$)/.test(filename);
 };
 
+/** Restrict asset downloads to HTTPS hosts under *.storyblok.com (e.g. a.storyblok.com). */
+const assertAllowedStoryblokAssetUrl = (filename: string): string => {
+	let url: URL;
+	try {
+		url = new URL(filename);
+	} catch {
+		throw new StoryblokManagementError('Invalid Storyblok asset URL.', 400, false);
+	}
+
+	if (url.protocol !== 'https:') {
+		throw new StoryblokManagementError('Storyblok asset URL must use HTTPS.', 400, false);
+	}
+
+	if (url.username || url.password) {
+		throw new StoryblokManagementError('Storyblok asset URL must not include credentials.', 400, false);
+	}
+
+	if (!url.hostname.endsWith('.storyblok.com')) {
+		throw new StoryblokManagementError('Storyblok asset URL host is not allowed.', 400, false);
+	}
+
+	return url.href;
+};
+
+/**
+ * Drains a fetch response with a hard byte cap. Content-Length is a fast-path reject only;
+ * the stream itself is still bounded so missing/lying headers cannot force unbounded buffering.
+ */
+const readResponseBodyWithLimit = async (response: Response, maxBytes: number): Promise<Buffer> => {
+	const contentLengthHeader = response.headers.get('content-length');
+	if (contentLengthHeader !== null) {
+		const contentLength = Number(contentLengthHeader);
+		if (Number.isFinite(contentLength) && contentLength > maxBytes) {
+			throw new StoryblokManagementError('Storyblok asset exceeds size limit.', 413, false);
+		}
+	}
+
+	const body = response.body;
+	if (!body) {
+		const arrayBuffer = await response.arrayBuffer();
+		if (arrayBuffer.byteLength > maxBytes) {
+			throw new StoryblokManagementError('Storyblok asset exceeds size limit.', 413, false);
+		}
+
+		return Buffer.from(arrayBuffer);
+	}
+
+	const reader = body.getReader();
+	const chunks: Uint8Array[] = [];
+	let totalBytes = 0;
+
+	try {
+		while (true) {
+			const { done, value } = await reader.read();
+			if (done) {
+				break;
+			}
+
+			totalBytes += value.byteLength;
+			if (totalBytes > maxBytes) {
+				await reader.cancel();
+				throw new StoryblokManagementError('Storyblok asset exceeds size limit.', 413, false);
+			}
+
+			chunks.push(value);
+		}
+	} finally {
+		try {
+			reader.releaseLock();
+		} catch {
+			// Stream may already be cancelled or released.
+		}
+	}
+
+	return Buffer.concat(chunks, totalBytes);
+};
+
 const toListedAsset = (asset: ManagementAsset): StoryblokListedAsset | null => {
 	if (!asset.id || !asset.filename || !isImageAsset(asset)) {
 		return null;
@@ -223,8 +300,10 @@ export class StoryblokManagementService {
 	}
 
 	async downloadAssetBuffer(filename: string): Promise<Buffer> {
-		const response = await fetch(filename, {
+		const assetUrl = assertAllowedStoryblokAssetUrl(filename);
+		const response = await fetch(assetUrl, {
 			method: 'GET',
+			redirect: 'error',
 			signal: AbortSignal.timeout(MANAGEMENT_FETCH_TIMEOUT_MS),
 		});
 
@@ -232,9 +311,7 @@ export class StoryblokManagementService {
 			throw new StoryblokManagementError('Storyblok asset download failed.', response.status, response.status >= 500);
 		}
 
-		const arrayBuffer = await response.arrayBuffer();
-
-		return Buffer.from(arrayBuffer);
+		return readResponseBodyWithLimit(response, campaignSubmissionConfig.maxImageBytes);
 	}
 
 	async uploadAsset(
