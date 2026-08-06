@@ -82,7 +82,7 @@ export const DetailsStep = ({
 }: Props) => {
 	const imageHintId = useId();
 	const imageErrorId = useId();
-	const imageSectionRef = useRef<HTMLDivElement>(null);
+	const imageErrorRef = useRef<HTMLParagraphElement>(null);
 	const submitErrorRef = useRef<HTMLParagraphElement>(null);
 	const durationPreset = form.watch('durationPreset');
 	const hasGoal = form.watch('hasGoal');
@@ -90,8 +90,8 @@ export const DetailsStep = ({
 
 	useEffect(() => {
 		if (imageError) {
-			imageSectionRef.current?.scrollIntoView({ block: 'nearest' });
-			primaryImageInputRef.current?.focus();
+			imageErrorRef.current?.scrollIntoView({ block: 'nearest' });
+			imageErrorRef.current?.focus();
 
 			return;
 		}
@@ -100,7 +100,7 @@ export const DetailsStep = ({
 			submitErrorRef.current?.scrollIntoView({ block: 'nearest' });
 			submitErrorRef.current?.focus();
 		}
-	}, [imageError, primaryImageInputRef, submitError]);
+	}, [imageError, submitError]);
 
 	const imageDescribedBy = [imageHintId, imageError ? imageErrorId : null].filter(Boolean).join(' ');
 
@@ -298,7 +298,7 @@ export const DetailsStep = ({
 				</RadioGroup>
 			</div>
 
-			<div ref={imageSectionRef} className="flex flex-col gap-3">
+			<div className="flex flex-col gap-3">
 				<Label className={cn(imageError && 'text-destructive')}>{labels.campaignBackground}</Label>
 
 				{previewSrc ? (
@@ -315,7 +315,13 @@ export const DetailsStep = ({
 					</div>
 				) : null}
 
-				<div className="flex flex-wrap gap-2" role="radiogroup" aria-label={labels.campaignBackground}>
+				<div
+					className="flex flex-wrap gap-2"
+					role="radiogroup"
+					aria-label={labels.campaignBackground}
+					aria-invalid={Boolean(imageError)}
+					aria-describedby={imageDescribedBy}
+				>
 					<div
 						className={cn(
 							'border-border text-muted-foreground relative size-20 shrink-0 rounded-xl border border-dashed text-xs',
@@ -386,8 +392,7 @@ export const DetailsStep = ({
 					type="file"
 					accept={campaignSubmissionConfig.permittedImageMimeTypes.join(',')}
 					className="sr-only"
-					aria-invalid={Boolean(imageError)}
-					aria-describedby={imageDescribedBy}
+					tabIndex={-1}
 					onChange={(event) => {
 						onImageChange(event.target.files?.[0] ?? null);
 					}}
@@ -396,7 +401,13 @@ export const DetailsStep = ({
 					{labels.imageHint}
 				</p>
 				{imageError ? (
-					<p id={imageErrorId} className="text-destructive text-sm" role="alert">
+					<p
+						id={imageErrorId}
+						ref={imageErrorRef}
+						className="text-destructive text-sm outline-none"
+						role="alert"
+						tabIndex={-1}
+					>
 						{imageError}
 					</p>
 				) : null}
