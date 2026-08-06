@@ -119,22 +119,22 @@ export const DonationModalProvider = ({ children }: Props) => {
 						</>
 					) : (
 						<>
-							<div className="flex shrink-0 items-start gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))] pr-14 pb-4 sm:gap-3 sm:px-6 sm:pt-6 sm:pr-20 sm:pb-6 md:pl-9">
-								<div className="min-w-0 flex-1">
-									<DialogTitle className="text-xl leading-tight font-medium text-pretty sm:text-2xl sm:leading-none">
+							<div className="flex shrink-0 flex-col gap-1 px-4 pt-[max(1rem,env(safe-area-inset-top))] pr-14 pb-4 sm:px-6 sm:pt-6 sm:pr-20 sm:pb-6 md:pl-9">
+								<div className="flex min-h-9 items-center gap-2 sm:gap-3">
+									<DialogTitle className="text-foreground min-w-0 flex-1 text-xl leading-none font-medium text-pretty sm:text-2xl">
 										{t('modal.title')}
 									</DialogTitle>
-									{campaignId && campaignTitle ? (
-										<p className="text-muted-foreground mt-1 line-clamp-2 text-sm leading-snug font-normal">
-											{t('modal.campaign-for', { title: campaignTitle })}
-										</p>
+									{showCurrencySelector ? (
+										<DonationCurrencySelector
+											currencies={websiteCurrencies}
+											className="border-input h-9 w-[4.75rem] shrink-0 self-center rounded-full px-2.5"
+										/>
 									) : null}
 								</div>
-								{showCurrencySelector ? (
-									<DonationCurrencySelector
-										currencies={websiteCurrencies}
-										className="border-input h-9 w-[4.75rem] shrink-0 rounded-full px-2.5"
-									/>
+								{campaignId && campaignTitle ? (
+									<p className="text-muted-foreground line-clamp-2 text-sm leading-snug font-normal">
+										{t('modal.campaign-for', { title: campaignTitle })}
+									</p>
 								) : null}
 							</div>
 							<DonationWizard state={state} send={send} />
