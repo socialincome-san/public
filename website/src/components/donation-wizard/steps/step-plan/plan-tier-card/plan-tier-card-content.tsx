@@ -52,7 +52,9 @@ export const PlanTierCardContent = ({
 					) : (
 						<Check className="text-foreground mt-0.5 size-3.5 shrink-0" aria-hidden />
 					)}
-					<span className={cn('min-w-0 break-words', benefit.emphasis && 'font-bold')}>{benefit.label}</span>
+					<span className={cn('min-w-0 break-words whitespace-pre-line', benefit.emphasis && 'font-bold')}>
+						{benefit.label}
+					</span>
 				</li>
 			))}
 		</ul>
