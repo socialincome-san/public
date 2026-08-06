@@ -22,7 +22,7 @@ describe('StoryblokManagementService.listCampaignDefaultImages', () => {
 		global.fetch = jest.fn().mockResolvedValue({
 			ok: true,
 			status: 200,
-			text: async () => JSON.stringify({ assets }),
+			text: () => Promise.resolve(JSON.stringify({ assets })),
 		}) as typeof fetch;
 
 		const service = new StoryblokManagementService();

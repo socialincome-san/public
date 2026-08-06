@@ -82,9 +82,10 @@ describe('CampaignSubmissionService', () => {
 		const createPublishedCampaignStory = jest.fn().mockResolvedValue({ storyId: 20, storyUuid: 'uuid' });
 		const getAsset = jest.fn();
 		const downloadAssetBuffer = jest.fn();
+		const uploadAsset = jest.fn().mockResolvedValue({ assetId: 10, asset: { filename: 'image.jpg' } });
 
 		const storyblokManagementService = {
-			uploadAsset: jest.fn().mockResolvedValue({ assetId: 10, asset: { filename: 'image.jpg' } }),
+			uploadAsset,
 			createPublishedCampaignStory,
 			deleteAsset,
 			deleteStory: jest.fn().mockResolvedValue(undefined),
@@ -110,6 +111,7 @@ describe('CampaignSubmissionService', () => {
 			storyblokManagementService,
 			getAsset,
 			downloadAssetBuffer,
+			uploadAsset,
 		};
 	};
 
@@ -172,7 +174,7 @@ describe('CampaignSubmissionService', () => {
 	});
 
 	test('submit downloads and re-uploads a default image from the defaults folder', async () => {
-		const { service, create, storyblokManagementService, getAsset, downloadAssetBuffer } = createService();
+		const { service, create, getAsset, downloadAssetBuffer, uploadAsset } = createService();
 		getAsset.mockResolvedValue({
 			id: 99,
 			filename: 'https://a.storyblok.com/f/109655/default.png',
@@ -191,14 +193,14 @@ describe('CampaignSubmissionService', () => {
 		expect(result.success).toBe(true);
 		expect(getAsset).toHaveBeenCalledWith(99);
 		expect(downloadAssetBuffer).toHaveBeenCalledWith('https://a.storyblok.com/f/109655/default.png');
-		expect(storyblokManagementService.uploadAsset).toHaveBeenCalled();
+		expect(uploadAsset).toHaveBeenCalled();
 		const createArg = create.mock.calls[0]?.[0];
 		expect(createArg?.data.public).toBe(false);
 		expect(createArg?.data.goal).toBeNull();
 	});
 
 	test('submit rejects default images outside the defaults folder', async () => {
-		const { service, getAsset, storyblokManagementService } = createService();
+		const { service, getAsset, uploadAsset } = createService();
 		getAsset.mockResolvedValue({
 			id: 99,
 			filename: 'https://a.storyblok.com/f/109655/default.png',
@@ -214,7 +216,7 @@ describe('CampaignSubmissionService', () => {
 		if (!result.success) {
 			expect(result.error).toBe('default-image-invalid');
 		}
-		expect(storyblokManagementService.uploadAsset).not.toHaveBeenCalled();
+		expect(uploadAsset).not.toHaveBeenCalled();
 	});
 
 	test('submit cleans up created resources when Storyblok story creation fails', async () => {

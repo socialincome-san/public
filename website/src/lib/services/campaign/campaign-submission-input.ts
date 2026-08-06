@@ -178,9 +178,6 @@ export const endDateFromDurationPreset = (preset: Exclude<CampaignSubmissionDura
 	return format(addDays(startOfDay(new Date()), days), 'yyyy-MM-dd');
 };
 
-export const isCampaignSubmissionDurationPreset = (value: string): value is CampaignSubmissionDurationPreset =>
-	(campaignSubmissionDurationPresets as readonly string[]).includes(value);
-
 /** Shared size/MIME checks for both client File prechecks and server buffer validation. */
 export const validateCampaignSubmissionImageMeta = (size: number, mimeType: string): CampaignSubmissionErrorCode | null => {
 	if (size > campaignSubmissionConfig.maxImageBytes) {
