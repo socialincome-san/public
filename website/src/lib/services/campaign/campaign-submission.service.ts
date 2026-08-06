@@ -1,11 +1,17 @@
 import { Prisma, PrismaClient } from '@/generated/prisma/client';
+import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { logger } from '@/lib/utils/logger';
 import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramPublicSubmissionService } from '../program/program-public-submission.service';
 import { isStoryblokManagementError, StoryblokManagementService } from '../storyblok/storyblok-management.service';
-import { type CampaignSubmissionFields, type CampaignSubmissionImageValidation } from './campaign-submission-input';
+import {
+	validateCampaignSubmissionImageBuffer,
+	type CampaignSubmissionFields,
+	type CampaignSubmissionImageSource,
+	type CampaignSubmissionImageValidation,
+} from './campaign-submission-input';
 import { CampaignValidationService } from './campaign-validation.service';
 
 export type CampaignSubmissionResult = {
@@ -16,6 +22,17 @@ type SubmissionCleanupState = {
 	campaignId?: string;
 	assetId?: number;
 	storyId?: number;
+};
+
+const filenameFromUrl = (url: string) => {
+	try {
+		const pathname = new URL(url).pathname;
+		const segment = pathname.split('/').filter(Boolean).at(-1);
+
+		return segment?.trim() ?? 'campaign-image';
+	} catch {
+		return 'campaign-image';
+	}
 };
 
 export class CampaignSubmissionService extends BaseService {
@@ -31,7 +48,7 @@ export class CampaignSubmissionService extends BaseService {
 
 	async submit(
 		fields: CampaignSubmissionFields,
-		image: CampaignSubmissionImageValidation,
+		imageSource: CampaignSubmissionImageSource,
 	): Promise<ServiceResult<CampaignSubmissionResult>> {
 		const eligibilityResult = await this.programPublicSubmissionService.isProgramEligibleForPublicSubmission(
 			fields.programId,
@@ -59,6 +76,12 @@ export class CampaignSubmissionService extends BaseService {
 		const cleanupState: SubmissionCleanupState = {};
 
 		try {
+			const imageResult = await this.resolveImage(imageSource);
+			if (!imageResult.success) {
+				return imageResult;
+			}
+			const image = imageResult.data;
+
 			const campaign = await this.db.campaign.create({
 				data: {
 					title: fields.title,
@@ -67,7 +90,7 @@ export class CampaignSubmissionService extends BaseService {
 					currency: fields.currency,
 					endDate: fields.endDate,
 					isActive: true,
-					public: true,
+					public: fields.public,
 					slug,
 					program: { connect: { id: fields.programId } },
 				},
@@ -115,6 +138,50 @@ export class CampaignSubmissionService extends BaseService {
 			this.logger.error(error, { slug });
 
 			return this.resultFail('submission-failed', 503);
+		}
+	}
+
+	private async resolveImage(
+		imageSource: CampaignSubmissionImageSource,
+	): Promise<ServiceResult<CampaignSubmissionImageValidation>> {
+		if (imageSource.kind === 'upload') {
+			return this.resultOk(imageSource.image);
+		}
+
+		try {
+			const asset = await this.storyblokManagementService.getAsset(imageSource.defaultImageId);
+			if (asset?.assetFolderId !== campaignSubmissionConfig.storyblokCampaignDefaultImagesFolderId) {
+				return this.resultFail('default-image-invalid', 400);
+			}
+
+			const buffer = await this.storyblokManagementService.downloadAssetBuffer(asset.filename);
+			const declaredMimeType = asset.contentType ?? '';
+			const validation = validateCampaignSubmissionImageBuffer(buffer, declaredMimeType, filenameFromUrl(asset.filename));
+			if (!validation.success) {
+				return this.resultFail(
+					validation.error === 'image-format-unsupported' ? 'default-image-invalid' : validation.error,
+					400,
+				);
+			}
+
+			return this.resultOk(validation.data);
+		} catch (error) {
+			if (isStoryblokManagementError(error)) {
+				this.logger.error(error, {
+					defaultImageId: imageSource.defaultImageId,
+					retryable: error.retryable,
+					statusCode: error.statusCode,
+				});
+
+				return this.resultFail(
+					error.statusCode === 404 ? 'default-image-invalid' : 'submission-failed',
+					error.retryable ? 503 : 400,
+				);
+			}
+
+			this.logger.error(error, { defaultImageId: imageSource.defaultImageId });
+
+			return this.resultFail('default-image-invalid', 400);
 		}
 	}
 

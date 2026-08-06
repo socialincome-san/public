@@ -35,6 +35,17 @@ type ManagementAsset = {
 	copyright?: string | null;
 	focus?: string | null;
 	name?: string | null;
+	asset_folder_id?: number | null;
+	content_type?: string | null;
+};
+
+export type StoryblokListedAsset = {
+	id: number;
+	filename: string;
+	alt: string | null;
+	focus: string | null;
+	contentType: string | null;
+	assetFolderId: number | null;
 };
 
 type StoryCreateResponse = {
@@ -121,8 +132,110 @@ const uploadSignedAsset = async (signed: SignedUploadResponse, fileBuffer: Buffe
 	}
 };
 
+const isImageAsset = (asset: ManagementAsset): boolean => {
+	const contentType = asset.content_type?.toLowerCase() ?? '';
+	if (contentType.startsWith('image/')) {
+		return campaignSubmissionConfig.permittedImageMimeTypes.includes(
+			contentType as (typeof campaignSubmissionConfig.permittedImageMimeTypes)[number],
+		);
+	}
+
+	const filename = asset.filename?.toLowerCase() ?? '';
+
+	return /\.(jpe?g|png|webp)(\?|$)/.test(filename);
+};
+
+const toListedAsset = (asset: ManagementAsset): StoryblokListedAsset | null => {
+	if (!asset.id || !asset.filename || !isImageAsset(asset)) {
+		return null;
+	}
+
+	return {
+		id: asset.id,
+		filename: asset.filename,
+		alt: asset.alt ?? null,
+		focus: asset.focus ?? null,
+		contentType: asset.content_type ?? null,
+		assetFolderId: asset.asset_folder_id ?? null,
+	};
+};
+
 export class StoryblokManagementService {
 	private readonly spaceId = campaignSubmissionConfig.storyblokSpaceId;
+
+	async listAssetsInFolder(
+		folderId: number,
+		options?: { perPage?: number; sortBy?: string },
+	): Promise<StoryblokListedAsset[]> {
+		const perPage = options?.perPage ?? 25;
+		const sortBy = options?.sortBy ?? 'created_at:asc';
+		const query = new URLSearchParams({
+			in_folder: String(folderId),
+			per_page: String(perPage),
+			page: '1',
+			sort_by: sortBy,
+		});
+
+		const body = await requestManagement(`/spaces/${this.spaceId}/assets/?${query.toString()}`, {
+			method: 'GET',
+		});
+
+		const assets = Array.isArray((body as { assets?: unknown })?.assets)
+			? ((body as { assets: ManagementAsset[] }).assets ?? [])
+			: Array.isArray(body)
+				? (body as ManagementAsset[])
+				: [];
+
+		return assets.flatMap((asset) => {
+			const listed = toListedAsset(asset);
+
+			return listed ? [listed] : [];
+		});
+	}
+
+	async listCampaignDefaultImages(
+		limit = campaignSubmissionConfig.maxCampaignDefaultImages,
+	): Promise<StoryblokListedAsset[]> {
+		// Fetch extra rows so non-image assets can be filtered out before applying the gallery cap.
+		const assets = await this.listAssetsInFolder(campaignSubmissionConfig.storyblokCampaignDefaultImagesFolderId, {
+			perPage: Math.max(limit * 3, 15),
+			sortBy: 'created_at:asc',
+		});
+
+		return assets.slice(0, limit);
+	}
+
+	async getAsset(assetId: number): Promise<StoryblokListedAsset | null> {
+		const body = await requestManagement(`/spaces/${this.spaceId}/assets/${assetId}`, { method: 'GET' });
+		const asset = unwrapAsset(body);
+		if (!asset?.id || !asset.filename) {
+			return null;
+		}
+
+		return {
+			id: asset.id,
+			filename: asset.filename,
+			alt: asset.alt ?? null,
+			focus: asset.focus ?? null,
+			contentType: asset.content_type ?? null,
+			assetFolderId: asset.asset_folder_id ?? null,
+		};
+	}
+
+	async downloadAssetBuffer(filename: string): Promise<Buffer> {
+		const response = await fetch(filename, {
+			method: 'GET',
+			signal: AbortSignal.timeout(MANAGEMENT_FETCH_TIMEOUT_MS),
+		});
+
+		if (!response.ok) {
+			throw new StoryblokManagementError('Storyblok asset download failed.', response.status, response.status >= 500);
+		}
+
+		const arrayBuffer = await response.arrayBuffer();
+
+		return Buffer.from(arrayBuffer);
+	}
 
 	async uploadAsset(
 		fileBuffer: Buffer,
