@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/button';
 import { RadioGroup, RadioGroupItem } from '@/components/radio-group';
+import { ContributorReferralSource } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { updateContributorReferralAfterWizardQrAction } from '@/lib/server-actions/qr-wizard-actions';
 import { updateContributorReferralAfterWizardCheckoutAction } from '@/lib/server-actions/stripe-wizard-actions';
@@ -11,11 +12,7 @@ import { useOnboardingAmountLine } from '../../hooks/use-onboarding-amount-line'
 import { OnboardingSkipFallback } from '../../shared/onboarding-skip-fallback';
 import { OnboardingSuccessHeader } from '../../shared/onboarding-success-header';
 import type { DonationWizardStepProps } from '../../wizard/types';
-import {
-	toContributorReferralSource,
-	WIZARD_REFERRAL_OPTIONS,
-	type WizardReferralOptionValue,
-} from './wizard-referral-options';
+import { WIZARD_REFERRAL_OPTIONS } from './wizard-referral-options';
 
 export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
@@ -23,7 +20,7 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 		state.context;
 	const amountLine = useOnboardingAmountLine(completedDonationSummary);
 
-	const [selectedReferral, setSelectedReferral] = useState<WizardReferralOptionValue | undefined>();
+	const [selectedReferral, setSelectedReferral] = useState<ContributorReferralSource | undefined>();
 	const [submitting, setSubmitting] = useState(false);
 
 	const hasStripeReferralContext = wizardPaymentSource === 'stripe' && Boolean(stripeCheckoutSessionId);
@@ -38,12 +35,10 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 		setSubmitting(true);
 
 		try {
-			const referral = toContributorReferralSource(selectedReferral);
-
 			if (hasStripeReferralContext && stripeCheckoutSessionId) {
 				const result = await updateContributorReferralAfterWizardCheckoutAction({
 					stripeCheckoutSessionId,
-					referral,
+					referral: selectedReferral,
 				});
 
 				if (!result.success) {
@@ -62,7 +57,7 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 				const result = await updateContributorReferralAfterWizardQrAction({
 					paymentReferenceId: qrContributorReferenceId,
 					expectedEmail: qrDonor.email,
-					referral,
+					referral: selectedReferral,
 				});
 
 				if (!result.success) {
@@ -104,7 +99,7 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 						<p className="text-foreground text-base leading-none font-medium">{t('onboarding.referral.question')}</p>
 						<RadioGroup
 							value={selectedReferral}
-							onValueChange={(value) => setSelectedReferral(value as WizardReferralOptionValue)}
+							onValueChange={(value) => setSelectedReferral(value as ContributorReferralSource)}
 							className="gap-4"
 						>
 							{WIZARD_REFERRAL_OPTIONS.map(({ value, labelKey }) => {
