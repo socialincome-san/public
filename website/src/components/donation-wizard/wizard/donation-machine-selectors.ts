@@ -1,4 +1,5 @@
 import type { LanguageCode } from '@/lib/types/language';
+import { resolveWizardPaymentMethod } from '@/lib/services/qr-bill/wizard-qr-payment';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import type { PlanTierBenefit } from '../steps/step-plan/plan-tier-card/plan-tier-benefit';
 import {
@@ -130,18 +131,29 @@ export const selectOneTimePlanView = (context: DonationWizardContext) => {
 	};
 };
 
-export const selectPaymentView = (context: DonationWizardContext) => {
-	const baseAmount = getDonationBaseAmount(context);
-	const displayAmount = getDonationDisplayAmount(context);
+export const selectPaymentView = (context: DonationWizardContext, currency?: string) => {
+	const paymentMethod = currency
+		? resolveWizardPaymentMethod(context.paymentMethod, currency)
+		: context.paymentMethod;
+	const effectiveContext: DonationWizardContext =
+		paymentMethod === context.paymentMethod
+			? context
+			: {
+					...context,
+					paymentMethod,
+					coverTransactionCosts: paymentMethod === 'online',
+				};
+	const baseAmount = getDonationBaseAmount(effectiveContext);
+	const displayAmount = getDonationDisplayAmount(effectiveContext);
 
 	return {
-		paymentMethod: context.paymentMethod,
+		paymentMethod,
 		cadence: context.cadence,
-		coverTransactionCosts: context.coverTransactionCosts,
+		coverTransactionCosts: effectiveContext.coverTransactionCosts,
 		transactionCost: getOnlineTransactionCost(baseAmount),
-		showTransactionCostToggle: context.paymentMethod === 'online',
+		showTransactionCostToggle: paymentMethod === 'online',
 		continueLabelKey:
-			context.paymentMethod === 'qr' ? ('stepPayment.generate-qr-code' as const) : ('stepPayment.pay-online' as const),
+			paymentMethod === 'qr' ? ('stepPayment.generate-qr-code' as const) : ('stepPayment.pay-online' as const),
 		summary: {
 			amount: displayAmount,
 			showPerMonth: context.cadence === 'monthly',

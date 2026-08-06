@@ -4,8 +4,9 @@ import { OnlinePaymentLogos } from '@/components/payment-logos/online-payment-lo
 import { QrPaymentLogo } from '@/components/payment-logos/qr-payment-logo';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
-import { isWizardQrCurrencySupported, resolveWizardPaymentMethod } from '@/lib/services/qr-bill/wizard-qr-payment';
+import { isWizardQrCurrencySupported } from '@/lib/services/qr-bill/wizard-qr-payment';
 import { cn } from '@/lib/utils/cn';
+import { useEffect } from 'react';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import { selectPaymentView } from '../../wizard/donation-machine-selectors';
@@ -17,9 +18,16 @@ import { PaymentMethodOption } from './payment-method-option';
 export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
-	const view = selectPaymentView(state.context);
+	const view = selectPaymentView(state.context, currency);
 	const isQrAvailable = isWizardQrCurrencySupported(currency);
-	const paymentMethod = resolveWizardPaymentMethod(view.paymentMethod, currency);
+
+	useEffect(() => {
+		if (view.paymentMethod === state.context.paymentMethod) {
+			return;
+		}
+
+		send({ type: 'SET_PAYMENT_METHOD', value: view.paymentMethod });
+	}, [send, state.context.paymentMethod, view.paymentMethod]);
 
 	return (
 		<div
@@ -32,7 +40,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 				<PaymentMethodOption
 					label={t('stepPayment.qr-payment')}
 					badge={t('stepPayment.minimal-costs')}
-					selected={paymentMethod === 'qr'}
+					selected={view.paymentMethod === 'qr'}
 					disabled={!isQrAvailable}
 					disabledReason={!isQrAvailable ? t('stepPayment.qr-payment-unavailable') : undefined}
 					onSelect={() => send({ type: 'SET_PAYMENT_METHOD', value: 'qr' })}
@@ -41,14 +49,14 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 				/>
 				<PaymentMethodOption
 					label={t('stepPayment.online')}
-					selected={paymentMethod === 'online'}
+					selected={view.paymentMethod === 'online'}
 					onSelect={() => send({ type: 'SET_PAYMENT_METHOD', value: 'online' })}
 					trailing={<OnlinePaymentLogos />}
 					testId="donation-wizard-payment-online"
 				/>
 			</div>
 
-			{paymentMethod === 'online' && (
+			{view.paymentMethod === 'online' && (
 				<div className="mb-5">
 					<CoverTransactionCostsToggle
 						cadence={view.cadence}
@@ -63,8 +71,8 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 			<DonationStepFooter
 				onBack={() => send({ type: 'BACK' })}
 				onContinue={() => {
-					if (paymentMethod === 'online') {
-						if (view.paymentMethod !== 'online') {
+					if (view.paymentMethod === 'online') {
+						if (state.context.paymentMethod !== 'online') {
 							send({ type: 'SET_PAYMENT_METHOD', value: 'online' });
 						}
 						send({ type: 'START_STRIPE_CHECKOUT' });
@@ -75,7 +83,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 
 					send({ type: 'START_QR_FLOW' });
 				}}
-				continueLabel={t(paymentMethod === 'qr' ? 'stepPayment.generate-qr-code' : 'stepPayment.pay-online')}
+				continueLabel={t(view.paymentMethod === 'qr' ? 'stepPayment.generate-qr-code' : 'stepPayment.pay-online')}
 				summary={{
 					amount: view.summary.amount,
 					currency,
