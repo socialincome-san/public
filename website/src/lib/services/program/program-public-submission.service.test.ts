@@ -146,7 +146,17 @@ describe('ProgramPublicSubmissionService', () => {
 			const { service, findMany, getPrograms } = createService();
 			getPrograms.mockResolvedValue({
 				success: true,
-				data: [enProgram('si-core-sl', 'Core EN'), enProgram('', 'Blank')],
+				data: [
+					{
+						content: {
+							portalSlug: ' si-core-sl ',
+							title: 'Core EN',
+							description: 'Core EN EN description',
+							primaryImage: { filename: 'si-core-sl.jpg', focus: '0x0:1x1' },
+						},
+					},
+					enProgram('', 'Blank'),
+				],
 			});
 			findMany.mockResolvedValue([
 				{

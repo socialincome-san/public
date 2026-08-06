@@ -54,7 +54,7 @@ export class ProgramPublicSubmissionService extends BaseService {
 		const publishedPortalSlugs = this.extractPublishedPortalSlugs(eligibilityPrograms);
 		const storyblokByPortalSlug = new Map(
 			enrichmentPrograms.flatMap((program) => {
-				const portalSlug = getProgramPortalSlug(program.content);
+				const portalSlug = this.normalizePortalSlug(getProgramPortalSlug(program.content));
 				if (!portalSlug) {
 					return [];
 				}
@@ -117,13 +117,21 @@ export class ProgramPublicSubmissionService extends BaseService {
 		return this.resultOk(this.extractPublishedPortalSlugs(programsResult.data));
 	}
 
+	private normalizePortalSlug(slug: string): string {
+		return slug.trim();
+	}
+
+	private normalizePortalSlugs(slugs: string[]): string[] {
+		return [...new Set(slugs.map((slug) => this.normalizePortalSlug(slug)).filter(Boolean))];
+	}
+
 	private extractPublishedPortalSlugs(programs: { content: Program }[]): string[] {
-		return [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
+		return this.normalizePortalSlugs(programs.map((program) => getProgramPortalSlug(program.content)));
 	}
 
 	private async getEligibleProgramOptions(publishedPortalSlugs: string[]): Promise<ServiceResult<EligibleProgramRow[]>> {
 		try {
-			const normalizedSlugs = [...new Set(publishedPortalSlugs.map((slug) => slug.trim()).filter(Boolean))];
+			const normalizedSlugs = this.normalizePortalSlugs(publishedPortalSlugs);
 			if (!normalizedSlugs.length) {
 				return this.resultOk([]);
 			}
@@ -186,7 +194,7 @@ export class ProgramPublicSubmissionService extends BaseService {
 				return this.resultOk(false);
 			}
 
-			const normalizedSlugs = new Set(publishedPortalSlugs.map((slug) => slug.trim()).filter(Boolean));
+			const normalizedSlugs = new Set(this.normalizePortalSlugs(publishedPortalSlugs));
 			if (!normalizedSlugs.size) {
 				return this.resultOk(false);
 			}
