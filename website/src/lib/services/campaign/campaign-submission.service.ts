@@ -150,7 +150,23 @@ export class CampaignSubmissionService extends BaseService {
 
 		try {
 			const asset = await this.storyblokManagementService.getAsset(imageSource.defaultImageId);
-			if (asset?.assetFolderId !== campaignSubmissionConfig.storyblokCampaignDefaultImagesFolderId) {
+			if (!asset) {
+				this.logger.warn('Campaign submission default image invalid', {
+					defaultImageId: imageSource.defaultImageId,
+					reason: 'asset-not-found',
+					assetFolderId: null,
+				});
+
+				return this.resultFail('default-image-invalid', 400);
+			}
+
+			if (asset.assetFolderId !== campaignSubmissionConfig.storyblokCampaignDefaultImagesFolderId) {
+				this.logger.warn('Campaign submission default image invalid', {
+					defaultImageId: imageSource.defaultImageId,
+					reason: 'wrong-folder',
+					assetFolderId: asset.assetFolderId,
+				});
+
 				return this.resultFail('default-image-invalid', 400);
 			}
 
@@ -158,6 +174,12 @@ export class CampaignSubmissionService extends BaseService {
 			const declaredMimeType = asset.contentType ?? '';
 			const validation = validateCampaignSubmissionImageBuffer(buffer, declaredMimeType, filenameFromUrl(asset.filename));
 			if (!validation.success) {
+				this.logger.warn('Campaign submission default image invalid', {
+					defaultImageId: imageSource.defaultImageId,
+					reason: validation.error,
+					assetFolderId: asset.assetFolderId,
+				});
+
 				return this.resultFail(
 					validation.error === 'image-format-unsupported' ? 'default-image-invalid' : validation.error,
 					400,
@@ -169,6 +191,8 @@ export class CampaignSubmissionService extends BaseService {
 			if (isStoryblokManagementError(error)) {
 				this.logger.error(error, {
 					defaultImageId: imageSource.defaultImageId,
+					reason: error.statusCode === 404 ? 'asset-not-found' : 'storyblok-management-error',
+					assetFolderId: null,
 					retryable: error.retryable,
 					statusCode: error.statusCode,
 				});
@@ -179,7 +203,11 @@ export class CampaignSubmissionService extends BaseService {
 				);
 			}
 
-			this.logger.error(error, { defaultImageId: imageSource.defaultImageId });
+			this.logger.error(error, {
+				defaultImageId: imageSource.defaultImageId,
+				reason: 'unexpected-error',
+				assetFolderId: null,
+			});
 
 			return this.resultFail('default-image-invalid', 400);
 		}

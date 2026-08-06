@@ -83,6 +83,13 @@ describe('CampaignSubmissionService', () => {
 		const getAsset = jest.fn();
 		const downloadAssetBuffer = jest.fn();
 		const uploadAsset = jest.fn().mockResolvedValue({ assetId: 10, asset: { filename: 'image.jpg' } });
+		const loggerInstance = {
+			warn: jest.fn(),
+			error: jest.fn(),
+			info: jest.fn(),
+			debug: jest.fn(),
+			alert: jest.fn(),
+		};
 
 		const storyblokManagementService = {
 			uploadAsset,
@@ -98,6 +105,7 @@ describe('CampaignSubmissionService', () => {
 			programPublicSubmissionService,
 			campaignValidationService,
 			storyblokManagementService,
+			loggerInstance,
 		);
 
 		return {
@@ -112,6 +120,7 @@ describe('CampaignSubmissionService', () => {
 			getAsset,
 			downloadAssetBuffer,
 			uploadAsset,
+			loggerInstance,
 		};
 	};
 
@@ -200,7 +209,7 @@ describe('CampaignSubmissionService', () => {
 	});
 
 	test('submit rejects default images outside the defaults folder', async () => {
-		const { service, getAsset, uploadAsset } = createService();
+		const { service, getAsset, uploadAsset, loggerInstance } = createService();
 		getAsset.mockResolvedValue({
 			id: 99,
 			filename: 'https://a.storyblok.com/f/109655/default.png',
@@ -216,6 +225,55 @@ describe('CampaignSubmissionService', () => {
 		if (!result.success) {
 			expect(result.error).toBe('default-image-invalid');
 		}
+		expect(loggerInstance.warn).toHaveBeenCalledWith('Campaign submission default image invalid', {
+			defaultImageId: 99,
+			reason: 'wrong-folder',
+			assetFolderId: 123,
+		});
+		expect(uploadAsset).not.toHaveBeenCalled();
+	});
+
+	test('submit rejects a missing default image asset', async () => {
+		const { service, getAsset, uploadAsset, loggerInstance } = createService();
+		getAsset.mockResolvedValue(null);
+
+		const result = await service.submit(baseFields, { kind: 'default', defaultImageId: 99 });
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('default-image-invalid');
+		}
+		expect(loggerInstance.warn).toHaveBeenCalledWith('Campaign submission default image invalid', {
+			defaultImageId: 99,
+			reason: 'asset-not-found',
+			assetFolderId: null,
+		});
+		expect(uploadAsset).not.toHaveBeenCalled();
+	});
+
+	test('submit rejects a default image with unsupported bytes', async () => {
+		const { service, getAsset, downloadAssetBuffer, uploadAsset, loggerInstance } = createService();
+		getAsset.mockResolvedValue({
+			id: 99,
+			filename: 'https://a.storyblok.com/f/109655/default.gif',
+			alt: null,
+			focus: null,
+			contentType: 'image/gif',
+			assetFolderId: campaignSubmissionConfig.storyblokCampaignDefaultImagesFolderId,
+		});
+		downloadAssetBuffer.mockResolvedValue(Buffer.from('not-an-image'));
+
+		const result = await service.submit(baseFields, { kind: 'default', defaultImageId: 99 });
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('default-image-invalid');
+		}
+		expect(loggerInstance.warn).toHaveBeenCalledWith('Campaign submission default image invalid', {
+			defaultImageId: 99,
+			reason: 'image-format-unsupported',
+			assetFolderId: campaignSubmissionConfig.storyblokCampaignDefaultImagesFolderId,
+		});
 		expect(uploadAsset).not.toHaveBeenCalled();
 	});
 
