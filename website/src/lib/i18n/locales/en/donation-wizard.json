@@ -101,7 +101,7 @@
 	"onboarding": {
 		"donatedThankYouMonthly": "{{currency}} {{amount}}/month donated. Thank you.",
 		"donatedThankYouOneTime": "{{currency}} {{amount}} donated. Thank you.",
-		"accountCreatedDescription": "We've setup your account.",
+		"accountCreatedDescription": "We've set up your account.",
 		"isThisYou": "Please review your account details",
 		"firstName": "First Name",
 		"lastName": "Last Name",

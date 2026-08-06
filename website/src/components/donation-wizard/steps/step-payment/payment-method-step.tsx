@@ -22,12 +22,20 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const isQrAvailable = isWizardQrCurrencySupported(currency);
 
 	useEffect(() => {
-		if (view.paymentMethod === state.context.paymentMethod) {
-			return;
+		if (view.paymentMethod !== state.context.paymentMethod) {
+			send({ type: 'SET_PAYMENT_METHOD', value: view.paymentMethod });
 		}
 
-		send({ type: 'SET_PAYMENT_METHOD', value: view.paymentMethod });
-	}, [send, state.context.paymentMethod, view.paymentMethod]);
+		if (view.coverTransactionCosts !== state.context.coverTransactionCosts) {
+			send({ type: 'SET_COVER_TRANSACTION_COSTS', value: view.coverTransactionCosts });
+		}
+	}, [
+		send,
+		state.context.coverTransactionCosts,
+		state.context.paymentMethod,
+		view.coverTransactionCosts,
+		view.paymentMethod,
+	]);
 
 	return (
 		<div
