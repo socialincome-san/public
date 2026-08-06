@@ -68,10 +68,10 @@ export type CampaignOption = { id: string; name: string };
 
 export type PublicCampaignActivity = 'active' | 'inactive' | 'all';
 
-export type PublicCampaignCardImage = {
+type PublicCampaignCardImage = {
 	filename: string;
-	alt?: string | null;
-	focus?: string | null;
+	alt: string | null;
+	focus: string | null;
 };
 
 export type PublicCampaignCard = {

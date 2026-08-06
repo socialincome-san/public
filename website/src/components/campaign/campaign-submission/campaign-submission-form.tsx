@@ -188,6 +188,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 					}
 
 					const firstDefault = result.data[0];
+
 					return firstDefault ? { type: 'default', id: firstDefault.id } : null;
 				});
 			} catch {
@@ -223,8 +224,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	}, [currentStep]);
 
 	const isContinueDisabled = programsLoading || programs.length === 0 || Boolean(programsError);
-	const isSubmitDisabled =
-		isSubmitting || (defaultImagesLoading && imageSelection?.type !== 'upload');
+	const isSubmitDisabled = isSubmitting || (defaultImagesLoading && imageSelection?.type !== 'upload');
 
 	const onSelectDefaultImage = (id: number) => {
 		revokeUploadPreview();
