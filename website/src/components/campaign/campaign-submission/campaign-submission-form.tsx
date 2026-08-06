@@ -175,22 +175,21 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				if (!result.success) {
 					setDefaultImages([]);
 					setDefaultImagesError(labels.defaultImagesError);
-					clearImageSelection();
+					setImageSelection((current) => (current?.type === 'upload' ? current : null));
 
 					return;
 				}
 
 				setDefaultImages(result.data);
 				setDefaultImagesError(null);
-				if (result.data[0]) {
-					setImageSelection({ type: 'default', id: result.data[0].id });
-					revokeUploadPreview();
-					if (primaryImageInputRef.current) {
-						primaryImageInputRef.current.value = '';
+				setImageSelection((current) => {
+					if (current !== null) {
+						return current;
 					}
-				} else {
-					clearImageSelection();
-				}
+
+					const firstDefault = result.data[0];
+					return firstDefault ? { type: 'default', id: firstDefault.id } : null;
+				});
 			} catch {
 				if (cancelled) {
 					return;
@@ -198,7 +197,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 
 				setDefaultImages([]);
 				setDefaultImagesError(labels.defaultImagesError);
-				clearImageSelection();
+				setImageSelection((current) => (current?.type === 'upload' ? current : null));
 			} finally {
 				if (!cancelled) {
 					setDefaultImagesLoading(false);
@@ -211,7 +210,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		return () => {
 			cancelled = true;
 		};
-	}, [clearImageSelection, currentStep, labels.defaultImagesError, revokeUploadPreview]);
+	}, [currentStep, labels.defaultImagesError]);
 
 	useEffect(() => {
 		if (!hasMountedStep.current) {
