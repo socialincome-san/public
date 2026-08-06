@@ -160,6 +160,7 @@ export const selectWizardShellView = (state: DonationWizardState) => {
 
 	return {
 		activeStep,
+		cadence: state.context.cadence,
 		communityStats: state.context.communityStats,
 		...getDonationWizardLayout(activeStep),
 	};
