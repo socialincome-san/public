@@ -296,7 +296,6 @@ export const DetailsStep = ({
 						description={labels.accessPrivateDescription}
 					/>
 				</RadioGroup>
-				<input type="hidden" {...form.register('isPublic')} />
 			</div>
 
 			<div ref={imageSectionRef} className="flex flex-col gap-3">
