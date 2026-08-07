@@ -27,6 +27,7 @@ export const CountriesOverviewPage = async ({ overview, lang, region }: Props) =
 		currentLabel: title,
 		lang,
 		region,
+		includeCurrentLabel: false,
 	});
 
 	return (
