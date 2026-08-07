@@ -1,9 +1,47 @@
-import { CountryCode } from '@/generated/prisma/enums';
+import type { CountryCode } from '@/generated/prisma/enums';
 import { DateTime } from 'luxon';
 
 export type TimeRange = {
 	start: DateTime;
 	end: DateTime;
+};
+
+export type TransparencyFinancialPeriod = { kind: 'all-time' } | { kind: 'ytd' } | { kind: 'year'; year: number };
+
+export type TransparencyFinancialPeriodRange = {
+	start: DateTime;
+	end: DateTime;
+};
+
+export const getTransparencyFinancialPeriodRange = (
+	period: TransparencyFinancialPeriod,
+	referenceDate = DateTime.now(),
+): TransparencyFinancialPeriodRange | undefined => {
+	if (period.kind === 'all-time') {
+		return undefined;
+	}
+
+	const start = referenceDate.set({ year: period.kind === 'year' ? period.year : referenceDate.year }).startOf('year');
+
+	return {
+		start,
+		end: period.kind === 'year' ? start.plus({ years: 1 }) : referenceDate,
+	};
+};
+
+export const getTransparencyFinancialPeriodDateFilter = (
+	period: TransparencyFinancialPeriod,
+	referenceDate = DateTime.now(),
+): { gte: Date; lt: Date } | undefined => {
+	const periodRange = getTransparencyFinancialPeriodRange(period, referenceDate);
+	if (!periodRange) {
+		return undefined;
+	}
+
+	return {
+		gte: periodRange.start.toJSDate(),
+		lt: periodRange.end.toJSDate(),
+	};
 };
 
 export type ContributionTimeRange = TimeRange & {
@@ -28,8 +66,15 @@ export type CountryTransparencyTotals = {
 	totalContributionsChf: number;
 };
 
+type TransparencyFinancialSummary = {
+	inflowsChf: number;
+	outflowsChf: number;
+	reservesChf: number;
+};
+
 export type TransparencyData = {
 	totals: TransparencyTotals;
+	financialSummary: TransparencyFinancialSummary;
 	timeRanges: ContributionTimeRange[];
 	topCountries: ContributionsByCountry[];
 };
