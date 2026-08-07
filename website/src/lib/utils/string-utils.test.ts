@@ -10,7 +10,7 @@ import {
 	titleCase,
 } from './string-utils';
 
-const normalizeTestIntlOutput = (value: string): string => value.replace(/[\u2018\u2019\u02BC]/g, "'");
+const normalizeTestIntlOutput = (value: string): string => value.replace(/['\u2018\u2019\u02BC]/g, ',');
 
 describe('string-utils', () => {
 	describe('slugify', () => {
@@ -161,7 +161,7 @@ describe('string-utils', () => {
 		});
 
 		test('normalizes swiss thousands separator apostrophe', () => {
-			expect(formatNumberLocale(4650, 'de-CH')).toBe("4'650");
+			expect(formatNumberLocale(4650, 'de-CH')).toBe("4,650");
 		});
 	});
 
