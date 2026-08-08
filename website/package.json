@@ -145,7 +145,7 @@
 		"firebase-tools": "15.25.1",
 		"jest": "30.4.2",
 		"knip": "6.31.0",
-		"next-openapi-gen": "0.8.9",
+		"next-openapi-gen": "0.10.5",
 		"npm-run-all2": "5.0.2",
 		"postcss": "8.5.25",
 		"prettier": "3.9.6",
