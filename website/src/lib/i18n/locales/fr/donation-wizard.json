@@ -26,7 +26,7 @@
 		"one-time-title": "Don unique",
 		"switch-to-one-time": "Unique",
 		"switch-to-monthly": "Mensuel",
-		"upsell-subtitle": "La moitié du montant, chaque mois. Cela nous aide encore plus.",
+		"upsell-subtitle": "La moitié du montant, chaque mois.\nCela nous aide encore plus.",
 		"upsell-preferred": "Recommandé",
 		"upsell-benefit-cancel": "Annulable à tout moment",
 		"per-month": "/mois",
@@ -91,8 +91,6 @@
 	},
 	"thankYou": {
 		"message": "Merci pour ton aide !",
-		"messageWithAmountMonthly": "Merci pour {{amount}}/mois !",
-		"messageWithAmountOneTime": "Merci pour {{amount}} !",
 		"loginPrompt": {
 			"title": "Ton compte est prêt",
 			"description": "Va sur la page de connexion pour accéder à ton compte.",
@@ -101,10 +99,10 @@
 		}
 	},
 	"onboarding": {
-		"successTitle": "Don réussi",
-		"accountCreatedDescription": "Nous venons de créer un compte pour toi. Vérifie tes informations.",
-		"accountCardTitle": "Vérifie tes informations de compte",
-		"isThisYou": "Est-ce bien toi ?",
+		"donatedThankYouMonthly": "{{currency}} {{amount}}/mois donnés. Merci.",
+		"donatedThankYouOneTime": "{{currency}} {{amount}} donnés. Merci.",
+		"accountCreatedDescription": "Nous avons configuré ton compte.",
+		"isThisYou": "Vérifie tes informations de compte",
 		"firstName": "Prénom",
 		"lastName": "Nom",
 		"email": "E-mail",
@@ -118,8 +116,8 @@
 		"updateError": "Une erreur s'est produite lors de l'enregistrement. Merci de réessayer.",
 		"continue": "Continuer",
 		"referral": {
-			"cardTitle": "Nous aide à concentrer notre temps sur ce qui fonctionne vraiment",
 			"question": "Comment as-tu entendu parler de nous ?",
+			"description": "Cela nous aide à comprendre ce qui fonctionne pour dépenser moins en sensibilisation et plus pour l'impact.",
 			"skip": "Ignorer",
 			"submit": "Envoyer le feedback",
 			"submitting": "Enregistrement…",
@@ -129,7 +127,6 @@
 				"socialmedia": "Réseaux sociaux",
 				"events": "Événements",
 				"media": "Médias",
-				"preferNotToSay": "Je préfère ne pas répondre",
 				"other": "Autre"
 			}
 		}
@@ -140,7 +137,7 @@
 		"supporters": "{{supporterCount}} supporters de {{countryCount}} pays",
 		"supporters-no-countries": "{{supporterCount}} supporters dans le monde",
 		"zewo": "Certifié ZEWO",
-		"why-one-percent": "Pourquoi 1 % ?",
+		"why-one-percent": "Pourquoi donner 1% ?",
 		"pay-with": "Payer avec"
 	}
 }

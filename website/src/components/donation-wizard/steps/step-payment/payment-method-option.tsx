@@ -3,7 +3,6 @@
 import { Badge } from '@/components/badge';
 import { SelectableCard } from '@/components/selectable-card';
 import { cn } from '@/lib/utils/cn';
-import { Smile } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 type Props = {
@@ -33,24 +32,25 @@ export const PaymentMethodOption = ({
 		disabled={disabled}
 		testId={testId}
 		className={cn(
-			'flex w-full flex-col gap-3 p-3 sm:h-16 sm:flex-row sm:items-center sm:p-4',
+			'flex w-full max-w-full min-w-0 flex-col gap-2 p-3 sm:min-h-16 sm:justify-center sm:p-4',
 			!selected && !disabled && 'hover:bg-muted/50',
 		)}
 	>
-		<div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-			<div className="flex min-w-0 flex-1 flex-col gap-1">
+		<div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-2">
+			<div className="flex min-w-0 flex-col gap-1">
 				<div className="flex min-w-0 flex-wrap items-center gap-2">
 					<span className="text-base leading-snug font-medium sm:text-lg sm:leading-none">{label}</span>
 					{badge && (
 						<Badge variant="verified" className="shrink-0 gap-0.5 px-2 py-0.5 text-[10px]">
 							{badge}
-							<Smile className="size-2.5" aria-hidden />
 						</Badge>
 					)}
 				</div>
-				{disabledReason ? <p className="text-muted-foreground text-sm leading-snug">{disabledReason}</p> : null}
+				{disabledReason ? (
+					<p className="text-muted-foreground min-w-0 text-sm leading-snug break-words">{disabledReason}</p>
+				) : null}
 			</div>
-			{trailing && <div className="flex shrink-0 items-center justify-start sm:justify-end">{trailing}</div>}
+			{trailing ? <div className="max-w-full min-w-0">{trailing}</div> : null}
 		</div>
 	</SelectableCard>
 );
