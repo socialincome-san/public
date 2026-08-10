@@ -48,11 +48,13 @@ export const getCountriesOverviewStoryPath = () => `${STORYBLOK_COUNTRIES_FOLDER
 
 export const getCountryStoryPath = (countrySlug: string) => `${STORYBLOK_COUNTRIES_FOLDER}/${countrySlug}`;
 
-const STORYBLOK_CAMPAIGNS_FOLDER = `${STORYBLOK_PAGES_FOLDER}/campaigns`;
+export const STORYBLOK_CAMPAIGNS_FOLDER = `${STORYBLOK_PAGES_FOLDER}/campaigns`;
 
 const STORYBLOK_CAMPAIGNS_OVERVIEW_SLUG = 'campaigns';
 
 export const getCampaignsOverviewStoryPath = () => `${STORYBLOK_CAMPAIGNS_FOLDER}/${STORYBLOK_CAMPAIGNS_OVERVIEW_SLUG}`;
+
+export const getCampaignStoryPath = (campaignSlug: string) => `${STORYBLOK_CAMPAIGNS_FOLDER}/${campaignSlug}`;
 
 export const STORYBLOK_FAQ_FOLDER = `${STORYBLOK_GLOBALS_FOLDER}/faqs`;
 

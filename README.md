@@ -244,6 +244,39 @@ npm run storyblok:generate
 The command logs into Storyblok, pulls component schemas, and writes generated
 types to `website/src/generated/storyblok/types`.
 
+### Anonymous Campaign Submissions
+
+Visitors can submit campaigns from the public `/campaigns` page. Submissions:
+
+- create an inactive, non-public database `Campaign` with a server-generated slug
+- upload a primary image and create an unpublished Storyblok `Campaign` story
+- link database and CMS entries through `Campaign.slug` ↔ `Storyblok.content.portalSlug`
+
+Publication happens manually in Storyblok. Published Storyblok stories are the
+sole public visibility gate for campaign pages (detail load and overview join).
+
+Public **active** vs **inactive** is derived from campaign end date and goal
+progress (not the database `isActive` flag): a campaign is inactive when its
+finish date has passed or its goal amount has been reached. The overview filter
+and card linkability use that derived state; deep links to published stories
+still work after a campaign becomes inactive.
+
+Server-only configuration lives in
+`website/src/lib/config/campaign-submission.config.ts`. Set the Management API
+token in `website/.env.local`:
+
+```bash
+STORYBLOK_MANAGEMENT_TOKEN="<storyblok-personal-access-token>"
+```
+
+The token must be able to create draft stories under `pages/campaigns` and
+upload assets in the configured asset folder. If a submission fails after partial
+progress, the API attempts compensating cleanup of the created Storyblok asset,
+Storyblok story, and database row.
+
+Future hardening (not part of the first version): Cloudflare Turnstile and
+distributed rate limiting on `POST /api/campaign-submissions`.
+
 ## Mobile API
 
 The `recipients_app` communicates with the Next.js API routes. The public API

@@ -15,7 +15,7 @@ import {
 const ADD_RECIPIENT = {
 	firstName: 'Tony',
 	lastName: 'Stark',
-	programName: 'SI Core Program SL',
+	programName: 'Sierra Leone Unconditional',
 	localPartnerName: 'Local Partner SL Operations',
 };
 
@@ -28,7 +28,7 @@ const EDIT_RECIPIENT = {
 	language: 'en',
 	profession: 'Photographer',
 	gender: 'female',
-	programName: 'SI Education SL',
+	programName: 'Skills to Stability',
 	localPartnerName: 'Local Partner SL Operations',
 	phone: '+666666666',
 	paymentProvider: 'Orange Money',
@@ -70,7 +70,7 @@ const CSV_RECIPIENTS = [
 	{
 		firstName: 'Bruce',
 		lastName: 'Banner',
-		programName: 'SI Core Program SL',
+		programName: 'Sierra Leone Unconditional',
 		localPartnerName: 'Local Partner SL Operations',
 		contactPhone: '+23277000801',
 		paymentPhone: '+23277000811',
@@ -81,7 +81,7 @@ const CSV_RECIPIENTS = [
 	{
 		firstName: 'Natasha',
 		lastName: 'Romanoff',
-		programName: 'SI Core Program SL',
+		programName: 'Sierra Leone Unconditional',
 		localPartnerName: 'Local Partner SL Operations',
 		contactPhone: '',
 		paymentPhone: '',
@@ -92,7 +92,7 @@ const CSV_RECIPIENTS = [
 	{
 		firstName: 'Clint',
 		lastName: 'Barton',
-		programName: 'SI Education SL',
+		programName: 'Skills to Stability',
 		localPartnerName: 'Local Partner SL Operations',
 		contactPhone: '+23277000803',
 		paymentPhone: '+23277000813',
