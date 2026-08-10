@@ -24,6 +24,7 @@ import {
 } from '@/lib/services/storyblok/storyblok.utils';
 
 type JournalOverviewLabels = {
+	homeLabel: string;
 	journalLabel: string;
 	overviewTitle: string;
 	overviewDescription: string;
@@ -46,13 +47,15 @@ export class JournalService extends BaseService {
 		const journalPath = createWebsiteJournalPath(lang, region);
 		const pathname = buildJournalOverviewPathname(journalPath, tagSlug);
 
-		const [authorsResult, tagsResult] = await Promise.all([
+		const [authorsResult, tagsResult, roleLabelsResult] = await Promise.all([
 			this.storyblok.getOverviewAuthors(lang),
 			this.storyblok.getOverviewTags(lang),
+			this.storyblok.getPrimaryRoleLabels(lang),
 		]);
 
 		const authors = authorsResult.success ? authorsResult.data : [];
 		const tags = tagsResult.success ? tagsResult.data : [];
+		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 
 		if (tagSlug) {
 			const tagResult = await this.storyblok.getTag(tagSlug, lang);
@@ -76,10 +79,11 @@ export class JournalService extends BaseService {
 				activeTagSlug: tagSlug,
 				journalPath,
 				pathname,
-				breadcrumbs: buildJournalOverviewBreadcrumbs(labels.journalLabel, journalPath, lang, region, {
+				breadcrumbs: buildJournalOverviewBreadcrumbs(labels.homeLabel, labels.journalLabel, journalPath, lang, region, {
 					slug: tagSlug,
 					label: tagResult.data.content.value,
 				}),
+				roleLabels,
 			});
 		}
 
@@ -98,7 +102,8 @@ export class JournalService extends BaseService {
 			pageDescription: labels.overviewDescription,
 			journalPath,
 			pathname,
-			breadcrumbs: buildJournalOverviewBreadcrumbs(labels.journalLabel, journalPath, lang, region),
+			breadcrumbs: buildJournalOverviewBreadcrumbs(labels.homeLabel, labels.journalLabel, journalPath, lang, region),
+			roleLabels,
 		});
 	}
 
@@ -107,6 +112,7 @@ export class JournalService extends BaseService {
 		region: string,
 		slug: string,
 		journalLabel: string,
+		homeLabel: string,
 	): Promise<ServiceResult<JournalArticlePageData>> {
 		const articleResult = await this.storyblok.getArticle(lang, slug);
 		if (!articleResult.success) {
@@ -129,10 +135,13 @@ export class JournalService extends BaseService {
 			story,
 			relatedArticles: relatedResult.success ? relatedResult.data : [],
 			breadcrumbs: buildJournalArticleBreadcrumbs(
+				homeLabel,
 				journalLabel,
 				journalPath,
 				getArticleTitle(story, true),
 				createWebsiteJournalArticleLink(slug, lang, region),
+				lang,
+				region,
 			),
 		});
 	}
@@ -142,6 +151,7 @@ export class JournalService extends BaseService {
 		region: string,
 		slug: string,
 		journalLabel: string,
+		homeLabel: string,
 	): Promise<ServiceResult<JournalPersonPageData>> {
 		const personResult = await this.storyblok.getPerson(slug, lang);
 		if (!personResult.success) {
@@ -149,8 +159,12 @@ export class JournalService extends BaseService {
 		}
 
 		const person = personResult.data;
-		const articlesResult = await this.storyblok.getArticlesByAuthor(person.uuid, lang);
+		const [articlesResult, roleLabelsResult] = await Promise.all([
+			this.storyblok.getArticlesByAuthor(person.uuid, lang),
+			this.storyblok.getPrimaryRoleLabels(lang),
+		]);
 		const articles = articlesResult.success ? articlesResult.data : [];
+		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 		const totalInDefault = await this.storyblok.resolveArticleCountInDefaultLanguage(lang, articles.length, () =>
 			this.storyblok.getArticleCountByAuthorForDefaultLang(person.uuid),
 		);
@@ -164,11 +178,15 @@ export class JournalService extends BaseService {
 			showMoreArticlesLink: totalInDefault > articles.length,
 			pathname,
 			breadcrumbs: buildJournalPersonBreadcrumbs(
+				homeLabel,
 				journalLabel,
 				journalPath,
 				personName,
 				createWebsitePersonLink(slug, lang, region),
+				lang,
+				region,
 			),
+			roleLabels,
 		});
 	}
 }

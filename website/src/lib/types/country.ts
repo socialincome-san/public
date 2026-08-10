@@ -260,6 +260,16 @@ export const getCountryNameByCode = (code: CountryCode): string => {
 	return COUNTRY_NAMES[code];
 };
 
+/**
+ * Case-insensitive lookup for arbitrary ISO-code input (e.g. lowercase codes from Storyblok
+ * datasources); falls back to the raw input when the code is unknown.
+ */
+export const getCountryNameFromIsoCode = (countryIsoCode: string): string => {
+	const code = countryIsoCode.toUpperCase();
+
+	return isValidCountryCode(code) ? getCountryNameByCode(code) : countryIsoCode;
+};
+
 export const COUNTRY_OPTIONS = COUNTRY_CODES.map((code) => ({
 	code,
 	name: COUNTRY_NAMES[code],

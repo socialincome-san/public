@@ -9,6 +9,7 @@ import "package:app/view/pages/payments_page.dart";
 import "package:app/view/widgets/dashboard/dashboard_item.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_grid.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_header.dart";
+import "package:app/view/widgets/income/balance_card/balance_card_program_completed_header.dart";
 import "package:app/view/widgets/income/balance_card/on_hold_bottom_card.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -27,6 +28,9 @@ class BalanceCardContainer extends DashboardItem {
     final payoutsUiState = context.watch<PayoutsCubit>().state.payoutsUiState;
 
     final MappedPayout? lastPaidPayment = payoutsUiState?.lastPaidPayout;
+    final isProgramCompleted = payoutsUiState != null &&
+        payoutsUiState.programTotalCountOfPayments > 0 &&
+        payoutsUiState.confirmedPayoutsCount == payoutsUiState.programTotalCountOfPayments;
 
     return Column(
       children: [
@@ -47,11 +51,16 @@ class BalanceCardContainer extends DashboardItem {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      BalanceCardHeader(
-                        daysTo: payoutsUiState?.nextPayout.daysToPayout ?? 0,
-                        amount: payoutsUiState?.nextPayout.amount ?? 0,
-                        balanceCardStatus: payoutsUiState?.status ?? BalanceCardStatus.allConfirmed,
-                      ),
+                      if (isProgramCompleted) ...[
+                        const BalanceCardProgramCompletedHeader(),
+                      ] else ...[
+                        BalanceCardHeader(
+                          daysTo: payoutsUiState?.nextPayout.daysToPayout ?? -1,
+                          amount: payoutsUiState?.nextPayout.amount ?? 0,
+                          currency: payoutsUiState?.nextPayout.currency ?? "???",
+                          balanceCardStatus: payoutsUiState?.status ?? BalanceCardStatus.allConfirmed,
+                        ),
+                      ],
                       const SizedBox(height: 16),
                       Text(
                         context.l10n.myPayments,

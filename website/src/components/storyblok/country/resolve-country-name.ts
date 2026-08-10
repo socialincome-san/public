@@ -2,10 +2,9 @@ import { getCountryDescription, getCountrySlug, getCountryTitle } from '@/compon
 import type { Country } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
-import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
+import { getCountryNameFromIsoCode } from '@/lib/types/country';
 
-export const getCountryNameFromIsoCode = (countryIsoCode: string): string =>
-	isValidCountryCode(countryIsoCode) ? getCountryNameByCode(countryIsoCode) : countryIsoCode;
+export { getCountryNameFromIsoCode } from '@/lib/types/country';
 
 export type ResolvedProgramCountry = {
 	isoCode: string;

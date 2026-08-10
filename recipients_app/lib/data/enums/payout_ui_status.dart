@@ -62,6 +62,14 @@ enum PayoutUiStatus {
     iconColor: AppColors.backgroundColor,
   ),
 
+  /// red label, dark font, close icon
+  failed(
+    color: AppColors.redColor,
+    icon: Icons.close_rounded,
+    textColor: AppColors.fontColorDark,
+    iconColor: AppColors.fontColorDark,
+  ),
+
   /// backgroundColor label, dark font, no visbible icon (That's why iconColor is same as color)
   empty(
     color: AppColors.backgroundColor,

@@ -32,10 +32,16 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 
 	const translator = await Translator.getInstance({
 		language: lang as WebsiteLanguage,
-		namespaces: ['website-journal', 'common', 'website-newsletter'],
+		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-common'],
 	});
 
-	const pageResult = await services.journal.getArticlePageData(lang, region, slug, translator.t('overview.title'));
+	const pageResult = await services.journal.getArticlePageData(
+		lang,
+		region,
+		slug,
+		translator.t('overview.title'),
+		translator.t('breadcrumb.home', { namespace: 'website-common' }),
+	);
 
 	if (!pageResult.success) {
 		notFound();
