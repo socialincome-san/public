@@ -67,6 +67,23 @@ describe('campaign-submission-input', () => {
 		}
 	});
 
+	test('parseCampaignSubmissionFields treats non-true public strings as false', () => {
+		const formData = new FormData();
+		formData.set('title', 'Campaign');
+		formData.set('description', 'Description');
+		formData.set('goal', '100');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', validEndDateString());
+		formData.set('programId', 'program-1');
+		formData.set('public', 'private');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.public).toBe(false);
+		}
+	});
+
 	test('parseCampaignSubmissionFields rejects titles that cannot be slugified', () => {
 		const formData = new FormData();
 		formData.set('title', '!!! 🎉');

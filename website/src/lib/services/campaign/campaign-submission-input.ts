@@ -108,7 +108,7 @@ const campaignSubmissionFieldsSchema = z.object({
 			return value;
 		}
 
-		return value.trim().toLowerCase() !== 'false';
+		return value.trim().toLowerCase() === 'true';
 	}),
 });
 
