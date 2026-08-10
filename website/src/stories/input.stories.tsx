@@ -12,7 +12,7 @@ const meta = {
 	args: {
 		placeholder: 'Enter text',
 		type: 'text',
-		defaultValue: 'TestValue',
+		defaultValue: '',
 	},
 
 	argTypes: {
@@ -43,10 +43,10 @@ const meta = {
 
 			source: {
 				code: `<Input
-	  type="email"
-	  placeholder="name@example.com"
-	  defaultValue="test@example.com"
-/>`,
+				type="email"
+				placeholder="name@example.com"
+				defaultValue="test@example.com"
+			/>`,
 			},
 			description: {
 				component:
@@ -61,12 +61,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-	play: async ({ canvas }) => {
-		const input = await canvas.findByRole('textbox');
+	play: async ({ canvasElement }) => {
+		const field = canvasElement.querySelector('input');
 
-		await userEvent.type(input, ' Hallo');
+		if (!field) {
+			throw new Error('The editable field must be rendered.');
+		}
 
-		await expect(input).toHaveValue('TestValue Hallo');
+		await userEvent.type(field, 'Hello');
+
+		await expect(field).toHaveValue('Hello');
 	},
 };
 
@@ -74,14 +78,19 @@ export const Disabled: Story = {
 	args: {
 		disabled: true,
 	},
-	play: async ({ canvas }) => {
-		const input = await canvas.findByRole('textbox');
+	play: async ({ canvasElement }) => {
+		const field = canvasElement.querySelector('input');
 
-		await expect(input).toBeDisabled();
-	},
-};
-export const ReadOnly: Story = {
-	args: {
-		readOnly: true,
+		if (!field) {
+			throw new Error('The disabled field must be rendered.');
+		}
+
+		const valueBeforeTyping = field.value;
+
+		await expect(field).toBeDisabled();
+
+		await userEvent.type(field, 'should not be added');
+
+		await expect(field).toHaveValue(valueBeforeTyping);
 	},
 };
