@@ -11,7 +11,7 @@ const createStory = (portalSlug: string, storySlug: string): CampaignStory =>
 			portalSlug,
 			title: 'CMS title',
 			description: 'Description',
-			primaryImage: { filename: 'image.jpg' },
+			primaryImage: { filename: 'https://a.storyblok.com/f/109655/image.jpg', alt: 'Cover', focus: '0x0:100x100' },
 			_uid: 'uid',
 		},
 	}) as CampaignStory;
@@ -37,6 +37,11 @@ describe('resolveCampaignsWithCmsEntries', () => {
 		expect(result.campaigns).toHaveLength(1);
 		expect(result.campaigns[0]?.title).toBe('CMS title');
 		expect(result.campaigns[0]?.slug).toBe('pending-campaign');
+		expect(result.campaigns[0]?.primaryImage).toEqual({
+			filename: 'https://a.storyblok.com/f/109655/image.jpg',
+			alt: 'Cover',
+			focus: '0x0:100x100',
+		});
 	});
 
 	test('skips stories without portalSlug or missing DB match', () => {

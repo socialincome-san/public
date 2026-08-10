@@ -35,6 +35,17 @@ type ManagementAsset = {
 	copyright?: string | null;
 	focus?: string | null;
 	name?: string | null;
+	asset_folder_id?: number | null;
+	content_type?: string | null;
+};
+
+export type StoryblokListedAsset = {
+	id: number;
+	filename: string;
+	alt: string | null;
+	focus: string | null;
+	contentType: string | null;
+	assetFolderId: number | null;
 };
 
 type StoryCreateResponse = {
@@ -121,8 +132,187 @@ const uploadSignedAsset = async (signed: SignedUploadResponse, fileBuffer: Buffe
 	}
 };
 
+const isImageAsset = (asset: ManagementAsset): boolean => {
+	const contentType = asset.content_type?.toLowerCase() ?? '';
+	if (contentType.startsWith('image/')) {
+		return campaignSubmissionConfig.permittedImageMimeTypes.includes(
+			contentType as (typeof campaignSubmissionConfig.permittedImageMimeTypes)[number],
+		);
+	}
+
+	const filename = asset.filename?.toLowerCase() ?? '';
+
+	return /\.(jpe?g|png|webp)(\?|$)/.test(filename);
+};
+
+/** Restrict asset downloads to HTTPS hosts under *.storyblok.com (e.g. a.storyblok.com). */
+const assertAllowedStoryblokAssetUrl = (filename: string): string => {
+	let url: URL;
+	try {
+		url = new URL(filename);
+	} catch {
+		throw new StoryblokManagementError('Invalid Storyblok asset URL.', 400, false);
+	}
+
+	if (url.protocol !== 'https:') {
+		throw new StoryblokManagementError('Storyblok asset URL must use HTTPS.', 400, false);
+	}
+
+	if (url.username || url.password) {
+		throw new StoryblokManagementError('Storyblok asset URL must not include credentials.', 400, false);
+	}
+
+	if (!url.hostname.endsWith('.storyblok.com')) {
+		throw new StoryblokManagementError('Storyblok asset URL host is not allowed.', 400, false);
+	}
+
+	return url.href;
+};
+
+/**
+ * Drains a fetch response with a hard byte cap. Content-Length is a fast-path reject only;
+ * the stream itself is still bounded so missing/lying headers cannot force unbounded buffering.
+ */
+const readResponseBodyWithLimit = async (response: Response, maxBytes: number): Promise<Buffer> => {
+	const contentLengthHeader = response.headers.get('content-length');
+	if (contentLengthHeader !== null) {
+		const contentLength = Number(contentLengthHeader);
+		if (Number.isFinite(contentLength) && contentLength > maxBytes) {
+			throw new StoryblokManagementError('Storyblok asset exceeds size limit.', 413, false);
+		}
+	}
+
+	const body = response.body;
+	if (!body) {
+		const arrayBuffer = await response.arrayBuffer();
+		if (arrayBuffer.byteLength > maxBytes) {
+			throw new StoryblokManagementError('Storyblok asset exceeds size limit.', 413, false);
+		}
+
+		return Buffer.from(arrayBuffer);
+	}
+
+	const reader = body.getReader();
+	const chunks: Uint8Array[] = [];
+	let totalBytes = 0;
+
+	try {
+		while (true) {
+			const { done, value } = await reader.read();
+			if (done) {
+				break;
+			}
+
+			totalBytes += value.byteLength;
+			if (totalBytes > maxBytes) {
+				await reader.cancel();
+				throw new StoryblokManagementError('Storyblok asset exceeds size limit.', 413, false);
+			}
+
+			chunks.push(value);
+		}
+	} finally {
+		try {
+			reader.releaseLock();
+		} catch {
+			// Stream may already be cancelled or released.
+		}
+	}
+
+	return Buffer.concat(chunks, totalBytes);
+};
+
+const toListedAsset = (asset: ManagementAsset): StoryblokListedAsset | null => {
+	if (!asset.id || !asset.filename || !isImageAsset(asset)) {
+		return null;
+	}
+
+	return {
+		id: asset.id,
+		filename: asset.filename,
+		alt: asset.alt ?? null,
+		focus: asset.focus ?? null,
+		contentType: asset.content_type ?? null,
+		assetFolderId: asset.asset_folder_id ?? null,
+	};
+};
+
 export class StoryblokManagementService {
 	private readonly spaceId = campaignSubmissionConfig.storyblokSpaceId;
+
+	async listAssetsInFolder(
+		folderId: number,
+		options?: { perPage?: number; sortBy?: string },
+	): Promise<StoryblokListedAsset[]> {
+		const perPage = options?.perPage ?? 25;
+		const sortBy = options?.sortBy ?? 'created_at:asc';
+		const query = new URLSearchParams({
+			in_folder: String(folderId),
+			per_page: String(perPage),
+			page: '1',
+			sort_by: sortBy,
+		});
+
+		const body = await requestManagement(`/spaces/${this.spaceId}/assets/?${query.toString()}`, {
+			method: 'GET',
+		});
+
+		const assets = Array.isArray((body as { assets?: unknown })?.assets)
+			? ((body as { assets: ManagementAsset[] }).assets ?? [])
+			: Array.isArray(body)
+				? (body as ManagementAsset[])
+				: [];
+
+		return assets.flatMap((asset) => {
+			const listed = toListedAsset(asset);
+
+			return listed ? [listed] : [];
+		});
+	}
+
+	async listCampaignDefaultImages(
+		limit = campaignSubmissionConfig.maxCampaignDefaultImages,
+	): Promise<StoryblokListedAsset[]> {
+		// Fetch extra rows so non-image assets can be filtered out before applying the gallery cap.
+		const assets = await this.listAssetsInFolder(campaignSubmissionConfig.storyblokCampaignDefaultImagesFolderId, {
+			perPage: Math.max(limit * 3, 15),
+			sortBy: 'created_at:asc',
+		});
+
+		return assets.slice(0, limit);
+	}
+
+	async getAsset(assetId: number): Promise<StoryblokListedAsset | null> {
+		const body = await requestManagement(`/spaces/${this.spaceId}/assets/${assetId}`, { method: 'GET' });
+		const asset = unwrapAsset(body);
+		if (!asset?.id || !asset.filename) {
+			return null;
+		}
+
+		return {
+			id: asset.id,
+			filename: asset.filename,
+			alt: asset.alt ?? null,
+			focus: asset.focus ?? null,
+			contentType: asset.content_type ?? null,
+			assetFolderId: asset.asset_folder_id ?? null,
+		};
+	}
+
+	async downloadAssetBuffer(filename: string): Promise<Buffer> {
+		const assetUrl = assertAllowedStoryblokAssetUrl(filename);
+		const response = await fetch(assetUrl, {
+			method: 'GET',
+			redirect: 'error',
+			signal: AbortSignal.timeout(MANAGEMENT_FETCH_TIMEOUT_MS),
+		});
+
+		if (!response.ok) {
+			throw new StoryblokManagementError('Storyblok asset download failed.', response.status, response.status >= 500);
+		}
+
+		return readResponseBodyWithLimit(response, campaignSubmissionConfig.maxImageBytes);
+	}
 
 	async uploadAsset(
 		fileBuffer: Buffer,
