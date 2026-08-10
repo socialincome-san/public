@@ -2,6 +2,7 @@ import { Recipient } from '@/generated/prisma/client';
 import { candidateContactDefinitions, recipientContactDefinitions } from './contacts.data';
 import { localPartnersData } from './local-partners.data';
 import { paymentInformationsData } from './payment-information.data';
+import { extraProgramRecipientsData } from './program-recipient-extras.data';
 import { programsData } from './programs.data';
 
 const createdAt = new Date('2025-01-01T13:00:00.000Z');
@@ -145,4 +146,8 @@ const candidatesData: Recipient[] = candidateContactDefinitions.map(({ key, cont
 	updatedAt: null,
 }));
 
-export const recipientsData: Recipient[] = [...programRecipientsData, ...candidatesData];
+export const recipientsData: Recipient[] = [
+	...programRecipientsData,
+	...extraProgramRecipientsData,
+	...candidatesData,
+];

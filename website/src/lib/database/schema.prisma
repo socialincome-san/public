@@ -890,7 +890,7 @@ model Campaign {
   public                 Boolean? @map("public")
   featured               Boolean? @map("featured")
   isFallback             Boolean  @default(false) @map("is_fallback")
-  slug                   String?  @map("slug")
+  slug                   String?  @unique @map("slug")
   metadataDescription    String?  @map("metadata_description")
   metadataOgImage        String?  @map("metadata_og_image")
   metadataTwitterImage   String?  @map("metadata_twitter_image")
