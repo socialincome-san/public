@@ -16,7 +16,7 @@ export const PaymentMethodLogo = ({ id, className }: Props) => {
 			alt={logo.alt}
 			width={logo.width}
 			height={logo.height}
-			className={cn('h-5 w-auto shrink-0 sm:h-6', className)}
+			className={cn('h-5 w-auto max-w-full shrink-0 sm:h-6', className)}
 		/>
 	);
 };
