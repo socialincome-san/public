@@ -1,7 +1,9 @@
 import { Currency } from '@/generated/prisma/enums';
 import {
 	campaignSubmissionConfig,
+	campaignSubmissionDurationPresets,
 	type CampaignSubmissionAllowedCurrency,
+	type CampaignSubmissionDurationPreset,
 	type CampaignSubmissionPermittedImageMimeType,
 } from '@/lib/config/campaign-submission.config';
 import { slugify } from '@/lib/utils/string-utils';
@@ -29,6 +31,7 @@ export const campaignSubmissionErrorCodes = [
 	'image-too-large',
 	'image-format-unsupported',
 	'image-type-mismatch',
+	'default-image-invalid',
 	'payload-too-large',
 	'invalid-form-data',
 	'invalid-submission',
@@ -70,7 +73,20 @@ const campaignSubmissionFieldsSchema = z.object({
 		.pipe(
 			z.string().min(1, 'description-required').max(campaignSubmissionConfig.maxDescriptionLength, 'description-too-long'),
 		),
-	goal: z.coerce.number().positive('goal-positive'),
+	goal: z.union([z.string(), z.number(), z.null()]).transform((value, ctx) => {
+		if (value === null || value === '') {
+			return null;
+		}
+
+		const numeric = typeof value === 'number' ? value : Number(value);
+		if (!Number.isFinite(numeric) || numeric <= 0) {
+			ctx.addIssue({ code: 'custom', message: 'goal-positive' });
+
+			return z.NEVER;
+		}
+
+		return numeric;
+	}),
 	currency: z
 		.string()
 		.transform((value) => value.trim().toUpperCase())
@@ -87,6 +103,13 @@ const campaignSubmissionFieldsSchema = z.object({
 		return date;
 	}),
 	programId: z.string().trim().min(1, 'program-required'),
+	public: z.union([z.boolean(), z.string()]).transform((value) => {
+		if (typeof value === 'boolean') {
+			return value;
+		}
+
+		return value.trim().toLowerCase() === 'true';
+	}),
 });
 
 export type CampaignSubmissionFields = z.infer<typeof campaignSubmissionFieldsSchema>;
@@ -97,6 +120,9 @@ export type CampaignSubmissionImageValidation = {
 	filename: string;
 	size: number;
 };
+
+export type CampaignSubmissionImageSource =
+	{ kind: 'upload'; image: CampaignSubmissionImageValidation } | { kind: 'default'; defaultImageId: number };
 
 const IMAGE_SIGNATURES: { mimeType: CampaignSubmissionPermittedImageMimeType; bytes: number[] }[] = [
 	{ mimeType: 'image/jpeg', bytes: [0xff, 0xd8, 0xff] },
@@ -144,6 +170,12 @@ export const validateCampaignSubmissionEndDate = (endDate: Date): CampaignSubmis
 	}
 
 	return null;
+};
+
+export const endDateFromDurationPreset = (preset: Exclude<CampaignSubmissionDurationPreset, 'other'>): string => {
+	const days = campaignSubmissionConfig.durationPresetDays[preset];
+
+	return format(addDays(startOfDay(new Date()), days), 'yyyy-MM-dd');
 };
 
 /** Shared size/MIME checks for both client File prechecks and server buffer validation. */
@@ -199,6 +231,7 @@ export const parseCampaignSubmissionFields = (
 		currency: formData.get('currency'),
 		endDate: formData.get('endDate'),
 		programId: formData.get('programId'),
+		public: formData.get('public') ?? 'true',
 	});
 
 	if (!parsed.success) {
@@ -219,40 +252,73 @@ export const parseCampaignSubmissionFields = (
 	return { success: true, data: parsed.data };
 };
 
+export const parseCampaignSubmissionDefaultImageId = (
+	value: FormDataEntryValue | null,
+): { success: true; data: number } | { success: false; error: CampaignSubmissionErrorCode } => {
+	if (typeof value !== 'string' || !value.trim()) {
+		return { success: false, error: 'image-required' };
+	}
+
+	const parsed = Number(value.trim());
+	if (!Number.isInteger(parsed) || parsed <= 0) {
+		return { success: false, error: 'default-image-invalid' };
+	}
+
+	return { success: true, data: parsed };
+};
+
 export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmissionErrorCode) => string) =>
-	z.object({
-		title: z
-			.string()
-			.trim()
-			.min(1, message('title-required'))
-			.max(campaignSubmissionConfig.maxTitleLength, message('title-too-long'))
-			.refine((title) => Boolean(slugify(title)), message('title-not-slugifiable')),
-		description: z
-			.string()
-			.trim()
-			.min(1, message('description-required'))
-			.max(campaignSubmissionConfig.maxDescriptionLength, message('description-too-long')),
-		goal: z.coerce.number().positive(message('goal-positive')),
-		currency: z.enum(campaignSubmissionConfig.allowedCurrencies, {
-			errorMap: () => ({ message: message('currency-unsupported') }),
-		}),
-		endDate: z
-			.string()
-			.min(1, message('end-date-required'))
-			.superRefine((value, ctx) => {
-				const date = parseCampaignSubmissionEndDate(value);
-				if (!date) {
-					ctx.addIssue({ code: 'custom', message: message('end-date-invalid') });
+	z
+		.object({
+			title: z
+				.string()
+				.trim()
+				.min(1, message('title-required'))
+				.max(campaignSubmissionConfig.maxTitleLength, message('title-too-long'))
+				.refine((title) => Boolean(slugify(title)), message('title-not-slugifiable')),
+			description: z
+				.string()
+				.trim()
+				.min(1, message('description-required'))
+				.max(campaignSubmissionConfig.maxDescriptionLength, message('description-too-long')),
+			hasGoal: z.boolean(),
+			goal: z.union([z.string(), z.number(), z.undefined(), z.null()]).optional(),
+			currency: z.enum(campaignSubmissionConfig.allowedCurrencies, {
+				errorMap: () => ({ message: message('currency-unsupported') }),
+			}),
+			durationPreset: z.enum(campaignSubmissionDurationPresets),
+			endDate: z.string(),
+			isPublic: z.boolean(),
+			programId: z.string().trim().min(1, message('program-required')),
+		})
+		.superRefine((values, ctx) => {
+			if (values.hasGoal) {
+				const numericGoal =
+					values.goal === undefined || values.goal === null || values.goal === '' ? null : Number(values.goal);
+				if (numericGoal === null || !Number.isFinite(numericGoal) || numericGoal <= 0) {
+					ctx.addIssue({ code: 'custom', path: ['goal'], message: message('goal-positive') });
+				}
+			}
+
+			if (values.durationPreset === 'other' || !values.endDate.trim()) {
+				if (!values.endDate.trim()) {
+					ctx.addIssue({ code: 'custom', path: ['endDate'], message: message('end-date-required') });
 
 					return;
 				}
+			}
 
-				const endDateError = validateCampaignSubmissionEndDate(date);
-				if (endDateError) {
-					ctx.addIssue({ code: 'custom', message: message(endDateError) });
-				}
-			}),
-		programId: z.string().trim().min(1, message('program-required')),
-	});
+			const date = parseCampaignSubmissionEndDate(values.endDate);
+			if (!date) {
+				ctx.addIssue({ code: 'custom', path: ['endDate'], message: message('end-date-invalid') });
+
+				return;
+			}
+
+			const endDateError = validateCampaignSubmissionEndDate(date);
+			if (endDateError) {
+				ctx.addIssue({ code: 'custom', path: ['endDate'], message: message(endDateError) });
+			}
+		});
 
 export const campaignSubmissionDefaultCurrency = Currency.CHF;

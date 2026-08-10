@@ -30,6 +30,12 @@ export const CampaignSubmissionSteps = ({ currentStep, ...stepProps }: Props) =>
 					form={stepProps.form}
 					labels={stepProps.labels}
 					primaryImageInputRef={stepProps.primaryImageInputRef}
+					imageSelection={stepProps.imageSelection}
+					defaultImages={stepProps.defaultImages}
+					defaultImagesLoading={stepProps.defaultImagesLoading}
+					defaultImagesError={stepProps.defaultImagesError}
+					uploadPreviewUrl={stepProps.uploadPreviewUrl}
+					onSelectDefaultImage={stepProps.onSelectDefaultImage}
 					onImageChange={stepProps.onImageChange}
 					imageError={stepProps.imageError}
 					submitError={stepProps.submitError}

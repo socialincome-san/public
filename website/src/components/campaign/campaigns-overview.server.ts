@@ -50,10 +50,19 @@ export const resolveCampaignsWithCmsEntries = (
 			continue;
 		}
 
+		const primaryImageFilename = story.content.primaryImage?.filename?.trim();
+
 		campaigns.push({
 			...databaseCampaign,
 			title: getCampaignTitle(story.content),
 			slug: getCampaignStoryblokSlug(story),
+			primaryImage: primaryImageFilename
+				? {
+						filename: primaryImageFilename,
+						alt: story.content.primaryImage.alt,
+						focus: story.content.primaryImage.focus,
+					}
+				: null,
 		});
 	}
 
