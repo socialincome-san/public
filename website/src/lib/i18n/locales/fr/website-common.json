@@ -116,6 +116,23 @@
 		"recipient-plural": "bénéficiaires",
 		"about": "À propos de"
 	},
+	"transparency-page": {
+		"inflows": {
+			"title-name": "Entrées",
+			"title-currency": "en {{currency}}",
+			"description": "Provenant de contributions récurrentes de 1 % et de dons uniques dans 12 devises."
+		},
+		"outflows": {
+			"title-name": "Sorties",
+			"title-currency": "en {{currency}}",
+			"description": "Transférées directement aux bénéficiaires via Mobile Money — sans intermédiaires."
+		},
+		"reserves": {
+			"title-name": "Réserves",
+			"title-currency": "en {{currency}}",
+			"description": "Réservées aux bénéficiaires des programmes en cours."
+		}
+	},
 	"program-detail-page": {
 		"view-details": "Voir les détails",
 		"view-breakdown": "Voir le détail",

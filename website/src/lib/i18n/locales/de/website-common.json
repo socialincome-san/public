@@ -116,6 +116,23 @@
 		"recipient-plural": "Empfänger:innen",
 		"about": "Über"
 	},
+	"transparency-page": {
+		"inflows": {
+			"title-name": "Zuflüsse",
+			"title-currency": "in {{currency}}",
+			"description": "Aus wiederkehrenden 1%-Beiträgen und einmaligen Spenden in 12 Währungen."
+		},
+		"outflows": {
+			"title-name": "Abflüsse",
+			"title-currency": "in {{currency}}",
+			"description": "Direkt via Mobile Money an Empfänger:innen überwiesen — ohne Zwischenhändler."
+		},
+		"reserves": {
+			"title-name": "Reserven",
+			"title-currency": "in {{currency}}",
+			"description": "Für Empfänger:innen in laufenden Programmen reserviert."
+		}
+	},
 	"program-detail-page": {
 		"view-details": "Details anzeigen",
 		"view-breakdown": "Aufschlüsselung anzeigen",
