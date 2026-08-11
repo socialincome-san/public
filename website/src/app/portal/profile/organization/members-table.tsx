@@ -1,13 +1,13 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { organizationMembersTableConfig } from '@/components/data-table/configs/organization-members-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { renameActiveOrganizationAction } from '@/lib/server-actions/organization-action';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
