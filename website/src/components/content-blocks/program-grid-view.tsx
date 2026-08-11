@@ -1,4 +1,4 @@
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import { getProgramPortalSlug } from '@/components/storyblok/program/program.utils';
 import { ProgramsOverview } from '@/components/storyblok/program/programs-overview';

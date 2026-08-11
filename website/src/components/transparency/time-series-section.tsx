@@ -1,6 +1,6 @@
 'use client';
 
-import { Card } from '@/components/card';
+import { Card } from '@/components/card/card';
 import type { Currency } from '@/generated/prisma/client';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';

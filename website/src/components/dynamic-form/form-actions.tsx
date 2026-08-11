@@ -1,4 +1,4 @@
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { useState } from 'react';
 

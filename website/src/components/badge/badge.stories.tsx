@@ -1,4 +1,4 @@
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
 const meta = {

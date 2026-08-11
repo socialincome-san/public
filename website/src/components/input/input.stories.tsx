@@ -1,4 +1,4 @@
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
