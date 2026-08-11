@@ -10,16 +10,12 @@ const meta = {
 	args: {
 		placeholder: 'Enter text',
 		type: 'text',
-		defaultValue: '',
 	},
 
 	argTypes: {
 		type: {
 			control: 'select',
 			options: ['text', 'number', 'email', 'password', 'search'],
-		},
-		defaultValue: {
-			control: 'text',
 		},
 		className: {
 			control: 'text',
