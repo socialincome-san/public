@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { SelectableCard } from '@/components/selectable-card';
 import { cn } from '@/lib/utils/cn';
 import type { ReactNode } from 'react';

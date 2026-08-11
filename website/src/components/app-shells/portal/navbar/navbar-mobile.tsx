@@ -4,7 +4,7 @@ import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-
 import { ProgramDropdown } from '@/components/app-shells/portal/navbar/program-dropdown';
 import { UserMenu } from '@/components/app-shells/portal/navbar/user-menu';
 import { Separator } from '@/components/breadcrumb/separator';
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { SILogo } from '@/components/svg/si-logo';
 import type { Session } from '@/lib/firebase/current-account';
 import type { UserSession } from '@/lib/services/user/user.types';

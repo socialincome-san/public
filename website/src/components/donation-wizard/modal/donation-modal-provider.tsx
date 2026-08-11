@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
 import { DonationCurrencySelector } from '@/components/donation/currency-selector';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';

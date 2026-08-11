@@ -1,7 +1,7 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { SuccessBanner } from '@/components/success-banner';
 import type { ServiceResult } from '@/lib/services/core/base.types';

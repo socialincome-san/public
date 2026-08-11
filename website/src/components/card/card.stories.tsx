@@ -3,7 +3,7 @@ import { SectionHeading } from '@/components/section-heading';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Image from 'next/image';
 
-import { Card } from '@/components/card';
+import { Card } from '@/components/card/card';
 
 const meta = {
 	title: 'Components/Card',

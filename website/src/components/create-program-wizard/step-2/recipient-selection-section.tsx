@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
 import { Profile } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
