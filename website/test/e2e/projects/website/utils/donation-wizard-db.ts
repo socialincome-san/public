@@ -159,7 +159,7 @@ export const expectPendingMonthlyContribution = async (email: string, options: {
 	const contribution = contributions[0];
 
 	expect(contribution.status).toBe('pending');
-	expect(contribution.interval).toBe('monthly');
+	expect(contribution.subscriptionId).toBeNull();
 	expect(contribution.currency).toBe(currency);
 	expect(Number(contribution.amount)).toBe(amount);
 	expect(Number(contribution.amountChf)).toBe(amount);
