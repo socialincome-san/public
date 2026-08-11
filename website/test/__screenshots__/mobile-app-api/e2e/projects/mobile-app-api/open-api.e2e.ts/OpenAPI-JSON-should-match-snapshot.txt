@@ -214,12 +214,10 @@
             "type": "boolean"
           },
           "paymentInformationId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "programId": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "localPartnerId": {
             "type": "string"
@@ -228,21 +226,13 @@
             "$ref": "#/components/schemas/Contact"
           },
           "program": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Program"
-              }
-            ]
+            "$ref": "#/components/schemas/Program"
           },
           "localPartner": {
             "$ref": "#/components/schemas/LocalPartner"
           },
           "paymentInformation": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/PaymentInformation"
-              }
-            ]
+            "$ref": "#/components/schemas/PaymentInformation"
           },
           "createdAt": {
             "type": "string"
@@ -256,9 +246,13 @@
           "id",
           "contactId",
           "termsAccepted",
+          "paymentInformationId",
+          "programId",
           "localPartnerId",
           "contact",
+          "program",
           "localPartner",
+          "paymentInformation",
           "createdAt"
         ]
       },
