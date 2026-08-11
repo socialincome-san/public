@@ -39,7 +39,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	args: {
-		href: '/',
+		href: 'https://smartive.ch',
 		children: 'Test',
 	},
 };
@@ -61,7 +61,7 @@ export const WithContent: Story = {
 			<div className="flex items-center gap-6">
 				<div className="flex flex-col gap-4">
 					<SectionHeading size={4} align="left">
-						Schulden statt Chancen? Warum wir keine Mikrokredite anbieten.
+						Debt instead of opportunity? Why we don't offer microloans.
 					</SectionHeading>
 					<div className="flex items-center gap-2">
 						<Avatar>
