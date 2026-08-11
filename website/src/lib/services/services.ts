@@ -69,6 +69,7 @@ import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.se
 import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { StoryblokService } from './storyblok/storyblok.service';
 import { StripeService } from './stripe/stripe.service';
+import { SubscriptionWriteService } from './subscription/subscription-write.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
 import { SurveyImpactService } from './survey/survey-impact.service';
 import { SurveyReadService } from './survey/survey-read.service';
@@ -132,6 +133,7 @@ const messagingLog = new MessagingLogService(prisma, userRead, messagingWebhook)
 const contributionRead = new ContributionReadService(prisma, programAccessRead);
 const contributionValidation = new ContributionValidationService(prisma);
 const contributionWrite = new ContributionWriteService(prisma, programAccessRead, contributionValidation);
+const subscriptionWrite = new SubscriptionWriteService(prisma);
 const organizationRead = new OrganizationReadService(prisma, userRead, organizationAccess);
 const organizationValidation = new OrganizationValidationService(prisma);
 const organizationWrite = new OrganizationWriteService(prisma, userRead, organizationAccess, organizationValidation);
@@ -217,6 +219,7 @@ const qrBill = new QrBillService(
 	contributorRead,
 	campaignRead,
 	contributionWrite,
+	subscriptionWrite,
 	exchangeRateRead,
 );
 const stripe = new StripeService(
@@ -224,6 +227,7 @@ const stripe = new StripeService(
 	contributorRead,
 	contributorWrite,
 	contributionWrite,
+	subscriptionWrite,
 	campaignRead,
 	programAccessRead,
 );
@@ -261,6 +265,7 @@ export const services = {
 		campaign: campaignWrite,
 		focus: focusWrite,
 		contribution: contributionWrite,
+		subscription: subscriptionWrite,
 		contributor: contributorWrite,
 		country: countryWrite,
 		donationCertificate: donationCertificateWrite,
