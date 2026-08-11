@@ -3,7 +3,6 @@ import { parsePositiveIntFlag, resolveStripeResourceId } from './backfill-shared
 
 export type BackfillCliOptions = {
 	apply: boolean;
-	confirmApply: boolean;
 	limit: number | null;
 	concurrency: number;
 };
@@ -16,7 +15,6 @@ export const parseBackfillCliOptions = (argv: string[]): BackfillCliOptions => {
 
 	return {
 		apply: argv.includes('--apply'),
-		confirmApply: argv.includes('--confirm-apply'),
 		limit,
 		concurrency,
 	};
@@ -64,7 +62,6 @@ export const mapStripePriceAmount = (unitAmount: number | null): number | null =
 };
 
 export const resolveStripeCustomerId = resolveStripeResourceId;
-export const resolveStripeChargeId = resolveStripeResourceId;
 
 export const getStripeKeyMode = (secretKey: string): 'live' | 'test' | 'unknown' => {
 	if (secretKey.startsWith('sk_live_')) {

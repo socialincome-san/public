@@ -1,5 +1,5 @@
 /**
- * One-off backfill: bank_transfer standing orders → DB Subscription rows + contribution links.
+ * One-off backfill: bank_transfer standing orders → DB Subscription rows.
  *
  * Heuristic:
  * 1. Group bank_transfer PaymentEvents by standing-order reference
@@ -7,17 +7,14 @@
  * 2. Keep groups with ≥2 succeeded contributions
  * 3. If median gap between payments is ~20–45 days → treat as monthly standing order
  * 4. Upsert Subscription (paymentMethod=bank_transfer, interval=monthly, bankStandingOrderReference=ref)
- * 5. Link succeeded + pending contributions in the group (not failed)
  *
- * Dry-run by default. Writes only with --apply.
- * --limit takes groups in first-seen reference order (not largest-first).
- * Non-local --apply requires --confirm-apply or CONFIRM_APPLY=1.
+ * Dry-run by default. Writes only with `--apply`.
+ * `--limit` takes groups in first-seen reference order (not largest-first).
  *
  * Usage (from website/):
  *   DATABASE_URL=... npx tsx src/lib/database/scripts/backfill-bank-subscriptions.ts
  *   DATABASE_URL=... npx tsx src/lib/database/scripts/backfill-bank-subscriptions.ts --limit=20
  *   DATABASE_URL=... npx tsx src/lib/database/scripts/backfill-bank-subscriptions.ts --apply
- *   DATABASE_URL=... npx tsx src/lib/database/scripts/backfill-bank-subscriptions.ts --apply --confirm-apply
  */
 
 import {
@@ -33,39 +30,33 @@ import {
 	daysBetween,
 	extractStandingOrderReference,
 	inferSubscriptionStatus,
-	isLinkableBankContributionStatus,
 	looksLikeMonthlyStandingOrder,
 	modeAmount,
 	modeValue,
 	parseBankBackfillCliOptions,
 } from './backfill-bank-subscriptions.mappers';
-import { assertApplyAllowed, exitCodeForSummary, getDatabaseHost } from './backfill-shared';
+import { assertDatabaseUrl, exitCodeForSummary, getDatabaseHost, log, printSummary } from './backfill-shared';
 
 type Summary = {
 	paymentEventsSeen: number;
 	groupsSeen: number;
 	subscriptionsCreated: number;
 	subscriptionsUpdated: number;
-	contributionsLinked: number;
 	skippedNoReference: number;
 	skippedTooFewPayments: number;
 	skippedNotMonthly: number;
 	skippedMixedContributor: number;
 	skippedMixedCurrency: number;
-	linkConflicts: number;
 	errors: number;
 };
 
 type BankPaymentRow = {
-	paymentEventId: string;
 	transactionId: string;
-	contributionId: string;
 	contributorId: string;
 	campaignId: string;
 	amount: number;
 	currency: Currency;
 	status: ContributionStatus;
-	subscriptionId: string | null;
 	createdAt: Date;
 };
 
@@ -79,23 +70,13 @@ const createSummary = (): Summary => ({
 	groupsSeen: 0,
 	subscriptionsCreated: 0,
 	subscriptionsUpdated: 0,
-	contributionsLinked: 0,
 	skippedNoReference: 0,
 	skippedTooFewPayments: 0,
 	skippedNotMonthly: 0,
 	skippedMixedContributor: 0,
 	skippedMixedCurrency: 0,
-	linkConflicts: 0,
 	errors: 0,
 });
-
-const log = (message: string) => console.info(message);
-
-const assertEnv = () => {
-	if (!process.env.DATABASE_URL) {
-		throw new Error('Missing DATABASE_URL');
-	}
-};
 
 const printBanner = (apply: boolean, limit: number | null) => {
 	const dbHost = getDatabaseHost(process.env.DATABASE_URL ?? '');
@@ -111,17 +92,14 @@ const loadBankPayments = async (): Promise<BankPaymentRow[]> => {
 	const paymentEvents = await prisma.paymentEvent.findMany({
 		where: { type: PaymentEventType.bank_transfer },
 		select: {
-			id: true,
 			transactionId: true,
 			contribution: {
 				select: {
-					id: true,
 					contributorId: true,
 					campaignId: true,
 					amount: true,
 					currency: true,
 					status: true,
-					subscriptionId: true,
 					createdAt: true,
 				},
 			},
@@ -130,15 +108,12 @@ const loadBankPayments = async (): Promise<BankPaymentRow[]> => {
 	});
 
 	return paymentEvents.map((paymentEvent) => ({
-		paymentEventId: paymentEvent.id,
 		transactionId: paymentEvent.transactionId,
-		contributionId: paymentEvent.contribution.id,
 		contributorId: paymentEvent.contribution.contributorId,
 		campaignId: paymentEvent.contribution.campaignId,
 		amount: Number(paymentEvent.contribution.amount),
 		currency: paymentEvent.contribution.currency,
 		status: paymentEvent.contribution.status,
-		subscriptionId: paymentEvent.contribution.subscriptionId,
 		createdAt: paymentEvent.contribution.createdAt,
 	}));
 };
@@ -161,7 +136,7 @@ const groupByStandingOrderReference = (payments: BankPaymentRow[], summary: Summ
 
 	return [...groups.entries()].map(([standingOrderReference, groupPayments]) => ({
 		standingOrderReference,
-		payments: groupPayments.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()),
+		payments: groupPayments,
 	}));
 };
 
@@ -214,43 +189,32 @@ const processGroup = async (input: { group: StandingOrderGroup; apply: boolean; 
 	const lastPaymentAt = succeeded[succeeded.length - 1].createdAt;
 	const status = inferSubscriptionStatus(lastPaymentAt);
 	const canceledAt = status === SubscriptionStatus.active ? null : lastPaymentAt;
-	const interval = DonationInterval.monthly;
-	const linkablePayments = group.payments.filter((payment) => isLinkableBankContributionStatus(payment.status));
 
 	const existing = await prisma.subscription.findUnique({
 		where: { bankStandingOrderReference: group.standingOrderReference },
 		select: { id: true },
 	});
 
-	let subscriptionId = existing?.id ?? null;
-
 	if (apply) {
-		const upserted = await prisma.subscription.upsert({
+		const sharedFields = {
+			contributorId,
+			campaignId,
+			amount,
+			currency,
+			interval: DonationInterval.monthly,
+			status,
+			paymentMethod: SubscriptionPaymentMethod.bank_transfer,
+			canceledAt,
+		};
+
+		await prisma.subscription.upsert({
 			where: { bankStandingOrderReference: group.standingOrderReference },
 			create: {
-				contributorId,
-				campaignId,
-				amount,
-				currency,
-				interval,
-				status,
-				paymentMethod: SubscriptionPaymentMethod.bank_transfer,
 				bankStandingOrderReference: group.standingOrderReference,
-				canceledAt,
+				...sharedFields,
 			},
-			update: {
-				contributorId,
-				campaignId,
-				amount,
-				currency,
-				interval,
-				status,
-				paymentMethod: SubscriptionPaymentMethod.bank_transfer,
-				canceledAt,
-			},
-			select: { id: true },
+			update: sharedFields,
 		});
-		subscriptionId = upserted.id;
 	}
 
 	if (existing) {
@@ -259,51 +223,14 @@ const processGroup = async (input: { group: StandingOrderGroup; apply: boolean; 
 		summary.subscriptionsCreated += 1;
 	}
 
-	for (const payment of linkablePayments) {
-		if (payment.subscriptionId) {
-			if (subscriptionId && payment.subscriptionId !== subscriptionId) {
-				summary.linkConflicts += 1;
-				log(
-					`  conflict: contribution ${payment.contributionId} already linked to ${payment.subscriptionId} (wanted ${subscriptionId})`,
-				);
-			}
-			continue;
-		}
-
-		if (apply) {
-			if (!subscriptionId) {
-				continue;
-			}
-			await prisma.contribution.update({
-				where: { id: payment.contributionId },
-				data: { subscriptionId },
-			});
-		}
-
-		summary.contributionsLinked += 1;
-	}
-
 	log(
-		`${apply ? 'wrote' : 'would write'} ref=${group.standingOrderReference} → contributor=${contributorId} status=${status} interval=${interval} amount=${amount} ${currency} payments=${succeeded.length} linkable=${linkablePayments.length} campaign=${campaignId}`,
+		`${apply ? 'wrote' : 'would write'} ref=${group.standingOrderReference} → contributor=${contributorId} status=${status} interval=${DonationInterval.monthly} amount=${amount} ${currency} payments=${succeeded.length} campaign=${campaignId}`,
 	);
 };
 
-const printSummary = (summary: Summary) => {
-	log('');
-	log('=== Summary ===');
-	for (const [key, value] of Object.entries(summary)) {
-		log(`${key}: ${value}`);
-	}
-};
-
 const main = async () => {
-	assertEnv();
-	const { apply, confirmApply, limit } = parseBankBackfillCliOptions(process.argv.slice(2));
-	assertApplyAllowed({
-		apply,
-		databaseUrl: process.env.DATABASE_URL ?? '',
-		confirmApply,
-	});
+	assertDatabaseUrl();
+	const { apply, limit } = parseBankBackfillCliOptions(process.argv.slice(2));
 	printBanner(apply, limit);
 
 	const summary = createSummary();

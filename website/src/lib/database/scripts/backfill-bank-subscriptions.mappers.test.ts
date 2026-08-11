@@ -1,9 +1,8 @@
-import { ContributionStatus, SubscriptionStatus } from '@/generated/prisma/enums';
+import { SubscriptionStatus } from '@/generated/prisma/enums';
 import {
 	daysBetween,
 	extractStandingOrderReference,
 	inferSubscriptionStatus,
-	isLinkableBankContributionStatus,
 	looksLikeMonthlyStandingOrder,
 	median,
 	modeAmount,
@@ -14,13 +13,12 @@ import {
 describe('backfill-bank-subscriptions.mappers', () => {
 	describe('parseBankBackfillCliOptions', () => {
 		test('defaults to dry-run without limit', () => {
-			expect(parseBankBackfillCliOptions([])).toEqual({ apply: false, confirmApply: false, limit: null });
+			expect(parseBankBackfillCliOptions([])).toEqual({ apply: false, limit: null });
 		});
 
-		test('parses --apply, --confirm-apply and --limit', () => {
-			expect(parseBankBackfillCliOptions(['--apply', '--confirm-apply', '--limit=5'])).toEqual({
+		test('parses --apply and --limit', () => {
+			expect(parseBankBackfillCliOptions(['--apply', '--limit=5'])).toEqual({
 				apply: true,
-				confirmApply: true,
 				limit: 5,
 			});
 		});
@@ -97,12 +95,6 @@ describe('backfill-bank-subscriptions.mappers', () => {
 		test('modeAmount', () => {
 			expect(modeAmount([50, 50, 80])).toBe(50);
 			expect(() => modeAmount([])).toThrow('modeValue requires at least one value');
-		});
-
-		test('isLinkableBankContributionStatus', () => {
-			expect(isLinkableBankContributionStatus(ContributionStatus.succeeded)).toBe(true);
-			expect(isLinkableBankContributionStatus(ContributionStatus.pending)).toBe(true);
-			expect(isLinkableBankContributionStatus(ContributionStatus.failed)).toBe(false);
 		});
 	});
 });

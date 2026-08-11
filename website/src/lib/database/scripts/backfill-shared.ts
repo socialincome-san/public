@@ -6,43 +6,23 @@ export const getDatabaseHost = (databaseUrl: string): string => {
 	}
 };
 
-export const isLocalDatabaseHost = (host: string): boolean => {
-	const normalized = host.toLowerCase();
+export const log = (message: string) => console.info(message);
 
-	return (
-		normalized === 'localhost' ||
-		normalized.startsWith('localhost:') ||
-		normalized === '127.0.0.1' ||
-		normalized.startsWith('127.0.0.1:') ||
-		normalized === '[::1]' ||
-		normalized.startsWith('[::1]:') ||
-		normalized === '::1'
-	);
+export const printSummary = (summary: Record<string, number>) => {
+	log('');
+	log('=== Summary ===');
+	for (const [key, value] of Object.entries(summary)) {
+		log(`${key}: ${value}`);
+	}
 };
 
-
-export const assertApplyAllowed = (input: { apply: boolean; databaseUrl: string; confirmApply: boolean }): void => {
-	if (!input.apply) {
-		return;
+export const assertDatabaseUrl = () => {
+	if (!process.env.DATABASE_URL) {
+		throw new Error('Missing DATABASE_URL');
 	}
-
-	const host = getDatabaseHost(input.databaseUrl);
-	if (isLocalDatabaseHost(host)) {
-		return;
-	}
-
-	const envConfirmed = process.env.CONFIRM_APPLY === '1';
-	if (input.confirmApply || envConfirmed) {
-		return;
-	}
-
-	throw new Error(
-		`Refusing --apply against non-local database host "${host}". Re-run with --confirm-apply or CONFIRM_APPLY=1.`,
-	);
 };
 
-export const exitCodeForSummary = (summary: { errors: number; linkConflicts: number }): number =>
-	summary.errors > 0 || summary.linkConflicts > 0 ? 1 : 0;
+export const exitCodeForSummary = (summary: { errors: number }): number => (summary.errors > 0 ? 1 : 0);
 
 export const parsePositiveIntFlag = (argv: string[], flag: string): number | null => {
 	const arg = argv.find((value) => value.startsWith(`${flag}=`));

@@ -6,7 +6,6 @@ import {
 	mapStripeSubscriptionStatus,
 	mapWithConcurrency,
 	parseBackfillCliOptions,
-	resolveStripeChargeId,
 	resolveStripeCustomerId,
 	shouldSkipStripeSubscriptionStatus,
 } from './backfill-stripe-subscriptions.mappers';
@@ -16,16 +15,14 @@ describe('backfill-stripe-subscriptions.mappers', () => {
 		test('defaults to dry-run without limit', () => {
 			expect(parseBackfillCliOptions([])).toEqual({
 				apply: false,
-				confirmApply: false,
 				limit: null,
 				concurrency: 2,
 			});
 		});
 
-		test('parses --apply, --confirm-apply, --limit and --concurrency', () => {
-			expect(parseBackfillCliOptions(['--apply', '--confirm-apply', '--limit=10', '--concurrency=4'])).toEqual({
+		test('parses --apply, --limit and --concurrency', () => {
+			expect(parseBackfillCliOptions(['--apply', '--limit=10', '--concurrency=4'])).toEqual({
 				apply: true,
-				confirmApply: true,
 				limit: 10,
 				concurrency: 4,
 			});
@@ -93,12 +90,6 @@ describe('backfill-stripe-subscriptions.mappers', () => {
 			expect(resolveStripeCustomerId({ id: 'cus_456' })).toBe('cus_456');
 			expect(resolveStripeCustomerId(null)).toBeNull();
 		});
-
-		test('resolveStripeChargeId', () => {
-			expect(resolveStripeChargeId('ch_123')).toBe('ch_123');
-			expect(resolveStripeChargeId({ id: 'ch_456' })).toBe('ch_456');
-			expect(resolveStripeChargeId(undefined)).toBeNull();
-		});
 	});
 
 	describe('banner helpers', () => {
@@ -113,8 +104,10 @@ describe('backfill-stripe-subscriptions.mappers', () => {
 		test('processes every item once at concurrency 1 and 3', async () => {
 			for (const concurrency of [1, 3]) {
 				const seen: number[] = [];
-				await mapWithConcurrency([1, 2, 3, 4, 5], concurrency, async (item) => {
+				await mapWithConcurrency([1, 2, 3, 4, 5], concurrency, (item) => {
 					seen.push(item);
+
+					return Promise.resolve();
 				});
 				expect(seen.sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5]);
 			}

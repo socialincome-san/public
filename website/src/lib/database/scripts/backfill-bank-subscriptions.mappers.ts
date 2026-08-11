@@ -1,9 +1,8 @@
-import { ContributionStatus, SubscriptionStatus } from '@/generated/prisma/enums';
+import { SubscriptionStatus } from '@/generated/prisma/enums';
 import { parsePositiveIntFlag } from './backfill-shared';
 
 export type BankBackfillCliOptions = {
 	apply: boolean;
-	confirmApply: boolean;
 	limit: number | null;
 };
 
@@ -11,7 +10,6 @@ const STANDING_ORDER_REF_PATTERN = /^(\d{10})(?:-\d+)?$/;
 
 export const parseBankBackfillCliOptions = (argv: string[]): BankBackfillCliOptions => ({
 	apply: argv.includes('--apply'),
-	confirmApply: argv.includes('--confirm-apply'),
 	limit: parsePositiveIntFlag(argv, '--limit'),
 });
 
@@ -88,6 +86,3 @@ export const modeValue = <T>(values: readonly T[]): T => {
 };
 
 export const modeAmount = (amounts: number[]): number => modeValue(amounts);
-
-export const isLinkableBankContributionStatus = (status: ContributionStatus): boolean =>
-	status === ContributionStatus.succeeded || status === ContributionStatus.pending;

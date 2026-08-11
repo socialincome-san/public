@@ -1,8 +1,7 @@
 import {
-	assertApplyAllowed,
+	assertDatabaseUrl,
 	exitCodeForSummary,
 	getDatabaseHost,
-	isLocalDatabaseHost,
 	parsePositiveIntFlag,
 	resolveStripeResourceId,
 } from './backfill-shared';
@@ -13,51 +12,22 @@ describe('backfill-shared', () => {
 		expect(getDatabaseHost('not-a-url')).toBe('unparseable');
 	});
 
-	test('isLocalDatabaseHost', () => {
-		expect(isLocalDatabaseHost('localhost:5432')).toBe(true);
-		expect(isLocalDatabaseHost('127.0.0.1')).toBe(true);
-		expect(isLocalDatabaseHost('[::1]:5432')).toBe(true);
-		expect(isLocalDatabaseHost('db.example:5432')).toBe(false);
-	});
-
-	test('assertApplyAllowed', () => {
-		expect(() =>
-			assertApplyAllowed({
-				apply: false,
-				databaseUrl: 'postgresql://u:p@db.example:5432/db',
-				confirmApply: false,
-			}),
-		).not.toThrow();
-
-		expect(() =>
-			assertApplyAllowed({
-				apply: true,
-				databaseUrl: 'postgresql://u:p@localhost:5432/db',
-				confirmApply: false,
-			}),
-		).not.toThrow();
-
-		expect(() =>
-			assertApplyAllowed({
-				apply: true,
-				databaseUrl: 'postgresql://u:p@db.example:5432/db',
-				confirmApply: false,
-			}),
-		).toThrow('Refusing --apply against non-local database host');
-
-		expect(() =>
-			assertApplyAllowed({
-				apply: true,
-				databaseUrl: 'postgresql://u:p@db.example:5432/db',
-				confirmApply: true,
-			}),
-		).not.toThrow();
+	test('assertDatabaseUrl', () => {
+		const previous = process.env.DATABASE_URL;
+		delete process.env.DATABASE_URL;
+		expect(() => assertDatabaseUrl()).toThrow('Missing DATABASE_URL');
+		process.env.DATABASE_URL = previous ?? 'postgresql://u:p@localhost:5432/db';
+		expect(() => assertDatabaseUrl()).not.toThrow();
+		if (previous === undefined) {
+			delete process.env.DATABASE_URL;
+		} else {
+			process.env.DATABASE_URL = previous;
+		}
 	});
 
 	test('exitCodeForSummary', () => {
-		expect(exitCodeForSummary({ errors: 0, linkConflicts: 0 })).toBe(0);
-		expect(exitCodeForSummary({ errors: 1, linkConflicts: 0 })).toBe(1);
-		expect(exitCodeForSummary({ errors: 0, linkConflicts: 2 })).toBe(1);
+		expect(exitCodeForSummary({ errors: 0 })).toBe(0);
+		expect(exitCodeForSummary({ errors: 1 })).toBe(1);
 	});
 
 	test('parsePositiveIntFlag', () => {
