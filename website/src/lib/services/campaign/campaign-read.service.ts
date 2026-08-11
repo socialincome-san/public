@@ -8,6 +8,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
+import { isCampaignPubliclyActive, matchesPublicCampaignActivity } from './campaign-public-activity';
 import {
 	CampaignOption,
 	CampaignPage,
@@ -245,9 +246,9 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
-	async getBySlug(slug: string): Promise<ServiceResult<CampaignPage>> {
+	async getByPortalSlug(portalSlug: string): Promise<ServiceResult<CampaignPage>> {
 		try {
-			const normalizedSlug = slug.trim();
+			const normalizedSlug = portalSlug.trim();
 			if (!normalizedSlug) {
 				return this.resultFail('Missing campaign slug');
 			}
@@ -326,12 +327,7 @@ export class CampaignReadService extends BaseService {
 
 			const campaign = await this.db.campaign.findFirst({
 				where: {
-					AND: [
-						{ OR: [{ id: normalizedId }, { legacyFirestoreId: normalizedId }] },
-						{ isActive: true },
-						{ slug: { not: null } },
-						{ OR: [{ public: true }, { public: null }] },
-					],
+					AND: [{ OR: [{ id: normalizedId }, { legacyFirestoreId: normalizedId }] }, { slug: { not: null } }],
 				},
 				select: { title: true },
 			});
@@ -348,14 +344,109 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
-	private buildPublicCampaignActivityWhere(
-		activity: PublicCampaignActivity = 'active',
-	): Pick<Prisma.CampaignWhereInput, 'isActive'> {
-		if (activity === 'all') {
-			return {};
+	private async mapPublicCampaignCards(
+		campaigns: {
+			id: string;
+			title: string;
+			slug: string | null;
+			creatorName: string | null;
+			currency: Currency;
+			endDate: Date;
+			goal: unknown;
+			additionalAmountChf: unknown;
+			contributions: { amountChf: unknown }[];
+		}[],
+		activity: PublicCampaignActivity,
+	): Promise<PublicCampaignCard[]> {
+		const exchangeRateCache = new Map<Currency, number | null>();
+		const publicCampaigns: PublicCampaignCard[] = [];
+
+		for (const campaign of campaigns) {
+			const campaignSlug = campaign.slug?.trim();
+			if (!campaignSlug) {
+				continue;
+			}
+
+			const { amountCollected } = await this.computeCollectedAmount(
+				campaign.contributions,
+				campaign.additionalAmountChf,
+				campaign.currency,
+				campaign.goal,
+				exchangeRateCache,
+			);
+			const isActive = isCampaignPubliclyActive({
+				endDate: campaign.endDate,
+				goal: campaign.goal,
+				amountCollected,
+			});
+
+			if (!matchesPublicCampaignActivity(isActive, activity)) {
+				continue;
+			}
+
+			const goal = campaign.goal !== null && campaign.goal !== undefined ? Number(campaign.goal) : null;
+
+			publicCampaigns.push({
+				id: campaign.id,
+				title: campaign.title,
+				slug: campaignSlug,
+				creatorName: campaign.creatorName,
+				currency: campaign.currency,
+				endDate: campaign.endDate,
+				goal: Number.isFinite(goal) ? goal : null,
+				isActive,
+			});
 		}
 
-		return { isActive: activity === 'active' };
+		return publicCampaigns;
+	}
+
+	async getCampaignsForCmsJoin(options?: {
+		activity?: PublicCampaignActivity;
+	}): Promise<ServiceResult<PublicCampaignCard[]>> {
+		const activity = options?.activity ?? 'active';
+
+		try {
+			const campaigns = await this.db.campaign.findMany({
+				where: {
+					slug: { not: null },
+				},
+				select: {
+					id: true,
+					title: true,
+					slug: true,
+					creatorName: true,
+					currency: true,
+					featured: true,
+					createdAt: true,
+					endDate: true,
+					goal: true,
+					additionalAmountChf: true,
+					contributions: {
+						where: { status: ContributionStatus.succeeded },
+						select: { amountChf: true },
+					},
+				},
+				orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
+			});
+
+			return this.resultOk(await this.mapPublicCampaignCards(campaigns, activity));
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch campaigns for CMS join: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getAllCampaignsForCmsJoinWithStats(options?: {
+		activity?: PublicCampaignActivity;
+	}): Promise<ServiceResult<PublicCampaignsWithStats>> {
+		const campaignsResult = await this.getCampaignsForCmsJoin(options);
+		if (!campaignsResult.success) {
+			return this.resultFail(campaignsResult.error);
+		}
+
+		return this.getPublicCampaignsWithStats(campaignsResult.data);
 	}
 
 	async getPublicCampaigns(options?: { activity?: PublicCampaignActivity }): Promise<ServiceResult<PublicCampaignCard[]>> {
@@ -364,7 +455,6 @@ export class CampaignReadService extends BaseService {
 		try {
 			const campaigns = await this.db.campaign.findMany({
 				where: {
-					...this.buildPublicCampaignActivityWhere(activity),
 					slug: { not: null },
 					OR: [{ public: true }, { public: null }],
 				},
@@ -376,30 +466,18 @@ export class CampaignReadService extends BaseService {
 					currency: true,
 					featured: true,
 					createdAt: true,
-					isActive: true,
+					endDate: true,
+					goal: true,
+					additionalAmountChf: true,
+					contributions: {
+						where: { status: ContributionStatus.succeeded },
+						select: { amountChf: true },
+					},
 				},
 				orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
 			});
 
-			const publicCampaigns: PublicCampaignCard[] = [];
-
-			for (const campaign of campaigns) {
-				const campaignSlug = campaign.slug?.trim();
-				if (!campaignSlug) {
-					continue;
-				}
-
-				publicCampaigns.push({
-					id: campaign.id,
-					title: campaign.title,
-					slug: campaignSlug,
-					creatorName: campaign.creatorName,
-					currency: campaign.currency,
-					isActive: campaign.isActive,
-				});
-			}
-
-			return this.resultOk(publicCampaigns);
+			return this.resultOk(await this.mapPublicCampaignCards(campaigns, activity));
 		} catch (error) {
 			this.logger.error(error);
 

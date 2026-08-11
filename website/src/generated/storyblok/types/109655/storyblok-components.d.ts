@@ -23,7 +23,7 @@ export interface Article {
   author: ISbStoryData<Author> | ISbStoryData<Person> | string;
   displayInOverviewPage?: boolean;
   originalLanguage?: "" | "en" | "fr" | "de" | "it";
-  type: ISbStoryData<ArticleType> | string;
+  type: ISbStoryData<ArticleType> | ISbStoryData<ArticleType> | string;
   tags?: (ISbStoryData<Tag> | string)[];
   showRelativeArticles?: boolean;
   footnotes?: StoryblokRichtext;
@@ -43,7 +43,7 @@ export interface ArticleType {
 
 export interface BannerSection {
   text: StoryblokRichtext;
-  color: "" | "#fbedd1" | "#cadde9";
+  color: "#fbedd1" | "#cadde9";
   component: "bannerSection";
   _uid: string;
   [k: string]: unknown;
@@ -53,6 +53,16 @@ export interface Button {
   label?: string;
   link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
   component: "button";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface Campaign {
+  portalSlug: string;
+  title: string;
+  description: string;
+  primaryImage: StoryblokAsset;
+  component: "Campaign";
   _uid: string;
   [k: string]: unknown;
 }
@@ -208,7 +218,7 @@ export interface HeroVideo {
 export interface ImageText {
   content?: StoryblokRichtext;
   image: StoryblokAsset;
-  layout: "" | "imageLeft" | "imageRight";
+  layout: "imageLeft" | "imageRight";
   imageToTextRatio?: "" | "1/3" | "1/2" | "2/3";
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
@@ -221,7 +231,6 @@ export interface ImageWithCaption {
   layout?: "" | "wide" | "sideBySide";
   image: StoryblokAsset;
   caption?: string;
-  layout?: "" | "wide" | "sideBySide";
   image2?: StoryblokAsset;
   caption2?: string;
   component: "imageWithCaption";
@@ -301,7 +310,7 @@ export interface Lottie {
 export interface MenuItem {
   label?: string;
   link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
-  icon?: "" | "instagram" | "linkedin" | "facebook" | "github" | "newsletter" | "contact";
+  icon?: "" | "instagram" | "linkedin" | "facebook" | "github" | "newsletter" | "contact" | "googleplay" | "appstore" | "youtube";
   newTab?: boolean;
   component: "menuItem";
   _uid: string;
@@ -379,6 +388,7 @@ export interface Page {
     | RichtextButtonHeader
     | NewsletterForm
     | Lottie
+    | PersonGrid
   )[];
   component: "page";
   _uid: string;
@@ -413,13 +423,35 @@ export interface Person {
   githubName?: string;
   linkedinName?: string;
   volunteerSince?: string;
-  volunteerStatus?: "" | "active" | "inactive" | "board_member";
+  volunteerStatus?: "" | "active" | "inactive";
   primaryRole?: number | string;
   fieldTrips?: {
     [k: string]: unknown;
   }[];
   countryOffice?: (number | string)[];
+  country?: number | string;
   component: "person";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface PersonGrid {
+  persons?: (ISbStoryData<Person> | string)[];
+  statusFilter?: "" | "all" | "active" | "inactive";
+  roleFilter?: (number | string)[];
+  countryOffice?: (number | string)[];
+  roleExcludeFilter?: (number | string)[];
+  excludeCountryOfficeMembers?: boolean;
+  linkToPersonPage?: boolean;
+  smallCards?: boolean;
+  showFilterPills?: boolean;
+  showSort?: boolean;
+  showSearch?: boolean;
+  showVolunteerDuration?: boolean;
+  button?: Button[];
+  disableMarginBottom?: boolean;
+  disableMarginTop?: boolean;
+  component: "personGrid";
   _uid: string;
   [k: string]: unknown;
 }
@@ -500,7 +532,7 @@ export interface RichtextButtonHeader {
 }
 
 export interface Spacer {
-  size: "" | "xs" | "s" | "m" | "l" | "xl";
+  size: "xs" | "s" | "m" | "l" | "xl";
   component: "spacer";
   _uid: string;
   [k: string]: unknown;
@@ -587,7 +619,7 @@ export interface TwoColumnText {
 export interface VideoText {
   content: StoryblokRichtext;
   vimeoLink: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
-  layout: "" | "videoLeft" | "videoRight";
+  layout: "videoLeft" | "videoRight";
   component: "videoText";
   _uid: string;
   [k: string]: unknown;
@@ -597,6 +629,7 @@ export type ContentType =
   | ActionButton
   | Article
   | ArticleType
+  | Campaign
   | CampaignOverview
   | Country
   | CountryOverview

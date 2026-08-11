@@ -6,7 +6,7 @@ import type { CompletedDonationSummary } from '../steps/step-stripe-checkout/map
 
 export const useOnboardingAmountLine = (completedDonationSummary: CompletedDonationSummary | null) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
-	const { currency } = useI18n();
+	const { currency = 'CHF' } = useI18n();
 
 	if (!completedDonationSummary) {
 		return undefined;
@@ -14,8 +14,11 @@ export const useOnboardingAmountLine = (completedDonationSummary: CompletedDonat
 
 	return t(
 		completedDonationSummary.cadence === 'monthly'
-			? 'thankYou.messageWithAmountMonthly'
-			: 'thankYou.messageWithAmountOneTime',
-		{ amount: `${currency} ${completedDonationSummary.amount}` },
+			? 'onboarding.donatedThankYouMonthly'
+			: 'onboarding.donatedThankYouOneTime',
+		{
+			currency,
+			amount: completedDonationSummary.amount.toFixed(2),
+		},
 	);
 };

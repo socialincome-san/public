@@ -11,6 +11,7 @@ import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceBlock } from '@/components/content-blocks/open-source';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
+import { PersonGridBlock } from '@/components/content-blocks/person-grid';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
 import { RichtextButtonHeaderBlock } from '@/components/content-blocks/richtext-button-header';
 import { SpacerBlock } from '@/components/content-blocks/spacer';
@@ -72,6 +73,8 @@ const renderPageBlock = (
 			return <OpenSourceBlock blok={block} lang={lang} />;
 		case 'partnershipsCarousel':
 			return <PartnershipsCarouselBlock blok={block} />;
+		case 'personGrid':
+			return <PersonGridBlock blok={block} lang={lang} region={region} />;
 		case 'programGrid':
 			return <ProgramGridBlock blok={block} lang={lang} region={region} />;
 		case 'richtextButtonHeader':

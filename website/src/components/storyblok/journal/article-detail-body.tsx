@@ -42,11 +42,12 @@ export const ArticleDetailBody = ({ story, slug, lang, region, translator }: Pro
 			</div>
 
 			{article.footnotes && (
-				<div className="prose prose-neutral text-muted-foreground max-w-none text-sm">
+				<div className="text-muted-foreground">
 					<ArticleRichText
 						document={article.footnotes as StoryblokRichtext}
 						lang={lang}
 						donationForm={<DonationFormServer lang={lang} />}
+						variant="footnotes"
 					/>
 				</div>
 			)}

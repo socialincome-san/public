@@ -1,4 +1,5 @@
 import "dart:async";
+import "dart:io";
 
 import "package:app/data/datasource/local/app_cache_database.dart";
 import "package:app/data/models/api/recipient_self_update.dart";
@@ -40,7 +41,7 @@ class AuthCubit extends Cubit<AuthState> {
     });
   }
 
-  Future<void> _listenToRecipient(User user) async{
+  Future<void> _listenToRecipient(User user) async {
     await _recipientSubscription?.cancel();
     _recipientSubscription = userRepository
         .fetchRecipient(user)
@@ -59,16 +60,20 @@ class AuthCubit extends Cubit<AuthState> {
               ),
             );
           },
-          onError: (Object ex, StackTrace stackTrace) {
-            if (ex is Exception) {
-              crashReportingRepository.logError(ex, stackTrace);
+          onError: (Object error, StackTrace stackTrace) {
+            if (error is SocketException) {
+              // Do not log this kind of errors in Sentry as they are caused by network issues on the client side
+              // and do not indicate a problem in the app itself.
+            } else {
+              crashReportingRepository.logError(error is Exception ? error : Exception(error.toString()), stackTrace);
             }
+
             // Only emit failure if we don't already have a recipient
             if (state.recipient == null) {
               emit(
                 AuthState(
                   status: AuthStatus.failure,
-                  exception: ex is Exception ? ex : Exception(ex.toString()),
+                  exception: error is Exception ? error : Exception(error.toString()),
                 ),
               );
             }

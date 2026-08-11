@@ -6,6 +6,7 @@ import {
 	getWebsitePublicPath,
 	WEBSITE_PERSON_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
+import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import { Metadata } from 'next';
@@ -13,6 +14,16 @@ import { Metadata } from 'next';
 // Helper type to remove index signature from a type
 type RemoveIndexSignature<T> = {
 	[K in keyof T as string extends K ? never : K]: T[K];
+};
+
+/**
+ * Normalizes a Storyblok field value into a clean string array — handles a single value, an
+ * array, or empty/undefined, which covers a field mid-migration from single-select to multi-select.
+ */
+export const toStringArray = (value: string | number | (string | number)[] | undefined): string[] => {
+	const list = Array.isArray(value) ? value : value !== undefined ? [value] : [];
+
+	return list.map((entry) => (typeof entry === 'string' ? entry.trim() : String(entry))).filter(Boolean);
 };
 
 export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'type' | 'tags'> & {
@@ -48,6 +59,32 @@ export const getPersonAvatarSrc = (person: ISbStoryData<Person>) => {
 export const getPersonLinkedInUrl = (handle: string) => `https://www.linkedin.com/in/${encodeURIComponent(handle)}`;
 
 export const getPersonGitHubUrl = (username: string) => `https://github.com/${encodeURIComponent(username)}`;
+
+/**
+ * Normalizes a Person.primaryRole value to its string code — Storyblok option fields can hold a
+ * numeric datasource id as well as a string value. Returns '' when the role is unset.
+ */
+export const getRoleCode = (role: Person['primaryRole']): string =>
+	role === undefined || role === null ? '' : String(role).trim();
+
+/**
+ * Display label for a Person.primaryRole value: the datasource label when available,
+ * a humanized version of the stored value otherwise. Returns '' for an unset role.
+ */
+export const getRoleLabel = (role: Person['primaryRole'], roleLabels?: Record<string, string>): string => {
+	const code = getRoleCode(role);
+	if (!code) {
+		return '';
+	}
+
+	return roleLabels?.[code] ?? humanizeIdentifier(code);
+};
+
+export const personHasRole = (person: ISbStoryData<Person>, roleCodes: string[]): boolean => {
+	const code = getRoleCode(person.content.primaryRole);
+
+	return code.length > 0 && roleCodes.includes(code);
+};
 
 // ==================== Image Utilities ====================
 
@@ -156,14 +193,20 @@ const formatStoryblokUrlDirect = (url: string, width: number, height: number, fo
  * Parse a Storyblok date string into a DateTime object.
  * Storyblok returns date fields in the following format "yyyy-MM-dd HH:mm" without timezone.
  * Nevertheless, the fields `first_published_at` and 'published_at' are returned in proper ISO8601 format.
+ *
+ * Those naive strings hold the editor's input already converted to UTC, so the date part alone is a
+ * day early for anything entered at midnight: picking 26 June in the CMS is stored as
+ * "2026-06-25 22:00". Reading the instant back in the space timezone restores the entered date.
  */
+const STORYBLOK_SPACE_TIMEZONE = 'Europe/Zurich';
+
 const toDateObject = (date: string, lang: string) => {
-	let dateObject = DateTime.fromISO(date).setLocale(lang);
+	let dateObject = DateTime.fromISO(date, { zone: 'utc' });
 	if (!dateObject.isValid) {
-		dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' }).setLocale(lang);
+		dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' });
 	}
 
-	return dateObject;
+	return dateObject.setZone(STORYBLOK_SPACE_TIMEZONE).setLocale(lang);
 };
 
 /**
@@ -176,6 +219,65 @@ export const formatStoryblokDate = (date: string | null | undefined, lang: strin
 	const dateObject = toDateObject(date, lang);
 
 	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
+};
+
+/**
+ * Locale-aware medium date, e.g. "Aug 2, 2023" (en) / "2. Aug. 2023" (de) / "2 août 2023" (fr).
+ */
+export const formatStoryblokDateMedium = (date: string | null | undefined, lang: string) => {
+	if (!date) {
+		return '';
+	}
+	const dateObject = toDateObject(date, lang);
+
+	return dateObject.isValid ? dateObject.toLocaleString(DateTime.DATE_MED) : '';
+};
+
+export type VolunteerDurationParts =
+	| { unit: 'days'; days: number }
+	// `isAnniversary` marks the exact day a whole month (first year only) or whole year is reached,
+	// which callers celebrate with their own wording instead of the running total.
+	| { unit: 'months'; months: number; isAnniversary: boolean }
+	| { unit: 'years'; years: number; isAnniversary: boolean };
+
+/**
+ * Breaks the time elapsed since a Storyblok date field into day/month/year buckets, for callers
+ * that render it in their own words (e.g. localized duration labels).
+ */
+export const getVolunteerDurationParts = (date: string | null | undefined, lang: string): VolunteerDurationParts | null => {
+	if (!date) {
+		return null;
+	}
+	const dateObject = toDateObject(date, lang);
+	if (!dateObject.isValid) {
+		return null;
+	}
+
+	// Both operands are pinned to midnight in the space timezone: the diff then lands on whole days,
+	// and server and viewer agree on "today" (this also renders inside the client-side person grid).
+	const start = dateObject.startOf('day');
+	const today = DateTime.now().setZone(STORYBLOK_SPACE_TIMEZONE).startOf('day');
+
+	const totalDays = Math.floor(today.diff(start, 'days').days);
+	if (totalDays < 0) {
+		return null;
+	}
+
+	const { years, months, days } = today.diff(start, ['years', 'months', 'days']).toObject();
+	const wholeYears = Math.floor(years ?? 0);
+	const wholeMonths = Math.floor(months ?? 0);
+	const remainderDays = Math.floor(days ?? 0);
+	const totalMonths = wholeYears * 12 + wholeMonths;
+
+	if (totalMonths < 1) {
+		return { unit: 'days', days: totalDays };
+	}
+
+	if (totalMonths < 12) {
+		return { unit: 'months', months: totalMonths, isAnniversary: remainderDays === 0 };
+	}
+
+	return { unit: 'years', years: wholeYears, isAnniversary: wholeMonths === 0 && remainderDays === 0 };
 };
 
 /**

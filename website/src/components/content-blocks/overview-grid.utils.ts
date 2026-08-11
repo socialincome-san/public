@@ -8,6 +8,13 @@ const isStoryData = <T>(value: ISbStoryData<T> | string): value is ISbStoryData<
 	return typeof value !== 'string';
 };
 
+/**
+ * Extracts UUIDs from a Storyblok "options" field, whose entries may be resolved stories or plain UUID strings.
+ */
+export const getStoryUuids = <T>(entries: (ISbStoryData<T> | string)[] | undefined): string[] => {
+	return (entries ?? []).map((entry) => (isStoryData(entry) ? entry.uuid : entry));
+};
+
 export const resolveSelectedStories = <T>(
 	selectedEntries: (ISbStoryData<T> | string)[] | undefined,
 	allStories: ISbStoryData<T>[],

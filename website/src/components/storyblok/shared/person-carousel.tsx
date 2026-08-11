@@ -22,9 +22,10 @@ type Props = {
 	/** When set, each card links to the person profile. */
 	personLink?: { lang: string; region: string };
 	size?: 'default' | 'small';
+	roleLabels?: Record<string, string>;
 };
 
-export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default' }: Props) => {
+export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default', roleLabels }: Props) => {
 	const [api, setApi] = useState<CarouselApi>();
 	const hasSidebar = Boolean(sidebar?.title ?? sidebar?.heading ?? sidebar?.description);
 	const isSmall = size === 'small';
@@ -55,6 +56,7 @@ export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default' 
 									person={person}
 									size={size}
 									href={personLink ? createWebsitePersonLink(person.slug, personLink.lang, personLink.region) : undefined}
+									roleLabels={roleLabels}
 								/>
 							</CarouselItem>
 						))}

@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Required because firebase_analytics collects the Android Advertising ID for analytics/ad personalization. -->
+    <!-- firebase_analytics is need by Firebase Remote Config. So I'm not sure if we can disable AD_ID usage. TODO: Check this! -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application android:icon="@mipmap/ic_launcher" android:label="Social Income" android:roundIcon="@mipmap/ic_launcher_round">
         <!-- Setting android:taskAffinity="" is a security countermeasure against Task hijacking. See https://www.guardsquare.com/mobile-app-security-research-center/malware/empty-task-affinity -->
