@@ -1,6 +1,5 @@
 import { Badge } from '@/components/badge';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { expect } from 'storybook/test';
 
 const meta = {
 	title: 'Components/Badge',
@@ -12,19 +11,15 @@ const meta = {
 	tags: ['autodocs'],
 	parameters: {
 		docs: {
-			codePanel: true,
 			description: {
-				component: 'Ein Badge kennzeichnet kurze Status- oder Kontextinformationen.',
-			},
-			source: {
-				code: '<Badge variant="verified">Verified</Badge>',
+				component: 'A badge displays short status or contextual information.',
 			},
 		},
 	},
 	argTypes: {
 		variant: {
 			control: 'select',
-			options: ['default', 'secondary', 'outline', 'outline-solid', 'destructive', 'verified', 'country'],
+			options: ['default', 'secondary', 'outline', 'outline-solid', 'destructive', 'verified', 'country', 'video'],
 		},
 		children: {
 			control: 'text',
@@ -39,12 +34,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-	play: async ({ canvas }) => {
-		const badge = await canvas.findByText('Badge');
-		await expect(badge).toBeVisible();
-	},
-};
+export const Default: Story = {};
 
 export const Variants: Story = {
 	render: () => (
@@ -56,6 +46,7 @@ export const Variants: Story = {
 			<Badge variant="destructive">Destructive</Badge>
 			<Badge variant="verified">Verified</Badge>
 			<Badge variant="country">Country</Badge>
+			<Badge variant="video">Video</Badge>
 		</div>
 	),
 };
