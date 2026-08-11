@@ -607,6 +607,69 @@ export class RecipientWriteService extends BaseService {
 		}
 	}
 
+	async removeFromProgram(session: Session, recipientId: string): Promise<ServiceResult<{ id: string }>> {
+		try {
+			const existing = await this.db.recipient.findUnique({
+				where: { id: recipientId },
+				select: {
+					id: true,
+					programId: true,
+					_count: { select: { payouts: true } },
+				},
+			});
+
+			if (!existing) {
+				return this.resultFail('Recipient not found');
+			}
+			if (!existing.programId) {
+				return this.resultFail('Recipient is already in the pool');
+			}
+
+			if (session.type === 'user') {
+				const accessResult = await this.programAccessService.getAccessiblePrograms(session.id);
+				if (!accessResult.success) {
+					return this.resultFail(accessResult.error);
+				}
+				if (!this.programAccessService.hasOperatorAccess(accessResult.data, existing.programId)) {
+					return this.resultFail('Permission denied');
+				}
+			} else {
+				return this.resultFail('Permission denied');
+			}
+
+			if (existing._count.payouts > 0) {
+				return this.resultFail('Recipient has payouts and cannot be removed from the program.');
+			}
+
+			// Before removing the recipient from the program, we make sure that the recipient
+			// still doesn't have any payouts and that the programId wasn't changed in the middle
+			// of the operation.
+			const removal = await this.db.recipient.updateMany({
+				where: {
+					id: recipientId,
+					programId: existing.programId,
+					payouts: { none: {} },
+				},
+				data: {
+					programId: null,
+					startDate: null,
+				},
+			});
+
+			if (removal.count === 0) {
+				return this.resultFail(
+					'Either the recipient has payouts and cannot be removed from the program, or the program was changed.',
+				);
+			}
+
+			return this.resultOk({ id: recipientId });
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not remove recipient from program: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async delete(session: Session, recipientId: string): Promise<ServiceResult<{ id: string }>> {
 		try {
 			const existing = await this.db.recipient.findUnique({

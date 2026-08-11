@@ -148,10 +148,11 @@ type Props = {
 	onSubmit: (values: any) => void;
 	onCancel?: () => void;
 	onDelete?: () => void;
+	onRemoveFromProgram?: () => void;
 	mode: 'add' | 'edit' | 'readonly';
 };
 
-const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, mode }) => {
+const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, onRemoveFromProgram, mode }) => {
 	const zodSchema = buildZodSchema(formSchema);
 
 	const form = useForm<z.infer<typeof zodSchema>>({
@@ -294,7 +295,13 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 						/>
 					);
 				})}
-				<FormActions mode={mode} isLoading={isLoading} onCancel={onCancel} onDelete={onDelete} />
+				<FormActions
+					mode={mode}
+					isLoading={isLoading}
+					onCancel={onCancel}
+					onDelete={onDelete}
+					onRemoveFromProgram={onRemoveFromProgram}
+				/>
 			</form>
 			{/* TODO: add proper loading state */}
 			{isLoading && (

@@ -1,3 +1,4 @@
+import type { CampaignDefaultImageOption } from '@/lib/server-actions/campaign-public-actions';
 import {
 	type CampaignSubmissionErrorCode,
 	type createCampaignSubmissionFormSchema,
@@ -13,10 +14,25 @@ export type SubmissionLabels = {
 	title: string;
 	description: string;
 	goal: string;
+	setGoalAmount: string;
 	currency: string;
 	endDate: string;
+	duration: string;
+	duration30: string;
+	duration90: string;
+	duration365: string;
+	durationOther: string;
+	access: string;
+	accessPublic: string;
+	accessPublicDescription: string;
+	accessPrivate: string;
+	accessPrivateDescription: string;
+	accessRecommended: string;
 	program: string;
 	primaryImage: string;
+	campaignBackground: string;
+	uploadImage: string;
+	removeUploadedImage: string;
 	submit: string;
 	submitting: string;
 	successTitle: string;
@@ -34,12 +50,16 @@ export type SubmissionLabels = {
 	details: string;
 	programsLoading: string;
 	programsEmpty: string;
+	defaultImagesLoading: string;
+	defaultImagesError: string;
 	errors: Record<CampaignSubmissionErrorCode, string>;
 };
 
 export type CampaignSubmissionStepId = 'program' | 'details';
 
 export type CampaignSubmissionFormValues = z.infer<ReturnType<typeof createCampaignSubmissionFormSchema>>;
+
+export type CampaignImageSelection = { type: 'default'; id: number } | { type: 'upload'; file: File } | null;
 
 export type CampaignSubmissionStepProps = {
 	form: UseFormReturn<CampaignSubmissionFormValues>;
@@ -48,6 +68,12 @@ export type CampaignSubmissionStepProps = {
 	programsLoading: boolean;
 	programsError: string | null;
 	primaryImageInputRef: RefObject<HTMLInputElement | null>;
+	imageSelection: CampaignImageSelection;
+	defaultImages: CampaignDefaultImageOption[];
+	defaultImagesLoading: boolean;
+	defaultImagesError: string | null;
+	uploadPreviewUrl: string | null;
+	onSelectDefaultImage: (id: number) => void;
 	onImageChange: (file: File | null) => void;
 	imageError: string | null;
 	submitError: string | null;
