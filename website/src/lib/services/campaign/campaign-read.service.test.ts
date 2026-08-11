@@ -37,7 +37,10 @@ const createService = ({
 		currency: 'CHF' | 'EUR';
 		featured: boolean;
 		createdAt: Date;
-		isActive: boolean;
+		endDate: Date;
+		goal?: number | null;
+		additionalAmountChf?: number | null;
+		contributions?: { amountChf: number }[];
 	}[];
 	exchangeRates?: Partial<Record<Currency, number>>;
 } = {}) => {
@@ -71,7 +74,7 @@ const createService = ({
 };
 
 describe('CampaignReadService public campaign preview data', () => {
-	test('getPublicCampaigns returns creator and currency with trimmed slug', async () => {
+	test('getPublicCampaigns returns creator and currency with trimmed slug for active campaigns', async () => {
 		const { service, campaignFindMany } = createService({
 			campaigns: [
 				{
@@ -82,7 +85,10 @@ describe('CampaignReadService public campaign preview data', () => {
 					currency: 'CHF',
 					featured: true,
 					createdAt: new Date('2025-01-01T00:00:00.000Z'),
-					isActive: true,
+					endDate: new Date('2025-07-15T12:00:00.000Z'),
+					goal: 10_000,
+					additionalAmountChf: 0,
+					contributions: [{ amountChf: 100 }],
 				},
 				{
 					id: 'campaign-2',
@@ -92,7 +98,10 @@ describe('CampaignReadService public campaign preview data', () => {
 					currency: 'EUR',
 					featured: false,
 					createdAt: new Date('2025-01-02T00:00:00.000Z'),
-					isActive: true,
+					endDate: new Date('2025-07-15T12:00:00.000Z'),
+					goal: null,
+					additionalAmountChf: null,
+					contributions: [],
 				},
 			],
 		});
@@ -100,7 +109,7 @@ describe('CampaignReadService public campaign preview data', () => {
 		const campaigns = expectSuccess(await service.getPublicCampaigns());
 
 		const [[callArg]] = campaignFindMany.mock.calls as unknown as [{ where?: Record<string, unknown> }][];
-		expect(callArg.where).toMatchObject({ isActive: true });
+		expect(callArg.where).not.toHaveProperty('isActive');
 		expect(campaigns).toEqual([
 			{
 				id: 'campaign-1',
@@ -108,6 +117,8 @@ describe('CampaignReadService public campaign preview data', () => {
 				slug: 'holiday-fundraiser',
 				creatorName: 'smartive AG',
 				currency: 'CHF',
+				endDate: new Date('2025-07-15T12:00:00.000Z'),
+				goal: 10_000,
 				isActive: true,
 			},
 		]);
@@ -124,7 +135,10 @@ describe('CampaignReadService public campaign preview data', () => {
 					currency: 'CHF',
 					featured: true,
 					createdAt: new Date('2025-01-01T00:00:00.000Z'),
-					isActive: true,
+					endDate: new Date('2025-07-15T12:00:00.000Z'),
+					goal: 10_000,
+					additionalAmountChf: 0,
+					contributions: [{ amountChf: 100 }],
 				},
 				{
 					id: 'campaign-2',
@@ -134,7 +148,10 @@ describe('CampaignReadService public campaign preview data', () => {
 					currency: 'EUR',
 					featured: false,
 					createdAt: new Date('2025-01-02T00:00:00.000Z'),
-					isActive: false,
+					endDate: new Date('2025-05-01T12:00:00.000Z'),
+					goal: 10_000,
+					additionalAmountChf: 0,
+					contributions: [{ amountChf: 100 }],
 				},
 			],
 		});
@@ -150,6 +167,8 @@ describe('CampaignReadService public campaign preview data', () => {
 				slug: 'active-campaign',
 				creatorName: 'smartive AG',
 				currency: 'CHF',
+				endDate: new Date('2025-07-15T12:00:00.000Z'),
+				goal: 10_000,
 				isActive: true,
 			},
 			{
@@ -158,23 +177,54 @@ describe('CampaignReadService public campaign preview data', () => {
 				slug: 'inactive-campaign',
 				creatorName: null,
 				currency: 'EUR',
+				endDate: new Date('2025-05-01T12:00:00.000Z'),
+				goal: 10_000,
 				isActive: false,
 			},
 		]);
 	});
 
-	test('getPublicCampaigns with activity inactive filters to inactive campaigns', async () => {
+	test('getPublicCampaigns with activity inactive filters to ended or fully funded campaigns', async () => {
 		const { service, campaignFindMany } = createService({
 			campaigns: [
 				{
-					id: 'campaign-2',
-					title: 'Inactive Campaign',
-					slug: 'inactive-campaign',
+					id: 'campaign-ended',
+					title: 'Ended Campaign',
+					slug: 'ended-campaign',
 					creatorName: null,
 					currency: 'EUR',
 					featured: false,
 					createdAt: new Date('2025-01-02T00:00:00.000Z'),
-					isActive: false,
+					endDate: new Date('2025-05-01T12:00:00.000Z'),
+					goal: 10_000,
+					additionalAmountChf: 0,
+					contributions: [{ amountChf: 100 }],
+				},
+				{
+					id: 'campaign-funded',
+					title: 'Funded Campaign',
+					slug: 'funded-campaign',
+					creatorName: null,
+					currency: 'CHF',
+					featured: false,
+					createdAt: new Date('2025-01-03T00:00:00.000Z'),
+					endDate: new Date('2025-07-15T12:00:00.000Z'),
+					goal: 500,
+					additionalAmountChf: 0,
+					contributions: [{ amountChf: 500 }],
+				},
+				{
+					id: 'campaign-active',
+					title: 'Active Campaign',
+					slug: 'active-campaign',
+					creatorName: null,
+					currency: 'CHF',
+					featured: false,
+					createdAt: new Date('2025-01-04T00:00:00.000Z'),
+					endDate: new Date('2025-07-15T12:00:00.000Z'),
+					goal: 10_000,
+					additionalAmountChf: 0,
+					contributions: [{ amountChf: 100 }],
 				},
 			],
 		});
@@ -182,14 +232,26 @@ describe('CampaignReadService public campaign preview data', () => {
 		const campaigns = expectSuccess(await service.getPublicCampaigns({ activity: 'inactive' }));
 
 		const [[callArg]] = campaignFindMany.mock.calls as unknown as [{ where?: Record<string, unknown> }][];
-		expect(callArg.where).toMatchObject({ isActive: false });
+		expect(callArg.where).not.toHaveProperty('isActive');
 		expect(campaigns).toEqual([
 			{
-				id: 'campaign-2',
-				title: 'Inactive Campaign',
-				slug: 'inactive-campaign',
+				id: 'campaign-ended',
+				title: 'Ended Campaign',
+				slug: 'ended-campaign',
 				creatorName: null,
 				currency: 'EUR',
+				endDate: new Date('2025-05-01T12:00:00.000Z'),
+				goal: 10_000,
+				isActive: false,
+			},
+			{
+				id: 'campaign-funded',
+				title: 'Funded Campaign',
+				slug: 'funded-campaign',
+				creatorName: null,
+				currency: 'CHF',
+				endDate: new Date('2025-07-15T12:00:00.000Z'),
+				goal: 500,
 				isActive: false,
 			},
 		]);
@@ -414,6 +476,8 @@ describe('CampaignReadService public campaign preview data', () => {
 					slug: 'holiday-fundraiser',
 					creatorName: 'smartive AG',
 					currency: 'CHF',
+					endDate: new Date('2025-07-15T12:00:00.000Z'),
+					goal: 10_000,
 					isActive: true,
 				},
 			]),
