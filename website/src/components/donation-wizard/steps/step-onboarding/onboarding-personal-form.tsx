@@ -1,13 +1,13 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Combobox } from '@/components/combo-box';
 import { RadioCard } from '@/components/create-program-wizard/radio-card';
 import { RadioCardGroup } from '@/components/create-program-wizard/radio-card-group';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/form';
 import { LongHairIcon } from '@/components/icons/long-hair-icon';
 import { ShortHairIcon } from '@/components/icons/short-hair-icon';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { GENDER_OPTIONS } from '@/lib/types/user';

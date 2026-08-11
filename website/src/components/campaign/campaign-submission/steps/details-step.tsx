@@ -2,7 +2,7 @@
 
 import { RadioCard } from '@/components/create-program-wizard/radio-card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { RadioGroup } from '@/components/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';

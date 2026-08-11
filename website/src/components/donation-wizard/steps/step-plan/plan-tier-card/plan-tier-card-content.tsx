@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { cn } from '@/lib/utils/cn';
 import { Check, Heart } from 'lucide-react';
 import type { PlanTierBenefit } from './plan-tier-benefit';

@@ -1,4 +1,4 @@
-import { Card } from '@/components/card';
+import { Card } from '@/components/card/card';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 
 type Props = {

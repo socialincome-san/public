@@ -1,4 +1,4 @@
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { CountryCode } from '@/generated/prisma/enums';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { CountryFlag } from '../country-flag';
