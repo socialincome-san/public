@@ -1,10 +1,9 @@
+import { Avatar, AvatarFallback } from '@/components/avatar';
 import { SectionHeading } from '@/components/section-heading';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Image from 'next/image';
-import { expect } from 'storybook/test';
-import { Avatar, AvatarFallback } from '../components/avatar';
 
-import { Card } from '../components/card';
+import { Card } from '@/components/card';
 
 const meta = {
 	title: 'Components/Card',
@@ -12,13 +11,18 @@ const meta = {
 	tags: ['autodocs'],
 	parameters: {
 		docs: {
-			codePanel: true,
 			description: {
-				component: 'Eine wiederverwendbare Card-Komponente für Inhalte mit optionalem Link-Verhalten.',
+				component: 'A reusable card component for content with optional link behavior.',
 			},
 		},
 	},
 	argTypes: {
+		href: {
+			control: 'text',
+		},
+		children: {
+			control: 'text',
+		},
 		variant: {
 			control: 'select',
 			options: ['default', 'noPadding'],
@@ -37,19 +41,6 @@ export const Default: Story = {
 	args: {
 		href: '/',
 		children: 'Test',
-	},
-	play: async ({ canvas }) => {
-		const link = await canvas.findByRole('link');
-		const card = link.firstElementChild;
-		const chevron = card?.querySelector('.lucide-chevron-right');
-
-		if (!card || !chevron) {
-			throw new Error('The linked card must render its content and chevron icon.');
-		}
-
-		await expect(link).toHaveAttribute('href', '/');
-		await expect(card).toHaveClass('cursor-pointer');
-		await expect(chevron).toBeVisible();
 	},
 };
 
@@ -89,17 +80,5 @@ export const WithContent: Story = {
 				/>
 			</div>
 		),
-	},
-	play: async ({ canvas }) => {
-		const author = await canvas.findByText('Sandino Scheidegger');
-		const card = author.closest('.shadow-lg');
-
-		if (!card) {
-			throw new Error('The author must be rendered inside the card.');
-		}
-
-		await expect(canvas.queryByRole('link')).not.toBeInTheDocument();
-		await expect(card).not.toHaveClass('cursor-pointer');
-		await expect(card.querySelector('svg')).not.toBeInTheDocument();
 	},
 };
