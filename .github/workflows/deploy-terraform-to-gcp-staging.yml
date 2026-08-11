@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "recipients_app/**"
 
 concurrency:
   group: deploy-terraform-gcp-staging
