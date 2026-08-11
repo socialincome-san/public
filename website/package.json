@@ -38,6 +38,8 @@
 		"db:migrate:create": "prisma migrate dev --create-only",
 		"db:introspect": "prisma db pull",
 		"db:seed": "prisma db seed",
+		"db:backfill:stripe-subscriptions": "tsx src/lib/database/scripts/backfill-stripe-subscriptions.ts",
+		"db:backfill:bank-subscriptions": "tsx src/lib/database/scripts/backfill-bank-subscriptions.ts",
 		"db:studio": "prisma studio",
 		"db:up": "docker compose up -d postgres",
 		"db:down": "docker compose down postgres",
