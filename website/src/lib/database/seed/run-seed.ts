@@ -25,6 +25,7 @@ import { programTargetFocusesData } from './data/program-target-focuses.data';
 import { programsData } from './data/programs.data';
 import { recipientsData } from './data/recipients.data';
 import { sourceLinksData } from './data/source-links.data';
+import { subscriptionsData } from './data/subscriptions.data';
 import { surveySchedulesData } from './data/survey-schedules.data';
 import { surveysData } from './data/surveys.data';
 import { usersData } from './data/users.data';
@@ -37,6 +38,7 @@ export const seedDatabase = async () => {
 		await tx.recipient.deleteMany();
 		await tx.paymentEvent.deleteMany();
 		await tx.contribution.deleteMany();
+		await tx.subscription.deleteMany();
 		await tx.donationCertificate.deleteMany();
 		await tx.contributor.deleteMany();
 		await tx.campaign.deleteMany();
@@ -84,6 +86,7 @@ export const seedDatabase = async () => {
 		await tx.paymentInformation.createMany({ data: paymentInformationsData, skipDuplicates: true });
 		await tx.campaign.createMany({ data: campaignsData, skipDuplicates: true });
 		await tx.contributor.createMany({ data: contributorsData, skipDuplicates: true });
+		await tx.subscription.createMany({ data: subscriptionsData, skipDuplicates: true });
 		await tx.contribution.createMany({ data: contributionsData, skipDuplicates: true });
 		await tx.paymentEvent.createMany({ data: paymentEventsData, skipDuplicates: true });
 		await tx.donationCertificate.createMany({ data: donationCertificatesData, skipDuplicates: true });

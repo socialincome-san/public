@@ -82,4 +82,22 @@ export const paymentEventsData: Prisma.PaymentEventCreateManyInput[] = [
 		createdAt: new Date('2024-12-10T10:00:10.000Z'),
 		updatedAt: null,
 	},
+	{
+		id: 'payment-event-mixed-owner-qr-50-1',
+		contributionId: 'contribution-mixed-owner-qr-50-1',
+		type: PaymentEventType.bank_transfer,
+		transactionId: '1733400000',
+		metadata: { method: 'bank_transfer', status: 'succeeded' },
+		createdAt: new Date('2024-11-01T10:00:10.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'payment-event-mixed-owner-qr-80-1',
+		contributionId: 'contribution-mixed-owner-qr-80-1',
+		type: PaymentEventType.bank_transfer,
+		transactionId: '1734000000',
+		metadata: { method: 'bank_transfer', status: 'succeeded' },
+		createdAt: new Date('2024-11-15T10:00:10.000Z'),
+		updatedAt: null,
+	},
 ];
