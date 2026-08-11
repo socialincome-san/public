@@ -641,7 +641,7 @@ export class RecipientWriteService extends BaseService {
 				return this.resultFail('Recipient has payouts and cannot be removed from the program.');
 			}
 
-			// Before removing the recipient from the program, we make sure that the recipient 
+			// Before removing the recipient from the program, we make sure that the recipient
 			// still doesn't have any payouts and that the programId wasn't changed in the middle
 			// of the operation.
 			const removal = await this.db.recipient.updateMany({
@@ -657,7 +657,9 @@ export class RecipientWriteService extends BaseService {
 			});
 
 			if (removal.count === 0) {
-				return this.resultFail('Either the recipient has payouts and cannot be removed from the program, or the program was changed.');
+				return this.resultFail(
+					'Either the recipient has payouts and cannot be removed from the program, or the program was changed.',
+				);
 			}
 
 			return this.resultOk({ id: recipientId });
