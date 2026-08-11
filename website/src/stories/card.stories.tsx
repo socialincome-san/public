@@ -61,7 +61,7 @@ export const WithContent: Story = {
 			<div className="flex items-center gap-6">
 				<div className="flex flex-col gap-4">
 					<SectionHeading size={4} align="left">
-						Debt instead of opportunity? Why we don't offer microloans.
+						Debt instead of opportunity? Why we don&apos;t offer microloans.
 					</SectionHeading>
 					<div className="flex items-center gap-2">
 						<Avatar>
