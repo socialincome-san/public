@@ -506,6 +506,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		event.preventDefault();
 
 		if (currentStep !== 'about') {
+			void onContinue();
+
 			return;
 		}
 
