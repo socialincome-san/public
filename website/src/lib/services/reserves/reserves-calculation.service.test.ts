@@ -119,46 +119,51 @@ describe('ReservesCalculationService.calculate', () => {
 	});
 
 	test('repeating the same calculation persists only one snapshot', async () => {
-		const { snapshots, db, createMany } = createConflictSafeReserveDb();
-		const bankAccountService = {
-			getAll: jest.fn().mockResolvedValue({ success: true, data: [postFinanceAccount] }),
-		};
-		const postFinanceBalanceService = {
-			getLatestClavBalances: jest.fn().mockResolvedValue({
-				success: true,
-				data: [{ iban: 'CH1909000000151126386', amount: 125, currency: 'CHF' }],
-			}),
-		};
-		const currencyDisplayService = {
-			getLatestRatesOrUndefined: jest.fn(),
-			convertAmount: jest.fn().mockReturnValue(125),
-		};
-		const service = new ReservesCalculationService(
-			{} as never,
-			bankAccountService as never,
-			postFinanceBalanceService as never,
-			new ReserveWriteService(db, {} as never),
-			currencyDisplayService as never,
-		);
+		jest.useFakeTimers().setSystemTime(new Date('2026-08-12T12:00:00.000Z'));
 
-		await expect(service.calculate()).resolves.toEqual({ success: true, data: 1 });
-		await expect(service.calculate()).resolves.toEqual({ success: true, data: 0 });
+		try {
+			const { snapshots, db, createMany } = createConflictSafeReserveDb();
+			const bankAccountService = {
+				getAll: jest.fn().mockResolvedValue({ success: true, data: [postFinanceAccount] }),
+			};
+			const postFinanceBalanceService = {
+				getLatestClavBalances: jest.fn().mockResolvedValue({
+					success: true,
+					data: [{ iban: 'CH1909000000151126386', amount: 125, currency: 'CHF' }],
+				}),
+			};
+			const currencyDisplayService = {
+				getLatestRatesOrUndefined: jest.fn(),
+				convertAmount: jest.fn().mockReturnValue(125),
+			};
+			const service = new ReservesCalculationService(
+				{} as never,
+				bankAccountService as never,
+				postFinanceBalanceService as never,
+				new ReserveWriteService(db, {} as never),
+				currencyDisplayService as never,
+			);
 
-		expect(createMany).toHaveBeenCalledTimes(2);
-		const firstWrite = createMany.mock.calls[0]?.[0];
-		expect(firstWrite).toEqual({
-			data: [
-				{
-					bankAccountId: 'postfinance-account',
-					date: firstWrite?.data[0]?.date,
-					amount: 125,
-					currency: 'CHF',
-					amountChf: 125,
-				},
-			],
-			skipDuplicates: true,
-		});
-		expect(firstWrite?.data[0]?.date).toBeInstanceOf(Date);
-		expect(snapshots.size).toBe(1);
+			await expect(service.calculate()).resolves.toEqual({ success: true, data: 1 });
+			await expect(service.calculate()).resolves.toEqual({ success: true, data: 0 });
+
+			expect(createMany).toHaveBeenCalledTimes(2);
+			const firstWrite = createMany.mock.calls[0]?.[0];
+			expect(firstWrite).toEqual({
+				data: [
+					{
+						bankAccountId: 'postfinance-account',
+						date: new Date('2026-08-12T00:00:00.000Z'),
+						amount: 125,
+						currency: 'CHF',
+						amountChf: 125,
+					},
+				],
+				skipDuplicates: true,
+			});
+			expect(snapshots.size).toBe(1);
+		} finally {
+			jest.useRealTimers();
+		}
 	});
 });
