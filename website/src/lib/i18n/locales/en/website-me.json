@@ -55,6 +55,7 @@
 			"donation-certificates-long": "Donation certificates"
 		}
 	},
+	"donate-now": "Donate now",
 	"contributions": {
 		"amount": "Amount",
 		"date": "Date",
@@ -76,14 +77,12 @@
 			"unknown": "Unknown"
 		},
 		"status-title": "Status",
-		"no-contributions": "No contributions found",
-		"new-contribution": "Make a contribution"
+		"no-contributions": "No contributions found"
 	},
 	"subscriptions": {
 		"amount": "Amount",
 		"created": "Created",
 		"payment-method": "Payment Method",
-		"new-subscription": "New subscription",
 		"interval": "Interval",
 		"interval-1": "Monthly",
 		"interval-3": "Quarterly",
@@ -95,7 +94,25 @@
 		},
 		"status-title": "Status",
 		"manage-subscriptions": "Manage Subscriptions",
-		"no-subscriptions": "No subscriptions found"
+		"no-subscriptions": "No subscriptions found",
+		"summary": {
+			"monthly-contribution": "Monthly contribution",
+			"total-contributions": "Total contributions",
+			"no-active-subscriptions": "No active Subscriptions",
+			"active-subscriptions-count": "{{count}} active subscriptions",
+			"contributions-since": "{{count}} contributions since {{date}}",
+			"no-contributions-yet": "No contributions yet"
+		},
+		"active-subscriptions": "Active subscriptions",
+		"upcoming-payments": "Upcoming payments",
+		"scheduled": "Scheduled",
+		"per-month": "per month",
+		"since": "since",
+		"card-fallback": "Card",
+		"empty": {
+			"description": "You've contributed {{amount}} across {{count}} transfers.\nReady to pick up where you left off?",
+			"description-no-contributions": "Start supporting someone today."
+		}
 	},
 	"donation-certificates": {
 		"created": "Created",

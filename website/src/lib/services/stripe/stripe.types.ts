@@ -115,6 +115,17 @@ export type StripePaymentMethod = {
 	label: string;
 };
 
+export type StripeCardDisplay = {
+	brand: string;
+	last4: string;
+};
+
+export type StripeSubscriptionDetails = {
+	brand?: string;
+	last4?: string;
+	currentPeriodEnd: Date | null;
+};
+
 export type StripeBillingPortalSessionUrl = string;
 
 export type StripeCustomerData = {

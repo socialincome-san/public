@@ -1,15 +1,15 @@
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Suspense } from 'react';
-import { DefaultPageProps } from '../..';
-import { SubscriptionsTable } from './subscriptions-table';
+import { type DefaultPageProps } from '../..';
+import { SubscriptionsView } from './subscriptions-view';
 
-export default async function Page({ params, searchParams }: DefaultPageProps) {
+export default async function Page({ params }: DefaultPageProps) {
 	const { lang, region } = await params;
 
 	return (
 		<Suspense fallback={<AppLoadingSkeleton />}>
-			<SubscriptionsTable lang={lang as WebsiteLanguage} region={region as WebsiteRegion} searchParams={searchParams} />
+			<SubscriptionsView lang={lang as WebsiteLanguage} region={region as WebsiteRegion} />
 		</Suspense>
 	);
 }

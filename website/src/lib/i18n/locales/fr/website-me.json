@@ -55,6 +55,7 @@
 			"donation-certificates-long": "Attestations de don"
 		}
 	},
+	"donate-now": "Faire un don",
 	"contributions": {
 		"amount": "Paiements",
 		"date": "Date",
@@ -76,14 +77,12 @@
 			"unknown": "Inconnu"
 		},
 		"status-title": "Statut",
-		"no-contributions": "Aucune contribution trouvée",
-		"new-contribution": "Faire une contribution"
+		"no-contributions": "Aucune contribution trouvée"
 	},
 	"subscriptions": {
 		"amount": "Montant",
 		"created": "Créé",
 		"payment-method": "Méthode de paiement",
-		"new-subscription": "Nouvelle souscription",
 		"interval": "Interval",
 		"interval-1": "Mensuel",
 		"interval-3": "Trimestriel",
@@ -95,7 +94,25 @@
 		},
 		"status-title": "Statut",
 		"manage-subscriptions": "Gérer les souscriptions",
-		"no-subscriptions": "Aucune souscription trouvée"
+		"no-subscriptions": "Aucune souscription trouvée",
+		"summary": {
+			"monthly-contribution": "Contribution mensuelle",
+			"total-contributions": "Contributions totales",
+			"no-active-subscriptions": "Aucune souscription active",
+			"active-subscriptions-count": "{{count}} souscriptions actives",
+			"contributions-since": "{{count}} contributions depuis le {{date}}",
+			"no-contributions-yet": "Aucune contribution pour l'instant"
+		},
+		"active-subscriptions": "Souscriptions actives",
+		"upcoming-payments": "Paiements à venir",
+		"scheduled": "Planifié",
+		"per-month": "par mois",
+		"since": "depuis le",
+		"card-fallback": "Carte",
+		"empty": {
+			"description": "Tu as contribué {{amount}} en {{count}} virements.\nPrêt·e à reprendre là où tu t'es arrêté·e ?",
+			"description-no-contributions": "Commence à soutenir quelqu'un aujourd'hui."
+		}
 	},
 	"donation-certificates": {
 		"created": "Créé",

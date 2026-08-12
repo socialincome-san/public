@@ -55,6 +55,7 @@
 			"donation-certificates-long": "Certificati di donazione"
 		}
 	},
+	"donate-now": "Dona ora",
 	"contributions": {
 		"amount": "Importo",
 		"date": "Data",
@@ -76,14 +77,12 @@
 			"unknown": "Sconosciuto"
 		},
 		"status-title": "Stato",
-		"no-contributions": "Nessuna contribuzione trovata",
-		"new-contribution": "Effettua una contribuzione"
+		"no-contributions": "Nessuna contribuzione trovata"
 	},
 	"subscriptions": {
 		"amount": "Importo",
 		"created": "Creato",
 		"payment-method": "Método di pagamento",
-		"new-subscription": "Nuova sottoscrizione",
 		"interval": "Intervallo",
 		"interval-1": "Mensile",
 		"interval-3": "Trimestrale",
@@ -95,7 +94,25 @@
 		},
 		"status-title": "Stato",
 		"manage-subscriptions": "Gestisci le sottoscrizioni",
-		"no-subscriptions": "Nessuna sottoscrizione trovata"
+		"no-subscriptions": "Nessuna sottoscrizione trovata",
+		"summary": {
+			"monthly-contribution": "Contributo mensile",
+			"total-contributions": "Contributi totali",
+			"no-active-subscriptions": "Nessuna sottoscrizione attiva",
+			"active-subscriptions-count": "{{count}} sottoscrizioni attive",
+			"contributions-since": "{{count}} contributi dal {{date}}",
+			"no-contributions-yet": "Nessun contributo ancora"
+		},
+		"active-subscriptions": "Sottoscrizioni attive",
+		"upcoming-payments": "Pagamenti in arrivo",
+		"scheduled": "Programmato",
+		"per-month": "al mese",
+		"since": "dal",
+		"card-fallback": "Carta",
+		"empty": {
+			"description": "Hai contribuito con {{amount}} in {{count}} bonifici.\nPronto a riprendere da dove avevi lasciato?",
+			"description-no-contributions": "Inizia a sostenere qualcuno oggi."
+		}
 	},
 	"donation-certificates": {
 		"created": "Creato",

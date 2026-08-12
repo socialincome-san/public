@@ -3,6 +3,8 @@ import {
 	formatCurrency,
 	formatCurrencyLocale,
 	formatDate,
+	formatDateLocale,
+	formatUtcDate,
 	formatNumberLocale,
 	humanize,
 	humanizeIdentifier,
@@ -196,6 +198,19 @@ describe('string-utils', () => {
 		});
 	});
 
+	describe('formatDateLocale', () => {
+		test('formats date with locale-aware medium style', () => {
+			const date = new Date('2024-11-03T12:00:00.000Z');
+			expect(formatDateLocale(date, 'en')).toMatch(/Nov/);
+			expect(formatDateLocale(date, 'en')).toMatch(/2024/);
+		});
+
+		test('returns em dash for invalid input', () => {
+			expect(formatDateLocale(null, 'en')).toBe('—');
+			expect(formatDateLocale('invalid-date', 'en')).toBe('—');
+		});
+	});
+
 	describe('formatDate', () => {
 		test('formats Date object', () => {
 			const d = new Date('2026-02-17T00:00:00Z');
@@ -210,6 +225,17 @@ describe('string-utils', () => {
 			expect(formatDate(null)).toBe('—');
 			// Invalid date string should not throw
 			expect(formatDate('invalid-date')).toBe('—');
+		});
+	});
+
+	describe('formatUtcDate', () => {
+		test('formats UTC calendar date regardless of local timezone', () => {
+			expect(formatUtcDate(new Date('2026-03-05T00:00:00.000Z'))).toBe('05.03.2026');
+		});
+
+		test('returns em dash for invalid input', () => {
+			expect(formatUtcDate(null)).toBe('—');
+			expect(formatUtcDate('invalid-date')).toBe('—');
 		});
 	});
 });

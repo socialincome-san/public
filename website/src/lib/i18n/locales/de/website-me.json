@@ -55,6 +55,7 @@
 			"donation-certificates-long": "Spendebescheinigungen"
 		}
 	},
+	"donate-now": "Jetzt spenden",
 	"contributions": {
 		"amount": "Betrag",
 		"date": "Datum",
@@ -76,14 +77,12 @@
 			"unknown": "Unbekannt"
 		},
 		"status-title": "Status",
-		"no-contributions": "Keine Zahlungen gefunden",
-		"new-contribution": "Neue Spende"
+		"no-contributions": "Keine Zahlungen gefunden"
 	},
 	"subscriptions": {
 		"amount": "Betrag",
 		"created": "Erstellt",
 		"payment-method": "Zahlungsart",
-		"new-subscription": "Neues Abonnement",
 		"interval": "Interval",
 		"interval-1": "Monatlich",
 		"interval-3": "Quartalsweise",
@@ -95,7 +94,25 @@
 		},
 		"status-title": "Status",
 		"manage-subscriptions": "Abonnemente verwalten",
-		"no-subscriptions": "Keine Abonnemente gefunden"
+		"no-subscriptions": "Keine Abonnemente gefunden",
+		"summary": {
+			"monthly-contribution": "Monatlicher Beitrag",
+			"total-contributions": "Gesamtbeiträge",
+			"no-active-subscriptions": "Keine aktiven Abonnemente",
+			"active-subscriptions-count": "{{count}} aktive Abonnemente",
+			"contributions-since": "{{count}} Beiträge seit {{date}}",
+			"no-contributions-yet": "Noch keine Beiträge"
+		},
+		"active-subscriptions": "Aktive Abonnemente",
+		"upcoming-payments": "Bevorstehende Zahlungen",
+		"scheduled": "Geplant",
+		"per-month": "pro Monat",
+		"since": "seit",
+		"card-fallback": "Karte",
+		"empty": {
+			"description": "Du hast {{amount}} über {{count}} Überweisungen beigetragen.\nMöchtest du dort weitermachen, wo du aufgehört hast?",
+			"description-no-contributions": "Beginne heute, jemanden zu unterstützen."
+		}
 	},
 	"donation-certificates": {
 		"created": "Erstellt",

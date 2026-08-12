@@ -36,6 +36,7 @@ import {
 	type CheckoutMetadata,
 	type PortalProgramDonationCheckoutInput,
 	type StripeBillingPortalSessionUrl,
+	type StripeSubscriptionDetails,
 	type StripeCheckoutCustomerPrefill,
 	type StripeCheckoutOnboardingPrefill,
 	type StripeContributorNameParts,
@@ -772,6 +773,40 @@ export class StripeService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not create Stripe customer: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getSubscriptionStripeDetails(stripeSubscriptionId: string): Promise<StripeSubscriptionDetails | null> {
+		try {
+			const subscription = await this.getStripeClient().subscriptions.retrieve(stripeSubscriptionId, {
+				expand: ['default_payment_method'],
+			});
+			const firstItem = subscription.items.data[0];
+			const currentPeriodEnd =
+				firstItem?.current_period_end != null ? new Date(firstItem.current_period_end * 1000) : null;
+			const paymentMethod = subscription.default_payment_method;
+			if (!paymentMethod || typeof paymentMethod === 'string') {
+				return { currentPeriodEnd };
+			}
+			if (paymentMethod.type !== 'card' || !paymentMethod.card) {
+				return { currentPeriodEnd };
+			}
+
+			return {
+				brand: titleCase(paymentMethod.card.brand),
+				last4: paymentMethod.card.last4,
+				currentPeriodEnd,
+			};
+		} catch (error) {
+			const stripeError = error as { type?: string; code?: string };
+			const isMissingResource = stripeError.type === 'StripeInvalidRequestError' && stripeError.code === 'resource_missing';
+			if (isMissingResource) {
+				return null;
+			}
+
+			this.logger.warn('Could not retrieve Stripe subscription details', { stripeSubscriptionId });
+
+			return null;
 		}
 	}
 

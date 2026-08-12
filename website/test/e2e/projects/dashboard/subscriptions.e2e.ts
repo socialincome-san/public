@@ -7,7 +7,8 @@ test.beforeEach(async () => {
 });
 
 test('dashboard subscriptions-page matches screenshot', async ({ page }) => {
-	await page.goto('/en/int/dashboard/subscriptions?sortBy=created&sortDirection=desc');
-	await expect(page.getByTestId('data-table')).toBeVisible();
+	await page.goto('/en/int/dashboard/subscriptions');
+	await expect(page.getByTestId('subscriptions-dashboard')).toBeVisible();
+	await expect(page.getByTestId('upcoming-payments')).toBeVisible();
 	await expectToHaveScreenshot(page);
 });

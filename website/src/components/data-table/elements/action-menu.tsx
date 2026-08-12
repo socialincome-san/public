@@ -9,7 +9,7 @@ import type { ReactNode } from 'react';
 
 export type ActionMenuItem = {
 	label: string;
-	icon: ReactNode;
+	icon?: ReactNode;
 	onSelect?: () => void;
 	href?: string;
 	disabled?: boolean;
