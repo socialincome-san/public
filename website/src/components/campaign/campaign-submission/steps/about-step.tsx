@@ -12,7 +12,14 @@ import type { CampaignSubmissionFormValues, CampaignSubmissionStepProps } from '
 
 type Props = Pick<
 	CampaignSubmissionStepProps,
-	'form' | 'labels' | 'profilePictureInputRef' | 'profilePicture' | 'sectionImageInputRef' | 'sectionImage' | 'submitError'
+	| 'form'
+	| 'labels'
+	| 'profilePictureInputRef'
+	| 'profilePicture'
+	| 'sectionImageInputRef'
+	| 'sectionImage'
+	| 'submitError'
+	| 'isSubmitting'
 >;
 
 type AdditionalLinkField = {
@@ -38,6 +45,7 @@ export const AboutStep = ({
 	sectionImageInputRef,
 	sectionImage,
 	submitError,
+	isSubmitting,
 }: Props) => {
 	const profileHintId = useId();
 	const profileErrorId = useId();
@@ -89,7 +97,7 @@ export const AboutStep = ({
 					<FormItem>
 						<FormLabel>{labels.aboutStepSubtitle}</FormLabel>
 						<FormControl>
-							<Input {...field} autoComplete="name" placeholder={labels.creatorNamePlaceholder} />
+							<Input {...field} autoComplete="name" placeholder={labels.creatorNamePlaceholder} disabled={isSubmitting} />
 						</FormControl>
 						<FormMessage />
 					</FormItem>
@@ -103,7 +111,8 @@ export const AboutStep = ({
 				<div className="border-border relative aspect-[16/10] w-full rounded-2xl border border-dashed">
 					<button
 						type="button"
-						className="hover:bg-muted/40 focus-visible:ring-ring absolute inset-0 rounded-2xl focus-visible:ring-2 focus-visible:outline-none"
+						disabled={isSubmitting}
+						className="hover:bg-muted/40 focus-visible:ring-ring absolute inset-0 rounded-2xl focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
 						aria-label={profilePicture.previewUrl ? labels.editProfilePicture : labels.profilePicture}
 						aria-describedby={[profileHintId, profilePicture.error ? profileErrorId : null].filter(Boolean).join(' ')}
 						onClick={() => profilePictureInputRef.current?.click()}
@@ -126,7 +135,8 @@ export const AboutStep = ({
 					{profilePicture.previewUrl ? (
 						<button
 							type="button"
-							className="bg-background text-foreground hover:bg-muted absolute top-2 right-2 flex size-8 items-center justify-center rounded-full border shadow-xs"
+							disabled={isSubmitting}
+							className="bg-background text-foreground hover:bg-muted absolute top-2 right-2 flex size-8 items-center justify-center rounded-full border shadow-xs disabled:pointer-events-none disabled:opacity-50"
 							aria-label={labels.removeUploadedImage}
 							onClick={() => profilePicture.onChange(null)}
 						>
@@ -140,6 +150,7 @@ export const AboutStep = ({
 					accept={campaignSubmissionConfig.permittedImageMimeTypes.join(',')}
 					className="sr-only"
 					tabIndex={-1}
+					disabled={isSubmitting}
 					onChange={(event) => {
 						profilePicture.onChange(event.target.files?.[0] ?? null);
 					}}
@@ -171,9 +182,11 @@ export const AboutStep = ({
 								{...field}
 								rows={3}
 								placeholder={labels.quotePlaceholder}
+								disabled={isSubmitting}
 								className={cn(
 									'placeholder:text-muted-foreground border-border text-foreground w-full min-w-0 rounded-2xl border bg-transparent px-3 py-2 text-sm shadow-xs outline-hidden',
 									'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+									'disabled:opacity-50',
 								)}
 							/>
 						</FormControl>
@@ -189,6 +202,7 @@ export const AboutStep = ({
 					<Switch
 						id="campaign-has-additional-information"
 						checked={hasAdditionalInformation}
+						disabled={isSubmitting}
 						onCheckedChange={(checked) => {
 							form.setValue('hasAdditionalInformation', checked, { shouldDirty: true, shouldValidate: true });
 							if (!checked) {
@@ -215,9 +229,11 @@ export const AboutStep = ({
 											{...field}
 											value={field.value ?? ''}
 											rows={4}
+											disabled={isSubmitting}
 											className={cn(
 												'placeholder:text-muted-foreground border-border text-foreground w-full min-w-0 rounded-2xl border bg-transparent px-3 py-2 text-sm shadow-xs outline-hidden',
 												'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+												'disabled:opacity-50',
 											)}
 										/>
 									</FormControl>
@@ -234,7 +250,8 @@ export const AboutStep = ({
 									<img src={sectionImage.previewUrl} alt="" className="size-full object-cover" />
 									<button
 										type="button"
-										className="bg-background text-foreground hover:bg-muted absolute top-2 right-2 flex size-8 items-center justify-center rounded-full border shadow-xs"
+										disabled={isSubmitting}
+										className="bg-background text-foreground hover:bg-muted absolute top-2 right-2 flex size-8 items-center justify-center rounded-full border shadow-xs disabled:pointer-events-none disabled:opacity-50"
 										aria-label={labels.removeUploadedImage}
 										onClick={() => sectionImage.onChange(null)}
 									>
@@ -244,7 +261,8 @@ export const AboutStep = ({
 							) : (
 								<button
 									type="button"
-									className="border-border text-muted-foreground hover:bg-muted/40 flex aspect-[16/10] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-dashed"
+									disabled={isSubmitting}
+									className="border-border text-muted-foreground hover:bg-muted/40 flex aspect-[16/10] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-dashed disabled:pointer-events-none disabled:opacity-50"
 									onClick={() => sectionImageInputRef.current?.click()}
 								>
 									<Upload className="size-6" aria-hidden />
@@ -257,6 +275,7 @@ export const AboutStep = ({
 								accept={campaignSubmissionConfig.permittedImageMimeTypes.join(',')}
 								className="sr-only"
 								tabIndex={-1}
+								disabled={isSubmitting}
 								onChange={(event) => {
 									sectionImage.onChange(event.target.files?.[0] ?? null);
 								}}
@@ -284,7 +303,13 @@ export const AboutStep = ({
 									<FormItem>
 										<FormLabel>{label}</FormLabel>
 										<FormControl>
-											<Input {...field} value={field.value ?? ''} autoComplete={autoComplete} placeholder={placeholder} />
+											<Input
+												{...field}
+												value={field.value ?? ''}
+												autoComplete={autoComplete}
+												placeholder={placeholder}
+												disabled={isSubmitting}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>

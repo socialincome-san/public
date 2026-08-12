@@ -344,6 +344,10 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	};
 
 	const onBack = () => {
+		if (isSubmittingRef.current) {
+			return;
+		}
+
 		form.clearErrors();
 		setSubmitError(null);
 		profilePicture.setError(null);
@@ -568,6 +572,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 						onImageChange={onImageChange}
 						imageError={imageError}
 						submitError={submitError}
+						isSubmitting={isSubmitting}
 						profilePictureInputRef={profilePicture.inputRef}
 						profilePicture={{
 							previewUrl: profilePicture.previewUrl,

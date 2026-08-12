@@ -104,6 +104,7 @@ export type CampaignSubmissionStepProps = {
 	onImageChange: (file: File | null) => void;
 	imageError: string | null;
 	submitError: string | null;
+	isSubmitting: boolean;
 	profilePictureInputRef: RefObject<HTMLInputElement | null>;
 	profilePicture: CampaignSubmissionImageUploadField;
 	sectionImageInputRef: RefObject<HTMLInputElement | null>;

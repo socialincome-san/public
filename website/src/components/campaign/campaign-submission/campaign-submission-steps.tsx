@@ -55,6 +55,7 @@ export const CampaignSubmissionSteps = ({ currentStep, ...stepProps }: Props) =>
 					sectionImageInputRef={stepProps.sectionImageInputRef}
 					sectionImage={stepProps.sectionImage}
 					submitError={stepProps.submitError}
+					isSubmitting={stepProps.isSubmitting}
 				/>
 			</div>
 		);
