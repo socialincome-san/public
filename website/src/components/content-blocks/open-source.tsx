@@ -4,14 +4,13 @@ import { IssuesList } from '@/components/open-source/issues-list';
 import { StatsOverview } from '@/components/open-source/stats-overview';
 import type { OpenSource } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { EMPTY_GITHUB_OPEN_SOURCE_PAGE_DATA } from '@/lib/services/github-api/github-api.types';
 import { services } from '@/lib/services/services';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
 	blok: OpenSource;
-	lang: WebsiteLanguage;
 };
 
 type OverviewLabels = {
@@ -36,7 +35,8 @@ type ContributorsLabels = {
 	commitPlural: string;
 };
 
-export const OpenSourceBlock = async ({ blok, lang }: Props) => {
+export const OpenSourceBlock = async ({ blok }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const [githubResult, translator] = await Promise.all([
 		services.githubApi.getOpenSourcePageData(),
 		Translator.getInstance({ language: lang, namespaces: ['website-open-source'] }),
@@ -65,7 +65,6 @@ export const OpenSourceBlock = async ({ blok, lang }: Props) => {
 				starsLabel={overviewLabels.stars.title}
 				forksLabel={overviewLabels.forks.title}
 				periodLabel={overviewLabels.commits.time}
-				lang={lang}
 			/>
 
 			<ContributorsList

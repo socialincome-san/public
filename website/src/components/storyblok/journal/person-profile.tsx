@@ -7,6 +7,7 @@ import { JournalPageShell } from '@/components/storyblok/journal/journal-page-sh
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
 import { PersonProfileHeader } from '@/components/storyblok/journal/person-profile-header';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { getPersonPortraitSrc } from '@/lib/services/journal/journal.utils';
 import { getPersonDisplayName, ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
 import type { ISbStoryData } from '@storyblok/js';
@@ -16,8 +17,6 @@ type Props = {
 	person: ISbStoryData<Person>;
 	articles: ISbStoryData<ResolvedArticle>[];
 	articlesHeading: string;
-	lang: string;
-	region: string;
 	pathname: string;
 	moreArticlesLabel: string;
 	videoLabel: string;
@@ -25,42 +24,44 @@ type Props = {
 	roleLabels: Record<string, string>;
 };
 
-export const PersonProfile = ({
+export const PersonProfile = async ({
 	breadcrumbs,
 	person,
 	articles,
 	articlesHeading,
-	lang,
-	region,
 	pathname,
 	moreArticlesLabel,
 	videoLabel,
 	showMoreArticlesLink,
 	roleLabels,
-}: Props) => (
-	<JournalPageShell>
-		<JournalBreadcrumb links={breadcrumbs} />
-		<PersonProfileHeader
-			person={person}
-			name={getPersonDisplayName(person)}
-			portraitSrc={getPersonPortraitSrc(person)}
-			roleLabels={roleLabels}
-		/>
+}: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 
-		{articles.length > 0 && (
-			<section className="space-y-8">
-				<Separator />
-				<SectionHeading align="left" size={4} bold className="text-foreground mb-4 md:mb-6">
-					{articlesHeading}
-				</SectionHeading>
-				<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-					{articles.map((article) => (
-						<JournalArticleCard key={article.uuid} lang={lang} region={region} article={article} videoLabel={videoLabel} />
-					))}
-				</div>
-			</section>
-		)}
+	return (
+		<JournalPageShell>
+			<JournalBreadcrumb links={breadcrumbs} />
+			<PersonProfileHeader
+				person={person}
+				name={getPersonDisplayName(person)}
+				portraitSrc={getPersonPortraitSrc(person)}
+				roleLabels={roleLabels}
+			/>
 
-		{showMoreArticlesLink && <MoreArticlesButton label={moreArticlesLabel} pathname={pathname} />}
-	</JournalPageShell>
-);
+			{articles.length > 0 && (
+				<section className="space-y-8">
+					<Separator />
+					<SectionHeading align="left" size={4} bold className="text-foreground mb-4 md:mb-6">
+						{articlesHeading}
+					</SectionHeading>
+					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+						{articles.map((article) => (
+							<JournalArticleCard key={article.uuid} lang={lang} region={region} article={article} videoLabel={videoLabel} />
+						))}
+					</div>
+				</section>
+			)}
+
+			{showMoreArticlesLink && <MoreArticlesButton label={moreArticlesLabel} pathname={pathname} />}
+		</JournalPageShell>
+	);
+};

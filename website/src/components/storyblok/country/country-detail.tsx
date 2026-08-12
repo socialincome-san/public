@@ -5,7 +5,7 @@ import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { Suspense } from 'react';
 import { CountryMap } from './country-map';
 import { CountryPayoutsTotal } from './country-payouts-total';
@@ -18,13 +18,12 @@ import { getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './c
 
 type Props = {
 	country: CountryStory;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	activeProgramsCount: number;
 	recipientsCount: number;
 };
 
-export const CountryDetail = async ({ country, lang, region, activeProgramsCount, recipientsCount }: Props) => {
+export const CountryDetail = async ({ country, activeProgramsCount, recipientsCount }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const isoCode = getCountryIsoCode(country.content);
 	const countryTitle = getCountryTitle(country.content);
@@ -39,7 +38,6 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 	return (
 		<>
 			<HeroHeader
-				lang={lang}
 				title={countryTitle}
 				heroImage={country.content.heroImage}
 				showDonationsFormMobile={false}
@@ -69,18 +67,16 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 					<DonationFormServer lang={lang} />
 				</BlockWrapper>
 			</div>
-			<CountryMap country={country} lang={lang} />
-			<CountryPersonCarousel country={country} lang={lang} />
-			<CountryPayoutsTotal country={country} lang={lang} region={region} />
+			<CountryMap country={country} />
+			<CountryPersonCarousel country={country} />
+			<CountryPayoutsTotal country={country} />
 			{isoCode !== '-' && (
-				<Suspense fallback={<CountryStatisticsSkeleton lang={lang} />}>
-					<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
+				<Suspense fallback={<CountryStatisticsSkeleton />}>
+					<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} />
 				</Suspense>
 			)}
-			<CountryPrograms country={country} lang={lang} region={region} />
-			{localPartners.length > 0 && (
-				<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
-			)}
+			<CountryPrograms country={country} />
+			{localPartners.length > 0 && <LocalPartnersTeaserRowContent localPartners={localPartners} />}
 		</>
 	);
 };

@@ -3,19 +3,18 @@ import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { getSessionsOrRedirect } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { redirect } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
-import { DefaultLayoutProps } from '..';
 
-export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
-	const { lang } = await params;
+export default async function Layout({ children }: PropsWithChildren) {
+	const { lang } = await getWebsiteRootParams();
 	const sessions = await getSessionsOrRedirect();
 	if (!sessions.find((s) => s.type === 'contributor')) {
 		redirect('/login');
 	}
 
-	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
 
 	const sections = [
 		{ href: '/dashboard/contributions', label: translator.t('sections.contributions.payments') },

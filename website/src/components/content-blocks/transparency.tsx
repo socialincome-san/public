@@ -5,7 +5,7 @@ import { TimeSeriesSection } from '@/components/transparency/time-series-section
 import { TotalsSection } from '@/components/transparency/totals-section';
 import type { Transparency } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import type { TransparencyFinancialPeriod } from '@/lib/services/transparency/transparency.types';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
@@ -13,10 +13,10 @@ import { DateTime } from 'luxon';
 
 type Props = {
 	blok: Transparency;
-	lang: WebsiteLanguage;
 };
 
-export const TransparencyBlock = async ({ blok, lang }: Props) => {
+export const TransparencyBlock = async ({ blok }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' };
 	const timeRanges = Array.from({ length: 12 }, (_, i) => {
 		const start = DateTime.now()
@@ -55,14 +55,14 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 
 	return (
 		<BlockWrapper className="space-y-12" {...storyblokEditable(blok as SbBlokData)}>
-			<SummarySection inflows={inflows} outflows={outflows} reserves={reserves} lang={lang} />
-			<TotalsSection totals={data.totals} lang={lang} displayCurrency={displayCurrency} rates={rates} />
+			<SummarySection inflows={inflows} outflows={outflows} reserves={reserves} />
+			<TotalsSection totals={data.totals} displayCurrency={displayCurrency} rates={rates} />
 			<TimeSeriesSection
 				timeRanges={resolvedTimeRanges.map(({ startIso, total }) => ({ startIso, total }))}
 				currency={timeSeriesCurrency}
 				lang={lang}
 			/>
-			<CountriesSection countries={data.topCountries} lang={lang} displayCurrency={displayCurrency} rates={rates} />
+			<CountriesSection countries={data.topCountries} displayCurrency={displayCurrency} rates={rates} />
 		</BlockWrapper>
 	);
 };

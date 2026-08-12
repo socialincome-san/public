@@ -2,20 +2,19 @@ import { BlockWrapper } from '@/components/block-wrapper';
 import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ExplainerVideoHeader } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { VimeoVideoMatchAndExtract } from '@/lib/utils/UrlVideoParser';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
 	blok: ExplainerVideoHeader;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
 const vimeoMatcher = new VimeoVideoMatchAndExtract();
 
-export const ExplainerVideoHeaderBlock = ({ blok, lang, region }: Props) => {
+export const ExplainerVideoHeaderBlock = async ({ blok }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const {
 		disableMarginBottom,
 		disableMarginTop,

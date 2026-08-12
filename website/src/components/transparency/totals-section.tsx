@@ -1,5 +1,6 @@
 import { Card } from '@/components/card/card';
 import { getSafeNumberFormatLocale, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import type { ExchangeRates } from '@/lib/services/exchange-rate/exchange-rate.types';
 import { services } from '@/lib/services/services';
 import type { TransparencyTotals } from '@/lib/services/transparency/transparency.types';
@@ -7,7 +8,6 @@ import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 
 type TotalsSectionProps = {
 	totals: TransparencyTotals;
-	lang: WebsiteLanguage;
 	displayCurrency: WebsiteCurrency;
 	rates?: ExchangeRates;
 };
@@ -16,7 +16,8 @@ const formatNumber = (value: number, lang: WebsiteLanguage): string => {
 	return new Intl.NumberFormat(lang).format(value);
 };
 
-export const TotalsSection = ({ totals, lang, displayCurrency, rates }: TotalsSectionProps) => {
+export const TotalsSection = async ({ totals, displayCurrency, rates }: TotalsSectionProps) => {
+	const { lang } = await getWebsiteRootParams();
 	const { amount: totalContributions, currency } = services.currencyDisplay.resolveFromChf(
 		totals.totalContributionsChf,
 		displayCurrency,

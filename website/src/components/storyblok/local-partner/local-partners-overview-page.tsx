@@ -28,7 +28,7 @@ export const LocalPartnersOverviewPage = async ({ overview, lang, region }: Prop
 	return (
 		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
-			<LocalPartnersOverview localPartners={localPartners} lang={lang} region={region} title={title} text={text} />
+			<LocalPartnersOverview localPartners={localPartners} title={title} text={text} />
 		</div>
 	);
 };

@@ -5,7 +5,7 @@ import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import { PersonGridInteractive } from '@/components/storyblok/shared/person-grid-interactive';
 import type { Person, PersonGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import { personHasRole, resolveStoryblokLink, toStringArray } from '@/lib/services/storyblok/storyblok.utils';
 import type { ISbStoryData } from '@storyblok/js';
@@ -14,8 +14,6 @@ import NextLink from 'next/link';
 
 type Props = {
 	blok: PersonGrid;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
 const matchesStatusFilter = (person: ISbStoryData<Person>, statusFilter: string) =>
@@ -29,7 +27,8 @@ const isRoleExcluded = (person: ISbStoryData<Person>, roleExcludeCodes: string[]
 
 const isCountryOfficeMember = (person: ISbStoryData<Person>) => Boolean(person.content.countryOffice?.length);
 
-export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
+export const PersonGridBlock = async ({ blok }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const manualUuids = getStoryUuids(blok.persons);
 	const countryOfficeCodes = toStringArray(blok.countryOffice);
 	const roleFilterCodes = toStringArray(blok.roleFilter);

@@ -1,6 +1,6 @@
 import { DefaultLayoutProps, DefaultParams } from '@/app/[lang]/[region]';
 import { StoryblokPreviewCountryPage } from '@/components/storyblok/storyblok-preview-country-page';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCountryStoryPath } from '@/lib/storyblok/storyblok-paths';
 
 type PreviewPageProps = DefaultLayoutProps<DefaultParams & { slug: string }> & {
@@ -15,7 +15,6 @@ export default async function PreviewCountryPage({ params, searchParams }: Previ
 		<StoryblokPreviewCountryPage
 			storyPath={getCountryStoryPath(slug)}
 			lang={lang as WebsiteLanguage}
-			region={region as WebsiteRegion}
 			previewRoutePath={`/${lang}/${region}/countries/${slug}/preview`}
 			searchParams={resolvedSearchParams}
 		/>

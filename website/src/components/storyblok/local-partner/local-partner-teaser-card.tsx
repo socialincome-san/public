@@ -1,4 +1,4 @@
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import { ChevronRightIcon } from 'lucide-react';
@@ -12,13 +12,12 @@ const CARD_IMAGE_HEIGHT = 240;
 
 type Props = {
 	localPartner: LocalPartnerStory;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	viewDetailsLabel: string;
 	className?: string;
 };
 
-export const LocalPartnerTeaserCard = ({ localPartner, lang, region, viewDetailsLabel, className }: Props) => {
+export const LocalPartnerTeaserCard = async ({ localPartner, viewDetailsLabel, className }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const title = getLocalPartnerTitle(localPartner.content);
 	const description = getLocalPartnerDescription(localPartner.content);
 	const slug = getLocalPartnerSlug(localPartner);

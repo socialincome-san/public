@@ -2,19 +2,18 @@ import { CampaignDetail } from '@/components/campaign/campaign-detail';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import { getCampaignPortalSlug, getCampaignTitle } from '@/components/storyblok/campaign/campaign.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
+import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { notFound } from 'next/navigation';
 
 type Props = {
 	storyPath: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
 
-export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
+export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, previewRoutePath, searchParams }: Props) => {
 	return await StoryblokPreviewStory<CampaignStory>({
 		storyPath,
 		lang,
@@ -43,8 +42,6 @@ export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, pr
 					description={story.content.description}
 					primaryImage={story.content.primaryImage}
 					campaignSlug={story.slug}
-					lang={lang}
-					region={region}
 				/>
 			);
 		},

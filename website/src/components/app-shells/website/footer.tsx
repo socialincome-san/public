@@ -1,3 +1,4 @@
+import type { Scope } from '@/components/app-shells/website/navbar/utils';
 import { AppStoreIcon } from '@/components/svg/app-store';
 import { ContactIcon } from '@/components/svg/contact';
 import { FacebookIcon } from '@/components/svg/facebook';
@@ -10,7 +11,7 @@ import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import { YoutubeIcon } from '@/components/svg/youtube';
 import { Layout, MenuItem } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteShellLocale } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
@@ -20,8 +21,7 @@ import NextImage from 'next/image';
 import NextLink from 'next/link';
 
 type Props = {
-	lang: WebsiteLanguage;
-	region: string;
+	scope: Scope;
 };
 
 const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.ComponentType<{ className?: string }>> = {
@@ -36,7 +36,8 @@ const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.Componen
 	youtube: YoutubeIcon,
 };
 
-export const Footer = async ({ lang, region }: Props) => {
+export const Footer = async ({ scope }: Props) => {
+	const { lang, region } = await getWebsiteShellLocale(scope === 'website');
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(STORYBLOK_LAYOUT_PATH, lang);
 	const layoutContent = result.success ? result.data.content : undefined;

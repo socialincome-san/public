@@ -4,7 +4,7 @@ import { CampaignsOverview } from '@/components/campaign/campaigns-overview';
 import { getStateQuery, resolveCampaignsWithCmsEntries } from '@/components/campaign/campaigns-overview.server';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import type { CampaignOverview } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
 import type { ISbStoryData } from '@storyblok/js';
@@ -12,12 +12,11 @@ import { BlockWrapper } from '../block-wrapper';
 
 type Props = {
 	overview: ISbStoryData<CampaignOverview>;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	searchParams?: AnySearchParams;
 };
 
-export const CampaignsOverviewPage = async ({ overview, lang, region, searchParams }: Props) => {
+export const CampaignsOverviewPage = async ({ overview, searchParams }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const selectedState = getStateQuery(searchParams);
 	const [campaignStoriesResult, campaignsResult] = await Promise.all([
 		services.storyblok.getCampaigns(lang),
@@ -47,8 +46,6 @@ export const CampaignsOverviewPage = async ({ overview, lang, region, searchPara
 				<CampaignsOverview
 					campaigns={campaigns}
 					statsById={statsById}
-					lang={lang}
-					region={region}
 					title={title}
 					text={text}
 					showStateFilter={true}

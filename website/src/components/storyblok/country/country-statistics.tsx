@@ -2,7 +2,8 @@ import { COUNTRY_COOKIE } from '@/app/[lang]/[region]';
 import { BlockWrapper } from '@/components/block-wrapper';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
-import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import {
 	loadCountryStatisticsComparison,
 	type CountryStatisticFormat,
@@ -16,7 +17,6 @@ import NextImage from 'next/image';
 type Props = {
 	countryIsoCode: string;
 	countryName: string;
-	lang: WebsiteLanguage;
 };
 
 const formatStatisticValue = (value: number, format: CountryStatisticFormat, locale: string, yearsLabel: string): string => {
@@ -100,7 +100,8 @@ const MobileStatisticRow = ({ label, value, showLabel = true }: { label: string;
 	);
 };
 
-export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: Props) => {
+export const CountryStatistics = async ({ countryIsoCode, countryName }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const normalizedCountryIsoCode = normalizeCountryCode(countryIsoCode);
 	if (!normalizedCountryIsoCode) {
 		return null;

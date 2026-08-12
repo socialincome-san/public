@@ -56,8 +56,6 @@ export const StoryblokPreviewPersonPage = async ({
 				<PersonProfile
 					{...pageResult.data}
 					articlesHeading={translator.t('person.articles')}
-					lang={lang}
-					region={region}
 					moreArticlesLabel={translator.t('overview.more-articles')}
 					videoLabel={translator.t('badge.video')}
 				/>

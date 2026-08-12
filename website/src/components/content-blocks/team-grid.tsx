@@ -1,6 +1,6 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
@@ -13,10 +13,10 @@ const PERSON_IMAGE_SIZE = 300;
 
 type Props = {
 	blok: TeamGrid;
-	lang: WebsiteLanguage;
 };
 
-export const TeamGridBlock = async ({ blok, lang }: Props) => {
+export const TeamGridBlock = async ({ blok }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const uuids = blok.person.map((person) => (typeof person === 'string' ? person : person.uuid));
 	const personsResult = await services.storyblok.getPersonsByUuids(lang, uuids);
 	const persons = personsResult.success ? personsResult.data : [];

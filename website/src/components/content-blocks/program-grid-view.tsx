@@ -4,7 +4,7 @@ import { getProgramPortalSlug } from '@/components/storyblok/program/program.uti
 import { ProgramsOverview } from '@/components/storyblok/program/programs-overview';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import NextLink from 'next/link';
@@ -13,11 +13,10 @@ type Props = {
 	programs: ProgramStory[];
 	allProgramsCount?: number;
 	blok: ProgramGrid;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
-export const ProgramGridView = async ({ programs, allProgramsCount = 0, blok, lang, region }: Props) => {
+export const ProgramGridView = async ({ programs, allProgramsCount = 0, blok }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const programPortalSlugs = [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
 	const statsResult = await services.read.program.getPublicProgramStatsByProgramPortalSlugs(programPortalSlugs);
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
@@ -28,7 +27,7 @@ export const ProgramGridView = async ({ programs, allProgramsCount = 0, blok, la
 
 	return (
 		<>
-			<ProgramsOverview programs={programs} statsByPortalSlug={statsByPortalSlug} lang={lang} region={region} />
+			<ProgramsOverview programs={programs} statsByPortalSlug={statsByPortalSlug} />
 			{button && buttonHref && (
 				<div className="mt-10 flex justify-center">
 					<Button variant="outline" asChild>

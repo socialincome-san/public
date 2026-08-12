@@ -1,5 +1,5 @@
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
 import type { FocusStory } from '../focus/focus.types';
@@ -24,13 +24,12 @@ import {
 } from './programs-overview.server';
 
 type Props = {
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	searchParams?: AnySearchParams;
 	fixedFocusSlug?: string;
 };
 
-export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixedFocusSlug }: Props) => {
+export const ProgramsOverviewSection = async ({ searchParams, fixedFocusSlug }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const hasFixedFocus = fixedFocusSlug !== undefined;
 	const [programsResult, storyblokFocusesResult] = await Promise.all([
 		services.storyblok.getPrograms(lang),
@@ -98,7 +97,7 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 				placeholder={translator.t('programs-page.search-placeholder')}
 				queryParamOverrides={fixedQueryParams}
 			/>
-			<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} lang={lang} region={region} />
+			<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} />
 		</div>
 	);
 };

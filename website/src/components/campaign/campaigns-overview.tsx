@@ -4,7 +4,7 @@ import { CreateCampaignButton } from '@/components/campaign/create-campaign-butt
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { isCampaignPubliclyActive, matchesPublicCampaignActivity } from '@/lib/services/campaign/campaign-public-activity';
 import {
 	campaignSubmissionErrorCodes,
@@ -16,8 +16,6 @@ import type { CampaignStateFilter } from './campaigns-overview-query';
 type Props = {
 	campaigns: PublicCampaignCard[];
 	statsById: PublicCampaignStatsMap;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	title?: string;
 	text?: string;
 	showStateFilter?: boolean;
@@ -27,13 +25,12 @@ type Props = {
 export const CampaignsOverview = async ({
 	campaigns,
 	statsById,
-	lang,
-	region,
 	title,
 	text,
 	showStateFilter = false,
 	selectedState = 'active',
 }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const hasCmsHeader = Boolean(title?.trim()) || Boolean(text?.trim());
 	const filteredCampaigns = campaigns
@@ -129,13 +126,7 @@ export const CampaignsOverview = async ({
 				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					{filteredCampaigns.map((campaign) => (
 						<li key={campaign.id} className="h-full">
-							<CampaignPreviewWallet
-								campaign={campaign}
-								stats={statsById[campaign.id]}
-								lang={lang}
-								region={region}
-								t={translator.t}
-							/>
+							<CampaignPreviewWallet campaign={campaign} stats={statsById[campaign.id]} t={translator.t} />
 						</li>
 					))}
 				</ul>

@@ -40,8 +40,6 @@ export default async function Page({ params, searchParams }: DefaultPageProps) {
 			allTagsLabel={translator.t('overview.all')}
 			moreArticlesLabel={translator.t('overview.more-articles')}
 			videoLabel={translator.t('badge.video')}
-			lang={lang}
-			region={region}
 		/>
 	);
 }

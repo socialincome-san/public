@@ -3,21 +3,14 @@ import { getYourContributionsTableConfig } from '@/components/data-table/configs
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 
 import { YourContributionsTableViewRow } from '@/lib/services/contribution/contribution.types';
 import { PlusIcon } from 'lucide-react';
 
-export const ContributionsTable = async ({
-	lang,
-	region,
-	searchParams,
-}: {
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
-	searchParams: Promise<Record<string, string>>;
-}) => {
+export const ContributionsTable = async ({ searchParams }: { searchParams: Promise<Record<string, string>> }) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const contributor = await getAuthenticatedContributorOrRedirect();
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);

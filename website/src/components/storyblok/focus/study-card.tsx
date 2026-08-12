@@ -1,5 +1,5 @@
 import type { Study } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import type { ISbStoryData } from '@storyblok/js';
@@ -8,11 +8,10 @@ import Link from 'next/link';
 
 type Props = {
 	study: ISbStoryData<Study>;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
-export const StudyCard = ({ study, lang, region }: Props) => {
+export const StudyCard = async ({ study }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const { title, description, subtitle, year, link, linkText } = study.content;
 	const metadata = [subtitle?.trim(), year?.trim()].filter(Boolean).join(', ');
 	const linkLabel = linkText?.trim();

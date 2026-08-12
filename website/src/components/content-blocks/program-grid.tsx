@@ -4,17 +4,16 @@ import { ProgramGridView } from '@/components/content-blocks/program-grid-view';
 import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import { SbBlokData, storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: ProgramGrid;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
-export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
+export const ProgramGridBlock = async ({ blok }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const programsResult = await services.storyblok.getPrograms(lang);
 	const allPrograms = programsResult.success ? programsResult.data : [];
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
@@ -35,7 +34,7 @@ export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
 					<StoryblokMarkdown>{blok.description}</StoryblokMarkdown>
 				</p>
 			)}
-			<ProgramGridView programs={programs} allProgramsCount={allPrograms.length} blok={blok} lang={lang} region={region} />
+			<ProgramGridView programs={programs} allProgramsCount={allPrograms.length} blok={blok} />
 		</BlockWrapper>
 	);
 };

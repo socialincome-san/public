@@ -30,8 +30,6 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 		<PersonProfile
 			{...pageResult.data}
 			articlesHeading={translator.t('person.articles')}
-			lang={lang}
-			region={region}
 			moreArticlesLabel={translator.t('overview.more-articles')}
 			videoLabel={translator.t('badge.video')}
 		/>

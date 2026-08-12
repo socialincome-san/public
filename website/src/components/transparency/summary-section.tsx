@@ -1,16 +1,16 @@
 import { SummarySectionClient, type SummaryMetric } from '@/components/transparency/summary-section-client';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import type { DisplayAmount } from '@/lib/services/currency-display/currency-display.types';
 
 type Props = {
 	inflows: DisplayAmount;
 	outflows: DisplayAmount;
 	reserves: DisplayAmount;
-	lang: WebsiteLanguage;
 };
 
-export const SummarySection = async ({ inflows, outflows, reserves, lang }: Props) => {
+export const SummarySection = async ({ inflows, outflows, reserves }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const metricSources: { key: SummaryMetric['key']; displayAmount: DisplayAmount }[] = [
 		{ key: 'inflows', displayAmount: inflows },

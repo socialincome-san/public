@@ -2,17 +2,17 @@ import { BlockWrapper } from '@/components/block-wrapper';
 import { Carousel, CarouselContent, CarouselItem, CarouselScrollNextButton } from '@/components/carousel';
 import { PersonCard } from '@/components/storyblok/shared/person-card';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryTitle } from './country.utils';
 
 type Props = {
 	country: CountryStory;
-	lang: WebsiteLanguage;
 };
 
-export const CountryPersonCarousel = async ({ country, lang }: Props) => {
+export const CountryPersonCarousel = async ({ country }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const isoCode = getCountryIsoCode(country.content);
 	const [countryOfficePersonsResult, roleLabelsResult] = await Promise.all([
 		services.storyblok.getPersonsByCountryOffice(lang, [isoCode]),

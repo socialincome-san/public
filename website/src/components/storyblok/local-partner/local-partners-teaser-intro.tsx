@@ -1,11 +1,8 @@
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 
-type Props = {
-	lang: WebsiteLanguage;
-};
-
-export const LocalPartnersTeaserIntro = async ({ lang }: Props) => {
+export const LocalPartnersTeaserIntro = async () => {
+	const { lang } = await getWebsiteRootParams();
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 
 	return (

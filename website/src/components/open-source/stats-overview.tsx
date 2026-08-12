@@ -1,5 +1,5 @@
 import { StatCard } from '@/components/open-source/stat-card';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import type { GithubRepoStats } from '@/lib/services/github-api/github-api.types';
 
 type Props = {
@@ -8,10 +8,10 @@ type Props = {
 	starsLabel: string;
 	forksLabel: string;
 	periodLabel: string;
-	lang: WebsiteLanguage;
 };
 
-export const StatsOverview = ({ stats, commitsLabel, starsLabel, forksLabel, periodLabel, lang }: Props) => {
+export const StatsOverview = async ({ stats, commitsLabel, starsLabel, forksLabel, periodLabel }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const cards = [
 		{ label: commitsLabel, total: stats.totalCommits, delta: stats.newCommits },
 		{ label: starsLabel, total: stats.totalStars, delta: stats.newStars },

@@ -3,7 +3,7 @@ import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { createWalletImageFromStoryblokAsset } from '@/components/wallet/wallet-image-utils';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import type { PublicProgramStatsMap } from '@/lib/services/program/program.types';
 import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
@@ -13,11 +13,10 @@ import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from '
 type Props = {
 	programs: ProgramStory[];
 	statsByPortalSlug: PublicProgramStatsMap;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
-export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, region }: Props) => {
+export const ProgramsOverview = async ({ programs, statsByPortalSlug }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const [displayCurrency, translator] = await Promise.all([
 		getWebsiteCurrencyFromCookie(),
 		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),

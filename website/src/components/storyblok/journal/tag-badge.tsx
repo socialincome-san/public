@@ -1,4 +1,5 @@
 import type { Tag } from '@/generated/storyblok/types/109655/storyblok-components';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { createWebsiteJournalTagLink } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
@@ -6,12 +7,11 @@ import Link from 'next/link';
 
 type Props = {
 	tag: ISbStoryData<Tag>;
-	lang: string;
-	region: string;
 	variant?: 'hero' | 'default';
 };
 
-export const TagBadge = ({ tag, lang, region, variant = 'default' }: Props) => {
+export const TagBadge = async ({ tag, variant = 'default' }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const label = tag.content?.value;
 	if (!label) {
 		return null;

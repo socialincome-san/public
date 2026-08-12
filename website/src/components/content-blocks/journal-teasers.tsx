@@ -3,7 +3,8 @@ import { JournalTeasersSection } from '@/components/journal/journal-teasers-sect
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import { storyblokEditable } from '@storyblok/js';
@@ -11,8 +12,6 @@ import type { SbBlokData } from '@storyblok/react';
 
 type Props = {
 	blok: JournalTeasers;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
 const getSelectedArticleUuids = (selectedArticles: JournalTeasers['selectedArticles']) => {
@@ -44,7 +43,8 @@ const getArticles = async (blok: JournalTeasers, lang: WebsiteLanguage) => {
 	return latestResult.success ? latestResult.data : [];
 };
 
-export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
+export const JournalTeasersBlock = async ({ blok }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const { disableMarginBottom, disableMarginTop, heading } = blok;
 	const [translator, articles] = await Promise.all([
 		Translator.getInstance({ language: lang, namespaces: ['website-journal'] }),
@@ -64,8 +64,6 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 			<JournalTeasersSection
 				heading={heading ? <StoryblokMarkdown>{heading}</StoryblokMarkdown> : undefined}
 				articles={articles}
-				lang={lang}
-				region={region}
 				journalCtaLabel={translator.t('teasers.goToJournal')}
 				videoLabel={translator.t('badge.video')}
 			/>

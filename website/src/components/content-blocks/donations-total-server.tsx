@@ -1,16 +1,15 @@
 import { DonationsTotalBlock } from '@/components/content-blocks/donations-total';
 import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 
 type Props = {
 	blok: DonationsTotal;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
-export const DonationsTotalBlockServer = async ({ blok, lang, region }: Props) => {
+export const DonationsTotalBlockServer = async ({ blok }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
 	const [totalsResult, rates] = await Promise.all([
 		services.transparency.getTransparencyTotals(),

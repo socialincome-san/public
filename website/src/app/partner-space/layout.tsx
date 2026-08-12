@@ -1,9 +1,10 @@
+import { RootDocument } from '@/app/root-document';
 import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { getSessionsOrRedirect } from '@/lib/firebase/current-account';
-import { defaultRegion } from '@/lib/i18n/utils';
+import { defaultLanguage } from '@/lib/i18n/utils';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 
@@ -25,13 +26,15 @@ export default async function PartnerSpaceLayout({ children }: { children: React
 	];
 
 	return (
-		<WebsiteAppShell sessions={sessions} lang="en" region={defaultRegion} scope="partner-space">
-			<Breadcrumb links={breadcrumbLinks} />
-			<h1 data-testid="welcome-message-partner-space" className="py-8 text-5xl">
-				Partner Space
-			</h1>
-			<TabNavigation sections={sections} />
-			<Card>{children}</Card>
-		</WebsiteAppShell>
+		<RootDocument lang={defaultLanguage}>
+			<WebsiteAppShell sessions={sessions} scope="partner-space">
+				<Breadcrumb links={breadcrumbLinks} />
+				<h1 data-testid="welcome-message-partner-space" className="py-8 text-5xl">
+					Partner Space
+				</h1>
+				<TabNavigation sections={sections} />
+				<Card>{children}</Card>
+			</WebsiteAppShell>
+		</RootDocument>
 	);
 }

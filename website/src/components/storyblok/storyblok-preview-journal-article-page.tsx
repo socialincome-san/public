@@ -56,8 +56,6 @@ export const StoryblokPreviewJournalArticlePage = async ({
 				<ArticleDetail
 					story={story}
 					slug={slug}
-					lang={lang}
-					region={region}
 					relatedArticles={pageResult.data.relatedArticles}
 					translator={translator}
 					breadcrumbs={pageResult.data.breadcrumbs}

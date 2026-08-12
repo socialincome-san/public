@@ -1,17 +1,16 @@
 import { ImpactMeasurementView } from '@/app/[lang]/[region]/programs/impact-measurement/view';
 import { Button } from '@/components/button/button';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import Link from 'next/link';
 
 type Props = {
 	focusId: string;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	teaserButtonLabel?: string;
 	teaserText?: string;
 };
 
-export const ImpactMeasurementPreviewWrapper = ({ focusId, lang, region, teaserButtonLabel, teaserText }: Props) => {
+export const ImpactMeasurementPreviewWrapper = async ({ focusId, teaserButtonLabel, teaserText }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const trimmedTeaserText = teaserText?.trim();
 	const trimmedTeaserButtonLabel = teaserButtonLabel?.trim();
 	const hasTeaser = [trimmedTeaserText, trimmedTeaserButtonLabel].some(Boolean);

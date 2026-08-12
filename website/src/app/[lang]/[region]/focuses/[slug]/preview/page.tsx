@@ -1,6 +1,6 @@
 import { DefaultLayoutProps, DefaultParams } from '@/app/[lang]/[region]';
 import { StoryblokPreviewFocusPage } from '@/components/storyblok/storyblok-preview-focus-page';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getFocusStoryPath } from '@/lib/storyblok/storyblok-paths';
 
 type PreviewPageProps = DefaultLayoutProps<DefaultParams & { slug: string }> & {
@@ -16,7 +16,6 @@ export default async function FocusPreviewRoute({ params, searchParams }: Previe
 			storyPath={getFocusStoryPath(slug)}
 			slug={slug}
 			lang={lang as WebsiteLanguage}
-			region={region as WebsiteRegion}
 			previewRoutePath={`/${lang}/${region}/focuses/${slug}/preview`}
 			searchParams={resolvedSearchParams}
 		/>

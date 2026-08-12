@@ -1,15 +1,11 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 
-type Props = {
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
-};
-
-export const CampaignJournalTeaser = async ({ lang, region }: Props) => {
+export const CampaignJournalTeaser = async () => {
+	const { lang } = await getWebsiteRootParams();
 	const [translator, articlesResult] = await Promise.all([
 		Translator.getInstance({ language: lang, namespaces: ['website-journal'] }),
 		services.storyblok.getLatestJournalArticles(lang),
@@ -31,8 +27,6 @@ export const CampaignJournalTeaser = async ({ lang, region }: Props) => {
 					</>
 				}
 				articles={articles}
-				lang={lang}
-				region={region}
 				journalCtaLabel={translator.t('teasers.goToJournal')}
 				videoLabel={translator.t('badge.video')}
 			/>

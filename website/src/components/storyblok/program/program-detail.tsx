@@ -51,7 +51,6 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 	return (
 		<>
 			<HeroHeader
-				lang={lang}
 				showDonationsFormMobile={false}
 				title={programDetailData.title}
 				heroImage={programDetailData.heroImage}
@@ -120,11 +119,11 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				</BlockWrapper>
 			</div>
 			{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0 ? (
-				<ProgramPayoutsTotal programDetailData={programDetailData} translator={translator} lang={lang} region={region} />
+				<ProgramPayoutsTotal programDetailData={programDetailData} translator={translator} />
 			) : null}
 			<div className="flex flex-col gap-8 py-8">
-				<CampaignJournalTeaser lang={lang} region={region} />
-				<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
+				<CampaignJournalTeaser />
+				<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} />
 				{faqItems.length > 0 && (
 					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 						<FaqSelectionContent heading={translator.t('title', { namespace: 'website-faq' })} items={faqItems} />

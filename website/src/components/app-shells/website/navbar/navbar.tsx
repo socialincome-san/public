@@ -10,7 +10,7 @@ import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { Session } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteShellLocale } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
 import { cn } from '@/lib/utils/cn';
@@ -19,12 +19,11 @@ import NextLink from 'next/link';
 
 type Props = {
 	sessions: Session[];
-	lang: WebsiteLanguage;
-	region: string;
 	scope: Scope;
 };
 
-export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
+export const Navbar = async ({ sessions, scope }: Props) => {
+	const { lang, region } = await getWebsiteShellLocale(scope === 'website');
 	const session = displaySession(sessions, scope);
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate', 'website-common'] });
 	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(STORYBLOK_LAYOUT_PATH, lang);

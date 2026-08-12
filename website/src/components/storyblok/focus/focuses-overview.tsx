@@ -1,7 +1,7 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
 import { FocusDetailCard } from './focus-detail-card';
@@ -24,14 +24,13 @@ import {
 
 type Props = {
 	focuses: FocusStory[];
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	title?: string;
 	text?: string;
 	searchParams?: AnySearchParams;
 };
 
-export const FocusesOverview = async ({ focuses, lang, region, title, text, searchParams }: Props) => {
+export const FocusesOverview = async ({ focuses, title, text, searchParams }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const focusSlugs = focuses.map((focus) => getFocusSlug(focus));
 	const statsResult = await services.read.focus.getPublicFocusStatsBySlugs(focusSlugs);

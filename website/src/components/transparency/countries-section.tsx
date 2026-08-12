@@ -2,6 +2,7 @@ import { Card } from '@/components/card/card';
 import { CountryFlag } from '@/components/country-flag';
 import { Progress } from '@/components/progress';
 import { getSafeNumberFormatLocale, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import type { ExchangeRates } from '@/lib/services/exchange-rate/exchange-rate.types';
 import { services } from '@/lib/services/services';
 import type { ContributionsByCountry } from '@/lib/services/transparency/transparency.types';
@@ -9,7 +10,6 @@ import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 
 type CountriesSectionProps = {
 	countries: ContributionsByCountry[];
-	lang: WebsiteLanguage;
 	displayCurrency: WebsiteCurrency;
 	rates?: ExchangeRates;
 };
@@ -18,7 +18,8 @@ const formatNumber = (value: number, lang: WebsiteLanguage): string => {
 	return new Intl.NumberFormat(lang).format(value);
 };
 
-export const CountriesSection = ({ countries, lang, displayCurrency, rates }: CountriesSectionProps) => {
+export const CountriesSection = async ({ countries, displayCurrency, rates }: CountriesSectionProps) => {
+	const { lang } = await getWebsiteRootParams();
 	const locale = getSafeNumberFormatLocale(lang);
 
 	const countryDisplays = countries.map((country) => {

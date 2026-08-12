@@ -6,7 +6,7 @@ import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-te
 import { CampaignNewsletter } from '@/components/campaign/campaign-newsletter';
 import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-other-campaigns-teaser';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 import { services } from '@/lib/services/services';
 
@@ -16,11 +16,10 @@ type Props = {
 	description: string;
 	primaryImage?: HeroHeaderImage | null;
 	campaignSlug: string;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
-export const CampaignDetail = async ({ campaign, title, description, primaryImage, campaignSlug, lang, region }: Props) => {
+export const CampaignDetail = async ({ campaign, title, description, primaryImage, campaignSlug }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const pageContentResult = await services.read.campaignPublicWebsite.getPageContent(lang);
 	if (!pageContentResult.success) {
 		throw new Error(pageContentResult.error);
@@ -43,13 +42,12 @@ export const CampaignDetail = async ({ campaign, title, description, primaryImag
 				description={description}
 				primaryImage={primaryImage}
 				translator={translator}
-				lang={lang}
 			/>
 			{campaign.secondDescription && campaign.thirdDescription && <CampaignExtraText campaign={campaign} />}
 			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
 			<CampaignAboutSection translator={translator} />
-			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />
-			<CampaignJournalTeaser lang={lang} region={region} />
+			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} />
+			<CampaignJournalTeaser />
 			{faqs.length > 0 && <CampaignFaqSection heading={translator.t('campaign.title')} faqs={faqs} />}
 		</>
 	);

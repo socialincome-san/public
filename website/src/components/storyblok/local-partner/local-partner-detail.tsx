@@ -40,7 +40,6 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 	return (
 		<>
 			<HeroHeader
-				lang={lang}
 				title={localPartnerTitle}
 				heroImage={localPartner.content.heroImage}
 				titleIcon={isoCode ? `/assets/flags/${isoCode.toLowerCase()}.svg` : undefined}
@@ -89,14 +88,14 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 					/>
 				}
 			/>
-			<LocalPartnerPayoutsTotal localPartner={localPartner} lang={lang} region={region} />
+			<LocalPartnerPayoutsTotal localPartner={localPartner} />
 			{Array.isArray(localPartner.content.testimonial)
 				? localPartner.content.testimonial.map((blok: TestimonialCarousel) => (
 						<TestimonialCarouselBlock key={blok._uid} blok={blok} />
 					))
 				: null}
-			<LocalPartnerPrograms localPartner={localPartner} lang={lang} region={region} />
-			<LocalPartnerPartners localPartner={localPartner} lang={lang} region={region} />
+			<LocalPartnerPrograms localPartner={localPartner} />
+			<LocalPartnerPartners localPartner={localPartner} />
 		</>
 	);
 };

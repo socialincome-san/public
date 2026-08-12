@@ -2,15 +2,14 @@ import { HeroVideoBlock } from '@/components/content-blocks/hero-video';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import type { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 
 type Props = {
 	blok: HeroVideo;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
-export const HeroVideoBlockServer = async ({ blok, lang }: Props) => {
+export const HeroVideoBlockServer = async ({ blok }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-home' });
 
 	return (

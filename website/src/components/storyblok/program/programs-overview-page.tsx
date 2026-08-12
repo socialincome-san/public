@@ -3,19 +3,18 @@ import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import type { AnySearchParams } from '@/lib/types/page-props';
 import type { ISbStoryData } from '@storyblok/js';
 import { ProgramsOverviewSection } from './programs-overview-section';
 
 type Props = {
 	overview: ISbStoryData<ProgramOverview>;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	searchParams?: AnySearchParams;
 };
 
-export const ProgramsOverviewPage = async ({ overview, lang, region, searchParams }: Props) => {
+export const ProgramsOverviewPage = async ({ overview, searchParams }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();
 	const breadcrumbLinks = await buildBreadcrumbLinks({
@@ -31,7 +30,7 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 				<CmsHeader title={title} text={text} />
 				<section className="mt-8 flex flex-col gap-6">
-					<ProgramsOverviewSection lang={lang} region={region} searchParams={searchParams} />
+					<ProgramsOverviewSection searchParams={searchParams} />
 				</section>
 			</BlockWrapper>
 		</div>

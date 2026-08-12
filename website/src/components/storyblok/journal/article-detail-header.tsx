@@ -1,6 +1,6 @@
 import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
 import { TagBadge } from '@/components/storyblok/journal/tag-badge';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { ARTICLE_HERO_IMAGE_HEIGHT, ARTICLE_HERO_IMAGE_WIDTH } from '@/lib/services/journal/journal.utils';
 import {
 	createWebsitePersonLink,
@@ -16,11 +16,10 @@ import Link from 'next/link';
 type Props = {
 	story: ISbStoryData<ResolvedArticle>;
 	hasHero: boolean;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
-export const ArticleDetailHeader = ({ story, hasHero, lang, region }: Props) => {
+export const ArticleDetailHeader = async ({ story, hasHero }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const article = story.content;
 	const author = article.author;
 
@@ -67,7 +66,7 @@ export const ArticleDetailHeader = ({ story, hasHero, lang, region }: Props) => 
 			{article.tags && article.tags.length > 0 && (
 				<div className="flex flex-wrap gap-2">
 					{article.tags.map((tag) => (
-						<TagBadge key={tag.slug} tag={tag} lang={lang} region={region} variant={hasHero ? 'hero' : 'default'} />
+						<TagBadge key={tag.slug} tag={tag} variant={hasHero ? 'hero' : 'default'} />
 					))}
 				</div>
 			)}

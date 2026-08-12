@@ -1,7 +1,7 @@
 import { type DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { CampaignDetail } from '@/components/campaign/campaign-detail';
 import { loadCampaignDetailData } from '@/components/storyblok/campaign/load-campaign-detail-data';
-import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
+import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { notFound } from 'next/navigation';
 
@@ -24,7 +24,7 @@ export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) =
 };
 
 export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlug) {
-	const { slug, lang, region } = await params;
+	const { slug, lang } = await params;
 	const data = await loadCampaignDetailData(slug, lang);
 
 	if (!data) {
@@ -38,8 +38,6 @@ export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlu
 			description={data.description}
 			primaryImage={data.primaryImage}
 			campaignSlug={slug}
-			lang={lang as WebsiteLanguage}
-			region={region as WebsiteRegion}
 		/>
 	);
 }

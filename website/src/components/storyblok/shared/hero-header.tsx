@@ -1,7 +1,7 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
 import NextImage from 'next/image';
 import type { ReactNode } from 'react';
@@ -17,7 +17,6 @@ type HeroHeaderStat = {
 export type HeroHeaderImage = Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'>;
 
 type Props = {
-	lang: WebsiteLanguage;
 	title: string;
 	heroImage?: HeroHeaderImage | null;
 	stats: HeroHeaderStat[];
@@ -29,8 +28,7 @@ type Props = {
 	showDonationsFormMobile?: boolean;
 };
 
-export const HeroHeader = ({
-	lang,
+export const HeroHeader = async ({
 	title,
 	heroImage,
 	stats,
@@ -41,6 +39,7 @@ export const HeroHeader = ({
 	showDonationForm = true,
 	showDonationsFormMobile = true,
 }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const heroImageSrc = heroImage?.filename
 		? formatStoryblokUrl(heroImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, heroImage.focus)
 		: null;

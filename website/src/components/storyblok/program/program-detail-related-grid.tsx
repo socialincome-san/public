@@ -2,19 +2,18 @@ import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import type { Button, ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { services } from '@/lib/services/services';
 import { getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 
 type Props = {
 	currentProgramFullSlug: string;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
 const RELATED_PROGRAMS_COUNT = 3;
 
-export const ProgramDetailRelatedGrid = async ({ currentProgramFullSlug, lang, region }: Props) => {
+export const ProgramDetailRelatedGrid = async ({ currentProgramFullSlug }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const [programsResult, translator] = await Promise.all([
 		services.storyblok.getPrograms(lang),
 		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
@@ -56,5 +55,5 @@ export const ProgramDetailRelatedGrid = async ({ currentProgramFullSlug, lang, r
 		button: [button],
 	};
 
-	return <ProgramGridBlock blok={blok} lang={lang} region={region} />;
+	return <ProgramGridBlock blok={blok} />;
 };

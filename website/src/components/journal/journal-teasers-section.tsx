@@ -1,7 +1,7 @@
 import { Button } from '@/components/button/button';
 import { SectionHeading } from '@/components/section-heading';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import type { ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
@@ -10,14 +10,13 @@ import type { ReactNode } from 'react';
 
 type Props = {
 	articles: ISbStoryData<ResolvedArticle>[];
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	heading?: ReactNode;
 	journalCtaLabel: string;
 	videoLabel: string;
 };
 
-export const JournalTeasersSection = ({ articles, lang, region, heading, journalCtaLabel, videoLabel }: Props) => {
+export const JournalTeasersSection = async ({ articles, heading, journalCtaLabel, videoLabel }: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 	const [featuredArticle, ...secondaryArticles] = articles;
 	const hasSecondaryArticles = secondaryArticles.length > 0;
 

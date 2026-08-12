@@ -1,6 +1,6 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Translator } from '@/lib/i18n/translator';
-import { type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { cn } from '@/lib/utils/cn';
 
 const SkeletonBar = ({ className }: { className: string }) => (
@@ -9,11 +9,8 @@ const SkeletonBar = ({ className }: { className: string }) => (
 
 const SKELETON_ROW_COUNT = 5;
 
-type Props = {
-	lang: WebsiteLanguage;
-};
-
-export const CountryStatisticsSkeleton = async ({ lang }: Props) => {
+export const CountryStatisticsSkeleton = async () => {
+	const { lang } = await getWebsiteRootParams();
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 
 	return (

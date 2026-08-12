@@ -1,15 +1,14 @@
 import { LocalPartnerTeaserCard } from '@/components/storyblok/local-partner/local-partner-teaser-card';
 import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import type { LocalPartnerStory } from './local-partner.types';
 
 type Props = {
 	localPartners: LocalPartnerStory[];
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 };
 
-export const LocalPartnersGrid = async ({ localPartners, lang, region }: Props) => {
+export const LocalPartnersGrid = async ({ localPartners }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const viewDetailsLabel = translator.t('local-partners-page.view-details');
 
@@ -21,13 +20,7 @@ export const LocalPartnersGrid = async ({ localPartners, lang, region }: Props) 
 		<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			{localPartners.map((localPartner) => (
 				<li key={localPartner.uuid} className="flex">
-					<LocalPartnerTeaserCard
-						localPartner={localPartner}
-						lang={lang}
-						region={region}
-						viewDetailsLabel={viewDetailsLabel}
-						className="max-w-none"
-					/>
+					<LocalPartnerTeaserCard localPartner={localPartner} viewDetailsLabel={viewDetailsLabel} className="max-w-none" />
 				</li>
 			))}
 		</ul>

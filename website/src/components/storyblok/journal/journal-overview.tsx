@@ -7,6 +7,7 @@ import { JournalPageShell } from '@/components/storyblok/journal/journal-page-sh
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
 import { PersonCarousel } from '@/components/storyblok/shared/person-carousel';
 import type { Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { createWebsiteJournalTagLink, ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
@@ -23,8 +24,6 @@ type Props = {
 	pathname: string;
 	journalPath: string;
 	activeTagSlug?: string;
-	lang: string;
-	region: string;
 	articles: ISbStoryData<ResolvedArticle>[];
 	authors: ISbStoryData<Person>[];
 	tags: ISbStoryData<Tag>[];
@@ -38,7 +37,7 @@ const tagFilterClassName = (active: boolean) =>
 		active ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground hover:bg-muted/80',
 	);
 
-export const JournalOverview = ({
+export const JournalOverview = async ({
 	breadcrumbs,
 	pageTitle,
 	pageDescription,
@@ -49,53 +48,55 @@ export const JournalOverview = ({
 	pathname,
 	journalPath,
 	activeTagSlug,
-	lang,
-	region,
 	articles,
 	authors,
 	tags,
 	showMoreArticlesLink,
 	roleLabels,
-}: Props) => (
-	<JournalPageShell>
-		<JournalBreadcrumb links={breadcrumbs} className="mb-8 pl-0" />
-		<JournalPageHeader title={pageTitle} description={pageDescription} />
+}: Props) => {
+	const { lang, region } = await getWebsiteRootParams();
 
-		<section className="flex flex-wrap gap-2">
-			<Link href={journalPath} className={tagFilterClassName(!activeTagSlug)}>
-				{allTagsLabel}
-			</Link>
-			{tags.map((tag) => (
-				<Link
-					key={tag.slug}
-					href={createWebsiteJournalTagLink(tag.slug, lang, region)}
-					className={tagFilterClassName(activeTagSlug === tag.slug)}
-				>
-					{tag.content?.value}
+	return (
+		<JournalPageShell>
+			<JournalBreadcrumb links={breadcrumbs} className="mb-8 pl-0" />
+			<JournalPageHeader title={pageTitle} description={pageDescription} />
+
+			<section className="flex flex-wrap gap-2">
+				<Link href={journalPath} className={tagFilterClassName(!activeTagSlug)}>
+					{allTagsLabel}
 				</Link>
-			))}
-		</section>
-
-		<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{articles.map((article) => (
-				<JournalArticleCard key={article.uuid} lang={lang} region={region} article={article} videoLabel={videoLabel} />
-			))}
-		</div>
-
-		{showMoreArticlesLink && <MoreArticlesButton label={moreArticlesLabel} pathname={pathname} />}
-
-		{showMoreArticlesLink && authors.length > 0 && <Separator />}
-
-		{authors.length > 0 && (
-			<section>
-				<PersonCarousel
-					persons={authors}
-					sidebar={{ heading: editorsHeading }}
-					personLink={{ lang, region }}
-					size="small"
-					roleLabels={roleLabels}
-				/>
+				{tags.map((tag) => (
+					<Link
+						key={tag.slug}
+						href={createWebsiteJournalTagLink(tag.slug, lang, region)}
+						className={tagFilterClassName(activeTagSlug === tag.slug)}
+					>
+						{tag.content?.value}
+					</Link>
+				))}
 			</section>
-		)}
-	</JournalPageShell>
-);
+
+			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+				{articles.map((article) => (
+					<JournalArticleCard key={article.uuid} lang={lang} region={region} article={article} videoLabel={videoLabel} />
+				))}
+			</div>
+
+			{showMoreArticlesLink && <MoreArticlesButton label={moreArticlesLabel} pathname={pathname} />}
+
+			{showMoreArticlesLink && authors.length > 0 && <Separator />}
+
+			{authors.length > 0 && (
+				<section>
+					<PersonCarousel
+						persons={authors}
+						sidebar={{ heading: editorsHeading }}
+						personLink={{ lang, region }}
+						size="small"
+						roleLabels={roleLabels}
+					/>
+				</section>
+			)}
+		</JournalPageShell>
+	);
+};

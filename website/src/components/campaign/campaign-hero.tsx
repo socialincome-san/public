@@ -3,7 +3,7 @@ import { DonationFormServer } from '@/components/donation-wizard/donation-form-s
 import { Progress } from '@/components/progress';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import { isCampaignPubliclyActive } from '@/lib/services/campaign/campaign-public-activity';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
@@ -18,10 +18,10 @@ type Props = {
 	description: string;
 	primaryImage?: HeroHeaderImage | null;
 	translator: Translator;
-	lang: WebsiteLanguage;
 };
 
-export const CampaignHero = ({ campaign, title, description, primaryImage, translator, lang }: Props) => {
+export const CampaignHero = async ({ campaign, title, description, primaryImage, translator }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
 	const showProgress = campaign.percentageCollected !== null && campaign.percentageCollected !== undefined;
 	const showAmount = campaign.amountCollected !== null;

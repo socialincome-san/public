@@ -1,13 +1,13 @@
 import { MagicLinkLoginForm } from '@/components/login/magic-link-login-form';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 
 type Props = {
-	lang: WebsiteLanguage;
 	prefilledEmail: string;
 };
 
-export const LoginPageContent = async ({ lang, prefilledEmail }: Props) => {
+export const LoginPageContent = async ({ prefilledEmail }: Props) => {
+	const { lang } = await getWebsiteRootParams();
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-login'],

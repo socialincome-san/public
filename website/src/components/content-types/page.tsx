@@ -25,6 +25,7 @@ import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsletter-signup';
 import type { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteRootParams } from '@/lib/i18n/website-root-params';
 import type { ParsedUrlQueryInput } from 'querystring';
 import { Fragment } from 'react';
 
@@ -33,8 +34,6 @@ type RichtextButtonHeaderAction = 'createProgram';
 
 type PageContentTypeProps = {
 	blok: Page;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
 	searchParams?: ParsedUrlQueryInput;
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction;
 };
@@ -48,21 +47,21 @@ const renderPageBlock = (
 ) => {
 	switch (block.component) {
 		case 'donationsTotal':
-			return <DonationsTotalBlockServer blok={block} lang={lang} region={region} />;
+			return <DonationsTotalBlockServer blok={block} />;
 		case 'downloads':
 			return <DownloadsBlock blok={block} />;
 		case 'explainerVideoHeader':
-			return <ExplainerVideoHeaderBlock blok={block} lang={lang} region={region} />;
+			return <ExplainerVideoHeaderBlock blok={block} />;
 		case 'faqSelection':
 			return <FaqSelectionBlock blok={block} lang={lang} region={region} />;
 		case 'heroVideo':
-			return <HeroVideoBlockServer blok={block} lang={lang} region={region} />;
+			return <HeroVideoBlockServer blok={block} />;
 		case 'imageText':
 			return <ImageTextBlock blok={block} />;
 		case 'impactMeasurement':
-			return <ImpactMeasurementBlock blok={block} lang={lang} searchParams={searchParams} />;
+			return <ImpactMeasurementBlock blok={block} searchParams={searchParams} />;
 		case 'journalTeasers':
-			return <JournalTeasersBlock blok={block} lang={lang} region={region} />;
+			return <JournalTeasersBlock blok={block} />;
 		case 'lottie':
 			return <LottieBlock blok={block} />;
 		case 'modalCards':
@@ -70,13 +69,13 @@ const renderPageBlock = (
 		case 'newsletterForm':
 			return <NewsletterSignup lang={lang} />;
 		case 'openSource':
-			return <OpenSourceBlock blok={block} lang={lang} />;
+			return <OpenSourceBlock blok={block} />;
 		case 'partnershipsCarousel':
 			return <PartnershipsCarouselBlock blok={block} />;
 		case 'personGrid':
-			return <PersonGridBlock blok={block} lang={lang} region={region} />;
+			return <PersonGridBlock blok={block} />;
 		case 'programGrid':
-			return <ProgramGridBlock blok={block} lang={lang} region={region} />;
+			return <ProgramGridBlock blok={block} />;
 		case 'richtextButtonHeader':
 			if (richtextButtonHeaderAction === 'createProgram') {
 				return <HomePageRichtextButtonHeaderBlock blok={block} lang={lang} region={region} />;
@@ -86,7 +85,7 @@ const renderPageBlock = (
 		case 'spacer':
 			return <SpacerBlock blok={block} />;
 		case 'teamGrid':
-			return <TeamGridBlock blok={block} lang={lang} />;
+			return <TeamGridBlock blok={block} />;
 		case 'testimonial':
 			return <TestimonialBlock blok={block} />;
 		case 'testimonialCarousel':
@@ -94,7 +93,7 @@ const renderPageBlock = (
 		case 'text':
 			return <TextBlock blok={block} />;
 		case 'transparency':
-			return <TransparencyBlock blok={block} lang={lang} />;
+			return <TransparencyBlock blok={block} />;
 		case 'twoColumnText':
 			return <TwoColumnTextBlock blok={block} />;
 		case 'videoText':
@@ -106,13 +105,9 @@ const renderPageBlock = (
 	}
 };
 
-export default function PageContentType({
-	blok,
-	lang,
-	region,
-	searchParams,
-	richtextButtonHeaderAction,
-}: PageContentTypeProps) {
+export default async function PageContentType({ blok, searchParams, richtextButtonHeaderAction }: PageContentTypeProps) {
+	const { lang, region } = await getWebsiteRootParams();
+
 	return (
 		blok.content?.map((currentBlock) => (
 			<Fragment key={currentBlock._uid}>

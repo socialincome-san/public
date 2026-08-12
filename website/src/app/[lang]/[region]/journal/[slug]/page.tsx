@@ -1,7 +1,7 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import {
 	createWebsiteJournalArticleCanonicalUrl,
@@ -51,8 +51,6 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 		<ArticleDetail
 			story={pageResult.data.story}
 			slug={slug}
-			lang={lang as WebsiteLanguage}
-			region={region as WebsiteRegion}
 			relatedArticles={pageResult.data.relatedArticles}
 			translator={translator}
 			breadcrumbs={pageResult.data.breadcrumbs}

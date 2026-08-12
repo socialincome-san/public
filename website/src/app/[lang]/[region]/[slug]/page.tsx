@@ -37,12 +37,7 @@ export default async function ContentPage({ params, searchParams }: DefaultLayou
 			<BlockWrapper disableMarginTop disableMarginBottom>
 				<Breadcrumb links={breadcrumbLinks} className="pb-0 pl-0" />
 			</BlockWrapper>
-			<PageContentType
-				blok={story.content}
-				lang={lang as WebsiteLanguage}
-				region={region as WebsiteRegion}
-				searchParams={resolvedSearchParams}
-			/>
+			<PageContentType blok={story.content} searchParams={resolvedSearchParams} />
 		</>
 	);
 }
