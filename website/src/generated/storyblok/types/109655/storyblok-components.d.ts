@@ -58,12 +58,23 @@ export interface Button {
 }
 
 export interface Campaign {
+  approved?: boolean;
   portalSlug: string;
   title: string;
   description: string;
   primaryImage: StoryblokAsset;
+  profilePicture?: StoryblokAsset;
+  creatorName: string;
+  quote: string;
+  sectionDescription?: string;
+  sectionImage?: StoryblokAsset;
+  linkInstagram?: string;
+  linkX?: string;
+  linkWebsite?: string;
+  linkTiktok?: string;
   component: "Campaign";
   _uid: string;
+  _editable?: string | undefined;
   [k: string]: unknown;
 }
 

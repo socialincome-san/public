@@ -10,6 +10,7 @@ import {
 } from '@/lib/server-actions/campaign-public-actions';
 import {
 	campaignSubmissionDefaultCurrency,
+	campaignSubmissionDetailsFieldNames,
 	createCampaignSubmissionFormSchema,
 	endDateFromDurationPreset,
 	isCampaignSubmissionErrorCode,
@@ -28,6 +29,7 @@ import type {
 	CampaignSubmissionStepId,
 	SubmissionLabels,
 } from './types';
+import { useCampaignImageUpload } from './use-campaign-image-upload';
 
 type Props = {
 	labels: SubmissionLabels;
@@ -45,7 +47,22 @@ const defaultFormValues = (): CampaignSubmissionFormValues => ({
 	endDate: endDateFromDurationPreset('30'),
 	isPublic: true,
 	programId: '',
+	creatorName: '',
+	quote: '',
+	hasAdditionalInformation: false,
+	sectionDescription: '',
+	linkInstagram: '',
+	linkX: '',
+	linkWebsite: '',
+	linkTiktok: '',
 });
+
+const isImageSubmissionError = (errorCode: string | undefined) =>
+	errorCode === 'image-required' ||
+	errorCode === 'image-too-large' ||
+	errorCode === 'image-format-unsupported' ||
+	errorCode === 'image-type-mismatch' ||
+	errorCode === 'default-image-invalid';
 
 export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [currentStep, setCurrentStep] = useState<CampaignSubmissionStepId>('program');
@@ -77,6 +94,9 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		},
 		[labels.error, labels.errors],
 	);
+
+	const profilePicture = useCampaignImageUpload({ resolveError });
+	const sectionImage = useCampaignImageUpload({ resolveError });
 
 	const formSchema = useMemo(() => createCampaignSubmissionFormSchema(resolveError), [resolveError]);
 
@@ -223,7 +243,12 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		stepTitleRef.current?.focus();
 	}, [currentStep]);
 
-	const isContinueDisabled = programsLoading || programs.length === 0 || Boolean(programsError);
+	const isContinueDisabled =
+		currentStep === 'program'
+			? programsLoading || programs.length === 0 || Boolean(programsError)
+			: currentStep === 'details'
+				? defaultImagesLoading && imageSelection?.type !== 'upload'
+				: false;
 	const isSubmitDisabled = isSubmitting || (defaultImagesLoading && imageSelection?.type !== 'upload');
 
 	const onSelectDefaultImage = (id: number) => {
@@ -272,28 +297,73 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		setImageError(null);
 	};
 
-	const onContinue = () => {
-		const programId = form.getValues('programId').trim();
-		if (!programId) {
-			form.setError('programId', {
-				type: 'manual',
-				message: resolveError('program-required'),
-			});
-			form.setFocus('programId');
+	const onContinue = async () => {
+		if (currentStep === 'program') {
+			const programId = form.getValues('programId').trim();
+			if (!programId) {
+				form.setError('programId', {
+					type: 'manual',
+					message: resolveError('program-required'),
+				});
+				form.setFocus('programId');
+
+				return;
+			}
+
+			form.clearErrors();
+			setImageError(null);
+			setSubmitError(null);
+			setCurrentStep('details');
 
 			return;
 		}
 
-		form.clearErrors();
-		setImageError(null);
-		setSubmitError(null);
-		setCurrentStep('details');
+		if (currentStep === 'details') {
+			const isValid = await form.trigger([...campaignSubmissionDetailsFieldNames]);
+			if (!isValid) {
+				return;
+			}
+
+			if (defaultImagesLoading && imageSelection?.type !== 'upload') {
+				return;
+			}
+
+			if (!imageSelection) {
+				setImageError(resolveError('image-required'));
+
+				return;
+			}
+
+			if (imageSelection.type === 'upload') {
+				const metaError = validateCampaignSubmissionImageMeta(imageSelection.file.size, imageSelection.file.type);
+				if (metaError) {
+					setImageError(resolveError(metaError));
+
+					return;
+				}
+			}
+
+			setImageError(null);
+			setSubmitError(null);
+			setCurrentStep('about');
+		}
 	};
 
 	const onBack = () => {
 		form.clearErrors();
 		setSubmitError(null);
-		setCurrentStep('program');
+		profilePicture.setError(null);
+		sectionImage.setError(null);
+
+		if (currentStep === 'about') {
+			setCurrentStep('details');
+
+			return;
+		}
+
+		if (currentStep === 'details') {
+			setCurrentStep('program');
+		}
 	};
 
 	const onSubmit = async (values: CampaignSubmissionFormValues) => {
@@ -307,9 +377,12 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 
 		setSubmitError(null);
 		setSubmitSuccess(false);
+		profilePicture.setError(null);
+		sectionImage.setError(null);
 
 		if (!imageSelection) {
 			setImageError(resolveError('image-required'));
+			setCurrentStep('details');
 
 			return;
 		}
@@ -318,9 +391,18 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			const metaError = validateCampaignSubmissionImageMeta(imageSelection.file.size, imageSelection.file.type);
 			if (metaError) {
 				setImageError(resolveError(metaError));
+				setCurrentStep('details');
 
 				return;
 			}
+		}
+
+		if (!profilePicture.validate()) {
+			return;
+		}
+
+		if (values.hasAdditionalInformation && !sectionImage.validate()) {
+			return;
 		}
 
 		isSubmittingRef.current = true;
@@ -340,11 +422,30 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			formData.append('endDate', values.endDate);
 			formData.append('programId', values.programId);
 			formData.append('public', values.isPublic ? 'true' : 'false');
+			formData.append('creatorName', values.creatorName);
+			formData.append('quote', values.quote);
+			formData.append('hasAdditionalInformation', values.hasAdditionalInformation ? 'true' : 'false');
+
+			if (values.hasAdditionalInformation) {
+				formData.append('sectionDescription', values.sectionDescription ?? '');
+				formData.append('linkInstagram', values.linkInstagram ?? '');
+				formData.append('linkX', values.linkX ?? '');
+				formData.append('linkWebsite', values.linkWebsite ?? '');
+				formData.append('linkTiktok', values.linkTiktok ?? '');
+			}
 
 			if (imageSelection.type === 'upload') {
 				formData.append('primaryImage', imageSelection.file);
 			} else {
 				formData.append('defaultImageId', String(imageSelection.id));
+			}
+
+			if (profilePicture.file) {
+				formData.append('profilePicture', profilePicture.file);
+			}
+
+			if (values.hasAdditionalInformation && sectionImage.file) {
+				formData.append('sectionImage', sectionImage.file);
 			}
 
 			const response = await fetch('/api/campaign-submissions', {
@@ -355,15 +456,10 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			if (!response.ok) {
 				const payload = (await response.json().catch(() => null)) as { errorCode?: string } | null;
 				const errorMessage = payload?.errorCode ? resolveError(payload.errorCode) : labels.error;
-				const isImageError =
-					payload?.errorCode === 'image-required' ||
-					payload?.errorCode === 'image-too-large' ||
-					payload?.errorCode === 'image-format-unsupported' ||
-					payload?.errorCode === 'image-type-mismatch' ||
-					payload?.errorCode === 'default-image-invalid';
 
-				if (isImageError) {
+				if (isImageSubmissionError(payload?.errorCode)) {
 					setImageError(errorMessage);
+					setCurrentStep('details');
 				} else {
 					setSubmitError(errorMessage);
 				}
@@ -374,6 +470,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			setSubmitSuccess(true);
 			form.reset(defaultFormValues());
 			clearImageSelection();
+			profilePicture.clear();
+			sectionImage.clear();
 			setDefaultImages([]);
 			setCurrentStep('program');
 			onSuccess?.();
@@ -399,21 +497,21 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		if (currentStep !== 'details') {
+		if (currentStep !== 'about') {
 			return;
 		}
 
-		submitDetails();
+		submitAbout();
 	};
 
-	const submitDetails = () => {
+	const submitAbout = () => {
 		if (defaultImagesLoading && imageSelection?.type !== 'upload') {
 			return;
 		}
 
 		if (!imageSelection) {
 			setImageError(resolveError('image-required'));
-			void form.trigger();
+			setCurrentStep('details');
 
 			return;
 		}
@@ -421,7 +519,12 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		void form.handleSubmit(onSubmit)();
 	};
 
-	const stepTitle = currentStep === 'program' ? labels.programStepTitle : labels.detailsStepTitle;
+	const stepTitle =
+		currentStep === 'program'
+			? labels.programStepTitle
+			: currentStep === 'details'
+				? labels.detailsStepTitle
+				: labels.aboutStepTitle;
 
 	return (
 		<Form {...form}>
@@ -433,6 +536,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 						stepLabel={labels.stepLabel}
 						programLabel={labels.program}
 						detailsLabel={labels.details}
+						aboutLabel={labels.about}
 						variant="bars"
 						className="min-w-0 flex-1"
 					/>
@@ -460,6 +564,18 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 						onImageChange={onImageChange}
 						imageError={imageError}
 						submitError={submitError}
+						profilePictureInputRef={profilePicture.inputRef}
+						profilePicture={{
+							previewUrl: profilePicture.previewUrl,
+							error: profilePicture.error,
+							onChange: profilePicture.setFromFile,
+						}}
+						sectionImageInputRef={sectionImage.inputRef}
+						sectionImage={{
+							previewUrl: sectionImage.previewUrl,
+							error: sectionImage.error,
+							onChange: sectionImage.setFromFile,
+						}}
 					/>
 				</div>
 				<div className="shrink-0">
@@ -469,9 +585,11 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 						isContinueDisabled={isContinueDisabled}
 						isSubmitDisabled={isSubmitDisabled}
 						isSubmitting={isSubmitting}
-						onContinue={onContinue}
+						onContinue={() => {
+							void onContinue();
+						}}
 						onBack={onBack}
-						onSubmit={submitDetails}
+						onSubmit={submitAbout}
 					/>
 				</div>
 			</form>

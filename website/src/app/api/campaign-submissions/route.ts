@@ -3,9 +3,11 @@ import {
 	isCampaignSubmissionErrorCode,
 	parseCampaignSubmissionDefaultImageId,
 	parseCampaignSubmissionFields,
+	parseOptionalCampaignSubmissionImage,
 	validateCampaignSubmissionImageBuffer,
 	type CampaignSubmissionErrorCode,
 	type CampaignSubmissionImageSource,
+	type CampaignSubmissionOptionalImages,
 } from '@/lib/services/campaign/campaign-submission-input';
 import { services } from '@/lib/services/services';
 import { parseMultipartFormDataWithLimit, RequestBodyTooLargeError } from '@/lib/utils/request-body';
@@ -67,6 +69,41 @@ const resolveImageSource = async (
 	return { success: false, error: 'image-required' };
 };
 
+const resolveOptionalImages = async (
+	formData: FormData,
+	hasAdditionalInformation: boolean,
+): Promise<
+	{ success: true; data: CampaignSubmissionOptionalImages } | { success: false; error: CampaignSubmissionErrorCode }
+> => {
+	const profilePictureResult = await parseOptionalCampaignSubmissionImage(formData, 'profilePicture');
+	if (!profilePictureResult.success) {
+		return profilePictureResult;
+	}
+
+	if (!hasAdditionalInformation) {
+		return {
+			success: true,
+			data: {
+				profilePicture: profilePictureResult.data,
+				sectionImage: null,
+			},
+		};
+	}
+
+	const sectionImageResult = await parseOptionalCampaignSubmissionImage(formData, 'sectionImage');
+	if (!sectionImageResult.success) {
+		return sectionImageResult;
+	}
+
+	return {
+		success: true,
+		data: {
+			profilePicture: profilePictureResult.data,
+			sectionImage: sectionImageResult.data,
+		},
+	};
+};
+
 export const POST = async (request: NextRequest) => {
 	let formData: FormData;
 	try {
@@ -89,7 +126,16 @@ export const POST = async (request: NextRequest) => {
 		return errorResponse(imageSourceResult.error, 400);
 	}
 
-	const submissionResult = await services.campaignSubmission.submit(fieldsResult.data, imageSourceResult.data);
+	const optionalImagesResult = await resolveOptionalImages(formData, fieldsResult.data.hasAdditionalInformation);
+	if (!optionalImagesResult.success) {
+		return errorResponse(optionalImagesResult.error, 400);
+	}
+
+	const submissionResult = await services.campaignSubmission.submit(
+		fieldsResult.data,
+		imageSourceResult.data,
+		optionalImagesResult.data,
+	);
 
 	if (!submissionResult.success) {
 		const errorCode = isCampaignSubmissionErrorCode(submissionResult.error) ? submissionResult.error : 'submission-failed';

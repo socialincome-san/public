@@ -28,7 +28,6 @@ type Props = Pick<
 	| 'onSelectDefaultImage'
 	| 'onImageChange'
 	| 'imageError'
-	| 'submitError'
 >;
 
 const durationOptions: {
@@ -78,12 +77,10 @@ export const DetailsStep = ({
 	onSelectDefaultImage,
 	onImageChange,
 	imageError,
-	submitError,
 }: Props) => {
 	const imageHintId = useId();
 	const imageErrorId = useId();
 	const imageErrorRef = useRef<HTMLParagraphElement>(null);
-	const submitErrorRef = useRef<HTMLParagraphElement>(null);
 	const durationPreset = form.watch('durationPreset');
 	const hasGoal = form.watch('hasGoal');
 	const isPublic = form.watch('isPublic');
@@ -92,15 +89,8 @@ export const DetailsStep = ({
 		if (imageError) {
 			imageErrorRef.current?.scrollIntoView({ block: 'nearest' });
 			imageErrorRef.current?.focus();
-
-			return;
 		}
-
-		if (submitError) {
-			submitErrorRef.current?.scrollIntoView({ block: 'nearest' });
-			submitErrorRef.current?.focus();
-		}
-	}, [imageError, submitError]);
+	}, [imageError]);
 
 	const imageDescribedBy = [imageHintId, imageError ? imageErrorId : null].filter(Boolean).join(' ');
 
@@ -412,12 +402,6 @@ export const DetailsStep = ({
 					</p>
 				) : null}
 			</div>
-
-			{submitError ? (
-				<p ref={submitErrorRef} className="text-destructive text-sm outline-none" role="alert" tabIndex={-1}>
-					{submitError}
-				</p>
-			) : null}
 		</div>
 	);
 };

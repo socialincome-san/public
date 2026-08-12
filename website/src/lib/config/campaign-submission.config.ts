@@ -14,10 +14,15 @@ export const campaignSubmissionConfig = {
 	maxImageBytes: 5 * 1024 * 1024,
 	maxTitleLength: 200,
 	maxDescriptionLength: 5000,
+	maxCreatorNameLength: 200,
+	maxQuoteLength: 1000,
+	maxSectionDescriptionLength: 5000,
+	maxLinkLength: 500,
 	allowedCurrencies: [Currency.CHF, Currency.EUR, Currency.USD, Currency.GBP] as const,
 	minCampaignDurationDays: 7,
 	maxCampaignDurationDays: 365,
-	maxMultipartBodyBytes: 6 * 1024 * 1024,
+	// Primary + optional profile + optional section image (5 MB each) plus text overhead.
+	maxMultipartBodyBytes: 16 * 1024 * 1024,
 	durationPresetDays: {
 		'30': 30,
 		'90': 90,

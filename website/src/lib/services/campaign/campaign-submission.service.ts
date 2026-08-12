@@ -11,6 +11,7 @@ import {
 	type CampaignSubmissionFields,
 	type CampaignSubmissionImageSource,
 	type CampaignSubmissionImageValidation,
+	type CampaignSubmissionOptionalImages,
 } from './campaign-submission-input';
 import { CampaignValidationService } from './campaign-validation.service';
 
@@ -20,7 +21,7 @@ export type CampaignSubmissionResult = {
 
 type SubmissionCleanupState = {
 	campaignId?: string;
-	assetId?: number;
+	assetIds: number[];
 	storyId?: number;
 };
 
@@ -49,6 +50,7 @@ export class CampaignSubmissionService extends BaseService {
 	async submit(
 		fields: CampaignSubmissionFields,
 		imageSource: CampaignSubmissionImageSource,
+		optionalImages: CampaignSubmissionOptionalImages = { profilePicture: null, sectionImage: null },
 	): Promise<ServiceResult<CampaignSubmissionResult>> {
 		const eligibilityResult = await this.programPublicSubmissionService.isProgramEligibleForPublicSubmission(
 			fields.programId,
@@ -73,14 +75,14 @@ export class CampaignSubmissionService extends BaseService {
 			return this.resultFail(slugResult.error, slugResult.status);
 		}
 		const slug = slugResult.data;
-		const cleanupState: SubmissionCleanupState = {};
+		const cleanupState: SubmissionCleanupState = { assetIds: [] };
 
 		try {
 			const imageResult = await this.resolveImage(imageSource);
 			if (!imageResult.success) {
 				return imageResult;
 			}
-			const image = imageResult.data;
+			const primaryImage = imageResult.data;
 
 			const campaign = await this.db.campaign.create({
 				data: {
@@ -92,25 +94,44 @@ export class CampaignSubmissionService extends BaseService {
 					isActive: true,
 					public: fields.public,
 					slug,
+					creatorName: fields.creatorName,
 					program: { connect: { id: fields.programId } },
 				},
 				select: { id: true, slug: true },
 			});
 			cleanupState.campaignId = campaign.id;
 
-			const { assetId, asset } = await this.storyblokManagementService.uploadAsset(
-				image.buffer,
-				image.filename,
-				image.mimeType,
+			const { assetId: primaryAssetId, asset: primaryAsset } = await this.storyblokManagementService.uploadAsset(
+				primaryImage.buffer,
+				primaryImage.filename,
+				primaryImage.mimeType,
 			);
-			cleanupState.assetId = assetId;
+			cleanupState.assetIds.push(primaryAssetId);
+
+			const profilePictureAsset = await this.uploadOptionalImage(optionalImages.profilePicture, cleanupState);
+			const sectionImageAsset = fields.hasAdditionalInformation
+				? await this.uploadOptionalImage(optionalImages.sectionImage, cleanupState)
+				: undefined;
 
 			const { storyId } = await this.storyblokManagementService.createPublishedCampaignStory({
 				slug,
 				title: fields.title,
 				description: fields.description,
 				portalSlug: slug,
-				primaryImage: asset,
+				primaryImage: primaryAsset,
+				creatorName: fields.creatorName,
+				quote: fields.quote,
+				...(profilePictureAsset ? { profilePicture: profilePictureAsset } : {}),
+				...(fields.hasAdditionalInformation
+					? {
+							sectionDescription: fields.sectionDescription,
+							...(sectionImageAsset ? { sectionImage: sectionImageAsset } : {}),
+							linkInstagram: fields.linkInstagram,
+							linkX: fields.linkX,
+							linkWebsite: fields.linkWebsite,
+							linkTiktok: fields.linkTiktok,
+						}
+					: {}),
 			});
 			cleanupState.storyId = storyId;
 
@@ -139,6 +160,17 @@ export class CampaignSubmissionService extends BaseService {
 
 			return this.resultFail('submission-failed', 503);
 		}
+	}
+
+	private async uploadOptionalImage(image: CampaignSubmissionImageValidation | null, cleanupState: SubmissionCleanupState) {
+		if (!image) {
+			return undefined;
+		}
+
+		const uploaded = await this.storyblokManagementService.uploadAsset(image.buffer, image.filename, image.mimeType);
+		cleanupState.assetIds.push(uploaded.assetId);
+
+		return uploaded.asset;
 	}
 
 	private async resolveImage(
@@ -218,8 +250,8 @@ export class CampaignSubmissionService extends BaseService {
 			await this.storyblokManagementService.deleteStory(state.storyId);
 		}
 
-		if (state.assetId) {
-			await this.storyblokManagementService.deleteAsset(state.assetId);
+		for (const assetId of state.assetIds) {
+			await this.storyblokManagementService.deleteAsset(assetId);
 		}
 
 		if (state.campaignId) {

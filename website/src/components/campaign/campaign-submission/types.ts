@@ -11,6 +11,9 @@ import type { z } from 'zod';
 export type SubmissionLabels = {
 	programStepTitle: string;
 	detailsStepTitle: string;
+	aboutStepTitle: string;
+	aboutStepSubtitle: string;
+	aboutStepDescription: string;
 	title: string;
 	description: string;
 	goal: string;
@@ -33,6 +36,20 @@ export type SubmissionLabels = {
 	campaignBackground: string;
 	uploadImage: string;
 	removeUploadedImage: string;
+	profilePicture: string;
+	profilePictureHint: string;
+	editProfilePicture: string;
+	creatorNamePlaceholder: string;
+	quote: string;
+	quotePlaceholder: string;
+	quoteHint: string;
+	hasAdditionalInformation: string;
+	sectionDescription: string;
+	sectionImage: string;
+	linkInstagram: string;
+	linkX: string;
+	linkWebsite: string;
+	linkTiktok: string;
 	submit: string;
 	submitting: string;
 	successTitle: string;
@@ -48,6 +65,7 @@ export type SubmissionLabels = {
 	stepLabel: string;
 	recipientsCount: string;
 	details: string;
+	about: string;
 	programsLoading: string;
 	programsEmpty: string;
 	defaultImagesLoading: string;
@@ -55,11 +73,17 @@ export type SubmissionLabels = {
 	errors: Record<CampaignSubmissionErrorCode, string>;
 };
 
-export type CampaignSubmissionStepId = 'program' | 'details';
+export type CampaignSubmissionStepId = 'program' | 'details' | 'about';
 
 export type CampaignSubmissionFormValues = z.infer<ReturnType<typeof createCampaignSubmissionFormSchema>>;
 
 export type CampaignImageSelection = { type: 'default'; id: number } | { type: 'upload'; file: File } | null;
+
+type CampaignSubmissionImageUploadField = {
+	previewUrl: string | null;
+	error: string | null;
+	onChange: (file: File | null) => void;
+};
 
 export type CampaignSubmissionStepProps = {
 	form: UseFormReturn<CampaignSubmissionFormValues>;
@@ -77,4 +101,8 @@ export type CampaignSubmissionStepProps = {
 	onImageChange: (file: File | null) => void;
 	imageError: string | null;
 	submitError: string | null;
+	profilePictureInputRef: RefObject<HTMLInputElement | null>;
+	profilePicture: CampaignSubmissionImageUploadField;
+	sectionImageInputRef: RefObject<HTMLInputElement | null>;
+	sectionImage: CampaignSubmissionImageUploadField;
 };

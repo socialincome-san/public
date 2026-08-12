@@ -12,9 +12,17 @@ import {
 
 const validEndDateString = () => format(addDays(startOfDay(new Date()), 30), 'yyyy-MM-dd');
 
+const withAboutFields = (formData: FormData) => {
+	formData.set('creatorName', 'Alex Creator');
+	formData.set('quote', 'Thank you for your support!');
+	formData.set('hasAdditionalInformation', 'false');
+
+	return formData;
+};
+
 describe('campaign-submission-input', () => {
 	test('parseCampaignSubmissionFields validates required fields', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', '  My Campaign  ');
 		formData.set('description', 'A description');
 		formData.set('goal', '1000');
@@ -30,11 +38,15 @@ describe('campaign-submission-input', () => {
 			expect(result.data.currency).toBe('CHF');
 			expect(result.data.goal).toBe(1000);
 			expect(result.data.public).toBe(true);
+			expect(result.data.creatorName).toBe('Alex Creator');
+			expect(result.data.quote).toBe('Thank you for your support!');
+			expect(result.data.hasAdditionalInformation).toBe(false);
+			expect(result.data.sectionDescription).toBeNull();
 		}
 	});
 
 	test('parseCampaignSubmissionFields accepts empty goal as null', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', 'Campaign');
 		formData.set('description', 'Description');
 		formData.set('goal', '');
@@ -52,7 +64,7 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('parseCampaignSubmissionFields rejects unsupported currency', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', 'Campaign');
 		formData.set('description', 'Description');
 		formData.set('goal', '100');
@@ -68,7 +80,7 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('parseCampaignSubmissionFields treats non-true public strings as false', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', 'Campaign');
 		formData.set('description', 'Description');
 		formData.set('goal', '100');
@@ -85,7 +97,7 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('parseCampaignSubmissionFields rejects titles that cannot be slugified', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', '!!! 🎉');
 		formData.set('description', 'Description');
 		formData.set('goal', '100');
@@ -101,7 +113,7 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('parseCampaignSubmissionFields rejects end dates outside the configured window', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', 'Campaign');
 		formData.set('description', 'Description');
 		formData.set('goal', '100');
@@ -147,7 +159,7 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('parseCampaignSubmissionFields rejects a blank programId', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', 'Campaign');
 		formData.set('description', 'Description');
 		formData.set('goal', '100');
@@ -159,6 +171,72 @@ describe('campaign-submission-input', () => {
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			expect(result.error).toBe('program-required');
+		}
+	});
+
+	test('parseCampaignSubmissionFields requires creator name and quote', () => {
+		const formData = new FormData();
+		formData.set('title', 'Campaign');
+		formData.set('description', 'Description');
+		formData.set('goal', '100');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', validEndDateString());
+		formData.set('programId', 'program-1');
+		formData.set('creatorName', '');
+		formData.set('quote', '');
+		formData.set('hasAdditionalInformation', 'false');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('creator-name-required');
+		}
+	});
+
+	test('parseCampaignSubmissionFields keeps additional information only when enabled', () => {
+		const formData = withAboutFields(new FormData());
+		formData.set('title', 'Campaign');
+		formData.set('description', 'Description');
+		formData.set('goal', '100');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', validEndDateString());
+		formData.set('programId', 'program-1');
+		formData.set('hasAdditionalInformation', 'true');
+		formData.set('sectionDescription', '  Extra details  ');
+		formData.set('linkInstagram', 'https://instagram.com/example');
+		formData.set('linkX', '');
+		formData.set('linkWebsite', 'https://example.com');
+		formData.set('linkTiktok', 'https://tiktok.com/@example');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.hasAdditionalInformation).toBe(true);
+			expect(result.data.sectionDescription).toBe('Extra details');
+			expect(result.data.linkInstagram).toBe('https://instagram.com/example');
+			expect(result.data.linkX).toBeNull();
+			expect(result.data.linkWebsite).toBe('https://example.com');
+			expect(result.data.linkTiktok).toBe('https://tiktok.com/@example');
+		}
+	});
+
+	test('parseCampaignSubmissionFields clears additional information when disabled', () => {
+		const formData = withAboutFields(new FormData());
+		formData.set('title', 'Campaign');
+		formData.set('description', 'Description');
+		formData.set('goal', '100');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', validEndDateString());
+		formData.set('programId', 'program-1');
+		formData.set('hasAdditionalInformation', 'false');
+		formData.set('sectionDescription', 'Should be ignored');
+		formData.set('linkInstagram', 'https://instagram.com/example');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.sectionDescription).toBeNull();
+			expect(result.data.linkInstagram).toBeNull();
 		}
 	});
 
@@ -186,6 +264,14 @@ describe('campaign-submission-input', () => {
 			endDate: validEndDateString(),
 			isPublic: true,
 			programId: '   ',
+			creatorName: 'Alex',
+			quote: 'Thanks',
+			hasAdditionalInformation: false,
+			sectionDescription: '',
+			linkInstagram: '',
+			linkX: '',
+			linkWebsite: '',
+			linkTiktok: '',
 		});
 
 		expect(result.success).toBe(false);
@@ -193,6 +279,31 @@ describe('campaign-submission-input', () => {
 			const messages = result.error.issues.map((issue) => issue.message);
 			expect(messages).toContain('program-required');
 			expect(messages).toContain('goal-positive');
+		}
+	});
+
+	test('createCampaignSubmissionFormSchema requires creator name and quote', () => {
+		const schema = createCampaignSubmissionFormSchema((code) => code);
+		const result = schema.safeParse({
+			title: 'Campaign',
+			description: 'Description',
+			hasGoal: false,
+			goal: '',
+			currency: 'CHF',
+			durationPreset: '30',
+			endDate: validEndDateString(),
+			isPublic: true,
+			programId: 'program-1',
+			creatorName: '',
+			quote: '',
+			hasAdditionalInformation: false,
+		});
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			const messages = result.error.issues.map((issue) => issue.message);
+			expect(messages).toContain('creator-name-required');
+			expect(messages).toContain('quote-required');
 		}
 	});
 });

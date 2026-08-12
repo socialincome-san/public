@@ -1,5 +1,6 @@
 'use client';
 
+import { AboutStep } from './steps/about-step';
 import { DetailsStep } from './steps/details-step';
 import { ProgramStep } from './steps/program-step';
 import type { CampaignSubmissionStepId, CampaignSubmissionStepProps } from './types';
@@ -38,6 +39,21 @@ export const CampaignSubmissionSteps = ({ currentStep, ...stepProps }: Props) =>
 					onSelectDefaultImage={stepProps.onSelectDefaultImage}
 					onImageChange={stepProps.onImageChange}
 					imageError={stepProps.imageError}
+				/>
+			</div>
+		);
+	}
+
+	if (currentStep === 'about') {
+		return (
+			<div className="min-h-0 flex-1 overflow-y-auto">
+				<AboutStep
+					form={stepProps.form}
+					labels={stepProps.labels}
+					profilePictureInputRef={stepProps.profilePictureInputRef}
+					profilePicture={stepProps.profilePicture}
+					sectionImageInputRef={stepProps.sectionImageInputRef}
+					sectionImage={stepProps.sectionImage}
 					submitError={stepProps.submitError}
 				/>
 			</div>
