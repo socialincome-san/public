@@ -36,7 +36,6 @@ import {
 	type CheckoutMetadata,
 	type PortalProgramDonationCheckoutInput,
 	type StripeBillingPortalSessionUrl,
-	type StripeSubscriptionDetails,
 	type StripeCheckoutCustomerPrefill,
 	type StripeCheckoutOnboardingPrefill,
 	type StripeContributorNameParts,
@@ -46,6 +45,7 @@ import {
 	type StripeEmbeddedCheckoutSessionInput,
 	type StripeHostedCheckoutCreateInput,
 	type StripePaymentMethod,
+	type StripeSubscriptionDetails,
 	type StripeSubscriptionPaginatedTableView,
 	type StripeSubscriptionRow,
 	type StripeSubscriptionTableQuery,
@@ -783,7 +783,7 @@ export class StripeService extends BaseService {
 			});
 			const firstItem = subscription.items.data[0];
 			const currentPeriodEnd =
-				firstItem?.current_period_end != null ? new Date(firstItem.current_period_end * 1000) : null;
+				typeof firstItem?.current_period_end === 'number' ? new Date(firstItem.current_period_end * 1000) : null;
 			const paymentMethod = subscription.default_payment_method;
 			if (!paymentMethod || typeof paymentMethod === 'string') {
 				return { currentPeriodEnd };

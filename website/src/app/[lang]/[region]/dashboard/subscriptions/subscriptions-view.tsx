@@ -68,18 +68,11 @@ export const SubscriptionsView = async ({ lang, region }: Props) => {
 			{activeSubscriptions.length > 0 ? (
 				<>
 					<ActiveSubscriptionsList lang={lang} subscriptions={activeSubscriptions} labels={labels} />
-					{upcomingPayments.length > 0 && (
-						<UpcomingPaymentsList lang={lang} payments={upcomingPayments} labels={labels} />
-					)}
+					{upcomingPayments.length > 0 && <UpcomingPaymentsList lang={lang} payments={upcomingPayments} labels={labels} />}
 				</>
 			) : (
 				<div className="pt-6">
-					<SubscriptionsEmptyState
-						lang={lang}
-						region={region}
-						contributionSummary={contributionSummary}
-						labels={labels}
-					/>
+					<SubscriptionsEmptyState lang={lang} region={region} contributionSummary={contributionSummary} labels={labels} />
 				</div>
 			)}
 		</div>

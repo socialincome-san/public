@@ -2,8 +2,7 @@ import { type UpcomingPaymentView } from './subscription.types';
 
 export const UPCOMING_PAYMENTS_PER_SUBSCRIPTION = 4;
 
-const startOfUtcDay = (date: Date): Date =>
-	new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+const startOfUtcDay = (date: Date): Date => new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 
 const dateAtAnchorDay = (reference: Date, anchorDay: number, monthOffset: number): Date => {
 	const year = reference.getUTCFullYear();

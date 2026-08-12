@@ -40,6 +40,7 @@ const createService = ({
 		warn: jest.fn(),
 		info: jest.fn(),
 		debug: jest.fn(),
+		alert: jest.fn(),
 	},
 }: {
 	subscriptions?: {
@@ -57,6 +58,7 @@ const createService = ({
 		warn: jest.Mock;
 		info: jest.Mock;
 		debug: jest.Mock;
+		alert: jest.Mock;
 	};
 } = {}) => {
 	const findMany = jest.fn().mockResolvedValue(subscriptions);

@@ -198,10 +198,7 @@ export class SubscriptionReadService extends BaseService {
 		}));
 	}
 
-	private resolveScheduleAnchor(
-		record: SubscriptionRecord,
-		stripeDetails: StripeSubscriptionDetails | null,
-	): Date {
+	private resolveScheduleAnchor(record: SubscriptionRecord, stripeDetails: StripeSubscriptionDetails | null): Date {
 		if (record.paymentMethod === SubscriptionPaymentMethod.bank_transfer) {
 			return record.createdAt;
 		}
