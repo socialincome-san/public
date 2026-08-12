@@ -58,25 +58,6 @@ export const useCampaignImageUpload = ({ resolveError }: UseCampaignImageUploadO
 		[clear, revokePreview, resolveError],
 	);
 
-	const validate = useCallback(() => {
-		if (!file) {
-			setError(null);
-
-			return true;
-		}
-
-		const metaError = validateCampaignSubmissionImageMeta(file.size, file.type);
-		if (metaError) {
-			setError(resolveError(metaError));
-
-			return false;
-		}
-
-		setError(null);
-
-		return true;
-	}, [file, resolveError]);
-
 	return {
 		file,
 		previewUrl,
@@ -85,6 +66,6 @@ export const useCampaignImageUpload = ({ resolveError }: UseCampaignImageUploadO
 		setFromFile,
 		clear,
 		setError,
-		validate,
+		onChange: setFromFile,
 	};
 };

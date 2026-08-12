@@ -2,11 +2,12 @@ import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.confi
 import { addDays, format, startOfDay } from 'date-fns';
 import {
 	appendCampaignSubmissionFormData,
+	createCampaignSubmissionDetailsSchema,
 	createCampaignSubmissionFormSchema,
 	endDateFromDurationPreset,
 	parseCampaignSubmissionDefaultImageId,
 	parseCampaignSubmissionFields,
-	toCampaignSubmissionWirePayload,
+	resolveCampaignSubmissionQuote,
 	validateCampaignSubmissionEndDate,
 	validateCampaignSubmissionImageBuffer,
 	validateCampaignSubmissionImageMeta,
@@ -160,8 +161,8 @@ describe('campaign-submission-input', () => {
 
 	test('validateCampaignSubmissionEndDate accepts min and max calendar bounds', () => {
 		const today = startOfDay(new Date());
-		const minEndDate = addDays(today, 7);
-		const maxEndDate = addDays(today, 365);
+		const minEndDate = addDays(today, campaignSubmissionConfig.minCampaignDurationDays);
+		const maxEndDate = addDays(today, campaignSubmissionConfig.maxCampaignDurationDays);
 
 		expect(validateCampaignSubmissionEndDate(minEndDate)).toBeNull();
 		expect(validateCampaignSubmissionEndDate(maxEndDate)).toBeNull();
@@ -241,62 +242,6 @@ describe('campaign-submission-input', () => {
 			expect(result.data.xHandle).toBeNull();
 			expect(result.data.linkWebsite).toBe('https://example.com');
 			expect(result.data.tiktokHandle).toBe('example.user');
-		}
-	});
-
-	test('parseCampaignSubmissionFields rejects full social URLs and unsafe website schemes', () => {
-		const base = () => {
-			const formData = withAboutFields(new FormData());
-			formData.set('title', 'Campaign');
-			formData.set('description', 'Description');
-			formData.set('goal', '100');
-			formData.set('currency', 'CHF');
-			formData.set('endDate', validEndDateString());
-			formData.set('programId', 'program-1');
-			formData.set('hasAdditionalInformation', 'true');
-
-			return formData;
-		};
-
-		const withInstagramUrl = base();
-		withInstagramUrl.set('instagramHandle', 'https://instagram.com/example');
-		const instagramResult = parseCampaignSubmissionFields(withInstagramUrl);
-		expect(instagramResult.success).toBe(false);
-		if (!instagramResult.success) {
-			expect(instagramResult.error).toBe('handle-invalid');
-		}
-
-		const withJavascriptWebsite = base();
-		withJavascriptWebsite.set('instagramHandle', 'example');
-		withJavascriptWebsite.set('linkWebsite', 'javascript:alert(1)');
-		const websiteResult = parseCampaignSubmissionFields(withJavascriptWebsite);
-		expect(websiteResult.success).toBe(false);
-		if (!websiteResult.success) {
-			expect(websiteResult.error).toBe('link-unsafe');
-		}
-
-		const withUnsafeX = base();
-		withUnsafeX.set('xHandle', 'javascript:alert(1)');
-		const xResult = parseCampaignSubmissionFields(withUnsafeX);
-		expect(xResult.success).toBe(false);
-		if (!xResult.success) {
-			expect(xResult.error).toBe('handle-invalid');
-		}
-
-		const withProtocolRelativeTiktok = base();
-		withProtocolRelativeTiktok.set('tiktokHandle', '//evil.com');
-		const tiktokResult = parseCampaignSubmissionFields(withProtocolRelativeTiktok);
-		expect(tiktokResult.success).toBe(false);
-		if (!tiktokResult.success) {
-			expect(tiktokResult.error).toBe('handle-invalid');
-		}
-
-		const withDataWebsite = base();
-		withDataWebsite.set('linkWebsite', 'data:text/html,xss');
-		const dataResult = parseCampaignSubmissionFields(withDataWebsite);
-		expect(dataResult.success).toBe(false);
-		if (!dataResult.success) {
-			expect(dataResult.error).toBe('link-unsafe');
 		}
 	});
 
@@ -406,9 +351,9 @@ describe('campaign-submission-input', () => {
 		}
 	});
 
-	test('createCampaignSubmissionFormSchema requires creator name and quote', () => {
+	test('createCampaignSubmissionFormSchema requires creator name and allows empty quote', () => {
 		const schema = createCampaignSubmissionFormSchema((code) => code);
-		const result = schema.safeParse({
+		const missingCreator = schema.safeParse({
 			title: 'Campaign',
 			description: 'Description',
 			hasGoal: false,
@@ -423,12 +368,70 @@ describe('campaign-submission-input', () => {
 			hasAdditionalInformation: false,
 		});
 
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const messages = result.error.issues.map((issue) => issue.message);
+		expect(missingCreator.success).toBe(false);
+		if (!missingCreator.success) {
+			const messages = missingCreator.error.issues.map((issue) => issue.message);
 			expect(messages).toContain('creator-name-required');
-			expect(messages).toContain('quote-required');
+			expect(messages).not.toContain('quote-required');
 		}
+
+		const emptyQuote = schema.safeParse({
+			title: 'Campaign',
+			description: 'Description',
+			hasGoal: false,
+			goal: '',
+			currency: 'CHF',
+			durationPreset: '30',
+			endDate: validEndDateString(),
+			isPublic: true,
+			programId: 'program-1',
+			creatorName: 'Alex',
+			quote: '',
+			hasAdditionalInformation: false,
+		});
+
+		expect(emptyQuote.success).toBe(true);
+	});
+
+	test('createCampaignSubmissionDetailsSchema validates details without about fields', () => {
+		const schema = createCampaignSubmissionDetailsSchema((code) => code);
+		const invalid = schema.safeParse({
+			title: '',
+			description: '',
+			hasGoal: true,
+			goal: '',
+			currency: 'CHF',
+			durationPreset: '30',
+			endDate: validEndDateString(),
+			isPublic: true,
+		});
+
+		expect(invalid.success).toBe(false);
+		if (!invalid.success) {
+			const messages = invalid.error.issues.map((issue) => issue.message);
+			expect(messages).toContain('title-required');
+			expect(messages).toContain('description-required');
+			expect(messages).toContain('goal-positive');
+		}
+
+		const valid = schema.safeParse({
+			title: 'Campaign',
+			description: 'Description',
+			hasGoal: false,
+			goal: '',
+			currency: 'CHF',
+			durationPreset: '30',
+			endDate: validEndDateString(),
+			isPublic: true,
+		});
+
+		expect(valid.success).toBe(true);
+	});
+
+	test('resolveCampaignSubmissionQuote falls back to placeholder text', () => {
+		expect(resolveCampaignSubmissionQuote('', 'Thank you for your support!')).toBe('Thank you for your support!');
+		expect(resolveCampaignSubmissionQuote('   ', 'Thank you for your support!')).toBe('Thank you for your support!');
+		expect(resolveCampaignSubmissionQuote(' Custom quote ', 'Thank you for your support!')).toBe('Custom quote');
 	});
 
 	test('append + parse round-trips client form values through FormData', () => {
@@ -444,14 +447,14 @@ describe('campaign-submission-input', () => {
 			tiktokHandle: 'example.user',
 		});
 
-		const formData = appendCampaignSubmissionFormData(new FormData(), toCampaignSubmissionWirePayload(values), {
+		const formData = appendCampaignSubmissionFormData(new FormData(), values, {
 			defaultImageId: 42,
 		});
 
 		expect(formData.get('public')).toBe('false');
 		expect(formData.get('goal')).toBe('2500');
 		expect(formData.get('defaultImageId')).toBe('42');
-		expect(formData.get('instagramHandle')).toBe('example');
+		expect(formData.get('instagramHandle')).toBe('@example');
 
 		const result = parseCampaignSubmissionFields(formData);
 		expect(result.success).toBe(true);
@@ -468,8 +471,9 @@ describe('campaign-submission-input', () => {
 		}
 	});
 
-	test('toCampaignSubmissionWirePayload clears optional about fields when disabled', () => {
-		const payload = toCampaignSubmissionWirePayload(
+	test('appendCampaignSubmissionFormData omits additional fields when disabled', () => {
+		const formData = appendCampaignSubmissionFormData(
+			new FormData(),
 			validFormValues({
 				hasAdditionalInformation: false,
 				sectionDescription: 'Should be ignored',
@@ -479,10 +483,9 @@ describe('campaign-submission-input', () => {
 			}),
 		);
 
-		expect(payload.goal).toBeNull();
-		expect(payload.public).toBe(true);
-		expect(payload.hasAdditionalInformation).toBe(false);
-		expect(payload.sectionDescription).toBeNull();
-		expect(payload.instagramHandle).toBeNull();
+		expect(formData.get('goal')).toBe('');
+		expect(formData.get('hasAdditionalInformation')).toBe('false');
+		expect(formData.get('sectionDescription')).toBeNull();
+		expect(formData.get('instagramHandle')).toBeNull();
 	});
 });

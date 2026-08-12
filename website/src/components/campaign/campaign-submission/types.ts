@@ -31,7 +31,6 @@ export type SubmissionLabels = {
 	accessPrivateDescription: string;
 	accessRecommended: string;
 	program: string;
-	primaryImage: string;
 	campaignBackground: string;
 	uploadImage: string;
 	removeUploadedImage: string;
@@ -81,31 +80,39 @@ export type { CampaignSubmissionFormValues };
 
 export type CampaignImageSelection = { type: 'default'; id: number } | { type: 'upload'; file: File } | null;
 
-type CampaignSubmissionImageUploadField = {
+export type CampaignSubmissionImageUploadField = {
+	inputRef: RefObject<HTMLInputElement | null>;
 	previewUrl: string | null;
 	error: string | null;
 	onChange: (file: File | null) => void;
+	setError: (error: string | null) => void;
+	clear: () => void;
 };
 
-export type CampaignSubmissionStepProps = {
+export type ProgramStepProps = {
 	form: UseFormReturn<CampaignSubmissionFormValues>;
 	labels: SubmissionLabels;
 	programs: PublicSubmissionProgramOption[];
 	programsLoading: boolean;
 	programsError: string | null;
-	primaryImageInputRef: RefObject<HTMLInputElement | null>;
+};
+
+export type DetailsStepProps = {
+	form: UseFormReturn<CampaignSubmissionFormValues>;
+	labels: SubmissionLabels;
+	primaryImage: CampaignSubmissionImageUploadField;
 	imageSelection: CampaignImageSelection;
 	defaultImages: CampaignDefaultImageOption[];
 	defaultImagesLoading: boolean;
 	defaultImagesError: string | null;
-	uploadPreviewUrl: string | null;
 	onSelectDefaultImage: (id: number) => void;
-	onImageChange: (file: File | null) => void;
-	imageError: string | null;
+};
+
+export type AboutStepProps = {
+	form: UseFormReturn<CampaignSubmissionFormValues>;
+	labels: SubmissionLabels;
+	profilePicture: CampaignSubmissionImageUploadField;
+	sectionImage: CampaignSubmissionImageUploadField;
 	submitError: string | null;
 	isSubmitting: boolean;
-	profilePictureInputRef: RefObject<HTMLInputElement | null>;
-	profilePicture: CampaignSubmissionImageUploadField;
-	sectionImageInputRef: RefObject<HTMLInputElement | null>;
-	sectionImage: CampaignSubmissionImageUploadField;
 };

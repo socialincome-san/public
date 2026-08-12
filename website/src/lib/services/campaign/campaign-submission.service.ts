@@ -188,6 +188,16 @@ export class CampaignSubmissionService extends BaseService {
 		return this.uploadImage(image, cleanupState);
 	}
 
+	private failDefaultImage(defaultImageId: number, reason: string, assetFolderId: number | null = null) {
+		this.logger.warn('Campaign submission default image invalid', {
+			defaultImageId,
+			reason,
+			assetFolderId,
+		});
+
+		return this.resultFail('default-image-invalid', 400);
+	}
+
 	private async resolveImage(
 		imageSource: CampaignSubmissionImageSource,
 	): Promise<ServiceResult<CampaignSubmissionImageValidation>> {
@@ -198,39 +208,18 @@ export class CampaignSubmissionService extends BaseService {
 		try {
 			const asset = await this.storyblokManagementService.getAsset(imageSource.defaultImageId);
 			if (!asset) {
-				this.logger.warn('Campaign submission default image invalid', {
-					defaultImageId: imageSource.defaultImageId,
-					reason: 'asset-not-found',
-					assetFolderId: null,
-				});
-
-				return this.resultFail('default-image-invalid', 400);
+				return this.failDefaultImage(imageSource.defaultImageId, 'asset-not-found');
 			}
 
 			if (asset.assetFolderId !== campaignSubmissionConfig.storyblokCampaignDefaultImagesFolderId) {
-				this.logger.warn('Campaign submission default image invalid', {
-					defaultImageId: imageSource.defaultImageId,
-					reason: 'wrong-folder',
-					assetFolderId: asset.assetFolderId,
-				});
-
-				return this.resultFail('default-image-invalid', 400);
+				return this.failDefaultImage(imageSource.defaultImageId, 'wrong-folder', asset.assetFolderId);
 			}
 
 			const buffer = await this.storyblokManagementService.downloadAssetBuffer(asset.filename);
 			const declaredMimeType = asset.contentType ?? '';
 			const validation = validateCampaignSubmissionImageBuffer(buffer, declaredMimeType, filenameFromUrl(asset.filename));
 			if (!validation.success) {
-				this.logger.warn('Campaign submission default image invalid', {
-					defaultImageId: imageSource.defaultImageId,
-					reason: validation.error,
-					assetFolderId: asset.assetFolderId,
-				});
-
-				return this.resultFail(
-					validation.error === 'image-format-unsupported' ? 'default-image-invalid' : validation.error,
-					400,
-				);
+				return this.failDefaultImage(imageSource.defaultImageId, validation.error, asset.assetFolderId);
 			}
 
 			return this.resultOk(validation.data);

@@ -4,8 +4,8 @@ import {
 	isCampaignSubmissionImageErrorCode,
 	parseCampaignSubmissionDefaultImageId,
 	parseCampaignSubmissionFields,
+	parseCampaignSubmissionImageFile,
 	parseOptionalCampaignSubmissionImage,
-	validateCampaignSubmissionImageBuffer,
 	type CampaignSubmissionErrorCode,
 	type CampaignSubmissionImageMultipartField,
 	type CampaignSubmissionImageSource,
@@ -42,8 +42,7 @@ const resolveImageSource = async (
 	}
 
 	if (hasUpload && imageField instanceof File) {
-		const imageBuffer = Buffer.from(await imageField.arrayBuffer());
-		const imageResult = validateCampaignSubmissionImageBuffer(imageBuffer, imageField.type, imageField.name);
+		const imageResult = await parseCampaignSubmissionImageFile(imageField);
 		if (!imageResult.success) {
 			return { success: false, error: imageResult.error, field: 'primaryImage' };
 		}

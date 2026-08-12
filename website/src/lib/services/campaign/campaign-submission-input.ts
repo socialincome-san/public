@@ -76,25 +76,7 @@ const campaignSubmissionErrorCodeSet = new Set<string>(campaignSubmissionErrorCo
 export const isCampaignSubmissionErrorCode = (value: string): value is CampaignSubmissionErrorCode =>
 	campaignSubmissionErrorCodeSet.has(value);
 
-export type CampaignSubmissionWirePayload = {
-	title: string;
-	description: string;
-	goal: number | null;
-	currency: CampaignSubmissionAllowedCurrency;
-	endDate: string;
-	programId: string;
-	public: boolean;
-	creatorName: string;
-	quote: string;
-	hasAdditionalInformation: boolean;
-	sectionDescription: string | null;
-	instagramHandle: string | null;
-	xHandle: string | null;
-	linkWebsite: string | null;
-	tiktokHandle: string | null;
-};
-
-export type CampaignSubmissionWireImages = {
+export type CampaignSubmissionFormImages = {
 	primaryImage?: File;
 	defaultImageId?: number;
 	profilePicture?: File;
@@ -103,7 +85,7 @@ export type CampaignSubmissionWireImages = {
 
 const sanitizeText = (value: string) => value.replace(CONTROL_CHARACTERS_REGEX, '').trim();
 
-const optionalSanitizedText = (maxLength: number, tooLongCode: CampaignSubmissionErrorCode) =>
+const optionalSanitizedText = (maxLength: number, tooLongCode: CampaignSubmissionErrorCode, msg: ErrorMessage) =>
 	z
 		.union([z.string(), z.null(), z.undefined()])
 		.transform((value) => {
@@ -115,7 +97,7 @@ const optionalSanitizedText = (maxLength: number, tooLongCode: CampaignSubmissio
 
 			return sanitized.length > 0 ? sanitized : null;
 		})
-		.refine((value) => value === null || value.length <= maxLength, tooLongCode);
+		.refine((value) => value === null || value.length <= maxLength, msg(tooLongCode));
 
 const normalizeSocialHandle = (value: string) => {
 	const sanitized = sanitizeText(value);
@@ -125,7 +107,7 @@ const normalizeSocialHandle = (value: string) => {
 
 const isValidSocialHandle = (value: string) => SOCIAL_HANDLE_REGEX.test(value) && !value.includes('..') && value.length > 0;
 
-const optionalSocialHandle = () =>
+const optionalSocialHandleSchema = (msg: ErrorMessage) =>
 	z.union([z.string(), z.null(), z.undefined()]).transform((value, ctx) => {
 		if (value === null || value === undefined) {
 			return null;
@@ -137,13 +119,13 @@ const optionalSocialHandle = () =>
 		}
 
 		if (handle.length > campaignSubmissionConfig.maxHandleLength) {
-			ctx.addIssue({ code: 'custom', message: 'handle-too-long' });
+			ctx.addIssue({ code: 'custom', message: msg('handle-too-long') });
 
 			return z.NEVER;
 		}
 
 		if (!isValidSocialHandle(handle)) {
-			ctx.addIssue({ code: 'custom', message: 'handle-invalid' });
+			ctx.addIssue({ code: 'custom', message: msg('handle-invalid') });
 
 			return z.NEVER;
 		}
@@ -165,11 +147,24 @@ const isSafeWebsiteUrl = (value: string) => {
 	}
 };
 
-const optionalWebsiteUrl = () =>
-	optionalSanitizedText(campaignSubmissionConfig.maxLinkLength, 'link-too-long').refine(
+const optionalWebsiteUrlSchema = (msg: ErrorMessage) =>
+	optionalSanitizedText(campaignSubmissionConfig.maxLinkLength, 'link-too-long', msg).refine(
 		(value) => value === null || isSafeWebsiteUrl(value),
-		'link-unsafe',
+		msg('link-unsafe'),
 	);
+
+const createCampaignSubmissionAdditionalFieldsSchema = (msg: ErrorMessage) =>
+	z.object({
+		sectionDescription: optionalSanitizedText(
+			campaignSubmissionConfig.maxSectionDescriptionLength,
+			'section-description-too-long',
+			msg,
+		),
+		instagramHandle: optionalSocialHandleSchema(msg),
+		xHandle: optionalSocialHandleSchema(msg),
+		linkWebsite: optionalWebsiteUrlSchema(msg),
+		tiktokHandle: optionalSocialHandleSchema(msg),
+	});
 
 const isAllowedCurrency = (value: string): value is CampaignSubmissionAllowedCurrency =>
 	campaignSubmissionConfig.allowedCurrencies.includes(value as CampaignSubmissionAllowedCurrency);
@@ -216,50 +211,19 @@ const creatorNameRule = (msg: ErrorMessage) =>
 const quoteRule = (msg: ErrorMessage) =>
 	z.string().min(1, msg('quote-required')).max(campaignSubmissionConfig.maxQuoteLength, msg('quote-too-long'));
 
+/** Client-side quote may be empty; the form fills the placeholder before submit. */
+const optionalClientQuoteRule = (msg: ErrorMessage) =>
+	z.string().max(campaignSubmissionConfig.maxQuoteLength, msg('quote-too-long'));
+
 const programIdRule = (msg: ErrorMessage) => z.string().trim().min(1, msg('program-required'));
 
-const validateClientSectionDescription = (value: string | undefined): CampaignSubmissionErrorCode | null => {
-	const sectionDescription = value?.trim() ?? '';
-	if (sectionDescription.length > campaignSubmissionConfig.maxSectionDescriptionLength) {
-		return 'section-description-too-long';
+export const resolveCampaignSubmissionQuote = (quote: string, fallback: string) => {
+	const sanitizedQuote = sanitizeText(quote);
+	if (sanitizedQuote.length > 0) {
+		return sanitizedQuote;
 	}
 
-	return null;
-};
-
-const validateClientWebsiteUrl = (value: string | undefined): CampaignSubmissionErrorCode | null => {
-	const website = value?.trim() ?? '';
-	if (!website) {
-		return null;
-	}
-
-	if (website.length > campaignSubmissionConfig.maxLinkLength) {
-		return 'link-too-long';
-	}
-
-	if (!isSafeWebsiteUrl(website)) {
-		return 'link-unsafe';
-	}
-
-	return null;
-};
-
-const validateClientSocialHandle = (value: string | undefined): CampaignSubmissionErrorCode | null => {
-	const rawHandle = value?.trim() ?? '';
-	if (!rawHandle) {
-		return null;
-	}
-
-	const handle = normalizeSocialHandle(rawHandle);
-	if (handle.length > campaignSubmissionConfig.maxHandleLength) {
-		return 'handle-too-long';
-	}
-
-	if (!isValidSocialHandle(handle)) {
-		return 'handle-invalid';
-	}
-
-	return null;
+	return sanitizeText(fallback);
 };
 
 const campaignSubmissionFieldsSchema = z
@@ -305,11 +269,12 @@ const campaignSubmissionFieldsSchema = z
 		sectionDescription: optionalSanitizedText(
 			campaignSubmissionConfig.maxSectionDescriptionLength,
 			'section-description-too-long',
+			asErrorCode,
 		),
-		instagramHandle: optionalSocialHandle(),
-		xHandle: optionalSocialHandle(),
-		linkWebsite: optionalWebsiteUrl(),
-		tiktokHandle: optionalSocialHandle(),
+		instagramHandle: optionalSocialHandleSchema(asErrorCode),
+		xHandle: optionalSocialHandleSchema(asErrorCode),
+		linkWebsite: optionalWebsiteUrlSchema(asErrorCode),
+		tiktokHandle: optionalSocialHandleSchema(asErrorCode),
 	})
 	.transform((values) => {
 		if (values.hasAdditionalInformation) {
@@ -496,6 +461,16 @@ export const parseCampaignSubmissionDefaultImageId = (
 	return { success: true, data: parsed };
 };
 
+export const parseCampaignSubmissionImageFile = async (
+	file: File,
+): Promise<
+	{ success: true; data: CampaignSubmissionImageValidation } | { success: false; error: CampaignSubmissionErrorCode }
+> => {
+	const imageBuffer = Buffer.from(await file.arrayBuffer());
+
+	return validateCampaignSubmissionImageBuffer(imageBuffer, file.type, file.name);
+};
+
 export const parseOptionalCampaignSubmissionImage = async (
 	formData: FormData,
 	fieldName: string,
@@ -507,8 +482,7 @@ export const parseOptionalCampaignSubmissionImage = async (
 		return { success: true, data: null };
 	}
 
-	const imageBuffer = Buffer.from(await imageField.arrayBuffer());
-	const imageResult = validateCampaignSubmissionImageBuffer(imageBuffer, imageField.type, imageField.name);
+	const imageResult = await parseCampaignSubmissionImageFile(imageField);
 	if (!imageResult.success) {
 		return { success: false, error: imageResult.error };
 	}
@@ -519,22 +493,67 @@ export const parseOptionalCampaignSubmissionImage = async (
 	};
 };
 
+const refineCampaignSubmissionGoalAndEndDate = (
+	values: {
+		hasGoal: boolean;
+		goal?: string | number | null;
+		endDate: string;
+	},
+	ctx: z.RefinementCtx,
+	message: ErrorMessage,
+) => {
+	if (values.hasGoal) {
+		const parsedGoal = parseCampaignSubmissionGoalInput(values.goal === undefined ? null : values.goal);
+		if (parsedGoal === null || parsedGoal === 'invalid') {
+			ctx.addIssue({ code: 'custom', path: ['goal'], message: message('goal-positive') });
+		}
+	}
+
+	if (!values.endDate.trim()) {
+		ctx.addIssue({ code: 'custom', path: ['endDate'], message: message('end-date-required') });
+
+		return;
+	}
+
+	const date = parseCampaignSubmissionEndDate(values.endDate);
+	if (!date) {
+		ctx.addIssue({ code: 'custom', path: ['endDate'], message: message('end-date-invalid') });
+
+		return;
+	}
+
+	const endDateError = validateCampaignSubmissionEndDate(date);
+	if (endDateError) {
+		ctx.addIssue({ code: 'custom', path: ['endDate'], message: message(endDateError) });
+	}
+};
+
+const campaignSubmissionDetailsObjectSchema = (message: ErrorMessage) =>
+	z.object({
+		title: z.string().transform(sanitizeText).pipe(titleRule(message)),
+		description: z.string().transform(sanitizeText).pipe(descriptionRule(message)),
+		hasGoal: z.boolean(),
+		goal: z.union([z.string(), z.number(), z.undefined(), z.null()]).optional(),
+		currency: z.enum(campaignSubmissionConfig.allowedCurrencies, {
+			errorMap: () => ({ message: message('currency-unsupported') }),
+		}),
+		durationPreset: z.enum(campaignSubmissionDurationPresets),
+		endDate: z.string(),
+		isPublic: z.boolean(),
+	});
+
+/** Validates only the details step — safe to run before about-step fields are filled. */
+export const createCampaignSubmissionDetailsSchema = (message: (code: CampaignSubmissionErrorCode) => string) =>
+	campaignSubmissionDetailsObjectSchema(message).superRefine((values, ctx) => {
+		refineCampaignSubmissionGoalAndEndDate(values, ctx, message);
+	});
+
 export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmissionErrorCode) => string) =>
-	z
-		.object({
-			title: z.string().trim().pipe(titleRule(message)),
-			description: z.string().trim().pipe(descriptionRule(message)),
-			hasGoal: z.boolean(),
-			goal: z.union([z.string(), z.number(), z.undefined(), z.null()]).optional(),
-			currency: z.enum(campaignSubmissionConfig.allowedCurrencies, {
-				errorMap: () => ({ message: message('currency-unsupported') }),
-			}),
-			durationPreset: z.enum(campaignSubmissionDurationPresets),
-			endDate: z.string(),
-			isPublic: z.boolean(),
+	campaignSubmissionDetailsObjectSchema(message)
+		.extend({
 			programId: programIdRule(message),
-			creatorName: z.string().trim().pipe(creatorNameRule(message)),
-			quote: z.string().trim().pipe(quoteRule(message)),
+			creatorName: z.string().transform(sanitizeText).pipe(creatorNameRule(message)),
+			quote: z.string().transform(sanitizeText).pipe(optionalClientQuoteRule(message)),
 			hasAdditionalInformation: z.boolean(),
 			sectionDescription: z.string().optional(),
 			instagramHandle: z.string().optional(),
@@ -543,120 +562,69 @@ export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmi
 			tiktokHandle: z.string().optional(),
 		})
 		.superRefine((values, ctx) => {
-			if (values.hasGoal) {
-				const parsedGoal = parseCampaignSubmissionGoalInput(values.goal === undefined ? null : values.goal);
-				if (parsedGoal === null || parsedGoal === 'invalid') {
-					ctx.addIssue({ code: 'custom', path: ['goal'], message: message('goal-positive') });
-				}
-			}
-
-			if (values.durationPreset === 'other' || !values.endDate.trim()) {
-				if (!values.endDate.trim()) {
-					ctx.addIssue({ code: 'custom', path: ['endDate'], message: message('end-date-required') });
-
-					return;
-				}
-			}
-
-			const date = parseCampaignSubmissionEndDate(values.endDate);
-			if (!date) {
-				ctx.addIssue({ code: 'custom', path: ['endDate'], message: message('end-date-invalid') });
-
-				return;
-			}
-
-			const endDateError = validateCampaignSubmissionEndDate(date);
-			if (endDateError) {
-				ctx.addIssue({ code: 'custom', path: ['endDate'], message: message(endDateError) });
-			}
+			refineCampaignSubmissionGoalAndEndDate(values, ctx, message);
 
 			if (!values.hasAdditionalInformation) {
 				return;
 			}
 
-			const sectionDescriptionError = validateClientSectionDescription(values.sectionDescription);
-			if (sectionDescriptionError) {
-				ctx.addIssue({
-					code: 'custom',
-					path: ['sectionDescription'],
-					message: message(sectionDescriptionError),
-				});
-			}
+			const additionalResult = createCampaignSubmissionAdditionalFieldsSchema(message).safeParse({
+				sectionDescription: values.sectionDescription,
+				instagramHandle: values.instagramHandle,
+				xHandle: values.xHandle,
+				linkWebsite: values.linkWebsite,
+				tiktokHandle: values.tiktokHandle,
+			});
 
-			const websiteError = validateClientWebsiteUrl(values.linkWebsite);
-			if (websiteError) {
-				ctx.addIssue({ code: 'custom', path: ['linkWebsite'], message: message(websiteError) });
-			}
-
-			for (const path of ['instagramHandle', 'xHandle', 'tiktokHandle'] as const) {
-				const handleError = validateClientSocialHandle(values[path]);
-				if (handleError) {
-					ctx.addIssue({ code: 'custom', path: [path], message: message(handleError) });
+			if (!additionalResult.success) {
+				for (const issue of additionalResult.error.issues) {
+					ctx.addIssue({
+						code: 'custom',
+						path: issue.path,
+						message: issue.message,
+					});
 				}
 			}
 		});
 
 export type CampaignSubmissionFormValues = z.infer<ReturnType<typeof createCampaignSubmissionFormSchema>>;
 
-const optionalTrimmedText = (value: string | undefined) => {
-	const trimmed = value?.trim() ?? '';
-
-	return trimmed.length > 0 ? trimmed : null;
-};
-
-const optionalWireSocialHandle = (value: string | undefined) => {
-	const handle = normalizeSocialHandle(value ?? '');
-
-	return handle.length > 0 ? handle : null;
-};
-
-export const toCampaignSubmissionWirePayload = (values: CampaignSubmissionFormValues): CampaignSubmissionWirePayload => {
-	const parsedGoal = values.hasGoal
-		? parseCampaignSubmissionGoalInput(values.goal === undefined ? null : values.goal)
-		: null;
-	const goal = parsedGoal === 'invalid' || parsedGoal === null ? null : parsedGoal;
-
-	return {
-		title: values.title,
-		description: values.description,
-		goal,
-		currency: values.currency,
-		endDate: values.endDate,
-		programId: values.programId,
-		public: values.isPublic,
-		creatorName: values.creatorName,
-		quote: values.quote,
-		hasAdditionalInformation: values.hasAdditionalInformation,
-		sectionDescription: values.hasAdditionalInformation ? optionalTrimmedText(values.sectionDescription) : null,
-		instagramHandle: values.hasAdditionalInformation ? optionalWireSocialHandle(values.instagramHandle) : null,
-		xHandle: values.hasAdditionalInformation ? optionalWireSocialHandle(values.xHandle) : null,
-		linkWebsite: values.hasAdditionalInformation ? optionalTrimmedText(values.linkWebsite) : null,
-		tiktokHandle: values.hasAdditionalInformation ? optionalWireSocialHandle(values.tiktokHandle) : null,
-	};
-};
+export const campaignSubmissionDetailsFieldNames = [
+	'title',
+	'description',
+	'hasGoal',
+	'goal',
+	'currency',
+	'durationPreset',
+	'endDate',
+	'isPublic',
+] as const satisfies ReadonlyArray<keyof CampaignSubmissionFormValues>;
 
 export const appendCampaignSubmissionFormData = (
 	formData: FormData,
-	payload: CampaignSubmissionWirePayload,
-	images: CampaignSubmissionWireImages = {},
+	values: CampaignSubmissionFormValues,
+	images: CampaignSubmissionFormImages = {},
 ): FormData => {
-	formData.append('title', payload.title);
-	formData.append('description', payload.description);
-	formData.append('goal', payload.goal === null ? '' : String(payload.goal));
-	formData.append('currency', payload.currency);
-	formData.append('endDate', payload.endDate);
-	formData.append('programId', payload.programId);
-	formData.append('public', payload.public ? 'true' : 'false');
-	formData.append('creatorName', payload.creatorName);
-	formData.append('quote', payload.quote);
-	formData.append('hasAdditionalInformation', payload.hasAdditionalInformation ? 'true' : 'false');
+	const parsedGoal = values.hasGoal ? parseCampaignSubmissionGoalInput(values.goal === undefined ? null : values.goal) : null;
+	const goal = parsedGoal === 'invalid' || parsedGoal === null ? null : parsedGoal;
 
-	if (payload.hasAdditionalInformation) {
-		formData.append('sectionDescription', payload.sectionDescription ?? '');
-		formData.append('instagramHandle', payload.instagramHandle ?? '');
-		formData.append('xHandle', payload.xHandle ?? '');
-		formData.append('linkWebsite', payload.linkWebsite ?? '');
-		formData.append('tiktokHandle', payload.tiktokHandle ?? '');
+	formData.append('title', values.title);
+	formData.append('description', values.description);
+	formData.append('goal', goal === null ? '' : String(goal));
+	formData.append('currency', values.currency);
+	formData.append('endDate', values.endDate);
+	formData.append('programId', values.programId);
+	formData.append('public', values.isPublic ? 'true' : 'false');
+	formData.append('creatorName', values.creatorName);
+	formData.append('quote', values.quote);
+	formData.append('hasAdditionalInformation', values.hasAdditionalInformation ? 'true' : 'false');
+
+	if (values.hasAdditionalInformation) {
+		formData.append('sectionDescription', values.sectionDescription ?? '');
+		formData.append('instagramHandle', values.instagramHandle ?? '');
+		formData.append('xHandle', values.xHandle ?? '');
+		formData.append('linkWebsite', values.linkWebsite ?? '');
+		formData.append('tiktokHandle', values.tiktokHandle ?? '');
 	}
 
 	if (images.primaryImage) {
@@ -675,17 +643,5 @@ export const appendCampaignSubmissionFormData = (
 
 	return formData;
 };
-
-export const campaignSubmissionDetailsFieldNames = [
-	'title',
-	'description',
-	'hasGoal',
-	'goal',
-	'currency',
-	'durationPreset',
-	'endDate',
-	'isPublic',
-	'programId',
-] as const;
 
 export const campaignSubmissionDefaultCurrency = Currency.CHF;

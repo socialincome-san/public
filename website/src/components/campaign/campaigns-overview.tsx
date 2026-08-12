@@ -82,7 +82,6 @@ export const CampaignsOverview = async ({
 		accessPrivateDescription: translator.t('campaigns-page.submission.access-private-description'),
 		accessRecommended: translator.t('campaigns-page.submission.access-recommended'),
 		program: translator.t('campaigns-page.submission.program'),
-		primaryImage: translator.t('campaigns-page.submission.primary-image'),
 		campaignBackground: translator.t('campaigns-page.submission.campaign-background'),
 		uploadImage: translator.t('campaigns-page.submission.upload-image'),
 		removeUploadedImage: translator.t('campaigns-page.submission.remove-uploaded-image'),

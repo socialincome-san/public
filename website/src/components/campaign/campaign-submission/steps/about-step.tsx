@@ -4,23 +4,10 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { Switch } from '@/components/switch';
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { cn } from '@/lib/utils/cn';
-import { Camera, Trash2, Upload } from 'lucide-react';
-import { useEffect, useId, useRef } from 'react';
-import type { CampaignSubmissionFormValues, CampaignSubmissionStepProps } from '../types';
-
-type Props = Pick<
-	CampaignSubmissionStepProps,
-	| 'form'
-	| 'labels'
-	| 'profilePictureInputRef'
-	| 'profilePicture'
-	| 'sectionImageInputRef'
-	| 'sectionImage'
-	| 'submitError'
-	| 'isSubmitting'
->;
+import { useEffect, useRef } from 'react';
+import { ImageUploadField } from '../image-upload-field';
+import type { AboutStepProps, CampaignSubmissionFormValues } from '../types';
 
 type AdditionalLinkField = {
 	name: keyof Pick<CampaignSubmissionFormValues, 'instagramHandle' | 'xHandle' | 'linkWebsite' | 'tiktokHandle'>;
@@ -37,29 +24,22 @@ const ADDITIONAL_FIELD_NAMES = [
 	'tiktokHandle',
 ] as const satisfies readonly (keyof CampaignSubmissionFormValues)[];
 
+const textareaClassName = cn(
+	'placeholder:text-muted-foreground border-border text-foreground w-full min-w-0 rounded-2xl border bg-transparent px-3 py-2 text-sm shadow-xs outline-hidden',
+	'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+	'disabled:opacity-50',
+);
+
 export const AboutStep = ({
 	form,
 	labels,
-	profilePictureInputRef,
 	profilePicture,
-	sectionImageInputRef,
 	sectionImage,
 	submitError,
 	isSubmitting,
-}: Props) => {
-	const profileHintId = useId();
-	const profileErrorId = useId();
-	const sectionHintId = useId();
-	const sectionErrorId = useId();
-	const profileErrorRef = useRef<HTMLParagraphElement>(null);
-	const sectionErrorRef = useRef<HTMLParagraphElement>(null);
+}: AboutStepProps) => {
 	const submitErrorRef = useRef<HTMLParagraphElement>(null);
 	const hasAdditionalInformation = form.watch('hasAdditionalInformation');
-	const textareaClassName = cn(
-		'placeholder:text-muted-foreground border-border text-foreground w-full min-w-0 rounded-2xl border bg-transparent px-3 py-2 text-sm shadow-xs outline-hidden',
-		'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
-		'disabled:opacity-50',
-	);
 
 	const additionalLinkFields: AdditionalLinkField[] = [
 		{
@@ -74,25 +54,11 @@ export const AboutStep = ({
 	];
 
 	useEffect(() => {
-		if (profilePicture.error) {
-			profileErrorRef.current?.scrollIntoView({ block: 'nearest' });
-			profileErrorRef.current?.focus();
-
-			return;
-		}
-
-		if (sectionImage.error) {
-			sectionErrorRef.current?.scrollIntoView({ block: 'nearest' });
-			sectionErrorRef.current?.focus();
-
-			return;
-		}
-
 		if (submitError) {
 			submitErrorRef.current?.scrollIntoView({ block: 'nearest' });
 			submitErrorRef.current?.focus();
 		}
-	}, [profilePicture.error, sectionImage.error, submitError]);
+	}, [submitError]);
 
 	return (
 		<div className="flex flex-col gap-6 px-6">
@@ -112,70 +78,19 @@ export const AboutStep = ({
 
 			<p className="text-muted-foreground -mt-2 text-sm">{labels.aboutStepDescription}</p>
 
-			<div className="flex flex-col gap-3">
-				<Label className={cn(profilePicture.error && 'text-destructive')}>{labels.profilePicture}</Label>
-				<div className="border-border relative aspect-[16/10] w-full rounded-2xl border border-dashed">
-					<button
-						type="button"
-						disabled={isSubmitting}
-						className="hover:bg-muted/40 focus-visible:ring-ring absolute inset-0 rounded-2xl focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-						aria-label={profilePicture.previewUrl ? labels.editProfilePicture : labels.profilePicture}
-						aria-describedby={[profileHintId, profilePicture.error ? profileErrorId : null].filter(Boolean).join(' ')}
-						onClick={() => profilePictureInputRef.current?.click()}
-					/>
-					<div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2">
-						{profilePicture.previewUrl ? (
-							<span className="border-primary size-32 overflow-hidden rounded-full border-2">
-								{/* eslint-disable-next-line @next/next/no-img-element -- local object URL preview */}
-								<img src={profilePicture.previewUrl} alt="" className="size-full object-cover" />
-							</span>
-						) : (
-							<>
-								<span className="bg-muted text-muted-foreground flex size-32 items-center justify-center rounded-full">
-									<Camera className="size-8" aria-hidden />
-								</span>
-								<span className="text-muted-foreground text-sm">{labels.profilePictureHint}</span>
-							</>
-						)}
-					</div>
-					{profilePicture.previewUrl ? (
-						<button
-							type="button"
-							disabled={isSubmitting}
-							className="bg-background text-foreground hover:bg-muted absolute top-2 right-2 flex size-8 items-center justify-center rounded-full border shadow-xs disabled:pointer-events-none disabled:opacity-50"
-							aria-label={labels.removeUploadedImage}
-							onClick={() => profilePicture.onChange(null)}
-						>
-							<Trash2 className="size-3.5" aria-hidden />
-						</button>
-					) : null}
-				</div>
-				<input
-					ref={profilePictureInputRef}
-					type="file"
-					accept={campaignSubmissionConfig.permittedImageMimeTypes.join(',')}
-					className="sr-only"
-					tabIndex={-1}
-					disabled={isSubmitting}
-					onChange={(event) => {
-						profilePicture.onChange(event.target.files?.[0] ?? null);
-					}}
-				/>
-				<p id={profileHintId} className="text-muted-foreground text-xs">
-					{labels.imageHint}
-				</p>
-				{profilePicture.error ? (
-					<p
-						id={profileErrorId}
-						ref={profileErrorRef}
-						className="text-destructive text-sm outline-none"
-						role="alert"
-						tabIndex={-1}
-					>
-						{profilePicture.error}
-					</p>
-				) : null}
-			</div>
+			<ImageUploadField
+				variant="avatar"
+				label={labels.profilePicture}
+				previewUrl={profilePicture.previewUrl}
+				error={profilePicture.error}
+				inputRef={profilePicture.inputRef}
+				onChange={profilePicture.onChange}
+				disabled={isSubmitting}
+				hint={labels.imageHint}
+				uploadLabel={labels.profilePictureHint}
+				editLabel={labels.editProfilePicture}
+				removeLabel={labels.removeUploadedImage}
+			/>
 
 			<FormField
 				control={form.control}
@@ -240,61 +155,18 @@ export const AboutStep = ({
 							)}
 						/>
 
-						<div className="flex flex-col gap-3">
-							<Label className={cn(sectionImage.error && 'text-destructive')}>{labels.sectionImage}</Label>
-							{sectionImage.previewUrl ? (
-								<div className="border-border relative aspect-[16/10] w-full overflow-hidden rounded-2xl border">
-									{/* eslint-disable-next-line @next/next/no-img-element -- local object URL preview */}
-									<img src={sectionImage.previewUrl} alt="" className="size-full object-cover" />
-									<button
-										type="button"
-										disabled={isSubmitting}
-										className="bg-background text-foreground hover:bg-muted absolute top-2 right-2 flex size-8 items-center justify-center rounded-full border shadow-xs disabled:pointer-events-none disabled:opacity-50"
-										aria-label={labels.removeUploadedImage}
-										onClick={() => sectionImage.onChange(null)}
-									>
-										<Trash2 className="size-3.5" aria-hidden />
-									</button>
-								</div>
-							) : (
-								<button
-									type="button"
-									disabled={isSubmitting}
-									className="border-border text-muted-foreground hover:bg-muted/40 flex aspect-[16/10] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-dashed disabled:pointer-events-none disabled:opacity-50"
-									aria-label={labels.sectionImage}
-									aria-describedby={[sectionHintId, sectionImage.error ? sectionErrorId : null].filter(Boolean).join(' ')}
-									onClick={() => sectionImageInputRef.current?.click()}
-								>
-									<Upload className="size-6" aria-hidden />
-									<span className="text-sm">{labels.uploadImage}</span>
-								</button>
-							)}
-							<input
-								ref={sectionImageInputRef}
-								type="file"
-								accept={campaignSubmissionConfig.permittedImageMimeTypes.join(',')}
-								className="sr-only"
-								tabIndex={-1}
-								disabled={isSubmitting}
-								onChange={(event) => {
-									sectionImage.onChange(event.target.files?.[0] ?? null);
-								}}
-							/>
-							<p id={sectionHintId} className="text-muted-foreground text-xs">
-								{labels.imageHint}
-							</p>
-							{sectionImage.error ? (
-								<p
-									id={sectionErrorId}
-									ref={sectionErrorRef}
-									className="text-destructive text-sm outline-none"
-									role="alert"
-									tabIndex={-1}
-								>
-									{sectionImage.error}
-								</p>
-							) : null}
-						</div>
+						<ImageUploadField
+							variant="cover"
+							label={labels.sectionImage}
+							previewUrl={sectionImage.previewUrl}
+							error={sectionImage.error}
+							inputRef={sectionImage.inputRef}
+							onChange={sectionImage.onChange}
+							disabled={isSubmitting}
+							hint={labels.imageHint}
+							uploadLabel={labels.uploadImage}
+							removeLabel={labels.removeUploadedImage}
+						/>
 
 						{additionalLinkFields.map(({ name, label, autoComplete, placeholder }) => (
 							<FormField

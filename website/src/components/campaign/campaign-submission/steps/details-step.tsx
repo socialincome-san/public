@@ -13,22 +13,9 @@ import { cn } from '@/lib/utils/cn';
 import { addDays, format } from 'date-fns';
 import { Camera, Check, Trash2 } from 'lucide-react';
 import { useEffect, useId, useRef } from 'react';
-import type { CampaignSubmissionStepProps } from '../types';
+import type { DetailsStepProps } from '../types';
 
-type Props = Pick<
-	CampaignSubmissionStepProps,
-	| 'form'
-	| 'labels'
-	| 'primaryImageInputRef'
-	| 'imageSelection'
-	| 'defaultImages'
-	| 'defaultImagesLoading'
-	| 'defaultImagesError'
-	| 'uploadPreviewUrl'
-	| 'onSelectDefaultImage'
-	| 'onImageChange'
-	| 'imageError'
->;
+type Props = DetailsStepProps;
 
 const durationOptions: {
 	value: CampaignSubmissionDurationPreset;
@@ -68,15 +55,12 @@ const RemoveUploadedImageButton = ({
 export const DetailsStep = ({
 	form,
 	labels,
-	primaryImageInputRef,
+	primaryImage,
 	imageSelection,
 	defaultImages,
 	defaultImagesLoading,
 	defaultImagesError,
-	uploadPreviewUrl,
 	onSelectDefaultImage,
-	onImageChange,
-	imageError,
 }: Props) => {
 	const imageHintId = useId();
 	const imageErrorId = useId();
@@ -84,6 +68,7 @@ export const DetailsStep = ({
 	const durationPreset = form.watch('durationPreset');
 	const hasGoal = form.watch('hasGoal');
 	const isPublic = form.watch('isPublic');
+	const imageError = primaryImage.error;
 
 	useEffect(() => {
 		if (imageError) {
@@ -96,7 +81,7 @@ export const DetailsStep = ({
 
 	const previewSrc =
 		imageSelection?.type === 'upload'
-			? uploadPreviewUrl
+			? primaryImage.previewUrl
 			: imageSelection?.type === 'default'
 				? (defaultImages.find((image) => image.id === imageSelection.id)?.url ?? null)
 				: null;
@@ -299,7 +284,7 @@ export const DetailsStep = ({
 							<RemoveUploadedImageButton
 								ariaLabel={labels.removeUploadedImage}
 								className="size-8"
-								onRemove={() => onImageChange(null)}
+								onRemove={() => primaryImage.onChange(null)}
 							/>
 						) : null}
 					</div>
@@ -323,11 +308,11 @@ export const DetailsStep = ({
 							className="hover:bg-muted/40 flex size-full flex-col items-center justify-center gap-1 rounded-xl"
 							aria-checked={imageSelection?.type === 'upload'}
 							role="radio"
-							onClick={() => primaryImageInputRef.current?.click()}
+							onClick={() => primaryImage.inputRef.current?.click()}
 						>
-							{uploadPreviewUrl && imageSelection?.type === 'upload' ? (
+							{primaryImage.previewUrl && imageSelection?.type === 'upload' ? (
 								/* eslint-disable-next-line @next/next/no-img-element -- local object URL preview */
-								<img src={uploadPreviewUrl} alt="" className="absolute inset-0 size-full rounded-xl object-cover" />
+								<img src={primaryImage.previewUrl} alt="" className="absolute inset-0 size-full rounded-xl object-cover" />
 							) : (
 								<>
 									<Camera className="size-5" aria-hidden />
@@ -335,11 +320,11 @@ export const DetailsStep = ({
 								</>
 							)}
 						</button>
-						{uploadPreviewUrl && imageSelection?.type === 'upload' ? (
+						{primaryImage.previewUrl && imageSelection?.type === 'upload' ? (
 							<RemoveUploadedImageButton
 								ariaLabel={labels.removeUploadedImage}
 								className="size-5"
-								onRemove={() => onImageChange(null)}
+								onRemove={() => primaryImage.onChange(null)}
 							/>
 						) : null}
 					</div>
@@ -378,13 +363,13 @@ export const DetailsStep = ({
 
 				<input
 					id="campaign-primary-image"
-					ref={primaryImageInputRef}
+					ref={primaryImage.inputRef}
 					type="file"
 					accept={campaignSubmissionConfig.permittedImageMimeTypes.join(',')}
 					className="sr-only"
 					tabIndex={-1}
 					onChange={(event) => {
-						onImageChange(event.target.files?.[0] ?? null);
+						primaryImage.onChange(event.target.files?.[0] ?? null);
 					}}
 				/>
 				<p id={imageHintId} className="text-muted-foreground text-xs">
