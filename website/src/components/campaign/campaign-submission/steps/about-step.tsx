@@ -1,7 +1,7 @@
 'use client';
 
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { Switch } from '@/components/switch';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
