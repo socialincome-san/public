@@ -598,31 +598,23 @@ export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmi
 
 export type CampaignSubmissionFormValues = z.infer<ReturnType<typeof createCampaignSubmissionFormSchema>>;
 
+const optionalTrimmedText = (value: string | undefined) => {
+	const trimmed = value?.trim() ?? '';
+
+	return trimmed.length > 0 ? trimmed : null;
+};
+
+const optionalWireSocialHandle = (value: string | undefined) => {
+	const handle = normalizeSocialHandle(value ?? '');
+
+	return handle.length > 0 ? handle : null;
+};
+
 export const toCampaignSubmissionWirePayload = (values: CampaignSubmissionFormValues): CampaignSubmissionWirePayload => {
 	const parsedGoal = values.hasGoal
 		? parseCampaignSubmissionGoalInput(values.goal === undefined ? null : values.goal)
 		: null;
 	const goal = parsedGoal === 'invalid' || parsedGoal === null ? null : parsedGoal;
-
-	if (!values.hasAdditionalInformation) {
-		return {
-			title: values.title,
-			description: values.description,
-			goal,
-			currency: values.currency,
-			endDate: values.endDate,
-			programId: values.programId,
-			public: values.isPublic,
-			creatorName: values.creatorName,
-			quote: values.quote,
-			hasAdditionalInformation: false,
-			sectionDescription: null,
-			instagramHandle: null,
-			xHandle: null,
-			linkWebsite: null,
-			tiktokHandle: null,
-		};
-	}
 
 	return {
 		title: values.title,
@@ -634,12 +626,12 @@ export const toCampaignSubmissionWirePayload = (values: CampaignSubmissionFormVa
 		public: values.isPublic,
 		creatorName: values.creatorName,
 		quote: values.quote,
-		hasAdditionalInformation: true,
-		sectionDescription: values.sectionDescription?.trim() ? values.sectionDescription : null,
-		instagramHandle: values.instagramHandle?.trim() ? values.instagramHandle : null,
-		xHandle: values.xHandle?.trim() ? values.xHandle : null,
-		linkWebsite: values.linkWebsite?.trim() ? values.linkWebsite : null,
-		tiktokHandle: values.tiktokHandle?.trim() ? values.tiktokHandle : null,
+		hasAdditionalInformation: values.hasAdditionalInformation,
+		sectionDescription: values.hasAdditionalInformation ? optionalTrimmedText(values.sectionDescription) : null,
+		instagramHandle: values.hasAdditionalInformation ? optionalWireSocialHandle(values.instagramHandle) : null,
+		xHandle: values.hasAdditionalInformation ? optionalWireSocialHandle(values.xHandle) : null,
+		linkWebsite: values.hasAdditionalInformation ? optionalTrimmedText(values.linkWebsite) : null,
+		tiktokHandle: values.hasAdditionalInformation ? optionalWireSocialHandle(values.tiktokHandle) : null,
 	};
 };
 

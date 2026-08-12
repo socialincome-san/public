@@ -52,10 +52,7 @@ const resolveImageSource = async (
 			success: true,
 			data: {
 				kind: 'upload',
-				image: {
-					...imageResult.data,
-					buffer: imageBuffer,
-				},
+				image: imageResult.data,
 			},
 		};
 	}

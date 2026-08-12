@@ -60,6 +60,7 @@ const defaultFormValues = (): CampaignSubmissionFormValues => ({
 	linkWebsite: '',
 	tiktokHandle: '',
 });
+
 export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [currentStep, setCurrentStep] = useState<CampaignSubmissionStepId>('program');
 	const [programs, setPrograms] = useState<PublicSubmissionProgramOption[]>([]);
@@ -245,7 +246,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			: currentStep === 'details'
 				? defaultImagesLoading && imageSelection?.type !== 'upload'
 				: false;
-	const isSubmitDisabled = isSubmitting;
 
 	const onSelectDefaultImage = (id: number) => {
 		revokeUploadPreview();
@@ -557,7 +557,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 						currentStep={currentStep}
 						labels={labels}
 						isContinueDisabled={isContinueDisabled}
-						isSubmitDisabled={isSubmitDisabled}
 						isSubmitting={isSubmitting}
 						onContinue={() => {
 							void onContinue();

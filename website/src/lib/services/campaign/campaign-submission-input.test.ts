@@ -451,7 +451,7 @@ describe('campaign-submission-input', () => {
 		expect(formData.get('public')).toBe('false');
 		expect(formData.get('goal')).toBe('2500');
 		expect(formData.get('defaultImageId')).toBe('42');
-		expect(formData.get('instagramHandle')).toBe('@example');
+		expect(formData.get('instagramHandle')).toBe('example');
 
 		const result = parseCampaignSubmissionFields(formData);
 		expect(result.success).toBe(true);

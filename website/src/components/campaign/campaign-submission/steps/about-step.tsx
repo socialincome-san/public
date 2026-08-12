@@ -55,6 +55,11 @@ export const AboutStep = ({
 	const sectionErrorRef = useRef<HTMLParagraphElement>(null);
 	const submitErrorRef = useRef<HTMLParagraphElement>(null);
 	const hasAdditionalInformation = form.watch('hasAdditionalInformation');
+	const textareaClassName = cn(
+		'placeholder:text-muted-foreground border-border text-foreground w-full min-w-0 rounded-2xl border bg-transparent px-3 py-2 text-sm shadow-xs outline-hidden',
+		'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+		'disabled:opacity-50',
+	);
 
 	const additionalLinkFields: AdditionalLinkField[] = [
 		{
@@ -184,11 +189,7 @@ export const AboutStep = ({
 								rows={3}
 								placeholder={labels.quotePlaceholder}
 								disabled={isSubmitting}
-								className={cn(
-									'placeholder:text-muted-foreground border-border text-foreground w-full min-w-0 rounded-2xl border bg-transparent px-3 py-2 text-sm shadow-xs outline-hidden',
-									'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
-									'disabled:opacity-50',
-								)}
+								className={textareaClassName}
 							/>
 						</FormControl>
 						<p className="text-muted-foreground text-xs">{labels.quoteHint}</p>
@@ -231,11 +232,7 @@ export const AboutStep = ({
 											value={field.value ?? ''}
 											rows={4}
 											disabled={isSubmitting}
-											className={cn(
-												'placeholder:text-muted-foreground border-border text-foreground w-full min-w-0 rounded-2xl border bg-transparent px-3 py-2 text-sm shadow-xs outline-hidden',
-												'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
-												'disabled:opacity-50',
-											)}
+											className={textareaClassName}
 										/>
 									</FormControl>
 									<FormMessage />
