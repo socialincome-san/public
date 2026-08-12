@@ -30,14 +30,7 @@ const textareaClassName = cn(
 	'disabled:opacity-50',
 );
 
-export const AboutStep = ({
-	form,
-	labels,
-	profilePicture,
-	sectionImage,
-	submitError,
-	isSubmitting,
-}: AboutStepProps) => {
+export const AboutStep = ({ form, labels, profilePicture, sectionImage, submitError, isSubmitting }: AboutStepProps) => {
 	const submitErrorRef = useRef<HTMLParagraphElement>(null);
 	const hasAdditionalInformation = form.watch('hasAdditionalInformation');
 

@@ -598,14 +598,16 @@ export const campaignSubmissionDetailsFieldNames = [
 	'durationPreset',
 	'endDate',
 	'isPublic',
-] as const satisfies ReadonlyArray<keyof CampaignSubmissionFormValues>;
+] as const satisfies readonly (keyof CampaignSubmissionFormValues)[];
 
 export const appendCampaignSubmissionFormData = (
 	formData: FormData,
 	values: CampaignSubmissionFormValues,
 	images: CampaignSubmissionFormImages = {},
 ): FormData => {
-	const parsedGoal = values.hasGoal ? parseCampaignSubmissionGoalInput(values.goal === undefined ? null : values.goal) : null;
+	const parsedGoal = values.hasGoal
+		? parseCampaignSubmissionGoalInput(values.goal === undefined ? null : values.goal)
+		: null;
 	const goal = parsedGoal === 'invalid' || parsedGoal === null ? null : parsedGoal;
 
 	formData.append('title', values.title);

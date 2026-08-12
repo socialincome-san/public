@@ -93,6 +93,33 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const primaryImageUpload = useCampaignImageUpload({ resolveError });
 	const profilePictureUpload = useCampaignImageUpload({ resolveError });
 	const sectionImageUpload = useCampaignImageUpload({ resolveError });
+	const {
+		file: primaryImageFile,
+		previewUrl: primaryImagePreviewUrl,
+		error: primaryImageError,
+		inputRef: primaryImageInputRef,
+		setFromFile: setPrimaryImageFromFile,
+		clear: clearPrimaryImageUpload,
+		setError: setPrimaryImageError,
+	} = primaryImageUpload;
+	const {
+		file: profilePictureFile,
+		previewUrl: profilePicturePreviewUrl,
+		error: profilePictureError,
+		inputRef: profilePictureInputRef,
+		setFromFile: setProfilePictureFromFile,
+		clear: clearProfilePictureUpload,
+		setError: setProfilePictureError,
+	} = profilePictureUpload;
+	const {
+		file: sectionImageFile,
+		previewUrl: sectionImagePreviewUrl,
+		error: sectionImageError,
+		inputRef: sectionImageInputRef,
+		setFromFile: setSectionImageFromFile,
+		clear: clearSectionImageUpload,
+		setError: setSectionImageError,
+	} = sectionImageUpload;
 
 	const formSchema = useMemo(() => createCampaignSubmissionFormSchema(resolveError), [resolveError]);
 	const detailsSchema = useMemo(() => createCampaignSubmissionDetailsSchema(resolveError), [resolveError]);
@@ -108,8 +135,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		defaultImagesRef.current = defaultImages;
 	}, [defaultImages]);
 
-	const imageSelection: CampaignImageSelection = primaryImageUpload.file
-		? { type: 'upload', file: primaryImageUpload.file }
+	const imageSelection: CampaignImageSelection = primaryImageFile
+		? { type: 'upload', file: primaryImageFile }
 		: selectedDefaultId !== null
 			? { type: 'default', id: selectedDefaultId }
 			: null;
@@ -117,57 +144,57 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const onPrimaryImageChange = useCallback(
 		(file: File | null) => {
 			if (!file) {
-				primaryImageUpload.clear();
+				clearPrimaryImageUpload();
 				const firstDefault = defaultImagesRef.current[0];
 				setSelectedDefaultId(firstDefault?.id ?? null);
 
 				return;
 			}
 
-			primaryImageUpload.setFromFile(file);
+			setPrimaryImageFromFile(file);
 			setSelectedDefaultId(null);
 		},
-		[primaryImageUpload.clear, primaryImageUpload.setFromFile],
+		[clearPrimaryImageUpload, setPrimaryImageFromFile],
 	);
 
 	const onSelectDefaultImage = useCallback(
 		(id: number) => {
-			primaryImageUpload.clear();
+			clearPrimaryImageUpload();
 			setSelectedDefaultId(id);
 		},
-		[primaryImageUpload.clear],
+		[clearPrimaryImageUpload],
 	);
 
 	const clearPrimaryImageSelection = useCallback(() => {
-		primaryImageUpload.clear();
+		clearPrimaryImageUpload();
 		setSelectedDefaultId(null);
-	}, [primaryImageUpload.clear]);
+	}, [clearPrimaryImageUpload]);
 
 	const primaryImage: CampaignSubmissionImageUploadField = {
-		inputRef: primaryImageUpload.inputRef,
-		previewUrl: primaryImageUpload.previewUrl,
-		error: primaryImageUpload.error,
+		inputRef: primaryImageInputRef,
+		previewUrl: primaryImagePreviewUrl,
+		error: primaryImageError,
 		onChange: onPrimaryImageChange,
-		setError: primaryImageUpload.setError,
+		setError: setPrimaryImageError,
 		clear: clearPrimaryImageSelection,
 	};
 
 	const profilePicture: CampaignSubmissionImageUploadField = {
-		inputRef: profilePictureUpload.inputRef,
-		previewUrl: profilePictureUpload.previewUrl,
-		error: profilePictureUpload.error,
-		onChange: profilePictureUpload.setFromFile,
-		setError: profilePictureUpload.setError,
-		clear: profilePictureUpload.clear,
+		inputRef: profilePictureInputRef,
+		previewUrl: profilePicturePreviewUrl,
+		error: profilePictureError,
+		onChange: setProfilePictureFromFile,
+		setError: setProfilePictureError,
+		clear: clearProfilePictureUpload,
 	};
 
 	const sectionImage: CampaignSubmissionImageUploadField = {
-		inputRef: sectionImageUpload.inputRef,
-		previewUrl: sectionImageUpload.previewUrl,
-		error: sectionImageUpload.error,
-		onChange: sectionImageUpload.setFromFile,
-		setError: sectionImageUpload.setError,
-		clear: sectionImageUpload.clear,
+		inputRef: sectionImageInputRef,
+		previewUrl: sectionImagePreviewUrl,
+		error: sectionImageError,
+		onChange: setSectionImageFromFile,
+		setError: setSectionImageError,
+		clear: clearSectionImageUpload,
 	};
 
 	useEffect(() => {
@@ -233,7 +260,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				if (!result.success) {
 					setDefaultImages([]);
 					setDefaultImagesError(labels.defaultImagesError);
-					setSelectedDefaultId((current) => (primaryImageUpload.file ? current : null));
+					setSelectedDefaultId((current) => (primaryImageFile ? current : null));
 
 					return;
 				}
@@ -256,7 +283,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 
 				setDefaultImages([]);
 				setDefaultImagesError(labels.defaultImagesError);
-				setSelectedDefaultId((current) => (primaryImageUpload.file ? current : null));
+				setSelectedDefaultId((current) => (primaryImageFile ? current : null));
 			} finally {
 				if (!cancelled) {
 					setDefaultImagesLoading(false);
@@ -269,7 +296,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		return () => {
 			cancelled = true;
 		};
-	}, [currentStep, defaultImages.length, labels.defaultImagesError, primaryImageUpload.file]);
+	}, [currentStep, defaultImages.length, labels.defaultImagesError, primaryImageFile]);
 
 	useEffect(() => {
 		if (!hasMountedStep.current) {
@@ -288,7 +315,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				? defaultImagesLoading && imageSelection?.type !== 'upload'
 				: false;
 
-	const onContinue = async () => {
+	const onContinue = () => {
 		if (currentStep === 'program') {
 			const programId = form.getValues('programId').trim();
 			if (!programId) {
@@ -423,8 +450,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			const formData = appendCampaignSubmissionFormData(new FormData(), submissionValues, {
 				primaryImage: imageSelection.type === 'upload' ? imageSelection.file : undefined,
 				defaultImageId: imageSelection.type === 'default' ? imageSelection.id : undefined,
-				profilePicture: profilePictureUpload.file ?? undefined,
-				sectionImage: values.hasAdditionalInformation ? (sectionImageUpload.file ?? undefined) : undefined,
+				profilePicture: profilePictureFile ?? undefined,
+				sectionImage: values.hasAdditionalInformation ? (sectionImageFile ?? undefined) : undefined,
 			});
 
 			const response = await fetch('/api/campaign-submissions', {
@@ -487,7 +514,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		event.preventDefault();
 
 		if (currentStep !== 'about') {
-			void onContinue();
+			onContinue();
 
 			return;
 		}
@@ -558,9 +585,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 						labels={labels}
 						isContinueDisabled={isContinueDisabled}
 						isSubmitting={isSubmitting}
-						onContinue={() => {
-							void onContinue();
-						}}
+						onContinue={onContinue}
 						onBack={onBack}
 						onSubmit={() => {
 							void form.handleSubmit(onSubmit)();
