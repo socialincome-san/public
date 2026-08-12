@@ -83,8 +83,6 @@ enum UserRole {
 
 enum DonationInterval {
   monthly
-  quarterly
-  yearly
 }
 
 enum SubscriptionStatus {
