@@ -165,15 +165,9 @@ const scrollToBottomAndTop = async (page: Page) => {
 	await page.evaluate(() => {
 		window.scrollTo(0, document.body.scrollHeight);
 	});
-	await page.waitForLoadState('networkidle');
 	await page.evaluate(() => {
 		window.scrollTo(0, 0);
 	});
-	await page.waitForLoadState('networkidle');
-};
-
-const waitForScreenshotReady = async (page: Page) => {
-	await page.waitForLoadState('networkidle');
 };
 
 const isPage = (target: Page | Locator): target is Page => {
@@ -182,7 +176,6 @@ const isPage = (target: Page | Locator): target is Page => {
 
 export const expectToHaveScreenshot = async (target: Page | Locator, scrollBeforeScreenshot = false) => {
 	const page = isPage(target) ? target : target.page();
-	await waitForScreenshotReady(page);
 	if (scrollBeforeScreenshot) {
 		await scrollToBottomAndTop(page);
 	}
