@@ -43,12 +43,6 @@ export const mapStripeRecurringInterval = (interval: string, intervalCount: numb
 	if (interval === 'month' && intervalCount === 1) {
 		return DonationInterval.monthly;
 	}
-	if (interval === 'month' && intervalCount === 3) {
-		return DonationInterval.quarterly;
-	}
-	if ((interval === 'month' && intervalCount === 12) || (interval === 'year' && intervalCount === 1)) {
-		return DonationInterval.yearly;
-	}
 
 	return null;
 };

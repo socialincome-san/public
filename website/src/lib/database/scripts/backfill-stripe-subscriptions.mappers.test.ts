@@ -65,12 +65,12 @@ describe('backfill-stripe-subscriptions.mappers', () => {
 	describe('mapStripeRecurringInterval', () => {
 		test('maps supported intervals', () => {
 			expect(mapStripeRecurringInterval('month', 1)).toBe(DonationInterval.monthly);
-			expect(mapStripeRecurringInterval('month', 3)).toBe(DonationInterval.quarterly);
-			expect(mapStripeRecurringInterval('month', 12)).toBe(DonationInterval.yearly);
-			expect(mapStripeRecurringInterval('year', 1)).toBe(DonationInterval.yearly);
 		});
 
 		test('returns null for unsupported intervals', () => {
+			expect(mapStripeRecurringInterval('month', 3)).toBeNull();
+			expect(mapStripeRecurringInterval('month', 12)).toBeNull();
+			expect(mapStripeRecurringInterval('year', 1)).toBeNull();
 			expect(mapStripeRecurringInterval('week', 1)).toBeNull();
 			expect(mapStripeRecurringInterval('month', 2)).toBeNull();
 		});
