@@ -980,6 +980,7 @@ model Reserve {
   id            String      @id @default(cuid()) @map("id")
   bankAccountId String      @map("bank_account_id")
   bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id])
+  date          DateTime    @map("date") @db.Date
   amount        Decimal     @map("amount") @db.Decimal(12, 4)
   currency      Currency    @map("currency")
   amountChf     Decimal     @map("amount_chf") @db.Decimal(12, 4)
@@ -987,6 +988,7 @@ model Reserve {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
+  @@unique([bankAccountId, date])
   @@index([bankAccountId])
   @@map("reserve")
 }

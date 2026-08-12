@@ -59,6 +59,48 @@ describe('PostFinanceBalanceService.getClavBalancesFromXml', () => {
 
 		expect(result).toEqual({ success: false, error: 'File is not a CAMT.052 document' });
 	});
+
+	test('rejects CLAV balances with an unknown credit/debit indicator', () => {
+		const result = service.getClavBalancesFromXml(`<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.052.001.08">
+	<BkToCstmrAcctRpt>
+		<Rpt>
+			<Acct><Id><IBAN>CH1909000000151126386</IBAN></Id></Acct>
+			<Bal>
+				<Tp><CdOrPrtry><Cd>CLAV</Cd></CdOrPrtry></Tp>
+				<Amt Ccy="CHF">1234.56</Amt>
+				<CdtDbtInd>UNKNOWN</CdtDbtInd>
+			</Bal>
+		</Rpt>
+	</BkToCstmrAcctRpt>
+</Document>`);
+
+		expect(result).toEqual({
+			success: false,
+			error: 'Invalid CLAV balance for PostFinance account CH1909000000151126386',
+		});
+	});
+
+	test('rejects CLAV balances with a negative CAMT amount', () => {
+		const result = service.getClavBalancesFromXml(`<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.052.001.08">
+	<BkToCstmrAcctRpt>
+		<Rpt>
+			<Acct><Id><IBAN>CH1909000000151126386</IBAN></Id></Acct>
+			<Bal>
+				<Tp><CdOrPrtry><Cd>CLAV</Cd></CdOrPrtry></Tp>
+				<Amt Ccy="CHF">-10.00</Amt>
+				<CdtDbtInd>CRDT</CdtDbtInd>
+			</Bal>
+		</Rpt>
+	</BkToCstmrAcctRpt>
+</Document>`);
+
+		expect(result).toEqual({
+			success: false,
+			error: 'Invalid CLAV balance for PostFinance account CH1909000000151126386',
+		});
+	});
 });
 
 describe('PostFinanceBalanceService.getLatestClavBalances', () => {

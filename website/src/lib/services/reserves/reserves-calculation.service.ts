@@ -52,6 +52,8 @@ export class ReservesCalculationService extends BaseService {
 			? await this.currencyDisplayService.getLatestRatesOrUndefined()
 			: undefined;
 		const balancesByIban = new Map(balancesResult.data.map((balance) => [this.normalizeIban(balance.iban), balance]));
+		const now = new Date();
+		const calculationDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 		const reserves: ReserveCreateInput[] = [];
 
 		for (const account of postFinanceAccounts) {
@@ -67,6 +69,7 @@ export class ReservesCalculationService extends BaseService {
 
 			reserves.push({
 				bankAccountId: account.id,
+				date: calculationDate,
 				amount: balance.amount,
 				currency: balance.currency,
 				amountChf,

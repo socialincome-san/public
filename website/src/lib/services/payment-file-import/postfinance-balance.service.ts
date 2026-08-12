@@ -109,7 +109,13 @@ export class PostFinanceBalanceService extends BaseService {
 				const creditDebitIndicator = this.selectString("string(./*[local-name()='CdtDbtInd'])", balance);
 				const amount = Number(amountValue);
 
-				if (!amountValue.trim() || !Number.isFinite(amount) || !this.isCurrency(currencyValue)) {
+				if (
+					!amountValue.trim() ||
+					!Number.isFinite(amount) ||
+					amount < 0 ||
+					!this.isCurrency(currencyValue) ||
+					(creditDebitIndicator !== 'CRDT' && creditDebitIndicator !== 'DBIT')
+				) {
 					return this.resultFail(`Invalid CLAV balance for PostFinance account ${iban}`);
 				}
 

@@ -15,7 +15,7 @@ export class ReserveWriteService extends BaseService {
 				return this.resultOk(0);
 			}
 
-			const { count } = await this.db.reserve.createMany({ data: reserves });
+			const { count } = await this.db.reserve.createMany({ data: reserves, skipDuplicates: true });
 
 			return this.resultOk(count);
 		} catch (error) {
