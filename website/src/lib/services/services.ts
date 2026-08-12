@@ -258,7 +258,6 @@ const createReservesCalculation = (bucketName: string) =>
 
 export const services = {
 	read: {
-		bankAccount: bankAccountRead,
 		candidate: candidateRead,
 		campaign: campaignRead,
 		campaignPublicWebsite,
@@ -275,7 +274,6 @@ export const services = {
 		payout: payoutRead,
 		program: programRead,
 		recipient: recipientRead,
-		reserve: reserveRead,
 		survey: surveyRead,
 		user: userRead,
 	},
@@ -302,7 +300,6 @@ export const services = {
 	appReviewMode,
 	qrBill,
 	createPaymentFileImport,
-	createPostFinanceBalance,
 	createReservesCalculation,
 	exchangeRateImport,
 	candidateImport,
@@ -312,7 +309,6 @@ export const services = {
 	orangeMoneyCsvPayoutProcess,
 	telecelCsvPayoutProcess,
 	currencyDisplay,
-	reserveWrite,
 	programStats,
 	recipientImport,
 	sendgrid,

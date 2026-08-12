@@ -15,7 +15,7 @@ type SummaryMetricTooltip = {
 		key: string;
 		account: string;
 		balance: string;
-		updatedAt: string;
+		recordedAt: string;
 	}[];
 };
 
@@ -77,7 +77,7 @@ export const SummarySectionClient = ({ metrics, lang }: Props) => {
 													<li key={row.key} className="flex flex-wrap gap-x-1 tabular-nums">
 														<span className="break-all">{row.account},</span>
 														<span>{row.balance},</span>
-														<span>{row.updatedAt}</span>
+														<span>{row.recordedAt}</span>
 													</li>
 												))}
 											</ul>

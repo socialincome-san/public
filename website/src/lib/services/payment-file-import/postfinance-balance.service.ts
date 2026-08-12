@@ -66,16 +66,7 @@ export class PostFinanceBalanceService extends BaseService {
 				return this.resultFail(`No CLAV balance found for PostFinance accounts: ${missingIbans.join(', ')}`);
 			}
 
-			const balances: PostFinanceBalance[] = [];
-			for (const iban of requestedIbans) {
-				const balance = balancesByIban.get(iban);
-				if (!balance) {
-					return this.resultFail(`No CLAV balance found for PostFinance account: ${iban}`);
-				}
-				balances.push(balance);
-			}
-
-			return this.resultOk(balances);
+			return this.resultOk([...balancesByIban.values()]);
 		} catch (error) {
 			this.logger.error(error);
 

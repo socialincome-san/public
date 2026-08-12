@@ -3,26 +3,23 @@ import { ReserveReadService } from './reserve-read.service';
 
 describe('ReserveReadService.getLatestPerBankAccount', () => {
 	test('returns the latest reserve per bank account and sums available amounts', async () => {
-		const latestUpdatedAt = new Date('2026-08-12T12:00:00.000Z');
+		const latestRecordedAt = new Date('2026-08-12T12:00:00.000Z');
 		const findMany = jest.fn().mockResolvedValue([
 			{
 				id: 'account-with-reserves',
 				bankAccountNumber: 'CH1909000000151126386',
 				description: 'Main account',
-				reserves: [
-					{ amountChf: '125.50', updatedAt: latestUpdatedAt },
-					{ amountChf: '75.25', updatedAt: new Date('2026-08-11T12:00:00.000Z') },
-				],
+				reserves: [{ amountChf: '125.50', createdAt: latestRecordedAt }],
 			},
 			{
 				id: 'account-with-reserve',
-				bankAccountNumber: '',
+				bankAccountNumber: 'CH9709000000169153887',
 				description: 'Secondary account',
-				reserves: [{ amountChf: '24.50', updatedAt: null }],
+				reserves: [{ amountChf: '24.50', createdAt: latestRecordedAt }],
 			},
 			{
 				id: 'account-without-reserve',
-				bankAccountNumber: '',
+				bankAccountNumber: 'CH5709000000154860881',
 				description: null,
 				reserves: [],
 			},
@@ -39,21 +36,21 @@ describe('ReserveReadService.getLatestPerBankAccount', () => {
 						bankAccountNumber: 'CH1909000000151126386',
 						description: 'Main account',
 						amountChf: 125.5,
-						updatedAt: latestUpdatedAt,
+						recordedAt: latestRecordedAt,
 					},
 					{
 						bankAccountId: 'account-with-reserve',
-						bankAccountNumber: '',
+						bankAccountNumber: 'CH9709000000169153887',
 						description: 'Secondary account',
 						amountChf: 24.5,
-						updatedAt: null,
+						recordedAt: latestRecordedAt,
 					},
 					{
 						bankAccountId: 'account-without-reserve',
-						bankAccountNumber: '',
+						bankAccountNumber: 'CH5709000000154860881',
 						description: null,
 						amountChf: null,
-						updatedAt: null,
+						recordedAt: null,
 					},
 				],
 				total: 150,
@@ -67,7 +64,7 @@ describe('ReserveReadService.getLatestPerBankAccount', () => {
 				reserves: {
 					orderBy: { createdAt: 'desc' },
 					take: 1,
-					select: { amountChf: true, updatedAt: true },
+					select: { amountChf: true, createdAt: true },
 				},
 			},
 		});

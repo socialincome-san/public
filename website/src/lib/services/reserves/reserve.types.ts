@@ -12,7 +12,7 @@ export type BankAccountLatestReserve = {
 	bankAccountNumber: string;
 	description: string | null;
 	amountChf: number | null;
-	updatedAt: Date | null;
+	recordedAt: Date | null;
 };
 
 export type LatestReserves = {

@@ -19,7 +19,7 @@ export class ReserveReadService extends BaseService {
 					reserves: {
 						orderBy: { createdAt: 'desc' },
 						take: 1,
-						select: { amountChf: true, updatedAt: true },
+						select: { amountChf: true, createdAt: true },
 					},
 				},
 			});
@@ -29,7 +29,7 @@ export class ReserveReadService extends BaseService {
 					bankAccountNumber,
 					description,
 					amountChf: latestReserve ? Number(latestReserve.amountChf) : null,
-					updatedAt: latestReserve?.updatedAt ?? null,
+					recordedAt: latestReserve?.createdAt ?? null,
 				}),
 			);
 

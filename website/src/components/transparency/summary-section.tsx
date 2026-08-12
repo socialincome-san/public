@@ -9,7 +9,7 @@ type ReserveAccount = {
 	bankAccountNumber: string;
 	description: string | null;
 	amount: DisplayAmount | null;
-	updatedAt: Date | null;
+	recordedAt: Date | null;
 };
 
 type Props = {
@@ -24,45 +24,44 @@ export const SummarySection = async ({ inflows, outflows, reserves, reserveAccou
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const locale = getSafeNumberFormatLocale(lang);
 	const noData = translator.t('transparency-page.reserves.no-data');
-	const dateFormatter = new Intl.DateTimeFormat('de-CH', {
+	const dateFormatter = new Intl.DateTimeFormat(locale, {
 		day: '2-digit',
 		month: '2-digit',
 		year: 'numeric',
 		timeZone: 'Europe/Zurich',
 	});
-	const reserveTooltipRows = reserveAccounts.map(({ bankAccountId, bankAccountNumber, description, amount, updatedAt }) => ({
-		key: bankAccountId,
-		account: [bankAccountNumber, description].find((value) => value?.trim())?.trim() ?? noData,
-		balance: amount ? formatCurrencyLocale(amount.amount, amount.currency, locale, { maximumFractionDigits: 0 }) : noData,
-		updatedAt: updatedAt ? dateFormatter.format(updatedAt) : noData,
-	}));
-	const metricSources: { key: SummaryMetric['key']; displayAmount: DisplayAmount }[] = [
-		{ key: 'inflows', displayAmount: inflows },
-		{ key: 'outflows', displayAmount: outflows },
-		{ key: 'reserves', displayAmount: reserves },
-	];
-	const metrics: SummaryMetric[] = metricSources.map(({ key, displayAmount }) => {
-		const metric = {
-			key,
-			titleName: translator.t(`transparency-page.${key}.title-name`),
-			titleCurrency: translator.t(`transparency-page.${key}.title-currency`, {
-				context: { currency: displayAmount.currency },
-			}),
-			description: translator.t(`transparency-page.${key}.description`),
-			amount: displayAmount.amount,
-		};
-
-		return key === 'reserves'
+	const reserveTooltipRows = reserveAccounts.map(
+		({ bankAccountId, bankAccountNumber, description, amount, recordedAt }) => ({
+			key: bankAccountId,
+			account: [description, bankAccountNumber].map((value) => value?.trim()).find(Boolean) ?? noData,
+			balance: amount ? formatCurrencyLocale(amount.amount, amount.currency, locale, { maximumFractionDigits: 0 }) : noData,
+			recordedAt: recordedAt ? dateFormatter.format(recordedAt) : noData,
+		}),
+	);
+	const metrics: SummaryMetric[] = (
+		[
+			{ key: 'inflows', displayAmount: inflows },
+			{ key: 'outflows', displayAmount: outflows },
+			{ key: 'reserves', displayAmount: reserves },
+		] as const
+	).map(({ key, displayAmount }) => ({
+		key,
+		titleName: translator.t(`transparency-page.${key}.title-name`),
+		titleCurrency: translator.t(`transparency-page.${key}.title-currency`, {
+			context: { currency: displayAmount.currency },
+		}),
+		description: translator.t(`transparency-page.${key}.description`),
+		amount: displayAmount.amount,
+		...(key === 'reserves'
 			? {
-					...metric,
 					tooltip: {
 						ariaLabel: translator.t('transparency-page.reserves.tooltip-label'),
 						emptyMessage: noData,
 						rows: reserveTooltipRows,
 					},
 				}
-			: metric;
-	});
+			: {}),
+	}));
 
 	return <SummarySectionClient metrics={metrics} lang={lang} />;
 };
