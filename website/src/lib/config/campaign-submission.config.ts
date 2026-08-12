@@ -22,8 +22,9 @@ export const campaignSubmissionConfig = {
 	allowedCurrencies: [Currency.CHF, Currency.EUR, Currency.USD, Currency.GBP] as const,
 	minCampaignDurationDays: 7,
 	maxCampaignDurationDays: 365,
-	// Primary + optional profile + optional section image (5 MB each) plus text overhead.
-	maxMultipartBodyBytes: 16 * 1024 * 1024,
+	// Primary + optional profile + optional section image (5 MB each) plus multipart/text overhead.
+	// 16 MB is too tight when all three images are near the per-file cap.
+	maxMultipartBodyBytes: 18 * 1024 * 1024,
 	durationPresetDays: {
 		'30': 30,
 		'90': 90,

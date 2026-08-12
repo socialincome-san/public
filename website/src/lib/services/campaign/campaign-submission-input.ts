@@ -53,12 +53,11 @@ export const campaignSubmissionErrorCodes = [
 
 export type CampaignSubmissionErrorCode = (typeof campaignSubmissionErrorCodes)[number];
 
-export const campaignSubmissionImageMultipartFields = [
-	'primaryImage',
-	'defaultImageId',
-	'profilePicture',
-	'sectionImage',
-] as const;
+type ErrorMessage = (code: CampaignSubmissionErrorCode) => string;
+
+const asErrorCode: ErrorMessage = (code) => code;
+
+const campaignSubmissionImageMultipartFields = ['primaryImage', 'defaultImageId', 'profilePicture', 'sectionImage'] as const;
 
 export type CampaignSubmissionImageMultipartField = (typeof campaignSubmissionImageMultipartFields)[number];
 
@@ -76,6 +75,31 @@ const campaignSubmissionErrorCodeSet = new Set<string>(campaignSubmissionErrorCo
 
 export const isCampaignSubmissionErrorCode = (value: string): value is CampaignSubmissionErrorCode =>
 	campaignSubmissionErrorCodeSet.has(value);
+
+export type CampaignSubmissionWirePayload = {
+	title: string;
+	description: string;
+	goal: number | null;
+	currency: CampaignSubmissionAllowedCurrency;
+	endDate: string;
+	programId: string;
+	public: boolean;
+	creatorName: string;
+	quote: string;
+	hasAdditionalInformation: boolean;
+	sectionDescription: string | null;
+	instagramHandle: string | null;
+	xHandle: string | null;
+	linkWebsite: string | null;
+	tiktokHandle: string | null;
+};
+
+export type CampaignSubmissionWireImages = {
+	primaryImage?: File;
+	defaultImageId?: number;
+	profilePicture?: File;
+	sectionImage?: File;
+};
 
 const sanitizeText = (value: string) => value.replace(CONTROL_CHARACTERS_REGEX, '').trim();
 
@@ -156,37 +180,101 @@ const isPermittedImageMimeType = (value: string): value is CampaignSubmissionPer
 const parseHasAdditionalInformation = (value: FormDataEntryValue | null) =>
 	typeof value === 'string' && value.trim().toLowerCase() === 'true';
 
+/** Shared goal parsing for client form checks and server FormData coercion. */
+const parseCampaignSubmissionGoalInput = (value: string | number | null | undefined): number | null | 'invalid' => {
+	if (value === null || value === undefined || value === '') {
+		return null;
+	}
+
+	const numeric = typeof value === 'number' ? value : Number(value);
+	if (!Number.isFinite(numeric) || numeric <= 0) {
+		return 'invalid';
+	}
+
+	return numeric;
+};
+
+const titleRule = (msg: ErrorMessage) =>
+	z
+		.string()
+		.min(1, msg('title-required'))
+		.max(campaignSubmissionConfig.maxTitleLength, msg('title-too-long'))
+		.refine((title) => Boolean(slugify(title)), msg('title-not-slugifiable'));
+
+const descriptionRule = (msg: ErrorMessage) =>
+	z
+		.string()
+		.min(1, msg('description-required'))
+		.max(campaignSubmissionConfig.maxDescriptionLength, msg('description-too-long'));
+
+const creatorNameRule = (msg: ErrorMessage) =>
+	z
+		.string()
+		.min(1, msg('creator-name-required'))
+		.max(campaignSubmissionConfig.maxCreatorNameLength, msg('creator-name-too-long'));
+
+const quoteRule = (msg: ErrorMessage) =>
+	z.string().min(1, msg('quote-required')).max(campaignSubmissionConfig.maxQuoteLength, msg('quote-too-long'));
+
+const programIdRule = (msg: ErrorMessage) => z.string().trim().min(1, msg('program-required'));
+
+const validateClientSectionDescription = (value: string | undefined): CampaignSubmissionErrorCode | null => {
+	const sectionDescription = value?.trim() ?? '';
+	if (sectionDescription.length > campaignSubmissionConfig.maxSectionDescriptionLength) {
+		return 'section-description-too-long';
+	}
+
+	return null;
+};
+
+const validateClientWebsiteUrl = (value: string | undefined): CampaignSubmissionErrorCode | null => {
+	const website = value?.trim() ?? '';
+	if (!website) {
+		return null;
+	}
+
+	if (website.length > campaignSubmissionConfig.maxLinkLength) {
+		return 'link-too-long';
+	}
+
+	if (!isSafeWebsiteUrl(website)) {
+		return 'link-unsafe';
+	}
+
+	return null;
+};
+
+const validateClientSocialHandle = (value: string | undefined): CampaignSubmissionErrorCode | null => {
+	const rawHandle = value?.trim() ?? '';
+	if (!rawHandle) {
+		return null;
+	}
+
+	const handle = normalizeSocialHandle(rawHandle);
+	if (handle.length > campaignSubmissionConfig.maxHandleLength) {
+		return 'handle-too-long';
+	}
+
+	if (!isValidSocialHandle(handle)) {
+		return 'handle-invalid';
+	}
+
+	return null;
+};
+
 const campaignSubmissionFieldsSchema = z
 	.object({
-		title: z
-			.string()
-			.transform(sanitizeText)
-			.pipe(
-				z
-					.string()
-					.min(1, 'title-required')
-					.max(campaignSubmissionConfig.maxTitleLength, 'title-too-long')
-					.refine((title) => Boolean(slugify(title)), 'title-not-slugifiable'),
-			),
-		description: z
-			.string()
-			.transform(sanitizeText)
-			.pipe(
-				z.string().min(1, 'description-required').max(campaignSubmissionConfig.maxDescriptionLength, 'description-too-long'),
-			),
+		title: z.string().transform(sanitizeText).pipe(titleRule(asErrorCode)),
+		description: z.string().transform(sanitizeText).pipe(descriptionRule(asErrorCode)),
 		goal: z.union([z.string(), z.number(), z.null()]).transform((value, ctx) => {
-			if (value === null || value === '') {
-				return null;
-			}
-
-			const numeric = typeof value === 'number' ? value : Number(value);
-			if (!Number.isFinite(numeric) || numeric <= 0) {
+			const parsed = parseCampaignSubmissionGoalInput(value);
+			if (parsed === 'invalid') {
 				ctx.addIssue({ code: 'custom', message: 'goal-positive' });
 
 				return z.NEVER;
 			}
 
-			return numeric;
+			return parsed;
 		}),
 		currency: z
 			.string()
@@ -203,7 +291,7 @@ const campaignSubmissionFieldsSchema = z
 
 			return date;
 		}),
-		programId: z.string().trim().min(1, 'program-required'),
+		programId: programIdRule(asErrorCode),
 		public: z.union([z.boolean(), z.string()]).transform((value) => {
 			if (typeof value === 'boolean') {
 				return value;
@@ -211,19 +299,8 @@ const campaignSubmissionFieldsSchema = z
 
 			return value.trim().toLowerCase() === 'true';
 		}),
-		creatorName: z
-			.string()
-			.transform(sanitizeText)
-			.pipe(
-				z
-					.string()
-					.min(1, 'creator-name-required')
-					.max(campaignSubmissionConfig.maxCreatorNameLength, 'creator-name-too-long'),
-			),
-		quote: z
-			.string()
-			.transform(sanitizeText)
-			.pipe(z.string().min(1, 'quote-required').max(campaignSubmissionConfig.maxQuoteLength, 'quote-too-long')),
+		creatorName: z.string().transform(sanitizeText).pipe(creatorNameRule(asErrorCode)),
+		quote: z.string().transform(sanitizeText).pipe(quoteRule(asErrorCode)),
 		hasAdditionalInformation: z.boolean(),
 		sectionDescription: optionalSanitizedText(
 			campaignSubmissionConfig.maxSectionDescriptionLength,
@@ -363,27 +440,28 @@ export const validateCampaignSubmissionImageBuffer = (
 	};
 };
 
+const readCampaignSubmissionFormDataFields = (formData: FormData) => ({
+	title: formData.get('title'),
+	description: formData.get('description'),
+	goal: formData.get('goal'),
+	currency: formData.get('currency'),
+	endDate: formData.get('endDate'),
+	programId: formData.get('programId'),
+	public: formData.get('public') ?? 'true',
+	creatorName: formData.get('creatorName') ?? '',
+	quote: formData.get('quote') ?? '',
+	hasAdditionalInformation: parseHasAdditionalInformation(formData.get('hasAdditionalInformation')),
+	sectionDescription: formData.get('sectionDescription'),
+	instagramHandle: formData.get('instagramHandle'),
+	xHandle: formData.get('xHandle'),
+	linkWebsite: formData.get('linkWebsite'),
+	tiktokHandle: formData.get('tiktokHandle'),
+});
+
 export const parseCampaignSubmissionFields = (
 	formData: FormData,
 ): { success: true; data: CampaignSubmissionFields } | { success: false; error: CampaignSubmissionErrorCode } => {
-	const hasAdditionalInformation = parseHasAdditionalInformation(formData.get('hasAdditionalInformation'));
-	const parsed = campaignSubmissionFieldsSchema.safeParse({
-		title: formData.get('title'),
-		description: formData.get('description'),
-		goal: formData.get('goal'),
-		currency: formData.get('currency'),
-		endDate: formData.get('endDate'),
-		programId: formData.get('programId'),
-		public: formData.get('public') ?? 'true',
-		creatorName: formData.get('creatorName') ?? '',
-		quote: formData.get('quote') ?? '',
-		hasAdditionalInformation,
-		sectionDescription: formData.get('sectionDescription'),
-		instagramHandle: formData.get('instagramHandle'),
-		xHandle: formData.get('xHandle'),
-		linkWebsite: formData.get('linkWebsite'),
-		tiktokHandle: formData.get('tiktokHandle'),
-	});
+	const parsed = campaignSubmissionFieldsSchema.safeParse(readCampaignSubmissionFormDataFields(formData));
 
 	if (!parsed.success) {
 		const message = parsed.error.issues[0]?.message;
@@ -444,17 +522,8 @@ export const parseOptionalCampaignSubmissionImage = async (
 export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmissionErrorCode) => string) =>
 	z
 		.object({
-			title: z
-				.string()
-				.trim()
-				.min(1, message('title-required'))
-				.max(campaignSubmissionConfig.maxTitleLength, message('title-too-long'))
-				.refine((title) => Boolean(slugify(title)), message('title-not-slugifiable')),
-			description: z
-				.string()
-				.trim()
-				.min(1, message('description-required'))
-				.max(campaignSubmissionConfig.maxDescriptionLength, message('description-too-long')),
+			title: z.string().trim().pipe(titleRule(message)),
+			description: z.string().trim().pipe(descriptionRule(message)),
 			hasGoal: z.boolean(),
 			goal: z.union([z.string(), z.number(), z.undefined(), z.null()]).optional(),
 			currency: z.enum(campaignSubmissionConfig.allowedCurrencies, {
@@ -463,17 +532,9 @@ export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmi
 			durationPreset: z.enum(campaignSubmissionDurationPresets),
 			endDate: z.string(),
 			isPublic: z.boolean(),
-			programId: z.string().trim().min(1, message('program-required')),
-			creatorName: z
-				.string()
-				.trim()
-				.min(1, message('creator-name-required'))
-				.max(campaignSubmissionConfig.maxCreatorNameLength, message('creator-name-too-long')),
-			quote: z
-				.string()
-				.trim()
-				.min(1, message('quote-required'))
-				.max(campaignSubmissionConfig.maxQuoteLength, message('quote-too-long')),
+			programId: programIdRule(message),
+			creatorName: z.string().trim().pipe(creatorNameRule(message)),
+			quote: z.string().trim().pipe(quoteRule(message)),
 			hasAdditionalInformation: z.boolean(),
 			sectionDescription: z.string().optional(),
 			instagramHandle: z.string().optional(),
@@ -483,9 +544,8 @@ export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmi
 		})
 		.superRefine((values, ctx) => {
 			if (values.hasGoal) {
-				const numericGoal =
-					values.goal === undefined || values.goal === null || values.goal === '' ? null : Number(values.goal);
-				if (numericGoal === null || !Number.isFinite(numericGoal) || numericGoal <= 0) {
+				const parsedGoal = parseCampaignSubmissionGoalInput(values.goal === undefined ? null : values.goal);
+				if (parsedGoal === null || parsedGoal === 'invalid') {
 					ctx.addIssue({ code: 'custom', path: ['goal'], message: message('goal-positive') });
 				}
 			}
@@ -510,38 +570,119 @@ export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmi
 				ctx.addIssue({ code: 'custom', path: ['endDate'], message: message(endDateError) });
 			}
 
-			if (values.hasAdditionalInformation) {
-				const sectionDescription = values.sectionDescription?.trim() ?? '';
-				if (sectionDescription.length > campaignSubmissionConfig.maxSectionDescriptionLength) {
-					ctx.addIssue({
-						code: 'custom',
-						path: ['sectionDescription'],
-						message: message('section-description-too-long'),
-					});
-				}
+			if (!values.hasAdditionalInformation) {
+				return;
+			}
 
-				const website = values.linkWebsite?.trim() ?? '';
-				if (website.length > campaignSubmissionConfig.maxLinkLength) {
-					ctx.addIssue({ code: 'custom', path: ['linkWebsite'], message: message('link-too-long') });
-				} else if (website.length > 0 && !isSafeWebsiteUrl(website)) {
-					ctx.addIssue({ code: 'custom', path: ['linkWebsite'], message: message('link-unsafe') });
-				}
+			const sectionDescriptionError = validateClientSectionDescription(values.sectionDescription);
+			if (sectionDescriptionError) {
+				ctx.addIssue({
+					code: 'custom',
+					path: ['sectionDescription'],
+					message: message(sectionDescriptionError),
+				});
+			}
 
-				for (const path of ['instagramHandle', 'xHandle', 'tiktokHandle'] as const) {
-					const rawHandle = values[path]?.trim() ?? '';
-					if (!rawHandle) {
-						continue;
-					}
+			const websiteError = validateClientWebsiteUrl(values.linkWebsite);
+			if (websiteError) {
+				ctx.addIssue({ code: 'custom', path: ['linkWebsite'], message: message(websiteError) });
+			}
 
-					const handle = normalizeSocialHandle(rawHandle);
-					if (handle.length > campaignSubmissionConfig.maxHandleLength) {
-						ctx.addIssue({ code: 'custom', path: [path], message: message('handle-too-long') });
-					} else if (!isValidSocialHandle(handle)) {
-						ctx.addIssue({ code: 'custom', path: [path], message: message('handle-invalid') });
-					}
+			for (const path of ['instagramHandle', 'xHandle', 'tiktokHandle'] as const) {
+				const handleError = validateClientSocialHandle(values[path]);
+				if (handleError) {
+					ctx.addIssue({ code: 'custom', path: [path], message: message(handleError) });
 				}
 			}
 		});
+
+export type CampaignSubmissionFormValues = z.infer<ReturnType<typeof createCampaignSubmissionFormSchema>>;
+
+export const toCampaignSubmissionWirePayload = (values: CampaignSubmissionFormValues): CampaignSubmissionWirePayload => {
+	const parsedGoal = values.hasGoal
+		? parseCampaignSubmissionGoalInput(values.goal === undefined ? null : values.goal)
+		: null;
+	const goal = parsedGoal === 'invalid' || parsedGoal === null ? null : parsedGoal;
+
+	if (!values.hasAdditionalInformation) {
+		return {
+			title: values.title,
+			description: values.description,
+			goal,
+			currency: values.currency,
+			endDate: values.endDate,
+			programId: values.programId,
+			public: values.isPublic,
+			creatorName: values.creatorName,
+			quote: values.quote,
+			hasAdditionalInformation: false,
+			sectionDescription: null,
+			instagramHandle: null,
+			xHandle: null,
+			linkWebsite: null,
+			tiktokHandle: null,
+		};
+	}
+
+	return {
+		title: values.title,
+		description: values.description,
+		goal,
+		currency: values.currency,
+		endDate: values.endDate,
+		programId: values.programId,
+		public: values.isPublic,
+		creatorName: values.creatorName,
+		quote: values.quote,
+		hasAdditionalInformation: true,
+		sectionDescription: values.sectionDescription?.trim() ? values.sectionDescription : null,
+		instagramHandle: values.instagramHandle?.trim() ? values.instagramHandle : null,
+		xHandle: values.xHandle?.trim() ? values.xHandle : null,
+		linkWebsite: values.linkWebsite?.trim() ? values.linkWebsite : null,
+		tiktokHandle: values.tiktokHandle?.trim() ? values.tiktokHandle : null,
+	};
+};
+
+export const appendCampaignSubmissionFormData = (
+	formData: FormData,
+	payload: CampaignSubmissionWirePayload,
+	images: CampaignSubmissionWireImages = {},
+): FormData => {
+	formData.append('title', payload.title);
+	formData.append('description', payload.description);
+	formData.append('goal', payload.goal === null ? '' : String(payload.goal));
+	formData.append('currency', payload.currency);
+	formData.append('endDate', payload.endDate);
+	formData.append('programId', payload.programId);
+	formData.append('public', payload.public ? 'true' : 'false');
+	formData.append('creatorName', payload.creatorName);
+	formData.append('quote', payload.quote);
+	formData.append('hasAdditionalInformation', payload.hasAdditionalInformation ? 'true' : 'false');
+
+	if (payload.hasAdditionalInformation) {
+		formData.append('sectionDescription', payload.sectionDescription ?? '');
+		formData.append('instagramHandle', payload.instagramHandle ?? '');
+		formData.append('xHandle', payload.xHandle ?? '');
+		formData.append('linkWebsite', payload.linkWebsite ?? '');
+		formData.append('tiktokHandle', payload.tiktokHandle ?? '');
+	}
+
+	if (images.primaryImage) {
+		formData.append('primaryImage', images.primaryImage);
+	} else if (images.defaultImageId !== undefined) {
+		formData.append('defaultImageId', String(images.defaultImageId));
+	}
+
+	if (images.profilePicture) {
+		formData.append('profilePicture', images.profilePicture);
+	}
+
+	if (images.sectionImage) {
+		formData.append('sectionImage', images.sectionImage);
+	}
+
+	return formData;
+};
 
 export const campaignSubmissionDetailsFieldNames = [
 	'title',

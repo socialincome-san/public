@@ -1,12 +1,11 @@
 import type { CampaignDefaultImageOption } from '@/lib/server-actions/campaign-public-actions';
 import {
 	type CampaignSubmissionErrorCode,
-	type createCampaignSubmissionFormSchema,
+	type CampaignSubmissionFormValues,
 } from '@/lib/services/campaign/campaign-submission-input';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import type { RefObject } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
-import type { z } from 'zod';
 
 export type SubmissionLabels = {
 	programStepTitle: string;
@@ -78,7 +77,7 @@ export type SubmissionLabels = {
 
 export type CampaignSubmissionStepId = 'program' | 'details' | 'about';
 
-export type CampaignSubmissionFormValues = z.infer<ReturnType<typeof createCampaignSubmissionFormSchema>>;
+export type { CampaignSubmissionFormValues };
 
 export type CampaignImageSelection = { type: 'default'; id: number } | { type: 'upload'; file: File } | null;
 

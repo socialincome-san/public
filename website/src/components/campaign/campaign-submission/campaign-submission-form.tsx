@@ -9,6 +9,7 @@ import {
 	type CampaignDefaultImageOption,
 } from '@/lib/server-actions/campaign-public-actions';
 import {
+	appendCampaignSubmissionFormData,
 	campaignSubmissionDefaultCurrency,
 	campaignSubmissionDetailsFieldNames,
 	createCampaignSubmissionFormSchema,
@@ -16,6 +17,7 @@ import {
 	isCampaignSubmissionErrorCode,
 	isCampaignSubmissionImageErrorCode,
 	isCampaignSubmissionImageMultipartField,
+	toCampaignSubmissionWirePayload,
 	validateCampaignSubmissionImageMeta,
 } from '@/lib/services/campaign/campaign-submission-input';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
@@ -243,7 +245,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			: currentStep === 'details'
 				? defaultImagesLoading && imageSelection?.type !== 'upload'
 				: false;
-	const isSubmitDisabled = isSubmitting || (defaultImagesLoading && imageSelection?.type !== 'upload');
+	const isSubmitDisabled = isSubmitting;
 
 	const onSelectDefaultImage = (id: number) => {
 		revokeUploadPreview();
@@ -369,10 +371,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			return;
 		}
 
-		if (defaultImagesLoading && imageSelection?.type !== 'upload') {
-			return;
-		}
-
 		setSubmitError(null);
 		setSubmitSuccess(false);
 		profilePicture.setError(null);
@@ -408,43 +406,12 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		setIsSubmitting(true);
 
 		try {
-			const formData = new FormData();
-			formData.append('title', values.title);
-			formData.append('description', values.description);
-			if (values.hasGoal && values.goal !== undefined && values.goal !== null && values.goal !== '') {
-				formData.append('goal', String(values.goal));
-			} else {
-				formData.append('goal', '');
-			}
-			formData.append('currency', values.currency);
-			formData.append('endDate', values.endDate);
-			formData.append('programId', values.programId);
-			formData.append('public', values.isPublic ? 'true' : 'false');
-			formData.append('creatorName', values.creatorName);
-			formData.append('quote', values.quote);
-			formData.append('hasAdditionalInformation', values.hasAdditionalInformation ? 'true' : 'false');
-
-			if (values.hasAdditionalInformation) {
-				formData.append('sectionDescription', values.sectionDescription ?? '');
-				formData.append('instagramHandle', values.instagramHandle ?? '');
-				formData.append('xHandle', values.xHandle ?? '');
-				formData.append('linkWebsite', values.linkWebsite ?? '');
-				formData.append('tiktokHandle', values.tiktokHandle ?? '');
-			}
-
-			if (imageSelection.type === 'upload') {
-				formData.append('primaryImage', imageSelection.file);
-			} else {
-				formData.append('defaultImageId', String(imageSelection.id));
-			}
-
-			if (profilePicture.file) {
-				formData.append('profilePicture', profilePicture.file);
-			}
-
-			if (values.hasAdditionalInformation && sectionImage.file) {
-				formData.append('sectionImage', sectionImage.file);
-			}
+			const formData = appendCampaignSubmissionFormData(new FormData(), toCampaignSubmissionWirePayload(values), {
+				primaryImage: imageSelection.type === 'upload' ? imageSelection.file : undefined,
+				defaultImageId: imageSelection.type === 'default' ? imageSelection.id : undefined,
+				profilePicture: profilePicture.file ?? undefined,
+				sectionImage: values.hasAdditionalInformation ? (sectionImage.file ?? undefined) : undefined,
+			});
 
 			const response = await fetch('/api/campaign-submissions', {
 				method: 'POST',
@@ -515,10 +482,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	};
 
 	const submitAbout = () => {
-		if (defaultImagesLoading && imageSelection?.type !== 'upload') {
-			return;
-		}
-
 		if (!imageSelection) {
 			setImageError(resolveError('image-required'));
 			setCurrentStep('details');

@@ -49,6 +49,7 @@ export const AboutStep = ({
 }: Props) => {
 	const profileHintId = useId();
 	const profileErrorId = useId();
+	const sectionHintId = useId();
 	const sectionErrorId = useId();
 	const profileErrorRef = useRef<HTMLParagraphElement>(null);
 	const sectionErrorRef = useRef<HTMLParagraphElement>(null);
@@ -263,6 +264,8 @@ export const AboutStep = ({
 									type="button"
 									disabled={isSubmitting}
 									className="border-border text-muted-foreground hover:bg-muted/40 flex aspect-[16/10] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-dashed disabled:pointer-events-none disabled:opacity-50"
+									aria-label={labels.sectionImage}
+									aria-describedby={[sectionHintId, sectionImage.error ? sectionErrorId : null].filter(Boolean).join(' ')}
 									onClick={() => sectionImageInputRef.current?.click()}
 								>
 									<Upload className="size-6" aria-hidden />
@@ -280,7 +283,9 @@ export const AboutStep = ({
 									sectionImage.onChange(event.target.files?.[0] ?? null);
 								}}
 							/>
-							<p className="text-muted-foreground text-xs">{labels.imageHint}</p>
+							<p id={sectionHintId} className="text-muted-foreground text-xs">
+								{labels.imageHint}
+							</p>
 							{sectionImage.error ? (
 								<p
 									id={sectionErrorId}
