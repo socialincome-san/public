@@ -43,6 +43,7 @@ export const SubscriptionsView = async ({ lang, region }: Props) => {
 		since: translator.t('subscriptions.since'),
 		wireTransfer: translator.t('contributions.sources.wire-transfer'),
 		cardFallback: translator.t('subscriptions.card-fallback'),
+		edit: translator.t('subscriptions.edit'),
 		upcomingPayments: translator.t('subscriptions.upcoming-payments'),
 		scheduled: translator.t('subscriptions.scheduled'),
 		emptyDescription: translator.t('subscriptions.empty.description'),

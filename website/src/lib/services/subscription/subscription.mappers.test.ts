@@ -7,6 +7,7 @@ import {
 	mapStripeSubscriptionPriceFields,
 	mapStripeSubscriptionStatus,
 	resolveStripeResourceId,
+	resolveStripeSubscriptionCanceledAt,
 	resolveStripeSubscriptionIdFromInvoice,
 	shouldSkipStripeSubscriptionStatus,
 } from './subscription.mappers';
@@ -66,6 +67,34 @@ describe('subscription.mappers', () => {
 	});
 
 	describe('mapStripeSubscriptionLifecycle', () => {
+		test('maps cancel_at_period_end to canceled', () => {
+			expect(
+				mapStripeSubscriptionLifecycle({
+					id: 'sub_1',
+					status: 'active',
+					cancel_at_period_end: true,
+					cancel_at: 1_700_100_000,
+					ended_at: null,
+					canceled_at: null,
+					metadata: {},
+					items: { data: [] },
+				} as never),
+			).toEqual({
+				status: SubscriptionStatus.canceled,
+				canceledAt: new Date(1_700_100_000 * 1000),
+			});
+		});
+
+		test('resolveStripeSubscriptionCanceledAt prefers current period end', () => {
+			expect(
+				resolveStripeSubscriptionCanceledAt({
+					canceled_at: null,
+					cancel_at: null,
+					items: { data: [{ current_period_end: 1_700_200_000 }] },
+				} as never),
+			).toEqual(new Date(1_700_200_000 * 1000));
+		});
+
 		test('maps canceled without price items', () => {
 			expect(
 				mapStripeSubscriptionLifecycle({

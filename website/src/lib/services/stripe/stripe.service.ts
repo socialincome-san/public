@@ -14,8 +14,15 @@
  * customer.subscription.created, customer.subscription.updated, customer.subscription.deleted
  */
 
-import { ContributionStatus, ContributorReferralSource, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
-import type { CountryCode } from '@/generated/prisma/enums';
+import {
+	ContributionStatus,
+	ContributorReferralSource,
+	PaymentEventType,
+	PrismaClient,
+	SubscriptionPaymentMethod,
+	SubscriptionStatus,
+} from '@/generated/prisma/client';
+import type { CountryCode, SubscriptionCancellationReason } from '@/generated/prisma/enums';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { isValidCurrency } from '@/lib/types/currency';
 import { logger } from '@/lib/utils/logger';
@@ -36,8 +43,18 @@ import {
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
+import {
+	isSubscriptionAmountInRange,
+	SUBSCRIPTION_AMOUNT_MAX,
+	SUBSCRIPTION_AMOUNT_MIN,
+} from '../subscription/subscription-amount';
+import { mapCancellationReasonToStripeFeedback } from '../subscription/subscription-cancellation';
 import { SubscriptionWriteService } from '../subscription/subscription-write.service';
-import { resolveStripeResourceId, resolveStripeSubscriptionIdFromInvoice } from '../subscription/subscription.mappers';
+import {
+	resolveStripeResourceId,
+	resolveStripeSubscriptionCanceledAt,
+	resolveStripeSubscriptionIdFromInvoice,
+} from '../subscription/subscription.mappers';
 import { assertContributorEmailMatchesCheckout, assertEmbeddedCheckoutSessionPaid } from './checkout-session-guards';
 import {
 	type CheckoutMetadata,
@@ -510,6 +527,7 @@ export class StripeService extends BaseService {
 	async createManageSubscriptionsSession(
 		stripeCustomerId: string | null,
 		language: string | null,
+		flow?: 'payment_method_update',
 	): Promise<ServiceResult<StripeBillingPortalSessionUrl>> {
 		try {
 			if (!stripeCustomerId) {
@@ -520,6 +538,7 @@ export class StripeService extends BaseService {
 				customer: stripeCustomerId,
 				return_url: `${process.env.BASE_URL}/dashboard/subscriptions`,
 				locale: (language as Stripe.BillingPortal.SessionCreateParams.Locale) ?? 'auto',
+				...(flow ? { flow_data: { type: flow } } : {}),
 			});
 
 			if (!session.url) {
@@ -531,6 +550,158 @@ export class StripeService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not create billing portal session: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async updateContributorSubscriptionAmount(input: {
+		contributorId: string;
+		subscriptionId: string;
+		amount: number;
+	}): Promise<ServiceResult<{ amount: number; currency: string }>> {
+		try {
+			const { contributorId, subscriptionId, amount } = input;
+			if (!isSubscriptionAmountInRange(amount)) {
+				return this.resultFail(
+					`Amount must be an integer between ${SUBSCRIPTION_AMOUNT_MIN} and ${SUBSCRIPTION_AMOUNT_MAX}`,
+				);
+			}
+
+			const subscription = await this.db.subscription.findFirst({
+				where: this.ownedActiveStripeSubscriptionWhere(contributorId, subscriptionId),
+				select: {
+					id: true,
+					campaignId: true,
+					currency: true,
+					stripeSubscriptionId: true,
+				},
+			});
+			if (!subscription?.stripeSubscriptionId) {
+				return this.resultFail('Subscription not found');
+			}
+
+			const stripe = this.getStripeClient();
+			const stripeSubscription = await stripe.subscriptions.retrieve(subscription.stripeSubscriptionId);
+			const item = stripeSubscription.items.data[0];
+			if (!item) {
+				return this.resultFail('Stripe subscription has no items');
+			}
+
+			const existingPrice = item.price;
+			const productId =
+				typeof existingPrice.product === 'string' ? existingPrice.product : (existingPrice.product?.id ?? null);
+			if (!productId) {
+				return this.resultFail('Stripe subscription item has no product');
+			}
+
+			const recurring = existingPrice.recurring;
+			if (!recurring) {
+				return this.resultFail('Stripe subscription item is not recurring');
+			}
+
+			const recurringInterval =
+				recurring.interval === 'day'
+					? ('day' as const)
+					: recurring.interval === 'week'
+						? ('week' as const)
+						: recurring.interval === 'month'
+							? ('month' as const)
+							: recurring.interval === 'year'
+								? ('year' as const)
+								: null;
+			if (!recurringInterval) {
+				return this.resultFail('Unsupported Stripe recurring interval');
+			}
+
+			const updatedSubscription = await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+				items: [
+					{
+						id: item.id,
+						price_data: {
+							currency: subscription.currency.toLowerCase(),
+							product: productId,
+							unit_amount: amount * 100,
+							recurring: {
+								interval: recurringInterval,
+								interval_count: recurring.interval_count,
+							},
+						},
+					},
+				],
+				proration_behavior: 'none',
+			});
+
+			const upsertResult = await this.subscriptionWriteService.upsertFromStripeSubscription({
+				stripeSubscription: updatedSubscription,
+				contributorId,
+				campaignId: subscription.campaignId,
+			});
+			if (!upsertResult.success) {
+				return this.resultFail(upsertResult.error);
+			}
+			if (!upsertResult.data) {
+				return this.resultFail('Could not sync updated subscription');
+			}
+
+			return this.resultOk({ amount, currency: subscription.currency });
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not update subscription amount');
+		}
+	}
+
+	async cancelContributorSubscription(input: {
+		contributorId: string;
+		subscriptionId: string;
+		reason: SubscriptionCancellationReason;
+	}): Promise<ServiceResult<void>> {
+		try {
+			const subscription = await this.db.subscription.findFirst({
+				where: {
+					id: input.subscriptionId,
+					contributorId: input.contributorId,
+					paymentMethod: SubscriptionPaymentMethod.stripe,
+				},
+				select: {
+					id: true,
+					stripeSubscriptionId: true,
+					status: true,
+				},
+			});
+			if (!subscription?.stripeSubscriptionId) {
+				return this.resultFail('Subscription not found');
+			}
+
+			if (subscription.status === SubscriptionStatus.ended) {
+				return this.resultFail('Subscription not found');
+			}
+
+			const stripe = this.getStripeClient();
+			let stripeSubscription = await stripe.subscriptions.retrieve(subscription.stripeSubscriptionId);
+
+			if (!stripeSubscription.cancel_at_period_end) {
+				stripeSubscription = await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+					cancel_at_period_end: true,
+					cancellation_details: {
+						feedback: mapCancellationReasonToStripeFeedback(input.reason),
+					},
+				});
+			}
+
+			await this.db.subscription.update({
+				where: { id: subscription.id },
+				data: {
+					status: SubscriptionStatus.canceled,
+					canceledAt: resolveStripeSubscriptionCanceledAt(stripeSubscription),
+					cancellationReason: input.reason,
+				},
+			});
+
+			return this.resultOk(undefined);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not cancel subscription');
 		}
 	}
 
@@ -589,6 +760,15 @@ export class StripeService extends BaseService {
 
 			return this.resultFail(`Failed to handle webhook event: ${JSON.stringify(error)}`);
 		}
+	}
+
+	private ownedActiveStripeSubscriptionWhere(contributorId: string, subscriptionId: string) {
+		return {
+			id: subscriptionId,
+			contributorId,
+			paymentMethod: SubscriptionPaymentMethod.stripe,
+			status: SubscriptionStatus.active,
+		};
 	}
 
 	private getStripeClient(): Stripe {
