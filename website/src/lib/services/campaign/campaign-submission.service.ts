@@ -101,17 +101,28 @@ export class CampaignSubmissionService extends BaseService {
 			});
 			cleanupState.campaignId = campaign.id;
 
-			const { assetId: primaryAssetId, asset: primaryAsset } = await this.storyblokManagementService.uploadAsset(
-				primaryImage.buffer,
-				primaryImage.filename,
-				primaryImage.mimeType,
-			);
-			cleanupState.assetIds.push(primaryAssetId);
+			// Wait for all uploads to settle so successful assetIds are recorded before any cleanup.
+			const [primaryResult, profileResult, sectionResult] = await Promise.allSettled([
+				this.uploadImage(primaryImage, cleanupState),
+				this.uploadOptionalImage(optionalImages.profilePicture, cleanupState),
+				fields.hasAdditionalInformation
+					? this.uploadOptionalImage(optionalImages.sectionImage, cleanupState)
+					: Promise.resolve(undefined),
+			]);
 
-			const profilePictureAsset = await this.uploadOptionalImage(optionalImages.profilePicture, cleanupState);
-			const sectionImageAsset = fields.hasAdditionalInformation
-				? await this.uploadOptionalImage(optionalImages.sectionImage, cleanupState)
-				: undefined;
+			if (primaryResult.status === 'rejected') {
+				throw primaryResult.reason;
+			}
+			if (profileResult.status === 'rejected') {
+				throw profileResult.reason;
+			}
+			if (sectionResult.status === 'rejected') {
+				throw sectionResult.reason;
+			}
+
+			const primaryAsset = primaryResult.value;
+			const profilePictureAsset = profileResult.value;
+			const sectionImageAsset = sectionResult.value;
 
 			const { storyId } = await this.storyblokManagementService.createPublishedCampaignStory({
 				slug,
@@ -162,15 +173,19 @@ export class CampaignSubmissionService extends BaseService {
 		}
 	}
 
+	private async uploadImage(image: CampaignSubmissionImageValidation, cleanupState: SubmissionCleanupState) {
+		const uploaded = await this.storyblokManagementService.uploadAsset(image.buffer, image.filename, image.mimeType);
+		cleanupState.assetIds.push(uploaded.assetId);
+
+		return uploaded.asset;
+	}
+
 	private async uploadOptionalImage(image: CampaignSubmissionImageValidation | null, cleanupState: SubmissionCleanupState) {
 		if (!image) {
 			return undefined;
 		}
 
-		const uploaded = await this.storyblokManagementService.uploadAsset(image.buffer, image.filename, image.mimeType);
-		cleanupState.assetIds.push(uploaded.assetId);
-
-		return uploaded.asset;
+		return this.uploadImage(image, cleanupState);
 	}
 
 	private async resolveImage(

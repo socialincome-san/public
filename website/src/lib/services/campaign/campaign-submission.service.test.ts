@@ -256,6 +256,42 @@ describe('CampaignSubmissionService', () => {
 		expect(db.campaign.delete).toHaveBeenCalledWith({ where: { id: 'campaign-1' } });
 	});
 
+	test('submit cleans up successful uploads when a parallel Storyblok upload fails', async () => {
+		const { service, db, deleteAsset, uploadAsset } = createService();
+		uploadAsset.mockImplementation(async (_buffer: Buffer, filename: string) => {
+			if (filename === 'profile.png') {
+				await new Promise((resolve) => setTimeout(resolve, 20));
+				throw new Error('profile upload failed');
+			}
+
+			if (filename === 'section.png') {
+				await new Promise((resolve) => setTimeout(resolve, 5));
+
+				return { assetId: 12, asset: { filename: 'section.png' } };
+			}
+
+			return { assetId: 10, asset: { filename: 'primary.png' } };
+		});
+
+		const result = await service.submit(
+			{
+				...baseFields,
+				hasAdditionalInformation: true,
+				sectionDescription: 'Extra section',
+			},
+			{ kind: 'upload', image: pngImage },
+			{
+				profilePicture: { ...pngImage, filename: 'profile.png' },
+				sectionImage: { ...pngImage, filename: 'section.png' },
+			},
+		);
+
+		expect(result.success).toBe(false);
+		expect(deleteAsset).toHaveBeenCalledWith(10);
+		expect(deleteAsset).toHaveBeenCalledWith(12);
+		expect(db.campaign.delete).toHaveBeenCalledWith({ where: { id: 'campaign-1' } });
+	});
+
 	test('submit downloads and re-uploads a default image from the defaults folder', async () => {
 		const { service, create, getAsset, downloadAssetBuffer, uploadAsset } = createService();
 		getAsset.mockResolvedValue({
