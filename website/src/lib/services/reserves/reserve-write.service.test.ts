@@ -1,8 +1,9 @@
-import { type PrismaClient } from '@/generated/prisma/client';
+import { Currency, type PrismaClient } from '@/generated/prisma/client';
 import { ReserveWriteService } from './reserve-write.service';
 import { type ReserveCreateInput } from './reserve.types';
 
 jest.mock('@/generated/prisma/client', () => ({
+	Currency: { CHF: 'CHF', EUR: 'EUR' },
 	PrismaClient: class {},
 }));
 
@@ -11,30 +12,32 @@ describe('ReserveWriteService.createMany', () => {
 		bankAccountId: 'postfinance-account',
 		date: new Date('2026-08-12T00:00:00.000Z'),
 		amount: 125,
-		currency: 'CHF' as ReserveCreateInput['currency'],
+		currency: Currency.CHF,
 		amountChf: 125,
 	};
 
 	test('uses skipDuplicates so repeated writes keep a single snapshot', async () => {
 		const snapshots = new Map<string, ReserveCreateInput>();
-		const createMany = jest.fn().mockImplementation(async ({ data, skipDuplicates }) => {
-			let count = 0;
+		const createMany = jest
+			.fn()
+			.mockImplementation(({ data, skipDuplicates }: { data: ReserveCreateInput[]; skipDuplicates?: boolean }) => {
+				let count = 0;
 
-			for (const row of data as ReserveCreateInput[]) {
-				const key = `${row.bankAccountId}:${row.date.toISOString()}`;
-				if (snapshots.has(key)) {
-					if (!skipDuplicates) {
-						throw new Error(`Duplicate reserve for ${key}`);
+				for (const row of data) {
+					const key = `${row.bankAccountId}:${row.date.toISOString()}`;
+					if (snapshots.has(key)) {
+						if (!skipDuplicates) {
+							throw new Error(`Duplicate reserve for ${key}`);
+						}
+						continue;
 					}
-					continue;
+
+					snapshots.set(key, row);
+					count += 1;
 				}
 
-				snapshots.set(key, row);
-				count += 1;
-			}
-
-			return { count };
-		});
+				return Promise.resolve({ count });
+			});
 		const service = new ReserveWriteService({ reserve: { createMany } } as unknown as PrismaClient, {} as never);
 
 		await expect(service.createMany([reserve])).resolves.toEqual({ success: true, data: 1 });

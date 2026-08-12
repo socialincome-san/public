@@ -1,7 +1,7 @@
 import { type PrismaClient } from '@/generated/prisma/client';
 import { ReserveWriteService } from './reserve-write.service';
-import { ReservesCalculationService } from './reserves-calculation.service';
 import { type ReserveCreateInput } from './reserve.types';
+import { ReservesCalculationService } from './reserves-calculation.service';
 
 jest.mock('@/generated/prisma/client', () => ({
 	BankAccountType: {
@@ -24,12 +24,14 @@ const postFinanceAccount = {
 	updatedAt: null,
 };
 
+type ReserveCreateManyArgs = { data: ReserveCreateInput[]; skipDuplicates?: boolean };
+
 const createConflictSafeReserveDb = () => {
 	const snapshots = new Map<string, ReserveCreateInput>();
-	const createMany = jest.fn().mockImplementation(async ({ data, skipDuplicates }) => {
+	const createMany = jest.fn(({ data, skipDuplicates }: ReserveCreateManyArgs) => {
 		let count = 0;
 
-		for (const row of data as ReserveCreateInput[]) {
+		for (const row of data) {
 			const key = `${row.bankAccountId}:${row.date.toISOString()}`;
 			if (snapshots.has(key)) {
 				if (!skipDuplicates) {
@@ -42,8 +44,8 @@ const createConflictSafeReserveDb = () => {
 			count += 1;
 		}
 
-		return { count };
-	});
+		return Promise.resolve({ count });
+	}) as jest.MockedFunction<(args: ReserveCreateManyArgs) => Promise<{ count: number }>>;
 
 	return {
 		snapshots,
@@ -63,9 +65,9 @@ describe('ReservesCalculationService.calculate', () => {
 				data: [{ iban: 'CH1909000000151126386', amount: 125, currency: 'EUR' }],
 			}),
 		};
-		const reserveWriteService = {
-			createMany: jest.fn().mockResolvedValue({ success: true, data: 1 }),
-		};
+		const createMany = jest.fn().mockResolvedValue({ success: true, data: 1 }) as jest.MockedFunction<
+			(reserves: ReserveCreateInput[]) => Promise<{ success: true; data: number }>
+		>;
 		const currencyDisplayService = {
 			getLatestRatesOrUndefined: jest.fn().mockResolvedValue({ CHF: 1, EUR: 2 }),
 			convertAmount: jest.fn().mockReturnValue(62.5),
@@ -74,21 +76,24 @@ describe('ReservesCalculationService.calculate', () => {
 			{} as never,
 			bankAccountService as never,
 			postFinanceBalanceService as never,
-			reserveWriteService as never,
+			{ createMany } as never,
 			currencyDisplayService as never,
 		);
 
 		await expect(service.calculate()).resolves.toEqual({ success: true, data: 1 });
 		expect(postFinanceBalanceService.getLatestClavBalances).toHaveBeenCalledWith(['CH19 0900 0000 1511 2638 6']);
-		expect(reserveWriteService.createMany).toHaveBeenCalledWith([
+		expect(createMany).toHaveBeenCalledTimes(1);
+		const writtenReserves = createMany.mock.calls[0]?.[0] ?? [];
+		expect(writtenReserves).toEqual([
 			{
 				bankAccountId: 'postfinance-account',
-				date: expect.any(Date),
+				date: writtenReserves[0]?.date,
 				amount: 125,
 				currency: 'EUR',
 				amountChf: 62.5,
 			},
 		]);
+		expect(writtenReserves[0]?.date).toBeInstanceOf(Date);
 	});
 
 	test('skips unsupported bank account types', async () => {
@@ -140,11 +145,12 @@ describe('ReservesCalculationService.calculate', () => {
 		await expect(service.calculate()).resolves.toEqual({ success: true, data: 0 });
 
 		expect(createMany).toHaveBeenCalledTimes(2);
-		expect(createMany).toHaveBeenCalledWith({
+		const firstWrite = createMany.mock.calls[0]?.[0];
+		expect(firstWrite).toEqual({
 			data: [
 				{
 					bankAccountId: 'postfinance-account',
-					date: expect.any(Date),
+					date: firstWrite?.data[0]?.date,
 					amount: 125,
 					currency: 'CHF',
 					amountChf: 125,
@@ -152,6 +158,7 @@ describe('ReservesCalculationService.calculate', () => {
 			],
 			skipDuplicates: true,
 		});
+		expect(firstWrite?.data[0]?.date).toBeInstanceOf(Date);
 		expect(snapshots.size).toBe(1);
 	});
 });
