@@ -18,6 +18,7 @@ import { type BankContributorData, type ContributorUpdateInput } from '../contri
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
+import { SubscriptionWriteService } from '../subscription/subscription-write.service';
 import {
 	type CreateWizardPendingContributionInput,
 	type CreateWizardQrReferencesInput,
@@ -45,6 +46,7 @@ export class QrBillService extends BaseService {
 		private readonly contributorReadService: ContributorReadService,
 		private readonly campaignService: CampaignReadService,
 		private readonly contributionService: ContributionWriteService,
+		private readonly subscriptionWriteService: SubscriptionWriteService,
 		private readonly exchangeRateService: ExchangeRateReadService,
 		loggerInstance = logger,
 	) {
@@ -93,7 +95,26 @@ export class QrBillService extends BaseService {
 				return this.resultFail(`Could not get or create contributor for reference Id ${userData.paymentReferenceId}`);
 			}
 
-			const newContribution = await this.buildContribution(payment, contributor.data.id, payment.campaignId);
+			const campaignIdResult = await this.resolveCampaignId(payment.campaignId);
+			if (!campaignIdResult.success) {
+				return this.resultFail(campaignIdResult.error);
+			}
+			const campaignId = campaignIdResult.data;
+
+			if (payment.interval === 1) {
+				const subscriptionResult = await this.subscriptionWriteService.upsertFromBankStandingOrder({
+					bankStandingOrderReference: payment.referenceId,
+					contributorId: contributor.data.id,
+					campaignId,
+					amount: payment.amount,
+					currency: payment.currency,
+				});
+				if (!subscriptionResult.success) {
+					return this.resultFail(subscriptionResult.error);
+				}
+			}
+
+			const newContribution = await this.buildContribution(payment, contributor.data.id, campaignId);
 			if (!newContribution.success) {
 				return this.resultFail(`Could not build new contribution for reference Id ${payment.referenceId}`);
 			}
@@ -336,13 +357,8 @@ export class QrBillService extends BaseService {
 	private async buildContribution(
 		payment: WizardQrPayment,
 		contributorId: string,
-		campaignIdFromContext?: string,
+		campaignId: string,
 	): Promise<ServiceResult<PaymentEventCreateInput>> {
-		const campaignIdResult = await this.resolveCampaignId(campaignIdFromContext ?? payment.campaignId);
-		if (!campaignIdResult.success) {
-			return campaignIdResult;
-		}
-
 		const amountChfResult = await this.resolveAmountChf(payment.amount, payment.currency);
 		if (!amountChfResult.success) {
 			return amountChfResult;
@@ -363,7 +379,7 @@ export class QrBillService extends BaseService {
 					status: ContributionStatus.pending,
 					campaign: {
 						connect: {
-							id: campaignIdResult.data,
+							id: campaignId,
 						},
 					},
 					contributor: {
