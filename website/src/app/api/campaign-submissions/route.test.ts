@@ -180,4 +180,55 @@ describe('POST /api/campaign-submissions', () => {
 		expect(body).toEqual({ errorCode: 'invalid-submission' });
 		expect(mockSubmit).not.toHaveBeenCalled();
 	});
+
+	test('returns image field for primaryImage validation failures', async () => {
+		const formData = createValidFormData();
+		formData.set('primaryImage', new File([Buffer.alloc(6 * 1024 * 1024)], 'huge.png', { type: 'image/png' }));
+		mockParseMultipartFormDataWithLimit.mockResolvedValue(formData);
+
+		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
+		const body: unknown = await response.json();
+
+		expect(response.status).toBe(400);
+		expect(body).toEqual({ errorCode: 'image-too-large', field: 'primaryImage' });
+		expect(mockSubmit).not.toHaveBeenCalled();
+	});
+
+	test('returns image field for profilePicture validation failures', async () => {
+		const formData = createValidFormData();
+		formData.set(
+			'profilePicture',
+			new File([Buffer.from('not-an-image')], 'profile.txt', {
+				type: 'text/plain',
+			}),
+		);
+		mockParseMultipartFormDataWithLimit.mockResolvedValue(formData);
+
+		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
+		const body: unknown = await response.json();
+
+		expect(response.status).toBe(400);
+		expect(body).toEqual({ errorCode: 'image-format-unsupported', field: 'profilePicture' });
+		expect(mockSubmit).not.toHaveBeenCalled();
+	});
+
+	test('returns image field for sectionImage validation failures', async () => {
+		const formData = createValidFormData();
+		formData.set('hasAdditionalInformation', 'true');
+		formData.set('sectionDescription', 'Extra');
+		formData.set(
+			'sectionImage',
+			new File([Buffer.from('not-an-image')], 'section.txt', {
+				type: 'text/plain',
+			}),
+		);
+		mockParseMultipartFormDataWithLimit.mockResolvedValue(formData);
+
+		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
+		const body: unknown = await response.json();
+
+		expect(response.status).toBe(400);
+		expect(body).toEqual({ errorCode: 'image-format-unsupported', field: 'sectionImage' });
+		expect(mockSubmit).not.toHaveBeenCalled();
+	});
 });

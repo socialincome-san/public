@@ -1,11 +1,13 @@
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import {
 	isCampaignSubmissionErrorCode,
+	isCampaignSubmissionImageErrorCode,
 	parseCampaignSubmissionDefaultImageId,
 	parseCampaignSubmissionFields,
 	parseOptionalCampaignSubmissionImage,
 	validateCampaignSubmissionImageBuffer,
 	type CampaignSubmissionErrorCode,
+	type CampaignSubmissionImageMultipartField,
 	type CampaignSubmissionImageSource,
 	type CampaignSubmissionOptionalImages,
 } from '@/lib/services/campaign/campaign-submission-input';
@@ -15,14 +17,21 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
-const errorResponse = (errorCode: CampaignSubmissionErrorCode, status: number) =>
-	NextResponse.json({ errorCode }, { status });
+type ImageFieldError = {
+	success: false;
+	error: CampaignSubmissionErrorCode;
+	field?: CampaignSubmissionImageMultipartField;
+};
+
+const errorResponse = (
+	errorCode: CampaignSubmissionErrorCode,
+	status: number,
+	field?: CampaignSubmissionImageMultipartField,
+) => NextResponse.json(field ? { errorCode, field } : { errorCode }, { status });
 
 const resolveImageSource = async (
 	formData: FormData,
-): Promise<
-	{ success: true; data: CampaignSubmissionImageSource } | { success: false; error: CampaignSubmissionErrorCode }
-> => {
+): Promise<{ success: true; data: CampaignSubmissionImageSource } | ImageFieldError> => {
 	const imageField = formData.get('primaryImage');
 	const hasUpload = imageField instanceof File && imageField.size > 0;
 	const defaultImageRaw = formData.get('defaultImageId');
@@ -36,7 +45,7 @@ const resolveImageSource = async (
 		const imageBuffer = Buffer.from(await imageField.arrayBuffer());
 		const imageResult = validateCampaignSubmissionImageBuffer(imageBuffer, imageField.type, imageField.name);
 		if (!imageResult.success) {
-			return { success: false, error: imageResult.error };
+			return { success: false, error: imageResult.error, field: 'primaryImage' };
 		}
 
 		return {
@@ -54,7 +63,7 @@ const resolveImageSource = async (
 	if (hasDefaultImage) {
 		const defaultImageIdResult = parseCampaignSubmissionDefaultImageId(defaultImageRaw);
 		if (!defaultImageIdResult.success) {
-			return defaultImageIdResult;
+			return { success: false, error: defaultImageIdResult.error, field: 'defaultImageId' };
 		}
 
 		return {
@@ -66,18 +75,16 @@ const resolveImageSource = async (
 		};
 	}
 
-	return { success: false, error: 'image-required' };
+	return { success: false, error: 'image-required', field: 'primaryImage' };
 };
 
 const resolveOptionalImages = async (
 	formData: FormData,
 	hasAdditionalInformation: boolean,
-): Promise<
-	{ success: true; data: CampaignSubmissionOptionalImages } | { success: false; error: CampaignSubmissionErrorCode }
-> => {
+): Promise<{ success: true; data: CampaignSubmissionOptionalImages } | ImageFieldError> => {
 	const profilePictureResult = await parseOptionalCampaignSubmissionImage(formData, 'profilePicture');
 	if (!profilePictureResult.success) {
-		return profilePictureResult;
+		return { success: false, error: profilePictureResult.error, field: 'profilePicture' };
 	}
 
 	if (!hasAdditionalInformation) {
@@ -92,7 +99,7 @@ const resolveOptionalImages = async (
 
 	const sectionImageResult = await parseOptionalCampaignSubmissionImage(formData, 'sectionImage');
 	if (!sectionImageResult.success) {
-		return sectionImageResult;
+		return { success: false, error: sectionImageResult.error, field: 'sectionImage' };
 	}
 
 	return {
@@ -123,12 +130,12 @@ export const POST = async (request: NextRequest) => {
 
 	const imageSourceResult = await resolveImageSource(formData);
 	if (!imageSourceResult.success) {
-		return errorResponse(imageSourceResult.error, 400);
+		return errorResponse(imageSourceResult.error, 400, imageSourceResult.field);
 	}
 
 	const optionalImagesResult = await resolveOptionalImages(formData, fieldsResult.data.hasAdditionalInformation);
 	if (!optionalImagesResult.success) {
-		return errorResponse(optionalImagesResult.error, 400);
+		return errorResponse(optionalImagesResult.error, 400, optionalImagesResult.field);
 	}
 
 	const submissionResult = await services.campaignSubmission.submit(
@@ -139,8 +146,11 @@ export const POST = async (request: NextRequest) => {
 
 	if (!submissionResult.success) {
 		const errorCode = isCampaignSubmissionErrorCode(submissionResult.error) ? submissionResult.error : 'submission-failed';
+		const field = isCampaignSubmissionImageErrorCode(errorCode)
+			? ('defaultImageId' satisfies CampaignSubmissionImageMultipartField)
+			: undefined;
 
-		return errorResponse(errorCode, submissionResult.status ?? 400);
+		return errorResponse(errorCode, submissionResult.status ?? 400, field);
 	}
 
 	return NextResponse.json({ slug: submissionResult.data.slug }, { status: 201 });

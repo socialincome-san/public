@@ -49,6 +49,25 @@ export const campaignSubmissionErrorCodes = [
 
 export type CampaignSubmissionErrorCode = (typeof campaignSubmissionErrorCodes)[number];
 
+export const campaignSubmissionImageMultipartFields = [
+	'primaryImage',
+	'defaultImageId',
+	'profilePicture',
+	'sectionImage',
+] as const;
+
+export type CampaignSubmissionImageMultipartField = (typeof campaignSubmissionImageMultipartFields)[number];
+
+export const isCampaignSubmissionImageMultipartField = (value: unknown): value is CampaignSubmissionImageMultipartField =>
+	typeof value === 'string' && (campaignSubmissionImageMultipartFields as readonly string[]).includes(value);
+
+export const isCampaignSubmissionImageErrorCode = (errorCode: string | undefined): boolean =>
+	errorCode === 'image-required' ||
+	errorCode === 'image-too-large' ||
+	errorCode === 'image-format-unsupported' ||
+	errorCode === 'image-type-mismatch' ||
+	errorCode === 'default-image-invalid';
+
 const campaignSubmissionErrorCodeSet = new Set<string>(campaignSubmissionErrorCodes);
 
 export const isCampaignSubmissionErrorCode = (value: string): value is CampaignSubmissionErrorCode =>

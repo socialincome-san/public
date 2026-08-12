@@ -14,6 +14,8 @@ import {
 	createCampaignSubmissionFormSchema,
 	endDateFromDurationPreset,
 	isCampaignSubmissionErrorCode,
+	isCampaignSubmissionImageErrorCode,
+	isCampaignSubmissionImageMultipartField,
 	validateCampaignSubmissionImageMeta,
 } from '@/lib/services/campaign/campaign-submission-input';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
@@ -56,14 +58,6 @@ const defaultFormValues = (): CampaignSubmissionFormValues => ({
 	linkWebsite: '',
 	linkTiktok: '',
 });
-
-const isImageSubmissionError = (errorCode: string | undefined) =>
-	errorCode === 'image-required' ||
-	errorCode === 'image-too-large' ||
-	errorCode === 'image-format-unsupported' ||
-	errorCode === 'image-type-mismatch' ||
-	errorCode === 'default-image-invalid';
-
 export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [currentStep, setCurrentStep] = useState<CampaignSubmissionStepId>('program');
 	const [programs, setPrograms] = useState<PublicSubmissionProgramOption[]>([]);
@@ -454,12 +448,22 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			});
 
 			if (!response.ok) {
-				const payload = (await response.json().catch(() => null)) as { errorCode?: string } | null;
+				const payload = (await response.json().catch(() => null)) as {
+					errorCode?: string;
+					field?: string;
+				} | null;
 				const errorMessage = payload?.errorCode ? resolveError(payload.errorCode) : labels.error;
+				const field = isCampaignSubmissionImageMultipartField(payload?.field) ? payload.field : undefined;
 
-				if (isImageSubmissionError(payload?.errorCode)) {
-					setImageError(errorMessage);
-					setCurrentStep('details');
+				if (isCampaignSubmissionImageErrorCode(payload?.errorCode)) {
+					if (field === 'profilePicture') {
+						profilePicture.setError(errorMessage);
+					} else if (field === 'sectionImage') {
+						sectionImage.setError(errorMessage);
+					} else {
+						setImageError(errorMessage);
+						setCurrentStep('details');
+					}
 				} else {
 					setSubmitError(errorMessage);
 				}
