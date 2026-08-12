@@ -203,21 +203,121 @@ describe('campaign-submission-input', () => {
 		formData.set('programId', 'program-1');
 		formData.set('hasAdditionalInformation', 'true');
 		formData.set('sectionDescription', '  Extra details  ');
-		formData.set('linkInstagram', 'https://instagram.com/example');
-		formData.set('linkX', '');
+		formData.set('instagramHandle', '@example');
+		formData.set('xHandle', '');
 		formData.set('linkWebsite', 'https://example.com');
-		formData.set('linkTiktok', 'https://tiktok.com/@example');
+		formData.set('tiktokHandle', 'example.user');
 
 		const result = parseCampaignSubmissionFields(formData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.hasAdditionalInformation).toBe(true);
 			expect(result.data.sectionDescription).toBe('Extra details');
-			expect(result.data.linkInstagram).toBe('https://instagram.com/example');
-			expect(result.data.linkX).toBeNull();
+			expect(result.data.instagramHandle).toBe('example');
+			expect(result.data.xHandle).toBeNull();
 			expect(result.data.linkWebsite).toBe('https://example.com');
-			expect(result.data.linkTiktok).toBe('https://tiktok.com/@example');
+			expect(result.data.tiktokHandle).toBe('example.user');
 		}
+	});
+
+	test('parseCampaignSubmissionFields rejects full social URLs and unsafe website schemes', () => {
+		const base = () => {
+			const formData = withAboutFields(new FormData());
+			formData.set('title', 'Campaign');
+			formData.set('description', 'Description');
+			formData.set('goal', '100');
+			formData.set('currency', 'CHF');
+			formData.set('endDate', validEndDateString());
+			formData.set('programId', 'program-1');
+			formData.set('hasAdditionalInformation', 'true');
+
+			return formData;
+		};
+
+		const withInstagramUrl = base();
+		withInstagramUrl.set('instagramHandle', 'https://instagram.com/example');
+		const instagramResult = parseCampaignSubmissionFields(withInstagramUrl);
+		expect(instagramResult.success).toBe(false);
+		if (!instagramResult.success) {
+			expect(instagramResult.error).toBe('handle-invalid');
+		}
+
+		const withJavascriptWebsite = base();
+		withJavascriptWebsite.set('instagramHandle', 'example');
+		withJavascriptWebsite.set('linkWebsite', 'javascript:alert(1)');
+		const websiteResult = parseCampaignSubmissionFields(withJavascriptWebsite);
+		expect(websiteResult.success).toBe(false);
+		if (!websiteResult.success) {
+			expect(websiteResult.error).toBe('link-unsafe');
+		}
+
+		const withUnsafeX = base();
+		withUnsafeX.set('xHandle', 'javascript:alert(1)');
+		const xResult = parseCampaignSubmissionFields(withUnsafeX);
+		expect(xResult.success).toBe(false);
+		if (!xResult.success) {
+			expect(xResult.error).toBe('handle-invalid');
+		}
+
+		const withProtocolRelativeTiktok = base();
+		withProtocolRelativeTiktok.set('tiktokHandle', '//evil.com');
+		const tiktokResult = parseCampaignSubmissionFields(withProtocolRelativeTiktok);
+		expect(tiktokResult.success).toBe(false);
+		if (!tiktokResult.success) {
+			expect(tiktokResult.error).toBe('handle-invalid');
+		}
+
+		const withDataWebsite = base();
+		withDataWebsite.set('linkWebsite', 'data:text/html,xss');
+		const dataResult = parseCampaignSubmissionFields(withDataWebsite);
+		expect(dataResult.success).toBe(false);
+		if (!dataResult.success) {
+			expect(dataResult.error).toBe('link-unsafe');
+		}
+	});
+
+	test('createCampaignSubmissionFormSchema rejects social URLs and unsafe website schemes', () => {
+		const schema = createCampaignSubmissionFormSchema((code) => code);
+		const baseValues = {
+			title: 'Campaign',
+			description: 'Description',
+			hasGoal: false,
+			goal: '',
+			currency: 'CHF' as const,
+			durationPreset: '30' as const,
+			endDate: validEndDateString(),
+			isPublic: true,
+			programId: 'program-1',
+			creatorName: 'Alex',
+			quote: 'Thanks',
+			hasAdditionalInformation: true,
+			sectionDescription: '',
+			instagramHandle: '',
+			xHandle: '',
+			linkWebsite: '',
+			tiktokHandle: '',
+		};
+
+		const urlHandle = schema.safeParse({ ...baseValues, instagramHandle: 'https://instagram.com/foo' });
+		expect(urlHandle.success).toBe(false);
+		if (!urlHandle.success) {
+			expect(urlHandle.error.issues.some((issue) => issue.message === 'handle-invalid')).toBe(true);
+		}
+
+		const unsafeWebsite = schema.safeParse({ ...baseValues, linkWebsite: 'javascript:alert(1)' });
+		expect(unsafeWebsite.success).toBe(false);
+		if (!unsafeWebsite.success) {
+			expect(unsafeWebsite.error.issues.some((issue) => issue.message === 'link-unsafe')).toBe(true);
+		}
+
+		const valid = schema.safeParse({
+			...baseValues,
+			instagramHandle: '@valid_user',
+			xHandle: 'valid_user',
+			tiktokHandle: 'valid.user',
+			linkWebsite: 'https://example.com',
+		});
+		expect(valid.success).toBe(true);
 	});
 
 	test('parseCampaignSubmissionFields clears additional information when disabled', () => {
@@ -230,13 +330,13 @@ describe('campaign-submission-input', () => {
 		formData.set('programId', 'program-1');
 		formData.set('hasAdditionalInformation', 'false');
 		formData.set('sectionDescription', 'Should be ignored');
-		formData.set('linkInstagram', 'https://instagram.com/example');
+		formData.set('instagramHandle', 'example');
 
 		const result = parseCampaignSubmissionFields(formData);
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.sectionDescription).toBeNull();
-			expect(result.data.linkInstagram).toBeNull();
+			expect(result.data.instagramHandle).toBeNull();
 		}
 	});
 
@@ -268,10 +368,10 @@ describe('campaign-submission-input', () => {
 			quote: 'Thanks',
 			hasAdditionalInformation: false,
 			sectionDescription: '',
-			linkInstagram: '',
-			linkX: '',
+			instagramHandle: '',
+			xHandle: '',
 			linkWebsite: '',
-			linkTiktok: '',
+			tiktokHandle: '',
 		});
 
 		expect(result.success).toBe(false);

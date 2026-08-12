@@ -16,17 +16,18 @@ type Props = Pick<
 >;
 
 type AdditionalLinkField = {
-	name: keyof Pick<CampaignSubmissionFormValues, 'linkInstagram' | 'linkX' | 'linkWebsite' | 'linkTiktok'>;
+	name: keyof Pick<CampaignSubmissionFormValues, 'instagramHandle' | 'xHandle' | 'linkWebsite' | 'tiktokHandle'>;
 	label: string;
 	autoComplete: string;
+	placeholder?: string;
 };
 
 const ADDITIONAL_FIELD_NAMES = [
 	'sectionDescription',
-	'linkInstagram',
-	'linkX',
+	'instagramHandle',
+	'xHandle',
 	'linkWebsite',
-	'linkTiktok',
+	'tiktokHandle',
 ] as const satisfies readonly (keyof CampaignSubmissionFormValues)[];
 
 export const AboutStep = ({
@@ -47,10 +48,15 @@ export const AboutStep = ({
 	const hasAdditionalInformation = form.watch('hasAdditionalInformation');
 
 	const additionalLinkFields: AdditionalLinkField[] = [
-		{ name: 'linkInstagram', label: labels.linkInstagram, autoComplete: 'off' },
-		{ name: 'linkX', label: labels.linkX, autoComplete: 'off' },
+		{
+			name: 'instagramHandle',
+			label: labels.instagramHandle,
+			autoComplete: 'off',
+			placeholder: labels.instagramHandlePlaceholder,
+		},
+		{ name: 'xHandle', label: labels.xHandle, autoComplete: 'off', placeholder: labels.xHandlePlaceholder },
 		{ name: 'linkWebsite', label: labels.linkWebsite, autoComplete: 'url' },
-		{ name: 'linkTiktok', label: labels.linkTiktok, autoComplete: 'off' },
+		{ name: 'tiktokHandle', label: labels.tiktokHandle, autoComplete: 'off', placeholder: labels.tiktokHandlePlaceholder },
 	];
 
 	useEffect(() => {
@@ -269,7 +275,7 @@ export const AboutStep = ({
 							) : null}
 						</div>
 
-						{additionalLinkFields.map(({ name, label, autoComplete }) => (
+						{additionalLinkFields.map(({ name, label, autoComplete, placeholder }) => (
 							<FormField
 								key={name}
 								control={form.control}
@@ -278,7 +284,7 @@ export const AboutStep = ({
 									<FormItem>
 										<FormLabel>{label}</FormLabel>
 										<FormControl>
-											<Input {...field} value={field.value ?? ''} autoComplete={autoComplete} />
+											<Input {...field} value={field.value ?? ''} autoComplete={autoComplete} placeholder={placeholder} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>

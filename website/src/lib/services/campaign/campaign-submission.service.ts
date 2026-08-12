@@ -126,10 +126,10 @@ export class CampaignSubmissionService extends BaseService {
 					? {
 							sectionDescription: fields.sectionDescription,
 							...(sectionImageAsset ? { sectionImage: sectionImageAsset } : {}),
-							linkInstagram: fields.linkInstagram,
-							linkX: fields.linkX,
+							instagramHandle: fields.instagramHandle,
+							xHandle: fields.xHandle,
 							linkWebsite: fields.linkWebsite,
-							linkTiktok: fields.linkTiktok,
+							tiktokHandle: fields.tiktokHandle,
 						}
 					: {}),
 			});

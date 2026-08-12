@@ -6,13 +6,14 @@ import {
 	type CampaignSubmissionDurationPreset,
 	type CampaignSubmissionPermittedImageMimeType,
 } from '@/lib/config/campaign-submission.config';
-import { slugify } from '@/lib/utils/string-utils';
+import { isSafeHref, slugify } from '@/lib/utils/string-utils';
 import { addDays, format, isValid, parse, startOfDay } from 'date-fns';
 import z from 'zod';
 
 // Intentional: strip ASCII control characters from untrusted text fields.
 // eslint-disable-next-line no-control-regex -- sanitizes form input
 const CONTROL_CHARACTERS_REGEX = /[\u0000-\u001F\u007F]/;
+const SOCIAL_HANDLE_REGEX = /^[a-zA-Z0-9._]+$/;
 
 export const campaignSubmissionErrorCodes = [
 	'title-required',
@@ -33,6 +34,9 @@ export const campaignSubmissionErrorCodes = [
 	'quote-too-long',
 	'section-description-too-long',
 	'link-too-long',
+	'link-unsafe',
+	'handle-invalid',
+	'handle-too-long',
 	'image-required',
 	'image-too-large',
 	'image-format-unsupported',
@@ -88,6 +92,60 @@ const optionalSanitizedText = (maxLength: number, tooLongCode: CampaignSubmissio
 			return sanitized.length > 0 ? sanitized : null;
 		})
 		.refine((value) => value === null || value.length <= maxLength, tooLongCode);
+
+const normalizeSocialHandle = (value: string) => {
+	const sanitized = sanitizeText(value);
+
+	return sanitized.startsWith('@') ? sanitized.slice(1) : sanitized;
+};
+
+const isValidSocialHandle = (value: string) => SOCIAL_HANDLE_REGEX.test(value) && !value.includes('..') && value.length > 0;
+
+const optionalSocialHandle = () =>
+	z.union([z.string(), z.null(), z.undefined()]).transform((value, ctx) => {
+		if (value === null || value === undefined) {
+			return null;
+		}
+
+		const handle = normalizeSocialHandle(value);
+		if (handle.length === 0) {
+			return null;
+		}
+
+		if (handle.length > campaignSubmissionConfig.maxHandleLength) {
+			ctx.addIssue({ code: 'custom', message: 'handle-too-long' });
+
+			return z.NEVER;
+		}
+
+		if (!isValidSocialHandle(handle)) {
+			ctx.addIssue({ code: 'custom', message: 'handle-invalid' });
+
+			return z.NEVER;
+		}
+
+		return handle;
+	});
+
+const isSafeWebsiteUrl = (value: string) => {
+	if (!isSafeHref(value)) {
+		return false;
+	}
+
+	try {
+		const protocol = new URL(value).protocol.toLowerCase();
+
+		return protocol === 'http:' || protocol === 'https:';
+	} catch {
+		return false;
+	}
+};
+
+const optionalWebsiteUrl = () =>
+	optionalSanitizedText(campaignSubmissionConfig.maxLinkLength, 'link-too-long').refine(
+		(value) => value === null || isSafeWebsiteUrl(value),
+		'link-unsafe',
+	);
 
 const isAllowedCurrency = (value: string): value is CampaignSubmissionAllowedCurrency =>
 	campaignSubmissionConfig.allowedCurrencies.includes(value as CampaignSubmissionAllowedCurrency);
@@ -171,10 +229,10 @@ const campaignSubmissionFieldsSchema = z
 			campaignSubmissionConfig.maxSectionDescriptionLength,
 			'section-description-too-long',
 		),
-		linkInstagram: optionalSanitizedText(campaignSubmissionConfig.maxLinkLength, 'link-too-long'),
-		linkX: optionalSanitizedText(campaignSubmissionConfig.maxLinkLength, 'link-too-long'),
-		linkWebsite: optionalSanitizedText(campaignSubmissionConfig.maxLinkLength, 'link-too-long'),
-		linkTiktok: optionalSanitizedText(campaignSubmissionConfig.maxLinkLength, 'link-too-long'),
+		instagramHandle: optionalSocialHandle(),
+		xHandle: optionalSocialHandle(),
+		linkWebsite: optionalWebsiteUrl(),
+		tiktokHandle: optionalSocialHandle(),
 	})
 	.transform((values) => {
 		if (values.hasAdditionalInformation) {
@@ -184,10 +242,10 @@ const campaignSubmissionFieldsSchema = z
 		return {
 			...values,
 			sectionDescription: null,
-			linkInstagram: null,
-			linkX: null,
+			instagramHandle: null,
+			xHandle: null,
 			linkWebsite: null,
-			linkTiktok: null,
+			tiktokHandle: null,
 		};
 	});
 
@@ -321,10 +379,10 @@ export const parseCampaignSubmissionFields = (
 		quote: formData.get('quote') ?? '',
 		hasAdditionalInformation,
 		sectionDescription: formData.get('sectionDescription'),
-		linkInstagram: formData.get('linkInstagram'),
-		linkX: formData.get('linkX'),
+		instagramHandle: formData.get('instagramHandle'),
+		xHandle: formData.get('xHandle'),
 		linkWebsite: formData.get('linkWebsite'),
-		linkTiktok: formData.get('linkTiktok'),
+		tiktokHandle: formData.get('tiktokHandle'),
 	});
 
 	if (!parsed.success) {
@@ -418,10 +476,10 @@ export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmi
 				.max(campaignSubmissionConfig.maxQuoteLength, message('quote-too-long')),
 			hasAdditionalInformation: z.boolean(),
 			sectionDescription: z.string().optional(),
-			linkInstagram: z.string().optional(),
-			linkX: z.string().optional(),
+			instagramHandle: z.string().optional(),
+			xHandle: z.string().optional(),
 			linkWebsite: z.string().optional(),
-			linkTiktok: z.string().optional(),
+			tiktokHandle: z.string().optional(),
 		})
 		.superRefine((values, ctx) => {
 			if (values.hasGoal) {
@@ -462,10 +520,24 @@ export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmi
 					});
 				}
 
-				for (const path of ['linkInstagram', 'linkX', 'linkWebsite', 'linkTiktok'] as const) {
-					const link = values[path]?.trim() ?? '';
-					if (link.length > campaignSubmissionConfig.maxLinkLength) {
-						ctx.addIssue({ code: 'custom', path: [path], message: message('link-too-long') });
+				const website = values.linkWebsite?.trim() ?? '';
+				if (website.length > campaignSubmissionConfig.maxLinkLength) {
+					ctx.addIssue({ code: 'custom', path: ['linkWebsite'], message: message('link-too-long') });
+				} else if (website.length > 0 && !isSafeWebsiteUrl(website)) {
+					ctx.addIssue({ code: 'custom', path: ['linkWebsite'], message: message('link-unsafe') });
+				}
+
+				for (const path of ['instagramHandle', 'xHandle', 'tiktokHandle'] as const) {
+					const rawHandle = values[path]?.trim() ?? '';
+					if (!rawHandle) {
+						continue;
+					}
+
+					const handle = normalizeSocialHandle(rawHandle);
+					if (handle.length > campaignSubmissionConfig.maxHandleLength) {
+						ctx.addIssue({ code: 'custom', path: [path], message: message('handle-too-long') });
+					} else if (!isValidSocialHandle(handle)) {
+						ctx.addIssue({ code: 'custom', path: [path], message: message('handle-invalid') });
 					}
 				}
 			}

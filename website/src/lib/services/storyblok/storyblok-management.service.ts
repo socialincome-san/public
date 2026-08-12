@@ -384,10 +384,10 @@ export class StoryblokManagementService {
 		profilePicture?: StoryblokAsset;
 		sectionDescription?: string | null;
 		sectionImage?: StoryblokAsset;
-		linkInstagram?: string | null;
-		linkX?: string | null;
+		instagramHandle?: string | null;
+		xHandle?: string | null;
 		linkWebsite?: string | null;
-		linkTiktok?: string | null;
+		tiktokHandle?: string | null;
 	}): Promise<{ storyId: number; storyUuid: string }> {
 		const content: Campaign = {
 			component: 'Campaign',
@@ -401,10 +401,10 @@ export class StoryblokManagementService {
 			...(input.profilePicture ? { profilePicture: input.profilePicture } : {}),
 			...(input.sectionDescription ? { sectionDescription: input.sectionDescription } : {}),
 			...(input.sectionImage ? { sectionImage: input.sectionImage } : {}),
-			...(input.linkInstagram ? { linkInstagram: input.linkInstagram } : {}),
-			...(input.linkX ? { linkX: input.linkX } : {}),
+			...(input.instagramHandle ? { instagramHandle: input.instagramHandle } : {}),
+			...(input.xHandle ? { xHandle: input.xHandle } : {}),
 			...(input.linkWebsite ? { linkWebsite: input.linkWebsite } : {}),
-			...(input.linkTiktok ? { linkTiktok: input.linkTiktok } : {}),
+			...(input.tiktokHandle ? { tiktokHandle: input.tiktokHandle } : {}),
 		};
 
 		const response = await requestManagement(`/spaces/${this.spaceId}/stories/`, {

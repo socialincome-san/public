@@ -46,10 +46,13 @@ export type SubmissionLabels = {
 	hasAdditionalInformation: string;
 	sectionDescription: string;
 	sectionImage: string;
-	linkInstagram: string;
-	linkX: string;
+	instagramHandle: string;
+	xHandle: string;
 	linkWebsite: string;
-	linkTiktok: string;
+	tiktokHandle: string;
+	instagramHandlePlaceholder: string;
+	xHandlePlaceholder: string;
+	tiktokHandlePlaceholder: string;
 	submit: string;
 	submitting: string;
 	successTitle: string;

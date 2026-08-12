@@ -53,10 +53,10 @@ const defaultFormValues = (): CampaignSubmissionFormValues => ({
 	quote: '',
 	hasAdditionalInformation: false,
 	sectionDescription: '',
-	linkInstagram: '',
-	linkX: '',
+	instagramHandle: '',
+	xHandle: '',
 	linkWebsite: '',
-	linkTiktok: '',
+	tiktokHandle: '',
 });
 export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [currentStep, setCurrentStep] = useState<CampaignSubmissionStepId>('program');
@@ -422,10 +422,10 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 
 			if (values.hasAdditionalInformation) {
 				formData.append('sectionDescription', values.sectionDescription ?? '');
-				formData.append('linkInstagram', values.linkInstagram ?? '');
-				formData.append('linkX', values.linkX ?? '');
+				formData.append('instagramHandle', values.instagramHandle ?? '');
+				formData.append('xHandle', values.xHandle ?? '');
 				formData.append('linkWebsite', values.linkWebsite ?? '');
-				formData.append('linkTiktok', values.linkTiktok ?? '');
+				formData.append('tiktokHandle', values.tiktokHandle ?? '');
 			}
 
 			if (imageSelection.type === 'upload') {

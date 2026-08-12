@@ -68,10 +68,10 @@ export interface Campaign {
   quote: string;
   sectionDescription?: string;
   sectionImage?: StoryblokAsset;
-  linkInstagram?: string;
-  linkX?: string;
+  instagramHandle?: string;
+  xHandle?: string;
   linkWebsite?: string;
-  linkTiktok?: string;
+  tiktokHandle?: string;
   component: "Campaign";
   _uid: string;
   _editable?: string | undefined;

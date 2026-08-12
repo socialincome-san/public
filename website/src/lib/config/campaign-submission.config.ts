@@ -18,6 +18,7 @@ export const campaignSubmissionConfig = {
 	maxQuoteLength: 1000,
 	maxSectionDescriptionLength: 5000,
 	maxLinkLength: 500,
+	maxHandleLength: 30,
 	allowedCurrencies: [Currency.CHF, Currency.EUR, Currency.USD, Currency.GBP] as const,
 	minCampaignDurationDays: 7,
 	maxCampaignDurationDays: 365,
