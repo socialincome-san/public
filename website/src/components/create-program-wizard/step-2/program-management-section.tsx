@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { RadioCard } from '../radio-card';
 import { RadioCardGroup } from '../radio-card-group';

@@ -1,7 +1,7 @@
 'use client';
 
-import { Badge } from '@/components/badge';
-import { Button } from '@/components/button';
+import { Badge } from '@/components/badge/badge';
+import { Button } from '@/components/button/button';
 import { CountryFlag } from '@/components/country-flag';
 import { RadioGroupItem } from '@/components/radio-group';
 import type { CountryCode } from '@/generated/prisma/client';

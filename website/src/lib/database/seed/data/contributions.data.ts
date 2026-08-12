@@ -1,4 +1,4 @@
-import { Contribution, ContributionStatus, DonationInterval, Prisma } from '@/generated/prisma/client';
+import { Contribution, ContributionStatus, Prisma } from '@/generated/prisma/client';
 
 export const contributionsData: Contribution[] = [
 	{
@@ -13,7 +13,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-core-sl-default',
 		createdAt: new Date('2024-09-01T10:00:00.000Z'),
 		updatedAt: null,
-		interval: DonationInterval.monthly,
 	},
 	{
 		id: 'contribution-core-high-2',
@@ -27,7 +26,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-core-sl-default',
 		createdAt: new Date('2024-10-01T10:00:00.000Z'),
 		updatedAt: null,
-		interval: DonationInterval.monthly,
 	},
 	{
 		id: 'contribution-core-recurring-1',
@@ -41,7 +39,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-core-sl-default',
 		createdAt: new Date('2024-11-01T10:00:00.000Z'),
 		updatedAt: null,
-		interval: DonationInterval.monthly,
 	},
 	{
 		id: 'contribution-core-recurring-2',
@@ -55,7 +52,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-core-sl-default',
 		createdAt: new Date('2024-12-01T10:00:00.000Z'),
 		updatedAt: null,
-		interval: DonationInterval.monthly,
 	},
 	{
 		id: 'contribution-sl-small-1',
@@ -69,7 +65,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-core-sl-default',
 		createdAt: new Date('2024-12-18T10:00:00.000Z'),
 		updatedAt: null,
-		interval: null,
 	},
 	{
 		id: 'contribution-sl-small-2',
@@ -83,7 +78,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-core-sl-default',
 		createdAt: new Date('2024-12-28T10:00:00.000Z'),
 		updatedAt: null,
-		interval: DonationInterval.monthly,
 	},
 	{
 		id: 'contribution-sl-medium-1',
@@ -97,7 +91,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-core-sl-default',
 		createdAt: new Date('2024-10-14T10:00:00.000Z'),
 		updatedAt: null,
-		interval: DonationInterval.quarterly,
 	},
 	{
 		id: 'contribution-sl-medium-2',
@@ -111,7 +104,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-core-sl-default',
 		createdAt: new Date('2024-12-14T10:00:00.000Z'),
 		updatedAt: null,
-		interval: DonationInterval.quarterly,
 	},
 	{
 		id: 'contribution-gh-onetime-1',
@@ -125,7 +117,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-livelihood-gh-default',
 		createdAt: new Date('2024-10-08T10:00:00.000Z'),
 		updatedAt: null,
-		interval: null,
 	},
 	{
 		id: 'contribution-gh-onetime-2',
@@ -139,7 +130,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-education-gh-default',
 		createdAt: new Date('2024-12-20T10:00:00.000Z'),
 		updatedAt: null,
-		interval: null,
 	},
 	{
 		id: 'contribution-gh-recurring-1',
@@ -153,7 +143,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-core-sl-default',
 		createdAt: new Date('2024-09-20T10:00:00.000Z'),
 		updatedAt: null,
-		interval: DonationInterval.monthly,
 	},
 	{
 		id: 'contribution-gh-recurring-2',
@@ -167,7 +156,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-core-sl-default',
 		createdAt: new Date('2024-10-20T10:00:00.000Z'),
 		updatedAt: null,
-		interval: DonationInterval.monthly,
 	},
 	{
 		id: 'contribution-lr-small-1',
@@ -181,7 +169,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-resilience-lr-default',
 		createdAt: new Date('2024-11-02T10:00:00.000Z'),
 		updatedAt: null,
-		interval: null,
 	},
 	{
 		id: 'contribution-lr-high-1',
@@ -195,7 +182,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-health-lr-default',
 		createdAt: new Date('2024-08-15T10:00:00.000Z'),
 		updatedAt: null,
-		interval: DonationInterval.yearly,
 	},
 	{
 		id: 'contribution-somaha-onetime-1',
@@ -209,7 +195,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-somaha-community-lr-default',
 		createdAt: new Date('2024-12-10T10:00:00.000Z'),
 		updatedAt: null,
-		interval: null,
 	},
 	{
 		id: 'contribution-mixed-owner-1',
@@ -223,7 +208,6 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-core-sl-default',
 		createdAt: new Date('2024-12-05T10:00:00.000Z'),
 		updatedAt: null,
-		interval: DonationInterval.quarterly,
 	},
 	{
 		id: 'contribution-mixed-owner-2',
@@ -237,6 +221,31 @@ export const contributionsData: Contribution[] = [
 		campaignId: 'campaign-si-education-sl-default',
 		createdAt: new Date('2024-12-22T10:00:00.000Z'),
 		updatedAt: null,
-		interval: null,
+	},
+	{
+		id: 'contribution-mixed-owner-qr-50-1',
+		legacyFirestoreId: null,
+		amount: new Prisma.Decimal(50),
+		currency: 'CHF',
+		amountChf: new Prisma.Decimal(50),
+		feesChf: new Prisma.Decimal(1),
+		contributorId: 'contributor-mixed-owner',
+		status: ContributionStatus.succeeded,
+		campaignId: 'campaign-si-core-sl-default',
+		createdAt: new Date('2024-11-01T10:00:00.000Z'),
+		updatedAt: null,
+	},
+	{
+		id: 'contribution-mixed-owner-qr-80-1',
+		legacyFirestoreId: null,
+		amount: new Prisma.Decimal(80),
+		currency: 'CHF',
+		amountChf: new Prisma.Decimal(80),
+		feesChf: new Prisma.Decimal(1),
+		contributorId: 'contributor-mixed-owner',
+		status: ContributionStatus.succeeded,
+		campaignId: 'campaign-si-education-sl-default',
+		createdAt: new Date('2024-11-15T10:00:00.000Z'),
+		updatedAt: null,
 	},
 ];

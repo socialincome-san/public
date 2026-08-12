@@ -1,4 +1,4 @@
-import { buttonVariants } from '@/components/button';
+import { buttonVariants } from '@/components/button/button';
 import type { GithubIssue } from '@/lib/services/github-api/github-api.types';
 import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';

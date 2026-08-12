@@ -2,7 +2,6 @@ import {
 	ContributionStatus,
 	CountryCode,
 	Currency,
-	DonationInterval,
 	PaymentEventType,
 	type Prisma,
 	PrismaClient,
@@ -361,7 +360,6 @@ export class QrBillService extends BaseService {
 					currency: payment.currency,
 					amountChf: amountChfResult.data,
 					feesChf: 0,
-					interval: this.getDonationInterval(payment.interval),
 					status: ContributionStatus.pending,
 					campaign: {
 						connect: {
@@ -376,19 +374,5 @@ export class QrBillService extends BaseService {
 		};
 
 		return this.resultOk(paymentEvent);
-	}
-
-	private getDonationInterval(interval: number): DonationInterval | null {
-		switch (interval) {
-			case 1:
-				return DonationInterval.monthly;
-			case 3:
-				return DonationInterval.quarterly;
-			case 12:
-				return DonationInterval.yearly;
-
-			default:
-				return null;
-		}
 	}
 }

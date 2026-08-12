@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import type { FaqItem } from '@/components/content-blocks/faq-selection.utils';
 import { SectionHeading } from '@/components/section-heading';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';

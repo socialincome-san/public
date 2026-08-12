@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
 import type { CampaignSubmissionStepId, SubmissionLabels } from './types';
 

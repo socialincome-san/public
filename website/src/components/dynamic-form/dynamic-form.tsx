@@ -4,7 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Combobox } from '@/components/combo-box';
 import { DatePicker } from '@/components/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';

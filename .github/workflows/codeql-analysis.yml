@@ -1,6 +1,9 @@
 name: CodeQL
 
-on: pull_request
+on:
+  pull_request:
+    paths-ignore:
+      - "recipients_app/**"
 
 jobs:
   analyze:
