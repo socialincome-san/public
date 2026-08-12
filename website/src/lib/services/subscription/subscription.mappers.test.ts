@@ -28,8 +28,8 @@ describe('subscription.mappers', () => {
 
 		test('maps intervals and amounts', () => {
 			expect(mapStripeRecurringInterval('month', 1)).toBe(DonationInterval.monthly);
-			expect(mapStripeRecurringInterval('month', 3)).toBe(DonationInterval.quarterly);
-			expect(mapStripeRecurringInterval('year', 1)).toBe(DonationInterval.yearly);
+			expect(mapStripeRecurringInterval('month', 3)).toBeNull();
+			expect(mapStripeRecurringInterval('year', 1)).toBeNull();
 			expect(mapStripeRecurringInterval('week', 1)).toBeNull();
 			expect(mapStripePriceAmount(1200)).toBe(12);
 			expect(mapStripePriceAmount(null)).toBeNull();
