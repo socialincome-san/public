@@ -130,7 +130,9 @@
 		"reserves": {
 			"title-name": "Reserves",
 			"title-currency": "in {{currency}}",
-			"description": "Reserved for recipients in ongoing programs."
+			"description": "Reserved for recipients in ongoing programs.",
+			"tooltip-label": "Show reserve account details",
+			"no-data": "No data"
 		}
 	},
 	"program-detail-page": {

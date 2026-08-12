@@ -42,6 +42,10 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 	const inflows = services.currencyDisplay.resolveFromChf(inflowsChf, displayCurrency, rates);
 	const outflows = services.currencyDisplay.resolveFromChf(outflowsChf, displayCurrency, rates);
 	const reserves = services.currencyDisplay.resolveFromChf(reservesChf, displayCurrency, rates);
+	const reserveAccounts = data.reserveAccounts.map(({ amountChf, ...account }) => ({
+		...account,
+		amount: amountChf === null ? null : services.currencyDisplay.resolveFromChf(amountChf, displayCurrency, rates),
+	}));
 
 	const { currency: timeSeriesCurrency } = services.currencyDisplay.resolveFromChf(
 		data.timeRanges[0]?.totalChf ?? 0,
@@ -55,7 +59,13 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 
 	return (
 		<BlockWrapper className="space-y-12" {...storyblokEditable(blok as SbBlokData)}>
-			<SummarySection inflows={inflows} outflows={outflows} reserves={reserves} lang={lang} />
+			<SummarySection
+				inflows={inflows}
+				outflows={outflows}
+				reserves={reserves}
+				reserveAccounts={reserveAccounts}
+				lang={lang}
+			/>
 			<TotalsSection totals={data.totals} lang={lang} displayCurrency={displayCurrency} rates={rates} />
 			<TimeSeriesSection
 				timeRanges={resolvedTimeRanges.map(({ startIso, total }) => ({ startIso, total }))}

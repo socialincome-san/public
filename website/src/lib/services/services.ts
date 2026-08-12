@@ -67,6 +67,7 @@ import { RecipientReadService } from './recipient/recipient-read.service';
 import { RecipientStatusService } from './recipient/recipient-status.service';
 import { RecipientValidationService } from './recipient/recipient-validation.service';
 import { RecipientWriteService } from './recipient/recipient-write.service';
+import { ReserveReadService } from './reserves/reserve-read.service';
 import { ReserveWriteService } from './reserves/reserve-write.service';
 import { ReservesCalculationService } from './reserves/reserves-calculation.service';
 import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
@@ -93,6 +94,7 @@ import { UserWriteService } from './user/user-write.service';
 
 const appReviewMode = new AppReviewModeService(prisma);
 const bankAccountRead = new BankAccountReadService(prisma);
+const reserveRead = new ReserveReadService(prisma);
 const firebaseAdmin = new FirebaseAdminService(prisma);
 const firebaseSession = new FirebaseSessionService(prisma);
 const programAccessRead = new ProgramAccessReadService(prisma);
@@ -102,7 +104,7 @@ const userRead = new UserReadService(prisma);
 const userValidation = new UserValidationService(prisma);
 const exchangeRateImport = new ExchangeRateImportService(prisma);
 const surveySchedule = new SurveyScheduleService(prisma);
-const transparency = new TransparencyService(prisma);
+const transparency = new TransparencyService(prisma, reserveRead);
 const githubApi = new GithubApiService(prisma);
 const storyblok = new StoryblokService(prisma);
 const journal = new JournalService(prisma, storyblok);
@@ -273,6 +275,7 @@ export const services = {
 		payout: payoutRead,
 		program: programRead,
 		recipient: recipientRead,
+		reserve: reserveRead,
 		survey: surveyRead,
 		user: userRead,
 	},

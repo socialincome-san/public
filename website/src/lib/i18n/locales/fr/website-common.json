@@ -130,7 +130,9 @@
 		"reserves": {
 			"title-name": "Réserves",
 			"title-currency": "en {{currency}}",
-			"description": "Réservées aux bénéficiaires des programmes en cours."
+			"description": "Réservées aux bénéficiaires des programmes en cours.",
+			"tooltip-label": "Afficher les détails des comptes de réserve",
+			"no-data": "Aucune donnée"
 		}
 	},
 	"program-detail-page": {

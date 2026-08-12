@@ -6,3 +6,16 @@ export type ReserveCreateInput = {
 	currency: Currency;
 	amountChf: number;
 };
+
+export type BankAccountLatestReserve = {
+	bankAccountId: string;
+	bankAccountNumber: string;
+	description: string | null;
+	amountChf: number | null;
+	updatedAt: Date | null;
+};
+
+export type LatestReserves = {
+	accounts: BankAccountLatestReserve[];
+	total: number;
+};
