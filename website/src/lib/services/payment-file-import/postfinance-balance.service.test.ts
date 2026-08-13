@@ -16,11 +16,11 @@ jest.mock('@/generated/prisma/client', () => ({
 
 const fixturePath = path.join(path.dirname(__filename), '__fixtures__', 'camt052-balances.xml');
 
-describe('PostFinanceBalanceService.getClavBalancesFromXml', () => {
+describe('PostFinanceBalanceService.getBalancesFromXml', () => {
 	const service = new PostFinanceBalanceService('test-bucket', {} as never);
 
-	test('extracts CLAV balances and normalizes IBANs', () => {
-		const result = service.getClavBalancesFromXml(fs.readFileSync(fixturePath, 'utf8'));
+	test('extracts preferred balances and normalizes IBANs', () => {
+		const result = service.getBalancesFromXml(fs.readFileSync(fixturePath, 'utf8'));
 
 		expect(result.success).toBe(true);
 		if (!result.success) {
@@ -41,8 +41,8 @@ describe('PostFinanceBalanceService.getClavBalancesFromXml', () => {
 		]);
 	});
 
-	test('ignores reports without a CLAV balance', () => {
-		const result = service.getClavBalancesFromXml(fs.readFileSync(fixturePath, 'utf8'));
+	test('ignores reports with only an opening balance', () => {
+		const result = service.getBalancesFromXml(fs.readFileSync(fixturePath, 'utf8'));
 
 		expect(result.success).toBe(true);
 		if (!result.success) {
@@ -53,15 +53,15 @@ describe('PostFinanceBalanceService.getClavBalancesFromXml', () => {
 	});
 
 	test('rejects XML from another CAMT family', () => {
-		const result = service.getClavBalancesFromXml(
+		const result = service.getBalancesFromXml(
 			'<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.054.001.08"></Document>',
 		);
 
 		expect(result).toEqual({ success: false, error: 'File is not a CAMT.052 document' });
 	});
 
-	test('rejects CLAV balances with an unknown credit/debit indicator', () => {
-		const result = service.getClavBalancesFromXml(`<?xml version="1.0" encoding="UTF-8"?>
+	test('rejects balances with an unknown credit/debit indicator', () => {
+		const result = service.getBalancesFromXml(`<?xml version="1.0" encoding="UTF-8"?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.052.001.08">
 	<BkToCstmrAcctRpt>
 		<Rpt>
@@ -77,12 +77,12 @@ describe('PostFinanceBalanceService.getClavBalancesFromXml', () => {
 
 		expect(result).toEqual({
 			success: false,
-			error: 'Invalid CLAV balance for PostFinance account CH1909000000151126386',
+			error: 'Invalid balance for PostFinance account CH1909000000151126386',
 		});
 	});
 
-	test('rejects CLAV balances with a negative CAMT amount', () => {
-		const result = service.getClavBalancesFromXml(`<?xml version="1.0" encoding="UTF-8"?>
+	test('rejects balances with a negative CAMT amount', () => {
+		const result = service.getBalancesFromXml(`<?xml version="1.0" encoding="UTF-8"?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.052.001.08">
 	<BkToCstmrAcctRpt>
 		<Rpt>
@@ -98,13 +98,13 @@ describe('PostFinanceBalanceService.getClavBalancesFromXml', () => {
 
 		expect(result).toEqual({
 			success: false,
-			error: 'Invalid CLAV balance for PostFinance account CH1909000000151126386',
+			error: 'Invalid balance for PostFinance account CH1909000000151126386',
 		});
 	});
 });
 
-describe('PostFinanceBalanceService.getLatestClavBalances', () => {
-	test('fails when no CLAV balance exists for a requested IBAN', async () => {
+describe('PostFinanceBalanceService.getLatestBalances', () => {
+	test('fails when no usable balance exists for a requested IBAN', async () => {
 		const file = {
 			name: 'camt.052_test.xml',
 			getMetadata: jest.fn().mockResolvedValue([{ updated: '2026-08-12T06:00:00Z' }]),
@@ -115,9 +115,9 @@ describe('PostFinanceBalanceService.getLatestClavBalances', () => {
 		};
 		const service = new PostFinanceBalanceService('test-bucket', {} as never, undefined, bucket as never);
 
-		await expect(service.getLatestClavBalances(['CH5709000000154860881'])).resolves.toEqual({
+		await expect(service.getLatestBalances(['CH5709000000154860881'])).resolves.toEqual({
 			success: false,
-			error: 'No CLAV balance found for PostFinance accounts: CH5709000000154860881',
+			error: 'No balance found for PostFinance accounts: CH5709000000154860881',
 		});
 	});
 });
