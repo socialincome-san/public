@@ -85,4 +85,18 @@ describe('PawaPayBalanceService.getLatestBalances', () => {
 			error: 'Invalid PawaPay balance for country SLE',
 		});
 	});
+
+	test('fails when a country is blank', async () => {
+		global.fetch = jest.fn().mockResolvedValue({
+			ok: true,
+			json: jest.fn().mockResolvedValue({
+				balances: [{ country: '   ', balance: '228.92', currency: 'SLE', provider: '' }],
+			}),
+		});
+
+		await expect(service.getLatestBalances()).resolves.toEqual({
+			success: false,
+			error: 'Invalid PawaPay balance for country    ',
+		});
+	});
 });

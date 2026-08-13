@@ -39,13 +39,14 @@ export class PawaPayBalanceService extends BaseService {
 
 			const balances: PawaPayBalance[] = [];
 			for (const balance of data.balances) {
+				const country = balance.country.trim();
 				const amount = Number(balance.balance);
-				if (!Number.isFinite(amount) || !this.isCurrency(balance.currency)) {
+				if (!country || !Number.isFinite(amount) || !this.isCurrency(balance.currency)) {
 					return this.resultFail(`Invalid PawaPay balance for country ${balance.country}`);
 				}
 
 				balances.push({
-					country: balance.country,
+					country,
 					amount,
 					currency: balance.currency,
 				});

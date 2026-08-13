@@ -24,15 +24,17 @@ export class BankAccountWriteService extends BaseService {
 			const existingCountries = new Set(existingAccounts.map(({ description }) => description));
 			const missingCountries = uniqueCountries.filter((country) => !existingCountries.has(country));
 
-			if (missingCountries.length > 0) {
-				await this.db.bankAccount.createMany({
-					data: missingCountries.map((country) => ({
-						type: BankAccountType.pawapay_wallet,
-						bankAccountNumber: null,
-						description: country,
-					})),
-				});
+			if (missingCountries.length === 0) {
+				return this.resultOk(existingAccounts);
 			}
+
+			await this.db.bankAccount.createMany({
+				data: missingCountries.map((country) => ({
+					type: BankAccountType.pawapay_wallet,
+					bankAccountNumber: null,
+					description: country,
+				})),
+			});
 
 			return this.resultOk(
 				await this.db.bankAccount.findMany({
