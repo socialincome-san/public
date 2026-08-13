@@ -11,6 +11,7 @@ type Props = {
 };
 
 const POLL_INTERVAL_MS = 50;
+const API_WAIT_TIMEOUT_MS = 10_000;
 
 const waitForTurnstileApi = (isCancelled: () => boolean) =>
 	new Promise<TurnstileApi | null>((resolve) => {
@@ -26,19 +27,32 @@ const waitForTurnstileApi = (isCancelled: () => boolean) =>
 			return;
 		}
 
-		const intervalId = window.setInterval(() => {
+		let intervalId = 0;
+		let timeoutId = 0;
+
+		const stopWaiting = () => {
+			window.clearInterval(intervalId);
+			window.clearTimeout(timeoutId);
+		};
+
+		intervalId = window.setInterval(() => {
 			if (isCancelled()) {
-				window.clearInterval(intervalId);
+				stopWaiting();
 				resolve(null);
 
 				return;
 			}
 
 			if (window.turnstile) {
-				window.clearInterval(intervalId);
+				stopWaiting();
 				resolve(window.turnstile);
 			}
 		}, POLL_INTERVAL_MS);
+
+		timeoutId = window.setTimeout(() => {
+			stopWaiting();
+			resolve(null);
+		}, API_WAIT_TIMEOUT_MS);
 	});
 
 export const TurnstileWidget = ({ siteKey, language, onTokenChange }: Props) => {

@@ -4,12 +4,11 @@ const originalFetch = global.fetch;
 const originalSecret = process.env.TURNSTILE_SECRET_KEY;
 const originalSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
-const jsonResponse = (body: unknown, status = 200) =>
-	Promise.resolve({
-		ok: status >= 200 && status < 300,
-		status,
-		json: () => Promise.resolve(body),
-	});
+const jsonResponse = (body: unknown, status = 200) => ({
+	ok: status >= 200 && status < 300,
+	status,
+	json: () => Promise.resolve(body),
+});
 
 describe('verifyTurnstileToken', () => {
 	let fetchMock: jest.Mock;

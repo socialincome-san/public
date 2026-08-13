@@ -20,6 +20,7 @@ import {
 	isCampaignSubmissionImageMultipartField,
 	resolveCampaignSubmissionQuote,
 } from '@/lib/services/campaign/campaign-submission-input';
+import { turnstileResponseFieldName } from '@/lib/services/campaign/turnstile-field';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
@@ -27,7 +28,6 @@ import { useForm, type FieldPath } from 'react-hook-form';
 import { CampaignSubmissionFooter } from './campaign-submission-footer';
 import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
 import { CampaignSubmissionSteps } from './campaign-submission-steps';
-import { turnstileResponseFieldName } from './turnstile/turnstile';
 import type {
 	CampaignImageSelection,
 	CampaignSubmissionFormValues,
@@ -81,7 +81,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const stepTitleRef = useRef<HTMLHeadingElement>(null);
 	const hasMountedStep = useRef(false);
 	const defaultImagesRef = useRef(defaultImages);
-	const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+	const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
 	const onTurnstileTokenChange = useCallback((token: string | null) => {
 		setTurnstileToken(token);
 	}, []);

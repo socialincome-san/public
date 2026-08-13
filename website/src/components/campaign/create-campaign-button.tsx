@@ -18,10 +18,11 @@ type Props = {
 
 export const CreateCampaignButton = ({ label, labels, lang }: Props) => {
 	const [open, setOpen] = useState(false);
+	const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
 
 	return (
 		<>
-			<TurnstileScript />
+			{open && turnstileSiteKey ? <TurnstileScript /> : null}
 			<Button type="button" className="rounded-full px-5 text-sm font-bold lg:h-11" onClick={() => setOpen(true)}>
 				{label}
 			</Button>

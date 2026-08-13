@@ -1,5 +1,3 @@
-export { turnstileResponseFieldName } from '@/lib/services/campaign/turnstile-field';
-
 type TurnstileRenderOptions = {
 	sitekey: string;
 	callback?: (token: string) => void;
