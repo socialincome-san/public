@@ -95,6 +95,12 @@
 		"status-title": "Statut",
 		"manage-subscriptions": "Gérer les souscriptions",
 		"edit": "Modifier",
+		"view-qr": "Voir le QR",
+		"qr-dialog": {
+			"title": "Ton bulletin QR",
+			"unavailable": "Impossible de générer le QR code. Réessaie plus tard.",
+			"close": "Fermer"
+		},
 		"edit-dialog": {
 			"title": "Modifier la souscription",
 			"monthly-contribution": "Contribution mensuelle",

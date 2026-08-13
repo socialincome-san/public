@@ -29,9 +29,6 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 	const confirmLabel =
 		state.context.cadence === 'monthly' ? t('stepQrBill.confirmStandingOrder') : t('stepQrBill.confirmOneTime');
 
-	const donorName = qrDonor ? `${qrDonor.firstName} ${qrDonor.lastName}` : '';
-	const amountLabel = `${currency} ${displayAmount}`;
-
 	const canDownloadPdf = Boolean(qrDonor && qrContributorReferenceId && qrContributionReferenceId);
 
 	const onConfirm = async () => {
@@ -71,7 +68,11 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 		}
 	};
 
-	if (!qrBillSvg) {
+	if (!qrBillSvg || !qrContributorReferenceId || !qrContributionReferenceId) {
+		return null;
+	}
+
+	if (currency !== 'CHF' && currency !== 'EUR') {
 		return null;
 	}
 
@@ -82,14 +83,14 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 		>
 			<div className="flex w-full items-start gap-4">
 				<h3 className="shrink-0 text-lg leading-7 font-medium">{t('stepQrBill.title')}</h3>
-				{canDownloadPdf && qrDonor && qrContributorReferenceId && qrContributionReferenceId && (
+				{canDownloadPdf && qrDonor && (
 					<div className="flex min-w-0 flex-1 items-start justify-end">
 						<QrBillPdfDownloadLink
-							wizardContext={state.context}
+							amount={displayAmount}
+							currency={currency}
 							contributorReferenceId={qrContributorReferenceId}
 							contributionReferenceId={qrContributionReferenceId}
-							qrDonor={qrDonor}
-							currency={currency}
+							email={qrDonor.email}
 							disabled={confirming}
 						/>
 					</div>
@@ -98,8 +99,10 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 
 			<QrBillPaymentCard
 				qrBillSvg={qrBillSvg}
-				donorName={donorName}
-				amountLabel={amountLabel}
+				amount={displayAmount}
+				currency={currency}
+				contributorReferenceId={qrContributorReferenceId}
+				contributionReferenceId={qrContributionReferenceId}
 				paymentTypeLabel={paymentTypeLabel}
 			/>
 

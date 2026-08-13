@@ -46,10 +46,12 @@ const createService = ({
 	subscriptions?: {
 		id: string;
 		amount: unknown;
-		currency: 'CHF' | 'EUR';
+		currency: 'CHF' | 'EUR' | 'USD';
 		createdAt: Date;
 		paymentMethod: 'stripe' | 'bank_transfer';
 		stripeSubscriptionId: string | null;
+		bankStandingOrderReference?: string | null;
+		contributor?: { paymentReferenceId: string | null };
 	}[];
 	contributionSummary?: { totalAmountChf: number; count: number; firstContributionAt: Date | null };
 	stripeDetails?: { brand?: string; last4?: string; currentPeriodEnd: Date | null } | null;
@@ -61,7 +63,13 @@ const createService = ({
 		alert: jest.Mock;
 	};
 } = {}) => {
-	const findMany = jest.fn().mockResolvedValue(subscriptions);
+	const findMany = jest.fn().mockResolvedValue(
+		subscriptions.map((subscription) => ({
+			bankStandingOrderReference: null,
+			contributor: { paymentReferenceId: null },
+			...subscription,
+		})),
+	);
 	const db = {
 		subscription: { findMany },
 	} as unknown as PrismaClient;
@@ -121,16 +129,89 @@ describe('SubscriptionReadService', () => {
 				createdAt: true,
 				paymentMethod: true,
 				stripeSubscriptionId: true,
+				bankStandingOrderReference: true,
+				contributor: {
+					select: { paymentReferenceId: true },
+				},
 			},
 			orderBy: { createdAt: 'desc' },
 		});
 		expect(data.activeSubscriptions).toHaveLength(2);
-		expect(data.activeSubscriptions[0]?.paymentDisplay).toEqual({ type: 'bank_transfer' });
+		expect(data.activeSubscriptions[0]?.paymentDisplay).toEqual({ type: 'bank_transfer', qrBill: null });
 		expect(data.activeSubscriptions[1]?.paymentDisplay).toEqual({
 			type: 'stripe',
 			brand: 'Visa',
 			last4: '4242',
 		});
+	});
+
+	it('includes qr bill references for bank transfer subscriptions when available', async () => {
+		const { service } = createService({
+			subscriptions: [
+				{
+					id: 'sub-bank',
+					amount: 50,
+					currency: 'CHF',
+					createdAt: new Date('2024-11-01T00:00:00.000Z'),
+					paymentMethod: SubscriptionPaymentMethod.bank_transfer,
+					stripeSubscriptionId: null,
+					bankStandingOrderReference: '1731700000',
+					contributor: { paymentReferenceId: '1735689600000' },
+				},
+			],
+		});
+
+		const data = expectSuccess(await service.getDashboardView('contributor-1'));
+
+		expect(data.activeSubscriptions[0]?.paymentDisplay).toEqual({
+			type: 'bank_transfer',
+			qrBill: {
+				contributorReferenceId: '1735689600000',
+				contributionReferenceId: '1731700000',
+			},
+		});
+	});
+
+	it('omits qr bill when bank transfer references are incomplete', async () => {
+		const { service } = createService({
+			subscriptions: [
+				{
+					id: 'sub-bank-missing-contribution-ref',
+					amount: 50,
+					currency: 'CHF',
+					createdAt: new Date('2024-11-01T00:00:00.000Z'),
+					paymentMethod: SubscriptionPaymentMethod.bank_transfer,
+					stripeSubscriptionId: null,
+					bankStandingOrderReference: null,
+					contributor: { paymentReferenceId: '1735689600000' },
+				},
+			],
+		});
+
+		const data = expectSuccess(await service.getDashboardView('contributor-1'));
+
+		expect(data.activeSubscriptions[0]?.paymentDisplay).toEqual({ type: 'bank_transfer', qrBill: null });
+	});
+
+	it('omits qr bill when bank transfer currency is unsupported', async () => {
+		const { service } = createService({
+			subscriptions: [
+				{
+					id: 'sub-bank-usd',
+					amount: 50,
+					currency: 'USD',
+					createdAt: new Date('2024-11-01T00:00:00.000Z'),
+					paymentMethod: SubscriptionPaymentMethod.bank_transfer,
+					stripeSubscriptionId: null,
+					bankStandingOrderReference: '1731700000',
+					contributor: { paymentReferenceId: '1735689600000' },
+				},
+			],
+		});
+
+		const data = expectSuccess(await service.getDashboardView('contributor-1'));
+
+		expect(data.activeSubscriptions[0]?.paymentDisplay).toEqual({ type: 'bank_transfer', qrBill: null });
 	});
 
 	it('builds four upcoming payments per active subscription and merges them chronologically', async () => {

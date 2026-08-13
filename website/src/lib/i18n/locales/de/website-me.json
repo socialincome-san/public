@@ -95,6 +95,12 @@
 		"status-title": "Status",
 		"manage-subscriptions": "Abonnemente verwalten",
 		"edit": "Bearbeiten",
+		"view-qr": "QR anzeigen",
+		"qr-dialog": {
+			"title": "Dein QR-Einzahlungsschein",
+			"unavailable": "QR-Code konnte nicht erzeugt werden. Bitte versuche es später erneut.",
+			"close": "Schliessen"
+		},
 		"edit-dialog": {
 			"title": "Abonnement bearbeiten",
 			"monthly-contribution": "Monatlicher Beitrag",

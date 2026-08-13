@@ -25,6 +25,10 @@ type SubscriptionRecord = {
 	createdAt: Date;
 	paymentMethod: SubscriptionPaymentMethod;
 	stripeSubscriptionId: string | null;
+	bankStandingOrderReference: string | null;
+	contributor: {
+		paymentReferenceId: string | null;
+	};
 };
 
 type SubscriptionPaymentDisplay = ActiveSubscriptionView['paymentDisplay'];
@@ -76,6 +80,10 @@ export class SubscriptionReadService extends BaseService {
 						createdAt: true,
 						paymentMethod: true,
 						stripeSubscriptionId: true,
+						bankStandingOrderReference: true,
+						contributor: {
+							select: { paymentReferenceId: true },
+						},
 					},
 					orderBy: { createdAt: 'desc' },
 				}),
@@ -121,11 +129,23 @@ export class SubscriptionReadService extends BaseService {
 		};
 
 		if (subscription.paymentMethod === SubscriptionPaymentMethod.bank_transfer) {
+			const contributorReferenceId = subscription.contributor.paymentReferenceId;
+			const contributionReferenceId = subscription.bankStandingOrderReference;
+			const qrBill =
+				contributorReferenceId &&
+				contributionReferenceId &&
+				(subscription.currency === 'CHF' || subscription.currency === 'EUR')
+					? { contributorReferenceId, contributionReferenceId }
+					: null;
+
 			return {
 				record: subscription,
 				view: {
 					...baseView,
-					paymentDisplay: { type: 'bank_transfer' as const },
+					paymentDisplay: {
+						type: 'bank_transfer' as const,
+						qrBill,
+					},
 				},
 				stripeDetails: null,
 			};

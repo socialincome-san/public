@@ -1,7 +1,13 @@
 import { type Currency } from '@/generated/prisma/client';
 import { type ContributorContributionSummary } from '../contribution/contribution.types';
 
-type SubscriptionPaymentDisplay = { type: 'bank_transfer' } | { type: 'stripe'; brand?: string; last4?: string };
+export type BankTransferQrBillView = {
+	contributorReferenceId: string;
+	contributionReferenceId: string;
+};
+
+type SubscriptionPaymentDisplay =
+	{ type: 'bank_transfer'; qrBill: BankTransferQrBillView | null } | { type: 'stripe'; brand?: string; last4?: string };
 
 export type ActiveSubscriptionView = {
 	id: string;

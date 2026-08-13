@@ -1,21 +1,50 @@
 'use client';
 
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { buildQrBillData } from '@/lib/utils/qr-bill';
+import { formatQrBillIban, formatQrBillReference } from '@/lib/utils/qr-bill-format';
 import { Scan } from 'lucide-react';
 import Image from 'next/image';
 import { QrPaymentDetailField } from '../step-qr-contact/qr-payment-detail-field';
 
 type QrBillPaymentCardProps = {
 	qrBillSvg: string;
-	donorName: string;
-	amountLabel: string;
-	paymentTypeLabel: string;
+	amount: number;
+	currency: 'CHF' | 'EUR';
+	contributorReferenceId: string;
+	contributionReferenceId: string;
+	paymentTypeLabel?: string;
 };
 
 const qrSvgClass = '[&_svg]:block [&_svg]:aspect-square [&_svg]:h-auto [&_svg]:w-full [&_svg]:max-w-full';
 
-export const QrBillPaymentCard = ({ qrBillSvg, donorName, amountLabel, paymentTypeLabel }: QrBillPaymentCardProps) => {
+export const QrBillPaymentCard = ({
+	qrBillSvg,
+	amount,
+	currency,
+	contributorReferenceId,
+	contributionReferenceId,
+	paymentTypeLabel,
+}: QrBillPaymentCardProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const {
+		creditor,
+		reference,
+		amount: qrAmount,
+		currency: qrCurrency,
+	} = buildQrBillData({
+		amount,
+		currency,
+		contributorReferenceId,
+		contributionReferenceId,
+	});
+
+	const paymentToValue = [
+		creditor.name,
+		`${creditor.address} ${creditor.buildingNumber}`,
+		`${creditor.zip} ${creditor.city}`,
+		creditor.country,
+	].join('\n');
 
 	return (
 		<div
@@ -36,10 +65,11 @@ export const QrBillPaymentCard = ({ qrBillSvg, donorName, amountLabel, paymentTy
 						<div className={qrSvgClass} dangerouslySetInnerHTML={{ __html: qrBillSvg }} />
 					</div>
 					<div className="flex w-full min-w-0 flex-1 flex-col gap-4">
-						<QrPaymentDetailField label={t('stepQrBill.paymentToLabel')} value={t('stepQrBill.paymentToValue')} />
-						<QrPaymentDetailField label={t('stepQrBill.fromLabel')} value={donorName} />
-						<QrPaymentDetailField label={t('stepQrBill.amountLabel')} value={amountLabel} />
-						<QrPaymentDetailField label={t('stepQrBill.paymentTypeLabel')} value={paymentTypeLabel} />
+						<QrPaymentDetailField label={t('stepQrBill.paymentToLabel')} value={paymentToValue} />
+						<QrPaymentDetailField label={t('stepQrBill.ibanLabel')} value={formatQrBillIban(creditor.account)} />
+						<QrPaymentDetailField label={t('stepQrBill.amountLabel')} value={`${qrCurrency} ${qrAmount}`} />
+						<QrPaymentDetailField label={t('stepQrBill.referenceLabel')} value={formatQrBillReference(reference)} />
+						{paymentTypeLabel && <QrPaymentDetailField label={t('stepQrBill.paymentTypeLabel')} value={paymentTypeLabel} />}
 					</div>
 				</div>
 			</div>

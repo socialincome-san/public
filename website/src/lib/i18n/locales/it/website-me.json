@@ -95,6 +95,12 @@
 		"status-title": "Stato",
 		"manage-subscriptions": "Gestisci le sottoscrizioni",
 		"edit": "Modifica",
+		"view-qr": "Vedi QR",
+		"qr-dialog": {
+			"title": "La tua bolletta QR",
+			"unavailable": "Impossibile generare il codice QR. Riprova più tardi.",
+			"close": "Chiudi"
+		},
 		"edit-dialog": {
 			"title": "Modifica sottoscrizione",
 			"monthly-contribution": "Contributo mensile",

@@ -66,15 +66,20 @@ export type CreateWizardPendingContributionInput = {
 	currency?: string;
 };
 
-export type DownloadWizardQrBillPdfInput = {
-	wizardContext: DonationAmountContext;
+export type DownloadQrBillPdfInput = {
+	amount: number;
+	currency: string;
 	contributorReferenceId: string;
 	contributionReferenceId: string;
 	expectedEmail: string;
-	currency?: string;
 };
 
-export type DownloadWizardQrBillPdfResult = {
+export type DownloadSubscriptionQrBillPdfInput = {
+	contributorId: string;
+	subscriptionId: string;
+};
+
+export type DownloadQrBillPdfResult = {
 	pdfBase64: string;
 	filename: string;
 };

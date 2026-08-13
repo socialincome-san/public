@@ -47,3 +47,15 @@ export const cancelSubscriptionAction = async (subscriptionId: string, reason: S
 		reason,
 	});
 };
+
+export const downloadSubscriptionQrBillPdfAction = async (subscriptionId: string) => {
+	const sessionResult = await getSessionByType('contributor');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	return services.qrBill.downloadSubscriptionQrBillPdf({
+		contributorId: sessionResult.data.id,
+		subscriptionId,
+	});
+};

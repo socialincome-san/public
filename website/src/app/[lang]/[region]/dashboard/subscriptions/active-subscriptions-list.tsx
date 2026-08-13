@@ -1,8 +1,7 @@
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { type ActiveSubscriptionView } from '@/lib/services/subscription/subscription.types';
-import { formatCurrencyLocale, formatDateLocale, wholeCurrencyFormatOptions } from '@/lib/utils/string-utils';
 import { EditSubscriptionRow } from './edit-subscription/edit-subscription-row';
-import { SubscriptionPaymentMethodDisplay } from './subscription-payment-method-display';
+import { WireSubscriptionRow } from './wire-subscription-row';
 
 type Props = {
 	lang: WebsiteLanguage;
@@ -14,6 +13,10 @@ type Props = {
 		wireTransfer: string;
 		cardFallback: string;
 		edit: string;
+		viewQr: string;
+		qrDialogTitle: string;
+		qrUnavailable: string;
+		close: string;
 	};
 };
 
@@ -42,20 +45,18 @@ export const ActiveSubscriptionsList = ({ lang, subscriptions, labels }: Props) 
 					}
 
 					return (
-						<div
+						<WireSubscriptionRow
 							key={subscription.id}
-							className="border-border flex flex-col gap-4 rounded-xl border p-6 sm:flex-row sm:items-center sm:justify-between"
-						>
-							<p className="text-base">
-								<span className="font-semibold">
-									{formatCurrencyLocale(subscription.amount, subscription.currency, lang, wholeCurrencyFormatOptions)}
-								</span>{' '}
-								<span className="text-muted-foreground">
-									{labels.perMonth} · {labels.since} {formatDateLocale(subscription.createdAt, lang)}
-								</span>
-							</p>
-							<SubscriptionPaymentMethodDisplay paymentDisplay={subscription.paymentDisplay} labels={labels} />
-						</div>
+							lang={lang}
+							labels={labels}
+							subscription={{
+								id: subscription.id,
+								amount: subscription.amount,
+								currency: subscription.currency,
+								createdAt: subscription.createdAt,
+								paymentDisplay: subscription.paymentDisplay,
+							}}
+						/>
 					);
 				})}
 			</div>

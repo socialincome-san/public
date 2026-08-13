@@ -95,6 +95,12 @@
 		"status-title": "Status",
 		"manage-subscriptions": "Manage Subscriptions",
 		"edit": "Edit",
+		"view-qr": "View QR",
+		"qr-dialog": {
+			"title": "Your QR bill",
+			"unavailable": "Could not generate the QR code. Please try again later.",
+			"close": "Close"
+		},
 		"edit-dialog": {
 			"title": "Edit Subscription",
 			"monthly-contribution": "Monthly contribution",

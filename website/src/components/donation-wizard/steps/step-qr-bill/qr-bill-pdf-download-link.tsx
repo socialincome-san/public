@@ -1,45 +1,63 @@
 'use client';
 
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { downloadWizardQrBillPdfAction } from '@/lib/server-actions/qr-wizard-actions';
+import { downloadQrBillPdfAction } from '@/lib/server-actions/qr-wizard-actions';
+import { downloadSubscriptionQrBillPdfAction } from '@/lib/server-actions/subscription-actions';
 import { cn } from '@/lib/utils/cn';
 import { Download } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import type { DonationAmountContext } from '../../utils/donation-amount';
-import type { QrDonorContext } from '../../wizard/donation-wizard-context';
 
-type QrBillPdfDownloadLinkProps = {
-	wizardContext: DonationAmountContext;
+type WizardQrBillPdfDownloadLinkProps = {
+	variant?: 'wizard';
+	amount: number;
+	currency: string;
 	contributorReferenceId: string;
 	contributionReferenceId: string;
-	qrDonor: QrDonorContext;
-	currency: string;
+	email: string;
 	disabled?: boolean;
 };
 
-export const QrBillPdfDownloadLink = ({
-	wizardContext,
-	contributorReferenceId,
-	contributionReferenceId,
-	qrDonor,
-	currency,
-	disabled = false,
-}: QrBillPdfDownloadLinkProps) => {
+type SubscriptionQrBillPdfDownloadLinkProps = {
+	variant: 'subscription';
+	subscriptionId: string;
+	disabled?: boolean;
+};
+
+type QrBillPdfDownloadLinkProps = WizardQrBillPdfDownloadLinkProps | SubscriptionQrBillPdfDownloadLinkProps;
+
+const triggerPdfDownload = (pdfBase64: string, filename: string) => {
+	const bytes = Uint8Array.from(atob(pdfBase64), (character) => character.charCodeAt(0));
+	const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+	const link = document.createElement('a');
+	link.href = url;
+	link.download = filename;
+	link.rel = 'noopener';
+	document.body.append(link);
+	link.click();
+	link.remove();
+	window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+};
+
+export const QrBillPdfDownloadLink = (props: QrBillPdfDownloadLinkProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const [downloading, setDownloading] = useState(false);
+	const disabled = props.disabled ?? false;
 
 	const onDownload = async () => {
 		setDownloading(true);
 
 		try {
-			const result = await downloadWizardQrBillPdfAction({
-				wizardContext,
-				contributorReferenceId,
-				contributionReferenceId,
-				expectedEmail: qrDonor.email,
-				currency,
-			});
+			const result =
+				props.variant === 'subscription'
+					? await downloadSubscriptionQrBillPdfAction(props.subscriptionId)
+					: await downloadQrBillPdfAction({
+							amount: props.amount,
+							currency: props.currency,
+							contributorReferenceId: props.contributorReferenceId,
+							contributionReferenceId: props.contributionReferenceId,
+							expectedEmail: props.email,
+						});
 
 			if (!result.success) {
 				toast.error(t('stepQrBill.downloadPdfError'));
@@ -47,16 +65,7 @@ export const QrBillPdfDownloadLink = ({
 				return;
 			}
 
-			const bytes = Uint8Array.from(atob(result.data.pdfBase64), (character) => character.charCodeAt(0));
-			const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
-			const link = document.createElement('a');
-			link.href = url;
-			link.download = result.data.filename;
-			link.rel = 'noopener';
-			document.body.append(link);
-			link.click();
-			link.remove();
-			window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+			triggerPdfDownload(result.data.pdfBase64, result.data.filename);
 		} catch {
 			toast.error(t('stepQrBill.downloadPdfError'));
 		} finally {
