@@ -5,23 +5,27 @@ import { downloadQrBillPdfAction } from '@/lib/server-actions/qr-wizard-actions'
 import { downloadSubscriptionQrBillPdfAction } from '@/lib/server-actions/subscription-actions';
 import { cn } from '@/lib/utils/cn';
 import { Download } from 'lucide-react';
-import { useState } from 'react';
+import { forwardRef, useState, type ReactNode } from 'react';
 import toast from 'react-hot-toast';
 
-type WizardQrBillPdfDownloadLinkProps = {
+type QrBillPdfDownloadAppearance = {
+	disabled?: boolean;
+	className?: string;
+	children?: ReactNode;
+};
+
+type WizardQrBillPdfDownloadLinkProps = QrBillPdfDownloadAppearance & {
 	variant?: 'wizard';
 	amount: number;
 	currency: string;
 	contributorReferenceId: string;
 	contributionReferenceId: string;
 	email: string;
-	disabled?: boolean;
 };
 
-type SubscriptionQrBillPdfDownloadLinkProps = {
+type SubscriptionQrBillPdfDownloadLinkProps = QrBillPdfDownloadAppearance & {
 	variant: 'subscription';
 	subscriptionId: string;
-	disabled?: boolean;
 };
 
 type QrBillPdfDownloadLinkProps = WizardQrBillPdfDownloadLinkProps | SubscriptionQrBillPdfDownloadLinkProps;
@@ -39,7 +43,7 @@ const triggerPdfDownload = (pdfBase64: string, filename: string) => {
 	window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
 };
 
-export const QrBillPdfDownloadLink = (props: QrBillPdfDownloadLinkProps) => {
+export const QrBillPdfDownloadLink = forwardRef<HTMLButtonElement, QrBillPdfDownloadLinkProps>((props, ref) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const [downloading, setDownloading] = useState(false);
 	const disabled = props.disabled ?? false;
@@ -75,16 +79,24 @@ export const QrBillPdfDownloadLink = (props: QrBillPdfDownloadLinkProps) => {
 
 	return (
 		<button
+			ref={ref}
 			type="button"
 			disabled={disabled || downloading}
 			onClick={() => void onDownload()}
 			className={cn(
-				'border-foreground text-foreground flex shrink-0 items-center gap-1 border-b pb-0.5 text-sm leading-5 font-normal',
-				'hover:text-foreground/80 disabled:cursor-not-allowed disabled:opacity-50',
+				!props.children &&
+					'border-primary text-primary hover:text-primary/80 flex shrink-0 items-center gap-1 border-b pb-0.5 text-sm leading-5 font-normal',
+				'disabled:cursor-not-allowed disabled:opacity-50',
+				props.className,
 			)}
 		>
-			<Download className="size-3.5 shrink-0" strokeWidth={1.75} aria-hidden />
-			{downloading ? t('stepQrBill.downloadingPdf') : t('stepQrBill.downloadPdf')}
+			{props.children ?? (
+				<>
+					<Download className="size-3.5 shrink-0" strokeWidth={1.75} aria-hidden />
+					{downloading ? t('stepQrBill.downloadingPdf') : t('stepQrBill.downloadPdf')}
+				</>
+			)}
 		</button>
 	);
-};
+});
+QrBillPdfDownloadLink.displayName = 'QrBillPdfDownloadLink';

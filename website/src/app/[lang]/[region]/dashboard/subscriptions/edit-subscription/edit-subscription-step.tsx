@@ -121,7 +121,7 @@ export const EditSubscriptionStep = ({
 
 			<button
 				type="button"
-				className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 self-start text-sm disabled:opacity-50"
+				className="text-muted-foreground hover:text-primary inline-flex items-center gap-2 self-start text-sm disabled:opacity-50"
 				disabled={isSubmitting || isUpdatingCard || !onStartCancel}
 				onClick={onStartCancel}
 				data-testid="edit-subscription-start-cancel"

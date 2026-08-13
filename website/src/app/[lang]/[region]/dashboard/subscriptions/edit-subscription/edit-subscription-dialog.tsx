@@ -23,17 +23,20 @@ type Props = {
 	state: EditSubscriptionSnapshot;
 	send: EditSubscriptionActor['send'];
 	onDismissAndRefresh: () => void;
-	onViewQr?: () => void;
+	canDownloadStandingOrderQr?: boolean;
 };
 
-export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh, onViewQr }: Props) => {
+export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh, canDownloadStandingOrderQr }: Props) => {
 	const translator = useTranslator(lang, 'website-me');
 	const [isUpdatingCard, startUpdateCardTransition] = useTransition();
 	const [updateCardError, setUpdateCardError] = useState(false);
 	const t = (key: string) => translator?.t(key) ?? '';
 	const isBankTransfer = state.context.paymentMethod === 'bank_transfer';
 	const isCanceledSuccess = state.matches('canceledSuccess');
-	const showViewQr = Boolean(onViewQr) && state.matches('success');
+	const standingOrderSubscriptionId =
+		canDownloadStandingOrderQr && isBankTransfer && state.matches('success')
+			? (state.context.subscriptionId ?? undefined)
+			: undefined;
 
 	const handleUpdateCard = () => {
 		setUpdateCardError(false);
@@ -73,9 +76,7 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 		? isBankTransfer
 			? 'subscriptions.edit-dialog.bank-cancel-success-message'
 			: 'subscriptions.edit-dialog.cancel-success-message'
-		: isBankTransfer
-			? 'subscriptions.edit-dialog.bank-success-message'
-			: 'subscriptions.edit-dialog.success-message';
+		: 'subscriptions.edit-dialog.success-message';
 
 	const successLabels = {
 		message: t(successMessageKey),
@@ -83,7 +84,9 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 			isCanceledSuccess ? 'subscriptions.edit-dialog.cancel-success-thanks' : 'subscriptions.edit-dialog.success-thanks',
 		),
 		done: t('subscriptions.edit-dialog.done'),
-		viewQr: t('subscriptions.view-qr'),
+		standingOrderTitle: t('subscriptions.edit-dialog.standing-order-title'),
+		standingOrderDescription: t('subscriptions.edit-dialog.standing-order-description'),
+		downloadQr: t('subscriptions.edit-dialog.download-qr'),
 	};
 
 	return (
@@ -110,7 +113,7 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 						{showBackButton && (
 							<button
 								type="button"
-								className="text-muted-foreground hover:text-foreground -ml-1 rounded-sm p-1"
+								className="text-muted-foreground hover:text-primary -ml-1 rounded-sm p-1"
 								onClick={() => send({ type: 'BACK' })}
 								aria-label={t('subscriptions.edit-dialog.back')}
 								data-testid="edit-subscription-back"
@@ -127,7 +130,7 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 						<EditSubscriptionSuccessStep
 							labels={successLabels}
 							onDone={onDismissAndRefresh}
-							onViewQr={showViewQr ? onViewQr : undefined}
+							standingOrderSubscriptionId={standingOrderSubscriptionId}
 						/>
 					</div>
 				) : state.matches('retention') ? (

@@ -14,7 +14,7 @@ const buttonVariants = cva(
 					'after:bg-linear-to-r after:from-[hsl(var(--gradient-button-from))] after:to-[hsl(var(--gradient-button-to))] after:inset-0 after:-z-10 after:rounded-full after:absolute after:opacity-100 hover:after:opacity-0 focus:after:opacity-0 after:transition-opacity',
 				].join(' '),
 				destructive: 'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90',
-				outline: 'border border-input hover:bg-accent hover:text-accent-foreground bg-background/5 ',
+				outline: 'border border-input text-primary hover:bg-accent hover:text-accent-foreground bg-background/5',
 				secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
 				ghost: 'hover:bg-accent hover:text-accent-foreground',
 				link: 'text-primary underline-offset-4 hover:underline',
