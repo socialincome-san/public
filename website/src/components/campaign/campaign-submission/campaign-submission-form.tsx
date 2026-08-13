@@ -81,6 +81,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const stepTitleRef = useRef<HTMLHeadingElement>(null);
 	const hasMountedStep = useRef(false);
 	const defaultImagesRef = useRef(defaultImages);
+<<<<<<< HEAD
 	const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
 	const onTurnstileTokenChange = useCallback((token: string | null) => {
 		setTurnstileToken(token);
@@ -89,6 +90,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		setTurnstileToken(null);
 		setTurnstileWidgetKey((key) => key + 1);
 	};
+=======
+>>>>>>> main
 
 	const resolveError = useCallback(
 		(code: string) => {
@@ -446,12 +449,15 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			return;
 		}
 
+<<<<<<< HEAD
 		if (turnstileSiteKey && !turnstileToken) {
 			setSubmitError(resolveError('turnstile-required'));
 
 			return;
 		}
 
+=======
+>>>>>>> main
 		const submissionValues = {
 			...values,
 			quote: resolveCampaignSubmissionQuote(values.quote, labels.quotePlaceholder),
@@ -470,9 +476,12 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				profilePicture: profilePictureFile ?? undefined,
 				sectionImage: values.hasAdditionalInformation ? (sectionImageFile ?? undefined) : undefined,
 			});
+<<<<<<< HEAD
 			if (turnstileToken) {
 				formData.append(turnstileResponseFieldName, turnstileToken);
 			}
+=======
+>>>>>>> main
 
 			const response = await fetch('/api/campaign-submissions', {
 				method: 'POST',
@@ -510,7 +519,10 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			clearPrimaryImageSelection();
 			profilePicture.clear();
 			sectionImage.clear();
+<<<<<<< HEAD
 			resetTurnstileWidget();
+=======
+>>>>>>> main
 			setDefaultImages([]);
 			setCurrentStep('program');
 			onSuccess?.();
@@ -600,10 +612,13 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 							sectionImage,
 							submitError,
 							isSubmitting,
+<<<<<<< HEAD
 							lang,
 							turnstileSiteKey,
 							turnstileWidgetKey,
 							onTurnstileTokenChange,
+=======
+>>>>>>> main
 						}}
 					/>
 				</div>

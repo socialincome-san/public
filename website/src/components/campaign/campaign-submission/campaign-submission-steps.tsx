@@ -13,6 +13,7 @@ type Props = {
 };
 
 export const CampaignSubmissionSteps = ({ currentStep, programStep, detailsStep, aboutStep }: Props) => {
+<<<<<<< HEAD
 	switch (currentStep) {
 		case 'program':
 			return (
@@ -33,4 +34,31 @@ export const CampaignSubmissionSteps = ({ currentStep, programStep, detailsStep,
 				</div>
 			);
 	}
+=======
+	if (currentStep === 'program') {
+		return (
+			<div className="flex min-h-0 flex-1 flex-col">
+				<ProgramStep {...programStep} />
+			</div>
+		);
+	}
+
+	if (currentStep === 'details') {
+		return (
+			<div className="min-h-0 flex-1 overflow-y-auto">
+				<DetailsStep {...detailsStep} />
+			</div>
+		);
+	}
+
+	if (currentStep === 'about') {
+		return (
+			<div className="min-h-0 flex-1 overflow-y-auto">
+				<AboutStep {...aboutStep} />
+			</div>
+		);
+	}
+
+	return null;
+>>>>>>> main
 };
