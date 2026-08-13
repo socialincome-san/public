@@ -116,6 +116,30 @@ export class SubscriptionReadService extends BaseService {
 		}
 	}
 
+	async getOwnedSubscriptionPaymentMethod(input: {
+		contributorId: string;
+		subscriptionId: string;
+	}): Promise<ServiceResult<SubscriptionPaymentMethod>> {
+		try {
+			const subscription = await this.db.subscription.findFirst({
+				where: {
+					id: input.subscriptionId,
+					contributorId: input.contributorId,
+				},
+				select: { paymentMethod: true },
+			});
+			if (!subscription) {
+				return this.resultFail('Subscription not found');
+			}
+
+			return this.resultOk(subscription.paymentMethod);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not load subscription payment method');
+		}
+	}
+
 	private async enrichSubscriptions(subscriptions: SubscriptionRecord[]): Promise<EnrichedSubscription[]> {
 		return Promise.all(subscriptions.map((subscription) => this.enrichSubscription(subscription)));
 	}

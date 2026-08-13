@@ -10,7 +10,11 @@ import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { type BankTransferQrBillView } from '@/lib/services/subscription/subscription.types';
 import { generateQrBillSvg } from '@/lib/utils/qr-bill';
 import { formatCurrencyLocale, formatDateLocale, wholeCurrencyFormatOptions } from '@/lib/utils/string-utils';
+import { useMachine } from '@xstate/react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { EditSubscriptionDialog } from './edit-subscription/edit-subscription-dialog';
+import { editSubscriptionMachine } from './edit-subscription/edit-subscription-machine';
 import { SubscriptionPaymentMethodDisplay } from './subscription-payment-method-display';
 
 type Props = {
@@ -30,6 +34,7 @@ type Props = {
 		since: string;
 		wireTransfer: string;
 		cardFallback: string;
+		edit: string;
 		viewQr: string;
 		qrDialogTitle: string;
 		qrUnavailable: string;
@@ -39,16 +44,21 @@ type Props = {
 
 export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 	const { t: tWizard } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const router = useRouter();
+	const [state, send] = useMachine(editSubscriptionMachine);
 	const [isQrOpen, setIsQrOpen] = useState(false);
+	const [qrAmountOverride, setQrAmountOverride] = useState<number | null>(null);
 	const { id, amount, currency, createdAt, paymentDisplay } = subscription;
 	const qrBill = paymentDisplay.qrBill;
 	const qrCurrency = currency === 'CHF' || currency === 'EUR' ? currency : null;
+	const isEditOpen = !state.matches('closed');
+	const qrAmount = qrAmountOverride ?? amount;
 
 	let qrBillSvg: string | null = null;
 	if (isQrOpen && qrBill && qrCurrency) {
 		try {
 			qrBillSvg = generateQrBillSvg({
-				amount,
+				amount: qrAmount,
 				contributorReferenceId: qrBill.contributorReferenceId,
 				contributionReferenceId: qrBill.contributionReferenceId,
 				currency: qrCurrency,
@@ -58,6 +68,18 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 			qrBillSvg = null;
 		}
 	}
+
+	const dismissEditAndRefresh = () => {
+		send({ type: 'DONE' });
+		router.refresh();
+	};
+
+	const openQrFromSuccess = () => {
+		setQrAmountOverride(state.context.amount);
+		send({ type: 'DONE' });
+		setIsQrOpen(true);
+		router.refresh();
+	};
 
 	return (
 		<>
@@ -73,13 +95,38 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 				</p>
 				<div className="flex flex-wrap items-center gap-3">
 					<SubscriptionPaymentMethodDisplay paymentDisplay={paymentDisplay} labels={labels} />
+					<Button
+						type="button"
+						variant="outline"
+						size="sm"
+						className="bg-background"
+						onClick={() =>
+							send({
+								type: 'OPEN',
+								subscription: {
+									subscriptionId: id,
+									initialAmount: Math.round(amount),
+									currency,
+									paymentMethod: 'bank_transfer',
+								},
+							})
+						}
+						aria-haspopup="dialog"
+						aria-expanded={isEditOpen}
+						data-testid="wire-subscription-edit"
+					>
+						{labels.edit}
+					</Button>
 					{qrBill && (
 						<Button
 							type="button"
 							variant="outline"
 							size="sm"
 							className="bg-background"
-							onClick={() => setIsQrOpen(true)}
+							onClick={() => {
+								setQrAmountOverride(null);
+								setIsQrOpen(true);
+							}}
 							data-testid="wire-subscription-view-qr"
 						>
 							{labels.viewQr}
@@ -88,7 +135,23 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 				</div>
 			</div>
 
-			<Dialog open={isQrOpen} onOpenChange={setIsQrOpen}>
+			<EditSubscriptionDialog
+				lang={lang}
+				state={state}
+				send={send}
+				onDismissAndRefresh={dismissEditAndRefresh}
+				onViewQr={qrBill ? openQrFromSuccess : undefined}
+			/>
+
+			<Dialog
+				open={isQrOpen}
+				onOpenChange={(nextOpen) => {
+					setIsQrOpen(nextOpen);
+					if (!nextOpen) {
+						setQrAmountOverride(null);
+					}
+				}}
+			>
 				<DialogContent
 					className="max-h-[90vh] overflow-y-auto sm:max-w-[820px]"
 					onOpenAutoFocus={(event) => event.preventDefault()}
@@ -108,7 +171,7 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 						<div className="flex flex-col gap-6" data-testid="wire-subscription-qr-dialog">
 							<QrBillPaymentCard
 								qrBillSvg={qrBillSvg}
-								amount={amount}
+								amount={qrAmount}
 								currency={qrCurrency}
 								contributorReferenceId={qrBill.contributorReferenceId}
 								contributionReferenceId={qrBill.contributionReferenceId}

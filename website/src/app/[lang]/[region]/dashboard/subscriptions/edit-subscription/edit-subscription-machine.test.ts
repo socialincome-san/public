@@ -12,6 +12,7 @@ const openEvent = {
 		subscriptionId: 'sub_db_1',
 		initialAmount: 30,
 		currency: 'CHF' as const,
+		paymentMethod: 'stripe' as const,
 		brand: 'Visa',
 		last4: '4242',
 	},
@@ -143,5 +144,48 @@ describe('editSubscriptionMachine', () => {
 		actor.send({ type: 'CONFIRM_CANCEL' });
 
 		await waitFor(() => actor.getSnapshot().matches('reason') && actor.getSnapshot().context.error === 'failed');
+	});
+
+	test('opens bank transfer subscriptions with bank payment method in context', () => {
+		const actor = createActor(editSubscriptionMachine).start();
+		actor.send({
+			type: 'OPEN',
+			subscription: {
+				subscriptionId: 'sub_bank_1',
+				initialAmount: 80,
+				currency: 'CHF',
+				paymentMethod: 'bank_transfer',
+			},
+		});
+
+		expect(actor.getSnapshot().matches('editing')).toBe(true);
+		expect(actor.getSnapshot().context.paymentMethod).toBe('bank_transfer');
+		expect(actor.getSnapshot().context.subscriptionId).toBe('sub_bank_1');
+	});
+
+	test('cancels bank transfer subscription successfully', async () => {
+		const actor = createActor(
+			editSubscriptionMachine.provide({
+				actors: {
+					cancelSubscription: fromPromise(() => Promise.resolve()),
+				},
+			}),
+		).start();
+
+		actor.send({
+			type: 'OPEN',
+			subscription: {
+				subscriptionId: 'sub_bank_1',
+				initialAmount: 80,
+				currency: 'CHF',
+				paymentMethod: 'bank_transfer',
+			},
+		});
+		actor.send({ type: 'START_CANCEL' });
+		actor.send({ type: 'CONTINUE_CANCEL' });
+		actor.send({ type: 'SET_CANCEL_REASON', value: 'other' });
+		actor.send({ type: 'CONFIRM_CANCEL' });
+
+		await waitFor(() => actor.getSnapshot().matches('canceledSuccess'));
 	});
 });

@@ -111,6 +111,7 @@
 			"update-subscription": "Update Subscription",
 			"success-title": "Subscription updated",
 			"success-message": "Your updated monthly donation is now active.",
+			"bank-success-message": "Your updated amount is saved. Please update your bank standing order.",
 			"success-thanks": "Thank you for supporting Social Income.",
 			"done": "Done",
 			"error": "Could not update subscription. Please try again.",
@@ -126,6 +127,7 @@
 			"cancel-reason-confirm": "Cancel subscription",
 			"cancel-success-title": "Subscription cancelled",
 			"cancel-success-message": "Your subscription has been cancelled.",
+			"bank-cancel-success-message": "Your subscription has been cancelled here. Please also stop the standing order in your bank.",
 			"cancel-success-thanks": "Thank you for supporting Social Income.",
 			"cancel-error": "Could not cancel subscription. Please try again.",
 			"cancel-reasons": {

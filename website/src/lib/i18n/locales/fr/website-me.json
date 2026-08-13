@@ -111,6 +111,7 @@
 			"update-subscription": "Mettre à jour la souscription",
 			"success-title": "Souscription mise à jour",
 			"success-message": "Ta contribution mensuelle mise à jour est maintenant active.",
+			"bank-success-message": "Ton nouveau montant est enregistré. Merci de mettre à jour ton ordre permanent bancaire.",
 			"success-thanks": "Merci de soutenir Social Income.",
 			"done": "Terminé",
 			"error": "Impossible de mettre à jour la souscription. Réessaie s'il te plaît.",
@@ -126,6 +127,7 @@
 			"cancel-reason-confirm": "Annuler la souscription",
 			"cancel-success-title": "Souscription annulée",
 			"cancel-success-message": "Ta souscription a été annulée.",
+			"bank-cancel-success-message": "Ta souscription a été annulée ici. Merci d'arrêter aussi l'ordre permanent dans ta banque.",
 			"cancel-success-thanks": "Merci de soutenir Social Income.",
 			"cancel-error": "Impossible d'annuler la souscription. Réessaie s'il te plaît.",
 			"cancel-reasons": {

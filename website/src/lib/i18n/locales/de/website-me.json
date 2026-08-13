@@ -111,6 +111,7 @@
 			"update-subscription": "Abonnement aktualisieren",
 			"success-title": "Abonnement aktualisiert",
 			"success-message": "Dein aktualisierter monatlicher Beitrag ist jetzt aktiv.",
+			"bank-success-message": "Dein neuer Betrag ist gespeichert. Bitte passe deinen Dauerauftrag in der Bank an.",
 			"success-thanks": "Danke, dass du Social Income unterstützt.",
 			"done": "Fertig",
 			"error": "Abonnement konnte nicht aktualisiert werden. Bitte versuche es erneut.",
@@ -126,6 +127,7 @@
 			"cancel-reason-confirm": "Abonnement kündigen",
 			"cancel-success-title": "Abonnement gekündigt",
 			"cancel-success-message": "Dein Abonnement wurde gekündigt.",
+			"bank-cancel-success-message": "Dein Abonnement wurde hier gekündigt. Bitte stoppe zusätzlich den Dauerauftrag in deiner Bank.",
 			"cancel-success-thanks": "Danke, dass du Social Income unterstützt.",
 			"cancel-error": "Abonnement konnte nicht gekündigt werden. Bitte versuche es erneut.",
 			"cancel-reasons": {

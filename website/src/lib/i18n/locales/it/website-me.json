@@ -111,6 +111,7 @@
 			"update-subscription": "Aggiorna sottoscrizione",
 			"success-title": "Sottoscrizione aggiornata",
 			"success-message": "Il tuo contributo mensile aggiornato è ora attivo.",
+			"bank-success-message": "Il nuovo importo è salvato. Aggiorna l'ordine permanente in banca.",
 			"success-thanks": "Grazie per sostenere Social Income.",
 			"done": "Fatto",
 			"error": "Impossibile aggiornare la sottoscrizione. Riprova.",
@@ -126,6 +127,7 @@
 			"cancel-reason-confirm": "Annulla sottoscrizione",
 			"cancel-success-title": "Sottoscrizione annullata",
 			"cancel-success-message": "La tua sottoscrizione è stata annullata.",
+			"bank-cancel-success-message": "La sottoscrizione è stata annullata qui. Ferma anche l'ordine permanente nella tua banca.",
 			"cancel-success-thanks": "Grazie per sostenere Social Income.",
 			"cancel-error": "Impossibile annullare la sottoscrizione. Riprova.",
 			"cancel-reasons": {

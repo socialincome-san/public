@@ -36,6 +36,7 @@ export const ActiveSubscriptionsList = ({ lang, subscriptions, labels }: Props) 
 									subscriptionId: subscription.id,
 									initialAmount: Math.round(subscription.amount),
 									currency: subscription.currency,
+									paymentMethod: 'stripe',
 									createdAt: subscription.createdAt,
 									brand: subscription.paymentDisplay.brand,
 									last4: subscription.paymentDisplay.last4,

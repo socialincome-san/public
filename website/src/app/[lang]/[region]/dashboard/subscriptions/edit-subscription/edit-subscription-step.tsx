@@ -100,22 +100,24 @@ export const EditSubscriptionStep = ({
 				</div>
 			</div>
 
-			<div className="bg-muted flex items-center justify-between gap-4 rounded-xl px-4 py-3">
-				<span className="text-muted-foreground flex items-center gap-2 text-sm">
-					<CreditCard className="size-4 shrink-0" aria-hidden />
-					{cardLabel}
-				</span>
-				<Button
-					type="button"
-					variant="outline"
-					size="sm"
-					className="bg-background"
-					disabled={isSubmitting || isUpdatingCard || !onUpdateCard}
-					onClick={onUpdateCard}
-				>
-					{labels.updateCard}
-				</Button>
-			</div>
+			{onUpdateCard && (
+				<div className="bg-muted flex items-center justify-between gap-4 rounded-xl px-4 py-3">
+					<span className="text-muted-foreground flex items-center gap-2 text-sm">
+						<CreditCard className="size-4 shrink-0" aria-hidden />
+						{cardLabel}
+					</span>
+					<Button
+						type="button"
+						variant="outline"
+						size="sm"
+						className="bg-background"
+						disabled={isSubmitting || isUpdatingCard}
+						onClick={onUpdateCard}
+					>
+						{labels.updateCard}
+					</Button>
+				</div>
+			)}
 
 			<button
 				type="button"

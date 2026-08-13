@@ -4,10 +4,13 @@ import { cancelSubscriptionAction, updateSubscriptionAmountAction } from '@/lib/
 import { canUpdateSubscriptionAmount, clampSubscriptionAmount } from '@/lib/services/subscription/subscription-amount';
 import { assign, fromPromise, setup } from 'xstate';
 
+export type EditSubscriptionPaymentMethod = 'stripe' | 'bank_transfer';
+
 export type EditSubscriptionOpenInput = {
 	subscriptionId: string;
 	initialAmount: number;
 	currency: Currency;
+	paymentMethod: EditSubscriptionPaymentMethod;
 	brand?: string;
 	last4?: string;
 };
@@ -20,6 +23,7 @@ export const editSubscriptionMachine = setup({
 			initialAmount: number;
 			amount: number;
 			currency: Currency;
+			paymentMethod: EditSubscriptionPaymentMethod;
 			brand?: string;
 			last4?: string;
 			cancellationReason?: SubscriptionCancellationReason;
@@ -69,6 +73,7 @@ export const editSubscriptionMachine = setup({
 		initialAmount: 0,
 		amount: 0,
 		currency: 'CHF',
+		paymentMethod: 'stripe',
 		brand: undefined,
 		last4: undefined,
 		cancellationReason: undefined,
@@ -84,6 +89,7 @@ export const editSubscriptionMachine = setup({
 						initialAmount: event.subscription.initialAmount,
 						amount: event.subscription.initialAmount,
 						currency: event.subscription.currency,
+						paymentMethod: event.subscription.paymentMethod,
 						brand: event.subscription.brand,
 						last4: event.subscription.last4,
 						cancellationReason: undefined,
