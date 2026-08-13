@@ -1,6 +1,7 @@
 import { prisma } from '../prisma';
 import { accountsData } from './data/accounts.data';
 import { addressesData } from './data/addresses.data';
+import { bankAccountsData } from './data/bank-accounts.data';
 import { campaignsData } from './data/campaigns.data';
 import { contactsData } from './data/contacts.data';
 import { contributionsData } from './data/contributions.data';
@@ -32,6 +33,8 @@ import { usersData } from './data/users.data';
 
 export const seedDatabase = async () => {
 	await prisma.$transaction(async (tx) => {
+		await tx.reserve.deleteMany();
+		await tx.bankAccount.deleteMany();
 		await tx.survey.deleteMany();
 		await tx.surveySchedule.deleteMany();
 		await tx.payout.deleteMany();
@@ -70,6 +73,7 @@ export const seedDatabase = async () => {
 			data: countryMobileMoneyProviderMappingsData,
 			skipDuplicates: true,
 		});
+		await tx.bankAccount.createMany({ data: bankAccountsData, skipDuplicates: true });
 		await tx.account.createMany({ data: accountsData, skipDuplicates: true });
 		await tx.address.createMany({ data: addressesData, skipDuplicates: true });
 		await tx.phone.createMany({ data: phonesData, skipDuplicates: true });

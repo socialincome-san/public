@@ -1,5 +1,6 @@
 import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
+import { BankAccountReadService } from './bank-account/bank-account-read.service';
 import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignSubmissionService } from './campaign/campaign-submission.service';
@@ -46,6 +47,7 @@ import { OrganizationReadService } from './organization/organization-read.servic
 import { OrganizationValidationService } from './organization/organization-validation.service';
 import { OrganizationWriteService } from './organization/organization-write.service';
 import { PaymentFileImportService } from './payment-file-import/payment-file-import.service';
+import { PostFinanceBalanceService } from './payment-file-import/postfinance-balance.service';
 import { OrangeMoneyCsvPayoutProcessService } from './payout-process/orange-money-csv-payout-process.service';
 import { PayoutProcessCoreService } from './payout-process/payout-process-core.service';
 import { TelecelCsvPayoutProcessService } from './payout-process/telecel-csv-payout-process.service';
@@ -65,6 +67,9 @@ import { RecipientReadService } from './recipient/recipient-read.service';
 import { RecipientStatusService } from './recipient/recipient-status.service';
 import { RecipientValidationService } from './recipient/recipient-validation.service';
 import { RecipientWriteService } from './recipient/recipient-write.service';
+import { ReserveReadService } from './reserves/reserve-read.service';
+import { ReserveWriteService } from './reserves/reserve-write.service';
+import { ReservesCalculationService } from './reserves/reserves-calculation.service';
 import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
 import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { StoryblokService } from './storyblok/storyblok.service';
@@ -89,6 +94,8 @@ import { UserValidationService } from './user/user-validation.service';
 import { UserWriteService } from './user/user-write.service';
 
 const appReviewMode = new AppReviewModeService(prisma);
+const bankAccountRead = new BankAccountReadService(prisma);
+const reserveRead = new ReserveReadService(prisma);
 const firebaseAdmin = new FirebaseAdminService(prisma);
 const firebaseSession = new FirebaseSessionService(prisma);
 const programAccessRead = new ProgramAccessReadService(prisma);
@@ -98,7 +105,7 @@ const userRead = new UserReadService(prisma);
 const userValidation = new UserValidationService(prisma);
 const exchangeRateImport = new ExchangeRateImportService(prisma);
 const surveySchedule = new SurveyScheduleService(prisma);
-const transparency = new TransparencyService(prisma);
+const transparency = new TransparencyService(prisma, reserveRead);
 const githubApi = new GithubApiService(prisma);
 const storyblok = new StoryblokService(prisma);
 const journal = new JournalService(prisma, storyblok);
@@ -184,6 +191,7 @@ const focusWrite = new FocusWriteService(prisma, userRead, focusValidation);
 const donationCertificateRead = new DonationCertificateReadService(prisma, programAccessRead);
 
 const currencyDisplay = new CurrencyDisplayService(exchangeRateRead);
+const reserveWrite = new ReserveWriteService(prisma);
 const programStats = new ProgramStatsService(prisma, currencyDisplay, recipientStatus);
 const campaignRead = new CampaignReadService(prisma, programAccessRead, exchangeRateRead);
 const campaignPublicWebsite = new CampaignPublicWebsiteService(prisma, storyblok);
@@ -240,6 +248,15 @@ const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAd
 
 const createPaymentFileImport = (bucketName: string) =>
 	new PaymentFileImportService(bucketName, prisma, contributorRead, contributionWrite, campaignRead);
+const createPostFinanceBalance = (bucketName: string) => new PostFinanceBalanceService(bucketName, prisma);
+const createReservesCalculation = (bucketName: string) =>
+	new ReservesCalculationService(
+		prisma,
+		bankAccountRead,
+		createPostFinanceBalance(bucketName),
+		reserveWrite,
+		currencyDisplay,
+	);
 
 export const services = {
 	read: {
@@ -286,6 +303,7 @@ export const services = {
 	appReviewMode,
 	qrBill,
 	createPaymentFileImport,
+	createReservesCalculation,
 	exchangeRateImport,
 	candidateImport,
 	firebaseAdmin,

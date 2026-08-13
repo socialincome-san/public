@@ -1,10 +1,23 @@
 'use client';
 
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { formatSummaryMetricAmount } from '@/components/transparency/summary-metric-format';
 import { useCountUp } from '@/lib/hooks/use-count-up';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { Info } from 'lucide-react';
 import { useInView } from 'motion/react';
 import { useRef } from 'react';
+
+type SummaryMetricTooltip = {
+	ariaLabel: string;
+	emptyMessage: string;
+	rows: {
+		key: string;
+		account: string;
+		balance: string;
+		recordedAt: string;
+	}[];
+};
 
 export type SummaryMetric = {
 	key: 'inflows' | 'outflows' | 'reserves';
@@ -12,6 +25,7 @@ export type SummaryMetric = {
 	titleCurrency: string;
 	description: string;
 	amount: number;
+	tooltip?: SummaryMetricTooltip;
 };
 
 type Props = {
@@ -39,10 +53,40 @@ export const SummarySectionClient = ({ metrics, lang }: Props) => {
 	return (
 		<section>
 			<div className="grid gap-8 md:grid-cols-3">
-				{metrics.map(({ key, titleName, titleCurrency, description, amount }) => (
+				{metrics.map(({ key, titleName, titleCurrency, description, amount, tooltip }) => (
 					<div key={key} className="border-muted-foreground/30 text-foreground flex flex-col border-l pl-6">
-						<h2>
-							<strong>{titleName}</strong> {titleCurrency}
+						<h2 className="flex items-center gap-1.5">
+							<span>
+								<strong>{titleName}</strong> {titleCurrency}
+							</span>
+							{tooltip ? (
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<button
+											type="button"
+											aria-label={tooltip.ariaLabel}
+											className="text-muted-foreground hover:text-foreground focus-visible:ring-foreground inline-flex rounded-sm focus-visible:ring-2 focus-visible:ring-offset-2"
+										>
+											<Info aria-hidden="true" className="size-4" />
+										</button>
+									</TooltipTrigger>
+									<TooltipContent sideOffset={8} className="max-w-[calc(100vw-2rem)] px-4 py-3 text-sm sm:max-w-xl">
+										{tooltip.rows.length > 0 ? (
+											<ul className="space-y-1.5">
+												{tooltip.rows.map((row) => (
+													<li key={row.key} className="flex flex-wrap gap-x-1 tabular-nums">
+														<span className="break-all">{row.account},</span>
+														<span>{row.balance},</span>
+														<span>{row.recordedAt}</span>
+													</li>
+												))}
+											</ul>
+										) : (
+											<p>{tooltip.emptyMessage}</p>
+										)}
+									</TooltipContent>
+								</Tooltip>
+							) : null}
 						</h2>
 						<p className="mt-2 text-sm">{description}</p>
 						<SummaryMetricValue amount={amount} lang={lang} />
