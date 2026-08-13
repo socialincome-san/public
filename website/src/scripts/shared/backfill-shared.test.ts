@@ -2,8 +2,8 @@ import {
 	assertDatabaseUrl,
 	exitCodeForSummary,
 	getDatabaseHost,
-	parsePositiveIntFlag,
-	resolveStripeResourceId,
+	mapWithConcurrency,
+	parseBackfillCliOptions,
 } from './backfill-shared';
 
 describe('backfill-shared', () => {
@@ -26,19 +26,32 @@ describe('backfill-shared', () => {
 	});
 
 	test('exitCodeForSummary', () => {
-		expect(exitCodeForSummary({ errors: 0 })).toBe(0);
-		expect(exitCodeForSummary({ errors: 1 })).toBe(1);
+		expect(exitCodeForSummary({ errors: 0, subscriptionsCreated: 0 }, false)).toBe(0);
+		expect(exitCodeForSummary({ errors: 1, subscriptionsCreated: 0 }, false)).toBe(1);
+		expect(exitCodeForSummary({ errors: 0, subscriptionsCreated: 3 }, false)).toBe(1);
+		expect(exitCodeForSummary({ errors: 0, subscriptionsCreated: 3 }, true)).toBe(0);
 	});
 
-	test('parsePositiveIntFlag', () => {
-		expect(parsePositiveIntFlag([], '--limit')).toBeNull();
-		expect(parsePositiveIntFlag(['--limit=3'], '--limit')).toBe(3);
-		expect(() => parsePositiveIntFlag(['--limit=0'], '--limit')).toThrow('Invalid --limit value');
+	test('parseBackfillCliOptions', () => {
+		expect(parseBackfillCliOptions([])).toEqual({ apply: false, limit: null, concurrency: 2 });
+		expect(parseBackfillCliOptions(['--apply', '--limit=10', '--concurrency=4'])).toEqual({
+			apply: true,
+			limit: 10,
+			concurrency: 4,
+		});
+		expect(() => parseBackfillCliOptions(['--limit=0'])).toThrow('Invalid --limit value');
+		expect(() => parseBackfillCliOptions(['--concurrency=-1'])).toThrow('Invalid --concurrency value');
 	});
 
-	test('resolveStripeResourceId', () => {
-		expect(resolveStripeResourceId('id_1')).toBe('id_1');
-		expect(resolveStripeResourceId({ id: 'id_2' })).toBe('id_2');
-		expect(resolveStripeResourceId(null)).toBeNull();
+	test('mapWithConcurrency processes every item once', async () => {
+		for (const concurrency of [1, 3]) {
+			const seen: number[] = [];
+			await mapWithConcurrency([1, 2, 3, 4, 5], concurrency, (item) => {
+				seen.push(item);
+
+				return Promise.resolve();
+			});
+			expect(seen.sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5]);
+		}
 	});
 });

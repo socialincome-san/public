@@ -22,9 +22,18 @@ export const assertDatabaseUrl = () => {
 	}
 };
 
-export const exitCodeForSummary = (summary: { errors: number }): number => (summary.errors > 0 ? 1 : 0);
+export const exitCodeForSummary = (summary: { errors: number; subscriptionsCreated: number }, apply: boolean): number => {
+	if (summary.errors > 0) {
+		return 1;
+	}
+	if (!apply && summary.subscriptionsCreated > 0) {
+		return 1;
+	}
 
-export const parsePositiveIntFlag = (argv: string[], flag: string): number | null => {
+	return 0;
+};
+
+const parsePositiveIntFlag = (argv: string[], flag: string): number | null => {
 	const arg = argv.find((value) => value.startsWith(`${flag}=`));
 	if (!arg) {
 		return null;
@@ -39,13 +48,29 @@ export const parsePositiveIntFlag = (argv: string[], flag: string): number | nul
 	return parsed;
 };
 
-export const resolveStripeResourceId = (value: string | { id: string } | null | undefined): string | null => {
-	if (!value) {
-		return null;
-	}
-	if (typeof value === 'string') {
-		return value;
-	}
+const DEFAULT_CONCURRENCY = 2;
 
-	return value.id;
+export const parseBackfillCliOptions = (argv: string[]) => ({
+	apply: argv.includes('--apply'),
+	limit: parsePositiveIntFlag(argv, '--limit'),
+	concurrency: parsePositiveIntFlag(argv, '--concurrency') ?? DEFAULT_CONCURRENCY,
+});
+
+export const mapWithConcurrency = async <T>(
+	items: T[],
+	concurrency: number,
+	worker: (item: T) => Promise<void>,
+): Promise<void> => {
+	let nextIndex = 0;
+
+	const runWorker = async () => {
+		while (nextIndex < items.length) {
+			const currentIndex = nextIndex;
+			nextIndex += 1;
+			await worker(items[currentIndex]);
+		}
+	};
+
+	const workers = Array.from({ length: Math.min(concurrency, Math.max(items.length, 1)) }, () => runWorker());
+	await Promise.all(workers);
 };

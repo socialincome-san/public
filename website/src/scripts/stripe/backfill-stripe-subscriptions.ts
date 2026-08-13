@@ -1,39 +1,38 @@
 /**
- * One-off backfill: Stripe subscriptions → DB Subscription rows.
- *
- * Dry-run by default. Writes only with `--apply`.
+ * Create-only backfill of missing Stripe subscriptions.
+ * Dry-run by default (exit 1 if anything would be created). Pass `--apply` to write.
  *
  * Usage (from website/):
- *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npx tsx src/scripts/stripe/backfill-stripe-subscriptions.ts
- *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npx tsx src/scripts/stripe/backfill-stripe-subscriptions.ts --limit=10
- *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npx tsx src/scripts/stripe/backfill-stripe-subscriptions.ts --concurrency=2 --apply
- *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npx tsx src/scripts/stripe/backfill-stripe-subscriptions.ts --apply
+ *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npm run db:backfill:stripe-subscriptions
+ *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npm run db:backfill:stripe-subscriptions -- --limit=10 --apply
  */
 
-import { Currency, DonationInterval, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/client';
+import { SubscriptionPaymentMethod } from '@/generated/prisma/client';
 import { prisma } from '@/lib/database/prisma';
-import { isValidCurrency } from '@/lib/types/currency';
-import Stripe from 'stripe';
-import { assertDatabaseUrl, exitCodeForSummary, getDatabaseHost, log, printSummary } from '../shared/backfill-shared';
 import {
-	getStripeKeyMode,
-	mapStripePriceAmount,
-	mapStripeRecurringInterval,
-	mapStripeSubscriptionStatus,
+	mapStripeSubscriptionLifecycle,
+	mapStripeSubscriptionPriceFields,
+	resolveStripeResourceId,
+	shouldSkipStripeSubscriptionStatus,
+} from '@/lib/services/subscription/subscription.mappers';
+import Stripe from 'stripe';
+import {
+	assertDatabaseUrl,
+	exitCodeForSummary,
+	getDatabaseHost,
+	log,
 	mapWithConcurrency,
 	parseBackfillCliOptions,
-	resolveStripeCustomerId,
-	shouldSkipStripeSubscriptionStatus,
-} from './backfill-stripe-subscriptions.mappers';
+	printSummary,
+} from '../shared/backfill-shared';
 
 type Summary = {
 	subscriptionsSeen: number;
 	subscriptionsCreated: number;
-	subscriptionsUpdated: number;
+	alreadyExists: number;
 	skippedIncomplete: number;
+	skippedNoCustomer: number;
 	skippedNoContributor: number;
-	skippedUnsupportedInterval: number;
-	skippedUnsupportedCurrency: number;
 	skippedNoPrice: number;
 	skippedUnknownStatus: number;
 	errors: number;
@@ -50,11 +49,10 @@ type ProcessContext = {
 const createSummary = (): Summary => ({
 	subscriptionsSeen: 0,
 	subscriptionsCreated: 0,
-	subscriptionsUpdated: 0,
+	alreadyExists: 0,
 	skippedIncomplete: 0,
+	skippedNoCustomer: 0,
 	skippedNoContributor: 0,
-	skippedUnsupportedInterval: 0,
-	skippedUnsupportedCurrency: 0,
 	skippedNoPrice: 0,
 	skippedUnknownStatus: 0,
 	errors: 0,
@@ -69,22 +67,25 @@ const getStripeClient = (): Stripe => {
 	return new Stripe(stripeSecretKey, { typescript: true });
 };
 
-const assertEnv = () => {
-	assertDatabaseUrl();
-	if (!process.env.STRIPE_SECRET_KEY) {
-		throw new Error('Missing STRIPE_SECRET_KEY');
+const stripeKeyMode = (secretKey: string): 'live' | 'test' | 'unknown' => {
+	if (secretKey.startsWith('sk_live_')) {
+		return 'live';
 	}
+	if (secretKey.startsWith('sk_test_')) {
+		return 'test';
+	}
+
+	return 'unknown';
 };
 
 const printBanner = (options: { apply: boolean; limit: number | null; concurrency: number }) => {
-	const keyMode = getStripeKeyMode(process.env.STRIPE_SECRET_KEY ?? '');
 	const dbHost = getDatabaseHost(process.env.DATABASE_URL ?? '');
 
 	log('=== Stripe subscription backfill ===');
 	log(`Mode: ${options.apply ? 'APPLY (writes enabled)' : 'DRY-RUN (no writes)'}`);
-	log(`Stripe key mode: ${keyMode}`);
+	log(`Stripe key mode: ${stripeKeyMode(process.env.STRIPE_SECRET_KEY ?? '')}`);
 	log(`Database host: ${dbHost}`);
-	log(`Limit: ${options.limit ?? 'none'}`);
+	log(`Limit: ${options.limit ?? 'none'} (Stripe list order, typically newest first)`);
 	log(`Concurrency: ${options.concurrency}`);
 	log('');
 };
@@ -145,21 +146,6 @@ const resolveCampaignId = async (
 	return fallbackCampaignId;
 };
 
-const extractPrice = (subscription: Stripe.Subscription) => {
-	const item = subscription.items.data[0];
-	const price = item?.price;
-	if (!price?.recurring) {
-		return null;
-	}
-
-	return {
-		unitAmount: price.unit_amount,
-		currency: price.currency,
-		interval: price.recurring.interval,
-		intervalCount: price.recurring.interval_count,
-	};
-};
-
 const listAllSubscriptions = async (stripe: Stripe, limit: number | null): Promise<Stripe.Subscription[]> => {
 	const subscriptions: Stripe.Subscription[] = [];
 	let startingAfter: string | undefined;
@@ -189,52 +175,19 @@ const listAllSubscriptions = async (stripe: Stripe, limit: number | null): Promi
 	return subscriptions;
 };
 
-const upsertSubscription = async (input: {
-	apply: boolean;
-	stripeSubscriptionId: string;
-	contributorId: string;
-	campaignId: string;
-	amount: number;
-	currency: Currency;
-	interval: DonationInterval;
-	status: SubscriptionStatus;
-	canceledAt: Date | null;
-}): Promise<'created' | 'updated'> => {
-	const existing = await prisma.subscription.findUnique({
-		where: { stripeSubscriptionId: input.stripeSubscriptionId },
-		select: { id: true },
-	});
-
-	if (!input.apply) {
-		return existing ? 'updated' : 'created';
-	}
-
-	const sharedFields = {
-		contributorId: input.contributorId,
-		campaignId: input.campaignId,
-		amount: input.amount,
-		currency: input.currency,
-		interval: input.interval,
-		status: input.status,
-		paymentMethod: SubscriptionPaymentMethod.stripe,
-		canceledAt: input.canceledAt,
-	};
-
-	await prisma.subscription.upsert({
-		where: { stripeSubscriptionId: input.stripeSubscriptionId },
-		create: {
-			stripeSubscriptionId: input.stripeSubscriptionId,
-			...sharedFields,
-		},
-		update: sharedFields,
-	});
-
-	return existing ? 'updated' : 'created';
-};
-
 const processSubscription = async (context: ProcessContext, subscription: Stripe.Subscription) => {
 	const { apply, fallbackCampaignId, contributorByStripeCustomerId, campaignExistsCache, summary } = context;
 	summary.subscriptionsSeen += 1;
+
+	const existing = await prisma.subscription.findUnique({
+		where: { stripeSubscriptionId: subscription.id },
+		select: { id: true },
+	});
+	if (existing) {
+		summary.alreadyExists += 1;
+
+		return;
+	}
 
 	if (shouldSkipStripeSubscriptionStatus(subscription.status)) {
 		summary.skippedIncomplete += 1;
@@ -243,17 +196,17 @@ const processSubscription = async (context: ProcessContext, subscription: Stripe
 		return;
 	}
 
-	const mappedStatus = mapStripeSubscriptionStatus(subscription.status, subscription.ended_at);
-	if (!mappedStatus) {
+	const lifecycle = mapStripeSubscriptionLifecycle(subscription);
+	if (!lifecycle) {
 		summary.skippedUnknownStatus += 1;
 		log(`skip unknown status ${subscription.id} (${subscription.status})`);
 
 		return;
 	}
 
-	const customerId = resolveStripeCustomerId(subscription.customer);
+	const customerId = resolveStripeResourceId(subscription.customer);
 	if (!customerId) {
-		summary.skippedNoContributor += 1;
+		summary.skippedNoCustomer += 1;
 		log(`skip no customer ${subscription.id}`);
 
 		return;
@@ -267,66 +220,40 @@ const processSubscription = async (context: ProcessContext, subscription: Stripe
 		return;
 	}
 
-	const price = extractPrice(subscription);
-	if (!price) {
+	const priceFields = mapStripeSubscriptionPriceFields(subscription);
+	if (!priceFields) {
 		summary.skippedNoPrice += 1;
-		log(`skip no price ${subscription.id}`);
-
-		return;
-	}
-
-	const interval = mapStripeRecurringInterval(price.interval, price.intervalCount);
-	if (!interval) {
-		summary.skippedUnsupportedInterval += 1;
-		log(`skip unsupported interval ${subscription.id} (${price.interval}/${price.intervalCount})`);
-
-		return;
-	}
-
-	const amount = mapStripePriceAmount(price.unitAmount);
-	if (amount === null) {
-		summary.skippedNoPrice += 1;
-		log(`skip invalid amount ${subscription.id}`);
-
-		return;
-	}
-
-	const currencyCode = price.currency.toUpperCase();
-	if (!isValidCurrency(currencyCode)) {
-		summary.skippedUnsupportedCurrency += 1;
-		log(`skip unsupported currency ${subscription.id} (${currencyCode})`);
+		log(`skip unmapped price ${subscription.id}`);
 
 		return;
 	}
 
 	const campaignId = await resolveCampaignId(subscription.metadata?.campaignId, fallbackCampaignId, campaignExistsCache);
-	const canceledAt = subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null;
 
-	const outcome = await upsertSubscription({
-		apply,
-		stripeSubscriptionId: subscription.id,
-		contributorId,
-		campaignId,
-		amount,
-		currency: currencyCode,
-		interval,
-		status: mappedStatus,
-		canceledAt,
-	});
-
-	if (outcome === 'created') {
-		summary.subscriptionsCreated += 1;
-	} else {
-		summary.subscriptionsUpdated += 1;
+	if (apply) {
+		await prisma.subscription.create({
+			data: {
+				stripeSubscriptionId: subscription.id,
+				contributorId,
+				campaignId,
+				amount: priceFields.amount,
+				currency: priceFields.currency,
+				interval: priceFields.interval,
+				status: lifecycle.status,
+				paymentMethod: SubscriptionPaymentMethod.stripe,
+				canceledAt: lifecycle.canceledAt,
+			},
+		});
 	}
 
+	summary.subscriptionsCreated += 1;
 	log(
-		`${apply ? 'wrote' : 'would write'} ${subscription.id} → contributor=${contributorId} status=${mappedStatus} interval=${interval} amount=${amount} ${currencyCode} campaign=${campaignId}`,
+		`${apply ? 'wrote' : 'would write'} ${subscription.id} → contributor=${contributorId} status=${lifecycle.status} interval=${priceFields.interval} amount=${priceFields.amount} ${priceFields.currency} campaign=${campaignId}`,
 	);
 };
 
 const main = async () => {
-	assertEnv();
+	assertDatabaseUrl();
 	const { apply, limit, concurrency } = parseBackfillCliOptions(process.argv.slice(2));
 	printBanner({ apply, limit, concurrency });
 
@@ -360,7 +287,7 @@ const main = async () => {
 	});
 
 	printSummary(summary);
-	process.exitCode = exitCodeForSummary(summary);
+	process.exitCode = exitCodeForSummary(summary, apply);
 };
 
 main()

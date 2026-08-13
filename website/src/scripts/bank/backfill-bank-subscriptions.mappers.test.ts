@@ -5,29 +5,10 @@ import {
 	inferSubscriptionStatus,
 	looksLikeMonthlyStandingOrder,
 	median,
-	modeAmount,
 	modeValue,
-	parseBankBackfillCliOptions,
 } from './backfill-bank-subscriptions.mappers';
 
 describe('backfill-bank-subscriptions.mappers', () => {
-	describe('parseBankBackfillCliOptions', () => {
-		test('defaults to dry-run without limit', () => {
-			expect(parseBankBackfillCliOptions([])).toEqual({ apply: false, limit: null });
-		});
-
-		test('parses --apply and --limit', () => {
-			expect(parseBankBackfillCliOptions(['--apply', '--limit=5'])).toEqual({
-				apply: true,
-				limit: 5,
-			});
-		});
-
-		test('rejects invalid --limit', () => {
-			expect(() => parseBankBackfillCliOptions(['--limit=0'])).toThrow('Invalid --limit value');
-		});
-	});
-
 	describe('extractStandingOrderReference', () => {
 		test('extracts bare contribution reference', () => {
 			expect(extractStandingOrderReference('1733400000')).toBe('1733400000');
@@ -66,16 +47,11 @@ describe('backfill-bank-subscriptions.mappers', () => {
 	describe('inferSubscriptionStatus', () => {
 		const now = new Date('2025-06-01T00:00:00.000Z');
 
-		test('active when recent', () => {
-			expect(inferSubscriptionStatus(new Date('2025-05-15T00:00:00.000Z'), now)).toBe(SubscriptionStatus.active);
-		});
-
-		test('canceled when a few months stale', () => {
-			expect(inferSubscriptionStatus(new Date('2025-03-01T00:00:00.000Z'), now)).toBe(SubscriptionStatus.canceled);
-		});
-
-		test('ended when long stale', () => {
-			expect(inferSubscriptionStatus(new Date('2024-01-01T00:00:00.000Z'), now)).toBe(SubscriptionStatus.ended);
+		test('uses 50 and 120 day boundaries', () => {
+			expect(inferSubscriptionStatus(new Date('2025-04-12T00:00:00.000Z'), now)).toBe(SubscriptionStatus.active);
+			expect(inferSubscriptionStatus(new Date('2025-04-11T00:00:00.000Z'), now)).toBe(SubscriptionStatus.canceled);
+			expect(inferSubscriptionStatus(new Date('2025-02-01T00:00:00.000Z'), now)).toBe(SubscriptionStatus.canceled);
+			expect(inferSubscriptionStatus(new Date('2025-01-31T00:00:00.000Z'), now)).toBe(SubscriptionStatus.ended);
 		});
 	});
 
@@ -89,12 +65,8 @@ describe('backfill-bank-subscriptions.mappers', () => {
 		test('modeValue prefers later on ties', () => {
 			expect(modeValue(['a', 'b', 'a', 'b'])).toBe('b');
 			expect(modeValue(['camp-1', 'camp-2', 'camp-1'])).toBe('camp-1');
+			expect(modeValue([50, 50, 80])).toBe(50);
 			expect(() => modeValue([])).toThrow('modeValue requires at least one value');
-		});
-
-		test('modeAmount', () => {
-			expect(modeAmount([50, 50, 80])).toBe(50);
-			expect(() => modeAmount([])).toThrow('modeValue requires at least one value');
 		});
 	});
 });

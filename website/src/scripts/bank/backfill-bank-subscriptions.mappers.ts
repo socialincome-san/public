@@ -1,17 +1,6 @@
 import { SubscriptionStatus } from '@/generated/prisma/enums';
-import { parsePositiveIntFlag } from '../shared/backfill-shared';
-
-export type BankBackfillCliOptions = {
-	apply: boolean;
-	limit: number | null;
-};
 
 const STANDING_ORDER_REF_PATTERN = /^(\d{10})(?:-\d+)?$/;
-
-export const parseBankBackfillCliOptions = (argv: string[]): BankBackfillCliOptions => ({
-	apply: argv.includes('--apply'),
-	limit: parsePositiveIntFlag(argv, '--limit'),
-});
 
 /** `1234567890` or `1234567890-{millis}` → standing-order ref; null for legacy ids. */
 export const extractStandingOrderReference = (transactionId: string): string | null => {
@@ -40,7 +29,6 @@ export const median = (values: number[]): number | null => {
 	return sorted[mid];
 };
 
-/** Median gap roughly one month (~20–45 days). */
 export const looksLikeMonthlyStandingOrder = (gapsInDays: number[]): boolean => {
 	const medianGap = median(gapsInDays);
 	if (medianGap === null) {
@@ -84,5 +72,3 @@ export const modeValue = <T>(values: readonly T[]): T => {
 
 	return bestValue;
 };
-
-export const modeAmount = (amounts: number[]): number => modeValue(amounts);
