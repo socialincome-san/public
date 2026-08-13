@@ -96,6 +96,7 @@ jobs:
           TF_VAR_base_url: ${{ vars.TF_PROD_BASE_URL }}
           TF_VAR_postfinance_ftp_rsa_private_key_base64: ${{ secrets.POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64 }}
           TF_VAR_scheduler_api_key: ${{ secrets.TF_PROD_SCHEDULER_API_KEY }}
+          TF_VAR_pawapay_api_token: ${{ secrets.TF_PROD_PAWAPAY_API_TOKEN }}
           TF_VAR_stripe_product_onetime: ${{ secrets.TF_PROD_STRIPE_PRODUCT_ONETIME }}
           TF_VAR_stripe_product_recurring: ${{ secrets.TF_PROD_STRIPE_PRODUCT_RECURRING }}
           TF_VAR_stripe_secret_key: ${{ secrets.TF_PROD_STRIPE_SECRET_KEY }}

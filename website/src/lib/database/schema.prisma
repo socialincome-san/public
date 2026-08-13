@@ -966,7 +966,7 @@ model Expense {
 model BankAccount {
   id                String          @id @default(cuid()) @map("id")
   type              BankAccountType @map("type")
-  bankAccountNumber String          @map("bank_account_number")
+  bankAccountNumber String?         @map("bank_account_number")
   description       String?         @map("description")
   reserves          Reserve[]
 
