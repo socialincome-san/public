@@ -130,7 +130,9 @@
 		"reserves": {
 			"title-name": "Reserven",
 			"title-currency": "in {{currency}}",
-			"description": "Für Empfänger:innen in laufenden Programmen reserviert."
+			"description": "Für Empfänger:innen in laufenden Programmen reserviert.",
+			"tooltip-label": "Reservekontodetails anzeigen",
+			"no-data": "Keine Daten"
 		}
 	},
 	"program-detail-page": {
