@@ -60,7 +60,7 @@ describe('ReservesCalculationService.calculate', () => {
 			getAll: jest.fn().mockResolvedValue({ success: true, data: [postFinanceAccount] }),
 		};
 		const postFinanceBalanceService = {
-			getLatestClavBalances: jest.fn().mockResolvedValue({
+			getLatestBalances: jest.fn().mockResolvedValue({
 				success: true,
 				data: [{ iban: 'CH1909000000151126386', amount: 125, currency: 'EUR' }],
 			}),
@@ -81,7 +81,7 @@ describe('ReservesCalculationService.calculate', () => {
 		);
 
 		await expect(service.calculate()).resolves.toEqual({ success: true, data: 1 });
-		expect(postFinanceBalanceService.getLatestClavBalances).toHaveBeenCalledWith(['CH19 0900 0000 1511 2638 6']);
+		expect(postFinanceBalanceService.getLatestBalances).toHaveBeenCalledWith(['CH19 0900 0000 1511 2638 6']);
 		expect(createMany).toHaveBeenCalledTimes(1);
 		const writtenReserves = createMany.mock.calls[0]?.[0] ?? [];
 		expect(writtenReserves).toEqual([
@@ -103,7 +103,7 @@ describe('ReservesCalculationService.calculate', () => {
 				data: [{ ...postFinanceAccount, type: 'pawapay_wallet' }],
 			}),
 		};
-		const postFinanceBalanceService = { getLatestClavBalances: jest.fn() };
+		const postFinanceBalanceService = { getLatestBalances: jest.fn() };
 		const reserveWriteService = { createMany: jest.fn() };
 		const service = new ReservesCalculationService(
 			{} as never,
@@ -114,7 +114,7 @@ describe('ReservesCalculationService.calculate', () => {
 		);
 
 		await expect(service.calculate()).resolves.toEqual({ success: true, data: 0 });
-		expect(postFinanceBalanceService.getLatestClavBalances).not.toHaveBeenCalled();
+		expect(postFinanceBalanceService.getLatestBalances).not.toHaveBeenCalled();
 		expect(reserveWriteService.createMany).not.toHaveBeenCalled();
 	});
 
@@ -127,7 +127,7 @@ describe('ReservesCalculationService.calculate', () => {
 				getAll: jest.fn().mockResolvedValue({ success: true, data: [postFinanceAccount] }),
 			};
 			const postFinanceBalanceService = {
-				getLatestClavBalances: jest.fn().mockResolvedValue({
+				getLatestBalances: jest.fn().mockResolvedValue({
 					success: true,
 					data: [{ iban: 'CH1909000000151126386', amount: 125, currency: 'CHF' }],
 				}),

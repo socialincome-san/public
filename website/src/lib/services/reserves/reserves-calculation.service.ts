@@ -41,7 +41,7 @@ export class ReservesCalculationService extends BaseService {
 			return this.resultOk(0);
 		}
 
-		const balancesResult = await this.postFinanceBalanceService.getLatestClavBalances(
+		const balancesResult = await this.postFinanceBalanceService.getLatestBalances(
 			postFinanceAccounts.map(({ bankAccountNumber }) => bankAccountNumber),
 		);
 		if (!balancesResult.success) {

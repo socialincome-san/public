@@ -17,6 +17,8 @@ type DatedStorageFile = {
 	updatedAt: number;
 };
 
+const balanceTypePreference = ['CLAV', 'CLBD', 'ITAV', 'ITBD'] as const;
+
 export class PostFinanceBalanceService extends BaseService {
 	private readonly bucket?: StorageBucket;
 
@@ -25,7 +27,7 @@ export class PostFinanceBalanceService extends BaseService {
 		this.bucket = bucket ?? (bucketName ? storageAdmin.storage.bucket(bucketName) : undefined);
 	}
 
-	async getLatestClavBalances(ibans: string[]): Promise<ServiceResult<PostFinanceBalance[]>> {
+	async getLatestBalances(ibans: string[]): Promise<ServiceResult<PostFinanceBalance[]>> {
 		if (!this.bucket) {
 			return this.resultFail('PostFinance payments files bucket is not configured');
 		}
@@ -44,7 +46,7 @@ export class PostFinanceBalanceService extends BaseService {
 			const balancesByIban = new Map<string, PostFinanceBalance>();
 			for (const { file } of files) {
 				const [contents] = await file.download();
-				const result = this.getClavBalancesFromXml(contents.toString('utf8'));
+				const result = this.getBalancesFromXml(contents.toString('utf8'));
 				if (!result.success) {
 					return result;
 				}
@@ -63,7 +65,7 @@ export class PostFinanceBalanceService extends BaseService {
 
 			const missingIbans = [...requestedIbans].filter((iban) => !balancesByIban.has(iban));
 			if (missingIbans.length > 0) {
-				return this.resultFail(`No CLAV balance found for PostFinance accounts: ${missingIbans.join(', ')}`);
+				return this.resultFail(`No balance found for PostFinance accounts: ${missingIbans.join(', ')}`);
 			}
 
 			return this.resultOk([...balancesByIban.values()]);
@@ -74,7 +76,7 @@ export class PostFinanceBalanceService extends BaseService {
 		}
 	}
 
-	getClavBalancesFromXml(xml: string): ServiceResult<PostFinanceBalance[]> {
+	getBalancesFromXml(xml: string): ServiceResult<PostFinanceBalance[]> {
 		try {
 			const document = new xmldom.DOMParser().parseFromString(xml, 'text/xml');
 			const namespace = document.documentElement?.namespaceURI;
@@ -96,10 +98,17 @@ export class PostFinanceBalanceService extends BaseService {
 				const iban = this.normalizeIban(
 					this.selectString("string(./*[local-name()='Acct']/*[local-name()='Id']/*[local-name()='IBAN'])", report),
 				);
-				const balance = xpath.select1(
-					"./*[local-name()='Bal'][./*[local-name()='Tp']/*[local-name()='CdOrPrtry']/*[local-name()='Cd']='CLAV'][last()]",
-					report,
-				);
+				let balance: ReturnType<typeof xpath.select1> | undefined;
+				for (const balanceType of balanceTypePreference) {
+					const selectedBalance = xpath.select1(
+						`./*[local-name()='Bal'][./*[local-name()='Tp']/*[local-name()='CdOrPrtry']/*[local-name()='Cd']='${balanceType}'][last()]`,
+						report,
+					);
+					if (selectedBalance && typeof selectedBalance === 'object') {
+						balance = selectedBalance;
+						break;
+					}
+				}
 				if (!iban || !balance || typeof balance !== 'object') {
 					continue;
 				}
@@ -116,7 +125,7 @@ export class PostFinanceBalanceService extends BaseService {
 					!this.isCurrency(currencyValue) ||
 					(creditDebitIndicator !== 'CRDT' && creditDebitIndicator !== 'DBIT')
 				) {
-					return this.resultFail(`Invalid CLAV balance for PostFinance account ${iban}`);
+					return this.resultFail(`Invalid balance for PostFinance account ${iban}`);
 				}
 
 				balances.push({
