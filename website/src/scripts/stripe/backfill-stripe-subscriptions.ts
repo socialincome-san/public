@@ -4,17 +4,17 @@
  * Dry-run by default. Writes only with `--apply`.
  *
  * Usage (from website/):
- *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npx tsx src/lib/database/scripts/backfill-stripe-subscriptions.ts
- *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npx tsx src/lib/database/scripts/backfill-stripe-subscriptions.ts --limit=10
- *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npx tsx src/lib/database/scripts/backfill-stripe-subscriptions.ts --concurrency=2 --apply
- *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npx tsx src/lib/database/scripts/backfill-stripe-subscriptions.ts --apply
+ *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npx tsx src/scripts/stripe/backfill-stripe-subscriptions.ts
+ *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npx tsx src/scripts/stripe/backfill-stripe-subscriptions.ts --limit=10
+ *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npx tsx src/scripts/stripe/backfill-stripe-subscriptions.ts --concurrency=2 --apply
+ *   DATABASE_URL=... STRIPE_SECRET_KEY=sk_live_... npx tsx src/scripts/stripe/backfill-stripe-subscriptions.ts --apply
  */
 
 import { Currency, DonationInterval, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/client';
+import { prisma } from '@/lib/database/prisma';
 import { isValidCurrency } from '@/lib/types/currency';
 import Stripe from 'stripe';
-import { prisma } from '../prisma';
-import { assertDatabaseUrl, exitCodeForSummary, getDatabaseHost, log, printSummary } from './backfill-shared';
+import { assertDatabaseUrl, exitCodeForSummary, getDatabaseHost, log, printSummary } from '../shared/backfill-shared';
 import {
 	getStripeKeyMode,
 	mapStripePriceAmount,

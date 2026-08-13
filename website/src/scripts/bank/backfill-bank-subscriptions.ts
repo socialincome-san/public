@@ -12,9 +12,9 @@
  * `--limit` takes groups in first-seen reference order (not largest-first).
  *
  * Usage (from website/):
- *   DATABASE_URL=... npx tsx src/lib/database/scripts/backfill-bank-subscriptions.ts
- *   DATABASE_URL=... npx tsx src/lib/database/scripts/backfill-bank-subscriptions.ts --limit=20
- *   DATABASE_URL=... npx tsx src/lib/database/scripts/backfill-bank-subscriptions.ts --apply
+ *   DATABASE_URL=... npx tsx src/scripts/bank/backfill-bank-subscriptions.ts
+ *   DATABASE_URL=... npx tsx src/scripts/bank/backfill-bank-subscriptions.ts --limit=20
+ *   DATABASE_URL=... npx tsx src/scripts/bank/backfill-bank-subscriptions.ts --apply
  */
 
 import {
@@ -25,7 +25,8 @@ import {
 	SubscriptionPaymentMethod,
 	SubscriptionStatus,
 } from '@/generated/prisma/client';
-import { prisma } from '../prisma';
+import { prisma } from '@/lib/database/prisma';
+import { assertDatabaseUrl, exitCodeForSummary, getDatabaseHost, log, printSummary } from '../shared/backfill-shared';
 import {
 	daysBetween,
 	extractStandingOrderReference,
@@ -35,7 +36,6 @@ import {
 	modeValue,
 	parseBankBackfillCliOptions,
 } from './backfill-bank-subscriptions.mappers';
-import { assertDatabaseUrl, exitCodeForSummary, getDatabaseHost, log, printSummary } from './backfill-shared';
 
 type Summary = {
 	paymentEventsSeen: number;

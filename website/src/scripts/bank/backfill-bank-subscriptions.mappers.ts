@@ -1,5 +1,5 @@
 import { SubscriptionStatus } from '@/generated/prisma/enums';
-import { parsePositiveIntFlag } from './backfill-shared';
+import { parsePositiveIntFlag } from '../shared/backfill-shared';
 
 export type BankBackfillCliOptions = {
 	apply: boolean;

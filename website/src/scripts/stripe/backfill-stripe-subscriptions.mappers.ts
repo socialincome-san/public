@@ -1,5 +1,5 @@
 import { DonationInterval, SubscriptionStatus } from '@/generated/prisma/enums';
-import { parsePositiveIntFlag, resolveStripeResourceId } from './backfill-shared';
+import { parsePositiveIntFlag, resolveStripeResourceId } from '../shared/backfill-shared';
 
 export type BackfillCliOptions = {
 	apply: boolean;
