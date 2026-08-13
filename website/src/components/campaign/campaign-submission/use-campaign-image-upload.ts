@@ -66,9 +66,6 @@ export const useCampaignImageUpload = ({ resolveError }: UseCampaignImageUploadO
 		setFromFile,
 		clear,
 		setError,
-<<<<<<< HEAD
-=======
 		onChange: setFromFile,
->>>>>>> main
 	};
 };

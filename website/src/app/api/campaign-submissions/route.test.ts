@@ -260,7 +260,6 @@ describe('POST /api/campaign-submissions', () => {
 		expect(body).toEqual({ errorCode: 'image-format-unsupported', field: 'sectionImage' });
 		expect(mockSubmit).not.toHaveBeenCalled();
 	});
-<<<<<<< HEAD
 
 	test('rejects submissions when Turnstile verification fails', async () => {
 		mockVerifyTurnstileToken.mockResolvedValue({ success: false, error: 'turnstile-invalid' });
@@ -294,6 +293,4 @@ describe('POST /api/campaign-submissions', () => {
 		expect(body).toEqual({ errorCode: 'submission-failed' });
 		expect(mockSubmit).not.toHaveBeenCalled();
 	});
-=======
->>>>>>> main
 });
