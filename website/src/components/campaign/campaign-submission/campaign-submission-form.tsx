@@ -413,8 +413,6 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 
 		setSubmitError(null);
 		setSubmitSuccess(false);
-		profilePicture.setError(null);
-		sectionImage.setError(null);
 
 		if (!imageSelection) {
 			primaryImage.setError(resolveError('image-required'));
@@ -444,6 +442,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 
 		isSubmittingRef.current = true;
 		primaryImage.setError(null);
+		profilePicture.setError(null);
+		sectionImage.setError(null);
 		setIsSubmitting(true);
 
 		try {
