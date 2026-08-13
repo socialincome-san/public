@@ -5,6 +5,7 @@ import {
 	CampaignSubmissionForm,
 	type SubmissionLabels,
 } from '@/components/campaign/campaign-submission/campaign-submission-form';
+import { TurnstileScript } from '@/components/campaign/campaign-submission/turnstile-script';
 import { Dialog, DialogContent } from '@/components/dialog';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { useState } from 'react';
@@ -20,6 +21,7 @@ export const CreateCampaignButton = ({ label, labels, lang }: Props) => {
 
 	return (
 		<>
+			<TurnstileScript />
 			<Button type="button" className="rounded-full px-5 text-sm font-bold lg:h-11" onClick={() => setOpen(true)}>
 				{label}
 			</Button>
