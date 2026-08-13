@@ -76,6 +76,14 @@ enum ExpenseType {
   staff
 }
 
+enum BankAccountType {
+  postfinance
+  pawapay_wallet
+  custodian_stablecoin_wallet
+  local_bank
+  mobile_money_wallet
+}
+
 enum UserRole {
   admin
   user
@@ -953,6 +961,36 @@ model Expense {
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("expense")
+}
+
+model BankAccount {
+  id                String          @id @default(cuid()) @map("id")
+  type              BankAccountType @map("type")
+  bankAccountNumber String          @map("bank_account_number")
+  description       String?         @map("description")
+  reserves          Reserve[]
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("bank_account")
+}
+
+model Reserve {
+  id            String      @id @default(cuid()) @map("id")
+  bankAccountId String      @map("bank_account_id")
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id])
+  date          DateTime    @map("date") @db.Date
+  amount        Decimal     @map("amount") @db.Decimal(12, 4)
+  currency      Currency    @map("currency")
+  amountChf     Decimal     @map("amount_chf") @db.Decimal(12, 4)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([bankAccountId, date])
+  @@index([bankAccountId])
+  @@map("reserve")
 }
 
 model Address {
