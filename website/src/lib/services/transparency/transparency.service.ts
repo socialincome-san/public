@@ -1,7 +1,10 @@
+import { type PrismaClient } from '@/generated/prisma/client';
 import { PayoutStatus, type CountryCode } from '@/generated/prisma/enums';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
+import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
+import { type ReserveReadService } from '../reserves/reserve-read.service';
 import type {
 	ContributionsByCountry,
 	ContributionTimeRange,
@@ -13,9 +16,15 @@ import type {
 } from './transparency.types';
 import { getTransparencyFinancialPeriodDateFilter } from './transparency.types';
 
-const RESERVES_PLACEHOLDER_CHF = 42;
-
 export class TransparencyService extends BaseService {
+	constructor(
+		db: PrismaClient,
+		private readonly reserveReadService: ReserveReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
+
 	async getTransparencyTotals(
 		financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' },
 	): Promise<ServiceResult<TransparencyTotals>> {
@@ -56,20 +65,25 @@ export class TransparencyService extends BaseService {
 		financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' },
 	): Promise<ServiceResult<TransparencyData>> {
 		try {
-			const [totals, outflowsChf, timeRangeData, topCountries] = await Promise.all([
+			const [totals, outflowsChf, latestReservesResult, timeRangeData, topCountries] = await Promise.all([
 				this.getTotals(financialPeriod),
 				this.getOutflows(financialPeriod),
+				this.reserveReadService.getLatestPerBankAccount(),
 				this.getContributionsByTimeRanges(timeRanges),
 				this.getContributionsByCountry(15),
 			]);
+			if (!latestReservesResult.success) {
+				return this.resultFail(latestReservesResult.error);
+			}
 
 			return this.resultOk({
 				totals,
 				financialSummary: {
 					inflowsChf: totals.totalContributionsChf,
 					outflowsChf,
-					reservesChf: RESERVES_PLACEHOLDER_CHF,
+					reservesChf: latestReservesResult.data.total,
 				},
+				reserveAccounts: latestReservesResult.data.accounts,
 				timeRanges: timeRangeData,
 				topCountries,
 			});
