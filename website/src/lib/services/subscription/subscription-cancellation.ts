@@ -1,6 +1,9 @@
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
 
-export const SUBSCRIPTION_CANCEL_RETENTION_PRESETS = [15, 10, 5] as const;
+const SUBSCRIPTION_CANCEL_RETENTION_PRESETS = [15, 10, 5] as const;
+
+export const getSubscriptionCancelRetentionPresets = (currentAmount: number): number[] =>
+	SUBSCRIPTION_CANCEL_RETENTION_PRESETS.filter((preset) => preset < currentAmount);
 
 export const SUBSCRIPTION_CANCEL_REASONS = [
 	'financial_situation_changed',

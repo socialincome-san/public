@@ -68,7 +68,10 @@ export const QrBillPaymentCard = ({
 						<QrPaymentDetailField label={t('stepQrBill.paymentToLabel')} value={paymentToValue} />
 						<QrPaymentDetailField label={t('stepQrBill.ibanLabel')} value={formatQrBillIban(creditor.account)} />
 						<QrPaymentDetailField label={t('stepQrBill.amountLabel')} value={`${qrCurrency} ${qrAmount}`} />
-						<QrPaymentDetailField label={t('stepQrBill.referenceLabel')} value={formatQrBillReference(reference)} />
+						<QrPaymentDetailField
+							label={t('stepQrBill.referenceLabel')}
+							value={reference ? formatQrBillReference(reference) : ''}
+						/>
 						{paymentTypeLabel && <QrPaymentDetailField label={t('stepQrBill.paymentTypeLabel')} value={paymentTypeLabel} />}
 					</div>
 				</div>

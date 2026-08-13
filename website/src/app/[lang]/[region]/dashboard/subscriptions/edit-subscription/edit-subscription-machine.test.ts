@@ -146,6 +146,63 @@ describe('editSubscriptionMachine', () => {
 		await waitFor(() => actor.getSnapshot().matches('reason') && actor.getSnapshot().context.error === 'failed');
 	});
 
+	test('ignores CLOSE while submitting', async () => {
+		let resolveUpdate: ((value: { amount: number; currency: string }) => void) | undefined;
+		const actor = createActor(
+			editSubscriptionMachine.provide({
+				actors: {
+					updateAmount: fromPromise(
+						() =>
+							new Promise<{ amount: number; currency: string }>((resolve) => {
+								resolveUpdate = resolve;
+							}),
+					),
+				},
+			}),
+		).start();
+
+		actor.send(openEvent);
+		actor.send({ type: 'SET_AMOUNT', value: 40 });
+		actor.send({ type: 'SUBMIT' });
+		await waitFor(() => actor.getSnapshot().matches('submitting'));
+
+		actor.send({ type: 'CLOSE' });
+		expect(actor.getSnapshot().matches('submitting')).toBe(true);
+
+		resolveUpdate?.({ amount: 40, currency: 'CHF' });
+		await waitFor(() => actor.getSnapshot().matches('success'));
+		expect(actor.getSnapshot().context.initialAmount).toBe(40);
+	});
+
+	test('ignores CLOSE while canceling', async () => {
+		let resolveCancel: (() => void) | undefined;
+		const actor = createActor(
+			editSubscriptionMachine.provide({
+				actors: {
+					cancelSubscription: fromPromise(
+						() =>
+							new Promise<void>((resolve) => {
+								resolveCancel = resolve;
+							}),
+					),
+				},
+			}),
+		).start();
+
+		actor.send(openEvent);
+		actor.send({ type: 'START_CANCEL' });
+		actor.send({ type: 'CONTINUE_CANCEL' });
+		actor.send({ type: 'SET_CANCEL_REASON', value: 'other' });
+		actor.send({ type: 'CONFIRM_CANCEL' });
+		await waitFor(() => actor.getSnapshot().matches('canceling'));
+
+		actor.send({ type: 'CLOSE' });
+		expect(actor.getSnapshot().matches('canceling')).toBe(true);
+
+		resolveCancel?.();
+		await waitFor(() => actor.getSnapshot().matches('canceledSuccess'));
+	});
+
 	test('opens bank transfer subscriptions with bank payment method in context', () => {
 		const actor = createActor(editSubscriptionMachine).start();
 		actor.send({

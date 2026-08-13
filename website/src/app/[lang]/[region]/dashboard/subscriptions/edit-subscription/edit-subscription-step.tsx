@@ -10,8 +10,10 @@ import {
 	parseSubscriptionAmountInput,
 	SUBSCRIPTION_AMOUNT_MAX,
 	SUBSCRIPTION_AMOUNT_MIN,
+	SUBSCRIPTION_AMOUNT_SLIDER_MAX,
 } from '@/lib/services/subscription/subscription-amount';
 import { CircleX, CreditCard } from 'lucide-react';
+import { useState } from 'react';
 
 type Props = {
 	amount: number;
@@ -29,6 +31,7 @@ type Props = {
 		cancelSubscription: string;
 		cancel: string;
 		updateSubscription: string;
+		updatingSubscription: string;
 		cardFallback: string;
 	};
 	onAmountChange: (amount: number) => void;
@@ -56,6 +59,9 @@ export const EditSubscriptionStep = ({
 }: Props) => {
 	const cardLabel = brand && last4 ? `${brand} •••• ${last4}` : labels.cardFallback;
 	const canSubmit = canUpdateSubscriptionAmount(amount, initialAmount) && !isSubmitting && !isUpdatingCard;
+	const sliderMax = Math.min(SUBSCRIPTION_AMOUNT_MAX, Math.max(SUBSCRIPTION_AMOUNT_SLIDER_MAX, initialAmount));
+	const [amountDraft, setAmountDraft] = useState<string | null>(null);
+	const amountInput = amountDraft ?? String(amount);
 
 	return (
 		<div className="flex flex-col gap-6" data-testid="edit-subscription-step">
@@ -67,13 +73,16 @@ export const EditSubscriptionStep = ({
 						type="number"
 						min={SUBSCRIPTION_AMOUNT_MIN}
 						max={SUBSCRIPTION_AMOUNT_MAX}
-						value={amount}
+						value={amountInput}
 						onChange={(event) => {
-							const parsed = parseSubscriptionAmountInput(event.target.value);
+							const nextValue = event.target.value;
+							setAmountDraft(nextValue);
+							const parsed = parseSubscriptionAmountInput(nextValue);
 							if (parsed !== null) {
 								onAmountChange(parsed);
 							}
 						}}
+						onBlur={() => setAmountDraft(null)}
 						className="h-auto flex-1 rounded-none border-0 bg-transparent px-0 text-center text-3xl font-medium shadow-none focus-visible:ring-0"
 						aria-label={labels.monthlyContribution}
 						data-testid="edit-subscription-amount-input"
@@ -83,10 +92,14 @@ export const EditSubscriptionStep = ({
 				<div className="flex flex-col gap-2">
 					<Slider
 						min={SUBSCRIPTION_AMOUNT_MIN}
-						max={SUBSCRIPTION_AMOUNT_MAX}
+						max={sliderMax}
 						step={1}
 						value={[amount]}
-						onValueChange={([value]) => onAmountChange(clampSubscriptionAmount(value ?? amount))}
+						onValueChange={([value]) => {
+							setAmountDraft(null);
+							onAmountChange(clampSubscriptionAmount(value ?? amount));
+						}}
+						aria-label={labels.monthlyContribution}
 						data-testid="edit-subscription-amount-slider"
 					/>
 					<div className="text-muted-foreground flex justify-between text-xs">
@@ -94,7 +107,7 @@ export const EditSubscriptionStep = ({
 							{currency} {SUBSCRIPTION_AMOUNT_MIN}
 						</span>
 						<span>
-							{currency} {SUBSCRIPTION_AMOUNT_MAX}
+							{currency} {sliderMax}
 						</span>
 					</div>
 				</div>
@@ -140,8 +153,8 @@ export const EditSubscriptionStep = ({
 				<Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting || isUpdatingCard}>
 					{labels.cancel}
 				</Button>
-				<Button type="button" onClick={onSubmit} disabled={!canSubmit}>
-					{labels.updateSubscription}
+				<Button type="button" onClick={onSubmit} disabled={!canSubmit} aria-busy={isSubmitting}>
+					{isSubmitting ? labels.updatingSubscription : labels.updateSubscription}
 				</Button>
 			</div>
 		</div>

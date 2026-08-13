@@ -15,11 +15,12 @@ type Props = {
 	};
 	onDone: () => void;
 	standingOrderSubscriptionId?: string;
+	testId?: string;
 };
 
-export const EditSubscriptionSuccessStep = ({ labels, onDone, standingOrderSubscriptionId }: Props) => {
+export const EditSubscriptionSuccessStep = ({ labels, onDone, standingOrderSubscriptionId, testId }: Props) => {
 	return (
-		<div className="flex flex-col items-center gap-8 py-4" data-testid="edit-subscription-success-step">
+		<div className="flex flex-col items-center gap-8 py-4" data-testid={testId ?? 'edit-subscription-success-step'}>
 			<div className="flex flex-col items-center gap-4 text-center">
 				<div className="bg-confirm/15 flex size-16 items-center justify-center rounded-full">
 					<CircleCheck className="text-confirm size-8" aria-hidden />

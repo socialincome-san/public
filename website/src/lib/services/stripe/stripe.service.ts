@@ -51,6 +51,8 @@ import {
 import { mapCancellationReasonToStripeFeedback } from '../subscription/subscription-cancellation';
 import { SubscriptionWriteService } from '../subscription/subscription-write.service';
 import {
+	mapStripeRecurringInterval,
+	mapStripeSubscriptionLifecycle,
 	resolveStripeResourceId,
 	resolveStripeSubscriptionCanceledAt,
 	resolveStripeSubscriptionIdFromInvoice,
@@ -549,7 +551,7 @@ export class StripeService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(`Could not create billing portal session: ${JSON.stringify(error)}`);
+			return this.resultFail('Could not create billing portal session');
 		}
 	}
 
@@ -594,39 +596,32 @@ export class StripeService extends BaseService {
 			}
 
 			const recurring = existingPrice.recurring;
-			if (!recurring) {
-				return this.resultFail('Stripe subscription item is not recurring');
+			if (!recurring || !mapStripeRecurringInterval(recurring.interval, recurring.interval_count)) {
+				return this.resultFail('Only monthly Stripe subscriptions can be updated');
 			}
 
-			const recurringInterval =
-				recurring.interval === 'day'
-					? ('day' as const)
-					: recurring.interval === 'week'
-						? ('week' as const)
-						: recurring.interval === 'month'
-							? ('month' as const)
-							: recurring.interval === 'year'
-								? ('year' as const)
-								: null;
-			if (!recurringInterval) {
-				return this.resultFail('Unsupported Stripe recurring interval');
+			const stripeCurrency = existingPrice.currency.toLowerCase();
+			if (stripeCurrency !== subscription.currency.toLowerCase()) {
+				return this.resultFail('Subscription currency does not match Stripe price');
 			}
+
+			const unitAmount = amount * 100;
+			if (existingPrice.unit_amount === unitAmount) {
+				return this.resultOk({ amount, currency: subscription.currency });
+			}
+
+			const price = await stripe.prices.create({
+				currency: stripeCurrency,
+				product: productId,
+				unit_amount: unitAmount,
+				recurring: {
+					interval: 'month',
+					interval_count: 1,
+				},
+			});
 
 			const updatedSubscription = await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
-				items: [
-					{
-						id: item.id,
-						price_data: {
-							currency: subscription.currency.toLowerCase(),
-							product: productId,
-							unit_amount: amount * 100,
-							recurring: {
-								interval: recurringInterval,
-								interval_count: recurring.interval_count,
-							},
-						},
-					},
-				],
+				items: [{ id: item.id, price: price.id }],
 				proration_behavior: 'none',
 			});
 
@@ -635,10 +630,17 @@ export class StripeService extends BaseService {
 				contributorId,
 				campaignId: subscription.campaignId,
 			});
-			if (!upsertResult.success) {
-				return this.resultFail(upsertResult.error);
-			}
-			if (!upsertResult.data) {
+			if (!upsertResult.success || !upsertResult.data) {
+				this.logger.alert(
+					'Stripe subscription amount updated but database sync failed',
+					{
+						subscriptionId,
+						stripeSubscriptionId: subscription.stripeSubscriptionId,
+						error: upsertResult.success ? 'Could not sync updated subscription' : upsertResult.error,
+					},
+					{ component: 'stripe-subscription-amount' },
+				);
+
 				return this.resultFail('Could not sync updated subscription');
 			}
 
@@ -679,23 +681,40 @@ export class StripeService extends BaseService {
 			const stripe = this.getStripeClient();
 			let stripeSubscription = await stripe.subscriptions.retrieve(subscription.stripeSubscriptionId);
 
-			if (!stripeSubscription.cancel_at_period_end) {
-				stripeSubscription = await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
-					cancel_at_period_end: true,
+			if (stripeSubscription.status !== 'canceled') {
+				await this.voidOpenSubscriptionInvoices(stripe, subscription.stripeSubscriptionId);
+				stripeSubscription = await stripe.subscriptions.cancel(subscription.stripeSubscriptionId, {
+					invoice_now: false,
+					prorate: false,
 					cancellation_details: {
 						feedback: mapCancellationReasonToStripeFeedback(input.reason),
 					},
 				});
 			}
 
-			await this.db.subscription.update({
-				where: { id: subscription.id },
-				data: {
-					status: SubscriptionStatus.canceled,
-					canceledAt: resolveStripeSubscriptionCanceledAt(stripeSubscription),
-					cancellationReason: input.reason,
-				},
-			});
+			const lifecycle = mapStripeSubscriptionLifecycle(stripeSubscription);
+
+			try {
+				await this.db.subscription.update({
+					where: { id: subscription.id },
+					data: {
+						status: lifecycle?.status ?? SubscriptionStatus.canceled,
+						canceledAt: lifecycle?.canceledAt ?? resolveStripeSubscriptionCanceledAt(stripeSubscription),
+						cancellationReason: input.reason,
+					},
+				});
+			} catch (error) {
+				this.logger.alert(
+					error,
+					{
+						subscriptionId: subscription.id,
+						stripeSubscriptionId: subscription.stripeSubscriptionId,
+					},
+					{ component: 'stripe-subscription-cancel' },
+				);
+
+				return this.resultFail('Could not cancel subscription');
+			}
 
 			return this.resultOk(undefined);
 		} catch (error) {
@@ -769,6 +788,33 @@ export class StripeService extends BaseService {
 			paymentMethod: SubscriptionPaymentMethod.stripe,
 			status: SubscriptionStatus.active,
 		};
+	}
+
+	private async voidOpenSubscriptionInvoices(stripe: Stripe, stripeSubscriptionId: string) {
+		try {
+			const invoices = await stripe.invoices.list({
+				subscription: stripeSubscriptionId,
+				status: 'open',
+				limit: 100,
+			});
+
+			for (const invoice of invoices.data) {
+				try {
+					await stripe.invoices.voidInvoice(invoice.id);
+				} catch (error) {
+					this.logger.warn('Could not void open invoice while canceling subscription', {
+						invoiceId: invoice.id,
+						stripeSubscriptionId,
+						error,
+					});
+				}
+			}
+		} catch (error) {
+			this.logger.warn('Could not list open invoices while canceling subscription', {
+				stripeSubscriptionId,
+				error,
+			});
+		}
 	}
 
 	private getStripeClient(): Stripe {
@@ -991,16 +1037,16 @@ export class StripeService extends BaseService {
 			const currentPeriodEnd =
 				typeof firstItem?.current_period_end === 'number' ? new Date(firstItem.current_period_end * 1000) : null;
 			const paymentMethod = subscription.default_payment_method;
-			if (!paymentMethod || typeof paymentMethod === 'string') {
-				return { currentPeriodEnd };
-			}
-			if (paymentMethod.type !== 'card' || !paymentMethod.card) {
+			const card =
+				paymentMethod && typeof paymentMethod !== 'string' && paymentMethod.type === 'card' ? paymentMethod.card : null;
+
+			if (!card) {
 				return { currentPeriodEnd };
 			}
 
 			return {
-				brand: titleCase(paymentMethod.card.brand),
-				last4: paymentMethod.card.last4,
+				brand: titleCase(card.brand),
+				last4: card.last4,
 				currentPeriodEnd,
 			};
 		} catch (error) {

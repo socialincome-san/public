@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/dialog';
 import { QrBillPaymentCard } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-payment-card';
 import { QrBillPdfDownloadLink } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-pdf-download-link';
 import { type Currency } from '@/generated/prisma/client';
@@ -115,6 +115,8 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 							size="sm"
 							className="bg-background"
 							onClick={() => setIsQrOpen(true)}
+							aria-haspopup="dialog"
+							aria-expanded={isQrOpen}
 							data-testid="wire-subscription-view-qr"
 						>
 							{labels.viewQr}
@@ -132,13 +134,13 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 			/>
 
 			<Dialog open={isQrOpen} onOpenChange={setIsQrOpen}>
-				<DialogContent
-					className="max-h-[90vh] overflow-y-auto sm:max-w-[820px]"
-					onOpenAutoFocus={(event) => event.preventDefault()}
-				>
+				<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[820px]">
 					<DialogHeader>
 						<div className="flex w-full items-start gap-4 pr-8">
-							<DialogTitle className="shrink-0">{labels.qrDialogTitle}</DialogTitle>
+							<div className="flex min-w-0 flex-col gap-1">
+								<DialogTitle className="shrink-0">{labels.qrDialogTitle}</DialogTitle>
+								<DialogDescription className="sr-only">{labels.qrDialogTitle}</DialogDescription>
+							</div>
 							{qrBillSvg && qrBill && (
 								<div className="flex min-w-0 flex-1 items-start justify-end">
 									<QrBillPdfDownloadLink variant="subscription" subscriptionId={id} />

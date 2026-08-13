@@ -2,11 +2,12 @@
 
 import { Button } from '@/components/button/button';
 import { type Currency } from '@/generated/prisma/client';
-import { SUBSCRIPTION_CANCEL_RETENTION_PRESETS } from '@/lib/services/subscription/subscription-cancellation';
+import { getSubscriptionCancelRetentionPresets } from '@/lib/services/subscription/subscription-cancellation';
 import { cn } from '@/lib/utils/cn';
 import { CircleX } from 'lucide-react';
 
 type Props = {
+	amount: number;
 	currency: Currency;
 	labels: {
 		heading: string;
@@ -22,7 +23,9 @@ type Props = {
 const retentionChipClass =
 	'border-border bg-background hover:bg-muted/50 flex h-14 min-w-[5rem] flex-1 cursor-pointer rounded-lg border px-3 py-2 transition-colors';
 
-export const CancelRetentionStep = ({ currency, labels, onReduceAmount, onContinueCancel }: Props) => {
+export const CancelRetentionStep = ({ amount, currency, labels, onReduceAmount, onContinueCancel }: Props) => {
+	const presets = getSubscriptionCancelRetentionPresets(amount);
+
 	return (
 		<div className="flex flex-col gap-6" data-testid="cancel-retention-step">
 			<div className="flex flex-col items-center gap-2 text-center">
@@ -34,7 +37,7 @@ export const CancelRetentionStep = ({ currency, labels, onReduceAmount, onContin
 				<p className="text-center text-xl font-medium">{labels.cardTitle}</p>
 
 				<div className="flex gap-5">
-					{SUBSCRIPTION_CANCEL_RETENTION_PRESETS.map((preset) => (
+					{presets.map((preset) => (
 						<button
 							key={preset}
 							type="button"

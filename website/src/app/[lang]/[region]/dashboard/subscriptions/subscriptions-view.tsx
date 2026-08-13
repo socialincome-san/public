@@ -22,7 +22,12 @@ export const SubscriptionsView = async ({ lang, region }: Props) => {
 	if (!dashboardResult.success) {
 		return (
 			<div className="border-destructive/30 text-destructive rounded-xl border p-6 text-sm" role="alert">
-				{dashboardResult.error}
+				<p>{translator.t('subscriptions.load-error')}</p>
+				<div className="pt-4">
+					<Button asChild variant="outline">
+						<a href={`/${lang}/${region}/dashboard/subscriptions`}>{translator.t('subscriptions.retry')}</a>
+					</Button>
+				</div>
 			</div>
 		);
 	}

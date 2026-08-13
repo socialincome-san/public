@@ -1,5 +1,6 @@
 export const SUBSCRIPTION_AMOUNT_MIN = 1;
-export const SUBSCRIPTION_AMOUNT_MAX = 5000;
+export const SUBSCRIPTION_AMOUNT_MAX = 1_000_000;
+export const SUBSCRIPTION_AMOUNT_SLIDER_MAX = 5000;
 
 export const clampSubscriptionAmount = (value: number): number =>
 	Math.min(SUBSCRIPTION_AMOUNT_MAX, Math.max(SUBSCRIPTION_AMOUNT_MIN, Math.round(value)));

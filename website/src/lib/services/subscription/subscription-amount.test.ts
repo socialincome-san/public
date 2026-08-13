@@ -19,7 +19,8 @@ describe('subscription-amount', () => {
 		expect(parseSubscriptionAmountInput('')).toBeNull();
 		expect(parseSubscriptionAmountInput('abc')).toBeNull();
 		expect(parseSubscriptionAmountInput('42')).toBe(42);
-		expect(parseSubscriptionAmountInput(' 6000 ')).toBe(SUBSCRIPTION_AMOUNT_MAX);
+		expect(parseSubscriptionAmountInput(' 6000 ')).toBe(6000);
+		expect(parseSubscriptionAmountInput(String(SUBSCRIPTION_AMOUNT_MAX + 1))).toBe(SUBSCRIPTION_AMOUNT_MAX);
 	});
 
 	test('validates range and update eligibility', () => {

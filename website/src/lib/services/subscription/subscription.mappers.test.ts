@@ -67,7 +67,7 @@ describe('subscription.mappers', () => {
 	});
 
 	describe('mapStripeSubscriptionLifecycle', () => {
-		test('maps cancel_at_period_end to canceled', () => {
+		test('keeps cancel_at_period_end subscriptions active until Stripe cancels them', () => {
 			expect(
 				mapStripeSubscriptionLifecycle({
 					id: 'sub_1',
@@ -80,17 +80,17 @@ describe('subscription.mappers', () => {
 					items: { data: [] },
 				} as never),
 			).toEqual({
-				status: SubscriptionStatus.canceled,
-				canceledAt: new Date(1_700_100_000 * 1000),
+				status: SubscriptionStatus.active,
+				canceledAt: null,
 			});
 		});
 
-		test('resolveStripeSubscriptionCanceledAt prefers current period end', () => {
+		test('resolveStripeSubscriptionCanceledAt prefers canceled_at', () => {
 			expect(
 				resolveStripeSubscriptionCanceledAt({
-					canceled_at: null,
-					cancel_at: null,
-					items: { data: [{ current_period_end: 1_700_200_000 }] },
+					canceled_at: 1_700_200_000,
+					cancel_at: 1_700_300_000,
+					items: { data: [{ current_period_end: 1_700_400_000 }] },
 				} as never),
 			).toEqual(new Date(1_700_200_000 * 1000));
 		});

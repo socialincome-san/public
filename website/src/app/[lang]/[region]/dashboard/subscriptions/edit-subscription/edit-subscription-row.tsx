@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/button/button';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale, formatDateLocale, wholeCurrencyFormatOptions } from '@/lib/utils/string-utils';
 import { useMachine } from '@xstate/react';
@@ -43,13 +44,9 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 
 	return (
 		<>
-			<button
-				type="button"
-				className="border-border hover:bg-muted/40 focus-visible:ring-ring flex w-full cursor-pointer flex-col gap-4 rounded-xl border p-6 text-left transition-colors focus-visible:ring-2 focus-visible:outline-hidden sm:flex-row sm:items-center sm:justify-between"
-				onClick={() => send({ type: 'OPEN', subscription: openInput })}
-				aria-haspopup="dialog"
-				aria-expanded={isOpen}
-				data-testid="edit-subscription-trigger"
+			<div
+				className="border-border flex flex-col gap-4 rounded-xl border p-6 sm:flex-row sm:items-center sm:justify-between"
+				data-testid="edit-subscription-row"
 			>
 				<p className="text-base">
 					<span className="font-semibold">
@@ -59,7 +56,7 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 						{labels.perMonth} · {labels.since} {formatDateLocale(subscription.createdAt, lang)}
 					</span>
 				</p>
-				<div className="flex flex-wrap items-center gap-4">
+				<div className="flex flex-wrap items-center gap-3">
 					<SubscriptionPaymentMethodDisplay
 						paymentDisplay={{
 							type: 'stripe',
@@ -68,11 +65,20 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 						}}
 						labels={labels}
 					/>
-					<span className="border-input bg-background/5 inline-flex h-8 items-center justify-center rounded-full border px-3 text-xs font-medium">
+					<Button
+						type="button"
+						variant="outline"
+						size="sm"
+						className="bg-background"
+						onClick={() => send({ type: 'OPEN', subscription: openInput })}
+						aria-haspopup="dialog"
+						aria-expanded={isOpen}
+						data-testid="edit-subscription-trigger"
+					>
 						{labels.edit}
-					</span>
+					</Button>
 				</div>
-			</button>
+			</div>
 
 			<EditSubscriptionDialog lang={lang} state={state} send={send} onDismissAndRefresh={dismissAndRefresh} />
 		</>

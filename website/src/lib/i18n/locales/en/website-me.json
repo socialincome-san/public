@@ -109,6 +109,7 @@
 			"cancel-subscription": "Cancel Subscription",
 			"cancel": "Cancel",
 			"update-subscription": "Update Subscription",
+			"updating-subscription": "Updating subscription",
 			"success-title": "Subscription updated",
 			"success-message": "Your updated monthly donation is now active.",
 			"success-thanks": "Thank you for supporting Social Income.",
@@ -117,6 +118,7 @@
 			"download-qr": "Download QR-Code",
 			"done": "Done",
 			"error": "Could not update subscription. Please try again.",
+			"update-card-error": "Could not open card update. Please try again.",
 			"back": "Back",
 			"cancel-retention-title": "Cancel subscription",
 			"cancel-retention-heading": "Are you sure you want to cancel this subscription?",
@@ -127,9 +129,10 @@
 			"cancel-reason-title": "Reason for canceling",
 			"cancel-reason-heading": "We're sorry to see you go. Could you tell us why?",
 			"cancel-reason-confirm": "Cancel subscription",
-			"cancel-success-title": "Subscription cancelled",
-			"cancel-success-message": "Your subscription has been cancelled.",
-			"bank-cancel-success-message": "Your subscription has been cancelled here. Please also stop the standing order in your bank.",
+			"canceling-subscription": "Canceling subscription",
+			"cancel-success-title": "Subscription canceled",
+			"cancel-success-message": "Your subscription has been canceled. No further payments will be charged.",
+			"bank-cancel-success-message": "Your subscription has been canceled here. Please also stop the standing order in your bank so no further payment is made.",
 			"cancel-success-thanks": "Thank you for supporting Social Income.",
 			"cancel-error": "Could not cancel subscription. Please try again.",
 			"cancel-reasons": {
@@ -143,10 +146,12 @@
 			}
 		},
 		"no-subscriptions": "No subscriptions found",
+		"load-error": "Could not load subscriptions. Please try again.",
+		"retry": "Retry",
 		"summary": {
 			"monthly-contribution": "Monthly contribution",
 			"total-contributions": "Total contributions",
-			"no-active-subscriptions": "No active Subscriptions",
+			"no-active-subscriptions": "No active subscriptions",
 			"active-subscriptions-count": "{{count}} active subscriptions",
 			"contributions-since": "{{count}} contributions since {{date}}",
 			"no-contributions-yet": "No contributions yet"

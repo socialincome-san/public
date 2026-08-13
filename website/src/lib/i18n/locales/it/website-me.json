@@ -109,6 +109,7 @@
 			"cancel-subscription": "Annulla sottoscrizione",
 			"cancel": "Annulla",
 			"update-subscription": "Aggiorna sottoscrizione",
+			"updating-subscription": "Aggiornamento della sottoscrizione",
 			"success-title": "Sottoscrizione aggiornata",
 			"success-message": "Il tuo contributo mensile aggiornato è ora attivo.",
 			"success-thanks": "Grazie per sostenere Social Income.",
@@ -117,6 +118,7 @@
 			"download-qr": "Scarica il codice QR",
 			"done": "Fatto",
 			"error": "Impossibile aggiornare la sottoscrizione. Riprova.",
+			"update-card-error": "Impossibile aprire l'aggiornamento della carta. Riprova.",
 			"back": "Indietro",
 			"cancel-retention-title": "Annulla sottoscrizione",
 			"cancel-retention-heading": "Sei sicuro/a di voler annullare questa sottoscrizione?",
@@ -127,9 +129,10 @@
 			"cancel-reason-title": "Motivo dell'annullamento",
 			"cancel-reason-heading": "Ci dispiace vederti andare. Ci dici perché?",
 			"cancel-reason-confirm": "Annulla sottoscrizione",
+			"canceling-subscription": "Annullamento della sottoscrizione",
 			"cancel-success-title": "Sottoscrizione annullata",
-			"cancel-success-message": "La tua sottoscrizione è stata annullata.",
-			"bank-cancel-success-message": "La sottoscrizione è stata annullata qui. Ferma anche l'ordine permanente nella tua banca.",
+			"cancel-success-message": "La tua sottoscrizione è stata annullata. Non verranno addebitati ulteriori pagamenti.",
+			"bank-cancel-success-message": "La sottoscrizione è stata annullata qui. Ferma anche l'ordine permanente nella tua banca, così non verrà effettuato un ulteriore pagamento.",
 			"cancel-success-thanks": "Grazie per sostenere Social Income.",
 			"cancel-error": "Impossibile annullare la sottoscrizione. Riprova.",
 			"cancel-reasons": {
@@ -143,6 +146,8 @@
 			}
 		},
 		"no-subscriptions": "Nessuna sottoscrizione trovata",
+		"load-error": "Impossibile caricare le sottoscrizioni. Riprova.",
+		"retry": "Riprova",
 		"summary": {
 			"monthly-contribution": "Contributo mensile",
 			"total-contributions": "Contributi totali",

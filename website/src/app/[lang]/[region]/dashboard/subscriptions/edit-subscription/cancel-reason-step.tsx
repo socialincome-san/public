@@ -15,6 +15,7 @@ type Props = {
 	labels: {
 		heading: string;
 		confirm: string;
+		canceling: string;
 	};
 	error?: string;
 	isSubmitting: boolean;
@@ -65,9 +66,10 @@ export const CancelReasonStep = ({
 				className="w-full"
 				disabled={!selectedReason || isSubmitting}
 				onClick={onConfirm}
+				aria-busy={isSubmitting}
 				data-testid="cancel-reason-confirm"
 			>
-				{labels.confirm}
+				{isSubmitting ? labels.canceling : labels.confirm}
 			</Button>
 		</div>
 	);

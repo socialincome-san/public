@@ -109,6 +109,7 @@
 			"cancel-subscription": "Annuler la souscription",
 			"cancel": "Annuler",
 			"update-subscription": "Mettre à jour la souscription",
+			"updating-subscription": "Mise à jour de la souscription",
 			"success-title": "Souscription mise à jour",
 			"success-message": "Ta contribution mensuelle mise à jour est maintenant active.",
 			"success-thanks": "Merci de soutenir Social Income.",
@@ -117,6 +118,7 @@
 			"download-qr": "Télécharger le QR-Code",
 			"done": "Terminé",
 			"error": "Impossible de mettre à jour la souscription. Réessaie s'il te plaît.",
+			"update-card-error": "Impossible d'ouvrir la mise à jour de la carte. Réessaie s'il te plaît.",
 			"back": "Retour",
 			"cancel-retention-title": "Annuler la souscription",
 			"cancel-retention-heading": "Es-tu sûr·e de vouloir annuler cette souscription ?",
@@ -127,9 +129,10 @@
 			"cancel-reason-title": "Raison de l'annulation",
 			"cancel-reason-heading": "Nous sommes désolés de te voir partir. Peux-tu nous dire pourquoi ?",
 			"cancel-reason-confirm": "Annuler la souscription",
+			"canceling-subscription": "Annulation de la souscription",
 			"cancel-success-title": "Souscription annulée",
-			"cancel-success-message": "Ta souscription a été annulée.",
-			"bank-cancel-success-message": "Ta souscription a été annulée ici. Merci d'arrêter aussi l'ordre permanent dans ta banque.",
+			"cancel-success-message": "Ta souscription a été annulée. Aucun autre paiement ne sera débité.",
+			"bank-cancel-success-message": "Ta souscription a été annulée ici. Merci d'arrêter aussi l'ordre permanent dans ta banque afin qu'aucun autre paiement ne soit effectué.",
 			"cancel-success-thanks": "Merci de soutenir Social Income.",
 			"cancel-error": "Impossible d'annuler la souscription. Réessaie s'il te plaît.",
 			"cancel-reasons": {
@@ -143,6 +146,8 @@
 			}
 		},
 		"no-subscriptions": "Aucune souscription trouvée",
+		"load-error": "Impossible de charger les souscriptions. Réessaie s'il te plaît.",
+		"retry": "Réessayer",
 		"summary": {
 			"monthly-contribution": "Contribution mensuelle",
 			"total-contributions": "Contributions totales",

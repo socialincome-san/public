@@ -70,15 +70,6 @@ export const resolveStripeSubscriptionCanceledAt = (subscription: Stripe.Subscri
 		return new Date(subscription.canceled_at * 1000);
 	}
 
-	const currentPeriodEnd = subscription.items.data[0]?.current_period_end;
-	if (typeof currentPeriodEnd === 'number') {
-		return new Date(currentPeriodEnd * 1000);
-	}
-
-	if (subscription.cancel_at) {
-		return new Date(subscription.cancel_at * 1000);
-	}
-
 	return new Date();
 };
 
@@ -86,13 +77,6 @@ export const resolveStripeSubscriptionCanceledAt = (subscription: Stripe.Subscri
 export const mapStripeSubscriptionLifecycle = (
 	subscription: Stripe.Subscription,
 ): MappedStripeSubscriptionLifecycle | null => {
-	if (subscription.cancel_at_period_end || subscription.cancel_at) {
-		return {
-			status: SubscriptionStatus.canceled,
-			canceledAt: resolveStripeSubscriptionCanceledAt(subscription),
-		};
-	}
-
 	const status = mapStripeSubscriptionStatus(subscription.status, subscription.ended_at);
 	if (!status) {
 		return null;

@@ -178,9 +178,6 @@ export const editSubscriptionMachine = setup({
 					}),
 				},
 			},
-			on: {
-				CLOSE: 'closed',
-			},
 		},
 		canceling: {
 			invoke: {
@@ -207,9 +204,6 @@ export const editSubscriptionMachine = setup({
 						error: () => 'failed',
 					}),
 				},
-			},
-			on: {
-				CLOSE: 'closed',
 			},
 		},
 		success: {

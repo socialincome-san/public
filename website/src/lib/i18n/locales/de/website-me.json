@@ -109,6 +109,7 @@
 			"cancel-subscription": "Abonnement kündigen",
 			"cancel": "Abbrechen",
 			"update-subscription": "Abonnement aktualisieren",
+			"updating-subscription": "Abonnement wird aktualisiert",
 			"success-title": "Abonnement aktualisiert",
 			"success-message": "Dein aktualisierter monatlicher Beitrag ist jetzt aktiv.",
 			"success-thanks": "Danke, dass du Social Income unterstützt.",
@@ -117,6 +118,7 @@
 			"download-qr": "QR-Code herunterladen",
 			"done": "Fertig",
 			"error": "Abonnement konnte nicht aktualisiert werden. Bitte versuche es erneut.",
+			"update-card-error": "Karten-Update konnte nicht geöffnet werden. Bitte versuche es erneut.",
 			"back": "Zurück",
 			"cancel-retention-title": "Abonnement kündigen",
 			"cancel-retention-heading": "Bist du sicher, dass du dieses Abonnement kündigen möchtest?",
@@ -127,9 +129,10 @@
 			"cancel-reason-title": "Kündigungsgrund",
 			"cancel-reason-heading": "Schade, dass du gehst. Kannst du uns sagen warum?",
 			"cancel-reason-confirm": "Abonnement kündigen",
+			"canceling-subscription": "Abonnement wird gekündigt",
 			"cancel-success-title": "Abonnement gekündigt",
-			"cancel-success-message": "Dein Abonnement wurde gekündigt.",
-			"bank-cancel-success-message": "Dein Abonnement wurde hier gekündigt. Bitte stoppe zusätzlich den Dauerauftrag in deiner Bank.",
+			"cancel-success-message": "Dein Abonnement wurde gekündigt. Es werden keine weiteren Zahlungen belastet.",
+			"bank-cancel-success-message": "Dein Abonnement wurde hier gekündigt. Bitte stoppe zusätzlich den Dauerauftrag in deiner Bank, damit keine weitere Zahlung erfolgt.",
 			"cancel-success-thanks": "Danke, dass du Social Income unterstützt.",
 			"cancel-error": "Abonnement konnte nicht gekündigt werden. Bitte versuche es erneut.",
 			"cancel-reasons": {
@@ -143,6 +146,8 @@
 			}
 		},
 		"no-subscriptions": "Keine Abonnemente gefunden",
+		"load-error": "Abonnemente konnten nicht geladen werden. Bitte versuche es erneut.",
+		"retry": "Erneut versuchen",
 		"summary": {
 			"monthly-contribution": "Monatlicher Beitrag",
 			"total-contributions": "Gesamtbeiträge",

@@ -354,7 +354,7 @@ describe('SubscriptionReadService', () => {
 		expect(data.upcomingPayments).toHaveLength(UPCOMING_PAYMENTS_PER_SUBSCRIPTION);
 	});
 
-	it('falls back to createdAt schedule anchor when stripe details are unavailable', async () => {
+	it('skips upcoming payments when stripe details are unavailable', async () => {
 		const { service, loggerInstance } = createService({
 			subscriptions: [
 				{
@@ -371,21 +371,12 @@ describe('SubscriptionReadService', () => {
 
 		const data = expectSuccess(await service.getDashboardView('contributor-1'));
 
-		expect(loggerInstance.warn).toHaveBeenCalledWith(
-			'Using subscription createdAt as schedule anchor for Stripe subscription',
-			{
-				subscriptionId: 'sub-stripe',
-				stripeSubscriptionId: 'sub_core_high_monthly',
-				reason: 'stripe_details_unavailable',
-			},
-		);
-		expect(data.upcomingPayments).toHaveLength(UPCOMING_PAYMENTS_PER_SUBSCRIPTION);
-		expect(data.upcomingPayments.map((payment) => payment.scheduledAt.toISOString())).toEqual([
-			'2026-02-01T00:00:00.000Z',
-			'2026-03-01T00:00:00.000Z',
-			'2026-04-01T00:00:00.000Z',
-			'2026-05-01T00:00:00.000Z',
-		]);
+		expect(loggerInstance.warn).toHaveBeenCalledWith('Skipping upcoming payments for Stripe subscription', {
+			subscriptionId: 'sub-stripe',
+			stripeSubscriptionId: 'sub_core_high_monthly',
+			reason: 'stripe_details_unavailable',
+		});
+		expect(data.upcomingPayments).toEqual([]);
 	});
 
 	it('uses stripe currentPeriodEnd instead of createdAt for upcoming payments', async () => {
@@ -414,7 +405,7 @@ describe('SubscriptionReadService', () => {
 		]);
 	});
 
-	it('warns when stripe currentPeriodEnd is missing but details are available', async () => {
+	it('skips upcoming payments when stripe currentPeriodEnd is missing', async () => {
 		const { service, loggerInstance } = createService({
 			subscriptions: [
 				{
@@ -429,15 +420,13 @@ describe('SubscriptionReadService', () => {
 			stripeDetails: { brand: 'Visa', last4: '4242', currentPeriodEnd: null },
 		});
 
-		expectSuccess(await service.getDashboardView('contributor-1'));
+		const data = expectSuccess(await service.getDashboardView('contributor-1'));
 
-		expect(loggerInstance.warn).toHaveBeenCalledWith(
-			'Using subscription createdAt as schedule anchor for Stripe subscription',
-			{
-				subscriptionId: 'sub-stripe',
-				stripeSubscriptionId: 'sub_123',
-				reason: 'current_period_end_missing',
-			},
-		);
+		expect(loggerInstance.warn).toHaveBeenCalledWith('Skipping upcoming payments for Stripe subscription', {
+			subscriptionId: 'sub-stripe',
+			stripeSubscriptionId: 'sub_123',
+			reason: 'current_period_end_missing',
+		});
+		expect(data.upcomingPayments).toEqual([]);
 	});
 });

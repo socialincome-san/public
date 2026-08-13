@@ -3,7 +3,7 @@ import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { ContributionReadService } from '../contribution/contribution-read.service';
 import { BaseService } from '../core/base.service';
-import { ServiceResult } from '../core/base.types';
+import { type ServiceResult } from '../core/base.types';
 import { StripeService } from '../stripe/stripe.service';
 import { type StripeSubscriptionDetails } from '../stripe/stripe.types';
 import {
@@ -31,12 +31,9 @@ type SubscriptionRecord = {
 	};
 };
 
-type SubscriptionPaymentDisplay = ActiveSubscriptionView['paymentDisplay'];
-
 type EnrichedSubscription = {
-	record: SubscriptionRecord;
 	view: ActiveSubscriptionView;
-	stripeDetails: StripeSubscriptionDetails | null;
+	scheduleAnchor: Date | null;
 };
 
 const computeMonthlyContributionSummary = (subscriptions: SubscriptionRecord[]): MonthlyContributionSummary => {
@@ -112,7 +109,7 @@ export class SubscriptionReadService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(`Could not fetch subscriptions dashboard for contributor ${contributorId}`);
+			return this.resultFail('Could not fetch subscriptions dashboard');
 		}
 	}
 
@@ -145,7 +142,7 @@ export class SubscriptionReadService extends BaseService {
 	}
 
 	private async enrichSubscription(subscription: SubscriptionRecord): Promise<EnrichedSubscription> {
-		const baseView = {
+		const viewBase = {
 			id: subscription.id,
 			amount: Number(subscription.amount),
 			currency: subscription.currency,
@@ -163,100 +160,100 @@ export class SubscriptionReadService extends BaseService {
 					: null;
 
 			return {
-				record: subscription,
 				view: {
-					...baseView,
-					paymentDisplay: {
-						type: 'bank_transfer' as const,
-						qrBill,
-					},
+					...viewBase,
+					paymentDisplay: { type: 'bank_transfer', qrBill },
 				},
-				stripeDetails: null,
+				scheduleAnchor: subscription.createdAt,
 			};
 		}
 
 		if (!subscription.stripeSubscriptionId) {
-			return {
-				record: subscription,
-				view: {
-					...baseView,
-					paymentDisplay: { type: 'stripe' as const },
-				},
-				stripeDetails: null,
-			};
+			return this.stripeSubscriptionWithoutSchedule(subscription, viewBase, 'stripe_details_unavailable');
 		}
 
 		const stripeDetails = await this.stripeService.getSubscriptionStripeDetails(subscription.stripeSubscriptionId);
 		if (!stripeDetails) {
+			return this.stripeSubscriptionWithoutSchedule(subscription, viewBase, 'stripe_details_unavailable');
+		}
+
+		if (!stripeDetails.currentPeriodEnd) {
 			return {
-				record: subscription,
 				view: {
-					...baseView,
-					paymentDisplay: { type: 'stripe' as const },
+					...viewBase,
+					paymentDisplay: this.toStripePaymentDisplay(stripeDetails),
 				},
-				stripeDetails: null,
+				scheduleAnchor: this.skipStripeSchedule(subscription, 'current_period_end_missing'),
 			};
 		}
 
-		const paymentDisplay = this.toStripePaymentDisplay(stripeDetails);
-
 		return {
-			record: subscription,
 			view: {
-				...baseView,
-				paymentDisplay,
+				...viewBase,
+				paymentDisplay: this.toStripePaymentDisplay(stripeDetails),
 			},
-			stripeDetails,
+			scheduleAnchor: stripeDetails.currentPeriodEnd,
 		};
 	}
 
-	private toStripePaymentDisplay(stripeDetails: StripeSubscriptionDetails): SubscriptionPaymentDisplay {
+	private stripeSubscriptionWithoutSchedule(
+		subscription: SubscriptionRecord,
+		viewBase: Omit<ActiveSubscriptionView, 'paymentDisplay'>,
+		reason: 'stripe_details_unavailable',
+	): EnrichedSubscription {
+		return {
+			view: {
+				...viewBase,
+				paymentDisplay: { type: 'stripe' },
+			},
+			scheduleAnchor: this.skipStripeSchedule(subscription, reason),
+		};
+	}
+
+	private skipStripeSchedule(
+		subscription: SubscriptionRecord,
+		reason: 'stripe_details_unavailable' | 'current_period_end_missing',
+	): null {
+		this.logger.warn('Skipping upcoming payments for Stripe subscription', {
+			subscriptionId: subscription.id,
+			stripeSubscriptionId: subscription.stripeSubscriptionId,
+			reason,
+		});
+
+		return null;
+	}
+
+	private toStripePaymentDisplay(stripeDetails: StripeSubscriptionDetails): ActiveSubscriptionView['paymentDisplay'] {
 		if (!stripeDetails.brand || !stripeDetails.last4) {
-			return { type: 'stripe' as const };
+			return { type: 'stripe' };
 		}
 
 		return {
-			type: 'stripe' as const,
+			type: 'stripe',
 			brand: stripeDetails.brand,
 			last4: stripeDetails.last4,
 		};
 	}
 
 	private buildUpcomingPaymentsForSubscription(
-		{ record, view, stripeDetails }: EnrichedSubscription,
+		{ view, scheduleAnchor }: EnrichedSubscription,
 		referenceNow: Date,
 	): UpcomingPaymentView[] {
-		const anchor = this.resolveScheduleAnchor(record, stripeDetails);
+		if (!scheduleAnchor) {
+			return [];
+		}
 
 		return buildMonthlySchedule({
-			anchor,
+			anchor: scheduleAnchor,
 			count: UPCOMING_PAYMENTS_PER_SUBSCRIPTION,
 			now: referenceNow,
 		}).map((scheduledAt) => ({
-			subscriptionId: record.id,
+			subscriptionId: view.id,
 			scheduledAt,
 			amount: view.amount,
 			currency: view.currency,
 			paymentDisplay: view.paymentDisplay,
-			status: 'scheduled' as const,
+			status: 'scheduled',
 		}));
-	}
-
-	private resolveScheduleAnchor(record: SubscriptionRecord, stripeDetails: StripeSubscriptionDetails | null): Date {
-		if (record.paymentMethod === SubscriptionPaymentMethod.bank_transfer) {
-			return record.createdAt;
-		}
-
-		if (stripeDetails?.currentPeriodEnd) {
-			return stripeDetails.currentPeriodEnd;
-		}
-
-		this.logger.warn('Using subscription createdAt as schedule anchor for Stripe subscription', {
-			subscriptionId: record.id,
-			stripeSubscriptionId: record.stripeSubscriptionId,
-			reason: stripeDetails === null ? 'stripe_details_unavailable' : 'current_period_end_missing',
-		});
-
-		return record.createdAt;
 	}
 }

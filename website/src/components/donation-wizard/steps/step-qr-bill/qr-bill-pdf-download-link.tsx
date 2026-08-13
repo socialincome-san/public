@@ -90,11 +90,18 @@ export const QrBillPdfDownloadLink = forwardRef<HTMLButtonElement, QrBillPdfDown
 				props.className,
 			)}
 		>
-			{props.children ?? (
+			{downloading ? (
 				<>
 					<Download className="size-3.5 shrink-0" strokeWidth={1.75} aria-hidden />
-					{downloading ? t('stepQrBill.downloadingPdf') : t('stepQrBill.downloadPdf')}
+					{t('stepQrBill.downloadingPdf')}
 				</>
+			) : (
+				(props.children ?? (
+					<>
+						<Download className="size-3.5 shrink-0" strokeWidth={1.75} aria-hidden />
+						{t('stepQrBill.downloadPdf')}
+					</>
+				))
 			)}
 		</button>
 	);

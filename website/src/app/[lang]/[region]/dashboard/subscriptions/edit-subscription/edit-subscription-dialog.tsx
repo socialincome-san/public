@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/dialog';
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
@@ -33,6 +33,7 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 	const t = (key: string) => translator?.t(key) ?? '';
 	const isBankTransfer = state.context.paymentMethod === 'bank_transfer';
 	const isCanceledSuccess = state.matches('canceledSuccess');
+	const isInFlight = state.matches('submitting') || state.matches('canceling') || isUpdatingCard;
 	const standingOrderSubscriptionId =
 		canDownloadStandingOrderQr && isBankTransfer && state.matches('success')
 			? (state.context.subscriptionId ?? undefined)
@@ -52,7 +53,7 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 		});
 	};
 
-	const showUpdateError = (Boolean(state.context.error) && state.matches('editing')) || updateCardError;
+	const showAmountError = Boolean(state.context.error) && state.matches('editing');
 	const showCancelError = Boolean(state.context.error) && state.matches('reason');
 	const showBackButton = state.matches('retention') || state.matches('reason');
 	const isSuccessStep = state.matches('success') || isCanceledSuccess;
@@ -94,6 +95,9 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 			open={isOpen}
 			onOpenChange={(nextOpen) => {
 				if (!nextOpen) {
+					if (isInFlight) {
+						return;
+					}
 					if (isSuccessStep) {
 						onDismissAndRefresh();
 
@@ -106,7 +110,10 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 		>
 			<DialogContent
 				className="max-h-[90vh] overflow-y-auto sm:max-w-[560px]"
-				onOpenAutoFocus={(event) => event.preventDefault()}
+				closeOnClickOutside={!isInFlight}
+				closeOnEscape={!isInFlight}
+				hideCloseButton={isInFlight}
+				aria-busy={isInFlight}
 			>
 				<DialogHeader>
 					<DialogTitle className="flex items-center gap-2">
@@ -123,18 +130,19 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 						)}
 						<span>{dialogTitle}</span>
 					</DialogTitle>
+					<DialogDescription className="sr-only">{dialogTitle}</DialogDescription>
 				</DialogHeader>
 
 				{isSuccessStep ? (
-					<div data-testid={isCanceledSuccess ? 'cancel-success-step' : undefined}>
-						<EditSubscriptionSuccessStep
-							labels={successLabels}
-							onDone={onDismissAndRefresh}
-							standingOrderSubscriptionId={standingOrderSubscriptionId}
-						/>
-					</div>
+					<EditSubscriptionSuccessStep
+						labels={successLabels}
+						onDone={onDismissAndRefresh}
+						standingOrderSubscriptionId={standingOrderSubscriptionId}
+						testId={isCanceledSuccess ? 'cancel-success-step' : 'edit-subscription-success-step'}
+					/>
 				) : state.matches('retention') ? (
 					<CancelRetentionStep
+						amount={state.context.amount}
 						currency={state.context.currency}
 						labels={{
 							heading: t('subscriptions.edit-dialog.cancel-retention-heading'),
@@ -153,6 +161,7 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 						labels={{
 							heading: t('subscriptions.edit-dialog.cancel-reason-heading'),
 							confirm: t('subscriptions.edit-dialog.cancel-reason-confirm'),
+							canceling: t('subscriptions.edit-dialog.canceling-subscription'),
 						}}
 						error={showCancelError ? t('subscriptions.edit-dialog.cancel-error') : undefined}
 						isSubmitting={state.matches('canceling')}
@@ -166,7 +175,13 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 						currency={state.context.currency}
 						brand={state.context.brand}
 						last4={state.context.last4}
-						error={showUpdateError ? t('subscriptions.edit-dialog.error') : undefined}
+						error={
+							updateCardError
+								? t('subscriptions.edit-dialog.update-card-error')
+								: showAmountError
+									? t('subscriptions.edit-dialog.error')
+									: undefined
+						}
 						isSubmitting={state.matches('submitting')}
 						isUpdatingCard={isUpdatingCard}
 						labels={{
@@ -176,6 +191,7 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 							cancelSubscription: t('subscriptions.edit-dialog.cancel-subscription'),
 							cancel: t('subscriptions.edit-dialog.cancel'),
 							updateSubscription: t('subscriptions.edit-dialog.update-subscription'),
+							updatingSubscription: t('subscriptions.edit-dialog.updating-subscription'),
 							cardFallback: t('subscriptions.card-fallback'),
 						}}
 						onAmountChange={(value) => send({ type: 'SET_AMOUNT', value })}
