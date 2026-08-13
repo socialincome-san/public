@@ -1,4 +1,4 @@
-export const turnstileResponseFieldName = 'cf-turnstile-response';
+export { turnstileResponseFieldName } from '@/lib/services/campaign/turnstile-field';
 
 type TurnstileRenderOptions = {
 	sitekey: string;

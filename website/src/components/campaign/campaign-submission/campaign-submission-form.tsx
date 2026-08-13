@@ -76,6 +76,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [submitSuccess, setSubmitSuccess] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+	const [turnstileWidgetKey, setTurnstileWidgetKey] = useState(0);
 	const isSubmittingRef = useRef(false);
 	const stepTitleRef = useRef<HTMLHeadingElement>(null);
 	const hasMountedStep = useRef(false);
@@ -84,6 +85,10 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const onTurnstileTokenChange = useCallback((token: string | null) => {
 		setTurnstileToken(token);
 	}, []);
+	const resetTurnstileWidget = () => {
+		setTurnstileToken(null);
+		setTurnstileWidgetKey((key) => key + 1);
+	};
 
 	const resolveError = useCallback(
 		(code: string) => {
@@ -495,6 +500,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 					setSubmitError(errorMessage);
 				}
 
+				resetTurnstileWidget();
+
 				return;
 			}
 
@@ -503,11 +510,12 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			clearPrimaryImageSelection();
 			profilePicture.clear();
 			sectionImage.clear();
-			setTurnstileToken(null);
+			resetTurnstileWidget();
 			setDefaultImages([]);
 			setCurrentStep('program');
 			onSuccess?.();
 		} catch {
+			resetTurnstileWidget();
 			setSubmitError(labels.error);
 		} finally {
 			isSubmittingRef.current = false;
@@ -594,6 +602,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 							isSubmitting,
 							lang,
 							turnstileSiteKey,
+							turnstileWidgetKey,
 							onTurnstileTokenChange,
 						}}
 					/>

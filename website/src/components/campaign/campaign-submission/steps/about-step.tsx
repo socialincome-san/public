@@ -40,6 +40,7 @@ export const AboutStep = ({
 	isSubmitting,
 	lang,
 	turnstileSiteKey,
+	turnstileWidgetKey,
 	onTurnstileTokenChange,
 }: AboutStepProps) => {
 	const submitErrorRef = useRef<HTMLParagraphElement>(null);
@@ -199,7 +200,12 @@ export const AboutStep = ({
 			</div>
 
 			{turnstileSiteKey ? (
-				<TurnstileWidget siteKey={turnstileSiteKey} language={lang} onTokenChange={onTurnstileTokenChange} />
+				<TurnstileWidget
+					key={turnstileWidgetKey}
+					siteKey={turnstileSiteKey}
+					language={lang}
+					onTokenChange={onTurnstileTokenChange}
+				/>
 			) : null}
 
 			{submitError ? (

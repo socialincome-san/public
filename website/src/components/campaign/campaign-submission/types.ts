@@ -118,5 +118,6 @@ export type AboutStepProps = {
 	isSubmitting: boolean;
 	lang: WebsiteLanguage;
 	turnstileSiteKey: string | undefined;
+	turnstileWidgetKey: number;
 	onTurnstileTokenChange: (token: string | null) => void;
 };

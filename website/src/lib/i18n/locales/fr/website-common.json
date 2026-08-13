@@ -301,7 +301,8 @@
 				"title-exists": "Une campagne avec ce titre existe déjà.",
 				"similar-title-exists": "Une campagne avec un titre similaire existe déjà. Veuillez choisir un autre titre.",
 				"submission-failed": "Nous n'avons pas pu finaliser votre soumission. Veuillez réessayer dans quelques minutes.",
-				"turnstile-required": "Veuillez terminer la vérification avant d'envoyer."
+				"turnstile-required": "Veuillez terminer la vérification avant d'envoyer.",
+				"turnstile-invalid": "La vérification a échoué. Veuillez réessayer."
 			}
 		}
 	},

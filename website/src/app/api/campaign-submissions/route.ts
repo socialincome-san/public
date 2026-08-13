@@ -11,6 +11,7 @@ import {
 	type CampaignSubmissionImageSource,
 	type CampaignSubmissionOptionalImages,
 } from '@/lib/services/campaign/campaign-submission-input';
+import { readTurnstileToken, verifyTurnstileToken } from '@/lib/services/campaign/verify-turnstile-token';
 import { services } from '@/lib/services/services';
 import { parseMultipartFormDataWithLimit, RequestBodyTooLargeError } from '@/lib/utils/request-body';
 import { NextRequest, NextResponse } from 'next/server';
@@ -117,6 +118,11 @@ export const POST = async (request: NextRequest) => {
 		}
 
 		return errorResponse('invalid-form-data', 400);
+	}
+
+	const turnstileResult = await verifyTurnstileToken(readTurnstileToken(formData));
+	if (!turnstileResult.success) {
+		return errorResponse(turnstileResult.error, turnstileResult.error === 'submission-failed' ? 503 : 400);
 	}
 
 	const fieldsResult = parseCampaignSubmissionFields(formData);
