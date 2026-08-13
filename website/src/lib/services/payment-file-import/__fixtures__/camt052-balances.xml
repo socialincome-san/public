@@ -24,7 +24,7 @@
 			<Bal>
 				<Tp>
 					<CdOrPrtry>
-						<Cd>CLAV</Cd>
+						<Cd>ITBD</Cd>
 					</CdOrPrtry>
 				</Tp>
 				<Amt Ccy="CHF">1234.56</Amt>
@@ -41,6 +41,15 @@
 			<Bal>
 				<Tp>
 					<CdOrPrtry>
+						<Cd>ITBD</Cd>
+					</CdOrPrtry>
+				</Tp>
+				<Amt Ccy="EUR">100.00</Amt>
+				<CdtDbtInd>CRDT</CdtDbtInd>
+			</Bal>
+			<Bal>
+				<Tp>
+					<CdOrPrtry>
 						<Cd>CLAV</Cd>
 					</CdOrPrtry>
 				</Tp>
@@ -49,7 +58,7 @@
 			</Bal>
 		</Rpt>
 		<Rpt>
-			<Id>REPORT-WITHOUT-CLAV</Id>
+			<Id>REPORT-OPENING-ONLY</Id>
 			<Acct>
 				<Id>
 					<IBAN>CH5709000000154860881</IBAN>
