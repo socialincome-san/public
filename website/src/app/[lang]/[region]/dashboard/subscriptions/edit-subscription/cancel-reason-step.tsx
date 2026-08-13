@@ -36,7 +36,7 @@ export const CancelReasonStep = ({
 			<p className="text-base font-medium">{labels.heading}</p>
 
 			<RadioGroup
-				value={selectedReason}
+				value={selectedReason ?? ''}
 				onValueChange={(value) => {
 					if (isSubscriptionCancellationReason(value)) {
 						onSelectReason(value);

@@ -41,11 +41,6 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 	const isOpen = !state.matches('closed');
 	const t = (key: string) => translator?.t(key) ?? '';
 
-	const closeAndRefresh = () => {
-		send({ type: 'CLOSE' });
-		router.refresh();
-	};
-
 	const openInput = {
 		subscriptionId: subscription.subscriptionId,
 		initialAmount: subscription.initialAmount,
@@ -68,39 +63,40 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 		});
 	};
 
-	const handleDone = () => {
+	const dismissAndRefresh = () => {
 		send({ type: 'DONE' });
 		router.refresh();
 	};
 
 	const showUpdateError = (Boolean(state.context.error) && state.matches('editing')) || updateCardError;
 	const showCancelError = Boolean(state.context.error) && state.matches('reason');
-
 	const showBackButton = state.matches('retention') || state.matches('reason');
+	const isCanceledSuccess = state.matches('canceledSuccess');
+	const isSuccessStep = state.matches('success') || isCanceledSuccess;
+
 	const reasonLabels = Object.fromEntries(
 		SUBSCRIPTION_CANCEL_REASONS.map((reason) => [reason, t(`subscriptions.edit-dialog.cancel-reasons.${reason}`)]),
 	) as Record<SubscriptionCancellationReason, string>;
 
-	const dialogTitle = state.matches('success')
-		? t('subscriptions.edit-dialog.success-title')
-		: state.matches('canceledSuccess')
-			? t('subscriptions.edit-dialog.cancel-success-title')
+	const dialogTitle = isCanceledSuccess
+		? t('subscriptions.edit-dialog.cancel-success-title')
+		: state.matches('success')
+			? t('subscriptions.edit-dialog.success-title')
 			: state.matches('retention')
 				? t('subscriptions.edit-dialog.cancel-retention-title')
 				: state.matches('reason') || state.matches('canceling')
 					? t('subscriptions.edit-dialog.cancel-reason-title')
 					: t('subscriptions.edit-dialog.title');
 
-	const isSuccessStep = state.matches('success') || state.matches('canceledSuccess');
-	const successLabels = state.matches('canceledSuccess')
-		? {
-				message: t('subscriptions.edit-dialog.cancel-success-message'),
-				thanks: t('subscriptions.edit-dialog.cancel-success-thanks'),
-			}
-		: {
-				message: t('subscriptions.edit-dialog.success-message'),
-				thanks: t('subscriptions.edit-dialog.success-thanks'),
-			};
+	const successLabels = {
+		message: t(
+			isCanceledSuccess ? 'subscriptions.edit-dialog.cancel-success-message' : 'subscriptions.edit-dialog.success-message',
+		),
+		thanks: t(
+			isCanceledSuccess ? 'subscriptions.edit-dialog.cancel-success-thanks' : 'subscriptions.edit-dialog.success-thanks',
+		),
+		done: t('subscriptions.edit-dialog.done'),
+	};
 
 	return (
 		<>
@@ -139,8 +135,8 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 				open={isOpen}
 				onOpenChange={(nextOpen) => {
 					if (!nextOpen) {
-						if (state.matches('success') || state.matches('canceledSuccess')) {
-							closeAndRefresh();
+						if (isSuccessStep) {
+							dismissAndRefresh();
 
 							return;
 						}
@@ -171,14 +167,8 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 					</DialogHeader>
 
 					{isSuccessStep ? (
-						<div data-testid={state.matches('canceledSuccess') ? 'cancel-success-step' : undefined}>
-							<EditSubscriptionSuccessStep
-								labels={{
-									...successLabels,
-									done: t('subscriptions.edit-dialog.done'),
-								}}
-								onDone={handleDone}
-							/>
+						<div data-testid={isCanceledSuccess ? 'cancel-success-step' : undefined}>
+							<EditSubscriptionSuccessStep labels={successLabels} onDone={dismissAndRefresh} />
 						</div>
 					) : state.matches('retention') ? (
 						<CancelRetentionStep

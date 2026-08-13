@@ -4,7 +4,6 @@ import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
 import { getSessionByType } from '@/lib/firebase/current-account';
 import { services } from '@/lib/services/services';
 import { isSubscriptionCancellationReason } from '@/lib/services/subscription/subscription-cancellation';
-import { revalidatePath } from 'next/cache';
 
 export const updateSubscriptionAmountAction = async (subscriptionId: string, amount: number) => {
 	const sessionResult = await getSessionByType('contributor');
@@ -12,18 +11,11 @@ export const updateSubscriptionAmountAction = async (subscriptionId: string, amo
 		return sessionResult;
 	}
 
-	const result = await services.stripe.updateContributorSubscriptionAmount({
+	return await services.stripe.updateContributorSubscriptionAmount({
 		contributorId: sessionResult.data.id,
 		subscriptionId,
 		amount,
 	});
-	if (!result.success) {
-		return result;
-	}
-
-	revalidatePath('/dashboard/subscriptions');
-
-	return result;
 };
 
 export const createUpdatePaymentMethodSessionAction = async () => {
@@ -49,16 +41,9 @@ export const cancelSubscriptionAction = async (subscriptionId: string, reason: S
 		return { success: false as const, error: 'Invalid cancellation reason' };
 	}
 
-	const result = await services.stripe.cancelContributorSubscription({
+	return await services.stripe.cancelContributorSubscription({
 		contributorId: sessionResult.data.id,
 		subscriptionId,
 		reason,
 	});
-	if (!result.success) {
-		return result;
-	}
-
-	revalidatePath('/dashboard/subscriptions');
-
-	return result;
 };
