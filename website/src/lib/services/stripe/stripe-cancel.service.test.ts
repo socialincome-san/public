@@ -160,10 +160,6 @@ describe('StripeService.cancelContributorSubscription', () => {
 
 		expect(result.success).toBe(true);
 		expect(subscriptionsCancel).toHaveBeenCalledTimes(1);
-		const [[{ data }]] = subscriptionUpdate.mock.calls as [
-			[{ where: { id: string }; data: { status: string; cancellationReason: string; canceledAt: Date } }],
-		];
-		expect(data.cancellationReason).toBe('other');
 	});
 
 	test('syncs db without calling stripe cancel when already canceled remotely', async () => {

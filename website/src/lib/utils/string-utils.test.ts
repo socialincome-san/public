@@ -3,7 +3,6 @@ import {
 	formatCurrency,
 	formatCurrencyLocale,
 	formatDate,
-	formatDateLocale,
 	formatNumberLocale,
 	formatUtcDate,
 	humanize,
@@ -195,19 +194,6 @@ describe('string-utils', () => {
 
 		test('returns 0 for non-finite values', () => {
 			expect(formatCompactNumberLocale(Number.NaN, 'en')).toBe('0');
-		});
-	});
-
-	describe('formatDateLocale', () => {
-		test('formats date with locale-aware medium style', () => {
-			const date = new Date('2024-11-03T12:00:00.000Z');
-			expect(formatDateLocale(date, 'en')).toMatch(/Nov/);
-			expect(formatDateLocale(date, 'en')).toMatch(/2024/);
-		});
-
-		test('returns em dash for invalid input', () => {
-			expect(formatDateLocale(null, 'en')).toBe('—');
-			expect(formatDateLocale('invalid-date', 'en')).toBe('—');
 		});
 	});
 

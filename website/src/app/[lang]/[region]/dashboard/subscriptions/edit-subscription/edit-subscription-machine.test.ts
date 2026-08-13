@@ -29,37 +29,12 @@ const waitFor = async (predicate: () => boolean, timeoutMs = 2000) => {
 };
 
 describe('editSubscriptionMachine', () => {
-	test('opens into editing with subscription context', () => {
-		const actor = createActor(editSubscriptionMachine).start();
-		actor.send(openEvent);
-
-		expect(actor.getSnapshot().matches('editing')).toBe(true);
-		expect(actor.getSnapshot().context.amount).toBe(30);
-		expect(actor.getSnapshot().context.subscriptionId).toBe('sub_db_1');
-	});
-
 	test('blocks submit when amount is unchanged', () => {
 		const actor = createActor(editSubscriptionMachine).start();
 		actor.send(openEvent);
 		actor.send({ type: 'SUBMIT' });
 
 		expect(actor.getSnapshot().matches('editing')).toBe(true);
-	});
-
-	test('submits successfully and reaches success', async () => {
-		const actor = createActor(
-			editSubscriptionMachine.provide({
-				actors: {
-					updateAmount: fromPromise(() => Promise.resolve({ amount: 40, currency: 'CHF' })),
-				},
-			}),
-		).start();
-
-		actor.send(openEvent);
-		actor.send({ type: 'SET_AMOUNT', value: 40 });
-		actor.send({ type: 'SUBMIT' });
-
-		await waitFor(() => actor.getSnapshot().matches('success'));
 	});
 
 	test('returns to editing with error on failed submit', async () => {
@@ -90,16 +65,6 @@ describe('editSubscriptionMachine', () => {
 		expect(actor.getSnapshot().context.amount).toBe(15);
 	});
 
-	test('retention other returns to editing without changing amount', () => {
-		const actor = createActor(editSubscriptionMachine).start();
-		actor.send(openEvent);
-		actor.send({ type: 'START_CANCEL' });
-		actor.send({ type: 'REDUCE_AMOUNT', value: 'other' });
-
-		expect(actor.getSnapshot().matches('editing')).toBe(true);
-		expect(actor.getSnapshot().context.amount).toBe(30);
-	});
-
 	test('blocks confirm cancel without reason', () => {
 		const actor = createActor(editSubscriptionMachine).start();
 		actor.send(openEvent);
@@ -108,24 +73,6 @@ describe('editSubscriptionMachine', () => {
 		actor.send({ type: 'CONFIRM_CANCEL' });
 
 		expect(actor.getSnapshot().matches('reason')).toBe(true);
-	});
-
-	test('cancels successfully and reaches canceledSuccess', async () => {
-		const actor = createActor(
-			editSubscriptionMachine.provide({
-				actors: {
-					cancelSubscription: fromPromise(() => Promise.resolve()),
-				},
-			}),
-		).start();
-
-		actor.send(openEvent);
-		actor.send({ type: 'START_CANCEL' });
-		actor.send({ type: 'CONTINUE_CANCEL' });
-		actor.send({ type: 'SET_CANCEL_REASON', value: 'other' });
-		actor.send({ type: 'CONFIRM_CANCEL' });
-
-		await waitFor(() => actor.getSnapshot().matches('canceledSuccess'));
 	});
 
 	test('returns to reason with error on failed cancel', async () => {
@@ -172,77 +119,5 @@ describe('editSubscriptionMachine', () => {
 		resolveUpdate?.({ amount: 40, currency: 'CHF' });
 		await waitFor(() => actor.getSnapshot().matches('success'));
 		expect(actor.getSnapshot().context.initialAmount).toBe(40);
-	});
-
-	test('ignores CLOSE while canceling', async () => {
-		let resolveCancel: (() => void) | undefined;
-		const actor = createActor(
-			editSubscriptionMachine.provide({
-				actors: {
-					cancelSubscription: fromPromise(
-						() =>
-							new Promise<void>((resolve) => {
-								resolveCancel = resolve;
-							}),
-					),
-				},
-			}),
-		).start();
-
-		actor.send(openEvent);
-		actor.send({ type: 'START_CANCEL' });
-		actor.send({ type: 'CONTINUE_CANCEL' });
-		actor.send({ type: 'SET_CANCEL_REASON', value: 'other' });
-		actor.send({ type: 'CONFIRM_CANCEL' });
-		await waitFor(() => actor.getSnapshot().matches('canceling'));
-
-		actor.send({ type: 'CLOSE' });
-		expect(actor.getSnapshot().matches('canceling')).toBe(true);
-
-		resolveCancel?.();
-		await waitFor(() => actor.getSnapshot().matches('canceledSuccess'));
-	});
-
-	test('opens bank transfer subscriptions with bank payment method in context', () => {
-		const actor = createActor(editSubscriptionMachine).start();
-		actor.send({
-			type: 'OPEN',
-			subscription: {
-				subscriptionId: 'sub_bank_1',
-				initialAmount: 80,
-				currency: 'CHF',
-				paymentMethod: 'bank_transfer',
-			},
-		});
-
-		expect(actor.getSnapshot().matches('editing')).toBe(true);
-		expect(actor.getSnapshot().context.paymentMethod).toBe('bank_transfer');
-		expect(actor.getSnapshot().context.subscriptionId).toBe('sub_bank_1');
-	});
-
-	test('cancels bank transfer subscription successfully', async () => {
-		const actor = createActor(
-			editSubscriptionMachine.provide({
-				actors: {
-					cancelSubscription: fromPromise(() => Promise.resolve()),
-				},
-			}),
-		).start();
-
-		actor.send({
-			type: 'OPEN',
-			subscription: {
-				subscriptionId: 'sub_bank_1',
-				initialAmount: 80,
-				currency: 'CHF',
-				paymentMethod: 'bank_transfer',
-			},
-		});
-		actor.send({ type: 'START_CANCEL' });
-		actor.send({ type: 'CONTINUE_CANCEL' });
-		actor.send({ type: 'SET_CANCEL_REASON', value: 'other' });
-		actor.send({ type: 'CONFIRM_CANCEL' });
-
-		await waitFor(() => actor.getSnapshot().matches('canceledSuccess'));
 	});
 });

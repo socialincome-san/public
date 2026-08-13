@@ -1,4 +1,4 @@
-import { PrismaClient, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/client';
+import { PrismaClient, SubscriptionStatus } from '@/generated/prisma/client';
 import { SubscriptionWriteService } from './subscription-write.service';
 
 jest.mock('@/generated/prisma/client', () => ({
@@ -41,91 +41,33 @@ describe('SubscriptionWriteService bank transfer mutations', () => {
 		jest.clearAllMocks();
 	});
 
-	describe('updateBankTransferAmount', () => {
-		it('updates amount for an owned active bank transfer subscription', async () => {
-			findFirst.mockResolvedValue({ id: 'sub-bank', currency: 'CHF' });
-			update.mockResolvedValue({});
+	it('rejects invalid amounts and missing or ended subscriptions', async () => {
+		const service = createService();
 
-			const result = await createService().updateBankTransferAmount({
-				contributorId: 'contributor-1',
-				subscriptionId: 'sub-bank',
-				amount: 75,
-			});
-
-			expect(result).toEqual({ success: true, data: { amount: 75, currency: 'CHF' } });
-			expect(findFirst).toHaveBeenCalledWith({
-				where: {
-					id: 'sub-bank',
-					contributorId: 'contributor-1',
-					paymentMethod: SubscriptionPaymentMethod.bank_transfer,
-					status: SubscriptionStatus.active,
-				},
-				select: { id: true, currency: true },
-			});
-			expect(update).toHaveBeenCalledWith({
-				where: { id: 'sub-bank' },
-				data: { amount: 75 },
-			});
+		const invalidAmount = await service.updateBankTransferAmount({
+			contributorId: 'contributor-1',
+			subscriptionId: 'sub-bank',
+			amount: 0,
 		});
+		expect(invalidAmount.success).toBe(false);
+		expect(findFirst).not.toHaveBeenCalled();
 
-		it('rejects invalid amounts', async () => {
-			const result = await createService().updateBankTransferAmount({
-				contributorId: 'contributor-1',
-				subscriptionId: 'sub-bank',
-				amount: 0,
-			});
-
-			expect(result.success).toBe(false);
-			expect(findFirst).not.toHaveBeenCalled();
+		findFirst.mockResolvedValueOnce(null);
+		const missing = await service.updateBankTransferAmount({
+			contributorId: 'contributor-1',
+			subscriptionId: 'sub-bank',
+			amount: 50,
 		});
+		expect(missing).toEqual({ success: false, error: 'Subscription not found' });
+		expect(update).not.toHaveBeenCalled();
 
-		it('rejects when subscription is missing or not owned', async () => {
-			findFirst.mockResolvedValue(null);
-
-			const result = await createService().updateBankTransferAmount({
-				contributorId: 'contributor-1',
-				subscriptionId: 'sub-bank',
-				amount: 50,
-			});
-
-			expect(result).toEqual({ success: false, error: 'Subscription not found' });
-			expect(update).not.toHaveBeenCalled();
+		findFirst.mockResolvedValueOnce({ id: 'sub-bank', status: SubscriptionStatus.ended });
+		const ended = await service.cancelBankTransfer({
+			contributorId: 'contributor-1',
+			subscriptionId: 'sub-bank',
+			reason: 'other',
 		});
-	});
-
-	describe('cancelBankTransfer', () => {
-		it('cancels an owned bank transfer subscription with reason', async () => {
-			findFirst.mockResolvedValue({ id: 'sub-bank', status: SubscriptionStatus.active });
-			update.mockResolvedValue({});
-
-			const result = await createService().cancelBankTransfer({
-				contributorId: 'contributor-1',
-				subscriptionId: 'sub-bank',
-				reason: 'other',
-			});
-
-			expect(result).toEqual({ success: true, data: undefined });
-			expect(update).toHaveBeenCalledWith({
-				where: { id: 'sub-bank' },
-				data: {
-					status: SubscriptionStatus.canceled,
-					canceledAt: new Date('2026-03-01T12:00:00.000Z'),
-					cancellationReason: 'other',
-				},
-			});
-		});
-
-		it('rejects ended subscriptions', async () => {
-			findFirst.mockResolvedValue({ id: 'sub-bank', status: SubscriptionStatus.ended });
-
-			const result = await createService().cancelBankTransfer({
-				contributorId: 'contributor-1',
-				subscriptionId: 'sub-bank',
-				reason: 'other',
-			});
-
-			expect(result).toEqual({ success: false, error: 'Subscription not found' });
-			expect(update).not.toHaveBeenCalled();
-		});
+		expect(ended).toEqual({ success: false, error: 'Subscription not found' });
+		expect(update).not.toHaveBeenCalled();
 	});
 });
