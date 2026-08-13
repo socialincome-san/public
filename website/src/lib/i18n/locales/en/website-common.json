@@ -300,7 +300,8 @@
 				"program-not-eligible": "Selected program is not eligible.",
 				"title-exists": "A campaign with this title already exists.",
 				"similar-title-exists": "A campaign with a similar title already exists. Please choose a different title.",
-				"submission-failed": "We could not complete your submission. Please try again in a few minutes."
+				"submission-failed": "We could not complete your submission. Please try again in a few minutes.",
+				"turnstile-required": "Please complete the verification before submitting."
 			}
 		}
 	},

@@ -5,7 +5,7 @@ import {
 	CampaignSubmissionForm,
 	type SubmissionLabels,
 } from '@/components/campaign/campaign-submission/campaign-submission-form';
-import { TurnstileScript } from '@/components/campaign/campaign-submission/turnstile-script';
+import { TurnstileScript } from '@/components/campaign/campaign-submission/turnstile/turnstile-script';
 import { Dialog, DialogContent } from '@/components/dialog';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { useState } from 'react';

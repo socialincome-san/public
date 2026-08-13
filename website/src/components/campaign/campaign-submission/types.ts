@@ -1,3 +1,4 @@
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CampaignDefaultImageOption } from '@/lib/server-actions/campaign-public-actions';
 import {
 	type CampaignSubmissionErrorCode,
@@ -115,4 +116,7 @@ export type AboutStepProps = {
 	sectionImage: CampaignSubmissionImageUploadField;
 	submitError: string | null;
 	isSubmitting: boolean;
+	lang: WebsiteLanguage;
+	turnstileSiteKey: string | undefined;
+	onTurnstileTokenChange: (token: string | null) => void;
 };

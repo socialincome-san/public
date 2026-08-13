@@ -300,7 +300,8 @@
 				"program-not-eligible": "Das ausgewählte Programm ist nicht zulässig.",
 				"title-exists": "Eine Kampagne mit diesem Titel existiert bereits.",
 				"similar-title-exists": "Eine Kampagne mit einem ähnlichen Titel existiert bereits. Bitte wählen Sie einen anderen Titel.",
-				"submission-failed": "Ihre Eingabe konnte nicht abgeschlossen werden. Bitte versuchen Sie es in ein paar Minuten erneut."
+				"submission-failed": "Ihre Eingabe konnte nicht abgeschlossen werden. Bitte versuchen Sie es in ein paar Minuten erneut.",
+				"turnstile-required": "Bitte schliesse die Verifizierung ab, bevor du die Kampagne einreichst."
 			}
 		}
 	},

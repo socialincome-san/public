@@ -7,6 +7,7 @@ import { Switch } from '@/components/switch';
 import { cn } from '@/lib/utils/cn';
 import { useEffect, useRef } from 'react';
 import { ImageUploadField } from '../image-upload-field';
+import { TurnstileWidget } from '../turnstile/turnstile-widget';
 import type { AboutStepProps, CampaignSubmissionFormValues } from '../types';
 
 type AdditionalLinkField = {
@@ -30,7 +31,17 @@ const textareaClassName = cn(
 	'disabled:opacity-50',
 );
 
-export const AboutStep = ({ form, labels, profilePicture, sectionImage, submitError, isSubmitting }: AboutStepProps) => {
+export const AboutStep = ({
+	form,
+	labels,
+	profilePicture,
+	sectionImage,
+	submitError,
+	isSubmitting,
+	lang,
+	turnstileSiteKey,
+	onTurnstileTokenChange,
+}: AboutStepProps) => {
 	const submitErrorRef = useRef<HTMLParagraphElement>(null);
 	const hasAdditionalInformation = form.watch('hasAdditionalInformation');
 
@@ -186,6 +197,10 @@ export const AboutStep = ({ form, labels, profilePicture, sectionImage, submitEr
 					</div>
 				) : null}
 			</div>
+
+			{turnstileSiteKey ? (
+				<TurnstileWidget siteKey={turnstileSiteKey} language={lang} onTokenChange={onTurnstileTokenChange} />
+			) : null}
 
 			{submitError ? (
 				<p ref={submitErrorRef} className="text-destructive text-sm outline-none" role="alert" tabIndex={-1}>

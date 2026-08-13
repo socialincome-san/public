@@ -27,6 +27,7 @@ import { useForm, type FieldPath } from 'react-hook-form';
 import { CampaignSubmissionFooter } from './campaign-submission-footer';
 import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
 import { CampaignSubmissionSteps } from './campaign-submission-steps';
+import { turnstileResponseFieldName } from './turnstile/turnstile';
 import type {
 	CampaignImageSelection,
 	CampaignSubmissionFormValues,
@@ -74,10 +75,15 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [submitSuccess, setSubmitSuccess] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 	const isSubmittingRef = useRef(false);
 	const stepTitleRef = useRef<HTMLHeadingElement>(null);
 	const hasMountedStep = useRef(false);
 	const defaultImagesRef = useRef(defaultImages);
+	const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+	const onTurnstileTokenChange = useCallback((token: string | null) => {
+		setTurnstileToken(token);
+	}, []);
 
 	const resolveError = useCallback(
 		(code: string) => {
@@ -435,6 +441,12 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			return;
 		}
 
+		if (turnstileSiteKey && !turnstileToken) {
+			setSubmitError(resolveError('turnstile-required'));
+
+			return;
+		}
+
 		const submissionValues = {
 			...values,
 			quote: resolveCampaignSubmissionQuote(values.quote, labels.quotePlaceholder),
@@ -453,6 +465,9 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				profilePicture: profilePictureFile ?? undefined,
 				sectionImage: values.hasAdditionalInformation ? (sectionImageFile ?? undefined) : undefined,
 			});
+			if (turnstileToken) {
+				formData.append(turnstileResponseFieldName, turnstileToken);
+			}
 
 			const response = await fetch('/api/campaign-submissions', {
 				method: 'POST',
@@ -488,6 +503,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			clearPrimaryImageSelection();
 			profilePicture.clear();
 			sectionImage.clear();
+			setTurnstileToken(null);
 			setDefaultImages([]);
 			setCurrentStep('program');
 			onSuccess?.();
@@ -576,6 +592,9 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 							sectionImage,
 							submitError,
 							isSubmitting,
+							lang,
+							turnstileSiteKey,
+							onTurnstileTokenChange,
 						}}
 					/>
 				</div>
