@@ -15,6 +15,21 @@ type EtherscanEthPriceResponse = {
 	};
 };
 
+const ETHERSCAN_API_URL = 'https://api.etherscan.io/v2/api';
+
+const isEtherscanEthPriceResponse = (value: unknown): value is EtherscanEthPriceResponse =>
+	typeof value === 'object' &&
+	value !== null &&
+	'status' in value &&
+	typeof value.status === 'string' &&
+	'message' in value &&
+	typeof value.message === 'string' &&
+	'result' in value &&
+	typeof value.result === 'object' &&
+	value.result !== null &&
+	'ethusd' in value.result &&
+	typeof value.result.ethusd === 'string';
+
 export class ExchangeRateImportService extends BaseService {
 	static readonly DAY_IN_MILLISECONDS = 60 * 60 * 24 * 1000;
 
@@ -101,20 +116,27 @@ export class ExchangeRateImportService extends BaseService {
 	}
 
 	private async fetchEthUsdPrice(): Promise<number> {
-		if (!process.env.ETHERSCAN_API_KEY) {
+		const apiKey = process.env.ETHERSCAN_API_KEY?.trim();
+		if (!apiKey) {
 			throw new Error('ETHERSCAN_API_KEY environment variable is not set');
 		}
 
-		const response = await fetch(
-			`https://api.etherscan.io/v2/api?module=stats&action=ethprice&chainid=1&apikey=${process.env.ETHERSCAN_API_KEY}`,
-			{ method: 'GET' },
-		);
+		const parameters = new URLSearchParams({
+			module: 'stats',
+			action: 'ethprice',
+			chainid: '1',
+			apikey: apiKey,
+		});
+		const response = await fetch(`${ETHERSCAN_API_URL}?${parameters.toString()}`, { method: 'GET' });
 		if (!response.ok) {
 			throw new Error(`Etherscan Request Failure: ${response.status} ${response.statusText}`);
 		}
 
-		const data: EtherscanEthPriceResponse = await response.json();
-		const ethUsdPrice = Number(data.result?.ethusd);
+		const data: unknown = await response.json();
+		if (!isEtherscanEthPriceResponse(data)) {
+			throw new Error('Invalid Etherscan ETH price response: invalid response shape');
+		}
+		const ethUsdPrice = Number(data.result.ethusd);
 		if (data.status !== '1' || !Number.isFinite(ethUsdPrice) || ethUsdPrice <= 0) {
 			throw new Error(`Invalid Etherscan ETH price response: ${data.message}`);
 		}

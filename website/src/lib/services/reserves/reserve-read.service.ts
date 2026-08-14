@@ -11,27 +11,51 @@ export class ReserveReadService extends BaseService {
 
 	async getLatestPerBankAccount(): Promise<ServiceResult<LatestReserves>> {
 		try {
-			const bankAccounts = await this.db.bankAccount.findMany({
-				select: {
-					id: true,
-					bankAccountNumber: true,
-					description: true,
-					reserves: {
-						orderBy: { createdAt: 'desc' },
-						take: 1,
-						select: { amountChf: true, createdAt: true },
-					},
-				},
+			const latestDates = await this.db.reserve.groupBy({
+				by: ['bankAccountId'],
+				_max: { date: true },
 			});
-			const accounts: BankAccountLatestReserve[] = bankAccounts.map(
-				({ id, bankAccountNumber, description, reserves: [latestReserve] }) => ({
+			const latestReserveFilters = latestDates.flatMap(({ bankAccountId, _max: { date } }) =>
+				date ? [{ bankAccountId, date }] : [],
+			);
+			const [bankAccounts, latestReserves] = await Promise.all([
+				this.db.bankAccount.findMany({
+					select: {
+						id: true,
+						bankAccountNumber: true,
+						description: true,
+					},
+				}),
+				latestReserveFilters.length > 0
+					? this.db.reserve.findMany({
+							where: { OR: latestReserveFilters },
+							select: {
+								bankAccountId: true,
+								amountChf: true,
+								createdAt: true,
+							},
+						})
+					: Promise.resolve([]),
+			]);
+			const latestTotalsByBankAccount = new Map<string, { amountChf: number; recordedAt: Date }>();
+			for (const reserve of latestReserves) {
+				const current = latestTotalsByBankAccount.get(reserve.bankAccountId);
+				latestTotalsByBankAccount.set(reserve.bankAccountId, {
+					amountChf: (current?.amountChf ?? 0) + Number(reserve.amountChf),
+					recordedAt: current && current.recordedAt > reserve.createdAt ? current.recordedAt : reserve.createdAt,
+				});
+			}
+			const accounts: BankAccountLatestReserve[] = bankAccounts.map(({ id, bankAccountNumber, description }) => {
+				const latestReserve = latestTotalsByBankAccount.get(id);
+
+				return {
 					bankAccountId: id,
 					bankAccountNumber,
 					description,
-					amountChf: latestReserve ? Number(latestReserve.amountChf) : null,
-					recordedAt: latestReserve?.createdAt ?? null,
-				}),
-			);
+					amountChf: latestReserve?.amountChf ?? null,
+					recordedAt: latestReserve?.recordedAt ?? null,
+				};
+			});
 
 			return this.resultOk({
 				accounts,

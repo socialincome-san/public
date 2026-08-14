@@ -22,6 +22,7 @@ import { CountryReadService } from './country/country-read.service';
 import { CountryValidationService } from './country/country-validation.service';
 import { CountryWriteService } from './country/country-write.service';
 import { CurrencyDisplayService } from './currency-display/currency-display.service';
+import { CustodianStablecoinWalletService } from './custodian-stablecoin-wallet/custodian-stablecoin-wallet.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
 import { DonationCertificateWriteService } from './donation-certificate/donation-certificate-write.service';
 import { ExchangeRateImportService } from './exchange-rate/exchange-rate-import.service';
@@ -257,6 +258,7 @@ const createReservesCalculation = (bucketName: string) =>
 		bankAccountWrite,
 		createPostFinanceBalance(bucketName),
 		new PawaPayBalanceService(prisma),
+		new CustodianStablecoinWalletService(prisma),
 		reserveWrite,
 		currencyDisplay,
 	);

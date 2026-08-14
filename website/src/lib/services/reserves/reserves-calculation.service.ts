@@ -5,6 +5,7 @@ import { type BankAccountWriteService } from '../bank-account/bank-account-write
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { type CurrencyDisplayService } from '../currency-display/currency-display.service';
+import { type CustodianStablecoinWalletService } from '../custodian-stablecoin-wallet/custodian-stablecoin-wallet.service';
 import { type ExchangeRates } from '../exchange-rate/exchange-rate.types';
 import { type PawaPayBalanceService } from '../pawapay/pawapay-balance.service';
 import { pawaPayWalletKey } from '../pawapay/pawapay-balance.types';
@@ -19,6 +20,7 @@ export class ReservesCalculationService extends BaseService {
 		private readonly bankAccountWriteService: BankAccountWriteService,
 		private readonly postFinanceBalanceService: PostFinanceBalanceService,
 		private readonly pawaPayBalanceService: PawaPayBalanceService,
+		private readonly custodianStablecoinWalletService: CustodianStablecoinWalletService,
 		private readonly reserveWriteService: ReserveWriteService,
 		private readonly currencyDisplayService: CurrencyDisplayService,
 		loggerInstance = logger,
@@ -33,30 +35,45 @@ export class ReservesCalculationService extends BaseService {
 		}
 
 		const postFinanceAccounts: (BankAccount & { bankAccountNumber: string })[] = [];
+		const custodianStablecoinWalletAccounts: (BankAccount & { bankAccountNumber: string })[] = [];
 		for (const account of bankAccountsResult.data) {
 			if (account.type === BankAccountType.postfinance) {
 				if (!account.bankAccountNumber) {
 					return this.resultFail(`Missing bank account number for PostFinance account ${account.id}`);
 				}
 				postFinanceAccounts.push({ ...account, bankAccountNumber: account.bankAccountNumber });
+			} else if (account.type === BankAccountType.custodian_stablecoin_wallet) {
+				const address = account.bankAccountNumber?.trim();
+				if (!address) {
+					return this.resultFail(`Missing wallet address for custodian stablecoin wallet account ${account.id}`);
+				}
+				custodianStablecoinWalletAccounts.push({ ...account, bankAccountNumber: address });
 			} else if (account.type !== BankAccountType.pawapay_wallet) {
 				this.logger.info(`Skipped reserve calculation for unsupported bank account type ${account.type}`);
 			}
 		}
 
-		const [postFinanceBalancesResult, pawaPayBalancesResult] = await Promise.all([
+		const [postFinanceBalancesResult, pawaPayBalancesResult, custodianStablecoinWalletBalancesResult] = await Promise.all([
 			postFinanceAccounts.length > 0
 				? this.postFinanceBalanceService.getLatestBalances(
 						postFinanceAccounts.map(({ bankAccountNumber }) => bankAccountNumber),
 					)
 				: Promise.resolve(this.resultOk([])),
 			this.pawaPayBalanceService.getLatestBalances(),
+			custodianStablecoinWalletAccounts.length > 0
+				? this.custodianStablecoinWalletService.getLatestBalances(
+						custodianStablecoinWalletAccounts.map(({ bankAccountNumber }) => bankAccountNumber),
+					)
+				: Promise.resolve(this.resultOk([])),
 		]);
 		if (!postFinanceBalancesResult.success) {
 			return postFinanceBalancesResult;
 		}
 		if (!pawaPayBalancesResult.success) {
 			return pawaPayBalancesResult;
+		}
+		if (!custodianStablecoinWalletBalancesResult.success) {
+			return custodianStablecoinWalletBalancesResult;
 		}
 
 		const pawaPayAccountsResult = await this.bankAccountWriteService.ensurePawaPayWallets(
@@ -66,7 +83,11 @@ export class ReservesCalculationService extends BaseService {
 			return pawaPayAccountsResult;
 		}
 
-		const allBalances = [...postFinanceBalancesResult.data, ...pawaPayBalancesResult.data];
+		const allBalances = [
+			...postFinanceBalancesResult.data,
+			...pawaPayBalancesResult.data,
+			...custodianStablecoinWalletBalancesResult.data,
+		];
 		const rates = allBalances.some(({ currency }) => currency !== Currency.CHF)
 			? await this.currencyDisplayService.getLatestRatesOrUndefined()
 			: undefined;
@@ -105,6 +126,29 @@ export class ReservesCalculationService extends BaseService {
 			reserves.push(reserve.data);
 		}
 
+		const custodianBalancesByAddressAndCurrency = new Map(
+			custodianStablecoinWalletBalancesResult.data.map((balance) => [
+				this.walletBalanceKey(balance.address, balance.currency),
+				balance,
+			]),
+		);
+		for (const account of custodianStablecoinWalletAccounts) {
+			for (const currency of [Currency.ETH, Currency.USD]) {
+				const balance = custodianBalancesByAddressAndCurrency.get(
+					this.walletBalanceKey(account.bankAccountNumber, currency),
+				);
+				if (!balance) {
+					return this.resultFail(`Missing ${currency} balance for custodian stablecoin wallet account ${account.id}`);
+				}
+
+				const reserve = this.toReserveInput(account.id, calculationDate, balance.amount, balance.currency, rates);
+				if (!reserve.success) {
+					return reserve;
+				}
+				reserves.push(reserve.data);
+			}
+		}
+
 		return this.reserveWriteService.createMany(reserves);
 	}
 
@@ -124,4 +168,6 @@ export class ReservesCalculationService extends BaseService {
 	};
 
 	private normalizeIban = (iban: string): string => iban.replaceAll(/\s/g, '').toUpperCase();
+
+	private walletBalanceKey = (address: string, currency: Currency): string => `${address.trim().toLowerCase()}:${currency}`;
 }

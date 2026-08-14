@@ -5,7 +5,7 @@ const fixedTime = '2025-01-01T13:00:00.000Z';
 const systemTime = '2026-08-14T12:00:00.000Z';
 
 const createDailyRates = () => {
-	const rates = [];
+	const rates: { currency: string; rate: { toNumber: () => number }; timestamp: Date }[] = [];
 	const start = new Date(fixedTime);
 	start.setMonth(start.getMonth() - 1);
 
