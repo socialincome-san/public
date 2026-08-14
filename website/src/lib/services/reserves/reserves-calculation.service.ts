@@ -7,6 +7,7 @@ import { type ServiceResult } from '../core/base.types';
 import { type CurrencyDisplayService } from '../currency-display/currency-display.service';
 import { type ExchangeRates } from '../exchange-rate/exchange-rate.types';
 import { type PawaPayBalanceService } from '../pawapay/pawapay-balance.service';
+import { pawaPayWalletKey } from '../pawapay/pawapay-balance.types';
 import { type PostFinanceBalanceService } from '../payment-file-import/postfinance-balance.service';
 import { type ReserveWriteService } from './reserve-write.service';
 import { type ReserveCreateInput } from './reserve.types';
@@ -59,7 +60,7 @@ export class ReservesCalculationService extends BaseService {
 		}
 
 		const pawaPayAccountsResult = await this.bankAccountWriteService.ensurePawaPayWallets(
-			pawaPayBalancesResult.data.map(({ country }) => country),
+			pawaPayBalancesResult.data.map(({ country, provider }) => pawaPayWalletKey(country, provider)),
 		);
 		if (!pawaPayAccountsResult.success) {
 			return pawaPayAccountsResult;
@@ -89,11 +90,12 @@ export class ReservesCalculationService extends BaseService {
 			reserves.push(reserve.data);
 		}
 
-		const pawaPayAccountsByCountry = new Map(pawaPayAccountsResult.data.map((account) => [account.description, account]));
+		const pawaPayAccountsByWalletKey = new Map(pawaPayAccountsResult.data.map((account) => [account.description, account]));
 		for (const balance of pawaPayBalancesResult.data) {
-			const account = pawaPayAccountsByCountry.get(balance.country);
+			const walletKey = pawaPayWalletKey(balance.country, balance.provider);
+			const account = pawaPayAccountsByWalletKey.get(walletKey);
 			if (!account) {
-				return this.resultFail(`Missing PawaPay wallet bank account for country ${balance.country}`);
+				return this.resultFail(`Missing PawaPay wallet bank account ${walletKey}`);
 			}
 
 			const reserve = this.toReserveInput(account.id, calculationDate, balance.amount, balance.currency, rates);

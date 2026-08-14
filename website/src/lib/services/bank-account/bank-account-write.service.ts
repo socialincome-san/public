@@ -8,9 +8,9 @@ export class BankAccountWriteService extends BaseService {
 		super(db, loggerInstance);
 	}
 
-	async ensurePawaPayWallets(countries: string[]): Promise<ServiceResult<BankAccount[]>> {
-		const uniqueCountries = [...new Set(countries)];
-		if (uniqueCountries.length === 0) {
+	async ensurePawaPayWallets(walletKeys: string[]): Promise<ServiceResult<BankAccount[]>> {
+		const uniqueWalletKeys = [...new Set(walletKeys)];
+		if (uniqueWalletKeys.length === 0) {
 			return this.resultOk([]);
 		}
 
@@ -18,21 +18,21 @@ export class BankAccountWriteService extends BaseService {
 			const existingAccounts = await this.db.bankAccount.findMany({
 				where: {
 					type: BankAccountType.pawapay_wallet,
-					description: { in: uniqueCountries },
+					description: { in: uniqueWalletKeys },
 				},
 			});
-			const existingCountries = new Set(existingAccounts.map(({ description }) => description));
-			const missingCountries = uniqueCountries.filter((country) => !existingCountries.has(country));
+			const existingWalletKeys = new Set(existingAccounts.map(({ description }) => description));
+			const missingWalletKeys = uniqueWalletKeys.filter((walletKey) => !existingWalletKeys.has(walletKey));
 
-			if (missingCountries.length === 0) {
+			if (missingWalletKeys.length === 0) {
 				return this.resultOk(existingAccounts);
 			}
 
 			await this.db.bankAccount.createMany({
-				data: missingCountries.map((country) => ({
+				data: missingWalletKeys.map((walletKey) => ({
 					type: BankAccountType.pawapay_wallet,
 					bankAccountNumber: null,
-					description: country,
+					description: walletKey,
 				})),
 			});
 
@@ -40,7 +40,7 @@ export class BankAccountWriteService extends BaseService {
 				await this.db.bankAccount.findMany({
 					where: {
 						type: BankAccountType.pawapay_wallet,
-						description: { in: uniqueCountries },
+						description: { in: uniqueWalletKeys },
 					},
 				}),
 			);

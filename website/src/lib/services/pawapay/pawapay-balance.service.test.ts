@@ -32,7 +32,7 @@ describe('PawaPayBalanceService.getLatestBalances', () => {
 			json: jest.fn().mockResolvedValue({
 				balances: [
 					{ country: 'SLE', balance: '228.92', currency: 'SLE', provider: '' },
-					{ country: 'GHA', balance: '144.14', currency: 'GHS', provider: '' },
+					{ country: 'GHA', balance: '144.14', currency: 'GHS', provider: ' MTN_MOMO_GHA ' },
 				],
 			}),
 		});
@@ -40,8 +40,8 @@ describe('PawaPayBalanceService.getLatestBalances', () => {
 		await expect(service.getLatestBalances()).resolves.toEqual({
 			success: true,
 			data: [
-				{ country: 'SLE', amount: 228.92, currency: 'SLE' },
-				{ country: 'GHA', amount: 144.14, currency: 'GHS' },
+				{ country: 'SLE', provider: '', amount: 228.92, currency: 'SLE' },
+				{ country: 'GHA', provider: 'MTN_MOMO_GHA', amount: 144.14, currency: 'GHS' },
 			],
 		});
 		expect(global.fetch).toHaveBeenCalledWith('https://api.pawapay.io/v2/wallet-balances', {
@@ -97,6 +97,20 @@ describe('PawaPayBalanceService.getLatestBalances', () => {
 		await expect(service.getLatestBalances()).resolves.toEqual({
 			success: false,
 			error: 'Invalid PawaPay balance for country    ',
+		});
+	});
+
+	test('fails when provider is missing', async () => {
+		global.fetch = jest.fn().mockResolvedValue({
+			ok: true,
+			json: jest.fn().mockResolvedValue({
+				balances: [{ country: 'SLE', balance: '228.92', currency: 'SLE' }],
+			}),
+		});
+
+		await expect(service.getLatestBalances()).resolves.toEqual({
+			success: false,
+			error: 'Invalid PawaPay balance response',
 		});
 	});
 });

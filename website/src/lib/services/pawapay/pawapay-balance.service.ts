@@ -10,6 +10,7 @@ type PawaPayApiBalance = {
 	country: string;
 	balance: string;
 	currency: string;
+	provider: string;
 };
 
 export class PawaPayBalanceService extends BaseService {
@@ -40,13 +41,16 @@ export class PawaPayBalanceService extends BaseService {
 			const balances: PawaPayBalance[] = [];
 			for (const balance of data.balances) {
 				const country = balance.country.trim();
-				const amount = Number(balance.balance);
-				if (!country || !Number.isFinite(amount) || !this.isCurrency(balance.currency)) {
+				const provider = balance.provider.trim();
+				const balanceValue = balance.balance.trim();
+				const amount = Number(balanceValue);
+				if (!country || !balanceValue || !Number.isFinite(amount) || !this.isCurrency(balance.currency)) {
 					return this.resultFail(`Invalid PawaPay balance for country ${balance.country}`);
 				}
 
 				balances.push({
 					country,
+					provider,
 					amount,
 					currency: balance.currency,
 				});
@@ -76,7 +80,9 @@ export class PawaPayBalanceService extends BaseService {
 		'balance' in value &&
 		typeof value.balance === 'string' &&
 		'currency' in value &&
-		typeof value.currency === 'string';
+		typeof value.currency === 'string' &&
+		'provider' in value &&
+		typeof value.provider === 'string';
 
 	private isCurrency = (value: string): value is Currency => Object.values(Currency).some((currency) => currency === value);
 }

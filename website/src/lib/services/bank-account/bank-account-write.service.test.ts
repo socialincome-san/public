@@ -6,7 +6,7 @@ jest.mock('@/generated/prisma/client', () => ({
 }));
 
 describe('BankAccountWriteService.ensurePawaPayWallets', () => {
-	test('creates missing wallet accounts and returns all requested countries', async () => {
+	test('creates missing wallet accounts and returns all requested wallet keys', async () => {
 		const existingAccount = {
 			id: 'ghana',
 			type: 'pawapay_wallet',
@@ -15,7 +15,7 @@ describe('BankAccountWriteService.ensurePawaPayWallets', () => {
 			createdAt: new Date(),
 			updatedAt: null,
 		};
-		const createdAccount = { ...existingAccount, id: 'sierra-leone', description: 'SLE' };
+		const createdAccount = { ...existingAccount, id: 'ghana-mtn', description: 'GHA:MTN_MOMO_GHA' };
 		const findMany = jest
 			.fn()
 			.mockResolvedValueOnce([existingAccount])
@@ -23,7 +23,7 @@ describe('BankAccountWriteService.ensurePawaPayWallets', () => {
 		const createMany = jest.fn().mockResolvedValue({ count: 1 });
 		const service = new BankAccountWriteService({ bankAccount: { findMany, createMany } } as never);
 
-		await expect(service.ensurePawaPayWallets(['GHA', 'SLE', 'SLE'])).resolves.toEqual({
+		await expect(service.ensurePawaPayWallets(['GHA', 'GHA:MTN_MOMO_GHA', 'GHA:MTN_MOMO_GHA'])).resolves.toEqual({
 			success: true,
 			data: [existingAccount, createdAccount],
 		});
@@ -32,7 +32,7 @@ describe('BankAccountWriteService.ensurePawaPayWallets', () => {
 				{
 					type: 'pawapay_wallet',
 					bankAccountNumber: null,
-					description: 'SLE',
+					description: 'GHA:MTN_MOMO_GHA',
 				},
 			],
 		});

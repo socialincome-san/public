@@ -123,7 +123,7 @@ describe('ReservesCalculationService.calculate', () => {
 		const pawaPayBalanceService = {
 			getLatestBalances: jest.fn().mockResolvedValue({
 				success: true,
-				data: [{ country: 'SLE', amount: 228.92, currency: 'SLE' }],
+				data: [{ country: 'SLE', provider: '', amount: 228.92, currency: 'SLE' }],
 			}),
 		};
 		const bankAccountWriteService = {
@@ -162,6 +162,66 @@ describe('ReservesCalculationService.calculate', () => {
 			},
 		]);
 		expect(writtenReserves[0]?.date).toBeInstanceOf(Date);
+	});
+
+	test('writes distinct reserves for provider-specific wallets in the same country', async () => {
+		const orangeAccount = { ...pawaPayAccount, id: 'ghana-orange', description: 'GHA:ORANGE_GHA' };
+		const mtnAccount = { ...pawaPayAccount, id: 'ghana-mtn', description: 'GHA:MTN_MOMO_GHA' };
+		const bankAccountService = {
+			getAll: jest.fn().mockResolvedValue({ success: true, data: [] }),
+		};
+		const postFinanceBalanceService = { getLatestBalances: jest.fn() };
+		const pawaPayBalanceService = {
+			getLatestBalances: jest.fn().mockResolvedValue({
+				success: true,
+				data: [
+					{ country: 'GHA', provider: 'ORANGE_GHA', amount: 100, currency: 'SLE' },
+					{ country: 'GHA', provider: 'MTN_MOMO_GHA', amount: 200, currency: 'SLE' },
+				],
+			}),
+		};
+		const bankAccountWriteService = {
+			ensurePawaPayWallets: jest.fn().mockResolvedValue({
+				success: true,
+				data: [orangeAccount, mtnAccount],
+			}),
+		};
+		const createMany = jest.fn().mockResolvedValue({ success: true, data: 2 }) as jest.MockedFunction<
+			(reserves: ReserveCreateInput[]) => Promise<{ success: true; data: number }>
+		>;
+		const currencyDisplayService = {
+			getLatestRatesOrUndefined: jest.fn().mockResolvedValue({ CHF: 1, SLE: 25 }),
+			convertAmount: jest.fn().mockImplementation((amount: number) => amount / 25),
+		};
+		const service = new ReservesCalculationService(
+			{} as never,
+			bankAccountService as never,
+			bankAccountWriteService as never,
+			postFinanceBalanceService as never,
+			pawaPayBalanceService as never,
+			{ createMany } as never,
+			currencyDisplayService as never,
+		);
+
+		await expect(service.calculate()).resolves.toEqual({ success: true, data: 2 });
+		expect(bankAccountWriteService.ensurePawaPayWallets).toHaveBeenCalledWith(['GHA:ORANGE_GHA', 'GHA:MTN_MOMO_GHA']);
+		const writtenReserves = createMany.mock.calls[0]?.[0] ?? [];
+		expect(writtenReserves).toEqual([
+			{
+				bankAccountId: 'ghana-orange',
+				date: writtenReserves[0]?.date,
+				amount: 100,
+				currency: 'SLE',
+				amountChf: 4,
+			},
+			{
+				bankAccountId: 'ghana-mtn',
+				date: writtenReserves[1]?.date,
+				amount: 200,
+				currency: 'SLE',
+				amountChf: 8,
+			},
+		]);
 	});
 
 	test('skips unsupported bank account types', async () => {
