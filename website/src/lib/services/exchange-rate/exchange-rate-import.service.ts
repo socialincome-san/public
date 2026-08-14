@@ -7,6 +7,14 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateCreateInput, ExchangeRateResponse } from './exchange-rate.types';
 
+type EtherscanEthPriceResponse = {
+	status: string;
+	message: string;
+	result: {
+		ethusd: string;
+	};
+};
+
 export class ExchangeRateImportService extends BaseService {
 	static readonly DAY_IN_MILLISECONDS = 60 * 60 * 24 * 1000;
 
@@ -92,6 +100,82 @@ export class ExchangeRateImportService extends BaseService {
 		}
 	}
 
+	private async fetchEthUsdPrice(): Promise<number> {
+		if (!process.env.ETHERSCAN_API_KEY) {
+			throw new Error('ETHERSCAN_API_KEY environment variable is not set');
+		}
+
+		const response = await fetch(
+			`https://api.etherscan.io/v2/api?module=stats&action=ethprice&chainid=1&apikey=${process.env.ETHERSCAN_API_KEY}`,
+			{ method: 'GET' },
+		);
+		if (!response.ok) {
+			throw new Error(`Etherscan Request Failure: ${response.status} ${response.statusText}`);
+		}
+
+		const data: EtherscanEthPriceResponse = await response.json();
+		const ethUsdPrice = Number(data.result?.ethusd);
+		if (data.status !== '1' || !Number.isFinite(ethUsdPrice) || ethUsdPrice <= 0) {
+			throw new Error(`Invalid Etherscan ETH price response: ${data.message}`);
+		}
+
+		return ethUsdPrice;
+	}
+
+	private async importTodayEthExchangeRate(): Promise<ServiceResult<void>> {
+		try {
+			const today = DateTime.utc().startOf('day');
+			const tomorrow = today.plus({ days: 1 });
+			const existingRates = await this.db.exchangeRate.findMany({
+				where: {
+					currency: { in: ['ETH', 'USD'] },
+					timestamp: {
+						gte: today.toJSDate(),
+						lt: tomorrow.toJSDate(),
+					},
+				},
+			});
+
+			if (existingRates.some(({ currency }) => currency === 'ETH')) {
+				this.logger.info('ETH exchange rate already exists for today');
+
+				return this.resultOk(undefined);
+			}
+
+			let usdRate = existingRates.find(({ currency }) => currency === 'USD')?.rate.toNumber();
+			if (usdRate === undefined) {
+				const ratesResult = await this.fetchAndStoreExchangeRates(today);
+				if (!ratesResult.success) {
+					return this.resultFail(`Could not import ETH exchange rate: ${ratesResult.error}`);
+				}
+				usdRate = ratesResult.data.rates.USD;
+			}
+			if (usdRate === undefined || !Number.isFinite(usdRate) || usdRate <= 0) {
+				return this.resultFail('Could not import ETH exchange rate: USD exchange rate for today is missing');
+			}
+
+			const ethUsdPrice = await this.fetchEthUsdPrice();
+			const ethRate = usdRate / ethUsdPrice;
+			await this.db.exchangeRate.create({
+				data: {
+					currency: 'ETH',
+					rate: ethRate,
+					timestamp: today.toJSDate(),
+				},
+			});
+			this.logger.info('Ingested ETH exchange rate for today', {
+				date: today.toISODate(),
+				rate: ethRate,
+			});
+
+			return this.resultOk(undefined);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not import ETH exchange rate: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async import(): Promise<ServiceResult<void>> {
 		try {
 			const oneMonthAgo = now();
@@ -142,6 +226,11 @@ export class ExchangeRateImportService extends BaseService {
 						return this.resultFail(`Could not fetch and store exchange rates: ${JSON.stringify(error)}`);
 					}
 				}
+			}
+
+			const ethImportResult = await this.importTodayEthExchangeRate();
+			if (!ethImportResult.success) {
+				this.logger.error(ethImportResult.error);
 			}
 
 			return this.resultOk(undefined);

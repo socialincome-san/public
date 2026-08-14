@@ -167,6 +167,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "ETHERSCAN_API_KEY"
+          value = var.etherscan_api_key
+        }
+
+        env {
           name  = "GITHUB_PAT"
           value = var.github_pat
         }

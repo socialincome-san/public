@@ -437,6 +437,7 @@ enum Currency {
   EGP
   ERN
   ETB
+  ETH
   EUR
   FJD
   FKP

@@ -152,6 +152,12 @@ variable "exchange_rates_api" {
   sensitive   = true
 }
 
+variable "etherscan_api_key" {
+  description = "API key for Etherscan"
+  type        = string
+  sensitive   = true
+}
+
 variable "github_pat" {
   description = "GitHub Personal Access Token for accessing private repositories"
   type        = string

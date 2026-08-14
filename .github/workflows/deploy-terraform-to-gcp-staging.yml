@@ -111,6 +111,7 @@ jobs:
           TF_VAR_twilio_messaging_service_sid: ${{ secrets.TF_STAGING_TWILIO_MESSAGING_SERVICE_SID }}
           TF_VAR_twilio_auth_token: ${{ secrets.TF_STAGING_TWILIO_AUTH_TOKEN }}
           TF_VAR_exchange_rates_api: ${{ secrets.TF_STAGING_EXCHANGE_RATES_API }}
+          TF_VAR_etherscan_api_key: ${{ secrets.TF_STAGING_ETHERSCAN_API_KEY }}
           TF_VAR_github_pat: ${{ secrets.TF_STAGING_GITHUB_PAT }}
           TF_VAR_app_review_mode_enabled: ${{ vars.TF_STAGING_APP_REVIEW_MODE_ENABLED }}
           TF_VAR_app_review_phone_number: ${{ secrets.TF_STAGING_APP_REVIEW_PHONE_NUMBER }}
