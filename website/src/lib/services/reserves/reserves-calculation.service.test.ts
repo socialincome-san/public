@@ -24,6 +24,15 @@ const postFinanceAccount = {
 	updatedAt: null,
 };
 
+const pawaPayAccount = {
+	id: 'pawapay-account-sle',
+	type: 'pawapay_wallet',
+	bankAccountNumber: null,
+	description: 'SLE',
+	createdAt: new Date(),
+	updatedAt: null,
+};
+
 type ReserveCreateManyArgs = { data: ReserveCreateInput[]; skipDuplicates?: boolean };
 
 const createConflictSafeReserveDb = () => {
@@ -65,6 +74,12 @@ describe('ReservesCalculationService.calculate', () => {
 				data: [{ iban: 'CH1909000000151126386', amount: 125, currency: 'EUR' }],
 			}),
 		};
+		const pawaPayBalanceService = {
+			getLatestBalances: jest.fn().mockResolvedValue({ success: true, data: [] }),
+		};
+		const bankAccountWriteService = {
+			ensurePawaPayWallets: jest.fn().mockResolvedValue({ success: true, data: [] }),
+		};
 		const createMany = jest.fn().mockResolvedValue({ success: true, data: 1 }) as jest.MockedFunction<
 			(reserves: ReserveCreateInput[]) => Promise<{ success: true; data: number }>
 		>;
@@ -75,13 +90,17 @@ describe('ReservesCalculationService.calculate', () => {
 		const service = new ReservesCalculationService(
 			{} as never,
 			bankAccountService as never,
+			bankAccountWriteService as never,
 			postFinanceBalanceService as never,
+			pawaPayBalanceService as never,
 			{ createMany } as never,
 			currencyDisplayService as never,
 		);
 
 		await expect(service.calculate()).resolves.toEqual({ success: true, data: 1 });
 		expect(postFinanceBalanceService.getLatestBalances).toHaveBeenCalledWith(['CH19 0900 0000 1511 2638 6']);
+		expect(pawaPayBalanceService.getLatestBalances).toHaveBeenCalledTimes(1);
+		expect(bankAccountWriteService.ensurePawaPayWallets).toHaveBeenCalledWith([]);
 		expect(createMany).toHaveBeenCalledTimes(1);
 		const writtenReserves = createMany.mock.calls[0]?.[0] ?? [];
 		expect(writtenReserves).toEqual([
@@ -96,26 +115,143 @@ describe('ReservesCalculationService.calculate', () => {
 		expect(writtenReserves[0]?.date).toBeInstanceOf(Date);
 	});
 
+	test('loads PawaPay balances, ensures wallet accounts, and writes converted reserves', async () => {
+		const bankAccountService = {
+			getAll: jest.fn().mockResolvedValue({ success: true, data: [] }),
+		};
+		const postFinanceBalanceService = { getLatestBalances: jest.fn() };
+		const pawaPayBalanceService = {
+			getLatestBalances: jest.fn().mockResolvedValue({
+				success: true,
+				data: [{ country: 'SLE', provider: '', amount: 228.92, currency: 'SLE' }],
+			}),
+		};
+		const bankAccountWriteService = {
+			ensurePawaPayWallets: jest.fn().mockResolvedValue({ success: true, data: [pawaPayAccount] }),
+		};
+		const createMany = jest.fn().mockResolvedValue({ success: true, data: 1 }) as jest.MockedFunction<
+			(reserves: ReserveCreateInput[]) => Promise<{ success: true; data: number }>
+		>;
+		const reserveWriteService = { createMany };
+		const currencyDisplayService = {
+			getLatestRatesOrUndefined: jest.fn().mockResolvedValue({ CHF: 1, SLE: 25 }),
+			convertAmount: jest.fn().mockReturnValue(9.1568),
+		};
+		const service = new ReservesCalculationService(
+			{} as never,
+			bankAccountService as never,
+			bankAccountWriteService as never,
+			postFinanceBalanceService as never,
+			pawaPayBalanceService as never,
+			reserveWriteService as never,
+			currencyDisplayService as never,
+		);
+
+		await expect(service.calculate()).resolves.toEqual({ success: true, data: 1 });
+		expect(postFinanceBalanceService.getLatestBalances).not.toHaveBeenCalled();
+		expect(pawaPayBalanceService.getLatestBalances).toHaveBeenCalledTimes(1);
+		expect(bankAccountWriteService.ensurePawaPayWallets).toHaveBeenCalledWith(['SLE']);
+		const writtenReserves = createMany.mock.calls[0]?.[0] ?? [];
+		expect(writtenReserves).toEqual([
+			{
+				bankAccountId: 'pawapay-account-sle',
+				date: writtenReserves[0]?.date,
+				amount: 228.92,
+				currency: 'SLE',
+				amountChf: 9.1568,
+			},
+		]);
+		expect(writtenReserves[0]?.date).toBeInstanceOf(Date);
+	});
+
+	test('writes distinct reserves for provider-specific wallets in the same country', async () => {
+		const orangeAccount = { ...pawaPayAccount, id: 'ghana-orange', description: 'GHA:ORANGE_GHA' };
+		const mtnAccount = { ...pawaPayAccount, id: 'ghana-mtn', description: 'GHA:MTN_MOMO_GHA' };
+		const bankAccountService = {
+			getAll: jest.fn().mockResolvedValue({ success: true, data: [] }),
+		};
+		const postFinanceBalanceService = { getLatestBalances: jest.fn() };
+		const pawaPayBalanceService = {
+			getLatestBalances: jest.fn().mockResolvedValue({
+				success: true,
+				data: [
+					{ country: 'GHA', provider: 'ORANGE_GHA', amount: 100, currency: 'SLE' },
+					{ country: 'GHA', provider: 'MTN_MOMO_GHA', amount: 200, currency: 'SLE' },
+				],
+			}),
+		};
+		const bankAccountWriteService = {
+			ensurePawaPayWallets: jest.fn().mockResolvedValue({
+				success: true,
+				data: [orangeAccount, mtnAccount],
+			}),
+		};
+		const createMany = jest.fn().mockResolvedValue({ success: true, data: 2 }) as jest.MockedFunction<
+			(reserves: ReserveCreateInput[]) => Promise<{ success: true; data: number }>
+		>;
+		const currencyDisplayService = {
+			getLatestRatesOrUndefined: jest.fn().mockResolvedValue({ CHF: 1, SLE: 25 }),
+			convertAmount: jest.fn().mockImplementation((amount: number) => amount / 25),
+		};
+		const service = new ReservesCalculationService(
+			{} as never,
+			bankAccountService as never,
+			bankAccountWriteService as never,
+			postFinanceBalanceService as never,
+			pawaPayBalanceService as never,
+			{ createMany } as never,
+			currencyDisplayService as never,
+		);
+
+		await expect(service.calculate()).resolves.toEqual({ success: true, data: 2 });
+		expect(bankAccountWriteService.ensurePawaPayWallets).toHaveBeenCalledWith(['GHA:ORANGE_GHA', 'GHA:MTN_MOMO_GHA']);
+		const writtenReserves = createMany.mock.calls[0]?.[0] ?? [];
+		expect(writtenReserves).toEqual([
+			{
+				bankAccountId: 'ghana-orange',
+				date: writtenReserves[0]?.date,
+				amount: 100,
+				currency: 'SLE',
+				amountChf: 4,
+			},
+			{
+				bankAccountId: 'ghana-mtn',
+				date: writtenReserves[1]?.date,
+				amount: 200,
+				currency: 'SLE',
+				amountChf: 8,
+			},
+		]);
+	});
+
 	test('skips unsupported bank account types', async () => {
 		const bankAccountService = {
 			getAll: jest.fn().mockResolvedValue({
 				success: true,
-				data: [{ ...postFinanceAccount, type: 'pawapay_wallet' }],
+				data: [{ ...postFinanceAccount, type: 'local_bank' }],
 			}),
 		};
 		const postFinanceBalanceService = { getLatestBalances: jest.fn() };
-		const reserveWriteService = { createMany: jest.fn() };
+		const pawaPayBalanceService = {
+			getLatestBalances: jest.fn().mockResolvedValue({ success: true, data: [] }),
+		};
+		const bankAccountWriteService = {
+			ensurePawaPayWallets: jest.fn().mockResolvedValue({ success: true, data: [] }),
+		};
+		const reserveWriteService = { createMany: jest.fn().mockResolvedValue({ success: true, data: 0 }) };
 		const service = new ReservesCalculationService(
 			{} as never,
 			bankAccountService as never,
+			bankAccountWriteService as never,
 			postFinanceBalanceService as never,
+			pawaPayBalanceService as never,
 			reserveWriteService as never,
 			{} as never,
 		);
 
 		await expect(service.calculate()).resolves.toEqual({ success: true, data: 0 });
 		expect(postFinanceBalanceService.getLatestBalances).not.toHaveBeenCalled();
-		expect(reserveWriteService.createMany).not.toHaveBeenCalled();
+		expect(reserveWriteService.createMany).toHaveBeenCalledWith([]);
 	});
 
 	test('repeating the same calculation persists only one snapshot', async () => {
@@ -132,6 +268,12 @@ describe('ReservesCalculationService.calculate', () => {
 					data: [{ iban: 'CH1909000000151126386', amount: 125, currency: 'CHF' }],
 				}),
 			};
+			const pawaPayBalanceService = {
+				getLatestBalances: jest.fn().mockResolvedValue({ success: true, data: [] }),
+			};
+			const bankAccountWriteService = {
+				ensurePawaPayWallets: jest.fn().mockResolvedValue({ success: true, data: [] }),
+			};
 			const currencyDisplayService = {
 				getLatestRatesOrUndefined: jest.fn(),
 				convertAmount: jest.fn().mockReturnValue(125),
@@ -139,7 +281,9 @@ describe('ReservesCalculationService.calculate', () => {
 			const service = new ReservesCalculationService(
 				{} as never,
 				bankAccountService as never,
+				bankAccountWriteService as never,
 				postFinanceBalanceService as never,
+				pawaPayBalanceService as never,
 				new ReserveWriteService(db, {} as never),
 				currencyDisplayService as never,
 			);

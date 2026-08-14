@@ -1,6 +1,7 @@
 import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
 import { BankAccountReadService } from './bank-account/bank-account-read.service';
+import { BankAccountWriteService } from './bank-account/bank-account-write.service';
 import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignSubmissionService } from './campaign/campaign-submission.service';
@@ -46,6 +47,7 @@ import { OrganizationAccessService } from './organization-access/organization-ac
 import { OrganizationReadService } from './organization/organization-read.service';
 import { OrganizationValidationService } from './organization/organization-validation.service';
 import { OrganizationWriteService } from './organization/organization-write.service';
+import { PawaPayBalanceService } from './pawapay/pawapay-balance.service';
 import { PaymentFileImportService } from './payment-file-import/payment-file-import.service';
 import { PostFinanceBalanceService } from './payment-file-import/postfinance-balance.service';
 import { OrangeMoneyCsvPayoutProcessService } from './payout-process/orange-money-csv-payout-process.service';
@@ -94,6 +96,7 @@ import { UserWriteService } from './user/user-write.service';
 
 const appReviewMode = new AppReviewModeService(prisma);
 const bankAccountRead = new BankAccountReadService(prisma);
+const bankAccountWrite = new BankAccountWriteService(prisma);
 const reserveRead = new ReserveReadService(prisma);
 const firebaseAdmin = new FirebaseAdminService(prisma);
 const firebaseSession = new FirebaseSessionService(prisma);
@@ -251,7 +254,9 @@ const createReservesCalculation = (bucketName: string) =>
 	new ReservesCalculationService(
 		prisma,
 		bankAccountRead,
+		bankAccountWrite,
 		createPostFinanceBalance(bucketName),
+		new PawaPayBalanceService(prisma),
 		reserveWrite,
 		currencyDisplay,
 	);

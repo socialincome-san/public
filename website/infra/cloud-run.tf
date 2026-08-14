@@ -82,6 +82,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "PAWAPAY_API_TOKEN"
+          value = var.pawapay_api_token
+        }
+
+        env {
           name  = "STRIPE_PRODUCT_ONETIME"
           value = var.stripe_product_onetime
         }
