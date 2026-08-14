@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from '@/components/avatar';
+import { Avatar, AvatarFallback } from '@/components/avatar/avatar';
 import { SectionHeading } from '@/components/section-heading';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Image from 'next/image';
