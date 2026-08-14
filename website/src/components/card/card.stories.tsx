@@ -15,6 +15,10 @@ const meta = {
 				component: 'A reusable card component for content with optional link behavior.',
 			},
 		},
+		design: {
+			type: 'figma',
+			url: 'https://www.figma.com/design/IDEMMGr7QkVOY4Ksbgbc57/Social-Income---shadcn-UI-Kit?node-id=46-65&p=f&t=zjQYKr57x1DPvxtF-0',
+		},
 	},
 	argTypes: {
 		href: {
