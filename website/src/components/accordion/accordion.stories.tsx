@@ -22,7 +22,7 @@ const meta = {
 		},
 		design: {
 			type: 'figma',
-			url: 'https://www.figma.com/design/IDEMMGr7QkVOY4Ksbgbc57/Social-Income---shadcn-UI-Kit?node-id=17086-205813&t=PTujeQP1nMjvbR1N-0',
+			url: 'https://www.figma.com/design/IDEMMGr7QkVOY4Ksbgbc57/Social-Income---shadcn-UI-Kit?node-id=1-434&p=f&t=9Voj9wb0Isxm1rnr-0',
 		},
 	},
 } satisfies Meta<typeof Accordion>;
