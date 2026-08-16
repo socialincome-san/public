@@ -2,7 +2,7 @@
 
 import { RadioCard } from '@/components/create-program-wizard/radio-card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { RadioGroup } from '@/components/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
@@ -13,23 +13,9 @@ import { cn } from '@/lib/utils/cn';
 import { addDays, format } from 'date-fns';
 import { Camera, Check, Trash2 } from 'lucide-react';
 import { useEffect, useId, useRef } from 'react';
-import type { CampaignSubmissionStepProps } from '../types';
+import type { DetailsStepProps } from '../types';
 
-type Props = Pick<
-	CampaignSubmissionStepProps,
-	| 'form'
-	| 'labels'
-	| 'primaryImageInputRef'
-	| 'imageSelection'
-	| 'defaultImages'
-	| 'defaultImagesLoading'
-	| 'defaultImagesError'
-	| 'uploadPreviewUrl'
-	| 'onSelectDefaultImage'
-	| 'onImageChange'
-	| 'imageError'
-	| 'submitError'
->;
+type Props = DetailsStepProps;
 
 const durationOptions: {
 	value: CampaignSubmissionDurationPreset;
@@ -69,21 +55,17 @@ const RemoveUploadedImageButton = ({
 export const DetailsStep = ({
 	form,
 	labels,
-	primaryImageInputRef,
+	primaryImage,
 	imageSelection,
 	defaultImages,
 	defaultImagesLoading,
 	defaultImagesError,
-	uploadPreviewUrl,
 	onSelectDefaultImage,
-	onImageChange,
-	imageError,
-	submitError,
 }: Props) => {
+	const { inputRef, previewUrl, error: imageError, onChange: onPrimaryImageChange } = primaryImage;
 	const imageHintId = useId();
 	const imageErrorId = useId();
 	const imageErrorRef = useRef<HTMLParagraphElement>(null);
-	const submitErrorRef = useRef<HTMLParagraphElement>(null);
 	const durationPreset = form.watch('durationPreset');
 	const hasGoal = form.watch('hasGoal');
 	const isPublic = form.watch('isPublic');
@@ -92,21 +74,14 @@ export const DetailsStep = ({
 		if (imageError) {
 			imageErrorRef.current?.scrollIntoView({ block: 'nearest' });
 			imageErrorRef.current?.focus();
-
-			return;
 		}
-
-		if (submitError) {
-			submitErrorRef.current?.scrollIntoView({ block: 'nearest' });
-			submitErrorRef.current?.focus();
-		}
-	}, [imageError, submitError]);
+	}, [imageError]);
 
 	const imageDescribedBy = [imageHintId, imageError ? imageErrorId : null].filter(Boolean).join(' ');
 
 	const previewSrc =
 		imageSelection?.type === 'upload'
-			? uploadPreviewUrl
+			? previewUrl
 			: imageSelection?.type === 'default'
 				? (defaultImages.find((image) => image.id === imageSelection.id)?.url ?? null)
 				: null;
@@ -309,7 +284,7 @@ export const DetailsStep = ({
 							<RemoveUploadedImageButton
 								ariaLabel={labels.removeUploadedImage}
 								className="size-8"
-								onRemove={() => onImageChange(null)}
+								onRemove={() => onPrimaryImageChange(null)}
 							/>
 						) : null}
 					</div>
@@ -333,11 +308,11 @@ export const DetailsStep = ({
 							className="hover:bg-muted/40 flex size-full flex-col items-center justify-center gap-1 rounded-xl"
 							aria-checked={imageSelection?.type === 'upload'}
 							role="radio"
-							onClick={() => primaryImageInputRef.current?.click()}
+							onClick={() => inputRef.current?.click()}
 						>
-							{uploadPreviewUrl && imageSelection?.type === 'upload' ? (
+							{previewUrl && imageSelection?.type === 'upload' ? (
 								/* eslint-disable-next-line @next/next/no-img-element -- local object URL preview */
-								<img src={uploadPreviewUrl} alt="" className="absolute inset-0 size-full rounded-xl object-cover" />
+								<img src={previewUrl} alt="" className="absolute inset-0 size-full rounded-xl object-cover" />
 							) : (
 								<>
 									<Camera className="size-5" aria-hidden />
@@ -345,11 +320,11 @@ export const DetailsStep = ({
 								</>
 							)}
 						</button>
-						{uploadPreviewUrl && imageSelection?.type === 'upload' ? (
+						{previewUrl && imageSelection?.type === 'upload' ? (
 							<RemoveUploadedImageButton
 								ariaLabel={labels.removeUploadedImage}
 								className="size-5"
-								onRemove={() => onImageChange(null)}
+								onRemove={() => onPrimaryImageChange(null)}
 							/>
 						) : null}
 					</div>
@@ -388,13 +363,13 @@ export const DetailsStep = ({
 
 				<input
 					id="campaign-primary-image"
-					ref={primaryImageInputRef}
+					ref={inputRef}
 					type="file"
 					accept={campaignSubmissionConfig.permittedImageMimeTypes.join(',')}
 					className="sr-only"
 					tabIndex={-1}
 					onChange={(event) => {
-						onImageChange(event.target.files?.[0] ?? null);
+						onPrimaryImageChange(event.target.files?.[0] ?? null);
 					}}
 				/>
 				<p id={imageHintId} className="text-muted-foreground text-xs">
@@ -412,12 +387,6 @@ export const DetailsStep = ({
 					</p>
 				) : null}
 			</div>
-
-			{submitError ? (
-				<p ref={submitErrorRef} className="text-destructive text-sm outline-none" role="alert" tabIndex={-1}>
-					{submitError}
-				</p>
-			) : null}
 		</div>
 	);
 };

@@ -76,6 +76,14 @@ enum ExpenseType {
   staff
 }
 
+enum BankAccountType {
+  postfinance
+  pawapay_wallet
+  custodian_stablecoin_wallet
+  local_bank
+  mobile_money_wallet
+}
+
 enum UserRole {
   admin
   user
@@ -83,8 +91,17 @@ enum UserRole {
 
 enum DonationInterval {
   monthly
-  quarterly
-  yearly
+}
+
+enum SubscriptionStatus {
+  active
+  canceled
+  ended
+}
+
+enum SubscriptionPaymentMethod {
+  stripe
+  bank_transfer
 }
 
 enum PayoutInterval {
@@ -597,12 +614,36 @@ model Contributor {
   stripeCustomerId   String?                   @map("stripe_customer_id")
 
   contributions        Contribution[]
+  subscriptions        Subscription[]
   donationCertificates DonationCertificate[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("contributor")
+}
+
+model Subscription {
+  id                         String                    @id @default(cuid()) @map("id")
+  contributorId              String                    @map("contributor_id")
+  contributor                Contributor               @relation(fields: [contributorId], references: [id])
+  campaignId                 String                    @map("campaign_id")
+  campaign                   Campaign                  @relation(fields: [campaignId], references: [id])
+  amount                     Decimal                   @map("amount") @db.Decimal(12, 4)
+  currency                   Currency                  @map("currency")
+  interval                   DonationInterval          @map("interval")
+  status                     SubscriptionStatus        @default(active) @map("status")
+  paymentMethod              SubscriptionPaymentMethod @map("payment_method")
+  stripeSubscriptionId       String?                   @unique @map("stripe_subscription_id")
+  bankStandingOrderReference String?                   @unique @map("bank_standing_order_reference")
+  canceledAt                 DateTime?                 @map("canceled_at") @db.Timestamptz(3)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([contributorId])
+  @@index([status])
+  @@map("subscription")
 }
 
 model Contribution {
@@ -612,7 +653,6 @@ model Contribution {
   currency          Currency           @map("currency")
   amountChf         Decimal            @map("amount_chf") @db.Decimal(12, 4)
   feesChf           Decimal            @map("fees_chf") @db.Decimal(12, 4)
-  interval          DonationInterval?  @map("interval")
   contributorId     String             @map("contributor_id")
   contributor       Contributor        @relation(fields: [contributorId], references: [id])
   status            ContributionStatus @map("status")
@@ -900,6 +940,7 @@ model Campaign {
   program                Program  @relation(fields: [programId], references: [id])
 
   contributions Contribution[]
+  subscriptions Subscription[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -920,6 +961,36 @@ model Expense {
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("expense")
+}
+
+model BankAccount {
+  id                String          @id @default(cuid()) @map("id")
+  type              BankAccountType @map("type")
+  bankAccountNumber String?         @map("bank_account_number")
+  description       String?         @map("description")
+  reserves          Reserve[]
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("bank_account")
+}
+
+model Reserve {
+  id            String      @id @default(cuid()) @map("id")
+  bankAccountId String      @map("bank_account_id")
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id])
+  date          DateTime    @map("date") @db.Date
+  amount        Decimal     @map("amount") @db.Decimal(12, 4)
+  currency      Currency    @map("currency")
+  amountChf     Decimal     @map("amount_chf") @db.Decimal(12, 4)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([bankAccountId, date])
+  @@index([bankAccountId])
+  @@map("reserve")
 }
 
 model Address {

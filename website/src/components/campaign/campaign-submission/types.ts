@@ -1,16 +1,18 @@
 import type { CampaignDefaultImageOption } from '@/lib/server-actions/campaign-public-actions';
 import {
 	type CampaignSubmissionErrorCode,
-	type createCampaignSubmissionFormSchema,
+	type CampaignSubmissionFormValues,
 } from '@/lib/services/campaign/campaign-submission-input';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import type { RefObject } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
-import type { z } from 'zod';
 
 export type SubmissionLabels = {
 	programStepTitle: string;
 	detailsStepTitle: string;
+	aboutStepTitle: string;
+	aboutStepSubtitle: string;
+	aboutStepDescription: string;
 	title: string;
 	description: string;
 	goal: string;
@@ -29,10 +31,26 @@ export type SubmissionLabels = {
 	accessPrivateDescription: string;
 	accessRecommended: string;
 	program: string;
-	primaryImage: string;
 	campaignBackground: string;
 	uploadImage: string;
 	removeUploadedImage: string;
+	profilePicture: string;
+	profilePictureHint: string;
+	editProfilePicture: string;
+	creatorNamePlaceholder: string;
+	quote: string;
+	quotePlaceholder: string;
+	quoteHint: string;
+	hasAdditionalInformation: string;
+	sectionDescription: string;
+	sectionImage: string;
+	instagramHandle: string;
+	xHandle: string;
+	linkWebsite: string;
+	tiktokHandle: string;
+	instagramHandlePlaceholder: string;
+	xHandlePlaceholder: string;
+	tiktokHandlePlaceholder: string;
 	submit: string;
 	submitting: string;
 	successTitle: string;
@@ -48,6 +66,7 @@ export type SubmissionLabels = {
 	stepLabel: string;
 	recipientsCount: string;
 	details: string;
+	about: string;
 	programsLoading: string;
 	programsEmpty: string;
 	defaultImagesLoading: string;
@@ -55,26 +74,45 @@ export type SubmissionLabels = {
 	errors: Record<CampaignSubmissionErrorCode, string>;
 };
 
-export type CampaignSubmissionStepId = 'program' | 'details';
+export type CampaignSubmissionStepId = 'program' | 'details' | 'about';
 
-export type CampaignSubmissionFormValues = z.infer<ReturnType<typeof createCampaignSubmissionFormSchema>>;
+export type { CampaignSubmissionFormValues };
 
 export type CampaignImageSelection = { type: 'default'; id: number } | { type: 'upload'; file: File } | null;
 
-export type CampaignSubmissionStepProps = {
+export type CampaignSubmissionImageUploadField = {
+	inputRef: RefObject<HTMLInputElement | null>;
+	previewUrl: string | null;
+	error: string | null;
+	onChange: (file: File | null) => void;
+	setError: (error: string | null) => void;
+	clear: () => void;
+};
+
+export type ProgramStepProps = {
 	form: UseFormReturn<CampaignSubmissionFormValues>;
 	labels: SubmissionLabels;
 	programs: PublicSubmissionProgramOption[];
 	programsLoading: boolean;
 	programsError: string | null;
-	primaryImageInputRef: RefObject<HTMLInputElement | null>;
+};
+
+export type DetailsStepProps = {
+	form: UseFormReturn<CampaignSubmissionFormValues>;
+	labels: SubmissionLabels;
+	primaryImage: CampaignSubmissionImageUploadField;
 	imageSelection: CampaignImageSelection;
 	defaultImages: CampaignDefaultImageOption[];
 	defaultImagesLoading: boolean;
 	defaultImagesError: string | null;
-	uploadPreviewUrl: string | null;
 	onSelectDefaultImage: (id: number) => void;
-	onImageChange: (file: File | null) => void;
-	imageError: string | null;
+};
+
+export type AboutStepProps = {
+	form: UseFormReturn<CampaignSubmissionFormValues>;
+	labels: SubmissionLabels;
+	profilePicture: CampaignSubmissionImageUploadField;
+	sectionImage: CampaignSubmissionImageUploadField;
 	submitError: string | null;
+	isSubmitting: boolean;
 };

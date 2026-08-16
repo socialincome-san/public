@@ -48,6 +48,7 @@ export const deleteDonationWizardTestUser = async (email: string) => {
 			where: { contribution: { contributorId: contributor.id } },
 		});
 		await prisma.contribution.deleteMany({ where: { contributorId: contributor.id } });
+		await prisma.subscription.deleteMany({ where: { contributorId: contributor.id } });
 		await prisma.donationCertificate.deleteMany({ where: { contributorId: contributor.id } });
 		await prisma.contributor.delete({ where: { id: contributor.id } });
 
@@ -159,7 +160,6 @@ export const expectPendingMonthlyContribution = async (email: string, options: {
 	const contribution = contributions[0];
 
 	expect(contribution.status).toBe('pending');
-	expect(contribution.interval).toBe('monthly');
 	expect(contribution.currency).toBe(currency);
 	expect(Number(contribution.amount)).toBe(amount);
 	expect(Number(contribution.amountChf)).toBe(amount);
@@ -170,6 +170,17 @@ export const expectPendingMonthlyContribution = async (email: string, options: {
 	expect(contribution.paymentEvent?.type).toBe('bank_transfer');
 	expect(contribution.paymentEvent?.contributionId).toBe(contribution.id);
 	expect(contribution.paymentEvent?.transactionId).toMatch(/^\d+$/);
+
+	const subscription = await prisma.subscription.findUnique({
+		where: { bankStandingOrderReference: contribution.paymentEvent!.transactionId },
+	});
+	expect(subscription).not.toBeNull();
+	expect(subscription?.contributorId).toBe(contributor!.id);
+	expect(subscription?.paymentMethod).toBe('bank_transfer');
+	expect(subscription?.interval).toBe('monthly');
+	expect(subscription?.status).toBe('active');
+	expect(Number(subscription?.amount)).toBe(amount);
+	expect(subscription?.currency).toBe(currency);
 
 	return contribution;
 };

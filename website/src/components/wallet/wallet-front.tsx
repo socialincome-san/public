@@ -1,4 +1,4 @@
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { cn } from '@/lib/utils/cn';
 import { PlusIcon } from 'lucide-react';
 import type { WalletBadge, WalletFooterColumn, WalletVariant } from './wallet.types';

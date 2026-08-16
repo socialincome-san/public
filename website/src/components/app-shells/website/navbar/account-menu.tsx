@@ -3,7 +3,7 @@
 import { useLogout } from '@/components/app-shells/use-logout';
 import { displaySession, Scope } from '@/components/app-shells/website/navbar/utils';
 import { Avatar, AvatarFallback } from '@/components/avatar';
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,

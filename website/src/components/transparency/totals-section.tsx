@@ -1,4 +1,4 @@
-import { Card } from '@/components/card';
+import { Card } from '@/components/card/card';
 import { getSafeNumberFormatLocale, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import type { ExchangeRates } from '@/lib/services/exchange-rate/exchange-rate.types';
 import { services } from '@/lib/services/services';

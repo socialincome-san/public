@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useTranslator } from '@/lib/hooks/useTranslator';

@@ -1,7 +1,10 @@
 'use client';
 
-import { Button } from '@/components/button';
-import { CampaignSubmissionForm, type SubmissionLabels } from '@/components/campaign/campaign-submission-form';
+import { Button } from '@/components/button/button';
+import {
+	CampaignSubmissionForm,
+	type SubmissionLabels,
+} from '@/components/campaign/campaign-submission/campaign-submission-form';
 import { Dialog, DialogContent } from '@/components/dialog';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { useState } from 'react';

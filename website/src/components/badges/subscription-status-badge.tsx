@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { HourglassIcon, RefreshCcw, RefreshCwOff, TriangleAlert } from 'lucide-react';
 import { ComponentType } from 'react';
 export type SubscriptionStatus =

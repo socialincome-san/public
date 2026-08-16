@@ -1,4 +1,4 @@
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import {

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramPayoutForecastTable } from '@/components/storyblok/program/program-payout-forecast-table';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
