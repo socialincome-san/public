@@ -596,5 +596,3 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		</Form>
 	);
 };
-
-export type { SubmissionLabels };
