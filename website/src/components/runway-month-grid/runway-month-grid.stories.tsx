@@ -10,6 +10,10 @@ const meta = {
 			control: 'select',
 			options: Array.from({ length: 20 }, (_, index) => index + 1),
 		},
+		language: {
+			control: 'select',
+			options: ['en', 'de', 'fr', 'it'],
+		},
 	},
 } satisfies Meta<typeof RunwayMonthGrid>;
 
@@ -20,5 +24,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
 	args: {
 		numberOfMonths: 16,
+		language: 'en',
 	},
 };

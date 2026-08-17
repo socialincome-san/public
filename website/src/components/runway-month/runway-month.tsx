@@ -8,7 +8,7 @@ type Props = {
 export const RunwayMonth = ({ month, year }: Props) => {
 	return (
 		<div className="bg-confirm-foreground text-primary h-20 w-25 overflow-hidden rounded-xl shadow-md">
-			<div className="border-primary/20 text-md leading flex h-2/3 flex-col items-center justify-center rounded-xl border bg-white text-center leading-none font-normal">
+			<div className="border-primary/20 leading flex h-2/3 flex-col items-center justify-center rounded-xl border bg-white text-center text-sm leading-none font-normal">
 				<span>{month}</span>
 				<span>{year}</span>
 			</div>
