@@ -1,4 +1,4 @@
-import { Card } from '@/components/card';
+import { Card } from '@/components/card/card';
 import { CountryFlag } from '@/components/country-flag';
 import { Progress } from '@/components/progress';
 import { getSafeNumberFormatLocale, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';

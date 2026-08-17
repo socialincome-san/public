@@ -1,4 +1,4 @@
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { cn } from '@/lib/utils/cn';
 import { PlayIcon } from 'lucide-react';
 

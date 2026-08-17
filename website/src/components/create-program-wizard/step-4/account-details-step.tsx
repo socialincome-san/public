@@ -1,7 +1,7 @@
 'use client';
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';

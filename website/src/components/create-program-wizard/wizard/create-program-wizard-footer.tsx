@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { CreateProgramStepIndicator } from './create-program-step-indicator';
 import { CreateProgramWizardSend, CreateProgramWizardState } from './types';

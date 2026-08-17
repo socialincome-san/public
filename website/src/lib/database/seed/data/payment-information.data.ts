@@ -1,8 +1,9 @@
 import { PaymentInformation } from '@/generated/prisma/client';
+import { extraProgramRecipientPaymentInformationsData } from './program-recipient-extras.data';
 
 const createdAt = new Date('2025-01-01T13:00:00.000Z');
 
-export const paymentInformationsData: PaymentInformation[] = [
+const basePaymentInformationsData: PaymentInformation[] = [
 	{
 		id: 'payment-information-core-sl-active',
 		mobileMoneyProviderId: 'mobile-money-provider-id-3',
@@ -259,4 +260,9 @@ export const paymentInformationsData: PaymentInformation[] = [
 		createdAt,
 		updatedAt: null,
 	},
+];
+
+export const paymentInformationsData: PaymentInformation[] = [
+	...basePaymentInformationsData,
+	...extraProgramRecipientPaymentInformationsData,
 ];

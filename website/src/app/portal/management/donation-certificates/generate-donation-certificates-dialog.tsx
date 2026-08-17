@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
 import { MultiSelect, MultiSelectOption } from '@/components/multi-select';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';

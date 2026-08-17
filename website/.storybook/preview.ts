@@ -8,6 +8,9 @@ const preview: Preview = {
 		nextjs: {
 			appDirectory: true,
 		},
+		docs: {
+			codePanel: true,
+		},
 	},
 };
 

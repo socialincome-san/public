@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { ContributorCard } from '@/components/open-source/contributor-card';
 import type { GithubContributor } from '@/lib/services/github-api/github-api.types';
 import { useState } from 'react';

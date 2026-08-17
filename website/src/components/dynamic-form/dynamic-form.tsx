@@ -4,7 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Combobox } from '@/components/combo-box';
 import { DatePicker } from '@/components/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
@@ -148,10 +148,11 @@ type Props = {
 	onSubmit: (values: any) => void;
 	onCancel?: () => void;
 	onDelete?: () => void;
+	onRemoveFromProgram?: () => void;
 	mode: 'add' | 'edit' | 'readonly';
 };
 
-const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, mode }) => {
+const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, onRemoveFromProgram, mode }) => {
 	const zodSchema = buildZodSchema(formSchema);
 
 	const form = useForm<z.infer<typeof zodSchema>>({
@@ -294,7 +295,13 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 						/>
 					);
 				})}
-				<FormActions mode={mode} isLoading={isLoading} onCancel={onCancel} onDelete={onDelete} />
+				<FormActions
+					mode={mode}
+					isLoading={isLoading}
+					onCancel={onCancel}
+					onDelete={onDelete}
+					onRemoveFromProgram={onRemoveFromProgram}
+				/>
 			</form>
 			{/* TODO: add proper loading state */}
 			{isLoading && (

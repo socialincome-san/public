@@ -1,5 +1,5 @@
 import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { getStoryUuids } from '@/components/content-blocks/overview-grid.utils';
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import { PersonGridInteractive } from '@/components/storyblok/shared/person-grid-interactive';

@@ -12,28 +12,16 @@ import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
 import type { StoryblokService } from '../storyblok/storyblok.service';
 import type { CampaignPageContent } from './campaign-public-website.types';
-import type { CampaignReadService } from './campaign-read.service';
 import type { CampaignPage } from './campaign.types';
 
 const campaignPageNamespaces = ['website-campaign', 'website-videos', 'website-newsletter', 'website-faq'] as const;
 
 export class CampaignPublicWebsiteService extends BaseService {
 	private readonly storyblok: StoryblokService;
-	private readonly campaignRead: CampaignReadService;
 
-	constructor(db: BaseService['db'], storyblok: StoryblokService, campaignRead: CampaignReadService) {
+	constructor(db: BaseService['db'], storyblok: StoryblokService) {
 		super(db);
 		this.storyblok = storyblok;
-		this.campaignRead = campaignRead;
-	}
-
-	async getMetadataForSlug(slug: string, lang: WebsiteLanguage) {
-		const result = await this.campaignRead.getBySlug(slug);
-		if (!result.success || !result.data?.isActive) {
-			return this.getFallbackMetadata(lang);
-		}
-
-		return this.getPageMetadata(lang, result.data);
 	}
 
 	async getPageContent(lang: WebsiteLanguage): Promise<ServiceResult<CampaignPageContent>> {

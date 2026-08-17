@@ -1,6 +1,6 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
-import { Card } from '@/components/card';
+import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
 
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';

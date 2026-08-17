@@ -7,6 +7,8 @@ dist/
 src/generated/
 next-env.d.ts
 public/openapi.json
+public/storybook/
+storybook-static/
 playwright-report/
 test-results/
 playwright/.auth/
