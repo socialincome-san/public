@@ -71,7 +71,7 @@ const DialogContent = React.forwardRef<
 				<DialogPrimitive.Content
 					ref={ref}
 					className={cn(
-						'max-w-site-width data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid translate-x-[-50%] translate-y-[-50%] gap-4 p-6 duration-200',
+						'text-primary max-w-site-width data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid translate-x-[-50%] translate-y-[-50%] gap-4 p-6 duration-200',
 						surfaceClasses,
 						sizeClasses,
 						mobileFullscreenClasses,
@@ -138,10 +138,18 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<DialogPrimitive.Title
 		ref={ref}
-		className={cn('text-foreground text-xl leading-none font-medium tracking-tight', className)}
+		className={cn('text-primary text-xl leading-none font-medium tracking-tight', className)}
 		{...props}
 	/>
 ));
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
-export { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle };
+const DialogDescription = React.forwardRef<
+	React.ElementRef<typeof DialogPrimitive.Description>,
+	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+>(({ className, ...props }, ref) => (
+	<DialogPrimitive.Description ref={ref} className={cn('text-muted-foreground text-sm', className)} {...props} />
+));
+DialogDescription.displayName = DialogPrimitive.Description.displayName;
+
+export { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle };

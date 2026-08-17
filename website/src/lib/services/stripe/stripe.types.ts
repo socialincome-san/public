@@ -115,7 +115,28 @@ export type StripePaymentMethod = {
 	label: string;
 };
 
+export type StripeSubscriptionDetails = {
+	brand?: string;
+	last4?: string;
+	currentPeriodEnd: Date | null;
+};
+
 export type StripeBillingPortalSessionUrl = string;
+
+export const APPLY_PAYMENT_METHOD_QUERY_PARAM = 'apply_payment_method';
+
+export type CreateManageSubscriptionsSessionInput = {
+	stripeCustomerId: string | null;
+	language: string | null;
+	flow: 'payment_method_update';
+	subscriptionId: string;
+};
+
+export type ApplyCustomerDefaultPaymentMethodInput = {
+	contributorId: string;
+	stripeCustomerId: string | null;
+	subscriptionId: string;
+};
 
 export type StripeCustomerData = {
 	id: string;

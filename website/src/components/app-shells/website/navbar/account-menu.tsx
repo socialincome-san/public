@@ -45,7 +45,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 			}
 			if (hasContributor) {
 				items.push({
-					href: '/dashboard/contributions',
+					href: '/dashboard/subscriptions',
 					label: translator.t('navigation.go-to-dashboard'),
 					icon: LayoutDashboard,
 				});
@@ -65,7 +65,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 			}
 			if (hasContributor) {
 				items.push({
-					href: '/dashboard/contributions',
+					href: '/dashboard/subscriptions',
 					label: translator.t('navigation.go-to-dashboard'),
 					icon: LayoutDashboard,
 				});

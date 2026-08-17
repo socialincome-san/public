@@ -77,6 +77,7 @@ import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.se
 import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { StoryblokService } from './storyblok/storyblok.service';
 import { StripeService } from './stripe/stripe.service';
+import { SubscriptionReadService } from './subscription/subscription-read.service';
 import { SubscriptionWriteService } from './subscription/subscription-write.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
 import { SurveyImpactService } from './survey/survey-impact.service';
@@ -243,6 +244,7 @@ const stripe = new StripeService(
 	campaignRead,
 	programAccessRead,
 );
+const subscriptionRead = new SubscriptionReadService(prisma, contributionRead, stripe);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
@@ -281,6 +283,7 @@ export const services = {
 		payout: payoutRead,
 		program: programRead,
 		recipient: recipientRead,
+		subscription: subscriptionRead,
 		survey: surveyRead,
 		user: userRead,
 	},
