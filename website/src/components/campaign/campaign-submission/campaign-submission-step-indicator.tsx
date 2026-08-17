@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils/cn';
 import type { CampaignSubmissionStepId } from './types';
 
-const STEP_ORDER: CampaignSubmissionStepId[] = ['program', 'details'];
+const STEP_ORDER: CampaignSubmissionStepId[] = ['program', 'details', 'about'];
 
 const circleClasses = {
 	base: 'flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium transition-colors',
@@ -25,6 +25,7 @@ type Props = {
 	stepLabel: string;
 	programLabel: string;
 	detailsLabel: string;
+	aboutLabel: string;
 	variant?: 'circles' | 'bars';
 	className?: string;
 };
@@ -35,13 +36,24 @@ export const CampaignSubmissionStepIndicator = ({
 	stepLabel,
 	programLabel,
 	detailsLabel,
+	aboutLabel,
 	variant = 'circles',
 	className,
 }: Props) => {
 	const activeIndex = STEP_ORDER.indexOf(currentStep);
 	const stepCount = STEP_ORDER.length;
 
-	const getStepName = (stepId: CampaignSubmissionStepId) => (stepId === 'program' ? programLabel : detailsLabel);
+	const getStepName = (stepId: CampaignSubmissionStepId) => {
+		if (stepId === 'program') {
+			return programLabel;
+		}
+
+		if (stepId === 'details') {
+			return detailsLabel;
+		}
+
+		return aboutLabel;
+	};
 
 	const getStepAriaLabel = (index: number) =>
 		stepLabel.replace('{{number}}', String(index + 1)).replace('{{name}}', getStepName(STEP_ORDER[index]));

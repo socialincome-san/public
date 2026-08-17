@@ -10,7 +10,7 @@ export type ReserveCreateInput = {
 
 export type BankAccountLatestReserve = {
 	bankAccountId: string;
-	bankAccountNumber: string;
+	bankAccountNumber: string | null;
 	description: string | null;
 	amountChf: number | null;
 	recordedAt: Date | null;
