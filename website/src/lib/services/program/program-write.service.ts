@@ -102,7 +102,6 @@ export class ProgramWriteService extends BaseService {
 					description: `Default active campaign for ${program.name}.`,
 					currency: Currency.CHF,
 					endDate: defaultCampaignEndDate,
-					isActive: true,
 					program: { connect: { id: program.id } },
 				},
 			});

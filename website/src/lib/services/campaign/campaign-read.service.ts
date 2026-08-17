@@ -55,8 +55,6 @@ export class CampaignReadService extends BaseService {
 				return [{ currency: direction }];
 			case 'endDate':
 				return [{ endDate: direction }];
-			case 'isActive':
-				return [{ isActive: direction }];
 			case 'programName':
 				return [{ program: { name: direction } }];
 			case 'createdAt':
@@ -137,9 +135,6 @@ export class CampaignReadService extends BaseService {
 					currency: true,
 					additionalAmountChf: true,
 					endDate: true,
-					isActive: true,
-					public: true,
-					featured: true,
 					slug: true,
 					metadataDescription: true,
 					metadataOgImage: true,
@@ -209,9 +204,6 @@ export class CampaignReadService extends BaseService {
 					currency: true,
 					additionalAmountChf: true,
 					endDate: true,
-					isActive: true,
-					public: true,
-					featured: true,
 					slug: true,
 					metadataDescription: true,
 					metadataOgImage: true,
@@ -356,8 +348,6 @@ export class CampaignReadService extends BaseService {
 					slug: true,
 					creatorName: true,
 					currency: true,
-					featured: true,
-					createdAt: true,
 					endDate: true,
 					goal: true,
 					additionalAmountChf: true,
@@ -366,7 +356,7 @@ export class CampaignReadService extends BaseService {
 						select: { amountChf: true },
 					},
 				},
-				orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
+				orderBy: [{ createdAt: 'desc' }],
 			});
 
 			return this.resultOk(await this.mapPublicCampaignCards(campaigns, activity));
@@ -386,42 +376,6 @@ export class CampaignReadService extends BaseService {
 		}
 
 		return this.getPublicCampaignsWithStats(campaignsResult.data);
-	}
-
-	async getPublicCampaigns(options?: { activity?: PublicCampaignActivity }): Promise<ServiceResult<PublicCampaignCard[]>> {
-		const activity = options?.activity ?? 'active';
-
-		try {
-			const campaigns = await this.db.campaign.findMany({
-				where: {
-					slug: { not: null },
-					OR: [{ public: true }, { public: null }],
-				},
-				select: {
-					id: true,
-					title: true,
-					slug: true,
-					creatorName: true,
-					currency: true,
-					featured: true,
-					createdAt: true,
-					endDate: true,
-					goal: true,
-					additionalAmountChf: true,
-					contributions: {
-						where: { status: ContributionStatus.succeeded },
-						select: { amountChf: true },
-					},
-				},
-				orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
-			});
-
-			return this.resultOk(await this.mapPublicCampaignCards(campaigns, activity));
-		} catch (error) {
-			this.logger.error(error);
-
-			return this.resultFail(`Could not fetch public campaigns: ${JSON.stringify(error)}`);
-		}
 	}
 
 	async getPublicCampaignStatsByIds(campaignIds: string[]): Promise<ServiceResult<PublicCampaignStatsMap>> {
@@ -481,35 +435,6 @@ export class CampaignReadService extends BaseService {
 			campaigns,
 			statsById: statsResult.success ? statsResult.data : {},
 		});
-	}
-
-	async getAllPublicCampaignsWithStats(options?: {
-		activity?: PublicCampaignActivity;
-	}): Promise<ServiceResult<PublicCampaignsWithStats>> {
-		const campaignsResult = await this.getPublicCampaigns(options);
-		if (!campaignsResult.success) {
-			return this.resultFail(campaignsResult.error);
-		}
-
-		return this.getPublicCampaignsWithStats(campaignsResult.data);
-	}
-
-	async getOtherPublicCampaignsWithStats(
-		excludeSlug: string,
-		limit: number,
-	): Promise<ServiceResult<PublicCampaignsWithStats>> {
-		const allResult = await this.getAllPublicCampaignsWithStats();
-		if (!allResult.success) {
-			return this.resultFail(allResult.error);
-		}
-
-		const campaigns = allResult.data.campaigns.filter((campaign) => campaign.slug !== excludeSlug).slice(0, limit);
-
-		if (campaigns.length === 0) {
-			return this.resultOk({ campaigns: [], statsById: {} });
-		}
-
-		return this.getPublicCampaignsWithStats(campaigns);
 	}
 
 	resolvePublicCampaignsBySlugs(slugs: string[], allCampaigns: PublicCampaignCard[]): PublicCampaignCard[] {
@@ -596,6 +521,8 @@ export class CampaignReadService extends BaseService {
 						}
 					: {}),
 			};
+			const sortByActivity = query.sortBy === 'isActive';
+			const skip = (query.page - 1) * query.pageSize;
 
 			const [campaigns, totalCount] = await Promise.all([
 				this.db.campaign.findMany({
@@ -608,29 +535,59 @@ export class CampaignReadService extends BaseService {
 						description: true,
 						currency: true,
 						endDate: true,
-						isActive: true,
+						goal: true,
+						additionalAmountChf: true,
 						programId: true,
 						program: { select: { name: true } },
 						createdAt: true,
+						contributions: {
+							where: { status: ContributionStatus.succeeded },
+							select: { amountChf: true },
+						},
 					},
 					orderBy: this.buildCampaignOrderBy(query),
-					skip: (query.page - 1) * query.pageSize,
-					take: query.pageSize,
+					...(sortByActivity ? {} : { skip, take: query.pageSize }),
 				}),
 				this.db.campaign.count({ where }),
 			]);
 
-			const tableRows: CampaignTableViewRow[] = campaigns.map((campaign) => ({
-				id: campaign.id,
-				link: this.getCampaignLink(campaign.id, campaign.legacyFirestoreId),
-				title: campaign.title,
-				description: campaign.description,
-				currency: campaign.currency,
-				endDate: campaign.endDate,
-				isActive: campaign.isActive,
-				programName: campaign.program?.name ?? null,
-				createdAt: campaign.createdAt,
-			}));
+			const exchangeRateCache = new Map<Currency, number | null>();
+			const mappedRows: CampaignTableViewRow[] = [];
+			for (const campaign of campaigns) {
+				const { amountCollected } = await this.computeCollectedAmount(
+					campaign.contributions,
+					campaign.additionalAmountChf,
+					campaign.currency,
+					campaign.goal,
+					exchangeRateCache,
+				);
+
+				mappedRows.push({
+					id: campaign.id,
+					link: this.getCampaignLink(campaign.id, campaign.legacyFirestoreId),
+					title: campaign.title,
+					description: campaign.description,
+					currency: campaign.currency,
+					endDate: campaign.endDate,
+					isActive: isCampaignActive({
+						endDate: campaign.endDate,
+						goal: campaign.goal,
+						amountCollected,
+					}),
+					programName: campaign.program?.name ?? null,
+					createdAt: campaign.createdAt,
+				});
+			}
+
+			const tableRows = sortByActivity
+				? [...mappedRows]
+						.sort((left, right) => {
+							const delta = Number(left.isActive) - Number(right.isActive);
+
+							return query.sortDirection === 'asc' ? delta : -delta;
+						})
+						.slice(skip, skip + query.pageSize)
+				: mappedRows;
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {

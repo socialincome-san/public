@@ -59,8 +59,6 @@ const baseFields = {
 describe('CampaignSubmissionService', () => {
 	type CampaignCreateInput = {
 		data: {
-			isActive: boolean;
-			public: boolean | null;
 			slug: string;
 			goal: number | null;
 			creatorName: string | null;
@@ -179,8 +177,6 @@ describe('CampaignSubmissionService', () => {
 		}
 		expect(create).toHaveBeenCalledTimes(1);
 		const createArg = create.mock.calls[0]?.[0];
-		expect(createArg?.data.isActive).toBe(true);
-		expect(createArg?.data.public).toBe(true);
 		expect(createArg?.data.slug).toBe('my-campaign');
 		expect(createArg?.data.creatorName).toBe('Alex Creator');
 		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
@@ -315,7 +311,6 @@ describe('CampaignSubmissionService', () => {
 		expect(downloadAssetBuffer).toHaveBeenCalledWith('https://a.storyblok.com/f/109655/default.png');
 		expect(uploadAsset).toHaveBeenCalled();
 		const createArg = create.mock.calls[0]?.[0];
-		expect(createArg?.data.public).toBe(false);
 		expect(createArg?.data.goal).toBeNull();
 		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
 			expect.objectContaining({

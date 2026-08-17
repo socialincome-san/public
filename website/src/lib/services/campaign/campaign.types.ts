@@ -42,9 +42,6 @@ type CampaignPayload = {
 	currency: Currency;
 	additionalAmountChf?: number | null;
 	endDate: Date;
-	isActive: boolean;
-	public?: boolean | null;
-	featured?: boolean | null;
 	slug?: string | null;
 	metadataDescription?: string | null;
 	metadataOgImage?: string | null;

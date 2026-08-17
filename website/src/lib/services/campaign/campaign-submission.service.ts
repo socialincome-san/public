@@ -91,8 +91,6 @@ export class CampaignSubmissionService extends BaseService {
 					goal: fields.goal,
 					currency: fields.currency,
 					endDate: fields.endDate,
-					isActive: true,
-					public: fields.public,
 					slug,
 					creatorName: fields.creatorName,
 					program: { connect: { id: fields.programId } },
