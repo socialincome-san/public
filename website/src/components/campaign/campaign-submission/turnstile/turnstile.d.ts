@@ -6,7 +6,7 @@ type TurnstileRenderOptions = {
 	language?: string;
 };
 
-export type TurnstileApi = {
+type TurnstileApi = {
 	remove: (widgetId: string) => void;
 	render: (container: HTMLElement, options: TurnstileRenderOptions) => string;
 };
@@ -16,3 +16,5 @@ declare global {
 		turnstile?: TurnstileApi;
 	}
 }
+
+export {};
