@@ -6,9 +6,9 @@ import { getCountryNameByCode } from '@/lib/types/country';
 import { useMemo, useState } from 'react';
 import { ProgramCountryFilter, type ProgramCountryFilterOption } from '../program-country-filter';
 import { ProgramOptionRow } from '../program-option-row';
-import type { CampaignSubmissionStepProps } from '../types';
+import type { ProgramStepProps } from '../types';
 
-type Props = Pick<CampaignSubmissionStepProps, 'form' | 'labels' | 'programs' | 'programsLoading' | 'programsError'>;
+type Props = ProgramStepProps;
 
 export const ProgramStep = ({ form, labels, programs, programsLoading, programsError }: Props) => {
 	const [selectedCountryId, setSelectedCountryId] = useState<string | null>(null);

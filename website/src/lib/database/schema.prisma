@@ -104,6 +104,16 @@ enum SubscriptionPaymentMethod {
   bank_transfer
 }
 
+enum SubscriptionCancellationReason {
+  financial_situation_changed
+  different_cause
+  not_enough_updates
+  technical_issue
+  prefer_one_time
+  pausing
+  other
+}
+
 enum PayoutInterval {
   monthly
   quarterly
@@ -437,6 +447,7 @@ enum Currency {
   EGP
   ERN
   ETB
+  ETH
   EUR
   FJD
   FKP
@@ -637,6 +648,7 @@ model Subscription {
   stripeSubscriptionId       String?                   @unique @map("stripe_subscription_id")
   bankStandingOrderReference String?                   @unique @map("bank_standing_order_reference")
   canceledAt                 DateTime?                 @map("canceled_at") @db.Timestamptz(3)
+  cancellationReason         SubscriptionCancellationReason? @map("cancellation_reason")
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -966,7 +978,7 @@ model Expense {
 model BankAccount {
   id                String          @id @default(cuid()) @map("id")
   type              BankAccountType @map("type")
-  bankAccountNumber String          @map("bank_account_number")
+  bankAccountNumber String?         @map("bank_account_number")
   description       String?         @map("description")
   reserves          Reserve[]
 
@@ -988,7 +1000,7 @@ model Reserve {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@unique([bankAccountId, date])
+  @@unique([bankAccountId, date, currency])
   @@index([bankAccountId])
   @@map("reserve")
 }

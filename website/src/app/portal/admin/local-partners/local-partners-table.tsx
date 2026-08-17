@@ -1,6 +1,6 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { localPartnersTableConfig } from '@/components/data-table/configs/local-partners-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';

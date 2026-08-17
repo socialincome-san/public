@@ -1,6 +1,7 @@
 import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
 import { BankAccountReadService } from './bank-account/bank-account-read.service';
+import { BankAccountWriteService } from './bank-account/bank-account-write.service';
 import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignSubmissionService } from './campaign/campaign-submission.service';
@@ -21,6 +22,7 @@ import { CountryReadService } from './country/country-read.service';
 import { CountryValidationService } from './country/country-validation.service';
 import { CountryWriteService } from './country/country-write.service';
 import { CurrencyDisplayService } from './currency-display/currency-display.service';
+import { CustodianStablecoinWalletService } from './custodian-stablecoin-wallet/custodian-stablecoin-wallet.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
 import { DonationCertificateWriteService } from './donation-certificate/donation-certificate-write.service';
 import { ExchangeRateImportService } from './exchange-rate/exchange-rate-import.service';
@@ -46,6 +48,7 @@ import { OrganizationAccessService } from './organization-access/organization-ac
 import { OrganizationReadService } from './organization/organization-read.service';
 import { OrganizationValidationService } from './organization/organization-validation.service';
 import { OrganizationWriteService } from './organization/organization-write.service';
+import { PawaPayBalanceService } from './pawapay/pawapay-balance.service';
 import { PaymentFileImportService } from './payment-file-import/payment-file-import.service';
 import { PostFinanceBalanceService } from './payment-file-import/postfinance-balance.service';
 import { OrangeMoneyCsvPayoutProcessService } from './payout-process/orange-money-csv-payout-process.service';
@@ -74,6 +77,7 @@ import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.se
 import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { StoryblokService } from './storyblok/storyblok.service';
 import { StripeService } from './stripe/stripe.service';
+import { SubscriptionReadService } from './subscription/subscription-read.service';
 import { SubscriptionWriteService } from './subscription/subscription-write.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
 import { SurveyImpactService } from './survey/survey-impact.service';
@@ -94,6 +98,7 @@ import { UserWriteService } from './user/user-write.service';
 
 const appReviewMode = new AppReviewModeService(prisma);
 const bankAccountRead = new BankAccountReadService(prisma);
+const bankAccountWrite = new BankAccountWriteService(prisma);
 const reserveRead = new ReserveReadService(prisma);
 const firebaseAdmin = new FirebaseAdminService(prisma);
 const firebaseSession = new FirebaseSessionService(prisma);
@@ -239,6 +244,7 @@ const stripe = new StripeService(
 	campaignRead,
 	programAccessRead,
 );
+const subscriptionRead = new SubscriptionReadService(prisma, contributionRead, stripe);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
@@ -251,7 +257,10 @@ const createReservesCalculation = (bucketName: string) =>
 	new ReservesCalculationService(
 		prisma,
 		bankAccountRead,
+		bankAccountWrite,
 		createPostFinanceBalance(bucketName),
+		new PawaPayBalanceService(prisma),
+		new CustodianStablecoinWalletService(prisma),
 		reserveWrite,
 		currencyDisplay,
 	);
@@ -274,6 +283,7 @@ export const services = {
 		payout: payoutRead,
 		program: programRead,
 		recipient: recipientRead,
+		subscription: subscriptionRead,
 		survey: surveyRead,
 		user: userRead,
 	},

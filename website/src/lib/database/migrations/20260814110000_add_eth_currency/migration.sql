@@ -1,0 +1,1 @@
+ALTER TYPE "Currency" ADD VALUE 'ETH';
