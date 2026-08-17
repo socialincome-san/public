@@ -6,7 +6,7 @@
 	"scripts": {
 		"serve": "npm run openapi:generate && npm run db:generate && next dev -p 3000",
 		"serve:ssl": "npm run openapi:generate && npm run db:generate && next dev --experimental-https -p 3000",
-		"storybook": "storybook dev -p 6006",
+		"storybook": "storybook dev -p 6006 --no-open",
 		"build-storybook": "storybook build",
 		"build-storybook:website": "rm -rf public/storybook storybook-static && storybook build && mkdir -p public/storybook && cp -R storybook-static/. public/storybook",
 		"build": "next build",
