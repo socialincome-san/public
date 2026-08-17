@@ -437,6 +437,7 @@ enum Currency {
   EGP
   ERN
   ETB
+  ETH
   EUR
   FJD
   FKP
@@ -988,7 +989,7 @@ model Reserve {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@unique([bankAccountId, date])
+  @@unique([bankAccountId, date, currency])
   @@index([bankAccountId])
   @@map("reserve")
 }
