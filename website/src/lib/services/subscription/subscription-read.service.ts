@@ -1,9 +1,18 @@
-import { Currency, PrismaClient, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/client';
+import {
+	Currency,
+	Prisma,
+	PrismaClient,
+	ProgramPermission,
+	SubscriptionPaymentMethod,
+	SubscriptionStatus,
+} from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
+import { toSortKey } from '@/lib/utils/to-sort-key';
 import { ContributionReadService } from '../contribution/contribution-read.service';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { StripeService } from '../stripe/stripe.service';
 import { type StripeSubscriptionDetails } from '../stripe/stripe.types';
 import {
@@ -12,9 +21,15 @@ import {
 	UPCOMING_PAYMENTS_PER_SUBSCRIPTION,
 } from './subscription-payment-schedule';
 import {
+	EMPTY_SUBSCRIPTION_FILTER_OPTIONS,
+	SUBSCRIPTION_PAYMENT_METHOD_LABELS,
+	SUBSCRIPTION_STATUS_LABELS,
 	type ActiveSubscriptionView,
 	type MonthlyContributionSummary,
+	type SubscriptionPaginatedTableView,
 	type SubscriptionsDashboardView,
+	type SubscriptionTableQuery,
+	type SubscriptionTableViewRow,
 	type UpcomingPaymentView,
 } from './subscription.types';
 
@@ -58,11 +73,211 @@ const computeMonthlyContributionSummary = (subscriptions: SubscriptionRecord[]):
 export class SubscriptionReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
+		private readonly programAccessService: ProgramAccessReadService,
 		private readonly contributionReadService: ContributionReadService,
 		private readonly stripeService: StripeService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
+	}
+
+	private buildSubscriptionOrderBy(query: SubscriptionTableQuery): Prisma.SubscriptionOrderByWithRelationInput[] {
+		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
+		const sortBy = toSortKey(query.sortBy, [
+			'id',
+			'contributor',
+			'email',
+			'amount',
+			'campaignTitle',
+			'programName',
+			'createdAt',
+			'status',
+			'paymentMethod',
+			'stripeSubscriptionId',
+			'bankStandingOrderReference',
+		] as const);
+		switch (sortBy) {
+			case 'id':
+				return [{ id: direction }];
+			case 'contributor':
+				return [
+					{ contributor: { contact: { firstName: direction } } },
+					{ contributor: { contact: { lastName: direction } } },
+				];
+			case 'email':
+				return [{ contributor: { contact: { email: direction } } }];
+			case 'amount':
+				return [{ amount: direction }];
+			case 'campaignTitle':
+				return [{ campaign: { title: direction } }];
+			case 'programName':
+				return [{ campaign: { program: { name: direction } } }];
+			case 'createdAt':
+				return [{ createdAt: direction }];
+			case 'status':
+				return [{ status: direction }];
+			case 'paymentMethod':
+				return [{ paymentMethod: direction }];
+			case 'stripeSubscriptionId':
+				return [{ stripeSubscriptionId: direction }];
+			case 'bankStandingOrderReference':
+				return [{ bankStandingOrderReference: direction }];
+			default:
+				return [{ createdAt: 'desc' }];
+		}
+	}
+
+	async getPaginatedTableView(
+		userId: string,
+		query: SubscriptionTableQuery,
+	): Promise<ServiceResult<SubscriptionPaginatedTableView>> {
+		try {
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+			const accessiblePrograms = accessibleProgramsResult.data.filter(
+				(program) => program.permission === ProgramPermission.operator,
+			);
+			const accessibleProgramIds = Array.from(new Set(accessiblePrograms.map((program) => program.programId)));
+			if (accessibleProgramIds.length === 0) {
+				return this.resultOk({
+					tableRows: [],
+					totalCount: 0,
+					filterOptions: EMPTY_SUBSCRIPTION_FILTER_OPTIONS,
+				});
+			}
+
+			const search = query.search.trim();
+			const selectedProgramIdRaw = query.programId?.trim();
+			const selectedCampaignIdRaw = query.campaignId?.trim();
+			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
+			const selectedCampaignId = selectedCampaignIdRaw === '' ? undefined : selectedCampaignIdRaw;
+			const statusValues = Object.values(SubscriptionStatus);
+			const selectedStatus = statusValues.find((status) => status === query.subscriptionStatus);
+			const paymentMethodValues = Object.values(SubscriptionPaymentMethod);
+			const selectedPaymentMethod = paymentMethodValues.find((method) => method === query.subscriptionPaymentMethod);
+
+			const campaigns = await this.db.campaign.findMany({
+				where: { programId: { in: accessibleProgramIds } },
+				select: {
+					id: true,
+					title: true,
+					program: { select: { id: true, name: true } },
+				},
+				orderBy: { title: 'asc' },
+			});
+			const campaignIds = campaigns.map((campaign) => campaign.id);
+
+			const filterOptions = {
+				programs: Array.from(
+					new Map(
+						campaigns
+							.filter((campaign) => campaign.program?.id && campaign.program?.name)
+							.map((campaign) => [campaign.program.id, { value: campaign.program.id, label: campaign.program.name }]),
+					).values(),
+				),
+				campaigns: campaigns.map((campaign) => ({ value: campaign.id, label: campaign.title })),
+				statuses: statusValues.map((status) => ({
+					value: status,
+					label: SUBSCRIPTION_STATUS_LABELS[status],
+				})),
+				paymentMethods: paymentMethodValues.map((method) => ({
+					value: method,
+					label: SUBSCRIPTION_PAYMENT_METHOD_LABELS[method],
+				})),
+			};
+
+			const filteredCampaignIds = selectedCampaignId
+				? campaignIds.filter((id) => id === selectedCampaignId)
+				: selectedProgramId
+					? campaigns.filter((campaign) => campaign.program?.id === selectedProgramId).map((campaign) => campaign.id)
+					: campaignIds;
+			if (filteredCampaignIds.length === 0) {
+				return this.resultOk({ tableRows: [], totalCount: 0, filterOptions });
+			}
+
+			const where = {
+				campaignId: { in: filteredCampaignIds },
+				...(selectedStatus ? { status: selectedStatus } : {}),
+				...(selectedPaymentMethod ? { paymentMethod: selectedPaymentMethod } : {}),
+				...(search
+					? {
+							OR: [
+								{ id: { contains: search, mode: 'insensitive' as const } },
+								{ contributor: { contact: { firstName: { contains: search, mode: 'insensitive' as const } } } },
+								{ contributor: { contact: { lastName: { contains: search, mode: 'insensitive' as const } } } },
+								{ contributor: { contact: { email: { contains: search, mode: 'insensitive' as const } } } },
+								{ campaign: { title: { contains: search, mode: 'insensitive' as const } } },
+								{ campaign: { program: { name: { contains: search, mode: 'insensitive' as const } } } },
+								{ stripeSubscriptionId: { contains: search, mode: 'insensitive' as const } },
+								{ bankStandingOrderReference: { contains: search, mode: 'insensitive' as const } },
+							],
+						}
+					: {}),
+			};
+
+			const [subscriptions, totalCount] = await Promise.all([
+				this.db.subscription.findMany({
+					where,
+					select: {
+						id: true,
+						createdAt: true,
+						amount: true,
+						currency: true,
+						status: true,
+						paymentMethod: true,
+						stripeSubscriptionId: true,
+						bankStandingOrderReference: true,
+						campaign: {
+							select: {
+								id: true,
+								title: true,
+								program: { select: { id: true, name: true } },
+							},
+						},
+						contributor: {
+							select: {
+								contact: {
+									select: {
+										firstName: true,
+										lastName: true,
+										email: true,
+									},
+								},
+							},
+						},
+					},
+					orderBy: this.buildSubscriptionOrderBy(query),
+					skip: (query.page - 1) * query.pageSize,
+					take: query.pageSize,
+				}),
+				this.db.subscription.count({ where }),
+			]);
+
+			const tableRows: SubscriptionTableViewRow[] = subscriptions.map((subscription) => ({
+				id: subscription.id,
+				firstName: subscription.contributor?.contact?.firstName ?? '',
+				lastName: subscription.contributor?.contact?.lastName ?? '',
+				email: subscription.contributor?.contact?.email ?? '',
+				amount: Number(subscription.amount),
+				currency: subscription.currency,
+				campaignId: subscription.campaign?.id ?? '',
+				campaignTitle: subscription.campaign?.title ?? '',
+				programName: subscription.campaign?.program?.name ?? null,
+				status: subscription.status,
+				paymentMethod: subscription.paymentMethod,
+				stripeSubscriptionId: subscription.stripeSubscriptionId,
+				bankStandingOrderReference: subscription.bankStandingOrderReference,
+				createdAt: subscription.createdAt,
+			}));
+
+			return this.resultOk({ tableRows, totalCount, filterOptions });
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch subscriptions: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async getDashboardView(contributorId: string): Promise<ServiceResult<SubscriptionsDashboardView>> {
