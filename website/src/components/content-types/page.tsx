@@ -99,6 +99,8 @@ const renderPageBlock = (
 			return <TwoColumnTextBlock blok={block} />;
 		case 'videoText':
 			return <VideoTextBlock blok={block} />;
+		case 'runwayMonthGrid':
+			return <>blabla</>;
 		default:
 			block satisfies never;
 

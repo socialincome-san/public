@@ -400,6 +400,7 @@ export interface Page {
     | NewsletterForm
     | Lottie
     | PersonGrid
+    | RunwayMonthGrid
   )[];
   component: "page";
   _uid: string;
@@ -539,6 +540,17 @@ export interface RichtextButtonHeader {
   disableMarginTop?: boolean;
   component: "richtextButtonHeader";
   _uid: string;
+  [k: string]: unknown;
+}
+
+export interface RunwayMonthGrid {
+  title?: string;
+  description?: string;
+  amountOfMonths: string;
+  footer?: string;
+  component: "runwayMonthGrid";
+  _uid: string;
+  _editable?: string | undefined;
   [k: string]: unknown;
 }
 
