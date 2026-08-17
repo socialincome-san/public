@@ -30,6 +30,7 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 	const translator = useTranslator(lang, 'website-me');
 	const [isUpdatingCard, startUpdateCardTransition] = useTransition();
 	const [updateCardError, setUpdateCardError] = useState(false);
+	const [isConfirmingCardLeave, setIsConfirmingCardLeave] = useState(false);
 	const t = (key: string) => translator?.t(key) ?? '';
 	const isBankTransfer = state.context.paymentMethod === 'bank_transfer';
 	const isCanceledSuccess = state.matches('canceledSuccess');
@@ -39,10 +40,17 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 			? (state.context.subscriptionId ?? undefined)
 			: undefined;
 
-	const handleUpdateCard = () => {
+	const startCardUpdate = () => {
+		const subscriptionId = state.context.subscriptionId;
+		if (!subscriptionId) {
+			setUpdateCardError(true);
+
+			return;
+		}
+
 		setUpdateCardError(false);
 		startUpdateCardTransition(async () => {
-			const result = await createUpdatePaymentMethodSessionAction();
+			const result = await createUpdatePaymentMethodSessionAction(subscriptionId);
 			if (!result.success || !result.data) {
 				setUpdateCardError(true);
 
@@ -51,6 +59,16 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 
 			window.location.assign(result.data);
 		});
+	};
+
+	const handleUpdateCard = () => {
+		if (state.context.amount !== state.context.initialAmount) {
+			setIsConfirmingCardLeave(true);
+
+			return;
+		}
+
+		startCardUpdate();
 	};
 
 	const showAmountError = Boolean(state.context.error) && state.matches('editing');
@@ -104,6 +122,7 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 						return;
 					}
 					setUpdateCardError(false);
+					setIsConfirmingCardLeave(false);
 					send({ type: 'CLOSE' });
 				}
 			}}
@@ -194,11 +213,25 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 							updatingSubscription: t('subscriptions.edit-dialog.updating-subscription'),
 							cardFallback: t('subscriptions.card-fallback'),
 						}}
-						onAmountChange={(value) => send({ type: 'SET_AMOUNT', value })}
+						onAmountChange={(value) => {
+							setIsConfirmingCardLeave(false);
+							send({ type: 'SET_AMOUNT', value });
+						}}
 						onCancel={() => send({ type: 'CLOSE' })}
 						onStartCancel={() => send({ type: 'START_CANCEL' })}
 						onSubmit={() => send({ type: 'SUBMIT' })}
 						onUpdateCard={isBankTransfer ? undefined : handleUpdateCard}
+						cardUpdateConfirm={
+							isConfirmingCardLeave
+								? {
+										message: t('subscriptions.edit-dialog.update-card-unsaved-warning'),
+										stayLabel: t('subscriptions.edit-dialog.update-card-stay'),
+										leaveLabel: t('subscriptions.edit-dialog.update-card-leave'),
+										onStay: () => setIsConfirmingCardLeave(false),
+										onLeave: startCardUpdate,
+									}
+								: undefined
+						}
 					/>
 				)}
 			</DialogContent>

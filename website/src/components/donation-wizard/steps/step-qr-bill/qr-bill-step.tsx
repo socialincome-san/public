@@ -86,7 +86,7 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 				{canDownloadPdf && qrDonor && (
 					<div className="flex min-w-0 flex-1 items-start justify-end">
 						<QrBillPdfDownloadLink
-							amount={displayAmount}
+							wizardContext={state.context}
 							currency={currency}
 							contributorReferenceId={qrContributorReferenceId}
 							contributionReferenceId={qrContributionReferenceId}

@@ -39,6 +39,13 @@ type Props = {
 	onStartCancel?: () => void;
 	onSubmit: () => void;
 	onUpdateCard?: () => void;
+	cardUpdateConfirm?: {
+		message: string;
+		stayLabel: string;
+		leaveLabel: string;
+		onStay: () => void;
+		onLeave: () => void;
+	};
 };
 
 export const EditSubscriptionStep = ({
@@ -56,6 +63,7 @@ export const EditSubscriptionStep = ({
 	onStartCancel,
 	onSubmit,
 	onUpdateCard,
+	cardUpdateConfirm,
 }: Props) => {
 	const cardLabel = brand && last4 ? `${brand} •••• ${last4}` : labels.cardFallback;
 	const canSubmit = canUpdateSubscriptionAmount(amount, initialAmount) && !isSubmitting && !isUpdatingCard;
@@ -114,21 +122,51 @@ export const EditSubscriptionStep = ({
 			</div>
 
 			{onUpdateCard && (
-				<div className="bg-muted flex items-center justify-between gap-4 rounded-xl px-4 py-3">
-					<span className="text-muted-foreground flex items-center gap-2 text-sm">
-						<CreditCard className="size-4 shrink-0" aria-hidden />
-						{cardLabel}
-					</span>
-					<Button
-						type="button"
-						variant="outline"
-						size="sm"
-						className="bg-background"
-						disabled={isSubmitting || isUpdatingCard}
-						onClick={onUpdateCard}
-					>
-						{labels.updateCard}
-					</Button>
+				<div className="flex flex-col gap-3">
+					<div className="bg-muted flex items-center justify-between gap-4 rounded-xl px-4 py-3">
+						<span className="text-muted-foreground flex items-center gap-2 text-sm">
+							<CreditCard className="size-4 shrink-0" aria-hidden />
+							{cardLabel}
+						</span>
+						{!cardUpdateConfirm && (
+							<Button
+								type="button"
+								variant="outline"
+								size="sm"
+								className="bg-background"
+								disabled={isSubmitting || isUpdatingCard}
+								onClick={onUpdateCard}
+							>
+								{labels.updateCard}
+							</Button>
+						)}
+					</div>
+					{cardUpdateConfirm && (
+						<div className="flex flex-col gap-3">
+							<p className="text-muted-foreground text-sm" role="status">
+								{cardUpdateConfirm.message}
+							</p>
+							<div className="flex flex-wrap gap-2">
+								<Button
+									type="button"
+									variant="outline"
+									size="sm"
+									disabled={isSubmitting || isUpdatingCard}
+									onClick={cardUpdateConfirm.onStay}
+								>
+									{cardUpdateConfirm.stayLabel}
+								</Button>
+								<Button
+									type="button"
+									size="sm"
+									disabled={isSubmitting || isUpdatingCard}
+									onClick={cardUpdateConfirm.onLeave}
+								>
+									{cardUpdateConfirm.leaveLabel}
+								</Button>
+							</div>
+						</div>
+					)}
 				</div>
 			)}
 

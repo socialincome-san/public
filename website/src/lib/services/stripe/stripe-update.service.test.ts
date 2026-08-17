@@ -126,6 +126,11 @@ describe('StripeService.updateContributorSubscriptionAmount', () => {
 			items: [{ id: 'si_1', price: 'price_new' }],
 			proration_behavior: 'none',
 		});
+		expect(upsertFromStripeSubscription).toHaveBeenCalledWith({
+			stripeSubscription: { id: 'sub_stripe_1' },
+			contributorId: 'contributor_1',
+			campaignId: 'campaign_1',
+		});
 	});
 
 	test('rejects non-monthly intervals before writing to Stripe', async () => {
@@ -182,5 +187,49 @@ describe('StripeService.updateContributorSubscriptionAmount', () => {
 		expect(result.success).toBe(false);
 		expect(loggerInstance.alert).toHaveBeenCalled();
 		expect(subscriptionsUpdate).toHaveBeenCalled();
+	});
+
+	test('syncs Prisma when Stripe already has the requested amount', async () => {
+		subscriptionsRetrieve.mockResolvedValueOnce({
+			id: 'sub_stripe_1',
+			items: { data: [{ id: 'si_1', price: { ...monthlyPrice, unit_amount: 5000 } }] },
+		});
+
+		const result = await createService().updateContributorSubscriptionAmount({
+			contributorId: 'contributor_1',
+			subscriptionId: 'sub_db_1',
+			amount: 50,
+		});
+
+		expect(result).toEqual({ success: true, data: { amount: 50, currency: 'CHF' } });
+		expect(pricesCreate).not.toHaveBeenCalled();
+		expect(subscriptionsUpdate).not.toHaveBeenCalled();
+		expect(upsertFromStripeSubscription).toHaveBeenCalledWith({
+			stripeSubscription: {
+				id: 'sub_stripe_1',
+				items: { data: [{ id: 'si_1', price: { ...monthlyPrice, unit_amount: 5000 } }] },
+			},
+			contributorId: 'contributor_1',
+			campaignId: 'campaign_1',
+		});
+	});
+
+	test('fails retry when Stripe already matches but database sync fails', async () => {
+		subscriptionsRetrieve.mockResolvedValueOnce({
+			id: 'sub_stripe_1',
+			items: { data: [{ id: 'si_1', price: { ...monthlyPrice, unit_amount: 5000 } }] },
+		});
+		upsertFromStripeSubscription.mockResolvedValueOnce({ success: false, error: 'sync failed' });
+
+		const result = await createService().updateContributorSubscriptionAmount({
+			contributorId: 'contributor_1',
+			subscriptionId: 'sub_db_1',
+			amount: 50,
+		});
+
+		expect(result.success).toBe(false);
+		expect(loggerInstance.alert).toHaveBeenCalled();
+		expect(pricesCreate).not.toHaveBeenCalled();
+		expect(subscriptionsUpdate).not.toHaveBeenCalled();
 	});
 });

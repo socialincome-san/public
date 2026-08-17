@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils/cn';
 import { Download } from 'lucide-react';
 import { forwardRef, useState, type ReactNode } from 'react';
 import toast from 'react-hot-toast';
+import { type DonationAmountContext } from '../../utils/donation-amount';
 
 type QrBillPdfDownloadAppearance = {
 	disabled?: boolean;
@@ -16,11 +17,11 @@ type QrBillPdfDownloadAppearance = {
 
 type WizardQrBillPdfDownloadLinkProps = QrBillPdfDownloadAppearance & {
 	variant?: 'wizard';
-	amount: number;
-	currency: string;
+	wizardContext: DonationAmountContext;
 	contributorReferenceId: string;
 	contributionReferenceId: string;
 	email: string;
+	currency: string;
 };
 
 type SubscriptionQrBillPdfDownloadLinkProps = QrBillPdfDownloadAppearance & {
@@ -56,11 +57,11 @@ export const QrBillPdfDownloadLink = forwardRef<HTMLButtonElement, QrBillPdfDown
 				props.variant === 'subscription'
 					? await downloadSubscriptionQrBillPdfAction(props.subscriptionId)
 					: await downloadQrBillPdfAction({
-							amount: props.amount,
-							currency: props.currency,
+							wizardContext: props.wizardContext,
 							contributorReferenceId: props.contributorReferenceId,
 							contributionReferenceId: props.contributionReferenceId,
 							expectedEmail: props.email,
+							currency: props.currency,
 						});
 
 			if (!result.success) {

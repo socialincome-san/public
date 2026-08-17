@@ -24,6 +24,8 @@ const resolveOwnedSubscriptionPaymentMethod = async (subscriptionId: string) => 
 		success: true as const,
 		data: {
 			contributorId: sessionResult.data.id,
+			stripeCustomerId: sessionResult.data.stripeCustomerId,
+			language: sessionResult.data.language,
 			paymentMethod: paymentMethodResult.data,
 		},
 	};
@@ -51,17 +53,23 @@ export const updateSubscriptionAmountAction = async (subscriptionId: string, amo
 	});
 };
 
-export const createUpdatePaymentMethodSessionAction = async () => {
-	const sessionResult = await getSessionByType('contributor');
-	if (!sessionResult.success) {
-		return sessionResult;
+export const createUpdatePaymentMethodSessionAction = async (subscriptionId: string) => {
+	const ownership = await resolveOwnedSubscriptionPaymentMethod(subscriptionId);
+	if (!ownership.success) {
+		return ownership;
 	}
 
-	return services.stripe.createManageSubscriptionsSession(
-		sessionResult.data.stripeCustomerId,
-		sessionResult.data.language,
-		'payment_method_update',
-	);
+	const { stripeCustomerId, language, paymentMethod } = ownership.data;
+	if (paymentMethod !== SubscriptionPaymentMethod.stripe) {
+		return { success: false as const, error: 'Subscription does not use Stripe' };
+	}
+
+	return services.stripe.createManageSubscriptionsSession({
+		stripeCustomerId,
+		language,
+		flow: 'payment_method_update',
+		subscriptionId,
+	});
 };
 
 export const cancelSubscriptionAction = async (subscriptionId: string, reason: SubscriptionCancellationReason) => {

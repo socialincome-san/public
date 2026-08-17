@@ -154,19 +154,21 @@ export class QrBillService extends BaseService {
 			return donorCheck;
 		}
 
-		if (input.currency !== 'CHF' && input.currency !== 'EUR') {
+		const paymentResult = resolveWizardQrPayment(input.wizardContext, input.currency);
+		if (!paymentResult.success) {
+			return paymentResult;
+		}
+
+		const { amount, currency } = paymentResult.data;
+		if (currency !== 'CHF' && currency !== 'EUR') {
 			return this.resultFail('QR bill PDF is only available for CHF and EUR');
 		}
 
-		if (!Number.isFinite(input.amount) || input.amount <= 0) {
-			return this.resultFail('Invalid QR bill amount');
-		}
-
 		return this.generateQrBillPdfResult({
-			amount: input.amount,
+			amount,
 			contributorReferenceId: input.contributorReferenceId,
 			contributionReferenceId: input.contributionReferenceId,
-			currency: input.currency,
+			currency,
 		});
 	}
 

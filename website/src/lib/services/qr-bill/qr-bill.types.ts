@@ -67,11 +67,11 @@ export type CreateWizardPendingContributionInput = {
 };
 
 export type DownloadQrBillPdfInput = {
-	amount: number;
-	currency: string;
+	wizardContext: DonationAmountContext;
 	contributorReferenceId: string;
 	contributionReferenceId: string;
 	expectedEmail: string;
+	currency?: string;
 };
 
 export type DownloadSubscriptionQrBillPdfInput = {

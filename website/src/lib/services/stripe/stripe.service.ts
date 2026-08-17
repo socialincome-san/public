@@ -4,13 +4,13 @@
  * 2. Login to Stripe: `stripe login`
  * 3. Forward webhooks to local endpoint (include subscription lifecycle events):
  *    `stripe listen --forward-to localhost:3000/api/v1/stripe/webhook \
- *      --events charge.succeeded,charge.updated,charge.failed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted`
+ *      --events charge.succeeded,charge.updated,charge.failed,customer.updated,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted`
  * 4. Copy the webhook signing secret from CLI output and set in your env.local:
  *    STRIPE_WEBHOOK_SECRET=whsec_xxx...
  * 5. Make a test contribution - webhooks will be forwarded to your local server.
  *
  * Production Stripe webhook endpoint must also allow:
- * charge.succeeded, charge.updated, charge.failed,
+ * charge.succeeded, charge.updated, charge.failed, customer.updated,
  * customer.subscription.created, customer.subscription.updated, customer.subscription.deleted
  */
 
@@ -59,7 +59,10 @@ import {
 } from '../subscription/subscription.mappers';
 import { assertContributorEmailMatchesCheckout, assertEmbeddedCheckoutSessionPaid } from './checkout-session-guards';
 import {
+	APPLY_PAYMENT_METHOD_QUERY_PARAM,
+	type ApplyCustomerDefaultPaymentMethodInput,
 	type CheckoutMetadata,
+	type CreateManageSubscriptionsSessionInput,
 	type PortalProgramDonationCheckoutInput,
 	type StripeBillingPortalSessionUrl,
 	type StripeCheckoutCustomerPrefill,
@@ -527,20 +530,22 @@ export class StripeService extends BaseService {
 	}
 
 	async createManageSubscriptionsSession(
-		stripeCustomerId: string | null,
-		language: string | null,
-		flow?: 'payment_method_update',
+		input: CreateManageSubscriptionsSessionInput,
 	): Promise<ServiceResult<StripeBillingPortalSessionUrl>> {
 		try {
+			const { stripeCustomerId, language, flow, subscriptionId } = input;
 			if (!stripeCustomerId) {
 				return this.resultFail('Missing Stripe customer ID');
 			}
 
+			const baseUrl = (process.env.BASE_URL ?? '').replace(TRAILING_SLASHES_REGEX, '');
+			const returnUrl = `${baseUrl}/dashboard/subscriptions?${APPLY_PAYMENT_METHOD_QUERY_PARAM}=${encodeURIComponent(subscriptionId)}`;
+
 			const session = await this.getStripeClient().billingPortal.sessions.create({
 				customer: stripeCustomerId,
-				return_url: `${process.env.BASE_URL}/dashboard/subscriptions`,
+				return_url: returnUrl,
 				locale: (language as Stripe.BillingPortal.SessionCreateParams.Locale) ?? 'auto',
-				...(flow ? { flow_data: { type: flow } } : {}),
+				flow_data: { type: flow },
 			});
 
 			if (!session.url) {
@@ -552,6 +557,36 @@ export class StripeService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail('Could not create billing portal session');
+		}
+	}
+
+	async applyCustomerDefaultPaymentMethodToOwnedSubscription(
+		input: ApplyCustomerDefaultPaymentMethodInput,
+	): Promise<ServiceResult<void>> {
+		try {
+			const { contributorId, stripeCustomerId, subscriptionId } = input;
+			if (!stripeCustomerId) {
+				return this.resultFail('Missing Stripe customer ID');
+			}
+
+			const subscription = await this.db.subscription.findFirst({
+				where: this.ownedActiveStripeSubscriptionWhere(contributorId, subscriptionId),
+				select: { id: true },
+			});
+			if (!subscription) {
+				return this.resultFail('Subscription not found');
+			}
+
+			const customer = await this.getStripeClient().customers.retrieve(stripeCustomerId);
+			if (customer.deleted) {
+				return this.resultFail('Stripe customer is deleted');
+			}
+
+			return this.copyCustomerDefaultPaymentMethodToSubscriptions(customer);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not apply default payment method to subscription');
 		}
 	}
 
@@ -606,42 +641,33 @@ export class StripeService extends BaseService {
 			}
 
 			const unitAmount = amount * 100;
-			if (existingPrice.unit_amount === unitAmount) {
-				return this.resultOk({ amount, currency: subscription.currency });
+			let stripeSubscriptionToSync = stripeSubscription;
+			if (existingPrice.unit_amount !== unitAmount) {
+				const price = await stripe.prices.create({
+					currency: stripeCurrency,
+					product: productId,
+					unit_amount: unitAmount,
+					recurring: {
+						interval: 'month',
+						interval_count: 1,
+					},
+				});
+
+				stripeSubscriptionToSync = await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+					items: [{ id: item.id, price: price.id }],
+					proration_behavior: 'none',
+				});
 			}
 
-			const price = await stripe.prices.create({
-				currency: stripeCurrency,
-				product: productId,
-				unit_amount: unitAmount,
-				recurring: {
-					interval: 'month',
-					interval_count: 1,
-				},
-			});
-
-			const updatedSubscription = await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
-				items: [{ id: item.id, price: price.id }],
-				proration_behavior: 'none',
-			});
-
-			const upsertResult = await this.subscriptionWriteService.upsertFromStripeSubscription({
-				stripeSubscription: updatedSubscription,
+			const upsertResult = await this.syncStripeSubscriptionAmount({
+				stripeSubscription: stripeSubscriptionToSync,
 				contributorId,
 				campaignId: subscription.campaignId,
+				subscriptionId,
+				stripeSubscriptionId: subscription.stripeSubscriptionId,
 			});
-			if (!upsertResult.success || !upsertResult.data) {
-				this.logger.alert(
-					'Stripe subscription amount updated but database sync failed',
-					{
-						subscriptionId,
-						stripeSubscriptionId: subscription.stripeSubscriptionId,
-						error: upsertResult.success ? 'Could not sync updated subscription' : upsertResult.error,
-					},
-					{ component: 'stripe-subscription-amount' },
-				);
-
-				return this.resultFail('Could not sync updated subscription');
+			if (!upsertResult.success) {
+				return this.resultFail(upsertResult.error);
 			}
 
 			return this.resultOk({ amount, currency: subscription.currency });
@@ -753,6 +779,26 @@ export class StripeService extends BaseService {
 
 					return this.resultOk(result.data);
 				}
+				case 'customer.updated': {
+					const customer = event.data.object;
+					const previousInvoiceSettings = event.data.previous_attributes?.invoice_settings;
+					if (!previousInvoiceSettings || !('default_payment_method' in previousInvoiceSettings)) {
+						return this.resultOk({ skipReason: 'Customer default payment method unchanged' });
+					}
+					if (customer.deleted) {
+						return this.resultOk({ skipReason: 'Stripe customer is deleted' });
+					}
+
+					this.logger.info('Processing customer default payment method update', { customerId: customer.id });
+					const result = await this.copyCustomerDefaultPaymentMethodToSubscriptions(customer);
+					if (!result.success) {
+						this.logger.error(result.error);
+
+						return this.resultFail(result.error);
+					}
+
+					return this.resultOk({});
+				}
 				case 'customer.subscription.created':
 				case 'customer.subscription.updated':
 				case 'customer.subscription.deleted': {
@@ -788,6 +834,67 @@ export class StripeService extends BaseService {
 			paymentMethod: SubscriptionPaymentMethod.stripe,
 			status: SubscriptionStatus.active,
 		};
+	}
+
+	private async syncStripeSubscriptionAmount(input: {
+		stripeSubscription: Stripe.Subscription;
+		contributorId: string;
+		campaignId: string;
+		subscriptionId: string;
+		stripeSubscriptionId: string;
+	}): Promise<ServiceResult<void>> {
+		const upsertResult = await this.subscriptionWriteService.upsertFromStripeSubscription({
+			stripeSubscription: input.stripeSubscription,
+			contributorId: input.contributorId,
+			campaignId: input.campaignId,
+		});
+		if (!upsertResult.success || !upsertResult.data) {
+			this.logger.alert(
+				'Stripe subscription amount updated but database sync failed',
+				{
+					subscriptionId: input.subscriptionId,
+					stripeSubscriptionId: input.stripeSubscriptionId,
+					error: upsertResult.success ? 'Could not sync updated subscription' : upsertResult.error,
+				},
+				{ component: 'stripe-subscription-amount' },
+			);
+
+			return this.resultFail('Could not sync updated subscription');
+		}
+
+		return this.resultOk(undefined);
+	}
+
+	private async copyCustomerDefaultPaymentMethodToSubscriptions(customer: Stripe.Customer): Promise<ServiceResult<void>> {
+		try {
+			const defaultPaymentMethodId = resolveStripeResourceId(customer.invoice_settings.default_payment_method);
+			if (!defaultPaymentMethodId) {
+				return this.resultOk(undefined);
+			}
+
+			const stripe = this.getStripeClient();
+			const subscriptions = await stripe.subscriptions.list({
+				customer: customer.id,
+				limit: 100,
+			});
+
+			for (const subscription of subscriptions.data) {
+				const currentPaymentMethodId = resolveStripeResourceId(subscription.default_payment_method);
+				if (currentPaymentMethodId === defaultPaymentMethodId) {
+					continue;
+				}
+
+				await stripe.subscriptions.update(subscription.id, {
+					default_payment_method: defaultPaymentMethodId,
+				});
+			}
+
+			return this.resultOk(undefined);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not copy default payment method to subscriptions');
+		}
 	}
 
 	private async voidOpenSubscriptionInvoices(stripe: Stripe, stripeSubscriptionId: string) {
