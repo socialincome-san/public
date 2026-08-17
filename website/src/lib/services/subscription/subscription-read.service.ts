@@ -21,9 +21,6 @@ import {
 	UPCOMING_PAYMENTS_PER_SUBSCRIPTION,
 } from './subscription-payment-schedule';
 import {
-	EMPTY_SUBSCRIPTION_FILTER_OPTIONS,
-	SUBSCRIPTION_PAYMENT_METHOD_LABELS,
-	SUBSCRIPTION_STATUS_LABELS,
 	type ActiveSubscriptionView,
 	type MonthlyContributionSummary,
 	type SubscriptionPaginatedTableView,
@@ -84,21 +81,17 @@ export class SubscriptionReadService extends BaseService {
 	private buildSubscriptionOrderBy(query: SubscriptionTableQuery): Prisma.SubscriptionOrderByWithRelationInput[] {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
 		const sortBy = toSortKey(query.sortBy, [
-			'id',
 			'contributor',
 			'email',
 			'amount',
-			'campaignTitle',
-			'programName',
 			'createdAt',
 			'status',
+			'cancellationReason',
 			'paymentMethod',
 			'stripeSubscriptionId',
 			'bankStandingOrderReference',
 		] as const);
 		switch (sortBy) {
-			case 'id':
-				return [{ id: direction }];
 			case 'contributor':
 				return [
 					{ contributor: { contact: { firstName: direction } } },
@@ -108,14 +101,12 @@ export class SubscriptionReadService extends BaseService {
 				return [{ contributor: { contact: { email: direction } } }];
 			case 'amount':
 				return [{ amount: direction }];
-			case 'campaignTitle':
-				return [{ campaign: { title: direction } }];
-			case 'programName':
-				return [{ campaign: { program: { name: direction } } }];
 			case 'createdAt':
 				return [{ createdAt: direction }];
 			case 'status':
 				return [{ status: direction }];
+			case 'cancellationReason':
+				return [{ cancellationReason: direction }];
 			case 'paymentMethod':
 				return [{ paymentMethod: direction }];
 			case 'stripeSubscriptionId':
@@ -136,69 +127,25 @@ export class SubscriptionReadService extends BaseService {
 			if (!accessibleProgramsResult.success) {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
-			const accessiblePrograms = accessibleProgramsResult.data.filter(
-				(program) => program.permission === ProgramPermission.operator,
+			const accessibleProgramIds = Array.from(
+				new Set(
+					accessibleProgramsResult.data
+						.filter((program) => program.permission === ProgramPermission.operator)
+						.map((program) => program.programId),
+				),
 			);
-			const accessibleProgramIds = Array.from(new Set(accessiblePrograms.map((program) => program.programId)));
 			if (accessibleProgramIds.length === 0) {
-				return this.resultOk({
-					tableRows: [],
-					totalCount: 0,
-					filterOptions: EMPTY_SUBSCRIPTION_FILTER_OPTIONS,
-				});
+				return this.resultOk({ tableRows: [], totalCount: 0 });
 			}
 
 			const search = query.search.trim();
-			const selectedProgramIdRaw = query.programId?.trim();
-			const selectedCampaignIdRaw = query.campaignId?.trim();
-			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
-			const selectedCampaignId = selectedCampaignIdRaw === '' ? undefined : selectedCampaignIdRaw;
 			const statusValues = Object.values(SubscriptionStatus);
 			const selectedStatus = statusValues.find((status) => status === query.subscriptionStatus);
 			const paymentMethodValues = Object.values(SubscriptionPaymentMethod);
 			const selectedPaymentMethod = paymentMethodValues.find((method) => method === query.subscriptionPaymentMethod);
 
-			const campaigns = await this.db.campaign.findMany({
-				where: { programId: { in: accessibleProgramIds } },
-				select: {
-					id: true,
-					title: true,
-					program: { select: { id: true, name: true } },
-				},
-				orderBy: { title: 'asc' },
-			});
-			const campaignIds = campaigns.map((campaign) => campaign.id);
-
-			const filterOptions = {
-				programs: Array.from(
-					new Map(
-						campaigns
-							.filter((campaign) => campaign.program?.id && campaign.program?.name)
-							.map((campaign) => [campaign.program.id, { value: campaign.program.id, label: campaign.program.name }]),
-					).values(),
-				),
-				campaigns: campaigns.map((campaign) => ({ value: campaign.id, label: campaign.title })),
-				statuses: statusValues.map((status) => ({
-					value: status,
-					label: SUBSCRIPTION_STATUS_LABELS[status],
-				})),
-				paymentMethods: paymentMethodValues.map((method) => ({
-					value: method,
-					label: SUBSCRIPTION_PAYMENT_METHOD_LABELS[method],
-				})),
-			};
-
-			const filteredCampaignIds = selectedCampaignId
-				? campaignIds.filter((id) => id === selectedCampaignId)
-				: selectedProgramId
-					? campaigns.filter((campaign) => campaign.program?.id === selectedProgramId).map((campaign) => campaign.id)
-					: campaignIds;
-			if (filteredCampaignIds.length === 0) {
-				return this.resultOk({ tableRows: [], totalCount: 0, filterOptions });
-			}
-
-			const where = {
-				campaignId: { in: filteredCampaignIds },
+			const where: Prisma.SubscriptionWhereInput = {
+				campaign: { programId: { in: accessibleProgramIds } },
 				...(selectedStatus ? { status: selectedStatus } : {}),
 				...(selectedPaymentMethod ? { paymentMethod: selectedPaymentMethod } : {}),
 				...(search
@@ -208,8 +155,6 @@ export class SubscriptionReadService extends BaseService {
 								{ contributor: { contact: { firstName: { contains: search, mode: 'insensitive' as const } } } },
 								{ contributor: { contact: { lastName: { contains: search, mode: 'insensitive' as const } } } },
 								{ contributor: { contact: { email: { contains: search, mode: 'insensitive' as const } } } },
-								{ campaign: { title: { contains: search, mode: 'insensitive' as const } } },
-								{ campaign: { program: { name: { contains: search, mode: 'insensitive' as const } } } },
 								{ stripeSubscriptionId: { contains: search, mode: 'insensitive' as const } },
 								{ bankStandingOrderReference: { contains: search, mode: 'insensitive' as const } },
 							],
@@ -226,16 +171,10 @@ export class SubscriptionReadService extends BaseService {
 						amount: true,
 						currency: true,
 						status: true,
+						cancellationReason: true,
 						paymentMethod: true,
 						stripeSubscriptionId: true,
 						bankStandingOrderReference: true,
-						campaign: {
-							select: {
-								id: true,
-								title: true,
-								program: { select: { id: true, name: true } },
-							},
-						},
 						contributor: {
 							select: {
 								contact: {
@@ -262,17 +201,15 @@ export class SubscriptionReadService extends BaseService {
 				email: subscription.contributor?.contact?.email ?? '',
 				amount: Number(subscription.amount),
 				currency: subscription.currency,
-				campaignId: subscription.campaign?.id ?? '',
-				campaignTitle: subscription.campaign?.title ?? '',
-				programName: subscription.campaign?.program?.name ?? null,
 				status: subscription.status,
+				cancellationReason: subscription.cancellationReason,
 				paymentMethod: subscription.paymentMethod,
 				stripeSubscriptionId: subscription.stripeSubscriptionId,
 				bankStandingOrderReference: subscription.bankStandingOrderReference,
 				createdAt: subscription.createdAt,
 			}));
 
-			return this.resultOk({ tableRows, totalCount, filterOptions });
+			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
 

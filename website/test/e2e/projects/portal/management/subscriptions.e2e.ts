@@ -1,4 +1,3 @@
-import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 
@@ -7,52 +6,16 @@ test.beforeEach(async () => {
 });
 
 test('shows operator subscription rows under management', async ({ page }) => {
-	const existing = await prisma.subscription.findUnique({
-		where: { id: 'subscription-core-high-stripe' },
-		select: {
-			stripeSubscriptionId: true,
-			contributor: {
-				select: {
-					contact: { select: { email: true } },
-				},
-			},
-			campaign: {
-				select: { title: true },
-			},
-		},
-	});
-	expect(existing?.contributor.contact?.email).toBeTruthy();
-	expect(existing?.campaign.title).toBeTruthy();
-
-	await page.goto(
-		`/portal/management/subscriptions?page=1&pageSize=10&search=${encodeURIComponent(existing!.contributor.contact.email!)}`,
-	);
+	await page.goto('/portal/management/subscriptions?page=1&pageSize=10&search=coreh%40dashboard.test');
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await expect(page.getByText(existing!.campaign.title, { exact: true })).toBeVisible();
-	await expect(page.getByText(existing!.stripeSubscriptionId!, { exact: true })).toBeVisible();
+	await expect(page.getByText('coreh@dashboard.test')).toBeVisible();
+	await expect(page.getByText('sub_core_high_monthly', { exact: true })).toBeVisible();
 });
 
 test('does not show owner-only subscription rows under management', async ({ page }) => {
-	const ownerOnly = await prisma.subscription.findUnique({
-		where: { id: 'subscription-lr-high-stripe' },
-		select: {
-			contributor: {
-				select: {
-					contact: { select: { email: true } },
-				},
-			},
-			campaign: {
-				select: { title: true },
-			},
-		},
-	});
-	expect(ownerOnly?.contributor.contact?.email).toBeTruthy();
-	expect(ownerOnly?.campaign.title).toBeTruthy();
-
-	await page.goto(
-		`/portal/management/subscriptions?page=1&pageSize=10&search=${encodeURIComponent(ownerOnly!.contributor.contact.email!)}`,
-	);
-	await expect(page.getByText(ownerOnly!.campaign.title, { exact: true })).toBeHidden();
+	await page.goto('/portal/management/subscriptions?page=1&pageSize=10&search=lrh%40dashboard.test');
+	await expect(page.getByTestId('data-table')).toBeVisible();
+	await expect(page.getByText('sub_lr_high_yearly', { exact: true })).toBeHidden();
 });
 
 test('subscription search sets the URL and shows matching rows', async ({ page }) => {

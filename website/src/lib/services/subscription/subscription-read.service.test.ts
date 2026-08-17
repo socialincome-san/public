@@ -16,7 +16,6 @@ jest.mock('@/generated/prisma/client', () => ({
 	},
 	SubscriptionStatus: {
 		active: 'active',
-		canceled: 'canceled',
 		ended: 'ended',
 	},
 }));
@@ -244,44 +243,28 @@ const defaultTableQuery: SubscriptionTableQuery = { page: 1, pageSize: 10, searc
 const createPortalService = ({
 	accessiblePrograms = [{ programId: 'program-1', programName: 'Core', permission: 'operator' as const }],
 	accessError,
-	campaigns = [
-		{
-			id: 'campaign-1',
-			title: 'Core Campaign',
-			programId: 'program-1',
-			program: { id: 'program-1', name: 'Core' },
-		},
-	],
 	subscriptions = [],
 	totalCount,
 }: {
 	accessiblePrograms?: { programId: string; programName: string; permission: 'operator' | 'owner' }[];
 	accessError?: string;
-	campaigns?: {
-		id: string;
-		title: string;
-		programId: string;
-		program: { id: string; name: string };
-	}[];
 	subscriptions?: {
 		id: string;
 		createdAt: Date;
 		amount: unknown;
 		currency: 'CHF' | 'EUR' | 'USD';
-		status: 'active' | 'canceled' | 'ended';
+		status: 'active' | 'ended';
+		cancellationReason: 'financial_situation_changed' | 'prefer_one_time' | null;
 		paymentMethod: 'stripe' | 'bank_transfer';
 		stripeSubscriptionId: string | null;
 		bankStandingOrderReference: string | null;
-		campaign: { id: string; title: string; program: { id: string; name: string } };
 		contributor: { contact: { firstName: string; lastName: string; email: string } };
 	}[];
 	totalCount?: number;
 } = {}) => {
-	const campaignFindMany = jest.fn().mockResolvedValue(campaigns);
 	const subscriptionFindMany = jest.fn().mockResolvedValue(subscriptions);
 	const subscriptionCount = jest.fn().mockResolvedValue(totalCount ?? subscriptions.length);
 	const db = {
-		campaign: { findMany: campaignFindMany },
 		subscription: { findMany: subscriptionFindMany, count: subscriptionCount },
 	} as unknown as PrismaClient;
 	const programAccessService = {
@@ -299,7 +282,6 @@ const createPortalService = ({
 			{ getContributorContributionSummary: jest.fn() } as unknown as ContributionReadService,
 			{ getSubscriptionStripeDetails: jest.fn() } as unknown as StripeService,
 		),
-		campaignFindMany,
 		subscriptionFindMany,
 	};
 };
@@ -310,25 +292,24 @@ const stripeTableSubscription = {
 	amount: 1200,
 	currency: 'CHF' as const,
 	status: 'active' as const,
+	cancellationReason: null,
 	paymentMethod: 'stripe' as const,
 	stripeSubscriptionId: 'sub_core_high_monthly',
 	bankStandingOrderReference: null,
-	campaign: { id: 'campaign-1', title: 'Core Campaign', program: { id: 'program-1', name: 'Core' } },
 	contributor: { contact: { firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.com' } },
 };
 
 describe('SubscriptionReadService.getPaginatedTableView', () => {
 	it('returns empty rows when the user has no operator program access', async () => {
-		const { service, campaignFindMany } = createPortalService({
+		const { service, subscriptionFindMany } = createPortalService({
 			accessiblePrograms: [{ programId: 'program-owner', programName: 'Owner only', permission: 'owner' }],
 		});
 
 		expect(expectSuccess(await service.getPaginatedTableView('user-1', defaultTableQuery))).toEqual({
 			tableRows: [],
 			totalCount: 0,
-			filterOptions: { programs: [], campaigns: [], statuses: [], paymentMethods: [] },
 		});
-		expect(campaignFindMany).not.toHaveBeenCalled();
+		expect(subscriptionFindMany).not.toHaveBeenCalled();
 	});
 
 	it('propagates program access failures', async () => {
@@ -342,8 +323,8 @@ describe('SubscriptionReadService.getPaginatedTableView', () => {
 		expect(result.error).toBe('User has no active organization');
 	});
 
-	it('scopes campaigns to operator programs only', async () => {
-		const { service, campaignFindMany, subscriptionFindMany } = createPortalService({
+	it('scopes subscriptions to operator programs only', async () => {
+		const { service, subscriptionFindMany } = createPortalService({
 			accessiblePrograms: [
 				{ programId: 'program-1', programName: 'Core', permission: 'operator' },
 				{ programId: 'program-owner', programName: 'Owner only', permission: 'owner' },
@@ -353,35 +334,18 @@ describe('SubscriptionReadService.getPaginatedTableView', () => {
 
 		await service.getPaginatedTableView('user-1', defaultTableQuery);
 
-		const [[campaignArgs]] = campaignFindMany.mock.calls as unknown as [{ where: { programId: { in: string[] } } }][];
-		expect(campaignArgs.where).toEqual({ programId: { in: ['program-1'] } });
-
 		const [[subscriptionArgs]] = subscriptionFindMany.mock.calls as unknown as [
-			{ where: { campaignId: { in: string[] } } },
+			{ where: { campaign: { programId: { in: string[] } } } },
 		][];
-		expect(subscriptionArgs.where.campaignId).toEqual({ in: ['campaign-1'] });
+		expect(subscriptionArgs.where.campaign).toEqual({ programId: { in: ['program-1'] } });
 	});
 
-	it('returns empty rows when program or campaign filters are inaccessible', async () => {
-		const { service } = createPortalService({ subscriptions: [stripeTableSubscription] });
-
-		expect(
-			expectSuccess(await service.getPaginatedTableView('user-1', { ...defaultTableQuery, programId: 'program-other' }))
-				.tableRows,
-		).toEqual([]);
-		expect(
-			expectSuccess(await service.getPaginatedTableView('user-1', { ...defaultTableQuery, campaignId: 'campaign-other' }))
-				.tableRows,
-		).toEqual([]);
-	});
-
-	it('applies status, payment method, campaign, and search filters', async () => {
+	it('applies status, payment method, and search filters', async () => {
 		const { service, subscriptionFindMany } = createPortalService({ subscriptions: [stripeTableSubscription] });
 
 		await service.getPaginatedTableView('user-1', {
 			...defaultTableQuery,
-			campaignId: 'campaign-1',
-			subscriptionStatus: 'canceled',
+			subscriptionStatus: 'ended',
 			subscriptionPaymentMethod: 'bank_transfer',
 			search: 'ada@example.com',
 		});
@@ -389,15 +353,15 @@ describe('SubscriptionReadService.getPaginatedTableView', () => {
 		const [[subscriptionArgs]] = subscriptionFindMany.mock.calls as unknown as [
 			{
 				where: {
-					campaignId: { in: string[] };
+					campaign: { programId: { in: string[] } };
 					status: string;
 					paymentMethod: string;
 					OR: unknown[];
 				};
 			},
 		][];
-		expect(subscriptionArgs.where.campaignId).toEqual({ in: ['campaign-1'] });
-		expect(subscriptionArgs.where.status).toBe('canceled');
+		expect(subscriptionArgs.where.campaign).toEqual({ programId: { in: ['program-1'] } });
+		expect(subscriptionArgs.where.status).toBe('ended');
 		expect(subscriptionArgs.where.paymentMethod).toBe('bank_transfer');
 		expect(subscriptionArgs.where.OR).toEqual(
 			expect.arrayContaining([
@@ -415,10 +379,10 @@ describe('SubscriptionReadService.getPaginatedTableView', () => {
 			amount: 80,
 			currency: 'CHF' as const,
 			status: 'ended' as const,
+			cancellationReason: 'prefer_one_time' as const,
 			paymentMethod: 'bank_transfer' as const,
 			stripeSubscriptionId: null,
 			bankStandingOrderReference: '1731700000',
-			campaign: { id: 'campaign-1', title: 'Core Campaign', program: { id: 'program-1', name: 'Core' } },
 			contributor: { contact: { firstName: 'Grace', lastName: 'Hopper', email: 'grace@example.com' } },
 		};
 		const { service, subscriptionFindMany } = createPortalService({
@@ -451,24 +415,13 @@ describe('SubscriptionReadService.getPaginatedTableView', () => {
 				email: 'grace@example.com',
 				amount: 80,
 				currency: 'CHF',
-				campaignId: 'campaign-1',
-				campaignTitle: 'Core Campaign',
-				programName: 'Core',
 				status: 'ended',
+				cancellationReason: 'prefer_one_time',
 				paymentMethod: 'bank_transfer',
 				stripeSubscriptionId: null,
 				bankStandingOrderReference: '1731700000',
 				createdAt: bankSubscription.createdAt,
 			},
-		]);
-		expect(data.filterOptions.statuses).toEqual([
-			{ value: 'active', label: 'Active' },
-			{ value: 'canceled', label: 'Canceled' },
-			{ value: 'ended', label: 'Ended' },
-		]);
-		expect(data.filterOptions.paymentMethods).toEqual([
-			{ value: 'stripe', label: 'Stripe' },
-			{ value: 'bank_transfer', label: 'Bank transfer' },
 		]);
 	});
 });

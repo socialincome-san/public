@@ -1,4 +1,9 @@
-import { type Currency, type SubscriptionPaymentMethod, type SubscriptionStatus } from '@/generated/prisma/client';
+import {
+	type Currency,
+	type SubscriptionCancellationReason,
+	type SubscriptionPaymentMethod,
+	type SubscriptionStatus,
+} from '@/generated/prisma/client';
 import { type ContributorContributionSummary } from '../contribution/contribution.types';
 
 export const SUBSCRIPTION_PAYMENT_METHOD_LABELS: Record<SubscriptionPaymentMethod, string> = {
@@ -8,8 +13,17 @@ export const SUBSCRIPTION_PAYMENT_METHOD_LABELS: Record<SubscriptionPaymentMetho
 
 export const SUBSCRIPTION_STATUS_LABELS: Record<SubscriptionStatus, string> = {
 	active: 'Active',
-	canceled: 'Canceled',
 	ended: 'Ended',
+};
+
+export const SUBSCRIPTION_CANCELLATION_REASON_LABELS: Record<SubscriptionCancellationReason, string> = {
+	financial_situation_changed: 'Financial situation changed',
+	different_cause: 'Different cause',
+	not_enough_updates: 'Not enough updates',
+	technical_issue: 'Technical issue',
+	prefer_one_time: 'Prefer one-time',
+	pausing: 'Pausing',
+	other: 'Other',
 };
 
 export type BankTransferQrBillView = {
@@ -57,10 +71,8 @@ export type SubscriptionTableViewRow = {
 	email: string;
 	amount: number;
 	currency: Currency;
-	campaignId: string;
-	campaignTitle: string;
-	programName: string | null;
 	status: SubscriptionStatus;
+	cancellationReason: SubscriptionCancellationReason | null;
 	paymentMethod: SubscriptionPaymentMethod;
 	stripeSubscriptionId: string | null;
 	bankStandingOrderReference: string | null;
@@ -73,28 +85,11 @@ export type SubscriptionTableQuery = {
 	search: string;
 	sortBy?: string;
 	sortDirection?: 'asc' | 'desc';
-	programId?: string;
-	campaignId?: string;
 	subscriptionStatus?: string;
 	subscriptionPaymentMethod?: string;
-};
-
-export type SubscriptionFilterOptions = {
-	programs: { value: string; label: string }[];
-	campaigns: { value: string; label: string }[];
-	statuses: { value: string; label: string }[];
-	paymentMethods: { value: string; label: string }[];
 };
 
 export type SubscriptionPaginatedTableView = {
 	tableRows: SubscriptionTableViewRow[];
 	totalCount: number;
-	filterOptions: SubscriptionFilterOptions;
-};
-
-export const EMPTY_SUBSCRIPTION_FILTER_OPTIONS: SubscriptionFilterOptions = {
-	programs: [],
-	campaigns: [],
-	statuses: [],
-	paymentMethods: [],
 };
