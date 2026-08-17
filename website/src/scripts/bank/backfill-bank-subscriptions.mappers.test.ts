@@ -6,6 +6,8 @@ import {
 	looksLikeMonthlyStandingOrder,
 	median,
 	modeValue,
+	preferredStandingOrderReference,
+	uniquifyStandingOrderReferences,
 } from './backfill-bank-subscriptions.mappers';
 
 describe('backfill-bank-subscriptions.mappers', () => {
@@ -67,6 +69,64 @@ describe('backfill-bank-subscriptions.mappers', () => {
 			expect(modeValue(['camp-1', 'camp-2', 'camp-1'])).toBe('camp-1');
 			expect(modeValue([50, 50, 80])).toBe(50);
 			expect(() => modeValue([])).toThrow('modeValue requires at least one value');
+		});
+	});
+
+	describe('preferredStandingOrderReference', () => {
+		test('uses a 10-digit ref that appears at least twice', () => {
+			expect(
+				preferredStandingOrderReference({
+					transactionIds: ['1766670134', '1766670134-1772233209298', 'abc-legacy'],
+					paymentReferenceId: '1766670133790',
+					contributorId: 'carole',
+					amount: 85,
+					currency: 'CHF',
+				}),
+			).toBe('1766670134');
+		});
+
+		test('ignores a single stray 10-digit ref and falls back to paymentReferenceId', () => {
+			expect(
+				preferredStandingOrderReference({
+					transactionIds: ['1766670134-1769814008260', '1772233209327-legacy', '1774994410068-legacy'],
+					paymentReferenceId: '1758351328881',
+					contributorId: 'joseph',
+					amount: 75,
+					currency: 'CHF',
+				}),
+			).toBe('1758351328881');
+		});
+
+		test('falls back to contributorId-amount-currency when nothing else is available', () => {
+			expect(
+				preferredStandingOrderReference({
+					transactionIds: ['legacy_wire-transfer_abc'],
+					paymentReferenceId: null,
+					contributorId: 'c1',
+					amount: 50,
+					currency: 'CHF',
+				}),
+			).toBe('c1-50-CHF');
+		});
+	});
+
+	describe('uniquifyStandingOrderReferences', () => {
+		test('suffixes colliding refs from the same contributor with two amounts', () => {
+			expect(
+				uniquifyStandingOrderReferences([
+					{ reference: '1749133425971', contributorId: 'lorenz', amount: 60 },
+					{ reference: '1749133425971', contributorId: 'lorenz', amount: 40 },
+				]),
+			).toEqual(['1749133425971-lorenz-60', '1749133425971-lorenz-40']);
+		});
+
+		test('leaves unique refs unchanged', () => {
+			expect(
+				uniquifyStandingOrderReferences([
+					{ reference: '1766670134', contributorId: 'carole', amount: 85 },
+					{ reference: '1758351328881', contributorId: 'joseph', amount: 75 },
+				]),
+			).toEqual(['1766670134', '1758351328881']);
 		});
 	});
 });

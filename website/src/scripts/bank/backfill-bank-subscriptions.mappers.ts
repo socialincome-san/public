@@ -72,3 +72,46 @@ export const modeValue = <T>(values: readonly T[]): T => {
 
 	return bestValue;
 };
+
+/** Prefer a 10-digit ref that appears at least twice; otherwise the contributor payment reference. */
+export const preferredStandingOrderReference = (input: {
+	transactionIds: readonly string[];
+	paymentReferenceId: string | null;
+	contributorId: string;
+	amount: number;
+	currency: string;
+}): string => {
+	const extracted = input.transactionIds
+		.map(extractStandingOrderReference)
+		.filter((reference): reference is string => reference !== null);
+
+	if (extracted.length >= 2) {
+		const preferred = modeValue(extracted);
+		const preferredCount = extracted.filter((reference) => reference === preferred).length;
+		if (preferredCount >= 2) {
+			return preferred;
+		}
+	}
+
+	if (input.paymentReferenceId) {
+		return input.paymentReferenceId;
+	}
+
+	return `${input.contributorId}-${input.amount}-${input.currency}`;
+};
+
+export const disambiguateStandingOrderReference = (reference: string, contributorId: string, amount: number): string =>
+	`${reference}-${contributorId}-${amount}`;
+
+export const uniquifyStandingOrderReferences = (
+	groups: readonly { reference: string; contributorId: string; amount: number }[],
+): string[] => {
+	const counts = new Map<string, number>();
+	for (const { reference } of groups) {
+		counts.set(reference, (counts.get(reference) ?? 0) + 1);
+	}
+
+	return groups.map(({ reference, contributorId, amount }) =>
+		(counts.get(reference) ?? 0) > 1 ? disambiguateStandingOrderReference(reference, contributorId, amount) : reference,
+	);
+};

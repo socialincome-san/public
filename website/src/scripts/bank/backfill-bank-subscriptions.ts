@@ -1,11 +1,11 @@
 /**
  * Create-only backfill of missing bank standing-order subscriptions.
  *
- * Groups bank_transfer payments by standing-order reference (`1234567890` or `1234567890-{millis}`).
+ * Groups bank_transfer payments by contributor + amount + currency.
  * Creates a monthly subscription when there are ≥2 succeeded payments with a ~20–45 day median gap.
  *
  * Dry-run by default (exit 1 if anything would be created). Pass `--apply` to write.
- * `--limit` takes groups in first-seen reference order.
+ * `--limit` takes groups in first-seen order.
  *
  * Usage (from website/):
  *   DATABASE_URL=... npm run db:backfill:bank-subscriptions
@@ -31,10 +31,12 @@ import {
 } from '../shared/backfill-shared';
 import {
 	daysBetween,
-	extractStandingOrderReference,
+	disambiguateStandingOrderReference,
 	inferSubscriptionStatus,
 	looksLikeMonthlyStandingOrder,
 	modeValue,
+	preferredStandingOrderReference,
+	uniquifyStandingOrderReferences,
 } from './backfill-bank-subscriptions.mappers';
 
 type Summary = {
@@ -42,17 +44,15 @@ type Summary = {
 	groupsSeen: number;
 	subscriptionsCreated: number;
 	alreadyExists: number;
-	skippedNoReference: number;
 	skippedTooFewPayments: number;
 	skippedNotMonthly: number;
-	skippedMixedContributor: number;
-	skippedMixedCurrency: number;
 	errors: number;
 };
 
 type BankPaymentRow = {
 	transactionId: string;
 	contributorId: string;
+	paymentReferenceId: string | null;
 	campaignId: string;
 	amount: number;
 	currency: Currency;
@@ -60,7 +60,10 @@ type BankPaymentRow = {
 	createdAt: Date;
 };
 
-type StandingOrderGroup = {
+type ContributorAmountGroup = {
+	contributorId: string;
+	amount: number;
+	currency: Currency;
 	standingOrderReference: string;
 	payments: BankPaymentRow[];
 };
@@ -70,11 +73,8 @@ const createSummary = (): Summary => ({
 	groupsSeen: 0,
 	subscriptionsCreated: 0,
 	alreadyExists: 0,
-	skippedNoReference: 0,
 	skippedTooFewPayments: 0,
 	skippedNotMonthly: 0,
-	skippedMixedContributor: 0,
-	skippedMixedCurrency: 0,
 	errors: 0,
 });
 
@@ -101,6 +101,7 @@ const loadBankPayments = async (): Promise<BankPaymentRow[]> => {
 					currency: true,
 					status: true,
 					createdAt: true,
+					contributor: { select: { paymentReferenceId: true } },
 				},
 			},
 		},
@@ -110,6 +111,7 @@ const loadBankPayments = async (): Promise<BankPaymentRow[]> => {
 	return paymentEvents.map((paymentEvent) => ({
 		transactionId: paymentEvent.transactionId,
 		contributorId: paymentEvent.contribution.contributorId,
+		paymentReferenceId: paymentEvent.contribution.contributor.paymentReferenceId,
 		campaignId: paymentEvent.contribution.campaignId,
 		amount: Number(paymentEvent.contribution.amount),
 		currency: paymentEvent.contribution.currency,
@@ -118,34 +120,83 @@ const loadBankPayments = async (): Promise<BankPaymentRow[]> => {
 	}));
 };
 
-const groupByStandingOrderReference = (payments: BankPaymentRow[], summary: Summary): StandingOrderGroup[] => {
+const groupByContributorAmount = (payments: BankPaymentRow[], summary: Summary): ContributorAmountGroup[] => {
 	const groups = new Map<string, BankPaymentRow[]>();
 
 	for (const payment of payments) {
 		summary.paymentEventsSeen += 1;
-		const standingOrderReference = extractStandingOrderReference(payment.transactionId);
-		if (!standingOrderReference) {
-			summary.skippedNoReference += 1;
-			continue;
-		}
-
-		const existing = groups.get(standingOrderReference) ?? [];
+		const key = `${payment.contributorId}|${payment.amount}|${payment.currency}`;
+		const existing = groups.get(key) ?? [];
 		existing.push(payment);
-		groups.set(standingOrderReference, existing);
+		groups.set(key, existing);
 	}
 
-	return [...groups.entries()].map(([standingOrderReference, groupPayments]) => ({
-		standingOrderReference,
-		payments: groupPayments,
-	}));
+	return [...groups.values()].map((groupPayments) => {
+		const { contributorId, amount, currency, paymentReferenceId } = groupPayments[0];
+
+		return {
+			contributorId,
+			amount,
+			currency,
+			standingOrderReference: preferredStandingOrderReference({
+				transactionIds: groupPayments.map((payment) => payment.transactionId),
+				paymentReferenceId,
+				contributorId,
+				amount,
+				currency,
+			}),
+			payments: groupPayments,
+		};
+	});
 };
 
-const processGroup = async (input: { group: StandingOrderGroup; apply: boolean; summary: Summary }) => {
-	const { group, apply, summary } = input;
+const succeededPayments = (payments: BankPaymentRow[]): BankPaymentRow[] =>
+	payments
+		.filter((payment) => payment.status === ContributionStatus.succeeded)
+		.sort((left, right) => left.createdAt.getTime() - right.createdAt.getTime());
+
+const evaluateGroup = (group: ContributorAmountGroup, summary: Summary): BankPaymentRow[] | null => {
 	summary.groupsSeen += 1;
 
-	const existing = await prisma.subscription.findUnique({
-		where: { bankStandingOrderReference: group.standingOrderReference },
+	const succeeded = succeededPayments(group.payments);
+	if (succeeded.length < 2) {
+		summary.skippedTooFewPayments += 1;
+		log(
+			`skip too few succeeded payments contributor=${group.contributorId} amount=${group.amount} ${group.currency} succeeded=${succeeded.length} total=${group.payments.length}`,
+		);
+
+		return null;
+	}
+
+	const gapsInDays = succeeded.slice(1).map((payment, index) => daysBetween(succeeded[index].createdAt, payment.createdAt));
+
+	if (!looksLikeMonthlyStandingOrder(gapsInDays)) {
+		summary.skippedNotMonthly += 1;
+		log(
+			`skip not monthly contributor=${group.contributorId} amount=${group.amount} ${group.currency} gaps=${gapsInDays.map((gap) => gap.toFixed(1)).join(',')}`,
+		);
+
+		return null;
+	}
+
+	return succeeded;
+};
+
+const writeGroup = async (input: {
+	group: ContributorAmountGroup;
+	succeeded: BankPaymentRow[];
+	apply: boolean;
+	summary: Summary;
+}) => {
+	const { group, succeeded, apply, summary } = input;
+
+	const existing = await prisma.subscription.findFirst({
+		where: {
+			contributorId: group.contributorId,
+			amount: group.amount,
+			currency: group.currency,
+			paymentMethod: SubscriptionPaymentMethod.bank_transfer,
+		},
 		select: { id: true },
 	});
 	if (existing) {
@@ -154,47 +205,15 @@ const processGroup = async (input: { group: StandingOrderGroup; apply: boolean; 
 		return;
 	}
 
-	const succeeded = group.payments.filter((payment) => payment.status === ContributionStatus.succeeded);
-	if (succeeded.length < 2) {
-		summary.skippedTooFewPayments += 1;
-		log(
-			`skip too few succeeded payments ref=${group.standingOrderReference} succeeded=${succeeded.length} total=${group.payments.length}`,
-		);
-
-		return;
+	let standingOrderReference = group.standingOrderReference;
+	const existingByReference = await prisma.subscription.findUnique({
+		where: { bankStandingOrderReference: standingOrderReference },
+		select: { id: true },
+	});
+	if (existingByReference) {
+		standingOrderReference = disambiguateStandingOrderReference(standingOrderReference, group.contributorId, group.amount);
 	}
 
-	const contributorIds = new Set(succeeded.map((payment) => payment.contributorId));
-	if (contributorIds.size !== 1) {
-		summary.skippedMixedContributor += 1;
-		log(`skip mixed contributors ref=${group.standingOrderReference}`);
-
-		return;
-	}
-	const contributorId = succeeded[0].contributorId;
-
-	const currencies = new Set(succeeded.map((payment) => payment.currency));
-	if (currencies.size !== 1) {
-		summary.skippedMixedCurrency += 1;
-		log(`skip mixed currencies ref=${group.standingOrderReference}`);
-
-		return;
-	}
-	const currency = succeeded[0].currency;
-
-	const gapsInDays: number[] = [];
-	for (let index = 1; index < succeeded.length; index += 1) {
-		gapsInDays.push(daysBetween(succeeded[index - 1].createdAt, succeeded[index].createdAt));
-	}
-
-	if (!looksLikeMonthlyStandingOrder(gapsInDays)) {
-		summary.skippedNotMonthly += 1;
-		log(`skip not monthly ref=${group.standingOrderReference} gaps=${gapsInDays.map((gap) => gap.toFixed(1)).join(',')}`);
-
-		return;
-	}
-
-	const amount = modeValue(succeeded.map((payment) => payment.amount));
 	const campaignId = modeValue(succeeded.map((payment) => payment.campaignId));
 	const lastPaymentAt = succeeded[succeeded.length - 1].createdAt;
 	const status = inferSubscriptionStatus(lastPaymentAt);
@@ -203,11 +222,11 @@ const processGroup = async (input: { group: StandingOrderGroup; apply: boolean; 
 	if (apply) {
 		await prisma.subscription.create({
 			data: {
-				bankStandingOrderReference: group.standingOrderReference,
-				contributorId,
+				bankStandingOrderReference: standingOrderReference,
+				contributorId: group.contributorId,
 				campaignId,
-				amount,
-				currency,
+				amount: group.amount,
+				currency: group.currency,
 				interval: DonationInterval.monthly,
 				status,
 				paymentMethod: SubscriptionPaymentMethod.bank_transfer,
@@ -218,7 +237,7 @@ const processGroup = async (input: { group: StandingOrderGroup; apply: boolean; 
 
 	summary.subscriptionsCreated += 1;
 	log(
-		`${apply ? 'wrote' : 'would write'} ref=${group.standingOrderReference} → contributor=${contributorId} status=${status} interval=${DonationInterval.monthly} amount=${amount} ${currency} payments=${succeeded.length} campaign=${campaignId}`,
+		`${apply ? 'wrote' : 'would write'} ref=${standingOrderReference} → contributor=${group.contributorId} status=${status} interval=${DonationInterval.monthly} amount=${group.amount} ${group.currency} payments=${succeeded.length} campaign=${campaignId}`,
 	);
 };
 
@@ -231,8 +250,8 @@ const main = async () => {
 	const payments = await loadBankPayments();
 	log(`Loaded ${payments.length} bank_transfer payment events`);
 
-	let groups = groupByStandingOrderReference(payments, summary);
-	log(`Grouped into ${groups.length} standing-order references`);
+	let groups = groupByContributorAmount(payments, summary);
+	log(`Grouped into ${groups.length} contributor+amount series`);
 
 	if (limit !== null) {
 		groups = groups.slice(0, limit);
@@ -240,12 +259,35 @@ const main = async () => {
 	}
 	log('');
 
+	const eligible: { group: ContributorAmountGroup; succeeded: BankPaymentRow[] }[] = [];
 	for (const group of groups) {
+		const succeeded = evaluateGroup(group, summary);
+		if (succeeded) {
+			eligible.push({ group, succeeded });
+		}
+	}
+
+	const uniqueReferences = uniquifyStandingOrderReferences(
+		eligible.map(({ group }) => ({
+			reference: group.standingOrderReference,
+			contributorId: group.contributorId,
+			amount: group.amount,
+		})),
+	);
+
+	for (const [index, { group, succeeded }] of eligible.entries()) {
 		try {
-			await processGroup({ group, apply, summary });
+			await writeGroup({
+				group: { ...group, standingOrderReference: uniqueReferences[index] },
+				succeeded,
+				apply,
+				summary,
+			});
 		} catch (error) {
 			summary.errors += 1;
-			log(`error processing ref=${group.standingOrderReference}: ${error instanceof Error ? error.message : String(error)}`);
+			log(
+				`error processing contributor=${group.contributorId} amount=${group.amount} ${group.currency}: ${error instanceof Error ? error.message : String(error)}`,
+			);
 		}
 	}
 
