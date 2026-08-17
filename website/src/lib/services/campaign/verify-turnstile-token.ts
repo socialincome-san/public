@@ -39,8 +39,6 @@ const parseSiteverifyResponse = (value: unknown): TurnstileSiteverifyResponse | 
 
 const getTurnstileSecretKey = () => process.env.TURNSTILE_SECRET_KEY?.trim();
 
-const getTurnstileSiteKey = () => process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
-
 export const readTurnstileToken = (formData: FormData): string | null => {
 	const value = formData.get(turnstileResponseFieldName);
 	if (typeof value !== 'string') {
@@ -55,13 +53,9 @@ export const readTurnstileToken = (formData: FormData): string | null => {
 export const verifyTurnstileToken = async (token: string | null): Promise<TurnstileVerificationResult> => {
 	const secret = getTurnstileSecretKey();
 	if (!secret) {
-		if (getTurnstileSiteKey()) {
-			logger.error('TURNSTILE_SECRET_KEY is missing while NEXT_PUBLIC_TURNSTILE_SITE_KEY is set');
+		logger.error('TURNSTILE_SECRET_KEY is missing');
 
-			return { success: false, error: 'submission-failed' };
-		}
-
-		return { success: true };
+		return { success: false, error: 'turnstile-invalid' };
 	}
 
 	if (!token) {

@@ -95,14 +95,12 @@ variable "turnstile_site_key" {
   description = "Cloudflare Turnstile site key for the campaign submission widget"
   type        = string
   sensitive   = true
-  default     = ""
 }
 
 variable "turnstile_secret_key" {
   description = "Cloudflare Turnstile secret key for server-side token verification"
   type        = string
   sensitive   = true
-  default     = ""
 }
 
 variable "sendgrid_api_key" {

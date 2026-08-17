@@ -37,21 +37,22 @@ describe('verifyTurnstileToken', () => {
 		jest.restoreAllMocks();
 	});
 
-	test('skips verification when Turnstile is not configured', async () => {
+	test('fails the challenge when the secret is missing', async () => {
 		delete process.env.TURNSTILE_SECRET_KEY;
-		delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-
-		await expect(verifyTurnstileToken('token')).resolves.toEqual({ success: true });
-		expect(fetchMock).not.toHaveBeenCalled();
-	});
-
-	test('fails closed when the site key is set without a secret', async () => {
-		delete process.env.TURNSTILE_SECRET_KEY;
-		process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY = 'site-key';
 
 		await expect(verifyTurnstileToken('token')).resolves.toEqual({
 			success: false,
-			error: 'submission-failed',
+			error: 'turnstile-invalid',
+		});
+		expect(fetchMock).not.toHaveBeenCalled();
+	});
+
+	test('fails the challenge when the secret is blank', async () => {
+		process.env.TURNSTILE_SECRET_KEY = '   ';
+
+		await expect(verifyTurnstileToken('token')).resolves.toEqual({
+			success: false,
+			error: 'turnstile-invalid',
 		});
 		expect(fetchMock).not.toHaveBeenCalled();
 	});
