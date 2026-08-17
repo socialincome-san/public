@@ -18,8 +18,8 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 
 	const sections = [
-		{ href: '/dashboard/contributions', label: translator.t('sections.contributions.payments') },
 		{ href: '/dashboard/subscriptions', label: translator.t('sections.contributions.subscriptions') },
+		{ href: '/dashboard/contributions', label: translator.t('sections.contributions.payments') },
 		{
 			href: '/dashboard/donation-certificates',
 			label: translator.t('sections.contributions.donation-certificates-long'),

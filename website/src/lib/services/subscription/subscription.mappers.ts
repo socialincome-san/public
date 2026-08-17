@@ -65,6 +65,14 @@ export type MappedStripeSubscriptionLifecycle = {
 	canceledAt: Date | null;
 };
 
+export const resolveStripeSubscriptionCanceledAt = (subscription: Stripe.Subscription): Date => {
+	if (subscription.canceled_at) {
+		return new Date(subscription.canceled_at * 1000);
+	}
+
+	return new Date();
+};
+
 /** Status/cancel fields only — safe for webhook payloads without expanded prices. */
 export const mapStripeSubscriptionLifecycle = (
 	subscription: Stripe.Subscription,

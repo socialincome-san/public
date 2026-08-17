@@ -26,7 +26,7 @@ export const getRedirectPathAfterLoginAction = async (): Promise<ServiceResult<s
 	}
 
 	if (session.type === 'contributor') {
-		return resultOk('/dashboard/contributions');
+		return resultOk('/dashboard/subscriptions');
 	}
 
 	if (session.type === 'local-partner') {
