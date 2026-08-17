@@ -1,20 +1,53 @@
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { addDays, format, startOfDay } from 'date-fns';
 import {
+	appendCampaignSubmissionFormData,
+	createCampaignSubmissionDetailsSchema,
 	createCampaignSubmissionFormSchema,
 	endDateFromDurationPreset,
 	parseCampaignSubmissionDefaultImageId,
 	parseCampaignSubmissionFields,
+	resolveCampaignSubmissionQuote,
 	validateCampaignSubmissionEndDate,
 	validateCampaignSubmissionImageBuffer,
 	validateCampaignSubmissionImageMeta,
+	type CampaignSubmissionFormValues,
 } from './campaign-submission-input';
 
 const validEndDateString = () => format(addDays(startOfDay(new Date()), 30), 'yyyy-MM-dd');
 
+const withAboutFields = (formData: FormData) => {
+	formData.set('creatorName', 'Alex Creator');
+	formData.set('quote', 'Thank you for your support!');
+	formData.set('hasAdditionalInformation', 'false');
+
+	return formData;
+};
+
+const validFormValues = (overrides: Partial<CampaignSubmissionFormValues> = {}): CampaignSubmissionFormValues => ({
+	title: 'My Campaign',
+	description: 'A description',
+	hasGoal: true,
+	goal: '1000',
+	currency: 'CHF',
+	durationPreset: '30',
+	endDate: validEndDateString(),
+	isPublic: true,
+	programId: 'program-1',
+	creatorName: 'Alex Creator',
+	quote: 'Thank you for your support!',
+	hasAdditionalInformation: false,
+	sectionDescription: '',
+	instagramHandle: '',
+	xHandle: '',
+	linkWebsite: '',
+	tiktokHandle: '',
+	...overrides,
+});
+
 describe('campaign-submission-input', () => {
 	test('parseCampaignSubmissionFields validates required fields', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', '  My Campaign  ');
 		formData.set('description', 'A description');
 		formData.set('goal', '1000');
@@ -30,11 +63,15 @@ describe('campaign-submission-input', () => {
 			expect(result.data.currency).toBe('CHF');
 			expect(result.data.goal).toBe(1000);
 			expect(result.data.public).toBe(true);
+			expect(result.data.creatorName).toBe('Alex Creator');
+			expect(result.data.quote).toBe('Thank you for your support!');
+			expect(result.data.hasAdditionalInformation).toBe(false);
+			expect(result.data.sectionDescription).toBeNull();
 		}
 	});
 
 	test('parseCampaignSubmissionFields accepts empty goal as null', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', 'Campaign');
 		formData.set('description', 'Description');
 		formData.set('goal', '');
@@ -52,7 +89,7 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('parseCampaignSubmissionFields rejects unsupported currency', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', 'Campaign');
 		formData.set('description', 'Description');
 		formData.set('goal', '100');
@@ -68,7 +105,7 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('parseCampaignSubmissionFields treats non-true public strings as false', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', 'Campaign');
 		formData.set('description', 'Description');
 		formData.set('goal', '100');
@@ -85,7 +122,7 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('parseCampaignSubmissionFields rejects titles that cannot be slugified', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', '!!! 🎉');
 		formData.set('description', 'Description');
 		formData.set('goal', '100');
@@ -101,7 +138,7 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('parseCampaignSubmissionFields rejects end dates outside the configured window', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', 'Campaign');
 		formData.set('description', 'Description');
 		formData.set('goal', '100');
@@ -124,8 +161,8 @@ describe('campaign-submission-input', () => {
 
 	test('validateCampaignSubmissionEndDate accepts min and max calendar bounds', () => {
 		const today = startOfDay(new Date());
-		const minEndDate = addDays(today, 7);
-		const maxEndDate = addDays(today, 365);
+		const minEndDate = addDays(today, campaignSubmissionConfig.minCampaignDurationDays);
+		const maxEndDate = addDays(today, campaignSubmissionConfig.maxCampaignDurationDays);
 
 		expect(validateCampaignSubmissionEndDate(minEndDate)).toBeNull();
 		expect(validateCampaignSubmissionEndDate(maxEndDate)).toBeNull();
@@ -147,7 +184,7 @@ describe('campaign-submission-input', () => {
 	});
 
 	test('parseCampaignSubmissionFields rejects a blank programId', () => {
-		const formData = new FormData();
+		const formData = withAboutFields(new FormData());
 		formData.set('title', 'Campaign');
 		formData.set('description', 'Description');
 		formData.set('goal', '100');
@@ -159,6 +196,116 @@ describe('campaign-submission-input', () => {
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			expect(result.error).toBe('program-required');
+		}
+	});
+
+	test('parseCampaignSubmissionFields requires creator name and quote', () => {
+		const formData = new FormData();
+		formData.set('title', 'Campaign');
+		formData.set('description', 'Description');
+		formData.set('goal', '100');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', validEndDateString());
+		formData.set('programId', 'program-1');
+		formData.set('creatorName', '');
+		formData.set('quote', '');
+		formData.set('hasAdditionalInformation', 'false');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('creator-name-required');
+		}
+	});
+
+	test('parseCampaignSubmissionFields keeps additional information only when enabled', () => {
+		const formData = withAboutFields(new FormData());
+		formData.set('title', 'Campaign');
+		formData.set('description', 'Description');
+		formData.set('goal', '100');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', validEndDateString());
+		formData.set('programId', 'program-1');
+		formData.set('hasAdditionalInformation', 'true');
+		formData.set('sectionDescription', '  Extra details  ');
+		formData.set('instagramHandle', '@example');
+		formData.set('xHandle', '');
+		formData.set('linkWebsite', 'https://example.com');
+		formData.set('tiktokHandle', 'example.user');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.hasAdditionalInformation).toBe(true);
+			expect(result.data.sectionDescription).toBe('Extra details');
+			expect(result.data.instagramHandle).toBe('example');
+			expect(result.data.xHandle).toBeNull();
+			expect(result.data.linkWebsite).toBe('https://example.com');
+			expect(result.data.tiktokHandle).toBe('example.user');
+		}
+	});
+
+	test('createCampaignSubmissionFormSchema rejects social URLs and unsafe website schemes', () => {
+		const schema = createCampaignSubmissionFormSchema((code) => code);
+		const baseValues = {
+			title: 'Campaign',
+			description: 'Description',
+			hasGoal: false,
+			goal: '',
+			currency: 'CHF' as const,
+			durationPreset: '30' as const,
+			endDate: validEndDateString(),
+			isPublic: true,
+			programId: 'program-1',
+			creatorName: 'Alex',
+			quote: 'Thanks',
+			hasAdditionalInformation: true,
+			sectionDescription: '',
+			instagramHandle: '',
+			xHandle: '',
+			linkWebsite: '',
+			tiktokHandle: '',
+		};
+
+		const urlHandle = schema.safeParse({ ...baseValues, instagramHandle: 'https://instagram.com/foo' });
+		expect(urlHandle.success).toBe(false);
+		if (!urlHandle.success) {
+			expect(urlHandle.error.issues.some((issue) => issue.message === 'handle-invalid')).toBe(true);
+		}
+
+		const unsafeWebsite = schema.safeParse({ ...baseValues, linkWebsite: 'javascript:alert(1)' });
+		expect(unsafeWebsite.success).toBe(false);
+		if (!unsafeWebsite.success) {
+			expect(unsafeWebsite.error.issues.some((issue) => issue.message === 'link-unsafe')).toBe(true);
+		}
+
+		const valid = schema.safeParse({
+			...baseValues,
+			instagramHandle: '@valid_user',
+			xHandle: 'valid_user',
+			tiktokHandle: 'valid.user',
+			linkWebsite: 'https://example.com',
+		});
+		expect(valid.success).toBe(true);
+	});
+
+	test('parseCampaignSubmissionFields clears additional information when disabled', () => {
+		const formData = withAboutFields(new FormData());
+		formData.set('title', 'Campaign');
+		formData.set('description', 'Description');
+		formData.set('goal', '100');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', validEndDateString());
+		formData.set('programId', 'program-1');
+		formData.set('hasAdditionalInformation', 'false');
+		formData.set('sectionDescription', 'Should be ignored');
+		formData.set('instagramHandle', 'example');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.sectionDescription).toBeNull();
+			expect(result.data.instagramHandle).toBeNull();
 		}
 	});
 
@@ -186,6 +333,14 @@ describe('campaign-submission-input', () => {
 			endDate: validEndDateString(),
 			isPublic: true,
 			programId: '   ',
+			creatorName: 'Alex',
+			quote: 'Thanks',
+			hasAdditionalInformation: false,
+			sectionDescription: '',
+			instagramHandle: '',
+			xHandle: '',
+			linkWebsite: '',
+			tiktokHandle: '',
 		});
 
 		expect(result.success).toBe(false);
@@ -194,5 +349,143 @@ describe('campaign-submission-input', () => {
 			expect(messages).toContain('program-required');
 			expect(messages).toContain('goal-positive');
 		}
+	});
+
+	test('createCampaignSubmissionFormSchema requires creator name and allows empty quote', () => {
+		const schema = createCampaignSubmissionFormSchema((code) => code);
+		const missingCreator = schema.safeParse({
+			title: 'Campaign',
+			description: 'Description',
+			hasGoal: false,
+			goal: '',
+			currency: 'CHF',
+			durationPreset: '30',
+			endDate: validEndDateString(),
+			isPublic: true,
+			programId: 'program-1',
+			creatorName: '',
+			quote: '',
+			hasAdditionalInformation: false,
+		});
+
+		expect(missingCreator.success).toBe(false);
+		if (!missingCreator.success) {
+			const messages = missingCreator.error.issues.map((issue) => issue.message);
+			expect(messages).toContain('creator-name-required');
+			expect(messages).not.toContain('quote-required');
+		}
+
+		const emptyQuote = schema.safeParse({
+			title: 'Campaign',
+			description: 'Description',
+			hasGoal: false,
+			goal: '',
+			currency: 'CHF',
+			durationPreset: '30',
+			endDate: validEndDateString(),
+			isPublic: true,
+			programId: 'program-1',
+			creatorName: 'Alex',
+			quote: '',
+			hasAdditionalInformation: false,
+		});
+
+		expect(emptyQuote.success).toBe(true);
+	});
+
+	test('createCampaignSubmissionDetailsSchema validates details without about fields', () => {
+		const schema = createCampaignSubmissionDetailsSchema((code) => code);
+		const invalid = schema.safeParse({
+			title: '',
+			description: '',
+			hasGoal: true,
+			goal: '',
+			currency: 'CHF',
+			durationPreset: '30',
+			endDate: validEndDateString(),
+			isPublic: true,
+		});
+
+		expect(invalid.success).toBe(false);
+		if (!invalid.success) {
+			const messages = invalid.error.issues.map((issue) => issue.message);
+			expect(messages).toContain('title-required');
+			expect(messages).toContain('description-required');
+			expect(messages).toContain('goal-positive');
+		}
+
+		const valid = schema.safeParse({
+			title: 'Campaign',
+			description: 'Description',
+			hasGoal: false,
+			goal: '',
+			currency: 'CHF',
+			durationPreset: '30',
+			endDate: validEndDateString(),
+			isPublic: true,
+		});
+
+		expect(valid.success).toBe(true);
+	});
+
+	test('resolveCampaignSubmissionQuote falls back to placeholder text', () => {
+		expect(resolveCampaignSubmissionQuote('', 'Thank you for your support!')).toBe('Thank you for your support!');
+		expect(resolveCampaignSubmissionQuote('   ', 'Thank you for your support!')).toBe('Thank you for your support!');
+		expect(resolveCampaignSubmissionQuote(' Custom quote ', 'Thank you for your support!')).toBe('Custom quote');
+	});
+
+	test('append + parse round-trips client form values through FormData', () => {
+		const values = validFormValues({
+			hasGoal: true,
+			goal: 2500,
+			isPublic: false,
+			hasAdditionalInformation: true,
+			sectionDescription: 'Extra details',
+			instagramHandle: '@example',
+			xHandle: '',
+			linkWebsite: 'https://example.com',
+			tiktokHandle: 'example.user',
+		});
+
+		const formData = appendCampaignSubmissionFormData(new FormData(), values, {
+			defaultImageId: 42,
+		});
+
+		expect(formData.get('public')).toBe('false');
+		expect(formData.get('goal')).toBe('2500');
+		expect(formData.get('defaultImageId')).toBe('42');
+		expect(formData.get('instagramHandle')).toBe('@example');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.title).toBe('My Campaign');
+			expect(result.data.goal).toBe(2500);
+			expect(result.data.public).toBe(false);
+			expect(result.data.hasAdditionalInformation).toBe(true);
+			expect(result.data.sectionDescription).toBe('Extra details');
+			expect(result.data.instagramHandle).toBe('example');
+			expect(result.data.xHandle).toBeNull();
+			expect(result.data.linkWebsite).toBe('https://example.com');
+			expect(result.data.tiktokHandle).toBe('example.user');
+		}
+	});
+
+	test('appendCampaignSubmissionFormData omits additional fields when disabled', () => {
+		const formData = appendCampaignSubmissionFormData(
+			new FormData(),
+			validFormValues({
+				hasAdditionalInformation: false,
+				sectionDescription: 'Should be ignored',
+				instagramHandle: 'example',
+				hasGoal: false,
+				goal: '',
+			}),
+		);
+
+		expect(formData.get('goal')).toBe('');
+		expect(formData.get('hasAdditionalInformation')).toBe('false');
+		expect(formData.get('sectionDescription')).toBeNull();
+		expect(formData.get('instagramHandle')).toBeNull();
 	});
 });

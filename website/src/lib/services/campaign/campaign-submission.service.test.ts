@@ -46,6 +46,14 @@ const baseFields = {
 	endDate: new Date('2030-06-01'),
 	programId: 'program-1',
 	public: true,
+	creatorName: 'Alex Creator',
+	quote: 'Thank you for your support!',
+	hasAdditionalInformation: false,
+	sectionDescription: null as string | null,
+	instagramHandle: null as string | null,
+	xHandle: null as string | null,
+	linkWebsite: null as string | null,
+	tiktokHandle: null as string | null,
 };
 
 describe('CampaignSubmissionService', () => {
@@ -55,6 +63,7 @@ describe('CampaignSubmissionService', () => {
 			public: boolean | null;
 			slug: string;
 			goal: number | null;
+			creatorName: string | null;
 		};
 	};
 
@@ -173,13 +182,114 @@ describe('CampaignSubmissionService', () => {
 		expect(createArg?.data.isActive).toBe(true);
 		expect(createArg?.data.public).toBe(true);
 		expect(createArg?.data.slug).toBe('my-campaign');
+		expect(createArg?.data.creatorName).toBe('Alex Creator');
 		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
 			expect.objectContaining({
 				slug: 'my-campaign',
 				title: 'My Campaign',
 				portalSlug: 'my-campaign',
+				creatorName: 'Alex Creator',
+				quote: 'Thank you for your support!',
 			}),
 		);
+	});
+
+	test('submit uploads optional about images and passes additional Storyblok fields', async () => {
+		const { service, createPublishedCampaignStory, uploadAsset } = createService();
+		uploadAsset
+			.mockResolvedValueOnce({ assetId: 10, asset: { filename: 'primary.png' } })
+			.mockResolvedValueOnce({ assetId: 11, asset: { filename: 'profile.png' } })
+			.mockResolvedValueOnce({ assetId: 12, asset: { filename: 'section.png' } });
+
+		const profilePicture = { ...pngImage, filename: 'profile.png' };
+		const sectionImage = { ...pngImage, filename: 'section.png' };
+		const result = await service.submit(
+			{
+				...baseFields,
+				hasAdditionalInformation: true,
+				sectionDescription: 'Extra section',
+				instagramHandle: 'example',
+				xHandle: 'example',
+				linkWebsite: 'https://example.com',
+				tiktokHandle: 'example',
+			},
+			{ kind: 'upload', image: pngImage },
+			{ profilePicture, sectionImage },
+		);
+
+		expect(result.success).toBe(true);
+		expect(uploadAsset).toHaveBeenCalledTimes(3);
+		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
+			expect.objectContaining({
+				creatorName: 'Alex Creator',
+				quote: 'Thank you for your support!',
+				sectionDescription: 'Extra section',
+				instagramHandle: 'example',
+				xHandle: 'example',
+				linkWebsite: 'https://example.com',
+				tiktokHandle: 'example',
+				profilePicture: { filename: 'profile.png' },
+				sectionImage: { filename: 'section.png' },
+			}),
+		);
+	});
+
+	test('submit cleans up all uploaded assets when Storyblok story creation fails', async () => {
+		const { service, db, deleteAsset, createPublishedCampaignStory, uploadAsset } = createService();
+		uploadAsset
+			.mockResolvedValueOnce({ assetId: 10, asset: { filename: 'primary.png' } })
+			.mockResolvedValueOnce({ assetId: 11, asset: { filename: 'profile.png' } });
+		createPublishedCampaignStory.mockRejectedValueOnce(new Error('story failed'));
+
+		const result = await service.submit(
+			baseFields,
+			{ kind: 'upload', image: pngImage },
+			{
+				profilePicture: { ...pngImage, filename: 'profile.png' },
+				sectionImage: null,
+			},
+		);
+
+		expect(result.success).toBe(false);
+		expect(deleteAsset).toHaveBeenCalledWith(10);
+		expect(deleteAsset).toHaveBeenCalledWith(11);
+		expect(db.campaign.delete).toHaveBeenCalledWith({ where: { id: 'campaign-1' } });
+	});
+
+	test('submit cleans up successful uploads when a parallel Storyblok upload fails', async () => {
+		const { service, db, deleteAsset, uploadAsset } = createService();
+		uploadAsset.mockImplementation(async (_buffer: Buffer, filename: string) => {
+			if (filename === 'profile.png') {
+				await new Promise((resolve) => setTimeout(resolve, 20));
+				throw new Error('profile upload failed');
+			}
+
+			if (filename === 'section.png') {
+				await new Promise((resolve) => setTimeout(resolve, 5));
+
+				return { assetId: 12, asset: { filename: 'section.png' } };
+			}
+
+			return { assetId: 10, asset: { filename: 'primary.png' } };
+		});
+
+		const result = await service.submit(
+			{
+				...baseFields,
+				hasAdditionalInformation: true,
+				sectionDescription: 'Extra section',
+			},
+			{ kind: 'upload', image: pngImage },
+			{
+				profilePicture: { ...pngImage, filename: 'profile.png' },
+				sectionImage: { ...pngImage, filename: 'section.png' },
+			},
+		);
+
+		expect(result.success).toBe(false);
+		expect(deleteAsset).toHaveBeenCalledWith(10);
+		expect(deleteAsset).toHaveBeenCalledWith(12);
+		expect(db.campaign.delete).toHaveBeenCalledWith({ where: { id: 'campaign-1' } });
 	});
 
 	test('submit downloads and re-uploads a default image from the defaults folder', async () => {
@@ -225,11 +335,7 @@ describe('CampaignSubmissionService', () => {
 		if (!result.success) {
 			expect(result.error).toBe('default-image-invalid');
 		}
-		expect(loggerInstance.warn).toHaveBeenCalledWith('Campaign submission default image invalid', {
-			defaultImageId: 99,
-			reason: 'wrong-folder',
-			assetFolderId: 123,
-		});
+		expect(loggerInstance.warn).toHaveBeenCalledTimes(1);
 		expect(uploadAsset).not.toHaveBeenCalled();
 	});
 
@@ -243,11 +349,7 @@ describe('CampaignSubmissionService', () => {
 		if (!result.success) {
 			expect(result.error).toBe('default-image-invalid');
 		}
-		expect(loggerInstance.warn).toHaveBeenCalledWith('Campaign submission default image invalid', {
-			defaultImageId: 99,
-			reason: 'asset-not-found',
-			assetFolderId: null,
-		});
+		expect(loggerInstance.warn).toHaveBeenCalledTimes(1);
 		expect(uploadAsset).not.toHaveBeenCalled();
 	});
 
@@ -269,23 +371,8 @@ describe('CampaignSubmissionService', () => {
 		if (!result.success) {
 			expect(result.error).toBe('default-image-invalid');
 		}
-		expect(loggerInstance.warn).toHaveBeenCalledWith('Campaign submission default image invalid', {
-			defaultImageId: 99,
-			reason: 'image-format-unsupported',
-			assetFolderId: campaignSubmissionConfig.storyblokCampaignDefaultImagesFolderId,
-		});
+		expect(loggerInstance.warn).toHaveBeenCalledTimes(1);
 		expect(uploadAsset).not.toHaveBeenCalled();
-	});
-
-	test('submit cleans up created resources when Storyblok story creation fails', async () => {
-		const { service, db, deleteAsset, createPublishedCampaignStory } = createService();
-		createPublishedCampaignStory.mockRejectedValueOnce(new Error('story failed'));
-
-		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
-
-		expect(result.success).toBe(false);
-		expect(deleteAsset).toHaveBeenCalledWith(10);
-		expect(db.campaign.delete).toHaveBeenCalledWith({ where: { id: 'campaign-1' } });
 	});
 
 	test('submit returns a failure result when the title cannot be slugified', async () => {

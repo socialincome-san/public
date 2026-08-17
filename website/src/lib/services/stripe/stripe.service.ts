@@ -2,11 +2,16 @@
  * TESTING WEBHOOKS:
  * 1. Install Stripe CLI: `brew install stripe/stripe-cli/stripe`
  * 2. Login to Stripe: `stripe login`
- * 3. Forward webhooks to local endpoint:
- *    `stripe listen --forward-to localhost:3000/api/v1/stripe/webhook`
+ * 3. Forward webhooks to local endpoint (include subscription lifecycle events):
+ *    `stripe listen --forward-to localhost:3000/api/v1/stripe/webhook \
+ *      --events charge.succeeded,charge.updated,charge.failed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted`
  * 4. Copy the webhook signing secret from CLI output and set in your env.local:
  *    STRIPE_WEBHOOK_SECRET=whsec_xxx...
  * 5. Make a test contribution - webhooks will be forwarded to your local server.
+ *
+ * Production Stripe webhook endpoint must also allow:
+ * charge.succeeded, charge.updated, charge.failed,
+ * customer.subscription.created, customer.subscription.updated, customer.subscription.deleted
  */
 
 import { ContributionStatus, ContributorReferralSource, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
@@ -31,6 +36,8 @@ import {
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
+import { SubscriptionWriteService } from '../subscription/subscription-write.service';
+import { resolveStripeResourceId, resolveStripeSubscriptionIdFromInvoice } from '../subscription/subscription.mappers';
 import { assertContributorEmailMatchesCheckout, assertEmbeddedCheckoutSessionPaid } from './checkout-session-guards';
 import {
 	type CheckoutMetadata,
@@ -68,6 +75,7 @@ export class StripeService extends BaseService {
 		private readonly contributorReadService: ContributorReadService,
 		private readonly contributorWriteService: ContributorWriteService,
 		private readonly contributionWriteService: ContributionWriteService,
+		private readonly subscriptionWriteService: SubscriptionWriteService,
 		private readonly campaignReadService: CampaignReadService,
 		private readonly programAccessReadService: ProgramAccessReadService,
 		loggerInstance = logger,
@@ -554,6 +562,24 @@ export class StripeService extends BaseService {
 
 					return this.resultOk(result.data);
 				}
+				case 'customer.subscription.created':
+				case 'customer.subscription.updated':
+				case 'customer.subscription.deleted': {
+					const subscription = event.data.object;
+					this.logger.info('Processing subscription event', {
+						eventType: event.type,
+						subscriptionId: subscription.id,
+					});
+
+					const result = await this.processSubscriptionEvent(subscription);
+					if (!result.success) {
+						this.logger.error(result.error);
+
+						return this.resultFail(result.error);
+					}
+
+					return this.resultOk(result.data);
+				}
 				default:
 					return this.resultOk({ skipReason: `Unhandled event type: ${event.type}` });
 			}
@@ -842,7 +868,7 @@ export class StripeService extends BaseService {
 	private async processChargeEvent(charge: Stripe.Charge): Promise<ServiceResult<StripeWebhookResult>> {
 		try {
 			const fullCharge = await this.getStripeClient().charges.retrieve(charge.id, {
-				expand: ['balance_transaction', 'invoice'],
+				expand: ['balance_transaction'],
 			});
 
 			const customerId = fullCharge.customer;
@@ -945,6 +971,34 @@ export class StripeService extends BaseService {
 				campaignId = fallbackCampaignResult.data.id;
 			}
 
+			const stripeSubscription = await this.resolveStripeSubscriptionForCharge(fullCharge);
+
+			if (stripeSubscription) {
+				const metadataCampaignId = await this.resolveExistingCampaignId(stripeSubscription.metadata?.campaignId);
+				if (metadataCampaignId) {
+					campaignId = metadataCampaignId;
+				}
+
+				const subscriptionResult = await this.subscriptionWriteService.upsertFromStripeSubscription({
+					stripeSubscription,
+					contributorId: contributor.id,
+					campaignId,
+				});
+				if (!subscriptionResult.success) {
+					this.logger.error('Subscription upsert failed; continuing with contribution write', {
+						chargeId: fullCharge.id,
+						stripeSubscriptionId: stripeSubscription.id,
+						error: subscriptionResult.error,
+					});
+				} else if (!subscriptionResult.data) {
+					this.logger.warn('Could not map Stripe subscription for charge; continuing with contribution write', {
+						chargeId: fullCharge.id,
+						stripeSubscriptionId: stripeSubscription.id,
+						status: stripeSubscription.status,
+					});
+				}
+			}
+
 			const chargeCurrency = fullCharge.currency.toUpperCase();
 			if (!isValidCurrency(chargeCurrency)) {
 				return this.resultFail(`Unsupported currency from Stripe charge: ${fullCharge.currency}`);
@@ -995,6 +1049,146 @@ export class StripeService extends BaseService {
 
 			return this.resultFail(`Failed to process charge: ${JSON.stringify(error)}`);
 		}
+	}
+
+	private async processSubscriptionEvent(subscription: Stripe.Subscription): Promise<ServiceResult<StripeWebhookResult>> {
+		try {
+			const customerId = resolveStripeResourceId(subscription.customer);
+			if (!customerId) {
+				return this.resultOk({ skipReason: `Subscription ${subscription.id} has no customer` });
+			}
+
+			const contributorResult = await this.contributorReadService.findByStripeCustomerOrEmail(customerId);
+			if (!contributorResult.success) {
+				return this.resultFail(contributorResult.error);
+			}
+			if (!contributorResult.data) {
+				this.logger.info('Skipping subscription event for unknown contributor', {
+					subscriptionId: subscription.id,
+					customerId,
+				});
+
+				return this.resultOk({ skipReason: 'No contributor for Stripe customer' });
+			}
+
+			let campaignId = await this.resolveExistingCampaignId(subscription.metadata?.campaignId);
+
+			if (!campaignId) {
+				const existing = await this.db.subscription.findUnique({
+					where: { stripeSubscriptionId: subscription.id },
+					select: { campaignId: true },
+				});
+				campaignId = existing?.campaignId;
+			}
+
+			if (!campaignId) {
+				const fallbackCampaignResult = await this.campaignReadService.getFallbackCampaign();
+				if (!fallbackCampaignResult.success) {
+					return this.resultFail(fallbackCampaignResult.error);
+				}
+				campaignId = fallbackCampaignResult.data.id;
+			}
+
+			const upsertResult = await this.subscriptionWriteService.syncFromStripeSubscriptionEvent({
+				stripeSubscription: subscription,
+				contributorId: contributorResult.data.id,
+				campaignId,
+			});
+			if (!upsertResult.success) {
+				return this.resultFail(upsertResult.error);
+			}
+			if (!upsertResult.data) {
+				return this.resultOk({
+					skipReason: `Could not sync Stripe subscription ${subscription.id}`,
+				});
+			}
+
+			return this.resultOk({
+				contributorId: contributorResult.data.id,
+				isNewContributor: false,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to process subscription event: ${JSON.stringify(error)}`);
+		}
+	}
+
+	private async resolveExistingCampaignId(campaignId: string | undefined): Promise<string | undefined> {
+		if (!campaignId) {
+			return undefined;
+		}
+
+		const campaign = await this.db.campaign.findUnique({
+			where: { id: campaignId },
+			select: { id: true },
+		});
+
+		return campaign?.id;
+	}
+
+	private async resolveStripeSubscriptionForCharge(charge: Stripe.Charge): Promise<Stripe.Subscription | null> {
+		try {
+			const legacyInvoice = (charge as Stripe.Charge & { invoice?: string | Stripe.Invoice | null }).invoice;
+			const subscriptionIdFromLegacyInvoice = await this.resolveSubscriptionIdFromInvoiceRef(legacyInvoice);
+			if (subscriptionIdFromLegacyInvoice) {
+				return await this.getStripeClient().subscriptions.retrieve(subscriptionIdFromLegacyInvoice, {
+					expand: ['items.data.price'],
+				});
+			}
+
+			const paymentIntentId = resolveStripeResourceId(charge.payment_intent);
+			if (!paymentIntentId) {
+				return null;
+			}
+
+			const invoicePayments = await this.getStripeClient().invoicePayments.list({
+				payment: { type: 'payment_intent', payment_intent: paymentIntentId },
+				limit: 1,
+				expand: ['data.invoice'],
+			});
+			const invoicePayment = invoicePayments.data[0];
+			if (!invoicePayment) {
+				return null;
+			}
+
+			const invoice =
+				typeof invoicePayment.invoice === 'string'
+					? await this.getStripeClient().invoices.retrieve(invoicePayment.invoice)
+					: invoicePayment.invoice;
+			if (!invoice || ('deleted' in invoice && invoice.deleted)) {
+				return null;
+			}
+
+			const subscriptionId = resolveStripeSubscriptionIdFromInvoice(invoice);
+			if (!subscriptionId) {
+				return null;
+			}
+
+			return await this.getStripeClient().subscriptions.retrieve(subscriptionId, {
+				expand: ['items.data.price'],
+			});
+		} catch (error) {
+			this.logger.error('Failed to resolve Stripe subscription for charge', {
+				chargeId: charge.id,
+				paymentIntentId: resolveStripeResourceId(charge.payment_intent),
+				error,
+			});
+
+			return null;
+		}
+	}
+
+	private async resolveSubscriptionIdFromInvoiceRef(
+		invoiceRef: string | Stripe.Invoice | null | undefined,
+	): Promise<string | null> {
+		if (!invoiceRef) {
+			return null;
+		}
+
+		const invoice = typeof invoiceRef === 'string' ? await this.getStripeClient().invoices.retrieve(invoiceRef) : invoiceRef;
+
+		return resolveStripeSubscriptionIdFromInvoice(invoice);
 	}
 
 	private extractAmountChf(charge: Stripe.Charge): number {

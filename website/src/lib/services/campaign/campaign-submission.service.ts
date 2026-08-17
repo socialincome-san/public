@@ -11,6 +11,7 @@ import {
 	type CampaignSubmissionFields,
 	type CampaignSubmissionImageSource,
 	type CampaignSubmissionImageValidation,
+	type CampaignSubmissionOptionalImages,
 } from './campaign-submission-input';
 import { CampaignValidationService } from './campaign-validation.service';
 
@@ -20,7 +21,7 @@ export type CampaignSubmissionResult = {
 
 type SubmissionCleanupState = {
 	campaignId?: string;
-	assetId?: number;
+	assetIds: number[];
 	storyId?: number;
 };
 
@@ -49,6 +50,7 @@ export class CampaignSubmissionService extends BaseService {
 	async submit(
 		fields: CampaignSubmissionFields,
 		imageSource: CampaignSubmissionImageSource,
+		optionalImages: CampaignSubmissionOptionalImages = { profilePicture: null, sectionImage: null },
 	): Promise<ServiceResult<CampaignSubmissionResult>> {
 		const eligibilityResult = await this.programPublicSubmissionService.isProgramEligibleForPublicSubmission(
 			fields.programId,
@@ -73,14 +75,14 @@ export class CampaignSubmissionService extends BaseService {
 			return this.resultFail(slugResult.error, slugResult.status);
 		}
 		const slug = slugResult.data;
-		const cleanupState: SubmissionCleanupState = {};
+		const cleanupState: SubmissionCleanupState = { assetIds: [] };
 
 		try {
 			const imageResult = await this.resolveImage(imageSource);
 			if (!imageResult.success) {
 				return imageResult;
 			}
-			const image = imageResult.data;
+			const primaryImage = imageResult.data;
 
 			const campaign = await this.db.campaign.create({
 				data: {
@@ -92,25 +94,55 @@ export class CampaignSubmissionService extends BaseService {
 					isActive: true,
 					public: fields.public,
 					slug,
+					creatorName: fields.creatorName,
 					program: { connect: { id: fields.programId } },
 				},
 				select: { id: true, slug: true },
 			});
 			cleanupState.campaignId = campaign.id;
 
-			const { assetId, asset } = await this.storyblokManagementService.uploadAsset(
-				image.buffer,
-				image.filename,
-				image.mimeType,
-			);
-			cleanupState.assetId = assetId;
+			// Wait for all uploads to settle so successful assetIds are recorded before any cleanup.
+			const [primaryResult, profileResult, sectionResult] = await Promise.allSettled([
+				this.uploadImage(primaryImage, cleanupState),
+				this.uploadOptionalImage(optionalImages.profilePicture, cleanupState),
+				fields.hasAdditionalInformation
+					? this.uploadOptionalImage(optionalImages.sectionImage, cleanupState)
+					: Promise.resolve(undefined),
+			]);
+
+			if (primaryResult.status === 'rejected') {
+				throw primaryResult.reason;
+			}
+			if (profileResult.status === 'rejected') {
+				throw profileResult.reason;
+			}
+			if (sectionResult.status === 'rejected') {
+				throw sectionResult.reason;
+			}
+
+			const primaryAsset = primaryResult.value;
+			const profilePictureAsset = profileResult.value;
+			const sectionImageAsset = sectionResult.value;
 
 			const { storyId } = await this.storyblokManagementService.createPublishedCampaignStory({
 				slug,
 				title: fields.title,
 				description: fields.description,
 				portalSlug: slug,
-				primaryImage: asset,
+				primaryImage: primaryAsset,
+				creatorName: fields.creatorName,
+				quote: fields.quote,
+				...(profilePictureAsset ? { profilePicture: profilePictureAsset } : {}),
+				...(fields.hasAdditionalInformation
+					? {
+							sectionDescription: fields.sectionDescription,
+							...(sectionImageAsset ? { sectionImage: sectionImageAsset } : {}),
+							instagramHandle: fields.instagramHandle,
+							xHandle: fields.xHandle,
+							linkWebsite: fields.linkWebsite,
+							tiktokHandle: fields.tiktokHandle,
+						}
+					: {}),
 			});
 			cleanupState.storyId = storyId;
 
@@ -141,6 +173,31 @@ export class CampaignSubmissionService extends BaseService {
 		}
 	}
 
+	private async uploadImage(image: CampaignSubmissionImageValidation, cleanupState: SubmissionCleanupState) {
+		const uploaded = await this.storyblokManagementService.uploadAsset(image.buffer, image.filename, image.mimeType);
+		cleanupState.assetIds.push(uploaded.assetId);
+
+		return uploaded.asset;
+	}
+
+	private async uploadOptionalImage(image: CampaignSubmissionImageValidation | null, cleanupState: SubmissionCleanupState) {
+		if (!image) {
+			return undefined;
+		}
+
+		return this.uploadImage(image, cleanupState);
+	}
+
+	private failDefaultImage(defaultImageId: number, reason: string, assetFolderId: number | null = null) {
+		this.logger.warn('Campaign submission default image invalid', {
+			defaultImageId,
+			reason,
+			assetFolderId,
+		});
+
+		return this.resultFail('default-image-invalid', 400);
+	}
+
 	private async resolveImage(
 		imageSource: CampaignSubmissionImageSource,
 	): Promise<ServiceResult<CampaignSubmissionImageValidation>> {
@@ -151,39 +208,18 @@ export class CampaignSubmissionService extends BaseService {
 		try {
 			const asset = await this.storyblokManagementService.getAsset(imageSource.defaultImageId);
 			if (!asset) {
-				this.logger.warn('Campaign submission default image invalid', {
-					defaultImageId: imageSource.defaultImageId,
-					reason: 'asset-not-found',
-					assetFolderId: null,
-				});
-
-				return this.resultFail('default-image-invalid', 400);
+				return this.failDefaultImage(imageSource.defaultImageId, 'asset-not-found');
 			}
 
 			if (asset.assetFolderId !== campaignSubmissionConfig.storyblokCampaignDefaultImagesFolderId) {
-				this.logger.warn('Campaign submission default image invalid', {
-					defaultImageId: imageSource.defaultImageId,
-					reason: 'wrong-folder',
-					assetFolderId: asset.assetFolderId,
-				});
-
-				return this.resultFail('default-image-invalid', 400);
+				return this.failDefaultImage(imageSource.defaultImageId, 'wrong-folder', asset.assetFolderId);
 			}
 
 			const buffer = await this.storyblokManagementService.downloadAssetBuffer(asset.filename);
 			const declaredMimeType = asset.contentType ?? '';
 			const validation = validateCampaignSubmissionImageBuffer(buffer, declaredMimeType, filenameFromUrl(asset.filename));
 			if (!validation.success) {
-				this.logger.warn('Campaign submission default image invalid', {
-					defaultImageId: imageSource.defaultImageId,
-					reason: validation.error,
-					assetFolderId: asset.assetFolderId,
-				});
-
-				return this.resultFail(
-					validation.error === 'image-format-unsupported' ? 'default-image-invalid' : validation.error,
-					400,
-				);
+				return this.failDefaultImage(imageSource.defaultImageId, validation.error, asset.assetFolderId);
 			}
 
 			return this.resultOk(validation.data);
@@ -218,8 +254,8 @@ export class CampaignSubmissionService extends BaseService {
 			await this.storyblokManagementService.deleteStory(state.storyId);
 		}
 
-		if (state.assetId) {
-			await this.storyblokManagementService.deleteAsset(state.assetId);
+		for (const assetId of state.assetIds) {
+			await this.storyblokManagementService.deleteAsset(assetId);
 		}
 
 		if (state.campaignId) {

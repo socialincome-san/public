@@ -1,5 +1,6 @@
 import type { CountryCode } from '@/generated/prisma/enums';
 import { DateTime } from 'luxon';
+import type { BankAccountLatestReserve } from '../reserves/reserve.types';
 
 export type TimeRange = {
 	start: DateTime;
@@ -75,6 +76,7 @@ type TransparencyFinancialSummary = {
 export type TransparencyData = {
 	totals: TransparencyTotals;
 	financialSummary: TransparencyFinancialSummary;
+	reserveAccounts: BankAccountLatestReserve[];
 	timeRanges: ContributionTimeRange[];
 	topCountries: ContributionsByCountry[];
 };
