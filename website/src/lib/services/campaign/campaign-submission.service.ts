@@ -129,6 +129,7 @@ export class CampaignSubmissionService extends BaseService {
 				title: fields.title,
 				description: fields.description,
 				portalSlug: slug,
+				public: fields.public,
 				primaryImage: primaryAsset,
 				creatorName: fields.creatorName,
 				quote: fields.quote,
