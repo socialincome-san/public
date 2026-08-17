@@ -6,11 +6,6 @@ export const turnstileSiteverifyUrl = 'https://challenges.cloudflare.com/turnsti
 
 const SITEVERIFY_TIMEOUT_MS = 10_000;
 
-type TurnstileSiteverifyResponse = {
-	success: boolean;
-	'error-codes'?: string[];
-};
-
 type TurnstileVerificationErrorCode = Extract<
 	CampaignSubmissionErrorCode,
 	'turnstile-required' | 'turnstile-invalid' | 'submission-failed'
@@ -18,26 +13,13 @@ type TurnstileVerificationErrorCode = Extract<
 
 export type TurnstileVerificationResult = { success: true } | { success: false; error: TurnstileVerificationErrorCode };
 
-const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
-
-const parseSiteverifyResponse = (value: unknown): TurnstileSiteverifyResponse | null => {
-	if (!isRecord(value) || typeof value.success !== 'boolean') {
-		return null;
+const hasSuccessFlag = (value: unknown): value is { success: boolean } => {
+	if (typeof value !== 'object' || value === null) {
+		return false;
 	}
 
-	const errorCodes = value['error-codes'];
-	if (errorCodes === undefined) {
-		return { success: value.success };
-	}
-
-	if (!Array.isArray(errorCodes) || errorCodes.some((code) => typeof code !== 'string')) {
-		return null;
-	}
-
-	return { success: value.success, 'error-codes': errorCodes };
+	return 'success' in value && typeof value.success === 'boolean';
 };
-
-const getTurnstileSecretKey = () => process.env.TURNSTILE_SECRET_KEY?.trim();
 
 export const readTurnstileToken = (formData: FormData): string | null => {
 	const value = formData.get(turnstileResponseFieldName);
@@ -51,7 +33,7 @@ export const readTurnstileToken = (formData: FormData): string | null => {
 };
 
 export const verifyTurnstileToken = async (token: string | null): Promise<TurnstileVerificationResult> => {
-	const secret = getTurnstileSecretKey();
+	const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
 	if (!secret) {
 		logger.error('TURNSTILE_SECRET_KEY is missing');
 
@@ -63,15 +45,10 @@ export const verifyTurnstileToken = async (token: string | null): Promise<Turnst
 	}
 
 	try {
-		const body = new URLSearchParams({
-			secret,
-			response: token,
-		});
-
 		const response = await fetch(turnstileSiteverifyUrl, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-			body,
+			body: new URLSearchParams({ secret, response: token }),
 			cache: 'no-store',
 			signal: AbortSignal.timeout(SITEVERIFY_TIMEOUT_MS),
 		});
@@ -82,8 +59,8 @@ export const verifyTurnstileToken = async (token: string | null): Promise<Turnst
 			return { success: false, error: 'submission-failed' };
 		}
 
-		const payload = parseSiteverifyResponse(await response.json());
-		if (!payload) {
+		const payload: unknown = await response.json();
+		if (!hasSuccessFlag(payload)) {
 			logger.error('Turnstile siteverify returned an unexpected payload');
 
 			return { success: false, error: 'submission-failed' };

@@ -86,7 +86,7 @@ describe('verifyTurnstileToken', () => {
 	});
 
 	test('rejects a token that Cloudflare marks as invalid', async () => {
-		fetchMock.mockResolvedValue(jsonResponse({ success: false, 'error-codes': ['invalid-input-response'] }));
+		fetchMock.mockResolvedValue(jsonResponse({ success: false }));
 
 		await expect(verifyTurnstileToken('invalid-token')).resolves.toEqual({
 			success: false,
