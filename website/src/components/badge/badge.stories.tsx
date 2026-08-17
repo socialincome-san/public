@@ -4,16 +4,21 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 const meta = {
 	title: 'Components/Badge',
 	component: Badge,
+	tags: ['autodocs'],
+
 	args: {
 		children: 'Badge',
 	},
 
-	tags: ['autodocs'],
 	parameters: {
 		docs: {
 			description: {
 				component: 'A badge displays short status or contextual information.',
 			},
+		},
+		design: {
+			type: 'figma',
+			url: 'https://www.figma.com/design/IDEMMGr7QkVOY4Ksbgbc57/Social-Income---shadcn-UI-Kit?node-id=23-995&p=f&t=zjQYKr57x1DPvxtF-0',
 		},
 	},
 	argTypes: {
