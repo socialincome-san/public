@@ -180,11 +180,7 @@ export class StoryblokService extends BaseService {
 	}
 
 	private static isListedCampaignStory(story: unknown): story is ISbStoryData<Campaign> {
-		return (
-			StoryblokService.isCampaignStory(story) &&
-			story.content.public === true &&
-			story.content.approved === true
-		);
+		return StoryblokService.isCampaignStory(story) && story.content.public === true && story.content.approved === true;
 	}
 
 	private static isFaqStory(story: unknown): story is ISbStoryData<Faq> {
