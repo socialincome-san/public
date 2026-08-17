@@ -5,8 +5,20 @@ import { Button } from './button';
 const meta = {
 	title: 'Components/Button',
 	component: Button,
+	tags: ['autodocs'],
 	args: {
 		children: 'Donate now',
+	},
+	parameters: {
+		docs: {
+			description: {
+				component: 'A reusable button component for user interactions.',
+			},
+		},
+		design: {
+			type: 'figma',
+			url: 'https://www.figma.com/design/IDEMMGr7QkVOY4Ksbgbc57/Social-Income---shadcn-UI-Kit?node-id=34-6&p=f&t=zjQYKr57x1DPvxtF-0',
+		},
 	},
 	argTypes: {
 		variant: {

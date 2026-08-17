@@ -103,7 +103,6 @@ jobs:
           TF_VAR_stripe_secret_key: ${{ secrets.TF_PROD_STRIPE_SECRET_KEY }}
           TF_VAR_stripe_publishable_key: ${{ secrets.TF_PROD_STRIPE_PUBLISHABLE_KEY }}
           TF_VAR_stripe_webhook_secret: ${{ secrets.TF_PROD_STRIPE_WEBHOOK_SECRET }}
-          TF_VAR_turnstile_site_key: ${{ secrets.TF_PROD_NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
           TF_VAR_turnstile_secret_key: ${{ secrets.TF_PROD_TURNSTILE_SECRET_KEY }}
           TF_VAR_sendgrid_api_key: ${{ secrets.TF_PROD_SENDGRID_API_KEY }}
           TF_VAR_sendgrid_list_id: ${{ secrets.TF_PROD_SENDGRID_LIST_ID }}
