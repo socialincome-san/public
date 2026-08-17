@@ -4,10 +4,19 @@ import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
+import { type PaymentEventType } from '@/generated/prisma/client';
 import { Translator } from '@/lib/i18n/translator';
 import type { YourContributionsTableViewRow } from '@/lib/services/contribution/contribution.types';
 import type { ColumnDef } from '@tanstack/react-table';
 import { CurrencyCell } from '../elements/currency-cell';
+
+const paymentEventTypeSourceKeys: Record<PaymentEventType, string> = {
+	stripe: 'contributions.sources.stripe',
+	bank_transfer: 'contributions.sources.wire-transfer',
+	benevity: 'contributions.sources.benevity',
+	cash: 'contributions.sources.cash',
+	raisenow: 'contributions.sources.raisenow',
+};
 
 export const makeYourContributionsColumns = (
 	_hideProgramName = false,
@@ -36,20 +45,22 @@ export const makeYourContributionsColumns = (
 		{
 			accessorKey: 'amount',
 			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('contributions.amount')}</SortableHeader>,
+			cell: (ctx) => <CurrencyCell ctx={ctx} currency={ctx.row.original.currency} />,
+		},
+		{
+			accessorKey: 'paymentEventType',
+			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('contributions.payment-type')}</SortableHeader>,
 			cell: (ctx) => {
-				const currency = ctx.row.original.currency;
+				const type = ctx.row.original.paymentEventType;
+				const translatedValue = type ? translator?.t(paymentEventTypeSourceKeys[type]) : undefined;
 
-				return <CurrencyCell ctx={ctx} currency={currency} />;
+				return <TextCell ctx={ctx} translatedValue={translatedValue} />;
 			},
 		},
 		{
-			accessorKey: 'currency',
-			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('contributions.currency')}</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'campaignTitle',
-			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('contributions.campaign')}</SortableHeader>,
+			id: 'attribution',
+			accessorFn: (row) => row.campaignTitle,
+			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('contributions.attribution')}</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 	];
