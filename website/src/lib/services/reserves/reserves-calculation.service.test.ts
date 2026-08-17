@@ -79,7 +79,7 @@ describe('ReservesCalculationService.calculate', () => {
 			getAll: jest.fn().mockResolvedValue({ success: true, data: [postFinanceAccount] }),
 		};
 		const postFinanceBalanceService = {
-			getLatestClavBalances: jest.fn().mockResolvedValue({
+			getLatestBalances: jest.fn().mockResolvedValue({
 				success: true,
 				data: [{ iban: 'CH1909000000151126386', amount: 125, currency: 'EUR' }],
 			}),
@@ -348,7 +348,7 @@ describe('ReservesCalculationService.calculate', () => {
 				getAll: jest.fn().mockResolvedValue({ success: true, data: [postFinanceAccount] }),
 			};
 			const postFinanceBalanceService = {
-				getLatestClavBalances: jest.fn().mockResolvedValue({
+				getLatestBalances: jest.fn().mockResolvedValue({
 					success: true,
 					data: [{ iban: 'CH1909000000151126386', amount: 125, currency: 'CHF' }],
 				}),

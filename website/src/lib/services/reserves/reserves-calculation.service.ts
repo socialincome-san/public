@@ -79,7 +79,6 @@ export class ReservesCalculationService extends BaseService {
 		const pawaPayAccountsResult = await this.bankAccountWriteService.ensurePawaPayWallets(
 			pawaPayBalancesResult.data.map(({ country, provider }) => pawaPayWalletKey(country, provider)),
 		);
-		);
 		if (!pawaPayAccountsResult.success) {
 			return pawaPayAccountsResult;
 		}
