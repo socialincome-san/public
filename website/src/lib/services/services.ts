@@ -6,7 +6,6 @@ import { CampaignPublicWebsiteService } from './campaign/campaign-public-website
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignSubmissionService } from './campaign/campaign-submission.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
-import { CampaignWriteService } from './campaign/campaign-write.service';
 import { CandidateImportService } from './candidate/candidate-import.service';
 import { CandidateReadService } from './candidate/candidate-read.service';
 import { CandidateValidationService } from './candidate/candidate-validation.service';
@@ -180,7 +179,6 @@ const contributorWrite = new ContributorWriteService(
 const messagingRecipients = new MessagingRecipientsService(prisma, contributorRead, recipientRead, localPartnerRead);
 const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
 const campaignValidation = new CampaignValidationService(prisma);
-const campaignWrite = new CampaignWriteService(prisma, programAccessRead, campaignValidation);
 const programPublicSubmission = new ProgramPublicSubmissionService(prisma, storyblok);
 const storyblokManagement = new StoryblokManagementService();
 const campaignSubmission = new CampaignSubmissionService(
@@ -289,7 +287,6 @@ export const services = {
 	},
 	write: {
 		candidate: candidateWrite,
-		campaign: campaignWrite,
 		focus: focusWrite,
 		contribution: contributionWrite,
 		subscription: subscriptionWrite,

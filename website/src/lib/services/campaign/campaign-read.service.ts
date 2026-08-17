@@ -13,7 +13,6 @@ import {
 	CampaignOption,
 	CampaignPage,
 	CampaignPaginatedTableView,
-	CampaignPayload,
 	CampaignTableQuery,
 	CampaignTableViewRow,
 	PublicCampaignActivity,
@@ -117,66 +116,6 @@ export class CampaignReadService extends BaseService {
 		const percentageCollected = goalAmount ? Math.round((amountCollected / goalAmount) * 100) : null;
 
 		return { amountCollected, percentageCollected };
-	}
-
-	async get(userId: string, campaignId: string): Promise<ServiceResult<CampaignPayload>> {
-		try {
-			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!accessibleProgramsResult.success) {
-				return this.resultFail(accessibleProgramsResult.error);
-			}
-
-			const campaign = await this.db.campaign.findFirst({
-				where: { id: campaignId },
-				select: {
-					id: true,
-					title: true,
-					description: true,
-					secondDescriptionTitle: true,
-					secondDescription: true,
-					thirdDescriptionTitle: true,
-					thirdDescription: true,
-					linkWebsite: true,
-					linkFacebook: true,
-					linkInstagram: true,
-					goal: true,
-					currency: true,
-					additionalAmountChf: true,
-					endDate: true,
-					isActive: true,
-					public: true,
-					featured: true,
-					slug: true,
-					metadataDescription: true,
-					metadataOgImage: true,
-					metadataTwitterImage: true,
-					creatorName: true,
-					creatorEmail: true,
-					programId: true,
-					program: { select: { id: true, name: true } },
-					createdAt: true,
-					updatedAt: true,
-				},
-			});
-
-			if (!campaign) {
-				return this.resultFail('Campaign not found');
-			}
-			const hasProgramReadAccess = accessibleProgramsResult.data.some((access) => access.programId === campaign.programId);
-			if (!hasProgramReadAccess) {
-				return this.resultFail('Permission denied');
-			}
-
-			return this.resultOk({
-				...campaign,
-				goal: campaign.goal ? Number(campaign.goal) : null,
-				additionalAmountChf: campaign.additionalAmountChf ? Number(campaign.additionalAmountChf) : null,
-			});
-		} catch (error) {
-			this.logger.error(error);
-
-			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
-		}
 	}
 
 	async getById(campaignId: string): Promise<ServiceResult<CampaignPage>> {

@@ -25,7 +25,7 @@ export type CampaignPaginatedTableView = {
 	totalCount: number;
 };
 
-export type CampaignPayload = {
+type CampaignPayload = {
 	id: string;
 	title: string;
 	description: string;

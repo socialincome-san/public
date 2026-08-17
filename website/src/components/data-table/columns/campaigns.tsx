@@ -1,6 +1,5 @@
 'use client';
 
-import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
@@ -56,12 +55,6 @@ export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
 			},
 			header: (ctx) => <SortableHeader ctx={ctx}>Link</SortableHeader>,
 			cell: (ctx) => <CopyUrlCell ctx={ctx} />,
-		},
-		{
-			id: 'actions',
-			header: '',
-			enableHiding: false,
-			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
 };
