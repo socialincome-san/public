@@ -8,7 +8,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
-import { isCampaignPubliclyActive, matchesPublicCampaignActivity } from './campaign-public-activity';
+import { isCampaignActive, matchesPublicCampaignActivity } from './campaign-public-activity';
 import {
 	CampaignOption,
 	CampaignPage,
@@ -374,7 +374,7 @@ export class CampaignReadService extends BaseService {
 				campaign.goal,
 				exchangeRateCache,
 			);
-			const isActive = isCampaignPubliclyActive({
+			const isActive = isCampaignActive({
 				endDate: campaign.endDate,
 				goal: campaign.goal,
 				amountCollected,

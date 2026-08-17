@@ -179,6 +179,14 @@ export class StoryblokService extends BaseService {
 		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.campaign.toLowerCase();
 	}
 
+	private static isListedCampaignStory(story: unknown): story is ISbStoryData<Campaign> {
+		return (
+			StoryblokService.isCampaignStory(story) &&
+			story.content.public === true &&
+			story.content.approved === true
+		);
+	}
+
 	private static isFaqStory(story: unknown): story is ISbStoryData<Faq> {
 		if (!story || typeof story !== 'object' || !('content' in story)) {
 			return false;
@@ -610,7 +618,7 @@ export class StoryblokService extends BaseService {
 				starts_with: `${StoryblokService.campaignsPath}/`,
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
-			let campaigns = data.filter((story) => StoryblokService.isCampaignStory(story));
+			let campaigns = data.filter((story) => StoryblokService.isListedCampaignStory(story));
 
 			if (campaigns.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
 				const draftParams: ISbStoriesParams = {
@@ -619,7 +627,7 @@ export class StoryblokService extends BaseService {
 					starts_with: `${StoryblokService.campaignsPath}/`,
 				};
 				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
-				campaigns = draftData.filter((story) => StoryblokService.isCampaignStory(story));
+				campaigns = draftData.filter((story) => StoryblokService.isListedCampaignStory(story));
 			}
 
 			return this.resultOk(campaigns);

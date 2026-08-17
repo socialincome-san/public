@@ -5,7 +5,7 @@ import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { isCampaignPubliclyActive, matchesPublicCampaignActivity } from '@/lib/services/campaign/campaign-public-activity';
+import { isCampaignActive, matchesPublicCampaignActivity } from '@/lib/services/campaign/campaign-public-activity';
 import {
 	campaignSubmissionErrorCodes,
 	type CampaignSubmissionErrorCode,
@@ -38,7 +38,7 @@ export const CampaignsOverview = async ({
 	const hasCmsHeader = Boolean(title?.trim()) || Boolean(text?.trim());
 	const filteredCampaigns = campaigns
 		.map((campaign) => {
-			const isActive = isCampaignPubliclyActive({
+			const isActive = isCampaignActive({
 				endDate: campaign.endDate,
 				goal: campaign.goal,
 				amountCollected: statsById[campaign.id]?.amountCollected ?? null,
