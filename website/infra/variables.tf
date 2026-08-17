@@ -60,6 +60,12 @@ variable "scheduler_api_key" {
   sensitive   = true
 }
 
+variable "pawapay_api_token" {
+  description = "Bearer token for the PawaPay API"
+  type        = string
+  sensitive   = true
+}
+
 variable "stripe_product_onetime" {
   description = "Stripe product ID for one-time payments"
   type        = string
@@ -154,6 +160,12 @@ variable "base_url" {
 
 variable "exchange_rates_api" {
   description = "API key for exchange rates service"
+  type        = string
+  sensitive   = true
+}
+
+variable "etherscan_api_key" {
+  description = "API key for Etherscan"
   type        = string
   sensitive   = true
 }

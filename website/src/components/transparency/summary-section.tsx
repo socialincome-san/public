@@ -6,7 +6,7 @@ import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 
 type ReserveAccount = {
 	bankAccountId: string;
-	bankAccountNumber: string;
+	bankAccountNumber: string | null;
 	description: string | null;
 	amount: DisplayAmount | null;
 	recordedAt: Date | null;
