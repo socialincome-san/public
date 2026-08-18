@@ -244,7 +244,7 @@ const stripe = new StripeService(
 	campaignRead,
 	programAccessRead,
 );
-const subscriptionRead = new SubscriptionReadService(prisma, contributionRead, stripe);
+const subscriptionRead = new SubscriptionReadService(prisma, programAccessRead, contributionRead, stripe);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);

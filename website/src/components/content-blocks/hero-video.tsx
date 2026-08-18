@@ -162,6 +162,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 									type="button"
 									variant="outline"
 									size="lg"
+									className="text-primary-foreground"
 									aria-haspopup="dialog"
 									onClick={() => openWizardAtAmountStep()}
 								>

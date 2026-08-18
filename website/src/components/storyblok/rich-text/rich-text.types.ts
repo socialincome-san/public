@@ -17,3 +17,10 @@ export type RichTextAlignmentProps = {
 export type RichTextHeadingProps = RichTextAlignmentProps & {
 	level: HeadingSize;
 };
+
+export type RichTextTableCellProps = {
+	colspan?: number;
+	rowspan?: number;
+	colwidth?: number[];
+	backgroundColor?: string;
+};

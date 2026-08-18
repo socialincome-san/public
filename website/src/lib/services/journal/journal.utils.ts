@@ -1,8 +1,8 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
 import type { Article, Person } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { JournalOverviewFilter } from '@/lib/services/journal/journal.types';
 import {
 	createWebsiteJournalPath,
-	createWebsiteJournalTagLink,
 	createWebsitePersonLink,
 	formatStoryblokUrl,
 } from '@/lib/services/storyblok/storyblok.utils';
@@ -20,8 +20,20 @@ const PERSON_PORTRAIT_HEIGHT = 480;
 export const parseJournalTagSlug = (searchParams: Record<string, string | undefined>) =>
 	typeof searchParams.tag === 'string' ? searchParams.tag : undefined;
 
-export const buildJournalOverviewPathname = (journalPath: string, tagSlug?: string) =>
-	tagSlug ? `${journalPath}?tag=${encodeURIComponent(tagSlug)}` : journalPath;
+export const parseJournalArticleTypeSlug = (searchParams: Record<string, string | undefined>) =>
+	typeof searchParams.type === 'string' ? searchParams.type : undefined;
+
+export const buildJournalOverviewPathname = (journalPath: string, filter?: JournalOverviewFilter) => {
+	if (filter?.tagSlug) {
+		return `${journalPath}?tag=${encodeURIComponent(filter.tagSlug)}`;
+	}
+
+	if (filter?.articleTypeSlug) {
+		return `${journalPath}?type=${encodeURIComponent(filter.articleTypeSlug)}`;
+	}
+
+	return journalPath;
+};
 
 const buildHomeBreadcrumb = (homeLabel: string, lang: string, region: string): BreadcrumbLinkType => ({
 	label: homeLabel,
@@ -34,14 +46,10 @@ export const buildJournalOverviewBreadcrumbs = (
 	journalPath: string,
 	lang: string,
 	region: string,
-	tag?: { slug: string; label: string },
+	activeFilter?: BreadcrumbLinkType,
 ): BreadcrumbLinkType[] =>
-	tag
-		? [
-				buildHomeBreadcrumb(homeLabel, lang, region),
-				{ label: journalLabel, href: journalPath },
-				{ label: tag.label, href: createWebsiteJournalTagLink(tag.slug, lang, region) },
-			]
+	activeFilter
+		? [buildHomeBreadcrumb(homeLabel, lang, region), { label: journalLabel, href: journalPath }, activeFilter]
 		: [buildHomeBreadcrumb(homeLabel, lang, region), { label: journalLabel, href: journalPath }];
 
 export const buildJournalArticleBreadcrumbs = (
