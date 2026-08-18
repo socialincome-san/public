@@ -12,6 +12,10 @@ export type CampaignTableViewRow = {
 	createdAt: Date;
 };
 
+export type CampaignTableEntry = CampaignTableViewRow & {
+	programPortalSlug: string | null;
+};
+
 export type CampaignTableQuery = {
 	page: number;
 	pageSize: number;

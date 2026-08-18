@@ -1,9 +1,8 @@
-import { Campaign, ContributionStatus, Currency, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { Campaign, ContributionStatus, Currency, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
 import { nowMs } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
-import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
@@ -12,9 +11,7 @@ import { isCampaignActive, matchesPublicCampaignActivity } from './campaign-publ
 import {
 	CampaignOption,
 	CampaignPage,
-	CampaignPaginatedTableView,
-	CampaignTableQuery,
-	CampaignTableViewRow,
+	CampaignTableEntry,
 	PublicCampaignActivity,
 	PublicCampaignCard,
 	PublicCampaignStats,
@@ -30,38 +27,6 @@ export class CampaignReadService extends BaseService {
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
-	}
-
-	private buildCampaignOrderBy(query: CampaignTableQuery): Prisma.CampaignOrderByWithRelationInput[] {
-		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
-		const sortBy = toSortKey(query.sortBy, [
-			'id',
-			'title',
-			'description',
-			'currency',
-			'endDate',
-			'isActive',
-			'programName',
-			'createdAt',
-		] as const);
-		switch (sortBy) {
-			case 'id':
-				return [{ id: direction }];
-			case 'title':
-				return [{ title: direction }];
-			case 'description':
-				return [{ description: direction }];
-			case 'currency':
-				return [{ currency: direction }];
-			case 'endDate':
-				return [{ endDate: direction }];
-			case 'programName':
-				return [{ program: { name: direction } }];
-			case 'createdAt':
-				return [{ createdAt: direction }];
-			default:
-				return [{ createdAt: 'desc' }];
-		}
 	}
 
 	private daysUntilTs(ts: Date): number {
@@ -491,10 +456,7 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
-	async getPaginatedTableView(
-		userId: string,
-		query: CampaignTableQuery,
-	): Promise<ServiceResult<CampaignPaginatedTableView>> {
+	async getTableEntries(userId: string): Promise<ServiceResult<CampaignTableEntry[]>> {
 		try {
 			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessibleProgramsResult.success) {
@@ -505,54 +467,31 @@ export class CampaignReadService extends BaseService {
 			);
 			const programIds = Array.from(new Set(programAccesses.map((access) => access.programId)));
 			if (programIds.length === 0) {
-				return this.resultOk({ tableRows: [], totalCount: 0 });
+				return this.resultOk([]);
 			}
-			const search = query.search.trim();
-			const where = {
-				programId: { in: programIds },
-				...(search
-					? {
-							OR: [
-								{ id: { contains: search, mode: 'insensitive' as const } },
-								{ title: { contains: search, mode: 'insensitive' as const } },
-								{ description: { contains: search, mode: 'insensitive' as const } },
-								{ program: { name: { contains: search, mode: 'insensitive' as const } } },
-							],
-						}
-					: {}),
-			};
-			const sortByActivity = query.sortBy === 'isActive';
-			const skip = (query.page - 1) * query.pageSize;
 
-			const [campaigns, totalCount] = await Promise.all([
-				this.db.campaign.findMany({
-					where,
-					select: {
-						id: true,
-						legacyFirestoreId: true,
-						slug: true,
-						title: true,
-						description: true,
-						currency: true,
-						endDate: true,
-						goal: true,
-						additionalAmountChf: true,
-						programId: true,
-						program: { select: { name: true } },
-						createdAt: true,
-						contributions: {
-							where: { status: ContributionStatus.succeeded },
-							select: { amountChf: true },
-						},
+			const campaigns = await this.db.campaign.findMany({
+				where: { programId: { in: programIds } },
+				select: {
+					id: true,
+					legacyFirestoreId: true,
+					title: true,
+					description: true,
+					currency: true,
+					endDate: true,
+					goal: true,
+					additionalAmountChf: true,
+					program: { select: { name: true, slug: true } },
+					createdAt: true,
+					contributions: {
+						where: { status: ContributionStatus.succeeded },
+						select: { amountChf: true },
 					},
-					orderBy: this.buildCampaignOrderBy(query),
-					...(sortByActivity ? {} : { skip, take: query.pageSize }),
-				}),
-				this.db.campaign.count({ where }),
-			]);
+				},
+			});
 
 			const exchangeRateCache = new Map<Currency, number | null>();
-			const mappedRows: CampaignTableViewRow[] = [];
+			const entries: CampaignTableEntry[] = [];
 			for (const campaign of campaigns) {
 				const { amountCollected } = await this.computeCollectedAmount(
 					campaign.contributions,
@@ -562,7 +501,7 @@ export class CampaignReadService extends BaseService {
 					exchangeRateCache,
 				);
 
-				mappedRows.push({
+				entries.push({
 					id: campaign.id,
 					link: this.getCampaignLink(campaign.id, campaign.legacyFirestoreId),
 					title: campaign.title,
@@ -575,21 +514,12 @@ export class CampaignReadService extends BaseService {
 						amountCollected,
 					}),
 					programName: campaign.program?.name ?? null,
+					programPortalSlug: campaign.program?.slug ?? null,
 					createdAt: campaign.createdAt,
 				});
 			}
 
-			const tableRows = sortByActivity
-				? [...mappedRows]
-						.sort((left, right) => {
-							const delta = Number(left.isActive) - Number(right.isActive);
-
-							return query.sortDirection === 'asc' ? delta : -delta;
-						})
-						.slice(skip, skip + query.pageSize)
-				: mappedRows;
-
-			return this.resultOk({ tableRows, totalCount });
+			return this.resultOk(entries);
 		} catch (error) {
 			this.logger.error(error);
 
