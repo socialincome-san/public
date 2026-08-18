@@ -27,6 +27,7 @@ import type { Page } from '@/generated/storyblok/types/109655/storyblok-componen
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { ParsedUrlQueryInput } from 'querystring';
 import { Fragment } from 'react';
+import { RunwayMonthGridBlock } from '../content-blocks/runway-month-grid-block';
 
 type PageBlock = Page['content'][number];
 type RichtextButtonHeaderAction = 'createProgram';
@@ -99,6 +100,8 @@ const renderPageBlock = (
 			return <TwoColumnTextBlock blok={block} />;
 		case 'videoText':
 			return <VideoTextBlock blok={block} />;
+		case 'runwayMonthGrid':
+			return <RunwayMonthGridBlock blok={block} lang={lang} />;
 		default:
 			block satisfies never;
 

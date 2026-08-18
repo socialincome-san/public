@@ -1,8 +1,9 @@
 import { RunwayMonth } from '@/components/runway-month/runway-month';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 
 type Props = {
 	numberOfMonths: number;
-	language?: 'en' | 'de' | 'it' | 'fr';
+	language?: Exclude<WebsiteLanguage, 'kri'>;
 };
 
 export const RunwayMonthGrid = ({ numberOfMonths, language = 'en' }: Props) => {
