@@ -20,6 +20,7 @@ import {
 	isCampaignSubmissionImageMultipartField,
 	resolveCampaignSubmissionQuote,
 } from '@/lib/services/campaign/campaign-submission-input';
+import { turnstileResponseFieldName } from '@/lib/services/campaign/turnstile-field';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
@@ -74,10 +75,20 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [submitSuccess, setSubmitSuccess] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+	const [turnstileWidgetKey, setTurnstileWidgetKey] = useState(0);
 	const isSubmittingRef = useRef(false);
 	const stepTitleRef = useRef<HTMLHeadingElement>(null);
 	const hasMountedStep = useRef(false);
 	const defaultImagesRef = useRef(defaultImages);
+	const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+	const onTurnstileTokenChange = useCallback((token: string | null) => {
+		setTurnstileToken(token);
+	}, []);
+	const resetTurnstileWidget = () => {
+		setTurnstileToken(null);
+		setTurnstileWidgetKey((key) => key + 1);
+	};
 
 	const resolveError = useCallback(
 		(code: string) => {
@@ -435,6 +446,12 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			return;
 		}
 
+		if (turnstileSiteKey && !turnstileToken) {
+			setSubmitError(resolveError('turnstile-required'));
+
+			return;
+		}
+
 		const submissionValues = {
 			...values,
 			quote: resolveCampaignSubmissionQuote(values.quote, labels.quotePlaceholder),
@@ -453,6 +470,9 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				profilePicture: profilePictureFile ?? undefined,
 				sectionImage: values.hasAdditionalInformation ? (sectionImageFile ?? undefined) : undefined,
 			});
+			if (turnstileToken) {
+				formData.append(turnstileResponseFieldName, turnstileToken);
+			}
 
 			const response = await fetch('/api/campaign-submissions', {
 				method: 'POST',
@@ -480,6 +500,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 					setSubmitError(errorMessage);
 				}
 
+				resetTurnstileWidget();
+
 				return;
 			}
 
@@ -488,10 +510,12 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			clearPrimaryImageSelection();
 			profilePicture.clear();
 			sectionImage.clear();
+			resetTurnstileWidget();
 			setDefaultImages([]);
 			setCurrentStep('program');
 			onSuccess?.();
 		} catch {
+			resetTurnstileWidget();
 			setSubmitError(labels.error);
 		} finally {
 			isSubmittingRef.current = false;
@@ -576,6 +600,10 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 							sectionImage,
 							submitError,
 							isSubmitting,
+							lang,
+							turnstileSiteKey,
+							turnstileWidgetKey,
+							onTurnstileTokenChange,
 						}}
 					/>
 				</div>
