@@ -1,5 +1,6 @@
 import type { CountryCode } from '@/generated/prisma/enums';
 import type {
+	ArticleType,
 	Campaign,
 	Country,
 	Faq,
@@ -20,6 +21,7 @@ import {
 	STORYBLOK_PROGRAMS_FOLDER,
 	getCampaignStoryPath,
 	getJournalArticleStoryPath,
+	getJournalArticleTypeStoryPath,
 	getJournalTagStoryPath,
 	getPersonStoryPath,
 	getProgramStoryPath,
@@ -95,6 +97,7 @@ export class StoryblokService extends BaseService {
 
 	private static readonly contentType = {
 		article: 'article',
+		articleType: 'articleType',
 		campaign: 'Campaign',
 		country: 'Country',
 		focus: 'Focus',
@@ -362,6 +365,25 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	async getArticleCountByArticleTypeForDefaultLang(articleTypeId: string): Promise<ServiceResult<number>> {
+		try {
+			const params: ISbStoriesParams = {
+				...(await this.getStoryParams(defaultLanguage)),
+				per_page: 1,
+				excluding_fields: StoryblokService.excludedFieldsForCounting,
+				content_type: StoryblokService.contentType.article,
+				filter_query: this.articlesByArticleTypeFilter(articleTypeId),
+			};
+			const res = await getStoryblokApi().get(StoryblokService.storiesPath, params);
+
+			return this.resultOk(res.total);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to count articles by article type: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getArticleCountByAuthorForDefaultLang(authorId: string): Promise<ServiceResult<number>> {
 		try {
 			const params: ISbStoriesParams = {
@@ -494,11 +516,11 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	async getOverviewTags(lang: string): Promise<ServiceResult<ISbStoryData<Tag>[]>> {
+	async getOverviewArticleTypes(lang: string): Promise<ServiceResult<ISbStoryData<ArticleType>[]>> {
 		try {
 			const params: ISbStoriesParams = {
 				...(await this.getStoryParams(lang)),
-				content_type: StoryblokService.contentType.tag,
+				content_type: StoryblokService.contentType.articleType,
 				filter_query: { displayInOverviewPage: { is: true } },
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
@@ -541,6 +563,23 @@ export class StoryblokService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Failed to fetch tag: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getArticleType(slug: string, lang: string): Promise<ServiceResult<ISbStoryData<ArticleType>>> {
+		try {
+			const res = await this.withLanguageFallback(
+				async (l, s) =>
+					getStoryblokApi().get(`cdn/stories/${getJournalArticleTypeStoryPath(s)}`, await this.getStoryParams(l)),
+				lang,
+				slug,
+			);
+
+			return this.resultOk((res.data as { story: ISbStoryData<ArticleType> }).story);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Failed to fetch article type: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -990,6 +1029,30 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
+	async getArticlesByArticleType(
+		articleTypeId: string,
+		lang: string,
+	): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> {
+		try {
+			const params: ISbStoriesParams = {
+				...(await this.getStoryParams(lang)),
+				per_page: StoryblokService.defaultPageSize,
+				resolve_relations: StoryblokService.standardArticleRelationsToResolve,
+				excluding_fields: StoryblokService.contentField,
+				sort_by: 'first_published_at:desc',
+				content_type: StoryblokService.contentType.article,
+				filter_query: this.articlesByArticleTypeFilter(articleTypeId),
+			};
+			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+
+			return this.resultOk(data);
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultOk([]);
+		}
+	}
+
 	async getArticlesByAuthor(authorId: string, lang: string): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> {
 		try {
 			const params: ISbStoriesParams = {
@@ -1129,6 +1192,10 @@ export class StoryblokService extends BaseService {
 
 	private articleByTagsFilter(tagId: string) {
 		return { tags: { any_in_array: tagId } };
+	}
+
+	private articlesByArticleTypeFilter(articleTypeId: string) {
+		return { type: { in: articleTypeId } };
 	}
 
 	private articlesByAuthorFilter(authorId: string) {
