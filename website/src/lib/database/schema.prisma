@@ -95,7 +95,6 @@ enum DonationInterval {
 
 enum SubscriptionStatus {
   active
-  canceled
   ended
 }
 

@@ -724,7 +724,7 @@ export class StripeService extends BaseService {
 				await this.db.subscription.update({
 					where: { id: subscription.id },
 					data: {
-						status: lifecycle?.status ?? SubscriptionStatus.canceled,
+						status: lifecycle?.status ?? SubscriptionStatus.ended,
 						canceledAt: lifecycle?.canceledAt ?? resolveStripeSubscriptionCanceledAt(stripeSubscription),
 						cancellationReason: input.reason,
 					},
