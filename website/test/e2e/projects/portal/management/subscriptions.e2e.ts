@@ -36,7 +36,7 @@ test('shows operator subscription rows under management', async ({ page }) => {
 
 	await page.goto(`/portal/management/subscriptions?page=1&pageSize=10&search=${encodeURIComponent(email)}`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await expect(page.getByText(email)).toBeVisible();
+	await expect(page.getByRole('row').filter({ hasText: email })).toHaveCount(2);
 	await expect(page.getByText(stripeSubscriptionId, { exact: true })).toBeVisible();
 });
 
@@ -60,7 +60,7 @@ test('subscription search sets the URL and shows matching rows', async ({ page }
 	await page.getByTestId('data-table-search-button').click();
 	await page.getByTestId('data-table-search-input').fill(email);
 	await expect(page).toHaveURL((url) => url.searchParams.get('search') === email);
-	await expect(page.getByText(email)).toBeVisible();
+	await expect(page.getByRole('row').filter({ hasText: email })).toHaveCount(2);
 });
 
 test('subscriptions table is read-only', async ({ page }) => {
