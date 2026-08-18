@@ -16,12 +16,13 @@ type Props = {
 	campaign: CampaignPage;
 	title: string;
 	description: string;
+	creatorName: string;
 	primaryImage?: HeroHeaderImage | null;
 	translator: Translator;
 	lang: WebsiteLanguage;
 };
 
-export const CampaignHero = ({ campaign, title, description, primaryImage, translator, lang }: Props) => {
+export const CampaignHero = ({ campaign, title, description, creatorName, primaryImage, translator, lang }: Props) => {
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
 	const showProgress = campaign.percentageCollected !== null && campaign.percentageCollected !== undefined;
 	const showAmount = campaign.amountCollected !== null;
@@ -48,7 +49,7 @@ export const CampaignHero = ({ campaign, title, description, primaryImage, trans
 
 				<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto mb-8 flex flex-row items-end justify-between gap-4 md:mb-24">
 					<div className="text-primary-foreground flex max-w-2xl flex-col gap-4">
-						<p className="text-lg">{translator.t('campaign.by', { context: { creator: campaign.creatorName } })}</p>
+						<p className="text-lg">{translator.t('campaign.by', { context: { creator: creatorName } })}</p>
 						<h1 className="text-5xl leading-tight font-bold md:text-6xl">{title}</h1>
 					</div>
 

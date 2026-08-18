@@ -62,14 +62,6 @@ export class CampaignSubmissionService extends BaseService {
 			return this.resultFail('program-not-eligible', 400);
 		}
 
-		const titleConflict = await this.db.campaign.findUnique({
-			where: { title: fields.title },
-			select: { id: true },
-		});
-		if (titleConflict) {
-			return this.resultFail('title-exists', 400);
-		}
-
 		const slugResult = await this.generateUniqueSlug(fields.title);
 		if (!slugResult.success) {
 			return this.resultFail(slugResult.error, slugResult.status);
@@ -86,13 +78,10 @@ export class CampaignSubmissionService extends BaseService {
 
 			const campaign = await this.db.campaign.create({
 				data: {
-					title: fields.title,
-					description: fields.description,
 					goal: fields.goal,
 					currency: fields.currency,
 					endDate: fields.endDate,
 					slug,
-					creatorName: fields.creatorName,
 					program: { connect: { id: fields.programId } },
 				},
 				select: { id: true, slug: true },
@@ -156,14 +145,7 @@ export class CampaignSubmissionService extends BaseService {
 			}
 
 			if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-				const target = error.meta?.target;
-				const conflictFields = Array.isArray(target) ? target.map(String) : typeof target === 'string' ? [target] : [];
-
-				if (conflictFields.includes('slug')) {
-					return this.resultFail('similar-title-exists', 400);
-				}
-
-				return this.resultFail('title-exists', 400);
+				return this.resultFail('slug-exists', 400);
 			}
 
 			this.logger.error(error, { slug });
@@ -285,6 +267,6 @@ export class CampaignSubmissionService extends BaseService {
 			}
 		}
 
-		return this.resultFail('similar-title-exists', 409);
+		return this.resultFail('slug-exists', 409);
 	}
 }

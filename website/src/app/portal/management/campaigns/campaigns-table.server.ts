@@ -1,5 +1,8 @@
+import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
+import { getStoryblokCampaignTitleForSlug } from '@/components/storyblok/campaign/campaign.utils';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
+import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import type {
 	CampaignPaginatedTableView,
 	CampaignTableEntry,
@@ -17,8 +20,6 @@ const compareRows = (left: CampaignTableViewRow, right: CampaignTableViewRow, so
 			return compareNullableStrings(left.id, right.id);
 		case 'title':
 			return compareNullableStrings(left.title, right.title);
-		case 'description':
-			return compareNullableStrings(left.description, right.description);
 		case 'currency':
 			return compareNullableStrings(left.currency, right.currency);
 		case 'endDate':
@@ -39,13 +40,14 @@ const matchesSearch = (row: CampaignTableViewRow, search: string) => {
 		return true;
 	}
 
-	return [row.id, row.title, row.description, row.programName, row.link].some((value) =>
+	return [row.id, row.slug, row.title, row.programName, row.link].some((value) =>
 		value?.toLocaleLowerCase().includes(normalizedSearch),
 	);
 };
 
 export const getCampaignTableView = (
 	entries: CampaignTableEntry[],
+	campaignStories: CampaignStory[],
 	programStories: ProgramStory[],
 	query: CampaignTableQuery,
 ): CampaignPaginatedTableView => {
@@ -57,6 +59,8 @@ export const getCampaignTableView = (
 
 		return {
 			...entry,
+			title: getStoryblokCampaignTitleForSlug(campaignStories, entry.slug),
+			link: `/${defaultLanguage}/${defaultRegion}/campaigns/${entry.slug}`,
 			programName: programStory ? getProgramTitle(programStory.content) : entry.programName,
 		};
 	});

@@ -3,8 +3,8 @@ import { Currency } from '@/generated/prisma/client';
 export type CampaignTableViewRow = {
 	id: string;
 	link: string;
+	slug: string;
 	title: string;
-	description: string;
 	currency: Currency;
 	endDate: Date;
 	isActive: boolean;
@@ -12,7 +12,7 @@ export type CampaignTableViewRow = {
 	createdAt: Date;
 };
 
-export type CampaignTableEntry = CampaignTableViewRow & {
+export type CampaignTableEntry = Omit<CampaignTableViewRow, 'link' | 'title'> & {
 	programPortalSlug: string | null;
 };
 
@@ -31,21 +31,11 @@ export type CampaignPaginatedTableView = {
 
 type CampaignPayload = {
 	id: string;
-	title: string;
-	description: string;
-	secondDescriptionTitle?: string | null;
-	secondDescription?: string | null;
-	thirdDescriptionTitle?: string | null;
-	thirdDescription?: string | null;
 	goal?: number | null;
 	currency: Currency;
 	additionalAmountChf?: number | null;
 	endDate: Date;
 	slug?: string | null;
-	metadataDescription?: string | null;
-	metadataOgImage?: string | null;
-	metadataTwitterImage?: string | null;
-	creatorName: string | null;
 	program: {
 		id: string;
 		name: string;
@@ -81,6 +71,8 @@ export type PublicCampaignCard = {
 	primaryImage?: PublicCampaignCardImage | null;
 };
 
+export type CampaignCmsJoin = Omit<PublicCampaignCard, 'title' | 'creatorName' | 'primaryImage'>;
+
 export type PublicCampaignStats = {
 	contributionsCount: number;
 	daysLeft: number;
@@ -92,5 +84,10 @@ export type PublicCampaignStatsMap = Record<string, PublicCampaignStats>;
 
 export type PublicCampaignsWithStats = {
 	campaigns: PublicCampaignCard[];
+	statsById: PublicCampaignStatsMap;
+};
+
+export type CampaignCmsJoinWithStats = {
+	campaigns: CampaignCmsJoin[];
 	statsById: PublicCampaignStatsMap;
 };

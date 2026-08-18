@@ -1,11 +1,21 @@
+import { getStoryblokCampaignTitleForSlug } from '@/components/storyblok/campaign/campaign.utils';
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
+import { defaultLanguage } from '@/lib/i18n/utils';
+import { services } from '@/lib/services/services';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem, selectOptionByTestId } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
+
+const getCampaignTitle = async (slug: string) => {
+	const result = await services.storyblok.getCampaigns(defaultLanguage);
+	expect(result.success).toBe(true);
+
+	return getStoryblokCampaignTitleForSlug(result.success ? result.data : [], slug);
+};
 
 test('add new contribution', async ({ page }) => {
 	const source = await prisma.contribution.findFirst({
@@ -24,7 +34,7 @@ test('add new contribution', async ({ page }) => {
 			},
 			campaign: {
 				select: {
-					title: true,
+					slug: true,
 				},
 			},
 		},
@@ -33,7 +43,7 @@ test('add new contribution', async ({ page }) => {
 
 	const contributorName =
 		`${source!.contributor.contact?.firstName ?? ''} ${source!.contributor.contact?.lastName ?? ''}`.trim();
-	const campaignTitle = source!.campaign.title;
+	const campaignTitle = await getCampaignTitle(source!.campaign.slug!);
 	const amount = 99.5;
 	const amountChf = 88.2;
 	const feesChf = 1.3;
@@ -77,7 +87,7 @@ test('edit contribution', async ({ page }) => {
 			},
 			campaign: {
 				select: {
-					title: true,
+					slug: true,
 				},
 			},
 		},
@@ -87,6 +97,7 @@ test('edit contribution', async ({ page }) => {
 	const updatedAmount = 123.45;
 	const updatedAmountChf = 111.11;
 	const updatedFeesChf = 2.22;
+	const campaignTitle = await getCampaignTitle(existing!.campaign.slug!);
 
 	await page.goto(
 		`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(existing!.contributor.contact.email!)}`,
@@ -94,7 +105,7 @@ test('edit contribution', async ({ page }) => {
 	const editableRow = page
 		.getByRole('row')
 		.filter({ hasText: existing!.contributor.contact.email! })
-		.filter({ hasText: existing!.campaign.title })
+		.filter({ hasText: campaignTitle })
 		.first();
 	await expect(editableRow.getByTestId('action-cell-icon')).toBeVisible();
 	await editableRow.click();
@@ -132,18 +143,19 @@ test('does not show owner-only contribution rows under management', async ({ pag
 			},
 			campaign: {
 				select: {
-					title: true,
+					slug: true,
 				},
 			},
 		},
 	});
 	expect(ownerOnly?.contributor.contact?.email).toBeTruthy();
-	expect(ownerOnly?.campaign.title).toBeTruthy();
+	expect(ownerOnly?.campaign.slug).toBeTruthy();
+	const campaignTitle = await getCampaignTitle(ownerOnly!.campaign.slug!);
 
 	await page.goto(
 		`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(ownerOnly!.contributor.contact.email!)}`,
 	);
-	await expect(page.getByText(ownerOnly!.campaign.title, { exact: true })).toBeHidden();
+	await expect(page.getByText(campaignTitle, { exact: true })).toBeHidden();
 });
 
 test('shows validation error when contribution amount is invalid', async ({ page }) => {
@@ -161,7 +173,7 @@ test('shows validation error when contribution amount is invalid', async ({ page
 			},
 			campaign: {
 				select: {
-					title: true,
+					slug: true,
 				},
 			},
 		},
@@ -170,11 +182,12 @@ test('shows validation error when contribution amount is invalid', async ({ page
 
 	const contributorName =
 		`${source!.contributor.contact?.firstName ?? ''} ${source!.contributor.contact?.lastName ?? ''}`.trim();
+	const campaignTitle = await getCampaignTitle(source!.campaign.slug!);
 
 	await page.goto('/portal/management/contributions');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-contribution');
 	await selectOptionByTestId(page, 'contributor', contributorName);
-	await selectOptionByTestId(page, 'campaign', source!.campaign.title);
+	await selectOptionByTestId(page, 'campaign', campaignTitle);
 	await page.getByTestId('form-item-amount').locator('input').fill('-1');
 	await selectOptionByTestId(page, 'currency', 'USD');
 	await page.getByTestId('form-item-amountChf').locator('input').fill('1');

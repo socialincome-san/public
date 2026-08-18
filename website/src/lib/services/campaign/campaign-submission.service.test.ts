@@ -61,7 +61,6 @@ describe('CampaignSubmissionService', () => {
 		data: {
 			slug: string;
 			goal: number | null;
-			creatorName: string | null;
 		};
 	};
 
@@ -71,7 +70,6 @@ describe('CampaignSubmissionService', () => {
 		>;
 		const db = {
 			campaign: {
-				findUnique: jest.fn().mockResolvedValue(null),
 				create,
 				delete: jest.fn().mockResolvedValue(undefined),
 			},
@@ -178,7 +176,6 @@ describe('CampaignSubmissionService', () => {
 		expect(create).toHaveBeenCalledTimes(1);
 		const createArg = create.mock.calls[0]?.[0];
 		expect(createArg?.data.slug).toBe('my-campaign');
-		expect(createArg?.data.creatorName).toBe('Alex Creator');
 		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
 			expect.objectContaining({
 				slug: 'my-campaign',
@@ -401,30 +398,12 @@ describe('CampaignSubmissionService', () => {
 		expect(result.success).toBe(false);
 		if (!result.success) {
 			expect(result.status).toBe(409);
-			expect(result.error).toBe('similar-title-exists');
+			expect(result.error).toBe('slug-exists');
 		}
 		expect(db.campaign.create).not.toHaveBeenCalled();
 	});
 
-	test('submit returns title-exists when campaign create hits a title unique constraint', async () => {
-		const { service, create } = createService();
-		create.mockRejectedValueOnce(
-			new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
-				code: 'P2002',
-				meta: { target: ['title'] },
-			}),
-		);
-
-		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
-
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			expect(result.error).toBe('title-exists');
-			expect(result.status).toBe(400);
-		}
-	});
-
-	test('submit returns similar-title-exists when campaign create hits a slug unique constraint', async () => {
+	test('submit returns slug-exists when campaign create hits a slug unique constraint', async () => {
 		const { service, create } = createService();
 		create.mockRejectedValueOnce(
 			new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
@@ -437,7 +416,7 @@ describe('CampaignSubmissionService', () => {
 
 		expect(result.success).toBe(false);
 		if (!result.success) {
-			expect(result.error).toBe('similar-title-exists');
+			expect(result.error).toBe('slug-exists');
 			expect(result.status).toBe(400);
 		}
 	});

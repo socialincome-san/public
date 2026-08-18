@@ -1,5 +1,4 @@
 import { CampaignAboutSection } from '@/components/campaign/campaign-about-section';
-import { CampaignExtraText } from '@/components/campaign/campaign-extra-text';
 import { CampaignFaqSection } from '@/components/campaign/campaign-faq-section';
 import { CampaignHero } from '@/components/campaign/campaign-hero';
 import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
@@ -14,13 +13,23 @@ type Props = {
 	campaign: CampaignPage;
 	title: string;
 	description: string;
+	creatorName: string;
 	primaryImage?: HeroHeaderImage | null;
 	campaignSlug: string;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const CampaignDetail = async ({ campaign, title, description, primaryImage, campaignSlug, lang, region }: Props) => {
+export const CampaignDetail = async ({
+	campaign,
+	title,
+	description,
+	creatorName,
+	primaryImage,
+	campaignSlug,
+	lang,
+	region,
+}: Props) => {
 	const pageContentResult = await services.read.campaignPublicWebsite.getPageContent(lang);
 	if (!pageContentResult.success) {
 		throw new Error(pageContentResult.error);
@@ -41,11 +50,11 @@ export const CampaignDetail = async ({ campaign, title, description, primaryImag
 				campaign={campaign}
 				title={title}
 				description={description}
+				creatorName={creatorName}
 				primaryImage={primaryImage}
 				translator={translator}
 				lang={lang}
 			/>
-			{campaign.secondDescription && campaign.thirdDescription && <CampaignExtraText campaign={campaign} />}
 			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
 			<CampaignAboutSection translator={translator} />
 			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />
