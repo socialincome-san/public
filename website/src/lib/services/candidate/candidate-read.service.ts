@@ -2,7 +2,6 @@ import { CountryCode, Gender, Prisma, PrismaClient } from '@/generated/prisma/cl
 import { Session } from '@/lib/firebase/current-account';
 import { stringifyCsv } from '@/lib/utils/csv';
 import { logger } from '@/lib/utils/logger';
-import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -15,6 +14,7 @@ import {
 	CandidatesTableViewRow,
 	Profile,
 } from './candidate.types';
+import { buildCandidateWhere } from './candidate-where';
 
 export class CandidateReadService extends BaseService {
 	constructor(
@@ -66,104 +66,6 @@ export class CandidateReadService extends BaseService {
 		}
 
 		return this.resultOk(true);
-	}
-
-	private buildCandidateWhere(
-		focuses?: string[],
-		profiles?: Profile[],
-		countryCode?: CountryCode | null,
-	): Prisma.RecipientWhereInput {
-		const where: Prisma.RecipientWhereInput = {
-			programId: null,
-		};
-
-		if (countryCode) {
-			where.AND = [
-				{
-					OR: [
-						{
-							contact: {
-								address: {
-									country: countryCode,
-								},
-							},
-						},
-						{
-							AND: [
-								{
-									OR: [
-										{
-											contact: {
-												address: null,
-											},
-										},
-										{
-											contact: {
-												address: {
-													country: null,
-												},
-											},
-										},
-									],
-								},
-								{
-									localPartner: {
-										contact: {
-											address: {
-												country: countryCode,
-											},
-										},
-									},
-								},
-							],
-						},
-					],
-				},
-			];
-		}
-
-		if (focuses && focuses.length > 0) {
-			where.localPartner = {
-				focuses: {
-					some: {
-						focusId: { in: focuses },
-					},
-				},
-			};
-		}
-
-		if (profiles && profiles.length > 0) {
-			const contactFilters: Prisma.ContactWhereInput[] = [];
-
-			const genderProfiles = profiles.filter((p) => p === Profile.male || p === Profile.female);
-
-			if (genderProfiles.length > 0) {
-				contactFilters.push({
-					gender: {
-						in: genderProfiles,
-					},
-				});
-			}
-
-			if (profiles.includes(Profile.youth)) {
-				const nowDate = now();
-				const youthCutoffDate = new Date(nowDate.getFullYear() - 25, nowDate.getMonth(), nowDate.getDate());
-
-				contactFilters.push({
-					dateOfBirth: {
-						gte: youthCutoffDate,
-					},
-				});
-			}
-
-			if (contactFilters.length > 0) {
-				where.contact = {
-					OR: contactFilters,
-				};
-			}
-		}
-
-		return where;
 	}
 
 	async get(session: Session, id: string): Promise<ServiceResult<CandidatePayload>> {
@@ -644,7 +546,7 @@ export class CandidateReadService extends BaseService {
 				countryCode = country.isoCode;
 			}
 
-			const where = this.buildCandidateWhere(focuses, profiles, countryCode);
+			const where = buildCandidateWhere(focuses, profiles, countryCode);
 			const count = await this.db.recipient.count({ where });
 
 			return this.resultOk({ count });

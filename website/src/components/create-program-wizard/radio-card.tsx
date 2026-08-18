@@ -28,8 +28,8 @@ export const RadioCard = ({ value, checked, disabled, label, description, badge,
 			<RadioGroupItem value={value} disabled={disabled} className="absolute top-1/2 right-3 -translate-y-1/2" />
 
 			<div className="flex-1 space-y-1 pr-6">
-				<div className="flex items-center gap-2">
-					{label}
+				<div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+					<span className="min-w-0">{label}</span>
 					{badge}
 				</div>
 

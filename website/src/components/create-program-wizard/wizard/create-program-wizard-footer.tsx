@@ -14,14 +14,26 @@ export const CreateProgramWizardFooter = ({ state, send }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 
 	return (
-		<div className="flex items-center justify-between gap-4 border-t pt-4">
-			<Button variant="outline" onClick={() => send({ type: 'BACK' })} disabled={!state.can({ type: 'BACK' })}>
+		<div className="grid shrink-0 grid-cols-2 items-center gap-3 border-t pt-4 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-4">
+			<CreateProgramStepIndicator
+				className="col-span-2 row-start-1 justify-self-center sm:col-span-1 sm:col-start-2"
+				state={state}
+			/>
+
+			<Button
+				variant="outline"
+				className="col-start-1 row-start-2 justify-self-start sm:row-start-1"
+				onClick={() => send({ type: 'BACK' })}
+				disabled={!state.can({ type: 'BACK' })}
+			>
 				{t('common.back')}
 			</Button>
 
-			<CreateProgramStepIndicator state={state} />
-
-			<Button onClick={() => send({ type: 'NEXT' })} disabled={!state.can({ type: 'NEXT' })}>
+			<Button
+				className="col-start-2 row-start-2 justify-self-end sm:col-start-3 sm:row-start-1"
+				onClick={() => send({ type: 'NEXT' })}
+				disabled={!state.can({ type: 'NEXT' })}
+			>
 				{t('common.continue')}
 			</Button>
 		</div>
