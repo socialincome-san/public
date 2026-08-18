@@ -49,6 +49,8 @@ export const campaignSubmissionErrorCodes = [
 	'title-exists',
 	'similar-title-exists',
 	'submission-failed',
+	'turnstile-required',
+	'turnstile-invalid',
 ] as const;
 
 export type CampaignSubmissionErrorCode = (typeof campaignSubmissionErrorCodes)[number];

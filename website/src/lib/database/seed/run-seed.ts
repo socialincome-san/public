@@ -53,10 +53,12 @@ export const seedDatabase = async () => {
 		await tx.program.deleteMany();
 		await tx.focus.deleteMany();
 		await tx.organizationAccess.deleteMany();
+		await tx.messageLog.deleteMany();
+		await tx.messagingJob.deleteMany();
 		await tx.expense.deleteMany();
+		await tx.user.deleteMany();
 		await tx.organization.deleteMany();
 		await tx.exchangeRate.deleteMany();
-		await tx.user.deleteMany();
 		await tx.contact.deleteMany();
 		await tx.phone.deleteMany();
 		await tx.address.deleteMany();

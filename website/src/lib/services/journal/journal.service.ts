@@ -3,6 +3,7 @@ import { BaseService } from '@/lib/services/core/base.service';
 import { ServiceResult } from '@/lib/services/core/base.types';
 import type {
 	JournalArticlePageData,
+	JournalOverviewFilter,
 	JournalOverviewPageData,
 	JournalPersonPageData,
 } from '@/lib/services/journal/journal.types';
@@ -17,9 +18,12 @@ import {
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
 import {
 	createWebsiteJournalArticleLink,
+	createWebsiteJournalArticleTypeLink,
 	createWebsiteJournalPath,
+	createWebsiteJournalTagLink,
 	createWebsitePersonLink,
 	getArticleTitle,
+	getArticleTypeLabel,
 	getPersonDisplayName,
 } from '@/lib/services/storyblok/storyblok.utils';
 
@@ -42,22 +46,23 @@ export class JournalService extends BaseService {
 		lang: string,
 		region: string,
 		labels: JournalOverviewLabels,
-		tagSlug?: string,
+		filter?: JournalOverviewFilter,
 	): Promise<ServiceResult<JournalOverviewPageData>> {
 		const journalPath = createWebsiteJournalPath(lang, region);
-		const pathname = buildJournalOverviewPathname(journalPath, tagSlug);
+		const pathname = buildJournalOverviewPathname(journalPath, filter);
 
-		const [authorsResult, tagsResult, roleLabelsResult] = await Promise.all([
+		const [authorsResult, articleTypesResult, roleLabelsResult] = await Promise.all([
 			this.storyblok.getOverviewAuthors(lang),
-			this.storyblok.getOverviewTags(lang),
+			this.storyblok.getOverviewArticleTypes(lang),
 			this.storyblok.getPrimaryRoleLabels(lang),
 		]);
 
 		const authors = authorsResult.success ? authorsResult.data : [];
-		const tags = tagsResult.success ? tagsResult.data : [];
+		const articleTypes = articleTypesResult.success ? articleTypesResult.data : [];
 		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 
-		if (tagSlug) {
+		if (filter?.tagSlug) {
+			const tagSlug = filter.tagSlug;
 			const tagResult = await this.storyblok.getTag(tagSlug, lang);
 			if (!tagResult.success) {
 				return this.resultFail(tagResult.error);
@@ -72,7 +77,7 @@ export class JournalService extends BaseService {
 			return this.resultOk({
 				articles,
 				authors,
-				tags,
+				articleTypes,
 				showMoreArticlesLink: totalInDefault > articles.length,
 				pageTitle: tagResult.data.content.value,
 				pageDescription: tagResult.data.content.description?.trim(),
@@ -80,8 +85,41 @@ export class JournalService extends BaseService {
 				journalPath,
 				pathname,
 				breadcrumbs: buildJournalOverviewBreadcrumbs(labels.homeLabel, labels.journalLabel, journalPath, lang, region, {
-					slug: tagSlug,
 					label: tagResult.data.content.value,
+					href: createWebsiteJournalTagLink(tagSlug, lang, region),
+				}),
+				roleLabels,
+			});
+		}
+
+		if (filter?.articleTypeSlug) {
+			const articleTypeSlug = filter.articleTypeSlug;
+			const articleTypeResult = await this.storyblok.getArticleType(articleTypeSlug, lang);
+			if (!articleTypeResult.success) {
+				return this.resultFail(articleTypeResult.error);
+			}
+
+			const articleType = articleTypeResult.data;
+			const articlesResult = await this.storyblok.getArticlesByArticleType(articleType.uuid, lang);
+			const articles = articlesResult.success ? articlesResult.data : [];
+			const totalInDefault = await this.storyblok.resolveArticleCountInDefaultLanguage(lang, articles.length, () =>
+				this.storyblok.getArticleCountByArticleTypeForDefaultLang(articleType.uuid),
+			);
+			const articleTypeLabel = getArticleTypeLabel(articleType);
+
+			return this.resultOk({
+				articles,
+				authors,
+				articleTypes,
+				showMoreArticlesLink: totalInDefault > articles.length,
+				pageTitle: articleTypeLabel,
+				pageDescription: articleType.content.description?.trim(),
+				activeArticleTypeSlug: articleTypeSlug,
+				journalPath,
+				pathname,
+				breadcrumbs: buildJournalOverviewBreadcrumbs(labels.homeLabel, labels.journalLabel, journalPath, lang, region, {
+					label: articleTypeLabel,
+					href: createWebsiteJournalArticleTypeLink(articleTypeSlug, lang, region),
 				}),
 				roleLabels,
 			});
@@ -96,7 +134,7 @@ export class JournalService extends BaseService {
 		return this.resultOk({
 			articles,
 			authors,
-			tags,
+			articleTypes,
 			showMoreArticlesLink: totalInDefault > articles.length,
 			pageTitle: labels.overviewTitle,
 			pageDescription: labels.overviewDescription,

@@ -55,13 +55,14 @@
 			"donation-certificates-long": "Certificati di donazione"
 		}
 	},
+	"donate-now": "Dona ora",
 	"contributions": {
 		"amount": "Importo",
 		"date": "Data",
 		"created": "Creato",
 		"updated": "Aggiornato",
-		"currency": "Valuta",
-		"campaign": "Campagna",
+		"payment-type": "Tipo di pagamento",
+		"attribution": "Attribuzione",
 		"sources": {
 			"benevity": "Benevity",
 			"cash": "Contanti",
@@ -76,14 +77,12 @@
 			"unknown": "Sconosciuto"
 		},
 		"status-title": "Stato",
-		"no-contributions": "Nessuna contribuzione trovata",
-		"new-contribution": "Effettua una contribuzione"
+		"no-contributions": "Nessuna contribuzione trovata"
 	},
 	"subscriptions": {
 		"amount": "Importo",
 		"created": "Creato",
 		"payment-method": "Método di pagamento",
-		"new-subscription": "Nuova sottoscrizione",
 		"interval": "Intervallo",
 		"interval-1": "Mensile",
 		"interval-3": "Trimestrale",
@@ -95,7 +94,81 @@
 		},
 		"status-title": "Stato",
 		"manage-subscriptions": "Gestisci le sottoscrizioni",
-		"no-subscriptions": "Nessuna sottoscrizione trovata"
+		"edit": "Modifica",
+		"view-qr": "Vedi QR",
+		"qr-dialog": {
+			"title": "La tua bolletta QR",
+			"unavailable": "Impossibile generare il codice QR. Riprova più tardi.",
+			"close": "Chiudi"
+		},
+		"edit-dialog": {
+			"title": "Modifica sottoscrizione",
+			"monthly-contribution": "Contributo mensile",
+			"per-month-suffix": "/ mese",
+			"update-card": "Aggiorna carta",
+			"cancel-subscription": "Annulla sottoscrizione",
+			"cancel": "Annulla",
+			"update-subscription": "Aggiorna sottoscrizione",
+			"updating-subscription": "Aggiornamento della sottoscrizione",
+			"success-title": "Sottoscrizione aggiornata",
+			"success-message": "Il tuo contributo mensile aggiornato è ora attivo.",
+			"success-thanks": "Grazie per sostenere Social Income.",
+			"standing-order-title": "Aggiorna l'ordine permanente",
+			"standing-order-description": "Aggiorna l'importo nel tuo e-banking dopo aver salvato.",
+			"download-qr": "Scarica il codice QR",
+			"done": "Fatto",
+			"error": "Impossibile aggiornare la sottoscrizione. Riprova.",
+			"update-card-error": "Impossibile aprire l'aggiornamento della carta. Riprova.",
+			"update-card-unsaved-warning": "Hai modifiche all'importo non salvate. Uscire senza salvare?",
+			"update-card-stay": "Resta",
+			"update-card-leave": "Esci senza salvare",
+			"back": "Indietro",
+			"cancel-retention-title": "Annulla sottoscrizione",
+			"cancel-retention-heading": "Sei sicuro/a di voler annullare questa sottoscrizione?",
+			"cancel-retention-card-title": "Ridurre l'importo ti aiuterebbe?",
+			"cancel-retention-other": "Altro",
+			"cancel-retention-or": "Oppure",
+			"cancel-retention-continue": "No, voglio annullare",
+			"cancel-reason-title": "Motivo dell'annullamento",
+			"cancel-reason-heading": "Ci dispiace vederti andare. Ci dici perché?",
+			"cancel-reason-confirm": "Annulla sottoscrizione",
+			"canceling-subscription": "Annullamento della sottoscrizione",
+			"cancel-success-title": "Sottoscrizione annullata",
+			"cancel-success-message": "La tua sottoscrizione è stata annullata. Non verranno addebitati ulteriori pagamenti.",
+			"bank-cancel-success-message": "La sottoscrizione è stata annullata qui. Ferma anche l'ordine permanente nella tua banca, così non verrà effettuato un ulteriore pagamento.",
+			"cancel-success-thanks": "Grazie per sostenere Social Income.",
+			"cancel-error": "Impossibile annullare la sottoscrizione. Riprova.",
+			"cancel-reasons": {
+				"financial_situation_changed": "La mia situazione finanziaria è cambiata",
+				"different_cause": "Voglio sostenere un'altra causa",
+				"not_enough_updates": "Non ricevo abbastanza aggiornamenti",
+				"technical_issue": "Ho avuto un problema tecnico",
+				"prefer_one_time": "Preferisco donazioni una tantum",
+				"pausing": "Metto in pausa per ora",
+				"other": "Altro"
+			}
+		},
+		"no-subscriptions": "Nessuna sottoscrizione trovata",
+		"load-error": "Impossibile caricare le sottoscrizioni. Riprova.",
+		"retry": "Riprova",
+		"summary": {
+			"monthly-contribution": "Contributo mensile",
+			"total-contributions": "Contributi totali",
+			"no-active-subscriptions": "Nessuna sottoscrizione attiva",
+			"active-subscriptions-count": "{{count}} sottoscrizioni attive",
+			"contributions-since": "{{count}} contributi dal {{date}}",
+			"no-contributions-yet": "Nessun contributo ancora"
+		},
+		"active-subscriptions": "Sottoscrizioni attive",
+		"upcoming-payments": "Pagamenti in arrivo",
+		"scheduled": "Programmato",
+		"per-month": "al mese",
+		"since": "dal",
+		"card-fallback": "Carta",
+		"empty": {
+			"description": "Hai contribuito con {{amount}} in {{count}} bonifici.\nPronto a riprendere da dove avevi lasciato?",
+			"description-no-contributions": "Inizia a sostenere qualcuno oggi."
+		}
 	},
 	"donation-certificates": {
 		"created": "Creato",

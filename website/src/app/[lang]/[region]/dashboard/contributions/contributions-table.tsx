@@ -7,7 +7,6 @@ import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 
 import { YourContributionsTableViewRow } from '@/lib/services/contribution/contribution.types';
-import { PlusIcon } from 'lucide-react';
 
 export const ContributionsTable = async ({
 	lang,
@@ -43,8 +42,7 @@ export const ContributionsTable = async ({
 			query={{ ...tableQuery, totalRows }}
 			actionMenuItems={[
 				{
-					label: translator.t('contributions.new-contribution'),
-					icon: <PlusIcon />,
+					label: translator.t('donate-now'),
 					href: `/${lang}/${region}`,
 				},
 			]}

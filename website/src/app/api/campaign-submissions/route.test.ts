@@ -7,6 +7,7 @@ import type {
 	CampaignSubmissionOptionalImages,
 } from '@/lib/services/campaign/campaign-submission-input';
 import type { CampaignSubmissionResult } from '@/lib/services/campaign/campaign-submission.service';
+import type { TurnstileVerificationResult } from '@/lib/services/campaign/verify-turnstile-token';
 import type { ServiceResult } from '@/lib/services/core/base.types';
 
 const mockSubmit = jest.fn() as jest.MockedFunction<
@@ -17,6 +18,9 @@ const mockSubmit = jest.fn() as jest.MockedFunction<
 	) => Promise<ServiceResult<CampaignSubmissionResult>>
 >;
 const mockParseMultipartFormDataWithLimit = jest.fn();
+const mockVerifyTurnstileToken = jest.fn() as jest.MockedFunction<
+	(token: string | null) => Promise<TurnstileVerificationResult>
+>;
 
 jest.mock('@/lib/services/services', () => ({
 	services: {
@@ -35,6 +39,17 @@ jest.mock('@/lib/utils/request-body', () => ({
 	},
 	parseMultipartFormDataWithLimit: mockParseMultipartFormDataWithLimit,
 }));
+
+jest.mock('@/lib/services/campaign/verify-turnstile-token', () => {
+	const actual: typeof import('@/lib/services/campaign/verify-turnstile-token') = jest.requireActual(
+		'@/lib/services/campaign/verify-turnstile-token',
+	);
+
+	return {
+		...actual,
+		verifyTurnstileToken: mockVerifyTurnstileToken,
+	};
+});
 
 import { POST } from './route';
 
@@ -66,6 +81,7 @@ describe('POST /api/campaign-submissions', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		mockParseMultipartFormDataWithLimit.mockResolvedValue(createValidFormData());
+		mockVerifyTurnstileToken.mockResolvedValue({ success: true });
 	});
 
 	test('returns submission-failed with service status when eligibility orchestration fails', async () => {
@@ -168,6 +184,19 @@ describe('POST /api/campaign-submissions', () => {
 		});
 	});
 
+	test('verifies the Turnstile token before creating the campaign', async () => {
+		const formData = createValidFormData();
+		formData.set('cf-turnstile-response', 'turnstile-token');
+		mockParseMultipartFormDataWithLimit.mockResolvedValue(formData);
+		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
+
+		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
+
+		expect(response.status).toBe(201);
+		expect(mockVerifyTurnstileToken).toHaveBeenCalledWith('turnstile-token');
+		expect(mockSubmit).toHaveBeenCalled();
+	});
+
 	test('rejects both primaryImage and defaultImageId', async () => {
 		const formData = createValidFormData();
 		formData.set('defaultImageId', '99');
@@ -229,6 +258,39 @@ describe('POST /api/campaign-submissions', () => {
 
 		expect(response.status).toBe(400);
 		expect(body).toEqual({ errorCode: 'image-format-unsupported', field: 'sectionImage' });
+		expect(mockSubmit).not.toHaveBeenCalled();
+	});
+
+	test('rejects submissions when Turnstile verification fails', async () => {
+		mockVerifyTurnstileToken.mockResolvedValue({ success: false, error: 'turnstile-invalid' });
+
+		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
+		const body: unknown = await response.json();
+
+		expect(response.status).toBe(400);
+		expect(body).toEqual({ errorCode: 'turnstile-invalid' });
+		expect(mockSubmit).not.toHaveBeenCalled();
+	});
+
+	test('rejects submissions when the Turnstile token is missing', async () => {
+		mockVerifyTurnstileToken.mockResolvedValue({ success: false, error: 'turnstile-required' });
+
+		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
+		const body: unknown = await response.json();
+
+		expect(response.status).toBe(400);
+		expect(body).toEqual({ errorCode: 'turnstile-required' });
+		expect(mockSubmit).not.toHaveBeenCalled();
+	});
+
+	test('returns submission-failed when Turnstile verification is unavailable', async () => {
+		mockVerifyTurnstileToken.mockResolvedValue({ success: false, error: 'submission-failed' });
+
+		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
+		const body: unknown = await response.json();
+
+		expect(response.status).toBe(503);
+		expect(body).toEqual({ errorCode: 'submission-failed' });
 		expect(mockSubmit).not.toHaveBeenCalled();
 	});
 });
