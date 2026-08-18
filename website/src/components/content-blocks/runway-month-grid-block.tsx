@@ -11,6 +11,7 @@ type Props = {
 
 export const RunwayMonthGridBlock = ({ blok, lang }: Props) => {
 	const language = lang === 'kri' ? 'en' : lang;
+
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<div className="space-y-6">
