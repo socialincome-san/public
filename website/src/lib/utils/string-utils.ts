@@ -194,6 +194,27 @@ export const formatCompactNumberLocale = (value: number, locale: string): string
 	return formatThousandsCompact(value, locale);
 };
 
+export const wholeCurrencyFormatOptions = {
+	minimumFractionDigits: 0,
+	maximumFractionDigits: 0,
+} as const;
+
+export const formatDateLocale = (
+	date: Date | string | null | undefined,
+	locale: string,
+	options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' },
+): string => {
+	if (!date) {
+		return '—';
+	}
+	const d = typeof date === 'string' ? new Date(date) : date;
+	try {
+		return normalizeIntlOutput(new Intl.DateTimeFormat(locale, options).format(d));
+	} catch {
+		return '—';
+	}
+};
+
 export const formatDate = (date: Date | string | null | undefined, pattern = 'dd.MM.yyyy'): string => {
 	if (!date) {
 		return '—';
@@ -204,6 +225,26 @@ export const formatDate = (date: Date | string | null | undefined, pattern = 'dd
 	} catch {
 		return '—';
 	}
+};
+
+export const formatUtcDate = (date: Date | string | null | undefined, pattern = 'dd.MM.yyyy'): string => {
+	if (!date) {
+		return '—';
+	}
+	const d = typeof date === 'string' ? new Date(date) : date;
+	if (Number.isNaN(d.getTime())) {
+		return '—';
+	}
+
+	if (pattern !== 'dd.MM.yyyy') {
+		return formatDate(d, pattern);
+	}
+
+	const day = String(d.getUTCDate()).padStart(2, '0');
+	const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+	const year = d.getUTCFullYear();
+
+	return `${day}.${month}.${year}`;
 };
 
 export const isSafeHref = (value: string) => {

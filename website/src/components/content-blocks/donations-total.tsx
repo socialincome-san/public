@@ -1,7 +1,7 @@
 'use client';
 
 import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { FloatingImage } from '@/components/floating-image';
 import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';

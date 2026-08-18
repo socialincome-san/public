@@ -12,6 +12,7 @@ import {
 	ContributionPayload,
 	ContributionTableQuery,
 	ContributionTableViewRow,
+	ContributorContributionSummary,
 	YourContributionsPaginatedTableView,
 	YourContributionsTableQuery,
 } from './contribution.types';
@@ -327,6 +328,33 @@ export class ContributionReadService extends BaseService {
 			this.logger.error(error);
 
 			return this.resultFail(`Could not fetch contributions for contributor ${contributorId}`);
+		}
+	}
+
+	async getContributorContributionSummary(contributorId: string): Promise<ServiceResult<ContributorContributionSummary>> {
+		try {
+			const [aggregate, firstContribution] = await Promise.all([
+				this.db.contribution.aggregate({
+					where: { contributorId, status: 'succeeded' },
+					_sum: { amountChf: true },
+					_count: { _all: true },
+				}),
+				this.db.contribution.findFirst({
+					where: { contributorId, status: 'succeeded' },
+					orderBy: { createdAt: 'asc' },
+					select: { createdAt: true },
+				}),
+			]);
+
+			return this.resultOk({
+				totalAmountChf: Number(aggregate._sum.amountChf ?? 0),
+				count: aggregate._count._all,
+				firstContributionAt: firstContribution?.createdAt ?? null,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail(`Could not fetch contribution summary for contributor ${contributorId}`);
 		}
 	}
 

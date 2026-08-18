@@ -1,7 +1,7 @@
 'use client';
 
 import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
 import { VideoControlButton } from '@/components/video-control-button';
 import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';

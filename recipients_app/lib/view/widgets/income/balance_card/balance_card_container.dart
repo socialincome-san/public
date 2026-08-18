@@ -55,7 +55,7 @@ class BalanceCardContainer extends DashboardItem {
                         const BalanceCardProgramCompletedHeader(),
                       ] else ...[
                         BalanceCardHeader(
-                          daysTo: payoutsUiState?.nextPayout.daysToPayout ?? 0,
+                          daysTo: payoutsUiState?.nextPayout.daysToPayout ?? -1,
                           amount: payoutsUiState?.nextPayout.amount ?? 0,
                           currency: payoutsUiState?.nextPayout.currency ?? "???",
                           balanceCardStatus: payoutsUiState?.status ?? BalanceCardStatus.allConfirmed,

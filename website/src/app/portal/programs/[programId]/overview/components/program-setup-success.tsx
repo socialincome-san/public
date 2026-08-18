@@ -1,5 +1,5 @@
-import { Button } from '@/components/button';
-import { Card } from '@/components/card';
+import { Button } from '@/components/button/button';
+import { Card } from '@/components/card/card';
 import { SuccessBanner } from '@/components/success-banner';
 import { ChevronRightIcon, ExternalLinkIcon } from 'lucide-react';
 import Link from 'next/link';

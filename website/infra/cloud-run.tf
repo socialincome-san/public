@@ -82,6 +82,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "PAWAPAY_API_TOKEN"
+          value = var.pawapay_api_token
+        }
+
+        env {
           name  = "STRIPE_PRODUCT_ONETIME"
           value = var.stripe_product_onetime
         }
@@ -104,6 +109,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         env {
           name  = "STRIPE_WEBHOOK_SECRET"
           value = var.stripe_webhook_secret
+        }
+
+        env {
+          name  = "TURNSTILE_SECRET_KEY"
+          value = var.turnstile_secret_key
         }
 
         env {
@@ -159,6 +169,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         env {
           name  = "EXCHANGE_RATES_API"
           value = var.exchange_rates_api
+        }
+
+        env {
+          name  = "ETHERSCAN_API_KEY"
+          value = var.etherscan_api_key
         }
 
         env {

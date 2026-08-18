@@ -1,20 +1,35 @@
-import { CountryCode } from '@/generated/prisma/enums';
+import { type PrismaClient } from '@/generated/prisma/client';
+import { PayoutStatus, type CountryCode } from '@/generated/prisma/enums';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
+import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
-import { ServiceResult } from '../core/base.types';
-import {
+import type { ServiceResult } from '../core/base.types';
+import { type ReserveReadService } from '../reserves/reserve-read.service';
+import type {
 	ContributionsByCountry,
 	ContributionTimeRange,
 	CountryTransparencyTotals,
 	TimeRange,
 	TransparencyData,
+	TransparencyFinancialPeriod,
 	TransparencyTotals,
 } from './transparency.types';
+import { getTransparencyFinancialPeriodDateFilter } from './transparency.types';
 
 export class TransparencyService extends BaseService {
-	async getTransparencyTotals(): Promise<ServiceResult<TransparencyTotals>> {
+	constructor(
+		db: PrismaClient,
+		private readonly reserveReadService: ReserveReadService,
+		loggerInstance = logger,
+	) {
+		super(db, loggerInstance);
+	}
+
+	async getTransparencyTotals(
+		financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' },
+	): Promise<ServiceResult<TransparencyTotals>> {
 		try {
-			const totals = await this.getTotals();
+			const totals = await this.getTotals(financialPeriod);
 
 			return this.resultOk(totals);
 		} catch (error) {
@@ -45,15 +60,33 @@ export class TransparencyService extends BaseService {
 		}
 	}
 
-	async getTransparencyData(timeRanges: TimeRange[]): Promise<ServiceResult<TransparencyData>> {
+	async getTransparencyData(
+		timeRanges: TimeRange[],
+		financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' },
+	): Promise<ServiceResult<TransparencyData>> {
 		try {
-			const [totals, timeRangeData, topCountries] = await Promise.all([
-				this.getTotals(),
+			const [totals, outflowsChf, latestReservesResult, timeRangeData, topCountries] = await Promise.all([
+				this.getTotals(financialPeriod),
+				this.getOutflows(financialPeriod),
+				this.reserveReadService.getLatestPerBankAccount(),
 				this.getContributionsByTimeRanges(timeRanges),
 				this.getContributionsByCountry(15),
 			]);
+			if (!latestReservesResult.success) {
+				return this.resultFail(latestReservesResult.error);
+			}
 
-			return this.resultOk({ totals, timeRanges: timeRangeData, topCountries });
+			return this.resultOk({
+				totals,
+				financialSummary: {
+					inflowsChf: totals.totalContributionsChf,
+					outflowsChf,
+					reservesChf: latestReservesResult.data.total,
+				},
+				reserveAccounts: latestReservesResult.data.accounts,
+				timeRanges: timeRangeData,
+				topCountries,
+			});
 		} catch (error) {
 			this.logger.error(error);
 
@@ -61,15 +94,16 @@ export class TransparencyService extends BaseService {
 		}
 	}
 
-	private async getTotals(): Promise<TransparencyTotals> {
+	private async getTotals(financialPeriod: TransparencyFinancialPeriod): Promise<TransparencyTotals> {
+		const createdAt = getTransparencyFinancialPeriodDateFilter(financialPeriod);
 		const [aggregate, distinctContributors] = await Promise.all([
 			this.db.contribution.aggregate({
-				where: { status: 'succeeded' },
+				where: { status: 'succeeded', createdAt },
 				_sum: { amountChf: true },
 				_count: { _all: true },
 			}),
 			this.db.contribution.findMany({
-				where: { status: 'succeeded' },
+				where: { status: 'succeeded', createdAt },
 				distinct: ['contributorId'],
 				select: { contributorId: true },
 			}),
@@ -80,6 +114,19 @@ export class TransparencyService extends BaseService {
 			totalContributors: distinctContributors.length,
 			totalContributionsCount: aggregate._count._all,
 		};
+	}
+
+	private async getOutflows(financialPeriod: TransparencyFinancialPeriod): Promise<number> {
+		const paymentAt = getTransparencyFinancialPeriodDateFilter(financialPeriod);
+		const aggregate = await this.db.payout.aggregate({
+			where: {
+				status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] },
+				paymentAt,
+			},
+			_sum: { amountChf: true },
+		});
+
+		return Number(aggregate._sum.amountChf ?? 0);
 	}
 
 	private async getTotalsForCountry(countryCode: CountryCode): Promise<CountryTransparencyTotals> {

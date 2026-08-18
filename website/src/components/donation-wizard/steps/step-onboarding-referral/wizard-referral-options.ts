@@ -1,10 +1,8 @@
 import { ContributorReferralSource } from '@/generated/prisma/enums';
 
-export type WizardReferralOptionValue = ContributorReferralSource | 'prefer_not_to_say';
-
 type WizardReferralOption = {
-	value: WizardReferralOptionValue;
-	labelKey: 'familyfriends' | 'socialmedia' | 'events' | 'media' | 'preferNotToSay' | 'other';
+	value: ContributorReferralSource;
+	labelKey: 'familyfriends' | 'socialmedia' | 'events' | 'media' | 'other';
 };
 
 export const WIZARD_REFERRAL_OPTIONS: readonly WizardReferralOption[] = [
@@ -12,9 +10,5 @@ export const WIZARD_REFERRAL_OPTIONS: readonly WizardReferralOption[] = [
 	{ value: ContributorReferralSource.social_media, labelKey: 'socialmedia' },
 	{ value: ContributorReferralSource.presentation, labelKey: 'events' },
 	{ value: ContributorReferralSource.media, labelKey: 'media' },
-	{ value: 'prefer_not_to_say', labelKey: 'preferNotToSay' },
 	{ value: ContributorReferralSource.other, labelKey: 'other' },
 ] as const;
-
-export const toContributorReferralSource = (value: WizardReferralOptionValue): ContributorReferralSource =>
-	value === 'prefer_not_to_say' ? ContributorReferralSource.other : value;

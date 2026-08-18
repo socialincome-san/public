@@ -15,6 +15,7 @@ const PRODUCTION_SCRIPT_SRC = [
 	'https://checkout.stripe.com',
 	'https://app.storyblok.com',
 	'https://static.cloudflareinsights.com',
+	'https://challenges.cloudflare.com',
 ] as const;
 
 const DEVELOPMENT_SCRIPT_SRC_EXTRA = ["'unsafe-eval'"] as const;
@@ -64,6 +65,7 @@ const PRODUCTION_CONNECT_SRC = [
 	'https://a.storyblok.com',
 	'https://static.cloudflareinsights.com',
 	'https://cloudflareinsights.com',
+	'https://challenges.cloudflare.com',
 ] as const;
 
 const LOCALHOST_CONNECT_SRC = ['http://localhost:*', 'ws://localhost:*'] as const;
@@ -81,6 +83,7 @@ const FRAME_SRC = [
 	'https://www.youtube.com',
 	'https://www.youtube-nocookie.com',
 	'https://player.mux.com',
+	'https://challenges.cloudflare.com',
 ] as const;
 
 const MEDIA_SRC = ["'self'", 'blob:', 'https://*.mux.com', 'https://*.edgemv.mux.com', 'https://a.storyblok.com'] as const;

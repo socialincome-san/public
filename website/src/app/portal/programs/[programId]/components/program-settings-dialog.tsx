@@ -1,7 +1,7 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { Button } from '@/components/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
+import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { logger } from '@/lib/utils/logger';

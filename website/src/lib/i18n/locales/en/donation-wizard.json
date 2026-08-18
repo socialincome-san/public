@@ -26,7 +26,7 @@
 		"one-time-title": "One-time Donation",
 		"switch-to-one-time": "One-time",
 		"switch-to-monthly": "Monthly",
-		"upsell-subtitle": "Half the amount, paid monthly. It helps us even more.",
+		"upsell-subtitle": "Half the amount, paid monthly.\nIt helps us even more.",
 		"upsell-preferred": "Preferred",
 		"upsell-benefit-cancel": "Cancel anytime",
 		"per-month": "/month",
@@ -60,9 +60,9 @@
 		"title": "QR-Payment",
 		"scanHint": "Scan with your banking app",
 		"paymentToLabel": "Payment to",
-		"paymentToValue": "Social Income, Postfinance AG, 8000 Zürich",
-		"fromLabel": "From",
+		"ibanLabel": "IBAN",
 		"amountLabel": "Amount",
+		"referenceLabel": "Reference",
 		"paymentTypeLabel": "Payment Type",
 		"paymentTypeStandingOrder": "Standing Order (monthly)",
 		"paymentTypeOneTime": "One-time payment",
@@ -91,8 +91,6 @@
 	},
 	"thankYou": {
 		"message": "Thank you for your help!",
-		"messageWithAmountMonthly": "Thank you for {{amount}}/month!",
-		"messageWithAmountOneTime": "Thank you for {{amount}}!",
 		"loginPrompt": {
 			"title": "Your account is ready",
 			"description": "Go to the login page to access your account.",
@@ -101,10 +99,10 @@
 		}
 	},
 	"onboarding": {
-		"successTitle": "Donation successful",
-		"accountCreatedDescription": "We have just created an account for you. Please check your details.",
-		"accountCardTitle": "Check your Account Information",
-		"isThisYou": "Is this you?",
+		"donatedThankYouMonthly": "{{currency}} {{amount}}/month donated. Thank you.",
+		"donatedThankYouOneTime": "{{currency}} {{amount}} donated. Thank you.",
+		"accountCreatedDescription": "We've set up your account.",
+		"isThisYou": "Please review your account details",
 		"firstName": "First Name",
 		"lastName": "Last Name",
 		"email": "E-Mail",
@@ -118,8 +116,8 @@
 		"updateError": "There was an error saving your information. Please try again.",
 		"continue": "Continue",
 		"referral": {
-			"cardTitle": "Helps us to focus our time on what's actually working",
 			"question": "How did you find us?",
+			"description": "This helps us understand what works so we can spend less on outreach and more on impact.",
 			"skip": "Skip",
 			"submit": "Send Feedback",
 			"submitting": "Saving…",
@@ -129,7 +127,6 @@
 				"socialmedia": "Social Media",
 				"events": "Events",
 				"media": "Media",
-				"preferNotToSay": "Prefer not to say",
 				"other": "Other"
 			}
 		}
@@ -140,7 +137,7 @@
 		"supporters": "{{supporterCount}} supporters from {{countryCount}} countries",
 		"supporters-no-countries": "{{supporterCount}} supporters worldwide",
 		"zewo": "ZEWO certified",
-		"why-one-percent": "Why 1 %?",
+		"why-one-percent": "Why donating 1%?",
 		"pay-with": "Pay with"
 	}
 }

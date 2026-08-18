@@ -806,11 +806,13 @@ export class RecipientReadService extends BaseService {
 				return this.resultFail(recipientResult.error, 500);
 			}
 
-			if (!recipientResult.data) {
-				return this.resultFail(`No recipient found for phone "${phone.slice(0, 2)}****${phone.slice(-2)}"`, 404);
+			const maskedPhone = `${phone.slice(0, 2)}****${phone.slice(-2)}`;
+			const recipient = recipientResult.data;
+			if (!recipient?.paymentInformation || !recipient.program) {
+				return this.resultFail(`No recipient found for phone "${maskedPhone}"`, 404);
 			}
 
-			return this.resultOk(recipientResult.data);
+			return this.resultOk(recipient);
 		} catch (error) {
 			this.logger.error(error);
 

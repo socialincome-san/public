@@ -1,4 +1,4 @@
-import { Card } from '@/components/card';
+import { Card } from '@/components/card/card';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { DonationForm } from './donation-form';

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
