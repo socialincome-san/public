@@ -1,3 +1,4 @@
+import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 
@@ -5,37 +6,73 @@ test.beforeEach(async () => {
 	await seedDatabase();
 });
 
+const loadSubscriptionContact = async (id: string) => {
+	const subscription = await prisma.subscription.findUnique({
+		where: { id },
+		select: {
+			stripeSubscriptionId: true,
+			contributor: {
+				select: {
+					contact: {
+						select: { email: true },
+					},
+				},
+			},
+		},
+	});
+	const email = subscription?.contributor.contact?.email;
+	if (!subscription || !email) {
+		throw new Error(`Missing email for subscription ${id}`);
+	}
+
+	return { email, stripeSubscriptionId: subscription.stripeSubscriptionId };
+};
+
 test('shows operator subscription rows under management', async ({ page }) => {
-	await page.goto('/portal/management/subscriptions?page=1&pageSize=10&search=coreh%40dashboard.test');
+	const { email, stripeSubscriptionId } = await loadSubscriptionContact('subscription-core-high-stripe');
+	if (!stripeSubscriptionId) {
+		throw new Error('Expected operator subscription to have a Stripe ID');
+	}
+
+	await page.goto(`/portal/management/subscriptions?page=1&pageSize=10&search=${encodeURIComponent(email)}`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await expect(page.getByText('coreh@dashboard.test')).toBeVisible();
-	await expect(page.getByText('sub_core_high_monthly', { exact: true })).toBeVisible();
+	await expect(page.getByText(email)).toBeVisible();
+	await expect(page.getByText(stripeSubscriptionId, { exact: true })).toBeVisible();
 });
 
 test('does not show owner-only subscription rows under management', async ({ page }) => {
-	await page.goto('/portal/management/subscriptions?page=1&pageSize=10&search=lrh%40dashboard.test');
+	const { email, stripeSubscriptionId } = await loadSubscriptionContact('subscription-lr-high-stripe');
+	if (!stripeSubscriptionId) {
+		throw new Error('Expected owner-only subscription to have a Stripe ID');
+	}
+
+	await page.goto(`/portal/management/subscriptions?page=1&pageSize=10&search=${encodeURIComponent(email)}`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
-	await expect(page.getByText('sub_lr_high_yearly', { exact: true })).toBeHidden();
+	await expect(page.getByText(stripeSubscriptionId, { exact: true })).toBeHidden();
 });
 
 test('subscription search sets the URL and shows matching rows', async ({ page }) => {
+	const { email } = await loadSubscriptionContact('subscription-core-high-stripe');
+
 	await page.goto('/portal/management/subscriptions');
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
 	await page.getByTestId('data-table-search-button').click();
-	await page.getByTestId('data-table-search-input').fill('coreh@dashboard.test');
-	await expect(page).toHaveURL(/search=coreh%40dashboard\.test/);
-	await expect(page.getByText('coreh@dashboard.test')).toBeVisible();
+	await page.getByTestId('data-table-search-input').fill(email);
+	await expect(page).toHaveURL((url) => url.searchParams.get('search') === email);
+	await expect(page.getByText(email)).toBeVisible();
 });
 
 test('subscriptions table is read-only', async ({ page }) => {
-	await page.goto('/portal/management/subscriptions?page=1&pageSize=10&search=coreh%40dashboard.test');
+	const { email } = await loadSubscriptionContact('subscription-core-high-stripe');
+
+	await page.goto(`/portal/management/subscriptions?page=1&pageSize=10&search=${encodeURIComponent(email)}`);
 	await expect(page.getByTestId('data-table')).toBeVisible();
 
 	await expect(page.getByTestId('data-table-actions-button')).toHaveCount(0);
 	await expect(page.getByTestId('action-cell-icon')).toHaveCount(0);
 
-	await page.getByRole('row').filter({ hasText: 'coreh@dashboard.test' }).first().click();
+	await page.getByRole('row').filter({ hasText: email }).first().click();
 	await expect(page.getByRole('heading', { name: /edit/i })).toHaveCount(0);
 	await expect(page.getByTestId('dynamic-form')).toHaveCount(0);
 });

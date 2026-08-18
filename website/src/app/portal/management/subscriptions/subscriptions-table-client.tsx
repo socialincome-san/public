@@ -20,7 +20,7 @@ export const SubscriptionsTableClient = ({
 	return (
 		<ConfiguredDataTableClient
 			config={subscriptionsTableConfig}
-			titleInfoTooltip="Shows subscriptions in programs you can access."
+			titleInfoTooltip="Shows subscriptions in your active organization scope."
 			rows={rows}
 			error={error}
 			query={query}

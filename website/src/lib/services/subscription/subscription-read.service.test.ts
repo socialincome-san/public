@@ -299,6 +299,29 @@ const stripeTableSubscription = {
 	contributor: { contact: { firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.com' } },
 };
 
+const subscriptionTableSelect = {
+	id: true,
+	createdAt: true,
+	amount: true,
+	currency: true,
+	status: true,
+	cancellationReason: true,
+	paymentMethod: true,
+	stripeSubscriptionId: true,
+	bankStandingOrderReference: true,
+	contributor: {
+		select: {
+			contact: {
+				select: {
+					firstName: true,
+					lastName: true,
+					email: true,
+				},
+			},
+		},
+	},
+};
+
 describe('SubscriptionReadService.getPaginatedTableView', () => {
 	it('returns empty rows when the user has no operator program access', async () => {
 		const { service, subscriptionFindMany } = createPortalService({
@@ -334,10 +357,13 @@ describe('SubscriptionReadService.getPaginatedTableView', () => {
 
 		await service.getPaginatedTableView('user-1', defaultTableQuery);
 
-		const [[subscriptionArgs]] = subscriptionFindMany.mock.calls as unknown as [
-			{ where: { campaign: { programId: { in: string[] } } } },
-		][];
-		expect(subscriptionArgs.where.campaign).toEqual({ programId: { in: ['program-1'] } });
+		expect(subscriptionFindMany).toHaveBeenCalledWith({
+			where: { campaign: { programId: { in: ['program-1'] } } },
+			select: subscriptionTableSelect,
+			orderBy: [{ createdAt: 'desc' }],
+			skip: 0,
+			take: 10,
+		});
 	});
 
 	it('applies status, payment method, and search filters', async () => {
@@ -350,26 +376,25 @@ describe('SubscriptionReadService.getPaginatedTableView', () => {
 			search: 'ada@example.com',
 		});
 
-		const [[subscriptionArgs]] = subscriptionFindMany.mock.calls as unknown as [
-			{
-				where: {
-					campaign: { programId: { in: string[] } };
-					status: string;
-					paymentMethod: string;
-					OR: unknown[];
-				};
+		expect(subscriptionFindMany).toHaveBeenCalledWith({
+			where: {
+				campaign: { programId: { in: ['program-1'] } },
+				status: 'ended',
+				paymentMethod: 'bank_transfer',
+				OR: [
+					{ id: { contains: 'ada@example.com', mode: 'insensitive' } },
+					{ contributor: { contact: { firstName: { contains: 'ada@example.com', mode: 'insensitive' } } } },
+					{ contributor: { contact: { lastName: { contains: 'ada@example.com', mode: 'insensitive' } } } },
+					{ contributor: { contact: { email: { contains: 'ada@example.com', mode: 'insensitive' } } } },
+					{ stripeSubscriptionId: { contains: 'ada@example.com', mode: 'insensitive' } },
+					{ bankStandingOrderReference: { contains: 'ada@example.com', mode: 'insensitive' } },
+				],
 			},
-		][];
-		expect(subscriptionArgs.where.campaign).toEqual({ programId: { in: ['program-1'] } });
-		expect(subscriptionArgs.where.status).toBe('ended');
-		expect(subscriptionArgs.where.paymentMethod).toBe('bank_transfer');
-		expect(subscriptionArgs.where.OR).toEqual(
-			expect.arrayContaining([
-				{ contributor: { contact: { email: { contains: 'ada@example.com', mode: 'insensitive' } } } },
-				{ stripeSubscriptionId: { contains: 'ada@example.com', mode: 'insensitive' } },
-				{ bankStandingOrderReference: { contains: 'ada@example.com', mode: 'insensitive' } },
-			]),
-		);
+			select: subscriptionTableSelect,
+			orderBy: [{ createdAt: 'desc' }],
+			skip: 0,
+			take: 10,
+		});
 	});
 
 	it('maps table rows and paginates', async () => {
@@ -400,12 +425,13 @@ describe('SubscriptionReadService.getPaginatedTableView', () => {
 			}),
 		);
 
-		const [[subscriptionArgs]] = subscriptionFindMany.mock.calls as unknown as [
-			{ skip: number; take: number; orderBy: { amount: string }[] },
-		][];
-		expect(subscriptionArgs.skip).toBe(20);
-		expect(subscriptionArgs.take).toBe(10);
-		expect(subscriptionArgs.orderBy).toEqual([{ amount: 'asc' }]);
+		expect(subscriptionFindMany).toHaveBeenCalledWith({
+			where: { campaign: { programId: { in: ['program-1'] } } },
+			select: subscriptionTableSelect,
+			orderBy: [{ amount: 'asc' }],
+			skip: 20,
+			take: 10,
+		});
 		expect(data.totalCount).toBe(21);
 		expect(data.tableRows).toEqual([
 			{

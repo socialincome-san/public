@@ -58,8 +58,7 @@ export const makeYourContributionsColumns = (
 			},
 		},
 		{
-			id: 'attribution',
-			accessorFn: (row) => row.campaignTitle,
+			accessorKey: 'campaignTitle',
 			header: (ctx) => <SortableHeader ctx={ctx}>{translator?.t('contributions.attribution')}</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},

@@ -130,8 +130,8 @@ export class SubscriptionReadService extends BaseService {
 			const accessibleProgramIds = Array.from(
 				new Set(
 					accessibleProgramsResult.data
-						.filter((program) => program.permission === ProgramPermission.operator)
-						.map((program) => program.programId),
+						.filter((access) => access.permission === ProgramPermission.operator)
+						.map((access) => access.programId),
 				),
 			);
 			if (accessibleProgramIds.length === 0) {
@@ -139,10 +139,10 @@ export class SubscriptionReadService extends BaseService {
 			}
 
 			const search = query.search.trim();
-			const statusValues = Object.values(SubscriptionStatus);
-			const selectedStatus = statusValues.find((status) => status === query.subscriptionStatus);
-			const paymentMethodValues = Object.values(SubscriptionPaymentMethod);
-			const selectedPaymentMethod = paymentMethodValues.find((method) => method === query.subscriptionPaymentMethod);
+			const selectedStatus = Object.values(SubscriptionStatus).find((status) => status === query.subscriptionStatus);
+			const selectedPaymentMethod = Object.values(SubscriptionPaymentMethod).find(
+				(method) => method === query.subscriptionPaymentMethod,
+			);
 
 			const where: Prisma.SubscriptionWhereInput = {
 				campaign: { programId: { in: accessibleProgramIds } },
@@ -213,7 +213,7 @@ export class SubscriptionReadService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 
-			return this.resultFail(`Could not fetch subscriptions: ${JSON.stringify(error)}`);
+			return this.resultFail('Could not fetch subscriptions');
 		}
 	}
 
