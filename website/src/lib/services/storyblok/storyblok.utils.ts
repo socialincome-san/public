@@ -6,10 +6,16 @@ import {
 	getWebsitePublicPath,
 	WEBSITE_PERSON_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
+import {
+	DEFAULT_OPEN_GRAPH_IMAGE_URL,
+	DEFAULT_TWITTER_IMAGE_URL,
+	toProductionMetadataImage,
+	type MetadataImage,
+} from '@/lib/utils/metadata';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 // Helper type to remove index signature from a type
 type RemoveIndexSignature<T> = {
@@ -180,7 +186,7 @@ export const formatStoryblokResizeUrl = (url: string, width: number, height: num
  * Unlike formatStoryblokUrl, this returns a URL that can be fetched directly without
  * going through the Next.js image loader.
  */
-const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) => {
+export const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) => {
 	let imageSource = url + `/m/${width}x${height}`;
 	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
 
@@ -362,24 +368,31 @@ export const generateMetaDataForArticle = (storyblokStory: ISbStoryData<Resolved
 	const imageFilename = storyblokArticle.image?.filename;
 	const tags = storyblokArticle.tags?.map((it) => it.content.value).join(', ');
 
-	let imageMetaData: { url: string; width?: number; height?: number } | undefined;
+	let imageMetaData: MetadataImage | undefined;
 	if (imageFilename) {
-		const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
-		if (dimensions.width && dimensions.height) {
-			// Use direct URL for OG metadata since it doesn't go through the Next.js image loader
-			const imageUrl = formatStoryblokUrlDirect(
-				imageFilename,
-				dimensions.width,
-				dimensions.height,
-				storyblokArticle.image.focus ?? undefined,
-			);
-			imageMetaData = {
-				url: imageUrl,
-				width: dimensions.width,
-				height: dimensions.height,
-			};
+		try {
+			const dimensions = getDimensionsFromStoryblokImageUrl(imageFilename);
+			if (dimensions.width && dimensions.height) {
+				// Use direct URL for OG metadata since it doesn't go through the Next.js image loader
+				const imageUrl = formatStoryblokUrlDirect(
+					imageFilename,
+					dimensions.width,
+					dimensions.height,
+					storyblokArticle.image.focus ?? undefined,
+				);
+				imageMetaData = {
+					url: imageUrl,
+					width: dimensions.width,
+					height: dimensions.height,
+				};
+			}
+		} catch {
+			imageMetaData = undefined;
 		}
 	}
+
+	const openGraphImages = toProductionMetadataImage(imageMetaData, DEFAULT_OPEN_GRAPH_IMAGE_URL);
+	const twitterImages = toProductionMetadataImage(imageMetaData, DEFAULT_TWITTER_IMAGE_URL);
 
 	return {
 		title: title,
@@ -389,14 +402,14 @@ export const generateMetaDataForArticle = (storyblokStory: ISbStoryData<Resolved
 		openGraph: {
 			title: title,
 			description: description,
-			images: imageMetaData,
+			images: openGraphImages,
 			url: url,
 			type: 'article',
 		},
 		twitter: {
 			title: title,
 			description: description,
-			images: imageMetaData,
+			images: twitterImages,
 			card: 'summary_large_image',
 			site: '@so_income',
 			creator: '@so_income',
