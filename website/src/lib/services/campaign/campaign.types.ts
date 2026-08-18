@@ -37,11 +37,6 @@ type CampaignPayload = {
 	secondDescription?: string | null;
 	thirdDescriptionTitle?: string | null;
 	thirdDescription?: string | null;
-	linkWebsite?: string | null;
-	linkInstagram?: string | null;
-	linkTiktok?: string | null;
-	linkFacebook?: string | null;
-	linkX?: string | null;
 	goal?: number | null;
 	currency: Currency;
 	additionalAmountChf?: number | null;
@@ -51,7 +46,6 @@ type CampaignPayload = {
 	metadataOgImage?: string | null;
 	metadataTwitterImage?: string | null;
 	creatorName: string | null;
-	creatorEmail: string | null;
 	program: {
 		id: string;
 		name: string;
