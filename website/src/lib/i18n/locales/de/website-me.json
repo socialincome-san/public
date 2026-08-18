@@ -55,6 +55,7 @@
 			"donation-certificates-long": "Spendebescheinigungen"
 		}
 	},
+	"donate-now": "Jetzt spenden",
 	"contributions": {
 		"amount": "Betrag",
 		"date": "Datum",
@@ -76,14 +77,12 @@
 			"unknown": "Unbekannt"
 		},
 		"status-title": "Status",
-		"no-contributions": "Keine Zahlungen gefunden",
-		"new-contribution": "Neue Spende"
+		"no-contributions": "Keine Zahlungen gefunden"
 	},
 	"subscriptions": {
 		"amount": "Betrag",
 		"created": "Erstellt",
 		"payment-method": "Zahlungsart",
-		"new-subscription": "Neues Abonnement",
 		"interval": "Interval",
 		"interval-1": "Monatlich",
 		"interval-3": "Quartalsweise",
@@ -95,7 +94,81 @@
 		},
 		"status-title": "Status",
 		"manage-subscriptions": "Abonnemente verwalten",
-		"no-subscriptions": "Keine Abonnemente gefunden"
+		"edit": "Bearbeiten",
+		"view-qr": "QR anzeigen",
+		"qr-dialog": {
+			"title": "Dein QR-Einzahlungsschein",
+			"unavailable": "QR-Code konnte nicht erzeugt werden. Bitte versuche es später erneut.",
+			"close": "Schliessen"
+		},
+		"edit-dialog": {
+			"title": "Abonnement bearbeiten",
+			"monthly-contribution": "Monatlicher Beitrag",
+			"per-month-suffix": "/ Monat",
+			"update-card": "Karte aktualisieren",
+			"cancel-subscription": "Abonnement kündigen",
+			"cancel": "Abbrechen",
+			"update-subscription": "Abonnement aktualisieren",
+			"updating-subscription": "Abonnement wird aktualisiert",
+			"success-title": "Abonnement aktualisiert",
+			"success-message": "Dein aktualisierter monatlicher Beitrag ist jetzt aktiv.",
+			"success-thanks": "Danke, dass du Social Income unterstützt.",
+			"standing-order-title": "Dauerauftrag aktualisieren",
+			"standing-order-description": "Passe den Betrag in deinem E-Banking an, nachdem du gespeichert hast.",
+			"download-qr": "QR-Code herunterladen",
+			"done": "Fertig",
+			"error": "Abonnement konnte nicht aktualisiert werden. Bitte versuche es erneut.",
+			"update-card-error": "Karten-Update konnte nicht geöffnet werden. Bitte versuche es erneut.",
+			"update-card-unsaved-warning": "Du hast ungespeicherte Betragsänderungen. Ohne Speichern fortfahren?",
+			"update-card-stay": "Bleiben",
+			"update-card-leave": "Ohne Speichern fortfahren",
+			"back": "Zurück",
+			"cancel-retention-title": "Abonnement kündigen",
+			"cancel-retention-heading": "Bist du sicher, dass du dieses Abonnement kündigen möchtest?",
+			"cancel-retention-card-title": "Würde eine Reduktion helfen?",
+			"cancel-retention-other": "Andere",
+			"cancel-retention-or": "Oder",
+			"cancel-retention-continue": "Nein, ich möchte kündigen",
+			"cancel-reason-title": "Kündigungsgrund",
+			"cancel-reason-heading": "Schade, dass du gehst. Kannst du uns sagen warum?",
+			"cancel-reason-confirm": "Abonnement kündigen",
+			"canceling-subscription": "Abonnement wird gekündigt",
+			"cancel-success-title": "Abonnement gekündigt",
+			"cancel-success-message": "Dein Abonnement wurde gekündigt. Es werden keine weiteren Zahlungen belastet.",
+			"bank-cancel-success-message": "Dein Abonnement wurde hier gekündigt. Bitte stoppe zusätzlich den Dauerauftrag in deiner Bank, damit keine weitere Zahlung erfolgt.",
+			"cancel-success-thanks": "Danke, dass du Social Income unterstützt.",
+			"cancel-error": "Abonnement konnte nicht gekündigt werden. Bitte versuche es erneut.",
+			"cancel-reasons": {
+				"financial_situation_changed": "Meine finanzielle Situation hat sich geändert",
+				"different_cause": "Ich möchte eine andere Sache unterstützen",
+				"not_enough_updates": "Ich erhalte nicht genug Updates",
+				"technical_issue": "Ich hatte ein technisches Problem",
+				"prefer_one_time": "Ich bevorzuge Einmalspenden",
+				"pausing": "Ich pausiere vorerst",
+				"other": "Andere"
+			}
+		},
+		"no-subscriptions": "Keine Abonnemente gefunden",
+		"load-error": "Abonnemente konnten nicht geladen werden. Bitte versuche es erneut.",
+		"retry": "Erneut versuchen",
+		"summary": {
+			"monthly-contribution": "Monatlicher Beitrag",
+			"total-contributions": "Gesamtbeiträge",
+			"no-active-subscriptions": "Keine aktiven Abonnemente",
+			"active-subscriptions-count": "{{count}} aktive Abonnemente",
+			"contributions-since": "{{count}} Beiträge seit {{date}}",
+			"no-contributions-yet": "Noch keine Beiträge"
+		},
+		"active-subscriptions": "Aktive Abonnemente",
+		"upcoming-payments": "Bevorstehende Zahlungen",
+		"scheduled": "Geplant",
+		"per-month": "pro Monat",
+		"since": "seit",
+		"card-fallback": "Karte",
+		"empty": {
+			"description": "Du hast {{amount}} über {{count}} Überweisungen beigetragen.\nMöchtest du dort weitermachen, wo du aufgehört hast?",
+			"description-no-contributions": "Beginne heute, jemanden zu unterstützen."
+		}
 	},
 	"donation-certificates": {
 		"created": "Erstellt",

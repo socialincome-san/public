@@ -112,6 +112,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "TURNSTILE_SECRET_KEY"
+          value = var.turnstile_secret_key
+        }
+
+        env {
           name  = "SENDGRID_API_KEY"
           value = var.sendgrid_api_key
         }

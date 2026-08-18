@@ -57,6 +57,7 @@ jobs:
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" > secrets/NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID}}" > secrets/NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_LINKEDIN_TRACKING_ID}}" > secrets/NEXT_PUBLIC_LINKEDIN_TRACKING_ID
+          echo "${{ secrets.TF_PROD_NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" > secrets/NEXT_PUBLIC_TURNSTILE_SITE_KEY
           echo "${{ secrets.TF_PROD_SENTRY_AUTH_TOKEN }}" > secrets/SENTRY_AUTH_TOKEN
           echo "${{ secrets.TF_PROD_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
 
@@ -102,6 +103,7 @@ jobs:
           TF_VAR_stripe_secret_key: ${{ secrets.TF_PROD_STRIPE_SECRET_KEY }}
           TF_VAR_stripe_publishable_key: ${{ secrets.TF_PROD_STRIPE_PUBLISHABLE_KEY }}
           TF_VAR_stripe_webhook_secret: ${{ secrets.TF_PROD_STRIPE_WEBHOOK_SECRET }}
+          TF_VAR_turnstile_secret_key: ${{ secrets.TF_PROD_TURNSTILE_SECRET_KEY }}
           TF_VAR_sendgrid_api_key: ${{ secrets.TF_PROD_SENDGRID_API_KEY }}
           TF_VAR_sendgrid_list_id: ${{ secrets.TF_PROD_SENDGRID_LIST_ID }}
           TF_VAR_sendgrid_suppression_list_id: ${{ secrets.TF_PROD_SENDGRID_SUPPRESSION_LIST_ID }}

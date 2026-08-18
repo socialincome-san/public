@@ -97,6 +97,12 @@ variable "stripe_webhook_secret" {
   sensitive   = true
 }
 
+variable "turnstile_secret_key" {
+  description = "Cloudflare Turnstile secret key for server-side token verification"
+  type        = string
+  sensitive   = true
+}
+
 variable "sendgrid_api_key" {
   type      = string
   sensitive = true

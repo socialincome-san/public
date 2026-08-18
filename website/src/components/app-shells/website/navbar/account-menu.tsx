@@ -2,7 +2,7 @@
 
 import { useLogout } from '@/components/app-shells/use-logout';
 import { displaySession, Scope } from '@/components/app-shells/website/navbar/utils';
-import { Avatar, AvatarFallback } from '@/components/avatar';
+import { Avatar, AvatarFallback } from '@/components/avatar/avatar';
 import { Button } from '@/components/button/button';
 import {
 	DropdownMenu,
@@ -45,7 +45,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 			}
 			if (hasContributor) {
 				items.push({
-					href: '/dashboard/contributions',
+					href: '/dashboard/subscriptions',
 					label: translator.t('navigation.go-to-dashboard'),
 					icon: LayoutDashboard,
 				});
@@ -65,7 +65,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 			}
 			if (hasContributor) {
 				items.push({
-					href: '/dashboard/contributions',
+					href: '/dashboard/subscriptions',
 					label: translator.t('navigation.go-to-dashboard'),
 					icon: LayoutDashboard,
 				});
