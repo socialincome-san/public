@@ -61,8 +61,8 @@
 		"date": "Datum",
 		"created": "Erstellt",
 		"updated": "Aktualisiert",
-		"currency": "Währung",
-		"campaign": "Kampagne",
+		"payment-type": "Zahlungsart",
+		"attribution": "Zuordnung",
 		"sources": {
 			"benevity": "Benevity",
 			"cash": "Bar",

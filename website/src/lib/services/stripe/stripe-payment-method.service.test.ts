@@ -16,7 +16,6 @@ jest.mock('@/generated/prisma/client', () => ({
 	},
 	SubscriptionStatus: {
 		active: 'active',
-		canceled: 'canceled',
 		ended: 'ended',
 	},
 	ContributionStatus: {},

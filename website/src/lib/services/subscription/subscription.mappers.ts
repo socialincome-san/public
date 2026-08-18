@@ -16,13 +16,13 @@ export const resolveStripeResourceId = (value: string | { id: string } | null | 
 export const shouldSkipStripeSubscriptionStatus = (status: string): boolean =>
 	status === 'incomplete' || status === 'incomplete_expired';
 
-export const mapStripeSubscriptionStatus = (status: string, endedAt: number | null): SubscriptionStatus | null => {
+export const mapStripeSubscriptionStatus = (status: string): SubscriptionStatus | null => {
 	if (shouldSkipStripeSubscriptionStatus(status)) {
 		return null;
 	}
 
 	if (status === 'canceled') {
-		return endedAt ? SubscriptionStatus.ended : SubscriptionStatus.canceled;
+		return SubscriptionStatus.ended;
 	}
 
 	if (status === 'active' || status === 'trialing' || status === 'past_due' || status === 'unpaid' || status === 'paused') {
@@ -77,7 +77,7 @@ export const resolveStripeSubscriptionCanceledAt = (subscription: Stripe.Subscri
 export const mapStripeSubscriptionLifecycle = (
 	subscription: Stripe.Subscription,
 ): MappedStripeSubscriptionLifecycle | null => {
-	const status = mapStripeSubscriptionStatus(subscription.status, subscription.ended_at);
+	const status = mapStripeSubscriptionStatus(subscription.status);
 	if (!status) {
 		return null;
 	}

@@ -5,23 +5,21 @@ import type { YourContributionsTableViewRow } from '@/lib/services/contribution/
 export const getYourContributionsTableConfig = ({
 	title,
 	emptyMessage,
-	enableSearch = false,
 }: {
 	title: string;
 	emptyMessage: string;
-	enableSearch?: boolean;
 }): DataTableConfig<YourContributionsTableViewRow> => ({
 	id: 'your-contributions',
 	title,
 	emptyMessage,
-	searchKeys: enableSearch ? ['campaignTitle', 'currency'] : [],
+	searchKeys: [],
 	sortOptions: [
 		{ id: 'updatedAt', label: 'Updated' },
 		{ id: 'createdAt', label: 'Created' },
 		{ id: 'status', label: 'Status' },
 		{ id: 'amount', label: 'Amount' },
-		{ id: 'currency', label: 'Currency' },
-		{ id: 'campaignTitle', label: 'Campaign' },
+		{ id: 'paymentEventType', label: 'Payment type' },
+		{ id: 'campaignTitle', label: 'Attribution' },
 	],
 	makeColumns: makeYourContributionsColumns,
 	showColumnVisibilitySelector: true,

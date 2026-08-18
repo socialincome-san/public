@@ -1,4 +1,4 @@
-import { Currency, PaymentEventType, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { PaymentEventType, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { START_CHARACTER_REGEX, UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
@@ -15,6 +15,7 @@ import {
 	ContributorContributionSummary,
 	YourContributionsPaginatedTableView,
 	YourContributionsTableQuery,
+	YourContributionsTableViewRow,
 } from './contribution.types';
 
 export class ContributionReadService extends BaseService {
@@ -64,7 +65,7 @@ export class ContributionReadService extends BaseService {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
 		const sortBy = toSortKey(query.sortBy, [
 			'amount',
-			'currency',
+			'paymentEventType',
 			'campaignTitle',
 			'createdAt',
 			'updatedAt',
@@ -73,8 +74,8 @@ export class ContributionReadService extends BaseService {
 		switch (sortBy) {
 			case 'amount':
 				return [{ amount: direction }];
-			case 'currency':
-				return [{ currency: direction }];
+			case 'paymentEventType':
+				return [{ paymentEvent: { type: direction } }];
 			case 'campaignTitle':
 				return [{ campaign: { title: direction } }];
 			case 'createdAt':
@@ -364,18 +365,10 @@ export class ContributionReadService extends BaseService {
 	): Promise<ServiceResult<YourContributionsPaginatedTableView>> {
 		try {
 			const search = query.search.trim();
-			const matchedCurrency = Object.values(Currency).find((currency) => currency.toLowerCase() === search.toLowerCase());
 			const where = search
 				? {
-						AND: [
-							{ contributorId },
-							{
-								OR: [
-									{ campaign: { title: { contains: search, mode: 'insensitive' as const } } },
-									...(matchedCurrency ? [{ currency: { equals: matchedCurrency } }] : []),
-								],
-							},
-						],
+						contributorId,
+						campaign: { title: { contains: search, mode: 'insensitive' as const } },
 					}
 				: { contributorId };
 
@@ -388,6 +381,7 @@ export class ContributionReadService extends BaseService {
 						amount: true,
 						currency: true,
 						status: true,
+						paymentEvent: { select: { type: true } },
 						campaign: {
 							select: { title: true },
 						},
@@ -399,11 +393,12 @@ export class ContributionReadService extends BaseService {
 				this.db.contribution.count({ where }),
 			]);
 
-			const tableRows = contributions.map((c) => ({
+			const tableRows: YourContributionsTableViewRow[] = contributions.map((c) => ({
 				createdAt: c.createdAt,
 				updatedAt: c.updatedAt,
 				amount: c.amount ? Number(c.amount) : 0,
-				currency: c.currency ?? '',
+				currency: c.currency,
+				paymentEventType: c.paymentEvent?.type ?? null,
 				campaignTitle: c.campaign?.title ?? '',
 				status: c.status,
 			}));

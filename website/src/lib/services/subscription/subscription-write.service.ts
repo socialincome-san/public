@@ -220,7 +220,7 @@ export class SubscriptionWriteService extends BaseService {
 			await this.db.subscription.update({
 				where: { id: subscription.id },
 				data: {
-					status: SubscriptionStatus.canceled,
+					status: SubscriptionStatus.ended,
 					canceledAt: now(),
 					cancellationReason: input.reason,
 				},
