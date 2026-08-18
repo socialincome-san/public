@@ -1,7 +1,8 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { RadioGroup, RadioGroupItem } from '@/components/radio-group';
+import { ContributorReferralSource } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { updateContributorReferralAfterWizardQrAction } from '@/lib/server-actions/qr-wizard-actions';
 import { updateContributorReferralAfterWizardCheckoutAction } from '@/lib/server-actions/stripe-wizard-actions';
@@ -11,11 +12,7 @@ import { useOnboardingAmountLine } from '../../hooks/use-onboarding-amount-line'
 import { OnboardingSkipFallback } from '../../shared/onboarding-skip-fallback';
 import { OnboardingSuccessHeader } from '../../shared/onboarding-success-header';
 import type { DonationWizardStepProps } from '../../wizard/types';
-import {
-	toContributorReferralSource,
-	WIZARD_REFERRAL_OPTIONS,
-	type WizardReferralOptionValue,
-} from './wizard-referral-options';
+import { WIZARD_REFERRAL_OPTIONS } from './wizard-referral-options';
 
 export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
@@ -23,7 +20,7 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 		state.context;
 	const amountLine = useOnboardingAmountLine(completedDonationSummary);
 
-	const [selectedReferral, setSelectedReferral] = useState<WizardReferralOptionValue | undefined>();
+	const [selectedReferral, setSelectedReferral] = useState<ContributorReferralSource | undefined>();
 	const [submitting, setSubmitting] = useState(false);
 
 	const hasStripeReferralContext = wizardPaymentSource === 'stripe' && Boolean(stripeCheckoutSessionId);
@@ -38,12 +35,10 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 		setSubmitting(true);
 
 		try {
-			const referral = toContributorReferralSource(selectedReferral);
-
 			if (hasStripeReferralContext && stripeCheckoutSessionId) {
 				const result = await updateContributorReferralAfterWizardCheckoutAction({
 					stripeCheckoutSessionId,
-					referral,
+					referral: selectedReferral,
 				});
 
 				if (!result.success) {
@@ -62,7 +57,7 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 				const result = await updateContributorReferralAfterWizardQrAction({
 					paymentReferenceId: qrContributorReferenceId,
 					expectedEmail: qrDonor.email,
-					referral,
+					referral: selectedReferral,
 				});
 
 				if (!result.success) {
@@ -94,33 +89,37 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 			className="flex w-full flex-col gap-6 px-4 pt-6 pb-8 sm:px-9 sm:pt-6 sm:pb-11"
 			data-testid="donation-wizard-step-referral"
 		>
-			<OnboardingSuccessHeader amountLine={amountLine} showAccountCreatedDescription />
+			<OnboardingSuccessHeader amountLine={amountLine} />
 
-			<div className="bg-background border-border flex flex-col gap-5 overflow-hidden rounded-3xl border px-0 pt-5 pb-7">
-				<div className="border-border border-b pb-2">
-					<p className="text-foreground px-6 text-lg leading-normal font-medium">{t('onboarding.referral.cardTitle')}</p>
-
-					<div className="border-border mt-4 grid gap-6 border-t p-6 sm:grid-cols-[minmax(0,1fr)_minmax(220px,1fr)]">
+			<div className="bg-background border-border flex flex-col gap-5 overflow-hidden rounded-3xl border px-0 pb-7">
+				<div className="border-border grid gap-6 border-b p-6 sm:grid-cols-[minmax(0,1fr)_minmax(220px,1fr)]">
+					<div className="flex flex-col gap-2">
 						<p className="text-foreground text-base leading-none font-medium">{t('onboarding.referral.question')}</p>
-						<RadioGroup
-							value={selectedReferral}
-							onValueChange={(value) => setSelectedReferral(value as WizardReferralOptionValue)}
-							className="gap-4"
-						>
-							{WIZARD_REFERRAL_OPTIONS.map(({ value, labelKey }) => {
-								const optionId = `donation-wizard-referral-${value}`;
-
-								return (
-									<div key={value} className="flex items-center gap-3">
-										<RadioGroupItem id={optionId} value={value} data-testid={`radio-card-${value}`} />
-										<label htmlFor={optionId} className="text-foreground cursor-pointer text-sm font-medium">
-											{t(`onboarding.referral.options.${labelKey}`)}
-										</label>
-									</div>
-								);
-							})}
-						</RadioGroup>
+						<p className="text-muted-foreground text-sm leading-normal">{t('onboarding.referral.description')}</p>
 					</div>
+					<RadioGroup
+						value={selectedReferral}
+						onValueChange={(value) => {
+							const option = WIZARD_REFERRAL_OPTIONS.find((referralOption) => referralOption.value === value);
+							if (option) {
+								setSelectedReferral(option.value);
+							}
+						}}
+						className="gap-4"
+					>
+						{WIZARD_REFERRAL_OPTIONS.map(({ value, labelKey }) => {
+							const optionId = `donation-wizard-referral-${value}`;
+
+							return (
+								<div key={value} className="flex items-center gap-3">
+									<RadioGroupItem id={optionId} value={value} data-testid={`radio-card-${value}`} />
+									<label htmlFor={optionId} className="text-foreground cursor-pointer text-sm font-medium">
+										{t(`onboarding.referral.options.${labelKey}`)}
+									</label>
+								</div>
+							);
+						})}
+					</RadioGroup>
 				</div>
 
 				<div className="flex flex-col gap-3 px-6 sm:flex-row sm:items-center sm:justify-between">

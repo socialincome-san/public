@@ -60,6 +60,12 @@ variable "scheduler_api_key" {
   sensitive   = true
 }
 
+variable "pawapay_api_token" {
+  description = "Bearer token for the PawaPay API"
+  type        = string
+  sensitive   = true
+}
+
 variable "stripe_product_onetime" {
   description = "Stripe product ID for one-time payments"
   type        = string
@@ -87,6 +93,12 @@ variable "stripe_publishable_key" {
 
 variable "stripe_webhook_secret" {
   description = "Stripe webhook signing secret"
+  type        = string
+  sensitive   = true
+}
+
+variable "turnstile_secret_key" {
+  description = "Cloudflare Turnstile secret key for server-side token verification"
   type        = string
   sensitive   = true
 }
@@ -142,6 +154,12 @@ variable "base_url" {
 
 variable "exchange_rates_api" {
   description = "API key for exchange rates service"
+  type        = string
+  sensitive   = true
+}
+
+variable "etherscan_api_key" {
+  description = "API key for Etherscan"
   type        = string
   sensitive   = true
 }

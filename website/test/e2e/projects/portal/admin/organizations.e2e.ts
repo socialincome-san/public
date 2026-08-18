@@ -28,8 +28,8 @@ test('admin organizations with direct URL sorting matches screenshot', async ({ 
 test('add new organization with users and program permissions', async ({ page }) => {
 	const organizationName = `E2E Organization ${Date.now()}`;
 	const selectedUsers = ['si_power_user global_owner', 'si_sl_user_1 owner'];
-	const ownedProgramName = 'SI Core Program SL';
-	const operatedProgramName = 'SI Women Support SL';
+	const ownedProgramName = 'Sierra Leone Unconditional';
+	const operatedProgramName = 'Financial Skills for Women';
 
 	await page.goto('/portal/admin/organizations');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-organization');
@@ -83,8 +83,8 @@ test('add new organization with users and program permissions', async ({ page })
 
 test('update organization users and permissions', async ({ page }) => {
 	const selectedUsers = ['si_power_user global_owner', 'si_sl_user_1 owner'];
-	const ownedProgramName = 'SI Core Program SL';
-	const operatedProgramName = 'SI Women Support SL';
+	const ownedProgramName = 'Sierra Leone Unconditional';
+	const operatedProgramName = 'Financial Skills for Women';
 
 	const organization = await prisma.organization.create({
 		data: { name: `E2E Update Organization ${Date.now()}` },

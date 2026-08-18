@@ -59,12 +59,23 @@ export interface Button {
 }
 
 export interface Campaign {
+  approved?: boolean;
   portalSlug: string;
   title: string;
   description: string;
   primaryImage: StoryblokAsset;
+  profilePicture?: StoryblokAsset;
+  creatorName: string;
+  quote: string;
+  sectionDescription?: string;
+  sectionImage?: StoryblokAsset;
+  instagramHandle?: string;
+  xHandle?: string;
+  linkWebsite?: string;
+  tiktokHandle?: string;
   component: "Campaign";
   _uid: string;
+  _editable?: string | undefined;
   [k: string]: unknown;
 }
 
@@ -179,8 +190,6 @@ export interface FaqSelection {
   heading?: string;
   questions: (ISbStoryData<Faq> | string)[];
   button?: Button[];
-  disableMarginTop?: boolean;
-  disableMarginBottom?: boolean;
   component: "faqSelection";
   _uid: string;
   [k: string]: unknown;
@@ -313,7 +322,7 @@ export interface Lottie {
 export interface MenuItem {
   label?: string;
   link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
-  icon?: "" | "instagram" | "linkedin" | "facebook" | "github" | "newsletter" | "contact";
+  icon?: "" | "instagram" | "linkedin" | "facebook" | "github" | "newsletter" | "contact" | "googleplay" | "appstore" | "youtube";
   newTab?: boolean;
   component: "menuItem";
   _uid: string;

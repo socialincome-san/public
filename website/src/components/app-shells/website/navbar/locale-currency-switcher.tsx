@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { CountryFlag } from '@/components/country-flag';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
 import { Tabs, TabsList, TabsTrigger } from '@/components/tabs';

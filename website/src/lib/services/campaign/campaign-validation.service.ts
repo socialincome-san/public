@@ -42,6 +42,30 @@ export class CampaignValidationService extends BaseService {
 			return this.resultFail('A campaign with this title already exists.');
 		}
 
+		if (input.slug) {
+			return this.validateSlugUniqueness(input.slug);
+		}
+
+		return this.resultOk(undefined);
+	}
+
+	async validateSlugUniqueness(slug: string, excludeCampaignId?: string): Promise<ServiceResult<void>> {
+		const normalizedSlug = slug.trim();
+		if (!normalizedSlug) {
+			return this.resultFail('Slug is required.');
+		}
+
+		const slugConflict = await this.db.campaign.findFirst({
+			where: {
+				slug: normalizedSlug,
+				...(excludeCampaignId ? { id: { not: excludeCampaignId } } : {}),
+			},
+			select: { id: true },
+		});
+		if (slugConflict) {
+			return this.resultFail('A campaign with this slug already exists.');
+		}
+
 		return this.resultOk(undefined);
 	}
 
@@ -57,6 +81,10 @@ export class CampaignValidationService extends BaseService {
 			if (titleConflict && titleConflict.id !== context.campaignId) {
 				return this.resultFail('A campaign with this title already exists.');
 			}
+		}
+
+		if (input.slug) {
+			return this.validateSlugUniqueness(input.slug, context.campaignId);
 		}
 
 		return this.resultOk(undefined);

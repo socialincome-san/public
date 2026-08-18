@@ -2,8 +2,8 @@
 
 import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-navbar-links';
 import { useLogout } from '@/components/app-shells/use-logout';
-import { Avatar, AvatarFallback } from '@/components/avatar';
-import { Button } from '@/components/button';
+import { Avatar, AvatarFallback } from '@/components/avatar/avatar';
+import { Button } from '@/components/button/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,

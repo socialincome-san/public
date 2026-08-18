@@ -100,3 +100,9 @@ export type YourContributionsPaginatedTableView = {
 	tableRows: YourContributionsTableViewRow[];
 	totalCount: number;
 };
+
+export type ContributorContributionSummary = {
+	totalAmountChf: number;
+	count: number;
+	firstContributionAt: Date | null;
+};

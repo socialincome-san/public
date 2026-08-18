@@ -2,10 +2,11 @@ import {
 	ContributionStatus,
 	CountryCode,
 	Currency,
-	DonationInterval,
 	PaymentEventType,
 	type Prisma,
 	PrismaClient,
+	SubscriptionPaymentMethod,
+	SubscriptionStatus,
 } from '@/generated/prisma/client';
 import { logger } from '@/lib/utils/logger';
 import { generateQrBillPdfBuffer } from '@/lib/utils/qr-bill-pdf';
@@ -19,11 +20,13 @@ import { type BankContributorData, type ContributorUpdateInput } from '../contri
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
+import { SubscriptionWriteService } from '../subscription/subscription-write.service';
 import {
 	type CreateWizardPendingContributionInput,
 	type CreateWizardQrReferencesInput,
-	type DownloadWizardQrBillPdfInput,
-	type DownloadWizardQrBillPdfResult,
+	type DownloadQrBillPdfInput,
+	type DownloadQrBillPdfResult,
+	type DownloadSubscriptionQrBillPdfInput,
 	type GetQrOnboardingPrefillInput,
 	type QrBillOnboardingPrefill,
 	type QrBillReferenceResult,
@@ -46,6 +49,7 @@ export class QrBillService extends BaseService {
 		private readonly contributorReadService: ContributorReadService,
 		private readonly campaignService: CampaignReadService,
 		private readonly contributionService: ContributionWriteService,
+		private readonly subscriptionWriteService: SubscriptionWriteService,
 		private readonly exchangeRateService: ExchangeRateReadService,
 		loggerInstance = logger,
 	) {
@@ -94,7 +98,26 @@ export class QrBillService extends BaseService {
 				return this.resultFail(`Could not get or create contributor for reference Id ${userData.paymentReferenceId}`);
 			}
 
-			const newContribution = await this.buildContribution(payment, contributor.data.id, payment.campaignId);
+			const campaignIdResult = await this.resolveCampaignId(payment.campaignId);
+			if (!campaignIdResult.success) {
+				return this.resultFail(campaignIdResult.error);
+			}
+			const campaignId = campaignIdResult.data;
+
+			if (payment.interval === 1) {
+				const subscriptionResult = await this.subscriptionWriteService.upsertFromBankStandingOrder({
+					bankStandingOrderReference: payment.referenceId,
+					contributorId: contributor.data.id,
+					campaignId,
+					amount: payment.amount,
+					currency: payment.currency,
+				});
+				if (!subscriptionResult.success) {
+					return this.resultFail(subscriptionResult.error);
+				}
+			}
+
+			const newContribution = await this.buildContribution(payment, contributor.data.id, campaignId);
 			if (!newContribution.success) {
 				return this.resultFail(`Could not build new contribution for reference Id ${payment.referenceId}`);
 			}
@@ -125,7 +148,7 @@ export class QrBillService extends BaseService {
 		return this.createPendingContribution(payment, input.userData);
 	}
 
-	async downloadWizardQrBillPdf(input: DownloadWizardQrBillPdfInput): Promise<ServiceResult<DownloadWizardQrBillPdfResult>> {
+	async downloadQrBillPdf(input: DownloadQrBillPdfInput): Promise<ServiceResult<DownloadQrBillPdfResult>> {
 		const donorCheck = await this.verifyContributorByPaymentReference(input.contributorReferenceId, input.expectedEmail);
 		if (!donorCheck.success) {
 			return donorCheck;
@@ -136,13 +159,80 @@ export class QrBillService extends BaseService {
 			return paymentResult;
 		}
 
+		const { amount, currency } = paymentResult.data;
+		if (currency !== 'CHF' && currency !== 'EUR') {
+			return this.resultFail('QR bill PDF is only available for CHF and EUR');
+		}
+
+		return this.generateQrBillPdfResult({
+			amount,
+			contributorReferenceId: input.contributorReferenceId,
+			contributionReferenceId: input.contributionReferenceId,
+			currency,
+		});
+	}
+
+	async downloadSubscriptionQrBillPdf(
+		input: DownloadSubscriptionQrBillPdfInput,
+	): Promise<ServiceResult<DownloadQrBillPdfResult>> {
 		try {
-			const pdfBuffer = await generateQrBillPdfBuffer({
-				amount: paymentResult.data.amount,
-				contributorReferenceId: input.contributorReferenceId,
-				contributionReferenceId: input.contributionReferenceId,
-				currency: paymentResult.data.currency as 'CHF' | 'EUR',
+			const subscription = await this.db.subscription.findFirst({
+				where: {
+					id: input.subscriptionId,
+					contributorId: input.contributorId,
+					status: SubscriptionStatus.active,
+					paymentMethod: SubscriptionPaymentMethod.bank_transfer,
+				},
+				select: {
+					amount: true,
+					currency: true,
+					bankStandingOrderReference: true,
+					contributor: {
+						select: { paymentReferenceId: true },
+					},
+				},
 			});
+
+			if (!subscription) {
+				return this.resultFail('Bank transfer subscription not found');
+			}
+
+			const contributorReferenceId = subscription.contributor.paymentReferenceId;
+			const contributionReferenceId = subscription.bankStandingOrderReference;
+			if (!contributorReferenceId || !contributionReferenceId) {
+				return this.resultFail('QR bill references are missing for this subscription');
+			}
+
+			if (subscription.currency !== 'CHF' && subscription.currency !== 'EUR') {
+				return this.resultFail('QR bill PDF is only available for CHF and EUR');
+			}
+
+			const amount = Number(subscription.amount);
+			if (!Number.isFinite(amount) || amount <= 0) {
+				return this.resultFail('Invalid QR bill amount');
+			}
+
+			return this.generateQrBillPdfResult({
+				amount,
+				contributorReferenceId,
+				contributionReferenceId,
+				currency: subscription.currency,
+			});
+		} catch (error) {
+			this.logger.error(error);
+
+			return this.resultFail('Could not generate QR bill PDF');
+		}
+	}
+
+	private async generateQrBillPdfResult(input: {
+		amount: number;
+		contributorReferenceId: string;
+		contributionReferenceId: string;
+		currency: 'CHF' | 'EUR';
+	}): Promise<ServiceResult<DownloadQrBillPdfResult>> {
+		try {
+			const pdfBuffer = await generateQrBillPdfBuffer(input);
 
 			return this.resultOk({
 				pdfBase64: pdfBuffer.toString('base64'),
@@ -337,13 +427,8 @@ export class QrBillService extends BaseService {
 	private async buildContribution(
 		payment: WizardQrPayment,
 		contributorId: string,
-		campaignIdFromContext?: string,
+		campaignId: string,
 	): Promise<ServiceResult<PaymentEventCreateInput>> {
-		const campaignIdResult = await this.resolveCampaignId(campaignIdFromContext ?? payment.campaignId);
-		if (!campaignIdResult.success) {
-			return campaignIdResult;
-		}
-
 		const amountChfResult = await this.resolveAmountChf(payment.amount, payment.currency);
 		if (!amountChfResult.success) {
 			return amountChfResult;
@@ -361,11 +446,10 @@ export class QrBillService extends BaseService {
 					currency: payment.currency,
 					amountChf: amountChfResult.data,
 					feesChf: 0,
-					interval: this.getDonationInterval(payment.interval),
 					status: ContributionStatus.pending,
 					campaign: {
 						connect: {
-							id: campaignIdResult.data,
+							id: campaignId,
 						},
 					},
 					contributor: {
@@ -376,19 +460,5 @@ export class QrBillService extends BaseService {
 		};
 
 		return this.resultOk(paymentEvent);
-	}
-
-	private getDonationInterval(interval: number): DonationInterval | null {
-		switch (interval) {
-			case 1:
-				return DonationInterval.monthly;
-			case 3:
-				return DonationInterval.quarterly;
-			case 12:
-				return DonationInterval.yearly;
-
-			default:
-				return null;
-		}
 	}
 }
