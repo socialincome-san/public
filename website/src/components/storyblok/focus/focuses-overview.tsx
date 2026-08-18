@@ -1,4 +1,5 @@
 import { BlockWrapper } from '@/components/block-wrapper';
+import { FilterBar } from '@/components/filters/filter-bar';
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -58,29 +59,33 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 			<div className="flex w-full flex-col gap-8">
 				<CmsHeader title={title} text={text} />
-				<div className="flex flex-wrap items-center justify-between gap-4">
-					<div className="flex min-h-10 flex-1 flex-nowrap items-center gap-2">
-						<FocusesOverviewCountryFilter
-							allCountriesLabel={translator.t('focuses-page.all-countries', {
-								context: { count: countryOptions.length },
-							})}
-							countryOptions={countryOptions}
-							selectedCountryIsoCode={selectedCountryIsoCode}
+				<FilterBar
+					filters={
+						<>
+							<FocusesOverviewCountryFilter
+								allCountriesLabel={translator.t('focuses-page.all-countries', {
+									context: { count: countryOptions.length },
+								})}
+								countryOptions={countryOptions}
+								selectedCountryIsoCode={selectedCountryIsoCode}
+							/>
+							<FocusesOverviewSdgFilter
+								allSdgsLabel={translator.t('focuses-page.all-sdgs', {
+									context: { count: sdgOptions.length },
+								})}
+								sdgOptions={sdgOptions}
+								selectedSdg={selectedSdg}
+							/>
+						</>
+					}
+					search={
+						<FocusesOverviewSearch
+							defaultValue={searchQuery}
+							label={translator.t('focuses-page.search-label')}
+							placeholder={translator.t('focuses-page.search-placeholder')}
 						/>
-						<FocusesOverviewSdgFilter
-							allSdgsLabel={translator.t('focuses-page.all-sdgs', {
-								context: { count: sdgOptions.length },
-							})}
-							sdgOptions={sdgOptions}
-							selectedSdg={selectedSdg}
-						/>
-					</div>
-					<FocusesOverviewSearch
-						defaultValue={searchQuery}
-						label={translator.t('focuses-page.search-label')}
-						placeholder={translator.t('focuses-page.search-placeholder')}
-					/>
-				</div>
+					}
+				/>
 				{hasStatsError ? <p className="text-destructive">{translator.t('focuses-page.load-stats-error')}</p> : null}
 				{sortedFocuses.length === 0 ? (
 					<p className="text-muted-foreground">
