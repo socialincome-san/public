@@ -547,12 +547,12 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
-	async getFallbackCampaignForProgram(programId: string): Promise<ServiceResult<Campaign>> {
+	async getDefaultCampaignForProgram(programId: string): Promise<ServiceResult<Campaign>> {
 		try {
 			const campaign = await this.db.campaign.findFirst({
 				where: {
 					programId,
-					isFallback: true,
+					isDefault: true,
 				},
 			});
 
@@ -560,7 +560,7 @@ export class CampaignReadService extends BaseService {
 				return this.resultOk(campaign);
 			}
 
-			return this.resultFail('No fallback campaign found');
+			return this.resultFail('No default campaign found for program');
 		} catch (error) {
 			this.logger.error(error);
 
