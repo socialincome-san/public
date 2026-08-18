@@ -2,6 +2,7 @@
 
 import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ActionButtonBlock } from '@/components/storyblok/journal/rich-text/action-button';
+import { BannerSectionBlock } from '@/components/storyblok/journal/rich-text/banner-section';
 import { EmbeddedVideoPlayer } from '@/components/storyblok/journal/rich-text/embedded-video';
 import { ImageWithCaption } from '@/components/storyblok/journal/rich-text/image-with-caption';
 import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsletter-signup';
@@ -53,6 +54,9 @@ export const ArticleRichText = ({ document, lang, donationForm, variant = 'artic
 		nodeResolvers: isFootnotes ? footnoteRichTextNodeResolvers : storyblokRichTextNodeResolvers,
 		blokResolvers: {
 			quotedText: (props: StoryblokBlockProps) => <QuotedText {...(props as ComponentProps<typeof QuotedText>)} />,
+			bannerSection: (props: StoryblokBlockProps) => (
+				<BannerSectionBlock {...(props as ComponentProps<typeof BannerSectionBlock>)} />
+			),
 			imageWithCaption: (props: StoryblokBlockProps) => (
 				<ImageWithCaption {...(props as ComponentProps<typeof ImageWithCaption>)} />
 			),
