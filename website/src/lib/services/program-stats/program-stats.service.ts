@@ -559,6 +559,7 @@ export class ProgramStatsService extends BaseService {
 		let calculatedTotalBudget = totalBudget;
 		let displayMonthlyCost = monthlyCost;
 		let exchangeRateText: string | undefined = `1 ${input.payoutCurrency} = 1 ${input.displayCurrency}`;
+		let payoutToDisplayRate: number | undefined;
 
 		if (input.displayCurrency !== input.payoutCurrency) {
 			const convertedTotal = this.currencyDisplayService.convertAmount(
@@ -573,7 +574,11 @@ export class ProgramStatsService extends BaseService {
 				input.displayCurrency,
 				rates,
 			);
-			exchangeRateText = this.getExchangeRateText(input.payoutCurrency, input.displayCurrency, rates);
+			payoutToDisplayRate = this.currencyDisplayService.convertAmount(1, input.payoutCurrency, input.displayCurrency, rates);
+			exchangeRateText =
+				payoutToDisplayRate === undefined
+					? undefined
+					: `1 ${input.payoutCurrency} = ${Number(payoutToDisplayRate.toFixed(4))} ${input.displayCurrency}`;
 			if (convertedTotal !== undefined && convertedMonthly !== undefined && exchangeRateText) {
 				calculatedTotalBudget = convertedTotal;
 				displayMonthlyCost = convertedMonthly;
@@ -595,17 +600,17 @@ export class ProgramStatsService extends BaseService {
 			`${numberOfIntervals.toLocaleString('de-CH')} ${intervalLabel} = ` +
 			`${totalBudget.toLocaleString('de-CH')} ${input.payoutCurrency}`;
 
-		if (input.displayCurrency !== input.payoutCurrency && exchangeRateText) {
-			const factor = this.currencyDisplayService.convertAmount(1, input.payoutCurrency, input.displayCurrency, rates);
+		if (payoutToDisplayRate !== undefined) {
 			totalBudgetTooltipText +=
 				` | Currency conversion: ${totalBudget.toLocaleString('de-CH')} ${input.payoutCurrency} x ` +
-				`${Number((factor ?? 1).toFixed(4))} = ${calculatedTotalBudget.toLocaleString('de-CH')} ${input.displayCurrency}`;
+				`${Number(payoutToDisplayRate.toFixed(4))} = ${calculatedTotalBudget.toLocaleString('de-CH')} ${input.displayCurrency}`;
 		}
 
 		return {
 			calculatedTotalBudget,
 			displayMonthlyCost,
 			exchangeRateText,
+			payoutToDisplayRate,
 			totalBudgetTooltipText,
 			payoutPerIntervalMin,
 			payoutPerIntervalMax,

@@ -1,6 +1,6 @@
 import { CountryCode } from '@/generated/prisma/client';
-import { Profile } from './candidate.types';
 import { buildCandidateWhere } from './candidate-where';
+import { Profile } from './candidate.types';
 
 jest.mock('@/generated/prisma/client', () => ({
 	CountryCode: { SL: 'SL' },
@@ -57,18 +57,25 @@ describe('buildCandidateWhere', () => {
 	});
 
 	it('keeps country matching alongside AND filters', () => {
-		expect(buildCandidateWhere(['poverty'], [Profile.female], CountryCode.SL).AND).toEqual(
-			expect.arrayContaining([
-				expect.objectContaining({
-					OR: expect.any(Array),
-				}),
-				{ localPartner: { focuses: { some: { focusId: 'poverty' } } } },
+		expect(buildCandidateWhere(['poverty'], [Profile.female], CountryCode.SL)).toEqual({
+			programId: null,
+			AND: [
 				{
-					contact: {
-						AND: [{ gender: Profile.female }],
-					},
+					OR: [
+						{ contact: { address: { country: CountryCode.SL } } },
+						{
+							AND: [
+								{
+									OR: [{ contact: { address: null } }, { contact: { address: { country: null } } }],
+								},
+								{ localPartner: { contact: { address: { country: CountryCode.SL } } } },
+							],
+						},
+					],
 				},
-			]),
-		);
+				{ localPartner: { focuses: { some: { focusId: 'poverty' } } } },
+				{ contact: { AND: [{ gender: Profile.female }] } },
+			],
+		});
 	});
 });

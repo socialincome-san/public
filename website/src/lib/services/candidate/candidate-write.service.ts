@@ -8,8 +8,8 @@ import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { UserReadService } from '../user/user-read.service';
 import { CandidateFormCreateInput, CandidateFormUpdateInput } from './candidate-form-input';
 import { CandidateValidationService } from './candidate-validation.service';
-import { CandidatePayload, Profile } from './candidate.types';
 import { buildCandidateWhere } from './candidate-where';
+import { CandidatePayload, Profile } from './candidate.types';
 
 export class CandidateWriteService extends BaseService {
 	private readonly candidatePayloadSelect = {

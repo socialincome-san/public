@@ -59,7 +59,11 @@ export const RecipientSelectionSection = ({
 					checked={value === 'universal'}
 					label={t('step2.recipient_selection.universal.label')}
 					description={t('step2.recipient_selection.universal.description')}
-					badge={<Badge variant="verified" className="shrink-0 whitespace-nowrap">{t('common.recommended')}</Badge>}
+					badge={
+						<Badge variant="verified" className="shrink-0 whitespace-nowrap">
+							{t('common.recommended')}
+						</Badge>
+					}
 				>
 					<div className={cn('text-sm', noUniversalRecipients ? 'text-destructive' : 'text-muted-foreground')}>
 						{isCountingRecipients ? (

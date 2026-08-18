@@ -6,6 +6,7 @@ import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
+import { buildCandidateWhere } from './candidate-where';
 import {
 	CandidatePayload,
 	CandidatesPaginatedTableView,
@@ -14,7 +15,6 @@ import {
 	CandidatesTableViewRow,
 	Profile,
 } from './candidate.types';
-import { buildCandidateWhere } from './candidate-where';
 
 export class CandidateReadService extends BaseService {
 	constructor(

@@ -12,7 +12,9 @@ export const PayoutBox = ({
 	payoutPerIntervalMax,
 	payoutPerInterval,
 	payoutInterval,
-	currency,
+	payoutCurrency,
+	displayCurrency,
+	payoutToDisplayRate,
 	customizePayouts,
 	onDurationChange,
 	onPayoutChange,
@@ -24,7 +26,9 @@ export const PayoutBox = ({
 	payoutPerIntervalMax: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
-	currency: string;
+	payoutCurrency: string;
+	displayCurrency: string;
+	payoutToDisplayRate?: number;
 	customizePayouts: boolean;
 	onDurationChange: (value: number) => void;
 	onPayoutChange: (value: number) => void;
@@ -45,7 +49,9 @@ export const PayoutBox = ({
 						payoutPerIntervalMax={payoutPerIntervalMax}
 						payoutPerInterval={payoutPerInterval}
 						payoutInterval={payoutInterval}
-						currency={currency}
+						payoutCurrency={payoutCurrency}
+						displayCurrency={displayCurrency}
+						payoutToDisplayRate={payoutToDisplayRate}
 						onDurationChange={onDurationChange}
 						onPayoutChange={onPayoutChange}
 						onIntervalChange={onIntervalChange}
@@ -55,7 +61,9 @@ export const PayoutBox = ({
 						programDuration={programDuration}
 						payoutPerInterval={payoutPerInterval}
 						payoutInterval={payoutInterval}
-						currency={currency}
+						payoutCurrency={payoutCurrency}
+						displayCurrency={displayCurrency}
+						payoutToDisplayRate={payoutToDisplayRate}
 					/>
 				)}
 			</div>

@@ -42,6 +42,7 @@ export const createProgramWizardMachine = setup({
 			calculatedTotalBudget: number;
 			displayMonthlyCost: number;
 			exchangeRateText?: string;
+			payoutToDisplayRate?: number;
 			totalBudgetTooltipText: string;
 			payoutPerIntervalMin: number;
 			payoutPerIntervalMax: number;
@@ -244,6 +245,7 @@ export const createProgramWizardMachine = setup({
 		calculatedTotalBudget: 23040,
 		displayMonthlyCost: 640,
 		exchangeRateText: undefined,
+		payoutToDisplayRate: undefined,
 		totalBudgetTooltipText: "20 recipients x 32 USD payout per interval x 36 monthly intervals = 23'040 USD",
 		payoutPerIntervalMin: 16,
 		payoutPerIntervalMax: 64,
@@ -384,6 +386,7 @@ export const createProgramWizardMachine = setup({
 						calculatedTotalBudget: event.output.calculatedTotalBudget,
 						displayMonthlyCost: event.output.displayMonthlyCost,
 						exchangeRateText: event.output.exchangeRateText,
+						payoutToDisplayRate: event.output.payoutToDisplayRate,
 						totalBudgetTooltipText: event.output.totalBudgetTooltipText,
 						payoutPerIntervalMin: event.output.payoutPerIntervalMin,
 						payoutPerIntervalMax: event.output.payoutPerIntervalMax,

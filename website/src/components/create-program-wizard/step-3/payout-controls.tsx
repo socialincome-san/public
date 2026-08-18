@@ -4,6 +4,7 @@ import { Slider } from '@/components/slider';
 import { Tabs, TabsList, TabsTrigger } from '@/components/tabs';
 import { PayoutInterval } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { PayoutPerIntervalAmount } from './payout-per-interval-amount';
 
 type Props = {
 	programDuration: number;
@@ -11,7 +12,9 @@ type Props = {
 	payoutPerIntervalMax: number;
 	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
-	currency: string;
+	payoutCurrency: string;
+	displayCurrency: string;
+	payoutToDisplayRate?: number;
 	onDurationChange: (value: number) => void;
 	onPayoutChange: (value: number) => void;
 	onIntervalChange: (value: PayoutInterval) => void;
@@ -23,7 +26,9 @@ export const PayoutControls = ({
 	payoutPerIntervalMax,
 	payoutPerInterval,
 	payoutInterval,
-	currency,
+	payoutCurrency,
+	displayCurrency,
+	payoutToDisplayRate,
 	onDurationChange,
 	onPayoutChange,
 	onIntervalChange,
@@ -51,11 +56,14 @@ export const PayoutControls = ({
 			</div>
 
 			<div className="space-y-2">
-				<div className="flex justify-between text-sm">
+				<div className="flex justify-between gap-4 text-sm">
 					<span>{t('step3.payout_controls.payout_per_interval')}</span>
-					<span className="font-medium">
-						{currency} {payoutPerInterval}
-					</span>
+					<PayoutPerIntervalAmount
+						payoutPerInterval={payoutPerInterval}
+						payoutCurrency={payoutCurrency}
+						displayCurrency={displayCurrency}
+						payoutToDisplayRate={payoutToDisplayRate}
+					/>
 				</div>
 
 				<Slider
