@@ -58,8 +58,7 @@ export const ProgramCostsHeader = ({
 					</div>
 
 					<span className="pb-1 text-sm">
-						{currency}{' '}
-						<span data-testid="monthly-cost">{Math.round(monthlyCost).toLocaleString('de-CH')}</span>{' '}
+						{currency} <span data-testid="monthly-cost">{Math.round(monthlyCost).toLocaleString('de-CH')}</span>{' '}
 						{t('common.per_month')}
 					</span>
 				</div>

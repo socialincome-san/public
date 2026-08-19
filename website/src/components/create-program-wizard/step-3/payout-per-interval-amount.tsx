@@ -1,7 +1,9 @@
-type Props = {
+import type { Currency } from '@/generated/prisma/enums';
+
+export type PayoutPerIntervalAmountProps = {
 	payoutPerInterval: number;
-	payoutCurrency: string;
-	displayCurrency: string;
+	payoutCurrency: Currency;
+	displayCurrency: Currency;
 	payoutToDisplayRate?: number;
 };
 
@@ -10,7 +12,7 @@ export const PayoutPerIntervalAmount = ({
 	payoutCurrency,
 	displayCurrency,
 	payoutToDisplayRate,
-}: Props) => {
+}: PayoutPerIntervalAmountProps) => {
 	const converted =
 		payoutToDisplayRate !== undefined && payoutCurrency !== displayCurrency
 			? Math.round(payoutPerInterval * payoutToDisplayRate)

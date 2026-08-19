@@ -4,21 +4,17 @@ import { Slider } from '@/components/slider';
 import { Tabs, TabsList, TabsTrigger } from '@/components/tabs';
 import { PayoutInterval } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { PayoutPerIntervalAmount } from './payout-per-interval-amount';
+import { PayoutPerIntervalAmount, type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 
 type Props = {
 	programDuration: number;
 	payoutPerIntervalMin: number;
 	payoutPerIntervalMax: number;
-	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
-	payoutCurrency: string;
-	displayCurrency: string;
-	payoutToDisplayRate?: number;
 	onDurationChange: (value: number) => void;
 	onPayoutChange: (value: number) => void;
 	onIntervalChange: (value: PayoutInterval) => void;
-};
+} & PayoutPerIntervalAmountProps;
 
 export const PayoutControls = ({
 	programDuration,

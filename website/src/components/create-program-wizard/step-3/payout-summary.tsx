@@ -2,16 +2,12 @@
 
 import { PayoutInterval } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { PayoutPerIntervalAmount } from './payout-per-interval-amount';
+import { PayoutPerIntervalAmount, type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 
 type Props = {
 	programDuration: number;
-	payoutPerInterval: number;
 	payoutInterval: PayoutInterval;
-	payoutCurrency: string;
-	displayCurrency: string;
-	payoutToDisplayRate?: number;
-};
+} & PayoutPerIntervalAmountProps;
 
 export const PayoutSummary = ({
 	programDuration,

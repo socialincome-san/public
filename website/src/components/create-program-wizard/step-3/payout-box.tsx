@@ -4,7 +4,20 @@ import { Switch } from '@/components/switch';
 import { PayoutInterval } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { PayoutControls } from './payout-controls';
+import { type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 import { PayoutSummary } from './payout-summary';
+
+type Props = {
+	programDuration: number;
+	payoutPerIntervalMin: number;
+	payoutPerIntervalMax: number;
+	payoutInterval: PayoutInterval;
+	customizePayouts: boolean;
+	onDurationChange: (value: number) => void;
+	onPayoutChange: (value: number) => void;
+	onIntervalChange: (value: PayoutInterval) => void;
+	onToggleCustomizePayouts: () => void;
+} & PayoutPerIntervalAmountProps;
 
 export const PayoutBox = ({
 	programDuration,
@@ -20,21 +33,7 @@ export const PayoutBox = ({
 	onPayoutChange,
 	onIntervalChange,
 	onToggleCustomizePayouts,
-}: {
-	programDuration: number;
-	payoutPerIntervalMin: number;
-	payoutPerIntervalMax: number;
-	payoutPerInterval: number;
-	payoutInterval: PayoutInterval;
-	payoutCurrency: string;
-	displayCurrency: string;
-	payoutToDisplayRate?: number;
-	customizePayouts: boolean;
-	onDurationChange: (value: number) => void;
-	onPayoutChange: (value: number) => void;
-	onIntervalChange: (value: PayoutInterval) => void;
-	onToggleCustomizePayouts: () => void;
-}) => {
+}: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 
 	return (

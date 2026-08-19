@@ -2,7 +2,7 @@ import { CountryCode } from '@/generated/prisma/enums';
 import { CountryCondition, type ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import type { ProgramBudgetCalculation } from '@/lib/services/program-stats/program-stats.types';
 import type { CreateProgramInput, PublicOnboardingUserDetails } from '@/lib/services/program/program.types';
-import { createActor, fromPromise } from 'xstate';
+import { createActor, fromPromise, waitFor } from 'xstate';
 import { createProgramWizardMachine } from './create-program-machine';
 
 jest.mock('@/lib/server-actions/candidate-actions', () => ({
@@ -29,6 +29,13 @@ type SaveProgramInput = {
 	userDetails?: PublicOnboardingUserDetails;
 };
 
+type LoadCountriesOutput = {
+	countries: ProgramCountryFeasibilityRow[];
+	focusOptions: { id: string; name: string }[];
+	focusOptionsError: string | undefined;
+	isAuthenticated: boolean;
+};
+
 const metFeasibility = {
 	condition: CountryCondition.MET,
 	details: { translationKey: 'met' },
@@ -49,16 +56,6 @@ const countryRow: ProgramCountryFeasibilityRow = {
 	sanctions: metFeasibility,
 };
 
-const waitFor = async (predicate: () => boolean, timeoutMs = 2000) => {
-	const startedAt = Date.now();
-	while (!predicate()) {
-		if (Date.now() - startedAt > timeoutMs) {
-			throw new Error('Timed out waiting for condition');
-		}
-		await new Promise((resolve) => setTimeout(resolve, 10));
-	}
-};
-
 type CreateWizardActorOptions = {
 	isAuthenticated: boolean;
 	resolvedIsAuthenticated?: boolean;
@@ -72,11 +69,11 @@ const createWizardActor = ({
 }: CreateWizardActorOptions) => {
 	const machine = createProgramWizardMachine.provide({
 		actors: {
-			loadCountries: fromPromise(() =>
+			loadCountries: fromPromise((): Promise<LoadCountriesOutput> =>
 				Promise.resolve({
 					countries: [countryRow],
-					focusOptions: [] as { id: string; name: string }[],
-					focusOptionsError: undefined as string | undefined,
+					focusOptions: [],
+					focusOptionsError: undefined,
 					isAuthenticated: resolvedIsAuthenticated,
 				}),
 			),
@@ -110,17 +107,17 @@ const createWizardActor = ({
 
 const walkToBudget = async (actor: ReturnType<typeof createWizardActor>) => {
 	actor.send({ type: 'OPEN' });
-	await waitFor(() => actor.getSnapshot().matches('countrySelection'));
+	await waitFor(actor, (state) => state.matches('countrySelection'));
 
 	actor.send({ type: 'SELECT_COUNTRY', id: 'country-sl' });
 	actor.send({ type: 'NEXT' });
-	await waitFor(() => actor.getSnapshot().matches('programSetup') && !actor.getSnapshot().context.isCountingRecipients);
+	await waitFor(actor, (state) => state.matches('programSetup') && !state.context.isCountingRecipients);
 
 	actor.send({ type: 'SELECT_RECIPIENT_APPROACH', value: 'universal' });
-	await waitFor(() => actor.getSnapshot().matches('programSetup') && !actor.getSnapshot().context.isCountingRecipients);
+	await waitFor(actor, (state) => state.matches('programSetup') && !state.context.isCountingRecipients);
 
 	actor.send({ type: 'NEXT' });
-	await waitFor(() => actor.getSnapshot().matches('budget') && !actor.getSnapshot().context.isCalculatingBudget);
+	await waitFor(actor, (state) => state.matches('budget') && !state.context.isCalculatingBudget);
 };
 
 describe('createProgramWizardMachine', () => {
@@ -137,7 +134,7 @@ describe('createProgramWizardMachine', () => {
 		expect(actor.getSnapshot().context.payoutToDisplayRate).toBe(0.0417);
 		actor.send({ type: 'NEXT' });
 
-		await waitFor(() => actor.getSnapshot().matches('closed'));
+		await waitFor(actor, (state) => state.matches('closed'));
 		expect(savedInput?.userDetails).toBeUndefined();
 		expect(savedInput?.programInput.countryId).toBe('country-sl');
 
@@ -168,7 +165,7 @@ describe('createProgramWizardMachine', () => {
 		await walkToBudget(actor);
 		actor.send({ type: 'NEXT' });
 
-		await waitFor(() => actor.getSnapshot().matches('closed'));
+		await waitFor(actor, (state) => state.matches('closed'));
 		expect(savedInput?.userDetails).toBeUndefined();
 
 		actor.stop();

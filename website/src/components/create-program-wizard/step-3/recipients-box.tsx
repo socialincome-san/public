@@ -85,10 +85,6 @@ export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange
 							step={1}
 							value={[amountOfRecipients]}
 							onValueChange={([value]) => {
-								if (value === undefined) {
-									return;
-								}
-
 								setRecipientCountDraft(null);
 								onChange(value);
 							}}
