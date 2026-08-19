@@ -126,6 +126,14 @@ export interface Document {
   [k: string]: unknown;
 }
 
+export interface DonationGlobe {
+  title?: string;
+  component: "donationGlobe";
+  _uid: string;
+  // _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface DonationsTotal {
   heading: string;
   images?: StoryblokMultiasset;
@@ -624,6 +632,7 @@ export interface Text {
 }
 
 export interface Transparency {
+  donationGlobe?: DonationGlobe[];
   component: "transparency";
   _uid: string;
   [k: string]: unknown;

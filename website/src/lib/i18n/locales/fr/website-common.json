@@ -117,6 +117,9 @@
 		"about": "À propos de"
 	},
 	"transparency-page": {
+		"donation-globe": {
+			"description": "{{donatorsCount}} people have donated to lift others out of poverty. Trust like that only comes with total transparency."
+		},
 		"inflows": {
 			"title-name": "Entrées",
 			"title-currency": "en {{currency}}",
