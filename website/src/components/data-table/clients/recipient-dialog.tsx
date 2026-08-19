@@ -36,7 +36,7 @@ export const RecipientDialog = ({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
+			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[600px]">
 				<DialogHeader>
 					<DialogTitle>{dialogTitle}</DialogTitle>
 				</DialogHeader>
