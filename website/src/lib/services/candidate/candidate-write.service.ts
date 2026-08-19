@@ -1,6 +1,5 @@
 import { CountryCode, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
-import { now } from '@/lib/utils/now';
 import { ContactRelationsService } from '../contact/contact-relations.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -8,6 +7,7 @@ import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { UserReadService } from '../user/user-read.service';
 import { CandidateFormCreateInput, CandidateFormUpdateInput } from './candidate-form-input';
 import { CandidateValidationService } from './candidate-validation.service';
+import { buildCandidateWhere } from './candidate-where';
 import { CandidatePayload, Profile } from './candidate.types';
 
 export class CandidateWriteService extends BaseService {
@@ -67,104 +67,6 @@ export class CandidateWriteService extends BaseService {
 		}
 
 		return this.resultOk(true);
-	}
-
-	private buildCandidateWhere(
-		focuses?: string[],
-		profiles?: Profile[],
-		countryCode?: CountryCode | null,
-	): Prisma.RecipientWhereInput {
-		const where: Prisma.RecipientWhereInput = {
-			programId: null,
-		};
-
-		if (countryCode) {
-			where.AND = [
-				{
-					OR: [
-						{
-							contact: {
-								address: {
-									country: countryCode,
-								},
-							},
-						},
-						{
-							AND: [
-								{
-									OR: [
-										{
-											contact: {
-												address: null,
-											},
-										},
-										{
-											contact: {
-												address: {
-													country: null,
-												},
-											},
-										},
-									],
-								},
-								{
-									localPartner: {
-										contact: {
-											address: {
-												country: countryCode,
-											},
-										},
-									},
-								},
-							],
-						},
-					],
-				},
-			];
-		}
-
-		if (focuses && focuses.length > 0) {
-			where.localPartner = {
-				focuses: {
-					some: {
-						focusId: { in: focuses },
-					},
-				},
-			};
-		}
-
-		if (profiles && profiles.length > 0) {
-			const contactFilters: Prisma.ContactWhereInput[] = [];
-
-			const genderProfiles = profiles.filter((p) => p === Profile.male || p === Profile.female);
-
-			if (genderProfiles.length > 0) {
-				contactFilters.push({
-					gender: {
-						in: genderProfiles,
-					},
-				});
-			}
-
-			if (profiles.includes(Profile.youth)) {
-				const nowDate = now();
-				const youthCutoffDate = new Date(nowDate.getFullYear() - 25, nowDate.getMonth(), nowDate.getDate());
-
-				contactFilters.push({
-					dateOfBirth: {
-						gte: youthCutoffDate,
-					},
-				});
-			}
-
-			if (contactFilters.length > 0) {
-				where.contact = {
-					OR: contactFilters,
-				};
-			}
-		}
-
-		return where;
 	}
 
 	private buildPaymentInformationCreateData(
@@ -727,7 +629,7 @@ export class CandidateWriteService extends BaseService {
 		profiles?: Profile[],
 	): Promise<ServiceResult<{ assigned: number }>> {
 		try {
-			const where = this.buildCandidateWhere(focuses, profiles, countryCode);
+			const where = buildCandidateWhere(focuses, profiles, countryCode);
 
 			const allAvailableCandidates = await this.db.recipient.findMany({
 				where,
