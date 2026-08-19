@@ -7,7 +7,6 @@ import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
 import type { StoryblokService } from '../storyblok/storyblok.service';
 import type { CampaignPageContent } from './campaign-public-website.types';
-import type { CampaignPage } from './campaign.types';
 
 const campaignPageNamespaces = ['website-campaign', 'website-videos', 'website-newsletter', 'website-faq'] as const;
 
@@ -38,27 +37,33 @@ export class CampaignPublicWebsiteService extends BaseService {
 
 	getPageMetadata(
 		lang: WebsiteLanguage,
-		campaign: Pick<CampaignPage, 'title' | 'metadataDescription' | 'metadataOgImage' | 'metadataTwitterImage'>,
+		campaign: {
+			title: string;
+			description: string;
+			primaryImage?: { filename?: string | null } | null;
+		},
 	) {
-		const campaignMetadata =
-			campaign.metadataDescription && campaign.metadataOgImage && campaign.metadataTwitterImage
+		const primaryImage = campaign.primaryImage?.filename?.trim();
+		const campaignMetadata = {
+			title: campaign.title,
+			description: campaign.description,
+			...(primaryImage
 				? {
-						title: campaign.title,
-						description: campaign.metadataDescription,
 						openGraph: {
 							title: campaign.title,
-							description: campaign.metadataDescription,
-							images: campaign.metadataOgImage,
+							description: campaign.description,
+							images: primaryImage,
 						},
 						twitter: {
 							title: campaign.title,
 							card: 'summary_large_image' as const,
 							site: '@so_income',
 							creator: '@so_income',
-							images: campaign.metadataTwitterImage,
+							images: primaryImage,
 						},
 					}
-				: undefined;
+				: {}),
+		};
 
 		return getMetadata(lang, 'website-campaign', campaignMetadata);
 	}

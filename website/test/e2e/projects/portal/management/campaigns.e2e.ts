@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
+import { getCampaignTitleForSlug } from '../../../get-campaign-title';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -9,21 +10,23 @@ test.beforeEach(async () => {
 test('lists campaigns belonging to the active organization', async ({ page }) => {
 	const existing = await prisma.campaign.findUnique({
 		where: { id: 'campaign-si-core-sl-default' },
-		select: { title: true },
+		select: { slug: true },
 	});
-	expect(existing?.title).toBeTruthy();
+	expect(existing?.slug).toBeTruthy();
+	const title = await getCampaignTitleForSlug(existing!.slug!);
 
-	await page.goto(`/portal/management/campaigns?page=1&pageSize=10&search=${encodeURIComponent(existing!.title)}`);
-	await expect(page.getByRole('cell', { name: existing!.title })).toBeVisible();
+	await page.goto(`/portal/management/campaigns?page=1&pageSize=10&search=${encodeURIComponent(title)}`);
+	await expect(page.getByRole('cell', { name: title })).toBeVisible();
 });
 
 test('does not show owner-only campaign rows under management', async ({ page }) => {
 	const ownerOnly = await prisma.campaign.findUnique({
 		where: { id: 'campaign-si-health-lr-default' },
-		select: { title: true },
+		select: { slug: true },
 	});
-	expect(ownerOnly).toBeTruthy();
+	expect(ownerOnly?.slug).toBeTruthy();
+	const title = await getCampaignTitleForSlug(ownerOnly!.slug!);
 
-	await page.goto(`/portal/management/campaigns?page=1&pageSize=10&search=${encodeURIComponent(ownerOnly!.title)}`);
-	await expect(page.getByText(ownerOnly!.title, { exact: true })).toBeHidden();
+	await page.goto(`/portal/management/campaigns?page=1&pageSize=10&search=${encodeURIComponent(title)}`);
+	await expect(page.getByText(title, { exact: true })).toBeHidden();
 });

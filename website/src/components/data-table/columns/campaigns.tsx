@@ -5,7 +5,6 @@ import { SortableHeader } from '@/components/data-table/elements/sortable-header
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
-import { slugify } from '@/lib/utils/string-utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import { CopyUrlCell } from '../elements/copy-url-cell';
 
@@ -14,11 +13,6 @@ export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
 		{
 			accessorKey: 'title',
 			header: (ctx) => <SortableHeader ctx={ctx}>Title</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'description',
-			header: (ctx) => <SortableHeader ctx={ctx}>Description</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -51,7 +45,7 @@ export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
 			accessorFn: (row) => {
 				const origin = typeof window !== 'undefined' ? window.location.origin : '';
 
-				return `${origin}/de/ch/campaigns/${slugify(row.title)}`;
+				return `${origin}${row.link}`;
 			},
 			header: (ctx) => <SortableHeader ctx={ctx}>Link</SortableHeader>,
 			cell: (ctx) => <CopyUrlCell ctx={ctx} />,
