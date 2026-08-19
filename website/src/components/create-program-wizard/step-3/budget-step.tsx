@@ -124,7 +124,7 @@ const BudgetStepContent = ({
 		payoutCurrency,
 		numberOfIntervals: numberOfIntervals.toLocaleString('de-CH'),
 		intervalLabel,
-		totalBudget: calculatedTotalBudget.toLocaleString('de-CH'),
+		totalBudget: Math.round(calculatedTotalBudget).toLocaleString('de-CH'),
 		displayCurrency,
 	});
 

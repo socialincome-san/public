@@ -14,7 +14,7 @@ export const CreateProgramWizardFooter = ({ state, send }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 
 	return (
-		<div className="grid shrink-0 grid-cols-2 items-center gap-3 border-t pt-4 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-4">
+		<div className="mt-6 grid shrink-0 grid-cols-2 items-center gap-3 border-t pt-4 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-4">
 			<CreateProgramStepIndicator
 				className="col-span-2 row-start-1 justify-self-center sm:col-span-1 sm:col-start-2"
 				state={state}
