@@ -1,4 +1,10 @@
-import { PaymentEventType, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import {
+	getCampaignPortalSlug,
+	getCampaignTitle,
+	getStoryblokCampaignTitleForSlug,
+} from '@/components/storyblok/campaign/campaign.utils';
+import { Currency, PaymentEventType, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import { defaultLanguage } from '@/lib/i18n/utils';
 import { logger } from '@/lib/utils/logger';
 import { START_CHARACTER_REGEX, UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
@@ -6,6 +12,7 @@ import { endOfYear, startOfYear } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
+import { StoryblokService } from '../storyblok/storyblok.service';
 import {
 	ContributionDonationEntry,
 	ContributionPaginatedTableView,
@@ -22,6 +29,7 @@ export class ContributionReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
+		private readonly storyblokService: StoryblokService,
 		loggerInstance = logger,
 	) {
 		super(db, loggerInstance);
@@ -51,7 +59,7 @@ export class ContributionReadService extends BaseService {
 			case 'amount':
 				return [{ amount: direction }];
 			case 'campaignTitle':
-				return [{ campaign: { title: direction } }];
+				return [{ createdAt: 'desc' }];
 			case 'programName':
 				return [{ campaign: { program: { name: direction } } }];
 			case 'createdAt':
@@ -77,7 +85,7 @@ export class ContributionReadService extends BaseService {
 			case 'paymentEventType':
 				return [{ paymentEvent: { type: direction } }];
 			case 'campaignTitle':
-				return [{ campaign: { title: direction } }];
+				return [{ updatedAt: 'desc' }];
 			case 'createdAt':
 				return [{ createdAt: direction }];
 			case 'updatedAt':
@@ -87,6 +95,12 @@ export class ContributionReadService extends BaseService {
 			default:
 				return [{ updatedAt: 'desc' }];
 		}
+	}
+
+	private async getCampaignStories() {
+		const result = await this.storyblokService.getCampaigns(defaultLanguage);
+
+		return result.success ? result.data : [];
 	}
 
 	async get(userId: string, contributionId: string): Promise<ServiceResult<ContributionPayload>> {
@@ -170,16 +184,17 @@ export class ContributionReadService extends BaseService {
 			const selectedProgramId = selectedProgramIdRaw === '' ? undefined : selectedProgramIdRaw;
 			const selectedCampaignId = selectedCampaignIdRaw === '' ? undefined : selectedCampaignIdRaw;
 			const selectedPaymentEventType = selectedPaymentEventTypeRaw === '' ? undefined : selectedPaymentEventTypeRaw;
+			const campaignStories = await this.getCampaignStories();
 
 			const campaigns = await this.db.campaign.findMany({
-				where: { programId: { in: accessibleProgramIds } },
+				where: { programId: { in: accessibleProgramIds }, slug: { not: null } },
 				select: {
 					id: true,
-					title: true,
+					slug: true,
 					programId: true,
 					program: { select: { id: true, name: true } },
 				},
-				orderBy: { title: 'asc' },
+				orderBy: { slug: 'asc' },
 			});
 			const campaignIds = campaigns.map((campaign) => campaign.id);
 
@@ -191,7 +206,11 @@ export class ContributionReadService extends BaseService {
 							.map((campaign) => [campaign.program.id, { value: campaign.program.id, label: campaign.program.name }]),
 					).values(),
 				),
-				campaigns: campaigns.map((campaign) => ({ value: campaign.id, label: campaign.title })),
+				campaigns: campaigns.flatMap((campaign) =>
+					campaign.slug
+						? [{ value: campaign.id, label: getStoryblokCampaignTitleForSlug(campaignStories, campaign.slug) }]
+						: [],
+				),
 				paymentEventTypes: (Object.values(PaymentEventType) as PaymentEventType[]).map((type) => ({
 					value: type,
 					label:
@@ -209,6 +228,17 @@ export class ContributionReadService extends BaseService {
 			if (filteredCampaignIds.length === 0) {
 				return this.resultOk({ tableRows: [], totalCount: 0, filterOptions });
 			}
+			const campaignIdsMatchingTitle = search
+				? campaigns
+						.filter(
+							(campaign) =>
+								campaign.slug &&
+								getStoryblokCampaignTitleForSlug(campaignStories, campaign.slug)
+									.toLocaleLowerCase()
+									.includes(search.toLocaleLowerCase()),
+						)
+						.map((campaign) => campaign.id)
+				: [];
 
 			const where = {
 				campaignId: { in: filteredCampaignIds },
@@ -226,13 +256,15 @@ export class ContributionReadService extends BaseService {
 								{ contributor: { contact: { firstName: { contains: search, mode: 'insensitive' as const } } } },
 								{ contributor: { contact: { lastName: { contains: search, mode: 'insensitive' as const } } } },
 								{ contributor: { contact: { email: { contains: search, mode: 'insensitive' as const } } } },
-								{ campaign: { title: { contains: search, mode: 'insensitive' as const } } },
+								{ campaign: { slug: { contains: search, mode: 'insensitive' as const } } },
+								...(campaignIdsMatchingTitle.length > 0 ? [{ campaignId: { in: campaignIdsMatchingTitle } }] : []),
 								{ campaign: { program: { name: { contains: search, mode: 'insensitive' as const } } } },
 							],
 						}
 					: {}),
 			};
 
+			const sortByCampaignTitle = query.sortBy === 'campaignTitle';
 			const [contributions, totalCount] = await Promise.all([
 				this.db.contribution.findMany({
 					where,
@@ -245,7 +277,7 @@ export class ContributionReadService extends BaseService {
 						campaign: {
 							select: {
 								id: true,
-								title: true,
+								slug: true,
 								program: { select: { id: true, name: true } },
 							},
 						},
@@ -262,8 +294,12 @@ export class ContributionReadService extends BaseService {
 						},
 					},
 					orderBy: this.buildContributionOrderBy(query),
-					skip: (query.page - 1) * query.pageSize,
-					take: query.pageSize,
+					...(sortByCampaignTitle
+						? {}
+						: {
+								skip: (query.page - 1) * query.pageSize,
+								take: query.pageSize,
+							}),
 				}),
 				this.db.contribution.count({ where }),
 			]);
@@ -276,13 +312,20 @@ export class ContributionReadService extends BaseService {
 				amount: c.amount ? Number(c.amount) : 0,
 				currency: c.currency ?? '',
 				campaignId: c.campaign?.id ?? '',
-				campaignTitle: c.campaign?.title ?? '',
+				campaignTitle: c.campaign?.slug ? getStoryblokCampaignTitleForSlug(campaignStories, c.campaign.slug) : '',
 				paymentEventType: c.paymentEvent?.type ?? null,
 				programName: c.campaign?.program?.name ?? null,
 				createdAt: c.createdAt,
 			}));
+			if (sortByCampaignTitle) {
+				const direction = query.sortDirection === 'asc' ? 1 : -1;
+				tableRows.sort((left, right) => direction * left.campaignTitle.localeCompare(right.campaignTitle));
+			}
+			const paginatedRows = sortByCampaignTitle
+				? tableRows.slice((query.page - 1) * query.pageSize, query.page * query.pageSize)
+				: tableRows;
 
-			return this.resultOk({ tableRows, totalCount, filterOptions });
+			return this.resultOk({ tableRows: paginatedRows, totalCount, filterOptions });
 		} catch (error) {
 			this.logger.error(error);
 
@@ -365,13 +408,32 @@ export class ContributionReadService extends BaseService {
 	): Promise<ServiceResult<YourContributionsPaginatedTableView>> {
 		try {
 			const search = query.search.trim();
+			const matchedCurrency = Object.values(Currency).find((currency) => currency.toLowerCase() === search.toLowerCase());
+			const campaignStories = await this.getCampaignStories();
+			const campaignSlugsMatchingTitle = search
+				? campaignStories
+						.filter((story) => getCampaignTitle(story.content).toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+						.map((story) => getCampaignPortalSlug(story.content))
+						.filter(Boolean)
+				: [];
 			const where = search
 				? {
-						contributorId,
-						campaign: { title: { contains: search, mode: 'insensitive' as const } },
+						AND: [
+							{ contributorId },
+							{
+								OR: [
+									{ campaign: { slug: { contains: search, mode: 'insensitive' as const } } },
+									...(campaignSlugsMatchingTitle.length > 0
+										? [{ campaign: { slug: { in: campaignSlugsMatchingTitle } } }]
+										: []),
+									...(matchedCurrency ? [{ currency: { equals: matchedCurrency } }] : []),
+								],
+							},
+						],
 					}
 				: { contributorId };
 
+			const sortByCampaignTitle = query.sortBy === 'campaignTitle';
 			const [contributions, totalCount] = await Promise.all([
 				this.db.contribution.findMany({
 					where,
@@ -383,12 +445,16 @@ export class ContributionReadService extends BaseService {
 						status: true,
 						paymentEvent: { select: { type: true } },
 						campaign: {
-							select: { title: true },
+							select: { slug: true },
 						},
 					},
 					orderBy: this.buildYourContributionOrderBy(query),
-					skip: (query.page - 1) * query.pageSize,
-					take: query.pageSize,
+					...(sortByCampaignTitle
+						? {}
+						: {
+								skip: (query.page - 1) * query.pageSize,
+								take: query.pageSize,
+							}),
 				}),
 				this.db.contribution.count({ where }),
 			]);
@@ -397,13 +463,20 @@ export class ContributionReadService extends BaseService {
 				createdAt: c.createdAt,
 				updatedAt: c.updatedAt,
 				amount: c.amount ? Number(c.amount) : 0,
-				currency: c.currency,
+				currency: c.currency ?? '',
+				campaignTitle: c.campaign?.slug ? getStoryblokCampaignTitleForSlug(campaignStories, c.campaign.slug) : '',
 				paymentEventType: c.paymentEvent?.type ?? null,
-				campaignTitle: c.campaign?.title ?? '',
 				status: c.status,
 			}));
+			if (sortByCampaignTitle) {
+				const direction = query.sortDirection === 'asc' ? 1 : -1;
+				tableRows.sort((left, right) => direction * left.campaignTitle.localeCompare(right.campaignTitle));
+			}
+			const paginatedRows = sortByCampaignTitle
+				? tableRows.slice((query.page - 1) * query.pageSize, query.page * query.pageSize)
+				: tableRows;
 
-			return this.resultOk({ tableRows, totalCount });
+			return this.resultOk({ tableRows: paginatedRows, totalCount });
 		} catch (error) {
 			this.logger.error(error);
 
