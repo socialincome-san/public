@@ -1,5 +1,4 @@
 import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import type { ContributorReadService } from '../../../contributor/contributor-read.service';
 import { BaseService } from '../../../core/base.service';
 import type { LocalPartnerReadService } from '../../../local-partner/local-partner-read.service';
@@ -14,9 +13,8 @@ export class MessagingRecipientsService extends BaseService {
 		private readonly contributorRead: ContributorReadService,
 		private readonly recipientRead: RecipientReadService,
 		private readonly localPartnerRead: LocalPartnerReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private fetcherFor(type: MessagingRecipientType, currentUserId: string): RowFetcher {

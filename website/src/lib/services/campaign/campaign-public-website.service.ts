@@ -30,7 +30,7 @@ export class CampaignPublicWebsiteService extends BaseService {
 
 			return this.resultOk({ translator, faqs });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load campaign page content: ${JSON.stringify(error)}`);
 		}

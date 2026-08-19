@@ -24,7 +24,7 @@ export class GithubApiService extends BaseService {
 				labels: issuesData.labels,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch GitHub data: ${error instanceof Error ? error.message : String(error)}`);
 		}

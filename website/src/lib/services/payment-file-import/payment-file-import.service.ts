@@ -1,7 +1,6 @@
 import { ContributionStatus, PaymentEvent, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
 import { Currency } from '@/generated/prisma/enums';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
-import { logger } from '@/lib/utils/logger';
 import xmldom from '@xmldom/xmldom';
 import { DateTime } from 'luxon';
 import fs from 'node:fs';
@@ -34,9 +33,8 @@ export class PaymentFileImportService extends BaseService {
 		private readonly contributorService: ContributorReadService,
 		private readonly contributionService: ContributionWriteService,
 		private readonly campaignService: CampaignReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 		this.bucketName = bucketName;
 	}
 
@@ -59,18 +57,18 @@ export class PaymentFileImportService extends BaseService {
 
 			for (const file of sftpFiles) {
 				if (bucketFiles.includes(file.name)) {
-					this.logger.info(`Skipped copying file ${file.name} because it already exists in ${this.bucketName} bucket`);
+					console.info(`Skipped copying file ${file.name} because it already exists in ${this.bucketName} bucket`);
 					continue;
 				}
 
 				await withFile(async ({ path: tmpPath }) => {
 					await sftp.get(`/yellow-net-reports/${file.name}`, tmpPath);
 					if (!file.name.startsWith('camt.054_P_')) {
-						this.logger.info(
+						console.info(
 							`Skipped processing ${file.name} because it does not contain relevant payment data. Storing anyway.`,
 						);
 					} else {
-						this.logger.info(`Importing contributions from file ${file.name}.`);
+						console.info(`Importing contributions from file ${file.name}.`);
 						const contributionsResult = this.getContributionsFromPaymentFile(tmpPath);
 						if (!contributionsResult.success) {
 							throw new Error(contributionsResult.error);
@@ -84,14 +82,14 @@ export class PaymentFileImportService extends BaseService {
 			void sftp.end();
 
 			if (!result.success) {
-				this.logger.error(`Error importing payment files: ${String(result.error)}`);
+				console.error(`Error importing payment files: ${String(result.error)}`);
 
 				return this.resultFail(`Error importing payment files: ${String(result.error)}`);
 			}
 
 			return this.resultOk(result.data);
 		} catch (error) {
-			this.logger.error(`Error importing payment files: ${String(error)}`);
+			console.error(`Error importing payment files: ${String(error)}`);
 
 			return this.resultFail(`Error importing payment files: ${JSON.stringify(error)}`);
 		} finally {
@@ -123,7 +121,7 @@ export class PaymentFileImportService extends BaseService {
 
 				const rawNode = new xmldom.XMLSerializer().serializeToString(node);
 				if (!referenceId) {
-					this.logger.alert(`Skipped processing a payment entry without reference ID. Raw content: ${rawNode}`);
+					console.error(`Skipped processing a payment entry without reference ID. Raw content: ${rawNode}`);
 					continue;
 				}
 
@@ -143,7 +141,7 @@ export class PaymentFileImportService extends BaseService {
 
 			return this.resultOk(contributions);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not parse payment file: ${JSON.stringify(error)}`);
 		}
@@ -178,7 +176,7 @@ export class PaymentFileImportService extends BaseService {
 					(contributor) => contributor.paymentReferenceId === this.getReferenceIds(c.referenceId).contributorReferenceId,
 				);
 				if (!contributor) {
-					this.logger.alert(
+					console.error(
 						`Contributor for reference ID ${this.getReferenceIds(c.referenceId).contributorReferenceId} does not exist`,
 					);
 					continue;
@@ -187,7 +185,7 @@ export class PaymentFileImportService extends BaseService {
 				const contributionReferenceId = this.getReferenceIds(c.referenceId).contributionReferenceId;
 
 				if (!contributionReferenceId) {
-					this.logger.info(`Legacy reference ID detected for contributor ${contributor.id}.`);
+					console.info(`Legacy reference ID detected for contributor ${contributor.id}.`);
 				}
 
 				const paymentEvent: PaymentEventCreateInput = {
@@ -230,7 +228,7 @@ export class PaymentFileImportService extends BaseService {
 			}
 
 			if (failedPaymentEvents.length > 0) {
-				this.logger.alert(
+				console.error(
 					`Failed to create payment events with contributions in payment file imports. Failed transaction IDs: ${failedPaymentEvents.join(', ')}`,
 				);
 
@@ -241,7 +239,7 @@ export class PaymentFileImportService extends BaseService {
 
 			return this.resultOk(created);
 		} catch (error) {
-			this.logger.error(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
+			console.error(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
 
 			return this.resultFail(`Error creating contributions from payment file: ${JSON.stringify(error)}`);
 		}

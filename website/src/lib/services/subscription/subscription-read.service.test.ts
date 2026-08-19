@@ -36,13 +36,6 @@ const expectSuccess = <T>(result: ServiceResult<T>) => {
 const createService = ({
 	subscriptions = [],
 	stripeDetails = null as { brand?: string; last4?: string; currentPeriodEnd: Date | null } | null,
-	loggerInstance = {
-		error: jest.fn(),
-		warn: jest.fn(),
-		info: jest.fn(),
-		debug: jest.fn(),
-		alert: jest.fn(),
-	},
 }: {
 	subscriptions?: {
 		id: string;
@@ -55,13 +48,6 @@ const createService = ({
 		contributor?: { paymentReferenceId: string | null };
 	}[];
 	stripeDetails?: { brand?: string; last4?: string; currentPeriodEnd: Date | null } | null;
-	loggerInstance?: {
-		error: jest.Mock;
-		warn: jest.Mock;
-		info: jest.Mock;
-		debug: jest.Mock;
-		alert: jest.Mock;
-	};
 } = {}) => {
 	const db = {
 		subscription: {
@@ -86,14 +72,9 @@ const createService = ({
 	} as unknown as ProgramAccessReadService;
 
 	return {
-		service: new SubscriptionReadService(
-			db,
-			programAccessService,
-			contributionReadService,
-			{ getSubscriptionStripeDetails: jest.fn().mockResolvedValue(stripeDetails) } as unknown as StripeService,
-			loggerInstance,
-		),
-		loggerInstance,
+		service: new SubscriptionReadService(db, programAccessService, contributionReadService, {
+			getSubscriptionStripeDetails: jest.fn().mockResolvedValue(stripeDetails),
+		} as unknown as StripeService),
 	};
 };
 
@@ -196,6 +177,7 @@ describe('SubscriptionReadService', () => {
 	});
 
 	it('skips stripe upcoming payments when details or currentPeriodEnd are missing', async () => {
+		const consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
 		const missingDetails = createService({
 			subscriptions: [
 				{
@@ -224,17 +206,18 @@ describe('SubscriptionReadService', () => {
 		});
 
 		expect(expectSuccess(await missingDetails.service.getDashboardView('contributor-1')).upcomingPayments).toEqual([]);
-		expect(missingDetails.loggerInstance.warn).toHaveBeenCalledWith('Skipping upcoming payments for Stripe subscription', {
+		expect(consoleWarn).toHaveBeenCalledWith('Skipping upcoming payments for Stripe subscription', {
 			subscriptionId: 'sub-stripe',
 			stripeSubscriptionId: 'sub_123',
 			reason: 'stripe_details_unavailable',
 		});
 		expect(expectSuccess(await missingPeriodEnd.service.getDashboardView('contributor-1')).upcomingPayments).toEqual([]);
-		expect(missingPeriodEnd.loggerInstance.warn).toHaveBeenCalledWith('Skipping upcoming payments for Stripe subscription', {
+		expect(consoleWarn).toHaveBeenCalledWith('Skipping upcoming payments for Stripe subscription', {
 			subscriptionId: 'sub-stripe',
 			stripeSubscriptionId: 'sub_123',
 			reason: 'current_period_end_missing',
 		});
+		consoleWarn.mockRestore();
 	});
 });
 

@@ -25,7 +25,6 @@ import {
 import type { CountryCode, SubscriptionCancellationReason } from '@/generated/prisma/enums';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { isValidCurrency } from '@/lib/types/currency';
-import { logger } from '@/lib/utils/logger';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { titleCase } from '@/lib/utils/string-utils';
 import { toSortKey } from '@/lib/utils/to-sort-key';
@@ -101,9 +100,8 @@ export class StripeService extends BaseService {
 		private readonly subscriptionWriteService: SubscriptionWriteService,
 		private readonly campaignReadService: CampaignReadService,
 		private readonly programAccessReadService: ProgramAccessReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async createPortalProgramDonationCheckout(
@@ -181,7 +179,7 @@ export class StripeService extends BaseService {
 				stripeCustomerId,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not create portal donation checkout session: ${JSON.stringify(error)}`);
 		}
@@ -231,7 +229,7 @@ export class StripeService extends BaseService {
 				publishableKey: result.data.publishableKey,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not create embedded checkout session: ${JSON.stringify(error)}`);
 		}
@@ -289,7 +287,7 @@ export class StripeService extends BaseService {
 				needsOnboarding,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load checkout onboarding prefill: ${JSON.stringify(error)}`);
 		}
@@ -391,7 +389,7 @@ export class StripeService extends BaseService {
 
 			return this.contributorWriteService.updateSelf(contributor.id, updateInput);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not update contributor after checkout: ${JSON.stringify(error)}`);
 		}
@@ -443,7 +441,7 @@ export class StripeService extends BaseService {
 				},
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not update contributor referral after checkout: ${JSON.stringify(error)}`);
 		}
@@ -462,7 +460,7 @@ export class StripeService extends BaseService {
 
 			return this.resultOk({ rows: paginated.data.rows });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch subscriptions table view: ${JSON.stringify(error)}`);
 		}
@@ -516,14 +514,14 @@ export class StripeService extends BaseService {
 				stripeError.code === 'resource_missing' &&
 				(stripeError.param === 'customer' || stripeError.message?.includes('No such customer'));
 			if (isMissingCustomer) {
-				this.logger.warn('Stripe customer not found in current mode; returning empty subscriptions', {
+				console.warn('Stripe customer not found in current mode; returning empty subscriptions', {
 					stripeCustomerId,
 				});
 
 				return this.resultOk({ rows: [], totalCount: 0 });
 			}
 
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch subscriptions: ${JSON.stringify(error)}`);
 		}
@@ -554,7 +552,7 @@ export class StripeService extends BaseService {
 
 			return this.resultOk(session.url);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not create billing portal session');
 		}
@@ -584,7 +582,7 @@ export class StripeService extends BaseService {
 
 			return this.copyCustomerDefaultPaymentMethodToSubscriptions(customer);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not apply default payment method to subscription');
 		}
@@ -672,7 +670,7 @@ export class StripeService extends BaseService {
 
 			return this.resultOk({ amount, currency: subscription.currency });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not update subscription amount');
 		}
@@ -730,21 +728,17 @@ export class StripeService extends BaseService {
 					},
 				});
 			} catch (error) {
-				this.logger.alert(
-					error,
-					{
-						subscriptionId: subscription.id,
-						stripeSubscriptionId: subscription.stripeSubscriptionId,
-					},
-					{ component: 'stripe-subscription-cancel' },
-				);
+				console.error(error, {
+					subscriptionId: subscription.id,
+					stripeSubscriptionId: subscription.stripeSubscriptionId,
+				});
 
 				return this.resultFail('Could not cancel subscription');
 			}
 
 			return this.resultOk(undefined);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not cancel subscription');
 		}
@@ -763,18 +757,18 @@ export class StripeService extends BaseService {
 				case 'charge.updated':
 				case 'charge.failed': {
 					const charge = event.data.object;
-					this.logger.info('Processing charge event', { eventType: event.type, chargeId: charge.id });
+					console.info('Processing charge event', { eventType: event.type, chargeId: charge.id });
 
 					const result = await this.processChargeEvent(charge);
 
 					if (!result.success) {
-						this.logger.error(result.error);
+						console.error(result.error);
 
 						return this.resultFail(result.error);
 					}
 
 					if (result.data.contributionId) {
-						this.logger.info('Successfully processed charge', { chargeId: charge.id });
+						console.info('Successfully processed charge', { chargeId: charge.id });
 					}
 
 					return this.resultOk(result.data);
@@ -789,10 +783,10 @@ export class StripeService extends BaseService {
 						return this.resultOk({ skipReason: 'Stripe customer is deleted' });
 					}
 
-					this.logger.info('Processing customer default payment method update', { customerId: customer.id });
+					console.info('Processing customer default payment method update', { customerId: customer.id });
 					const result = await this.copyCustomerDefaultPaymentMethodToSubscriptions(customer);
 					if (!result.success) {
-						this.logger.error(result.error);
+						console.error(result.error);
 
 						return this.resultFail(result.error);
 					}
@@ -803,14 +797,14 @@ export class StripeService extends BaseService {
 				case 'customer.subscription.updated':
 				case 'customer.subscription.deleted': {
 					const subscription = event.data.object;
-					this.logger.info('Processing subscription event', {
+					console.info('Processing subscription event', {
 						eventType: event.type,
 						subscriptionId: subscription.id,
 					});
 
 					const result = await this.processSubscriptionEvent(subscription);
 					if (!result.success) {
-						this.logger.error(result.error);
+						console.error(result.error);
 
 						return this.resultFail(result.error);
 					}
@@ -821,7 +815,7 @@ export class StripeService extends BaseService {
 					return this.resultOk({ skipReason: `Unhandled event type: ${event.type}` });
 			}
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to handle webhook event: ${JSON.stringify(error)}`);
 		}
@@ -849,15 +843,11 @@ export class StripeService extends BaseService {
 			campaignId: input.campaignId,
 		});
 		if (!upsertResult.success || !upsertResult.data) {
-			this.logger.alert(
-				'Stripe subscription amount updated but database sync failed',
-				{
-					subscriptionId: input.subscriptionId,
-					stripeSubscriptionId: input.stripeSubscriptionId,
-					error: upsertResult.success ? 'Could not sync updated subscription' : upsertResult.error,
-				},
-				{ component: 'stripe-subscription-amount' },
-			);
+			console.error('Stripe subscription amount updated but database sync failed', {
+				subscriptionId: input.subscriptionId,
+				stripeSubscriptionId: input.stripeSubscriptionId,
+				error: upsertResult.success ? 'Could not sync updated subscription' : upsertResult.error,
+			});
 
 			return this.resultFail('Could not sync updated subscription');
 		}
@@ -891,7 +881,7 @@ export class StripeService extends BaseService {
 
 			return this.resultOk(undefined);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not copy default payment method to subscriptions');
 		}
@@ -909,7 +899,7 @@ export class StripeService extends BaseService {
 				try {
 					await stripe.invoices.voidInvoice(invoice.id);
 				} catch (error) {
-					this.logger.warn('Could not void open invoice while canceling subscription', {
+					console.warn('Could not void open invoice while canceling subscription', {
 						invoiceId: invoice.id,
 						stripeSubscriptionId,
 						error,
@@ -917,7 +907,7 @@ export class StripeService extends BaseService {
 				}
 			}
 		} catch (error) {
-			this.logger.warn('Could not list open invoices while canceling subscription', {
+			console.warn('Could not list open invoices while canceling subscription', {
 				stripeSubscriptionId,
 				error,
 			});
@@ -1045,7 +1035,7 @@ export class StripeService extends BaseService {
 				publishableKey,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not create Stripe checkout session: ${JSON.stringify(error)}`);
 		}
@@ -1114,7 +1104,7 @@ export class StripeService extends BaseService {
 
 			return this.resultOk(session.url);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not create Stripe checkout session: ${JSON.stringify(error)}`);
 		}
@@ -1129,7 +1119,7 @@ export class StripeService extends BaseService {
 
 			return this.resultOk(customer.id);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not create Stripe customer: ${JSON.stringify(error)}`);
 		}
@@ -1163,7 +1153,7 @@ export class StripeService extends BaseService {
 				return null;
 			}
 
-			this.logger.warn('Could not retrieve Stripe subscription details', { stripeSubscriptionId });
+			console.warn('Could not retrieve Stripe subscription details', { stripeSubscriptionId });
 
 			return null;
 		}
@@ -1268,14 +1258,14 @@ export class StripeService extends BaseService {
 						user.contactId,
 					);
 					if (!portalResult.success) {
-						this.logger.error(portalResult.error);
+						console.error(portalResult.error);
 
 						return this.resultFail(portalResult.error);
 					}
 					contributor = portalResult.data.contributor;
 					isNewContributor = portalResult.data.isNewContributor;
 					if (isNewContributor) {
-						this.logger.info('Created new contributor (portal)', { contributorId: contributor.id });
+						console.info('Created new contributor (portal)', { contributorId: contributor.id });
 					}
 				}
 			}
@@ -1294,7 +1284,7 @@ export class StripeService extends BaseService {
 					const contributorResult =
 						await this.contributorWriteService.getOrCreateContributorWithFirebaseAuth(contributorData);
 					if (!contributorResult.success) {
-						this.logger.error(contributorResult.error);
+						console.error(contributorResult.error);
 
 						return this.resultFail(contributorResult.error);
 					}
@@ -1303,7 +1293,7 @@ export class StripeService extends BaseService {
 					isNewContributor = contributorResult.data.isNewContributor;
 
 					if (isNewContributor) {
-						this.logger.info('Created new contributor', { contributorId: contributor.id });
+						console.info('Created new contributor', { contributorId: contributor.id });
 					}
 				} else {
 					const existingContributorResult = await this.contributorReadService.findByStripeCustomerOrEmail(
@@ -1312,13 +1302,13 @@ export class StripeService extends BaseService {
 					);
 
 					if (!existingContributorResult.success) {
-						this.logger.error(existingContributorResult.error);
+						console.error(existingContributorResult.error);
 
 						return this.resultFail(existingContributorResult.error);
 					}
 
 					if (!existingContributorResult.data) {
-						this.logger.info(`Skipping non-successful charge for non-existent contributor`);
+						console.info(`Skipping non-successful charge for non-existent contributor`);
 
 						return this.resultOk({ skipReason: 'Non-successful charge with no existing contributor' });
 					}
@@ -1332,7 +1322,7 @@ export class StripeService extends BaseService {
 			if (!campaignId) {
 				const fallbackCampaignResult = await this.campaignReadService.getFallbackCampaign();
 				if (!fallbackCampaignResult.success) {
-					this.logger.error(fallbackCampaignResult.error);
+					console.error(fallbackCampaignResult.error);
 
 					return this.resultFail(fallbackCampaignResult.error);
 				}
@@ -1353,13 +1343,13 @@ export class StripeService extends BaseService {
 					campaignId,
 				});
 				if (!subscriptionResult.success) {
-					this.logger.error('Subscription upsert failed; continuing with contribution write', {
+					console.error('Subscription upsert failed; continuing with contribution write', {
 						chargeId: fullCharge.id,
 						stripeSubscriptionId: stripeSubscription.id,
 						error: subscriptionResult.error,
 					});
 				} else if (!subscriptionResult.data) {
-					this.logger.warn('Could not map Stripe subscription for charge; continuing with contribution write', {
+					console.warn('Could not map Stripe subscription for charge; continuing with contribution write', {
 						chargeId: fullCharge.id,
 						stripeSubscriptionId: stripeSubscription.id,
 						status: stripeSubscription.status,
@@ -1400,12 +1390,12 @@ export class StripeService extends BaseService {
 			);
 
 			if (!contributionResult.success) {
-				this.logger.error(contributionResult.error);
+				console.error(contributionResult.error);
 
 				return this.resultFail(contributionResult.error);
 			}
 
-			this.logger.info('Created contribution', { contributionId: contributionResult.data.id });
+			console.info('Created contribution', { contributionId: contributionResult.data.id });
 
 			return this.resultOk({
 				contributionId: contributionResult.data.id,
@@ -1413,7 +1403,7 @@ export class StripeService extends BaseService {
 				isNewContributor,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to process charge: ${JSON.stringify(error)}`);
 		}
@@ -1431,7 +1421,7 @@ export class StripeService extends BaseService {
 				return this.resultFail(contributorResult.error);
 			}
 			if (!contributorResult.data) {
-				this.logger.info('Skipping subscription event for unknown contributor', {
+				console.info('Skipping subscription event for unknown contributor', {
 					subscriptionId: subscription.id,
 					customerId,
 				});
@@ -1476,7 +1466,7 @@ export class StripeService extends BaseService {
 				isNewContributor: false,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to process subscription event: ${JSON.stringify(error)}`);
 		}
@@ -1537,7 +1527,7 @@ export class StripeService extends BaseService {
 				expand: ['items.data.price'],
 			});
 		} catch (error) {
-			this.logger.error('Failed to resolve Stripe subscription for charge', {
+			console.error('Failed to resolve Stripe subscription for charge', {
 				chargeId: charge.id,
 				paymentIntentId: resolveStripeResourceId(charge.payment_intent),
 				error,
@@ -1580,7 +1570,7 @@ export class StripeService extends BaseService {
 
 			return this.resultOk(customer as StripeCustomerData);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not retrieve Stripe customer: ${JSON.stringify(error)}`);
 		}
@@ -1602,7 +1592,7 @@ export class StripeService extends BaseService {
 
 			return session?.metadata ?? null;
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return null;
 		}

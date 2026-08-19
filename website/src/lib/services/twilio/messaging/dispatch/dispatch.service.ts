@@ -1,5 +1,4 @@
 import { MessagingJob, PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { ServiceResult } from '../../../core/base.types';
 import { UserReadService } from '../../../user/user-read.service';
 import { TwilioBaseService } from '../../twilio-base.service';
@@ -30,9 +29,8 @@ export class MessagingDispatchService extends TwilioBaseService {
 		private readonly userService: UserReadService,
 		private readonly twilioTemplateService: TwilioTemplateService,
 		private readonly recipientsService: MessagingRecipientsService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private async assertAdmin(userId: string): Promise<ServiceResult<true>> {
@@ -160,7 +158,7 @@ export class MessagingDispatchService extends TwilioBaseService {
 				return created;
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Failed to prepare messaging job');
 		}
@@ -182,7 +180,7 @@ export class MessagingDispatchService extends TwilioBaseService {
 						data: { sentCount, failedCount },
 					});
 				} catch (error) {
-					this.logger.error(error);
+					console.error(error);
 				}
 			};
 
@@ -219,10 +217,10 @@ export class MessagingDispatchService extends TwilioBaseService {
 							},
 						});
 					} catch (dbError) {
-						this.logger.error(dbError);
+						console.error(dbError);
 					}
 					failedCount += 1;
-					this.logger.error(error);
+					console.error(error);
 					sinceFlush += 1;
 					if (sinceFlush >= COUNTER_FLUSH_EVERY) {
 						await flushCounters();
@@ -241,7 +239,7 @@ export class MessagingDispatchService extends TwilioBaseService {
 						data: { twilioMessageSid: msgSid, twilioStatus: 'queued' },
 					});
 				} catch (dbError) {
-					this.logger.error(dbError);
+					console.error(dbError);
 				}
 				sinceFlush += 1;
 				if (sinceFlush >= COUNTER_FLUSH_EVERY) {
@@ -256,7 +254,7 @@ export class MessagingDispatchService extends TwilioBaseService {
 				const settled = await Promise.allSettled(chunk.map(dispatch));
 				for (const outcome of settled) {
 					if (outcome.status === 'rejected') {
-						this.logger.error(outcome.reason);
+						console.error(outcome.reason);
 					}
 				}
 			}
@@ -275,14 +273,14 @@ export class MessagingDispatchService extends TwilioBaseService {
 
 			return this.resultOk({ jobId: job.id });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 			await this.db.messagingJob
 				.update({
 					where: { id: job.id },
 					data: { status: 'interrupted', finishedAt: new Date() },
 				})
 				.catch((markError) => {
-					this.logger.error(markError);
+					console.error(markError);
 				});
 
 			return this.resultFail('Dispatch failed unexpectedly');

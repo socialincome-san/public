@@ -48,7 +48,7 @@ export class ExchangeRateImportService extends BaseService {
 
 			return this.resultOk(result);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch exchange rates: ${JSON.stringify(error)}`);
 		}
@@ -60,7 +60,7 @@ export class ExchangeRateImportService extends BaseService {
 		}
 
 		const day = dt.toFormat('yyyy-MM-dd');
-		this.logger.info('Fetching exchange rates for day', { day });
+		console.info('Fetching exchange rates for day', { day });
 		const response = await fetch(`https://api.apilayer.com/exchangerates_data/${day}?base=chf`, {
 			method: 'GET',
 			headers: {
@@ -92,7 +92,7 @@ export class ExchangeRateImportService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not store exchange rates: ${JSON.stringify(error)}`);
 		}
@@ -105,11 +105,11 @@ export class ExchangeRateImportService extends BaseService {
 			if (!storeResult.success) {
 				return this.resultFail(storeResult.error, storeResult.status);
 			}
-			this.logger.info('Ingested exchange rates for date', { date: dt.toISODate() });
+			console.info('Ingested exchange rates for date', { date: dt.toISODate() });
 
 			return this.resultOk(rates);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not ingest exchange rates: ${JSON.stringify(error)}`);
 		}
@@ -159,7 +159,7 @@ export class ExchangeRateImportService extends BaseService {
 			});
 
 			if (existingRates.some(({ currency }) => currency === 'ETH')) {
-				this.logger.info('ETH exchange rate already exists for today');
+				console.info('ETH exchange rate already exists for today');
 
 				return this.resultOk(undefined);
 			}
@@ -185,14 +185,14 @@ export class ExchangeRateImportService extends BaseService {
 					timestamp: today.toJSDate(),
 				},
 			});
-			this.logger.info('Ingested ETH exchange rate for today', {
+			console.info('Ingested ETH exchange rate for today', {
 				date: today.toISODate(),
 				rate: ethRate,
 			});
 
 			return this.resultOk(undefined);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not import ETH exchange rate: ${JSON.stringify(error)}`);
 		}
@@ -206,12 +206,12 @@ export class ExchangeRateImportService extends BaseService {
 			const existingExchangeRates = await this.getAllRatesSince(oneMonthAgo);
 
 			if (!existingExchangeRates.success) {
-				this.logger.error('Could not fetch existing exchange rates');
+				console.error('Could not fetch existing exchange rates');
 
 				return this.resultFail('Could not fetch existing exchange rates');
 			}
 
-			this.logger.info('Starting exchange rate import', {
+			console.info('Starting exchange rate import', {
 				fromDate: oneMonthAgo.toISOString(),
 				toDate: now().toISOString(),
 			});
@@ -229,7 +229,7 @@ export class ExchangeRateImportService extends BaseService {
 					);
 				});
 
-				this.logger.info('Checking exchange rates for timestamp', {
+				console.info('Checking exchange rates for timestamp', {
 					date: DateTime.fromMillis(timestamp).toISODate(),
 					found: ratesForTimestamp.length,
 				});
@@ -238,12 +238,12 @@ export class ExchangeRateImportService extends BaseService {
 					try {
 						const storedRates = await this.fetchAndStoreExchangeRates(DateTime.fromMillis(timestamp));
 						if (!storedRates.success) {
-							this.logger.error('Could not store exchange rates');
+							console.error('Could not store exchange rates');
 
 							return this.resultFail(`Could not store exchange rates: ${storedRates.error}`);
 						}
 					} catch (error) {
-						this.logger.error(error);
+						console.error(error);
 
 						return this.resultFail(`Could not fetch and store exchange rates: ${JSON.stringify(error)}`);
 					}
@@ -252,12 +252,12 @@ export class ExchangeRateImportService extends BaseService {
 
 			const ethImportResult = await this.importTodayEthExchangeRate();
 			if (!ethImportResult.success) {
-				this.logger.error(ethImportResult.error);
+				console.error(ethImportResult.error);
 			}
 
 			return this.resultOk(undefined);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not import exchange rates: ${JSON.stringify(error)}`);
 		}

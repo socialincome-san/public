@@ -1,5 +1,4 @@
 import { services } from '@/lib/services/services';
-import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
@@ -18,18 +17,17 @@ export const POST = async (request: NextRequest) => {
 		const result = await services.stripe.handleWebhookEvent(body, signature, webhookSecret);
 
 		if (!result.success) {
-			logger.alert(
-				`Stripe webhook processing failed: ${result.error}`,
-				{ error: result.error, signature: signature?.slice(0, 20) + '...' },
-				{ component: 'stripe-webhook' },
-			);
+			console.error(`Stripe webhook processing failed: ${result.error}`, {
+				error: result.error,
+				signature: `${signature.slice(0, 20)}...`,
+			});
 
 			return NextResponse.json({ error: result.error }, { status: 400 });
 		}
 
 		return NextResponse.json({ received: true });
 	} catch (error) {
-		logger.alert('Stripe webhook error', { error }, { component: 'stripe-webhook' });
+		console.error('Stripe webhook error', { error });
 
 		return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
 	}

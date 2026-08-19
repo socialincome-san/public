@@ -1,7 +1,6 @@
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { logger } from '@/lib/utils/logger';
 import { randomUUID } from 'crypto';
 
 const MANAGEMENT_API_BASE = 'https://mapi.storyblok.com/v1';
@@ -437,7 +436,7 @@ export class StoryblokManagementService {
 				method: 'DELETE',
 			});
 		} catch (error) {
-			logger.error(error, { assetId });
+			console.error(error, { assetId });
 		}
 	}
 
@@ -447,7 +446,7 @@ export class StoryblokManagementService {
 				method: 'DELETE',
 			});
 		} catch (error) {
-			logger.error(error, { storyId });
+			console.error(error, { storyId });
 		}
 	}
 }

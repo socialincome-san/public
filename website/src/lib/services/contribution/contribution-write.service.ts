@@ -1,5 +1,4 @@
 import { Contribution, ContributionStatus, PaymentEvent, Prisma, PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -18,9 +17,8 @@ export class ContributionWriteService extends BaseService {
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly contributionValidationService: ContributionValidationService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async update(userId: string, input: ContributionFormUpdateInput): Promise<ServiceResult<ContributionPayload>> {
@@ -114,7 +112,7 @@ export class ContributionWriteService extends BaseService {
 				feesChf: Number(updatedContribution.feesChf),
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not update contribution. Please try again later.');
 		}
@@ -185,7 +183,7 @@ export class ContributionWriteService extends BaseService {
 				feesChf: Number(created.feesChf),
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not create contribution. Please try again later.');
 		}
@@ -219,7 +217,7 @@ export class ContributionWriteService extends BaseService {
 
 			return this.resultOk(paymentEvent.contribution);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not create or update contribution from Stripe event: ${JSON.stringify(error)}`);
 		}
@@ -260,7 +258,7 @@ export class ContributionWriteService extends BaseService {
 
 			return this.resultOk(result);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not create payment events with contributions: ${JSON.stringify(error)}`);
 		}

@@ -38,7 +38,7 @@ describe('ReserveWriteService.createMany', () => {
 
 				return Promise.resolve({ count });
 			});
-		const service = new ReserveWriteService({ reserve: { createMany } } as unknown as PrismaClient, {} as never);
+		const service = new ReserveWriteService({ reserve: { createMany } } as unknown as PrismaClient);
 
 		await expect(service.createMany([reserve])).resolves.toEqual({ success: true, data: 1 });
 		await expect(service.createMany([reserve])).resolves.toEqual({ success: true, data: 0 });
@@ -51,7 +51,7 @@ describe('ReserveWriteService.createMany', () => {
 
 	test('returns zero without writing when the input list is empty', async () => {
 		const createMany = jest.fn();
-		const service = new ReserveWriteService({ reserve: { createMany } } as unknown as PrismaClient, {} as never);
+		const service = new ReserveWriteService({ reserve: { createMany } } as unknown as PrismaClient);
 
 		await expect(service.createMany([])).resolves.toEqual({ success: true, data: 0 });
 		expect(createMany).not.toHaveBeenCalled();

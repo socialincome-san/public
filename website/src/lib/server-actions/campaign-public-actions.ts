@@ -6,7 +6,6 @@ import { resultFail, resultOk } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
 import { isStoryblokManagementError } from '@/lib/services/storyblok/storyblok-management.service';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
-import { logger } from '@/lib/utils/logger';
 
 const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
 	allWebsiteLanguages.includes(value as WebsiteLanguage);
@@ -54,12 +53,12 @@ export const getCampaignDefaultImagesAction = async () => {
 		return resultOk(images);
 	} catch (error) {
 		if (isStoryblokManagementError(error)) {
-			logger.error(error, { statusCode: error.statusCode, retryable: error.retryable });
+			console.error(error, { statusCode: error.statusCode, retryable: error.retryable });
 
 			return resultFail('Could not load campaign default images.', error.retryable ? 503 : 502);
 		}
 
-		logger.error(error);
+		console.error(error);
 
 		return resultFail('Could not load campaign default images.');
 	}

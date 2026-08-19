@@ -1,5 +1,4 @@
 import { PaymentEventType, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { START_CHARACTER_REGEX, UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { endOfYear, startOfYear } from 'date-fns';
@@ -22,9 +21,8 @@ export class ContributionReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildContributionOrderBy(query: ContributionTableQuery): Prisma.ContributionOrderByWithRelationInput[] {
@@ -137,7 +135,7 @@ export class ContributionReadService extends BaseService {
 				feesChf: Number(contribution.feesChf),
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch contribution: ${JSON.stringify(error)}`);
 		}
@@ -284,7 +282,7 @@ export class ContributionReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount, filterOptions });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch contributions: ${JSON.stringify(error)}`);
 		}
@@ -326,7 +324,7 @@ export class ContributionReadService extends BaseService {
 
 			return this.resultOk(contributions);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch contributions for contributor ${contributorId}`);
 		}
@@ -353,7 +351,7 @@ export class ContributionReadService extends BaseService {
 				firstContributionAt: firstContribution?.createdAt ?? null,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch contribution summary for contributor ${contributorId}`);
 		}
@@ -405,7 +403,7 @@ export class ContributionReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch contributions for contributor: ${JSON.stringify(error)}`);
 		}

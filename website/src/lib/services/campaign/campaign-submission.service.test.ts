@@ -57,6 +57,16 @@ const baseFields = {
 };
 
 describe('CampaignSubmissionService', () => {
+	const consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+	afterEach(() => {
+		consoleWarn.mockClear();
+	});
+
+	afterAll(() => {
+		consoleWarn.mockRestore();
+	});
+
 	type CampaignCreateInput = {
 		data: {
 			slug: string;
@@ -90,13 +100,6 @@ describe('CampaignSubmissionService', () => {
 		const getAsset = jest.fn();
 		const downloadAssetBuffer = jest.fn();
 		const uploadAsset = jest.fn().mockResolvedValue({ assetId: 10, asset: { filename: 'image.jpg' } });
-		const loggerInstance = {
-			warn: jest.fn(),
-			error: jest.fn(),
-			info: jest.fn(),
-			debug: jest.fn(),
-			alert: jest.fn(),
-		};
 
 		const storyblokManagementService = {
 			uploadAsset,
@@ -112,7 +115,6 @@ describe('CampaignSubmissionService', () => {
 			programPublicSubmissionService,
 			campaignValidationService,
 			storyblokManagementService,
-			loggerInstance,
 		);
 
 		return {
@@ -127,7 +129,6 @@ describe('CampaignSubmissionService', () => {
 			getAsset,
 			downloadAssetBuffer,
 			uploadAsset,
-			loggerInstance,
 		};
 	};
 
@@ -320,7 +321,7 @@ describe('CampaignSubmissionService', () => {
 	});
 
 	test('submit rejects default images outside the defaults folder', async () => {
-		const { service, getAsset, uploadAsset, loggerInstance } = createService();
+		const { service, getAsset, uploadAsset } = createService();
 		getAsset.mockResolvedValue({
 			id: 99,
 			filename: 'https://a.storyblok.com/f/109655/default.png',
@@ -336,12 +337,12 @@ describe('CampaignSubmissionService', () => {
 		if (!result.success) {
 			expect(result.error).toBe('default-image-invalid');
 		}
-		expect(loggerInstance.warn).toHaveBeenCalledTimes(1);
+		expect(consoleWarn).toHaveBeenCalledTimes(1);
 		expect(uploadAsset).not.toHaveBeenCalled();
 	});
 
 	test('submit rejects a missing default image asset', async () => {
-		const { service, getAsset, uploadAsset, loggerInstance } = createService();
+		const { service, getAsset, uploadAsset } = createService();
 		getAsset.mockResolvedValue(null);
 
 		const result = await service.submit(baseFields, { kind: 'default', defaultImageId: 99 });
@@ -350,12 +351,12 @@ describe('CampaignSubmissionService', () => {
 		if (!result.success) {
 			expect(result.error).toBe('default-image-invalid');
 		}
-		expect(loggerInstance.warn).toHaveBeenCalledTimes(1);
+		expect(consoleWarn).toHaveBeenCalledTimes(1);
 		expect(uploadAsset).not.toHaveBeenCalled();
 	});
 
 	test('submit rejects a default image with unsupported bytes', async () => {
-		const { service, getAsset, downloadAssetBuffer, uploadAsset, loggerInstance } = createService();
+		const { service, getAsset, downloadAssetBuffer, uploadAsset } = createService();
 		getAsset.mockResolvedValue({
 			id: 99,
 			filename: 'https://a.storyblok.com/f/109655/default.gif',
@@ -372,7 +373,7 @@ describe('CampaignSubmissionService', () => {
 		if (!result.success) {
 			expect(result.error).toBe('default-image-invalid');
 		}
-		expect(loggerInstance.warn).toHaveBeenCalledTimes(1);
+		expect(consoleWarn).toHaveBeenCalledTimes(1);
 		expect(uploadAsset).not.toHaveBeenCalled();
 	});
 
