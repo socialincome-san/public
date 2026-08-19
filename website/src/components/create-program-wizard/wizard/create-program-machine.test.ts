@@ -20,6 +20,9 @@ jest.mock('@/lib/server-actions/program-actions', () => ({
 jest.mock('@/lib/server-actions/program-stats-actions', () => ({
 	calculateProgramBudgetAction: jest.fn(),
 }));
+jest.mock('@/lib/server-actions/session-actions', () => ({
+	getIsAuthenticatedUserAction: jest.fn(),
+}));
 
 type SaveProgramInput = {
 	programInput: CreateProgramInput;
@@ -56,7 +59,17 @@ const waitFor = async (predicate: () => boolean, timeoutMs = 2000) => {
 	}
 };
 
-const createWizardActor = (isAuthenticated: boolean, onSave?: (input: SaveProgramInput) => void) => {
+type CreateWizardActorOptions = {
+	isAuthenticated: boolean;
+	resolvedIsAuthenticated?: boolean;
+	onSave?: (input: SaveProgramInput) => void;
+};
+
+const createWizardActor = ({
+	isAuthenticated,
+	resolvedIsAuthenticated = isAuthenticated,
+	onSave,
+}: CreateWizardActorOptions) => {
 	const machine = createProgramWizardMachine.provide({
 		actors: {
 			loadCountries: fromPromise(() =>
@@ -64,6 +77,7 @@ const createWizardActor = (isAuthenticated: boolean, onSave?: (input: SaveProgra
 					countries: [countryRow],
 					focusOptions: [] as { id: string; name: string }[],
 					focusOptionsError: undefined as string | undefined,
+					isAuthenticated: resolvedIsAuthenticated,
 				}),
 			),
 			loadCandidateCounts: fromPromise(() =>
@@ -112,8 +126,11 @@ const walkToBudget = async (actor: ReturnType<typeof createWizardActor>) => {
 describe('createProgramWizardMachine', () => {
 	test('skips account details and omits userDetails when authenticated', async () => {
 		let savedInput: SaveProgramInput | undefined;
-		const actor = createWizardActor(true, (input) => {
-			savedInput = input;
+		const actor = createWizardActor({
+			isAuthenticated: true,
+			onSave: (input) => {
+				savedInput = input;
+			},
 		});
 
 		await walkToBudget(actor);
@@ -128,12 +145,31 @@ describe('createProgramWizardMachine', () => {
 	});
 
 	test('goes to account details when unauthenticated', async () => {
-		const actor = createWizardActor(false);
+		const actor = createWizardActor({ isAuthenticated: false });
 
 		await walkToBudget(actor);
 		actor.send({ type: 'NEXT' });
 
 		expect(actor.getSnapshot().matches('accountDetails')).toBe(true);
+
+		actor.stop();
+	});
+
+	test('skips account details when authentication is resolved on open', async () => {
+		let savedInput: SaveProgramInput | undefined;
+		const actor = createWizardActor({
+			isAuthenticated: false,
+			resolvedIsAuthenticated: true,
+			onSave: (input) => {
+				savedInput = input;
+			},
+		});
+
+		await walkToBudget(actor);
+		actor.send({ type: 'NEXT' });
+
+		await waitFor(() => actor.getSnapshot().matches('closed'));
+		expect(savedInput?.userDetails).toBeUndefined();
 
 		actor.stop();
 	});

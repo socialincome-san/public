@@ -13,7 +13,8 @@ jest.mock('@/lib/utils/now', () => ({
 	now: () => new Date('2026-08-17T12:00:00.000Z'),
 }));
 
-const youthCutoffDate = new Date(2026 - 25, 7, 17);
+const nowDate = new Date('2026-08-17T12:00:00.000Z');
+const youthCutoffDate = new Date(nowDate.getFullYear() - 25, nowDate.getMonth(), nowDate.getDate());
 
 describe('buildCandidateWhere', () => {
 	it('returns unassigned recipients when no filters are set', () => {

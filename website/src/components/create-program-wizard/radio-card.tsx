@@ -30,7 +30,7 @@ export const RadioCard = ({ value, checked, disabled, label, description, badge,
 			<div className="flex-1 space-y-1 pr-6">
 				<div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
 					<span className="min-w-0">{label}</span>
-					{badge}
+					{badge ? <span className="shrink-0 whitespace-nowrap">{badge}</span> : null}
 				</div>
 
 				{description && <p className="text-muted-foreground text-sm">{description}</p>}

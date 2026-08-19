@@ -3,7 +3,7 @@ import { DownloadsBlock } from '@/components/content-blocks/downloads';
 import { ExplainerVideoHeaderBlock } from '@/components/content-blocks/explainer-video-header';
 import { FaqSelectionBlock } from '@/components/content-blocks/faq-selection';
 import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-server';
-import { HomePageRichtextButtonHeaderBlockServer } from '@/components/content-blocks/home-page-richtext-button-header-server';
+import { HomePageRichtextButtonHeaderBlock } from '@/components/content-blocks/home-page-richtext-button-header';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
@@ -80,7 +80,7 @@ const renderPageBlock = (
 			return <ProgramGridBlock blok={block} lang={lang} region={region} />;
 		case 'richtextButtonHeader':
 			if (richtextButtonHeaderAction === 'createProgram') {
-				return <HomePageRichtextButtonHeaderBlockServer blok={block} lang={lang} region={region} />;
+				return <HomePageRichtextButtonHeaderBlock blok={block} lang={lang} region={region} />;
 			}
 
 			return <RichtextButtonHeaderBlock blok={block} lang={lang} region={region} />;

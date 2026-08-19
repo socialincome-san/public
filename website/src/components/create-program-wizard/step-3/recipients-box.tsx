@@ -36,6 +36,14 @@ export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange
 	const recipientsLabel = t('step3.recipients.title');
 	const recipientCountInput = noCandidates ? '0' : (recipientCountDraft ?? String(amountOfRecipients));
 
+	const commitRecipientCount = (raw: string) => {
+		setRecipientCountDraft(null);
+		const parsed = parseRecipientCountInput(raw, filteredRecipients);
+		if (parsed !== null && parsed !== amountOfRecipients) {
+			onChange(parsed);
+		}
+	};
+
 	return (
 		<div className="flex h-full flex-col overflow-hidden rounded-xl border">
 			<div className="space-y-6 p-8">
@@ -51,15 +59,13 @@ export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange
 						max={filteredRecipients}
 						disabled={noCandidates}
 						value={recipientCountInput}
-						onChange={(event) => {
-							const nextValue = event.target.value;
-							setRecipientCountDraft(nextValue);
-							const parsed = parseRecipientCountInput(nextValue, filteredRecipients);
-							if (parsed !== null) {
-								onChange(parsed);
+						onChange={(event) => setRecipientCountDraft(event.target.value)}
+						onBlur={(event) => commitRecipientCount(event.target.value)}
+						onKeyDown={(event) => {
+							if (event.key === 'Enter') {
+								event.currentTarget.blur();
 							}
 						}}
-						onBlur={() => setRecipientCountDraft(null)}
 						className="h-auto w-32 rounded-lg px-5 py-2 text-center text-3xl tabular-nums shadow-none"
 						aria-label={recipientsLabel}
 						data-testid="recipients-count-input"
@@ -79,6 +85,10 @@ export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange
 							step={1}
 							value={[amountOfRecipients]}
 							onValueChange={([value]) => {
+								if (value === undefined) {
+									return;
+								}
+
 								setRecipientCountDraft(null);
 								onChange(value);
 							}}

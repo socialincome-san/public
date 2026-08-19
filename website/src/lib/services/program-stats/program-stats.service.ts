@@ -575,10 +575,7 @@ export class ProgramStatsService extends BaseService {
 				rates,
 			);
 			payoutToDisplayRate = this.currencyDisplayService.convertAmount(1, input.payoutCurrency, input.displayCurrency, rates);
-			exchangeRateText =
-				payoutToDisplayRate === undefined
-					? undefined
-					: `1 ${input.payoutCurrency} = ${Number(payoutToDisplayRate.toFixed(4))} ${input.displayCurrency}`;
+			exchangeRateText = this.getExchangeRateText(input.payoutCurrency, input.displayCurrency, rates);
 			if (convertedTotal !== undefined && convertedMonthly !== undefined && exchangeRateText) {
 				calculatedTotalBudget = convertedTotal;
 				displayMonthlyCost = convertedMonthly;

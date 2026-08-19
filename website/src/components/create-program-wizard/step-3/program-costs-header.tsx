@@ -52,19 +52,14 @@ export const ProgramCostsHeader = ({
 				<div className="flex flex-wrap items-end gap-x-4 gap-y-1" aria-busy={isCalculatingBudget}>
 					<div className="flex items-baseline gap-2">
 						<span className="text-sm font-bold">{currency}</span>
-						<span
-							data-testid={`total-budget-${Math.round(totalBudget)}`}
-							className={cn('text-6xl', isCalculatingBudget && 'opacity-60')}
-						>
+						<span data-testid="total-budget" className={cn('text-6xl', isCalculatingBudget && 'opacity-60')}>
 							{Math.round(totalBudget).toLocaleString('de-CH')}
 						</span>
 					</div>
 
 					<span className="pb-1 text-sm">
 						{currency}{' '}
-						<span data-testid={`monthly-cost-${Math.round(monthlyCost)}`}>
-							{Math.round(monthlyCost).toLocaleString('de-CH')}
-						</span>{' '}
+						<span data-testid="monthly-cost">{Math.round(monthlyCost).toLocaleString('de-CH')}</span>{' '}
 						{t('common.per_month')}
 					</span>
 				</div>

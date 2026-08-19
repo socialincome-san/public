@@ -9,13 +9,11 @@ type Props = {
 	blok: RichtextButtonHeader;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
-	isAuthenticated: boolean;
 };
 
-export const HomePageRichtextButtonHeaderBlock = ({ blok, lang, region, isAuthenticated }: Props) => {
+export const HomePageRichtextButtonHeaderBlock = ({ blok, lang, region }: Props) => {
 	return (
 		<CreateProgramModal
-			isAuthenticated={isAuthenticated}
 			trigger={({ open }) => <RichtextButtonHeaderBlock blok={blok} lang={lang} region={region} buttonAction={open} />}
 		/>
 	);

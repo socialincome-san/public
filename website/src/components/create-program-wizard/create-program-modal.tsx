@@ -41,12 +41,12 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 	};
 
 	useEffect(() => {
-		if (!createdProgramId || !isAuthenticated) {
+		if (!createdProgramId || !state.context.isAuthenticated) {
 			return;
 		}
 
 		router.replace(`/portal/programs/${createdProgramId}/overview`);
-	}, [createdProgramId, isAuthenticated, router]);
+	}, [createdProgramId, state.context.isAuthenticated, router]);
 
 	return (
 		<>

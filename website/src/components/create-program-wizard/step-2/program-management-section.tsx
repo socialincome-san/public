@@ -31,7 +31,7 @@ export const ProgramManagementSection = ({ value, onChange }: Props) => {
 					disabled
 					label={t('step2.program_management.self_run.label')}
 					description={t('step2.program_management.self_run.description')}
-					badge={<Badge className="shrink-0 whitespace-nowrap">{t('common.coming_soon')}</Badge>}
+					badge={<Badge>{t('common.coming_soon')}</Badge>}
 				/>
 			</RadioCardGroup>
 		</div>

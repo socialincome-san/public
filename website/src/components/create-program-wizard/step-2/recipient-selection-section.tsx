@@ -59,11 +59,7 @@ export const RecipientSelectionSection = ({
 					checked={value === 'universal'}
 					label={t('step2.recipient_selection.universal.label')}
 					description={t('step2.recipient_selection.universal.description')}
-					badge={
-						<Badge variant="verified" className="shrink-0 whitespace-nowrap">
-							{t('common.recommended')}
-						</Badge>
-					}
+					badge={<Badge variant="verified">{t('common.recommended')}</Badge>}
 				>
 					<div className={cn('text-sm', noUniversalRecipients ? 'text-destructive' : 'text-muted-foreground')}>
 						{isCountingRecipients ? (
@@ -129,7 +125,7 @@ export const RecipientSelectionSection = ({
 					disabled
 					label={t('step2.recipient_selection.custom.label')}
 					description={t('step2.recipient_selection.custom.description')}
-					badge={<Badge className="shrink-0 whitespace-nowrap">{t('common.coming_soon')}</Badge>}
+					badge={<Badge>{t('common.coming_soon')}</Badge>}
 				/>
 			</RadioCardGroup>
 		</div>

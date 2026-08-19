@@ -33,8 +33,8 @@ test('create new program', async ({ page }) => {
 	await page.getByTestId('payout-per-interval-slider').getByRole('slider').click();
 	await page.getByTestId('payout-per-interval-slider').getByRole('slider').press('ArrowRight');
 	await page.getByTestId('payout-per-interval-slider').getByRole('slider').press('ArrowRight');
-	await expect(page.getByTestId('total-budget-928.0833333333333')).toBeVisible();
-	await expect(page.getByTestId('monthly-cost-25')).toBeVisible();
+	await expect(page.getByTestId('total-budget')).toHaveText('928');
+	await expect(page.getByTestId('monthly-cost')).toHaveText('25');
 
 	await page.getByRole('button', { name: 'Continue' }).click();
 	await expect(page.getByText('Great! You initiated a new program')).toBeVisible();
