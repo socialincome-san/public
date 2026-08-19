@@ -21,16 +21,22 @@ test('create new program', async ({ page }) => {
 	await page.getByRole('button', { name: 'Continue' }).click();
 
 	await page.getByTestId('recipients-slider').getByRole('slider').click();
+	const payoutAmount = page.getByTestId('payout-per-interval-amount');
+	await expect(payoutAmount).toContainText('SLE');
+	await expect(payoutAmount).toContainText('CHF');
 	await page.getByTestId('recipients-slider').getByRole('slider').press('ArrowLeft');
 	await page.getByTestId('customize-payouts-switch').click();
+	await expect(payoutAmount).toContainText('SLE');
+	await expect(payoutAmount).toContainText('CHF');
 	await page.getByTestId('program-duration-slider').getByRole('slider').click();
 	await page.getByTestId('program-duration-slider').getByRole('slider').press('ArrowRight');
 	await page.getByTestId('payout-per-interval-slider').getByRole('slider').click();
 	await page.getByTestId('payout-per-interval-slider').getByRole('slider').press('ArrowRight');
 	await page.getByTestId('payout-per-interval-slider').getByRole('slider').press('ArrowRight');
-	await expect(page.getByTestId('total-budget-928.0833333333333')).toBeVisible();
-	await expect(page.getByTestId('monthly-cost-25')).toBeVisible();
+	await expect(page.getByTestId('total-budget')).toHaveText('928');
+	await expect(page.getByTestId('monthly-cost')).toHaveText('25');
 
 	await page.getByRole('button', { name: 'Continue' }).click();
 	await expect(page.getByText('Great! You initiated a new program')).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Almost there' })).not.toBeVisible();
 });
