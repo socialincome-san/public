@@ -1,3 +1,4 @@
+import { GlobeStage } from '@/components/globe/globe-stage';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { DonationGlobe } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
@@ -31,7 +32,9 @@ export const DonationGlobeBlock = async ({ blok, lang }: Props) => {
 				)}
 				<p className="text-foreground my-4 text-left">{description}</p>
 			</div>
-			<div className="bg-muted min-h-64 rounded-2xl md:w-1/2" aria-hidden />
+			<div className="md:w-1/2">
+				<GlobeStage />
+			</div>
 		</div>
 	);
 };
