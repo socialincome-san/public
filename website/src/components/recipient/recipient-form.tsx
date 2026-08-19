@@ -312,6 +312,16 @@ export const RecipientForm = ({
 	}, [sessionType, programId]);
 
 	const mode = recipientId ? 'edit' : 'add';
+	const extraAction =
+		recipient?.program && sessionType === 'user'
+			? {
+					label: 'Remove from program',
+					confirmTitle: 'Remove from program?',
+					confirmDescription:
+						'The recipient stays in the pool and can be reassigned to a program later. This is only possible for recipients without payouts.',
+					onConfirm: onRemoveFromProgram,
+				}
+			: undefined;
 
 	return (
 		<DynamicForm
@@ -320,7 +330,7 @@ export const RecipientForm = ({
 			onSubmit={onSubmit}
 			onCancel={onCancel}
 			onDelete={onDelete}
-			onRemoveFromProgram={recipient?.program && sessionType === 'user' ? onRemoveFromProgram : undefined}
+			extraAction={extraAction}
 			mode={mode}
 		/>
 	);

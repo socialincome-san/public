@@ -14,7 +14,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
 import { MultiSelect } from '../multi-select';
-import { FormActions } from './form-actions';
+import { FormActions, type ExtraAction } from './form-actions';
 
 export type FormField = {
 	label: string;
@@ -148,11 +148,11 @@ type Props = {
 	onSubmit: (values: any) => void;
 	onCancel?: () => void;
 	onDelete?: () => void;
-	onRemoveFromProgram?: () => void;
+	extraAction?: ExtraAction;
 	mode: 'add' | 'edit' | 'readonly';
 };
 
-const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, onRemoveFromProgram, mode }) => {
+const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, extraAction, mode }) => {
 	const zodSchema = buildZodSchema(formSchema);
 
 	const form = useForm<z.infer<typeof zodSchema>>({
@@ -295,13 +295,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 						/>
 					);
 				})}
-				<FormActions
-					mode={mode}
-					isLoading={isLoading}
-					onCancel={onCancel}
-					onDelete={onDelete}
-					onRemoveFromProgram={onRemoveFromProgram}
-				/>
+				<FormActions mode={mode} isLoading={isLoading} onCancel={onCancel} onDelete={onDelete} extraAction={extraAction} />
 			</form>
 			{/* TODO: add proper loading state */}
 			{isLoading && (
