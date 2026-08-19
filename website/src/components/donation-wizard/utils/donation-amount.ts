@@ -1,3 +1,5 @@
+import { getIndirectBeneficiaryCount } from '@/lib/utils/indirect-beneficiaries';
+
 export type PresetAmount = 25 | 50 | 100;
 export type Cadence = 'monthly' | 'one-time';
 export type PlanTier = '1x' | '2x';
@@ -127,13 +129,12 @@ export const isAmountValid = (context: DonationAmountContext): boolean => resolv
 export const isOnePercentPlanSelected = (context: DonationAmountContext): boolean => context.selectedAmount === null;
 
 const SOCIAL_INCOME_MONTHLY_CHF = 30;
-const INDIRECT_BENEFICIARY_FACTOR = 6;
 
 export const getBeneficiaryImpact = (monthlyAmount: number): { directCount: number; indirectCount: number } => {
 	const directCount = Math.max(1, Math.floor(monthlyAmount / SOCIAL_INCOME_MONTHLY_CHF));
 
 	return {
 		directCount,
-		indirectCount: directCount * INDIRECT_BENEFICIARY_FACTOR,
+		indirectCount: getIndirectBeneficiaryCount(directCount),
 	};
 };

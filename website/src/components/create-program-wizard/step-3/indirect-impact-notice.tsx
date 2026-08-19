@@ -2,6 +2,7 @@
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/tool-tip';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { getIndirectBeneficiaryCount, INDIRECT_BENEFICIARY_FACTOR } from '@/lib/utils/indirect-beneficiaries';
 
 type Props = {
 	recipients: number;
@@ -9,7 +10,7 @@ type Props = {
 
 export const IndirectImpactNotice = ({ recipients }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
-	const indirect = recipients * 5;
+	const indirect = getIndirectBeneficiaryCount(recipients);
 
 	return (
 		<div className="bg-confirm-foreground flex items-center gap-3 rounded-b-xl px-6 py-4 text-sm">
@@ -24,7 +25,9 @@ export const IndirectImpactNotice = ({ recipients }: Props) => {
 								{t('step3.indirect_notice.indirect_people', { indirect: indirect.toLocaleString('de-CH') })}
 							</span>
 						</TooltipTrigger>
-						<TooltipContent className="max-w-[220px] text-left">{t('step3.indirect_notice.tooltip')}</TooltipContent>
+						<TooltipContent className="max-w-[220px] text-left">
+							{t('step3.indirect_notice.tooltip', { factor: INDIRECT_BENEFICIARY_FACTOR })}
+						</TooltipContent>
 					</Tooltip>
 				</TooltipProvider>{' '}
 				{t('step3.indirect_notice.suffix')}

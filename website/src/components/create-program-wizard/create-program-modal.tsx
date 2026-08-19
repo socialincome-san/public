@@ -30,6 +30,7 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 
 	const isOpen = !state.matches('closed');
 	const createdProgramId = state.context.createdProgramId;
+	const isAuthenticatedUser = state.context.isAuthenticated;
 	const open = () => send({ type: 'OPEN' });
 	const handleTriggerKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
 		if (event.key !== 'Enter' && event.key !== ' ') {
@@ -41,12 +42,12 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 	};
 
 	useEffect(() => {
-		if (!createdProgramId || !isAuthenticated) {
+		if (!createdProgramId || !isAuthenticatedUser) {
 			return;
 		}
 
 		router.replace(`/portal/programs/${createdProgramId}/overview`);
-	}, [createdProgramId, isAuthenticated, router]);
+	}, [createdProgramId, isAuthenticatedUser, router]);
 
 	return (
 		<>

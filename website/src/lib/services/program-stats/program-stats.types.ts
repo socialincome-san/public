@@ -101,6 +101,7 @@ export type ProgramBudgetCalculation = {
 	calculatedTotalBudget: number;
 	displayMonthlyCost: number;
 	exchangeRateText?: string;
+	payoutToDisplayRate?: number;
 	totalBudgetTooltipText: string;
 	payoutPerIntervalMin: number;
 	payoutPerIntervalMax: number;
