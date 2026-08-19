@@ -1,21 +1,12 @@
-import { getStoryblokCampaignTitleForSlug } from '@/components/storyblok/campaign/campaign.utils';
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
-import { defaultLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { expect, test } from '@playwright/test';
+import { getCampaignTitleForSlug } from '../../../get-campaign-title';
 import { clickDataTableActionItem, selectOptionByTestId } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
 });
-
-const getCampaignTitle = async (slug: string) => {
-	const result = await services.storyblok.getCampaigns(defaultLanguage);
-	expect(result.success).toBe(true);
-
-	return getStoryblokCampaignTitleForSlug(result.success ? result.data : [], slug);
-};
 
 test('add new contribution', async ({ page }) => {
 	const source = await prisma.contribution.findFirst({
@@ -43,7 +34,7 @@ test('add new contribution', async ({ page }) => {
 
 	const contributorName =
 		`${source!.contributor.contact?.firstName ?? ''} ${source!.contributor.contact?.lastName ?? ''}`.trim();
-	const campaignTitle = await getCampaignTitle(source!.campaign.slug!);
+	const campaignTitle = await getCampaignTitleForSlug(source!.campaign.slug!);
 	const amount = 99.5;
 	const amountChf = 88.2;
 	const feesChf = 1.3;
@@ -97,7 +88,7 @@ test('edit contribution', async ({ page }) => {
 	const updatedAmount = 123.45;
 	const updatedAmountChf = 111.11;
 	const updatedFeesChf = 2.22;
-	const campaignTitle = await getCampaignTitle(existing!.campaign.slug!);
+	const campaignTitle = await getCampaignTitleForSlug(existing!.campaign.slug!);
 
 	await page.goto(
 		`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(existing!.contributor.contact.email!)}`,
@@ -150,7 +141,7 @@ test('does not show owner-only contribution rows under management', async ({ pag
 	});
 	expect(ownerOnly?.contributor.contact?.email).toBeTruthy();
 	expect(ownerOnly?.campaign.slug).toBeTruthy();
-	const campaignTitle = await getCampaignTitle(ownerOnly!.campaign.slug!);
+	const campaignTitle = await getCampaignTitleForSlug(ownerOnly!.campaign.slug!);
 
 	await page.goto(
 		`/portal/management/contributions?page=1&pageSize=10&search=${encodeURIComponent(ownerOnly!.contributor.contact.email!)}`,
@@ -182,7 +173,7 @@ test('shows validation error when contribution amount is invalid', async ({ page
 
 	const contributorName =
 		`${source!.contributor.contact?.firstName ?? ''} ${source!.contributor.contact?.lastName ?? ''}`.trim();
-	const campaignTitle = await getCampaignTitle(source!.campaign.slug!);
+	const campaignTitle = await getCampaignTitleForSlug(source!.campaign.slug!);
 
 	await page.goto('/portal/management/contributions');
 	await clickDataTableActionItem(page, 'data-table-action-item-add-contribution');
