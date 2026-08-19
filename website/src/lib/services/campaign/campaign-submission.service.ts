@@ -2,6 +2,7 @@ import { Prisma, PrismaClient } from '@/generated/prisma/client';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { logger } from '@/lib/utils/logger';
 import { slugify } from '@/lib/utils/string-utils';
+import { randomUUID } from 'crypto';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramPublicSubmissionService } from '../program/program-public-submission.service';
@@ -267,6 +268,6 @@ export class CampaignSubmissionService extends BaseService {
 			}
 		}
 
-		return this.resultFail('slug-exists', 409);
+		return this.resultOk(`${baseSlug}-${randomUUID()}`);
 	}
 }

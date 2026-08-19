@@ -386,8 +386,8 @@ describe('CampaignSubmissionService', () => {
 		expect(db.campaign.create).not.toHaveBeenCalled();
 	});
 
-	test('submit returns a failure result when no unique slug can be found', async () => {
-		const { service, db, campaignValidationService } = createService();
+	test('submit appends a uuid when numbered slug suffixes are exhausted', async () => {
+		const { service, create, campaignValidationService } = createService();
 		(campaignValidationService.validateSlugUniqueness as jest.Mock).mockResolvedValue({
 			success: false,
 			error: 'taken',
@@ -395,12 +395,14 @@ describe('CampaignSubmissionService', () => {
 
 		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
 
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			expect(result.status).toBe(409);
-			expect(result.error).toBe('slug-exists');
+		const uuidSlug = /^my-campaign-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.slug).toMatch(uuidSlug);
 		}
-		expect(db.campaign.create).not.toHaveBeenCalled();
+		const createArg = create.mock.calls[0]?.[0];
+		expect(createArg?.data.slug).toMatch(uuidSlug);
+		expect(campaignValidationService.validateSlugUniqueness).toHaveBeenCalledTimes(20);
 	});
 
 	test('submit returns slug-exists when campaign create hits a slug unique constraint', async () => {
