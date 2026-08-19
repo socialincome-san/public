@@ -1,5 +1,4 @@
 import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -16,9 +15,8 @@ export class SurveyWriteService extends BaseService {
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly surveyReadService: SurveyReadService,
 		private readonly surveyValidationService: SurveyValidationService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private toPayload(survey: {
@@ -151,7 +149,7 @@ export class SurveyWriteService extends BaseService {
 
 			return this.resultOk(this.toPayload(survey));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Failed to create survey. Please try again later.');
 		}
@@ -248,7 +246,7 @@ export class SurveyWriteService extends BaseService {
 
 			return this.resultOk(this.toPayload(updatedSurvey));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Failed to update survey. Please try again later.');
 		}
@@ -288,7 +286,7 @@ export class SurveyWriteService extends BaseService {
 				message: `Successfully created ${surveysCreated} surveys`,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to generate surveys: ${JSON.stringify(error)}`);
 		}
@@ -311,7 +309,7 @@ export class SurveyWriteService extends BaseService {
 
 			return this.resultOk(this.toPayload(updatedSurvey));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to update survey: ${JSON.stringify(error)}`);
 		}

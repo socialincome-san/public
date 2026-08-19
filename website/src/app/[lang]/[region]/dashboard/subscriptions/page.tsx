@@ -3,7 +3,6 @@ import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-co
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { APPLY_PAYMENT_METHOD_QUERY_PARAM } from '@/lib/services/stripe/stripe.types';
-import { logger } from '@/lib/utils/logger';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { type DefaultPageProps } from '../..';
@@ -22,7 +21,7 @@ export default async function Page({ params, searchParams }: DefaultPageProps) {
 			subscriptionId: applyPaymentMethodSubscriptionId,
 		});
 		if (!result.success) {
-			logger.warn('Could not apply Stripe default payment method after portal return', {
+			console.warn('Could not apply Stripe default payment method after portal return', {
 				subscriptionId: applyPaymentMethodSubscriptionId,
 				error: result.error,
 			});

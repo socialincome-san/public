@@ -8,7 +8,6 @@ import {
 	SurveyStatus,
 } from '@/generated/prisma/client';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
@@ -28,9 +27,8 @@ export class ProgramStatsService extends BaseService {
 		db: PrismaClient,
 		private readonly currencyDisplayService: CurrencyDisplayService,
 		private readonly recipientStatusService: RecipientStatusService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async isReadyForFirstPayoutInterval(programId: string): Promise<ServiceResult<boolean>> {
@@ -73,7 +71,7 @@ export class ProgramStatsService extends BaseService {
 
 			return this.resultOk(totalContributionsChf >= costPerIntervalChf);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not check program readiness: ${JSON.stringify(error)}`);
 		}
@@ -86,7 +84,7 @@ export class ProgramStatsService extends BaseService {
 
 			return this.resultOk(calculation);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not calculate program budget preview: ${JSON.stringify(error)}`);
 		}
@@ -256,7 +254,7 @@ export class ProgramStatsService extends BaseService {
 				recipientsCount,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load program dashboard stats: ${JSON.stringify(error)}`);
 		}
@@ -272,7 +270,7 @@ export class ProgramStatsService extends BaseService {
 
 			return this.getProgramDashboardStats(match.id);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load dashboard stats by slug: ${JSON.stringify(error)}`);
 		}

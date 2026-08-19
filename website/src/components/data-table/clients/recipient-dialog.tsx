@@ -5,7 +5,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/d
 import { RecipientForm } from '@/components/recipient/recipient-form';
 import type { Session } from '@/lib/firebase/current-account';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { logger } from '@/lib/utils/logger';
 
 type Props = {
 	open: boolean;
@@ -29,7 +28,7 @@ export const RecipientDialog = ({
 	const handleError = (error: unknown) => {
 		const errorMessage = retrieveErrorMessage(error);
 		onError(`Error saving recipient: ${errorMessage}`);
-		logger.error('Recipient Form Error', { error });
+		console.error('Recipient Form Error', { error });
 	};
 
 	const dialogTitle = recipientId ? 'Edit Recipient' : 'New Recipient';

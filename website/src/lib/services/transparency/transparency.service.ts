@@ -1,7 +1,6 @@
 import { type PrismaClient } from '@/generated/prisma/client';
 import { PayoutStatus, type CountryCode } from '@/generated/prisma/enums';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
 import { type ReserveReadService } from '../reserves/reserve-read.service';
@@ -20,9 +19,8 @@ export class TransparencyService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly reserveReadService: ReserveReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async getTransparencyTotals(
@@ -33,7 +31,7 @@ export class TransparencyService extends BaseService {
 
 			return this.resultOk(totals);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch transparency totals: ${JSON.stringify(error)}`);
 		}
@@ -54,7 +52,7 @@ export class TransparencyService extends BaseService {
 
 			return this.resultOk(totals);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch transparency totals for country: ${JSON.stringify(error)}`);
 		}
@@ -88,7 +86,7 @@ export class TransparencyService extends BaseService {
 				topCountries,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch transparency data: ${JSON.stringify(error)}`);
 		}

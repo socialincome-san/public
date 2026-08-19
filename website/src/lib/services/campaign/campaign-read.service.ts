@@ -1,5 +1,4 @@
 import { Campaign, ContributionStatus, Currency, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { nowMs } from '@/lib/utils/now';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -23,9 +22,8 @@ export class CampaignReadService extends BaseService {
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly exchangeRateService: ExchangeRateReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private daysUntilTs(ts: Date): number {
@@ -124,7 +122,7 @@ export class CampaignReadService extends BaseService {
 				amountCollected,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
 		}
@@ -179,7 +177,7 @@ export class CampaignReadService extends BaseService {
 				amountCollected,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch campaign: ${JSON.stringify(error)}`);
 		}
@@ -205,7 +203,7 @@ export class CampaignReadService extends BaseService {
 
 			return this.resultOk({ campaignPortalSlug: campaign.slug });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch campaign reference: ${JSON.stringify(error)}`);
 		}
@@ -289,7 +287,7 @@ export class CampaignReadService extends BaseService {
 
 			return this.resultOk(await this.mapCampaignsForCmsJoin(campaigns, activity));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch campaigns for CMS join: ${JSON.stringify(error)}`);
 		}
@@ -349,7 +347,7 @@ export class CampaignReadService extends BaseService {
 
 			return this.resultOk(statsById);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch campaign stats map: ${JSON.stringify(error)}`);
 		}
@@ -410,7 +408,7 @@ export class CampaignReadService extends BaseService {
 
 			return this.resultOk(options);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch editable campaign options: ${JSON.stringify(error)}`);
 		}
@@ -481,7 +479,7 @@ export class CampaignReadService extends BaseService {
 
 			return this.resultOk(entries);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch campaigns: ${JSON.stringify(error)}`);
 		}
@@ -501,7 +499,7 @@ export class CampaignReadService extends BaseService {
 
 			return this.resultOk(campaign);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch default campaign: ${JSON.stringify(error)}`);
 		}
@@ -522,7 +520,7 @@ export class CampaignReadService extends BaseService {
 
 			return this.resultFail('No default campaign found for program');
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch campaign for program: ${JSON.stringify(error)}`);
 		}

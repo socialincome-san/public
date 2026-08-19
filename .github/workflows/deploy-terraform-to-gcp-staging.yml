@@ -57,7 +57,6 @@ jobs:
           echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_PROJECT_ID }}" > secrets/NEXT_PUBLIC_FIREBASE_PROJECT_ID
           echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" > secrets/NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
           echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" > secrets/NEXT_PUBLIC_TURNSTILE_SITE_KEY
-          echo "${{ secrets.TF_STAGING_SENTRY_AUTH_TOKEN }}" > secrets/SENTRY_AUTH_TOKEN
           echo "${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
 
       - name: 📤 Build and Push Docker Image

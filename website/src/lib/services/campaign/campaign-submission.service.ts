@@ -1,6 +1,5 @@
 import { Prisma, PrismaClient } from '@/generated/prisma/client';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { logger } from '@/lib/utils/logger';
 import { slugify } from '@/lib/utils/string-utils';
 import { randomUUID } from 'crypto';
 import { BaseService } from '../core/base.service';
@@ -43,9 +42,8 @@ export class CampaignSubmissionService extends BaseService {
 		private readonly programPublicSubmissionService: ProgramPublicSubmissionService,
 		private readonly campaignValidationService: CampaignValidationService,
 		private readonly storyblokManagementService: StoryblokManagementService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async submit(
@@ -140,7 +138,7 @@ export class CampaignSubmissionService extends BaseService {
 			await this.compensateSubmissionFailure(cleanupState);
 
 			if (isStoryblokManagementError(error)) {
-				this.logger.error(error, { slug, retryable: error.retryable, statusCode: error.statusCode });
+				console.error(error, { slug, retryable: error.retryable, statusCode: error.statusCode });
 
 				return this.resultFail('submission-failed', error.retryable ? 503 : 502);
 			}
@@ -149,7 +147,7 @@ export class CampaignSubmissionService extends BaseService {
 				return this.resultFail('slug-exists', 400);
 			}
 
-			this.logger.error(error, { slug });
+			console.error(error, { slug });
 
 			return this.resultFail('submission-failed', 503);
 		}
@@ -171,7 +169,7 @@ export class CampaignSubmissionService extends BaseService {
 	}
 
 	private failDefaultImage(defaultImageId: number, reason: string, assetFolderId: number | null = null) {
-		this.logger.warn('Campaign submission default image invalid', {
+		console.warn('Campaign submission default image invalid', {
 			defaultImageId,
 			reason,
 			assetFolderId,
@@ -207,7 +205,7 @@ export class CampaignSubmissionService extends BaseService {
 			return this.resultOk(validation.data);
 		} catch (error) {
 			if (isStoryblokManagementError(error)) {
-				this.logger.error(error, {
+				console.error(error, {
 					defaultImageId: imageSource.defaultImageId,
 					reason: error.statusCode === 404 ? 'asset-not-found' : 'storyblok-management-error',
 					assetFolderId: null,
@@ -221,7 +219,7 @@ export class CampaignSubmissionService extends BaseService {
 				);
 			}
 
-			this.logger.error(error, {
+			console.error(error, {
 				defaultImageId: imageSource.defaultImageId,
 				reason: 'unexpected-error',
 				assetFolderId: null,
@@ -244,7 +242,7 @@ export class CampaignSubmissionService extends BaseService {
 			try {
 				await this.db.campaign.delete({ where: { id: state.campaignId } });
 			} catch (error) {
-				this.logger.error(error, { campaignId: state.campaignId });
+				console.error(error, { campaignId: state.campaignId });
 			}
 		}
 	}

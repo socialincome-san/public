@@ -1,6 +1,5 @@
 import { Prisma, PrismaClient, Recipient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
-import { logger } from '@/lib/utils/logger';
 import { ContactRelationsService } from '../contact/contact-relations.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -17,9 +16,8 @@ export class RecipientWriteService extends BaseService {
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly validationService: RecipientValidationService,
 		private readonly contactRelationsService: ContactRelationsService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private async deletePhoneIfOrphaned(phoneId: string): Promise<void> {
@@ -101,7 +99,7 @@ export class RecipientWriteService extends BaseService {
 				return this.resultOk(newRecipient);
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not create recipient. Please try again later.');
 		}
@@ -277,7 +275,7 @@ export class RecipientWriteService extends BaseService {
 
 			return this.resultOk(updatedRecipient);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			if (phoneAdded && nextPaymentPhoneNumber) {
 				await this.firebaseAdminService.deleteByPhoneNumberIfExists(nextPaymentPhoneNumber);
@@ -601,7 +599,7 @@ export class RecipientWriteService extends BaseService {
 
 			return this.resultOk(updatedRecipient);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to update recipient: ${JSON.stringify(error)}`);
 		}
@@ -664,7 +662,7 @@ export class RecipientWriteService extends BaseService {
 
 			return this.resultOk({ id: recipientId });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not remove recipient from program: ${JSON.stringify(error)}`);
 		}
@@ -748,7 +746,7 @@ export class RecipientWriteService extends BaseService {
 				try {
 					await this.contactRelationsService.deletePhoneIfUnused(previousContactPhoneId);
 				} catch (cleanupError) {
-					this.logger.warn('Recipient deleted but contact phone cleanup failed', {
+					console.warn('Recipient deleted but contact phone cleanup failed', {
 						recipientId,
 						previousContactPhoneId,
 						error: cleanupError,
@@ -759,7 +757,7 @@ export class RecipientWriteService extends BaseService {
 				try {
 					await this.contactRelationsService.deletePhoneIfUnused(previousPaymentPhoneId);
 				} catch (cleanupError) {
-					this.logger.warn('Recipient deleted but payment phone cleanup failed', {
+					console.warn('Recipient deleted but payment phone cleanup failed', {
 						recipientId,
 						previousPaymentPhoneId,
 						error: cleanupError,
@@ -770,7 +768,7 @@ export class RecipientWriteService extends BaseService {
 				try {
 					await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
 				} catch (cleanupError) {
-					this.logger.warn('Recipient deleted but address cleanup failed', {
+					console.warn('Recipient deleted but address cleanup failed', {
 						recipientId,
 						previousAddressId,
 						error: cleanupError,
@@ -782,14 +780,14 @@ export class RecipientWriteService extends BaseService {
 				try {
 					const firebaseDeleteResult = await this.firebaseAdminService.deleteByPhoneNumberIfExists(paymentPhoneNumber);
 					if (!firebaseDeleteResult.success) {
-						this.logger.warn('Recipient deleted in DB but Firebase user deletion failed', {
+						console.warn('Recipient deleted in DB but Firebase user deletion failed', {
 							recipientId,
 							paymentPhoneNumber,
 							error: firebaseDeleteResult.error,
 						});
 					}
 				} catch (cleanupError) {
-					this.logger.warn('Recipient deleted in DB but Firebase cleanup threw', {
+					console.warn('Recipient deleted in DB but Firebase cleanup threw', {
 						recipientId,
 						paymentPhoneNumber,
 						error: cleanupError,
@@ -799,7 +797,7 @@ export class RecipientWriteService extends BaseService {
 
 			return this.resultOk({ id: recipientId });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not delete recipient. Please try again later.');
 		}

@@ -10,7 +10,6 @@ import { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { logger } from '@/lib/utils/logger';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import ContributorsForm from './contributors-form';
@@ -45,7 +44,7 @@ export default function ContributorsTableClient({
 	const onError = (error: unknown) => {
 		const message = retrieveErrorMessage(error);
 		setErrorMessage(`Error saving contributor: ${message}`);
-		logger.error('Contributor Form Error', { error });
+		console.error('Contributor Form Error', { error });
 	};
 
 	const dialogTitle = contributorId ? 'Edit Contributor' : 'New Contributor';
