@@ -58,7 +58,6 @@ jobs:
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID}}" > secrets/NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_LINKEDIN_TRACKING_ID}}" > secrets/NEXT_PUBLIC_LINKEDIN_TRACKING_ID
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" > secrets/NEXT_PUBLIC_TURNSTILE_SITE_KEY
-          echo "${{ secrets.TF_PROD_SENTRY_AUTH_TOKEN }}" > secrets/SENTRY_AUTH_TOKEN
           echo "${{ secrets.TF_PROD_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
 
       - name: 📤 Build and Push Docker Image
