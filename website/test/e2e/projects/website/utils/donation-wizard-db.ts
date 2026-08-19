@@ -251,6 +251,21 @@ export const expectOneTimeStripeWizardCompleted = async (
 	await expectContributorReferral(donor.email, referral);
 };
 
+export const expectContributionOnCampaign = async (email: string, expectedCampaignId: string) => {
+	const contributor = await findContributorByEmail(email);
+	expect(contributor).not.toBeNull();
+
+	const contribution = await prisma.contribution.findFirst({
+		where: { contributorId: contributor!.id },
+		include: { campaign: { select: { id: true, isFallback: true } } },
+		orderBy: { createdAt: 'desc' },
+	});
+
+	expect(contribution).not.toBeNull();
+	expect(contribution!.campaign.id).toBe(expectedCampaignId);
+	expect(contribution!.campaign.isFallback).toBe(false);
+};
+
 export const expectCompleteMonthlyQrDonation = async (
 	donor: DonationWizardDonor,
 	options: {

@@ -105,6 +105,28 @@ export const openDonationWizardFromHero = async (
 	);
 };
 
+export const openDonationWizardFromProgramPage = async (
+	page: Page,
+	programSlug: string,
+	monthlyIncome: number,
+	options: { cadence?: 'monthly' | 'one-time' } = {},
+) => {
+	const { cadence = 'monthly' } = options;
+
+	await applySwissTestLocale(page);
+	await page.goto(`/en/ch/programs/${programSlug}`);
+
+	const heroForm = page.getByTestId('donation-wizard-hero-form').first();
+	await expect(heroForm).toBeVisible();
+	await completeHeroAmountFields(heroForm, monthlyIncome, cadence);
+
+	await expect(wizard(page)).toBeVisible();
+	await waitForWizardStep(
+		wizard(page),
+		cadence === 'monthly' ? 'donation-wizard-step-monthly-plan' : 'donation-wizard-step-one-time-plan',
+	);
+};
+
 export const completeAmountStep = async (page: Page, monthlyIncome: number) => {
 	const modal = wizard(page);
 	const incomeInput = modal.getByTestId('donation-wizard-monthly-income');
