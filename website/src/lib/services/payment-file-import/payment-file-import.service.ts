@@ -1,6 +1,7 @@
 import { ContributionStatus, PaymentEvent, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
 import { Currency } from '@/generated/prisma/enums';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
+import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import xmldom from '@xmldom/xmldom';
 import { DateTime } from 'luxon';
 import fs from 'node:fs';
@@ -121,7 +122,7 @@ export class PaymentFileImportService extends BaseService {
 
 				const rawNode = new xmldom.XMLSerializer().serializeToString(node);
 				if (!referenceId) {
-					console.error(`Skipped processing a payment entry without reference ID. Raw content: ${rawNode}`);
+					console.error(`${SLACK_ALERT}: Skipped processing a payment entry without reference ID. Raw content: ${rawNode}`);
 					continue;
 				}
 
@@ -177,7 +178,7 @@ export class PaymentFileImportService extends BaseService {
 				);
 				if (!contributor) {
 					console.error(
-						`Contributor for reference ID ${this.getReferenceIds(c.referenceId).contributorReferenceId} does not exist`,
+						`${SLACK_ALERT}: Contributor for reference ID ${this.getReferenceIds(c.referenceId).contributorReferenceId} does not exist`,
 					);
 					continue;
 				}

@@ -26,6 +26,7 @@ import type { CountryCode, SubscriptionCancellationReason } from '@/generated/pr
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { isValidCurrency } from '@/lib/types/currency';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
+import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import { titleCase } from '@/lib/utils/string-utils';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import Stripe from 'stripe';
@@ -728,9 +729,10 @@ export class StripeService extends BaseService {
 					},
 				});
 			} catch (error) {
-				console.error(error, {
+				console.error(`${SLACK_ALERT}: Stripe canceled the subscription but database update failed`, {
 					subscriptionId: subscription.id,
 					stripeSubscriptionId: subscription.stripeSubscriptionId,
+					error,
 				});
 
 				return this.resultFail('Could not cancel subscription');
@@ -762,7 +764,10 @@ export class StripeService extends BaseService {
 					const result = await this.processChargeEvent(charge);
 
 					if (!result.success) {
-						console.error(result.error);
+						console.error(`${SLACK_ALERT}: Stripe charge event processing failed: ${result.error}`, {
+							eventType: event.type,
+							chargeId: charge.id,
+						});
 
 						return this.resultFail(result.error);
 					}
@@ -786,7 +791,9 @@ export class StripeService extends BaseService {
 					console.info('Processing customer default payment method update', { customerId: customer.id });
 					const result = await this.copyCustomerDefaultPaymentMethodToSubscriptions(customer);
 					if (!result.success) {
-						console.error(result.error);
+						console.error(`${SLACK_ALERT}: Stripe customer payment method sync failed: ${result.error}`, {
+							customerId: customer.id,
+						});
 
 						return this.resultFail(result.error);
 					}
@@ -804,7 +811,10 @@ export class StripeService extends BaseService {
 
 					const result = await this.processSubscriptionEvent(subscription);
 					if (!result.success) {
-						console.error(result.error);
+						console.error(`${SLACK_ALERT}: Stripe subscription event processing failed: ${result.error}`, {
+							eventType: event.type,
+							subscriptionId: subscription.id,
+						});
 
 						return this.resultFail(result.error);
 					}
@@ -843,7 +853,7 @@ export class StripeService extends BaseService {
 			campaignId: input.campaignId,
 		});
 		if (!upsertResult.success || !upsertResult.data) {
-			console.error('Stripe subscription amount updated but database sync failed', {
+			console.error(`${SLACK_ALERT}: Stripe subscription amount updated but database sync failed`, {
 				subscriptionId: input.subscriptionId,
 				stripeSubscriptionId: input.stripeSubscriptionId,
 				error: upsertResult.success ? 'Could not sync updated subscription' : upsertResult.error,

@@ -1,19 +1,26 @@
 import { services } from '@/lib/services/services';
+import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
 	const apiKey = request.headers.get('x-api-key');
 
-	if (apiKey !== process.env.SCHEDULER_API_KEY || !process.env.SCHEDULER_API_KEY) {
-		console.error('Scheduler API key not set or wrong');
+	if (!process.env.SCHEDULER_API_KEY) {
+		console.error(`${SLACK_ALERT}: Scheduler API key not set`);
+
+		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
+	}
+
+	if (apiKey !== process.env.SCHEDULER_API_KEY) {
+		console.warn('Scheduler API key wrong');
 
 		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
 	}
 
 	if (!process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET) {
-		console.error('Payment files storage bucket env var not set');
+		console.error(`${SLACK_ALERT}: Payment files storage bucket env var not set`);
 
-		return NextResponse.json({ ok: false, error: 'Internal server errororized' }, { status: 500 });
+		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 
 	const service = services.createPaymentFileImport(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
@@ -21,7 +28,7 @@ export const POST = async (request: NextRequest) => {
 	try {
 		const result = await service.importPaymentFiles();
 		if (!result.success) {
-			console.error(`Payment files import failed: ${result.error}`, { result });
+			console.error(`${SLACK_ALERT}: Payment files import failed: ${result.error}`, { result });
 
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
@@ -35,7 +42,7 @@ export const POST = async (request: NextRequest) => {
 
 		return NextResponse.json(result.data, { status: 201 });
 	} catch (error) {
-		console.error(`Payment files import failed: ${String(error)}`, { error });
+		console.error(`${SLACK_ALERT}: Payment files import failed: ${String(error)}`, { error });
 
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}

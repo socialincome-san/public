@@ -67,6 +67,13 @@ gcloud projects add-iam-policy-binding social-income-staging \
   --condition=None
 ```
 
+```
+gcloud projects add-iam-policy-binding social-income-staging \
+  --member="serviceAccount:terraform-deployer@social-income-staging.iam.gserviceaccount.com" \
+  --role="roles/monitoring.admin" \
+  --condition=None
+```
+
 ## Step 2: Create state bucket and assign roles
 
 ```
@@ -116,3 +123,31 @@ need to run the terraform apply command without the docker build step.
 It can be that the apply fails the first few times because the
 activation of some required GCP services (APIs) takes some time. Also,
 you will have to give access to the terraform deployer for the domain.
+
+## Slack alerts
+
+When something must not fail silently (Stripe webhooks, payment imports,
+scheduler jobs), the app logs `SLACK_ALERT: ...` with `console.error`.
+The token `SLACK_ALERT` is a shared TypeScript constant so the log text
+stays identical.
+
+Cloud Run writes those logs to Cloud Logging. Terraform creates a
+log-based alert that searches for `SLACK_ALERT` and pages the Slack
+channel already connected in the Cloud Console
+(`#social-income-monitoring`). The Slack message title includes
+`(staging)` or `(prod)`.
+
+At most one Slack message is sent every 5 minutes.
+
+To test after deploy, open:
+
+`https://<host>/api/v1/slack-alert-test?key=<SCHEDULER_API_KEY>`
+
+### One-time setup per GCP project
+
+1. In Cloud Monitoring, add a Slack notification channel for
+   `#social-income-monitoring` and authorize the workspace.
+2. Invite the Google Cloud Monitoring app to that Slack channel.
+3. Grant `roles/monitoring.admin` to the Terraform deployer (see Step
+   1). Terraform only attaches the alert policy to that existing
+   channel.

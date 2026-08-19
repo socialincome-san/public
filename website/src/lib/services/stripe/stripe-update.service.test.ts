@@ -1,4 +1,5 @@
 import { PrismaClient, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/client';
+import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import type { CampaignReadService } from '../campaign/campaign-read.service';
 import type { ContributionWriteService } from '../contribution/contribution-write.service';
 import type { ContributorReadService } from '../contributor/contributor-read.service';
@@ -181,7 +182,13 @@ describe('StripeService.updateContributorSubscriptionAmount', () => {
 		});
 
 		expect(result.success).toBe(false);
-		expect(consoleError).toHaveBeenCalled();
+		expect(consoleError).toHaveBeenCalledWith(
+			`${SLACK_ALERT}: Stripe subscription amount updated but database sync failed`,
+			expect.objectContaining({
+				subscriptionId: 'sub_db_1',
+				stripeSubscriptionId: 'sub_stripe_1',
+			}),
+		);
 		expect(subscriptionsUpdate).toHaveBeenCalled();
 	});
 
@@ -224,7 +231,13 @@ describe('StripeService.updateContributorSubscriptionAmount', () => {
 		});
 
 		expect(result.success).toBe(false);
-		expect(consoleError).toHaveBeenCalled();
+		expect(consoleError).toHaveBeenCalledWith(
+			`${SLACK_ALERT}: Stripe subscription amount updated but database sync failed`,
+			expect.objectContaining({
+				subscriptionId: 'sub_db_1',
+				stripeSubscriptionId: 'sub_stripe_1',
+			}),
+		);
 		expect(pricesCreate).not.toHaveBeenCalled();
 		expect(subscriptionsUpdate).not.toHaveBeenCalled();
 	});
