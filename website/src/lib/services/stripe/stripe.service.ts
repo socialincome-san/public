@@ -161,7 +161,7 @@ export class StripeService extends BaseService {
 				}
 			}
 
-			const campaignResult = await this.campaignReadService.getFallbackCampaignForProgram(input.programId);
+			const campaignResult = await this.campaignReadService.getDefaultCampaignForProgram(input.programId);
 			if (!campaignResult.success) {
 				return this.resultFail(campaignResult.error);
 			}
@@ -724,7 +724,7 @@ export class StripeService extends BaseService {
 				await this.db.subscription.update({
 					where: { id: subscription.id },
 					data: {
-						status: lifecycle?.status ?? SubscriptionStatus.canceled,
+						status: lifecycle?.status ?? SubscriptionStatus.ended,
 						canceledAt: lifecycle?.canceledAt ?? resolveStripeSubscriptionCanceledAt(stripeSubscription),
 						cancellationReason: input.reason,
 					},

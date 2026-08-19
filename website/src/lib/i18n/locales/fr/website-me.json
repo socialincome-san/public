@@ -61,8 +61,8 @@
 		"date": "Date",
 		"created": "Créé",
 		"updated": "Mis à jour",
-		"currency": "Devise",
-		"campaign": "Campagne",
+		"payment-type": "Type de paiement",
+		"attribution": "Attribution",
 		"sources": {
 			"benevity": "Benevity",
 			"cash": "Cash",

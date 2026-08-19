@@ -35,6 +35,7 @@ export default async function ManagementLayout({ children }: ManagementLayoutPro
 		// Organization access–based
 		{ href: `/portal/management/contributors`, label: 'Contributors' },
 		{ href: `/portal/management/contributions`, label: 'Contributions' },
+		{ href: `/portal/management/subscriptions`, label: 'Subscriptions' },
 		{ href: `/portal/management/donation-certificates`, label: 'Donation Certificates' },
 		{ href: `/portal/management/campaigns`, label: 'Campaigns' },
 	];

@@ -22,6 +22,7 @@ import {
 	ContributorContributionSummary,
 	YourContributionsPaginatedTableView,
 	YourContributionsTableQuery,
+	YourContributionsTableViewRow,
 } from './contribution.types';
 
 export class ContributionReadService extends BaseService {
@@ -72,7 +73,7 @@ export class ContributionReadService extends BaseService {
 		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
 		const sortBy = toSortKey(query.sortBy, [
 			'amount',
-			'currency',
+			'paymentEventType',
 			'campaignTitle',
 			'createdAt',
 			'updatedAt',
@@ -81,8 +82,8 @@ export class ContributionReadService extends BaseService {
 		switch (sortBy) {
 			case 'amount':
 				return [{ amount: direction }];
-			case 'currency':
-				return [{ currency: direction }];
+			case 'paymentEventType':
+				return [{ paymentEvent: { type: direction } }];
 			case 'campaignTitle':
 				return [{ updatedAt: 'desc' }];
 			case 'createdAt':
@@ -442,6 +443,7 @@ export class ContributionReadService extends BaseService {
 						amount: true,
 						currency: true,
 						status: true,
+						paymentEvent: { select: { type: true } },
 						campaign: {
 							select: { slug: true },
 						},
@@ -457,12 +459,13 @@ export class ContributionReadService extends BaseService {
 				this.db.contribution.count({ where }),
 			]);
 
-			const tableRows = contributions.map((c) => ({
+			const tableRows: YourContributionsTableViewRow[] = contributions.map((c) => ({
 				createdAt: c.createdAt,
 				updatedAt: c.updatedAt,
 				amount: c.amount ? Number(c.amount) : 0,
 				currency: c.currency ?? '',
 				campaignTitle: c.campaign?.slug ? getStoryblokCampaignTitleForSlug(campaignStories, c.campaign.slug) : '',
+				paymentEventType: c.paymentEvent?.type ?? null,
 				status: c.status,
 			}));
 			if (sortByCampaignTitle) {

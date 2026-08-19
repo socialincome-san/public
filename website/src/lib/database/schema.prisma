@@ -95,7 +95,6 @@ enum DonationInterval {
 
 enum SubscriptionStatus {
   active
-  canceled
   ended
 }
 
@@ -927,6 +926,9 @@ model Campaign {
   currency               Currency @map("currency")
   additionalAmountChf    Decimal? @map("additional_amount_chf") @db.Decimal(12, 4)
   endDate                DateTime @map("end_date") @db.Timestamptz(3)
+  /// Each program should have exactly one default campaign.
+  isDefault              Boolean  @default(false) @map("is_default")
+  /// There should be exactly one fallback campaign in total.
   isFallback             Boolean  @default(false) @map("is_fallback")
   slug                   String?  @unique @map("slug")
   programId              String   @map("program_id")

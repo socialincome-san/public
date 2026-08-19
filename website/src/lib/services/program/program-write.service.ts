@@ -98,11 +98,9 @@ export class ProgramWriteService extends BaseService {
 
 			await this.db.campaign.create({
 				data: {
-					title: `${program.name} - Default Campaign`,
-					description: `Default active campaign for ${program.name}.`,
 					currency: Currency.CHF,
 					endDate: defaultCampaignEndDate,
-					isFallback: true,
+					isDefault: true,
 					program: { connect: { id: program.id } },
 				},
 			});

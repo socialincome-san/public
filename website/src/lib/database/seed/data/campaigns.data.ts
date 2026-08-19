@@ -12,6 +12,7 @@ export const campaignsData: Campaign[] = [
 		programId: 'program-si-core-sl',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
+		isDefault: true,
 		isFallback: true,
 	},
 	{
@@ -25,6 +26,7 @@ export const campaignsData: Campaign[] = [
 		programId: 'program-si-core-sl',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
+		isDefault: false,
 		isFallback: false,
 	},
 	{
@@ -38,6 +40,7 @@ export const campaignsData: Campaign[] = [
 		programId: 'program-si-core-sl',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
+		isDefault: false,
 		isFallback: false,
 	},
 	{
@@ -51,7 +54,8 @@ export const campaignsData: Campaign[] = [
 		programId: 'program-si-women-support-sl',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
-		isFallback: true,
+		isDefault: true,
+		isFallback: false,
 	},
 	{
 		id: 'campaign-si-education-sl-default',
@@ -64,7 +68,8 @@ export const campaignsData: Campaign[] = [
 		programId: 'program-si-education-sl',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
-		isFallback: true,
+		isDefault: true,
+		isFallback: false,
 	},
 	{
 		id: 'campaign-si-livelihood-gh-default',
@@ -77,7 +82,8 @@ export const campaignsData: Campaign[] = [
 		programId: 'program-si-livelihood-gh',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
-		isFallback: true,
+		isDefault: true,
+		isFallback: false,
 	},
 	{
 		id: 'campaign-si-education-gh-default',
@@ -90,7 +96,8 @@ export const campaignsData: Campaign[] = [
 		programId: 'program-si-education-gh',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
-		isFallback: true,
+		isDefault: true,
+		isFallback: false,
 	},
 	{
 		id: 'campaign-si-resilience-lr-default',
@@ -103,7 +110,8 @@ export const campaignsData: Campaign[] = [
 		programId: 'program-si-resilience-lr',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
-		isFallback: true,
+		isDefault: true,
+		isFallback: false,
 	},
 	{
 		id: 'campaign-si-health-lr-default',
@@ -116,7 +124,8 @@ export const campaignsData: Campaign[] = [
 		programId: 'program-si-health-lr',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
-		isFallback: true,
+		isDefault: true,
+		isFallback: false,
 	},
 	{
 		id: 'campaign-somaha-community-lr-default',
@@ -129,6 +138,7 @@ export const campaignsData: Campaign[] = [
 		programId: 'program-somaha-community-lr',
 		createdAt: new Date('2025-01-01T13:00:00.000Z'),
 		updatedAt: null,
-		isFallback: true,
+		isDefault: true,
+		isFallback: false,
 	},
 ];
