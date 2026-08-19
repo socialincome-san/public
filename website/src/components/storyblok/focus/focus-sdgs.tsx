@@ -72,11 +72,7 @@ export const FocusSdgs = ({ values = [], label, layout = 'stacked' }: Props) => 
 
 	return (
 		<div
-			className={
-				layout === 'stacked'
-					? 'flex flex-col gap-0'
-					: 'grid gap-3 py-4 sm:grid-cols-[140px_1fr] sm:items-center'
-			}
+			className={layout === 'stacked' ? 'flex flex-col gap-0' : 'grid gap-3 py-4 sm:grid-cols-[140px_1fr] sm:items-center'}
 		>
 			{layout === 'stacked' ? (
 				<>

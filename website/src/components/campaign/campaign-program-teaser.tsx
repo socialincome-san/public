@@ -8,6 +8,7 @@ import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { cn } from '@/lib/utils/cn';
 
 type Props = {
 	programId: string;
@@ -25,14 +26,16 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 	}
 
 	const programPortalSlug = programSlugResult.data;
-	const [programsResult, statsResult, targetFocusesResult, focusStoriesResult, translator, rates] = await Promise.all([
-		services.storyblok.getPrograms(lang),
-		services.read.program.getPublicProgramStatsById(programId),
-		services.read.program.getPublicTargetFocusesByProgramId(programId),
-		services.storyblok.getFocuses(lang),
-		Translator.getInstance({ language: lang, namespaces: ['website-campaign', 'website-common'] }),
-		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
-	]);
+	const [programsResult, statsResult, targetFocusesResult, localPartnersResult, focusStoriesResult, translator, rates] =
+		await Promise.all([
+			services.storyblok.getPrograms(lang),
+			services.read.program.getPublicProgramStatsById(programId),
+			services.read.program.getPublicTargetFocusesByProgramId(programId),
+			services.read.localPartner.getPublicLocalPartnersByProgramId(programId),
+			services.storyblok.getFocuses(lang),
+			Translator.getInstance({ language: lang, namespaces: ['website-campaign', 'website-common'] }),
+			services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
+		]);
 	if (!programsResult.success) {
 		return null;
 	}
@@ -60,13 +63,15 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 			sdgs: focusStory?.content.sdgs ?? [],
 		};
 	});
+	const localPartners = localPartnersResult.success ? localPartnersResult.data : [];
 	const sdgValues = focuses.flatMap(({ sdgs }) => sdgs);
 	const hasFocuses = focuses.length > 0;
+	const hasLocalPartners = localPartners.length > 0;
 	const hasSdgs = sdgValues.length > 0;
 
 	return (
 		<BlockWrapper>
-			<section className="bg-card grid gap-8 rounded-2xl p-6 shadow-sm md:p-3 md:pl-10 md:grid-cols-[minmax(0,4fr)_minmax(280px,2fr)] md:items-center md:gap-12">
+			<section className="bg-card grid gap-8 rounded-2xl p-6 shadow-sm md:grid-cols-[minmax(0,4fr)_minmax(280px,2fr)] md:items-center md:gap-12 md:p-3 md:pl-10">
 				<div className="min-w-0">
 					<p className="text-muted-foreground text-sm font-medium">{translator.t('campaign.program-teaser.heading')}</p>
 					<h2 className="text-foreground mt-3 text-4xl leading-tight font-bold text-pretty">
@@ -75,7 +80,7 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 					{program.content.description.trim() ? (
 						<p className="text-muted-foreground mt-5 max-w-2xl text-base leading-7">{program.content.description.trim()}</p>
 					) : null}
-					{hasFocuses || hasSdgs ? (
+					{hasFocuses || hasLocalPartners || hasSdgs ? (
 						<div className="border-border mt-8 border-y">
 							{hasFocuses ? (
 								<div className="grid gap-3 py-4 sm:grid-cols-[140px_1fr] sm:items-center">
@@ -89,8 +94,27 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 									</div>
 								</div>
 							) : null}
+							{hasLocalPartners ? (
+								<div
+									className={cn(
+										'grid gap-3 py-4 sm:grid-cols-[140px_1fr] sm:items-center',
+										hasFocuses && 'border-border border-t',
+									)}
+								>
+									<p className="text-sm font-medium text-slate-600">
+										{translator.t('campaign.program-teaser.local-partners')}
+									</p>
+									<div className="flex flex-wrap gap-2">
+										{localPartners.map((localPartner) => (
+											<Badge key={localPartner.id} className="px-3 py-1.5 font-medium">
+												{localPartner.name}
+											</Badge>
+										))}
+									</div>
+								</div>
+							) : null}
 							{hasSdgs ? (
-								<div className={hasFocuses ? 'border-border border-t' : undefined}>
+								<div className={hasFocuses || hasLocalPartners ? 'border-border border-t' : undefined}>
 									<FocusSdgs values={sdgValues} label={translator.t('focuses-page.sdgs')} layout="row" />
 								</div>
 							) : null}
