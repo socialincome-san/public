@@ -39,3 +39,75 @@ resource "google_monitoring_alert_policy" "slack_alerts" {
 
   depends_on = [google_project_service.monitoring]
 }
+
+resource "google_monitoring_uptime_check_config" "health_ready" {
+  display_name = "Website health / DB (${var.env})"
+  timeout      = "10s"
+  period       = "60s"
+
+  http_check {
+    path         = "/api/health/ready"
+    port         = 443
+    use_ssl      = true
+    validate_ssl = true
+  }
+
+  monitored_resource {
+    type = "uptime_url"
+    labels = {
+      project_id = var.gcp_project_id
+      host       = var.website_domain
+    }
+  }
+
+  content_matchers {
+    content = "\"status\":\"ok\""
+  }
+
+  depends_on = [google_project_service.monitoring]
+}
+
+resource "google_monitoring_alert_policy" "uptime_health_ready" {
+  display_name = "Website health / DB down (${var.env})"
+  combiner     = "OR"
+
+  documentation {
+    content   = "GET https://${var.website_domain}/api/health/ready failed. Cloud Run is unreachable or Postgres did not answer SELECT 1."
+    mime_type = "text/markdown"
+  }
+
+  conditions {
+    display_name = "Uptime check failed (${var.env})"
+    condition_threshold {
+      filter          = <<-EOT
+        metric.type="monitoring.googleapis.com/uptime_check/check_passed"
+        metric.label."check_id"="${google_monitoring_uptime_check_config.health_ready.uptime_check_id}"
+        resource.type="uptime_url"
+      EOT
+      duration        = "60s"
+      comparison      = "COMPARISON_GT"
+      threshold_value = 1
+
+      aggregations {
+        alignment_period     = "1200s"
+        per_series_aligner   = "ALIGN_NEXT_OLDER"
+        cross_series_reducer = "REDUCE_COUNT_FALSE"
+        group_by_fields      = ["resource.label.*"]
+      }
+
+      trigger {
+        count = 1
+      }
+    }
+  }
+
+  notification_channels = [
+    data.google_monitoring_notification_channel.slack_alerts.name,
+  ]
+
+  alert_strategy {
+    auto_close = "3600s"
+  }
+
+  depends_on = [google_project_service.monitoring]
+}

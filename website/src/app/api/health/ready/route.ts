@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/database/prisma';
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export const GET = async () => {
 	try {
 		await prisma.$queryRaw`SELECT 1`;
@@ -9,6 +11,6 @@ export const GET = async () => {
 	} catch (error) {
 		console.error('Healthcheck DB error:', error);
 
-		return NextResponse.json({ status: 'unhealthy' }, { status: 500 });
+		return NextResponse.json({ status: 'unhealthy' }, { status: 503 });
 	}
 };
