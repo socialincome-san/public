@@ -1,4 +1,3 @@
--- AlterTable
 ALTER TABLE "campaign" ADD COLUMN "is_default" BOOLEAN NOT NULL DEFAULT false;
 
 -- Backfill defaults from campaign titles

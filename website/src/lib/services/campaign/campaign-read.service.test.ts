@@ -112,9 +112,7 @@ describe('CampaignReadService public campaign preview data', () => {
 		expect(campaigns).toEqual([
 			{
 				id: 'campaign-1',
-				title: 'Holiday Fundraiser',
 				slug: 'holiday-fundraiser',
-				creatorName: 'smartive AG',
 				currency: 'CHF',
 				endDate: new Date('2025-07-15T12:00:00.000Z'),
 				goal: 10_000,
@@ -162,9 +160,7 @@ describe('CampaignReadService public campaign preview data', () => {
 		expect(campaigns).toEqual([
 			{
 				id: 'campaign-1',
-				title: 'Active Campaign',
 				slug: 'active-campaign',
-				creatorName: 'smartive AG',
 				currency: 'CHF',
 				endDate: new Date('2025-07-15T12:00:00.000Z'),
 				goal: 10_000,
@@ -172,9 +168,7 @@ describe('CampaignReadService public campaign preview data', () => {
 			},
 			{
 				id: 'campaign-2',
-				title: 'Inactive Campaign',
 				slug: 'inactive-campaign',
-				creatorName: null,
 				currency: 'EUR',
 				endDate: new Date('2025-05-01T12:00:00.000Z'),
 				goal: 10_000,
@@ -234,9 +228,7 @@ describe('CampaignReadService public campaign preview data', () => {
 		expect(campaigns).toEqual([
 			{
 				id: 'campaign-ended',
-				title: 'Ended Campaign',
 				slug: 'ended-campaign',
-				creatorName: null,
 				currency: 'EUR',
 				endDate: new Date('2025-05-01T12:00:00.000Z'),
 				goal: 10_000,
@@ -244,9 +236,7 @@ describe('CampaignReadService public campaign preview data', () => {
 			},
 			{
 				id: 'campaign-funded',
-				title: 'Funded Campaign',
 				slug: 'funded-campaign',
-				creatorName: null,
 				currency: 'CHF',
 				endDate: new Date('2025-07-15T12:00:00.000Z'),
 				goal: 500,
@@ -470,9 +460,7 @@ describe('CampaignReadService public campaign preview data', () => {
 			await service.getPublicCampaignsWithStats([
 				{
 					id: 'campaign-1',
-					title: 'Holiday Fundraiser',
 					slug: 'holiday-fundraiser',
-					creatorName: 'smartive AG',
 					currency: 'CHF',
 					endDate: new Date('2025-07-15T12:00:00.000Z'),
 					goal: 10_000,

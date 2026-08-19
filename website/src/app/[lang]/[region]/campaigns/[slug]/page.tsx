@@ -17,9 +17,8 @@ export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) =
 
 	return services.read.campaignPublicWebsite.getPageMetadata(lang as WebsiteLanguage, {
 		title: data.title,
-		metadataDescription: data.campaign.metadataDescription,
-		metadataOgImage: data.campaign.metadataOgImage,
-		metadataTwitterImage: data.campaign.metadataTwitterImage,
+		description: data.description,
+		primaryImage: data.primaryImage,
 	});
 };
 
@@ -36,6 +35,7 @@ export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlu
 			campaign={data.campaign}
 			title={data.title}
 			description={data.description}
+			creatorName={data.creatorName}
 			primaryImage={data.primaryImage}
 			campaignSlug={slug}
 			lang={lang as WebsiteLanguage}

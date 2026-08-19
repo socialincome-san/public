@@ -1,5 +1,5 @@
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
-import type { PublicCampaignCard } from '@/lib/services/campaign/campaign.types';
+import type { CampaignCmsJoin } from '@/lib/services/campaign/campaign.types';
 import { resolveCampaignsWithCmsEntries } from './campaigns-overview.server';
 
 const createStory = (portalSlug: string, storySlug: string): CampaignStory =>
@@ -11,16 +11,15 @@ const createStory = (portalSlug: string, storySlug: string): CampaignStory =>
 			portalSlug,
 			title: 'CMS title',
 			description: 'Description',
+			creatorName: 'CMS creator',
 			primaryImage: { filename: 'https://a.storyblok.com/f/109655/image.jpg', alt: 'Cover', focus: '0x0:100x100' },
 			_uid: 'uid',
 		},
 	}) as CampaignStory;
 
-const createDbCampaign = (slug: string): PublicCampaignCard => ({
+const createDbCampaign = (slug: string): CampaignCmsJoin => ({
 	id: `id-${slug}`,
-	title: 'DB title',
 	slug,
-	creatorName: null,
 	currency: 'CHF',
 	endDate: new Date('2025-12-31T00:00:00.000Z'),
 	goal: 10_000,
@@ -36,6 +35,7 @@ describe('resolveCampaignsWithCmsEntries', () => {
 
 		expect(result.campaigns).toHaveLength(1);
 		expect(result.campaigns[0]?.title).toBe('CMS title');
+		expect(result.campaigns[0]?.creatorName).toBe('CMS creator');
 		expect(result.campaigns[0]?.slug).toBe('pending-campaign');
 		expect(result.campaigns[0]?.primaryImage).toEqual({
 			filename: 'https://a.storyblok.com/f/109655/image.jpg',

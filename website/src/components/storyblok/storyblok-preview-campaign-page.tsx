@@ -41,6 +41,7 @@ export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, pr
 					campaign={campaignResult.data}
 					title={getCampaignTitle(story.content)}
 					description={story.content.description}
+					creatorName={story.content.creatorName}
 					primaryImage={story.content.primaryImage}
 					campaignSlug={story.slug}
 					lang={lang}

@@ -8,6 +8,7 @@ export type CampaignStory = ISbStoryData<Campaign>;
 export type CampaignDetailData = {
 	title: string;
 	description: string;
+	creatorName: string;
 	fullSlug: string;
 	primaryImage?: HeroHeaderImage | null;
 	campaign: CampaignPage;

@@ -1,5 +1,6 @@
 'use server';
 
+import { getCampaignPortalSlug, getStoryblokCampaignTitleForSlug } from '@/components/storyblok/campaign/campaign.utils';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { allWebsiteLanguages, defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk } from '@/lib/services/core/service-result';
@@ -29,7 +30,23 @@ export const getPublicCampaignTitleAction = async (campaignId: string) => {
 		return resultFail('Missing campaign id');
 	}
 
-	return services.read.campaign.getPublicTitleById(normalizedCampaignId);
+	const campaignReference = await services.read.campaign.getPublicReferenceById(normalizedCampaignId);
+	if (!campaignReference.success) {
+		return campaignReference;
+	}
+	const campaignStories = await services.storyblok.getCampaigns(defaultLanguage);
+	if (!campaignStories.success) {
+		return resultFail(campaignStories.error);
+	}
+	const hasCampaignStory = campaignStories.data.some(
+		(candidate) => getCampaignPortalSlug(candidate.content) === campaignReference.data.campaignPortalSlug,
+	);
+
+	return hasCampaignStory
+		? resultOk({
+				title: getStoryblokCampaignTitleForSlug(campaignStories.data, campaignReference.data.campaignPortalSlug),
+			})
+		: resultFail('Campaign not found');
 };
 
 export const getEligiblePublicSubmissionProgramsAction = async (lang: WebsiteLanguage = defaultLanguage) => {

@@ -1,13 +1,13 @@
 import { Campaign, ContributionStatus, Currency, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
-import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { nowMs } from '@/lib/utils/now';
-import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { isCampaignActive, matchesPublicCampaignActivity } from './campaign-public-activity';
 import {
+	CampaignCmsJoin,
+	CampaignCmsJoinWithStats,
 	CampaignOption,
 	CampaignPage,
 	CampaignTableEntry,
@@ -15,7 +15,6 @@ import {
 	PublicCampaignCard,
 	PublicCampaignStats,
 	PublicCampaignStatsMap,
-	PublicCampaignsWithStats,
 } from './campaign.types';
 
 export class CampaignReadService extends BaseService {
@@ -85,25 +84,11 @@ export class CampaignReadService extends BaseService {
 				where: { OR: [{ legacyFirestoreId: campaignId }, { id: campaignId }] },
 				select: {
 					id: true,
-					title: true,
-					description: true,
-					secondDescriptionTitle: true,
-					secondDescription: true,
-					thirdDescriptionTitle: true,
-					thirdDescription: true,
-					linkWebsite: true,
-					linkFacebook: true,
-					linkInstagram: true,
 					goal: true,
 					currency: true,
 					additionalAmountChf: true,
 					endDate: true,
 					slug: true,
-					metadataDescription: true,
-					metadataOgImage: true,
-					metadataTwitterImage: true,
-					creatorName: true,
-					creatorEmail: true,
 					program: { select: { id: true, name: true } },
 					createdAt: true,
 					updatedAt: true,
@@ -154,25 +139,11 @@ export class CampaignReadService extends BaseService {
 				where: { slug: normalizedSlug },
 				select: {
 					id: true,
-					title: true,
-					description: true,
-					secondDescriptionTitle: true,
-					secondDescription: true,
-					thirdDescriptionTitle: true,
-					thirdDescription: true,
-					linkWebsite: true,
-					linkFacebook: true,
-					linkInstagram: true,
 					goal: true,
 					currency: true,
 					additionalAmountChf: true,
 					endDate: true,
 					slug: true,
-					metadataDescription: true,
-					metadataOgImage: true,
-					metadataTwitterImage: true,
-					creatorName: true,
-					creatorEmail: true,
 					program: { select: { id: true, name: true } },
 					createdAt: true,
 					updatedAt: true,
@@ -212,7 +183,7 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
-	async getPublicTitleById(campaignId: string): Promise<ServiceResult<{ title: string }>> {
+	async getPublicReferenceById(campaignId: string): Promise<ServiceResult<{ campaignPortalSlug: string }>> {
 		try {
 			const normalizedId = campaignId.trim();
 			if (!normalizedId) {
@@ -223,27 +194,25 @@ export class CampaignReadService extends BaseService {
 				where: {
 					AND: [{ OR: [{ id: normalizedId }, { legacyFirestoreId: normalizedId }] }, { slug: { not: null } }],
 				},
-				select: { title: true },
+				select: { slug: true },
 			});
 
-			if (!campaign) {
+			if (!campaign?.slug) {
 				return this.resultFail('Campaign not found');
 			}
 
-			return this.resultOk({ title: campaign.title });
+			return this.resultOk({ campaignPortalSlug: campaign.slug });
 		} catch (error) {
 			console.error(error);
 
-			return this.resultFail(`Could not fetch campaign title: ${JSON.stringify(error)}`);
+			return this.resultFail(`Could not fetch campaign reference: ${JSON.stringify(error)}`);
 		}
 	}
 
-	private async mapPublicCampaignCards(
+	private async mapCampaignsForCmsJoin(
 		campaigns: {
 			id: string;
-			title: string;
 			slug: string | null;
-			creatorName: string | null;
 			currency: Currency;
 			endDate: Date;
 			goal: unknown;
@@ -251,9 +220,9 @@ export class CampaignReadService extends BaseService {
 			contributions: { amountChf: unknown }[];
 		}[],
 		activity: PublicCampaignActivity,
-	): Promise<PublicCampaignCard[]> {
+	): Promise<CampaignCmsJoin[]> {
 		const exchangeRateCache = new Map<Currency, number | null>();
-		const publicCampaigns: PublicCampaignCard[] = [];
+		const publicCampaigns: CampaignCmsJoin[] = [];
 
 		for (const campaign of campaigns) {
 			const campaignSlug = campaign.slug?.trim();
@@ -282,9 +251,7 @@ export class CampaignReadService extends BaseService {
 
 			publicCampaigns.push({
 				id: campaign.id,
-				title: campaign.title,
 				slug: campaignSlug,
-				creatorName: campaign.creatorName,
 				currency: campaign.currency,
 				endDate: campaign.endDate,
 				goal: Number.isFinite(goal) ? goal : null,
@@ -295,9 +262,7 @@ export class CampaignReadService extends BaseService {
 		return publicCampaigns;
 	}
 
-	async getCampaignsForCmsJoin(options?: {
-		activity?: PublicCampaignActivity;
-	}): Promise<ServiceResult<PublicCampaignCard[]>> {
+	async getCampaignsForCmsJoin(options?: { activity?: PublicCampaignActivity }): Promise<ServiceResult<CampaignCmsJoin[]>> {
 		const activity = options?.activity ?? 'active';
 
 		try {
@@ -307,9 +272,7 @@ export class CampaignReadService extends BaseService {
 				},
 				select: {
 					id: true,
-					title: true,
 					slug: true,
-					creatorName: true,
 					currency: true,
 					endDate: true,
 					goal: true,
@@ -322,7 +285,7 @@ export class CampaignReadService extends BaseService {
 				orderBy: [{ createdAt: 'desc' }],
 			});
 
-			return this.resultOk(await this.mapPublicCampaignCards(campaigns, activity));
+			return this.resultOk(await this.mapCampaignsForCmsJoin(campaigns, activity));
 		} catch (error) {
 			console.error(error);
 
@@ -332,7 +295,7 @@ export class CampaignReadService extends BaseService {
 
 	async getAllCampaignsForCmsJoinWithStats(options?: {
 		activity?: PublicCampaignActivity;
-	}): Promise<ServiceResult<PublicCampaignsWithStats>> {
+	}): Promise<ServiceResult<CampaignCmsJoinWithStats>> {
 		const campaignsResult = await this.getCampaignsForCmsJoin(options);
 		if (!campaignsResult.success) {
 			return this.resultFail(campaignsResult.error);
@@ -390,7 +353,7 @@ export class CampaignReadService extends BaseService {
 		}
 	}
 
-	async getPublicCampaignsWithStats(campaigns: PublicCampaignCard[]): Promise<ServiceResult<PublicCampaignsWithStats>> {
+	async getPublicCampaignsWithStats(campaigns: CampaignCmsJoin[]): Promise<ServiceResult<CampaignCmsJoinWithStats>> {
 		const campaignIds = [...new Set(campaigns.map((campaign) => campaign.id))];
 		const statsResult = await this.getPublicCampaignStatsByIds(campaignIds);
 
@@ -436,15 +399,12 @@ export class CampaignReadService extends BaseService {
 			}
 
 			const campaigns = await this.db.campaign.findMany({
-				where: { programId: { in: programIds } },
-				select: { id: true, title: true },
-				orderBy: { title: 'asc' },
+				where: { programId: { in: programIds }, slug: { not: null } },
+				select: { id: true, slug: true },
+				orderBy: { slug: 'asc' },
 			});
 
-			const options = campaigns.map((campaign) => ({
-				id: campaign.id,
-				name: campaign.title,
-			}));
+			const options = campaigns.flatMap((campaign) => (campaign.slug ? [{ id: campaign.id, name: campaign.slug }] : []));
 
 			return this.resultOk(options);
 		} catch (error) {
@@ -469,12 +429,10 @@ export class CampaignReadService extends BaseService {
 			}
 
 			const campaigns = await this.db.campaign.findMany({
-				where: { programId: { in: programIds } },
+				where: { programId: { in: programIds }, slug: { not: null } },
 				select: {
 					id: true,
-					legacyFirestoreId: true,
-					title: true,
-					description: true,
+					slug: true,
 					currency: true,
 					endDate: true,
 					goal: true,
@@ -491,6 +449,10 @@ export class CampaignReadService extends BaseService {
 			const exchangeRateCache = new Map<Currency, number | null>();
 			const entries: CampaignTableEntry[] = [];
 			for (const campaign of campaigns) {
+				const slug = campaign.slug?.trim();
+				if (!slug) {
+					continue;
+				}
 				const { amountCollected } = await this.computeCollectedAmount(
 					campaign.contributions,
 					campaign.additionalAmountChf,
@@ -501,9 +463,7 @@ export class CampaignReadService extends BaseService {
 
 				entries.push({
 					id: campaign.id,
-					link: this.getCampaignLink(campaign.id, campaign.legacyFirestoreId),
-					title: campaign.title,
-					description: campaign.description,
+					slug,
 					currency: campaign.currency,
 					endDate: campaign.endDate,
 					isActive: isCampaignActive({
@@ -564,13 +524,5 @@ export class CampaignReadService extends BaseService {
 
 			return this.resultFail(`Could not fetch campaign for program: ${JSON.stringify(error)}`);
 		}
-	}
-
-	private getCampaignLink(id: string, legacyFirestoreId: string | null): string {
-		const base = (process.env.BASE_URL ?? '').replace(TRAILING_SLASHES_REGEX, '');
-
-		const campaignId = legacyFirestoreId && legacyFirestoreId.length > 0 ? legacyFirestoreId : id;
-
-		return `${base}/${defaultLanguage}/${defaultRegion}/campaign/${campaignId}`;
 	}
 }
