@@ -161,7 +161,7 @@ export class StripeService extends BaseService {
 				}
 			}
 
-			const campaignResult = await this.campaignReadService.getActiveCampaignForProgram(input.programId);
+			const campaignResult = await this.campaignReadService.getDefaultCampaignForProgram(input.programId);
 			if (!campaignResult.success) {
 				return this.resultFail(campaignResult.error);
 			}

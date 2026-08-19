@@ -12,6 +12,10 @@ export type CampaignTableViewRow = {
 	createdAt: Date;
 };
 
+export type CampaignTableEntry = CampaignTableViewRow & {
+	programPortalSlug: string | null;
+};
+
 export type CampaignTableQuery = {
 	page: number;
 	pageSize: number;
@@ -25,7 +29,7 @@ export type CampaignPaginatedTableView = {
 	totalCount: number;
 };
 
-export type CampaignPayload = {
+type CampaignPayload = {
 	id: string;
 	title: string;
 	description: string;
@@ -42,9 +46,6 @@ export type CampaignPayload = {
 	currency: Currency;
 	additionalAmountChf?: number | null;
 	endDate: Date;
-	isActive: boolean;
-	public?: boolean | null;
-	featured?: boolean | null;
 	slug?: string | null;
 	metadataDescription?: string | null;
 	metadataOgImage?: string | null;

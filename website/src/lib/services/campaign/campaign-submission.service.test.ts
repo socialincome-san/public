@@ -59,8 +59,6 @@ const baseFields = {
 describe('CampaignSubmissionService', () => {
 	type CampaignCreateInput = {
 		data: {
-			isActive: boolean;
-			public: boolean | null;
 			slug: string;
 			goal: number | null;
 			creatorName: string | null;
@@ -179,8 +177,6 @@ describe('CampaignSubmissionService', () => {
 		}
 		expect(create).toHaveBeenCalledTimes(1);
 		const createArg = create.mock.calls[0]?.[0];
-		expect(createArg?.data.isActive).toBe(true);
-		expect(createArg?.data.public).toBe(true);
 		expect(createArg?.data.slug).toBe('my-campaign');
 		expect(createArg?.data.creatorName).toBe('Alex Creator');
 		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
@@ -188,6 +184,7 @@ describe('CampaignSubmissionService', () => {
 				slug: 'my-campaign',
 				title: 'My Campaign',
 				portalSlug: 'my-campaign',
+				public: true,
 				creatorName: 'Alex Creator',
 				quote: 'Thank you for your support!',
 			}),
@@ -293,7 +290,7 @@ describe('CampaignSubmissionService', () => {
 	});
 
 	test('submit downloads and re-uploads a default image from the defaults folder', async () => {
-		const { service, create, getAsset, downloadAssetBuffer, uploadAsset } = createService();
+		const { service, create, createPublishedCampaignStory, getAsset, downloadAssetBuffer, uploadAsset } = createService();
 		getAsset.mockResolvedValue({
 			id: 99,
 			filename: 'https://a.storyblok.com/f/109655/default.png',
@@ -314,8 +311,12 @@ describe('CampaignSubmissionService', () => {
 		expect(downloadAssetBuffer).toHaveBeenCalledWith('https://a.storyblok.com/f/109655/default.png');
 		expect(uploadAsset).toHaveBeenCalled();
 		const createArg = create.mock.calls[0]?.[0];
-		expect(createArg?.data.public).toBe(false);
 		expect(createArg?.data.goal).toBeNull();
+		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
+			expect.objectContaining({
+				public: false,
+			}),
+		);
 	});
 
 	test('submit rejects default images outside the defaults folder', async () => {
