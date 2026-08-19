@@ -79,8 +79,9 @@ describe('CampaignSubmissionService', () => {
 			isProgramEligibleForPublicSubmission: jest.fn().mockResolvedValue({ success: true, data: true }),
 		} as unknown as ProgramPublicSubmissionService;
 
+		const validateSlugUniqueness = jest.fn().mockResolvedValue({ success: true, data: undefined });
 		const campaignValidationService = {
-			validateSlugUniqueness: jest.fn().mockResolvedValue({ success: true, data: undefined }),
+			validateSlugUniqueness,
 		} as unknown as CampaignValidationService;
 
 		const deleteAsset = jest.fn().mockResolvedValue(undefined);
@@ -120,6 +121,7 @@ describe('CampaignSubmissionService', () => {
 			deleteAsset,
 			createPublishedCampaignStory,
 			campaignValidationService,
+			validateSlugUniqueness,
 			programPublicSubmissionService,
 			storyblokManagementService,
 			getAsset,
@@ -387,8 +389,8 @@ describe('CampaignSubmissionService', () => {
 	});
 
 	test('submit appends a uuid when numbered slug suffixes are exhausted', async () => {
-		const { service, create, campaignValidationService } = createService();
-		(campaignValidationService.validateSlugUniqueness as jest.Mock).mockResolvedValue({
+		const { service, create, validateSlugUniqueness } = createService();
+		validateSlugUniqueness.mockResolvedValue({
 			success: false,
 			error: 'taken',
 		});
@@ -402,7 +404,7 @@ describe('CampaignSubmissionService', () => {
 		}
 		const createArg = create.mock.calls[0]?.[0];
 		expect(createArg?.data.slug).toMatch(uuidSlug);
-		expect(campaignValidationService.validateSlugUniqueness).toHaveBeenCalledTimes(20);
+		expect(validateSlugUniqueness).toHaveBeenCalledTimes(20);
 	});
 
 	test('submit returns slug-exists when campaign create hits a slug unique constraint', async () => {
