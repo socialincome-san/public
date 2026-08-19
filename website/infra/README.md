@@ -124,30 +124,10 @@ It can be that the apply fails the first few times because the
 activation of some required GCP services (APIs) takes some time. Also,
 you will have to give access to the terraform deployer for the domain.
 
-## Slack alerts
+## Step 9: Connect Slack to Cloud Monitoring
 
-When something must not fail silently (Stripe webhooks, payment imports,
-scheduler jobs), the app logs `SLACK_ALERT: ...` with `console.error`.
-The token `SLACK_ALERT` is a shared TypeScript constant so the log text
-stays identical.
-
-Cloud Run writes those logs to Cloud Logging. Terraform creates a
-log-based alert that searches for `SLACK_ALERT` and pages the Slack
-channel already connected in the Cloud Console
-(`#social-income-monitoring`). The Slack message title includes
-`(staging)` or `(prod)`.
-
-At most one Slack message is sent every 5 minutes.
-
-To test after deploy, open:
-
-`https://<host>/api/v1/slack-alert-test?key=<SCHEDULER_API_KEY>`
-
-### One-time setup per GCP project
-
-1. In Cloud Monitoring, add a Slack notification channel for
-   `#social-income-monitoring` and authorize the workspace.
-2. Invite the Google Cloud Monitoring app to that Slack channel.
-3. Grant `roles/monitoring.admin` to the Terraform deployer (see Step
-   1). Terraform only attaches the alert policy to that existing
-   channel.
+In Cloud Monitoring, add a Slack notification channel for
+`#social-income-monitoring` and authorize the workspace. Invite the
+Google Cloud Monitoring app to that channel. Terraform attaches the
+alert policy to this existing channel (`roles/monitoring.admin` is
+granted in Step 1).
