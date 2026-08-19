@@ -17,6 +17,7 @@ import { ContributionWriteService } from './contribution/contribution-write.serv
 import { ContributorReadService } from './contributor/contributor-read.service';
 import { ContributorValidationService } from './contributor/contributor-validation.service';
 import { ContributorWriteService } from './contributor/contributor-write.service';
+import { CountryGeoJsonService } from './country/country-geojson.service';
 import { CountryReadService } from './country/country-read.service';
 import { CountryValidationService } from './country/country-validation.service';
 import { CountryWriteService } from './country/country-write.service';
@@ -176,6 +177,7 @@ const contributorWrite = new ContributorWriteService(
 	contributorValidation,
 	contactRelations,
 );
+const countryGeoJson = new CountryGeoJsonService(prisma);
 const messagingRecipients = new MessagingRecipientsService(prisma, contributorRead, recipientRead, localPartnerRead);
 const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
 const campaignValidation = new CampaignValidationService(prisma);
@@ -328,6 +330,7 @@ export const services = {
 	surveyImpact,
 	transparency,
 	githubApi,
+	countryGeoJson,
 	twilioOtp,
 	messagingTwilioTemplates,
 	messagingDispatch,
