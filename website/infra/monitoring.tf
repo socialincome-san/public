@@ -12,12 +12,8 @@ resource "google_monitoring_alert_policy" "slack_alerts" {
 
   documentation {
     mime_type = "text/markdown"
-    subject   = "SLACK_ALERT (${var.env}): $${log.extracted_label.message}"
-    content   = <<-EOT
-      **SLACK_ALERT** on ${google_cloud_run_service.google_cloud_run_service.name}
-
-      $${log.extracted_label.message}
-    EOT
+    subject   = "SLACK_ALERT (${var.env})"
+    content   = "$${log.extracted_label.message}"
   }
 
   conditions {
