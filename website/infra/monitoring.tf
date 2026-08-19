@@ -8,7 +8,7 @@ data "google_monitoring_notification_channel" "slack_alerts" {
 resource "google_monitoring_alert_policy" "slack_alerts" {
   display_name = "Cloud Run SLACK_ALERT logs (${var.env})"
   combiner     = "OR"
-  enabled      = true
+  enabled      = var.env == "prod"
 
   documentation {
     mime_type = "text/markdown"
