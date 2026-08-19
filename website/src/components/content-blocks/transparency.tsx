@@ -1,4 +1,5 @@
 import { BlockWrapper } from '@/components/block-wrapper';
+import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
 import { CountriesSection } from '@/components/transparency/countries-section';
 import { SummarySection } from '@/components/transparency/summary-section';
 import { TimeSeriesSection } from '@/components/transparency/time-series-section';
@@ -59,6 +60,9 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 
 	return (
 		<BlockWrapper className="space-y-12" {...storyblokEditable(blok as SbBlokData)}>
+			{blok.donationGlobe?.map((globeBlok) => (
+				<DonationGlobeBlock key={globeBlok._uid} blok={globeBlok} lang={lang} />
+			))}
 			<SummarySection
 				inflows={inflows}
 				outflows={outflows}
