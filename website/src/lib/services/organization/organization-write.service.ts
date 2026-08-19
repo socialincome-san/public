@@ -1,5 +1,4 @@
 import { PrismaClient, ProgramPermission, UserRole } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
@@ -18,9 +17,8 @@ export class OrganizationWriteService extends BaseService {
 		private readonly userService: UserReadService,
 		private readonly organizationAccessService: OrganizationAccessService,
 		private readonly organizationValidationService: OrganizationValidationService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildOrganizationAccessRows(
@@ -77,7 +75,7 @@ export class OrganizationWriteService extends BaseService {
 				operatedProgramIds: [],
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not create organization');
 		}
@@ -181,7 +179,7 @@ export class OrganizationWriteService extends BaseService {
 				operatedProgramIds: validatedInput.operatedProgramIds,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not create organization. Please try again later.');
 		}
@@ -266,7 +264,7 @@ export class OrganizationWriteService extends BaseService {
 				operatedProgramIds: validatedInput.operatedProgramIds,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not update organization. Please try again later.');
 		}
@@ -323,7 +321,7 @@ export class OrganizationWriteService extends BaseService {
 
 			return this.resultOk(updatedOrganization);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not rename organization. Please try again later.');
 		}
@@ -365,7 +363,7 @@ export class OrganizationWriteService extends BaseService {
 
 			return this.resultOk(undefined);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not delete organization. Please try again later.');
 		}

@@ -66,10 +66,9 @@ describe('ExchangeRateImportService ETH import', () => {
 		const create = jest.fn().mockResolvedValue({});
 		const createMany = jest.fn();
 		const db = { exchangeRate: { findMany, create, createMany } };
-		const logger = { info: jest.fn(), error: jest.fn() };
-		const service = new ExchangeRateImportService(db as unknown as PrismaClient, logger as never);
+		const service = new ExchangeRateImportService(db as unknown as PrismaClient);
 
-		return { create, createMany, findMany, logger, service };
+		return { create, createMany, findMany, service };
 	};
 
 	test('converts ETH/USD into ETH per CHF and stores it for today', async () => {
@@ -145,7 +144,8 @@ describe('ExchangeRateImportService ETH import', () => {
 	});
 
 	test('keeps the fiat import successful when Etherscan fails', async () => {
-		const { create, logger, service } = setup([{ currency: 'USD', rate: { toNumber: () => 1.12 } }]);
+		const { create, service } = setup([{ currency: 'USD', rate: { toNumber: () => 1.12 } }]);
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
 		global.fetch = jest.fn().mockResolvedValue({
 			ok: false,
 			status: 503,
@@ -154,6 +154,7 @@ describe('ExchangeRateImportService ETH import', () => {
 
 		await expect(service.import()).resolves.toEqual({ success: true, data: undefined });
 		expect(create).not.toHaveBeenCalled();
-		expect(logger.error).toHaveBeenCalled();
+		expect(consoleError).toHaveBeenCalled();
+		consoleError.mockRestore();
 	});
 });

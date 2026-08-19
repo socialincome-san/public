@@ -7,7 +7,6 @@ import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { logger } from '@/lib/utils/logger';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import LocalPartnersForm from './local-partners-form';
@@ -39,7 +38,7 @@ export default function LocalPartnersTable({
 	const onError = (error: unknown) => {
 		const errorMessage = retrieveErrorMessage(error);
 		setErrorMessage(`Error saving local partner: ${errorMessage}`);
-		logger.error('Local Partner Form Error', { error });
+		console.error('Local Partner Form Error', { error });
 	};
 
 	return (

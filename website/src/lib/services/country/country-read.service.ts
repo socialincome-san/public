@@ -1,6 +1,5 @@
 import { CountryCode, NetworkTechnology, Prisma, PrismaClient, SanctionRegime } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
-import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -24,9 +23,8 @@ export class CountryReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildCountryOrderBy(query: CountryTableQuery): Prisma.CountryOrderByWithRelationInput[] {
@@ -114,7 +112,7 @@ export class CountryReadService extends BaseService {
 					: null,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get country: ${JSON.stringify(error)}`);
 		}
@@ -133,7 +131,7 @@ export class CountryReadService extends BaseService {
 
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch country table view: ${JSON.stringify(error)}`);
 		}
@@ -199,7 +197,7 @@ export class CountryReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch countries: ${JSON.stringify(error)}`);
 		}
@@ -385,7 +383,7 @@ export class CountryReadService extends BaseService {
 
 			return this.resultOk({ rows });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch program country feasibility: ${JSON.stringify(error)}`);
 		}
@@ -412,7 +410,7 @@ export class CountryReadService extends BaseService {
 
 			return this.resultOk(countryStats);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load country stats: ${JSON.stringify(error)}`);
 		}
@@ -454,7 +452,7 @@ export class CountryReadService extends BaseService {
 
 			return this.resultOk(statsByIsoCode);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load country stats map: ${JSON.stringify(error)}`);
 		}

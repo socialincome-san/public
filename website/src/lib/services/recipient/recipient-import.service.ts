@@ -1,6 +1,5 @@
 import { Session } from '@/lib/firebase/current-account';
 import { parseCsvOptionalFields, parseCsvText } from '@/lib/utils/csv';
-import { logger } from '@/lib/utils/logger';
 import { ServiceResult } from '../core/base.types';
 import { resultFail, resultOk } from '../core/service-result';
 import { RecipientFormCreateInput } from './recipient-form-input';
@@ -11,7 +10,6 @@ export class RecipientImportService {
 	constructor(
 		private readonly recipientWriteService: RecipientWriteService,
 		private readonly recipientValidationService: RecipientValidationService,
-		private readonly loggerInstance = logger,
 	) {}
 
 	private mapRowToRecipient(rowNumber: number, row: Record<string, string>): ServiceResult<RecipientFormCreateInput> {
@@ -112,7 +110,7 @@ export class RecipientImportService {
 
 			return resultOk({ created: validatedRecipients.length });
 		} catch (error) {
-			this.loggerInstance.error(error);
+			console.error(error);
 
 			return resultFail(error instanceof Error ? error.message : 'Failed to parse CSV file');
 		}

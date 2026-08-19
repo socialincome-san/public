@@ -370,7 +370,7 @@ describe('ReservesCalculationService.calculate', () => {
 				postFinanceBalanceService as never,
 				pawaPayBalanceService as never,
 				{ getLatestBalances: jest.fn() } as never,
-				new ReserveWriteService(db, {} as never),
+				new ReserveWriteService(db),
 				currencyDisplayService as never,
 			);
 

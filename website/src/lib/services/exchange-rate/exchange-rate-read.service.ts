@@ -1,5 +1,4 @@
 import { Currency, Prisma, PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
@@ -17,9 +16,8 @@ export class ExchangeRateReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildExchangeRateOrderBy(query: ExchangeRateTableQuery): Prisma.ExchangeRateOrderByWithRelationInput[] {
@@ -71,7 +69,7 @@ export class ExchangeRateReadService extends BaseService {
 
 			return this.resultOk(result);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch latest exchange rates: ${JSON.stringify(error)}`);
 		}
@@ -94,7 +92,7 @@ export class ExchangeRateReadService extends BaseService {
 				rate: Number(result.rate),
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch latest exchange rate: ${JSON.stringify(error)}`);
 		}
@@ -178,7 +176,7 @@ export class ExchangeRateReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount, currencyFilterOptions });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch exchange rates: ${JSON.stringify(error)}`);
 		}

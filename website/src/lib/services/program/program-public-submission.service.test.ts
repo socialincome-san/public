@@ -81,10 +81,9 @@ const createService = () => {
 	const storyblok = {
 		getPrograms,
 	} as unknown as StoryblokService;
-	const logger = { error: jest.fn() };
-	const service = new ProgramPublicSubmissionService(db as unknown as PrismaClient, storyblok, logger as never);
+	const service = new ProgramPublicSubmissionService(db as unknown as PrismaClient, storyblok);
 
-	return { service, findMany, findFirst, getPrograms, logger };
+	return { service, findMany, findFirst, getPrograms };
 };
 
 describe('ProgramPublicSubmissionService', () => {
@@ -235,14 +234,16 @@ describe('ProgramPublicSubmissionService', () => {
 		});
 
 		test('propagates eligibility service failures', async () => {
-			const { service, findMany, getPrograms, logger } = createService();
+			const { service, findMany, getPrograms } = createService();
+			const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
 			getPrograms.mockResolvedValue({ success: true, data: [enProgram('si-core-sl', 'Core EN')] });
 			findMany.mockRejectedValue(new Error('db down'));
 
 			const result = await service.getEligibleProgramsForPublicSubmission('en');
 
 			expectFailure(result, 'Could not load programs.');
-			expect(logger.error).toHaveBeenCalled();
+			expect(consoleError).toHaveBeenCalled();
+			consoleError.mockRestore();
 		});
 
 		test('propagates Storyblok eligibility failures instead of returning an empty list', async () => {
@@ -324,14 +325,16 @@ describe('ProgramPublicSubmissionService', () => {
 		});
 
 		test('returns a failure result when Prisma throws', async () => {
-			const { service, findFirst, getPrograms, logger } = createService();
+			const { service, findFirst, getPrograms } = createService();
+			const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
 			getPrograms.mockResolvedValue({ success: true, data: [enProgram('si-core-sl', 'Core EN')] });
 			findFirst.mockRejectedValue(new Error('db down'));
 
 			const result = await service.isProgramEligibleForPublicSubmission('program-1');
 
 			expectFailure(result, 'Could not verify program eligibility.');
-			expect(logger.error).toHaveBeenCalled();
+			expect(consoleError).toHaveBeenCalled();
+			consoleError.mockRestore();
 		});
 	});
 });

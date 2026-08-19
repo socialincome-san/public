@@ -1,7 +1,6 @@
 import { PayoutInterval, PayoutStatus, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
 import { stringifyCsv } from '@/lib/utils/csv';
-import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
 import { toSortKey } from '@/lib/utils/to-sort-key';
@@ -33,9 +32,8 @@ export class RecipientReadService extends BaseService {
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly appReviewModeService: AppReviewModeService,
 		private readonly recipientStatusService: RecipientStatusService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildRecipientOrderBy(query: RecipientTableQuery): Prisma.RecipientOrderByWithRelationInput[] {
@@ -527,7 +525,7 @@ export class RecipientReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch public recipients: ${JSON.stringify(error)}`);
 		}
@@ -613,7 +611,7 @@ export class RecipientReadService extends BaseService {
 
 			return this.resultOk(recipient);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch recipient: ${JSON.stringify(error)}`);
 		}
@@ -651,7 +649,7 @@ export class RecipientReadService extends BaseService {
 
 			return this.resultOk(options);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch editable recipient options: ${JSON.stringify(error)}`);
 		}
@@ -687,7 +685,7 @@ export class RecipientReadService extends BaseService {
 
 			return this.resultOk(recipients);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get survey recipients: ${JSON.stringify(error)}`);
 		}
@@ -765,7 +763,7 @@ export class RecipientReadService extends BaseService {
 
 			return this.resultOk(recipient);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not find recipient by phone number: ${JSON.stringify(error)}`);
 		}
@@ -814,7 +812,7 @@ export class RecipientReadService extends BaseService {
 
 			return this.resultOk(recipient);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not resolve recipient from request: ${JSON.stringify(error)}`);
 		}
@@ -981,7 +979,7 @@ export class RecipientReadService extends BaseService {
 
 			return this.resultOk(stringifyCsv(rows, headers));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not export recipients CSV: ${JSON.stringify(error)}`);
 		}
@@ -1081,7 +1079,7 @@ export class RecipientReadService extends BaseService {
 
 			return this.resultOk({ tableRows, permission: globalPermission });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch recipients: ${JSON.stringify(error)}`);
 		}
@@ -1102,7 +1100,7 @@ export class RecipientReadService extends BaseService {
 				query,
 			);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch recipients: ${JSON.stringify(error)}`);
 		}
@@ -1124,7 +1122,7 @@ export class RecipientReadService extends BaseService {
 				{ ...query, programId },
 			);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch program recipients: ${JSON.stringify(error)}`);
 		}
@@ -1251,7 +1249,7 @@ export class RecipientReadService extends BaseService {
 				programFilterOptions,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch upcoming onboarding recipients: ${JSON.stringify(error)}`);
 		}
@@ -1282,7 +1280,7 @@ export class RecipientReadService extends BaseService {
 				permission,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch program scoped recipients: ${JSON.stringify(error)}`);
 		}
@@ -1304,7 +1302,7 @@ export class RecipientReadService extends BaseService {
 				permission: paginated.data.permission,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch local partner recipients table view: ${JSON.stringify(error)}`);
 		}
@@ -1459,7 +1457,7 @@ export class RecipientReadService extends BaseService {
 				programFilterOptions,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch recipients for local partner: ${JSON.stringify(error)}`);
 		}

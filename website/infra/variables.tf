@@ -215,3 +215,9 @@ variable "app_review_phone_number" {
   type        = string
   sensitive   = true
 }
+
+variable "slack_alert_channel_name" {
+  description = "Existing Cloud Monitoring Slack channel to notify (must already be connected in the GCP Console)"
+  type        = string
+  default     = "#social-income-monitoring"
+}

@@ -1,20 +1,26 @@
 import { services } from '@/lib/services/services';
-import { logger } from '@/lib/utils/logger';
+import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
 	const apiKey = request.headers.get('x-api-key');
 
-	if (apiKey !== process.env.SCHEDULER_API_KEY || !process.env.SCHEDULER_API_KEY) {
-		logger.alert('Scheduler API key not set or wrong');
+	if (!process.env.SCHEDULER_API_KEY) {
+		console.error(`${SLACK_ALERT}: Scheduler API key not set`);
+
+		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
+	}
+
+	if (apiKey !== process.env.SCHEDULER_API_KEY) {
+		console.warn('Scheduler API key wrong');
 
 		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
 	}
 
 	if (!process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET) {
-		logger.alert('Payment files storage bucket env var not set');
+		console.error(`${SLACK_ALERT}: Payment files storage bucket env var not set`);
 
-		return NextResponse.json({ ok: false, error: 'Internal server errororized' }, { status: 500 });
+		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 
 	const service = services.createPaymentFileImport(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
@@ -22,21 +28,21 @@ export const POST = async (request: NextRequest) => {
 	try {
 		const result = await service.importPaymentFiles();
 		if (!result.success) {
-			logger.alert(`Payment files import failed: ${result.error}`, { result }, { component: 'payment-files-import' });
+			console.error(`${SLACK_ALERT}: Payment files import failed: ${result.error}`, { result });
 
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 		if (result.data.length > 0) {
-			logger.info(
+			console.info(
 				`Payment files import succeeded. Updated following payment events: ${result.data.map((c) => c.id).join(', ')}`,
 			);
 		} else {
-			logger.info('Payment files import succeeded. No payment events updated.');
+			console.info('Payment files import succeeded. No payment events updated.');
 		}
 
 		return NextResponse.json(result.data, { status: 201 });
 	} catch (error) {
-		logger.alert(`Payment files import failed: ${String(error)}`, { error }, { component: 'payment-files-import' });
+		console.error(`${SLACK_ALERT}: Payment files import failed: ${String(error)}`, { error });
 
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}

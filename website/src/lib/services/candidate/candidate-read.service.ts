@@ -1,7 +1,6 @@
 import { CountryCode, Gender, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
 import { stringifyCsv } from '@/lib/utils/csv';
-import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -20,9 +19,8 @@ export class CandidateReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildCandidateOrderBy(query: CandidatesTableQuery): Prisma.RecipientOrderByWithRelationInput[] {
@@ -133,7 +131,7 @@ export class CandidateReadService extends BaseService {
 
 			return this.resultOk(candidate);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch candidate: ${JSON.stringify(error)}`);
 		}
@@ -152,7 +150,7 @@ export class CandidateReadService extends BaseService {
 
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch candidates table view: ${JSON.stringify(error)}`);
 		}
@@ -336,7 +334,7 @@ export class CandidateReadService extends BaseService {
 				localPartnerFilterOptions,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch candidates: ${JSON.stringify(error)}`);
 		}
@@ -355,7 +353,7 @@ export class CandidateReadService extends BaseService {
 
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch local partner candidates table view: ${JSON.stringify(error)}`);
 		}
@@ -519,7 +517,7 @@ export class CandidateReadService extends BaseService {
 				localPartnerFilterOptions: [],
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch candidates for local partner: ${JSON.stringify(error)}`);
 		}
@@ -551,7 +549,7 @@ export class CandidateReadService extends BaseService {
 
 			return this.resultOk({ count });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not count candidates: ${JSON.stringify(error)}`);
 		}
@@ -712,7 +710,7 @@ export class CandidateReadService extends BaseService {
 
 			return this.resultOk(stringifyCsv(rows, headers));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not export candidates CSV: ${JSON.stringify(error)}`);
 		}

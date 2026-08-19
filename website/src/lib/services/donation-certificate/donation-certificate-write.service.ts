@@ -1,7 +1,6 @@
 import { PrismaClient } from '@/generated/prisma/client';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE, LANGUAGE_CODES, LanguageCode } from '@/lib/types/language';
-import { logger } from '@/lib/utils/logger';
 import { withFile } from 'tmp-promise';
 import { ContributionReadService } from '../contribution/contribution-read.service';
 import { ContributorReadService } from '../contributor/contributor-read.service';
@@ -23,9 +22,8 @@ export class DonationCertificateWriteService extends BaseService {
 		private readonly contributorService: ContributorReadService,
 		private readonly contributionService: ContributionReadService,
 		private readonly donationCertificateReadService: DonationCertificateReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async createDonationCertificate(
@@ -35,14 +33,14 @@ export class DonationCertificateWriteService extends BaseService {
 	): Promise<ServiceResult<void>> {
 		try {
 			if (!this.bucketName) {
-				this.logger.error('Firebase Storage bucket name missing');
+				console.error('Firebase Storage bucket name missing');
 
 				return this.resultFail(DonationCertificateError.bucketMissing);
 			}
 
 			const result = await this.contributorService.getByIds({ contributorIds: [contributorsId] });
 			if (!result.success || !result.data?.length) {
-				this.logger.info(`Could not load contributor for contributor ID ${contributorsId}`);
+				console.info(`Could not load contributor for contributor ID ${contributorsId}`);
 
 				return this.resultFail(DonationCertificateError.technicalError);
 			}
@@ -59,24 +57,24 @@ export class DonationCertificateWriteService extends BaseService {
 				lang,
 			);
 			if (!existingCertificate.success) {
-				this.logger.info(`Could not load existing certificates for contributor ${contributorsId}`);
+				console.info(`Could not load existing certificates for contributor ${contributorsId}`);
 
 				return this.resultFail(DonationCertificateError.technicalError);
 			}
 			if (existingCertificate.data) {
-				this.logger.info(`Donation certificates already exists for contributor ${contributorsId}`);
+				console.info(`Donation certificates already exists for contributor ${contributorsId}`);
 
 				return this.resultFail(DonationCertificateError.alreadyExists);
 			}
 
 			const contributions = await this.contributionService.getSucceededForContributorAndYear(contributorsId, year);
 			if (!contributions.success) {
-				this.logger.info(`Could not load contributions for contributor ${contributorsId}`);
+				console.info(`Could not load contributions for contributor ${contributorsId}`);
 
 				return this.resultFail(DonationCertificateError.technicalError);
 			}
 			if (!contributions.data.length) {
-				this.logger.info(`Contributor ${contributorsId} has no contributions`);
+				console.info(`Contributor ${contributorsId} has no contributions`);
 
 				return this.resultFail(DonationCertificateError.noContributions);
 			}
@@ -92,7 +90,7 @@ export class DonationCertificateWriteService extends BaseService {
 				const bucket = storageAdmin.storage.bucket(this.bucketName);
 				await storageAdmin.uploadFile({ bucket, sourceFilePath: path, destinationFilePath });
 
-				this.logger.info(`Donation certificate document written for user ${contributor.id}`);
+				console.info(`Donation certificate document written for user ${contributor.id}`);
 			});
 			await this.db.donationCertificate.createMany({
 				data: {
@@ -103,7 +101,7 @@ export class DonationCertificateWriteService extends BaseService {
 				},
 			});
 		} catch (e) {
-			this.logger.error(`Error while generating Donation Certificate file: ${String(e)}`);
+			console.error(`Error while generating Donation Certificate file: ${String(e)}`);
 
 			return this.resultFail(DonationCertificateError.technicalError);
 		}
@@ -160,11 +158,11 @@ export class DonationCertificateWriteService extends BaseService {
 					Skipped, because certificate already exists (${skippedExists.length}): ${skippedExists.join(', ')}
 					Skipped, because no contributions available for contribot (${skippedNoContributions.length}): ${skippedNoContributions.join(', ')}
 					Users with errors (${creationWithFailures.length}): ${creationWithFailures.join(', ')}`;
-			this.logger.info(success);
+			console.info(success);
 
 			return this.resultOk(success);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Error while creating donation certificates for ${year}: ${JSON.stringify(error)}`);
 		}
