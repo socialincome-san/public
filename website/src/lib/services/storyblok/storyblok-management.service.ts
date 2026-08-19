@@ -378,6 +378,7 @@ export class StoryblokManagementService {
 		title: string;
 		description: string;
 		portalSlug: string;
+		public: boolean;
 		primaryImage: StoryblokAsset;
 		creatorName: string;
 		quote: string;
@@ -395,6 +396,7 @@ export class StoryblokManagementService {
 			title: input.title,
 			description: input.description,
 			portalSlug: input.portalSlug,
+			public: input.public,
 			primaryImage: input.primaryImage,
 			creatorName: input.creatorName,
 			quote: input.quote,

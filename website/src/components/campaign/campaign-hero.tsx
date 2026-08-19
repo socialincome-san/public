@@ -4,7 +4,7 @@ import { Progress } from '@/components/progress';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { isCampaignPubliclyActive } from '@/lib/services/campaign/campaign-public-activity';
+import { isCampaignActive } from '@/lib/services/campaign/campaign-public-activity';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
 import NextImage from 'next/image';
@@ -25,7 +25,7 @@ export const CampaignHero = ({ campaign, title, description, primaryImage, trans
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
 	const showProgress = campaign.percentageCollected !== null && campaign.percentageCollected !== undefined;
 	const showAmount = campaign.amountCollected !== null;
-	const isActive = isCampaignPubliclyActive({
+	const isActive = isCampaignActive({
 		endDate: campaign.endDate,
 		goal: campaign.goal,
 		amountCollected: campaign.amountCollected,

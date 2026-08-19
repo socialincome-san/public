@@ -60,6 +60,7 @@ export interface Button {
 
 export interface Campaign {
   approved?: boolean;
+  public?: boolean;
   portalSlug: string;
   title: string;
   description: string;
