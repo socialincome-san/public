@@ -22,13 +22,15 @@ const CampaignsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const [campaignsResult, programsResult] = await Promise.all([
+	const [campaignsResult, campaignStoriesResult, programsResult] = await Promise.all([
 		services.read.campaign.getTableEntries(user.id),
+		services.storyblok.getCampaigns(defaultLanguage),
 		services.storyblok.getPrograms(defaultLanguage),
 	]);
+	const campaignStories = campaignStoriesResult.success ? campaignStoriesResult.data : [];
 	const programStories = programsResult.success ? programsResult.data : [];
 	const campaignTableView = campaignsResult.success
-		? getCampaignTableView(campaignsResult.data, programStories, tableQuery)
+		? getCampaignTableView(campaignsResult.data, campaignStories, programStories, tableQuery)
 		: { tableRows: [], totalCount: 0 };
 	const error = campaignsResult.success ? null : campaignsResult.error;
 	const campaignRows: CampaignTableViewRow[] = campaignTableView.tableRows;

@@ -23,6 +23,7 @@ export const loadCampaignDetailData = cache(async (urlSlug: string, lang: string
 	return {
 		title: getCampaignTitle(story.content),
 		description: story.content.description,
+		creatorName: story.content.creatorName,
 		fullSlug: story.full_slug,
 		primaryImage: story.content.primaryImage,
 		campaign: campaignResult.data,
