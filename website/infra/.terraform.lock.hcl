@@ -54,9 +54,20 @@ provider "registry.terraform.io/hashicorp/random" {
 
 provider "registry.terraform.io/hashicorp/time" {
   version     = "0.14.1"
-  constraints = "~> 0.13"
+  constraints = "~> 0.14"
   hashes = [
+    "h1:3VPQ5ewm8M+AGy9/rrp2W5v8B8CaHnHHqLpDWKOTgRU=",
+    "h1:45j3PwF5CLU/G6IZOoypbowa0q5el4tibU19ngmge9s=",
+    "h1:AgN6bWmsnQtLBxa0OetXZvkWETNG3D0NWXVvOWwWbaw=",
+    "h1:FlUh1KgKazWNS3Enamn8W1pFTeYp9GB0g7VTTQGUDjY=",
+    "h1:GJig5pIwiKDsiF73KLs7vWvDs76/x6DeNSxKrfqlA40=",
+    "h1:K8Rb0AekJj+jcsFTGwP4vtNyJg3tEfQZyE6eZTKG5Ok=",
+    "h1:OsvT2OO5/xg7l54ijTaf9zlnHK+3xd5GvjLg9oXxPmA=",
+    "h1:PRFvwRTa5E5IOWYqx2QtBbpyzRt6hyqs6fZcozGmuEw=",
+    "h1:YRK+EoKey0ssT+VU2821si0k+fzPFHALvVnfe2atBlU=",
     "h1:r93SxP++6gUlwCHDQ5OkRmcU8B0yv6ZA9nF0Dh6NJmA=",
+    "h1:vFOZAMvuQEu88W8UpIScyCsF42txkgMBy9wCVg0JQGQ=",
+    "h1:wvp2ICH/rHsgIqOtsDOAS9B5McNhi4ZAHeMCOx3juHc=",
     "zh:0837ca5b057e5cff94dff7de2fcccafb4abaa33c45de193fe2853e684818a267",
     "zh:15a122f72d9e0f34fc5384cc7ec089319641fee5c319748a3aa02fc42f459969",
     "zh:342fb83093a280ea7ee0654feae1f5867c62eb8eebc1ab46f9a7ab0b4c878a62",
