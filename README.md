@@ -101,10 +101,11 @@ If you need this token, ask a maintainer or contact
 `support@socialincome.org`. Do not commit real API keys or secrets.
 
 Maintainers may also need these Storyblok values for preview mode, webhooks,
-or schema/type generation:
+campaign submissions, or schema/type generation:
 
 - `STORYBLOK_PREVIEW_SECRET`
 - `STORYBLOK_WEBHOOK_SECRET`
+- `STORYBLOK_MANAGEMENT_TOKEN`
 - `STORYBLOK_PERSONAL_ACCESS_TOKEN`
 - `STORYBLOK_SPACE_ID`
 
@@ -263,15 +264,20 @@ still work after a campaign becomes inactive.
 
 Server-only configuration lives in
 `website/src/lib/config/campaign-submission.config.ts`. Set the Management API
-token in `website/.env.local`:
+token in `website/.env.local` for local development:
 
 ```bash
 STORYBLOK_MANAGEMENT_TOKEN="<storyblok-personal-access-token>"
 ```
 
-The token must be able to create draft stories under `pages/campaigns` and
-upload assets in the configured asset folder. If a submission fails after partial
-progress, the API attempts compensating cleanup of the created Storyblok asset,
+Staging and production receive the same runtime variable from Cloud Run. Store
+the values as GitHub Actions secrets `TF_STAGING_STORYBLOK_MANAGEMENT_TOKEN`
+and `TF_PROD_STORYBLOK_MANAGEMENT_TOKEN`.
+
+The token must be able to list assets in the default-images folder, create
+draft stories under `pages/campaigns`, and upload assets in the configured
+asset folder. If a submission fails after partial progress, the API attempts
+compensating cleanup of the created Storyblok asset,
 Storyblok story, and database row.
 
 Future hardening (not part of the first version): Cloudflare Turnstile and
