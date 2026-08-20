@@ -48,40 +48,33 @@ resource "google_monitoring_alert_policy" "slack_alerts" {
   depends_on = [google_project_service.monitoring]
 }
 
-resource "google_monitoring_uptime_check_config" "health_live" {
-  display_name = "Website / live (${var.env})"
-  timeout      = "10s"
-  period       = "60s"
-
-  http_check {
-    path         = "/api/health/live"
-    port         = 443
-    use_ssl      = true
-    validate_ssl = true
-  }
-
-  monitored_resource {
-    type = "uptime_url"
-    labels = {
-      project_id = var.gcp_project_id
-      host       = var.website_domain
+locals {
+  uptime_health_checks = {
+    website = {
+      path               = "/api/health/website"
+      check_display_name = "Website (${var.env})"
+      alert_display_name = "Website unreachable (${var.env})"
+      alert_subject      = "Website unreachable (${var.env})"
+      alert_content      = "GET https://${var.website_domain}/api/health/website failed. Cloud Run is unreachable, TLS failed, or the container is not responding."
+    }
+    database = {
+      path               = "/api/health/database"
+      check_display_name = "Website database (${var.env})"
+      alert_display_name = "Website DB down (${var.env})"
+      alert_subject      = "Website DB down (${var.env})"
+      alert_content      = "GET https://${var.website_domain}/api/health/database failed. Postgres did not answer SELECT 1."
     }
   }
-
-  content_matchers {
-    content = "\"status\":\"alive\""
-  }
-
-  depends_on = [google_project_service.monitoring]
 }
 
-resource "google_monitoring_uptime_check_config" "health_ready" {
-  display_name = "Website DB / ready (${var.env})"
+resource "google_monitoring_uptime_check_config" "health" {
+  for_each     = local.uptime_health_checks
+  display_name = each.value.check_display_name
   timeout      = "10s"
   period       = "60s"
 
   http_check {
-    path         = "/api/health/ready"
+    path         = each.value.path
     port         = 443
     use_ssl      = true
     validate_ssl = true
@@ -102,105 +95,27 @@ resource "google_monitoring_uptime_check_config" "health_ready" {
   depends_on = [google_project_service.monitoring]
 }
 
-resource "google_monitoring_alert_policy" "uptime_health_website_unreachable" {
-  display_name = "Website unreachable (${var.env})"
+resource "google_monitoring_alert_policy" "uptime_health" {
+  for_each     = local.uptime_health_checks
+  display_name = each.value.alert_display_name
   combiner     = "OR"
 
   documentation {
-    subject   = "Website unreachable (${var.env})"
+    subject   = each.value.alert_subject
     mime_type = "text/markdown"
-    content   = <<-EOT
-      GET https://${var.website_domain}/api/health/live failed.
-
-      Cloud Run is unreachable, TLS failed, or the container is not responding. This is **not** a DB-only issue.
-    EOT
+    content   = each.value.alert_content
   }
 
   conditions {
-    display_name = "Live uptime check failed (${var.env})"
+    display_name = "Uptime check failed (${var.env})"
     condition_threshold {
       filter          = <<-EOT
         metric.type="monitoring.googleapis.com/uptime_check/check_passed"
-        metric.label."check_id"="${google_monitoring_uptime_check_config.health_live.uptime_check_id}"
+        metric.label."check_id"="${google_monitoring_uptime_check_config.health[each.key].uptime_check_id}"
         resource.type="uptime_url"
       EOT
       duration        = "60s"
       comparison      = "COMPARISON_GT"
-      threshold_value = 1
-
-      aggregations {
-        alignment_period     = "1200s"
-        per_series_aligner   = "ALIGN_NEXT_OLDER"
-        cross_series_reducer = "REDUCE_COUNT_FALSE"
-        group_by_fields      = ["resource.label.*"]
-      }
-
-      trigger {
-        count = 1
-      }
-    }
-  }
-
-  notification_channels = [
-    data.google_monitoring_notification_channel.slack_alerts.name,
-  ]
-
-  alert_strategy {
-    auto_close = "3600s"
-  }
-
-  depends_on = [google_project_service.monitoring]
-}
-
-resource "google_monitoring_alert_policy" "uptime_health_db_down" {
-  display_name = "Website DB down (${var.env})"
-  combiner     = "AND"
-
-  documentation {
-    subject   = "Website DB down (${var.env})"
-    mime_type = "text/markdown"
-    content   = <<-EOT
-      GET https://${var.website_domain}/api/health/ready failed while /api/health/live is OK.
-
-      The website is up but Postgres did not answer `SELECT 1` (auth, connectivity, or query failure).
-    EOT
-  }
-
-  conditions {
-    display_name = "Ready uptime check failed (${var.env})"
-    condition_threshold {
-      filter          = <<-EOT
-        metric.type="monitoring.googleapis.com/uptime_check/check_passed"
-        metric.label."check_id"="${google_monitoring_uptime_check_config.health_ready.uptime_check_id}"
-        resource.type="uptime_url"
-      EOT
-      duration        = "60s"
-      comparison      = "COMPARISON_GT"
-      threshold_value = 1
-
-      aggregations {
-        alignment_period     = "1200s"
-        per_series_aligner   = "ALIGN_NEXT_OLDER"
-        cross_series_reducer = "REDUCE_COUNT_FALSE"
-        group_by_fields      = ["resource.label.*"]
-      }
-
-      trigger {
-        count = 1
-      }
-    }
-  }
-
-  conditions {
-    display_name = "Live uptime check passing (${var.env})"
-    condition_threshold {
-      filter          = <<-EOT
-        metric.type="monitoring.googleapis.com/uptime_check/check_passed"
-        metric.label."check_id"="${google_monitoring_uptime_check_config.health_live.uptime_check_id}"
-        resource.type="uptime_url"
-      EOT
-      duration        = "60s"
-      comparison      = "COMPARISON_LT"
       threshold_value = 1
 
       aggregations {
