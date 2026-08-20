@@ -14,11 +14,11 @@ type Props = {
 	aboutStep: AboutStepProps;
 };
 
-const FormCardLayout = ({ children }: { children: ReactNode }) => (
+const formCardClassName = 'border-border rounded-xl border p-6 shadow-sm';
+
+const FormCardColumn = ({ children }: { children: ReactNode }) => (
 	<div className="bg-muted min-h-0 flex-1 overflow-y-auto px-6 py-10">
-		<Card variant="noPadding" className="border-border mx-auto w-full max-w-[858px] rounded-xl border p-6 shadow-sm">
-			{children}
-		</Card>
+		<div className="mx-auto flex w-full max-w-[858px] flex-col gap-6">{children}</div>
 	</div>
 );
 
@@ -32,15 +32,17 @@ export const CampaignSubmissionSteps = ({ currentStep, programStep, detailsStep,
 			);
 		case 'details':
 			return (
-				<FormCardLayout>
-					<DetailsStep {...detailsStep} />
-				</FormCardLayout>
+				<FormCardColumn>
+					<Card variant="noPadding" className={formCardClassName}>
+						<DetailsStep {...detailsStep} />
+					</Card>
+				</FormCardColumn>
 			);
 		case 'about':
 			return (
-				<FormCardLayout>
+				<FormCardColumn>
 					<AboutStep {...aboutStep} />
-				</FormCardLayout>
+				</FormCardColumn>
 			);
 	}
 };

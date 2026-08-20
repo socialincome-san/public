@@ -1,5 +1,6 @@
 'use client';
 
+import { Card } from '@/components/card/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
@@ -30,6 +31,8 @@ const textareaClassName = cn(
 	'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
 	'disabled:opacity-50',
 );
+
+const formCardClassName = 'border-border rounded-xl border p-6 shadow-sm';
 
 export const AboutStep = ({
 	form,
@@ -66,138 +69,149 @@ export const AboutStep = ({
 	}, [submitError]);
 
 	return (
-		<div className="flex flex-col gap-6">
-			<FormField
-				control={form.control}
-				name="creatorName"
-				render={({ field }) => (
-					<FormItem>
-						<FormLabel>{labels.aboutStepSubtitle}</FormLabel>
-						<FormControl>
-							<Input {...field} autoComplete="name" placeholder={labels.creatorNamePlaceholder} disabled={isSubmitting} />
-						</FormControl>
-						<FormMessage />
-					</FormItem>
-				)}
-			/>
+		<>
+			<Card variant="noPadding" className={formCardClassName}>
+				<div className="flex flex-col gap-6">
+					<FormField
+						control={form.control}
+						name="creatorName"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>{labels.aboutStepSubtitle}</FormLabel>
+								<FormControl>
+									<Input
+										{...field}
+										autoComplete="name"
+										placeholder={labels.creatorNamePlaceholder}
+										disabled={isSubmitting}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-			<p className="text-muted-foreground -mt-2 text-sm">{labels.aboutStepDescription}</p>
+					<p className="text-muted-foreground -mt-2 text-sm">{labels.aboutStepDescription}</p>
 
-			<ImageUploadField
-				variant="avatar"
-				label={labels.profilePicture}
-				previewUrl={profilePicture.previewUrl}
-				error={profilePicture.error}
-				inputRef={profilePicture.inputRef}
-				onChange={profilePicture.onChange}
-				disabled={isSubmitting}
-				hint={labels.imageHint}
-				uploadLabel={labels.profilePictureHint}
-				editLabel={labels.editProfilePicture}
-				removeLabel={labels.removeUploadedImage}
-			/>
-
-			<FormField
-				control={form.control}
-				name="quote"
-				render={({ field }) => (
-					<FormItem>
-						<FormLabel>{labels.quote}</FormLabel>
-						<FormControl>
-							<textarea
-								{...field}
-								rows={3}
-								placeholder={labels.quotePlaceholder}
-								disabled={isSubmitting}
-								className={textareaClassName}
-							/>
-						</FormControl>
-						<p className="text-muted-foreground text-xs">{labels.quoteHint}</p>
-						<FormMessage />
-					</FormItem>
-				)}
-			/>
-
-			<div className="flex flex-col gap-3">
-				<div className="flex items-center justify-between gap-3">
-					<Label htmlFor="campaign-has-additional-information">{labels.hasAdditionalInformation}</Label>
-					<Switch
-						id="campaign-has-additional-information"
-						checked={hasAdditionalInformation}
+					<ImageUploadField
+						variant="avatar"
+						label={labels.profilePicture}
+						previewUrl={profilePicture.previewUrl}
+						error={profilePicture.error}
+						inputRef={profilePicture.inputRef}
+						onChange={profilePicture.onChange}
 						disabled={isSubmitting}
-						onCheckedChange={(checked) => {
-							form.setValue('hasAdditionalInformation', checked, { shouldDirty: true, shouldValidate: true });
-							if (!checked) {
-								for (const fieldName of ADDITIONAL_FIELD_NAMES) {
-									form.setValue(fieldName, '', { shouldDirty: true, shouldValidate: true });
-								}
-								form.clearErrors([...ADDITIONAL_FIELD_NAMES]);
-								sectionImage.onChange(null);
-							}
-						}}
+						hint={labels.imageHint}
+						uploadLabel={labels.profilePictureHint}
+						editLabel={labels.editProfilePicture}
+						removeLabel={labels.removeUploadedImage}
+					/>
+
+					<FormField
+						control={form.control}
+						name="quote"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>{labels.quote}</FormLabel>
+								<FormControl>
+									<textarea
+										{...field}
+										rows={3}
+										placeholder={labels.quotePlaceholder}
+										disabled={isSubmitting}
+										className={textareaClassName}
+									/>
+								</FormControl>
+								<p className="text-muted-foreground text-xs">{labels.quoteHint}</p>
+								<FormMessage />
+							</FormItem>
+						)}
 					/>
 				</div>
+			</Card>
 
-				{hasAdditionalInformation ? (
-					<div className="flex flex-col gap-6">
-						<FormField
-							control={form.control}
-							name="sectionDescription"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>{labels.sectionDescription}</FormLabel>
-									<FormControl>
-										<textarea
-											{...field}
-											value={field.value ?? ''}
-											rows={4}
-											disabled={isSubmitting}
-											className={textareaClassName}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<ImageUploadField
-							variant="cover"
-							label={labels.sectionImage}
-							previewUrl={sectionImage.previewUrl}
-							error={sectionImage.error}
-							inputRef={sectionImage.inputRef}
-							onChange={sectionImage.onChange}
+			<Card variant="noPadding" className={formCardClassName}>
+				<div className="flex flex-col gap-6">
+					<div className="flex items-center justify-between gap-3">
+						<Label htmlFor="campaign-has-additional-information">{labels.hasAdditionalInformation}</Label>
+						<Switch
+							id="campaign-has-additional-information"
+							checked={hasAdditionalInformation}
 							disabled={isSubmitting}
-							hint={labels.imageHint}
-							uploadLabel={labels.uploadImage}
-							removeLabel={labels.removeUploadedImage}
+							onCheckedChange={(checked) => {
+								form.setValue('hasAdditionalInformation', checked, { shouldDirty: true, shouldValidate: true });
+								if (!checked) {
+									for (const fieldName of ADDITIONAL_FIELD_NAMES) {
+										form.setValue(fieldName, '', { shouldDirty: true, shouldValidate: true });
+									}
+									form.clearErrors([...ADDITIONAL_FIELD_NAMES]);
+									sectionImage.onChange(null);
+								}
+							}}
 						/>
+					</div>
 
-						{additionalLinkFields.map(({ name, label, autoComplete, placeholder }) => (
+					{hasAdditionalInformation ? (
+						<>
 							<FormField
-								key={name}
 								control={form.control}
-								name={name}
+								name="sectionDescription"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>{label}</FormLabel>
+										<FormLabel>{labels.sectionDescription}</FormLabel>
 										<FormControl>
-											<Input
+											<textarea
 												{...field}
 												value={field.value ?? ''}
-												autoComplete={autoComplete}
-												placeholder={placeholder}
+												rows={4}
 												disabled={isSubmitting}
+												className={textareaClassName}
 											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
-						))}
-					</div>
-				) : null}
-			</div>
+
+							<ImageUploadField
+								variant="cover"
+								label={labels.sectionImage}
+								previewUrl={sectionImage.previewUrl}
+								error={sectionImage.error}
+								inputRef={sectionImage.inputRef}
+								onChange={sectionImage.onChange}
+								disabled={isSubmitting}
+								hint={labels.imageHint}
+								uploadLabel={labels.uploadImage}
+								removeLabel={labels.removeUploadedImage}
+							/>
+
+							{additionalLinkFields.map(({ name, label, autoComplete, placeholder }) => (
+								<FormField
+									key={name}
+									control={form.control}
+									name={name}
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>{label}</FormLabel>
+											<FormControl>
+												<Input
+													{...field}
+													value={field.value ?? ''}
+													autoComplete={autoComplete}
+													placeholder={placeholder}
+													disabled={isSubmitting}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							))}
+						</>
+					) : null}
+				</div>
+			</Card>
 
 			{turnstileSiteKey ? (
 				<TurnstileWidget
@@ -213,6 +227,6 @@ export const AboutStep = ({
 					{submitError}
 				</p>
 			) : null}
-		</div>
+		</>
 	);
 };
