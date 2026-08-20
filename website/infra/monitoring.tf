@@ -48,13 +48,31 @@ resource "google_monitoring_alert_policy" "slack_alerts" {
   depends_on = [google_project_service.monitoring]
 }
 
-resource "google_monitoring_uptime_check_config" "health_ready" {
-  display_name = "Website health / DB (${var.env})"
+locals {
+  uptime_health_checks = {
+    website = {
+      path               = "/api/health/website"
+      check_display_name = "Website (${var.env})"
+      alert_name         = "Website unreachable (${var.env})"
+      alert_content      = "GET https://${var.website_domain}/api/health/website failed. Cloud Run is unreachable, TLS failed, or the container is not responding."
+    }
+    database = {
+      path               = "/api/health/database"
+      check_display_name = "Website database (${var.env})"
+      alert_name         = "Website DB down (${var.env})"
+      alert_content      = "GET https://${var.website_domain}/api/health/database failed. Postgres did not answer SELECT 1."
+    }
+  }
+}
+
+resource "google_monitoring_uptime_check_config" "health" {
+  for_each     = local.uptime_health_checks
+  display_name = each.value.check_display_name
   timeout      = "10s"
   period       = "60s"
 
   http_check {
-    path         = "/api/health/ready"
+    path         = each.value.path
     port         = 443
     use_ssl      = true
     validate_ssl = true
@@ -75,21 +93,23 @@ resource "google_monitoring_uptime_check_config" "health_ready" {
   depends_on = [google_project_service.monitoring]
 }
 
-resource "google_monitoring_alert_policy" "uptime_health_ready" {
-  display_name = "Website health / DB down (${var.env})"
+resource "google_monitoring_alert_policy" "uptime_health" {
+  for_each     = local.uptime_health_checks
+  display_name = each.value.alert_name
   combiner     = "OR"
 
   documentation {
-    content   = "GET https://${var.website_domain}/api/health/ready failed. Cloud Run is unreachable or Postgres did not answer SELECT 1."
+    subject   = each.value.alert_name
     mime_type = "text/markdown"
+    content   = each.value.alert_content
   }
 
   conditions {
-    display_name = "Uptime check failed (${var.env})"
+    display_name = "${each.value.check_display_name} failed"
     condition_threshold {
       filter          = <<-EOT
         metric.type="monitoring.googleapis.com/uptime_check/check_passed"
-        metric.label."check_id"="${google_monitoring_uptime_check_config.health_ready.uptime_check_id}"
+        metric.label."check_id"="${google_monitoring_uptime_check_config.health[each.key].uptime_check_id}"
         resource.type="uptime_url"
       EOT
       duration        = "60s"
