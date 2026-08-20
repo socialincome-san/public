@@ -92,7 +92,7 @@ export const CampaignHero = ({
 				<div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,hsl(var(--foreground))_0%,hsl(var(--foreground)/0.85)_22%,transparent_55%)]" />
 
 				<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto mb-8 flex flex-row items-end justify-between gap-8 md:mb-24">
-					<div className="flex min-w-0 flex-1 flex-col gap-10">
+					<div className="flex min-w-0 flex-1 flex-col gap-10 px-4">
 						<div className="flex max-w-2xl flex-col gap-4">
 							<p className="text-lg">{translator.t('campaign.by', { context: { creator: creatorName } })}</p>
 							<h1 className="text-5xl leading-tight font-bold text-pretty md:text-6xl">{title}</h1>
