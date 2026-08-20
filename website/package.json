@@ -117,7 +117,7 @@
 		"swissqrbill": "4.4.1",
 		"tailwind-merge": "3.6.0",
 		"tmp-promise": "3.0.3",
-		"twilio": "6.0.2",
+		"twilio": "6.1.0",
 		"xpath": "0.0.34",
 		"xstate": "5.32.5",
 		"zod": "^3.23.8"
