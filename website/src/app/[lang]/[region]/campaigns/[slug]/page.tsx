@@ -39,6 +39,12 @@ export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlu
 			quote={data.quote}
 			primaryImage={data.primaryImage}
 			profilePicture={data.profilePicture}
+			sectionDescription={data.sectionDescription}
+			sectionImage={data.sectionImage}
+			instagramHandle={data.instagramHandle}
+			xHandle={data.xHandle}
+			tiktokHandle={data.tiktokHandle}
+			linkWebsite={data.linkWebsite}
 			campaignSlug={slug}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}

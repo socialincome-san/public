@@ -13,5 +13,11 @@ export type CampaignDetailData = {
 	fullSlug: string;
 	primaryImage?: HeroHeaderImage | null;
 	profilePicture?: HeroHeaderImage | null;
+	sectionDescription?: string;
+	sectionImage?: HeroHeaderImage | null;
+	instagramHandle?: string;
+	xHandle?: string;
+	tiktokHandle?: string;
+	linkWebsite?: string;
 	campaign: CampaignPage;
 };
