@@ -689,12 +689,7 @@ export class StripeService extends BaseService {
 				return this.resultFail('Subscription not found');
 			}
 
-			const chargeAmount =
-				coverTransactionCosts === undefined
-					? amount
-					: coverTransactionCosts
-						? getAmountWithTransactionCostCoverage(amount)
-						: amount;
+			const chargeAmount = coverTransactionCosts ? getAmountWithTransactionCostCoverage(amount) : amount;
 			if (coverTransactionCosts === true && !isCoverTransactionCostsAmountInRange(chargeAmount)) {
 				return this.resultFail(`Amount must be between ${SUBSCRIPTION_AMOUNT_MIN} and ${SUBSCRIPTION_AMOUNT_MAX}`);
 			}

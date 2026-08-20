@@ -3,8 +3,6 @@ import { SUBSCRIPTION_AMOUNT_MAX, SUBSCRIPTION_AMOUNT_MIN } from './subscription
 const ONLINE_TRANSACTION_FEE_RATE = 0.03;
 
 export const COVER_TRANSACTION_COSTS_METADATA_KEY = 'coverTransactionCosts';
-export const COVER_TRANSACTION_COSTS_NUDGE_BACKGROUND = '#fef8ee';
-export const COVER_TRANSACTION_COSTS_NUDGE_FOREGROUND = '#083344';
 
 const roundAmount = (amount: number): number => Math.round(amount * 100) / 100;
 

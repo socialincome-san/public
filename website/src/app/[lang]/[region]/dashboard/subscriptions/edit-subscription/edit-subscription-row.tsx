@@ -3,7 +3,7 @@
 import { Button } from '@/components/button/button';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { getBaseAmountBeforeTransactionCostCoverage } from '@/lib/services/subscription/cover-transaction-costs';
-import { formatCurrencyLocale, formatDateLocale, wholeCurrencyFormatOptions } from '@/lib/utils/string-utils';
+import { formatCurrencyLocale, formatDateLocale, fractionalCurrencyFormatOptions } from '@/lib/utils/string-utils';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/navigation';
 import { CoverSubscriptionTransactionCostsPrompt } from '../cover-subscription-transaction-costs-prompt';
@@ -36,13 +36,13 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 	const [state, send] = useMachine(editSubscriptionMachine);
 	const router = useRouter();
 	const isOpen = !state.matches('closed');
-	const baseAmount = subscription.coverTransactionCosts
+	const contributionAmount = subscription.coverTransactionCosts
 		? getBaseAmountBeforeTransactionCostCoverage(subscription.amount)
 		: Math.round(subscription.amount);
 
 	const openInput = (options: { preselectCoverTransactionCosts?: boolean } = {}): EditSubscriptionOpenInput => ({
 		subscriptionId: subscription.subscriptionId,
-		initialAmount: baseAmount,
+		initialAmount: contributionAmount,
 		currency: subscription.currency,
 		paymentMethod: subscription.paymentMethod,
 		brand: subscription.brand,
@@ -63,7 +63,7 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 		>
 			<p className="text-base">
 				<span className="font-semibold">
-					{formatCurrencyLocale(baseAmount, subscription.currency, lang, wholeCurrencyFormatOptions)}
+					{formatCurrencyLocale(subscription.amount, subscription.currency, lang, fractionalCurrencyFormatOptions)}
 				</span>{' '}
 				<span className="text-muted-foreground">
 					{labels.perMonth} · {labels.since} {formatDateLocale(subscription.createdAt, lang)}
@@ -96,19 +96,17 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 
 	return (
 		<>
-			{!subscription.coverTransactionCosts ? (
-				<div className="border-border overflow-hidden rounded-xl border">
-					{subscriptionRow}
+			<div className="border-border overflow-hidden rounded-xl border">
+				{subscriptionRow}
+				{!subscription.coverTransactionCosts ? (
 					<CoverSubscriptionTransactionCostsPrompt
 						lang={lang}
-						amount={baseAmount}
+						amount={contributionAmount}
 						currency={subscription.currency}
 						onOpen={() => send({ type: 'OPEN', subscription: openInput({ preselectCoverTransactionCosts: true }) })}
 					/>
-				</div>
-			) : (
-				<div className="border-border overflow-hidden rounded-xl border">{subscriptionRow}</div>
-			)}
+				) : null}
+			</div>
 
 			<EditSubscriptionDialog lang={lang} state={state} send={send} onDismissAndRefresh={dismissAndRefresh} />
 		</>

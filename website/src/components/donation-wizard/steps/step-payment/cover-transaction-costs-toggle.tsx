@@ -3,7 +3,6 @@
 import { Switch } from '@/components/switch';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { COVER_TRANSACTION_COSTS_NUDGE_BACKGROUND } from '@/lib/services/subscription/cover-transaction-costs';
 import { cn } from '@/lib/utils/cn';
 import { CircleHelp } from 'lucide-react';
 import type { Cadence } from '../../utils/donation-amount';
@@ -17,7 +16,6 @@ type Props = {
 	onCheckedChange: (checked: boolean) => void;
 	disabled?: boolean;
 	switchId?: string;
-	layout?: 'row' | 'stacked';
 	tone?: 'accent' | 'warning';
 };
 
@@ -29,24 +27,20 @@ export const CoverTransactionCostsToggle = ({
 	onCheckedChange,
 	disabled = false,
 	switchId = 'cover-transaction-costs',
-	layout = 'row',
 	tone = 'accent',
 }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const fee = formatDonationCurrencyAmount(currency, transactionCost);
 
 	return (
-		<div
-			className={cn(
-				'flex max-w-full min-w-0 flex-col gap-3 overflow-hidden rounded-md px-4 py-3',
-				tone === 'warning' ? null : 'bg-accent',
-				layout === 'row' && 'sm:flex-row sm:items-center sm:gap-2',
-			)}
-			style={tone === 'warning' ? { backgroundColor: COVER_TRANSACTION_COSTS_NUDGE_BACKGROUND } : undefined}
-			data-testid="cover-transaction-costs-toggle"
-		>
+		<div className="flex max-w-full min-w-0 flex-col gap-2" data-testid="cover-transaction-costs-toggle">
 			<p className="text-foreground min-w-0 text-sm leading-snug break-words">{t('stepPayment.cover-costs-description')}</p>
-			<div className="flex min-w-0 items-center gap-3">
+			<div
+				className={cn(
+					'flex min-w-0 items-center gap-3 overflow-hidden rounded-md px-4 py-3',
+					tone === 'warning' ? 'bg-[#fef8ee]' : 'bg-accent',
+				)}
+			>
 				<Switch
 					id={switchId}
 					checked={checked}

@@ -174,7 +174,6 @@ export const EditSubscriptionStep = ({
 								checked={coverTransactionCosts}
 								disabled={isSubmitting || isUpdatingCard}
 								switchId="edit-subscription-cover-transaction-costs"
-								layout="stacked"
 								tone={coverTransactionCosts ? 'accent' : 'warning'}
 								onCheckedChange={onCoverTransactionCostsChange}
 							/>

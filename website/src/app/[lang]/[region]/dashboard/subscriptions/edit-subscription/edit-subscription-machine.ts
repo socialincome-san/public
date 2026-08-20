@@ -119,7 +119,7 @@ export const editSubscriptionMachine = setup({
 							brand: event.subscription.brand,
 							last4: event.subscription.last4,
 							initialCoverTransactionCosts,
-							coverTransactionCosts: event.subscription.preselectCoverTransactionCosts ? true : initialCoverTransactionCosts,
+							coverTransactionCosts: event.subscription.preselectCoverTransactionCosts ?? initialCoverTransactionCosts,
 							cancellationReason: undefined,
 							error: undefined,
 						};

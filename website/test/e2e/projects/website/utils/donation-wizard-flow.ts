@@ -150,7 +150,7 @@ export const completeStripePaymentMethodStep = async (page: Page, options: { cov
 
 	await modal.getByTestId('donation-wizard-payment-online').click();
 
-	const coverCostsSwitch = modal.locator('#cover-transaction-costs');
+	const coverCostsSwitch = modal.getByTestId('cover-transaction-costs-switch');
 	if (coverTransactionCosts) {
 		await expect(coverCostsSwitch).toBeChecked();
 	} else {
