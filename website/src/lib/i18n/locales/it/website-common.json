@@ -251,6 +251,7 @@
 			"submitting": "Invio in corso…",
 			"success-title": "Campagna inviata",
 			"success": "Grazie. La tua campagna è stata inviata e verrà revisionata prima della pubblicazione.",
+			"view-campaign": "Vedi la campagna",
 			"error": "Qualcosa è andato storto. Riprova.",
 			"currency-placeholder": "Seleziona una valuta",
 			"image-hint": "JPEG, PNG o WebP fino a 5 MB.",

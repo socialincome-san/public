@@ -1,6 +1,7 @@
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { randomUUID } from 'crypto';
 
 const MANAGEMENT_API_BASE = 'https://mapi.storyblok.com/v1';
@@ -370,6 +371,20 @@ export class StoryblokManagementService {
 			await this.deleteAsset(assetId);
 			throw error;
 		}
+	}
+
+	async campaignStoryExists(slug: string): Promise<boolean> {
+		const storyPath = getCampaignStoryPath(slug);
+		const query = new URLSearchParams({ with_slug: storyPath });
+		const body = await requestManagement(`/spaces/${this.spaceId}/stories/?${query.toString()}`, {
+			method: 'GET',
+		});
+
+		const stories = Array.isArray((body as { stories?: unknown })?.stories)
+			? ((body as { stories: Array<{ slug?: string; full_slug?: string; is_folder?: boolean }> }).stories ?? [])
+			: [];
+
+		return stories.some((story) => !story.is_folder && (story.full_slug === storyPath || story.slug === slug));
 	}
 
 	async createPublishedCampaignStory(input: {

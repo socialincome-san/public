@@ -2,7 +2,7 @@
 
 import { DialogHeader, DialogTitle } from '@/components/dialog';
 import { Form } from '@/components/form';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import {
 	getCampaignDefaultImagesAction,
 	getEligiblePublicSubmissionProgramsAction,
@@ -23,6 +23,7 @@ import {
 import { turnstileResponseFieldName } from '@/lib/services/campaign/turnstile-field';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useForm, type FieldPath } from 'react-hook-form';
 import { CampaignSubmissionFooter } from './campaign-submission-footer';
@@ -40,7 +41,26 @@ import { useCampaignImageUpload } from './use-campaign-image-upload';
 type Props = {
 	labels: SubmissionLabels;
 	lang: WebsiteLanguage;
+	region: WebsiteRegion;
 	onSuccess?: () => void;
+};
+
+const readSubmittedCampaignSlug = (payload: unknown): string | null => {
+	if (typeof payload !== 'object' || payload === null || !('slug' in payload)) {
+		return null;
+	}
+
+	const { slug } = payload;
+	if (typeof slug !== 'string') {
+		return null;
+	}
+
+	const trimmed = slug.trim();
+	if (!trimmed || trimmed.includes('/') || trimmed.includes('.')) {
+		return null;
+	}
+
+	return trimmed;
 };
 
 const defaultFormValues = (): CampaignSubmissionFormValues => ({
@@ -63,7 +83,8 @@ const defaultFormValues = (): CampaignSubmissionFormValues => ({
 	tiktokHandle: '',
 });
 
-export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
+export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Props) => {
+	const router = useRouter();
 	const [currentStep, setCurrentStep] = useState<CampaignSubmissionStepId>('program');
 	const [programs, setPrograms] = useState<PublicSubmissionProgramOption[]>([]);
 	const [programsLoading, setProgramsLoading] = useState(true);
@@ -505,6 +526,8 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				return;
 			}
 
+			const payload: unknown = await response.json().catch(() => null);
+			const campaignSlug = readSubmittedCampaignSlug(payload);
 			setSubmitSuccess(true);
 			form.reset(defaultFormValues());
 			clearPrimaryImageSelection();
@@ -514,6 +537,9 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			setDefaultImages([]);
 			setCurrentStep('program');
 			onSuccess?.();
+			if (campaignSlug) {
+				router.push(`/${lang}/${region}/campaigns/${campaignSlug}`);
+			}
 		} catch {
 			resetTurnstileWidget();
 			setSubmitError(labels.error);
@@ -529,7 +555,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left">
 					<DialogTitle className="leading-snug text-balance">{labels.successTitle}</DialogTitle>
 				</DialogHeader>
-				<p className="text-foreground px-6 text-sm">{labels.success}</p>
+				<p className="text-foreground px-6 pt-4 text-center text-sm">{labels.success}</p>
 			</div>
 		);
 	}

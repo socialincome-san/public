@@ -56,6 +56,7 @@ export type SubmissionLabels = {
 	submitting: string;
 	successTitle: string;
 	success: string;
+	viewCampaign: string;
 	error: string;
 	currencyPlaceholder: string;
 	imageHint: string;

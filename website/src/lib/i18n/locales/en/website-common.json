@@ -251,6 +251,7 @@
 			"submitting": "Submitting…",
 			"success-title": "Campaign submitted",
 			"success": "Thank you. Your campaign was submitted and will be reviewed before publication.",
+			"view-campaign": "View campaign",
 			"error": "Something went wrong. Please try again.",
 			"currency-placeholder": "Select a currency",
 			"image-hint": "JPEG, PNG, or WebP up to 5 MB.",
