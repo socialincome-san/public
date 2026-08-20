@@ -19,7 +19,9 @@ type Props = {
 	title: string;
 	description: string;
 	creatorName: string;
+	quote: string;
 	primaryImage?: HeroHeaderImage | null;
+	profilePicture?: HeroHeaderImage | null;
 	campaignSlug: string;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
@@ -30,7 +32,9 @@ export const CampaignDetail = async ({
 	title,
 	description,
 	creatorName,
+	quote,
 	primaryImage,
+	profilePicture,
 	campaignSlug,
 	lang,
 	region,
@@ -63,12 +67,14 @@ export const CampaignDetail = async ({
 				campaign={campaign}
 				title={title}
 				creatorName={creatorName}
+				quote={quote}
 				primaryImage={primaryImage}
+				profilePicture={profilePicture}
 				translator={translator}
 				lang={lang}
 			/>
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
-			<BlockWrapper className="my-15"  disableMarginTop={true} disableMarginBottom={true}>
+			<BlockWrapper className="my-15" disableMarginTop={true} disableMarginBottom={true}>
 				<div>{description}</div>
 			</BlockWrapper>
 			{campaign.program?.id ? <CampaignProgramTeaser programId={campaign.program.id} lang={lang} region={region} /> : null}

@@ -36,7 +36,9 @@ export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlu
 			title={data.title}
 			description={data.description}
 			creatorName={data.creatorName}
+			quote={data.quote}
 			primaryImage={data.primaryImage}
+			profilePicture={data.profilePicture}
 			campaignSlug={slug}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}

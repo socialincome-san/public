@@ -24,8 +24,10 @@ export const loadCampaignDetailData = cache(async (urlSlug: string, lang: string
 		title: getCampaignTitle(story.content),
 		description: story.content.description,
 		creatorName: story.content.creatorName,
+		quote: story.content.quote ?? '',
 		fullSlug: story.full_slug,
 		primaryImage: story.content.primaryImage,
+		profilePicture: story.content.profilePicture,
 		campaign: campaignResult.data,
 	};
 });

@@ -1,5 +1,5 @@
 import { BlockWrapper } from '@/components/block-wrapper';
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
+import { CampaignDonationFormServer } from '@/components/campaign/campaign-donation/campaign-donation-form-server';
 import { Progress } from '@/components/progress';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Translator } from '@/lib/i18n/translator';
@@ -16,12 +16,23 @@ type Props = {
 	campaign: CampaignPage;
 	title: string;
 	creatorName: string;
+	quote: string;
 	primaryImage?: HeroHeaderImage | null;
+	profilePicture?: HeroHeaderImage | null;
 	translator: Translator;
 	lang: WebsiteLanguage;
 };
 
-export const CampaignHero = ({ campaign, title, creatorName, primaryImage, translator, lang }: Props) => {
+export const CampaignHero = ({
+	campaign,
+	title,
+	creatorName,
+	quote,
+	primaryImage,
+	profilePicture,
+	translator,
+	lang,
+}: Props) => {
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
 	const showProgress = campaign.percentageCollected !== null && campaign.percentageCollected !== undefined;
 	const showAmount = campaign.amountCollected !== null;
@@ -54,7 +65,13 @@ export const CampaignHero = ({ campaign, title, creatorName, primaryImage, trans
 
 					{isActive ? (
 						<div className="hidden shrink-0 lg:block">
-							<DonationFormServer lang={lang} campaignId={campaign.id} />
+							<CampaignDonationFormServer
+								lang={lang}
+								campaignId={campaign.id}
+								quote={quote}
+								creatorName={creatorName}
+								profilePicture={profilePicture}
+							/>
 						</div>
 					) : null}
 				</div>
@@ -62,7 +79,13 @@ export const CampaignHero = ({ campaign, title, creatorName, primaryImage, trans
 
 			{isActive ? (
 				<BlockWrapper className="lg:hidden" disableMarginTop={true} disableMarginBottom={true}>
-					<DonationFormServer lang={lang} campaignId={campaign.id} />
+					<CampaignDonationFormServer
+						lang={lang}
+						campaignId={campaign.id}
+						quote={quote}
+						creatorName={creatorName}
+						profilePicture={profilePicture}
+					/>
 				</BlockWrapper>
 			) : null}
 
