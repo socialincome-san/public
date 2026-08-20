@@ -99,6 +99,8 @@ const requestManagement = async (path: string, init: RequestInit): Promise<unkno
 	return body;
 };
 
+const isObjectRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
+
 // `finish_upload` and the single-asset endpoint both return a minimal asset object, sometimes at the
 // response root and sometimes nested under `asset`.
 const unwrapAsset = (body: unknown): ManagementAsset | null => {
@@ -380,11 +382,15 @@ export class StoryblokManagementService {
 			method: 'GET',
 		});
 
-		const stories = Array.isArray((body as { stories?: unknown })?.stories)
-			? ((body as { stories: Array<{ slug?: string; full_slug?: string; is_folder?: boolean }> }).stories ?? [])
-			: [];
+		const stories = isObjectRecord(body) && Array.isArray(body.stories) ? body.stories : [];
 
-		return stories.some((story) => !story.is_folder && (story.full_slug === storyPath || story.slug === slug));
+		return stories.some((story) => {
+			if (!isObjectRecord(story) || story.is_folder) {
+				return false;
+			}
+
+			return story.full_slug === storyPath || story.slug === slug;
+		});
 	}
 
 	async createPublishedCampaignStory(input: {

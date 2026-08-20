@@ -1,12 +1,12 @@
 'use client';
 
-import { Card } from '@/components/card/card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { Switch } from '@/components/switch';
 import { cn } from '@/lib/utils/cn';
 import { useEffect, useRef } from 'react';
+import { CampaignSubmissionFormCard } from '../form-layout';
 import { ImageUploadField } from '../image-upload-field';
 import { TurnstileWidget } from '../turnstile/turnstile-widget';
 import type { AboutStepProps, CampaignSubmissionFormValues } from '../types';
@@ -31,8 +31,6 @@ const textareaClassName = cn(
 	'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
 	'disabled:opacity-50',
 );
-
-const formCardClassName = 'border-border rounded-xl border p-6 shadow-sm';
 
 export const AboutStep = ({
 	form,
@@ -70,7 +68,7 @@ export const AboutStep = ({
 
 	return (
 		<>
-			<Card variant="noPadding" className={formCardClassName}>
+			<CampaignSubmissionFormCard>
 				<div className="flex flex-col gap-6">
 					<FormField
 						control={form.control}
@@ -128,9 +126,9 @@ export const AboutStep = ({
 						)}
 					/>
 				</div>
-			</Card>
+			</CampaignSubmissionFormCard>
 
-			<Card variant="noPadding" className={formCardClassName}>
+			<CampaignSubmissionFormCard>
 				<div className="flex flex-col gap-6">
 					<div className="flex items-center justify-between gap-3">
 						<Label htmlFor="campaign-has-additional-information">{labels.hasAdditionalInformation}</Label>
@@ -211,7 +209,7 @@ export const AboutStep = ({
 						</>
 					) : null}
 				</div>
-			</Card>
+			</CampaignSubmissionFormCard>
 
 			{turnstileSiteKey ? (
 				<TurnstileWidget

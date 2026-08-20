@@ -22,6 +22,7 @@ import {
 } from '@/lib/services/campaign/campaign-submission-input';
 import { turnstileResponseFieldName } from '@/lib/services/campaign/turnstile-field';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
+import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
@@ -45,6 +46,8 @@ type Props = {
 	onSuccess?: () => void;
 };
 
+const submittedCampaignSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 const readSubmittedCampaignSlug = (payload: unknown): string | null => {
 	if (typeof payload !== 'object' || payload === null || !('slug' in payload)) {
 		return null;
@@ -56,7 +59,7 @@ const readSubmittedCampaignSlug = (payload: unknown): string | null => {
 	}
 
 	const trimmed = slug.trim();
-	if (!trimmed || trimmed.includes('/') || trimmed.includes('.')) {
+	if (!submittedCampaignSlugPattern.test(trimmed)) {
 		return null;
 	}
 
@@ -538,7 +541,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			setCurrentStep('program');
 			onSuccess?.();
 			if (campaignSlug) {
-				router.push(`/${lang}/${region}/campaigns/${campaignSlug}`);
+				router.push(getWebsitePublicPath(lang, region, `campaigns/${campaignSlug}`));
 			}
 		} catch {
 			resetTurnstileWidget();

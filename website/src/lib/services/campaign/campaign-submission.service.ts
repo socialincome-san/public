@@ -273,7 +273,9 @@ export class CampaignSubmissionService extends BaseService {
 				return this.resultFail('submission-failed', error.retryable ? 503 : 502);
 			}
 
-			throw error;
+			console.error(error, { slug: baseSlug });
+
+			return this.resultFail('submission-failed', 503);
 		}
 	}
 

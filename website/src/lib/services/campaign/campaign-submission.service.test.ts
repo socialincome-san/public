@@ -394,7 +394,7 @@ describe('CampaignSubmissionService', () => {
 
 	test('submit suffixes the slug when it already exists in Storyblok', async () => {
 		const { service, create, campaignStoryExists, createPublishedCampaignStory } = createService();
-		campaignStoryExists.mockImplementation(async (slug: string) => slug === 'my-campaign');
+		campaignStoryExists.mockImplementation((slug: string) => slug === 'my-campaign');
 
 		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
 
@@ -414,10 +414,10 @@ describe('CampaignSubmissionService', () => {
 
 	test('submit skips slugs taken in the database or Storyblok until one is free', async () => {
 		const { service, create, validateSlugUniqueness, campaignStoryExists } = createService();
-		validateSlugUniqueness.mockImplementation(async (slug: string) =>
+		validateSlugUniqueness.mockImplementation((slug: string) =>
 			slug === 'my-campaign' ? { success: false, error: 'taken' } : { success: true, data: undefined },
 		);
-		campaignStoryExists.mockImplementation(async (slug: string) => slug === 'my-campaign-2');
+		campaignStoryExists.mockImplementation((slug: string) => slug === 'my-campaign-2');
 
 		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
 
@@ -433,6 +433,22 @@ describe('CampaignSubmissionService', () => {
 		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
 		const { service, db, campaignStoryExists } = createService();
 		campaignStoryExists.mockRejectedValueOnce(new StoryblokManagementError('Storyblok request failed.', 503, true));
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('submission-failed');
+			expect(result.status).toBe(503);
+		}
+		expect(db.campaign.create).not.toHaveBeenCalled();
+		consoleError.mockRestore();
+	});
+
+	test('submit returns submission-failed when Storyblok uniqueness lookup throws unexpectedly', async () => {
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		const { service, db, campaignStoryExists } = createService();
+		campaignStoryExists.mockRejectedValueOnce(new Error('network down'));
 
 		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
 

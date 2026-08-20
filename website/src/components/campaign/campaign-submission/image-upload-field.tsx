@@ -61,15 +61,9 @@ export const ImageUploadField = ({
 					/>
 					<div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2">
 						{previewUrl ? (
-							<span className="border-primary size-40 overflow-hidden rounded-full border-2 transform-gpu">
+							<span className="border-primary size-40 overflow-hidden rounded-full border-2">
 								{/* eslint-disable-next-line @next/next/no-img-element -- local object URL preview */}
-								<img
-									src={previewUrl}
-									alt=""
-									width={160}
-									height={160}
-									className="size-full rounded-full object-cover [image-rendering:high-quality]"
-								/>
+								<img src={previewUrl} alt="" width={160} height={160} className="size-full rounded-full object-cover" />
 							</span>
 						) : (
 							<>
