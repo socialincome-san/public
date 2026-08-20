@@ -13,18 +13,18 @@ describe('getCampaignDaysRemaining', () => {
 
 		expect(getCampaignDaysRemaining({ endDate, createdAt, now })).toEqual({
 			remainingDays: 90,
-			progress: 100,
+			progress: 0,
 		});
 	});
 
-	test('returns full duration at campaign start', () => {
+	test('returns full duration and empty progress at campaign start', () => {
 		expect(getCampaignDaysRemaining({ endDate, createdAt, now: createdAt.getTime() })).toEqual({
 			remainingDays: 90,
-			progress: 100,
+			progress: 0,
 		});
 	});
 
-	test('returns remaining fraction while the campaign is running', () => {
+	test('returns remaining days and elapsed fraction while the campaign is running', () => {
 		const now = dateFrom(createdAt, 45).getTime();
 
 		expect(getCampaignDaysRemaining({ endDate, createdAt, now })).toEqual({
@@ -33,12 +33,12 @@ describe('getCampaignDaysRemaining', () => {
 		});
 	});
 
-	test('returns zero after the campaign has ended', () => {
+	test('returns zero remaining days and full progress after the campaign has ended', () => {
 		const now = dateFrom(endDate, 3).getTime();
 
 		expect(getCampaignDaysRemaining({ endDate, createdAt, now })).toEqual({
 			remainingDays: 0,
-			progress: 0,
+			progress: 100,
 		});
 	});
 });

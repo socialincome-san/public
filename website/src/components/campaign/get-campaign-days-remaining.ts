@@ -23,6 +23,6 @@ export const getCampaignDaysRemaining = ({
 
 	return {
 		remainingDays: Math.max(0, Math.ceil(remainingCampaignDurationMs / MS_PER_DAY)),
-		progress: Math.min(100, (remainingCampaignDurationMs / totalCampaignDurationMs) * 100),
+		progress: 100 - Math.min(100, (remainingCampaignDurationMs / totalCampaignDurationMs) * 100),
 	};
 };
