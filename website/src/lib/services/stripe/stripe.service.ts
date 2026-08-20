@@ -825,9 +825,13 @@ export class StripeService extends BaseService {
 					return this.resultOk({ skipReason: `Unhandled event type: ${event.type}` });
 			}
 		} catch (error) {
-			console.error(error);
+			if (error instanceof Stripe.errors.StripeSignatureVerificationError) {
+				return this.resultFail('Invalid Stripe signature', 400);
+			}
 
-			return this.resultFail(`Failed to handle webhook event: ${JSON.stringify(error)}`);
+			console.error(`${SLACK_ALERT}: Stripe webhook handler failed`, { error });
+
+			return this.resultFail('Failed to handle webhook event');
 		}
 	}
 
