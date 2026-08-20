@@ -50,7 +50,7 @@ export const ImageUploadField = ({
 		<div className="flex flex-col gap-3">
 			<Label className={cn(error && 'text-destructive')}>{label}</Label>
 			{variant === 'avatar' ? (
-				<div className="border-border relative aspect-[16/10] w-full rounded-2xl border border-dashed min-h-48">
+				<div className="border-border relative aspect-[16/10] min-h-48 w-full rounded-2xl border border-dashed">
 					<button
 						type="button"
 						disabled={disabled}
