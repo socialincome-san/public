@@ -39,8 +39,8 @@ const createService = (localPartners: PublicProgramLocalPartner[] = []) => {
 describe('LocalPartnerReadService public program local partners', () => {
 	test('returns every local partner with recipients in the program', async () => {
 		const localPartners = [
-			{ id: 'partner-1', name: 'Aurora Foundation', slug: 'aurora-foundation' },
-			{ id: 'partner-2', name: 'SLAES', slug: 'slaes' },
+			{ id: 'partner-1', name: 'Aurora Foundation' },
+			{ id: 'partner-2', name: 'SLAES' },
 		];
 		const { service, findMany } = createService(localPartners);
 
@@ -56,7 +56,6 @@ describe('LocalPartnerReadService public program local partners', () => {
 			select: {
 				id: true,
 				name: true,
-				slug: true,
 			},
 			orderBy: { name: 'asc' },
 		});

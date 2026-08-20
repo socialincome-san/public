@@ -72,6 +72,13 @@ export const CampaignHero = ({
 		endDate: campaign.endDate,
 		createdAt: campaign.createdAt,
 	});
+	const donationFormProps = {
+		lang,
+		campaignId: campaign.id,
+		quote,
+		creatorName,
+		profilePicture,
+	};
 
 	return (
 		<section className="full-bleed-hero flex flex-col gap-6">
@@ -120,13 +127,7 @@ export const CampaignHero = ({
 
 					{isActive ? (
 						<div className="hidden shrink-0 lg:block">
-							<CampaignDonationFormServer
-								lang={lang}
-								campaignId={campaign.id}
-								quote={quote}
-								creatorName={creatorName}
-								profilePicture={profilePicture}
-							/>
+							<CampaignDonationFormServer {...donationFormProps} />
 						</div>
 					) : null}
 				</div>
@@ -134,13 +135,7 @@ export const CampaignHero = ({
 
 			{isActive ? (
 				<BlockWrapper className="lg:hidden" disableMarginTop={true}>
-					<CampaignDonationFormServer
-						lang={lang}
-						campaignId={campaign.id}
-						quote={quote}
-						creatorName={creatorName}
-						profilePicture={profilePicture}
-					/>
+					<CampaignDonationFormServer {...donationFormProps} />
 				</BlockWrapper>
 			) : null}
 		</section>

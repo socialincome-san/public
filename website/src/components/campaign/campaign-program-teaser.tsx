@@ -16,6 +16,25 @@ type Props = {
 	region: WebsiteRegion;
 };
 
+type TeaserMetaRowProps = {
+	label: string;
+	items: { id: string; name: string }[];
+	showDivider?: boolean;
+};
+
+const TeaserMetaRow = ({ label, items, showDivider = false }: TeaserMetaRowProps) => (
+	<div className={cn('grid gap-3 py-4 sm:grid-cols-[140px_1fr] sm:items-center', showDivider && 'border-border border-t')}>
+		<p className="text-sm font-medium text-slate-600">{label}</p>
+		<div className="flex flex-wrap gap-2">
+			{items.map((item) => (
+				<Badge key={item.id} className="px-3 py-1.5 font-medium">
+					{item.name}
+				</Badge>
+			))}
+		</div>
+	</div>
+);
+
 export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) => {
 	const [programSlugResult, displayCurrency] = await Promise.all([
 		services.read.program.getProgramSlugById(programId),
@@ -59,7 +78,7 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 
 		return {
 			id: focus.id,
-			title: focusStory ? getFocusTitle(focusStory.content) : focus.name,
+			name: focusStory ? getFocusTitle(focusStory.content) : focus.name,
 			sdgs: focusStory?.content.sdgs ?? [],
 		};
 	});
@@ -68,6 +87,7 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 	const hasFocuses = focuses.length > 0;
 	const hasLocalPartners = localPartners.length > 0;
 	const hasSdgs = sdgValues.length > 0;
+	const programDescription = program.content.description.trim();
 
 	return (
 		<BlockWrapper disableMarginTop={true} className="mt-10">
@@ -77,41 +97,20 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 					<h2 className="text-foreground mt-3 text-4xl leading-tight font-bold text-pretty">
 						{getProgramTitle(program.content)}
 					</h2>
-					{program.content.description.trim() ? (
-						<p className="text-muted-foreground mt-5 max-w-2xl text-base leading-7">{program.content.description.trim()}</p>
+					{programDescription ? (
+						<p className="text-muted-foreground mt-5 max-w-2xl text-base leading-7">{programDescription}</p>
 					) : null}
 					{hasFocuses || hasLocalPartners || hasSdgs ? (
 						<div className="border-border mt-8 border-y">
 							{hasFocuses ? (
-								<div className="grid gap-3 py-4 sm:grid-cols-[140px_1fr] sm:items-center">
-									<p className="text-sm font-medium text-slate-600">{translator.t('campaign.program-teaser.focus-areas')}</p>
-									<div className="flex flex-wrap gap-2">
-										{focuses.map((focus) => (
-											<Badge key={focus.id} className="px-3 py-1.5 font-medium">
-												{focus.title}
-											</Badge>
-										))}
-									</div>
-								</div>
+								<TeaserMetaRow label={translator.t('campaign.program-teaser.focus-areas')} items={focuses} />
 							) : null}
 							{hasLocalPartners ? (
-								<div
-									className={cn(
-										'grid gap-3 py-4 sm:grid-cols-[140px_1fr] sm:items-center',
-										hasFocuses && 'border-border border-t',
-									)}
-								>
-									<p className="text-sm font-medium text-slate-600">
-										{translator.t('campaign.program-teaser.local-partners')}
-									</p>
-									<div className="flex flex-wrap gap-2">
-										{localPartners.map((localPartner) => (
-											<Badge key={localPartner.id} className="px-3 py-1.5 font-medium">
-												{localPartner.name}
-											</Badge>
-										))}
-									</div>
-								</div>
+								<TeaserMetaRow
+									label={translator.t('campaign.program-teaser.local-partners')}
+									items={localPartners}
+									showDivider={hasFocuses}
+								/>
 							) : null}
 							{hasSdgs ? (
 								<div className={hasFocuses || hasLocalPartners ? 'border-border border-t' : undefined}>

@@ -86,34 +86,28 @@ export const CampaignDonationForm = ({
 				) : null}
 
 				<div className="bg-accent grid w-full grid-cols-2 rounded-md p-1">
-					<button
-						type="button"
-						data-testid="donation-wizard-cadence-monthly"
-						aria-pressed={values.cadence === 'monthly'}
-						onClick={() => form.setCadence('monthly')}
-						className={cn(
-							'cursor-pointer rounded-md px-3 py-2 text-sm font-medium transition-colors',
-							values.cadence === 'monthly'
-								? cn(segmentActive, 'text-foreground')
-								: 'text-muted-foreground hover:text-foreground',
-						)}
-					>
-						{translations.monthly}
-					</button>
-					<button
-						type="button"
-						data-testid="donation-wizard-cadence-one-time"
-						aria-pressed={values.cadence === 'one-time'}
-						onClick={() => form.setCadence('one-time')}
-						className={cn(
-							'cursor-pointer rounded-md px-3 py-2 text-sm font-medium transition-colors',
-							values.cadence === 'one-time'
-								? cn(segmentActive, 'text-foreground')
-								: 'text-muted-foreground hover:text-foreground',
-						)}
-					>
-						{translations.oneTime}
-					</button>
+					{(
+						[
+							{ cadence: 'monthly', label: translations.monthly, testId: 'donation-wizard-cadence-monthly' },
+							{ cadence: 'one-time', label: translations.oneTime, testId: 'donation-wizard-cadence-one-time' },
+						] as const
+					).map(({ cadence, label, testId }) => (
+						<button
+							key={cadence}
+							type="button"
+							data-testid={testId}
+							aria-pressed={values.cadence === cadence}
+							onClick={() => form.setCadence(cadence)}
+							className={cn(
+								'cursor-pointer rounded-md px-3 py-2 text-sm font-medium transition-colors',
+								values.cadence === cadence
+									? cn(segmentActive, 'text-foreground')
+									: 'text-muted-foreground hover:text-foreground',
+							)}
+						>
+							{label}
+						</button>
+					))}
 				</div>
 
 				<div className="flex w-full gap-3">

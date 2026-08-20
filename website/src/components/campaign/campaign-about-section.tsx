@@ -72,7 +72,7 @@ type SocialLinkProps = {
 };
 
 const SocialLink = ({ href, label, iconOnly = false, children }: SocialLinkProps) => (
-	<Button variant="outline" size="icon" className={iconOnly ? 'size-9' : 'h-9 w-auto px-4'} asChild>
+	<Button variant="outline" size={iconOnly ? 'icon' : 'sm'} className={iconOnly ? undefined : 'h-9 px-4'} asChild>
 		<a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
 			{children}
 		</a>

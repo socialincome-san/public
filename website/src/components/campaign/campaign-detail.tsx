@@ -65,6 +65,7 @@ export const CampaignDetail = async ({
 		throw new Error(pageContentResult.error);
 	}
 	const { translator, faqs } = pageContentResult.data;
+	const trimmedDescription = description.trim();
 	const newsletterTranslations = {
 		title: translator.t('popup.information-label'),
 		emailLabel: translator.t('updates.email'),
@@ -87,9 +88,11 @@ export const CampaignDetail = async ({
 				lang={lang}
 			/>
 			<Breadcrumb links={breadcrumbLinks} className="pb-0" />
-			<BlockWrapper className="my-15" disableMarginTop={true} disableMarginBottom={true}>
-				<div>{description}</div>
-			</BlockWrapper>
+			{trimmedDescription ? (
+				<BlockWrapper className="my-15" disableMarginTop={true} disableMarginBottom={true}>
+					<p className="text-foreground text-lg whitespace-pre-wrap">{trimmedDescription}</p>
+				</BlockWrapper>
+			) : null}
 			<CampaignAboutSection
 				heading={translator.t('campaign.about-title')}
 				sectionDescription={sectionDescription}

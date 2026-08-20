@@ -22,7 +22,8 @@ export const CampaignDonationFormServer = async ({ lang, campaignId, quote, crea
 	const profilePictureSrc = profilePicture?.filename
 		? formatStoryblokUrl(profilePicture.filename, PROFILE_PICTURE_SIZE, PROFILE_PICTURE_SIZE, profilePicture.focus)
 		: null;
-	const profilePictureAlt = profilePicture?.alt?.trim() ? profilePicture.alt.trim() : creatorName;
+	const trimmedProfilePictureAlt = profilePicture?.alt?.trim();
+	const profilePictureAlt = trimmedProfilePictureAlt ? trimmedProfilePictureAlt : creatorName;
 
 	return (
 		<CampaignDonationForm
