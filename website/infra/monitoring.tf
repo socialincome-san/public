@@ -49,7 +49,7 @@ resource "google_monitoring_alert_policy" "slack_alerts" {
 }
 
 resource "google_monitoring_uptime_check_config" "health_live" {
-  display_name = "Website app / live (${var.env})"
+  display_name = "Website / live (${var.env})"
   timeout      = "10s"
   period       = "60s"
 
@@ -102,12 +102,12 @@ resource "google_monitoring_uptime_check_config" "health_ready" {
   depends_on = [google_project_service.monitoring]
 }
 
-resource "google_monitoring_alert_policy" "uptime_health_app_down" {
-  display_name = "Website app unreachable (${var.env})"
+resource "google_monitoring_alert_policy" "uptime_health_website_unreachable" {
+  display_name = "Website unreachable (${var.env})"
   combiner     = "OR"
 
   documentation {
-    subject   = "Website app unreachable (${var.env})"
+    subject   = "Website unreachable (${var.env})"
     mime_type = "text/markdown"
     content   = <<-EOT
       GET https://${var.website_domain}/api/health/live failed.
@@ -162,7 +162,7 @@ resource "google_monitoring_alert_policy" "uptime_health_db_down" {
     content   = <<-EOT
       GET https://${var.website_domain}/api/health/ready failed while /api/health/live is OK.
 
-      The app is up but Postgres did not answer `SELECT 1` (auth, connectivity, or query failure).
+      The website is up but Postgres did not answer `SELECT 1` (auth, connectivity, or query failure).
     EOT
   }
 
