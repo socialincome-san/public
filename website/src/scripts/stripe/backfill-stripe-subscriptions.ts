@@ -9,6 +9,7 @@
 
 import { SubscriptionPaymentMethod } from '@/generated/prisma/client';
 import { prisma } from '@/lib/database/prisma';
+import { mapCoverTransactionCostsMetadata } from '@/lib/services/subscription/cover-transaction-costs';
 import {
 	mapStripeSubscriptionLifecycle,
 	mapStripeSubscriptionPriceFields,
@@ -242,6 +243,7 @@ const processSubscription = async (context: ProcessContext, subscription: Stripe
 				status: lifecycle.status,
 				paymentMethod: SubscriptionPaymentMethod.stripe,
 				canceledAt: lifecycle.canceledAt,
+				coverTransactionCosts: mapCoverTransactionCostsMetadata(subscription.metadata),
 			},
 		});
 	}
