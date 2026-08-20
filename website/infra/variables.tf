@@ -199,6 +199,12 @@ variable "storyblok_webhook_secret" {
   sensitive   = true
 }
 
+variable "storyblok_management_token" {
+  description = "Storyblok Management API token used to list campaign default images, upload assets, and create draft campaign stories"
+  type        = string
+  sensitive   = true
+}
+
 variable "mapbox_token" {
   description = "Mapbox token for generating country map images"
   type        = string

@@ -1,6 +1,6 @@
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { ProgramPublicSubmissionService } from '../program/program-public-submission.service';
-import { StoryblokManagementService } from '../storyblok/storyblok-management.service';
+import { StoryblokManagementError, StoryblokManagementService } from '../storyblok/storyblok-management.service';
 import { CampaignSubmissionService } from './campaign-submission.service';
 import { CampaignValidationService } from './campaign-validation.service';
 
@@ -96,6 +96,7 @@ describe('CampaignSubmissionService', () => {
 
 		const deleteAsset = jest.fn().mockResolvedValue(undefined);
 		const createPublishedCampaignStory = jest.fn().mockResolvedValue({ storyId: 20, storyUuid: 'uuid' });
+		const campaignStoryExists = jest.fn().mockResolvedValue(false);
 		const getAsset = jest.fn();
 		const downloadAssetBuffer = jest.fn();
 		const uploadAsset = jest.fn().mockResolvedValue({ assetId: 10, asset: { filename: 'image.jpg' } });
@@ -103,6 +104,7 @@ describe('CampaignSubmissionService', () => {
 		const storyblokManagementService = {
 			uploadAsset,
 			createPublishedCampaignStory,
+			campaignStoryExists,
 			deleteAsset,
 			deleteStory: jest.fn().mockResolvedValue(undefined),
 			getAsset,
@@ -122,6 +124,7 @@ describe('CampaignSubmissionService', () => {
 			create,
 			deleteAsset,
 			createPublishedCampaignStory,
+			campaignStoryExists,
 			campaignValidationService,
 			validateSlugUniqueness,
 			programPublicSubmissionService,
@@ -387,6 +390,75 @@ describe('CampaignSubmissionService', () => {
 			expect(result.status).toBe(400);
 		}
 		expect(db.campaign.create).not.toHaveBeenCalled();
+	});
+
+	test('submit suffixes the slug when it already exists in Storyblok', async () => {
+		const { service, create, campaignStoryExists, createPublishedCampaignStory } = createService();
+		campaignStoryExists.mockImplementation((slug: string) => slug === 'my-campaign');
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
+
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.slug).toBe('my-campaign-2');
+		}
+		const createArg = create.mock.calls[0]?.[0];
+		expect(createArg?.data.slug).toBe('my-campaign-2');
+		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
+			expect.objectContaining({
+				slug: 'my-campaign-2',
+				portalSlug: 'my-campaign-2',
+			}),
+		);
+	});
+
+	test('submit skips slugs taken in the database or Storyblok until one is free', async () => {
+		const { service, create, validateSlugUniqueness, campaignStoryExists } = createService();
+		validateSlugUniqueness.mockImplementation((slug: string) =>
+			slug === 'my-campaign' ? { success: false, error: 'taken' } : { success: true, data: undefined },
+		);
+		campaignStoryExists.mockImplementation((slug: string) => slug === 'my-campaign-2');
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
+
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.slug).toBe('my-campaign-3');
+		}
+		const createArg = create.mock.calls[0]?.[0];
+		expect(createArg?.data.slug).toBe('my-campaign-3');
+	});
+
+	test('submit returns submission-failed when Storyblok uniqueness lookup fails', async () => {
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		const { service, db, campaignStoryExists } = createService();
+		campaignStoryExists.mockRejectedValueOnce(new StoryblokManagementError('Storyblok request failed.', 503, true));
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('submission-failed');
+			expect(result.status).toBe(503);
+		}
+		expect(db.campaign.create).not.toHaveBeenCalled();
+		consoleError.mockRestore();
+	});
+
+	test('submit returns submission-failed when Storyblok uniqueness lookup throws unexpectedly', async () => {
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		const { service, db, campaignStoryExists } = createService();
+		campaignStoryExists.mockRejectedValueOnce(new Error('network down'));
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('submission-failed');
+			expect(result.status).toBe(503);
+		}
+		expect(db.campaign.create).not.toHaveBeenCalled();
+		consoleError.mockRestore();
 	});
 
 	test('submit appends a uuid when numbered slug suffixes are exhausted', async () => {

@@ -140,6 +140,7 @@ export const CampaignsOverview = async ({
 						label={translator.t('campaigns-page.create-campaign')}
 						labels={submissionLabels}
 						lang={lang}
+						region={region}
 					/>
 				</div>
 			) : null}
