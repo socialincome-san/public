@@ -15,6 +15,13 @@
 			"goal-amount": "{{ amount, currency }}"
 		},
 		"ended": " La campagne est terminée. Tu peux faire un don en allant sur la page principale du site.",
+		"days-left": "Jours restants",
+		"program-teaser": {
+			"heading": "Ton don soutient",
+			"focus-areas": "Domaines d’intervention",
+			"local-partners": "Partenaires locaux"
+		},
+		"about-title": "À propos",
 		"about-si-title": "Über Social Income",
 		"about-si-text-1": "Social Income est une ONG basée en Suisse qui assure des transferts d’argent inconditionnels par téléphone mobile à des personnes vivant dans une pauvreté multidimensionnelle en Afrique de l’Ouest.",
 		"about-si-text-2": "Depuis 2020, Social Income gère un programme de revenu de base universel non limité dans le temps en Sierra Leone.",

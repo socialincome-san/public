@@ -47,6 +47,7 @@ export type CampaignPage = CampaignPayload & {
 	amountCollected: number | null;
 	percentageCollected: number | null;
 	daysLeft: number;
+	createdAt: Date;
 };
 
 export type CampaignOption = { id: string; name: string };

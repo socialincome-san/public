@@ -1,13 +1,16 @@
 import { BlockWrapper } from '@/components/block-wrapper';
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
+import { CampaignDonationFormServer } from '@/components/campaign/campaign-donation/campaign-donation-form-server';
+import { getCampaignDaysRemaining } from '@/components/campaign/get-campaign-days-remaining';
 import { Progress } from '@/components/progress';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { isCampaignActive } from '@/lib/services/campaign/campaign-public-activity';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { formatNumberLocale } from '@/lib/utils/string-utils';
 import NextImage from 'next/image';
+import type { ReactNode } from 'react';
 
 const HERO_HEADER_IMAGE_WIDTH = 1920;
 const HERO_HEADER_IMAGE_HEIGHT = 1080;
@@ -15,17 +18,46 @@ const HERO_HEADER_IMAGE_HEIGHT = 1080;
 type Props = {
 	campaign: CampaignPage;
 	title: string;
-	description: string;
 	creatorName: string;
+	quote: string;
 	primaryImage?: HeroHeaderImage | null;
+	profilePicture?: HeroHeaderImage | null;
 	translator: Translator;
 	lang: WebsiteLanguage;
 };
 
-export const CampaignHero = ({ campaign, title, description, creatorName, primaryImage, translator, lang }: Props) => {
+type HeroStatProps = {
+	label: string;
+	value: string;
+	trailing?: ReactNode;
+	progress: number;
+};
+
+const HeroStat = ({ label, value, trailing, progress }: HeroStatProps) => (
+	<div className="flex min-w-0 flex-1 flex-col gap-3">
+		<div className="flex items-end justify-between gap-4">
+			<div className="flex min-w-0 flex-col gap-1">
+				<p className="text-sm font-medium">{label}</p>
+				<p className="text-4xl font-normal tabular-nums md:text-6xl">{value}</p>
+			</div>
+			{trailing}
+		</div>
+		<Progress value={progress} variant="onDark" className="h-2" />
+	</div>
+);
+
+export const CampaignHero = ({
+	campaign,
+	title,
+	creatorName,
+	quote,
+	primaryImage,
+	profilePicture,
+	translator,
+	lang,
+}: Props) => {
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
-	const showProgress = campaign.percentageCollected !== null && campaign.percentageCollected !== undefined;
-	const showAmount = campaign.amountCollected !== null;
+	const raisedPercent = campaign.percentageCollected ?? 0;
 	const isActive = isCampaignActive({
 		endDate: campaign.endDate,
 		goal: campaign.goal,
@@ -35,6 +67,18 @@ export const CampaignHero = ({ campaign, title, description, creatorName, primar
 		? formatStoryblokUrl(primaryImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, primaryImage.focus)
 		: null;
 	const heroImageAlt = primaryImage?.alt ?? title;
+	const locale = getSafeNumberFormatLocale(lang);
+	const { remainingDays, progress: daysProgress } = getCampaignDaysRemaining({
+		endDate: campaign.endDate,
+		createdAt: campaign.createdAt,
+	});
+	const donationFormProps = {
+		lang,
+		campaignId: campaign.id,
+		quote,
+		creatorName,
+		profilePicture,
+	};
 
 	return (
 		<section className="full-bleed-hero flex flex-col gap-6">
@@ -45,83 +89,55 @@ export const CampaignHero = ({ campaign, title, description, creatorName, primar
 					<div className="bg-primary/20 absolute inset-0" />
 				)}
 
-				<div className="from-foreground/70 via-foreground/35 to-foreground/15 absolute inset-0 bg-gradient-to-t" />
+				<div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,hsl(var(--foreground))_0%,hsl(var(--foreground)/0.85)_22%,transparent_55%)]" />
 
-				<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto mb-8 flex flex-row items-end justify-between gap-4 md:mb-24">
-					<div className="text-primary-foreground flex max-w-2xl flex-col gap-4">
-						<p className="text-lg">{translator.t('campaign.by', { context: { creator: creatorName } })}</p>
-						<h1 className="text-5xl leading-tight font-bold md:text-6xl">{title}</h1>
+				<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto mb-8 flex flex-row items-end justify-between gap-8 md:mb-24">
+					<div className="flex min-w-0 flex-1 flex-col gap-10 px-4">
+						<div className="flex max-w-2xl flex-col gap-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+							<p className="text-lg">{translator.t('campaign.by', { context: { creator: creatorName } })}</p>
+							<h1 className="text-5xl leading-tight font-bold text-pretty md:text-6xl">{title}</h1>
+						</div>
+
+						<div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-16">
+							<HeroStat
+								label={translator.t('campaigns-page.raised-percentage', {
+									namespace: 'website-common',
+									context: {
+										percentage: raisedPercent,
+										currency: campaign.currency,
+									},
+								})}
+								value={formatNumberLocale(campaign.amountCollected ?? 0, locale)}
+								trailing={
+									hasGoal ? (
+										<p className="pb-1 text-xl font-medium tabular-nums opacity-40">
+											{formatNumberLocale(campaign.goal ?? 0, locale)}
+										</p>
+									) : null
+								}
+								progress={raisedPercent}
+							/>
+							<HeroStat
+								label={translator.t('campaign.days-left')}
+								value={formatNumberLocale(remainingDays, locale)}
+								progress={daysProgress}
+							/>
+						</div>
 					</div>
 
 					{isActive ? (
 						<div className="hidden shrink-0 lg:block">
-							<DonationFormServer lang={lang} campaignId={campaign.id} />
+							<CampaignDonationFormServer {...donationFormProps} />
 						</div>
 					) : null}
 				</div>
 			</div>
 
 			{isActive ? (
-				<BlockWrapper className="lg:hidden" disableMarginTop={true} disableMarginBottom={true}>
-					<DonationFormServer lang={lang} campaignId={campaign.id} />
+				<BlockWrapper className="lg:hidden" disableMarginTop={true}>
+					<CampaignDonationFormServer {...donationFormProps} />
 				</BlockWrapper>
 			) : null}
-
-			<div className="w-site-width max-w-content mx-auto flex flex-col gap-6 px-6 pb-12 md:pb-16">
-				<p className="text-foreground text-lg">{description}</p>
-
-				{!hasGoal && showAmount && (
-					<p className="text-primary text-xl font-bold">
-						{translator.t('campaign.without-goal.collected', {
-							context: {
-								count: campaign.numberOfContributions,
-								amount: campaign.amountCollected,
-								currency: campaign.currency,
-								total: campaign.goal,
-							},
-						})}
-					</p>
-				)}
-
-				{showProgress && (
-					<div className="flex flex-col gap-2">
-						<div className="text-primary flex justify-between text-sm font-medium">
-							<span>
-								{translator.t('campaign.with-goal.collected-percentage', {
-									context: { percentage: campaign.percentageCollected },
-								})}
-							</span>
-							<span>{translator.t('campaign.with-goal.goal-title')}</span>
-						</div>
-						<Progress value={campaign.percentageCollected ?? 0} className="h-3" />
-						<div className="text-primary flex justify-between text-sm">
-							<span>
-								{translator.t('campaign.with-goal.collected-amount', {
-									context: {
-										count: campaign.numberOfContributions,
-										amount: campaign.amountCollected,
-										currency: campaign.currency,
-									},
-								})}
-							</span>
-							<span>
-								{translator.t('campaign.with-goal.goal-amount', {
-									context: {
-										amount: campaign.goal,
-										currency: campaign.currency,
-									},
-								})}
-							</span>
-						</div>
-					</div>
-				)}
-
-				{!isActive && (
-					<p className="text-destructive text-lg font-medium">
-						{translator.t('campaign.ended', { context: { count: campaign.daysLeft } })}
-					</p>
-				)}
-			</div>
 		</section>
 	);
 };

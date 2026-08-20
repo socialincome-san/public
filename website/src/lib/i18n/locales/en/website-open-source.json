@@ -8,8 +8,7 @@
 			"time": "in the last 12 months"
 		},
 		"stars": {
-			"title": "Stars",
-			"time": "in the last 12 months"
+			"title": "Stars"
 		},
 		"forks": {
 			"title": "Forks",
