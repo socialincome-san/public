@@ -15,6 +15,7 @@
 			"goal-amount": "{{ amount, currency }}"
 		},
 		"ended": "La campagna è terminata. Per donazioni regolari, si prega di utilizzare la pagina principale delle donazioni.",
+		"days-left": "Giorni rimanenti",
 		"program-teaser": {
 			"heading": "La tua donazione sostiene",
 			"focus-areas": "Aree di intervento",

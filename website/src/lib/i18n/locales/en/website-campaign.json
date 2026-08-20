@@ -15,6 +15,7 @@
 			"goal-amount": "{{ amount, currency }}"
 		},
 		"ended": "The campaign has ended.  For regular donations, please use the main donation page.",
+		"days-left": "Days left",
 		"program-teaser": {
 			"heading": "Your donation supports",
 			"focus-areas": "Focus areas",

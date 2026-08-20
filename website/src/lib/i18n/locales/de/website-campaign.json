@@ -15,6 +15,7 @@
 			"goal-amount": "{{ amount, currency }}"
 		},
 		"ended": "Die Kampagne ist beendet. Für reguläre Spenden verwende bitte die Hauptspendeseite.",
+		"days-left": "Tage verbleibend",
 		"program-teaser": {
 			"heading": "Deine Spende unterstützt",
 			"focus-areas": "Schwerpunktbereiche",
