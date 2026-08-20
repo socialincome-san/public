@@ -37,13 +37,38 @@ describe('editSubscriptionMachine', () => {
 		expect(actor.getSnapshot().matches('editing')).toBe(true);
 	});
 
+	test('allows submit when only cover transaction costs changes', () => {
+		const actor = createActor(editSubscriptionMachine).start();
+		actor.send(openEvent);
+		actor.send({ type: 'SET_COVER_TRANSACTION_COSTS', value: true });
+
+		expect(actor.getSnapshot().can({ type: 'SUBMIT' })).toBe(true);
+	});
+
+	test('preselects cover transaction costs when opening from nudge', () => {
+		const actor = createActor(editSubscriptionMachine).start();
+		actor.send({
+			...openEvent,
+			subscription: {
+				...openEvent.subscription,
+				coverTransactionCosts: false,
+				preselectCoverTransactionCosts: true,
+			},
+		});
+
+		expect(actor.getSnapshot().context.coverTransactionCosts).toBe(true);
+		expect(actor.getSnapshot().context.initialCoverTransactionCosts).toBe(false);
+		expect(actor.getSnapshot().can({ type: 'SUBMIT' })).toBe(true);
+	});
+
 	test('returns to editing with error on failed submit', async () => {
 		const actor = createActor(
 			editSubscriptionMachine.provide({
 				actors: {
-					updateAmount: fromPromise<{ amount: number; currency: string }, { subscriptionId: string; amount: number }>(() =>
-						Promise.reject(new Error('Stripe failed')),
-					),
+					updateAmount: fromPromise<
+						{ amount: number; currency: string },
+						{ subscriptionId: string; amount: number; coverTransactionCosts?: boolean }
+					>(() => Promise.reject(new Error('Stripe failed'))),
 				},
 			}),
 		).start();
