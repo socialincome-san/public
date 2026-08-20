@@ -573,7 +573,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 						{stepTitle}
 					</DialogTitle>
 				</DialogHeader>
-				<div className="flex min-h-0 flex-1 flex-col overflow-hidden pt-4 pb-4">
+				<div className="flex min-h-0 flex-1 flex-col overflow-hidden">
 					<CampaignSubmissionSteps
 						currentStep={currentStep}
 						programStep={{

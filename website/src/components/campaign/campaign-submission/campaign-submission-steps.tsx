@@ -1,5 +1,7 @@
 'use client';
 
+import { Card } from '@/components/card/card';
+import type { ReactNode } from 'react';
 import { AboutStep } from './steps/about-step';
 import { DetailsStep } from './steps/details-step';
 import { ProgramStep } from './steps/program-step';
@@ -12,6 +14,14 @@ type Props = {
 	aboutStep: AboutStepProps;
 };
 
+const FormCardLayout = ({ children }: { children: ReactNode }) => (
+	<div className="bg-muted min-h-0 flex-1 overflow-y-auto px-6 py-10">
+		<Card variant="noPadding" className="border-border mx-auto w-full max-w-[858px] rounded-xl border p-6 shadow-sm">
+			{children}
+		</Card>
+	</div>
+);
+
 export const CampaignSubmissionSteps = ({ currentStep, programStep, detailsStep, aboutStep }: Props) => {
 	switch (currentStep) {
 		case 'program':
@@ -22,15 +32,15 @@ export const CampaignSubmissionSteps = ({ currentStep, programStep, detailsStep,
 			);
 		case 'details':
 			return (
-				<div className="min-h-0 flex-1 overflow-y-auto">
+				<FormCardLayout>
 					<DetailsStep {...detailsStep} />
-				</div>
+				</FormCardLayout>
 			);
 		case 'about':
 			return (
-				<div className="min-h-0 flex-1 overflow-y-auto">
+				<FormCardLayout>
 					<AboutStep {...aboutStep} />
-				</div>
+				</FormCardLayout>
 			);
 	}
 };
