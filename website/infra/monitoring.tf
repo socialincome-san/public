@@ -48,8 +48,35 @@ resource "google_monitoring_alert_policy" "slack_alerts" {
   depends_on = [google_project_service.monitoring]
 }
 
+resource "google_monitoring_uptime_check_config" "health_live" {
+  display_name = "Website app / live (${var.env})"
+  timeout      = "10s"
+  period       = "60s"
+
+  http_check {
+    path         = "/api/health/live"
+    port         = 443
+    use_ssl      = true
+    validate_ssl = true
+  }
+
+  monitored_resource {
+    type = "uptime_url"
+    labels = {
+      project_id = var.gcp_project_id
+      host       = var.website_domain
+    }
+  }
+
+  content_matchers {
+    content = "\"status\":\"alive\""
+  }
+
+  depends_on = [google_project_service.monitoring]
+}
+
 resource "google_monitoring_uptime_check_config" "health_ready" {
-  display_name = "Website health / DB (${var.env})"
+  display_name = "Website DB / ready (${var.env})"
   timeout      = "10s"
   period       = "60s"
 
@@ -75,17 +102,72 @@ resource "google_monitoring_uptime_check_config" "health_ready" {
   depends_on = [google_project_service.monitoring]
 }
 
-resource "google_monitoring_alert_policy" "uptime_health_ready" {
-  display_name = "Website health / DB down (${var.env})"
+resource "google_monitoring_alert_policy" "uptime_health_app_down" {
+  display_name = "Website app unreachable (${var.env})"
   combiner     = "OR"
 
   documentation {
-    content   = "GET https://${var.website_domain}/api/health/ready failed. Cloud Run is unreachable or Postgres did not answer SELECT 1."
+    subject   = "Website app unreachable (${var.env})"
     mime_type = "text/markdown"
+    content   = <<-EOT
+      GET https://${var.website_domain}/api/health/live failed.
+
+      Cloud Run is unreachable, TLS failed, or the container is not responding. This is **not** a DB-only issue.
+    EOT
   }
 
   conditions {
-    display_name = "Uptime check failed (${var.env})"
+    display_name = "Live uptime check failed (${var.env})"
+    condition_threshold {
+      filter          = <<-EOT
+        metric.type="monitoring.googleapis.com/uptime_check/check_passed"
+        metric.label."check_id"="${google_monitoring_uptime_check_config.health_live.uptime_check_id}"
+        resource.type="uptime_url"
+      EOT
+      duration        = "60s"
+      comparison      = "COMPARISON_GT"
+      threshold_value = 1
+
+      aggregations {
+        alignment_period     = "1200s"
+        per_series_aligner   = "ALIGN_NEXT_OLDER"
+        cross_series_reducer = "REDUCE_COUNT_FALSE"
+        group_by_fields      = ["resource.label.*"]
+      }
+
+      trigger {
+        count = 1
+      }
+    }
+  }
+
+  notification_channels = [
+    data.google_monitoring_notification_channel.slack_alerts.name,
+  ]
+
+  alert_strategy {
+    auto_close = "3600s"
+  }
+
+  depends_on = [google_project_service.monitoring]
+}
+
+resource "google_monitoring_alert_policy" "uptime_health_db_down" {
+  display_name = "Website DB down (${var.env})"
+  combiner     = "AND"
+
+  documentation {
+    subject   = "Website DB down (${var.env})"
+    mime_type = "text/markdown"
+    content   = <<-EOT
+      GET https://${var.website_domain}/api/health/ready failed while /api/health/live is OK.
+
+      The app is up but Postgres did not answer `SELECT 1` (auth, connectivity, or query failure).
+    EOT
+  }
+
+  conditions {
+    display_name = "Ready uptime check failed (${var.env})"
     condition_threshold {
       filter          = <<-EOT
         metric.type="monitoring.googleapis.com/uptime_check/check_passed"
@@ -94,6 +176,31 @@ resource "google_monitoring_alert_policy" "uptime_health_ready" {
       EOT
       duration        = "60s"
       comparison      = "COMPARISON_GT"
+      threshold_value = 1
+
+      aggregations {
+        alignment_period     = "1200s"
+        per_series_aligner   = "ALIGN_NEXT_OLDER"
+        cross_series_reducer = "REDUCE_COUNT_FALSE"
+        group_by_fields      = ["resource.label.*"]
+      }
+
+      trigger {
+        count = 1
+      }
+    }
+  }
+
+  conditions {
+    display_name = "Live uptime check passing (${var.env})"
+    condition_threshold {
+      filter          = <<-EOT
+        metric.type="monitoring.googleapis.com/uptime_check/check_passed"
+        metric.label."check_id"="${google_monitoring_uptime_check_config.health_live.uptime_check_id}"
+        resource.type="uptime_url"
+      EOT
+      duration        = "60s"
+      comparison      = "COMPARISON_LT"
       threshold_value = 1
 
       aggregations {
