@@ -253,19 +253,38 @@ export class CampaignSubmissionService extends BaseService {
 			return this.resultFail('title-not-slugifiable', 400);
 		}
 
-		const uniquenessResult = await this.campaignValidationService.validateSlugUniqueness(baseSlug);
-		if (uniquenessResult.success) {
-			return this.resultOk(baseSlug);
-		}
-
-		for (let suffix = 2; suffix <= 20; suffix += 1) {
-			const candidate = `${baseSlug}-${suffix}`;
-			const candidateResult = await this.campaignValidationService.validateSlugUniqueness(candidate);
-			if (candidateResult.success) {
-				return this.resultOk(candidate);
+		try {
+			if (await this.isSlugAvailable(baseSlug)) {
+				return this.resultOk(baseSlug);
 			}
+
+			for (let suffix = 2; suffix <= 20; suffix += 1) {
+				const candidate = `${baseSlug}-${suffix}`;
+				if (await this.isSlugAvailable(candidate)) {
+					return this.resultOk(candidate);
+				}
+			}
+
+			return this.resultOk(`${baseSlug}-${randomUUID()}`);
+		} catch (error) {
+			if (isStoryblokManagementError(error)) {
+				console.error(error, { slug: baseSlug, retryable: error.retryable, statusCode: error.statusCode });
+
+				return this.resultFail('submission-failed', error.retryable ? 503 : 502);
+			}
+
+			console.error(error, { slug: baseSlug });
+
+			return this.resultFail('submission-failed', 503);
+		}
+	}
+
+	private async isSlugAvailable(slug: string): Promise<boolean> {
+		const uniquenessResult = await this.campaignValidationService.validateSlugUniqueness(slug);
+		if (!uniquenessResult.success) {
+			return false;
 		}
 
-		return this.resultOk(`${baseSlug}-${randomUUID()}`);
+		return !(await this.storyblokManagementService.campaignStoryExists(slug));
 	}
 }

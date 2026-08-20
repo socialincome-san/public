@@ -1,5 +1,6 @@
 'use client';
 
+import { CampaignSubmissionFormCard, CampaignSubmissionFormCardColumn } from './form-layout';
 import { AboutStep } from './steps/about-step';
 import { DetailsStep } from './steps/details-step';
 import { ProgramStep } from './steps/program-step';
@@ -22,15 +23,17 @@ export const CampaignSubmissionSteps = ({ currentStep, programStep, detailsStep,
 			);
 		case 'details':
 			return (
-				<div className="min-h-0 flex-1 overflow-y-auto">
-					<DetailsStep {...detailsStep} />
-				</div>
+				<CampaignSubmissionFormCardColumn key={currentStep}>
+					<CampaignSubmissionFormCard>
+						<DetailsStep {...detailsStep} />
+					</CampaignSubmissionFormCard>
+				</CampaignSubmissionFormCardColumn>
 			);
 		case 'about':
 			return (
-				<div className="min-h-0 flex-1 overflow-y-auto">
+				<CampaignSubmissionFormCardColumn key={currentStep}>
 					<AboutStep {...aboutStep} />
-				</div>
+				</CampaignSubmissionFormCardColumn>
 			);
 	}
 };
