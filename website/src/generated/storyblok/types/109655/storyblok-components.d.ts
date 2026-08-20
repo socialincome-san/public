@@ -376,6 +376,24 @@ export interface OpenSource {
   [k: string]: unknown;
 }
 
+export interface OpenSourceContributors {
+  component: "openSourceContributors";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface OpenSourceIssues {
+  component: "openSourceIssues";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface OpenSourceStats {
+  component: "openSourceStats";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Page {
   content: (
     | DonationsTotal
@@ -395,7 +413,9 @@ export interface Page {
     | TwoColumnText
     | VideoText
     | Transparency
-    | OpenSource
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
     | Spacer
     | ExplainerVideoHeader
     | RichtextButtonHeader

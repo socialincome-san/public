@@ -9,7 +9,9 @@ import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measu
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
 import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
-import { OpenSourceBlock } from '@/components/content-blocks/open-source';
+import { OpenSourceContributorsBlock } from '@/components/content-blocks/open-source-contributors';
+import { OpenSourceIssuesBlock } from '@/components/content-blocks/open-source-issues';
+import { OpenSourceStatsBlock } from '@/components/content-blocks/open-source-stats';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { PersonGridBlock } from '@/components/content-blocks/person-grid';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
@@ -70,8 +72,12 @@ const renderPageBlock = (
 			return <ModalCardsBlock blok={block} />;
 		case 'newsletterForm':
 			return <NewsletterSignup lang={lang} />;
-		case 'openSource':
-			return <OpenSourceBlock blok={block} lang={lang} />;
+		case 'openSourceStats':
+			return <OpenSourceStatsBlock blok={block} lang={lang} />;
+		case 'openSourceContributors':
+			return <OpenSourceContributorsBlock blok={block} lang={lang} />;
+		case 'openSourceIssues':
+			return <OpenSourceIssuesBlock blok={block} lang={lang} />;
 		case 'partnershipsCarousel':
 			return <PartnershipsCarouselBlock blok={block} />;
 		case 'personGrid':
