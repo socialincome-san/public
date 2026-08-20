@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { CampaignAboutSection } from '@/components/campaign/campaign-about-section';
@@ -61,13 +62,15 @@ export const CampaignDetail = async ({
 			<CampaignHero
 				campaign={campaign}
 				title={title}
-				description={description}
 				creatorName={creatorName}
 				primaryImage={primaryImage}
 				translator={translator}
 				lang={lang}
 			/>
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
+			<BlockWrapper className="my-15"  disableMarginTop={true} disableMarginBottom={true}>
+				<div>{description}</div>
+			</BlockWrapper>
 			{campaign.program?.id ? <CampaignProgramTeaser programId={campaign.program.id} lang={lang} region={region} /> : null}
 			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
 			<CampaignAboutSection translator={translator} />

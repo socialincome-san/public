@@ -15,14 +15,13 @@ const HERO_HEADER_IMAGE_HEIGHT = 1080;
 type Props = {
 	campaign: CampaignPage;
 	title: string;
-	description: string;
 	creatorName: string;
 	primaryImage?: HeroHeaderImage | null;
 	translator: Translator;
 	lang: WebsiteLanguage;
 };
 
-export const CampaignHero = ({ campaign, title, description, creatorName, primaryImage, translator, lang }: Props) => {
+export const CampaignHero = ({ campaign, title, creatorName, primaryImage, translator, lang }: Props) => {
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
 	const showProgress = campaign.percentageCollected !== null && campaign.percentageCollected !== undefined;
 	const showAmount = campaign.amountCollected !== null;
@@ -67,61 +66,61 @@ export const CampaignHero = ({ campaign, title, description, creatorName, primar
 				</BlockWrapper>
 			) : null}
 
-			<div className="w-site-width max-w-content mx-auto flex flex-col gap-6 px-6 pb-12 md:pb-16">
-				<p className="text-foreground text-lg">{description}</p>
+			{(!hasGoal && showAmount) || showProgress || !isActive ? (
+				<div className="w-site-width max-w-content mx-auto flex flex-col gap-6 px-6 pb-12 md:pb-16">
+					{!hasGoal && showAmount && (
+						<p className="text-primary text-xl font-bold">
+							{translator.t('campaign.without-goal.collected', {
+								context: {
+									count: campaign.numberOfContributions,
+									amount: campaign.amountCollected,
+									currency: campaign.currency,
+									total: campaign.goal,
+								},
+							})}
+						</p>
+					)}
 
-				{!hasGoal && showAmount && (
-					<p className="text-primary text-xl font-bold">
-						{translator.t('campaign.without-goal.collected', {
-							context: {
-								count: campaign.numberOfContributions,
-								amount: campaign.amountCollected,
-								currency: campaign.currency,
-								total: campaign.goal,
-							},
-						})}
-					</p>
-				)}
-
-				{showProgress && (
-					<div className="flex flex-col gap-2">
-						<div className="text-primary flex justify-between text-sm font-medium">
-							<span>
-								{translator.t('campaign.with-goal.collected-percentage', {
-									context: { percentage: campaign.percentageCollected },
-								})}
-							</span>
-							<span>{translator.t('campaign.with-goal.goal-title')}</span>
+					{showProgress && (
+						<div className="flex flex-col gap-2">
+							<div className="text-primary flex justify-between text-sm font-medium">
+								<span>
+									{translator.t('campaign.with-goal.collected-percentage', {
+										context: { percentage: campaign.percentageCollected },
+									})}
+								</span>
+								<span>{translator.t('campaign.with-goal.goal-title')}</span>
+							</div>
+							<Progress value={campaign.percentageCollected ?? 0} className="h-3" />
+							<div className="text-primary flex justify-between text-sm">
+								<span>
+									{translator.t('campaign.with-goal.collected-amount', {
+										context: {
+											count: campaign.numberOfContributions,
+											amount: campaign.amountCollected,
+											currency: campaign.currency,
+										},
+									})}
+								</span>
+								<span>
+									{translator.t('campaign.with-goal.goal-amount', {
+										context: {
+											amount: campaign.goal,
+											currency: campaign.currency,
+										},
+									})}
+								</span>
+							</div>
 						</div>
-						<Progress value={campaign.percentageCollected ?? 0} className="h-3" />
-						<div className="text-primary flex justify-between text-sm">
-							<span>
-								{translator.t('campaign.with-goal.collected-amount', {
-									context: {
-										count: campaign.numberOfContributions,
-										amount: campaign.amountCollected,
-										currency: campaign.currency,
-									},
-								})}
-							</span>
-							<span>
-								{translator.t('campaign.with-goal.goal-amount', {
-									context: {
-										amount: campaign.goal,
-										currency: campaign.currency,
-									},
-								})}
-							</span>
-						</div>
-					</div>
-				)}
+					)}
 
-				{!isActive && (
-					<p className="text-destructive text-lg font-medium">
-						{translator.t('campaign.ended', { context: { count: campaign.daysLeft } })}
-					</p>
-				)}
-			</div>
+					{!isActive && (
+						<p className="text-destructive text-lg font-medium">
+							{translator.t('campaign.ended', { context: { count: campaign.daysLeft } })}
+						</p>
+					)}
+				</div>
+			) : null}
 		</section>
 	);
 };
