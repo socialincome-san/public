@@ -53,15 +53,13 @@ locals {
     website = {
       path               = "/api/health/website"
       check_display_name = "Website (${var.env})"
-      alert_display_name = "Website unreachable (${var.env})"
-      alert_subject      = "Website unreachable (${var.env})"
+      alert_name         = "Website unreachable (${var.env})"
       alert_content      = "GET https://${var.website_domain}/api/health/website failed. Cloud Run is unreachable, TLS failed, or the container is not responding."
     }
     database = {
       path               = "/api/health/database"
       check_display_name = "Website database (${var.env})"
-      alert_display_name = "Website DB down (${var.env})"
-      alert_subject      = "Website DB down (${var.env})"
+      alert_name         = "Website DB down (${var.env})"
       alert_content      = "GET https://${var.website_domain}/api/health/database failed. Postgres did not answer SELECT 1."
     }
   }
@@ -97,17 +95,17 @@ resource "google_monitoring_uptime_check_config" "health" {
 
 resource "google_monitoring_alert_policy" "uptime_health" {
   for_each     = local.uptime_health_checks
-  display_name = each.value.alert_display_name
+  display_name = each.value.alert_name
   combiner     = "OR"
 
   documentation {
-    subject   = each.value.alert_subject
+    subject   = each.value.alert_name
     mime_type = "text/markdown"
     content   = each.value.alert_content
   }
 
   conditions {
-    display_name = "Uptime check failed (${var.env})"
+    display_name = "${each.value.check_display_name} failed"
     condition_threshold {
       filter          = <<-EOT
         metric.type="monitoring.googleapis.com/uptime_check/check_passed"
