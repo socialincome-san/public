@@ -235,6 +235,46 @@ export const getContributorStripeCustomerId = async (email: string) => {
 	return contributor.stripeCustomerId;
 };
 
+const getContributorStripeSubscription = async (email: string) => {
+	const contributor = await findContributorByEmail(email);
+
+	if (!contributor) {
+		throw new Error(`No contributor found for ${email}`);
+	}
+
+	const subscription = await prisma.subscription.findFirst({
+		where: {
+			contributorId: contributor.id,
+			paymentMethod: 'stripe',
+		},
+		orderBy: { createdAt: 'desc' },
+	});
+
+	if (!subscription) {
+		throw new Error(`No Stripe subscription found for contributor ${email}`);
+	}
+
+	return subscription;
+};
+
+export const expectContributorStripeSubscription = async (
+	email: string,
+	expected: {
+		amount: number;
+		currency?: string;
+		coverTransactionCosts: boolean;
+	},
+) => {
+	const subscription = await getContributorStripeSubscription(email);
+
+	expect(subscription.status).toBe('active');
+	expect(subscription.interval).toBe('monthly');
+	expect(subscription.stripeSubscriptionId).toBeTruthy();
+	expect(Number(subscription.amount)).toBe(expected.amount);
+	expect(subscription.currency).toBe(expected.currency ?? 'CHF');
+	expect(subscription.coverTransactionCosts).toBe(expected.coverTransactionCosts);
+};
+
 export const expectOneTimeStripeWizardCompleted = async (
 	donor: DonationWizardDonor,
 	options: {

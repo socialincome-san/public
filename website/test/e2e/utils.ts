@@ -1,6 +1,57 @@
 import { prisma } from '@/lib/database/prisma';
 import { expect, Locator, Page } from '@playwright/test';
 
+const FIREBASE_EMULATOR_OOB_CODES_API = 'http://127.0.0.1:9099/emulator/v1/projects/demo-social-income-local/oobCodes';
+
+type FirebaseOobCode = {
+	email: string;
+	requestType: string;
+	oobLink: string;
+};
+
+type FirebaseOobCodesResponse = {
+	oobCodes: FirebaseOobCode[];
+};
+
+export const loginContributorViaEmailLink = async (page: Page, email: string) => {
+	await page.goto('/en/int');
+	await page.getByTestId('login-button').click();
+
+	const dialog = page.getByRole('dialog');
+	await expect(dialog).toBeVisible();
+	await dialog.locator('input[type="email"]').fill(email);
+	await dialog.locator('button[type="submit"]').click();
+
+	await expect
+		.poll(
+			async () => {
+				const response = await page.request.get(FIREBASE_EMULATOR_OOB_CODES_API);
+				const json = (await response.json()) as FirebaseOobCodesResponse;
+
+				return json.oobCodes.some((code) => code.email === email && code.requestType === 'EMAIL_SIGNIN');
+			},
+			{ timeout: 15_000 },
+		)
+		.toBeTruthy();
+
+	const response = await page.request.get(FIREBASE_EMULATOR_OOB_CODES_API);
+	const json = (await response.json()) as FirebaseOobCodesResponse;
+	const latest = json.oobCodes.filter((code) => code.email === email && code.requestType === 'EMAIL_SIGNIN').pop();
+
+	if (!latest) {
+		throw new Error(`No EMAIL_SIGNIN oobCode found for ${email}`);
+	}
+
+	await page.goto(latest.oobLink);
+	await page.waitForURL((url) => url.pathname.includes('/auth/confirm-login'));
+
+	const confirmButton = page.getByTestId('confirm-login-button');
+	await expect(confirmButton).toBeVisible();
+	await confirmButton.click();
+
+	await page.waitForURL((url) => url.pathname.includes('/dashboard'));
+};
+
 export const getFirebaseAdminService = async () => {
 	const { FirebaseAdminService } = await import('@/lib/services/firebase/firebase-admin.service');
 	const { prisma } = await import('@/lib/database/prisma');

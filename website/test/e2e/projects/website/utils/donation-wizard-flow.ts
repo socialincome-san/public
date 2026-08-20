@@ -144,10 +144,20 @@ export const completeQrPaymentMethodStep = async (page: Page) => {
 	await waitForWizardStep(modal, 'donation-wizard-step-qr-contact');
 };
 
-export const completeStripePaymentMethodStep = async (page: Page) => {
+export const completeStripePaymentMethodStep = async (page: Page, options: { coverTransactionCosts?: boolean } = {}) => {
 	const modal = wizard(page);
+	const { coverTransactionCosts = true } = options;
 
 	await modal.getByTestId('donation-wizard-payment-online').click();
+
+	const coverCostsSwitch = modal.locator('#cover-transaction-costs');
+	if (coverTransactionCosts) {
+		await expect(coverCostsSwitch).toBeChecked();
+	} else {
+		await coverCostsSwitch.click();
+		await expect(coverCostsSwitch).not.toBeChecked();
+	}
+
 	await clickWizardButton(modal, 'donation-wizard-continue');
 	await waitForWizardStep(modal, 'donation-wizard-step-stripe-checkout');
 };
