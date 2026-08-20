@@ -286,10 +286,18 @@ https://socialincome.org/v1/api-docs
 
 ## Monitoring
 
-The website pages Slack (`#social-income-monitoring`) when Cloud Run
-logs contain `SLACK_ALERT`. Prefix `console.error` with that token for
-failures that must not stay silent (Stripe webhooks, payment imports,
-scheduler jobs). At most one Slack message is sent every 5 minutes.
+The website pages Slack (`#social-income-monitoring`) for production
+failures that must not stay silent:
+
+- Cloud Run logs that contain `SLACK_ALERT` (Stripe webhooks, payment
+  imports, scheduler jobs). Prefix `console.error` with that token.
+  Staging still writes the logs but does not page Slack, because its
+  Stripe and campaign data is incomplete. At most one Slack message is
+  sent every 5 minutes.
+- Uptime checks every 60s: `/api/health/website`, `/api/health/database`,
+  and the public homepage `/en/int`.
+- Cloud Run 5xx bursts, Cloud Scheduler job errors, Cloud SQL CPU and
+  connections, and Cloud Run memory / OOM.
 
 The recipients app still reports errors to Sentry.
 
