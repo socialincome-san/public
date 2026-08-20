@@ -1,3 +1,5 @@
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { CampaignAboutSection } from '@/components/campaign/campaign-about-section';
 import { CampaignFaqSection } from '@/components/campaign/campaign-faq-section';
 import { CampaignHero } from '@/components/campaign/campaign-hero';
@@ -9,6 +11,7 @@ import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header'
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 import { services } from '@/lib/services/services';
+import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 
 type Props = {
 	campaign: CampaignPage;
@@ -31,7 +34,15 @@ export const CampaignDetail = async ({
 	lang,
 	region,
 }: Props) => {
-	const pageContentResult = await services.read.campaignPublicWebsite.getPageContent(lang);
+	const [pageContentResult, breadcrumbLinks] = await Promise.all([
+		services.read.campaignPublicWebsite.getPageContent(lang),
+		buildBreadcrumbLinks({
+			fullSlug: getCampaignStoryPath(campaignSlug),
+			currentLabel: title,
+			lang,
+			region,
+		}),
+	]);
 	if (!pageContentResult.success) {
 		throw new Error(pageContentResult.error);
 	}
@@ -56,6 +67,7 @@ export const CampaignDetail = async ({
 				translator={translator}
 				lang={lang}
 			/>
+			<Breadcrumb links={breadcrumbLinks} className="py-0" />
 			{campaign.program?.id ? <CampaignProgramTeaser programId={campaign.program.id} lang={lang} region={region} /> : null}
 			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
 			<CampaignAboutSection translator={translator} />

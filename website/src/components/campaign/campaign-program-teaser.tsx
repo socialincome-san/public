@@ -70,7 +70,7 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 	const hasSdgs = sdgValues.length > 0;
 
 	return (
-		<BlockWrapper>
+		<BlockWrapper disableMarginTop={true} className="mt-10">
 			<section className="bg-card grid gap-8 rounded-2xl p-6 shadow-sm md:grid-cols-[minmax(0,4fr)_minmax(280px,2fr)] md:items-center md:gap-12 md:p-3 md:pl-10">
 				<div className="min-w-0">
 					<p className="text-muted-foreground text-sm font-medium">{translator.t('campaign.program-teaser.heading')}</p>
