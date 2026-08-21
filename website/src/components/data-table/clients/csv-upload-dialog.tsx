@@ -1,9 +1,9 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
-import { SuccessBanner } from '@/components/banner/success-banner';
 import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { SuccessBanner } from '@/components/success-banner/success-banner';
 import type { ServiceResult } from '@/lib/services/core/base.types';
 import { CsvRow, parseCsvFile } from '@/lib/utils/csv';
 import { useState } from 'react';

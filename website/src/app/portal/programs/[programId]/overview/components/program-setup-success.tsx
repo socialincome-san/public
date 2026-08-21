@@ -1,4 +1,4 @@
-import { SuccessBanner } from '@/components/banner/success-banner';
+import { SuccessBanner } from '@/components/success-banner/success-banner';
 import { Button } from '@/components/button/button';
 import { Card } from '@/components/card/card';
 import { ChevronRightIcon, ExternalLinkIcon } from 'lucide-react';
