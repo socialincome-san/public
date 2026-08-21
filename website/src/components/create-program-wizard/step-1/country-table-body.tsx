@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button/button';
-import { CountryFlag } from '@/components/country-flag';
+import { CountryFlag } from '@/components/country-flag/country-flag';
 import { RadioGroupItem } from '@/components/radio-group';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';

@@ -1,6 +1,6 @@
 'use client';
 
-import { CountryFlag } from '@/components/country-flag';
+import { CountryFlag } from '@/components/country-flag/country-flag';
 import { CountryCode } from '@/generated/prisma/enums';
 
 type CountryFlagCellProps = {

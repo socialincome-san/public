@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button/button';
-import { CountryFlag } from '@/components/country-flag';
+import { CountryFlag } from '@/components/country-flag/country-flag';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
 import { Tabs, TabsList, TabsTrigger } from '@/components/tabs';
 import { type CountryCode } from '@/generated/prisma/enums';
