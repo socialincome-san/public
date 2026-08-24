@@ -1,7 +1,7 @@
 import { Button } from '@/components/button/button';
 import { SuccessBanner } from '@/components/success-banner/success-banner';
-import ChevronRightIcon from '@heroicons/react/24/solid/ChevronRightIcon';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { ChevronRightIcon } from 'lucide-react';
 
 const meta = {
 	title: 'Components/SuccessBanner',
