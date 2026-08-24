@@ -50,6 +50,7 @@ export class CampaignSubmissionService extends BaseService {
 		fields: CampaignSubmissionFields,
 		imageSource: CampaignSubmissionImageSource,
 		optionalImages: CampaignSubmissionOptionalImages = { profilePicture: null, sectionImage: null },
+		contributorId?: string | null,
 	): Promise<ServiceResult<CampaignSubmissionResult>> {
 		const eligibilityResult = await this.programPublicSubmissionService.isProgramEligibleForPublicSubmission(
 			fields.programId,
@@ -82,6 +83,7 @@ export class CampaignSubmissionService extends BaseService {
 					endDate: fields.endDate,
 					slug,
 					program: { connect: { id: fields.programId } },
+					...(contributorId ? { contributor: { connect: { id: contributorId } } } : {}),
 				},
 				select: { id: true, slug: true },
 			});

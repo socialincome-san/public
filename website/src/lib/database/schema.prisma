@@ -626,6 +626,7 @@ model Contributor {
   contributions        Contribution[]
   subscriptions        Subscription[]
   donationCertificates DonationCertificate[]
+  campaigns            Campaign[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -933,6 +934,8 @@ model Campaign {
   slug                   String?  @unique @map("slug")
   programId              String   @map("program_id")
   program                Program  @relation(fields: [programId], references: [id])
+  contributorId          String?      @map("contributor_id")
+  contributor            Contributor? @relation(fields: [contributorId], references: [id])
 
   contributions Contribution[]
   subscriptions Subscription[]
@@ -940,6 +943,7 @@ model Campaign {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
+  @@index([contributorId])
   @@map("campaign")
 }
 

@@ -71,6 +71,7 @@ describe('CampaignSubmissionService', () => {
 		data: {
 			slug: string;
 			goal: number | null;
+			contributor?: { connect: { id: string } };
 		};
 	};
 
@@ -182,6 +183,7 @@ describe('CampaignSubmissionService', () => {
 		expect(create).toHaveBeenCalledTimes(1);
 		const createArg = create.mock.calls[0]?.[0];
 		expect(createArg?.data.slug).toBe('my-campaign');
+		expect(createArg?.data.contributor).toBeUndefined();
 		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
 			expect.objectContaining({
 				slug: 'my-campaign',
@@ -192,6 +194,25 @@ describe('CampaignSubmissionService', () => {
 				quote: 'Thank you for your support!',
 			}),
 		);
+	});
+
+	test('submit connects contributor when contributorId is provided', async () => {
+		const { service, create } = createService();
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage }, undefined, 'contributor-1');
+
+		expect(result.success).toBe(true);
+		const createArg = create.mock.calls[0]?.[0];
+		expect(createArg?.data.contributor).toEqual({ connect: { id: 'contributor-1' } });
+	});
+
+	test('submit omits contributor connect when contributorId is null', async () => {
+		const { service, create } = createService();
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage }, undefined, null);
+
+		expect(result.success).toBe(true);
+		expect(create.mock.calls[0]?.[0]?.data.contributor).toBeUndefined();
 	});
 
 	test('submit uploads optional about images and passes additional Storyblok fields', async () => {

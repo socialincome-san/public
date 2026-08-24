@@ -108,6 +108,20 @@ const resolveOptionalImages = async (
 	};
 };
 
+const resolveContributorIdFromRequest = async (request: NextRequest): Promise<string | null> => {
+	const sessionResult = await services.firebaseSession.getDecodedSessionFromRequest(request);
+	if (!sessionResult.success) {
+		return null;
+	}
+
+	const contributorResult = await services.read.contributor.getCurrentContributorSession(sessionResult.data.uid);
+	if (!contributorResult.success) {
+		return null;
+	}
+
+	return contributorResult.data.id;
+};
+
 export const POST = async (request: NextRequest) => {
 	let formData: FormData;
 	try {
@@ -140,10 +154,13 @@ export const POST = async (request: NextRequest) => {
 		return errorResponse(optionalImagesResult.error, 400, optionalImagesResult.field);
 	}
 
+	const contributorId = await resolveContributorIdFromRequest(request);
+
 	const submissionResult = await services.campaignSubmission.submit(
 		fieldsResult.data,
 		imageSourceResult.data,
 		optionalImagesResult.data,
+		contributorId,
 	);
 
 	if (!submissionResult.success) {
