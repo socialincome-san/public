@@ -29,6 +29,7 @@ import type { Page } from '@/generated/storyblok/types/109655/storyblok-componen
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { ParsedUrlQueryInput } from 'querystring';
 import { Fragment } from 'react';
+import { DonationGlobeBlock } from '../content-blocks/donation-globe-block';
 import { RunwayMonthGridBlock } from '../content-blocks/runway-month-grid-block';
 
 type PageBlock = Page['content'][number];
@@ -50,6 +51,8 @@ const renderPageBlock = (
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction,
 ) => {
 	switch (block.component) {
+		case 'donationGlobe':
+			return <DonationGlobeBlock blok={block} lang={lang} />;
 		case 'donationsTotal':
 			return <DonationsTotalBlockServer blok={block} lang={lang} region={region} />;
 		case 'downloads':

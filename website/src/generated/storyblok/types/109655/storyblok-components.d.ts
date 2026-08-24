@@ -431,6 +431,7 @@ export interface Page {
     | Lottie
     | PersonGrid
     | RunwayMonthGrid
+    | DonationGlobe
   )[];
   component: "page";
   _uid: string;

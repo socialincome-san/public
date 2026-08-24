@@ -38,9 +38,7 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 	]);
 
 	if (!dataResult.success) {
-		return donationGlobeBlocks && donationGlobeBlocks.length > 0 ? (
-			<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>{donationGlobeBlocks}</BlockWrapper>
-		) : null;
+		return donationGlobeBlocks && donationGlobeBlocks.length > 0 ? donationGlobeBlocks : null;
 	}
 
 	const data = dataResult.data;
@@ -64,22 +62,24 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 	}));
 
 	return (
-		<BlockWrapper className="space-y-12" {...storyblokEditable(blok as SbBlokData)}>
+		<>
 			{donationGlobeBlocks}
-			<SummarySection
-				inflows={inflows}
-				outflows={outflows}
-				reserves={reserves}
-				reserveAccounts={reserveAccounts}
-				lang={lang}
-			/>
-			<TotalsSection totals={data.totals} lang={lang} displayCurrency={displayCurrency} rates={rates} />
-			<TimeSeriesSection
-				timeRanges={resolvedTimeRanges.map(({ startIso, total }) => ({ startIso, total }))}
-				currency={timeSeriesCurrency}
-				lang={lang}
-			/>
-			<CountriesSection countries={data.topCountries} lang={lang} displayCurrency={displayCurrency} rates={rates} />
-		</BlockWrapper>
+			<BlockWrapper className="space-y-12" {...storyblokEditable(blok as SbBlokData)}>
+				<SummarySection
+					inflows={inflows}
+					outflows={outflows}
+					reserves={reserves}
+					reserveAccounts={reserveAccounts}
+					lang={lang}
+				/>
+				<TotalsSection totals={data.totals} lang={lang} displayCurrency={displayCurrency} rates={rates} />
+				<TimeSeriesSection
+					timeRanges={resolvedTimeRanges.map(({ startIso, total }) => ({ startIso, total }))}
+					currency={timeSeriesCurrency}
+					lang={lang}
+				/>
+				<CountriesSection countries={data.topCountries} lang={lang} displayCurrency={displayCurrency} rates={rates} />
+			</BlockWrapper>
+		</>
 	);
 };
