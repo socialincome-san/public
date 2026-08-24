@@ -202,13 +202,8 @@ describe('CampaignSubmissionService', () => {
 		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage }, undefined, 'contributor-1');
 
 		expect(result.success).toBe(true);
-		expect(create).toHaveBeenCalledWith(
-			expect.objectContaining({
-				data: expect.objectContaining({
-					contributor: { connect: { id: 'contributor-1' } },
-				}),
-			}),
-		);
+		const createArg = create.mock.calls[0]?.[0];
+		expect(createArg?.data.contributor).toEqual({ connect: { id: 'contributor-1' } });
 	});
 
 	test('submit omits contributor connect when contributorId is null', async () => {
