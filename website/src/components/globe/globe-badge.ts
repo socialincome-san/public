@@ -1,15 +1,13 @@
 import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
 import { formatCurrencyLocale, formatDateLocale } from '@/lib/utils/string-utils';
 
-const BADGE_LOCALE = 'en-US';
-
-const buildBadgeContent = (contribution: GlobeContribution): HTMLElement => {
-	const formattedAmount = formatCurrencyLocale(contribution.amount, contribution.currency, BADGE_LOCALE, {
+const buildBadgeContent = (contribution: GlobeContribution, locale: string): HTMLElement => {
+	const formattedAmount = formatCurrencyLocale(contribution.amount, contribution.currency, locale, {
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 0,
 	});
 
-	const formattedDate = formatDateLocale(new Date(contribution.contributedAt), BADGE_LOCALE, {
+	const formattedDate = formatDateLocale(new Date(contribution.contributedAt), locale, {
 		day: '2-digit',
 		month: 'short',
 		hour: '2-digit',
@@ -56,8 +54,8 @@ export const createBadgeSlotElement = (): HTMLElement => {
 	return slot;
 };
 
-export const mountBadgeContent = (slot: HTMLElement, contribution: GlobeContribution, animate = true) => {
-	slot.replaceChildren(buildBadgeContent(contribution));
+export const mountBadgeContent = (slot: HTMLElement, contribution: GlobeContribution, locale: string, animate = true) => {
+	slot.replaceChildren(buildBadgeContent(contribution, locale));
 	slot.style.display = '';
 	slot.style.opacity = animate ? '' : '1';
 	slot.classList.remove('animate-globe-badge');
@@ -73,16 +71,4 @@ export const clearBadgeSlot = (slot: HTMLElement) => {
 	slot.classList.remove('animate-globe-badge');
 	slot.style.display = 'none';
 	slot.style.opacity = '';
-};
-
-/**
- * Creates a badge DOM element for a globe contribution.
- * Uses DOM APIs exclusively — no innerHTML with dynamic values — to prevent XSS.
- * The element is positioned ~10px above its geographic anchor via translateY.
- */
-export const createBadgeElement = (contribution: GlobeContribution): HTMLElement => {
-	const wrapper = createBadgeSlotElement();
-	mountBadgeContent(wrapper, contribution);
-
-	return wrapper;
 };

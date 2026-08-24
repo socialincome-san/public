@@ -1,7 +1,8 @@
+import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
 import type { CountryGeoJson } from '@/lib/services/country/country-geojson.types';
 import type { GlobeInstance } from 'globe.gl';
 import type { Material, Object3D } from 'three';
-import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
+import { clearBadgeSlot, createBadgeSlotElement, mountBadgeContent } from './globe-badge';
 import {
 	AUTO_ROTATE_SPEED,
 	DAMPING_FACTOR,
@@ -11,12 +12,12 @@ import {
 	HEXAGON_RESOLUTION,
 	INITIAL_GLOBE_VIEW,
 } from './globe-config';
-import { clearBadgeSlot, createBadgeSlotElement, mountBadgeContent } from './globe-badge';
 
 type GlobeRendererOptions = {
 	element: HTMLElement;
-	countries: CountryGeoJson | null;
+	countries: CountryGeoJson;
 	size: number;
+	locale: string;
 	reducedMotion: boolean;
 	signal: AbortSignal;
 	onReady: () => void;
@@ -41,7 +42,6 @@ export type GlobeRendererHandle = {
 		params: { lat: number; lng: number; contribution: GlobeContribution; animate?: boolean },
 	) => void;
 	deactivateBadgeSlot: (slotIndex: number) => void;
-	getBadgeSlotElement: (slotIndex: number) => HTMLElement | null;
 	getPointOfView: () => { lat: number; lng: number; altitude: number };
 	dispose: () => void;
 };
@@ -109,6 +109,7 @@ export const createGlobeRenderer = async ({
 	element,
 	countries,
 	size,
+	locale,
 	reducedMotion,
 	signal,
 	onReady,
@@ -127,6 +128,22 @@ export const createGlobeRenderer = async ({
 	let disposed = false;
 	let readyFrame: number | null = null;
 	let shouldReduceMotion = reducedMotion;
+
+	const markReadyOnNextFrame = () => {
+		if (disposed) {
+			return;
+		}
+
+		if (readyFrame !== null) {
+			window.cancelAnimationFrame(readyFrame);
+		}
+		readyFrame = window.requestAnimationFrame(() => {
+			readyFrame = null;
+			if (!disposed) {
+				onReady();
+			}
+		});
+	};
 
 	const badgeSlots: BadgeSlot[] = Array.from({ length: MAX_BADGE_SLOTS }, (_, id) => ({
 		id,
@@ -156,7 +173,7 @@ export const createGlobeRenderer = async ({
 		.showGraticules(false)
 		.globeMaterial(globeMaterial)
 		.lights([])
-		.hexPolygonsData(countries?.features ?? [])
+		.hexPolygonsData(countries.features)
 		.hexPolygonResolution(HEXAGON_RESOLUTION)
 		.hexPolygonMargin(HEXAGON_MARGIN)
 		.hexPolygonColor(() => GLOBE_COLORS.hexagon)
@@ -171,17 +188,7 @@ export const createGlobeRenderer = async ({
 			element.style.display = slot?.active && isVisible ? '' : 'none';
 		})
 		.pointOfView(INITIAL_GLOBE_VIEW, 0)
-		.onGlobeReady(() => {
-			if (!countries || disposed) {
-				return;
-			}
-
-			readyFrame = window.requestAnimationFrame(() => {
-				if (!disposed) {
-					onReady();
-				}
-			});
-		});
+		.onGlobeReady(markReadyOnNextFrame);
 
 	const controls = globe.controls();
 	configureGlobeControls(controls, reducedMotion);
@@ -202,7 +209,12 @@ export const createGlobeRenderer = async ({
 		globe.pauseAnimation();
 		onContextLost();
 	};
+	const handleContextRestored = () => {
+		globe.resumeAnimation();
+		markReadyOnNextFrame();
+	};
 	renderer.domElement.addEventListener('webglcontextlost', handleContextLost);
+	renderer.domElement.addEventListener('webglcontextrestored', handleContextRestored);
 
 	return {
 		resize: (nextSize) => {
@@ -222,7 +234,7 @@ export const createGlobeRenderer = async ({
 			}
 
 			clearBadgeSlot(slot.element);
-			mountBadgeContent(slot.element, contribution, animate);
+			mountBadgeContent(slot.element, contribution, locale, animate);
 			slot.lat = lat;
 			slot.lng = lng;
 			slot.active = true;
@@ -237,7 +249,6 @@ export const createGlobeRenderer = async ({
 			slot.active = false;
 			clearBadgeSlot(slot.element);
 		},
-		getBadgeSlotElement: (slotIndex) => badgeSlots[slotIndex]?.element ?? null,
 		getPointOfView: () => globe.pointOfView(),
 		dispose: () => {
 			disposed = true;
@@ -250,11 +261,11 @@ export const createGlobeRenderer = async ({
 			}
 			refreshBadgeSlots();
 			renderer.domElement.removeEventListener('webglcontextlost', handleContextLost);
+			renderer.domElement.removeEventListener('webglcontextrestored', handleContextRestored);
 			controls.removeEventListener('end', resumeAutoRotation);
 			controls.dispose();
 			globe.pauseAnimation();
 			globe.scene().traverse(disposeObject);
-			globeMaterial.dispose();
 			renderer.dispose();
 			renderer.forceContextLoss();
 			globe._destructor();

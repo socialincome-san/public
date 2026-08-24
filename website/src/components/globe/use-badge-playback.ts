@@ -1,34 +1,25 @@
 'use client';
 
 import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
-import { getCountryCentroid } from '@/lib/types/country-centroids';
 import { isValidCountryCode } from '@/lib/types/country';
+import { getCountryCentroid } from '@/lib/types/country-centroids';
 import { logger } from '@/lib/utils/logger';
 import { useEffect, useRef, type RefObject } from 'react';
 import { MAX_BADGE_SLOTS, type GlobeRendererHandle } from './globe-renderer';
 
 const VISIBILITY_THRESHOLD_DEG = 65;
+const BADGE_SYNC_INTERVAL_MS = 100;
 
-/**
- * Converts lat/lng values from degrees to radians for angular distance computation.
- */
-const toRad = (deg: number) => (deg * Math.PI) / 180;
+const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
 
-/**
- * Returns the angular distance in degrees between two lat/lng points on a sphere.
- */
 const angularDistanceDeg = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
 	const cosDistance =
-		Math.sin(toRad(lat1)) * Math.sin(toRad(lat2)) +
-		Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(toRad(lng2 - lng1));
+		Math.sin(toRadians(lat1)) * Math.sin(toRadians(lat2)) +
+		Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.cos(toRadians(lng2 - lng1));
+
 	return (Math.acos(Math.max(-1, Math.min(1, cosDistance))) * 180) / Math.PI;
 };
 
-/**
- * Returns a deterministic sub-country offset in degrees derived from the contribution key.
- * This avoids identical badges stacking when multiple contributions come from the same country.
- * The offset is small enough to stay within country boundaries for large countries.
- */
 const deterministicOffset = (key: string): { lat: number; lng: number } => {
 	let hash = 0;
 	for (let i = 0; i < key.length; i++) {
@@ -36,6 +27,7 @@ const deterministicOffset = (key: string): { lat: number; lng: number } => {
 	}
 	const latOffset = ((hash & 0xff) / 255 - 0.5) * 2.0;
 	const lngOffset = (((hash >> 8) & 0xff) / 255 - 0.5) * 3.0;
+
 	return { lat: latOffset, lng: lngOffset };
 };
 
@@ -47,6 +39,7 @@ type ActiveBadge = {
 type ResolvedContribution = GlobeContribution & {
 	lat: number;
 	lng: number;
+	timestamp: number;
 };
 
 type Props = {
@@ -55,10 +48,8 @@ type Props = {
 	reducedMotion: boolean;
 };
 
-const isContributionVisible = (
-	pov: { lat: number; lng: number },
-	candidate: ResolvedContribution,
-): boolean => angularDistanceDeg(pov.lat, pov.lng, candidate.lat, candidate.lng) < VISIBILITY_THRESHOLD_DEG;
+const isContributionVisible = (pov: { lat: number; lng: number }, candidate: ResolvedContribution): boolean =>
+	angularDistanceDeg(pov.lat, pov.lng, candidate.lat, candidate.lng) < VISIBILITY_THRESHOLD_DEG;
 
 export const useBadgePlayback = ({ contributions, rendererRef, reducedMotion }: Props) => {
 	const reducedMotionRef = useRef(reducedMotion);
@@ -86,6 +77,7 @@ export const useBadgePlayback = ({ contributions, rendererRef, reducedMotion }: 
 				...contribution,
 				lat: centroid.lat + offset.lat,
 				lng: centroid.lng + offset.lng,
+				timestamp: Date.parse(contribution.contributedAt),
 			});
 		}
 
@@ -97,7 +89,10 @@ export const useBadgePlayback = ({ contributions, rendererRef, reducedMotion }: 
 			return;
 		}
 
+		resolved.sort((a, b) => b.timestamp - a.timestamp);
+		const contributionsByKey = new Map(resolved.map((contribution) => [contribution.key, contribution]));
 		const activeBadges: ActiveBadge[] = [];
+		let activeRenderer: GlobeRendererHandle | null = null;
 
 		const findFreeSlotIndex = () => {
 			const usedSlots = new Set(activeBadges.map((badge) => badge.slotIndex));
@@ -123,8 +118,14 @@ export const useBadgePlayback = ({ contributions, rendererRef, reducedMotion }: 
 				return;
 			}
 
+			if (activeRenderer && activeRenderer !== renderer) {
+				deactivateAllBadges(activeRenderer);
+			}
+			activeRenderer = renderer;
+
 			if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
 				deactivateAllBadges(renderer);
+
 				return;
 			}
 
@@ -132,28 +133,22 @@ export const useBadgePlayback = ({ contributions, rendererRef, reducedMotion }: 
 			const animate = !reducedMotionRef.current;
 
 			for (let index = activeBadges.length - 1; index >= 0; index--) {
-				const badge = activeBadges[index]!;
-				const contribution = resolved.find((entry) => entry.key === badge.key);
+				const badge = activeBadges[index];
+				const contribution = contributionsByKey.get(badge.key);
 				if (!contribution || !isContributionVisible(pov, contribution)) {
 					renderer.deactivateBadgeSlot(badge.slotIndex);
 					activeBadges.splice(index, 1);
 				}
 			}
 
-			const visibleContributions = resolved
-				.filter((candidate) => isContributionVisible(pov, candidate))
-				.sort(
-					(a, b) => new Date(b.contributedAt).getTime() - new Date(a.contributedAt).getTime(),
-				);
-
 			const activeKeys = new Set(activeBadges.map((badge) => badge.key));
 
-			for (const candidate of visibleContributions) {
+			for (const candidate of resolved) {
 				if (activeBadges.length >= MAX_BADGE_SLOTS) {
 					break;
 				}
 
-				if (activeKeys.has(candidate.key)) {
+				if (activeKeys.has(candidate.key) || !isContributionVisible(pov, candidate)) {
 					continue;
 				}
 
@@ -173,23 +168,16 @@ export const useBadgePlayback = ({ contributions, rendererRef, reducedMotion }: 
 			}
 		};
 
-		let frameId: number | null = null;
-		const tick = () => {
-			syncVisibleBadges();
-			frameId = requestAnimationFrame(tick);
-		};
-
-		frameId = requestAnimationFrame(tick);
+		const intervalId = window.setInterval(syncVisibleBadges, BADGE_SYNC_INTERVAL_MS);
+		document.addEventListener('visibilitychange', syncVisibleBadges);
+		syncVisibleBadges();
 
 		return () => {
-			if (frameId !== null) {
-				cancelAnimationFrame(frameId);
-			}
-			const renderer = rendererRef.current;
-			if (renderer) {
-				deactivateAllBadges(renderer);
+			window.clearInterval(intervalId);
+			document.removeEventListener('visibilitychange', syncVisibleBadges);
+			if (activeRenderer) {
+				deactivateAllBadges(activeRenderer);
 			}
 		};
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [contributions, reducedMotion]);
+	}, [contributions, rendererRef]);
 };

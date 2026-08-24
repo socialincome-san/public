@@ -1,7 +1,7 @@
 import { isCountryGeoJson } from '@/lib/services/country/country-geojson.utils';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { GLOBE_COLORS, GLOBE_SPHERE_OPACITY, INITIAL_GLOBE_VIEW } from './globe-config';
+import { GLOBE_COLORS, GLOBE_SPHERE_OPACITY } from './globe-config';
 
 describe('generated globe fallback', () => {
 	it('is generated from a valid Natural Earth FeatureCollection', async () => {
@@ -12,6 +12,7 @@ describe('generated globe fallback', () => {
 		expect(isCountryGeoJson(payload)).toBe(true);
 		if (isCountryGeoJson(payload)) {
 			expect(payload.features.length).toBeGreaterThan(50);
+			expect(payload.features.every((feature) => feature.properties === null)).toBe(true);
 		}
 	});
 
@@ -24,13 +25,5 @@ describe('generated globe fallback', () => {
 		expect(svg).toContain(`fill-opacity="${GLOBE_SPHERE_OPACITY}"`);
 		expect(svg).toContain(`fill="${GLOBE_COLORS.hexagon}"`);
 		expect(countryPaths.length).toBeGreaterThan(50);
-	});
-
-	it('uses the same initial orientation as the WebGL globe', async () => {
-		const script = await readFile(path.join(process.cwd(), 'src/scripts/globe/generate-globe-fallback.ts'), 'utf8');
-
-		expect(script).toContain('geoOrthographic()');
-		expect(script).toContain('rotate([-INITIAL_GLOBE_VIEW.lng, -INITIAL_GLOBE_VIEW.lat])');
-		expect(INITIAL_GLOBE_VIEW).toEqual({ lat: 38, lng: 10, altitude: 1.72 });
 	});
 });

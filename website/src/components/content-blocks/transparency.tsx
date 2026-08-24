@@ -18,6 +18,9 @@ type Props = {
 };
 
 export const TransparencyBlock = async ({ blok, lang }: Props) => {
+	const donationGlobeBlocks = blok.donationGlobe?.map((globeBlok) => (
+		<DonationGlobeBlock key={globeBlok._uid} blok={globeBlok} lang={lang} />
+	));
 	const financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' };
 	const timeRanges = Array.from({ length: 12 }, (_, i) => {
 		const start = DateTime.now()
@@ -35,7 +38,9 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 	]);
 
 	if (!dataResult.success) {
-		return null;
+		return donationGlobeBlocks && donationGlobeBlocks.length > 0 ? (
+			<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>{donationGlobeBlocks}</BlockWrapper>
+		) : null;
 	}
 
 	const data = dataResult.data;
@@ -60,9 +65,7 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 
 	return (
 		<BlockWrapper className="space-y-12" {...storyblokEditable(blok as SbBlokData)}>
-			{blok.donationGlobe?.map((globeBlok) => (
-				<DonationGlobeBlock key={globeBlok._uid} blok={globeBlok} lang={lang} />
-			))}
+			{donationGlobeBlocks}
 			<SummarySection
 				inflows={inflows}
 				outflows={outflows}

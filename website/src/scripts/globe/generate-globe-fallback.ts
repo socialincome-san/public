@@ -4,6 +4,7 @@ import {
 	GLOBE_SPHERE_OPACITY,
 	INITIAL_GLOBE_VIEW,
 } from '@/components/globe/globe-config';
+import type { CountryGeoJson } from '@/lib/services/country/country-geojson.types';
 import { isCountryGeoJson } from '@/lib/services/country/country-geojson.utils';
 import { geoOrthographic, geoPath } from 'd3-geo';
 import { readFile, writeFile } from 'node:fs/promises';
@@ -21,6 +22,14 @@ const generateFallback = async () => {
 		throw new Error('Country GeoJSON is not a valid FeatureCollection.');
 	}
 
+	const countries: CountryGeoJson = {
+		type: 'FeatureCollection',
+		features: payload.features.map(({ geometry }) => ({
+			type: 'Feature',
+			properties: null,
+			geometry,
+		})),
+	};
 	const projection = geoOrthographic()
 		.rotate([-INITIAL_GLOBE_VIEW.lng, -INITIAL_GLOBE_VIEW.lat])
 		.translate([center, center])
@@ -28,7 +37,7 @@ const generateFallback = async () => {
 		.clipAngle(90)
 		.precision(0.5);
 	const pathGenerator = geoPath(projection);
-	const countryPaths = payload.features
+	const countryPaths = countries.features
 		.map((feature) => pathGenerator(feature))
 		.filter((countryPath): countryPath is string => countryPath !== null)
 		.map((countryPath) => `\t<path d="${countryPath}" fill="${GLOBE_COLORS.hexagon}" />`)
@@ -42,7 +51,10 @@ const generateFallback = async () => {
 		'',
 	].join('\n');
 
-	await writeFile(outputPath, svg, 'utf8');
+	await Promise.all([writeFile(inputPath, `${JSON.stringify(countries)}\n`, 'utf8'), writeFile(outputPath, svg, 'utf8')]);
 };
 
-void generateFallback();
+void generateFallback().catch((error) => {
+	console.error(error);
+	process.exitCode = 1;
+});

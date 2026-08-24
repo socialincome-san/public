@@ -66,7 +66,7 @@ const renderGlobe = (root: Root) => {
 	act(() => {
 		root.render(
 			<div data-globe-stage data-ready="false">
-				<GlobeClient contributions={[]} />
+				<GlobeClient contributions={[]} locale="en-US" />
 			</div>,
 		);
 	});
@@ -86,6 +86,9 @@ describe('GlobeClient lifecycle', () => {
 		rendererHandle = {
 			resize: jest.fn(),
 			setReducedMotion: jest.fn(),
+			activateBadgeSlot: jest.fn(),
+			deactivateBadgeSlot: jest.fn(),
+			getPointOfView: jest.fn(() => ({ lat: 0, lng: 0, altitude: 1.72 })),
 			dispose: jest.fn(),
 		};
 
@@ -104,7 +107,9 @@ describe('GlobeClient lifecycle', () => {
 		await flushAsync();
 
 		const rendererOptions = jest.mocked(createGlobeRenderer).mock.calls[0]?.[0];
-		expect(rendererOptions).toEqual(expect.objectContaining({ countries: countryData, size: 400, reducedMotion: false }));
+		expect(rendererOptions).toEqual(
+			expect.objectContaining({ countries: countryData, size: 400, locale: 'en-US', reducedMotion: false }),
+		);
 		expect(getCountryGeoJson).toHaveBeenCalledWith(expect.any(AbortSignal));
 
 		act(() => rendererOptions?.onReady());
@@ -127,7 +132,7 @@ describe('GlobeClient lifecycle', () => {
 		act(() => root.unmount());
 	});
 
-	it('initializes the sphere without countries when GeoJSON is unavailable', async () => {
+	it('keeps the fallback without starting WebGL when GeoJSON is unavailable', async () => {
 		jest.mocked(getCountryGeoJson).mockResolvedValue({
 			success: false,
 			error: 'Country GeoJSON is not a valid FeatureCollection.',
@@ -136,7 +141,7 @@ describe('GlobeClient lifecycle', () => {
 		renderGlobe(root);
 		await flushAsync();
 
-		expect(createGlobeRenderer).toHaveBeenCalledWith(expect.objectContaining({ countries: null }));
+		expect(createGlobeRenderer).not.toHaveBeenCalled();
 		expect(container.querySelector<HTMLElement>('[data-globe-stage]')?.dataset.ready).toBe('false');
 
 		act(() => root.unmount());

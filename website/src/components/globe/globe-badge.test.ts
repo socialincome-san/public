@@ -1,7 +1,7 @@
 /** @jest-environment jsdom */
 
 import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
-import { createBadgeElement } from './globe-badge';
+import { createBadgeSlotElement, mountBadgeContent } from './globe-badge';
 
 const makeContribution = (overrides: Partial<GlobeContribution> = {}): GlobeContribution => ({
 	key: 'cid-test',
@@ -13,28 +13,32 @@ const makeContribution = (overrides: Partial<GlobeContribution> = {}): GlobeCont
 	...overrides,
 });
 
-describe('createBadgeElement', () => {
-	it('creates a DOM element without using innerHTML for dynamic content', () => {
-		const contribution = makeContribution();
-		const element = createBadgeElement(contribution);
+const renderBadge = (contribution: GlobeContribution) => {
+	const slot = createBadgeSlotElement();
+	mountBadgeContent(slot, contribution, 'en-US');
 
-		expect(element instanceof HTMLElement).toBe(true);
-		expect(element.querySelector('[innerHTML]')).toBeNull();
+	return slot;
+};
+
+describe('globe badge', () => {
+	it('creates a badge element', () => {
+		expect(renderBadge(makeContribution())).toBeInstanceOf(HTMLElement);
 	});
 
 	it('displays the country name', () => {
-		const element = createBadgeElement(makeContribution({ countryName: 'Switzerland' }));
+		const element = renderBadge(makeContribution({ countryName: 'Switzerland' }));
 		expect(element.textContent).toContain('Switzerland');
 	});
 
-	it('uppercases the country name', () => {
-		const element = createBadgeElement(makeContribution({ countryName: 'Germany' }));
+	it('applies uppercase styling to the country name', () => {
+		const element = renderBadge(makeContribution({ countryName: 'Germany' }));
 		const label = element.querySelector('[data-globe-badge] > span > span');
 		expect(label?.textContent).toBe('Germany');
+		expect(label?.className).toContain('uppercase');
 	});
 
 	it('renders a circular 14x14 country flag after the country name', () => {
-		const element = createBadgeElement(makeContribution({ countryCode: 'CH', countryName: 'Switzerland' }));
+		const element = renderBadge(makeContribution({ countryCode: 'CH', countryName: 'Switzerland' }));
 		const countryRow = element.querySelector('[data-globe-badge] > span');
 		const [name, flag] = [...(countryRow?.children ?? [])];
 
@@ -48,33 +52,33 @@ describe('createBadgeElement', () => {
 	});
 
 	it('displays the formatted amount', () => {
-		const element = createBadgeElement(makeContribution({ amount: 100, currency: 'USD' }));
+		const element = renderBadge(makeContribution({ amount: 100, currency: 'USD' }));
 		expect(element.textContent).toContain('100');
 	});
 
 	it('displays the contribution date', () => {
-		const element = createBadgeElement(makeContribution({ contributedAt: '2026-08-10T14:32:00.000Z' }));
+		const element = renderBadge(makeContribution({ contributedAt: '2026-08-10T14:32:00.000Z' }));
 		expect(element.textContent).toMatch(/aug|10/i);
 	});
 
 	it('marks the root element as pointer-events-none', () => {
-		const element = createBadgeElement(makeContribution());
+		const element = renderBadge(makeContribution());
 		expect(element.className).toContain('pointer-events-none');
 	});
 
 	it('applies the badge animation class', () => {
-		const element = createBadgeElement(makeContribution());
+		const element = renderBadge(makeContribution());
 		expect(element.className).toContain('animate-globe-badge');
 	});
 
 	it('offsets the badge upward from its anchor', () => {
-		const element = createBadgeElement(makeContribution());
+		const element = renderBadge(makeContribution());
 		expect(element.style.transform).toBe('translateY(-10px)');
 	});
 
 	it('uses textContent — not innerHTML — for country name', () => {
 		const contribution = makeContribution({ countryName: '<script>alert(1)</script>' });
-		const element = createBadgeElement(contribution);
+		const element = renderBadge(contribution);
 		expect(element.innerHTML).not.toContain('<script>');
 		expect(element.textContent).toContain('<script>alert(1)</script>');
 	});

@@ -10,6 +10,9 @@ const GlobeClient = dynamic(() => import('./globe-client').then((module) => modu
 
 type Props = {
 	contributions: GlobeContribution[];
+	locale: string;
 };
 
-export const GlobeClientShell = ({ contributions }: Props) => <GlobeClient contributions={contributions} />;
+export const GlobeClientShell = ({ contributions, locale }: Props) => (
+	<GlobeClient contributions={contributions} locale={locale} />
+);

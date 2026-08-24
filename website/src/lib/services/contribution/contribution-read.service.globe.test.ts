@@ -1,5 +1,7 @@
 import type { ServiceResult } from '@/lib/services/core/base.types';
-import type { GlobeContribution } from './contribution-globe.types';
+import type { ContributionReadService as ContributionReadServiceType } from './contribution-read.service';
+
+const mockLoggerWarn = jest.fn();
 
 jest.mock('@/generated/prisma/client', () => ({
 	ContributionStatus: { succeeded: 'succeeded' },
@@ -7,27 +9,72 @@ jest.mock('@/generated/prisma/client', () => ({
 }));
 
 jest.mock('@/lib/utils/logger', () => ({
-	logger: { error: jest.fn(), warn: jest.fn() },
+	logger: { error: jest.fn(), warn: mockLoggerWarn },
 }));
 
 jest.mock('@/lib/types/country', () => ({
 	getCountryNameByCode: (code: string) => `Country(${code})`,
 }));
 
-const mockFindMany = jest.fn();
+type ContributionRow = {
+	id: string;
+	amount: string;
+	currency: string;
+	createdAt: Date;
+	contributor: {
+		contact: {
+			address: { country: string | null } | null;
+		} | null;
+	};
+};
+
+type FindManyQuery = {
+	where: {
+		status: string;
+		createdAt: { gte: Date };
+	};
+	select: Record<string, unknown>;
+	orderBy: { createdAt: string };
+	take: number;
+};
+
+const makeRow = (overrides: Partial<ContributionRow> = {}): ContributionRow => ({
+	id: 'cid-1',
+	amount: '42.0000',
+	currency: 'CHF',
+	createdAt: new Date('2026-08-10T14:32:00.000Z'),
+	contributor: {
+		contact: {
+			address: { country: 'CH' },
+		},
+	},
+	...overrides,
+});
+
+const mockFindMany = jest.fn<Promise<ContributionRow[]>, [FindManyQuery]>();
 const mockDb = {
 	contribution: { findMany: mockFindMany },
 } as never;
 
+const getFindManyQuery = () => {
+	const query = mockFindMany.mock.calls.at(-1)?.[0];
+	if (!query) {
+		throw new Error('Expected contribution.findMany to be called.');
+	}
+
+	return query;
+};
+
 const expectSuccess = <T>(result: ServiceResult<T>) => {
 	expect(result.success).toBe(true);
-	if (!result.success) throw new Error(result.error);
+	if (!result.success) {
+		throw new Error(result.error);
+	}
+
 	return result.data;
 };
 
-// Import after mocks are in place.
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-let ContributionReadService: typeof import('./contribution-read.service').ContributionReadService;
+let ContributionReadService: typeof ContributionReadServiceType;
 
 beforeAll(async () => {
 	({ ContributionReadService } = await import('./contribution-read.service'));
@@ -40,32 +87,14 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 
 	const cutoff = new Date('2026-08-05T00:00:00.000Z');
 
-	const makeRow = (overrides: Record<string, unknown> = {}) => ({
-		id: 'cid-1',
-		amount: '42.0000',
-		currency: 'CHF',
-		createdAt: new Date('2026-08-10T14:32:00.000Z'),
-		contributor: {
-			contact: {
-				address: { country: 'CH' },
-			},
-		},
-		...overrides,
-	});
-
 	it('queries only succeeded contributions created at or after the cutoff', async () => {
 		mockFindMany.mockResolvedValue([]);
 		const service = new ContributionReadService(mockDb, {} as never);
 		await service.getRecentSuccessfulContributions(cutoff);
 
-		expect(mockFindMany).toHaveBeenCalledWith(
-			expect.objectContaining({
-				where: expect.objectContaining({
-					status: 'succeeded',
-					createdAt: { gte: cutoff },
-				}),
-			}),
-		);
+		const { where } = getFindManyQuery();
+		expect(where.status).toBe('succeeded');
+		expect(where.createdAt).toEqual({ gte: cutoff });
 	});
 
 	it('orders by createdAt descending', async () => {
@@ -73,23 +102,28 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 		const service = new ContributionReadService(mockDb, {} as never);
 		await service.getRecentSuccessfulContributions(cutoff);
 
-		expect(mockFindMany).toHaveBeenCalledWith(
-			expect.objectContaining({ orderBy: { createdAt: 'desc' } }),
-		);
+		expect(getFindManyQuery().orderBy).toEqual({ createdAt: 'desc' });
 	});
 
-	it('selects only the required fields — no names, emails, or payment references', async () => {
+	it('caps the public contribution payload', async () => {
 		mockFindMany.mockResolvedValue([]);
 		const service = new ContributionReadService(mockDb, {} as never);
 		await service.getRecentSuccessfulContributions(cutoff);
 
-		const [call] = mockFindMany.mock.calls;
-		const select = (call as [{ select: Record<string, unknown> }])[0].select;
+		expect(getFindManyQuery().take).toBe(200);
+	});
 
-		expect(select).toHaveProperty('id', true);
+	it('selects only the public globe fields', async () => {
+		mockFindMany.mockResolvedValue([]);
+		const service = new ContributionReadService(mockDb, {} as never);
+		await service.getRecentSuccessfulContributions(cutoff);
+
+		const { select } = getFindManyQuery();
+
 		expect(select).toHaveProperty('amount', true);
 		expect(select).toHaveProperty('currency', true);
 		expect(select).toHaveProperty('createdAt', true);
+		expect(select).not.toHaveProperty('id');
 		expect(select).not.toHaveProperty('amountChf');
 		expect(select).not.toHaveProperty('feesChf');
 		expect(select).not.toHaveProperty('legacyFirestoreId');
@@ -100,8 +134,7 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 		const service = new ContributionReadService(mockDb, {} as never);
 		await service.getRecentSuccessfulContributions(cutoff);
 
-		const [call] = mockFindMany.mock.calls;
-		const select = (call as [{ select: Record<string, unknown> }])[0].select;
+		const { select } = getFindManyQuery();
 
 		expect(select).toHaveProperty('contributor');
 	});
@@ -112,17 +145,16 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 		const contributions = expectSuccess(await service.getRecentSuccessfulContributions(cutoff));
 
 		expect(contributions).toHaveLength(1);
-		const dto = contributions[0] as GlobeContribution;
-		expect(dto.key).toBe('cid-1');
-		expect(dto.amount).toBe(42);
-		expect(dto.currency).toBe('CHF');
-		expect(dto.contributedAt).toBe('2026-08-10T14:32:00.000Z');
-		expect(dto.countryCode).toBe('CH');
-		expect(dto.countryName).toBe('Country(CH)');
+		const dto = contributions[0];
+		expect(dto?.key).toBe('contribution-0');
+		expect(dto?.amount).toBe(42);
+		expect(dto?.currency).toBe('CHF');
+		expect(dto?.contributedAt).toBe('2026-08-10T14:32:00.000Z');
+		expect(dto?.countryCode).toBe('CH');
+		expect(dto?.countryName).toBe('Country(CH)');
 	});
 
 	it('excludes contributions without a country and logs the skipped count', async () => {
-		const { logger } = await import('@/lib/utils/logger');
 		mockFindMany.mockResolvedValue([
 			makeRow({ contributor: { contact: { address: { country: null } } } }),
 			makeRow({ id: 'cid-2' }),
@@ -131,14 +163,12 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 		const contributions = expectSuccess(await service.getRecentSuccessfulContributions(cutoff));
 
 		expect(contributions).toHaveLength(1);
-		expect(contributions[0]?.key).toBe('cid-2');
-		expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Skipped 1'));
+		expect(contributions[0]?.key).toBe('contribution-0');
+		expect(mockLoggerWarn).toHaveBeenCalledWith(expect.stringContaining('Skipped 1'));
 	});
 
 	it('excludes contributions with no address at all', async () => {
-		mockFindMany.mockResolvedValue([
-			makeRow({ contributor: { contact: { address: null } } }),
-		]);
+		mockFindMany.mockResolvedValue([makeRow({ contributor: { contact: { address: null } } })]);
 		const service = new ContributionReadService(mockDb, {} as never);
 		const contributions = expectSuccess(await service.getRecentSuccessfulContributions(cutoff));
 
@@ -167,6 +197,7 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 		const contributions = expectSuccess(await service.getRecentSuccessfulContributions(cutoff));
 
 		const dto = contributions[0] as Record<string, unknown>;
+		expect(dto).not.toHaveProperty('id');
 		expect(dto).not.toHaveProperty('contributorId');
 		expect(dto).not.toHaveProperty('email');
 		expect(dto).not.toHaveProperty('firstName');

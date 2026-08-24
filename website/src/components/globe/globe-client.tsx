@@ -8,18 +8,18 @@ import { cn } from '@/lib/utils/cn';
 import { logger } from '@/lib/utils/logger';
 import { useEffect, useRef } from 'react';
 import styles from './globe-client.module.css';
-import { MIN_RENDERER_SIZE } from './globe-config';
 import { createGlobeRenderer, type GlobeRendererHandle } from './globe-renderer';
 import { useBadgePlayback } from './use-badge-playback';
 
 const getRendererSize = ({ width, height }: { width: number; height: number }) =>
-	Math.max(MIN_RENDERER_SIZE, Math.round(Math.min(width, height)));
+	Math.max(1, Math.round(Math.min(width, height)));
 
 type Props = {
 	contributions: GlobeContribution[];
+	locale: string;
 };
 
-export const GlobeClient = ({ contributions }: Props) => {
+export const GlobeClient = ({ contributions, locale }: Props) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const rendererRef = useRef<GlobeRendererHandle>(null);
 	const reducedMotionRef = useRef(true);
@@ -41,7 +41,7 @@ export const GlobeClient = ({ contributions }: Props) => {
 		const abortController = new AbortController();
 		let disposed = false;
 		let initializationStarted = false;
-		let latestSize = MIN_RENDERER_SIZE;
+		let latestSize = 1;
 
 		const setReady = (ready: boolean) => {
 			const stage = container.closest('[data-globe-stage]');
@@ -64,12 +64,15 @@ export const GlobeClient = ({ contributions }: Props) => {
 
 				if (!countriesResult.success) {
 					logger.warn(countriesResult.error, { component: 'GlobeClient' });
+
+					return;
 				}
 
 				const renderer = await createGlobeRenderer({
 					element: container,
-					countries: countriesResult.success ? countriesResult.data : null,
+					countries: countriesResult.data,
 					size: latestSize,
+					locale,
 					reducedMotion: reducedMotionRef.current,
 					signal: abortController.signal,
 					onReady: () => setReady(true),
@@ -116,7 +119,7 @@ export const GlobeClient = ({ contributions }: Props) => {
 			rendererRef.current = null;
 			setReady(false);
 		};
-	}, []);
+	}, [locale]);
 
 	return (
 		<div

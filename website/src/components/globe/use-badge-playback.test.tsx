@@ -1,15 +1,18 @@
 /** @jest-environment jsdom */
 
 import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
-import { act } from 'react';
+import { act, useRef } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { clearBadgeSlot, createBadgeSlotElement, mountBadgeContent } from './globe-badge';
 import type { GlobeRendererHandle } from './globe-renderer';
+import type { useBadgePlayback as UseBadgePlayback } from './use-badge-playback';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
+const mockLoggerWarn = jest.fn();
+
 jest.mock('@/lib/utils/logger', () => ({
-	logger: { warn: jest.fn(), error: jest.fn() },
+	logger: { warn: mockLoggerWarn, error: jest.fn() },
 }));
 
 jest.mock('@/lib/types/country', () => ({
@@ -24,6 +27,7 @@ jest.mock('@/lib/types/country-centroids', () => ({
 			US: { lat: 37.09, lng: -95.71 },
 			FR: { lat: 46.23, lng: 2.21 },
 		};
+
 		return centroids[code] ?? null;
 	},
 }));
@@ -38,14 +42,19 @@ const makeContribution = (overrides: Partial<GlobeContribution> = {}): GlobeCont
 	...overrides,
 });
 
+type TestRenderer = jest.Mocked<GlobeRendererHandle> & {
+	maxConcurrentBadges: number;
+	setPointOfView: (next: { lat: number; lng: number }) => void;
+};
+
 const createRenderer = (
 	pov: { lat: number; lng: number; altitude: number } = { lat: 46.82, lng: 8.23, altitude: 1.72 },
-): jest.Mocked<GlobeRendererHandle> & { maxConcurrentBadges: number; setPointOfView: (next: { lat: number; lng: number }) => void } => {
+): TestRenderer => {
 	const slots = Array.from({ length: 6 }, () => createBadgeSlotElement());
 	let activeCount = 0;
 	let pointOfView = pov;
 
-	const renderer = {
+	const renderer: TestRenderer = {
 		maxConcurrentBadges: 0,
 		setPointOfView: (next: { lat: number; lng: number }) => {
 			pointOfView = { ...pointOfView, ...next };
@@ -58,7 +67,7 @@ const createRenderer = (
 				return;
 			}
 			clearBadgeSlot(slot);
-			mountBadgeContent(slot, params.contribution, params.animate ?? true);
+			mountBadgeContent(slot, params.contribution, 'en-US', params.animate ?? true);
 			activeCount++;
 			renderer.maxConcurrentBadges = Math.max(renderer.maxConcurrentBadges, activeCount);
 		}),
@@ -69,20 +78,14 @@ const createRenderer = (
 			}
 			activeCount = Math.max(0, activeCount - 1);
 		}),
-		getBadgeSlotElement: jest.fn((slotIndex: number) => slots[slotIndex] ?? null),
 		getPointOfView: jest.fn(() => pointOfView),
 		dispose: jest.fn(),
 	};
 
-	return renderer as jest.Mocked<GlobeRendererHandle> & {
-		maxConcurrentBadges: number;
-		setPointOfView: (next: { lat: number; lng: number }) => void;
-	};
+	return renderer;
 };
 
-// Import hook after mocks are set up.
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-let useBadgePlayback: typeof import('./use-badge-playback').useBadgePlayback;
+let useBadgePlayback: typeof UseBadgePlayback;
 
 beforeAll(async () => {
 	({ useBadgePlayback } = await import('./use-badge-playback'));
@@ -95,8 +98,9 @@ type HookProps = {
 };
 
 const TestComponent = ({ contributions, renderer, reducedMotion }: HookProps) => {
-	const rendererRef = { current: renderer };
+	const rendererRef = useRef(renderer);
 	useBadgePlayback({ contributions, rendererRef, reducedMotion });
+
 	return null;
 };
 
@@ -107,24 +111,19 @@ const renderHook = (props: HookProps): { root: Root; container: HTMLDivElement }
 	act(() => {
 		root.render(<TestComponent {...props} />);
 	});
+
 	return { root, container };
 };
 
-const flushAnimationFrames = () => {
+const flushBadgeSync = () => {
 	act(() => {
-		jest.runOnlyPendingTimers();
+		jest.advanceTimersByTime(100);
 	});
 };
 
 describe('useBadgePlayback', () => {
 	beforeEach(() => {
 		jest.useFakeTimers();
-		jest.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) =>
-			window.setTimeout(() => callback(0), 0),
-		);
-		jest.spyOn(window, 'cancelAnimationFrame').mockImplementation((id) => {
-			window.clearTimeout(id);
-		});
 		Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
 	});
 
@@ -140,8 +139,7 @@ describe('useBadgePlayback', () => {
 		expect(() => renderHook({ contributions: [], renderer, reducedMotion: false })).not.toThrow();
 	});
 
-	it('skips contributions with unmapped country codes and logs a warning', async () => {
-		const { logger } = await import('@/lib/utils/logger');
+	it('skips contributions with unmapped country codes and logs a warning', () => {
 		const renderer = createRenderer();
 
 		renderHook({
@@ -150,7 +148,7 @@ describe('useBadgePlayback', () => {
 			reducedMotion: false,
 		});
 
-		expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('skipped 1'));
+		expect(mockLoggerWarn).toHaveBeenCalledWith(expect.stringContaining('skipped 1'));
 	});
 
 	it('activates a badge while its position is visible on the globe', () => {
@@ -161,7 +159,7 @@ describe('useBadgePlayback', () => {
 			reducedMotion: false,
 		});
 
-		flushAnimationFrames();
+		flushBadgeSync();
 
 		expect(renderer.activateBadgeSlot).toHaveBeenCalledTimes(1);
 
@@ -177,9 +175,9 @@ describe('useBadgePlayback', () => {
 			reducedMotion: false,
 		});
 
-		flushAnimationFrames();
-		flushAnimationFrames();
-		flushAnimationFrames();
+		flushBadgeSync();
+		flushBadgeSync();
+		flushBadgeSync();
 
 		expect(renderer.activateBadgeSlot).toHaveBeenCalledTimes(1);
 		expect(renderer.deactivateBadgeSlot).not.toHaveBeenCalled();
@@ -196,11 +194,11 @@ describe('useBadgePlayback', () => {
 			reducedMotion: false,
 		});
 
-		flushAnimationFrames();
+		flushBadgeSync();
 		expect(renderer.activateBadgeSlot).toHaveBeenCalledTimes(1);
 
 		renderer.setPointOfView({ lat: -45, lng: 120 });
-		flushAnimationFrames();
+		flushBadgeSync();
 
 		expect(renderer.deactivateBadgeSlot).toHaveBeenCalledWith(0);
 
@@ -216,11 +214,11 @@ describe('useBadgePlayback', () => {
 			reducedMotion: false,
 		});
 
-		flushAnimationFrames();
+		flushBadgeSync();
 		renderer.setPointOfView({ lat: -45, lng: 120 });
-		flushAnimationFrames();
+		flushBadgeSync();
 		renderer.setPointOfView({ lat: 46.82, lng: 8.23 });
-		flushAnimationFrames();
+		flushBadgeSync();
 
 		expect(renderer.activateBadgeSlot).toHaveBeenCalledTimes(2);
 		expect(renderer.deactivateBadgeSlot).toHaveBeenCalledTimes(1);
@@ -231,13 +229,11 @@ describe('useBadgePlayback', () => {
 
 	it('does not exceed six active badge slots', () => {
 		const renderer = createRenderer();
-		const contributions = Array.from({ length: 20 }, (_, i) =>
-			makeContribution({ key: `cid-${i}`, countryCode: 'CH' }),
-		);
+		const contributions = Array.from({ length: 20 }, (_, i) => makeContribution({ key: `cid-${i}`, countryCode: 'CH' }));
 
 		const { root, container } = renderHook({ contributions, renderer, reducedMotion: false });
 
-		flushAnimationFrames();
+		flushBadgeSync();
 
 		expect(renderer.maxConcurrentBadges).toBeLessThanOrEqual(6);
 
@@ -254,7 +250,7 @@ describe('useBadgePlayback', () => {
 		});
 
 		for (let i = 0; i < 5; i++) {
-			flushAnimationFrames();
+			flushBadgeSync();
 		}
 
 		expect(renderer.activateBadgeSlot).toHaveBeenCalledTimes(1);
@@ -271,11 +267,11 @@ describe('useBadgePlayback', () => {
 			reducedMotion: false,
 		});
 
-		flushAnimationFrames();
+		flushBadgeSync();
 		expect(renderer.activateBadgeSlot).toHaveBeenCalledTimes(1);
 
 		Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
-		flushAnimationFrames();
+		flushBadgeSync();
 
 		expect(renderer.deactivateBadgeSlot).toHaveBeenCalledWith(0);
 
@@ -291,15 +287,12 @@ describe('useBadgePlayback', () => {
 			reducedMotion: true,
 		});
 
-		flushAnimationFrames();
+		flushBadgeSync();
 
 		expect(renderer.activateBadgeSlot).toHaveBeenCalledTimes(1);
-		expect(renderer.activateBadgeSlot).toHaveBeenCalledWith(
-			0,
-			expect.objectContaining({ animate: false }),
-		);
+		expect(renderer.activateBadgeSlot).toHaveBeenCalledWith(0, expect.objectContaining({ animate: false }));
 
-		flushAnimationFrames();
+		flushBadgeSync();
 		expect(renderer.activateBadgeSlot).toHaveBeenCalledTimes(1);
 
 		act(() => root.unmount());
@@ -316,7 +309,7 @@ describe('useBadgePlayback', () => {
 			reducedMotion: false,
 		});
 
-		flushAnimationFrames();
+		flushBadgeSync();
 
 		act(() => root.unmount());
 		container.remove();

@@ -1,10 +1,13 @@
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
+import Image from 'next/image';
 
-const fallbackSvgPath = path.join(process.cwd(), 'public/assets/globe/globe-fallback.svg');
-
-export const GlobeFallback = () => {
-	const svg = readFileSync(fallbackSvgPath, 'utf8');
-
-	return <div className="size-full" dangerouslySetInnerHTML={{ __html: svg }} />;
-};
+export const GlobeFallback = () => (
+	<div className="relative size-full">
+		<Image
+			src="/assets/globe/globe-fallback.svg"
+			alt=""
+			fill
+			sizes="(min-width: 768px) 50vw, 100vw"
+			className="object-contain"
+		/>
+	</div>
+);

@@ -14,5 +14,4 @@ export const HEXAGON_RESOLUTION = 3;
 export const HEXAGON_MARGIN = 0.65;
 export const AUTO_ROTATE_SPEED = 1.5;
 export const DAMPING_FACTOR = 0.05;
-export const MIN_RENDERER_SIZE = 320;
 export const FALLBACK_VIEW_BOX_SIZE = 760;

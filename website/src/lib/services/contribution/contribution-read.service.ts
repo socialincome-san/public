@@ -33,6 +33,8 @@ import {
 	YourContributionsTableViewRow,
 } from './contribution.types';
 
+const RECENT_GLOBE_CONTRIBUTION_LIMIT = 200;
+
 export class ContributionReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
@@ -499,7 +501,6 @@ export class ContributionReadService extends BaseService {
 					createdAt: { gte: cutoff },
 				},
 				select: {
-					id: true,
 					amount: true,
 					currency: true,
 					createdAt: true,
@@ -516,6 +517,7 @@ export class ContributionReadService extends BaseService {
 					},
 				},
 				orderBy: { createdAt: 'desc' },
+				take: RECENT_GLOBE_CONTRIBUTION_LIMIT,
 			});
 
 			let skipped = 0;
@@ -528,7 +530,7 @@ export class ContributionReadService extends BaseService {
 					continue;
 				}
 				contributions.push({
-					key: row.id,
+					key: `contribution-${contributions.length}`,
 					amount: Number(row.amount),
 					currency: row.currency,
 					contributedAt: row.createdAt.toISOString(),

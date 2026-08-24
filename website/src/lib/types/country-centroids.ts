@@ -2,11 +2,6 @@ import type { CountryCode } from '@/generated/prisma/enums';
 
 type CountryCentroid = { lat: number; lng: number };
 
-/**
- * Geographic centroids (lat/lng) keyed by ISO 3166-1 alpha-2 country code.
- * Used for placing globe visualization badges at country level only.
- * Source: standard public-domain country centroid data. No contributor address is used.
- */
 export const COUNTRY_CENTROIDS: Partial<Record<CountryCode, CountryCentroid>> = {
 	AD: { lat: 42.55, lng: 1.57 },
 	AE: { lat: 23.42, lng: 53.85 },
@@ -256,5 +251,4 @@ export const COUNTRY_CENTROIDS: Partial<Record<CountryCode, CountryCentroid>> = 
 	ZW: { lat: -19.02, lng: 29.15 },
 };
 
-export const getCountryCentroid = (code: CountryCode): CountryCentroid | null =>
-	COUNTRY_CENTROIDS[code] ?? null;
+export const getCountryCentroid = (code: CountryCode): CountryCentroid | null => COUNTRY_CENTROIDS[code] ?? null;

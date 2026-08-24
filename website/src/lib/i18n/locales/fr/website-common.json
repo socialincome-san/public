@@ -118,7 +118,8 @@
 	},
 	"transparency-page": {
 		"donation-globe": {
-			"description": "{{donatorsCount}} people have donated to lift others out of poverty. Trust like that only comes with total transparency."
+			"aria-label": "Globe montrant les dons récents dans le monde",
+			"description": "{{donatorsCount}} personnes ont fait un don pour aider d’autres personnes à sortir de la pauvreté. Une telle confiance ne peut naître que d’une transparence totale."
 		},
 		"inflows": {
 			"title-name": "Entrées",
