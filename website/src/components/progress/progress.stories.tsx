@@ -5,6 +5,12 @@ const meta = {
 	title: 'Components/Progress',
 	component: Progress,
 	tags: ['autodocs'],
+	argTypes: {
+		variant: {
+			control: 'select',
+			options: ['default', 'urgent', 'onDark'],
+		},
+	},
 	parameters: {
 		design: {
 			type: 'figma',
