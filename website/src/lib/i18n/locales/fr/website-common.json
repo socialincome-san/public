@@ -208,6 +208,11 @@
 			"about-step-title": "À propos",
 			"about-step-subtitle": "Qui collecte des fonds ?",
 			"about-step-description": "Parlez un peu plus de vous.",
+			"personal-step-title": "Données personnelles",
+			"personal-step-subtitle": "Nous utiliserons vos données personnelles pour créer votre compte. Elles ne seront pas affichées sur la page de la campagne.",
+			"first-name": "Prénom",
+			"last-name": "Nom",
+			"email": "E-mail",
 			"title": "Titre de la campagne",
 			"description": "Texte d'introduction",
 			"goal": "Montant de l'objectif",
@@ -263,6 +268,7 @@
 			"recipients-count": "{{count}} bénéficiaires",
 			"details": "Détails",
 			"about": "À propos",
+			"personal": "Données personnelles",
 			"programs-loading": "Chargement des programmes…",
 			"programs-empty": "Aucun programme n'est disponible pour le moment.",
 			"default-images-loading": "Chargement des images…",
@@ -301,7 +307,11 @@
 				"slug-exists": "Une campagne avec ce slug existe déjà.",
 				"submission-failed": "Nous n'avons pas pu finaliser votre soumission. Veuillez réessayer dans quelques minutes.",
 				"turnstile-required": "Veuillez terminer la vérification avant d'envoyer.",
-				"turnstile-invalid": "La vérification a échoué. Veuillez réessayer."
+				"turnstile-invalid": "La vérification a échoué. Veuillez réessayer.",
+				"first-name-required": "Le prénom est obligatoire.",
+				"last-name-required": "Le nom est obligatoire.",
+				"email-required": "L'e-mail est obligatoire.",
+				"email-invalid": "Veuillez saisir une adresse e-mail valide."
 			}
 		}
 	},

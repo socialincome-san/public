@@ -2,6 +2,7 @@
 
 import { DialogHeader, DialogTitle } from '@/components/dialog';
 import { Form } from '@/components/form';
+import { useContributorSession } from '@/lib/firebase/hooks/useContributorSession';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import {
 	getCampaignDefaultImagesAction,
@@ -10,10 +11,13 @@ import {
 } from '@/lib/server-actions/campaign-public-actions';
 import {
 	appendCampaignSubmissionFormData,
+	campaignSubmissionAboutFieldNames,
 	campaignSubmissionDefaultCurrency,
 	campaignSubmissionDetailsFieldNames,
+	campaignSubmissionPersonalFieldNames,
 	createCampaignSubmissionDetailsSchema,
 	createCampaignSubmissionFormSchema,
+	createCampaignSubmissionPersonalSchema,
 	endDateFromDurationPreset,
 	isCampaignSubmissionErrorCode,
 	isCampaignSubmissionImageErrorCode,
@@ -45,6 +49,9 @@ type Props = {
 	region: WebsiteRegion;
 	onSuccess?: () => void;
 };
+
+const guestSteps = ['program', 'details', 'about', 'personal'] as const satisfies readonly CampaignSubmissionStepId[];
+const contributorSteps = ['program', 'details', 'about'] as const satisfies readonly CampaignSubmissionStepId[];
 
 const submittedCampaignSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -84,10 +91,18 @@ const defaultFormValues = (): CampaignSubmissionFormValues => ({
 	xHandle: '',
 	linkWebsite: '',
 	tiktokHandle: '',
+	firstName: '',
+	lastName: '',
+	email: '',
 });
 
 export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Props) => {
 	const router = useRouter();
+	const { contributorSession, loading: contributorSessionLoading } = useContributorSession();
+	const isLoggedInContributor = contributorSession?.type === 'contributor';
+	const visibleSteps = isLoggedInContributor ? contributorSteps : guestSteps;
+	const lastStep = visibleSteps[visibleSteps.length - 1];
+
 	const [currentStep, setCurrentStep] = useState<CampaignSubmissionStepId>('program');
 	const [programs, setPrograms] = useState<PublicSubmissionProgramOption[]>([]);
 	const [programsLoading, setProgramsLoading] = useState(true);
@@ -158,6 +173,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 
 	const formSchema = useMemo(() => createCampaignSubmissionFormSchema(resolveError), [resolveError]);
 	const detailsSchema = useMemo(() => createCampaignSubmissionDetailsSchema(resolveError), [resolveError]);
+	const personalSchema = useMemo(() => createCampaignSubmissionPersonalSchema(resolveError), [resolveError]);
 
 	const form = useForm<CampaignSubmissionFormValues>({
 		resolver: zodResolver(formSchema),
@@ -169,6 +185,12 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 	useEffect(() => {
 		defaultImagesRef.current = defaultImages;
 	}, [defaultImages]);
+
+	useEffect(() => {
+		if (isLoggedInContributor && currentStep === 'personal') {
+			setCurrentStep('about');
+		}
+	}, [currentStep, isLoggedInContributor]);
 
 	const imageSelection: CampaignImageSelection = primaryImageFile
 		? { type: 'upload', file: primaryImageFile }
@@ -343,12 +365,68 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 		stepTitleRef.current?.focus();
 	}, [currentStep]);
 
+	const applySchemaErrors = (issuePaths: Set<FieldPath<CampaignSubmissionFormValues>>, issues: { path: PropertyKey[]; message: string }[]) => {
+		for (const issue of issues) {
+			const path = issue.path[0];
+			if (typeof path !== 'string') {
+				continue;
+			}
+
+			const fieldName = path as FieldPath<CampaignSubmissionFormValues>;
+			issuePaths.add(fieldName);
+			form.setError(fieldName, {
+				type: 'manual',
+				message: issue.message,
+			});
+		}
+
+		const firstInvalidField = [...issuePaths][0];
+		if (firstInvalidField) {
+			form.setFocus(firstInvalidField);
+		}
+	};
+
+	const validateAboutStep = () => {
+		form.clearErrors([...campaignSubmissionAboutFieldNames]);
+
+		const aboutResult = formSchema.safeParse(form.getValues());
+		if (!aboutResult.success) {
+			const issuePaths = new Set<FieldPath<CampaignSubmissionFormValues>>();
+			const aboutFieldSet = new Set<string>(campaignSubmissionAboutFieldNames);
+
+			applySchemaErrors(
+				issuePaths,
+				aboutResult.error.issues.filter((issue) => {
+					const path = issue.path[0];
+
+					return typeof path === 'string' && aboutFieldSet.has(path);
+				}),
+			);
+
+			if (issuePaths.size > 0) {
+				return false;
+			}
+		}
+
+		if (profilePicture.error) {
+			return false;
+		}
+
+		if (form.getValues('hasAdditionalInformation') && sectionImage.error) {
+			return false;
+		}
+
+		return true;
+	};
+
 	const isContinueDisabled =
 		currentStep === 'program'
 			? programsLoading || programs.length === 0 || Boolean(programsError)
 			: currentStep === 'details'
 				? defaultImagesLoading && imageSelection?.type !== 'upload'
-				: false;
+				: currentStep === 'about'
+					? contributorSessionLoading
+					: false;
 
 	const onContinue = () => {
 		if (currentStep === 'program') {
@@ -377,25 +455,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			const detailsResult = detailsSchema.safeParse(form.getValues());
 			if (!detailsResult.success) {
 				const issuePaths = new Set<FieldPath<CampaignSubmissionFormValues>>();
-
-				for (const issue of detailsResult.error.issues) {
-					const path = issue.path[0];
-					if (typeof path !== 'string') {
-						continue;
-					}
-
-					const fieldName = path as FieldPath<CampaignSubmissionFormValues>;
-					issuePaths.add(fieldName);
-					form.setError(fieldName, {
-						type: 'manual',
-						message: issue.message,
-					});
-				}
-
-				const firstInvalidField = [...issuePaths][0];
-				if (firstInvalidField) {
-					form.setFocus(firstInvalidField);
-				}
+				applySchemaErrors(issuePaths, detailsResult.error.issues);
 
 				return;
 			}
@@ -417,6 +477,21 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			primaryImage.setError(null);
 			setSubmitError(null);
 			setCurrentStep('about');
+
+			return;
+		}
+
+		if (currentStep === 'about') {
+			if (contributorSessionLoading || isLoggedInContributor) {
+				return;
+			}
+
+			if (!validateAboutStep()) {
+				return;
+			}
+
+			setSubmitError(null);
+			setCurrentStep('personal');
 		}
 	};
 
@@ -429,6 +504,12 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 		setSubmitError(null);
 		profilePicture.setError(null);
 		sectionImage.setError(null);
+
+		if (currentStep === 'personal') {
+			setCurrentStep('about');
+
+			return;
+		}
 
 		if (currentStep === 'about') {
 			setCurrentStep('details');
@@ -470,6 +551,23 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			return;
 		}
 
+		if (!isLoggedInContributor) {
+			form.clearErrors([...campaignSubmissionPersonalFieldNames]);
+
+			const personalResult = personalSchema.safeParse({
+				firstName: values.firstName,
+				lastName: values.lastName,
+				email: values.email,
+			});
+			if (!personalResult.success) {
+				const issuePaths = new Set<FieldPath<CampaignSubmissionFormValues>>();
+				applySchemaErrors(issuePaths, personalResult.error.issues);
+				setCurrentStep('personal');
+
+				return;
+			}
+		}
+
 		if (turnstileSiteKey && !turnstileToken) {
 			setSubmitError(resolveError('turnstile-required'));
 
@@ -479,6 +577,13 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 		const submissionValues = {
 			...values,
 			quote: resolveCampaignSubmissionQuote(values.quote, labels.quotePlaceholder),
+			...(isLoggedInContributor
+				? { firstName: '', lastName: '', email: '' }
+				: {
+						firstName: values.firstName.trim(),
+						lastName: values.lastName.trim(),
+						email: values.email.trim(),
+					}),
 		};
 
 		isSubmittingRef.current = true;
@@ -493,6 +598,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 				defaultImageId: imageSelection.type === 'default' ? imageSelection.id : undefined,
 				profilePicture: profilePictureFile ?? undefined,
 				sectionImage: values.hasAdditionalInformation ? (sectionImageFile ?? undefined) : undefined,
+				includePersonalData: !isLoggedInContributor,
 			});
 			if (turnstileToken) {
 				formData.append(turnstileResponseFieldName, turnstileToken);
@@ -566,7 +672,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		if (currentStep !== 'about') {
+		if (currentStep !== lastStep) {
 			onContinue();
 
 			return;
@@ -580,7 +686,17 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			? labels.programStepTitle
 			: currentStep === 'details'
 				? labels.detailsStepTitle
-				: labels.aboutStepTitle;
+				: currentStep === 'personal'
+					? labels.personalStepTitle
+					: labels.aboutStepTitle;
+
+	const turnstileProps = {
+		submitError,
+		lang,
+		turnstileSiteKey,
+		turnstileWidgetKey,
+		onTurnstileTokenChange,
+	};
 
 	return (
 		<Form {...form}>
@@ -588,11 +704,13 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 				<div className="-mt-6 flex h-[52px] shrink-0 items-center border-b pr-12 pl-6 sm:hidden">
 					<CampaignSubmissionStepIndicator
 						currentStep={currentStep}
+						steps={visibleSteps}
 						formStepsLabel={labels.formSteps}
 						stepLabel={labels.stepLabel}
 						programLabel={labels.program}
 						detailsLabel={labels.details}
 						aboutLabel={labels.about}
+						personalLabel={labels.personal}
 						variant="bars"
 						className="min-w-0 flex-1"
 					/>
@@ -627,18 +745,21 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 							labels,
 							profilePicture,
 							sectionImage,
-							submitError,
 							isSubmitting,
-							lang,
-							turnstileSiteKey,
-							turnstileWidgetKey,
-							onTurnstileTokenChange,
+							...(isLoggedInContributor ? turnstileProps : {}),
+						}}
+						personalStep={{
+							form,
+							labels,
+							isSubmitting,
+							...turnstileProps,
 						}}
 					/>
 				</div>
 				<div className="shrink-0">
 					<CampaignSubmissionFooter
 						currentStep={currentStep}
+						visibleSteps={visibleSteps}
 						labels={labels}
 						isContinueDisabled={isContinueDisabled}
 						isSubmitting={isSubmitting}

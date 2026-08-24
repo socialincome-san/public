@@ -208,6 +208,11 @@
 			"about-step-title": "Informazioni",
 			"about-step-subtitle": "Chi sta raccogliendo fondi?",
 			"about-step-description": "Racconta qualcosa di più su di te.",
+			"personal-step-title": "Dati personali",
+			"personal-step-subtitle": "Utilizzeremo i tuoi dati personali per creare il tuo account. Non verranno mostrati sulla pagina della campagna.",
+			"first-name": "Nome",
+			"last-name": "Cognome",
+			"email": "E-mail",
 			"title": "Titolo della campagna",
 			"description": "Testo introduttivo",
 			"goal": "Importo obiettivo",
@@ -263,6 +268,7 @@
 			"recipients-count": "{{count}} beneficiari",
 			"details": "Dettagli",
 			"about": "Informazioni",
+			"personal": "Dati personali",
 			"programs-loading": "Caricamento dei programmi…",
 			"programs-empty": "Al momento non ci sono programmi disponibili.",
 			"default-images-loading": "Caricamento delle immagini…",
@@ -301,7 +307,11 @@
 				"slug-exists": "Esiste già una campagna con questo slug.",
 				"submission-failed": "Non siamo riusciti a completare l'invio. Riprova tra qualche minuto.",
 				"turnstile-required": "Completa la verifica prima di inviare.",
-				"turnstile-invalid": "Verifica non riuscita. Riprova."
+				"turnstile-invalid": "Verifica non riuscita. Riprova.",
+				"first-name-required": "Il nome è obbligatorio.",
+				"last-name-required": "Il cognome è obbligatorio.",
+				"email-required": "L'e-mail è obbligatoria.",
+				"email-invalid": "Inserisci un indirizzo e-mail valido."
 			}
 		}
 	},

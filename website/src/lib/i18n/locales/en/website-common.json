@@ -208,6 +208,11 @@
 			"about-step-title": "About",
 			"about-step-subtitle": "Who is fundraising?",
 			"about-step-description": "Tell people a bit more about you.",
+			"personal-step-title": "Personal Data",
+			"personal-step-subtitle": "We'll use your personal data to create your account. It won't be displayed on the campaign page.",
+			"first-name": "First Name",
+			"last-name": "Last Name",
+			"email": "E-Mail",
 			"title": "Campaign title",
 			"description": "Lead text",
 			"goal": "Goal amount",
@@ -263,6 +268,7 @@
 			"recipients-count": "{{count}} Recipients",
 			"details": "Details",
 			"about": "About",
+			"personal": "Personal Data",
 			"programs-loading": "Loading programs…",
 			"programs-empty": "No programs are available right now.",
 			"default-images-loading": "Loading images…",
@@ -301,7 +307,11 @@
 				"slug-exists": "A campaign with this slug already exists.",
 				"submission-failed": "We could not complete your submission. Please try again in a few minutes.",
 				"turnstile-required": "Please complete the verification before submitting.",
-				"turnstile-invalid": "Verification failed. Please try again."
+				"turnstile-invalid": "Verification failed. Please try again.",
+				"first-name-required": "First name is required.",
+				"last-name-required": "Last name is required.",
+				"email-required": "E-Mail is required.",
+				"email-invalid": "Please enter a valid e-mail address."
 			}
 		}
 	},
