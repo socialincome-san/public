@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button/button';
-import { RadioGroup, RadioGroupItem } from '@/components/radio-group';
+import { RadioGroup, RadioGroupItem } from '@/components/radio-group/radio-group';
 import { ContributorReferralSource } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { updateContributorReferralAfterWizardQrAction } from '@/lib/server-actions/qr-wizard-actions';
