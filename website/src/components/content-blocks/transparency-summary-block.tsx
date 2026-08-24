@@ -78,7 +78,7 @@ export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
 		titleCurrency: translator.t(`transparency-page.${key}.title-currency`, {
 			context: { currency: displayAmount.currency },
 		}),
-		description: descriptions[key] ?? '',
+		description: descriptions[key],
 		amount: displayAmount.amount,
 		...(key === 'reserves'
 			? {

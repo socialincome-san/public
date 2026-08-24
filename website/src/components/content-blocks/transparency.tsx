@@ -43,7 +43,7 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 	if (!dataResult.success) {
 		const nestedBlocks = [...(donationGlobeBlocks ?? []), ...(transparencySummaryBlocks ?? [])];
 
-		return nestedBlocks.length > 0 ? nestedBlocks : null;
+		return nestedBlocks.length > 0 ? <>{nestedBlocks}</> : null;
 	}
 
 	const data = dataResult.data;
