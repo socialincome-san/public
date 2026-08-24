@@ -1,15 +1,9 @@
 import type { ServiceResult } from '@/lib/services/core/base.types';
 import type { ContributionReadService as ContributionReadServiceType } from './contribution-read.service';
 
-const mockLoggerWarn = jest.fn();
-
 jest.mock('@/generated/prisma/client', () => ({
 	ContributionStatus: { succeeded: 'succeeded' },
 	PrismaClient: class {},
-}));
-
-jest.mock('@/lib/utils/logger', () => ({
-	logger: { error: jest.fn(), warn: mockLoggerWarn },
 }));
 
 jest.mock('@/lib/types/country', () => ({
@@ -81,15 +75,22 @@ beforeAll(async () => {
 });
 
 describe('ContributionReadService.getRecentSuccessfulContributions', () => {
+	const consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+
 	beforeEach(() => {
 		mockFindMany.mockReset();
+		consoleWarn.mockClear();
+	});
+
+	afterAll(() => {
+		consoleWarn.mockRestore();
 	});
 
 	const cutoff = new Date('2026-08-05T00:00:00.000Z');
 
 	it('queries only succeeded contributions created at or after the cutoff', async () => {
 		mockFindMany.mockResolvedValue([]);
-		const service = new ContributionReadService(mockDb, {} as never);
+		const service = new ContributionReadService(mockDb, {} as never, {} as never);
 		await service.getRecentSuccessfulContributions(cutoff);
 
 		const { where } = getFindManyQuery();
@@ -99,7 +100,7 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 
 	it('orders by createdAt descending', async () => {
 		mockFindMany.mockResolvedValue([]);
-		const service = new ContributionReadService(mockDb, {} as never);
+		const service = new ContributionReadService(mockDb, {} as never, {} as never);
 		await service.getRecentSuccessfulContributions(cutoff);
 
 		expect(getFindManyQuery().orderBy).toEqual({ createdAt: 'desc' });
@@ -107,7 +108,7 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 
 	it('caps the public contribution payload', async () => {
 		mockFindMany.mockResolvedValue([]);
-		const service = new ContributionReadService(mockDb, {} as never);
+		const service = new ContributionReadService(mockDb, {} as never, {} as never);
 		await service.getRecentSuccessfulContributions(cutoff);
 
 		expect(getFindManyQuery().take).toBe(200);
@@ -115,7 +116,7 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 
 	it('selects only the public globe fields', async () => {
 		mockFindMany.mockResolvedValue([]);
-		const service = new ContributionReadService(mockDb, {} as never);
+		const service = new ContributionReadService(mockDb, {} as never, {} as never);
 		await service.getRecentSuccessfulContributions(cutoff);
 
 		const { select } = getFindManyQuery();
@@ -131,7 +132,7 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 
 	it('loads the country through contributor → contact → address', async () => {
 		mockFindMany.mockResolvedValue([]);
-		const service = new ContributionReadService(mockDb, {} as never);
+		const service = new ContributionReadService(mockDb, {} as never, {} as never);
 		await service.getRecentSuccessfulContributions(cutoff);
 
 		const { select } = getFindManyQuery();
@@ -141,7 +142,7 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 
 	it('maps a database row to the public GlobeContribution DTO', async () => {
 		mockFindMany.mockResolvedValue([makeRow()]);
-		const service = new ContributionReadService(mockDb, {} as never);
+		const service = new ContributionReadService(mockDb, {} as never, {} as never);
 		const contributions = expectSuccess(await service.getRecentSuccessfulContributions(cutoff));
 
 		expect(contributions).toHaveLength(1);
@@ -159,25 +160,26 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 			makeRow({ contributor: { contact: { address: { country: null } } } }),
 			makeRow({ id: 'cid-2' }),
 		]);
-		const service = new ContributionReadService(mockDb, {} as never);
+		const service = new ContributionReadService(mockDb, {} as never, {} as never);
 		const contributions = expectSuccess(await service.getRecentSuccessfulContributions(cutoff));
 
 		expect(contributions).toHaveLength(1);
 		expect(contributions[0]?.key).toBe('contribution-0');
-		expect(mockLoggerWarn).toHaveBeenCalledWith(expect.stringContaining('Skipped 1'));
+		expect(consoleWarn).toHaveBeenCalledWith(expect.stringContaining('Skipped 1'));
 	});
 
 	it('excludes contributions with no address at all', async () => {
 		mockFindMany.mockResolvedValue([makeRow({ contributor: { contact: { address: null } } })]);
-		const service = new ContributionReadService(mockDb, {} as never);
+		const service = new ContributionReadService(mockDb, {} as never, {} as never);
 		const contributions = expectSuccess(await service.getRecentSuccessfulContributions(cutoff));
 
 		expect(contributions).toHaveLength(0);
+		expect(consoleWarn).toHaveBeenCalledWith(expect.stringContaining('Skipped 1'));
 	});
 
 	it('returns an empty array without error when no contributions exist', async () => {
 		mockFindMany.mockResolvedValue([]);
-		const service = new ContributionReadService(mockDb, {} as never);
+		const service = new ContributionReadService(mockDb, {} as never, {} as never);
 		const contributions = expectSuccess(await service.getRecentSuccessfulContributions(cutoff));
 
 		expect(contributions).toEqual([]);
@@ -185,7 +187,7 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 
 	it('returns a service failure when the database throws', async () => {
 		mockFindMany.mockRejectedValue(new Error('DB unavailable'));
-		const service = new ContributionReadService(mockDb, {} as never);
+		const service = new ContributionReadService(mockDb, {} as never, {} as never);
 		const result = await service.getRecentSuccessfulContributions(cutoff);
 
 		expect(result.success).toBe(false);
@@ -193,7 +195,7 @@ describe('ContributionReadService.getRecentSuccessfulContributions', () => {
 
 	it('does not expose contributor ID in the DTO', async () => {
 		mockFindMany.mockResolvedValue([makeRow()]);
-		const service = new ContributionReadService(mockDb, {} as never);
+		const service = new ContributionReadService(mockDb, {} as never, {} as never);
 		const contributions = expectSuccess(await service.getRecentSuccessfulContributions(cutoff));
 
 		const dto = contributions[0] as Record<string, unknown>;

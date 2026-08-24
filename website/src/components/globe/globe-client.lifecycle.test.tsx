@@ -12,12 +12,6 @@ import { createGlobeRenderer, type GlobeRendererHandle } from './globe-renderer'
 
 jest.mock('@/lib/hooks/use-prefers-reduced-motion');
 jest.mock('@/lib/services/country/country-geojson.client');
-jest.mock('@/lib/utils/logger', () => ({
-	logger: {
-		error: jest.fn(),
-		warn: jest.fn(),
-	},
-}));
 jest.mock('./globe-client.module.css', () => ({ globe: 'globe' }));
 jest.mock('./globe-renderer');
 jest.mock('./use-badge-playback', () => ({

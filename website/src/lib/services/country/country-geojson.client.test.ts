@@ -1,12 +1,5 @@
 import { COUNTRY_GEOJSON_URL, getCountryGeoJson } from './country-geojson.client';
 
-jest.mock('@/lib/utils/logger', () => ({
-	logger: {
-		error: jest.fn(),
-		warn: jest.fn(),
-	},
-}));
-
 const validFeatureCollection = {
 	type: 'FeatureCollection',
 	features: [{ type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [] } }],

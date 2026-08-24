@@ -9,12 +9,6 @@ import type { useBadgePlayback as UseBadgePlayback } from './use-badge-playback'
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-const mockLoggerWarn = jest.fn();
-
-jest.mock('@/lib/utils/logger', () => ({
-	logger: { warn: mockLoggerWarn, error: jest.fn() },
-}));
-
 jest.mock('@/lib/types/country', () => ({
 	isValidCountryCode: (code: string) => ['CH', 'DE', 'US', 'FR'].includes(code),
 }));
@@ -140,6 +134,7 @@ describe('useBadgePlayback', () => {
 	});
 
 	it('skips contributions with unmapped country codes and logs a warning', () => {
+		const consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
 		const renderer = createRenderer();
 
 		renderHook({
@@ -148,7 +143,7 @@ describe('useBadgePlayback', () => {
 			reducedMotion: false,
 		});
 
-		expect(mockLoggerWarn).toHaveBeenCalledWith(expect.stringContaining('skipped 1'));
+		expect(consoleWarn).toHaveBeenCalledWith(expect.stringContaining('skipped 1'));
 	});
 
 	it('activates a badge while its position is visible on the globe', () => {
