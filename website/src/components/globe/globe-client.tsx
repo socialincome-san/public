@@ -1,6 +1,7 @@
 'use client';
 
 import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
+import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
 import { getCountryGeoJson } from '@/lib/services/country/country-geojson.client';
 import { isAbortError } from '@/lib/services/country/country-geojson.utils';
 import { cn } from '@/lib/utils/cn';
@@ -9,11 +10,16 @@ import { useEffect, useRef } from 'react';
 import styles from './globe-client.module.css';
 import { MIN_RENDERER_SIZE } from './globe-config';
 import { createGlobeRenderer, type GlobeRendererHandle } from './globe-renderer';
+import { useBadgePlayback } from './use-badge-playback';
 
 const getRendererSize = ({ width, height }: { width: number; height: number }) =>
 	Math.max(MIN_RENDERER_SIZE, Math.round(Math.min(width, height)));
 
-export const GlobeClient = () => {
+type Props = {
+	contributions: GlobeContribution[];
+};
+
+export const GlobeClient = ({ contributions }: Props) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const rendererRef = useRef<GlobeRendererHandle>(null);
 	const reducedMotionRef = useRef(true);
@@ -23,6 +29,8 @@ export const GlobeClient = () => {
 		reducedMotionRef.current = reducedMotion;
 		rendererRef.current?.setReducedMotion(reducedMotion);
 	}, [reducedMotion]);
+
+	useBadgePlayback({ contributions, rendererRef, reducedMotion });
 
 	useEffect(() => {
 		const container = containerRef.current;

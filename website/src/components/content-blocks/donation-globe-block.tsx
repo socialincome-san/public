@@ -13,8 +13,17 @@ type Props = {
 };
 
 export const DonationGlobeBlock = async ({ blok, lang }: Props) => {
-	const communityStatsResult = await services.read.contributor.getCommunityStats();
+	const cutoff = new Date();
+	cutoff.setUTCDate(cutoff.getUTCDate() - 14);
+
+	const [communityStatsResult, contributionsResult] = await Promise.all([
+		services.read.contributor.getCommunityStats(),
+		services.read.contribution.getRecentSuccessfulContributions(cutoff),
+	]);
+
 	const donatorsCount = communityStatsResult.success ? communityStatsResult.data.supporterCount : 0;
+	const contributions = contributionsResult.success ? contributionsResult.data : [];
+
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const description = translator.t('transparency-page.donation-globe.description', {
 		context: {
@@ -33,7 +42,7 @@ export const DonationGlobeBlock = async ({ blok, lang }: Props) => {
 				<p className="text-foreground my-4 text-left">{description}</p>
 			</div>
 			<div className="md:w-1/2">
-				<GlobeStage />
+				<GlobeStage contributions={contributions} />
 			</div>
 		</div>
 	);

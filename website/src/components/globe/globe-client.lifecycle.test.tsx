@@ -20,6 +20,9 @@ jest.mock('@/lib/utils/logger', () => ({
 }));
 jest.mock('./globe-client.module.css', () => ({ globe: 'globe' }));
 jest.mock('./globe-renderer');
+jest.mock('./use-badge-playback', () => ({
+	useBadgePlayback: jest.fn(),
+}));
 
 const countryData: CountryGeoJson = {
 	type: 'FeatureCollection',
@@ -63,7 +66,7 @@ const renderGlobe = (root: Root) => {
 	act(() => {
 		root.render(
 			<div data-globe-stage data-ready="false">
-				<GlobeClient />
+				<GlobeClient contributions={[]} />
 			</div>,
 		);
 	});

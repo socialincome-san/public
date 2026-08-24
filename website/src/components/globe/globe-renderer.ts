@@ -1,6 +1,7 @@
 import type { CountryGeoJson } from '@/lib/services/country/country-geojson.types';
 import type { GlobeInstance } from 'globe.gl';
 import type { Material, Object3D } from 'three';
+import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
 import {
 	AUTO_ROTATE_SPEED,
 	DAMPING_FACTOR,
@@ -10,6 +11,7 @@ import {
 	HEXAGON_RESOLUTION,
 	INITIAL_GLOBE_VIEW,
 } from './globe-config';
+import { clearBadgeSlot, createBadgeSlotElement, mountBadgeContent } from './globe-badge';
 
 type GlobeRendererOptions = {
 	element: HTMLElement;
@@ -21,9 +23,26 @@ type GlobeRendererOptions = {
 	onContextLost: () => void;
 };
 
+export const MAX_BADGE_SLOTS = 6;
+
+type BadgeSlot = {
+	id: number;
+	lat: number;
+	lng: number;
+	element: HTMLElement;
+	active: boolean;
+};
+
 export type GlobeRendererHandle = {
 	resize: (size: number) => void;
 	setReducedMotion: (reducedMotion: boolean) => void;
+	activateBadgeSlot: (
+		slotIndex: number,
+		params: { lat: number; lng: number; contribution: GlobeContribution; animate?: boolean },
+	) => void;
+	deactivateBadgeSlot: (slotIndex: number) => void;
+	getBadgeSlotElement: (slotIndex: number) => HTMLElement | null;
+	getPointOfView: () => { lat: number; lng: number; altitude: number };
 	dispose: () => void;
 };
 
@@ -109,6 +128,18 @@ export const createGlobeRenderer = async ({
 	let readyFrame: number | null = null;
 	let shouldReduceMotion = reducedMotion;
 
+	const badgeSlots: BadgeSlot[] = Array.from({ length: MAX_BADGE_SLOTS }, (_, id) => ({
+		id,
+		lat: 0,
+		lng: 0,
+		element: createBadgeSlotElement(),
+		active: false,
+	}));
+
+	const refreshBadgeSlots = () => {
+		globe.htmlElementsData([...badgeSlots]);
+	};
+
 	const globe: GlobeInstance = new Globe(element, {
 		animateIn: false,
 		waitForGlobeReady: true,
@@ -130,6 +161,15 @@ export const createGlobeRenderer = async ({
 		.hexPolygonMargin(HEXAGON_MARGIN)
 		.hexPolygonColor(() => GLOBE_COLORS.hexagon)
 		.hexPolygonsTransitionDuration(0)
+		.htmlElementsData(badgeSlots)
+		.htmlLat((d) => (d as BadgeSlot).lat)
+		.htmlLng((d) => (d as BadgeSlot).lng)
+		.htmlElement((d) => (d as BadgeSlot).element)
+		.htmlTransitionDuration(0)
+		.htmlElementVisibilityModifier((element, isVisible) => {
+			const slot = badgeSlots.find((entry) => entry.element === element);
+			element.style.display = slot?.active && isVisible ? '' : 'none';
+		})
 		.pointOfView(INITIAL_GLOBE_VIEW, 0)
 		.onGlobeReady(() => {
 			if (!countries || disposed) {
@@ -175,11 +215,40 @@ export const createGlobeRenderer = async ({
 				globe.pointOfView(INITIAL_GLOBE_VIEW, 0);
 			}
 		},
+		activateBadgeSlot: (slotIndex, { lat, lng, contribution, animate = true }) => {
+			const slot = badgeSlots[slotIndex];
+			if (!slot) {
+				return;
+			}
+
+			clearBadgeSlot(slot.element);
+			mountBadgeContent(slot.element, contribution, animate);
+			slot.lat = lat;
+			slot.lng = lng;
+			slot.active = true;
+			refreshBadgeSlots();
+		},
+		deactivateBadgeSlot: (slotIndex) => {
+			const slot = badgeSlots[slotIndex];
+			if (!slot) {
+				return;
+			}
+
+			slot.active = false;
+			clearBadgeSlot(slot.element);
+		},
+		getBadgeSlotElement: (slotIndex) => badgeSlots[slotIndex]?.element ?? null,
+		getPointOfView: () => globe.pointOfView(),
 		dispose: () => {
 			disposed = true;
 			if (readyFrame !== null) {
 				window.cancelAnimationFrame(readyFrame);
 			}
+			for (const slot of badgeSlots) {
+				clearBadgeSlot(slot.element);
+				slot.active = false;
+			}
+			refreshBadgeSlots();
 			renderer.domElement.removeEventListener('webglcontextlost', handleContextLost);
 			controls.removeEventListener('end', resumeAutoRotation);
 			controls.dispose();

@@ -1,5 +1,6 @@
 'use client';
 
+import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
 import dynamic from 'next/dynamic';
 
 const GlobeClient = dynamic(() => import('./globe-client').then((module) => module.GlobeClient), {
@@ -7,4 +8,8 @@ const GlobeClient = dynamic(() => import('./globe-client').then((module) => modu
 	loading: () => null,
 });
 
-export const GlobeClientShell = () => <GlobeClient />;
+type Props = {
+	contributions: GlobeContribution[];
+};
+
+export const GlobeClientShell = ({ contributions }: Props) => <GlobeClient contributions={contributions} />;

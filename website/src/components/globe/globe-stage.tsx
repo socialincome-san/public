@@ -9,10 +9,15 @@
  * Reduced motion disables auto-rotation and the 500ms crossfade. Load or WebGL failures keep this fallback visible.
  * New dependencies: globe.gl and three (client WebGL), d3-geo (dev, fallback generation only).
  */
+import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
 import { GlobeClientShell } from './globe-client-shell';
 import { GlobeFallback } from './globe-fallback';
 
-export const GlobeStage = () => (
+type Props = {
+	contributions: GlobeContribution[];
+};
+
+export const GlobeStage = ({ contributions }: Props) => (
 	<div
 		className="group/globe relative mx-auto aspect-square w-full max-w-[760px] overflow-visible"
 		data-globe-stage
@@ -23,7 +28,7 @@ export const GlobeStage = () => (
 			<div className="pointer-events-none absolute inset-0 size-full opacity-100 transition-opacity duration-500 group-data-[ready=true]/globe:opacity-0 motion-reduce:transition-none">
 				<GlobeFallback />
 			</div>
-			<GlobeClientShell />
+			<GlobeClientShell contributions={contributions} />
 		</div>
 	</div>
 );
