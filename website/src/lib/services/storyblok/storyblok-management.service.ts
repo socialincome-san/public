@@ -439,7 +439,7 @@ export class StoryblokManagementService {
 					parent_id: campaignSubmissionConfig.storyblokCampaignsFolderId || undefined,
 					content,
 				},
-				publish: 0,
+				publish: 1,
 			}),
 		});
 
