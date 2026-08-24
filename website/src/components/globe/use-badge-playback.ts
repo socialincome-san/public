@@ -3,7 +3,6 @@
 import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
 import { isValidCountryCode } from '@/lib/types/country';
 import { getCountryCentroid } from '@/lib/types/country-centroids';
-import { logger } from '@/lib/utils/logger';
 import { useEffect, useRef, type RefObject } from 'react';
 import { MAX_BADGE_SLOTS, type GlobeRendererHandle } from './globe-renderer';
 
@@ -82,7 +81,7 @@ export const useBadgePlayback = ({ contributions, rendererRef, reducedMotion }: 
 		}
 
 		if (skipped > 0) {
-			logger.warn(`useBadgePlayback: skipped ${skipped} contributions without a mapped centroid.`);
+			console.warn(`useBadgePlayback: skipped ${skipped} contributions without a mapped centroid.`);
 		}
 
 		if (resolved.length === 0) {

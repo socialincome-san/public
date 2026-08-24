@@ -5,7 +5,6 @@ import type { GlobeContribution } from '@/lib/services/contribution/contribution
 import { getCountryGeoJson } from '@/lib/services/country/country-geojson.client';
 import { isAbortError } from '@/lib/services/country/country-geojson.utils';
 import { cn } from '@/lib/utils/cn';
-import { logger } from '@/lib/utils/logger';
 import { useEffect, useRef } from 'react';
 import styles from './globe-client.module.css';
 import { createGlobeRenderer, type GlobeRendererHandle } from './globe-renderer';
@@ -63,7 +62,7 @@ export const GlobeClient = ({ contributions, locale }: Props) => {
 				}
 
 				if (!countriesResult.success) {
-					logger.warn(countriesResult.error, { component: 'GlobeClient' });
+					console.warn(countriesResult.error, { component: 'GlobeClient' });
 
 					return;
 				}
@@ -89,7 +88,7 @@ export const GlobeClient = ({ contributions, locale }: Props) => {
 				renderer.resize(latestSize);
 			} catch (error) {
 				if (!isAbortError(error)) {
-					logger.error(error, { component: 'GlobeClient' });
+					console.error(error, { component: 'GlobeClient' });
 				}
 				setReady(false);
 			}

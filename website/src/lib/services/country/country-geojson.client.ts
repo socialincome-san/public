@@ -1,6 +1,5 @@
 import type { ServiceResult } from '@/lib/services/core/base.types';
 import { resultFail, resultOk } from '@/lib/services/core/service-result';
-import { logger } from '@/lib/utils/logger';
 import type { CountryGeoJson } from './country-geojson.types';
 import { isAbortError, isCountryGeoJson } from './country-geojson.utils';
 
@@ -26,7 +25,7 @@ export const getCountryGeoJson = async (signal?: AbortSignal): Promise<ServiceRe
 			return resultFail('Country GeoJSON loading was cancelled.');
 		}
 
-		logger.error(error, { service: 'CountryGeoJsonClient' });
+		console.error(error, { service: 'CountryGeoJsonClient' });
 
 		return resultFail(`Could not load country GeoJSON: ${error instanceof Error ? error.message : String(error)}`);
 	}
