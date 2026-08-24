@@ -117,6 +117,10 @@
 		"about": "About"
 	},
 	"transparency-page": {
+		"donation-globe": {
+			"aria-label": "Globe showing recent donations around the world",
+			"description": "{{donatorsCount}} people have donated to lift others out of poverty. Trust like that only comes with total transparency."
+		},
 		"inflows": {
 			"title-name": "Inflows",
 			"title-currency": "in {{currency}}",

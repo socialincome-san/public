@@ -7,6 +7,7 @@ dist/
 src/generated/
 next-env.d.ts
 public/openapi.json
+public/assets/globe/countries-110m.json
 public/storybook/
 storybook-static/
 playwright-report/

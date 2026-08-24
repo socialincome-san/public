@@ -117,6 +117,10 @@
 		"about": "Über"
 	},
 	"transparency-page": {
+		"donation-globe": {
+			"aria-label": "Globus mit aktuellen Spenden aus aller Welt",
+			"description": "{{donatorsCount}} Menschen haben gespendet, um anderen den Weg aus der Armut zu ermöglichen. Dieses Vertrauen entsteht nur durch vollständige Transparenz."
+		},
 		"inflows": {
 			"title-name": "Zuflüsse",
 			"title-currency": "in {{currency}}",

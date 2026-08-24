@@ -117,6 +117,10 @@
 		"about": "À propos de"
 	},
 	"transparency-page": {
+		"donation-globe": {
+			"aria-label": "Globe montrant les dons récents dans le monde",
+			"description": "{{donatorsCount}} personnes ont fait un don pour aider d’autres personnes à sortir de la pauvreté. Une telle confiance ne peut naître que d’une transparence totale."
+		},
 		"inflows": {
 			"title-name": "Entrées",
 			"title-currency": "en {{currency}}",
