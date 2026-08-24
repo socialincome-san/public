@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/button/button';
 import { CountryFlag } from '@/components/country-flag';
-import { RadioGroupItem } from '@/components/radio-group';
+import { RadioGroupItem } from '@/components/radio-group/radio-group';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
