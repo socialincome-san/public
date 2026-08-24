@@ -1,7 +1,7 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { CampaignDonationFormServer } from '@/components/campaign/campaign-donation/campaign-donation-form-server';
 import { getCampaignDaysRemaining } from '@/components/campaign/get-campaign-days-remaining';
-import { Progress } from '@/components/progress';
+import { Progress } from '@/components/progress/progress';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
