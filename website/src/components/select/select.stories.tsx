@@ -33,15 +33,24 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	args: {
+		defaultValue: undefined,
 		disabled: false,
+		defaultOpen: false,
 	},
 	argTypes: {
+		defaultValue: {
+			control: 'select',
+			options: currencies.slice(0, 3).map((currency) => currency.value),
+		},
 		disabled: {
+			control: 'boolean',
+		},
+		defaultOpen: {
 			control: 'boolean',
 		},
 	},
 	render: (args) => (
-		<Select {...args}>
+		<Select key={`${args.defaultValue ?? 'empty'}-${args.defaultOpen}`} {...args}>
 			<SelectTrigger>
 				<SelectValue placeholder="Choose a currency" />
 			</SelectTrigger>
