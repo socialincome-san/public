@@ -106,6 +106,7 @@ export const PersonCard = ({ person, href, size = 'default', className, voluntee
 			className={cn(
 				'bg-card flex h-full w-full flex-col overflow-hidden rounded-xl shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]',
 				isSmall ? 'max-w-[260px] p-2.5' : 'max-w-[305px] p-3',
+				href && 'transition-transform hover:scale-[1.01]',
 				className,
 			)}
 		>
