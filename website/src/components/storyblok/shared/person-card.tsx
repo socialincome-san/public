@@ -137,7 +137,7 @@ export const PersonCard = ({ person, href, size = 'default', className, voluntee
 								? '(min-width: 1280px) 240px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw'
 								: '(min-width: 1280px) 281px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw'
 						}
-						className="object-cover"
+						className="border-background border-2 object-cover"
 					/>
 				) : null}
 				<svg
@@ -150,8 +150,6 @@ export const PersonCard = ({ person, href, size = 'default', className, voluntee
 					<path
 						d="M0 0H132.305C159.296 0 185.482 9.1858 206.558 26.0465C211.375 29.9004 217.361 32 223.53 32H279H0V0Z"
 						fill="white"
-						stroke="white"
-						strokeWidth="1"
 					/>
 				</svg>
 			</div>
