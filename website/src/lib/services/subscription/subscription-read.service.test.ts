@@ -42,6 +42,7 @@ const createService = ({
 		amount: unknown;
 		currency: 'CHF' | 'EUR' | 'USD';
 		createdAt: Date;
+		coverTransactionCosts?: boolean;
 		paymentMethod: 'stripe' | 'bank_transfer';
 		stripeSubscriptionId: string | null;
 		bankStandingOrderReference?: string | null;
@@ -54,6 +55,7 @@ const createService = ({
 			findMany: jest.fn().mockResolvedValue(
 				subscriptions.map((subscription) => ({
 					bankStandingOrderReference: null,
+					coverTransactionCosts: false,
 					contributor: { paymentReferenceId: null },
 					...subscription,
 				})),

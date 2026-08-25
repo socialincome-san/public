@@ -117,20 +117,21 @@
 		"about": "Über"
 	},
 	"transparency-page": {
+		"donation-globe": {
+			"aria-label": "Globus mit aktuellen Spenden aus aller Welt",
+			"description": "{{donatorsCount}} Menschen haben gespendet, um anderen den Weg aus der Armut zu ermöglichen. Dieses Vertrauen entsteht nur durch vollständige Transparenz."
+		},
 		"inflows": {
 			"title-name": "Zuflüsse",
-			"title-currency": "in {{currency}}",
-			"description": "Aus wiederkehrenden 1%-Beiträgen und einmaligen Spenden in 12 Währungen."
+			"title-currency": "in {{currency}}"
 		},
 		"outflows": {
 			"title-name": "Abflüsse",
-			"title-currency": "in {{currency}}",
-			"description": "Direkt via Mobile Money an Empfänger:innen überwiesen — ohne Zwischenhändler."
+			"title-currency": "in {{currency}}"
 		},
 		"reserves": {
 			"title-name": "Reserven",
 			"title-currency": "in {{currency}}",
-			"description": "Für Empfänger:innen in laufenden Programmen reserviert.",
 			"tooltip-label": "Reservekontodetails anzeigen",
 			"no-data": "Keine Daten"
 		}
