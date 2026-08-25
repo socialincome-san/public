@@ -7,7 +7,10 @@ jest.mock('@/generated/prisma/client', () => ({
 			code: string;
 			meta?: { target?: string | string[] };
 
-			constructor(message: string, { code, meta }: { code: string; meta?: { target?: string | string[] } }) {
+			constructor(
+				message: string,
+				{ code, meta }: { code: string; clientVersion?: string; meta?: { target?: string | string[] } },
+			) {
 				super(message);
 				this.code = code;
 				this.meta = meta;
@@ -142,6 +145,7 @@ describe('ContributorWriteService.getOrCreateFromEmailAndName', () => {
 		create.mockRejectedValue(
 			new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
 				code: 'P2002',
+				clientVersion: 'test',
 				meta: { target: ['email'] },
 			}),
 		);
@@ -155,10 +159,7 @@ describe('ContributorWriteService.getOrCreateFromEmailAndName', () => {
 		expect(findFirst).toHaveBeenCalledTimes(2);
 		expect(findFirst).toHaveBeenLastCalledWith({
 			where: {
-				OR: [
-					{ contact: { email: 'ada@example.com' } },
-					{ account: { firebaseAuthUserId: 'firebase-uid-1' } },
-				],
+				OR: [{ contact: { email: 'ada@example.com' } }, { account: { firebaseAuthUserId: 'firebase-uid-1' } }],
 			},
 			include: { contact: true },
 		});
@@ -175,6 +176,7 @@ describe('ContributorWriteService.getOrCreateFromEmailAndName', () => {
 		create.mockRejectedValue(
 			new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
 				code: 'P2002',
+				clientVersion: 'test',
 				meta: { target: ['firebaseAuthUserId'] },
 			}),
 		);
@@ -187,10 +189,7 @@ describe('ContributorWriteService.getOrCreateFromEmailAndName', () => {
 		}
 		expect(findFirst).toHaveBeenLastCalledWith({
 			where: {
-				OR: [
-					{ contact: { email: 'ada@example.com' } },
-					{ account: { firebaseAuthUserId: 'firebase-uid-1' } },
-				],
+				OR: [{ contact: { email: 'ada@example.com' } }, { account: { firebaseAuthUserId: 'firebase-uid-1' } }],
 			},
 			include: { contact: true },
 		});

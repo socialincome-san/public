@@ -452,10 +452,7 @@ export class ContributorWriteService extends BaseService {
 				if (this.isExpectedContributorCreateUniqueConstraint(createError)) {
 					const concurrent = await this.db.contributor.findFirst({
 						where: {
-							OR: [
-								{ contact: { email: accountData.email } },
-								{ account: { firebaseAuthUserId: firebaseResult.data.uid } },
-							],
+							OR: [{ contact: { email: accountData.email } }, { account: { firebaseAuthUserId: firebaseResult.data.uid } }],
 						},
 						include: { contact: true },
 					});
@@ -673,8 +670,6 @@ export class ContributorWriteService extends BaseService {
 		const target = error.meta?.target;
 		const fields = Array.isArray(target) ? target : typeof target === 'string' ? [target] : [];
 
-		return fields.some(
-			(field) => field === 'email' || field === 'firebaseAuthUserId' || field === 'firebase_auth_user_id',
-		);
+		return fields.some((field) => field === 'email' || field === 'firebaseAuthUserId' || field === 'firebase_auth_user_id');
 	}
 }
