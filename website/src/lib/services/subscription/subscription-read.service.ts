@@ -34,6 +34,7 @@ type SubscriptionRecord = {
 	amount: unknown;
 	currency: Currency;
 	createdAt: Date;
+	coverTransactionCosts: boolean;
 	paymentMethod: SubscriptionPaymentMethod;
 	stripeSubscriptionId: string | null;
 	bankStandingOrderReference: string | null;
@@ -225,6 +226,7 @@ export class SubscriptionReadService extends BaseService {
 						amount: true,
 						currency: true,
 						createdAt: true,
+						coverTransactionCosts: true,
 						paymentMethod: true,
 						stripeSubscriptionId: true,
 						bankStandingOrderReference: true,
@@ -297,6 +299,7 @@ export class SubscriptionReadService extends BaseService {
 			amount: Number(subscription.amount),
 			currency: subscription.currency,
 			createdAt: subscription.createdAt,
+			coverTransactionCosts: subscription.coverTransactionCosts,
 		};
 
 		if (subscription.paymentMethod === SubscriptionPaymentMethod.bank_transfer) {
