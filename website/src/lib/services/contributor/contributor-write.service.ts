@@ -451,7 +451,12 @@ export class ContributorWriteService extends BaseService {
 			} catch (createError) {
 				if (this.isExpectedContributorCreateUniqueConstraint(createError)) {
 					const concurrent = await this.db.contributor.findFirst({
-						where: { contact: { email: accountData.email } },
+						where: {
+							OR: [
+								{ contact: { email: accountData.email } },
+								{ account: { firebaseAuthUserId: firebaseResult.data.uid } },
+							],
+						},
 						include: { contact: true },
 					});
 

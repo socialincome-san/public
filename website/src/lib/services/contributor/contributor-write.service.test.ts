@@ -153,6 +153,15 @@ describe('ContributorWriteService.getOrCreateFromEmailAndName', () => {
 			expect(result.data).toEqual({ contributor: concurrent, isNewContributor: false });
 		}
 		expect(findFirst).toHaveBeenCalledTimes(2);
+		expect(findFirst).toHaveBeenLastCalledWith({
+			where: {
+				OR: [
+					{ contact: { email: 'ada@example.com' } },
+					{ account: { firebaseAuthUserId: 'firebase-uid-1' } },
+				],
+			},
+			include: { contact: true },
+		});
 	});
 
 	test('returns concurrent contributor when create hits firebaseAuthUserId unique constraint', async () => {
@@ -176,6 +185,15 @@ describe('ContributorWriteService.getOrCreateFromEmailAndName', () => {
 		if (result.success) {
 			expect(result.data).toEqual({ contributor: concurrent, isNewContributor: false });
 		}
+		expect(findFirst).toHaveBeenLastCalledWith({
+			where: {
+				OR: [
+					{ contact: { email: 'ada@example.com' } },
+					{ account: { firebaseAuthUserId: 'firebase-uid-1' } },
+				],
+			},
+			include: { contact: true },
+		});
 	});
 
 	test('fails for unrelated create errors', async () => {
