@@ -1,4 +1,4 @@
-import { Progress } from '@/components/progress';
+import { Progress } from '@/components/progress/progress';
 import { createWalletImageFromStoryblokAsset, WALLET_IMAGE_SIZES } from '@/components/wallet/wallet-image-utils';
 import type { TranslateFunction } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';

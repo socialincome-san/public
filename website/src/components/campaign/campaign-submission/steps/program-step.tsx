@@ -1,7 +1,7 @@
 'use client';
 
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/form';
-import { RadioGroup } from '@/components/radio-group';
+import { RadioGroup } from '@/components/radio-group/radio-group';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { useMemo, useState } from 'react';
 import { ProgramCountryFilter, type ProgramCountryFilterOption } from '../program-country-filter';
