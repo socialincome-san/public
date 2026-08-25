@@ -11,6 +11,7 @@ import { ContributorFormCreateInput, ContributorFormUpdateInput } from './contri
 import { ContributorValidationService } from './contributor-validation.service';
 import {
 	BankContributorData,
+	CampaignGuestAccountData,
 	ContributorUpdateInput,
 	ContributorWithContact,
 	StripeContributorData,
@@ -401,6 +402,55 @@ export class ContributorWriteService extends BaseService {
 			console.error(error);
 
 			return this.resultFail(`Could not get or create contributor by reference ID: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getOrCreateFromEmailAndName(
+		accountData: CampaignGuestAccountData,
+	): Promise<ServiceResult<{ contributor: ContributorWithContact; isNewContributor: boolean }>> {
+		try {
+			const existing = await this.db.contributor.findFirst({
+				where: { contact: { email: accountData.email } },
+				include: { contact: true },
+			});
+
+			if (existing) {
+				return this.resultOk({ contributor: existing, isNewContributor: false });
+			}
+
+			const firebaseResult = await this.firebaseAdminService.getOrCreateUser({
+				email: accountData.email,
+				displayName: `${accountData.firstName} ${accountData.lastName}`,
+			});
+
+			if (!firebaseResult.success) {
+				return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+			}
+
+			const contributor = await this.db.contributor.create({
+				data: {
+					referral: ContributorReferralSource.other,
+					account: {
+						create: {
+							firebaseAuthUserId: firebaseResult.data.uid,
+						},
+					},
+					contact: {
+						create: {
+							firstName: accountData.firstName,
+							lastName: accountData.lastName,
+							email: accountData.email,
+						},
+					},
+				},
+				include: { contact: true },
+			});
+
+			return this.resultOk({ contributor, isNewContributor: true });
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not get or create contributor from email: ${JSON.stringify(error)}`);
 		}
 	}
 

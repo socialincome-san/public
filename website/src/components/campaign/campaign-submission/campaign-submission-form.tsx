@@ -2,6 +2,8 @@
 
 import { DialogHeader, DialogTitle } from '@/components/dialog';
 import { Form } from '@/components/form';
+import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useContributorSession } from '@/lib/firebase/hooks/useContributorSession';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import {
@@ -117,6 +119,7 @@ const defaultFormValues = (): CampaignSubmissionFormValues => ({
 
 export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Props) => {
 	const router = useRouter();
+	const { auth } = useAuth();
 	const { contributorSession, loading: contributorSessionLoading } = useContributorSession();
 	const isLoggedInContributor = contributorSession?.type === 'contributor';
 	const visibleSteps = isLoggedInContributor ? contributorSteps : guestSteps;
@@ -660,6 +663,34 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			if (claimId) {
 				addPendingClaimId(claimId);
 			}
+
+			if (!isLoggedInContributor) {
+				const guestEmail = submissionValues.email.trim();
+				const guestFirstName = submissionValues.firstName.trim();
+				const guestLastName = submissionValues.lastName.trim();
+
+				if (guestEmail && guestFirstName && guestLastName) {
+					try {
+						await fetch('/api/campaign-submissions/ensure-account', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({
+								email: guestEmail,
+								firstName: guestFirstName,
+								lastName: guestLastName,
+							}),
+						});
+
+						await sendMagicLoginLink({
+							auth,
+							email: guestEmail,
+						});
+					} catch {
+						// Fail soft: campaign and claimId already succeeded.
+					}
+				}
+			}
+
 			setSubmitSuccess(true);
 			form.reset(defaultFormValues());
 			clearPrimaryImageSelection();
