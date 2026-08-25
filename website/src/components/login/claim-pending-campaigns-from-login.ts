@@ -1,34 +1,8 @@
 import { removePendingClaimIds } from '@/components/campaign/campaign-submission/pending-claim-ids';
+import { claimPendingCampaignsAction } from '@/lib/server-actions/campaign-submission-actions';
 
 export type ClaimPendingCampaignsFromLoginResult = {
 	campaignSlug: string | null;
-};
-
-const readSuccessfulClaimIds = (payload: unknown): string[] => {
-	if (typeof payload !== 'object' || payload === null || !('successfulClaimIds' in payload)) {
-		return [];
-	}
-
-	const { successfulClaimIds } = payload;
-	if (!Array.isArray(successfulClaimIds)) {
-		return [];
-	}
-
-	return successfulClaimIds.filter((claimId): claimId is string => typeof claimId === 'string' && claimId.trim().length > 0);
-};
-
-const readCampaignSlug = (payload: unknown): string | null => {
-	if (typeof payload !== 'object' || payload === null || !('campaignSlug' in payload)) {
-		return null;
-	}
-
-	const { campaignSlug } = payload;
-	if (typeof campaignSlug !== 'string') {
-		return null;
-	}
-
-	const trimmed = campaignSlug.trim();
-	return trimmed.length > 0 ? trimmed : null;
 };
 
 export const claimPendingCampaignsFromLogin = async (
@@ -39,20 +13,16 @@ export const claimPendingCampaignsFromLogin = async (
 	}
 
 	try {
-		const response = await fetch('/api/campaign-submissions/claim-pending', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ claimIds }),
-		});
-
-		if (!response.ok) {
+		const result = await claimPendingCampaignsAction(claimIds);
+		if (!result.success) {
 			return { campaignSlug: null };
 		}
 
-		const payload: unknown = await response.json().catch(() => null);
-		removePendingClaimIds(readSuccessfulClaimIds(payload));
+		removePendingClaimIds(result.data.successfulClaimIds);
 
-		return { campaignSlug: readCampaignSlug(payload) };
+		const campaignSlug = result.data.campaignSlug?.trim();
+
+		return { campaignSlug: campaignSlug && campaignSlug.length > 0 ? campaignSlug : null };
 	} catch {
 		// Fail soft: login should still succeed.
 		return { campaignSlug: null };

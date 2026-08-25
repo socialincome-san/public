@@ -11,6 +11,7 @@ import {
 	getEligiblePublicSubmissionProgramsAction,
 	type CampaignDefaultImageOption,
 } from '@/lib/server-actions/campaign-public-actions';
+import { ensureCampaignGuestAccountAction } from '@/lib/server-actions/campaign-submission-actions';
 import {
 	appendCampaignSubmissionFormData,
 	campaignSubmissionAboutFieldNames,
@@ -387,7 +388,10 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 		stepTitleRef.current?.focus();
 	}, [currentStep]);
 
-	const applySchemaErrors = (issuePaths: Set<FieldPath<CampaignSubmissionFormValues>>, issues: { path: PropertyKey[]; message: string }[]) => {
+	const applySchemaErrors = (
+		issuePaths: Set<FieldPath<CampaignSubmissionFormValues>>,
+		issues: { path: PropertyKey[]; message: string }[],
+	) => {
 		for (const issue of issues) {
 			const path = issue.path[0];
 			if (typeof path !== 'string') {
@@ -671,14 +675,10 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 
 				if (guestEmail && guestFirstName && guestLastName) {
 					try {
-						await fetch('/api/campaign-submissions/ensure-account', {
-							method: 'POST',
-							headers: { 'Content-Type': 'application/json' },
-							body: JSON.stringify({
-								email: guestEmail,
-								firstName: guestFirstName,
-								lastName: guestLastName,
-							}),
+						await ensureCampaignGuestAccountAction({
+							email: guestEmail,
+							firstName: guestFirstName,
+							lastName: guestLastName,
 						});
 
 						await sendMagicLoginLink({
