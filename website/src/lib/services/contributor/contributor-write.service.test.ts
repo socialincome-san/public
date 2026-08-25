@@ -2,9 +2,21 @@ jest.mock('@/generated/prisma/client', () => ({
 	ContributorReferralSource: {
 		other: 'other',
 	},
+	Prisma: {
+		PrismaClientKnownRequestError: class PrismaClientKnownRequestError extends Error {
+			code: string;
+			meta?: { target?: string | string[] };
+
+			constructor(message: string, { code, meta }: { code: string; meta?: { target?: string | string[] } }) {
+				super(message);
+				this.code = code;
+				this.meta = meta;
+			}
+		},
+	},
 }));
 
-import { ContributorReferralSource } from '@/generated/prisma/client';
+import { ContributorReferralSource, Prisma } from '@/generated/prisma/client';
 import type { ContactRelationsService } from '../contact/contact-relations.service';
 import type { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import type { ProgramAccessReadService } from '../program-access/program-access-read.service';
@@ -117,5 +129,66 @@ describe('ContributorWriteService.getOrCreateFromEmailAndName', () => {
 			expect(result.error).toContain('Failed to create Firebase user');
 		}
 		expect(create).not.toHaveBeenCalled();
+	});
+
+	test('returns concurrent contributor when create hits email unique constraint', async () => {
+		const { service, findFirst, create, getOrCreateUser } = createService();
+		const concurrent = {
+			id: 'contributor-3',
+			contact: { email: 'ada@example.com', firstName: 'Ada', lastName: 'Lovelace' },
+		};
+		findFirst.mockResolvedValueOnce(null).mockResolvedValueOnce(concurrent);
+		getOrCreateUser.mockResolvedValue({ success: true, data: { uid: 'firebase-uid-1' } });
+		create.mockRejectedValue(
+			new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+				code: 'P2002',
+				meta: { target: ['email'] },
+			}),
+		);
+
+		const result = await service.getOrCreateFromEmailAndName(accountData);
+
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data).toEqual({ contributor: concurrent, isNewContributor: false });
+		}
+		expect(findFirst).toHaveBeenCalledTimes(2);
+	});
+
+	test('returns concurrent contributor when create hits firebaseAuthUserId unique constraint', async () => {
+		const { service, findFirst, create, getOrCreateUser } = createService();
+		const concurrent = {
+			id: 'contributor-4',
+			contact: { email: 'ada@example.com', firstName: 'Ada', lastName: 'Lovelace' },
+		};
+		findFirst.mockResolvedValueOnce(null).mockResolvedValueOnce(concurrent);
+		getOrCreateUser.mockResolvedValue({ success: true, data: { uid: 'firebase-uid-1' } });
+		create.mockRejectedValue(
+			new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+				code: 'P2002',
+				meta: { target: ['firebaseAuthUserId'] },
+			}),
+		);
+
+		const result = await service.getOrCreateFromEmailAndName(accountData);
+
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data).toEqual({ contributor: concurrent, isNewContributor: false });
+		}
+	});
+
+	test('fails for unrelated create errors', async () => {
+		const { service, findFirst, create, getOrCreateUser } = createService();
+		findFirst.mockResolvedValue(null);
+		getOrCreateUser.mockResolvedValue({ success: true, data: { uid: 'firebase-uid-1' } });
+		create.mockRejectedValue(new Error('db-down'));
+
+		const result = await service.getOrCreateFromEmailAndName(accountData);
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toContain('Could not get or create contributor from email');
+		}
 	});
 });

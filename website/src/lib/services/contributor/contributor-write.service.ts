@@ -427,26 +427,41 @@ export class ContributorWriteService extends BaseService {
 				return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
 			}
 
-			const contributor = await this.db.contributor.create({
-				data: {
-					referral: ContributorReferralSource.other,
-					account: {
-						create: {
-							firebaseAuthUserId: firebaseResult.data.uid,
+			try {
+				const contributor = await this.db.contributor.create({
+					data: {
+						referral: ContributorReferralSource.other,
+						account: {
+							create: {
+								firebaseAuthUserId: firebaseResult.data.uid,
+							},
+						},
+						contact: {
+							create: {
+								firstName: accountData.firstName,
+								lastName: accountData.lastName,
+								email: accountData.email,
+							},
 						},
 					},
-					contact: {
-						create: {
-							firstName: accountData.firstName,
-							lastName: accountData.lastName,
-							email: accountData.email,
-						},
-					},
-				},
-				include: { contact: true },
-			});
+					include: { contact: true },
+				});
 
-			return this.resultOk({ contributor, isNewContributor: true });
+				return this.resultOk({ contributor, isNewContributor: true });
+			} catch (createError) {
+				if (this.isExpectedContributorCreateUniqueConstraint(createError)) {
+					const concurrent = await this.db.contributor.findFirst({
+						where: { contact: { email: accountData.email } },
+						include: { contact: true },
+					});
+
+					if (concurrent) {
+						return this.resultOk({ contributor: concurrent, isNewContributor: false });
+					}
+				}
+
+				throw createError;
+			}
 		} catch (error) {
 			console.error(error);
 
@@ -643,5 +658,18 @@ export class ContributorWriteService extends BaseService {
 
 			return this.resultFail(`Could not find contributor: ${JSON.stringify(error)}`);
 		}
+	}
+
+	private isExpectedContributorCreateUniqueConstraint(error: unknown): boolean {
+		if (!(error instanceof Prisma.PrismaClientKnownRequestError) || error.code !== 'P2002') {
+			return false;
+		}
+
+		const target = error.meta?.target;
+		const fields = Array.isArray(target) ? target : typeof target === 'string' ? [target] : [];
+
+		return fields.some(
+			(field) => field === 'email' || field === 'firebaseAuthUserId' || field === 'firebase_auth_user_id',
+		);
 	}
 }
