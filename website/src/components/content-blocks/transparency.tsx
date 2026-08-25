@@ -1,7 +1,7 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
+import { TransparencySummaryBlock } from '@/components/content-blocks/transparency-summary-block';
 import { CountriesSection } from '@/components/transparency/countries-section';
-import { SummarySection } from '@/components/transparency/summary-section';
 import { TimeSeriesSection } from '@/components/transparency/time-series-section';
 import { TotalsSection } from '@/components/transparency/totals-section';
 import type { Transparency } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -21,6 +21,9 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 	const donationGlobeBlocks = blok.donationGlobe?.map((globeBlok) => (
 		<DonationGlobeBlock key={globeBlok._uid} blok={globeBlok} lang={lang} />
 	));
+	const transparencySummaryBlocks = blok.transparencySummary?.map((summaryBlok) => (
+		<TransparencySummaryBlock key={summaryBlok._uid} blok={summaryBlok} lang={lang} />
+	));
 	const financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' };
 	const timeRanges = Array.from({ length: 12 }, (_, i) => {
 		const start = DateTime.now()
@@ -38,21 +41,12 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 	]);
 
 	if (!dataResult.success) {
-		return donationGlobeBlocks && donationGlobeBlocks.length > 0 ? (
-			<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>{donationGlobeBlocks}</BlockWrapper>
-		) : null;
+		const nestedBlocks = [...(donationGlobeBlocks ?? []), ...(transparencySummaryBlocks ?? [])];
+
+		return nestedBlocks.length > 0 ? <>{nestedBlocks}</> : null;
 	}
 
 	const data = dataResult.data;
-	const { inflowsChf, outflowsChf, reservesChf } = data.financialSummary;
-	const inflows = services.currencyDisplay.resolveFromChf(inflowsChf, displayCurrency, rates);
-	const outflows = services.currencyDisplay.resolveFromChf(outflowsChf, displayCurrency, rates);
-	const reserves = services.currencyDisplay.resolveFromChf(reservesChf, displayCurrency, rates);
-	const reserveAccounts = data.reserveAccounts.map(({ amountChf, ...account }) => ({
-		...account,
-		amount: amountChf === null ? null : services.currencyDisplay.resolveFromChf(amountChf, displayCurrency, rates),
-	}));
-
 	const { currency: timeSeriesCurrency } = services.currencyDisplay.resolveFromChf(
 		data.timeRanges[0]?.totalChf ?? 0,
 		displayCurrency,
@@ -64,22 +58,18 @@ export const TransparencyBlock = async ({ blok, lang }: Props) => {
 	}));
 
 	return (
-		<BlockWrapper className="space-y-12" {...storyblokEditable(blok as SbBlokData)}>
+		<>
 			{donationGlobeBlocks}
-			<SummarySection
-				inflows={inflows}
-				outflows={outflows}
-				reserves={reserves}
-				reserveAccounts={reserveAccounts}
-				lang={lang}
-			/>
-			<TotalsSection totals={data.totals} lang={lang} displayCurrency={displayCurrency} rates={rates} />
-			<TimeSeriesSection
-				timeRanges={resolvedTimeRanges.map(({ startIso, total }) => ({ startIso, total }))}
-				currency={timeSeriesCurrency}
-				lang={lang}
-			/>
-			<CountriesSection countries={data.topCountries} lang={lang} displayCurrency={displayCurrency} rates={rates} />
-		</BlockWrapper>
+			{transparencySummaryBlocks}
+			<BlockWrapper className="space-y-12" {...storyblokEditable(blok as SbBlokData)}>
+				<TotalsSection totals={data.totals} lang={lang} displayCurrency={displayCurrency} rates={rates} />
+				<TimeSeriesSection
+					timeRanges={resolvedTimeRanges.map(({ startIso, total }) => ({ startIso, total }))}
+					currency={timeSeriesCurrency}
+					lang={lang}
+				/>
+				<CountriesSection countries={data.topCountries} lang={lang} displayCurrency={displayCurrency} rates={rates} />
+			</BlockWrapper>
+		</>
 	);
 };

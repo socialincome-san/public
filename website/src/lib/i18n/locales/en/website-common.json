@@ -123,18 +123,15 @@
 		},
 		"inflows": {
 			"title-name": "Inflows",
-			"title-currency": "in {{currency}}",
-			"description": "From recurring 1% contributions and one-time donations across 12 currencies."
+			"title-currency": "in {{currency}}"
 		},
 		"outflows": {
 			"title-name": "Outflows",
-			"title-currency": "in {{currency}}",
-			"description": "Transferred directly to recipients via Mobile Money — no intermediaries."
+			"title-currency": "in {{currency}}"
 		},
 		"reserves": {
 			"title-name": "Reserves",
 			"title-currency": "in {{currency}}",
-			"description": "Reserved for recipients in ongoing programs.",
 			"tooltip-label": "Show reserve account details",
 			"no-data": "No data"
 		}

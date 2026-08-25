@@ -431,6 +431,8 @@ export interface Page {
     | Lottie
     | PersonGrid
     | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
   )[];
   component: "page";
   _uid: string;
@@ -654,7 +656,17 @@ export interface Text {
 
 export interface Transparency {
   donationGlobe?: DonationGlobe[];
+  transparencySummary?: TransparencySummary[];
   component: "transparency";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TransparencySummary {
+  inflowsDescription?: string;
+  outflowsDescription?: string;
+  reservesDescription?: string;
+  component: "transparencySummary";
   _uid: string;
   [k: string]: unknown;
 }

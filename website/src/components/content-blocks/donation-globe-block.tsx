@@ -1,3 +1,4 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { GlobeStage } from '@/components/globe/globe-stage';
 import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
@@ -52,18 +53,20 @@ export const DonationGlobeBlock = async ({ blok, lang }: Props) => {
 				});
 
 	return (
-		<div className="flex flex-col gap-8 md:flex-row md:items-center md:gap-14" {...storyblokEditable(blok as SbBlokData)}>
-			<div className="flex flex-col justify-center space-y-2 md:w-1/2">
-				{blok.title && (
-					<SectionHeading align="left" className="mb-0 whitespace-pre-line md:mb-0">
-						<StoryblokMarkdown>{blok.title}</StoryblokMarkdown>
-					</SectionHeading>
-				)}
-				{description && <p className="text-foreground my-4 text-left">{description}</p>}
+		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+			<div className="flex flex-col gap-8 md:flex-row md:items-center md:gap-14">
+				<div className="flex flex-col justify-center space-y-2 md:w-1/2">
+					{blok.title && (
+						<SectionHeading align="left" className="mb-0 whitespace-pre-line md:mb-0">
+							<StoryblokMarkdown>{blok.title}</StoryblokMarkdown>
+						</SectionHeading>
+					)}
+					{description && <p className="text-foreground my-4 text-left">{description}</p>}
+				</div>
+				<div className="md:w-1/2">
+					<GlobeStage contributions={contributions} locale={locale} label={globeLabel} />
+				</div>
 			</div>
-			<div className="md:w-1/2">
-				<GlobeStage contributions={contributions} locale={locale} label={globeLabel} />
-			</div>
-		</div>
+		</BlockWrapper>
 	);
 };

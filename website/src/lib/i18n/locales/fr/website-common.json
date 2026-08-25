@@ -123,18 +123,15 @@
 		},
 		"inflows": {
 			"title-name": "Entrées",
-			"title-currency": "en {{currency}}",
-			"description": "Provenant de contributions récurrentes de 1 % et de dons uniques dans 12 devises."
+			"title-currency": "en {{currency}}"
 		},
 		"outflows": {
 			"title-name": "Sorties",
-			"title-currency": "en {{currency}}",
-			"description": "Transférées directement aux bénéficiaires via Mobile Money — sans intermédiaires."
+			"title-currency": "en {{currency}}"
 		},
 		"reserves": {
 			"title-name": "Réserves",
 			"title-currency": "en {{currency}}",
-			"description": "Réservées aux bénéficiaires des programmes en cours.",
 			"tooltip-label": "Afficher les détails des comptes de réserve",
 			"no-data": "Aucune donnée"
 		}

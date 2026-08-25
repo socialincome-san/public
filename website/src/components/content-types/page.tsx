@@ -1,3 +1,4 @@
+import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
 import { ExplainerVideoHeaderBlock } from '@/components/content-blocks/explainer-video-header';
@@ -16,12 +17,14 @@ import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnersh
 import { PersonGridBlock } from '@/components/content-blocks/person-grid';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
 import { RichtextButtonHeaderBlock } from '@/components/content-blocks/richtext-button-header';
+import { RunwayMonthGridBlock } from '@/components/content-blocks/runway-month-grid-block';
 import { SpacerBlock } from '@/components/content-blocks/spacer';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
 import { TestimonialBlock } from '@/components/content-blocks/testimonial-entry';
 import { TextBlock } from '@/components/content-blocks/text';
 import { TransparencyBlock } from '@/components/content-blocks/transparency';
+import { TransparencySummaryBlock } from '@/components/content-blocks/transparency-summary-block';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsletter-signup';
@@ -29,7 +32,6 @@ import type { Page } from '@/generated/storyblok/types/109655/storyblok-componen
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { ParsedUrlQueryInput } from 'querystring';
 import { Fragment } from 'react';
-import { RunwayMonthGridBlock } from '../content-blocks/runway-month-grid-block';
 
 type PageBlock = Page['content'][number];
 type RichtextButtonHeaderAction = 'createProgram';
@@ -50,6 +52,8 @@ const renderPageBlock = (
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction,
 ) => {
 	switch (block.component) {
+		case 'donationGlobe':
+			return <DonationGlobeBlock blok={block} lang={lang} />;
 		case 'donationsTotal':
 			return <DonationsTotalBlockServer blok={block} lang={lang} region={region} />;
 		case 'downloads':
@@ -102,6 +106,8 @@ const renderPageBlock = (
 			return <TextBlock blok={block} />;
 		case 'transparency':
 			return <TransparencyBlock blok={block} lang={lang} />;
+		case 'transparencySummary':
+			return <TransparencySummaryBlock blok={block} lang={lang} />;
 		case 'twoColumnText':
 			return <TwoColumnTextBlock blok={block} />;
 		case 'videoText':
