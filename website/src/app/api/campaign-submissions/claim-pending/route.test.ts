@@ -39,14 +39,14 @@ describe('POST /api/campaign-submissions/claim-pending', () => {
 		expect(mockClaimPendingCampaigns).not.toHaveBeenCalled();
 	});
 
-	test('returns successful claim ids for a contributor session', async () => {
+	test('returns successful claim ids and campaignSlug for a contributor session', async () => {
 		mockGetSessionByType.mockResolvedValue({
 			success: true,
 			data: { type: 'contributor', id: 'contributor-1' },
 		});
 		mockClaimPendingCampaigns.mockResolvedValue({
 			success: true,
-			data: { successfulClaimIds: ['Ab12Cd34'] },
+			data: { successfulClaimIds: ['Ab12Cd34'], campaignSlug: 'my-campaign' },
 		});
 
 		const response = await POST(
@@ -59,7 +59,7 @@ describe('POST /api/campaign-submissions/claim-pending', () => {
 		const body: unknown = await response.json();
 
 		expect(response.status).toBe(200);
-		expect(body).toEqual({ successfulClaimIds: ['Ab12Cd34'] });
+		expect(body).toEqual({ successfulClaimIds: ['Ab12Cd34'], campaignSlug: 'my-campaign' });
 		expect(mockClaimPendingCampaigns).toHaveBeenCalledWith('contributor-1', ['Ab12Cd34']);
 	});
 

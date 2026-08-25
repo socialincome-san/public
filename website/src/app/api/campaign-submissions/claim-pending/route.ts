@@ -42,5 +42,11 @@ export const POST = async (request: NextRequest) => {
 		return NextResponse.json({ errorCode: 'submission-failed' }, { status: 503 });
 	}
 
-	return NextResponse.json({ successfulClaimIds: result.data.successfulClaimIds }, { status: 200 });
+	return NextResponse.json(
+		{
+			successfulClaimIds: result.data.successfulClaimIds,
+			...(result.data.campaignSlug ? { campaignSlug: result.data.campaignSlug } : {}),
+		},
+		{ status: 200 },
+	);
 };

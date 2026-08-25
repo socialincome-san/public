@@ -31,7 +31,7 @@ describe('CampaignPendingClaimService', () => {
 		jest.clearAllMocks();
 	});
 
-	test('treats a missing pending row as success', async () => {
+	test('treats a missing pending row as success without campaignSlug', async () => {
 		const { service, findUnique, transaction, deletePending } = createService();
 		findUnique.mockResolvedValue(null);
 
@@ -39,18 +39,18 @@ describe('CampaignPendingClaimService', () => {
 
 		expect(result.success).toBe(true);
 		if (result.success) {
-			expect(result.data.successfulClaimIds).toEqual(['missing-claim']);
+			expect(result.data).toEqual({ successfulClaimIds: ['missing-claim'] });
 		}
 		expect(transaction).not.toHaveBeenCalled();
 		expect(deletePending).not.toHaveBeenCalled();
 	});
 
-	test('sets contributorId and deletes pending when the campaign has no owner', async () => {
+	test('sets contributorId, deletes pending, and returns campaignSlug when newly owned', async () => {
 		const { service, findUnique, update, deletePending, transaction } = createService();
 		findUnique.mockResolvedValue({
 			claimId: 'Ab12Cd34',
 			campaignId: 'campaign-1',
-			campaign: { id: 'campaign-1', contributorId: null },
+			campaign: { id: 'campaign-1', contributorId: null, slug: 'my-campaign' },
 		});
 		update.mockResolvedValue(undefined);
 		deletePending.mockResolvedValue(undefined);
@@ -59,7 +59,7 @@ describe('CampaignPendingClaimService', () => {
 
 		expect(result.success).toBe(true);
 		if (result.success) {
-			expect(result.data.successfulClaimIds).toEqual(['Ab12Cd34']);
+			expect(result.data).toEqual({ successfulClaimIds: ['Ab12Cd34'], campaignSlug: 'my-campaign' });
 		}
 		expect(transaction).toHaveBeenCalledTimes(1);
 		expect(update).toHaveBeenCalledWith({
@@ -69,12 +69,40 @@ describe('CampaignPendingClaimService', () => {
 		expect(deletePending).toHaveBeenCalledWith({ where: { claimId: 'Ab12Cd34' } });
 	});
 
-	test('does not overwrite an existing contributorId and still deletes pending as success', async () => {
+	test('returns the campaignSlug of the last newly-owned claim in array order', async () => {
+		const { service, findUnique } = createService();
+		findUnique
+			.mockResolvedValueOnce({
+				claimId: 'claim-old',
+				campaignId: 'campaign-1',
+				campaign: { id: 'campaign-1', contributorId: null, slug: 'older-campaign' },
+			})
+			.mockResolvedValueOnce({
+				claimId: 'claim-owned',
+				campaignId: 'campaign-2',
+				campaign: { id: 'campaign-2', contributorId: 'other', slug: 'already-owned' },
+			})
+			.mockResolvedValueOnce({
+				claimId: 'claim-new',
+				campaignId: 'campaign-3',
+				campaign: { id: 'campaign-3', contributorId: null, slug: 'newest-campaign' },
+			});
+
+		const result = await service.claimPendingCampaigns('contributor-1', ['claim-old', 'claim-owned', 'claim-new']);
+
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.successfulClaimIds).toEqual(['claim-old', 'claim-owned', 'claim-new']);
+			expect(result.data.campaignSlug).toBe('newest-campaign');
+		}
+	});
+
+	test('does not overwrite an existing contributorId and does not set campaignSlug', async () => {
 		const { service, findUnique, update, deletePending, transaction } = createService();
 		findUnique.mockResolvedValue({
 			claimId: 'Ab12Cd34',
 			campaignId: 'campaign-1',
-			campaign: { id: 'campaign-1', contributorId: 'other-contributor' },
+			campaign: { id: 'campaign-1', contributorId: 'other-contributor', slug: 'owned-campaign' },
 		});
 		deletePending.mockResolvedValue(undefined);
 
@@ -82,7 +110,7 @@ describe('CampaignPendingClaimService', () => {
 
 		expect(result.success).toBe(true);
 		if (result.success) {
-			expect(result.data.successfulClaimIds).toEqual(['Ab12Cd34']);
+			expect(result.data).toEqual({ successfulClaimIds: ['Ab12Cd34'] });
 		}
 		expect(transaction).not.toHaveBeenCalled();
 		expect(update).not.toHaveBeenCalled();
@@ -95,7 +123,7 @@ describe('CampaignPendingClaimService', () => {
 			.mockResolvedValueOnce({
 				claimId: 'Ab12Cd34',
 				campaignId: 'campaign-1',
-				campaign: { id: 'campaign-1', contributorId: null },
+				campaign: { id: 'campaign-1', contributorId: null, slug: 'failed-campaign' },
 			})
 			.mockResolvedValueOnce(null);
 		transaction.mockRejectedValue(new Error('db-down'));
@@ -104,7 +132,7 @@ describe('CampaignPendingClaimService', () => {
 
 		expect(result.success).toBe(true);
 		if (result.success) {
-			expect(result.data.successfulClaimIds).toEqual(['other']);
+			expect(result.data).toEqual({ successfulClaimIds: ['other'] });
 		}
 	});
 
@@ -119,5 +147,21 @@ describe('CampaignPendingClaimService', () => {
 			expect(result.data.successfulClaimIds).toEqual(['Ab12Cd34', 'Xy98Zk76']);
 		}
 		expect(findUnique).toHaveBeenCalledTimes(2);
+	});
+
+	test('omits campaignSlug when the newly owned campaign has no slug', async () => {
+		const { service, findUnique } = createService();
+		findUnique.mockResolvedValue({
+			claimId: 'Ab12Cd34',
+			campaignId: 'campaign-1',
+			campaign: { id: 'campaign-1', contributorId: null, slug: null },
+		});
+
+		const result = await service.claimPendingCampaigns('contributor-1', ['Ab12Cd34']);
+
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data).toEqual({ successfulClaimIds: ['Ab12Cd34'] });
+		}
 	});
 });

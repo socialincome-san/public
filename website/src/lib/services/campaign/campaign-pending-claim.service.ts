@@ -4,7 +4,13 @@ import { ServiceResult } from '../core/base.types';
 
 export type ClaimPendingCampaignsResult = {
 	successfulClaimIds: string[];
+	campaignSlug?: string;
 };
+
+type ClaimSingleResult =
+	| { kind: 'missing' }
+	| { kind: 'already-owned' }
+	| { kind: 'owned'; campaignSlug: string | null };
 
 const normalizeClaimIds = (claimIds: readonly string[]): string[] => {
 	const seen = new Set<string>();
@@ -32,22 +38,28 @@ export class CampaignPendingClaimService extends BaseService {
 		claimIds: readonly string[],
 	): Promise<ServiceResult<ClaimPendingCampaignsResult>> {
 		const successfulClaimIds: string[] = [];
+		let campaignSlug: string | undefined;
 
 		for (const claimId of normalizeClaimIds(claimIds)) {
 			try {
 				const claimed = await this.claimSinglePendingCampaign(contributorId, claimId);
-				if (claimed) {
-					successfulClaimIds.push(claimId);
+				successfulClaimIds.push(claimId);
+
+				if (claimed.kind === 'owned') {
+					const slug = claimed.campaignSlug?.trim();
+					if (slug) {
+						campaignSlug = slug;
+					}
 				}
 			} catch (error) {
 				console.error(error, { claimId, contributorId, reason: 'claim-pending-failed' });
 			}
 		}
 
-		return this.resultOk({ successfulClaimIds });
+		return this.resultOk(campaignSlug ? { successfulClaimIds, campaignSlug } : { successfulClaimIds });
 	}
 
-	private async claimSinglePendingCampaign(contributorId: string, claimId: string): Promise<boolean> {
+	private async claimSinglePendingCampaign(contributorId: string, claimId: string): Promise<ClaimSingleResult> {
 		const pending = await this.db.campaignPending.findUnique({
 			where: { claimId },
 			select: {
@@ -57,13 +69,14 @@ export class CampaignPendingClaimService extends BaseService {
 					select: {
 						id: true,
 						contributorId: true,
+						slug: true,
 					},
 				},
 			},
 		});
 
 		if (!pending) {
-			return true;
+			return { kind: 'missing' };
 		}
 
 		if (pending.campaign.contributorId === null) {
@@ -75,11 +88,11 @@ export class CampaignPendingClaimService extends BaseService {
 				this.db.campaignPending.delete({ where: { claimId } }),
 			]);
 
-			return true;
+			return { kind: 'owned', campaignSlug: pending.campaign.slug };
 		}
 
 		await this.db.campaignPending.delete({ where: { claimId } });
 
-		return true;
+		return { kind: 'already-owned' };
 	}
 }
