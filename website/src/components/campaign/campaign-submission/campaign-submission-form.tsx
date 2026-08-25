@@ -101,6 +101,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 	const [submitSuccess, setSubmitSuccess] = useState(false);
 	const [successCampaignSlug, setSuccessCampaignSlug] = useState('');
 	const [successGuestEmail, setSuccessGuestEmail] = useState('');
+	const [successClaimId, setSuccessClaimId] = useState('');
 	const [isRetryingMagicLink, setIsRetryingMagicLink] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -628,7 +629,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			}
 
 			const campaignSlug = result.data.slug.trim();
-			const claimId = result.data.claimId?.trim();
+			const claimId = result.data.claimId?.trim() ?? '';
 			if (claimId) {
 				addPendingClaimId(claimId);
 			}
@@ -640,6 +641,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 					await sendMagicLoginLink({
 						auth,
 						email: guestEmail,
+						claimId: claimId || undefined,
 					});
 				} catch {
 					// Fail soft: campaign and claimId already succeeded.
@@ -648,6 +650,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 
 			setSuccessCampaignSlug(campaignSlug);
 			setSuccessGuestEmail(guestEmail);
+			setSuccessClaimId(claimId);
 			setSubmitSuccess(true);
 			form.reset(defaultFormValues());
 			clearPrimaryImageSelection();
@@ -676,6 +679,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			await sendMagicLoginLink({
 				auth,
 				email: successGuestEmail,
+				claimId: successClaimId || undefined,
 			});
 		} catch {
 			// Fail soft: user can retry again or contact support.
