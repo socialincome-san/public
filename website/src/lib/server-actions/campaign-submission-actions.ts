@@ -165,26 +165,21 @@ export const submitCampaignAction = async (formData: FormData): Promise<SubmitCa
 		return submissionFail(errorCode, submissionResult.status ?? 400, field);
 	}
 
+	if (!contributor) {
+		const personalParsed = personalSchema.safeParse({
+			firstName: formData.get('firstName'),
+			lastName: formData.get('lastName'),
+			email: formData.get('email'),
+		});
+		if (personalParsed.success) {
+			const accountResult = await services.write.contributor.getOrCreateFromEmailAndName(personalParsed.data);
+			if (!accountResult.success) {
+				console.error(accountResult.error);
+			}
+		}
+	}
+
 	return resultOk(submissionResult.data);
-};
-
-export const ensureCampaignGuestAccountAction = async (input: unknown) => {
-	const parsed = personalSchema.safeParse(input);
-	if (!parsed.success) {
-		const message = parsed.error.issues[0]?.message;
-		const errorCode = message && isCampaignSubmissionErrorCode(message) ? message : 'invalid-submission';
-
-		return resultFail(errorCode, 400);
-	}
-
-	const result = await services.write.contributor.getOrCreateFromEmailAndName(parsed.data);
-	if (!result.success) {
-		console.error(result.error);
-
-		return resultFail('submission-failed', 503);
-	}
-
-	return resultOk(true);
 };
 
 export const claimPendingCampaignsAction = async (claimIds: unknown) => {

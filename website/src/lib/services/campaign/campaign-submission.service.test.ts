@@ -79,10 +79,12 @@ describe('CampaignSubmissionService', () => {
 		const create = jest.fn().mockResolvedValue({ id: 'campaign-1', slug: 'my-campaign' }) as jest.MockedFunction<
 			(input: CampaignCreateInput) => Promise<{ id: string; slug: string }>
 		>;
-		const createPending = jest.fn().mockImplementation(async (input: { data: { claimId: string; campaignId: string } }) => ({
-			claimId: input.data.claimId,
-			campaignId: input.data.campaignId,
-		})) as jest.MockedFunction<
+		const createPending = jest.fn().mockImplementation((input: { data: { claimId: string; campaignId: string } }) =>
+			Promise.resolve({
+				claimId: input.data.claimId,
+				campaignId: input.data.campaignId,
+			}),
+		) as jest.MockedFunction<
 			(input: { data: { claimId: string; campaignId: string } }) => Promise<{ claimId: string; campaignId: string }>
 		>;
 		const db = {
@@ -250,10 +252,12 @@ describe('CampaignSubmissionService', () => {
 					meta: { target: ['claim_id'] },
 				}),
 			)
-			.mockImplementationOnce(async (input: { data: { claimId: string; campaignId: string } }) => ({
-				claimId: input.data.claimId,
-				campaignId: input.data.campaignId,
-			}));
+			.mockImplementationOnce((input: { data: { claimId: string; campaignId: string } }) =>
+				Promise.resolve({
+					claimId: input.data.claimId,
+					campaignId: input.data.campaignId,
+				}),
+			);
 
 		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage }, undefined, null);
 

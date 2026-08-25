@@ -3,7 +3,9 @@ import { parseCampaignsQueryParam } from './parse-campaigns-query-param';
 describe('parseCampaignsQueryParam', () => {
 	test('parses a comma-separated campaigns param', () => {
 		expect(
-			parseCampaignsQueryParam('https://socialincome.org/auth/finish-login?email=ada%40example.com&campaigns=Ab12Cd34,Xy98Zk76'),
+			parseCampaignsQueryParam(
+				'https://socialincome.org/auth/finish-login?email=ada%40example.com&campaigns=Ab12Cd34,Xy98Zk76',
+			),
 		).toEqual(['Ab12Cd34', 'Xy98Zk76']);
 	});
 

@@ -60,11 +60,7 @@ jest.mock('@/lib/services/campaign/verify-turnstile-token', () => {
 	};
 });
 
-import {
-	claimPendingCampaignsAction,
-	ensureCampaignGuestAccountAction,
-	submitCampaignAction,
-} from './campaign-submission-actions';
+import { claimPendingCampaignsAction, submitCampaignAction } from './campaign-submission-actions';
 
 const validEndDateString = () => format(addDays(startOfDay(new Date()), 30), 'yyyy-MM-dd');
 
@@ -131,6 +127,62 @@ describe('submitCampaignAction', () => {
 			expect.objectContaining({ profilePicture: null, sectionImage: null }),
 			null,
 		);
+		expect(mockGetOrCreateFromEmailAndName).not.toHaveBeenCalled();
+	});
+
+	test('creates a guest contributor account after a successful guest submission', async () => {
+		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
+		mockGetOrCreateFromEmailAndName.mockResolvedValue({
+			success: true,
+			data: { contributor: { id: 'contributor-1' }, isNewContributor: true },
+		});
+
+		const formData = createValidFormData();
+		formData.set('firstName', 'Ada');
+		formData.set('lastName', 'Lovelace');
+		formData.set('email', 'ada@example.com');
+
+		const result = await submitCampaignAction(formData);
+
+		expect(result).toEqual({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
+		expect(mockGetOrCreateFromEmailAndName).toHaveBeenCalledWith({
+			email: 'ada@example.com',
+			firstName: 'Ada',
+			lastName: 'Lovelace',
+		});
+	});
+
+	test('still succeeds when guest account creation fails after submission', async () => {
+		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
+		mockGetOrCreateFromEmailAndName.mockResolvedValue({
+			success: false,
+			error: 'database-down',
+		});
+
+		const formData = createValidFormData();
+		formData.set('firstName', 'Ada');
+		formData.set('lastName', 'Lovelace');
+		formData.set('email', 'ada@example.com');
+
+		const result = await submitCampaignAction(formData);
+
+		expect(result).toEqual({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
+		expect(mockGetOrCreateFromEmailAndName).toHaveBeenCalled();
+	});
+
+	test('does not create a guest account when a contributor is already logged in', async () => {
+		mockGetOptionalContributor.mockResolvedValue({ type: 'contributor', id: 'contributor-1' });
+		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
+
+		const formData = createValidFormData();
+		formData.set('firstName', 'Ada');
+		formData.set('lastName', 'Lovelace');
+		formData.set('email', 'ada@example.com');
+
+		const result = await submitCampaignAction(formData);
+
+		expect(result).toEqual({ success: true, data: { slug: 'my-campaign' } });
+		expect(mockGetOrCreateFromEmailAndName).not.toHaveBeenCalled();
 	});
 
 	test('omits claimId from the result when the service does not return one', async () => {
@@ -319,70 +371,6 @@ describe('submitCampaignAction', () => {
 
 		expect(result).toEqual({ success: false, error: 'submission-failed', status: 503 });
 		expect(mockSubmit).not.toHaveBeenCalled();
-	});
-});
-
-describe('ensureCampaignGuestAccountAction', () => {
-	beforeEach(() => {
-		jest.clearAllMocks();
-	});
-
-	test('fails for non-object input', async () => {
-		const result = await ensureCampaignGuestAccountAction('not-json');
-
-		expect(result).toEqual({ success: false, error: 'invalid-submission', status: 400 });
-		expect(mockGetOrCreateFromEmailAndName).not.toHaveBeenCalled();
-	});
-
-	test('fails for invalid personal fields', async () => {
-		const result = await ensureCampaignGuestAccountAction({
-			email: 'not-an-email',
-			firstName: '',
-			lastName: 'Lovelace',
-		});
-
-		expect(result.success).toBe(false);
-		if (result.success) {
-			throw new Error('Expected failure');
-		}
-		expect(result.error).toMatch(/^(email-invalid|first-name-required)$/);
-		expect(result.status).toBe(400);
-		expect(mockGetOrCreateFromEmailAndName).not.toHaveBeenCalled();
-	});
-
-	test('succeeds when get-or-create succeeds', async () => {
-		mockGetOrCreateFromEmailAndName.mockResolvedValue({
-			success: true,
-			data: { contributor: { id: 'contributor-1' }, isNewContributor: true },
-		});
-
-		const result = await ensureCampaignGuestAccountAction({
-			email: 'ada@example.com',
-			firstName: 'Ada',
-			lastName: 'Lovelace',
-		});
-
-		expect(result).toEqual({ success: true, data: true });
-		expect(mockGetOrCreateFromEmailAndName).toHaveBeenCalledWith({
-			email: 'ada@example.com',
-			firstName: 'Ada',
-			lastName: 'Lovelace',
-		});
-	});
-
-	test('fails when get-or-create fails', async () => {
-		mockGetOrCreateFromEmailAndName.mockResolvedValue({
-			success: false,
-			error: 'database-down',
-		});
-
-		const result = await ensureCampaignGuestAccountAction({
-			email: 'ada@example.com',
-			firstName: 'Ada',
-			lastName: 'Lovelace',
-		});
-
-		expect(result).toEqual({ success: false, error: 'submission-failed', status: 503 });
 	});
 });
 

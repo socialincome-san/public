@@ -22,8 +22,6 @@ describe('buildMagicLoginContinueUrl', () => {
 
 		const url = buildMagicLoginContinueUrl('https://socialincome.org', 'ada@example.com');
 
-		expect(url).toBe(
-			'https://socialincome.org/auth/confirm-login?email=ada%40example.com&campaigns=Ab12Cd34%2CXy98Zk76',
-		);
+		expect(url).toBe('https://socialincome.org/auth/confirm-login?email=ada%40example.com&campaigns=Ab12Cd34%2CXy98Zk76');
 	});
 });

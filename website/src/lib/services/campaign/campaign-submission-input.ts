@@ -81,7 +81,7 @@ const campaignSubmissionErrorCodeSet = new Set<string>(campaignSubmissionErrorCo
 export const isCampaignSubmissionErrorCode = (value: string): value is CampaignSubmissionErrorCode =>
 	campaignSubmissionErrorCodeSet.has(value);
 
-export type CampaignSubmissionFormImages = {
+type CampaignSubmissionFormImages = {
 	primaryImage?: File;
 	defaultImageId?: number;
 	profilePicture?: File;

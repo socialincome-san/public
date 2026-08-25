@@ -12,7 +12,7 @@ import {
 	getEligiblePublicSubmissionProgramsAction,
 	type CampaignDefaultImageOption,
 } from '@/lib/server-actions/campaign-public-actions';
-import { ensureCampaignGuestAccountAction, submitCampaignAction } from '@/lib/server-actions/campaign-submission-actions';
+import { submitCampaignAction } from '@/lib/server-actions/campaign-submission-actions';
 import {
 	appendCampaignSubmissionFormData,
 	campaignSubmissionAboutFieldNames,
@@ -175,11 +175,9 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 		defaultImagesRef.current = defaultImages;
 	}, [defaultImages]);
 
-	useEffect(() => {
-		if (isLoggedInContributor && currentStep === 'personal') {
-			setCurrentStep('about');
-		}
-	}, [currentStep, isLoggedInContributor]);
+	if (isLoggedInContributor && currentStep === 'personal') {
+		setCurrentStep('about');
+	}
 
 	const imageSelection: CampaignImageSelection = primaryImageFile
 		? { type: 'upload', file: primaryImageFile }
@@ -637,25 +635,14 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 
 			const guestEmail = submissionValues.email.trim();
 
-			if (!isLoggedInContributor) {
-				const guestFirstName = submissionValues.firstName.trim();
-				const guestLastName = submissionValues.lastName.trim();
-
-				if (guestEmail && guestFirstName && guestLastName) {
-					try {
-						await ensureCampaignGuestAccountAction({
-							email: guestEmail,
-							firstName: guestFirstName,
-							lastName: guestLastName,
-						});
-
-						await sendMagicLoginLink({
-							auth,
-							email: guestEmail,
-						});
-					} catch {
-						// Fail soft: campaign and claimId already succeeded.
-					}
+			if (!isLoggedInContributor && guestEmail) {
+				try {
+					await sendMagicLoginLink({
+						auth,
+						email: guestEmail,
+					});
+				} catch {
+					// Fail soft: campaign and claimId already succeeded.
 				}
 			}
 

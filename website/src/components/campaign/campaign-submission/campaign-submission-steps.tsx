@@ -21,13 +21,7 @@ type Props = {
 	personalStep: PersonalStepProps;
 };
 
-export const CampaignSubmissionSteps = ({
-	currentStep,
-	programStep,
-	detailsStep,
-	aboutStep,
-	personalStep,
-}: Props) => {
+export const CampaignSubmissionSteps = ({ currentStep, programStep, detailsStep, aboutStep, personalStep }: Props) => {
 	switch (currentStep) {
 		case 'program':
 			return (

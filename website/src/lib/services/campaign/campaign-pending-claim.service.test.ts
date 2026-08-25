@@ -117,6 +117,26 @@ describe('CampaignPendingClaimService', () => {
 		expect(deletePending).toHaveBeenCalledWith({ where: { claimId: 'Ab12Cd34' } });
 	});
 
+	test('returns campaignSlug when the campaign is already owned by the claiming contributor', async () => {
+		const { service, findUnique, update, deletePending, transaction } = createService();
+		findUnique.mockResolvedValue({
+			claimId: 'Ab12Cd34',
+			campaignId: 'campaign-1',
+			campaign: { id: 'campaign-1', contributorId: 'contributor-1', slug: 'my-campaign' },
+		});
+		deletePending.mockResolvedValue(undefined);
+
+		const result = await service.claimPendingCampaigns('contributor-1', ['Ab12Cd34']);
+
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data).toEqual({ successfulClaimIds: ['Ab12Cd34'], campaignSlug: 'my-campaign' });
+		}
+		expect(transaction).not.toHaveBeenCalled();
+		expect(update).not.toHaveBeenCalled();
+		expect(deletePending).toHaveBeenCalledWith({ where: { claimId: 'Ab12Cd34' } });
+	});
+
 	test('omits claim ids that fail during write', async () => {
 		const { service, findUnique, transaction } = createService();
 		findUnique

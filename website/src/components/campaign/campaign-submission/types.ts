@@ -127,7 +127,6 @@ export type AboutStepProps = {
 	profilePicture: CampaignSubmissionImageUploadField;
 	sectionImage: CampaignSubmissionImageUploadField;
 	isSubmitting: boolean;
-	/** When About is the last step (logged-in contributor), Turnstile + submit errors render here. */
 	submitError?: string | null;
 	lang?: WebsiteLanguage;
 	turnstileSiteKey?: string;

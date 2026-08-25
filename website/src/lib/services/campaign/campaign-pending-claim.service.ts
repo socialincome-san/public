@@ -7,10 +7,7 @@ export type ClaimPendingCampaignsResult = {
 	campaignSlug?: string;
 };
 
-type ClaimSingleResult =
-	| { kind: 'missing' }
-	| { kind: 'already-owned' }
-	| { kind: 'owned'; campaignSlug: string | null };
+type ClaimSingleResult = { kind: 'missing' } | { kind: 'already-owned' } | { kind: 'owned'; campaignSlug: string | null };
 
 const normalizeClaimIds = (claimIds: readonly string[]): string[] => {
 	const seen = new Set<string>();
@@ -92,6 +89,10 @@ export class CampaignPendingClaimService extends BaseService {
 		}
 
 		await this.db.campaignPending.delete({ where: { claimId } });
+
+		if (pending.campaign.contributorId === contributorId) {
+			return { kind: 'owned', campaignSlug: pending.campaign.slug };
+		}
 
 		return { kind: 'already-owned' };
 	}

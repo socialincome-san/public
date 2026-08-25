@@ -3,22 +3,21 @@
 import { DialogHeader, DialogTitle } from '@/components/dialog';
 import { CircleCheck, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
+import type { SubmissionLabels } from './types';
 
 type Props = {
-	labels: {
-		successCreatedTitle: string;
-		successLiveTitle: string;
-	};
+	labels: Pick<SubmissionLabels, 'successCreatedTitle' | 'successLiveTitle'>;
 	campaignHref: string;
 };
 
-export const CampaignSubmissionContributorSuccess = ({ labels, campaignHref }: Props) => {
-	const [campaignUrlLabel, setCampaignUrlLabel] = useState(campaignHref);
+const subscribe = () => () => undefined;
+const getHost = () => window.location.host;
+const getServerHost = () => '';
 
-	useEffect(() => {
-		setCampaignUrlLabel(`${window.location.host}${campaignHref}`);
-	}, [campaignHref]);
+export const CampaignSubmissionContributorSuccess = ({ labels, campaignHref }: Props) => {
+	const host = useSyncExternalStore(subscribe, getHost, getServerHost);
+	const campaignUrlLabel = host ? `${host}${campaignHref}` : campaignHref;
 
 	return (
 		<div className="flex min-h-0 flex-1 flex-col" data-testid="campaign-submission-contributor-success">
