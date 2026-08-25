@@ -122,6 +122,27 @@ describe('POST /api/campaign-submissions', () => {
 	});
 
 	test('passes validated fields and image to submit without assembling portal slugs', async () => {
+		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
+
+		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
+		const body: unknown = await response.json();
+
+		expect(response.status).toBe(201);
+		expect(body).toEqual({ slug: 'my-campaign', claimId: 'Ab12Cd34' });
+		expect(mockSubmit).toHaveBeenCalledWith(
+			expect.objectContaining({ programId: 'program-1' }),
+			expect.objectContaining({ kind: 'upload' }),
+			expect.objectContaining({ profilePicture: null, sectionImage: null }),
+			null,
+		);
+	});
+
+	test('omits claimId from the response when the service does not return one', async () => {
+		mockGetDecodedSessionFromRequest.mockResolvedValue({ success: true, data: { uid: 'firebase-uid-1' } });
+		mockGetCurrentContributorSession.mockResolvedValue({
+			success: true,
+			data: { type: 'contributor', id: 'contributor-1' },
+		});
 		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
 
 		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
@@ -129,12 +150,6 @@ describe('POST /api/campaign-submissions', () => {
 
 		expect(response.status).toBe(201);
 		expect(body).toEqual({ slug: 'my-campaign' });
-		expect(mockSubmit).toHaveBeenCalledWith(
-			expect.objectContaining({ programId: 'program-1' }),
-			expect.objectContaining({ kind: 'upload' }),
-			expect.objectContaining({ profilePicture: null, sectionImage: null }),
-			null,
-		);
 	});
 
 	test('passes contributorId from the contributor session when logged in', async () => {

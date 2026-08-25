@@ -172,5 +172,7 @@ export const POST = async (request: NextRequest) => {
 		return errorResponse(errorCode, submissionResult.status ?? 400, field);
 	}
 
-	return NextResponse.json({ slug: submissionResult.data.slug }, { status: 201 });
+	const { slug, claimId } = submissionResult.data;
+
+	return NextResponse.json(claimId ? { slug, claimId } : { slug }, { status: 201 });
 };

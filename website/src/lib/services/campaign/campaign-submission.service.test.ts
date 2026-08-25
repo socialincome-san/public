@@ -79,10 +79,19 @@ describe('CampaignSubmissionService', () => {
 		const create = jest.fn().mockResolvedValue({ id: 'campaign-1', slug: 'my-campaign' }) as jest.MockedFunction<
 			(input: CampaignCreateInput) => Promise<{ id: string; slug: string }>
 		>;
+		const createPending = jest.fn().mockImplementation(async (input: { data: { claimId: string; campaignId: string } }) => ({
+			claimId: input.data.claimId,
+			campaignId: input.data.campaignId,
+		})) as jest.MockedFunction<
+			(input: { data: { claimId: string; campaignId: string } }) => Promise<{ claimId: string; campaignId: string }>
+		>;
 		const db = {
 			campaign: {
 				create,
 				delete: jest.fn().mockResolvedValue(undefined),
+			},
+			campaignPending: {
+				create: createPending,
 			},
 		};
 
@@ -123,6 +132,7 @@ describe('CampaignSubmissionService', () => {
 			service,
 			db,
 			create,
+			createPending,
 			deleteAsset,
 			createPublishedCampaignStory,
 			campaignStoryExists,
@@ -172,18 +182,26 @@ describe('CampaignSubmissionService', () => {
 	});
 
 	test('submit creates public DB campaign and published Storyblok story', async () => {
-		const { service, create, createPublishedCampaignStory } = createService();
+		const { service, create, createPending, createPublishedCampaignStory } = createService();
 
 		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
 
 		expect(result.success).toBe(true);
 		if (result.success) {
 			expect(result.data.slug).toBe('my-campaign');
+			expect(result.data.claimId).toMatch(/^[0-9A-Za-z]{8}$/);
 		}
 		expect(create).toHaveBeenCalledTimes(1);
 		const createArg = create.mock.calls[0]?.[0];
 		expect(createArg?.data.slug).toBe('my-campaign');
 		expect(createArg?.data.contributor).toBeUndefined();
+		expect(createPending).toHaveBeenCalledTimes(1);
+		expect(createPending.mock.calls[0]?.[0]).toEqual({
+			data: {
+				claimId: result.success ? result.data.claimId : undefined,
+				campaignId: 'campaign-1',
+			},
+		});
 		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
 			expect.objectContaining({
 				slug: 'my-campaign',
@@ -197,22 +215,53 @@ describe('CampaignSubmissionService', () => {
 	});
 
 	test('submit connects contributor when contributorId is provided', async () => {
-		const { service, create } = createService();
+		const { service, create, createPending } = createService();
 
 		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage }, undefined, 'contributor-1');
 
 		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.claimId).toBeUndefined();
+		}
 		const createArg = create.mock.calls[0]?.[0];
 		expect(createArg?.data.contributor).toEqual({ connect: { id: 'contributor-1' } });
+		expect(createPending).not.toHaveBeenCalled();
 	});
 
 	test('submit omits contributor connect when contributorId is null', async () => {
-		const { service, create } = createService();
+		const { service, create, createPending } = createService();
 
 		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage }, undefined, null);
 
 		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.claimId).toMatch(/^[0-9A-Za-z]{8}$/);
+		}
 		expect(create.mock.calls[0]?.[0]?.data.contributor).toBeUndefined();
+		expect(createPending).toHaveBeenCalledTimes(1);
+	});
+
+	test('submit retries campaign pending create on claimId collision', async () => {
+		const { service, createPending } = createService();
+		createPending
+			.mockRejectedValueOnce(
+				new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+					code: 'P2002',
+					meta: { target: ['claim_id'] },
+				}),
+			)
+			.mockImplementationOnce(async (input: { data: { claimId: string; campaignId: string } }) => ({
+				claimId: input.data.claimId,
+				campaignId: input.data.campaignId,
+			}));
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage }, undefined, null);
+
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.claimId).toMatch(/^[0-9A-Za-z]{8}$/);
+		}
+		expect(createPending).toHaveBeenCalledTimes(2);
 	});
 
 	test('submit uploads optional about images and passes additional Storyblok fields', async () => {
