@@ -59,8 +59,14 @@ export type SubmissionLabels = {
 	tiktokHandlePlaceholder: string;
 	submit: string;
 	submitting: string;
-	successTitle: string;
-	success: string;
+	successThankYou: string;
+	successCreatedTitle: string;
+	successLiveTitle: string;
+	successGuestDescription: string;
+	successDidntGetIt: string;
+	successRetry: string;
+	successRetrySending: string;
+	successSupportPrefix: string;
 	error: string;
 	currencyPlaceholder: string;
 	imageHint: string;

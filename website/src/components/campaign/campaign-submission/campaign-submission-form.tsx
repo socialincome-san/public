@@ -32,10 +32,11 @@ import { turnstileResponseFieldName } from '@/lib/services/campaign/turnstile-fi
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useForm, type FieldPath } from 'react-hook-form';
+import { CampaignSubmissionContributorSuccess } from './campaign-submission-contributor-success';
 import { CampaignSubmissionFooter } from './campaign-submission-footer';
+import { CampaignSubmissionGuestSuccess } from './campaign-submission-guest-success';
 import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
 import { CampaignSubmissionSteps } from './campaign-submission-steps';
 import { addPendingClaimId } from './pending-claim-ids';
@@ -82,7 +83,6 @@ const defaultFormValues = (): CampaignSubmissionFormValues => ({
 });
 
 export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Props) => {
-	const router = useRouter();
 	const { auth } = useAuth();
 	const { contributorSession, loading: contributorSessionLoading } = useContributorSession();
 	const isLoggedInContributor = contributorSession?.type === 'contributor';
@@ -99,6 +99,9 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 	const [selectedDefaultId, setSelectedDefaultId] = useState<number | null>(null);
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [submitSuccess, setSubmitSuccess] = useState(false);
+	const [successCampaignSlug, setSuccessCampaignSlug] = useState('');
+	const [successGuestEmail, setSuccessGuestEmail] = useState('');
+	const [isRetryingMagicLink, setIsRetryingMagicLink] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 	const [turnstileWidgetKey, setTurnstileWidgetKey] = useState(0);
@@ -632,8 +635,9 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 				addPendingClaimId(claimId);
 			}
 
+			const guestEmail = submissionValues.email.trim();
+
 			if (!isLoggedInContributor) {
-				const guestEmail = submissionValues.email.trim();
 				const guestFirstName = submissionValues.firstName.trim();
 				const guestLastName = submissionValues.lastName.trim();
 
@@ -655,6 +659,8 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 				}
 			}
 
+			setSuccessCampaignSlug(campaignSlug);
+			setSuccessGuestEmail(guestEmail);
 			setSubmitSuccess(true);
 			form.reset(defaultFormValues());
 			clearPrimaryImageSelection();
@@ -664,9 +670,6 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			setDefaultImages([]);
 			setCurrentStep('program');
 			onSuccess?.();
-			if (campaignSlug) {
-				router.push(getWebsitePublicPath(lang, region, `campaigns/${campaignSlug}`));
-			}
 		} catch {
 			resetTurnstileWidget();
 			setSubmitError(labels.error);
@@ -676,14 +679,40 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 		}
 	};
 
+	const onRetryMagicLink = async () => {
+		if (!successGuestEmail || isRetryingMagicLink) {
+			return;
+		}
+
+		setIsRetryingMagicLink(true);
+		try {
+			await sendMagicLoginLink({
+				auth,
+				email: successGuestEmail,
+			});
+		} catch {
+			// Fail soft: user can retry again or contact support.
+		} finally {
+			setIsRetryingMagicLink(false);
+		}
+	};
+
 	if (submitSuccess) {
+		if (isLoggedInContributor) {
+			const campaignHref = getWebsitePublicPath(lang, region, `campaigns/${successCampaignSlug}`);
+
+			return <CampaignSubmissionContributorSuccess labels={labels} campaignHref={campaignHref} />;
+		}
+
 		return (
-			<div className="flex min-h-0 flex-1 flex-col">
-				<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left">
-					<DialogTitle className="leading-snug text-balance">{labels.successTitle}</DialogTitle>
-				</DialogHeader>
-				<p className="text-foreground px-6 pt-4 text-center text-sm">{labels.success}</p>
-			</div>
+			<CampaignSubmissionGuestSuccess
+				labels={labels}
+				email={successGuestEmail}
+				isRetrying={isRetryingMagicLink}
+				onRetry={() => {
+					void onRetryMagicLink();
+				}}
+			/>
 		);
 	}
 
