@@ -3,6 +3,7 @@
 import { DialogHeader, DialogTitle } from '@/components/dialog';
 import { Form } from '@/components/form';
 import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
+import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useContributorSession } from '@/lib/firebase/hooks/useContributorSession';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -11,7 +12,7 @@ import {
 	getEligiblePublicSubmissionProgramsAction,
 	type CampaignDefaultImageOption,
 } from '@/lib/server-actions/campaign-public-actions';
-import { ensureCampaignGuestAccountAction } from '@/lib/server-actions/campaign-submission-actions';
+import { ensureCampaignGuestAccountAction, submitCampaignAction } from '@/lib/server-actions/campaign-submission-actions';
 import {
 	appendCampaignSubmissionFormData,
 	campaignSubmissionAboutFieldNames,
@@ -56,44 +57,6 @@ type Props = {
 
 const guestSteps = ['program', 'details', 'about', 'personal'] as const satisfies readonly CampaignSubmissionStepId[];
 const contributorSteps = ['program', 'details', 'about'] as const satisfies readonly CampaignSubmissionStepId[];
-
-const submittedCampaignSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
-const readSubmittedCampaignSlug = (payload: unknown): string | null => {
-	if (typeof payload !== 'object' || payload === null || !('slug' in payload)) {
-		return null;
-	}
-
-	const { slug } = payload;
-	if (typeof slug !== 'string') {
-		return null;
-	}
-
-	const trimmed = slug.trim();
-	if (!submittedCampaignSlugPattern.test(trimmed)) {
-		return null;
-	}
-
-	return trimmed;
-};
-
-const readSubmittedCampaignClaimId = (payload: unknown): string | null => {
-	if (typeof payload !== 'object' || payload === null || !('claimId' in payload)) {
-		return null;
-	}
-
-	const { claimId } = payload;
-	if (typeof claimId !== 'string') {
-		return null;
-	}
-
-	const trimmed = claimId.trim();
-	if (!trimmed) {
-		return null;
-	}
-
-	return trimmed;
-};
 
 const defaultFormValues = (): CampaignSubmissionFormValues => ({
 	title: '',
@@ -600,6 +563,15 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			return;
 		}
 
+		const primaryImageUploadBytes = imageSelection.type === 'upload' ? imageSelection.file.size : 0;
+		const sectionImageBytes = values.hasAdditionalInformation ? (sectionImageFile?.size ?? 0) : 0;
+		const totalImageBytes = primaryImageUploadBytes + (profilePictureFile?.size ?? 0) + sectionImageBytes;
+		if (totalImageBytes > campaignSubmissionConfig.maxMultipartBodyBytes) {
+			setSubmitError(resolveError('payload-too-large'));
+
+			return;
+		}
+
 		const submissionValues = {
 			...values,
 			quote: resolveCampaignSubmissionQuote(values.quote, labels.quotePlaceholder),
@@ -630,20 +602,13 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 				formData.append(turnstileResponseFieldName, turnstileToken);
 			}
 
-			const response = await fetch('/api/campaign-submissions', {
-				method: 'POST',
-				body: formData,
-			});
+			const result = await submitCampaignAction(formData);
 
-			if (!response.ok) {
-				const payload = (await response.json().catch(() => null)) as {
-					errorCode?: string;
-					field?: string;
-				} | null;
-				const errorMessage = payload?.errorCode ? resolveError(payload.errorCode) : labels.error;
-				const field = isCampaignSubmissionImageMultipartField(payload?.field) ? payload.field : undefined;
+			if (!result.success) {
+				const errorMessage = resolveError(result.error);
+				const field = isCampaignSubmissionImageMultipartField(result.field) ? result.field : undefined;
 
-				if (isCampaignSubmissionImageErrorCode(payload?.errorCode)) {
+				if (isCampaignSubmissionImageErrorCode(result.error)) {
 					if (field === 'profilePicture') {
 						profilePicture.setError(errorMessage);
 					} else if (field === 'sectionImage') {
@@ -661,9 +626,8 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 				return;
 			}
 
-			const payload: unknown = await response.json().catch(() => null);
-			const campaignSlug = readSubmittedCampaignSlug(payload);
-			const claimId = readSubmittedCampaignClaimId(payload);
+			const campaignSlug = result.data.slug.trim();
+			const claimId = result.data.claimId?.trim();
 			if (claimId) {
 				addPendingClaimId(claimId);
 			}
