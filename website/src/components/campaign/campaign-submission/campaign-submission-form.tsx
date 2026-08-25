@@ -34,6 +34,7 @@ import { useForm, type FieldPath } from 'react-hook-form';
 import { CampaignSubmissionFooter } from './campaign-submission-footer';
 import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
 import { CampaignSubmissionSteps } from './campaign-submission-steps';
+import { addPendingClaimId } from './pending-claim-ids';
 import type {
 	CampaignImageSelection,
 	CampaignSubmissionFormValues,
@@ -67,6 +68,24 @@ const readSubmittedCampaignSlug = (payload: unknown): string | null => {
 
 	const trimmed = slug.trim();
 	if (!submittedCampaignSlugPattern.test(trimmed)) {
+		return null;
+	}
+
+	return trimmed;
+};
+
+const readSubmittedCampaignClaimId = (payload: unknown): string | null => {
+	if (typeof payload !== 'object' || payload === null || !('claimId' in payload)) {
+		return null;
+	}
+
+	const { claimId } = payload;
+	if (typeof claimId !== 'string') {
+		return null;
+	}
+
+	const trimmed = claimId.trim();
+	if (!trimmed) {
 		return null;
 	}
 
@@ -637,6 +656,10 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 
 			const payload: unknown = await response.json().catch(() => null);
 			const campaignSlug = readSubmittedCampaignSlug(payload);
+			const claimId = readSubmittedCampaignClaimId(payload);
+			if (claimId) {
+				addPendingClaimId(claimId);
+			}
 			setSubmitSuccess(true);
 			form.reset(defaultFormValues());
 			clearPrimaryImageSelection();
