@@ -32,8 +32,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-	render: () => (
-		<Select>
+	args: {
+		disabled: false,
+	},
+	argTypes: {
+		disabled: {
+			control: 'boolean',
+		},
+	},
+	render: (args) => (
+		<Select {...args}>
 			<SelectTrigger>
 				<SelectValue placeholder="Choose a currency" />
 			</SelectTrigger>
