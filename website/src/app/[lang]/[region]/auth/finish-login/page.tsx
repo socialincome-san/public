@@ -1,5 +1,7 @@
 'use client';
 
+import { claimPendingCampaignsFromLogin } from '@/components/login/claim-pending-campaigns-from-login';
+import { parseCampaignsQueryParam } from '@/components/login/parse-campaigns-query-param';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { createSessionAction, getRedirectPathAfterLoginAction } from '@/lib/server-actions/session-actions';
 import { isSignInWithEmailLink, signInWithEmailLink, signOut } from 'firebase/auth';
@@ -62,6 +64,8 @@ export default function FinishLoginPage() {
 
 					return;
 				}
+
+				await claimPendingCampaignsFromLogin(parseCampaignsQueryParam(url));
 
 				const redirectPathResult = await getRedirectPathAfterLoginAction();
 				if (!redirectPathResult.success) {

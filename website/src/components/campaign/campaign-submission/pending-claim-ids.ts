@@ -48,3 +48,28 @@ export const addPendingClaimId = (claimId: string): void => {
 		// Fail soft: submission already succeeded; storage may be full or blocked.
 	}
 };
+
+export const removePendingClaimIds = (claimIds: readonly string[]): void => {
+	if (!isBrowser() || claimIds.length === 0) {
+		return;
+	}
+
+	const toRemove = new Set(claimIds.map((claimId) => claimId.trim()).filter(Boolean));
+	if (toRemove.size === 0) {
+		return;
+	}
+
+	const remaining = readPendingClaimIds().filter((claimId) => !toRemove.has(claimId));
+
+	try {
+		if (remaining.length === 0) {
+			window.localStorage.removeItem(PENDING_CLAIM_IDS_STORAGE_KEY);
+
+			return;
+		}
+
+		window.localStorage.setItem(PENDING_CLAIM_IDS_STORAGE_KEY, JSON.stringify(remaining));
+	} catch {
+		// Fail soft: claim already processed server-side.
+	}
+};

@@ -1,4 +1,4 @@
-import { addPendingClaimId, readPendingClaimIds } from './pending-claim-ids';
+import { addPendingClaimId, readPendingClaimIds, removePendingClaimIds } from './pending-claim-ids';
 
 const STORAGE_KEY = 'campaign_pending_claim_ids';
 
@@ -67,6 +67,21 @@ describe('pending-claim-ids', () => {
 
 	test('addPendingClaimId no-ops on an empty claim id', () => {
 		addPendingClaimId('   ');
+
+		expect(readPendingClaimIds()).toEqual([]);
+		expect(window.localStorage.getItem(STORAGE_KEY)).toBeNull();
+	});
+
+	test('removePendingClaimIds removes listed ids and deletes the key when empty', () => {
+		addPendingClaimId('Ab12Cd34');
+		addPendingClaimId('Xy98Zk76');
+		addPendingClaimId('KeepMe01');
+
+		removePendingClaimIds(['Ab12Cd34', 'Xy98Zk76']);
+
+		expect(readPendingClaimIds()).toEqual(['KeepMe01']);
+
+		removePendingClaimIds(['KeepMe01']);
 
 		expect(readPendingClaimIds()).toEqual([]);
 		expect(window.localStorage.getItem(STORAGE_KEY)).toBeNull();
