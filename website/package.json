@@ -144,7 +144,7 @@
 		"@types/node": "25.9.5",
 		"@types/pdfkit": "0.17.6",
 		"@types/react": "19.2.18",
-		"@types/react-dom": "19.2.4",
+		"@types/react-dom": "19.2.5",
 		"@types/ssh2-sftp-client": "9.0.6",
 		"@types/three": "0.185.4",
 		"d3-geo": "3.1.1",
