@@ -28,4 +28,21 @@ describe('Test translations', () => {
 		expect(translator.t('CH', { namespace: 'countries' })).toBe('Switzerland');
 		expect(translator.t('DE', { namespace: 'countries' })).toBe('Germany');
 	});
+
+	it('keeps transparency countries headline placeholders for interpolation', async () => {
+		const translator = await Translator.getInstance({
+			language: 'en',
+			namespaces: ['website-common'],
+		});
+
+		expect(translator.t('transparency-page.countries.headline', { context: { count: 72 } })).toBe(
+			'{{amount}} donations arrived from {{countriesCount}} countries',
+		);
+		expect(translator.t('transparency-page.countries.headline', { context: { count: 1 } })).toBe(
+			'{{amount}} donations arrived from {{countriesCount}} country',
+		);
+		expect(translator.t('transparency-page.countries.headline-country')).toBe(
+			'{{amount}} donations arrived from {{country}}',
+		);
+	});
 });

@@ -134,6 +134,17 @@
 			"title-currency": "en {{currency}}",
 			"tooltip-label": "Afficher les détails des comptes de réserve",
 			"no-data": "Aucune donnée"
+		},
+		"countries": {
+			"headline_one": "{{amount}} de dons sont arrivés de {{countriesCount}} pays",
+			"headline_other": "{{amount}} de dons sont arrivés de {{countriesCount}} pays",
+			"headline-country": "{{amount}} de dons sont arrivés de {{country}}",
+			"headline-other": "{{amount}} de dons sont arrivés d’autres pays",
+			"other-countries": "autres pays",
+			"other-countries-title": "Autres pays",
+			"empty": "Aucun don provenant d’un pays pour cette période.",
+			"chart-aria-label": "Montants des dons par pays d’origine",
+			"legend-row-aria": "{{country}}, {{amount}}, {{percentage}}"
 		}
 	},
 	"program-detail-page": {
