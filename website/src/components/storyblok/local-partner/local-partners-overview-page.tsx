@@ -5,15 +5,17 @@ import { LocalPartnersOverview } from '@/components/storyblok/local-partner/loca
 import type { LocalPartnersOverview as LocalPartnersOverviewContent } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import type { AnySearchParams } from '@/lib/types/page-props';
 import type { ISbStoryData } from '@storyblok/js';
 
 type Props = {
 	overview: ISbStoryData<LocalPartnersOverviewContent>;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
+	searchParams?: AnySearchParams;
 };
 
-export const LocalPartnersOverviewPage = async ({ overview, lang, region }: Props) => {
+export const LocalPartnersOverviewPage = async ({ overview, lang, region, searchParams }: Props) => {
 	const localPartnersResult = await services.storyblok.getLocalPartners(lang);
 	const localPartners = (localPartnersResult.success ? localPartnersResult.data : []) as LocalPartnerStory[];
 	const title = overview.content.title?.trim() ?? overview.name;
@@ -28,7 +30,14 @@ export const LocalPartnersOverviewPage = async ({ overview, lang, region }: Prop
 	return (
 		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} className="py-0" />
-			<LocalPartnersOverview localPartners={localPartners} lang={lang} region={region} title={title} text={text} />
+			<LocalPartnersOverview
+				localPartners={localPartners}
+				lang={lang}
+				region={region}
+				title={title}
+				text={text}
+				searchParams={searchParams}
+			/>
 		</div>
 	);
 };
