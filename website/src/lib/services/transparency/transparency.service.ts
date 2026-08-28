@@ -2,6 +2,7 @@ import { type PrismaClient } from '@/generated/prisma/client';
 import { PayoutStatus, type CountryCode } from '@/generated/prisma/enums';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { getCountryFlagColors } from '@/lib/utils/country-flag-colors';
+import { startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
 import { type ReserveReadService } from '../reserves/reserve-read.service';
@@ -97,6 +98,28 @@ export class TransparencyService extends BaseService {
 			console.error(error);
 
 			return this.resultFail(`Could not fetch transparency data: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getRunwayMonths(): Promise<ServiceResult<number>> {
+		try {
+			const latestReservesResult = await this.reserveReadService.getLatestPerBankAccount();
+			if (!latestReservesResult.success) {
+				return this.resultFail(latestReservesResult.error);
+			}
+
+			const monthlyRecipientPaymentsChf = await this.getLastCompletedMonthRecipientPaymentsChf(
+				this.getLatestReserveRecordedAt(latestReservesResult.data.accounts) ?? new Date(),
+			);
+			if (monthlyRecipientPaymentsChf <= 0) {
+				return this.resultFail('No recipient payments in the last completed month');
+			}
+
+			return this.resultOk(Math.floor(latestReservesResult.data.total / monthlyRecipientPaymentsChf));
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not calculate runway months: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -266,5 +289,30 @@ export class TransparencyService extends BaseService {
 				contributorCount: data.contributors.size,
 			}))
 			.sort(compareCountryContributionRows);
+	}
+
+	private getLatestReserveRecordedAt(accounts: { recordedAt: Date | null }[]): Date | undefined {
+		return accounts.reduce<Date | undefined>((latest, { recordedAt }) => {
+			if (!recordedAt) {
+				return latest;
+			}
+
+			return latest && latest > recordedAt ? latest : recordedAt;
+		}, undefined);
+	}
+
+	private async getLastCompletedMonthRecipientPaymentsChf(referenceDate: Date): Promise<number> {
+		const aggregate = await this.db.payout.aggregate({
+			where: {
+				status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] },
+				paymentAt: {
+					gte: startOfMonth(subMonths(referenceDate, 1)),
+					lt: startOfMonth(referenceDate),
+				},
+			},
+			_sum: { amountChf: true },
+		});
+
+		return Number(aggregate._sum.amountChf ?? 0);
 	}
 }

@@ -135,6 +135,10 @@
 			"tooltip-label": "Reservekontodetails anzeigen",
 			"no-data": "Keine Daten"
 		},
+		"runway": {
+			"description": "Selbst wenn heute alle Spender:innen aufhören würden zu spenden, könnten wir Empfänger:innen noch {{months}} Monate lang weiter auszahlen.",
+			"zewo-hint": "Im Einklang mit ZEWO"
+		},
 		"countries": {
 			"headline_one": "Spenden im Wert von {{amount}} kamen aus {{countriesCount}} Land",
 			"headline_other": "Spenden im Wert von {{amount}} kamen aus {{countriesCount}} Ländern",

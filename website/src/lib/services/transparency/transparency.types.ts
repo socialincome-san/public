@@ -110,3 +110,9 @@ export type TransparencyData = {
 	timeRanges: ContributionTimeRange[];
 	topCountries: ContributionsByCountry[];
 };
+
+const ZEWO_RESERVE_RUNWAY_MIN_MONTHS = 3;
+const ZEWO_RESERVE_RUNWAY_MAX_MONTHS = 18;
+
+export const isRunwayInLineWithZewo = (months: number): boolean =>
+	months >= ZEWO_RESERVE_RUNWAY_MIN_MONTHS && months <= ZEWO_RESERVE_RUNWAY_MAX_MONTHS;
