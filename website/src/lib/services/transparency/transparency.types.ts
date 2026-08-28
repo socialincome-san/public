@@ -69,17 +69,14 @@ export type CountryContributionRow = {
 
 export type TransparencyCountrySegment = {
 	countryCode: TransparencyCountrySegmentCode;
-	countryName: string;
 	totalChf: number;
 	percentageOfTotal: number;
 	unitCount: number;
 	color: string;
-	contributorCount: number;
 };
 
-export type TransparencyOtherCountry = {
+type TransparencyOtherCountry = {
 	countryCode: CountryCode;
-	countryName: string;
 	totalChf: number;
 };
 

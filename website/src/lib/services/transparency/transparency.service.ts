@@ -5,7 +5,11 @@ import { getCountryFlagColors } from '@/lib/utils/country-flag-colors';
 import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
 import { type ReserveReadService } from '../reserves/reserve-read.service';
-import { buildTransparencyCountriesData, TOP_CONTRIBUTING_COUNTRIES_LIMIT } from './countries-distribution';
+import {
+	buildTransparencyCountriesData,
+	compareCountryContributionRows,
+	TOP_CONTRIBUTING_COUNTRIES_LIMIT,
+} from './countries-distribution';
 import type {
 	ContributionsByCountry,
 	ContributionTimeRange,
@@ -106,7 +110,6 @@ export class TransparencyService extends BaseService {
 			return this.resultOk(
 				buildTransparencyCountriesData(rows, {
 					limit,
-					getCountryName: getCountryNameByCode,
 					getCountryColors: getCountryFlagColors,
 				}),
 			);
@@ -262,6 +265,6 @@ export class TransparencyService extends BaseService {
 				totalChf: data.totalChf,
 				contributorCount: data.contributors.size,
 			}))
-			.sort((left, right) => right.totalChf - left.totalChf);
+			.sort(compareCountryContributionRows);
 	}
 }

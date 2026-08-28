@@ -5,6 +5,7 @@ import {
 	type CountryContributionRow,
 	type TransparencyCountriesData,
 	type TransparencyCountrySegment,
+	type TransparencyCountrySegmentCode,
 } from './transparency.types';
 
 export const TOP_CONTRIBUTING_COUNTRIES_LIMIT = 15;
@@ -12,32 +13,8 @@ export const COUNTRY_DISTRIBUTION_UNIT_COUNT = 100;
 
 export const OTHER_SEGMENT_COLOR = 'hsl(var(--muted-foreground) / 0.4)';
 
-export type TranslationTemplatePart = { type: 'text'; value: string } | { type: 'placeholder'; key: string };
-
-const PLACEHOLDER_REGEX = /\{\{(\w+)\}\}/g;
-
-export const splitTranslationTemplate = (template: string): TranslationTemplatePart[] => {
-	const parts: TranslationTemplatePart[] = [];
-	let lastIndex = 0;
-
-	for (const match of template.matchAll(PLACEHOLDER_REGEX)) {
-		const matchIndex = match.index ?? 0;
-		if (matchIndex > lastIndex) {
-			parts.push({ type: 'text', value: template.slice(lastIndex, matchIndex) });
-		}
-
-		const key = match[1];
-		if (key) {
-			parts.push({ type: 'placeholder', key });
-		}
-		lastIndex = matchIndex + match[0].length;
-	}
-
-	if (lastIndex < template.length) {
-		parts.push({ type: 'text', value: template.slice(lastIndex) });
-	}
-
-	return parts;
+export const compareCountryContributionRows = (left: CountryContributionRow, right: CountryContributionRow): number => {
+	return right.totalChf - left.totalChf || left.countryCode.localeCompare(right.countryCode);
 };
 
 export const allocateUnitCounts = (weights: number[], totalUnits = COUNTRY_DISTRIBUTION_UNIT_COUNT): number[] => {
@@ -66,6 +43,23 @@ export const allocateUnitCounts = (weights: number[], totalUnits = COUNTRY_DISTR
 		remainder -= 1;
 	}
 
+	for (const [index, weight] of weights.entries()) {
+		if (weight <= 0 || (unitCounts[index] ?? 0) > 0) {
+			continue;
+		}
+
+		const donorIndex = unitCounts.reduce(
+			(largestIndex, count, candidateIndex) => (count > (unitCounts[largestIndex] ?? 0) ? candidateIndex : largestIndex),
+			0,
+		);
+		if ((unitCounts[donorIndex] ?? 0) <= 1) {
+			break;
+		}
+
+		unitCounts[donorIndex] = (unitCounts[donorIndex] ?? 0) - 1;
+		unitCounts[index] = 1;
+	}
+
 	return unitCounts;
 };
 
@@ -81,14 +75,12 @@ export const buildTransparencyCountriesData = (
 	rows: CountryContributionRow[],
 	options: {
 		limit?: number;
-		getCountryName: (countryCode: CountryCode) => string;
 		getCountryColors?: (countryCode: CountryCode) => string[];
-	},
+	} = {},
 ): TransparencyCountriesData => {
-	const limit = options.limit ?? TOP_CONTRIBUTING_COUNTRIES_LIMIT;
-	const countries = rows
-		.filter((row) => row.totalChf > 0)
-		.sort((left, right) => right.totalChf - left.totalChf || left.countryCode.localeCompare(right.countryCode));
+	const requestedLimit = options.limit ?? TOP_CONTRIBUTING_COUNTRIES_LIMIT;
+	const limit = Number.isFinite(requestedLimit) ? Math.max(1, Math.floor(requestedLimit)) : TOP_CONTRIBUTING_COUNTRIES_LIMIT;
+	const countries = [...rows].filter((row) => row.totalChf > 0).sort(compareCountryContributionRows);
 
 	const totalContributionsChf = countries.reduce((sum, row) => sum + row.totalChf, 0);
 	if (countries.length === 0 || totalContributionsChf <= 0) {
@@ -103,26 +95,20 @@ export const buildTransparencyCountriesData = (
 	const topCountries = countries.slice(0, limit);
 	const otherCountries = countries.slice(limit);
 	const otherTotalChf = otherCountries.reduce((sum, row) => sum + row.totalChf, 0);
-	const otherContributorCount = otherCountries.reduce((sum, row) => sum + row.contributorCount, 0);
 
-	const unresolvedSegments = [
-		...topCountries.map((row) => ({
-			countryCode: row.countryCode,
-			countryName: options.getCountryName(row.countryCode) || row.countryCode,
-			totalChf: row.totalChf,
-			contributorCount: row.contributorCount,
-		})),
-		...(otherCountries.length > 0
-			? [
-					{
-						countryCode: OTHER_COUNTRY_SEGMENT_CODE,
-						countryName: '',
-						totalChf: otherTotalChf,
-						contributorCount: otherContributorCount,
-					},
-				]
-			: []),
-	];
+	const unresolvedSegments: {
+		countryCode: TransparencyCountrySegmentCode;
+		totalChf: number;
+	}[] = topCountries.map((row) => ({
+		countryCode: row.countryCode,
+		totalChf: row.totalChf,
+	}));
+	if (otherCountries.length > 0) {
+		unresolvedSegments.push({
+			countryCode: OTHER_COUNTRY_SEGMENT_CODE,
+			totalChf: otherTotalChf,
+		});
+	}
 
 	const unitCounts = allocateUnitCounts(unresolvedSegments.map((segment) => segment.totalChf));
 	const countryColorByCode = options.getCountryColors
@@ -135,7 +121,6 @@ export const buildTransparencyCountriesData = (
 		: new Map<CountryCode, string>();
 	const segments: TransparencyCountrySegment[] = unresolvedSegments.map((segment, index) => ({
 		countryCode: segment.countryCode,
-		countryName: segment.countryName,
 		totalChf: segment.totalChf,
 		percentageOfTotal: (segment.totalChf / totalContributionsChf) * 100,
 		unitCount: unitCounts[index] ?? 0,
@@ -143,7 +128,6 @@ export const buildTransparencyCountriesData = (
 			segment.countryCode === OTHER_COUNTRY_SEGMENT_CODE
 				? OTHER_SEGMENT_COLOR
 				: (countryColorByCode.get(segment.countryCode) ?? OTHER_SEGMENT_COLOR),
-		contributorCount: segment.contributorCount,
 	}));
 
 	return {
@@ -152,7 +136,6 @@ export const buildTransparencyCountriesData = (
 		segments,
 		otherCountries: otherCountries.map((row) => ({
 			countryCode: row.countryCode,
-			countryName: options.getCountryName(row.countryCode) || row.countryCode,
 			totalChf: row.totalChf,
 		})),
 	};

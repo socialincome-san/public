@@ -36,13 +36,24 @@ describe('Test translations', () => {
 		});
 
 		expect(translator.t('transparency-page.countries.headline', { context: { count: 72 } })).toBe(
-			'{{amount}} donations arrived from {{countriesCount}} countries',
+			'Donations totaling {{amount}} arrived from {{countriesCount}} countries',
 		);
 		expect(translator.t('transparency-page.countries.headline', { context: { count: 1 } })).toBe(
-			'{{amount}} donations arrived from {{countriesCount}} country',
+			'Donations totaling {{amount}} arrived from {{countriesCount}} country',
 		);
 		expect(translator.t('transparency-page.countries.headline-country')).toBe(
-			'{{amount}} donations arrived from {{country}}',
+			'Donations totaling {{amount}} arrived from {{country}}',
+		);
+	});
+
+	it('uses valid French transparency countries copy', async () => {
+		const translator = await Translator.getInstance({
+			language: 'fr',
+			namespaces: ['website-common'],
+		});
+
+		expect(translator.t('transparency-page.countries.headline', { context: { count: 1 } })).toBe(
+			'Des dons totalisant {{amount}} sont arrivés de {{countriesCount}} pays',
 		);
 	});
 });

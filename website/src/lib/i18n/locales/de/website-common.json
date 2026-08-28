@@ -136,10 +136,10 @@
 			"no-data": "Keine Daten"
 		},
 		"countries": {
-			"headline_one": "{{amount}} Spenden kamen aus {{countriesCount}} Land",
-			"headline_other": "{{amount}} Spenden kamen aus {{countriesCount}} Ländern",
-			"headline-country": "{{amount}} Spenden kamen aus {{country}}",
-			"headline-other": "{{amount}} Spenden kamen aus anderen Ländern",
+			"headline_one": "Spenden im Wert von {{amount}} kamen aus {{countriesCount}} Land",
+			"headline_other": "Spenden im Wert von {{amount}} kamen aus {{countriesCount}} Ländern",
+			"headline-country": "Spenden im Wert von {{amount}} kamen aus {{country}}",
+			"headline-other": "Spenden im Wert von {{amount}} kamen aus anderen Ländern",
 			"other-countries": "Andere Länder",
 			"other-countries-title": "Andere Länder",
 			"empty": "In diesem Zeitraum gab es keine Spenden aus Ländern.",

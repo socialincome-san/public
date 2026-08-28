@@ -1,6 +1,6 @@
 'use client';
 
-import { CountryCode } from '@/generated/prisma/enums';
+import type { CountryCode } from '@/generated/prisma/enums';
 import { cn } from '@/lib/utils/cn';
 import { WHITESPACE_REGEX } from '@/lib/utils/regex';
 import Image from 'next/image';
@@ -17,7 +17,14 @@ type CountryFlagProps = {
 	className?: string;
 };
 
-export const CountryFlag = ({ country, size = 'lg', decorative = false, className }: CountryFlagProps) => {
+const CountryFlagImage = ({
+	country,
+	size,
+	decorative,
+	className,
+}: Required<Omit<CountryFlagProps, 'className'>> & {
+	className?: string;
+}) => {
 	const [hasError, setHasError] = useState(false);
 
 	const containerSize = size === 'sm' ? 'size-4 text-[10px]' : 'size-9 text-[12px]';
@@ -32,7 +39,7 @@ export const CountryFlag = ({ country, size = 'lg', decorative = false, classNam
 					containerSize,
 					className,
 				)}
-				aria-hidden={decorative}
+				aria-hidden={decorative || undefined}
 			>
 				{country}
 			</span>
@@ -40,7 +47,10 @@ export const CountryFlag = ({ country, size = 'lg', decorative = false, classNam
 	}
 
 	return (
-		<span className={cn('inline-flex overflow-hidden rounded-full', containerSize, className)} aria-hidden={decorative}>
+		<span
+			className={cn('inline-flex overflow-hidden rounded-full', containerSize, className)}
+			aria-hidden={decorative || undefined}
+		>
 			<Image
 				src={`/assets/flags/${slug}.svg`}
 				alt={decorative ? '' : country}
@@ -51,4 +61,8 @@ export const CountryFlag = ({ country, size = 'lg', decorative = false, classNam
 			/>
 		</span>
 	);
+};
+
+export const CountryFlag = ({ country, size = 'lg', decorative = false, className }: CountryFlagProps) => {
+	return <CountryFlagImage key={country} country={country} size={size} decorative={decorative} className={className} />;
 };

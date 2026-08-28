@@ -136,10 +136,10 @@
 			"no-data": "No data"
 		},
 		"countries": {
-			"headline_one": "{{amount}} donations arrived from {{countriesCount}} country",
-			"headline_other": "{{amount}} donations arrived from {{countriesCount}} countries",
-			"headline-country": "{{amount}} donations arrived from {{country}}",
-			"headline-other": "{{amount}} donations arrived from other countries",
+			"headline_one": "Donations totaling {{amount}} arrived from {{countriesCount}} country",
+			"headline_other": "Donations totaling {{amount}} arrived from {{countriesCount}} countries",
+			"headline-country": "Donations totaling {{amount}} arrived from {{country}}",
+			"headline-other": "Donations totaling {{amount}} arrived from other countries",
 			"other-countries": "other countries",
 			"other-countries-title": "Other countries",
 			"empty": "No donations from any country in this period.",

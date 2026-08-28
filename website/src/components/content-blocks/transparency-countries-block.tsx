@@ -38,7 +38,7 @@ export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
 		return null;
 	}
 
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common', 'countries'] });
 	const locale = getSafeNumberFormatLocale(lang);
 	const data = dataResult.data;
 	const formatAmount = (amountChf: number): string => {
@@ -51,7 +51,10 @@ export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
 	const formattedTotalAmount = formatAmount(data.totalContributionsChf);
 	const formattedCountriesCount = formatNumberLocale(data.countriesCount, locale, { maximumFractionDigits: 0 });
 	const segments: CountriesSectionSegment[] = data.segments.map((segment) => {
-		const countryName = segment.countryCode === OTHER_COUNTRY_SEGMENT_CODE ? otherCountriesLabel : segment.countryName;
+		const countryName =
+			segment.countryCode === OTHER_COUNTRY_SEGMENT_CODE
+				? otherCountriesLabel
+				: translator.t(segment.countryCode, { namespace: 'countries' });
 		const formattedAmount = formatAmount(segment.totalChf);
 		const formattedPercentage = formatPercentageDisplay(segment.percentageOfTotal, segment.totalChf);
 
@@ -74,7 +77,7 @@ export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
 	});
 	const otherCountries: CountriesSectionOtherCountry[] = data.otherCountries.map((country) => ({
 		countryCode: country.countryCode,
-		countryName: country.countryName,
+		countryName: translator.t(country.countryCode, { namespace: 'countries' }),
 		formattedAmount: formatAmount(country.totalChf),
 	}));
 

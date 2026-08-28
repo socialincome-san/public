@@ -184,7 +184,7 @@ export const getRepresentativeFlagColor = (svg: string, fallback = MISSING_FLAG_
 	return getFlagColorsFromSvg(svg)[0] ?? fallback;
 };
 
-export const pickDiverseFlagColor = (candidates: string[], usedColors: string[], fallback = MISSING_FLAG_COLOR): string => {
+const pickDiverseFlagColor = (candidates: string[], usedColors: string[], fallback = MISSING_FLAG_COLOR): string => {
 	if (candidates.length === 0) {
 		return fallback;
 	}

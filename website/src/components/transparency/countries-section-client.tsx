@@ -1,9 +1,9 @@
 'use client';
 
 import { CountryFlag } from '@/components/country-flag';
-import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/dialog';
 import { type CountryCode } from '@/generated/prisma/enums';
-import { splitTranslationTemplate } from '@/lib/services/transparency/countries-distribution';
+import { splitTranslationTemplate } from '@/lib/i18n/translation-template';
 import { OTHER_COUNTRY_SEGMENT_CODE } from '@/lib/services/transparency/transparency.types';
 import { cn } from '@/lib/utils/cn';
 import { Fragment, useRef, useState, type CSSProperties, type ReactNode } from 'react';
@@ -71,7 +71,12 @@ export const CountriesSectionClient = ({
 	const [activeSegmentId, setActiveSegmentId] = useState<string | null>(null);
 	const [isOtherDialogOpen, setIsOtherDialogOpen] = useState(false);
 	const interactionRef = useRef<HTMLDivElement>(null);
-	const resolvedActiveSegmentId = segments.some((segment) => segment.id === activeSegmentId) ? activeSegmentId : null;
+	const resolvedActiveSegmentId =
+		isOtherDialogOpen && segments.some(({ id }) => id === OTHER_COUNTRY_SEGMENT_CODE)
+			? OTHER_COUNTRY_SEGMENT_CODE
+			: segments.some(({ id }) => id === activeSegmentId)
+				? activeSegmentId
+				: null;
 	const activeSegment = segments.find((segment) => segment.id === resolvedActiveSegmentId);
 	const hasOtherCountries = otherCountries.length > 0;
 	const unitBars = segments.flatMap((segment) =>
@@ -132,7 +137,13 @@ export const CountriesSectionClient = ({
 		<div className="flex flex-col gap-8">
 			<div className="flex flex-col gap-2">
 				<p className="text-sm font-medium">{sectionTitle}</p>
-				<h2 className="text-4xl leading-snug font-light md:text-5xl">{headline}</h2>
+				<h2
+					className="min-h-[2lh] text-4xl leading-snug font-light md:text-5xl"
+					aria-live="polite"
+					aria-atomic="true"
+				>
+					{headline}
+				</h2>
 			</div>
 			{segments.length === 0 ? (
 				<p className="text-muted-foreground">{emptyLabel}</p>
@@ -142,11 +153,7 @@ export const CountriesSectionClient = ({
 					className="flex flex-col gap-8"
 					onMouseLeave={(event) => clearActiveIfLeavingInteraction(event.relatedTarget)}
 				>
-					<div
-						role="img"
-						aria-label={chartAriaLabel}
-						className="flex h-[54px] w-full items-stretch justify-between sm:h-[62px]"
-					>
+					<div role="img" aria-label={chartAriaLabel} className="flex h-13.5 w-full items-stretch justify-between sm:h-15.5">
 						{unitBars.map((bar) => {
 							const isDimmed = resolvedActiveSegmentId !== null && bar.segmentId !== resolvedActiveSegmentId;
 
@@ -155,7 +162,7 @@ export const CountriesSectionClient = ({
 									key={bar.key}
 									aria-hidden="true"
 									className={cn(
-										'h-full w-0.5 rounded-full sm:w-[3px]',
+										'h-full w-0.5 rounded-full sm:w-0.75',
 										'transition-opacity duration-150 motion-reduce:transition-none',
 										isDimmed && 'opacity-25',
 									)}
@@ -197,6 +204,8 @@ export const CountriesSectionClient = ({
 										type="button"
 										className={rowClassName}
 										aria-label={segment.rowAriaLabel}
+										aria-haspopup={isOther && hasOtherCountries ? 'dialog' : undefined}
+										aria-expanded={isOther && hasOtherCountries ? isOtherDialogOpen : undefined}
 										onMouseEnter={() => setActiveFromEvent(segment.id)}
 										onFocus={() => setActiveFromEvent(segment.id)}
 										onBlur={(event) => clearActiveIfLeavingInteraction(event.relatedTarget)}
@@ -214,6 +223,7 @@ export const CountriesSectionClient = ({
 				<Dialog open={isOtherDialogOpen} onOpenChange={setIsOtherDialogOpen}>
 					<DialogContent className="flex max-h-[min(85vh,40rem)] flex-col overflow-hidden rounded-3xl sm:max-w-md">
 						<DialogTitle>{dialogTitle}</DialogTitle>
+						<DialogDescription className="sr-only">{chartAriaLabel}</DialogDescription>
 						<ul className="min-h-0 overflow-y-auto">
 							{otherCountries.map((country) => (
 								<li key={country.countryCode} className="flex items-center gap-3 py-2">

@@ -5,19 +5,8 @@ import {
 	COUNTRY_DISTRIBUTION_UNIT_COUNT,
 	formatPercentageDisplay,
 	OTHER_SEGMENT_COLOR,
-	splitTranslationTemplate,
 } from './countries-distribution';
 import { OTHER_COUNTRY_SEGMENT_CODE, type CountryContributionRow } from './transparency.types';
-
-const names: Record<string, string> = {
-	CH: 'Switzerland',
-	DE: 'Germany',
-	US: 'United States',
-	FR: 'France',
-	IT: 'Italy',
-};
-
-const getCountryName = (countryCode: string): string => names[countryCode] ?? '';
 
 const row = (
 	countryCode: CountryContributionRow['countryCode'],
@@ -27,22 +16,6 @@ const row = (
 	countryCode,
 	totalChf,
 	contributorCount,
-});
-
-describe('splitTranslationTemplate', () => {
-	test('keeps placeholders so translations can change word order', () => {
-		expect(splitTranslationTemplate('{{amount}} donations arrived from {{countriesCount}} countries')).toEqual([
-			{ type: 'placeholder', key: 'amount' },
-			{ type: 'text', value: ' donations arrived from ' },
-			{ type: 'placeholder', key: 'countriesCount' },
-			{ type: 'text', value: ' countries' },
-		]);
-		expect(splitTranslationTemplate('{{countriesCount}} Länder spendeten {{amount}}')).toEqual([
-			{ type: 'placeholder', key: 'countriesCount' },
-			{ type: 'text', value: ' Länder spendeten ' },
-			{ type: 'placeholder', key: 'amount' },
-		]);
-	});
 });
 
 describe('allocateUnitCounts', () => {
@@ -60,6 +33,10 @@ describe('allocateUnitCounts', () => {
 		expect(allocateUnitCounts([])).toEqual([]);
 		expect(allocateUnitCounts([0, 0])).toEqual([0, 0]);
 	});
+
+	test('keeps every positive segment visible when enough units are available', () => {
+		expect(allocateUnitCounts([1_000_000, 1, 1])).toEqual([98, 1, 1]);
+	});
 });
 
 describe('formatPercentageDisplay', () => {
@@ -74,7 +51,6 @@ describe('buildTransparencyCountriesData', () => {
 	test('aggregates remaining countries into Other and sorts them by amount descending', () => {
 		const data = buildTransparencyCountriesData([row('CH', 80), row('DE', 10), row('US', 5), row('FR', 4), row('IT', 1)], {
 			limit: 2,
-			getCountryName,
 			getCountryColors: getCountryFlagColors,
 		});
 
@@ -92,7 +68,6 @@ describe('buildTransparencyCountriesData', () => {
 	test('omits Other when every country fits in the top limit', () => {
 		const data = buildTransparencyCountriesData([row('CH', 70), row('DE', 30)], {
 			limit: 5,
-			getCountryName,
 		});
 
 		expect(data.segments).toHaveLength(2);
@@ -102,13 +77,12 @@ describe('buildTransparencyCountriesData', () => {
 	});
 
 	test('handles a single country', () => {
-		const data = buildTransparencyCountriesData([row('CH', 42)], { limit: 15, getCountryName });
+		const data = buildTransparencyCountriesData([row('CH', 42)], { limit: 15 });
 
 		expect(data.countriesCount).toBe(1);
 		expect(data.segments).toEqual([
 			expect.objectContaining({
 				countryCode: 'CH',
-				countryName: 'Switzerland',
 				totalChf: 42,
 				percentageOfTotal: 100,
 				unitCount: 100,
@@ -118,20 +92,32 @@ describe('buildTransparencyCountriesData', () => {
 	});
 
 	test('returns an empty model for missing or zero-value data', () => {
-		expect(buildTransparencyCountriesData([], { getCountryName })).toEqual({
+		expect(buildTransparencyCountriesData([])).toEqual({
 			totalContributionsChf: 0,
 			countriesCount: 0,
 			segments: [],
 			otherCountries: [],
 		});
-		expect(buildTransparencyCountriesData([row('CH', 0)], { getCountryName }).segments).toEqual([]);
+		expect(buildTransparencyCountriesData([row('CH', 0)]).segments).toEqual([]);
 	});
 
-	test('falls back to the country code when a name is missing', () => {
-		const data = buildTransparencyCountriesData([row('AT', 10)], {
-			getCountryName: () => '',
-		});
+	test('does not mutate the input order', () => {
+		const rows = [row('DE', 10), row('CH', 20)];
 
-		expect(data.segments[0]?.countryName).toBe('AT');
+		buildTransparencyCountriesData(rows);
+
+		expect(rows.map(({ countryCode }) => countryCode)).toEqual(['DE', 'CH']);
+	});
+
+	test('sorts equal totals by country code and clamps invalid limits', () => {
+		const rows = [row('DE', 10), row('CH', 10)];
+
+		expect(buildTransparencyCountriesData(rows, { limit: 0 }).segments.map(({ countryCode }) => countryCode)).toEqual([
+			'CH',
+			OTHER_COUNTRY_SEGMENT_CODE,
+		]);
+		expect(
+			buildTransparencyCountriesData(rows, { limit: Number.NaN }).segments.map(({ countryCode }) => countryCode),
+		).toEqual(['CH', 'DE']);
 	});
 });
