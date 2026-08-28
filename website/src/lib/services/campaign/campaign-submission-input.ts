@@ -46,9 +46,10 @@ export const campaignSubmissionErrorCodes = [
 	'invalid-form-data',
 	'invalid-submission',
 	'program-not-eligible',
-	'title-exists',
-	'similar-title-exists',
+	'slug-exists',
 	'submission-failed',
+	'turnstile-required',
+	'turnstile-invalid',
 ] as const;
 
 export type CampaignSubmissionErrorCode = (typeof campaignSubmissionErrorCodes)[number];

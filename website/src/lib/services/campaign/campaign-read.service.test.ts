@@ -35,7 +35,6 @@ const createService = ({
 		slug: string | null;
 		creatorName: string | null;
 		currency: 'CHF' | 'EUR';
-		featured: boolean;
 		createdAt: Date;
 		endDate: Date;
 		goal?: number | null;
@@ -74,7 +73,7 @@ const createService = ({
 };
 
 describe('CampaignReadService public campaign preview data', () => {
-	test('getPublicCampaigns returns creator and currency with trimmed slug for active campaigns', async () => {
+	test('getCampaignsForCmsJoin returns creator and currency with trimmed slug for active campaigns', async () => {
 		const { service, campaignFindMany } = createService({
 			campaigns: [
 				{
@@ -83,7 +82,6 @@ describe('CampaignReadService public campaign preview data', () => {
 					slug: ' holiday-fundraiser ',
 					creatorName: 'smartive AG',
 					currency: 'CHF',
-					featured: true,
 					createdAt: new Date('2025-01-01T00:00:00.000Z'),
 					endDate: new Date('2025-07-15T12:00:00.000Z'),
 					goal: 10_000,
@@ -96,7 +94,6 @@ describe('CampaignReadService public campaign preview data', () => {
 					slug: '   ',
 					creatorName: null,
 					currency: 'EUR',
-					featured: false,
 					createdAt: new Date('2025-01-02T00:00:00.000Z'),
 					endDate: new Date('2025-07-15T12:00:00.000Z'),
 					goal: null,
@@ -106,16 +103,16 @@ describe('CampaignReadService public campaign preview data', () => {
 			],
 		});
 
-		const campaigns = expectSuccess(await service.getPublicCampaigns());
+		const campaigns = expectSuccess(await service.getCampaignsForCmsJoin());
 
-		const [[callArg]] = campaignFindMany.mock.calls as unknown as [{ where?: Record<string, unknown> }][];
+		const [[callArg]] = campaignFindMany.mock.calls as unknown as [{ where?: Record<string, unknown>; orderBy?: unknown }][];
 		expect(callArg.where).not.toHaveProperty('isActive');
+		expect(callArg.where).not.toHaveProperty('public');
+		expect(callArg.orderBy).toEqual([{ createdAt: 'desc' }]);
 		expect(campaigns).toEqual([
 			{
 				id: 'campaign-1',
-				title: 'Holiday Fundraiser',
 				slug: 'holiday-fundraiser',
-				creatorName: 'smartive AG',
 				currency: 'CHF',
 				endDate: new Date('2025-07-15T12:00:00.000Z'),
 				goal: 10_000,
@@ -124,7 +121,7 @@ describe('CampaignReadService public campaign preview data', () => {
 		]);
 	});
 
-	test('getPublicCampaigns with activity all includes inactive campaigns', async () => {
+	test('getCampaignsForCmsJoin with activity all includes inactive campaigns', async () => {
 		const { service, campaignFindMany } = createService({
 			campaigns: [
 				{
@@ -133,7 +130,6 @@ describe('CampaignReadService public campaign preview data', () => {
 					slug: 'active-campaign',
 					creatorName: 'smartive AG',
 					currency: 'CHF',
-					featured: true,
 					createdAt: new Date('2025-01-01T00:00:00.000Z'),
 					endDate: new Date('2025-07-15T12:00:00.000Z'),
 					goal: 10_000,
@@ -146,7 +142,6 @@ describe('CampaignReadService public campaign preview data', () => {
 					slug: 'inactive-campaign',
 					creatorName: null,
 					currency: 'EUR',
-					featured: false,
 					createdAt: new Date('2025-01-02T00:00:00.000Z'),
 					endDate: new Date('2025-05-01T12:00:00.000Z'),
 					goal: 10_000,
@@ -156,16 +151,16 @@ describe('CampaignReadService public campaign preview data', () => {
 			],
 		});
 
-		const campaigns = expectSuccess(await service.getPublicCampaigns({ activity: 'all' }));
+		const campaigns = expectSuccess(await service.getCampaignsForCmsJoin({ activity: 'all' }));
 
-		const [[callArg]] = campaignFindMany.mock.calls as unknown as [{ where?: Record<string, unknown> }][];
+		const [[callArg]] = campaignFindMany.mock.calls as unknown as [{ where?: Record<string, unknown>; orderBy?: unknown }][];
 		expect(callArg.where).not.toHaveProperty('isActive');
+		expect(callArg.where).not.toHaveProperty('public');
+		expect(callArg.orderBy).toEqual([{ createdAt: 'desc' }]);
 		expect(campaigns).toEqual([
 			{
 				id: 'campaign-1',
-				title: 'Active Campaign',
 				slug: 'active-campaign',
-				creatorName: 'smartive AG',
 				currency: 'CHF',
 				endDate: new Date('2025-07-15T12:00:00.000Z'),
 				goal: 10_000,
@@ -173,9 +168,7 @@ describe('CampaignReadService public campaign preview data', () => {
 			},
 			{
 				id: 'campaign-2',
-				title: 'Inactive Campaign',
 				slug: 'inactive-campaign',
-				creatorName: null,
 				currency: 'EUR',
 				endDate: new Date('2025-05-01T12:00:00.000Z'),
 				goal: 10_000,
@@ -184,7 +177,7 @@ describe('CampaignReadService public campaign preview data', () => {
 		]);
 	});
 
-	test('getPublicCampaigns with activity inactive filters to ended or fully funded campaigns', async () => {
+	test('getCampaignsForCmsJoin with activity inactive filters to ended or fully funded campaigns', async () => {
 		const { service, campaignFindMany } = createService({
 			campaigns: [
 				{
@@ -193,7 +186,6 @@ describe('CampaignReadService public campaign preview data', () => {
 					slug: 'ended-campaign',
 					creatorName: null,
 					currency: 'EUR',
-					featured: false,
 					createdAt: new Date('2025-01-02T00:00:00.000Z'),
 					endDate: new Date('2025-05-01T12:00:00.000Z'),
 					goal: 10_000,
@@ -206,7 +198,6 @@ describe('CampaignReadService public campaign preview data', () => {
 					slug: 'funded-campaign',
 					creatorName: null,
 					currency: 'CHF',
-					featured: false,
 					createdAt: new Date('2025-01-03T00:00:00.000Z'),
 					endDate: new Date('2025-07-15T12:00:00.000Z'),
 					goal: 500,
@@ -219,7 +210,6 @@ describe('CampaignReadService public campaign preview data', () => {
 					slug: 'active-campaign',
 					creatorName: null,
 					currency: 'CHF',
-					featured: false,
 					createdAt: new Date('2025-01-04T00:00:00.000Z'),
 					endDate: new Date('2025-07-15T12:00:00.000Z'),
 					goal: 10_000,
@@ -229,16 +219,16 @@ describe('CampaignReadService public campaign preview data', () => {
 			],
 		});
 
-		const campaigns = expectSuccess(await service.getPublicCampaigns({ activity: 'inactive' }));
+		const campaigns = expectSuccess(await service.getCampaignsForCmsJoin({ activity: 'inactive' }));
 
-		const [[callArg]] = campaignFindMany.mock.calls as unknown as [{ where?: Record<string, unknown> }][];
+		const [[callArg]] = campaignFindMany.mock.calls as unknown as [{ where?: Record<string, unknown>; orderBy?: unknown }][];
 		expect(callArg.where).not.toHaveProperty('isActive');
+		expect(callArg.where).not.toHaveProperty('public');
+		expect(callArg.orderBy).toEqual([{ createdAt: 'desc' }]);
 		expect(campaigns).toEqual([
 			{
 				id: 'campaign-ended',
-				title: 'Ended Campaign',
 				slug: 'ended-campaign',
-				creatorName: null,
 				currency: 'EUR',
 				endDate: new Date('2025-05-01T12:00:00.000Z'),
 				goal: 10_000,
@@ -246,9 +236,7 @@ describe('CampaignReadService public campaign preview data', () => {
 			},
 			{
 				id: 'campaign-funded',
-				title: 'Funded Campaign',
 				slug: 'funded-campaign',
-				creatorName: null,
 				currency: 'CHF',
 				endDate: new Date('2025-07-15T12:00:00.000Z'),
 				goal: 500,
@@ -472,9 +460,7 @@ describe('CampaignReadService public campaign preview data', () => {
 			await service.getPublicCampaignsWithStats([
 				{
 					id: 'campaign-1',
-					title: 'Holiday Fundraiser',
 					slug: 'holiday-fundraiser',
-					creatorName: 'smartive AG',
 					currency: 'CHF',
 					endDate: new Date('2025-07-15T12:00:00.000Z'),
 					goal: 10_000,

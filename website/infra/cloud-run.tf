@@ -42,6 +42,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "STORYBLOK_MANAGEMENT_TOKEN"
+          value = var.storyblok_management_token
+        }
+
+        env {
           name  = "MAPBOX_TOKEN"
           value = var.mapbox_token
         }
@@ -112,6 +117,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "TURNSTILE_SECRET_KEY"
+          value = var.turnstile_secret_key
+        }
+
+        env {
           name  = "SENDGRID_API_KEY"
           value = var.sendgrid_api_key
         }
@@ -164,6 +174,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         env {
           name  = "EXCHANGE_RATES_API"
           value = var.exchange_rates_api
+        }
+
+        env {
+          name  = "ETHERSCAN_API_KEY"
+          value = var.etherscan_api_key
         }
 
         env {

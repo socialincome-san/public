@@ -1,6 +1,6 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { Button } from '@/components/button/button';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { organizationMembersTableConfig } from '@/components/data-table/configs/organization-members-table.config';
@@ -12,7 +12,6 @@ import { renameActiveOrganizationAction } from '@/lib/server-actions/organizatio
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { logger } from '@/lib/utils/logger';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PencilIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
@@ -65,7 +64,7 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 				},
 				onError: (renameError) => {
 					setErrorMessage(`Error renaming organization: ${retrieveErrorMessage(renameError)}`);
-					logger.error('Rename Organization Error', { error: renameError });
+					console.error('Rename Organization Error', { error: renameError });
 				},
 			});
 		});

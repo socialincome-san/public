@@ -2,7 +2,7 @@
 
 import { DialogHeader, DialogTitle } from '@/components/dialog';
 import { Form } from '@/components/form';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import {
 	getCampaignDefaultImagesAction,
 	getEligiblePublicSubmissionProgramsAction,
@@ -20,8 +20,11 @@ import {
 	isCampaignSubmissionImageMultipartField,
 	resolveCampaignSubmissionQuote,
 } from '@/lib/services/campaign/campaign-submission-input';
+import { turnstileResponseFieldName } from '@/lib/services/campaign/turnstile-field';
 import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
+import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useForm, type FieldPath } from 'react-hook-form';
 import { CampaignSubmissionFooter } from './campaign-submission-footer';
@@ -39,7 +42,28 @@ import { useCampaignImageUpload } from './use-campaign-image-upload';
 type Props = {
 	labels: SubmissionLabels;
 	lang: WebsiteLanguage;
+	region: WebsiteRegion;
 	onSuccess?: () => void;
+};
+
+const submittedCampaignSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+const readSubmittedCampaignSlug = (payload: unknown): string | null => {
+	if (typeof payload !== 'object' || payload === null || !('slug' in payload)) {
+		return null;
+	}
+
+	const { slug } = payload;
+	if (typeof slug !== 'string') {
+		return null;
+	}
+
+	const trimmed = slug.trim();
+	if (!submittedCampaignSlugPattern.test(trimmed)) {
+		return null;
+	}
+
+	return trimmed;
 };
 
 const defaultFormValues = (): CampaignSubmissionFormValues => ({
@@ -62,7 +86,8 @@ const defaultFormValues = (): CampaignSubmissionFormValues => ({
 	tiktokHandle: '',
 });
 
-export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
+export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Props) => {
+	const router = useRouter();
 	const [currentStep, setCurrentStep] = useState<CampaignSubmissionStepId>('program');
 	const [programs, setPrograms] = useState<PublicSubmissionProgramOption[]>([]);
 	const [programsLoading, setProgramsLoading] = useState(true);
@@ -74,10 +99,20 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [submitSuccess, setSubmitSuccess] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+	const [turnstileWidgetKey, setTurnstileWidgetKey] = useState(0);
 	const isSubmittingRef = useRef(false);
 	const stepTitleRef = useRef<HTMLHeadingElement>(null);
 	const hasMountedStep = useRef(false);
 	const defaultImagesRef = useRef(defaultImages);
+	const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+	const onTurnstileTokenChange = useCallback((token: string | null) => {
+		setTurnstileToken(token);
+	}, []);
+	const resetTurnstileWidget = () => {
+		setTurnstileToken(null);
+		setTurnstileWidgetKey((key) => key + 1);
+	};
 
 	const resolveError = useCallback(
 		(code: string) => {
@@ -435,6 +470,12 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 			return;
 		}
 
+		if (turnstileSiteKey && !turnstileToken) {
+			setSubmitError(resolveError('turnstile-required'));
+
+			return;
+		}
+
 		const submissionValues = {
 			...values,
 			quote: resolveCampaignSubmissionQuote(values.quote, labels.quotePlaceholder),
@@ -453,6 +494,9 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				profilePicture: profilePictureFile ?? undefined,
 				sectionImage: values.hasAdditionalInformation ? (sectionImageFile ?? undefined) : undefined,
 			});
+			if (turnstileToken) {
+				formData.append(turnstileResponseFieldName, turnstileToken);
+			}
 
 			const response = await fetch('/api/campaign-submissions', {
 				method: 'POST',
@@ -480,18 +524,27 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 					setSubmitError(errorMessage);
 				}
 
+				resetTurnstileWidget();
+
 				return;
 			}
 
+			const payload: unknown = await response.json().catch(() => null);
+			const campaignSlug = readSubmittedCampaignSlug(payload);
 			setSubmitSuccess(true);
 			form.reset(defaultFormValues());
 			clearPrimaryImageSelection();
 			profilePicture.clear();
 			sectionImage.clear();
+			resetTurnstileWidget();
 			setDefaultImages([]);
 			setCurrentStep('program');
 			onSuccess?.();
+			if (campaignSlug) {
+				router.push(getWebsitePublicPath(lang, region, `campaigns/${campaignSlug}`));
+			}
 		} catch {
+			resetTurnstileWidget();
 			setSubmitError(labels.error);
 		} finally {
 			isSubmittingRef.current = false;
@@ -505,7 +558,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 				<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left">
 					<DialogTitle className="leading-snug text-balance">{labels.successTitle}</DialogTitle>
 				</DialogHeader>
-				<p className="text-foreground px-6 text-sm">{labels.success}</p>
+				<p className="text-foreground px-6 pt-4 text-center text-sm">{labels.success}</p>
 			</div>
 		);
 	}
@@ -549,7 +602,7 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 						{stepTitle}
 					</DialogTitle>
 				</DialogHeader>
-				<div className="flex min-h-0 flex-1 flex-col overflow-hidden pt-4 pb-4">
+				<div className="flex min-h-0 flex-1 flex-col overflow-hidden">
 					<CampaignSubmissionSteps
 						currentStep={currentStep}
 						programStep={{
@@ -576,6 +629,10 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 							sectionImage,
 							submitError,
 							isSubmitting,
+							lang,
+							turnstileSiteKey,
+							turnstileWidgetKey,
+							onTurnstileTokenChange,
 						}}
 					/>
 				</div>
@@ -596,5 +653,3 @@ export const CampaignSubmissionForm = ({ labels, lang, onSuccess }: Props) => {
 		</Form>
 	);
 };
-
-export type { SubmissionLabels };

@@ -117,20 +117,21 @@
 		"about": "Informazioni su"
 	},
 	"transparency-page": {
+		"donation-globe": {
+			"aria-label": "Globo che mostra le donazioni recenti nel mondo",
+			"description": "{{donatorsCount}} persone hanno donato per aiutare altri a uscire dalla povertà. Una fiducia simile nasce solo da una trasparenza totale."
+		},
 		"inflows": {
 			"title-name": "Entrate",
-			"title-currency": "in {{currency}}",
-			"description": "Da contributi ricorrenti dell’1% e donazioni una tantum in 12 valute."
+			"title-currency": "in {{currency}}"
 		},
 		"outflows": {
 			"title-name": "Uscite",
-			"title-currency": "in {{currency}}",
-			"description": "Trasferite direttamente ai beneficiari tramite Mobile Money — senza intermediari."
+			"title-currency": "in {{currency}}"
 		},
 		"reserves": {
 			"title-name": "Riserve",
 			"title-currency": "in {{currency}}",
-			"description": "Riservate ai beneficiari dei programmi in corso.",
 			"tooltip-label": "Mostra i dettagli dei conti di riserva",
 			"no-data": "Nessun dato"
 		}
@@ -298,9 +299,10 @@
 				"invalid-form-data": "Dati del modulo non validi.",
 				"invalid-submission": "Invio non valido.",
 				"program-not-eligible": "Il programma selezionato non è idoneo.",
-				"title-exists": "Esiste già una campagna con questo titolo.",
-				"similar-title-exists": "Esiste già una campagna con un titolo simile. Scegli un titolo diverso.",
-				"submission-failed": "Non siamo riusciti a completare l'invio. Riprova tra qualche minuto."
+				"slug-exists": "Esiste già una campagna con questo slug.",
+				"submission-failed": "Non siamo riusciti a completare l'invio. Riprova tra qualche minuto.",
+				"turnstile-required": "Completa la verifica prima di inviare.",
+				"turnstile-invalid": "Verifica non riuscita. Riprova."
 			}
 		}
 	},

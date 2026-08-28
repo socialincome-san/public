@@ -75,6 +75,12 @@ type PublicProgramFilterData = {
 
 export type PublicProgramFilterDataMap = Record<string, PublicProgramFilterData>;
 
+export type PublicProgramTargetFocus = {
+	id: string;
+	slug: string;
+	name: string;
+};
+
 export type PublicProgramStats = {
 	campaignsCount: number;
 	recipientsCount: number;

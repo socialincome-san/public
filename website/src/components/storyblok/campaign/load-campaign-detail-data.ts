@@ -23,8 +23,17 @@ export const loadCampaignDetailData = cache(async (urlSlug: string, lang: string
 	return {
 		title: getCampaignTitle(story.content),
 		description: story.content.description,
+		creatorName: story.content.creatorName,
+		quote: story.content.quote ?? '',
 		fullSlug: story.full_slug,
 		primaryImage: story.content.primaryImage,
+		profilePicture: story.content.profilePicture,
+		sectionDescription: story.content.sectionDescription,
+		sectionImage: story.content.sectionImage,
+		instagramHandle: story.content.instagramHandle,
+		xHandle: story.content.xHandle,
+		tiktokHandle: story.content.tiktokHandle,
+		linkWebsite: story.content.linkWebsite,
 		campaign: campaignResult.data,
 	};
 });

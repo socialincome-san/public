@@ -4,7 +4,20 @@ import { Switch } from '@/components/switch';
 import { PayoutInterval } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { PayoutControls } from './payout-controls';
+import { type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 import { PayoutSummary } from './payout-summary';
+
+type Props = {
+	programDuration: number;
+	payoutPerIntervalMin: number;
+	payoutPerIntervalMax: number;
+	payoutInterval: PayoutInterval;
+	customizePayouts: boolean;
+	onDurationChange: (value: number) => void;
+	onPayoutChange: (value: number) => void;
+	onIntervalChange: (value: PayoutInterval) => void;
+	onToggleCustomizePayouts: () => void;
+} & PayoutPerIntervalAmountProps;
 
 export const PayoutBox = ({
 	programDuration,
@@ -12,25 +25,15 @@ export const PayoutBox = ({
 	payoutPerIntervalMax,
 	payoutPerInterval,
 	payoutInterval,
-	currency,
+	payoutCurrency,
+	displayCurrency,
+	payoutToDisplayRate,
 	customizePayouts,
 	onDurationChange,
 	onPayoutChange,
 	onIntervalChange,
 	onToggleCustomizePayouts,
-}: {
-	programDuration: number;
-	payoutPerIntervalMin: number;
-	payoutPerIntervalMax: number;
-	payoutPerInterval: number;
-	payoutInterval: PayoutInterval;
-	currency: string;
-	customizePayouts: boolean;
-	onDurationChange: (value: number) => void;
-	onPayoutChange: (value: number) => void;
-	onIntervalChange: (value: PayoutInterval) => void;
-	onToggleCustomizePayouts: () => void;
-}) => {
+}: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 
 	return (
@@ -45,7 +48,9 @@ export const PayoutBox = ({
 						payoutPerIntervalMax={payoutPerIntervalMax}
 						payoutPerInterval={payoutPerInterval}
 						payoutInterval={payoutInterval}
-						currency={currency}
+						payoutCurrency={payoutCurrency}
+						displayCurrency={displayCurrency}
+						payoutToDisplayRate={payoutToDisplayRate}
 						onDurationChange={onDurationChange}
 						onPayoutChange={onPayoutChange}
 						onIntervalChange={onIntervalChange}
@@ -55,7 +60,9 @@ export const PayoutBox = ({
 						programDuration={programDuration}
 						payoutPerInterval={payoutPerInterval}
 						payoutInterval={payoutInterval}
-						currency={currency}
+						payoutCurrency={payoutCurrency}
+						displayCurrency={displayCurrency}
+						payoutToDisplayRate={payoutToDisplayRate}
 					/>
 				)}
 			</div>

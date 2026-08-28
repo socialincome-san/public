@@ -97,6 +97,12 @@ variable "stripe_webhook_secret" {
   sensitive   = true
 }
 
+variable "turnstile_secret_key" {
+  description = "Cloudflare Turnstile secret key for server-side token verification"
+  type        = string
+  sensitive   = true
+}
+
 variable "sendgrid_api_key" {
   type      = string
   sensitive = true
@@ -152,6 +158,12 @@ variable "exchange_rates_api" {
   sensitive   = true
 }
 
+variable "etherscan_api_key" {
+  description = "API key for Etherscan"
+  type        = string
+  sensitive   = true
+}
+
 variable "github_pat" {
   description = "GitHub Personal Access Token for accessing private repositories"
   type        = string
@@ -187,6 +199,12 @@ variable "storyblok_webhook_secret" {
   sensitive   = true
 }
 
+variable "storyblok_management_token" {
+  description = "Storyblok Management API token used to list campaign default images, upload assets, and create draft campaign stories"
+  type        = string
+  sensitive   = true
+}
+
 variable "mapbox_token" {
   description = "Mapbox token for generating country map images"
   type        = string
@@ -202,4 +220,10 @@ variable "app_review_phone_number" {
   description = "Phone number to use in app review mode"
   type        = string
   sensitive   = true
+}
+
+variable "slack_alert_channel_name" {
+  description = "Existing Cloud Monitoring Slack channel to notify (must already be connected in the GCP Console)"
+  type        = string
+  default     = "#social-income-monitoring"
 }

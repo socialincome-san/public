@@ -95,13 +95,22 @@ enum DonationInterval {
 
 enum SubscriptionStatus {
   active
-  canceled
   ended
 }
 
 enum SubscriptionPaymentMethod {
   stripe
   bank_transfer
+}
+
+enum SubscriptionCancellationReason {
+  financial_situation_changed
+  different_cause
+  not_enough_updates
+  technical_issue
+  prefer_one_time
+  pausing
+  other
 }
 
 enum PayoutInterval {
@@ -437,6 +446,7 @@ enum Currency {
   EGP
   ERN
   ETB
+  ETH
   EUR
   FJD
   FKP
@@ -616,6 +626,7 @@ model Contributor {
   contributions        Contribution[]
   subscriptions        Subscription[]
   donationCertificates DonationCertificate[]
+  campaigns            Campaign[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -637,6 +648,8 @@ model Subscription {
   stripeSubscriptionId       String?                   @unique @map("stripe_subscription_id")
   bankStandingOrderReference String?                   @unique @map("bank_standing_order_reference")
   canceledAt                 DateTime?                 @map("canceled_at") @db.Timestamptz(3)
+  cancellationReason         SubscriptionCancellationReason? @map("cancellation_reason")
+  coverTransactionCosts      Boolean                   @default(false) @map("cover_transaction_costs")
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -663,6 +676,7 @@ model Contribution {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
+  @@index([status, createdAt(sort: Desc)])
   @@map("contribution")
 }
 
@@ -911,33 +925,19 @@ model ProgramTargetFocus {
 model Campaign {
   id                     String   @id @default(cuid()) @map("id")
   legacyFirestoreId      String?  @unique @map("legacy_firestore_id")
-  title                  String   @unique @map("title")
-  description            String   @map("description")
-  secondDescriptionTitle String?  @map("second_description_title")
-  secondDescription      String?  @map("second_description")
-  thirdDescriptionTitle  String?  @map("third_description_title")
-  thirdDescription       String?  @map("third_description")
-  linkWebsite            String?  @map("link_website")
-  linkInstagram          String?  @map("link_instagram")
-  linkTiktok             String?  @map("link_tiktok")
-  linkFacebook           String?  @map("link_facebook")
-  linkX                  String?  @map("link_x")
   goal                   Decimal? @map("goal") @db.Decimal(12, 4)
   currency               Currency @map("currency")
   additionalAmountChf    Decimal? @map("additional_amount_chf") @db.Decimal(12, 4)
   endDate                DateTime @map("end_date") @db.Timestamptz(3)
-  isActive               Boolean  @default(false) @map("is_active")
-  public                 Boolean? @map("public")
-  featured               Boolean? @map("featured")
+  /// Each program should have exactly one default campaign.
+  isDefault              Boolean  @default(false) @map("is_default")
+  /// There should be exactly one fallback campaign in total.
   isFallback             Boolean  @default(false) @map("is_fallback")
   slug                   String?  @unique @map("slug")
-  metadataDescription    String?  @map("metadata_description")
-  metadataOgImage        String?  @map("metadata_og_image")
-  metadataTwitterImage   String?  @map("metadata_twitter_image")
-  creatorName            String?  @map("creator_name")
-  creatorEmail           String?  @map("creator_email")
   programId              String   @map("program_id")
   program                Program  @relation(fields: [programId], references: [id])
+  contributorId          String?      @map("contributor_id")
+  contributor            Contributor? @relation(fields: [contributorId], references: [id])
 
   contributions Contribution[]
   subscriptions Subscription[]
@@ -945,6 +945,7 @@ model Campaign {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
+  @@index([contributorId])
   @@map("campaign")
 }
 
@@ -988,7 +989,7 @@ model Reserve {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@unique([bankAccountId, date])
+  @@unique([bankAccountId, date, currency])
   @@index([bankAccountId])
   @@map("reserve")
 }

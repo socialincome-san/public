@@ -1,4 +1,5 @@
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { StoryblokManagementService } from './storyblok-management.service';
 
 describe('StoryblokManagementService.listCampaignDefaultImages', () => {
@@ -30,6 +31,87 @@ describe('StoryblokManagementService.listCampaignDefaultImages', () => {
 
 		expect(result).toHaveLength(campaignSubmissionConfig.maxCampaignDefaultImages);
 		expect(result.map((asset) => asset.id)).toEqual([1, 2, 3, 4, 5]);
+	});
+});
+
+describe('StoryblokManagementService.campaignStoryExists', () => {
+	const originalFetch = global.fetch;
+
+	afterEach(() => {
+		global.fetch = originalFetch;
+		jest.restoreAllMocks();
+	});
+
+	test('returns true when a campaign story already uses the slug', async () => {
+		process.env.STORYBLOK_MANAGEMENT_TOKEN = 'test-token';
+		const slug = 'meine-kampagne';
+		const storyPath = getCampaignStoryPath(slug);
+		const fetchMock = jest.fn().mockResolvedValue({
+			ok: true,
+			status: 200,
+			text: () =>
+				Promise.resolve(
+					JSON.stringify({
+						stories: [{ slug, full_slug: storyPath, is_folder: false }],
+					}),
+				),
+		});
+		global.fetch = fetchMock as typeof fetch;
+
+		const service = new StoryblokManagementService();
+		const exists = await service.campaignStoryExists(slug);
+
+		expect(exists).toBe(true);
+		expect(fetchMock).toHaveBeenCalledWith(
+			expect.stringContaining(`with_slug=${encodeURIComponent(storyPath)}`),
+			expect.objectContaining({ method: 'GET' }),
+		);
+	});
+
+	test('returns false when no matching campaign story exists', async () => {
+		process.env.STORYBLOK_MANAGEMENT_TOKEN = 'test-token';
+		global.fetch = jest.fn().mockResolvedValue({
+			ok: true,
+			status: 200,
+			text: () => Promise.resolve(JSON.stringify({ stories: [] })),
+		}) as typeof fetch;
+
+		const service = new StoryblokManagementService();
+
+		await expect(service.campaignStoryExists('meine-kampagne')).resolves.toBe(false);
+	});
+
+	test('returns false when the only matching story is a folder', async () => {
+		process.env.STORYBLOK_MANAGEMENT_TOKEN = 'test-token';
+		const slug = 'meine-kampagne';
+		const storyPath = getCampaignStoryPath(slug);
+		global.fetch = jest.fn().mockResolvedValue({
+			ok: true,
+			status: 200,
+			text: () =>
+				Promise.resolve(
+					JSON.stringify({
+						stories: [{ slug, full_slug: storyPath, is_folder: true }],
+					}),
+				),
+		}) as typeof fetch;
+
+		const service = new StoryblokManagementService();
+
+		await expect(service.campaignStoryExists(slug)).resolves.toBe(false);
+	});
+
+	test('returns false when the Storyblok payload has no stories array', async () => {
+		process.env.STORYBLOK_MANAGEMENT_TOKEN = 'test-token';
+		global.fetch = jest.fn().mockResolvedValue({
+			ok: true,
+			status: 200,
+			text: () => Promise.resolve(JSON.stringify({})),
+		}) as typeof fetch;
+
+		const service = new StoryblokManagementService();
+
+		await expect(service.campaignStoryExists('meine-kampagne')).resolves.toBe(false);
 	});
 });
 

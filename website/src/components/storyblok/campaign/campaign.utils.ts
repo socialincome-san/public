@@ -14,3 +14,9 @@ export const getCampaignStoryblokSlug = (campaign: CampaignStory) => {
 export const getCampaignTitle = (campaign: Campaign) => {
 	return campaign.title.trim() || getCampaignPortalSlug(campaign);
 };
+
+export const getStoryblokCampaignTitleForSlug = (campaigns: CampaignStory[], slug: string) => {
+	const campaign = campaigns.find((story) => getCampaignPortalSlug(story.content) === slug);
+
+	return campaign ? getCampaignTitle(campaign.content) : slug;
+};

@@ -1,6 +1,6 @@
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { ProgramPublicSubmissionService } from '../program/program-public-submission.service';
-import { StoryblokManagementService } from '../storyblok/storyblok-management.service';
+import { StoryblokManagementError, StoryblokManagementService } from '../storyblok/storyblok-management.service';
 import { CampaignSubmissionService } from './campaign-submission.service';
 import { CampaignValidationService } from './campaign-validation.service';
 
@@ -57,13 +57,21 @@ const baseFields = {
 };
 
 describe('CampaignSubmissionService', () => {
+	const consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+	afterEach(() => {
+		consoleWarn.mockClear();
+	});
+
+	afterAll(() => {
+		consoleWarn.mockRestore();
+	});
+
 	type CampaignCreateInput = {
 		data: {
-			isActive: boolean;
-			public: boolean | null;
 			slug: string;
 			goal: number | null;
-			creatorName: string | null;
+			contributor?: { connect: { id: string } };
 		};
 	};
 
@@ -73,7 +81,6 @@ describe('CampaignSubmissionService', () => {
 		>;
 		const db = {
 			campaign: {
-				findUnique: jest.fn().mockResolvedValue(null),
 				create,
 				delete: jest.fn().mockResolvedValue(undefined),
 			},
@@ -83,26 +90,22 @@ describe('CampaignSubmissionService', () => {
 			isProgramEligibleForPublicSubmission: jest.fn().mockResolvedValue({ success: true, data: true }),
 		} as unknown as ProgramPublicSubmissionService;
 
+		const validateSlugUniqueness = jest.fn().mockResolvedValue({ success: true, data: undefined });
 		const campaignValidationService = {
-			validateSlugUniqueness: jest.fn().mockResolvedValue({ success: true, data: undefined }),
+			validateSlugUniqueness,
 		} as unknown as CampaignValidationService;
 
 		const deleteAsset = jest.fn().mockResolvedValue(undefined);
 		const createPublishedCampaignStory = jest.fn().mockResolvedValue({ storyId: 20, storyUuid: 'uuid' });
+		const campaignStoryExists = jest.fn().mockResolvedValue(false);
 		const getAsset = jest.fn();
 		const downloadAssetBuffer = jest.fn();
 		const uploadAsset = jest.fn().mockResolvedValue({ assetId: 10, asset: { filename: 'image.jpg' } });
-		const loggerInstance = {
-			warn: jest.fn(),
-			error: jest.fn(),
-			info: jest.fn(),
-			debug: jest.fn(),
-			alert: jest.fn(),
-		};
 
 		const storyblokManagementService = {
 			uploadAsset,
 			createPublishedCampaignStory,
+			campaignStoryExists,
 			deleteAsset,
 			deleteStory: jest.fn().mockResolvedValue(undefined),
 			getAsset,
@@ -114,7 +117,6 @@ describe('CampaignSubmissionService', () => {
 			programPublicSubmissionService,
 			campaignValidationService,
 			storyblokManagementService,
-			loggerInstance,
 		);
 
 		return {
@@ -123,13 +125,14 @@ describe('CampaignSubmissionService', () => {
 			create,
 			deleteAsset,
 			createPublishedCampaignStory,
+			campaignStoryExists,
 			campaignValidationService,
+			validateSlugUniqueness,
 			programPublicSubmissionService,
 			storyblokManagementService,
 			getAsset,
 			downloadAssetBuffer,
 			uploadAsset,
-			loggerInstance,
 		};
 	};
 
@@ -179,19 +182,37 @@ describe('CampaignSubmissionService', () => {
 		}
 		expect(create).toHaveBeenCalledTimes(1);
 		const createArg = create.mock.calls[0]?.[0];
-		expect(createArg?.data.isActive).toBe(true);
-		expect(createArg?.data.public).toBe(true);
 		expect(createArg?.data.slug).toBe('my-campaign');
-		expect(createArg?.data.creatorName).toBe('Alex Creator');
+		expect(createArg?.data.contributor).toBeUndefined();
 		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
 			expect.objectContaining({
 				slug: 'my-campaign',
 				title: 'My Campaign',
 				portalSlug: 'my-campaign',
+				public: true,
 				creatorName: 'Alex Creator',
 				quote: 'Thank you for your support!',
 			}),
 		);
+	});
+
+	test('submit connects contributor when contributorId is provided', async () => {
+		const { service, create } = createService();
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage }, undefined, 'contributor-1');
+
+		expect(result.success).toBe(true);
+		const createArg = create.mock.calls[0]?.[0];
+		expect(createArg?.data.contributor).toEqual({ connect: { id: 'contributor-1' } });
+	});
+
+	test('submit omits contributor connect when contributorId is null', async () => {
+		const { service, create } = createService();
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage }, undefined, null);
+
+		expect(result.success).toBe(true);
+		expect(create.mock.calls[0]?.[0]?.data.contributor).toBeUndefined();
 	});
 
 	test('submit uploads optional about images and passes additional Storyblok fields', async () => {
@@ -293,7 +314,7 @@ describe('CampaignSubmissionService', () => {
 	});
 
 	test('submit downloads and re-uploads a default image from the defaults folder', async () => {
-		const { service, create, getAsset, downloadAssetBuffer, uploadAsset } = createService();
+		const { service, create, createPublishedCampaignStory, getAsset, downloadAssetBuffer, uploadAsset } = createService();
 		getAsset.mockResolvedValue({
 			id: 99,
 			filename: 'https://a.storyblok.com/f/109655/default.png',
@@ -314,12 +335,16 @@ describe('CampaignSubmissionService', () => {
 		expect(downloadAssetBuffer).toHaveBeenCalledWith('https://a.storyblok.com/f/109655/default.png');
 		expect(uploadAsset).toHaveBeenCalled();
 		const createArg = create.mock.calls[0]?.[0];
-		expect(createArg?.data.public).toBe(false);
 		expect(createArg?.data.goal).toBeNull();
+		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
+			expect.objectContaining({
+				public: false,
+			}),
+		);
 	});
 
 	test('submit rejects default images outside the defaults folder', async () => {
-		const { service, getAsset, uploadAsset, loggerInstance } = createService();
+		const { service, getAsset, uploadAsset } = createService();
 		getAsset.mockResolvedValue({
 			id: 99,
 			filename: 'https://a.storyblok.com/f/109655/default.png',
@@ -335,12 +360,12 @@ describe('CampaignSubmissionService', () => {
 		if (!result.success) {
 			expect(result.error).toBe('default-image-invalid');
 		}
-		expect(loggerInstance.warn).toHaveBeenCalledTimes(1);
+		expect(consoleWarn).toHaveBeenCalledTimes(1);
 		expect(uploadAsset).not.toHaveBeenCalled();
 	});
 
 	test('submit rejects a missing default image asset', async () => {
-		const { service, getAsset, uploadAsset, loggerInstance } = createService();
+		const { service, getAsset, uploadAsset } = createService();
 		getAsset.mockResolvedValue(null);
 
 		const result = await service.submit(baseFields, { kind: 'default', defaultImageId: 99 });
@@ -349,12 +374,12 @@ describe('CampaignSubmissionService', () => {
 		if (!result.success) {
 			expect(result.error).toBe('default-image-invalid');
 		}
-		expect(loggerInstance.warn).toHaveBeenCalledTimes(1);
+		expect(consoleWarn).toHaveBeenCalledTimes(1);
 		expect(uploadAsset).not.toHaveBeenCalled();
 	});
 
 	test('submit rejects a default image with unsupported bytes', async () => {
-		const { service, getAsset, downloadAssetBuffer, uploadAsset, loggerInstance } = createService();
+		const { service, getAsset, downloadAssetBuffer, uploadAsset } = createService();
 		getAsset.mockResolvedValue({
 			id: 99,
 			filename: 'https://a.storyblok.com/f/109655/default.gif',
@@ -371,7 +396,7 @@ describe('CampaignSubmissionService', () => {
 		if (!result.success) {
 			expect(result.error).toBe('default-image-invalid');
 		}
-		expect(loggerInstance.warn).toHaveBeenCalledTimes(1);
+		expect(consoleWarn).toHaveBeenCalledTimes(1);
 		expect(uploadAsset).not.toHaveBeenCalled();
 	});
 
@@ -388,42 +413,95 @@ describe('CampaignSubmissionService', () => {
 		expect(db.campaign.create).not.toHaveBeenCalled();
 	});
 
-	test('submit returns a failure result when no unique slug can be found', async () => {
-		const { service, db, campaignValidationService } = createService();
-		(campaignValidationService.validateSlugUniqueness as jest.Mock).mockResolvedValue({
+	test('submit suffixes the slug when it already exists in Storyblok', async () => {
+		const { service, create, campaignStoryExists, createPublishedCampaignStory } = createService();
+		campaignStoryExists.mockImplementation((slug: string) => slug === 'my-campaign');
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
+
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.slug).toBe('my-campaign-2');
+		}
+		const createArg = create.mock.calls[0]?.[0];
+		expect(createArg?.data.slug).toBe('my-campaign-2');
+		expect(createPublishedCampaignStory).toHaveBeenCalledWith(
+			expect.objectContaining({
+				slug: 'my-campaign-2',
+				portalSlug: 'my-campaign-2',
+			}),
+		);
+	});
+
+	test('submit skips slugs taken in the database or Storyblok until one is free', async () => {
+		const { service, create, validateSlugUniqueness, campaignStoryExists } = createService();
+		validateSlugUniqueness.mockImplementation((slug: string) =>
+			slug === 'my-campaign' ? { success: false, error: 'taken' } : { success: true, data: undefined },
+		);
+		campaignStoryExists.mockImplementation((slug: string) => slug === 'my-campaign-2');
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
+
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.slug).toBe('my-campaign-3');
+		}
+		const createArg = create.mock.calls[0]?.[0];
+		expect(createArg?.data.slug).toBe('my-campaign-3');
+	});
+
+	test('submit returns submission-failed when Storyblok uniqueness lookup fails', async () => {
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		const { service, db, campaignStoryExists } = createService();
+		campaignStoryExists.mockRejectedValueOnce(new StoryblokManagementError('Storyblok request failed.', 503, true));
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('submission-failed');
+			expect(result.status).toBe(503);
+		}
+		expect(db.campaign.create).not.toHaveBeenCalled();
+		consoleError.mockRestore();
+	});
+
+	test('submit returns submission-failed when Storyblok uniqueness lookup throws unexpectedly', async () => {
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		const { service, db, campaignStoryExists } = createService();
+		campaignStoryExists.mockRejectedValueOnce(new Error('network down'));
+
+		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
+
+		expect(result.success).toBe(false);
+		if (!result.success) {
+			expect(result.error).toBe('submission-failed');
+			expect(result.status).toBe(503);
+		}
+		expect(db.campaign.create).not.toHaveBeenCalled();
+		consoleError.mockRestore();
+	});
+
+	test('submit appends a uuid when numbered slug suffixes are exhausted', async () => {
+		const { service, create, validateSlugUniqueness } = createService();
+		validateSlugUniqueness.mockResolvedValue({
 			success: false,
 			error: 'taken',
 		});
 
 		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
 
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			expect(result.status).toBe(409);
-			expect(result.error).toBe('similar-title-exists');
+		const uuidSlug = /^my-campaign-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data.slug).toMatch(uuidSlug);
 		}
-		expect(db.campaign.create).not.toHaveBeenCalled();
+		const createArg = create.mock.calls[0]?.[0];
+		expect(createArg?.data.slug).toMatch(uuidSlug);
+		expect(validateSlugUniqueness).toHaveBeenCalledTimes(20);
 	});
 
-	test('submit returns title-exists when campaign create hits a title unique constraint', async () => {
-		const { service, create } = createService();
-		create.mockRejectedValueOnce(
-			new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
-				code: 'P2002',
-				meta: { target: ['title'] },
-			}),
-		);
-
-		const result = await service.submit(baseFields, { kind: 'upload', image: pngImage });
-
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			expect(result.error).toBe('title-exists');
-			expect(result.status).toBe(400);
-		}
-	});
-
-	test('submit returns similar-title-exists when campaign create hits a slug unique constraint', async () => {
+	test('submit returns slug-exists when campaign create hits a slug unique constraint', async () => {
 		const { service, create } = createService();
 		create.mockRejectedValueOnce(
 			new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
@@ -436,7 +514,7 @@ describe('CampaignSubmissionService', () => {
 
 		expect(result.success).toBe(false);
 		if (!result.success) {
-			expect(result.error).toBe('similar-title-exists');
+			expect(result.error).toBe('slug-exists');
 			expect(result.status).toBe(400);
 		}
 	});

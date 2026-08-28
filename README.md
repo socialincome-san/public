@@ -101,10 +101,11 @@ If you need this token, ask a maintainer or contact
 `support@socialincome.org`. Do not commit real API keys or secrets.
 
 Maintainers may also need these Storyblok values for preview mode, webhooks,
-or schema/type generation:
+campaign submissions, or schema/type generation:
 
 - `STORYBLOK_PREVIEW_SECRET`
 - `STORYBLOK_WEBHOOK_SECRET`
+- `STORYBLOK_MANAGEMENT_TOKEN`
 - `STORYBLOK_PERSONAL_ACCESS_TOKEN`
 - `STORYBLOK_SPACE_ID`
 
@@ -263,15 +264,20 @@ still work after a campaign becomes inactive.
 
 Server-only configuration lives in
 `website/src/lib/config/campaign-submission.config.ts`. Set the Management API
-token in `website/.env.local`:
+token in `website/.env.local` for local development:
 
 ```bash
 STORYBLOK_MANAGEMENT_TOKEN="<storyblok-personal-access-token>"
 ```
 
-The token must be able to create draft stories under `pages/campaigns` and
-upload assets in the configured asset folder. If a submission fails after partial
-progress, the API attempts compensating cleanup of the created Storyblok asset,
+Staging and production receive the same runtime variable from Cloud Run. Store
+the values as GitHub Actions secrets `TF_STAGING_STORYBLOK_MANAGEMENT_TOKEN`
+and `TF_PROD_STORYBLOK_MANAGEMENT_TOKEN`.
+
+The token must be able to list assets in the default-images folder, create
+draft stories under `pages/campaigns`, and upload assets in the configured
+asset folder. If a submission fails after partial progress, the API attempts
+compensating cleanup of the created Storyblok asset,
 Storyblok story, and database row.
 
 Future hardening (not part of the first version): Cloudflare Turnstile and
@@ -283,6 +289,23 @@ The `recipients_app` communicates with the Next.js API routes. The public API
 documentation is available at:
 
 https://socialincome.org/v1/api-docs
+
+## Monitoring
+
+The website pages Slack (`#social-income-monitoring`) for production
+failures that must not stay silent:
+
+- Cloud Run logs that contain `SLACK_ALERT` (Stripe webhooks, payment
+  imports, scheduler jobs). Prefix `console.error` with that token.
+  Staging still writes the logs but does not page Slack, because its
+  Stripe and campaign data is incomplete. At most one Slack message is
+  sent every 5 minutes.
+- Uptime checks every 60s: `/api/health/website`, `/api/health/database`,
+  and the public homepage `/en/int`.
+- Cloud Run 5xx bursts, Cloud Scheduler job errors, Cloud SQL CPU and
+  connections, and Cloud Run memory / OOM.
+
+The recipients app still reports errors to Sentry.
 
 ## Troubleshooting
 

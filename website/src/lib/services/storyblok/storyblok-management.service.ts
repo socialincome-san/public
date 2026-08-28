@@ -1,7 +1,7 @@
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { logger } from '@/lib/utils/logger';
+import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { randomUUID } from 'crypto';
 
 const MANAGEMENT_API_BASE = 'https://mapi.storyblok.com/v1';
@@ -98,6 +98,8 @@ const requestManagement = async (path: string, init: RequestInit): Promise<unkno
 
 	return body;
 };
+
+const isObjectRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 
 // `finish_upload` and the single-asset endpoint both return a minimal asset object, sometimes at the
 // response root and sometimes nested under `asset`.
@@ -373,11 +375,30 @@ export class StoryblokManagementService {
 		}
 	}
 
+	async campaignStoryExists(slug: string): Promise<boolean> {
+		const storyPath = getCampaignStoryPath(slug);
+		const query = new URLSearchParams({ with_slug: storyPath });
+		const body = await requestManagement(`/spaces/${this.spaceId}/stories/?${query.toString()}`, {
+			method: 'GET',
+		});
+
+		const stories = isObjectRecord(body) && Array.isArray(body.stories) ? body.stories : [];
+
+		return stories.some((story) => {
+			if (!isObjectRecord(story) || story.is_folder) {
+				return false;
+			}
+
+			return story.full_slug === storyPath || story.slug === slug;
+		});
+	}
+
 	async createPublishedCampaignStory(input: {
 		slug: string;
 		title: string;
 		description: string;
 		portalSlug: string;
+		public: boolean;
 		primaryImage: StoryblokAsset;
 		creatorName: string;
 		quote: string;
@@ -395,6 +416,7 @@ export class StoryblokManagementService {
 			title: input.title,
 			description: input.description,
 			portalSlug: input.portalSlug,
+			public: input.public,
 			primaryImage: input.primaryImage,
 			creatorName: input.creatorName,
 			quote: input.quote,
@@ -417,7 +439,7 @@ export class StoryblokManagementService {
 					parent_id: campaignSubmissionConfig.storyblokCampaignsFolderId || undefined,
 					content,
 				},
-				publish: 0,
+				publish: 1,
 			}),
 		});
 
@@ -435,7 +457,7 @@ export class StoryblokManagementService {
 				method: 'DELETE',
 			});
 		} catch (error) {
-			logger.error(error, { assetId });
+			console.error(error, { assetId });
 		}
 	}
 
@@ -445,7 +467,7 @@ export class StoryblokManagementService {
 				method: 'DELETE',
 			});
 		} catch (error) {
-			logger.error(error, { storyId });
+			console.error(error, { storyId });
 		}
 	}
 }

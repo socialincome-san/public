@@ -1,5 +1,6 @@
 'use client';
 
+import { CampaignSubmissionFormCard, CampaignSubmissionFormCardColumn } from './form-layout';
 import { AboutStep } from './steps/about-step';
 import { DetailsStep } from './steps/details-step';
 import { ProgramStep } from './steps/program-step';
@@ -13,29 +14,26 @@ type Props = {
 };
 
 export const CampaignSubmissionSteps = ({ currentStep, programStep, detailsStep, aboutStep }: Props) => {
-	if (currentStep === 'program') {
-		return (
-			<div className="flex min-h-0 flex-1 flex-col">
-				<ProgramStep {...programStep} />
-			</div>
-		);
+	switch (currentStep) {
+		case 'program':
+			return (
+				<div className="flex min-h-0 flex-1 flex-col">
+					<ProgramStep {...programStep} />
+				</div>
+			);
+		case 'details':
+			return (
+				<CampaignSubmissionFormCardColumn key={currentStep}>
+					<CampaignSubmissionFormCard>
+						<DetailsStep {...detailsStep} />
+					</CampaignSubmissionFormCard>
+				</CampaignSubmissionFormCardColumn>
+			);
+		case 'about':
+			return (
+				<CampaignSubmissionFormCardColumn key={currentStep}>
+					<AboutStep {...aboutStep} />
+				</CampaignSubmissionFormCardColumn>
+			);
 	}
-
-	if (currentStep === 'details') {
-		return (
-			<div className="min-h-0 flex-1 overflow-y-auto">
-				<DetailsStep {...detailsStep} />
-			</div>
-		);
-	}
-
-	if (currentStep === 'about') {
-		return (
-			<div className="min-h-0 flex-1 overflow-y-auto">
-				<AboutStep {...aboutStep} />
-			</div>
-		);
-	}
-
-	return null;
 };

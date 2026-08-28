@@ -1,6 +1,5 @@
 import { PayoutProcess, PrismaClient } from '@/generated/prisma/client';
 import { stringifyCsvLines } from '@/lib/utils/csv';
-import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { format } from 'date-fns';
 import { BaseService } from '../core/base.service';
@@ -12,9 +11,8 @@ export class OrangeMoneyCsvPayoutProcessService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly core: PayoutProcessCoreService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private async validateProvider(mobileMoneyProviderId: string): Promise<ServiceResult<void>> {
@@ -83,7 +81,7 @@ export class OrangeMoneyCsvPayoutProcessService extends BaseService {
 
 			return this.resultOk(this.buildRegistrationCsv(recipientsResult.data));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not generate registration CSV: ${JSON.stringify(error)}`);
 		}
@@ -107,7 +105,7 @@ export class OrangeMoneyCsvPayoutProcessService extends BaseService {
 
 			return this.resultOk(this.buildPayoutCsv(recipientsResult.data, selectedDate));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not generate payout CSV: ${JSON.stringify(error)}`);
 		}

@@ -1,4 +1,4 @@
-import { Progress } from '@/components/progress';
+import { Progress } from '@/components/progress/progress';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { CircleHelp } from 'lucide-react';
 

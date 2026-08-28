@@ -117,20 +117,21 @@
 		"about": "About"
 	},
 	"transparency-page": {
+		"donation-globe": {
+			"aria-label": "Globe showing recent donations around the world",
+			"description": "{{donatorsCount}} people have donated to lift others out of poverty. Trust like that only comes with total transparency."
+		},
 		"inflows": {
 			"title-name": "Inflows",
-			"title-currency": "in {{currency}}",
-			"description": "From recurring 1% contributions and one-time donations across 12 currencies."
+			"title-currency": "in {{currency}}"
 		},
 		"outflows": {
 			"title-name": "Outflows",
-			"title-currency": "in {{currency}}",
-			"description": "Transferred directly to recipients via Mobile Money — no intermediaries."
+			"title-currency": "in {{currency}}"
 		},
 		"reserves": {
 			"title-name": "Reserves",
 			"title-currency": "in {{currency}}",
-			"description": "Reserved for recipients in ongoing programs.",
 			"tooltip-label": "Show reserve account details",
 			"no-data": "No data"
 		}
@@ -298,9 +299,10 @@
 				"invalid-form-data": "Invalid form data.",
 				"invalid-submission": "Invalid submission.",
 				"program-not-eligible": "Selected program is not eligible.",
-				"title-exists": "A campaign with this title already exists.",
-				"similar-title-exists": "A campaign with a similar title already exists. Please choose a different title.",
-				"submission-failed": "We could not complete your submission. Please try again in a few minutes."
+				"slug-exists": "A campaign with this slug already exists.",
+				"submission-failed": "We could not complete your submission. Please try again in a few minutes.",
+				"turnstile-required": "Please complete the verification before submitting.",
+				"turnstile-invalid": "Verification failed. Please try again."
 			}
 		}
 	},

@@ -1,5 +1,4 @@
-import { Currency, type PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
+import { Currency } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { type PawaPayBalance } from './pawapay-balance.types';
@@ -14,10 +13,6 @@ type PawaPayApiBalance = {
 };
 
 export class PawaPayBalanceService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
-
 	async getLatestBalances(): Promise<ServiceResult<PawaPayBalance[]>> {
 		const token = process.env.PAWAPAY_API_TOKEN?.trim();
 		if (!token) {
@@ -58,7 +53,7 @@ export class PawaPayBalanceService extends BaseService {
 
 			return this.resultOk(balances);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get PawaPay balances: ${JSON.stringify(error)}`);
 		}

@@ -7,6 +7,7 @@ import {
 	mapStripeSubscriptionPriceFields,
 	mapStripeSubscriptionStatus,
 	resolveStripeResourceId,
+	resolveStripeSubscriptionCanceledAt,
 	resolveStripeSubscriptionIdFromInvoice,
 	shouldSkipStripeSubscriptionStatus,
 } from './subscription.mappers';
@@ -19,11 +20,10 @@ describe('subscription.mappers', () => {
 		});
 
 		test('maps statuses', () => {
-			expect(mapStripeSubscriptionStatus('active', null)).toBe(SubscriptionStatus.active);
-			expect(mapStripeSubscriptionStatus('past_due', null)).toBe(SubscriptionStatus.active);
-			expect(mapStripeSubscriptionStatus('canceled', null)).toBe(SubscriptionStatus.canceled);
-			expect(mapStripeSubscriptionStatus('canceled', 1_700_000_000)).toBe(SubscriptionStatus.ended);
-			expect(mapStripeSubscriptionStatus('incomplete', null)).toBeNull();
+			expect(mapStripeSubscriptionStatus('active')).toBe(SubscriptionStatus.active);
+			expect(mapStripeSubscriptionStatus('past_due')).toBe(SubscriptionStatus.active);
+			expect(mapStripeSubscriptionStatus('canceled')).toBe(SubscriptionStatus.ended);
+			expect(mapStripeSubscriptionStatus('incomplete')).toBeNull();
 		});
 
 		test('maps intervals and amounts', () => {
@@ -66,6 +66,34 @@ describe('subscription.mappers', () => {
 	});
 
 	describe('mapStripeSubscriptionLifecycle', () => {
+		test('keeps cancel_at_period_end subscriptions active until Stripe cancels them', () => {
+			expect(
+				mapStripeSubscriptionLifecycle({
+					id: 'sub_1',
+					status: 'active',
+					cancel_at_period_end: true,
+					cancel_at: 1_700_100_000,
+					ended_at: null,
+					canceled_at: null,
+					metadata: {},
+					items: { data: [] },
+				} as never),
+			).toEqual({
+				status: SubscriptionStatus.active,
+				canceledAt: null,
+			});
+		});
+
+		test('resolveStripeSubscriptionCanceledAt prefers canceled_at', () => {
+			expect(
+				resolveStripeSubscriptionCanceledAt({
+					canceled_at: 1_700_200_000,
+					cancel_at: 1_700_300_000,
+					items: { data: [{ current_period_end: 1_700_400_000 }] },
+				} as never),
+			).toEqual(new Date(1_700_200_000 * 1000));
+		});
+
 		test('maps canceled without price items', () => {
 			expect(
 				mapStripeSubscriptionLifecycle({
@@ -77,7 +105,7 @@ describe('subscription.mappers', () => {
 					items: { data: [] },
 				} as never),
 			).toEqual({
-				status: SubscriptionStatus.canceled,
+				status: SubscriptionStatus.ended,
 				canceledAt: new Date(1_700_000_000 * 1000),
 			});
 		});

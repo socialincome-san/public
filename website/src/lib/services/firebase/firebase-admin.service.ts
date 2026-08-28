@@ -15,7 +15,7 @@ export class FirebaseAdminService extends BaseService {
 			}
 
 			if (existingUserResult.data) {
-				this.logger.info('User already exists for phone number', { phoneNumber });
+				console.info('User already exists for phone number', { phoneNumber });
 
 				return this.resultFail('User already exists for phone number');
 			}
@@ -26,7 +26,7 @@ export class FirebaseAdminService extends BaseService {
 
 			return this.resultOk(userRecord);
 		} catch (error) {
-			this.logger.error('Error creating user by phone number:', { error });
+			console.error('Error creating user by phone number:', { error });
 
 			return this.resultFail(`Could not create auth user by phone number: ${JSON.stringify(error)}`);
 		}
@@ -40,7 +40,7 @@ export class FirebaseAdminService extends BaseService {
 			}
 
 			if (!existingUserResult.data) {
-				this.logger.warn('Old Firebase user missing, recreating with new phone', {
+				console.warn('Old Firebase user missing, recreating with new phone', {
 					oldPhoneNumber,
 					newPhoneNumber,
 				});
@@ -58,7 +58,7 @@ export class FirebaseAdminService extends BaseService {
 
 			return this.resultOk(updatedUser);
 		} catch (error) {
-			this.logger.error('Error updating user by phone number:', { oldPhoneNumber, newPhoneNumber, error });
+			console.error('Error updating user by phone number:', { oldPhoneNumber, newPhoneNumber, error });
 
 			return this.resultFail(`Could not update auth user by phone number: ${JSON.stringify(error)}`);
 		}
@@ -73,7 +73,7 @@ export class FirebaseAdminService extends BaseService {
 			if ((error as { code?: string })?.code === 'auth/user-not-found') {
 				return this.resultOk(null);
 			}
-			this.logger.error('Error getting user by phone number:', { phoneNumber, error });
+			console.error('Error getting user by phone number:', { phoneNumber, error });
 
 			return this.resultFail('Auth user not found by phone number');
 		}
@@ -89,7 +89,7 @@ export class FirebaseAdminService extends BaseService {
 
 			return this.resultOk(updatedUser);
 		} catch (error) {
-			this.logger.error(`Error updating user by UID ${uid}:`, { uid, updates, error });
+			console.error(`Error updating user by UID ${uid}:`, { uid, updates, error });
 
 			return this.resultFail(`Could not update auth user by UID: ${JSON.stringify(error)}`);
 		}
@@ -105,7 +105,7 @@ export class FirebaseAdminService extends BaseService {
 
 			return this.resultOk(userRecord);
 		} catch (error) {
-			this.logger.error('Error creating survey user:', { email, error });
+			console.error('Error creating survey user:', { email, error });
 
 			return this.resultFail(`Could not create survey auth user: ${JSON.stringify(error)}`);
 		}
@@ -117,7 +117,7 @@ export class FirebaseAdminService extends BaseService {
 
 			return this.resultOk(token);
 		} catch (error) {
-			this.logger.error('Error creating custom token:', { uid, error });
+			console.error('Error creating custom token:', { uid, error });
 
 			return this.resultFail(`Could not create custom token: ${JSON.stringify(error)}`);
 		}
@@ -135,7 +135,7 @@ export class FirebaseAdminService extends BaseService {
 
 			return this.resultOk(decodedToken);
 		} catch (error) {
-			this.logger.error('Error verifying ID token:', { error });
+			console.error('Error verifying ID token:', { error });
 
 			return this.resultFail(`Invalid or expired token: ${JSON.stringify(error)}`);
 		}
@@ -185,7 +185,7 @@ export class FirebaseAdminService extends BaseService {
 		const token = request.headers.get('X-Firebase-AppCheck');
 
 		if (!token) {
-			this.logger.warn('App Check failed: missing token', {
+			console.warn('App Check failed: missing token', {
 				path: request.url,
 				userAgent: request.headers.get('user-agent'),
 			});
@@ -196,14 +196,14 @@ export class FirebaseAdminService extends BaseService {
 		try {
 			const decoded = await appCheck().verifyToken(token);
 
-			this.logger.info('App Check passed', {
+			console.info('App Check passed', {
 				appId: decoded.appId,
 				path: request.url,
 			});
 
 			return this.resultOk(true);
 		} catch (error) {
-			this.logger.warn('App Check failed: invalid token', {
+			console.warn('App Check failed: invalid token', {
 				path: request.url,
 				userAgent: request.headers.get('user-agent'),
 				errorMessage: (error as Error)?.message,
@@ -229,7 +229,7 @@ export class FirebaseAdminService extends BaseService {
 
 			return this.resultOk(true);
 		} catch (error) {
-			this.logger.error('Error deleting auth user by phone number:', {
+			console.error('Error deleting auth user by phone number:', {
 				phoneNumber,
 				error,
 			});
@@ -254,7 +254,7 @@ export class FirebaseAdminService extends BaseService {
 
 			return this.resultOk(true);
 		} catch (error) {
-			this.logger.error('Error deleting auth user by email:', {
+			console.error('Error deleting auth user by email:', {
 				email,
 				error,
 			});
@@ -277,7 +277,7 @@ export class FirebaseAdminService extends BaseService {
 			) {
 				return this.resultOk(true);
 			}
-			this.logger.error('Error deleting auth user by uid:', { uid, error });
+			console.error('Error deleting auth user by uid:', { uid, error });
 
 			return this.resultFail(`Could not delete auth user by uid: ${JSON.stringify(error)}`);
 		}

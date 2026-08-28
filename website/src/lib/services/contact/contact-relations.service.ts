@@ -1,5 +1,4 @@
-import { CountryCode, Prisma, PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
+import { CountryCode, Prisma } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import {
 	BuildAddressWriteOperationParams,
@@ -8,10 +7,6 @@ import {
 } from './contact-relations.types';
 
 export class ContactRelationsService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
-
 	getAddressInput(contact: ContactAddressFields) {
 		const hasAddressValue = this.hasAddressInput(contact);
 		if (!hasAddressValue) {

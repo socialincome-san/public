@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient } from '@/generated/prisma/client';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { logger } from '@/lib/utils/logger';
 import { slugify } from '@/lib/utils/string-utils';
+import { randomUUID } from 'crypto';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramPublicSubmissionService } from '../program/program-public-submission.service';
@@ -42,15 +42,15 @@ export class CampaignSubmissionService extends BaseService {
 		private readonly programPublicSubmissionService: ProgramPublicSubmissionService,
 		private readonly campaignValidationService: CampaignValidationService,
 		private readonly storyblokManagementService: StoryblokManagementService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async submit(
 		fields: CampaignSubmissionFields,
 		imageSource: CampaignSubmissionImageSource,
 		optionalImages: CampaignSubmissionOptionalImages = { profilePicture: null, sectionImage: null },
+		contributorId?: string | null,
 	): Promise<ServiceResult<CampaignSubmissionResult>> {
 		const eligibilityResult = await this.programPublicSubmissionService.isProgramEligibleForPublicSubmission(
 			fields.programId,
@@ -60,14 +60,6 @@ export class CampaignSubmissionService extends BaseService {
 		}
 		if (!eligibilityResult.data) {
 			return this.resultFail('program-not-eligible', 400);
-		}
-
-		const titleConflict = await this.db.campaign.findUnique({
-			where: { title: fields.title },
-			select: { id: true },
-		});
-		if (titleConflict) {
-			return this.resultFail('title-exists', 400);
 		}
 
 		const slugResult = await this.generateUniqueSlug(fields.title);
@@ -86,16 +78,12 @@ export class CampaignSubmissionService extends BaseService {
 
 			const campaign = await this.db.campaign.create({
 				data: {
-					title: fields.title,
-					description: fields.description,
 					goal: fields.goal,
 					currency: fields.currency,
 					endDate: fields.endDate,
-					isActive: true,
-					public: fields.public,
 					slug,
-					creatorName: fields.creatorName,
 					program: { connect: { id: fields.programId } },
+					...(contributorId ? { contributor: { connect: { id: contributorId } } } : {}),
 				},
 				select: { id: true, slug: true },
 			});
@@ -129,6 +117,7 @@ export class CampaignSubmissionService extends BaseService {
 				title: fields.title,
 				description: fields.description,
 				portalSlug: slug,
+				public: fields.public,
 				primaryImage: primaryAsset,
 				creatorName: fields.creatorName,
 				quote: fields.quote,
@@ -151,23 +140,16 @@ export class CampaignSubmissionService extends BaseService {
 			await this.compensateSubmissionFailure(cleanupState);
 
 			if (isStoryblokManagementError(error)) {
-				this.logger.error(error, { slug, retryable: error.retryable, statusCode: error.statusCode });
+				console.error(error, { slug, retryable: error.retryable, statusCode: error.statusCode });
 
 				return this.resultFail('submission-failed', error.retryable ? 503 : 502);
 			}
 
 			if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-				const target = error.meta?.target;
-				const conflictFields = Array.isArray(target) ? target.map(String) : typeof target === 'string' ? [target] : [];
-
-				if (conflictFields.includes('slug')) {
-					return this.resultFail('similar-title-exists', 400);
-				}
-
-				return this.resultFail('title-exists', 400);
+				return this.resultFail('slug-exists', 400);
 			}
 
-			this.logger.error(error, { slug });
+			console.error(error, { slug });
 
 			return this.resultFail('submission-failed', 503);
 		}
@@ -189,7 +171,7 @@ export class CampaignSubmissionService extends BaseService {
 	}
 
 	private failDefaultImage(defaultImageId: number, reason: string, assetFolderId: number | null = null) {
-		this.logger.warn('Campaign submission default image invalid', {
+		console.warn('Campaign submission default image invalid', {
 			defaultImageId,
 			reason,
 			assetFolderId,
@@ -225,7 +207,7 @@ export class CampaignSubmissionService extends BaseService {
 			return this.resultOk(validation.data);
 		} catch (error) {
 			if (isStoryblokManagementError(error)) {
-				this.logger.error(error, {
+				console.error(error, {
 					defaultImageId: imageSource.defaultImageId,
 					reason: error.statusCode === 404 ? 'asset-not-found' : 'storyblok-management-error',
 					assetFolderId: null,
@@ -239,7 +221,7 @@ export class CampaignSubmissionService extends BaseService {
 				);
 			}
 
-			this.logger.error(error, {
+			console.error(error, {
 				defaultImageId: imageSource.defaultImageId,
 				reason: 'unexpected-error',
 				assetFolderId: null,
@@ -262,7 +244,7 @@ export class CampaignSubmissionService extends BaseService {
 			try {
 				await this.db.campaign.delete({ where: { id: state.campaignId } });
 			} catch (error) {
-				this.logger.error(error, { campaignId: state.campaignId });
+				console.error(error, { campaignId: state.campaignId });
 			}
 		}
 	}
@@ -273,19 +255,38 @@ export class CampaignSubmissionService extends BaseService {
 			return this.resultFail('title-not-slugifiable', 400);
 		}
 
-		const uniquenessResult = await this.campaignValidationService.validateSlugUniqueness(baseSlug);
-		if (uniquenessResult.success) {
-			return this.resultOk(baseSlug);
-		}
-
-		for (let suffix = 2; suffix <= 20; suffix += 1) {
-			const candidate = `${baseSlug}-${suffix}`;
-			const candidateResult = await this.campaignValidationService.validateSlugUniqueness(candidate);
-			if (candidateResult.success) {
-				return this.resultOk(candidate);
+		try {
+			if (await this.isSlugAvailable(baseSlug)) {
+				return this.resultOk(baseSlug);
 			}
+
+			for (let suffix = 2; suffix <= 20; suffix += 1) {
+				const candidate = `${baseSlug}-${suffix}`;
+				if (await this.isSlugAvailable(candidate)) {
+					return this.resultOk(candidate);
+				}
+			}
+
+			return this.resultOk(`${baseSlug}-${randomUUID()}`);
+		} catch (error) {
+			if (isStoryblokManagementError(error)) {
+				console.error(error, { slug: baseSlug, retryable: error.retryable, statusCode: error.statusCode });
+
+				return this.resultFail('submission-failed', error.retryable ? 503 : 502);
+			}
+
+			console.error(error, { slug: baseSlug });
+
+			return this.resultFail('submission-failed', 503);
+		}
+	}
+
+	private async isSlugAvailable(slug: string): Promise<boolean> {
+		const uniquenessResult = await this.campaignValidationService.validateSlugUniqueness(slug);
+		if (!uniquenessResult.success) {
+			return false;
 		}
 
-		return this.resultFail('similar-title-exists', 409);
+		return !(await this.storyblokManagementService.campaignStoryExists(slug));
 	}
 }

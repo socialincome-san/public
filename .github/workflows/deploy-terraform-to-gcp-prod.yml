@@ -57,7 +57,7 @@ jobs:
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" > secrets/NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID}}" > secrets/NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_LINKEDIN_TRACKING_ID}}" > secrets/NEXT_PUBLIC_LINKEDIN_TRACKING_ID
-          echo "${{ secrets.TF_PROD_SENTRY_AUTH_TOKEN }}" > secrets/SENTRY_AUTH_TOKEN
+          echo "${{ secrets.TF_PROD_NEXT_PUBLIC_TURNSTILE_SITE_KEY }}" > secrets/NEXT_PUBLIC_TURNSTILE_SITE_KEY
           echo "${{ secrets.TF_PROD_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
 
       - name: 📤 Build and Push Docker Image
@@ -83,6 +83,7 @@ jobs:
           TF_VAR_firebase_service_account_json: ${{ secrets.TF_PROD_FIREBASE_SERVICE_ACCOUNT_JSON }}
           TF_VAR_storyblok_preview_secret: ${{ secrets.TF_PROD_STORYBLOK_PREVIEW_SECRET }}
           TF_VAR_storyblok_webhook_secret: ${{ secrets.TF_PROD_STORYBLOK_WEBHOOK_SECRET }}
+          TF_VAR_storyblok_management_token: ${{ secrets.TF_PROD_STORYBLOK_MANAGEMENT_TOKEN }}
           TF_VAR_mapbox_token: ${{ secrets.TF_PROD_MAPBOX_TOKEN }}
           TF_VAR_env: ${{ env.ENVIRONMENT }}
           TF_VAR_app_name: ${{ env.APP_NAME }}
@@ -102,6 +103,7 @@ jobs:
           TF_VAR_stripe_secret_key: ${{ secrets.TF_PROD_STRIPE_SECRET_KEY }}
           TF_VAR_stripe_publishable_key: ${{ secrets.TF_PROD_STRIPE_PUBLISHABLE_KEY }}
           TF_VAR_stripe_webhook_secret: ${{ secrets.TF_PROD_STRIPE_WEBHOOK_SECRET }}
+          TF_VAR_turnstile_secret_key: ${{ secrets.TF_PROD_TURNSTILE_SECRET_KEY }}
           TF_VAR_sendgrid_api_key: ${{ secrets.TF_PROD_SENDGRID_API_KEY }}
           TF_VAR_sendgrid_list_id: ${{ secrets.TF_PROD_SENDGRID_LIST_ID }}
           TF_VAR_sendgrid_suppression_list_id: ${{ secrets.TF_PROD_SENDGRID_SUPPRESSION_LIST_ID }}
@@ -112,6 +114,7 @@ jobs:
           TF_VAR_twilio_messaging_service_sid: ${{ secrets.TF_PROD_TWILIO_MESSAGING_SERVICE_SID }}
           TF_VAR_twilio_auth_token: ${{ secrets.TF_PROD_TWILIO_AUTH_TOKEN }}
           TF_VAR_exchange_rates_api: ${{ secrets.TF_PROD_EXCHANGE_RATES_API }}
+          TF_VAR_etherscan_api_key: ${{ secrets.TF_PROD_ETHERSCAN_API_KEY }}
           TF_VAR_github_pat: ${{ secrets.TF_PROD_GITHUB_PAT }}
           TF_VAR_app_review_mode_enabled: ${{ vars.TF_PROD_APP_REVIEW_MODE_ENABLED }}
           TF_VAR_app_review_phone_number: ${{ secrets.TF_PROD_APP_REVIEW_PHONE_NUMBER }}

@@ -6,7 +6,6 @@ import { CampaignPublicWebsiteService } from './campaign/campaign-public-website
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignSubmissionService } from './campaign/campaign-submission.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
-import { CampaignWriteService } from './campaign/campaign-write.service';
 import { CandidateImportService } from './candidate/candidate-import.service';
 import { CandidateReadService } from './candidate/candidate-read.service';
 import { CandidateValidationService } from './candidate/candidate-validation.service';
@@ -22,6 +21,7 @@ import { CountryReadService } from './country/country-read.service';
 import { CountryValidationService } from './country/country-validation.service';
 import { CountryWriteService } from './country/country-write.service';
 import { CurrencyDisplayService } from './currency-display/currency-display.service';
+import { CustodianStablecoinWalletService } from './custodian-stablecoin-wallet/custodian-stablecoin-wallet.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
 import { DonationCertificateWriteService } from './donation-certificate/donation-certificate-write.service';
 import { ExchangeRateImportService } from './exchange-rate/exchange-rate-import.service';
@@ -76,6 +76,7 @@ import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.se
 import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { StoryblokService } from './storyblok/storyblok.service';
 import { StripeService } from './stripe/stripe.service';
+import { SubscriptionReadService } from './subscription/subscription-read.service';
 import { SubscriptionWriteService } from './subscription/subscription-write.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
 import { SurveyImpactService } from './survey/survey-impact.service';
@@ -140,7 +141,7 @@ const messagingTwilioTemplates = new TwilioTemplateService(prisma);
 const messagingChannelPreview = new MessagingChannelPreviewService(prisma, userRead);
 const messagingWebhook = new MessagingWebhookService(prisma);
 const messagingLog = new MessagingLogService(prisma, userRead, messagingWebhook);
-const contributionRead = new ContributionReadService(prisma, programAccessRead);
+const contributionRead = new ContributionReadService(prisma, programAccessRead, storyblok);
 const contributionValidation = new ContributionValidationService(prisma);
 const contributionWrite = new ContributionWriteService(prisma, programAccessRead, contributionValidation);
 const subscriptionWrite = new SubscriptionWriteService(prisma);
@@ -178,7 +179,6 @@ const contributorWrite = new ContributorWriteService(
 const messagingRecipients = new MessagingRecipientsService(prisma, contributorRead, recipientRead, localPartnerRead);
 const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
 const campaignValidation = new CampaignValidationService(prisma);
-const campaignWrite = new CampaignWriteService(prisma, programAccessRead, campaignValidation);
 const programPublicSubmission = new ProgramPublicSubmissionService(prisma, storyblok);
 const storyblokManagement = new StoryblokManagementService();
 const campaignSubmission = new CampaignSubmissionService(
@@ -242,6 +242,7 @@ const stripe = new StripeService(
 	campaignRead,
 	programAccessRead,
 );
+const subscriptionRead = new SubscriptionReadService(prisma, programAccessRead, contributionRead, stripe);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
@@ -257,6 +258,7 @@ const createReservesCalculation = (bucketName: string) =>
 		bankAccountWrite,
 		createPostFinanceBalance(bucketName),
 		new PawaPayBalanceService(prisma),
+		new CustodianStablecoinWalletService(prisma),
 		reserveWrite,
 		currencyDisplay,
 	);
@@ -279,12 +281,12 @@ export const services = {
 		payout: payoutRead,
 		program: programRead,
 		recipient: recipientRead,
+		subscription: subscriptionRead,
 		survey: surveyRead,
 		user: userRead,
 	},
 	write: {
 		candidate: candidateWrite,
-		campaign: campaignWrite,
 		focus: focusWrite,
 		contribution: contributionWrite,
 		subscription: subscriptionWrite,

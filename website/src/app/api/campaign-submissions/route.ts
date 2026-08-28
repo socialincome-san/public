@@ -11,6 +11,7 @@ import {
 	type CampaignSubmissionImageSource,
 	type CampaignSubmissionOptionalImages,
 } from '@/lib/services/campaign/campaign-submission-input';
+import { readTurnstileToken, verifyTurnstileToken } from '@/lib/services/campaign/verify-turnstile-token';
 import { services } from '@/lib/services/services';
 import { parseMultipartFormDataWithLimit, RequestBodyTooLargeError } from '@/lib/utils/request-body';
 import { NextRequest, NextResponse } from 'next/server';
@@ -107,6 +108,20 @@ const resolveOptionalImages = async (
 	};
 };
 
+const resolveContributorIdFromRequest = async (request: NextRequest): Promise<string | null> => {
+	const sessionResult = await services.firebaseSession.getDecodedSessionFromRequest(request);
+	if (!sessionResult.success) {
+		return null;
+	}
+
+	const contributorResult = await services.read.contributor.getCurrentContributorSession(sessionResult.data.uid);
+	if (!contributorResult.success) {
+		return null;
+	}
+
+	return contributorResult.data.id;
+};
+
 export const POST = async (request: NextRequest) => {
 	let formData: FormData;
 	try {
@@ -117,6 +132,11 @@ export const POST = async (request: NextRequest) => {
 		}
 
 		return errorResponse('invalid-form-data', 400);
+	}
+
+	const turnstileResult = await verifyTurnstileToken(readTurnstileToken(formData));
+	if (!turnstileResult.success) {
+		return errorResponse(turnstileResult.error, turnstileResult.error === 'submission-failed' ? 503 : 400);
 	}
 
 	const fieldsResult = parseCampaignSubmissionFields(formData);
@@ -134,10 +154,13 @@ export const POST = async (request: NextRequest) => {
 		return errorResponse(optionalImagesResult.error, 400, optionalImagesResult.field);
 	}
 
+	const contributorId = await resolveContributorIdFromRequest(request);
+
 	const submissionResult = await services.campaignSubmission.submit(
 		fieldsResult.data,
 		imageSourceResult.data,
 		optionalImagesResult.data,
+		contributorId,
 	);
 
 	if (!submissionResult.success) {
