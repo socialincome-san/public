@@ -137,11 +137,7 @@ export const CountriesSectionClient = ({
 		<div className="flex flex-col gap-8">
 			<div className="flex flex-col gap-2">
 				<p className="text-sm font-medium">{sectionTitle}</p>
-				<h2
-					className="min-h-[2lh] text-4xl leading-snug font-light md:text-5xl"
-					aria-live="polite"
-					aria-atomic="true"
-				>
+				<h2 className="min-h-[2lh] text-4xl leading-snug font-light md:text-5xl" aria-live="polite" aria-atomic="true">
 					{headline}
 				</h2>
 			</div>
