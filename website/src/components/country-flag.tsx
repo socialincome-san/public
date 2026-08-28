@@ -1,6 +1,6 @@
 'use client';
 
-import { CountryCode } from '@/generated/prisma/enums';
+import type { CountryCode } from '@/generated/prisma/enums';
 import { cn } from '@/lib/utils/cn';
 import { WHITESPACE_REGEX } from '@/lib/utils/regex';
 import Image from 'next/image';
@@ -13,9 +13,18 @@ const slugifyCountry = (name: string): string => {
 type CountryFlagProps = {
 	country: CountryCode;
 	size?: 'sm' | 'lg';
+	decorative?: boolean;
+	className?: string;
 };
 
-export const CountryFlag = ({ country, size = 'lg' }: CountryFlagProps) => {
+const CountryFlagImage = ({
+	country,
+	size,
+	decorative,
+	className,
+}: Required<Omit<CountryFlagProps, 'className'>> & {
+	className?: string;
+}) => {
 	const [hasError, setHasError] = useState(false);
 
 	const containerSize = size === 'sm' ? 'size-4 text-[10px]' : 'size-9 text-[12px]';
@@ -24,27 +33,36 @@ export const CountryFlag = ({ country, size = 'lg' }: CountryFlagProps) => {
 
 	if (hasError) {
 		return (
-			<div
+			<span
 				className={cn(
-					'bg-muted text-muted-foreground flex items-center justify-center rounded-full uppercase',
+					'bg-muted text-muted-foreground inline-flex items-center justify-center rounded-full uppercase',
 					containerSize,
+					className,
 				)}
+				aria-hidden={decorative || undefined}
 			>
 				{country}
-			</div>
+			</span>
 		);
 	}
 
 	return (
-		<div className={cn('overflow-hidden rounded-full', containerSize)}>
+		<span
+			className={cn('inline-flex overflow-hidden rounded-full', containerSize, className)}
+			aria-hidden={decorative || undefined}
+		>
 			<Image
 				src={`/assets/flags/${slug}.svg`}
-				alt={country}
+				alt={decorative ? '' : country}
 				width={36}
 				height={36}
-				className="size-full rounded-full object-cover"
+				className="block size-full rounded-full object-cover"
 				onError={() => setHasError(true)}
 			/>
-		</div>
+		</span>
 	);
+};
+
+export const CountryFlag = ({ country, size = 'lg', decorative = false, className }: CountryFlagProps) => {
+	return <CountryFlagImage key={country} country={country} size={size} decorative={decorative} className={className} />;
 };
