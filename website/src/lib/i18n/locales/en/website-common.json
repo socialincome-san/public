@@ -136,7 +136,8 @@
 			"no-data": "No data"
 		},
 		"runway": {
-			"description": "Even if every donor stopped giving today, we could keep paying recipients for {{months}} more months.",
+			"description_one": "Even if every donor stopped giving today, we could keep paying recipients for {{count}} more month.",
+			"description_other": "Even if every donor stopped giving today, we could keep paying recipients for {{count}} more months.",
 			"zewo-hint": "In line with ZEWO"
 		},
 		"countries": {

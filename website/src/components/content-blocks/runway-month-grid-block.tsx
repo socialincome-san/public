@@ -30,7 +30,7 @@ export const RunwayMonthGridBlock = async ({ blok, lang }: Props) => {
 				<div className="space-y-2">
 					{blok.title && <h2 className="text-primary text-xl font-semibold">{blok.title}</h2>}
 					<p className="text-foreground">
-						{translator.t('transparency-page.runway.description', { context: { months: amountOfMonths } })}
+						{translator.t('transparency-page.runway.description', { context: { count: amountOfMonths } })}
 					</p>
 				</div>
 				<RunwayMonthGrid numberOfMonths={amountOfMonths} language={language} />
