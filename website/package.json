@@ -122,7 +122,7 @@
 		"tmp-promise": "3.0.3",
 		"twilio": "6.1.0",
 		"xpath": "0.0.34",
-		"xstate": "5.32.5",
+		"xstate": "5.32.6",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
