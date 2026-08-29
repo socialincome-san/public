@@ -57,6 +57,36 @@ export type ContributionsByCountry = {
 	percentageOfTotal: number;
 };
 
+export const OTHER_COUNTRY_SEGMENT_CODE = 'OTHER';
+
+export type TransparencyCountrySegmentCode = CountryCode | typeof OTHER_COUNTRY_SEGMENT_CODE;
+
+export type CountryContributionRow = {
+	countryCode: CountryCode;
+	totalChf: number;
+	contributorCount: number;
+};
+
+export type TransparencyCountrySegment = {
+	countryCode: TransparencyCountrySegmentCode;
+	totalChf: number;
+	percentageOfTotal: number;
+	unitCount: number;
+	color: string;
+};
+
+type TransparencyOtherCountry = {
+	countryCode: CountryCode;
+	totalChf: number;
+};
+
+export type TransparencyCountriesData = {
+	totalContributionsChf: number;
+	countriesCount: number;
+	segments: TransparencyCountrySegment[];
+	otherCountries: TransparencyOtherCountry[];
+};
+
 export type TransparencyTotals = {
 	totalContributionsChf: number;
 	totalContributors: number;

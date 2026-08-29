@@ -4,7 +4,7 @@ import { RadioCard } from '@/components/create-program-wizard/radio-card';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
-import { RadioGroup } from '@/components/radio-group';
+import { RadioGroup } from '@/components/radio-group/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
 import { campaignSubmissionConfig, type CampaignSubmissionDurationPreset } from '@/lib/config/campaign-submission.config';
@@ -94,7 +94,7 @@ export const DetailsStep = ({
 	};
 
 	return (
-		<div className="flex flex-col gap-6 px-6">
+		<div className="flex flex-col gap-6">
 			<FormField
 				control={form.control}
 				name="title"

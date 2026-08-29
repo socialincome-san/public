@@ -31,7 +31,11 @@ const resolveOwnedSubscriptionPaymentMethod = async (subscriptionId: string) => 
 	};
 };
 
-export const updateSubscriptionAmountAction = async (subscriptionId: string, amount: number) => {
+export const updateSubscriptionAmountAction = async (
+	subscriptionId: string,
+	amount: number,
+	options: { coverTransactionCosts?: boolean } = {},
+) => {
 	const ownership = await resolveOwnedSubscriptionPaymentMethod(subscriptionId);
 	if (!ownership.success) {
 		return ownership;
@@ -50,6 +54,7 @@ export const updateSubscriptionAmountAction = async (subscriptionId: string, amo
 		contributorId,
 		subscriptionId,
 		amount,
+		coverTransactionCosts: options.coverTransactionCosts,
 	});
 };
 

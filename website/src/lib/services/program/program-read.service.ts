@@ -13,6 +13,7 @@ import {
 	PublicProgramFilterDataMap,
 	PublicProgramStats,
 	PublicProgramStatsMap,
+	PublicProgramTargetFocus,
 } from './program.types';
 
 export class ProgramReadService extends BaseService {
@@ -128,6 +129,34 @@ export class ProgramReadService extends BaseService {
 			console.error(error);
 
 			return this.resultFail(`Could not fetch program filter data: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicTargetFocusesByProgramId(programId: string): Promise<ServiceResult<PublicProgramTargetFocus[]>> {
+		try {
+			const normalizedProgramId = programId.trim();
+			if (!normalizedProgramId) {
+				return this.resultFail('Missing program id');
+			}
+
+			const targetFocuses = await this.db.programTargetFocus.findMany({
+				where: { programId: normalizedProgramId },
+				select: {
+					focus: {
+						select: {
+							id: true,
+							slug: true,
+							name: true,
+						},
+					},
+				},
+			});
+
+			return this.resultOk(targetFocuses.map(({ focus }) => focus));
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not fetch program target focuses: ${JSON.stringify(error)}`);
 		}
 	}
 

@@ -13,6 +13,7 @@ import {
 	LocalPartnerTableViewRow,
 	PublicLocalPartnerStats,
 	PublicLocalPartnerStatsMap,
+	PublicProgramLocalPartner,
 } from './local-partner.types';
 
 export class LocalPartnerReadService extends BaseService {
@@ -21,6 +22,34 @@ export class LocalPartnerReadService extends BaseService {
 		private readonly userService: UserReadService,
 	) {
 		super(db);
+	}
+
+	async getPublicLocalPartnersByProgramId(programId: string): Promise<ServiceResult<PublicProgramLocalPartner[]>> {
+		try {
+			const normalizedProgramId = programId.trim();
+			if (!normalizedProgramId) {
+				return this.resultFail('Missing program id');
+			}
+
+			const localPartners = await this.db.localPartner.findMany({
+				where: {
+					recipients: {
+						some: { programId: normalizedProgramId },
+					},
+				},
+				select: {
+					id: true,
+					name: true,
+				},
+				orderBy: { name: 'asc' },
+			});
+
+			return this.resultOk(localPartners);
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not fetch local partners for program: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async getPublicLocalPartnerStatsById(localPartnerId: string): Promise<ServiceResult<PublicLocalPartnerStats>> {

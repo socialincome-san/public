@@ -20,12 +20,7 @@ export const POST = async (request: NextRequest) => {
 		const result = await services.stripe.handleWebhookEvent(body, signature, webhookSecret);
 
 		if (!result.success) {
-			console.error(`Stripe webhook processing failed: ${result.error}`, {
-				error: result.error,
-				signature: `${signature.slice(0, 20)}...`,
-			});
-
-			return NextResponse.json({ error: result.error }, { status: 400 });
+			return NextResponse.json({ error: result.error }, { status: result.status ?? 500 });
 		}
 
 		return NextResponse.json({ received: true });

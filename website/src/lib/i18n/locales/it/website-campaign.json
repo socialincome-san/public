@@ -15,6 +15,13 @@
 			"goal-amount": "{{ amount, currency }}"
 		},
 		"ended": "La campagna è terminata. Per donazioni regolari, si prega di utilizzare la pagina principale delle donazioni.",
+		"days-left": "Giorni rimanenti",
+		"program-teaser": {
+			"heading": "La tua donazione sostiene",
+			"focus-areas": "Aree di intervento",
+			"local-partners": "Partner locali"
+		},
+		"about-title": "Informazioni",
 		"about-si-title": "Informazioni su Social Income",
 		"about-si-text-1": "Social Income è un'organizzazione no-profit con sede in Svizzera che fornisce trasferimenti di denaro incondizionati tramite cellulare a persone che vivono in condizioni di povertà multidimensionale nell'Africa occidentale.",
 		"about-si-text-2": "Dal 2020, Social Income gestisce un programma di reddito di base universale aperto in Sierra Leone.",

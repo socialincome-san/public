@@ -1,3 +1,4 @@
+import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
 import { ExplainerVideoHeaderBlock } from '@/components/content-blocks/explainer-video-header';
@@ -9,17 +10,22 @@ import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measu
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
 import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
-import { OpenSourceBlock } from '@/components/content-blocks/open-source';
+import { OpenSourceContributorsBlock } from '@/components/content-blocks/open-source-contributors';
+import { OpenSourceIssuesBlock } from '@/components/content-blocks/open-source-issues';
+import { OpenSourceStatsBlock } from '@/components/content-blocks/open-source-stats';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { PersonGridBlock } from '@/components/content-blocks/person-grid';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
 import { RichtextButtonHeaderBlock } from '@/components/content-blocks/richtext-button-header';
+import { RunwayMonthGridBlock } from '@/components/content-blocks/runway-month-grid-block';
 import { SpacerBlock } from '@/components/content-blocks/spacer';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
 import { TestimonialBlock } from '@/components/content-blocks/testimonial-entry';
 import { TextBlock } from '@/components/content-blocks/text';
 import { TransparencyBlock } from '@/components/content-blocks/transparency';
+import { TransparencyCountriesBlock } from '@/components/content-blocks/transparency-countries-block';
+import { TransparencySummaryBlock } from '@/components/content-blocks/transparency-summary-block';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsletter-signup';
@@ -27,7 +33,6 @@ import type { Page } from '@/generated/storyblok/types/109655/storyblok-componen
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { ParsedUrlQueryInput } from 'querystring';
 import { Fragment } from 'react';
-import { RunwayMonthGridBlock } from '../content-blocks/runway-month-grid-block';
 
 type PageBlock = Page['content'][number];
 type RichtextButtonHeaderAction = 'createProgram';
@@ -48,6 +53,8 @@ const renderPageBlock = (
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction,
 ) => {
 	switch (block.component) {
+		case 'donationGlobe':
+			return <DonationGlobeBlock blok={block} lang={lang} />;
 		case 'donationsTotal':
 			return <DonationsTotalBlockServer blok={block} lang={lang} region={region} />;
 		case 'downloads':
@@ -70,8 +77,12 @@ const renderPageBlock = (
 			return <ModalCardsBlock blok={block} />;
 		case 'newsletterForm':
 			return <NewsletterSignup lang={lang} />;
-		case 'openSource':
-			return <OpenSourceBlock blok={block} lang={lang} />;
+		case 'openSourceStats':
+			return <OpenSourceStatsBlock blok={block} lang={lang} />;
+		case 'openSourceContributors':
+			return <OpenSourceContributorsBlock blok={block} lang={lang} />;
+		case 'openSourceIssues':
+			return <OpenSourceIssuesBlock blok={block} lang={lang} />;
 		case 'partnershipsCarousel':
 			return <PartnershipsCarouselBlock blok={block} />;
 		case 'personGrid':
@@ -96,6 +107,10 @@ const renderPageBlock = (
 			return <TextBlock blok={block} />;
 		case 'transparency':
 			return <TransparencyBlock blok={block} lang={lang} />;
+		case 'transparencyCountries':
+			return <TransparencyCountriesBlock blok={block} lang={lang} />;
+		case 'transparencySummary':
+			return <TransparencySummaryBlock blok={block} lang={lang} />;
 		case 'twoColumnText':
 			return <TwoColumnTextBlock blok={block} />;
 		case 'videoText':

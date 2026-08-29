@@ -127,6 +127,14 @@ export interface Document {
   [k: string]: unknown;
 }
 
+export interface DonationGlobe {
+  title?: string;
+  component: "donationGlobe";
+  _uid: string;
+  // _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface DonationsTotal {
   heading: string;
   images?: StoryblokMultiasset;
@@ -376,6 +384,24 @@ export interface OpenSource {
   [k: string]: unknown;
 }
 
+export interface OpenSourceContributors {
+  component: "openSourceContributors";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface OpenSourceIssues {
+  component: "openSourceIssues";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface OpenSourceStats {
+  component: "openSourceStats";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Page {
   content: (
     | DonationsTotal
@@ -395,7 +421,9 @@ export interface Page {
     | TwoColumnText
     | VideoText
     | Transparency
-    | OpenSource
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
     | Spacer
     | ExplainerVideoHeader
     | RichtextButtonHeader
@@ -403,6 +431,9 @@ export interface Page {
     | Lottie
     | PersonGrid
     | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
   )[];
   component: "page";
   _uid: string;
@@ -625,7 +656,24 @@ export interface Text {
 }
 
 export interface Transparency {
+  donationGlobe?: DonationGlobe[];
+  transparencySummary?: TransparencySummary[];
   component: "transparency";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TransparencyCountries {
+  component: "transparencyCountries";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TransparencySummary {
+  inflowsDescription?: string;
+  outflowsDescription?: string;
+  reservesDescription?: string;
+  component: "transparencySummary";
   _uid: string;
   [k: string]: unknown;
 }

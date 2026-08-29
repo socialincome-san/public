@@ -3,8 +3,16 @@ import {
 	getCampaignTitle,
 	getStoryblokCampaignTitleForSlug,
 } from '@/components/storyblok/campaign/campaign.utils';
-import { Currency, PaymentEventType, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
+import {
+	ContributionStatus,
+	Currency,
+	PaymentEventType,
+	Prisma,
+	PrismaClient,
+	ProgramPermission,
+} from '@/generated/prisma/client';
 import { defaultLanguage } from '@/lib/i18n/utils';
+import { getCountryNameByCode } from '@/lib/types/country';
 import { START_CHARACTER_REGEX, UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { endOfYear, startOfYear } from 'date-fns';
@@ -12,6 +20,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { StoryblokService } from '../storyblok/storyblok.service';
+import { type GlobeContribution } from './contribution-globe.types';
 import {
 	ContributionDonationEntry,
 	ContributionPaginatedTableView,
@@ -23,6 +32,8 @@ import {
 	YourContributionsTableQuery,
 	YourContributionsTableViewRow,
 } from './contribution.types';
+
+const RECENT_GLOBE_CONTRIBUTION_LIMIT = 200;
 
 export class ContributionReadService extends BaseService {
 	constructor(
@@ -479,6 +490,64 @@ export class ContributionReadService extends BaseService {
 			console.error(error);
 
 			return this.resultFail(`Could not fetch contributions for contributor: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getRecentSuccessfulContributions(cutoff: Date): Promise<ServiceResult<GlobeContribution[]>> {
+		try {
+			const rows = await this.db.contribution.findMany({
+				where: {
+					status: ContributionStatus.succeeded,
+					createdAt: { gte: cutoff },
+				},
+				select: {
+					amount: true,
+					currency: true,
+					createdAt: true,
+					contributor: {
+						select: {
+							contact: {
+								select: {
+									address: {
+										select: { country: true },
+									},
+								},
+							},
+						},
+					},
+				},
+				orderBy: { createdAt: 'desc' },
+				take: RECENT_GLOBE_CONTRIBUTION_LIMIT,
+			});
+
+			let skipped = 0;
+			const contributions: GlobeContribution[] = [];
+
+			for (const row of rows) {
+				const countryCode = row.contributor.contact?.address?.country ?? null;
+				if (!countryCode) {
+					skipped++;
+					continue;
+				}
+				contributions.push({
+					key: `contribution-${contributions.length}`,
+					amount: Number(row.amount),
+					currency: row.currency,
+					contributedAt: row.createdAt.toISOString(),
+					countryCode,
+					countryName: getCountryNameByCode(countryCode),
+				});
+			}
+
+			if (skipped > 0) {
+				console.warn(`Skipped ${skipped} contributions without a country for globe visualization.`);
+			}
+
+			return this.resultOk(contributions);
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not fetch recent contributions for globe: ${JSON.stringify(error)}`);
 		}
 	}
 }

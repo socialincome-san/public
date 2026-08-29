@@ -42,6 +42,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "STORYBLOK_MANAGEMENT_TOKEN"
+          value = var.storyblok_management_token
+        }
+
+        env {
           name  = "MAPBOX_TOKEN"
           value = var.mapbox_token
         }

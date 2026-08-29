@@ -4,6 +4,7 @@ export const campaignsData: Campaign[] = [
 	{
 		id: 'campaign-si-core-sl-default',
 		legacyFirestoreId: null,
+		contributorId: null,
 		goal: new Prisma.Decimal(100000),
 		currency: 'CHF',
 		additionalAmountChf: null,
@@ -18,6 +19,7 @@ export const campaignsData: Campaign[] = [
 	{
 		id: 'campaign-si-core-sl-active-operations',
 		legacyFirestoreId: null,
+		contributorId: null,
 		goal: new Prisma.Decimal(45000),
 		currency: 'CHF',
 		additionalAmountChf: null,
@@ -32,6 +34,7 @@ export const campaignsData: Campaign[] = [
 	{
 		id: 'campaign-si-core-sl-active-growth',
 		legacyFirestoreId: null,
+		contributorId: null,
 		goal: new Prisma.Decimal(30000),
 		currency: 'CHF',
 		additionalAmountChf: null,
@@ -46,6 +49,7 @@ export const campaignsData: Campaign[] = [
 	{
 		id: 'campaign-si-women-support-sl-default',
 		legacyFirestoreId: null,
+		contributorId: null,
 		goal: new Prisma.Decimal(25000),
 		currency: 'CHF',
 		additionalAmountChf: null,
@@ -60,6 +64,7 @@ export const campaignsData: Campaign[] = [
 	{
 		id: 'campaign-si-education-sl-default',
 		legacyFirestoreId: null,
+		contributorId: null,
 		goal: new Prisma.Decimal(22000),
 		currency: 'CHF',
 		additionalAmountChf: null,
@@ -74,6 +79,7 @@ export const campaignsData: Campaign[] = [
 	{
 		id: 'campaign-si-livelihood-gh-default',
 		legacyFirestoreId: null,
+		contributorId: null,
 		goal: new Prisma.Decimal(28000),
 		currency: 'CHF',
 		additionalAmountChf: null,
@@ -88,6 +94,7 @@ export const campaignsData: Campaign[] = [
 	{
 		id: 'campaign-si-education-gh-default',
 		legacyFirestoreId: null,
+		contributorId: null,
 		goal: new Prisma.Decimal(24000),
 		currency: 'CHF',
 		additionalAmountChf: null,
@@ -102,6 +109,7 @@ export const campaignsData: Campaign[] = [
 	{
 		id: 'campaign-si-resilience-lr-default',
 		legacyFirestoreId: null,
+		contributorId: null,
 		goal: new Prisma.Decimal(26000),
 		currency: 'CHF',
 		additionalAmountChf: null,
@@ -116,6 +124,7 @@ export const campaignsData: Campaign[] = [
 	{
 		id: 'campaign-si-health-lr-default',
 		legacyFirestoreId: null,
+		contributorId: null,
 		goal: new Prisma.Decimal(21000),
 		currency: 'CHF',
 		additionalAmountChf: null,
@@ -130,6 +139,7 @@ export const campaignsData: Campaign[] = [
 	{
 		id: 'campaign-somaha-community-lr-default',
 		legacyFirestoreId: null,
+		contributorId: null,
 		goal: new Prisma.Decimal(19000),
 		currency: 'CHF',
 		additionalAmountChf: null,
