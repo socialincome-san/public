@@ -1,7 +1,7 @@
 'use client';
 
 import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { RichtextButtonHeader } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';

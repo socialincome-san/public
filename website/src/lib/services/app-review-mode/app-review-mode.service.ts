@@ -83,7 +83,7 @@ export class AppReviewModeService extends BaseService {
 				amountOfRecipientsForStart: 6,
 				coveredByReserves: false,
 				programDurationInMonths: 60,
-				payoutPerInterval: new Prisma.Decimal(5000000),
+				payoutPerInterval: new Prisma.Decimal(500),
 				payoutInterval: PayoutInterval.monthly,
 				targetProfiles: [],
 				countryId: 'usa',

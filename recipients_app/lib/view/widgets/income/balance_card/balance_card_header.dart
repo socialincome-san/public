@@ -77,7 +77,7 @@ class BalanceCardHeader extends StatelessWidget {
     if (balanceCardStatus == BalanceCardStatus.onHold) {
       daysText = localizations.paymentsSuspended;
     } else if (daysTo < 0) {
-      daysText = "-";
+      daysText = "?";
     } else if (daysTo == 0) {
       daysText = localizations.today;
     } else if (daysTo == 1) {

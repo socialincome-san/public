@@ -1,4 +1,4 @@
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { cn } from '@/lib/utils/cn';
 import { PlusIcon } from 'lucide-react';
 import type { WalletBadge, WalletFooterColumn, WalletVariant } from './wallet.types';
@@ -14,7 +14,7 @@ type WalletFrontProps = {
 
 export const WalletFront = ({ variant, title, subtitle, badge, footerLeft, footerRight }: WalletFrontProps) => (
 	<div
-		className="flex aspect-[1.9] w-full min-w-0 flex-1 drop-shadow-[0_4px_20px_rgba(0,0,0,0.09)]"
+		className="flex min-h-[calc(100cqw/1.9)] w-full min-w-0 grow drop-shadow-[0_4px_20px_rgba(0,0,0,0.09)]"
 		data-testid="wallet-front"
 	>
 		<WalletFrontContent
@@ -39,7 +39,7 @@ const WalletFrontContent = ({ variant, title, subtitle, badge, footerLeft, foote
 	>
 		<div className="h-full min-w-0 px-7 pt-0 pb-8">
 			{variant === 'default' ? (
-				<div className="flex h-full w-full min-w-0 flex-col items-start justify-between gap-2">
+				<div className="flex h-full w-full min-w-0 flex-col items-start gap-2">
 					<div className="w-full min-w-0">
 						<h2 className="mb-3 text-4xl leading-none font-normal wrap-break-word whitespace-normal">{title}</h2>
 						<p className="mb-3 line-clamp-1 w-full min-w-0 text-base leading-6 font-medium">{subtitle}</p>
@@ -47,7 +47,7 @@ const WalletFrontContent = ({ variant, title, subtitle, badge, footerLeft, foote
 					</div>
 
 					{footerLeft || footerRight ? (
-						<div className="flex w-full min-w-0 flex-wrap items-end justify-between gap-x-4 gap-y-3">
+						<div className="mt-auto flex w-full min-w-0 flex-wrap items-end justify-between gap-x-4 gap-y-3">
 							<div className="flex min-w-0 flex-col items-start">
 								{footerLeft ? (
 									<>

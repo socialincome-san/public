@@ -1,5 +1,4 @@
 import { PayoutStatus, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { endOfMonth, format, isSameMonth, startOfMonth } from 'date-fns';
 import { BaseService } from '../core/base.service';
@@ -17,9 +16,8 @@ export class PayoutProcessCoreService extends BaseService {
 		private readonly programStatsService: ProgramStatsService,
 		private readonly exchangeRateService: ExchangeRateReadService,
 		private readonly recipientStatusService: RecipientStatusService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async getRecipientsReadyForPayout(
@@ -131,7 +129,7 @@ export class PayoutProcessCoreService extends BaseService {
 
 			return this.resultOk(mapped);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch payout recipients: ${JSON.stringify(error)}`);
 		}
@@ -186,7 +184,7 @@ export class PayoutProcessCoreService extends BaseService {
 
 			return this.resultOk(toCreate);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not preview payouts: ${JSON.stringify(error)}`);
 		}
@@ -239,7 +237,7 @@ export class PayoutProcessCoreService extends BaseService {
 
 			return this.resultOk(message);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not generate payouts: ${JSON.stringify(error)}`);
 		}

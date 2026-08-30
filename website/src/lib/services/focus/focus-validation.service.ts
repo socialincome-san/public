@@ -1,5 +1,3 @@
-import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
@@ -11,10 +9,6 @@ import {
 import type { FocusUpdateUniquenessContext } from './focus-validation.types';
 
 export class FocusValidationService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
-
 	validateCreateInput(input: FocusFormCreateInput): ServiceResult<FocusFormCreateInput> {
 		const parsedInput = focusCreateInputSchema.safeParse(input);
 		if (!parsedInput.success) {

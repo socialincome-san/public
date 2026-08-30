@@ -7,6 +7,29 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateCreateInput, ExchangeRateResponse } from './exchange-rate.types';
 
+type EtherscanEthPriceResponse = {
+	status: string;
+	message: string;
+	result: {
+		ethusd: string;
+	};
+};
+
+const ETHERSCAN_API_URL = 'https://api.etherscan.io/v2/api';
+
+const isEtherscanEthPriceResponse = (value: unknown): value is EtherscanEthPriceResponse =>
+	typeof value === 'object' &&
+	value !== null &&
+	'status' in value &&
+	typeof value.status === 'string' &&
+	'message' in value &&
+	typeof value.message === 'string' &&
+	'result' in value &&
+	typeof value.result === 'object' &&
+	value.result !== null &&
+	'ethusd' in value.result &&
+	typeof value.result.ethusd === 'string';
+
 export class ExchangeRateImportService extends BaseService {
 	static readonly DAY_IN_MILLISECONDS = 60 * 60 * 24 * 1000;
 
@@ -25,7 +48,7 @@ export class ExchangeRateImportService extends BaseService {
 
 			return this.resultOk(result);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch exchange rates: ${JSON.stringify(error)}`);
 		}
@@ -37,7 +60,7 @@ export class ExchangeRateImportService extends BaseService {
 		}
 
 		const day = dt.toFormat('yyyy-MM-dd');
-		this.logger.info('Fetching exchange rates for day', { day });
+		console.info('Fetching exchange rates for day', { day });
 		const response = await fetch(`https://api.apilayer.com/exchangerates_data/${day}?base=chf`, {
 			method: 'GET',
 			headers: {
@@ -69,7 +92,7 @@ export class ExchangeRateImportService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not store exchange rates: ${JSON.stringify(error)}`);
 		}
@@ -82,13 +105,96 @@ export class ExchangeRateImportService extends BaseService {
 			if (!storeResult.success) {
 				return this.resultFail(storeResult.error, storeResult.status);
 			}
-			this.logger.info('Ingested exchange rates for date', { date: dt.toISODate() });
+			console.info('Ingested exchange rates for date', { date: dt.toISODate() });
 
 			return this.resultOk(rates);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not ingest exchange rates: ${JSON.stringify(error)}`);
+		}
+	}
+
+	private async fetchEthUsdPrice(): Promise<number> {
+		const apiKey = process.env.ETHERSCAN_API_KEY?.trim();
+		if (!apiKey) {
+			throw new Error('ETHERSCAN_API_KEY environment variable is not set');
+		}
+
+		const parameters = new URLSearchParams({
+			module: 'stats',
+			action: 'ethprice',
+			chainid: '1',
+			apikey: apiKey,
+		});
+		const response = await fetch(`${ETHERSCAN_API_URL}?${parameters.toString()}`, { method: 'GET' });
+		if (!response.ok) {
+			throw new Error(`Etherscan Request Failure: ${response.status} ${response.statusText}`);
+		}
+
+		const data: unknown = await response.json();
+		if (!isEtherscanEthPriceResponse(data)) {
+			throw new Error('Invalid Etherscan ETH price response: invalid response shape');
+		}
+		const ethUsdPrice = Number(data.result.ethusd);
+		if (data.status !== '1' || !Number.isFinite(ethUsdPrice) || ethUsdPrice <= 0) {
+			throw new Error(`Invalid Etherscan ETH price response: ${data.message}`);
+		}
+
+		return ethUsdPrice;
+	}
+
+	private async importTodayEthExchangeRate(): Promise<ServiceResult<void>> {
+		try {
+			const today = DateTime.utc().startOf('day');
+			const tomorrow = today.plus({ days: 1 });
+			const existingRates = await this.db.exchangeRate.findMany({
+				where: {
+					currency: { in: ['ETH', 'USD'] },
+					timestamp: {
+						gte: today.toJSDate(),
+						lt: tomorrow.toJSDate(),
+					},
+				},
+			});
+
+			if (existingRates.some(({ currency }) => currency === 'ETH')) {
+				console.info('ETH exchange rate already exists for today');
+
+				return this.resultOk(undefined);
+			}
+
+			let usdRate = existingRates.find(({ currency }) => currency === 'USD')?.rate.toNumber();
+			if (usdRate === undefined) {
+				const ratesResult = await this.fetchAndStoreExchangeRates(today);
+				if (!ratesResult.success) {
+					return this.resultFail(`Could not import ETH exchange rate: ${ratesResult.error}`);
+				}
+				usdRate = ratesResult.data.rates.USD;
+			}
+			if (usdRate === undefined || !Number.isFinite(usdRate) || usdRate <= 0) {
+				return this.resultFail('Could not import ETH exchange rate: USD exchange rate for today is missing');
+			}
+
+			const ethUsdPrice = await this.fetchEthUsdPrice();
+			const ethRate = usdRate / ethUsdPrice;
+			await this.db.exchangeRate.create({
+				data: {
+					currency: 'ETH',
+					rate: ethRate,
+					timestamp: today.toJSDate(),
+				},
+			});
+			console.info('Ingested ETH exchange rate for today', {
+				date: today.toISODate(),
+				rate: ethRate,
+			});
+
+			return this.resultOk(undefined);
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not import ETH exchange rate: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -100,12 +206,12 @@ export class ExchangeRateImportService extends BaseService {
 			const existingExchangeRates = await this.getAllRatesSince(oneMonthAgo);
 
 			if (!existingExchangeRates.success) {
-				this.logger.error('Could not fetch existing exchange rates');
+				console.error('Could not fetch existing exchange rates');
 
 				return this.resultFail('Could not fetch existing exchange rates');
 			}
 
-			this.logger.info('Starting exchange rate import', {
+			console.info('Starting exchange rate import', {
 				fromDate: oneMonthAgo.toISOString(),
 				toDate: now().toISOString(),
 			});
@@ -123,7 +229,7 @@ export class ExchangeRateImportService extends BaseService {
 					);
 				});
 
-				this.logger.info('Checking exchange rates for timestamp', {
+				console.info('Checking exchange rates for timestamp', {
 					date: DateTime.fromMillis(timestamp).toISODate(),
 					found: ratesForTimestamp.length,
 				});
@@ -132,21 +238,26 @@ export class ExchangeRateImportService extends BaseService {
 					try {
 						const storedRates = await this.fetchAndStoreExchangeRates(DateTime.fromMillis(timestamp));
 						if (!storedRates.success) {
-							this.logger.error('Could not store exchange rates');
+							console.error('Could not store exchange rates');
 
 							return this.resultFail(`Could not store exchange rates: ${storedRates.error}`);
 						}
 					} catch (error) {
-						this.logger.error(error);
+						console.error(error);
 
 						return this.resultFail(`Could not fetch and store exchange rates: ${JSON.stringify(error)}`);
 					}
 				}
 			}
 
+			const ethImportResult = await this.importTodayEthExchangeRate();
+			if (!ethImportResult.success) {
+				console.error(ethImportResult.error);
+			}
+
 			return this.resultOk(undefined);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not import exchange rates: ${JSON.stringify(error)}`);
 		}

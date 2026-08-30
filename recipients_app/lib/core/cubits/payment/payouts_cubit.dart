@@ -234,6 +234,14 @@ class PayoutsCubit extends Cubit<PayoutsState> {
 
   // Calculate the next payment date based on the previous payment date and the payout interval
   NextPayoutData _getNextPaymentData(List<MappedPayout> mappedPayments) {
+    if (mappedPayments.isEmpty) {
+      return NextPayoutData(
+        amount: recipient.program.payoutPerInterval,
+        currency: recipient.program.country.currency,
+        daysToPayout: -1,
+      );
+    }
+
     final previousPaymentDate = mappedPayments.last.payout.paymentAt;
     final monthsToAdd = _getPayoutIntervalInMonths();
     final nextPaymentDate = DateTime(

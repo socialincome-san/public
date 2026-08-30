@@ -1,5 +1,4 @@
 import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { UserRecord } from 'firebase-admin/auth';
 import { AppReviewModeService } from '../../app-review-mode/app-review-mode.service';
 import { ServiceResult } from '../../core/base.types';
@@ -12,9 +11,8 @@ export class TwilioOtpService extends TwilioBaseService {
 		db: PrismaClient,
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly appReviewModeService: AppReviewModeService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private readonly twilioVerifyServiceSid = process.env.TWILIO_VERIFY_SERVICE_SID;
@@ -36,7 +34,7 @@ export class TwilioOtpService extends TwilioBaseService {
 				return this.resultFail(bypassResult.error);
 			}
 			if (bypassResult.data) {
-				this.logger.info('APP REVIEW MODE: Skipping Twilio OTP send for app review phone');
+				console.info('APP REVIEW MODE: Skipping Twilio OTP send for app review phone');
 
 				return this.resultOk(true);
 			}
@@ -46,7 +44,7 @@ export class TwilioOtpService extends TwilioBaseService {
 				return twilioClientResult;
 			}
 
-			this.logger.info('Twilio: Requesting OTP for phone');
+			console.info('Twilio: Requesting OTP for phone');
 			await twilioClientResult.data.verify.v2.services(this.twilioVerifyServiceSid ?? '').verifications.create({
 				to: phoneResult.data,
 				channel: 'sms',
@@ -54,7 +52,7 @@ export class TwilioOtpService extends TwilioBaseService {
 
 			return this.resultOk(true);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to request OTP: ${this.formatError(error)}`);
 		}
@@ -68,7 +66,7 @@ export class TwilioOtpService extends TwilioBaseService {
 			}
 
 			if (!request.phoneNumber || !request.otp) {
-				this.logger.info('Missing phone number or OTP');
+				console.info('Missing phone number or OTP');
 
 				return this.resultFail('Phone number and OTP are required');
 			}
@@ -83,7 +81,7 @@ export class TwilioOtpService extends TwilioBaseService {
 				return this.resultFail(bypassResult.error);
 			}
 			if (bypassResult.data) {
-				this.logger.info('APP REVIEW MODE: Skipping Twilio verify for app review phone');
+				console.info('APP REVIEW MODE: Skipping Twilio verify for app review phone');
 
 				return await this.finalizeOtpVerification(phoneResult.data);
 			}
@@ -93,7 +91,7 @@ export class TwilioOtpService extends TwilioBaseService {
 				return twilioClientResult;
 			}
 
-			this.logger.info('Twilio: Attempting to verify OTP for phone');
+			console.info('Twilio: Attempting to verify OTP for phone');
 			const verification = await twilioClientResult.data.verify.v2
 				.services(this.twilioVerifyServiceSid ?? '')
 				.verificationChecks.create({
@@ -101,10 +99,10 @@ export class TwilioOtpService extends TwilioBaseService {
 					code: request.otp,
 				});
 
-			this.logger.info(`Twilio verification response has status: '${verification.status}' and sid '${verification.sid}'`);
+			console.info(`Twilio verification response has status: '${verification.status}' and sid '${verification.sid}'`);
 
 			if (verification.status !== 'approved') {
-				this.logger.info('OTP verification failed', { status: verification.status });
+				console.info('OTP verification failed', { status: verification.status });
 
 				return this.resultFail('Invalid OTP provided');
 			}
@@ -115,7 +113,7 @@ export class TwilioOtpService extends TwilioBaseService {
 				return this.resultFail('Verification resource not found for the provided phone number and OTP');
 			}
 
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to verify OTP: ${this.formatError(error)}`);
 		}
@@ -123,12 +121,12 @@ export class TwilioOtpService extends TwilioBaseService {
 
 	private async finalizeOtpVerification(phoneNumber: string): Promise<ServiceResult<VerifyOtpResult>> {
 		try {
-			this.logger.info('OTP verified successfully, checking if user exists');
+			console.info('OTP verified successfully, checking if user exists');
 			let isNewUser = false;
 
 			let userRecord = await this.getUserByPhoneNumber(phoneNumber);
 			if (!userRecord) {
-				this.logger.info('Creating new user with given phone number');
+				console.info('Creating new user with given phone number');
 				isNewUser = true;
 				userRecord = await this.createUserWithPhoneNumber(phoneNumber);
 				if (!userRecord) {
@@ -147,7 +145,7 @@ export class TwilioOtpService extends TwilioBaseService {
 				uid: userRecord.uid,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to generate custom token: ${this.formatError(error)}`);
 		}
@@ -172,7 +170,7 @@ export class TwilioOtpService extends TwilioBaseService {
 
 	private requireValidPhoneNumber(phoneNumber?: string): ServiceResult<string> {
 		if (!phoneNumber) {
-			this.logger.info('Missing phone number');
+			console.info('Missing phone number');
 
 			return this.resultFail('Phone number is required');
 		}
@@ -184,7 +182,7 @@ export class TwilioOtpService extends TwilioBaseService {
 
 		const phoneRegex = /^\+[1-9]\d{1,14}$/;
 		if (!phoneRegex.test(normalized)) {
-			this.logger.info('Invalid phone number format');
+			console.info('Invalid phone number format');
 
 			return this.resultFail('Phone number must be in valid E.164 format (e.g., +12345678901)');
 		}
@@ -195,7 +193,7 @@ export class TwilioOtpService extends TwilioBaseService {
 	private async getUserByPhoneNumber(phoneNumber: string): Promise<UserRecord | null> {
 		const result = await this.firebaseAdminService.getByPhoneNumber(phoneNumber);
 		if (!result.success) {
-			this.logger.info('User not found with given phone number', { phoneNumber, error: result.error });
+			console.info('User not found with given phone number', { phoneNumber, error: result.error });
 
 			return null;
 		}
@@ -206,11 +204,11 @@ export class TwilioOtpService extends TwilioBaseService {
 	private async createUserWithPhoneNumber(phoneNumber: string): Promise<UserRecord | null> {
 		const result = await this.firebaseAdminService.createByPhoneNumber(phoneNumber);
 		if (!result.success) {
-			this.logger.error(result.error);
+			console.error(result.error);
 
 			return null;
 		}
-		this.logger.info('New user created successfully', { userId: result.data.uid });
+		console.info('New user created successfully', { userId: result.data.uid });
 
 		return result.data;
 	}
@@ -218,11 +216,11 @@ export class TwilioOtpService extends TwilioBaseService {
 	private async generateCustomToken(userRecord: UserRecord): Promise<string | null> {
 		const result = await this.firebaseAdminService.createCustomToken(userRecord.uid);
 		if (!result.success) {
-			this.logger.error(result.error);
+			console.error(result.error);
 
 			return null;
 		}
-		this.logger.info('Custom token created for user', { userId: userRecord.uid });
+		console.info('Custom token created for user', { userId: userRecord.uid });
 
 		return result.data;
 	}

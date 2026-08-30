@@ -24,6 +24,8 @@ export type TableQueryState = {
 	payoutStatus?: string;
 	recipientStatus?: string;
 	mobileMoneyProviderId?: string;
+	subscriptionStatus?: string;
+	subscriptionPaymentMethod?: string;
 };
 
 type QueryValue = string | string[] | number | null | undefined;
@@ -44,6 +46,8 @@ type TableQueryInput = {
 	payoutStatus?: QueryValue;
 	recipientStatus?: QueryValue;
 	mobileMoneyProviderId?: QueryValue;
+	subscriptionStatus?: QueryValue;
+	subscriptionPaymentMethod?: QueryValue;
 };
 
 const takeFirst = (value: QueryValue): string | undefined => {
@@ -106,6 +110,8 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	const payoutStatus = normalizeToken(input.payoutStatus, MAX_QUERY_TOKEN_LENGTH);
 	const recipientStatus = normalizeToken(input.recipientStatus, MAX_QUERY_TOKEN_LENGTH);
 	const mobileMoneyProviderId = normalizeToken(input.mobileMoneyProviderId, MAX_QUERY_TOKEN_LENGTH);
+	const subscriptionStatus = normalizeToken(input.subscriptionStatus, MAX_QUERY_TOKEN_LENGTH);
+	const subscriptionPaymentMethod = normalizeToken(input.subscriptionPaymentMethod, MAX_QUERY_TOKEN_LENGTH);
 
 	return {
 		page,
@@ -123,6 +129,8 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 		payoutStatus: payoutStatus || undefined,
 		recipientStatus: recipientStatus || undefined,
 		mobileMoneyProviderId: mobileMoneyProviderId || undefined,
+		subscriptionStatus: subscriptionStatus || undefined,
+		subscriptionPaymentMethod: subscriptionPaymentMethod || undefined,
 	};
 };
 
@@ -143,6 +151,8 @@ export const tableQueryFromSearchParams = (searchParams: Record<string, string |
 		payoutStatus: searchParams.payoutStatus,
 		recipientStatus: searchParams.recipientStatus,
 		mobileMoneyProviderId: searchParams.mobileMoneyProviderId,
+		subscriptionStatus: searchParams.subscriptionStatus,
+		subscriptionPaymentMethod: searchParams.subscriptionPaymentMethod,
 	});
 };
 
@@ -170,6 +180,12 @@ export const applyTableQueryPatch = (
 		mobileMoneyProviderId: hasPatchKey('mobileMoneyProviderId')
 			? patch.mobileMoneyProviderId
 			: currentSearchParams.get('mobileMoneyProviderId'),
+		subscriptionStatus: hasPatchKey('subscriptionStatus')
+			? patch.subscriptionStatus
+			: currentSearchParams.get('subscriptionStatus'),
+		subscriptionPaymentMethod: hasPatchKey('subscriptionPaymentMethod')
+			? patch.subscriptionPaymentMethod
+			: currentSearchParams.get('subscriptionPaymentMethod'),
 	});
 
 	const nextParams = new URLSearchParams(currentSearchParams.toString());
@@ -237,6 +253,16 @@ export const applyTableQueryPatch = (
 		nextParams.set('mobileMoneyProviderId', nextQuery.mobileMoneyProviderId);
 	} else {
 		nextParams.delete('mobileMoneyProviderId');
+	}
+	if (nextQuery.subscriptionStatus) {
+		nextParams.set('subscriptionStatus', nextQuery.subscriptionStatus);
+	} else {
+		nextParams.delete('subscriptionStatus');
+	}
+	if (nextQuery.subscriptionPaymentMethod) {
+		nextParams.set('subscriptionPaymentMethod', nextQuery.subscriptionPaymentMethod);
+	} else {
+		nextParams.delete('subscriptionPaymentMethod');
 	}
 
 	return nextParams;

@@ -1,6 +1,7 @@
 import { prisma } from '../prisma';
 import { accountsData } from './data/accounts.data';
 import { addressesData } from './data/addresses.data';
+import { bankAccountsData } from './data/bank-accounts.data';
 import { campaignsData } from './data/campaigns.data';
 import { contactsData } from './data/contacts.data';
 import { contributionsData } from './data/contributions.data';
@@ -25,18 +26,22 @@ import { programTargetFocusesData } from './data/program-target-focuses.data';
 import { programsData } from './data/programs.data';
 import { recipientsData } from './data/recipients.data';
 import { sourceLinksData } from './data/source-links.data';
+import { subscriptionsData } from './data/subscriptions.data';
 import { surveySchedulesData } from './data/survey-schedules.data';
 import { surveysData } from './data/surveys.data';
 import { usersData } from './data/users.data';
 
 export const seedDatabase = async () => {
 	await prisma.$transaction(async (tx) => {
+		await tx.reserve.deleteMany();
+		await tx.bankAccount.deleteMany();
 		await tx.survey.deleteMany();
 		await tx.surveySchedule.deleteMany();
 		await tx.payout.deleteMany();
 		await tx.recipient.deleteMany();
 		await tx.paymentEvent.deleteMany();
 		await tx.contribution.deleteMany();
+		await tx.subscription.deleteMany();
 		await tx.donationCertificate.deleteMany();
 		await tx.contributor.deleteMany();
 		await tx.campaign.deleteMany();
@@ -48,10 +53,12 @@ export const seedDatabase = async () => {
 		await tx.program.deleteMany();
 		await tx.focus.deleteMany();
 		await tx.organizationAccess.deleteMany();
+		await tx.messageLog.deleteMany();
+		await tx.messagingJob.deleteMany();
 		await tx.expense.deleteMany();
+		await tx.user.deleteMany();
 		await tx.organization.deleteMany();
 		await tx.exchangeRate.deleteMany();
-		await tx.user.deleteMany();
 		await tx.contact.deleteMany();
 		await tx.phone.deleteMany();
 		await tx.address.deleteMany();
@@ -68,6 +75,7 @@ export const seedDatabase = async () => {
 			data: countryMobileMoneyProviderMappingsData,
 			skipDuplicates: true,
 		});
+		await tx.bankAccount.createMany({ data: bankAccountsData, skipDuplicates: true });
 		await tx.account.createMany({ data: accountsData, skipDuplicates: true });
 		await tx.address.createMany({ data: addressesData, skipDuplicates: true });
 		await tx.phone.createMany({ data: phonesData, skipDuplicates: true });
@@ -84,6 +92,7 @@ export const seedDatabase = async () => {
 		await tx.paymentInformation.createMany({ data: paymentInformationsData, skipDuplicates: true });
 		await tx.campaign.createMany({ data: campaignsData, skipDuplicates: true });
 		await tx.contributor.createMany({ data: contributorsData, skipDuplicates: true });
+		await tx.subscription.createMany({ data: subscriptionsData, skipDuplicates: true });
 		await tx.contribution.createMany({ data: contributionsData, skipDuplicates: true });
 		await tx.paymentEvent.createMany({ data: paymentEventsData, skipDuplicates: true });
 		await tx.donationCertificate.createMany({ data: donationCertificatesData, skipDuplicates: true });

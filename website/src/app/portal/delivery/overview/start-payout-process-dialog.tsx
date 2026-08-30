@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
 import { PayoutProcess } from '@/generated/prisma/enums';
 import type { PayoutProcessOverviewOption } from '@/lib/services/payout-process/payout-process-overview.types';

@@ -1,7 +1,5 @@
 import { CountryCode, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
-import { logger } from '@/lib/utils/logger';
-import { now } from '@/lib/utils/now';
 import { ContactRelationsService } from '../contact/contact-relations.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -9,6 +7,7 @@ import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { UserReadService } from '../user/user-read.service';
 import { CandidateFormCreateInput, CandidateFormUpdateInput } from './candidate-form-input';
 import { CandidateValidationService } from './candidate-validation.service';
+import { buildCandidateWhere } from './candidate-where';
 import { CandidatePayload, Profile } from './candidate.types';
 
 export class CandidateWriteService extends BaseService {
@@ -50,9 +49,8 @@ export class CandidateWriteService extends BaseService {
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly candidateValidationService: CandidateValidationService,
 		private readonly contactRelationsService: ContactRelationsService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private async deletePhoneIfOrphaned(phoneId: string): Promise<void> {
@@ -69,104 +67,6 @@ export class CandidateWriteService extends BaseService {
 		}
 
 		return this.resultOk(true);
-	}
-
-	private buildCandidateWhere(
-		focuses?: string[],
-		profiles?: Profile[],
-		countryCode?: CountryCode | null,
-	): Prisma.RecipientWhereInput {
-		const where: Prisma.RecipientWhereInput = {
-			programId: null,
-		};
-
-		if (countryCode) {
-			where.AND = [
-				{
-					OR: [
-						{
-							contact: {
-								address: {
-									country: countryCode,
-								},
-							},
-						},
-						{
-							AND: [
-								{
-									OR: [
-										{
-											contact: {
-												address: null,
-											},
-										},
-										{
-											contact: {
-												address: {
-													country: null,
-												},
-											},
-										},
-									],
-								},
-								{
-									localPartner: {
-										contact: {
-											address: {
-												country: countryCode,
-											},
-										},
-									},
-								},
-							],
-						},
-					],
-				},
-			];
-		}
-
-		if (focuses && focuses.length > 0) {
-			where.localPartner = {
-				focuses: {
-					some: {
-						focusId: { in: focuses },
-					},
-				},
-			};
-		}
-
-		if (profiles && profiles.length > 0) {
-			const contactFilters: Prisma.ContactWhereInput[] = [];
-
-			const genderProfiles = profiles.filter((p) => p === Profile.male || p === Profile.female);
-
-			if (genderProfiles.length > 0) {
-				contactFilters.push({
-					gender: {
-						in: genderProfiles,
-					},
-				});
-			}
-
-			if (profiles.includes(Profile.youth)) {
-				const nowDate = now();
-				const youthCutoffDate = new Date(nowDate.getFullYear() - 25, nowDate.getMonth(), nowDate.getDate());
-
-				contactFilters.push({
-					dateOfBirth: {
-						gte: youthCutoffDate,
-					},
-				});
-			}
-
-			if (contactFilters.length > 0) {
-				where.contact = {
-					OR: contactFilters,
-				};
-			}
-		}
-
-		return where;
 	}
 
 	private buildPaymentInformationCreateData(
@@ -413,7 +313,7 @@ export class CandidateWriteService extends BaseService {
 				return this.resultOk(newCandidate);
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not create candidate. Please try again later.');
 		}
@@ -579,7 +479,7 @@ export class CandidateWriteService extends BaseService {
 
 			return this.resultOk(updatedCandidate);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 			if (phoneAdded && nextPaymentPhoneNumber) {
 				await this.firebaseAdminService.deleteByPhoneNumberIfExists(nextPaymentPhoneNumber);
 			}
@@ -664,7 +564,7 @@ export class CandidateWriteService extends BaseService {
 				try {
 					await this.contactRelationsService.deletePhoneIfUnused(previousContactPhoneId);
 				} catch (cleanupError) {
-					this.logger.warn('Candidate deleted but contact phone cleanup failed', {
+					console.warn('Candidate deleted but contact phone cleanup failed', {
 						candidateId,
 						previousContactPhoneId,
 						error: cleanupError,
@@ -675,7 +575,7 @@ export class CandidateWriteService extends BaseService {
 				try {
 					await this.contactRelationsService.deletePhoneIfUnused(previousPaymentPhoneId);
 				} catch (cleanupError) {
-					this.logger.warn('Candidate deleted but payment phone cleanup failed', {
+					console.warn('Candidate deleted but payment phone cleanup failed', {
 						candidateId,
 						previousPaymentPhoneId,
 						error: cleanupError,
@@ -686,7 +586,7 @@ export class CandidateWriteService extends BaseService {
 				try {
 					await this.contactRelationsService.deleteAddressIfUnused(previousAddressId);
 				} catch (cleanupError) {
-					this.logger.warn('Candidate deleted but address cleanup failed', {
+					console.warn('Candidate deleted but address cleanup failed', {
 						candidateId,
 						previousAddressId,
 						error: cleanupError,
@@ -698,14 +598,14 @@ export class CandidateWriteService extends BaseService {
 				try {
 					const firebaseDeleteResult = await this.firebaseAdminService.deleteByPhoneNumberIfExists(paymentPhoneNumber);
 					if (!firebaseDeleteResult.success) {
-						this.logger.warn('Candidate deleted in DB but Firebase user deletion failed', {
+						console.warn('Candidate deleted in DB but Firebase user deletion failed', {
 							candidateId,
 							paymentPhoneNumber,
 							error: firebaseDeleteResult.error,
 						});
 					}
 				} catch (cleanupError) {
-					this.logger.warn('Candidate deleted in DB but Firebase cleanup threw', {
+					console.warn('Candidate deleted in DB but Firebase cleanup threw', {
 						candidateId,
 						paymentPhoneNumber,
 						error: cleanupError,
@@ -715,7 +615,7 @@ export class CandidateWriteService extends BaseService {
 
 			return this.resultOk({ id: candidateId });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not delete candidate. Please try again later.');
 		}
@@ -729,7 +629,7 @@ export class CandidateWriteService extends BaseService {
 		profiles?: Profile[],
 	): Promise<ServiceResult<{ assigned: number }>> {
 		try {
-			const where = this.buildCandidateWhere(focuses, profiles, countryCode);
+			const where = buildCandidateWhere(focuses, profiles, countryCode);
 
 			const allAvailableCandidates = await this.db.recipient.findMany({
 				where,
@@ -752,7 +652,7 @@ export class CandidateWriteService extends BaseService {
 
 			return this.resultOk({ assigned: selectedIds.length });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not assign candidates: ${JSON.stringify(error)}`);
 		}

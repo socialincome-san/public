@@ -1,5 +1,4 @@
 import { Contributor, ContributorReferralSource, Prisma, PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { DateTime } from 'luxon';
 import { ContactRelationsService } from '../contact/contact-relations.service';
 import { BaseService } from '../core/base.service';
@@ -25,9 +24,8 @@ export class ContributorWriteService extends BaseService {
 		private readonly sendGridService: SendgridSubscriptionService,
 		private readonly contributorValidationService: ContributorValidationService,
 		private readonly contactRelationsService: ContactRelationsService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private async applyContributorUpdate(
@@ -61,7 +59,7 @@ export class ContributorWriteService extends BaseService {
 				});
 
 				if (!firebaseResult.success) {
-					this.logger.warn('Could not update Firebase Auth user', {
+					console.warn('Could not update Firebase Auth user', {
 						error: firebaseResult.error,
 					});
 				}
@@ -74,7 +72,7 @@ export class ContributorWriteService extends BaseService {
 
 			return this.resultOk(updatedContributor);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not update contributor: ${JSON.stringify(error)}`);
 		}
@@ -150,7 +148,7 @@ export class ContributorWriteService extends BaseService {
 					displayName: newDisplayName,
 				});
 				if (!firebaseResult.success) {
-					this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
+					console.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
 				}
 			}
 
@@ -190,7 +188,7 @@ export class ContributorWriteService extends BaseService {
 
 			return this.resultOk(updated);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not update contributor. Please try again later.');
 		}
@@ -200,7 +198,7 @@ export class ContributorWriteService extends BaseService {
 		try {
 			return this.applyContributorUpdate(contributorId, data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not update contributor (self): ${JSON.stringify(error)}`);
 		}
@@ -234,7 +232,7 @@ export class ContributorWriteService extends BaseService {
 
 			return this.resultOk({ contributor: createResult.data, isNewContributor: true });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get or create contributor from Stripe customer: ${JSON.stringify(error)}`);
 		}
@@ -279,7 +277,7 @@ export class ContributorWriteService extends BaseService {
 
 			return this.resultOk({ contributor, isNewContributor: true });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get or create contributor for account: ${JSON.stringify(error)}`);
 		}
@@ -307,7 +305,7 @@ export class ContributorWriteService extends BaseService {
 					},
 				});
 				if (!res.success) {
-					this.logger.error(res.error);
+					console.error(res.error);
 
 					return this.resultFail('Could not udate existing contributor with newly created reference ID');
 				}
@@ -315,7 +313,7 @@ export class ContributorWriteService extends BaseService {
 
 			return this.resultOk(referenceId);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get or generate contributor reference ID: ${JSON.stringify(error)}`);
 		}
@@ -400,7 +398,7 @@ export class ContributorWriteService extends BaseService {
 
 			return this.resultOk(newContributor);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get or create contributor by reference ID: ${JSON.stringify(error)}`);
 		}
@@ -441,7 +439,7 @@ export class ContributorWriteService extends BaseService {
 
 			return this.resultOk(contributor);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not create contributor with Firebase Auth user: ${JSON.stringify(error)}`);
 		}
@@ -551,7 +549,7 @@ export class ContributorWriteService extends BaseService {
 
 			return this.resultOk(contributor);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not create contributor. Please try again later.');
 		}
@@ -566,7 +564,7 @@ export class ContributorWriteService extends BaseService {
 
 			return this.resultOk(undefined);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not update contributor Stripe customer ID: ${JSON.stringify(error)}`);
 		}
@@ -591,7 +589,7 @@ export class ContributorWriteService extends BaseService {
 
 			return this.resultOk(contributor);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not find contributor: ${JSON.stringify(error)}`);
 		}

@@ -1,7 +1,6 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { RecipientPrismaUpdateInput } from '@/lib/services/recipient/recipient.types';
 import { services } from '@/lib/services/services';
-import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 import { RecipientSelfUpdate } from '../../models';
 
@@ -15,7 +14,7 @@ export const GET = withAppCheck(async (request: NextRequest) => {
 	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
-		logger.warn('[GET /recipients/me] Failed', {
+		console.warn('[GET /recipients/me] Failed', {
 			error: recipientResult.error,
 			status: recipientResult.status,
 		});
@@ -37,14 +36,14 @@ export const GET = withAppCheck(async (request: NextRequest) => {
  * @openapi
  */
 export const PATCH = withAppCheck(async (request: NextRequest) => {
-	logger.info('[PATCH /recipients/me] Incoming request', {
+	console.info('[PATCH /recipients/me] Incoming request', {
 		contentType: request.headers.get('content-type'),
 	});
 
 	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
-		logger.warn('[PATCH /recipients/me] Recipient resolution failed', {
+		console.warn('[PATCH /recipients/me] Recipient resolution failed', {
 			error: recipientResult.error,
 			status: recipientResult.status,
 		});
@@ -61,7 +60,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 	try {
 		body = await request.json();
 	} catch {
-		logger.warn('[PATCH /recipients/me] Invalid JSON body');
+		console.warn('[PATCH /recipients/me] Invalid JSON body');
 
 		return new Response('Invalid JSON body', { status: 400 });
 	}
@@ -69,7 +68,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 	const parsed = RecipientSelfUpdate.safeParse(body);
 
 	if (!parsed.success) {
-		logger.warn('[PATCH /recipients/me] Validation failed', {
+		console.warn('[PATCH /recipients/me] Validation failed', {
 			zodErrors: parsed.error.format(),
 		});
 
@@ -87,7 +86,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 		contactPhoneState = 'provided';
 	}
 
-	logger.info('[PATCH /recipients/me] Phone update intent', {
+	console.info('[PATCH /recipients/me] Phone update intent', {
 		oldPaymentPhone,
 		newPaymentPhone,
 		contactPhone: contactPhoneState,
@@ -156,14 +155,14 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 	});
 
 	if (!updateResult.success) {
-		logger.error('[PATCH /recipients/me] Update failed', {
+		console.error('[PATCH /recipients/me] Update failed', {
 			error: updateResult.error,
 		});
 
 		return new Response(updateResult.error, { status: 500 });
 	}
 
-	logger.info('[PATCH /recipients/me] Update successful', {
+	console.info('[PATCH /recipients/me] Update successful', {
 		recipientId: recipient.id,
 	});
 

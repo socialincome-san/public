@@ -1,4 +1,4 @@
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import type { MessagingJobDetailView, MessagingJobMessageRow } from '@/lib/services/twilio/messaging/logs/log.types';
 import { twilioMessageLogUrl } from '@/lib/services/twilio/messaging/twilio-console-urls';

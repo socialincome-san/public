@@ -1,5 +1,5 @@
 import { BlockWrapper } from '@/components/block-wrapper';
-import { Card } from '@/components/card';
+import { Card } from '@/components/card/card';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { payoutForecastTableConfig } from '@/components/data-table/configs/payout-forecast-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';

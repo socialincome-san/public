@@ -26,7 +26,7 @@
 		"one-time-title": "Donazione una tantum",
 		"switch-to-one-time": "Una tantum",
 		"switch-to-monthly": "Mensile",
-		"upsell-subtitle": "La metà dell'importo, ogni mese. Ci aiuta ancora di più.",
+		"upsell-subtitle": "La metà dell'importo, ogni mese.\nCi aiuta ancora di più.",
 		"upsell-preferred": "Consigliato",
 		"upsell-benefit-cancel": "Annullabile in qualsiasi momento",
 		"per-month": "/mese",
@@ -60,9 +60,9 @@
 		"title": "Pagamento QR",
 		"scanHint": "Scansiona con la tua app bancaria",
 		"paymentToLabel": "Pagamento a",
-		"paymentToValue": "Social Income, Postfinance AG, 8000 Zürich",
-		"fromLabel": "Da",
+		"ibanLabel": "IBAN",
 		"amountLabel": "Importo",
+		"referenceLabel": "Riferimento",
 		"paymentTypeLabel": "Tipo di pagamento",
 		"paymentTypeStandingOrder": "Ordine permanente (mensile)",
 		"paymentTypeOneTime": "Pagamento una tantum",
@@ -91,8 +91,6 @@
 	},
 	"thankYou": {
 		"message": "Grazie per il tuo aiuto!",
-		"messageWithAmountMonthly": "Grazie per {{amount}}/mese!",
-		"messageWithAmountOneTime": "Grazie per {{amount}}!",
 		"loginPrompt": {
 			"title": "Il tuo account è pronto",
 			"description": "Vai alla pagina di accesso per entrare nel tuo account.",
@@ -101,10 +99,10 @@
 		}
 	},
 	"onboarding": {
-		"successTitle": "Donazione riuscita",
-		"accountCreatedDescription": "Abbiamo appena creato un account per te. Controlla i tuoi dati.",
-		"accountCardTitle": "Controlla le informazioni del tuo account",
-		"isThisYou": "Sei tu?",
+		"donatedThankYouMonthly": "{{currency}} {{amount}}/mese donati. Grazie.",
+		"donatedThankYouOneTime": "{{currency}} {{amount}} donati. Grazie.",
+		"accountCreatedDescription": "Abbiamo configurato il tuo account.",
+		"isThisYou": "Controlla i dati del tuo account",
 		"firstName": "Nome",
 		"lastName": "Cognome",
 		"email": "E-mail",
@@ -118,8 +116,8 @@
 		"updateError": "Si è verificato un errore durante il salvataggio. Riprova.",
 		"continue": "Continua",
 		"referral": {
-			"cardTitle": "Ci aiuta a concentrare il nostro tempo su ciò che funziona davvero",
 			"question": "Come hai scoperto Social Income?",
+			"description": "Questo ci aiuta a capire cosa funziona, così possiamo spendere meno in outreach e più per l'impatto.",
 			"skip": "Salta",
 			"submit": "Invia feedback",
 			"submitting": "Salvataggio…",
@@ -129,7 +127,6 @@
 				"socialmedia": "Social media",
 				"events": "Eventi",
 				"media": "Media",
-				"preferNotToSay": "Preferisco non rispondere",
 				"other": "Altro"
 			}
 		}
@@ -140,7 +137,7 @@
 		"supporters": "{{supporterCount}} sostenitori da {{countryCount}} paesi",
 		"supporters-no-countries": "{{supporterCount}} sostenitori in tutto il mondo",
 		"zewo": "Certificato ZEWO",
-		"why-one-percent": "Perché l'1 %?",
+		"why-one-percent": "Perché donare l'1%?",
 		"pay-with": "Paga con"
 	}
 }

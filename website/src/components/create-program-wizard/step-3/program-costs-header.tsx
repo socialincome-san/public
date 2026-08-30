@@ -29,8 +29,8 @@ export const ProgramCostsHeader = ({
 	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 
 	return (
-		<div className="text-foreground flex items-start justify-between">
-			<div className="space-y-1">
+		<div className="text-foreground flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+			<div className="min-w-0 space-y-1">
 				<div className="flex items-center gap-2">
 					<p className="text-sm font-medium">{t('step3.total_costs.title')}</p>
 					<Tooltip>
@@ -49,28 +49,22 @@ export const ProgramCostsHeader = ({
 					</Tooltip>
 				</div>
 
-				<div className="flex items-end gap-4" aria-busy={isCalculatingBudget}>
+				<div className="flex flex-wrap items-end gap-x-4 gap-y-1" aria-busy={isCalculatingBudget}>
 					<div className="flex items-baseline gap-2">
 						<span className="text-sm font-bold">{currency}</span>
-						<span
-							data-testid={`total-budget-${totalBudget}`}
-							className={cn('text-6xl', isCalculatingBudget && 'opacity-60')}
-						>
-							{totalBudget.toLocaleString('de-CH')}
+						<span data-testid="total-budget" className={cn('text-6xl', isCalculatingBudget && 'opacity-60')}>
+							{Math.round(totalBudget).toLocaleString('de-CH')}
 						</span>
 					</div>
 
 					<span className="pb-1 text-sm">
-						{currency}{' '}
-						<span data-testid={`monthly-cost-${Math.round(monthlyCost)}`}>
-							{Math.round(monthlyCost).toLocaleString('de-CH')}
-						</span>{' '}
+						{currency} <span data-testid="monthly-cost">{Math.round(monthlyCost).toLocaleString('de-CH')}</span>{' '}
 						{t('common.per_month')}
 					</span>
 				</div>
 			</div>
 
-			<div className="flex flex-col items-end gap-1">
+			<div className="flex flex-col items-start gap-1 sm:items-end">
 				<Select value={currency} onValueChange={onCurrencyChange}>
 					<SelectTrigger className="w-24">
 						<SelectValue />

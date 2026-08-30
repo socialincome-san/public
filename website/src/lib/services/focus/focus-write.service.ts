@@ -1,5 +1,4 @@
 import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
@@ -12,9 +11,8 @@ export class FocusWriteService extends BaseService {
 		db: PrismaClient,
 		private readonly userService: UserReadService,
 		private readonly validationService: FocusValidationService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private async assertAdmin(userId: string): Promise<ServiceResult<true>> {
@@ -62,7 +60,7 @@ export class FocusWriteService extends BaseService {
 				updatedAt: created.updatedAt,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not create focus. Please try again later.');
 		}
@@ -117,7 +115,7 @@ export class FocusWriteService extends BaseService {
 				updatedAt: updated.updatedAt,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not update focus. Please try again later.');
 		}
@@ -156,7 +154,7 @@ export class FocusWriteService extends BaseService {
 
 			return this.resultOk({ id: focusId });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not delete focus: ${JSON.stringify(error)}`);
 		}

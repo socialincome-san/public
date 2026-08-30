@@ -1,5 +1,4 @@
 import { PayoutProcess, Prisma, PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -18,9 +17,8 @@ export class MobileMoneyProviderReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildMobileMoneyProviderOrderBy(
@@ -67,7 +65,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 				updatedAt: provider.updatedAt,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get mobile money provider: ${JSON.stringify(error)}`);
 		}
@@ -126,7 +124,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch mobile money providers: ${JSON.stringify(error)}`);
 		}
@@ -146,7 +144,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 
 			return this.resultOk(providers);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch mobile money provider options: ${JSON.stringify(error)}`);
 		}
@@ -167,7 +165,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 
 			return this.resultOk(providers);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch root mobile money provider options: ${JSON.stringify(error)}`);
 		}
@@ -182,7 +180,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 
 			return this.resultOk(providers);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch supported mobile money providers: ${JSON.stringify(error)}`);
 		}
@@ -225,7 +223,7 @@ export class MobileMoneyProviderReadService extends BaseService {
 
 			return this.resultOk(options);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch payout process overview options: ${JSON.stringify(error)}`);
 		}
