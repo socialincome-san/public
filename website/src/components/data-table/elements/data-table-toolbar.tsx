@@ -3,7 +3,7 @@
 import { Button } from '@/components/button/button';
 import { ActionMenu, type ActionMenuItem } from '@/components/data-table/elements/action-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { Switch } from '@/components/switch/switch';
 import { ArrowUpDownIcon, Columns3Icon, FilterIcon, SearchIcon } from 'lucide-react';
 import { Input } from '../../input/input';

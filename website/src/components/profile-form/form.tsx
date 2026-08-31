@@ -4,7 +4,7 @@ import { Button } from '@/components/button/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { Switch } from '@/components/switch/switch';
 import { ContributorReferralSource, Gender } from '@/generated/prisma/enums';
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
