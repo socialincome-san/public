@@ -10,18 +10,13 @@ const Switch = ({ className, ...props }: React.ComponentProps<typeof SwitchPrimi
 			data-slot="switch"
 			className={cn(
 				'relative inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full',
-				'border border-transparent shadow-xs outline-hidden transition-all',
+				'border border-transparent bg-origin-border shadow-xs outline-hidden transition-all',
 				'focus-visible:ring-ring/50 focus-visible:ring-[3px]',
 				'disabled:cursor-not-allowed disabled:opacity-50',
 				'bg-input',
+				'data-[state=checked]:bg-[linear-gradient(to_right,hsl(var(--gradient-button-from)),hsl(var(--gradient-button-to)))]',
 				className,
 			)}
-			// eslint-disable-next-line react/forbid-component-props
-			style={{
-				backgroundImage: props.checked
-					? 'linear-gradient(to right, hsl(var(--gradient-button-from)), hsl(var(--gradient-button-to)))'
-					: undefined,
-			}}
 			{...props}
 		>
 			<SwitchPrimitive.Thumb

@@ -5,8 +5,8 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { RadioGroup } from '@/components/radio-group/radio-group';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
-import { Switch } from '@/components/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
+import { Switch } from '@/components/switch/switch';
 import { campaignSubmissionConfig, type CampaignSubmissionDurationPreset } from '@/lib/config/campaign-submission.config';
 import { endDateFromDurationPreset } from '@/lib/services/campaign/campaign-submission-input';
 import { cn } from '@/lib/utils/cn';
