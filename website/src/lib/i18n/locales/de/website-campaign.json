@@ -21,6 +21,11 @@
 			"focus-areas": "Schwerpunktbereiche",
 			"local-partners": "Lokale Partner"
 		},
+		"creation-teaser": {
+			"title": "Starte deine eigene Spendenkampagne",
+			"description": "Ein Geburtstag, ein Marathon, eine Hochzeit — jeder Anlass kann ein Social Income finanzieren. Wähle ein Programm, setze ein Ziel und teile deine Seite.",
+			"button": "Kampagne starten"
+		},
 		"about-title": "Über",
 		"about-si-title": "Über Social Income",
 		"about-si-text-1": "Social Income ist eine NGO mit Sitz in der Schweiz, die bedingungslose Geldüberweisungen per Mobiltelefon an Menschen in multidimensionaler Armut in Westafrika bereitstellt.",

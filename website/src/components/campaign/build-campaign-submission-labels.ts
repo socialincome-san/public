@@ -1,0 +1,88 @@
+import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import type { Translator } from '@/lib/i18n/translator';
+import {
+	campaignSubmissionErrorCodes,
+	type CampaignSubmissionErrorCode,
+} from '@/lib/services/campaign/campaign-submission-input';
+import type { SubmissionLabels } from './campaign-submission/types';
+
+export const buildCampaignSubmissionLabels = (translator: Translator): SubmissionLabels => {
+	const errorContext = {
+		minDays: campaignSubmissionConfig.minCampaignDurationDays,
+		maxDays: campaignSubmissionConfig.maxCampaignDurationDays,
+		maxImageMb: campaignSubmissionConfig.maxImageBytes / (1024 * 1024),
+	};
+	const submissionErrors = Object.fromEntries(
+		campaignSubmissionErrorCodes.map((code) => [
+			code,
+			translator.t(`campaigns-page.submission.errors.${code}`, { context: errorContext }),
+		]),
+	) as Record<CampaignSubmissionErrorCode, string>;
+
+	return {
+		programStepTitle: translator.t('campaigns-page.submission.program-step-title'),
+		detailsStepTitle: translator.t('campaigns-page.submission.details-step-title'),
+		aboutStepTitle: translator.t('campaigns-page.submission.about-step-title'),
+		aboutStepSubtitle: translator.t('campaigns-page.submission.about-step-subtitle'),
+		aboutStepDescription: translator.t('campaigns-page.submission.about-step-description'),
+		title: translator.t('campaigns-page.submission.title'),
+		description: translator.t('campaigns-page.submission.description'),
+		goal: translator.t('campaigns-page.submission.goal'),
+		setGoalAmount: translator.t('campaigns-page.submission.set-goal-amount'),
+		currency: translator.t('campaigns-page.submission.currency'),
+		endDate: translator.t('campaigns-page.submission.end-date'),
+		duration: translator.t('campaigns-page.submission.duration'),
+		duration30: translator.t('campaigns-page.submission.duration-30'),
+		duration90: translator.t('campaigns-page.submission.duration-90'),
+		duration365: translator.t('campaigns-page.submission.duration-365'),
+		durationOther: translator.t('campaigns-page.submission.duration-other'),
+		access: translator.t('campaigns-page.submission.access'),
+		accessPublic: translator.t('campaigns-page.submission.access-public'),
+		accessPublicDescription: translator.t('campaigns-page.submission.access-public-description'),
+		accessPrivate: translator.t('campaigns-page.submission.access-private'),
+		accessPrivateDescription: translator.t('campaigns-page.submission.access-private-description'),
+		accessRecommended: translator.t('campaigns-page.submission.access-recommended'),
+		program: translator.t('campaigns-page.submission.program'),
+		campaignBackground: translator.t('campaigns-page.submission.campaign-background'),
+		uploadImage: translator.t('campaigns-page.submission.upload-image'),
+		removeUploadedImage: translator.t('campaigns-page.submission.remove-uploaded-image'),
+		profilePicture: translator.t('campaigns-page.submission.profile-picture'),
+		profilePictureHint: translator.t('campaigns-page.submission.profile-picture-hint'),
+		editProfilePicture: translator.t('campaigns-page.submission.edit-profile-picture'),
+		creatorNamePlaceholder: translator.t('campaigns-page.submission.creator-name-placeholder'),
+		quote: translator.t('campaigns-page.submission.quote'),
+		quotePlaceholder: translator.t('campaigns-page.submission.quote-placeholder'),
+		quoteHint: translator.t('campaigns-page.submission.quote-hint'),
+		hasAdditionalInformation: translator.t('campaigns-page.submission.has-additional-information'),
+		sectionDescription: translator.t('campaigns-page.submission.section-description'),
+		sectionImage: translator.t('campaigns-page.submission.section-image'),
+		instagramHandle: translator.t('campaigns-page.submission.instagram-handle'),
+		xHandle: translator.t('campaigns-page.submission.x-handle'),
+		linkWebsite: translator.t('campaigns-page.submission.link-website'),
+		tiktokHandle: translator.t('campaigns-page.submission.tiktok-handle'),
+		instagramHandlePlaceholder: translator.t('campaigns-page.submission.instagram-handle-placeholder'),
+		xHandlePlaceholder: translator.t('campaigns-page.submission.x-handle-placeholder'),
+		tiktokHandlePlaceholder: translator.t('campaigns-page.submission.tiktok-handle-placeholder'),
+		submit: translator.t('campaigns-page.submission.submit'),
+		submitting: translator.t('campaigns-page.submission.submitting'),
+		successTitle: translator.t('campaigns-page.submission.success-title'),
+		success: translator.t('campaigns-page.submission.success'),
+		error: translator.t('campaigns-page.submission.error'),
+		currencyPlaceholder: translator.t('campaigns-page.submission.currency-placeholder'),
+		imageHint: translator.t('campaigns-page.submission.image-hint'),
+		continue: translator.t('campaigns-page.submission.continue'),
+		back: translator.t('campaigns-page.submission.back'),
+		allCountries: translator.t('campaigns-page.submission.all-countries'),
+		filterByCountry: translator.t('campaigns-page.submission.filter-by-country'),
+		formSteps: translator.t('campaigns-page.submission.form-steps'),
+		stepLabel: translator.t('campaigns-page.submission.step-label'),
+		recipientsCount: translator.t('campaigns-page.submission.recipients-count'),
+		details: translator.t('campaigns-page.submission.details'),
+		about: translator.t('campaigns-page.submission.about'),
+		programsLoading: translator.t('campaigns-page.submission.programs-loading'),
+		programsEmpty: translator.t('campaigns-page.submission.programs-empty'),
+		defaultImagesLoading: translator.t('campaigns-page.submission.default-images-loading'),
+		defaultImagesError: translator.t('campaigns-page.submission.default-images-error'),
+		errors: submissionErrors,
+	};
+};
