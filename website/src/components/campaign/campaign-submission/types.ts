@@ -70,6 +70,7 @@ export type SubmissionLabels = {
 	error: string;
 	currencyPlaceholder: string;
 	imageHint: string;
+	imageFocusHint: string;
 	continue: string;
 	back: string;
 	allCountries: string;
@@ -96,8 +97,10 @@ export type CampaignImageSelection = { type: 'default'; id: number } | { type: '
 export type CampaignSubmissionImageUploadField = {
 	inputRef: RefObject<HTMLInputElement | null>;
 	previewUrl: string | null;
+	focus: string | null;
 	error: string | null;
 	onChange: (file: File | null) => void;
+	setFocus: (focus: string | null) => void;
 	setError: (error: string | null) => void;
 	clear: () => void;
 };

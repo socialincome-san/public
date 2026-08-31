@@ -1,3 +1,4 @@
+import { parseStoryblokFocus } from '@/components/campaign/campaign-submission/storyblok-image-focus';
 import { Currency } from '@/generated/prisma/enums';
 import {
 	campaignSubmissionConfig,
@@ -83,9 +84,12 @@ export const isCampaignSubmissionErrorCode = (value: string): value is CampaignS
 
 type CampaignSubmissionFormImages = {
 	primaryImage?: File;
+	primaryImageFocus?: string | null;
 	defaultImageId?: number;
 	profilePicture?: File;
+	profilePictureFocus?: string | null;
 	sectionImage?: File;
+	sectionImageFocus?: string | null;
 };
 
 const sanitizeText = (value: string) => value.replace(CONTROL_CHARACTERS_REGEX, '').trim();
@@ -309,6 +313,7 @@ export type CampaignSubmissionImageValidation = {
 	mimeType: CampaignSubmissionPermittedImageMimeType;
 	filename: string;
 	size: number;
+	focus?: string | null;
 };
 
 export type CampaignSubmissionImageSource =
@@ -384,6 +389,29 @@ export const validateCampaignSubmissionImageMeta = (size: number, mimeType: stri
 	}
 
 	return null;
+};
+
+export const parseCampaignSubmissionImageFocus = (
+	value: FormDataEntryValue | null | undefined,
+): { success: true; data: string | null } | { success: false; error: CampaignSubmissionErrorCode } => {
+	if (value === null || value === undefined) {
+		return { success: true, data: null };
+	}
+
+	if (typeof value !== 'string') {
+		return { success: false, error: 'invalid-submission' };
+	}
+
+	const trimmed = value.trim();
+	if (trimmed.length === 0) {
+		return { success: true, data: null };
+	}
+
+	if (!parseStoryblokFocus(trimmed)) {
+		return { success: false, error: 'invalid-submission' };
+	}
+
+	return { success: true, data: trimmed };
 };
 
 export const validateCampaignSubmissionImageBuffer = (
@@ -682,16 +710,25 @@ export const appendCampaignSubmissionFormData = (
 
 	if (imageFields.primaryImage) {
 		formData.append('primaryImage', imageFields.primaryImage);
+		if (imageFields.primaryImageFocus) {
+			formData.append('primaryImageFocus', imageFields.primaryImageFocus);
+		}
 	} else if (imageFields.defaultImageId !== undefined) {
 		formData.append('defaultImageId', String(imageFields.defaultImageId));
 	}
 
 	if (imageFields.profilePicture) {
 		formData.append('profilePicture', imageFields.profilePicture);
+		if (imageFields.profilePictureFocus) {
+			formData.append('profilePictureFocus', imageFields.profilePictureFocus);
+		}
 	}
 
 	if (imageFields.sectionImage) {
 		formData.append('sectionImage', imageFields.sectionImage);
+		if (imageFields.sectionImageFocus) {
+			formData.append('sectionImageFocus', imageFields.sectionImageFocus);
+		}
 	}
 
 	return formData;

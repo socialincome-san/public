@@ -10,6 +10,7 @@ type UseCampaignImageUploadOptions = {
 export const useCampaignImageUpload = ({ resolveError }: UseCampaignImageUploadOptions) => {
 	const [file, setFile] = useState<File | null>(null);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+	const [focus, setFocus] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const previewUrlRef = useRef<string | null>(null);
@@ -25,6 +26,7 @@ export const useCampaignImageUpload = ({ resolveError }: UseCampaignImageUploadO
 	const clear = useCallback(() => {
 		revokePreview();
 		setFile(null);
+		setFocus(null);
 		setError(null);
 		if (inputRef.current) {
 			inputRef.current.value = '';
@@ -53,6 +55,7 @@ export const useCampaignImageUpload = ({ resolveError }: UseCampaignImageUploadO
 			previewUrlRef.current = objectUrl;
 			setPreviewUrl(objectUrl);
 			setFile(nextFile);
+			setFocus(null);
 			setError(metaError ? resolveError(metaError) : null);
 		},
 		[clear, revokePreview, resolveError],
@@ -61,9 +64,11 @@ export const useCampaignImageUpload = ({ resolveError }: UseCampaignImageUploadO
 	return {
 		file,
 		previewUrl,
+		focus,
 		error,
 		inputRef,
 		setFromFile,
+		setFocus,
 		clear,
 		setError,
 		onChange: setFromFile,

@@ -120,6 +120,7 @@ export const CampaignsOverview = async ({
 		error: translator.t('campaigns-page.submission.error'),
 		currencyPlaceholder: translator.t('campaigns-page.submission.currency-placeholder'),
 		imageHint: translator.t('campaigns-page.submission.image-hint'),
+		imageFocusHint: translator.t('campaigns-page.submission.image-focus-hint'),
 		continue: translator.t('campaigns-page.submission.continue'),
 		back: translator.t('campaigns-page.submission.back'),
 		allCountries: translator.t('campaigns-page.submission.all-countries'),
