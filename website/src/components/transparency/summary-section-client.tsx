@@ -23,7 +23,7 @@ export type SummaryMetric = {
 	key: 'inflows' | 'outflows' | 'reserves';
 	titleName: string;
 	titleCurrency: string;
-	description: string;
+	description?: string;
 	amount: number;
 	tooltip?: SummaryMetricTooltip;
 };
@@ -88,7 +88,7 @@ export const SummarySectionClient = ({ metrics, lang }: Props) => {
 								</Tooltip>
 							) : null}
 						</h2>
-						<p className="mt-2 text-sm">{description}</p>
+						{description ? <p className="mt-2 text-sm">{description}</p> : null}
 						<SummaryMetricValue amount={amount} lang={lang} />
 					</div>
 				))}
