@@ -4,7 +4,7 @@ import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
 import { MultiSelect, MultiSelectOption } from '@/components/multi-select';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
-import { Switch } from '@/components/switch';
+import { Switch } from '@/components/switch/switch';
 import { generateDonationCertificates, getContributorOptions } from '@/lib/server-actions/donation-certificates-actions';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, LanguageCode } from '@/lib/types/language';
 import { useRef, useState, useTransition } from 'react';
