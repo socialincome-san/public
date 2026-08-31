@@ -1,14 +1,40 @@
-@layer utilities {
-	.bg-website-gradient {
-		background: repeating-linear-gradient(
-			330deg,
-			var(--gradient-background-from) 0px,
-			var(--gradient-background-to) 600px,
-			var(--gradient-background-from) 1200px
-		);
-	}
+.partnerships-marquee {
+  animation: partnerships-marquee 30s linear infinite;
+}
 
-	.bg-donation-modal-gradient {
-		background: linear-gradient(-17deg, var(--gradient-background-from) 19%, var(--gradient-background-to) 50%), white;
-	}
+.partnerships-marquee-reverse {
+  animation-direction: reverse;
+}
+
+.partnerships-marquee-mask:hover .partnerships-marquee {
+  animation-play-state: paused;
+}
+
+.partnerships-marquee-mask {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 3rem,
+    black calc(100% - 3rem),
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 3rem,
+    black calc(100% - 3rem),
+    transparent
+  );
+}
+
+@keyframes partnerships-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partnerships-marquee {
+    animation: none;
+  }
 }

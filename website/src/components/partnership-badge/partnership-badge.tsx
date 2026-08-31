@@ -13,7 +13,7 @@ export const PartnershipBadge = ({ partnership }: Props) => {
 			href={href}
 			target="_blank"
 			rel="noopener noreferrer"
-			className="bg-muted/50 inline-flex items-center gap-3 rounded-full px-4 py-2 text-sm font-medium shadow-sm"
+			className="bg-muted inline-flex items-center gap-3 rounded-full px-4 py-2 text-sm font-medium shadow-sm"
 		>
 			{partnership.logoIcon?.filename && (
 				// eslint-disable-next-line @next/next/no-img-element
