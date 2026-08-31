@@ -74,7 +74,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 			}
 
 			if (!result.data.needsOnboarding) {
-				send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU', email: result.data.email });
+				send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU', email: result.data.email, isLoggedInDonor: true });
 
 				return;
 			}

@@ -96,6 +96,11 @@
 			"description": "Vai alla pagina di accesso per entrare nel tuo account.",
 			"loginButton": "Accedi",
 			"supportPrefix": "Domande? Contatta"
+		},
+		"loggedInPrompt": {
+			"title": "Grazie per la tua donazione.",
+			"description": "Puoi trovare il pagamento nella tua dashboard.",
+			"dashboardButton": "Apri la dashboard"
 		}
 	},
 	"onboarding": {
