@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils/cn';
-import { useCallback, useEffect, useRef, useState, type MouseEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { clickToStoryblokFocus, focusToMarkerPosition, focusToObjectPosition } from './storyblok-image-focus';
 
 type ImageFocusPointProps = {
@@ -35,7 +35,10 @@ export const ImageFocusPoint = ({
 	} | null>(null);
 	const [frameSize, setFrameSize] = useState<{ width: number; height: number } | null>(null);
 
-	const naturalSize = loadedImage?.url === previewUrl ? { width: loadedImage.width, height: loadedImage.height } : null;
+	const naturalSize = useMemo(
+		() => (loadedImage?.url === previewUrl ? { width: loadedImage.width, height: loadedImage.height } : null),
+		[loadedImage, previewUrl],
+	);
 
 	useEffect(() => {
 		const image = new Image();

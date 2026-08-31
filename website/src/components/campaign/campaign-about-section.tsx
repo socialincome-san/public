@@ -1,10 +1,10 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button/button';
+import { focusToObjectPosition } from '@/components/campaign/campaign-submission/storyblok-image-focus';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import { InstagramIcon } from '@/components/svg/instagram';
 import { TiktokIcon } from '@/components/svg/tiktok';
 import { XIcon } from '@/components/svg/x';
-import { focusToObjectPosition } from '@/components/campaign/campaign-submission/storyblok-image-focus';
 import {
 	formatStoryblokResizeUrl,
 	getDimensionsFromStoryblokImageUrl,
@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils/cn';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import { ExternalLink } from 'lucide-react';
 import NextImage from 'next/image';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 const SECTION_IMAGE_MAX_WIDTH = 858;
 
@@ -110,11 +110,7 @@ export const CampaignAboutSection = ({
 		: null;
 	const objectPosition =
 		sectionImage?.focus && naturalSectionImageDimensions?.width && naturalSectionImageDimensions?.height
-			? focusToObjectPosition(
-					sectionImage.focus,
-					naturalSectionImageDimensions.width,
-					naturalSectionImageDimensions.height,
-				)
+			? focusToObjectPosition(sectionImage.focus, naturalSectionImageDimensions.width, naturalSectionImageDimensions.height)
 			: undefined;
 	const hasLinks = Boolean(tiktok ?? x ?? instagram ?? websiteHref);
 	const showTextCard = Boolean(description ?? hasLinks);
@@ -174,14 +170,16 @@ export const CampaignAboutSection = ({
 				) : null}
 				{imageSrc ? (
 					<div className="bg-card min-h-72 overflow-hidden rounded-3xl p-3 shadow-lg">
-						<div className="relative h-full min-h-64 overflow-hidden rounded-xl">
+						<div
+							className="relative h-full min-h-64 overflow-hidden rounded-xl"
+							style={objectPosition ? ({ ['--section-image-object-position']: objectPosition } as CSSProperties) : undefined}
+						>
 							<NextImage
 								src={imageSrc}
 								alt={sectionImage?.alt ?? ''}
 								fill
 								sizes="(max-width: 1024px) 100vw, 429px"
-								className="object-cover"
-								style={objectPosition ? { objectPosition } : undefined}
+								className={cn('object-cover', objectPosition && '[object-position:var(--section-image-object-position)]')}
 								loading="lazy"
 							/>
 						</div>

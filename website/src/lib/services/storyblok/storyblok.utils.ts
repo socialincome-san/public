@@ -1,6 +1,6 @@
+import { normalizeStoryblokFocusForImageService } from '@/components/campaign/campaign-submission/storyblok-image-focus';
 import type { Article, ArticleType, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
-import { normalizeStoryblokFocusForImageService } from '@/components/campaign/campaign-submission/storyblok-image-focus';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import {
 	getWebsitePathTailFromStoryblokSlug,
