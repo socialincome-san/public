@@ -10,8 +10,6 @@
  *   npm run db:seed:cms-campaigns              # dry-run
  *   npm run db:seed:cms-campaigns:apply        # create missing campaigns
  *   npm run db:seed:cms-campaigns:apply:all    # create all CMS campaigns (incl. unlisted)
- *   mise run seed-cms-campaigns                # create missing campaigns
- *   mise run seed-cms-campaigns-all            # create all CMS campaigns
  */
 
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';

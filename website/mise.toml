@@ -8,18 +8,6 @@ run = "npm ci"
 [tasks.db]
 run = "npm run db:up"
 
-[tasks.seed-cms-campaigns]
-run = "npm run db:seed:cms-campaigns:apply"
-depends = ["db"]
-
-[tasks.seed-cms-campaigns-dry-run]
-run = "npm run db:seed:cms-campaigns"
-depends = ["db"]
-
-[tasks.seed-cms-campaigns-all]
-run = "npm run db:seed:cms-campaigns:apply:all"
-depends = ["db"]
-
 [tasks.firebase]
 run = "npm run emulator:start"
 depends = ["install"]
