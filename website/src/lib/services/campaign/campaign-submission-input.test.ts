@@ -8,6 +8,7 @@ import {
 	endDateFromDurationPreset,
 	parseCampaignSubmissionDefaultImageId,
 	parseCampaignSubmissionFields,
+	parseCampaignSubmissionImageFocus,
 	resolveCampaignSubmissionQuote,
 	validateCampaignSubmissionEndDate,
 	validateCampaignSubmissionImageBuffer,
@@ -577,5 +578,47 @@ describe('campaign-submission-input', () => {
 			expect(result.data).not.toHaveProperty('lastName');
 			expect(result.data).not.toHaveProperty('email');
 		}
+	});
+});
+
+describe('parseCampaignSubmissionImageFocus', () => {
+	test('accepts valid Storyblok focus strings', () => {
+		expect(parseCampaignSubmissionImageFocus('100x200:100x200')).toEqual({
+			success: true,
+			data: '100x200:100x200',
+		});
+	});
+
+	test('treats empty values as null', () => {
+		expect(parseCampaignSubmissionImageFocus(null)).toEqual({ success: true, data: null });
+		expect(parseCampaignSubmissionImageFocus('   ')).toEqual({ success: true, data: null });
+	});
+
+	test('rejects invalid focus strings', () => {
+		expect(parseCampaignSubmissionImageFocus('invalid')).toEqual({
+			success: false,
+			error: 'invalid-submission',
+		});
+	});
+});
+
+describe('appendCampaignSubmissionFormData focus fields', () => {
+	test('includes focus fields for uploaded images', () => {
+		const primaryImage = new File(['primary'], 'primary.png', { type: 'image/png' });
+		const profilePicture = new File(['profile'], 'profile.png', { type: 'image/png' });
+		const sectionImage = new File(['section'], 'section.png', { type: 'image/png' });
+
+		const formData = appendCampaignSubmissionFormData(new FormData(), validFormValues(), {
+			primaryImage,
+			primaryImageFocus: '10x20:10x20',
+			profilePicture,
+			profilePictureFocus: '30x40:30x40',
+			sectionImage,
+			sectionImageFocus: '50x60:50x60',
+		});
+
+		expect(formData.get('primaryImageFocus')).toBe('10x20:10x20');
+		expect(formData.get('profilePictureFocus')).toBe('30x40:30x40');
+		expect(formData.get('sectionImageFocus')).toBe('50x60:50x60');
 	});
 });

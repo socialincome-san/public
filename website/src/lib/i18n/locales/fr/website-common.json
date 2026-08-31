@@ -266,6 +266,7 @@
 			"error": "Une erreur s'est produite. Veuillez réessayer.",
 			"currency-placeholder": "Sélectionner une devise",
 			"image-hint": "JPEG, PNG ou WebP jusqu'à 5 Mo.",
+			"image-focus-hint": "Cliquez sur l'image pour définir le point focal.",
 			"continue": "Continuer",
 			"back": "Retour",
 			"all-countries": "Tous les pays",

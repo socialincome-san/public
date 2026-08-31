@@ -243,6 +243,19 @@ describe('CampaignSubmissionService', () => {
 		expect(createPending).toHaveBeenCalledTimes(1);
 	});
 
+	test('submit passes uploaded image focus to Storyblok', async () => {
+		const { service, uploadAsset } = createService();
+
+		await service.submit(baseFields, { kind: 'upload', image: { ...pngImage, focus: '400x250:400x250' } }, undefined, null);
+
+		expect(uploadAsset).toHaveBeenCalledWith(
+			pngImage.buffer,
+			pngImage.filename,
+			pngImage.mimeType,
+			expect.objectContaining({ focus: '400x250:400x250' }),
+		);
+	});
+
 	test('submit retries campaign pending create on claimId collision', async () => {
 		const { service, createPending } = createService();
 		createPending
@@ -372,7 +385,7 @@ describe('CampaignSubmissionService', () => {
 			id: 99,
 			filename: 'https://a.storyblok.com/f/109655/default.png',
 			alt: null,
-			focus: null,
+			focus: '100x120:100x120',
 			contentType: 'image/png',
 			assetFolderId: campaignSubmissionConfig.storyblokCampaignDefaultImagesFolderId,
 		});
@@ -386,7 +399,12 @@ describe('CampaignSubmissionService', () => {
 		expect(result.success).toBe(true);
 		expect(getAsset).toHaveBeenCalledWith(99);
 		expect(downloadAssetBuffer).toHaveBeenCalledWith('https://a.storyblok.com/f/109655/default.png');
-		expect(uploadAsset).toHaveBeenCalled();
+		expect(uploadAsset).toHaveBeenCalledWith(
+			pngImage.buffer,
+			expect.any(String),
+			'image/png',
+			expect.objectContaining({ focus: '100x120:100x120' }),
+		);
 		const createArg = create.mock.calls[0]?.[0];
 		expect(createArg?.data.goal).toBeNull();
 		expect(createPublishedCampaignStory).toHaveBeenCalledWith(

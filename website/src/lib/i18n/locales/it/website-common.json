@@ -266,6 +266,7 @@
 			"error": "Qualcosa è andato storto. Riprova.",
 			"currency-placeholder": "Seleziona una valuta",
 			"image-hint": "JPEG, PNG o WebP fino a 5 MB.",
+			"image-focus-hint": "Clicca sull'immagine per impostare il punto focale.",
 			"continue": "Continua",
 			"back": "Indietro",
 			"all-countries": "Tutti i paesi",
