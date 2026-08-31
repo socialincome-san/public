@@ -1,7 +1,9 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { buildCampaignSubmissionLabels } from '@/components/campaign/build-campaign-submission-labels';
 import { CampaignAboutSection } from '@/components/campaign/campaign-about-section';
+import { CampaignCreationTeaser } from '@/components/campaign/campaign-creation-teaser';
 import { CampaignFaqSection } from '@/components/campaign/campaign-faq-section';
 import { CampaignHero } from '@/components/campaign/campaign-hero';
 import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
@@ -66,6 +68,7 @@ export const CampaignDetail = async ({
 	}
 	const { translator, faqs } = pageContentResult.data;
 	const trimmedDescription = description.trim();
+	const submissionLabels = buildCampaignSubmissionLabels(translator);
 	const newsletterTranslations = {
 		title: translator.t('popup.information-label'),
 		emailLabel: translator.t('updates.email'),
@@ -103,6 +106,16 @@ export const CampaignDetail = async ({
 				linkWebsite={linkWebsite}
 			/>
 			{campaign.program?.id ? <CampaignProgramTeaser programId={campaign.program.id} lang={lang} region={region} /> : null}
+			<CampaignCreationTeaser
+				translations={{
+					title: translator.t('campaign.creation-teaser.title'),
+					description: translator.t('campaign.creation-teaser.description'),
+					button: translator.t('campaign.creation-teaser.button'),
+				}}
+				labels={submissionLabels}
+				lang={lang}
+				region={region}
+			/>
 			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
 			<CampaignSocialIncomeSection translator={translator} />
 			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />

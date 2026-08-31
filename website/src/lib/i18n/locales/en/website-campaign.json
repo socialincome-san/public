@@ -21,6 +21,11 @@
 			"focus-areas": "Focus areas",
 			"local-partners": "Local partners"
 		},
+		"creation-teaser": {
+			"title": "Start your own fundraiser campaign",
+			"description": "A birthday, a marathon, a wedding — any occasion can fund a Social Income. Pick a program, set a goal, share your page.",
+			"button": "Start your campaign"
+		},
 		"about-title": "About",
 		"about-si-title": "About Social Income",
 		"about-si-text-1": "Social Income is a nonprofit organization based in Switzerland that provides unconditional cash transfers via mobile phone to people living in multidimensional poverty in West Africa.",
