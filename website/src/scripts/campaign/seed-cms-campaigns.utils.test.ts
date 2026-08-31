@@ -17,18 +17,14 @@ describe('seed-cms-campaigns.utils', () => {
 	});
 
 	test('resolveProgramIdForCampaignSlug matches by program slug substring', () => {
-		expect(
-			resolveProgramIdForCampaignSlug('skills-program-campaign', programs, 'program-si-core-sl'),
-		).toEqual({
+		expect(resolveProgramIdForCampaignSlug('skills-program-campaign', programs, 'program-si-core-sl')).toEqual({
 			programId: 'program-si-education-sl',
 			matchedBy: 'slug',
 		});
 	});
 
 	test('resolveProgramIdForCampaignSlug falls back to default program id', () => {
-		expect(
-			resolveProgramIdForCampaignSlug('unknown-campaign-slug', programs, 'program-si-core-sl'),
-		).toEqual({
+		expect(resolveProgramIdForCampaignSlug('unknown-campaign-slug', programs, 'program-si-core-sl')).toEqual({
 			programId: 'program-si-core-sl',
 			matchedBy: 'default',
 		});

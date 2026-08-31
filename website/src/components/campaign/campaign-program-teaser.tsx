@@ -2,8 +2,8 @@ import { Badge } from '@/components/badge/badge';
 import { BlockWrapper } from '@/components/block-wrapper';
 import { FocusSdgs } from '@/components/storyblok/focus/focus-sdgs';
 import { getFocusSlug, getFocusTitle } from '@/components/storyblok/focus/focus.utils';
-import { getLocalPartnerSlug } from '@/components/storyblok/local-partner/local-partner.utils';
 import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
+import { getLocalPartnerSlug } from '@/components/storyblok/local-partner/local-partner.utils';
 import { ProgramWallet } from '@/components/storyblok/program/program-wallet';
 import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
@@ -37,12 +37,7 @@ const TeaserMetaRow = ({ label, items, showDivider = false }: TeaserMetaRowProps
 		<div className="flex flex-wrap gap-2">
 			{items.map((item) => {
 				const badge = (
-					<Badge
-						className={cn(
-							'px-3 py-1.5 font-medium',
-							item.href && 'hover:bg-muted/80 transition-colors',
-						)}
-					>
+					<Badge className={cn('px-3 py-1.5 font-medium', item.href && 'hover:bg-muted/80 transition-colors')}>
 						{item.name}
 					</Badge>
 				);
@@ -137,9 +132,7 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 		return {
 			id: localPartner.id,
 			name: localPartner.name,
-			href: localPartnerStory
-				? `/${lang}/${region}/local-partners/${getLocalPartnerSlug(localPartnerStory)}`
-				: undefined,
+			href: localPartnerStory ? `/${lang}/${region}/local-partners/${getLocalPartnerSlug(localPartnerStory)}` : undefined,
 		};
 	});
 	const sdgValues = focuses.flatMap(({ sdgs }) => sdgs);
