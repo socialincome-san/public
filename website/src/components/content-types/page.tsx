@@ -24,6 +24,7 @@ import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonia
 import { TestimonialBlock } from '@/components/content-blocks/testimonial-entry';
 import { TextBlock } from '@/components/content-blocks/text';
 import { TransparencyBlock } from '@/components/content-blocks/transparency';
+import { TransparencyCountriesBlock } from '@/components/content-blocks/transparency-countries-block';
 import { TransparencySummaryBlock } from '@/components/content-blocks/transparency-summary-block';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
@@ -106,6 +107,8 @@ const renderPageBlock = (
 			return <TextBlock blok={block} />;
 		case 'transparency':
 			return <TransparencyBlock blok={block} lang={lang} />;
+		case 'transparencyCountries':
+			return <TransparencyCountriesBlock blok={block} lang={lang} />;
 		case 'transparencySummary':
 			return <TransparencySummaryBlock blok={block} lang={lang} />;
 		case 'twoColumnText':
