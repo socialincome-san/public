@@ -4,15 +4,19 @@ import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header'
 import { InstagramIcon } from '@/components/svg/instagram';
 import { TiktokIcon } from '@/components/svg/tiktok';
 import { XIcon } from '@/components/svg/x';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { focusToObjectPosition } from '@/components/campaign/campaign-submission/storyblok-image-focus';
+import {
+	formatStoryblokResizeUrl,
+	getDimensionsFromStoryblokImageUrl,
+	getScaledAssetDimensions,
+} from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import { ExternalLink } from 'lucide-react';
 import NextImage from 'next/image';
 import type { ReactNode } from 'react';
 
-const SECTION_IMAGE_WIDTH = 858;
-const SECTION_IMAGE_HEIGHT = 858;
+const SECTION_IMAGE_MAX_WIDTH = 858;
 
 type Props = {
 	heading: string;
@@ -94,9 +98,24 @@ export const CampaignAboutSection = ({
 	const instagram = getSocialHandle(instagramHandle);
 	const websiteHref = getWebsiteHref(linkWebsite);
 	const websiteLabel = websiteHref ? getWebsiteLabel(websiteHref) : null;
-	const imageSrc = sectionImage?.filename
-		? formatStoryblokUrl(sectionImage.filename, SECTION_IMAGE_WIDTH, SECTION_IMAGE_HEIGHT, sectionImage.focus)
+	const scaledSectionImage = sectionImage?.filename
+		? getScaledAssetDimensions({ filename: sectionImage.filename }, SECTION_IMAGE_MAX_WIDTH)
 		: null;
+	const imageSrc =
+		scaledSectionImage && sectionImage?.filename
+			? formatStoryblokResizeUrl(sectionImage.filename, scaledSectionImage.width, scaledSectionImage.height)
+			: null;
+	const naturalSectionImageDimensions = sectionImage?.filename
+		? getDimensionsFromStoryblokImageUrl(sectionImage.filename)
+		: null;
+	const objectPosition =
+		sectionImage?.focus && naturalSectionImageDimensions?.width && naturalSectionImageDimensions?.height
+			? focusToObjectPosition(
+					sectionImage.focus,
+					naturalSectionImageDimensions.width,
+					naturalSectionImageDimensions.height,
+				)
+			: undefined;
 	const hasLinks = Boolean(tiktok ?? x ?? instagram ?? websiteHref);
 	const showTextCard = Boolean(description ?? hasLinks);
 
@@ -162,6 +181,7 @@ export const CampaignAboutSection = ({
 								fill
 								sizes="(max-width: 1024px) 100vw, 429px"
 								className="object-cover"
+								style={objectPosition ? { objectPosition } : undefined}
 								loading="lazy"
 							/>
 						</div>
