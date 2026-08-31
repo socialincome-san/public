@@ -3,7 +3,7 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
-import { Switch } from '@/components/switch';
+import { Switch } from '@/components/switch/switch';
 import { cn } from '@/lib/utils/cn';
 import { useEffect, useRef } from 'react';
 import { CampaignSubmissionFormCard } from '../form-layout';
