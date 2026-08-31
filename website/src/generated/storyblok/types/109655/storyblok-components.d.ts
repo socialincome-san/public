@@ -127,6 +127,14 @@ export interface Document {
   [k: string]: unknown;
 }
 
+export interface DonationGlobe {
+  title?: string;
+  component: "donationGlobe";
+  _uid: string;
+  // _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface DonationsTotal {
   heading: string;
   images?: StoryblokMultiasset;
@@ -423,6 +431,9 @@ export interface Page {
     | Lottie
     | PersonGrid
     | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
   )[];
   component: "page";
   _uid: string;
@@ -645,7 +656,24 @@ export interface Text {
 }
 
 export interface Transparency {
+  donationGlobe?: DonationGlobe[];
+  transparencySummary?: TransparencySummary[];
   component: "transparency";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TransparencyCountries {
+  component: "transparencyCountries";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TransparencySummary {
+  inflowsDescription?: string;
+  outflowsDescription?: string;
+  reservesDescription?: string;
+  component: "transparencySummary";
   _uid: string;
   [k: string]: unknown;
 }

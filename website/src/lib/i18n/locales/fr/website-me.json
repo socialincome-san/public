@@ -104,6 +104,8 @@
 		"edit-dialog": {
 			"title": "Modifier la souscription",
 			"monthly-contribution": "Contribution mensuelle",
+			"transaction-fees": "Frais de transaction",
+			"payment-method": "Moyen de paiement",
 			"per-month-suffix": "/ mois",
 			"update-card": "Mettre à jour la carte",
 			"cancel-subscription": "Annuler la souscription",
@@ -165,6 +167,12 @@
 		"per-month": "par mois",
 		"since": "depuis le",
 		"card-fallback": "Carte",
+		"cover-transaction-costs": {
+			"nudge-prefix": "Les paiements par carte coûtent env.",
+			"nudge-fee": "{{fee}}/mois",
+			"nudge-middle": "de frais de traitement.",
+			"nudge-cta": "Aidez à garder les coûts bas — couvrez les frais de transaction."
+		},
 		"empty": {
 			"description": "Tu as contribué {{amount}} en {{count}} virements.\nPrêt·e à reprendre là où tu t'es arrêté·e ?",
 			"description-no-contributions": "Commence à soutenir quelqu'un aujourd'hui."
