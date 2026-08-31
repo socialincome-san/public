@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -9,7 +9,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/dropdown-menu';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import type { VolunteerDurationTranslations } from '@/components/storyblok/shared/person-card';
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';

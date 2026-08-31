@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { CellType } from '@/components/data-table/elements/types';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';

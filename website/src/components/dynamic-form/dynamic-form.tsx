@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/accordion';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/accordion/accordion';
 import { Combobox } from '@/components/combo-box';
 import { DatePicker } from '@/components/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import { Switch } from '@/components/switch';
@@ -14,7 +14,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
 import { MultiSelect } from '../multi-select';
-import { FormActions } from './form-actions';
+import { FormActions, type ExtraAction } from './form-actions';
 
 export type FormField = {
 	label: string;
@@ -148,10 +148,11 @@ type Props = {
 	onSubmit: (values: any) => void;
 	onCancel?: () => void;
 	onDelete?: () => void;
+	extraAction?: ExtraAction;
 	mode: 'add' | 'edit' | 'readonly';
 };
 
-const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, mode }) => {
+const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onDelete, extraAction, mode }) => {
 	const zodSchema = buildZodSchema(formSchema);
 
 	const form = useForm<z.infer<typeof zodSchema>>({
@@ -294,7 +295,7 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 						/>
 					);
 				})}
-				<FormActions mode={mode} isLoading={isLoading} onCancel={onCancel} onDelete={onDelete} />
+				<FormActions mode={mode} isLoading={isLoading} onCancel={onCancel} onDelete={onDelete} extraAction={extraAction} />
 			</form>
 			{/* TODO: add proper loading state */}
 			{isLoading && (

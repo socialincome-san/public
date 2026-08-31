@@ -1,4 +1,5 @@
-import { Progress } from '@/components/progress';
+import { Progress } from '@/components/progress/progress';
+import { createWalletImageFromStoryblokAsset, WALLET_IMAGE_SIZES } from '@/components/wallet/wallet-image-utils';
 import type { TranslateFunction } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import type { PublicCampaignCard, PublicCampaignStats } from '@/lib/services/campaign/campaign.types';
@@ -6,9 +7,6 @@ import { cn } from '@/lib/utils/cn';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import NextImage from 'next/image';
 import Link from 'next/link';
-
-const CAMPAIGN_PREVIEW_PLACEHOLDER_IMAGE =
-	'https://a.storyblok.com/f/109655/3000x2000/7f29d7f158/social-income-program-1.jpg';
 
 type Props = {
 	campaign: PublicCampaignCard;
@@ -25,6 +23,7 @@ export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Prop
 	const contributionLabel =
 		stats?.contributionsCount === 1 ? t('campaigns-page.contribution-singular') : t('campaigns-page.contribution-plural');
 	const daysLabel = stats?.daysLeft === 1 ? t('campaigns-page.day-left-singular') : t('campaigns-page.day-left-plural');
+	const image = createWalletImageFromStoryblokAsset(campaign.primaryImage ?? undefined, campaign.title);
 
 	const content = (
 		<article
@@ -34,13 +33,11 @@ export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Prop
 			)}
 			data-testid="campaign-preview-wallet"
 		>
-			<NextImage
-				src={CAMPAIGN_PREVIEW_PLACEHOLDER_IMAGE}
-				alt=""
-				fill
-				sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-				className="object-cover"
-			/>
+			{image ? (
+				<NextImage src={image.src} alt={image.alt} fill sizes={WALLET_IMAGE_SIZES} className="object-cover" />
+			) : (
+				<div className="bg-primary/20 absolute inset-0" aria-hidden />
+			)}
 			<div
 				className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.35)_30%,rgb(8,51,68)_58%,rgb(8,51,68)_100%)]"
 				aria-hidden

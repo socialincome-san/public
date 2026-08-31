@@ -1,38 +1,58 @@
 import { BaseService } from '@/lib/services/core/base.service';
 import type { ServiceResult } from '@/lib/services/core/base.types';
 import { now } from '@/lib/utils/now';
-import type { GithubContributor, GithubIssue, GithubOpenSourcePageData, GithubRepoStats } from './github-api.types';
+import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import type { GithubContributor, GithubIssue, GithubOpenSourceIssuesData, GithubRepoStats } from './github-api.types';
 
 const OWNER = 'socialincome-san';
 const REPO = 'public';
 const API_BASE = `https://api.github.com/repos/${OWNER}/${REPO}`;
 const GITHUB_REVALIDATE_SECONDS = 60 * 60 * 24;
+const MAX_ERROR_DETAILS_LENGTH = 200;
+
+const isRateLimitResponse = (status: number, headers: Headers, details: string) => {
+	if (status === 429) {
+		return true;
+	}
+
+	if (status !== 403) {
+		return false;
+	}
+
+	if (headers.get('x-ratelimit-remaining') === '0' || headers.get('retry-after')) {
+		return true;
+	}
+
+	return details.toLowerCase().includes('rate limit');
+};
 
 export class GithubApiService extends BaseService {
-	async getOpenSourcePageData(): Promise<ServiceResult<GithubOpenSourcePageData>> {
+	async getOpenSourceStats(): Promise<ServiceResult<GithubRepoStats>> {
+		return this.withGithubErrorHandling(() => this.loadRepoStats());
+	}
+
+	async getOpenSourceContributors(): Promise<ServiceResult<GithubContributor[]>> {
+		return this.withGithubErrorHandling(() => this.loadContributors());
+	}
+
+	async getOpenSourceIssues(): Promise<ServiceResult<GithubOpenSourceIssuesData>> {
+		return this.withGithubErrorHandling(() => this.loadIssues());
+	}
+
+	private async withGithubErrorHandling<T>(operation: () => Promise<T>): Promise<ServiceResult<T>> {
 		try {
-			const [stats, contributors, issuesData] = await Promise.all([
-				this.loadRepoStats(),
-				this.loadContributors(),
-				this.loadIssues(),
-			]);
-
-			return this.resultOk({
-				stats,
-				contributors,
-				issues: issuesData.issues,
-				labels: issuesData.labels,
-			});
+			return this.resultOk(await operation());
 		} catch (error) {
-			this.logger.error(error);
+			const message = error instanceof Error ? error.message : String(error);
+			console.error(`${SLACK_ALERT}: GitHub open-source data fetch failed: ${message}`, { error });
 
-			return this.resultFail(`Could not fetch GitHub data: ${error instanceof Error ? error.message : String(error)}`);
+			return this.resultFail(`Could not fetch GitHub data: ${message}`);
 		}
 	}
 
-	private async fetchGithub(url: string, options?: { accept?: string }) {
+	private async fetchGithub(url: string) {
 		const headers: Record<string, string> = {
-			Accept: options?.accept ?? 'application/vnd.github+json',
+			Accept: 'application/vnd.github+json',
 		};
 
 		if (process.env.GITHUB_PAT) {
@@ -43,16 +63,21 @@ export class GithubApiService extends BaseService {
 
 		if (!response.ok) {
 			const details = await response.text();
+			const truncatedDetails = details.slice(0, MAX_ERROR_DETAILS_LENGTH);
+
+			if (isRateLimitResponse(response.status, response.headers, details)) {
+				throw new Error('GitHub API rate limit exceeded.');
+			}
 
 			if (response.status === 403) {
-				throw new Error('GitHub API rate limit exceeded.');
+				throw new Error(`GitHub API request forbidden (403): ${truncatedDetails}`);
 			}
 
 			if (response.status === 404) {
 				throw new Error(`GitHub repository ${OWNER}/${REPO} not found.`);
 			}
 
-			throw new Error(`GitHub request failed (${response.status}): ${details}`);
+			throw new Error(`GitHub request failed (${response.status}): ${truncatedDetails}`);
 		}
 
 		return response;
@@ -62,16 +87,11 @@ export class GithubApiService extends BaseService {
 		const repoResponse = await this.fetchGithub(API_BASE);
 		const repoData = (await repoResponse.json()) as { stargazers_count: number; forks_count: number };
 
-		const [commits, newStars, newForks] = await Promise.all([
-			this.loadCommitStats(),
-			this.countRecentStargazers(),
-			this.countRecentForks(),
-		]);
+		const [commits, newForks] = await Promise.all([this.loadCommitStats(), this.countRecentForks()]);
 
 		return {
 			...commits,
 			totalStars: repoData.stargazers_count,
-			newStars,
 			totalForks: repoData.forks_count,
 			newForks,
 		};
@@ -99,34 +119,6 @@ export class GithubApiService extends BaseService {
 		}
 
 		return { totalCommits, newCommits: recentCommits.length };
-	}
-
-	private async countRecentStargazers() {
-		const since = now();
-		since.setDate(since.getDate() - 30);
-		const sinceIso = since.toISOString();
-
-		let newStars = 0;
-		let page = 1;
-		let hasMore = true;
-
-		while (hasMore) {
-			const response = await this.fetchGithub(`${API_BASE}/stargazers?per_page=100&page=${page}`, {
-				accept: 'application/vnd.github.v3.star+json',
-			});
-			const stars = (await response.json()) as { starred_at?: string }[];
-
-			for (const star of stars) {
-				if (star.starred_at && new Date(star.starred_at) >= new Date(sinceIso)) {
-					newStars++;
-				}
-			}
-
-			hasMore = stars.length === 100;
-			page++;
-		}
-
-		return newStars;
 	}
 
 	private async countRecentForks() {
@@ -191,7 +183,7 @@ export class GithubApiService extends BaseService {
 		return contributors.sort((left, right) => right.commits - left.commits);
 	}
 
-	private async loadIssues(): Promise<{ issues: GithubIssue[]; labels: string[] }> {
+	private async loadIssues(): Promise<GithubOpenSourceIssuesData> {
 		const issues: GithubIssue[] = [];
 		const labels: string[] = [];
 		let page = 1;

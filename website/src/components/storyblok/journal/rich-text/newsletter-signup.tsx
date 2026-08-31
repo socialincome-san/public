@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
 import type { CreateNewsletterSubscription } from '@/lib/services/sendgrid/types';

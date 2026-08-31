@@ -1,7 +1,7 @@
-import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
+import { type DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { CampaignDetail } from '@/components/campaign/campaign-detail';
-import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { loadCampaignDetailData } from '@/components/storyblok/campaign/load-campaign-detail-data';
+import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { notFound } from 'next/navigation';
 
@@ -9,38 +9,42 @@ export const revalidate = 900;
 
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { slug, lang } = await params;
+	const data = await loadCampaignDetailData(slug, lang);
 
-	return services.read.campaignPublicWebsite.getMetadataForSlug(slug, lang as WebsiteLanguage);
-};
+	if (!data) {
+		return services.read.campaignPublicWebsite.getFallbackMetadata(lang as WebsiteLanguage);
+	}
 
-const CampaignInactiveMessage = async ({ lang }: { lang: WebsiteLanguage }) => {
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-campaign'],
+	return services.read.campaignPublicWebsite.getPageMetadata(lang as WebsiteLanguage, {
+		title: data.title,
+		description: data.description,
+		primaryImage: data.primaryImage,
 	});
-
-	return (
-		<section className="w-site-width max-w-content mx-auto px-6 py-16">
-			<p className="text-primary text-center text-2xl font-medium">{translator.t('campaign.not-found')}</p>
-		</section>
-	);
 };
 
 export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlug) {
 	const { slug, lang, region } = await params;
-	const result = await services.read.campaign.getBySlug(slug);
+	const data = await loadCampaignDetailData(slug, lang);
 
-	if (!result.success || !result.data) {
+	if (!data) {
 		return notFound();
-	}
-
-	if (!result.data.isActive) {
-		return <CampaignInactiveMessage lang={lang as WebsiteLanguage} />;
 	}
 
 	return (
 		<CampaignDetail
-			campaign={result.data}
+			campaign={data.campaign}
+			title={data.title}
+			description={data.description}
+			creatorName={data.creatorName}
+			quote={data.quote}
+			primaryImage={data.primaryImage}
+			profilePicture={data.profilePicture}
+			sectionDescription={data.sectionDescription}
+			sectionImage={data.sectionImage}
+			instagramHandle={data.instagramHandle}
+			xHandle={data.xHandle}
+			tiktokHandle={data.tiktokHandle}
+			linkWebsite={data.linkWebsite}
 			campaignSlug={slug}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}

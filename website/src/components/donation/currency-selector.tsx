@@ -22,7 +22,7 @@ export const DonationCurrencySelector = ({ currencies, className }: Props) => {
 				}
 			}}
 		>
-			<SelectTrigger className={cn('h-12 w-auto min-w-20 rounded-xl', className)}>
+			<SelectTrigger className={cn('h-9 w-auto min-w-20 rounded-full', className)}>
 				<SelectValue>{currency}</SelectValue>
 			</SelectTrigger>
 			<SelectContent>

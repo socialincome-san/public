@@ -67,6 +67,20 @@ gcloud projects add-iam-policy-binding social-income-staging \
   --condition=None
 ```
 
+```
+gcloud projects add-iam-policy-binding social-income-staging \
+  --member="serviceAccount:terraform-deployer@social-income-staging.iam.gserviceaccount.com" \
+  --role="roles/monitoring.admin" \
+  --condition=None
+```
+
+```
+gcloud projects add-iam-policy-binding social-income-staging \
+  --member="serviceAccount:terraform-deployer@social-income-staging.iam.gserviceaccount.com" \
+  --role="roles/logging.configWriter" \
+  --condition=None
+```
+
 ## Step 2: Create state bucket and assign roles
 
 ```
@@ -116,3 +130,11 @@ need to run the terraform apply command without the docker build step.
 It can be that the apply fails the first few times because the
 activation of some required GCP services (APIs) takes some time. Also,
 you will have to give access to the terraform deployer for the domain.
+
+## Step 9: Connect Slack to Cloud Monitoring
+
+In Cloud Monitoring, add a Slack notification channel for
+`#social-income-monitoring` and authorize the workspace. Invite the
+Google Cloud Monitoring app to that channel. Terraform attaches the
+alert policy to this existing channel (`roles/monitoring.admin` and
+`roles/logging.configWriter` are granted in Step 1).

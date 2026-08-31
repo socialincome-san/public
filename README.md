@@ -101,10 +101,11 @@ If you need this token, ask a maintainer or contact
 `support@socialincome.org`. Do not commit real API keys or secrets.
 
 Maintainers may also need these Storyblok values for preview mode, webhooks,
-or schema/type generation:
+campaign submissions, or schema/type generation:
 
 - `STORYBLOK_PREVIEW_SECRET`
 - `STORYBLOK_WEBHOOK_SECRET`
+- `STORYBLOK_MANAGEMENT_TOKEN`
 - `STORYBLOK_PERSONAL_ACCESS_TOKEN`
 - `STORYBLOK_SPACE_ID`
 
@@ -244,12 +245,67 @@ npm run storyblok:generate
 The command logs into Storyblok, pulls component schemas, and writes generated
 types to `website/src/generated/storyblok/types`.
 
+### Anonymous Campaign Submissions
+
+Visitors can submit campaigns from the public `/campaigns` page. Submissions:
+
+- create an inactive, non-public database `Campaign` with a server-generated slug
+- upload a primary image and create an unpublished Storyblok `Campaign` story
+- link database and CMS entries through `Campaign.slug` ↔ `Storyblok.content.portalSlug`
+
+Publication happens manually in Storyblok. Published Storyblok stories are the
+sole public visibility gate for campaign pages (detail load and overview join).
+
+Public **active** vs **inactive** is derived from campaign end date and goal
+progress (not the database `isActive` flag): a campaign is inactive when its
+finish date has passed or its goal amount has been reached. The overview filter
+and card linkability use that derived state; deep links to published stories
+still work after a campaign becomes inactive.
+
+Server-only configuration lives in
+`website/src/lib/config/campaign-submission.config.ts`. Set the Management API
+token in `website/.env.local` for local development:
+
+```bash
+STORYBLOK_MANAGEMENT_TOKEN="<storyblok-personal-access-token>"
+```
+
+Staging and production receive the same runtime variable from Cloud Run. Store
+the values as GitHub Actions secrets `TF_STAGING_STORYBLOK_MANAGEMENT_TOKEN`
+and `TF_PROD_STORYBLOK_MANAGEMENT_TOKEN`.
+
+The token must be able to list assets in the default-images folder, create
+draft stories under `pages/campaigns`, and upload assets in the configured
+asset folder. If a submission fails after partial progress, the API attempts
+compensating cleanup of the created Storyblok asset,
+Storyblok story, and database row.
+
+Future hardening (not part of the first version): Cloudflare Turnstile and
+distributed rate limiting on `POST /api/campaign-submissions`.
+
 ## Mobile API
 
 The `recipients_app` communicates with the Next.js API routes. The public API
 documentation is available at:
 
 https://socialincome.org/v1/api-docs
+
+## Monitoring
+
+The website pages Slack (`#social-income-monitoring`) for production
+failures that must not stay silent:
+
+- Cloud Run logs that contain `SLACK_ALERT` (Stripe webhooks, payment
+  imports, scheduler jobs). Prefix `console.error` with that token.
+  Staging still writes the logs but does not page Slack, because its
+  Stripe and campaign data is incomplete. At most one Slack message is
+  sent every 5 minutes.
+- Uptime checks every 60s: `/api/health/website`, `/api/health/database`,
+  and the public homepage `/en/int`.
+- Cloud Run 5xx bursts, Cloud Scheduler job errors, Cloud SQL CPU and
+  connections, and Cloud Run memory / OOM.
+
+The recipients app still reports errors to Sentry.
 
 ## Troubleshooting
 

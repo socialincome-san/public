@@ -7,28 +7,21 @@ import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
 import type { StoryblokService } from '../storyblok/storyblok.service';
 import type { CampaignPageContent } from './campaign-public-website.types';
-import type { CampaignReadService } from './campaign-read.service';
-import type { CampaignPage } from './campaign.types';
 
-const campaignPageNamespaces = ['website-campaign', 'website-videos', 'website-newsletter', 'website-faq'] as const;
+const campaignPageNamespaces = [
+	'website-campaign',
+	'website-common',
+	'website-videos',
+	'website-newsletter',
+	'website-faq',
+] as const;
 
 export class CampaignPublicWebsiteService extends BaseService {
 	private readonly storyblok: StoryblokService;
-	private readonly campaignRead: CampaignReadService;
 
-	constructor(db: BaseService['db'], storyblok: StoryblokService, campaignRead: CampaignReadService) {
+	constructor(db: BaseService['db'], storyblok: StoryblokService) {
 		super(db);
 		this.storyblok = storyblok;
-		this.campaignRead = campaignRead;
-	}
-
-	async getMetadataForSlug(slug: string, lang: WebsiteLanguage) {
-		const result = await this.campaignRead.getBySlug(slug);
-		if (!result.success || !result.data?.isActive) {
-			return this.getFallbackMetadata(lang);
-		}
-
-		return this.getPageMetadata(lang, result.data);
 	}
 
 	async getPageContent(lang: WebsiteLanguage): Promise<ServiceResult<CampaignPageContent>> {
@@ -42,7 +35,7 @@ export class CampaignPublicWebsiteService extends BaseService {
 
 			return this.resultOk({ translator, faqs });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load campaign page content: ${JSON.stringify(error)}`);
 		}
@@ -50,27 +43,33 @@ export class CampaignPublicWebsiteService extends BaseService {
 
 	getPageMetadata(
 		lang: WebsiteLanguage,
-		campaign: Pick<CampaignPage, 'title' | 'metadataDescription' | 'metadataOgImage' | 'metadataTwitterImage'>,
+		campaign: {
+			title: string;
+			description: string;
+			primaryImage?: { filename?: string | null } | null;
+		},
 	) {
-		const campaignMetadata =
-			campaign.metadataDescription && campaign.metadataOgImage && campaign.metadataTwitterImage
+		const primaryImage = campaign.primaryImage?.filename?.trim();
+		const campaignMetadata = {
+			title: campaign.title,
+			description: campaign.description,
+			...(primaryImage
 				? {
-						title: campaign.title,
-						description: campaign.metadataDescription,
 						openGraph: {
 							title: campaign.title,
-							description: campaign.metadataDescription,
-							images: campaign.metadataOgImage,
+							description: campaign.description,
+							images: primaryImage,
 						},
 						twitter: {
 							title: campaign.title,
 							card: 'summary_large_image' as const,
 							site: '@so_income',
 							creator: '@so_income',
-							images: campaign.metadataTwitterImage,
+							images: primaryImage,
 						},
 					}
-				: undefined;
+				: {}),
+		};
 
 		return getMetadata(lang, 'website-campaign', campaignMetadata);
 	}

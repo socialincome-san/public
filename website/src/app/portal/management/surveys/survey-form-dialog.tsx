@@ -1,9 +1,8 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
 import { SurveyForm } from './survey-form';
 
@@ -19,7 +18,7 @@ export const SurveyFormDialog = ({ open, onOpenChange, surveyId }: SurveyFormDia
 	const onError = (error?: unknown) => {
 		const message = retrieveErrorMessage(error);
 		setErrorMessage(`Error saving survey: ${message}`);
-		logger.error('Survey Form Error', { error });
+		console.error('Survey Form Error', { error });
 	};
 
 	const handleOpenChange = (newOpen: boolean) => {

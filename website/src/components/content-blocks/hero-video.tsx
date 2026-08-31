@@ -1,16 +1,14 @@
 'use client';
-
 import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
 import { VideoControlButton } from '@/components/video-control-button';
 import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
-import { ArrowsPointingInIcon, ArrowsPointingOutIcon, ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/outline';
-import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import MuxVideo from '@mux/mux-video-react';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { Maximize2, MessageSquareText, Minimize2, Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { useRef, useState, type ReactNode } from 'react';
 import Markdown from 'react-markdown';
 
@@ -110,14 +108,14 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 								aria-label={isPlaying ? translations.pauseVideo : translations.playVideo}
 								title={isPlaying ? translations.pauseVideo : translations.playVideo}
 							>
-								{isPlaying ? <PauseIcon className="size-5" /> : <PlayIcon className="size-5" />}
+								{isPlaying ? <Pause className="size-5" /> : <Play className="size-5" />}
 							</VideoControlButton>
 							<VideoControlButton
 								onClick={() => setIsMuted((prev) => !prev)}
 								aria-label={isMuted ? translations.unmuteVideo : translations.muteVideo}
 								title={isMuted ? translations.unmuteVideo : translations.muteVideo}
 							>
-								{isMuted ? <SpeakerXMarkIcon className="size-5" /> : <SpeakerWaveIcon className="size-5" />}
+								{isMuted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
 							</VideoControlButton>
 							{subtitleUrl && (
 								<VideoControlButton
@@ -125,7 +123,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 									aria-label={showCaptions ? translations.hideCaptions : translations.showCaptions}
 									title={showCaptions ? translations.hideCaptions : translations.showCaptions}
 								>
-									<ChatBubbleBottomCenterTextIcon className="size-5" />
+									<MessageSquareText className="size-5" />
 								</VideoControlButton>
 							)}
 						</div>
@@ -134,7 +132,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 							aria-label={translations.exitExpandedVideoView}
 							title={translations.exitExpandedVideoView}
 						>
-							<ArrowsPointingInIcon className="size-5" />
+							<Minimize2 className="size-5" />
 						</VideoControlButton>
 					</div>
 				) : (
@@ -144,7 +142,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 						aria-label={translations.expandVideoView}
 						title={translations.expandVideoView}
 					>
-						<ArrowsPointingOutIcon className="size-5" />
+						<Maximize2 className="size-5" />
 					</VideoControlButton>
 				)}
 
@@ -162,6 +160,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 									type="button"
 									variant="outline"
 									size="lg"
+									className="text-primary-foreground"
 									aria-haspopup="dialog"
 									onClick={() => openWizardAtAmountStep()}
 								>

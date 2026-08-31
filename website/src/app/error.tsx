@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { FallbackPage } from '@/components/fallback-page';
 import Link from 'next/link';
 

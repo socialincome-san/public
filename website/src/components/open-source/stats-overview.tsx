@@ -14,7 +14,7 @@ type Props = {
 export const StatsOverview = ({ stats, commitsLabel, starsLabel, forksLabel, periodLabel, lang }: Props) => {
 	const cards = [
 		{ label: commitsLabel, total: stats.totalCommits, delta: stats.newCommits },
-		{ label: starsLabel, total: stats.totalStars, delta: stats.newStars },
+		{ label: starsLabel, total: stats.totalStars },
 		{ label: forksLabel, total: stats.totalForks, delta: stats.newForks },
 	];
 

@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/button';
-import { Input } from '@/components/input';
+import { Button } from '@/components/button/button';
+import { Input } from '@/components/input/input';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import type { DonationAmountFieldsTranslations } from '../../i18n/donation-amount-fields-translations';
