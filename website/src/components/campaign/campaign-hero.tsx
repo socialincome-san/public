@@ -110,9 +110,7 @@ export const CampaignHero = ({
 								value={formatNumberLocale(campaign.amountCollected ?? 0, locale)}
 								trailing={
 									hasGoal ? (
-										<p className="pb-1 text-xl font-medium opacity-40">
-											{formatNumberLocale(campaign.goal ?? 0, locale)}
-										</p>
+										<p className="pb-1 text-xl font-medium opacity-40">{formatNumberLocale(campaign.goal ?? 0, locale)}</p>
 									) : null
 								}
 								progress={raisedPercent}

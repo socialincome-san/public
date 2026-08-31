@@ -14,12 +14,12 @@
  *   mise run seed-cms-campaigns-all            # create all CMS campaigns
  */
 
-import '@/scripts/shared/load-script-env';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import { prisma } from '@/lib/database/prisma';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { getStoryblokApi } from '@/lib/services/storyblok/storyblok.config';
 import { STORYBLOK_CAMPAIGNS_FOLDER } from '@/lib/storyblok/storyblok-paths';
+import '@/scripts/shared/load-script-env';
 import type { ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import {
 	assertDatabaseUrl,
@@ -131,12 +131,7 @@ const resolveDefaultProgramId = async (programs: ProgramRef[], overrideProgramId
 	return firstProgram.id;
 };
 
-const printBanner = (options: {
-	apply: boolean;
-	listedOnly: boolean;
-	defaultProgramId: string;
-	contributorId: string;
-}) => {
+const printBanner = (options: { apply: boolean; listedOnly: boolean; defaultProgramId: string; contributorId: string }) => {
 	log('=== CMS campaign database seed ===');
 	log(`Mode: ${options.apply ? 'APPLY (writes enabled)' : 'DRY-RUN (no writes)'}`);
 	log(`Database host: ${getDatabaseHost(process.env.DATABASE_URL ?? '')}`);
@@ -171,9 +166,7 @@ const main = async () => {
 		select: { id: true },
 	});
 	if (!contributor) {
-		throw new Error(
-			`Contributor not found: ${cmsCampaignSeedContributorId}. Run \`npm run db:seed\` first.`,
-		);
+		throw new Error(`Contributor not found: ${cmsCampaignSeedContributorId}. Run \`npm run db:seed\` first.`);
 	}
 
 	printBanner({ apply, listedOnly, defaultProgramId, contributorId: cmsCampaignSeedContributorId });

@@ -36,10 +36,8 @@ export const exitCodeForCreateOnlyScript = (
 	return 0;
 };
 
-export const exitCodeForSummary = (
-	summary: { errors: number; subscriptionsCreated: number },
-	apply: boolean,
-): number => exitCodeForCreateOnlyScript({ errors: summary.errors, recordsToCreate: summary.subscriptionsCreated }, apply);
+export const exitCodeForSummary = (summary: { errors: number; subscriptionsCreated: number }, apply: boolean): number =>
+	exitCodeForCreateOnlyScript({ errors: summary.errors, recordsToCreate: summary.subscriptionsCreated }, apply);
 
 const parsePositiveIntFlag = (argv: string[], flag: string): number | null => {
 	const arg = argv.find((value) => value.startsWith(`${flag}=`));
