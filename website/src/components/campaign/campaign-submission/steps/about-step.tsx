@@ -3,7 +3,7 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
-import { Switch } from '@/components/switch';
+import { Switch } from '@/components/switch/switch';
 import { cn } from '@/lib/utils/cn';
 import { useEffect, useRef } from 'react';
 import { CampaignSubmissionFormCard } from '../form-layout';
@@ -46,6 +46,7 @@ export const AboutStep = ({
 }: AboutStepProps) => {
 	const submitErrorRef = useRef<HTMLParagraphElement>(null);
 	const hasAdditionalInformation = form.watch('hasAdditionalInformation');
+	const showTurnstile = Boolean(turnstileSiteKey && lang && onTurnstileTokenChange);
 
 	const additionalLinkFields: AdditionalLinkField[] = [
 		{
@@ -211,7 +212,7 @@ export const AboutStep = ({
 				</div>
 			</CampaignSubmissionFormCard>
 
-			{turnstileSiteKey ? (
+			{showTurnstile && turnstileSiteKey && lang && onTurnstileTokenChange ? (
 				<TurnstileWidget
 					key={turnstileWidgetKey}
 					siteKey={turnstileSiteKey}
