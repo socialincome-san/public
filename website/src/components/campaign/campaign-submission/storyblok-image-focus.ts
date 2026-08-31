@@ -1,4 +1,4 @@
-export const STORYBLOK_FOCUS_REGEX = /^\d+x\d+:\d+x\d+$/;
+const STORYBLOK_FOCUS_REGEX = /^\d+x\d+:\d+x\d+$/;
 
 export type StoryblokFocusPoint = {
 	x: number;
