@@ -9,6 +9,7 @@ import { now } from '@/lib/utils/now';
 import Stripe from 'stripe';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
+import { mapCoverTransactionCostsMetadata } from './cover-transaction-costs';
 import { isSubscriptionAmountInRange, SUBSCRIPTION_AMOUNT_MAX, SUBSCRIPTION_AMOUNT_MIN } from './subscription-amount';
 import {
 	mapStripeSubscriptionFields,
@@ -50,6 +51,7 @@ export class SubscriptionWriteService extends BaseService {
 			status: mapped.status,
 			paymentMethod: SubscriptionPaymentMethod.stripe,
 			canceledAt: mapped.canceledAt,
+			coverTransactionCosts: mapCoverTransactionCostsMetadata(input.stripeSubscription.metadata),
 		};
 
 		try {
@@ -133,6 +135,7 @@ export class SubscriptionWriteService extends BaseService {
 			status,
 			paymentMethod: SubscriptionPaymentMethod.bank_transfer,
 			canceledAt,
+			coverTransactionCosts: false,
 		};
 
 		try {

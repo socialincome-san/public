@@ -18,6 +18,7 @@ export type StripeEmbeddedCheckoutCreateInput = {
 	campaignId?: string;
 	accountId?: string;
 	source?: string;
+	coverTransactionCosts?: boolean;
 };
 
 export type StripeHostedCheckoutCreateInput = {
@@ -30,6 +31,7 @@ export type StripeHostedCheckoutCreateInput = {
 	campaignId?: string;
 	accountId?: string;
 	source?: string;
+	coverTransactionCosts?: boolean;
 };
 
 export type PortalProgramDonationCheckoutInput = {
@@ -156,6 +158,7 @@ export type CheckoutMetadata = {
 	campaignId?: string;
 	accountId?: string;
 	source?: string;
+	coverTransactionCosts?: string;
 	[key: string]: string | undefined;
 };
 
