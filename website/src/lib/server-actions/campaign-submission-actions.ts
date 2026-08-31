@@ -1,5 +1,10 @@
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+'use server';
+
+import { getSessionByType } from '@/lib/firebase/current-account';
+import { getOptionalContributor } from '@/lib/firebase/current-contributor';
+import type { ClaimPendingCampaignsResult } from '@/lib/services/campaign/campaign-pending-claim.service';
 import {
+	createCampaignSubmissionPersonalSchema,
 	isCampaignSubmissionErrorCode,
 	isCampaignSubmissionImageErrorCode,
 	parseCampaignSubmissionDefaultImageId,
@@ -11,12 +16,14 @@ import {
 	type CampaignSubmissionImageSource,
 	type CampaignSubmissionOptionalImages,
 } from '@/lib/services/campaign/campaign-submission-input';
+import type { CampaignSubmissionResult } from '@/lib/services/campaign/campaign-submission.service';
 import { readTurnstileToken, verifyTurnstileToken } from '@/lib/services/campaign/verify-turnstile-token';
+import { resultFail, resultOk } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
-import { parseMultipartFormDataWithLimit, RequestBodyTooLargeError } from '@/lib/utils/request-body';
-import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'nodejs';
+const personalSchema = createCampaignSubmissionPersonalSchema((code) => code);
+
+const emptyClaimResult: ClaimPendingCampaignsResult = { successfulClaimIds: [] };
 
 type ImageFieldError = {
 	success: false;
@@ -24,11 +31,15 @@ type ImageFieldError = {
 	field?: CampaignSubmissionImageMultipartField;
 };
 
-const errorResponse = (
-	errorCode: CampaignSubmissionErrorCode,
-	status: number,
+export type SubmitCampaignActionResult =
+	| { success: true; data: CampaignSubmissionResult; status?: number }
+	| { success: false; error: string; status?: number; field?: CampaignSubmissionImageMultipartField };
+
+const submissionFail = (
+	error: string,
+	status?: number,
 	field?: CampaignSubmissionImageMultipartField,
-) => NextResponse.json(field ? { errorCode, field } : { errorCode }, { status });
+): SubmitCampaignActionResult => ({ success: false, error, status, ...(field ? { field } : {}) });
 
 const resolveImageSource = async (
 	formData: FormData,
@@ -108,59 +119,41 @@ const resolveOptionalImages = async (
 	};
 };
 
-const resolveContributorIdFromRequest = async (request: NextRequest): Promise<string | null> => {
-	const sessionResult = await services.firebaseSession.getDecodedSessionFromRequest(request);
-	if (!sessionResult.success) {
-		return null;
+const readClaimIds = (claimIds: unknown): string[] => {
+	if (!Array.isArray(claimIds)) {
+		return [];
 	}
 
-	const contributorResult = await services.read.contributor.getCurrentContributorSession(sessionResult.data.uid);
-	if (!contributorResult.success) {
-		return null;
-	}
-
-	return contributorResult.data.id;
+	return claimIds.filter((claimId): claimId is string => typeof claimId === 'string');
 };
 
-export const POST = async (request: NextRequest) => {
-	let formData: FormData;
-	try {
-		formData = await parseMultipartFormDataWithLimit(request, campaignSubmissionConfig.maxMultipartBodyBytes);
-	} catch (error) {
-		if (error instanceof RequestBodyTooLargeError) {
-			return errorResponse('payload-too-large', 413);
-		}
-
-		return errorResponse('invalid-form-data', 400);
-	}
-
+export const submitCampaignAction = async (formData: FormData): Promise<SubmitCampaignActionResult> => {
 	const turnstileResult = await verifyTurnstileToken(readTurnstileToken(formData));
 	if (!turnstileResult.success) {
-		return errorResponse(turnstileResult.error, turnstileResult.error === 'submission-failed' ? 503 : 400);
+		return submissionFail(turnstileResult.error, turnstileResult.error === 'submission-failed' ? 503 : 400);
 	}
 
 	const fieldsResult = parseCampaignSubmissionFields(formData);
 	if (!fieldsResult.success) {
-		return errorResponse(fieldsResult.error, 400);
+		return submissionFail(fieldsResult.error, 400);
 	}
 
 	const imageSourceResult = await resolveImageSource(formData);
 	if (!imageSourceResult.success) {
-		return errorResponse(imageSourceResult.error, 400, imageSourceResult.field);
+		return submissionFail(imageSourceResult.error, 400, imageSourceResult.field);
 	}
 
 	const optionalImagesResult = await resolveOptionalImages(formData, fieldsResult.data.hasAdditionalInformation);
 	if (!optionalImagesResult.success) {
-		return errorResponse(optionalImagesResult.error, 400, optionalImagesResult.field);
+		return submissionFail(optionalImagesResult.error, 400, optionalImagesResult.field);
 	}
 
-	const contributorId = await resolveContributorIdFromRequest(request);
-
+	const contributor = await getOptionalContributor();
 	const submissionResult = await services.campaignSubmission.submit(
 		fieldsResult.data,
 		imageSourceResult.data,
 		optionalImagesResult.data,
-		contributorId,
+		contributor?.id ?? null,
 	);
 
 	if (!submissionResult.success) {
@@ -169,8 +162,43 @@ export const POST = async (request: NextRequest) => {
 			? ('defaultImageId' satisfies CampaignSubmissionImageMultipartField)
 			: undefined;
 
-		return errorResponse(errorCode, submissionResult.status ?? 400, field);
+		return submissionFail(errorCode, submissionResult.status ?? 400, field);
 	}
 
-	return NextResponse.json({ slug: submissionResult.data.slug }, { status: 201 });
+	if (!contributor) {
+		const personalParsed = personalSchema.safeParse({
+			firstName: formData.get('firstName'),
+			lastName: formData.get('lastName'),
+			email: formData.get('email'),
+		});
+		if (personalParsed.success) {
+			const accountResult = await services.write.contributor.getOrCreateFromEmailAndName(personalParsed.data);
+			if (!accountResult.success) {
+				console.error(accountResult.error);
+			}
+		}
+	}
+
+	return resultOk(submissionResult.data);
+};
+
+export const claimPendingCampaignsAction = async (claimIds: unknown) => {
+	const contributorSession = await getSessionByType('contributor');
+	if (!contributorSession.success) {
+		return resultOk(emptyClaimResult);
+	}
+
+	const pendingClaimIds = readClaimIds(claimIds);
+	if (pendingClaimIds.length === 0) {
+		return resultOk(emptyClaimResult);
+	}
+
+	const result = await services.campaignPendingClaim.claimPendingCampaigns(contributorSession.data.id, pendingClaimIds);
+	if (!result.success) {
+		console.error(result.error);
+
+		return resultFail('submission-failed', 503);
+	}
+
+	return resultOk(result.data);
 };

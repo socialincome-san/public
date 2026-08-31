@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient } from '@/generated/prisma/client';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { slugify } from '@/lib/utils/string-utils';
-import { randomUUID } from 'crypto';
+import { randomBytes, randomUUID } from 'crypto';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramPublicSubmissionService } from '../program/program-public-submission.service';
@@ -17,6 +17,17 @@ import { CampaignValidationService } from './campaign-validation.service';
 
 export type CampaignSubmissionResult = {
 	slug: string;
+	claimId?: string;
+};
+
+const claimIdAlphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const claimIdLength = 8;
+const claimIdCreateMaxAttempts = 5;
+
+const generateClaimId = (): string => {
+	const bytes = randomBytes(claimIdLength);
+
+	return Array.from(bytes, (byte) => claimIdAlphabet[byte % claimIdAlphabet.length]).join('');
 };
 
 type SubmissionCleanupState = {
@@ -135,6 +146,12 @@ export class CampaignSubmissionService extends BaseService {
 			});
 			cleanupState.storyId = storyId;
 
+			if (!contributorId) {
+				const claimId = await this.createCampaignPending(campaign.id);
+
+				return this.resultOk({ slug, claimId });
+			}
+
 			return this.resultOk({ slug });
 		} catch (error) {
 			await this.compensateSubmissionFailure(cleanupState);
@@ -153,6 +170,41 @@ export class CampaignSubmissionService extends BaseService {
 
 			return this.resultFail('submission-failed', 503);
 		}
+	}
+
+	private async createCampaignPending(campaignId: string): Promise<string> {
+		let lastError: unknown;
+
+		for (let attempt = 1; attempt <= claimIdCreateMaxAttempts; attempt += 1) {
+			const claimId = generateClaimId();
+
+			try {
+				await this.db.campaignPending.create({
+					data: {
+						claimId,
+						campaignId,
+					},
+				});
+
+				return claimId;
+			} catch (error) {
+				lastError = error;
+				const isClaimIdCollision = error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002';
+
+				if (isClaimIdCollision && attempt < claimIdCreateMaxAttempts) {
+					continue;
+				}
+
+				if (isClaimIdCollision) {
+					break;
+				}
+
+				throw error;
+			}
+		}
+
+		console.error(lastError, { campaignId, reason: 'claim-id-allocation-failed' });
+		throw new Error('Failed to allocate a unique campaign claim id');
 	}
 
 	private async uploadImage(image: CampaignSubmissionImageValidation, cleanupState: SubmissionCleanupState) {

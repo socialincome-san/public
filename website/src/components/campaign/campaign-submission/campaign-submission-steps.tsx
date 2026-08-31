@@ -3,17 +3,25 @@
 import { CampaignSubmissionFormCard, CampaignSubmissionFormCardColumn } from './form-layout';
 import { AboutStep } from './steps/about-step';
 import { DetailsStep } from './steps/details-step';
+import { PersonalStep } from './steps/personal-step';
 import { ProgramStep } from './steps/program-step';
-import type { AboutStepProps, CampaignSubmissionStepId, DetailsStepProps, ProgramStepProps } from './types';
+import type {
+	AboutStepProps,
+	CampaignSubmissionStepId,
+	DetailsStepProps,
+	PersonalStepProps,
+	ProgramStepProps,
+} from './types';
 
 type Props = {
 	currentStep: CampaignSubmissionStepId;
 	programStep: ProgramStepProps;
 	detailsStep: DetailsStepProps;
 	aboutStep: AboutStepProps;
+	personalStep: PersonalStepProps;
 };
 
-export const CampaignSubmissionSteps = ({ currentStep, programStep, detailsStep, aboutStep }: Props) => {
+export const CampaignSubmissionSteps = ({ currentStep, programStep, detailsStep, aboutStep, personalStep }: Props) => {
 	switch (currentStep) {
 		case 'program':
 			return (
@@ -33,6 +41,12 @@ export const CampaignSubmissionSteps = ({ currentStep, programStep, detailsStep,
 			return (
 				<CampaignSubmissionFormCardColumn key={currentStep}>
 					<AboutStep {...aboutStep} />
+				</CampaignSubmissionFormCardColumn>
+			);
+		case 'personal':
+			return (
+				<CampaignSubmissionFormCardColumn key={currentStep}>
+					<PersonalStep {...personalStep} />
 				</CampaignSubmissionFormCardColumn>
 			);
 	}

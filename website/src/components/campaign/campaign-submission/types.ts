@@ -14,6 +14,11 @@ export type SubmissionLabels = {
 	aboutStepTitle: string;
 	aboutStepSubtitle: string;
 	aboutStepDescription: string;
+	personalStepTitle: string;
+	personalStepSubtitle: string;
+	firstName: string;
+	lastName: string;
+	email: string;
 	title: string;
 	description: string;
 	goal: string;
@@ -54,8 +59,14 @@ export type SubmissionLabels = {
 	tiktokHandlePlaceholder: string;
 	submit: string;
 	submitting: string;
-	successTitle: string;
-	success: string;
+	successThankYou: string;
+	successCreatedTitle: string;
+	successLiveTitle: string;
+	successGuestDescription: string;
+	successDidntGetIt: string;
+	successRetry: string;
+	successRetrySending: string;
+	successSupportPrefix: string;
 	error: string;
 	currencyPlaceholder: string;
 	imageHint: string;
@@ -68,6 +79,7 @@ export type SubmissionLabels = {
 	recipientsCount: string;
 	details: string;
 	about: string;
+	personal: string;
 	programsLoading: string;
 	programsEmpty: string;
 	defaultImagesLoading: string;
@@ -75,7 +87,7 @@ export type SubmissionLabels = {
 	errors: Record<CampaignSubmissionErrorCode, string>;
 };
 
-export type CampaignSubmissionStepId = 'program' | 'details' | 'about';
+export type CampaignSubmissionStepId = 'program' | 'details' | 'about' | 'personal';
 
 export type { CampaignSubmissionFormValues };
 
@@ -114,6 +126,17 @@ export type AboutStepProps = {
 	labels: SubmissionLabels;
 	profilePicture: CampaignSubmissionImageUploadField;
 	sectionImage: CampaignSubmissionImageUploadField;
+	isSubmitting: boolean;
+	submitError?: string | null;
+	lang?: WebsiteLanguage;
+	turnstileSiteKey?: string;
+	turnstileWidgetKey?: number;
+	onTurnstileTokenChange?: (token: string | null) => void;
+};
+
+export type PersonalStepProps = {
+	form: UseFormReturn<CampaignSubmissionFormValues>;
+	labels: SubmissionLabels;
 	submitError: string | null;
 	isSubmitting: boolean;
 	lang: WebsiteLanguage;

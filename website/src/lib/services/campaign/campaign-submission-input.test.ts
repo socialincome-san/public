@@ -4,6 +4,7 @@ import {
 	appendCampaignSubmissionFormData,
 	createCampaignSubmissionDetailsSchema,
 	createCampaignSubmissionFormSchema,
+	createCampaignSubmissionPersonalSchema,
 	endDateFromDurationPreset,
 	parseCampaignSubmissionDefaultImageId,
 	parseCampaignSubmissionFields,
@@ -42,6 +43,9 @@ const validFormValues = (overrides: Partial<CampaignSubmissionFormValues> = {}):
 	xHandle: '',
 	linkWebsite: '',
 	tiktokHandle: '',
+	firstName: '',
+	lastName: '',
+	email: '',
 	...overrides,
 });
 
@@ -265,6 +269,9 @@ describe('campaign-submission-input', () => {
 			xHandle: '',
 			linkWebsite: '',
 			tiktokHandle: '',
+			firstName: '',
+			lastName: '',
+			email: '',
 		};
 
 		const urlHandle = schema.safeParse({ ...baseValues, instagramHandle: 'https://instagram.com/foo' });
@@ -341,6 +348,9 @@ describe('campaign-submission-input', () => {
 			xHandle: '',
 			linkWebsite: '',
 			tiktokHandle: '',
+			firstName: '',
+			lastName: '',
+			email: '',
 		});
 
 		expect(result.success).toBe(false);
@@ -366,6 +376,9 @@ describe('campaign-submission-input', () => {
 			creatorName: '',
 			quote: '',
 			hasAdditionalInformation: false,
+			firstName: '',
+			lastName: '',
+			email: '',
 		});
 
 		expect(missingCreator.success).toBe(false);
@@ -388,9 +401,44 @@ describe('campaign-submission-input', () => {
 			creatorName: 'Alex',
 			quote: '',
 			hasAdditionalInformation: false,
+			firstName: '',
+			lastName: '',
+			email: '',
 		});
 
 		expect(emptyQuote.success).toBe(true);
+	});
+
+	test('createCampaignSubmissionFormSchema allows empty personal fields for contributor path', () => {
+		const schema = createCampaignSubmissionFormSchema((code) => code);
+		const result = schema.safeParse(validFormValues());
+
+		expect(result.success).toBe(true);
+	});
+
+	test('createCampaignSubmissionPersonalSchema requires names and a valid email', () => {
+		const schema = createCampaignSubmissionPersonalSchema((code) => code);
+
+		const missing = schema.safeParse({ firstName: '', lastName: ' ', email: '' });
+		expect(missing.success).toBe(false);
+		if (!missing.success) {
+			const messages = missing.error.issues.map((issue) => issue.message);
+			expect(messages).toContain('first-name-required');
+			expect(messages).toContain('last-name-required');
+			expect(messages).toContain('email-required');
+		}
+
+		const invalidEmail = schema.safeParse({ firstName: 'Ada', lastName: 'Lovelace', email: 'not-an-email' });
+		expect(invalidEmail.success).toBe(false);
+		if (!invalidEmail.success) {
+			expect(invalidEmail.error.issues.some((issue) => issue.message === 'email-invalid')).toBe(true);
+		}
+
+		const valid = schema.safeParse({ firstName: '  Ada  ', lastName: ' Lovelace ', email: ' ada@example.com ' });
+		expect(valid.success).toBe(true);
+		if (valid.success) {
+			expect(valid.data).toEqual({ firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.com' });
+		}
 	});
 
 	test('createCampaignSubmissionDetailsSchema validates details without about fields', () => {
@@ -487,5 +535,47 @@ describe('campaign-submission-input', () => {
 		expect(formData.get('hasAdditionalInformation')).toBe('false');
 		expect(formData.get('sectionDescription')).toBeNull();
 		expect(formData.get('instagramHandle')).toBeNull();
+	});
+
+	test('appendCampaignSubmissionFormData includes personal fields only when requested', () => {
+		const values = validFormValues({
+			firstName: 'Ada',
+			lastName: 'Lovelace',
+			email: 'ada@example.com',
+		});
+
+		const withPersonal = appendCampaignSubmissionFormData(new FormData(), values, {
+			includePersonalData: true,
+		});
+		expect(withPersonal.get('firstName')).toBe('Ada');
+		expect(withPersonal.get('lastName')).toBe('Lovelace');
+		expect(withPersonal.get('email')).toBe('ada@example.com');
+
+		const withoutPersonal = appendCampaignSubmissionFormData(new FormData(), values);
+		expect(withoutPersonal.get('firstName')).toBeNull();
+		expect(withoutPersonal.get('lastName')).toBeNull();
+		expect(withoutPersonal.get('email')).toBeNull();
+	});
+
+	test('parseCampaignSubmissionFields ignores personal FormData keys', () => {
+		const formData = withAboutFields(new FormData());
+		formData.set('title', 'Campaign');
+		formData.set('description', 'Description');
+		formData.set('goal', '100');
+		formData.set('currency', 'CHF');
+		formData.set('endDate', validEndDateString());
+		formData.set('programId', 'program-1');
+		formData.set('public', 'true');
+		formData.set('firstName', 'Ada');
+		formData.set('lastName', 'Lovelace');
+		formData.set('email', 'ada@example.com');
+
+		const result = parseCampaignSubmissionFields(formData);
+		expect(result.success).toBe(true);
+		if (result.success) {
+			expect(result.data).not.toHaveProperty('firstName');
+			expect(result.data).not.toHaveProperty('lastName');
+			expect(result.data).not.toHaveProperty('email');
+		}
 	});
 });

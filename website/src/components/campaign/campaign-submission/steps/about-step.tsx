@@ -46,6 +46,7 @@ export const AboutStep = ({
 }: AboutStepProps) => {
 	const submitErrorRef = useRef<HTMLParagraphElement>(null);
 	const hasAdditionalInformation = form.watch('hasAdditionalInformation');
+	const showTurnstile = Boolean(turnstileSiteKey && lang && onTurnstileTokenChange);
 
 	const additionalLinkFields: AdditionalLinkField[] = [
 		{
@@ -211,7 +212,7 @@ export const AboutStep = ({
 				</div>
 			</CampaignSubmissionFormCard>
 
-			{turnstileSiteKey ? (
+			{showTurnstile && turnstileSiteKey && lang && onTurnstileTokenChange ? (
 				<TurnstileWidget
 					key={turnstileWidgetKey}
 					siteKey={turnstileSiteKey}

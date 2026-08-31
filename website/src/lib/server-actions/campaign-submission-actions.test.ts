@@ -1,5 +1,4 @@
 import { addDays, format, startOfDay } from 'date-fns';
-import { NextRequest } from 'next/server';
 
 import type {
 	CampaignSubmissionFields,
@@ -18,37 +17,36 @@ const mockSubmit = jest.fn() as jest.MockedFunction<
 		contributorId?: string | null,
 	) => Promise<ServiceResult<CampaignSubmissionResult>>
 >;
-const mockParseMultipartFormDataWithLimit = jest.fn();
 const mockVerifyTurnstileToken = jest.fn() as jest.MockedFunction<
 	(token: string | null) => Promise<TurnstileVerificationResult>
 >;
-const mockGetDecodedSessionFromRequest = jest.fn();
-const mockGetCurrentContributorSession = jest.fn();
+const mockGetOrCreateFromEmailAndName = jest.fn();
+const mockGetSessionByType = jest.fn();
+const mockClaimPendingCampaigns = jest.fn();
+const mockGetOptionalContributor = jest.fn();
+
+jest.mock('@/lib/firebase/current-account', () => ({
+	getSessionByType: mockGetSessionByType,
+}));
+
+jest.mock('@/lib/firebase/current-contributor', () => ({
+	getOptionalContributor: mockGetOptionalContributor,
+}));
 
 jest.mock('@/lib/services/services', () => ({
 	services: {
 		campaignSubmission: {
 			submit: mockSubmit,
 		},
-		firebaseSession: {
-			getDecodedSessionFromRequest: mockGetDecodedSessionFromRequest,
-		},
-		read: {
+		write: {
 			contributor: {
-				getCurrentContributorSession: mockGetCurrentContributorSession,
+				getOrCreateFromEmailAndName: mockGetOrCreateFromEmailAndName,
 			},
 		},
+		campaignPendingClaim: {
+			claimPendingCampaigns: mockClaimPendingCampaigns,
+		},
 	},
-}));
-
-jest.mock('@/lib/utils/request-body', () => ({
-	RequestBodyTooLargeError: class RequestBodyTooLargeError extends Error {
-		constructor() {
-			super('Request body exceeds the maximum allowed size.');
-			this.name = 'RequestBodyTooLargeError';
-		}
-	},
-	parseMultipartFormDataWithLimit: mockParseMultipartFormDataWithLimit,
 }));
 
 jest.mock('@/lib/services/campaign/verify-turnstile-token', () => {
@@ -62,7 +60,7 @@ jest.mock('@/lib/services/campaign/verify-turnstile-token', () => {
 	};
 });
 
-import { POST } from './route';
+import { claimPendingCampaignsAction, submitCampaignAction } from './campaign-submission-actions';
 
 const validEndDateString = () => format(addDays(startOfDay(new Date()), 30), 'yyyy-MM-dd');
 
@@ -88,13 +86,11 @@ const createValidFormData = () => {
 	return formData;
 };
 
-describe('POST /api/campaign-submissions', () => {
+describe('submitCampaignAction', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
-		mockParseMultipartFormDataWithLimit.mockResolvedValue(createValidFormData());
 		mockVerifyTurnstileToken.mockResolvedValue({ success: true });
-		mockGetDecodedSessionFromRequest.mockResolvedValue({ success: false, error: 'Missing session cookie' });
-		mockGetCurrentContributorSession.mockResolvedValue({ success: false, error: 'Contributor not found' });
+		mockGetOptionalContributor.mockResolvedValue(null);
 	});
 
 	test('returns submission-failed with service status when eligibility orchestration fails', async () => {
@@ -104,11 +100,9 @@ describe('POST /api/campaign-submissions', () => {
 			status: 503,
 		});
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
-		const body: unknown = await response.json();
+		const result = await submitCampaignAction(createValidFormData());
 
-		expect(response.status).toBe(503);
-		expect(body).toEqual({ errorCode: 'submission-failed' });
+		expect(result).toEqual({ success: false, error: 'submission-failed', status: 503 });
 		expect(mockSubmit).toHaveBeenCalledWith(
 			expect.objectContaining({ programId: 'program-1', public: true, creatorName: 'Alex Creator' }),
 			expect.objectContaining({ kind: 'upload' }),
@@ -122,55 +116,97 @@ describe('POST /api/campaign-submissions', () => {
 	});
 
 	test('passes validated fields and image to submit without assembling portal slugs', async () => {
-		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
+		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
-		const body: unknown = await response.json();
+		const result = await submitCampaignAction(createValidFormData());
 
-		expect(response.status).toBe(201);
-		expect(body).toEqual({ slug: 'my-campaign' });
+		expect(result).toEqual({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
 		expect(mockSubmit).toHaveBeenCalledWith(
 			expect.objectContaining({ programId: 'program-1' }),
 			expect.objectContaining({ kind: 'upload' }),
 			expect.objectContaining({ profilePicture: null, sectionImage: null }),
 			null,
 		);
+		expect(mockGetOrCreateFromEmailAndName).not.toHaveBeenCalled();
+	});
+
+	test('creates a guest contributor account after a successful guest submission', async () => {
+		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
+		mockGetOrCreateFromEmailAndName.mockResolvedValue({
+			success: true,
+			data: { contributor: { id: 'contributor-1' }, isNewContributor: true },
+		});
+
+		const formData = createValidFormData();
+		formData.set('firstName', 'Ada');
+		formData.set('lastName', 'Lovelace');
+		formData.set('email', 'ada@example.com');
+
+		const result = await submitCampaignAction(formData);
+
+		expect(result).toEqual({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
+		expect(mockGetOrCreateFromEmailAndName).toHaveBeenCalledWith({
+			email: 'ada@example.com',
+			firstName: 'Ada',
+			lastName: 'Lovelace',
+		});
+	});
+
+	test('still succeeds when guest account creation fails after submission', async () => {
+		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
+		mockGetOrCreateFromEmailAndName.mockResolvedValue({
+			success: false,
+			error: 'database-down',
+		});
+
+		const formData = createValidFormData();
+		formData.set('firstName', 'Ada');
+		formData.set('lastName', 'Lovelace');
+		formData.set('email', 'ada@example.com');
+
+		const result = await submitCampaignAction(formData);
+
+		expect(result).toEqual({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
+		expect(mockGetOrCreateFromEmailAndName).toHaveBeenCalled();
+	});
+
+	test('does not create a guest account when a contributor is already logged in', async () => {
+		mockGetOptionalContributor.mockResolvedValue({ type: 'contributor', id: 'contributor-1' });
+		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
+
+		const formData = createValidFormData();
+		formData.set('firstName', 'Ada');
+		formData.set('lastName', 'Lovelace');
+		formData.set('email', 'ada@example.com');
+
+		const result = await submitCampaignAction(formData);
+
+		expect(result).toEqual({ success: true, data: { slug: 'my-campaign' } });
+		expect(mockGetOrCreateFromEmailAndName).not.toHaveBeenCalled();
+	});
+
+	test('omits claimId from the result when the service does not return one', async () => {
+		mockGetOptionalContributor.mockResolvedValue({ type: 'contributor', id: 'contributor-1' });
+		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
+
+		const result = await submitCampaignAction(createValidFormData());
+
+		expect(result).toEqual({ success: true, data: { slug: 'my-campaign' } });
 	});
 
 	test('passes contributorId from the contributor session when logged in', async () => {
-		mockGetDecodedSessionFromRequest.mockResolvedValue({ success: true, data: { uid: 'firebase-uid-1' } });
-		mockGetCurrentContributorSession.mockResolvedValue({
-			success: true,
-			data: { type: 'contributor', id: 'contributor-1' },
-		});
+		mockGetOptionalContributor.mockResolvedValue({ type: 'contributor', id: 'contributor-1' });
 		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
+		const result = await submitCampaignAction(createValidFormData());
 
-		expect(response.status).toBe(201);
-		expect(mockGetDecodedSessionFromRequest).toHaveBeenCalled();
-		expect(mockGetCurrentContributorSession).toHaveBeenCalledWith('firebase-uid-1');
+		expect(result.success).toBe(true);
+		expect(mockGetOptionalContributor).toHaveBeenCalled();
 		expect(mockSubmit).toHaveBeenCalledWith(
 			expect.objectContaining({ programId: 'program-1' }),
 			expect.objectContaining({ kind: 'upload' }),
 			expect.objectContaining({ profilePicture: null, sectionImage: null }),
 			'contributor-1',
-		);
-	});
-
-	test('leaves contributorId null when session exists but contributor is missing', async () => {
-		mockGetDecodedSessionFromRequest.mockResolvedValue({ success: true, data: { uid: 'firebase-uid-1' } });
-		mockGetCurrentContributorSession.mockResolvedValue({ success: false, error: 'Contributor not found' });
-		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
-
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
-
-		expect(response.status).toBe(201);
-		expect(mockSubmit).toHaveBeenCalledWith(
-			expect.objectContaining({ programId: 'program-1' }),
-			expect.objectContaining({ kind: 'upload' }),
-			expect.objectContaining({ profilePicture: null, sectionImage: null }),
-			null,
 		);
 	});
 
@@ -187,12 +223,11 @@ describe('POST /api/campaign-submissions', () => {
 		formData.set('quote', 'Thank you for your support!');
 		formData.set('hasAdditionalInformation', 'false');
 		formData.set('defaultImageId', '99');
-		mockParseMultipartFormDataWithLimit.mockResolvedValue(formData);
 		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
+		const result = await submitCampaignAction(formData);
 
-		expect(response.status).toBe(201);
+		expect(result.success).toBe(true);
 		expect(mockSubmit).toHaveBeenCalledWith(
 			expect.objectContaining({ goal: null, public: false }),
 			{
@@ -220,12 +255,11 @@ describe('POST /api/campaign-submissions', () => {
 				type: 'image/png',
 			}),
 		);
-		mockParseMultipartFormDataWithLimit.mockResolvedValue(formData);
 		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
+		const result = await submitCampaignAction(formData);
 
-		expect(response.status).toBe(201);
+		expect(result.success).toBe(true);
 		expect(mockSubmit).toHaveBeenCalledWith(
 			expect.objectContaining({ hasAdditionalInformation: true, sectionDescription: 'Extra' }),
 			expect.objectContaining({ kind: 'upload' }),
@@ -241,12 +275,11 @@ describe('POST /api/campaign-submissions', () => {
 	test('verifies the Turnstile token before creating the campaign', async () => {
 		const formData = createValidFormData();
 		formData.set('cf-turnstile-response', 'turnstile-token');
-		mockParseMultipartFormDataWithLimit.mockResolvedValue(formData);
 		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
+		const result = await submitCampaignAction(formData);
 
-		expect(response.status).toBe(201);
+		expect(result.success).toBe(true);
 		expect(mockVerifyTurnstileToken).toHaveBeenCalledWith('turnstile-token');
 		expect(mockSubmit).toHaveBeenCalled();
 	});
@@ -254,26 +287,20 @@ describe('POST /api/campaign-submissions', () => {
 	test('rejects both primaryImage and defaultImageId', async () => {
 		const formData = createValidFormData();
 		formData.set('defaultImageId', '99');
-		mockParseMultipartFormDataWithLimit.mockResolvedValue(formData);
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
-		const body: unknown = await response.json();
+		const result = await submitCampaignAction(formData);
 
-		expect(response.status).toBe(400);
-		expect(body).toEqual({ errorCode: 'invalid-submission' });
+		expect(result).toEqual({ success: false, error: 'invalid-submission', status: 400 });
 		expect(mockSubmit).not.toHaveBeenCalled();
 	});
 
 	test('returns image field for primaryImage validation failures', async () => {
 		const formData = createValidFormData();
 		formData.set('primaryImage', new File([Buffer.alloc(6 * 1024 * 1024)], 'huge.png', { type: 'image/png' }));
-		mockParseMultipartFormDataWithLimit.mockResolvedValue(formData);
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
-		const body: unknown = await response.json();
+		const result = await submitCampaignAction(formData);
 
-		expect(response.status).toBe(400);
-		expect(body).toEqual({ errorCode: 'image-too-large', field: 'primaryImage' });
+		expect(result).toEqual({ success: false, error: 'image-too-large', status: 400, field: 'primaryImage' });
 		expect(mockSubmit).not.toHaveBeenCalled();
 	});
 
@@ -285,13 +312,15 @@ describe('POST /api/campaign-submissions', () => {
 				type: 'text/plain',
 			}),
 		);
-		mockParseMultipartFormDataWithLimit.mockResolvedValue(formData);
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
-		const body: unknown = await response.json();
+		const result = await submitCampaignAction(formData);
 
-		expect(response.status).toBe(400);
-		expect(body).toEqual({ errorCode: 'image-format-unsupported', field: 'profilePicture' });
+		expect(result).toEqual({
+			success: false,
+			error: 'image-format-unsupported',
+			status: 400,
+			field: 'profilePicture',
+		});
 		expect(mockSubmit).not.toHaveBeenCalled();
 	});
 
@@ -305,46 +334,103 @@ describe('POST /api/campaign-submissions', () => {
 				type: 'text/plain',
 			}),
 		);
-		mockParseMultipartFormDataWithLimit.mockResolvedValue(formData);
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
-		const body: unknown = await response.json();
+		const result = await submitCampaignAction(formData);
 
-		expect(response.status).toBe(400);
-		expect(body).toEqual({ errorCode: 'image-format-unsupported', field: 'sectionImage' });
+		expect(result).toEqual({
+			success: false,
+			error: 'image-format-unsupported',
+			status: 400,
+			field: 'sectionImage',
+		});
 		expect(mockSubmit).not.toHaveBeenCalled();
 	});
 
 	test('rejects submissions when Turnstile verification fails', async () => {
 		mockVerifyTurnstileToken.mockResolvedValue({ success: false, error: 'turnstile-invalid' });
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
-		const body: unknown = await response.json();
+		const result = await submitCampaignAction(createValidFormData());
 
-		expect(response.status).toBe(400);
-		expect(body).toEqual({ errorCode: 'turnstile-invalid' });
+		expect(result).toEqual({ success: false, error: 'turnstile-invalid', status: 400 });
 		expect(mockSubmit).not.toHaveBeenCalled();
 	});
 
 	test('rejects submissions when the Turnstile token is missing', async () => {
 		mockVerifyTurnstileToken.mockResolvedValue({ success: false, error: 'turnstile-required' });
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
-		const body: unknown = await response.json();
+		const result = await submitCampaignAction(createValidFormData());
 
-		expect(response.status).toBe(400);
-		expect(body).toEqual({ errorCode: 'turnstile-required' });
+		expect(result).toEqual({ success: false, error: 'turnstile-required', status: 400 });
 		expect(mockSubmit).not.toHaveBeenCalled();
 	});
 
 	test('returns submission-failed when Turnstile verification is unavailable', async () => {
 		mockVerifyTurnstileToken.mockResolvedValue({ success: false, error: 'submission-failed' });
 
-		const response = await POST(new NextRequest('http://localhost/api/campaign-submissions', { method: 'POST' }));
-		const body: unknown = await response.json();
+		const result = await submitCampaignAction(createValidFormData());
 
-		expect(response.status).toBe(503);
-		expect(body).toEqual({ errorCode: 'submission-failed' });
+		expect(result).toEqual({ success: false, error: 'submission-failed', status: 503 });
 		expect(mockSubmit).not.toHaveBeenCalled();
+	});
+});
+
+describe('claimPendingCampaignsAction', () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
+	test('returns an empty success list when the session is not a contributor', async () => {
+		mockGetSessionByType.mockResolvedValue({ success: false, error: 'No contributor session' });
+
+		const result = await claimPendingCampaignsAction(['Ab12Cd34']);
+
+		expect(result).toEqual({ success: true, data: { successfulClaimIds: [] } });
+		expect(mockClaimPendingCampaigns).not.toHaveBeenCalled();
+	});
+
+	test('returns successful claim ids and campaignSlug for a contributor session', async () => {
+		mockGetSessionByType.mockResolvedValue({
+			success: true,
+			data: { type: 'contributor', id: 'contributor-1' },
+		});
+		mockClaimPendingCampaigns.mockResolvedValue({
+			success: true,
+			data: { successfulClaimIds: ['Ab12Cd34'], campaignSlug: 'my-campaign' },
+		});
+
+		const result = await claimPendingCampaignsAction(['Ab12Cd34', 42]);
+
+		expect(result).toEqual({
+			success: true,
+			data: { successfulClaimIds: ['Ab12Cd34'], campaignSlug: 'my-campaign' },
+		});
+		expect(mockClaimPendingCampaigns).toHaveBeenCalledWith('contributor-1', ['Ab12Cd34']);
+	});
+
+	test('returns an empty success list when claim ids are empty', async () => {
+		mockGetSessionByType.mockResolvedValue({
+			success: true,
+			data: { type: 'contributor', id: 'contributor-1' },
+		});
+
+		const result = await claimPendingCampaignsAction([]);
+
+		expect(result).toEqual({ success: true, data: { successfulClaimIds: [] } });
+		expect(mockClaimPendingCampaigns).not.toHaveBeenCalled();
+	});
+
+	test('fails when claiming fails', async () => {
+		mockGetSessionByType.mockResolvedValue({
+			success: true,
+			data: { type: 'contributor', id: 'contributor-1' },
+		});
+		mockClaimPendingCampaigns.mockResolvedValue({
+			success: false,
+			error: 'db-down',
+		});
+
+		const result = await claimPendingCampaignsAction(['Ab12Cd34']);
+
+		expect(result).toEqual({ success: false, error: 'submission-failed', status: 503 });
 	});
 });
