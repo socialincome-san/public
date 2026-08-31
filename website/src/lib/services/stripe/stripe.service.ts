@@ -44,6 +44,13 @@ import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import {
+	amountToStripeUnitAmount,
+	COVER_TRANSACTION_COSTS_METADATA_KEY,
+	getAmountWithTransactionCostCoverage,
+	isCoverTransactionCostsAmountInRange,
+	toCoverTransactionCostsMetadataValue,
+} from '../subscription/cover-transaction-costs';
+import {
 	isSubscriptionAmountInRange,
 	SUBSCRIPTION_AMOUNT_MAX,
 	SUBSCRIPTION_AMOUNT_MIN,
@@ -178,6 +185,7 @@ export class StripeService extends BaseService {
 				accountId: user.accountId,
 				source: 'portal',
 				stripeCustomerId,
+				coverTransactionCosts: false,
 			});
 		} catch (error) {
 			console.error(error);
@@ -195,7 +203,7 @@ export class StripeService extends BaseService {
 				return resolved;
 			}
 
-			const { unitAmount, recurring, campaignId, currency } = resolved.data;
+			const { unitAmount, recurring, campaignId, currency, coverTransactionCosts } = resolved.data;
 
 			if (campaignId) {
 				const campaignResult = await this.campaignReadService.getById(campaignId);
@@ -218,6 +226,7 @@ export class StripeService extends BaseService {
 				stripeCustomerId: input.stripeCustomerId,
 				campaignId,
 				source: 'donation-wizard',
+				coverTransactionCosts,
 			});
 
 			if (!result.success) {
@@ -589,13 +598,78 @@ export class StripeService extends BaseService {
 		}
 	}
 
+	private async updateStripeSubscriptionUnitAmount(input: {
+		stripeSubscriptionId: string;
+		expectedCurrency: string;
+		unitAmount: number;
+		metadata?: Record<string, string>;
+	}): Promise<ServiceResult<Stripe.Subscription>> {
+		const stripe = this.getStripeClient();
+		const stripeSubscription = await stripe.subscriptions.retrieve(input.stripeSubscriptionId);
+		const item = stripeSubscription.items.data[0];
+		if (!item) {
+			return this.resultFail('Stripe subscription has no items');
+		}
+
+		const existingPrice = item.price;
+		const productId =
+			typeof existingPrice.product === 'string' ? existingPrice.product : (existingPrice.product?.id ?? null);
+		if (!productId) {
+			return this.resultFail('Stripe subscription item has no product');
+		}
+
+		const recurring = existingPrice.recurring;
+		if (!recurring || !mapStripeRecurringInterval(recurring.interval, recurring.interval_count)) {
+			return this.resultFail('Only monthly Stripe subscriptions can be updated');
+		}
+
+		const stripeCurrency = existingPrice.currency.toLowerCase();
+		if (stripeCurrency !== input.expectedCurrency.toLowerCase()) {
+			return this.resultFail('Subscription currency does not match Stripe price');
+		}
+
+		const metadata = input.metadata ? { ...stripeSubscription.metadata, ...input.metadata } : undefined;
+		const priceChanged = existingPrice.unit_amount !== input.unitAmount;
+
+		if (!priceChanged && !metadata) {
+			return this.resultOk(stripeSubscription);
+		}
+
+		if (priceChanged) {
+			const price = await stripe.prices.create({
+				currency: stripeCurrency,
+				product: productId,
+				unit_amount: input.unitAmount,
+				recurring: {
+					interval: 'month',
+					interval_count: 1,
+				},
+			});
+
+			return this.resultOk(
+				await stripe.subscriptions.update(input.stripeSubscriptionId, {
+					items: [{ id: item.id, price: price.id }],
+					proration_behavior: 'none',
+					...(metadata && { metadata }),
+				}),
+			);
+		}
+
+		return this.resultOk(
+			await stripe.subscriptions.update(input.stripeSubscriptionId, {
+				metadata,
+			}),
+		);
+	}
+
 	async updateContributorSubscriptionAmount(input: {
 		contributorId: string;
 		subscriptionId: string;
 		amount: number;
+		coverTransactionCosts?: boolean;
 	}): Promise<ServiceResult<{ amount: number; currency: string }>> {
 		try {
-			const { contributorId, subscriptionId, amount } = input;
+			const { contributorId, subscriptionId, amount, coverTransactionCosts } = input;
 			if (!isSubscriptionAmountInRange(amount)) {
 				return this.resultFail(
 					`Amount must be an integer between ${SUBSCRIPTION_AMOUNT_MIN} and ${SUBSCRIPTION_AMOUNT_MAX}`,
@@ -615,51 +689,28 @@ export class StripeService extends BaseService {
 				return this.resultFail('Subscription not found');
 			}
 
-			const stripe = this.getStripeClient();
-			const stripeSubscription = await stripe.subscriptions.retrieve(subscription.stripeSubscriptionId);
-			const item = stripeSubscription.items.data[0];
-			if (!item) {
-				return this.resultFail('Stripe subscription has no items');
+			const chargeAmount = coverTransactionCosts ? getAmountWithTransactionCostCoverage(amount) : amount;
+			if (coverTransactionCosts === true && !isCoverTransactionCostsAmountInRange(chargeAmount)) {
+				return this.resultFail(`Amount must be between ${SUBSCRIPTION_AMOUNT_MIN} and ${SUBSCRIPTION_AMOUNT_MAX}`);
 			}
 
-			const existingPrice = item.price;
-			const productId =
-				typeof existingPrice.product === 'string' ? existingPrice.product : (existingPrice.product?.id ?? null);
-			if (!productId) {
-				return this.resultFail('Stripe subscription item has no product');
-			}
-
-			const recurring = existingPrice.recurring;
-			if (!recurring || !mapStripeRecurringInterval(recurring.interval, recurring.interval_count)) {
-				return this.resultFail('Only monthly Stripe subscriptions can be updated');
-			}
-
-			const stripeCurrency = existingPrice.currency.toLowerCase();
-			if (stripeCurrency !== subscription.currency.toLowerCase()) {
-				return this.resultFail('Subscription currency does not match Stripe price');
-			}
-
-			const unitAmount = amount * 100;
-			let stripeSubscriptionToSync = stripeSubscription;
-			if (existingPrice.unit_amount !== unitAmount) {
-				const price = await stripe.prices.create({
-					currency: stripeCurrency,
-					product: productId,
-					unit_amount: unitAmount,
-					recurring: {
-						interval: 'month',
-						interval_count: 1,
-					},
-				});
-
-				stripeSubscriptionToSync = await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
-					items: [{ id: item.id, price: price.id }],
-					proration_behavior: 'none',
-				});
+			const updateResult = await this.updateStripeSubscriptionUnitAmount({
+				stripeSubscriptionId: subscription.stripeSubscriptionId,
+				expectedCurrency: subscription.currency,
+				unitAmount: amountToStripeUnitAmount(chargeAmount),
+				metadata:
+					coverTransactionCosts === undefined
+						? undefined
+						: {
+								[COVER_TRANSACTION_COSTS_METADATA_KEY]: toCoverTransactionCostsMetadataValue(coverTransactionCosts),
+							},
+			});
+			if (!updateResult.success) {
+				return updateResult;
 			}
 
 			const upsertResult = await this.syncStripeSubscriptionAmount({
-				stripeSubscription: stripeSubscriptionToSync,
+				stripeSubscription: updateResult.data,
 				contributorId,
 				campaignId: subscription.campaignId,
 				subscriptionId,
@@ -669,7 +720,7 @@ export class StripeService extends BaseService {
 				return this.resultFail(upsertResult.error);
 			}
 
-			return this.resultOk({ amount, currency: subscription.currency });
+			return this.resultOk({ amount: chargeAmount, currency: subscription.currency });
 		} catch (error) {
 			console.error(error);
 
@@ -992,18 +1043,16 @@ export class StripeService extends BaseService {
 				campaignId,
 				accountId,
 				source,
+				coverTransactionCosts,
 			} = data;
 
-			const metadata: Record<string, string> = {};
-			if (campaignId) {
-				metadata.campaignId = campaignId;
-			}
-			if (accountId) {
-				metadata.accountId = accountId;
-			}
-			if (source) {
-				metadata.source = source;
-			}
+			const metadata = buildCheckoutSessionMetadata({
+				campaignId,
+				accountId,
+				source,
+				coverTransactionCosts,
+			});
+			const subscriptionMetadata = buildSubscriptionCheckoutMetadata({ campaignId, coverTransactionCosts });
 
 			const stripe = this.getStripeClient();
 			const productId = recurring ? process.env.STRIPE_PRODUCT_RECURRING : process.env.STRIPE_PRODUCT_ONETIME;
@@ -1032,9 +1081,9 @@ export class StripeService extends BaseService {
 				locale: 'auto',
 				...(Object.keys(metadata).length > 0 && { metadata }),
 				...(recurring &&
-					campaignId && {
+					Object.keys(subscriptionMetadata).length > 0 && {
 						subscription_data: {
-							metadata: { campaignId },
+							metadata: subscriptionMetadata,
 						},
 					}),
 			});
@@ -1067,18 +1116,16 @@ export class StripeService extends BaseService {
 				campaignId,
 				accountId,
 				source,
+				coverTransactionCosts,
 			} = data;
 
-			const metadata: Record<string, string> = {};
-			if (campaignId) {
-				metadata.campaignId = campaignId;
-			}
-			if (accountId) {
-				metadata.accountId = accountId;
-			}
-			if (source) {
-				metadata.source = source;
-			}
+			const metadata = buildCheckoutSessionMetadata({
+				campaignId,
+				accountId,
+				source,
+				coverTransactionCosts,
+			});
+			const subscriptionMetadata = buildSubscriptionCheckoutMetadata({ campaignId, coverTransactionCosts });
 
 			const stripe = this.getStripeClient();
 			const productId = recurring ? process.env.STRIPE_PRODUCT_RECURRING : process.env.STRIPE_PRODUCT_ONETIME;
@@ -1105,9 +1152,9 @@ export class StripeService extends BaseService {
 				locale: 'auto',
 				...(Object.keys(metadata).length > 0 && { metadata }),
 				...(recurring &&
-					campaignId && {
+					Object.keys(subscriptionMetadata).length > 0 && {
 						subscription_data: {
-							metadata: { campaignId },
+							metadata: subscriptionMetadata,
 						},
 					}),
 			});
@@ -1641,3 +1688,46 @@ export class StripeService extends BaseService {
 		return { firstName, lastName };
 	}
 }
+
+const applyCoverTransactionCostsMetadata = (
+	metadata: Record<string, string>,
+	coverTransactionCosts?: boolean,
+): Record<string, string> => {
+	if (coverTransactionCosts !== undefined) {
+		metadata[COVER_TRANSACTION_COSTS_METADATA_KEY] = toCoverTransactionCostsMetadataValue(coverTransactionCosts);
+	}
+
+	return metadata;
+};
+
+const buildCheckoutSessionMetadata = (input: {
+	campaignId?: string;
+	accountId?: string;
+	source?: string;
+	coverTransactionCosts?: boolean;
+}): Record<string, string> => {
+	const metadata: Record<string, string> = {};
+	if (input.campaignId) {
+		metadata.campaignId = input.campaignId;
+	}
+	if (input.accountId) {
+		metadata.accountId = input.accountId;
+	}
+	if (input.source) {
+		metadata.source = input.source;
+	}
+
+	return applyCoverTransactionCostsMetadata(metadata, input.coverTransactionCosts);
+};
+
+const buildSubscriptionCheckoutMetadata = (input: {
+	campaignId?: string;
+	coverTransactionCosts?: boolean;
+}): Record<string, string> => {
+	const metadata: Record<string, string> = {};
+	if (input.campaignId) {
+		metadata.campaignId = input.campaignId;
+	}
+
+	return applyCoverTransactionCostsMetadata(metadata, input.coverTransactionCosts);
+};
