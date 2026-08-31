@@ -5,7 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
-import { Switch } from '@/components/switch';
+import { Switch } from '@/components/switch/switch';
 import { ContributorReferralSource, Gender } from '@/generated/prisma/enums';
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
 import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';

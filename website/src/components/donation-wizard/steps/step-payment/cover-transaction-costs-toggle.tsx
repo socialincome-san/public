@@ -1,6 +1,6 @@
 'use client';
 
-import { Switch } from '@/components/switch';
+import { Switch } from '@/components/switch/switch';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { cn } from '@/lib/utils/cn';
