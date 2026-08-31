@@ -79,6 +79,7 @@ export class PayoutProcessCoreService extends BaseService {
 							country: {
 								select: {
 									currency: true,
+									isoCode: true,
 								},
 							},
 						},
@@ -122,6 +123,7 @@ export class PayoutProcessCoreService extends BaseService {
 					program: {
 						payoutPerInterval: Number(recipient.program!.payoutPerInterval),
 						payoutCurrency: recipient.program!.country.currency,
+						payoutCountryCode: recipient.program!.country.isoCode,
 						programDurationInMonths: recipient.program!.programDurationInMonths,
 					},
 					payouts: recipient.payouts,
