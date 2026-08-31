@@ -40,6 +40,7 @@ export class LocalPartnerReadService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					slug: true,
 				},
 				orderBy: { name: 'asc' },
 			});

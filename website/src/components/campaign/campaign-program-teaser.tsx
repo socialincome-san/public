@@ -1,7 +1,9 @@
 import { Badge } from '@/components/badge/badge';
 import { BlockWrapper } from '@/components/block-wrapper';
 import { FocusSdgs } from '@/components/storyblok/focus/focus-sdgs';
-import { getFocusTitle } from '@/components/storyblok/focus/focus.utils';
+import { getFocusSlug, getFocusTitle } from '@/components/storyblok/focus/focus.utils';
+import { getLocalPartnerSlug } from '@/components/storyblok/local-partner/local-partner.utils';
+import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
 import { ProgramWallet } from '@/components/storyblok/program/program-wallet';
 import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
@@ -9,6 +11,7 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { cn } from '@/lib/utils/cn';
+import Link from 'next/link';
 
 type Props = {
 	programId: string;
@@ -16,9 +19,15 @@ type Props = {
 	region: WebsiteRegion;
 };
 
+type TeaserMetaItem = {
+	id: string;
+	name: string;
+	href?: string;
+};
+
 type TeaserMetaRowProps = {
 	label: string;
-	items: { id: string; name: string }[];
+	items: TeaserMetaItem[];
 	showDivider?: boolean;
 };
 
@@ -26,11 +35,32 @@ const TeaserMetaRow = ({ label, items, showDivider = false }: TeaserMetaRowProps
 	<div className={cn('grid gap-3 py-4 sm:grid-cols-[140px_1fr] sm:items-center', showDivider && 'border-border border-t')}>
 		<p className="text-sm font-medium text-slate-600">{label}</p>
 		<div className="flex flex-wrap gap-2">
-			{items.map((item) => (
-				<Badge key={item.id} className="px-3 py-1.5 font-medium">
-					{item.name}
-				</Badge>
-			))}
+			{items.map((item) => {
+				const badge = (
+					<Badge
+						className={cn(
+							'px-3 py-1.5 font-medium',
+							item.href && 'hover:bg-muted/80 transition-colors',
+						)}
+					>
+						{item.name}
+					</Badge>
+				);
+
+				if (!item.href) {
+					return <div key={item.id}>{badge}</div>;
+				}
+
+				return (
+					<Link
+						key={item.id}
+						href={item.href}
+						className="rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-950"
+					>
+						{badge}
+					</Link>
+				);
+			})}
 		</div>
 	</div>
 );
@@ -45,16 +75,25 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 	}
 
 	const programPortalSlug = programSlugResult.data;
-	const [programsResult, statsResult, targetFocusesResult, localPartnersResult, focusStoriesResult, translator, rates] =
-		await Promise.all([
-			services.storyblok.getPrograms(lang),
-			services.read.program.getPublicProgramStatsById(programId),
-			services.read.program.getPublicTargetFocusesByProgramId(programId),
-			services.read.localPartner.getPublicLocalPartnersByProgramId(programId),
-			services.storyblok.getFocuses(lang),
-			Translator.getInstance({ language: lang, namespaces: ['website-campaign', 'website-common'] }),
-			services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
-		]);
+	const [
+		programsResult,
+		statsResult,
+		targetFocusesResult,
+		localPartnersResult,
+		focusStoriesResult,
+		localPartnerStoriesResult,
+		translator,
+		rates,
+	] = await Promise.all([
+		services.storyblok.getPrograms(lang),
+		services.read.program.getPublicProgramStatsById(programId),
+		services.read.program.getPublicTargetFocusesByProgramId(programId),
+		services.read.localPartner.getPublicLocalPartnersByProgramId(programId),
+		services.storyblok.getFocuses(lang),
+		services.storyblok.getLocalPartners(lang),
+		Translator.getInstance({ language: lang, namespaces: ['website-campaign', 'website-common'] }),
+		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
+	]);
 	if (!programsResult.success) {
 		return null;
 	}
@@ -80,9 +119,29 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 			id: focus.id,
 			name: focusStory ? getFocusTitle(focusStory.content) : focus.name,
 			sdgs: focusStory?.content.sdgs ?? [],
+			href: focusStory ? `/${lang}/${region}/focuses/${getFocusSlug(focusStory)}` : undefined,
 		};
 	});
-	const localPartners = localPartnersResult.success ? localPartnersResult.data : [];
+	const localPartnerStoriesByPortalSlug = new Map(
+		(localPartnerStoriesResult.success ? localPartnerStoriesResult.data : [])
+			.map((localPartnerStory) => {
+				const portalSlug = localPartnerStory.content.portalSlug?.trim();
+
+				return portalSlug ? ([portalSlug, localPartnerStory] as const) : null;
+			})
+			.filter((entry): entry is readonly [string, LocalPartnerStory] => entry !== null),
+	);
+	const localPartners = (localPartnersResult.success ? localPartnersResult.data : []).map((localPartner) => {
+		const localPartnerStory = localPartnerStoriesByPortalSlug.get(localPartner.slug);
+
+		return {
+			id: localPartner.id,
+			name: localPartner.name,
+			href: localPartnerStory
+				? `/${lang}/${region}/local-partners/${getLocalPartnerSlug(localPartnerStory)}`
+				: undefined,
+		};
+	});
 	const sdgValues = focuses.flatMap(({ sdgs }) => sdgs);
 	const hasFocuses = focuses.length > 0;
 	const hasLocalPartners = localPartners.length > 0;
