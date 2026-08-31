@@ -182,6 +182,6 @@
 		"protobufjs": "8.8.0",
 		"uuid": "14.0.2",
 		"tabbable": "6.5.0",
-		"nanoid": "5.1.16"
+		"nanoid": "6.0.1"
 	}
 }
