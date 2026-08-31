@@ -158,11 +158,11 @@ join CMS content with local donation data), run:
 
 ```bash
 cd website
-mise run seed-cms-campaigns
+npm run db:seed:cms-campaigns:apply
 ```
 
 This is create-only: it adds missing campaigns matched by Storyblok
-`portalSlug` and skips rows that already exist. Use `mise run seed-cms-campaigns-all`
+`portalSlug` and skips rows that already exist. Use `npm run db:seed:cms-campaigns:apply:all`
 to include unlisted campaigns, or `npm run db:seed:cms-campaigns` for a dry-run.
 
 Requires `STORYBLOK_PREVIEW_TOKEN` in `.env.local` (see `.env.local.sample`).
@@ -368,7 +368,7 @@ though the previous run passed. Ask a maintainer if this happens.
 ```bash
 cd website
 npm run db:seed
-mise run seed-cms-campaigns
+npm run db:seed:cms-campaigns:apply
 npm run db:studio
 npm run db:migrate:dev
 ```
