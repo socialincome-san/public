@@ -16,7 +16,7 @@ import { ExternalLink } from 'lucide-react';
 import NextImage from 'next/image';
 import type { CSSProperties, ReactNode } from 'react';
 
-const SECTION_IMAGE_MAX_WIDTH = 858;
+const SECTION_IMAGE_MAX_WIDTH = 500;
 
 type Props = {
 	heading: string;
@@ -124,7 +124,7 @@ export const CampaignAboutSection = ({
 			<section
 				className={cn(
 					'grid items-stretch gap-8',
-					showTextCard && imageSrc && 'lg:grid-cols-[minmax(0,1fr)_minmax(280px,429px)]',
+					showTextCard && imageSrc && 'md:grid-cols-[minmax(0,4fr)_minmax(280px,2fr)]',
 				)}
 			>
 				{showTextCard ? (
@@ -169,7 +169,7 @@ export const CampaignAboutSection = ({
 					</div>
 				) : null}
 				{imageSrc ? (
-					<div className="bg-card min-h-72 overflow-hidden rounded-3xl p-3 shadow-lg">
+					<div className="bg-card flex min-h-72 min-w-0 w-full flex-col overflow-hidden rounded-3xl p-3 shadow-lg">
 						<div
 							className="relative h-full min-h-64 overflow-hidden rounded-xl"
 							style={objectPosition ? ({ ['--section-image-object-position']: objectPosition } as CSSProperties) : undefined}
@@ -178,7 +178,7 @@ export const CampaignAboutSection = ({
 								src={imageSrc}
 								alt={sectionImage?.alt ?? ''}
 								fill
-								sizes="(max-width: 1024px) 100vw, 429px"
+								sizes="(max-width: 767px) 100vw, 33vw"
 								className={cn('object-cover', objectPosition && '[object-position:var(--section-image-object-position)]')}
 								loading="lazy"
 							/>
