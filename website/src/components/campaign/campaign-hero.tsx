@@ -38,7 +38,7 @@ const HeroStat = ({ label, value, trailing, progress }: HeroStatProps) => (
 		<div className="flex items-end justify-between gap-4">
 			<div className="flex min-w-0 flex-col gap-1">
 				<p className="text-sm font-medium">{label}</p>
-				<p className="text-4xl font-normal tabular-nums md:text-6xl">{value}</p>
+				<p className="text-4xl font-normal md:text-6xl">{value}</p>
 			</div>
 			{trailing}
 		</div>
@@ -110,9 +110,7 @@ export const CampaignHero = ({
 								value={formatNumberLocale(campaign.amountCollected ?? 0, locale)}
 								trailing={
 									hasGoal ? (
-										<p className="pb-1 text-xl font-medium tabular-nums opacity-40">
-											{formatNumberLocale(campaign.goal ?? 0, locale)}
-										</p>
+										<p className="pb-1 text-xl font-medium opacity-40">{formatNumberLocale(campaign.goal ?? 0, locale)}</p>
 									) : null
 								}
 								progress={raisedPercent}
