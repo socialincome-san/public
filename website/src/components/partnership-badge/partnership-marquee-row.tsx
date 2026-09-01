@@ -9,7 +9,7 @@ type Props = {
 	reverse?: boolean;
 };
 
-const PIXELS_PER_SECOND = 2500;
+const PIXELS_PER_SECOND = 33;
 
 export const PartnershipMarqueeRow = ({ entries, reverse = false }: Props) => {
 	const trackRef = useRef<HTMLDivElement>(null);
@@ -30,6 +30,7 @@ export const PartnershipMarqueeRow = ({ entries, reverse = false }: Props) => {
 
 		const resizeObserver = new ResizeObserver(calculateDuration);
 		resizeObserver.observe(track);
+
 		return () => resizeObserver.disconnect();
 	}, [entries]);
 
