@@ -169,7 +169,7 @@ export const CampaignAboutSection = ({
 					</div>
 				) : null}
 				{imageSrc ? (
-					<div className="bg-card flex min-h-72 min-w-0 w-full flex-col overflow-hidden rounded-3xl p-3 shadow-lg">
+					<div className="bg-card flex min-h-72 w-full min-w-0 flex-col overflow-hidden rounded-3xl p-3 shadow-lg">
 						<div
 							className="relative h-full min-h-64 overflow-hidden rounded-xl"
 							style={objectPosition ? ({ ['--section-image-object-position']: objectPosition } as CSSProperties) : undefined}
