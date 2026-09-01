@@ -12,32 +12,19 @@
 		background: linear-gradient(-17deg, var(--gradient-background-from) 19%, var(--gradient-background-to) 50%), white;
 	}
 
-	.partnerships-marquee {
-		animation: partnerships-marquee 30s linear infinite;
-	}
-
-	.partnerships-marquee-reverse {
-		animation-direction: reverse;
-	}
-
-	.partnerships-marquee-mask:hover .partnerships-marquee {
-		animation-play-state: paused;
-	}
-
-	.partnerships-marquee-mask {
-		mask-image: linear-gradient(to right, transparent, black 3rem, black calc(100% - 3rem), transparent);
-		-webkit-mask-image: linear-gradient(to right, transparent, black 3rem, black calc(100% - 3rem), transparent);
-	}
-
-	@keyframes partnerships-marquee {
+	@keyframes marquee-left {
 		to {
 			transform: translateX(-50%);
 		}
 	}
 
-	@media (prefers-reduced-motion: reduce) {
-		.partnerships-marquee {
-			animation: none;
+	@keyframes marquee-right {
+		from {
+			transform: translateX(-50%);
+		}
+
+		to {
+			transform: translateX(0);
 		}
 	}
 }

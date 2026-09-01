@@ -1,5 +1,6 @@
 import { BlockWrapper } from '@/components/block-wrapper';
-import { PartnershipMarqueeRow } from '@/components/partnership-badge/partnership-marquee-row';
+import { Marquee } from '@/components/marquee/marquee';
+import { PartnershipBadge } from '@/components/partnership-badge/partnership-badge';
 import type { Partnership, PartnershipsCard } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
@@ -35,14 +36,20 @@ export const PartnershipsCardBlock = ({ blok }: Props) => {
 						<Markdown>{blok.description}</Markdown>
 					</div>
 				)}
-
-				<div className="partnerships-marquee-mask">
+				<div>
 					{rows.map((row, rowIndex) => (
-						<PartnershipMarqueeRow
+						<Marquee
 							key={rowIndex === 0 ? 'first-row' : 'second-row'}
-							entries={row}
-							reverse={rowIndex === 1}
-						/>
+							direction={rowIndex === 0 ? 'left' : 'right'}
+							speed="fast"
+							className="-mx-4 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] px-4 py-1"
+						>
+							<div className="flex gap-3 pr-3 motion-reduce:w-full motion-reduce:flex-wrap">
+								{row.map((entry) => (
+									<PartnershipBadge key={entry._uid} partnership={entry} />
+								))}
+							</div>
+						</Marquee>
 					))}
 				</div>
 			</div>
