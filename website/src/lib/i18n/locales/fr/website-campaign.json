@@ -21,6 +21,11 @@
 			"focus-areas": "Domaines d’intervention",
 			"local-partners": "Partenaires locaux"
 		},
+		"creation-teaser": {
+			"title": "Lance ta propre campagne de collecte",
+			"description": "Un anniversaire, un marathon, un mariage — toute occasion peut financer un Social Income. Choisis un programme, fixe un objectif et partage ta page.",
+			"button": "Lancer ta campagne"
+		},
 		"about-title": "À propos",
 		"about-si-title": "Über Social Income",
 		"about-si-text-1": "Social Income est une ONG basée en Suisse qui assure des transferts d’argent inconditionnels par téléphone mobile à des personnes vivant dans une pauvreté multidimensionnelle en Afrique de l’Ouest.",

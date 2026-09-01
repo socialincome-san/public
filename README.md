@@ -153,6 +153,20 @@ npm run db:seed
 This fills the local database with representative test data from
 `website/src/lib/database/seed`.
 
+To also create database entries for Storyblok campaigns (so campaign pages
+join CMS content with local donation data), run:
+
+```bash
+cd website
+npm run db:seed:cms-campaigns:apply
+```
+
+This is create-only: it adds missing campaigns matched by Storyblok
+`portalSlug` and skips rows that already exist. Use `npm run db:seed:cms-campaigns:apply:all`
+to include unlisted campaigns, or `npm run db:seed:cms-campaigns` for a dry-run.
+
+Requires `STORYBLOK_PREVIEW_TOKEN` in `.env.local` (see `.env.local.sample`).
+
 ## Local Login
 
 Open the website at:
@@ -245,6 +259,41 @@ npm run storyblok:generate
 The command logs into Storyblok, pulls component schemas, and writes generated
 types to `website/src/generated/storyblok/types`.
 
+### Storyblok Management Token
+
+Campaign submissions and other Management API calls require a Personal Access
+Token (PAT) with write access. This is separate from
+`STORYBLOK_PERSONAL_ACCESS_TOKEN`, which the Storyblok CLI uses for schema pull
+and type generation.
+
+To create or rotate the token:
+
+1. Log in to [Storyblok](https://app.storyblok.com) with `dev@socialincome.org`.
+2. Open **Account Settings** → **Personal Access Tokens** (PAT).
+3. Create a token named **Campaign management token** with these scopes:
+   - **Assets**: read, write
+   - **Stories**: read, write, publish
+   - **Asset folders**: read
+   - **Spaces**: read
+4. Set the token lifetime to **1 year**.
+5. Copy the token immediately. Storyblok only shows it once.
+
+Store the token in these places:
+
+- **Local development**: `website/.env.local`
+
+  ```bash
+  STORYBLOK_MANAGEMENT_TOKEN="<token>"
+  ```
+
+- **1Password**: Social Income maintainer vault (for team access and rotation).
+- **GitHub Actions** (staging and production deploys): repository secrets
+  `TF_STAGING_STORYBLOK_MANAGEMENT_TOKEN` and
+  `TF_PROD_STORYBLOK_MANAGEMENT_TOKEN`.
+
+Terraform passes the secret to Cloud Run as `STORYBLOK_MANAGEMENT_TOKEN` at
+deploy time. Set a calendar reminder to rotate the token before it expires.
+
 ### Anonymous Campaign Submissions
 
 Visitors can submit campaigns from the public `/campaigns` page. Submissions:
@@ -263,16 +312,10 @@ and card linkability use that derived state; deep links to published stories
 still work after a campaign becomes inactive.
 
 Server-only configuration lives in
-`website/src/lib/config/campaign-submission.config.ts`. Set the Management API
-token in `website/.env.local` for local development:
-
-```bash
-STORYBLOK_MANAGEMENT_TOKEN="<storyblok-personal-access-token>"
-```
-
-Staging and production receive the same runtime variable from Cloud Run. Store
-the values as GitHub Actions secrets `TF_STAGING_STORYBLOK_MANAGEMENT_TOKEN`
-and `TF_PROD_STORYBLOK_MANAGEMENT_TOKEN`.
+`website/src/lib/config/campaign-submission.config.ts`. Local development and
+deployed environments need `STORYBLOK_MANAGEMENT_TOKEN`; see
+[Storyblok Management Token](#storyblok-management-token) for creation and
+storage.
 
 The token must be able to list assets in the default-images folder, create
 draft stories under `pages/campaigns`, and upload assets in the configured
@@ -354,6 +397,7 @@ though the previous run passed. Ask a maintainer if this happens.
 ```bash
 cd website
 npm run db:seed
+npm run db:seed:cms-campaigns:apply
 npm run db:studio
 npm run db:migrate:dev
 ```

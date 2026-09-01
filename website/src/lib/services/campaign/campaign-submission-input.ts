@@ -1,3 +1,4 @@
+import { parseStoryblokFocus } from '@/components/campaign/campaign-submission/storyblok-image-focus';
 import { Currency } from '@/generated/prisma/enums';
 import {
 	campaignSubmissionConfig,
@@ -50,6 +51,10 @@ export const campaignSubmissionErrorCodes = [
 	'submission-failed',
 	'turnstile-required',
 	'turnstile-invalid',
+	'first-name-required',
+	'last-name-required',
+	'email-required',
+	'email-invalid',
 ] as const;
 
 export type CampaignSubmissionErrorCode = (typeof campaignSubmissionErrorCodes)[number];
@@ -77,11 +82,14 @@ const campaignSubmissionErrorCodeSet = new Set<string>(campaignSubmissionErrorCo
 export const isCampaignSubmissionErrorCode = (value: string): value is CampaignSubmissionErrorCode =>
 	campaignSubmissionErrorCodeSet.has(value);
 
-export type CampaignSubmissionFormImages = {
+type CampaignSubmissionFormImages = {
 	primaryImage?: File;
+	primaryImageFocus?: string | null;
 	defaultImageId?: number;
 	profilePicture?: File;
+	profilePictureFocus?: string | null;
 	sectionImage?: File;
+	sectionImageFocus?: string | null;
 };
 
 const sanitizeText = (value: string) => value.replace(CONTROL_CHARACTERS_REGEX, '').trim();
@@ -209,6 +217,12 @@ const creatorNameRule = (msg: ErrorMessage) =>
 		.min(1, msg('creator-name-required'))
 		.max(campaignSubmissionConfig.maxCreatorNameLength, msg('creator-name-too-long'));
 
+const firstNameRule = (msg: ErrorMessage) => z.string().min(1, msg('first-name-required'));
+
+const lastNameRule = (msg: ErrorMessage) => z.string().min(1, msg('last-name-required'));
+
+const emailRule = (msg: ErrorMessage) => z.string().min(1, msg('email-required')).email(msg('email-invalid'));
+
 const quoteRule = (msg: ErrorMessage) =>
 	z.string().min(1, msg('quote-required')).max(campaignSubmissionConfig.maxQuoteLength, msg('quote-too-long'));
 
@@ -299,6 +313,7 @@ export type CampaignSubmissionImageValidation = {
 	mimeType: CampaignSubmissionPermittedImageMimeType;
 	filename: string;
 	size: number;
+	focus?: string | null;
 };
 
 export type CampaignSubmissionImageSource =
@@ -374,6 +389,29 @@ export const validateCampaignSubmissionImageMeta = (size: number, mimeType: stri
 	}
 
 	return null;
+};
+
+export const parseCampaignSubmissionImageFocus = (
+	value: FormDataEntryValue | null | undefined,
+): { success: true; data: string | null } | { success: false; error: CampaignSubmissionErrorCode } => {
+	if (value === null || value === undefined) {
+		return { success: true, data: null };
+	}
+
+	if (typeof value !== 'string') {
+		return { success: false, error: 'invalid-submission' };
+	}
+
+	const trimmed = value.trim();
+	if (trimmed.length === 0) {
+		return { success: true, data: null };
+	}
+
+	if (!parseStoryblokFocus(trimmed)) {
+		return { success: false, error: 'invalid-submission' };
+	}
+
+	return { success: true, data: trimmed };
 };
 
 export const validateCampaignSubmissionImageBuffer = (
@@ -561,6 +599,10 @@ export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmi
 			xHandle: z.string().optional(),
 			linkWebsite: z.string().optional(),
 			tiktokHandle: z.string().optional(),
+			// Optional in the full schema so logged-in contributors can submit without personal data.
+			firstName: z.string(),
+			lastName: z.string(),
+			email: z.string(),
 		})
 		.superRefine((values, ctx) => {
 			refineCampaignSubmissionGoalAndEndDate(values, ctx, message);
@@ -588,6 +630,14 @@ export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmi
 			}
 		});
 
+/** Validates only the personal-data step — required for guests before submit. */
+export const createCampaignSubmissionPersonalSchema = (message: (code: CampaignSubmissionErrorCode) => string) =>
+	z.object({
+		firstName: z.string().transform(sanitizeText).pipe(firstNameRule(message)),
+		lastName: z.string().transform(sanitizeText).pipe(lastNameRule(message)),
+		email: z.string().transform(sanitizeText).pipe(emailRule(message)),
+	});
+
 export type CampaignSubmissionFormValues = z.infer<ReturnType<typeof createCampaignSubmissionFormSchema>>;
 
 export const campaignSubmissionDetailsFieldNames = [
@@ -601,11 +651,33 @@ export const campaignSubmissionDetailsFieldNames = [
 	'isPublic',
 ] as const satisfies readonly (keyof CampaignSubmissionFormValues)[];
 
+export const campaignSubmissionPersonalFieldNames = [
+	'firstName',
+	'lastName',
+	'email',
+] as const satisfies readonly (keyof CampaignSubmissionFormValues)[];
+
+export const campaignSubmissionAboutFieldNames = [
+	'creatorName',
+	'quote',
+	'hasAdditionalInformation',
+	'sectionDescription',
+	'instagramHandle',
+	'xHandle',
+	'linkWebsite',
+	'tiktokHandle',
+] as const satisfies readonly (keyof CampaignSubmissionFormValues)[];
+
+type AppendCampaignSubmissionFormDataOptions = CampaignSubmissionFormImages & {
+	includePersonalData?: boolean;
+};
+
 export const appendCampaignSubmissionFormData = (
 	formData: FormData,
 	values: CampaignSubmissionFormValues,
-	images: CampaignSubmissionFormImages = {},
+	images: AppendCampaignSubmissionFormDataOptions = {},
 ): FormData => {
+	const { includePersonalData = false, ...imageFields } = images;
 	const parsedGoal = values.hasGoal
 		? parseCampaignSubmissionGoalInput(values.goal === undefined ? null : values.goal)
 		: null;
@@ -630,18 +702,33 @@ export const appendCampaignSubmissionFormData = (
 		formData.append('tiktokHandle', values.tiktokHandle ?? '');
 	}
 
-	if (images.primaryImage) {
-		formData.append('primaryImage', images.primaryImage);
-	} else if (images.defaultImageId !== undefined) {
-		formData.append('defaultImageId', String(images.defaultImageId));
+	if (includePersonalData) {
+		formData.append('firstName', values.firstName);
+		formData.append('lastName', values.lastName);
+		formData.append('email', values.email);
 	}
 
-	if (images.profilePicture) {
-		formData.append('profilePicture', images.profilePicture);
+	if (imageFields.primaryImage) {
+		formData.append('primaryImage', imageFields.primaryImage);
+		if (imageFields.primaryImageFocus) {
+			formData.append('primaryImageFocus', imageFields.primaryImageFocus);
+		}
+	} else if (imageFields.defaultImageId !== undefined) {
+		formData.append('defaultImageId', String(imageFields.defaultImageId));
 	}
 
-	if (images.sectionImage) {
-		formData.append('sectionImage', images.sectionImage);
+	if (imageFields.profilePicture) {
+		formData.append('profilePicture', imageFields.profilePicture);
+		if (imageFields.profilePictureFocus) {
+			formData.append('profilePictureFocus', imageFields.profilePictureFocus);
+		}
+	}
+
+	if (imageFields.sectionImage) {
+		formData.append('sectionImage', imageFields.sectionImage);
+		if (imageFields.sectionImageFocus) {
+			formData.append('sectionImageFocus', imageFields.sectionImageFocus);
+		}
 	}
 
 	return formData;
