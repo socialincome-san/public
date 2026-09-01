@@ -1,4 +1,6 @@
 import type { PrismaClient } from '@/generated/prisma/client';
+import { PayoutStatus } from '@/generated/prisma/enums';
+import { format } from 'date-fns';
 import { TransparencyService } from './transparency.service';
 
 type CountryContributionQuery = {
@@ -20,6 +22,45 @@ type CountryContribution = {
 			};
 		};
 	};
+};
+
+type PayoutAggregateQuery = {
+	where: {
+		paymentAt?: {
+			gte: Date;
+			lt: Date;
+		};
+		status?: {
+			in: PayoutStatus[];
+		};
+	};
+};
+
+const createRunwayService = ({
+	reservesChf,
+	lastCompletedMonthPaymentsChf,
+	reserveRecordedAt = new Date('2026-08-15T12:00:00.000Z'),
+}: {
+	reservesChf: number;
+	lastCompletedMonthPaymentsChf: number;
+	reserveRecordedAt?: Date;
+}) => {
+	const aggregate = jest.fn().mockResolvedValue({ _sum: { amountChf: lastCompletedMonthPaymentsChf } });
+	const service = new TransparencyService(
+		{ payout: { aggregate } } as unknown as PrismaClient,
+		{
+			getLatestPerBankAccount: () =>
+				Promise.resolve({
+					success: true as const,
+					data: {
+						accounts: [{ recordedAt: reserveRecordedAt }],
+						total: reservesChf,
+					},
+				}),
+		} as never,
+	);
+
+	return { service, aggregate };
 };
 
 describe('TransparencyService.getContributionsByCountryData', () => {
@@ -54,5 +95,36 @@ describe('TransparencyService.getContributionsByCountryData', () => {
 		}
 		expect(result.data.totalContributionsChf).toBe(50);
 		expect(result.data.segments.map(({ countryCode }) => countryCode)).toEqual(['CH', 'DE']);
+	});
+});
+
+describe('TransparencyService.getRunwayMonths', () => {
+	test('divides latest reserves by last completed month recipient payments and floors full months', async () => {
+		const { service, aggregate } = createRunwayService({
+			reservesChf: 173780,
+			lastCompletedMonthPaymentsChf: 9905,
+		});
+
+		const result = await service.getRunwayMonths();
+
+		expect(result).toEqual({ success: true, data: 17 });
+		const [query] = aggregate.mock.calls[0] as [PayoutAggregateQuery];
+		expect(query.where.status?.in).toEqual([PayoutStatus.paid, PayoutStatus.confirmed]);
+		const paymentAt = query.where.paymentAt;
+		expect(paymentAt?.gte).toBeInstanceOf(Date);
+		expect(paymentAt?.lt).toBeInstanceOf(Date);
+		expect(paymentAt?.gte && format(paymentAt.gte, 'yyyy-MM')).toBe('2026-07');
+		expect(paymentAt?.lt && format(paymentAt.lt, 'yyyy-MM')).toBe('2026-08');
+	});
+
+	test('fails when the last completed month has no recipient payments', async () => {
+		const { service } = createRunwayService({
+			reservesChf: 173780,
+			lastCompletedMonthPaymentsChf: 0,
+		});
+
+		const result = await service.getRunwayMonths();
+
+		expect(result).toEqual({ success: false, error: 'No recipient payments in the last completed month' });
 	});
 });

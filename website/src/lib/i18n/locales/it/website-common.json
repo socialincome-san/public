@@ -135,6 +135,10 @@
 			"tooltip-label": "Mostra i dettagli dei conti di riserva",
 			"no-data": "Nessun dato"
 		},
+		"runway": {
+			"description": "Anche se ogni donatore smettesse di donare oggi, potremmo continuare a pagare i beneficiari per altri {{months}} mesi.",
+			"zewo-hint": "In linea con ZEWO"
+		},
 		"countries": {
 			"headline_one": "Donazioni per un totale di {{amount}} sono arrivate da {{countriesCount}} paese",
 			"headline_other": "Donazioni per un totale di {{amount}} sono arrivate da {{countriesCount}} paesi",

@@ -135,6 +135,11 @@
 			"tooltip-label": "Show reserve account details",
 			"no-data": "No data"
 		},
+		"runway": {
+			"description_one": "Even if every donor stopped giving today, we could keep paying recipients for {{count}} more month.",
+			"description_other": "Even if every donor stopped giving today, we could keep paying recipients for {{count}} more months.",
+			"zewo-hint": "In line with ZEWO"
+		},
 		"countries": {
 			"headline_one": "Donations totaling {{amount}} arrived from {{countriesCount}} country",
 			"headline_other": "Donations totaling {{amount}} arrived from {{countriesCount}} countries",

@@ -578,9 +578,6 @@ export interface RichtextButtonHeader {
 
 export interface RunwayMonthGrid {
   title?: string;
-  description?: string;
-  amountOfMonths: string;
-  footer?: string;
   component: "runwayMonthGrid";
   _uid: string;
   _editable?: string | undefined;
