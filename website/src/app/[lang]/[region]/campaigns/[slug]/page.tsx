@@ -45,6 +45,7 @@ export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlu
 			xHandle={data.xHandle}
 			tiktokHandle={data.tiktokHandle}
 			linkWebsite={data.linkWebsite}
+			faq={data.faq}
 			campaignSlug={slug}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
