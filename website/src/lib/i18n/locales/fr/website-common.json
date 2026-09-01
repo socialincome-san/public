@@ -134,6 +134,17 @@
 			"title-currency": "en {{currency}}",
 			"tooltip-label": "Afficher les détails des comptes de réserve",
 			"no-data": "Aucune donnée"
+		},
+		"countries": {
+			"headline_one": "Des dons totalisant {{amount}} sont arrivés de {{countriesCount}} pays",
+			"headline_other": "Des dons totalisant {{amount}} sont arrivés de {{countriesCount}} pays",
+			"headline-country": "Des dons totalisant {{amount}} sont arrivés de {{country}}",
+			"headline-other": "Des dons totalisant {{amount}} sont arrivés d’autres pays",
+			"other-countries": "autres pays",
+			"other-countries-title": "Autres pays",
+			"empty": "Aucun don provenant d’un pays pour cette période.",
+			"chart-aria-label": "Montants des dons par pays d’origine",
+			"legend-row-aria": "{{country}}, {{amount}}, {{percentage}}"
 		}
 	},
 	"program-detail-page": {
@@ -209,6 +220,11 @@
 			"about-step-title": "À propos",
 			"about-step-subtitle": "Qui collecte des fonds ?",
 			"about-step-description": "Parlez un peu plus de vous.",
+			"personal-step-title": "Données personnelles",
+			"personal-step-subtitle": "Nous utiliserons vos données personnelles pour créer votre compte. Elles ne seront pas affichées sur la page de la campagne.",
+			"first-name": "Prénom",
+			"last-name": "Nom",
+			"email": "E-mail",
 			"title": "Titre de la campagne",
 			"description": "Texte d'introduction",
 			"goal": "Montant de l'objectif",
@@ -250,11 +266,18 @@
 			"tiktok-handle-placeholder": "@nomdutilisateur",
 			"submit": "Soumettre la campagne",
 			"submitting": "Envoi en cours…",
-			"success-title": "Campagne soumise",
-			"success": "Merci. Votre campagne a été soumise et sera examinée avant publication.",
+			"success-thank-you": "Merci",
+			"success-created-title": "Campagne créée",
+			"success-live-title": "Votre campagne est en ligne !",
+			"success-guest-description": "Ouvrez le lien de connexion que nous avons envoyé à {{ email }} pour confirmer.",
+			"success-didnt-get-it": "Vous ne l'avez pas reçu ?",
+			"success-retry": "Réessayer",
+			"success-retry-sending": "Envoi…",
+			"success-support-prefix": "Réessayez ou contactez",
 			"error": "Une erreur s'est produite. Veuillez réessayer.",
 			"currency-placeholder": "Sélectionner une devise",
 			"image-hint": "JPEG, PNG ou WebP jusqu'à 5 Mo.",
+			"image-focus-hint": "Cliquez sur l'image pour définir le point focal.",
 			"continue": "Continuer",
 			"back": "Retour",
 			"all-countries": "Tous les pays",
@@ -264,6 +287,7 @@
 			"recipients-count": "{{count}} bénéficiaires",
 			"details": "Détails",
 			"about": "À propos",
+			"personal": "Données personnelles",
 			"programs-loading": "Chargement des programmes…",
 			"programs-empty": "Aucun programme n'est disponible pour le moment.",
 			"default-images-loading": "Chargement des images…",
@@ -302,7 +326,11 @@
 				"slug-exists": "Une campagne avec ce slug existe déjà.",
 				"submission-failed": "Nous n'avons pas pu finaliser votre soumission. Veuillez réessayer dans quelques minutes.",
 				"turnstile-required": "Veuillez terminer la vérification avant d'envoyer.",
-				"turnstile-invalid": "La vérification a échoué. Veuillez réessayer."
+				"turnstile-invalid": "La vérification a échoué. Veuillez réessayer.",
+				"first-name-required": "Le prénom est obligatoire.",
+				"last-name-required": "Le nom est obligatoire.",
+				"email-required": "L'e-mail est obligatoire.",
+				"email-invalid": "Veuillez saisir une adresse e-mail valide."
 			}
 		}
 	},

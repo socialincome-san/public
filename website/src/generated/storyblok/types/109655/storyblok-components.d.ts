@@ -433,6 +433,7 @@ export interface Page {
     | RunwayMonthGrid
     | DonationGlobe
     | TransparencySummary
+    | TransparencyCountries
   )[];
   component: "page";
   _uid: string;
@@ -658,6 +659,12 @@ export interface Transparency {
   donationGlobe?: DonationGlobe[];
   transparencySummary?: TransparencySummary[];
   component: "transparency";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TransparencyCountries {
+  component: "transparencyCountries";
   _uid: string;
   [k: string]: unknown;
 }

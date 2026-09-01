@@ -5,14 +5,15 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { RadioGroup } from '@/components/radio-group/radio-group';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
-import { Switch } from '@/components/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
+import { Switch } from '@/components/switch/switch';
 import { campaignSubmissionConfig, type CampaignSubmissionDurationPreset } from '@/lib/config/campaign-submission.config';
 import { endDateFromDurationPreset } from '@/lib/services/campaign/campaign-submission-input';
 import { cn } from '@/lib/utils/cn';
 import { addDays, format } from 'date-fns';
 import { Camera, Check, Trash2 } from 'lucide-react';
 import { useEffect, useId, useRef } from 'react';
+import { ImageFocusPoint } from '../image-focus-point';
 import type { DetailsStepProps } from '../types';
 
 type Props = DetailsStepProps;
@@ -62,8 +63,9 @@ export const DetailsStep = ({
 	defaultImagesError,
 	onSelectDefaultImage,
 }: Props) => {
-	const { inputRef, previewUrl, error: imageError, onChange: onPrimaryImageChange } = primaryImage;
+	const { inputRef, previewUrl, focus, setFocus, error: imageError, onChange: onPrimaryImageChange } = primaryImage;
 	const imageHintId = useId();
+	const imageFocusHintId = useId();
 	const imageErrorId = useId();
 	const imageErrorRef = useRef<HTMLParagraphElement>(null);
 	const durationPreset = form.watch('durationPreset');
@@ -77,7 +79,13 @@ export const DetailsStep = ({
 		}
 	}, [imageError]);
 
-	const imageDescribedBy = [imageHintId, imageError ? imageErrorId : null].filter(Boolean).join(' ');
+	const imageDescribedBy = [
+		imageHintId,
+		imageSelection?.type === 'upload' ? imageFocusHintId : null,
+		imageError ? imageErrorId : null,
+	]
+		.filter(Boolean)
+		.join(' ');
 
 	const previewSrc =
 		imageSelection?.type === 'upload'
@@ -278,8 +286,20 @@ export const DetailsStep = ({
 
 				{previewSrc ? (
 					<div className="border-border relative aspect-[16/10] w-full overflow-hidden rounded-2xl border">
-						{/* eslint-disable-next-line @next/next/no-img-element -- blob and Storyblok CDN previews */}
-						<img src={previewSrc} alt="" className="size-full object-cover" />
+						{imageSelection?.type === 'upload' && previewUrl ? (
+							<ImageFocusPoint
+								previewUrl={previewUrl}
+								focus={focus}
+								onFocusChange={setFocus}
+								aspectRatio={16 / 10}
+								shape="rect"
+								ariaLabel={labels.campaignBackground}
+								className="rounded-2xl"
+							/>
+						) : (
+							/* eslint-disable-next-line @next/next/no-img-element -- Storyblok CDN preview */
+							<img src={previewSrc} alt="" className="size-full object-cover" />
+						)}
 						{imageSelection?.type === 'upload' ? (
 							<RemoveUploadedImageButton
 								ariaLabel={labels.removeUploadedImage}
@@ -375,6 +395,11 @@ export const DetailsStep = ({
 				<p id={imageHintId} className="text-muted-foreground text-xs">
 					{labels.imageHint}
 				</p>
+				{imageSelection?.type === 'upload' ? (
+					<p id={imageFocusHintId} className="text-muted-foreground text-xs">
+						{labels.imageFocusHint}
+					</p>
+				) : null}
 				{imageError ? (
 					<p
 						id={imageErrorId}

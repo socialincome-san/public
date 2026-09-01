@@ -1,4 +1,4 @@
-import { PayoutProcess, PrismaClient } from '@/generated/prisma/client';
+import { CountryCode, PayoutProcess, PrismaClient } from '@/generated/prisma/client';
 import { stringifyCsvLines } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
 import { format } from 'date-fns';
@@ -6,6 +6,9 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { PayoutProcessCoreService } from './payout-process-core.service';
 import type { PayoutRecipient, PreviewPayout } from './payout-process.types';
+
+const DEFAULT_PHONE_DIGITS = 8;
+const LIBERIA_PHONE_DIGITS = 9;
 
 export class OrangeMoneyCsvPayoutProcessService extends BaseService {
 	constructor(
@@ -28,13 +31,23 @@ export class OrangeMoneyCsvPayoutProcessService extends BaseService {
 		return this.resultOk(undefined);
 	}
 
+	private formatPhone(recipient: PayoutRecipient): string {
+		const phone = recipient.paymentInformation?.phone?.number;
+		if (!phone) {
+			return 'NO_PHONE';
+		}
+
+		const countryCode = recipient.program?.payoutCountryCode;
+
+		return countryCode === CountryCode.LR ? `0${phone.slice(-LIBERIA_PHONE_DIGITS)}` : phone.slice(-DEFAULT_PHONE_DIGITS);
+	}
+
 	buildRegistrationCsv(recipients: PayoutRecipient[]): string {
 		const csvRows: string[][] = [['Mobile Number*', 'Unique Code*', 'User Type*']];
 
 		for (const recipient of recipients) {
 			const code = recipient.paymentInformation?.code ?? 'NO_CODE';
-			const phone = recipient.paymentInformation?.phone?.number ?? 'NO_PHONE';
-			csvRows.push([phone.toString().slice(-8), code.toString(), 'subscriber']);
+			csvRows.push([this.formatPhone(recipient), code.toString(), 'subscriber']);
 		}
 
 		return stringifyCsvLines(csvRows);
@@ -48,13 +61,12 @@ export class OrangeMoneyCsvPayoutProcessService extends BaseService {
 
 		for (const recipient of recipients) {
 			const code = recipient.paymentInformation?.code ?? 'NO_CODE';
-			const phone = recipient.paymentInformation?.phone?.number ?? 'NO_PHONE';
 			const firstName = recipient.contact?.firstName ?? '';
 			const lastName = recipient.contact?.lastName ?? '';
 			const amount = Number(recipient.program?.payoutPerInterval ?? 0);
 
 			csvRows.push([
-				phone.toString().slice(-8),
+				this.formatPhone(recipient),
 				amount.toString(),
 				firstName,
 				lastName,
