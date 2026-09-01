@@ -8,6 +8,8 @@ type Props = {
 
 export const PartnershipBadge = ({ partnership }: Props) => {
 	const href = partnership.website.url || partnership.website.cached_url || '#';
+	const logoAlt = partnership.logoIcon?.alt?.trim();
+	const accessibleLogoAlt = logoAlt?.length ? logoAlt : `${partnership.name} logo`;
 
 	return (
 		<Link
@@ -17,13 +19,13 @@ export const PartnershipBadge = ({ partnership }: Props) => {
 			className="inline-flex h-12 shrink-0 items-center gap-2.5 rounded-full border border-slate-200 bg-slate-100 py-0 pr-4 pl-3 shadow-sm"
 		>
 			{partnership.logoIcon?.filename && (
-				<span className="relative size-10 shrink-0">
+				<span className="flex size-8 shrink-0 items-center justify-center">
 					<Image
 						src={partnership.logoIcon.filename}
-						alt={partnership.logoIcon.alt || `${partnership.name} logo`}
-						fill
-						sizes="40px"
-						className="object-contain"
+						alt={accessibleLogoAlt}
+						width={24}
+						height={24}
+						className="size-6 object-contain"
 					/>
 				</span>
 			)}
