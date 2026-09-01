@@ -3,7 +3,7 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
-import { Switch } from '@/components/switch';
+import { Switch } from '@/components/switch/switch';
 import { cn } from '@/lib/utils/cn';
 import { useEffect, useRef } from 'react';
 import { CampaignSubmissionFormCard } from '../form-layout';
@@ -46,6 +46,7 @@ export const AboutStep = ({
 }: AboutStepProps) => {
 	const submitErrorRef = useRef<HTMLParagraphElement>(null);
 	const hasAdditionalInformation = form.watch('hasAdditionalInformation');
+	const showTurnstile = Boolean(turnstileSiteKey && lang && onTurnstileTokenChange);
 
 	const additionalLinkFields: AdditionalLinkField[] = [
 		{
@@ -95,11 +96,17 @@ export const AboutStep = ({
 						variant="avatar"
 						label={labels.profilePicture}
 						previewUrl={profilePicture.previewUrl}
+						focus={profilePicture.focus}
+						onFocusChange={profilePicture.setFocus}
+						focusAspectRatio={1}
+						focusShape="circle"
+						focusAriaLabel={labels.profilePicture}
 						error={profilePicture.error}
 						inputRef={profilePicture.inputRef}
 						onChange={profilePicture.onChange}
 						disabled={isSubmitting}
 						hint={labels.imageHint}
+						focusHint={labels.imageFocusHint}
 						uploadLabel={labels.profilePictureHint}
 						editLabel={labels.editProfilePicture}
 						removeLabel={labels.removeUploadedImage}
@@ -175,11 +182,17 @@ export const AboutStep = ({
 								variant="cover"
 								label={labels.sectionImage}
 								previewUrl={sectionImage.previewUrl}
+								focus={sectionImage.focus}
+								onFocusChange={sectionImage.setFocus}
+								focusAspectRatio={1}
+								focusShape="rect"
+								focusAriaLabel={labels.sectionImage}
 								error={sectionImage.error}
 								inputRef={sectionImage.inputRef}
 								onChange={sectionImage.onChange}
 								disabled={isSubmitting}
 								hint={labels.imageHint}
+								focusHint={labels.imageFocusHint}
 								uploadLabel={labels.uploadImage}
 								removeLabel={labels.removeUploadedImage}
 							/>
@@ -211,7 +224,7 @@ export const AboutStep = ({
 				</div>
 			</CampaignSubmissionFormCard>
 
-			{turnstileSiteKey ? (
+			{showTurnstile && turnstileSiteKey && lang && onTurnstileTokenChange ? (
 				<TurnstileWidget
 					key={turnstileWidgetKey}
 					siteKey={turnstileSiteKey}

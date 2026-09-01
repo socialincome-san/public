@@ -320,6 +320,7 @@ export class StoryblokManagementService {
 		fileBuffer: Buffer,
 		filename: string,
 		mimeType: string,
+		options?: { focus?: string | null },
 	): Promise<{ assetId: number; asset: StoryblokAsset }> {
 		const signedResponse = await requestManagement(`/spaces/${this.spaceId}/assets/`, {
 			method: 'POST',
@@ -356,6 +357,11 @@ export class StoryblokManagementService {
 				throw new StoryblokManagementError('Storyblok did not return an asset URL after upload.', 502, true);
 			}
 
+			const focus = options?.focus?.trim();
+			if (focus) {
+				await this.updateAssetFocus(assetId, focus);
+			}
+
 			return {
 				assetId,
 				asset: {
@@ -365,7 +371,7 @@ export class StoryblokManagementService {
 					alt: resolvedAsset?.alt ?? '',
 					name: resolvedAsset?.name ?? '',
 					title: resolvedAsset?.title ?? '',
-					focus: resolvedAsset?.focus ?? '',
+					focus: focus ?? resolvedAsset?.focus ?? '',
 					copyright: resolvedAsset?.copyright ?? '',
 				},
 			};
@@ -373,6 +379,14 @@ export class StoryblokManagementService {
 			await this.deleteAsset(assetId);
 			throw error;
 		}
+	}
+
+	async updateAssetFocus(assetId: number, focus: string): Promise<void> {
+		await requestManagement(`/spaces/${this.spaceId}/assets/${assetId}`, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ asset: { focus } }),
+		});
 	}
 
 	async campaignStoryExists(slug: string): Promise<boolean> {

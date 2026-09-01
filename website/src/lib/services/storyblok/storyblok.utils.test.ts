@@ -33,6 +33,13 @@ describe('formatStoryblokUrl', () => {
 		expect(url.searchParams.get('_ratio')).toBe('0.5263');
 	});
 
+	it('normalizes legacy zero-size focus strings for the image service', () => {
+		const result = formatStoryblokUrl(imageUrl, 760, 400, '710x124:710x124');
+		const url = new URL(result);
+
+		expect(url.searchParams.get('_crop')).toBe('710x124:711x125');
+	});
+
 	it('uses smart crop metadata when no focal point is provided', () => {
 		const result = formatStoryblokUrl(imageUrl, 760, 400, null);
 		const url = new URL(result);

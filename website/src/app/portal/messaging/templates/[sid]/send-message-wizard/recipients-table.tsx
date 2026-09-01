@@ -4,7 +4,7 @@ import { Button } from '@/components/button/button';
 import { Checkbox } from '@/components/checkbox';
 import { Input } from '@/components/input/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import { listMessagingRecipientsAction } from '@/lib/server-actions/messaging-actions';
 import type {
