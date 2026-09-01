@@ -51,6 +51,7 @@ export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, pr
 					xHandle={story.content.xHandle}
 					tiktokHandle={story.content.tiktokHandle}
 					linkWebsite={story.content.linkWebsite}
+					faq={story.content.faq}
 					campaignSlug={story.slug}
 					lang={lang}
 					region={region}

@@ -12,6 +12,7 @@ import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-oth
 import { CampaignProgramTeaser } from '@/components/campaign/campaign-program-teaser';
 import { CampaignSocialIncomeSection } from '@/components/campaign/campaign-social-income';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
+import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 import { services } from '@/lib/services/services';
@@ -32,6 +33,7 @@ type Props = {
 	tiktokHandle?: string | null;
 	linkWebsite?: string | null;
 	campaignSlug: string;
+	faq?: Campaign['faq'];
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
@@ -51,11 +53,12 @@ export const CampaignDetail = async ({
 	tiktokHandle,
 	linkWebsite,
 	campaignSlug,
+	faq,
 	lang,
 	region,
 }: Props) => {
 	const [pageContentResult, breadcrumbLinks] = await Promise.all([
-		services.read.campaignPublicWebsite.getPageContent(lang),
+		services.read.campaignPublicWebsite.getPageContent(lang, faq),
 		buildBreadcrumbLinks({
 			fullSlug: getCampaignStoryPath(campaignSlug),
 			currentLabel: title,
@@ -120,7 +123,9 @@ export const CampaignDetail = async ({
 			<CampaignSocialIncomeSection translator={translator} />
 			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />
 			<CampaignJournalTeaser lang={lang} region={region} />
-			{faqs.length > 0 && <CampaignFaqSection heading={translator.t('campaign.title')} faqs={faqs} />}
+			{faqs.length > 0 && (
+				<CampaignFaqSection heading={translator.t('title', { namespace: 'website-faq' })} faqs={faqs} />
+			)}
 		</>
 	);
 };

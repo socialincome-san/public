@@ -109,6 +109,8 @@ export class StoryblokService extends BaseService {
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
 	private static readonly standardStoryRelationsToResolve = [
 		'faqSelection.questions',
+		'Campaign.faq',
+		'campaignGlobals.faq',
 		'program.faq',
 		'downloads.documents',
 		'partnershipsCarousel.partnerships',
