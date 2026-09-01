@@ -277,6 +277,7 @@
 			"error": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
 			"currency-placeholder": "Währung auswählen",
 			"image-hint": "JPEG, PNG oder WebP bis 5 MB.",
+			"image-focus-hint": "Klicken Sie auf das Bild, um den Fokuspunkt festzulegen.",
 			"continue": "Weiter",
 			"back": "Zurück",
 			"all-countries": "Alle Länder",

@@ -10,6 +10,7 @@ import {
 	parseCampaignSubmissionDefaultImageId,
 	parseCampaignSubmissionFields,
 	parseCampaignSubmissionImageFile,
+	parseCampaignSubmissionImageFocus,
 	parseOptionalCampaignSubmissionImage,
 	type CampaignSubmissionErrorCode,
 	type CampaignSubmissionImageMultipartField,
@@ -59,11 +60,19 @@ const resolveImageSource = async (
 			return { success: false, error: imageResult.error, field: 'primaryImage' };
 		}
 
+		const focusResult = parseCampaignSubmissionImageFocus(formData.get('primaryImageFocus'));
+		if (!focusResult.success) {
+			return { success: false, error: focusResult.error, field: 'primaryImage' };
+		}
+
 		return {
 			success: true,
 			data: {
 				kind: 'upload',
-				image: imageResult.data,
+				image: {
+					...imageResult.data,
+					focus: focusResult.data,
+				},
 			},
 		};
 	}
@@ -95,11 +104,16 @@ const resolveOptionalImages = async (
 		return { success: false, error: profilePictureResult.error, field: 'profilePicture' };
 	}
 
+	const profileFocusResult = parseCampaignSubmissionImageFocus(formData.get('profilePictureFocus'));
+	if (!profileFocusResult.success) {
+		return { success: false, error: profileFocusResult.error, field: 'profilePicture' };
+	}
+
 	if (!hasAdditionalInformation) {
 		return {
 			success: true,
 			data: {
-				profilePicture: profilePictureResult.data,
+				profilePicture: profilePictureResult.data ? { ...profilePictureResult.data, focus: profileFocusResult.data } : null,
 				sectionImage: null,
 			},
 		};
@@ -110,11 +124,16 @@ const resolveOptionalImages = async (
 		return { success: false, error: sectionImageResult.error, field: 'sectionImage' };
 	}
 
+	const sectionFocusResult = parseCampaignSubmissionImageFocus(formData.get('sectionImageFocus'));
+	if (!sectionFocusResult.success) {
+		return { success: false, error: sectionFocusResult.error, field: 'sectionImage' };
+	}
+
 	return {
 		success: true,
 		data: {
-			profilePicture: profilePictureResult.data,
-			sectionImage: sectionImageResult.data,
+			profilePicture: profilePictureResult.data ? { ...profilePictureResult.data, focus: profileFocusResult.data } : null,
+			sectionImage: sectionImageResult.data ? { ...sectionImageResult.data, focus: sectionFocusResult.data } : null,
 		},
 	};
 };

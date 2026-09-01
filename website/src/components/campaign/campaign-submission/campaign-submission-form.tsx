@@ -136,27 +136,33 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 	const {
 		file: primaryImageFile,
 		previewUrl: primaryImagePreviewUrl,
+		focus: primaryImageFocus,
 		error: primaryImageError,
 		inputRef: primaryImageInputRef,
 		setFromFile: setPrimaryImageFromFile,
+		setFocus: setPrimaryImageFocus,
 		clear: clearPrimaryImageUpload,
 		setError: setPrimaryImageError,
 	} = primaryImageUpload;
 	const {
 		file: profilePictureFile,
 		previewUrl: profilePicturePreviewUrl,
+		focus: profilePictureFocus,
 		error: profilePictureError,
 		inputRef: profilePictureInputRef,
 		setFromFile: setProfilePictureFromFile,
+		setFocus: setProfilePictureFocus,
 		clear: clearProfilePictureUpload,
 		setError: setProfilePictureError,
 	} = profilePictureUpload;
 	const {
 		file: sectionImageFile,
 		previewUrl: sectionImagePreviewUrl,
+		focus: sectionImageFocus,
 		error: sectionImageError,
 		inputRef: sectionImageInputRef,
 		setFromFile: setSectionImageFromFile,
+		setFocus: setSectionImageFocus,
 		clear: clearSectionImageUpload,
 		setError: setSectionImageError,
 	} = sectionImageUpload;
@@ -218,8 +224,10 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 	const primaryImage: CampaignSubmissionImageUploadField = {
 		inputRef: primaryImageInputRef,
 		previewUrl: primaryImagePreviewUrl,
+		focus: primaryImageFocus,
 		error: primaryImageError,
 		onChange: onPrimaryImageChange,
+		setFocus: setPrimaryImageFocus,
 		setError: setPrimaryImageError,
 		clear: clearPrimaryImageSelection,
 	};
@@ -227,8 +235,10 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 	const profilePicture: CampaignSubmissionImageUploadField = {
 		inputRef: profilePictureInputRef,
 		previewUrl: profilePicturePreviewUrl,
+		focus: profilePictureFocus,
 		error: profilePictureError,
 		onChange: setProfilePictureFromFile,
+		setFocus: setProfilePictureFocus,
 		setError: setProfilePictureError,
 		clear: clearProfilePictureUpload,
 	};
@@ -236,8 +246,10 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 	const sectionImage: CampaignSubmissionImageUploadField = {
 		inputRef: sectionImageInputRef,
 		previewUrl: sectionImagePreviewUrl,
+		focus: sectionImageFocus,
 		error: sectionImageError,
 		onChange: setSectionImageFromFile,
+		setFocus: setSectionImageFocus,
 		setError: setSectionImageError,
 		clear: clearSectionImageUpload,
 	};
@@ -595,9 +607,12 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 		try {
 			const formData = appendCampaignSubmissionFormData(new FormData(), submissionValues, {
 				primaryImage: imageSelection.type === 'upload' ? imageSelection.file : undefined,
+				primaryImageFocus: imageSelection.type === 'upload' ? primaryImageFocus : undefined,
 				defaultImageId: imageSelection.type === 'default' ? imageSelection.id : undefined,
 				profilePicture: profilePictureFile ?? undefined,
+				profilePictureFocus: profilePictureFile ? profilePictureFocus : undefined,
 				sectionImage: values.hasAdditionalInformation ? (sectionImageFile ?? undefined) : undefined,
+				sectionImageFocus: values.hasAdditionalInformation && sectionImageFile ? sectionImageFocus : undefined,
 				includePersonalData: !isLoggedInContributor,
 			});
 			if (turnstileToken) {

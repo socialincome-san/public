@@ -208,7 +208,9 @@ export class CampaignSubmissionService extends BaseService {
 	}
 
 	private async uploadImage(image: CampaignSubmissionImageValidation, cleanupState: SubmissionCleanupState) {
-		const uploaded = await this.storyblokManagementService.uploadAsset(image.buffer, image.filename, image.mimeType);
+		const uploaded = await this.storyblokManagementService.uploadAsset(image.buffer, image.filename, image.mimeType, {
+			focus: image.focus,
+		});
 		cleanupState.assetIds.push(uploaded.assetId);
 
 		return uploaded.asset;
@@ -256,7 +258,10 @@ export class CampaignSubmissionService extends BaseService {
 				return this.failDefaultImage(imageSource.defaultImageId, validation.error, asset.assetFolderId);
 			}
 
-			return this.resultOk(validation.data);
+			return this.resultOk({
+				...validation.data,
+				focus: asset.focus,
+			});
 		} catch (error) {
 			if (isStoryblokManagementError(error)) {
 				console.error(error, {
