@@ -27,12 +27,21 @@ export class CampaignPublicWebsiteService extends BaseService {
 
 	async getPageContent(lang: WebsiteLanguage, campaignFaqs?: Campaign['faq']): Promise<ServiceResult<CampaignPageContent>> {
 		try {
-			const [translator, faqs] = await Promise.all([
+			const [translator, globalsResult] = await Promise.all([
 				Translator.getInstance({ language: lang, namespaces: [...campaignPageNamespaces] }),
-				this.resolveCampaignFaqs(lang, campaignFaqs),
+				this.storyblok.getStoryWithFallback<ISbStoryData<CampaignGlobals>>(STORYBLOK_CAMPAIGN_GLOBALS_PATH, lang),
 			]);
 
-			return this.resultOk({ translator, faqs });
+			const faqs = campaignFaqs?.length
+				? CampaignPublicWebsiteService.toResolvedFaqs(campaignFaqs)
+				: globalsResult.success
+					? CampaignPublicWebsiteService.toResolvedFaqs(globalsResult.data.content.faq)
+					: [];
+			const videoPlaybackIds = globalsResult.success
+				? CampaignPublicWebsiteService.toVideoPlaybackIds(globalsResult.data.content)
+				: [];
+
+			return this.resultOk({ translator, faqs, videoPlaybackIds });
 		} catch (error) {
 			console.error(error);
 
@@ -40,25 +49,33 @@ export class CampaignPublicWebsiteService extends BaseService {
 		}
 	}
 
-	private async resolveCampaignFaqs(lang: WebsiteLanguage, campaignFaqs?: Campaign['faq']): Promise<ISbStoryData<Faq>[]> {
-		if (campaignFaqs?.length) {
-			return CampaignPublicWebsiteService.toResolvedFaqs(campaignFaqs);
-		}
-
-		const globalsResult = await this.storyblok.getStoryWithFallback<ISbStoryData<CampaignGlobals>>(
-			STORYBLOK_CAMPAIGN_GLOBALS_PATH,
-			lang,
-		);
-
-		if (!globalsResult.success) {
-			return [];
-		}
-
-		return CampaignPublicWebsiteService.toResolvedFaqs(globalsResult.data.content.faq);
-	}
-
 	private static toResolvedFaqs(faqReferences: (ISbStoryData<Faq> | string)[]): ISbStoryData<Faq>[] {
 		return faqReferences.filter((reference): reference is ISbStoryData<Faq> => typeof reference !== 'string');
+	}
+
+	private static toVideoPlaybackIds(globals: CampaignGlobals): string[] {
+		return [globals.muxPlaybackId1, globals.muxPlaybackId2, globals.muxPlaybackId3]
+			.map(CampaignPublicWebsiteService.normalizeMuxPlaybackId)
+			.filter((playbackId): playbackId is string => playbackId !== null);
+	}
+
+	private static normalizeMuxPlaybackId(value: string): string | null {
+		const trimmed = value.trim();
+		if (!trimmed) {
+			return null;
+		}
+
+		const playbackIdFromPlayerUrl = trimmed.match(/player\.mux\.com\/([^/?#]+)/)?.[1];
+		if (playbackIdFromPlayerUrl) {
+			return playbackIdFromPlayerUrl;
+		}
+
+		const playbackIdFromStreamUrl = trimmed.match(/stream\.mux\.com\/([^/.?#]+)/)?.[1];
+		if (playbackIdFromStreamUrl) {
+			return playbackIdFromStreamUrl;
+		}
+
+		return trimmed;
 	}
 
 	getPageMetadata(

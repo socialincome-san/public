@@ -5,4 +5,5 @@ import type { ISbStoryData } from '@storyblok/js';
 export type CampaignPageContent = {
 	translator: Translator;
 	faqs: ISbStoryData<Faq>[];
+	videoPlaybackIds: string[];
 };
