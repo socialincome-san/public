@@ -60,11 +60,11 @@ export interface Button {
 
 export interface Campaign {
   approved?: boolean;
-  public?: boolean;
   portalSlug: string;
   title: string;
   description: string;
   primaryImage: StoryblokAsset;
+  public?: boolean;
   profilePicture?: StoryblokAsset;
   creatorName: string;
   quote: string;
@@ -74,6 +74,7 @@ export interface Campaign {
   xHandle?: string;
   linkWebsite?: string;
   tiktokHandle?: string;
+  faq?: (ISbStoryData<Faq> | string)[];
   component: "Campaign";
   _uid: string;
   _editable?: string | undefined;
@@ -84,6 +85,14 @@ export interface CampaignDonate {
   campaignId?: string;
   component: "campaignDonate";
   _uid: string;
+  [k: string]: unknown;
+}
+
+export interface CampaignGlobals {
+  faq: (ISbStoryData<Faq> | string)[];
+  component: "campaignGlobals";
+  _uid: string;
+  _editable?: string | undefined;
   [k: string]: unknown;
 }
 
