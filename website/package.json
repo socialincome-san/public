@@ -158,7 +158,7 @@
 		"firebase-tools": "15.28.2",
 		"jest": "30.5.0",
 		"jest-environment-jsdom": "30.5.0",
-		"knip": "6.32.3",
+		"knip": "6.33.0",
 		"next-openapi-gen": "0.8.9",
 		"npm-run-all2": "5.0.2",
 		"postcss": "8.5.26",
