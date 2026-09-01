@@ -10,7 +10,6 @@ import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-te
 import { CampaignNewsletter } from '@/components/campaign/campaign-newsletter';
 import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-other-campaigns-teaser';
 import { CampaignProgramTeaser } from '@/components/campaign/campaign-program-teaser';
-import { CampaignSocialIncomeSection } from '@/components/campaign/campaign-social-income';
 import { CampaignVideoSlider } from '@/components/campaign/campaign-video-slider';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -132,7 +131,6 @@ export const CampaignDetail = async ({
 			/>
 			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
 			<CampaignVideoSlider translations={videoSliderTranslations} videoPlaybackIds={videoPlaybackIds} />
-			<CampaignSocialIncomeSection translator={translator} />
 			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />
 			<CampaignJournalTeaser lang={lang} region={region} />
 			{faqs.length > 0 && <CampaignFaqSection heading={translator.t('title', { namespace: 'website-faq' })} faqs={faqs} />}

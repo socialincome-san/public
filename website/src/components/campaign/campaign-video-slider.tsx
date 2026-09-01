@@ -104,7 +104,10 @@ export const CampaignVideoSlider = ({ translations, videoPlaybackIds }: Props) =
 									key={playbackId}
 									type="button"
 									onClick={() => handleSelectVideo(index)}
-									className={cn('h-1.5 w-16 rounded-full transition-colors', index === activeIndex ? 'bg-primary' : 'bg-primary/25')}
+									className={cn(
+										'h-1.5 w-16 rounded-full transition-colors',
+										index === activeIndex ? 'bg-primary' : 'bg-primary/25',
+									)}
 									aria-label={translations.showVideoLabels[index]}
 									aria-current={index === activeIndex ? 'true' : undefined}
 								/>
