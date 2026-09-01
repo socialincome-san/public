@@ -58,7 +58,7 @@ export const donationWizardMachine = setup({
 			| { type: 'STRIPE_CHECKOUT_BACK' }
 			| { type: 'STRIPE_CHECKOUT_COMPLETE' }
 			| { type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE'; email: string }
-			| { type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU'; email?: string }
+			| { type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU'; email?: string; isLoggedInDonor?: boolean }
 			| { type: 'DONATION_ONBOARDING_REFERRAL_COMPLETE' }
 			| { type: 'BACK' };
 	},
@@ -480,6 +480,7 @@ export const donationWizardMachine = setup({
 					target: 'stepThankYou',
 					actions: assign({
 						loginEmail: ({ context, event }) => event.email ?? context.loginEmail,
+						isLoggedInDonor: ({ event }) => event.isLoggedInDonor ?? false,
 					}),
 				},
 				CLOSE: {
@@ -497,6 +498,7 @@ export const donationWizardMachine = setup({
 					target: 'stepThankYou',
 					actions: assign({
 						loginEmail: ({ context, event }) => event.email ?? context.loginEmail,
+						isLoggedInDonor: ({ event }) => event.isLoggedInDonor ?? false,
 					}),
 				},
 				CLOSE: {

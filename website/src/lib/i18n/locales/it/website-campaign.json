@@ -21,6 +21,11 @@
 			"focus-areas": "Aree di intervento",
 			"local-partners": "Partner locali"
 		},
+		"creation-teaser": {
+			"title": "Avvia la tua campagna di raccolta fondi",
+			"description": "Un compleanno, una maratona, un matrimonio — ogni occasione può finanziare un Social Income. Scegli un programma, imposta un obiettivo e condividi la tua pagina.",
+			"button": "Avvia la campagna"
+		},
 		"about-title": "Informazioni",
 		"about-si-title": "Informazioni su Social Income",
 		"about-si-text-1": "Social Income è un'organizzazione no-profit con sede in Svizzera che fornisce trasferimenti di denaro incondizionati tramite cellulare a persone che vivono in condizioni di povertà multidimensionale nell'Africa occidentale.",
