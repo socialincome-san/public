@@ -1,8 +1,4 @@
-import type {
-	Campaign,
-	CampaignGlobals,
-	Faq,
-} from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Campaign, CampaignGlobals, Faq } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { STORYBLOK_CAMPAIGN_GLOBALS_PATH } from '@/lib/storyblok/storyblok-paths';
@@ -29,10 +25,7 @@ export class CampaignPublicWebsiteService extends BaseService {
 		this.storyblok = storyblok;
 	}
 
-	async getPageContent(
-		lang: WebsiteLanguage,
-		campaignFaqs?: Campaign['faq'],
-	): Promise<ServiceResult<CampaignPageContent>> {
+	async getPageContent(lang: WebsiteLanguage, campaignFaqs?: Campaign['faq']): Promise<ServiceResult<CampaignPageContent>> {
 		try {
 			const [translator, faqs] = await Promise.all([
 				Translator.getInstance({ language: lang, namespaces: [...campaignPageNamespaces] }),
@@ -47,10 +40,7 @@ export class CampaignPublicWebsiteService extends BaseService {
 		}
 	}
 
-	private async resolveCampaignFaqs(
-		lang: WebsiteLanguage,
-		campaignFaqs?: Campaign['faq'],
-	): Promise<ISbStoryData<Faq>[]> {
+	private async resolveCampaignFaqs(lang: WebsiteLanguage, campaignFaqs?: Campaign['faq']): Promise<ISbStoryData<Faq>[]> {
 		if (campaignFaqs?.length) {
 			return CampaignPublicWebsiteService.toResolvedFaqs(campaignFaqs);
 		}

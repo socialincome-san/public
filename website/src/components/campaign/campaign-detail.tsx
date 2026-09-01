@@ -123,9 +123,7 @@ export const CampaignDetail = async ({
 			<CampaignSocialIncomeSection translator={translator} />
 			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />
 			<CampaignJournalTeaser lang={lang} region={region} />
-			{faqs.length > 0 && (
-				<CampaignFaqSection heading={translator.t('title', { namespace: 'website-faq' })} faqs={faqs} />
-			)}
+			{faqs.length > 0 && <CampaignFaqSection heading={translator.t('title', { namespace: 'website-faq' })} faqs={faqs} />}
 		</>
 	);
 };
