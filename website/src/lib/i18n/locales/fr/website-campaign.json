@@ -16,6 +16,13 @@
 		},
 		"ended": " La campagne est terminée. Tu peux faire un don en allant sur la page principale du site.",
 		"days-left": "Jours restants",
+		"fundraising-pill": {
+			"days-left_one": "Plus que {{count}} jour",
+			"days-left_other": "Plus que {{count}} jours",
+			"amount-missing": "Encore {{missing}} pour atteindre {{goal}}",
+			"supporters-left_one": "Encore {{count}} supporter pour atteindre {{goal}}",
+			"supporters-left_other": "Encore {{count}} supporters pour atteindre {{goal}}"
+		},
 		"program-teaser": {
 			"heading": "Ton don soutient",
 			"focus-areas": "Domaines d’intervention",
