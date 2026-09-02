@@ -1,5 +1,7 @@
 import { BlockWrapper } from '@/components/block-wrapper';
+import { buildCampaignFundraisingPillLabels } from '@/components/campaign/build-campaign-fundraising-pill-labels';
 import { CampaignDonationFormServer } from '@/components/campaign/campaign-donation/campaign-donation-form-server';
+import { CampaignFundraisingPills } from '@/components/campaign/campaign-fundraising-pills';
 import { getCampaignDaysRemaining } from '@/components/campaign/get-campaign-days-remaining';
 import { Progress } from '@/components/progress/progress';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
@@ -79,6 +81,9 @@ export const CampaignHero = ({
 		creatorName,
 		profilePicture,
 	};
+	const fundraisingPillLabels = isActive
+		? buildCampaignFundraisingPillLabels(campaign, remainingDays, translator, locale)
+		: [];
 
 	return (
 		<section className="full-bleed-hero flex flex-col gap-6">
@@ -90,6 +95,12 @@ export const CampaignHero = ({
 				)}
 
 				<div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,hsl(var(--foreground))_0%,hsl(var(--foreground)/0.85)_22%,transparent_55%)]" />
+
+				{fundraisingPillLabels.length > 0 ? (
+					<div className="w-site-width max-w-content absolute inset-x-0 top-10 z-30 mx-auto px-4 lg:top-[calc(1.25rem+3.5rem+2.5rem)]">
+						<CampaignFundraisingPills labels={fundraisingPillLabels} />
+					</div>
+				) : null}
 
 				<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto mb-8 flex flex-row items-end justify-between gap-8 md:mb-24">
 					<div className="flex min-w-0 flex-1 flex-col gap-10 px-4">
