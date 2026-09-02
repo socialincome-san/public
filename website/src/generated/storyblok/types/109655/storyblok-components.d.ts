@@ -429,7 +429,6 @@ export interface Page {
     | Text
     | TwoColumnText
     | VideoText
-    | Transparency
     | OpenSourceStats
     | OpenSourceContributors
     | OpenSourceIssues
@@ -657,14 +656,6 @@ export interface Text {
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
   component: "text";
-  _uid: string;
-  [k: string]: unknown;
-}
-
-export interface Transparency {
-  donationGlobe?: DonationGlobe[];
-  transparencySummary?: TransparencySummary[];
-  component: "transparency";
   _uid: string;
   [k: string]: unknown;
 }
