@@ -9,7 +9,13 @@ import type { ServiceResult } from '../core/base.types';
 import type { StoryblokService } from '../storyblok/storyblok.service';
 import type { CampaignPageContent } from './campaign-public-website.types';
 
-const campaignPageNamespaces = ['website-campaign', 'website-common', 'website-newsletter', 'website-faq'] as const;
+const campaignPageNamespaces = [
+	'website-campaign',
+	'website-common',
+	'website-videos',
+	'website-newsletter',
+	'website-faq',
+] as const;
 
 export class CampaignPublicWebsiteService extends BaseService {
 	private readonly storyblok: StoryblokService;
@@ -21,19 +27,11 @@ export class CampaignPublicWebsiteService extends BaseService {
 
 	async getPageContent(lang: WebsiteLanguage, campaignFaqs?: Campaign['faq']): Promise<ServiceResult<CampaignPageContent>> {
 		try {
-			const [translator, globalsResult] = await Promise.all([
+			const [translator, faqs, videoPlaybackIds] = await Promise.all([
 				Translator.getInstance({ language: lang, namespaces: [...campaignPageNamespaces] }),
-				this.storyblok.getStoryWithFallback<ISbStoryData<CampaignGlobals>>(STORYBLOK_CAMPAIGN_GLOBALS_PATH, lang),
+				this.resolveCampaignFaqs(lang, campaignFaqs),
+				this.resolveVideoPlaybackIds(lang),
 			]);
-
-			const faqs = campaignFaqs?.length
-				? CampaignPublicWebsiteService.toResolvedFaqs(campaignFaqs)
-				: globalsResult.success
-					? CampaignPublicWebsiteService.toResolvedFaqs(globalsResult.data.content.faq)
-					: [];
-			const videoPlaybackIds = globalsResult.success
-				? CampaignPublicWebsiteService.toVideoPlaybackIds(globalsResult.data.content)
-				: [];
 
 			return this.resultOk({ translator, faqs, videoPlaybackIds });
 		} catch (error) {
@@ -41,6 +39,36 @@ export class CampaignPublicWebsiteService extends BaseService {
 
 			return this.resultFail(`Could not load campaign page content: ${JSON.stringify(error)}`);
 		}
+	}
+
+	private async resolveCampaignFaqs(lang: WebsiteLanguage, campaignFaqs?: Campaign['faq']): Promise<ISbStoryData<Faq>[]> {
+		if (campaignFaqs?.length) {
+			return CampaignPublicWebsiteService.toResolvedFaqs(campaignFaqs);
+		}
+
+		const globalsResult = await this.storyblok.getStoryWithFallback<ISbStoryData<CampaignGlobals>>(
+			STORYBLOK_CAMPAIGN_GLOBALS_PATH,
+			lang,
+		);
+
+		if (!globalsResult.success) {
+			return [];
+		}
+
+		return CampaignPublicWebsiteService.toResolvedFaqs(globalsResult.data.content.faq);
+	}
+
+	private async resolveVideoPlaybackIds(lang: WebsiteLanguage): Promise<string[]> {
+		const globalsResult = await this.storyblok.getStoryWithFallback<ISbStoryData<CampaignGlobals>>(
+			STORYBLOK_CAMPAIGN_GLOBALS_PATH,
+			lang,
+		);
+
+		if (!globalsResult.success) {
+			return [];
+		}
+
+		return CampaignPublicWebsiteService.toVideoPlaybackIds(globalsResult.data.content);
 	}
 
 	private static toResolvedFaqs(faqReferences: (ISbStoryData<Faq> | string)[]): ISbStoryData<Faq>[] {
