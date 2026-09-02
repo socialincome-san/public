@@ -2,11 +2,6 @@ import type { CountryCode } from '@/generated/prisma/enums';
 import { DateTime } from 'luxon';
 import type { BankAccountLatestReserve } from '../reserves/reserve.types';
 
-export type TimeRange = {
-	start: DateTime;
-	end: DateTime;
-};
-
 export type TransparencyFinancialPeriod = { kind: 'all-time' } | { kind: 'ytd' } | { kind: 'year'; year: number };
 
 export type TransparencyFinancialPeriodRange = {
@@ -45,18 +40,6 @@ export const getTransparencyFinancialPeriodDateFilter = (
 	};
 };
 
-export type ContributionTimeRange = TimeRange & {
-	totalChf: number;
-};
-
-export type ContributionsByCountry = {
-	country: string;
-	countryCode: CountryCode;
-	totalChf: number;
-	contributorCount: number;
-	percentageOfTotal: number;
-};
-
 export const OTHER_COUNTRY_SEGMENT_CODE = 'OTHER';
 
 export type TransparencyCountrySegmentCode = CountryCode | typeof OTHER_COUNTRY_SEGMENT_CODE;
@@ -87,12 +70,6 @@ export type TransparencyCountriesData = {
 	otherCountries: TransparencyOtherCountry[];
 };
 
-export type TransparencyTotals = {
-	totalContributionsChf: number;
-	totalContributors: number;
-	totalContributionsCount: number;
-};
-
 export type CountryTransparencyTotals = {
 	totalContributionsChf: number;
 };
@@ -103,12 +80,9 @@ type TransparencyFinancialSummary = {
 	reservesChf: number;
 };
 
-export type TransparencyData = {
-	totals: TransparencyTotals;
+export type TransparencySummaryData = {
 	financialSummary: TransparencyFinancialSummary;
 	reserveAccounts: BankAccountLatestReserve[];
-	timeRanges: ContributionTimeRange[];
-	topCountries: ContributionsByCountry[];
 };
 
 const ZEWO_RESERVE_RUNWAY_MIN_MONTHS = 3;

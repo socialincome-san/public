@@ -12,11 +12,11 @@ type Props = {
 
 export const DonationsTotalBlockServer = async ({ blok, lang, region }: Props) => {
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const [totalsResult, rates] = await Promise.all([
-		services.transparency.getTransparencyTotals(),
+	const [totalResult, rates] = await Promise.all([
+		services.transparency.getTotalContributionsChf(),
 		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
 	]);
-	const totalChf = totalsResult.success ? totalsResult.data.totalContributionsChf : 0;
+	const totalChf = totalResult.success ? totalResult.data : 0;
 	const { amount: totalAmount, currency } = services.currencyDisplay.resolveFromChf(totalChf, displayCurrency, rates);
 
 	return <DonationsTotalBlock blok={blok} lang={lang} region={region} totalAmount={totalAmount} currency={currency} />;
