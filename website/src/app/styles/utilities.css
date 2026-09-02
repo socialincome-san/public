@@ -11,4 +11,20 @@
 	.bg-donation-modal-gradient {
 		background: linear-gradient(-17deg, var(--gradient-background-from) 19%, var(--gradient-background-to) 50%), white;
 	}
+
+	@keyframes marquee-left {
+		to {
+			transform: translateX(-50%);
+		}
+	}
+
+	@keyframes marquee-right {
+		from {
+			transform: translateX(-50%);
+		}
+
+		to {
+			transform: translateX(0);
+		}
+	}
 }

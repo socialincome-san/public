@@ -114,6 +114,7 @@ export class StoryblokService extends BaseService {
 		'program.faq',
 		'downloads.documents',
 		'partnershipsCarousel.partnerships',
+		'partnershipsCard.partnerships',
 		'Country.partners',
 		'Local Partner.focuses',
 		'Local Partner.partners',

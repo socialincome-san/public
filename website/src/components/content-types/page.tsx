@@ -13,6 +13,7 @@ import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceContributorsBlock } from '@/components/content-blocks/open-source-contributors';
 import { OpenSourceIssuesBlock } from '@/components/content-blocks/open-source-issues';
 import { OpenSourceStatsBlock } from '@/components/content-blocks/open-source-stats';
+import { PartnershipsCardBlock } from '@/components/content-blocks/partnerships-card';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { PersonGridBlock } from '@/components/content-blocks/person-grid';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
@@ -85,6 +86,8 @@ const renderPageBlock = (
 			return <OpenSourceIssuesBlock blok={block} lang={lang} />;
 		case 'partnershipsCarousel':
 			return <PartnershipsCarouselBlock blok={block} />;
+		case 'partnershipsCard':
+			return <PartnershipsCardBlock blok={block} />;
 		case 'personGrid':
 			return <PersonGridBlock blok={block} lang={lang} region={region} />;
 		case 'programGrid':
