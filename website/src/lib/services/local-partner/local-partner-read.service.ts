@@ -186,6 +186,7 @@ export class LocalPartnerReadService extends BaseService {
 			'firebaseAuthUserId',
 			'contactNumber',
 			'createdAt',
+			'country',
 		] as const);
 		switch (sortBy) {
 			case 'id':
@@ -202,6 +203,8 @@ export class LocalPartnerReadService extends BaseService {
 				return [{ contact: { phone: { number: direction } } }];
 			case 'createdAt':
 				return [{ createdAt: direction }];
+			case 'country':
+				return [{ contact: { address: { country: direction } } }];
 			default:
 				return [{ name: 'asc' }];
 		}
@@ -323,6 +326,7 @@ export class LocalPartnerReadService extends BaseService {
 								lastName: true,
 								email: true,
 								phone: { select: { number: true } },
+								address: { select: { country: true } },
 							},
 						},
 						account: {
@@ -372,6 +376,7 @@ export class LocalPartnerReadService extends BaseService {
 					recipientsCount,
 					candidatesCount: Math.max(0, partner._count.recipients - recipientsCount),
 					createdAt: partner.createdAt,
+					country: partner.contact?.address?.country ?? null,
 				};
 			});
 
