@@ -85,6 +85,7 @@ export const CampaignVideoSlider = ({ translations, videoPlaybackIds }: Props) =
 												playsInline
 											/>
 										) : (
+											// eslint-disable-next-line @next/next/no-img-element -- Mux CDN poster thumbnail
 											<img
 												src={getMuxPosterUrl(playbackId)}
 												alt={translations.videoTitles[index]}

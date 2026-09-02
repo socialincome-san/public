@@ -49,7 +49,7 @@ export class CampaignPublicWebsiteService extends BaseService {
 
 	private static toVideoPlaybackIds(globals: CampaignGlobals): string[] {
 		return [globals.muxPlaybackId1, globals.muxPlaybackId2, globals.muxPlaybackId3]
-			.map(CampaignPublicWebsiteService.normalizeMuxPlaybackId)
+			.map((value) => CampaignPublicWebsiteService.normalizeMuxPlaybackId(value))
 			.filter((playbackId): playbackId is string => playbackId !== null);
 	}
 
