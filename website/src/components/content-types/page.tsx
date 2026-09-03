@@ -35,7 +35,7 @@ import type { ParsedUrlQueryInput } from 'querystring';
 import { Fragment, type ReactNode } from 'react';
 
 type PageBlock = Page['content'][number];
-type NestedPageBlock = TwoColumn['leftColumn'][number];
+type NestedPageBlock = Extract<TwoColumn['leftColumn'][number], PageBlock>;
 type RichtextButtonHeaderAction = 'createProgram';
 
 type PageContentTypeProps = {
@@ -135,6 +135,8 @@ const renderPageBlock = (
 		case 'runwayMonthGrid':
 			return <RunwayMonthGridBlock blok={block} lang={lang} />;
 		default:
+			block satisfies never;
+
 			return null;
 	}
 };

@@ -678,140 +678,68 @@ export interface TransparencySummary {
 
 export interface TwoColumn {
   leftColumn: (
-    | ActionButton
-    | Article
-    | ArticleType
-    | BannerSection
-    | Button
-    | Campaign
-    | CampaignDonate
-    | CampaignGlobals
-    | CampaignOverview
-    | Country
-    | CountryOverview
-    | Document
-    | DonationGlobe
     | DonationsTotal
     | Downloads
-    | DropdownItem
-    | EmbeddedVideo
-    | ExplainerVideoHeader
-    | Faq
     | FaqSelection
-    | Focus
-    | FocusOverview
     | HeroVideo
     | ImageText
-    | ImageWithCaption
     | ImpactMeasurement
     | JournalTeasers
-    | Layout
-    | LocalPartner
-    | LocalPartnersOverview
-    | Lottie
-    | MenuItem
-    | MenuItemGroup
-    | ModalCard
     | ModalCards
-    | NewsletterForm
-    | NewsletterSignup
-    | OpenSource
-    | OpenSourceContributors
-    | OpenSourceIssues
-    | OpenSourceStats
-    | Page
-    | Partnership
     | PartnershipsCarousel
-    | Person
-    | PersonGrid
-    | Program
     | ProgramGrid
-    | ProgramOverview
-    | QuotedText
-    | ReferenceArticle
-    | ReferencesGroup
-    | RichtextButtonHeader
-    | RunwayMonthGrid
-    | Spacer
-    | Study
-    | Tag
     | TeamGrid
     | Testimonial
     | TestimonialCarousel
     | Text
-    | TransparencyCountries
-    | TransparencySummary
     | TwoColumn
     | TwoColumnText
     | VideoText
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | Spacer
+    | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
+    | Lottie
+    | PersonGrid
+    | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
   )[];
   rightColumn: (
-    | ActionButton
-    | Article
-    | ArticleType
-    | BannerSection
-    | Button
-    | Campaign
-    | CampaignDonate
-    | CampaignGlobals
-    | CampaignOverview
-    | Country
-    | CountryOverview
-    | Document
-    | DonationGlobe
     | DonationsTotal
     | Downloads
-    | DropdownItem
-    | EmbeddedVideo
-    | ExplainerVideoHeader
-    | Faq
     | FaqSelection
-    | Focus
-    | FocusOverview
     | HeroVideo
     | ImageText
-    | ImageWithCaption
     | ImpactMeasurement
     | JournalTeasers
-    | Layout
-    | LocalPartner
-    | LocalPartnersOverview
-    | Lottie
-    | MenuItem
-    | MenuItemGroup
-    | ModalCard
     | ModalCards
-    | NewsletterForm
-    | NewsletterSignup
-    | OpenSource
-    | OpenSourceContributors
-    | OpenSourceIssues
-    | OpenSourceStats
-    | Page
-    | Partnership
     | PartnershipsCarousel
-    | Person
-    | PersonGrid
-    | Program
     | ProgramGrid
-    | ProgramOverview
-    | QuotedText
-    | ReferenceArticle
-    | ReferencesGroup
-    | RichtextButtonHeader
-    | RunwayMonthGrid
-    | Spacer
-    | Study
-    | Tag
     | TeamGrid
     | Testimonial
     | TestimonialCarousel
     | Text
-    | TransparencyCountries
-    | TransparencySummary
     | TwoColumn
     | TwoColumnText
     | VideoText
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | Spacer
+    | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
+    | Lottie
+    | PersonGrid
+    | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
   )[];
   columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
   disableMarginTop?: boolean;
