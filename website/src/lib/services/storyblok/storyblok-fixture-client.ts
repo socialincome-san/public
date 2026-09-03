@@ -1,4 +1,4 @@
-import type { ISbResult, ISbStoriesParams, ISbStoryData, StoryblokClient } from '@storyblok/js';
+import type { ISbResult, ISbStoryData, StoryblokClient } from '@storyblok/js';
 import layoutStory from '../../../../test/e2e/fixtures/storyblok/globals-layout.json';
 import homeStory from '../../../../test/e2e/fixtures/storyblok/pages-home.json';
 import sierraLeoneCoreProgramStory from '../../../../test/e2e/fixtures/storyblok/pages-programs-sierra-leone-core-program.json';
@@ -40,30 +40,28 @@ const storyPathFromSlug = (slug: string): string => {
  * list/count endpoints return empty collections so soft fallbacks still work.
  */
 export const createStoryblokFixtureClient = (): StoryblokClient => {
-	const get = async (slug: string, _params?: ISbStoriesParams): Promise<ISbResult> => {
+	const get = (slug: string): Promise<ISbResult> => {
 		if (slug === 'cdn/stories' || slug === 'cdn/datasource_entries' || slug === 'cdn/links') {
-			return emptyStoriesResult();
+			return Promise.resolve(emptyStoriesResult());
 		}
 
 		if (slug.startsWith('cdn/stories/')) {
 			const storyPath = storyPathFromSlug(slug);
 			const story = STORY_FIXTURES[storyPath];
 			if (!story) {
-				throw new Error(`Storyblok fixture not found for story path: ${storyPath}`);
+				return Promise.reject(new Error(`Storyblok fixture not found for story path: ${storyPath}`));
 			}
 
-			return storyResult(story);
+			return Promise.resolve(storyResult(story));
 		}
 
-		throw new Error(`Unsupported Storyblok fixture endpoint: ${slug}`);
+		return Promise.reject(new Error(`Unsupported Storyblok fixture endpoint: ${slug}`));
 	};
 
-	const getAll = async (_slug: string, _params?: ISbStoriesParams): Promise<ISbStoryData[]> => {
-		return [];
-	};
+	const getAll = (): Promise<ISbStoryData[]> => Promise.resolve([]);
 
 	return {
 		get,
 		getAll,
-	} as StoryblokClient;
+	} as unknown as StoryblokClient;
 };

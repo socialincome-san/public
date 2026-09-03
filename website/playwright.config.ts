@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env.test', quiet: true });
 dotenv.config({ path: '.env.local', quiet: true });
 
-const port = process.env.PORT || '3000';
+const port = process.env.PORT ?? '3000';
 const baseURL = `http://localhost:${port}`;
 
 const e2eStorageState: Awaited<ReturnType<BrowserContext['storageState']>> = {
