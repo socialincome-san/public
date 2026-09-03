@@ -4,6 +4,9 @@ import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env.test', quiet: true });
 dotenv.config({ path: '.env.local', quiet: true });
 
+const port = process.env.PORT ?? '3000';
+const baseURL = `http://localhost:${port}`;
+
 const e2eStorageState: Awaited<ReturnType<BrowserContext['storageState']>> = {
 	cookies: [
 		{
@@ -19,7 +22,7 @@ const e2eStorageState: Awaited<ReturnType<BrowserContext['storageState']>> = {
 	],
 	origins: [
 		{
-			origin: 'http://localhost:3000',
+			origin: baseURL,
 			localStorage: [{ name: 'cookie_consent', value: 'denied' }],
 		},
 	],
@@ -41,7 +44,7 @@ export default defineConfig({
 	reporter: [['html', { open: 'never' }]],
 
 	use: {
-		baseURL: 'http://localhost:3000',
+		baseURL,
 		screenshot: 'only-on-failure',
 		trace: 'retain-on-failure',
 		video: 'retain-on-failure',
@@ -113,8 +116,13 @@ export default defineConfig({
 	],
 	webServer: {
 		command: 'npm run build-storybook:website && npm run build && npm run start',
-		url: 'http://localhost:3000',
-		reuseExistingServer: true,
+		url: baseURL,
+		reuseExistingServer: !process.env.CI,
 		timeout: 180_000,
+		env: {
+			...process.env,
+			E2E_STORYBLOK_MOCK: '1',
+			PORT: port,
+		},
 	},
 });
