@@ -427,6 +427,7 @@ export interface Page {
     | Testimonial
     | TestimonialCarousel
     | Text
+    | TwoColumn
     | TwoColumnText
     | VideoText
     | OpenSourceStats
@@ -671,6 +672,151 @@ export interface TransparencySummary {
   outflowsDescription?: string;
   reservesDescription?: string;
   component: "transparencySummary";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TwoColumn {
+  leftColumn: (
+    | ActionButton
+    | Article
+    | ArticleType
+    | BannerSection
+    | Button
+    | Campaign
+    | CampaignDonate
+    | CampaignGlobals
+    | CampaignOverview
+    | Country
+    | CountryOverview
+    | Document
+    | DonationGlobe
+    | DonationsTotal
+    | Downloads
+    | DropdownItem
+    | EmbeddedVideo
+    | ExplainerVideoHeader
+    | Faq
+    | FaqSelection
+    | Focus
+    | FocusOverview
+    | HeroVideo
+    | ImageText
+    | ImageWithCaption
+    | ImpactMeasurement
+    | JournalTeasers
+    | Layout
+    | LocalPartner
+    | LocalPartnersOverview
+    | Lottie
+    | MenuItem
+    | MenuItemGroup
+    | ModalCard
+    | ModalCards
+    | NewsletterForm
+    | NewsletterSignup
+    | OpenSource
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | OpenSourceStats
+    | Page
+    | Partnership
+    | PartnershipsCarousel
+    | Person
+    | PersonGrid
+    | Program
+    | ProgramGrid
+    | ProgramOverview
+    | QuotedText
+    | ReferenceArticle
+    | ReferencesGroup
+    | RichtextButtonHeader
+    | RunwayMonthGrid
+    | Spacer
+    | Study
+    | Tag
+    | TeamGrid
+    | Testimonial
+    | TestimonialCarousel
+    | Text
+    | TransparencyCountries
+    | TransparencySummary
+    | TwoColumn
+    | TwoColumnText
+    | VideoText
+  )[];
+  rightColumn: (
+    | ActionButton
+    | Article
+    | ArticleType
+    | BannerSection
+    | Button
+    | Campaign
+    | CampaignDonate
+    | CampaignGlobals
+    | CampaignOverview
+    | Country
+    | CountryOverview
+    | Document
+    | DonationGlobe
+    | DonationsTotal
+    | Downloads
+    | DropdownItem
+    | EmbeddedVideo
+    | ExplainerVideoHeader
+    | Faq
+    | FaqSelection
+    | Focus
+    | FocusOverview
+    | HeroVideo
+    | ImageText
+    | ImageWithCaption
+    | ImpactMeasurement
+    | JournalTeasers
+    | Layout
+    | LocalPartner
+    | LocalPartnersOverview
+    | Lottie
+    | MenuItem
+    | MenuItemGroup
+    | ModalCard
+    | ModalCards
+    | NewsletterForm
+    | NewsletterSignup
+    | OpenSource
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | OpenSourceStats
+    | Page
+    | Partnership
+    | PartnershipsCarousel
+    | Person
+    | PersonGrid
+    | Program
+    | ProgramGrid
+    | ProgramOverview
+    | QuotedText
+    | ReferenceArticle
+    | ReferencesGroup
+    | RichtextButtonHeader
+    | RunwayMonthGrid
+    | Spacer
+    | Study
+    | Tag
+    | TeamGrid
+    | Testimonial
+    | TestimonialCarousel
+    | Text
+    | TransparencyCountries
+    | TransparencySummary
+    | TwoColumn
+    | TwoColumnText
+    | VideoText
+  )[];
+  columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
+  component: "twoColumn";
   _uid: string;
   [k: string]: unknown;
 }
