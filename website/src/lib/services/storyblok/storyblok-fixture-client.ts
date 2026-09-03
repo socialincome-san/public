@@ -1,8 +1,8 @@
 import type { ISbResult, ISbStoryData, StoryblokClient } from '@storyblok/js';
-import layoutStory from '../../../../test/e2e/fixtures/storyblok/globals-layout.json';
-import homeStory from '../../../../test/e2e/fixtures/storyblok/pages-home.json';
-import sierraLeoneCoreProgramStory from '../../../../test/e2e/fixtures/storyblok/pages-programs-sierra-leone-core-program.json';
-import skillsProgramStory from '../../../../test/e2e/fixtures/storyblok/pages-programs-skills-program.json';
+import layoutStory from '../../../../test/e2e/fixtures/storyblok/globals-layout';
+import homeStory from '../../../../test/e2e/fixtures/storyblok/pages-home';
+import sierraLeoneCoreProgramStory from '../../../../test/e2e/fixtures/storyblok/pages-programs-sierra-leone-core-program';
+import skillsProgramStory from '../../../../test/e2e/fixtures/storyblok/pages-programs-skills-program';
 
 const STORY_FIXTURES: Record<string, ISbStoryData> = {
 	'globals/layout': layoutStory as unknown as ISbStoryData,
