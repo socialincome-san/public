@@ -188,6 +188,8 @@ jobs:
       NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.TF_STAGING_STRIPE_PUBLISHABLE_KEY }}
       GITHUB_PAT: ${{ secrets.TF_STAGING_GITHUB_PAT }}
       HOME: /root
+      # Deterministic Storyblok fixtures for Playwright (no STORYBLOK_PREVIEW_TOKEN required).
+      E2E_STORYBLOK_MOCK: '1'
       # Fork PRs get a read-only GITHUB_TOKEN, so skip snapshot auto-commit like Renovate.
       SKIP_SNAPSHOT_UPDATE: ${{ github.actor == 'renovate[bot]' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) }}
 

@@ -1,0 +1,18 @@
+{
+	"uuid": "e2e-program-skills",
+	"slug": "skills-program",
+	"full_slug": "pages/programs/skills-program",
+	"name": "Skills to Stability",
+	"content": {
+		"component": "program",
+		"_uid": "e2e-program-skills-content",
+		"portalSlug": "skills-program",
+		"title": "Skills to Stability",
+		"description": "E2E fixture for the skills program public page.",
+		"primaryImage": {},
+		"secondaryImage": {},
+		"tertiaryImage": {},
+		"fourthImage": {},
+		"faq": []
+	}
+}
