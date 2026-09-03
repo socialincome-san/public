@@ -427,6 +427,7 @@ export interface Page {
     | Testimonial
     | TestimonialCarousel
     | Text
+    | TwoColumn
     | TwoColumnText
     | VideoText
     | OpenSourceStats
@@ -671,6 +672,79 @@ export interface TransparencySummary {
   outflowsDescription?: string;
   reservesDescription?: string;
   component: "transparencySummary";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TwoColumn {
+  leftColumn: (
+    | DonationsTotal
+    | Downloads
+    | FaqSelection
+    | HeroVideo
+    | ImageText
+    | ImpactMeasurement
+    | JournalTeasers
+    | ModalCards
+    | PartnershipsCarousel
+    | ProgramGrid
+    | TeamGrid
+    | Testimonial
+    | TestimonialCarousel
+    | Text
+    | TwoColumn
+    | TwoColumnText
+    | VideoText
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | Spacer
+    | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
+    | Lottie
+    | PersonGrid
+    | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
+  )[];
+  rightColumn: (
+    | DonationsTotal
+    | Downloads
+    | FaqSelection
+    | HeroVideo
+    | ImageText
+    | ImpactMeasurement
+    | JournalTeasers
+    | ModalCards
+    | PartnershipsCarousel
+    | ProgramGrid
+    | TeamGrid
+    | Testimonial
+    | TestimonialCarousel
+    | Text
+    | TwoColumn
+    | TwoColumnText
+    | VideoText
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | Spacer
+    | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
+    | Lottie
+    | PersonGrid
+    | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
+  )[];
+  columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
+  component: "twoColumn";
   _uid: string;
   [k: string]: unknown;
 }
