@@ -15,7 +15,7 @@ const isResolvedPartnership = (entry: ISbStoryData<Partnership> | string): entry
 
 export const PartnershipsCardBlock = ({ blok }: Props) => {
 	const entries = (blok.partnerships ?? []).filter(isResolvedPartnership).map((entry) => entry.content);
-	const MIN_BADGES_PER_ROW = 12;
+	const MIN_BADGES_PER_ROW = 20;
 
 	const fillRow = (row: Partnership[]) => {
 		if (row.length === 0) {
@@ -31,11 +31,14 @@ export const PartnershipsCardBlock = ({ blok }: Props) => {
 		return filled;
 	};
 
-	const rows = [entries.filter((_, index) => index % 2 === 0), entries.filter((_, index) => index % 2 === 1)].filter(
-		(row) => row.length > 0,
-	);
+	const rows =
+		entries.length === 1
+			? [entries, entries]
+			: [entries.filter((_, index) => index % 2 === 0), entries.filter((_, index) => index % 2 === 1)].filter(
+					(row) => row.length > 0,
+				);
 
-	if (entries.length === 0) {
+	if ((blok.partnerships ?? []).length === 0) {
 		return null;
 	}
 
