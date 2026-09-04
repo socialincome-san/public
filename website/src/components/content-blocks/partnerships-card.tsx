@@ -15,6 +15,21 @@ const isResolvedPartnership = (entry: ISbStoryData<Partnership> | string): entry
 
 export const PartnershipsCardBlock = ({ blok }: Props) => {
 	const entries = (blok.partnerships ?? []).filter(isResolvedPartnership).map((entry) => entry.content);
+	const MIN_BADGES_PER_ROW = 12;
+
+	const fillRow = (row: Partnership[]) => {
+		if (row.length === 0) {
+			return row;
+		}
+
+		const filled = [...row];
+
+		while (filled.length < MIN_BADGES_PER_ROW) {
+			filled.push(...row);
+		}
+
+		return filled;
+	};
 
 	const rows = [entries.filter((_, index) => index % 2 === 0), entries.filter((_, index) => index % 2 === 1)].filter(
 		(row) => row.length > 0,
@@ -44,9 +59,9 @@ export const PartnershipsCardBlock = ({ blok }: Props) => {
 							speed="fast"
 							className="-mx-4 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] px-4 py-1"
 						>
-							<div className="flex gap-3 pr-3 motion-reduce:w-full motion-reduce:flex-wrap">
-								{row.map((entry) => (
-									<PartnershipBadge key={entry._uid} partnership={entry} />
+							<div className="flex gap-6 pr-3 motion-reduce:w-full motion-reduce:flex-wrap">
+								{fillRow(row).map((entry, index) => (
+									<PartnershipBadge key={`${entry._uid}-${index}`} partnership={entry} />
 								))}
 							</div>
 						</Marquee>
