@@ -15,7 +15,10 @@ const isResolvedPartnership = (entry: ISbStoryData<Partnership> | string): entry
 
 export const PartnershipsCardBlock = ({ blok }: Props) => {
 	const entries = (blok.partnerships ?? []).filter(isResolvedPartnership).map((entry) => entry.content);
-	const MIN_BADGES_PER_ROW = 20;
+
+	// Repeats partners to avoid gaps while scrolling. Higher values make rows longer,
+	// which increases the visible scroll speed because the duration stays the same.
+	const MIN_BADGES_PER_ROW = 15;
 
 	const fillRow = (row: Partnership[]) => {
 		if (row.length === 0) {
@@ -59,7 +62,7 @@ export const PartnershipsCardBlock = ({ blok }: Props) => {
 						<Marquee
 							key={rowIndex === 0 ? 'first-row' : 'second-row'}
 							direction={rowIndex === 0 ? 'left' : 'right'}
-							speed="fast"
+							speed="regular"
 							className="-mx-4 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] px-4 py-1"
 						>
 							<div className="flex gap-6 pr-3 motion-reduce:w-full motion-reduce:flex-wrap">
