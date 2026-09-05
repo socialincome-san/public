@@ -98,7 +98,7 @@
 		"firebase": "12.18.0",
 		"firebase-admin": "13.10.0",
 		"globe.gl": "^2.46.1",
-		"i18next": "26.4.0",
+		"i18next": "26.4.1",
 		"i18next-resources-to-backend": "1.2.3",
 		"isomorphic-dompurify": "3.23.0",
 		"js-cookie": "3.0.8",
