@@ -161,7 +161,7 @@
 		"knip": "6.34.0",
 		"next-openapi-gen": "0.8.9",
 		"npm-run-all2": "5.0.2",
-		"postcss": "8.5.27",
+		"postcss": "8.5.28",
 		"prettier": "3.9.6",
 		"prettier-plugin-organize-imports": "4.3.0",
 		"prettier-plugin-tailwindcss": "0.8.1",
