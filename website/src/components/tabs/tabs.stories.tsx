@@ -62,6 +62,9 @@ export const SeveralTabs: Story = {
 };
 
 export const DisabledTrigger: Story = {
+	args: {
+		defaultValue: 'available',
+	},
 	render: (args) => (
 		<TabsExample
 			args={args}
