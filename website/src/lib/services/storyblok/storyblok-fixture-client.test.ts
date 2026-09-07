@@ -27,10 +27,11 @@ describe('createStoryblokFixtureClient', () => {
 		expect(skillsProgramStory.content.portalSlug).toBe('skills-program');
 	});
 
-	it('throws for unknown story paths so service soft-fallbacks can catch', async () => {
+	it('throws a 404 for unknown story paths so service language fallbacks can catch', async () => {
 		await expect(client.get('cdn/stories/pages/unknown')).rejects.toThrow(
 			'Storyblok fixture not found for story path: pages/unknown',
 		);
+		await expect(client.get('cdn/stories/pages/unknown')).rejects.toMatchObject({ status: 404 });
 	});
 
 	it('returns empty collections for list and getAll endpoints', async () => {

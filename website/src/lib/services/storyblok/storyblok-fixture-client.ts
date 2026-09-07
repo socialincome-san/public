@@ -25,6 +25,15 @@ const storyResult = (story: ISbStoryData): ISbResult =>
 		headers: {},
 	}) as ISbResult;
 
+// The Storyblok CDN rejects unknown stories with a 404-shaped error. Mirroring that shape keeps the
+// language fallbacks in StoryblokService on their normal "story is missing" path instead of treating
+// a missing fixture as an unexpected failure.
+const storyNotFoundError = (storyPath: string): Error =>
+	Object.assign(new Error(`Storyblok fixture not found for story path: ${storyPath}`), {
+		status: 404,
+		response: 'Not Found',
+	});
+
 const storyPathFromSlug = (slug: string): string => {
 	const normalized = slug.replace(/^\/+/, '');
 	if (normalized.startsWith('cdn/stories/')) {
@@ -49,7 +58,7 @@ export const createStoryblokFixtureClient = (): StoryblokClient => {
 			const storyPath = storyPathFromSlug(slug);
 			const story = STORY_FIXTURES[storyPath];
 			if (!story) {
-				return Promise.reject(new Error(`Storyblok fixture not found for story path: ${storyPath}`));
+				return Promise.reject(storyNotFoundError(storyPath));
 			}
 
 			return Promise.resolve(storyResult(story));

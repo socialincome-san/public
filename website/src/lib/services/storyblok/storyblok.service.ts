@@ -28,7 +28,6 @@ import {
 } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
-import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -244,27 +243,12 @@ export class StoryblokService extends BaseService {
 		};
 	}
 
+	/**
+	 * Runs a loader for `lang` and retries in the default language when Storyblok answers 404.
+	 * Resolves to `undefined` once the default language is missing too, so callers can turn a missing
+	 * story into a failed `ServiceResult` instead of an unexpected error.
+	 */
 	private async withLanguageFallback<T>(
-		loader: (lang: string, slug: string) => Promise<T>,
-		lang: string,
-		slug: string,
-	): Promise<T> {
-		try {
-			return await loader(lang, slug);
-		} catch (error: unknown) {
-			const errorStatus = typeof error === 'object' && error !== null && 'status' in error ? error.status : undefined;
-			if (errorStatus === 404) {
-				if (lang === defaultLanguage) {
-					return notFound();
-				}
-
-				return await this.withLanguageFallback(loader, defaultLanguage, slug);
-			}
-			throw error;
-		}
-	}
-
-	private async withOptionalLanguageFallback<T>(
 		loader: (lang: string, slug: string) => Promise<T>,
 		lang: string,
 		slug: string,
@@ -278,7 +262,7 @@ export class StoryblokService extends BaseService {
 					return undefined;
 				}
 
-				return await this.withOptionalLanguageFallback(loader, defaultLanguage, slug);
+				return await this.withLanguageFallback(loader, defaultLanguage, slug);
 			}
 			throw error;
 		}
@@ -300,6 +284,10 @@ export class StoryblokService extends BaseService {
 				slug,
 			);
 
+			if (!data) {
+				return this.resultFail(`Story not found: '${slug}'`);
+			}
+
 			return this.resultOk(data);
 		} catch (error) {
 			console.error(error);
@@ -310,7 +298,7 @@ export class StoryblokService extends BaseService {
 
 	async getStoryTitle(slug: string, lang: string): Promise<ServiceResult<StoryTitleData>> {
 		try {
-			const data = await this.withOptionalLanguageFallback(
+			const data = await this.withLanguageFallback(
 				async (language: string) => {
 					const response = await getStoryblokApi().get(`cdn/stories/${slug}`, await this.getStoryParams(language));
 					const responseData = response.data as { story: StoryTitleData };
@@ -564,6 +552,10 @@ export class StoryblokService extends BaseService {
 				slug,
 			);
 
+			if (!res) {
+				return this.resultFail(`Failed to fetch tag: not found for slug '${slug}'`);
+			}
+
 			return this.resultOk((res.data as { story: ISbStoryData<Tag> }).story);
 		} catch (error) {
 			console.error(error);
@@ -580,6 +572,10 @@ export class StoryblokService extends BaseService {
 				lang,
 				slug,
 			);
+
+			if (!res) {
+				return this.resultFail(`Failed to fetch article type: not found for slug '${slug}'`);
+			}
 
 			return this.resultOk((res.data as { story: ISbStoryData<ArticleType> }).story);
 		} catch (error) {
@@ -714,7 +710,7 @@ export class StoryblokService extends BaseService {
 		const storyPath = getProgramStoryPath(slug);
 
 		try {
-			const data = await this.withOptionalLanguageFallback(
+			const data = await this.withLanguageFallback(
 				async (language: string) => {
 					const response = await getStoryblokApi().get(`cdn/stories/${storyPath}`, {
 						...(await this.getStoryParams(language)),
@@ -743,7 +739,7 @@ export class StoryblokService extends BaseService {
 		const storyPath = getCampaignStoryPath(slug);
 
 		try {
-			const data = await this.withOptionalLanguageFallback(
+			const data = await this.withLanguageFallback(
 				async (language: string) => {
 					const response = await getStoryblokApi().get(`cdn/stories/${storyPath}`, {
 						...(await this.getStoryParams(language)),
@@ -1006,6 +1002,10 @@ export class StoryblokService extends BaseService {
 				slug,
 			);
 
+			if (!res) {
+				return this.resultFail(`Failed to fetch person: not found for slug '${slug}'`);
+			}
+
 			return this.resultOk((res.data as { story: ISbStoryData<Person> }).story);
 		} catch (error) {
 			console.error(error);
@@ -1159,6 +1159,10 @@ export class StoryblokService extends BaseService {
 				lang,
 				slug,
 			);
+
+			if (!res) {
+				return this.resultFail(`Failed to fetch article: not found for slug '${slug}'`);
+			}
 
 			return this.resultOk((res.data as { story: ISbStoryData<ResolvedArticle> }).story);
 		} catch (error) {
