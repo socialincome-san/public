@@ -23,18 +23,19 @@ import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
 import { TestimonialBlock } from '@/components/content-blocks/testimonial-entry';
 import { TextBlock } from '@/components/content-blocks/text';
-import { TransparencyBlock } from '@/components/content-blocks/transparency';
 import { TransparencyCountriesBlock } from '@/components/content-blocks/transparency-countries-block';
 import { TransparencySummaryBlock } from '@/components/content-blocks/transparency-summary-block';
+import { TwoColumnBlock } from '@/components/content-blocks/two-column';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsletter-signup';
-import type { Page } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Page, TwoColumn } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { ParsedUrlQueryInput } from 'querystring';
-import { Fragment } from 'react';
+import { Fragment, type ReactNode } from 'react';
 
 type PageBlock = Page['content'][number];
+type NestedPageBlock = Extract<TwoColumn['leftColumn'][number], PageBlock>;
 type RichtextButtonHeaderAction = 'createProgram';
 
 type PageContentTypeProps = {
@@ -46,12 +47,12 @@ type PageContentTypeProps = {
 };
 
 const renderPageBlock = (
-	block: PageBlock,
+	block: PageBlock | NestedPageBlock,
 	lang: WebsiteLanguage,
 	region: WebsiteRegion,
 	searchParams?: ParsedUrlQueryInput,
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction,
-) => {
+): ReactNode => {
 	switch (block.component) {
 		case 'donationGlobe':
 			return <DonationGlobeBlock blok={block} lang={lang} />;
@@ -105,12 +106,28 @@ const renderPageBlock = (
 			return <TestimonialCarouselBlock blok={block} />;
 		case 'text':
 			return <TextBlock blok={block} />;
-		case 'transparency':
-			return <TransparencyBlock blok={block} lang={lang} />;
 		case 'transparencyCountries':
 			return <TransparencyCountriesBlock blok={block} lang={lang} />;
 		case 'transparencySummary':
 			return <TransparencySummaryBlock blok={block} lang={lang} />;
+		case 'twoColumn': {
+			const renderColumn = (column: typeof block.leftColumn) =>
+				column.length > 0
+					? column.map((columnBlock) => (
+							<Fragment key={columnBlock._uid}>
+								{renderPageBlock(columnBlock, lang, region, searchParams, richtextButtonHeaderAction)}
+							</Fragment>
+						))
+					: undefined;
+
+			return (
+				<TwoColumnBlock
+					blok={block}
+					leftColumn={renderColumn(block.leftColumn)}
+					rightColumn={renderColumn(block.rightColumn)}
+				/>
+			);
+		}
 		case 'twoColumnText':
 			return <TwoColumnTextBlock blok={block} />;
 		case 'videoText':
