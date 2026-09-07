@@ -16,6 +16,13 @@ const meta = {
 	title: 'Components/DatePicker',
 	component: InteractiveDatePicker,
 	tags: ['autodocs'],
+
+	parameters: {
+		design: {
+			type: 'figma',
+			url: 'https://www.figma.com/design/IDEMMGr7QkVOY4Ksbgbc57/Social-Income---shadcn-UI-Kit?node-id=244-2898&p=f&t=uDt5Wmo7FudNnpiF-0',
+		},
+	},
 	args: {
 		placeholder: 'Select date',
 	},
