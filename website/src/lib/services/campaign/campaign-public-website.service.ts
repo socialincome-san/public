@@ -7,7 +7,8 @@ import type { ISbStoryData } from '@storyblok/js';
 import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
 import type { StoryblokService } from '../storyblok/storyblok.service';
-import type { CampaignPageContent } from './campaign-public-website.types';
+import { formatStoryblokUrl } from '../storyblok/storyblok.utils';
+import type { CampaignNewsletterContent, CampaignPageContent } from './campaign-public-website.types';
 
 const campaignPageNamespaces = [
 	'website-campaign',
@@ -16,6 +17,15 @@ const campaignPageNamespaces = [
 	'website-newsletter',
 	'website-faq',
 ] as const;
+
+const NEWSLETTER_IMAGE_SIZE = 60;
+
+const emptyNewsletterContent: CampaignNewsletterContent = {
+	title: '',
+	senderName: '',
+	imageSrc: null,
+	imageAlt: '',
+};
 
 export class CampaignPublicWebsiteService extends BaseService {
 	private readonly storyblok: StoryblokService;
@@ -27,48 +37,28 @@ export class CampaignPublicWebsiteService extends BaseService {
 
 	async getPageContent(lang: WebsiteLanguage, campaignFaqs?: Campaign['faq']): Promise<ServiceResult<CampaignPageContent>> {
 		try {
-			const [translator, faqs, videoPlaybackIds] = await Promise.all([
+			const [translator, globalsResult] = await Promise.all([
 				Translator.getInstance({ language: lang, namespaces: [...campaignPageNamespaces] }),
-				this.resolveCampaignFaqs(lang, campaignFaqs),
-				this.resolveVideoPlaybackIds(lang),
+				this.storyblok.getStoryWithFallback<ISbStoryData<CampaignGlobals>>(STORYBLOK_CAMPAIGN_GLOBALS_PATH, lang),
 			]);
 
-			return this.resultOk({ translator, faqs, videoPlaybackIds });
+			const globals = globalsResult.success ? globalsResult.data.content : null;
+			const faqs = campaignFaqs?.length
+				? CampaignPublicWebsiteService.toResolvedFaqs(campaignFaqs)
+				: globals
+					? CampaignPublicWebsiteService.toResolvedFaqs(globals.faq)
+					: [];
+			const videoPlaybackIds = globals ? CampaignPublicWebsiteService.toVideoPlaybackIds(globals) : [];
+			const newsletter = globals
+				? CampaignPublicWebsiteService.toNewsletterContent(globals)
+				: emptyNewsletterContent;
+
+			return this.resultOk({ translator, faqs, videoPlaybackIds, newsletter });
 		} catch (error) {
 			console.error(error);
 
 			return this.resultFail(`Could not load campaign page content: ${JSON.stringify(error)}`);
 		}
-	}
-
-	private async resolveCampaignFaqs(lang: WebsiteLanguage, campaignFaqs?: Campaign['faq']): Promise<ISbStoryData<Faq>[]> {
-		if (campaignFaqs?.length) {
-			return CampaignPublicWebsiteService.toResolvedFaqs(campaignFaqs);
-		}
-
-		const globalsResult = await this.storyblok.getStoryWithFallback<ISbStoryData<CampaignGlobals>>(
-			STORYBLOK_CAMPAIGN_GLOBALS_PATH,
-			lang,
-		);
-
-		if (!globalsResult.success) {
-			return [];
-		}
-
-		return CampaignPublicWebsiteService.toResolvedFaqs(globalsResult.data.content.faq);
-	}
-
-	private async resolveVideoPlaybackIds(lang: WebsiteLanguage): Promise<string[]> {
-		const globalsResult = await this.storyblok.getStoryWithFallback<ISbStoryData<CampaignGlobals>>(
-			STORYBLOK_CAMPAIGN_GLOBALS_PATH,
-			lang,
-		);
-
-		if (!globalsResult.success) {
-			return [];
-		}
-
-		return CampaignPublicWebsiteService.toVideoPlaybackIds(globalsResult.data.content);
 	}
 
 	private static toResolvedFaqs(faqReferences: (ISbStoryData<Faq> | string)[]): ISbStoryData<Faq>[] {
@@ -79,6 +69,20 @@ export class CampaignPublicWebsiteService extends BaseService {
 		return [globals.muxPlaybackId1, globals.muxPlaybackId2, globals.muxPlaybackId3]
 			.map((value) => CampaignPublicWebsiteService.normalizeMuxPlaybackId(value))
 			.filter((playbackId): playbackId is string => playbackId !== null);
+	}
+
+	private static toNewsletterContent(globals: CampaignGlobals): CampaignNewsletterContent {
+		const senderName = globals.newsletterSenderName?.trim() ?? '';
+		const filename = globals.newsletterImage?.filename?.trim();
+
+		return {
+			title: globals.newsletterTitle?.trim() ?? '',
+			senderName,
+			imageSrc: filename
+				? formatStoryblokUrl(filename, NEWSLETTER_IMAGE_SIZE, NEWSLETTER_IMAGE_SIZE, globals.newsletterImage.focus)
+				: null,
+			imageAlt: globals.newsletterImage?.alt?.trim() || senderName,
+		};
 	}
 
 	private static normalizeMuxPlaybackId(value: string): string | null {

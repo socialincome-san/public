@@ -10,6 +10,9 @@
 		"toast-success": "Thank you for subscribing to our newsletter!",
 		"toast-failure": "Something went wrong. Try again or contact us at hello@socialincome.org",
 		"email-placeholder": "Your email",
-		"button-subscribe": "Subscribe now"
+		"button-subscribe": "Subscribe now",
+		"first-name": "First Name",
+		"email": "E-Mail",
+		"sent-by": "Newsletter sent by"
 	}
 }

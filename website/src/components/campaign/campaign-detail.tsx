@@ -69,14 +69,15 @@ export const CampaignDetail = async ({
 	if (!pageContentResult.success) {
 		throw new Error(pageContentResult.error);
 	}
-	const { translator, faqs, videoPlaybackIds } = pageContentResult.data;
+	const { translator, faqs, videoPlaybackIds, newsletter } = pageContentResult.data;
 	const trimmedDescription = description.trim();
 	const submissionLabels = buildCampaignSubmissionLabels(translator);
 	const newsletterTranslations = {
-		title: translator.t('popup.information-label'),
-		emailLabel: translator.t('updates.email'),
+		firstNameLabel: translator.t('popup.first-name'),
+		emailLabel: translator.t('popup.email'),
 		emailPlaceholder: translator.t('popup.email-placeholder'),
 		buttonAddSubscriber: translator.t('popup.button-subscribe'),
+		sentBy: translator.t('popup.sent-by'),
 		toastSuccess: translator.t('popup.toast-success'),
 		toastFailure: translator.t('popup.toast-failure'),
 	};
@@ -129,7 +130,14 @@ export const CampaignDetail = async ({
 				lang={lang}
 				region={region}
 			/>
-			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
+			<CampaignNewsletter
+				lang={lang}
+				title={newsletter.title}
+				senderName={newsletter.senderName}
+				imageSrc={newsletter.imageSrc}
+				imageAlt={newsletter.imageAlt}
+				translations={newsletterTranslations}
+			/>
 			<CampaignVideoSlider translations={videoSliderTranslations} videoPlaybackIds={videoPlaybackIds} />
 			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />
 			<CampaignJournalTeaser lang={lang} region={region} />
