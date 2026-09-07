@@ -55,13 +55,14 @@
 			"donation-certificates-long": "Attestations de don"
 		}
 	},
+	"donate-now": "Faire un don",
 	"contributions": {
 		"amount": "Paiements",
 		"date": "Date",
 		"created": "Créé",
 		"updated": "Mis à jour",
-		"currency": "Devise",
-		"campaign": "Campagne",
+		"payment-type": "Type de paiement",
+		"attribution": "Attribution",
 		"sources": {
 			"benevity": "Benevity",
 			"cash": "Cash",
@@ -76,14 +77,12 @@
 			"unknown": "Inconnu"
 		},
 		"status-title": "Statut",
-		"no-contributions": "Aucune contribution trouvée",
-		"new-contribution": "Faire une contribution"
+		"no-contributions": "Aucune contribution trouvée"
 	},
 	"subscriptions": {
 		"amount": "Montant",
 		"created": "Créé",
 		"payment-method": "Méthode de paiement",
-		"new-subscription": "Nouvelle souscription",
 		"interval": "Interval",
 		"interval-1": "Mensuel",
 		"interval-3": "Trimestriel",
@@ -95,7 +94,89 @@
 		},
 		"status-title": "Statut",
 		"manage-subscriptions": "Gérer les souscriptions",
-		"no-subscriptions": "Aucune souscription trouvée"
+		"edit": "Modifier",
+		"view-qr": "Voir le QR",
+		"qr-dialog": {
+			"title": "Ton bulletin QR",
+			"unavailable": "Impossible de générer le QR code. Réessaie plus tard.",
+			"close": "Fermer"
+		},
+		"edit-dialog": {
+			"title": "Modifier la souscription",
+			"monthly-contribution": "Contribution mensuelle",
+			"transaction-fees": "Frais de transaction",
+			"payment-method": "Moyen de paiement",
+			"per-month-suffix": "/ mois",
+			"update-card": "Mettre à jour la carte",
+			"cancel-subscription": "Annuler la souscription",
+			"cancel": "Annuler",
+			"update-subscription": "Mettre à jour la souscription",
+			"updating-subscription": "Mise à jour de la souscription",
+			"success-title": "Souscription mise à jour",
+			"success-message": "Ta contribution mensuelle mise à jour est maintenant active.",
+			"success-thanks": "Merci de soutenir Social Income.",
+			"standing-order-title": "Mets à jour ton ordre permanent",
+			"standing-order-description": "Mets à jour le montant dans ton e-banking après l'enregistrement.",
+			"download-qr": "Télécharger le QR-Code",
+			"done": "Terminé",
+			"error": "Impossible de mettre à jour la souscription. Réessaie s'il te plaît.",
+			"update-card-error": "Impossible d'ouvrir la mise à jour de la carte. Réessaie s'il te plaît.",
+			"update-card-unsaved-warning": "Tu as des modifications de montant non enregistrées. Quitter sans enregistrer ?",
+			"update-card-stay": "Rester",
+			"update-card-leave": "Quitter sans enregistrer",
+			"back": "Retour",
+			"cancel-retention-title": "Annuler la souscription",
+			"cancel-retention-heading": "Es-tu sûr·e de vouloir annuler cette souscription ?",
+			"cancel-retention-card-title": "Réduire ton montant t'aiderait-il ?",
+			"cancel-retention-other": "Autre",
+			"cancel-retention-or": "Ou",
+			"cancel-retention-continue": "Non, je veux annuler",
+			"cancel-reason-title": "Raison de l'annulation",
+			"cancel-reason-heading": "Nous sommes désolés de te voir partir. Peux-tu nous dire pourquoi ?",
+			"cancel-reason-confirm": "Annuler la souscription",
+			"canceling-subscription": "Annulation de la souscription",
+			"cancel-success-title": "Souscription annulée",
+			"cancel-success-message": "Ta souscription a été annulée. Aucun autre paiement ne sera débité.",
+			"bank-cancel-success-message": "Ta souscription a été annulée ici. Merci d'arrêter aussi l'ordre permanent dans ta banque afin qu'aucun autre paiement ne soit effectué.",
+			"cancel-success-thanks": "Merci de soutenir Social Income.",
+			"cancel-error": "Impossible d'annuler la souscription. Réessaie s'il te plaît.",
+			"cancel-reasons": {
+				"financial_situation_changed": "Ma situation financière a changé",
+				"different_cause": "Je veux soutenir une autre cause",
+				"not_enough_updates": "Je ne reçois pas assez de nouvelles",
+				"technical_issue": "J'ai eu un problème technique",
+				"prefer_one_time": "Je préfère les dons ponctuels",
+				"pausing": "Je fais une pause pour l'instant",
+				"other": "Autre"
+			}
+		},
+		"no-subscriptions": "Aucune souscription trouvée",
+		"load-error": "Impossible de charger les souscriptions. Réessaie s'il te plaît.",
+		"retry": "Réessayer",
+		"summary": {
+			"monthly-contribution": "Contribution mensuelle",
+			"total-contributions": "Contributions totales",
+			"no-active-subscriptions": "Aucune souscription active",
+			"active-subscriptions-count": "{{count}} souscriptions actives",
+			"contributions-since": "{{count}} contributions depuis le {{date}}",
+			"no-contributions-yet": "Aucune contribution pour l'instant"
+		},
+		"active-subscriptions": "Souscriptions actives",
+		"upcoming-payments": "Paiements à venir",
+		"scheduled": "Planifié",
+		"per-month": "par mois",
+		"since": "depuis le",
+		"card-fallback": "Carte",
+		"cover-transaction-costs": {
+			"nudge-prefix": "Les paiements par carte coûtent env.",
+			"nudge-fee": "{{fee}}/mois",
+			"nudge-middle": "de frais de traitement.",
+			"nudge-cta": "Aidez à garder les coûts bas — couvrez les frais de transaction."
+		},
+		"empty": {
+			"description": "Tu as contribué {{amount}} en {{count}} virements.\nPrêt·e à reprendre là où tu t'es arrêté·e ?",
+			"description-no-contributions": "Commence à soutenir quelqu'un aujourd'hui."
+		}
 	},
 	"donation-certificates": {
 		"created": "Créé",

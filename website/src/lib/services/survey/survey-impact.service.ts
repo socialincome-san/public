@@ -1,7 +1,6 @@
-import { CountryCode, Gender, Prisma, PrismaClient, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
+import { CountryCode, Gender, Prisma, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/client';
 import { RECIPIENT_AGE_GROUP_BOUNDS, RECIPIENT_AGE_GROUPS } from '@/lib/constants/recipient-age-groups';
 import { QUESTIONS } from '@/lib/types/question';
-import { logger } from '@/lib/utils/logger';
 import { now, nowMs } from '@/lib/utils/now';
 import { differenceInDays, max, min } from 'date-fns';
 import { getQuestionnaire } from '../../../app/[lang]/[region]/survey/[recipient]/[survey]/questionnaires';
@@ -29,10 +28,6 @@ const defaultQuestionnaires: SurveyQuestionnaire[] = [
 
 export class SurveyImpactService extends BaseService {
 	private static questionQuestionnairesCache: Record<string, SurveyQuestionnaire[]> | null = null;
-
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
 
 	private getAnswerValue(response: AnswerRecord, questionName: string): Prisma.JsonValue | undefined {
 		const legacyQuestionName = questionName.replace(/V\d+$/, '');
@@ -491,7 +486,7 @@ export class SurveyImpactService extends BaseService {
 				questions,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load survey impact measurements: ${JSON.stringify(error)}`);
 		}
@@ -575,7 +570,7 @@ export class SurveyImpactService extends BaseService {
 				questionnaires,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load survey impact filter options: ${JSON.stringify(error)}`);
 		}
@@ -660,7 +655,7 @@ export class SurveyImpactService extends BaseService {
 				ageBreakdown: this.toBreakdownItems(ageCounts, uniqueRecipients.size, false),
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load survey impact study details: ${JSON.stringify(error)}`);
 		}

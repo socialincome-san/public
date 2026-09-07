@@ -1,4 +1,4 @@
-import { Card } from '@/components/card';
+import { Card } from '@/components/card/card';
 import { SurveyImpactQuestion } from '@/lib/services/survey/survey-impact.types';
 import { ReactNode } from 'react';
 import { ImpactMeasurementQuestionContent } from './question-content';

@@ -1,5 +1,4 @@
 import { PayoutStatus, PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
@@ -12,9 +11,8 @@ export class PayoutWriteService extends BaseService {
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly payoutValidationService: PayoutValidationService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async updatePayoutStatus(userId: string, payoutId: string, newStatus: PayoutStatus): Promise<ServiceResult<string>> {
@@ -56,7 +54,7 @@ export class PayoutWriteService extends BaseService {
 
 			return this.resultOk(`Payout updated to "${newStatus}"`);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not update payout: ${JSON.stringify(error)}`);
 		}
@@ -130,7 +128,7 @@ export class PayoutWriteService extends BaseService {
 				},
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not create payout: ${JSON.stringify(error)}`);
 		}
@@ -219,7 +217,7 @@ export class PayoutWriteService extends BaseService {
 				},
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not update payout: ${JSON.stringify(error)}`);
 		}
@@ -267,7 +265,7 @@ export class PayoutWriteService extends BaseService {
 
 			return this.resultOk({ id: payoutId });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not delete payout: ${JSON.stringify(error)}`);
 		}
@@ -294,7 +292,7 @@ export class PayoutWriteService extends BaseService {
 
 			return this.resultOk(updated);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to update payout "${payoutId}": ${JSON.stringify(error)}`);
 		}

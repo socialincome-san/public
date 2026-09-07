@@ -1,5 +1,7 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { CampaignsGridSection } from '@/components/campaign/campaigns-grid-section';
+import { resolveCampaignsWithCmsEntries } from '@/components/campaign/campaigns-overview.server';
+import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
@@ -13,14 +15,25 @@ type Props = {
 };
 
 export const CampaignOtherCampaignsTeaser = async ({ currentCampaignSlug, lang, region }: Props) => {
-	const [translator, dataResult] = await Promise.all([
+	const [translator, campaignStoriesResult, campaignsResult] = await Promise.all([
 		Translator.getInstance({ language: lang, namespaces: ['website-campaign'] }),
-		services.read.campaign.getOtherPublicCampaignsWithStats(currentCampaignSlug, TEASER_LIMIT),
+		services.storyblok.getCampaigns(lang),
+		services.read.campaign.getAllCampaignsForCmsJoinWithStats({ activity: 'active' }),
 	]);
 
-	if (!dataResult.success || dataResult.data.campaigns.length === 0) {
+	const campaignStories = (campaignStoriesResult.success ? campaignStoriesResult.data : []) as CampaignStory[];
+	const campaignsData = campaignsResult.success ? campaignsResult.data : { campaigns: [], statsById: {} };
+	const resolved = resolveCampaignsWithCmsEntries(campaignStories, campaignsData.campaigns, campaignsData.statsById);
+	const campaigns = resolved.campaigns.filter((campaign) => campaign.slug !== currentCampaignSlug).slice(0, TEASER_LIMIT);
+
+	if (campaigns.length === 0) {
 		return null;
 	}
+
+	const campaignIds = new Set(campaigns.map((campaign) => campaign.id));
+	const statsById = Object.fromEntries(
+		Object.entries(resolved.statsById).filter(([campaignId]) => campaignIds.has(campaignId)),
+	);
 
 	return (
 		<BlockWrapper>
@@ -31,7 +44,7 @@ export const CampaignOtherCampaignsTeaser = async ({ currentCampaignSlug, lang, 
 						<strong>{translator.t('campaign.other-campaigns.heading-emphasis')}</strong>
 					</>
 				}
-				data={dataResult.data}
+				data={{ campaigns, statsById }}
 				lang={lang}
 				region={region}
 				cta={{

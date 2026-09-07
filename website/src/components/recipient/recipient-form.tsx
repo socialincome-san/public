@@ -15,6 +15,7 @@ import {
 	deleteRecipientAction,
 	getRecipientAction,
 	getRecipientOptions,
+	removeRecipientFromProgramAction,
 	updateRecipientAction,
 } from '@/lib/server-actions/recipient-actions';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
@@ -171,6 +172,20 @@ export const RecipientForm = ({
 		});
 	};
 
+	const onRemoveFromProgram = () => {
+		if (!recipientId) {
+			return;
+		}
+
+		startTransition(async () => {
+			const result = await removeRecipientFromProgramAction(recipientId, sessionType);
+			handleServiceResult(result, {
+				onSuccess: () => onSuccess?.(),
+				onError: (error) => onError?.(error),
+			});
+		});
+	};
+
 	useEffect(() => {
 		if (recipientId) {
 			// Load recipient in edit mode
@@ -297,6 +312,16 @@ export const RecipientForm = ({
 	}, [sessionType, programId]);
 
 	const mode = recipientId ? 'edit' : 'add';
+	const extraAction =
+		recipient?.program && sessionType === 'user'
+			? {
+					label: 'Remove from program',
+					confirmTitle: 'Remove from program?',
+					confirmDescription:
+						'The recipient stays in the pool and can be reassigned to a program later. This is only possible for recipients without payouts.',
+					onConfirm: onRemoveFromProgram,
+				}
+			: undefined;
 
 	return (
 		<DynamicForm
@@ -305,6 +330,7 @@ export const RecipientForm = ({
 			onSubmit={onSubmit}
 			onCancel={onCancel}
 			onDelete={onDelete}
+			extraAction={extraAction}
 			mode={mode}
 		/>
 	);

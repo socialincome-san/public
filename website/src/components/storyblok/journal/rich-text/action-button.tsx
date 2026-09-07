@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import type { ActionButton } from '@/generated/storyblok/types/109655/storyblok-components';
 import Link from 'next/link';
 

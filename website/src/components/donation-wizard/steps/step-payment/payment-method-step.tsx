@@ -4,8 +4,9 @@ import { OnlinePaymentLogos } from '@/components/payment-logos/online-payment-lo
 import { QrPaymentLogo } from '@/components/payment-logos/qr-payment-logo';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
-import { isWizardQrCurrencySupported, resolveWizardPaymentMethod } from '@/lib/services/qr-bill/wizard-qr-payment';
+import { isWizardQrCurrencySupported } from '@/lib/services/qr-bill/wizard-qr-payment';
 import { cn } from '@/lib/utils/cn';
+import { useEffect } from 'react';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import { selectPaymentView } from '../../wizard/donation-machine-selectors';
@@ -17,13 +18,28 @@ import { PaymentMethodOption } from './payment-method-option';
 export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
-	const view = selectPaymentView(state.context);
+	const view = selectPaymentView(state.context, currency);
 	const isQrAvailable = isWizardQrCurrencySupported(currency);
-	const paymentMethod = resolveWizardPaymentMethod(view.paymentMethod, currency);
+
+	useEffect(() => {
+		if (view.paymentMethod !== state.context.paymentMethod) {
+			send({ type: 'SET_PAYMENT_METHOD', value: view.paymentMethod });
+		}
+
+		if (view.coverTransactionCosts !== state.context.coverTransactionCosts) {
+			send({ type: 'SET_COVER_TRANSACTION_COSTS', value: view.coverTransactionCosts });
+		}
+	}, [
+		send,
+		state.context.coverTransactionCosts,
+		state.context.paymentMethod,
+		view.coverTransactionCosts,
+		view.paymentMethod,
+	]);
 
 	return (
 		<div
-			className={cn(getDonationWizardCardClass('stepPayment'), 'text-foreground flex w-full flex-col')}
+			className={cn(getDonationWizardCardClass('stepPayment'), 'text-foreground flex w-full max-w-full min-w-0 flex-col')}
 			data-testid="donation-wizard-step-payment"
 		>
 			<h3 className="mb-4 text-base font-medium sm:text-lg">{t('stepPayment.title')}</h3>
@@ -32,7 +48,7 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 				<PaymentMethodOption
 					label={t('stepPayment.qr-payment')}
 					badge={t('stepPayment.minimal-costs')}
-					selected={paymentMethod === 'qr'}
+					selected={view.paymentMethod === 'qr'}
 					disabled={!isQrAvailable}
 					disabledReason={!isQrAvailable ? t('stepPayment.qr-payment-unavailable') : undefined}
 					onSelect={() => send({ type: 'SET_PAYMENT_METHOD', value: 'qr' })}
@@ -41,14 +57,14 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 				/>
 				<PaymentMethodOption
 					label={t('stepPayment.online')}
-					selected={paymentMethod === 'online'}
+					selected={view.paymentMethod === 'online'}
 					onSelect={() => send({ type: 'SET_PAYMENT_METHOD', value: 'online' })}
 					trailing={<OnlinePaymentLogos />}
 					testId="donation-wizard-payment-online"
 				/>
 			</div>
 
-			{paymentMethod === 'online' && (
+			{view.paymentMethod === 'online' && (
 				<div className="mb-5">
 					<CoverTransactionCostsToggle
 						cadence={view.cadence}
@@ -63,19 +79,29 @@ export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 			<DonationStepFooter
 				onBack={() => send({ type: 'BACK' })}
 				onContinue={() => {
-					if (paymentMethod === 'online') {
-						if (view.paymentMethod !== 'online') {
+					if (view.paymentMethod === 'online') {
+						const checkoutContext = {
+							...state.context,
+							paymentMethod: 'online' as const,
+							coverTransactionCosts: view.coverTransactionCosts,
+						};
+
+						if (state.context.paymentMethod !== 'online') {
 							send({ type: 'SET_PAYMENT_METHOD', value: 'online' });
 						}
+						if (state.context.coverTransactionCosts !== view.coverTransactionCosts) {
+							send({ type: 'SET_COVER_TRANSACTION_COSTS', value: view.coverTransactionCosts });
+						}
+
 						send({ type: 'START_STRIPE_CHECKOUT' });
-						void requestStripeEmbeddedCheckout({ ...state.context, paymentMethod: 'online' }, currency, send);
+						void requestStripeEmbeddedCheckout(checkoutContext, currency, send);
 
 						return;
 					}
 
 					send({ type: 'START_QR_FLOW' });
 				}}
-				continueLabel={t(paymentMethod === 'qr' ? 'stepPayment.generate-qr-code' : 'stepPayment.pay-online')}
+				continueLabel={t(view.paymentMethod === 'qr' ? 'stepPayment.generate-qr-code' : 'stepPayment.pay-online')}
 				summary={{
 					amount: view.summary.amount,
 					currency,

@@ -1,5 +1,4 @@
 import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
@@ -12,9 +11,8 @@ export class ExpenseWriteService extends BaseService {
 		db: PrismaClient,
 		private readonly userService: UserReadService,
 		private readonly expenseValidationService: ExpenseValidationService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async create(userId: string, input: ExpenseFormCreateInput): Promise<ServiceResult<ExpensePayload>> {
@@ -58,7 +56,7 @@ export class ExpenseWriteService extends BaseService {
 				organization: created.organization,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not create expense. Please try again later.');
 		}
@@ -110,7 +108,7 @@ export class ExpenseWriteService extends BaseService {
 				organization: updated.organization,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not update expense. Please try again later.');
 		}

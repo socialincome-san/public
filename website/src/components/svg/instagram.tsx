@@ -3,7 +3,15 @@ type Props = {
 };
 
 export const InstagramIcon = ({ className = '' }: Props) => (
-	<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" className={className}>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="20"
+		height="20"
+		viewBox="0 0 20 20"
+		fill="none"
+		className={className}
+		aria-hidden="true"
+	>
 		<path
 			d="M15.3293 5.85177C14.6671 5.85306 14.1286 5.31684 14.1273 4.65457C14.126 3.9923 14.6622 3.45381 15.3248 3.45251C15.9874 3.45122 16.5259 3.98776 16.5272 4.65003C16.5281 5.3123 15.9919 5.85047 15.3293 5.85177Z"
 			fill="currentColor"

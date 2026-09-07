@@ -1,6 +1,6 @@
 'use client';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteCurrency, websiteCurrencies } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
@@ -22,7 +22,7 @@ export const DonationCurrencySelector = ({ currencies, className }: Props) => {
 				}
 			}}
 		>
-			<SelectTrigger className={cn('h-12 w-auto min-w-20 rounded-xl', className)}>
+			<SelectTrigger className={cn('h-9 w-auto min-w-20 rounded-full', className)}>
 				<SelectValue>{currency}</SelectValue>
 			</SelectTrigger>
 			<SelectContent>

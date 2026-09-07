@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/button';
-import { Input } from '@/components/input';
+import { Button } from '@/components/button/button';
+import { Input } from '@/components/input/input';
 import { SegmentedToggle } from '@/components/segmented-toggle';
 import { createPortalProgramDonationCheckoutAction } from '@/lib/server-actions/stripe-wizard-actions';
 import { useRouter } from 'next/navigation';

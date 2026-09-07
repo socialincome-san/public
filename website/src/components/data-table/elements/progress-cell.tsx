@@ -1,7 +1,7 @@
 'use client';
 
 import { CellType } from '@/components/data-table/elements/types';
-import { Progress } from '@/components/progress';
+import { Progress } from '@/components/progress/progress';
 
 export const ProgressCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const percent = ctx.getValue() as number;

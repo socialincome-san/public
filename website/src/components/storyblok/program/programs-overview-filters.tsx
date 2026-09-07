@@ -30,7 +30,7 @@ export const ProgramsOverviewFilters = ({
 	queryParamOverrides,
 }: ProgramsOverviewFiltersProps) => {
 	return (
-		<div className="flex min-h-10 flex-1 flex-wrap items-center gap-2">
+		<>
 			<FilterDropdown
 				allLabel={allCountriesLabel}
 				options={countryOptions}
@@ -47,6 +47,6 @@ export const ProgramsOverviewFilters = ({
 					queryParamOverrides={queryParamOverrides}
 				/>
 			)}
-		</div>
+		</>
 	);
 };

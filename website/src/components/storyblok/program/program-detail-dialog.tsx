@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import { cn } from '@/lib/utils/cn';

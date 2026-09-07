@@ -1,14 +1,14 @@
 'use client';
 
 import { CellType } from '@/components/data-table/elements/types';
-import { ContributionStatus, PayoutStatus, SurveyStatus } from '@/generated/prisma/enums';
+import { ContributionStatus, PayoutStatus, SubscriptionStatus, SurveyStatus } from '@/generated/prisma/enums';
 
 import { BooleanBadge } from '@/components/badges/boolean-badge';
 import { CampaignStatusBadge } from '@/components/badges/campaign-status-badge';
 import { ContributionStatusBadge } from '@/components/badges/contribution-status-badge';
 import { PayoutStatusBadge } from '@/components/badges/payout-status-badge';
 import { RecipientStatusBadge } from '@/components/badges/recipient-status-badge';
-import { SubscriptionStatus, SubscriptionStatusBadge } from '@/components/badges/subscription-status-badge';
+import { SubscriptionStatusBadge } from '@/components/badges/subscription-status-badge';
 import { SurveyStatusBadge } from '@/components/badges/survey-status-badge';
 import type { RecipientLifecycleStatus } from '@/lib/services/recipient/recipient.types';
 

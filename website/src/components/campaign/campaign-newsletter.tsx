@@ -1,9 +1,9 @@
 'use client';
 
 import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
 import { CreateNewsletterSubscription } from '@/lib/services/sendgrid/types';
 import { LanguageCode } from '@/lib/types/language';

@@ -1,4 +1,4 @@
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import type { TwilioTemplateSummary } from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
 import Link from 'next/link';

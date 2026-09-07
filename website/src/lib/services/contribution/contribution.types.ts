@@ -84,6 +84,7 @@ export type YourContributionsTableViewRow = {
 	updatedAt: Date | null;
 	amount: number;
 	currency: Currency;
+	paymentEventType: PaymentEventType | null;
 	campaignTitle: string;
 	status: ContributionStatus;
 };
@@ -99,4 +100,10 @@ export type YourContributionsTableQuery = {
 export type YourContributionsPaginatedTableView = {
 	tableRows: YourContributionsTableViewRow[];
 	totalCount: number;
+};
+
+export type ContributorContributionSummary = {
+	totalAmountChf: number;
+	count: number;
+	firstContributionAt: Date | null;
 };

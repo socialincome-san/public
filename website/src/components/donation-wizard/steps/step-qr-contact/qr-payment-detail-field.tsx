@@ -6,6 +6,6 @@ type QrPaymentDetailFieldProps = {
 export const QrPaymentDetailField = ({ label, value }: QrPaymentDetailFieldProps) => (
 	<div className="text-foreground text-sm leading-5">
 		<p className="font-bold">{label}</p>
-		<p className="font-normal">{value}</p>
+		<p className="font-normal whitespace-pre-line">{value}</p>
 	</div>
 );

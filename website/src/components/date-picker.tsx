@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { ChevronDownIcon } from 'lucide-react';
-import { Button } from './button';
+import { Button } from './button/button';
 import { Calendar } from './calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 

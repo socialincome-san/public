@@ -1,9 +1,8 @@
 import { CardAlertFooter, type CardAlertFooterVariant } from '@/components/card-alert-footer';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
 import { cn } from '@/lib/utils/cn';
-import { InfoIcon } from 'lucide-react';
 import NextLink from 'next/link';
-import { getSdg, type SdgValue } from './sdgs';
+import { FocusSdgs } from './focus-sdgs';
+import type { SdgValue } from './sdgs';
 
 type FocusDetailCardLabels = {
 	recipients: string;
@@ -27,72 +26,12 @@ type FocusDetailCardStatProps = {
 	label: string;
 };
 
-type FocusDetailCardSdgsProps = {
-	values?: SdgValue[];
-	label: string;
-};
-
 const FocusDetailCardStat = ({ value, label }: FocusDetailCardStatProps) => (
 	<div className="flex flex-col gap-0">
 		<div className="text-2xl font-semibold text-slate-600">{value}</div>
 		<div className="text-sm font-medium text-slate-600">{label}</div>
 	</div>
 );
-
-const FocusDetailCardSdgs = ({ values = [], label }: FocusDetailCardSdgsProps) => {
-	const validSdgs = values.flatMap((value) => {
-		const sdg = getSdg(value);
-
-		return sdg ? [sdg] : [];
-	});
-
-	return (
-		<div className="flex flex-col gap-0">
-			<div className="flex min-h-7 items-center gap-1">
-				{validSdgs.length > 0 ? (
-					validSdgs.map((sdg) => (
-						<span
-							key={sdg.number}
-							className="flex size-5 items-center justify-center rounded-full text-xs leading-none font-semibold text-white"
-							style={{ backgroundColor: sdg.color }}
-							title={sdg.title}
-							aria-label={`SDG ${sdg.number}: ${sdg.title}`}
-						>
-							{sdg.number}
-						</span>
-					))
-				) : (
-					<span className="text-2xl font-semibold text-slate-600" aria-hidden>
-						-
-					</span>
-				)}
-			</div>
-			<div className="flex items-center gap-1 text-sm font-medium text-slate-600">
-				<span>{label}</span>
-				{validSdgs.length > 0 ? (
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<button
-								type="button"
-								className="pointer-events-auto relative z-10 inline-flex text-slate-600 hover:text-slate-950"
-								aria-label={`${label} information`}
-							>
-								<InfoIcon className="size-[12px]" aria-hidden />
-							</button>
-						</TooltipTrigger>
-						<TooltipContent sideOffset={8} className="max-w-[280px]">
-							<ul>
-								{validSdgs.map((sdg) => (
-									<li key={sdg.number}>{`SDG ${sdg.number}: ${sdg.title}`}</li>
-								))}
-							</ul>
-						</TooltipContent>
-					</Tooltip>
-				) : null}
-			</div>
-		</div>
-	);
-};
 
 export const FocusDetailCard = ({
 	href,
@@ -128,7 +67,7 @@ export const FocusDetailCard = ({
 					<div className="grid grid-cols-3 gap-3">
 						<FocusDetailCardStat value={recipientsCount} label={labels.recipients} />
 						<FocusDetailCardStat value={programsCount} label={labels.programs} />
-						<FocusDetailCardSdgs values={sdgValues} label={labels.sdgs} />
+						<FocusSdgs values={sdgValues} label={labels.sdgs} />
 					</div>
 				</div>
 			</div>

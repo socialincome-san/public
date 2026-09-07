@@ -1,5 +1,5 @@
 import { SendMessageDialog } from '@/app/portal/messaging/templates/[sid]/send-message-dialog';
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { twilioTemplateUrl } from '@/lib/services/twilio/messaging/twilio-console-urls';
 import type { TwilioTemplateDetail } from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
 import { ExternalLink } from 'lucide-react';

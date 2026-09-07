@@ -1,6 +1,6 @@
 import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
-import { Card } from '@/components/card';
+import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { getSessionsOrRedirect } from '@/lib/firebase/current-account';
 import { defaultRegion } from '@/lib/i18n/utils';

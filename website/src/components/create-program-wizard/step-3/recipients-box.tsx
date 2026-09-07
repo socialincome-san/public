@@ -1,7 +1,9 @@
 'use client';
 
+import { Input } from '@/components/input/input';
 import { Slider } from '@/components/slider';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useState } from 'react';
 import { IndirectImpactNotice } from './indirect-impact-notice';
 
 type Props = {
@@ -10,18 +12,64 @@ type Props = {
 	onChange: (value: number) => void;
 };
 
+const RECIPIENTS_MIN = 1;
+
+const parseRecipientCountInput = (raw: string, max: number): number | null => {
+	const trimmed = raw.trim();
+	if (trimmed === '') {
+		return null;
+	}
+
+	const parsed = Number(trimmed);
+	if (!Number.isFinite(parsed)) {
+		return null;
+	}
+
+	return Math.min(max, Math.max(RECIPIENTS_MIN, Math.round(parsed)));
+};
+
 export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const [recipientCountDraft, setRecipientCountDraft] = useState<string | null>(null);
 	const noCandidates = filteredRecipients === 0;
 	const atMax = !noCandidates && amountOfRecipients === filteredRecipients;
+	const recipientsLabel = t('step3.recipients.title');
+	const recipientCountInput = noCandidates ? '0' : (recipientCountDraft ?? String(amountOfRecipients));
+
+	const commitRecipientCount = (raw: string) => {
+		setRecipientCountDraft(null);
+		const parsed = parseRecipientCountInput(raw, filteredRecipients);
+		if (parsed !== null && parsed !== amountOfRecipients) {
+			onChange(parsed);
+		}
+	};
 
 	return (
 		<div className="flex h-full flex-col overflow-hidden rounded-xl border">
 			<div className="space-y-6 p-8">
-				<h3 className="font-medium">{t('step3.recipients.title')}</h3>
+				<h3 className="font-medium">{recipientsLabel}</h3>
 
 				<div className="flex justify-center">
-					<div className="rounded-lg border px-5 py-2 text-3xl">{noCandidates ? 0 : amountOfRecipients}</div>
+					<Input
+						type="number"
+						inputMode="numeric"
+						name="amountOfRecipients"
+						autoComplete="off"
+						min={RECIPIENTS_MIN}
+						max={filteredRecipients}
+						disabled={noCandidates}
+						value={recipientCountInput}
+						onChange={(event) => setRecipientCountDraft(event.target.value)}
+						onBlur={(event) => commitRecipientCount(event.target.value)}
+						onKeyDown={(event) => {
+							if (event.key === 'Enter') {
+								event.currentTarget.blur();
+							}
+						}}
+						className="h-auto w-32 rounded-lg px-5 py-2 text-center text-3xl tabular-nums shadow-none"
+						aria-label={recipientsLabel}
+						data-testid="recipients-count-input"
+					/>
 				</div>
 
 				{noCandidates ? (
@@ -32,15 +80,19 @@ export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange
 					<>
 						<Slider
 							data-testid="recipients-slider"
-							min={1}
+							min={RECIPIENTS_MIN}
 							max={filteredRecipients}
 							step={1}
 							value={[amountOfRecipients]}
-							onValueChange={([v]) => onChange(v)}
+							onValueChange={([value]) => {
+								setRecipientCountDraft(null);
+								onChange(value);
+							}}
+							aria-label={recipientsLabel}
 						/>
 
 						<div className="text-muted-foreground flex justify-between text-xs">
-							<span>1</span>
+							<span>{RECIPIENTS_MIN}</span>
 							<span>{filteredRecipients}</span>
 						</div>
 

@@ -3,7 +3,7 @@
 import {
 	type CreateWizardPendingContributionInput,
 	type CreateWizardQrReferencesInput,
-	type DownloadWizardQrBillPdfInput,
+	type DownloadQrBillPdfInput,
 	type GetQrOnboardingPrefillInput,
 	type UpdateContributorAfterQrPaymentInput,
 	type UpdateContributorReferralAfterQrPaymentInput,
@@ -30,6 +30,6 @@ export const updateContributorReferralAfterWizardQrAction = async (input: Update
 	return services.qrBill.updateReferralAfterQrPayment(input);
 };
 
-export const downloadWizardQrBillPdfAction = async (input: DownloadWizardQrBillPdfInput) => {
-	return services.qrBill.downloadWizardQrBillPdf(input);
+export const downloadQrBillPdfAction = async (input: DownloadQrBillPdfInput) => {
+	return services.qrBill.downloadQrBillPdf(input);
 };

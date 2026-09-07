@@ -76,7 +76,7 @@ class AccountPageState extends State<AccountPage> {
       text: widget.recipient.paymentInformation?.phone.number ?? "",
     );
     _mobileMoneyProviderController = TextEditingController(
-      text: widget.recipient.paymentInformation?.mobileMoneyProvider.name ?? "",
+      text: widget.recipient.paymentInformation?.mobileMoneyProvider?.name ?? "???",
     );
     _contactNumberController = TextEditingController(
       text: widget.recipient.contact.phone?.number ?? "",

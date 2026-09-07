@@ -1,5 +1,6 @@
 import { Contact, Gender } from '@/generated/prisma/client';
 import { LanguageCode } from '@/lib/types/language';
+import { extraProgramRecipientContactsData } from './program-recipient-extras.data';
 import { phonesData } from './phones.data';
 
 const createdAt = new Date('2025-01-01T13:00:00.000Z');
@@ -869,4 +870,9 @@ const candidateContacts: Contact[] = candidateContactDefinitions.map(
 	}),
 );
 
-export const contactsData: Contact[] = [...baseContacts, ...recipientContacts, ...candidateContacts];
+export const contactsData: Contact[] = [
+	...baseContacts,
+	...recipientContacts,
+	...candidateContacts,
+	...extraProgramRecipientContactsData,
+];

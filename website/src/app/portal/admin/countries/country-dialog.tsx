@@ -1,9 +1,8 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { logger } from '@/lib/utils/logger';
 import CountriesForm from './countries-form';
 
 type Props = {
@@ -19,7 +18,7 @@ export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onE
 		const action = countryId ? 'updating/deleting' : 'creating';
 		const errorMessage = retrieveErrorMessage(error);
 		onError(`Error ${action} country: ${errorMessage}`);
-		logger.error('Country Form Error', { error });
+		console.error('Country Form Error', { error });
 	};
 
 	return (

@@ -39,7 +39,7 @@ export class TwilioTemplateService extends TwilioBaseService {
 
 			return this.resultOk(summaries);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to list Twilio content templates: ${this.formatError(error)}`);
 		}
@@ -75,7 +75,7 @@ export class TwilioTemplateService extends TwilioBaseService {
 				supportedChannels: whatsappStatus === 'approved' ? ['sms', 'whatsapp'] : ['sms'],
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch Twilio content template: ${this.formatError(error)}`);
 		}
@@ -90,7 +90,7 @@ export class TwilioTemplateService extends TwilioBaseService {
 
 			return whatsapp.status ?? null;
 		} catch (error) {
-			this.logger.warn(`Failed to fetch WhatsApp approval for template ${sid}: ${this.formatError(error)}`);
+			console.warn(`Failed to fetch WhatsApp approval for template ${sid}: ${this.formatError(error)}`);
 
 			return null;
 		}

@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { generateDonationCertificateForCurrentUser } from '@/lib/server-actions/donation-certificates-actions';

@@ -1,9 +1,8 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { logger } from '@/lib/utils/logger';
 import { useState } from 'react';
 import { ContributionForm } from './contribution-form';
 
@@ -25,7 +24,7 @@ export const ContributionFormDialog = ({
 	const onError = (error?: unknown) => {
 		const message = retrieveErrorMessage(error);
 		setErrorMessage(`Error saving contribution: ${message}`);
-		logger.error('Contribution Form Error', { error });
+		console.error('Contribution Form Error', { error });
 	};
 
 	const handleOpenChange = (newOpen: boolean) => {

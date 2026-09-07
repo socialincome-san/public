@@ -1,7 +1,7 @@
 'use client';
 
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { useContributorSession } from '@/lib/firebase/hooks/useContributorSession';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';

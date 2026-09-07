@@ -1,5 +1,4 @@
 import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { ServiceResult } from '../../../core/base.types';
 import { UserReadService } from '../../../user/user-read.service';
 import { TwilioBaseService } from '../../twilio-base.service';
@@ -22,9 +21,8 @@ export class MessagingLogService extends TwilioBaseService {
 		db: PrismaClient,
 		private readonly userService: UserReadService,
 		private readonly webhookService: MessagingWebhookService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private async markOrphanedJobs(): Promise<void> {
@@ -35,10 +33,10 @@ export class MessagingLogService extends TwilioBaseService {
 				data: { status: 'interrupted', finishedAt: new Date() },
 			});
 			if (result.count > 0) {
-				this.logger.warn(`Marked ${result.count} orphaned messaging jobs as interrupted`);
+				console.warn(`Marked ${result.count} orphaned messaging jobs as interrupted`);
 			}
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 		}
 	}
 
@@ -204,7 +202,7 @@ export class MessagingLogService extends TwilioBaseService {
 				}
 			} catch (error) {
 				// A single unreachable SID must not abort the whole sync.
-				this.logger.error(error);
+				console.error(error);
 			}
 		};
 

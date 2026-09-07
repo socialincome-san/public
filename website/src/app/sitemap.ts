@@ -1,3 +1,4 @@
+import { getCampaignStoryblokSlug } from '@/components/storyblok/campaign/campaign.utils';
 import {
 	defaultLanguage,
 	mainWebsiteLanguages,
@@ -40,6 +41,8 @@ const toPathTail = (slug: string): string | undefined => {
 	return pathTail;
 };
 
+const isIndividualCampaignPathTail = (pathTail: string) => pathTail.startsWith('campaigns/');
+
 const collectLanguagesForLink = (link: StoryblokPublishedLink): PathTailByLanguage => {
 	const languages = new Map<WebsiteLanguage, string>();
 	const enAlternate = link.alternates?.find((alternate) => alternate.lang === defaultLanguage);
@@ -71,6 +74,11 @@ const collectStoryblokEntries = (links: StoryblokPublishedLink[]): PathTailByLan
 			continue;
 		}
 
+		const defaultPathTail = toPathTail(link.slug);
+		if (defaultPathTail && isIndividualCampaignPathTail(defaultPathTail)) {
+			continue;
+		}
+
 		const languages = collectLanguagesForLink(link);
 		if (languages.size > 0) {
 			entries.push(languages);
@@ -81,15 +89,20 @@ const collectStoryblokEntries = (links: StoryblokPublishedLink[]): PathTailByLan
 };
 
 const collectCampaignEntries = async (): Promise<PathTailByLanguage[]> => {
-	const result = await services.read.campaign.getPublicCampaigns();
+	const result = await services.storyblok.getCampaigns(defaultLanguage);
 	if (!result.success) {
 		return [];
 	}
 
-	return result.data.map((campaign) => {
-		const pathTail = `campaigns/${campaign.slug}`;
+	return result.data.flatMap((story) => {
+		const slug = getCampaignStoryblokSlug(story).trim();
+		if (!slug) {
+			return [];
+		}
 
-		return new Map(mainWebsiteLanguages.map((lang) => [lang, pathTail]));
+		const pathTail = `campaigns/${slug}`;
+
+		return [new Map(mainWebsiteLanguages.map((lang) => [lang, pathTail]))];
 	});
 };
 

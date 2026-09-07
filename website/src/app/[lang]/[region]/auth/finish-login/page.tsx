@@ -1,10 +1,12 @@
 'use client';
 
+import { claimPendingCampaignsFromLogin } from '@/components/login/claim-pending-campaigns-from-login';
+import { parseCampaignsQueryParam } from '@/components/login/parse-campaigns-query-param';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { createSessionAction, getRedirectPathAfterLoginAction } from '@/lib/server-actions/session-actions';
 import { isSignInWithEmailLink, signInWithEmailLink, signOut } from 'firebase/auth';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const getEmailFromLoginUrl = (url: string): string | null => {
@@ -25,6 +27,7 @@ const getEmailFromLoginUrl = (url: string): string | null => {
 export default function FinishLoginPage() {
 	const { auth } = useAuth();
 	const router = useRouter();
+	const params = useParams<{ lang?: string; region?: string }>();
 
 	const [status, setStatus] = useState<'checking' | 'signing-in' | 'error'>('checking');
 
@@ -63,6 +66,16 @@ export default function FinishLoginPage() {
 					return;
 				}
 
+				const claimResult = await claimPendingCampaignsFromLogin(parseCampaignsQueryParam(url));
+				const lang = typeof params.lang === 'string' ? params.lang : null;
+				const region = typeof params.region === 'string' ? params.region : null;
+
+				if (claimResult.campaignSlug && lang && region) {
+					router.replace(`/${lang}/${region}/campaigns/${claimResult.campaignSlug}`);
+
+					return;
+				}
+
 				const redirectPathResult = await getRedirectPathAfterLoginAction();
 				if (!redirectPathResult.success) {
 					await signOut(auth);
@@ -77,7 +90,7 @@ export default function FinishLoginPage() {
 		};
 
 		void run();
-	}, [auth, router]);
+	}, [auth, params.lang, params.region, router]);
 
 	if (status === 'checking') {
 		return <div className="flex min-h-screen items-center justify-center">Checking login…</div>;

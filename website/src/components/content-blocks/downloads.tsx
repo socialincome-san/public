@@ -1,5 +1,5 @@
 import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { Document, Downloads } from '@/generated/storyblok/types/109655/storyblok-components';

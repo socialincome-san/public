@@ -1,6 +1,6 @@
 'use client';
 
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { SearchIcon } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
@@ -50,7 +50,7 @@ export const FocusesOverviewSearch = ({ defaultValue, label, placeholder }: Prop
 	};
 
 	return (
-		<div className="relative w-full sm:w-80">
+		<div className="relative w-full">
 			<SearchIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
 			<Input
 				type="search"

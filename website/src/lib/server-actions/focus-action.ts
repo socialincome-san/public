@@ -50,10 +50,5 @@ export const deleteFocusAction = async (id: string) => {
 };
 
 export const getFocusOptionsAction = async () => {
-	const sessionResult = await getSessionByType('user');
-	if (!sessionResult.success) {
-		return sessionResult;
-	}
-
 	return services.read.focus.getOptions();
 };

@@ -1,5 +1,5 @@
 import { jobStatusVariant } from '@/app/portal/messaging/delivery-log/messaging-job-status';
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import type { MessagingJobListRow } from '@/lib/services/twilio/messaging/logs/log.types';
 import Link from 'next/link';

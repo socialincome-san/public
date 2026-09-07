@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
 import { LEADING_TRAILING_DASHES_REGEX, NON_ALPHANUMERIC_DASH_REGEX } from '@/lib/utils/regex';
 import { MoreHorizontalIcon } from 'lucide-react';
@@ -9,7 +9,7 @@ import type { ReactNode } from 'react';
 
 export type ActionMenuItem = {
 	label: string;
-	icon: ReactNode;
+	icon?: ReactNode;
 	onSelect?: () => void;
 	href?: string;
 	disabled?: boolean;

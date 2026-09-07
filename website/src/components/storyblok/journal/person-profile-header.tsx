@@ -43,7 +43,7 @@ export const PersonProfileHeader = ({ person, name, portraitSrc, roleLabels }: P
 					</SectionHeading>
 					{roleLabel && <p className="text-muted-foreground text-base sm:text-lg">{roleLabel}</p>}
 				</div>
-				{bioText && <p className="text-foreground text-base leading-7 sm:text-lg sm:leading-8">{bioText}</p>}
+				{bioText && <p className="text-foreground max-w-2xl text-base leading-7 sm:text-lg sm:leading-8">{bioText}</p>}
 				{(linkedinName ?? githubName) && (
 					<div className="flex flex-wrap justify-center gap-4 sm:justify-start">
 						{linkedinName && (

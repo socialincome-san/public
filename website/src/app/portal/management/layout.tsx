@@ -1,6 +1,6 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
-import { Card } from '@/components/card';
+import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { getSessionByType } from '@/lib/firebase/current-account';
 
@@ -35,6 +35,7 @@ export default async function ManagementLayout({ children }: ManagementLayoutPro
 		// Organization access–based
 		{ href: `/portal/management/contributors`, label: 'Contributors' },
 		{ href: `/portal/management/contributions`, label: 'Contributions' },
+		{ href: `/portal/management/subscriptions`, label: 'Subscriptions' },
 		{ href: `/portal/management/donation-certificates`, label: 'Donation Certificates' },
 		{ href: `/portal/management/campaigns`, label: 'Campaigns' },
 	];

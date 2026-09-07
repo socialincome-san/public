@@ -1,6 +1,5 @@
 import { Currency, PrismaClient, ProgramPermission, UserRole } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
-import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
 import { slugify } from '@/lib/utils/string-utils';
@@ -23,9 +22,8 @@ export class ProgramWriteService extends BaseService {
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly organizationWriteService: OrganizationWriteService,
 		private readonly programValidationService: ProgramValidationService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async create(
@@ -98,11 +96,9 @@ export class ProgramWriteService extends BaseService {
 
 			await this.db.campaign.create({
 				data: {
-					title: `${program.name} - Default Campaign`,
-					description: `Default active campaign for ${program.name}.`,
 					currency: Currency.CHF,
 					endDate: defaultCampaignEndDate,
-					isActive: true,
+					isDefault: true,
 					program: { connect: { id: program.id } },
 				},
 			});
@@ -133,7 +129,7 @@ export class ProgramWriteService extends BaseService {
 
 			return this.resultOk({ programId: program.id });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not create program: ${JSON.stringify(error)}`);
 		}
@@ -299,7 +295,7 @@ export class ProgramWriteService extends BaseService {
 
 			return this.resultOk({ id: parsedInput.id });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not update program settings: ${JSON.stringify(error)}`);
 		}
@@ -383,7 +379,7 @@ export class ProgramWriteService extends BaseService {
 
 			return this.resultOk(undefined);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not delete program: ${JSON.stringify(error)}`);
 		}

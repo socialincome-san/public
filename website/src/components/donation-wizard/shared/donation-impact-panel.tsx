@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils/cn';
 import { CircleCheckBig } from 'lucide-react';
 import Image from 'next/image';
 import { getSupportersImpactLabel } from '../utils/community-stats';
+import type { Cadence } from '../utils/donation-amount';
 import { getDonationExplainerVideo } from '../utils/donation-explainer-video';
 import {
 	donationImpactChecklistItemClass,
@@ -18,28 +19,34 @@ import {
 const ZEWO_HOMEPAGE_URL = 'https://www.zewo.ch';
 
 type Props = {
+	cadence: Cadence;
 	communityStats: ContributorCommunityStats | null;
 };
 
-export const DonationImpactPanel = ({ communityStats }: Props) => {
+export const DonationImpactPanel = ({ cadence, communityStats }: Props) => {
 	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const explainerVideo = getDonationExplainerVideo(language);
 	const whyOnePercentLabel = t('impact.why-one-percent');
 
 	const supportersLabel = getSupportersImpactLabel(t, language, communityStats);
-	const checklist = [t('impact.cancel-anytime'), ...(supportersLabel ? [supportersLabel] : [])];
+	const checklist = [
+		...(cadence === 'monthly' ? [t('impact.cancel-anytime')] : []),
+		...(supportersLabel ? [supportersLabel] : []),
+	];
 
 	return (
 		<div className="flex w-full flex-col gap-5 md:gap-6 md:px-6 md:pt-5">
 			<h3 className="text-left text-lg leading-none font-medium md:text-xl">{t('impact.title')}</h3>
-			<ul className="flex flex-col gap-4">
-				{checklist.map((item) => (
-					<li key={item} className={donationImpactChecklistItemClass}>
-						<CircleCheckBig className="text-foreground size-[18px] shrink-0" aria-hidden />
-						{item}
-					</li>
-				))}
-			</ul>
+			{checklist.length > 0 ? (
+				<ul className="flex flex-col gap-4">
+					{checklist.map((item) => (
+						<li key={item} className={donationImpactChecklistItemClass}>
+							<CircleCheckBig className="text-foreground size-[18px] shrink-0" aria-hidden />
+							{item}
+						</li>
+					))}
+				</ul>
+			) : null}
 			<div className="flex flex-col">
 				<a
 					href={ZEWO_HOMEPAGE_URL}

@@ -3,13 +3,17 @@ import { Currency } from '@/generated/prisma/client';
 export type CampaignTableViewRow = {
 	id: string;
 	link: string;
+	slug: string;
 	title: string;
-	description: string;
 	currency: Currency;
 	endDate: Date;
 	isActive: boolean;
 	programName: string | null;
 	createdAt: Date;
+};
+
+export type CampaignTableEntry = Omit<CampaignTableViewRow, 'link' | 'title'> & {
+	programPortalSlug: string | null;
 };
 
 export type CampaignTableQuery = {
@@ -25,32 +29,13 @@ export type CampaignPaginatedTableView = {
 	totalCount: number;
 };
 
-export type CampaignPayload = {
+type CampaignPayload = {
 	id: string;
-	title: string;
-	description: string;
-	secondDescriptionTitle?: string | null;
-	secondDescription?: string | null;
-	thirdDescriptionTitle?: string | null;
-	thirdDescription?: string | null;
-	linkWebsite?: string | null;
-	linkInstagram?: string | null;
-	linkTiktok?: string | null;
-	linkFacebook?: string | null;
-	linkX?: string | null;
 	goal?: number | null;
 	currency: Currency;
 	additionalAmountChf?: number | null;
 	endDate: Date;
-	isActive: boolean;
-	public?: boolean | null;
-	featured?: boolean | null;
 	slug?: string | null;
-	metadataDescription?: string | null;
-	metadataOgImage?: string | null;
-	metadataTwitterImage?: string | null;
-	creatorName: string | null;
-	creatorEmail: string | null;
 	program: {
 		id: string;
 		name: string;
@@ -62,11 +47,18 @@ export type CampaignPage = CampaignPayload & {
 	amountCollected: number | null;
 	percentageCollected: number | null;
 	daysLeft: number;
+	createdAt: Date;
 };
 
 export type CampaignOption = { id: string; name: string };
 
 export type PublicCampaignActivity = 'active' | 'inactive' | 'all';
+
+type PublicCampaignCardImage = {
+	filename: string;
+	alt: string | null;
+	focus: string | null;
+};
 
 export type PublicCampaignCard = {
 	id: string;
@@ -74,8 +66,13 @@ export type PublicCampaignCard = {
 	slug: string;
 	creatorName: string | null;
 	currency: Currency;
+	endDate: Date;
+	goal: number | null;
 	isActive: boolean;
+	primaryImage?: PublicCampaignCardImage | null;
 };
+
+export type CampaignCmsJoin = Omit<PublicCampaignCard, 'title' | 'creatorName' | 'primaryImage'>;
 
 export type PublicCampaignStats = {
 	contributionsCount: number;
@@ -88,5 +85,10 @@ export type PublicCampaignStatsMap = Record<string, PublicCampaignStats>;
 
 export type PublicCampaignsWithStats = {
 	campaigns: PublicCampaignCard[];
+	statsById: PublicCampaignStatsMap;
+};
+
+export type CampaignCmsJoinWithStats = {
+	campaigns: CampaignCmsJoin[];
 	statsById: PublicCampaignStatsMap;
 };

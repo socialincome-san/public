@@ -1,13 +1,12 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { organizationsTableConfig } from '@/components/data-table/configs/organizations-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { logger } from '@/lib/utils/logger';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import OrganizationsForm from './organizations-form';
@@ -40,7 +39,7 @@ export default function OrganizationsTable({
 	const onError = (error: unknown) => {
 		const message = retrieveErrorMessage(error);
 		setErrorMessage(`Error saving organization: ${message}`);
-		logger.error('Organization Form Error', { error });
+		console.error('Organization Form Error', { error });
 	};
 
 	return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { confirmPayoutAction, contestPayoutAction } from '@/lib/server-actions/payout-confirmation-actions';
 import type { PayoutConfirmationTableViewRow } from '@/lib/services/payout/payout.types';

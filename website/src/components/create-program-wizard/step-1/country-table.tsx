@@ -1,6 +1,6 @@
 'use client';
 
-import { RadioGroup } from '@/components/radio-group';
+import { RadioGroup } from '@/components/radio-group/radio-group';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CountryCondition } from '@/lib/services/country/country.types';

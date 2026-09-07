@@ -1,15 +1,9 @@
-import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramSettingsFormUpdateInput, programSettingsUpdateInputSchema } from './program-settings-form-input';
 
 export class ProgramValidationService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
-
 	validateSettingsUpdateInput(input: ProgramSettingsFormUpdateInput): ServiceResult<ProgramSettingsFormUpdateInput> {
 		const parsedInput = programSettingsUpdateInputSchema.safeParse(input);
 		if (!parsedInput.success) {

@@ -42,7 +42,18 @@ resource "google_project_service" "iam" {
   project = var.gcp_project_id
   service = "iam.googleapis.com"
 }
+
 resource "google_project_service" "scheduler" {
   project = var.gcp_project_id
   service = "cloudscheduler.googleapis.com"
+}
+
+resource "google_project_service" "monitoring" {
+  project = var.gcp_project_id
+  service = "monitoring.googleapis.com"
+}
+
+resource "google_project_service" "logging" {
+  project = var.gcp_project_id
+  service = "logging.googleapis.com"
 }

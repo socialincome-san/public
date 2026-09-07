@@ -1,18 +1,17 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
-import { Button } from '@/components/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
+import { Button } from '@/components/button/button';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { organizationMembersTableConfig } from '@/components/data-table/configs/organization-members-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
-import { Input } from '@/components/input';
+import { Input } from '@/components/input/input';
 import { renameActiveOrganizationAction } from '@/lib/server-actions/organization-action';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { logger } from '@/lib/utils/logger';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PencilIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
@@ -65,7 +64,7 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 				},
 				onError: (renameError) => {
 					setErrorMessage(`Error renaming organization: ${retrieveErrorMessage(renameError)}`);
-					logger.error('Rename Organization Error', { error: renameError });
+					console.error('Rename Organization Error', { error: renameError });
 				},
 			});
 		});

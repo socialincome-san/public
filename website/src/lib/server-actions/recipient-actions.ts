@@ -50,6 +50,22 @@ export const updateRecipientAction = async (
 	return result;
 };
 
+export const removeRecipientFromProgramAction = async (recipientId: string, sessionType: Session['type'] = 'user') => {
+	const sessionResult = await getSessionByType(sessionType);
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const session = sessionResult.data;
+	const result = await services.write.recipient.removeFromProgram(session, recipientId);
+	if (session.type === 'user') {
+		revalidatePath(PORTAL_RECIPIENTS_PATH);
+		revalidatePath(PORTAL_PROGRAM_RECIPIENTS_PATH, 'page');
+		revalidatePath(PORTAL_MONITORING_UPCOMING_ONBOARDING_PATH);
+	}
+
+	return result;
+};
+
 export const deleteRecipientAction = async (recipientId: string, sessionType: Session['type'] = 'user') => {
 	const sessionResult = await getSessionByType(sessionType);
 	if (!sessionResult.success) {

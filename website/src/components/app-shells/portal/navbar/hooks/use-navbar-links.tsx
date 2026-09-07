@@ -62,7 +62,7 @@ export const useNavbarLinks = (sessions: Session[]) => {
 		...(hasContributor
 			? [
 					{
-						href: '/dashboard/contributions',
+						href: '/dashboard/subscriptions',
 						label: 'Switch to dashboard',
 						icon: LayoutDashboard,
 					},

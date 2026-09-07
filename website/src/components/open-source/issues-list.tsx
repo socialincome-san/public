@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { IssueRow } from '@/components/open-source/issue-row';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import type { GithubIssue } from '@/lib/services/github-api/github-api.types';
 import { useState } from 'react';
 

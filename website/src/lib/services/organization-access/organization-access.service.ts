@@ -20,7 +20,7 @@ export class OrganizationAccessService extends BaseService {
 				id: user.activeOrganizationId,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get active organization access: ${JSON.stringify(error)}`);
 		}

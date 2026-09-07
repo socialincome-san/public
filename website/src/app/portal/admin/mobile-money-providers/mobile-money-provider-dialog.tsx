@@ -1,9 +1,8 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { logger } from '@/lib/utils/logger';
 import MobileMoneyProvidersForm from './mobile-money-providers-form';
 
 type Props = {
@@ -19,7 +18,7 @@ export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId, erro
 		const action = providerId ? 'updating/deleting' : 'creating';
 		const errorMessage = retrieveErrorMessage(error);
 		onError(`Error ${action} mobile money provider: ${errorMessage}`);
-		logger.error('Mobile Money Provider Form Error', { error });
+		console.error('Mobile Money Provider Form Error', { error });
 	};
 
 	return (

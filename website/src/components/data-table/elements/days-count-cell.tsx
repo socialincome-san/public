@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { CellType } from '@/components/data-table/elements/types';
 import { Clock3Icon } from 'lucide-react';
 

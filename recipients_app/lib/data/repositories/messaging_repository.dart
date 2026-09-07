@@ -1,6 +1,9 @@
 // "unreachable_from_main" is ignored beacuse of the vm:entry-point function "_firebaseMessagingBackgroundHandler"
 // ignore_for_file: unreachable_from_main
 import "dart:developer";
+import "dart:io";
+
+import "package:firebase_core/firebase_core.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
 
 /// This must be a top level function in order to work
@@ -80,7 +83,25 @@ class MessagingRepository {
   }
 
   Future<String?> getToken() async {
-    return await messaging.getToken();
+    const maxRetries = 3;
+    for (var attempt = 0; attempt < maxRetries; attempt++) {
+      if (Platform.isIOS) {
+        // The APNS token may not be registered with the device yet, so wait a bit before
+        // asking for the FCM token.
+        await Future.delayed(const Duration(seconds: 1));
+      }
+      try {
+        return await messaging.getToken();
+      } on FirebaseException catch (e) {
+        if (e.code != "apns-token-not-set") rethrow;
+        if (attempt == maxRetries - 1) {
+          log("PUSHNOTIFICATION: Failed to get FCM token after $maxRetries retries: ${e.code}");
+          break;
+        }
+        log("PUSHNOTIFICATION: APNS token not yet set, retrying (${attempt + 1}/$maxRetries)");
+      }
+    }
+    return null;
   }
 
   static void logRemoteMessage(RemoteMessage message) {

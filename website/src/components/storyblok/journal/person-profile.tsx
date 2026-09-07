@@ -38,8 +38,8 @@ export const PersonProfile = ({
 	showMoreArticlesLink,
 	roleLabels,
 }: Props) => (
-	<JournalPageShell>
-		<JournalBreadcrumb links={breadcrumbs} />
+	<JournalPageShell className="px-6 sm:px-6">
+		<JournalBreadcrumb links={breadcrumbs} className="mb-12 w-full px-0" />
 		<PersonProfileHeader
 			person={person}
 			name={getPersonDisplayName(person)}

@@ -71,7 +71,7 @@ export class UserReadService extends BaseService {
 				organizationIds,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch user: ${JSON.stringify(error)}`);
 		}
@@ -91,7 +91,7 @@ export class UserReadService extends BaseService {
 
 			return this.resultOk(organizations);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load user options: ${JSON.stringify(error)}`);
 		}
@@ -186,7 +186,7 @@ export class UserReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch users: ${JSON.stringify(error)}`);
 		}
@@ -289,7 +289,7 @@ export class UserReadService extends BaseService {
 
 			return this.resultOk(session);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Error fetching user information: ${JSON.stringify(error)}`);
 		}
@@ -312,7 +312,7 @@ export class UserReadService extends BaseService {
 
 			return this.resultOk(true);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not check admin status: ${JSON.stringify(error)}`);
 		}

@@ -1,4 +1,4 @@
-import { Currency, PayoutStatus } from '@/generated/prisma/client';
+import { CountryCode, Currency, PayoutStatus } from '@/generated/prisma/client';
 
 export type PayoutRecipient = {
 	id: string;
@@ -11,6 +11,7 @@ export type PayoutRecipient = {
 	program: {
 		payoutPerInterval: number;
 		payoutCurrency: Currency;
+		payoutCountryCode: CountryCode;
 		programDurationInMonths: number;
 	};
 	payouts: {

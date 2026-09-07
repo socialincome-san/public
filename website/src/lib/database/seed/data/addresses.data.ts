@@ -1,5 +1,6 @@
 import { Address } from '@/generated/prisma/client';
 import { candidateContactDefinitions, recipientContactDefinitions } from './contacts.data';
+import { extraProgramRecipientAddressesData } from './program-recipient-extras.data';
 
 export const addressesData: Address[] = [
 	{
@@ -260,4 +261,5 @@ export const addressesData: Address[] = [
 			updatedAt: null,
 		};
 	}),
+	...extraProgramRecipientAddressesData,
 ];

@@ -1,3 +1,4 @@
+import { normalizeStoryblokFocusForImageService } from '@/components/campaign/campaign-submission/storyblok-image-focus';
 import type { Article, ArticleType, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultLanguage } from '@/lib/i18n/utils';
@@ -40,6 +41,16 @@ export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>, includeS
 	const subtitle = article.content.subtitle?.trim();
 
 	return subtitle ? `${article.content.title} ${subtitle}` : article.content.title;
+};
+
+export const getArticleTypeLabel = (articleType: ISbStoryData<ArticleType>) => {
+	const value = articleType.content?.value?.trim();
+
+	if (value) {
+		return value;
+	}
+
+	return articleType.name;
 };
 
 const PERSON_AVATAR_SIZE = 300;
@@ -159,7 +170,7 @@ export const getScaledAssetDimensions = (
  * Official documentation: https://www.storyblok.com/faq/use-focal-point-set-in-storyblok
  */
 export const formatStoryblokUrl = (url: string, width: number, height: number, focus?: string | null) => {
-	const crop = focus ?? 'smart';
+	const crop = focus ? normalizeStoryblokFocusForImageService(focus) : 'smart';
 	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
 
 	return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;
@@ -182,7 +193,7 @@ export const formatStoryblokResizeUrl = (url: string, width: number, height: num
  */
 const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) => {
 	let imageSource = url + `/m/${width}x${height}`;
-	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
+	imageSource += focus ? `/filters:focal(${normalizeStoryblokFocusForImageService(focus)})` : '/smart';
 
 	return imageSource;
 };
@@ -307,6 +318,9 @@ export const createWebsiteJournalArticleLink = (slug: string, lang: string, regi
 
 export const createWebsiteJournalTagLink = (tagSlug: string, lang: string, region: string) =>
 	`${createWebsiteJournalPath(lang, region)}?tag=${encodeURIComponent(tagSlug)}`;
+
+export const createWebsiteJournalArticleTypeLink = (articleTypeSlug: string, lang: string, region: string) =>
+	`${createWebsiteJournalPath(lang, region)}?type=${encodeURIComponent(articleTypeSlug)}`;
 
 export const createWebsitePersonLink = (slug: string, lang: string, region: string) =>
 	createWebsitePath(lang, region, WEBSITE_PERSON_PATH_SEGMENT, slug);

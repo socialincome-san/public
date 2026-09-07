@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { Dialog, DialogContent } from '@/components/dialog';
 import type { TwilioTemplateDetail } from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
 import { Send } from 'lucide-react';

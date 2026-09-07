@@ -1,3 +1,4 @@
+import { FilterBar } from '@/components/filters/filter-bar';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
@@ -81,22 +82,28 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 	const fixedQueryParams = hasFixedFocus ? [{ key: FOCUS_QUERY_KEY, value: fixedFocusId }] : [];
 
 	return (
-		<div className="flex flex-wrap items-center justify-between gap-4">
-			<ProgramsOverviewFilters
-				allCountriesLabel={translator.t('programs-page.all-countries', { context: { count: countryOptions.length } })}
-				allFocusesLabel={translator.t('programs-page.all-focuses', { context: { count: focusFilterOptions.length } })}
-				countryOptions={countryOptions}
-				selectedCountryIsoCode={selectedCountryIsoCode}
-				focusOptions={focusFilterOptions}
-				selectedFocusId={selectedFocusId}
-				showFocusFilter={!hasFixedFocus}
-				queryParamOverrides={fixedQueryParams}
-			/>
-			<ProgramsOverviewSearch
-				defaultValue={searchQuery}
-				label={translator.t('programs-page.search-label')}
-				placeholder={translator.t('programs-page.search-placeholder')}
-				queryParamOverrides={fixedQueryParams}
+		<div className="flex w-full flex-col gap-4">
+			<FilterBar
+				filters={
+					<ProgramsOverviewFilters
+						allCountriesLabel={translator.t('programs-page.all-countries', { context: { count: countryOptions.length } })}
+						allFocusesLabel={translator.t('programs-page.all-focuses', { context: { count: focusFilterOptions.length } })}
+						countryOptions={countryOptions}
+						selectedCountryIsoCode={selectedCountryIsoCode}
+						focusOptions={focusFilterOptions}
+						selectedFocusId={selectedFocusId}
+						showFocusFilter={!hasFixedFocus}
+						queryParamOverrides={fixedQueryParams}
+					/>
+				}
+				search={
+					<ProgramsOverviewSearch
+						defaultValue={searchQuery}
+						label={translator.t('programs-page.search-label')}
+						placeholder={translator.t('programs-page.search-placeholder')}
+						queryParamOverrides={fixedQueryParams}
+					/>
+				}
 			/>
 			<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} lang={lang} region={region} />
 		</div>

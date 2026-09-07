@@ -11,7 +11,7 @@ export class SurveyScheduleService extends BaseService {
 
 			return this.resultOk(schedules);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to get survey schedules for programs: ${JSON.stringify(error)}`);
 		}

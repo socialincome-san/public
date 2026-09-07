@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { syncMessagingJobStatusesAction } from '@/lib/server-actions/messaging-actions';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { useRouter } from 'next/navigation';

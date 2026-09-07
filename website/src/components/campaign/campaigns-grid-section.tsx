@@ -1,4 +1,4 @@
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { CampaignsOverview } from '@/components/campaign/campaigns-overview';
 import { SectionHeading } from '@/components/section-heading';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';

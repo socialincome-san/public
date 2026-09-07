@@ -4,6 +4,7 @@ import {
 	formatCurrencyLocale,
 	formatDate,
 	formatNumberLocale,
+	formatUtcDate,
 	humanize,
 	humanizeIdentifier,
 	slugify,
@@ -210,6 +211,17 @@ describe('string-utils', () => {
 			expect(formatDate(null)).toBe('—');
 			// Invalid date string should not throw
 			expect(formatDate('invalid-date')).toBe('—');
+		});
+	});
+
+	describe('formatUtcDate', () => {
+		test('formats UTC calendar date regardless of local timezone', () => {
+			expect(formatUtcDate(new Date('2026-03-05T00:00:00.000Z'))).toBe('05.03.2026');
+		});
+
+		test('returns em dash for invalid input', () => {
+			expect(formatUtcDate(null)).toBe('—');
+			expect(formatUtcDate('invalid-date')).toBe('—');
 		});
 	});
 });

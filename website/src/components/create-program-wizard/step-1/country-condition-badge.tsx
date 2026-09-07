@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { CountryCondition } from '@/lib/services/country/country.types';
 import { AlertTriangleIcon, CheckIcon, XCircleIcon } from 'lucide-react';

@@ -55,13 +55,14 @@
 			"donation-certificates-long": "Donation certificates"
 		}
 	},
+	"donate-now": "Donate now",
 	"contributions": {
 		"amount": "Amount",
 		"date": "Date",
 		"created": "Created",
 		"updated": "Updated",
-		"currency": "Currency",
-		"campaign": "Campaign",
+		"payment-type": "Payment type",
+		"attribution": "Attribution",
 		"sources": {
 			"benevity": "Benevity",
 			"cash": "Cash",
@@ -76,14 +77,12 @@
 			"unknown": "Unknown"
 		},
 		"status-title": "Status",
-		"no-contributions": "No contributions found",
-		"new-contribution": "Make a contribution"
+		"no-contributions": "No contributions found"
 	},
 	"subscriptions": {
 		"amount": "Amount",
 		"created": "Created",
 		"payment-method": "Payment Method",
-		"new-subscription": "New subscription",
 		"interval": "Interval",
 		"interval-1": "Monthly",
 		"interval-3": "Quarterly",
@@ -95,7 +94,89 @@
 		},
 		"status-title": "Status",
 		"manage-subscriptions": "Manage Subscriptions",
-		"no-subscriptions": "No subscriptions found"
+		"edit": "Edit",
+		"view-qr": "View QR",
+		"qr-dialog": {
+			"title": "Your QR bill",
+			"unavailable": "Could not generate the QR code. Please try again later.",
+			"close": "Close"
+		},
+		"edit-dialog": {
+			"title": "Edit Subscription",
+			"monthly-contribution": "Monthly contribution",
+			"transaction-fees": "Transaction fees",
+			"payment-method": "Payment method",
+			"per-month-suffix": "/ Month",
+			"update-card": "Update Card",
+			"cancel-subscription": "Cancel Subscription",
+			"cancel": "Cancel",
+			"update-subscription": "Update Subscription",
+			"updating-subscription": "Updating subscription",
+			"success-title": "Subscription updated",
+			"success-message": "Your updated monthly donation is now active.",
+			"success-thanks": "Thank you for supporting Social Income.",
+			"standing-order-title": "Update your standing order",
+			"standing-order-description": "Update the amount in your e-banking after saving.",
+			"download-qr": "Download QR-Code",
+			"done": "Done",
+			"error": "Could not update subscription. Please try again.",
+			"update-card-error": "Could not open card update. Please try again.",
+			"update-card-unsaved-warning": "You have unsaved amount changes. Leave without saving?",
+			"update-card-stay": "Stay",
+			"update-card-leave": "Leave without saving",
+			"back": "Back",
+			"cancel-retention-title": "Cancel subscription",
+			"cancel-retention-heading": "Are you sure you want to cancel this subscription?",
+			"cancel-retention-card-title": "Would reducing help?",
+			"cancel-retention-other": "Other",
+			"cancel-retention-or": "Or",
+			"cancel-retention-continue": "No, I want to cancel",
+			"cancel-reason-title": "Reason for canceling",
+			"cancel-reason-heading": "We're sorry to see you go. Could you tell us why?",
+			"cancel-reason-confirm": "Cancel subscription",
+			"canceling-subscription": "Canceling subscription",
+			"cancel-success-title": "Subscription canceled",
+			"cancel-success-message": "Your subscription has been canceled. No further payments will be charged.",
+			"bank-cancel-success-message": "Your subscription has been canceled here. Please also stop the standing order in your bank so no further payment is made.",
+			"cancel-success-thanks": "Thank you for supporting Social Income.",
+			"cancel-error": "Could not cancel subscription. Please try again.",
+			"cancel-reasons": {
+				"financial_situation_changed": "My financial situation has changed",
+				"different_cause": "I want to support a different cause",
+				"not_enough_updates": "I didn't receive enough updates",
+				"technical_issue": "I had a technical issue (payment/login/etc.)",
+				"prefer_one_time": "I prefer to donate one-time instead of monthly",
+				"pausing": "I'm pausing, but might restart later",
+				"other": "Other"
+			}
+		},
+		"no-subscriptions": "No subscriptions found",
+		"load-error": "Could not load subscriptions. Please try again.",
+		"retry": "Retry",
+		"summary": {
+			"monthly-contribution": "Monthly contribution",
+			"total-contributions": "Total contributions",
+			"no-active-subscriptions": "No active subscriptions",
+			"active-subscriptions-count": "{{count}} active subscriptions",
+			"contributions-since": "{{count}} contributions since {{date}}",
+			"no-contributions-yet": "No contributions yet"
+		},
+		"active-subscriptions": "Active subscriptions",
+		"upcoming-payments": "Upcoming payments",
+		"scheduled": "Scheduled",
+		"per-month": "per month",
+		"since": "since",
+		"card-fallback": "Card",
+		"cover-transaction-costs": {
+			"nudge-prefix": "Card payments cost approx.",
+			"nudge-fee": "{{fee}}/mo",
+			"nudge-middle": "in processing fees.",
+			"nudge-cta": "Help keep costs low — cover transaction costs."
+		},
+		"empty": {
+			"description": "You've contributed {{amount}} across {{count}} transfers.\nReady to pick up where you left off?",
+			"description-no-contributions": "Start supporting someone today."
+		}
 	},
 	"donation-certificates": {
 		"created": "Created",

@@ -1,4 +1,4 @@
-import { Button } from '@/components/button';
+import { Button } from '@/components/button/button';
 import { NotFound as NotFoundComponent } from '@/components/not-found';
 import Link from 'next/link';
 

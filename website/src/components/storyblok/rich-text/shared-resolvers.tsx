@@ -6,6 +6,7 @@ import type {
 	RichTextAlignmentProps,
 	RichTextHeadingProps,
 	RichTextLinkProps,
+	RichTextTableCellProps,
 } from '@/components/storyblok/rich-text/rich-text.types';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/table';
 import { cn } from '@/lib/utils/cn';
@@ -92,15 +93,28 @@ export const storyblokRichTextBasicNodeResolvers = {
 	),
 };
 
+// Storyblok stores merged cells as a single cell carrying colspan/rowspan, so these have to be
+// forwarded to the DOM or the merged content collapses into one column and the row looks empty.
+const getRichTextTableCellSpanProps = ({ colspan, rowspan }: RichTextTableCellProps = {}) => ({
+	colSpan: colspan && colspan > 1 ? colspan : undefined,
+	rowSpan: rowspan && rowspan > 1 ? rowspan : undefined,
+});
+
 const storyblokRichTextTableNodeResolvers = {
 	[NODE_TABLE]: (children: ReactNode) => (
 		<Table className="text-foreground my-6">
 			<TableBody>{children}</TableBody>
 		</Table>
 	),
-	[NODE_TABLE_HEADER]: (children: ReactNode) => <TableHead className="font-bold">{children}</TableHead>,
+	[NODE_TABLE_HEADER]: (children: ReactNode, props?: RichTextTableCellProps) => (
+		<TableHead className="font-bold" {...getRichTextTableCellSpanProps(props)}>
+			{children}
+		</TableHead>
+	),
 	[NODE_TABLE_ROW]: (children: ReactNode) => <TableRow>{children}</TableRow>,
-	[NODE_TABLE_CELL]: (children: ReactNode) => <TableCell>{children}</TableCell>,
+	[NODE_TABLE_CELL]: (children: ReactNode, props?: RichTextTableCellProps) => (
+		<TableCell {...getRichTextTableCellSpanProps(props)}>{children}</TableCell>
+	),
 };
 
 export const storyblokRichTextNodeResolvers = {

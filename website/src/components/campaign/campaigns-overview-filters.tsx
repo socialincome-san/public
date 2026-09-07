@@ -12,7 +12,7 @@ type Props = {
 
 export const CampaignsOverviewFilters = ({ allLabel, activeLabel, inactiveLabel, selectedState }: Props) => {
 	return (
-		<div className="flex min-h-10 flex-1 flex-wrap items-center gap-2">
+		<div className="flex min-h-10 w-full max-w-3xs flex-1 flex-wrap items-center gap-2">
 			<FilterDropdown
 				options={[
 					{ value: 'all', label: allLabel },

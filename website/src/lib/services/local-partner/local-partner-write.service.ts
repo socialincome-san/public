@@ -1,6 +1,5 @@
 import { LocalPartner, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
-import { logger } from '@/lib/utils/logger';
 import { ContactRelationsService } from '../contact/contact-relations.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -16,9 +15,8 @@ export class LocalPartnerWriteService extends BaseService {
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly localPartnerValidationService: LocalPartnerValidationService,
 		private readonly contactRelationsService: ContactRelationsService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async create(userId: string, input: LocalPartnerFormCreateInput): Promise<ServiceResult<LocalPartner>> {
@@ -55,7 +53,7 @@ export class LocalPartnerWriteService extends BaseService {
 				displayName,
 			});
 			if (!firebaseSyncResult.success) {
-				this.logger.warn('Could not fully sync Firebase Auth user on local partner creation', {
+				console.warn('Could not fully sync Firebase Auth user on local partner creation', {
 					firebaseUid: firebaseResult.data.uid,
 					error: firebaseSyncResult.error,
 				});
@@ -81,7 +79,7 @@ export class LocalPartnerWriteService extends BaseService {
 
 			return this.resultOk(partner);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not create local partner. Please try again later.');
 		}
@@ -173,7 +171,7 @@ export class LocalPartnerWriteService extends BaseService {
 					displayName: newDisplayName,
 				});
 				if (!firebaseResult.success) {
-					this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
+					console.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
 				}
 			}
 
@@ -216,7 +214,7 @@ export class LocalPartnerWriteService extends BaseService {
 
 			return this.resultOk(updated);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not update local partner. Please try again later.');
 		}
@@ -295,7 +293,7 @@ export class LocalPartnerWriteService extends BaseService {
 
 			const firebaseDeleteResult = await this.firebaseAdminService.deleteByUidIfExists(firebaseUid);
 			if (!firebaseDeleteResult.success) {
-				this.logger.warn('Local partner deleted in DB but Firebase user deletion failed', {
+				console.warn('Local partner deleted in DB but Firebase user deletion failed', {
 					localPartnerId,
 					firebaseUid,
 					error: firebaseDeleteResult.error,
@@ -304,7 +302,7 @@ export class LocalPartnerWriteService extends BaseService {
 
 			return this.resultOk({ id: localPartnerId });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not delete local partner. Please try again later.');
 		}

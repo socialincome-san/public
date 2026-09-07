@@ -1,9 +1,8 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { logger } from '@/lib/utils/logger';
 import FocusesForm from './focuses-form';
 
 type Props = {
@@ -19,7 +18,7 @@ export const FocusDialog = ({ open, onOpenChange, focusId, errorMessage, onError
 		const action = focusId ? 'updating/deleting' : 'creating';
 		const message = retrieveErrorMessage(error);
 		onError(`Error ${action} focus: ${message}`);
-		logger.error('Focus Form Error', { error });
+		console.error('Focus Form Error', { error });
 	};
 
 	return (

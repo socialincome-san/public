@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/button';
-import { Card } from '@/components/card';
+import { Button } from '@/components/button/button';
+import { Card } from '@/components/card/card';
 import { useIsPage } from '@/lib/hooks/useIsPage';
 import type { ConsentStatusString } from 'firebase/analytics';
 import { useEffect, useState } from 'react';

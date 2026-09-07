@@ -1,14 +1,8 @@
-import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { Twilio } from 'twilio';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 
 export abstract class TwilioBaseService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
-
 	private twilioClient?: Twilio;
 
 	protected readonly twilioAccountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -52,7 +46,7 @@ export abstract class TwilioBaseService extends BaseService {
 
 			return this.resultOk(this.twilioClient);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Failed to initialize Twilio client');
 		}

@@ -1,5 +1,5 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
-import { Card } from '@/components/card';
+import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { getSessionsOrRedirect } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
@@ -18,8 +18,8 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 
 	const sections = [
-		{ href: '/dashboard/contributions', label: translator.t('sections.contributions.payments') },
 		{ href: '/dashboard/subscriptions', label: translator.t('sections.contributions.subscriptions') },
+		{ href: '/dashboard/contributions', label: translator.t('sections.contributions.payments') },
 		{
 			href: '/dashboard/donation-certificates',
 			label: translator.t('sections.contributions.donation-certificates-long'),

@@ -2,7 +2,6 @@ export type GithubRepoStats = {
 	totalCommits: number;
 	newCommits: number;
 	totalStars: number;
-	newStars: number;
 	totalForks: number;
 	newForks: number;
 };
@@ -21,23 +20,20 @@ export type GithubIssue = {
 	labels: string[];
 };
 
-export type GithubOpenSourcePageData = {
-	stats: GithubRepoStats;
-	contributors: GithubContributor[];
+export type GithubOpenSourceIssuesData = {
 	issues: GithubIssue[];
 	labels: string[];
 };
 
-export const EMPTY_GITHUB_OPEN_SOURCE_PAGE_DATA: GithubOpenSourcePageData = {
-	stats: {
-		totalCommits: 0,
-		newCommits: 0,
-		totalStars: 0,
-		newStars: 0,
-		totalForks: 0,
-		newForks: 0,
-	},
-	contributors: [],
+export const EMPTY_GITHUB_REPO_STATS: GithubRepoStats = {
+	totalCommits: 0,
+	newCommits: 0,
+	totalStars: 0,
+	totalForks: 0,
+	newForks: 0,
+};
+
+export const EMPTY_GITHUB_OPEN_SOURCE_ISSUES_DATA: GithubOpenSourceIssuesData = {
 	issues: [],
 	labels: [],
 };

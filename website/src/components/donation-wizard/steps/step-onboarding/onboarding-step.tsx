@@ -74,7 +74,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 			}
 
 			if (!result.data.needsOnboarding) {
-				send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU', email: result.data.email });
+				send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU', email: result.data.email, isLoggedInDonor: true });
 
 				return;
 			}
@@ -219,7 +219,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 			className="flex w-full flex-col gap-6 px-4 pt-6 pb-8 sm:px-9 sm:pt-6 sm:pb-11"
 			data-testid="donation-wizard-step-onboarding"
 		>
-			<OnboardingSuccessHeader amountLine={amountLine} showAccountCreatedDescription />
+			<OnboardingSuccessHeader amountLine={amountLine} />
 			<OnboardingPersonalForm
 				form={form}
 				onSubmit={onSubmit}

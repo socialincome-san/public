@@ -1,4 +1,4 @@
-import { Badge } from '@/components/badge';
+import { Badge } from '@/components/badge/badge';
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { getFocusSlug, getFocusTitle } from '@/components/storyblok/focus/focus.utils';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
