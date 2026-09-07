@@ -17,7 +17,7 @@ type MultiSelectStoryArgs = Omit<ComponentProps<typeof MultiSelect>, 'onValueCha
 const InteractiveMultiSelect = (args: MultiSelectStoryArgs) => {
 	const [selected, setSelected] = useState(args.defaultValue ?? []);
 
-	return <MultiSelect {...args} onValueChange={setSelected} />;
+	return <MultiSelect {...args} defaultValue={selected} onValueChange={setSelected} />;
 };
 
 const meta = {
