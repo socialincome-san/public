@@ -1,5 +1,5 @@
 import { Card } from '@/components/card/card';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
 import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
 import { cn } from '@/lib/utils/cn';
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
