@@ -160,7 +160,7 @@
 		"jest-environment-jsdom": "30.5.1",
 		"knip": "6.34.0",
 		"next-openapi-gen": "0.8.9",
-		"npm-run-all2": "5.0.2",
+		"npm-run-all2": "9.0.3",
 		"postcss": "8.5.28",
 		"prettier": "3.9.6",
 		"prettier-plugin-organize-imports": "4.3.0",
