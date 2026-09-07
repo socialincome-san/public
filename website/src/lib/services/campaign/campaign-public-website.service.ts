@@ -49,9 +49,7 @@ export class CampaignPublicWebsiteService extends BaseService {
 					? CampaignPublicWebsiteService.toResolvedFaqs(globals.faq)
 					: [];
 			const videoPlaybackIds = globals ? CampaignPublicWebsiteService.toVideoPlaybackIds(globals) : [];
-			const newsletter = globals
-				? CampaignPublicWebsiteService.toNewsletterContent(globals)
-				: emptyNewsletterContent;
+			const newsletter = globals ? CampaignPublicWebsiteService.toNewsletterContent(globals) : emptyNewsletterContent;
 
 			return this.resultOk({ translator, faqs, videoPlaybackIds, newsletter });
 		} catch (error) {
@@ -74,6 +72,7 @@ export class CampaignPublicWebsiteService extends BaseService {
 	private static toNewsletterContent(globals: CampaignGlobals): CampaignNewsletterContent {
 		const senderName = globals.newsletterSenderName?.trim() ?? '';
 		const filename = globals.newsletterImage?.filename?.trim();
+		const imageAlt = globals.newsletterImage?.alt?.trim() ?? '';
 
 		return {
 			title: globals.newsletterTitle?.trim() ?? '',
@@ -81,7 +80,7 @@ export class CampaignPublicWebsiteService extends BaseService {
 			imageSrc: filename
 				? formatStoryblokUrl(filename, NEWSLETTER_IMAGE_SIZE, NEWSLETTER_IMAGE_SIZE, globals.newsletterImage.focus)
 				: null,
-			imageAlt: globals.newsletterImage?.alt?.trim() || senderName,
+			imageAlt: imageAlt || senderName,
 		};
 	}
 
