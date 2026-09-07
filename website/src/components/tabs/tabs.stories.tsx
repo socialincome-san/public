@@ -16,6 +16,7 @@ const TabsExample = ({ args, items }: { args: ComponentProps<typeof Tabs>; items
 	const initialValue = items.some((item) => item.value === defaultValue) ? defaultValue : items[0].value;
 
 	const [value, setValue] = useState(initialValue);
+
 	return (
 		<Tabs {...args} value={value} onValueChange={setValue}>
 			<TabsList>
