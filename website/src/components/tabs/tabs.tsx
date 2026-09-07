@@ -9,6 +9,7 @@ const Tabs = ({ className, ...props }: React.ComponentProps<typeof TabsPrimitive
 };
 
 const TabsList = ({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.List>) => {
+
 	return (
 		<TabsPrimitive.List
 			data-slot="tabs-list"
@@ -22,6 +23,7 @@ const TabsList = ({ className, ...props }: React.ComponentProps<typeof TabsPrimi
 };
 
 const TabsTrigger = ({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Trigger>) => {
+	
 	return (
 		<TabsPrimitive.Trigger
 			data-slot="tabs-trigger"
