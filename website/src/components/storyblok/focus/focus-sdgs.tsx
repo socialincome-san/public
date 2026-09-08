@@ -1,4 +1,4 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
 import { InfoIcon } from 'lucide-react';
 import { getSdg, type SdgValue } from './sdgs';
 

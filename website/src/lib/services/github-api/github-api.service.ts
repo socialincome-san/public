@@ -9,6 +9,7 @@ const REPO = 'public';
 const API_BASE = `https://api.github.com/repos/${OWNER}/${REPO}`;
 const GITHUB_REVALIDATE_SECONDS = 60 * 60 * 24;
 const MAX_ERROR_DETAILS_LENGTH = 200;
+const RENOVATE_BOT_LOGIN = 'renovate[bot]';
 
 const isRateLimitResponse = (status: number, headers: Headers, details: string) => {
 	if (status === 429) {
@@ -168,12 +169,14 @@ export class GithubApiService extends BaseService {
 			}
 
 			contributors.push(
-				...data.map((contributor: { id: number; login: string; avatar_url: string; contributions: number }) => ({
-					id: contributor.id,
-					name: contributor.login,
-					commits: contributor.contributions,
-					avatarUrl: contributor.avatar_url,
-				})),
+				...data
+					.filter((contributor: { login: string }) => contributor.login !== RENOVATE_BOT_LOGIN)
+					.map((contributor: { id: number; login: string; avatar_url: string; contributions: number }) => ({
+						id: contributor.id,
+						name: contributor.login,
+						commits: contributor.contributions,
+						avatarUrl: contributor.avatar_url,
+					})),
 			);
 
 			hasMore = data.length === 100;
