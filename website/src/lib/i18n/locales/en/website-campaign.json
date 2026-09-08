@@ -16,6 +16,13 @@
 		},
 		"ended": "The campaign has ended.  For regular donations, please use the main donation page.",
 		"days-left": "Days left",
+		"fundraising-pill": {
+			"days-left_one": "Just {{count}} day left",
+			"days-left_other": "Just {{count}} days left",
+			"amount-missing": "{{missing}} missing to reach {{goal}}",
+			"supporters-left_one": "{{count}} supporter left to reach {{goal}}",
+			"supporters-left_other": "{{count}} supporters left to reach {{goal}}"
+		},
 		"program-teaser": {
 			"heading": "Your donation supports",
 			"focus-areas": "Focus areas",

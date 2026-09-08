@@ -16,6 +16,13 @@
 		},
 		"ended": "Die Kampagne ist beendet. Für reguläre Spenden verwende bitte die Hauptspendeseite.",
 		"days-left": "Tage verbleibend",
+		"fundraising-pill": {
+			"days-left_one": "Nur noch {{count}} Tag",
+			"days-left_other": "Nur noch {{count}} Tage",
+			"amount-missing": "Noch {{missing}} bis zum Ziel von {{goal}}",
+			"supporters-left_one": "Noch {{count}} Spender:in bis {{goal}}",
+			"supporters-left_other": "Noch {{count}} Spender:innen bis {{goal}}"
+		},
 		"program-teaser": {
 			"heading": "Deine Spende unterstützt",
 			"focus-areas": "Schwerpunktbereiche",
