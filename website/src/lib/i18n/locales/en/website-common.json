@@ -123,7 +123,28 @@
 		},
 		"inflows": {
 			"title-name": "Inflows",
-			"title-currency": "in {{currency}}"
+			"title-currency": "in {{currency}}",
+			"eyebrow": "Inflows",
+			"headline-before": "Most of our funding comes from ",
+			"headline-bold": "individuals giving monthly",
+			"headline-after": ".",
+			"video-label": "Our monthly donors typically give 1% of what they earn.",
+			"breakdown-title": "Breakdown",
+			"total-label": "Total inflows",
+			"segments": {
+				"individuals": {
+					"label": "Individuals",
+					"description": "Recurring and one-time donations"
+				},
+				"foundations": {
+					"label": "Foundations & Grants",
+					"description": "Multi-year grants and one-off awards"
+				},
+				"corporate": {
+					"label": "Corporate partners",
+					"description": "Payroll giving and matched gifts"
+				}
+			}
 		},
 		"outflows": {
 			"title-name": "Outflows",

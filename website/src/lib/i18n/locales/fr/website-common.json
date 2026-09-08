@@ -123,7 +123,28 @@
 		},
 		"inflows": {
 			"title-name": "Entrées",
-			"title-currency": "en {{currency}}"
+			"title-currency": "en {{currency}}",
+			"eyebrow": "Entrées",
+			"headline-before": "La majeure partie de notre financement provient de ",
+			"headline-bold": "particuliers qui donnent chaque mois",
+			"headline-after": ".",
+			"video-label": "Nos donateurs mensuels donnent généralement 1% de leurs revenus.",
+			"breakdown-title": "Répartition",
+			"total-label": "Total des entrées",
+			"segments": {
+				"individuals": {
+					"label": "Particuliers",
+					"description": "Dons récurrents et ponctuels"
+				},
+				"foundations": {
+					"label": "Fondations & subventions",
+					"description": "Subventions pluriannuelles et ponctuelles"
+				},
+				"corporate": {
+					"label": "Partenaires entreprises",
+					"description": "Dons salariaux et dons jumelés"
+				}
+			}
 		},
 		"outflows": {
 			"title-name": "Sorties",

@@ -7,6 +7,7 @@ import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-ser
 import { HomePageRichtextButtonHeaderBlock } from '@/components/content-blocks/home-page-richtext-button-header';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
+import { InflowsBlock } from '@/components/content-blocks/inflows-block';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
 import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
@@ -71,6 +72,8 @@ const renderPageBlock = (
 			return <ImageTextBlock blok={block} />;
 		case 'impactMeasurement':
 			return <ImpactMeasurementBlock blok={block} lang={lang} searchParams={searchParams} />;
+		case 'inflows':
+			return <InflowsBlock blok={block} lang={lang} />;
 		case 'journalTeasers':
 			return <JournalTeasersBlock blok={block} lang={lang} region={region} />;
 		case 'lottie':

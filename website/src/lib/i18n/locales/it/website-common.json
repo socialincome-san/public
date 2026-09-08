@@ -123,7 +123,28 @@
 		},
 		"inflows": {
 			"title-name": "Entrate",
-			"title-currency": "in {{currency}}"
+			"title-currency": "in {{currency}}",
+			"eyebrow": "Entrate",
+			"headline-before": "La maggior parte dei nostri finanziamenti arriva da ",
+			"headline-bold": "persone che donano ogni mese",
+			"headline-after": ".",
+			"video-label": "I nostri donatori mensili tipicamente donano l'1% di ciò che guadagnano.",
+			"breakdown-title": "Ripartizione",
+			"total-label": "Entrate totali",
+			"segments": {
+				"individuals": {
+					"label": "Persone",
+					"description": "Donazioni ricorrenti e una tantum"
+				},
+				"foundations": {
+					"label": "Fondazioni & grant",
+					"description": "Grant pluriennali e una tantum"
+				},
+				"corporate": {
+					"label": "Partner aziendali",
+					"description": "Payroll giving e matched gifts"
+				}
+			}
 		},
 		"outflows": {
 			"title-name": "Uscite",

@@ -123,7 +123,28 @@
 		},
 		"inflows": {
 			"title-name": "Zuflüsse",
-			"title-currency": "in {{currency}}"
+			"title-currency": "in {{currency}}",
+			"eyebrow": "Zuflüsse",
+			"headline-before": "Der Grossteil unserer Finanzierung stammt von ",
+			"headline-bold": "Privatpersonen mit monatlichen Spenden",
+			"headline-after": ".",
+			"video-label": "Unsere monatlichen Spenderinnen und Spender geben typischerweise 1% ihres Einkommens.",
+			"breakdown-title": "Aufschlüsselung",
+			"total-label": "Zuflüsse insgesamt",
+			"segments": {
+				"individuals": {
+					"label": "Privatpersonen",
+					"description": "Wiederkehrende und einmalige Spenden"
+				},
+				"foundations": {
+					"label": "Stiftungen & Grants",
+					"description": "Mehrjährige und einmalige Förderungen"
+				},
+				"corporate": {
+					"label": "Unternehmen",
+					"description": "Payroll Giving und Matching Gifts"
+				}
+			}
 		},
 		"outflows": {
 			"title-name": "Abflüsse",

@@ -280,6 +280,15 @@ export interface ImpactMeasurement {
   [k: string]: unknown;
 }
 
+export interface Inflows {
+  foundationInflows?: string;
+  corporatePartnerInflows?: string;
+  component: "inflows";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface JournalTeasers {
   heading?: string;
   articlesDisplayMode: "latest" | "selected";
@@ -450,6 +459,7 @@ export interface Page {
     | DonationGlobe
     | TransparencySummary
     | TransparencyCountries
+    | Inflows
   )[];
   component: "page";
   _uid: string;
@@ -723,6 +733,7 @@ export interface TwoColumn {
     | DonationGlobe
     | TransparencySummary
     | TransparencyCountries
+    | Inflows
   )[];
   rightColumn: (
     | DonationsTotal
@@ -756,6 +767,7 @@ export interface TwoColumn {
     | DonationGlobe
     | TransparencySummary
     | TransparencyCountries
+    | Inflows
   )[];
   columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
   disableMarginTop?: boolean;
