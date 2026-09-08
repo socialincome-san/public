@@ -17,7 +17,6 @@ import { prisma } from '@/lib/database/prisma';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { getStoryblokApi } from '@/lib/services/storyblok/storyblok.config';
 import { STORYBLOK_CAMPAIGNS_FOLDER } from '@/lib/storyblok/storyblok-paths';
-import '@/scripts/shared/load-script-env';
 import type { ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import {
 	assertDatabaseUrl,
