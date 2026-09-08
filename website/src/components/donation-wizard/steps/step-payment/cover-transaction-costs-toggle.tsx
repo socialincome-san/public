@@ -1,7 +1,7 @@
 'use client';
 
 import { Switch } from '@/components/switch/switch';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { cn } from '@/lib/utils/cn';
 import { CircleHelp } from 'lucide-react';

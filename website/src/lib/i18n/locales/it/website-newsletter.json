@@ -10,6 +10,9 @@
 		"toast-success": "Grazie per iscriverti alla nostra newsletter!",
 		"toast-failure": "Qualcosa è andato storto. Prova di nuovo o contattaci a hello@socialincome.org",
 		"email-placeholder": "La tua email",
-		"button-subscribe": "Iscriviti ora"
+		"button-subscribe": "Iscriviti ora",
+		"first-name": "Nome",
+		"email": "E-Mail",
+		"sent-by": "Newsletter inviata da"
 	}
 }

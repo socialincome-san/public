@@ -6,7 +6,6 @@ import { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import type { DisplayAmount } from '@/lib/services/currency-display/currency-display.types';
 import { services } from '@/lib/services/services';
-import type { TransparencyFinancialPeriod } from '@/lib/services/transparency/transparency.types';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
@@ -24,10 +23,9 @@ type Props = {
 };
 
 export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
-	const financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' };
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
 	const [dataResult, rates] = await Promise.all([
-		services.transparency.getTransparencyData([], financialPeriod),
+		services.transparency.getTransparencySummary(),
 		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
 	]);
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { CardAlertFooter } from '@/components/card-alert-footer';
-import { CountryFlag } from '@/components/country-flag';
+import { CountryFlag } from '@/components/country-flag/country-flag';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { getCountryNameByCode } from '@/lib/types/country';
