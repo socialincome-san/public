@@ -13,7 +13,7 @@ import { Loader2 } from 'lucide-react';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
-import { MultiSelect } from '../multi-select';
+import { MultiSelect } from '../multi-select/multi-select';
 import { FormActions, type ExtraAction } from './form-actions';
 
 export type FormField = {

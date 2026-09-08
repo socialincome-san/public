@@ -17,7 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { MultiSelect, MultiSelectOption } from '../multi-select';
+import { MultiSelect, MultiSelectOption } from '../multi-select/multi-select';
 import { buildDefaultValues } from './defaults';
 import { ProfileFormInput, ProfileFormOutput, profileFormSchema } from './schemas';
 import { submitProfileForm } from './submit';
