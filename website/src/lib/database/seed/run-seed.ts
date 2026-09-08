@@ -25,6 +25,7 @@ import { programAccessesData } from './data/program-accesses.data';
 import { programTargetFocusesData } from './data/program-target-focuses.data';
 import { programsData } from './data/programs.data';
 import { recipientsData } from './data/recipients.data';
+import { reservesData } from './data/reserves.data';
 import { sourceLinksData } from './data/source-links.data';
 import { subscriptionsData } from './data/subscriptions.data';
 import { surveySchedulesData } from './data/survey-schedules.data';
@@ -76,6 +77,7 @@ export const seedDatabase = async () => {
 			skipDuplicates: true,
 		});
 		await tx.bankAccount.createMany({ data: bankAccountsData, skipDuplicates: true });
+		await tx.reserve.createMany({ data: reservesData, skipDuplicates: true });
 		await tx.account.createMany({ data: accountsData, skipDuplicates: true });
 		await tx.address.createMany({ data: addressesData, skipDuplicates: true });
 		await tx.phone.createMany({ data: phonesData, skipDuplicates: true });
