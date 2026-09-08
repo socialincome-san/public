@@ -217,9 +217,12 @@ describe('TransparencyService.getLatestReservesChf', () => {
 	});
 
 	test('fails when latest reserves cannot be loaded', async () => {
-		const service = new TransparencyService({} as unknown as PrismaClient, {
-			getLatestPerBankAccount: () => Promise.resolve({ success: false as const, error: 'Reserve lookup failed' }),
-		} as never);
+		const service = new TransparencyService(
+			{} as unknown as PrismaClient,
+			{
+				getLatestPerBankAccount: () => Promise.resolve({ success: false as const, error: 'Reserve lookup failed' }),
+			} as never,
+		);
 
 		const result = await service.getLatestReservesChf();
 

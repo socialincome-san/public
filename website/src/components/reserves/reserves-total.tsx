@@ -1,9 +1,6 @@
 'use client';
 
-import {
-	FinancialInstitutionLogo,
-	type FinancialInstitutionLogoId,
-} from '@/components/reserves/financial-institution-logo';
+import { FinancialInstitutionLogo, type FinancialInstitutionLogoId } from '@/components/reserves/financial-institution-logo';
 import { useCountUp } from '@/lib/hooks/use-count-up';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
@@ -24,14 +21,7 @@ type Props = {
 	lang: WebsiteLanguage;
 };
 
-export const ReservesTotal = ({
-	amount,
-	title,
-	titleCurrency,
-	institutionsHeading,
-	institutions,
-	lang,
-}: Props) => {
+export const ReservesTotal = ({ amount, title, titleCurrency, institutionsHeading, institutions, lang }: Props) => {
 	const locale = getSafeNumberFormatLocale(lang);
 	const sectionRef = useRef<HTMLDivElement>(null);
 	const isInView = useInView(sectionRef, { once: true, amount: 0.3 });

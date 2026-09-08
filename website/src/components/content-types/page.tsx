@@ -16,8 +16,8 @@ import { OpenSourceStatsBlock } from '@/components/content-blocks/open-source-st
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { PersonGridBlock } from '@/components/content-blocks/person-grid';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
-import { RichtextButtonHeaderBlock } from '@/components/content-blocks/richtext-button-header';
 import { ReservesBlock } from '@/components/content-blocks/reserves-block';
+import { RichtextButtonHeaderBlock } from '@/components/content-blocks/richtext-button-header';
 import { RunwayMonthGridBlock } from '@/components/content-blocks/runway-month-grid-block';
 import { SpacerBlock } from '@/components/content-blocks/spacer';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
