@@ -426,6 +426,14 @@ export interface OpenSourceStats {
   [k: string]: unknown;
 }
 
+export interface Outflows {
+  component: "outflows";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+
 export interface Page {
   content: (
     | DonationsTotal
@@ -460,6 +468,7 @@ export interface Page {
     | TransparencySummary
     | TransparencyCountries
     | Inflows
+    | Outflows
   )[];
   component: "page";
   _uid: string;
@@ -734,6 +743,7 @@ export interface TwoColumn {
     | TransparencySummary
     | TransparencyCountries
     | Inflows
+    | Outflows
   )[];
   rightColumn: (
     | DonationsTotal
@@ -768,6 +778,7 @@ export interface TwoColumn {
     | TransparencySummary
     | TransparencyCountries
     | Inflows
+    | Outflows
   )[];
   columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
   disableMarginTop?: boolean;

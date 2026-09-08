@@ -148,7 +148,36 @@
 		},
 		"outflows": {
 			"title-name": "Uscite",
-			"title-currency": "in {{currency}}"
+			"title-currency": "in {{currency}}",
+			"eyebrow": "Uscite",
+			"headline-before": "",
+			"headline-bold": "{{percent}}%",
+			"headline-after": " di ogni contributo raggiungono direttamente le persone beneficiarie.",
+			"zewo-before": "Certificati ZEWO per una raccolta fondi etica e sottoposti ogni anno a revisione da {{auditFirm}} (",
+			"zewo-link": "Vedi i rapporti di revisione 2020-2025",
+			"zewo-after": ").",
+			"zewo-alt": "Certificazione ZEWO",
+			"breakdown-title": "Come viene utilizzata una donazione di CHF 100",
+			"breakdown-aria-label": "Ripartizione di come viene utilizzato ogni CHF 100",
+			"segments": {
+				"direct-cash": {
+					"label": "Trasferimenti diretti di denaro",
+					"description": "Ciò che trasferiamo direttamente sui telefoni delle persone in difficoltà."
+				},
+				"administration": {
+					"label": "Amministrazione",
+					"description": "Ciò che usiamo per revisione, software e infrastruttura cloud, ecc."
+				},
+				"fundraising": {
+					"label": "Raccolta fondi",
+					"description": "Ciò che investiamo per far crescere il movimento."
+				}
+			},
+			"ngo-average-before": "Media delle ONG: ~CHF {{amount}} di ogni CHF 100 raggiungono i beneficiari. (",
+			"ngo-average-source": "Fonte",
+			"ngo-average-after": ")",
+			"annual-statement-before": "Riferimento: ultimo ",
+			"annual-statement-link": "bilancio annuale (download)"
 		},
 		"reserves": {
 			"title-name": "Riserve",

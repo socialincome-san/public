@@ -148,7 +148,36 @@
 		},
 		"outflows": {
 			"title-name": "Outflows",
-			"title-currency": "in {{currency}}"
+			"title-currency": "in {{currency}}",
+			"eyebrow": "Outflows",
+			"headline-before": "",
+			"headline-bold": "{{percent}}%",
+			"headline-after": " of every contribution reaches recipients directly.",
+			"zewo-before": "ZEWO-certified for ethical fundraising and audited yearly by {{auditFirm}} (",
+			"zewo-link": "See audit reports 2020-2025",
+			"zewo-after": ").",
+			"zewo-alt": "ZEWO certification",
+			"breakdown-title": "How is a CHF 100 donation spent",
+			"breakdown-aria-label": "Breakdown of how each CHF 100 is spent",
+			"segments": {
+				"direct-cash": {
+					"label": "Direct cash transfers",
+					"description": "What we transfer directly onto the phones of people in need."
+				},
+				"administration": {
+					"label": "Administration",
+					"description": "What we use for audit, software and cloud infrastructure etc."
+				},
+				"fundraising": {
+					"label": "Fundraising",
+					"description": "What we invest to grow the movement."
+				}
+			},
+			"ngo-average-before": "NGO average: ~CHF {{amount}} of every CHF 100 reaches beneficiaries. (",
+			"ngo-average-source": "Source",
+			"ngo-average-after": ")",
+			"annual-statement-before": "Reference latest ",
+			"annual-statement-link": "annual statement (download)"
 		},
 		"reserves": {
 			"title-name": "Reserves",

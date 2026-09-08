@@ -14,6 +14,7 @@ import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceContributorsBlock } from '@/components/content-blocks/open-source-contributors';
 import { OpenSourceIssuesBlock } from '@/components/content-blocks/open-source-issues';
 import { OpenSourceStatsBlock } from '@/components/content-blocks/open-source-stats';
+import { OutflowsBlock } from '@/components/content-blocks/outflows-block';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { PersonGridBlock } from '@/components/content-blocks/person-grid';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
@@ -74,6 +75,8 @@ const renderPageBlock = (
 			return <ImpactMeasurementBlock blok={block} lang={lang} searchParams={searchParams} />;
 		case 'inflows':
 			return <InflowsBlock blok={block} lang={lang} />;
+		case 'outflows':
+			return <OutflowsBlock blok={block} lang={lang} region={region} />;
 		case 'journalTeasers':
 			return <JournalTeasersBlock blok={block} lang={lang} region={region} />;
 		case 'lottie':
