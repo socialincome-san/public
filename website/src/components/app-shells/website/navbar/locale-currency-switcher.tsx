@@ -3,7 +3,7 @@
 import { Button } from '@/components/button/button';
 import { CountryFlag } from '@/components/country-flag/country-flag';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
-import { Tabs, TabsList, TabsTrigger } from '@/components/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/tabs/tabs';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { useIsPage } from '@/lib/hooks/useIsPage';
 import { useTranslator } from '@/lib/hooks/useTranslator';

@@ -1,7 +1,7 @@
 'use client';
 
 import { Slider } from '@/components/slider/slider';
-import { Tabs, TabsList, TabsTrigger } from '@/components/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/tabs/tabs';
 import { PayoutInterval } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { PayoutPerIntervalAmount, type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
