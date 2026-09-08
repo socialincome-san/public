@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/accordion/accordion';
 import { Combobox } from '@/components/combo-box';
-import { DatePicker } from '@/components/date-picker';
+import { DatePicker } from '@/components/date-picker/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
