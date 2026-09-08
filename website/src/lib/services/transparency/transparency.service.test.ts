@@ -204,6 +204,29 @@ describe('TransparencyService.getContributionsByCountryData', () => {
 	});
 });
 
+describe('TransparencyService.getLatestReservesChf', () => {
+	test('returns the latest reserves total', async () => {
+		const { service } = createRunwayService({
+			reservesChf: 232_000,
+			lastCompletedMonthPaymentsChf: 10_000,
+		});
+
+		const result = await service.getLatestReservesChf();
+
+		expect(result).toEqual({ success: true, data: 232_000 });
+	});
+
+	test('fails when latest reserves cannot be loaded', async () => {
+		const service = new TransparencyService({} as unknown as PrismaClient, {
+			getLatestPerBankAccount: () => Promise.resolve({ success: false as const, error: 'Reserve lookup failed' }),
+		} as never);
+
+		const result = await service.getLatestReservesChf();
+
+		expect(result).toEqual({ success: false, error: 'Reserve lookup failed' });
+	});
+});
+
 describe('TransparencyService.getRunwayMonths', () => {
 	test('divides latest reserves by last completed month recipient payments and floors full months', async () => {
 		const { service, aggregate } = createRunwayService({

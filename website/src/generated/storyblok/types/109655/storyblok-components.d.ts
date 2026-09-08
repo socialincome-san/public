@@ -446,6 +446,7 @@ export interface Page {
     | Lottie
     | PersonGrid
     | RunwayMonthGrid
+    | ReservesBlock
     | DonationGlobe
     | TransparencySummary
     | TransparencyCountries
@@ -581,6 +582,13 @@ export interface ReferencesGroup {
   [k: string]: unknown;
 }
 
+export interface ReservesBlock {
+  component: "reservesBlock";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface RichtextButtonHeader {
   heading?: StoryblokRichtext;
   button?: Button[];
@@ -711,6 +719,7 @@ export interface TwoColumn {
     | Lottie
     | PersonGrid
     | RunwayMonthGrid
+    | ReservesBlock
     | DonationGlobe
     | TransparencySummary
     | TransparencyCountries
@@ -743,6 +752,7 @@ export interface TwoColumn {
     | Lottie
     | PersonGrid
     | RunwayMonthGrid
+    | ReservesBlock
     | DonationGlobe
     | TransparencySummary
     | TransparencyCountries

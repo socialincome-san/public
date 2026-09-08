@@ -131,7 +131,14 @@
 		},
 		"reserves": {
 			"title-name": "Reserves",
+			"total-today": "Total reserves today",
 			"title-currency": "in {{currency}}",
+			"institutions-heading": "Financial institutions we work with",
+			"institutions": {
+				"postfinance": "PostFinance",
+				"ecobank": "Ecobank",
+				"orange-money": "Orange Money"
+			},
 			"tooltip-label": "Show reserve account details",
 			"no-data": "No data"
 		},

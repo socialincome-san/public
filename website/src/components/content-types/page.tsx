@@ -17,6 +17,7 @@ import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnersh
 import { PersonGridBlock } from '@/components/content-blocks/person-grid';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
 import { RichtextButtonHeaderBlock } from '@/components/content-blocks/richtext-button-header';
+import { ReservesBlock } from '@/components/content-blocks/reserves-block';
 import { RunwayMonthGridBlock } from '@/components/content-blocks/runway-month-grid-block';
 import { SpacerBlock } from '@/components/content-blocks/spacer';
 import { TeamGridBlock } from '@/components/content-blocks/team-grid';
@@ -134,6 +135,8 @@ const renderPageBlock = (
 			return <VideoTextBlock blok={block} />;
 		case 'runwayMonthGrid':
 			return <RunwayMonthGridBlock blok={block} lang={lang} />;
+		case 'reservesBlock':
+			return <ReservesBlock blok={block} lang={lang} />;
 		default:
 			block satisfies never;
 
