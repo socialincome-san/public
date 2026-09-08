@@ -1,4 +1,4 @@
-import { useEffect, useState, type ComponentProps } from 'react';
+import { useState, type ComponentProps } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
@@ -16,7 +16,12 @@ const TabsExample = ({ args, items }: { args: ComponentProps<typeof Tabs>; items
 	const initialValue = items.some((item) => item.value === defaultValue) ? defaultValue : items[0].value;
 
 	const [value, setValue] = useState(initialValue);
-	useEffect(() => setValue(initialValue), [initialValue]);
+	const [lastInitialValue, setLastInitialValue] = useState(initialValue);
+
+	if (lastInitialValue !== initialValue) {
+		setLastInitialValue(initialValue);
+		setValue(initialValue);
+	}
 
 	return (
 		<Tabs {...args} value={value} onValueChange={setValue}>
