@@ -7,7 +7,7 @@ import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { useInView } from 'motion/react';
 import { useRef } from 'react';
 
-export type FinancialInstitution = {
+type FinancialInstitution = {
 	id: FinancialInstitutionLogoId;
 	label: string;
 };
