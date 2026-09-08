@@ -3,9 +3,9 @@
 import * as React from 'react';
 
 import { ChevronDownIcon } from 'lucide-react';
-import { Button } from './button/button';
-import { Calendar } from './calendar';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import { Button } from '../button/button';
+import { Calendar } from '../calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '../popover';
 
 // avoid time zone issues by normalizing date to noon
 export const normalizeToNoon = (date: Date) => {

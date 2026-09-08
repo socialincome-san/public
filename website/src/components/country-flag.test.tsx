@@ -1,6 +1,6 @@
 /** @jest-environment jsdom */
 
-import { CountryFlag } from '@/components/country-flag';
+import { CountryFlag } from '@/components/country-flag/country-flag';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 

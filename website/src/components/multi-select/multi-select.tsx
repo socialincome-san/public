@@ -5,11 +5,11 @@ import { CheckIcon, ChevronDown, WandSparkles, XCircle, XIcon } from 'lucide-rea
 import * as React from 'react';
 
 import { cn } from '@/lib/utils/cn';
-import { Badge } from './badge/badge';
-import { Button } from './button/button';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from './command';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
-import { Separator } from './separator';
+import { Badge } from '../badge/badge';
+import { Button } from '../button/button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '../command';
+import { Popover, PopoverContent, PopoverTrigger } from '../popover';
+import { Separator } from '../separator';
 
 /**
  * Animation types and configurations
