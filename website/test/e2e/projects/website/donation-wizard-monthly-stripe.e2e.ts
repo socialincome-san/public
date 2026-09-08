@@ -22,6 +22,7 @@ import {
 	openDonationWizardFromHero,
 } from './utils/donation-wizard-flow';
 import { completeStripeEmbeddedCheckout } from './utils/donation-wizard-stripe';
+import { describeDonationWizardStripeE2e } from './utils/donation-wizard-stripe-e2e';
 
 const MONTHLY_INCOME = 7500;
 const MONTHLY_DONATION_BASE = 75;
@@ -82,52 +83,54 @@ const completeMonthlyStripeDonation = async (
 	await completeReferralStep(page, 'social_media');
 };
 
-test.beforeEach(async () => {
-	await seedDatabase();
-});
+describeDonationWizardStripeE2e('donation wizard monthly stripe', () => {
+	test.beforeEach(async () => {
+		await seedDatabase();
+	});
 
-test('monthly donation via Stripe creates a subscription with cover transaction costs enabled', async ({ page }) => {
-	const donor = {
-		firstName: 'Monthly',
-		lastName: 'StripeDonor',
-		email: `donation-wizard.monthly-stripe.${Date.now()}@example.com`,
-	};
+	test('monthly donation via Stripe creates a subscription with cover transaction costs enabled', async ({ page }) => {
+		const donor = {
+			firstName: 'Monthly',
+			lastName: 'StripeDonor',
+			email: `donation-wizard.monthly-stripe.${Date.now()}@example.com`,
+		};
 
-	await deleteDonationWizardTestUser(donor.email);
-
-	try {
-		await expectNoDonationWizardRecords(donor.email);
-		await completeMonthlyStripeDonation(page, donor);
-		await expectContributorOnboardingCompleted(donor.email, { gender: 'female', country: 'CH' });
-
-		const stripeCustomerId = await getContributorStripeCustomerId(donor.email);
-		await waitForStripeSubscription(stripeCustomerId, {
-			unitAmount: amountToStripeUnitAmount(MONTHLY_DONATION_WITH_FEES),
-			coverTransactionCosts: true,
-		});
-	} finally {
 		await deleteDonationWizardTestUser(donor.email);
-	}
-});
 
-test('monthly donation via Stripe without cover costs creates a subscription at the base amount', async ({ page }) => {
-	const donor = {
-		firstName: 'Monthly',
-		lastName: 'StripeNoCover',
-		email: `donation-wizard.monthly-stripe-no-cover.${Date.now()}@example.com`,
-	};
+		try {
+			await expectNoDonationWizardRecords(donor.email);
+			await completeMonthlyStripeDonation(page, donor);
+			await expectContributorOnboardingCompleted(donor.email, { gender: 'female', country: 'CH' });
 
-	await deleteDonationWizardTestUser(donor.email);
+			const stripeCustomerId = await getContributorStripeCustomerId(donor.email);
+			await waitForStripeSubscription(stripeCustomerId, {
+				unitAmount: amountToStripeUnitAmount(MONTHLY_DONATION_WITH_FEES),
+				coverTransactionCosts: true,
+			});
+		} finally {
+			await deleteDonationWizardTestUser(donor.email);
+		}
+	});
 
-	try {
-		await completeMonthlyStripeDonation(page, donor, { coverTransactionCosts: false });
+	test('monthly donation via Stripe without cover costs creates a subscription at the base amount', async ({ page }) => {
+		const donor = {
+			firstName: 'Monthly',
+			lastName: 'StripeNoCover',
+			email: `donation-wizard.monthly-stripe-no-cover.${Date.now()}@example.com`,
+		};
 
-		const stripeCustomerId = await getContributorStripeCustomerId(donor.email);
-		await waitForStripeSubscription(stripeCustomerId, {
-			unitAmount: amountToStripeUnitAmount(MONTHLY_DONATION_BASE),
-			coverTransactionCosts: false,
-		});
-	} finally {
 		await deleteDonationWizardTestUser(donor.email);
-	}
+
+		try {
+			await completeMonthlyStripeDonation(page, donor, { coverTransactionCosts: false });
+
+			const stripeCustomerId = await getContributorStripeCustomerId(donor.email);
+			await waitForStripeSubscription(stripeCustomerId, {
+				unitAmount: amountToStripeUnitAmount(MONTHLY_DONATION_BASE),
+				coverTransactionCosts: false,
+			});
+		} finally {
+			await deleteDonationWizardTestUser(donor.email);
+		}
+	});
 });
