@@ -188,6 +188,10 @@ jobs:
       NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.TF_STAGING_STRIPE_PUBLISHABLE_KEY }}
       GITHUB_PAT: ${{ secrets.TF_STAGING_GITHUB_PAT }}
       HOME: /root
+      # Deterministic Storyblok fixtures for Playwright (no STORYBLOK_PREVIEW_TOKEN required).
+      E2E_STORYBLOK_MOCK: '1'
+      # Fork PRs get a read-only GITHUB_TOKEN, so skip snapshot auto-commit like Renovate.
+      SKIP_SNAPSHOT_UPDATE: ${{ github.actor == 'renovate[bot]' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) }}
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -199,21 +203,21 @@ jobs:
         uses: ./.github/workflows/actions/init
 
       - name: Run E2E snapshot update
-        if: github.actor != 'renovate[bot]'
+        if: env.SKIP_SNAPSHOT_UPDATE != 'true'
         working-directory: website
         run: npm run test:e2e:update
 
       - name: Run E2E tests (no snapshot update)
-        if: github.actor == 'renovate[bot]'
+        if: env.SKIP_SNAPSHOT_UPDATE == 'true'
         working-directory: website
         run: npm run test:e2e
 
       - name: Mark repo as safe
-        if: github.actor != 'renovate[bot]'
+        if: env.SKIP_SNAPSHOT_UPDATE != 'true'
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Commit and push updated snapshots
-        if: github.actor != 'renovate[bot]'
+        if: env.SKIP_SNAPSHOT_UPDATE != 'true'
         uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7
         with:
           commit_message: "chore: update snapshots (CI auto-commit)"

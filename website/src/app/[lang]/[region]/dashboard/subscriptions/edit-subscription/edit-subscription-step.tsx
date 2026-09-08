@@ -5,7 +5,7 @@ import { CoverTransactionCostsToggle } from '@/components/donation-wizard/steps/
 import { formatDonationCurrencyAmount } from '@/components/donation-wizard/utils/donation-formatting';
 import { Input } from '@/components/input/input';
 import { Separator } from '@/components/separator';
-import { Slider } from '@/components/slider';
+import { Slider } from '@/components/slider/slider';
 import { type Currency } from '@/generated/prisma/client';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import {

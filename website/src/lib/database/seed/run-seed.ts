@@ -43,8 +43,8 @@ export const seedDatabase = async () => {
 		await tx.contribution.deleteMany();
 		await tx.subscription.deleteMany();
 		await tx.donationCertificate.deleteMany();
-		await tx.contributor.deleteMany();
 		await tx.campaign.deleteMany();
+		await tx.contributor.deleteMany();
 		await tx.paymentInformation.deleteMany();
 		await tx.localPartnerFocus.deleteMany();
 		await tx.localPartner.deleteMany();

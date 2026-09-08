@@ -12,7 +12,7 @@ import { IdCell } from '@/components/data-table/elements/id-cell';
 import { TABLE_PAGE_SIZE_OPTIONS, TableQueryState } from '@/components/data-table/query-state';
 import { TableFilterConfig } from '@/components/data-table/table-config.types';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
