@@ -90,6 +90,12 @@ export interface CampaignDonate {
 
 export interface CampaignGlobals {
   faq: (ISbStoryData<Faq> | string)[];
+  muxPlaybackId1: string;
+  muxPlaybackId2: string;
+  muxPlaybackId3: string;
+  newsletterImage: StoryblokAsset;
+  newsletterSenderName: string;
+  newsletterTitle: string;
   component: "campaignGlobals";
   _uid: string;
   _editable?: string | undefined;

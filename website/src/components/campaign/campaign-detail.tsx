@@ -10,7 +10,7 @@ import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-te
 import { CampaignNewsletter } from '@/components/campaign/campaign-newsletter';
 import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-other-campaigns-teaser';
 import { CampaignProgramTeaser } from '@/components/campaign/campaign-program-teaser';
-import { CampaignSocialIncomeSection } from '@/components/campaign/campaign-social-income';
+import { CampaignVideoSlider } from '@/components/campaign/campaign-video-slider';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -69,16 +69,27 @@ export const CampaignDetail = async ({
 	if (!pageContentResult.success) {
 		throw new Error(pageContentResult.error);
 	}
-	const { translator, faqs } = pageContentResult.data;
+	const { translator, faqs, videoPlaybackIds, newsletter } = pageContentResult.data;
 	const trimmedDescription = description.trim();
 	const submissionLabels = buildCampaignSubmissionLabels(translator);
 	const newsletterTranslations = {
-		title: translator.t('popup.information-label'),
-		emailLabel: translator.t('updates.email'),
+		firstNameLabel: translator.t('popup.first-name'),
+		emailLabel: translator.t('popup.email'),
 		emailPlaceholder: translator.t('popup.email-placeholder'),
 		buttonAddSubscriber: translator.t('popup.button-subscribe'),
+		sentBy: translator.t('popup.sent-by'),
 		toastSuccess: translator.t('popup.toast-success'),
 		toastFailure: translator.t('popup.toast-failure'),
+	};
+	const videoSliderTranslations = {
+		title: translator.t('campaign.video-slider.title'),
+		description: translator.t('campaign.video-slider.description'),
+		videoTitles: videoPlaybackIds.map((_, index) =>
+			translator.t('campaign.video-slider.video-title', { context: { index: index + 1 } }),
+		),
+		showVideoLabels: videoPlaybackIds.map((_, index) =>
+			translator.t('campaign.video-slider.show-video', { context: { index: index + 1 } }),
+		),
 	};
 
 	return (
@@ -119,8 +130,15 @@ export const CampaignDetail = async ({
 				lang={lang}
 				region={region}
 			/>
-			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
-			<CampaignSocialIncomeSection translator={translator} />
+			<CampaignNewsletter
+				lang={lang}
+				title={newsletter.title}
+				senderName={newsletter.senderName}
+				imageSrc={newsletter.imageSrc}
+				imageAlt={newsletter.imageAlt}
+				translations={newsletterTranslations}
+			/>
+			<CampaignVideoSlider translations={videoSliderTranslations} videoPlaybackIds={videoPlaybackIds} />
 			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />
 			<CampaignJournalTeaser lang={lang} region={region} />
 			{faqs.length > 0 && <CampaignFaqSection heading={translator.t('title', { namespace: 'website-faq' })} faqs={faqs} />}

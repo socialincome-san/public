@@ -10,6 +10,9 @@
 		"toast-success": "Merci de t’être abonné à la newsletter de Social Income!",
 		"toast-failure": "Oups! Ça n’a pas marché. Essaie encore une fois ou prend contact avec nous (hello@socialincome.org)",
 		"email-placeholder": "Ton adresse E-Mail",
-		"button-subscribe": "S'abonner"
+		"button-subscribe": "S'abonner",
+		"first-name": "Prénom",
+		"email": "E-Mail",
+		"sent-by": "Newsletter envoyée par"
 	}
 }
