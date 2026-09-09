@@ -1,7 +1,7 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { getDonationExplainerVideo } from '@/components/donation-wizard/utils/donation-explainer-video';
 import { InflowsSection, type InflowsSectionSegment } from '@/components/inflows/inflows-section';
-import { buildInflowSegments, parseChfAmount, resolveIndividualsInflowsChf } from '@/components/inflows/inflows-segments';
+import { buildInflowSegments, parseChfAmount, resolveInflowSegmentAmountsChf } from '@/components/inflows/inflows-segments';
 import type { Inflows as InflowsBlok } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
@@ -28,14 +28,16 @@ export const InflowsBlock = async ({ blok, lang }: Props) => {
 	}
 
 	const totalInflowsChf = dataResult.data.financialSummary.inflowsChf;
-	const foundationsChf = parseChfAmount(blok.foundationInflows);
-	const corporateChf = parseChfAmount(blok.corporatePartnerInflows);
-	const individualsChf = resolveIndividualsInflowsChf(totalInflowsChf, foundationsChf, corporateChf);
+	const amountsChf = resolveInflowSegmentAmountsChf(
+		totalInflowsChf,
+		parseChfAmount(blok.foundationInflows),
+		parseChfAmount(blok.corporatePartnerInflows),
+	);
 
 	const totalInflows = services.currencyDisplay.resolveFromChf(totalInflowsChf, displayCurrency, rates);
-	const individuals = services.currencyDisplay.resolveFromChf(individualsChf, displayCurrency, rates);
-	const foundations = services.currencyDisplay.resolveFromChf(foundationsChf, displayCurrency, rates);
-	const corporate = services.currencyDisplay.resolveFromChf(corporateChf, displayCurrency, rates);
+	const individuals = services.currencyDisplay.resolveFromChf(amountsChf.individuals, displayCurrency, rates);
+	const foundations = services.currencyDisplay.resolveFromChf(amountsChf.foundations, displayCurrency, rates);
+	const corporate = services.currencyDisplay.resolveFromChf(amountsChf.corporate, displayCurrency, rates);
 
 	const computedSegments = buildInflowSegments({
 		individuals: individuals.amount,

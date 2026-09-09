@@ -1,4 +1,4 @@
-import { allocatePercents, buildInflowSegments, parseChfAmount, resolveIndividualsInflowsChf } from './inflows-segments';
+import { allocatePercents, buildInflowSegments, parseChfAmount, resolveInflowSegmentAmountsChf } from './inflows-segments';
 
 describe('parseChfAmount', () => {
 	test('returns 0 for missing or blank values', () => {
@@ -20,14 +20,24 @@ describe('parseChfAmount', () => {
 	});
 });
 
-describe('resolveIndividualsInflowsChf', () => {
+describe('resolveInflowSegmentAmountsChf', () => {
 	test('subtracts foundations and corporate from the donation total', () => {
-		expect(resolveIndividualsInflowsChf(1000, 240, 130)).toBe(630);
+		expect(resolveInflowSegmentAmountsChf(1000, 240, 130)).toEqual({
+			individuals: 630,
+			foundations: 240,
+			corporate: 130,
+		});
 	});
 
-	test('never goes below zero', () => {
-		expect(resolveIndividualsInflowsChf(100, 80, 50)).toBe(0);
-		expect(resolveIndividualsInflowsChf(0, 10, 10)).toBe(0);
+	test('caps configured amounts so segments never exceed the total', () => {
+		expect(resolveInflowSegmentAmountsChf(100, 80, 50)).toEqual({ individuals: 0, foundations: 80, corporate: 20 });
+		expect(resolveInflowSegmentAmountsChf(100, 140, 50)).toEqual({ individuals: 0, foundations: 100, corporate: 0 });
+		expect(resolveInflowSegmentAmountsChf(0, 10, 10)).toEqual({ individuals: 0, foundations: 0, corporate: 0 });
+	});
+
+	test('segments always sum to the donation total', () => {
+		const amounts = resolveInflowSegmentAmountsChf(500, 400, 400);
+		expect(amounts.individuals + amounts.foundations + amounts.corporate).toBe(500);
 	});
 });
 

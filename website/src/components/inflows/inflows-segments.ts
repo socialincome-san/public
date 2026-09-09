@@ -27,12 +27,21 @@ export const parseChfAmount = (raw: string | undefined): number => {
 	return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
 };
 
-/** Individuals share of inflows: donation total minus CMS foundation and corporate amounts. */
-export const resolveIndividualsInflowsChf = (
+/**
+ * Splits the donation total into segment amounts that always sum to that total: the CMS foundation and
+ * corporate amounts are capped by the remaining total, and individuals take whatever is left.
+ */
+export const resolveInflowSegmentAmountsChf = (
 	totalInflowsChf: number,
 	foundationsChf: number,
 	corporateChf: number,
-): number => Math.max(0, totalInflowsChf - foundationsChf - corporateChf);
+): InflowSegmentAmounts => {
+	const total = Math.max(0, totalInflowsChf);
+	const foundations = Math.min(Math.max(0, foundationsChf), total);
+	const corporate = Math.min(Math.max(0, corporateChf), total - foundations);
+
+	return { individuals: total - foundations - corporate, foundations, corporate };
+};
 
 /** Largest-remainder allocation so integer percents always sum to 100 (or all 0). */
 export const allocatePercents = (amounts: readonly number[]): number[] => {
