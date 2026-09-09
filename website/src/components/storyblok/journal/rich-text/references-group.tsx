@@ -1,4 +1,4 @@
-import { ShowMoreToggle } from '@/components/show-more-toggle';
+import { ShowMoreToggle } from '@/components/show-more-toggle/show-more-toggle';
 import { StoryblokAssetThumbnail } from '@/components/storyblok/storyblok-asset-thumbnail';
 import type { ReferenceArticle, ReferencesGroup } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
