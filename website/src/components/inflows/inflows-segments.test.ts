@@ -1,4 +1,4 @@
-import { allocatePercents, buildInflowSegments, parseChfAmount } from './inflows-segments';
+import { allocatePercents, buildInflowSegments, parseChfAmount, resolveIndividualsInflowsChf } from './inflows-segments';
 
 describe('parseChfAmount', () => {
 	test('returns 0 for missing or blank values', () => {
@@ -17,6 +17,17 @@ describe('parseChfAmount', () => {
 		expect(parseChfAmount('abc')).toBe(0);
 		expect(parseChfAmount('-10')).toBe(0);
 		expect(parseChfAmount('Infinity')).toBe(0);
+	});
+});
+
+describe('resolveIndividualsInflowsChf', () => {
+	test('subtracts foundations and corporate from the donation total', () => {
+		expect(resolveIndividualsInflowsChf(1000, 240, 130)).toBe(630);
+	});
+
+	test('never goes below zero', () => {
+		expect(resolveIndividualsInflowsChf(100, 80, 50)).toBe(0);
+		expect(resolveIndividualsInflowsChf(0, 10, 10)).toBe(0);
 	});
 });
 

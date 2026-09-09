@@ -1,7 +1,7 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { getDonationExplainerVideo } from '@/components/donation-wizard/utils/donation-explainer-video';
 import { InflowsSection, type InflowsSectionSegment } from '@/components/inflows/inflows-section';
-import { buildInflowSegments, parseChfAmount } from '@/components/inflows/inflows-segments';
+import { buildInflowSegments, parseChfAmount, resolveIndividualsInflowsChf } from '@/components/inflows/inflows-segments';
 import type { Inflows as InflowsBlok } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
@@ -27,22 +27,24 @@ export const InflowsBlock = async ({ blok, lang }: Props) => {
 		return null;
 	}
 
-	const individualsChf = dataResult.data.financialSummary.inflowsChf;
+	const totalInflowsChf = dataResult.data.financialSummary.inflowsChf;
 	const foundationsChf = parseChfAmount(blok.foundationInflows);
 	const corporateChf = parseChfAmount(blok.corporatePartnerInflows);
+	const individualsChf = resolveIndividualsInflowsChf(totalInflowsChf, foundationsChf, corporateChf);
 
+	const totalInflows = services.currencyDisplay.resolveFromChf(totalInflowsChf, displayCurrency, rates);
 	const individuals = services.currencyDisplay.resolveFromChf(individualsChf, displayCurrency, rates);
 	const foundations = services.currencyDisplay.resolveFromChf(foundationsChf, displayCurrency, rates);
 	const corporate = services.currencyDisplay.resolveFromChf(corporateChf, displayCurrency, rates);
 
-	const { segments: computedSegments, total } = buildInflowSegments({
+	const { segments: computedSegments } = buildInflowSegments({
 		individuals: individuals.amount,
 		foundations: foundations.amount,
 		corporate: corporate.amount,
 	});
 
 	const locale = getSafeNumberFormatLocale(lang);
-	const currency = individuals.currency;
+	const currency = totalInflows.currency;
 	const formatAmount = (amount: number) => formatCurrencyLocale(amount, currency, locale, { maximumFractionDigits: 0 });
 
 	const segmentCopy = {
@@ -75,7 +77,7 @@ export const InflowsBlock = async ({ blok, lang }: Props) => {
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<InflowsSection
 				lang={lang}
-				totalAmount={total}
+				totalAmount={totalInflows.amount}
 				videoEmbedUrl={explainerVideo.embedUrl}
 				videoThumbnailSrc={explainerVideo.thumbnailSrc}
 				segments={segments}
