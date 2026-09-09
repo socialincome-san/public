@@ -61,18 +61,13 @@ export const allocatePercents = (amounts: readonly number[]): number[] => {
 	return result;
 };
 
-export const buildInflowSegments = (amounts: InflowSegmentAmounts): { segments: InflowSegment[]; total: number } => {
-	const orderedAmounts = SEGMENT_ORDER.map((key) => amounts[key]);
-	const percents = allocatePercents(orderedAmounts);
-	const total = orderedAmounts.reduce((sum, amount) => sum + amount, 0);
+export const buildInflowSegments = (amounts: InflowSegmentAmounts): InflowSegment[] => {
+	const percents = allocatePercents(SEGMENT_ORDER.map((key) => amounts[key]));
 
-	return {
-		total,
-		segments: SEGMENT_ORDER.map((key, index) => ({
-			key,
-			amount: amounts[key],
-			percent: percents[index] ?? 0,
-			color: INFLOW_SEGMENT_COLORS[key],
-		})),
-	};
+	return SEGMENT_ORDER.map((key, index) => ({
+		key,
+		amount: amounts[key],
+		percent: percents[index] ?? 0,
+		color: INFLOW_SEGMENT_COLORS[key],
+	}));
 };

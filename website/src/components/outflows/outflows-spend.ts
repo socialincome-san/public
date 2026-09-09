@@ -2,7 +2,6 @@ export const OUTFLOW_REACH_PERCENT = 88;
 export const OUTFLOW_NGO_AVERAGE_CHF = 70;
 export const OUTFLOW_AUDIT_FIRM = 'Wespi & Partner AG';
 export const OUTFLOW_NGO_AVERAGE_SOURCE_URL = 'https://zewo.ch/';
-export const OUTFLOW_CHF_100_TOTAL = 100;
 
 const OUTFLOW_SPEND_ROWS = [
 	{

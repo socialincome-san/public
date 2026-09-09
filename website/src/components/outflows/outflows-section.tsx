@@ -1,7 +1,7 @@
 'use client';
 
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
-import { OUTFLOW_CHF_100_TOTAL, type OutflowsSectionRow } from '@/components/outflows/outflows-spend';
+import { type OutflowsSectionRow } from '@/components/outflows/outflows-spend';
 import { Progress } from '@/components/progress/progress';
 import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
 import { cn } from '@/lib/utils/cn';
@@ -73,24 +73,21 @@ export const OutflowsSection = ({ copy, rows, downloadsHref, ngoAverageSourceUrl
 						className="flex w-full list-none flex-col gap-6 pl-0 sm:gap-7"
 						aria-label={copy.breakdownAriaLabel}
 					>
-						{rows.map((row) => {
-							const widthPercent = (row.chf / OUTFLOW_CHF_100_TOTAL) * 100;
-
-							return (
-								<li key={row.id} className="flex w-full flex-col gap-2">
-									<div className="flex flex-col gap-1">
-										<div className="flex items-baseline justify-between gap-4">
-											<span className="min-w-0 text-base leading-6 font-medium text-cyan-950">{row.label}</span>
-											<span className="shrink-0 text-base leading-6 font-medium text-cyan-950 tabular-nums">
-												CHF {row.chf}
-											</span>
-										</div>
-										<p className="text-muted-foreground text-sm leading-5">{row.description}</p>
+						{rows.map((row) => (
+							<li key={row.id} className="flex w-full flex-col gap-2">
+								<div className="flex flex-col gap-1">
+									<div className="flex items-baseline justify-between gap-4">
+										<span className="min-w-0 text-base leading-6 font-medium text-cyan-950">{row.label}</span>
+										<span className="shrink-0 text-base leading-6 font-medium text-cyan-950 tabular-nums">
+											CHF {row.chf}
+										</span>
 									</div>
-									<Progress value={showBars ? widthPercent : 0} />
-								</li>
-							);
-						})}
+									<p className="text-muted-foreground text-sm leading-5">{row.description}</p>
+								</div>
+								{/* Rows split a CHF 100 donation, so the amount is already the share in percent. */}
+								<Progress value={showBars ? row.chf : 0} />
+							</li>
+						))}
 					</ul>
 
 					<div className="flex flex-col gap-5 sm:gap-6">

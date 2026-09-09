@@ -37,7 +37,7 @@ export const InflowsBlock = async ({ blok, lang }: Props) => {
 	const foundations = services.currencyDisplay.resolveFromChf(foundationsChf, displayCurrency, rates);
 	const corporate = services.currencyDisplay.resolveFromChf(corporateChf, displayCurrency, rates);
 
-	const { segments: computedSegments } = buildInflowSegments({
+	const computedSegments = buildInflowSegments({
 		individuals: individuals.amount,
 		foundations: foundations.amount,
 		corporate: corporate.amount,

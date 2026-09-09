@@ -66,9 +66,7 @@ export const InflowsSection = ({
 			</div>
 
 			<div className="relative flex w-full flex-col items-center gap-8 rounded-[32px] bg-white px-6 pt-6 pb-8 shadow-[0px_0px_20px_rgba(0,0,0,0.05)] sm:px-8 sm:pt-7 sm:pb-10">
-				<div className="flex w-full items-center justify-between gap-4">
-					<h3 className="text-2xl leading-none font-medium text-cyan-950">{copy.breakdownTitle}</h3>
-				</div>
+				<h3 className="w-full text-2xl leading-none font-medium text-cyan-950">{copy.breakdownTitle}</h3>
 				<InflowsGauge
 					segments={segments}
 					centerValue={totalAmount}

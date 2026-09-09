@@ -2,6 +2,7 @@
 
 import { FinancialInstitutionLogo, type FinancialInstitutionLogoId } from '@/components/reserves/financial-institution-logo';
 import { useCountUp } from '@/lib/hooks/use-count-up';
+import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { useInView } from 'motion/react';
@@ -24,9 +25,11 @@ type Props = {
 export const ReservesTotal = ({ amount, title, titleCurrency, institutionsHeading, institutions, lang }: Props) => {
 	const locale = getSafeNumberFormatLocale(lang);
 	const sectionRef = useRef<HTMLDivElement>(null);
+	const reduceMotion = usePrefersReducedMotion();
 	const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-	const animatedValue = useCountUp(amount, isInView);
-	const displayValue = isInView ? animatedValue : amount;
+	const isAnimating = isInView && !reduceMotion;
+	const animatedValue = useCountUp(amount, isAnimating);
+	const displayValue = isAnimating ? animatedValue : amount;
 
 	return (
 		<div ref={sectionRef} className="text-foreground flex flex-col gap-8">

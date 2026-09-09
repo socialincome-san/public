@@ -75,8 +75,6 @@ const renderPageBlock = (
 			return <ImpactMeasurementBlock blok={block} lang={lang} searchParams={searchParams} />;
 		case 'inflows':
 			return <InflowsBlock blok={block} lang={lang} />;
-		case 'outflows':
-			return <OutflowsBlock blok={block} lang={lang} region={region} />;
 		case 'journalTeasers':
 			return <JournalTeasersBlock blok={block} lang={lang} region={region} />;
 		case 'lottie':
@@ -91,12 +89,16 @@ const renderPageBlock = (
 			return <OpenSourceContributorsBlock blok={block} lang={lang} />;
 		case 'openSourceIssues':
 			return <OpenSourceIssuesBlock blok={block} lang={lang} />;
+		case 'outflows':
+			return <OutflowsBlock blok={block} lang={lang} region={region} />;
 		case 'partnershipsCarousel':
 			return <PartnershipsCarouselBlock blok={block} />;
 		case 'personGrid':
 			return <PersonGridBlock blok={block} lang={lang} region={region} />;
 		case 'programGrid':
 			return <ProgramGridBlock blok={block} lang={lang} region={region} />;
+		case 'reservesBlock':
+			return <ReservesBlock blok={block} lang={lang} />;
 		case 'richtextButtonHeader':
 			if (richtextButtonHeaderAction === 'createProgram') {
 				return <HomePageRichtextButtonHeaderBlock blok={block} lang={lang} region={region} />;
@@ -141,8 +143,6 @@ const renderPageBlock = (
 			return <VideoTextBlock blok={block} />;
 		case 'runwayMonthGrid':
 			return <RunwayMonthGridBlock blok={block} lang={lang} />;
-		case 'reservesBlock':
-			return <ReservesBlock blok={block} lang={lang} />;
 		default:
 			block satisfies never;
 

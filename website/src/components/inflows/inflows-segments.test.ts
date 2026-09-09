@@ -51,13 +51,12 @@ describe('allocatePercents', () => {
 
 describe('buildInflowSegments', () => {
 	test('builds ordered segments with colors and percents', () => {
-		const { segments, total } = buildInflowSegments({
+		const segments = buildInflowSegments({
 			individuals: 630,
 			foundations: 240,
 			corporate: 130,
 		});
 
-		expect(total).toBe(1000);
 		expect(segments.map(({ key, percent, amount }) => ({ key, percent, amount }))).toEqual([
 			{ key: 'individuals', percent: 63, amount: 630 },
 			{ key: 'foundations', percent: 24, amount: 240 },

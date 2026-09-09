@@ -1,7 +1,12 @@
-import { PostFinanceLogo } from '@/components/reserves/postfinance-logo';
 import { cn } from '@/lib/utils/cn';
 
+/** Logos are rendered as masks so every institution picks up the surrounding text color. */
 const FINANCIAL_INSTITUTION_LOGOS = {
+	postfinance: {
+		src: '/assets/financial-institutions/postfinance-mask.png',
+		width: 126,
+		height: 26,
+	},
 	ecobank: {
 		src: '/assets/financial-institutions/ecobank.svg',
 		width: 66,
@@ -14,7 +19,7 @@ const FINANCIAL_INSTITUTION_LOGOS = {
 	},
 } as const;
 
-export type FinancialInstitutionLogoId = 'postfinance' | keyof typeof FINANCIAL_INSTITUTION_LOGOS;
+export type FinancialInstitutionLogoId = keyof typeof FINANCIAL_INSTITUTION_LOGOS;
 
 type Props = {
 	id: FinancialInstitutionLogoId;
@@ -23,14 +28,6 @@ type Props = {
 };
 
 export const FinancialInstitutionLogo = ({ id, label, className }: Props) => {
-	if (id === 'postfinance') {
-		return (
-			<span role="img" aria-label={label} className={className}>
-				<PostFinanceLogo />
-			</span>
-		);
-	}
-
 	const logo = FINANCIAL_INSTITUTION_LOGOS[id];
 
 	return (
