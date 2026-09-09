@@ -7,6 +7,8 @@ const joinSources = (sources: readonly string[]) => sources.join(' ');
 const PRODUCTION_SCRIPT_SRC = [
 	"'self'",
 	"'unsafe-inline'",
+	// The dotLottie renderer compiles a WASM module. Narrower than 'unsafe-eval': it does not permit eval().
+	"'wasm-unsafe-eval'",
 	'https://www.googletagmanager.com',
 	'https://www.google-analytics.com',
 	'https://connect.facebook.net',
