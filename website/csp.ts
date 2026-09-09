@@ -58,7 +58,6 @@ const PRODUCTION_CONNECT_SRC = [
 	'https://checkout.stripe.com',
 	'https://r.stripe.com',
 	'https://q.stripe.com',
-	'https://o4507045017026560.ingest.us.sentry.io',
 	'https://*.mux.com',
 	'https://*.edgemv.mux.com',
 	'https://*.litix.io',

@@ -1,18 +1,22 @@
 import { type PrismaClient } from '@/generated/prisma/client';
 import { PayoutStatus, type CountryCode } from '@/generated/prisma/enums';
-import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
-import { logger } from '@/lib/utils/logger';
+import { isValidCountryCode } from '@/lib/types/country';
+import { getCountryFlagColors } from '@/lib/utils/country-flag-colors';
+import { startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
 import { type ReserveReadService } from '../reserves/reserve-read.service';
+import {
+	buildTransparencyCountriesData,
+	compareCountryContributionRows,
+	TOP_CONTRIBUTING_COUNTRIES_LIMIT,
+} from './countries-distribution';
 import type {
-	ContributionsByCountry,
-	ContributionTimeRange,
+	CountryContributionRow,
 	CountryTransparencyTotals,
-	TimeRange,
-	TransparencyData,
+	TransparencyCountriesData,
 	TransparencyFinancialPeriod,
-	TransparencyTotals,
+	TransparencySummaryData,
 } from './transparency.types';
 import { getTransparencyFinancialPeriodDateFilter } from './transparency.types';
 
@@ -20,22 +24,21 @@ export class TransparencyService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly reserveReadService: ReserveReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
-	async getTransparencyTotals(
+	async getTotalContributionsChf(
 		financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' },
-	): Promise<ServiceResult<TransparencyTotals>> {
+	): Promise<ServiceResult<number>> {
 		try {
-			const totals = await this.getTotals(financialPeriod);
+			const totalContributionsChf = await this.queryTotalContributionsChf(financialPeriod);
 
-			return this.resultOk(totals);
+			return this.resultOk(totalContributionsChf);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
-			return this.resultFail(`Could not fetch transparency totals: ${JSON.stringify(error)}`);
+			return this.resultFail(`Could not fetch total contributions: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -54,66 +57,90 @@ export class TransparencyService extends BaseService {
 
 			return this.resultOk(totals);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch transparency totals for country: ${JSON.stringify(error)}`);
 		}
 	}
 
-	async getTransparencyData(
-		timeRanges: TimeRange[],
+	async getTransparencySummary(
 		financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' },
-	): Promise<ServiceResult<TransparencyData>> {
+	): Promise<ServiceResult<TransparencySummaryData>> {
 		try {
-			const [totals, outflowsChf, latestReservesResult, timeRangeData, topCountries] = await Promise.all([
-				this.getTotals(financialPeriod),
+			const [inflowsChf, outflowsChf, latestReservesResult] = await Promise.all([
+				this.queryTotalContributionsChf(financialPeriod),
 				this.getOutflows(financialPeriod),
 				this.reserveReadService.getLatestPerBankAccount(),
-				this.getContributionsByTimeRanges(timeRanges),
-				this.getContributionsByCountry(15),
 			]);
 			if (!latestReservesResult.success) {
 				return this.resultFail(latestReservesResult.error);
 			}
 
 			return this.resultOk({
-				totals,
 				financialSummary: {
-					inflowsChf: totals.totalContributionsChf,
+					inflowsChf,
 					outflowsChf,
 					reservesChf: latestReservesResult.data.total,
 				},
 				reserveAccounts: latestReservesResult.data.accounts,
-				timeRanges: timeRangeData,
-				topCountries,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
-			return this.resultFail(`Could not fetch transparency data: ${JSON.stringify(error)}`);
+			return this.resultFail(`Could not fetch transparency summary: ${JSON.stringify(error)}`);
 		}
 	}
 
-	private async getTotals(financialPeriod: TransparencyFinancialPeriod): Promise<TransparencyTotals> {
-		const createdAt = getTransparencyFinancialPeriodDateFilter(financialPeriod);
-		const [aggregate, distinctContributors] = await Promise.all([
-			this.db.contribution.aggregate({
-				where: { status: 'succeeded', createdAt },
-				_sum: { amountChf: true },
-				_count: { _all: true },
-			}),
-			this.db.contribution.findMany({
-				where: { status: 'succeeded', createdAt },
-				distinct: ['contributorId'],
-				select: { contributorId: true },
-			}),
-		]);
+	async getRunwayMonths(): Promise<ServiceResult<number>> {
+		try {
+			const latestReservesResult = await this.reserveReadService.getLatestPerBankAccount();
+			if (!latestReservesResult.success) {
+				return this.resultFail(latestReservesResult.error);
+			}
 
-		return {
-			totalContributionsChf: Number(aggregate._sum.amountChf ?? 0),
-			totalContributors: distinctContributors.length,
-			totalContributionsCount: aggregate._count._all,
-		};
+			const monthlyRecipientPaymentsChf = await this.getLastCompletedMonthRecipientPaymentsChf(
+				this.getLatestReserveRecordedAt(latestReservesResult.data.accounts) ?? new Date(),
+			);
+			if (monthlyRecipientPaymentsChf <= 0) {
+				return this.resultFail('No recipient payments in the last completed month');
+			}
+
+			return this.resultOk(Math.floor(latestReservesResult.data.total / monthlyRecipientPaymentsChf));
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not calculate runway months: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getContributionsByCountryData(
+		limit: number = TOP_CONTRIBUTING_COUNTRIES_LIMIT,
+		financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' },
+	): Promise<ServiceResult<TransparencyCountriesData>> {
+		try {
+			const rows = await this.getCountryContributionRows(financialPeriod);
+
+			return this.resultOk(
+				buildTransparencyCountriesData(rows, {
+					limit,
+					getCountryColors: getCountryFlagColors,
+				}),
+			);
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not fetch contributions by country: ${JSON.stringify(error)}`);
+		}
+	}
+
+	private async queryTotalContributionsChf(financialPeriod: TransparencyFinancialPeriod): Promise<number> {
+		const createdAt = getTransparencyFinancialPeriodDateFilter(financialPeriod);
+		const aggregate = await this.db.contribution.aggregate({
+			where: { status: 'succeeded', createdAt },
+			_sum: { amountChf: true },
+		});
+
+		return Number(aggregate._sum.amountChf ?? 0);
 	}
 
 	private async getOutflows(financialPeriod: TransparencyFinancialPeriod): Promise<number> {
@@ -149,33 +176,12 @@ export class TransparencyService extends BaseService {
 		};
 	}
 
-	private async getContributionsByTimeRanges(ranges: TimeRange[]): Promise<ContributionTimeRange[]> {
-		return await Promise.all(
-			ranges.map(async (range) => {
-				const aggregate = await this.db.contribution.aggregate({
-					where: {
-						status: 'succeeded',
-						createdAt: {
-							gte: range.start.toJSDate(),
-							lt: range.end.toJSDate(),
-						},
-					},
-					_sum: { amountChf: true },
-				});
-
-				return {
-					start: range.start,
-					end: range.end,
-					totalChf: Number(aggregate._sum.amountChf ?? 0),
-				};
-			}),
-		);
-	}
-
-	private async getContributionsByCountry(limit: number): Promise<ContributionsByCountry[]> {
+	private async getCountryContributionRows(financialPeriod: TransparencyFinancialPeriod): Promise<CountryContributionRow[]> {
+		const createdAt = getTransparencyFinancialPeriodDateFilter(financialPeriod);
 		const contributions = await this.db.contribution.findMany({
 			where: {
 				status: 'succeeded',
+				createdAt,
 				contributor: {
 					contact: {
 						address: { isNot: null },
@@ -200,8 +206,8 @@ export class TransparencyService extends BaseService {
 		});
 
 		const countryMap = new Map<CountryCode, { totalChf: number; contributors: Set<string> }>();
-		for (const c of contributions) {
-			const country = c.contributor.contact.address?.country;
+		for (const contribution of contributions) {
+			const country = contribution.contributor.contact.address?.country;
 			if (!country) {
 				continue;
 			}
@@ -211,26 +217,41 @@ export class TransparencyService extends BaseService {
 				entry = { totalChf: 0, contributors: new Set() };
 				countryMap.set(country, entry);
 			}
-			entry.totalChf += Number(c.amountChf);
-			entry.contributors.add(c.contributorId);
+			entry.totalChf += Number(contribution.amountChf);
+			entry.contributors.add(contribution.contributorId);
 		}
 
-		const allCountries = [...countryMap.entries()]
+		return [...countryMap.entries()]
 			.map(([countryCode, data]) => ({
 				countryCode,
 				totalChf: data.totalChf,
 				contributorCount: data.contributors.size,
 			}))
-			.sort((a, b) => b.totalChf - a.totalChf);
+			.sort(compareCountryContributionRows);
+	}
 
-		const grandTotal = allCountries.reduce((sum, r) => sum + r.totalChf, 0);
+	private getLatestReserveRecordedAt(accounts: { recordedAt: Date | null }[]): Date | undefined {
+		return accounts.reduce<Date | undefined>((latest, { recordedAt }) => {
+			if (!recordedAt) {
+				return latest;
+			}
 
-		return allCountries.slice(0, limit).map((r) => ({
-			country: getCountryNameByCode(r.countryCode),
-			countryCode: r.countryCode,
-			totalChf: r.totalChf,
-			contributorCount: r.contributorCount,
-			percentageOfTotal: grandTotal > 0 ? (r.totalChf / grandTotal) * 100 : 0,
-		}));
+			return latest && latest > recordedAt ? latest : recordedAt;
+		}, undefined);
+	}
+
+	private async getLastCompletedMonthRecipientPaymentsChf(referenceDate: Date): Promise<number> {
+		const aggregate = await this.db.payout.aggregate({
+			where: {
+				status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] },
+				paymentAt: {
+					gte: startOfMonth(subMonths(referenceDate, 1)),
+					lt: startOfMonth(referenceDate),
+				},
+			},
+			_sum: { amountChf: true },
+		});
+
+		return Number(aggregate._sum.amountChf ?? 0);
 	}
 }

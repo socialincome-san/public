@@ -150,7 +150,7 @@ export const expectPendingMonthlyContribution = async (email: string, options: {
 		where: { contributorId: contributor!.id },
 		include: {
 			paymentEvent: true,
-			campaign: { select: { isFallback: true } },
+			campaign: { select: { id: true, isFallback: true } },
 		},
 		orderBy: { createdAt: 'desc' },
 	});
@@ -164,6 +164,7 @@ export const expectPendingMonthlyContribution = async (email: string, options: {
 	expect(Number(contribution.amount)).toBe(amount);
 	expect(Number(contribution.amountChf)).toBe(amount);
 	expect(Number(contribution.feesChf)).toBe(0);
+	expect(contribution.campaign.id).toBe('campaign-si-core-sl-default');
 	expect(contribution.campaign.isFallback).toBe(true);
 
 	expect(contribution.paymentEvent).not.toBeNull();

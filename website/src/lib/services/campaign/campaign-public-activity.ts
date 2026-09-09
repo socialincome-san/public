@@ -11,7 +11,7 @@ type CampaignPublicActivityInput = {
  * Public active/inactive state for campaign cards and filters.
  * Storyblok publish state is the visibility gate; this only reflects period/goal progress.
  */
-export const isCampaignPubliclyActive = ({
+export const isCampaignActive = ({
 	endDate,
 	goal,
 	amountCollected,

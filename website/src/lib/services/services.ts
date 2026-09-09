@@ -2,11 +2,11 @@ import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
 import { BankAccountReadService } from './bank-account/bank-account-read.service';
 import { BankAccountWriteService } from './bank-account/bank-account-write.service';
+import { CampaignPendingClaimService } from './campaign/campaign-pending-claim.service';
 import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignSubmissionService } from './campaign/campaign-submission.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
-import { CampaignWriteService } from './campaign/campaign-write.service';
 import { CandidateImportService } from './candidate/candidate-import.service';
 import { CandidateReadService } from './candidate/candidate-read.service';
 import { CandidateValidationService } from './candidate/candidate-validation.service';
@@ -142,7 +142,7 @@ const messagingTwilioTemplates = new TwilioTemplateService(prisma);
 const messagingChannelPreview = new MessagingChannelPreviewService(prisma, userRead);
 const messagingWebhook = new MessagingWebhookService(prisma);
 const messagingLog = new MessagingLogService(prisma, userRead, messagingWebhook);
-const contributionRead = new ContributionReadService(prisma, programAccessRead);
+const contributionRead = new ContributionReadService(prisma, programAccessRead, storyblok);
 const contributionValidation = new ContributionValidationService(prisma);
 const contributionWrite = new ContributionWriteService(prisma, programAccessRead, contributionValidation);
 const subscriptionWrite = new SubscriptionWriteService(prisma);
@@ -180,7 +180,6 @@ const contributorWrite = new ContributorWriteService(
 const messagingRecipients = new MessagingRecipientsService(prisma, contributorRead, recipientRead, localPartnerRead);
 const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
 const campaignValidation = new CampaignValidationService(prisma);
-const campaignWrite = new CampaignWriteService(prisma, programAccessRead, campaignValidation);
 const programPublicSubmission = new ProgramPublicSubmissionService(prisma, storyblok);
 const storyblokManagement = new StoryblokManagementService();
 const campaignSubmission = new CampaignSubmissionService(
@@ -189,6 +188,7 @@ const campaignSubmission = new CampaignSubmissionService(
 	campaignValidation,
 	storyblokManagement,
 );
+const campaignPendingClaim = new CampaignPendingClaimService(prisma);
 const focusValidation = new FocusValidationService(prisma);
 const focusRead = new FocusReadService(prisma, userRead);
 const focusWrite = new FocusWriteService(prisma, userRead, focusValidation);
@@ -289,7 +289,6 @@ export const services = {
 	},
 	write: {
 		candidate: candidateWrite,
-		campaign: campaignWrite,
 		focus: focusWrite,
 		contribution: contributionWrite,
 		subscription: subscriptionWrite,
@@ -326,6 +325,7 @@ export const services = {
 	storyblok,
 	storyblokManagement,
 	campaignSubmission,
+	campaignPendingClaim,
 	programPublicSubmission,
 	stripe,
 	surveyImpact,

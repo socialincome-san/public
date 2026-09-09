@@ -6,7 +6,6 @@ import {
 	SubscriptionPaymentMethod,
 	SubscriptionStatus,
 } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { ContributionReadService } from '../contribution/contribution-read.service';
@@ -35,6 +34,7 @@ type SubscriptionRecord = {
 	amount: unknown;
 	currency: Currency;
 	createdAt: Date;
+	coverTransactionCosts: boolean;
 	paymentMethod: SubscriptionPaymentMethod;
 	stripeSubscriptionId: string | null;
 	bankStandingOrderReference: string | null;
@@ -73,9 +73,8 @@ export class SubscriptionReadService extends BaseService {
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly contributionReadService: ContributionReadService,
 		private readonly stripeService: StripeService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildSubscriptionOrderBy(query: SubscriptionTableQuery): Prisma.SubscriptionOrderByWithRelationInput[] {
@@ -211,7 +210,7 @@ export class SubscriptionReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not fetch subscriptions');
 		}
@@ -227,6 +226,7 @@ export class SubscriptionReadService extends BaseService {
 						amount: true,
 						currency: true,
 						createdAt: true,
+						coverTransactionCosts: true,
 						paymentMethod: true,
 						stripeSubscriptionId: true,
 						bankStandingOrderReference: true,
@@ -259,7 +259,7 @@ export class SubscriptionReadService extends BaseService {
 				contributionSummary: contributionSummaryResult.data,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not fetch subscriptions dashboard');
 		}
@@ -283,7 +283,7 @@ export class SubscriptionReadService extends BaseService {
 
 			return this.resultOk(subscription.paymentMethod);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not load subscription payment method');
 		}
@@ -299,6 +299,7 @@ export class SubscriptionReadService extends BaseService {
 			amount: Number(subscription.amount),
 			currency: subscription.currency,
 			createdAt: subscription.createdAt,
+			coverTransactionCosts: subscription.coverTransactionCosts,
 		};
 
 		if (subscription.paymentMethod === SubscriptionPaymentMethod.bank_transfer) {
@@ -366,7 +367,7 @@ export class SubscriptionReadService extends BaseService {
 		subscription: SubscriptionRecord,
 		reason: 'stripe_details_unavailable' | 'current_period_end_missing',
 	): null {
-		this.logger.warn('Skipping upcoming payments for Stripe subscription', {
+		console.warn('Skipping upcoming payments for Stripe subscription', {
 			subscriptionId: subscription.id,
 			stripeSubscriptionId: subscription.stripeSubscriptionId,
 			reason,

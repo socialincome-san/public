@@ -1,5 +1,4 @@
-import { PayoutInterval, PayoutStatus, PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
+import { PayoutInterval, PayoutStatus } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
@@ -9,10 +8,6 @@ import {
 } from './recipient.types';
 
 export class RecipientStatusService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
-
 	countPaidOrConfirmedPayouts = (payouts: { status: PayoutStatus }[]): ServiceResult<number> => {
 		try {
 			const count = payouts.filter(
@@ -21,7 +16,7 @@ export class RecipientStatusService extends BaseService {
 
 			return this.resultOk(count);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not count paid or confirmed payouts');
 		}
@@ -38,7 +33,7 @@ export class RecipientStatusService extends BaseService {
 
 			return this.resultOk(programDurationInMonths);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not calculate expected intervals');
 		}
@@ -59,7 +54,7 @@ export class RecipientStatusService extends BaseService {
 				nowDate: params.nowDate,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not determine recipient lifecycle status');
 		}
@@ -83,7 +78,7 @@ export class RecipientStatusService extends BaseService {
 
 			return this.resultOk('active');
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not determine recipient lifecycle status');
 		}
@@ -98,7 +93,7 @@ export class RecipientStatusService extends BaseService {
 
 			return this.resultOk(statusResult.data === 'active');
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not determine recipient payout eligibility');
 		}

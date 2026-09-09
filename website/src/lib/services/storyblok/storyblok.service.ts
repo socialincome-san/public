@@ -109,6 +109,8 @@ export class StoryblokService extends BaseService {
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
 	private static readonly standardStoryRelationsToResolve = [
 		'faqSelection.questions',
+		'Campaign.faq',
+		'campaignGlobals.faq',
 		'program.faq',
 		'downloads.documents',
 		'partnershipsCarousel.partnerships',
@@ -180,6 +182,10 @@ export class StoryblokService extends BaseService {
 		const contentWithComponent = storyWithContent.content as { component?: string };
 
 		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.campaign.toLowerCase();
+	}
+
+	private static isListedCampaignStory(story: unknown): story is ISbStoryData<Campaign> {
+		return StoryblokService.isCampaignStory(story) && story.content.public === true && story.content.approved === true;
 	}
 
 	private static isFaqStory(story: unknown): story is ISbStoryData<Faq> {
@@ -296,7 +302,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch story: ${JSON.stringify(error)}`);
 		}
@@ -321,7 +327,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch story title: ${JSON.stringify(error)}`);
 		}
@@ -340,7 +346,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(res.total);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to count overview articles: ${JSON.stringify(error)}`);
 		}
@@ -359,7 +365,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(res.total);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to count articles by tag: ${JSON.stringify(error)}`);
 		}
@@ -378,7 +384,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(res.total);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to count articles by article type: ${JSON.stringify(error)}`);
 		}
@@ -397,7 +403,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(res.total);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to count articles by author: ${JSON.stringify(error)}`);
 		}
@@ -434,7 +440,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk((res.data as { stories: ISbStoryData<Person>[] }).stories);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch persons by UUIDs: ${JSON.stringify(error)}`);
 		}
@@ -451,7 +457,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch focuses: ${JSON.stringify(error)}`);
 		}
@@ -473,7 +479,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch persons by country office: ${JSON.stringify(error)}`);
 		}
@@ -489,7 +495,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(labelsByValue);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch datasource entries: ${JSON.stringify(error)}`);
 		}
@@ -510,7 +516,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch persons: ${JSON.stringify(error)}`);
 		}
@@ -527,7 +533,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultOk([]);
 		}
@@ -544,7 +550,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(links);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch page links: ${JSON.stringify(error)}`);
 		}
@@ -560,7 +566,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk((res.data as { story: ISbStoryData<Tag> }).story);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch tag: ${JSON.stringify(error)}`);
 		}
@@ -577,7 +583,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk((res.data as { story: ISbStoryData<ArticleType> }).story);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch article type: ${JSON.stringify(error)}`);
 		}
@@ -607,7 +613,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(countries);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultOk([]);
 		}
@@ -635,7 +641,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(programs);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch programs: ${JSON.stringify(error)}`);
 		}
@@ -649,7 +655,7 @@ export class StoryblokService extends BaseService {
 				starts_with: `${StoryblokService.campaignsPath}/`,
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
-			let campaigns = data.filter((story) => StoryblokService.isCampaignStory(story));
+			let campaigns = data.filter((story) => StoryblokService.isListedCampaignStory(story));
 
 			if (campaigns.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
 				const draftParams: ISbStoriesParams = {
@@ -658,12 +664,12 @@ export class StoryblokService extends BaseService {
 					starts_with: `${StoryblokService.campaignsPath}/`,
 				};
 				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
-				campaigns = draftData.filter((story) => StoryblokService.isCampaignStory(story));
+				campaigns = draftData.filter((story) => StoryblokService.isListedCampaignStory(story));
 			}
 
 			return this.resultOk(campaigns);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultOk([]);
 		}
@@ -698,7 +704,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(countryPrograms);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultOk([]);
 		}
@@ -727,7 +733,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch program: ${JSON.stringify(error)}`);
 		}
@@ -756,7 +762,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch campaign: ${JSON.stringify(error)}`);
 		}
@@ -786,7 +792,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(sortedFaqs.slice(0, limit));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultOk([]);
 		}
@@ -818,7 +824,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(story);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch country: ${JSON.stringify(error)}`);
 		}
@@ -849,7 +855,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(story);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch country: ${JSON.stringify(error)}`);
 		}
@@ -879,7 +885,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(localPartners);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch local partners: ${JSON.stringify(error)}`);
 		}
@@ -917,7 +923,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(story);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch local partner: ${JSON.stringify(error)}`);
 		}
@@ -947,7 +953,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(focuses);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch focuses: ${JSON.stringify(error)}`);
 		}
@@ -986,7 +992,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(story);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch focus: ${JSON.stringify(error)}`);
 		}
@@ -1002,7 +1008,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk((res.data as { story: ISbStoryData<Person> }).story);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch person: ${JSON.stringify(error)}`);
 		}
@@ -1023,7 +1029,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultOk([]);
 		}
@@ -1047,7 +1053,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultOk([]);
 		}
@@ -1068,7 +1074,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultOk([]);
 		}
@@ -1101,7 +1107,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultOk([]);
 		}
@@ -1133,7 +1139,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk((res.data as { stories: ISbStoryData<ResolvedArticle>[] }).stories);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultOk([]);
 		}
@@ -1156,7 +1162,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk((res.data as { story: ISbStoryData<ResolvedArticle> }).story);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to fetch article: ${JSON.stringify(error)}`);
 		}
@@ -1184,7 +1190,7 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk(result);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultOk([]);
 		}

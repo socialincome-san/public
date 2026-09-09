@@ -1,7 +1,6 @@
 import { PayoutStatus, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { CountryCode } from '@/generated/prisma/enums';
 import { isValidCountryCode } from '@/lib/types/country';
-import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
@@ -36,9 +35,8 @@ export class PayoutReadService extends BaseService {
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly exchangeRateService: ExchangeRateReadService,
 		private readonly recipientStatusService: RecipientStatusService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildPayoutOrderBy(query: PayoutTableQuery): Prisma.PayoutOrderByWithRelationInput[] {
@@ -142,7 +140,7 @@ export class PayoutReadService extends BaseService {
 
 			return this.resultOk(totals);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch payout totals for country: ${JSON.stringify(error)}`);
 		}
@@ -173,7 +171,7 @@ export class PayoutReadService extends BaseService {
 
 			return this.resultOk({ totalPayoutsChf: Number(aggregate._sum.amountChf ?? 0) });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch payout totals for local partner: ${JSON.stringify(error)}`);
 		}
@@ -353,7 +351,7 @@ export class PayoutReadService extends BaseService {
 				mobileMoneyProviderFilterOptions,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch payouts: ${JSON.stringify(error)}`);
 		}
@@ -459,7 +457,7 @@ export class PayoutReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount, programFilterOptions });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch ongoing payouts: ${JSON.stringify(error)}`);
 		}
@@ -487,7 +485,7 @@ export class PayoutReadService extends BaseService {
 
 			return this.buildForecastTableView(programId, monthsAhead);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not generate payout forecast: ${JSON.stringify(error)}`);
 		}
@@ -585,7 +583,7 @@ export class PayoutReadService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not generate payout forecast: ${JSON.stringify(error)}`);
 		}
@@ -710,7 +708,7 @@ export class PayoutReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount, programFilterOptions, statusFilterOptions });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch payout confirmation inbox: ${JSON.stringify(error)}`);
 		}
@@ -774,7 +772,7 @@ export class PayoutReadService extends BaseService {
 				},
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch payout: ${JSON.stringify(error)}`);
 		}
@@ -789,7 +787,7 @@ export class PayoutReadService extends BaseService {
 
 			return this.resultOk(payouts);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch payouts: ${JSON.stringify(error)}`);
 		}
@@ -807,7 +805,7 @@ export class PayoutReadService extends BaseService {
 
 			return this.resultOk(payout);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch payout "${payoutId}": ${JSON.stringify(error)}`);
 		}

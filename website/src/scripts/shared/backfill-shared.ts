@@ -22,16 +22,22 @@ export const assertDatabaseUrl = () => {
 	}
 };
 
-export const exitCodeForSummary = (summary: { errors: number; subscriptionsCreated: number }, apply: boolean): number => {
+export const exitCodeForCreateOnlyScript = (
+	summary: { errors: number; recordsToCreate: number },
+	apply: boolean,
+): number => {
 	if (summary.errors > 0) {
 		return 1;
 	}
-	if (!apply && summary.subscriptionsCreated > 0) {
+	if (!apply && summary.recordsToCreate > 0) {
 		return 1;
 	}
 
 	return 0;
 };
+
+export const exitCodeForSummary = (summary: { errors: number; subscriptionsCreated: number }, apply: boolean): number =>
+	exitCodeForCreateOnlyScript({ errors: summary.errors, recordsToCreate: summary.subscriptionsCreated }, apply);
 
 const parsePositiveIntFlag = (argv: string[], flag: string): number | null => {
 	const arg = argv.find((value) => value.startsWith(`${flag}=`));

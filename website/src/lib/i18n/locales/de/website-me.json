@@ -104,6 +104,8 @@
 		"edit-dialog": {
 			"title": "Abonnement bearbeiten",
 			"monthly-contribution": "Monatlicher Beitrag",
+			"transaction-fees": "Transaktionsgebühren",
+			"payment-method": "Zahlungsmethode",
 			"per-month-suffix": "/ Monat",
 			"update-card": "Karte aktualisieren",
 			"cancel-subscription": "Abonnement kündigen",
@@ -165,6 +167,12 @@
 		"per-month": "pro Monat",
 		"since": "seit",
 		"card-fallback": "Karte",
+		"cover-transaction-costs": {
+			"nudge-prefix": "Kartenzahlungen kosten ca.",
+			"nudge-fee": "{{fee}}/Mt.",
+			"nudge-middle": "an Gebühren.",
+			"nudge-cta": "Hilf mit, Kosten tief zu halten — übernimm die Transaktionsgebühren."
+		},
 		"empty": {
 			"description": "Du hast {{amount}} über {{count}} Überweisungen beigetragen.\nMöchtest du dort weitermachen, wo du aufgehört hast?",
 			"description-no-contributions": "Beginne heute, jemanden zu unterstützen."

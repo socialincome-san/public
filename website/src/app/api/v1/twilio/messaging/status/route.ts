@@ -1,6 +1,6 @@
 import { services } from '@/lib/services/services';
-import { logger } from '@/lib/utils/logger';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
+import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import { NextRequest, NextResponse } from 'next/server';
 import twilio from 'twilio';
 
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 	// validateRequest would reject legitimate webhooks.
 	const baseUrl = process.env.BASE_URL?.replace(TRAILING_SLASHES_REGEX, '');
 	if (!baseUrl) {
-		logger.error('Missing BASE_URL for Twilio messaging status webhook');
+		console.error(`${SLACK_ALERT}: Missing BASE_URL for Twilio messaging status webhook`);
 
 		return NextResponse.json({ error: 'internal' }, { status: 500 });
 	}
@@ -34,14 +34,14 @@ export async function POST(request: NextRequest) {
 	}
 
 	if (!signature || !authToken) {
-		logger.warn('Missing Twilio signature or TWILIO_AUTH_TOKEN');
+		console.warn('Missing Twilio signature or TWILIO_AUTH_TOKEN');
 
 		return NextResponse.json({ error: 'forbidden' }, { status: 403 });
 	}
 
 	const valid = twilio.validateRequest(authToken, signature, url, params);
 	if (!valid) {
-		logger.warn('Invalid Twilio signature on messaging status webhook');
+		console.warn('Invalid Twilio signature on messaging status webhook');
 
 		return NextResponse.json({ error: 'forbidden' }, { status: 403 });
 	}
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
 	});
 
 	if (!result.success) {
-		logger.error(`Webhook handler failed: ${result.error}`);
+		console.error(`${SLACK_ALERT}: Twilio messaging status webhook handler failed: ${result.error}`);
 
 		return NextResponse.json({ error: 'internal' }, { status: 500 });
 	}

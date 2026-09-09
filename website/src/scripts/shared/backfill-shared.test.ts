@@ -1,5 +1,6 @@
 import {
 	assertDatabaseUrl,
+	exitCodeForCreateOnlyScript,
 	exitCodeForSummary,
 	getDatabaseHost,
 	mapWithConcurrency,
@@ -23,6 +24,13 @@ describe('backfill-shared', () => {
 		} else {
 			process.env.DATABASE_URL = previous;
 		}
+	});
+
+	test('exitCodeForCreateOnlyScript', () => {
+		expect(exitCodeForCreateOnlyScript({ errors: 0, recordsToCreate: 0 }, false)).toBe(0);
+		expect(exitCodeForCreateOnlyScript({ errors: 1, recordsToCreate: 0 }, false)).toBe(1);
+		expect(exitCodeForCreateOnlyScript({ errors: 0, recordsToCreate: 3 }, false)).toBe(1);
+		expect(exitCodeForCreateOnlyScript({ errors: 0, recordsToCreate: 3 }, true)).toBe(0);
 	});
 
 	test('exitCodeForSummary', () => {

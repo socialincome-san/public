@@ -64,6 +64,7 @@ export interface Campaign {
   title: string;
   description: string;
   primaryImage: StoryblokAsset;
+  public?: boolean;
   profilePicture?: StoryblokAsset;
   creatorName: string;
   quote: string;
@@ -73,6 +74,7 @@ export interface Campaign {
   xHandle?: string;
   linkWebsite?: string;
   tiktokHandle?: string;
+  faq?: (ISbStoryData<Faq> | string)[];
   component: "Campaign";
   _uid: string;
   _editable?: string | undefined;
@@ -83,6 +85,20 @@ export interface CampaignDonate {
   campaignId?: string;
   component: "campaignDonate";
   _uid: string;
+  [k: string]: unknown;
+}
+
+export interface CampaignGlobals {
+  faq: (ISbStoryData<Faq> | string)[];
+  muxPlaybackId1: string;
+  muxPlaybackId2: string;
+  muxPlaybackId3: string;
+  newsletterImage: StoryblokAsset;
+  newsletterSenderName: string;
+  newsletterTitle: string;
+  component: "campaignGlobals";
+  _uid: string;
+  _editable?: string | undefined;
   [k: string]: unknown;
 }
 
@@ -123,6 +139,14 @@ export interface Document {
   language?: string;
   component: "document";
   _uid: string;
+  [k: string]: unknown;
+}
+
+export interface DonationGlobe {
+  title?: string;
+  component: "donationGlobe";
+  _uid: string;
+  // _editable?: string | undefined;
   [k: string]: unknown;
 }
 
@@ -375,6 +399,24 @@ export interface OpenSource {
   [k: string]: unknown;
 }
 
+export interface OpenSourceContributors {
+  component: "openSourceContributors";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface OpenSourceIssues {
+  component: "openSourceIssues";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface OpenSourceStats {
+  component: "openSourceStats";
+  _uid: string;
+  [k: string]: unknown;
+}
+
 export interface Page {
   content: (
     | DonationsTotal
@@ -391,10 +433,12 @@ export interface Page {
     | Testimonial
     | TestimonialCarousel
     | Text
+    | TwoColumn
     | TwoColumnText
     | VideoText
-    | Transparency
-    | OpenSource
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
     | Spacer
     | ExplainerVideoHeader
     | RichtextButtonHeader
@@ -402,6 +446,9 @@ export interface Page {
     | Lottie
     | PersonGrid
     | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
   )[];
   component: "page";
   _uid: string;
@@ -546,9 +593,6 @@ export interface RichtextButtonHeader {
 
 export interface RunwayMonthGrid {
   title?: string;
-  description?: string;
-  amountOfMonths: string;
-  footer?: string;
   component: "runwayMonthGrid";
   _uid: string;
   _editable?: string | undefined;
@@ -623,8 +667,90 @@ export interface Text {
   [k: string]: unknown;
 }
 
-export interface Transparency {
-  component: "transparency";
+export interface TransparencyCountries {
+  component: "transparencyCountries";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TransparencySummary {
+  inflowsDescription?: string;
+  outflowsDescription?: string;
+  reservesDescription?: string;
+  component: "transparencySummary";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TwoColumn {
+  leftColumn: (
+    | DonationsTotal
+    | Downloads
+    | FaqSelection
+    | HeroVideo
+    | ImageText
+    | ImpactMeasurement
+    | JournalTeasers
+    | ModalCards
+    | PartnershipsCarousel
+    | ProgramGrid
+    | TeamGrid
+    | Testimonial
+    | TestimonialCarousel
+    | Text
+    | TwoColumn
+    | TwoColumnText
+    | VideoText
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | Spacer
+    | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
+    | Lottie
+    | PersonGrid
+    | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
+  )[];
+  rightColumn: (
+    | DonationsTotal
+    | Downloads
+    | FaqSelection
+    | HeroVideo
+    | ImageText
+    | ImpactMeasurement
+    | JournalTeasers
+    | ModalCards
+    | PartnershipsCarousel
+    | ProgramGrid
+    | TeamGrid
+    | Testimonial
+    | TestimonialCarousel
+    | Text
+    | TwoColumn
+    | TwoColumnText
+    | VideoText
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | Spacer
+    | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
+    | Lottie
+    | PersonGrid
+    | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
+  )[];
+  columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
+  component: "twoColumn";
   _uid: string;
   [k: string]: unknown;
 }

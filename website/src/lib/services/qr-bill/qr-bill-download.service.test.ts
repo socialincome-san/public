@@ -43,13 +43,6 @@ describe('QrBillService.downloadQrBillPdf', () => {
 			{} as ContributionWriteService,
 			{} as SubscriptionWriteService,
 			{} as ExchangeRateReadService,
-			{
-				error: jest.fn(),
-				warn: jest.fn(),
-				info: jest.fn(),
-				debug: jest.fn(),
-				alert: jest.fn(),
-			},
 		);
 
 	beforeEach(() => {

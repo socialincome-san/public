@@ -2,8 +2,8 @@
 
 import { Button } from '@/components/button/button';
 import { Input } from '@/components/input/input';
-import { RadioGroup, RadioGroupItem } from '@/components/radio-group';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { RadioGroup, RadioGroupItem } from '@/components/radio-group/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import type { MessagingRecipientType } from '@/lib/services/twilio/messaging/recipients/recipients.types';
 import { getFieldCatalog, type FieldEntry } from '@/lib/services/twilio/messaging/twilio-templates/field-catalog';
 import type {

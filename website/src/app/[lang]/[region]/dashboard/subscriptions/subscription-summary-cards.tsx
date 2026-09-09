@@ -1,7 +1,12 @@
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { type ContributorContributionSummary } from '@/lib/services/contribution/contribution.types';
 import { type MonthlyContributionSummary } from '@/lib/services/subscription/subscription.types';
-import { formatCurrencyLocale, formatDateLocale, wholeCurrencyFormatOptions } from '@/lib/utils/string-utils';
+import {
+	formatCurrencyLocale,
+	formatDateLocale,
+	fractionalCurrencyFormatOptions,
+	wholeCurrencyFormatOptions,
+} from '@/lib/utils/string-utils';
 
 type Props = {
 	lang: WebsiteLanguage;
@@ -26,7 +31,7 @@ const formatMonthlyAmount = (monthlyContribution: MonthlyContributionSummary, la
 		monthlyContribution.totalAmount,
 		monthlyContribution.currency,
 		lang,
-		wholeCurrencyFormatOptions,
+		fractionalCurrencyFormatOptions,
 	);
 };
 

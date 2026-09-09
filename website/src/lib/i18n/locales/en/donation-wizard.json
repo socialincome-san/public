@@ -96,6 +96,11 @@
 			"description": "Go to the login page to access your account.",
 			"loginButton": "Log in",
 			"supportPrefix": "Questions? Reach"
+		},
+		"loggedInPrompt": {
+			"title": "Thank you for your donation.",
+			"description": "You can find the payment now in your dashboard.",
+			"dashboardButton": "Open Dashboard"
 		}
 	},
 	"onboarding": {

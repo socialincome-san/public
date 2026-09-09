@@ -1,16 +1,15 @@
 import {
 	DonationInterval,
-	PrismaClient,
 	SubscriptionPaymentMethod,
 	SubscriptionStatus,
 	type Subscription,
 } from '@/generated/prisma/client';
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
-import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import Stripe from 'stripe';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
+import { mapCoverTransactionCostsMetadata } from './cover-transaction-costs';
 import { isSubscriptionAmountInRange, SUBSCRIPTION_AMOUNT_MAX, SUBSCRIPTION_AMOUNT_MIN } from './subscription-amount';
 import {
 	mapStripeSubscriptionFields,
@@ -33,10 +32,6 @@ const subscriptionSelect = {
 } as const;
 
 export class SubscriptionWriteService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
-
 	async upsertFromStripeSubscription(input: {
 		stripeSubscription: Stripe.Subscription;
 		contributorId: string;
@@ -56,6 +51,7 @@ export class SubscriptionWriteService extends BaseService {
 			status: mapped.status,
 			paymentMethod: SubscriptionPaymentMethod.stripe,
 			canceledAt: mapped.canceledAt,
+			coverTransactionCosts: mapCoverTransactionCostsMetadata(input.stripeSubscription.metadata),
 		};
 
 		try {
@@ -71,7 +67,7 @@ export class SubscriptionWriteService extends BaseService {
 
 			return this.resultOk(subscription);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not upsert Stripe subscription: ${JSON.stringify(error)}`);
 		}
@@ -102,7 +98,7 @@ export class SubscriptionWriteService extends BaseService {
 				select: subscriptionSelect,
 			});
 			if (!existing) {
-				this.logger.warn('Cannot create Stripe subscription without price fields on lifecycle event', {
+				console.warn('Cannot create Stripe subscription without price fields on lifecycle event', {
 					stripeSubscriptionId: input.stripeSubscription.id,
 					status: input.stripeSubscription.status,
 				});
@@ -121,7 +117,7 @@ export class SubscriptionWriteService extends BaseService {
 
 			return this.resultOk(subscription);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not sync Stripe subscription lifecycle: ${JSON.stringify(error)}`);
 		}
@@ -139,6 +135,7 @@ export class SubscriptionWriteService extends BaseService {
 			status,
 			paymentMethod: SubscriptionPaymentMethod.bank_transfer,
 			canceledAt,
+			coverTransactionCosts: false,
 		};
 
 		try {
@@ -154,7 +151,7 @@ export class SubscriptionWriteService extends BaseService {
 
 			return this.resultOk(subscription);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not upsert bank standing-order subscription: ${JSON.stringify(error)}`);
 		}
@@ -193,7 +190,7 @@ export class SubscriptionWriteService extends BaseService {
 
 			return this.resultOk({ amount, currency: subscription.currency });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not update subscription amount');
 		}
@@ -228,7 +225,7 @@ export class SubscriptionWriteService extends BaseService {
 
 			return this.resultOk(undefined);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not cancel subscription');
 		}

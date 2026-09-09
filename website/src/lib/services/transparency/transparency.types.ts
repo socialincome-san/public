@@ -2,11 +2,6 @@ import type { CountryCode } from '@/generated/prisma/enums';
 import { DateTime } from 'luxon';
 import type { BankAccountLatestReserve } from '../reserves/reserve.types';
 
-export type TimeRange = {
-	start: DateTime;
-	end: DateTime;
-};
-
 export type TransparencyFinancialPeriod = { kind: 'all-time' } | { kind: 'ytd' } | { kind: 'year'; year: number };
 
 export type TransparencyFinancialPeriodRange = {
@@ -45,22 +40,34 @@ export const getTransparencyFinancialPeriodDateFilter = (
 	};
 };
 
-export type ContributionTimeRange = TimeRange & {
-	totalChf: number;
-};
+export const OTHER_COUNTRY_SEGMENT_CODE = 'OTHER';
 
-export type ContributionsByCountry = {
-	country: string;
+export type TransparencyCountrySegmentCode = CountryCode | typeof OTHER_COUNTRY_SEGMENT_CODE;
+
+export type CountryContributionRow = {
 	countryCode: CountryCode;
 	totalChf: number;
 	contributorCount: number;
-	percentageOfTotal: number;
 };
 
-export type TransparencyTotals = {
+export type TransparencyCountrySegment = {
+	countryCode: TransparencyCountrySegmentCode;
+	totalChf: number;
+	percentageOfTotal: number;
+	unitCount: number;
+	color: string;
+};
+
+type TransparencyOtherCountry = {
+	countryCode: CountryCode;
+	totalChf: number;
+};
+
+export type TransparencyCountriesData = {
 	totalContributionsChf: number;
-	totalContributors: number;
-	totalContributionsCount: number;
+	countriesCount: number;
+	segments: TransparencyCountrySegment[];
+	otherCountries: TransparencyOtherCountry[];
 };
 
 export type CountryTransparencyTotals = {
@@ -73,10 +80,13 @@ type TransparencyFinancialSummary = {
 	reservesChf: number;
 };
 
-export type TransparencyData = {
-	totals: TransparencyTotals;
+export type TransparencySummaryData = {
 	financialSummary: TransparencyFinancialSummary;
 	reserveAccounts: BankAccountLatestReserve[];
-	timeRanges: ContributionTimeRange[];
-	topCountries: ContributionsByCountry[];
 };
+
+const ZEWO_RESERVE_RUNWAY_MIN_MONTHS = 3;
+const ZEWO_RESERVE_RUNWAY_MAX_MONTHS = 18;
+
+export const isRunwayInLineWithZewo = (months: number): boolean =>
+	months >= ZEWO_RESERVE_RUNWAY_MIN_MONTHS && months <= ZEWO_RESERVE_RUNWAY_MAX_MONTHS;

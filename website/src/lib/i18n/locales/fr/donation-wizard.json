@@ -96,6 +96,11 @@
 			"description": "Va sur la page de connexion pour accéder à ton compte.",
 			"loginButton": "Se connecter",
 			"supportPrefix": "Des questions ? Contacte"
+		},
+		"loggedInPrompt": {
+			"title": "Merci pour ton don.",
+			"description": "Tu trouveras le paiement dans ton tableau de bord.",
+			"dashboardButton": "Ouvrir le tableau de bord"
 		}
 	},
 	"onboarding": {

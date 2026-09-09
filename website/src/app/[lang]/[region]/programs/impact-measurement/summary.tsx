@@ -1,4 +1,4 @@
-import { Progress } from '@/components/progress';
+import { Progress } from '@/components/progress/progress';
 import { services } from '@/lib/services/services';
 import { SurveyImpactStudyDetailItem } from '@/lib/services/survey/survey-impact.types';
 import { formatNumberLocale } from '@/lib/utils/string-utils';

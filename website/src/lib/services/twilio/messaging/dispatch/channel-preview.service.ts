@@ -1,5 +1,4 @@
 import { MessagingChannel, PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../../../core/base.service';
 import { ServiceResult } from '../../../core/base.types';
 import { UserReadService } from '../../../user/user-read.service';
@@ -10,9 +9,8 @@ export class MessagingChannelPreviewService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async previewByContactIds(

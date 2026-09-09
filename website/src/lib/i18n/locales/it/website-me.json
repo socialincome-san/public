@@ -104,6 +104,8 @@
 		"edit-dialog": {
 			"title": "Modifica sottoscrizione",
 			"monthly-contribution": "Contributo mensile",
+			"transaction-fees": "Commissioni di transazione",
+			"payment-method": "Metodo di pagamento",
 			"per-month-suffix": "/ mese",
 			"update-card": "Aggiorna carta",
 			"cancel-subscription": "Annulla sottoscrizione",
@@ -165,6 +167,12 @@
 		"per-month": "al mese",
 		"since": "dal",
 		"card-fallback": "Carta",
+		"cover-transaction-costs": {
+			"nudge-prefix": "I pagamenti con carta costano circa",
+			"nudge-fee": "{{fee}}/mese",
+			"nudge-middle": "di commissioni.",
+			"nudge-cta": "Aiuta a tenere bassi i costi — copri le commissioni di transazione."
+		},
 		"empty": {
 			"description": "Hai contribuito con {{amount}} in {{count}} bonifici.\nPronto a riprendere da dove avevi lasciato?",
 			"description-no-contributions": "Inizia a sostenere qualcuno oggi."

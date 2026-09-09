@@ -64,13 +64,6 @@ describe('StripeService.cancelContributorSubscription', () => {
 			{} as SubscriptionWriteService,
 			{} as CampaignReadService,
 			{} as ProgramAccessReadService,
-			{
-				error: jest.fn(),
-				warn: jest.fn(),
-				info: jest.fn(),
-				debug: jest.fn(),
-				alert: jest.fn(),
-			},
 		);
 
 	beforeEach(() => {

@@ -39,6 +39,7 @@ export type ActiveSubscriptionView = {
 	amount: number;
 	currency: Currency;
 	createdAt: Date;
+	coverTransactionCosts: boolean;
 	paymentDisplay: SubscriptionPaymentDisplay;
 };
 

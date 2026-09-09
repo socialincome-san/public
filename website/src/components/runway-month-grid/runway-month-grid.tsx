@@ -18,7 +18,7 @@ export const RunwayMonthGrid = ({ numberOfMonths, language = 'en' }: Props) => {
 	});
 
 	return (
-		<div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+		<div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
 			{months.map(({ month, year }) => (
 				<RunwayMonth key={`${month}-${year}`} month={month} year={year} />
 			))}

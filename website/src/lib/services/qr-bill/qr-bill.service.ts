@@ -8,7 +8,6 @@ import {
 	SubscriptionPaymentMethod,
 	SubscriptionStatus,
 } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { generateQrBillPdfBuffer } from '@/lib/utils/qr-bill-pdf';
 import { DateTime } from 'luxon';
 import { CampaignReadService } from '../campaign/campaign-read.service';
@@ -51,9 +50,8 @@ export class QrBillService extends BaseService {
 		private readonly contributionService: ContributionWriteService,
 		private readonly subscriptionWriteService: SubscriptionWriteService,
 		private readonly exchangeRateService: ExchangeRateReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async getOrCreateQrReferences(
@@ -128,7 +126,7 @@ export class QrBillService extends BaseService {
 
 			return this.resultOk('Contribution created');
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Failed to store contribution');
 		}
@@ -219,7 +217,7 @@ export class QrBillService extends BaseService {
 				currency: subscription.currency,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not generate QR bill PDF');
 		}
@@ -239,7 +237,7 @@ export class QrBillService extends BaseService {
 				filename: 'social-income-qr-bill.pdf',
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not generate QR bill PDF');
 		}
@@ -267,7 +265,7 @@ export class QrBillService extends BaseService {
 				needsOnboarding: contributor.needsOnboarding,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not load QR onboarding prefill');
 		}
@@ -317,7 +315,7 @@ export class QrBillService extends BaseService {
 
 			return this.contributorWriteService.updateSelf(contributor.id, updateInput);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not update contributor after QR payment');
 		}
@@ -346,7 +344,7 @@ export class QrBillService extends BaseService {
 				},
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not update contributor referral after QR payment');
 		}
@@ -382,7 +380,7 @@ export class QrBillService extends BaseService {
 
 			return this.resultOk({ contributor, email: normalizedContributorEmail });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not verify contributor for payment reference');
 		}

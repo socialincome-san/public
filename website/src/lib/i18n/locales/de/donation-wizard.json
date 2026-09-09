@@ -96,6 +96,11 @@
 			"description": "Gehe zur Anmeldeseite, um auf dein Konto zuzugreifen.",
 			"loginButton": "Einloggen",
 			"supportPrefix": "Fragen? Kontaktiere"
+		},
+		"loggedInPrompt": {
+			"title": "Vielen Dank für deine Spende.",
+			"description": "Du findest die Zahlung jetzt in deinem Dashboard.",
+			"dashboardButton": "Dashboard öffnen"
 		}
 	},
 	"onboarding": {

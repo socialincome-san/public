@@ -1,4 +1,5 @@
 import {
+	STORYBLOK_CAMPAIGN_GLOBALS_PATH,
 	STORYBLOK_FAQ_FOLDER,
 	STORYBLOK_LAYOUT_PATH,
 	getCampaignsOverviewStoryPath,
@@ -45,6 +46,10 @@ describe('storyblok-paths', () => {
 
 	it('uses globals/faqs for faq stories', () => {
 		expect(STORYBLOK_FAQ_FOLDER).toBe('globals/faqs');
+	});
+
+	it('uses globals/campaign-globals for campaign globals', () => {
+		expect(STORYBLOK_CAMPAIGN_GLOBALS_PATH).toBe('globals/campaign-globals');
 	});
 
 	it('builds country story paths under pages/countries', () => {

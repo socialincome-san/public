@@ -1,38 +1,95 @@
+import { BlockWrapper } from '@/components/block-wrapper';
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { buildCampaignSubmissionLabels } from '@/components/campaign/build-campaign-submission-labels';
 import { CampaignAboutSection } from '@/components/campaign/campaign-about-section';
-import { CampaignExtraText } from '@/components/campaign/campaign-extra-text';
+import { CampaignCreationTeaser } from '@/components/campaign/campaign-creation-teaser';
 import { CampaignFaqSection } from '@/components/campaign/campaign-faq-section';
 import { CampaignHero } from '@/components/campaign/campaign-hero';
 import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
 import { CampaignNewsletter } from '@/components/campaign/campaign-newsletter';
 import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-other-campaigns-teaser';
+import { CampaignProgramTeaser } from '@/components/campaign/campaign-program-teaser';
+import { CampaignVideoSlider } from '@/components/campaign/campaign-video-slider';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
+import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 import { services } from '@/lib/services/services';
+import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 
 type Props = {
 	campaign: CampaignPage;
 	title: string;
 	description: string;
+	creatorName: string;
+	quote: string;
 	primaryImage?: HeroHeaderImage | null;
+	profilePicture?: HeroHeaderImage | null;
+	sectionDescription?: string | null;
+	sectionImage?: HeroHeaderImage | null;
+	instagramHandle?: string | null;
+	xHandle?: string | null;
+	tiktokHandle?: string | null;
+	linkWebsite?: string | null;
 	campaignSlug: string;
+	faq?: Campaign['faq'];
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const CampaignDetail = async ({ campaign, title, description, primaryImage, campaignSlug, lang, region }: Props) => {
-	const pageContentResult = await services.read.campaignPublicWebsite.getPageContent(lang);
+export const CampaignDetail = async ({
+	campaign,
+	title,
+	description,
+	creatorName,
+	quote,
+	primaryImage,
+	profilePicture,
+	sectionDescription,
+	sectionImage,
+	instagramHandle,
+	xHandle,
+	tiktokHandle,
+	linkWebsite,
+	campaignSlug,
+	faq,
+	lang,
+	region,
+}: Props) => {
+	const [pageContentResult, breadcrumbLinks] = await Promise.all([
+		services.read.campaignPublicWebsite.getPageContent(lang, faq),
+		buildBreadcrumbLinks({
+			fullSlug: getCampaignStoryPath(campaignSlug),
+			currentLabel: title,
+			lang,
+			region,
+		}),
+	]);
 	if (!pageContentResult.success) {
 		throw new Error(pageContentResult.error);
 	}
-	const { translator, faqs } = pageContentResult.data;
+	const { translator, faqs, videoPlaybackIds, newsletter } = pageContentResult.data;
+	const trimmedDescription = description.trim();
+	const submissionLabels = buildCampaignSubmissionLabels(translator);
 	const newsletterTranslations = {
-		title: translator.t('popup.information-label'),
-		emailLabel: translator.t('updates.email'),
+		firstNameLabel: translator.t('popup.first-name'),
+		emailLabel: translator.t('popup.email'),
 		emailPlaceholder: translator.t('popup.email-placeholder'),
 		buttonAddSubscriber: translator.t('popup.button-subscribe'),
+		sentBy: translator.t('popup.sent-by'),
 		toastSuccess: translator.t('popup.toast-success'),
 		toastFailure: translator.t('popup.toast-failure'),
+	};
+	const videoSliderTranslations = {
+		title: translator.t('campaign.video-slider.title'),
+		description: translator.t('campaign.video-slider.description'),
+		videoTitles: videoPlaybackIds.map((_, index) =>
+			translator.t('campaign.video-slider.video-title', { context: { index: index + 1 } }),
+		),
+		showVideoLabels: videoPlaybackIds.map((_, index) =>
+			translator.t('campaign.video-slider.show-video', { context: { index: index + 1 } }),
+		),
 	};
 
 	return (
@@ -40,17 +97,51 @@ export const CampaignDetail = async ({ campaign, title, description, primaryImag
 			<CampaignHero
 				campaign={campaign}
 				title={title}
-				description={description}
+				creatorName={creatorName}
+				quote={quote}
 				primaryImage={primaryImage}
+				profilePicture={profilePicture}
 				translator={translator}
 				lang={lang}
 			/>
-			{campaign.secondDescription && campaign.thirdDescription && <CampaignExtraText campaign={campaign} />}
-			<CampaignNewsletter lang={lang} translations={newsletterTranslations} />
-			<CampaignAboutSection translator={translator} />
+			<Breadcrumb links={breadcrumbLinks} className="pb-0" />
+			{trimmedDescription ? (
+				<BlockWrapper className="my-15" disableMarginTop={true} disableMarginBottom={true}>
+					<p className="text-foreground max-w-2xl text-lg whitespace-pre-wrap">{trimmedDescription}</p>
+				</BlockWrapper>
+			) : null}
+			<CampaignAboutSection
+				heading={translator.t('campaign.about-title')}
+				sectionDescription={sectionDescription}
+				sectionImage={sectionImage}
+				instagramHandle={instagramHandle}
+				xHandle={xHandle}
+				tiktokHandle={tiktokHandle}
+				linkWebsite={linkWebsite}
+			/>
+			{campaign.program?.id ? <CampaignProgramTeaser programId={campaign.program.id} lang={lang} region={region} /> : null}
+			<CampaignCreationTeaser
+				translations={{
+					title: translator.t('campaign.creation-teaser.title'),
+					description: translator.t('campaign.creation-teaser.description'),
+					button: translator.t('campaign.creation-teaser.button'),
+				}}
+				labels={submissionLabels}
+				lang={lang}
+				region={region}
+			/>
+			<CampaignNewsletter
+				lang={lang}
+				title={newsletter.title}
+				senderName={newsletter.senderName}
+				imageSrc={newsletter.imageSrc}
+				imageAlt={newsletter.imageAlt}
+				translations={newsletterTranslations}
+			/>
+			<CampaignVideoSlider translations={videoSliderTranslations} videoPlaybackIds={videoPlaybackIds} />
 			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />
 			<CampaignJournalTeaser lang={lang} region={region} />
-			{faqs.length > 0 && <CampaignFaqSection heading={translator.t('campaign.title')} faqs={faqs} />}
+			{faqs.length > 0 && <CampaignFaqSection heading={translator.t('title', { namespace: 'website-faq' })} faqs={faqs} />}
 		</>
 	);
 };

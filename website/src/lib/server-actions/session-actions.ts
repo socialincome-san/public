@@ -1,6 +1,6 @@
 'use server';
 
-import { getCurrentSessions } from '../firebase/current-account';
+import { getCurrentSessions, getSessionByType } from '../firebase/current-account';
 import { ServiceResult } from '../services/core/base.types';
 import { resultOk } from '../services/core/service-result';
 import { services } from '../services/services';
@@ -11,6 +11,12 @@ export const createSessionAction = async (idToken: string) => {
 
 export const logoutAction = async () => {
 	return services.firebaseSession.clearSessionCookie();
+};
+
+export const getIsAuthenticatedUserAction = async (): Promise<boolean> => {
+	const sessionResult = await getSessionByType('user');
+
+	return sessionResult.success;
 };
 
 export const getRedirectPathAfterLoginAction = async (): Promise<ServiceResult<string>> => {

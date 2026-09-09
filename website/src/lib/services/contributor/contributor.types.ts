@@ -91,6 +91,12 @@ export type BankContributorData = {
 	language: string;
 };
 
+export type CampaignGuestAccountData = {
+	email: string;
+	firstName: string;
+	lastName: string;
+};
+
 export type ContributorSession = {
 	type: 'contributor';
 	id: string;

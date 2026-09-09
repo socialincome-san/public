@@ -1,5 +1,4 @@
 import { Prisma, PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -14,15 +13,44 @@ import {
 	LocalPartnerTableViewRow,
 	PublicLocalPartnerStats,
 	PublicLocalPartnerStatsMap,
+	PublicProgramLocalPartner,
 } from './local-partner.types';
 
 export class LocalPartnerReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
+	}
+
+	async getPublicLocalPartnersByProgramId(programId: string): Promise<ServiceResult<PublicProgramLocalPartner[]>> {
+		try {
+			const normalizedProgramId = programId.trim();
+			if (!normalizedProgramId) {
+				return this.resultFail('Missing program id');
+			}
+
+			const localPartners = await this.db.localPartner.findMany({
+				where: {
+					recipients: {
+						some: { programId: normalizedProgramId },
+					},
+				},
+				select: {
+					id: true,
+					name: true,
+					slug: true,
+				},
+				orderBy: { name: 'asc' },
+			});
+
+			return this.resultOk(localPartners);
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not fetch local partners for program: ${JSON.stringify(error)}`);
+		}
 	}
 
 	async getPublicLocalPartnerStatsById(localPartnerId: string): Promise<ServiceResult<PublicLocalPartnerStats>> {
@@ -44,7 +72,7 @@ export class LocalPartnerReadService extends BaseService {
 
 			return this.resultOk(stats);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch local partner stats: ${JSON.stringify(error)}`);
 		}
@@ -104,7 +132,7 @@ export class LocalPartnerReadService extends BaseService {
 
 			return this.resultOk(statsByLocalPartnerId);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch local partner stats map: ${JSON.stringify(error)}`);
 		}
@@ -142,7 +170,7 @@ export class LocalPartnerReadService extends BaseService {
 
 			return this.resultOk({ recipientsCount, completedSurveysCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch local partner dashboard stats: ${JSON.stringify(error)}`);
 		}
@@ -227,7 +255,7 @@ export class LocalPartnerReadService extends BaseService {
 				contact: partner.contact,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get local partner: ${JSON.stringify(error)}`);
 		}
@@ -246,7 +274,7 @@ export class LocalPartnerReadService extends BaseService {
 
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch local partner table view: ${JSON.stringify(error)}`);
 		}
@@ -354,7 +382,7 @@ export class LocalPartnerReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch local partners: ${JSON.stringify(error)}`);
 		}
@@ -372,7 +400,7 @@ export class LocalPartnerReadService extends BaseService {
 
 			return this.resultOk(partners);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch local partners: ${JSON.stringify(error)}`);
 		}
@@ -434,7 +462,7 @@ export class LocalPartnerReadService extends BaseService {
 
 			return this.resultOk(session);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch local partner session: ${JSON.stringify(error)}`);
 		}

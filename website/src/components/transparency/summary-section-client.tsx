@@ -1,6 +1,6 @@
 'use client';
 
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
 import { formatSummaryMetricAmount } from '@/components/transparency/summary-metric-format';
 import { useCountUp } from '@/lib/hooks/use-count-up';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
@@ -23,7 +23,7 @@ export type SummaryMetric = {
 	key: 'inflows' | 'outflows' | 'reserves';
 	titleName: string;
 	titleCurrency: string;
-	description: string;
+	description?: string;
 	amount: number;
 	tooltip?: SummaryMetricTooltip;
 };
@@ -88,7 +88,7 @@ export const SummarySectionClient = ({ metrics, lang }: Props) => {
 								</Tooltip>
 							) : null}
 						</h2>
-						<p className="mt-2 text-sm">{description}</p>
+						{description ? <p className="mt-2 text-sm">{description}</p> : null}
 						<SummaryMetricValue amount={amount} lang={lang} />
 					</div>
 				))}

@@ -1,5 +1,4 @@
 import { PrismaClient, SanctionRegime } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
@@ -12,9 +11,8 @@ export class CountryWriteService extends BaseService {
 		db: PrismaClient,
 		private readonly userService: UserReadService,
 		private readonly countryValidationService: CountryValidationService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async create(userId: string, input: CountryFormCreateInput): Promise<ServiceResult<CountryPayload>> {
@@ -108,7 +106,7 @@ export class CountryWriteService extends BaseService {
 					: null,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not create country. Please try again later.');
 		}
@@ -233,7 +231,7 @@ export class CountryWriteService extends BaseService {
 					: null,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not update country. Please try again later.');
 		}
@@ -272,7 +270,7 @@ export class CountryWriteService extends BaseService {
 
 			return this.resultOk({ id: countryId });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not delete country: ${JSON.stringify(error)}`);
 		}

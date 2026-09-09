@@ -1,15 +1,12 @@
 import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { ServiceResult } from './base.types';
 import { resultFail, resultOk } from './service-result';
 
 export abstract class BaseService {
 	protected readonly db: PrismaClient;
-	protected readonly logger;
 
-	constructor(db: PrismaClient, loggerInstance = logger) {
+	constructor(db: PrismaClient) {
 		this.db = db;
-		this.logger = loggerInstance;
 	}
 
 	protected resultOk<T>(data: T, status?: number): ServiceResult<T> {

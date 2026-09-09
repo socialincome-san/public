@@ -1,5 +1,4 @@
-import { Currency, type PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
+import { Currency } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { type CustodianStablecoinWalletBalance } from './custodian-stablecoin-wallet.types';
@@ -35,10 +34,6 @@ const weiToEth = (wei: string): string => {
 };
 
 export class CustodianStablecoinWalletService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
-
 	async getLatestBalances(addresses: string[]): Promise<ServiceResult<CustodianStablecoinWalletBalance[]>> {
 		if (addresses.length === 0) {
 			return this.resultOk([]);
@@ -92,7 +87,7 @@ export class CustodianStablecoinWalletService extends BaseService {
 
 			return this.resultOk(walletBalances.flat());
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get custodian stablecoin wallet balances: ${JSON.stringify(error)}`);
 		}

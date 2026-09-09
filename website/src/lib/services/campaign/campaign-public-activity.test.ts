@@ -1,11 +1,11 @@
-import { isCampaignPubliclyActive, matchesPublicCampaignActivity } from './campaign-public-activity';
+import { isCampaignActive, matchesPublicCampaignActivity } from './campaign-public-activity';
 
 const now = new Date('2025-06-15T12:00:00.000Z').getTime();
 
 describe('isCampaignPubliclyActive', () => {
 	test('is active when end date is in the future and goal has not been reached', () => {
 		expect(
-			isCampaignPubliclyActive({
+			isCampaignActive({
 				endDate: new Date('2025-07-15T12:00:00.000Z'),
 				goal: 10_000,
 				amountCollected: 9_999,
@@ -16,7 +16,7 @@ describe('isCampaignPubliclyActive', () => {
 
 	test('is inactive when end date is in the past', () => {
 		expect(
-			isCampaignPubliclyActive({
+			isCampaignActive({
 				endDate: new Date('2025-06-01T12:00:00.000Z'),
 				goal: 10_000,
 				amountCollected: 100,
@@ -27,7 +27,7 @@ describe('isCampaignPubliclyActive', () => {
 
 	test('is inactive when end date is exactly now', () => {
 		expect(
-			isCampaignPubliclyActive({
+			isCampaignActive({
 				endDate: new Date(now),
 				goal: null,
 				amountCollected: null,
@@ -38,7 +38,7 @@ describe('isCampaignPubliclyActive', () => {
 
 	test('is inactive when goal has been reached even if end date is in the future', () => {
 		expect(
-			isCampaignPubliclyActive({
+			isCampaignActive({
 				endDate: new Date('2025-07-15T12:00:00.000Z'),
 				goal: 10_000,
 				amountCollected: 10_000,
@@ -49,7 +49,7 @@ describe('isCampaignPubliclyActive', () => {
 
 	test('is active when there is no goal', () => {
 		expect(
-			isCampaignPubliclyActive({
+			isCampaignActive({
 				endDate: new Date('2025-07-15T12:00:00.000Z'),
 				goal: null,
 				amountCollected: 50_000,
@@ -60,7 +60,7 @@ describe('isCampaignPubliclyActive', () => {
 
 	test('is active when collected amount is unknown', () => {
 		expect(
-			isCampaignPubliclyActive({
+			isCampaignActive({
 				endDate: new Date('2025-07-15T12:00:00.000Z'),
 				goal: 10_000,
 				amountCollected: null,

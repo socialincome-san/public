@@ -1,5 +1,4 @@
 import { BankAccountType, Currency, type BankAccount, type PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { type BankAccountReadService } from '../bank-account/bank-account-read.service';
 import { type BankAccountWriteService } from '../bank-account/bank-account-write.service';
 import { BaseService } from '../core/base.service';
@@ -23,9 +22,8 @@ export class ReservesCalculationService extends BaseService {
 		private readonly custodianStablecoinWalletService: CustodianStablecoinWalletService,
 		private readonly reserveWriteService: ReserveWriteService,
 		private readonly currencyDisplayService: CurrencyDisplayService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async calculate(): Promise<ServiceResult<number>> {
@@ -49,7 +47,7 @@ export class ReservesCalculationService extends BaseService {
 				}
 				custodianStablecoinWalletAccounts.push({ ...account, bankAccountNumber: address });
 			} else if (account.type !== BankAccountType.pawapay_wallet) {
-				this.logger.info(`Skipped reserve calculation for unsupported bank account type ${account.type}`);
+				console.info(`Skipped reserve calculation for unsupported bank account type ${account.type}`);
 			}
 		}
 

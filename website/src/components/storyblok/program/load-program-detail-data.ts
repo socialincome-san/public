@@ -10,6 +10,7 @@ import { HeroHeaderImage } from '../shared/hero-header';
 
 type ProgramDetailPortalData = {
 	programId?: string;
+	campaignId?: string;
 	stats?: PublicProgramStats;
 	dashboardStats?: ProgramDashboardStats;
 	programDetails?: PublicProgramDetails;
@@ -31,14 +32,16 @@ export const loadProgramDetailPortalData = async (portalSlug: string): Promise<P
 	}
 
 	const programId = programIdResult.data;
-	const [statsResult, dashboardStatsResult, programDetailsResult] = await Promise.all([
+	const [statsResult, dashboardStatsResult, programDetailsResult, defaultCampaignResult] = await Promise.all([
 		services.read.program.getPublicProgramStatsById(programId),
 		services.programStats.getProgramDashboardStats(programId),
 		services.read.program.getPublicProgramBySlug(portalSlug),
+		services.read.campaign.getDefaultCampaignForProgram(programId),
 	]);
 
 	return {
 		programId,
+		campaignId: defaultCampaignResult.success ? defaultCampaignResult.data.id : undefined,
 		stats: statsResult.success ? statsResult.data : undefined,
 		dashboardStats: dashboardStatsResult.success ? dashboardStatsResult.data : undefined,
 		programDetails: programDetailsResult.success ? programDetailsResult.data : undefined,

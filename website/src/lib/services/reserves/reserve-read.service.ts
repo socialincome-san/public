@@ -1,14 +1,8 @@
-import { type PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { type BankAccountLatestReserve, type LatestReserves } from './reserve.types';
 
 export class ReserveReadService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
-
 	async getLatestPerBankAccount(): Promise<ServiceResult<LatestReserves>> {
 		try {
 			const latestDates = await this.db.reserve.groupBy({
@@ -62,7 +56,7 @@ export class ReserveReadService extends BaseService {
 				total: accounts.reduce((total, { amountChf }) => total + (amountChf ?? 0), 0),
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get latest reserves: ${JSON.stringify(error)}`);
 		}

@@ -1,6 +1,8 @@
 'use server';
 
+import { getStoryblokCampaignTitleForSlug } from '@/components/storyblok/campaign/campaign.utils';
 import { getSessionByType } from '@/lib/firebase/current-account';
+import { defaultLanguage } from '@/lib/i18n/utils';
 import {
 	ContributionFormCreateInput,
 	ContributionFormUpdateInput,
@@ -45,14 +47,24 @@ export const getContributionsOptionsAction = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
-	const contributorOptions = await services.read.contributor.getEditableOptions(sessionResult.data.id);
+	const [contributorOptions, campaignOptions, campaignStories] = await Promise.all([
+		services.read.contributor.getEditableOptions(sessionResult.data.id),
+		services.read.campaign.getEditableOptions(sessionResult.data.id),
+		services.storyblok.getCampaigns(defaultLanguage),
+	]);
 	if (!contributorOptions.success) {
 		return resultFail(contributorOptions.error);
 	}
-	const campaignOptions = await services.read.campaign.getEditableOptions(sessionResult.data.id);
 	if (!campaignOptions.success) {
 		return resultFail(campaignOptions.error);
 	}
+	if (!campaignStories.success) {
+		return resultFail(campaignStories.error);
+	}
+	const resolvedCampaignOptions = campaignOptions.data.map(({ id, name: slug }) => ({
+		id,
+		name: getStoryblokCampaignTitleForSlug(campaignStories.data, slug),
+	}));
 
-	return resultOk({ contributorOptions: contributorOptions.data, campaignOptions: campaignOptions.data });
+	return resultOk({ contributorOptions: contributorOptions.data, campaignOptions: resolvedCampaignOptions });
 };

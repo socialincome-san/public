@@ -1,7 +1,7 @@
 import { Badge } from '@/components/badge/badge';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { type UpcomingPaymentView } from '@/lib/services/subscription/subscription.types';
-import { formatCurrencyLocale, formatUtcDate, wholeCurrencyFormatOptions } from '@/lib/utils/string-utils';
+import { formatCurrencyLocale, formatUtcDate, fractionalCurrencyFormatOptions } from '@/lib/utils/string-utils';
 import { CalendarIcon } from 'lucide-react';
 import { SubscriptionPaymentMethodDisplay } from './subscription-payment-method-display';
 
@@ -36,7 +36,7 @@ export const UpcomingPaymentsList = ({ lang, payments, labels }: Props) => {
 						</div>
 						<div className="flex shrink-0 items-center gap-4">
 							<span className="text-sm font-medium">
-								{formatCurrencyLocale(payment.amount, payment.currency, lang, wholeCurrencyFormatOptions)}
+								{formatCurrencyLocale(payment.amount, payment.currency, lang, fractionalCurrencyFormatOptions)}
 							</span>
 							<Badge variant="verified">{labels.scheduled}</Badge>
 						</div>

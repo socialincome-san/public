@@ -1,5 +1,3 @@
-import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
@@ -13,10 +11,6 @@ import {
 import { OrganizationUpdateUniquenessContext } from './organization-validation.types';
 
 export class OrganizationValidationService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
-
 	validateCreateInput(input: OrganizationFormCreateInput): ServiceResult<OrganizationFormCreateInput> {
 		const parsedInput = organizationCreateInputSchema.safeParse(input);
 		if (!parsedInput.success) {

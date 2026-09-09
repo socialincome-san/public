@@ -104,6 +104,8 @@
 		"edit-dialog": {
 			"title": "Edit Subscription",
 			"monthly-contribution": "Monthly contribution",
+			"transaction-fees": "Transaction fees",
+			"payment-method": "Payment method",
 			"per-month-suffix": "/ Month",
 			"update-card": "Update Card",
 			"cancel-subscription": "Cancel Subscription",
@@ -165,6 +167,12 @@
 		"per-month": "per month",
 		"since": "since",
 		"card-fallback": "Card",
+		"cover-transaction-costs": {
+			"nudge-prefix": "Card payments cost approx.",
+			"nudge-fee": "{{fee}}/mo",
+			"nudge-middle": "in processing fees.",
+			"nudge-cta": "Help keep costs low — cover transaction costs."
+		},
 		"empty": {
 			"description": "You've contributed {{amount}} across {{count}} transfers.\nReady to pick up where you left off?",
 			"description-no-contributions": "Start supporting someone today."
