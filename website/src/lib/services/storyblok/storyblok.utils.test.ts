@@ -1,5 +1,4 @@
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
-import type { ISbStoryData } from '@storyblok/js';
 import {
 	formatStoryblokDateMedium,
 	formatStoryblokResizeUrl,
@@ -140,10 +139,7 @@ describe('isResolvedArticle', () => {
 	const resolvedPerson = { uuid: 'person-1', content: { firstName: 'Ada', lastName: 'Lovelace' } };
 	const resolvedType = { uuid: 'type-1', content: { value: 'Essay' } };
 
-	const article = (author: unknown, type: unknown): ISbStoryData =>
-		({
-			content: { author, type },
-		}) as unknown as ISbStoryData;
+	const article = (author: unknown, type: unknown) => ({ content: { author, type } });
 
 	it('returns true when author and type are resolved story objects', () => {
 		expect(isResolvedArticle(article(resolvedPerson, resolvedType))).toBe(true);

@@ -45,11 +45,8 @@ const isResolvedRelation = (value: unknown): value is ISbStoryData =>
  * or over the resolve_relations limit. Only treat articles as ResolvedArticle when author and
  * type are fully resolved objects.
  */
-export const isResolvedArticle = (story: ISbStoryData): story is ISbStoryData<ResolvedArticle> => {
-	const content = story.content as { author?: unknown; type?: unknown } | undefined;
-
-	return isResolvedRelation(content?.author) && isResolvedRelation(content?.type);
-};
+export const isResolvedArticle = (story: unknown): story is ISbStoryData<ResolvedArticle> =>
+	isResolvedRelation(story) && isResolvedRelation(story.content.author) && isResolvedRelation(story.content.type);
 
 export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>, includeSubtitle = false) => {
 	if (!includeSubtitle) {

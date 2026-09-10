@@ -1201,7 +1201,7 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	private filterResolvedArticles(stories: ISbStoryData[]): ISbStoryData<ResolvedArticle>[] {
+	private filterResolvedArticles(stories: unknown[]): ISbStoryData<ResolvedArticle>[] {
 		return stories.filter(isResolvedArticle);
 	}
 
