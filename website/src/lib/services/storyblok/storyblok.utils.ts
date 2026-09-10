@@ -34,7 +34,11 @@ export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'ty
 };
 
 const isResolvedRelation = (value: unknown): value is ISbStoryData =>
-	typeof value === 'object' && value !== null && 'content' in value && typeof value.content === 'object' && value.content !== null;
+	typeof value === 'object' &&
+	value !== null &&
+	'content' in value &&
+	typeof value.content === 'object' &&
+	value.content !== null;
 
 /**
  * Storyblok leaves unresolved references as UUID strings when the related story is missing
