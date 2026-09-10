@@ -123,15 +123,72 @@
 		},
 		"inflows": {
 			"title-name": "Entrate",
-			"title-currency": "in {{currency}}"
+			"title-currency": "in {{currency}}",
+			"eyebrow": "Entrate",
+			"headline-before": "La maggior parte dei nostri finanziamenti arriva da ",
+			"headline-bold": "persone che donano ogni mese",
+			"headline-after": ".",
+			"video-label": "I nostri donatori mensili tipicamente donano l'1% di ciò che guadagnano.",
+			"breakdown-title": "Ripartizione",
+			"total-label": "Entrate totali",
+			"segments": {
+				"individuals": {
+					"label": "Persone",
+					"description": "Donazioni ricorrenti e una tantum"
+				},
+				"foundations": {
+					"label": "Fondazioni & grant",
+					"description": "Grant pluriennali e una tantum"
+				},
+				"corporate": {
+					"label": "Partner aziendali",
+					"description": "Payroll giving e matched gifts"
+				}
+			}
 		},
 		"outflows": {
 			"title-name": "Uscite",
-			"title-currency": "in {{currency}}"
+			"title-currency": "in {{currency}}",
+			"eyebrow": "Uscite",
+			"headline-before": "",
+			"headline-bold": "{{percent}}%",
+			"headline-after": " di ogni contributo raggiungono direttamente le persone beneficiarie.",
+			"zewo-before": "Certificati ZEWO per una raccolta fondi etica e sottoposti ogni anno a revisione da {{auditFirm}} (",
+			"zewo-link": "Vedi i rapporti di revisione 2020-2025",
+			"zewo-after": ").",
+			"zewo-alt": "Certificazione ZEWO",
+			"breakdown-title": "Come viene utilizzata una donazione di CHF 100",
+			"breakdown-aria-label": "Ripartizione di come viene utilizzato ogni CHF 100",
+			"segments": {
+				"direct-cash": {
+					"label": "Trasferimenti diretti di denaro",
+					"description": "Ciò che trasferiamo direttamente sui telefoni delle persone in difficoltà."
+				},
+				"administration": {
+					"label": "Amministrazione",
+					"description": "Ciò che usiamo per revisione, software e infrastruttura cloud, ecc."
+				},
+				"fundraising": {
+					"label": "Raccolta fondi",
+					"description": "Ciò che investiamo per far crescere il movimento."
+				}
+			},
+			"ngo-average-before": "Media delle ONG: ~CHF {{amount}} di ogni CHF 100 raggiungono i beneficiari. (",
+			"ngo-average-source": "Fonte",
+			"ngo-average-after": ")",
+			"annual-statement-before": "Riferimento: ultimo ",
+			"annual-statement-link": "bilancio annuale (download)"
 		},
 		"reserves": {
 			"title-name": "Riserve",
+			"total-today": "Riserve totali oggi",
 			"title-currency": "in {{currency}}",
+			"institutions-heading": "Istituti finanziari con cui collaboriamo",
+			"institutions": {
+				"postfinance": "PostFinance",
+				"ecobank": "Ecobank",
+				"orange-money": "Orange Money"
+			},
 			"tooltip-label": "Mostra i dettagli dei conti di riserva",
 			"no-data": "Nessun dato"
 		},

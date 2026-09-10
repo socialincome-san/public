@@ -123,15 +123,72 @@
 		},
 		"inflows": {
 			"title-name": "Entrées",
-			"title-currency": "en {{currency}}"
+			"title-currency": "en {{currency}}",
+			"eyebrow": "Entrées",
+			"headline-before": "La majeure partie de notre financement provient de ",
+			"headline-bold": "particuliers qui donnent chaque mois",
+			"headline-after": ".",
+			"video-label": "Nos donateurs mensuels donnent généralement 1% de leurs revenus.",
+			"breakdown-title": "Répartition",
+			"total-label": "Total des entrées",
+			"segments": {
+				"individuals": {
+					"label": "Particuliers",
+					"description": "Dons récurrents et ponctuels"
+				},
+				"foundations": {
+					"label": "Fondations & subventions",
+					"description": "Subventions pluriannuelles et ponctuelles"
+				},
+				"corporate": {
+					"label": "Partenaires entreprises",
+					"description": "Dons salariaux et dons jumelés"
+				}
+			}
 		},
 		"outflows": {
 			"title-name": "Sorties",
-			"title-currency": "en {{currency}}"
+			"title-currency": "en {{currency}}",
+			"eyebrow": "Sorties",
+			"headline-before": "",
+			"headline-bold": "{{percent}} %",
+			"headline-after": " de chaque contribution atteignent directement les bénéficiaires.",
+			"zewo-before": "Certifié ZEWO pour une collecte de fonds éthique et audité chaque année par {{auditFirm}} (",
+			"zewo-link": "Voir les rapports d’audit 2020-2025",
+			"zewo-after": ").",
+			"zewo-alt": "Certification ZEWO",
+			"breakdown-title": "Comment un don de CHF 100 est utilisé",
+			"breakdown-aria-label": "Répartition de l’utilisation de chaque CHF 100",
+			"segments": {
+				"direct-cash": {
+					"label": "Transferts d’argent directs",
+					"description": "Ce que nous transférons directement sur les téléphones des personnes dans le besoin."
+				},
+				"administration": {
+					"label": "Administration",
+					"description": "Ce que nous utilisons pour l’audit, les logiciels et l’infrastructure cloud, etc."
+				},
+				"fundraising": {
+					"label": "Collecte de fonds",
+					"description": "Ce que nous investissons pour faire grandir le mouvement."
+				}
+			},
+			"ngo-average-before": "Moyenne des ONG : ~CHF {{amount}} sur chaque CHF 100 atteignent les bénéficiaires. (",
+			"ngo-average-source": "Source",
+			"ngo-average-after": ")",
+			"annual-statement-before": "Référence : dernier ",
+			"annual-statement-link": "rapport annuel (téléchargement)"
 		},
 		"reserves": {
 			"title-name": "Réserves",
+			"total-today": "Réserves totales aujourd’hui",
 			"title-currency": "en {{currency}}",
+			"institutions-heading": "Institutions financières avec lesquelles nous travaillons",
+			"institutions": {
+				"postfinance": "PostFinance",
+				"ecobank": "Ecobank",
+				"orange-money": "Orange Money"
+			},
 			"tooltip-label": "Afficher les détails des comptes de réserve",
 			"no-data": "Aucune donnée"
 		},

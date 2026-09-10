@@ -123,15 +123,72 @@
 		},
 		"inflows": {
 			"title-name": "Zuflüsse",
-			"title-currency": "in {{currency}}"
+			"title-currency": "in {{currency}}",
+			"eyebrow": "Zuflüsse",
+			"headline-before": "Der Grossteil unserer Finanzierung stammt von ",
+			"headline-bold": "Privatpersonen mit monatlichen Spenden",
+			"headline-after": ".",
+			"video-label": "Unsere monatlichen Spenderinnen und Spender geben typischerweise 1% ihres Einkommens.",
+			"breakdown-title": "Aufschlüsselung",
+			"total-label": "Zuflüsse insgesamt",
+			"segments": {
+				"individuals": {
+					"label": "Privatpersonen",
+					"description": "Wiederkehrende und einmalige Spenden"
+				},
+				"foundations": {
+					"label": "Stiftungen & Grants",
+					"description": "Mehrjährige und einmalige Förderungen"
+				},
+				"corporate": {
+					"label": "Unternehmen",
+					"description": "Payroll Giving und Matching Gifts"
+				}
+			}
 		},
 		"outflows": {
 			"title-name": "Abflüsse",
-			"title-currency": "in {{currency}}"
+			"title-currency": "in {{currency}}",
+			"eyebrow": "Abflüsse",
+			"headline-before": "Von jeder Spende erreichen ",
+			"headline-bold": "{{percent}} %",
+			"headline-after": " die Empfänger:innen direkt.",
+			"zewo-before": "ZEWO-zertifiziert für ethisches Fundraising und jährlich geprüft durch {{auditFirm}} (",
+			"zewo-link": "Auditberichte 2020–2025 ansehen",
+			"zewo-after": ").",
+			"zewo-alt": "ZEWO-Zertifizierung",
+			"breakdown-title": "Wie eine Spende von CHF 100 verwendet wird",
+			"breakdown-aria-label": "Aufschlüsselung, wie je CHF 100 verwendet werden",
+			"segments": {
+				"direct-cash": {
+					"label": "Direkte Geldtransfers",
+					"description": "Was wir direkt auf die Handys von Menschen in Not überweisen."
+				},
+				"administration": {
+					"label": "Administration",
+					"description": "Was wir für Audit, Software und Cloud-Infrastruktur usw. verwenden."
+				},
+				"fundraising": {
+					"label": "Fundraising",
+					"description": "Was wir investieren, um die Bewegung zu vergrössern."
+				}
+			},
+			"ngo-average-before": "NGO-Durchschnitt: ~CHF {{amount}} von je CHF 100 erreichen Begünstigte. (",
+			"ngo-average-source": "Quelle",
+			"ngo-average-after": ")",
+			"annual-statement-before": "Referenz: aktueller ",
+			"annual-statement-link": "Jahresbericht (Download)"
 		},
 		"reserves": {
 			"title-name": "Reserven",
+			"total-today": "Gesamte Reserven heute",
 			"title-currency": "in {{currency}}",
+			"institutions-heading": "Finanzinstitute, mit denen wir zusammenarbeiten",
+			"institutions": {
+				"postfinance": "PostFinance",
+				"ecobank": "Ecobank",
+				"orange-money": "Orange Money"
+			},
 			"tooltip-label": "Reservekontodetails anzeigen",
 			"no-data": "Keine Daten"
 		},
