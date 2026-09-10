@@ -140,10 +140,9 @@ describe('isResolvedArticle', () => {
 	const resolvedPerson = { uuid: 'person-1', content: { firstName: 'Ada', lastName: 'Lovelace' } };
 	const resolvedType = { uuid: 'type-1', content: { value: 'Essay' } };
 
-	const article = (author: unknown, type: unknown): ISbStoryData =>
-		({
-			content: { author, type },
-		}) as unknown as ISbStoryData;
+	const resolvedTag = { uuid: 'tag-1', slug: 'basic-income', content: { value: 'Basic Income' } };
+
+	const article = (author: unknown, type: unknown, tags?: unknown) => ({ content: { author, type, tags } });
 
 	it('returns true when author and type are resolved story objects', () => {
 		expect(isResolvedArticle(article(resolvedPerson, resolvedType))).toBe(true);
@@ -155,5 +154,16 @@ describe('isResolvedArticle', () => {
 
 	it('returns false when type is still a UUID string', () => {
 		expect(isResolvedArticle(article(resolvedPerson, 'e7f414cb-8543-4eb6-94c2-5673af9d111d'))).toBe(false);
+	});
+
+	it('returns true for an empty or resolved tag list', () => {
+		expect(isResolvedArticle(article(resolvedPerson, resolvedType, []))).toBe(true);
+		expect(isResolvedArticle(article(resolvedPerson, resolvedType, [resolvedTag]))).toBe(true);
+	});
+
+	it('returns false when any tag is still a UUID string', () => {
+		expect(
+			isResolvedArticle(article(resolvedPerson, resolvedType, [resolvedTag, '3f8d0d1e-2a1b-4c9a-9f4d-0b2c7a6e5d41'])),
+		).toBe(false);
 	});
 });

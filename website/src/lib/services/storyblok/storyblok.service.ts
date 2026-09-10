@@ -1027,7 +1027,7 @@ export class StoryblokService extends BaseService {
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 
-			return this.resultOk(this.filterResolvedArticles(data as ISbStoryData[]));
+			return this.resultOk(this.filterResolvedArticles(data));
 		} catch (error) {
 			console.error(error);
 
@@ -1051,7 +1051,7 @@ export class StoryblokService extends BaseService {
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 
-			return this.resultOk(this.filterResolvedArticles(data as ISbStoryData[]));
+			return this.resultOk(this.filterResolvedArticles(data));
 		} catch (error) {
 			console.error(error);
 
@@ -1072,7 +1072,7 @@ export class StoryblokService extends BaseService {
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 
-			return this.resultOk(this.filterResolvedArticles(data as ISbStoryData[]));
+			return this.resultOk(this.filterResolvedArticles(data));
 		} catch (error) {
 			console.error(error);
 
@@ -1105,7 +1105,7 @@ export class StoryblokService extends BaseService {
 
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 
-			return this.resultOk(this.filterResolvedArticles(data as ISbStoryData[]));
+			return this.resultOk(this.filterResolvedArticles(data));
 		} catch (error) {
 			console.error(error);
 
@@ -1201,7 +1201,7 @@ export class StoryblokService extends BaseService {
 		}
 	}
 
-	private filterResolvedArticles(stories: ISbStoryData[]): ISbStoryData<ResolvedArticle>[] {
+	private filterResolvedArticles(stories: unknown[]): ISbStoryData<ResolvedArticle>[] {
 		return stories.filter(isResolvedArticle);
 	}
 

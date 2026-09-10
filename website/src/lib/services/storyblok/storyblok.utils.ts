@@ -42,13 +42,17 @@ const isResolvedRelation = (value: unknown): value is ISbStoryData =>
 
 /**
  * Storyblok leaves unresolved references as UUID strings when the related story is missing
- * or over the resolve_relations limit. Only treat articles as ResolvedArticle when author and
- * type are fully resolved objects.
+ * or over the resolve_relations limit. Only treat articles as ResolvedArticle when author,
+ * type and every tag are fully resolved objects.
  */
-export const isResolvedArticle = (story: ISbStoryData): story is ISbStoryData<ResolvedArticle> => {
-	const content = story.content as { author?: unknown; type?: unknown } | undefined;
+export const isResolvedArticle = (story: unknown): story is ISbStoryData<ResolvedArticle> => {
+	if (!isResolvedRelation(story) || !isResolvedRelation(story.content.author) || !isResolvedRelation(story.content.type)) {
+		return false;
+	}
 
-	return isResolvedRelation(content?.author) && isResolvedRelation(content?.type);
+	const { tags } = story.content;
+
+	return tags === undefined || tags === null || (Array.isArray(tags) && tags.every(isResolvedRelation));
 };
 
 export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>, includeSubtitle = false) => {
