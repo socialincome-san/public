@@ -1,5 +1,4 @@
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
-import type { ISbStoryData } from '@storyblok/js';
 import {
 	formatStoryblokDateMedium,
 	formatStoryblokResizeUrl,
