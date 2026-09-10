@@ -90,6 +90,12 @@ export interface CampaignDonate {
 
 export interface CampaignGlobals {
   faq: (ISbStoryData<Faq> | string)[];
+  muxPlaybackId1: string;
+  muxPlaybackId2: string;
+  muxPlaybackId3: string;
+  newsletterImage: StoryblokAsset;
+  newsletterSenderName: string;
+  newsletterTitle: string;
   component: "campaignGlobals";
   _uid: string;
   _editable?: string | undefined;
@@ -274,6 +280,15 @@ export interface ImpactMeasurement {
   [k: string]: unknown;
 }
 
+export interface Inflows {
+  foundationInflows?: string;
+  corporatePartnerInflows?: string;
+  component: "inflows";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface JournalTeasers {
   heading?: string;
   articlesDisplayMode: "latest" | "selected";
@@ -411,6 +426,14 @@ export interface OpenSourceStats {
   [k: string]: unknown;
 }
 
+export interface Outflows {
+  component: "outflows";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+
 export interface Page {
   content: (
     | DonationsTotal
@@ -427,9 +450,9 @@ export interface Page {
     | Testimonial
     | TestimonialCarousel
     | Text
+    | TwoColumn
     | TwoColumnText
     | VideoText
-    | Transparency
     | OpenSourceStats
     | OpenSourceContributors
     | OpenSourceIssues
@@ -440,9 +463,12 @@ export interface Page {
     | Lottie
     | PersonGrid
     | RunwayMonthGrid
+    | ReservesBlock
     | DonationGlobe
     | TransparencySummary
     | TransparencyCountries
+    | Inflows
+    | Outflows
   )[];
   component: "page";
   _uid: string;
@@ -575,6 +601,13 @@ export interface ReferencesGroup {
   [k: string]: unknown;
 }
 
+export interface ReservesBlock {
+  component: "reservesBlock";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface RichtextButtonHeader {
   heading?: StoryblokRichtext;
   button?: Button[];
@@ -661,14 +694,6 @@ export interface Text {
   [k: string]: unknown;
 }
 
-export interface Transparency {
-  donationGlobe?: DonationGlobe[];
-  transparencySummary?: TransparencySummary[];
-  component: "transparency";
-  _uid: string;
-  [k: string]: unknown;
-}
-
 export interface TransparencyCountries {
   component: "transparencyCountries";
   _uid: string;
@@ -680,6 +705,85 @@ export interface TransparencySummary {
   outflowsDescription?: string;
   reservesDescription?: string;
   component: "transparencySummary";
+  _uid: string;
+  [k: string]: unknown;
+}
+
+export interface TwoColumn {
+  leftColumn: (
+    | DonationsTotal
+    | Downloads
+    | FaqSelection
+    | HeroVideo
+    | ImageText
+    | ImpactMeasurement
+    | JournalTeasers
+    | ModalCards
+    | PartnershipsCarousel
+    | ProgramGrid
+    | TeamGrid
+    | Testimonial
+    | TestimonialCarousel
+    | Text
+    | TwoColumn
+    | TwoColumnText
+    | VideoText
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | Spacer
+    | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
+    | Lottie
+    | PersonGrid
+    | RunwayMonthGrid
+    | ReservesBlock
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
+    | Inflows
+    | Outflows
+  )[];
+  rightColumn: (
+    | DonationsTotal
+    | Downloads
+    | FaqSelection
+    | HeroVideo
+    | ImageText
+    | ImpactMeasurement
+    | JournalTeasers
+    | ModalCards
+    | PartnershipsCarousel
+    | ProgramGrid
+    | TeamGrid
+    | Testimonial
+    | TestimonialCarousel
+    | Text
+    | TwoColumn
+    | TwoColumnText
+    | VideoText
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | Spacer
+    | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
+    | Lottie
+    | PersonGrid
+    | RunwayMonthGrid
+    | ReservesBlock
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
+    | Inflows
+    | Outflows
+  )[];
+  columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
+  component: "twoColumn";
   _uid: string;
   [k: string]: unknown;
 }

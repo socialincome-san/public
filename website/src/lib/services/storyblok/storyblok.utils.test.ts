@@ -5,6 +5,7 @@ import {
 	formatStoryblokUrl,
 	getScaledAssetDimensions,
 	getVolunteerDurationParts,
+	isResolvedArticle,
 	resolveStoryblokLink,
 } from './storyblok.utils';
 
@@ -131,5 +132,37 @@ describe('formatStoryblokDateMedium', () => {
 	it('shows the day the editor entered, not the UTC-shifted one', () => {
 		expect(formatStoryblokDateMedium('2026-06-25 22:00', 'en')).toBe('Jun 26, 2026');
 		expect(formatStoryblokDateMedium('2026-01-25 23:00', 'en')).toBe('Jan 26, 2026');
+	});
+});
+
+describe('isResolvedArticle', () => {
+	const resolvedPerson = { uuid: 'person-1', content: { firstName: 'Ada', lastName: 'Lovelace' } };
+	const resolvedType = { uuid: 'type-1', content: { value: 'Essay' } };
+
+	const resolvedTag = { uuid: 'tag-1', slug: 'basic-income', content: { value: 'Basic Income' } };
+
+	const article = (author: unknown, type: unknown, tags?: unknown) => ({ content: { author, type, tags } });
+
+	it('returns true when author and type are resolved story objects', () => {
+		expect(isResolvedArticle(article(resolvedPerson, resolvedType))).toBe(true);
+	});
+
+	it('returns false when author is still a UUID string', () => {
+		expect(isResolvedArticle(article('0514a978-c701-4d3e-bfe0-5de95f063d97', resolvedType))).toBe(false);
+	});
+
+	it('returns false when type is still a UUID string', () => {
+		expect(isResolvedArticle(article(resolvedPerson, 'e7f414cb-8543-4eb6-94c2-5673af9d111d'))).toBe(false);
+	});
+
+	it('returns true for an empty or resolved tag list', () => {
+		expect(isResolvedArticle(article(resolvedPerson, resolvedType, []))).toBe(true);
+		expect(isResolvedArticle(article(resolvedPerson, resolvedType, [resolvedTag]))).toBe(true);
+	});
+
+	it('returns false when any tag is still a UUID string', () => {
+		expect(
+			isResolvedArticle(article(resolvedPerson, resolvedType, [resolvedTag, '3f8d0d1e-2a1b-4c9a-9f4d-0b2c7a6e5d41'])),
+		).toBe(false);
 	});
 });

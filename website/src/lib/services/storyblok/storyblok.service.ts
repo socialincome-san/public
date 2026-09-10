@@ -33,7 +33,7 @@ import { cache } from 'react';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { getStoryblokApi } from './storyblok.config';
-import type { ResolvedArticle } from './storyblok.utils';
+import { isResolvedArticle, type ResolvedArticle } from './storyblok.utils';
 
 type StoryblokDatasourceEntry = {
 	value: string;
@@ -1027,7 +1027,7 @@ export class StoryblokService extends BaseService {
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 
-			return this.resultOk(data);
+			return this.resultOk(this.filterResolvedArticles(data));
 		} catch (error) {
 			console.error(error);
 
@@ -1051,7 +1051,7 @@ export class StoryblokService extends BaseService {
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 
-			return this.resultOk(data);
+			return this.resultOk(this.filterResolvedArticles(data));
 		} catch (error) {
 			console.error(error);
 
@@ -1072,7 +1072,7 @@ export class StoryblokService extends BaseService {
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 
-			return this.resultOk(data);
+			return this.resultOk(this.filterResolvedArticles(data));
 		} catch (error) {
 			console.error(error);
 
@@ -1100,12 +1100,12 @@ export class StoryblokService extends BaseService {
 			if (limit) {
 				const res = await getStoryblokApi().get(StoryblokService.storiesPath, params);
 
-				return this.resultOk((res.data as { stories: ISbStoryData<ResolvedArticle>[] }).stories);
+				return this.resultOk(this.filterResolvedArticles((res.data as { stories: ISbStoryData[] }).stories));
 			}
 
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 
-			return this.resultOk(data);
+			return this.resultOk(this.filterResolvedArticles(data));
 		} catch (error) {
 			console.error(error);
 
@@ -1137,7 +1137,7 @@ export class StoryblokService extends BaseService {
 
 			const res = await getStoryblokApi().get(StoryblokService.storiesPath, params);
 
-			return this.resultOk((res.data as { stories: ISbStoryData<ResolvedArticle>[] }).stories);
+			return this.resultOk(this.filterResolvedArticles((res.data as { stories: ISbStoryData[] }).stories));
 		} catch (error) {
 			console.error(error);
 
@@ -1160,7 +1160,12 @@ export class StoryblokService extends BaseService {
 				slug,
 			);
 
-			return this.resultOk((res.data as { story: ISbStoryData<ResolvedArticle> }).story);
+			const story = (res.data as { story: ISbStoryData }).story;
+			if (!isResolvedArticle(story)) {
+				return this.resultFail(`Article relations unresolved for slug: ${slug}`);
+			}
+
+			return this.resultOk(story);
 		} catch (error) {
 			console.error(error);
 
@@ -1177,7 +1182,7 @@ export class StoryblokService extends BaseService {
 	): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> {
 		try {
 			const related = await this.getRelativeArticlesByAuthorAndTags(authorId, tags, lang, articleId, numberOfArticles);
-			let result = related.data.stories;
+			let result = this.filterResolvedArticles(related.data.stories);
 
 			if (result.length < numberOfArticles) {
 				const idsToIgnore = [...result.map((s) => s.id), articleId].join(',');
@@ -1194,6 +1199,10 @@ export class StoryblokService extends BaseService {
 
 			return this.resultOk([]);
 		}
+	}
+
+	private filterResolvedArticles(stories: unknown[]): ISbStoryData<ResolvedArticle>[] {
+		return stories.filter(isResolvedArticle);
 	}
 
 	private articleByTagsFilter(tagId: string) {

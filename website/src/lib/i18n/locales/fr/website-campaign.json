@@ -16,6 +16,13 @@
 		},
 		"ended": " La campagne est terminée. Tu peux faire un don en allant sur la page principale du site.",
 		"days-left": "Jours restants",
+		"fundraising-pill": {
+			"days-left_one": "Plus que {{count}} jour",
+			"days-left_other": "Plus que {{count}} jours",
+			"amount-missing": "Encore {{missing}} pour atteindre {{goal}}",
+			"supporters-left_one": "Encore {{count}} supporter pour atteindre {{goal}}",
+			"supporters-left_other": "Encore {{count}} supporters pour atteindre {{goal}}"
+		},
 		"program-teaser": {
 			"heading": "Ton don soutient",
 			"focus-areas": "Domaines d’intervention",
@@ -27,9 +34,12 @@
 			"button": "Lancer ta campagne"
 		},
 		"about-title": "À propos",
-		"about-si-title": "Über Social Income",
-		"about-si-text-1": "Social Income est une ONG basée en Suisse qui assure des transferts d’argent inconditionnels par téléphone mobile à des personnes vivant dans une pauvreté multidimensionnelle en Afrique de l’Ouest.",
-		"about-si-text-2": "Depuis 2020, Social Income gère un programme de revenu de base universel non limité dans le temps en Sierra Leone.",
+		"video-slider": {
+			"title": "Que signifie recevoir un **Social Income** ?",
+			"description": "Écoute directement les bénéficiaires de nos programmes expliquer ce que Social Income signifie concrètement.",
+			"show-video": "Afficher la vidéo {{ index }}",
+			"video-title": "Vidéo de bénéficiaire Social Income {{ index }}"
+		},
 		"other-campaigns": {
 			"heading-prefix": "Découvre d'autres ",
 			"heading-emphasis": "campagnes",

@@ -7,15 +7,18 @@ import { HeroVideoBlockServer } from '@/components/content-blocks/hero-video-ser
 import { HomePageRichtextButtonHeaderBlock } from '@/components/content-blocks/home-page-richtext-button-header';
 import { ImageTextBlock } from '@/components/content-blocks/image-text';
 import { ImpactMeasurementBlock } from '@/components/content-blocks/impact-measurement';
+import { InflowsBlock } from '@/components/content-blocks/inflows-block';
 import { JournalTeasersBlock } from '@/components/content-blocks/journal-teasers';
 import { LottieBlock } from '@/components/content-blocks/lottie';
 import { ModalCardsBlock } from '@/components/content-blocks/modal-cards';
 import { OpenSourceContributorsBlock } from '@/components/content-blocks/open-source-contributors';
 import { OpenSourceIssuesBlock } from '@/components/content-blocks/open-source-issues';
 import { OpenSourceStatsBlock } from '@/components/content-blocks/open-source-stats';
+import { OutflowsBlock } from '@/components/content-blocks/outflows-block';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { PersonGridBlock } from '@/components/content-blocks/person-grid';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
+import { ReservesBlock } from '@/components/content-blocks/reserves-block';
 import { RichtextButtonHeaderBlock } from '@/components/content-blocks/richtext-button-header';
 import { RunwayMonthGridBlock } from '@/components/content-blocks/runway-month-grid-block';
 import { SpacerBlock } from '@/components/content-blocks/spacer';
@@ -23,18 +26,19 @@ import { TeamGridBlock } from '@/components/content-blocks/team-grid';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
 import { TestimonialBlock } from '@/components/content-blocks/testimonial-entry';
 import { TextBlock } from '@/components/content-blocks/text';
-import { TransparencyBlock } from '@/components/content-blocks/transparency';
 import { TransparencyCountriesBlock } from '@/components/content-blocks/transparency-countries-block';
 import { TransparencySummaryBlock } from '@/components/content-blocks/transparency-summary-block';
+import { TwoColumnBlock } from '@/components/content-blocks/two-column';
 import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text';
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsletter-signup';
-import type { Page } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Page, TwoColumn } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { ParsedUrlQueryInput } from 'querystring';
-import { Fragment } from 'react';
+import { Fragment, type ReactNode } from 'react';
 
 type PageBlock = Page['content'][number];
+type NestedPageBlock = Extract<TwoColumn['leftColumn'][number], PageBlock>;
 type RichtextButtonHeaderAction = 'createProgram';
 
 type PageContentTypeProps = {
@@ -46,12 +50,12 @@ type PageContentTypeProps = {
 };
 
 const renderPageBlock = (
-	block: PageBlock,
+	block: PageBlock | NestedPageBlock,
 	lang: WebsiteLanguage,
 	region: WebsiteRegion,
 	searchParams?: ParsedUrlQueryInput,
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction,
-) => {
+): ReactNode => {
 	switch (block.component) {
 		case 'donationGlobe':
 			return <DonationGlobeBlock blok={block} lang={lang} />;
@@ -69,6 +73,8 @@ const renderPageBlock = (
 			return <ImageTextBlock blok={block} />;
 		case 'impactMeasurement':
 			return <ImpactMeasurementBlock blok={block} lang={lang} searchParams={searchParams} />;
+		case 'inflows':
+			return <InflowsBlock blok={block} lang={lang} />;
 		case 'journalTeasers':
 			return <JournalTeasersBlock blok={block} lang={lang} region={region} />;
 		case 'lottie':
@@ -83,12 +89,16 @@ const renderPageBlock = (
 			return <OpenSourceContributorsBlock blok={block} lang={lang} />;
 		case 'openSourceIssues':
 			return <OpenSourceIssuesBlock blok={block} lang={lang} />;
+		case 'outflows':
+			return <OutflowsBlock blok={block} lang={lang} region={region} />;
 		case 'partnershipsCarousel':
 			return <PartnershipsCarouselBlock blok={block} />;
 		case 'personGrid':
 			return <PersonGridBlock blok={block} lang={lang} region={region} />;
 		case 'programGrid':
 			return <ProgramGridBlock blok={block} lang={lang} region={region} />;
+		case 'reservesBlock':
+			return <ReservesBlock blok={block} lang={lang} />;
 		case 'richtextButtonHeader':
 			if (richtextButtonHeaderAction === 'createProgram') {
 				return <HomePageRichtextButtonHeaderBlock blok={block} lang={lang} region={region} />;
@@ -105,12 +115,28 @@ const renderPageBlock = (
 			return <TestimonialCarouselBlock blok={block} />;
 		case 'text':
 			return <TextBlock blok={block} />;
-		case 'transparency':
-			return <TransparencyBlock blok={block} lang={lang} />;
 		case 'transparencyCountries':
 			return <TransparencyCountriesBlock blok={block} lang={lang} />;
 		case 'transparencySummary':
 			return <TransparencySummaryBlock blok={block} lang={lang} />;
+		case 'twoColumn': {
+			const renderColumn = (column: typeof block.leftColumn) =>
+				column.length > 0
+					? column.map((columnBlock) => (
+							<Fragment key={columnBlock._uid}>
+								{renderPageBlock(columnBlock, lang, region, searchParams, richtextButtonHeaderAction)}
+							</Fragment>
+						))
+					: undefined;
+
+			return (
+				<TwoColumnBlock
+					blok={block}
+					leftColumn={renderColumn(block.leftColumn)}
+					rightColumn={renderColumn(block.rightColumn)}
+				/>
+			);
+		}
 		case 'twoColumnText':
 			return <TwoColumnTextBlock blok={block} />;
 		case 'videoText':

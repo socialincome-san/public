@@ -11,6 +11,7 @@ export type LocalPartnerTableViewRow = {
 	recipientsCount: number;
 	candidatesCount: number;
 	createdAt: Date;
+	country: CountryCode | null;
 };
 
 export type LocalPartnerTableView = {
