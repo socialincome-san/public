@@ -33,6 +33,28 @@ export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'ty
 	tags?: ISbStoryData<Tag>[];
 };
 
+const isResolvedRelation = (value: unknown): value is ISbStoryData =>
+	typeof value === 'object' &&
+	value !== null &&
+	'content' in value &&
+	typeof value.content === 'object' &&
+	value.content !== null;
+
+/**
+ * Storyblok leaves unresolved references as UUID strings when the related story is missing
+ * or over the resolve_relations limit. Only treat articles as ResolvedArticle when author,
+ * type and every tag are fully resolved objects.
+ */
+export const isResolvedArticle = (story: unknown): story is ISbStoryData<ResolvedArticle> => {
+	if (!isResolvedRelation(story) || !isResolvedRelation(story.content.author) || !isResolvedRelation(story.content.type)) {
+		return false;
+	}
+
+	const { tags } = story.content;
+
+	return tags === undefined || tags === null || (Array.isArray(tags) && tags.every(isResolvedRelation));
+};
+
 export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>, includeSubtitle = false) => {
 	if (!includeSubtitle) {
 		return article.content.title;
