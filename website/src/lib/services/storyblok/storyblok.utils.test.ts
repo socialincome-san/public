@@ -1,10 +1,12 @@
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
+import type { ISbStoryData } from '@storyblok/js';
 import {
 	formatStoryblokDateMedium,
 	formatStoryblokResizeUrl,
 	formatStoryblokUrl,
 	getScaledAssetDimensions,
 	getVolunteerDurationParts,
+	isResolvedArticle,
 	resolveStoryblokLink,
 } from './storyblok.utils';
 
@@ -131,5 +133,27 @@ describe('formatStoryblokDateMedium', () => {
 	it('shows the day the editor entered, not the UTC-shifted one', () => {
 		expect(formatStoryblokDateMedium('2026-06-25 22:00', 'en')).toBe('Jun 26, 2026');
 		expect(formatStoryblokDateMedium('2026-01-25 23:00', 'en')).toBe('Jan 26, 2026');
+	});
+});
+
+describe('isResolvedArticle', () => {
+	const resolvedPerson = { uuid: 'person-1', content: { firstName: 'Ada', lastName: 'Lovelace' } };
+	const resolvedType = { uuid: 'type-1', content: { value: 'Essay' } };
+
+	const article = (author: unknown, type: unknown): ISbStoryData =>
+		({
+			content: { author, type },
+		}) as unknown as ISbStoryData;
+
+	it('returns true when author and type are resolved story objects', () => {
+		expect(isResolvedArticle(article(resolvedPerson, resolvedType))).toBe(true);
+	});
+
+	it('returns false when author is still a UUID string', () => {
+		expect(isResolvedArticle(article('0514a978-c701-4d3e-bfe0-5de95f063d97', resolvedType))).toBe(false);
+	});
+
+	it('returns false when type is still a UUID string', () => {
+		expect(isResolvedArticle(article(resolvedPerson, 'e7f414cb-8543-4eb6-94c2-5673af9d111d'))).toBe(false);
 	});
 });

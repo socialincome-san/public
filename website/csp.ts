@@ -67,6 +67,9 @@ const PRODUCTION_CONNECT_SRC = [
 	'https://static.cloudflareinsights.com',
 	'https://cloudflareinsights.com',
 	'https://challenges.cloudflare.com',
+	// The dotLottie renderer fetches its WASM binary from jsDelivr, falling back to unpkg.
+	'https://cdn.jsdelivr.net',
+	'https://unpkg.com',
 ] as const;
 
 const LOCALHOST_CONNECT_SRC = ['http://localhost:*', 'ws://localhost:*'] as const;
