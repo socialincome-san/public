@@ -91,6 +91,21 @@ export class TransparencyService extends BaseService {
 		}
 	}
 
+	async getLatestReservesChf(): Promise<ServiceResult<number>> {
+		try {
+			const latestReservesResult = await this.reserveReadService.getLatestPerBankAccount();
+			if (!latestReservesResult.success) {
+				return this.resultFail(latestReservesResult.error);
+			}
+
+			return this.resultOk(latestReservesResult.data.total);
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not fetch latest reserves: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getRunwayMonths(): Promise<ServiceResult<number>> {
 		try {
 			const latestReservesResult = await this.reserveReadService.getLatestPerBankAccount();

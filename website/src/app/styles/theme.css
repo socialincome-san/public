@@ -78,6 +78,16 @@
 			transform: scale(0.95);
 		}
 	}
+	/* Draws a path with pathLength="1" and stroke-dasharray="1 2". Duration mirrors SEGMENT_STAGGER_MS in inflows-gauge.tsx. */
+	--animate-gauge-arc-draw: gaugeArcDraw 900ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+	@keyframes gaugeArcDraw {
+		from {
+			stroke-dashoffset: 1;
+		}
+		to {
+			stroke-dashoffset: 0;
+		}
+	}
 	--animate-globe-badge: globeBadge 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 	@keyframes globeBadge {
 		from {

@@ -123,15 +123,72 @@
 		},
 		"inflows": {
 			"title-name": "Inflows",
-			"title-currency": "in {{currency}}"
+			"title-currency": "in {{currency}}",
+			"eyebrow": "Inflows",
+			"headline-before": "Most of our funding comes from ",
+			"headline-bold": "individuals giving monthly",
+			"headline-after": ".",
+			"video-label": "Our monthly donors typically give 1% of what they earn.",
+			"breakdown-title": "Breakdown",
+			"total-label": "Total inflows",
+			"segments": {
+				"individuals": {
+					"label": "Individuals",
+					"description": "Recurring and one-time donations"
+				},
+				"foundations": {
+					"label": "Foundations & Grants",
+					"description": "Multi-year grants and one-off awards"
+				},
+				"corporate": {
+					"label": "Corporate partners",
+					"description": "Payroll giving and matched gifts"
+				}
+			}
 		},
 		"outflows": {
 			"title-name": "Outflows",
-			"title-currency": "in {{currency}}"
+			"title-currency": "in {{currency}}",
+			"eyebrow": "Outflows",
+			"headline-before": "",
+			"headline-bold": "{{percent}}%",
+			"headline-after": " of every contribution reaches recipients directly.",
+			"zewo-before": "ZEWO-certified for ethical fundraising and audited yearly by {{auditFirm}} (",
+			"zewo-link": "See audit reports 2020-2025",
+			"zewo-after": ").",
+			"zewo-alt": "ZEWO certification",
+			"breakdown-title": "How is a CHF 100 donation spent",
+			"breakdown-aria-label": "Breakdown of how each CHF 100 is spent",
+			"segments": {
+				"direct-cash": {
+					"label": "Direct cash transfers",
+					"description": "What we transfer directly onto the phones of people in need."
+				},
+				"administration": {
+					"label": "Administration",
+					"description": "What we use for audit, software and cloud infrastructure etc."
+				},
+				"fundraising": {
+					"label": "Fundraising",
+					"description": "What we invest to grow the movement."
+				}
+			},
+			"ngo-average-before": "NGO average: ~CHF {{amount}} of every CHF 100 reaches beneficiaries. (",
+			"ngo-average-source": "Source",
+			"ngo-average-after": ")",
+			"annual-statement-before": "Reference latest ",
+			"annual-statement-link": "annual statement (download)"
 		},
 		"reserves": {
 			"title-name": "Reserves",
+			"total-today": "Total reserves today",
 			"title-currency": "in {{currency}}",
+			"institutions-heading": "Financial institutions we work with",
+			"institutions": {
+				"postfinance": "PostFinance",
+				"ecobank": "Ecobank",
+				"orange-money": "Orange Money"
+			},
 			"tooltip-label": "Show reserve account details",
 			"no-data": "No data"
 		},
