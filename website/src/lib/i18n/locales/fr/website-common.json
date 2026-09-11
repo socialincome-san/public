@@ -61,6 +61,10 @@
 	},
 	"local-partners-page": {
 		"empty": "Aucun partenaire local trouvé.",
+		"no-results": "Aucun partenaire local ne correspond aux filtres sélectionnés.",
+		"search-label": "Rechercher des partenaires locaux",
+		"search-placeholder": "Rechercher",
+		"all-countries": "Tous les pays ({{count}})",
 		"recipient-singular": "bénéficiaire",
 		"recipient-plural": "bénéficiaires",
 		"completed-survey-singular": "enquête complétée",

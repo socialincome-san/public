@@ -30,6 +30,8 @@ export const StoryblokPreviewLocalPartnersOverviewPage = async ({
 
 			return storyResult.success ? storyResult.data : null;
 		},
-		renderStory: (overview) => <LocalPartnersOverviewPage overview={overview} lang={lang} region={region} />,
+		renderStory: (overview) => (
+			<LocalPartnersOverviewPage overview={overview} lang={lang} region={region} searchParams={searchParams} />
+		),
 	});
 };

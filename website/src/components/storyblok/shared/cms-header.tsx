@@ -1,9 +1,12 @@
+import { cn } from '@/lib/utils/cn';
+
 type Props = {
 	title?: string;
 	text?: string;
+	textClassName?: string;
 };
 
-export const CmsHeader = ({ title, text }: Props) => {
+export const CmsHeader = ({ title, text, textClassName }: Props) => {
 	const normalizedTitle = title?.trim();
 	const normalizedText = text?.trim();
 
@@ -17,7 +20,7 @@ export const CmsHeader = ({ title, text }: Props) => {
 				<h1 className="text-foreground text-5xl leading-tight font-bold md:text-6xl">{normalizedTitle}</h1>
 			) : null}
 			{normalizedText ? (
-				<p className="text-foreground text-base leading-6 sm:text-lg sm:leading-7">{normalizedText}</p>
+				<p className={cn('text-foreground text-base leading-6 sm:text-lg sm:leading-7', textClassName)}>{normalizedText}</p>
 			) : null}
 		</div>
 	);
