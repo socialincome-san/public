@@ -153,7 +153,7 @@
 			"headline-before": "",
 			"headline-bold": "{{percent}} %",
 			"headline-after": " de chaque contribution atteignent directement les bénéficiaires.",
-			"zewo-before": "Certifié ZEWO pour une collecte de fonds éthique et audité chaque année par {{auditFirm}} (",
+			"zewo-before": "Certifié ZEWO pour sa bonne gouvernance et audité chaque année par {{auditFirm}} (",
 			"zewo-link": "Voir les rapports d’audit 2020-2025",
 			"zewo-after": ").",
 			"zewo-alt": "Certification ZEWO",
@@ -166,18 +166,18 @@
 				},
 				"administration": {
 					"label": "Administration",
-					"description": "Ce que nous utilisons pour les transferts d'argent, l'audit, les logiciels, l'infrastructure et d'autres coûts.""
+					"description": "Ce que nous utilisons pour les transferts d'argent, l'audit, les logiciels, l'infrastructure et d'autres coûts."
 				},
 				"fundraising": {
 					"label": "Collecte de fonds",
 					"description": "Ce que nous investissons pour faire grandir le mouvement."
 				}
 			},
-			"ngo-average-before": "Moyenne des ONG : ~CHF {{amount}} sur chaque CHF 100 atteignent les bénéficiaires. (",
-			"ngo-average-source": "Source",
-			"ngo-average-after": ")",
-			"annual-statement-before": "Référence : dernier ",
-			"annual-statement-link": "rapport annuel (téléchargement)"
+			"ngo-average-before": "À titre de comparaison, les standards internationaux tels que ceux de ",
+			"ngo-average-source": "ZEWO",
+			"ngo-average-after": " fixent la limite supérieure des frais généraux à {{amount}} %.",
+			"annual-statement-before": "Derniers comptes annuels : ",
+			"annual-statement-link": "télécharger"
 		},
 		"reserves": {
 			"title-name": "Réserves",

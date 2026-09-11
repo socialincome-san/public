@@ -3,8 +3,8 @@ import { OutflowsSection } from '@/components/outflows/outflows-section';
 import {
 	buildOutflowsSectionRows,
 	OUTFLOW_AUDIT_FIRM,
-	OUTFLOW_NGO_AVERAGE_CHF,
 	OUTFLOW_NGO_AVERAGE_SOURCE_URL,
+	OUTFLOW_NGO_UPPER_LIMIT_PERCENT,
 	OUTFLOW_REACH_PERCENT,
 } from '@/components/outflows/outflows-spend';
 
@@ -60,11 +60,11 @@ export const OutflowsBlock = async ({ blok, lang, region }: Props) => {
 					zewoAlt: translator.t('transparency-page.outflows.zewo-alt'),
 					breakdownTitle: translator.t('transparency-page.outflows.breakdown-title'),
 					breakdownAriaLabel: translator.t('transparency-page.outflows.breakdown-aria-label'),
-					ngoAverageBefore: translator.t('transparency-page.outflows.ngo-average-before', {
-						context: { amount: OUTFLOW_NGO_AVERAGE_CHF },
-					}),
+					ngoAverageBefore: translator.t('transparency-page.outflows.ngo-average-before'),
 					ngoAverageSource: translator.t('transparency-page.outflows.ngo-average-source'),
-					ngoAverageAfter: translator.t('transparency-page.outflows.ngo-average-after'),
+					ngoAverageAfter: translator.t('transparency-page.outflows.ngo-average-after', {
+						context: { amount: OUTFLOW_NGO_UPPER_LIMIT_PERCENT },
+					}),
 					donateNow: translator.t('countries-page.donate-now'),
 					annualStatementBefore: translator.t('transparency-page.outflows.annual-statement-before'),
 					annualStatementLink: translator.t('transparency-page.outflows.annual-statement-link'),
