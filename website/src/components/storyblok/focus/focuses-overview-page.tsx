@@ -25,6 +25,7 @@ export const FocusesOverviewPage = async ({ overview, lang, region, searchParams
 		currentLabel: title,
 		lang,
 		region,
+		includeCurrentLabel: false,
 	});
 
 	return (

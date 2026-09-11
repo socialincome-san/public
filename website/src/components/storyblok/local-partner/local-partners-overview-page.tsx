@@ -23,6 +23,7 @@ export const LocalPartnersOverviewPage = async ({ overview, lang, region }: Prop
 		currentLabel: title,
 		lang,
 		region,
+		includeCurrentLabel: false,
 	});
 
 	return (
