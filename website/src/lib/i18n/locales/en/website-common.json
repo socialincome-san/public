@@ -153,7 +153,7 @@
 			"headline-before": "",
 			"headline-bold": "{{percent}}%",
 			"headline-after": " of every contribution reaches recipients directly.",
-			"zewo-before": "ZEWO-certified for ethical fundraising and audited yearly by {{auditFirm}} (",
+			"zewo-before": "ZEWO-certified for good governance and audited yearly by {{auditFirm}} (",
 			"zewo-link": "See audit reports 2020-2025",
 			"zewo-after": ").",
 			"zewo-alt": "ZEWO certification",
@@ -166,18 +166,18 @@
 				},
 				"administration": {
 					"label": "Administration",
-					"description": "What we use for audit, software and cloud infrastructure etc."
+					"description": "What we use for money transfers, audit, software, infrastructure and other costs."
 				},
 				"fundraising": {
 					"label": "Fundraising",
 					"description": "What we invest to grow the movement."
 				}
 			},
-			"ngo-average-before": "NGO average: ~CHF {{amount}} of every CHF 100 reaches beneficiaries. (",
-			"ngo-average-source": "Source",
-			"ngo-average-after": ")",
-			"annual-statement-before": "Reference latest ",
-			"annual-statement-link": "annual statement (download)"
+			"ngo-average-before": "For comparison, international standards such as ",
+			"ngo-average-source": "ZEWO's",
+			"ngo-average-after": " set the upper limit for overhead at {{amount}}%.",
+			"annual-statement-before": "Latest annual statement: ",
+			"annual-statement-link": "download"
 		},
 		"reserves": {
 			"title-name": "Reserves",
