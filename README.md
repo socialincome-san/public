@@ -459,6 +459,7 @@ We receive in-kind donations from
 [Google Nonprofit](https://www.google.com/nonprofits/),
 [GitHub](https://socialimpact.github.com),
 [Codemagic](https://codemagic.io/start/),
+[Cloudflare](https://www.cloudflare.com),
 [Linktree](https://linktr.ee),
 [Twilio](https://twilio.org),
 [Algolia](https://www.algolia.com),
