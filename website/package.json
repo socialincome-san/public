@@ -84,7 +84,7 @@
 		"@storyblok/react": "7.0.1",
 		"@stripe/react-stripe-js": "6.9.0",
 		"@stripe/stripe-js": "9.15.0",
-		"@tanstack/react-table": "8.21.3",
+		"@tanstack/react-table": "9.2.4",
 		"@xmldom/xmldom": "0.9.12",
 		"@xstate/react": "6.1.0",
 		"accept-language-parser": "1.5.0",
