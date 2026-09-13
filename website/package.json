@@ -58,7 +58,7 @@
 	"dependencies": {
 		"@hookform/resolvers": "5.9.1",
 		"@lottiefiles/dotlottie-react": "^0.19.10",
-		"@mux/mux-video-react": "0.31.2",
+		"@mux/mux-video-react": "0.31.3",
 		"@prisma/adapter-pg": "7.10.0",
 		"@prisma/client": "7.10.0",
 		"@radix-ui/react-accordion": "1.2.20",
