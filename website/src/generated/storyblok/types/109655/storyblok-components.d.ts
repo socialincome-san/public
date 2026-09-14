@@ -79,6 +79,7 @@ export interface Campaign {
   xHandle?: string;
   linkWebsite?: string;
   tiktokHandle?: string;
+  faq?: (ISbStoryData<Faq> | string)[];
   component: "Campaign";
   _uid: string;
   _editable?: string | undefined;
@@ -88,6 +89,20 @@ export interface Campaign {
 export interface CampaignDonate {
   campaignId?: string;
   component: "campaignDonate";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface CampaignGlobals {
+  faq: (ISbStoryData<Faq> | string)[];
+  muxPlaybackId1: string;
+  muxPlaybackId2: string;
+  muxPlaybackId3: string;
+  newsletterImage: StoryblokAsset;
+  newsletterSenderName: string;
+  newsletterTitle: string;
+  component: "campaignGlobals";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -289,6 +304,15 @@ export interface ImpactMeasurement {
   [k: string]: unknown;
 }
 
+export interface Inflows {
+  foundationInflows?: string;
+  corporatePartnerInflows?: string;
+  component: "inflows";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface JournalTeasers {
   heading?: string;
   articlesDisplayMode: "latest" | "selected";
@@ -451,6 +475,13 @@ export interface OpenSourceStats {
   [k: string]: unknown;
 }
 
+export interface Outflows {
+  component: "outflows";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface Page {
   content: (
     | DonationsTotal
@@ -469,7 +500,6 @@ export interface Page {
     | Text
     | TwoColumnText
     | VideoText
-    | Transparency
     | OpenSource
     | OpenSourceStats
     | OpenSourceContributors
@@ -485,6 +515,9 @@ export interface Page {
     | TransparencySummary
     | TransparencyCountries
     | PartnershipsCard
+    | TwoColumn
+    | Inflows
+    | Outflows
   )[];
   component: "page";
   _uid: string;
@@ -639,6 +672,13 @@ export interface ReferencesGroup {
   [k: string]: unknown;
 }
 
+export interface ReservesBlock {
+  component: "reservesBlock";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
 export interface RichtextButtonHeader {
   heading?: StoryblokRichTextDoc;
   button?: Button[];
@@ -733,15 +773,6 @@ export interface Text {
   [k: string]: unknown;
 }
 
-export interface Transparency {
-  donationGlobe?: DonationGlobe[];
-  transparencySummary?: TransparencySummary[];
-  component: "transparency";
-  _uid: string;
-  _editable?: string | undefined;
-  [k: string]: unknown;
-}
-
 export interface TransparencyCountries {
   component: "transparencyCountries";
   _uid: string;
@@ -754,6 +785,82 @@ export interface TransparencySummary {
   outflowsDescription?: string;
   reservesDescription?: string;
   component: "transparencySummary";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface TwoColumn {
+  leftColumn: (
+    | DonationsTotal
+    | Downloads
+    | FaqSelection
+    | HeroVideo
+    | ImageText
+    | ImpactMeasurement
+    | JournalTeasers
+    | ModalCards
+    | PartnershipsCarousel
+    | ProgramGrid
+    | TeamGrid
+    | Testimonial
+    | TestimonialCarousel
+    | Text
+    | TwoColumn
+    | TwoColumnText
+    | VideoText
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | Spacer
+    | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
+    | Lottie
+    | PersonGrid
+    | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
+    | ReservesBlock
+  )[];
+  rightColumn: (
+    | DonationsTotal
+    | Downloads
+    | FaqSelection
+    | HeroVideo
+    | ImageText
+    | ImpactMeasurement
+    | JournalTeasers
+    | ModalCards
+    | PartnershipsCarousel
+    | ProgramGrid
+    | TeamGrid
+    | Testimonial
+    | TestimonialCarousel
+    | Text
+    | TwoColumn
+    | TwoColumnText
+    | VideoText
+    | OpenSourceStats
+    | OpenSourceContributors
+    | OpenSourceIssues
+    | Spacer
+    | ExplainerVideoHeader
+    | RichtextButtonHeader
+    | NewsletterForm
+    | Lottie
+    | PersonGrid
+    | RunwayMonthGrid
+    | DonationGlobe
+    | TransparencySummary
+    | TransparencyCountries
+    | ReservesBlock
+  )[];
+  columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
+  disableMarginTop?: boolean;
+  disableMarginBottom?: boolean;
+  component: "twoColumn";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -786,6 +893,7 @@ export type ContentType =
   | Article
   | ArticleType
   | Campaign
+  | CampaignGlobals
   | CampaignOverview
   | Country
   | CountryOverview
