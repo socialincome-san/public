@@ -44,6 +44,7 @@ import { LocalPartnerWriteService } from './local-partner/local-partner-write.se
 import { MobileMoneyProviderReadService } from './mobile-money-provider/mobile-money-provider-read.service';
 import { MobileMoneyProviderValidationService } from './mobile-money-provider/mobile-money-provider-validation.service';
 import { MobileMoneyProviderWriteService } from './mobile-money-provider/mobile-money-provider-write.service';
+import { MonthlySummaryService } from './monthly-summary/monthly-summary.service';
 import { OrganizationAccessService } from './organization-access/organization-access.service';
 import { OrganizationReadService } from './organization/organization-read.service';
 import { OrganizationValidationService } from './organization/organization-validation.service';
@@ -116,6 +117,7 @@ const storyblok = new StoryblokService(prisma);
 const journal = new JournalService(prisma, storyblok);
 const sendgrid = new SendgridSubscriptionService();
 const sendgridMail = new SendgridMailService();
+const monthlySummary = new MonthlySummaryService(prisma);
 const recipientStatus = new RecipientStatusService(prisma);
 
 const exchangeRateRead = new ExchangeRateReadService(prisma, userRead);
@@ -324,6 +326,7 @@ export const services = {
 	recipientImport,
 	sendgrid,
 	sendgridMail,
+	monthlySummary,
 	journal,
 	storyblok,
 	storyblokManagement,
