@@ -15,6 +15,7 @@ import { OpenSourceContributorsBlock } from '@/components/content-blocks/open-so
 import { OpenSourceIssuesBlock } from '@/components/content-blocks/open-source-issues';
 import { OpenSourceStatsBlock } from '@/components/content-blocks/open-source-stats';
 import { OutflowsBlock } from '@/components/content-blocks/outflows-block';
+import { PartnershipsCardBlock } from '@/components/content-blocks/partnerships-card';
 import { PartnershipsCarouselBlock } from '@/components/content-blocks/partnerships-carousel';
 import { PersonGridBlock } from '@/components/content-blocks/person-grid';
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
@@ -38,7 +39,7 @@ import type { ParsedUrlQueryInput } from 'querystring';
 import { Fragment, type ReactNode } from 'react';
 
 type PageBlock = Page['content'][number];
-type NestedPageBlock = Extract<TwoColumn['leftColumn'][number], PageBlock>;
+type NestedPageBlock = TwoColumn['leftColumn'][number];
 type RichtextButtonHeaderAction = 'createProgram';
 
 type PageContentTypeProps = {
@@ -83,6 +84,8 @@ const renderPageBlock = (
 			return <ModalCardsBlock blok={block} />;
 		case 'newsletterForm':
 			return <NewsletterSignup lang={lang} />;
+		case 'openSource':
+			return null;
 		case 'openSourceStats':
 			return <OpenSourceStatsBlock blok={block} lang={lang} />;
 		case 'openSourceContributors':
@@ -93,6 +96,8 @@ const renderPageBlock = (
 			return <OutflowsBlock blok={block} lang={lang} region={region} />;
 		case 'partnershipsCarousel':
 			return <PartnershipsCarouselBlock blok={block} />;
+		case 'partnershipsCard':
+			return <PartnershipsCardBlock blok={block} />;
 		case 'personGrid':
 			return <PersonGridBlock blok={block} lang={lang} region={region} />;
 		case 'programGrid':
