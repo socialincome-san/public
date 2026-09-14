@@ -127,6 +127,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "SENDGRID_FROM_EMAIL"
+          value = var.sendgrid_from_email
+        }
+
+        env {
           name  = "SENDGRID_LIST_ID"
           value = var.sendgrid_list_id
         }

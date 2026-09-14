@@ -73,6 +73,7 @@ import { RecipientWriteService } from './recipient/recipient-write.service';
 import { ReserveReadService } from './reserves/reserve-read.service';
 import { ReserveWriteService } from './reserves/reserve-write.service';
 import { ReservesCalculationService } from './reserves/reserves-calculation.service';
+import { SendgridMailService } from './sendgrid/sendgrid-mail.service';
 import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
 import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { StoryblokService } from './storyblok/storyblok.service';
@@ -114,6 +115,7 @@ const githubApi = new GithubApiService(prisma);
 const storyblok = new StoryblokService(prisma);
 const journal = new JournalService(prisma, storyblok);
 const sendgrid = new SendgridSubscriptionService();
+const sendgridMail = new SendgridMailService();
 const recipientStatus = new RecipientStatusService(prisma);
 
 const exchangeRateRead = new ExchangeRateReadService(prisma, userRead);
@@ -321,6 +323,7 @@ export const services = {
 	programStats,
 	recipientImport,
 	sendgrid,
+	sendgridMail,
 	journal,
 	storyblok,
 	storyblokManagement,

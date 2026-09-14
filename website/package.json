@@ -80,6 +80,7 @@
 		"@radix-ui/react-tooltip": "1.2.16",
 		"@scalar/api-reference-react": "0.9.67",
 		"@sendgrid/client": "8.1.6",
+		"@sendgrid/mail": "^8.1.6",
 		"@storyblok/js": "6.3.2",
 		"@storyblok/react": "7.0.1",
 		"@stripe/react-stripe-js": "6.9.0",
