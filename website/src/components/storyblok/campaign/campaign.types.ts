@@ -19,5 +19,6 @@ export type CampaignDetailData = {
 	xHandle?: string;
 	tiktokHandle?: string;
 	linkWebsite?: string;
+	faq?: Campaign['faq'];
 	campaign: CampaignPage;
 };

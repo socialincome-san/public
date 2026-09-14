@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button/button';
-import { DatePicker, normalizeToNoon } from '@/components/date-picker';
+import { DatePicker, normalizeToNoon } from '@/components/date-picker/date-picker';
 import { getPayoutRecipientCountsAction } from '@/lib/server-actions/payout-process-actions';
 import { formatPayoutProcessLabel } from '@/lib/services/mobile-money-provider/payout-process-options';
 import type { PayoutProcessOverviewOption } from '@/lib/services/payout-process/payout-process-overview.types';

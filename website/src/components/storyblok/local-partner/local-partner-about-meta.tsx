@@ -4,6 +4,7 @@ import { getFocusSlug, getFocusTitle } from '@/components/storyblok/focus/focus.
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
+import { cn } from '@/lib/utils/cn';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
@@ -72,6 +73,12 @@ export const LocalPartnerAboutMetaCard = ({
 		})
 		.filter((value): value is { label: string; href: string } => value !== null);
 
+	const facts = [
+		{ label: 'Partner since', value: partnerSince },
+		{ label: 'Founded', value: foundingYear },
+		{ label: 'Location', value: location },
+	].filter((fact): fact is { label: string; value: string } => Boolean(fact.value));
+
 	const hasMeta =
 		Boolean(mission) ||
 		Boolean(partnerSince) ||
@@ -84,55 +91,51 @@ export const LocalPartnerAboutMetaCard = ({
 
 	return (
 		<div className="border-border bg-card mt-2 rounded-2xl border p-6">
-			<div className="grid gap-6 lg:grid-cols-2">
+			<div className="space-y-6">
 				{mission ? (
-					<div className="lg:col-span-2">
-						<p className="text-muted-foreground text-sm font-bold">Mission</p>
-						<p className="text-foreground mt-2 text-base">{mission}</p>
+					<div>
+						<p className="text-muted-foreground text-sm">Mission</p>
+						<p className="text-foreground mt-2 text-lg">{mission}</p>
 					</div>
 				) : null}
 
-				<div className="space-y-3">
-					{partnerSince ? (
-						<div className="flex items-baseline justify-between gap-4">
-							<p className="text-muted-foreground text-sm">Partner since</p>
-							<p className="text-foreground text-sm font-medium">{partnerSince}</p>
+				<div className="space-y-4">
+					{facts.length > 0 ? (
+						<div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
+							{facts.map(({ label, value }) => (
+								<div key={label} className="flex items-baseline justify-between gap-4 sm:block">
+									<p className="text-muted-foreground text-sm">{label}</p>
+									<p className="text-foreground text-base font-medium sm:mt-1 sm:text-2xl">{value}</p>
+								</div>
+							))}
 						</div>
 					) : null}
-					{foundingYear ? (
-						<div className="flex items-baseline justify-between gap-4">
-							<p className="text-muted-foreground text-sm">Founded</p>
-							<p className="text-foreground text-sm font-medium">{foundingYear}</p>
-						</div>
-					) : null}
-					{location ? (
-						<div className="flex items-baseline justify-between gap-4">
-							<p className="text-muted-foreground text-sm">Location</p>
-							<p className="text-foreground text-sm font-medium">{location}</p>
+					{resolvedExternalLinks.length > 0 ? (
+						<div
+							className={cn(
+								'flex items-baseline justify-between gap-4',
+								facts.length > 0 && 'border-border mt-6 border-t pt-6',
+							)}
+						>
+							<p className="text-muted-foreground shrink-0 text-sm">Learn more</p>
+							<div className="flex min-w-0 flex-wrap justify-end gap-2">
+								{resolvedExternalLinks.map(({ label, href }) => (
+									<Link
+										key={label}
+										href={href}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="text-foreground border-border bg-muted/50 hover:bg-muted flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium transition-colors"
+									>
+										{label}
+										<ArrowUpRight className="size-3" aria-hidden="true" />
+										<span className="sr-only"> (opens in a new tab)</span>
+									</Link>
+								))}
+							</div>
 						</div>
 					) : null}
 				</div>
-
-				{resolvedExternalLinks.length > 0 ? (
-					<div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
-						<p className="text-muted-foreground text-sm">Learn more</p>
-						<div className="flex flex-wrap gap-2">
-							{resolvedExternalLinks.map(({ label, href }) => (
-								<Link
-									key={label}
-									href={href}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="text-foreground border-border bg-muted/50 hover:bg-muted flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium transition-colors"
-								>
-									{label}
-									<ArrowUpRight className="size-3" aria-hidden="true" />
-									<span className="sr-only"> (opens in a new tab)</span>
-								</Link>
-							))}
-						</div>
-					</div>
-				) : null}
 			</div>
 		</div>
 	);

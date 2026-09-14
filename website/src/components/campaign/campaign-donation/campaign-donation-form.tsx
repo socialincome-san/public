@@ -16,7 +16,7 @@ import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import NextImage from 'next/image';
 
-const ZEWO_HOMEPAGE_URL = 'https://www.zewo.ch';
+const ZEWO_NPO_DETAIL_URL = 'https://zewo.ch/npo-detail/?relief_organization=social-income';
 const PROFILE_PICTURE_SIZE = 87;
 
 const amountOptions: (PresetAmount | 'other')[] = [25, 50, 100, 'other'];
@@ -56,7 +56,7 @@ export const CampaignDonationForm = ({
 				)}
 			>
 				<a
-					href={ZEWO_HOMEPAGE_URL}
+					href={ZEWO_NPO_DETAIL_URL}
 					target="_blank"
 					rel="noopener noreferrer"
 					className="absolute top-5 right-4"

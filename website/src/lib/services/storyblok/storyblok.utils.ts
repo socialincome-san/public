@@ -1,3 +1,4 @@
+import { normalizeStoryblokFocusForImageService } from '@/components/campaign/campaign-submission/storyblok-image-focus';
 import type { Article, ArticleType, Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultLanguage } from '@/lib/i18n/utils';
@@ -30,6 +31,28 @@ export type ResolvedArticle = Omit<RemoveIndexSignature<Article>, 'author' | 'ty
 	author: ISbStoryData<Person>;
 	type: ISbStoryData<ArticleType>;
 	tags?: ISbStoryData<Tag>[];
+};
+
+const isResolvedRelation = (value: unknown): value is ISbStoryData =>
+	typeof value === 'object' &&
+	value !== null &&
+	'content' in value &&
+	typeof value.content === 'object' &&
+	value.content !== null;
+
+/**
+ * Storyblok leaves unresolved references as UUID strings when the related story is missing
+ * or over the resolve_relations limit. Only treat articles as ResolvedArticle when author,
+ * type and every tag are fully resolved objects.
+ */
+export const isResolvedArticle = (story: unknown): story is ISbStoryData<ResolvedArticle> => {
+	if (!isResolvedRelation(story) || !isResolvedRelation(story.content.author) || !isResolvedRelation(story.content.type)) {
+		return false;
+	}
+
+	const { tags } = story.content;
+
+	return tags === undefined || tags === null || (Array.isArray(tags) && tags.every(isResolvedRelation));
 };
 
 export const getArticleTitle = (article: ISbStoryData<ResolvedArticle>, includeSubtitle = false) => {
@@ -169,7 +192,7 @@ export const getScaledAssetDimensions = (
  * Official documentation: https://www.storyblok.com/faq/use-focal-point-set-in-storyblok
  */
 export const formatStoryblokUrl = (url: string, width: number, height: number, focus?: string | null) => {
-	const crop = focus ?? 'smart';
+	const crop = focus ? normalizeStoryblokFocusForImageService(focus) : 'smart';
 	const ratio = width > 0 && height > 0 ? (height / width).toFixed(4) : '0';
 
 	return `${url}?_crop=${encodeURIComponent(crop)}&_ratio=${ratio}`;
@@ -192,7 +215,7 @@ export const formatStoryblokResizeUrl = (url: string, width: number, height: num
  */
 const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) => {
 	let imageSource = url + `/m/${width}x${height}`;
-	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
+	imageSource += focus ? `/filters:focal(${normalizeStoryblokFocusForImageService(focus)})` : '/smart';
 
 	return imageSource;
 };

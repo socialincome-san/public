@@ -1,12 +1,14 @@
-import type { Faq } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Campaign, CampaignGlobals, Faq } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { STORYBLOK_CAMPAIGN_GLOBALS_PATH } from '@/lib/storyblok/storyblok-paths';
 import { getMetadata } from '@/lib/utils/metadata';
 import type { ISbStoryData } from '@storyblok/js';
 import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
 import type { StoryblokService } from '../storyblok/storyblok.service';
-import type { CampaignPageContent } from './campaign-public-website.types';
+import { formatStoryblokUrl } from '../storyblok/storyblok.utils';
+import type { CampaignNewsletterContent, CampaignPageContent } from './campaign-public-website.types';
 
 const campaignPageNamespaces = [
 	'website-campaign',
@@ -16,6 +18,15 @@ const campaignPageNamespaces = [
 	'website-faq',
 ] as const;
 
+const NEWSLETTER_IMAGE_SIZE = 60;
+
+const emptyNewsletterContent: CampaignNewsletterContent = {
+	title: '',
+	senderName: '',
+	imageSrc: null,
+	imageAlt: '',
+};
+
 export class CampaignPublicWebsiteService extends BaseService {
 	private readonly storyblok: StoryblokService;
 
@@ -24,21 +35,72 @@ export class CampaignPublicWebsiteService extends BaseService {
 		this.storyblok = storyblok;
 	}
 
-	async getPageContent(lang: WebsiteLanguage): Promise<ServiceResult<CampaignPageContent>> {
+	async getPageContent(lang: WebsiteLanguage, campaignFaqs?: Campaign['faq']): Promise<ServiceResult<CampaignPageContent>> {
 		try {
-			const [translator, faqsResult] = await Promise.all([
+			const [translator, globalsResult] = await Promise.all([
 				Translator.getInstance({ language: lang, namespaces: [...campaignPageNamespaces] }),
-				this.storyblok.getFaqs(lang, 5),
+				this.storyblok.getStoryWithFallback<ISbStoryData<CampaignGlobals>>(STORYBLOK_CAMPAIGN_GLOBALS_PATH, lang),
 			]);
 
-			const faqs: ISbStoryData<Faq>[] = faqsResult.success ? faqsResult.data : [];
+			const globals = globalsResult.success ? globalsResult.data.content : null;
+			const faqs = campaignFaqs?.length
+				? CampaignPublicWebsiteService.toResolvedFaqs(campaignFaqs)
+				: globals
+					? CampaignPublicWebsiteService.toResolvedFaqs(globals.faq)
+					: [];
+			const videoPlaybackIds = globals ? CampaignPublicWebsiteService.toVideoPlaybackIds(globals) : [];
+			const newsletter = globals ? CampaignPublicWebsiteService.toNewsletterContent(globals) : emptyNewsletterContent;
 
-			return this.resultOk({ translator, faqs });
+			return this.resultOk({ translator, faqs, videoPlaybackIds, newsletter });
 		} catch (error) {
 			console.error(error);
 
 			return this.resultFail(`Could not load campaign page content: ${JSON.stringify(error)}`);
 		}
+	}
+
+	private static toResolvedFaqs(faqReferences: (ISbStoryData<Faq> | string)[]): ISbStoryData<Faq>[] {
+		return faqReferences.filter((reference): reference is ISbStoryData<Faq> => typeof reference !== 'string');
+	}
+
+	private static toVideoPlaybackIds(globals: CampaignGlobals): string[] {
+		return [globals.muxPlaybackId1, globals.muxPlaybackId2, globals.muxPlaybackId3]
+			.map((value) => CampaignPublicWebsiteService.normalizeMuxPlaybackId(value))
+			.filter((playbackId): playbackId is string => playbackId !== null);
+	}
+
+	private static toNewsletterContent(globals: CampaignGlobals): CampaignNewsletterContent {
+		const senderName = globals.newsletterSenderName?.trim() ?? '';
+		const filename = globals.newsletterImage?.filename?.trim();
+		const imageAlt = globals.newsletterImage?.alt?.trim() ?? '';
+
+		return {
+			title: globals.newsletterTitle?.trim() ?? '',
+			senderName,
+			imageSrc: filename
+				? formatStoryblokUrl(filename, NEWSLETTER_IMAGE_SIZE, NEWSLETTER_IMAGE_SIZE, globals.newsletterImage.focus)
+				: null,
+			imageAlt: imageAlt || senderName,
+		};
+	}
+
+	private static normalizeMuxPlaybackId(value: string): string | null {
+		const trimmed = value.trim();
+		if (!trimmed) {
+			return null;
+		}
+
+		const playbackIdFromPlayerUrl = trimmed.match(/player\.mux\.com\/([^/?#]+)/)?.[1];
+		if (playbackIdFromPlayerUrl) {
+			return playbackIdFromPlayerUrl;
+		}
+
+		const playbackIdFromStreamUrl = trimmed.match(/stream\.mux\.com\/([^/.?#]+)/)?.[1];
+		if (playbackIdFromStreamUrl) {
+			return playbackIdFromStreamUrl;
+		}
+
+		return trimmed;
 	}
 
 	getPageMetadata(

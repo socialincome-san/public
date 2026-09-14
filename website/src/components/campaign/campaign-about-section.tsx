@@ -1,18 +1,22 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button/button';
+import { focusToObjectPosition } from '@/components/campaign/campaign-submission/storyblok-image-focus';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import { InstagramIcon } from '@/components/svg/instagram';
 import { TiktokIcon } from '@/components/svg/tiktok';
 import { XIcon } from '@/components/svg/x';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import {
+	formatStoryblokResizeUrl,
+	getDimensionsFromStoryblokImageUrl,
+	getScaledAssetDimensions,
+} from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import { ExternalLink } from 'lucide-react';
 import NextImage from 'next/image';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
-const SECTION_IMAGE_WIDTH = 858;
-const SECTION_IMAGE_HEIGHT = 858;
+const SECTION_IMAGE_MAX_WIDTH = 500;
 
 type Props = {
 	heading: string;
@@ -94,9 +98,20 @@ export const CampaignAboutSection = ({
 	const instagram = getSocialHandle(instagramHandle);
 	const websiteHref = getWebsiteHref(linkWebsite);
 	const websiteLabel = websiteHref ? getWebsiteLabel(websiteHref) : null;
-	const imageSrc = sectionImage?.filename
-		? formatStoryblokUrl(sectionImage.filename, SECTION_IMAGE_WIDTH, SECTION_IMAGE_HEIGHT, sectionImage.focus)
+	const scaledSectionImage = sectionImage?.filename
+		? getScaledAssetDimensions({ filename: sectionImage.filename }, SECTION_IMAGE_MAX_WIDTH)
 		: null;
+	const imageSrc =
+		scaledSectionImage && sectionImage?.filename
+			? formatStoryblokResizeUrl(sectionImage.filename, scaledSectionImage.width, scaledSectionImage.height)
+			: null;
+	const naturalSectionImageDimensions = sectionImage?.filename
+		? getDimensionsFromStoryblokImageUrl(sectionImage.filename)
+		: null;
+	const objectPosition =
+		sectionImage?.focus && naturalSectionImageDimensions?.width && naturalSectionImageDimensions?.height
+			? focusToObjectPosition(sectionImage.focus, naturalSectionImageDimensions.width, naturalSectionImageDimensions.height)
+			: undefined;
 	const hasLinks = Boolean(tiktok ?? x ?? instagram ?? websiteHref);
 	const showTextCard = Boolean(description ?? hasLinks);
 
@@ -109,7 +124,7 @@ export const CampaignAboutSection = ({
 			<section
 				className={cn(
 					'grid items-stretch gap-8',
-					showTextCard && imageSrc && 'lg:grid-cols-[minmax(0,1fr)_minmax(280px,429px)]',
+					showTextCard && imageSrc && 'md:grid-cols-[minmax(0,4fr)_minmax(280px,2fr)]',
 				)}
 			>
 				{showTextCard ? (
@@ -154,14 +169,17 @@ export const CampaignAboutSection = ({
 					</div>
 				) : null}
 				{imageSrc ? (
-					<div className="bg-card min-h-72 overflow-hidden rounded-3xl p-3 shadow-lg">
-						<div className="relative h-full min-h-64 overflow-hidden rounded-xl">
+					<div className="bg-card flex min-h-72 w-full min-w-0 flex-col overflow-hidden rounded-3xl p-3 shadow-lg">
+						<div
+							className="relative h-full min-h-64 overflow-hidden rounded-xl"
+							style={objectPosition ? ({ ['--section-image-object-position']: objectPosition } as CSSProperties) : undefined}
+						>
 							<NextImage
 								src={imageSrc}
 								alt={sectionImage?.alt ?? ''}
 								fill
-								sizes="(max-width: 1024px) 100vw, 429px"
-								className="object-cover"
+								sizes="(max-width: 767px) 100vw, 33vw"
+								className={cn('object-cover', objectPosition && '[object-position:var(--section-image-object-position)]')}
 								loading="lazy"
 							/>
 						</div>

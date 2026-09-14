@@ -201,3 +201,33 @@ describe('StoryblokManagementService.downloadAssetBuffer', () => {
 		});
 	});
 });
+
+describe('StoryblokManagementService.updateAssetFocus', () => {
+	const originalFetch = global.fetch;
+
+	afterEach(() => {
+		global.fetch = originalFetch;
+		jest.restoreAllMocks();
+	});
+
+	test('sends focus metadata to the Storyblok asset update endpoint', async () => {
+		process.env.STORYBLOK_MANAGEMENT_TOKEN = 'test-token';
+		const fetchMock = jest.fn().mockResolvedValue({
+			ok: true,
+			status: 200,
+			text: () => Promise.resolve('{}'),
+		});
+		global.fetch = fetchMock as typeof fetch;
+
+		const service = new StoryblokManagementService();
+		await service.updateAssetFocus(42, '100x200:100x200');
+
+		expect(fetchMock).toHaveBeenCalledWith(
+			expect.stringContaining('/assets/42'),
+			expect.objectContaining({
+				method: 'PUT',
+				body: JSON.stringify({ asset: { focus: '100x200:100x200' } }),
+			}),
+		);
+	});
+});

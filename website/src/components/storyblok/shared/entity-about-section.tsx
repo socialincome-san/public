@@ -35,7 +35,7 @@ export const EntityAboutSection = ({
 				<div className="flex flex-col gap-4">
 					{preDescription}
 					<h2 className="text-4xl font-bold md:text-3xl">{aboutHeading}</h2>
-					<div className="text-foreground prose max-w-none text-base">
+					<div className="text-foreground prose prose-lg max-w-none [&_a]:[font-size:inherit]! [&_a]:[font-weight:inherit]! [&_a]:[color:inherit]!">
 						<RichTextRenderer richTextDocument={description} />
 					</div>
 					{postDescription}

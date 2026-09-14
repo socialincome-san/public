@@ -1,6 +1,6 @@
 'use client';
 
-import { Switch } from '@/components/switch';
+import { Switch } from '@/components/switch/switch';
 import { PayoutInterval } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { PayoutControls } from './payout-controls';

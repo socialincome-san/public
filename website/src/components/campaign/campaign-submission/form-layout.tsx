@@ -1,12 +1,13 @@
 'use client';
 
 import { Card } from '@/components/card/card';
+import { cn } from '@/lib/utils/cn';
 import type { ReactNode } from 'react';
 
 const formCardClassName = 'border-border rounded-xl border p-6 shadow-sm';
 
-export const CampaignSubmissionFormCard = ({ children }: { children: ReactNode }) => (
-	<Card variant="noPadding" className={formCardClassName}>
+export const CampaignSubmissionFormCard = ({ children, className }: { children: ReactNode; className?: string }) => (
+	<Card variant="noPadding" className={cn(formCardClassName, className)}>
 		{children}
 	</Card>
 );

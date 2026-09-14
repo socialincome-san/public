@@ -1,5 +1,5 @@
 import { CountryCode } from '@/generated/prisma/client';
-import { buildCandidateWhere } from './candidate-where';
+import { buildCandidateWhere, buildCountryFilter } from './candidate-where';
 import { Profile } from './candidate.types';
 
 jest.mock('@/generated/prisma/client', () => ({
@@ -76,6 +76,24 @@ describe('buildCandidateWhere', () => {
 				},
 				{ localPartner: { focuses: { some: { focusId: 'poverty' } } } },
 				{ contact: { AND: [{ gender: Profile.female }] } },
+			],
+		});
+	});
+});
+
+describe('buildCountryFilter', () => {
+	it('falls back to the local partner country when the candidate has no address at all', () => {
+		expect(buildCountryFilter(CountryCode.SL)).toEqual({
+			OR: [
+				{ contact: { address: { country: CountryCode.SL } } },
+				{
+					AND: [
+						{
+							OR: [{ contact: { address: null } }, { contact: { address: { country: null } } }],
+						},
+						{ localPartner: { contact: { address: { country: CountryCode.SL } } } },
+					],
+				},
 			],
 		});
 	});

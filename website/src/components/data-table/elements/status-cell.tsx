@@ -8,8 +8,8 @@ import { CampaignStatusBadge } from '@/components/badges/campaign-status-badge';
 import { ContributionStatusBadge } from '@/components/badges/contribution-status-badge';
 import { PayoutStatusBadge } from '@/components/badges/payout-status-badge';
 import { RecipientStatusBadge } from '@/components/badges/recipient-status-badge';
-import { SubscriptionStatusBadge } from '@/components/badges/subscription-status-badge';
 import { SurveyStatusBadge } from '@/components/badges/survey-status-badge';
+import { SubscriptionStatusBadge } from '@/components/subscription-status-badge/subscription-status-badge';
 import type { RecipientLifecycleStatus } from '@/lib/services/recipient/recipient.types';
 
 type StatusVariant = 'contribution' | 'payout' | 'recipient' | 'survey' | 'campaign' | 'subscription' | 'boolean';

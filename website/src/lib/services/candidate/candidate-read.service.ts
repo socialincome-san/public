@@ -5,7 +5,7 @@ import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserReadService } from '../user/user-read.service';
-import { buildCandidateWhere } from './candidate-where';
+import { buildCandidateWhere, buildCountryFilter } from './candidate-where';
 import {
 	CandidatePayload,
 	CandidatesPaginatedTableView,
@@ -178,19 +178,7 @@ export class CandidateReadService extends BaseService {
 				...(selectedLocalPartnerId ? { localPartnerId: selectedLocalPartnerId } : {}),
 				...(selectedGender ? { contact: { gender: selectedGender } } : {}),
 			};
-			const countryScope: Prisma.RecipientWhereInput | null = selectedCountry
-				? {
-						OR: [
-							{ contact: { address: { country: selectedCountry } } },
-							{
-								AND: [
-									{ contact: { address: { country: null } } },
-									{ localPartner: { contact: { address: { country: selectedCountry } } } },
-								],
-							},
-						],
-					}
-				: null;
+			const countryScope: Prisma.RecipientWhereInput | null = selectedCountry ? buildCountryFilter(selectedCountry) : null;
 			const where: Prisma.RecipientWhereInput = search
 				? {
 						AND: [
@@ -374,19 +362,7 @@ export class CandidateReadService extends BaseService {
 				localPartnerId,
 				...(selectedGender ? { contact: { gender: selectedGender } } : {}),
 			};
-			const countryWhere: Prisma.RecipientWhereInput | null = selectedCountry
-				? {
-						OR: [
-							{ contact: { address: { country: selectedCountry } } },
-							{
-								AND: [
-									{ contact: { address: { country: null } } },
-									{ localPartner: { contact: { address: { country: selectedCountry } } } },
-								],
-							},
-						],
-					}
-				: null;
+			const countryWhere: Prisma.RecipientWhereInput | null = selectedCountry ? buildCountryFilter(selectedCountry) : null;
 			const where: Prisma.RecipientWhereInput = search
 				? {
 						AND: [

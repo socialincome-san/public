@@ -7,7 +7,7 @@ const YOUTH_MAX_AGE_YEARS = 25;
 const getYouthCutoffDate = (nowDate: Date) =>
 	new Date(nowDate.getFullYear() - YOUTH_MAX_AGE_YEARS, nowDate.getMonth(), nowDate.getDate());
 
-const buildCountryFilter = (countryCode: CountryCode): Prisma.RecipientWhereInput => ({
+export const buildCountryFilter = (countryCode: CountryCode): Prisma.RecipientWhereInput => ({
 	OR: [
 		{
 			contact: {

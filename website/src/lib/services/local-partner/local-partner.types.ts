@@ -11,6 +11,7 @@ export type LocalPartnerTableViewRow = {
 	recipientsCount: number;
 	candidatesCount: number;
 	createdAt: Date;
+	country: CountryCode | null;
 };
 
 export type LocalPartnerTableView = {
@@ -65,6 +66,7 @@ export type PublicLocalPartnerStatsMap = Record<string, PublicLocalPartnerStats>
 export type PublicProgramLocalPartner = {
 	id: string;
 	name: string;
+	slug: string;
 };
 
 export type LocalPartnerSession = {

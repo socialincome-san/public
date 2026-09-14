@@ -43,6 +43,12 @@ const nextConfig: NextConfig = {
 	},
 	output: 'standalone',
 	serverExternalPackages: ['pdfkit', 'ssh2', 'ssh2-sftp-client'],
+	// Match campaignSubmissionConfig.maxMultipartBodyBytes (primary + optional images).
+	experimental: {
+		serverActions: {
+			bodySizeLimit: '18mb',
+		},
+	},
 };
 
 export default nextConfig;

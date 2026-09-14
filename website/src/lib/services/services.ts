@@ -2,6 +2,7 @@ import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
 import { BankAccountReadService } from './bank-account/bank-account-read.service';
 import { BankAccountWriteService } from './bank-account/bank-account-write.service';
+import { CampaignPendingClaimService } from './campaign/campaign-pending-claim.service';
 import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignSubmissionService } from './campaign/campaign-submission.service';
@@ -187,6 +188,7 @@ const campaignSubmission = new CampaignSubmissionService(
 	campaignValidation,
 	storyblokManagement,
 );
+const campaignPendingClaim = new CampaignPendingClaimService(prisma);
 const focusValidation = new FocusValidationService(prisma);
 const focusRead = new FocusReadService(prisma, userRead);
 const focusWrite = new FocusWriteService(prisma, userRead, focusValidation);
@@ -323,6 +325,7 @@ export const services = {
 	storyblok,
 	storyblokManagement,
 	campaignSubmission,
+	campaignPendingClaim,
 	programPublicSubmission,
 	stripe,
 	surveyImpact,

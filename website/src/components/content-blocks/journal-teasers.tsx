@@ -6,8 +6,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { StoryblokService } from '@/lib/services/storyblok/storyblok.service';
-import { storyblokEditable } from '@storyblok/js';
-import type { SbBlokData } from '@storyblok/react';
+import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
 	blok: JournalTeasers;

@@ -31,10 +31,18 @@ const fetchCampaignStories = async (version: ISbStoriesParams['version']) => {
 };
 
 export const getCampaignTitleForSlug = async (slug: string): Promise<string> => {
-	let campaigns = await fetchCampaignStories('published');
-	if (campaigns.length === 0) {
-		campaigns = await fetchCampaignStories('draft');
+	if (!process.env.STORYBLOK_PREVIEW_TOKEN) {
+		return slug;
 	}
 
-	return getStoryblokCampaignTitleForSlug(campaigns, slug);
+	try {
+		let campaigns = await fetchCampaignStories('published');
+		if (campaigns.length === 0) {
+			campaigns = await fetchCampaignStories('draft');
+		}
+
+		return getStoryblokCampaignTitleForSlug(campaigns, slug);
+	} catch {
+		return slug;
+	}
 };

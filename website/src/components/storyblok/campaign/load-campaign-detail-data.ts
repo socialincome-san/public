@@ -34,6 +34,7 @@ export const loadCampaignDetailData = cache(async (urlSlug: string, lang: string
 		xHandle: story.content.xHandle,
 		tiktokHandle: story.content.tiktokHandle,
 		linkWebsite: story.content.linkWebsite,
+		faq: story.content.faq,
 		campaign: campaignResult.data,
 	};
 });

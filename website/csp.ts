@@ -7,6 +7,8 @@ const joinSources = (sources: readonly string[]) => sources.join(' ');
 const PRODUCTION_SCRIPT_SRC = [
 	"'self'",
 	"'unsafe-inline'",
+	// The dotLottie renderer compiles a WASM module. Narrower than 'unsafe-eval': it does not permit eval().
+	"'wasm-unsafe-eval'",
 	'https://www.googletagmanager.com',
 	'https://www.google-analytics.com',
 	'https://connect.facebook.net',
@@ -65,6 +67,9 @@ const PRODUCTION_CONNECT_SRC = [
 	'https://static.cloudflareinsights.com',
 	'https://cloudflareinsights.com',
 	'https://challenges.cloudflare.com',
+	// The dotLottie renderer fetches its WASM binary from jsDelivr, falling back to unpkg.
+	'https://cdn.jsdelivr.net',
+	'https://unpkg.com',
 ] as const;
 
 const LOCALHOST_CONNECT_SRC = ['http://localhost:*', 'ws://localhost:*'] as const;

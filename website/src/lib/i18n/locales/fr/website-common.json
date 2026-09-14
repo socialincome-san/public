@@ -123,17 +123,78 @@
 		},
 		"inflows": {
 			"title-name": "Entrées",
-			"title-currency": "en {{currency}}"
+			"title-currency": "en {{currency}}",
+			"eyebrow": "Entrées",
+			"headline-before": "La majeure partie de notre financement provient de ",
+			"headline-bold": "particuliers qui donnent chaque mois",
+			"headline-after": ".",
+			"video-label": "Nos donateurs mensuels donnent généralement 1% de leurs revenus.",
+			"breakdown-title": "Répartition",
+			"total-label": "Total des entrées",
+			"segments": {
+				"individuals": {
+					"label": "Particuliers",
+					"description": "Dons récurrents et ponctuels"
+				},
+				"foundations": {
+					"label": "Fondations & subventions",
+					"description": "Subventions pluriannuelles et ponctuelles"
+				},
+				"corporate": {
+					"label": "Partenaires entreprises",
+					"description": "Dons salariaux et dons jumelés"
+				}
+			}
 		},
 		"outflows": {
 			"title-name": "Sorties",
-			"title-currency": "en {{currency}}"
+			"title-currency": "en {{currency}}",
+			"eyebrow": "Sorties",
+			"headline-before": "",
+			"headline-bold": "{{percent}} %",
+			"headline-after": " de chaque contribution atteignent directement les bénéficiaires.",
+			"zewo-before": "Certifié ZEWO pour une collecte de fonds éthique et audité chaque année par {{auditFirm}} (",
+			"zewo-link": "Voir les rapports d’audit 2020-2025",
+			"zewo-after": ").",
+			"zewo-alt": "Certification ZEWO",
+			"breakdown-title": "Comment un don de CHF 100 est utilisé",
+			"breakdown-aria-label": "Répartition de l’utilisation de chaque CHF 100",
+			"segments": {
+				"direct-cash": {
+					"label": "Transferts d’argent directs",
+					"description": "Ce que nous transférons directement sur les téléphones des personnes dans le besoin."
+				},
+				"administration": {
+					"label": "Administration",
+					"description": "Ce que nous utilisons pour l’audit, les logiciels et l’infrastructure cloud, etc."
+				},
+				"fundraising": {
+					"label": "Collecte de fonds",
+					"description": "Ce que nous investissons pour faire grandir le mouvement."
+				}
+			},
+			"ngo-average-before": "Moyenne des ONG : ~CHF {{amount}} sur chaque CHF 100 atteignent les bénéficiaires. (",
+			"ngo-average-source": "Source",
+			"ngo-average-after": ")",
+			"annual-statement-before": "Référence : dernier ",
+			"annual-statement-link": "rapport annuel (téléchargement)"
 		},
 		"reserves": {
 			"title-name": "Réserves",
+			"total-today": "Réserves totales aujourd’hui",
 			"title-currency": "en {{currency}}",
+			"institutions-heading": "Institutions financières avec lesquelles nous travaillons",
+			"institutions": {
+				"postfinance": "PostFinance",
+				"ecobank": "Ecobank",
+				"orange-money": "Orange Money"
+			},
 			"tooltip-label": "Afficher les détails des comptes de réserve",
 			"no-data": "Aucune donnée"
+		},
+		"runway": {
+			"description": "Même si tous les donateurs cessaient de donner aujourd’hui, nous pourrions continuer à verser les paiements aux bénéficiaires pendant {{months}} mois supplémentaires.",
+			"zewo-hint": "Conforme à ZEWO"
 		},
 		"countries": {
 			"headline_one": "Des dons totalisant {{amount}} sont arrivés de {{countriesCount}} pays",
@@ -220,6 +281,11 @@
 			"about-step-title": "À propos",
 			"about-step-subtitle": "Qui collecte des fonds ?",
 			"about-step-description": "Parlez un peu plus de vous.",
+			"personal-step-title": "Données personnelles",
+			"personal-step-subtitle": "Nous utiliserons vos données personnelles pour créer votre compte. Elles ne seront pas affichées sur la page de la campagne.",
+			"first-name": "Prénom",
+			"last-name": "Nom",
+			"email": "E-mail",
 			"title": "Titre de la campagne",
 			"description": "Texte d'introduction",
 			"goal": "Montant de l'objectif",
@@ -261,11 +327,18 @@
 			"tiktok-handle-placeholder": "@nomdutilisateur",
 			"submit": "Soumettre la campagne",
 			"submitting": "Envoi en cours…",
-			"success-title": "Campagne soumise",
-			"success": "Merci. Votre campagne a été soumise et sera examinée avant publication.",
+			"success-thank-you": "Merci",
+			"success-created-title": "Campagne créée",
+			"success-live-title": "Votre campagne est en ligne !",
+			"success-guest-description": "Ouvrez le lien de connexion que nous avons envoyé à {{ email }} pour confirmer.",
+			"success-didnt-get-it": "Vous ne l'avez pas reçu ?",
+			"success-retry": "Réessayer",
+			"success-retry-sending": "Envoi…",
+			"success-support-prefix": "Réessayez ou contactez",
 			"error": "Une erreur s'est produite. Veuillez réessayer.",
 			"currency-placeholder": "Sélectionner une devise",
 			"image-hint": "JPEG, PNG ou WebP jusqu'à 5 Mo.",
+			"image-focus-hint": "Cliquez sur l'image pour définir le point focal.",
 			"continue": "Continuer",
 			"back": "Retour",
 			"all-countries": "Tous les pays",
@@ -275,6 +348,7 @@
 			"recipients-count": "{{count}} bénéficiaires",
 			"details": "Détails",
 			"about": "À propos",
+			"personal": "Données personnelles",
 			"programs-loading": "Chargement des programmes…",
 			"programs-empty": "Aucun programme n'est disponible pour le moment.",
 			"default-images-loading": "Chargement des images…",
@@ -313,7 +387,11 @@
 				"slug-exists": "Une campagne avec ce slug existe déjà.",
 				"submission-failed": "Nous n'avons pas pu finaliser votre soumission. Veuillez réessayer dans quelques minutes.",
 				"turnstile-required": "Veuillez terminer la vérification avant d'envoyer.",
-				"turnstile-invalid": "La vérification a échoué. Veuillez réessayer."
+				"turnstile-invalid": "La vérification a échoué. Veuillez réessayer.",
+				"first-name-required": "Le prénom est obligatoire.",
+				"last-name-required": "Le nom est obligatoire.",
+				"email-required": "L'e-mail est obligatoire.",
+				"email-invalid": "Veuillez saisir une adresse e-mail valide."
 			}
 		}
 	},

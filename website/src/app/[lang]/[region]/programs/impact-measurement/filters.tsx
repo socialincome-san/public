@@ -1,6 +1,6 @@
 'use client';
 
-import { MultiSelect, type MultiSelectOption } from '@/components/multi-select';
+import { MultiSelect, type MultiSelectOption } from '@/components/multi-select/multi-select';
 import { Funnel } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { FILTER_PREFIX, IMPACT_FILTER_QUERY_KEYS } from './filters.constants';

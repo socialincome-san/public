@@ -1,6 +1,6 @@
 'use client';
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/tool-tip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/tool-tip/tool-tip';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { getIndirectBeneficiaryCount, INDIRECT_BENEFICIARY_FACTOR } from '@/lib/utils/indirect-beneficiaries';
 

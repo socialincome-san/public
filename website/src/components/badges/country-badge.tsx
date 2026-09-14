@@ -1,7 +1,7 @@
 import { Badge } from '@/components/badge/badge';
 import { CountryCode } from '@/generated/prisma/enums';
 import { getCountryNameByCode } from '@/lib/types/country';
-import { CountryFlag } from '../country-flag';
+import { CountryFlag } from '../country-flag/country-flag';
 
 type Props = {
 	country: CountryCode;
