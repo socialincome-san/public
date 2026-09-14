@@ -153,7 +153,7 @@
 			"headline-before": "Von jeder Spende erreichen ",
 			"headline-bold": "{{percent}} %",
 			"headline-after": " die Empfänger:innen direkt.",
-			"zewo-before": "ZEWO-zertifiziert für ethisches Fundraising und jährlich geprüft durch {{auditFirm}} (",
+			"zewo-before": "ZEWO-zertifiziert für gute Governance und jährlich geprüft durch {{auditFirm}} (",
 			"zewo-link": "Auditberichte 2020–2025 ansehen",
 			"zewo-after": ").",
 			"zewo-alt": "ZEWO-Zertifizierung",
@@ -166,18 +166,18 @@
 				},
 				"administration": {
 					"label": "Administration",
-					"description": "Was wir für Audit, Software und Cloud-Infrastruktur usw. verwenden."
+					"description": "Was wir für Geldtransfers, Audit, Software, Infrastruktur und weitere Kosten verwenden."
 				},
 				"fundraising": {
 					"label": "Fundraising",
 					"description": "Was wir investieren, um die Bewegung zu vergrössern."
 				}
 			},
-			"ngo-average-before": "NGO-Durchschnitt: ~CHF {{amount}} von je CHF 100 erreichen Begünstigte. (",
-			"ngo-average-source": "Quelle",
-			"ngo-average-after": ")",
-			"annual-statement-before": "Referenz: aktueller ",
-			"annual-statement-link": "Jahresbericht (Download)"
+			"ngo-average-before": "Zum Vergleich: Internationale Standards wie jene der ",
+			"ngo-average-source": "ZEWO",
+			"ngo-average-after": " setzen die Obergrenze für Overhead bei {{amount}} %.",
+			"annual-statement-before": "Aktuelle Jahresrechnung: ",
+			"annual-statement-link": "herunterladen"
 		},
 		"reserves": {
 			"title-name": "Reserven",

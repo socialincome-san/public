@@ -153,7 +153,7 @@
 			"headline-before": "",
 			"headline-bold": "{{percent}}%",
 			"headline-after": " di ogni contributo raggiungono direttamente le persone beneficiarie.",
-			"zewo-before": "Certificati ZEWO per una raccolta fondi etica e sottoposti ogni anno a revisione da {{auditFirm}} (",
+			"zewo-before": "Certificati ZEWO per la buona governance e sottoposti ogni anno a revisione da {{auditFirm}} (",
 			"zewo-link": "Vedi i rapporti di revisione 2020-2025",
 			"zewo-after": ").",
 			"zewo-alt": "Certificazione ZEWO",
@@ -166,18 +166,18 @@
 				},
 				"administration": {
 					"label": "Amministrazione",
-					"description": "Ciò che usiamo per revisione, software e infrastruttura cloud, ecc."
+					"description": "Ciò che utilizziamo per i trasferimenti di denaro, l'audit, il software, l'infrastruttura e altri costi."
 				},
 				"fundraising": {
 					"label": "Raccolta fondi",
 					"description": "Ciò che investiamo per far crescere il movimento."
 				}
 			},
-			"ngo-average-before": "Media delle ONG: ~CHF {{amount}} di ogni CHF 100 raggiungono i beneficiari. (",
-			"ngo-average-source": "Fonte",
-			"ngo-average-after": ")",
-			"annual-statement-before": "Riferimento: ultimo ",
-			"annual-statement-link": "bilancio annuale (download)"
+			"ngo-average-before": "Per confronto, gli standard internazionali come quelli di ",
+			"ngo-average-source": "ZEWO",
+			"ngo-average-after": " fissano il limite massimo per i costi generali al {{amount}}%.",
+			"annual-statement-before": "Ultimo bilancio annuale: ",
+			"annual-statement-link": "scarica"
 		},
 		"reserves": {
 			"title-name": "Riserve",
