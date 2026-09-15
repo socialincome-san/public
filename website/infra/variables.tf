@@ -108,6 +108,11 @@ variable "sendgrid_api_key" {
   sensitive = true
 }
 
+variable "sendgrid_from_email" {
+  description = "Verified SendGrid sender address for outgoing emails"
+  type        = string
+}
+
 variable "sendgrid_list_id" {
   type      = string
   sensitive = true

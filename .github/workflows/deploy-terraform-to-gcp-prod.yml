@@ -105,6 +105,7 @@ jobs:
           TF_VAR_stripe_webhook_secret: ${{ secrets.TF_PROD_STRIPE_WEBHOOK_SECRET }}
           TF_VAR_turnstile_secret_key: ${{ secrets.TF_PROD_TURNSTILE_SECRET_KEY }}
           TF_VAR_sendgrid_api_key: ${{ secrets.TF_PROD_SENDGRID_API_KEY }}
+          TF_VAR_sendgrid_from_email: ${{ secrets.TF_PROD_SENDGRID_FROM_EMAIL }}
           TF_VAR_sendgrid_list_id: ${{ secrets.TF_PROD_SENDGRID_LIST_ID }}
           TF_VAR_sendgrid_suppression_list_id: ${{ secrets.TF_PROD_SENDGRID_SUPPRESSION_LIST_ID }}
           TF_VAR_twilio_account_sid: ${{ secrets.TF_PROD_TWILIO_ACCOUNT_SID }}
