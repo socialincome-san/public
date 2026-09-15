@@ -63,6 +63,13 @@ export type PublicLocalPartnerStats = {
 
 export type PublicLocalPartnerStatsMap = Record<string, PublicLocalPartnerStats>;
 
+export type PublicLocalPartnerOverviewStats = {
+	recipientsCount: number;
+	candidatesCount: number;
+};
+
+export type PublicLocalPartnerOverviewStatsMap = Record<string, PublicLocalPartnerOverviewStats>;
+
 export type PublicProgramLocalPartner = {
 	id: string;
 	name: string;
