@@ -4,7 +4,7 @@ ALTER TABLE "campaign" DROP CONSTRAINT "campaign_contributor_id_fkey";
 -- CreateTable
 CREATE TABLE "sent_email" (
     "id" TEXT NOT NULL,
-    "recipient" TEXT NOT NULL,
+    "email_address" TEXT NOT NULL,
     "from_email" TEXT NOT NULL,
     "subject" TEXT NOT NULL,
     "body" TEXT NOT NULL,
