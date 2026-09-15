@@ -42,3 +42,18 @@ resource "google_cloud_scheduler_job" "google_cloud_scheduler_job_post_finance_i
     }
   }
 }
+
+resource "google_cloud_scheduler_job" "google_cloud_scheduler_job_monthly_summary" {
+  name        = "monthly-summary-job"
+  description = "Sends the monthly summary email on the first day of every month"
+  schedule    = "0 8 1 * *" # Cron expression for the first day of every month at 08:00 UTC
+  time_zone   = "UTC"
+
+  http_target {
+    http_method = "POST"
+    uri         = "https://${var.website_domain}/api/v1/monthly-summary"
+    headers = {
+      "x-api-key" = var.scheduler_api_key
+    }
+  }
+}
