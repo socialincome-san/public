@@ -635,21 +635,21 @@ model Contributor {
 }
 
 model Subscription {
-  id                         String                    @id @default(cuid()) @map("id")
-  contributorId              String                    @map("contributor_id")
-  contributor                Contributor               @relation(fields: [contributorId], references: [id])
-  campaignId                 String                    @map("campaign_id")
-  campaign                   Campaign                  @relation(fields: [campaignId], references: [id])
-  amount                     Decimal                   @map("amount") @db.Decimal(12, 4)
-  currency                   Currency                  @map("currency")
-  interval                   DonationInterval          @map("interval")
-  status                     SubscriptionStatus        @default(active) @map("status")
-  paymentMethod              SubscriptionPaymentMethod @map("payment_method")
-  stripeSubscriptionId       String?                   @unique @map("stripe_subscription_id")
-  bankStandingOrderReference String?                   @unique @map("bank_standing_order_reference")
-  canceledAt                 DateTime?                 @map("canceled_at") @db.Timestamptz(3)
+  id                         String                          @id @default(cuid()) @map("id")
+  contributorId              String                          @map("contributor_id")
+  contributor                Contributor                     @relation(fields: [contributorId], references: [id])
+  campaignId                 String                          @map("campaign_id")
+  campaign                   Campaign                        @relation(fields: [campaignId], references: [id])
+  amount                     Decimal                         @map("amount") @db.Decimal(12, 4)
+  currency                   Currency                        @map("currency")
+  interval                   DonationInterval                @map("interval")
+  status                     SubscriptionStatus              @default(active) @map("status")
+  paymentMethod              SubscriptionPaymentMethod       @map("payment_method")
+  stripeSubscriptionId       String?                         @unique @map("stripe_subscription_id")
+  bankStandingOrderReference String?                         @unique @map("bank_standing_order_reference")
+  canceledAt                 DateTime?                       @map("canceled_at") @db.Timestamptz(3)
   cancellationReason         SubscriptionCancellationReason? @map("cancellation_reason")
-  coverTransactionCosts      Boolean                   @default(false) @map("cover_transaction_costs")
+  coverTransactionCosts      Boolean                         @default(false) @map("cover_transaction_costs")
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -695,12 +695,14 @@ model PaymentEvent {
 }
 
 model SentEmail {
-  id         String   @id @default(cuid()) @map("id")
-  emailAddress String   @map("email_address")
-  fromEmail    String   @map("from_email")
-  subject      String   @map("subject")
-  body         String   @map("body")
-  sentAt       DateTime @default(now()) @map("sent_at") @db.Timestamptz(3)
+  id        String   @id @default(cuid()) @map("id")
+  toEmail   String   @map("email_address")
+  fromEmail String   @map("from_email")
+  contactId String?  @map("contact_id")
+  contact   Contact? @relation(fields: [contactId], references: [id])
+  subject   String   @map("subject")
+  body      String   @map("body")
+  sentAt    DateTime @default(now()) @map("sent_at") @db.Timestamptz(3)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -938,21 +940,21 @@ model ProgramTargetFocus {
 }
 
 model Campaign {
-  id                     String   @id @default(cuid()) @map("id")
-  legacyFirestoreId      String?  @unique @map("legacy_firestore_id")
-  goal                   Decimal? @map("goal") @db.Decimal(12, 4)
-  currency               Currency @map("currency")
-  additionalAmountChf    Decimal? @map("additional_amount_chf") @db.Decimal(12, 4)
-  endDate                DateTime @map("end_date") @db.Timestamptz(3)
+  id                  String       @id @default(cuid()) @map("id")
+  legacyFirestoreId   String?      @unique @map("legacy_firestore_id")
+  goal                Decimal?     @map("goal") @db.Decimal(12, 4)
+  currency            Currency     @map("currency")
+  additionalAmountChf Decimal?     @map("additional_amount_chf") @db.Decimal(12, 4)
+  endDate             DateTime     @map("end_date") @db.Timestamptz(3)
   /// Each program should have exactly one default campaign.
-  isDefault              Boolean  @default(false) @map("is_default")
+  isDefault           Boolean      @default(false) @map("is_default")
   /// There should be exactly one fallback campaign in total.
-  isFallback             Boolean  @default(false) @map("is_fallback")
-  slug                   String?  @unique @map("slug")
-  programId              String   @map("program_id")
-  program                Program  @relation(fields: [programId], references: [id])
-  contributorId          String?      @map("contributor_id")
-  contributor            Contributor? @relation(fields: [contributorId], references: [id])
+  isFallback          Boolean      @default(false) @map("is_fallback")
+  slug                String?      @unique @map("slug")
+  programId           String       @map("program_id")
+  program             Program      @relation(fields: [programId], references: [id])
+  contributorId       String?      @map("contributor_id")
+  contributor         Contributor? @relation(fields: [contributorId], references: [id])
 
   contributions    Contribution[]
   subscriptions    Subscription[]
@@ -1072,8 +1074,9 @@ model Contact {
   localPartner LocalPartner?
   messages     MessageLog[]
 
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt  DateTime?   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  sentEmails SentEmail[]
 
   @@map("contact")
 }
@@ -1105,26 +1108,26 @@ enum MessagingJobStatus {
 }
 
 model MessagingJob {
-  id                   String              @id @default(cuid()) @map("id")
-  templateSid          String              @map("template_sid")
-  templateFriendlyName String              @map("template_friendly_name")
-  channelRequested     MessagingChannel    @map("channel_requested")
-  recipientType        String              @map("recipient_type")
-  assignments          Json                @map("assignments")
-  totalSelected        Int                 @map("total_selected")
-  sentCount            Int                 @default(0) @map("sent_count")
-  failedCount          Int                 @default(0) @map("failed_count")
-  skippedCount         Int                 @default(0) @map("skipped_count")
-  fallbackCount        Int                 @default(0) @map("fallback_count")
-  deliveredCount       Int                 @default(0) @map("delivered_count")
-  status               MessagingJobStatus  @map("status")
-  createdById          String              @map("created_by_id")
-  createdBy            User                @relation(fields: [createdById], references: [id])
-  startedAt            DateTime            @map("started_at") @db.Timestamptz(3)
-  finishedAt           DateTime?           @map("finished_at") @db.Timestamptz(3)
+  id                   String             @id @default(cuid()) @map("id")
+  templateSid          String             @map("template_sid")
+  templateFriendlyName String             @map("template_friendly_name")
+  channelRequested     MessagingChannel   @map("channel_requested")
+  recipientType        String             @map("recipient_type")
+  assignments          Json               @map("assignments")
+  totalSelected        Int                @map("total_selected")
+  sentCount            Int                @default(0) @map("sent_count")
+  failedCount          Int                @default(0) @map("failed_count")
+  skippedCount         Int                @default(0) @map("skipped_count")
+  fallbackCount        Int                @default(0) @map("fallback_count")
+  deliveredCount       Int                @default(0) @map("delivered_count")
+  status               MessagingJobStatus @map("status")
+  createdById          String             @map("created_by_id")
+  createdBy            User               @relation(fields: [createdById], references: [id])
+  startedAt            DateTime           @map("started_at") @db.Timestamptz(3)
+  finishedAt           DateTime?          @map("finished_at") @db.Timestamptz(3)
   messages             MessageLog[]
-  createdAt            DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt            DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt            DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@index([createdById])
   @@index([status])
