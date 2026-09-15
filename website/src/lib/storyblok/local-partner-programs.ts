@@ -62,11 +62,12 @@ export const getLocalPartnerProgramSummaries = async (
 	const filterDataByPortalSlug = filterDataResult.success ? filterDataResult.data : {};
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 
+	const developmentFallbackCountry = process.env.NODE_ENV === 'development' ? countryIsoCode : '';
 	const { stories: selectedStories, isPartnerScoped } = selectLocalPartnerProgramStories(
 		stories,
 		filterDataByPortalSlug,
 		recipientsCountByProgramId,
-		countryIsoCode,
+		developmentFallbackCountry,
 	);
 
 	const countedStories = selectedStories
