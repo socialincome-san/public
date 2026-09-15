@@ -23,7 +23,14 @@ describe('MonthlySummaryService', () => {
 	});
 
 	test('returns a failed result when loading fails', async () => {
-		const db = { contribution: { aggregate: jest.fn().mockRejectedValue(new Error('Database unavailable')) } } as never;
+		const db = {
+			contribution: { aggregate: jest.fn().mockRejectedValue(new Error('Database unavailable')) },
+			payout: { aggregate: jest.fn() },
+			contributor: { count: jest.fn() },
+			campaign: { count: jest.fn() },
+			program: { count: jest.fn() },
+			recipient: { count: jest.fn() },
+		} as never;
 		const result = await new MonthlySummaryService(db).getLastMonth();
 
 		expect(result).toEqual({ success: false, error: 'Unable to load monthly summary: Error: Database unavailable' });
