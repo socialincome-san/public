@@ -694,6 +694,21 @@ model PaymentEvent {
   @@map("payment_event")
 }
 
+model SentEmail {
+  id         String   @id @default(cuid()) @map("id")
+  recipient String   @map("recipient")
+  fromEmail String   @map("from_email")
+  subject   String   @map("subject")
+  body      String   @map("body")
+  sentAt    DateTime @default(now()) @map("sent_at") @db.Timestamptz(3)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([sentAt])
+  @@map("sent_email")
+}
+
 model DonationCertificate {
   id                String      @id @default(cuid()) @map("id")
   legacyFirestoreId String?     @unique @map("legacy_firestore_id")
