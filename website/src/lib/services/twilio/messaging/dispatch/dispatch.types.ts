@@ -1,5 +1,5 @@
 import type { MessagingChannel, MessagingJobStatus } from '@/generated/prisma/client';
-import type { MessagingRecipientType } from '../recipients/recipients.types';
+import type { MessagingPhoneSource, MessagingRecipientType } from '../recipients/recipients.types';
 import type { SelectionState } from '../recipients/selection.types';
 import type { VariableAssignments } from '../twilio-templates/twilio-template.types';
 
@@ -7,9 +7,13 @@ export type DispatchSendInput = {
 	templateSid: string;
 	channel: MessagingChannel;
 	recipientType: MessagingRecipientType;
+	phoneSource: MessagingPhoneSource;
+	phoneFallbackAllowed: boolean;
 	selection: SelectionState;
 	assignments: VariableAssignments;
 };
+
+export type ChannelPreviewInput = Omit<DispatchSendInput, 'templateSid' | 'assignments'>;
 
 export type MessagingJobStatusView = {
 	id: string;

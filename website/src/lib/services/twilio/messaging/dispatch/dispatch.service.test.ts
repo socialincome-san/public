@@ -1,3 +1,4 @@
+import type { MessagingTarget } from '../recipients/recipients.types';
 import { MessagingDispatchService } from './dispatch.service';
 import type { DispatchSendInput } from './dispatch.types';
 
@@ -8,7 +9,11 @@ type MockTwilioClient = {
 };
 
 function makeService(opts: {
-	contacts: { id: string; firstName: string; phone: { number: string; hasWhatsApp: boolean } | null }[];
+	contacts: {
+		id: string;
+		firstName: string;
+		phone: { number: string; hasWhatsApp: boolean } | null;
+	}[];
 	isAdmin?: boolean;
 }) {
 	const twilioClient: MockTwilioClient = {
@@ -92,7 +97,6 @@ function makeService(opts: {
 						language: null,
 						dateOfBirth: null,
 						profession: null,
-						phone: c.phone,
 					})),
 				),
 		},
@@ -122,7 +126,7 @@ function makeService(opts: {
 		),
 	};
 
-	// recipientsService is unused because resolveContactIdsForType is overridden on the instance below.
+	// recipientsService is unused because resolveTargetsForType is overridden on the instance below.
 	const service = new MessagingDispatchService(
 		db as never,
 		userService as never,
@@ -131,8 +135,9 @@ function makeService(opts: {
 	);
 	// Override Twilio client + env requirement check.
 	(service as unknown as { getTwilioClient: () => unknown }).getTwilioClient = () => ({ success: true, data: twilioClient });
-	(service as unknown as { resolveContactIdsForType: (...args: unknown[]) => Promise<string[]> }).resolveContactIdsForType =
-		() => Promise.resolve(opts.contacts.map((c) => c.id));
+	(
+		service as unknown as { resolveTargetsForType: (...args: unknown[]) => Promise<MessagingTarget[]> }
+	).resolveTargetsForType = () => Promise.resolve(opts.contacts.map((c) => ({ contactId: c.id, phone: c.phone })));
 
 	process.env.TWILIO_MESSAGING_SERVICE_SID = 'MGtest';
 	process.env.BASE_URL = 'https://test.example';
@@ -154,6 +159,8 @@ describe('MessagingDispatchService.dispatchSend', () => {
 			templateSid: 'HX1',
 			channel: 'whatsapp',
 			recipientType: 'contributor',
+			phoneSource: 'contact',
+			phoneFallbackAllowed: false,
 			selection: { mode: 'include', ids: new Set(['c1', 'c2', 'c3']) },
 			assignments: { '1': { source: 'field', path: 'contact.firstName' } },
 		};
@@ -204,6 +211,8 @@ describe('MessagingDispatchService.dispatchSend', () => {
 				templateSid: 'HX1',
 				channel: 'sms',
 				recipientType: 'contributor',
+				phoneSource: 'contact',
+				phoneFallbackAllowed: false,
 				selection: { mode: 'include', ids: new Set(['c1']) },
 				assignments: {},
 			},
@@ -230,6 +239,8 @@ describe('MessagingDispatchService.dispatchSend', () => {
 				templateSid: 'HX1',
 				channel: 'sms',
 				recipientType: 'contributor',
+				phoneSource: 'contact',
+				phoneFallbackAllowed: false,
 				selection: { mode: 'include', ids: new Set(['c1', 'c2']) },
 				assignments: { '1': { source: 'field', path: 'contact.firstName' } },
 			},
@@ -259,6 +270,8 @@ describe('MessagingDispatchService.dispatchSend', () => {
 					templateSid: 'HX1',
 					channel: 'sms',
 					recipientType: 'contributor',
+					phoneSource: 'contact',
+					phoneFallbackAllowed: false,
 					selection: { mode: 'include', ids: new Set(['c1']) },
 					assignments: { '1': { source: 'field', path: 'contact.firstName' } },
 				},
@@ -281,6 +294,8 @@ describe('MessagingDispatchService.dispatchSend', () => {
 				templateSid: 'HX1',
 				channel: 'sms',
 				recipientType: 'contributor',
+				phoneSource: 'contact',
+				phoneFallbackAllowed: false,
 				selection: { mode: 'include', ids: new Set() },
 				assignments: {},
 			},
@@ -288,5 +303,49 @@ describe('MessagingDispatchService.dispatchSend', () => {
 		);
 		expect(result.success).toBe(false);
 		expect(created.jobs).toHaveLength(0);
+	});
+
+	test('payment phone with a non-recipient type is rejected before any DB writes', async () => {
+		const { service, twilioClient, created } = makeService({
+			contacts: [{ id: 'c1', firstName: 'A', phone: { number: '+411', hasWhatsApp: false } }],
+		});
+		const result = await service.dispatchSend(
+			{
+				templateSid: 'HX1',
+				channel: 'sms',
+				recipientType: 'contributor',
+				phoneSource: 'payment',
+				phoneFallbackAllowed: false,
+				selection: { mode: 'include', ids: new Set(['c1']) },
+				assignments: {},
+			},
+			'user1',
+		);
+		expect(result.success).toBe(false);
+		expect(!result.success && result.error).toBe('Payment phone is only available for recipients');
+		expect(twilioClient.messages.create).not.toHaveBeenCalled();
+		expect(created.jobs).toHaveLength(0);
+	});
+
+	test('the phone chosen during target resolution is sent to and logged', async () => {
+		const { service, twilioClient, created } = makeService({
+			contacts: [{ id: 'c1', firstName: 'A', phone: { number: '+41799', hasWhatsApp: false } }],
+		});
+		const result = await service.dispatchSend(
+			{
+				templateSid: 'HX1',
+				channel: 'sms',
+				recipientType: 'recipient',
+				phoneSource: 'payment',
+				phoneFallbackAllowed: true,
+				selection: { mode: 'include', ids: new Set(['r1']) },
+				assignments: { '1': { source: 'field', path: 'contact.firstName' } },
+			},
+			'user1',
+		);
+		expect(result.success).toBe(true);
+		expect(twilioClient.messages.create).toHaveBeenCalledTimes(1);
+		expect(twilioClient.messages.create.mock.calls[0][0]).toMatchObject({ to: '+41799' });
+		expect(created.logs[0]).toMatchObject({ contactId: 'c1', phoneNumber: '+41799' });
 	});
 });

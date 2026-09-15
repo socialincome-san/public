@@ -3,7 +3,10 @@
 import { DialogTitle } from '@/components/dialog';
 import type { MessagingChannel } from '@/generated/prisma/client';
 import type { ChannelPreviewSummary } from '@/lib/services/twilio/messaging/dispatch/dispatch.types';
-import type { MessagingRecipientType } from '@/lib/services/twilio/messaging/recipients/recipients.types';
+import type {
+	MessagingPhoneSource,
+	MessagingRecipientType,
+} from '@/lib/services/twilio/messaging/recipients/recipients.types';
 import { emptySelection } from '@/lib/services/twilio/messaging/recipients/selection';
 import type { SelectionState } from '@/lib/services/twilio/messaging/recipients/selection.types';
 import type {
@@ -58,6 +61,8 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 	const [currentStep, setCurrentStep] = useState<WizardStep>(1);
 	const [type, setType] = useState<MessagingRecipientType | null>(null);
 	const [channel, setChannel] = useState<MessagingChannel | null>(null);
+	const [phoneSource, setPhoneSource] = useState<MessagingPhoneSource>('contact');
+	const [phoneFallbackAllowed, setPhoneFallbackAllowed] = useState(false);
 	const [query, setQuery] = useState<RecipientsTableQuery | null>(null);
 	const [selection, setSelection] = useState<SelectionState>(emptySelection());
 	const [lastResetReason, setLastResetReason] = useState<ResetReason>(null);
@@ -93,6 +98,8 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 
 	const handleTypeChange = (next: MessagingRecipientType | null) => {
 		setType(next);
+		setPhoneSource('contact');
+		setPhoneFallbackAllowed(false);
 		setQuery(next ? { type: next, page: 1, search: '', filters: {} } : null);
 		setSelection(emptySelection());
 		setLastResetReason(null);
@@ -132,7 +139,15 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 		if (!type || !channel) {
 			return;
 		}
-		send.start({ templateSid: template.sid, channel, recipientType: type, selection, assignments });
+		send.start({
+			templateSid: template.sid,
+			channel,
+			recipientType: type,
+			phoneSource,
+			phoneFallbackAllowed,
+			selection,
+			assignments,
+		});
 	};
 
 	const meta = STEP_META[currentStep];
@@ -174,8 +189,12 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 								type={type}
 								channel={channel}
 								supportedChannels={template.supportedChannels}
+								phoneSource={phoneSource}
+								phoneFallbackAllowed={phoneFallbackAllowed}
 								onTypeChange={handleTypeChange}
 								onChannelChange={setChannel}
+								onPhoneSourceChange={setPhoneSource}
+								onPhoneFallbackAllowedChange={setPhoneFallbackAllowed}
 							/>
 						)}
 
@@ -210,6 +229,8 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 								totalCount={totalCount}
 								type={type}
 								channel={channel}
+								phoneSource={phoneSource}
+								phoneFallbackAllowed={phoneFallbackAllowed}
 								onPreviewLoaded={setPreviewForSend}
 							/>
 						)}

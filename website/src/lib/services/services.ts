@@ -139,7 +139,6 @@ const payoutWrite = new PayoutWriteService(prisma, programAccessRead, payoutVali
 const twilioOtp = new TwilioOtpService(prisma, firebaseAdmin, appReviewMode);
 const messagingTwilioTemplates = new TwilioTemplateService(prisma);
 
-const messagingChannelPreview = new MessagingChannelPreviewService(prisma, userRead);
 const messagingWebhook = new MessagingWebhookService(prisma);
 const messagingLog = new MessagingLogService(prisma, userRead, messagingWebhook);
 const contributionRead = new ContributionReadService(prisma, programAccessRead, storyblok);
@@ -179,6 +178,7 @@ const contributorWrite = new ContributorWriteService(
 );
 const messagingRecipients = new MessagingRecipientsService(prisma, contributorRead, recipientRead, localPartnerRead);
 const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
+const messagingChannelPreview = new MessagingChannelPreviewService(prisma, userRead, messagingRecipients);
 const campaignValidation = new CampaignValidationService(prisma);
 const programPublicSubmission = new ProgramPublicSubmissionService(prisma, storyblok);
 const storyblokManagement = new StoryblokManagementService();
