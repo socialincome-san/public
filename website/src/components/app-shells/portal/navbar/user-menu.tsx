@@ -10,7 +10,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@/components/dropdown-menu';
+} from '@/components/dropdown-menu/dropdown-menu';
 import type { Session } from '@/lib/firebase/current-account';
 import type { UserSession } from '@/lib/services/user/user.types';
 import { cn } from '@/lib/utils/cn';

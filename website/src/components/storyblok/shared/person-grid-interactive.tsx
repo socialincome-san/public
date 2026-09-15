@@ -8,7 +8,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@/components/dropdown-menu';
+} from '@/components/dropdown-menu/dropdown-menu';
 import { Input } from '@/components/input/input';
 import type { VolunteerDurationTranslations } from '@/components/storyblok/shared/person-card';
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
