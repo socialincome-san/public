@@ -74,7 +74,16 @@
 		"teaser-title": "Ancré localement.",
 		"teaser-subtitle": "Rencontrez nos partenaires.",
 		"teaser-text": "En travaillant avec des partenaires locaux, nous veillons à ce que les projets soient plus efficaces, plus résilients et ancrés dans la réalité des communautés que nous souhaitons soutenir.",
-		"teaser-next-button-aria": "Afficher le partenaire local suivant"
+		"teaser-next-button-aria": "Afficher le partenaire local suivant",
+		"recipient-singular-with-count": "{{count}} bénéficiaire",
+		"recipient-plural-with-count": "{{count}} bénéficiaires",
+		"programs-in-count-singular": "dans {{count}} programme",
+		"programs-in-count-plural": "dans {{count}} programmes",
+		"programs-fundraising": "Collecte en cours",
+		"programs-more": "+{{count}} autres programmes",
+		"programs-build-own": "Crée ton propre programme",
+		"programs-count-singular": "{{count}} programme",
+		"programs-count-plural": "{{count}} programmes"
 	},
 	"focuses-page": {
 		"empty": "Aucun axe trouvé.",

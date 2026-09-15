@@ -138,6 +138,40 @@ export class LocalPartnerReadService extends BaseService {
 		}
 	}
 
+	/**
+	 * Recipients of one local partner grouped by the program they are enrolled in, keyed by program id.
+	 * This is the only link between a local partner and the programs it runs.
+	 */
+	async getProgramRecipientCountsByLocalPartnerSlug(
+		localPartnerSlug: string,
+	): Promise<ServiceResult<Record<string, number>>> {
+		try {
+			const normalizedLocalPartnerSlug = localPartnerSlug.trim();
+			if (!normalizedLocalPartnerSlug) {
+				return this.resultOk({});
+			}
+
+			const recipientGroups = await this.db.recipient.groupBy({
+				by: ['programId'],
+				where: { localPartner: { slug: normalizedLocalPartnerSlug }, programId: { not: null } },
+				_count: { _all: true },
+			});
+
+			const recipientsCountByProgramId: Record<string, number> = {};
+			for (const group of recipientGroups) {
+				if (group.programId) {
+					recipientsCountByProgramId[group.programId] = group._count._all;
+				}
+			}
+
+			return this.resultOk(recipientsCountByProgramId);
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not fetch program recipient counts: ${JSON.stringify(error)}`);
+		}
+	}
+
 	async getPublicLocalPartnerDashboardStatsBySlug(
 		localPartnerSlug: string,
 	): Promise<ServiceResult<{ recipientsCount: number; completedSurveysCount: number }>> {
