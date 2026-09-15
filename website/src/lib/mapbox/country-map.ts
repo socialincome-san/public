@@ -518,3 +518,127 @@ const getGeocodingCountryFeature = async (isoCode: string, accessToken: string):
 	return features.find((feature) => getMatchedIsoCode(feature, isoCode) !== null) ?? null;
 };
 
+const getCountryRegionByPoint = async ({
+	accessToken,
+	center,
+	isoCode,
+}: {
+	accessToken: string;
+	center: [number, number];
+	isoCode: string;
+}): Promise<string | null> => {
+	const url = new URL(`https://api.mapbox.com/v4/mapbox.country-boundaries-v1/tilequery/${center[0]},${center[1]}.json`);
+	url.searchParams.set('layers', MAPBOX_COUNTRY_BOUNDARIES_SOURCE_LAYER);
+	url.searchParams.set('limit', '5');
+	url.searchParams.set('access_token', accessToken);
+	const response = await fetch(url, { next: { revalidate: MAPBOX_DATA_REVALIDATE_SECONDS } });
+
+	if (!response.ok) {
+		return null;
+	}
+
+	const data: unknown = await response.json();
+	const features = getFeatures(data).map(toTilequeryBoundaryFeature).filter(isNonNullable);
+
+	return (
+		features.find((feature) => {
+			const properties = feature.properties;
+
+			return properties?.disputed === 'false' && properties.iso_3166_1?.toUpperCase() === isoCode;
+		})?.properties?.region ?? null
+	);
+};
+
+const getFeatures = (data: unknown): unknown[] => {
+	if (!isRecord(data) || !Array.isArray(data.features)) {
+		return [];
+	}
+
+	return data.features;
+};
+
+const toGeocodingCountryFeature = (value: unknown): GeocodingCountryFeature | null => {
+	if (!isRecord(value)) {
+		return null;
+	}
+
+	const geometry = isRecord(value.geometry) ? value.geometry : undefined;
+	const properties = isRecord(value.properties) ? value.properties : undefined;
+	const context = isRecord(properties?.context) ? properties.context : undefined;
+	const country = isRecord(context?.country) ? context.country : undefined;
+	const coordinates = toCoordinatePair(geometry?.coordinates);
+	const boundingBox = toNumberArray(properties?.bbox);
+
+	return {
+		geometry: coordinates ? { coordinates } : undefined,
+		properties: {
+			bbox: boundingBox,
+			context: {
+				country: country
+					? {
+							country_code: toOptionalString(country.country_code),
+							country_code_alpha_3: toOptionalString(country.country_code_alpha_3),
+						}
+					: undefined,
+			},
+		},
+	};
+};
+
+const toTilequeryBoundaryFeature = (value: unknown): TilequeryBoundaryFeature | null => {
+	if (!isRecord(value)) {
+		return null;
+	}
+
+	const properties = isRecord(value.properties) ? value.properties : undefined;
+
+	return {
+		properties: properties
+			? {
+					disputed: toOptionalString(properties.disputed),
+					iso_3166_1: toOptionalString(properties.iso_3166_1),
+					region: toOptionalString(properties.region),
+				}
+			: undefined,
+	};
+};
+
+const toCoordinatePair = (value: unknown): [number, number] | undefined => {
+	if (!Array.isArray(value) || value.length < 2 || typeof value[0] !== 'number' || typeof value[1] !== 'number') {
+		return undefined;
+	}
+
+	return [value[0], value[1]];
+};
+
+const toNumberArray = (value: unknown): number[] | undefined => {
+	if (!Array.isArray(value) || !value.every((entry) => typeof entry === 'number')) {
+		return undefined;
+	}
+
+	return value;
+};
+
+const toOptionalString = (value: unknown): string | undefined => {
+	return typeof value === 'string' ? value : undefined;
+};
+
+const isRecord = (value: unknown): value is UnknownRecord => {
+	return typeof value === 'object' && value !== null;
+};
+
+const isNonNullable = <T>(value: T | null | undefined): value is T => {
+	return value !== null && value !== undefined;
+};
+
+const toCountryBoundingBox = (value: number[] | undefined): CountryBoundingBox | null => {
+	if (value?.length !== 4) {
+		return null;
+	}
+
+	const [minLongitude, minLatitude, maxLongitude, maxLatitude] = value;
+
+	return [minLongitude, minLatitude, maxLongitude, maxLatitude].every((coordinate) => typeof coordinate === 'number')
+		? [minLongitude, minLatitude, maxLongitude, maxLatitude]
+		: null;
+};
