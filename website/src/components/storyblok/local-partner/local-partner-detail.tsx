@@ -2,7 +2,6 @@ import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { isFocusStory } from '@/components/storyblok/focus/focus.utils';
 import { EntityAboutSection } from '@/components/storyblok/shared/entity-about-section';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
@@ -36,12 +35,7 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 		localPartner.content.portalSlug?.trim() ?? '',
 		isoCode ?? '',
 	);
-	const heroCard =
-		partnerPrograms.programs.length > 0 ? (
-			<LocalPartnerProgramsCard partnerPrograms={partnerPrograms} lang={lang} region={region} />
-		) : (
-			<DonationFormServer lang={lang} />
-		);
+	const heroCard = <LocalPartnerProgramsCard partnerPrograms={partnerPrograms} lang={lang} region={region} />;
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: localPartner.full_slug,
 		currentLabel: localPartnerTitle,
