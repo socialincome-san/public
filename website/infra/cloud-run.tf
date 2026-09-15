@@ -142,6 +142,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "MONTHLY_SUMMARY_RECIPIENTS"
+          value = var.monthly_summary_recipients
+        }
+
+        env {
           name  = "TWILIO_ACCOUNT_SID"
           value = var.twilio_account_sid
         }
