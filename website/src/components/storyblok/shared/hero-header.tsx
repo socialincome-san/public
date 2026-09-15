@@ -26,6 +26,8 @@ type Props = {
 	preTitle?: ReactNode;
 	badges?: ReactNode;
 	campaignId?: string;
+	/** Replaces the default donation form in both the desktop hero slot and the mobile slot. */
+	heroCard?: ReactNode;
 	showDonationForm?: boolean;
 	showDonationsFormMobile?: boolean;
 };
@@ -40,6 +42,7 @@ export const HeroHeader = ({
 	preTitle,
 	badges,
 	campaignId,
+	heroCard,
 	showDonationForm = true,
 	showDonationsFormMobile = true,
 }: Props) => {
@@ -47,6 +50,7 @@ export const HeroHeader = ({
 		? formatStoryblokUrl(heroImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, heroImage.focus)
 		: null;
 	const heroImageAlt = heroImage?.alt ?? title;
+	const heroCardNode = heroCard ?? <DonationFormServer lang={lang} campaignId={campaignId} />;
 
 	return (
 		<section className="full-bleed-hero flex flex-col gap-6">
@@ -92,17 +96,13 @@ export const HeroHeader = ({
 						{badges ? <div className="flex flex-wrap gap-2">{badges}</div> : null}
 					</div>
 
-					{showDonationForm ? (
-						<div className="hidden shrink-0 lg:block">
-							<DonationFormServer lang={lang} campaignId={campaignId} />
-						</div>
-					) : null}
+					{showDonationForm ? <div className="hidden shrink-0 lg:block">{heroCardNode}</div> : null}
 				</div>
 			</div>
 
 			{showDonationsFormMobile ? (
 				<BlockWrapper className="lg:hidden" disableMarginTop={true} disableMarginBottom={true}>
-					<DonationFormServer lang={lang} campaignId={campaignId} />
+					{heroCardNode}
 				</BlockWrapper>
 			) : null}
 		</section>
