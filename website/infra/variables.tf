@@ -123,6 +123,11 @@ variable "sendgrid_suppression_list_id" {
   sensitive = true
 }
 
+variable "monthly_summary_recipients" {
+  description = "Comma-separated email addresses receiving the monthly summary"
+  type        = string
+}
+
 variable "twilio_account_sid" {
   type      = string
   sensitive = true
