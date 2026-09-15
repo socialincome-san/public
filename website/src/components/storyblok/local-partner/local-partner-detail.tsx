@@ -1,16 +1,20 @@
+import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
+import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { isFocusStory } from '@/components/storyblok/focus/focus.utils';
 import { EntityAboutSection } from '@/components/storyblok/shared/entity-about-section';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getLocalPartnerProgramSummaries } from '@/lib/storyblok/local-partner-programs';
 import { LocalPartnerAboutMetaCard, LocalPartnerFocusBadges } from './local-partner-about-meta';
 import { LocalPartnerPartners } from './local-partner-partners';
 import { LocalPartnerPayoutsTotal } from './local-partner-payouts-total';
 import { LocalPartnerPrograms } from './local-partner-programs';
+import { LocalPartnerProgramsCard } from './local-partner-programs-card';
 import type { LocalPartnerStory } from './local-partner.types';
 import { getLocalPartnerIsoCode, getLocalPartnerTitle } from './local-partner.utils';
 
@@ -27,6 +31,17 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 	const localPartnerTitle = getLocalPartnerTitle(localPartner.content);
 	const isoCode = getLocalPartnerIsoCode(localPartner.content);
 	const focuses = (localPartner.content.focuses ?? []).filter(isFocusStory);
+	const partnerPrograms = await getLocalPartnerProgramSummaries(
+		lang,
+		localPartner.content.portalSlug?.trim() ?? '',
+		isoCode ?? '',
+	);
+	const heroCard =
+		partnerPrograms.programs.length > 0 ? (
+			<LocalPartnerProgramsCard partnerPrograms={partnerPrograms} lang={lang} region={region} />
+		) : (
+			<DonationFormServer lang={lang} />
+		);
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: localPartner.full_slug,
 		currentLabel: localPartnerTitle,
@@ -45,8 +60,8 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 				heroImage={localPartner.content.heroImage}
 				titleIcon={isoCode ? `/assets/flags/${isoCode.toLowerCase()}.svg` : undefined}
 				titleIconAlt={isoCode ? `${isoCode} flag` : undefined}
-				showDonationForm={false}
 				showDonationsFormMobile={false}
+				heroCard={heroCard}
 				stats={[
 					{
 						value: recipientsCount,
@@ -65,6 +80,11 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 				]}
 			/>
 			<Breadcrumb links={breadcrumbLinks} />
+			<div className="lg:hidden">
+				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+					{heroCard}
+				</BlockWrapper>
+			</div>
 			<EntityAboutSection
 				isoCode={isoCode}
 				mapLabel={localPartnerTitle}
