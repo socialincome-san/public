@@ -11,6 +11,7 @@ import {
 	LocalPartnerTableQuery,
 	LocalPartnerTableView,
 	LocalPartnerTableViewRow,
+	PublicLocalPartnerOverviewStatsMap,
 	PublicLocalPartnerStats,
 	PublicLocalPartnerStatsMap,
 	PublicProgramLocalPartner,
@@ -135,6 +136,59 @@ export class LocalPartnerReadService extends BaseService {
 			console.error(error);
 
 			return this.resultFail(`Could not fetch local partner stats map: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicLocalPartnerOverviewStatsBySlugs(
+		localPartnerSlugs: string[],
+	): Promise<ServiceResult<PublicLocalPartnerOverviewStatsMap>> {
+		try {
+			const normalizedLocalPartnerSlugs = [...new Set(localPartnerSlugs.map((slug) => slug.trim()).filter(Boolean))];
+			if (!normalizedLocalPartnerSlugs.length) {
+				return this.resultOk({});
+			}
+
+			const partners = await this.db.localPartner.findMany({
+				where: { slug: { in: normalizedLocalPartnerSlugs } },
+				select: { id: true, slug: true },
+			});
+			const partnerIds = partners.map((partner) => partner.id);
+			const [assignedRecipientGroups, waitingRecipientGroups] = partnerIds.length
+				? await Promise.all([
+						this.db.recipient.groupBy({
+							by: ['localPartnerId'],
+							where: { localPartnerId: { in: partnerIds }, programId: { not: null } },
+							_count: { _all: true },
+						}),
+						this.db.recipient.groupBy({
+							by: ['localPartnerId'],
+							where: { localPartnerId: { in: partnerIds }, programId: null },
+							_count: { _all: true },
+						}),
+					])
+				: [[], []];
+			const recipientsCountByPartnerId = new Map(
+				assignedRecipientGroups.map((group) => [group.localPartnerId, group._count._all]),
+			);
+			const candidatesCountByPartnerId = new Map(
+				waitingRecipientGroups.map((group) => [group.localPartnerId, group._count._all]),
+			);
+
+			return this.resultOk(
+				Object.fromEntries(
+					partners.map((partner) => [
+						partner.slug,
+						{
+							recipientsCount: recipientsCountByPartnerId.get(partner.id) ?? 0,
+							candidatesCount: candidatesCountByPartnerId.get(partner.id) ?? 0,
+						},
+					]),
+				),
+			);
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not fetch local partner overview stats: ${JSON.stringify(error)}`);
 		}
 	}
 
