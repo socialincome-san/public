@@ -29,6 +29,34 @@ export type LocalPartnerPrograms = {
 
 const EMPTY: LocalPartnerPrograms = { programs: [], programCount: 0, recipientsTotal: 0, isPartnerScoped: false };
 
+const DEVELOPMENT_PROGRAM_DATA_BY_PORTAL_SLUG: Record<
+	string,
+	{ programId: string; countryIsoCode: string; recipientsCount: number }
+> = {
+	'sierra-leone-core-program': { programId: 'program-si-core-sl', countryIsoCode: 'SL', recipientsCount: 9 },
+	'financial-skills-for-women': {
+		programId: 'program-si-women-support-sl',
+		countryIsoCode: 'SL',
+		recipientsCount: 9,
+	},
+	'skills-program': { programId: 'program-si-education-sl', countryIsoCode: 'SL', recipientsCount: 9 },
+	'mother-and-newborn-program': { programId: 'program-mother-and-newborn', countryIsoCode: 'SL', recipientsCount: 5 },
+	'gender-based-violence-program': {
+		programId: 'program-gender-based-violence',
+		countryIsoCode: 'SL',
+		recipientsCount: 5,
+	},
+	'widow-program': { programId: 'program-widow', countryIsoCode: 'SL', recipientsCount: 5 },
+	'ebola-survivors-program': { programId: 'program-ebola-survivors', countryIsoCode: 'SL', recipientsCount: 5 },
+	'ghana-core-program': { programId: 'program-si-livelihood-gh', countryIsoCode: 'GH', recipientsCount: 20 },
+	'cacao-farmers': { programId: 'program-si-education-gh', countryIsoCode: 'GH', recipientsCount: 12 },
+	'ubi-for-artists': { programId: 'program-ubi-for-artists', countryIsoCode: 'GH', recipientsCount: 8 },
+	'liberia-core-program': { programId: 'program-si-resilience-lr', countryIsoCode: 'LR', recipientsCount: 9 },
+	'epilepsy-forward': { programId: 'program-si-health-lr', countryIsoCode: 'LR', recipientsCount: 5 },
+	craftspeople: { programId: 'program-somaha-community-lr', countryIsoCode: 'LR', recipientsCount: 5 },
+	'island-income': { programId: 'program-island-income', countryIsoCode: 'LR', recipientsCount: 5 },
+};
+
 /**
  * Programs a local partner runs, with the partner's own recipient count per program.
  *
@@ -58,11 +86,15 @@ export const getLocalPartnerProgramSummaries = async (
 		services.read.program.getPublicProgramFilterDataByPortalSlugs(portalSlugs),
 		services.read.program.getPublicProgramStatsByProgramPortalSlugs(portalSlugs),
 	]);
+	const isDevelopment = process.env.NODE_ENV === 'development';
 	const recipientsCountByProgramId = countsResult.success ? countsResult.data : {};
-	const filterDataByPortalSlug = filterDataResult.success ? filterDataResult.data : {};
+	const filterDataByPortalSlug = {
+		...(isDevelopment ? DEVELOPMENT_PROGRAM_DATA_BY_PORTAL_SLUG : {}),
+		...(filterDataResult.success ? filterDataResult.data : {}),
+	};
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 
-	const developmentFallbackCountry = process.env.NODE_ENV === 'development' ? countryIsoCode : '';
+	const developmentFallbackCountry = isDevelopment ? countryIsoCode : '';
 	const { stories: selectedStories, isPartnerScoped } = selectLocalPartnerProgramStories(
 		stories,
 		filterDataByPortalSlug,
@@ -81,7 +113,9 @@ export const getLocalPartnerProgramSummaries = async (
 				programId,
 				recipientsCount:
 					(programId ? recipientsCountByProgramId[programId] : undefined) ??
-					statsByPortalSlug[portalSlug]?.recipientsCount ??
+					(isDevelopment && !statsByPortalSlug[portalSlug]?.recipientsCount
+						? DEVELOPMENT_PROGRAM_DATA_BY_PORTAL_SLUG[portalSlug]?.recipientsCount
+						: statsByPortalSlug[portalSlug]?.recipientsCount) ??
 					0,
 			};
 		})
