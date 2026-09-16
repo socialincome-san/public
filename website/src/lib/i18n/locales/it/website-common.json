@@ -193,7 +193,7 @@
 			"no-data": "Nessun dato"
 		},
 		"runway": {
-			"description": "Anche se ogni donatore smettesse di donare oggi, potremmo continuare a pagare i beneficiari per altri {{months}} mesi.",
+			"description": "Anche se ogni donatore smettesse di donare oggi, potremmo continuare a pagare i beneficiari per altri {{count}} mesi.",
 			"zewo-hint": "In linea con ZEWO"
 		},
 		"countries": {
