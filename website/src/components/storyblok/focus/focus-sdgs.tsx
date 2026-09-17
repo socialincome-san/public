@@ -18,7 +18,7 @@ const resolveSdgs = (values: SdgValue[]) => {
 		}
 	}
 
-	return [...sdgsByNumber.values()];
+	return [...sdgsByNumber.values()].sort((a, b) => a.number - b.number);
 };
 
 export const FocusSdgs = ({ values = [], label, layout = 'stacked' }: Props) => {
