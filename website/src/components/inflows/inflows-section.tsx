@@ -56,7 +56,7 @@ export const InflowsSection = ({
 				</h2>
 				<ExplainerVideoTrigger
 					layout="row"
-					className="mt-4 flex w-auto items-center gap-3 border-0 px-0 py-0 hover:bg-transparent"
+					className="mt-4 flex w-auto items-center gap-3 border-0 px-0 py-0 text-base font-normal hover:bg-transparent"
 					label={copy.videoLabel}
 					embedUrl={videoEmbedUrl}
 					thumbnailSrc={videoThumbnailSrc}
