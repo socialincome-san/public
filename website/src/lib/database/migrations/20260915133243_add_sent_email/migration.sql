@@ -1,6 +1,3 @@
--- DropForeignKey
-ALTER TABLE "campaign" DROP CONSTRAINT "campaign_contributor_id_fkey";
-
 -- CreateTable
 CREATE TABLE "sent_email" (
     "id" TEXT NOT NULL,
@@ -21,6 +18,3 @@ CREATE INDEX "sent_email_sent_at_idx" ON "sent_email"("sent_at");
 
 -- AddForeignKey
 ALTER TABLE "sent_email" ADD CONSTRAINT "sent_email_contact_id_fkey" FOREIGN KEY ("contact_id") REFERENCES "contact"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "campaign" ADD CONSTRAINT "campaign_contributor_id_fkey" FOREIGN KEY ("contributor_id") REFERENCES "contributor"("id") ON DELETE SET NULL ON UPDATE CASCADE;

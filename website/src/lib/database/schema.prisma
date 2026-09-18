@@ -699,7 +699,7 @@ model SentEmail {
   toEmail   String   @map("email_address")
   fromEmail String   @map("from_email")
   contactId String?  @map("contact_id")
-  contact   Contact? @relation(fields: [contactId], references: [id])
+  contact   Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
   subject   String   @map("subject")
   body      String   @map("body")
   sentAt    DateTime @default(now()) @map("sent_at") @db.Timestamptz(3)
@@ -954,7 +954,7 @@ model Campaign {
   programId           String       @map("program_id")
   program             Program      @relation(fields: [programId], references: [id])
   contributorId       String?      @map("contributor_id")
-  contributor         Contributor? @relation(fields: [contributorId], references: [id])
+  contributor         Contributor? @relation(fields: [contributorId], references: [id], onDelete: Restrict)
 
   contributions    Contribution[]
   subscriptions    Subscription[]
