@@ -132,7 +132,6 @@ variable "monthly_summary_enabled" {
 variable "monthly_summary_recipients" {
   description = "Comma-separated email addresses receiving the monthly summary"
   type        = string
-  default     = ""
 }
 
 variable "twilio_account_sid" {
