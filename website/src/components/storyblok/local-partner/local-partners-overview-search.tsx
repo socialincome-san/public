@@ -21,7 +21,10 @@ export const LocalPartnersOverviewSearch = ({ defaultValue, label, placeholder }
 	const currentValue = searchParams.get(SEARCH_QUERY_KEY) ?? defaultValue;
 	const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const searchParamsRef = useRef(searchParams);
-	searchParamsRef.current = searchParams;
+
+	useEffect(() => {
+		searchParamsRef.current = searchParams;
+	}, [searchParams]);
 
 	useEffect(() => {
 		return () => {

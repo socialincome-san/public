@@ -24,7 +24,10 @@ const createLocalPartner = ({ slug, title, description, countryIsoCode }: Create
 			_uid: slug,
 			title,
 			countryIsoCode,
-			description: { text: description },
+			description: {
+				type: 'doc',
+				content: [{ type: 'text', text: description }],
+			},
 		},
 	}) as unknown as LocalPartnerStory;
 
@@ -54,9 +57,7 @@ describe('local partners overview server helpers', () => {
 	});
 
 	it('filters partners by country', () => {
-		const sierraLeonePartners = localPartners.filter((localPartner) =>
-			localPartnerMatchesCountryQuery(localPartner, 'SL'),
-		);
+		const sierraLeonePartners = localPartners.filter((localPartner) => localPartnerMatchesCountryQuery(localPartner, 'SL'));
 
 		expect(sierraLeonePartners.map((localPartner) => localPartner.slug)).toEqual(['the-ark-foundation']);
 	});
