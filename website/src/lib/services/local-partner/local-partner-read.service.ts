@@ -152,37 +152,24 @@ export class LocalPartnerReadService extends BaseService {
 				where: { slug: { in: normalizedLocalPartnerSlugs } },
 				select: { id: true, slug: true },
 			});
-			const partnerIds = partners.map((partner) => partner.id);
-			const [assignedRecipientGroups, waitingRecipientGroups] = partnerIds.length
-				? await Promise.all([
-						this.db.recipient.groupBy({
-							by: ['localPartnerId'],
-							where: { localPartnerId: { in: partnerIds }, programId: { not: null } },
-							_count: { _all: true },
-						}),
-						this.db.recipient.groupBy({
-							by: ['localPartnerId'],
-							where: { localPartnerId: { in: partnerIds }, programId: null },
-							_count: { _all: true },
-						}),
-					])
-				: [[], []];
-			const recipientsCountByPartnerId = new Map(
-				assignedRecipientGroups.map((group) => [group.localPartnerId, group._count._all]),
-			);
-			const candidatesCountByPartnerId = new Map(
-				waitingRecipientGroups.map((group) => [group.localPartnerId, group._count._all]),
-			);
+			const statsMapResult = await this.getPublicLocalPartnerStatsByIds(partners.map((partner) => partner.id));
+			if (!statsMapResult.success) {
+				return this.resultFail(statsMapResult.error);
+			}
 
 			return this.resultOk(
 				Object.fromEntries(
-					partners.map((partner) => [
-						partner.slug,
-						{
-							recipientsCount: recipientsCountByPartnerId.get(partner.id) ?? 0,
-							candidatesCount: candidatesCountByPartnerId.get(partner.id) ?? 0,
-						},
-					]),
+					partners.map((partner) => {
+						const stats = statsMapResult.data[partner.id];
+
+						return [
+							partner.slug,
+							{
+								recipientsCount: stats?.assignedRecipientsCount ?? 0,
+								candidatesCount: stats?.waitingRecipientsCount ?? 0,
+							},
+						];
+					}),
 				),
 			);
 		} catch (error) {

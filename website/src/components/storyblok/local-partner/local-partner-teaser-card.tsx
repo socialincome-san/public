@@ -1,6 +1,7 @@
 import { Badge } from '@/components/badge/badge';
-import { CardAlertFooter } from '@/components/card-alert-footer';
+import { CardAlertFooter, type CardAlertFooterVariant } from '@/components/card-alert-footer';
 import { CountryFlag } from '@/components/country-flag/country-flag';
+import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
@@ -18,15 +19,33 @@ import {
 const CARD_IMAGE_WIDTH = 400;
 const CARD_IMAGE_HEIGHT = 240;
 
+export const getLocalPartnerCandidateFooter = (translator: Translator, candidatesCount: number) => {
+	if (candidatesCount > 0) {
+		return {
+			candidatesLabel: translator.t(
+				candidatesCount === 1
+					? 'local-partners-page.candidates-ready-to-enroll_one'
+					: 'local-partners-page.candidates-ready-to-enroll_other',
+				{ context: { count: candidatesCount } },
+			),
+			alertVariant: 'confirm' as const satisfies CardAlertFooterVariant,
+		};
+	}
+
+	return {
+		candidatesLabel: translator.t('local-partners-page.no-candidates'),
+		alertVariant: 'secondary' as const satisfies CardAlertFooterVariant,
+	};
+};
+
 type Props = {
 	localPartner: LocalPartnerStory;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
-	viewDetailsLabel: string;
 	recipientsCount: number;
 	recipientsLabel: string;
 	candidatesLabel: string;
-	createProgramLabel: string;
+	alertVariant: CardAlertFooterVariant;
 	className?: string;
 };
 
@@ -34,11 +53,10 @@ export const LocalPartnerTeaserCard = ({
 	localPartner,
 	lang,
 	region,
-	viewDetailsLabel,
 	recipientsCount,
 	recipientsLabel,
 	candidatesLabel,
-	createProgramLabel,
+	alertVariant,
 	className,
 }: Props) => {
 	const title = getLocalPartnerTitle(localPartner.content);
@@ -55,9 +73,9 @@ export const LocalPartnerTeaserCard = ({
 	return (
 		<NextLink
 			href={href}
-			aria-label={`${title}, ${viewDetailsLabel}`}
 			className={cn(
-				'bg-confirm-foreground group flex h-full w-full max-w-[305px] flex-col overflow-hidden rounded-xl',
+				'group flex h-full w-full max-w-[305px] flex-col overflow-hidden rounded-xl',
+				alertVariant === 'confirm' ? 'bg-confirm-foreground' : 'bg-secondary',
 				className,
 				'drop-shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5',
 				'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
@@ -96,7 +114,7 @@ export const LocalPartnerTeaserCard = ({
 					</div>
 				</div>
 			</div>
-			<CardAlertFooter text={candidatesLabel} trailingText={createProgramLabel} variant="confirm" />
+			<CardAlertFooter text={candidatesLabel} variant={alertVariant} />
 		</NextLink>
 	);
 };
