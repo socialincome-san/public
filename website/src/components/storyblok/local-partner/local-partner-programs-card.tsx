@@ -29,7 +29,7 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, region }
 	const { programs, programCount, recipientsTotal, isPartnerScoped } = partnerPrograms;
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const t = (key: string) => translator.t(`local-partners-page.${key}`);
-	const format = (key: string, count: number) => t(key).replace('{{count}}', `${count}`);
+	const format = (key: string, count: number) => translator.t(`local-partners-page.${key}`, { context: { count } });
 
 	const hasOverflow = programCount > LOCAL_PARTNER_PROGRAM_ROWS;
 	const visiblePrograms = hasOverflow ? programs.slice(0, LOCAL_PARTNER_PROGRAM_ROWS - 1) : programs;

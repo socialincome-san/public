@@ -94,29 +94,27 @@ export const getLocalPartnerProgramSummaries = async (
 	};
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 
-	const developmentFallbackCountry = isDevelopment ? countryIsoCode : '';
+	// Country fallback is prototype-only: production must not invent a program list from the partner's country.
 	const { stories: selectedStories, isPartnerScoped } = selectLocalPartnerProgramStories(
 		stories,
 		filterDataByPortalSlug,
 		recipientsCountByProgramId,
-		developmentFallbackCountry,
+		isDevelopment ? countryIsoCode : '',
 	);
 
 	const countedStories = selectedStories
 		.map((story) => {
 			const portalSlug = getProgramPortalSlug(story.content);
 			const programId = filterDataByPortalSlug[portalSlug]?.programId;
+			const partnerCount = programId !== undefined ? recipientsCountByProgramId[programId] : undefined;
+			const statsCount = statsByPortalSlug[portalSlug]?.recipientsCount;
+			const developmentCount = DEVELOPMENT_PROGRAM_DATA_BY_PORTAL_SLUG[portalSlug]?.recipientsCount;
 
 			return {
 				story,
 				portalSlug,
 				programId,
-				recipientsCount:
-					(programId ? recipientsCountByProgramId[programId] : undefined) ??
-					(isDevelopment && !statsByPortalSlug[portalSlug]?.recipientsCount
-						? DEVELOPMENT_PROGRAM_DATA_BY_PORTAL_SLUG[portalSlug]?.recipientsCount
-						: statsByPortalSlug[portalSlug]?.recipientsCount) ??
-					0,
+				recipientsCount: partnerCount ?? (isDevelopment ? (statsCount ?? developmentCount) : statsCount) ?? 0,
 			};
 		})
 		.sort((a, b) => b.recipientsCount - a.recipientsCount);
@@ -140,8 +138,11 @@ export const getLocalPartnerProgramSummaries = async (
 
 	return {
 		programs,
-		programCount: countedStories.length,
-		recipientsTotal: countedStories.reduce((total, entry) => total + entry.recipientsCount, 0),
+		// Partner-scoped totals come from the DB so a missing Storyblok story cannot zero the hero-matching count.
+		programCount: isPartnerScoped ? Object.keys(recipientsCountByProgramId).length : countedStories.length,
+		recipientsTotal: isPartnerScoped
+			? Object.values(recipientsCountByProgramId).reduce((total, count) => total + count, 0)
+			: countedStories.reduce((total, entry) => total + entry.recipientsCount, 0),
 		isPartnerScoped,
 	};
 };

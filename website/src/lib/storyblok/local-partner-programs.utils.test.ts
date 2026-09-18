@@ -25,6 +25,13 @@ describe('selectLocalPartnerProgramStories', () => {
 		expect(selection.stories).toEqual([]);
 	});
 
+	it('keeps a linked program with zero recipients instead of falling back to the country list', () => {
+		const selection = selectLocalPartnerProgramStories(stories, filterData, { 'p-beta': 0 }, 'SL');
+
+		expect(selection.isPartnerScoped).toBe(true);
+		expect(selection.stories).toEqual([stories[1]]);
+	});
+
 	it('falls back to the programs of the partner country when no recipients are linked', () => {
 		const selection = selectLocalPartnerProgramStories(stories, filterData, {}, 'sl');
 
