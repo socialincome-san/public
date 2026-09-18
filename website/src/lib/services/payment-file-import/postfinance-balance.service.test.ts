@@ -113,7 +113,7 @@ describe('PostFinanceBalanceService.getLatestBalances', () => {
 		const bucket = {
 			getFiles: jest.fn().mockResolvedValue([[file]]),
 		};
-		const service = new PostFinanceBalanceService('test-bucket', {} as never, undefined, bucket as never);
+		const service = new PostFinanceBalanceService('test-bucket', {} as never, bucket as never);
 
 		await expect(service.getLatestBalances(['CH5709000000154860881'])).resolves.toEqual({
 			success: false,

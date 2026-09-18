@@ -116,7 +116,7 @@
 		"indirect_notice": {
 			"prefix": "{{recipients}} recipients benefit",
 			"indirect_people": "{{indirect}} additional indirect people",
-			"tooltip": "On average, each supported recipient positively impacts around five additional people in their household and community.",
+			"tooltip": "On average, each supported recipient positively impacts around {{factor}} additional people in their household and community.",
 			"suffix": "in poverty."
 		},
 		"payouts": {

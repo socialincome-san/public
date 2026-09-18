@@ -7,7 +7,9 @@
 		"title": "Journal",
 		"description": "Stories, insights and updates on our journey to create impact.",
 		"editors": "Contributing Editors",
-		"more-articles": "There are more articles available in English"
+		"more-articles": "There are more articles available in English",
+		"article-count_one": "{{count}} article",
+		"article-count_other": "{{count}} articles"
 	},
 	"person": {
 		"articles": "Articles"

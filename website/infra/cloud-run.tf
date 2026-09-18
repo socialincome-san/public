@@ -42,6 +42,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "STORYBLOK_MANAGEMENT_TOKEN"
+          value = var.storyblok_management_token
+        }
+
+        env {
           name  = "MAPBOX_TOKEN"
           value = var.mapbox_token
         }
@@ -122,6 +127,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "SENDGRID_FROM_EMAIL"
+          value = var.sendgrid_from_email
+        }
+
+        env {
           name  = "SENDGRID_LIST_ID"
           value = var.sendgrid_list_id
         }
@@ -129,6 +139,16 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         env {
           name  = "SENDGRID_SUPPRESSION_LIST_ID"
           value = var.sendgrid_suppression_list_id
+        }
+
+        env {
+          name  = "MONTHLY_SUMMARY_ENABLED"
+          value = tostring(var.monthly_summary_enabled)
+        }
+
+        env {
+          name  = "MONTHLY_SUMMARY_RECIPIENTS"
+          value = var.monthly_summary_recipients
         }
 
         env {

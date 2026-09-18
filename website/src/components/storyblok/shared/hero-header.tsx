@@ -25,6 +25,7 @@ type Props = {
 	titleIconAlt?: string;
 	preTitle?: ReactNode;
 	badges?: ReactNode;
+	campaignId?: string;
 	showDonationForm?: boolean;
 	showDonationsFormMobile?: boolean;
 };
@@ -38,6 +39,7 @@ export const HeroHeader = ({
 	titleIconAlt,
 	preTitle,
 	badges,
+	campaignId,
 	showDonationForm = true,
 	showDonationsFormMobile = true,
 }: Props) => {
@@ -92,7 +94,7 @@ export const HeroHeader = ({
 
 					{showDonationForm ? (
 						<div className="hidden shrink-0 lg:block">
-							<DonationFormServer lang={lang} />
+							<DonationFormServer lang={lang} campaignId={campaignId} />
 						</div>
 					) : null}
 				</div>
@@ -100,7 +102,7 @@ export const HeroHeader = ({
 
 			{showDonationsFormMobile ? (
 				<BlockWrapper className="lg:hidden" disableMarginTop={true} disableMarginBottom={true}>
-					<DonationFormServer lang={lang} />
+					<DonationFormServer lang={lang} campaignId={campaignId} />
 				</BlockWrapper>
 			) : null}
 		</section>

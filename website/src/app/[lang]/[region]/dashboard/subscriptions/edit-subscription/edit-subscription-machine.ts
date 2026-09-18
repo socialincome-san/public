@@ -1,7 +1,11 @@
 import { type Currency } from '@/generated/prisma/client';
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
 import { cancelSubscriptionAction, updateSubscriptionAmountAction } from '@/lib/server-actions/subscription-actions';
-import { canUpdateSubscriptionAmount, clampSubscriptionAmount } from '@/lib/services/subscription/subscription-amount';
+import {
+	canUpdateSubscriptionAmount,
+	clampSubscriptionAmount,
+	isSubscriptionAmountInRange,
+} from '@/lib/services/subscription/subscription-amount';
 import { assign, fromPromise, setup } from 'xstate';
 
 export type EditSubscriptionPaymentMethod = 'stripe' | 'bank_transfer';
@@ -13,6 +17,8 @@ export type EditSubscriptionOpenInput = {
 	paymentMethod: EditSubscriptionPaymentMethod;
 	brand?: string;
 	last4?: string;
+	coverTransactionCosts?: boolean;
+	preselectCoverTransactionCosts?: boolean;
 };
 
 export const editSubscriptionMachine = setup({
@@ -26,12 +32,15 @@ export const editSubscriptionMachine = setup({
 			paymentMethod: EditSubscriptionPaymentMethod;
 			brand?: string;
 			last4?: string;
+			initialCoverTransactionCosts: boolean;
+			coverTransactionCosts: boolean;
 			cancellationReason?: SubscriptionCancellationReason;
 			error?: string;
 		};
 		events:
 			| { type: 'OPEN'; subscription: EditSubscriptionOpenInput }
 			| { type: 'SET_AMOUNT'; value: number }
+			| { type: 'SET_COVER_TRANSACTION_COSTS'; value: boolean }
 			| { type: 'SUBMIT' }
 			| { type: 'START_CANCEL' }
 			| { type: 'REDUCE_AMOUNT'; value: number | 'other' }
@@ -43,14 +52,18 @@ export const editSubscriptionMachine = setup({
 			| { type: 'CLOSE' };
 	},
 	actors: {
-		updateAmount: fromPromise(async ({ input }: { input: { subscriptionId: string; amount: number } }) => {
-			const result = await updateSubscriptionAmountAction(input.subscriptionId, input.amount);
-			if (!result.success) {
-				throw new Error(result.error);
-			}
+		updateAmount: fromPromise(
+			async ({ input }: { input: { subscriptionId: string; amount: number; coverTransactionCosts?: boolean } }) => {
+				const result = await updateSubscriptionAmountAction(input.subscriptionId, input.amount, {
+					coverTransactionCosts: input.coverTransactionCosts,
+				});
+				if (!result.success) {
+					throw new Error(result.error);
+				}
 
-			return result.data;
-		}),
+				return result.data;
+			},
+		),
 		cancelSubscription: fromPromise(
 			async ({ input }: { input: { subscriptionId: string; reason: SubscriptionCancellationReason } }) => {
 				const result = await cancelSubscriptionAction(input.subscriptionId, input.reason);
@@ -61,8 +74,16 @@ export const editSubscriptionMachine = setup({
 		),
 	},
 	guards: {
-		canSubmit: ({ context }) =>
-			context.subscriptionId !== null && canUpdateSubscriptionAmount(context.amount, context.initialAmount),
+		canSubmit: ({ context }) => {
+			if (context.subscriptionId === null || !isSubscriptionAmountInRange(context.amount)) {
+				return false;
+			}
+
+			const amountChanged = canUpdateSubscriptionAmount(context.amount, context.initialAmount);
+			const coverChanged = context.coverTransactionCosts !== context.initialCoverTransactionCosts;
+
+			return amountChanged || coverChanged;
+		},
 		hasCancelReason: ({ context }) => context.cancellationReason !== undefined,
 	},
 }).createMachine({
@@ -76,6 +97,8 @@ export const editSubscriptionMachine = setup({
 		paymentMethod: 'stripe',
 		brand: undefined,
 		last4: undefined,
+		initialCoverTransactionCosts: false,
+		coverTransactionCosts: false,
 		cancellationReason: undefined,
 		error: undefined,
 	},
@@ -84,17 +107,23 @@ export const editSubscriptionMachine = setup({
 			on: {
 				OPEN: {
 					target: 'editing',
-					actions: assign(({ event }) => ({
-						subscriptionId: event.subscription.subscriptionId,
-						initialAmount: event.subscription.initialAmount,
-						amount: event.subscription.initialAmount,
-						currency: event.subscription.currency,
-						paymentMethod: event.subscription.paymentMethod,
-						brand: event.subscription.brand,
-						last4: event.subscription.last4,
-						cancellationReason: undefined,
-						error: undefined,
-					})),
+					actions: assign(({ event }) => {
+						const initialCoverTransactionCosts = event.subscription.coverTransactionCosts ?? false;
+
+						return {
+							subscriptionId: event.subscription.subscriptionId,
+							initialAmount: event.subscription.initialAmount,
+							amount: event.subscription.initialAmount,
+							currency: event.subscription.currency,
+							paymentMethod: event.subscription.paymentMethod,
+							brand: event.subscription.brand,
+							last4: event.subscription.last4,
+							initialCoverTransactionCosts,
+							coverTransactionCosts: event.subscription.preselectCoverTransactionCosts ?? initialCoverTransactionCosts,
+							cancellationReason: undefined,
+							error: undefined,
+						};
+					}),
 				},
 			},
 		},
@@ -103,6 +132,12 @@ export const editSubscriptionMachine = setup({
 				SET_AMOUNT: {
 					actions: assign({
 						amount: ({ event }) => event.value,
+						error: () => undefined,
+					}),
+				},
+				SET_COVER_TRANSACTION_COSTS: {
+					actions: assign({
+						coverTransactionCosts: ({ event }) => event.value,
 						error: () => undefined,
 					}),
 				},
@@ -162,6 +197,7 @@ export const editSubscriptionMachine = setup({
 					return {
 						subscriptionId: context.subscriptionId,
 						amount: context.amount,
+						coverTransactionCosts: context.paymentMethod === 'stripe' ? context.coverTransactionCosts : undefined,
 					};
 				},
 				onDone: {
@@ -169,6 +205,7 @@ export const editSubscriptionMachine = setup({
 					actions: assign({
 						error: () => undefined,
 						initialAmount: ({ context }) => context.amount,
+						initialCoverTransactionCosts: ({ context }) => context.coverTransactionCosts,
 					}),
 				},
 				onError: {

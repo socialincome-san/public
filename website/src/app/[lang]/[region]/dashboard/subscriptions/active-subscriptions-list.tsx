@@ -34,10 +34,11 @@ export const ActiveSubscriptionsList = ({ lang, subscriptions, labels }: Props) 
 								labels={labels}
 								subscription={{
 									subscriptionId: subscription.id,
-									initialAmount: Math.round(subscription.amount),
+									amount: subscription.amount,
 									currency: subscription.currency,
 									paymentMethod: 'stripe',
 									createdAt: subscription.createdAt,
+									coverTransactionCosts: subscription.coverTransactionCosts,
 									brand: subscription.paymentDisplay.brand,
 									last4: subscription.paymentDisplay.last4,
 								}}

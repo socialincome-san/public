@@ -199,6 +199,11 @@ export const wholeCurrencyFormatOptions = {
 	maximumFractionDigits: 0,
 } as const;
 
+export const fractionalCurrencyFormatOptions = {
+	minimumFractionDigits: 0,
+	maximumFractionDigits: 2,
+} as const;
+
 export const formatDateLocale = (
 	date: Date | string | null | undefined,
 	locale: string,

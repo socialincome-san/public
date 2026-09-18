@@ -1,6 +1,6 @@
 'use client';
 
-import { RadioGroupItem } from '@/components/radio-group';
+import { RadioGroupItem } from '@/components/radio-group/radio-group';
 import { cn } from '@/lib/utils/cn';
 import { ReactNode } from 'react';
 
@@ -28,9 +28,9 @@ export const RadioCard = ({ value, checked, disabled, label, description, badge,
 			<RadioGroupItem value={value} disabled={disabled} className="absolute top-1/2 right-3 -translate-y-1/2" />
 
 			<div className="flex-1 space-y-1 pr-6">
-				<div className="flex items-center gap-2">
-					{label}
-					{badge}
+				<div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+					<span className="min-w-0">{label}</span>
+					{badge ? <span className="shrink-0 whitespace-nowrap">{badge}</span> : null}
 				</div>
 
 				{description && <p className="text-muted-foreground text-sm">{description}</p>}

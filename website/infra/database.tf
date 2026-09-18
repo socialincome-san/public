@@ -2,12 +2,16 @@ locals {
   is_prod = var.env == "prod"
 }
 
+resource "time_rotating" "psql_admin_password" {
+  rotation_days = 7
+}
+
 resource "random_password" "psql_admin_password" {
   length  = 16
   special = false
 
   keepers = {
-    rotation = timestamp()
+    rotation = time_rotating.psql_admin_password.rotation_rfc3339
   }
 }
 

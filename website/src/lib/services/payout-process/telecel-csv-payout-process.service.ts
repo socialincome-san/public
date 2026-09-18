@@ -1,6 +1,5 @@
 import { PayoutProcess, PrismaClient } from '@/generated/prisma/client';
 import { stringifyCsvLines } from '@/lib/utils/csv';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { PayoutProcessCoreService } from './payout-process-core.service';
@@ -11,9 +10,8 @@ export class TelecelCsvPayoutProcessService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly core: PayoutProcessCoreService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private async getProviderIds(): Promise<ServiceResult<string[]>> {
@@ -57,7 +55,7 @@ export class TelecelCsvPayoutProcessService extends BaseService {
 
 			return this.resultOk(this.buildPayoutCsv(recipientsResult.data));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not generate payout CSV: ${JSON.stringify(error)}`);
 		}

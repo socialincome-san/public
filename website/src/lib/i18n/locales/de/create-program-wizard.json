@@ -116,7 +116,7 @@
 		"indirect_notice": {
 			"prefix": "{{recipients}} Empfänger profitieren",
 			"indirect_people": "{{indirect}} weitere indirekt betroffene Personen",
-			"tooltip": "Im Durchschnitt wirkt sich jede unterstützte empfangende Person positiv auf etwa fünf weitere Personen im Haushalt und Umfeld aus.",
+			"tooltip": "Im Durchschnitt wirkt sich jede unterstützte empfangende Person positiv auf etwa {{factor}} weitere Personen im Haushalt und Umfeld aus.",
 			"suffix": "von Armut."
 		},
 		"payouts": {

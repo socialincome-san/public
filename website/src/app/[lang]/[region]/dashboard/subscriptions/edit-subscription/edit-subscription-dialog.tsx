@@ -62,7 +62,11 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 	};
 
 	const handleUpdateCard = () => {
-		if (state.context.amount !== state.context.initialAmount) {
+		const hasUnsavedChanges =
+			state.context.amount !== state.context.initialAmount ||
+			state.context.coverTransactionCosts !== state.context.initialCoverTransactionCosts;
+
+		if (hasUnsavedChanges) {
 			setIsConfirmingCardLeave(true);
 
 			return;
@@ -128,7 +132,7 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 			}}
 		>
 			<DialogContent
-				className="max-h-[90vh] overflow-y-auto sm:max-w-[560px]"
+				className="max-h-[90dvh] overflow-y-auto sm:w-[min(640px,90vw)] sm:max-w-[640px]"
 				closeOnClickOutside={!isInFlight}
 				closeOnEscape={!isInFlight}
 				hideCloseButton={isInFlight}
@@ -194,6 +198,9 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 						currency={state.context.currency}
 						brand={state.context.brand}
 						last4={state.context.last4}
+						coverTransactionCosts={state.context.coverTransactionCosts}
+						initialCoverTransactionCosts={state.context.initialCoverTransactionCosts}
+						showCoverTransactionCosts={!isBankTransfer}
 						error={
 							updateCardError
 								? t('subscriptions.edit-dialog.update-card-error')
@@ -205,6 +212,8 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 						isUpdatingCard={isUpdatingCard}
 						labels={{
 							monthlyContribution: t('subscriptions.edit-dialog.monthly-contribution'),
+							transactionFees: t('subscriptions.edit-dialog.transaction-fees'),
+							paymentMethod: t('subscriptions.edit-dialog.payment-method'),
 							perMonthSuffix: t('subscriptions.edit-dialog.per-month-suffix'),
 							updateCard: t('subscriptions.edit-dialog.update-card'),
 							cancelSubscription: t('subscriptions.edit-dialog.cancel-subscription'),
@@ -216,6 +225,10 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 						onAmountChange={(value) => {
 							setIsConfirmingCardLeave(false);
 							send({ type: 'SET_AMOUNT', value });
+						}}
+						onCoverTransactionCostsChange={(value) => {
+							setIsConfirmingCardLeave(false);
+							send({ type: 'SET_COVER_TRANSACTION_COSTS', value });
 						}}
 						onCancel={() => send({ type: 'CLOSE' })}
 						onStartCancel={() => send({ type: 'START_CANCEL' })}

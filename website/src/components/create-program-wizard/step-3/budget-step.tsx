@@ -19,6 +19,7 @@ type Props = {
 	calculatedTotalBudget: number;
 	displayMonthlyCost: number;
 	exchangeRateText?: string;
+	payoutToDisplayRate?: number;
 	totalBudgetTooltipText: string;
 	isCalculatingBudget: boolean;
 	customizePayouts: boolean;
@@ -44,6 +45,7 @@ export const BudgetStep = ({
 	calculatedTotalBudget,
 	displayMonthlyCost,
 	exchangeRateText,
+	payoutToDisplayRate,
 	totalBudgetTooltipText,
 	isCalculatingBudget,
 	customizePayouts,
@@ -67,6 +69,7 @@ export const BudgetStep = ({
 		calculatedTotalBudget={calculatedTotalBudget}
 		displayMonthlyCost={displayMonthlyCost}
 		exchangeRateText={exchangeRateText}
+		payoutToDisplayRate={payoutToDisplayRate}
 		totalBudgetTooltipText={totalBudgetTooltipText}
 		isCalculatingBudget={isCalculatingBudget}
 		customizePayouts={customizePayouts}
@@ -92,6 +95,7 @@ const BudgetStepContent = ({
 	calculatedTotalBudget,
 	displayMonthlyCost,
 	exchangeRateText,
+	payoutToDisplayRate,
 	isCalculatingBudget,
 	customizePayouts,
 	onRecipientsChange,
@@ -120,7 +124,7 @@ const BudgetStepContent = ({
 		payoutCurrency,
 		numberOfIntervals: numberOfIntervals.toLocaleString('de-CH'),
 		intervalLabel,
-		totalBudget: calculatedTotalBudget.toLocaleString('de-CH'),
+		totalBudget: Math.round(calculatedTotalBudget).toLocaleString('de-CH'),
 		displayCurrency,
 	});
 
@@ -149,7 +153,9 @@ const BudgetStepContent = ({
 					payoutPerIntervalMax={payoutPerIntervalMax}
 					payoutPerInterval={payoutPerInterval}
 					payoutInterval={payoutInterval}
-					currency={payoutCurrency}
+					payoutCurrency={payoutCurrency}
+					displayCurrency={displayCurrency}
+					payoutToDisplayRate={payoutToDisplayRate}
 					customizePayouts={customizePayouts}
 					onDurationChange={onDurationChange}
 					onPayoutChange={onPayoutChange}

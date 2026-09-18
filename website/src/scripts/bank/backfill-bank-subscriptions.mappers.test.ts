@@ -49,10 +49,9 @@ describe('backfill-bank-subscriptions.mappers', () => {
 	describe('inferSubscriptionStatus', () => {
 		const now = new Date('2025-06-01T00:00:00.000Z');
 
-		test('uses 50 and 120 day boundaries', () => {
+		test('uses a 50 day active boundary', () => {
 			expect(inferSubscriptionStatus(new Date('2025-04-12T00:00:00.000Z'), now)).toBe(SubscriptionStatus.active);
-			expect(inferSubscriptionStatus(new Date('2025-04-11T00:00:00.000Z'), now)).toBe(SubscriptionStatus.canceled);
-			expect(inferSubscriptionStatus(new Date('2025-02-01T00:00:00.000Z'), now)).toBe(SubscriptionStatus.canceled);
+			expect(inferSubscriptionStatus(new Date('2025-04-11T00:00:00.000Z'), now)).toBe(SubscriptionStatus.ended);
 			expect(inferSubscriptionStatus(new Date('2025-01-31T00:00:00.000Z'), now)).toBe(SubscriptionStatus.ended);
 		});
 	});

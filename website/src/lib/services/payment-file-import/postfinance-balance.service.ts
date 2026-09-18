@@ -1,6 +1,5 @@
 import { Currency, type PrismaClient } from '@/generated/prisma/client';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
-import { logger } from '@/lib/utils/logger';
 import xmldom from '@xmldom/xmldom';
 import { type Storage } from 'firebase-admin/storage';
 import xpath from 'xpath';
@@ -22,8 +21,8 @@ const balanceTypePreference = ['CLAV', 'CLBD', 'ITAV', 'ITBD'] as const;
 export class PostFinanceBalanceService extends BaseService {
 	private readonly bucket?: StorageBucket;
 
-	constructor(bucketName: string, db: PrismaClient, loggerInstance = logger, bucket?: StorageBucket) {
-		super(db, loggerInstance);
+	constructor(bucketName: string, db: PrismaClient, bucket?: StorageBucket) {
+		super(db);
 		this.bucket = bucket ?? (bucketName ? storageAdmin.storage.bucket(bucketName) : undefined);
 	}
 
@@ -70,7 +69,7 @@ export class PostFinanceBalanceService extends BaseService {
 
 			return this.resultOk([...balancesByIban.values()]);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get PostFinance balances: ${JSON.stringify(error)}`);
 		}
@@ -137,7 +136,7 @@ export class PostFinanceBalanceService extends BaseService {
 
 			return this.resultOk(balances);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not parse CAMT.052 file: ${JSON.stringify(error)}`);
 		}

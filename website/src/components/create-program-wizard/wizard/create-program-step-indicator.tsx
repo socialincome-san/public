@@ -38,23 +38,24 @@ const stepClasses = {
 };
 
 type Props = {
+	className?: string;
 	state: CreateProgramWizardState;
 };
 
-export const CreateProgramStepIndicator = ({ state }: Props) => {
+export const CreateProgramStepIndicator = ({ className, state }: Props) => {
 	const activeIndex = getCurrentStepIndex(state);
 
 	const showFourthStep = state.context.isAuthenticated === false;
 	const stepCount = showFourthStep ? 4 : 3;
 
 	return (
-		<div className="flex items-center gap-3">
+		<div className={cn('flex items-center gap-2 sm:gap-3', className)}>
 			{Array.from({ length: stepCount }).map((_, index) => {
 				const isActive = index === activeIndex;
 				const isCompleted = index < activeIndex;
 
 				return (
-					<div key={index} className="flex items-center gap-3">
+					<div key={index} className="flex items-center gap-2 sm:gap-3">
 						<div
 							className={cn(
 								stepClasses.base,
@@ -66,7 +67,7 @@ export const CreateProgramStepIndicator = ({ state }: Props) => {
 							{index + 1}
 						</div>
 
-						{index < stepCount - 1 && <div className="bg-muted h-px w-0 md:w-6" />}
+						{index < stepCount - 1 && <div className="bg-muted hidden h-px w-6 sm:block" />}
 					</div>
 				);
 			})}

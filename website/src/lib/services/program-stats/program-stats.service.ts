@@ -8,7 +8,6 @@ import {
 	SurveyStatus,
 } from '@/generated/prisma/client';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
 import { BaseService } from '../core/base.service';
@@ -28,9 +27,8 @@ export class ProgramStatsService extends BaseService {
 		db: PrismaClient,
 		private readonly currencyDisplayService: CurrencyDisplayService,
 		private readonly recipientStatusService: RecipientStatusService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async isReadyForFirstPayoutInterval(programId: string): Promise<ServiceResult<boolean>> {
@@ -73,7 +71,7 @@ export class ProgramStatsService extends BaseService {
 
 			return this.resultOk(totalContributionsChf >= costPerIntervalChf);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not check program readiness: ${JSON.stringify(error)}`);
 		}
@@ -86,7 +84,7 @@ export class ProgramStatsService extends BaseService {
 
 			return this.resultOk(calculation);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not calculate program budget preview: ${JSON.stringify(error)}`);
 		}
@@ -256,7 +254,7 @@ export class ProgramStatsService extends BaseService {
 				recipientsCount,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load program dashboard stats: ${JSON.stringify(error)}`);
 		}
@@ -272,7 +270,7 @@ export class ProgramStatsService extends BaseService {
 
 			return this.getProgramDashboardStats(match.id);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load dashboard stats by slug: ${JSON.stringify(error)}`);
 		}
@@ -559,6 +557,7 @@ export class ProgramStatsService extends BaseService {
 		let calculatedTotalBudget = totalBudget;
 		let displayMonthlyCost = monthlyCost;
 		let exchangeRateText: string | undefined = `1 ${input.payoutCurrency} = 1 ${input.displayCurrency}`;
+		let payoutToDisplayRate: number | undefined;
 
 		if (input.displayCurrency !== input.payoutCurrency) {
 			const convertedTotal = this.currencyDisplayService.convertAmount(
@@ -573,8 +572,12 @@ export class ProgramStatsService extends BaseService {
 				input.displayCurrency,
 				rates,
 			);
-			exchangeRateText = this.getExchangeRateText(input.payoutCurrency, input.displayCurrency, rates);
-			if (convertedTotal !== undefined && convertedMonthly !== undefined && exchangeRateText) {
+			payoutToDisplayRate = this.currencyDisplayService.convertAmount(1, input.payoutCurrency, input.displayCurrency, rates);
+			exchangeRateText =
+				payoutToDisplayRate === undefined
+					? undefined
+					: `1 ${input.payoutCurrency} = ${Number(payoutToDisplayRate.toFixed(4))} ${input.displayCurrency}`;
+			if (convertedTotal !== undefined && convertedMonthly !== undefined && payoutToDisplayRate !== undefined) {
 				calculatedTotalBudget = convertedTotal;
 				displayMonthlyCost = convertedMonthly;
 			}
@@ -595,17 +598,17 @@ export class ProgramStatsService extends BaseService {
 			`${numberOfIntervals.toLocaleString('de-CH')} ${intervalLabel} = ` +
 			`${totalBudget.toLocaleString('de-CH')} ${input.payoutCurrency}`;
 
-		if (input.displayCurrency !== input.payoutCurrency && exchangeRateText) {
-			const factor = this.currencyDisplayService.convertAmount(1, input.payoutCurrency, input.displayCurrency, rates);
+		if (payoutToDisplayRate !== undefined) {
 			totalBudgetTooltipText +=
 				` | Currency conversion: ${totalBudget.toLocaleString('de-CH')} ${input.payoutCurrency} x ` +
-				`${Number((factor ?? 1).toFixed(4))} = ${calculatedTotalBudget.toLocaleString('de-CH')} ${input.displayCurrency}`;
+				`${Number(payoutToDisplayRate.toFixed(4))} = ${calculatedTotalBudget.toLocaleString('de-CH')} ${input.displayCurrency}`;
 		}
 
 		return {
 			calculatedTotalBudget,
 			displayMonthlyCost,
 			exchangeRateText,
+			payoutToDisplayRate,
 			totalBudgetTooltipText,
 			payoutPerIntervalMin,
 			payoutPerIntervalMax,

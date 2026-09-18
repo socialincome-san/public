@@ -1,13 +1,8 @@
-import { BankAccountType, type BankAccount, type PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
+import { BankAccountType, type BankAccount } from '@/generated/prisma/client';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 
 export class BankAccountWriteService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
-
 	async ensurePawaPayWallets(walletKeys: string[]): Promise<ServiceResult<BankAccount[]>> {
 		const uniqueWalletKeys = [...new Set(walletKeys)];
 		if (uniqueWalletKeys.length === 0) {
@@ -45,7 +40,7 @@ export class BankAccountWriteService extends BaseService {
 				}),
 			);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not ensure PawaPay wallet bank accounts: ${JSON.stringify(error)}`);
 		}

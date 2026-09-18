@@ -8,6 +8,8 @@ const STORYBLOK_HOME_PAGE_SLUG = 'home';
 
 export const STORYBLOK_LAYOUT_PATH = `${STORYBLOK_GLOBALS_FOLDER}/layout`;
 
+export const STORYBLOK_CAMPAIGN_GLOBALS_PATH = `${STORYBLOK_GLOBALS_FOLDER}/campaign-globals`;
+
 const pagesPrefix = `${STORYBLOK_PAGES_FOLDER}/`;
 
 export const getPageStoryPath = (pageSlug: string) => `${pagesPrefix}${pageSlug}`;
@@ -78,7 +80,7 @@ export const getJournalArticleStoryPath = (articleSlug: string) => `${STORYBLOK_
 
 export const getJournalTagStoryPath = (tagSlug: string) => `${STORYBLOK_JOURNAL_TAGS_FOLDER}/${tagSlug}`;
 
-const getJournalArticleTypeStoryPath = (articleTypeSlug: string) =>
+export const getJournalArticleTypeStoryPath = (articleTypeSlug: string) =>
 	`${STORYBLOK_JOURNAL_ARTICLE_TYPES_FOLDER}/${articleTypeSlug}`;
 
 export const getJournalTagWebsitePathTail = (tagSlug: string) => `${WEBSITE_JOURNAL_PATH_SEGMENT}/tag/${tagSlug}`;

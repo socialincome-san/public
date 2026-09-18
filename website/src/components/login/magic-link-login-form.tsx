@@ -4,11 +4,11 @@ import { Button } from '@/components/button/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
+import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -48,12 +48,7 @@ export const MagicLinkLoginForm = ({ lang, prefilledEmail = '' }: Props) => {
 		setSubmittedEmail(email);
 
 		try {
-			const actionCodeSettings = {
-				url: `${window.location.origin}/auth/confirm-login?email=${encodeURIComponent(email)}`,
-				handleCodeInApp: true,
-			};
-
-			await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+			await sendMagicLoginLink({ auth, email });
 		} catch {
 			// Intentionally ignore errors to avoid account enumeration.
 		}

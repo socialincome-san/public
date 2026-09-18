@@ -1,10 +1,9 @@
-import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
 import path from 'path';
 import { getSecurityHeaders } from './csp';
 import { getRedirects } from './redirects';
 
-let nextConfig: NextConfig = {
+const nextConfig: NextConfig = {
 	transpilePackages: ['storyblok-rich-text-react-renderer'],
 	reactStrictMode: true,
 	redirects: getRedirects,
@@ -44,21 +43,12 @@ let nextConfig: NextConfig = {
 	},
 	output: 'standalone',
 	serverExternalPackages: ['pdfkit', 'ssh2', 'ssh2-sftp-client'],
-};
-
-if (process.env.SENTRY_AUTH_TOKEN) {
-	nextConfig = withSentryConfig(nextConfig, {
-		org: 'social-income',
-		project: 'website',
-		authToken: process.env.SENTRY_AUTH_TOKEN,
-		release: {
-			name: process.env.NEXT_PUBLIC_APP_VERSION,
+	// Match campaignSubmissionConfig.maxMultipartBodyBytes (primary + optional images).
+	experimental: {
+		serverActions: {
+			bodySizeLimit: '18mb',
 		},
-		silent: !process.env.CI,
-		widenClientFileUpload: true,
-		disableLogger: true,
-		automaticVercelMonitors: false,
-	});
-}
+	},
+};
 
 export default nextConfig;

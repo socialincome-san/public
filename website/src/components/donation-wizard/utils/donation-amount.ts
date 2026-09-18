@@ -1,25 +1,21 @@
+import {
+	getAmountWithTransactionCostCoverage,
+	getOnlineTransactionCost,
+} from '@/lib/services/subscription/cover-transaction-costs';
+import { getIndirectBeneficiaryCount } from '@/lib/utils/indirect-beneficiaries';
+
 export type PresetAmount = 25 | 50 | 100;
 export type Cadence = 'monthly' | 'one-time';
 export type PlanTier = '1x' | '2x';
 export type PaymentMethod = 'qr' | 'online';
 export type OneTimePlanChoice = 'one-time' | 'monthly-half';
 
-const ONLINE_TRANSACTION_FEE_RATE = 0.03;
+export { getOnlineTransactionCost };
 
 export const DONATION_MONTHLY_INCOME_MIN = 50;
 export const DONATION_MONTHLY_INCOME_MAX = 1000_000;
 export const DONATION_CUSTOM_AMOUNT_MIN = 1;
 export const DONATION_CUSTOM_AMOUNT_MAX = 1000_000;
-
-const roundAmount = (amount: number): number => Math.round(amount * 100) / 100;
-
-export const getOnlineTransactionCost = (baseAmount: number): number => {
-	if (baseAmount <= 0) {
-		return 0;
-	}
-
-	return roundAmount(baseAmount * ONLINE_TRANSACTION_FEE_RATE);
-};
 
 export type DonationAmountContext = {
 	monthlyIncome: number | null;
@@ -116,7 +112,7 @@ export const getDonationDisplayAmount = (context: DonationAmountContext): number
 	const base = getDonationBaseAmount(context);
 
 	if (context.paymentMethod === 'online' && context.coverTransactionCosts) {
-		return roundAmount(base + getOnlineTransactionCost(base));
+		return getAmountWithTransactionCostCoverage(base);
 	}
 
 	return base;
@@ -127,13 +123,12 @@ export const isAmountValid = (context: DonationAmountContext): boolean => resolv
 export const isOnePercentPlanSelected = (context: DonationAmountContext): boolean => context.selectedAmount === null;
 
 const SOCIAL_INCOME_MONTHLY_CHF = 30;
-const INDIRECT_BENEFICIARY_FACTOR = 6;
 
 export const getBeneficiaryImpact = (monthlyAmount: number): { directCount: number; indirectCount: number } => {
 	const directCount = Math.max(1, Math.floor(monthlyAmount / SOCIAL_INCOME_MONTHLY_CHF));
 
 	return {
 		directCount,
-		indirectCount: directCount * INDIRECT_BENEFICIARY_FACTOR,
+		indirectCount: getIndirectBeneficiaryCount(directCount),
 	};
 };

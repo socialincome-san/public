@@ -7,7 +7,6 @@ import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { UserTableViewRow } from '@/lib/services/user/user.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { logger } from '@/lib/utils/logger';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import UsersForm from './users-form';
@@ -40,7 +39,7 @@ export default function UsersTable({
 	const onError = (error: unknown) => {
 		const errorMessage = retrieveErrorMessage(error);
 		setErrorMessage(`Error updating user: ${errorMessage}`);
-		logger.error('User Form Error', { error });
+		console.error('User Form Error', { error });
 	};
 
 	return (

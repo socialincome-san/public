@@ -5,6 +5,7 @@ import {
 	getCampaignTitle,
 } from '@/components/storyblok/campaign/campaign.utils';
 import type {
+	CampaignCmsJoin,
 	PublicCampaignCard,
 	PublicCampaignStatsMap,
 	PublicCampaignsWithStats,
@@ -32,7 +33,7 @@ export const getStateQuery = (searchParams?: AnySearchParams): CampaignStateFilt
 
 export const resolveCampaignsWithCmsEntries = (
 	stories: CampaignStory[],
-	databaseCampaigns: PublicCampaignCard[],
+	databaseCampaigns: CampaignCmsJoin[],
 	statsById: PublicCampaignStatsMap,
 ): PublicCampaignsWithStats => {
 	const databaseCampaignByPortalSlug = new Map(databaseCampaigns.map((campaign) => [campaign.slug, campaign] as const));
@@ -55,6 +56,7 @@ export const resolveCampaignsWithCmsEntries = (
 		campaigns.push({
 			...databaseCampaign,
 			title: getCampaignTitle(story.content),
+			creatorName: story.content.creatorName,
 			slug: getCampaignStoryblokSlug(story),
 			primaryImage: primaryImageFilename
 				? {

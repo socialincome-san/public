@@ -108,6 +108,11 @@ variable "sendgrid_api_key" {
   sensitive = true
 }
 
+variable "sendgrid_from_email" {
+  description = "Verified SendGrid sender address for outgoing emails"
+  type        = string
+}
+
 variable "sendgrid_list_id" {
   type      = string
   sensitive = true
@@ -116,6 +121,17 @@ variable "sendgrid_list_id" {
 variable "sendgrid_suppression_list_id" {
   type      = string
   sensitive = true
+}
+
+variable "monthly_summary_enabled" {
+  description = "Whether the monthly summary email is enabled"
+  type        = bool
+  default     = false
+}
+
+variable "monthly_summary_recipients" {
+  description = "Comma-separated email addresses receiving the monthly summary"
+  type        = string
 }
 
 variable "twilio_account_sid" {
@@ -199,6 +215,12 @@ variable "storyblok_webhook_secret" {
   sensitive   = true
 }
 
+variable "storyblok_management_token" {
+  description = "Storyblok Management API token used to list campaign default images, upload assets, and create draft campaign stories"
+  type        = string
+  sensitive   = true
+}
+
 variable "mapbox_token" {
   description = "Mapbox token for generating country map images"
   type        = string
@@ -214,4 +236,10 @@ variable "app_review_phone_number" {
   description = "Phone number to use in app review mode"
   type        = string
   sensitive   = true
+}
+
+variable "slack_alert_channel_name" {
+  description = "Existing Cloud Monitoring Slack channel to notify (must already be connected in the GCP Console)"
+  type        = string
+  default     = "#social-income-monitoring"
 }

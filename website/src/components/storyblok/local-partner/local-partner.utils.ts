@@ -2,12 +2,18 @@ import type { LocalPartner } from '@/generated/storyblok/types/109655/storyblok-
 import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
 import type { LocalPartnerStory } from './local-partner.types';
 
-const storyblokRichtextToPlainText = (node: StoryblokRichtext): string => {
-	if (node.text !== undefined) {
+type StoryblokRichtextNode = StoryblokRichtext | StoryblokRichtext['content'][number];
+
+const storyblokRichtextToPlainText = (node: StoryblokRichtextNode): string => {
+	if (node.type === 'text') {
 		return node.text;
 	}
 
-	return node.content?.map(storyblokRichtextToPlainText).join(' ') ?? '';
+	if ('content' in node && node.content) {
+		return node.content.map(storyblokRichtextToPlainText).join(' ');
+	}
+
+	return '';
 };
 
 export const getLocalPartnerIsoCode = (localPartner: LocalPartner) => {

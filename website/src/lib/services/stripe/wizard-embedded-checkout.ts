@@ -14,6 +14,7 @@ type ResolvedWizardEmbeddedCheckout = {
 	recurring: boolean;
 	campaignId?: string;
 	currency: string;
+	coverTransactionCosts: boolean;
 };
 
 export const normalizeCheckoutEmail = (email: string): string => email.trim().toLowerCase();
@@ -49,5 +50,6 @@ export const resolveWizardEmbeddedCheckout = (
 		recurring: context.cadence === 'monthly',
 		campaignId: context.campaignId,
 		currency: currencyCode,
+		coverTransactionCosts: context.coverTransactionCosts,
 	});
 };

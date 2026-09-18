@@ -45,7 +45,7 @@ describe('ReserveReadService.getLatestPerBankAccount', () => {
 			},
 		]);
 		const db = { bankAccount: { findMany }, reserve: { groupBy, findMany: findManyReserves } };
-		const service = new ReserveReadService(db as unknown as PrismaClient, {} as never);
+		const service = new ReserveReadService(db as unknown as PrismaClient);
 
 		await expect(service.getLatestPerBankAccount()).resolves.toEqual({
 			success: true,
@@ -111,7 +111,7 @@ describe('ReserveReadService.getLatestPerBankAccount', () => {
 				findMany: findManyReserves,
 			},
 		};
-		const service = new ReserveReadService(db as unknown as PrismaClient, {} as never);
+		const service = new ReserveReadService(db as unknown as PrismaClient);
 
 		await expect(service.getLatestPerBankAccount()).resolves.toEqual({
 			success: true,

@@ -88,6 +88,7 @@ describe('messaging recipients mappers', () => {
 			recipientsCount: 5,
 			candidatesCount: 2,
 			createdAt: new Date('2025-01-01'),
+			country: null,
 		};
 
 		test('uses LocalPartner name as name', () => {

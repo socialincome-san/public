@@ -1,5 +1,4 @@
 import { Prisma, PrismaClient, type CountryCode } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -27,9 +26,8 @@ export class FocusReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildFocusOrderBy(query: FocusTableQuery): Prisma.FocusOrderByWithRelationInput[] {
@@ -130,7 +128,7 @@ export class FocusReadService extends BaseService {
 				updatedAt: focus.updatedAt,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get focus: ${JSON.stringify(error)}`);
 		}
@@ -170,7 +168,7 @@ export class FocusReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch focuses: ${JSON.stringify(error)}`);
 		}
@@ -185,7 +183,7 @@ export class FocusReadService extends BaseService {
 
 			return this.resultOk(focuses);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch focus options: ${JSON.stringify(error)}`);
 		}
@@ -210,7 +208,7 @@ export class FocusReadService extends BaseService {
 
 			return this.resultOk(stats);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch focus stats: ${JSON.stringify(error)}`);
 		}
@@ -245,7 +243,7 @@ export class FocusReadService extends BaseService {
 
 			return this.resultOk(await this.buildPublicFocusStatsMap(focuses, (focus) => focus.slug ?? focus.id));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch focus stats by slug: ${JSON.stringify(error)}`);
 		}
@@ -279,7 +277,7 @@ export class FocusReadService extends BaseService {
 
 			return this.resultOk(await this.buildPublicFocusStatsMap(focuses, (focus) => focus.id));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch focus stats map: ${JSON.stringify(error)}`);
 		}

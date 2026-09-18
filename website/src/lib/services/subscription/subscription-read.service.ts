@@ -1,9 +1,17 @@
-import { Currency, PrismaClient, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
+import {
+	Currency,
+	Prisma,
+	PrismaClient,
+	ProgramPermission,
+	SubscriptionPaymentMethod,
+	SubscriptionStatus,
+} from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
+import { toSortKey } from '@/lib/utils/to-sort-key';
 import { ContributionReadService } from '../contribution/contribution-read.service';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
+import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { StripeService } from '../stripe/stripe.service';
 import { type StripeSubscriptionDetails } from '../stripe/stripe.types';
 import {
@@ -14,7 +22,10 @@ import {
 import {
 	type ActiveSubscriptionView,
 	type MonthlyContributionSummary,
+	type SubscriptionPaginatedTableView,
 	type SubscriptionsDashboardView,
+	type SubscriptionTableQuery,
+	type SubscriptionTableViewRow,
 	type UpcomingPaymentView,
 } from './subscription.types';
 
@@ -23,6 +34,7 @@ type SubscriptionRecord = {
 	amount: unknown;
 	currency: Currency;
 	createdAt: Date;
+	coverTransactionCosts: boolean;
 	paymentMethod: SubscriptionPaymentMethod;
 	stripeSubscriptionId: string | null;
 	bankStandingOrderReference: string | null;
@@ -58,11 +70,150 @@ const computeMonthlyContributionSummary = (subscriptions: SubscriptionRecord[]):
 export class SubscriptionReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
+		private readonly programAccessService: ProgramAccessReadService,
 		private readonly contributionReadService: ContributionReadService,
 		private readonly stripeService: StripeService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
+	}
+
+	private buildSubscriptionOrderBy(query: SubscriptionTableQuery): Prisma.SubscriptionOrderByWithRelationInput[] {
+		const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
+		const sortBy = toSortKey(query.sortBy, [
+			'contributor',
+			'email',
+			'amount',
+			'createdAt',
+			'status',
+			'cancellationReason',
+			'paymentMethod',
+			'stripeSubscriptionId',
+			'bankStandingOrderReference',
+		] as const);
+		switch (sortBy) {
+			case 'contributor':
+				return [
+					{ contributor: { contact: { firstName: direction } } },
+					{ contributor: { contact: { lastName: direction } } },
+				];
+			case 'email':
+				return [{ contributor: { contact: { email: direction } } }];
+			case 'amount':
+				return [{ amount: direction }];
+			case 'createdAt':
+				return [{ createdAt: direction }];
+			case 'status':
+				return [{ status: direction }];
+			case 'cancellationReason':
+				return [{ cancellationReason: direction }];
+			case 'paymentMethod':
+				return [{ paymentMethod: direction }];
+			case 'stripeSubscriptionId':
+				return [{ stripeSubscriptionId: direction }];
+			case 'bankStandingOrderReference':
+				return [{ bankStandingOrderReference: direction }];
+			default:
+				return [{ createdAt: 'desc' }];
+		}
+	}
+
+	async getPaginatedTableView(
+		userId: string,
+		query: SubscriptionTableQuery,
+	): Promise<ServiceResult<SubscriptionPaginatedTableView>> {
+		try {
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+			const accessibleProgramIds = Array.from(
+				new Set(
+					accessibleProgramsResult.data
+						.filter((access) => access.permission === ProgramPermission.operator)
+						.map((access) => access.programId),
+				),
+			);
+			if (accessibleProgramIds.length === 0) {
+				return this.resultOk({ tableRows: [], totalCount: 0 });
+			}
+
+			const search = query.search.trim();
+			const selectedStatus = Object.values(SubscriptionStatus).find((status) => status === query.subscriptionStatus);
+			const selectedPaymentMethod = Object.values(SubscriptionPaymentMethod).find(
+				(method) => method === query.subscriptionPaymentMethod,
+			);
+
+			const where: Prisma.SubscriptionWhereInput = {
+				campaign: { programId: { in: accessibleProgramIds } },
+				...(selectedStatus ? { status: selectedStatus } : {}),
+				...(selectedPaymentMethod ? { paymentMethod: selectedPaymentMethod } : {}),
+				...(search
+					? {
+							OR: [
+								{ id: { contains: search, mode: 'insensitive' as const } },
+								{ contributor: { contact: { firstName: { contains: search, mode: 'insensitive' as const } } } },
+								{ contributor: { contact: { lastName: { contains: search, mode: 'insensitive' as const } } } },
+								{ contributor: { contact: { email: { contains: search, mode: 'insensitive' as const } } } },
+								{ stripeSubscriptionId: { contains: search, mode: 'insensitive' as const } },
+								{ bankStandingOrderReference: { contains: search, mode: 'insensitive' as const } },
+							],
+						}
+					: {}),
+			};
+
+			const [subscriptions, totalCount] = await Promise.all([
+				this.db.subscription.findMany({
+					where,
+					select: {
+						id: true,
+						createdAt: true,
+						amount: true,
+						currency: true,
+						status: true,
+						cancellationReason: true,
+						paymentMethod: true,
+						stripeSubscriptionId: true,
+						bankStandingOrderReference: true,
+						contributor: {
+							select: {
+								contact: {
+									select: {
+										firstName: true,
+										lastName: true,
+										email: true,
+									},
+								},
+							},
+						},
+					},
+					orderBy: this.buildSubscriptionOrderBy(query),
+					skip: (query.page - 1) * query.pageSize,
+					take: query.pageSize,
+				}),
+				this.db.subscription.count({ where }),
+			]);
+
+			const tableRows: SubscriptionTableViewRow[] = subscriptions.map((subscription) => ({
+				id: subscription.id,
+				firstName: subscription.contributor?.contact?.firstName ?? '',
+				lastName: subscription.contributor?.contact?.lastName ?? '',
+				email: subscription.contributor?.contact?.email ?? '',
+				amount: Number(subscription.amount),
+				currency: subscription.currency,
+				status: subscription.status,
+				cancellationReason: subscription.cancellationReason,
+				paymentMethod: subscription.paymentMethod,
+				stripeSubscriptionId: subscription.stripeSubscriptionId,
+				bankStandingOrderReference: subscription.bankStandingOrderReference,
+				createdAt: subscription.createdAt,
+			}));
+
+			return this.resultOk({ tableRows, totalCount });
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail('Could not fetch subscriptions');
+		}
 	}
 
 	async getDashboardView(contributorId: string): Promise<ServiceResult<SubscriptionsDashboardView>> {
@@ -75,6 +226,7 @@ export class SubscriptionReadService extends BaseService {
 						amount: true,
 						currency: true,
 						createdAt: true,
+						coverTransactionCosts: true,
 						paymentMethod: true,
 						stripeSubscriptionId: true,
 						bankStandingOrderReference: true,
@@ -107,7 +259,7 @@ export class SubscriptionReadService extends BaseService {
 				contributionSummary: contributionSummaryResult.data,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not fetch subscriptions dashboard');
 		}
@@ -131,7 +283,7 @@ export class SubscriptionReadService extends BaseService {
 
 			return this.resultOk(subscription.paymentMethod);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not load subscription payment method');
 		}
@@ -147,6 +299,7 @@ export class SubscriptionReadService extends BaseService {
 			amount: Number(subscription.amount),
 			currency: subscription.currency,
 			createdAt: subscription.createdAt,
+			coverTransactionCosts: subscription.coverTransactionCosts,
 		};
 
 		if (subscription.paymentMethod === SubscriptionPaymentMethod.bank_transfer) {
@@ -214,7 +367,7 @@ export class SubscriptionReadService extends BaseService {
 		subscription: SubscriptionRecord,
 		reason: 'stripe_details_unavailable' | 'current_period_end_missing',
 	): null {
-		this.logger.warn('Skipping upcoming payments for Stripe subscription', {
+		console.warn('Skipping upcoming payments for Stripe subscription', {
 			subscriptionId: subscription.id,
 			stripeSubscriptionId: subscription.stripeSubscriptionId,
 			reason,

@@ -1,5 +1,4 @@
 import { Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -24,9 +23,8 @@ export class OrganizationReadService extends BaseService {
 		db: PrismaClient,
 		private readonly userService: UserReadService,
 		private readonly organizationAccessService: OrganizationAccessService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildOrganizationOrderBy(query: OrganizationTableQuery): Prisma.OrganizationOrderByWithRelationInput[] {
@@ -78,7 +76,7 @@ export class OrganizationReadService extends BaseService {
 
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch organization members table view: ${JSON.stringify(error)}`);
 		}
@@ -107,7 +105,7 @@ export class OrganizationReadService extends BaseService {
 				name: organization.name,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch active organization summary: ${JSON.stringify(error)}`);
 		}
@@ -182,7 +180,7 @@ export class OrganizationReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch organization members: ${JSON.stringify(error)}`);
 		}
@@ -201,7 +199,7 @@ export class OrganizationReadService extends BaseService {
 
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch organizations table view: ${JSON.stringify(error)}`);
 		}
@@ -273,7 +271,7 @@ export class OrganizationReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch organizations: ${JSON.stringify(error)}`);
 		}
@@ -293,7 +291,7 @@ export class OrganizationReadService extends BaseService {
 
 			return this.resultOk(organizations);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch organizations: ${JSON.stringify(error)}`);
 		}
@@ -340,7 +338,7 @@ export class OrganizationReadService extends BaseService {
 					.map((access) => access.programId),
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch organization: ${JSON.stringify(error)}`);
 		}
@@ -373,7 +371,7 @@ export class OrganizationReadService extends BaseService {
 				})),
 			);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch organization users: ${JSON.stringify(error)}`);
 		}
@@ -396,7 +394,7 @@ export class OrganizationReadService extends BaseService {
 
 			return this.resultOk(programs);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch organization programs: ${JSON.stringify(error)}`);
 		}

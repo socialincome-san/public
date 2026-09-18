@@ -13,6 +13,7 @@ export const localPartnersTableConfig: DataTableConfig<LocalPartnerTableViewRow>
 		{ id: 'email', label: 'Email' },
 		{ id: 'contactNumber', label: 'Contact number' },
 		{ id: 'createdAt', label: 'Created' },
+		{ id: 'country', label: 'Country' },
 	],
 	makeColumns: makeLocalPartnerColumns,
 	showColumnVisibilitySelector: true,

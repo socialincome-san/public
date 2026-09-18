@@ -84,6 +84,7 @@ export type YourContributionsTableViewRow = {
 	updatedAt: Date | null;
 	amount: number;
 	currency: Currency;
+	paymentEventType: PaymentEventType | null;
 	campaignTitle: string;
 	status: ContributionStatus;
 };

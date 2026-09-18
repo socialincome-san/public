@@ -34,5 +34,5 @@ export const DateCell = <TData,>({
 	}
 	const formatted = new Intl.DateTimeFormat(locale, options).format(date);
 
-	return <span>{formatted}</span>;
+	return <span data-testid="date-cell">{formatted}</span>;
 };

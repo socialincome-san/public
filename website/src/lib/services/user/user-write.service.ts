@@ -1,5 +1,4 @@
 import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -29,9 +28,8 @@ export class UserWriteService extends BaseService {
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly userReadService: UserReadService,
 		private readonly userValidationService: UserValidationService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async create(actorUserId: string, input: UserFormCreateInput): Promise<ServiceResult<UserPayload>> {
@@ -125,7 +123,7 @@ export class UserWriteService extends BaseService {
 				if (didCreateFirebaseUser) {
 					const rollbackResult = await this.firebaseAdminService.deleteByUidIfExists(firebaseAuthUser.uid);
 					if (!rollbackResult.success) {
-						this.logger.warn('Could not rollback Firebase user after failed user creation', {
+						console.warn('Could not rollback Firebase user after failed user creation', {
 							firebaseUid: firebaseAuthUser.uid,
 							error: rollbackResult.error,
 						});
@@ -144,7 +142,7 @@ export class UserWriteService extends BaseService {
 				emailVerified: true,
 			});
 			if (!firebaseSyncResult.success) {
-				this.logger.warn('Could not fully sync Firebase Auth user on user creation', {
+				console.warn('Could not fully sync Firebase Auth user on user creation', {
 					firebaseUid: firebaseAuthUser.uid,
 					error: firebaseSyncResult.error,
 				});
@@ -160,7 +158,7 @@ export class UserWriteService extends BaseService {
 				organizationIds: validatedInput.organizationIds,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not create user. Please try again later.');
 		}
@@ -240,7 +238,7 @@ export class UserWriteService extends BaseService {
 				});
 
 				if (!firebaseUpdateResult.success) {
-					this.logger.warn('Could not fully sync Firebase Auth user on user update', {
+					console.warn('Could not fully sync Firebase Auth user on user update', {
 						firebaseUid: existingUser.account.firebaseAuthUserId,
 						error: firebaseUpdateResult.error,
 					});
@@ -257,7 +255,7 @@ export class UserWriteService extends BaseService {
 				organizationIds: validatedInput.organizationIds,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not update user. Please try again later.');
 		}
@@ -343,7 +341,7 @@ export class UserWriteService extends BaseService {
 				organizationIds,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not update user: ${JSON.stringify(error)}`);
 		}
@@ -397,7 +395,7 @@ export class UserWriteService extends BaseService {
 				existingUser.account.firebaseAuthUserId,
 			);
 			if (!firebaseDeleteResult.success) {
-				this.logger.warn('User deleted in DB but Firebase user deletion failed', {
+				console.warn('User deleted in DB but Firebase user deletion failed', {
 					userId: targetUserId,
 					firebaseUid: existingUser.account.firebaseAuthUserId,
 					error: firebaseDeleteResult.error,
@@ -406,7 +404,7 @@ export class UserWriteService extends BaseService {
 
 			return this.resultOk(undefined);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not delete user. Please try again later.');
 		}

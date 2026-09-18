@@ -4,6 +4,7 @@ import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country
 import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
 import { calculateProgramBudgetAction } from '@/lib/server-actions/program-stats-actions';
+import { getIsAuthenticatedUserAction } from '@/lib/server-actions/session-actions';
 import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CreateProgramInput, PublicOnboardingUserDetails } from '@/lib/services/program/program.types';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
@@ -42,6 +43,7 @@ export const createProgramWizardMachine = setup({
 			calculatedTotalBudget: number;
 			displayMonthlyCost: number;
 			exchangeRateText?: string;
+			payoutToDisplayRate?: number;
 			totalBudgetTooltipText: string;
 			payoutPerIntervalMin: number;
 			payoutPerIntervalMax: number;
@@ -95,10 +97,11 @@ export const createProgramWizardMachine = setup({
 	},
 
 	actors: {
-		loadCountries: fromPromise(async () => {
-			const [countryResult, focusOptionsResult] = await Promise.all([
+		loadCountries: fromPromise(async ({ input }: { input: { isAuthenticated: boolean } }) => {
+			const [countryResult, focusOptionsResult, isAuthenticated] = await Promise.all([
 				getProgramCountryFeasibilityAction(),
 				getFocusOptionsAction(),
+				input.isAuthenticated ? Promise.resolve(true) : getIsAuthenticatedUserAction(),
 			]);
 			if (!countryResult.success) {
 				throw new Error(countryResult.error);
@@ -108,6 +111,7 @@ export const createProgramWizardMachine = setup({
 				countries: countryResult.data.rows,
 				focusOptions: focusOptionsResult.success ? focusOptionsResult.data : [],
 				focusOptionsError: focusOptionsResult.success ? undefined : focusOptionsResult.error,
+				isAuthenticated,
 			};
 		}),
 
@@ -244,6 +248,7 @@ export const createProgramWizardMachine = setup({
 		calculatedTotalBudget: 23040,
 		displayMonthlyCost: 640,
 		exchangeRateText: undefined,
+		payoutToDisplayRate: undefined,
 		totalBudgetTooltipText: "20 recipients x 32 USD payout per interval x 36 monthly intervals = 23'040 USD",
 		payoutPerIntervalMin: 16,
 		payoutPerIntervalMax: 64,
@@ -384,6 +389,7 @@ export const createProgramWizardMachine = setup({
 						calculatedTotalBudget: event.output.calculatedTotalBudget,
 						displayMonthlyCost: event.output.displayMonthlyCost,
 						exchangeRateText: event.output.exchangeRateText,
+						payoutToDisplayRate: event.output.payoutToDisplayRate,
 						totalBudgetTooltipText: event.output.totalBudgetTooltipText,
 						payoutPerIntervalMin: event.output.payoutPerIntervalMin,
 						payoutPerIntervalMax: event.output.payoutPerIntervalMax,
@@ -464,12 +470,14 @@ export const createProgramWizardMachine = setup({
 		loading: {
 			invoke: {
 				src: 'loadCountries',
+				input: ({ context }) => ({ isAuthenticated: context.isAuthenticated }),
 				onDone: {
 					target: 'countrySelection',
 					actions: assign({
 						countries: ({ event }) => event.output.countries,
 						focusOptions: ({ event }) => event.output.focusOptions,
 						focusOptionsError: ({ event }) => event.output.focusOptionsError,
+						isAuthenticated: ({ event }) => event.output.isAuthenticated,
 						error: () => undefined,
 					}),
 				},

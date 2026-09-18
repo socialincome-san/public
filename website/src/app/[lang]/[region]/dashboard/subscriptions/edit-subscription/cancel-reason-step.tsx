@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/button/button';
 import { Label } from '@/components/label';
-import { RadioGroup, RadioGroupItem } from '@/components/radio-group';
+import { RadioGroup, RadioGroupItem } from '@/components/radio-group/radio-group';
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
 import {
 	SUBSCRIPTION_CANCEL_REASONS,

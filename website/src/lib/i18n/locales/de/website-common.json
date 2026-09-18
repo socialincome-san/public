@@ -117,22 +117,95 @@
 		"about": "Über"
 	},
 	"transparency-page": {
+		"donation-globe": {
+			"aria-label": "Globus mit aktuellen Spenden aus aller Welt",
+			"description": "{{donatorsCount}} Menschen haben gespendet, um anderen den Weg aus der Armut zu ermöglichen. Dieses Vertrauen entsteht nur durch vollständige Transparenz."
+		},
 		"inflows": {
 			"title-name": "Zuflüsse",
 			"title-currency": "in {{currency}}",
-			"description": "Aus wiederkehrenden 1%-Beiträgen und einmaligen Spenden in 12 Währungen."
+			"eyebrow": "Zuflüsse",
+			"headline-before": "Der Grossteil unserer Finanzierung stammt von ",
+			"headline-bold": "Privatpersonen mit monatlichen Spenden",
+			"headline-after": ".",
+			"video-label": "Unsere monatlichen Spenderinnen und Spender geben typischerweise 1% ihres Einkommens.",
+			"breakdown-title": "Aufschlüsselung",
+			"total-label": "Zuflüsse insgesamt",
+			"segments": {
+				"individuals": {
+					"label": "Privatpersonen",
+					"description": "Wiederkehrende und einmalige Spenden"
+				},
+				"foundations": {
+					"label": "Stiftungen & Grants",
+					"description": "Mehrjährige und einmalige Förderungen"
+				},
+				"corporate": {
+					"label": "Unternehmen",
+					"description": "Payroll Giving und Matching Gifts"
+				}
+			}
 		},
 		"outflows": {
 			"title-name": "Abflüsse",
 			"title-currency": "in {{currency}}",
-			"description": "Direkt via Mobile Money an Empfänger:innen überwiesen — ohne Zwischenhändler."
+			"eyebrow": "Abflüsse",
+			"headline-before": "Von jeder Spende erreichen ",
+			"headline-bold": "{{percent}} %",
+			"headline-after": " die Empfänger:innen direkt.",
+			"zewo-before": "ZEWO-zertifiziert für gute Governance und jährlich geprüft durch {{auditFirm}} (",
+			"zewo-link": "Auditberichte 2020–2025 ansehen",
+			"zewo-after": ").",
+			"zewo-alt": "ZEWO-Zertifizierung",
+			"breakdown-title": "Wie eine Spende von CHF 100 verwendet wird",
+			"breakdown-aria-label": "Aufschlüsselung, wie je CHF 100 verwendet werden",
+			"segments": {
+				"direct-cash": {
+					"label": "Direkte Geldtransfers",
+					"description": "Was wir direkt auf die Handys von Menschen in Not überweisen."
+				},
+				"administration": {
+					"label": "Administration",
+					"description": "Was wir für Geldtransfers, Audit, Software, Infrastruktur und weitere Kosten verwenden."
+				},
+				"fundraising": {
+					"label": "Fundraising",
+					"description": "Was wir investieren, um die Bewegung zu vergrössern."
+				}
+			},
+			"ngo-average-before": "Zum Vergleich: Internationale Standards wie jene der ",
+			"ngo-average-source": "ZEWO",
+			"ngo-average-after": " setzen die Obergrenze für Overhead bei {{amount}} %.",
+			"annual-statement-before": "Aktuelle Jahresrechnung: ",
+			"annual-statement-link": "herunterladen"
 		},
 		"reserves": {
 			"title-name": "Reserven",
+			"total-today": "Gesamte Reserven heute",
 			"title-currency": "in {{currency}}",
-			"description": "Für Empfänger:innen in laufenden Programmen reserviert.",
+			"institutions-heading": "Finanzinstitute, mit denen wir zusammenarbeiten",
+			"institutions": {
+				"postfinance": "PostFinance",
+				"ecobank": "Ecobank",
+				"orange-money": "Orange Money"
+			},
 			"tooltip-label": "Reservekontodetails anzeigen",
 			"no-data": "Keine Daten"
+		},
+		"runway": {
+			"description": "Selbst wenn heute alle Spender:innen aufhören würden zu spenden, könnten wir Empfänger:innen noch {{count}} Monate lang weiter auszahlen.",
+			"zewo-hint": "Im Einklang mit ZEWO"
+		},
+		"countries": {
+			"headline_one": "Spenden im Wert von {{amount}} kamen aus {{countriesCount}} Land",
+			"headline_other": "Spenden im Wert von {{amount}} kamen aus {{countriesCount}} Ländern",
+			"headline-country": "Spenden im Wert von {{amount}} kamen aus {{country}}",
+			"headline-other": "Spenden im Wert von {{amount}} kamen aus anderen Ländern",
+			"other-countries": "Andere Länder",
+			"other-countries-title": "Andere Länder",
+			"empty": "In diesem Zeitraum gab es keine Spenden aus Ländern.",
+			"chart-aria-label": "Spendenbeträge nach Herkunftsland",
+			"legend-row-aria": "{{country}}, {{amount}}, {{percentage}}"
 		}
 	},
 	"program-detail-page": {
@@ -208,6 +281,11 @@
 			"about-step-title": "Über",
 			"about-step-subtitle": "Wer sammelt Spenden?",
 			"about-step-description": "Erzähle den Leuten etwas mehr über dich.",
+			"personal-step-title": "Persönliche Daten",
+			"personal-step-subtitle": "Wir verwenden deine persönlichen Daten, um dein Konto zu erstellen. Sie werden nicht auf der Kampagnenseite angezeigt.",
+			"first-name": "Vorname",
+			"last-name": "Nachname",
+			"email": "E-Mail",
 			"title": "Kampagnentitel",
 			"description": "Lead-Text",
 			"goal": "Zielbetrag",
@@ -249,11 +327,18 @@
 			"tiktok-handle-placeholder": "@benutzername",
 			"submit": "Kampagne einreichen",
 			"submitting": "Wird eingereicht…",
-			"success-title": "Kampagne eingereicht",
-			"success": "Vielen Dank. Ihre Kampagne wurde eingereicht und wird vor der Veröffentlichung geprüft.",
+			"success-thank-you": "Danke",
+			"success-created-title": "Kampagne erstellt",
+			"success-live-title": "Deine Kampagne ist live!",
+			"success-guest-description": "Öffne den Anmeldelink, den wir an {{ email }} gesendet haben, um zu bestätigen.",
+			"success-didnt-get-it": "Nicht erhalten?",
+			"success-retry": "Erneut senden",
+			"success-retry-sending": "Wird gesendet…",
+			"success-support-prefix": "Erneut versuchen oder kontaktiere",
 			"error": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.",
 			"currency-placeholder": "Währung auswählen",
 			"image-hint": "JPEG, PNG oder WebP bis 5 MB.",
+			"image-focus-hint": "Klicken Sie auf das Bild, um den Fokuspunkt festzulegen.",
 			"continue": "Weiter",
 			"back": "Zurück",
 			"all-countries": "Alle Länder",
@@ -263,6 +348,7 @@
 			"recipients-count": "{{count}} Empfänger:innen",
 			"details": "Details",
 			"about": "Über",
+			"personal": "Persönliche Daten",
 			"programs-loading": "Programme werden geladen…",
 			"programs-empty": "Derzeit sind keine Programme verfügbar.",
 			"default-images-loading": "Bilder werden geladen…",
@@ -298,11 +384,14 @@
 				"invalid-form-data": "Ungültige Formulardaten.",
 				"invalid-submission": "Ungültige Eingabe.",
 				"program-not-eligible": "Das ausgewählte Programm ist nicht zulässig.",
-				"title-exists": "Eine Kampagne mit diesem Titel existiert bereits.",
-				"similar-title-exists": "Eine Kampagne mit einem ähnlichen Titel existiert bereits. Bitte wählen Sie einen anderen Titel.",
+				"slug-exists": "Eine Kampagne mit diesem Slug existiert bereits.",
 				"submission-failed": "Ihre Eingabe konnte nicht abgeschlossen werden. Bitte versuchen Sie es in ein paar Minuten erneut.",
 				"turnstile-required": "Bitte schliesse die Verifizierung ab, bevor du die Kampagne einreichst.",
-				"turnstile-invalid": "Verifizierung fehlgeschlagen. Bitte versuche es erneut."
+				"turnstile-invalid": "Verifizierung fehlgeschlagen. Bitte versuche es erneut.",
+				"first-name-required": "Vorname ist erforderlich.",
+				"last-name-required": "Nachname ist erforderlich.",
+				"email-required": "E-Mail ist erforderlich.",
+				"email-invalid": "Bitte gib eine gültige E-Mail-Adresse ein."
 			}
 		}
 	},

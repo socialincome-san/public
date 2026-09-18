@@ -1,5 +1,4 @@
 import { PayoutStatus, PrismaClient, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
@@ -14,6 +13,7 @@ import {
 	PublicProgramFilterDataMap,
 	PublicProgramStats,
 	PublicProgramStatsMap,
+	PublicProgramTargetFocus,
 } from './program.types';
 
 export class ProgramReadService extends BaseService {
@@ -21,9 +21,8 @@ export class ProgramReadService extends BaseService {
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly programStatsService: ProgramStatsService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private readonly sumPayoutAmounts = (recipients: { payouts: { amount: unknown }[] }[]): number => {
@@ -127,9 +126,37 @@ export class ProgramReadService extends BaseService {
 
 			return this.resultOk(filterDataByPortalSlug);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch program filter data: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicTargetFocusesByProgramId(programId: string): Promise<ServiceResult<PublicProgramTargetFocus[]>> {
+		try {
+			const normalizedProgramId = programId.trim();
+			if (!normalizedProgramId) {
+				return this.resultFail('Missing program id');
+			}
+
+			const targetFocuses = await this.db.programTargetFocus.findMany({
+				where: { programId: normalizedProgramId },
+				select: {
+					focus: {
+						select: {
+							id: true,
+							slug: true,
+							name: true,
+						},
+					},
+				},
+			});
+
+			return this.resultOk(targetFocuses.map(({ focus }) => focus));
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not fetch program target focuses: ${JSON.stringify(error)}`);
 		}
 	}
 
@@ -196,7 +223,7 @@ export class ProgramReadService extends BaseService {
 
 			return this.resultOk({ wallets });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch programs: ${JSON.stringify(error)}`);
 		}
@@ -218,7 +245,7 @@ export class ProgramReadService extends BaseService {
 
 			return this.resultOk(wallet);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch program wallet: ${JSON.stringify(error)}`);
 		}
@@ -241,7 +268,7 @@ export class ProgramReadService extends BaseService {
 
 			return this.resultOk(programs);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch editable program options: ${JSON.stringify(error)}`);
 		}
@@ -373,7 +400,7 @@ export class ProgramReadService extends BaseService {
 
 			return this.resultOk(this.toPublicProgramDetails(program));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load public program: ${JSON.stringify(error)}`);
 		}
@@ -396,7 +423,7 @@ export class ProgramReadService extends BaseService {
 
 			return this.resultOk(program);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load public preview program: ${JSON.stringify(error)}`);
 		}
@@ -420,7 +447,7 @@ export class ProgramReadService extends BaseService {
 
 			return this.resultOk(this.toPublicProgramStats(program));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch program stats: ${JSON.stringify(error)}`);
 		}
@@ -447,7 +474,7 @@ export class ProgramReadService extends BaseService {
 
 			return this.resultOk(statsByProgramPortalSlug);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch program stats map: ${JSON.stringify(error)}`);
 		}
@@ -462,7 +489,7 @@ export class ProgramReadService extends BaseService {
 
 			return this.resultOk(program.id);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not resolve programId by slug: ${JSON.stringify(error)}`);
 		}
@@ -481,7 +508,7 @@ export class ProgramReadService extends BaseService {
 
 			return this.resultOk(program.slug);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch program slug: ${JSON.stringify(error)}`);
 		}
@@ -500,7 +527,7 @@ export class ProgramReadService extends BaseService {
 
 			return this.resultOk(program.name);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch program name: ${JSON.stringify(error)}`);
 		}
@@ -585,7 +612,7 @@ export class ProgramReadService extends BaseService {
 				canEdit: permission === ProgramPermission.operator,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load program settings: ${JSON.stringify(error)}`);
 		}
@@ -645,7 +672,7 @@ export class ProgramReadService extends BaseService {
 
 			return this.resultOk(organizations);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not load organization options: ${JSON.stringify(error)}`);
 		}

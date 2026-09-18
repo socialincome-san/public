@@ -2,7 +2,7 @@
 
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
-import { Switch } from '@/components/switch';
+import { Switch } from '@/components/switch/switch';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 
 type Props = {

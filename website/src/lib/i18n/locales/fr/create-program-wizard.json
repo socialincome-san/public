@@ -116,7 +116,7 @@
 		"indirect_notice": {
 			"prefix": "{{recipients}} beneficiaires profitent",
 			"indirect_people": "{{indirect}} personnes indirectement touchees en plus",
-			"tooltip": "En moyenne, chaque beneficiaire soutenu a un impact positif sur environ cinq autres personnes dans son foyer et sa communaute.",
+			"tooltip": "En moyenne, chaque beneficiaire soutenu a un impact positif sur environ {{factor}} autres personnes dans son foyer et sa communaute.",
 			"suffix": "de la pauvrete."
 		},
 		"payouts": {

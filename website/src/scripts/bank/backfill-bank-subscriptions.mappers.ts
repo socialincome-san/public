@@ -44,9 +44,6 @@ export const inferSubscriptionStatus = (lastPaymentAt: Date, now = new Date()): 
 	if (daysSinceLastPayment <= 50) {
 		return SubscriptionStatus.active;
 	}
-	if (daysSinceLastPayment <= 120) {
-		return SubscriptionStatus.canceled;
-	}
 
 	return SubscriptionStatus.ended;
 };

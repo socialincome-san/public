@@ -1,5 +1,4 @@
 import { Prisma, PrismaClient, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { now } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
@@ -27,9 +26,8 @@ export class SurveyReadService extends BaseService {
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly recipientService: RecipientReadService,
 		private readonly surveyScheduleService: SurveyScheduleService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildSurveyOrderBy(query: SurveyTableQuery): Prisma.SurveyOrderByWithRelationInput[] {
@@ -208,7 +206,7 @@ export class SurveyReadService extends BaseService {
 
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch survey table view: ${JSON.stringify(error)}`);
 		}
@@ -226,7 +224,7 @@ export class SurveyReadService extends BaseService {
 				query,
 			);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
@@ -245,7 +243,7 @@ export class SurveyReadService extends BaseService {
 
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch upcoming survey table view: ${JSON.stringify(error)}`);
 		}
@@ -375,7 +373,7 @@ export class SurveyReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount, programFilterOptions });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch upcoming surveys: ${JSON.stringify(error)}`);
 		}
@@ -403,7 +401,7 @@ export class SurveyReadService extends BaseService {
 
 			return this.resultOk({ tableRows: paginated.data.tableRows });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch program scoped surveys: ${JSON.stringify(error)}`);
 		}
@@ -453,7 +451,7 @@ export class SurveyReadService extends BaseService {
 
 			return this.resultOk(payload);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to get survey: ${JSON.stringify(error)}`);
 		}
@@ -544,7 +542,7 @@ export class SurveyReadService extends BaseService {
 
 			return this.resultOk({ surveys });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Failed to preview survey generation: ${JSON.stringify(error)}`);
 		}
@@ -559,7 +557,7 @@ export class SurveyReadService extends BaseService {
 
 			return this.resultOk(surveys);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
@@ -576,7 +574,7 @@ export class SurveyReadService extends BaseService {
 
 			return this.resultOk(surveys);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}
@@ -616,7 +614,7 @@ export class SurveyReadService extends BaseService {
 				nameOfRecipient: `${surveys.recipient.contact?.firstName ?? ''} ${surveys.recipient.contact?.lastName ?? ''}`.trim(),
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch surveys: ${JSON.stringify(error)}`);
 		}

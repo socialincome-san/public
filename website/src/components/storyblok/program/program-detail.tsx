@@ -53,6 +53,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 			<HeroHeader
 				lang={lang}
 				showDonationsFormMobile={false}
+				campaignId={programDetailData.campaignId}
 				title={programDetailData.title}
 				heroImage={programDetailData.heroImage}
 				stats={
@@ -76,7 +77,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				<Breadcrumb className="py-0" links={breadcrumbLinks} />
 				<div className="lg:hidden">
 					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
-						<DonationFormServer lang={lang} />
+						<DonationFormServer lang={lang} campaignId={programDetailData.campaignId} />
 					</BlockWrapper>
 				</div>
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>

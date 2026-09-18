@@ -9,7 +9,6 @@ jest.mock('@/generated/prisma/client', () => ({
 	},
 	SubscriptionStatus: {
 		active: 'active',
-		canceled: 'canceled',
 		ended: 'ended',
 	},
 	DonationInterval: {
@@ -28,14 +27,7 @@ describe('SubscriptionWriteService bank transfer mutations', () => {
 		subscription: { findFirst, update },
 	} as unknown as PrismaClient;
 
-	const createService = () =>
-		new SubscriptionWriteService(db, {
-			error: jest.fn(),
-			warn: jest.fn(),
-			info: jest.fn(),
-			debug: jest.fn(),
-			alert: jest.fn(),
-		});
+	const createService = () => new SubscriptionWriteService(db);
 
 	beforeEach(() => {
 		jest.clearAllMocks();

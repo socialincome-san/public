@@ -1,11 +1,11 @@
 'use server';
 
-import { MessagingChannel } from '@/generated/prisma/client';
 import { getSessionByType } from '@/lib/firebase/current-account';
 import type { ServiceResult } from '@/lib/services/core/base.types';
 import { resultFail, resultOk } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
 import type {
+	ChannelPreviewInput,
 	ChannelPreviewSummary,
 	DispatchSendInput,
 	MessagingJobStatusView,
@@ -22,7 +22,6 @@ import {
 	type MessagingRecipientsPage,
 	type MessagingRecipientsQuery,
 } from '@/lib/services/twilio/messaging/recipients/recipients.types';
-import type { SelectionState } from '@/lib/services/twilio/messaging/recipients/selection.types';
 
 // ── Log ─────────────────────
 
@@ -150,20 +149,12 @@ export async function getMessagingJobAction(jobId: string): Promise<ServiceResul
 }
 
 export async function previewMessagingChannelAction(
-	type: MessagingRecipientType,
-	selection: SelectionState,
-	channel: MessagingChannel,
+	input: ChannelPreviewInput,
 ): Promise<ServiceResult<ChannelPreviewSummary>> {
 	const session = await getSessionByType('user');
 	if (!session.success) {
 		return session;
 	}
 
-	try {
-		const contactIds = await services.messagingRecipients.resolveContactIds(type, selection, session.data.id);
-
-		return await services.messagingChannelPreview.previewByContactIds(contactIds, channel, session.data.id);
-	} catch (error) {
-		return resultFail(error instanceof Error ? error.message : 'Failed to preview channel');
-	}
+	return services.messagingChannelPreview.previewSelection(input, session.data.id);
 }

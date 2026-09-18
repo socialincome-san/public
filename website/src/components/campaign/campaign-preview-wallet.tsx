@@ -1,4 +1,4 @@
-import { Progress } from '@/components/progress';
+import { Progress } from '@/components/progress/progress';
 import { createWalletImageFromStoryblokAsset, WALLET_IMAGE_SIZES } from '@/components/wallet/wallet-image-utils';
 import type { TranslateFunction } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
@@ -39,7 +39,7 @@ export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Prop
 				<div className="bg-primary/20 absolute inset-0" aria-hidden />
 			)}
 			<div
-				className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.35)_30%,rgb(8,51,68)_58%,rgb(8,51,68)_100%)]"
+				className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,transparent_30%,rgb(8,51,68)_58%,rgb(8,51,68)_100%)]"
 				aria-hidden
 			/>
 			<div className="min-h-[191px] flex-1" aria-hidden />

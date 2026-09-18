@@ -1,5 +1,11 @@
 export type MessagingRecipientType = 'contributor' | 'recipient' | 'local-partner';
 
+export type MessagingPhoneSource = 'contact' | 'payment';
+
+export type MessagingPhone = { number: string; hasWhatsApp: boolean };
+
+export type MessagingTarget = { contactId: string; phone: MessagingPhone | null };
+
 export type MessagingRecipientRow = {
 	id: string;
 	name: string;

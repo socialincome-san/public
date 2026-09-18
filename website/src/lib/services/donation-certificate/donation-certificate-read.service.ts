@@ -1,6 +1,5 @@
 import { DonationCertificate, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { LanguageCode } from '@/lib/types/language';
-import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -18,9 +17,8 @@ export class DonationCertificateReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildDonationCertificateOrderBy(
@@ -159,7 +157,7 @@ export class DonationCertificateReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch donation certificates: ${JSON.stringify(error)}`);
 		}
@@ -214,7 +212,7 @@ export class DonationCertificateReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch donation certificates: ${JSON.stringify(error)}`);
 		}
@@ -231,7 +229,7 @@ export class DonationCertificateReadService extends BaseService {
 
 			return this.resultOk(existingCertificates);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch existing donation certificates: ${JSON.stringify(error)}`);
 		}
@@ -253,7 +251,7 @@ export class DonationCertificateReadService extends BaseService {
 
 			return this.resultOk(existingCertificate);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch existing donation certificates: ${JSON.stringify(error)}`);
 		}

@@ -1,16 +1,22 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
-import type { Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
 import type { ISbStoryData } from '@storyblok/js';
+
+export type JournalOverviewFilter = {
+	tagSlug?: string;
+	articleTypeSlug?: string;
+};
 
 export type JournalOverviewPageData = {
 	articles: ISbStoryData<ResolvedArticle>[];
 	authors: ISbStoryData<Person>[];
-	tags: ISbStoryData<Tag>[];
+	articleTypes: ISbStoryData<ArticleType>[];
 	showMoreArticlesLink: boolean;
 	pageTitle: string;
 	pageDescription?: string;
 	activeTagSlug?: string;
+	activeArticleTypeSlug?: string;
 	journalPath: string;
 	pathname: string;
 	breadcrumbs: BreadcrumbLinkType[];

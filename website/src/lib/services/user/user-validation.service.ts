@@ -1,15 +1,9 @@
-import { PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserFormCreateInput, UserFormUpdateInput, userCreateInputSchema, userUpdateInputSchema } from './user-form-input';
 import { UserUpdateUniquenessContext } from './user-validation.types';
 
 export class UserValidationService extends BaseService {
-	constructor(db: PrismaClient, loggerInstance = logger) {
-		super(db, loggerInstance);
-	}
-
 	validateCreateInput(input: UserFormCreateInput): ServiceResult<UserFormCreateInput> {
 		const parsedInput = userCreateInputSchema.safeParse(input);
 		if (!parsedInput.success) {

@@ -75,6 +75,7 @@ export const CreateProgramSteps = ({ state, send, onGoToLogin }: Props) => {
 				calculatedTotalBudget={state.context.calculatedTotalBudget}
 				displayMonthlyCost={state.context.displayMonthlyCost}
 				exchangeRateText={state.context.exchangeRateText}
+				payoutToDisplayRate={state.context.payoutToDisplayRate}
 				totalBudgetTooltipText={state.context.totalBudgetTooltipText}
 				isCalculatingBudget={state.context.isCalculatingBudget}
 				customizePayouts={state.context.customizePayouts}

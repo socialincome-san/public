@@ -117,22 +117,95 @@
 		"about": "Informazioni su"
 	},
 	"transparency-page": {
+		"donation-globe": {
+			"aria-label": "Globo che mostra le donazioni recenti nel mondo",
+			"description": "{{donatorsCount}} persone hanno donato per aiutare altri a uscire dalla povertà. Una fiducia simile nasce solo da una trasparenza totale."
+		},
 		"inflows": {
 			"title-name": "Entrate",
 			"title-currency": "in {{currency}}",
-			"description": "Da contributi ricorrenti dell’1% e donazioni una tantum in 12 valute."
+			"eyebrow": "Entrate",
+			"headline-before": "La maggior parte dei nostri finanziamenti arriva da ",
+			"headline-bold": "persone che donano ogni mese",
+			"headline-after": ".",
+			"video-label": "I nostri donatori mensili tipicamente donano l'1% di ciò che guadagnano.",
+			"breakdown-title": "Ripartizione",
+			"total-label": "Entrate totali",
+			"segments": {
+				"individuals": {
+					"label": "Persone",
+					"description": "Donazioni ricorrenti e una tantum"
+				},
+				"foundations": {
+					"label": "Fondazioni & grant",
+					"description": "Grant pluriennali e una tantum"
+				},
+				"corporate": {
+					"label": "Partner aziendali",
+					"description": "Payroll giving e matched gifts"
+				}
+			}
 		},
 		"outflows": {
 			"title-name": "Uscite",
 			"title-currency": "in {{currency}}",
-			"description": "Trasferite direttamente ai beneficiari tramite Mobile Money — senza intermediari."
+			"eyebrow": "Uscite",
+			"headline-before": "",
+			"headline-bold": "{{percent}}%",
+			"headline-after": " di ogni contributo raggiungono direttamente le persone beneficiarie.",
+			"zewo-before": "Certificati ZEWO per la buona governance e sottoposti ogni anno a revisione da {{auditFirm}} (",
+			"zewo-link": "Vedi i rapporti di revisione 2020-2025",
+			"zewo-after": ").",
+			"zewo-alt": "Certificazione ZEWO",
+			"breakdown-title": "Come viene utilizzata una donazione di CHF 100",
+			"breakdown-aria-label": "Ripartizione di come viene utilizzato ogni CHF 100",
+			"segments": {
+				"direct-cash": {
+					"label": "Trasferimenti diretti di denaro",
+					"description": "Ciò che trasferiamo direttamente sui telefoni delle persone in difficoltà."
+				},
+				"administration": {
+					"label": "Amministrazione",
+					"description": "Ciò che utilizziamo per i trasferimenti di denaro, l'audit, il software, l'infrastruttura e altri costi."
+				},
+				"fundraising": {
+					"label": "Raccolta fondi",
+					"description": "Ciò che investiamo per far crescere il movimento."
+				}
+			},
+			"ngo-average-before": "Per confronto, gli standard internazionali come quelli di ",
+			"ngo-average-source": "ZEWO",
+			"ngo-average-after": " fissano il limite massimo per i costi generali al {{amount}}%.",
+			"annual-statement-before": "Ultimo bilancio annuale: ",
+			"annual-statement-link": "scarica"
 		},
 		"reserves": {
 			"title-name": "Riserve",
+			"total-today": "Riserve totali oggi",
 			"title-currency": "in {{currency}}",
-			"description": "Riservate ai beneficiari dei programmi in corso.",
+			"institutions-heading": "Istituti finanziari con cui collaboriamo",
+			"institutions": {
+				"postfinance": "PostFinance",
+				"ecobank": "Ecobank",
+				"orange-money": "Orange Money"
+			},
 			"tooltip-label": "Mostra i dettagli dei conti di riserva",
 			"no-data": "Nessun dato"
+		},
+		"runway": {
+			"description": "Anche se ogni donatore smettesse di donare oggi, potremmo continuare a pagare i beneficiari per altri {{count}} mesi.",
+			"zewo-hint": "In linea con ZEWO"
+		},
+		"countries": {
+			"headline_one": "Donazioni per un totale di {{amount}} sono arrivate da {{countriesCount}} paese",
+			"headline_other": "Donazioni per un totale di {{amount}} sono arrivate da {{countriesCount}} paesi",
+			"headline-country": "Donazioni per un totale di {{amount}} sono arrivate da {{country}}",
+			"headline-other": "Donazioni per un totale di {{amount}} sono arrivate da altri paesi",
+			"other-countries": "altri paesi",
+			"other-countries-title": "Altri paesi",
+			"empty": "Nessuna donazione da nessun paese in questo periodo.",
+			"chart-aria-label": "Importi delle donazioni per paese di origine",
+			"legend-row-aria": "{{country}}, {{amount}}, {{percentage}}"
 		}
 	},
 	"program-detail-page": {
@@ -208,6 +281,11 @@
 			"about-step-title": "Informazioni",
 			"about-step-subtitle": "Chi sta raccogliendo fondi?",
 			"about-step-description": "Racconta qualcosa di più su di te.",
+			"personal-step-title": "Dati personali",
+			"personal-step-subtitle": "Utilizzeremo i tuoi dati personali per creare il tuo account. Non verranno mostrati sulla pagina della campagna.",
+			"first-name": "Nome",
+			"last-name": "Cognome",
+			"email": "E-mail",
 			"title": "Titolo della campagna",
 			"description": "Testo introduttivo",
 			"goal": "Importo obiettivo",
@@ -249,11 +327,18 @@
 			"tiktok-handle-placeholder": "@nomeutente",
 			"submit": "Invia campagna",
 			"submitting": "Invio in corso…",
-			"success-title": "Campagna inviata",
-			"success": "Grazie. La tua campagna è stata inviata e verrà revisionata prima della pubblicazione.",
+			"success-thank-you": "Grazie",
+			"success-created-title": "Campagna creata",
+			"success-live-title": "La tua campagna è online!",
+			"success-guest-description": "Apri il link di accesso che abbiamo inviato a {{ email }} per confermare.",
+			"success-didnt-get-it": "Non l'hai ricevuto?",
+			"success-retry": "Riprova",
+			"success-retry-sending": "Invio in corso…",
+			"success-support-prefix": "Riprova o contatta",
 			"error": "Qualcosa è andato storto. Riprova.",
 			"currency-placeholder": "Seleziona una valuta",
 			"image-hint": "JPEG, PNG o WebP fino a 5 MB.",
+			"image-focus-hint": "Clicca sull'immagine per impostare il punto focale.",
 			"continue": "Continua",
 			"back": "Indietro",
 			"all-countries": "Tutti i paesi",
@@ -263,6 +348,7 @@
 			"recipients-count": "{{count}} beneficiari",
 			"details": "Dettagli",
 			"about": "Informazioni",
+			"personal": "Dati personali",
 			"programs-loading": "Caricamento dei programmi…",
 			"programs-empty": "Al momento non ci sono programmi disponibili.",
 			"default-images-loading": "Caricamento delle immagini…",
@@ -298,11 +384,14 @@
 				"invalid-form-data": "Dati del modulo non validi.",
 				"invalid-submission": "Invio non valido.",
 				"program-not-eligible": "Il programma selezionato non è idoneo.",
-				"title-exists": "Esiste già una campagna con questo titolo.",
-				"similar-title-exists": "Esiste già una campagna con un titolo simile. Scegli un titolo diverso.",
+				"slug-exists": "Esiste già una campagna con questo slug.",
 				"submission-failed": "Non siamo riusciti a completare l'invio. Riprova tra qualche minuto.",
 				"turnstile-required": "Completa la verifica prima di inviare.",
-				"turnstile-invalid": "Verifica non riuscita. Riprova."
+				"turnstile-invalid": "Verifica non riuscita. Riprova.",
+				"first-name-required": "Il nome è obbligatorio.",
+				"last-name-required": "Il cognome è obbligatorio.",
+				"email-required": "L'e-mail è obbligatoria.",
+				"email-invalid": "Inserisci un indirizzo e-mail valido."
 			}
 		}
 	},

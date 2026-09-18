@@ -2,7 +2,6 @@ import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/pr
 import { type CountryCode, PrismaClient } from '@/generated/prisma/client';
 import type { Program } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { logger } from '@/lib/utils/logger';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import type { StoryblokService } from '../storyblok/storyblok.service';
@@ -29,9 +28,8 @@ export class ProgramPublicSubmissionService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly storyblok: StoryblokService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	async getEligibleProgramsForPublicSubmission(
@@ -181,7 +179,7 @@ export class ProgramPublicSubmissionService extends BaseService {
 				})),
 			);
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not load programs.');
 		}
@@ -210,7 +208,7 @@ export class ProgramPublicSubmissionService extends BaseService {
 
 			return this.resultOk(Boolean(program));
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail('Could not verify program eligibility.');
 		}

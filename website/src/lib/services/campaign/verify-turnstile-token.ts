@@ -1,4 +1,3 @@
-import { logger } from '@/lib/utils/logger';
 import type { CampaignSubmissionErrorCode } from './campaign-submission-input';
 import { turnstileResponseFieldName } from './turnstile-field';
 
@@ -35,7 +34,7 @@ export const readTurnstileToken = (formData: FormData): string | null => {
 export const verifyTurnstileToken = async (token: string | null): Promise<TurnstileVerificationResult> => {
 	const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
 	if (!secret) {
-		logger.error('TURNSTILE_SECRET_KEY is missing');
+		console.error('TURNSTILE_SECRET_KEY is missing');
 
 		return { success: false, error: 'turnstile-invalid' };
 	}
@@ -54,14 +53,14 @@ export const verifyTurnstileToken = async (token: string | null): Promise<Turnst
 		});
 
 		if (!response.ok) {
-			logger.error('Turnstile siteverify request failed', { status: response.status });
+			console.error('Turnstile siteverify request failed', { status: response.status });
 
 			return { success: false, error: 'submission-failed' };
 		}
 
 		const payload: unknown = await response.json();
 		if (!hasSuccessFlag(payload)) {
-			logger.error('Turnstile siteverify returned an unexpected payload');
+			console.error('Turnstile siteverify returned an unexpected payload');
 
 			return { success: false, error: 'submission-failed' };
 		}
@@ -72,7 +71,7 @@ export const verifyTurnstileToken = async (token: string | null): Promise<Turnst
 
 		return { success: true };
 	} catch (error) {
-		logger.error(error);
+		console.error(error);
 
 		return { success: false, error: 'submission-failed' };
 	}

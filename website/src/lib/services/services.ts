@@ -2,11 +2,11 @@ import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
 import { BankAccountReadService } from './bank-account/bank-account-read.service';
 import { BankAccountWriteService } from './bank-account/bank-account-write.service';
+import { CampaignPendingClaimService } from './campaign/campaign-pending-claim.service';
 import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignSubmissionService } from './campaign/campaign-submission.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
-import { CampaignWriteService } from './campaign/campaign-write.service';
 import { CandidateImportService } from './candidate/candidate-import.service';
 import { CandidateReadService } from './candidate/candidate-read.service';
 import { CandidateValidationService } from './candidate/candidate-validation.service';
@@ -44,6 +44,7 @@ import { LocalPartnerWriteService } from './local-partner/local-partner-write.se
 import { MobileMoneyProviderReadService } from './mobile-money-provider/mobile-money-provider-read.service';
 import { MobileMoneyProviderValidationService } from './mobile-money-provider/mobile-money-provider-validation.service';
 import { MobileMoneyProviderWriteService } from './mobile-money-provider/mobile-money-provider-write.service';
+import { MonthlySummaryService } from './monthly-summary/monthly-summary.service';
 import { OrganizationAccessService } from './organization-access/organization-access.service';
 import { OrganizationReadService } from './organization/organization-read.service';
 import { OrganizationValidationService } from './organization/organization-validation.service';
@@ -73,6 +74,7 @@ import { RecipientWriteService } from './recipient/recipient-write.service';
 import { ReserveReadService } from './reserves/reserve-read.service';
 import { ReserveWriteService } from './reserves/reserve-write.service';
 import { ReservesCalculationService } from './reserves/reserves-calculation.service';
+import { SendgridMailService } from './sendgrid/sendgrid-mail.service';
 import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
 import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { StoryblokService } from './storyblok/storyblok.service';
@@ -114,6 +116,8 @@ const githubApi = new GithubApiService(prisma);
 const storyblok = new StoryblokService(prisma);
 const journal = new JournalService(prisma, storyblok);
 const sendgrid = new SendgridSubscriptionService();
+const sendgridMail = new SendgridMailService();
+const monthlySummary = new MonthlySummaryService(prisma);
 const recipientStatus = new RecipientStatusService(prisma);
 
 const exchangeRateRead = new ExchangeRateReadService(prisma, userRead);
@@ -139,10 +143,9 @@ const payoutWrite = new PayoutWriteService(prisma, programAccessRead, payoutVali
 const twilioOtp = new TwilioOtpService(prisma, firebaseAdmin, appReviewMode);
 const messagingTwilioTemplates = new TwilioTemplateService(prisma);
 
-const messagingChannelPreview = new MessagingChannelPreviewService(prisma, userRead);
 const messagingWebhook = new MessagingWebhookService(prisma);
 const messagingLog = new MessagingLogService(prisma, userRead, messagingWebhook);
-const contributionRead = new ContributionReadService(prisma, programAccessRead);
+const contributionRead = new ContributionReadService(prisma, programAccessRead, storyblok);
 const contributionValidation = new ContributionValidationService(prisma);
 const contributionWrite = new ContributionWriteService(prisma, programAccessRead, contributionValidation);
 const subscriptionWrite = new SubscriptionWriteService(prisma);
@@ -179,8 +182,8 @@ const contributorWrite = new ContributorWriteService(
 );
 const messagingRecipients = new MessagingRecipientsService(prisma, contributorRead, recipientRead, localPartnerRead);
 const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
+const messagingChannelPreview = new MessagingChannelPreviewService(prisma, userRead, messagingRecipients);
 const campaignValidation = new CampaignValidationService(prisma);
-const campaignWrite = new CampaignWriteService(prisma, programAccessRead, campaignValidation);
 const programPublicSubmission = new ProgramPublicSubmissionService(prisma, storyblok);
 const storyblokManagement = new StoryblokManagementService();
 const campaignSubmission = new CampaignSubmissionService(
@@ -189,6 +192,7 @@ const campaignSubmission = new CampaignSubmissionService(
 	campaignValidation,
 	storyblokManagement,
 );
+const campaignPendingClaim = new CampaignPendingClaimService(prisma);
 const focusValidation = new FocusValidationService(prisma);
 const focusRead = new FocusReadService(prisma, userRead);
 const focusWrite = new FocusWriteService(prisma, userRead, focusValidation);
@@ -244,7 +248,7 @@ const stripe = new StripeService(
 	campaignRead,
 	programAccessRead,
 );
-const subscriptionRead = new SubscriptionReadService(prisma, contributionRead, stripe);
+const subscriptionRead = new SubscriptionReadService(prisma, programAccessRead, contributionRead, stripe);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
@@ -289,7 +293,6 @@ export const services = {
 	},
 	write: {
 		candidate: candidateWrite,
-		campaign: campaignWrite,
 		focus: focusWrite,
 		contribution: contributionWrite,
 		subscription: subscriptionWrite,
@@ -322,10 +325,13 @@ export const services = {
 	programStats,
 	recipientImport,
 	sendgrid,
+	sendgridMail,
+	monthlySummary,
 	journal,
 	storyblok,
 	storyblokManagement,
 	campaignSubmission,
+	campaignPendingClaim,
 	programPublicSubmission,
 	stripe,
 	surveyImpact,

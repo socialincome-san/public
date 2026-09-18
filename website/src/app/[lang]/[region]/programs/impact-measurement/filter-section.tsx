@@ -1,4 +1,4 @@
-import { type MultiSelectOption } from '@/components/multi-select';
+import { type MultiSelectOption } from '@/components/multi-select/multi-select';
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { SurveyQuestionnaire } from '@/generated/prisma/client';
 import { RECIPIENT_AGE_GROUPS } from '@/lib/constants/recipient-age-groups';

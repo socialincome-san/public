@@ -1,5 +1,4 @@
 import { ExpenseType, Prisma, PrismaClient } from '@/generated/prisma/client';
-import { logger } from '@/lib/utils/logger';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -10,9 +9,8 @@ export class ExpenseReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
-		loggerInstance = logger,
 	) {
-		super(db, loggerInstance);
+		super(db);
 	}
 
 	private buildExpenseOrderBy(query: ExpenseTableQuery): Prisma.ExpenseOrderByWithRelationInput[] {
@@ -61,7 +59,7 @@ export class ExpenseReadService extends BaseService {
 				organization: expense.organization,
 			});
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not get expense: ${JSON.stringify(error)}`);
 		}
@@ -118,7 +116,7 @@ export class ExpenseReadService extends BaseService {
 
 			return this.resultOk({ tableRows, totalCount });
 		} catch (error) {
-			this.logger.error(error);
+			console.error(error);
 
 			return this.resultFail(`Could not fetch expenses: ${JSON.stringify(error)}`);
 		}

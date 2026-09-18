@@ -6,8 +6,12 @@ import { JournalPageHeader } from '@/components/storyblok/journal/journal-page-h
 import { JournalPageShell } from '@/components/storyblok/journal/journal-page-shell';
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
 import { PersonCarousel } from '@/components/storyblok/shared/person-carousel';
-import type { Person, Tag } from '@/generated/storyblok/types/109655/storyblok-components';
-import { createWebsiteJournalTagLink, ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
+import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
+import {
+	createWebsiteJournalArticleTypeLink,
+	getArticleTypeLabel,
+	ResolvedArticle,
+} from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';
@@ -17,25 +21,29 @@ type Props = {
 	pageTitle: string;
 	pageDescription?: string;
 	editorsHeading: string;
-	allTagsLabel: string;
+	allArticleTypesLabel: string;
+	articleCountLabel: string;
 	moreArticlesLabel: string;
 	videoLabel: string;
 	pathname: string;
 	journalPath: string;
 	activeTagSlug?: string;
+	activeArticleTypeSlug?: string;
 	lang: string;
 	region: string;
 	articles: ISbStoryData<ResolvedArticle>[];
 	authors: ISbStoryData<Person>[];
-	tags: ISbStoryData<Tag>[];
+	articleTypes: ISbStoryData<ArticleType>[];
 	showMoreArticlesLink: boolean;
 	roleLabels: Record<string, string>;
 };
 
-const tagFilterClassName = (active: boolean) =>
+const articleTypeFilterClassName = (active: boolean) =>
 	cn(
-		'inline-flex rounded-full px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors',
-		active ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground hover:bg-muted/80',
+		'inline-flex rounded-full border bg-transparent px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors',
+		active
+			? 'border-foreground text-foreground'
+			: 'border-border text-muted-foreground hover:text-foreground hover:bg-muted/50',
 	);
 
 export const JournalOverview = ({
@@ -43,17 +51,19 @@ export const JournalOverview = ({
 	pageTitle,
 	pageDescription,
 	editorsHeading,
-	allTagsLabel,
+	allArticleTypesLabel,
+	articleCountLabel,
 	moreArticlesLabel,
 	videoLabel,
 	pathname,
 	journalPath,
 	activeTagSlug,
+	activeArticleTypeSlug,
 	lang,
 	region,
 	articles,
 	authors,
-	tags,
+	articleTypes,
 	showMoreArticlesLink,
 	roleLabels,
 }: Props) => (
@@ -61,19 +71,20 @@ export const JournalOverview = ({
 		<JournalBreadcrumb links={breadcrumbs} className="mb-8 pl-0" />
 		<JournalPageHeader title={pageTitle} description={pageDescription} />
 
-		<section className="flex flex-wrap gap-2">
-			<Link href={journalPath} className={tagFilterClassName(!activeTagSlug)}>
-				{allTagsLabel}
+		<section className="flex flex-wrap items-center gap-2">
+			<Link href={journalPath} className={articleTypeFilterClassName(!activeTagSlug && !activeArticleTypeSlug)}>
+				{allArticleTypesLabel}
 			</Link>
-			{tags.map((tag) => (
+			{articleTypes.map((articleType) => (
 				<Link
-					key={tag.slug}
-					href={createWebsiteJournalTagLink(tag.slug, lang, region)}
-					className={tagFilterClassName(activeTagSlug === tag.slug)}
+					key={articleType.slug}
+					href={createWebsiteJournalArticleTypeLink(articleType.slug, lang, region)}
+					className={articleTypeFilterClassName(activeArticleTypeSlug === articleType.slug)}
 				>
-					{tag.content?.value}
+					{getArticleTypeLabel(articleType)}
 				</Link>
 			))}
+			<span className="text-muted-foreground ml-auto text-sm font-normal whitespace-nowrap">{articleCountLabel}</span>
 		</section>
 
 		<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -2,7 +2,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { Metadata } from 'next';
 
-export const WEBSITE_ORIGIN = 'https://socialincome.org';
+const WEBSITE_ORIGIN = 'https://socialincome.org';
 export const DEFAULT_OPEN_GRAPH_IMAGE_URL = `${WEBSITE_ORIGIN}/assets/metadata/og/default.jpg`;
 export const DEFAULT_TWITTER_IMAGE_URL = DEFAULT_OPEN_GRAPH_IMAGE_URL;
 

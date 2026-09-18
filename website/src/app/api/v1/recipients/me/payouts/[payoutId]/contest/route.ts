@@ -1,7 +1,6 @@
 import { ContestPayoutBody } from '@/app/api/v1/models';
 import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { services } from '@/lib/services/services';
-import { logger } from '@/lib/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 type Params = Promise<{ payoutId: string }>;
@@ -21,7 +20,7 @@ export const POST = withAppCheck(async (request: NextRequest, { params }: { para
 	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
-		logger.warn('[POST /payouts/:id/contest] Recipient resolution failed', {
+		console.warn('[POST /payouts/:id/contest] Recipient resolution failed', {
 			error: recipientResult.error,
 			status: recipientResult.status,
 		});
@@ -39,7 +38,7 @@ export const POST = withAppCheck(async (request: NextRequest, { params }: { para
 	const parsed = ContestPayoutBody.safeParse(body);
 
 	if (!parsed.success) {
-		logger.warn('[POST /payouts/:id/contest] Validation failed', {
+		console.warn('[POST /payouts/:id/contest] Validation failed', {
 			zodErrors: parsed.error.format(),
 		});
 
@@ -54,7 +53,7 @@ export const POST = withAppCheck(async (request: NextRequest, { params }: { para
 	);
 
 	if (!contestResult.success) {
-		logger.error('[POST /payouts/:id/contest] Update failed', {
+		console.error('[POST /payouts/:id/contest] Update failed', {
 			error: contestResult.error,
 			payoutId,
 			recipientId: recipientResult.data.id,
@@ -63,7 +62,7 @@ export const POST = withAppCheck(async (request: NextRequest, { params }: { para
 		return new Response(contestResult.error, { status: 500 });
 	}
 
-	logger.info('[POST /payouts/:id/contest] Payout contested', {
+	console.info('[POST /payouts/:id/contest] Payout contested', {
 		payoutId,
 		recipientId: recipientResult.data.id,
 		hasComments: Boolean(parsed.data.comments),
