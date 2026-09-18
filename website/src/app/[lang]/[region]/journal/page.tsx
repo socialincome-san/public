@@ -40,6 +40,9 @@ export default async function Page({ params, searchParams }: DefaultPageProps) {
 			{...pageResult.data}
 			editorsHeading={translator.t('overview.editors')}
 			allArticleTypesLabel={translator.t('overview.all')}
+			articleCountLabel={translator.t('overview.article-count', {
+				context: { count: pageResult.data.articles.length },
+			})}
 			moreArticlesLabel={translator.t('overview.more-articles')}
 			videoLabel={translator.t('badge.video')}
 			lang={lang}

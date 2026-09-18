@@ -7,7 +7,9 @@
 		"title": "Giornale",
 		"description": "Storie e aggiornamenti sul nostro percorso per creare un impatto.",
 		"editors": "Redattori collaboratori",
-		"more-articles": "Ci sono altri articoli disponibili in inglese"
+		"more-articles": "Ci sono altri articoli disponibili in inglese",
+		"article-count_one": "{{count}} articolo",
+		"article-count_other": "{{count}} articoli"
 	},
 	"person": {
 		"articles": "Articoli"

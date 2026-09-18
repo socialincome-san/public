@@ -7,7 +7,9 @@
 		"title": "Journal",
 		"description": "Histoires, réflexions et nouvelles de notre parcours pour créer un impact.",
 		"editors": "Rédacteurs contributeurs",
-		"more-articles": "Il y a plus d'articles disponibles en anglais"
+		"more-articles": "Il y a plus d'articles disponibles en anglais",
+		"article-count_one": "{{count}} article",
+		"article-count_other": "{{count}} articles"
 	},
 	"person": {
 		"articles": "Articles"
