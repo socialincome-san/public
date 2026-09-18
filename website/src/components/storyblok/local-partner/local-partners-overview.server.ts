@@ -35,16 +35,19 @@ const getNormalizedIsoCode = (localPartner: LocalPartnerStory) =>
 	getLocalPartnerIsoCode(localPartner.content)?.toUpperCase();
 
 export const localPartnerMatchesSearchQuery = (localPartner: LocalPartnerStory, searchQuery: string) => {
+	const countryIsoCode = getLocalPartnerIsoCode(localPartner.content) ?? '';
 	const keywords = [
 		getLocalPartnerTitle(localPartner.content),
 		getLocalPartnerSlug(localPartner),
 		getLocalPartnerDescription(localPartner.content),
+		countryIsoCode,
+		getCountryNameFromIsoCode(countryIsoCode),
 	]
 		.map((value) => normalizeSearchValue(value))
 		.join(' ');
-	const searchTerms = normalizeSearchValue(searchQuery).split(/\s+/);
+	const searchTerms = normalizeSearchValue(searchQuery).split(/\s+/).filter(Boolean);
 
-	return searchTerms.every((term) => keywords.includes(term));
+	return searchTerms.length > 0 && searchTerms.every((term) => keywords.includes(term));
 };
 
 export const localPartnerMatchesCountryQuery = (
