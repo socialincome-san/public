@@ -1,41 +1,52 @@
-import { MessagingChannel, PrismaClient } from '@/generated/prisma/client';
+import { PrismaClient } from '@/generated/prisma/client';
 import { BaseService } from '../../../core/base.service';
 import { ServiceResult } from '../../../core/base.types';
 import { UserReadService } from '../../../user/user-read.service';
+import { isPhoneSourceAllowed, PAYMENT_PHONE_ONLY_FOR_RECIPIENTS } from '../recipients/phone-source';
+import { MessagingRecipientsService } from '../recipients/recipients.service';
+import type { MessagingTarget } from '../recipients/recipients.types';
 import { resolveChannel } from './channel-resolver';
-import type { ChannelPreviewSummary } from './dispatch.types';
+import type { ChannelPreviewInput, ChannelPreviewSummary } from './dispatch.types';
 
 export class MessagingChannelPreviewService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly userService: UserReadService,
+		private readonly recipientsService: MessagingRecipientsService,
 	) {
 		super(db);
 	}
 
-	async previewByContactIds(
-		contactIds: string[],
-		channel: MessagingChannel,
-		currentUserId: string,
-	): Promise<ServiceResult<ChannelPreviewSummary>> {
+	async previewSelection(input: ChannelPreviewInput, currentUserId: string): Promise<ServiceResult<ChannelPreviewSummary>> {
 		const admin = await this.userService.isAdmin(currentUserId);
 		if (!admin.success) {
 			return this.resultFail(admin.error);
 		}
+		if (!isPhoneSourceAllowed(input.recipientType, input.phoneSource)) {
+			return this.resultFail(PAYMENT_PHONE_ONLY_FOR_RECIPIENTS);
+		}
 
-		const contacts = await this.db.contact.findMany({
-			where: { id: { in: contactIds } },
-			select: { id: true, phone: { select: { number: true, hasWhatsApp: true } } },
-		});
+		let targets: MessagingTarget[];
+		try {
+			targets = await this.recipientsService.resolveTargets(
+				input.recipientType,
+				input.selection,
+				input.phoneSource,
+				input.phoneFallbackAllowed,
+				currentUserId,
+			);
+		} catch (error) {
+			return this.resultFail(error instanceof Error ? error.message : 'Failed to preview channel');
+		}
 
 		let primary = 0;
 		let fallback = 0;
 		let skippedNoPhone = 0;
-		for (const c of contacts) {
+		for (const target of targets) {
 			const r = resolveChannel({
-				requested: channel,
-				phoneNumber: c.phone?.number ?? null,
-				hasWhatsApp: c.phone?.hasWhatsApp ?? false,
+				requested: input.channel,
+				phoneNumber: target.phone?.number ?? null,
+				hasWhatsApp: target.phone?.hasWhatsApp ?? false,
 			});
 			if (r.skippedReason === 'no_phone') {
 				skippedNoPhone += 1;
@@ -46,6 +57,6 @@ export class MessagingChannelPreviewService extends BaseService {
 			}
 		}
 
-		return this.resultOk({ total: contacts.length, primary, fallback, skippedNoPhone });
+		return this.resultOk({ total: targets.length, primary, fallback, skippedNoPhone });
 	}
 }
