@@ -161,7 +161,7 @@ describe('string-utils', () => {
 		});
 
 		test('normalizes swiss thousands separator apostrophe', () => {
-			expect(formatNumberLocale(4650, 'de-CH')).toBe("4,650");
+			expect(formatNumberLocale(4650, 'de-CH')).toBe('4,650');
 		});
 	});
 
