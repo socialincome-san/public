@@ -1,10 +1,8 @@
 import { authAdmin } from '@/lib/firebase/firebase-admin';
-import admin from 'firebase-admin';
-import { DecodedIdToken, UpdateRequest, UserRecord } from 'firebase-admin/auth';
+import { getAppCheck } from 'firebase-admin/app-check';
+import { type DecodedIdToken, type UpdateRequest, type UserRecord } from 'firebase-admin/auth';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-
-const { appCheck } = admin;
 
 export class FirebaseAdminService extends BaseService {
 	async createByPhoneNumber(phoneNumber: string): Promise<ServiceResult<UserRecord>> {
@@ -194,7 +192,7 @@ export class FirebaseAdminService extends BaseService {
 		}
 
 		try {
-			const decoded = await appCheck().verifyToken(token);
+			const decoded = await getAppCheck().verifyToken(token);
 
 			console.info('App Check passed', {
 				appId: decoded.appId,
