@@ -193,7 +193,7 @@
 			"no-data": "Aucune donnée"
 		},
 		"runway": {
-			"description": "Même si tous les donateurs cessaient de donner aujourd’hui, nous pourrions continuer à verser les paiements aux bénéficiaires pendant {{months}} mois supplémentaires.",
+			"description": "Même si tous les donateurs cessaient de donner aujourd’hui, nous pourrions continuer à verser les paiements aux bénéficiaires pendant {{count}} mois supplémentaires.",
 			"zewo-hint": "Conforme à ZEWO"
 		},
 		"countries": {

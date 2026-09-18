@@ -193,7 +193,7 @@
 			"no-data": "Keine Daten"
 		},
 		"runway": {
-			"description": "Selbst wenn heute alle Spender:innen aufhören würden zu spenden, könnten wir Empfänger:innen noch {{months}} Monate lang weiter auszahlen.",
+			"description": "Selbst wenn heute alle Spender:innen aufhören würden zu spenden, könnten wir Empfänger:innen noch {{count}} Monate lang weiter auszahlen.",
 			"zewo-hint": "Im Einklang mit ZEWO"
 		},
 		"countries": {
