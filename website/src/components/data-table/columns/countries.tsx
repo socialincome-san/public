@@ -8,7 +8,7 @@ import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { CountryTableViewRow } from '@/lib/services/country/country.types';
 import { getCountryNameByCode } from '@/lib/types/country';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from '@/components/data-table/tanstack-table';
 
 export const makeCountryColumns = (): ColumnDef<CountryTableViewRow>[] => {
 	return [

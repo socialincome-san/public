@@ -1,4 +1,4 @@
-import type { CellContext, HeaderContext } from '@tanstack/react-table';
+import type { CellContext, HeaderContext } from '@/components/data-table/tanstack-table';
 import { ReactNode } from 'react';
 
 export type CellType<TData, TValue> = {

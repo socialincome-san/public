@@ -11,6 +11,7 @@ import {
 import { IdCell } from '@/components/data-table/elements/id-cell';
 import { TABLE_PAGE_SIZE_OPTIONS, TableQueryState } from '@/components/data-table/query-state';
 import { TableFilterConfig } from '@/components/data-table/table-config.types';
+import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
 import { useTranslator } from '@/lib/hooks/useTranslator';
@@ -19,7 +20,7 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { DATA_TABLE_FETCH_PREFIX_REGEX } from '@/lib/utils/regex';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
-import type { ColumnDef, SortingState, VisibilityState } from '@tanstack/react-table';
+import type { SortingState, VisibilityState } from '@tanstack/react-table';
 import { functionalUpdate } from '@tanstack/react-table';
 import DOMPurify from 'isomorphic-dompurify';
 import { InfoIcon } from 'lucide-react';

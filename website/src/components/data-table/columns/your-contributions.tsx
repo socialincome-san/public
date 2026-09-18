@@ -7,7 +7,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import { type PaymentEventType } from '@/generated/prisma/client';
 import { Translator } from '@/lib/i18n/translator';
 import type { YourContributionsTableViewRow } from '@/lib/services/contribution/contribution.types';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import { CurrencyCell } from '../elements/currency-cell';
 
 const paymentEventTypeSourceKeys: Record<PaymentEventType, string> = {

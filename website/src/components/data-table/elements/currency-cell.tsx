@@ -1,7 +1,7 @@
 'use client';
 
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
-import { CellContext } from '@tanstack/react-table';
+import { type CellContext } from '@/components/data-table/tanstack-table';
 
 type CurrencyCellProps<TData, TValue> = {
 	ctx: CellContext<TData, TValue>;

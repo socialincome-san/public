@@ -12,7 +12,7 @@ import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { Translator } from '@/lib/i18n/translator';
 import type { PublicRecipientTableViewRow, RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from '@/components/data-table/tanstack-table';
 
 const buildRecipientLeadColumns = <TRow extends PublicRecipientTableViewRow>(
 	translator?: Translator,

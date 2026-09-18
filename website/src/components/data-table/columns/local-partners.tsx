@@ -6,7 +6,7 @@ import { IdCell } from '@/components/data-table/elements/id-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import { CountryFlagCell } from '../elements/country-flag-cell';
 
 export const makeLocalPartnerColumns = (): ColumnDef<LocalPartnerTableViewRow>[] => {

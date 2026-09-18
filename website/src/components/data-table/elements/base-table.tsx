@@ -2,20 +2,17 @@
 
 import { Button } from '@/components/button/button';
 import { TABLE_PAGE_SIZE_OPTIONS } from '@/components/data-table/query-state';
+import { type ColumnDef } from '@/components/data-table/tanstack-table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import { cn } from '@/lib/utils/cn';
+import { flexRender, functionalUpdate, type SortingState, type VisibilityState } from '@tanstack/react-table';
 import {
-	ColumnDef,
-	flexRender,
-	functionalUpdate,
 	getCoreRowModel,
 	getPaginationRowModel,
 	getSortedRowModel,
-	SortingState,
-	useReactTable,
-	VisibilityState,
-} from '@tanstack/react-table';
+	useLegacyTable,
+} from '@tanstack/react-table/legacy';
 import { useState } from 'react';
 
 type BaseTableProps<TData, TValue> = {
@@ -67,10 +64,10 @@ export const BaseTable = <TData, TValue>({
 	const resolvedSorting = isServerSorting ? activeServerSorting.sorting : sorting;
 	const useClientPagination = !isServerPagination && !compact;
 
-	// TanStack Table's `useReactTable()` returns functions that React Compiler can warn about.
+	// TanStack Table's hook returns functions that React Compiler can warn about.
 	// We keep the call here and silence the specific rule to avoid false positives.
 	// eslint-disable-next-line react-hooks/incompatible-library
-	const table = useReactTable({
+	const table = useLegacyTable({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),

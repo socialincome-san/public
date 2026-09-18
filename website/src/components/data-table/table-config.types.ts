@@ -1,6 +1,7 @@
 import { TableQueryState } from '@/components/data-table/query-state';
+import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import { Translator } from '@/lib/i18n/translator';
-import type { ColumnDef, SortingState } from '@tanstack/react-table';
+import type { SortingState } from '@tanstack/react-table';
 
 type TableFilterOption = {
 	value: string;

@@ -5,7 +5,7 @@ import { PayoutConfirmationActionsCell } from '@/components/data-table/elements/
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import type { PayoutConfirmationTableViewRow } from '@/lib/services/payout/payout.types';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import { CurrencyCell } from '../elements/currency-cell';
 
 export const makePayoutConfirmationColumns = (): ColumnDef<PayoutConfirmationTableViewRow>[] => [

@@ -1,6 +1,6 @@
 'use client';
 
-import { CellContext } from '@tanstack/react-table';
+import { type CellContext } from '@/components/data-table/tanstack-table';
 
 type DateCellProps<TData> = {
 	ctx: CellContext<TData, unknown>;

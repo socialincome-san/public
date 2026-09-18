@@ -11,7 +11,7 @@ import {
 	SUBSCRIPTION_STATUS_LABELS,
 	type SubscriptionTableViewRow,
 } from '@/lib/services/subscription/subscription.types';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from '@/components/data-table/tanstack-table';
 
 export const makeSubscriptionsColumns = (): ColumnDef<SubscriptionTableViewRow>[] => {
 	return [
