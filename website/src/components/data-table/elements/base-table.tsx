@@ -10,8 +10,8 @@ import { flexRender, functionalUpdate, type RowData, type SortingState } from '@
 import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, useLegacyTable } from '@tanstack/react-table/legacy';
 import { useState } from 'react';
 
-type BaseTableProps<TData extends RowData, TValue> = {
-	columns: ColumnDef<TData, TValue>[];
+type BaseTableProps<TData extends RowData> = {
+	columns: ColumnDef<TData>[];
 	data: TData[];
 	onRowClick?: (row: TData) => void;
 	initialSorting?: SortingState;
@@ -34,7 +34,7 @@ type BaseTableProps<TData extends RowData, TValue> = {
 	emptyMessage?: string;
 };
 
-export const BaseTable = <TData extends RowData, TValue>({
+export const BaseTable = <TData extends RowData>({
 	columns,
 	data,
 	onRowClick,
@@ -47,7 +47,7 @@ export const BaseTable = <TData extends RowData, TValue>({
 	serverSorting,
 	compact = false,
 	emptyMessage = 'No results.',
-}: BaseTableProps<TData, TValue>) => {
+}: BaseTableProps<TData>) => {
 	const stableTableMinHeightClass = compact ? undefined : 'min-h-[680px] md:min-h-[760px]';
 	const [sorting, setSorting] = useState<SortingState>(initialSorting);
 	const [internalColumnVisibility, setInternalColumnVisibility] = useState<VisibilityState>({});
