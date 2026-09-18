@@ -1,6 +1,6 @@
 import { Badge } from '@/components/badge/badge';
 import { CardAlertFooter } from '@/components/card-alert-footer';
-import { CountryFlag } from '@/components/country-flag';
+import { CountryFlag } from '@/components/country-flag/country-flag';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
