@@ -22,6 +22,7 @@ type Props = {
 	pageDescription?: string;
 	editorsHeading: string;
 	allArticleTypesLabel: string;
+	articleCountLabel: string;
 	moreArticlesLabel: string;
 	videoLabel: string;
 	pathname: string;
@@ -51,6 +52,7 @@ export const JournalOverview = ({
 	pageDescription,
 	editorsHeading,
 	allArticleTypesLabel,
+	articleCountLabel,
 	moreArticlesLabel,
 	videoLabel,
 	pathname,
@@ -69,7 +71,7 @@ export const JournalOverview = ({
 		<JournalBreadcrumb links={breadcrumbs} className="mb-8 pl-0" />
 		<JournalPageHeader title={pageTitle} description={pageDescription} />
 
-		<section className="flex flex-wrap gap-2">
+		<section className="flex flex-wrap items-center gap-2">
 			<Link href={journalPath} className={articleTypeFilterClassName(!activeTagSlug && !activeArticleTypeSlug)}>
 				{allArticleTypesLabel}
 			</Link>
@@ -82,6 +84,7 @@ export const JournalOverview = ({
 					{getArticleTypeLabel(articleType)}
 				</Link>
 			))}
+			<span className="text-muted-foreground ml-auto text-sm font-normal whitespace-nowrap">{articleCountLabel}</span>
 		</section>
 
 		<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

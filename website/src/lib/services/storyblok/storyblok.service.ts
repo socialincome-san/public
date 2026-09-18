@@ -529,6 +529,7 @@ export class StoryblokService extends BaseService {
 				...(await this.getStoryParams(lang)),
 				content_type: StoryblokService.contentType.articleType,
 				filter_query: { displayInOverviewPage: { is: true } },
+				sort_by: 'content.sortOrder:asc:int',
 			};
 			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
 

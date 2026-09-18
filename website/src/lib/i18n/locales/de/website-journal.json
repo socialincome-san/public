@@ -7,7 +7,9 @@
 		"title": "Journal",
 		"description": "News, Insights und Einblicke in die Arbeit von Social Income.",
 		"editors": "Mitwirkende Redakteure",
-		"more-articles": "Weitere Artikel sind auf Englisch verfügbar"
+		"more-articles": "Weitere Artikel sind auf Englisch verfügbar",
+		"article-count_one": "{{count}} Artikel",
+		"article-count_other": "{{count}} Artikel"
 	},
 	"person": {
 		"articles": "Artikel"
