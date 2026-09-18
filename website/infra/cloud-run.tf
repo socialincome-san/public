@@ -142,6 +142,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
+          name  = "MONTHLY_SUMMARY_ENABLED"
+          value = tostring(var.monthly_summary_enabled)
+        }
+
+        env {
           name  = "MONTHLY_SUMMARY_RECIPIENTS"
           value = var.monthly_summary_recipients
         }

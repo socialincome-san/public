@@ -123,6 +123,12 @@ variable "sendgrid_suppression_list_id" {
   sensitive = true
 }
 
+variable "monthly_summary_enabled" {
+  description = "Whether the monthly summary email is enabled"
+  type        = bool
+  default     = false
+}
+
 variable "monthly_summary_recipients" {
   description = "Comma-separated email addresses receiving the monthly summary"
   type        = string
