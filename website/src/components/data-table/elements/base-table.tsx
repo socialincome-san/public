@@ -2,20 +2,15 @@
 
 import { Button } from '@/components/button/button';
 import { TABLE_PAGE_SIZE_OPTIONS } from '@/components/data-table/query-state';
-import { type ColumnDef } from '@/components/data-table/tanstack-table';
+import { type ColumnDef, type VisibilityState } from '@/components/data-table/tanstack-table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import { cn } from '@/lib/utils/cn';
-import { flexRender, functionalUpdate, type SortingState, type VisibilityState } from '@tanstack/react-table';
-import {
-	getCoreRowModel,
-	getPaginationRowModel,
-	getSortedRowModel,
-	useLegacyTable,
-} from '@tanstack/react-table/legacy';
+import { flexRender, functionalUpdate, type RowData, type SortingState } from '@tanstack/react-table';
+import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, useLegacyTable } from '@tanstack/react-table/legacy';
 import { useState } from 'react';
 
-type BaseTableProps<TData, TValue> = {
+type BaseTableProps<TData extends RowData, TValue> = {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	onRowClick?: (row: TData) => void;
@@ -39,7 +34,7 @@ type BaseTableProps<TData, TValue> = {
 	emptyMessage?: string;
 };
 
-export const BaseTable = <TData, TValue>({
+export const BaseTable = <TData extends RowData, TValue>({
 	columns,
 	data,
 	onRowClick,
@@ -91,6 +86,7 @@ export const BaseTable = <TData, TValue>({
 		state: { sorting: resolvedSorting, columnVisibility: resolvedColumnVisibility },
 		initialState: {
 			pagination: {
+				pageIndex: 0,
 				pageSize: compact ? Math.max(data.length, 1) : 10,
 			},
 		},

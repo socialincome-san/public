@@ -6,8 +6,8 @@ import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
-import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
+import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
 
 export const makePayoutColumns = (): ColumnDef<PayoutTableViewRow>[] => {
 	return [

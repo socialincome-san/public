@@ -1,14 +1,15 @@
 'use client';
 
 import { type CellContext } from '@/components/data-table/tanstack-table';
+import type { RowData } from '@tanstack/react-table';
 
-type DateCellProps<TData> = {
+type DateCellProps<TData extends RowData> = {
 	ctx: CellContext<TData, unknown>;
 	locale?: string;
 	options?: Intl.DateTimeFormatOptions;
 };
 
-export const DateCell = <TData,>({
+export const DateCell = <TData extends RowData>({
 	ctx,
 	locale = 'de-CH',
 	options = {

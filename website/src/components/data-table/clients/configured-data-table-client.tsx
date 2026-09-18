@@ -5,9 +5,10 @@ import { useTableQueryNavigation } from '@/components/data-table/hooks/use-table
 import { TableQueryState } from '@/components/data-table/query-state';
 import { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { RowData } from '@tanstack/react-table';
 import type { ActionMenuItem } from '../elements/action-menu';
 
-type ConfiguredDataTableClientProps<Row> = {
+type ConfiguredDataTableClientProps<Row extends RowData> = {
 	config: DataTableConfig<Row>;
 	titleInfoTooltip?: string;
 	rows: Row[];
@@ -23,7 +24,7 @@ type ConfiguredDataTableClientProps<Row> = {
 	lang?: WebsiteLanguage;
 };
 
-export const ConfiguredDataTableClient = <Row,>({
+export const ConfiguredDataTableClient = <Row extends RowData>({
 	config,
 	titleInfoTooltip,
 	rows,

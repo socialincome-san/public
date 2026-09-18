@@ -2,8 +2,8 @@
 
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
-import type { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
+import type { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
 
 export const makeOrganizationMemberColumns = (): ColumnDef<OrganizationMemberTableViewRow>[] => {
 	return [

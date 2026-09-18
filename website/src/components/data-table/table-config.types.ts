@@ -1,7 +1,7 @@
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import { Translator } from '@/lib/i18n/translator';
-import type { SortingState } from '@tanstack/react-table';
+import type { RowData, SortingState } from '@tanstack/react-table';
 
 type TableFilterOption = {
 	value: string;
@@ -18,7 +18,7 @@ export type TableFilterConfig = {
 	hidden?: boolean;
 };
 
-export type DataTableConfig<Row> = {
+export type DataTableConfig<Row extends RowData> = {
 	id: string;
 	title: string;
 	emptyMessage: string;

@@ -2,10 +2,11 @@
 
 import { Button } from '@/components/button/button';
 import { CellType } from '@/components/data-table/elements/types';
+import type { RowData } from '@tanstack/react-table';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 
-export const IdCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
+export const IdCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const value = ctx.getValue();
 	const id = value ? String(value) : '';
 	const [copied, setCopied] = useState(false);

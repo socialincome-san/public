@@ -1,9 +1,10 @@
 'use client';
 
+import { type CellContext } from '@/components/data-table/tanstack-table';
 import { cn } from '@/lib/utils/cn';
 import { now } from '@/lib/utils/now';
 import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
-import { type CellContext } from '@/components/data-table/tanstack-table';
+import type { RowData } from '@tanstack/react-table';
 import { differenceInYears } from 'date-fns';
 
 const calculateAge = (date: Date | string | null): number | null => {
@@ -22,11 +23,11 @@ const calculateAge = (date: Date | string | null): number | null => {
 	return age >= 0 ? age : null;
 };
 
-type AgeCellProps<TData, TValue> = {
+type AgeCellProps<TData extends RowData, TValue> = {
 	ctx: CellContext<TData, TValue>;
 };
 
-export const AgeCell = <TData, TValue>({ ctx }: AgeCellProps<TData, TValue>) => {
+export const AgeCell = <TData extends RowData, TValue>({ ctx }: AgeCellProps<TData, TValue>) => {
 	const date = ctx.getValue() as Date | string | null;
 	const isObfuscated = date === OBFUSCATED_SENTINEL;
 

@@ -2,8 +2,9 @@ import { CellType } from '@/components/data-table/elements/types';
 import { LongHairIcon } from '@/components/icons/long-hair-icon';
 import { ShortHairIcon } from '@/components/icons/short-hair-icon';
 import { Gender } from '@/generated/prisma/enums';
+import type { RowData } from '@tanstack/react-table';
 
-export const GenderCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
+export const GenderCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const value = ctx.getValue() as Gender | null;
 
 	if (!value) {

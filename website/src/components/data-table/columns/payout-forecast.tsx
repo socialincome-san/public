@@ -4,9 +4,9 @@ import { columnLabel } from '@/components/data-table/columns/column-label';
 import { CurrencyCell } from '@/components/data-table/elements/currency-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
+import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { Translator } from '@/lib/i18n/translator';
 import type { PayoutForecastTableViewRow } from '@/lib/services/payout/payout.types';
-import type { ColumnDef } from '@/components/data-table/tanstack-table';
 
 export const makePayoutForecastColumns = (
 	_hideProgramName?: boolean,

@@ -2,11 +2,12 @@
 
 import { CellType } from '@/components/data-table/elements/types';
 import { useStorage, useStorageDownloadURL } from '@/lib/firebase/hooks/useStorage';
+import type { RowData } from '@tanstack/react-table';
 import { ref } from 'firebase/storage';
 import { Download } from 'lucide-react';
 import Link from 'next/link';
 
-export const DownloadCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
+export const DownloadCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const storagePath = String(ctx.getValue() ?? '');
 	const storage = useStorage();
 	const isDownloadablePath = storagePath.startsWith('users/');

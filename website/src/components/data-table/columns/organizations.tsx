@@ -4,8 +4,8 @@ import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
-import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
+import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
 
 export const makeOrganizationAdminColumns = (): ColumnDef<OrganizationTableViewRow>[] => {
 	return [
