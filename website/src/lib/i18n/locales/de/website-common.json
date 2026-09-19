@@ -61,6 +61,10 @@
 	},
 	"local-partners-page": {
 		"empty": "Keine lokalen Partner gefunden.",
+		"no-results": "Keine lokalen Partner entsprechen den gewählten Filtern.",
+		"search-label": "Lokale Partner suchen",
+		"search-placeholder": "Suchen",
+		"all-countries": "Alle Länder ({{count}})",
 		"recipient-singular": "Empfänger:in",
 		"recipient-plural": "Empfänger:innen",
 		"completed-survey-singular": "abgeschlossene Umfrage",
