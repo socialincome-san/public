@@ -10,9 +10,9 @@ import { ProgressCell } from '@/components/data-table/elements/progress-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
+import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { Translator } from '@/lib/i18n/translator';
 import type { PublicRecipientTableViewRow, RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import type { ColumnDef } from '@tanstack/react-table';
 
 const buildRecipientLeadColumns = <TRow extends PublicRecipientTableViewRow>(
 	translator?: Translator,

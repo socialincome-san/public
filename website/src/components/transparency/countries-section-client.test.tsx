@@ -69,6 +69,7 @@ describe('CountriesSectionClient', () => {
 		expect(markup).toContain('CHF 100');
 		expect(markup).toContain('donations arrived from');
 		expect(markup).toContain('>3<');
+		expect(markup).toContain('\u00a0countries');
 		expect(markup).toContain('aria-live="polite"');
 		expect(markup).toContain('aria-atomic="true"');
 		expect(markup).toContain('min-h-[2lh]');
@@ -123,7 +124,7 @@ describe('CountriesSectionClient', () => {
 
 		expect(container.querySelector('h2')?.textContent).toContain('CHF 15');
 		expect(container.querySelector('h2')?.textContent).toContain('Germany');
-		expect(container.querySelector('h2')?.textContent).not.toContain('3 countries');
+		expect(container.querySelector('h2')?.textContent).not.toContain('3\u00a0countries');
 
 		const otherButton = container.querySelector<HTMLButtonElement>('button[aria-label="Other countries, CHF 5, 5%"]');
 		expect(otherButton).not.toBeNull();

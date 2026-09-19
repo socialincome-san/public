@@ -61,6 +61,10 @@
 	},
 	"local-partners-page": {
 		"empty": "Aucun partenaire local trouvé.",
+		"no-results": "Aucun partenaire local ne correspond aux filtres sélectionnés.",
+		"search-label": "Rechercher des partenaires locaux",
+		"search-placeholder": "Rechercher",
+		"all-countries": "Tous les pays ({{count}})",
 		"recipient-singular": "bénéficiaire",
 		"recipient-plural": "bénéficiaires",
 		"completed-survey-singular": "enquête complétée",
@@ -77,7 +81,16 @@
 		"teaser-title": "Ancré localement.",
 		"teaser-subtitle": "Rencontrez nos partenaires.",
 		"teaser-text": "En travaillant avec des partenaires locaux, nous veillons à ce que les projets soient plus efficaces, plus résilients et ancrés dans la réalité des communautés que nous souhaitons soutenir.",
-		"teaser-next-button-aria": "Afficher le partenaire local suivant"
+		"teaser-next-button-aria": "Afficher le partenaire local suivant",
+		"recipient-singular-with-count": "{{count}} bénéficiaire",
+		"recipient-plural-with-count": "{{count}} bénéficiaires",
+		"programs-in-count-singular": "dans {{count}} programme",
+		"programs-in-count-plural": "dans {{count}} programmes",
+		"programs-fundraising": "Collecte en cours",
+		"programs-more": "+{{count}} autres programmes",
+		"programs-build-own": "Crée ton propre programme",
+		"programs-count-singular": "{{count}} programme",
+		"programs-count-plural": "{{count}} programmes"
 	},
 	"focuses-page": {
 		"empty": "Aucun axe trouvé.",
@@ -156,7 +169,7 @@
 			"headline-before": "",
 			"headline-bold": "{{percent}} %",
 			"headline-after": " de chaque contribution atteignent directement les bénéficiaires.",
-			"zewo-before": "Certifié ZEWO pour une collecte de fonds éthique et audité chaque année par {{auditFirm}} (",
+			"zewo-before": "Certifié ZEWO pour sa bonne gouvernance et audité chaque année par {{auditFirm}} (",
 			"zewo-link": "Voir les rapports d’audit 2020-2025",
 			"zewo-after": ").",
 			"zewo-alt": "Certification ZEWO",
@@ -169,18 +182,18 @@
 				},
 				"administration": {
 					"label": "Administration",
-					"description": "Ce que nous utilisons pour l’audit, les logiciels et l’infrastructure cloud, etc."
+					"description": "Ce que nous utilisons pour les transferts d'argent, l'audit, les logiciels, l'infrastructure et d'autres coûts."
 				},
 				"fundraising": {
 					"label": "Collecte de fonds",
 					"description": "Ce que nous investissons pour faire grandir le mouvement."
 				}
 			},
-			"ngo-average-before": "Moyenne des ONG : ~CHF {{amount}} sur chaque CHF 100 atteignent les bénéficiaires. (",
-			"ngo-average-source": "Source",
-			"ngo-average-after": ")",
-			"annual-statement-before": "Référence : dernier ",
-			"annual-statement-link": "rapport annuel (téléchargement)"
+			"ngo-average-before": "À titre de comparaison, les standards internationaux tels que ceux de ",
+			"ngo-average-source": "ZEWO",
+			"ngo-average-after": " fixent la limite supérieure des frais généraux à {{amount}} %.",
+			"annual-statement-before": "Derniers comptes annuels : ",
+			"annual-statement-link": "télécharger"
 		},
 		"reserves": {
 			"title-name": "Réserves",
@@ -196,7 +209,7 @@
 			"no-data": "Aucune donnée"
 		},
 		"runway": {
-			"description": "Même si tous les donateurs cessaient de donner aujourd’hui, nous pourrions continuer à verser les paiements aux bénéficiaires pendant {{months}} mois supplémentaires.",
+			"description": "Même si tous les donateurs cessaient de donner aujourd’hui, nous pourrions continuer à verser les paiements aux bénéficiaires pendant {{count}} mois supplémentaires.",
 			"zewo-hint": "Conforme à ZEWO"
 		},
 		"countries": {

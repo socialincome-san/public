@@ -5,8 +5,8 @@ import { CurrencyCell } from '@/components/data-table/elements/currency-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
+import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
-import type { ColumnDef } from '@tanstack/react-table';
 
 export const makeContributionsColumns = (): ColumnDef<ContributionTableViewRow>[] => {
 	return [

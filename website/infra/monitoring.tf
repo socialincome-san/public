@@ -42,6 +42,7 @@ locals {
     google_cloud_scheduler_job.google_cloud_scheduler_job_exchange_rate.name,
     google_cloud_scheduler_job.google_cloud_scheduler_job_reserves_calculation.name,
     google_cloud_scheduler_job.google_cloud_scheduler_job_post_finance_import.name,
+    google_cloud_scheduler_job.google_cloud_scheduler_job_monthly_summary.name,
   ]
 
   metric_alerts = {

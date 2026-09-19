@@ -12,9 +12,10 @@ type Props = {
 	localPartners: LocalPartnerStory[];
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
+	hasActiveFilters?: boolean;
 };
 
-export const LocalPartnersGrid = async ({ localPartners, lang, region }: Props) => {
+export const LocalPartnersGrid = async ({ localPartners, lang, region, hasActiveFilters = false }: Props) => {
 	const portalSlugs = localPartners.map((localPartner) => getLocalPartnerPortalSlug(localPartner.content)).filter(Boolean);
 	const [translator, statsByPortalSlug] = await Promise.all([
 		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
@@ -22,7 +23,11 @@ export const LocalPartnersGrid = async ({ localPartners, lang, region }: Props) 
 	]);
 
 	if (localPartners.length === 0) {
-		return <p className="text-muted-foreground">{translator.t('local-partners-page.empty')}</p>;
+		return (
+			<p className="text-muted-foreground">
+				{translator.t(hasActiveFilters ? 'local-partners-page.no-results' : 'local-partners-page.empty')}
+			</p>
+		);
 	}
 
 	return (

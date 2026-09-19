@@ -9,8 +9,9 @@ import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
-export default async function LocalPartnersOverviewRoute({ params }: DefaultPageProps) {
+export default async function LocalPartnersOverviewRoute({ params, searchParams }: DefaultPageProps) {
 	const { lang, region } = await params;
+	const resolvedSearchParams = await searchParams;
 	const overviewResult = await services.storyblok.getStoryWithFallback<ISbStoryData<LocalPartnersOverview>>(
 		getLocalPartnersOverviewStoryPath(),
 		lang,
@@ -25,6 +26,7 @@ export default async function LocalPartnersOverviewRoute({ params }: DefaultPage
 			overview={overviewResult.data}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
+			searchParams={resolvedSearchParams}
 		/>
 	);
 }

@@ -2,6 +2,7 @@
 
 import { Badge } from '@/components/badge/badge';
 import { CellType } from '@/components/data-table/elements/types';
+import type { RowData } from '@tanstack/react-table';
 import { Clock3Icon } from 'lucide-react';
 
 const formatDaysUntilStart = (days: number): string => {
@@ -12,7 +13,7 @@ const formatDaysUntilStart = (days: number): string => {
 	return `In ${days} day${days === 1 ? '' : 's'}`;
 };
 
-export const DaysCountCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
+export const DaysCountCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const rawValue = ctx.getValue();
 	const days = typeof rawValue === 'number' ? rawValue : Number(rawValue ?? 0);
 	const safeDays = Number.isFinite(days) ? Math.max(0, Math.floor(days)) : 0;

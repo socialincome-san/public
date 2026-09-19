@@ -61,7 +61,7 @@ export const DonationGlobeBlock = async ({ blok, lang }: Props) => {
 							<StoryblokMarkdown>{blok.title}</StoryblokMarkdown>
 						</SectionHeading>
 					)}
-					{description && <p className="text-foreground my-4 text-left">{description}</p>}
+					{description && <p className="text-foreground my-4 text-left text-xl">{description}</p>}
 				</div>
 				<div className="md:w-1/2">
 					<GlobeStage contributions={contributions} locale={locale} label={globeLabel} />
