@@ -11,6 +11,7 @@ import {
 	LocalPartnerTableQuery,
 	LocalPartnerTableView,
 	LocalPartnerTableViewRow,
+	PublicLocalPartnerOverviewStatsMap,
 	PublicLocalPartnerStats,
 	PublicLocalPartnerStatsMap,
 	PublicProgramLocalPartner,
@@ -135,6 +136,46 @@ export class LocalPartnerReadService extends BaseService {
 			console.error(error);
 
 			return this.resultFail(`Could not fetch local partner stats map: ${JSON.stringify(error)}`);
+		}
+	}
+
+	async getPublicLocalPartnerOverviewStatsBySlugs(
+		localPartnerSlugs: string[],
+	): Promise<ServiceResult<PublicLocalPartnerOverviewStatsMap>> {
+		try {
+			const normalizedLocalPartnerSlugs = [...new Set(localPartnerSlugs.map((slug) => slug.trim()).filter(Boolean))];
+			if (!normalizedLocalPartnerSlugs.length) {
+				return this.resultOk({});
+			}
+
+			const partners = await this.db.localPartner.findMany({
+				where: { slug: { in: normalizedLocalPartnerSlugs } },
+				select: { id: true, slug: true },
+			});
+			const statsMapResult = await this.getPublicLocalPartnerStatsByIds(partners.map((partner) => partner.id));
+			if (!statsMapResult.success) {
+				return this.resultFail(statsMapResult.error);
+			}
+
+			return this.resultOk(
+				Object.fromEntries(
+					partners.map((partner) => {
+						const stats = statsMapResult.data[partner.id];
+
+						return [
+							partner.slug,
+							{
+								recipientsCount: stats?.assignedRecipientsCount ?? 0,
+								candidatesCount: stats?.waitingRecipientsCount ?? 0,
+							},
+						];
+					}),
+				),
+			);
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Could not fetch local partner overview stats: ${JSON.stringify(error)}`);
 		}
 	}
 
