@@ -113,7 +113,7 @@
 		"react-dom": "19.2.8",
 		"react-dropzone": "15.0.0",
 		"react-hook-form": "7.87.0",
-		"react-hot-toast": "2.6.0",
+		"react-hot-toast": "2.6.1",
 		"react-markdown": "10.1.0",
 		"ssh2-sftp-client": "12.1.1",
 		"storyblok-rich-text-react-renderer": "3.0.1",
