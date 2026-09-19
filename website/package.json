@@ -163,7 +163,7 @@
 		"next-openapi-gen": "0.10.5",
 		"npm-run-all2": "9.0.3",
 		"postcss": "8.5.28",
-		"prettier": "3.9.6",
+		"prettier": "3.9.7",
 		"prettier-plugin-organize-imports": "4.3.0",
 		"prettier-plugin-tailwindcss": "0.8.1",
 		"prisma": "7.10.0",
