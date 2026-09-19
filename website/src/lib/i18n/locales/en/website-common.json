@@ -61,6 +61,10 @@
 	},
 	"local-partners-page": {
 		"empty": "No local partners found.",
+		"no-results": "No local partners match the selected filters.",
+		"search-label": "Search local partners",
+		"search-placeholder": "Search",
+		"all-countries": "All countries ({{count}})",
 		"recipient-singular": "recipient",
 		"recipient-plural": "recipients",
 		"completed-survey-singular": "completed survey",
@@ -74,7 +78,16 @@
 		"teaser-title": "Locally Driven.",
 		"teaser-subtitle": "Meet Our Partners.",
 		"teaser-text": "By working together with local partners, we ensure that projects are more effective, resilient, and rooted in the realities of the communities we aim to support.",
-		"teaser-next-button-aria": "Show next local partner"
+		"teaser-next-button-aria": "Show next local partner",
+		"recipient-singular-with-count": "{{count}} recipient",
+		"recipient-plural-with-count": "{{count}} recipients",
+		"programs-in-count-singular": "in {{count}} program",
+		"programs-in-count-plural": "in {{count}} programs",
+		"programs-fundraising": "Currently fundraising",
+		"programs-more": "+{{count}} more programs",
+		"programs-build-own": "Build your own program",
+		"programs-count-singular": "{{count}} program",
+		"programs-count-plural": "{{count}} programs"
 	},
 	"focuses-page": {
 		"empty": "No focuses found.",

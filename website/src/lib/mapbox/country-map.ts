@@ -10,6 +10,9 @@ type BoundaryStyle = {
 type VariantConfig = {
 	padding: number;
 	imageSize: number;
+	// Mapbox sizes labels in logical pixels, so rendering at @2x doubles the label
+	// size relative to the map while keeping the same output resolution.
+	renderScale: 1 | 2;
 	boundaryStyle: BoundaryStyle;
 	customStyleUrl: string;
 	showSurroundingCountries: boolean;
@@ -253,8 +256,9 @@ const visibleCountryFeaturesFilter = [
 
 const MAP_VARIANT_CONFIG: Record<MapboxMapVariant, VariantConfig> = {
 	main: {
-		padding: 128,
-		imageSize: 1024,
+		padding: 107,
+		imageSize: 856,
+		renderScale: 2,
 		customStyleUrl: MAIN_MAP_CUSTOM_STYLE_URL,
 		showSurroundingCountries: true,
 		boundaryStyle: {
@@ -271,6 +275,7 @@ const MAP_VARIANT_CONFIG: Record<MapboxMapVariant, VariantConfig> = {
 	inset: {
 		padding: 48,
 		imageSize: 512,
+		renderScale: 1,
 		customStyleUrl: INSET_MAP_CUSTOM_STYLE_URL,
 		showSurroundingCountries: false,
 		boundaryStyle: {
@@ -372,14 +377,19 @@ const buildMapboxStaticImageUrl = ({
 	const variantConfig = MAP_VARIANT_CONFIG[variant];
 	const styleReference = getRequiredMapboxStyleReference(variantConfig.customStyleUrl);
 	const viewport = `[${boundingBox.map((coordinate) => coordinate.toFixed(4)).join(',')}]`;
+	const { renderScale } = variantConfig;
+	// Mapbox multiplies the requested dimensions by the scale factor, so ask for
+	// logical pixels here to end up at imageSize in the rendered image.
+	const logicalSize = variantConfig.imageSize / renderScale;
+	const scaleSuffix = renderScale === 2 ? '@2x' : '';
 	const url = new URL(
-		`https://api.mapbox.com/styles/v1/${styleReference.username}/${styleReference.styleId}/static/${viewport}/${variantConfig.imageSize}x${variantConfig.imageSize}`,
+		`https://api.mapbox.com/styles/v1/${styleReference.username}/${styleReference.styleId}/static/${viewport}/${logicalSize}x${logicalSize}${scaleSuffix}`,
 	);
 
 	url.searchParams.set('addlayer', JSON.stringify(buildCountryFillLayer(isoCode, variant, variantConfig)));
 	// Keep the fill layer below labels so country and ocean names stay visible.
 	url.searchParams.set('before_layer', MAPBOX_BOUNDARY_INSERT_BEFORE_LAYER);
-	url.searchParams.set('padding', String(variantConfig.padding));
+	url.searchParams.set('padding', String(Math.round(variantConfig.padding / renderScale)));
 	url.searchParams.set('logo', 'false');
 	url.searchParams.set('attribution', 'false');
 	url.searchParams.set('access_token', accessToken);

@@ -61,6 +61,10 @@
 	},
 	"local-partners-page": {
 		"empty": "Nessun partner locale trovato.",
+		"no-results": "Nessun partner locale corrisponde ai filtri selezionati.",
+		"search-label": "Cerca partner locali",
+		"search-placeholder": "Cerca",
+		"all-countries": "Tutti i paesi ({{count}})",
 		"recipient-singular": "beneficiario",
 		"recipient-plural": "beneficiari",
 		"completed-survey-singular": "questionario completato",
@@ -74,7 +78,16 @@
 		"teaser-title": "Radicati a livello locale.",
 		"teaser-subtitle": "Conosci i nostri partner.",
 		"teaser-text": "Collaborando con partner locali, ci assicuriamo che i progetti siano più efficaci, resilienti e radicati nelle realtà delle comunità che vogliamo sostenere.",
-		"teaser-next-button-aria": "Mostra il partner locale successivo"
+		"teaser-next-button-aria": "Mostra il partner locale successivo",
+		"recipient-singular-with-count": "{{count}} beneficiario",
+		"recipient-plural-with-count": "{{count}} beneficiari",
+		"programs-in-count-singular": "in {{count}} programma",
+		"programs-in-count-plural": "in {{count}} programmi",
+		"programs-fundraising": "Raccolta fondi in corso",
+		"programs-more": "+{{count}} altri programmi",
+		"programs-build-own": "Crea il tuo programma",
+		"programs-count-singular": "{{count}} programma",
+		"programs-count-plural": "{{count}} programmi"
 	},
 	"focuses-page": {
 		"empty": "Nessun focus trovato.",
