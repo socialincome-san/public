@@ -25,6 +25,7 @@ export const LocalPartnersOverviewPage = async ({ overview, lang, region, search
 		currentLabel: title,
 		lang,
 		region,
+		includeCurrentLabel: false,
 	});
 
 	return (
