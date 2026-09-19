@@ -1,11 +1,12 @@
 'use client';
 
 import { CellType } from '@/components/data-table/elements/types';
+import type { RowData } from '@tanstack/react-table';
 import { ChevronRightIcon } from 'lucide-react';
 
-type ActionCellProps<TData, TValue> = CellType<TData, TValue>;
+type ActionCellProps<TData extends RowData, TValue> = CellType<TData, TValue>;
 
-export const ActionCell = <TData, TValue>({ ctx }: ActionCellProps<TData, TValue>) => {
+export const ActionCell = <TData extends RowData, TValue>({ ctx }: ActionCellProps<TData, TValue>) => {
 	void ctx;
 
 	return (

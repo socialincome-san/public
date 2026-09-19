@@ -2,24 +2,16 @@
 
 import { Button } from '@/components/button/button';
 import { TABLE_PAGE_SIZE_OPTIONS } from '@/components/data-table/query-state';
+import { type ColumnDef, type VisibilityState } from '@/components/data-table/tanstack-table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import { cn } from '@/lib/utils/cn';
-import {
-	ColumnDef,
-	flexRender,
-	functionalUpdate,
-	getCoreRowModel,
-	getPaginationRowModel,
-	getSortedRowModel,
-	SortingState,
-	useReactTable,
-	VisibilityState,
-} from '@tanstack/react-table';
+import { flexRender, functionalUpdate, type RowData, type SortingState } from '@tanstack/react-table';
+import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, useLegacyTable } from '@tanstack/react-table/legacy';
 import { useState } from 'react';
 
-type BaseTableProps<TData, TValue> = {
-	columns: ColumnDef<TData, TValue>[];
+type BaseTableProps<TData extends RowData> = {
+	columns: ColumnDef<TData>[];
 	data: TData[];
 	onRowClick?: (row: TData) => void;
 	initialSorting?: SortingState;
@@ -42,7 +34,7 @@ type BaseTableProps<TData, TValue> = {
 	emptyMessage?: string;
 };
 
-export const BaseTable = <TData, TValue>({
+export const BaseTable = <TData extends RowData>({
 	columns,
 	data,
 	onRowClick,
@@ -55,7 +47,7 @@ export const BaseTable = <TData, TValue>({
 	serverSorting,
 	compact = false,
 	emptyMessage = 'No results.',
-}: BaseTableProps<TData, TValue>) => {
+}: BaseTableProps<TData>) => {
 	const stableTableMinHeightClass = compact ? undefined : 'min-h-[680px] md:min-h-[760px]';
 	const [sorting, setSorting] = useState<SortingState>(initialSorting);
 	const [internalColumnVisibility, setInternalColumnVisibility] = useState<VisibilityState>({});
@@ -67,10 +59,10 @@ export const BaseTable = <TData, TValue>({
 	const resolvedSorting = isServerSorting ? activeServerSorting.sorting : sorting;
 	const useClientPagination = !isServerPagination && !compact;
 
-	// TanStack Table's `useReactTable()` returns functions that React Compiler can warn about.
+	// TanStack Table's hook returns functions that React Compiler can warn about.
 	// We keep the call here and silence the specific rule to avoid false positives.
 	// eslint-disable-next-line react-hooks/incompatible-library
-	const table = useReactTable({
+	const table = useLegacyTable({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
@@ -94,6 +86,7 @@ export const BaseTable = <TData, TValue>({
 		state: { sorting: resolvedSorting, columnVisibility: resolvedColumnVisibility },
 		initialState: {
 			pagination: {
+				pageIndex: 0,
 				pageSize: compact ? Math.max(data.length, 1) : 10,
 			},
 		},
