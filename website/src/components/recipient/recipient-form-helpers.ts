@@ -4,16 +4,16 @@ import {
 	normalizeNullableString,
 	normalizeOptionalString,
 } from '@/components/dynamic-form/contact-form-input-mapper';
-import { FormField } from '@/components/dynamic-form/dynamic-form';
-import { RecipientFormCreateInput, RecipientFormUpdateInput } from '@/lib/services/recipient/recipient-form-input';
-import { RecipientPayload } from '@/lib/services/recipient/recipient.types';
-import { RecipientFormSchema } from './recipient-form';
+import type { FormField } from '@/components/dynamic-form/dynamic-form';
+import type { CreateRecipientInput, UpdateRecipientInput } from '@/modules/recipients/recipient.schemas';
+import type { RecipientPayload } from '@/modules/recipients/recipient.types';
+import type { RecipientFormSchema } from './recipient-form';
 
 export const buildUpdateRecipientInput = (
 	schema: RecipientFormSchema,
 	recipient: RecipientPayload,
 	contactFields: Record<string, FormField>,
-): RecipientFormUpdateInput => {
+): UpdateRecipientInput => {
 	return {
 		id: recipient.id,
 		startDate: schema.fields.startDate.value ?? null,
@@ -35,7 +35,7 @@ export const buildUpdateRecipientInput = (
 export const buildCreateRecipientInput = (
 	schema: RecipientFormSchema,
 	contactFields: Record<string, FormField>,
-): RecipientFormCreateInput => {
+): CreateRecipientInput => {
 	return {
 		startDate: schema.fields.startDate.value ?? null,
 		suspendedAt: schema.fields.suspendedAt.value ?? null,

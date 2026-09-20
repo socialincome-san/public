@@ -10,10 +10,10 @@ import {
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
+import type { recipientStatusService as recipientStatusFunctions } from '@/modules/recipients/recipient.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { CurrencyDisplayService } from '../currency-display/currency-display.service';
-import { RecipientStatusService } from '../recipient/recipient-status.service';
 import {
 	ProgramBudgetCalculation,
 	ProgramBudgetCalculationInput,
@@ -26,7 +26,7 @@ export class ProgramStatsService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly currencyDisplayService: CurrencyDisplayService,
-		private readonly recipientStatusService: RecipientStatusService,
+		private readonly recipientStatusService: typeof recipientStatusFunctions,
 	) {
 		super(db);
 	}

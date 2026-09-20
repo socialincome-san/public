@@ -2,12 +2,12 @@ import { Prisma, PrismaClient, ProgramPermission, SurveyStatus } from '@/generat
 import { now } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import type { recipientService as recipientServiceFunctions } from '@/modules/recipients/recipient.service';
 import crypto from 'crypto';
 import { addMonths, endOfMonth, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
-import { RecipientReadService } from '../recipient/recipient-read.service';
 import { SurveyScheduleService } from '../survey-schedule/survey-schedule.service';
 import {
 	SurveyCreateInput,
@@ -24,7 +24,7 @@ export class SurveyReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
-		private readonly recipientService: RecipientReadService,
+		private readonly recipientService: Pick<typeof recipientServiceFunctions, 'getSurveyRecipients'>,
 		private readonly surveyScheduleService: SurveyScheduleService,
 	) {
 		super(db);

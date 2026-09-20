@@ -12,8 +12,8 @@ import {
 } from '@/lib/server-actions/payout-actions';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import type { PayoutPayload } from '@/lib/services/payout/payout.types';
-import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
 import { allCurrencies } from '@/lib/types/currency';
+import type { RecipientOption } from '@/modules/recipients/recipient.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreatePayoutInput, buildUpdatePayoutInput } from './payout-form-helpers';

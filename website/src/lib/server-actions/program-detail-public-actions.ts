@@ -3,6 +3,7 @@
 import { resultFail } from '@/lib/services/core/service-result';
 import { PAYOUT_FORECAST_MONTHS_AHEAD } from '@/lib/services/payout/payout-forecast.constants';
 import { services } from '@/lib/services/services';
+import { getPublicRecipientsTableView } from '@/modules/recipients/recipient.service';
 
 const normalizeProgramId = (programId: unknown): string | null => {
 	if (typeof programId !== 'string') {
@@ -29,5 +30,5 @@ export const getPublicRecipientsTableAction = async (programId: string) => {
 		return resultFail('Invalid program id');
 	}
 
-	return services.read.recipient.getPublicRecipientsTableView(normalizedProgramId);
+	return getPublicRecipientsTableView(normalizedProgramId);
 };

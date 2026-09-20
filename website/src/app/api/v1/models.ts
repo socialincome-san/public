@@ -1,5 +1,6 @@
 import { Currency } from '@/generated/prisma/enums';
 import { z } from 'zod';
+export { recipientSelfUpdateSchema as RecipientSelfUpdate } from '@/modules/recipients/recipient.schemas';
 
 const currencyEnum = z.enum(Object.values(Currency) as [string, ...string[]]);
 
@@ -118,21 +119,6 @@ const Survey = z.object({
 });
 
 export const SurveyListResponse = z.array(Survey);
-
-export const RecipientSelfUpdate = z.object({
-	firstName: z.string().min(1).optional(),
-	lastName: z.string().min(1).optional(),
-	callingName: z.string().optional(),
-	gender: z.enum(['male', 'female', 'other', 'private']).optional(),
-	dateOfBirth: z.string().optional(),
-	language: z.string().optional(),
-	email: z.string().email().optional(),
-	termsAccepted: z.boolean().optional(),
-	contactPhone: z.string().nullable().optional(),
-	paymentPhone: z.string().optional(),
-	paymentProvider: z.string().optional(),
-	successorName: z.string().optional(),
-});
 
 export const PayoutParams = z.object({
 	payoutId: z.string().describe('Payout ID'),

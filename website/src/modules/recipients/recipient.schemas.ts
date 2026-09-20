@@ -1,10 +1,11 @@
 import { CountryCode, Gender } from '@/generated/prisma/enums';
-import z from 'zod';
+import { z } from 'zod';
 
 const nullableTrimmedString = z.preprocess((value) => {
 	if (typeof value !== 'string') {
 		return value;
 	}
+
 	const trimmedValue = value.trim();
 
 	return trimmedValue === '' ? null : trimmedValue;
@@ -14,6 +15,7 @@ const optionalTrimmedString = z.preprocess((value) => {
 	if (typeof value !== 'string') {
 		return value;
 	}
+
 	const trimmedValue = value.trim();
 
 	return trimmedValue === '' ? undefined : trimmedValue;
@@ -51,7 +53,7 @@ const recipientPaymentInformationInputSchema = z.object({
 	phone: optionalTrimmedString,
 });
 
-export const recipientCreateInputSchema = z.object({
+export const recipientCreateSchema = z.object({
 	startDate: optionalDate,
 	suspendedAt: optionalDate,
 	suspensionReason: nullableTrimmedString,
@@ -63,9 +65,31 @@ export const recipientCreateInputSchema = z.object({
 	paymentInformation: recipientPaymentInformationInputSchema,
 });
 
-export const recipientUpdateInputSchema = recipientCreateInputSchema.extend({
+export const recipientUpdateSchema = recipientCreateSchema.extend({
 	id: z.string().trim().min(1, 'Recipient id is required.'),
 });
 
-export type RecipientFormCreateInput = z.infer<typeof recipientCreateInputSchema>;
-export type RecipientFormUpdateInput = z.infer<typeof recipientUpdateInputSchema>;
+export const recipientIdSchema = z.string().trim().min(1, 'Recipient id is required.');
+
+export const recipientSessionTypeSchema = z.enum(['user', 'local-partner', 'contributor']);
+
+export const recipientCsvFileSchema = z.instanceof(File);
+
+export const recipientSelfUpdateSchema = z.object({
+	firstName: z.string().min(1).optional(),
+	lastName: z.string().min(1).optional(),
+	callingName: z.string().optional(),
+	gender: z.enum(['male', 'female', 'other', 'private']).optional(),
+	dateOfBirth: z.string().optional(),
+	language: z.string().optional(),
+	email: z.string().email().optional(),
+	termsAccepted: z.boolean().optional(),
+	contactPhone: z.string().nullable().optional(),
+	paymentPhone: z.string().optional(),
+	paymentProvider: z.string().optional(),
+	successorName: z.string().optional(),
+});
+
+export type CreateRecipientInput = z.infer<typeof recipientCreateSchema>;
+export type UpdateRecipientInput = z.infer<typeof recipientUpdateSchema>;
+export type UpdateRecipientSelfInput = z.infer<typeof recipientSelfUpdateSchema>;

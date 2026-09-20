@@ -1,8 +1,8 @@
 import { Currency, Gender, PayoutInterval, Prisma } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
+import type { RecipientWithPaymentInfo } from '@/modules/recipients/recipient.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { RecipientWithPaymentInfo } from '../recipient/recipient.types';
 
 export class AppReviewModeService extends BaseService {
 	private isEnabled(): boolean {

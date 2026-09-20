@@ -3,12 +3,12 @@ import { CountryCode } from '@/generated/prisma/enums';
 import { isValidCountryCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import type { recipientStatusService as recipientStatusFunctions } from '@/modules/recipients/recipient.service';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
-import { RecipientStatusService } from '../recipient/recipient-status.service';
 import {
 	CountryPayoutTotals,
 	OngoingPayoutPaginatedTableView,
@@ -34,7 +34,7 @@ export class PayoutReadService extends BaseService {
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly exchangeRateService: ExchangeRateReadService,
-		private readonly recipientStatusService: RecipientStatusService,
+		private readonly recipientStatusService: typeof recipientStatusFunctions,
 	) {
 		super(db);
 	}

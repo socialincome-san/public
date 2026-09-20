@@ -6,7 +6,7 @@ import { DaysCountCell } from '@/components/data-table/elements/days-count-cell'
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
-import type { UpcomingOnboardingTableViewRow } from '@/lib/services/recipient/recipient.types';
+import type { UpcomingOnboardingTableViewRow } from '@/modules/recipients/recipient.types';
 
 export const makeUpcomingOnboardingColumns = (): ColumnDef<UpcomingOnboardingTableViewRow>[] => [
 	{

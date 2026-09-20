@@ -3,6 +3,7 @@
 import { getSessionByType } from '@/lib/firebase/current-account';
 import { type PayoutFormCreateInput, type PayoutFormUpdateInput } from '@/lib/services/payout/payout-form-input';
 import { services } from '@/lib/services/services';
+import { getEditableRecipientOptions } from '@/modules/recipients/recipient.service';
 import { revalidatePath } from 'next/cache';
 
 const PORTAL_DELIVERY_PAYOUTS_PATH = '/portal/delivery/payouts';
@@ -61,5 +62,5 @@ export const getPayoutRecipientOptionsAction = async () => {
 		return sessionResult;
 	}
 
-	return services.read.recipient.getEditableRecipientOptions(sessionResult.data.id);
+	return getEditableRecipientOptions(sessionResult.data.id);
 };

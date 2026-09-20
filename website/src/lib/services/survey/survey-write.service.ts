@@ -1,4 +1,5 @@
 import { PrismaClient } from '@/generated/prisma/client';
+import { getRecipientProgramAssignment } from '@/modules/recipients/recipient.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -97,11 +98,12 @@ export class SurveyWriteService extends BaseService {
 		const validatedInput = validatedInputResult.data;
 
 		try {
-			const recipient = await this.db.recipient.findUnique({
-				where: { id: validatedInput.recipientId },
-				select: { program: { select: { id: true } } },
-			});
+			const recipientResult = await getRecipientProgramAssignment(validatedInput.recipientId);
+			if (!recipientResult.success) {
+				return this.resultFail(recipientResult.error);
+			}
 
+			const recipient = recipientResult.data;
 			if (!recipient) {
 				return this.resultFail('Recipient not found');
 			}
@@ -111,10 +113,10 @@ export class SurveyWriteService extends BaseService {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
 
-			if (!recipient.program?.id) {
+			if (!recipient.programId) {
 				return this.resultFail('Recipient is not assigned to a program');
 			}
-			if (!this.programAccessService.hasOperatorAccess(accessibleProgramsResult.data, recipient.program.id)) {
+			if (!this.programAccessService.hasOperatorAccess(accessibleProgramsResult.data, recipient.programId)) {
 				return this.resultFail('Access denied');
 			}
 
@@ -189,17 +191,18 @@ export class SurveyWriteService extends BaseService {
 				return this.resultFail('Access denied');
 			}
 
-			const targetRecipient = await this.db.recipient.findUnique({
-				where: { id: validatedInput.recipientId },
-				select: { id: true, program: { select: { id: true } } },
-			});
+			const targetRecipientResult = await getRecipientProgramAssignment(validatedInput.recipientId);
+			if (!targetRecipientResult.success) {
+				return this.resultFail(targetRecipientResult.error);
+			}
+			const targetRecipient = targetRecipientResult.data;
 			if (!targetRecipient) {
 				return this.resultFail('Recipient not found');
 			}
-			if (!targetRecipient.program?.id) {
+			if (!targetRecipient.programId) {
 				return this.resultFail('Recipient is not assigned to a program');
 			}
-			if (!this.programAccessService.hasOperatorAccess(accessibleProgramsResult.data, targetRecipient.program.id)) {
+			if (!this.programAccessService.hasOperatorAccess(accessibleProgramsResult.data, targetRecipient.programId)) {
 				return this.resultFail('Access denied');
 			}
 

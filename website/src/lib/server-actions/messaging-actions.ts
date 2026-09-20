@@ -22,6 +22,7 @@ import {
 	type MessagingRecipientsPage,
 	type MessagingRecipientsQuery,
 } from '@/lib/services/twilio/messaging/recipients/recipients.types';
+import { getPaginatedRecipientTableView } from '@/modules/recipients/recipient.service';
 
 // ── Log ─────────────────────
 
@@ -93,7 +94,7 @@ export async function listMessagingRecipientsAction(
 	}
 
 	if (type === 'recipient') {
-		const res = await services.read.recipient.getPaginatedTableView(userId, {
+		const res = await getPaginatedRecipientTableView(userId, {
 			...baseQuery,
 			programId: query.filters?.programId,
 			recipientStatus: query.filters?.recipientStatus,

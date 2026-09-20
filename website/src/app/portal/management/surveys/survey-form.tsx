@@ -11,8 +11,8 @@ import {
 	updateSurveyAction,
 } from '@/lib/server-actions/survey-actions';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
 import type { SurveyPayload } from '@/lib/services/survey/survey.types';
+import type { RecipientOption } from '@/modules/recipients/recipient.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateSurveyInput, buildUpdateSurveyInput } from './survey-form-helpers';

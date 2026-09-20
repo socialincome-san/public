@@ -6,6 +6,7 @@ import { resultFail } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
 import { SurveyFormCreateInput, SurveyFormUpdateInput } from '@/lib/services/survey/survey-form-input';
 import type { SurveyPayload, SurveyUpdateInput, SurveyWithRecipient } from '@/lib/services/survey/survey.types';
+import { getEditableRecipientOptions } from '@/modules/recipients/recipient.service';
 import { revalidatePath } from 'next/cache';
 import { getCurrentSurvey } from '../firebase/current-survey';
 
@@ -46,7 +47,7 @@ export const getSurveyRecipientOptionsAction = async () => {
 		return sessionResult;
 	}
 
-	return services.read.recipient.getEditableRecipientOptions(sessionResult.data.id);
+	return getEditableRecipientOptions(sessionResult.data.id);
 };
 
 export const previewSurveyGenerationAction = async () => {

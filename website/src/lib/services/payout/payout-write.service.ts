@@ -1,4 +1,5 @@
 import { PayoutStatus, PrismaClient } from '@/generated/prisma/client';
+import { getRecipientProgramAssignment } from '@/modules/recipients/recipient.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessReadService } from '../program-access/program-access-read.service';
@@ -68,11 +69,12 @@ export class PayoutWriteService extends BaseService {
 		const validatedInput = validatedInputResult.data;
 
 		try {
-			const recipient = await this.db.recipient.findUnique({
-				where: { id: validatedInput.recipientId },
-				select: { programId: true },
-			});
+			const recipientResult = await getRecipientProgramAssignment(validatedInput.recipientId);
+			if (!recipientResult.success) {
+				return this.resultFail(recipientResult.error);
+			}
 
+			const recipient = recipientResult.data;
 			if (!recipient) {
 				return this.resultFail('Recipient not found');
 			}
@@ -162,10 +164,11 @@ export class PayoutWriteService extends BaseService {
 				return this.resultFail('No edit permission for this payout');
 			}
 
-			const targetRecipient = await this.db.recipient.findUnique({
-				where: { id: validatedInput.recipientId },
-				select: { programId: true },
-			});
+			const targetRecipientResult = await getRecipientProgramAssignment(validatedInput.recipientId);
+			if (!targetRecipientResult.success) {
+				return this.resultFail(targetRecipientResult.error);
+			}
+			const targetRecipient = targetRecipientResult.data;
 			if (!targetRecipient) {
 				return this.resultFail('Recipient not found');
 			}

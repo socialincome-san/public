@@ -1,16 +1,29 @@
 import type { PrismaClient } from '@/generated/prisma/client';
+import type { recipientService as recipientServiceFunctions } from '@/modules/recipients/recipient.service';
 import type { ContributorReadService } from '../../../contributor/contributor-read.service';
 import type { LocalPartnerReadService } from '../../../local-partner/local-partner-read.service';
-import type { RecipientReadService } from '../../../recipient/recipient-read.service';
 import { MessagingRecipientsService } from './recipients.service';
 import type { MessagingRecipientFilters } from './recipients.types';
 import type { SelectionState } from './selection.types';
+
+type RecipientTargetRow = {
+	contactId: string;
+	contact: { phone: { number: string; hasWhatsApp: boolean } | null };
+	paymentInformation: { phone: { number: string; hasWhatsApp: boolean } | null } | null;
+};
+
+const mockFindRecipientMessagingTargets = jest.fn<Promise<RecipientTargetRow[]>, [string[]]>();
+
+jest.mock('@/modules/recipients/recipient.service', () => ({
+	getRecipientMessagingTargets: (recipientIds: string[]): Promise<{ success: true; data: RecipientTargetRow[] }> =>
+		mockFindRecipientMessagingTargets(recipientIds).then((data) => ({ success: true as const, data })),
+}));
 
 const contactPhone = { number: '+41791111111', hasWhatsApp: true };
 const paymentPhone = { number: '+41792222222', hasWhatsApp: false };
 
 type Rows = {
-	recipient?: unknown[];
+	recipient?: RecipientTargetRow[];
 	contributor?: unknown[];
 	localPartner?: unknown[];
 };
@@ -31,15 +44,15 @@ type Reads = {
 };
 
 function makeService(rows: Rows, reads: Reads = {}) {
+	mockFindRecipientMessagingTargets.mockResolvedValue(rows.recipient ?? []);
 	const db = {
-		recipient: { findMany: jest.fn().mockResolvedValue(rows.recipient ?? []) },
 		contributor: { findMany: jest.fn().mockResolvedValue(rows.contributor ?? []) },
 		localPartner: { findMany: jest.fn().mockResolvedValue(rows.localPartner ?? []) },
 	};
 	const service = new MessagingRecipientsService(
 		db as unknown as PrismaClient,
 		(reads.contributorRead ?? {}) as unknown as ContributorReadService,
-		(reads.recipientRead ?? {}) as unknown as RecipientReadService,
+		(reads.recipientRead ?? {}) as unknown as Pick<typeof recipientServiceFunctions, 'getPaginatedTableView'>,
 		(reads.localPartnerRead ?? {}) as unknown as LocalPartnerReadService,
 	);
 
@@ -51,6 +64,10 @@ const allMatching = (filters: MessagingRecipientFilters = {}): SelectionState =>
 	search: 'ann',
 	filters,
 	excludedIds: new Set<string>(),
+});
+
+beforeEach(() => {
+	jest.clearAllMocks();
 });
 
 describe('MessagingRecipientsService.translateEntityIdsToTargets', () => {
@@ -95,11 +112,11 @@ describe('MessagingRecipientsService.translateEntityIdsToTargets', () => {
 	});
 
 	test('recipient rows are looked up by the given entity ids', async () => {
-		const { service, db } = makeService({ recipient: [] });
+		const { service } = makeService({ recipient: [] });
 
 		await service.translateEntityIdsToTargets('recipient', ['r1', 'r2'], 'contact', false);
 
-		expect(db.recipient.findMany).toHaveBeenCalledWith(expect.objectContaining({ where: { id: { in: ['r1', 'r2'] } } }));
+		expect(mockFindRecipientMessagingTargets).toHaveBeenCalledWith(['r1', 'r2']);
 	});
 
 	test('contributor: targets the contact phone', async () => {
@@ -119,12 +136,12 @@ describe('MessagingRecipientsService.translateEntityIdsToTargets', () => {
 	});
 
 	test('no entity ids: returns nothing and does not query', async () => {
-		const { service, db } = makeService({});
+		const { service } = makeService({});
 
 		const targets = await service.translateEntityIdsToTargets('recipient', [], 'contact', false);
 
 		expect(targets).toEqual([]);
-		expect(db.recipient.findMany).not.toHaveBeenCalled();
+		expect(mockFindRecipientMessagingTargets).not.toHaveBeenCalled();
 	});
 });
 

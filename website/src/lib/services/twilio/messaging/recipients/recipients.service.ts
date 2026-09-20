@@ -1,15 +1,16 @@
 import { PrismaClient } from '@/generated/prisma/client';
+import { getRecipientMessagingTargets, type recipientService } from '@/modules/recipients/recipient.service';
 import type { ContributorReadService } from '../../../contributor/contributor-read.service';
 import { BaseService } from '../../../core/base.service';
 import type { ServiceResult } from '../../../core/base.types';
 import type { LocalPartnerReadService } from '../../../local-partner/local-partner-read.service';
-import type { RecipientReadService } from '../../../recipient/recipient-read.service';
 import { pickTargetPhone } from './phone-source';
 import type { MessagingPhone, MessagingPhoneSource, MessagingRecipientType, MessagingTarget } from './recipients.types';
 import { resolveSelectionToIds, type RowFetcher } from './resolve-selection';
 import type { SelectionState } from './selection.types';
 
 type TableViewPage = { tableRows: { id: string }[]; totalCount: number };
+type RecipientRead = Pick<typeof recipientService, 'getPaginatedTableView'>;
 
 // Adapts a paginated table view into the page shape `resolveSelectionToIds` walks through.
 const toFetchedPage = (result: ServiceResult<TableViewPage>): { ids: string[]; totalCount: number } => {
@@ -29,7 +30,7 @@ export class MessagingRecipientsService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly contributorRead: ContributorReadService,
-		private readonly recipientRead: RecipientReadService,
+		private readonly recipientRead: RecipientRead,
 		private readonly localPartnerRead: LocalPartnerReadService,
 	) {
 		super(db);
@@ -113,16 +114,12 @@ export class MessagingRecipientsService extends BaseService {
 		phoneSource: MessagingPhoneSource,
 		phoneFallbackAllowed: boolean,
 	): Promise<MessagingTarget[]> {
-		const rows = await this.db.recipient.findMany({
-			where: { id: { in: entityIds } },
-			select: {
-				contactId: true,
-				contact: { select: { phone: { select: { number: true, hasWhatsApp: true } } } },
-				paymentInformation: { select: { phone: { select: { number: true, hasWhatsApp: true } } } },
-			},
-		});
+		const rowsResult = await getRecipientMessagingTargets(entityIds);
+		if (!rowsResult.success) {
+			throw new Error(rowsResult.error);
+		}
 
-		return rows.map((row) => ({
+		return rowsResult.data.map((row) => ({
 			contactId: row.contactId,
 			phone: pickTargetPhone({
 				source: phoneSource,

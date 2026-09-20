@@ -1,7 +1,7 @@
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
-import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/modules/recipients/recipient.types';
 
 type RecipientsFilterArgs = {
 	query?: TableQueryState & { totalRows: number };

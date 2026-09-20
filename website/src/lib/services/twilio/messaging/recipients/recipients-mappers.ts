@@ -1,6 +1,6 @@
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
 import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
-import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient-table.types';
+import type { RecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import type { MessagingRecipientRow } from './recipients.types';
 
 export function contributorRowToMessagingRow(row: ContributorTableViewRow): MessagingRecipientRow {

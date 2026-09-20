@@ -1,7 +1,7 @@
 'use client';
 
 import { Badge } from '@/components/badge/badge';
-import type { RecipientLifecycleStatus } from '@/lib/services/recipient/recipient.types';
+import type { RecipientLifecycleStatus } from '@/modules/recipients/recipient.types';
 import { CheckCircle2Icon, Clock3Icon, PauseCircleIcon, PlayCircleIcon } from 'lucide-react';
 import type { ComponentType } from 'react';
 

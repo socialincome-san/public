@@ -1,7 +1,7 @@
 import { type PrismaClient } from '@/generated/prisma/client';
+import type { recipientStatusService as recipientStatusFunctions } from '@/modules/recipients/recipient.service';
 import { CurrencyDisplayService } from '../currency-display/currency-display.service';
 import type { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
-import type { RecipientStatusService } from '../recipient/recipient-status.service';
 import { ProgramStatsService } from './program-stats.service';
 import type { ProgramBudgetCalculation, ProgramBudgetCalculationInput } from './program-stats.types';
 
@@ -35,7 +35,7 @@ const createService = (exchangeRates?: Record<string, number>) => {
 		);
 	const currencyDisplay = new CurrencyDisplayService({ getLatestRates } as unknown as ExchangeRateReadService);
 
-	return new ProgramStatsService({} as PrismaClient, currencyDisplay, {} as RecipientStatusService);
+	return new ProgramStatsService({} as PrismaClient, currencyDisplay, {} as typeof recipientStatusFunctions);
 };
 
 const calculateBudget = async (

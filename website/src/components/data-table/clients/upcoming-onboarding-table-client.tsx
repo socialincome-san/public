@@ -6,9 +6,9 @@ import {
 	upcomingOnboardingTableConfig,
 } from '@/components/data-table/configs/upcoming-onboarding-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
-import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
-import type { RecipientProgramFilterOption, UpcomingOnboardingTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
+import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/modules/recipients/recipient.actions';
+import type { RecipientProgramFilterOption, UpcomingOnboardingTableViewRow } from '@/modules/recipients/recipient.types';
 import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
 import { useState } from 'react';
 import type { ActionMenuItem } from '../elements/action-menu';
