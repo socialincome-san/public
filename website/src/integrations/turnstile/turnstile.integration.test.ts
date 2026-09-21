@@ -1,4 +1,4 @@
-import { readTurnstileToken, turnstileSiteverifyUrl, verifyTurnstileToken } from './verify-turnstile-token';
+import { turnstileSiteverifyUrl, verifyTurnstileToken } from './turnstile.integration';
 
 const originalFetch = global.fetch;
 const originalSecret = process.env.TURNSTILE_SECRET_KEY;
@@ -73,7 +73,7 @@ describe('verifyTurnstileToken', () => {
 			return jsonResponse({ success: true });
 		});
 
-		await expect(verifyTurnstileToken('valid-token')).resolves.toEqual({ success: true });
+		await expect(verifyTurnstileToken('valid-token')).resolves.toEqual({ success: true, data: undefined });
 		expect(fetchMock).toHaveBeenCalledWith(
 			turnstileSiteverifyUrl,
 			expect.objectContaining({
@@ -110,22 +110,5 @@ describe('verifyTurnstileToken', () => {
 			success: false,
 			error: 'submission-failed',
 		});
-	});
-});
-
-describe('readTurnstileToken', () => {
-	test('returns a trimmed token from form data', () => {
-		const formData = new FormData();
-		formData.set('cf-turnstile-response', '  token-value  ');
-
-		expect(readTurnstileToken(formData)).toBe('token-value');
-	});
-
-	test('returns null when the field is missing or blank', () => {
-		expect(readTurnstileToken(new FormData())).toBeNull();
-
-		const formData = new FormData();
-		formData.set('cf-turnstile-response', '   ');
-		expect(readTurnstileToken(formData)).toBeNull();
 	});
 });

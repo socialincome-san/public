@@ -29,6 +29,7 @@ import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import { titleCase } from '@/lib/utils/string-utils';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import type { CampaignReadService } from '@/modules/campaigns/campaign.types';
 import { upsertFromStripeEvent } from '@/modules/contributions/contribution.service';
 import { type PaymentEventCreateData, type StripeContributionCreateData } from '@/modules/contributions/contribution.types';
 import {
@@ -41,7 +42,6 @@ import {
 import type { ContributorWithContact, StripeContributorData } from '@/modules/contributors/contributor.types';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import Stripe from 'stripe';
-import { CampaignReadService } from '../campaign/campaign-read.service';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import {

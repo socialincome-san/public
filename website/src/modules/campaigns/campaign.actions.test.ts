@@ -1,13 +1,11 @@
+import type { ServiceResult } from '@/lib/service-result';
 import { addDays, format, startOfDay } from 'date-fns';
-
 import type {
 	CampaignSubmissionFields,
 	CampaignSubmissionImageSource,
 	CampaignSubmissionOptionalImages,
-} from '@/lib/services/campaign/campaign-submission-input';
-import type { CampaignSubmissionResult } from '@/lib/services/campaign/campaign-submission.service';
-import type { TurnstileVerificationResult } from '@/lib/services/campaign/verify-turnstile-token';
-import type { ServiceResult } from '@/lib/services/core/base.types';
+	CampaignSubmissionResult,
+} from './campaign.types';
 
 const mockSubmit = jest.fn() as jest.MockedFunction<
 	(
@@ -15,15 +13,18 @@ const mockSubmit = jest.fn() as jest.MockedFunction<
 		imageSource: CampaignSubmissionImageSource,
 		optionalImages?: CampaignSubmissionOptionalImages,
 		contributorId?: string | null,
+		turnstileToken?: string | null,
 	) => Promise<ServiceResult<CampaignSubmissionResult>>
->;
-const mockVerifyTurnstileToken = jest.fn() as jest.MockedFunction<
-	(token: string | null) => Promise<TurnstileVerificationResult>
 >;
 const mockGetOrCreateFromEmailAndName = jest.fn();
 const mockGetSessionByType = jest.fn();
 const mockClaimPendingCampaigns = jest.fn();
 const mockGetOptionalContributor = jest.fn();
+const mockGetEligibleProgramsForPublicSubmission = jest.fn();
+
+jest.mock('next/cache', () => ({
+	revalidatePath: jest.fn(),
+}));
 
 jest.mock('@/lib/firebase/current-account', () => ({
 	getSessionByType: mockGetSessionByType,
@@ -33,33 +34,43 @@ jest.mock('@/lib/firebase/current-contributor', () => ({
 	getOptionalContributor: mockGetOptionalContributor,
 }));
 
-jest.mock('@/lib/services/services', () => ({
-	services: {
-		campaignSubmission: {
-			submit: mockSubmit,
-		},
-		campaignPendingClaim: {
-			claimPendingCampaigns: mockClaimPendingCampaigns,
-		},
-	},
+jest.mock('./campaign-submission.service', () => ({
+	submitCampaign: mockSubmit,
+}));
+
+jest.mock('./campaign-pending-claim.service', () => ({
+	claimPendingCampaigns: mockClaimPendingCampaigns,
 }));
 
 jest.mock('@/modules/contributors/contributor.service', () => ({
 	getOrCreateContributorFromEmailAndName: mockGetOrCreateFromEmailAndName,
 }));
 
-jest.mock('@/lib/services/campaign/verify-turnstile-token', () => {
-	const actual: typeof import('@/lib/services/campaign/verify-turnstile-token') = jest.requireActual(
-		'@/lib/services/campaign/verify-turnstile-token',
-	);
+jest.mock('@/modules/programs/program-public-submission.service', () => ({
+	getEligibleProgramsForPublicSubmission: mockGetEligibleProgramsForPublicSubmission,
+}));
 
-	return {
-		...actual,
-		verifyTurnstileToken: mockVerifyTurnstileToken,
-	};
-});
+jest.mock('./campaign-public-website.service', () => ({
+	getCampaignPageContent: jest.fn(),
+}));
 
-import { claimPendingCampaignsAction, submitCampaignAction } from './campaign-submission-actions';
+jest.mock('./campaign.service', () => ({
+	getCampaignDefaultImages: jest.fn(),
+	getPublicCampaignTitle: jest.fn(),
+	getCampaignByPortalSlug: jest.fn(),
+	getAllCampaignsForCmsJoinWithStats: jest.fn(),
+	getDefaultCampaignForProgram: jest.fn(),
+}));
+
+jest.mock('@/modules/users/user.service', () => ({
+	isAdmin: jest.fn(),
+}));
+
+import {
+	claimPendingCampaignsAction,
+	getEligiblePublicSubmissionProgramsAction,
+	submitCampaignAction,
+} from './campaign.actions';
 
 const validEndDateString = () => format(addDays(startOfDay(new Date()), 30), 'yyyy-MM-dd');
 
@@ -88,7 +99,6 @@ const createValidFormData = () => {
 describe('submitCampaignAction', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
-		mockVerifyTurnstileToken.mockResolvedValue({ success: true });
 		mockGetOptionalContributor.mockResolvedValue(null);
 	});
 
@@ -107,6 +117,7 @@ describe('submitCampaignAction', () => {
 			expect.objectContaining({ kind: 'upload' }),
 			expect.objectContaining({ profilePicture: null, sectionImage: null }),
 			null,
+			null,
 		);
 		expect(mockSubmit.mock.calls[0]?.[1]).toMatchObject({
 			kind: 'upload',
@@ -124,6 +135,7 @@ describe('submitCampaignAction', () => {
 			expect.objectContaining({ programId: 'program-1' }),
 			expect.objectContaining({ kind: 'upload' }),
 			expect.objectContaining({ profilePicture: null, sectionImage: null }),
+			null,
 			null,
 		);
 		expect(mockGetOrCreateFromEmailAndName).not.toHaveBeenCalled();
@@ -206,6 +218,7 @@ describe('submitCampaignAction', () => {
 			expect.objectContaining({ kind: 'upload' }),
 			expect.objectContaining({ profilePicture: null, sectionImage: null }),
 			'contributor-1',
+			null,
 		);
 	});
 
@@ -234,6 +247,7 @@ describe('submitCampaignAction', () => {
 				defaultImageId: 99,
 			},
 			expect.objectContaining({ profilePicture: null, sectionImage: null }),
+			null,
 			null,
 		);
 	});
@@ -264,6 +278,7 @@ describe('submitCampaignAction', () => {
 			expect.objectContaining({ kind: 'upload' }),
 			expect.anything(),
 			null,
+			null,
 		);
 		expect(mockSubmit.mock.calls[0]?.[2]).toMatchObject({
 			profilePicture: { filename: 'profile.png' },
@@ -271,7 +286,7 @@ describe('submitCampaignAction', () => {
 		});
 	});
 
-	test('verifies the Turnstile token before creating the campaign', async () => {
+	test('passes the Turnstile token from form data to submit', async () => {
 		const formData = createValidFormData();
 		formData.set('cf-turnstile-response', 'turnstile-token');
 		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
@@ -279,8 +294,13 @@ describe('submitCampaignAction', () => {
 		const result = await submitCampaignAction(formData);
 
 		expect(result.success).toBe(true);
-		expect(mockVerifyTurnstileToken).toHaveBeenCalledWith('turnstile-token');
-		expect(mockSubmit).toHaveBeenCalled();
+		expect(mockSubmit).toHaveBeenCalledWith(
+			expect.anything(),
+			expect.anything(),
+			expect.anything(),
+			null,
+			'turnstile-token',
+		);
 	});
 
 	test('rejects both primaryImage and defaultImageId', async () => {
@@ -345,31 +365,12 @@ describe('submitCampaignAction', () => {
 		expect(mockSubmit).not.toHaveBeenCalled();
 	});
 
-	test('rejects submissions when Turnstile verification fails', async () => {
-		mockVerifyTurnstileToken.mockResolvedValue({ success: false, error: 'turnstile-invalid' });
+	test('surfaces Turnstile failures returned by the service', async () => {
+		mockSubmit.mockResolvedValue({ success: false, error: 'turnstile-invalid', status: 400 });
 
 		const result = await submitCampaignAction(createValidFormData());
 
 		expect(result).toEqual({ success: false, error: 'turnstile-invalid', status: 400 });
-		expect(mockSubmit).not.toHaveBeenCalled();
-	});
-
-	test('rejects submissions when the Turnstile token is missing', async () => {
-		mockVerifyTurnstileToken.mockResolvedValue({ success: false, error: 'turnstile-required' });
-
-		const result = await submitCampaignAction(createValidFormData());
-
-		expect(result).toEqual({ success: false, error: 'turnstile-required', status: 400 });
-		expect(mockSubmit).not.toHaveBeenCalled();
-	});
-
-	test('returns submission-failed when Turnstile verification is unavailable', async () => {
-		mockVerifyTurnstileToken.mockResolvedValue({ success: false, error: 'submission-failed' });
-
-		const result = await submitCampaignAction(createValidFormData());
-
-		expect(result).toEqual({ success: false, error: 'submission-failed', status: 503 });
-		expect(mockSubmit).not.toHaveBeenCalled();
 	});
 });
 
@@ -431,5 +432,29 @@ describe('claimPendingCampaignsAction', () => {
 		const result = await claimPendingCampaignsAction(['Ab12Cd34']);
 
 		expect(result).toEqual({ success: false, error: 'submission-failed', status: 503 });
+	});
+});
+
+describe('getEligiblePublicSubmissionProgramsAction', () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
+	test('delegates to the public submission service with a valid language', async () => {
+		const programsResult = { success: true as const, data: [] };
+		mockGetEligibleProgramsForPublicSubmission.mockResolvedValue(programsResult);
+
+		const result = await getEligiblePublicSubmissionProgramsAction('de');
+
+		expect(mockGetEligibleProgramsForPublicSubmission).toHaveBeenCalledWith('de');
+		expect(result).toEqual(programsResult);
+	});
+
+	test('treats invalid language input as the default language', async () => {
+		mockGetEligibleProgramsForPublicSubmission.mockResolvedValue({ success: true, data: [] });
+
+		await getEligiblePublicSubmissionProgramsAction('nope');
+
+		expect(mockGetEligibleProgramsForPublicSubmission).toHaveBeenCalledWith('en');
 	});
 });

@@ -2,6 +2,7 @@ import { ContributionStatus, PaymentEventType, PrismaClient } from '@/generated/
 import { Currency } from '@/generated/prisma/enums';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import type { CampaignReadService } from '@/modules/campaigns/campaign.types';
 import { upsertFromBankTransfer } from '@/modules/contributions/contribution.service';
 import { type BankTransferUpsertInput, type PaymentEventRecord } from '@/modules/contributions/contribution.types';
 import { findContributorsByPaymentReferenceIds } from '@/modules/contributors/contributor.service';
@@ -12,7 +13,6 @@ import SFTPClient from 'ssh2-sftp-client';
 import { withFile } from 'tmp-promise';
 import xpath from 'xpath';
 import { CONTRIBUTION_REFERENCE_ID_LENGTH, CONTRIBUTOR_REFERENCE_ID_LENGTH } from '../bank-transfer/bank-transfer-config';
-import { CampaignReadService } from '../campaign/campaign-read.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { BankContribution } from './payment-file-import.types';

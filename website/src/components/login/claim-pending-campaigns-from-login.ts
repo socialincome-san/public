@@ -1,5 +1,5 @@
 import { removePendingClaimIds } from '@/components/campaign/campaign-submission/pending-claim-ids';
-import { claimPendingCampaignsAction } from '@/lib/server-actions/campaign-submission-actions';
+import { claimPendingCampaignsAction } from '@/modules/campaigns/campaign.actions';
 
 export type ClaimPendingCampaignsFromLoginResult = {
 	campaignSlug: string | null;

@@ -1,4 +1,4 @@
-import { isCampaignActive, matchesPublicCampaignActivity } from './campaign-public-activity';
+import { isCampaignActive, matchesPublicCampaignActivity, readTurnstileToken } from './campaign.types';
 
 const now = new Date('2025-06-15T12:00:00.000Z').getTime();
 
@@ -80,5 +80,22 @@ describe('matchesPublicCampaignActivity', () => {
 		{ isActive: false, activity: 'all' as const, expected: true },
 	])('returns $expected for isActive=$isActive activity=$activity', ({ isActive, activity, expected }) => {
 		expect(matchesPublicCampaignActivity(isActive, activity)).toBe(expected);
+	});
+});
+
+describe('readTurnstileToken', () => {
+	test('returns a trimmed token from form data', () => {
+		const formData = new FormData();
+		formData.set('cf-turnstile-response', '  token-value  ');
+
+		expect(readTurnstileToken(formData)).toBe('token-value');
+	});
+
+	test('returns null when the field is missing or blank', () => {
+		expect(readTurnstileToken(new FormData())).toBeNull();
+
+		const formData = new FormData();
+		formData.set('cf-turnstile-response', '   ');
+		expect(readTurnstileToken(formData)).toBeNull();
 	});
 });

@@ -4,6 +4,7 @@ import { getCampaignPortalSlug, getCampaignTitle } from '@/components/storyblok/
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { getCampaignByPortalSlugAction } from '@/modules/campaigns/campaign.actions';
 import { notFound } from 'next/navigation';
 
 type Props = {
@@ -31,7 +32,7 @@ export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, pr
 				return notFound();
 			}
 
-			const campaignResult = await services.read.campaign.getByPortalSlug(portalSlug);
+			const campaignResult = await getCampaignByPortalSlugAction(portalSlug);
 			if (!campaignResult.success || !campaignResult.data) {
 				return notFound();
 			}

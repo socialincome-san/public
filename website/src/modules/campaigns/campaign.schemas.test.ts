@@ -14,7 +14,7 @@ import {
 	validateCampaignSubmissionImageBuffer,
 	validateCampaignSubmissionImageMeta,
 	type CampaignSubmissionFormValues,
-} from './campaign-submission-input';
+} from './campaign.types';
 
 const validEndDateString = () => format(addDays(startOfDay(new Date()), 30), 'yyyy-MM-dd');
 

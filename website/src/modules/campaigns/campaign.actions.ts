@@ -2,9 +2,31 @@
 
 import { getSessionByType } from '@/lib/firebase/current-account';
 import { getOptionalContributor } from '@/lib/firebase/current-contributor';
-import type { ClaimPendingCampaignsResult } from '@/lib/services/campaign/campaign-pending-claim.service';
+import { defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { resultFail, resultOk } from '@/lib/service-result';
+import { getOrCreateContributorFromEmailAndName } from '@/modules/contributors/contributor.service';
+import { getEligibleProgramsForPublicSubmission } from '@/modules/programs/program-public-submission.service';
+import { revalidatePath } from 'next/cache';
+import { claimPendingCampaigns } from './campaign-pending-claim.service';
+import { getCampaignPageContent } from './campaign-public-website.service';
+import { submitCampaign } from './campaign-submission.service';
 import {
+	campaignActivitySchema,
+	campaignClaimIdsSchema,
+	campaignIdSchema,
+	campaignPortalSlugSchema,
+	campaignProgramIdSchema,
+	campaignPublicLanguageSchema,
 	createCampaignSubmissionPersonalSchema,
+} from './campaign.schemas';
+import {
+	getAllCampaignsForCmsJoinWithStats,
+	getCampaignByPortalSlug,
+	getCampaignDefaultImages,
+	getDefaultCampaignForProgram,
+	getPublicCampaignTitle,
+} from './campaign.service';
+import {
 	isCampaignSubmissionErrorCode,
 	isCampaignSubmissionImageErrorCode,
 	parseCampaignSubmissionDefaultImageId,
@@ -12,16 +34,13 @@ import {
 	parseCampaignSubmissionImageFile,
 	parseCampaignSubmissionImageFocus,
 	parseOptionalCampaignSubmissionImage,
-	type CampaignSubmissionErrorCode,
+	readTurnstileToken,
 	type CampaignSubmissionImageMultipartField,
 	type CampaignSubmissionImageSource,
 	type CampaignSubmissionOptionalImages,
-} from '@/lib/services/campaign/campaign-submission-input';
-import type { CampaignSubmissionResult } from '@/lib/services/campaign/campaign-submission.service';
-import { readTurnstileToken, verifyTurnstileToken } from '@/lib/services/campaign/verify-turnstile-token';
-import { resultFail, resultOk } from '@/lib/services/core/service-result';
-import { services } from '@/lib/services/services';
-import { getOrCreateContributorFromEmailAndName } from '@/modules/contributors/contributor.service';
+	type CampaignSubmissionResult,
+	type ClaimPendingCampaignsResult,
+} from './campaign.types';
 
 const personalSchema = createCampaignSubmissionPersonalSchema((code) => code);
 
@@ -29,9 +48,11 @@ const emptyClaimResult: ClaimPendingCampaignsResult = { successfulClaimIds: [] }
 
 type ImageFieldError = {
 	success: false;
-	error: CampaignSubmissionErrorCode;
+	error: string;
 	field?: CampaignSubmissionImageMultipartField;
 };
+
+export type { CampaignDefaultImageOption } from './campaign.types';
 
 export type SubmitCampaignActionResult =
 	| { success: true; data: CampaignSubmissionResult; status?: number }
@@ -139,20 +160,7 @@ const resolveOptionalImages = async (
 	};
 };
 
-const readClaimIds = (claimIds: unknown): string[] => {
-	if (!Array.isArray(claimIds)) {
-		return [];
-	}
-
-	return claimIds.filter((claimId): claimId is string => typeof claimId === 'string');
-};
-
 export const submitCampaignAction = async (formData: FormData): Promise<SubmitCampaignActionResult> => {
-	const turnstileResult = await verifyTurnstileToken(readTurnstileToken(formData));
-	if (!turnstileResult.success) {
-		return submissionFail(turnstileResult.error, turnstileResult.error === 'submission-failed' ? 503 : 400);
-	}
-
 	const fieldsResult = parseCampaignSubmissionFields(formData);
 	if (!fieldsResult.success) {
 		return submissionFail(fieldsResult.error, 400);
@@ -169,11 +177,12 @@ export const submitCampaignAction = async (formData: FormData): Promise<SubmitCa
 	}
 
 	const contributor = await getOptionalContributor();
-	const submissionResult = await services.campaignSubmission.submit(
+	const submissionResult = await submitCampaign(
 		fieldsResult.data,
 		imageSourceResult.data,
 		optionalImagesResult.data,
 		contributor?.id ?? null,
+		readTurnstileToken(formData),
 	);
 
 	if (!submissionResult.success) {
@@ -199,6 +208,8 @@ export const submitCampaignAction = async (formData: FormData): Promise<SubmitCa
 		}
 	}
 
+	revalidatePath('/[lang]/[region]/campaigns', 'layout');
+
 	return resultOk(submissionResult.data);
 };
 
@@ -208,12 +219,13 @@ export const claimPendingCampaignsAction = async (claimIds: unknown) => {
 		return resultOk(emptyClaimResult);
 	}
 
-	const pendingClaimIds = readClaimIds(claimIds);
+	const parsedClaimIds = campaignClaimIdsSchema.safeParse(claimIds);
+	const pendingClaimIds = parsedClaimIds.success ? parsedClaimIds.data.filter((claimId) => typeof claimId === 'string') : [];
 	if (pendingClaimIds.length === 0) {
 		return resultOk(emptyClaimResult);
 	}
 
-	const result = await services.campaignPendingClaim.claimPendingCampaigns(contributorSession.data.id, pendingClaimIds);
+	const result = await claimPendingCampaigns(contributorSession.data.id, pendingClaimIds);
 	if (!result.success) {
 		console.error(result.error);
 
@@ -222,3 +234,57 @@ export const claimPendingCampaignsAction = async (claimIds: unknown) => {
 
 	return resultOk(result.data);
 };
+
+export const getPublicCampaignTitleAction = async (campaignId: unknown) => {
+	const parsedCampaignId = campaignIdSchema.safeParse(campaignId);
+	if (!parsedCampaignId.success) {
+		return resultFail(parsedCampaignId.error.issues[0]?.message ?? 'Invalid campaign id');
+	}
+
+	return getPublicCampaignTitle(parsedCampaignId.data);
+};
+
+export const getEligiblePublicSubmissionProgramsAction = async (lang: unknown) => {
+	const parsedLanguage = campaignPublicLanguageSchema.safeParse(lang);
+	const candidate = parsedLanguage.success ? parsedLanguage.data : '';
+	const language = isWebsiteLanguage(candidate) ? candidate : defaultLanguage;
+
+	return getEligibleProgramsForPublicSubmission(language);
+};
+
+export const getCampaignDefaultImagesAction = async () => getCampaignDefaultImages();
+
+export const getCampaignByPortalSlugAction = async (portalSlug: unknown) => {
+	const parsedSlug = campaignPortalSlugSchema.safeParse(portalSlug);
+	if (!parsedSlug.success) {
+		return resultFail(parsedSlug.error.issues[0]?.message ?? 'Missing campaign slug');
+	}
+
+	return getCampaignByPortalSlug(parsedSlug.data);
+};
+
+export const getAllCampaignsForCmsJoinWithStatsAction = async (activity: unknown) => {
+	const parsedActivity = campaignActivitySchema.safeParse(activity);
+
+	return getAllCampaignsForCmsJoinWithStats(parsedActivity.success ? { activity: parsedActivity.data } : undefined);
+};
+
+export const getCampaignPageContentAction = async (lang: unknown, campaignFaqs: unknown = undefined) => {
+	const parsedLanguage = campaignPublicLanguageSchema.safeParse(lang);
+	const candidate = parsedLanguage.success ? parsedLanguage.data : '';
+	const language = isWebsiteLanguage(candidate) ? candidate : defaultLanguage;
+
+	return getCampaignPageContent(language, campaignFaqs);
+};
+
+export const getDefaultCampaignForProgramAction = async (programId: unknown) => {
+	const parsedProgramId = campaignProgramIdSchema.safeParse(programId);
+	if (!parsedProgramId.success) {
+		return resultFail(parsedProgramId.error.issues[0]?.message ?? 'Missing program id');
+	}
+
+	return getDefaultCampaignForProgram(parsedProgramId.data);
+};
+
+const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
+	value === 'en' || value === 'de' || value === 'fr' || value === 'it' || value === 'kri';

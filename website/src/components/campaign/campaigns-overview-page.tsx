@@ -7,6 +7,7 @@ import type { CampaignOverview } from '@/generated/storyblok/types/109655/storyb
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
+import { getAllCampaignsForCmsJoinWithStatsAction } from '@/modules/campaigns/campaign.actions';
 import type { ISbStoryData } from '@storyblok/js';
 import { BlockWrapper } from '../block-wrapper';
 
@@ -22,7 +23,7 @@ export const CampaignsOverviewPage = async ({ overview, lang, region, searchPara
 	const [campaignStoriesResult, campaignsResult] = await Promise.all([
 		services.storyblok.getCampaigns(lang),
 		// Activity filter is applied in CampaignsOverview via isCampaignPubliclyActive.
-		services.read.campaign.getAllCampaignsForCmsJoinWithStats({ activity: 'all' }),
+		getAllCampaignsForCmsJoinWithStatsAction('all'),
 	]);
 	const campaignStories = (campaignStoriesResult.success ? campaignStoriesResult.data : []) as CampaignStory[];
 	const campaignsData = campaignsResult.success ? campaignsResult.data : { campaigns: [], statsById: {} };

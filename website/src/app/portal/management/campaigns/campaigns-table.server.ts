@@ -8,7 +8,7 @@ import type {
 	CampaignTableEntry,
 	CampaignTableQuery,
 	CampaignTableViewRow,
-} from '@/lib/services/campaign/campaign.types';
+} from '@/modules/campaigns/campaign.types';
 
 const compareNullableStrings = (left: string | null, right: string | null) => {
 	return (left ?? '').localeCompare(right ?? '', undefined, { sensitivity: 'base' });

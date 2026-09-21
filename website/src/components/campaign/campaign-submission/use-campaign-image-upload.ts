@@ -1,6 +1,6 @@
 'use client';
 
-import { validateCampaignSubmissionImageMeta } from '@/lib/services/campaign/campaign-submission-input';
+import { validateCampaignSubmissionImageMeta } from '@/modules/campaigns/campaign.types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 type UseCampaignImageUploadOptions = {

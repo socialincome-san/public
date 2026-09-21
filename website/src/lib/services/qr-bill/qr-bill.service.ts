@@ -8,6 +8,7 @@ import {
 	SubscriptionStatus,
 } from '@/generated/prisma/client';
 import { generateQrBillPdfBuffer } from '@/lib/utils/qr-bill-pdf';
+import type { CampaignReadService } from '@/modules/campaigns/campaign.types';
 import { upsertFromBankTransfer } from '@/modules/contributions/contribution.service';
 import { type BankTransferUpsertInput } from '@/modules/contributions/contribution.types';
 import {
@@ -19,7 +20,6 @@ import {
 import { type BankContributorData, type ContributorWithContact } from '@/modules/contributors/contributor.types';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import { DateTime } from 'luxon';
-import { CampaignReadService } from '../campaign/campaign-read.service';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { SubscriptionWriteService } from '../subscription/subscription-write.service';

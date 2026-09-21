@@ -3,6 +3,7 @@ import type { Program, ProgramOverview } from '@/generated/storyblok/types/10965
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { services } from '@/lib/services/services';
 import { getProgramStoryPath, getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
+import { getDefaultCampaignForProgramAction } from '@/modules/campaigns/campaign.actions';
 import {
 	getProgramDashboardStatsAction,
 	getProgramIdByPortalSlugAction,
@@ -42,7 +43,7 @@ export const loadProgramDetailPortalData = async (portalSlug: string): Promise<P
 		getPublicProgramStatsByIdAction(programId),
 		getProgramDashboardStatsAction(programId),
 		getPublicProgramBySlugAction(portalSlug),
-		services.read.campaign.getDefaultCampaignForProgram(programId),
+		getDefaultCampaignForProgramAction(programId),
 	]);
 
 	return {

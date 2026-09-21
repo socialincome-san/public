@@ -12,7 +12,7 @@ jest.mock('@/generated/prisma/client', () => ({
 jest.mock('@/modules/contributions/contribution.service', () => ({
 	upsertFromBankTransfer: jest.fn(),
 }));
-jest.mock('@/lib/services/campaign/campaign-read.service', () => ({ CampaignReadService: class {} }));
+jest.mock('@/modules/campaigns/campaign.service', () => ({ getFallbackCampaign: jest.fn() }));
 jest.mock('@/modules/contributors/contributor.service', () => ({
 	findContributorsByPaymentReferenceIds: jest.fn(),
 }));

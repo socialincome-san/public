@@ -1,5 +1,7 @@
 import { ensurePawaPayWallets, getBankAccounts } from '@/modules/bank-accounts/bank-account.service';
 import type { BankAccountReadService, BankAccountWriteService } from '@/modules/bank-accounts/bank-account.types';
+import { getCampaignById, getDefaultCampaignForProgram, getFallbackCampaign } from '@/modules/campaigns/campaign.service';
+import type { CampaignReadService } from '@/modules/campaigns/campaign.types';
 import { getLatestRateForCurrency, getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import {
@@ -10,21 +12,12 @@ import type { LocalPartnerReadService } from '@/modules/local-partners/local-par
 import { hasAnyOperatorAccess, hasOperatorAccess } from '@/modules/program-access/program-access.permissions';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
-import {
-	getEligibleProgramsForPublicSubmission,
-	isProgramEligibleForPublicSubmission,
-} from '@/modules/programs/program-public-submission.service';
 import { isReadyForFirstPayoutInterval } from '@/modules/programs/program-stats.service';
 import { recipientService, recipientStatusService } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
 import type { UserReadService } from '@/modules/users/user.types';
 import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
-import { CampaignPendingClaimService } from './campaign/campaign-pending-claim.service';
-import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
-import { CampaignReadService } from './campaign/campaign-read.service';
-import { CampaignSubmissionService } from './campaign/campaign-submission.service';
-import { CampaignValidationService } from './campaign/campaign-validation.service';
 import { CurrencyDisplayService } from './currency-display/currency-display.service';
 import { CustodianStablecoinWalletService } from './custodian-stablecoin-wallet/custodian-stablecoin-wallet.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
@@ -47,7 +40,6 @@ import { QrBillService } from './qr-bill/qr-bill.service';
 import { ReserveReadService } from './reserves/reserve-read.service';
 import { ReserveWriteService } from './reserves/reserve-write.service';
 import { ReservesCalculationService } from './reserves/reserves-calculation.service';
-import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { StoryblokService } from './storyblok/storyblok.service';
 import { StripeService } from './stripe/stripe.service';
 import { SubscriptionReadService } from './subscription/subscription-read.service';
@@ -112,19 +104,6 @@ const localPartnerRead: LocalPartnerReadService = {
 const messagingRecipients = new MessagingRecipientsService(prisma, recipientRead, localPartnerRead);
 const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
 const messagingChannelPreview = new MessagingChannelPreviewService(prisma, userRead, messagingRecipients);
-const campaignValidation = new CampaignValidationService(prisma);
-const programPublicSubmission = {
-	getEligibleProgramsForPublicSubmission,
-	isProgramEligibleForPublicSubmission,
-};
-const storyblokManagement = new StoryblokManagementService();
-const campaignSubmission = new CampaignSubmissionService(
-	prisma,
-	programPublicSubmission,
-	campaignValidation,
-	storyblokManagement,
-);
-const campaignPendingClaim = new CampaignPendingClaimService(prisma);
 const donationCertificateRead = new DonationCertificateReadService(prisma, programAccessRead);
 
 const currencyDisplay = new CurrencyDisplayService(exchangeRateRead);
@@ -132,8 +111,11 @@ const reserveWrite = new ReserveWriteService(prisma);
 const programStats = {
 	isReadyForFirstPayoutInterval,
 };
-const campaignRead = new CampaignReadService(prisma, programAccessRead, exchangeRateRead);
-const campaignPublicWebsite = new CampaignPublicWebsiteService(prisma, storyblok);
+const campaignRead: CampaignReadService = {
+	getById: getCampaignById,
+	getFallbackCampaign,
+	getDefaultCampaignForProgram,
+};
 const payoutRead = new PayoutReadService(prisma, programAccessRead, exchangeRateRead, recipientStatus);
 const payoutProcessCore = new PayoutProcessCoreService(
 	prisma,
@@ -169,8 +151,6 @@ const createReservesCalculation = (bucketName: string) =>
 
 export const services = {
 	read: {
-		campaign: campaignRead,
-		campaignPublicWebsite,
 		donationCertificate: donationCertificateRead,
 		payout: payoutRead,
 		recipient: recipientRead,
@@ -198,10 +178,6 @@ export const services = {
 	monthlySummary,
 	journal,
 	storyblok,
-	storyblokManagement,
-	campaignSubmission,
-	campaignPendingClaim,
-	programPublicSubmission,
 	stripe,
 	surveyImpact,
 	transparency,

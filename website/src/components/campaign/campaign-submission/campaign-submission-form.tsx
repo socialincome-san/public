@@ -7,12 +7,13 @@ import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.confi
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useContributorSession } from '@/lib/firebase/hooks/useContributorSession';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import {
 	getCampaignDefaultImagesAction,
 	getEligiblePublicSubmissionProgramsAction,
+	submitCampaignAction,
 	type CampaignDefaultImageOption,
-} from '@/lib/server-actions/campaign-public-actions';
-import { submitCampaignAction } from '@/lib/server-actions/campaign-submission-actions';
+} from '@/modules/campaigns/campaign.actions';
 import {
 	appendCampaignSubmissionFormData,
 	campaignSubmissionAboutFieldNames,
@@ -27,9 +28,8 @@ import {
 	isCampaignSubmissionImageErrorCode,
 	isCampaignSubmissionImageMultipartField,
 	resolveCampaignSubmissionQuote,
-} from '@/lib/services/campaign/campaign-submission-input';
-import { turnstileResponseFieldName } from '@/lib/services/campaign/turnstile-field';
-import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
+	turnstileResponseFieldName,
+} from '@/modules/campaigns/campaign.types';
 import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';

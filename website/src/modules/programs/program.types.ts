@@ -8,7 +8,6 @@ import type {
 	ProgramPermission,
 	SurveyStatus,
 } from '@/generated/prisma/enums';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { ServiceResult } from '@/lib/service-result';
 
 export type ProgramWallet = {
@@ -220,11 +219,4 @@ export type PublicSubmissionProgramOption = {
 
 export type ProgramStatsReadService = {
 	isReadyForFirstPayoutInterval: (programId: string) => Promise<ServiceResult<boolean>>;
-};
-
-export type ProgramPublicSubmissionReadService = {
-	getEligibleProgramsForPublicSubmission: (
-		language?: WebsiteLanguage,
-	) => Promise<ServiceResult<PublicSubmissionProgramOption[]>>;
-	isProgramEligibleForPublicSubmission: (programId: string) => Promise<ServiceResult<boolean>>;
 };
