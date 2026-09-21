@@ -1,4 +1,5 @@
-import { UserRole } from '@/generated/prisma/client';
+import type { UserRole } from '@/generated/prisma/enums';
+import type { ServiceResult } from '@/lib/service-result';
 
 export type OrganizationMemberTableViewRow = {
 	id: string;
@@ -6,10 +7,6 @@ export type OrganizationMemberTableViewRow = {
 	lastName: string;
 	email: string;
 	role: UserRole | null;
-};
-
-export type OrganizationMemberTableView = {
-	tableRows: OrganizationMemberTableViewRow[];
 };
 
 export type OrganizationMemberTableQuery = {
@@ -32,10 +29,6 @@ export type OrganizationTableViewRow = {
 	operatedProgramsCount: number;
 	usersCount: number;
 	createdAt: Date;
-};
-
-export type OrganizationTableView = {
-	tableRows: OrganizationTableViewRow[];
 };
 
 export type OrganizationTableQuery = {
@@ -67,4 +60,8 @@ export type OrganizationPayload = {
 export type ActiveOrganizationSummary = {
 	id: string;
 	name: string;
+};
+
+export type OrganizationWriteService = {
+	createFromEmail: (email: string) => Promise<ServiceResult<OrganizationPayload>>;
 };

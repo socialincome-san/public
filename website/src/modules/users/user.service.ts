@@ -1,4 +1,4 @@
-import { ProgramPermission } from '@/generated/prisma/enums';
+import { ProgramPermission, type UserRole } from '@/generated/prisma/enums';
 import {
 	createFirebaseUserByEmail,
 	deleteFirebaseUserByUidIfExists,
@@ -144,17 +144,26 @@ export const getCurrentUserSession = async (firebaseAuthUserId: string): Promise
 };
 
 export const isAdmin = async (userId: string): Promise<ServiceResult<true>> => {
+	const roleResult = await getUserRole(userId);
+	if (!roleResult.success) {
+		return roleResult;
+	}
+
+	return isAdminRole(roleResult.data) ? resultOk(true) : resultFail('Permission denied');
+};
+
+export const getUserRole = async (userId: string): Promise<ServiceResult<UserRole>> => {
 	try {
 		const user = await userRepository.findUserRole(userId);
 		if (!user) {
 			return resultFail('User not found');
 		}
 
-		return isAdminRole(user.role) ? resultOk(true) : resultFail('Permission denied');
+		return resultOk(user.role);
 	} catch (error) {
-		console.error('Could not check admin status', { userId, error });
+		console.error('Could not get user role', { userId, error });
 
-		return resultFail('Could not check admin status');
+		return resultFail('Could not get user role');
 	}
 };
 

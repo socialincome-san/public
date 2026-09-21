@@ -1,3 +1,5 @@
+import { createOrganizationFromEmail } from '@/modules/organizations/organization.service';
+import type { OrganizationWriteService } from '@/modules/organizations/organization.types';
 import { hasAnyOperatorAccess, hasOperatorAccess } from '@/modules/program-access/program-access.permissions';
 import { createInitialAccessesForProgram, getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccessReadService, ProgramAccessWriteService } from '@/modules/program-access/program-access.types';
@@ -51,10 +53,6 @@ import { MobileMoneyProviderReadService } from './mobile-money-provider/mobile-m
 import { MobileMoneyProviderValidationService } from './mobile-money-provider/mobile-money-provider-validation.service';
 import { MobileMoneyProviderWriteService } from './mobile-money-provider/mobile-money-provider-write.service';
 import { MonthlySummaryService } from './monthly-summary/monthly-summary.service';
-import { OrganizationAccessService } from './organization-access/organization-access.service';
-import { OrganizationReadService } from './organization/organization-read.service';
-import { OrganizationValidationService } from './organization/organization-validation.service';
-import { OrganizationWriteService } from './organization/organization-write.service';
 import { PawaPayBalanceService } from './pawapay/pawapay-balance.service';
 import { PaymentFileImportService } from './payment-file-import/payment-file-import.service';
 import { PostFinanceBalanceService } from './payment-file-import/postfinance-balance.service';
@@ -108,7 +106,9 @@ const programAccessRead: ProgramAccessReadService = {
 const programAccessWrite: ProgramAccessWriteService = {
 	createInitialAccessesForProgram,
 };
-const organizationAccess = new OrganizationAccessService(prisma);
+const organizationWrite: OrganizationWriteService = {
+	createFromEmail: createOrganizationFromEmail,
+};
 const userRead: UserReadService = { isAdmin };
 const exchangeRateImport = new ExchangeRateImportService(prisma);
 const surveySchedule = new SurveyScheduleService(prisma);
@@ -142,9 +142,6 @@ const contributionRead = new ContributionReadService(prisma, programAccessRead, 
 const contributionValidation = new ContributionValidationService(prisma);
 const contributionWrite = new ContributionWriteService(prisma, programAccessRead, contributionValidation);
 const subscriptionWrite = new SubscriptionWriteService(prisma);
-const organizationRead = new OrganizationReadService(prisma, userRead, organizationAccess);
-const organizationValidation = new OrganizationValidationService(prisma);
-const organizationWrite = new OrganizationWriteService(prisma, userRead, organizationAccess, organizationValidation);
 const localPartnerRead = new LocalPartnerReadService(prisma, userRead);
 const localPartnerValidation = new LocalPartnerValidationService(prisma);
 const localPartnerWrite = new LocalPartnerWriteService(
@@ -276,7 +273,6 @@ export const services = {
 		expense: expenseRead,
 		localPartner: localPartnerRead,
 		mobileMoneyProvider: mobileMoneyProviderRead,
-		organization: organizationRead,
 		payout: payoutRead,
 		program: programRead,
 		recipient: recipientRead,
@@ -295,7 +291,6 @@ export const services = {
 		expense: expenseWrite,
 		localPartner: localPartnerWrite,
 		mobileMoneyProvider: mobileMoneyProviderWrite,
-		organization: organizationWrite,
 		payout: payoutWrite,
 		program: programWrite,
 		recipient: recipientWrite,

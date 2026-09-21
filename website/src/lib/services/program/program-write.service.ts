@@ -3,12 +3,12 @@ import { getCountryNameByCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
 import { slugify } from '@/lib/utils/string-utils';
+import type { OrganizationWriteService } from '@/modules/organizations/organization.types';
 import type { ProgramAccessReadService, ProgramAccessWriteService } from '@/modules/program-access/program-access.types';
 import { CandidateWriteService } from '../candidate/candidate-write.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import { OrganizationWriteService } from '../organization/organization-write.service';
 import { ProgramValidationService } from './program-validation.service';
 import { CreateProgramInput, ProgramSettingsUpdateInput, PublicOnboardingUserDetails } from './program.types';
 

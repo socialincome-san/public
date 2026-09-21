@@ -3,6 +3,7 @@
 import { getSessionByType } from '@/lib/firebase/current-account';
 import type { ExpenseFormCreateInput, ExpenseFormUpdateInput } from '@/lib/services/expense/expense-form-input';
 import { services } from '@/lib/services/services';
+import { getOrganizationOptions } from '@/modules/organizations/organization.service';
 import { revalidatePath } from 'next/cache';
 
 const REVALIDATE_PATH = '/portal/admin/expenses';
@@ -44,5 +45,5 @@ export const getExpenseOptionsAction = async () => {
 		return sessionResult;
 	}
 
-	return services.read.organization.getOptions(sessionResult.data.id);
+	return getOrganizationOptions(sessionResult.data.id);
 };
