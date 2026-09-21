@@ -3,7 +3,7 @@
 import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
 import { PayoutProcess } from '@/generated/prisma/enums';
-import type { PayoutProcessOverviewOption } from '@/lib/services/payout-process/payout-process-overview.types';
+import type { PayoutProcessOverviewOption } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { OrangeMoneyCsvPayoutProcessDialog } from './orange-money-csv-payout-process-dialog';
 import type { PayoutProcessDialogBaseProps } from './payout-process-dialog-props';
 import { TelecelCsvPayoutProcessDialog } from './telecel-csv-payout-process-dialog';

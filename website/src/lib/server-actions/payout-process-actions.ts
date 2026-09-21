@@ -3,6 +3,7 @@
 import { getSessionByType } from '@/lib/firebase/current-account';
 import { ServiceResult } from '@/lib/services/core/base.types';
 import { services } from '@/lib/services/services';
+import { getPayoutProcessOverviewOptions } from '@/modules/mobile-money-providers/mobile-money-provider.service';
 import { revalidatePath } from 'next/cache';
 
 const forUser = async <T>(run: (userId: string) => Promise<ServiceResult<T>>) => {
@@ -59,7 +60,7 @@ export const generateTelecelCurrentMonthPayoutsAction = async (selectedDate: Dat
 
 export const getPayoutRecipientCountsAction = async (selectedDate: Date) =>
 	forUser(async (userId) => {
-		const optionsResult = await services.read.mobileMoneyProvider.getPayoutProcessOverviewOptions();
+		const optionsResult = await getPayoutProcessOverviewOptions();
 		if (!optionsResult.success) {
 			return optionsResult;
 		}

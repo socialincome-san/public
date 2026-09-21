@@ -1,7 +1,11 @@
-import { BankAccountType, Currency, type BankAccount, type PrismaClient } from '@/generated/prisma/client';
+import type { PrismaClient } from '@/generated/prisma/client';
+import { BankAccountType, Currency } from '@/generated/prisma/enums';
+import type {
+	BankAccountReadService,
+	BankAccountRecord,
+	BankAccountWriteService,
+} from '@/modules/bank-accounts/bank-account.types';
 import { type ExchangeRates } from '@/modules/exchange-rates/exchange-rate.types';
-import { type BankAccountReadService } from '../bank-account/bank-account-read.service';
-import { type BankAccountWriteService } from '../bank-account/bank-account-write.service';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { type CurrencyDisplayService } from '../currency-display/currency-display.service';
@@ -32,8 +36,12 @@ export class ReservesCalculationService extends BaseService {
 			return bankAccountsResult;
 		}
 
-		const postFinanceAccounts: (BankAccount & { bankAccountNumber: string })[] = [];
-		const custodianStablecoinWalletAccounts: (BankAccount & { bankAccountNumber: string })[] = [];
+		const postFinanceAccounts: (BankAccountRecord & {
+			bankAccountNumber: string;
+		})[] = [];
+		const custodianStablecoinWalletAccounts: (BankAccountRecord & {
+			bankAccountNumber: string;
+		})[] = [];
 		for (const account of bankAccountsResult.data) {
 			if (account.type === BankAccountType.postfinance) {
 				if (!account.bankAccountNumber) {

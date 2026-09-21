@@ -1,3 +1,5 @@
+import { ensurePawaPayWallets, getBankAccounts } from '@/modules/bank-accounts/bank-account.service';
+import type { BankAccountReadService, BankAccountWriteService } from '@/modules/bank-accounts/bank-account.types';
 import { getLatestRateForCurrency, getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import { createOrganizationFromEmail } from '@/modules/organizations/organization.service';
@@ -10,8 +12,6 @@ import { isAdmin } from '@/modules/users/user.service';
 import type { UserReadService } from '@/modules/users/user.types';
 import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
-import { BankAccountReadService } from './bank-account/bank-account-read.service';
-import { BankAccountWriteService } from './bank-account/bank-account-write.service';
 import { CampaignPendingClaimService } from './campaign/campaign-pending-claim.service';
 import { CampaignPublicWebsiteService } from './campaign/campaign-public-website.service';
 import { CampaignReadService } from './campaign/campaign-read.service';
@@ -39,9 +39,6 @@ import { JournalService } from './journal/journal.service';
 import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
 import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
 import { LocalPartnerWriteService } from './local-partner/local-partner-write.service';
-import { MobileMoneyProviderReadService } from './mobile-money-provider/mobile-money-provider-read.service';
-import { MobileMoneyProviderValidationService } from './mobile-money-provider/mobile-money-provider-validation.service';
-import { MobileMoneyProviderWriteService } from './mobile-money-provider/mobile-money-provider-write.service';
 import { MonthlySummaryService } from './monthly-summary/monthly-summary.service';
 import { PawaPayBalanceService } from './pawapay/pawapay-balance.service';
 import { PaymentFileImportService } from './payment-file-import/payment-file-import.service';
@@ -83,8 +80,12 @@ import { TwilioTemplateService } from './twilio/messaging/twilio-templates/twili
 import { TwilioOtpService } from './twilio/otp/twilio-otp.service';
 
 const appReviewMode = new AppReviewModeService(prisma);
-const bankAccountRead = new BankAccountReadService(prisma);
-const bankAccountWrite = new BankAccountWriteService(prisma);
+const bankAccountRead: BankAccountReadService = {
+	getAll: getBankAccounts,
+};
+const bankAccountWrite: BankAccountWriteService = {
+	ensurePawaPayWallets,
+};
 const reserveRead = new ReserveReadService(prisma);
 const firebaseAdmin = new FirebaseAdminService(prisma);
 const firebaseSession = new FirebaseSessionService(prisma);
@@ -142,9 +143,6 @@ const localPartnerWrite = new LocalPartnerWriteService(
 	localPartnerValidation,
 	contactRelations,
 );
-const mobileMoneyProviderRead = new MobileMoneyProviderReadService(prisma, userRead);
-const mobileMoneyProviderValidation = new MobileMoneyProviderValidationService(prisma);
-const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(prisma, userRead, mobileMoneyProviderValidation);
 const contributorRead = new ContributorReadService(prisma, programAccessRead);
 const contributorValidation = new ContributorValidationService(prisma);
 const contributorWrite = new ContributorWriteService(
@@ -250,7 +248,6 @@ export const services = {
 		contributor: contributorRead,
 		donationCertificate: donationCertificateRead,
 		localPartner: localPartnerRead,
-		mobileMoneyProvider: mobileMoneyProviderRead,
 		payout: payoutRead,
 		program: programRead,
 		recipient: recipientRead,
@@ -264,7 +261,6 @@ export const services = {
 		contributor: contributorWrite,
 		donationCertificate: donationCertificateWrite,
 		localPartner: localPartnerWrite,
-		mobileMoneyProvider: mobileMoneyProviderWrite,
 		payout: payoutWrite,
 		program: programWrite,
 		recipient: recipientWrite,

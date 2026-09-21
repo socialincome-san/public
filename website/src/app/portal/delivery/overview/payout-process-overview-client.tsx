@@ -2,11 +2,11 @@
 
 import { Button } from '@/components/button/button';
 import { DatePicker, normalizeToNoon } from '@/components/date-picker/date-picker';
+import { formatPayoutProcessLabel } from '@/lib/payout-process-options';
 import { getPayoutRecipientCountsAction } from '@/lib/server-actions/payout-process-actions';
-import { formatPayoutProcessLabel } from '@/lib/services/mobile-money-provider/payout-process-options';
-import type { PayoutProcessOverviewOption } from '@/lib/services/payout-process/payout-process-overview.types';
 import { cn } from '@/lib/utils/cn';
 import { now } from '@/lib/utils/now';
+import type { PayoutProcessOverviewOption } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { format } from 'date-fns';
 import { CalendarIcon, CircleDollarSignIcon, FileSpreadsheet } from 'lucide-react';
 import { useEffect, useState } from 'react';

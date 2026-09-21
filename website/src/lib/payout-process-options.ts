@@ -21,5 +21,5 @@ export const toPayoutProcess = (value: string): PayoutProcess | null => {
 		return null;
 	}
 
-	return PAYOUT_PROCESS_VALUES.includes(trimmed as PayoutProcess) ? (trimmed as PayoutProcess) : null;
+	return PAYOUT_PROCESS_VALUES.find((process) => process === trimmed) ?? null;
 };

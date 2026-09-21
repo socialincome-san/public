@@ -16,11 +16,11 @@ import {
 	getCandidateOptions,
 	updateCandidateAction,
 } from '@/lib/server-actions/candidate-actions';
-import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import { CandidatePayload } from '@/lib/services/candidate/candidate.types';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
 import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
+import { getSupportedMobileMoneyProviderOptionsAction } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCandidateInput, buildUpdateCandidateInput } from './candidate-form-helpers';

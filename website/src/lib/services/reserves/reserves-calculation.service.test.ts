@@ -99,8 +99,8 @@ describe('ReservesCalculationService.calculate', () => {
 		};
 		const service = new ReservesCalculationService(
 			{} as never,
-			bankAccountService as never,
-			bankAccountWriteService as never,
+			bankAccountService,
+			bankAccountWriteService,
 			postFinanceBalanceService as never,
 			pawaPayBalanceService as never,
 			{ getLatestBalances: jest.fn() } as never,
@@ -150,8 +150,8 @@ describe('ReservesCalculationService.calculate', () => {
 		};
 		const service = new ReservesCalculationService(
 			{} as never,
-			bankAccountService as never,
-			bankAccountWriteService as never,
+			bankAccountService,
+			bankAccountWriteService,
 			postFinanceBalanceService as never,
 			pawaPayBalanceService as never,
 			{ getLatestBalances: jest.fn() } as never,
@@ -207,8 +207,8 @@ describe('ReservesCalculationService.calculate', () => {
 		};
 		const service = new ReservesCalculationService(
 			{} as never,
-			bankAccountService as never,
-			bankAccountWriteService as never,
+			bankAccountService,
+			bankAccountWriteService,
 			postFinanceBalanceService as never,
 			pawaPayBalanceService as never,
 			{ getLatestBalances: jest.fn() } as never,
@@ -276,8 +276,8 @@ describe('ReservesCalculationService.calculate', () => {
 		};
 		const service = new ReservesCalculationService(
 			{} as never,
-			bankAccountService as never,
-			bankAccountWriteService as never,
+			bankAccountService,
+			bankAccountWriteService,
 			postFinanceBalanceService as never,
 			pawaPayBalanceService as never,
 			custodianStablecoinWalletService as never,
@@ -325,8 +325,8 @@ describe('ReservesCalculationService.calculate', () => {
 		const reserveWriteService = { createMany: jest.fn().mockResolvedValue({ success: true, data: 0 }) };
 		const service = new ReservesCalculationService(
 			{} as never,
-			bankAccountService as never,
-			bankAccountWriteService as never,
+			bankAccountService,
+			bankAccountWriteService,
 			postFinanceBalanceService as never,
 			pawaPayBalanceService as never,
 			{ getLatestBalances: jest.fn() } as never,
@@ -365,8 +365,8 @@ describe('ReservesCalculationService.calculate', () => {
 			};
 			const service = new ReservesCalculationService(
 				{} as never,
-				bankAccountService as never,
-				bankAccountWriteService as never,
+				bankAccountService,
+				bankAccountWriteService,
 				postFinanceBalanceService as never,
 				pawaPayBalanceService as never,
 				{ getLatestBalances: jest.fn() } as never,

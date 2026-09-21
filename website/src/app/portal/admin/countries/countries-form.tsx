@@ -3,7 +3,6 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { NetworkTechnology, SanctionRegime } from '@/generated/prisma/enums';
-import { getRootMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { COUNTRY_OPTIONS, isValidCountryCode } from '@/lib/types/country';
 import { allCurrencies, bestGuessCurrency } from '@/lib/types/currency';
@@ -14,6 +13,7 @@ import {
 	updateCountryAction,
 } from '@/modules/countries/country.actions';
 import { type CountryPayload, NETWORK_TECH_LABELS } from '@/modules/countries/country.types';
+import { getRootMobileMoneyProviderOptionsAction } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCountryInput, buildUpdateCountryInput } from './countries-form-helper';
