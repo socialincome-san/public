@@ -25,13 +25,9 @@ import { CampaignPublicWebsiteService } from './campaign/campaign-public-website
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignSubmissionService } from './campaign/campaign-submission.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
-import { ContactRelationsService } from './contact/contact-relations.service';
 import { ContributionReadService } from './contribution/contribution-read.service';
 import { ContributionValidationService } from './contribution/contribution-validation.service';
 import { ContributionWriteService } from './contribution/contribution-write.service';
-import { ContributorReadService } from './contributor/contributor-read.service';
-import { ContributorValidationService } from './contributor/contributor-validation.service';
-import { ContributorWriteService } from './contributor/contributor-write.service';
 import { CurrencyDisplayService } from './currency-display/currency-display.service';
 import { CustodianStablecoinWalletService } from './custodian-stablecoin-wallet/custodian-stablecoin-wallet.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
@@ -101,7 +97,6 @@ const journal = new JournalService(prisma, storyblok);
 const recipientStatus = recipientStatusService;
 const monthlySummary = new MonthlySummaryService(prisma, recipientStatus);
 
-const contactRelations = new ContactRelationsService(prisma);
 const recipientRead = recipientService;
 const recipientWrite = recipientService;
 const recipientImport = recipientService;
@@ -120,16 +115,7 @@ const localPartnerRead: LocalPartnerReadService = {
 	getPaginatedTableView: getPaginatedLocalPartnerTableView,
 	getMessagingTargets: getLocalPartnerMessagingTargets,
 };
-const contributorRead = new ContributorReadService(prisma, programAccessRead);
-const contributorValidation = new ContributorValidationService(prisma);
-const contributorWrite = new ContributorWriteService(
-	prisma,
-	programAccessRead,
-	firebaseAdmin,
-	contributorValidation,
-	contactRelations,
-);
-const messagingRecipients = new MessagingRecipientsService(prisma, contributorRead, recipientRead, localPartnerRead);
+const messagingRecipients = new MessagingRecipientsService(prisma, recipientRead, localPartnerRead);
 const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
 const messagingChannelPreview = new MessagingChannelPreviewService(prisma, userRead, messagingRecipients);
 const campaignValidation = new CampaignValidationService(prisma);
@@ -164,30 +150,9 @@ const payoutProcessCore = new PayoutProcessCoreService(
 );
 const orangeMoneyCsvPayoutProcess = new OrangeMoneyCsvPayoutProcessService(prisma, payoutProcessCore);
 const telecelCsvPayoutProcess = new TelecelCsvPayoutProcessService(prisma, payoutProcessCore);
-const donationCertificateWrite = new DonationCertificateWriteService(
-	prisma,
-	contributorRead,
-	contributionRead,
-	donationCertificateRead,
-);
-const qrBill = new QrBillService(
-	prisma,
-	contributorWrite,
-	contributorRead,
-	campaignRead,
-	contributionWrite,
-	subscriptionWrite,
-	exchangeRateRead,
-);
-const stripe = new StripeService(
-	prisma,
-	contributorRead,
-	contributorWrite,
-	contributionWrite,
-	subscriptionWrite,
-	campaignRead,
-	programAccessRead,
-);
+const donationCertificateWrite = new DonationCertificateWriteService(prisma, contributionRead, donationCertificateRead);
+const qrBill = new QrBillService(prisma, campaignRead, contributionWrite, subscriptionWrite, exchangeRateRead);
+const stripe = new StripeService(prisma, contributionWrite, subscriptionWrite, campaignRead, programAccessRead);
 const subscriptionRead = new SubscriptionReadService(prisma, programAccessRead, contributionRead, stripe);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
@@ -195,7 +160,7 @@ const surveyValidation = new SurveyValidationService(prisma);
 const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAdmin, surveyRead, surveyValidation);
 
 const createPaymentFileImport = (bucketName: string) =>
-	new PaymentFileImportService(bucketName, prisma, contributorRead, contributionWrite, campaignRead);
+	new PaymentFileImportService(bucketName, prisma, contributionWrite, campaignRead);
 const createPostFinanceBalance = (bucketName: string) => new PostFinanceBalanceService(bucketName, prisma);
 const createReservesCalculation = (bucketName: string) =>
 	new ReservesCalculationService(
@@ -214,7 +179,6 @@ export const services = {
 		campaign: campaignRead,
 		campaignPublicWebsite,
 		contribution: contributionRead,
-		contributor: contributorRead,
 		donationCertificate: donationCertificateRead,
 		payout: payoutRead,
 		recipient: recipientRead,
@@ -224,7 +188,6 @@ export const services = {
 	write: {
 		contribution: contributionWrite,
 		subscription: subscriptionWrite,
-		contributor: contributorWrite,
 		donationCertificate: donationCertificateWrite,
 		payout: payoutWrite,
 		recipient: recipientWrite,

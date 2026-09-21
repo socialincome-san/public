@@ -38,15 +38,14 @@ jest.mock('@/lib/services/services', () => ({
 		campaignSubmission: {
 			submit: mockSubmit,
 		},
-		write: {
-			contributor: {
-				getOrCreateFromEmailAndName: mockGetOrCreateFromEmailAndName,
-			},
-		},
 		campaignPendingClaim: {
 			claimPendingCampaigns: mockClaimPendingCampaigns,
 		},
 	},
+}));
+
+jest.mock('@/modules/contributors/contributor.service', () => ({
+	getOrCreateContributorFromEmailAndName: mockGetOrCreateFromEmailAndName,
 }));
 
 jest.mock('@/lib/services/campaign/verify-turnstile-token', () => {

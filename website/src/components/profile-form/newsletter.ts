@@ -1,4 +1,4 @@
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
+import { ContributorSession } from '@/modules/contributors/contributor.types';
 import { subscribeToNewsletterAction, unsubscribeFromNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { toNewsletterLanguage } from '@/modules/newsletter/newsletter.types';
 import { ProfileFormOutput } from './schemas';

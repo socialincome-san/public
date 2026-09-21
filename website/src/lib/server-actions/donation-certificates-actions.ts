@@ -3,6 +3,7 @@
 import { getSessionByType } from '@/lib/firebase/current-account';
 import { services } from '@/lib/services/services';
 import { LanguageCode } from '@/lib/types/language';
+import { getContributorsByIds } from '@/modules/contributors/contributor.service';
 import { revalidatePath } from 'next/cache';
 
 export const getContributorOptions = async () => {
@@ -11,7 +12,7 @@ export const getContributorOptions = async () => {
 		return sessionResult;
 	}
 
-	return await services.read.contributor.getByIds({ actorUserId: sessionResult.data.id });
+	return await getContributorsByIds({ actorUserId: sessionResult.data.id });
 };
 
 export const generateDonationCertificates = async (year: number, contributorIds: string[], language?: LanguageCode) => {

@@ -3,20 +3,23 @@ import {
 	CountryCode,
 	Currency,
 	PaymentEventType,
-	type Prisma,
 	PrismaClient,
 	SubscriptionPaymentMethod,
 	SubscriptionStatus,
 } from '@/generated/prisma/client';
 import { generateQrBillPdfBuffer } from '@/lib/utils/qr-bill-pdf';
+import {
+	findContributorsByPaymentReferenceIds,
+	getOrCreateContributorByReferenceId,
+	getOrCreateReferenceIdByEmail,
+	updateContributorSelf,
+} from '@/modules/contributors/contributor.service';
+import { type BankContributorData, type ContributorWithContact } from '@/modules/contributors/contributor.types';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import { DateTime } from 'luxon';
 import { CampaignReadService } from '../campaign/campaign-read.service';
 import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { type PaymentEventCreateInput } from '../contribution/contribution.types';
-import { ContributorReadService } from '../contributor/contributor-read.service';
-import { ContributorWriteService } from '../contributor/contributor-write.service';
-import { type BankContributorData, type ContributorUpdateInput } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { SubscriptionWriteService } from '../subscription/subscription-write.service';
@@ -37,15 +40,9 @@ import {
 } from './qr-bill.types';
 import { resolveWizardQrPayment } from './wizard-qr-payment';
 
-type QrContributorWithContact = Prisma.ContributorGetPayload<{
-	include: { contact: { include: { address: true } } };
-}>;
-
 export class QrBillService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly contributorWriteService: ContributorWriteService,
-		private readonly contributorReadService: ContributorReadService,
 		private readonly campaignService: CampaignReadService,
 		private readonly contributionService: ContributionWriteService,
 		private readonly subscriptionWriteService: SubscriptionWriteService,
@@ -57,14 +54,12 @@ export class QrBillService extends BaseService {
 	async getOrCreateQrReferences(
 		contributorData: CreateWizardQrReferencesInput,
 	): Promise<ServiceResult<QrBillReferenceResult>> {
-		const contributorReferenceIdResult = await this.contributorWriteService.getOrCreateReferenceIdByEmail(
-			contributorData.email,
-		);
+		const contributorReferenceIdResult = await getOrCreateReferenceIdByEmail(contributorData.email);
 		if (!contributorReferenceIdResult.success) {
 			return this.resultFail(contributorReferenceIdResult.error);
 		}
 
-		const contributorUpsertResult = await this.contributorWriteService.getOrCreateByReferenceId({
+		const contributorUpsertResult = await getOrCreateContributorByReferenceId({
 			...contributorData,
 			paymentReferenceId: contributorReferenceIdResult.data,
 		});
@@ -90,7 +85,7 @@ export class QrBillService extends BaseService {
 				return verifiedContributor;
 			}
 
-			const contributor = await this.contributorWriteService.getOrCreateByReferenceId(userData);
+			const contributor = await getOrCreateContributorByReferenceId(userData);
 
 			if (!contributor.success) {
 				return this.resultFail(`Could not get or create contributor for reference Id ${userData.paymentReferenceId}`);
@@ -283,37 +278,20 @@ export class QrBillService extends BaseService {
 
 			const { contributor, email: contributorEmail } = verifiedContributor.data;
 
-			const updateInput: ContributorUpdateInput = {
+			return updateContributorSelf(contributor.id, {
 				...(user.personal.referral !== undefined ? { referral: user.personal.referral } : {}),
 				needsOnboarding: false,
 				contact: {
-					update: {
-						data: {
-							firstName: user.personal.name,
-							lastName: user.personal.lastname,
-							email: contributorEmail,
-							gender: user.personal.gender ?? null,
-							language: user.language,
-							address: {
-								upsert: {
-									update: {
-										country: user.address.country,
-									},
-									create: {
-										street: '',
-										number: '',
-										city: '',
-										zip: '',
-										country: user.address.country,
-									},
-								},
-							},
-						},
+					firstName: user.personal.name,
+					lastName: user.personal.lastname,
+					email: contributorEmail,
+					gender: user.personal.gender ?? null,
+					language: user.language,
+					address: {
+						country: user.address.country,
 					},
 				},
-			};
-
-			return this.contributorWriteService.updateSelf(contributor.id, updateInput);
+			});
 		} catch (error) {
 			console.error(error);
 
@@ -333,14 +311,10 @@ export class QrBillService extends BaseService {
 
 			const { contributor, email: contributorEmail } = verifiedContributor.data;
 
-			return this.contributorWriteService.updateSelf(contributor.id, {
+			return updateContributorSelf(contributor.id, {
 				referral,
 				contact: {
-					update: {
-						data: {
-							email: contributorEmail,
-						},
-					},
+					email: contributorEmail,
 				},
 			});
 		} catch (error) {
@@ -357,13 +331,14 @@ export class QrBillService extends BaseService {
 	private async verifyContributorByPaymentReference(
 		paymentReferenceId: string,
 		expectedEmail: string,
-	): Promise<ServiceResult<{ contributor: QrContributorWithContact; email: string }>> {
+	): Promise<ServiceResult<{ contributor: ContributorWithContact; email: string }>> {
 		try {
-			const contributor = await this.db.contributor.findFirst({
-				where: { paymentReferenceId },
-				include: { contact: { include: { address: true } } },
-			});
+			const contributorsResult = await findContributorsByPaymentReferenceIds([paymentReferenceId]);
+			if (!contributorsResult.success) {
+				return this.resultFail(contributorsResult.error);
+			}
 
+			const contributor = contributorsResult.data[0];
 			if (!contributor) {
 				return this.resultFail('Contributor not found for payment reference');
 			}

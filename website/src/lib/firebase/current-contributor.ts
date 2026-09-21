@@ -1,5 +1,6 @@
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { services } from '@/lib/services/services';
+import { getCurrentContributorSession } from '@/modules/contributors/contributor.service';
+import { ContributorSession } from '@/modules/contributors/contributor.types';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
@@ -14,7 +15,7 @@ const loadCurrentContributor = async (): Promise<ContributorSession | null> => {
 	}
 
 	const authUserId = decodedTokenResult.data.uid;
-	const result = await services.read.contributor.getCurrentContributorSession(authUserId);
+	const result = await getCurrentContributorSession(authUserId);
 
 	return result.success ? result.data : null;
 };

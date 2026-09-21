@@ -1,4 +1,4 @@
-import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
+import type { ContributorTableViewRow } from '@/modules/contributors/contributor.types';
 import type { LocalPartnerTableViewRow } from '@/modules/local-partners/local-partner.types';
 import type { RecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import {

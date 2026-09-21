@@ -1,11 +1,10 @@
 import { getInitialDonationContext, type DonationAmountContext } from '@/components/donation-wizard/utils/donation-amount';
 import { PrismaClient } from '@/generated/prisma/client';
 import { generateQrBillPdfBuffer } from '@/lib/utils/qr-bill-pdf';
+import { findContributorsByPaymentReferenceIds } from '@/modules/contributors/contributor.service';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import type { CampaignReadService } from '../campaign/campaign-read.service';
 import type { ContributionWriteService } from '../contribution/contribution-write.service';
-import type { ContributorReadService } from '../contributor/contributor-read.service';
-import type { ContributorWriteService } from '../contributor/contributor-write.service';
 import type { SubscriptionWriteService } from '../subscription/subscription-write.service';
 import { QrBillService } from './qr-bill.service';
 
@@ -23,6 +22,13 @@ jest.mock('@/lib/utils/qr-bill-pdf', () => ({
 	generateQrBillPdfBuffer: jest.fn(),
 }));
 
+jest.mock('@/modules/contributors/contributor.service', () => ({
+	findContributorsByPaymentReferenceIds: jest.fn(),
+	getOrCreateContributorByReferenceId: jest.fn(),
+	getOrCreateReferenceIdByEmail: jest.fn(),
+	updateContributorSelf: jest.fn(),
+}));
+
 const withContext = (overrides: Partial<DonationAmountContext>): DonationAmountContext => ({
 	...getInitialDonationContext(),
 	paymentMethod: 'qr',
@@ -31,14 +37,12 @@ const withContext = (overrides: Partial<DonationAmountContext>): DonationAmountC
 });
 
 describe('QrBillService.downloadQrBillPdf', () => {
-	const findFirst = jest.fn();
 	const generatePdf = generateQrBillPdfBuffer as jest.MockedFunction<typeof generateQrBillPdfBuffer>;
+	const mockFindContributorsByPaymentReferenceIds = findContributorsByPaymentReferenceIds as jest.Mock;
 
 	const createService = () =>
 		new QrBillService(
-			{ contributor: { findFirst } } as unknown as PrismaClient,
-			{} as ContributorWriteService,
-			{} as ContributorReadService,
+			{} as PrismaClient,
 			{} as CampaignReadService,
 			{} as ContributionWriteService,
 			{} as SubscriptionWriteService,
@@ -47,8 +51,9 @@ describe('QrBillService.downloadQrBillPdf', () => {
 
 	beforeEach(() => {
 		jest.clearAllMocks();
-		findFirst.mockResolvedValue({
-			contact: { email: 'donor@example.com', address: null },
+		mockFindContributorsByPaymentReferenceIds.mockResolvedValue({
+			success: true,
+			data: [{ contact: { email: 'donor@example.com', address: null } }],
 		});
 		generatePdf.mockResolvedValue(Buffer.from('pdf'));
 	});

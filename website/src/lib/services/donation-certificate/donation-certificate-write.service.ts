@@ -1,9 +1,9 @@
 import { PrismaClient } from '@/generated/prisma/client';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE, LANGUAGE_CODES, LanguageCode } from '@/lib/types/language';
+import { getContributorsByIds } from '@/modules/contributors/contributor.service';
 import { withFile } from 'tmp-promise';
 import { ContributionReadService } from '../contribution/contribution-read.service';
-import { ContributorReadService } from '../contributor/contributor-read.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { DonationCertificateReadService } from './donation-certificate-read.service';
@@ -19,7 +19,6 @@ export class DonationCertificateWriteService extends BaseService {
 
 	constructor(
 		db: PrismaClient,
-		private readonly contributorService: ContributorReadService,
 		private readonly contributionService: ContributionReadService,
 		private readonly donationCertificateReadService: DonationCertificateReadService,
 	) {
@@ -38,7 +37,7 @@ export class DonationCertificateWriteService extends BaseService {
 				return this.resultFail(DonationCertificateError.bucketMissing);
 			}
 
-			const result = await this.contributorService.getByIds({ contributorIds: [contributorsId] });
+			const result = await getContributorsByIds({ contributorIds: [contributorsId] });
 			if (!result.success || !result.data?.length) {
 				console.info(`Could not load contributor for contributor ID ${contributorsId}`);
 
@@ -174,7 +173,7 @@ export class DonationCertificateWriteService extends BaseService {
 		contributorIds: string[],
 		language?: LanguageCode,
 	): Promise<ServiceResult<string>> {
-		const scopedContributorsResult = await this.contributorService.getByIds({
+		const scopedContributorsResult = await getContributorsByIds({
 			actorUserId: userId,
 			contributorIds,
 		});

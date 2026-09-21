@@ -1,7 +1,8 @@
 import { ContributorReferralSource } from '@/generated/prisma/enums';
-import { updateSelfAction as updateContributorSelfAction } from '@/lib/server-actions/contributor-actions';
-import { ContributorSession, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { slugify } from '@/lib/utils/string-utils';
+import { updateContributorSelfAction } from '@/modules/contributors/contributor.actions';
+import type { UpdateContributorSelfInput } from '@/modules/contributors/contributor.schemas';
+import { ContributorSession } from '@/modules/contributors/contributor.types';
 import { updateLocalPartnerAction } from '@/modules/local-partners/local-partner.actions';
 import type { LocalPartnerUpdateInput } from '@/modules/local-partners/local-partner.schemas';
 import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
@@ -24,26 +25,15 @@ export const submitProfileForm = async (
 			};
 		}
 
-		const update: ContributorUpdateInput = {
+		const update: UpdateContributorSelfInput = {
 			referral: values.referral ?? (session as ContributorSession).referral ?? ContributorReferralSource.other,
 			contact: {
-				update: {
-					data: {
-						firstName: values.firstName,
-						lastName: values.lastName,
-						email: values.email,
-						gender: values.gender ?? null,
-						language: values.language,
-						address: values.address
-							? {
-									upsert: {
-										update: values.address,
-										create: values.address,
-									},
-								}
-							: undefined,
-					},
-				},
+				firstName: values.firstName,
+				lastName: values.lastName,
+				email: values.email,
+				gender: values.gender ?? null,
+				language: values.language,
+				address: values.address,
 			},
 		};
 

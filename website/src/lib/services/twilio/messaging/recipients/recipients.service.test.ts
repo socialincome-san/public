@@ -1,7 +1,6 @@
 import type { PrismaClient } from '@/generated/prisma/client';
 import type { LocalPartnerReadService } from '@/modules/local-partners/local-partner.types';
 import type { recipientService as recipientServiceFunctions } from '@/modules/recipients/recipient.service';
-import type { ContributorReadService } from '../../../contributor/contributor-read.service';
 import { MessagingRecipientsService } from './recipients.service';
 import type { MessagingRecipientFilters } from './recipients.types';
 import type { SelectionState } from './selection.types';
@@ -18,10 +17,15 @@ type LocalPartnerTargetRow = {
 };
 
 const mockFindRecipientMessagingTargets = jest.fn<Promise<RecipientTargetRow[]>, [string[]]>();
+const mockGetPaginatedContributorTableView = jest.fn<unknown, unknown[]>();
 
 jest.mock('@/modules/recipients/recipient.service', () => ({
 	getRecipientMessagingTargets: (recipientIds: string[]): Promise<{ success: true; data: RecipientTargetRow[] }> =>
 		mockFindRecipientMessagingTargets(recipientIds).then((data) => ({ success: true as const, data })),
+}));
+
+jest.mock('@/modules/contributors/contributor.service', () => ({
+	getPaginatedContributorTableView: (...args: unknown[]) => mockGetPaginatedContributorTableView(...args),
 }));
 
 const contactPhone = { number: '+41791111111', hasWhatsApp: true };
@@ -62,10 +66,11 @@ function makeService(rows: Rows, reads: Reads = {}) {
 	};
 	const service = new MessagingRecipientsService(
 		db as unknown as PrismaClient,
-		(reads.contributorRead ?? {}) as unknown as ContributorReadService,
 		(reads.recipientRead ?? {}) as unknown as Pick<typeof recipientServiceFunctions, 'getPaginatedTableView'>,
 		localPartnerRead,
 	);
+
+	mockGetPaginatedContributorTableView.mockImplementation(reads.contributorRead?.getPaginatedTableView ?? jest.fn());
 
 	return { service, db };
 }

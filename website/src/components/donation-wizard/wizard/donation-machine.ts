@@ -1,5 +1,5 @@
-import { getContributorCommunityStatsAction } from '@/lib/server-actions/contributor-public-actions';
-import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
+import { getContributorCommunityStatsAction } from '@/modules/contributors/contributor.actions';
+import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
 import { assign, fromPromise, setup } from 'xstate';
 import { buildCompletedDonationSummary } from '../steps/step-stripe-checkout/map-wizard-to-stripe-checkout';
 import {

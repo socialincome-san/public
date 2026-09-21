@@ -7,6 +7,8 @@ import type { SubscribeToNewsletterInput } from './newsletter.schemas';
 import type { NewsletterContact, NewsletterSubscriber } from './newsletter.types';
 import { toNewsletterLanguage } from './newsletter.types';
 
+export { toNewsletterLanguage };
+
 export const getActiveNewsletterSubscription = async (
 	email: string | null,
 ): Promise<ServiceResult<NewsletterContact | null>> => {

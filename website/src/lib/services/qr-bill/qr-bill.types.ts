@@ -1,6 +1,6 @@
 import { type DonationAmountContext } from '@/components/donation-wizard/utils/donation-amount';
-import { type Contributor, ContributorReferralSource, CountryCode, Currency, Gender } from '@/generated/prisma/client';
-import { type BankContributorData } from '../contributor/contributor.types';
+import { ContributorReferralSource, CountryCode, Currency, Gender } from '@/generated/prisma/client';
+import { type BankContributorData, type ContributorRecord } from '@/modules/contributors/contributor.types';
 
 type QrDonorDetails = Pick<BankContributorData, 'email' | 'firstName' | 'lastName' | 'language'>;
 
@@ -42,7 +42,7 @@ export type UpdateContributorAfterQrPaymentInput = {
 	};
 };
 
-export type UpdateContributorAfterQrPaymentResult = Contributor;
+export type UpdateContributorAfterQrPaymentResult = ContributorRecord;
 
 export type GetQrOnboardingPrefillInput = {
 	paymentReferenceId: string;
@@ -55,7 +55,7 @@ export type UpdateContributorReferralAfterQrPaymentInput = {
 	referral: ContributorReferralSource;
 };
 
-export type UpdateContributorReferralAfterQrPaymentResult = Contributor;
+export type UpdateContributorReferralAfterQrPaymentResult = ContributorRecord;
 
 export type CreateWizardQrReferencesInput = QrDonorDetails;
 

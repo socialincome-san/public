@@ -3,10 +3,16 @@ import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import type { CampaignReadService } from '../campaign/campaign-read.service';
 import type { ContributionWriteService } from '../contribution/contribution-write.service';
-import type { ContributorReadService } from '../contributor/contributor-read.service';
-import type { ContributorWriteService } from '../contributor/contributor-write.service';
 import type { SubscriptionWriteService } from '../subscription/subscription-write.service';
 import { StripeService } from './stripe.service';
+
+jest.mock('@/modules/contributors/contributor.service', () => ({
+	findContributorByAccountId: jest.fn(),
+	findContributorByStripeCustomerOrEmail: jest.fn(),
+	getOrCreateContributorForAccount: jest.fn(),
+	getOrCreateContributorWithFirebaseAuth: jest.fn(),
+	updateContributorSelf: jest.fn(),
+}));
 
 jest.mock('@/generated/prisma/client', () => ({
 	PrismaClient: class {},
@@ -46,8 +52,6 @@ describe('StripeService.updateContributorSubscriptionAmount', () => {
 	const createService = () =>
 		new StripeService(
 			db,
-			{} as ContributorReadService,
-			{} as ContributorWriteService,
 			{} as ContributionWriteService,
 			{ upsertFromStripeSubscription } as unknown as SubscriptionWriteService,
 			{} as CampaignReadService,

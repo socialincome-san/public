@@ -1,4 +1,4 @@
-import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
+import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
 import type { CompletedDonationSummary } from '../steps/step-stripe-checkout/map-wizard-to-stripe-checkout';
 import { type DonationAmountContext, getInitialDonationContext } from '../utils/donation-amount';
 

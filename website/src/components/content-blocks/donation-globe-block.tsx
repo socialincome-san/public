@@ -7,12 +7,13 @@ import { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
+import { getContributorCommunityStatsAction } from '@/modules/contributors/contributor.actions';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { unstable_cache } from 'next/cache';
 
 const getCachedCommunityStats = unstable_cache(
 	async () => {
-		const result = await services.read.contributor.getCommunityStats();
+		const result = await getContributorCommunityStatsAction();
 		if (!result.success) {
 			throw new Error(result.error);
 		}

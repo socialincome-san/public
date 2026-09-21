@@ -1,11 +1,11 @@
 import { Translator } from '@/lib/i18n/translator';
 import { LanguageCode } from '@/lib/types/language';
 import { now } from '@/lib/utils/now';
+import { ContributorDonationCertificate } from '@/modules/contributors/contributor.types';
 import { createWriteStream } from 'fs';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
 import { ContributionDonationEntry } from '../contribution/contribution.types';
-import { ContributorDonationCertificate } from '../contributor/contributor.types';
 import { ServiceResult } from '../core/base.types';
 
 const ASSET_DIR = path.join(process.cwd(), 'public', 'assets');

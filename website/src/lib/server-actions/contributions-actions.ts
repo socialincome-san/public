@@ -9,6 +9,7 @@ import {
 } from '@/lib/services/contribution/contribution-form-input';
 import { resultFail, resultOk } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
+import { getEditableContributorOptions } from '@/modules/contributors/contributor.service';
 import { revalidatePath } from 'next/cache';
 
 export const createContributionAction = async (contribution: ContributionFormCreateInput) => {
@@ -48,7 +49,7 @@ export const getContributionsOptionsAction = async () => {
 		return sessionResult;
 	}
 	const [contributorOptions, campaignOptions, campaignStories] = await Promise.all([
-		services.read.contributor.getEditableOptions(sessionResult.data.id),
+		getEditableContributorOptions(sessionResult.data.id),
 		services.read.campaign.getEditableOptions(sessionResult.data.id),
 		services.storyblok.getCampaigns(defaultLanguage),
 	]);

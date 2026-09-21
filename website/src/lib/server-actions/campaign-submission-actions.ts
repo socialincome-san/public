@@ -21,6 +21,7 @@ import type { CampaignSubmissionResult } from '@/lib/services/campaign/campaign-
 import { readTurnstileToken, verifyTurnstileToken } from '@/lib/services/campaign/verify-turnstile-token';
 import { resultFail, resultOk } from '@/lib/services/core/service-result';
 import { services } from '@/lib/services/services';
+import { getOrCreateContributorFromEmailAndName } from '@/modules/contributors/contributor.service';
 
 const personalSchema = createCampaignSubmissionPersonalSchema((code) => code);
 
@@ -191,7 +192,7 @@ export const submitCampaignAction = async (formData: FormData): Promise<SubmitCa
 			email: formData.get('email'),
 		});
 		if (personalParsed.success) {
-			const accountResult = await services.write.contributor.getOrCreateFromEmailAndName(personalParsed.data);
+			const accountResult = await getOrCreateContributorFromEmailAndName(personalParsed.data);
 			if (!accountResult.success) {
 				console.error(accountResult.error);
 			}

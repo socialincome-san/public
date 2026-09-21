@@ -1,9 +1,10 @@
+import { getCurrentContributorSession } from '@/modules/contributors/contributor.service';
+import type { ContributorSession } from '@/modules/contributors/contributor.types';
 import { getCurrentLocalPartnerSession } from '@/modules/local-partners/local-partner.service';
 import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import { getCurrentUserSession } from '@/modules/users/user.service';
 import type { UserSession } from '@/modules/users/user.types';
 import { redirect } from 'next/navigation';
-import { ContributorSession } from '../services/contributor/contributor.types';
 import { ServiceResult } from '../services/core/base.types';
 import { resultFail, resultOk } from '../services/core/service-result';
 import { services } from '../services/services';
@@ -27,7 +28,7 @@ export const getCurrentSessions = async (): Promise<Session[]> => {
 	}
 
 	const out: Session[] = [];
-	const contributorResult = await services.read.contributor.getCurrentContributorSession(authUserId);
+	const contributorResult = await getCurrentContributorSession(authUserId);
 	if (contributorResult.success && contributorResult.data) {
 		out.push(contributorResult.data);
 	}

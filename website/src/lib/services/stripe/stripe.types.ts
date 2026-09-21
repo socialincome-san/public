@@ -1,5 +1,6 @@
 import { type DonationAmountContext } from '@/components/donation-wizard/utils/donation-amount';
-import { type Contributor, ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/client';
+import { ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/client';
+import type { ContributorRecord } from '@/modules/contributors/contributor.types';
 
 export type StripeEmbeddedCheckoutSessionInput = {
 	wizardContext: DonationAmountContext;
@@ -76,14 +77,14 @@ export type UpdateContributorAfterCheckoutInput = {
 	};
 };
 
-export type UpdateContributorAfterCheckoutResult = Contributor;
+export type UpdateContributorAfterCheckoutResult = ContributorRecord;
 
 export type UpdateContributorReferralAfterCheckoutInput = {
 	stripeCheckoutSessionId: string;
 	referral: ContributorReferralSource;
 };
 
-export type UpdateContributorReferralAfterCheckoutResult = Contributor;
+export type UpdateContributorReferralAfterCheckoutResult = ContributorRecord;
 
 export type StripeSubscriptionRow = {
 	id: string;

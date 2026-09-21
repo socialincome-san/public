@@ -1,6 +1,6 @@
-import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
 import type { LanguageCode } from '@/lib/types/language';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
+import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
 
 const localeForLanguage = (language: LanguageCode): string => (language === 'de' ? 'de-CH' : language);
 

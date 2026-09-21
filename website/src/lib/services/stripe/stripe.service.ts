@@ -29,18 +29,19 @@ import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import { titleCase } from '@/lib/utils/string-utils';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import {
+	findContributorByAccountId,
+	findContributorByStripeCustomerOrEmail,
+	getOrCreateContributorForAccount,
+	getOrCreateContributorWithFirebaseAuth,
+	updateContributorSelf,
+} from '@/modules/contributors/contributor.service';
+import type { ContributorWithContact, StripeContributorData } from '@/modules/contributors/contributor.types';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import Stripe from 'stripe';
 import { CampaignReadService } from '../campaign/campaign-read.service';
 import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { type PaymentEventCreateData, type StripeContributionCreateData } from '../contribution/contribution.types';
-import { ContributorReadService } from '../contributor/contributor-read.service';
-import { ContributorWriteService } from '../contributor/contributor-write.service';
-import {
-	type ContributorUpdateInput,
-	type ContributorWithContact,
-	type StripeContributorData,
-} from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import {
@@ -102,8 +103,6 @@ export class StripeService extends BaseService {
 
 	constructor(
 		db: PrismaClient,
-		private readonly contributorReadService: ContributorReadService,
-		private readonly contributorWriteService: ContributorWriteService,
 		private readonly contributionWriteService: ContributionWriteService,
 		private readonly subscriptionWriteService: SubscriptionWriteService,
 		private readonly campaignReadService: CampaignReadService,
@@ -137,13 +136,13 @@ export class StripeService extends BaseService {
 			}
 
 			let stripeCustomerId: string | null = null;
-			const contributor = await this.db.contributor.findUnique({
-				where: { accountId: user.accountId },
-				select: { stripeCustomerId: true },
-			});
+			const contributorResult = await findContributorByAccountId(user.accountId);
+			if (!contributorResult.success) {
+				return this.resultFail(contributorResult.error);
+			}
 
-			if (contributor?.stripeCustomerId) {
-				stripeCustomerId = contributor.stripeCustomerId;
+			if (contributorResult.data?.stripeCustomerId) {
+				stripeCustomerId = contributorResult.data.stripeCustomerId;
 			} else {
 				const email = user.contact?.email ?? null;
 				if (!email) {
@@ -157,11 +156,7 @@ export class StripeService extends BaseService {
 				}
 
 				stripeCustomerId = createCustomerResult.data;
-				const contributorResult = await this.contributorWriteService.getOrCreateContributorForAccount(
-					user.accountId,
-					stripeCustomerId,
-					user.contactId,
-				);
+				const contributorResult = await getOrCreateContributorForAccount(user.accountId, stripeCustomerId, user.contactId);
 				if (!contributorResult.success) {
 					return this.resultFail(contributorResult.error);
 				}
@@ -283,7 +278,7 @@ export class StripeService extends BaseService {
 
 			const stripeCustomerId = typeof session.customer === 'string' ? session.customer : session.customer.id;
 			const email = session.customer_details?.email ?? undefined;
-			const contributorResult = await this.contributorReadService.findByStripeCustomerOrEmail(stripeCustomerId, email);
+			const contributorResult = await findContributorByStripeCustomerOrEmail(stripeCustomerId, email);
 
 			if (!contributorResult.success) {
 				return contributorResult;
@@ -339,10 +334,7 @@ export class StripeService extends BaseService {
 				return this.resultFail('A contributor email is required');
 			}
 
-			const existingResult = await this.contributorReadService.findByStripeCustomerOrEmail(
-				stripeCustomer.id,
-				contributorEmail,
-			);
+			const existingResult = await findContributorByStripeCustomerOrEmail(stripeCustomer.id, contributorEmail);
 
 			if (!existingResult.success) {
 				return existingResult;
@@ -351,7 +343,7 @@ export class StripeService extends BaseService {
 			let contributor = existingResult.data;
 
 			if (!contributor) {
-				const createResult = await this.contributorWriteService.getOrCreateContributorWithFirebaseAuth({
+				const createResult = await getOrCreateContributorWithFirebaseAuth({
 					stripeCustomerId: stripeCustomer.id,
 					email: contributorEmail,
 					firstName: user.personal.name,
@@ -366,38 +358,20 @@ export class StripeService extends BaseService {
 				contributor = createResult.data.contributor;
 			}
 
-			const updateInput: ContributorUpdateInput = {
-				id: contributor.id,
+			return updateContributorSelf(contributor.id, {
 				...(user.personal.referral !== undefined ? { referral: user.personal.referral } : {}),
 				needsOnboarding: false,
 				contact: {
-					update: {
-						data: {
-							firstName: user.personal.name,
-							lastName: user.personal.lastname,
-							email: contributorEmail,
-							gender: user.personal.gender ?? null,
-							language: user.language,
-							address: {
-								upsert: {
-									update: {
-										country: user.address.country,
-									},
-									create: {
-										street: '',
-										number: '',
-										city: '',
-										zip: '',
-										country: user.address.country,
-									},
-								},
-							},
-						},
+					firstName: user.personal.name,
+					lastName: user.personal.lastname,
+					email: contributorEmail,
+					gender: user.personal.gender ?? null,
+					language: user.language,
+					address: {
+						country: user.address.country,
 					},
 				},
-			};
-
-			return this.contributorWriteService.updateSelf(contributor.id, updateInput);
+			});
 		} catch (error) {
 			console.error(error);
 
@@ -424,7 +398,7 @@ export class StripeService extends BaseService {
 
 			const stripeCustomerId = typeof session.customer === 'string' ? session.customer : session.customer.id;
 			const email = session.customer_details?.email ?? undefined;
-			const existingResult = await this.contributorReadService.findByStripeCustomerOrEmail(stripeCustomerId, email);
+			const existingResult = await findContributorByStripeCustomerOrEmail(stripeCustomerId, email);
 
 			if (!existingResult.success) {
 				return existingResult;
@@ -440,14 +414,10 @@ export class StripeService extends BaseService {
 				return this.resultFail('Contributor email is required');
 			}
 
-			return this.contributorWriteService.updateSelf(contributor.id, {
+			return updateContributorSelf(contributor.id, {
 				referral,
 				contact: {
-					update: {
-						data: {
-							email: contributorEmail,
-						},
-					},
+					email: contributorEmail,
 				},
 			});
 		} catch (error) {
@@ -1313,11 +1283,7 @@ export class StripeService extends BaseService {
 					select: { contactId: true },
 				});
 				if (user) {
-					const portalResult = await this.contributorWriteService.getOrCreateContributorForAccount(
-						accountId,
-						stripeCustomer.id,
-						user.contactId,
-					);
+					const portalResult = await getOrCreateContributorForAccount(accountId, stripeCustomer.id, user.contactId);
 					if (!portalResult.success) {
 						console.error(portalResult.error);
 
@@ -1342,8 +1308,7 @@ export class StripeService extends BaseService {
 						referral: ContributorReferralSource.other,
 					};
 
-					const contributorResult =
-						await this.contributorWriteService.getOrCreateContributorWithFirebaseAuth(contributorData);
+					const contributorResult = await getOrCreateContributorWithFirebaseAuth(contributorData);
 					if (!contributorResult.success) {
 						console.error(contributorResult.error);
 
@@ -1357,7 +1322,7 @@ export class StripeService extends BaseService {
 						console.info('Created new contributor', { contributorId: contributor.id });
 					}
 				} else {
-					const existingContributorResult = await this.contributorReadService.findByStripeCustomerOrEmail(
+					const existingContributorResult = await findContributorByStripeCustomerOrEmail(
 						stripeCustomer.id,
 						stripeCustomer.email || undefined,
 					);
@@ -1477,7 +1442,7 @@ export class StripeService extends BaseService {
 				return this.resultOk({ skipReason: `Subscription ${subscription.id} has no customer` });
 			}
 
-			const contributorResult = await this.contributorReadService.findByStripeCustomerOrEmail(customerId);
+			const contributorResult = await findContributorByStripeCustomerOrEmail(customerId);
 			if (!contributorResult.success) {
 				return this.resultFail(contributorResult.error);
 			}

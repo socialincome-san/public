@@ -8,8 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/switch/switch';
 import { ContributorReferralSource, Gender } from '@/generated/prisma/enums';
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
+import { ContributorSession } from '@/modules/contributors/contributor.types';
 import { getFocusOptionsAction } from '@/modules/focuses/focus.actions';
 import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import type { UserSession } from '@/modules/users/user.types';

@@ -2,6 +2,7 @@ import { ContributionStatus, PaymentEvent, PaymentEventType, PrismaClient } from
 import { Currency } from '@/generated/prisma/enums';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { findContributorsByPaymentReferenceIds } from '@/modules/contributors/contributor.service';
 import xmldom from '@xmldom/xmldom';
 import { DateTime } from 'luxon';
 import fs from 'node:fs';
@@ -12,7 +13,6 @@ import { CONTRIBUTION_REFERENCE_ID_LENGTH, CONTRIBUTOR_REFERENCE_ID_LENGTH } fro
 import { CampaignReadService } from '../campaign/campaign-read.service';
 import { ContributionWriteService } from '../contribution/contribution-write.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
-import { ContributorReadService } from '../contributor/contributor-read.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { BankContribution } from './payment-file-import.types';
@@ -31,7 +31,6 @@ export class PaymentFileImportService extends BaseService {
 	constructor(
 		bucketName: string,
 		db: PrismaClient,
-		private readonly contributorService: ContributorReadService,
 		private readonly contributionService: ContributionWriteService,
 		private readonly campaignService: CampaignReadService,
 	) {
@@ -161,7 +160,7 @@ export class PaymentFileImportService extends BaseService {
 			}
 			const campaignId = fallbackCampaignResult.data.id;
 
-			const contributors = await this.contributorService.findByPaymentReferenceIds(
+			const contributors = await findContributorsByPaymentReferenceIds(
 				bankContributions.map((c) => this.getReferenceIds(c.referenceId).contributorReferenceId),
 			);
 			if (!contributors.success) {

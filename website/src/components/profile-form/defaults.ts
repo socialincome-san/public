@@ -1,4 +1,4 @@
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
+import { ContributorSession } from '@/modules/contributors/contributor.types';
 import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import type { UserSession } from '@/modules/users/user.types';
 import { ProfileFormInput } from './schemas';

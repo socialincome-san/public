@@ -1,4 +1,4 @@
-import { Address, ContributorReferralSource, CountryCode, Gender, Phone, Prisma } from '@/generated/prisma/client';
+import type { ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/enums';
 
 export type ContributorCommunityStats = {
 	supporterCount: number;
@@ -39,22 +39,8 @@ export type ContributorPayload = {
 	referral: ContributorReferralSource;
 	paymentReferenceId: string | null;
 	stripeCustomerId: string | null;
-	contact: {
-		id: string;
-		firstName: string;
-		lastName: string;
-		callingName: string | null;
-		email: string | null;
-		gender: Gender | null;
-		language: string | null;
-		dateOfBirth: Date | null;
-		profession: string | null;
-		address: Address | null;
-		phone: Phone | null;
-	};
+	contact: ContributorContact;
 };
-
-export type ContributorUpdateInput = Prisma.ContributorUpdateInput;
 
 export type ContributorOption = {
 	id: string;
@@ -67,13 +53,28 @@ export type ContributorDonationCertificate = {
 	lastName: string;
 	email: string | null;
 	language: string | null;
-	address: Address | null;
+	address: ContributorAddress | null;
 	authId: string;
 };
 
-export type ContributorWithContact = Prisma.ContributorGetPayload<{
-	include: { contact: true };
-}>;
+export type ContributorRecord = {
+	id: string;
+	legacyFirestoreId: string | null;
+	accountId: string;
+	contactId: string;
+	referral: ContributorReferralSource;
+	needsOnboarding: boolean;
+	paymentReferenceId: string | null;
+	stripeCustomerId: string | null;
+	createdAt: Date;
+	updatedAt: Date | null;
+};
+
+export type ContributorWithContact = ContributorRecord & {
+	contact: ContributorContactRecord & {
+		address: ContributorAddress | null;
+	};
+};
 
 export type StripeContributorData = {
 	stripeCustomerId: string;
@@ -112,4 +113,61 @@ export type ContributorSession = {
 	zip: string | null;
 	country: CountryCode | null;
 	stripeCustomerId: string | null;
+};
+
+export type ContributorUpdateUniquenessContext = {
+	existingContactId: string;
+	existingEmail: string | null;
+	existingPhoneId: string | null;
+	existingPhoneNumber: string | null;
+};
+
+type ContributorContact = {
+	id: string;
+	firstName: string;
+	lastName: string;
+	callingName: string | null;
+	email: string | null;
+	gender: Gender | null;
+	language: string | null;
+	dateOfBirth: Date | null;
+	profession: string | null;
+	phone: ContributorPhone | null;
+	address: ContributorAddress | null;
+};
+
+type ContributorAddress = {
+	id: string;
+	street: string;
+	number: string;
+	city: string;
+	zip: string;
+	country: CountryCode | null;
+	createdAt: Date;
+	updatedAt: Date | null;
+};
+
+type ContributorPhone = {
+	id: string;
+	number: string;
+	hasWhatsApp: boolean;
+	createdAt: Date;
+	updatedAt: Date | null;
+};
+
+type ContributorContactRecord = {
+	id: string;
+	firstName: string;
+	lastName: string;
+	callingName: string | null;
+	email: string | null;
+	gender: Gender | null;
+	language: string | null;
+	dateOfBirth: Date | null;
+	profession: string | null;
+	phoneId: string | null;
+	addressId: string | null;
+	isInstitution: boolean;
+	createdAt: Date;
+	updatedAt: Date | null;
 };

@@ -22,6 +22,7 @@ import {
 	type MessagingRecipientsPage,
 	type MessagingRecipientsQuery,
 } from '@/lib/services/twilio/messaging/recipients/recipients.types';
+import { getPaginatedContributorTableView } from '@/modules/contributors/contributor.service';
 import { getPaginatedLocalPartnerTableView } from '@/modules/local-partners/local-partner.service';
 import { getPaginatedRecipientTableView } from '@/modules/recipients/recipient.service';
 
@@ -77,7 +78,7 @@ export async function listMessagingRecipientsAction(
 	const baseQuery = { page: query.page, pageSize: query.pageSize, search: query.search };
 
 	if (type === 'contributor') {
-		const res = await services.read.contributor.getPaginatedTableView(userId, {
+		const res = await getPaginatedContributorTableView(userId, {
 			...baseQuery,
 			country: query.filters?.country,
 		});

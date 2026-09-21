@@ -1,7 +1,7 @@
 import { PrismaClient } from '@/generated/prisma/client';
+import { getPaginatedContributorTableView } from '@/modules/contributors/contributor.service';
 import type { LocalPartnerReadService } from '@/modules/local-partners/local-partner.types';
 import { getRecipientMessagingTargets, type recipientService } from '@/modules/recipients/recipient.service';
-import type { ContributorReadService } from '../../../contributor/contributor-read.service';
 import { BaseService } from '../../../core/base.service';
 import type { ServiceResult } from '../../../core/base.types';
 import { pickTargetPhone } from './phone-source';
@@ -29,7 +29,6 @@ const contactPhoneTarget = (row: { contactId: string; contact: { phone: Messagin
 export class MessagingRecipientsService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly contributorRead: ContributorReadService,
 		private readonly recipientRead: RecipientRead,
 		private readonly localPartnerRead: LocalPartnerReadService,
 	) {
@@ -75,7 +74,7 @@ export class MessagingRecipientsService extends BaseService {
 	private contributorFetcher(currentUserId: string): RowFetcher {
 		return async (page, pageSize, search, filters) =>
 			toFetchedPage(
-				await this.contributorRead.getPaginatedTableView(currentUserId, {
+				await getPaginatedContributorTableView(currentUserId, {
 					page,
 					pageSize,
 					search,
