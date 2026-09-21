@@ -16,6 +16,10 @@ const mockSetApiKey = sgMail.setApiKey as jest.Mock;
 const mockSend = sgMail.send as jest.Mock;
 
 describe('SendgridMailService', () => {
+	const db = {
+		contact: { findUnique: jest.fn().mockResolvedValue(null) },
+		sentEmail: { create: jest.fn().mockResolvedValue({}) },
+	};
 	const originalApiKey = process.env.SENDGRID_API_KEY;
 	const originalFromEmail = process.env.SENDGRID_FROM_EMAIL;
 
@@ -29,7 +33,7 @@ describe('SendgridMailService', () => {
 		delete process.env.SENDGRID_API_KEY;
 		delete process.env.SENDGRID_FROM_EMAIL;
 
-		const result = await new SendgridMailService().send({
+		const result = await new SendgridMailService(db as never).send({
 			to: 'recipient@example.com',
 			subject: 'Subject',
 			text: 'Body',
@@ -47,7 +51,7 @@ describe('SendgridMailService', () => {
 		process.env.SENDGRID_FROM_EMAIL = 'sender@example.com';
 		mockSend.mockResolvedValue([] as never);
 
-		const result = await new SendgridMailService().send({
+		const result = await new SendgridMailService(db as never).send({
 			to: ['one@example.com', 'two@example.com'],
 			subject: 'Subject',
 			text: 'Body',
@@ -61,6 +65,7 @@ describe('SendgridMailService', () => {
 			subject: 'Subject',
 			text: 'Body',
 		});
+		expect(db.sentEmail.create).toHaveBeenCalledTimes(2);
 	});
 
 	test('returns an error when SendGrid fails', async () => {
@@ -68,7 +73,7 @@ describe('SendgridMailService', () => {
 		process.env.SENDGRID_FROM_EMAIL = 'sender@example.com';
 		mockSend.mockRejectedValue(new Error('SendGrid unavailable'));
 
-		const result = await new SendgridMailService().send({
+		const result = await new SendgridMailService(db as never).send({
 			to: 'recipient@example.com',
 			subject: 'Subject',
 			text: 'Body',
@@ -77,6 +82,25 @@ describe('SendgridMailService', () => {
 		expect(result).toEqual({
 			success: false,
 			error: 'Unable to send email: Error: SendGrid unavailable',
+		});
+		expect(db.sentEmail.create).not.toHaveBeenCalled();
+	});
+
+	test('returns an error when storing the sent email fails', async () => {
+		process.env.SENDGRID_API_KEY = 'test-api-key';
+		process.env.SENDGRID_FROM_EMAIL = 'sender@example.com';
+		mockSend.mockResolvedValue([] as never);
+		jest.mocked(db.sentEmail.create).mockRejectedValue(new Error('Database unavailable'));
+
+		const result = await new SendgridMailService(db as never).send({
+			to: 'recipient@example.com',
+			subject: 'Subject',
+			text: 'Body',
+		});
+
+		expect(result).toEqual({
+			success: false,
+			error: 'Unable to send email: Error: Database unavailable',
 		});
 	});
 });

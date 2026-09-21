@@ -112,7 +112,7 @@ const githubApi = new GithubApiService(prisma);
 const storyblok = new StoryblokService(prisma);
 const journal = new JournalService(prisma, storyblok);
 const sendgrid = new SendgridSubscriptionService();
-const sendgridMail = new SendgridMailService();
+const sendgridMail = new SendgridMailService(prisma);
 const monthlySummary = new MonthlySummaryService(prisma);
 const recipientStatus = recipientStatusService;
 
