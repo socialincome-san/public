@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: aikidosecurity/local-scanner:latest@sha256:4d6d31921dcc8016878937686435b6dfb9e1c6f262df414953954813876d9726
+      image: aikidosecurity/local-scanner:latest@sha256:18cd7f0c8abe313d04aeacd7514c4697bcafee459cf3bc5a6d8f08cd1b741303
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
