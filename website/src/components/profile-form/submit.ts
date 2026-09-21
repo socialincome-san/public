@@ -1,12 +1,12 @@
 import { ContributorReferralSource } from '@/generated/prisma/enums';
 import { updateSelfAction as updateContributorSelfAction } from '@/lib/server-actions/contributor-actions';
 import { updateLocalPartnerAction } from '@/lib/server-actions/local-partner-action';
-import { updateUserSelfAction } from '@/lib/server-actions/user-actions';
 import { ContributorSession, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerFormUpdateInput } from '@/lib/services/local-partner/local-partner-form-input';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
-import { UserSession } from '@/lib/services/user/user.types';
 import { slugify } from '@/lib/utils/string-utils';
+import { updateUserSelfAction } from '@/modules/users/user.actions';
+import type { UserSession } from '@/modules/users/user.types';
 import { toggleNewsletter } from './newsletter';
 import { ProfileFormOutput } from './schemas';
 

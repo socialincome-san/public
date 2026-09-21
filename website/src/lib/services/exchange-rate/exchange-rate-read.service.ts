@@ -1,9 +1,9 @@
 import { Currency, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import type { UserReadService } from '@/modules/users/user.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { UserReadService } from '../user/user-read.service';
 import {
 	ExchangeRate,
 	ExchangeRateTableQuery,

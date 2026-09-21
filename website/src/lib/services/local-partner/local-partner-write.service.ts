@@ -1,10 +1,10 @@
 import { LocalPartner, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { Session } from '@/lib/firebase/current-account';
+import type { UserReadService } from '@/modules/users/user.types';
 import { ContactRelationsService } from '../contact/contact-relations.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import { UserReadService } from '../user/user-read.service';
 import { LocalPartnerFormCreateInput, LocalPartnerFormUpdateInput } from './local-partner-form-input';
 import { LocalPartnerValidationService } from './local-partner-validation.service';
 

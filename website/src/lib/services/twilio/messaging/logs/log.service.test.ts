@@ -42,7 +42,7 @@ function makeService(opts: { jobs: StoredJob[]; isAdmin?: boolean }) {
 	};
 
 	return {
-		service: new MessagingLogService(db as never, userService as never, { handleStatusCallback: jest.fn() } as never),
+		service: new MessagingLogService(db as never, userService, { handleStatusCallback: jest.fn() } as never),
 		findManyCalls,
 		updateManyCalls,
 	};
@@ -198,7 +198,7 @@ describe('MessagingLogService.getJobWithMessages', () => {
 			),
 		};
 
-		return new MessagingLogService(db as never, userService as never, { handleStatusCallback: jest.fn() } as never);
+		return new MessagingLogService(db as never, userService, { handleStatusCallback: jest.fn() } as never);
 	}
 
 	const baseJob = {
@@ -331,7 +331,7 @@ describe('MessagingLogService.syncJobStatuses', () => {
 		);
 		const webhookService = { handleStatusCallback };
 
-		const service = new MessagingLogService(db as never, userService as never, webhookService as never);
+		const service = new MessagingLogService(db as never, userService, webhookService as never);
 
 		// getTwilioClient is protected and would otherwise construct a real client from env vars.
 		const twilioClient = {

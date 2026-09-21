@@ -1,7 +1,7 @@
 import { PrismaClient, SanctionRegime } from '@/generated/prisma/client';
+import type { UserReadService } from '@/modules/users/user.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { UserReadService } from '../user/user-read.service';
 import { CountryFormCreateInput, CountryFormUpdateInput } from './country-form-input';
 import { CountryValidationService } from './country-validation.service';
 import { CountryPayload } from './country.types';

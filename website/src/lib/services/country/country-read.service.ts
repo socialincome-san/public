@@ -1,9 +1,9 @@
 import { CountryCode, NetworkTechnology, Prisma, PrismaClient, SanctionRegime } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import type { UserReadService } from '@/modules/users/user.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { UserReadService } from '../user/user-read.service';
 import {
 	CountryCondition,
 	CountryPaginatedTableView,

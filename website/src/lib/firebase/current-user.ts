@@ -1,5 +1,6 @@
 import { services } from '@/lib/services/services';
-import { UserSession } from '@/lib/services/user/user.types';
+import { getCurrentUserSession } from '@/modules/users/user.service';
+import type { UserSession } from '@/modules/users/user.types';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
 
@@ -14,7 +15,7 @@ const loadCurrentUser = async (): Promise<UserSession | null> => {
 	}
 
 	const authUserId = decodedTokenResult.data.uid;
-	const result = await services.read.user.getCurrentUserSession(authUserId);
+	const result = await getCurrentUserSession(authUserId);
 
 	return result.success ? result.data : null;
 };

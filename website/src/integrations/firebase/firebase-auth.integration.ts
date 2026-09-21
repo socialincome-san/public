@@ -1,7 +1,7 @@
 import { authAdmin } from '@/lib/firebase/firebase-admin';
 import type { ServiceResult } from '@/lib/services/core/base.types';
 import { resultFail, resultOk } from '@/lib/services/core/service-result';
-import type { DecodedIdToken, UserRecord } from 'firebase-admin/auth';
+import type { DecodedIdToken, UpdateRequest, UserRecord } from 'firebase-admin/auth';
 
 export const createFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<ServiceResult<UserRecord>> => {
 	try {
@@ -70,6 +70,66 @@ export const deleteFirebaseUserByPhoneNumberIfExists = async (phoneNumber: strin
 	}
 };
 
+export const findFirebaseUserByEmail = async (email: string): Promise<ServiceResult<UserRecord | null>> => {
+	try {
+		return resultOk(await authAdmin.auth.getUserByEmail(email));
+	} catch (error: unknown) {
+		if (isFirebaseUserNotFoundError(error)) {
+			return resultOk(null);
+		}
+
+		console.error('Error getting Firebase user by email', { email, error });
+
+		return resultFail('Could not check existing Firebase Auth user');
+	}
+};
+
+export const createFirebaseUserByEmail = async (input: {
+	email: string;
+	displayName: string;
+}): Promise<ServiceResult<UserRecord>> => {
+	try {
+		return resultOk(
+			await authAdmin.auth.createUser({
+				email: input.email,
+				displayName: input.displayName,
+			}),
+		);
+	} catch (error) {
+		console.error('Error creating Firebase user by email', { email: input.email, error });
+
+		return resultFail('Could not create Firebase Auth user');
+	}
+};
+
+export const updateFirebaseUserByUid = async (uid: string, updates: UpdateRequest): Promise<ServiceResult<UserRecord>> => {
+	try {
+		await authAdmin.auth.getUser(uid);
+
+		return resultOk(await authAdmin.auth.updateUser(uid, updates));
+	} catch (error) {
+		console.error('Error updating Firebase user by UID', { uid, updates, error });
+
+		return resultFail('Could not update Firebase Auth user');
+	}
+};
+
+export const deleteFirebaseUserByUidIfExists = async (uid: string): Promise<ServiceResult<boolean>> => {
+	try {
+		await authAdmin.auth.deleteUser(uid);
+
+		return resultOk(true);
+	} catch (error: unknown) {
+		if (isFirebaseUserNotFoundError(error)) {
+			return resultOk(true);
+		}
+
+		console.error('Error deleting Firebase user by UID', { uid, error });
+
+		return resultFail('Could not delete Firebase Auth user');
+	}
+};
+
 export const decodeFirebaseTokenFromRequest = async (request: Request): Promise<ServiceResult<DecodedIdToken>> => {
 	const header = request.headers.get('authorization');
 	if (!header?.startsWith('Bearer ')) {
@@ -93,7 +153,7 @@ const findFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<Servi
 	try {
 		return resultOk(await authAdmin.auth.getUserByPhoneNumber(phoneNumber));
 	} catch (error: unknown) {
-		if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'auth/user-not-found') {
+		if (isFirebaseUserNotFoundError(error)) {
 			return resultOk(null);
 		}
 
@@ -102,3 +162,6 @@ const findFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<Servi
 		return resultFail('Auth user not found by phone number');
 	}
 };
+
+const isFirebaseUserNotFoundError = (error: unknown): boolean =>
+	typeof error === 'object' && error !== null && 'code' in error && error.code === 'auth/user-not-found';

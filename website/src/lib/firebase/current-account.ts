@@ -1,10 +1,11 @@
+import { getCurrentUserSession } from '@/modules/users/user.service';
+import type { UserSession } from '@/modules/users/user.types';
 import { redirect } from 'next/navigation';
 import { ContributorSession } from '../services/contributor/contributor.types';
 import { ServiceResult } from '../services/core/base.types';
 import { resultFail, resultOk } from '../services/core/service-result';
 import { LocalPartnerSession } from '../services/local-partner/local-partner.types';
 import { services } from '../services/services';
-import { UserSession } from '../services/user/user.types';
 
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
@@ -29,7 +30,7 @@ export const getCurrentSessions = async (): Promise<Session[]> => {
 	if (contributorResult.success && contributorResult.data) {
 		out.push(contributorResult.data);
 	}
-	const userResult = await services.read.user.getCurrentUserSession(authUserId);
+	const userResult = await getCurrentUserSession(authUserId);
 	if (userResult.success && userResult.data) {
 		out.push(userResult.data);
 	}

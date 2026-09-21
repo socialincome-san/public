@@ -1,4 +1,5 @@
-import { CountryCode, Gender, UserRole } from '@/generated/prisma/client';
+import type { CountryCode, Gender, UserRole } from '@/generated/prisma/enums';
+import type { ServiceResult } from '@/lib/services/core/base.types';
 
 export type UserPayload = {
 	id: string;
@@ -8,24 +9,6 @@ export type UserPayload = {
 	role: UserRole;
 	organizationId: string | null;
 	organizationIds: string[];
-};
-
-export type UserUpdateInput = {
-	id?: string;
-	firstName?: string;
-	lastName?: string;
-	email?: string;
-	role?: UserRole;
-	organizationId?: string;
-	gender?: Gender | null;
-	language?: string | null;
-	address?: {
-		street: string;
-		number: string;
-		city: string;
-		zip: string;
-		country: CountryCode;
-	} | null;
 };
 
 export type UserTableViewRow = {
@@ -66,7 +49,6 @@ export type UserSession = {
 	city: string | null;
 	zip: string | null;
 	country: CountryCode | null;
-
 	role: UserRole;
 	activeOrganization: {
 		id: string;
@@ -81,4 +63,8 @@ export type UserSession = {
 		name: string;
 	}[];
 	hasAnyOperatorProgramAccess: boolean;
+};
+
+export type UserReadService = {
+	isAdmin: (userId: string) => Promise<ServiceResult<true>>;
 };

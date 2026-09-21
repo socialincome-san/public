@@ -1,6 +1,6 @@
 import { MessagingJob, PrismaClient } from '@/generated/prisma/client';
+import type { UserReadService } from '@/modules/users/user.types';
 import { ServiceResult } from '../../../core/base.types';
-import { UserReadService } from '../../../user/user-read.service';
 import { TwilioBaseService } from '../../twilio-base.service';
 import { isPhoneSourceAllowed, PAYMENT_PHONE_ONLY_FOR_RECIPIENTS } from '../recipients/phone-source';
 import { MessagingRecipientsService } from '../recipients/recipients.service';

@@ -1,9 +1,9 @@
 import { PayoutProcess, Prisma, PrismaClient } from '@/generated/prisma/client';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import type { UserReadService } from '@/modules/users/user.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import type { PayoutProcessOverviewOption } from '../payout-process/payout-process-overview.types';
-import { UserReadService } from '../user/user-read.service';
 import {
 	MobileMoneyProviderOption,
 	MobileMoneyProviderPaginatedTableView,

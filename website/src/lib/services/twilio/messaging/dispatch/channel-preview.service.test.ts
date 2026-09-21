@@ -19,7 +19,7 @@ function makeService(opts: { targets: MessagingTarget[]; isAdmin?: boolean; reso
 	};
 
 	return {
-		service: new MessagingChannelPreviewService({} as never, userService as never, recipientsService as never),
+		service: new MessagingChannelPreviewService({} as never, userService, recipientsService as never),
 		recipientsService,
 	};
 }

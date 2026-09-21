@@ -2,6 +2,8 @@ import { hasAnyOperatorAccess, hasOperatorAccess } from '@/modules/program-acces
 import { createInitialAccessesForProgram, getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccessReadService, ProgramAccessWriteService } from '@/modules/program-access/program-access.types';
 import { recipientService, recipientStatusService } from '@/modules/recipients/recipient.service';
+import { isAdmin } from '@/modules/users/user.service';
+import type { UserReadService } from '@/modules/users/user.types';
 import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
 import { BankAccountReadService } from './bank-account/bank-account-read.service';
@@ -91,9 +93,6 @@ import { MessagingWebhookService } from './twilio/messaging/logs/webhook.service
 import { MessagingRecipientsService } from './twilio/messaging/recipients/recipients.service';
 import { TwilioTemplateService } from './twilio/messaging/twilio-templates/twilio-template.service';
 import { TwilioOtpService } from './twilio/otp/twilio-otp.service';
-import { UserReadService } from './user/user-read.service';
-import { UserValidationService } from './user/user-validation.service';
-import { UserWriteService } from './user/user-write.service';
 
 const appReviewMode = new AppReviewModeService(prisma);
 const bankAccountRead = new BankAccountReadService(prisma);
@@ -110,8 +109,7 @@ const programAccessWrite: ProgramAccessWriteService = {
 	createInitialAccessesForProgram,
 };
 const organizationAccess = new OrganizationAccessService(prisma);
-const userRead = new UserReadService(prisma);
-const userValidation = new UserValidationService(prisma);
+const userRead: UserReadService = { isAdmin };
 const exchangeRateImport = new ExchangeRateImportService(prisma);
 const surveySchedule = new SurveyScheduleService(prisma);
 const transparency = new TransparencyService(prisma, reserveRead);
@@ -125,7 +123,6 @@ const recipientStatus = recipientStatusService;
 
 const exchangeRateRead = new ExchangeRateReadService(prisma, userRead);
 const exchangeRateWrite = new ExchangeRateWriteService(prisma, userRead, exchangeRateImport);
-const userWrite = new UserWriteService(prisma, firebaseAdmin, userRead, userValidation);
 const candidateRead = new CandidateReadService(prisma, userRead);
 const contactRelations = new ContactRelationsService(prisma);
 const candidateValidation = new CandidateValidationService(prisma);
@@ -285,7 +282,6 @@ export const services = {
 		recipient: recipientRead,
 		subscription: subscriptionRead,
 		survey: surveyRead,
-		user: userRead,
 	},
 	write: {
 		candidate: candidateWrite,
@@ -304,7 +300,6 @@ export const services = {
 		program: programWrite,
 		recipient: recipientWrite,
 		survey: surveyWrite,
-		user: userWrite,
 	},
 	appReviewMode,
 	qrBill,

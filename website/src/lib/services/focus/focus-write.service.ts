@@ -1,7 +1,7 @@
 import { PrismaClient } from '@/generated/prisma/client';
+import type { UserReadService } from '@/modules/users/user.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { UserReadService } from '../user/user-read.service';
 import { FocusFormCreateInput, FocusFormUpdateInput } from './focus-form-input';
 import { FocusValidationService } from './focus-validation.service';
 import { FocusPayload } from './focus.types';

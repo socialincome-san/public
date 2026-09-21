@@ -1,6 +1,6 @@
 import { ContributorSession } from '@/lib/services/contributor/contributor.types';
 import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
-import { UserSession } from '@/lib/services/user/user.types';
+import type { UserSession } from '@/modules/users/user.types';
 import { ProfileFormInput } from './schemas';
 
 export const buildDefaultValues = (

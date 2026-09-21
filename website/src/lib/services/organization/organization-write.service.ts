@@ -1,8 +1,8 @@
 import { PrismaClient, ProgramPermission, UserRole } from '@/generated/prisma/client';
+import type { UserReadService } from '@/modules/users/user.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
-import { UserReadService } from '../user/user-read.service';
 import {
 	OrganizationFormCreateInput,
 	OrganizationFormUpdateInput,

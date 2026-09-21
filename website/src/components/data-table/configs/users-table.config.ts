@@ -1,6 +1,6 @@
 import { makeUserColumns } from '@/components/data-table/columns/users';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
-import type { UserTableViewRow } from '@/lib/services/user/user.types';
+import type { UserTableViewRow } from '@/modules/users/user.types';
 
 export const usersTableConfig: DataTableConfig<UserTableViewRow> = {
 	id: 'admin-users',

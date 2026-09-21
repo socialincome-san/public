@@ -1,7 +1,7 @@
 import { PrismaClient } from '@/generated/prisma/client';
+import type { UserReadService } from '@/modules/users/user.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { UserReadService } from '../user/user-read.service';
 import { ExchangeRateImportService } from './exchange-rate-import.service';
 
 export class ExchangeRateWriteService extends BaseService {
