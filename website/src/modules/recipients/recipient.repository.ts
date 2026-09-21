@@ -122,15 +122,6 @@ export const findEditableRecipientOptions = async (programIds: string[]) =>
 		orderBy: [{ contact: { firstName: 'asc' } }],
 	});
 
-export const findLocalPartnerOptions = async () =>
-	prisma.localPartner.findMany({
-		select: {
-			id: true,
-			name: true,
-		},
-		orderBy: { name: 'asc' },
-	});
-
 export const findSurveyRecipients = async (programIds: string[], currentDate: Date) =>
 	prisma.recipient.findMany({
 		where: {

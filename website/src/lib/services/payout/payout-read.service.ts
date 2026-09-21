@@ -4,6 +4,7 @@ import { isValidCountryCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
+import { getLocalPartnerIdBySlug } from '@/modules/local-partners/local-partner.service';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import type { recipientStatusService as recipientStatusFunctions } from '@/modules/recipients/recipient.service';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
@@ -153,18 +154,15 @@ export class PayoutReadService extends BaseService {
 				return this.resultFail('Missing local partner slug');
 			}
 
-			const localPartner = await this.db.localPartner.findUnique({
-				where: { slug: normalizedSlug },
-				select: { id: true },
-			});
-			if (!localPartner) {
-				return this.resultFail('Local partner not found');
+			const localPartnerResult = await getLocalPartnerIdBySlug(normalizedSlug);
+			if (!localPartnerResult.success) {
+				return this.resultFail(localPartnerResult.error);
 			}
 
 			const aggregate = await this.db.payout.aggregate({
 				where: {
 					status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] },
-					recipient: { localPartnerId: localPartner.id },
+					recipient: { localPartnerId: localPartnerResult.data },
 				},
 				_sum: { amountChf: true },
 			});

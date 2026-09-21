@@ -11,6 +11,7 @@ import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
 import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
+import { getLocalPartnerOptions } from '@/modules/local-partners/local-partner.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
 import { differenceInCalendarDays, startOfDay } from 'date-fns';
@@ -524,9 +525,12 @@ export const getRecipientFormOptions = async (session: Session): Promise<Service
 		const programs = accessResult.data
 			.filter(({ permission }) => permission === ProgramPermission.operator)
 			.map(({ programId, programName }) => ({ id: programId, name: programName }));
-		const localPartner = await recipientRepository.findLocalPartnerOptions();
+		const localPartnerResult = await getLocalPartnerOptions();
+		if (!localPartnerResult.success) {
+			return resultFail(localPartnerResult.error);
+		}
 
-		return resultOk({ programs, localPartner });
+		return resultOk({ programs, localPartner: localPartnerResult.data });
 	} catch (error) {
 		console.error(error);
 

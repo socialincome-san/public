@@ -4,7 +4,10 @@ import { assignRandomCandidatesToProgram } from '@/modules/candidates/candidate.
 import type { CandidateAssignmentService } from '@/modules/candidates/candidate.types';
 import { getLatestRateForCurrency, getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
-import { getPaginatedLocalPartnerTableView } from '@/modules/local-partners/local-partner.service';
+import {
+	getLocalPartnerMessagingTargets,
+	getPaginatedLocalPartnerTableView,
+} from '@/modules/local-partners/local-partner.service';
 import type { LocalPartnerReadService } from '@/modules/local-partners/local-partner.types';
 import { createOrganizationFromEmail } from '@/modules/organizations/organization.service';
 import type { OrganizationWriteService } from '@/modules/organizations/organization.types';
@@ -132,6 +135,7 @@ const contributionWrite = new ContributionWriteService(prisma, programAccessRead
 const subscriptionWrite = new SubscriptionWriteService(prisma);
 const localPartnerRead: LocalPartnerReadService = {
 	getPaginatedTableView: getPaginatedLocalPartnerTableView,
+	getMessagingTargets: getLocalPartnerMessagingTargets,
 };
 const contributorRead = new ContributorReadService(prisma, programAccessRead);
 const contributorValidation = new ContributorValidationService(prisma);

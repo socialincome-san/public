@@ -12,6 +12,11 @@ type RecipientTargetRow = {
 	paymentInformation: { phone: { number: string; hasWhatsApp: boolean } | null } | null;
 };
 
+type LocalPartnerTargetRow = {
+	contactId: string;
+	contact: { phone: { number: string; hasWhatsApp: boolean } | null };
+};
+
 const mockFindRecipientMessagingTargets = jest.fn<Promise<RecipientTargetRow[]>, [string[]]>();
 
 jest.mock('@/modules/recipients/recipient.service', () => ({
@@ -25,7 +30,7 @@ const paymentPhone = { number: '+41792222222', hasWhatsApp: false };
 type Rows = {
 	recipient?: RecipientTargetRow[];
 	contributor?: unknown[];
-	localPartner?: unknown[];
+	localPartner?: LocalPartnerTargetRow[];
 };
 
 type TableView = { tableRows: { id: string }[]; totalCount: number };
@@ -47,13 +52,19 @@ function makeService(rows: Rows, reads: Reads = {}) {
 	mockFindRecipientMessagingTargets.mockResolvedValue(rows.recipient ?? []);
 	const db = {
 		contributor: { findMany: jest.fn().mockResolvedValue(rows.contributor ?? []) },
-		localPartner: { findMany: jest.fn().mockResolvedValue(rows.localPartner ?? []) },
+	};
+	const localPartnerRead: LocalPartnerReadService = {
+		getPaginatedTableView: reads.localPartnerRead?.getPaginatedTableView ?? jest.fn(),
+		getMessagingTargets: jest.fn().mockResolvedValue({
+			success: true as const,
+			data: rows.localPartner ?? [],
+		}),
 	};
 	const service = new MessagingRecipientsService(
 		db as unknown as PrismaClient,
 		(reads.contributorRead ?? {}) as unknown as ContributorReadService,
 		(reads.recipientRead ?? {}) as unknown as Pick<typeof recipientServiceFunctions, 'getPaginatedTableView'>,
-		(reads.localPartnerRead ?? {}) as unknown as LocalPartnerReadService,
+		localPartnerRead,
 	);
 
 	return { service, db };

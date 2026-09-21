@@ -10,6 +10,7 @@ import { isAdmin } from '@/modules/users/user.service';
 import * as localPartnerRepository from './local-partner.repository';
 import type { LocalPartnerCreateInput, LocalPartnerUpdateInput } from './local-partner.schemas';
 import type {
+	LocalPartnerMessagingTarget,
 	LocalPartnerOption,
 	LocalPartnerPaginatedTableView,
 	LocalPartnerPayload,
@@ -196,6 +197,35 @@ export const getLocalPartnerOptions = async (): Promise<ServiceResult<LocalPartn
 		console.error('Could not fetch local partner options', { error });
 
 		return resultFail('Could not fetch local partners');
+	}
+};
+
+export const getLocalPartnerMessagingTargets = async (
+	localPartnerIds: string[],
+): Promise<ServiceResult<LocalPartnerMessagingTarget[]>> => {
+	try {
+		return resultOk(await localPartnerRepository.findLocalPartnerMessagingTargets(localPartnerIds));
+	} catch (error) {
+		console.error('Could not fetch local partner messaging targets', { error });
+
+		return resultFail('Could not fetch local partner messaging targets');
+	}
+};
+
+export const getLocalPartnerIdBySlug = async (slug: string): Promise<ServiceResult<string>> => {
+	const normalizedSlug = slug.trim();
+	if (!normalizedSlug) {
+		return resultFail('Missing local partner slug');
+	}
+
+	try {
+		const localPartner = await localPartnerRepository.findLocalPartnerIdBySlug(normalizedSlug);
+
+		return localPartner ? resultOk(localPartner.id) : resultFail('Local partner not found');
+	} catch (error) {
+		console.error('Could not fetch local partner by slug', { slug, error });
+
+		return resultFail('Could not fetch local partner');
 	}
 };
 

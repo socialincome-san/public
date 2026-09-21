@@ -17,6 +17,9 @@ jest.mock('./recipient.repository', () => ({
 }));
 
 jest.mock('@/integrations/firebase/firebase-auth.integration', () => ({}));
+jest.mock('@/modules/local-partners/local-partner.service', () => ({
+	getLocalPartnerOptions: jest.fn(),
+}));
 jest.mock('@/modules/program-access/program-access.service', () => ({
 	getAccessiblePrograms: jest.fn(),
 }));

@@ -129,6 +129,24 @@ export const findLocalPartnerOptions = async () =>
 		orderBy: { name: 'asc' },
 	});
 
+export const findLocalPartnerMessagingTargets = async (localPartnerIds: string[]) =>
+	prisma.localPartner.findMany({
+		where: { id: { in: localPartnerIds } },
+		select: {
+			contactId: true,
+			contact: {
+				select: {
+					phone: {
+						select: {
+							number: true,
+							hasWhatsApp: true,
+						},
+					},
+				},
+			},
+		},
+	});
+
 export const findLocalPartnerSession = async (firebaseAuthUserId: string) =>
 	prisma.localPartner.findFirst({
 		where: { account: { firebaseAuthUserId } },

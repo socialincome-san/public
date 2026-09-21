@@ -17,6 +17,9 @@ jest.mock('@/generated/prisma/enums', () => ({
 jest.mock('@/lib/utils/now', () => ({
 	now: () => new Date('2025-06-15T12:00:00.000Z'),
 }));
+jest.mock('@/modules/local-partners/local-partner.service', () => ({
+	getLocalPartnerIdBySlug: jest.fn(),
+}));
 
 type MockProgramDelegate = {
 	findUnique: jest.Mock;

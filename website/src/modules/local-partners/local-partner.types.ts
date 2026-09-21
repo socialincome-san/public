@@ -72,6 +72,16 @@ export type LocalPartnerOption = {
 	name: string;
 };
 
+export type LocalPartnerMessagingTarget = {
+	contactId: string;
+	contact: {
+		phone: {
+			number: string;
+			hasWhatsApp: boolean;
+		} | null;
+	};
+};
+
 type PublicLocalPartnerStats = {
 	assignedRecipientsCount: number;
 	waitingRecipientsCount: number;
@@ -114,4 +124,5 @@ export type LocalPartnerReadService = {
 		userId: string,
 		query: LocalPartnerTableQuery,
 	) => Promise<ServiceResult<LocalPartnerPaginatedTableView>>;
+	getMessagingTargets: (localPartnerIds: string[]) => Promise<ServiceResult<LocalPartnerMessagingTarget[]>>;
 };

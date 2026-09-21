@@ -142,11 +142,11 @@ export class MessagingRecipientsService extends BaseService {
 
 	// Local partners only have a contact phone; callers reject the payment source before resolution.
 	private async localPartnerTargets(entityIds: string[]): Promise<MessagingTarget[]> {
-		const rows = await this.db.localPartner.findMany({
-			where: { id: { in: entityIds } },
-			select: { contactId: true, contact: { select: { phone: { select: { number: true, hasWhatsApp: true } } } } },
-		});
+		const rowsResult = await this.localPartnerRead.getMessagingTargets(entityIds);
+		if (!rowsResult.success) {
+			throw new Error(rowsResult.error);
+		}
 
-		return rows.map(contactPhoneTarget);
+		return rowsResult.data.map(contactPhoneTarget);
 	}
 }
