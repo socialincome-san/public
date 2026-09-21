@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/button/button';
 import { CellType } from '@/components/data-table/elements/types';
+import type { RowData } from '@tanstack/react-table';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 
@@ -21,7 +22,7 @@ const useCopyToClipboard = (timeout = 1500) => {
 	return { copied, copy };
 };
 
-export const CopyUrlCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
+export const CopyUrlCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const url = String(ctx.getValue() ?? '');
 	const { copied, copy } = useCopyToClipboard();
 

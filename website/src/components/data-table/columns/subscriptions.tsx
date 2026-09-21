@@ -5,13 +5,13 @@ import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
+import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import {
 	SUBSCRIPTION_CANCELLATION_REASON_LABELS,
 	SUBSCRIPTION_PAYMENT_METHOD_LABELS,
 	SUBSCRIPTION_STATUS_LABELS,
 	type SubscriptionTableViewRow,
 } from '@/lib/services/subscription/subscription.types';
-import type { ColumnDef } from '@tanstack/react-table';
 
 export const makeSubscriptionsColumns = (): ColumnDef<SubscriptionTableViewRow>[] => {
 	return [
