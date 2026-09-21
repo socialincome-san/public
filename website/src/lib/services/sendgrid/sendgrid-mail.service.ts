@@ -30,6 +30,23 @@ export class SendgridMailService extends BaseService {
 			await this.sendEmail(input, from);
 			await this.storeSentEmails(input, from);
 
+			const recipients = Array.isArray(input.to) ? input.to : [input.to];
+			await Promise.all(
+				recipients.map(async (toEmail) => {
+					const contact = await this.db.contact.findUnique({ where: { email: toEmail } });
+
+					return this.db.sentEmail.create({
+						data: {
+							toEmail,
+							fromEmail: from,
+							subject: input.subject,
+							body: input.text,
+							contactId: contact?.id,
+						},
+					});
+				}),
+			);
+
 			return { success: true, data: undefined };
 		} catch (error) {
 			return {
