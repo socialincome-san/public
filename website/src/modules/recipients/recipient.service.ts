@@ -14,6 +14,7 @@ import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
 import { getLocalPartnerOptions } from '@/modules/local-partners/local-partner.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
+import { getProgramNameById } from '@/modules/programs/program-reference.service';
 import { differenceInCalendarDays, startOfDay } from 'date-fns';
 import {
 	canCreateRecipient,
@@ -686,8 +687,9 @@ export const exportRecipientsCsv = async (session: Session): Promise<ServiceResu
 
 export const getPublicRecipientsTableView = async (programId: string): Promise<ServiceResult<PublicRecipientTableView>> => {
 	try {
-		if (!(await recipientRepository.findProgram(programId))) {
-			return resultFail('Program not found');
+		const programResult = await getProgramNameById(programId);
+		if (!programResult.success) {
+			return resultFail(programResult.error);
 		}
 
 		const { recipients, totalCount } = await recipientRepository.findPublicRecipientTableSource(

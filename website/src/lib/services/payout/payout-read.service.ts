@@ -6,6 +6,7 @@ import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import { getLocalPartnerIdBySlug } from '@/modules/local-partners/local-partner.service';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
+import { getProgramPayoutForecastSource } from '@/modules/programs/program-reference.service';
 import type { recipientStatusService as recipientStatusFunctions } from '@/modules/recipients/recipient.service';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
@@ -494,33 +495,11 @@ export class PayoutReadService extends BaseService {
 		monthsAhead: number,
 	): Promise<ServiceResult<PayoutForecastTableView>> {
 		try {
-			const program = await this.db.program.findUnique({
-				where: { id: programId },
-				select: {
-					programDurationInMonths: true,
-					payoutPerInterval: true,
-					payoutInterval: true,
-					country: {
-						select: {
-							currency: true,
-						},
-					},
-					recipients: {
-						select: {
-							startDate: true,
-							suspendedAt: true,
-							payouts: {
-								where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
-								select: { id: true },
-							},
-						},
-					},
-				},
-			});
-
-			if (!program) {
-				return this.resultFail('Program not found');
+			const programResult = await getProgramPayoutForecastSource(programId);
+			if (!programResult.success) {
+				return this.resultFail(programResult.error);
 			}
+			const program = programResult.data;
 
 			const forecastMonths = Array.from({ length: monthsAhead + 1 }, (_, i) => {
 				const start = startOfMonth(addMonths(now(), i));
@@ -565,7 +544,7 @@ export class PayoutReadService extends BaseService {
 				return this.resultFail('Missing exchange rate');
 			}
 
-			const payoutPerIntervalUsd = (Number(program.payoutPerInterval) / baseRate) * usdRate;
+			const payoutPerIntervalUsd = (program.payoutPerInterval / baseRate) * usdRate;
 
 			const tableRows: PayoutForecastTableViewRow[] = forecastMonths.map((label) => {
 				const count = recipientCountByMonth.get(label) ?? 0;
@@ -573,7 +552,7 @@ export class PayoutReadService extends BaseService {
 				return {
 					period: label,
 					numberOfRecipients: count,
-					amountInProgramCurrency: Number(program.payoutPerInterval) * count,
+					amountInProgramCurrency: program.payoutPerInterval * count,
 					amountUsd: payoutPerIntervalUsd * count,
 					programCurrency: program.country.currency,
 				};

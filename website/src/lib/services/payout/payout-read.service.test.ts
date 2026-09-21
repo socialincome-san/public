@@ -4,7 +4,8 @@ import type { ProgramAccessReadService } from '@/modules/program-access/program-
 import type { recipientStatusService as recipientStatusFunctions } from '@/modules/recipients/recipient.service';
 import type { ServiceResult } from '../core/base.types';
 import { PAYOUT_FORECAST_MONTHS_AHEAD } from './payout-forecast.constants';
-import { PayoutReadService } from './payout-read.service';
+
+const mockGetProgramPayoutForecastSource = jest.fn();
 
 jest.mock('@/generated/prisma/client', () => ({
 	PayoutStatus: { confirmed: 'confirmed', paid: 'paid' },
@@ -20,10 +21,11 @@ jest.mock('@/lib/utils/now', () => ({
 jest.mock('@/modules/local-partners/local-partner.service', () => ({
 	getLocalPartnerIdBySlug: jest.fn(),
 }));
+jest.mock('@/modules/programs/program-reference.service', () => ({
+	getProgramPayoutForecastSource: mockGetProgramPayoutForecastSource,
+}));
 
-type MockProgramDelegate = {
-	findUnique: jest.Mock;
-};
+import { PayoutReadService } from './payout-read.service';
 
 const expectSuccess = <T>(result: ServiceResult<T>) => {
 	expect(result.success).toBe(true);
@@ -69,12 +71,10 @@ const createService = ({
 	accessiblePrograms?: { programId: string; permission: 'owner' | 'operator' }[];
 	accessError?: string;
 } = {}) => {
-	const findUnique = jest.fn().mockResolvedValue(program);
-	const db = {
-		program: {
-			findUnique,
-		} satisfies MockProgramDelegate,
-	};
+	mockGetProgramPayoutForecastSource.mockResolvedValue(
+		program ? { success: true as const, data: program } : { success: false as const, error: 'Program not found' },
+	);
+	const db = {};
 
 	const programAccessService = {
 		getAccessiblePrograms: jest
@@ -99,7 +99,7 @@ const createService = ({
 		recipientStatusService,
 	);
 
-	return { service, findUnique, recipientStatusService, programAccessService };
+	return { service, recipientStatusService, programAccessService };
 };
 
 describe('PayoutReadService payout forecast', () => {

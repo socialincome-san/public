@@ -214,18 +214,6 @@ export const getProgramSlugById = async (programId: string): Promise<ServiceResu
 	}
 };
 
-export const getProgramNameById = async (programId: string): Promise<ServiceResult<string>> => {
-	try {
-		const program = await programRepository.findProgramNameById(programId);
-
-		return program ? resultOk(program.name) : resultFail('Program not found');
-	} catch (error) {
-		console.error('Could not fetch program name', { programId, error });
-
-		return resultFail('Could not fetch program name');
-	}
-};
-
 export const getProgramSettings = async (
 	userId: string,
 	programId: string,

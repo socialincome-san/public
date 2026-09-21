@@ -1,5 +1,6 @@
+import { getProgramNameById } from '@/modules/programs/program-reference.service';
 import { getProgramDashboardStats, isReadyForFirstPayoutInterval } from '@/modules/programs/program-stats.service';
-import { getProgramNameById, getProgramSlugById } from '@/modules/programs/program.service';
+import { getProgramSlugById } from '@/modules/programs/program.service';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { FirstIntervalFundingSection } from './components/first-interval-funding-section';

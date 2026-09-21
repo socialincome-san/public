@@ -1,4 +1,5 @@
 import { PrismaClient } from '@/generated/prisma/client';
+import { countProgramsCreatedBetween } from '@/modules/programs/program-reference.service';
 import type { recipientStatusService as recipientStatusFunctions } from '@/modules/recipients/recipient.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -37,31 +38,40 @@ export class MonthlySummaryService extends BaseService {
 			const now = new Date();
 			const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1));
 			const to = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
-			const [contributions, payouts, contributors, campaigns, programs, recipients, recipientRecords] = await Promise.all([
-				this.db.contribution.aggregate({
-					where: { status: 'succeeded', createdAt: { gte: from, lt: to } },
-					_sum: { amountChf: true },
-					_count: { _all: true },
-				}),
-				this.db.payout.aggregate({
-					where: { status: 'paid', paymentAt: { gte: from, lt: to } },
-					_sum: { amountChf: true },
-					_count: { _all: true },
-				}),
-				this.db.contributor.count({ where: { createdAt: { gte: from, lt: to } } }),
-				this.db.campaign.count({ where: { createdAt: { gte: from, lt: to } } }),
-				this.db.program.count({ where: { createdAt: { gte: from, lt: to } } }),
-				this.db.recipient.count({ where: { createdAt: { gte: from, lt: to } } }),
-				this.db.recipient.findMany({
-					include: {
-						payouts: { select: { status: true } },
-						program: {
-							select: { programDurationInMonths: true, payoutInterval: true, country: { select: { isoCode: true } } },
+			const [contributions, payouts, contributors, campaigns, programsResult, recipients, recipientRecords] =
+				await Promise.all([
+					this.db.contribution.aggregate({
+						where: { status: 'succeeded', createdAt: { gte: from, lt: to } },
+						_sum: { amountChf: true },
+						_count: { _all: true },
+					}),
+					this.db.payout.aggregate({
+						where: { status: 'paid', paymentAt: { gte: from, lt: to } },
+						_sum: { amountChf: true },
+						_count: { _all: true },
+					}),
+					this.db.contributor.count({ where: { createdAt: { gte: from, lt: to } } }),
+					this.db.campaign.count({ where: { createdAt: { gte: from, lt: to } } }),
+					countProgramsCreatedBetween(from, to),
+					this.db.recipient.count({ where: { createdAt: { gte: from, lt: to } } }),
+					this.db.recipient.findMany({
+						include: {
+							payouts: { select: { status: true } },
+							program: {
+								select: {
+									programDurationInMonths: true,
+									payoutInterval: true,
+									country: { select: { isoCode: true } },
+								},
+							},
+							localPartner: { select: { name: true } },
 						},
-						localPartner: { select: { name: true } },
-					},
-				}),
-			]);
+					}),
+				]);
+			if (!programsResult.success) {
+				return this.resultFail(programsResult.error);
+			}
+			const programs = programsResult.data;
 
 			const emptyStats = (): SummaryStats => ({
 				recipients: { active: 0, former: 0, suspended: 0, future: 0 },

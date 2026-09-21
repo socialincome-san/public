@@ -31,6 +31,18 @@ export type ProgramOption = {
 	name: string;
 };
 
+export type ProgramPayoutForecastSource = {
+	programDurationInMonths: number;
+	payoutPerInterval: number;
+	payoutInterval: PayoutInterval;
+	country: { currency: Currency };
+	recipients: {
+		startDate: Date | null;
+		suspendedAt: Date | null;
+		payouts: { id: string }[];
+	}[];
+};
+
 export type PublicProgramDetails = {
 	programId: string;
 	programName: string;

@@ -163,15 +163,6 @@ export const findOrganizationUserOptions = async () =>
 		orderBy: [{ contact: { firstName: 'asc' } }, { contact: { lastName: 'asc' } }],
 	});
 
-export const findOrganizationProgramOptions = async () =>
-	prisma.program.findMany({
-		select: {
-			id: true,
-			name: true,
-		},
-		orderBy: { name: 'asc' },
-	});
-
 export const findOrganizationByName = async (name: string) =>
 	prisma.organization.findUnique({
 		where: { name },
@@ -181,12 +172,6 @@ export const findOrganizationByName = async (name: string) =>
 export const findUsersByIds = async (userIds: string[]) =>
 	prisma.user.findMany({
 		where: { id: { in: userIds } },
-		select: { id: true },
-	});
-
-export const findProgramsByIds = async (programIds: string[]) =>
-	prisma.program.findMany({
-		where: { id: { in: programIds } },
 		select: { id: true },
 	});
 

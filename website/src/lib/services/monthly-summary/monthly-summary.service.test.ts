@@ -1,17 +1,28 @@
+const mockCountProgramsCreatedBetween = jest.fn();
+
+jest.mock('@/modules/programs/program-reference.service', () => ({
+	countProgramsCreatedBetween: mockCountProgramsCreatedBetween,
+}));
+
 import { MonthlySummaryService } from './monthly-summary.service';
 
 describe('MonthlySummaryService', () => {
 	const getRecipientLifecycleStatus = jest.fn().mockReturnValue({ success: true as const, data: 'active' as const });
 	const recipientStatusService = { getRecipientLifecycleStatus } as never;
 
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockCountProgramsCreatedBetween.mockResolvedValue({ success: true, data: 0 });
+	});
+
 	test('loads last month numbers', async () => {
 		getRecipientLifecycleStatus.mockReturnValue({ success: true, data: 'completed' });
+		mockCountProgramsCreatedBetween.mockResolvedValue({ success: true, data: 6 });
 		const db = {
 			contribution: { aggregate: jest.fn().mockResolvedValue({ _sum: { amountChf: '100' }, _count: { _all: 2 } }) },
 			payout: { aggregate: jest.fn().mockResolvedValue({ _sum: { amountChf: '80' }, _count: { _all: 3 } }) },
 			contributor: { count: jest.fn().mockResolvedValue(4) },
 			campaign: { count: jest.fn().mockResolvedValue(5) },
-			program: { count: jest.fn().mockResolvedValue(6) },
 			recipient: {
 				count: jest.fn().mockResolvedValue(7),
 				findMany: jest.fn().mockResolvedValue([
@@ -51,7 +62,6 @@ describe('MonthlySummaryService', () => {
 			payout: { aggregate: jest.fn().mockResolvedValue({ _sum: { amountChf: null }, _count: { _all: 0 } }) },
 			contributor: { count: jest.fn().mockResolvedValue(0) },
 			campaign: { count: jest.fn().mockResolvedValue(0) },
-			program: { count: jest.fn().mockResolvedValue(0) },
 			recipient: {
 				count: jest.fn().mockResolvedValue(0),
 				findMany: jest.fn().mockResolvedValue([
@@ -83,7 +93,6 @@ describe('MonthlySummaryService', () => {
 			payout: { aggregate: jest.fn() },
 			contributor: { count: jest.fn() },
 			campaign: { count: jest.fn() },
-			program: { count: jest.fn() },
 			recipient: { count: jest.fn(), findMany: jest.fn() },
 		} as never;
 		const result = await new MonthlySummaryService(db, recipientStatusService).getLastMonth();

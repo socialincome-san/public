@@ -8,7 +8,8 @@ const mockFindOrganizationSummary = jest.fn();
 const mockFindPaginatedOrganizations = jest.fn();
 const mockFindOrganizationByName = jest.fn();
 const mockFindUsersByIds = jest.fn();
-const mockFindProgramsByIds = jest.fn();
+const mockGetProgramReferenceOptions = jest.fn();
+const mockValidateProgramIds = jest.fn();
 const mockCreateOrganization = jest.fn();
 const mockFindOperatorProgramAccess = jest.fn();
 const mockUpdateOrganizationName = jest.fn();
@@ -21,13 +22,17 @@ jest.mock('@/modules/users/user.service', () => ({
 	getUserRole: mockGetUserRole,
 }));
 
+jest.mock('@/modules/programs/program-reference.service', () => ({
+	getProgramReferenceOptions: mockGetProgramReferenceOptions,
+	validateProgramIds: mockValidateProgramIds,
+}));
+
 jest.mock('./organization.repository', () => ({
 	findActiveOrganizationId: mockFindActiveOrganizationId,
 	findOrganizationSummary: mockFindOrganizationSummary,
 	findPaginatedOrganizations: mockFindPaginatedOrganizations,
 	findOrganizationByName: mockFindOrganizationByName,
 	findUsersByIds: mockFindUsersByIds,
-	findProgramsByIds: mockFindProgramsByIds,
 	createOrganization: mockCreateOrganization,
 	findOperatorProgramAccess: mockFindOperatorProgramAccess,
 	updateOrganizationName: mockUpdateOrganizationName,

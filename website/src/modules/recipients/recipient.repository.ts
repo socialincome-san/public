@@ -3,12 +3,6 @@ import { prisma } from '@/lib/database/prisma';
 import type { CreateRecipientInput, UpdateRecipientInput, UpdateRecipientSelfInput } from './recipient.schemas';
 import type { RecipientTableQuery } from './recipient.types';
 
-export const findProgram = async (programId: string) =>
-	prisma.program.findUnique({
-		where: { id: programId },
-		select: { id: true },
-	});
-
 export const findRecipientOwnership = async (recipientId: string) =>
 	prisma.recipient.findUnique({
 		where: { id: recipientId },

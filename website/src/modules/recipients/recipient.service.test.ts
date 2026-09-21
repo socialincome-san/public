@@ -2,14 +2,13 @@ import { PayoutInterval, PayoutStatus } from '@/generated/prisma/enums';
 import type { ServiceResult } from '@/lib/service-result';
 import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
 
-const mockFindProgram = jest.fn();
+const mockGetProgramNameById = jest.fn();
 const mockFindPublicRecipientTableSource = jest.fn();
 const mockFindUnassignedRecipientCountries = jest.fn();
 const mockCountRecipientsForProgramsAndLocalPartners = jest.fn();
 const mockCountCandidatesForLocalPartners = jest.fn();
 
 jest.mock('./recipient.repository', () => ({
-	findProgram: mockFindProgram,
 	findPublicRecipientTableSource: mockFindPublicRecipientTableSource,
 	findUnassignedRecipientCountries: mockFindUnassignedRecipientCountries,
 	countRecipientsForProgramsAndLocalPartners: mockCountRecipientsForProgramsAndLocalPartners,
@@ -22,6 +21,9 @@ jest.mock('@/modules/local-partners/local-partner.service', () => ({
 }));
 jest.mock('@/modules/program-access/program-access.service', () => ({
 	getAccessiblePrograms: jest.fn(),
+}));
+jest.mock('@/modules/programs/program-reference.service', () => ({
+	getProgramNameById: mockGetProgramNameById,
 }));
 jest.mock('@/lib/utils/now', () => ({
 	now: () => new Date('2025-06-15T12:00:00.000Z'),
@@ -74,7 +76,7 @@ const recipient = {
 describe('recipient public table view', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
-		mockFindProgram.mockResolvedValue({ id: 'program-1' });
+		mockGetProgramNameById.mockResolvedValue({ success: true, data: 'Program' });
 		mockFindPublicRecipientTableSource.mockResolvedValue({
 			recipients: [recipient],
 			totalCount: 1,
@@ -82,7 +84,7 @@ describe('recipient public table view', () => {
 	});
 
 	test('returns program not found when the program is missing', async () => {
-		mockFindProgram.mockResolvedValue(null);
+		mockGetProgramNameById.mockResolvedValue({ success: false, error: 'Program not found' });
 
 		const result = await getPublicRecipientsTableView('missing-program');
 

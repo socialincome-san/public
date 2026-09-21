@@ -122,6 +122,44 @@ export const findProgramSlugById = async (programId: string) =>
 export const findProgramNameById = async (programId: string) =>
 	prisma.program.findUnique({ where: { id: programId }, select: { name: true } });
 
+export const findProgramOptions = async () =>
+	prisma.program.findMany({
+		select: { id: true, name: true },
+		orderBy: { name: 'asc' },
+	});
+
+export const findProgramsByIds = async (programIds: string[]) =>
+	prisma.program.findMany({
+		where: { id: { in: programIds } },
+		select: { id: true },
+	});
+
+export const countProgramsCreatedBetween = async (from: Date, to: Date) =>
+	prisma.program.count({
+		where: { createdAt: { gte: from, lt: to } },
+	});
+
+export const findProgramPayoutForecastSource = async (programId: string) =>
+	prisma.program.findUnique({
+		where: { id: programId },
+		select: {
+			programDurationInMonths: true,
+			payoutPerInterval: true,
+			payoutInterval: true,
+			country: { select: { currency: true } },
+			recipients: {
+				select: {
+					startDate: true,
+					suspendedAt: true,
+					payouts: {
+						where: { status: { in: completedPayoutStatuses } },
+						select: { id: true },
+					},
+				},
+			},
+		},
+	});
+
 export const findProgramSettings = async (programId: string) =>
 	prisma.program.findUnique({
 		where: { id: programId },

@@ -1,5 +1,6 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { getProgramReferenceOptions, validateProgramIds } from '@/modules/programs/program-reference.service';
 import { getUserRole, isAdmin } from '@/modules/users/user.service';
 import { canRenameOrganization } from './organization.permissions';
 import * as organizationRepository from './organization.repository';
@@ -211,7 +212,12 @@ export const getOrganizationProgramOptions = async (
 			return resultFail(isAdminResult.error);
 		}
 
-		return resultOk(await organizationRepository.findOrganizationProgramOptions());
+		const programsResult = await getProgramReferenceOptions();
+		if (!programsResult.success) {
+			return resultFail(programsResult.error);
+		}
+
+		return resultOk(programsResult.data);
 	} catch (error) {
 		console.error('Could not fetch organization programs', { userId, error });
 
@@ -377,8 +383,11 @@ const validateOrganizationInput = async (
 
 	const uniqueProgramIds = Array.from(new Set([...input.ownedProgramIds, ...input.operatedProgramIds]));
 	if (uniqueProgramIds.length > 0) {
-		const programs = await organizationRepository.findProgramsByIds(uniqueProgramIds);
-		if (programs.length !== uniqueProgramIds.length) {
+		const programsResult = await validateProgramIds(uniqueProgramIds);
+		if (!programsResult.success) {
+			return resultFail(programsResult.error);
+		}
+		if (!programsResult.data) {
 			return resultFail('One or more selected programs do not exist.');
 		}
 	}
