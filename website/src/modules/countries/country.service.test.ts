@@ -16,6 +16,10 @@ jest.mock('@/modules/users/user.service', () => ({
 	isAdmin: mockIsAdmin,
 }));
 
+jest.mock('@/modules/recipients/recipient.service', () => ({
+	getUnassignedRecipientCountries: mockFindUnassignedRecipientCountries,
+}));
+
 jest.mock('@/integrations/world-bank/world-bank.integration', () => ({
 	fetchWorldBankIndicator: jest.fn(),
 }));
@@ -24,7 +28,6 @@ jest.mock('./country.repository', () => ({
 	findCountryById: mockFindCountryById,
 	findPaginatedCountries: mockFindPaginatedCountries,
 	findCountriesForFeasibility: mockFindCountriesForFeasibility,
-	findUnassignedRecipientCountries: mockFindUnassignedRecipientCountries,
 	findPublicCountryStats: mockFindPublicCountryStats,
 	findCountryByIsoCode: mockFindCountryByIsoCode,
 	createCountry: mockCreateCountry,
@@ -64,10 +67,8 @@ const createCountry = (id: string, isoCode: string) => ({
 });
 
 const createCandidate = (contactCountry?: string | null, localPartnerCountry?: string | null) => ({
-	contact: { address: { country: contactCountry ?? null } },
-	localPartner: {
-		contact: { address: { country: localPartnerCountry ?? null } },
-	},
+	contactCountry: contactCountry ?? null,
+	localPartnerCountry: localPartnerCountry ?? null,
 });
 
 describe('country service', () => {
@@ -99,12 +100,15 @@ describe('country service', () => {
 			createCountry('country-ke', 'KE'),
 			createCountry('country-ug', 'UG'),
 		]);
-		mockFindUnassignedRecipientCountries.mockResolvedValue([
-			createCandidate('SL', 'KE'),
-			createCandidate(null, 'KE'),
-			createCandidate(undefined, 'KE'),
-			createCandidate(null, null),
-		]);
+		mockFindUnassignedRecipientCountries.mockResolvedValue({
+			success: true,
+			data: [
+				createCandidate('SL', 'KE'),
+				createCandidate(null, 'KE'),
+				createCandidate(undefined, 'KE'),
+				createCandidate(null, null),
+			],
+		});
 
 		const data = expectSuccess(await getProgramCountryFeasibility());
 

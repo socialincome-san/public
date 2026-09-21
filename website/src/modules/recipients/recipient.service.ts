@@ -52,6 +52,7 @@ import type {
 	RecipientUpcomingOnboardingPaginatedTableView,
 	RecipientWithPaymentInfo,
 	SurveyRecipientOption,
+	UnassignedRecipientCountry,
 	UpcomingOnboardingTableViewRow,
 } from './recipient.types';
 
@@ -1050,6 +1051,48 @@ const isRecipientEligibleForPayout = (input: RecipientLifecycleStatusInput): Ser
 		console.error(error);
 
 		return resultFail('Could not determine recipient payout eligibility');
+	}
+};
+
+export const getUnassignedRecipientCountries = async (): Promise<ServiceResult<UnassignedRecipientCountry[]>> => {
+	try {
+		const recipients = await recipientRepository.findUnassignedRecipientCountries();
+
+		return resultOk(
+			recipients.map((recipient) => ({
+				contactCountry: recipient.contact?.address?.country ?? null,
+				localPartnerCountry: recipient.localPartner?.contact?.address?.country ?? null,
+			})),
+		);
+	} catch (error) {
+		console.error('Could not fetch unassigned recipient countries', { error });
+
+		return resultFail('Could not fetch unassigned recipient countries');
+	}
+};
+
+export const countRecipientsForProgramsAndLocalPartners = async (
+	programIds: string[],
+	localPartnerIds: string[],
+): Promise<ServiceResult<number>> => {
+	try {
+		return resultOk(await recipientRepository.countRecipientsForProgramsAndLocalPartners(programIds, localPartnerIds));
+	} catch (error) {
+		console.error('Could not count recipients for programs and local partners', {
+			error,
+		});
+
+		return resultFail('Could not count recipients');
+	}
+};
+
+export const countCandidatesForLocalPartners = async (localPartnerIds: string[]): Promise<ServiceResult<number>> => {
+	try {
+		return resultOk(await recipientRepository.countCandidatesForLocalPartners(localPartnerIds));
+	} catch (error) {
+		console.error('Could not count candidates for local partners', { error });
+
+		return resultFail('Could not count candidates');
 	}
 };
 

@@ -1,6 +1,11 @@
 import type { CountryCode, Currency, Gender, PayoutInterval, ProgramPermission } from '@/generated/prisma/enums';
 import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
 
+export type UnassignedRecipientCountry = {
+	contactCountry: CountryCode | null;
+	localPartnerCountry: CountryCode | null;
+};
+
 export type RecipientPayload = {
 	id: string;
 	startDate: Date | null;

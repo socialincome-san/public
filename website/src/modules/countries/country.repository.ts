@@ -151,35 +151,6 @@ export const findCountriesForFeasibility = async () =>
 		orderBy: { isoCode: 'asc' },
 	});
 
-export const findUnassignedRecipientCountries = async () =>
-	prisma.recipient.findMany({
-		where: { programId: null },
-		select: {
-			contact: {
-				select: {
-					address: {
-						select: {
-							country: true,
-						},
-					},
-				},
-			},
-			localPartner: {
-				select: {
-					contact: {
-						select: {
-							address: {
-								select: {
-									country: true,
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	});
-
 export const findPublicCountryStats = async (isoCodes: CountryCode[]) =>
 	prisma.country.findMany({
 		where: { isoCode: { in: isoCodes } },

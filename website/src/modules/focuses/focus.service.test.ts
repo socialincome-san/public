@@ -7,7 +7,7 @@ const mockFindPaginatedFocuses = jest.fn();
 const mockFindFocusOptions = jest.fn();
 const mockFindFocusStatsBySlugs = jest.fn();
 const mockCountRecipientsInProgramsForPartners = jest.fn();
-const mockCountCandidatesForPartners = jest.fn();
+const mockCountCandidatesForLocalPartners = jest.fn();
 const mockFindFocusByName = jest.fn();
 const mockFindFocusBySlug = jest.fn();
 const mockCreateFocus = jest.fn();
@@ -19,13 +19,16 @@ jest.mock('@/modules/users/user.service', () => ({
 	isAdmin: mockIsAdmin,
 }));
 
+jest.mock('@/modules/recipients/recipient.service', () => ({
+	countRecipientsForProgramsAndLocalPartners: mockCountRecipientsInProgramsForPartners,
+	countCandidatesForLocalPartners: mockCountCandidatesForLocalPartners,
+}));
+
 jest.mock('./focus.repository', () => ({
 	findFocusById: mockFindFocusById,
 	findPaginatedFocuses: mockFindPaginatedFocuses,
 	findFocusOptions: mockFindFocusOptions,
 	findFocusStatsBySlugs: mockFindFocusStatsBySlugs,
-	countRecipientsInProgramsForPartners: mockCountRecipientsInProgramsForPartners,
-	countCandidatesForPartners: mockCountCandidatesForPartners,
 	findFocusByName: mockFindFocusByName,
 	findFocusBySlug: mockFindFocusBySlug,
 	createFocus: mockCreateFocus,
@@ -82,8 +85,8 @@ describe('focus service', () => {
 				localPartners: [{ localPartnerId: 'partner-1' }, { localPartnerId: 'partner-2' }],
 			},
 		]);
-		mockCountRecipientsInProgramsForPartners.mockResolvedValue(7);
-		mockCountCandidatesForPartners.mockResolvedValue(3);
+		mockCountRecipientsInProgramsForPartners.mockResolvedValue({ success: true, data: 7 });
+		mockCountCandidatesForLocalPartners.mockResolvedValue({ success: true, data: 3 });
 
 		const data = expectSuccess<PublicFocusStatsBySlugMap>(
 			await getPublicFocusStatsBySlugs(['health', ' health ', '', 'missing']),

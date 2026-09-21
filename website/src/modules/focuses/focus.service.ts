@@ -1,5 +1,9 @@
 import type { CountryCode } from '@/generated/prisma/enums';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import {
+	countCandidatesForLocalPartners,
+	countRecipientsForProgramsAndLocalPartners,
+} from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
 import * as focusRepository from './focus.repository';
 import type { FocusCreateInput, FocusUpdateInput } from './focus.schemas';
@@ -12,6 +16,7 @@ import type {
 } from './focus.types';
 
 type FocusStatsSource = Awaited<ReturnType<typeof focusRepository.findFocusStatsBySlugs>>[number];
+type PublicFocusStats = PublicFocusStatsBySlugMap[string];
 
 export const getFocus = async (userId: string, focusId: string): Promise<ServiceResult<FocusPayload>> => {
 	try {
@@ -74,11 +79,17 @@ export const getPublicFocusStatsBySlugs = async (
 
 		const focuses = await focusRepository.findFocusStatsBySlugs(normalizedFocusSlugs);
 		const statsBySlug: PublicFocusStatsBySlugMap = {};
-		await Promise.all(
-			focuses.map(async (focus) => {
-				statsBySlug[focus.slug] = await buildPublicFocusStats(focus);
-			}),
-		);
+		const statsResults = await Promise.all(focuses.map(buildPublicFocusStats));
+		for (const [index, statsResult] of statsResults.entries()) {
+			if (!statsResult.success) {
+				return resultFail(statsResult.error);
+			}
+
+			const focus = focuses[index];
+			if (focus) {
+				statsBySlug[focus.slug] = statsResult.data;
+			}
+		}
 
 		return resultOk(statsBySlug);
 	} catch (error) {
@@ -169,7 +180,7 @@ export const deleteFocus = async (userId: string, focusId: string): Promise<Serv
 	}
 };
 
-const buildPublicFocusStats = async (focus: FocusStatsSource) => {
+const buildPublicFocusStats = async (focus: FocusStatsSource): Promise<ServiceResult<PublicFocusStats>> => {
 	const programIds = [...new Set(focus.programs.map(({ programId }) => programId))];
 	const localPartnerIds = [...new Set(focus.localPartners.map(({ localPartnerId }) => localPartnerId))];
 	const countryIsoCodes = [
@@ -180,17 +191,23 @@ const buildPublicFocusStats = async (focus: FocusStatsSource) => {
 		),
 	];
 	const hasLocalPartners = localPartnerIds.length > 0;
-	const [recipientsInProgramsCount, candidatesCount] = await Promise.all([
+	const [recipientsInProgramsResult, candidatesResult] = await Promise.all([
 		hasLocalPartners && programIds.length > 0
-			? focusRepository.countRecipientsInProgramsForPartners(programIds, localPartnerIds)
-			: 0,
-		hasLocalPartners ? focusRepository.countCandidatesForPartners(localPartnerIds) : 0,
+			? countRecipientsForProgramsAndLocalPartners(programIds, localPartnerIds)
+			: Promise.resolve(resultOk(0)),
+		hasLocalPartners ? countCandidatesForLocalPartners(localPartnerIds) : Promise.resolve(resultOk(0)),
 	]);
+	if (!recipientsInProgramsResult.success) {
+		return resultFail(recipientsInProgramsResult.error);
+	}
+	if (!candidatesResult.success) {
+		return resultFail(candidatesResult.error);
+	}
 
-	return {
+	return resultOk({
 		programsCount: focus._count.programs,
-		recipientsInProgramsCount,
-		candidatesCount,
+		recipientsInProgramsCount: recipientsInProgramsResult.data,
+		candidatesCount: candidatesResult.data,
 		countryIsoCodes,
-	};
+	});
 };

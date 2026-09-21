@@ -4,10 +4,16 @@ import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
 
 const mockFindProgram = jest.fn();
 const mockFindPublicRecipientTableSource = jest.fn();
+const mockFindUnassignedRecipientCountries = jest.fn();
+const mockCountRecipientsForProgramsAndLocalPartners = jest.fn();
+const mockCountCandidatesForLocalPartners = jest.fn();
 
 jest.mock('./recipient.repository', () => ({
 	findProgram: mockFindProgram,
 	findPublicRecipientTableSource: mockFindPublicRecipientTableSource,
+	findUnassignedRecipientCountries: mockFindUnassignedRecipientCountries,
+	countRecipientsForProgramsAndLocalPartners: mockCountRecipientsForProgramsAndLocalPartners,
+	countCandidatesForLocalPartners: mockCountCandidatesForLocalPartners,
 }));
 
 jest.mock('@/integrations/firebase/firebase-auth.integration', () => ({}));
@@ -18,7 +24,12 @@ jest.mock('@/lib/utils/now', () => ({
 	now: () => new Date('2025-06-15T12:00:00.000Z'),
 }));
 
-import { getPublicRecipientsTableView } from './recipient.service';
+import {
+	countCandidatesForLocalPartners,
+	countRecipientsForProgramsAndLocalPartners,
+	getPublicRecipientsTableView,
+	getUnassignedRecipientCountries,
+} from './recipient.service';
 
 const expectSuccess = <T>(result: ServiceResult<T>): T => {
 	expect(result.success).toBe(true);
@@ -108,5 +119,37 @@ describe('recipient public table view', () => {
 
 		expect(expectSuccess(result).totalCount).toBe(1001);
 		expect(mockFindPublicRecipientTableSource).toHaveBeenCalledWith('program-1', 1000);
+	});
+});
+
+describe('recipient statistics', () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
+	test('maps unassigned recipient countries to a module DTO', async () => {
+		mockFindUnassignedRecipientCountries.mockResolvedValue([
+			{
+				contact: { address: { country: 'SL' } },
+				localPartner: { contact: { address: { country: 'KE' } } },
+			},
+			{
+				contact: null,
+				localPartner: null,
+			},
+		]);
+
+		expect(expectSuccess(await getUnassignedRecipientCountries())).toEqual([
+			{ contactCountry: 'SL', localPartnerCountry: 'KE' },
+			{ contactCountry: null, localPartnerCountry: null },
+		]);
+	});
+
+	test('returns recipient and candidate counts', async () => {
+		mockCountRecipientsForProgramsAndLocalPartners.mockResolvedValue(7);
+		mockCountCandidatesForLocalPartners.mockResolvedValue(3);
+
+		expect(expectSuccess(await countRecipientsForProgramsAndLocalPartners(['program-1'], ['partner-1']))).toBe(7);
+		expect(expectSuccess(await countCandidatesForLocalPartners(['partner-1']))).toBe(3);
 	});
 });

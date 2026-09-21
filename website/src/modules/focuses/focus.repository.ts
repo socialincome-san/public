@@ -78,22 +78,6 @@ export const findFocusStatsBySlugs = async (focusSlugs: string[]) =>
 		},
 	});
 
-export const countRecipientsInProgramsForPartners = async (programIds: string[], localPartnerIds: string[]) =>
-	prisma.recipient.count({
-		where: {
-			programId: { in: programIds },
-			localPartnerId: { in: localPartnerIds },
-		},
-	});
-
-export const countCandidatesForPartners = async (localPartnerIds: string[]) =>
-	prisma.recipient.count({
-		where: {
-			programId: null,
-			localPartnerId: { in: localPartnerIds },
-		},
-	});
-
 export const findFocusByName = async (name: string) =>
 	prisma.focus.findUnique({
 		where: { name },

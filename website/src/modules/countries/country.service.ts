@@ -2,6 +2,7 @@ import { CountryCode, type NetworkTechnology, type SanctionRegime } from '@/gene
 import { fetchWorldBankIndicator } from '@/integrations/world-bank/world-bank.integration';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
+import { getUnassignedRecipientCountries } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
 import * as countryRepository from './country.repository';
 import type { CountryCreateInput, CountryUpdateInput } from './country.schemas';
@@ -111,14 +112,16 @@ export const getPaginatedCountryTableView = async (
 
 export const getProgramCountryFeasibility = async (): Promise<ServiceResult<ProgramCountryFeasibilityView>> => {
 	try {
-		const [countries, candidates] = await Promise.all([
+		const [countries, candidatesResult] = await Promise.all([
 			countryRepository.findCountriesForFeasibility(),
-			countryRepository.findUnassignedRecipientCountries(),
+			getUnassignedRecipientCountries(),
 		]);
+		if (!candidatesResult.success) {
+			return resultFail(candidatesResult.error);
+		}
 		const candidateCountsByCountry = new Map<CountryCode, number>();
-		for (const candidate of candidates) {
-			const candidateCountry =
-				candidate.contact?.address?.country ?? candidate.localPartner?.contact?.address?.country ?? null;
+		for (const candidate of candidatesResult.data) {
+			const candidateCountry = candidate.contactCountry ?? candidate.localPartnerCountry;
 			if (candidateCountry) {
 				candidateCountsByCountry.set(candidateCountry, (candidateCountsByCountry.get(candidateCountry) ?? 0) + 1);
 			}

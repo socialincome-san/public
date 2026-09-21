@@ -463,6 +463,51 @@ export const deleteAddressIfOrphaned = async (addressId: string) => {
 	return true;
 };
 
+export const findUnassignedRecipientCountries = async () =>
+	prisma.recipient.findMany({
+		where: { programId: null },
+		select: {
+			contact: {
+				select: {
+					address: {
+						select: {
+							country: true,
+						},
+					},
+				},
+			},
+			localPartner: {
+				select: {
+					contact: {
+						select: {
+							address: {
+								select: {
+									country: true,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	});
+
+export const countRecipientsForProgramsAndLocalPartners = async (programIds: string[], localPartnerIds: string[]) =>
+	prisma.recipient.count({
+		where: {
+			programId: { in: programIds },
+			localPartnerId: { in: localPartnerIds },
+		},
+	});
+
+export const countCandidatesForLocalPartners = async (localPartnerIds: string[]) =>
+	prisma.recipient.count({
+		where: {
+			programId: null,
+			localPartnerId: { in: localPartnerIds },
+		},
+	});
+
 type RecipientUpdatePersistenceContext = {
 	contactId: string;
 	contactPhoneId: string | undefined;
