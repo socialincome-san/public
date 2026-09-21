@@ -3,7 +3,6 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutInterval, Profile } from '@/generated/prisma/enums';
-import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
 import {
 	deleteProgramAction,
 	getProgramOrganizationOptionsAction,
@@ -15,6 +14,7 @@ import { ProgramSettingsPayload } from '@/lib/services/program/program.types';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { SLUG_REGEX } from '@/lib/utils/regex';
 import { getProgramCountryFeasibilityAction } from '@/modules/countries/country.actions';
+import { getFocusOptionsAction } from '@/modules/focuses/focus.actions';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';

@@ -3,8 +3,8 @@ import { FilterBar } from '@/components/filters/filter-bar';
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
+import { getPublicFocusStatsBySlugsAction } from '@/modules/focuses/focus.actions';
 import { FocusDetailCard } from './focus-detail-card';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusTitle } from './focus.utils';
@@ -35,7 +35,7 @@ type Props = {
 export const FocusesOverview = async ({ focuses, lang, region, title, text, searchParams }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const focusSlugs = focuses.map((focus) => getFocusSlug(focus));
-	const statsResult = await services.read.focus.getPublicFocusStatsBySlugs(focusSlugs);
+	const statsResult = await getPublicFocusStatsBySlugsAction(focusSlugs);
 	const statsBySlug = statsResult.success ? statsResult.data : {};
 	const hasStatsError = !statsResult.success;
 	const searchQuery = getSearchQuery(searchParams);

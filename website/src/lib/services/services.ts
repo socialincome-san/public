@@ -37,9 +37,6 @@ import { ExpenseValidationService } from './expense/expense-validation.service';
 import { ExpenseWriteService } from './expense/expense-write.service';
 import { FirebaseAdminService } from './firebase/firebase-admin.service';
 import { FirebaseSessionService } from './firebase/firebase-session.service';
-import { FocusReadService } from './focus/focus-read.service';
-import { FocusValidationService } from './focus/focus-validation.service';
-import { FocusWriteService } from './focus/focus-write.service';
 import { GithubApiService } from './github-api/github-api.service';
 import { JournalService } from './journal/journal.service';
 import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
@@ -177,9 +174,6 @@ const campaignSubmission = new CampaignSubmissionService(
 	storyblokManagement,
 );
 const campaignPendingClaim = new CampaignPendingClaimService(prisma);
-const focusValidation = new FocusValidationService(prisma);
-const focusRead = new FocusReadService(prisma, userRead);
-const focusWrite = new FocusWriteService(prisma, userRead, focusValidation);
 const donationCertificateRead = new DonationCertificateReadService(prisma, programAccessRead);
 
 const currencyDisplay = new CurrencyDisplayService(exchangeRateRead);
@@ -258,7 +252,6 @@ export const services = {
 		candidate: candidateRead,
 		campaign: campaignRead,
 		campaignPublicWebsite,
-		focus: focusRead,
 		contribution: contributionRead,
 		contributor: contributorRead,
 		donationCertificate: donationCertificateRead,
@@ -273,7 +266,6 @@ export const services = {
 	},
 	write: {
 		candidate: candidateWrite,
-		focus: focusWrite,
 		contribution: contributionWrite,
 		subscription: subscriptionWrite,
 		contributor: contributorWrite,

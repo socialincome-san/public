@@ -2,10 +2,10 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
-import { createFocusAction, deleteFocusAction, getFocusAction, updateFocusAction } from '@/lib/server-actions/focus-action';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import type { FocusPayload } from '@/lib/services/focus/focus.types';
 import { SLUG_REGEX } from '@/lib/utils/regex';
+import { createFocusAction, deleteFocusAction, getFocusAction, updateFocusAction } from '@/modules/focuses/focus.actions';
+import type { FocusPayload } from '@/modules/focuses/focus.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateFocusInput, buildUpdateFocusInput } from './focuses-form-helper';

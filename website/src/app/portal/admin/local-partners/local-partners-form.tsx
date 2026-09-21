@@ -3,7 +3,6 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getContactValuesFromPayload } from '@/components/dynamic-form/helper';
-import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
 import {
 	createLocalPartnerAction,
 	deleteLocalPartnerAction,
@@ -14,6 +13,7 @@ import { ServiceResult } from '@/lib/services/core/base.types';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
 import { LocalPartnerPayload } from '@/lib/services/local-partner/local-partner.types';
 import { SLUG_REGEX } from '@/lib/utils/regex';
+import { getFocusOptionsAction } from '@/modules/focuses/focus.actions';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateLocalPartnerInput, buildUpdateLocalPartnerInput } from './local-partners-form-helper';

@@ -1,4 +1,4 @@
-import type { CountryCode } from '@/generated/prisma/client';
+import type { CountryCode } from '@/generated/prisma/enums';
 
 export type FocusTableViewRow = {
 	id: string;
@@ -32,12 +32,11 @@ export type FocusOption = {
 	name: string;
 };
 
-export type PublicFocusStats = {
+type PublicFocusStats = {
 	programsCount: number;
 	recipientsInProgramsCount: number;
 	candidatesCount: number;
 	countryIsoCodes: CountryCode[];
 };
 
-export type PublicFocusStatsMap = Record<string, PublicFocusStats>;
 export type PublicFocusStatsBySlugMap = Record<string, PublicFocusStats>;

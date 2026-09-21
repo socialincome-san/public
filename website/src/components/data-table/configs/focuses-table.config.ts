@@ -1,6 +1,6 @@
 import { makeFocusColumns } from '@/components/data-table/columns/focuses';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
-import type { FocusTableViewRow } from '@/lib/services/focus/focus.types';
+import type { FocusTableViewRow } from '@/modules/focuses/focus.types';
 
 export const focusesTableConfig: DataTableConfig<FocusTableViewRow> = {
 	id: 'admin-focuses',

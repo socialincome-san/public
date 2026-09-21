@@ -11,7 +11,7 @@ jest.mock('@/lib/server-actions/candidate-actions', () => ({
 jest.mock('@/modules/countries/country.actions', () => ({
 	getProgramCountryFeasibilityAction: jest.fn(),
 }));
-jest.mock('@/lib/server-actions/focus-action', () => ({
+jest.mock('@/modules/focuses/focus.actions', () => ({
 	getFocusOptionsAction: jest.fn(),
 }));
 jest.mock('@/lib/server-actions/program-actions', () => ({
