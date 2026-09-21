@@ -4,9 +4,8 @@ import { tableQueryFromSearchParams } from '@/components/data-table/query-state'
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-
-import { YourContributionsTableViewRow } from '@/lib/services/contribution/contribution.types';
+import { getPaginatedYourContributionsTableView } from '@/modules/contributions/contribution.service';
+import { YourContributionsTableViewRow } from '@/modules/contributions/contribution.types';
 
 export const ContributionsTable = async ({
 	lang,
@@ -27,7 +26,7 @@ export const ContributionsTable = async ({
 		emptyMessage: translator.t('contributions.no-contributions'),
 	});
 
-	const result = await services.read.contribution.getPaginatedYourContributionsTableView(contributor.id, tableQuery);
+	const result = await getPaginatedYourContributionsTableView(contributor.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: YourContributionsTableViewRow[] = result.success ? result.data.tableRows : [];

@@ -9,7 +9,9 @@ jest.mock('@/generated/prisma/client', () => ({
 	ContributionStatus: {},
 	PaymentEventType: {},
 }));
-jest.mock('@/lib/services/contribution/contribution-write.service', () => ({ ContributionWriteService: class {} }));
+jest.mock('@/modules/contributions/contribution.service', () => ({
+	upsertFromBankTransfer: jest.fn(),
+}));
 jest.mock('@/lib/services/campaign/campaign-read.service', () => ({ CampaignReadService: class {} }));
 jest.mock('@/modules/contributors/contributor.service', () => ({
 	findContributorsByPaymentReferenceIds: jest.fn(),
@@ -19,7 +21,7 @@ const fixturePath = path.join(path.dirname(__filename), '__fixtures__', 'camt054
 
 describe('PaymentFileImportService.getContributionsFromPaymentFile', () => {
 	test('extracts two contributions with correct Ref and Amt per entry (real file)', () => {
-		const service = new PaymentFileImportService('test-bucket', {} as never, {} as never, {} as never);
+		const service = new PaymentFileImportService('test-bucket', {} as never, {} as never);
 		const result = service.getContributionsFromPaymentFile(fixturePath);
 		expect(result.success).toBe(true);
 		if (!result.success) {

@@ -250,6 +250,16 @@ export const getContributorsByIds = async (params?: {
 	}
 };
 
+export const findContributorById = async (contributorId: string): Promise<ServiceResult<{ id: string } | null>> => {
+	try {
+		return resultOk(await contributorRepository.findContributorId(contributorId));
+	} catch (error) {
+		console.error(error);
+
+		return resultFail('Could not find contributor');
+	}
+};
+
 export const findContributorByAccountId = async (
 	accountId: string,
 ): Promise<ServiceResult<ContributorWithContact | null>> => {

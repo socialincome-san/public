@@ -25,9 +25,6 @@ import { CampaignPublicWebsiteService } from './campaign/campaign-public-website
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignSubmissionService } from './campaign/campaign-submission.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
-import { ContributionReadService } from './contribution/contribution-read.service';
-import { ContributionValidationService } from './contribution/contribution-validation.service';
-import { ContributionWriteService } from './contribution/contribution-write.service';
 import { CurrencyDisplayService } from './currency-display/currency-display.service';
 import { CustodianStablecoinWalletService } from './custodian-stablecoin-wallet/custodian-stablecoin-wallet.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
@@ -107,9 +104,6 @@ const messagingTwilioTemplates = new TwilioTemplateService(prisma);
 
 const messagingWebhook = new MessagingWebhookService(prisma);
 const messagingLog = new MessagingLogService(prisma, userRead, messagingWebhook);
-const contributionRead = new ContributionReadService(prisma, programAccessRead, storyblok);
-const contributionValidation = new ContributionValidationService(prisma);
-const contributionWrite = new ContributionWriteService(prisma, programAccessRead, contributionValidation);
 const subscriptionWrite = new SubscriptionWriteService(prisma);
 const localPartnerRead: LocalPartnerReadService = {
 	getPaginatedTableView: getPaginatedLocalPartnerTableView,
@@ -150,17 +144,16 @@ const payoutProcessCore = new PayoutProcessCoreService(
 );
 const orangeMoneyCsvPayoutProcess = new OrangeMoneyCsvPayoutProcessService(prisma, payoutProcessCore);
 const telecelCsvPayoutProcess = new TelecelCsvPayoutProcessService(prisma, payoutProcessCore);
-const donationCertificateWrite = new DonationCertificateWriteService(prisma, contributionRead, donationCertificateRead);
-const qrBill = new QrBillService(prisma, campaignRead, contributionWrite, subscriptionWrite, exchangeRateRead);
-const stripe = new StripeService(prisma, contributionWrite, subscriptionWrite, campaignRead, programAccessRead);
-const subscriptionRead = new SubscriptionReadService(prisma, programAccessRead, contributionRead, stripe);
+const donationCertificateWrite = new DonationCertificateWriteService(prisma, donationCertificateRead);
+const qrBill = new QrBillService(prisma, campaignRead, subscriptionWrite, exchangeRateRead);
+const stripe = new StripeService(prisma, subscriptionWrite, campaignRead, programAccessRead);
+const subscriptionRead = new SubscriptionReadService(prisma, programAccessRead, stripe);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
 const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAdmin, surveyRead, surveyValidation);
 
-const createPaymentFileImport = (bucketName: string) =>
-	new PaymentFileImportService(bucketName, prisma, contributionWrite, campaignRead);
+const createPaymentFileImport = (bucketName: string) => new PaymentFileImportService(bucketName, prisma, campaignRead);
 const createPostFinanceBalance = (bucketName: string) => new PostFinanceBalanceService(bucketName, prisma);
 const createReservesCalculation = (bucketName: string) =>
 	new ReservesCalculationService(
@@ -178,7 +171,6 @@ export const services = {
 	read: {
 		campaign: campaignRead,
 		campaignPublicWebsite,
-		contribution: contributionRead,
 		donationCertificate: donationCertificateRead,
 		payout: payoutRead,
 		recipient: recipientRead,
@@ -186,7 +178,6 @@ export const services = {
 		survey: surveyRead,
 	},
 	write: {
-		contribution: contributionWrite,
 		subscription: subscriptionWrite,
 		donationCertificate: donationCertificateWrite,
 		payout: payoutWrite,

@@ -1,4 +1,13 @@
-import { ContributionStatus, Currency, PaymentEventType, Prisma } from '@/generated/prisma/client';
+import type { ContributionStatus, Currency, PaymentEventType } from '@/generated/prisma/enums';
+
+export type GlobeContribution = {
+	key: string;
+	amount: number;
+	currency: string;
+	contributedAt: string;
+	countryCode: string;
+	countryName: string;
+};
 
 export type ContributionTableViewRow = {
 	id: string;
@@ -77,7 +86,42 @@ export type PaymentEventCreateData = {
 	metadata?: Record<string, unknown>;
 };
 
-export type PaymentEventCreateInput = Prisma.PaymentEventCreateInput;
+export type BankTransferUpsertInput = {
+	type: PaymentEventType;
+	transactionId: string;
+	metadata?: Record<string, unknown>;
+	contribution: {
+		amount: number;
+		currency: Currency;
+		amountChf: number;
+		feesChf: number;
+		status: ContributionStatus;
+		campaignId: string;
+		contributorId: string;
+	};
+};
+
+export type PaymentEventRecord = {
+	id: string;
+	type: PaymentEventType;
+	transactionId: string;
+	contributionId: string;
+	createdAt: Date;
+	updatedAt: Date | null;
+};
+
+export type ContributionRecord = {
+	id: string;
+	amount: number;
+	currency: Currency;
+	amountChf: number;
+	feesChf: number;
+	status: ContributionStatus;
+	contributorId: string;
+	campaignId: string;
+	createdAt: Date;
+	updatedAt: Date | null;
+};
 
 export type YourContributionsTableViewRow = {
 	createdAt: Date;
@@ -106,4 +150,9 @@ export type ContributorContributionSummary = {
 	totalAmountChf: number;
 	count: number;
 	firstContributionAt: Date | null;
+};
+
+export type ContributionFormOptions = {
+	contributorOptions: { id: string; name: string }[];
+	campaignOptions: { id: string; name: string }[];
 };

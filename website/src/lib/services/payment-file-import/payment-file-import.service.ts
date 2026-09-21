@@ -1,7 +1,9 @@
-import { ContributionStatus, PaymentEvent, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
+import { ContributionStatus, PaymentEventType, PrismaClient } from '@/generated/prisma/client';
 import { Currency } from '@/generated/prisma/enums';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { upsertFromBankTransfer } from '@/modules/contributions/contribution.service';
+import { type BankTransferUpsertInput, type PaymentEventRecord } from '@/modules/contributions/contribution.types';
 import { findContributorsByPaymentReferenceIds } from '@/modules/contributors/contributor.service';
 import xmldom from '@xmldom/xmldom';
 import { DateTime } from 'luxon';
@@ -11,8 +13,6 @@ import { withFile } from 'tmp-promise';
 import xpath from 'xpath';
 import { CONTRIBUTION_REFERENCE_ID_LENGTH, CONTRIBUTOR_REFERENCE_ID_LENGTH } from '../bank-transfer/bank-transfer-config';
 import { CampaignReadService } from '../campaign/campaign-read.service';
-import { ContributionWriteService } from '../contribution/contribution-write.service';
-import { PaymentEventCreateInput } from '../contribution/contribution.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { BankContribution } from './payment-file-import.types';
@@ -31,7 +31,6 @@ export class PaymentFileImportService extends BaseService {
 	constructor(
 		bucketName: string,
 		db: PrismaClient,
-		private readonly contributionService: ContributionWriteService,
 		private readonly campaignService: CampaignReadService,
 	) {
 		super(db);
@@ -41,7 +40,7 @@ export class PaymentFileImportService extends BaseService {
 	/**
 	 * Imports payment files from the Postfinance SFTP server to the payments files storage bucket
 	 */
-	async importPaymentFiles(): Promise<ServiceResult<PaymentEvent[]>> {
+	async importPaymentFiles(): Promise<ServiceResult<PaymentEventRecord[]>> {
 		const sftp = new SFTPClient();
 		const allContributions: BankContribution[] = [];
 		try {
@@ -152,7 +151,9 @@ export class PaymentFileImportService extends BaseService {
 	 * @param bankContributions contributions from payment files
 	 */
 	// TODO: create or update
-	private async createOrUpdateContributions(bankContributions: BankContribution[]): Promise<ServiceResult<PaymentEvent[]>> {
+	private async createOrUpdateContributions(
+		bankContributions: BankContribution[],
+	): Promise<ServiceResult<PaymentEventRecord[]>> {
 		try {
 			const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
 			if (!fallbackCampaignResult.success) {
@@ -188,7 +189,7 @@ export class PaymentFileImportService extends BaseService {
 					console.info(`Legacy reference ID detected for contributor ${contributor.id}.`);
 				}
 
-				const paymentEvent: PaymentEventCreateInput = {
+				const paymentEvent: BankTransferUpsertInput = {
 					type: PaymentEventType.bank_transfer,
 					transactionId:
 						contributionReferenceId && contributionReferenceId.length > 0
@@ -198,25 +199,17 @@ export class PaymentFileImportService extends BaseService {
 						raw_content: c.rawContent,
 					},
 					contribution: {
-						create: {
-							amount: c.amount,
-							amountChf: c.amount,
-							currency: c.currency,
-							feesChf: 0,
-							status: ContributionStatus.succeeded,
-							campaign: {
-								connect: {
-									id: campaignId,
-								},
-							},
-							contributor: {
-								connect: { id: contributor.id },
-							},
-						},
+						amount: c.amount,
+						amountChf: c.amount,
+						currency: c.currency,
+						feesChf: 0,
+						status: ContributionStatus.succeeded,
+						campaignId,
+						contributorId: contributor.id,
 					},
 				};
 				try {
-					const result = await this.contributionService.upsertFromBankTransfer(paymentEvent);
+					const result = await upsertFromBankTransfer(paymentEvent);
 					if (!result.success) {
 						failedPaymentEvents.push(contributionReferenceId);
 					} else {

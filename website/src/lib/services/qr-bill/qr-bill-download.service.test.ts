@@ -4,7 +4,6 @@ import { generateQrBillPdfBuffer } from '@/lib/utils/qr-bill-pdf';
 import { findContributorsByPaymentReferenceIds } from '@/modules/contributors/contributor.service';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import type { CampaignReadService } from '../campaign/campaign-read.service';
-import type { ContributionWriteService } from '../contribution/contribution-write.service';
 import type { SubscriptionWriteService } from '../subscription/subscription-write.service';
 import { QrBillService } from './qr-bill.service';
 
@@ -20,6 +19,10 @@ jest.mock('@/generated/prisma/client', () => ({
 
 jest.mock('@/lib/utils/qr-bill-pdf', () => ({
 	generateQrBillPdfBuffer: jest.fn(),
+}));
+
+jest.mock('@/modules/contributions/contribution.service', () => ({
+	upsertFromBankTransfer: jest.fn(),
 }));
 
 jest.mock('@/modules/contributors/contributor.service', () => ({
@@ -44,7 +47,6 @@ describe('QrBillService.downloadQrBillPdf', () => {
 		new QrBillService(
 			{} as PrismaClient,
 			{} as CampaignReadService,
-			{} as ContributionWriteService,
 			{} as SubscriptionWriteService,
 			{} as ExchangeRateReadService,
 		);

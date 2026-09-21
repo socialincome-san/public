@@ -8,6 +8,8 @@ import {
 	SubscriptionStatus,
 } from '@/generated/prisma/client';
 import { generateQrBillPdfBuffer } from '@/lib/utils/qr-bill-pdf';
+import { upsertFromBankTransfer } from '@/modules/contributions/contribution.service';
+import { type BankTransferUpsertInput } from '@/modules/contributions/contribution.types';
 import {
 	findContributorsByPaymentReferenceIds,
 	getOrCreateContributorByReferenceId,
@@ -18,8 +20,6 @@ import { type BankContributorData, type ContributorWithContact } from '@/modules
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import { DateTime } from 'luxon';
 import { CampaignReadService } from '../campaign/campaign-read.service';
-import { ContributionWriteService } from '../contribution/contribution-write.service';
-import { type PaymentEventCreateInput } from '../contribution/contribution.types';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { SubscriptionWriteService } from '../subscription/subscription-write.service';
@@ -44,7 +44,6 @@ export class QrBillService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly campaignService: CampaignReadService,
-		private readonly contributionService: ContributionWriteService,
 		private readonly subscriptionWriteService: SubscriptionWriteService,
 		private readonly exchangeRateService: ExchangeRateReadService,
 	) {
@@ -114,7 +113,7 @@ export class QrBillService extends BaseService {
 			if (!newContribution.success) {
 				return this.resultFail(`Could not build new contribution for reference Id ${payment.referenceId}`);
 			}
-			const createdContribution = await this.contributionService.upsertFromBankTransfer(newContribution.data);
+			const createdContribution = await upsertFromBankTransfer(newContribution.data);
 			if (!createdContribution.success) {
 				return this.resultFail(`Could not generate pending contribution for reference id ${payment.referenceId}`);
 			}
@@ -401,34 +400,26 @@ export class QrBillService extends BaseService {
 		payment: WizardQrPayment,
 		contributorId: string,
 		campaignId: string,
-	): Promise<ServiceResult<PaymentEventCreateInput>> {
+	): Promise<ServiceResult<BankTransferUpsertInput>> {
 		const amountChfResult = await this.resolveAmountChf(payment.amount, payment.currency);
 		if (!amountChfResult.success) {
 			return amountChfResult;
 		}
 
-		const paymentEvent: PaymentEventCreateInput = {
+		const paymentEvent: BankTransferUpsertInput = {
 			type: PaymentEventType.bank_transfer,
 			transactionId: payment.referenceId,
 			metadata: {
 				raw_content: '',
 			},
 			contribution: {
-				create: {
-					amount: payment.amount,
-					currency: payment.currency,
-					amountChf: amountChfResult.data,
-					feesChf: 0,
-					status: ContributionStatus.pending,
-					campaign: {
-						connect: {
-							id: campaignId,
-						},
-					},
-					contributor: {
-						connect: { id: contributorId },
-					},
-				},
+				amount: payment.amount,
+				currency: payment.currency,
+				amountChf: amountChfResult.data,
+				feesChf: 0,
+				status: ContributionStatus.pending,
+				campaignId,
+				contributorId,
 			},
 		};
 

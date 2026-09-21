@@ -1,9 +1,12 @@
 import { PrismaClient, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/client';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import type { CampaignReadService } from '../campaign/campaign-read.service';
-import type { ContributionWriteService } from '../contribution/contribution-write.service';
 import type { SubscriptionWriteService } from '../subscription/subscription-write.service';
 import { StripeService } from './stripe.service';
+
+jest.mock('@/modules/contributions/contribution.service', () => ({
+	upsertFromStripeEvent: jest.fn(),
+}));
 
 jest.mock('@/modules/contributors/contributor.service', () => ({
 	findContributorByAccountId: jest.fn(),
@@ -62,13 +65,7 @@ describe('StripeService.cancelContributorSubscription', () => {
 	} as unknown as PrismaClient;
 
 	const createService = () =>
-		new StripeService(
-			db,
-			{} as ContributionWriteService,
-			{} as SubscriptionWriteService,
-			{} as CampaignReadService,
-			{} as ProgramAccessReadService,
-		);
+		new StripeService(db, {} as SubscriptionWriteService, {} as CampaignReadService, {} as ProgramAccessReadService);
 
 	beforeEach(() => {
 		jest.clearAllMocks();

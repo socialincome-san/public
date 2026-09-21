@@ -8,8 +8,8 @@ import {
 } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import { getContributorContributionSummary } from '@/modules/contributions/contribution.service';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
-import { ContributionReadService } from '../contribution/contribution-read.service';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import { StripeService } from '../stripe/stripe.service';
@@ -71,7 +71,6 @@ export class SubscriptionReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
-		private readonly contributionReadService: ContributionReadService,
 		private readonly stripeService: StripeService,
 	) {
 		super(db);
@@ -236,7 +235,7 @@ export class SubscriptionReadService extends BaseService {
 					},
 					orderBy: { createdAt: 'desc' },
 				}),
-				this.contributionReadService.getContributorContributionSummary(contributorId),
+				getContributorContributionSummary(contributorId),
 			]);
 
 			if (!contributionSummaryResult.success) {

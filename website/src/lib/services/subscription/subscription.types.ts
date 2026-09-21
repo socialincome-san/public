@@ -4,7 +4,7 @@ import {
 	type SubscriptionPaymentMethod,
 	type SubscriptionStatus,
 } from '@/generated/prisma/client';
-import { type ContributorContributionSummary } from '../contribution/contribution.types';
+import { type ContributorContributionSummary } from '@/modules/contributions/contribution.types';
 
 export const SUBSCRIPTION_PAYMENT_METHOD_LABELS: Record<SubscriptionPaymentMethod, string> = {
 	stripe: 'Stripe',

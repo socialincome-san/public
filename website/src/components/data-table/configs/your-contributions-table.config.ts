@@ -1,6 +1,6 @@
 import { makeYourContributionsColumns } from '@/components/data-table/columns/your-contributions';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
-import type { YourContributionsTableViewRow } from '@/lib/services/contribution/contribution.types';
+import type { YourContributionsTableViewRow } from '@/modules/contributions/contribution.types';
 
 export const getYourContributionsTableConfig = ({
 	title,

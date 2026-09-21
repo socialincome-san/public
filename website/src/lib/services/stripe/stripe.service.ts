@@ -29,6 +29,8 @@ import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import { titleCase } from '@/lib/utils/string-utils';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import { upsertFromStripeEvent } from '@/modules/contributions/contribution.service';
+import { type PaymentEventCreateData, type StripeContributionCreateData } from '@/modules/contributions/contribution.types';
 import {
 	findContributorByAccountId,
 	findContributorByStripeCustomerOrEmail,
@@ -40,8 +42,6 @@ import type { ContributorWithContact, StripeContributorData } from '@/modules/co
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import Stripe from 'stripe';
 import { CampaignReadService } from '../campaign/campaign-read.service';
-import { ContributionWriteService } from '../contribution/contribution-write.service';
-import { type PaymentEventCreateData, type StripeContributionCreateData } from '../contribution/contribution.types';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
 import {
@@ -103,7 +103,6 @@ export class StripeService extends BaseService {
 
 	constructor(
 		db: PrismaClient,
-		private readonly contributionWriteService: ContributionWriteService,
 		private readonly subscriptionWriteService: SubscriptionWriteService,
 		private readonly campaignReadService: CampaignReadService,
 		private readonly programAccessReadService: ProgramAccessReadService,
@@ -1410,10 +1409,7 @@ export class StripeService extends BaseService {
 				},
 			};
 
-			const contributionResult = await this.contributionWriteService.upsertFromStripeEvent(
-				contributionData,
-				paymentEventData,
-			);
+			const contributionResult = await upsertFromStripeEvent(contributionData, paymentEventData);
 
 			if (!contributionResult.success) {
 				console.error(contributionResult.error);

@@ -251,6 +251,12 @@ export const findContributorRecord = async (contributorId: string) =>
 		select: contributorRecordSelect,
 	});
 
+export const findContributorId = async (contributorId: string) =>
+	prisma.contributor.findUnique({
+		where: { id: contributorId },
+		select: { id: true },
+	});
+
 export const findContributorByEmailOrFirebaseAuthUserId = async (email: string, firebaseAuthUserId: string) =>
 	prisma.contributor.findFirst({
 		where: {

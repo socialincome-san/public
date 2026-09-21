@@ -1,9 +1,9 @@
 import { PrismaClient } from '@/generated/prisma/client';
 import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE, LANGUAGE_CODES, LanguageCode } from '@/lib/types/language';
+import { getSucceededForContributorAndYear } from '@/modules/contributions/contribution.service';
 import { getContributorsByIds } from '@/modules/contributors/contributor.service';
 import { withFile } from 'tmp-promise';
-import { ContributionReadService } from '../contribution/contribution-read.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { DonationCertificateReadService } from './donation-certificate-read.service';
@@ -19,7 +19,6 @@ export class DonationCertificateWriteService extends BaseService {
 
 	constructor(
 		db: PrismaClient,
-		private readonly contributionService: ContributionReadService,
 		private readonly donationCertificateReadService: DonationCertificateReadService,
 	) {
 		super(db);
@@ -66,7 +65,7 @@ export class DonationCertificateWriteService extends BaseService {
 				return this.resultFail(DonationCertificateError.alreadyExists);
 			}
 
-			const contributions = await this.contributionService.getSucceededForContributorAndYear(contributorsId, year);
+			const contributions = await getSucceededForContributorAndYear(contributorsId, year);
 			if (!contributions.success) {
 				console.info(`Could not load contributions for contributor ${contributorsId}`);
 

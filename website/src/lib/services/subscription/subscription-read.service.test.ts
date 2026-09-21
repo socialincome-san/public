@@ -1,11 +1,15 @@
 import { PrismaClient, SubscriptionPaymentMethod } from '@/generated/prisma/client';
+import { getContributorContributionSummary } from '@/modules/contributions/contribution.service';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
-import type { ContributionReadService } from '../contribution/contribution-read.service';
 import type { ServiceResult } from '../core/base.types';
 import type { StripeService } from '../stripe/stripe.service';
 import { UPCOMING_PAYMENTS_PER_SUBSCRIPTION } from './subscription-payment-schedule';
 import { SubscriptionReadService } from './subscription-read.service';
 import type { SubscriptionTableQuery } from './subscription.types';
+
+jest.mock('@/modules/contributions/contribution.service', () => ({
+	getContributorContributionSummary: jest.fn(),
+}));
 
 jest.mock('@/generated/prisma/client', () => ({
 	PrismaClient: class {},
@@ -23,6 +27,10 @@ jest.mock('@/generated/prisma/client', () => ({
 jest.mock('@/lib/utils/now', () => ({
 	now: jest.fn(() => new Date('2026-01-15T12:00:00.000Z')),
 }));
+
+const mockGetContributorContributionSummary = getContributorContributionSummary as jest.MockedFunction<
+	typeof getContributorContributionSummary
+>;
 
 const expectSuccess = <T>(result: ServiceResult<T>) => {
 	expect(result.success).toBe(true);
@@ -63,18 +71,16 @@ const createService = ({
 		},
 	} as unknown as PrismaClient;
 
-	const contributionReadService = {
-		getContributorContributionSummary: jest.fn().mockResolvedValue({
-			success: true as const,
-			data: { totalAmountChf: 750, count: 15, firstContributionAt: new Date('2024-11-03T00:00:00.000Z') },
-		}),
-	} as unknown as ContributionReadService;
+	mockGetContributorContributionSummary.mockResolvedValue({
+		success: true,
+		data: { totalAmountChf: 750, count: 15, firstContributionAt: new Date('2024-11-03T00:00:00.000Z') },
+	});
 	const programAccessService = {
 		getAccessiblePrograms: jest.fn(),
 	} as unknown as ProgramAccessReadService;
 
 	return {
-		service: new SubscriptionReadService(db, programAccessService, contributionReadService, {
+		service: new SubscriptionReadService(db, programAccessService, {
 			getSubscriptionStripeDetails: jest.fn().mockResolvedValue(stripeDetails),
 		} as unknown as StripeService),
 	};
@@ -261,12 +267,9 @@ const createPortalService = ({
 	} as unknown as ProgramAccessReadService;
 
 	return {
-		service: new SubscriptionReadService(
-			db,
-			programAccessService,
-			{ getContributorContributionSummary: jest.fn() } as unknown as ContributionReadService,
-			{ getSubscriptionStripeDetails: jest.fn() } as unknown as StripeService,
-		),
+		service: new SubscriptionReadService(db, programAccessService, {
+			getSubscriptionStripeDetails: jest.fn(),
+		} as unknown as StripeService),
 		subscriptionFindMany,
 	};
 };
