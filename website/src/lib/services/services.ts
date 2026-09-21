@@ -117,8 +117,8 @@ const storyblok = new StoryblokService(prisma);
 const journal = new JournalService(prisma, storyblok);
 const sendgrid = new SendgridSubscriptionService();
 const sendgridMail = new SendgridMailService(prisma);
-const monthlySummary = new MonthlySummaryService(prisma);
 const recipientStatus = new RecipientStatusService(prisma);
+const monthlySummary = new MonthlySummaryService(prisma, recipientStatus);
 
 const exchangeRateRead = new ExchangeRateReadService(prisma, userRead);
 const exchangeRateWrite = new ExchangeRateWriteService(prisma, userRead, exchangeRateImport);
