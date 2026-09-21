@@ -1,12 +1,12 @@
 import { Contributor, ContributorReferralSource, Prisma, PrismaClient } from '@/generated/prisma/client';
+import { subscribeToNewsletter } from '@/modules/newsletter/newsletter.service';
+import { toNewsletterLanguage } from '@/modules/newsletter/newsletter.types';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import { DateTime } from 'luxon';
 import { ContactRelationsService } from '../contact/contact-relations.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import { SendgridSubscriptionService } from '../sendgrid/sendgrid-subscription.service';
-import { SupportedLanguage } from '../sendgrid/types';
 import { ContributorFormCreateInput, ContributorFormUpdateInput } from './contributor-form-input';
 import { ContributorValidationService } from './contributor-validation.service';
 import {
@@ -22,7 +22,6 @@ export class ContributorWriteService extends BaseService {
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
 		private readonly firebaseAdminService: FirebaseAdminService,
-		private readonly sendGridService: SendgridSubscriptionService,
 		private readonly contributorValidationService: ContributorValidationService,
 		private readonly contactRelationsService: ContactRelationsService,
 	) {
@@ -390,11 +389,11 @@ export class ContributorWriteService extends BaseService {
 				include: { contact: true },
 			});
 
-			await this.sendGridService.subscribeToNewsletter({
+			await subscribeToNewsletter({
 				firstname: contributorData.firstName,
 				lastname: contributorData.lastName,
 				email: contributorData.email,
-				language: contributorData.language as SupportedLanguage,
+				language: toNewsletterLanguage(contributorData.language),
 			});
 
 			return this.resultOk(newContributor);

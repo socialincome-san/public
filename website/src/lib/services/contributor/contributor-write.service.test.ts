@@ -1,3 +1,7 @@
+jest.mock('@/modules/newsletter/newsletter.service', () => ({
+	subscribeToNewsletter: jest.fn().mockResolvedValue({ success: true, data: undefined }),
+}));
+
 jest.mock('@/generated/prisma/client', () => ({
 	ContributorReferralSource: {
 		other: 'other',
@@ -23,7 +27,6 @@ import { ContributorReferralSource, Prisma } from '@/generated/prisma/client';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import type { ContactRelationsService } from '../contact/contact-relations.service';
 import type { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import type { SendgridSubscriptionService } from '../sendgrid/sendgrid-subscription.service';
 import type { ContributorValidationService } from './contributor-validation.service';
 import { ContributorWriteService } from './contributor-write.service';
 
@@ -48,7 +51,6 @@ describe('ContributorWriteService.getOrCreateFromEmailAndName', () => {
 			db as never,
 			{} as ProgramAccessReadService,
 			firebaseAdminService,
-			{} as SendgridSubscriptionService,
 			{} as ContributorValidationService,
 			{} as ContactRelationsService,
 		);

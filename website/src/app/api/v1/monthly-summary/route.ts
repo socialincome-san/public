@@ -1,5 +1,6 @@
 import { services } from '@/lib/services/services';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { sendMail } from '@/modules/mail/mail.service';
 import { NextRequest, NextResponse } from 'next/server';
 
 const getRecipients = () =>
@@ -75,7 +76,7 @@ ${localPartners
 	)
 	.join('\n')}`;
 
-		const emailResult = await services.sendgridMail.send({
+		const emailResult = await sendMail({
 			to: recipients,
 			subject: `Monthly summary — ${month}`,
 			text,

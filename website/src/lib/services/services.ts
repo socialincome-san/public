@@ -54,8 +54,6 @@ import { QrBillService } from './qr-bill/qr-bill.service';
 import { ReserveReadService } from './reserves/reserve-read.service';
 import { ReserveWriteService } from './reserves/reserve-write.service';
 import { ReservesCalculationService } from './reserves/reserves-calculation.service';
-import { SendgridMailService } from './sendgrid/sendgrid-mail.service';
-import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
 import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { StoryblokService } from './storyblok/storyblok.service';
 import { StripeService } from './stripe/stripe.service';
@@ -100,8 +98,6 @@ const transparency = new TransparencyService(prisma, reserveRead);
 const githubApi = new GithubApiService(prisma);
 const storyblok = new StoryblokService(prisma);
 const journal = new JournalService(prisma, storyblok);
-const sendgrid = new SendgridSubscriptionService();
-const sendgridMail = new SendgridMailService(prisma);
 const recipientStatus = recipientStatusService;
 const monthlySummary = new MonthlySummaryService(prisma, recipientStatus);
 
@@ -130,7 +126,6 @@ const contributorWrite = new ContributorWriteService(
 	prisma,
 	programAccessRead,
 	firebaseAdmin,
-	sendgrid,
 	contributorValidation,
 	contactRelations,
 );
@@ -246,8 +241,6 @@ export const services = {
 	telecelCsvPayoutProcess,
 	currencyDisplay,
 	recipientImport,
-	sendgrid,
-	sendgridMail,
 	monthlySummary,
 	journal,
 	storyblok,
