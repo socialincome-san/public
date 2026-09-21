@@ -3,7 +3,7 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { countriesTableConfig } from '@/components/data-table/configs/countries-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import type { CountryTableViewRow } from '@/lib/services/country/country.types';
+import type { CountryTableViewRow } from '@/modules/countries/country.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { CountryDialog } from './country-dialog';

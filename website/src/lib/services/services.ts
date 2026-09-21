@@ -28,9 +28,6 @@ import { ContributionWriteService } from './contribution/contribution-write.serv
 import { ContributorReadService } from './contributor/contributor-read.service';
 import { ContributorValidationService } from './contributor/contributor-validation.service';
 import { ContributorWriteService } from './contributor/contributor-write.service';
-import { CountryReadService } from './country/country-read.service';
-import { CountryValidationService } from './country/country-validation.service';
-import { CountryWriteService } from './country/country-write.service';
 import { CurrencyDisplayService } from './currency-display/currency-display.service';
 import { CustodianStablecoinWalletService } from './custodian-stablecoin-wallet/custodian-stablecoin-wallet.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
@@ -154,9 +151,6 @@ const localPartnerWrite = new LocalPartnerWriteService(
 const mobileMoneyProviderRead = new MobileMoneyProviderReadService(prisma, userRead);
 const mobileMoneyProviderValidation = new MobileMoneyProviderValidationService(prisma);
 const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(prisma, userRead, mobileMoneyProviderValidation);
-const countryRead = new CountryReadService(prisma, userRead);
-const countryValidation = new CountryValidationService(prisma);
-const countryWrite = new CountryWriteService(prisma, userRead, countryValidation);
 const expenseRead = new ExpenseReadService(prisma, userRead);
 const expenseValidation = new ExpenseValidationService(prisma);
 const expenseWrite = new ExpenseWriteService(prisma, userRead, expenseValidation);
@@ -267,7 +261,6 @@ export const services = {
 		focus: focusRead,
 		contribution: contributionRead,
 		contributor: contributorRead,
-		country: countryRead,
 		donationCertificate: donationCertificateRead,
 		expense: expenseRead,
 		localPartner: localPartnerRead,
@@ -284,7 +277,6 @@ export const services = {
 		contribution: contributionWrite,
 		subscription: subscriptionWrite,
 		contributor: contributorWrite,
-		country: countryWrite,
 		donationCertificate: donationCertificateWrite,
 		expense: expenseWrite,
 		localPartner: localPartnerWrite,

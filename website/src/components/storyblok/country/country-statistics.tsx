@@ -3,13 +3,11 @@ import { BlockWrapper } from '@/components/block-wrapper';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
-import {
-	loadCountryStatisticsComparison,
-	type CountryStatisticFormat,
-} from '@/lib/services/country/world-bank-country-statistics';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { cn } from '@/lib/utils/cn';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
+import { getCountryStatisticsComparisonAction } from '@/modules/countries/country.actions';
+import type { CountryStatisticFormat } from '@/modules/countries/country.types';
 import { cookies, headers } from 'next/headers';
 import NextImage from 'next/image';
 
@@ -107,7 +105,11 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 	}
 
 	const visitorCountryCode = await resolveVisitorCountryCode();
-	const rows = await loadCountryStatisticsComparison(normalizedCountryIsoCode, visitorCountryCode);
+	const rowsResult = await getCountryStatisticsComparisonAction({
+		countryCode: normalizedCountryIsoCode,
+		visitorCountryCode,
+	});
+	const rows = rowsResult.success ? rowsResult.data : [];
 	if (rows.length === 0) {
 		return null;
 	}

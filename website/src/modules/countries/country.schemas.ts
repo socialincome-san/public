@@ -1,5 +1,5 @@
 import { CountryCode, Currency, NetworkTechnology, SanctionRegime } from '@/generated/prisma/enums';
-import z from 'zod';
+import { z } from 'zod';
 
 const sourceLinkSchema = z.object({
 	text: z.string().trim().min(1),
@@ -24,8 +24,17 @@ export const countryCreateInputSchema = z.object({
 });
 
 export const countryUpdateInputSchema = countryCreateInputSchema.extend({
-	id: z.string().trim().min(1, 'Country id is required.').optional(),
+	id: z.string().trim().min(1, 'Country id is required.'),
 });
 
-export type CountryFormCreateInput = z.infer<typeof countryCreateInputSchema>;
-export type CountryFormUpdateInput = z.infer<typeof countryUpdateInputSchema>;
+export const countryIdSchema = z.string().trim().min(1, 'Country id is required.');
+
+export const countryIsoCodesSchema = z.array(z.string());
+
+export const countryStatisticsComparisonSchema = z.object({
+	countryCode: z.nativeEnum(CountryCode),
+	visitorCountryCode: z.nativeEnum(CountryCode),
+});
+
+export type CountryCreateInput = z.infer<typeof countryCreateInputSchema>;
+export type CountryUpdateInput = z.infer<typeof countryUpdateInputSchema>;

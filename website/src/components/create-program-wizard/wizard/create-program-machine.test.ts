@@ -1,14 +1,14 @@
 import { CountryCode } from '@/generated/prisma/enums';
-import { CountryCondition, type ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import type { ProgramBudgetCalculation } from '@/lib/services/program-stats/program-stats.types';
 import type { CreateProgramInput, PublicOnboardingUserDetails } from '@/lib/services/program/program.types';
+import { CountryCondition, type ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
 import { createActor, fromPromise, waitFor } from 'xstate';
 import { createProgramWizardMachine } from './create-program-machine';
 
 jest.mock('@/lib/server-actions/candidate-actions', () => ({
 	getCandidateCountAction: jest.fn(),
 }));
-jest.mock('@/lib/server-actions/country-action', () => ({
+jest.mock('@/modules/countries/country.actions', () => ({
 	getProgramCountryFeasibilityAction: jest.fn(),
 }));
 jest.mock('@/lib/server-actions/focus-action', () => ({

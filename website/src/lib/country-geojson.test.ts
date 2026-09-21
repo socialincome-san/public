@@ -1,8 +1,14 @@
-import { COUNTRY_GEOJSON_URL, getCountryGeoJson } from './country-geojson.client';
+import { COUNTRY_GEOJSON_URL, getCountryGeoJson } from './country-geojson';
 
 const validFeatureCollection = {
 	type: 'FeatureCollection',
-	features: [{ type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [] } }],
+	features: [
+		{
+			type: 'Feature',
+			properties: {},
+			geometry: { type: 'Polygon', coordinates: [] },
+		},
+	],
 };
 
 describe('getCountryGeoJson', () => {

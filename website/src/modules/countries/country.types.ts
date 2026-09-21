@@ -1,7 +1,9 @@
-import { Currency, MobileMoneyProvider } from '@/generated/prisma/client';
-import { CountryCode, NetworkTechnology } from '@/generated/prisma/enums';
+import type { CountryCode, Currency, NetworkTechnology, SanctionRegime } from '@/generated/prisma/enums';
 
-export type MobileMoneyProviderRef = Pick<MobileMoneyProvider, 'id' | 'name'>;
+export type MobileMoneyProviderRef = {
+	id: string;
+	name: string;
+};
 
 export type CountryTableViewRow = {
 	id: string;
@@ -20,10 +22,6 @@ export type CountryTableViewRow = {
 	networkSourceText?: string | null;
 	networkSourceHref?: string | null;
 	updatedAt: Date;
-};
-
-export type CountryTableView = {
-	tableRows: CountryTableViewRow[];
 };
 
 export type CountryTableQuery = {
@@ -48,11 +46,11 @@ export type CountryPayload = {
 	microfinanceIndex?: number | null;
 	cashConditionOverride: boolean;
 	populationCoverage?: number | null;
-	networkTechnology?: string | null;
+	networkTechnology?: NetworkTechnology | null;
 	latestSurveyDate?: Date | null;
 	mobileMoneyProviders?: MobileMoneyProviderRef[] | null;
 	mobileMoneyConditionOverride: boolean;
-	sanctions?: string[] | null;
+	sanctions?: SanctionRegime[] | null;
 	microfinanceSourceLink?: { id: string; text: string; href: string } | null;
 	networkSourceLink?: { id: string; text: string; href: string } | null;
 };
@@ -81,20 +79,17 @@ type CountryFeasibility = {
 
 export type ProgramCountryFeasibilityRow = {
 	id: string;
-
 	country: {
 		isoCode: CountryCode;
 		isActive: boolean;
 		currency: Currency;
 		defaultPayoutAmount: number;
 	};
-
 	stats: {
 		programCount: number;
 		recipientCount: number;
 		candidateCount: number;
 	};
-
 	cash: CountryFeasibility;
 	mobileMoney: CountryFeasibility;
 	mobileNetwork: CountryFeasibility;
@@ -112,10 +107,25 @@ export type PublicCountryStats = {
 
 export type PublicCountryStatsMap = Record<string, PublicCountryStats>;
 
+export type CountryStatisticFormat = 'number' | 'percentage' | 'years';
+
+export type CountryStatisticRow = {
+	key: 'population' | 'growthRate' | 'literacyRate' | 'povertyLevel' | 'lifeExpectancy';
+	labelKey:
+		| 'countries-page.statistics.population'
+		| 'countries-page.statistics.growth-rate'
+		| 'countries-page.statistics.literacy-rate'
+		| 'countries-page.statistics.poverty-level'
+		| 'countries-page.statistics.life-expectancy';
+	format: CountryStatisticFormat;
+	countryValue: number;
+	visitorValue: number;
+};
+
 export const NETWORK_TECH_LABELS: Record<NetworkTechnology, string> = {
-	[NetworkTechnology.g3]: '3G',
-	[NetworkTechnology.g4]: '4G',
-	[NetworkTechnology.g5]: '5G',
-	[NetworkTechnology.satellite]: 'Satellite',
-	[NetworkTechnology.unknown]: 'Unknown',
+	g3: '3G',
+	g4: '4G',
+	g5: '5G',
+	satellite: 'Satellite',
+	unknown: 'Unknown',
 };

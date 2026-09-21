@@ -1,13 +1,13 @@
 import { Currency, PayoutInterval, Profile } from '@/generated/prisma/enums';
 import { getCandidateCountAction } from '@/lib/server-actions/candidate-actions';
-import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
 import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
 import { createProgramAction } from '@/lib/server-actions/program-actions';
 import { calculateProgramBudgetAction } from '@/lib/server-actions/program-stats-actions';
 import { getIsAuthenticatedUserAction } from '@/lib/server-actions/session-actions';
-import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
 import { CreateProgramInput, PublicOnboardingUserDetails } from '@/lib/services/program/program.types';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
+import { getProgramCountryFeasibilityAction } from '@/modules/countries/country.actions';
+import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
 import { assign, fromPromise, setup } from 'xstate';
 import type { ProgramManagementType, RecipientApproachType } from './types';
 

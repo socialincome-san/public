@@ -1,5 +1,5 @@
+import type { CountryGeoJson } from '@/lib/country-geojson';
 import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
-import type { CountryGeoJson } from '@/lib/services/country/country-geojson.types';
 import type { GlobeInstance } from 'globe.gl';
 import type { Material, Object3D } from 'three';
 import { clearBadgeSlot, createBadgeSlotElement, mountBadgeContent } from './globe-badge';
