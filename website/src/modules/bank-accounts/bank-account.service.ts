@@ -1,6 +1,6 @@
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import * as bankAccountRepository from './bank-account.repository';
-import type { BankAccountRecord } from './bank-account.types';
+import type { BankAccountRecord, BankAccountSummary } from './bank-account.types';
 
 export const getBankAccounts = async (): Promise<ServiceResult<BankAccountRecord[]>> => {
 	try {
@@ -9,6 +9,16 @@ export const getBankAccounts = async (): Promise<ServiceResult<BankAccountRecord
 		console.error('Could not get bank accounts', { error });
 
 		return resultFail('Could not get bank accounts');
+	}
+};
+
+export const getBankAccountSummaries = async (): Promise<ServiceResult<BankAccountSummary[]>> => {
+	try {
+		return resultOk(await bankAccountRepository.findBankAccountSummaries());
+	} catch (error) {
+		console.error('Could not get bank account summaries', { error });
+
+		return resultFail('Could not get bank account summaries');
 	}
 };
 

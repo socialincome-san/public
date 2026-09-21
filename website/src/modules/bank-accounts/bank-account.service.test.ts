@@ -1,12 +1,14 @@
 const mockFindPawaPayWalletAccounts = jest.fn();
 const mockCreatePawaPayWalletAccounts = jest.fn();
+const mockFindBankAccountSummaries = jest.fn();
 
 jest.mock('./bank-account.repository', () => ({
 	findPawaPayWalletAccounts: mockFindPawaPayWalletAccounts,
 	createPawaPayWalletAccounts: mockCreatePawaPayWalletAccounts,
+	findBankAccountSummaries: mockFindBankAccountSummaries,
 }));
 
-import { ensurePawaPayWallets } from './bank-account.service';
+import { ensurePawaPayWallets, getBankAccountSummaries } from './bank-account.service';
 
 const existingAccount = {
 	id: 'ghana',
@@ -60,5 +62,20 @@ describe('bank account service', () => {
 		});
 		expect(mockFindPawaPayWalletAccounts).toHaveBeenCalledTimes(1);
 		expect(mockCreatePawaPayWalletAccounts).not.toHaveBeenCalled();
+	});
+
+	test('returns bank account summaries', async () => {
+		const summary = {
+			id: 'account-1',
+			bankAccountNumber: 'CH123',
+			description: 'Main account',
+		};
+		mockFindBankAccountSummaries.mockResolvedValue([summary]);
+
+		await expect(getBankAccountSummaries()).resolves.toEqual({
+			success: true,
+			data: [summary],
+			status: undefined,
+		});
 	});
 });

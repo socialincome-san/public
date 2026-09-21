@@ -6,6 +6,15 @@ export const findBankAccounts = async () =>
 		select: bankAccountSelect,
 	});
 
+export const findBankAccountSummaries = async () =>
+	prisma.bankAccount.findMany({
+		select: {
+			id: true,
+			bankAccountNumber: true,
+			description: true,
+		},
+	});
+
 export const findPawaPayWalletAccounts = async (walletKeys: string[]) =>
 	prisma.bankAccount.findMany({
 		where: {

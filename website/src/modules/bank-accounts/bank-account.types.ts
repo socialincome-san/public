@@ -10,6 +10,8 @@ export type BankAccountRecord = {
 	updatedAt: Date | null;
 };
 
+export type BankAccountSummary = Pick<BankAccountRecord, 'id' | 'bankAccountNumber' | 'description'>;
+
 export type BankAccountReadService = {
 	getAll: () => Promise<ServiceResult<BankAccountRecord[]>>;
 };
