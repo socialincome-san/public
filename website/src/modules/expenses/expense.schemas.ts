@@ -1,5 +1,5 @@
 import { ExpenseType } from '@/generated/prisma/enums';
-import z from 'zod';
+import { z } from 'zod';
 
 const requiredTrimmedString = (label: string) => z.string().trim().min(1, `${label} is required.`);
 
@@ -15,8 +15,10 @@ export const expenseCreateInputSchema = z.object({
 });
 
 export const expenseUpdateInputSchema = expenseCreateInputSchema.extend({
-	id: requiredTrimmedString('Expense id').optional(),
+	id: requiredTrimmedString('Expense id'),
 });
 
-export type ExpenseFormCreateInput = z.infer<typeof expenseCreateInputSchema>;
-export type ExpenseFormUpdateInput = z.infer<typeof expenseUpdateInputSchema>;
+export const expenseIdSchema = requiredTrimmedString('Expense id');
+
+export type ExpenseCreateInput = z.infer<typeof expenseCreateInputSchema>;
+export type ExpenseUpdateInput = z.infer<typeof expenseUpdateInputSchema>;

@@ -32,9 +32,6 @@ import { CurrencyDisplayService } from './currency-display/currency-display.serv
 import { CustodianStablecoinWalletService } from './custodian-stablecoin-wallet/custodian-stablecoin-wallet.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
 import { DonationCertificateWriteService } from './donation-certificate/donation-certificate-write.service';
-import { ExpenseReadService } from './expense/expense-read.service';
-import { ExpenseValidationService } from './expense/expense-validation.service';
-import { ExpenseWriteService } from './expense/expense-write.service';
 import { FirebaseAdminService } from './firebase/firebase-admin.service';
 import { FirebaseSessionService } from './firebase/firebase-session.service';
 import { GithubApiService } from './github-api/github-api.service';
@@ -148,9 +145,6 @@ const localPartnerWrite = new LocalPartnerWriteService(
 const mobileMoneyProviderRead = new MobileMoneyProviderReadService(prisma, userRead);
 const mobileMoneyProviderValidation = new MobileMoneyProviderValidationService(prisma);
 const mobileMoneyProviderWrite = new MobileMoneyProviderWriteService(prisma, userRead, mobileMoneyProviderValidation);
-const expenseRead = new ExpenseReadService(prisma, userRead);
-const expenseValidation = new ExpenseValidationService(prisma);
-const expenseWrite = new ExpenseWriteService(prisma, userRead, expenseValidation);
 const contributorRead = new ContributorReadService(prisma, programAccessRead);
 const contributorValidation = new ContributorValidationService(prisma);
 const contributorWrite = new ContributorWriteService(
@@ -255,7 +249,6 @@ export const services = {
 		contribution: contributionRead,
 		contributor: contributorRead,
 		donationCertificate: donationCertificateRead,
-		expense: expenseRead,
 		localPartner: localPartnerRead,
 		mobileMoneyProvider: mobileMoneyProviderRead,
 		payout: payoutRead,
@@ -270,7 +263,6 @@ export const services = {
 		subscription: subscriptionWrite,
 		contributor: contributorWrite,
 		donationCertificate: donationCertificateWrite,
-		expense: expenseWrite,
 		localPartner: localPartnerWrite,
 		mobileMoneyProvider: mobileMoneyProviderWrite,
 		payout: payoutWrite,

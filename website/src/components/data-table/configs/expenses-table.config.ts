@@ -1,6 +1,6 @@
 import { makeExpenseColumns } from '@/components/data-table/columns/expenses';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
-import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
+import type { ExpenseTableViewRow } from '@/modules/expenses/expense.types';
 
 export const expensesTableConfig: DataTableConfig<ExpenseTableViewRow> = {
 	id: 'admin-expenses',

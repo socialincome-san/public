@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { ExpenseFormCreateInput, ExpenseFormUpdateInput } from '@/lib/services/expense/expense-form-input';
-import { ExpensePayload } from '@/lib/services/expense/expense.types';
+import type { ExpenseCreateInput, ExpenseUpdateInput } from '@/modules/expenses/expense.schemas';
+import type { ExpensePayload } from '@/modules/expenses/expense.types';
 import { ExpenseFormSchema } from './expenses-form';
 
 const asString = (value: unknown): string => (typeof value === 'string' ? value : '');
 
-export const buildCreateExpenseInput = (schema: ExpenseFormSchema): ExpenseFormCreateInput => {
+export const buildCreateExpenseInput = (schema: ExpenseFormSchema): ExpenseCreateInput => {
 	return {
 		type: schema.fields.type.value,
 		year: Number(schema.fields.year.value),
@@ -14,7 +14,7 @@ export const buildCreateExpenseInput = (schema: ExpenseFormSchema): ExpenseFormC
 	};
 };
 
-export const buildUpdateExpenseInput = (schema: ExpenseFormSchema, existing: ExpensePayload): ExpenseFormUpdateInput => {
+export const buildUpdateExpenseInput = (schema: ExpenseFormSchema, existing: ExpensePayload): ExpenseUpdateInput => {
 	return {
 		id: existing.id,
 		type: schema.fields.type.value,
