@@ -42,6 +42,9 @@ export const POST = async (request: NextRequest) => {
 		const month = from.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 		const { moneyIn, moneyOut } = summaryResult.data;
 		const { contributors, campaigns, programs, recipients: newRecipients } = summaryResult.data.new;
+		const { overall, countries, localPartners } = summaryResult.data.stats;
+		const formatStats = (stats: typeof overall) =>
+			`Recipients: ${stats.recipients.active} active, ${stats.recipients.former} former, ${stats.recipients.suspended} suspended, ${stats.recipients.future} future\nCandidates: ${stats.candidates}\nPayouts: ${stats.payouts.total} total, ${stats.payouts.confirmed} confirmed, ${stats.payouts.contested} contested, ${stats.payouts.failed} failed`;
 		const text = `Hi,
 
 Here's the summary for ${month}:
@@ -54,7 +57,23 @@ New
 - ${contributors} contributors
 - ${campaigns} campaigns
 - ${programs} programs
-- ${newRecipients} recipients`;
+- ${newRecipients} recipients
+
+Overall
+${formatStats(overall)}
+
+Countries
+${Object.entries(countries)
+	.map(([country, stats]) => `${country}\n${formatStats(stats)}`)
+	.join('\n')}
+
+Local Program Partners
+${localPartners
+	.map(
+		(partner) =>
+			`${partner.name} (${partner.countryIsoCodes.join(', ') || 'n/a'}): ${partner.stats.recipients.active}/${partner.stats.recipients.former}/${partner.stats.recipients.suspended}/${partner.stats.recipients.future} recipients in ${partner.programs} programs\n${formatStats(partner.stats)}`,
+	)
+	.join('\n')}`;
 
 		const emailResult = await services.sendgridMail.send({
 			to: recipients,
