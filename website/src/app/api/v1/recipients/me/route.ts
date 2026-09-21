@@ -1,7 +1,7 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { recipientSelfUpdateSchema } from '@/modules/recipients/recipient.schemas';
 import { getAuthenticatedRecipientFromRequest, updateRecipientSelf } from '@/modules/recipients/recipient.service';
 import { NextRequest, NextResponse } from 'next/server';
+import { RecipientSelfUpdate } from '../../models';
 
 /**
  * Get recipient
@@ -64,7 +64,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 		return new Response('Invalid JSON body', { status: 400 });
 	}
 
-	const parsed = recipientSelfUpdateSchema.safeParse(body);
+	const parsed = RecipientSelfUpdate.safeParse(body);
 
 	if (!parsed.success) {
 		console.warn('[PATCH /recipients/me] Validation failed', {
