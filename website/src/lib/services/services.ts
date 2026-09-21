@@ -1,7 +1,11 @@
 import { ensurePawaPayWallets, getBankAccounts } from '@/modules/bank-accounts/bank-account.service';
 import type { BankAccountReadService, BankAccountWriteService } from '@/modules/bank-accounts/bank-account.types';
+import { assignRandomCandidatesToProgram } from '@/modules/candidates/candidate.service';
+import type { CandidateAssignmentService } from '@/modules/candidates/candidate.types';
 import { getLatestRateForCurrency, getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
+import { getPaginatedLocalPartnerTableView } from '@/modules/local-partners/local-partner.service';
+import type { LocalPartnerReadService } from '@/modules/local-partners/local-partner.types';
 import { createOrganizationFromEmail } from '@/modules/organizations/organization.service';
 import type { OrganizationWriteService } from '@/modules/organizations/organization.types';
 import { hasAnyOperatorAccess, hasOperatorAccess } from '@/modules/program-access/program-access.permissions';
@@ -17,10 +21,6 @@ import { CampaignPublicWebsiteService } from './campaign/campaign-public-website
 import { CampaignReadService } from './campaign/campaign-read.service';
 import { CampaignSubmissionService } from './campaign/campaign-submission.service';
 import { CampaignValidationService } from './campaign/campaign-validation.service';
-import { CandidateImportService } from './candidate/candidate-import.service';
-import { CandidateReadService } from './candidate/candidate-read.service';
-import { CandidateValidationService } from './candidate/candidate-validation.service';
-import { CandidateWriteService } from './candidate/candidate-write.service';
 import { ContactRelationsService } from './contact/contact-relations.service';
 import { ContributionReadService } from './contribution/contribution-read.service';
 import { ContributionValidationService } from './contribution/contribution-validation.service';
@@ -36,9 +36,6 @@ import { FirebaseAdminService } from './firebase/firebase-admin.service';
 import { FirebaseSessionService } from './firebase/firebase-session.service';
 import { GithubApiService } from './github-api/github-api.service';
 import { JournalService } from './journal/journal.service';
-import { LocalPartnerReadService } from './local-partner/local-partner-read.service';
-import { LocalPartnerValidationService } from './local-partner/local-partner-validation.service';
-import { LocalPartnerWriteService } from './local-partner/local-partner-write.service';
 import { MonthlySummaryService } from './monthly-summary/monthly-summary.service';
 import { PawaPayBalanceService } from './pawapay/pawapay-balance.service';
 import { PaymentFileImportService } from './payment-file-import/payment-file-import.service';
@@ -115,11 +112,10 @@ const sendgridMail = new SendgridMailService(prisma);
 const recipientStatus = recipientStatusService;
 const monthlySummary = new MonthlySummaryService(prisma, recipientStatus);
 
-const candidateRead = new CandidateReadService(prisma, userRead);
 const contactRelations = new ContactRelationsService(prisma);
-const candidateValidation = new CandidateValidationService(prisma);
-const candidateWrite = new CandidateWriteService(prisma, userRead, firebaseAdmin, candidateValidation, contactRelations);
-const candidateImport = new CandidateImportService(candidateWrite, candidateValidation);
+const candidateAssignment: CandidateAssignmentService = {
+	assignRandomCandidatesToProgram,
+};
 const recipientRead = recipientService;
 const recipientWrite = recipientService;
 const recipientImport = recipientService;
@@ -134,15 +130,9 @@ const contributionRead = new ContributionReadService(prisma, programAccessRead, 
 const contributionValidation = new ContributionValidationService(prisma);
 const contributionWrite = new ContributionWriteService(prisma, programAccessRead, contributionValidation);
 const subscriptionWrite = new SubscriptionWriteService(prisma);
-const localPartnerRead = new LocalPartnerReadService(prisma, userRead);
-const localPartnerValidation = new LocalPartnerValidationService(prisma);
-const localPartnerWrite = new LocalPartnerWriteService(
-	prisma,
-	userRead,
-	firebaseAdmin,
-	localPartnerValidation,
-	contactRelations,
-);
+const localPartnerRead: LocalPartnerReadService = {
+	getPaginatedTableView: getPaginatedLocalPartnerTableView,
+};
 const contributorRead = new ContributorReadService(prisma, programAccessRead);
 const contributorValidation = new ContributorValidationService(prisma);
 const contributorWrite = new ContributorWriteService(
@@ -179,7 +169,7 @@ const programWrite = new ProgramWriteService(
 	prisma,
 	programAccessRead,
 	programAccessWrite,
-	candidateWrite,
+	candidateAssignment,
 	firebaseAdmin,
 	organizationWrite,
 	programValidation,
@@ -241,13 +231,11 @@ const createReservesCalculation = (bucketName: string) =>
 
 export const services = {
 	read: {
-		candidate: candidateRead,
 		campaign: campaignRead,
 		campaignPublicWebsite,
 		contribution: contributionRead,
 		contributor: contributorRead,
 		donationCertificate: donationCertificateRead,
-		localPartner: localPartnerRead,
 		payout: payoutRead,
 		program: programRead,
 		recipient: recipientRead,
@@ -255,12 +243,10 @@ export const services = {
 		survey: surveyRead,
 	},
 	write: {
-		candidate: candidateWrite,
 		contribution: contributionWrite,
 		subscription: subscriptionWrite,
 		contributor: contributorWrite,
 		donationCertificate: donationCertificateWrite,
-		localPartner: localPartnerWrite,
 		payout: payoutWrite,
 		program: programWrite,
 		recipient: recipientWrite,
@@ -270,7 +256,6 @@ export const services = {
 	qrBill,
 	createPaymentFileImport,
 	createReservesCalculation,
-	candidateImport,
 	firebaseAdmin,
 	firebaseSession,
 	payoutProcessCore,

@@ -28,7 +28,7 @@ const optionalDate = z.preprocess((value) => {
 	return value;
 }, z.coerce.date().nullable());
 
-const localPartnerContactInputSchema = z.object({
+const localPartnerContactSchema = z.object({
 	firstName: z.string().trim().min(2, 'First name must be at least 2 characters.'),
 	lastName: z.string().trim().min(2, 'Last name must be at least 2 characters.'),
 	callingName: nullableTrimmedString,
@@ -46,16 +46,19 @@ const localPartnerContactInputSchema = z.object({
 	country: z.nativeEnum(CountryCode).nullable(),
 });
 
-export const localPartnerCreateInputSchema = z.object({
+export const localPartnerCreateSchema = z.object({
 	name: z.string().trim().min(1, 'Name is required.'),
 	slug: z.string().trim().min(1, 'Slug is required.').regex(SLUG_REGEX, 'Invalid slug format.'),
 	focuses: z.array(z.string().trim().min(1)).default([]),
-	contact: localPartnerContactInputSchema,
+	contact: localPartnerContactSchema,
 });
 
-export const localPartnerUpdateInputSchema = localPartnerCreateInputSchema.extend({
+export const localPartnerUpdateSchema = localPartnerCreateSchema.extend({
 	id: z.string().trim().min(1, 'Local partner id is required.').optional(),
 });
 
-export type LocalPartnerFormCreateInput = z.infer<typeof localPartnerCreateInputSchema>;
-export type LocalPartnerFormUpdateInput = z.infer<typeof localPartnerUpdateInputSchema>;
+export const localPartnerIdSchema = z.string().trim().min(1, 'Local partner id is required.');
+export const localPartnerSessionTypeSchema = z.enum(['user', 'local-partner', 'contributor']);
+
+export type LocalPartnerCreateInput = z.infer<typeof localPartnerCreateSchema>;
+export type LocalPartnerUpdateInput = z.infer<typeof localPartnerUpdateSchema>;

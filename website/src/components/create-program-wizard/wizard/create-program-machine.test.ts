@@ -5,7 +5,7 @@ import { CountryCondition, type ProgramCountryFeasibilityRow } from '@/modules/c
 import { createActor, fromPromise, waitFor } from 'xstate';
 import { createProgramWizardMachine } from './create-program-machine';
 
-jest.mock('@/lib/server-actions/candidate-actions', () => ({
+jest.mock('@/modules/candidates/candidate.actions', () => ({
 	getCandidateCountAction: jest.fn(),
 }));
 jest.mock('@/modules/countries/country.actions', () => ({

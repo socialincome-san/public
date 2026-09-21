@@ -1,9 +1,9 @@
 import { PrismaClient } from '@/generated/prisma/client';
+import type { LocalPartnerReadService } from '@/modules/local-partners/local-partner.types';
 import { getRecipientMessagingTargets, type recipientService } from '@/modules/recipients/recipient.service';
 import type { ContributorReadService } from '../../../contributor/contributor-read.service';
 import { BaseService } from '../../../core/base.service';
 import type { ServiceResult } from '../../../core/base.types';
-import type { LocalPartnerReadService } from '../../../local-partner/local-partner-read.service';
 import { pickTargetPhone } from './phone-source';
 import type { MessagingPhone, MessagingPhoneSource, MessagingRecipientType, MessagingTarget } from './recipients.types';
 import { resolveSelectionToIds, type RowFetcher } from './resolve-selection';

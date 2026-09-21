@@ -1,5 +1,6 @@
-import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
 import { services } from '@/lib/services/services';
+import { getCurrentLocalPartnerSession } from '@/modules/local-partners/local-partner.service';
+import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
@@ -15,7 +16,7 @@ const loadCurrentLocalPartner = async (): Promise<LocalPartnerSession | null> =>
 	}
 
 	const authUserId = decodedTokenResult.data.uid;
-	const result = await services.read.localPartner.getCurrentLocalPartnerSession(authUserId);
+	const result = await getCurrentLocalPartnerSession(authUserId);
 
 	return result.success ? result.data : null;
 };

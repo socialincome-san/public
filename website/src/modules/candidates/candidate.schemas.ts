@@ -1,4 +1,4 @@
-import { CountryCode, Gender } from '@/generated/prisma/enums';
+import { CountryCode, Gender, Profile } from '@/generated/prisma/enums';
 import z from 'zod';
 
 const nullableTrimmedString = z.preprocess((value) => {
@@ -27,7 +27,7 @@ const optionalDate = z.preprocess((value) => {
 	return value;
 }, z.coerce.date().nullable());
 
-const candidateContactInputSchema = z.object({
+const candidateContactSchema = z.object({
 	firstName: z.string().trim().min(2, 'First name must be at least 2 characters.'),
 	lastName: z.string().trim().min(2, 'Last name must be at least 2 characters.'),
 	callingName: nullableTrimmedString,
@@ -45,25 +45,34 @@ const candidateContactInputSchema = z.object({
 	country: z.nativeEnum(CountryCode).nullable(),
 });
 
-const candidatePaymentInformationInputSchema = z.object({
+const candidatePaymentInformationSchema = z.object({
 	mobileMoneyProviderId: optionalTrimmedString,
 	code: nullableTrimmedString,
 	phone: optionalTrimmedString,
 });
 
-export const candidateCreateInputSchema = z.object({
+export const candidateCreateSchema = z.object({
 	suspendedAt: optionalDate,
 	suspensionReason: nullableTrimmedString,
 	successorName: nullableTrimmedString,
 	termsAccepted: z.boolean().optional().default(false),
 	localPartnerId: optionalTrimmedString,
-	contact: candidateContactInputSchema,
-	paymentInformation: candidatePaymentInformationInputSchema,
+	contact: candidateContactSchema,
+	paymentInformation: candidatePaymentInformationSchema,
 });
 
-export const candidateUpdateInputSchema = candidateCreateInputSchema.extend({
+export const candidateUpdateSchema = candidateCreateSchema.extend({
 	id: z.string().trim().min(1, 'Candidate id is required.'),
 });
 
-export type CandidateFormCreateInput = z.infer<typeof candidateCreateInputSchema>;
-export type CandidateFormUpdateInput = z.infer<typeof candidateUpdateInputSchema>;
+export const candidateIdSchema = z.string().trim().min(1, 'Candidate id is required.');
+export const candidateSessionTypeSchema = z.enum(['user', 'local-partner', 'contributor']);
+export const candidateCsvFileSchema = z.instanceof(File);
+export const candidateCountSchema = z.object({
+	focuses: z.array(z.string()),
+	profiles: z.array(z.nativeEnum(Profile)),
+	countryId: z.string().nullable(),
+});
+
+export type CandidateCreateInput = z.infer<typeof candidateCreateSchema>;
+export type CandidateUpdateInput = z.infer<typeof candidateUpdateSchema>;

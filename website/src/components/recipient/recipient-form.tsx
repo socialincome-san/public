@@ -10,9 +10,9 @@ import {
 } from '@/components/dynamic-form/helper';
 import type { Session } from '@/lib/firebase/current-account';
 import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
 import { ProgramOption } from '@/lib/services/program/program.types';
 import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
+import type { LocalPartnerOption } from '@/modules/local-partners/local-partner.types';
 import { getSupportedMobileMoneyProviderOptionsAction } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
 import {
 	createRecipientAction,

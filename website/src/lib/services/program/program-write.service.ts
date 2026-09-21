@@ -3,9 +3,9 @@ import { getCountryNameByCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
 import { slugify } from '@/lib/utils/string-utils';
+import type { CandidateAssignmentService } from '@/modules/candidates/candidate.types';
 import type { OrganizationWriteService } from '@/modules/organizations/organization.types';
 import type { ProgramAccessReadService, ProgramAccessWriteService } from '@/modules/program-access/program-access.types';
-import { CandidateWriteService } from '../candidate/candidate-write.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
@@ -17,7 +17,7 @@ export class ProgramWriteService extends BaseService {
 		db: PrismaClient,
 		private readonly programAccessReadService: ProgramAccessReadService,
 		private readonly programAccessService: ProgramAccessWriteService,
-		private readonly candidateService: CandidateWriteService,
+		private readonly candidateService: CandidateAssignmentService,
 		private readonly firebaseAdminService: FirebaseAdminService,
 		private readonly organizationWriteService: OrganizationWriteService,
 		private readonly programValidationService: ProgramValidationService,

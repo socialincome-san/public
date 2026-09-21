@@ -1,4 +1,24 @@
-import { Address, CountryCode, Gender, Phone } from '@/generated/prisma/client';
+import type { CountryCode, Gender } from '@/generated/prisma/enums';
+import type { ServiceResult } from '@/lib/service-result';
+
+type ContactPhone = {
+	id: string;
+	number: string;
+	hasWhatsApp: boolean;
+	createdAt: Date;
+	updatedAt: Date | null;
+};
+
+type ContactAddress = {
+	id: string;
+	street: string;
+	number: string;
+	city: string;
+	zip: string;
+	country: CountryCode | null;
+	createdAt: Date;
+	updatedAt: Date | null;
+};
 
 export type LocalPartnerTableViewRow = {
 	id: string;
@@ -12,10 +32,6 @@ export type LocalPartnerTableViewRow = {
 	candidatesCount: number;
 	createdAt: Date;
 	country: CountryCode | null;
-};
-
-export type LocalPartnerTableView = {
-	tableRows: LocalPartnerTableViewRow[];
 };
 
 export type LocalPartnerTableQuery = {
@@ -46,8 +62,8 @@ export type LocalPartnerPayload = {
 		language: string | null;
 		dateOfBirth: Date | null;
 		profession: string | null;
-		phone: Phone | null;
-		address: Address | null;
+		phone: ContactPhone | null;
+		address: ContactAddress | null;
 	};
 };
 
@@ -56,7 +72,7 @@ export type LocalPartnerOption = {
 	name: string;
 };
 
-export type PublicLocalPartnerStats = {
+type PublicLocalPartnerStats = {
 	assignedRecipientsCount: number;
 	waitingRecipientsCount: number;
 };
@@ -91,4 +107,11 @@ export type LocalPartnerSession = {
 	city: string | null;
 	zip: string | null;
 	country: CountryCode | null;
+};
+
+export type LocalPartnerReadService = {
+	getPaginatedTableView: (
+		userId: string,
+		query: LocalPartnerTableQuery,
+	) => Promise<ServiceResult<LocalPartnerPaginatedTableView>>;
 };

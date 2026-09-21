@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@/generated/prisma/client';
+import type { LocalPartnerReadService } from '@/modules/local-partners/local-partner.types';
 import type { recipientService as recipientServiceFunctions } from '@/modules/recipients/recipient.service';
 import type { ContributorReadService } from '../../../contributor/contributor-read.service';
-import type { LocalPartnerReadService } from '../../../local-partner/local-partner-read.service';
 import { MessagingRecipientsService } from './recipients.service';
 import type { MessagingRecipientFilters } from './recipients.types';
 import type { SelectionState } from './selection.types';

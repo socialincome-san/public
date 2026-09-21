@@ -6,6 +6,7 @@ import {
 } from '@/components/storyblok/program/program.utils';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { getProgramRecipientCountsByLocalPartnerSlug } from '@/modules/local-partners/local-partner.service';
 import { LOCAL_PARTNER_PROGRAM_ROWS, selectLocalPartnerProgramStories } from './local-partner-programs.utils';
 
 export type LocalPartnerProgramSummary = {
@@ -82,7 +83,7 @@ export const getLocalPartnerProgramSummaries = async (
 	const stories = programsResult.data.filter((story) => getProgramPortalSlug(story.content)) as ProgramStory[];
 	const portalSlugs = [...new Set(stories.map((story) => getProgramPortalSlug(story.content)))];
 	const [countsResult, filterDataResult, statsResult] = await Promise.all([
-		services.read.localPartner.getProgramRecipientCountsByLocalPartnerSlug(localPartnerPortalSlug),
+		getProgramRecipientCountsByLocalPartnerSlug(localPartnerPortalSlug),
 		services.read.program.getPublicProgramFilterDataByPortalSlugs(portalSlugs),
 		services.read.program.getPublicProgramStatsByProgramPortalSlugs(portalSlugs),
 	]);

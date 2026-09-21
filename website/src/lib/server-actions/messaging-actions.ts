@@ -22,6 +22,7 @@ import {
 	type MessagingRecipientsPage,
 	type MessagingRecipientsQuery,
 } from '@/lib/services/twilio/messaging/recipients/recipients.types';
+import { getPaginatedLocalPartnerTableView } from '@/modules/local-partners/local-partner.service';
 import { getPaginatedRecipientTableView } from '@/modules/recipients/recipient.service';
 
 // ── Log ─────────────────────
@@ -115,7 +116,7 @@ export async function listMessagingRecipientsAction(
 		});
 	}
 
-	const res = await services.read.localPartner.getPaginatedTableView(userId, baseQuery);
+	const res = await getPaginatedLocalPartnerTableView(userId, baseQuery);
 	if (!res.success) {
 		return resultFail(res.error);
 	}

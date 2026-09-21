@@ -78,6 +78,18 @@ export const getCountry = async (userId: string, countryId: string): Promise<Ser
 	}
 };
 
+export const getCountryIsoCode = async (countryId: string): Promise<ServiceResult<CountryCode>> => {
+	try {
+		const country = await countryRepository.findCountryById(countryId);
+
+		return country ? resultOk(country.isoCode) : resultFail('Country not found');
+	} catch (error) {
+		console.error('Could not get country ISO code', { countryId, error });
+
+		return resultFail('Could not get country ISO code');
+	}
+};
+
 export const getPaginatedCountryTableView = async (
 	userId: string,
 	query: CountryTableQuery,

@@ -11,6 +11,7 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { cn } from '@/lib/utils/cn';
+import { getPublicLocalPartnersByProgramIdAction } from '@/modules/local-partners/local-partner.actions';
 import Link from 'next/link';
 
 type Props = {
@@ -83,7 +84,7 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 		services.storyblok.getPrograms(lang),
 		services.read.program.getPublicProgramStatsById(programId),
 		services.read.program.getPublicTargetFocusesByProgramId(programId),
-		services.read.localPartner.getPublicLocalPartnersByProgramId(programId),
+		getPublicLocalPartnersByProgramIdAction(programId),
 		services.storyblok.getFocuses(lang),
 		services.storyblok.getLocalPartners(lang),
 		Translator.getInstance({ language: lang, namespaces: ['website-campaign', 'website-common'] }),
