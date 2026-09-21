@@ -1,4 +1,6 @@
+import { PrismaClient } from '@/generated/prisma/client';
 import sgMail from '@sendgrid/mail';
+import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 
 type SendEmailInput = {
@@ -7,8 +9,12 @@ type SendEmailInput = {
 	text: string;
 };
 
-export class SendgridMailService {
+export class SendgridMailService extends BaseService {
 	private initialized = false;
+
+	constructor(db: PrismaClient) {
+		super(db);
+	}
 
 	async send(input: SendEmailInput): Promise<ServiceResult<void>> {
 		try {
@@ -33,6 +39,23 @@ export class SendgridMailService {
 				subject: input.subject,
 				text: input.text,
 			});
+
+			const recipients = Array.isArray(input.to) ? input.to : [input.to];
+			await Promise.all(
+				recipients.map(async (toEmail) => {
+					const contact = await this.db.contact.findUnique({ where: { email: toEmail } });
+
+					return this.db.sentEmail.create({
+						data: {
+							toEmail,
+							fromEmail: from,
+							subject: input.subject,
+							body: input.text,
+							contactId: contact?.id,
+						},
+					});
+				}),
+			);
 
 			return { success: true, data: undefined };
 		} catch (error) {
