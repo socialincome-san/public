@@ -1,8 +1,5 @@
-import {
-	getAmountWithTransactionCostCoverage,
-	getOnlineTransactionCost,
-} from '@/lib/services/subscription/cover-transaction-costs';
 import { getIndirectBeneficiaryCount } from '@/lib/utils/indirect-beneficiaries';
+import { getAmountWithTransactionCostCoverage, getOnlineTransactionCost } from '@/modules/subscriptions/subscription.types';
 
 export type PresetAmount = 25 | 50 | 100;
 export type Cadence = 'monthly' | 'one-time';

@@ -4,7 +4,7 @@ import {
 	COVER_TRANSACTION_COSTS_METADATA_KEY,
 	getAmountWithTransactionCostCoverage,
 	toCoverTransactionCostsMetadataValue,
-} from '@/lib/services/subscription/cover-transaction-costs';
+} from '@/modules/subscriptions/subscription.types';
 import { expect, test, type Page } from '@playwright/test';
 import Stripe from 'stripe';
 import {

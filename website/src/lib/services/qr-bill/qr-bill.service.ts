@@ -19,10 +19,10 @@ import {
 } from '@/modules/contributors/contributor.service';
 import { type BankContributorData, type ContributorWithContact } from '@/modules/contributors/contributor.types';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
+import { upsertFromBankStandingOrder } from '@/modules/subscriptions/subscription.service';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
-import { SubscriptionWriteService } from '../subscription/subscription-write.service';
 import {
 	type CreateWizardPendingContributionInput,
 	type CreateWizardQrReferencesInput,
@@ -44,7 +44,6 @@ export class QrBillService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly campaignService: CampaignReadService,
-		private readonly subscriptionWriteService: SubscriptionWriteService,
 		private readonly exchangeRateService: ExchangeRateReadService,
 	) {
 		super(db);
@@ -97,7 +96,7 @@ export class QrBillService extends BaseService {
 			const campaignId = campaignIdResult.data;
 
 			if (payment.interval === 1) {
-				const subscriptionResult = await this.subscriptionWriteService.upsertFromBankStandingOrder({
+				const subscriptionResult = await upsertFromBankStandingOrder({
 					bankStandingOrderReference: payment.referenceId,
 					contributorId: contributor.data.id,
 					campaignId,

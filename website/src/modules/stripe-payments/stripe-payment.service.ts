@@ -1,8 +1,6 @@
 import {
 	ContributionStatus,
 	ContributorReferralSource,
-	Currency,
-	DonationInterval,
 	PaymentEventType,
 	SubscriptionStatus,
 	type CountryCode,
@@ -18,7 +16,12 @@ import {
 	listOpenStripeInvoices,
 	listStripeCheckoutSessionsByPaymentIntent,
 	listStripeSubscriptions,
+	mapStripeRecurringInterval,
+	mapStripeSubscriptionFields,
+	mapStripeSubscriptionLifecycle,
+	mapStripeSubscriptionPriceFields,
 	resolveStripeResourceId,
+	resolveStripeSubscriptionCanceledAt,
 	retrieveStripeCharge,
 	retrieveStripeCheckoutSession,
 	retrieveStripeCustomer,
@@ -35,20 +38,6 @@ import {
 	type StripeApiSubscription,
 } from '@/integrations/stripe/stripe.integration';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
-import {
-	amountToStripeUnitAmount,
-	COVER_TRANSACTION_COSTS_METADATA_KEY,
-	getAmountWithTransactionCostCoverage,
-	isCoverTransactionCostsAmountInRange,
-	mapCoverTransactionCostsMetadata,
-	toCoverTransactionCostsMetadataValue,
-} from '@/lib/services/subscription/cover-transaction-costs';
-import {
-	isSubscriptionAmountInRange,
-	SUBSCRIPTION_AMOUNT_MAX,
-	SUBSCRIPTION_AMOUNT_MIN,
-} from '@/lib/services/subscription/subscription-amount';
-import { mapCancellationReasonToStripeFeedback } from '@/lib/services/subscription/subscription-cancellation';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { isValidCurrency } from '@/lib/types/currency';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
@@ -67,6 +56,18 @@ import {
 } from '@/modules/contributors/contributor.service';
 import type { ContributorWithContact, StripeContributorData } from '@/modules/contributors/contributor.types';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import {
+	amountToStripeUnitAmount,
+	COVER_TRANSACTION_COSTS_METADATA_KEY,
+	getAmountWithTransactionCostCoverage,
+	isCoverTransactionCostsAmountInRange,
+	isSubscriptionAmountInRange,
+	mapCoverTransactionCostsMetadata,
+	SUBSCRIPTION_AMOUNT_MAX,
+	SUBSCRIPTION_AMOUNT_MIN,
+	toCoverTransactionCostsMetadataValue,
+} from '@/modules/subscriptions/subscription-amount.service';
+import { mapCancellationReasonToStripeFeedback } from '@/modules/subscriptions/subscription-cancellation.service';
 import { getUserContactIdByAccountId, getUserStripeCheckoutContext } from '@/modules/users/user.service';
 import { canCreatePortalProgramDonation } from './stripe-payment.permissions';
 import * as stripePaymentRepository from './stripe-payment.repository';
@@ -1635,96 +1636,4 @@ const buildSubscriptionCheckoutMetadata = (input: {
 	}
 
 	return applyCoverTransactionCostsMetadata(metadata, input.coverTransactionCosts);
-};
-
-const shouldSkipStripeSubscriptionStatus = (status: string): boolean =>
-	status === 'incomplete' || status === 'incomplete_expired';
-
-const mapStripeSubscriptionStatus = (status: string): SubscriptionStatus | null => {
-	if (shouldSkipStripeSubscriptionStatus(status)) {
-		return null;
-	}
-	if (status === 'canceled') {
-		return SubscriptionStatus.ended;
-	}
-	if (status === 'active' || status === 'trialing' || status === 'past_due' || status === 'unpaid' || status === 'paused') {
-		return SubscriptionStatus.active;
-	}
-
-	return null;
-};
-
-const mapStripeRecurringInterval = (interval: string, intervalCount: number): DonationInterval | null => {
-	if (interval === 'month' && intervalCount === 1) {
-		return DonationInterval.monthly;
-	}
-
-	return null;
-};
-
-const resolveStripeSubscriptionCanceledAt = (subscription: StripeApiSubscription): Date => {
-	if (subscription.canceled_at) {
-		return new Date(subscription.canceled_at * 1000);
-	}
-
-	return new Date();
-};
-
-const mapStripeSubscriptionLifecycle = (
-	subscription: StripeApiSubscription,
-): { status: SubscriptionStatus; canceledAt: Date | null } | null => {
-	const status = mapStripeSubscriptionStatus(subscription.status);
-	if (!status) {
-		return null;
-	}
-
-	return {
-		status,
-		canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
-	};
-};
-
-const mapStripeSubscriptionPriceFields = (
-	subscription: StripeApiSubscription,
-): { amount: number; currency: Currency; interval: DonationInterval } | null => {
-	const price = subscription.items.data[0]?.price;
-	if (!price?.recurring) {
-		return null;
-	}
-
-	const interval = mapStripeRecurringInterval(price.recurring.interval, price.recurring.interval_count);
-	if (!interval) {
-		return null;
-	}
-	if (price.unit_amount === null || price.unit_amount < 0) {
-		return null;
-	}
-
-	const currencyCode = price.currency.toUpperCase();
-	if (!isValidCurrency(currencyCode)) {
-		return null;
-	}
-
-	return {
-		amount: price.unit_amount / 100,
-		currency: currencyCode,
-		interval,
-	};
-};
-
-const mapStripeSubscriptionFields = (subscription: StripeApiSubscription) => {
-	const lifecycle = mapStripeSubscriptionLifecycle(subscription);
-	if (!lifecycle) {
-		return null;
-	}
-
-	const priceFields = mapStripeSubscriptionPriceFields(subscription);
-	if (!priceFields) {
-		return null;
-	}
-
-	return {
-		...lifecycle,
-		...priceFields,
-	};
 };

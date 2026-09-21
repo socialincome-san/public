@@ -8,14 +8,14 @@
  */
 
 import { SubscriptionPaymentMethod } from '@/generated/prisma/client';
-import { prisma } from '@/lib/database/prisma';
-import { mapCoverTransactionCostsMetadata } from '@/lib/services/subscription/cover-transaction-costs';
 import {
 	mapStripeSubscriptionLifecycle,
 	mapStripeSubscriptionPriceFields,
 	resolveStripeResourceId,
 	shouldSkipStripeSubscriptionStatus,
-} from '@/lib/services/subscription/subscription.mappers';
+} from '@/integrations/stripe/stripe.integration';
+import { prisma } from '@/lib/database/prisma';
+import { mapCoverTransactionCostsMetadata } from '@/modules/subscriptions/subscription.types';
 import Stripe from 'stripe';
 import {
 	assertDatabaseUrl,

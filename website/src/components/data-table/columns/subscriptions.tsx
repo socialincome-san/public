@@ -11,7 +11,7 @@ import {
 	SUBSCRIPTION_PAYMENT_METHOD_LABELS,
 	SUBSCRIPTION_STATUS_LABELS,
 	type SubscriptionTableViewRow,
-} from '@/lib/services/subscription/subscription.types';
+} from '@/modules/subscriptions/subscription.types';
 
 export const makeSubscriptionsColumns = (): ColumnDef<SubscriptionTableViewRow>[] => {
 	return [

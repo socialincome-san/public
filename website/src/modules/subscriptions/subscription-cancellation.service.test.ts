@@ -2,9 +2,9 @@ import {
 	getSubscriptionCancelRetentionPresets,
 	isSubscriptionCancellationReason,
 	mapCancellationReasonToStripeFeedback,
-} from './subscription-cancellation';
+} from './subscription.types';
 
-describe('subscription-cancellation', () => {
+describe('subscription cancellation helpers', () => {
 	test('maps cancellation reasons to Stripe feedback', () => {
 		expect(mapCancellationReasonToStripeFeedback('financial_situation_changed')).toBe('too_expensive');
 		expect(mapCancellationReasonToStripeFeedback('different_cause')).toBe('switched_service');

@@ -1,4 +1,6 @@
+import { Currency, DonationInterval, SubscriptionStatus } from '@/generated/prisma/enums';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { isValidCurrency } from '@/lib/types/currency';
 import Stripe from 'stripe';
 
 export type StripeApiCheckoutSession = Stripe.Checkout.Session;
@@ -128,6 +130,145 @@ export const resolveStripeSubscriptionIdFromInvoice = (invoice: InvoiceSubscript
 	}
 
 	return resolveStripeResourceId(invoice.subscription);
+};
+
+export const shouldSkipStripeSubscriptionStatus = (status: string): boolean =>
+	status === 'incomplete' || status === 'incomplete_expired';
+
+export const mapStripeSubscriptionStatus = (status: string): SubscriptionStatus | null => {
+	if (shouldSkipStripeSubscriptionStatus(status)) {
+		return null;
+	}
+
+	if (status === 'canceled') {
+		return SubscriptionStatus.ended;
+	}
+
+	if (status === 'active' || status === 'trialing' || status === 'past_due' || status === 'unpaid' || status === 'paused') {
+		return SubscriptionStatus.active;
+	}
+
+	return null;
+};
+
+export const mapStripeRecurringInterval = (interval: string, intervalCount: number): DonationInterval | null => {
+	if (interval === 'month' && intervalCount === 1) {
+		return DonationInterval.monthly;
+	}
+
+	return null;
+};
+
+export const mapStripePriceAmount = (unitAmount: number | null): number | null => {
+	if (unitAmount === null || unitAmount < 0) {
+		return null;
+	}
+
+	return unitAmount / 100;
+};
+
+export type StripeSubscriptionLifecycleSource = {
+	status: string;
+	canceled_at?: number | null;
+};
+
+export type MappedStripeSubscriptionLifecycle = {
+	status: SubscriptionStatus;
+	canceledAt: Date | null;
+};
+
+export const resolveStripeSubscriptionCanceledAt = (subscription: { canceled_at?: number | null }): Date => {
+	if (subscription.canceled_at) {
+		return new Date(subscription.canceled_at * 1000);
+	}
+
+	return new Date();
+};
+
+export const mapStripeSubscriptionLifecycle = (
+	subscription: StripeSubscriptionLifecycleSource,
+): MappedStripeSubscriptionLifecycle | null => {
+	const status = mapStripeSubscriptionStatus(subscription.status);
+	if (!status) {
+		return null;
+	}
+
+	return {
+		status,
+		canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
+	};
+};
+
+export type StripeSubscriptionPriceSource = {
+	items: {
+		data: {
+			price?: {
+				unit_amount?: number | null;
+				currency: string;
+				recurring?: {
+					interval: string;
+					interval_count: number;
+				} | null;
+			} | null;
+		}[];
+	};
+};
+
+export type MappedStripeSubscriptionPriceFields = {
+	amount: number;
+	currency: Currency;
+	interval: DonationInterval;
+};
+
+export const mapStripeSubscriptionPriceFields = (
+	subscription: StripeSubscriptionPriceSource,
+): MappedStripeSubscriptionPriceFields | null => {
+	const price = subscription.items.data[0]?.price;
+	if (!price?.recurring) {
+		return null;
+	}
+
+	const interval = mapStripeRecurringInterval(price.recurring.interval, price.recurring.interval_count);
+	if (!interval) {
+		return null;
+	}
+
+	const amount = mapStripePriceAmount(price.unit_amount ?? null);
+	if (amount === null) {
+		return null;
+	}
+
+	const currencyCode = price.currency.toUpperCase();
+	if (!isValidCurrency(currencyCode)) {
+		return null;
+	}
+
+	return {
+		amount,
+		currency: currencyCode,
+		interval,
+	};
+};
+
+export type MappedStripeSubscriptionFields = MappedStripeSubscriptionLifecycle & MappedStripeSubscriptionPriceFields;
+
+export const mapStripeSubscriptionFields = (
+	subscription: StripeSubscriptionLifecycleSource & StripeSubscriptionPriceSource,
+): MappedStripeSubscriptionFields | null => {
+	const lifecycle = mapStripeSubscriptionLifecycle(subscription);
+	if (!lifecycle) {
+		return null;
+	}
+
+	const priceFields = mapStripeSubscriptionPriceFields(subscription);
+	if (!priceFields) {
+		return null;
+	}
+
+	return {
+		...lifecycle,
+		...priceFields,
+	};
 };
 
 export const getStripeBalanceTransaction = (

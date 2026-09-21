@@ -2,8 +2,8 @@
 
 import { Button } from '@/components/button/button';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
-import { getBaseAmountBeforeTransactionCostCoverage } from '@/lib/services/subscription/cover-transaction-costs';
 import { formatCurrencyLocale, formatDateLocale, fractionalCurrencyFormatOptions } from '@/lib/utils/string-utils';
+import { getBaseAmountBeforeTransactionCostCoverage } from '@/modules/subscriptions/subscription.types';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/navigation';
 import { CoverSubscriptionTransactionCostsPrompt } from '../cover-subscription-transaction-costs-prompt';

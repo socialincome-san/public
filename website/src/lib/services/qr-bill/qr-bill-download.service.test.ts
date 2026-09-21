@@ -4,7 +4,6 @@ import { generateQrBillPdfBuffer } from '@/lib/utils/qr-bill-pdf';
 import type { CampaignReadService } from '@/modules/campaigns/campaign.types';
 import { findContributorsByPaymentReferenceIds } from '@/modules/contributors/contributor.service';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
-import type { SubscriptionWriteService } from '../subscription/subscription-write.service';
 import { QrBillService } from './qr-bill.service';
 
 jest.mock('@/generated/prisma/client', () => ({
@@ -32,6 +31,10 @@ jest.mock('@/modules/contributors/contributor.service', () => ({
 	updateContributorSelf: jest.fn(),
 }));
 
+jest.mock('@/modules/subscriptions/subscription.service', () => ({
+	upsertFromBankStandingOrder: jest.fn(),
+}));
+
 const withContext = (overrides: Partial<DonationAmountContext>): DonationAmountContext => ({
 	...getInitialDonationContext(),
 	paymentMethod: 'qr',
@@ -44,12 +47,7 @@ describe('QrBillService.downloadQrBillPdf', () => {
 	const mockFindContributorsByPaymentReferenceIds = findContributorsByPaymentReferenceIds as jest.Mock;
 
 	const createService = () =>
-		new QrBillService(
-			{} as PrismaClient,
-			{} as CampaignReadService,
-			{} as SubscriptionWriteService,
-			{} as ExchangeRateReadService,
-		);
+		new QrBillService({} as PrismaClient, {} as CampaignReadService, {} as ExchangeRateReadService);
 
 	beforeEach(() => {
 		jest.clearAllMocks();

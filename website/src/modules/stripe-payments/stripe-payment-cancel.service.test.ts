@@ -19,8 +19,35 @@ jest.mock('@/integrations/stripe/stripe.integration', () => ({
 	listOpenStripeInvoices: jest.fn(),
 	listStripeCheckoutSessionsByPaymentIntent: jest.fn(),
 	listStripeSubscriptions: jest.fn(),
+	mapStripeSubscriptionLifecycle: (subscription: { status: string; canceled_at?: number | null }) => {
+		if (subscription.status === 'incomplete' || subscription.status === 'incomplete_expired') {
+			return null;
+		}
+		if (subscription.status === 'canceled') {
+			return {
+				status: 'ended',
+				canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
+			};
+		}
+		if (
+			subscription.status === 'active' ||
+			subscription.status === 'trialing' ||
+			subscription.status === 'past_due' ||
+			subscription.status === 'unpaid' ||
+			subscription.status === 'paused'
+		) {
+			return {
+				status: 'active',
+				canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
+			};
+		}
+
+		return null;
+	},
 	resolveStripeResourceId: (value: string | { id: string } | null | undefined) =>
 		typeof value === 'string' ? value : (value?.id ?? null),
+	resolveStripeSubscriptionCanceledAt: (subscription: { canceled_at?: number | null }) =>
+		subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : new Date(),
 	retrieveStripeCharge: jest.fn(),
 	retrieveStripeCheckoutSession: jest.fn(),
 	retrieveStripeCustomer: jest.fn(),

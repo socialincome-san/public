@@ -1,11 +1,28 @@
-import { PrismaClient, SubscriptionPaymentMethod } from '@/generated/prisma/client';
+import { ProgramPermission, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/enums';
+import type { ServiceResult } from '@/lib/service-result';
 import { getContributorContributionSummary } from '@/modules/contributions/contribution.service';
-import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
+import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import { getSubscriptionStripeDetails } from '@/modules/stripe-payments/stripe-payment.service';
-import type { ServiceResult } from '../core/base.types';
-import { UPCOMING_PAYMENTS_PER_SUBSCRIPTION } from './subscription-payment-schedule';
-import { SubscriptionReadService } from './subscription-read.service';
+import * as subscriptionRepository from './subscription.repository';
+import {
+	cancelBankTransfer,
+	getDashboardView,
+	getPaginatedTableView,
+	updateBankTransferAmount,
+} from './subscription.service';
 import type { SubscriptionTableQuery } from './subscription.types';
+import { UPCOMING_PAYMENTS_PER_SUBSCRIPTION } from './subscription.types';
+
+jest.mock('./subscription.repository', () => ({
+	findActiveSubscriptionsByContributorId: jest.fn(),
+	findSubscriptionTableSource: jest.fn(),
+	findOwnedSubscriptionPaymentMethod: jest.fn(),
+	findOwnedActiveBankTransferSubscription: jest.fn(),
+	findOwnedBankTransferSubscription: jest.fn(),
+	updateBankStandingOrder: jest.fn(),
+	updateBankTransferSubscriptionAmount: jest.fn(),
+	updateBankTransferSubscriptionCancellation: jest.fn(),
+}));
 
 jest.mock('@/modules/contributions/contribution.service', () => ({
 	getContributorContributionSummary: jest.fn(),
@@ -15,22 +32,26 @@ jest.mock('@/modules/stripe-payments/stripe-payment.service', () => ({
 	getSubscriptionStripeDetails: jest.fn(),
 }));
 
-jest.mock('@/generated/prisma/client', () => ({
-	PrismaClient: class {},
-	ProgramPermission: { operator: 'operator', owner: 'owner' },
-	SubscriptionPaymentMethod: {
-		stripe: 'stripe',
-		bank_transfer: 'bank_transfer',
-	},
-	SubscriptionStatus: {
-		active: 'active',
-		ended: 'ended',
-	},
+jest.mock('@/modules/program-access/program-access.service', () => ({
+	getAccessiblePrograms: jest.fn(),
 }));
 
 jest.mock('@/lib/utils/now', () => ({
 	now: jest.fn(() => new Date('2026-01-15T12:00:00.000Z')),
 }));
+
+const mockFindActiveSubscriptionsByContributorId = jest.mocked(
+	subscriptionRepository.findActiveSubscriptionsByContributorId,
+);
+const mockFindSubscriptionTableSource = jest.mocked(subscriptionRepository.findSubscriptionTableSource);
+const mockFindOwnedActiveBankTransferSubscription = jest.mocked(
+	subscriptionRepository.findOwnedActiveBankTransferSubscription,
+);
+const mockFindOwnedBankTransferSubscription = jest.mocked(subscriptionRepository.findOwnedBankTransferSubscription);
+const mockUpdateBankTransferSubscriptionAmount = jest.mocked(subscriptionRepository.updateBankTransferSubscriptionAmount);
+const mockUpdateBankTransferSubscriptionCancellation = jest.mocked(
+	subscriptionRepository.updateBankTransferSubscriptionCancellation,
+);
 
 const mockGetContributorContributionSummary = getContributorContributionSummary as jest.MockedFunction<
 	typeof getContributorContributionSummary
@@ -38,6 +59,7 @@ const mockGetContributorContributionSummary = getContributorContributionSummary 
 const mockGetSubscriptionStripeDetails = getSubscriptionStripeDetails as jest.MockedFunction<
 	typeof getSubscriptionStripeDetails
 >;
+const mockGetAccessiblePrograms = getAccessiblePrograms as jest.MockedFunction<typeof getAccessiblePrograms>;
 
 const expectSuccess = <T>(result: ServiceResult<T>) => {
 	expect(result.success).toBe(true);
@@ -48,7 +70,7 @@ const expectSuccess = <T>(result: ServiceResult<T>) => {
 	return result.data;
 };
 
-const createService = ({
+const setupDashboard = ({
 	subscriptions = [],
 	stripeDetails = null as { brand?: string; last4?: string; currentPeriodEnd: Date | null } | null,
 }: {
@@ -65,36 +87,28 @@ const createService = ({
 	}[];
 	stripeDetails?: { brand?: string; last4?: string; currentPeriodEnd: Date | null } | null;
 } = {}) => {
-	const db = {
-		subscription: {
-			findMany: jest.fn().mockResolvedValue(
-				subscriptions.map((subscription) => ({
-					bankStandingOrderReference: null,
-					coverTransactionCosts: false,
-					contributor: { paymentReferenceId: null },
-					...subscription,
-				})),
-			),
-		},
-	} as unknown as PrismaClient;
-
+	mockFindActiveSubscriptionsByContributorId.mockResolvedValue(
+		subscriptions.map((subscription) => ({
+			bankStandingOrderReference: null,
+			coverTransactionCosts: false,
+			contributor: { paymentReferenceId: null },
+			...subscription,
+		})) as never,
+	);
 	mockGetContributorContributionSummary.mockResolvedValue({
 		success: true,
 		data: { totalAmountChf: 750, count: 15, firstContributionAt: new Date('2024-11-03T00:00:00.000Z') },
 	});
 	mockGetSubscriptionStripeDetails.mockResolvedValue({ success: true, data: stripeDetails });
-	const programAccessService = {
-		getAccessiblePrograms: jest.fn(),
-	} as unknown as ProgramAccessReadService;
-
-	return {
-		service: new SubscriptionReadService(db, programAccessService),
-	};
 };
 
-describe('SubscriptionReadService', () => {
+describe('getDashboardView', () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
 	it('omits qr bill when bank transfer references are incomplete or currency is unsupported', async () => {
-		const incomplete = createService({
+		setupDashboard({
 			subscriptions: [
 				{
 					id: 'sub-bank-missing-ref',
@@ -108,7 +122,12 @@ describe('SubscriptionReadService', () => {
 				},
 			],
 		});
-		const unsupportedCurrency = createService({
+		expect(expectSuccess(await getDashboardView('contributor-1')).activeSubscriptions[0]?.paymentDisplay).toEqual({
+			type: 'bank_transfer',
+			qrBill: null,
+		});
+
+		setupDashboard({
 			subscriptions: [
 				{
 					id: 'sub-bank-usd',
@@ -122,21 +141,14 @@ describe('SubscriptionReadService', () => {
 				},
 			],
 		});
-
-		expect(
-			expectSuccess(await incomplete.service.getDashboardView('contributor-1')).activeSubscriptions[0]?.paymentDisplay,
-		).toEqual({
+		expect(expectSuccess(await getDashboardView('contributor-1')).activeSubscriptions[0]?.paymentDisplay).toEqual({
 			type: 'bank_transfer',
 			qrBill: null,
 		});
-		expect(
-			expectSuccess(await unsupportedCurrency.service.getDashboardView('contributor-1')).activeSubscriptions[0]
-				?.paymentDisplay,
-		).toEqual({ type: 'bank_transfer', qrBill: null });
 	});
 
 	it('returns null monthly total for mixed currencies', async () => {
-		const { service } = createService({
+		setupDashboard({
 			subscriptions: [
 				{
 					id: 'sub-1',
@@ -157,7 +169,7 @@ describe('SubscriptionReadService', () => {
 			],
 		});
 
-		expect(expectSuccess(await service.getDashboardView('contributor-1')).monthlyContribution).toEqual({
+		expect(expectSuccess(await getDashboardView('contributor-1')).monthlyContribution).toEqual({
 			totalAmount: null,
 			currency: null,
 			activeCount: 2,
@@ -165,7 +177,7 @@ describe('SubscriptionReadService', () => {
 	});
 
 	it('schedules stripe upcoming payments from currentPeriodEnd', async () => {
-		const { service } = createService({
+		setupDashboard({
 			subscriptions: [
 				{
 					id: 'sub-stripe',
@@ -179,7 +191,7 @@ describe('SubscriptionReadService', () => {
 			stripeDetails: { brand: 'Visa', last4: '4242', currentPeriodEnd: new Date('2026-03-05T00:00:00.000Z') },
 		});
 
-		const data = expectSuccess(await service.getDashboardView('contributor-1'));
+		const data = expectSuccess(await getDashboardView('contributor-1'));
 
 		expect(data.upcomingPayments).toHaveLength(UPCOMING_PAYMENTS_PER_SUBSCRIPTION);
 		expect(data.upcomingPayments.map((payment) => payment.scheduledAt.toISOString())).toEqual([
@@ -192,7 +204,7 @@ describe('SubscriptionReadService', () => {
 
 	it('skips stripe upcoming payments when details or currentPeriodEnd are missing', async () => {
 		const consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
-		const missingDetails = createService({
+		setupDashboard({
 			subscriptions: [
 				{
 					id: 'sub-stripe',
@@ -206,14 +218,14 @@ describe('SubscriptionReadService', () => {
 			stripeDetails: null,
 		});
 
-		expect(expectSuccess(await missingDetails.service.getDashboardView('contributor-1')).upcomingPayments).toEqual([]);
+		expect(expectSuccess(await getDashboardView('contributor-1')).upcomingPayments).toEqual([]);
 		expect(consoleWarn).toHaveBeenCalledWith('Skipping upcoming payments for Stripe subscription', {
 			subscriptionId: 'sub-stripe',
 			stripeSubscriptionId: 'sub_123',
 			reason: 'stripe_details_unavailable',
 		});
 
-		const missingPeriodEnd = createService({
+		setupDashboard({
 			subscriptions: [
 				{
 					id: 'sub-stripe',
@@ -227,7 +239,7 @@ describe('SubscriptionReadService', () => {
 			stripeDetails: { brand: 'Visa', last4: '4242', currentPeriodEnd: null },
 		});
 
-		expect(expectSuccess(await missingPeriodEnd.service.getDashboardView('contributor-1')).upcomingPayments).toEqual([]);
+		expect(expectSuccess(await getDashboardView('contributor-1')).upcomingPayments).toEqual([]);
 		expect(consoleWarn).toHaveBeenCalledWith('Skipping upcoming payments for Stripe subscription', {
 			subscriptionId: 'sub-stripe',
 			stripeSubscriptionId: 'sub_123',
@@ -239,13 +251,13 @@ describe('SubscriptionReadService', () => {
 
 const defaultTableQuery: SubscriptionTableQuery = { page: 1, pageSize: 10, search: '' };
 
-const createPortalService = ({
-	accessiblePrograms = [{ programId: 'program-1', programName: 'Core', permission: 'operator' as const }],
+const setupPortal = ({
+	accessiblePrograms = [{ programId: 'program-1', programName: 'Core', permission: ProgramPermission.operator }],
 	accessError,
 	subscriptions = [],
 	totalCount,
 }: {
-	accessiblePrograms?: { programId: string; programName: string; permission: 'operator' | 'owner' }[];
+	accessiblePrograms?: { programId: string; programName: string; permission: ProgramPermission }[];
 	accessError?: string;
 	subscriptions?: {
 		id: string;
@@ -261,23 +273,13 @@ const createPortalService = ({
 	}[];
 	totalCount?: number;
 } = {}) => {
-	const subscriptionFindMany = jest.fn().mockResolvedValue(subscriptions);
-	const subscriptionCount = jest.fn().mockResolvedValue(totalCount ?? subscriptions.length);
-	const db = {
-		subscription: { findMany: subscriptionFindMany, count: subscriptionCount },
-	} as unknown as PrismaClient;
-	const programAccessService = {
-		getAccessiblePrograms: jest
-			.fn()
-			.mockResolvedValue(
-				accessError ? { success: false as const, error: accessError } : { success: true as const, data: accessiblePrograms },
-			),
-	} as unknown as ProgramAccessReadService;
-
-	return {
-		service: new SubscriptionReadService(db, programAccessService),
-		subscriptionFindMany,
-	};
+	mockFindSubscriptionTableSource.mockResolvedValue({
+		subscriptions: subscriptions as never,
+		totalCount: totalCount ?? subscriptions.length,
+	});
+	mockGetAccessiblePrograms.mockResolvedValue(
+		accessError ? { success: false, error: accessError } : { success: true, data: accessiblePrograms },
+	);
 };
 
 const stripeTableSubscription = {
@@ -293,45 +295,26 @@ const stripeTableSubscription = {
 	contributor: { contact: { firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.com' } },
 };
 
-const subscriptionTableSelect = {
-	id: true,
-	createdAt: true,
-	amount: true,
-	currency: true,
-	status: true,
-	cancellationReason: true,
-	paymentMethod: true,
-	stripeSubscriptionId: true,
-	bankStandingOrderReference: true,
-	contributor: {
-		select: {
-			contact: {
-				select: {
-					firstName: true,
-					lastName: true,
-					email: true,
-				},
-			},
-		},
-	},
-};
+describe('getPaginatedTableView', () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
 
-describe('SubscriptionReadService.getPaginatedTableView', () => {
 	it('returns empty rows when the user has no operator program access', async () => {
-		const { service, subscriptionFindMany } = createPortalService({
-			accessiblePrograms: [{ programId: 'program-owner', programName: 'Owner only', permission: 'owner' }],
+		setupPortal({
+			accessiblePrograms: [{ programId: 'program-owner', programName: 'Owner only', permission: ProgramPermission.owner }],
 		});
 
-		expect(expectSuccess(await service.getPaginatedTableView('user-1', defaultTableQuery))).toEqual({
+		expect(expectSuccess(await getPaginatedTableView('user-1', defaultTableQuery))).toEqual({
 			tableRows: [],
 			totalCount: 0,
 		});
-		expect(subscriptionFindMany).not.toHaveBeenCalled();
+		expect(mockFindSubscriptionTableSource).not.toHaveBeenCalled();
 	});
 
 	it('propagates program access failures', async () => {
-		const { service } = createPortalService({ accessError: 'User has no active organization' });
-		const result = await service.getPaginatedTableView('user-1', defaultTableQuery);
+		setupPortal({ accessError: 'User has no active organization' });
+		const result = await getPaginatedTableView('user-1', defaultTableQuery);
 
 		expect(result.success).toBe(false);
 		if (result.success) {
@@ -341,53 +324,40 @@ describe('SubscriptionReadService.getPaginatedTableView', () => {
 	});
 
 	it('scopes subscriptions to operator programs only', async () => {
-		const { service, subscriptionFindMany } = createPortalService({
+		setupPortal({
 			accessiblePrograms: [
-				{ programId: 'program-1', programName: 'Core', permission: 'operator' },
-				{ programId: 'program-owner', programName: 'Owner only', permission: 'owner' },
+				{ programId: 'program-1', programName: 'Core', permission: ProgramPermission.operator },
+				{ programId: 'program-owner', programName: 'Owner only', permission: ProgramPermission.owner },
 			],
 			subscriptions: [stripeTableSubscription],
 		});
 
-		await service.getPaginatedTableView('user-1', defaultTableQuery);
+		await getPaginatedTableView('user-1', defaultTableQuery);
 
-		expect(subscriptionFindMany).toHaveBeenCalledWith({
-			where: { campaign: { programId: { in: ['program-1'] } } },
-			select: subscriptionTableSelect,
-			orderBy: [{ createdAt: 'desc' }],
-			skip: 0,
-			take: 10,
+		expect(mockFindSubscriptionTableSource).toHaveBeenCalledWith({
+			accessibleProgramIds: ['program-1'],
+			query: defaultTableQuery,
 		});
 	});
 
 	it('applies status, payment method, and search filters', async () => {
-		const { service, subscriptionFindMany } = createPortalService({ subscriptions: [stripeTableSubscription] });
+		setupPortal({ subscriptions: [stripeTableSubscription] });
 
-		await service.getPaginatedTableView('user-1', {
+		await getPaginatedTableView('user-1', {
 			...defaultTableQuery,
 			subscriptionStatus: 'ended',
 			subscriptionPaymentMethod: 'bank_transfer',
 			search: 'ada@example.com',
 		});
 
-		expect(subscriptionFindMany).toHaveBeenCalledWith({
-			where: {
-				campaign: { programId: { in: ['program-1'] } },
-				status: 'ended',
-				paymentMethod: 'bank_transfer',
-				OR: [
-					{ id: { contains: 'ada@example.com', mode: 'insensitive' } },
-					{ contributor: { contact: { firstName: { contains: 'ada@example.com', mode: 'insensitive' } } } },
-					{ contributor: { contact: { lastName: { contains: 'ada@example.com', mode: 'insensitive' } } } },
-					{ contributor: { contact: { email: { contains: 'ada@example.com', mode: 'insensitive' } } } },
-					{ stripeSubscriptionId: { contains: 'ada@example.com', mode: 'insensitive' } },
-					{ bankStandingOrderReference: { contains: 'ada@example.com', mode: 'insensitive' } },
-				],
+		expect(mockFindSubscriptionTableSource).toHaveBeenCalledWith({
+			accessibleProgramIds: ['program-1'],
+			query: {
+				...defaultTableQuery,
+				subscriptionStatus: 'ended',
+				subscriptionPaymentMethod: 'bank_transfer',
+				search: 'ada@example.com',
 			},
-			select: subscriptionTableSelect,
-			orderBy: [{ createdAt: 'desc' }],
-			skip: 0,
-			take: 10,
 		});
 	});
 
@@ -404,13 +374,13 @@ describe('SubscriptionReadService.getPaginatedTableView', () => {
 			bankStandingOrderReference: '1731700000',
 			contributor: { contact: { firstName: 'Grace', lastName: 'Hopper', email: 'grace@example.com' } },
 		};
-		const { service, subscriptionFindMany } = createPortalService({
+		setupPortal({
 			subscriptions: [bankSubscription],
 			totalCount: 21,
 		});
 
 		const data = expectSuccess(
-			await service.getPaginatedTableView('user-1', {
+			await getPaginatedTableView('user-1', {
 				page: 3,
 				pageSize: 10,
 				search: '',
@@ -419,12 +389,15 @@ describe('SubscriptionReadService.getPaginatedTableView', () => {
 			}),
 		);
 
-		expect(subscriptionFindMany).toHaveBeenCalledWith({
-			where: { campaign: { programId: { in: ['program-1'] } } },
-			select: subscriptionTableSelect,
-			orderBy: [{ amount: 'asc' }],
-			skip: 20,
-			take: 10,
+		expect(mockFindSubscriptionTableSource).toHaveBeenCalledWith({
+			accessibleProgramIds: ['program-1'],
+			query: {
+				page: 3,
+				pageSize: 10,
+				search: '',
+				sortBy: 'amount',
+				sortDirection: 'asc',
+			},
 		});
 		expect(data.totalCount).toBe(21);
 		expect(data.tableRows).toEqual([
@@ -443,5 +416,39 @@ describe('SubscriptionReadService.getPaginatedTableView', () => {
 				createdAt: bankSubscription.createdAt,
 			},
 		]);
+	});
+});
+
+describe('bank transfer mutations', () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
+	it('rejects invalid amounts and missing or ended subscriptions', async () => {
+		const invalidAmount = await updateBankTransferAmount({
+			contributorId: 'contributor-1',
+			subscriptionId: 'sub-bank',
+			amount: 0,
+		});
+		expect(invalidAmount.success).toBe(false);
+		expect(mockFindOwnedActiveBankTransferSubscription).not.toHaveBeenCalled();
+
+		mockFindOwnedActiveBankTransferSubscription.mockResolvedValueOnce(null);
+		const missing = await updateBankTransferAmount({
+			contributorId: 'contributor-1',
+			subscriptionId: 'sub-bank',
+			amount: 50,
+		});
+		expect(missing).toEqual({ success: false, error: 'Subscription not found' });
+		expect(mockUpdateBankTransferSubscriptionAmount).not.toHaveBeenCalled();
+
+		mockFindOwnedBankTransferSubscription.mockResolvedValueOnce({ id: 'sub-bank', status: SubscriptionStatus.ended });
+		const ended = await cancelBankTransfer({
+			contributorId: 'contributor-1',
+			subscriptionId: 'sub-bank',
+			reason: 'other',
+		});
+		expect(ended).toEqual({ success: false, error: 'Subscription not found' });
+		expect(mockUpdateBankTransferSubscriptionCancellation).not.toHaveBeenCalled();
 	});
 });

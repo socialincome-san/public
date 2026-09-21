@@ -5,9 +5,9 @@ import {
 	parseSubscriptionAmountInput,
 	SUBSCRIPTION_AMOUNT_MAX,
 	SUBSCRIPTION_AMOUNT_MIN,
-} from './subscription-amount';
+} from './subscription.types';
 
-describe('subscription-amount', () => {
+describe('subscription amount helpers', () => {
 	test('clamps values into the allowed range', () => {
 		expect(clampSubscriptionAmount(0)).toBe(SUBSCRIPTION_AMOUNT_MIN);
 		expect(clampSubscriptionAmount(-10)).toBe(SUBSCRIPTION_AMOUNT_MIN);

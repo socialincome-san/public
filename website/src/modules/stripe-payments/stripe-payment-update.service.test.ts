@@ -18,6 +18,41 @@ jest.mock('@/integrations/stripe/stripe.integration', () => ({
 	listOpenStripeInvoices: jest.fn(),
 	listStripeCheckoutSessionsByPaymentIntent: jest.fn(),
 	listStripeSubscriptions: jest.fn(),
+	mapStripeRecurringInterval: (interval: string, intervalCount: number) =>
+		interval === 'month' && intervalCount === 1 ? 'monthly' : null,
+	mapStripeSubscriptionFields: (subscription: {
+		status: string;
+		canceled_at?: number | null;
+		items: {
+			data: {
+				price?: {
+					unit_amount?: number | null;
+					currency: string;
+					recurring?: { interval: string; interval_count: number } | null;
+				} | null;
+			}[];
+		};
+		metadata?: Record<string, string>;
+	}) => {
+		if (subscription.status === 'incomplete' || subscription.status === 'incomplete_expired') {
+			return null;
+		}
+		const price = subscription.items.data[0]?.price;
+		if (!price?.recurring || price.unit_amount === null || price.unit_amount === undefined || price.unit_amount < 0) {
+			return null;
+		}
+		if (price.recurring.interval !== 'month' || price.recurring.interval_count !== 1) {
+			return null;
+		}
+
+		return {
+			status: subscription.status === 'canceled' ? 'ended' : 'active',
+			canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
+			amount: price.unit_amount / 100,
+			currency: price.currency.toUpperCase(),
+			interval: 'monthly',
+		};
+	},
 	resolveStripeResourceId: (value: string | { id: string } | null | undefined) =>
 		typeof value === 'string' ? value : (value?.id ?? null),
 	retrieveStripeCharge: jest.fn(),

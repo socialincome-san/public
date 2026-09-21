@@ -7,9 +7,9 @@ import { QrBillPdfDownloadLink } from '@/components/donation-wizard/steps/step-q
 import { type Currency } from '@/generated/prisma/client';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
-import { type BankTransferQrBillView } from '@/lib/services/subscription/subscription.types';
 import { generateQrBillSvg } from '@/lib/utils/qr-bill';
 import { formatCurrencyLocale, formatDateLocale, wholeCurrencyFormatOptions } from '@/lib/utils/string-utils';
+import { type BankTransferQrBillView } from '@/modules/subscriptions/subscription.types';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

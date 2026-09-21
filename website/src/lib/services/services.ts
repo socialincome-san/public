@@ -56,8 +56,6 @@ import { ReserveReadService } from './reserves/reserve-read.service';
 import { ReserveWriteService } from './reserves/reserve-write.service';
 import { ReservesCalculationService } from './reserves/reserves-calculation.service';
 import { StoryblokService } from './storyblok/storyblok.service';
-import { SubscriptionReadService } from './subscription/subscription-read.service';
-import { SubscriptionWriteService } from './subscription/subscription-write.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
 import { SurveyImpactService } from './survey/survey-impact.service';
 import { SurveyReadService } from './survey/survey-read.service';
@@ -110,7 +108,6 @@ const messagingTwilioTemplates = new TwilioTemplateService(prisma);
 
 const messagingWebhook = new MessagingWebhookService(prisma);
 const messagingLog = new MessagingLogService(prisma, userRead, messagingWebhook);
-const subscriptionWrite = new SubscriptionWriteService(prisma);
 const localPartnerRead: LocalPartnerReadService = {
 	getPaginatedTableView: getPaginatedLocalPartnerTableView,
 	getMessagingTargets: getLocalPartnerMessagingTargets,
@@ -141,7 +138,7 @@ const payoutProcessCore = new PayoutProcessCoreService(
 const orangeMoneyCsvPayoutProcess = new OrangeMoneyCsvPayoutProcessService(prisma, payoutProcessCore);
 const telecelCsvPayoutProcess = new TelecelCsvPayoutProcessService(prisma, payoutProcessCore);
 const donationCertificateWrite = new DonationCertificateWriteService(prisma, donationCertificateRead);
-const qrBill = new QrBillService(prisma, campaignRead, subscriptionWrite, exchangeRateRead);
+const qrBill = new QrBillService(prisma, campaignRead, exchangeRateRead);
 const stripe = {
 	createPortalProgramDonationCheckout,
 	createEmbeddedCheckoutSession,
@@ -157,7 +154,6 @@ const stripe = {
 	handleWebhookEvent,
 	getSubscriptionStripeDetails,
 };
-const subscriptionRead = new SubscriptionReadService(prisma, programAccessRead);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);
@@ -182,11 +178,9 @@ export const services = {
 		donationCertificate: donationCertificateRead,
 		payout: payoutRead,
 		recipient: recipientRead,
-		subscription: subscriptionRead,
 		survey: surveyRead,
 	},
 	write: {
-		subscription: subscriptionWrite,
 		donationCertificate: donationCertificateWrite,
 		payout: payoutWrite,
 		recipient: recipientWrite,
