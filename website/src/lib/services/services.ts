@@ -1,3 +1,6 @@
+import { hasAnyOperatorAccess, hasOperatorAccess } from '@/modules/program-access/program-access.permissions';
+import { createInitialAccessesForProgram, getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import type { ProgramAccessReadService, ProgramAccessWriteService } from '@/modules/program-access/program-access.types';
 import { recipientService, recipientStatusService } from '@/modules/recipients/recipient.service';
 import { prisma } from '../database/prisma';
 import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
@@ -59,8 +62,6 @@ import { TelecelCsvPayoutProcessService } from './payout-process/telecel-csv-pay
 import { PayoutReadService } from './payout/payout-read.service';
 import { PayoutValidationService } from './payout/payout-validation.service';
 import { PayoutWriteService } from './payout/payout-write.service';
-import { ProgramAccessReadService } from './program-access/program-access-read.service';
-import { ProgramAccessWriteService } from './program-access/program-access-write.service';
 import { ProgramStatsService } from './program-stats/program-stats.service';
 import { ProgramPublicSubmissionService } from './program/program-public-submission.service';
 import { ProgramReadService } from './program/program-read.service';
@@ -100,8 +101,14 @@ const bankAccountWrite = new BankAccountWriteService(prisma);
 const reserveRead = new ReserveReadService(prisma);
 const firebaseAdmin = new FirebaseAdminService(prisma);
 const firebaseSession = new FirebaseSessionService(prisma);
-const programAccessRead = new ProgramAccessReadService(prisma);
-const programAccessWrite = new ProgramAccessWriteService(prisma);
+const programAccessRead: ProgramAccessReadService = {
+	getAccessiblePrograms,
+	hasAnyOperatorAccess,
+	hasOperatorAccess,
+};
+const programAccessWrite: ProgramAccessWriteService = {
+	createInitialAccessesForProgram,
+};
 const organizationAccess = new OrganizationAccessService(prisma);
 const userRead = new UserReadService(prisma);
 const userValidation = new UserValidationService(prisma);

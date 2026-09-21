@@ -1,7 +1,7 @@
 import { PrismaClient, SubscriptionPaymentMethod } from '@/generated/prisma/client';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import type { ContributionReadService } from '../contribution/contribution-read.service';
 import type { ServiceResult } from '../core/base.types';
-import type { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import type { StripeService } from '../stripe/stripe.service';
 import { UPCOMING_PAYMENTS_PER_SUBSCRIPTION } from './subscription-payment-schedule';
 import { SubscriptionReadService } from './subscription-read.service';

@@ -1,8 +1,8 @@
 import { Contribution, ContributionStatus, PaymentEvent, Prisma, PrismaClient } from '@/generated/prisma/client';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { ContributionFormCreateInput, ContributionFormUpdateInput } from './contribution-form-input';
 import { ContributionValidationService } from './contribution-validation.service';
 import {

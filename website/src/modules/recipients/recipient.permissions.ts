@@ -1,5 +1,6 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
 import type { Session } from '@/lib/firebase/current-account';
+import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
 
 export const canCreateRecipient = (
 	actor: RecipientActor,
@@ -60,12 +61,6 @@ export const hasOperatorAccess = (accessiblePrograms: AccessibleProgram[], progr
 	return accessiblePrograms.some(
 		(program) => program.programId === programId && program.permission === ProgramPermission.operator,
 	);
-};
-
-type AccessibleProgram = {
-	programId: string;
-	programName: string;
-	permission: ProgramPermission;
 };
 
 type RecipientActor = Pick<Session, 'id' | 'type'>;

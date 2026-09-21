@@ -1,8 +1,8 @@
 import { CountryCode, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import {
 	ContributorCommunityStats,
 	ContributorDonationCertificate,

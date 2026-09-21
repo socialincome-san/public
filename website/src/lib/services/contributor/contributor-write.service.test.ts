@@ -20,9 +20,9 @@ jest.mock('@/generated/prisma/client', () => ({
 }));
 
 import { ContributorReferralSource, Prisma } from '@/generated/prisma/client';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import type { ContactRelationsService } from '../contact/contact-relations.service';
 import type { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import type { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import type { SendgridSubscriptionService } from '../sendgrid/sendgrid-subscription.service';
 import type { ContributorValidationService } from './contributor-validation.service';
 import { ContributorWriteService } from './contributor-write.service';

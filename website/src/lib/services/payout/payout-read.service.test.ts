@@ -1,8 +1,8 @@
 import { type PrismaClient } from '@/generated/prisma/client';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import type { recipientStatusService as recipientStatusFunctions } from '@/modules/recipients/recipient.service';
 import type { ServiceResult } from '../core/base.types';
 import type { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
-import type { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { PAYOUT_FORECAST_MONTHS_AHEAD } from './payout-forecast.constants';
 import { PayoutReadService } from './payout-read.service';
 

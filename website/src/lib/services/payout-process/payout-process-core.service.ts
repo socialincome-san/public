@@ -1,11 +1,11 @@
 import { PayoutStatus, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import type { recipientStatusService as recipientStatusFunctions } from '@/modules/recipients/recipient.service';
 import { endOfMonth, format, isSameMonth, startOfMonth } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
-import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { ProgramStatsService } from '../program-stats/program-stats.service';
 import { PayoutRecipient, PreviewPayout } from './payout-process.types';
 

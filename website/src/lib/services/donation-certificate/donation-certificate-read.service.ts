@@ -1,9 +1,9 @@
 import { DonationCertificate, Prisma, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { LanguageCode } from '@/lib/types/language';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import {
 	DonationCertificatePaginatedTableView,
 	DonationCertificateTableQuery,

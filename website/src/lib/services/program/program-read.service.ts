@@ -1,7 +1,7 @@
 import { PayoutStatus, PrismaClient, ProgramPermission, SurveyStatus } from '@/generated/prisma/client';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { ProgramStatsService } from '../program-stats/program-stats.service';
 import {
 	ProgramOption,

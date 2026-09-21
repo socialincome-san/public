@@ -1,9 +1,9 @@
 import { Campaign, ContributionStatus, Currency, PrismaClient, ProgramPermission } from '@/generated/prisma/client';
 import { nowMs } from '@/lib/utils/now';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
-import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { isCampaignActive, matchesPublicCampaignActivity } from './campaign-public-activity';
 import {
 	CampaignCmsJoin,

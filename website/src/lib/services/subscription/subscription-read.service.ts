@@ -8,10 +8,10 @@ import {
 } from '@/generated/prisma/client';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import { ContributionReadService } from '../contribution/contribution-read.service';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
-import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { StripeService } from '../stripe/stripe.service';
 import { type StripeSubscriptionDetails } from '../stripe/stripe.types';
 import {

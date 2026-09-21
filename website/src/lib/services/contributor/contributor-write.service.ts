@@ -1,10 +1,10 @@
 import { Contributor, ContributorReferralSource, Prisma, PrismaClient } from '@/generated/prisma/client';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import { DateTime } from 'luxon';
 import { ContactRelationsService } from '../contact/contact-relations.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
-import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { SendgridSubscriptionService } from '../sendgrid/sendgrid-subscription.service';
 import { SupportedLanguage } from '../sendgrid/types';
 import { ContributorFormCreateInput, ContributorFormUpdateInput } from './contributor-form-input';

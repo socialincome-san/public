@@ -15,10 +15,10 @@ import { defaultLanguage } from '@/lib/i18n/utils';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { START_CHARACTER_REGEX, UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import { endOfYear, startOfYear } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { StoryblokService } from '../storyblok/storyblok.service';
 import { type GlobeContribution } from './contribution-globe.types';
 import {

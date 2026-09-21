@@ -1,9 +1,9 @@
 import { PrismaClient, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/client';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import type { CampaignReadService } from '../campaign/campaign-read.service';
 import type { ContributionWriteService } from '../contribution/contribution-write.service';
 import type { ContributorReadService } from '../contributor/contributor-read.service';
 import type { ContributorWriteService } from '../contributor/contributor-write.service';
-import type { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import type { SubscriptionWriteService } from '../subscription/subscription-write.service';
 import { StripeService } from './stripe.service';
 import { APPLY_PAYMENT_METHOD_QUERY_PARAM } from './stripe.types';

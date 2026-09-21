@@ -12,6 +12,8 @@ import { resultFail, resultOk } from '@/lib/services/core/service-result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
 import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
+import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
 import { differenceInCalendarDays, startOfDay } from 'date-fns';
 import {
 	canCreateRecipient,
@@ -1084,12 +1086,6 @@ export const recipientStatusService = {
 	isRecipientEligibleForPayout,
 };
 
-const getAccessiblePrograms = async (userId: string): Promise<ServiceResult<AccessibleProgram[]>> => {
-	const programs = await recipientRepository.findAccessiblePrograms(userId);
-
-	return programs ? resultOk(programs) : resultFail('User has no active organization');
-};
-
 const getActorAccessiblePrograms = async (session: Session): Promise<ServiceResult<AccessibleProgram[]>> =>
 	session.type === 'user' ? getAccessiblePrograms(session.id) : resultOk([]);
 
@@ -1577,8 +1573,6 @@ const CSV_HEADERS = [
 	'paymentCode',
 	'paymentPhone',
 ];
-
-type AccessibleProgram = NonNullable<Awaited<ReturnType<typeof recipientRepository.findAccessiblePrograms>>>[number];
 
 type RecipientWriteResult = Awaited<ReturnType<typeof recipientRepository.updateRecipient>>;
 

@@ -1,8 +1,8 @@
 import { PayoutStatus, PrismaClient } from '@/generated/prisma/client';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import { getRecipientProgramAssignment } from '@/modules/recipients/recipient.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramAccessReadService } from '../program-access/program-access-read.service';
 import { PayoutFormCreateInput, PayoutFormUpdateInput } from './payout-form-input';
 import { PayoutValidationService } from './payout-validation.service';
 import { PayoutEntity, PayoutPayload } from './payout.types';

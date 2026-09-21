@@ -3,34 +3,6 @@ import { prisma } from '@/lib/database/prisma';
 import type { CreateRecipientInput, UpdateRecipientInput, UpdateRecipientSelfInput } from './recipient.schemas';
 import type { RecipientTableQuery } from './recipient.types';
 
-export const findAccessiblePrograms = async (userId: string) => {
-	const user = await prisma.user.findUnique({
-		where: { id: userId },
-		select: { activeOrganizationId: true },
-	});
-
-	if (!user?.activeOrganizationId) {
-		return null;
-	}
-
-	const accesses = await prisma.programAccess.findMany({
-		where: { organizationId: user.activeOrganizationId },
-		select: {
-			programId: true,
-			permission: true,
-			program: {
-				select: { name: true },
-			},
-		},
-	});
-
-	return accesses.map(({ programId, permission, program }) => ({
-		programId,
-		programName: program.name,
-		permission,
-	}));
-};
-
 export const findProgram = async (programId: string) =>
 	prisma.program.findUnique({
 		where: { id: programId },
