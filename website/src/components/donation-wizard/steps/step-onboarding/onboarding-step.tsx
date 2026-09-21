@@ -2,12 +2,12 @@
 
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { getQrOnboardingPrefillAction, updateContributorAfterWizardQrAction } from '@/lib/server-actions/qr-wizard-actions';
+import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
+import { toNewsletterLanguage } from '@/modules/newsletter/newsletter.types';
 import {
 	getStripeCheckoutOnboardingPrefillAction,
 	updateContributorAfterWizardCheckoutAction,
-} from '@/lib/server-actions/stripe-wizard-actions';
-import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
-import { toNewsletterLanguage } from '@/modules/newsletter/newsletter.types';
+} from '@/modules/stripe-payments/stripe-payment.actions';
 import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';

@@ -4,6 +4,24 @@ import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { CreateUserInput, UpdateUserInput, UpdateUserSelfInput } from './user.schemas';
 import type { UserTableQuery } from './user.types';
 
+export const findUserStripeCheckoutContext = async (userId: string) =>
+	prisma.user.findUnique({
+		where: { id: userId },
+		select: {
+			accountId: true,
+			contactId: true,
+			contact: {
+				select: { email: true, firstName: true, lastName: true },
+			},
+		},
+	});
+
+export const findUserContactIdByAccountId = async (accountId: string) =>
+	prisma.user.findUnique({
+		where: { accountId },
+		select: { contactId: true },
+	});
+
 export const findUserById = async (userId: string) =>
 	prisma.user.findUnique({
 		where: { id: userId },

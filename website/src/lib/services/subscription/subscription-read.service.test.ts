@@ -1,14 +1,18 @@
 import { PrismaClient, SubscriptionPaymentMethod } from '@/generated/prisma/client';
 import { getContributorContributionSummary } from '@/modules/contributions/contribution.service';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
+import { getSubscriptionStripeDetails } from '@/modules/stripe-payments/stripe-payment.service';
 import type { ServiceResult } from '../core/base.types';
-import type { StripeService } from '../stripe/stripe.service';
 import { UPCOMING_PAYMENTS_PER_SUBSCRIPTION } from './subscription-payment-schedule';
 import { SubscriptionReadService } from './subscription-read.service';
 import type { SubscriptionTableQuery } from './subscription.types';
 
 jest.mock('@/modules/contributions/contribution.service', () => ({
 	getContributorContributionSummary: jest.fn(),
+}));
+
+jest.mock('@/modules/stripe-payments/stripe-payment.service', () => ({
+	getSubscriptionStripeDetails: jest.fn(),
 }));
 
 jest.mock('@/generated/prisma/client', () => ({
@@ -30,6 +34,9 @@ jest.mock('@/lib/utils/now', () => ({
 
 const mockGetContributorContributionSummary = getContributorContributionSummary as jest.MockedFunction<
 	typeof getContributorContributionSummary
+>;
+const mockGetSubscriptionStripeDetails = getSubscriptionStripeDetails as jest.MockedFunction<
+	typeof getSubscriptionStripeDetails
 >;
 
 const expectSuccess = <T>(result: ServiceResult<T>) => {
@@ -75,14 +82,13 @@ const createService = ({
 		success: true,
 		data: { totalAmountChf: 750, count: 15, firstContributionAt: new Date('2024-11-03T00:00:00.000Z') },
 	});
+	mockGetSubscriptionStripeDetails.mockResolvedValue({ success: true, data: stripeDetails });
 	const programAccessService = {
 		getAccessiblePrograms: jest.fn(),
 	} as unknown as ProgramAccessReadService;
 
 	return {
-		service: new SubscriptionReadService(db, programAccessService, {
-			getSubscriptionStripeDetails: jest.fn().mockResolvedValue(stripeDetails),
-		} as unknown as StripeService),
+		service: new SubscriptionReadService(db, programAccessService),
 	};
 };
 
@@ -199,6 +205,14 @@ describe('SubscriptionReadService', () => {
 			],
 			stripeDetails: null,
 		});
+
+		expect(expectSuccess(await missingDetails.service.getDashboardView('contributor-1')).upcomingPayments).toEqual([]);
+		expect(consoleWarn).toHaveBeenCalledWith('Skipping upcoming payments for Stripe subscription', {
+			subscriptionId: 'sub-stripe',
+			stripeSubscriptionId: 'sub_123',
+			reason: 'stripe_details_unavailable',
+		});
+
 		const missingPeriodEnd = createService({
 			subscriptions: [
 				{
@@ -213,12 +227,6 @@ describe('SubscriptionReadService', () => {
 			stripeDetails: { brand: 'Visa', last4: '4242', currentPeriodEnd: null },
 		});
 
-		expect(expectSuccess(await missingDetails.service.getDashboardView('contributor-1')).upcomingPayments).toEqual([]);
-		expect(consoleWarn).toHaveBeenCalledWith('Skipping upcoming payments for Stripe subscription', {
-			subscriptionId: 'sub-stripe',
-			stripeSubscriptionId: 'sub_123',
-			reason: 'stripe_details_unavailable',
-		});
 		expect(expectSuccess(await missingPeriodEnd.service.getDashboardView('contributor-1')).upcomingPayments).toEqual([]);
 		expect(consoleWarn).toHaveBeenCalledWith('Skipping upcoming payments for Stripe subscription', {
 			subscriptionId: 'sub-stripe',
@@ -267,9 +275,7 @@ const createPortalService = ({
 	} as unknown as ProgramAccessReadService;
 
 	return {
-		service: new SubscriptionReadService(db, programAccessService, {
-			getSubscriptionStripeDetails: jest.fn(),
-		} as unknown as StripeService),
+		service: new SubscriptionReadService(db, programAccessService),
 		subscriptionFindMany,
 	};
 };

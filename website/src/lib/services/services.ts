@@ -14,6 +14,21 @@ import { getAccessiblePrograms } from '@/modules/program-access/program-access.s
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import { isReadyForFirstPayoutInterval } from '@/modules/programs/program-stats.service';
 import { recipientService, recipientStatusService } from '@/modules/recipients/recipient.service';
+import {
+	applyCustomerDefaultPaymentMethodToOwnedSubscription,
+	cancelContributorSubscription,
+	createEmbeddedCheckoutSession,
+	createManageSubscriptionsSession,
+	createPortalProgramDonationCheckout,
+	getCheckoutOnboardingPrefill,
+	getPaginatedSubscriptionsTableView,
+	getSubscriptionsTableView,
+	getSubscriptionStripeDetails,
+	handleWebhookEvent,
+	updateContributorAfterCheckout,
+	updateContributorReferralAfterCheckout,
+	updateContributorSubscriptionAmount,
+} from '@/modules/stripe-payments/stripe-payment.service';
 import { isAdmin } from '@/modules/users/user.service';
 import type { UserReadService } from '@/modules/users/user.types';
 import { prisma } from '../database/prisma';
@@ -41,7 +56,6 @@ import { ReserveReadService } from './reserves/reserve-read.service';
 import { ReserveWriteService } from './reserves/reserve-write.service';
 import { ReservesCalculationService } from './reserves/reserves-calculation.service';
 import { StoryblokService } from './storyblok/storyblok.service';
-import { StripeService } from './stripe/stripe.service';
 import { SubscriptionReadService } from './subscription/subscription-read.service';
 import { SubscriptionWriteService } from './subscription/subscription-write.service';
 import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
@@ -128,8 +142,22 @@ const orangeMoneyCsvPayoutProcess = new OrangeMoneyCsvPayoutProcessService(prism
 const telecelCsvPayoutProcess = new TelecelCsvPayoutProcessService(prisma, payoutProcessCore);
 const donationCertificateWrite = new DonationCertificateWriteService(prisma, donationCertificateRead);
 const qrBill = new QrBillService(prisma, campaignRead, subscriptionWrite, exchangeRateRead);
-const stripe = new StripeService(prisma, subscriptionWrite, campaignRead, programAccessRead);
-const subscriptionRead = new SubscriptionReadService(prisma, programAccessRead, stripe);
+const stripe = {
+	createPortalProgramDonationCheckout,
+	createEmbeddedCheckoutSession,
+	getCheckoutOnboardingPrefill,
+	updateContributorAfterCheckout,
+	updateContributorReferralAfterCheckout,
+	getSubscriptionsTableView,
+	getPaginatedSubscriptionsTableView,
+	createManageSubscriptionsSession,
+	applyCustomerDefaultPaymentMethodToOwnedSubscription,
+	updateContributorSubscriptionAmount,
+	cancelContributorSubscription,
+	handleWebhookEvent,
+	getSubscriptionStripeDetails,
+};
+const subscriptionRead = new SubscriptionReadService(prisma, programAccessRead);
 const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
 const surveyImpact = new SurveyImpactService(prisma);
 const surveyValidation = new SurveyValidationService(prisma);

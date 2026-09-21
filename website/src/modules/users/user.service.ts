@@ -9,7 +9,14 @@ import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import { isAdminRole } from './user.permissions';
 import * as userRepository from './user.repository';
 import type { CreateUserInput, UpdateUserInput, UpdateUserSelfInput } from './user.schemas';
-import type { UserPaginatedTableView, UserPayload, UserSession, UserTableQuery, UserTableViewRow } from './user.types';
+import type {
+	UserPaginatedTableView,
+	UserPayload,
+	UserSession,
+	UserStripeCheckoutContext,
+	UserTableQuery,
+	UserTableViewRow,
+} from './user.types';
 
 export const getUser = async (actorUserId: string, userId: string): Promise<ServiceResult<UserPayload>> => {
 	try {
@@ -140,6 +147,39 @@ export const getCurrentUserSession = async (firebaseAuthUserId: string): Promise
 		console.error('Could not fetch user session', { firebaseAuthUserId, error });
 
 		return resultFail('Error fetching user information');
+	}
+};
+
+export const getUserStripeCheckoutContext = async (userId: string): Promise<ServiceResult<UserStripeCheckoutContext>> => {
+	try {
+		const user = await userRepository.findUserStripeCheckoutContext(userId);
+		if (!user) {
+			return resultFail('User account not found');
+		}
+
+		return resultOk({
+			accountId: user.accountId,
+			contactId: user.contactId,
+			email: user.contact?.email ?? null,
+			firstName: user.contact?.firstName ?? null,
+			lastName: user.contact?.lastName ?? null,
+		});
+	} catch (error) {
+		console.error('Could not fetch user for Stripe checkout', { userId, error });
+
+		return resultFail('Could not fetch user');
+	}
+};
+
+export const getUserContactIdByAccountId = async (accountId: string): Promise<ServiceResult<string | null>> => {
+	try {
+		const user = await userRepository.findUserContactIdByAccountId(accountId);
+
+		return resultOk(user?.contactId ?? null);
+	} catch (error) {
+		console.error('Could not fetch user contact by account', { accountId, error });
+
+		return resultFail('Could not fetch user');
 	}
 };
 

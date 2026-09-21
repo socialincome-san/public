@@ -65,6 +65,14 @@ export type UserSession = {
 	hasAnyOperatorProgramAccess: boolean;
 };
 
+export type UserStripeCheckoutContext = {
+	accountId: string;
+	contactId: string;
+	email: string | null;
+	firstName: string | null;
+	lastName: string | null;
+};
+
 export type UserReadService = {
 	isAdmin: (userId: string) => Promise<ServiceResult<true>>;
 };

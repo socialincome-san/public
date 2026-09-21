@@ -10,10 +10,10 @@ import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { getContributorContributionSummary } from '@/modules/contributions/contribution.service';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
+import { getSubscriptionStripeDetails } from '@/modules/stripe-payments/stripe-payment.service';
+import type { StripeSubscriptionDetails } from '@/modules/stripe-payments/stripe-payment.types';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
-import { StripeService } from '../stripe/stripe.service';
-import { type StripeSubscriptionDetails } from '../stripe/stripe.types';
 import {
 	buildMonthlySchedule,
 	mergeUpcomingPayments,
@@ -71,7 +71,6 @@ export class SubscriptionReadService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
-		private readonly stripeService: StripeService,
 	) {
 		super(db);
 	}
@@ -324,10 +323,12 @@ export class SubscriptionReadService extends BaseService {
 			return this.stripeSubscriptionWithoutSchedule(subscription, viewBase, 'stripe_details_unavailable');
 		}
 
-		const stripeDetails = await this.stripeService.getSubscriptionStripeDetails(subscription.stripeSubscriptionId);
-		if (!stripeDetails) {
+		const stripeDetailsResult = await getSubscriptionStripeDetails(subscription.stripeSubscriptionId);
+		if (!stripeDetailsResult.success || !stripeDetailsResult.data) {
 			return this.stripeSubscriptionWithoutSchedule(subscription, viewBase, 'stripe_details_unavailable');
 		}
+
+		const stripeDetails = stripeDetailsResult.data;
 
 		if (!stripeDetails.currentPeriodEnd) {
 			return {

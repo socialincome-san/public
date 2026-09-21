@@ -1,38 +1,30 @@
-import { type DonationAmountContext } from '@/components/donation-wizard/utils/donation-amount';
-import { ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/client';
+import type {
+	ContributorReferralSource,
+	CountryCode,
+	Gender,
+	SubscriptionCancellationReason,
+} from '@/generated/prisma/enums';
 import type { ContributorRecord } from '@/modules/contributors/contributor.types';
 
 export type StripeEmbeddedCheckoutSessionInput = {
-	wizardContext: DonationAmountContext;
+	wizardContext: DonationWizardAmountContext;
 	currency?: string;
 	returnPath?: string;
 	stripeCustomerId: string | null;
 };
 
-export type StripeEmbeddedCheckoutCreateInput = {
-	amount: number;
-	returnUrl?: string;
-	recurring?: boolean;
-	currency?: string;
-	intervalCount?: number;
-	stripeCustomerId?: string | null;
+export type DonationWizardAmountContext = {
+	monthlyIncome: number | null;
+	selectedAmount: 25 | 50 | 100 | 'other' | null;
+	customAmount: number | null;
+	cadence: 'monthly' | 'one-time';
+	selectedTier: '1x' | '2x';
+	paymentMethod: 'qr' | 'online';
+	chargeMonthlyHalfOfOneTimeAmount: boolean;
+	coverTransactionCosts: boolean;
+	oneTimePlanChoice: 'one-time' | 'monthly-half';
+	returnsToOneTimePlanStep: boolean;
 	campaignId?: string;
-	accountId?: string;
-	source?: string;
-	coverTransactionCosts?: boolean;
-};
-
-export type StripeHostedCheckoutCreateInput = {
-	amount: number;
-	successUrl: string;
-	recurring?: boolean;
-	currency?: string;
-	intervalCount?: number;
-	stripeCustomerId?: string | null;
-	campaignId?: string;
-	accountId?: string;
-	source?: string;
-	coverTransactionCosts?: boolean;
 };
 
 export type PortalProgramDonationCheckoutInput = {
@@ -141,15 +133,6 @@ export type ApplyCustomerDefaultPaymentMethodInput = {
 	subscriptionId: string;
 };
 
-export type StripeCustomerData = {
-	id: string;
-	email: string;
-	name?: string;
-	address?: {
-		country?: string;
-	};
-};
-
 export type StripeContributorNameParts = {
 	firstName: string;
 	lastName: string;
@@ -168,4 +151,17 @@ export type StripeWebhookResult = {
 	contributorId?: string;
 	isNewContributor?: boolean;
 	skipReason?: string;
+};
+
+export type UpdateContributorSubscriptionAmountInput = {
+	contributorId: string;
+	subscriptionId: string;
+	amount: number;
+	coverTransactionCosts?: boolean;
+};
+
+export type CancelContributorSubscriptionInput = {
+	contributorId: string;
+	subscriptionId: string;
+	reason: SubscriptionCancellationReason;
 };
