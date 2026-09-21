@@ -76,6 +76,7 @@ import { ReserveWriteService } from './reserves/reserve-write.service';
 import { ReservesCalculationService } from './reserves/reserves-calculation.service';
 import { SendgridMailService } from './sendgrid/sendgrid-mail.service';
 import { SendgridSubscriptionService } from './sendgrid/sendgrid-subscription.service';
+import { SentEmailReadService } from './sent-email/sent-email-read.service';
 import { StoryblokManagementService } from './storyblok/storyblok-management.service';
 import { StoryblokService } from './storyblok/storyblok.service';
 import { StripeService } from './stripe/stripe.service';
@@ -168,6 +169,7 @@ const countryRead = new CountryReadService(prisma, userRead);
 const countryValidation = new CountryValidationService(prisma);
 const countryWrite = new CountryWriteService(prisma, userRead, countryValidation);
 const expenseRead = new ExpenseReadService(prisma, userRead);
+const sentEmailRead = new SentEmailReadService(prisma, userRead);
 const expenseValidation = new ExpenseValidationService(prisma);
 const expenseWrite = new ExpenseWriteService(prisma, userRead, expenseValidation);
 const contributorRead = new ContributorReadService(prisma, programAccessRead);
@@ -281,6 +283,7 @@ export const services = {
 		donationCertificate: donationCertificateRead,
 		exchangeRate: exchangeRateRead,
 		expense: expenseRead,
+		sentEmail: sentEmailRead,
 		localPartner: localPartnerRead,
 		mobileMoneyProvider: mobileMoneyProviderRead,
 		organization: organizationRead,

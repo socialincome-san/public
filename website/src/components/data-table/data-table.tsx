@@ -46,6 +46,8 @@ type DataTableProps<Row extends RowData> = {
 	pageSizeOptions?: number[];
 	showRowsPerPageSelector?: boolean;
 	showColumnVisibilitySelector?: boolean;
+	showSearchClearButton?: boolean;
+	showSearchFields?: boolean;
 	showEntityIdColumn?: boolean;
 	isLoading?: boolean;
 	toolbarFilters?: TableFilterConfig[];
@@ -87,6 +89,8 @@ export default function DataTable<Row extends RowData>({
 	pageSizeOptions = [...TABLE_PAGE_SIZE_OPTIONS],
 	showRowsPerPageSelector = true,
 	showColumnVisibilitySelector = false,
+	showSearchClearButton = true,
+	showSearchFields = true,
 	showEntityIdColumn = true,
 	isLoading = false,
 	toolbarFilters = [],
@@ -250,6 +254,8 @@ export default function DataTable<Row extends RowData>({
 					searchKeys={onQueryChange ? resolvedSearchKeys : []}
 					searchValue={activeQuery?.search ?? ''}
 					onSearchChange={onSearchChange}
+					showSearchClearButton={showSearchClearButton}
+					showSearchFields={showSearchFields}
 					sortOptions={onQueryChange ? toolbarSortOptions : []}
 					sortBy={activeQuery?.sortBy}
 					sortDirection={activeQuery?.sortDirection}
