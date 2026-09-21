@@ -7,8 +7,7 @@ import {
 	updateFirebaseUserByPhoneNumber,
 } from '@/integrations/firebase/firebase-auth.integration';
 import type { Session } from '@/lib/firebase/current-account';
-import type { ServiceResult } from '@/lib/services/core/base.types';
-import { resultFail, resultOk } from '@/lib/services/core/service-result';
+import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
 import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';

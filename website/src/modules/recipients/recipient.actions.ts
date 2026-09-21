@@ -1,7 +1,7 @@
 'use server';
 
 import { getSessionByType, type Session } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/services/core/service-result';
+import { resultFail } from '@/lib/service-result';
 import { revalidatePath } from 'next/cache';
 import {
 	recipientCreateSchema,

@@ -1,5 +1,5 @@
 import type { ProgramPermission } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/services/core/base.types';
+import type { ServiceResult } from '@/lib/service-result';
 
 export type ProgramAccess = {
 	programId: string;

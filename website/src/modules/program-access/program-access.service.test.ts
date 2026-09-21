@@ -1,5 +1,5 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/services/core/base.types';
+import type { ServiceResult } from '@/lib/service-result';
 
 const mockFindActiveOrganizationId = jest.fn();
 const mockFindProgramAccessesByOrganizationId = jest.fn();

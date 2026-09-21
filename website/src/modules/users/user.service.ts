@@ -5,8 +5,7 @@ import {
 	findFirebaseUserByEmail,
 	updateFirebaseUserByUid,
 } from '@/integrations/firebase/firebase-auth.integration';
-import type { ServiceResult } from '@/lib/services/core/base.types';
-import { resultFail, resultOk } from '@/lib/services/core/service-result';
+import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import { isAdminRole } from './user.permissions';
 import * as userRepository from './user.repository';
 import type { CreateUserInput, UpdateUserInput, UpdateUserSelfInput } from './user.schemas';

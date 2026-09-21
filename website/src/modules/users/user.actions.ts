@@ -1,8 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import type { ServiceResult } from '@/lib/services/core/base.types';
-import { resultFail } from '@/lib/services/core/service-result';
+import { resultFail, type ServiceResult } from '@/lib/service-result';
 import { revalidatePath } from 'next/cache';
 import { userCreateSchema, userIdSchema, userSelfUpdateSchema, userUpdateSchema } from './user.schemas';
 import { createUser, deleteUser, getUser, getUserOptions, updateUser, updateUserSelf } from './user.service';

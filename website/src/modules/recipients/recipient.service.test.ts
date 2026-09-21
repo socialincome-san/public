@@ -1,5 +1,5 @@
 import { PayoutInterval, PayoutStatus } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/services/core/base.types';
+import type { ServiceResult } from '@/lib/service-result';
 import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
 
 const mockFindProgram = jest.fn();

@@ -1,5 +1,4 @@
-import type { ServiceResult } from '@/lib/services/core/base.types';
-import { resultFail, resultOk } from '@/lib/services/core/service-result';
+import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import * as programAccessRepository from './program-access.repository';
 import type { CreateInitialProgramAccessesInput, ProgramAccesses } from './program-access.types';
 

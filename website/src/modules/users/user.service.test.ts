@@ -1,5 +1,5 @@
 import { ProgramPermission, UserRole } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/services/core/base.types';
+import type { ServiceResult } from '@/lib/service-result';
 
 const mockFindUserRole = jest.fn();
 const mockFindContactByEmail = jest.fn();

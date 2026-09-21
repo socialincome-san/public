@@ -1,5 +1,5 @@
 import type { CountryCode, Gender, UserRole } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/services/core/base.types';
+import type { ServiceResult } from '@/lib/service-result';
 
 export type UserPayload = {
 	id: string;

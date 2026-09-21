@@ -1,6 +1,5 @@
 import { authAdmin } from '@/lib/firebase/firebase-admin';
-import type { ServiceResult } from '@/lib/services/core/base.types';
-import { resultFail, resultOk } from '@/lib/services/core/service-result';
+import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import type { DecodedIdToken, UpdateRequest, UserRecord } from 'firebase-admin/auth';
 
 export const createFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<ServiceResult<UserRecord>> => {
