@@ -1,7 +1,7 @@
 import { type Currency, type PrismaClient } from '@/generated/prisma/client';
+import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import type { ServiceResult } from '../core/base.types';
-import type { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import { CampaignReadService } from './campaign-read.service';
 
 jest.mock('@/generated/prisma/client', () => ({

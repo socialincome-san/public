@@ -1,3 +1,5 @@
+import { getLatestRateForCurrency, getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
+import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import { createOrganizationFromEmail } from '@/modules/organizations/organization.service';
 import type { OrganizationWriteService } from '@/modules/organizations/organization.types';
 import { hasAnyOperatorAccess, hasOperatorAccess } from '@/modules/program-access/program-access.permissions';
@@ -33,9 +35,6 @@ import { CurrencyDisplayService } from './currency-display/currency-display.serv
 import { CustodianStablecoinWalletService } from './custodian-stablecoin-wallet/custodian-stablecoin-wallet.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
 import { DonationCertificateWriteService } from './donation-certificate/donation-certificate-write.service';
-import { ExchangeRateImportService } from './exchange-rate/exchange-rate-import.service';
-import { ExchangeRateReadService } from './exchange-rate/exchange-rate-read.service';
-import { ExchangeRateWriteService } from './exchange-rate/exchange-rate-write.service';
 import { ExpenseReadService } from './expense/expense-read.service';
 import { ExpenseValidationService } from './expense/expense-validation.service';
 import { ExpenseWriteService } from './expense/expense-write.service';
@@ -110,7 +109,10 @@ const organizationWrite: OrganizationWriteService = {
 	createFromEmail: createOrganizationFromEmail,
 };
 const userRead: UserReadService = { isAdmin };
-const exchangeRateImport = new ExchangeRateImportService(prisma);
+const exchangeRateRead: ExchangeRateReadService = {
+	getLatestRateForCurrency,
+	getLatestRates,
+};
 const surveySchedule = new SurveyScheduleService(prisma);
 const transparency = new TransparencyService(prisma, reserveRead);
 const githubApi = new GithubApiService(prisma);
@@ -121,8 +123,6 @@ const sendgridMail = new SendgridMailService(prisma);
 const monthlySummary = new MonthlySummaryService(prisma);
 const recipientStatus = recipientStatusService;
 
-const exchangeRateRead = new ExchangeRateReadService(prisma, userRead);
-const exchangeRateWrite = new ExchangeRateWriteService(prisma, userRead, exchangeRateImport);
 const candidateRead = new CandidateReadService(prisma, userRead);
 const contactRelations = new ContactRelationsService(prisma);
 const candidateValidation = new CandidateValidationService(prisma);
@@ -269,7 +269,6 @@ export const services = {
 		contributor: contributorRead,
 		country: countryRead,
 		donationCertificate: donationCertificateRead,
-		exchangeRate: exchangeRateRead,
 		expense: expenseRead,
 		localPartner: localPartnerRead,
 		mobileMoneyProvider: mobileMoneyProviderRead,
@@ -287,7 +286,6 @@ export const services = {
 		contributor: contributorWrite,
 		country: countryWrite,
 		donationCertificate: donationCertificateWrite,
-		exchangeRate: exchangeRateWrite,
 		expense: expenseWrite,
 		localPartner: localPartnerWrite,
 		mobileMoneyProvider: mobileMoneyProviderWrite,
@@ -300,7 +298,6 @@ export const services = {
 	qrBill,
 	createPaymentFileImport,
 	createReservesCalculation,
-	exchangeRateImport,
 	candidateImport,
 	firebaseAdmin,
 	firebaseSession,

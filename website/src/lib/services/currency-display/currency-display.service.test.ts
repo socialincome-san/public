@@ -1,4 +1,4 @@
-import type { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
+import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import { CurrencyDisplayService } from './currency-display.service';
 
 const createService = (exchangeRates?: Record<string, number>) => {

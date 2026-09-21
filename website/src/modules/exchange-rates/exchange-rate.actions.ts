@@ -1,7 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { services } from '@/lib/services/services';
+import { triggerExchangeRateImportAsAdmin } from '@/modules/exchange-rates/exchange-rate.service';
 import { revalidatePath } from 'next/cache';
 
 export const importExchangeRatesAction = async () => {
@@ -9,7 +9,8 @@ export const importExchangeRatesAction = async () => {
 	if (!sessionResult.success) {
 		return sessionResult;
 	}
-	const result = await services.write.exchangeRate.triggerImportAsAdmin(sessionResult.data.id);
+
+	const result = await triggerExchangeRateImportAsAdmin(sessionResult.data.id);
 	revalidatePath('/portal/admin/exchange-rates');
 
 	return result;

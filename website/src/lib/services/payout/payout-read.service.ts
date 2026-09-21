@@ -3,12 +3,12 @@ import { CountryCode } from '@/generated/prisma/enums';
 import { isValidCountryCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
 import type { recipientStatusService as recipientStatusFunctions } from '@/modules/recipients/recipient.service';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import {
 	CountryPayoutTotals,
 	OngoingPayoutPaginatedTableView,

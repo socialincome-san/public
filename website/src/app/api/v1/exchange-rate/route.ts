@@ -1,5 +1,5 @@
-import { services } from '@/lib/services/services';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { importExchangeRates } from '@/modules/exchange-rates/exchange-rate.service';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
@@ -18,7 +18,7 @@ export const POST = async (request: NextRequest) => {
 	}
 
 	try {
-		const result = await services.exchangeRateImport.import();
+		const result = await importExchangeRates();
 		if (!result.success) {
 			console.error(`${SLACK_ALERT}: Exchange rate import failed: ${String(result.error)}`, { result });
 

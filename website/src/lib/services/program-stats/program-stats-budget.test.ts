@@ -1,7 +1,7 @@
 import { type PrismaClient } from '@/generated/prisma/client';
+import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import type { recipientStatusService as recipientStatusFunctions } from '@/modules/recipients/recipient.service';
 import { CurrencyDisplayService } from '../currency-display/currency-display.service';
-import type { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import { ProgramStatsService } from './program-stats.service';
 import type { ProgramBudgetCalculation, ProgramBudgetCalculationInput } from './program-stats.types';
 

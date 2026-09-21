@@ -1,11 +1,11 @@
 import { getInitialDonationContext, type DonationAmountContext } from '@/components/donation-wizard/utils/donation-amount';
 import { PrismaClient } from '@/generated/prisma/client';
 import { generateQrBillPdfBuffer } from '@/lib/utils/qr-bill-pdf';
+import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import type { CampaignReadService } from '../campaign/campaign-read.service';
 import type { ContributionWriteService } from '../contribution/contribution-write.service';
 import type { ContributorReadService } from '../contributor/contributor-read.service';
 import type { ContributorWriteService } from '../contributor/contributor-write.service';
-import type { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import type { SubscriptionWriteService } from '../subscription/subscription-write.service';
 import { QrBillService } from './qr-bill.service';
 

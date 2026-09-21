@@ -1,4 +1,5 @@
-import { Currency, Prisma } from '@/generated/prisma/client';
+import type { Currency } from '@/generated/prisma/enums';
+import type { ServiceResult } from '@/lib/service-result';
 
 export type ExchangeRatesTableViewRow = {
 	id: string;
@@ -31,15 +32,15 @@ export type ExchangeRatesPaginatedTableView = {
 	}[];
 };
 
-/**
- * A sparse dictionary of currency codes and numeric rates.
- * Example: { USD: 1, EUR: 0.91, SLL: 22250 }
- */
 export type ExchangeRates = Partial<Record<Currency, number>>;
-export type ExchangeRateCreateInput = Prisma.ExchangeRateCreateInput;
 
-export type ExchangeRateResponse = {
-	base: string;
-	date: string;
-	rates: ExchangeRates;
+export type ExchangeRateCreateInput = {
+	currency: Currency;
+	rate: number;
+	timestamp: Date;
+};
+
+export type ExchangeRateReadService = {
+	getLatestRates: () => Promise<ServiceResult<ExchangeRates>>;
+	getLatestRateForCurrency: (currency: Currency) => Promise<ServiceResult<ExchangeRate>>;
 };

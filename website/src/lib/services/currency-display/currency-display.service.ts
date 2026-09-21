@@ -1,7 +1,6 @@
 import type { Currency } from '@/generated/prisma/client';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import type { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
-import type { ExchangeRates } from '../exchange-rate/exchange-rate.types';
+import type { ExchangeRateReadService, ExchangeRates } from '@/modules/exchange-rates/exchange-rate.types';
 import type { DisplayAmount, WalletPayoutDisplayInput } from './currency-display.types';
 
 export class CurrencyDisplayService {

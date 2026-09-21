@@ -9,6 +9,7 @@ import {
 	SubscriptionStatus,
 } from '@/generated/prisma/client';
 import { generateQrBillPdfBuffer } from '@/lib/utils/qr-bill-pdf';
+import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import { DateTime } from 'luxon';
 import { CampaignReadService } from '../campaign/campaign-read.service';
 import { ContributionWriteService } from '../contribution/contribution-write.service';
@@ -18,7 +19,6 @@ import { ContributorWriteService } from '../contributor/contributor-write.servic
 import { type BankContributorData, type ContributorUpdateInput } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { type ServiceResult } from '../core/base.types';
-import { ExchangeRateReadService } from '../exchange-rate/exchange-rate-read.service';
 import { SubscriptionWriteService } from '../subscription/subscription-write.service';
 import {
 	type CreateWizardPendingContributionInput,
