@@ -54,7 +54,7 @@ import type {
 	UpcomingOnboardingTableViewRow,
 } from './recipient.types';
 
-export const validateRecipientCreateInput = (input: CreateRecipientInput): ServiceResult<CreateRecipientInput> => {
+const validateRecipientCreateInput = (input: CreateRecipientInput): ServiceResult<CreateRecipientInput> => {
 	const parsedInput = recipientCreateSchema.safeParse(input);
 
 	return parsedInput.success
@@ -62,7 +62,7 @@ export const validateRecipientCreateInput = (input: CreateRecipientInput): Servi
 		: resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 };
 
-export const validateRecipientUpdateInput = (input: UpdateRecipientInput): ServiceResult<UpdateRecipientInput> => {
+const validateRecipientUpdateInput = (input: UpdateRecipientInput): ServiceResult<UpdateRecipientInput> => {
 	const parsedInput = recipientUpdateSchema.safeParse(input);
 
 	return parsedInput.success
@@ -70,7 +70,7 @@ export const validateRecipientUpdateInput = (input: UpdateRecipientInput): Servi
 		: resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
 };
 
-export const validateRecipientCreateUniqueness = async (input: CreateRecipientInput): Promise<ServiceResult<void>> => {
+const validateRecipientCreateUniqueness = async (input: CreateRecipientInput): Promise<ServiceResult<void>> => {
 	if (input.contact.phone && input.paymentInformation.phone === input.contact.phone) {
 		return resultFail('Contact phone and payment phone must be different.');
 	}
@@ -97,7 +97,7 @@ export const validateRecipientCreateUniqueness = async (input: CreateRecipientIn
 	return resultOk(undefined);
 };
 
-export const validateRecipientUpdateUniqueness = async (
+const validateRecipientUpdateUniqueness = async (
 	input: UpdateRecipientInput,
 	context: RecipientUpdateUniquenessContext,
 ): Promise<ServiceResult<void>> => {
@@ -532,7 +532,7 @@ export const getRecipientFormOptions = async (session: Session): Promise<Service
 	}
 };
 
-export const getSurveyRecipients = async (programIds: string[]): Promise<ServiceResult<SurveyRecipientOption[]>> => {
+const getSurveyRecipients = async (programIds: string[]): Promise<ServiceResult<SurveyRecipientOption[]>> => {
 	try {
 		return resultOk(await recipientRepository.findSurveyRecipients(programIds, now()));
 	} catch (error) {
@@ -542,7 +542,7 @@ export const getSurveyRecipients = async (programIds: string[]): Promise<Service
 	}
 };
 
-export const getRecipientByPaymentPhoneNumber = async (
+const getRecipientByPaymentPhoneNumber = async (
 	phoneNumber: string,
 ): Promise<ServiceResult<RecipientWithPaymentInfo | null>> => {
 	try {
@@ -700,7 +700,7 @@ export const getPublicRecipientsTableView = async (programId: string): Promise<S
 	}
 };
 
-export const getRecipientTableView = async (userId: string): Promise<ServiceResult<RecipientTableView>> => {
+const getRecipientTableView = async (userId: string): Promise<ServiceResult<RecipientTableView>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -820,7 +820,7 @@ export const getPaginatedUpcomingOnboardingRecipientTableView = async (
 	}
 };
 
-export const getProgramScopedRecipientTableView = async (
+const getProgramScopedRecipientTableView = async (
 	userId: string,
 	programId: string,
 ): Promise<ServiceResult<RecipientTableView>> => {
@@ -850,9 +850,7 @@ export const getProgramScopedRecipientTableView = async (
 	}
 };
 
-export const getRecipientTableViewByLocalPartnerId = async (
-	localPartnerId: string,
-): Promise<ServiceResult<RecipientTableView>> => {
+const getRecipientTableViewByLocalPartnerId = async (localPartnerId: string): Promise<ServiceResult<RecipientTableView>> => {
 	try {
 		const result = await getPaginatedRecipientTableViewByLocalPartnerId(localPartnerId, {
 			page: 1,
@@ -967,7 +965,7 @@ export const importRecipientsCsv = async (session: Session, file: File): Promise
 	}
 };
 
-export const countPaidOrConfirmedPayouts = (payouts: { status: PayoutStatus }[]): ServiceResult<number> => {
+const countPaidOrConfirmedPayouts = (payouts: { status: PayoutStatus }[]): ServiceResult<number> => {
 	try {
 		return resultOk(
 			payouts.filter(({ status }) => status === PayoutStatus.paid || status === PayoutStatus.confirmed).length,
@@ -979,7 +977,7 @@ export const countPaidOrConfirmedPayouts = (payouts: { status: PayoutStatus }[])
 	}
 };
 
-export const getExpectedPayoutIntervals = (
+const getExpectedPayoutIntervals = (
 	programDurationInMonths: number,
 	payoutInterval: PayoutInterval,
 ): ServiceResult<number> => {
@@ -999,7 +997,7 @@ export const getExpectedPayoutIntervals = (
 	}
 };
 
-export const getRecipientLifecycleStatusFromExpectedIntervals = (
+const getRecipientLifecycleStatusFromExpectedIntervals = (
 	input: RecipientLifecycleStatusFromExpectedIntervalsInput,
 ): ServiceResult<RecipientLifecycleStatus> => {
 	try {
@@ -1021,9 +1019,7 @@ export const getRecipientLifecycleStatusFromExpectedIntervals = (
 	}
 };
 
-export const getRecipientLifecycleStatus = (
-	input: RecipientLifecycleStatusInput,
-): ServiceResult<RecipientLifecycleStatus> => {
+const getRecipientLifecycleStatus = (input: RecipientLifecycleStatusInput): ServiceResult<RecipientLifecycleStatus> => {
 	try {
 		const intervalsResult = getExpectedPayoutIntervals(input.programDurationInMonths, input.payoutInterval);
 		if (!intervalsResult.success) {
@@ -1044,7 +1040,7 @@ export const getRecipientLifecycleStatus = (
 	}
 };
 
-export const isRecipientEligibleForPayout = (input: RecipientLifecycleStatusInput): ServiceResult<boolean> => {
+const isRecipientEligibleForPayout = (input: RecipientLifecycleStatusInput): ServiceResult<boolean> => {
 	try {
 		const statusResult = getRecipientLifecycleStatus(input);
 

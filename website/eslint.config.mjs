@@ -45,10 +45,6 @@ const providerSdkImportPaths = [
 		name: '@sendgrid/client',
 		message: 'Call SendGrid through src/integrations instead of importing the SDK directly.',
 	},
-	{
-		name: '@stripe/stripe-js',
-		message: 'Call Stripe through src/integrations instead of importing the SDK directly.',
-	},
 ];
 
 const providerSdkImportPatterns = [

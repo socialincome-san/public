@@ -36,7 +36,7 @@ export type RecipientProgramAssignment = {
 	localPartnerId: string;
 };
 
-export type RecipientMessagingPhone = {
+type RecipientMessagingPhone = {
 	number: string;
 	hasWhatsApp: boolean;
 };
