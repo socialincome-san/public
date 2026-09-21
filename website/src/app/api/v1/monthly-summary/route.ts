@@ -1,3 +1,4 @@
+import { MonthlySummaryEmailTemplate } from '@/lib/services/monthly-summary/monthly-summary-email';
 import { services } from '@/lib/services/services';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import { NextRequest, NextResponse } from 'next/server';
@@ -38,46 +39,11 @@ export const POST = async (request: NextRequest) => {
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 
-		const { from } = summaryResult.data.period;
-		const month = from.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
-		const { moneyIn, moneyOut } = summaryResult.data;
-		const { contributors, campaigns, programs, recipients: newRecipients } = summaryResult.data.new;
-		const { overall, countries, localPartners } = summaryResult.data.stats;
-		const formatStats = (stats: typeof overall) =>
-			`Recipients: ${stats.recipients.active} active, ${stats.recipients.former} former, ${stats.recipients.suspended} suspended, ${stats.recipients.future} future\nCandidates: ${stats.candidates}\nPayouts: ${stats.payouts.total} total, ${stats.payouts.confirmed} confirmed, ${stats.payouts.contested} contested, ${stats.payouts.failed} failed`;
-		const text = `Hi,
-
-Here's the summary for ${month}:
-
-Money
-- In: CHF ${moneyIn.amountChf.toLocaleString('en-CH')} (${moneyIn.count} contributions)
-- Out: CHF ${moneyOut.amountChf.toLocaleString('en-CH')} (${moneyOut.count} payouts)
-
-New
-- ${contributors} contributors
-- ${campaigns} campaigns
-- ${programs} programs
-- ${newRecipients} recipients
-
-Overall
-${formatStats(overall)}
-
-Countries
-${Object.entries(countries)
-	.map(([country, stats]) => `${country}\n${formatStats(stats)}`)
-	.join('\n')}
-
-Local Program Partners
-${localPartners
-	.map(
-		(partner) =>
-			`${partner.name} (${partner.countryIsoCodes.join(', ') || 'n/a'}): ${partner.stats.recipients.active}/${partner.stats.recipients.former}/${partner.stats.recipients.suspended}/${partner.stats.recipients.future} recipients in ${partner.programs} programs\n${formatStats(partner.stats)}`,
-	)
-	.join('\n')}`;
+		const { subject, text } = new MonthlySummaryEmailTemplate().create(summaryResult.data);
 
 		const emailResult = await services.sendgridMail.send({
 			to: recipients,
-			subject: `Monthly summary — ${month}`,
+			subject,
 			text,
 		});
 		if (!emailResult.success) {
