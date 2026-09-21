@@ -117,6 +117,18 @@ export const findOrganizationOptions = async () =>
 		orderBy: { name: 'asc' },
 	});
 
+export const findOperatorFallbackOrganization = async () =>
+	prisma.organization.findFirst({
+		where: { isOperatorFallback: true },
+		select: { id: true },
+	});
+
+export const findOrganizationsByIds = async (organizationIds: string[]) =>
+	prisma.organization.findMany({
+		where: { id: { in: organizationIds } },
+		select: { id: true },
+	});
+
 export const findOrganizationById = async (organizationId: string) =>
 	prisma.organization.findUnique({
 		where: { id: organizationId },

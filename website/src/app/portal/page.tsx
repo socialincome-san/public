@@ -31,7 +31,7 @@ const PortalDataLoader = async () => {
 				</div>
 
 				<div className="space-y-16">
-					<UserPrograms userId={user.id} />
+					<UserPrograms />
 				</div>
 			</BlockWrapper>
 		</>

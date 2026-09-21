@@ -1,5 +1,5 @@
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { ProgramPublicSubmissionService } from '../program/program-public-submission.service';
+import type { ProgramPublicSubmissionReadService } from '@/modules/programs/program.types';
 import { StoryblokManagementError, StoryblokManagementService } from '../storyblok/storyblok-management.service';
 import { CampaignSubmissionService } from './campaign-submission.service';
 import { CampaignValidationService } from './campaign-validation.service';
@@ -99,7 +99,7 @@ describe('CampaignSubmissionService', () => {
 
 		const programPublicSubmissionService = {
 			isProgramEligibleForPublicSubmission: jest.fn().mockResolvedValue({ success: true, data: true }),
-		} as unknown as ProgramPublicSubmissionService;
+		} as unknown as ProgramPublicSubmissionReadService;
 
 		const validateSlugUniqueness = jest.fn().mockResolvedValue({ success: true, data: undefined });
 		const campaignValidationService = {

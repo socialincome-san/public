@@ -1,5 +1,5 @@
 import type { ServiceResult } from '@/lib/services/core/base.types';
-import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
+import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
 
 const mockGetEligibleProgramsForPublicSubmission = jest.fn();
 

@@ -1,7 +1,5 @@
 import { ensurePawaPayWallets, getBankAccounts } from '@/modules/bank-accounts/bank-account.service';
 import type { BankAccountReadService, BankAccountWriteService } from '@/modules/bank-accounts/bank-account.types';
-import { assignRandomCandidatesToProgram } from '@/modules/candidates/candidate.service';
-import type { CandidateAssignmentService } from '@/modules/candidates/candidate.types';
 import { getLatestRateForCurrency, getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import {
@@ -9,11 +7,14 @@ import {
 	getPaginatedLocalPartnerTableView,
 } from '@/modules/local-partners/local-partner.service';
 import type { LocalPartnerReadService } from '@/modules/local-partners/local-partner.types';
-import { createOrganizationFromEmail } from '@/modules/organizations/organization.service';
-import type { OrganizationWriteService } from '@/modules/organizations/organization.types';
 import { hasAnyOperatorAccess, hasOperatorAccess } from '@/modules/program-access/program-access.permissions';
-import { createInitialAccessesForProgram, getAccessiblePrograms } from '@/modules/program-access/program-access.service';
-import type { ProgramAccessReadService, ProgramAccessWriteService } from '@/modules/program-access/program-access.types';
+import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
+import {
+	getEligibleProgramsForPublicSubmission,
+	isProgramEligibleForPublicSubmission,
+} from '@/modules/programs/program-public-submission.service';
+import { isReadyForFirstPayoutInterval } from '@/modules/programs/program-stats.service';
 import { recipientService, recipientStatusService } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
 import type { UserReadService } from '@/modules/users/user.types';
@@ -49,11 +50,6 @@ import { TelecelCsvPayoutProcessService } from './payout-process/telecel-csv-pay
 import { PayoutReadService } from './payout/payout-read.service';
 import { PayoutValidationService } from './payout/payout-validation.service';
 import { PayoutWriteService } from './payout/payout-write.service';
-import { ProgramStatsService } from './program-stats/program-stats.service';
-import { ProgramPublicSubmissionService } from './program/program-public-submission.service';
-import { ProgramReadService } from './program/program-read.service';
-import { ProgramValidationService } from './program/program-validation.service';
-import { ProgramWriteService } from './program/program-write.service';
 import { QrBillService } from './qr-bill/qr-bill.service';
 import { ReserveReadService } from './reserves/reserve-read.service';
 import { ReserveWriteService } from './reserves/reserve-write.service';
@@ -94,12 +90,6 @@ const programAccessRead: ProgramAccessReadService = {
 	hasAnyOperatorAccess,
 	hasOperatorAccess,
 };
-const programAccessWrite: ProgramAccessWriteService = {
-	createInitialAccessesForProgram,
-};
-const organizationWrite: OrganizationWriteService = {
-	createFromEmail: createOrganizationFromEmail,
-};
 const userRead: UserReadService = { isAdmin };
 const exchangeRateRead: ExchangeRateReadService = {
 	getLatestRateForCurrency,
@@ -116,9 +106,6 @@ const recipientStatus = recipientStatusService;
 const monthlySummary = new MonthlySummaryService(prisma, recipientStatus);
 
 const contactRelations = new ContactRelationsService(prisma);
-const candidateAssignment: CandidateAssignmentService = {
-	assignRandomCandidatesToProgram,
-};
 const recipientRead = recipientService;
 const recipientWrite = recipientService;
 const recipientImport = recipientService;
@@ -151,7 +138,10 @@ const messagingRecipients = new MessagingRecipientsService(prisma, contributorRe
 const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
 const messagingChannelPreview = new MessagingChannelPreviewService(prisma, userRead, messagingRecipients);
 const campaignValidation = new CampaignValidationService(prisma);
-const programPublicSubmission = new ProgramPublicSubmissionService(prisma, storyblok);
+const programPublicSubmission = {
+	getEligibleProgramsForPublicSubmission,
+	isProgramEligibleForPublicSubmission,
+};
 const storyblokManagement = new StoryblokManagementService();
 const campaignSubmission = new CampaignSubmissionService(
 	prisma,
@@ -164,20 +154,11 @@ const donationCertificateRead = new DonationCertificateReadService(prisma, progr
 
 const currencyDisplay = new CurrencyDisplayService(exchangeRateRead);
 const reserveWrite = new ReserveWriteService(prisma);
-const programStats = new ProgramStatsService(prisma, currencyDisplay, recipientStatus);
+const programStats = {
+	isReadyForFirstPayoutInterval,
+};
 const campaignRead = new CampaignReadService(prisma, programAccessRead, exchangeRateRead);
 const campaignPublicWebsite = new CampaignPublicWebsiteService(prisma, storyblok);
-const programRead = new ProgramReadService(prisma, programAccessRead, programStats);
-const programValidation = new ProgramValidationService(prisma);
-const programWrite = new ProgramWriteService(
-	prisma,
-	programAccessRead,
-	programAccessWrite,
-	candidateAssignment,
-	firebaseAdmin,
-	organizationWrite,
-	programValidation,
-);
 const payoutRead = new PayoutReadService(prisma, programAccessRead, exchangeRateRead, recipientStatus);
 const payoutProcessCore = new PayoutProcessCoreService(
 	prisma,
@@ -241,7 +222,6 @@ export const services = {
 		contributor: contributorRead,
 		donationCertificate: donationCertificateRead,
 		payout: payoutRead,
-		program: programRead,
 		recipient: recipientRead,
 		subscription: subscriptionRead,
 		survey: surveyRead,
@@ -252,7 +232,6 @@ export const services = {
 		contributor: contributorWrite,
 		donationCertificate: donationCertificateWrite,
 		payout: payoutWrite,
-		program: programWrite,
 		recipient: recipientWrite,
 		survey: surveyWrite,
 	},
@@ -266,7 +245,6 @@ export const services = {
 	orangeMoneyCsvPayoutProcess,
 	telecelCsvPayoutProcess,
 	currencyDisplay,
-	programStats,
 	recipientImport,
 	sendgrid,
 	sendgridMail,

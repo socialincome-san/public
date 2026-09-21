@@ -1,12 +1,11 @@
 import { apiPlugin, storyblokInit, type StoryblokClient } from '@storyblok/js';
-import { createStoryblokFixtureClient } from './storyblok-fixture-client';
+import { createStoryblokFixtureClient } from './storyblok-fixture.integration';
 
-let storyblokApi: StoryblokClient | undefined;
+export type StoryblokContentClient = Pick<StoryblokClient, 'get' | 'getAll'>;
 
-/**
- * Initialize and return the Storyblok API client.
- */
-export const getStoryblokApi = () => {
+let storyblokApi: StoryblokContentClient | undefined;
+
+export const getStoryblokContentClient = (): StoryblokContentClient => {
 	if (storyblokApi) {
 		return storyblokApi;
 	}
@@ -21,7 +20,6 @@ export const getStoryblokApi = () => {
 		accessToken: process.env.STORYBLOK_PREVIEW_TOKEN,
 		use: [apiPlugin],
 	});
-
 	if (!result.storyblokApi) {
 		throw new Error('Failed to initialize Storyblok API client');
 	}

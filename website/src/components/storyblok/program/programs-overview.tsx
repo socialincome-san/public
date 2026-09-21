@@ -1,8 +1,8 @@
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { PublicProgramStatsMap } from '@/lib/services/program/program.types';
 import { services } from '@/lib/services/services';
+import type { PublicProgramStatsMap } from '@/modules/programs/program.types';
 import { ProgramWallet } from './program-wallet';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug } from './program.utils';

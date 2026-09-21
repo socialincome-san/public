@@ -1,10 +1,10 @@
 import { Prisma, PrismaClient } from '@/generated/prisma/client';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { slugify } from '@/lib/utils/string-utils';
+import type { ProgramPublicSubmissionReadService } from '@/modules/programs/program.types';
 import { randomBytes, randomUUID } from 'crypto';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramPublicSubmissionService } from '../program/program-public-submission.service';
 import { isStoryblokManagementError, StoryblokManagementService } from '../storyblok/storyblok-management.service';
 import {
 	validateCampaignSubmissionImageBuffer,
@@ -50,7 +50,7 @@ const filenameFromUrl = (url: string) => {
 export class CampaignSubmissionService extends BaseService {
 	constructor(
 		db: PrismaClient,
-		private readonly programPublicSubmissionService: ProgramPublicSubmissionService,
+		private readonly programPublicSubmissionService: ProgramPublicSubmissionReadService,
 		private readonly campaignValidationService: CampaignValidationService,
 		private readonly storyblokManagementService: StoryblokManagementService,
 	) {

@@ -1,4 +1,3 @@
-import type { CountryCode } from '@/generated/prisma/enums';
 import type {
 	ArticleType,
 	Campaign,
@@ -10,6 +9,8 @@ import type {
 	Program,
 	Tag,
 } from '@/generated/storyblok/types/109655/storyblok-components';
+import { getStoryblokContentClient as getStoryblokApi } from '@/integrations/storyblok/storyblok-content.integration';
+import { fetchStoryblokPrograms } from '@/integrations/storyblok/storyblok-program.integration';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import {
 	STORYBLOK_CAMPAIGNS_FOLDER,
@@ -18,7 +19,6 @@ import {
 	STORYBLOK_FOCUSES_FOLDER,
 	STORYBLOK_LOCAL_PARTNERS_FOLDER,
 	STORYBLOK_PAGES_FOLDER,
-	STORYBLOK_PROGRAMS_FOLDER,
 	getCampaignStoryPath,
 	getJournalArticleStoryPath,
 	getJournalArticleTypeStoryPath,
@@ -32,7 +32,6 @@ import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { getStoryblokApi } from './storyblok.config';
 import { isResolvedArticle, type ResolvedArticle } from './storyblok.utils';
 
 type StoryblokDatasourceEntry = {
@@ -103,7 +102,6 @@ export class StoryblokService extends BaseService {
 		focus: 'Focus',
 		localPartner: 'Local Partner',
 		person: 'person',
-		program: 'program',
 		tag: 'tag',
 	} as const;
 	private static readonly standardArticleRelationsToResolve = ['article.author', 'article.tags', 'article.type'];
@@ -133,7 +131,6 @@ export class StoryblokService extends BaseService {
 	private static readonly countriesPath = STORYBLOK_COUNTRIES_FOLDER;
 	private static readonly focusesPath = STORYBLOK_FOCUSES_FOLDER;
 	private static readonly localPartnersPath = STORYBLOK_LOCAL_PARTNERS_FOLDER;
-	private static readonly programsPath = STORYBLOK_PROGRAMS_FOLDER;
 	private static readonly campaignsPath = STORYBLOK_CAMPAIGNS_FOLDER;
 	private static readonly faqsPath = STORYBLOK_FAQ_FOLDER;
 	private static readonly excludedFieldsForCounting = [StoryblokService.contentField, StoryblokService.leadTextField].join(
@@ -153,21 +150,6 @@ export class StoryblokService extends BaseService {
 		const contentWithComponent = storyWithContent.content as { component?: string };
 
 		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.country.toLowerCase();
-	}
-
-	private static isProgramStory(story: unknown): story is ISbStoryData<Program> {
-		if (!story || typeof story !== 'object' || !('content' in story)) {
-			return false;
-		}
-
-		const storyWithContent = story as { content?: unknown };
-		if (!storyWithContent.content || typeof storyWithContent.content !== 'object') {
-			return false;
-		}
-
-		const contentWithComponent = storyWithContent.content as { component?: string };
-
-		return contentWithComponent.component?.toLowerCase() === StoryblokService.contentType.program.toLowerCase();
 	}
 
 	private static isCampaignStory(story: unknown): story is ISbStoryData<Campaign> {
@@ -622,31 +604,9 @@ export class StoryblokService extends BaseService {
 	}
 
 	async getPrograms(lang: string): Promise<ServiceResult<ISbStoryData<Program>[]>> {
-		try {
-			const baseParams = await this.getStoryParams(lang);
-			const params: ISbStoriesParams = {
-				...baseParams,
-				starts_with: `${StoryblokService.programsPath}/`,
-			};
-			const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
-			let programs = data.filter((story) => StoryblokService.isProgramStory(story));
+		const { version } = await this.getStoryParams(lang);
 
-			if (programs.length === 0 && StoryblokService.shouldFallbackToDraft(baseParams.version)) {
-				const draftParams: ISbStoriesParams = {
-					...baseParams,
-					version: 'draft',
-					starts_with: `${StoryblokService.programsPath}/`,
-				};
-				const draftData = await getStoryblokApi().getAll(StoryblokService.storiesPath, draftParams);
-				programs = draftData.filter((story) => StoryblokService.isProgramStory(story));
-			}
-
-			return this.resultOk(programs);
-		} catch (error) {
-			console.error(error);
-
-			return this.resultFail(`Failed to fetch programs: ${JSON.stringify(error)}`);
-		}
+		return fetchStoryblokPrograms(lang, version);
 	}
 
 	async getCampaigns(lang: string): Promise<ServiceResult<ISbStoryData<Campaign>[]>> {
@@ -670,41 +630,6 @@ export class StoryblokService extends BaseService {
 			}
 
 			return this.resultOk(campaigns);
-		} catch (error) {
-			console.error(error);
-
-			return this.resultOk([]);
-		}
-	}
-
-	async getCountryPrograms(lang: string, isoCode: string): Promise<ServiceResult<ISbStoryData<Program>[]>> {
-		try {
-			const normalizedIsoCode = isoCode.trim().toUpperCase();
-			if (!normalizedIsoCode) {
-				return this.resultOk([]);
-			}
-
-			const programsResult = await this.getPrograms(lang);
-			if (!programsResult.success) {
-				return this.resultOk([]);
-			}
-
-			const programsInCountry = await this.db.program.findMany({
-				where: { country: { isoCode: normalizedIsoCode as CountryCode } },
-				select: { id: true },
-			});
-			const programIdsInCountry = new Set(programsInCountry.map((program) => program.id));
-
-			const countryPrograms = programsResult.data.filter((story) => {
-				const programId = story.content?.id?.toString().trim();
-				if (!programId) {
-					return false;
-				}
-
-				return programIdsInCountry.has(programId);
-			});
-
-			return this.resultOk(countryPrograms);
 		} catch (error) {
 			console.error(error);
 

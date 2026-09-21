@@ -20,7 +20,3 @@ export type ProgramAccessReadService = {
 	hasOperatorAccess: (accesses: ProgramAccesses, programId: string) => boolean;
 	hasAnyOperatorAccess: (accesses: ProgramAccesses) => boolean;
 };
-
-export type ProgramAccessWriteService = {
-	createInitialAccessesForProgram: (input: CreateInitialProgramAccessesInput) => Promise<ServiceResult<void>>;
-};

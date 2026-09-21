@@ -12,6 +12,11 @@ import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
 import { cn } from '@/lib/utils/cn';
 import { getPublicLocalPartnersByProgramIdAction } from '@/modules/local-partners/local-partner.actions';
+import {
+	getProgramSlugByIdAction,
+	getPublicProgramStatsByIdAction,
+	getPublicTargetFocusesByProgramIdAction,
+} from '@/modules/programs/program.actions';
 import Link from 'next/link';
 
 type Props = {
@@ -63,7 +68,7 @@ const TeaserMetaRow = ({ label, items, showDivider = false }: TeaserMetaRowProps
 
 export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) => {
 	const [programSlugResult, displayCurrency] = await Promise.all([
-		services.read.program.getProgramSlugById(programId),
+		getProgramSlugByIdAction(programId),
 		getWebsiteCurrencyFromCookie(),
 	]);
 	if (!programSlugResult.success) {
@@ -82,8 +87,8 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 		rates,
 	] = await Promise.all([
 		services.storyblok.getPrograms(lang),
-		services.read.program.getPublicProgramStatsById(programId),
-		services.read.program.getPublicTargetFocusesByProgramId(programId),
+		getPublicProgramStatsByIdAction(programId),
+		getPublicTargetFocusesByProgramIdAction(programId),
 		getPublicLocalPartnersByProgramIdAction(programId),
 		services.storyblok.getFocuses(lang),
 		services.storyblok.getLocalPartners(lang),

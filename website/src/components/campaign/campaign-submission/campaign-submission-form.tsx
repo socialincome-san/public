@@ -29,8 +29,8 @@ import {
 	resolveCampaignSubmissionQuote,
 } from '@/lib/services/campaign/campaign-submission-input';
 import { turnstileResponseFieldName } from '@/lib/services/campaign/turnstile-field';
-import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
+import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useForm, type FieldPath } from 'react-hook-form';

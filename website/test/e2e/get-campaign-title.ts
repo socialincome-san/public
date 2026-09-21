@@ -1,7 +1,7 @@
 import { getStoryblokCampaignTitleForSlug } from '@/components/storyblok/campaign/campaign.utils';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
+import { getStoryblokContentClient as getStoryblokApi } from '@/integrations/storyblok/storyblok-content.integration';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { getStoryblokApi } from '@/lib/services/storyblok/storyblok.config';
 import { STORYBLOK_CAMPAIGNS_FOLDER } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 

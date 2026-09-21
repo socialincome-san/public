@@ -1,10 +1,16 @@
 import { getProgramImages, getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import type { Program, ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
-import type { PublicProgramDetails, PublicProgramStats } from '@/lib/services/program/program.types';
 import { services } from '@/lib/services/services';
 import { getProgramStoryPath, getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
+import {
+	getProgramDashboardStatsAction,
+	getProgramIdByPortalSlugAction,
+	getPublicPreviewProgramBySlugAction,
+	getPublicProgramBySlugAction,
+	getPublicProgramStatsByIdAction,
+} from '@/modules/programs/program.actions';
+import type { ProgramDashboardStats, PublicProgramDetails, PublicProgramStats } from '@/modules/programs/program.types';
 import type { ISbStoryData } from '@storyblok/js';
 import { HeroHeaderImage } from '../shared/hero-header';
 
@@ -26,16 +32,16 @@ export type ProgramDetailData = {
 } & ProgramDetailPortalData;
 
 export const loadProgramDetailPortalData = async (portalSlug: string): Promise<ProgramDetailPortalData> => {
-	const programIdResult = await services.read.program.getProgramIdByPortalSlug(portalSlug);
+	const programIdResult = await getProgramIdByPortalSlugAction(portalSlug);
 	if (!programIdResult.success) {
 		return {};
 	}
 
 	const programId = programIdResult.data;
 	const [statsResult, dashboardStatsResult, programDetailsResult, defaultCampaignResult] = await Promise.all([
-		services.read.program.getPublicProgramStatsById(programId),
-		services.programStats.getProgramDashboardStats(programId),
-		services.read.program.getPublicProgramBySlug(portalSlug),
+		getPublicProgramStatsByIdAction(programId),
+		getProgramDashboardStatsAction(programId),
+		getPublicProgramBySlugAction(portalSlug),
 		services.read.campaign.getDefaultCampaignForProgram(programId),
 	]);
 
@@ -68,7 +74,7 @@ export const loadProgramDetailData = async (urlSlug: string, lang: string): Prom
 	}
 
 	const [previewProgramResult, overviewResult] = await Promise.all([
-		services.read.program.getPublicPreviewProgramBySlug(urlSlug),
+		getPublicPreviewProgramBySlugAction(urlSlug),
 		services.storyblok.getStoryWithFallback<ISbStoryData<ProgramOverview>>(getProgramsOverviewStoryPath(), lang),
 	]);
 

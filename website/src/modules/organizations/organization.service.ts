@@ -112,6 +112,41 @@ export const getOrganizationOptions = async (userId: string): Promise<ServiceRes
 	}
 };
 
+export const getOrganizationReferenceOptions = async (): Promise<ServiceResult<OrganizationOption[]>> => {
+	try {
+		return resultOk(await organizationRepository.findOrganizationOptions());
+	} catch (error) {
+		console.error('Could not fetch organization reference options', { error });
+
+		return resultFail('Could not fetch organizations');
+	}
+};
+
+export const getOperatorFallbackOrganizationId = async (): Promise<ServiceResult<string>> => {
+	try {
+		const organization = await organizationRepository.findOperatorFallbackOrganization();
+
+		return organization ? resultOk(organization.id) : resultFail('Operator fallback organization not found');
+	} catch (error) {
+		console.error('Could not fetch operator fallback organization', { error });
+
+		return resultFail('Could not fetch operator fallback organization');
+	}
+};
+
+export const validateOrganizationIds = async (organizationIds: string[]): Promise<ServiceResult<boolean>> => {
+	try {
+		const uniqueIds = [...new Set(organizationIds)];
+		const organizations = await organizationRepository.findOrganizationsByIds(uniqueIds);
+
+		return resultOk(organizations.length === uniqueIds.length);
+	} catch (error) {
+		console.error('Could not validate organizations', { error });
+
+		return resultFail('Could not validate organizations');
+	}
+};
+
 export const getOrganization = async (
 	userId: string,
 	organizationId: string,

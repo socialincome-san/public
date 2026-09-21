@@ -3,10 +3,10 @@ import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { createWalletImageFromStoryblokAsset } from '@/components/wallet/wallet-image-utils';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { PublicProgramStats } from '@/lib/services/program/program.types';
 import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { ExchangeRates } from '@/modules/exchange-rates/exchange-rate.types';
+import type { PublicProgramStats } from '@/modules/programs/program.types';
 import type { ProgramStory } from './program.types';
 import { getProgramStoryblokSlug, getProgramTitle } from './program.utils';
 

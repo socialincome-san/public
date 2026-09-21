@@ -2,18 +2,18 @@ import { PayoutStatus, Prisma, PrismaClient, ProgramPermission } from '@/generat
 import { now } from '@/lib/utils/now';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
+import type { ProgramStatsReadService } from '@/modules/programs/program.types';
 import type { recipientStatusService as recipientStatusFunctions } from '@/modules/recipients/recipient.service';
 import { endOfMonth, format, isSameMonth, startOfMonth } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramStatsService } from '../program-stats/program-stats.service';
 import { PayoutRecipient, PreviewPayout } from './payout-process.types';
 
 export class PayoutProcessCoreService extends BaseService {
 	constructor(
 		db: PrismaClient,
 		private readonly programAccessService: ProgramAccessReadService,
-		private readonly programStatsService: ProgramStatsService,
+		private readonly programStatsService: ProgramStatsReadService,
 		private readonly exchangeRateService: ExchangeRateReadService,
 		private readonly recipientStatusService: typeof recipientStatusFunctions,
 	) {

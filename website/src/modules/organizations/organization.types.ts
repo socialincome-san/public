@@ -1,5 +1,4 @@
 import type { UserRole } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/service-result';
 
 export type OrganizationMemberTableViewRow = {
 	id: string;
@@ -60,8 +59,4 @@ export type OrganizationPayload = {
 export type ActiveOrganizationSummary = {
 	id: string;
 	name: string;
-};
-
-export type OrganizationWriteService = {
-	createFromEmail: (email: string) => Promise<ServiceResult<OrganizationPayload>>;
 };

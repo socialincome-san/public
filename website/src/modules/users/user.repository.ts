@@ -146,6 +146,12 @@ export const findUserRole = async (userId: string) =>
 		select: { role: true },
 	});
 
+export const findActiveOrganizationIdByUserId = async (userId: string) =>
+	prisma.user.findUnique({
+		where: { id: userId },
+		select: { activeOrganizationId: true },
+	});
+
 export const findContactByEmail = async (email: string) =>
 	prisma.contact.findUnique({
 		where: { email },

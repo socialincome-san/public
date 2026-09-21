@@ -1,4 +1,4 @@
-import { ProgramPermission, type UserRole } from '@/generated/prisma/enums';
+import { ProgramPermission, UserRole } from '@/generated/prisma/enums';
 import {
 	createFirebaseUserByEmail,
 	deleteFirebaseUserByUidIfExists,
@@ -167,6 +167,28 @@ export const getUserRole = async (userId: string): Promise<ServiceResult<UserRol
 	}
 };
 
+export const getActiveOrganizationId = async (userId: string): Promise<ServiceResult<string>> => {
+	try {
+		const user = await userRepository.findActiveOrganizationIdByUserId(userId);
+
+		return user?.activeOrganizationId ? resultOk(user.activeOrganizationId) : resultFail('User has no active organization');
+	} catch (error) {
+		console.error('Could not get active organization', { userId, error });
+
+		return resultFail('Could not get active organization');
+	}
+};
+
+export const isUserEmailAvailable = async (email: string): Promise<ServiceResult<boolean>> => {
+	try {
+		return resultOk(!(await userRepository.findContactByEmail(email.trim().toLowerCase())));
+	} catch (error) {
+		console.error('Could not check user email availability', { error });
+
+		return resultFail('Could not check user email availability');
+	}
+};
+
 export const createUser = async (actorUserId: string, input: CreateUserInput): Promise<ServiceResult<UserPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(actorUserId);
@@ -233,6 +255,66 @@ export const createUser = async (actorUserId: string, input: CreateUserInput): P
 		return resultOk(toUserPayload(createdUser, input.organizationIds));
 	} catch (error) {
 		console.error('Could not create user', { actorUserId, error });
+
+		return resultFail('Could not create user. Please try again later.');
+	}
+};
+
+export const createPublicOnboardingUser = async (input: {
+	email: string;
+	firstName: string;
+	lastName: string;
+	organizationId: string;
+}): Promise<ServiceResult<{ userId: string }>> => {
+	try {
+		const uniquenessResult = await validateEmailUniqueness(input.email);
+		if (!uniquenessResult.success) {
+			return uniquenessResult;
+		}
+
+		const existingFirebaseUserResult = await findFirebaseUserByEmail(input.email);
+		if (!existingFirebaseUserResult.success) {
+			return resultFail(`Failed to check Firebase user: ${existingFirebaseUserResult.error}`);
+		}
+		const displayName = `${input.firstName} ${input.lastName}`.trim();
+		const firebaseUserResult = existingFirebaseUserResult.data
+			? resultOk(existingFirebaseUserResult.data)
+			: await createFirebaseUserByEmail({ email: input.email, displayName });
+		if (!firebaseUserResult.success) {
+			return resultFail(`Failed to create Firebase user: ${firebaseUserResult.error}`);
+		}
+
+		const didCreateFirebaseUser = !existingFirebaseUserResult.data;
+		try {
+			const user = await userRepository.createUser(
+				{
+					email: input.email,
+					firstName: input.firstName,
+					lastName: input.lastName,
+					role: UserRole.user,
+					organizationIds: [input.organizationId],
+				},
+				firebaseUserResult.data.uid,
+				input.organizationId,
+			);
+
+			return resultOk({ userId: user.id });
+		} catch (error) {
+			if (didCreateFirebaseUser) {
+				const rollbackResult = await deleteFirebaseUserByUidIfExists(firebaseUserResult.data.uid);
+				if (!rollbackResult.success) {
+					console.warn('Could not rollback Firebase user after failed onboarding user creation', {
+						firebaseUid: firebaseUserResult.data.uid,
+						error: rollbackResult.error,
+					});
+				}
+			}
+			console.error('Could not persist public onboarding user', { error });
+
+			return resultFail('Could not create user. Please try again later.');
+		}
+	} catch (error) {
+		console.error('Could not create public onboarding user', { error });
 
 		return resultFail('Could not create user. Please try again later.');
 	}

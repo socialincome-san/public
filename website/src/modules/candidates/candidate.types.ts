@@ -1,5 +1,4 @@
-import type { CountryCode, Gender, Profile } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/service-result';
+import type { CountryCode, Gender } from '@/generated/prisma/enums';
 
 type CandidatePhone = {
 	id: string;
@@ -84,14 +83,4 @@ export type CandidatesPaginatedTableView = {
 	countryFilterOptions: CandidateFilterOption[];
 	genderFilterOptions: CandidateFilterOption[];
 	localPartnerFilterOptions: CandidateFilterOption[];
-};
-
-export type CandidateAssignmentService = {
-	assignRandomCandidatesToProgram: (
-		programId: string,
-		amountOfRecipientsForStart: number,
-		countryCode: CountryCode,
-		focuses?: string[],
-		profiles?: Profile[],
-	) => Promise<ServiceResult<{ assigned: number }>>;
 };
