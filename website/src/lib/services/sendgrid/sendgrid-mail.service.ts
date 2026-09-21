@@ -33,6 +33,7 @@ export class SendgridMailService extends BaseService {
 			return { success: true, data: undefined };
 		} catch (error) {
 			console.error('Error sending email:', error);
+
 			return {
 				success: false,
 				error: `Unable to send email: ${String(error)}`,
