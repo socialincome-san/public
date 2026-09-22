@@ -46,8 +46,10 @@ export const fetchGithubData = async (path: string): Promise<ServiceResult<Githu
 			return resultFail('GitHub API request failed');
 		}
 
+		const data: unknown = await response.json();
+
 		return resultOk({
-			data: await response.json(),
+			data,
 			linkHeader: response.headers.get('link'),
 		});
 	} catch (error) {
