@@ -1,8 +1,8 @@
-import { getCurrentAuthToken } from '@/modules/auth/auth.service';
 import { getCurrentLocalPartnerSession } from '@/modules/local-partners/local-partner.service';
 import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
+import { getCurrentAuthToken } from './session-cookie';
 
 const loadCurrentLocalPartner = async (): Promise<LocalPartnerSession | null> => {
 	const decodedTokenResult = await getCurrentAuthToken();

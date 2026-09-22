@@ -27,3 +27,8 @@ export type AuthToken = {
 	email: string | null;
 	phoneNumber: string | null;
 };
+
+export type SessionCookie = {
+	value: string;
+	maxAge: number;
+};

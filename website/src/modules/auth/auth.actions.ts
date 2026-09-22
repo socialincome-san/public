@@ -1,20 +1,61 @@
 'use server';
 
 import { getCurrentSessions, getSessionByType } from '@/lib/firebase/current-account';
+import { SESSION_COOKIE_NAME } from '@/lib/firebase/session-cookie';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { cookies } from 'next/headers';
 import { sessionIdTokenSchema } from './auth.schemas';
-import { clearSessionCookie, createSessionAndSetCookie } from './auth.service';
+import { createSessionCookie } from './auth.service';
 
-export const createSessionAction = async (input: unknown) => {
+export const createSessionAction = async (input: unknown): Promise<ServiceResult<boolean>> => {
 	const inputResult = sessionIdTokenSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail(inputResult.error.issues[0]?.message ?? 'missing-id-token');
 	}
 
-	return createSessionAndSetCookie(inputResult.data);
+	const sessionCookieResult = await createSessionCookie(inputResult.data);
+	if (!sessionCookieResult.success) {
+		return resultFail(sessionCookieResult.error);
+	}
+
+	try {
+		(await cookies()).set({
+			name: SESSION_COOKIE_NAME,
+			value: sessionCookieResult.data.value,
+			httpOnly: true,
+			secure: IS_PRODUCTION,
+			sameSite: 'lax',
+			path: '/',
+			maxAge: sessionCookieResult.data.maxAge,
+		});
+
+		return resultOk(true);
+	} catch (error) {
+		console.error('Could not set session cookie', { error });
+
+		return resultFail('Could not create session cookie');
+	}
 };
 
-export const logoutAction = async () => clearSessionCookie();
+export const logoutAction = async (): Promise<ServiceResult<boolean>> => {
+	try {
+		(await cookies()).set({
+			name: SESSION_COOKIE_NAME,
+			value: '',
+			httpOnly: true,
+			secure: IS_PRODUCTION,
+			sameSite: 'lax',
+			path: '/',
+			maxAge: 0,
+		});
+
+		return resultOk(true);
+	} catch (error) {
+		console.error('Could not clear session cookie', { error });
+
+		return resultFail('logout-failed');
+	}
+};
 
 export const getIsAuthenticatedUserAction = async (): Promise<boolean> => {
 	const sessionResult = await getSessionByType('user');
@@ -41,3 +82,5 @@ export const getRedirectPathAfterLoginAction = async (): Promise<ServiceResult<s
 
 	return resultOk('/');
 };
+
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';

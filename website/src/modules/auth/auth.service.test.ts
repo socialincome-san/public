@@ -1,5 +1,5 @@
-import { resultOk } from '@/lib/service-result';
-import { requestOtp, verifyOtp } from './auth.service';
+import { resultFail, resultOk } from '@/lib/service-result';
+import { createSessionCookie, requestOtp, verifyOtp, verifySessionCookie } from './auth.service';
 
 const mockValidateConfiguration = jest.fn();
 const mockRequestTwilioOtp = jest.fn();
@@ -7,6 +7,12 @@ const mockVerifyTwilioOtp = jest.fn();
 const mockFindFirebaseUser = jest.fn();
 const mockCreateFirebaseUser = jest.fn();
 const mockCreateFirebaseToken = jest.fn();
+const mockCreateFirebaseSessionCookie = jest.fn();
+const mockVerifyFirebaseSessionCookie = jest.fn();
+
+jest.mock('next/headers', () => {
+	throw new Error('Auth services must not import Next.js request boundaries');
+});
 
 jest.mock('@/integrations/twilio/twilio-otp.integration', () => ({
 	validateTwilioOtpConfiguration: (...args: unknown[]): unknown => mockValidateConfiguration(...args),
@@ -18,6 +24,8 @@ jest.mock('@/integrations/firebase/firebase-auth.integration', () => ({
 	findFirebaseUserByPhoneNumber: (...args: unknown[]): unknown => mockFindFirebaseUser(...args),
 	createFirebaseUserByPhoneNumber: (...args: unknown[]): unknown => mockCreateFirebaseUser(...args),
 	createFirebaseCustomToken: (...args: unknown[]): unknown => mockCreateFirebaseToken(...args),
+	createFirebaseSessionCookie: (...args: unknown[]): unknown => mockCreateFirebaseSessionCookie(...args),
+	verifyFirebaseSessionCookie: (...args: unknown[]): unknown => mockVerifyFirebaseSessionCookie(...args),
 }));
 
 beforeEach(() => {
@@ -61,4 +69,34 @@ test('rejects an unapproved OTP without creating an auth user', async () => {
 		error: 'Invalid OTP provided',
 	});
 	expect(mockCreateFirebaseUser).not.toHaveBeenCalled();
+});
+
+test('creates and validates a seven-day Firebase session cookie value', async () => {
+	const authToken = { uid: 'uid1', email: 'user@example.org', phoneNumber: null };
+	mockCreateFirebaseSessionCookie.mockResolvedValue(resultOk('session-cookie'));
+	mockVerifyFirebaseSessionCookie.mockResolvedValue(resultOk(authToken));
+
+	expect(await createSessionCookie('id-token')).toEqual(
+		resultOk({
+			value: 'session-cookie',
+			maxAge: 7 * 24 * 60 * 60,
+		}),
+	);
+	expect(mockCreateFirebaseSessionCookie).toHaveBeenCalledWith('id-token', 7 * 24 * 60 * 60 * 1000);
+	expect(mockVerifyFirebaseSessionCookie).toHaveBeenCalledWith('session-cookie');
+});
+
+test('rejects a session cookie value that cannot be verified', async () => {
+	mockCreateFirebaseSessionCookie.mockResolvedValue(resultOk('session-cookie'));
+	mockVerifyFirebaseSessionCookie.mockResolvedValue(resultFail('Invalid or expired session cookie'));
+
+	expect(await createSessionCookie('id-token')).toEqual(resultFail('invalid-token'));
+});
+
+test('verifies an existing Firebase session cookie value', async () => {
+	const authToken = { uid: 'uid1', email: null, phoneNumber: '+41791234567' };
+	mockVerifyFirebaseSessionCookie.mockResolvedValue(resultOk(authToken));
+
+	expect(await verifySessionCookie('session-cookie')).toEqual(resultOk(authToken));
+	expect(mockVerifyFirebaseSessionCookie).toHaveBeenCalledWith('session-cookie');
 });

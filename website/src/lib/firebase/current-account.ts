@@ -1,4 +1,3 @@
-import { getCurrentAuthToken } from '@/modules/auth/auth.service';
 import { getCurrentContributorSession } from '@/modules/contributors/contributor.service';
 import type { ContributorSession } from '@/modules/contributors/contributor.types';
 import { getCurrentLocalPartnerSession } from '@/modules/local-partners/local-partner.service';
@@ -7,6 +6,7 @@ import { getCurrentUserSession } from '@/modules/users/user.service';
 import type { UserSession } from '@/modules/users/user.types';
 import { redirect } from 'next/navigation';
 import { resultFail, resultOk, type ServiceResult } from '../service-result';
+import { getCurrentAuthToken } from './session-cookie';
 
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
 

@@ -1,8 +1,8 @@
-import { getCurrentAuthToken } from '@/modules/auth/auth.service';
 import { getCurrentContributorSession } from '@/modules/contributors/contributor.service';
 import { ContributorSession } from '@/modules/contributors/contributor.types';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
+import { getCurrentAuthToken } from './session-cookie';
 
 const loadCurrentContributor = async (): Promise<ContributorSession | null> => {
 	const decodedTokenResult = await getCurrentAuthToken();

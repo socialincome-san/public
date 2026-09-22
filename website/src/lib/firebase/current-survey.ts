@@ -1,7 +1,7 @@
-import { getCurrentAuthToken } from '@/modules/auth/auth.service';
 import { getSurveyByAccessEmail } from '@/modules/surveys/survey.service';
 import type { SurveyPayload } from '@/modules/surveys/survey.types';
 import { cache } from 'react';
+import { getCurrentAuthToken } from './session-cookie';
 
 const loadCurrentSurvey = async (): Promise<SurveyPayload | null> => {
 	const decodedTokenResult = await getCurrentAuthToken();

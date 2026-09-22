@@ -21,9 +21,8 @@ import {
 	verifyTwilioOtp,
 } from '@/integrations/twilio/twilio-otp.integration';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
-import { cookies } from 'next/headers';
 import type { VerifyOtpInput } from './auth.schemas';
-import type { AuthToken, AuthUser, AuthUserUpdate, VerifyOtpResult } from './auth.types';
+import type { AuthToken, AuthUser, AuthUserUpdate, SessionCookie, VerifyOtpResult } from './auth.types';
 
 export const requestOtp = async (phoneNumber: string): Promise<ServiceResult<boolean>> => {
 	const configurationResult = await validateTwilioOtpConfiguration();
@@ -126,7 +125,7 @@ export const decodeFirebaseTokenFromRequest = async (request: Request): Promise<
 export const getPhoneNumberFromFirebaseToken = (decodedToken: AuthToken): ServiceResult<string | null> =>
 	resultOk(decodedToken.phoneNumber);
 
-export const createSessionAndSetCookie = async (idToken: string): Promise<ServiceResult<boolean>> => {
+export const createSessionCookie = async (idToken: string): Promise<ServiceResult<SessionCookie>> => {
 	if (!idToken) {
 		return resultFail('missing-id-token');
 	}
@@ -141,62 +140,14 @@ export const createSessionAndSetCookie = async (idToken: string): Promise<Servic
 		return resultFail('invalid-token');
 	}
 
-	try {
-		const store = await cookies();
-		store.set({
-			name: SESSION_COOKIE_NAME,
-			value: sessionCookieResult.data,
-			httpOnly: true,
-			secure: IS_PRODUCTION,
-			sameSite: 'lax',
-			path: '/',
-			maxAge: Math.floor(SESSION_EXPIRES_IN_MS / 1000),
-		});
-
-		return resultOk(true);
-	} catch (error) {
-		console.error('Could not set session cookie', { error });
-
-		return resultFail('Could not create session cookie');
-	}
+	return resultOk({
+		value: sessionCookieResult.data,
+		maxAge: Math.floor(SESSION_EXPIRES_IN_MS / 1000),
+	});
 };
 
-export const clearSessionCookie = async (): Promise<ServiceResult<boolean>> => {
-	try {
-		const store = await cookies();
-		store.set({
-			name: SESSION_COOKIE_NAME,
-			value: '',
-			httpOnly: true,
-			secure: IS_PRODUCTION,
-			sameSite: 'lax',
-			path: '/',
-			maxAge: 0,
-		});
-
-		return resultOk(true);
-	} catch (error) {
-		console.error('Could not clear session cookie', { error });
-
-		return resultFail('logout-failed');
-	}
-};
-
-export const getCurrentAuthToken = async (): Promise<ServiceResult<AuthToken>> => {
-	try {
-		const store = await cookies();
-		const sessionCookie = store.get(SESSION_COOKIE_NAME)?.value;
-		if (!sessionCookie) {
-			return resultFail('Missing session cookie');
-		}
-
-		return verifyFirebaseSessionCookieIntegration(sessionCookie);
-	} catch (error) {
-		console.error('Could not read session cookie', { error });
-
-		return resultFail('Could not read session cookie');
-	}
-};
+export const verifySessionCookie = async (sessionCookie: string): Promise<ServiceResult<AuthToken>> =>
+	verifyFirebaseSessionCookieIntegration(sessionCookie);
 
 export const verifyAppCheckFromRequest = async (request: Request): Promise<ServiceResult<boolean>> => {
 	const token = request.headers.get('X-Firebase-AppCheck');
@@ -279,7 +230,5 @@ const shouldBypassOtp = (phoneNumber: string): boolean => {
 	);
 };
 
-const SESSION_COOKIE_NAME = 'session';
 const SESSION_MAX_AGE_DAYS = 7;
 const SESSION_EXPIRES_IN_MS = SESSION_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';

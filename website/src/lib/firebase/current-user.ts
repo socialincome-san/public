@@ -1,8 +1,8 @@
-import { getCurrentAuthToken } from '@/modules/auth/auth.service';
 import { getCurrentUserSession } from '@/modules/users/user.service';
 import type { UserSession } from '@/modules/users/user.types';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
+import { getCurrentAuthToken } from './session-cookie';
 
 const loadCurrentUser = async (): Promise<UserSession | null> => {
 	const decodedTokenResult = await getCurrentAuthToken();

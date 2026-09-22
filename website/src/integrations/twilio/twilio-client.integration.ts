@@ -1,9 +1,9 @@
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
-import { Twilio } from 'twilio';
+import twilio from 'twilio';
 
-let twilioClient: Twilio | null = null;
+let twilioClient: twilio.Twilio | null = null;
 
-export const getTwilioClient = async (): Promise<ServiceResult<Twilio>> => {
+export const getTwilioClient = async (): Promise<ServiceResult<twilio.Twilio>> => {
 	if (twilioClient) {
 		return resultOk(twilioClient);
 	}
@@ -22,7 +22,7 @@ export const getTwilioClient = async (): Promise<ServiceResult<Twilio>> => {
 	}
 
 	try {
-		twilioClient = await Promise.resolve(new Twilio(apiKeySid, apiKeySecret, { accountSid }));
+		twilioClient = await Promise.resolve(new twilio.Twilio(apiKeySid, apiKeySecret, { accountSid }));
 
 		return resultOk(twilioClient);
 	} catch (error) {
