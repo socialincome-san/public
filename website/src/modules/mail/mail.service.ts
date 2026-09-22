@@ -1,7 +1,8 @@
 import { sendSendgridEmail } from '@/integrations/sendgrid/sendgrid-mail.integration';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { isAdmin } from '@/modules/users/user.service';
 import * as mailRepository from './mail.repository';
-import type { SendMailInput } from './mail.types';
+import type { SendMailInput, SentEmailPaginatedTableView, SentEmailTableQuery, SentEmailTableViewRow } from './mail.types';
 
 export const sendMail = async (input: SendMailInput): Promise<ServiceResult<void>> => {
 	try {
@@ -27,6 +28,37 @@ export const sendMail = async (input: SendMailInput): Promise<ServiceResult<void
 		console.error('Could not send email', { error });
 
 		return resultFail('Could not send email');
+	}
+};
+
+export const getPaginatedSentEmailTableView = async (
+	userId: string,
+	query: SentEmailTableQuery,
+): Promise<ServiceResult<SentEmailPaginatedTableView>> => {
+	try {
+		const isAdminResult = await isAdmin(userId);
+		if (!isAdminResult.success) {
+			return resultFail(isAdminResult.error);
+		}
+
+		const { sentEmails, totalCount } = await mailRepository.findPaginatedSentEmails(query);
+		const tableRows: SentEmailTableViewRow[] = sentEmails.map((sentEmail) => ({
+			id: sentEmail.id,
+			sentAt: sentEmail.sentAt,
+			toEmail: sentEmail.toEmail,
+			subject: sentEmail.subject,
+			body: sentEmail.body,
+			fromEmail: sentEmail.fromEmail,
+			contact: sentEmail.contact
+				? [sentEmail.contact.firstName, sentEmail.contact.lastName, sentEmail.contact.email].filter(Boolean).join(' ')
+				: '',
+		}));
+
+		return resultOk({ tableRows, totalCount });
+	} catch (error) {
+		console.error('Could not fetch sent emails', { userId, error });
+
+		return resultFail('Could not fetch sent emails');
 	}
 };
 
