@@ -1,4 +1,5 @@
 import type { Prisma } from '@/generated/prisma/client';
+import type { PayoutProcess } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { MobileMoneyProviderCreateInput, MobileMoneyProviderUpdateInput } from './mobile-money-provider.schemas';
@@ -56,6 +57,19 @@ export const findMobileMoneyProvidersWithPayoutProcess = async () =>
 		where: { payoutProcess: { not: null } },
 		select: { id: true, name: true, payoutProcess: true },
 		orderBy: { name: 'asc' },
+	});
+
+export const findMobileMoneyProviderPayoutProcess = async (providerId: string) =>
+	prisma.mobileMoneyProvider.findUnique({
+		where: { id: providerId },
+		select: { payoutProcess: true },
+	});
+
+export const findMobileMoneyProviderIdsByPayoutProcess = async (payoutProcess: PayoutProcess) =>
+	prisma.mobileMoneyProvider.findMany({
+		where: { payoutProcess },
+		select: { id: true },
+		orderBy: { id: 'asc' },
 	});
 
 export const findMobileMoneyProviderByName = async (name: string) =>

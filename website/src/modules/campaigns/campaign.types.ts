@@ -7,7 +7,6 @@ import {
 	type CampaignSubmissionPermittedImageMimeType,
 } from '@/lib/config/campaign-submission.config';
 import type { Translator } from '@/lib/i18n/translator';
-import type { ServiceResult } from '@/lib/service-result';
 import { nowMs } from '@/lib/utils/now';
 import type { ISbStoryData } from '@storyblok/js';
 import { addDays, format, startOfDay } from 'date-fns';
@@ -151,12 +150,6 @@ export type CampaignDefaultImageOption = {
 	id: number;
 	url: string;
 	alt: string | null;
-};
-
-export type CampaignReadService = {
-	getById: (campaignId: string) => Promise<ServiceResult<CampaignPage>>;
-	getFallbackCampaign: () => Promise<ServiceResult<CampaignReference>>;
-	getDefaultCampaignForProgram: (programId: string) => Promise<ServiceResult<CampaignReference>>;
 };
 
 export const turnstileResponseFieldName = 'cf-turnstile-response';

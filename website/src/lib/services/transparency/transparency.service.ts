@@ -1,11 +1,10 @@
-import { type PrismaClient } from '@/generated/prisma/client';
 import { PayoutStatus, type CountryCode } from '@/generated/prisma/enums';
 import { isValidCountryCode } from '@/lib/types/country';
 import { getCountryFlagColors } from '@/lib/utils/country-flag-colors';
+import { getLatestReserves } from '@/modules/reserves/reserve.service';
 import { startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
-import { type ReserveReadService } from '../reserves/reserve-read.service';
 import {
 	buildTransparencyCountriesData,
 	compareCountryContributionRows,
@@ -21,13 +20,6 @@ import type {
 import { getTransparencyFinancialPeriodDateFilter } from './transparency.types';
 
 export class TransparencyService extends BaseService {
-	constructor(
-		db: PrismaClient,
-		private readonly reserveReadService: ReserveReadService,
-	) {
-		super(db);
-	}
-
 	async getTotalContributionsChf(
 		financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' },
 	): Promise<ServiceResult<number>> {
@@ -70,7 +62,7 @@ export class TransparencyService extends BaseService {
 			const [inflowsChf, outflowsChf, latestReservesResult] = await Promise.all([
 				this.queryTotalContributionsChf(financialPeriod),
 				this.getOutflows(financialPeriod),
-				this.reserveReadService.getLatestPerBankAccount(),
+				getLatestReserves(),
 			]);
 			if (!latestReservesResult.success) {
 				return this.resultFail(latestReservesResult.error);
@@ -93,7 +85,7 @@ export class TransparencyService extends BaseService {
 
 	async getLatestReservesChf(): Promise<ServiceResult<number>> {
 		try {
-			const latestReservesResult = await this.reserveReadService.getLatestPerBankAccount();
+			const latestReservesResult = await getLatestReserves();
 			if (!latestReservesResult.success) {
 				return this.resultFail(latestReservesResult.error);
 			}
@@ -108,7 +100,7 @@ export class TransparencyService extends BaseService {
 
 	async getRunwayMonths(): Promise<ServiceResult<number>> {
 		try {
-			const latestReservesResult = await this.reserveReadService.getLatestPerBankAccount();
+			const latestReservesResult = await getLatestReserves();
 			if (!latestReservesResult.success) {
 				return this.resultFail(latestReservesResult.error);
 			}

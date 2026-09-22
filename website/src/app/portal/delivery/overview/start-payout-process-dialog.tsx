@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
-import { PayoutProcess } from '@/generated/prisma/enums';
 import type { PayoutProcessOverviewOption } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { OrangeMoneyCsvPayoutProcessDialog } from './orange-money-csv-payout-process-dialog';
 import type { PayoutProcessDialogBaseProps } from './payout-process-dialog-props';
@@ -38,7 +37,7 @@ export const StartPayoutProcessDialog = ({
 		return <TelecelCsvPayoutProcessDialog {...props} />;
 	}
 
-	if (option.payoutProcess === PayoutProcess.orange_money_csv) {
+	if (option.payoutProcess === 'orange_money_csv') {
 		return <OrangeMoneyCsvPayoutProcessDialog {...props} mobileMoneyProviderId={option.id} providerName={option.name} />;
 	}
 

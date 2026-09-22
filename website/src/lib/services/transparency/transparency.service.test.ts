@@ -1,6 +1,13 @@
 import type { PrismaClient } from '@/generated/prisma/client';
 import { PayoutStatus } from '@/generated/prisma/enums';
 import { format } from 'date-fns';
+
+const mockGetLatestReserves = jest.fn();
+
+jest.mock('@/modules/reserves/reserve.service', () => ({
+	getLatestReserves: mockGetLatestReserves,
+}));
+
 import { TransparencyService } from './transparency.service';
 
 type CountryContributionQuery = {
@@ -59,19 +66,14 @@ const createRunwayService = ({
 	reserveRecordedAt?: Date;
 }) => {
 	const aggregate = jest.fn().mockResolvedValue({ _sum: { amountChf: lastCompletedMonthPaymentsChf } });
-	const service = new TransparencyService(
-		{ payout: { aggregate } } as unknown as PrismaClient,
-		{
-			getLatestPerBankAccount: () =>
-				Promise.resolve({
-					success: true as const,
-					data: {
-						accounts: [{ recordedAt: reserveRecordedAt }],
-						total: reservesChf,
-					},
-				}),
-		} as never,
-	);
+	mockGetLatestReserves.mockResolvedValue({
+		success: true,
+		data: {
+			accounts: [{ recordedAt: reserveRecordedAt }],
+			total: reservesChf,
+		},
+	});
+	const service = new TransparencyService({ payout: { aggregate } } as unknown as PrismaClient);
 
 	return { service, aggregate };
 };
@@ -79,7 +81,7 @@ const createRunwayService = ({
 describe('TransparencyService.getTotalContributionsChf', () => {
 	test('returns only the contribution total for the requested financial period', async () => {
 		const aggregate = jest.fn().mockResolvedValue({ _sum: { amountChf: 125 } });
-		const service = new TransparencyService({ contribution: { aggregate } } as unknown as PrismaClient, {} as never);
+		const service = new TransparencyService({ contribution: { aggregate } } as unknown as PrismaClient);
 
 		const result = await service.getTotalContributionsChf({ kind: 'year', year: 2025 });
 
@@ -95,10 +97,9 @@ describe('TransparencyService.getTotalContributionsChf', () => {
 	test('returns a failed result when the contribution query fails', async () => {
 		const error = new Error('Database unavailable');
 		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
-		const service = new TransparencyService(
-			{ contribution: { aggregate: jest.fn().mockRejectedValue(error) } } as unknown as PrismaClient,
-			{} as never,
-		);
+		const service = new TransparencyService({
+			contribution: { aggregate: jest.fn().mockRejectedValue(error) },
+		} as unknown as PrismaClient);
 
 		const result = await service.getTotalContributionsChf();
 
@@ -112,22 +113,17 @@ describe('TransparencyService.getTransparencySummary', () => {
 	test('returns only inflows, outflows, and reserve data', async () => {
 		const contributionAggregate = jest.fn().mockResolvedValue({ _sum: { amountChf: 125 } });
 		const payoutAggregate = jest.fn().mockResolvedValue({ _sum: { amountChf: 80 } });
-		const service = new TransparencyService(
-			{
-				contribution: { aggregate: contributionAggregate },
-				payout: { aggregate: payoutAggregate },
-			} as unknown as PrismaClient,
-			{
-				getLatestPerBankAccount: () =>
-					Promise.resolve({
-						success: true as const,
-						data: {
-							accounts: [],
-							total: 45,
-						},
-					}),
-			} as never,
-		);
+		mockGetLatestReserves.mockResolvedValue({
+			success: true,
+			data: {
+				accounts: [],
+				total: 45,
+			},
+		});
+		const service = new TransparencyService({
+			contribution: { aggregate: contributionAggregate },
+			payout: { aggregate: payoutAggregate },
+		} as unknown as PrismaClient);
 
 		const result = await service.getTransparencySummary({ kind: 'year', year: 2025 });
 
@@ -153,15 +149,11 @@ describe('TransparencyService.getTransparencySummary', () => {
 	});
 
 	test('propagates reserve lookup failures', async () => {
-		const service = new TransparencyService(
-			{
-				contribution: { aggregate: jest.fn().mockResolvedValue({ _sum: { amountChf: 125 } }) },
-				payout: { aggregate: jest.fn().mockResolvedValue({ _sum: { amountChf: 80 } }) },
-			} as unknown as PrismaClient,
-			{
-				getLatestPerBankAccount: () => Promise.resolve({ success: false as const, error: 'Reserve lookup failed' }),
-			} as never,
-		);
+		mockGetLatestReserves.mockResolvedValue({ success: false, error: 'Reserve lookup failed' });
+		const service = new TransparencyService({
+			contribution: { aggregate: jest.fn().mockResolvedValue({ _sum: { amountChf: 125 } }) },
+			payout: { aggregate: jest.fn().mockResolvedValue({ _sum: { amountChf: 80 } }) },
+		} as unknown as PrismaClient);
 
 		const result = await service.getTransparencySummary();
 
@@ -188,7 +180,7 @@ describe('TransparencyService.getContributionsByCountryData', () => {
 				contributor: { contact: { address: { country: 'CH' } } },
 			},
 		]);
-		const service = new TransparencyService({ contribution: { findMany } } as unknown as PrismaClient, {} as never);
+		const service = new TransparencyService({ contribution: { findMany } } as unknown as PrismaClient);
 
 		const result = await service.getContributionsByCountryData(15, { kind: 'year', year: 2025 });
 
@@ -217,12 +209,8 @@ describe('TransparencyService.getLatestReservesChf', () => {
 	});
 
 	test('fails when latest reserves cannot be loaded', async () => {
-		const service = new TransparencyService(
-			{} as unknown as PrismaClient,
-			{
-				getLatestPerBankAccount: () => Promise.resolve({ success: false as const, error: 'Reserve lookup failed' }),
-			} as never,
-		);
+		mockGetLatestReserves.mockResolvedValue({ success: false, error: 'Reserve lookup failed' });
+		const service = new TransparencyService({} as unknown as PrismaClient);
 
 		const result = await service.getLatestReservesChf();
 

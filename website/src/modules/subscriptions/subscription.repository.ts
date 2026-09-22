@@ -58,6 +58,24 @@ export const findOwnedActiveBankTransferSubscription = async (contributorId: str
 		select: { id: true, currency: true },
 	});
 
+export const findOwnedActiveBankTransferQrBill = async (contributorId: string, subscriptionId: string) =>
+	prisma.subscription.findFirst({
+		where: {
+			id: subscriptionId,
+			contributorId,
+			paymentMethod: SubscriptionPaymentMethod.bank_transfer,
+			status: SubscriptionStatus.active,
+		},
+		select: {
+			amount: true,
+			currency: true,
+			bankStandingOrderReference: true,
+			contributor: {
+				select: { paymentReferenceId: true },
+			},
+		},
+	});
+
 export const findOwnedBankTransferSubscription = async (contributorId: string, subscriptionId: string) =>
 	prisma.subscription.findFirst({
 		where: {

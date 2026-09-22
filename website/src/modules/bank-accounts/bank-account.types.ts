@@ -1,5 +1,4 @@
 import type { BankAccountType } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/service-result';
 
 export type BankAccountRecord = {
 	id: string;
@@ -11,11 +10,3 @@ export type BankAccountRecord = {
 };
 
 export type BankAccountSummary = Pick<BankAccountRecord, 'id' | 'bankAccountNumber' | 'description'>;
-
-export type BankAccountReadService = {
-	getAll: () => Promise<ServiceResult<BankAccountRecord[]>>;
-};
-
-export type BankAccountWriteService = {
-	ensurePawaPayWallets: (walletKeys: string[]) => Promise<ServiceResult<BankAccountRecord[]>>;
-};

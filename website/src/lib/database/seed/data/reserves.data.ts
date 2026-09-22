@@ -2,7 +2,7 @@ import { Currency, Prisma, type Reserve } from '@/generated/prisma/client';
 
 // Reserve snapshots must stay anchored to the current date: the runway calculation compares the latest
 // reserves against the payouts of the month before they were recorded. Dates are built in UTC to match
-// ReservesCalculationService and to keep the date-only column stable across timezones.
+// reserve calculation service and to keep the date-only column stable across timezones.
 const now = new Date();
 const latestSnapshotDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 const previousSnapshotDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1));

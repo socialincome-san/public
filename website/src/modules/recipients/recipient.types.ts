@@ -1,4 +1,11 @@
-import type { CountryCode, Currency, Gender, PayoutInterval, ProgramPermission } from '@/generated/prisma/enums';
+import type {
+	CountryCode,
+	Currency,
+	Gender,
+	PayoutInterval,
+	PayoutStatus,
+	ProgramPermission,
+} from '@/generated/prisma/enums';
 import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
 
 export type UnassignedRecipientCountry = {
@@ -39,6 +46,32 @@ export type RecipientProgramAssignment = {
 	id: string;
 	programId: string | null;
 	localPartnerId: string;
+};
+
+export type PayoutProcessRecipient = {
+	id: string;
+	startDate: Date | null;
+	suspendedAt: Date | null;
+	contact: {
+		firstName: string;
+		lastName: string;
+	};
+	paymentInformation: {
+		code: string | null;
+		phone: { number: string } | null;
+		mobileMoneyProvider: { name: string } | null;
+	} | null;
+	program: {
+		payoutPerInterval: number;
+		payoutCurrency: Currency;
+		payoutCountryCode: CountryCode;
+		programDurationInMonths: number;
+		payoutInterval: PayoutInterval;
+	};
+	payouts: {
+		paymentAt: Date;
+		status: PayoutStatus;
+	}[];
 };
 
 type RecipientMessagingPhone = {

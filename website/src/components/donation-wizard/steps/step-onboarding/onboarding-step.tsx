@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { getQrOnboardingPrefillAction, updateContributorAfterWizardQrAction } from '@/lib/server-actions/qr-wizard-actions';
 import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { toNewsletterLanguage } from '@/modules/newsletter/newsletter.types';
+import { getQrOnboardingPrefillAction, updateContributorAfterWizardQrAction } from '@/modules/qr-bills/qr-bill.actions';
 import {
 	getStripeCheckoutOnboardingPrefillAction,
 	updateContributorAfterWizardCheckoutAction,

@@ -35,6 +35,21 @@ export type PayoutPayload = {
 	comments: string | null;
 };
 
+export type PayoutProcessCreateInput = {
+	recipientId: string;
+	amount: number;
+	amountChf: number | null;
+	currency: Currency;
+	status: PayoutStatus;
+	paymentAt: Date;
+	phoneNumber: string | null;
+};
+
+export type PayoutProcessCreateSummary = {
+	createdCount: number;
+	skippedCount: number;
+};
+
 export type PayoutTableViewRow = {
 	id: string;
 	recipientFirstName: string;

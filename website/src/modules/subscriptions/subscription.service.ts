@@ -16,6 +16,7 @@ import * as subscriptionRepository from './subscription.repository';
 import type {
 	ActiveSubscriptionView,
 	MonthlyContributionSummary,
+	OwnedBankTransferQrBill,
 	SubscriptionPaginatedTableView,
 	SubscriptionsDashboardView,
 	SubscriptionTableQuery,
@@ -133,6 +134,43 @@ export const getOwnedSubscriptionPaymentMethod = async (input: {
 		console.error(error);
 
 		return resultFail('Could not load subscription payment method');
+	}
+};
+
+export const getOwnedActiveBankTransferQrBill = async (input: {
+	contributorId: string;
+	subscriptionId: string;
+}): Promise<ServiceResult<OwnedBankTransferQrBill>> => {
+	try {
+		const subscription = await subscriptionRepository.findOwnedActiveBankTransferQrBill(
+			input.contributorId,
+			input.subscriptionId,
+		);
+		if (!subscription) {
+			return resultFail('Bank transfer subscription not found');
+		}
+
+		const contributorReferenceId = subscription.contributor.paymentReferenceId;
+		const contributionReferenceId = subscription.bankStandingOrderReference;
+		if (!contributorReferenceId || !contributionReferenceId) {
+			return resultFail('QR bill references are missing for this subscription');
+		}
+
+		const amount = Number(subscription.amount);
+		if (!Number.isFinite(amount) || amount <= 0) {
+			return resultFail('Invalid QR bill amount');
+		}
+
+		return resultOk({
+			amount,
+			currency: subscription.currency,
+			contributorReferenceId,
+			contributionReferenceId,
+		});
+	} catch (error) {
+		console.error(error);
+
+		return resultFail('Could not load bank transfer subscription');
 	}
 };
 

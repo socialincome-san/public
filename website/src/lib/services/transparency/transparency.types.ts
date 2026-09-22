@@ -1,6 +1,6 @@
 import type { CountryCode } from '@/generated/prisma/enums';
+import type { BankAccountLatestReserve } from '@/modules/reserves/reserve.types';
 import { DateTime } from 'luxon';
-import type { BankAccountLatestReserve } from '../reserves/reserve.types';
 
 export type TransparencyFinancialPeriod = { kind: 'all-time' } | { kind: 'ytd' } | { kind: 'year'; year: number };
 

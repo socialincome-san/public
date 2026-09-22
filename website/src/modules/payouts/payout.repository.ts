@@ -3,7 +3,12 @@ import { type CountryCode, PayoutStatus } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { CreatePayoutInput, UpdatePayoutInput } from './payout.schemas';
-import type { OngoingPayoutTableQuery, PayoutConfirmationTableQuery, PayoutTableQuery } from './payout.types';
+import type {
+	OngoingPayoutTableQuery,
+	PayoutConfirmationTableQuery,
+	PayoutProcessCreateInput,
+	PayoutTableQuery,
+} from './payout.types';
 
 export const findPayoutTotalForCountry = async (isoCode: CountryCode) =>
 	prisma.payout.aggregate({
@@ -160,6 +165,29 @@ export const findPayoutForRecipientStatusUpdate = async (recipientId: string, pa
 	prisma.payout.findFirst({
 		where: { id: payoutId, recipientId },
 		select: { id: true },
+	});
+
+export const findPayoutProcessRecipientPrograms = async (recipientIds: string[]) =>
+	prisma.recipient.findMany({
+		where: { id: { in: recipientIds } },
+		select: { id: true, programId: true },
+	});
+
+export const findExistingPayoutProcessRecipientIds = async (recipientIds: string[], monthStart: Date, monthEnd: Date) =>
+	prisma.payout.findMany({
+		where: {
+			recipientId: { in: recipientIds },
+			paymentAt: { gte: monthStart, lte: monthEnd },
+		},
+		select: { recipientId: true },
+	});
+
+export const createPayoutProcessPayouts = async (inputs: PayoutProcessCreateInput[]) =>
+	prisma.payout.createMany({
+		data: inputs.map((input) => ({
+			...input,
+			comments: null,
+		})),
 	});
 
 export const createPayout = async (input: CreatePayoutInput) =>

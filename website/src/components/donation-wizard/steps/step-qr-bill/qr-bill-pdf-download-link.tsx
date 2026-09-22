@@ -1,9 +1,8 @@
 'use client';
 
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { downloadQrBillPdfAction } from '@/lib/server-actions/qr-wizard-actions';
 import { cn } from '@/lib/utils/cn';
-import { downloadSubscriptionQrBillPdfAction } from '@/modules/subscriptions/subscription.actions';
+import { downloadQrBillPdfAction, downloadSubscriptionQrBillPdfAction } from '@/modules/qr-bills/qr-bill.actions';
 import { Download } from 'lucide-react';
 import { forwardRef, useState, type ReactNode } from 'react';
 import toast from 'react-hot-toast';

@@ -19,6 +19,7 @@ import {
 	type TransparencyFinancialPeriod,
 } from '@/lib/services/transparency/transparency.types';
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
+import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
@@ -29,10 +30,10 @@ type Props = {
 export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
 	const financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' };
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const [dataResult, rates] = await Promise.all([
-		services.transparency.getContributionsByCountryData(TOP_CONTRIBUTING_COUNTRIES_LIMIT, financialPeriod),
-		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
-	]);
+	const dataResult = await services.transparency.getContributionsByCountryData(
+		TOP_CONTRIBUTING_COUNTRIES_LIMIT,
+		financialPeriod,
+	);
 
 	if (!dataResult.success) {
 		return null;
@@ -41,21 +42,28 @@ export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common', 'countries'] });
 	const locale = getSafeNumberFormatLocale(lang);
 	const data = dataResult.data;
-	const formatAmount = (amountChf: number): string => {
-		const { amount, currency } = services.currencyDisplay.resolveFromChf(amountChf, displayCurrency, rates);
-
-		return formatCurrencyLocale(amount, currency, locale, { maximumFractionDigits: 0 });
-	};
+	const chfAmounts = [
+		data.totalContributionsChf,
+		...data.segments.map(({ totalChf }) => totalChf),
+		...data.otherCountries.map(({ totalChf }) => totalChf),
+	];
+	const displayResult = await resolveChfAmountsAction({ amounts: chfAmounts, displayCurrency });
+	if (!displayResult.success) {
+		return null;
+	}
+	const formattedAmounts = displayResult.data.map(({ amount, currency }) =>
+		formatCurrencyLocale(amount, currency, locale, { maximumFractionDigits: 0 }),
+	);
 
 	const otherCountriesLabel = translator.t('transparency-page.countries.other-countries');
-	const formattedTotalAmount = formatAmount(data.totalContributionsChf);
+	const formattedTotalAmount = formattedAmounts[0] ?? formatCurrencyLocale(0, 'CHF', locale);
 	const formattedCountriesCount = formatNumberLocale(data.countriesCount, locale, { maximumFractionDigits: 0 });
-	const segments: CountriesSectionSegment[] = data.segments.map((segment) => {
+	const segments: CountriesSectionSegment[] = data.segments.map((segment, index) => {
 		const countryName =
 			segment.countryCode === OTHER_COUNTRY_SEGMENT_CODE
 				? otherCountriesLabel
 				: translator.t(segment.countryCode, { namespace: 'countries' });
-		const formattedAmount = formatAmount(segment.totalChf);
+		const formattedAmount = formattedAmounts[index + 1] ?? formatCurrencyLocale(segment.totalChf, 'CHF', locale);
 		const formattedPercentage = formatPercentageDisplay(segment.percentageOfTotal, segment.totalChf);
 
 		return {
@@ -75,10 +83,11 @@ export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
 			}),
 		};
 	});
-	const otherCountries: CountriesSectionOtherCountry[] = data.otherCountries.map((country) => ({
+	const otherCountries: CountriesSectionOtherCountry[] = data.otherCountries.map((country, index) => ({
 		countryCode: country.countryCode,
 		countryName: translator.t(country.countryCode, { namespace: 'countries' }),
-		formattedAmount: formatAmount(country.totalChf),
+		formattedAmount:
+			formattedAmounts[data.segments.length + index + 1] ?? formatCurrencyLocale(country.totalChf, 'CHF', locale),
 	}));
 
 	return (

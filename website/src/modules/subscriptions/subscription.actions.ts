@@ -3,7 +3,6 @@
 import { SubscriptionPaymentMethod } from '@/generated/prisma/enums';
 import { getSessionByType } from '@/lib/firebase/current-account';
 import { resultFail } from '@/lib/service-result';
-import { services } from '@/lib/services/services';
 import {
 	cancelContributorSubscription,
 	createManageSubscriptionsSession,
@@ -83,25 +82,6 @@ export const cancelSubscriptionAction = async (input: unknown) => {
 		contributorId,
 		subscriptionId: parsed.data.subscriptionId,
 		reason: parsed.data.reason,
-	});
-};
-
-export const downloadSubscriptionQrBillPdfAction = async (input: unknown) => {
-	const sessionResult = await getSessionByType('contributor');
-	if (!sessionResult.success) {
-		return sessionResult;
-	}
-
-	const parsed = subscriptionIdSchema.safeParse(
-		typeof input === 'object' && input !== null && 'subscriptionId' in input ? input.subscriptionId : input,
-	);
-	if (!parsed.success) {
-		return resultFail(parsed.error.issues[0]?.message ?? 'Subscription id is required.');
-	}
-
-	return services.qrBill.downloadSubscriptionQrBillPdf({
-		contributorId: sessionResult.data.id,
-		subscriptionId: parsed.data,
 	});
 };
 

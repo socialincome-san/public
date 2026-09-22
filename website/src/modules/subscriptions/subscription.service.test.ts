@@ -18,6 +18,7 @@ jest.mock('./subscription.repository', () => ({
 	findSubscriptionTableSource: jest.fn(),
 	findOwnedSubscriptionPaymentMethod: jest.fn(),
 	findOwnedActiveBankTransferSubscription: jest.fn(),
+	findOwnedActiveBankTransferQrBill: jest.fn(),
 	findOwnedBankTransferSubscription: jest.fn(),
 	updateBankStandingOrder: jest.fn(),
 	updateBankTransferSubscriptionAmount: jest.fn(),

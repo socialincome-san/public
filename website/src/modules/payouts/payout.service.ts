@@ -27,6 +27,8 @@ import type {
 	PayoutMonth,
 	PayoutPaginatedTableView,
 	PayoutPayload,
+	PayoutProcessCreateInput,
+	PayoutProcessCreateSummary,
 	PayoutRecord,
 	PayoutTableQuery,
 	PayoutTableViewRow,
@@ -403,6 +405,50 @@ export const getPayoutByRecipientAndId = async (
 		console.error('Could not fetch recipient payout', { recipientId, payoutId, error });
 
 		return resultFail(`Could not fetch payout "${payoutId}"`);
+	}
+};
+
+export const createPayoutProcessPayouts = async (
+	userId: string,
+	inputs: PayoutProcessCreateInput[],
+	selectedDate: Date,
+): Promise<ServiceResult<PayoutProcessCreateSummary>> => {
+	if (inputs.length === 0) {
+		return resultOk({ createdCount: 0, skippedCount: 0 });
+	}
+
+	try {
+		const accessResult = await getAccessiblePrograms(userId);
+		if (!accessResult.success) {
+			return resultFail(accessResult.error);
+		}
+
+		const recipientIds = Array.from(new Set(inputs.map(({ recipientId }) => recipientId)));
+		const recipientPrograms = await payoutRepository.findPayoutProcessRecipientPrograms(recipientIds);
+		if (recipientPrograms.length !== recipientIds.length) {
+			return resultFail('One or more payout recipients were not found');
+		}
+		if (recipientPrograms.some(({ programId }) => !programId || !canWritePayout(accessResult.data, programId))) {
+			return resultFail('Access denied for one or more payout recipients');
+		}
+
+		const monthStart = startOfMonth(selectedDate);
+		const monthEnd = endOfMonth(selectedDate);
+		const existingPayouts = await payoutRepository.findExistingPayoutProcessRecipientIds(recipientIds, monthStart, monthEnd);
+		const existingRecipientIds = new Set(existingPayouts.map(({ recipientId }) => recipientId));
+		const toCreate = inputs.filter(({ recipientId }) => !existingRecipientIds.has(recipientId));
+		if (toCreate.length > 0) {
+			await payoutRepository.createPayoutProcessPayouts(toCreate);
+		}
+
+		return resultOk({
+			createdCount: toCreate.length,
+			skippedCount: inputs.length - toCreate.length,
+		});
+	} catch (error) {
+		console.error('Could not generate payouts', { userId, error });
+
+		return resultFail('Could not generate payouts');
 	}
 };
 

@@ -1,4 +1,5 @@
 import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
+import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
 import type { CompletedDonationSummary } from '../steps/step-stripe-checkout/map-wizard-to-stripe-checkout';
 import { type DonationAmountContext, getInitialDonationContext } from '../utils/donation-amount';
 
@@ -32,7 +33,7 @@ export type DonationWizardContext = DonationAmountContext & {
 	qrDonor: QrDonorContext | null;
 	qrContributorReferenceId: string | null;
 	qrContributionReferenceId: string | null;
-	qrBillSvg: string | null;
+	qrBillDisplay: QrBillDisplay | null;
 	qrBillStatus: QrBillStatus;
 	qrBillError: string | null;
 };
@@ -49,7 +50,7 @@ export const resetQrBillContext = {
 	qrDonor: null,
 	qrContributorReferenceId: null,
 	qrContributionReferenceId: null,
-	qrBillSvg: null,
+	qrBillDisplay: null,
 	qrBillStatus: 'idle' as const,
 	qrBillError: null,
 };

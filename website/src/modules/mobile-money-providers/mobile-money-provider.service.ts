@@ -161,6 +161,37 @@ export const getPayoutProcessOverviewOptions = async (): Promise<ServiceResult<P
 	}
 };
 
+export const getMobileMoneyProviderPayoutProcess = async (
+	providerId: string,
+): Promise<ServiceResult<PayoutProcess | null>> => {
+	try {
+		const provider = await mobileMoneyProviderRepository.findMobileMoneyProviderPayoutProcess(providerId);
+		if (!provider) {
+			return resultFail('Mobile money provider not found');
+		}
+
+		return resultOk(provider.payoutProcess);
+	} catch (error) {
+		console.error('Could not fetch mobile money provider payout process', { providerId, error });
+
+		return resultFail('Could not fetch mobile money provider payout process');
+	}
+};
+
+export const getMobileMoneyProviderIdsByPayoutProcess = async (
+	payoutProcess: PayoutProcess,
+): Promise<ServiceResult<string[]>> => {
+	try {
+		const providers = await mobileMoneyProviderRepository.findMobileMoneyProviderIdsByPayoutProcess(payoutProcess);
+
+		return resultOk(providers.map(({ id }) => id));
+	} catch (error) {
+		console.error('Could not fetch mobile money providers for payout process', { payoutProcess, error });
+
+		return resultFail('Could not fetch mobile money providers for payout process');
+	}
+};
+
 export const createMobileMoneyProvider = async (
 	userId: string,
 	input: MobileMoneyProviderCreateInput,

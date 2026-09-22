@@ -49,6 +49,11 @@ export type BankTransferQrBillView = {
 	contributionReferenceId: string;
 };
 
+export type OwnedBankTransferQrBill = BankTransferQrBillView & {
+	amount: number;
+	currency: Currency;
+};
+
 type SubscriptionPaymentDisplay =
 	{ type: 'bank_transfer'; qrBill: BankTransferQrBillView | null } | { type: 'stripe'; brand?: string; last4?: string };
 

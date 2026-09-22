@@ -1,6 +1,6 @@
 import { makeYourCertificatesColumns } from '@/components/data-table/columns/your-donation-certificates';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
-import type { YourDonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
+import type { YourDonationCertificateTableViewRow } from '@/modules/donation-certificates/donation-certificate.types';
 
 export const getYourDonationCertificatesTableConfig = ({
 	title,

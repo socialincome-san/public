@@ -36,6 +36,7 @@ import {
 	type UpdateRecipientSelfInput,
 } from './recipient.schemas';
 import type {
+	PayoutProcessRecipient,
 	PublicRecipientTableView,
 	PublicRecipientTableViewRow,
 	RecipientFormOptions,
@@ -570,6 +571,45 @@ export const getRecipientProgramAssignment = async (
 		console.error(error);
 
 		return resultFail('Could not fetch recipient program assignment');
+	}
+};
+
+export const getPayoutProcessRecipients = async (
+	programIds: string[],
+	mobileMoneyProviderIds: string[],
+): Promise<ServiceResult<PayoutProcessRecipient[]>> => {
+	try {
+		const recipients = await recipientRepository.findPayoutProcessRecipients(programIds, mobileMoneyProviderIds);
+
+		return resultOk(
+			recipients.flatMap((recipient) => {
+				if (!recipient.program) {
+					return [];
+				}
+
+				return [
+					{
+						id: recipient.id,
+						startDate: recipient.startDate,
+						suspendedAt: recipient.suspendedAt,
+						contact: recipient.contact,
+						paymentInformation: recipient.paymentInformation,
+						program: {
+							payoutPerInterval: Number(recipient.program.payoutPerInterval),
+							payoutCurrency: recipient.program.country.currency,
+							payoutCountryCode: recipient.program.country.isoCode,
+							programDurationInMonths: recipient.program.programDurationInMonths,
+							payoutInterval: recipient.program.payoutInterval,
+						},
+						payouts: recipient.payouts,
+					},
+				];
+			}),
+		);
+	} catch (error) {
+		console.error('Could not fetch payout process recipients', { error });
+
+		return resultFail('Could not fetch payout recipients');
 	}
 };
 

@@ -4,9 +4,10 @@ import type { TransparencySummary } from '@/generated/storyblok/types/109655/sto
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
-import type { DisplayAmount } from '@/lib/services/currency-display/currency-display.types';
 import { services } from '@/lib/services/services';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
+import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
+import type { DisplayAmount } from '@/modules/currency-display/currency-display.types';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type ReserveAccount = {
@@ -24,23 +25,36 @@ type Props = {
 
 export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const [dataResult, rates] = await Promise.all([
-		services.transparency.getTransparencySummary(),
-		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
-	]);
+	const dataResult = await services.transparency.getTransparencySummary();
 
 	if (!dataResult.success) {
 		return null;
 	}
 
 	const { inflowsChf, outflowsChf, reservesChf } = dataResult.data.financialSummary;
-	const inflows = services.currencyDisplay.resolveFromChf(inflowsChf, displayCurrency, rates);
-	const outflows = services.currencyDisplay.resolveFromChf(outflowsChf, displayCurrency, rates);
-	const reserves = services.currencyDisplay.resolveFromChf(reservesChf, displayCurrency, rates);
-	const reserveAccounts: ReserveAccount[] = dataResult.data.reserveAccounts.map(({ amountChf, ...account }) => ({
-		...account,
-		amount: amountChf === null ? null : services.currencyDisplay.resolveFromChf(amountChf, displayCurrency, rates),
-	}));
+	const reserveAmountsChf = dataResult.data.reserveAccounts.flatMap(({ amountChf }) =>
+		amountChf === null ? [] : [amountChf],
+	);
+	const displayResult = await resolveChfAmountsAction({
+		amounts: [inflowsChf, outflowsChf, reservesChf, ...reserveAmountsChf],
+		displayCurrency,
+	});
+	if (!displayResult.success) {
+		return null;
+	}
+	const [inflows, outflows, reserves, ...reserveDisplayAmounts] = displayResult.data;
+	if (!inflows || !outflows || !reserves) {
+		return null;
+	}
+	let reserveDisplayIndex = 0;
+	const reserveAccounts: ReserveAccount[] = dataResult.data.reserveAccounts.map(({ amountChf, ...account }) => {
+		const amount = amountChf === null ? null : (reserveDisplayAmounts[reserveDisplayIndex] ?? null);
+		if (amountChf !== null) {
+			reserveDisplayIndex += 1;
+		}
+
+		return { ...account, amount };
+	});
 
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const locale = getSafeNumberFormatLocale(lang);

@@ -8,7 +8,6 @@ import type {
 	ProgramPermission,
 	SurveyStatus,
 } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/service-result';
 
 export type ProgramWallet = {
 	id: string;
@@ -215,8 +214,4 @@ export type PublicSubmissionProgramOption = {
 	description: string | null;
 	imageUrl: string | null;
 	tags: string[];
-};
-
-export type ProgramStatsReadService = {
-	isReadyForFirstPayoutInterval: (programId: string) => Promise<ServiceResult<boolean>>;
 };

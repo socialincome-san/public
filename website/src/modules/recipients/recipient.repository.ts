@@ -13,6 +13,52 @@ export const findRecipientOwnership = async (recipientId: string) =>
 		},
 	});
 
+export const findPayoutProcessRecipients = async (programIds: string[], mobileMoneyProviderIds: string[]) =>
+	prisma.recipient.findMany({
+		where: {
+			programId: { in: programIds },
+			paymentInformation: { mobileMoneyProviderId: { in: mobileMoneyProviderIds } },
+		},
+		select: {
+			id: true,
+			startDate: true,
+			suspendedAt: true,
+			contact: {
+				select: {
+					firstName: true,
+					lastName: true,
+				},
+			},
+			paymentInformation: {
+				select: {
+					code: true,
+					phone: { select: { number: true } },
+					mobileMoneyProvider: { select: { name: true } },
+				},
+			},
+			program: {
+				select: {
+					payoutPerInterval: true,
+					programDurationInMonths: true,
+					payoutInterval: true,
+					country: {
+						select: {
+							currency: true,
+							isoCode: true,
+						},
+					},
+				},
+			},
+			payouts: {
+				select: {
+					paymentAt: true,
+					status: true,
+				},
+			},
+		},
+		orderBy: [{ paymentInformation: { code: 'asc' } }, { id: 'asc' }],
+	});
+
 export const findRecipient = async (recipientId: string) =>
 	prisma.recipient.findUnique({
 		where: { id: recipientId },
