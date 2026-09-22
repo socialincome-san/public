@@ -539,7 +539,7 @@ export const getRecipientFormOptions = async (session: Session): Promise<Service
 	}
 };
 
-const getSurveyRecipients = async (programIds: string[]): Promise<ServiceResult<SurveyRecipientOption[]>> => {
+export const getSurveyRecipients = async (programIds: string[]): Promise<ServiceResult<SurveyRecipientOption[]>> => {
 	try {
 		return resultOk(await recipientRepository.findSurveyRecipients(programIds, now()));
 	} catch (error) {

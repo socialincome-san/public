@@ -52,11 +52,6 @@ import { ReserveReadService } from './reserves/reserve-read.service';
 import { ReserveWriteService } from './reserves/reserve-write.service';
 import { ReservesCalculationService } from './reserves/reserves-calculation.service';
 import { StoryblokService } from './storyblok/storyblok.service';
-import { SurveyScheduleService } from './survey-schedule/survey-schedule.service';
-import { SurveyImpactService } from './survey/survey-impact.service';
-import { SurveyReadService } from './survey/survey-read.service';
-import { SurveyValidationService } from './survey/survey-validation.service';
-import { SurveyWriteService } from './survey/survey-write.service';
 import { TransparencyService } from './transparency/transparency.service';
 import { MessagingChannelPreviewService } from './twilio/messaging/dispatch/channel-preview.service';
 import { MessagingDispatchService } from './twilio/messaging/dispatch/dispatch.service';
@@ -86,7 +81,6 @@ const exchangeRateRead: ExchangeRateReadService = {
 	getLatestRateForCurrency,
 	getLatestRates,
 };
-const surveySchedule = new SurveyScheduleService(prisma);
 const transparency = new TransparencyService(prisma, reserveRead);
 const storyblok = new StoryblokService(prisma);
 const journal = new JournalService(prisma, storyblok);
@@ -146,11 +140,6 @@ const stripe = {
 	handleWebhookEvent,
 	getSubscriptionStripeDetails,
 };
-const surveyRead = new SurveyReadService(prisma, programAccessRead, recipientRead, surveySchedule);
-const surveyImpact = new SurveyImpactService(prisma);
-const surveyValidation = new SurveyValidationService(prisma);
-const surveyWrite = new SurveyWriteService(prisma, programAccessRead, firebaseAdmin, surveyRead, surveyValidation);
-
 const createPaymentFileImport = (bucketName: string) => new PaymentFileImportService(bucketName, prisma, campaignRead);
 const createPostFinanceBalance = (bucketName: string) => new PostFinanceBalanceService(bucketName, prisma);
 const createReservesCalculation = (bucketName: string) =>
@@ -169,12 +158,10 @@ export const services = {
 	read: {
 		donationCertificate: donationCertificateRead,
 		recipient: recipientRead,
-		survey: surveyRead,
 	},
 	write: {
 		donationCertificate: donationCertificateWrite,
 		recipient: recipientWrite,
-		survey: surveyWrite,
 	},
 	appReviewMode,
 	qrBill,
@@ -191,7 +178,6 @@ export const services = {
 	journal,
 	storyblok,
 	stripe,
-	surveyImpact,
 	transparency,
 	twilioOtp,
 	messagingTwilioTemplates,

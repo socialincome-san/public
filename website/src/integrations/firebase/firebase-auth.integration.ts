@@ -101,6 +101,69 @@ export const createFirebaseUserByEmail = async (input: {
 	}
 };
 
+export const createFirebaseSurveyUser = async (email: string, password: string): Promise<ServiceResult<{ uid: string }>> => {
+	try {
+		const user = await authAdmin.auth.createUser({
+			email,
+			password,
+			emailVerified: true,
+		});
+
+		return resultOk({ uid: user.uid });
+	} catch (error) {
+		console.error('Error creating survey user', { email, error });
+
+		return resultFail('Could not create survey auth user');
+	}
+};
+
+export const synchronizeFirebaseSurveyUser = async (input: {
+	nextEmail: string;
+	nextPassword: string;
+	previousEmail?: string;
+}): Promise<ServiceResult<void>> => {
+	try {
+		const existingUserResult = await findFirebaseUserByEmail(input.nextEmail);
+		if (!existingUserResult.success) {
+			return resultFail(existingUserResult.error);
+		}
+
+		if (existingUserResult.data) {
+			await authAdmin.auth.updateUser(existingUserResult.data.uid, {
+				email: input.nextEmail,
+				password: input.nextPassword,
+				emailVerified: true,
+			});
+		} else {
+			await authAdmin.auth.createUser({
+				email: input.nextEmail,
+				password: input.nextPassword,
+				emailVerified: true,
+			});
+		}
+
+		if (input.previousEmail && input.previousEmail !== input.nextEmail) {
+			const previousUserResult = await findFirebaseUserByEmail(input.previousEmail);
+			if (!previousUserResult.success) {
+				return resultFail(previousUserResult.error);
+			}
+			if (previousUserResult.data) {
+				await authAdmin.auth.deleteUser(previousUserResult.data.uid);
+			}
+		}
+
+		return resultOk(undefined);
+	} catch (error) {
+		console.error('Error synchronizing survey user', {
+			nextEmail: input.nextEmail,
+			previousEmail: input.previousEmail,
+			error,
+		});
+
+		return resultFail('Could not synchronize survey auth user');
+	}
+};
+
 export const updateFirebaseUserByUid = async (uid: string, updates: UpdateRequest): Promise<ServiceResult<UserRecord>> => {
 	try {
 		await authAdmin.auth.getUser(uid);

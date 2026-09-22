@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import type { SurveyFormCreateInput, SurveyFormUpdateInput } from '@/lib/services/survey/survey-form-input';
-import type { SurveyPayload } from '@/lib/services/survey/survey.types';
+import type { SurveyCreateInput, SurveyUpdateInput } from '@/modules/surveys/survey.schemas';
+import type { SurveyPayload } from '@/modules/surveys/survey.types';
 import { SurveyFormSchema } from './survey-form';
 
 const toDateOrNow = (value: unknown): Date => {
 	return new Date(typeof value === 'string' || typeof value === 'number' || value instanceof Date ? value : new Date());
 };
 
-export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyFormCreateInput => {
+export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyCreateInput => {
 	const dueAtValue = schema.fields.dueAt.value;
 
 	return {
@@ -22,7 +22,7 @@ export const buildCreateSurveyInput = (schema: SurveyFormSchema): SurveyFormCrea
 	};
 };
 
-export const buildUpdateSurveyInput = (schema: SurveyFormSchema, existing: SurveyPayload): SurveyFormUpdateInput => {
+export const buildUpdateSurveyInput = (schema: SurveyFormSchema, existing: SurveyPayload): SurveyUpdateInput => {
 	const dueAtValue = schema.fields.dueAt.value;
 	const nextAccessPassword = `${schema.fields.accessPw.value ?? ''}`.trim();
 

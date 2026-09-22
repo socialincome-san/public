@@ -3,6 +3,7 @@ import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { SurveyQuestionnaire } from '@/generated/prisma/client';
 import { RECIPIENT_AGE_GROUPS } from '@/lib/constants/recipient-age-groups';
 import { services } from '@/lib/services/services';
+import { getSurveyImpactFilterOptions } from '@/modules/surveys/survey.service';
 import { questionnaireLabelKeys } from './config';
 import { ImpactMeasurementFilters } from './filters';
 import { FILTER_PREFIX, ImpactFilterQueryParams } from './filters.constants';
@@ -32,7 +33,7 @@ const getFocusTitleBySlug = (focuses: FocusStory[]) => {
 export const ImpactMeasurementFilterSection = async ({ lang, searchParams }: ImpactMeasurementFilterSectionProps) => {
 	const [translator, filterOptionsResult, storyblokFocusesResult] = await Promise.all([
 		getImpactTranslator(lang),
-		services.surveyImpact.getImpactFilterOptions(),
+		getSurveyImpactFilterOptions(),
 		services.storyblok.getFocuses(lang),
 	]);
 	const filterOptions = filterOptionsResult.success

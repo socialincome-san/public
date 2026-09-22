@@ -4,15 +4,15 @@ import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import type { RecipientOption } from '@/modules/recipients/recipient.types';
 import {
 	createSurveyAction,
 	getSurveyAction,
 	getSurveyRecipientOptionsAction,
 	updateSurveyAction,
-} from '@/lib/server-actions/survey-actions';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import type { SurveyPayload } from '@/lib/services/survey/survey.types';
-import type { RecipientOption } from '@/modules/recipients/recipient.types';
+} from '@/modules/surveys/survey.actions';
+import type { SurveyPayload } from '@/modules/surveys/survey.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateSurveyInput, buildUpdateSurveyInput } from './survey-form-helpers';

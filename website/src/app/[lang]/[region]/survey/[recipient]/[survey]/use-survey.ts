@@ -2,9 +2,9 @@
 import { SurveyStatus } from '@/generated/prisma/enums';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { createSessionAction, logoutAction } from '@/lib/server-actions/session-actions';
-import { getByIdAndRecipient, saveChanges } from '@/lib/server-actions/survey-actions';
-import { SurveyWithRecipient } from '@/lib/services/survey/survey.types';
 import { now } from '@/lib/utils/now';
+import { getSurveyByIdAndRecipientAction, saveSurveyChangesAction } from '@/modules/surveys/survey.actions';
+import type { SurveyWithRecipient } from '@/modules/surveys/survey.types';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { Model } from 'survey-core';
@@ -41,7 +41,7 @@ export const useSurvey = () => {
 
 	const loadSurvey = async (surveyId: string, recipientId: string) => {
 		try {
-			const surveyResult = await getByIdAndRecipient(surveyId, recipientId);
+			const surveyResult = await getSurveyByIdAndRecipientAction({ surveyId, recipientId });
 			if (!surveyResult.success) {
 				throw new Error(surveyResult.error);
 			}
@@ -59,10 +59,13 @@ export const useSurvey = () => {
 		const data = survey.data as Record<string, unknown> & { pageNo?: number };
 		data.pageNo = survey.currentPageNo;
 		try {
-			const saveResult = await saveChanges(surveyId, {
-				data: data as typeof survey.data,
-				status: status,
-				completedAt: status === SurveyStatus.completed ? now() : null,
+			const saveResult = await saveSurveyChangesAction({
+				surveyId,
+				input: {
+					data: data as typeof survey.data,
+					status: status,
+					completedAt: status === SurveyStatus.completed ? now() : null,
+				},
 			});
 			if (!saveResult.success) {
 				throw new Error(saveResult.error);

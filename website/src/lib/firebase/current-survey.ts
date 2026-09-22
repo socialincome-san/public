@@ -1,6 +1,7 @@
 import { services } from '@/lib/services/services';
+import { getSurveyByAccessEmail } from '@/modules/surveys/survey.service';
+import type { SurveyPayload } from '@/modules/surveys/survey.types';
 import { cache } from 'react';
-import { SurveyPayload } from '../services/survey/survey.types';
 
 const loadCurrentSurvey = async (): Promise<SurveyPayload | null> => {
 	const cookieResult = await services.firebaseSession.readSessionCookie();
@@ -16,7 +17,7 @@ const loadCurrentSurvey = async (): Promise<SurveyPayload | null> => {
 	if (!email) {
 		return null;
 	}
-	const result = await services.read.survey.getByAccessEmail(email);
+	const result = await getSurveyByAccessEmail(email);
 
 	return result.success ? result.data : null;
 };
