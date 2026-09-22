@@ -1,5 +1,6 @@
 import sgMail from '@sendgrid/mail';
-import { SendgridMailService } from './sendgrid-mail.service';
+import type { MonthlySummary } from '../monthly-summary/monthly-summary.service';
+import { createMonthlySummaryTemplateData, MONTHLY_SUMMARY_TEMPLATE, SendgridMailService } from './sendgrid-mail.service';
 
 jest.mock('@sendgrid/mail', () => ({
 	__esModule: true,
@@ -14,6 +15,44 @@ jest.mock('@sendgrid/mail', () => ({
 const mockSetApiKey = sgMail.setApiKey as jest.Mock;
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const mockSend = sgMail.send as jest.Mock;
+
+const summary = {
+	period: {
+		from: new Date('2026-08-01T00:00:00.000Z'),
+		to: new Date('2026-09-01T00:00:00.000Z'),
+	},
+	moneyIn: { amountChf: 42_300, count: 128 },
+	moneyOut: { amountChf: 31_800, count: 96 },
+	new: { contributors: 14, campaigns: 2, programs: 1, recipients: 8 },
+	stats: {
+		overall: {
+			recipients: { active: 50, former: 2, suspended: 3, future: 10 },
+			candidates: 4,
+			payouts: { total: 96, confirmed: 80, contested: 2, failed: 1 },
+		},
+		countries: {
+			SL: {
+				recipients: { active: 20, former: 1, suspended: 2, future: 3 },
+				candidates: 2,
+				payouts: { total: 40, confirmed: 35, contested: 1, failed: 1 },
+			},
+		},
+		localPartners: [
+			{
+				name: 'Partner',
+				countryIsoCodes: ['SL'],
+				programs: 2,
+				stats: {
+					recipients: { active: 20, former: 1, suspended: 2, future: 3 },
+					candidates: 2,
+					payouts: { total: 40, confirmed: 35, contested: 1, failed: 1 },
+				},
+			},
+		],
+	},
+} satisfies MonthlySummary;
+
+const templateData = createMonthlySummaryTemplateData(summary);
 
 describe('SendgridMailService', () => {
 	const createDb = () => ({
@@ -37,6 +76,54 @@ describe('SendgridMailService', () => {
 		process.env.SENDGRID_MONTHLY_SUMMARY_TEMPLATE_ID = originalTemplateId;
 	});
 
+	test('maps the monthly summary to the SendGrid template variables', () => {
+		expect(templateData).toEqual({
+			month: 'August 2026',
+			moneyInAmount: "42'300",
+			moneyInCount: 128,
+			moneyOutAmount: "31'800",
+			moneyOutCount: 96,
+			contributors: 14,
+			campaigns: 2,
+			programs: 1,
+			recipients: 8,
+			overallRecipientsActive: 50,
+			overallRecipientsFormer: 2,
+			overallRecipientsSuspended: 3,
+			overallRecipientsFuture: 10,
+			overallCandidates: 4,
+			overallPayoutsTotal: 96,
+			overallPayoutsConfirmed: 80,
+			overallPayoutsContested: 2,
+			overallPayoutsFailed: 1,
+			countries: [
+				{
+					name: 'SL',
+					recipientsActive: 20,
+					recipientsFormer: 1,
+					recipientsSuspended: 2,
+					recipientsFuture: 3,
+					candidates: 2,
+					payoutsTotal: 40,
+					payoutsConfirmed: 35,
+					payoutsContested: 1,
+					payoutsFailed: 1,
+				},
+			],
+			localPartners: [
+				{
+					name: 'Partner',
+					country: 'SL',
+					recipientsActive: 20,
+					recipientsFormer: 1,
+					recipientsSuspended: 2,
+					recipientsFuture: 3,
+					programs: 2,
+				},
+			],
+		});
+	});
+
 	test('returns an error when SendGrid configuration is missing', async () => {
 		delete process.env.SENDGRID_API_KEY;
 		delete process.env.SENDGRID_FROM_EMAIL;
@@ -45,6 +132,8 @@ describe('SendgridMailService', () => {
 			to: 'recipient@example.com',
 			subject: 'Subject',
 			text: 'Body',
+			template: MONTHLY_SUMMARY_TEMPLATE,
+			data: templateData,
 		});
 
 		expect(result).toEqual({
@@ -64,6 +153,8 @@ describe('SendgridMailService', () => {
 			to: ['one@example.com', 'two@example.com'],
 			subject: 'Subject',
 			text: 'Body',
+			template: MONTHLY_SUMMARY_TEMPLATE,
+			data: templateData,
 		});
 
 		expect(result).toEqual({ success: true, data: undefined });
@@ -72,7 +163,7 @@ describe('SendgridMailService', () => {
 			to: ['one@example.com', 'two@example.com'],
 			from: 'sender@example.com',
 			templateId: 'd-template-id',
-			dynamicTemplateData: undefined,
+			dynamicTemplateData: templateData,
 		});
 		expect(db.sentEmail.create).toHaveBeenCalledTimes(2);
 	});
@@ -87,6 +178,8 @@ describe('SendgridMailService', () => {
 			to: 'recipient@example.com',
 			subject: 'Subject',
 			text: 'Body',
+			template: MONTHLY_SUMMARY_TEMPLATE,
+			data: templateData,
 		});
 
 		expect(result).toEqual({
@@ -107,6 +200,8 @@ describe('SendgridMailService', () => {
 			to: 'recipient@example.com',
 			subject: 'Subject',
 			text: 'Body',
+			template: MONTHLY_SUMMARY_TEMPLATE,
+			data: templateData,
 		});
 
 		expect(result).toEqual({
