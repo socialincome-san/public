@@ -23,6 +23,7 @@ describe('SendgridMailService', () => {
 	let db = createDb();
 	const originalApiKey = process.env.SENDGRID_API_KEY;
 	const originalFromEmail = process.env.SENDGRID_FROM_EMAIL;
+	const originalTemplateId = process.env.SENDGRID_MONTHLY_SUMMARY_TEMPLATE_ID;
 
 	beforeEach(() => {
 		db = createDb();
@@ -33,6 +34,7 @@ describe('SendgridMailService', () => {
 	afterEach(() => {
 		process.env.SENDGRID_API_KEY = originalApiKey;
 		process.env.SENDGRID_FROM_EMAIL = originalFromEmail;
+		process.env.SENDGRID_MONTHLY_SUMMARY_TEMPLATE_ID = originalTemplateId;
 	});
 
 	test('returns an error when SendGrid configuration is missing', async () => {
@@ -55,6 +57,7 @@ describe('SendgridMailService', () => {
 	test('sends an email to one or more recipients', async () => {
 		process.env.SENDGRID_API_KEY = 'test-api-key';
 		process.env.SENDGRID_FROM_EMAIL = 'sender@example.com';
+		process.env.SENDGRID_MONTHLY_SUMMARY_TEMPLATE_ID = 'd-template-id';
 		mockSend.mockResolvedValue([] as never);
 
 		const result = await new SendgridMailService(db as never).send({
@@ -68,8 +71,8 @@ describe('SendgridMailService', () => {
 		expect(mockSend).toHaveBeenCalledWith({
 			to: ['one@example.com', 'two@example.com'],
 			from: 'sender@example.com',
-			subject: 'Subject',
-			text: 'Body',
+			templateId: 'd-template-id',
+			dynamicTemplateData: undefined,
 		});
 		expect(db.sentEmail.create).toHaveBeenCalledTimes(2);
 	});
@@ -77,6 +80,7 @@ describe('SendgridMailService', () => {
 	test('returns an error when SendGrid fails', async () => {
 		process.env.SENDGRID_API_KEY = 'test-api-key';
 		process.env.SENDGRID_FROM_EMAIL = 'sender@example.com';
+		process.env.SENDGRID_MONTHLY_SUMMARY_TEMPLATE_ID = 'd-template-id';
 		mockSend.mockRejectedValue(new Error('SendGrid unavailable'));
 
 		const result = await new SendgridMailService(db as never).send({
@@ -95,6 +99,7 @@ describe('SendgridMailService', () => {
 	test('returns an error when storing the sent email fails', async () => {
 		process.env.SENDGRID_API_KEY = 'test-api-key';
 		process.env.SENDGRID_FROM_EMAIL = 'sender@example.com';
+		process.env.SENDGRID_MONTHLY_SUMMARY_TEMPLATE_ID = 'd-template-id';
 		mockSend.mockResolvedValue([] as never);
 		jest.mocked(db.sentEmail.create).mockRejectedValue(new Error('Database unavailable'));
 

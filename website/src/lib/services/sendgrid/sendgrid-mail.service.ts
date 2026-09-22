@@ -7,6 +7,7 @@ type SendEmailInput = {
 	to: string | string[];
 	subject: string;
 	text: string;
+	dynamicTemplateData?: Record<string, unknown>;
 };
 
 export class SendgridMailService extends BaseService {
@@ -19,15 +20,16 @@ export class SendgridMailService extends BaseService {
 	async send(input: SendEmailInput): Promise<ServiceResult<void>> {
 		try {
 			const from = process.env.SENDGRID_FROM_EMAIL;
+			const templateId = process.env.SENDGRID_MONTHLY_SUMMARY_TEMPLATE_ID;
 
-			if (!process.env.SENDGRID_API_KEY || !from) {
+			if (!process.env.SENDGRID_API_KEY || !from || !templateId) {
 				return {
 					success: false,
 					error: 'Missing required SendGrid environment variables',
 				};
 			}
 
-			await this.sendEmail(input, from);
+			await this.sendEmail(input, from, templateId);
 			await this.storeSentEmails(input, from);
 
 			return { success: true, data: undefined };
@@ -41,7 +43,7 @@ export class SendgridMailService extends BaseService {
 		}
 	}
 
-	private async sendEmail(input: SendEmailInput, from: string): Promise<void> {
+	private async sendEmail(input: SendEmailInput, from: string, templateId: string): Promise<void> {
 		const apiKey = process.env.SENDGRID_API_KEY;
 
 		if (!this.initialized && apiKey) {
@@ -52,8 +54,8 @@ export class SendgridMailService extends BaseService {
 		await sgMail.send({
 			to: input.to,
 			from,
-			subject: input.subject,
-			text: input.text,
+			templateId,
+			dynamicTemplateData: input.dynamicTemplateData,
 		});
 	}
 

@@ -39,12 +39,13 @@ export const POST = async (request: NextRequest) => {
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 
-		const { subject, text } = new MonthlySummaryEmailTemplate().create(summaryResult.data);
+		const { subject, text, dynamicTemplateData } = new MonthlySummaryEmailTemplate().create(summaryResult.data);
 
 		const emailResult = await services.sendgridMail.send({
 			to: recipients,
 			subject,
 			text,
+			dynamicTemplateData,
 		});
 		if (!emailResult.success) {
 			console.error(`${SLACK_ALERT}: Monthly summary email failed: ${emailResult.error}`, { emailResult });
