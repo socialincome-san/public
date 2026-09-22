@@ -39,8 +39,6 @@ type DataTableToolbarProps = {
 	searchKeys: string[];
 	searchValue?: string;
 	onSearchChange: (value: string) => void;
-	showSearchClearButton?: boolean;
-	showSearchFields?: boolean;
 	actionMenuItems?: ActionMenuItem[];
 	filters?: ToolbarFilter[];
 	columns?: ToolbarColumn[];
@@ -56,8 +54,6 @@ export const DataTableToolbar = ({
 	searchKeys,
 	searchValue,
 	onSearchChange,
-	showSearchClearButton = true,
-	showSearchFields = true,
 	actionMenuItems,
 	filters = [],
 	columns = [],
@@ -111,11 +107,9 @@ export const DataTableToolbar = ({
 						<PopoverContent align="end" className="w-[320px] space-y-2 p-3">
 							<div className="flex items-center justify-between">
 								<p className="text-sm font-medium">Search</p>
-								{showSearchClearButton ? (
-									<Button type="button" variant="ghost" size="sm" onClick={clearSearch} disabled={!hasSearchValue}>
-										Clear
-									</Button>
-								) : null}
+								<Button type="button" variant="ghost" size="sm" onClick={clearSearch} disabled={!hasSearchValue}>
+									Clear
+								</Button>
 							</div>
 							<Input
 								key={`table-search-${searchValue ?? ''}`}
@@ -125,7 +119,7 @@ export const DataTableToolbar = ({
 								autoFocus
 								data-testid="data-table-search-input"
 							/>
-							{showSearchFields ? <p className="text-muted-foreground text-xs">Fields: {searchKeys.join(', ')}</p> : null}
+							<p className="text-muted-foreground text-xs">Fields: {searchKeys.join(', ')}</p>
 						</PopoverContent>
 					</Popover>
 				) : null}

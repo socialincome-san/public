@@ -21,17 +21,17 @@ export class SentEmailReadService extends BaseService {
 			case 'id':
 				return [{ id: direction }];
 			case 'sentAt':
-				return [{ sentAt: direction }];
+				return [{ sentAt: direction }, { id: direction }];
 			case 'toEmail':
-				return [{ toEmail: direction }];
+				return [{ toEmail: direction }, { id: direction }];
 			case 'subject':
-				return [{ subject: direction }];
+				return [{ subject: direction }, { id: direction }];
 			case 'fromEmail':
-				return [{ fromEmail: direction }];
+				return [{ fromEmail: direction }, { id: direction }];
 			case 'contact':
-				return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }];
+				return [{ contact: { firstName: direction } }, { contact: { lastName: direction } }, { id: direction }];
 			default:
-				return [{ sentAt: 'desc' }];
+				return [{ sentAt: 'desc' }, { id: 'desc' }];
 		}
 	}
 

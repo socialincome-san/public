@@ -30,8 +30,6 @@ export type DataTableConfig<Row extends RowData> = {
 	}[];
 	initialSorting?: SortingState;
 	showColumnVisibilitySelector?: boolean;
-	showSearchClearButton?: boolean;
-	showSearchFields?: boolean;
 	showEntityIdColumn?: boolean;
 	showRowsPerPageSelector?: boolean;
 	pageSizeOptions?: number[];
