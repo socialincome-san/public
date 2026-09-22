@@ -1,5 +1,4 @@
 import type { CountryCode, Gender } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/service-result';
 
 type ContactPhone = {
 	id: string;
@@ -117,12 +116,4 @@ export type LocalPartnerSession = {
 	city: string | null;
 	zip: string | null;
 	country: CountryCode | null;
-};
-
-export type LocalPartnerReadService = {
-	getPaginatedTableView: (
-		userId: string,
-		query: LocalPartnerTableQuery,
-	) => Promise<ServiceResult<LocalPartnerPaginatedTableView>>;
-	getMessagingTargets: (localPartnerIds: string[]) => Promise<ServiceResult<LocalPartnerMessagingTarget[]>>;
 };

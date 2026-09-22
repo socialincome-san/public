@@ -1,5 +1,4 @@
 import type { CountryCode, Gender, UserRole } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/service-result';
 
 export type UserPayload = {
 	id: string;
@@ -71,8 +70,4 @@ export type UserStripeCheckoutContext = {
 	email: string | null;
 	firstName: string | null;
 	lastName: string | null;
-};
-
-export type UserReadService = {
-	isAdmin: (userId: string) => Promise<ServiceResult<true>>;
 };

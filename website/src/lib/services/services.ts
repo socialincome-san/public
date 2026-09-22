@@ -4,11 +4,6 @@ import { getCampaignById, getDefaultCampaignForProgram, getFallbackCampaign } fr
 import type { CampaignReadService } from '@/modules/campaigns/campaign.types';
 import { getLatestRateForCurrency, getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
 import type { ExchangeRateReadService } from '@/modules/exchange-rates/exchange-rate.types';
-import {
-	getLocalPartnerMessagingTargets,
-	getPaginatedLocalPartnerTableView,
-} from '@/modules/local-partners/local-partner.service';
-import type { LocalPartnerReadService } from '@/modules/local-partners/local-partner.types';
 import { hasAnyOperatorAccess, hasOperatorAccess } from '@/modules/program-access/program-access.permissions';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccessReadService } from '@/modules/program-access/program-access.types';
@@ -29,10 +24,7 @@ import {
 	updateContributorReferralAfterCheckout,
 	updateContributorSubscriptionAmount,
 } from '@/modules/stripe-payments/stripe-payment.service';
-import { isAdmin } from '@/modules/users/user.service';
-import type { UserReadService } from '@/modules/users/user.types';
 import { prisma } from '../database/prisma';
-import { AppReviewModeService } from './app-review-mode/app-review-mode.service';
 import { CurrencyDisplayService } from './currency-display/currency-display.service';
 import { CustodianStablecoinWalletService } from './custodian-stablecoin-wallet/custodian-stablecoin-wallet.service';
 import { DonationCertificateReadService } from './donation-certificate/donation-certificate-read.service';
@@ -53,15 +45,7 @@ import { ReserveWriteService } from './reserves/reserve-write.service';
 import { ReservesCalculationService } from './reserves/reserves-calculation.service';
 import { StoryblokService } from './storyblok/storyblok.service';
 import { TransparencyService } from './transparency/transparency.service';
-import { MessagingChannelPreviewService } from './twilio/messaging/dispatch/channel-preview.service';
-import { MessagingDispatchService } from './twilio/messaging/dispatch/dispatch.service';
-import { MessagingLogService } from './twilio/messaging/logs/log.service';
-import { MessagingWebhookService } from './twilio/messaging/logs/webhook.service';
-import { MessagingRecipientsService } from './twilio/messaging/recipients/recipients.service';
-import { TwilioTemplateService } from './twilio/messaging/twilio-templates/twilio-template.service';
-import { TwilioOtpService } from './twilio/otp/twilio-otp.service';
 
-const appReviewMode = new AppReviewModeService(prisma);
 const bankAccountRead: BankAccountReadService = {
 	getAll: getBankAccounts,
 };
@@ -76,7 +60,6 @@ const programAccessRead: ProgramAccessReadService = {
 	hasAnyOperatorAccess,
 	hasOperatorAccess,
 };
-const userRead: UserReadService = { isAdmin };
 const exchangeRateRead: ExchangeRateReadService = {
 	getLatestRateForCurrency,
 	getLatestRates,
@@ -90,18 +73,6 @@ const monthlySummary = new MonthlySummaryService(prisma, recipientStatus);
 const recipientRead = recipientService;
 const recipientWrite = recipientService;
 const recipientImport = recipientService;
-const twilioOtp = new TwilioOtpService(prisma, firebaseAdmin, appReviewMode);
-const messagingTwilioTemplates = new TwilioTemplateService(prisma);
-
-const messagingWebhook = new MessagingWebhookService(prisma);
-const messagingLog = new MessagingLogService(prisma, userRead, messagingWebhook);
-const localPartnerRead: LocalPartnerReadService = {
-	getPaginatedTableView: getPaginatedLocalPartnerTableView,
-	getMessagingTargets: getLocalPartnerMessagingTargets,
-};
-const messagingRecipients = new MessagingRecipientsService(prisma, recipientRead, localPartnerRead);
-const messagingDispatch = new MessagingDispatchService(prisma, userRead, messagingTwilioTemplates, messagingRecipients);
-const messagingChannelPreview = new MessagingChannelPreviewService(prisma, userRead, messagingRecipients);
 const donationCertificateRead = new DonationCertificateReadService(prisma, programAccessRead);
 
 const currencyDisplay = new CurrencyDisplayService(exchangeRateRead);
@@ -163,7 +134,6 @@ export const services = {
 		donationCertificate: donationCertificateWrite,
 		recipient: recipientWrite,
 	},
-	appReviewMode,
 	qrBill,
 	createPaymentFileImport,
 	createReservesCalculation,
@@ -179,11 +149,4 @@ export const services = {
 	storyblok,
 	stripe,
 	transparency,
-	twilioOtp,
-	messagingTwilioTemplates,
-	messagingDispatch,
-	messagingChannelPreview,
-	messagingWebhook,
-	messagingRecipients,
-	messagingLog,
 };

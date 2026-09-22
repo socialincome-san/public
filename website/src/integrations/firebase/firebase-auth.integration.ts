@@ -69,6 +69,30 @@ export const deleteFirebaseUserByPhoneNumberIfExists = async (phoneNumber: strin
 	}
 };
 
+export const findFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<ServiceResult<UserRecord | null>> => {
+	try {
+		return resultOk(await authAdmin.auth.getUserByPhoneNumber(phoneNumber));
+	} catch (error: unknown) {
+		if (isFirebaseUserNotFoundError(error)) {
+			return resultOk(null);
+		}
+
+		console.error('Error getting user by phone number:', { phoneNumber, error });
+
+		return resultFail('Auth user not found by phone number');
+	}
+};
+
+export const createFirebaseCustomToken = async (uid: string): Promise<ServiceResult<string>> => {
+	try {
+		return resultOk(await authAdmin.auth.createCustomToken(uid));
+	} catch (error) {
+		console.error('Error creating Firebase custom token', { uid, error });
+
+		return resultFail('Could not create auth token for user');
+	}
+};
+
 export const findFirebaseUserByEmail = async (email: string): Promise<ServiceResult<UserRecord | null>> => {
 	try {
 		return resultOk(await authAdmin.auth.getUserByEmail(email));
@@ -209,20 +233,6 @@ export const decodeFirebaseTokenFromRequest = async (request: Request): Promise<
 
 export const getPhoneNumberFromFirebaseToken = (decodedToken: DecodedIdToken): string | null => {
 	return decodedToken.phone_number ?? null;
-};
-
-const findFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<ServiceResult<UserRecord | null>> => {
-	try {
-		return resultOk(await authAdmin.auth.getUserByPhoneNumber(phoneNumber));
-	} catch (error: unknown) {
-		if (isFirebaseUserNotFoundError(error)) {
-			return resultOk(null);
-		}
-
-		console.error('Error getting user by phone number:', { phoneNumber, error });
-
-		return resultFail('Auth user not found by phone number');
-	}
 };
 
 const isFirebaseUserNotFoundError = (error: unknown): boolean =>

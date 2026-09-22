@@ -1,7 +1,7 @@
 import { jobStatusVariant } from '@/app/portal/messaging/delivery-log/messaging-job-status';
 import { Badge } from '@/components/badge/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
-import type { MessagingJobListRow } from '@/lib/services/twilio/messaging/logs/log.types';
+import type { MessagingJobListRow } from '@/modules/messaging/messaging.types';
 import Link from 'next/link';
 
 type MessagingJobsTableProps = {

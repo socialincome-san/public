@@ -4,13 +4,13 @@ import { Button } from '@/components/button/button';
 import { Input } from '@/components/input/input';
 import { RadioGroup, RadioGroupItem } from '@/components/radio-group/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
-import type { MessagingRecipientType } from '@/lib/services/twilio/messaging/recipients/recipients.types';
-import { getFieldCatalog, type FieldEntry } from '@/lib/services/twilio/messaging/twilio-templates/field-catalog';
 import type {
 	Assignment,
+	MessagingRecipientType,
 	ParsedVariable,
 	VariableAssignments,
-} from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
+} from '@/modules/messaging/messaging.types';
+import { getFieldCatalog, type FieldEntry } from './field-catalog';
 import { clearAssignment, getAssignment, setConstantSource, setFieldSource } from './variable-assignments';
 
 type VariableAssignmentRowProps = {
@@ -105,7 +105,7 @@ export const Step3Assignments = ({ body, variables, type, assignments, onChange 
 	}
 
 	const disabled = type === null;
-	const catalog = getFieldCatalog(type ?? 'contributor');
+	const catalog = getFieldCatalog();
 
 	return (
 		<div className="space-y-4">
