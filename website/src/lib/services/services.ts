@@ -39,7 +39,6 @@ import { DonationCertificateReadService } from './donation-certificate/donation-
 import { DonationCertificateWriteService } from './donation-certificate/donation-certificate-write.service';
 import { FirebaseAdminService } from './firebase/firebase-admin.service';
 import { FirebaseSessionService } from './firebase/firebase-session.service';
-import { GithubApiService } from './github-api/github-api.service';
 import { JournalService } from './journal/journal.service';
 import { MonthlySummaryService } from './monthly-summary/monthly-summary.service';
 import { PawaPayBalanceService } from './pawapay/pawapay-balance.service';
@@ -92,7 +91,6 @@ const exchangeRateRead: ExchangeRateReadService = {
 };
 const surveySchedule = new SurveyScheduleService(prisma);
 const transparency = new TransparencyService(prisma, reserveRead);
-const githubApi = new GithubApiService(prisma);
 const storyblok = new StoryblokService(prisma);
 const journal = new JournalService(prisma, storyblok);
 const recipientStatus = recipientStatusService;
@@ -203,7 +201,6 @@ export const services = {
 	stripe,
 	surveyImpact,
 	transparency,
-	githubApi,
 	twilioOtp,
 	messagingTwilioTemplates,
 	messagingDispatch,

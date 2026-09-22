@@ -4,8 +4,8 @@ import { OpenSourceUnavailableMessage } from '@/components/open-source/unavailab
 import type { OpenSourceIssues } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { EMPTY_GITHUB_OPEN_SOURCE_ISSUES_DATA } from '@/lib/services/github-api/github-api.types';
-import { services } from '@/lib/services/services';
+import { getOpenSourceIssuesAction } from '@/modules/github/github.actions';
+import { EMPTY_GITHUB_OPEN_SOURCE_ISSUES_DATA } from '@/modules/github/github.types';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
@@ -24,7 +24,7 @@ type IssuesLabels = {
 
 export const OpenSourceIssuesBlock = async ({ blok, lang }: Props) => {
 	const [issuesResult, translator] = await Promise.all([
-		services.githubApi.getOpenSourceIssues(),
+		getOpenSourceIssuesAction(),
 		Translator.getInstance({ language: lang, namespaces: ['website-open-source'] }),
 	]);
 

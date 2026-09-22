@@ -1,10 +1,6 @@
-jest.mock('@/generated/prisma/client', () => ({
-	PrismaClient: class {},
-}));
+import { getOpenSourceContributors } from './github.service';
 
-import { GithubApiService } from './github-api.service';
-
-describe('GithubApiService.getOpenSourceContributors', () => {
+describe('getOpenSourceContributors', () => {
 	afterEach(() => {
 		jest.restoreAllMocks();
 	});
@@ -30,8 +26,7 @@ describe('GithubApiService.getOpenSourceContributors', () => {
 			),
 		);
 
-		const service = new GithubApiService({} as never);
-		const result = await service.getOpenSourceContributors();
+		const result = await getOpenSourceContributors();
 
 		expect(result).toEqual({
 			success: true,
