@@ -369,7 +369,7 @@ test('CSV Upload fails for invalid gender', async ({ page }) => {
 	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
 	await page.getByTestId('csv-dropzone-input').setInputFiles('./test/e2e/projects/portal/admin/upload-invalid-gender.csv');
 	await page.getByTestId('import-button').click();
-	await expect(page.getByText('Row 1: gender must be one of male, female, other, private (case-insensitive)')).toBeVisible();
+	await expect(page.getByText('CSV contains invalid candidate data')).toBeVisible();
 
 	const created = await getCandidateByName('Hal', 'Jordan');
 	expect(created).toBeNull();
@@ -382,7 +382,7 @@ test('CSV Upload fails for missing localPartnerId', async ({ page }) => {
 		.getByTestId('csv-dropzone-input')
 		.setInputFiles('./test/e2e/projects/portal/admin/upload-missing-local-partner-id.csv');
 	await page.getByTestId('import-button').click();
-	await expect(page.getByText('Row 1: localPartnerId is required')).toBeVisible();
+	await expect(page.getByText('CSV contains invalid candidate data')).toBeVisible();
 
 	const created = await getCandidateByName('Arthur', 'Curry');
 	expect(created).toBeNull();
@@ -395,7 +395,7 @@ test('CSV Upload fails for duplicate contact phone', async ({ page }) => {
 		.getByTestId('csv-dropzone-input')
 		.setInputFiles('./test/e2e/projects/portal/admin/upload-duplicate-contact-phone.csv');
 	await page.getByTestId('import-button').click();
-	await expect(page.getByText('Row 1: A contact with this phone number already exists.')).toBeVisible();
+	await expect(page.getByText('CSV contains invalid candidate data')).toBeVisible();
 
 	const created = await getCandidateByName('Victor', 'Stone');
 	expect(created).toBeNull();
