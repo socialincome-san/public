@@ -14,8 +14,8 @@ export class MonthlySummaryEmailTemplate {
 Here's the summary for ${month}:
 
 Money
-- In: CHF ${moneyIn.amountChf.toLocaleString('en-CH')} (${moneyIn.count} contributions)
-- Out: CHF ${moneyOut.amountChf.toLocaleString('en-CH')} (${moneyOut.count} payouts)
+- In: CHF ${moneyIn.amountChf.toLocaleString('en-CH').replaceAll('’', "'")} (${moneyIn.count} contributions)
+- Out: CHF ${moneyOut.amountChf.toLocaleString('en-CH').replaceAll('’', "'")} (${moneyOut.count} payouts)
 
 New
 - ${contributors} contributors
