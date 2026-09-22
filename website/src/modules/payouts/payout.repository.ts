@@ -184,8 +184,14 @@ export const findExistingPayoutProcessRecipientIds = async (recipientIds: string
 
 export const createPayoutProcessPayouts = async (inputs: PayoutProcessCreateInput[]) =>
 	prisma.payout.createMany({
-		data: inputs.map((input) => ({
-			...input,
+		data: inputs.map(({ recipientId, amount, amountChf, currency, status, paymentAt, phoneNumber }) => ({
+			recipientId,
+			amount,
+			amountChf,
+			currency,
+			status,
+			paymentAt,
+			phoneNumber,
 			comments: null,
 		})),
 	});
