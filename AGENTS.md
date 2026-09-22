@@ -162,7 +162,8 @@ unrelated migration.
 ## Types
 
 - Keep single-file types local.
-- Put shared module contracts in `*.types.ts`.
+- Put shared module contracts and inert constants in `*.types.ts`.
+- Do not export runtime functions, parsers, validators, or business calculations from `*.types.ts`.
 - Keep Zod-inferred input types next to their schemas.
 - Return explicit serializable DTOs across server/client boundaries; do
   not expose broad Prisma models.

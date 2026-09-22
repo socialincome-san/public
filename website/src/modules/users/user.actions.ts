@@ -15,7 +15,7 @@ export const createUserAction = async (input: unknown): Promise<ServiceResult<Us
 
 	const parsedInput = userCreateSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await createUser(sessionResult.data.id, parsedInput.data);
@@ -34,7 +34,7 @@ export const updateUserAction = async (input: unknown): Promise<ServiceResult<Us
 
 	const parsedInput = userUpdateSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateUser(sessionResult.data.id, parsedInput.data);
@@ -53,7 +53,7 @@ export const deleteUserAction = async (userId: unknown): Promise<ServiceResult<v
 
 	const parsedUserId = userIdSchema.safeParse(userId);
 	if (!parsedUserId.success) {
-		return resultFail(parsedUserId.error.issues[0]?.message ?? 'Invalid user id.');
+		return resultFail('Invalid user id.');
 	}
 
 	const result = await deleteUser(sessionResult.data.id, parsedUserId.data);
@@ -72,7 +72,7 @@ export const updateUserSelfAction = async (input: unknown): Promise<ServiceResul
 
 	const parsedInput = userSelfUpdateSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateUserSelf(sessionResult.data.id, parsedInput.data);
@@ -92,7 +92,7 @@ export const getUserAction = async (userId: unknown): Promise<ServiceResult<User
 
 	const parsedUserId = userIdSchema.safeParse(userId);
 	if (!parsedUserId.success) {
-		return resultFail(parsedUserId.error.issues[0]?.message ?? 'Invalid user id.');
+		return resultFail('Invalid user id.');
 	}
 
 	return getUser(sessionResult.data.id, parsedUserId.data);

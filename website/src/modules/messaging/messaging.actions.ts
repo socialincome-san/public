@@ -28,7 +28,7 @@ export const listMessagingJobsAction = async (query: unknown) => {
 	}
 	const queryResult = messagingPaginationSchema.safeParse(query);
 	if (!queryResult.success) {
-		return resultFail(queryResult.error.issues[0]?.message ?? 'Invalid pagination');
+		return resultFail('Invalid pagination');
 	}
 
 	return listMessagingJobs(queryResult.data, sessionResult.data.id);
@@ -85,7 +85,7 @@ export const startMessagingSendAction = async (input: unknown) => {
 	}
 	const inputResult = dispatchSendSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid messaging send request');
+		return resultFail('Invalid messaging send request');
 	}
 
 	const result = await dispatchMessagingSend(inputResult.data, sessionResult.data.id);
@@ -114,7 +114,7 @@ export const previewMessagingChannelAction = async (input: unknown) => {
 	}
 	const inputResult = channelPreviewSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid messaging preview request');
+		return resultFail('Invalid messaging preview request');
 	}
 
 	return previewMessagingChannel(inputResult.data, sessionResult.data.id);

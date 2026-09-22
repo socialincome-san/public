@@ -92,7 +92,7 @@ describe('getOrCreateContributorFromEmailAndName', () => {
 
 		expect(result.success).toBe(false);
 		if (!result.success) {
-			expect(result.error).toContain('Failed to create Firebase user');
+			expect(result.error).toBe('Could not create contributor authentication user');
 		}
 		expect(mockCreateContributorFromEmailAndName).not.toHaveBeenCalled();
 	});

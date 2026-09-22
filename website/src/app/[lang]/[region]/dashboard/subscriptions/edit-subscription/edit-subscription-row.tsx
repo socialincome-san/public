@@ -3,10 +3,10 @@
 import { Button } from '@/components/button/button';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale, formatDateLocale, fractionalCurrencyFormatOptions } from '@/lib/utils/string-utils';
-import { getBaseAmountBeforeTransactionCostCoverage } from '@/modules/subscriptions/subscription.types';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/navigation';
 import { CoverSubscriptionTransactionCostsPrompt } from '../cover-subscription-transaction-costs-prompt';
+import { getBaseAmountBeforeTransactionCostCoverage } from '../subscription-amount';
 import { SubscriptionPaymentMethodDisplay } from '../subscription-payment-method-display';
 import { EditSubscriptionDialog } from './edit-subscription-dialog';
 import { editSubscriptionMachine, type EditSubscriptionOpenInput } from './edit-subscription-machine';

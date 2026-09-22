@@ -30,7 +30,7 @@ export const createOrganizationAction = async (input: unknown): Promise<ServiceR
 
 	const parsedInput = organizationCreateSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await createOrganization(sessionResult.data.id, parsedInput.data);
@@ -47,7 +47,7 @@ export const updateOrganizationAction = async (input: unknown): Promise<ServiceR
 
 	const parsedInput = organizationUpdateSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateOrganization(sessionResult.data.id, parsedInput.data);
@@ -66,7 +66,7 @@ export const renameActiveOrganizationAction = async (
 
 	const parsedInput = organizationRenameSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await renameActiveOrganization(sessionResult.data.id, parsedInput.data);
@@ -85,7 +85,7 @@ export const deleteOrganizationAction = async (organizationId: unknown): Promise
 
 	const parsedOrganizationId = organizationIdSchema.safeParse(organizationId);
 	if (!parsedOrganizationId.success) {
-		return resultFail(parsedOrganizationId.error.issues[0]?.message ?? 'Invalid organization id.');
+		return resultFail('Invalid organization id.');
 	}
 
 	const result = await deleteOrganization(sessionResult.data.id, parsedOrganizationId.data);
@@ -102,7 +102,7 @@ export const getOrganizationAction = async (organizationId: unknown): Promise<Se
 
 	const parsedOrganizationId = organizationIdSchema.safeParse(organizationId);
 	if (!parsedOrganizationId.success) {
-		return resultFail(parsedOrganizationId.error.issues[0]?.message ?? 'Invalid organization id.');
+		return resultFail('Invalid organization id.');
 	}
 
 	return getOrganization(sessionResult.data.id, parsedOrganizationId.data);

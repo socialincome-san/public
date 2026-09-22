@@ -3,9 +3,8 @@ import {
 	upsertSendgridNewsletterSubscription,
 } from '@/integrations/sendgrid/sendgrid-subscription.integration';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
-import type { SubscribeToNewsletterInput } from './newsletter.schemas';
+import { toNewsletterLanguage, type SubscribeToNewsletterInput } from './newsletter.schemas';
 import type { NewsletterContact, NewsletterSubscriber } from './newsletter.types';
-import { toNewsletterLanguage } from './newsletter.types';
 
 export { toNewsletterLanguage };
 

@@ -106,26 +106,43 @@ export const createExample = async (): Promise<ServiceResult<{ id: string }>> =>
 	assert.deepEqual(messages, []);
 });
 
-test('safe-result-errors rejects JSON.stringify in resultFail messages', () => {
+test('safe-result-errors accepts fixed resultFail messages', () => {
 	const valid = lint({
 		filename: 'src/modules/example/example.service.ts',
 		rules: { 'backend-architecture/safe-result-errors': 'error' },
 		code: `import { resultFail } from '@/lib/services/core/service-result';
 
-export const failExample = () => resultFail('Could not create example');
+const fixedMessage = 'Could not create example' as const;
+
+export const failExample = (useAlternative: boolean) =>
+	useAlternative ? resultFail(fixedMessage) : resultFail(\`Example unavailable\`);
 `,
 	});
 	assert.deepEqual(valid, []);
+});
 
+test('safe-result-errors rejects dynamic resultFail messages', () => {
 	const invalid = lint({
 		filename: 'src/modules/example/example.service.ts',
 		rules: { 'backend-architecture/safe-result-errors': 'error' },
 		code: `import { resultFail } from '@/lib/services/core/service-result';
 
-export const failExample = (error: unknown) => resultFail(\`Could not create example: \${JSON.stringify(error)}\`);
+export const failExample = (error: { message: string }, parseResult: { error: { issues: { message: string }[] } }) => {
+	resultFail(\`Could not create example: \${error.message}\`);
+	resultFail(error.message);
+	resultFail('Could not create example: ' + error.message);
+	resultFail(\`Could not create example: \${JSON.stringify(error)}\`);
+	resultFail(parseResult.error.issues[0]?.message ?? 'Invalid input');
+};
 `,
 	});
-	assert.deepEqual(messageIds(invalid), ['unsafeResultError']);
+	assert.deepEqual(messageIds(invalid), [
+		'unsafeResultError',
+		'unsafeResultError',
+		'unsafeResultError',
+		'unsafeResultError',
+		'unsafeResultError',
+	]);
 });
 
 test('filename-contract enforces approved suffixes', () => {
@@ -224,4 +241,37 @@ test('no-service-throw rejects thrown errors in services', () => {
 `,
 	});
 	assert.deepEqual(messageIds(invalid), ['noThrow']);
+});
+
+test('types-file-no-runtime-functions allows type exports and inert constants', () => {
+	const messages = lint({
+		filename: 'src/modules/example/example.types.ts',
+		rules: { 'backend-architecture/types-file-no-runtime-functions': 'error' },
+		code: `export type Example = { id: string };
+export const EXAMPLE_STATUSES = ['active', 'inactive'] as const;
+export const EXAMPLE_LABELS = { active: 'Active', inactive: 'Inactive' };
+export const EXAMPLE_LIMIT = 10;
+`,
+	});
+
+	assert.deepEqual(messages, []);
+});
+
+test('types-file-no-runtime-functions rejects direct and referenced function exports', () => {
+	const messages = lint({
+		filename: 'src/modules/example/example.types.ts',
+		rules: { 'backend-architecture/types-file-no-runtime-functions': 'error' },
+		code: `export function parseExample(value: string) {
+	return value.trim();
+}
+
+export const validateExample = (value: string) => value.length > 0;
+const calculateExample = function (value: number) {
+	return value * 2;
+};
+export { calculateExample };
+`,
+	});
+
+	assert.deepEqual(messageIds(messages), ['runtimeFunction', 'runtimeFunction', 'runtimeFunction']);
 });

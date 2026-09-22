@@ -174,7 +174,9 @@ export const getLatestPostFinanceBalances = async (
 
 	const missingIbans = [...requestedIbans].filter((iban) => !balancesByIban.has(iban));
 	if (missingIbans.length > 0) {
-		return resultFail(`No balance found for PostFinance accounts: ${missingIbans.join(', ')}`);
+		console.error('No balance found for requested PostFinance accounts', { missingAccountCount: missingIbans.length });
+
+		return resultFail('No balance found for one or more PostFinance accounts');
 	}
 
 	return resultOk([...balancesByIban.values()]);
@@ -208,7 +210,9 @@ export const parseCamt052Balances = (xml: string): ServiceResult<PostFinanceBala
 				!currency ||
 				(creditDebitIndicator !== 'CRDT' && creditDebitIndicator !== 'DBIT')
 			) {
-				return resultFail(`Invalid balance for PostFinance account ${iban}`);
+				console.error('Invalid balance in PostFinance CAMT.052 file');
+
+				return resultFail('Invalid balance in PostFinance CAMT.052 file');
 			}
 
 			balances.push({
@@ -309,9 +313,7 @@ const createOrUpdateContributions = async (
 				failedTransactionIds: failedPaymentEvents,
 			});
 
-			return resultFail(
-				`Failed to create payment events with contributions. Failed transaction IDs: ${failedPaymentEvents.join(', ')}`,
-			);
+			return resultFail('Failed to create payment events with contributions');
 		}
 
 		return resultOk(created);

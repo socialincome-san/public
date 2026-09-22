@@ -30,7 +30,7 @@ export const createSurveyAction = async (input: unknown) => {
 	}
 	const inputResult = surveyCreateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await createSurvey(sessionResult.data.id, inputResult.data);
@@ -59,7 +59,7 @@ export const updateSurveyAction = async (input: unknown) => {
 	}
 	const inputResult = surveyUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateSurvey(sessionResult.data.id, inputResult.data);
@@ -114,7 +114,7 @@ export const getSurveyByIdAndRecipientAction = async (input: unknown) => {
 export const saveSurveyChangesAction = async (input: unknown) => {
 	const inputResult = surveySaveActionSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 	const currentSurvey = await getCurrentSurvey();
 	if (currentSurvey?.id !== inputResult.data.surveyId) {

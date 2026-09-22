@@ -1,4 +1,5 @@
 import { buildCampaignSubmissionLabels } from '@/components/campaign/build-campaign-submission-labels';
+import { isCampaignActive, matchesPublicCampaignActivity } from '@/components/campaign/campaign-activity';
 import { CampaignPreviewWallet } from '@/components/campaign/campaign-preview-wallet';
 import { CampaignsOverviewFilters } from '@/components/campaign/campaigns-overview-filters';
 import { CreateCampaignButton } from '@/components/campaign/create-campaign-button';
@@ -6,7 +7,6 @@ import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { PublicCampaignCard, PublicCampaignStatsMap } from '@/modules/campaigns/campaign.types';
-import { isCampaignActive, matchesPublicCampaignActivity } from '@/modules/campaigns/campaign.types';
 import type { CampaignStateFilter } from './campaigns-overview-query';
 
 type Props = {

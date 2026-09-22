@@ -9,10 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/switch/switch';
 import { campaignSubmissionConfig, type CampaignSubmissionDurationPreset } from '@/lib/config/campaign-submission.config';
 import { cn } from '@/lib/utils/cn';
-import { endDateFromDurationPreset } from '@/modules/campaigns/campaign.types';
 import { addDays, format } from 'date-fns';
 import { Camera, Check, Trash2 } from 'lucide-react';
 import { useEffect, useId, useRef } from 'react';
+import { endDateFromDurationPreset } from '../campaign-submission.client';
 import { ImageFocusPoint } from '../image-focus-point';
 import type { DetailsStepProps } from '../types';
 

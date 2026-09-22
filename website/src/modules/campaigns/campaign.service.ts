@@ -11,8 +11,6 @@ import { getAccessiblePrograms } from '@/modules/program-access/program-access.s
 import { canListCampaigns } from './campaign.permissions';
 import * as campaignRepository from './campaign.repository';
 import {
-	isCampaignActive,
-	matchesPublicCampaignActivity,
 	type CampaignCmsJoin,
 	type CampaignCmsJoinWithStats,
 	type CampaignDefaultImageOption,
@@ -393,10 +391,45 @@ const toCampaignPage = async (campaign: {
 		percentageCollected,
 		daysLeft: daysUntilTs(campaign.endDate),
 		amountCollected,
+		isActive: isCampaignActive({
+			endDate: campaign.endDate,
+			goal: campaign.goal,
+			amountCollected,
+		}),
 	};
 };
 
 const daysUntilTs = (ts: Date): number => Math.ceil((ts.getTime() - nowMs()) / (24 * 60 * 60 * 1000));
+
+const isCampaignActive = ({
+	endDate,
+	goal,
+	amountCollected,
+}: {
+	endDate: Date;
+	goal?: unknown;
+	amountCollected?: number | null;
+}): boolean => {
+	if (endDate.getTime() <= nowMs()) {
+		return false;
+	}
+
+	if (goal === null || goal === undefined || amountCollected === null || amountCollected === undefined) {
+		return true;
+	}
+
+	const goalAmount = Number(goal);
+
+	return !Number.isFinite(goalAmount) || goalAmount <= 0 || amountCollected < goalAmount;
+};
+
+const matchesPublicCampaignActivity = (isActive: boolean, activity: PublicCampaignActivity): boolean => {
+	if (activity === 'all') {
+		return true;
+	}
+
+	return activity === 'active' ? isActive : !isActive;
+};
 
 const isValidExchangeRate = (rate: number): boolean => Number.isFinite(rate) && rate > 0;
 

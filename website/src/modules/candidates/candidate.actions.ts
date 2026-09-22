@@ -32,7 +32,7 @@ export const createCandidateAction = async (input: unknown, sessionType: unknown
 	}
 	const inputResult = candidateCreateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await createCandidate(sessionResult.data, inputResult.data);
@@ -48,7 +48,7 @@ export const updateCandidateAction = async (input: unknown, sessionType: unknown
 	}
 	const inputResult = candidateUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateCandidate(sessionResult.data, inputResult.data);
@@ -64,7 +64,7 @@ export const deleteCandidateAction = async (candidateId: unknown, sessionType: u
 	}
 	const idResult = candidateIdSchema.safeParse(candidateId);
 	if (!idResult.success) {
-		return resultFail(idResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await deleteCandidate(sessionResult.data, idResult.data);
@@ -80,7 +80,7 @@ export const getCandidateAction = async (candidateId: unknown, sessionType: unkn
 	}
 	const idResult = candidateIdSchema.safeParse(candidateId);
 	if (!idResult.success) {
-		return resultFail(idResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	return getCandidate(sessionResult.data, idResult.data);
@@ -109,7 +109,7 @@ export const getCandidateOptionsAction = async (sessionType: unknown = 'user') =
 export const getCandidateCountAction = async (focuses: unknown, profiles: unknown, countryId: unknown) => {
 	const inputResult = candidateCountSchema.safeParse({ focuses, profiles, countryId });
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	return getCandidateCount(inputResult.data.focuses, inputResult.data.profiles, inputResult.data.countryId);

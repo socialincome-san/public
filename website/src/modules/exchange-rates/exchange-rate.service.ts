@@ -129,7 +129,9 @@ export const importExchangeRates = async (): Promise<ServiceResult<void>> => {
 			if (!hasRatesForTimestamp) {
 				const storedRatesResult = await fetchAndStoreFiatExchangeRates(DateTime.fromMillis(timestamp));
 				if (!storedRatesResult.success) {
-					return resultFail(`Could not store exchange rates: ${storedRatesResult.error}`);
+					console.error('Could not store imported exchange rates', { error: storedRatesResult.error });
+
+					return resultFail('Could not store exchange rates');
 				}
 			}
 		}
@@ -206,7 +208,9 @@ const importTodayEthExchangeRate = async (): Promise<ServiceResult<void>> => {
 		if (usdRate === undefined) {
 			const ratesResult = await fetchAndStoreFiatExchangeRates(today);
 			if (!ratesResult.success) {
-				return resultFail(`Could not import ETH exchange rate: ${ratesResult.error}`);
+				console.error('Could not load USD exchange rate for ETH import', { error: ratesResult.error });
+
+				return resultFail('Could not import ETH exchange rate');
 			}
 			usdRate = ratesResult.data.rates.USD;
 		}
@@ -216,7 +220,9 @@ const importTodayEthExchangeRate = async (): Promise<ServiceResult<void>> => {
 
 		const ethUsdPriceResult = await fetchEthUsdPrice();
 		if (!ethUsdPriceResult.success) {
-			return resultFail(`Could not import ETH exchange rate: ${ethUsdPriceResult.error}`);
+			console.error('Could not load ETH price for exchange rate import', { error: ethUsdPriceResult.error });
+
+			return resultFail('Could not import ETH exchange rate');
 		}
 
 		const ethRate = usdRate / ethUsdPriceResult.data;

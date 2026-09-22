@@ -1,6 +1,6 @@
 import { CountryCode } from '@/generated/prisma/enums';
 import { z } from 'zod';
-import { NEWSLETTER_LANGUAGES } from './newsletter.types';
+import { NEWSLETTER_LANGUAGES, type NewsletterLanguage } from './newsletter.types';
 
 export const subscribeToNewsletterSchema = z.object({
 	firstname: z.string().trim().min(1).optional(),
@@ -12,3 +12,12 @@ export const subscribeToNewsletterSchema = z.object({
 });
 
 export type SubscribeToNewsletterInput = z.infer<typeof subscribeToNewsletterSchema>;
+
+export const toNewsletterLanguage = (
+	language: string | null | undefined,
+	fallback: NewsletterLanguage = 'en',
+): NewsletterLanguage => {
+	const parsed = z.enum(NEWSLETTER_LANGUAGES).safeParse(language);
+
+	return parsed.success ? parsed.data : fallback;
+};

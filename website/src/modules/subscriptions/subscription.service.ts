@@ -11,6 +11,8 @@ import { getAccessiblePrograms } from '@/modules/program-access/program-access.s
 import type { ProgramAccesses } from '@/modules/program-access/program-access.types';
 import { getSubscriptionStripeDetails } from '@/modules/stripe-payments/stripe-payment.service';
 import type { StripeSubscriptionDetails } from '@/modules/stripe-payments/stripe-payment.types';
+import { subscriptionAmount } from './subscription-amount.service';
+import { subscriptionPaymentSchedule } from './subscription-payment-schedule.service';
 import { canListSubscriptions } from './subscription.permissions';
 import * as subscriptionRepository from './subscription.repository';
 import type {
@@ -25,14 +27,9 @@ import type {
 	UpcomingPaymentView,
 	UpsertBankStandingOrderInput,
 } from './subscription.types';
-import {
-	buildMonthlySchedule,
-	isSubscriptionAmountInRange,
-	mergeUpcomingPayments,
-	SUBSCRIPTION_AMOUNT_MAX,
-	SUBSCRIPTION_AMOUNT_MIN,
-	UPCOMING_PAYMENTS_PER_SUBSCRIPTION,
-} from './subscription.types';
+import { UPCOMING_PAYMENTS_PER_SUBSCRIPTION } from './subscription.types';
+
+const { buildMonthly: buildMonthlySchedule, mergeUpcoming: mergeUpcomingPayments } = subscriptionPaymentSchedule;
 
 type DashboardSubscriptionRecord = Awaited<
 	ReturnType<typeof subscriptionRepository.findActiveSubscriptionsByContributorId>
@@ -194,8 +191,8 @@ export const updateBankTransferAmount = async (input: {
 	amount: number;
 }): Promise<ServiceResult<{ amount: number; currency: string }>> => {
 	try {
-		if (!isSubscriptionAmountInRange(input.amount)) {
-			return resultFail(`Amount must be an integer between ${SUBSCRIPTION_AMOUNT_MIN} and ${SUBSCRIPTION_AMOUNT_MAX}`);
+		if (!subscriptionAmount.isSubscriptionAmountInRange(input.amount)) {
+			return resultFail('Amount must be an integer between 1 and 1000000');
 		}
 
 		const subscription = await subscriptionRepository.findOwnedActiveBankTransferSubscription(

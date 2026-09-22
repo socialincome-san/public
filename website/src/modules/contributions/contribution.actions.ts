@@ -25,7 +25,7 @@ export const createContributionAction = async (input: unknown) => {
 
 	const inputResult = contributionCreateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await createContribution(sessionResult.data.id, inputResult.data);
@@ -42,7 +42,7 @@ export const updateContributionAction = async (input: unknown) => {
 
 	const inputResult = contributionUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateContribution(sessionResult.data.id, inputResult.data);
@@ -59,7 +59,7 @@ export const getContributionAction = async (contributionId: unknown) => {
 
 	const contributionIdResult = contributionIdSchema.safeParse(contributionId);
 	if (!contributionIdResult.success) {
-		return resultFail(contributionIdResult.error.issues[0]?.message ?? 'Contribution id is required.');
+		return resultFail('Contribution id is required.');
 	}
 
 	return getContribution(sessionResult.data.id, contributionIdResult.data);
@@ -77,7 +77,7 @@ export const getContributionsOptionsAction = async () => {
 export const getRecentSuccessfulContributionsAction = async (cutoff: unknown) => {
 	const cutoffResult = contributionGlobeCutoffSchema.safeParse(cutoff);
 	if (!cutoffResult.success) {
-		return resultFail(cutoffResult.error.issues[0]?.message ?? 'Invalid cutoff date.');
+		return resultFail('Invalid cutoff date.');
 	}
 
 	return getRecentSuccessfulContributions(cutoffResult.data);

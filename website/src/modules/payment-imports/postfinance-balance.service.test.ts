@@ -118,7 +118,7 @@ describe('parseCamt052Balances', () => {
 
 		expect(result).toEqual({
 			success: false,
-			error: 'Invalid balance for PostFinance account CH1909000000151126386',
+			error: 'Invalid balance in PostFinance CAMT.052 file',
 		});
 	});
 
@@ -139,7 +139,7 @@ describe('parseCamt052Balances', () => {
 
 		expect(result).toEqual({
 			success: false,
-			error: 'Invalid balance for PostFinance account CH1909000000151126386',
+			error: 'Invalid balance in PostFinance CAMT.052 file',
 		});
 	});
 });
@@ -163,7 +163,7 @@ describe('getLatestPostFinanceBalances', () => {
 
 		await expect(getLatestPostFinanceBalances('test-bucket', ['CH5709000000154860881'])).resolves.toEqual({
 			success: false,
-			error: 'No balance found for PostFinance accounts: CH5709000000154860881',
+			error: 'No balance found for one or more PostFinance accounts',
 		});
 	});
 });

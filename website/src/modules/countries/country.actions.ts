@@ -29,7 +29,7 @@ export const createCountryAction = async (input: unknown) => {
 	}
 	const parsedInput = countryCreateInputSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await createCountry(sessionResult.data.id, parsedInput.data);
@@ -45,7 +45,7 @@ export const updateCountryAction = async (input: unknown) => {
 	}
 	const parsedInput = countryUpdateInputSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateCountry(sessionResult.data.id, parsedInput.data);
@@ -61,7 +61,7 @@ export const deleteCountryAction = async (input: unknown) => {
 	}
 	const parsedInput = countryIdSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await deleteCountry(sessionResult.data.id, parsedInput.data);
@@ -77,7 +77,7 @@ export const getCountryAction = async (input: unknown) => {
 	}
 	const parsedInput = countryIdSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	return getCountry(sessionResult.data.id, parsedInput.data);
@@ -88,7 +88,7 @@ export const getProgramCountryFeasibilityAction = async () => getProgramCountryF
 export const getPublicCountryStatsByIsoCodesAction = async (input: unknown) => {
 	const parsedInput = countryIsoCodesSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	return getPublicCountryStatsByIsoCodes(parsedInput.data);
@@ -97,7 +97,7 @@ export const getPublicCountryStatsByIsoCodesAction = async (input: unknown) => {
 export const getCountryStatisticsComparisonAction = async (input: unknown) => {
 	const parsedInput = countryStatisticsComparisonSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	return getCountryStatisticsComparison(parsedInput.data.countryCode, parsedInput.data.visitorCountryCode);

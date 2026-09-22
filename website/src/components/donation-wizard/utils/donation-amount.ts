@@ -1,5 +1,5 @@
 import { getIndirectBeneficiaryCount } from '@/lib/utils/indirect-beneficiaries';
-import { getAmountWithTransactionCostCoverage, getOnlineTransactionCost } from '@/modules/subscriptions/subscription.types';
+import { ONLINE_TRANSACTION_FEE_RATE } from '@/modules/subscriptions/subscription.types';
 
 export type PresetAmount = 25 | 50 | 100;
 export type Cadence = 'monthly' | 'one-time';
@@ -7,12 +7,18 @@ export type PlanTier = '1x' | '2x';
 export type PaymentMethod = 'qr' | 'online';
 export type OneTimePlanChoice = 'one-time' | 'monthly-half';
 
-export { getOnlineTransactionCost };
-
 export const DONATION_MONTHLY_INCOME_MIN = 50;
 export const DONATION_MONTHLY_INCOME_MAX = 1000_000;
 export const DONATION_CUSTOM_AMOUNT_MIN = 1;
 export const DONATION_CUSTOM_AMOUNT_MAX = 1000_000;
+
+const roundAmount = (amount: number): number => Math.round(amount * 100) / 100;
+
+export const getOnlineTransactionCost = (baseAmount: number): number =>
+	baseAmount <= 0 ? 0 : roundAmount(baseAmount * ONLINE_TRANSACTION_FEE_RATE);
+
+const getAmountWithTransactionCostCoverage = (baseAmount: number): number =>
+	roundAmount(baseAmount + getOnlineTransactionCost(baseAmount));
 
 export type DonationAmountContext = {
 	monthlyIncome: number | null;

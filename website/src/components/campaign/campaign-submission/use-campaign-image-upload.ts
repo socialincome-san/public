@@ -1,7 +1,7 @@
 'use client';
 
-import { validateCampaignSubmissionImageMeta } from '@/modules/campaigns/campaign.types';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { validateCampaignSubmissionImageMeta } from './campaign-submission.client';
 
 type UseCampaignImageUploadOptions = {
 	resolveError: (code: string) => string;

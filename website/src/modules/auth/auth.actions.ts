@@ -10,7 +10,7 @@ import { createSessionCookie } from './auth.service';
 export const createSessionAction = async (input: unknown): Promise<ServiceResult<boolean>> => {
 	const inputResult = sessionIdTokenSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'missing-id-token');
+		return resultFail('missing-id-token');
 	}
 
 	const sessionCookieResult = await createSessionCookie(inputResult.data);

@@ -1,4 +1,5 @@
-import { isCampaignActive, matchesPublicCampaignActivity, readTurnstileToken } from './campaign.types';
+import { isCampaignActive, matchesPublicCampaignActivity } from '@/components/campaign/campaign-activity';
+import { readTurnstileToken } from './campaign.schemas';
 
 const now = new Date('2025-06-15T12:00:00.000Z').getTime();
 

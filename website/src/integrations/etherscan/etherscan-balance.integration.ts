@@ -62,7 +62,9 @@ export const fetchCustodianStablecoinWalletBalances = async (
 				const ethAmount = Number(weiToEth(ethResult.data));
 				const usdcAmount = Number(usdcResult.data) / USDC_DECIMALS;
 				if (!Number.isFinite(ethAmount) || !Number.isFinite(usdcAmount)) {
-					return resultFail(`Invalid Etherscan balance amount for wallet ${address}`);
+					console.error('Etherscan returned an invalid wallet balance amount', { address });
+
+					return resultFail('Etherscan returned an invalid wallet balance amount');
 				}
 
 				return resultOk([
@@ -91,22 +93,36 @@ const fetchBalance = async (parameters: URLSearchParams, asset: 'ETH' | 'USDC'):
 	try {
 		const response = await fetch(`${ETHERSCAN_API_URL}?${parameters.toString()}`, { method: 'GET' });
 		if (!response.ok) {
-			return resultFail(`Etherscan ${asset} balance request failed: ${response.status} ${response.statusText}`);
+			console.error('Etherscan balance request failed', {
+				asset,
+				status: response.status,
+				statusText: response.statusText,
+			});
+
+			return resultFail('Etherscan balance request failed');
 		}
 
 		const data: unknown = await response.json();
 		if (!isEtherscanBalanceResponse(data)) {
-			return resultFail(`Invalid Etherscan ${asset} balance response`);
+			console.error('Etherscan returned an invalid balance response', { asset });
+
+			return resultFail('Etherscan returned an invalid balance response');
 		}
 		if (data.status !== '1' || !/^\d+$/.test(data.result)) {
-			return resultFail(`Invalid Etherscan ${asset} balance response: ${data.message}`);
+			console.error('Etherscan balance response reported a failure', {
+				asset,
+				providerMessage: data.message,
+				providerStatus: data.status,
+			});
+
+			return resultFail('Etherscan returned an invalid balance response');
 		}
 
 		return resultOk(data.result);
 	} catch (error) {
-		console.error(`Could not get Etherscan ${asset} balance`, { error });
+		console.error('Could not get Etherscan balance', { asset, error });
 
-		return resultFail(`Could not get Etherscan ${asset} balance`);
+		return resultFail('Could not get Etherscan balance');
 	}
 };
 

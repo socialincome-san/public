@@ -15,7 +15,7 @@ export const createExpenseAction = async (input: unknown) => {
 	}
 	const parsedInput = expenseCreateInputSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await createExpense(sessionResult.data.id, parsedInput.data);
@@ -31,7 +31,7 @@ export const updateExpenseAction = async (input: unknown) => {
 	}
 	const parsedInput = expenseUpdateInputSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateExpense(sessionResult.data.id, parsedInput.data);
@@ -47,7 +47,7 @@ export const getExpenseAction = async (input: unknown) => {
 	}
 	const parsedInput = expenseIdSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	return getExpense(sessionResult.data.id, parsedInput.data);

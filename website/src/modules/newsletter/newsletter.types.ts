@@ -16,11 +16,3 @@ export type NewsletterSubscriber = {
 	language?: string | null;
 	country?: CountryCode | null;
 };
-
-const isNewsletterLanguage = (value: string | null | undefined): value is NewsletterLanguage =>
-	value === 'de' || value === 'en' || value === 'fr' || value === 'it';
-
-export const toNewsletterLanguage = (
-	language: string | null | undefined,
-	fallback: NewsletterLanguage = 'en',
-): NewsletterLanguage => (isNewsletterLanguage(language) ? language : fallback);

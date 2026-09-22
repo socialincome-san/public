@@ -63,7 +63,7 @@ describe('fetchPawaPayBalances', () => {
 
 		await expect(fetchPawaPayBalances()).resolves.toEqual({
 			success: false,
-			error: 'Invalid PawaPay balance for country SLE',
+			error: 'PawaPay returned an invalid balance',
 		});
 	});
 });

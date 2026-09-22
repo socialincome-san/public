@@ -19,7 +19,7 @@ export const updateSubscriptionAmountAction = async (input: unknown) => {
 
 	const parsed = updateSubscriptionAmountSchema.safeParse(input);
 	if (!parsed.success) {
-		return resultFail(parsed.error.issues[0]?.message ?? 'Invalid subscription amount update');
+		return resultFail('Invalid subscription amount update');
 	}
 
 	const { contributorId, paymentMethod } = ownership.data;
@@ -61,7 +61,7 @@ export const createUpdatePaymentMethodSessionAction = async (input: unknown) => 
 export const cancelSubscriptionAction = async (input: unknown) => {
 	const parsed = cancelSubscriptionSchema.safeParse(input);
 	if (!parsed.success) {
-		return resultFail(parsed.error.issues[0]?.message ?? 'Invalid cancellation reason');
+		return resultFail('Invalid cancellation reason');
 	}
 
 	const ownership = await resolveOwnedSubscriptionPaymentMethod(parsed.data);
@@ -95,7 +95,7 @@ const resolveOwnedSubscriptionPaymentMethod = async (input: unknown) => {
 		typeof input === 'object' && input !== null && 'subscriptionId' in input ? input.subscriptionId : input,
 	);
 	if (!parsed.success) {
-		return resultFail(parsed.error.issues[0]?.message ?? 'Subscription id is required.');
+		return resultFail('Subscription id is required.');
 	}
 
 	const paymentMethodResult = await getOwnedSubscriptionPaymentMethod({

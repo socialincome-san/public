@@ -8,7 +8,7 @@ import { subscribeToNewsletter, unsubscribeFromNewsletter } from './newsletter.s
 export const subscribeToNewsletterAction = async (input: unknown) => {
 	const parsed = subscribeToNewsletterSchema.safeParse(input);
 	if (!parsed.success) {
-		return resultFail(parsed.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	return subscribeToNewsletter(parsed.data);

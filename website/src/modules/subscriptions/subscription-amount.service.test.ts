@@ -3,9 +3,8 @@ import {
 	clampSubscriptionAmount,
 	isSubscriptionAmountInRange,
 	parseSubscriptionAmountInput,
-	SUBSCRIPTION_AMOUNT_MAX,
-	SUBSCRIPTION_AMOUNT_MIN,
-} from './subscription.types';
+} from '@/app/[lang]/[region]/dashboard/subscriptions/subscription-amount';
+import { SUBSCRIPTION_AMOUNT_MAX, SUBSCRIPTION_AMOUNT_MIN } from './subscription.types';
 
 describe('subscription amount helpers', () => {
 	test('clamps values into the allowed range', () => {

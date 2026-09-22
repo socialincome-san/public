@@ -26,7 +26,7 @@ export const createContributorAction = async (input: unknown) => {
 
 	const inputResult = contributorCreateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await createContributor(sessionResult.data.id, inputResult.data);
@@ -43,7 +43,7 @@ export const updateContributorAction = async (input: unknown) => {
 
 	const inputResult = contributorUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateContributor(sessionResult.data.id, inputResult.data);
@@ -60,7 +60,7 @@ export const getContributorAction = async (contributorId: unknown) => {
 
 	const contributorIdResult = contributorIdSchema.safeParse(contributorId);
 	if (!contributorIdResult.success) {
-		return resultFail(contributorIdResult.error.issues[0]?.message ?? 'Contributor id is required.');
+		return resultFail('Contributor id is required.');
 	}
 
 	return getContributor(sessionResult.data.id, contributorIdResult.data);
@@ -76,7 +76,7 @@ export const updateContributorSelfAction = async (input: unknown) => {
 
 	const inputResult = contributorSelfUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateContributorSelf(sessionResult.data.id, inputResult.data);

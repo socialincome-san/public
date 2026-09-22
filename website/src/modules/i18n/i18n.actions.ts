@@ -1,11 +1,12 @@
 'use server';
 
-import { LANGUAGE_COOKIE } from '@/app/[lang]/[region]';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { switchToDefaultLanguageInputSchema } from './i18n.schemas';
 
-export const switchToDefaultLanguageAction = async (pathname: string) => {
+export const switchToDefaultLanguageAction = async (input: unknown) => {
+	const pathname = switchToDefaultLanguageInputSchema.parse(input);
 	const segments = pathname.split('/').filter(Boolean);
 	if (segments.length < 2) {
 		redirect(`/${defaultLanguage}/int`);
@@ -20,3 +21,5 @@ export const switchToDefaultLanguageAction = async (pathname: string) => {
 
 	redirect(`/${segments.join('/')}`);
 };
+
+const LANGUAGE_COOKIE = 'si_lang';

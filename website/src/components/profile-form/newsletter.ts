@@ -1,6 +1,6 @@
+import { toNewsletterLanguage } from '@/components/newsletter/newsletter-language';
 import { ContributorSession } from '@/modules/contributors/contributor.types';
 import { subscribeToNewsletterAction, unsubscribeFromNewsletterAction } from '@/modules/newsletter/newsletter.actions';
-import { toNewsletterLanguage } from '@/modules/newsletter/newsletter.types';
 import { ProfileFormOutput } from './schemas';
 
 export const toggleNewsletter = async (values: ProfileFormOutput, session: ContributorSession, isSubscribed: boolean) => {

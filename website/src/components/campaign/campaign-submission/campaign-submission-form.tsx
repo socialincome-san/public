@@ -15,19 +15,10 @@ import {
 	type CampaignDefaultImageOption,
 } from '@/modules/campaigns/campaign.actions';
 import {
-	appendCampaignSubmissionFormData,
 	campaignSubmissionAboutFieldNames,
 	campaignSubmissionDefaultCurrency,
 	campaignSubmissionDetailsFieldNames,
 	campaignSubmissionPersonalFieldNames,
-	createCampaignSubmissionDetailsSchema,
-	createCampaignSubmissionFormSchema,
-	createCampaignSubmissionPersonalSchema,
-	endDateFromDurationPreset,
-	isCampaignSubmissionErrorCode,
-	isCampaignSubmissionImageErrorCode,
-	isCampaignSubmissionImageMultipartField,
-	resolveCampaignSubmissionQuote,
 	turnstileResponseFieldName,
 } from '@/modules/campaigns/campaign.types';
 import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
@@ -39,6 +30,17 @@ import { CampaignSubmissionFooter } from './campaign-submission-footer';
 import { CampaignSubmissionGuestSuccess } from './campaign-submission-guest-success';
 import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
 import { CampaignSubmissionSteps } from './campaign-submission-steps';
+import {
+	appendCampaignSubmissionFormData,
+	createCampaignSubmissionDetailsSchema,
+	createCampaignSubmissionFormSchema,
+	createCampaignSubmissionPersonalSchema,
+	endDateFromDurationPreset,
+	isCampaignSubmissionErrorCode,
+	isCampaignSubmissionImageErrorCode,
+	isCampaignSubmissionImageMultipartField,
+	resolveCampaignSubmissionQuote,
+} from './campaign-submission.client';
 import { addPendingClaimId } from './pending-claim-ids';
 import type {
 	CampaignImageSelection,

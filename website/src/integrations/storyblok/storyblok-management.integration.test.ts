@@ -133,18 +133,18 @@ describe('downloadStoryblokAssetBuffer', () => {
 	});
 
 	test.each([
-		['http://a.storyblok.com/f/109655/default.png', 'Storyblok asset URL must use HTTPS.'],
-		['https://evil.example.com/f/109655/default.png', 'Storyblok asset URL host is not allowed.'],
-		['https://storyblok.com.evil.com/f/109655/default.png', 'Storyblok asset URL host is not allowed.'],
-		['https://user:pass@a.storyblok.com/f/109655/default.png', 'Storyblok asset URL must not include credentials.'],
-		['not-a-url', 'Invalid Storyblok asset URL.'],
-	])('rejects unsafe asset URL %s', async (filename, message) => {
+		'http://a.storyblok.com/f/109655/default.png',
+		'https://evil.example.com/f/109655/default.png',
+		'https://storyblok.com.evil.com/f/109655/default.png',
+		'https://user:pass@a.storyblok.com/f/109655/default.png',
+		'not-a-url',
+	])('rejects unsafe asset URL %s', async (filename) => {
 		const fetchMock = jest.fn();
 		global.fetch = fetchMock as typeof fetch;
 
 		await expect(downloadStoryblokAssetBuffer(filename)).resolves.toEqual({
 			success: false,
-			error: message,
+			error: 'Storyblok request failed.',
 			status: 400,
 		});
 		expect(fetchMock).not.toHaveBeenCalled();
@@ -161,7 +161,7 @@ describe('downloadStoryblokAssetBuffer', () => {
 
 		await expect(downloadStoryblokAssetBuffer(allowedUrl)).resolves.toEqual({
 			success: false,
-			error: 'Storyblok asset exceeds size limit.',
+			error: 'Storyblok request failed.',
 			status: 413,
 		});
 	});
@@ -173,7 +173,7 @@ describe('downloadStoryblokAssetBuffer', () => {
 
 		await expect(downloadStoryblokAssetBuffer(allowedUrl)).resolves.toEqual({
 			success: false,
-			error: 'Storyblok asset exceeds size limit.',
+			error: 'Storyblok request failed.',
 			status: 413,
 		});
 	});

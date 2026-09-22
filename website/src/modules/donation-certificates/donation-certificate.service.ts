@@ -236,11 +236,14 @@ const createDonationCertificates = async (
 		);
 
 		if (successCount === 0) {
-			return resultFail(`Error while creating donation certificates for ${year}.
-					No donation certificates created.
-					Skipped, because certificate already exists (${skippedExists.length}): ${skippedExists.join(', ')}
-					Skipped, because no contributions available for contributor (${skippedNoContributions.length}): ${skippedNoContributions.join(', ')}
-					Users with errors (${creationWithFailures.length}): ${creationWithFailures.join(', ')}`);
+			console.error('No donation certificates were created', {
+				year,
+				skippedExistingContributorIds: skippedExists,
+				skippedWithoutContributionsContributorIds: skippedNoContributions,
+				failedContributorIds: creationWithFailures,
+			});
+
+			return resultFail('Could not create donation certificates');
 		}
 
 		const success = `Successfully created ${successCount} donation certificates for ${year}.
@@ -253,7 +256,7 @@ const createDonationCertificates = async (
 	} catch (error) {
 		console.error('Error while creating donation certificates', { year, error });
 
-		return resultFail(`Error while creating donation certificates for ${year}.`);
+		return resultFail('Could not create donation certificates');
 	}
 };
 

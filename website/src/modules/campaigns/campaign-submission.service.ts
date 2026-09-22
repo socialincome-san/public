@@ -15,9 +15,8 @@ import { slugify } from '@/lib/utils/string-utils';
 import { isProgramEligibleForPublicSubmission } from '@/modules/programs/program-public-submission.service';
 import { randomBytes, randomUUID } from 'crypto';
 import * as campaignRepository from './campaign.repository';
-import type { CampaignSubmissionFields } from './campaign.schemas';
+import { validateCampaignSubmissionImageBuffer, type CampaignSubmissionFields } from './campaign.schemas';
 import {
-	validateCampaignSubmissionImageBuffer,
 	type CampaignSubmissionImageSource,
 	type CampaignSubmissionImageValidation,
 	type CampaignSubmissionOptionalImages,

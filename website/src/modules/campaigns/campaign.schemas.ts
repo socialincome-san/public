@@ -1,54 +1,18 @@
 import {
 	campaignSubmissionConfig,
-	campaignSubmissionDurationPresets,
 	type CampaignSubmissionAllowedCurrency,
+	type CampaignSubmissionPermittedImageMimeType,
 } from '@/lib/config/campaign-submission.config';
+import { parseStoryblokFocus } from '@/lib/storyblok/storyblok-image-focus';
 import { isSafeHref, slugify } from '@/lib/utils/string-utils';
 import { addDays, format, isValid, parse, startOfDay } from 'date-fns';
 import z from 'zod';
-
-export const campaignSubmissionErrorCodeSchema = z.enum([
-	'title-required',
-	'title-too-long',
-	'title-not-slugifiable',
-	'description-required',
-	'description-too-long',
-	'goal-positive',
-	'currency-unsupported',
-	'end-date-required',
-	'end-date-invalid',
-	'end-date-too-soon',
-	'end-date-too-late',
-	'program-required',
-	'creator-name-required',
-	'creator-name-too-long',
-	'quote-required',
-	'quote-too-long',
-	'section-description-too-long',
-	'link-too-long',
-	'link-unsafe',
-	'handle-invalid',
-	'handle-too-long',
-	'image-required',
-	'image-too-large',
-	'image-format-unsupported',
-	'image-type-mismatch',
-	'default-image-invalid',
-	'payload-too-large',
-	'invalid-form-data',
-	'invalid-submission',
-	'program-not-eligible',
-	'slug-exists',
-	'submission-failed',
-	'turnstile-required',
-	'turnstile-invalid',
-	'first-name-required',
-	'last-name-required',
-	'email-required',
-	'email-invalid',
-]);
-
-export type CampaignSubmissionErrorCode = z.infer<typeof campaignSubmissionErrorCodeSchema>;
+import {
+	campaignSubmissionErrorCodes,
+	turnstileResponseFieldName,
+	type CampaignSubmissionErrorCode,
+	type CampaignSubmissionImageValidation,
+} from './campaign.types';
 
 export const campaignIdSchema = z.string().trim().min(1, 'Missing campaign id');
 
@@ -68,12 +32,17 @@ type ErrorMessage = (code: CampaignSubmissionErrorCode) => string;
 
 const asErrorCode: ErrorMessage = (code) => code;
 
-// Intentional: strip ASCII control characters from untrusted text fields.
-// eslint-disable-next-line no-control-regex -- sanitizes form input
-const CONTROL_CHARACTERS_REGEX = /[\u0000-\u001F\u007F]/;
 const SOCIAL_HANDLE_REGEX = /^[a-zA-Z0-9._]+$/;
 
-const sanitizeText = (value: string) => value.replace(CONTROL_CHARACTERS_REGEX, '').trim();
+const sanitizeText = (value: string) =>
+	Array.from(value)
+		.filter((character) => {
+			const code = character.charCodeAt(0);
+
+			return code > 31 && code !== 127;
+		})
+		.join('')
+		.trim();
 
 const optionalSanitizedText = (maxLength: number, tooLongCode: CampaignSubmissionErrorCode, msg: ErrorMessage) =>
 	z
@@ -143,19 +112,6 @@ const optionalWebsiteUrlSchema = (msg: ErrorMessage) =>
 		msg('link-unsafe'),
 	);
 
-const createCampaignSubmissionAdditionalFieldsSchema = (msg: ErrorMessage) =>
-	z.object({
-		sectionDescription: optionalSanitizedText(
-			campaignSubmissionConfig.maxSectionDescriptionLength,
-			'section-description-too-long',
-			msg,
-		),
-		instagramHandle: optionalSocialHandleSchema(msg),
-		xHandle: optionalSocialHandleSchema(msg),
-		linkWebsite: optionalWebsiteUrlSchema(msg),
-		tiktokHandle: optionalSocialHandleSchema(msg),
-	});
-
 const isAllowedCurrency = (value: string): value is CampaignSubmissionAllowedCurrency =>
 	campaignSubmissionConfig.allowedCurrencies.some((currency) => currency === value);
 
@@ -200,12 +156,9 @@ const emailRule = (msg: ErrorMessage) => z.string().min(1, msg('email-required')
 const quoteRule = (msg: ErrorMessage) =>
 	z.string().min(1, msg('quote-required')).max(campaignSubmissionConfig.maxQuoteLength, msg('quote-too-long'));
 
-const optionalClientQuoteRule = (msg: ErrorMessage) =>
-	z.string().max(campaignSubmissionConfig.maxQuoteLength, msg('quote-too-long'));
-
 const programIdRule = (msg: ErrorMessage) => z.string().trim().min(1, msg('program-required'));
 
-export const campaignSubmissionFieldsSchema = z
+const campaignSubmissionFieldsSchema = z
 	.object({
 		title: z.string().transform(sanitizeText).pipe(titleRule(asErrorCode)),
 		description: z.string().transform(sanitizeText).pipe(descriptionRule(asErrorCode)),
@@ -281,7 +234,7 @@ const parseCampaignSubmissionEndDate = (value: string): Date | null => {
 	return startOfDay(date);
 };
 
-const validateCampaignSubmissionEndDate = (endDate: Date): CampaignSubmissionErrorCode | null => {
+export const validateCampaignSubmissionEndDate = (endDate: Date): CampaignSubmissionErrorCode | null => {
 	const today = startOfDay(new Date());
 	const minEndDate = addDays(today, campaignSubmissionConfig.minCampaignDurationDays);
 	const maxEndDate = addDays(today, campaignSubmissionConfig.maxCampaignDurationDays);
@@ -297,102 +250,6 @@ const validateCampaignSubmissionEndDate = (endDate: Date): CampaignSubmissionErr
 	return null;
 };
 
-const refineCampaignSubmissionGoalAndEndDate = (
-	values: {
-		hasGoal: boolean;
-		goal?: string | number | null;
-		endDate: string;
-	},
-	ctx: z.RefinementCtx,
-	message: ErrorMessage,
-) => {
-	if (values.hasGoal) {
-		const parsedGoal = parseCampaignSubmissionGoalInput(values.goal === undefined ? null : values.goal);
-		if (parsedGoal === null || parsedGoal === 'invalid') {
-			ctx.addIssue({ code: 'custom', path: ['goal'], message: message('goal-positive') });
-		}
-	}
-
-	if (!values.endDate.trim()) {
-		ctx.addIssue({ code: 'custom', path: ['endDate'], message: message('end-date-required') });
-
-		return;
-	}
-
-	const date = parseCampaignSubmissionEndDate(values.endDate);
-	if (!date) {
-		ctx.addIssue({ code: 'custom', path: ['endDate'], message: message('end-date-invalid') });
-
-		return;
-	}
-
-	const endDateError = validateCampaignSubmissionEndDate(date);
-	if (endDateError) {
-		ctx.addIssue({ code: 'custom', path: ['endDate'], message: message(endDateError) });
-	}
-};
-
-const campaignSubmissionDetailsObjectSchema = (message: ErrorMessage) =>
-	z.object({
-		title: z.string().transform(sanitizeText).pipe(titleRule(message)),
-		description: z.string().transform(sanitizeText).pipe(descriptionRule(message)),
-		hasGoal: z.boolean(),
-		goal: z.union([z.string(), z.number(), z.undefined(), z.null()]).optional(),
-		currency: z.enum(campaignSubmissionConfig.allowedCurrencies, {
-			errorMap: () => ({ message: message('currency-unsupported') }),
-		}),
-		durationPreset: z.enum(campaignSubmissionDurationPresets),
-		endDate: z.string(),
-		isPublic: z.boolean(),
-	});
-
-export const createCampaignSubmissionDetailsSchema = (message: (code: CampaignSubmissionErrorCode) => string) =>
-	campaignSubmissionDetailsObjectSchema(message).superRefine((values, ctx) => {
-		refineCampaignSubmissionGoalAndEndDate(values, ctx, message);
-	});
-
-export const createCampaignSubmissionFormSchema = (message: (code: CampaignSubmissionErrorCode) => string) =>
-	campaignSubmissionDetailsObjectSchema(message)
-		.extend({
-			programId: programIdRule(message),
-			creatorName: z.string().transform(sanitizeText).pipe(creatorNameRule(message)),
-			quote: z.string().transform(sanitizeText).pipe(optionalClientQuoteRule(message)),
-			hasAdditionalInformation: z.boolean(),
-			sectionDescription: z.string().optional(),
-			instagramHandle: z.string().optional(),
-			xHandle: z.string().optional(),
-			linkWebsite: z.string().optional(),
-			tiktokHandle: z.string().optional(),
-			firstName: z.string(),
-			lastName: z.string(),
-			email: z.string(),
-		})
-		.superRefine((values, ctx) => {
-			refineCampaignSubmissionGoalAndEndDate(values, ctx, message);
-
-			if (!values.hasAdditionalInformation) {
-				return;
-			}
-
-			const additionalResult = createCampaignSubmissionAdditionalFieldsSchema(message).safeParse({
-				sectionDescription: values.sectionDescription,
-				instagramHandle: values.instagramHandle,
-				xHandle: values.xHandle,
-				linkWebsite: values.linkWebsite,
-				tiktokHandle: values.tiktokHandle,
-			});
-
-			if (!additionalResult.success) {
-				for (const issue of additionalResult.error.issues) {
-					ctx.addIssue({
-						code: 'custom',
-						path: issue.path,
-						message: issue.message,
-					});
-				}
-			}
-		});
-
 export const createCampaignSubmissionPersonalSchema = (message: (code: CampaignSubmissionErrorCode) => string) =>
 	z.object({
 		firstName: z.string().transform(sanitizeText).pipe(firstNameRule(message)),
@@ -400,4 +257,201 @@ export const createCampaignSubmissionPersonalSchema = (message: (code: CampaignS
 		email: z.string().transform(sanitizeText).pipe(emailRule(message)),
 	});
 
-export type CampaignSubmissionFormValues = z.infer<ReturnType<typeof createCampaignSubmissionFormSchema>>;
+export const isCampaignSubmissionErrorCode = (value: string): value is CampaignSubmissionErrorCode =>
+	campaignSubmissionErrorCodes.some((code) => code === value);
+
+export const isCampaignSubmissionImageErrorCode = (errorCode: string | undefined): boolean =>
+	errorCode === 'image-required' ||
+	errorCode === 'image-too-large' ||
+	errorCode === 'image-format-unsupported' ||
+	errorCode === 'image-type-mismatch' ||
+	errorCode === 'default-image-invalid';
+
+const validateCampaignSubmissionImageMeta = (size: number, mimeType: string): CampaignSubmissionErrorCode | null => {
+	if (size > campaignSubmissionConfig.maxImageBytes) {
+		return 'image-too-large';
+	}
+
+	if (mimeType && !isPermittedImageMimeType(mimeType)) {
+		return 'image-format-unsupported';
+	}
+
+	return null;
+};
+
+export const parseCampaignSubmissionImageFocus = (
+	value: FormDataEntryValue | null | undefined,
+): { success: true; data: string | null } | { success: false; error: CampaignSubmissionErrorCode } => {
+	if (value === null || value === undefined) {
+		return { success: true, data: null };
+	}
+
+	if (typeof value !== 'string') {
+		return { success: false, error: 'invalid-submission' };
+	}
+
+	const trimmed = value.trim();
+	if (trimmed.length === 0) {
+		return { success: true, data: null };
+	}
+
+	if (!parseStoryblokFocus(trimmed)) {
+		return { success: false, error: 'invalid-submission' };
+	}
+
+	return { success: true, data: trimmed };
+};
+
+export const validateCampaignSubmissionImageBuffer = (
+	buffer: Buffer,
+	declaredMimeType: string,
+	filename: string,
+): { success: true; data: CampaignSubmissionImageValidation } | { success: false; error: CampaignSubmissionErrorCode } => {
+	const metaError = validateCampaignSubmissionImageMeta(buffer.length, declaredMimeType);
+	if (metaError) {
+		return { success: false, error: metaError };
+	}
+
+	const detectedMimeType = detectImageMimeType(buffer);
+	if (!detectedMimeType) {
+		return { success: false, error: 'image-format-unsupported' };
+	}
+
+	if (declaredMimeType && isPermittedImageMimeType(declaredMimeType) && declaredMimeType !== detectedMimeType) {
+		return { success: false, error: 'image-type-mismatch' };
+	}
+
+	return {
+		success: true,
+		data: {
+			buffer,
+			mimeType: detectedMimeType,
+			filename: filename.trim() || 'campaign-image',
+			size: buffer.length,
+		},
+	};
+};
+
+export const parseCampaignSubmissionFields = (
+	formData: FormData,
+): { success: true; data: CampaignSubmissionFields } | { success: false; error: CampaignSubmissionErrorCode } => {
+	const parsed = campaignSubmissionFieldsSchema.safeParse(readCampaignSubmissionFormDataFields(formData));
+
+	if (!parsed.success) {
+		const message = parsed.error.issues[0]?.message;
+		const errorCode = message && isCampaignSubmissionErrorCode(message) ? message : 'invalid-submission';
+
+		return { success: false, error: errorCode };
+	}
+
+	const endDateError = validateCampaignSubmissionEndDate(parsed.data.endDate);
+	if (endDateError) {
+		return { success: false, error: endDateError };
+	}
+
+	return { success: true, data: parsed.data };
+};
+
+export const parseCampaignSubmissionDefaultImageId = (
+	value: FormDataEntryValue | null,
+): { success: true; data: number } | { success: false; error: CampaignSubmissionErrorCode } => {
+	if (typeof value !== 'string' || !value.trim()) {
+		return { success: false, error: 'image-required' };
+	}
+
+	const parsed = Number(value.trim());
+	if (!Number.isInteger(parsed) || parsed <= 0) {
+		return { success: false, error: 'default-image-invalid' };
+	}
+
+	return { success: true, data: parsed };
+};
+
+export const parseCampaignSubmissionImageFile = async (
+	file: File,
+): Promise<
+	{ success: true; data: CampaignSubmissionImageValidation } | { success: false; error: CampaignSubmissionErrorCode }
+> => {
+	const imageBuffer = Buffer.from(await file.arrayBuffer());
+
+	return validateCampaignSubmissionImageBuffer(imageBuffer, file.type, file.name);
+};
+
+export const parseOptionalCampaignSubmissionImage = async (
+	formData: FormData,
+	fieldName: string,
+): Promise<
+	{ success: true; data: CampaignSubmissionImageValidation | null } | { success: false; error: CampaignSubmissionErrorCode }
+> => {
+	const imageField = formData.get(fieldName);
+	if (!(imageField instanceof File) || imageField.size === 0) {
+		return { success: true, data: null };
+	}
+
+	const imageResult = await parseCampaignSubmissionImageFile(imageField);
+	if (!imageResult.success) {
+		return { success: false, error: imageResult.error };
+	}
+
+	return {
+		success: true,
+		data: imageResult.data,
+	};
+};
+
+export const readTurnstileToken = (formData: FormData): string | null => {
+	const value = formData.get(turnstileResponseFieldName);
+	if (typeof value !== 'string') {
+		return null;
+	}
+
+	const trimmed = value.trim();
+
+	return trimmed.length > 0 ? trimmed : null;
+};
+
+const IMAGE_SIGNATURES: { mimeType: CampaignSubmissionPermittedImageMimeType; bytes: number[] }[] = [
+	{ mimeType: 'image/jpeg', bytes: [0xff, 0xd8, 0xff] },
+	{ mimeType: 'image/png', bytes: [0x89, 0x50, 0x4e, 0x47] },
+	{ mimeType: 'image/webp', bytes: [0x52, 0x49, 0x46, 0x46] },
+];
+
+const detectImageMimeType = (buffer: Buffer): CampaignSubmissionPermittedImageMimeType | null => {
+	for (const signature of IMAGE_SIGNATURES) {
+		if (signature.bytes.every((byte, index) => buffer[index] === byte)) {
+			if (signature.mimeType === 'image/webp') {
+				const webpMarker = buffer.subarray(8, 12).toString('ascii');
+
+				return webpMarker === 'WEBP' ? signature.mimeType : null;
+			}
+
+			return signature.mimeType;
+		}
+	}
+
+	return null;
+};
+
+const isPermittedImageMimeType = (value: string): value is CampaignSubmissionPermittedImageMimeType =>
+	campaignSubmissionConfig.permittedImageMimeTypes.some((mimeType) => mimeType === value);
+
+const parseHasAdditionalInformation = (value: FormDataEntryValue | null) =>
+	typeof value === 'string' && value.trim().toLowerCase() === 'true';
+
+const readCampaignSubmissionFormDataFields = (formData: FormData) => ({
+	title: formData.get('title'),
+	description: formData.get('description'),
+	goal: formData.get('goal'),
+	currency: formData.get('currency'),
+	endDate: formData.get('endDate'),
+	programId: formData.get('programId'),
+	public: formData.get('public') ?? 'true',
+	creatorName: formData.get('creatorName') ?? '',
+	quote: formData.get('quote') ?? '',
+	hasAdditionalInformation: parseHasAdditionalInformation(formData.get('hasAdditionalInformation')),
+	sectionDescription: formData.get('sectionDescription'),
+	instagramHandle: formData.get('instagramHandle'),
+	xHandle: formData.get('xHandle'),
+	linkWebsite: formData.get('linkWebsite'),
+	tiktokHandle: formData.get('tiktokHandle'),
+});

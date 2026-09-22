@@ -51,7 +51,7 @@ export const createStripeEmbeddedCheckoutAction = async (input: unknown) => {
 export const getStripeCheckoutOnboardingPrefillAction = async (sessionId: unknown) => {
 	const parsed = stripeCheckoutSessionIdSchema.safeParse(sessionId);
 	if (!parsed.success) {
-		return resultFail(parsed.error.issues[0]?.message ?? 'Missing checkout session id');
+		return resultFail('Missing checkout session id');
 	}
 
 	return getCheckoutOnboardingPrefill(parsed.data);

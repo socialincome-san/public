@@ -35,7 +35,9 @@ const isStoryblokManagementError = (error: unknown): error is StoryblokManagemen
 
 const toServiceFailure = (error: unknown): ServiceResult<never> => {
 	if (isStoryblokManagementError(error)) {
-		return resultFail(error.message, error.retryable ? 503 : error.statusCode);
+		console.error('Storyblok management request failed', { error });
+
+		return resultFail('Storyblok request failed.', error.retryable ? 503 : error.statusCode);
 	}
 
 	console.error(error);

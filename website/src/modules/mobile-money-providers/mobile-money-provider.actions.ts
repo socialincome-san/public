@@ -28,7 +28,7 @@ export const createMobileMoneyProviderAction = async (input: unknown) => {
 	}
 	const inputResult = mobileMoneyProviderCreateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await createMobileMoneyProvider(sessionResult.data.id, inputResult.data);
@@ -44,7 +44,7 @@ export const updateMobileMoneyProviderAction = async (input: unknown) => {
 	}
 	const inputResult = mobileMoneyProviderUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateMobileMoneyProvider(sessionResult.data.id, inputResult.data);
@@ -60,7 +60,7 @@ export const getMobileMoneyProviderAction = async (providerId: unknown) => {
 	}
 	const providerIdResult = mobileMoneyProviderIdSchema.safeParse(providerId);
 	if (!providerIdResult.success) {
-		return resultFail(providerIdResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	return getMobileMoneyProvider(sessionResult.data.id, providerIdResult.data);
@@ -73,7 +73,7 @@ export const deleteMobileMoneyProviderAction = async (providerId: unknown) => {
 	}
 	const providerIdResult = mobileMoneyProviderIdSchema.safeParse(providerId);
 	if (!providerIdResult.success) {
-		return resultFail(providerIdResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await deleteMobileMoneyProvider(sessionResult.data.id, providerIdResult.data);

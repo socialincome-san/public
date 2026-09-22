@@ -433,7 +433,7 @@ export const getPayoutByRecipientAndId = async (
 	} catch (error) {
 		console.error('Could not fetch recipient payout', { recipientId, payoutId, error });
 
-		return resultFail(`Could not fetch payout "${payoutId}"`);
+		return resultFail('Could not fetch payout');
 	}
 };
 
@@ -519,7 +519,7 @@ export const updatePayoutStatus = async (
 export const createPayout = async (userId: string, input: CreatePayoutInput): Promise<ServiceResult<PayoutPayload>> => {
 	const inputResult = payoutCreateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	try {
@@ -553,7 +553,7 @@ export const createPayout = async (userId: string, input: CreatePayoutInput): Pr
 export const updatePayout = async (userId: string, input: UpdatePayoutInput): Promise<ServiceResult<PayoutPayload>> => {
 	const inputResult = payoutUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	try {
@@ -633,7 +633,9 @@ export const updatePayoutStatusByRecipient = async (
 	try {
 		const payout = await payoutRepository.findPayoutForRecipientStatusUpdate(recipientId, payoutId);
 		if (!payout) {
-			return resultFail(`Payout "${payoutId}" not found for recipient`);
+			console.warn('Payout not found for recipient', { recipientId, payoutId });
+
+			return resultFail('Payout not found for recipient');
 		}
 
 		const updated = await payoutRepository.updatePayoutStatusByRecipient(payout.id, status, comments);
@@ -642,7 +644,7 @@ export const updatePayoutStatusByRecipient = async (
 	} catch (error) {
 		console.error('Failed to update recipient payout', { recipientId, payoutId, status, error });
 
-		return resultFail(`Failed to update payout "${payoutId}"`);
+		return resultFail('Failed to update payout');
 	}
 };
 

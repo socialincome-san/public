@@ -1,12 +1,8 @@
 import { type Currency } from '@/generated/prisma/client';
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
 import { cancelSubscriptionAction, updateSubscriptionAmountAction } from '@/modules/subscriptions/subscription.actions';
-import {
-	canUpdateSubscriptionAmount,
-	clampSubscriptionAmount,
-	isSubscriptionAmountInRange,
-} from '@/modules/subscriptions/subscription.types';
 import { assign, fromPromise, setup } from 'xstate';
+import { canUpdateSubscriptionAmount, clampSubscriptionAmount, isSubscriptionAmountInRange } from '../subscription-amount';
 
 export type EditSubscriptionPaymentMethod = 'stripe' | 'bank_transfer';
 

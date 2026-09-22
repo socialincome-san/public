@@ -9,18 +9,20 @@ import { Slider } from '@/components/slider/slider';
 import { type Currency } from '@/generated/prisma/client';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import {
-	canUpdateSubscriptionAmount,
-	clampSubscriptionAmount,
-	getAmountWithTransactionCostCoverage,
-	getOnlineTransactionCost,
-	isSubscriptionAmountInRange,
-	parseSubscriptionAmountInput,
 	SUBSCRIPTION_AMOUNT_MAX,
 	SUBSCRIPTION_AMOUNT_MIN,
 	SUBSCRIPTION_AMOUNT_SLIDER_MAX,
 } from '@/modules/subscriptions/subscription.types';
 import { CircleX, CreditCard } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
+import {
+	canUpdateSubscriptionAmount,
+	clampSubscriptionAmount,
+	getAmountWithTransactionCostCoverage,
+	getOnlineTransactionCost,
+	isSubscriptionAmountInRange,
+	parseSubscriptionAmountInput,
+} from '../subscription-amount';
 
 type Props = {
 	amount: number;

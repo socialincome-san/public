@@ -566,17 +566,13 @@ export const upsertFromBankTransfer = async (
 const validateCreateInput = (input: CreateContributionInput): ServiceResult<CreateContributionInput> => {
 	const parsedInput = contributionCreateSchema.safeParse(input);
 
-	return parsedInput.success
-		? resultOk(parsedInput.data)
-		: resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+	return parsedInput.success ? resultOk(parsedInput.data) : resultFail('Invalid input.');
 };
 
 const validateUpdateInput = (input: UpdateContributionInput): ServiceResult<UpdateContributionInput> => {
 	const parsedInput = contributionUpdateSchema.safeParse(input);
 
-	return parsedInput.success
-		? resultOk(parsedInput.data)
-		: resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+	return parsedInput.success ? resultOk(parsedInput.data) : resultFail('Invalid input.');
 };
 
 const validateReferencesExist = async (input: {

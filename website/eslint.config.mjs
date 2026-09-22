@@ -290,6 +290,7 @@ export default [
 	{
 		files: ['src/modules/**/*.{schemas,permissions,types}.ts'],
 		rules: {
+			'backend-architecture/types-file-no-runtime-functions': 'error',
 			'@typescript-eslint/no-restricted-imports': [
 				'error',
 				{
@@ -320,6 +321,12 @@ export default [
 		rules: {
 			'@typescript-eslint/naming-convention': [
 				'error',
+				{
+					selector: 'variable',
+					modifiers: ['const', 'exported'],
+					types: ['function'],
+					format: ['camelCase'],
+				},
 				{
 					selector: 'variable',
 					modifiers: ['const', 'exported'],

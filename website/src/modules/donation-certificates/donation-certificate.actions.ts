@@ -30,7 +30,7 @@ export const createDonationCertificatesAction = async (input: unknown): Promise<
 
 	const parsedInput = donationCertificateBatchCreateSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid donation certificate input.');
+		return resultFail('Invalid donation certificate input.');
 	}
 
 	const result = await createDonationCertificatesForUser(
@@ -52,7 +52,7 @@ export const createCurrentContributorDonationCertificateAction = async (input: u
 
 	const parsedInput = donationCertificateCreateSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid donation certificate input.');
+		return resultFail('Invalid donation certificate input.');
 	}
 
 	const result = await createDonationCertificateForContributor(

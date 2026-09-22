@@ -1,20 +1,22 @@
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { addDays, format, startOfDay } from 'date-fns';
 import {
 	appendCampaignSubmissionFormData,
 	createCampaignSubmissionDetailsSchema,
 	createCampaignSubmissionFormSchema,
 	createCampaignSubmissionPersonalSchema,
 	endDateFromDurationPreset,
+	resolveCampaignSubmissionQuote,
+	validateCampaignSubmissionImageMeta,
+} from '@/components/campaign/campaign-submission/campaign-submission.client';
+import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import { addDays, format, startOfDay } from 'date-fns';
+import {
 	parseCampaignSubmissionDefaultImageId,
 	parseCampaignSubmissionFields,
 	parseCampaignSubmissionImageFocus,
-	resolveCampaignSubmissionQuote,
 	validateCampaignSubmissionEndDate,
 	validateCampaignSubmissionImageBuffer,
-	validateCampaignSubmissionImageMeta,
-	type CampaignSubmissionFormValues,
-} from './campaign.types';
+} from './campaign.schemas';
+import type { CampaignSubmissionFormValues } from './campaign.types';
 
 const validEndDateString = () => format(addDays(startOfDay(new Date()), 30), 'yyyy-MM-dd');
 

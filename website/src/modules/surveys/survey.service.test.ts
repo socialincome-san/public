@@ -147,7 +147,7 @@ describe('survey CRUD and access', () => {
 			accessPw: 'secret',
 		});
 
-		expectFailure(result, 'This field is required.');
+		expectFailure(result, 'Invalid input.');
 		expect(mockCreateSurvey).not.toHaveBeenCalled();
 	});
 

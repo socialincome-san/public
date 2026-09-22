@@ -285,7 +285,9 @@ export const createLocalPartner = async (
 			? resultOk(existingFirebaseUserResult.data)
 			: await createFirebaseUserByEmail({ email: input.contact.email, displayName });
 		if (!firebaseUserResult.success) {
-			return resultFail(`Failed to create Firebase user: ${firebaseUserResult.error}`);
+			console.error('Could not create Firebase user for local partner', { error: firebaseUserResult.error });
+
+			return resultFail('Could not create local partner authentication user');
 		}
 
 		const firebaseSyncResult = await updateFirebaseUserByUid(firebaseUserResult.data.uid, {

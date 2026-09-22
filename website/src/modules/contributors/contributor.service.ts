@@ -491,7 +491,9 @@ export const getOrCreateContributorWithFirebaseAuth = async (
 			displayName: `${contributorData.firstName} ${contributorData.lastName}`,
 		});
 		if (!firebaseResult.success) {
-			return resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+			console.error('Could not create Firebase user for Stripe contributor', { error: firebaseResult.error });
+
+			return resultFail('Could not create contributor authentication user');
 		}
 
 		const contributor = await contributorRepository.createContributorFromStripeData(
@@ -596,7 +598,9 @@ export const getOrCreateContributorByReferenceId = async (
 			displayName: `${contributorData.firstName} ${contributorData.lastName}`,
 		});
 		if (!firebaseResult.success) {
-			return resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+			console.error('Could not create Firebase user for bank contributor', { error: firebaseResult.error });
+
+			return resultFail('Could not create contributor authentication user');
 		}
 
 		const newContributor = await contributorRepository.createContributorFromBankData(
@@ -632,7 +636,9 @@ export const getOrCreateContributorFromEmailAndName = async (
 			displayName: `${accountData.firstName} ${accountData.lastName}`,
 		});
 		if (!firebaseResult.success) {
-			return resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+			console.error('Could not create Firebase user for campaign contributor', { error: firebaseResult.error });
+
+			return resultFail('Could not create contributor authentication user');
 		}
 
 		try {
@@ -694,7 +700,9 @@ export const createContributor = async (
 			displayName,
 		});
 		if (!firebaseResult.success) {
-			return resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+			console.error('Could not create Firebase user for contributor', { error: firebaseResult.error });
+
+			return resultFail('Could not create contributor authentication user');
 		}
 
 		const contributor = await contributorRepository.createContributor(validatedInput, firebaseResult.data.uid);
@@ -710,17 +718,13 @@ export const createContributor = async (
 const validateContributorCreateInput = (input: CreateContributorInput): ServiceResult<CreateContributorInput> => {
 	const parsedInput = contributorCreateSchema.safeParse(input);
 
-	return parsedInput.success
-		? resultOk(parsedInput.data)
-		: resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+	return parsedInput.success ? resultOk(parsedInput.data) : resultFail('Invalid input.');
 };
 
 const validateContributorUpdateInput = (input: UpdateContributorInput): ServiceResult<UpdateContributorInput> => {
 	const parsedInput = contributorUpdateSchema.safeParse(input);
 
-	return parsedInput.success
-		? resultOk(parsedInput.data)
-		: resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+	return parsedInput.success ? resultOk(parsedInput.data) : resultFail('Invalid input.');
 };
 
 const validateCreateUniqueness = async (input: CreateContributorInput): Promise<ServiceResult<void>> => {

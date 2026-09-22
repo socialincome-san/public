@@ -1,9 +1,7 @@
-import {
-	buildMonthlySchedule,
-	mergeUpcomingPayments,
-	UPCOMING_PAYMENTS_PER_SUBSCRIPTION,
-	type UpcomingPaymentView,
-} from './subscription.types';
+import { subscriptionPaymentSchedule } from './subscription-payment-schedule.service';
+import { UPCOMING_PAYMENTS_PER_SUBSCRIPTION, type UpcomingPaymentView } from './subscription.types';
+
+const { buildMonthly: buildMonthlySchedule, mergeUpcoming: mergeUpcomingPayments } = subscriptionPaymentSchedule;
 
 const createPayment = ({
 	subscriptionId,

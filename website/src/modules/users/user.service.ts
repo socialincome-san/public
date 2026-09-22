@@ -248,7 +248,9 @@ export const createUser = async (actorUserId: string, input: CreateUserInput): P
 
 		const existingFirebaseUserResult = await findFirebaseUserByEmail(input.email);
 		if (!existingFirebaseUserResult.success) {
-			return resultFail(`Failed to check Firebase user: ${existingFirebaseUserResult.error}`);
+			console.error('Could not check Firebase user for user creation', { error: existingFirebaseUserResult.error });
+
+			return resultFail('Could not check existing authentication user');
 		}
 
 		const displayName = `${input.firstName} ${input.lastName}`.trim();
@@ -256,7 +258,9 @@ export const createUser = async (actorUserId: string, input: CreateUserInput): P
 			? resultOk(existingFirebaseUserResult.data)
 			: await createFirebaseUserByEmail({ email: input.email, displayName });
 		if (!firebaseUserResult.success) {
-			return resultFail(`Failed to create Firebase user: ${firebaseUserResult.error}`);
+			console.error('Could not create Firebase user for user creation', { error: firebaseUserResult.error });
+
+			return resultFail('Could not create authentication user');
 		}
 
 		const firebaseUser = firebaseUserResult.data;
@@ -314,14 +318,18 @@ export const createPublicOnboardingUser = async (input: {
 
 		const existingFirebaseUserResult = await findFirebaseUserByEmail(input.email);
 		if (!existingFirebaseUserResult.success) {
-			return resultFail(`Failed to check Firebase user: ${existingFirebaseUserResult.error}`);
+			console.error('Could not check Firebase user for public onboarding', { error: existingFirebaseUserResult.error });
+
+			return resultFail('Could not check existing authentication user');
 		}
 		const displayName = `${input.firstName} ${input.lastName}`.trim();
 		const firebaseUserResult = existingFirebaseUserResult.data
 			? resultOk(existingFirebaseUserResult.data)
 			: await createFirebaseUserByEmail({ email: input.email, displayName });
 		if (!firebaseUserResult.success) {
-			return resultFail(`Failed to create Firebase user: ${firebaseUserResult.error}`);
+			console.error('Could not create Firebase user for public onboarding', { error: firebaseUserResult.error });
+
+			return resultFail('Could not create authentication user');
 		}
 
 		const didCreateFirebaseUser = !existingFirebaseUserResult.data;

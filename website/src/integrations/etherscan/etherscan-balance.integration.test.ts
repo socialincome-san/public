@@ -74,7 +74,7 @@ describe('fetchCustodianStablecoinWalletBalances', () => {
 
 		await expect(fetchCustodianStablecoinWalletBalances([address])).resolves.toEqual({
 			success: false,
-			error: 'Invalid Etherscan ETH balance response: NOTOK',
+			error: 'Etherscan returned an invalid balance response',
 		});
 	});
 });

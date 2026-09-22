@@ -78,13 +78,17 @@ export const calculateReserves = async (bucketName: string): Promise<ServiceResu
 	for (const account of bankAccountsResult.data) {
 		if (account.type === BankAccountType.postfinance) {
 			if (!account.bankAccountNumber) {
-				return resultFail(`Missing bank account number for PostFinance account ${account.id}`);
+				console.error('PostFinance account is missing a bank account number', { bankAccountId: account.id });
+
+				return resultFail('PostFinance account is missing a bank account number');
 			}
 			postFinanceAccounts.push({ ...account, bankAccountNumber: account.bankAccountNumber });
 		} else if (account.type === BankAccountType.custodian_stablecoin_wallet) {
 			const address = account.bankAccountNumber?.trim();
 			if (!address) {
-				return resultFail(`Missing wallet address for custodian stablecoin wallet account ${account.id}`);
+				console.error('Custodian stablecoin account is missing a wallet address', { bankAccountId: account.id });
+
+				return resultFail('Custodian stablecoin account is missing a wallet address');
 			}
 			custodianAccounts.push({ ...account, bankAccountNumber: address });
 		} else if (account.type !== BankAccountType.pawapay_wallet) {
@@ -170,7 +174,9 @@ const buildReserves = ({
 	for (const account of postFinanceAccounts) {
 		const balance = balancesByIban.get(normalizeIban(account.bankAccountNumber));
 		if (!balance) {
-			return resultFail(`Missing PostFinance balance for bank account ${account.id}`);
+			console.error('PostFinance balance is missing for reserve calculation', { bankAccountId: account.id });
+
+			return resultFail('PostFinance balance is missing for reserve calculation');
 		}
 		const reserve = toReserveInput(account.id, calculationDate, balance.amount, balance.currency, rates);
 		if (!reserve.success) {
@@ -183,7 +189,9 @@ const buildReserves = ({
 		const walletKey = pawaPayWalletKey(balance.country, balance.provider);
 		const account = pawaPayAccountsByWalletKey.get(walletKey);
 		if (!account) {
-			return resultFail(`Missing PawaPay wallet bank account ${walletKey}`);
+			console.error('PawaPay wallet account is missing for reserve calculation', { walletKey });
+
+			return resultFail('PawaPay wallet account is missing for reserve calculation');
 		}
 		const reserve = toReserveInput(account.id, calculationDate, balance.amount, balance.currency, rates);
 		if (!reserve.success) {
@@ -196,7 +204,12 @@ const buildReserves = ({
 		for (const currency of [Currency.ETH, Currency.USD]) {
 			const balance = custodianBalancesByAddressAndCurrency.get(walletBalanceKey(account.bankAccountNumber, currency));
 			if (!balance) {
-				return resultFail(`Missing ${currency} balance for custodian stablecoin wallet account ${account.id}`);
+				console.error('Custodian wallet balance is missing for reserve calculation', {
+					bankAccountId: account.id,
+					currency,
+				});
+
+				return resultFail('Custodian wallet balance is missing for reserve calculation');
 			}
 			const reserve = toReserveInput(account.id, calculationDate, balance.amount, balance.currency, rates);
 			if (!reserve.success) {
@@ -227,7 +240,13 @@ const toReserveInput = (
 ): ServiceResult<ReserveCreateInput> => {
 	const amountChf = convertAmount(amount, currency, Currency.CHF, rates);
 	if (!amountChf.success) {
-		return resultFail(`Could not convert ${currency} reserve for bank account ${bankAccountId} to CHF`);
+		console.error('Could not convert reserve amount to CHF', {
+			bankAccountId,
+			currency,
+			error: amountChf.error,
+		});
+
+		return resultFail('Could not convert reserve amount to CHF');
 	}
 
 	return resultOk({ bankAccountId, date, amount, currency, amountChf: amountChf.data });

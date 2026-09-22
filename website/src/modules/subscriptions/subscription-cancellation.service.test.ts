@@ -1,16 +1,16 @@
 import {
 	getSubscriptionCancelRetentionPresets,
 	isSubscriptionCancellationReason,
-	mapCancellationReasonToStripeFeedback,
-} from './subscription.types';
+} from '@/app/[lang]/[region]/dashboard/subscriptions/subscription-cancellation';
+import { subscriptionCancellation } from './subscription-cancellation.service';
 
 describe('subscription cancellation helpers', () => {
 	test('maps cancellation reasons to Stripe feedback', () => {
-		expect(mapCancellationReasonToStripeFeedback('financial_situation_changed')).toBe('too_expensive');
-		expect(mapCancellationReasonToStripeFeedback('different_cause')).toBe('switched_service');
-		expect(mapCancellationReasonToStripeFeedback('not_enough_updates')).toBe('missing_features');
-		expect(mapCancellationReasonToStripeFeedback('pausing')).toBe('unused');
-		expect(mapCancellationReasonToStripeFeedback('other')).toBe('other');
+		expect(subscriptionCancellation.mapReasonToStripeFeedback('financial_situation_changed')).toBe('too_expensive');
+		expect(subscriptionCancellation.mapReasonToStripeFeedback('different_cause')).toBe('switched_service');
+		expect(subscriptionCancellation.mapReasonToStripeFeedback('not_enough_updates')).toBe('missing_features');
+		expect(subscriptionCancellation.mapReasonToStripeFeedback('pausing')).toBe('unused');
+		expect(subscriptionCancellation.mapReasonToStripeFeedback('other')).toBe('other');
 	});
 
 	test('validates cancellation reason values', () => {

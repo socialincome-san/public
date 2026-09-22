@@ -32,35 +32,87 @@ const isServiceResultTypeAnnotation = (sourceCode, typeNode) => {
 	return /^ServiceResult<.+>$/.test(text) || /^Promise<ServiceResult<.+>>$/.test(text);
 };
 
-const containsJsonStringify = (node) => {
-	if (!node) {
+const findVariable = (scope, name) => {
+	for (let currentScope = scope; currentScope; currentScope = currentScope.upper) {
+		const variable = currentScope.variables.find((candidate) => candidate.name === name);
+		if (variable) {
+			return variable;
+		}
+	}
+
+	return null;
+};
+
+const isStaticResultError = (sourceCode, node, visitedVariables = new Set()) => {
+	if (node?.type === 'Literal') {
+		return typeof node.value === 'string';
+	}
+
+	if (node?.type === 'TemplateLiteral') {
+		return node.expressions.length === 0;
+	}
+
+	if (node?.type === 'TSAsExpression') {
+		return isStaticResultError(sourceCode, node.expression, visitedVariables);
+	}
+
+	if (node?.type === 'ConditionalExpression') {
+		return (
+			isStaticResultError(sourceCode, node.consequent, visitedVariables) &&
+			isStaticResultError(sourceCode, node.alternate, visitedVariables)
+		);
+	}
+
+	if (node?.type !== 'Identifier') {
 		return false;
 	}
 
+	const variable = findVariable(sourceCode.getScope(node), node.name);
+	const definition = variable?.defs.length === 1 ? variable.defs[0] : null;
 	if (
-		node.type === 'CallExpression' &&
-		node.callee?.type === 'MemberExpression' &&
-		node.callee.object?.type === 'Identifier' &&
-		node.callee.object.name === 'JSON' &&
-		node.callee.property?.type === 'Identifier' &&
-		node.callee.property.name === 'stringify'
+		!variable ||
+		visitedVariables.has(variable) ||
+		definition?.type !== 'Variable' ||
+		definition.parent?.kind !== 'const' ||
+		!definition.node.init
 	) {
+		return false;
+	}
+
+	visitedVariables.add(variable);
+	return isStaticResultError(sourceCode, definition.node.init, visitedVariables);
+};
+
+const isUnsafeResultError = (sourceCode, node) => {
+	if (isStaticResultError(sourceCode, node)) {
+		return false;
+	}
+
+	if (node?.type === 'TemplateLiteral' || node?.type === 'BinaryExpression' || node?.type === 'CallExpression') {
 		return true;
 	}
 
-	if (node.type === 'TemplateLiteral') {
-		return node.expressions.some((expression) => containsJsonStringify(expression));
+	if (node?.type === 'ConditionalExpression') {
+		return isUnsafeResultError(sourceCode, node.consequent) || isUnsafeResultError(sourceCode, node.alternate);
 	}
 
-	if (node.type === 'BinaryExpression') {
-		return containsJsonStringify(node.left) || containsJsonStringify(node.right);
+	if (node?.type === 'LogicalExpression') {
+		return isUnsafeResultError(sourceCode, node.left) || isUnsafeResultError(sourceCode, node.right);
 	}
 
-	if (node.type === 'ConditionalExpression') {
-		return containsJsonStringify(node.consequent) || containsJsonStringify(node.alternate);
+	if (node?.type === 'ChainExpression' || node?.type === 'TSAsExpression') {
+		return isUnsafeResultError(sourceCode, node.expression);
 	}
 
-	return false;
+	if (node?.type === 'Identifier') {
+		return node.name === 'error' || node.name === 'errors';
+	}
+
+	return (
+		node?.type === 'MemberExpression' &&
+		((node.property.type === 'Identifier' && node.property.name === 'message') ||
+			(node.property.type === 'Literal' && node.property.value === 'message'))
+	);
 };
 
 const isResultFailCall = (node) => {
@@ -286,6 +338,8 @@ const safeResultErrors = {
 		},
 	},
 	create(context) {
+		const sourceCode = context.sourceCode;
+
 		return {
 			CallExpression(node) {
 				if (!isResultFailCall(node)) {
@@ -293,7 +347,7 @@ const safeResultErrors = {
 				}
 
 				const [errorArgument] = node.arguments;
-				if (containsJsonStringify(errorArgument)) {
+				if (isUnsafeResultError(sourceCode, errorArgument)) {
 					context.report({ node, messageId: 'unsafeResultError' });
 				}
 			},
@@ -535,6 +589,75 @@ const noServiceThrow = {
 	},
 };
 
+const typesFileNoRuntimeFunctions = {
+	meta: {
+		type: 'problem',
+		docs: {
+			description: 'Forbid exported runtime functions from module type-contract files.',
+		},
+		schema: [],
+		messages: {
+			runtimeFunction:
+				'Module .types files may only export shared types, view models, and inert constants; move runtime functions to the owning layer.',
+		},
+	},
+	create(context) {
+		const filename = normalizePath(context.filename);
+		if ((!filename.endsWith('.types.ts') && !filename.endsWith('.types.tsx')) || !filename.includes('/src/modules/')) {
+			return {};
+		}
+
+		const sourceCode = context.sourceCode;
+		const reportIdentifierIfFunction = (identifier) => {
+			const variable = findVariable(sourceCode.getScope(identifier), identifier.name);
+			const definition = variable?.defs.length === 1 ? variable.defs[0] : null;
+			const functionNode =
+				definition?.type === 'FunctionName'
+					? definition.node
+					: definition?.type === 'Variable'
+						? definition.node.init
+						: null;
+
+			if (functionNode && (functionNode.type === 'FunctionDeclaration' || isFunctionExpression(functionNode))) {
+				context.report({ node: identifier, messageId: 'runtimeFunction' });
+			}
+		};
+
+		return {
+			ExportDefaultDeclaration(node) {
+				if (node.declaration.type === 'FunctionDeclaration' || isFunctionExpression(node.declaration)) {
+					context.report({ node, messageId: 'runtimeFunction' });
+				}
+			},
+			ExportNamedDeclaration(node) {
+				if (node.exportKind === 'type') {
+					return;
+				}
+
+				if (node.declaration?.type === 'FunctionDeclaration') {
+					context.report({ node: node.declaration, messageId: 'runtimeFunction' });
+
+					return;
+				}
+
+				for (const declarator of getExportedVariableDeclarators(node)) {
+					if (isFunctionExpression(declarator.init)) {
+						context.report({ node: declarator, messageId: 'runtimeFunction' });
+					}
+				}
+
+				if (!node.source) {
+					for (const specifier of node.specifiers) {
+						if (specifier.exportKind !== 'type' && specifier.local.type === 'Identifier') {
+							reportIdentifierIfFunction(specifier.local);
+						}
+					}
+				}
+			},
+		};
+	},
+};
+
 const backendArchitecturePlugin = {
 	meta: {
 		name: 'backend-architecture',
@@ -549,6 +672,7 @@ const backendArchitecturePlugin = {
 		'repository-export-naming': repositoryExportNaming,
 		'action-unknown-params': actionUnknownParams,
 		'no-service-throw': noServiceThrow,
+		'types-file-no-runtime-functions': typesFileNoRuntimeFunctions,
 	},
 };
 

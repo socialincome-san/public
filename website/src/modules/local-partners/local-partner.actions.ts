@@ -24,7 +24,7 @@ export const createLocalPartnerAction = async (input: unknown) => {
 	}
 	const inputResult = localPartnerCreateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await createLocalPartner(sessionResult.data.id, inputResult.data);
@@ -44,7 +44,7 @@ export const updateLocalPartnerAction = async (input: unknown, sessionType: unkn
 	}
 	const inputResult = localPartnerUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateLocalPartner(sessionResult.data, inputResult.data);
@@ -64,7 +64,7 @@ export const getLocalPartnerAction = async (localPartnerId: unknown) => {
 	}
 	const idResult = localPartnerIdSchema.safeParse(localPartnerId);
 	if (!idResult.success) {
-		return resultFail(idResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	return getLocalPartner(sessionResult.data.id, idResult.data);
@@ -77,7 +77,7 @@ export const deleteLocalPartnerAction = async (localPartnerId: unknown) => {
 	}
 	const idResult = localPartnerIdSchema.safeParse(localPartnerId);
 	if (!idResult.success) {
-		return resultFail(idResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await deleteLocalPartner(sessionResult.data.id, idResult.data);

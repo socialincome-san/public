@@ -172,7 +172,9 @@ export const createCandidate = async (
 		if (paymentPhone) {
 			const firebaseResult = await createFirebaseUserByPhoneNumber(paymentPhone);
 			if (!firebaseResult.success) {
-				return resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+				console.error('Could not create candidate Firebase user', { error: firebaseResult.error });
+
+				return resultFail('Could not create candidate authentication user');
 			}
 		}
 
@@ -230,7 +232,9 @@ export const updateCandidate = async (
 		if (!previousPaymentPhone && nextPaymentPhone) {
 			const result = await createFirebaseUserByPhoneNumber(nextPaymentPhone);
 			if (!result.success) {
-				return resultFail(`Failed to create Firebase user: ${result.error}`);
+				console.error('Could not create candidate Firebase user', { error: result.error });
+
+				return resultFail('Could not create candidate authentication user');
 			}
 			firebaseChange = 'added';
 		} else if (previousPaymentPhone && !nextPaymentPhone) {
@@ -239,7 +243,9 @@ export const updateCandidate = async (
 		} else if (previousPaymentPhone && nextPaymentPhone && previousPaymentPhone !== nextPaymentPhone) {
 			const result = await updateFirebaseUserByPhoneNumber(previousPaymentPhone, nextPaymentPhone);
 			if (!result.success) {
-				return resultFail(`Failed to update Firebase user: ${result.error}`);
+				console.error('Could not update candidate Firebase user', { error: result.error });
+
+				return resultFail('Could not update candidate authentication user');
 			}
 			firebaseChange = 'changed';
 		}
@@ -331,13 +337,17 @@ export const importCandidatesCsv = async (session: Session, file: File): Promise
 			candidates.push(parsedResult.data);
 		}
 		if (errors.length) {
-			return resultFail(errors.join('\n'));
+			console.warn('Candidate CSV validation failed', { errors });
+
+			return resultFail('CSV contains invalid candidate data');
 		}
 
-		for (const [index, candidate] of candidates.entries()) {
+		for (const candidate of candidates) {
 			const result = await createCandidate(session, candidate);
 			if (!result.success) {
-				return resultFail(`Row ${index + 1}: ${result.error}`);
+				console.error('Could not create candidate from CSV', { error: result.error });
+
+				return resultFail('Could not create candidate from CSV');
 			}
 		}
 
@@ -345,7 +355,7 @@ export const importCandidatesCsv = async (session: Session, file: File): Promise
 	} catch (error) {
 		console.error('Could not import candidates CSV', { error });
 
-		return resultFail(error instanceof Error ? error.message : 'Failed to parse CSV file');
+		return resultFail('Failed to parse candidates CSV file');
 	}
 };
 
@@ -359,7 +369,12 @@ export const assignRandomCandidatesToProgram = async (
 	try {
 		const candidates = await candidateRepository.findCandidateIdsForAssignment(focuses, profiles, countryCode);
 		if (candidates.length < amount) {
-			return resultFail(`Not enough candidates available. Requested ${amount}, but only ${candidates.length} available.`);
+			console.warn('Not enough candidates available for assignment', {
+				available: candidates.length,
+				requested: amount,
+			});
+
+			return resultFail('Not enough candidates available');
 		}
 		const selectedIds = [...candidates]
 			.sort(() => Math.random() - 0.5)
@@ -565,10 +580,14 @@ const compensateFirebaseChange = async (
 
 const mapCsvRowToCandidate = (rowNumber: number, row: Record<string, string>): ServiceResult<CandidateCreateInput> => {
 	if (!row.firstName || !row.lastName) {
-		return resultFail(`Row ${rowNumber}: firstName and lastName are required`);
+		console.warn('Candidate CSV row is missing a name', { rowNumber });
+
+		return resultFail('Candidate first name and last name are required');
 	}
 	if (!row.localPartnerId) {
-		return resultFail(`Row ${rowNumber}: localPartnerId is required`);
+		console.warn('Candidate CSV row is missing a local partner', { rowNumber });
+
+		return resultFail('Candidate local partner is required');
 	}
 	const optionalFieldsResult = parseCsvOptionalFields(rowNumber, row);
 	if (!optionalFieldsResult.success) {

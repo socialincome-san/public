@@ -266,7 +266,7 @@ export const previewSurveyGeneration = async (userId: string): Promise<ServiceRe
 export const createSurvey = async (userId: string, input: SurveyCreateInput): Promise<ServiceResult<SurveyPayload>> => {
 	const inputResult = surveyCreateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	try {
@@ -299,7 +299,9 @@ export const createSurvey = async (userId: string, input: SurveyCreateInput): Pr
 			nextPassword: inputResult.data.accessPw,
 		});
 		if (!firebaseResult.success) {
-			return resultFail(`Failed to sync survey auth user: ${firebaseResult.error}`);
+			console.error('Could not synchronize survey Firebase user', { error: firebaseResult.error });
+
+			return resultFail('Could not synchronize survey authentication user');
 		}
 
 		const survey = await surveyRepository.createSurvey({
@@ -318,7 +320,7 @@ export const createSurvey = async (userId: string, input: SurveyCreateInput): Pr
 export const updateSurvey = async (userId: string, input: SurveyUpdateInput): Promise<ServiceResult<SurveyPayload>> => {
 	const inputResult = surveyUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	try {
@@ -385,7 +387,9 @@ export const updateSurvey = async (userId: string, input: SurveyUpdateInput): Pr
 				nextPassword: inputResult.data.accessPw,
 			});
 			if (!firebaseResult.success) {
-				return resultFail(`Failed to sync survey auth user: ${firebaseResult.error}`);
+				console.error('Could not synchronize survey Firebase user', { error: firebaseResult.error });
+
+				return resultFail('Could not synchronize survey authentication user');
 			}
 			updateData.accessPw = inputResult.data.accessPw;
 		}
@@ -412,7 +416,9 @@ export const generateSurveys = async (userId: string): Promise<ServiceResult<Sur
 		for (const surveyInput of previewResult.data.surveys) {
 			const firebaseResult = await createFirebaseSurveyUser(surveyInput.accessEmail, surveyInput.accessPw);
 			if (!firebaseResult.success) {
-				return resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+				console.error('Could not create Firebase user for generated survey', { error: firebaseResult.error });
+
+				return resultFail('Could not create survey authentication user');
 			}
 			await surveyRepository.createSurvey(surveyInput);
 			surveysCreated += 1;
@@ -435,7 +441,7 @@ export const saveSurveyChanges = async (
 ): Promise<ServiceResult<SurveyPayload>> => {
 	const inputResult = surveyResponseUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	try {

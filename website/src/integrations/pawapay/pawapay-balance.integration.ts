@@ -22,7 +22,12 @@ export const fetchPawaPayBalances = async (): Promise<ServiceResult<PawaPayBalan
 			headers: { Authorization: `Bearer ${token}` },
 		});
 		if (!response.ok) {
-			return resultFail(`PawaPay balance request failed: ${response.status} ${response.statusText}`);
+			console.error('PawaPay balance request failed', {
+				status: response.status,
+				statusText: response.statusText,
+			});
+
+			return resultFail('PawaPay balance request failed');
 		}
 
 		const data: unknown = await response.json();
@@ -38,7 +43,12 @@ export const fetchPawaPayBalances = async (): Promise<ServiceResult<PawaPayBalan
 			const amount = Number(balanceValue);
 			const currency = parseCurrency(balance.currency);
 			if (!country || !balanceValue || !Number.isFinite(amount) || !currency) {
-				return resultFail(`Invalid PawaPay balance for country ${balance.country}`);
+				console.error('PawaPay returned an invalid balance', {
+					country: balance.country,
+					provider: balance.provider,
+				});
+
+				return resultFail('PawaPay returned an invalid balance');
 			}
 
 			balances.push({ country, provider, amount, currency });

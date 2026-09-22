@@ -31,7 +31,7 @@ export const createRecipientAction = async (input: unknown, sessionType: unknown
 
 	const inputResult = recipientCreateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await createRecipient(sessionResult.data, inputResult.data);
@@ -48,7 +48,7 @@ export const updateRecipientAction = async (input: unknown, sessionType: unknown
 
 	const inputResult = recipientUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	const result = await updateRecipient(sessionResult.data, inputResult.data);
@@ -65,7 +65,7 @@ export const removeRecipientFromProgramAction = async (recipientId: unknown, ses
 
 	const recipientIdResult = recipientIdSchema.safeParse(recipientId);
 	if (!recipientIdResult.success) {
-		return resultFail(recipientIdResult.error.issues[0]?.message ?? 'Recipient id is required.');
+		return resultFail('Recipient id is required.');
 	}
 
 	const result = await removeRecipientFromProgram(sessionResult.data, recipientIdResult.data);
@@ -82,7 +82,7 @@ export const deleteRecipientAction = async (recipientId: unknown, sessionType: u
 
 	const recipientIdResult = recipientIdSchema.safeParse(recipientId);
 	if (!recipientIdResult.success) {
-		return resultFail(recipientIdResult.error.issues[0]?.message ?? 'Recipient id is required.');
+		return resultFail('Recipient id is required.');
 	}
 
 	const result = await deleteRecipient(sessionResult.data, recipientIdResult.data);
@@ -99,7 +99,7 @@ export const getRecipientAction = async (recipientId: unknown, sessionType: unkn
 
 	const recipientIdResult = recipientIdSchema.safeParse(recipientId);
 	if (!recipientIdResult.success) {
-		return resultFail(recipientIdResult.error.issues[0]?.message ?? 'Recipient id is required.');
+		return resultFail('Recipient id is required.');
 	}
 
 	return getRecipientById(sessionResult.data, recipientIdResult.data);
@@ -122,7 +122,7 @@ export const importRecipientsCsvAction = async (file: unknown, sessionType: unkn
 
 	const fileResult = recipientCsvFileSchema.safeParse(file);
 	if (!fileResult.success) {
-		return resultFail(fileResult.error.issues[0]?.message ?? 'Invalid CSV file');
+		return resultFail('Invalid CSV file');
 	}
 
 	const result = await importRecipientsCsv(sessionResult.data, fileResult.data);
@@ -143,7 +143,7 @@ export const downloadRecipientsCsvAction = async (sessionType: unknown = 'user')
 export const getPublicRecipientsTableAction = async (programId: unknown) => {
 	const programIdResult = publicRecipientProgramIdSchema.safeParse(programId);
 	if (!programIdResult.success) {
-		return resultFail(programIdResult.error.issues[0]?.message ?? 'Invalid program id');
+		return resultFail('Invalid program id');
 	}
 
 	return getPublicRecipientsTableView(programIdResult.data);

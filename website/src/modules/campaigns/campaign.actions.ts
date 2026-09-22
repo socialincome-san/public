@@ -18,15 +18,6 @@ import {
 	campaignProgramIdSchema,
 	campaignPublicLanguageSchema,
 	createCampaignSubmissionPersonalSchema,
-} from './campaign.schemas';
-import {
-	getAllCampaignsForCmsJoinWithStats,
-	getCampaignByPortalSlug,
-	getCampaignDefaultImages,
-	getDefaultCampaignForProgram,
-	getPublicCampaignTitle,
-} from './campaign.service';
-import {
 	isCampaignSubmissionErrorCode,
 	isCampaignSubmissionImageErrorCode,
 	parseCampaignSubmissionDefaultImageId,
@@ -35,11 +26,20 @@ import {
 	parseCampaignSubmissionImageFocus,
 	parseOptionalCampaignSubmissionImage,
 	readTurnstileToken,
-	type CampaignSubmissionImageMultipartField,
-	type CampaignSubmissionImageSource,
-	type CampaignSubmissionOptionalImages,
-	type CampaignSubmissionResult,
-	type ClaimPendingCampaignsResult,
+} from './campaign.schemas';
+import {
+	getAllCampaignsForCmsJoinWithStats,
+	getCampaignByPortalSlug,
+	getCampaignDefaultImages,
+	getDefaultCampaignForProgram,
+	getPublicCampaignTitle,
+} from './campaign.service';
+import type {
+	CampaignSubmissionImageMultipartField,
+	CampaignSubmissionImageSource,
+	CampaignSubmissionOptionalImages,
+	CampaignSubmissionResult,
+	ClaimPendingCampaignsResult,
 } from './campaign.types';
 
 const personalSchema = createCampaignSubmissionPersonalSchema((code) => code);
@@ -238,7 +238,7 @@ export const claimPendingCampaignsAction = async (claimIds: unknown) => {
 export const getPublicCampaignTitleAction = async (campaignId: unknown) => {
 	const parsedCampaignId = campaignIdSchema.safeParse(campaignId);
 	if (!parsedCampaignId.success) {
-		return resultFail(parsedCampaignId.error.issues[0]?.message ?? 'Invalid campaign id');
+		return resultFail('Invalid campaign id');
 	}
 
 	return getPublicCampaignTitle(parsedCampaignId.data);
@@ -257,7 +257,7 @@ export const getCampaignDefaultImagesAction = async () => getCampaignDefaultImag
 export const getCampaignByPortalSlugAction = async (portalSlug: unknown) => {
 	const parsedSlug = campaignPortalSlugSchema.safeParse(portalSlug);
 	if (!parsedSlug.success) {
-		return resultFail(parsedSlug.error.issues[0]?.message ?? 'Missing campaign slug');
+		return resultFail('Missing campaign slug');
 	}
 
 	return getCampaignByPortalSlug(parsedSlug.data);
@@ -280,7 +280,7 @@ export const getCampaignPageContentAction = async (lang: unknown, campaignFaqs: 
 export const getDefaultCampaignForProgramAction = async (programId: unknown) => {
 	const parsedProgramId = campaignProgramIdSchema.safeParse(programId);
 	if (!parsedProgramId.success) {
-		return resultFail(parsedProgramId.error.issues[0]?.message ?? 'Missing program id');
+		return resultFail('Missing program id');
 	}
 
 	return getDefaultCampaignForProgram(parsedProgramId.data);

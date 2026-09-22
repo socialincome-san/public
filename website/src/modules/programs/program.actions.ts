@@ -39,7 +39,7 @@ import {
 export const createProgramAction = async (input: unknown, userDetails?: unknown) => {
 	const parsedInput = programCreateSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid program input.');
+		return resultFail('Invalid program input.');
 	}
 
 	const sessionResult = await getSessionByType('user');
@@ -91,7 +91,7 @@ export const updateProgramSettingsAction = async (input: unknown) => {
 	}
 	const parsedInput = programSettingsUpdateSchema.safeParse(input);
 	if (!parsedInput.success) {
-		return resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid program input.');
+		return resultFail('Invalid program input.');
 	}
 
 	const result = await updateProgramSettings(sessionResult.data.id, parsedInput.data);
@@ -124,9 +124,7 @@ export const deleteProgramAction = async (programId: unknown) => {
 export const calculateProgramBudgetAction = async (input: unknown) => {
 	const parsedInput = programBudgetCalculationSchema.safeParse(input);
 
-	return parsedInput.success
-		? calculateProgramBudget(parsedInput.data)
-		: resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid program budget input.');
+	return parsedInput.success ? calculateProgramBudget(parsedInput.data) : resultFail('Invalid program budget input.');
 };
 
 export const getPublicProgramFilterDataByPortalSlugsAction = async (slugs: unknown) => {

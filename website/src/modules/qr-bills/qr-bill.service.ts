@@ -225,7 +225,9 @@ export const resolveWizardQrPayment = (
 
 	const currencyCode = Object.values(Currency).find((candidate) => candidate === (currency ?? 'CHF').toUpperCase());
 	if (!currencyCode || !isQrCurrency(currencyCode)) {
-		return resultFail(`Unsupported currency for QR bill: ${currency ?? ''}`);
+		console.warn('Unsupported currency requested for QR bill', { currency });
+
+		return resultFail('Unsupported currency for QR bill');
 	}
 
 	return resultOk({
@@ -398,7 +400,9 @@ const resolveAmountChf = async (amount: number, currency: Currency): Promise<Ser
 	const rateCurrency = ratesResult.data[currency];
 	const rateChf = ratesResult.data.CHF;
 	if (!rateCurrency || !rateChf) {
-		return resultFail(`Missing exchange rate for ${currency}`);
+		console.error('Missing exchange rate for QR bill', { currency });
+
+		return resultFail('Missing exchange rate for QR bill');
 	}
 
 	return resultOk(Math.round((amount / rateCurrency) * rateChf * 100) / 100);

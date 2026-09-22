@@ -53,18 +53,8 @@ import {
 } from '@/modules/contributors/contributor.service';
 import type { ContributorWithContact, StripeContributorData } from '@/modules/contributors/contributor.types';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
-import {
-	amountToStripeUnitAmount,
-	COVER_TRANSACTION_COSTS_METADATA_KEY,
-	getAmountWithTransactionCostCoverage,
-	isCoverTransactionCostsAmountInRange,
-	isSubscriptionAmountInRange,
-	mapCoverTransactionCostsMetadata,
-	SUBSCRIPTION_AMOUNT_MAX,
-	SUBSCRIPTION_AMOUNT_MIN,
-	toCoverTransactionCostsMetadataValue,
-} from '@/modules/subscriptions/subscription-amount.service';
-import { mapCancellationReasonToStripeFeedback } from '@/modules/subscriptions/subscription-cancellation.service';
+import { subscriptionAmount } from '@/modules/subscriptions/subscription-amount.service';
+import { subscriptionCancellation } from '@/modules/subscriptions/subscription-cancellation.service';
 import { getUserContactIdByAccountId, getUserStripeCheckoutContext } from '@/modules/users/user.service';
 import { canCreatePortalProgramDonation } from './stripe-payment.permissions';
 import * as stripePaymentRepository from './stripe-payment.repository';
@@ -90,6 +80,17 @@ import {
 	type UpdateContributorReferralAfterCheckoutResult,
 	type UpdateContributorSubscriptionAmountInput,
 } from './stripe-payment.types';
+
+const {
+	amountToStripeUnitAmount,
+	coverTransactionCostsMetadataKey: COVER_TRANSACTION_COSTS_METADATA_KEY,
+	getAmountWithTransactionCostCoverage,
+	isCoverTransactionCostsAmountInRange,
+	isSubscriptionAmountInRange,
+	mapCoverTransactionCostsMetadata,
+	toCoverTransactionCostsMetadataValue,
+} = subscriptionAmount;
+const { mapReasonToStripeFeedback } = subscriptionCancellation;
 
 const STRIPE_CHECKOUT_SESSION_ID_PARAM = 'donation_checkout_session_id';
 const CHECKOUT_SESSION_ID_PLACEHOLDER = '{CHECKOUT_SESSION_ID}';
@@ -454,7 +455,7 @@ export const updateContributorSubscriptionAmount = async (
 	try {
 		const { contributorId, subscriptionId, amount, coverTransactionCosts } = input;
 		if (!isSubscriptionAmountInRange(amount)) {
-			return resultFail(`Amount must be an integer between ${SUBSCRIPTION_AMOUNT_MIN} and ${SUBSCRIPTION_AMOUNT_MAX}`);
+			return resultFail('Amount must be an integer between 1 and 1000000');
 		}
 
 		const subscription = await stripePaymentRepository.findOwnedActiveStripeSubscription(contributorId, subscriptionId);
@@ -464,7 +465,7 @@ export const updateContributorSubscriptionAmount = async (
 
 		const chargeAmount = coverTransactionCosts ? getAmountWithTransactionCostCoverage(amount) : amount;
 		if (coverTransactionCosts === true && !isCoverTransactionCostsAmountInRange(chargeAmount)) {
-			return resultFail(`Amount must be between ${SUBSCRIPTION_AMOUNT_MIN} and ${SUBSCRIPTION_AMOUNT_MAX}`);
+			return resultFail('Amount must be between 1 and 1000000');
 		}
 
 		const updateResult = await updateStripeSubscriptionUnitAmount({
@@ -529,7 +530,7 @@ export const cancelContributorSubscription = async (
 			await voidOpenSubscriptionInvoices(subscription.stripeSubscriptionId);
 			const cancelResult = await cancelStripeSubscription(
 				subscription.stripeSubscriptionId,
-				mapCancellationReasonToStripeFeedback(input.reason),
+				mapReasonToStripeFeedback(input.reason),
 			);
 			if (!cancelResult.success) {
 				return cancelResult;
@@ -764,7 +765,12 @@ const processChargeEvent = async (charge: StripeApiCharge): Promise<ServiceResul
 
 		const chargeCurrency = fullCharge.currency.toUpperCase();
 		if (!isValidCurrency(chargeCurrency)) {
-			return resultFail(`Unsupported currency from Stripe charge: ${fullCharge.currency}`);
+			console.error('Stripe charge has an unsupported currency', {
+				chargeId: fullCharge.id,
+				currency: fullCharge.currency,
+			});
+
+			return resultFail('Stripe charge has an unsupported currency');
 		}
 
 		const contributionData: StripeContributionCreateData = {
@@ -1405,7 +1411,9 @@ const resolveWizardEmbeddedCheckout = (
 
 	const currencyCode = (currency ?? 'CHF').toUpperCase();
 	if (!isValidCurrency(currencyCode)) {
-		return resultFail(`Unsupported currency: ${currency ?? ''}`);
+		console.warn('Unsupported currency requested for embedded checkout', { currency });
+
+		return resultFail('Unsupported currency for embedded checkout');
 	}
 
 	const displayAmount = getDonationDisplayAmount(context);

@@ -75,17 +75,13 @@ export const getRecipientMonthlySummarySource = async (
 const validateRecipientCreateInput = (input: CreateRecipientInput): ServiceResult<CreateRecipientInput> => {
 	const parsedInput = recipientCreateSchema.safeParse(input);
 
-	return parsedInput.success
-		? resultOk(parsedInput.data)
-		: resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+	return parsedInput.success ? resultOk(parsedInput.data) : resultFail('Invalid input.');
 };
 
 const validateRecipientUpdateInput = (input: UpdateRecipientInput): ServiceResult<UpdateRecipientInput> => {
 	const parsedInput = recipientUpdateSchema.safeParse(input);
 
-	return parsedInput.success
-		? resultOk(parsedInput.data)
-		: resultFail(parsedInput.error.issues[0]?.message ?? 'Invalid input.');
+	return parsedInput.success ? resultOk(parsedInput.data) : resultFail('Invalid input.');
 };
 
 const validateRecipientCreateUniqueness = async (input: CreateRecipientInput): Promise<ServiceResult<void>> => {
@@ -304,12 +300,12 @@ export const updateRecipientSelf = async (
 ): Promise<ServiceResult<RecipientWithPaymentInfo>> => {
 	const recipientIdResult = recipientIdSchema.safeParse(recipientId);
 	if (!recipientIdResult.success) {
-		return resultFail(recipientIdResult.error.issues[0]?.message ?? 'Recipient id is required.');
+		return resultFail('Recipient id is required.');
 	}
 
 	const inputResult = recipientSelfUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
-		return resultFail(inputResult.error.issues[0]?.message ?? 'Invalid input.');
+		return resultFail('Invalid input.');
 	}
 
 	let firebaseCompensation: FirebaseCompensation | null = null;
@@ -325,7 +321,9 @@ export const updateRecipientSelf = async (
 		if (previousPaymentPhone && nextPaymentPhone && previousPaymentPhone !== nextPaymentPhone) {
 			const firebaseResult = await updateFirebaseUserByPhoneNumber(previousPaymentPhone, nextPaymentPhone);
 			if (!firebaseResult.success) {
-				return resultFail(`Failed to update Firebase phone number: ${firebaseResult.error}`);
+				console.error('Could not update recipient Firebase phone number', { error: firebaseResult.error });
+
+				return resultFail('Could not update recipient authentication phone number');
 			}
 			firebaseCompensation = {
 				kind: 'changed',
@@ -363,7 +361,7 @@ export const removeRecipientFromProgram = async (
 	try {
 		const idResult = recipientIdSchema.safeParse(recipientId);
 		if (!idResult.success) {
-			return resultFail(idResult.error.issues[0]?.message ?? 'Recipient id is required.');
+			return resultFail('Recipient id is required.');
 		}
 
 		const existing = await recipientRepository.findRecipientForProgramRemoval(idResult.data);
@@ -404,7 +402,7 @@ export const deleteRecipient = async (session: Session, recipientId: string): Pr
 	try {
 		const idResult = recipientIdSchema.safeParse(recipientId);
 		if (!idResult.success) {
-			return resultFail(idResult.error.issues[0]?.message ?? 'Recipient id is required.');
+			return resultFail('Recipient id is required.');
 		}
 
 		const existing = await recipientRepository.findRecipientForDeletion(idResult.data);
@@ -456,7 +454,7 @@ export const getRecipientById = async (session: Session, recipientId: string): P
 	try {
 		const idResult = recipientIdSchema.safeParse(recipientId);
 		if (!idResult.success) {
-			return resultFail(idResult.error.issues[0]?.message ?? 'Recipient id is required.');
+			return resultFail('Recipient id is required.');
 		}
 
 		const recipient = await recipientRepository.findRecipient(idResult.data);
@@ -664,7 +662,9 @@ export const getAuthenticatedRecipientFromRequest = async (
 
 		const recipient = recipientResult.data;
 		if (!recipient?.paymentInformation || !recipient.program) {
-			return resultFail(`No recipient found for phone "${maskPhoneNumber(phone)}"`, 404);
+			console.warn('No recipient found for authenticated phone', { phone: maskPhoneNumber(phone) });
+
+			return resultFail('No recipient found for authenticated phone', 404);
 		}
 
 		return resultOk(recipient);
@@ -904,7 +904,7 @@ export const importRecipientsCsv = async (session: Session, file: File): Promise
 	try {
 		const fileResult = recipientCsvFileSchema.safeParse(file);
 		if (!fileResult.success) {
-			return resultFail(fileResult.error.issues[0]?.message ?? 'Invalid CSV file');
+			return resultFail('Invalid CSV file');
 		}
 
 		const rows = parseCsvText(await fileResult.data.text());
@@ -935,13 +935,17 @@ export const importRecipientsCsv = async (session: Session, file: File): Promise
 		}
 
 		if (errors.length > 0) {
-			return resultFail(errors.join('\n'));
+			console.warn('Recipient CSV validation failed', { errors });
+
+			return resultFail('CSV contains invalid recipient data');
 		}
 
-		for (const [index, recipient] of recipients.entries()) {
+		for (const recipient of recipients) {
 			const createResult = await createRecipient(session, recipient);
 			if (!createResult.success) {
-				return resultFail(`Row ${index + 1}: ${createResult.error}`);
+				console.error('Could not create recipient from CSV', { error: createResult.error });
+
+				return resultFail('Could not create recipient from CSV');
 			}
 		}
 
@@ -949,7 +953,7 @@ export const importRecipientsCsv = async (session: Session, file: File): Promise
 	} catch (error) {
 		console.error(error);
 
-		return resultFail(error instanceof Error ? error.message : 'Failed to parse CSV file');
+		return resultFail('Failed to parse recipients CSV file');
 	}
 };
 
@@ -1102,24 +1106,33 @@ const synchronizeFirebasePaymentPhone = async (
 	}
 	if (!previousPhone && nextPhone) {
 		const result = await createFirebaseUserByPhoneNumber(nextPhone);
+		if (!result.success) {
+			console.error('Could not create Firebase user for recipient payment phone', { error: result.error });
 
-		return result.success
-			? resultOk({ kind: 'added', nextPhone })
-			: resultFail(`Failed to create Firebase user: ${result.error}`);
+			return resultFail('Could not create recipient authentication user');
+		}
+
+		return resultOk({ kind: 'added', nextPhone });
 	}
 	if (previousPhone && !nextPhone) {
 		const result = await deleteFirebaseUserByPhoneNumberIfExists(previousPhone);
+		if (!result.success) {
+			console.error('Could not delete Firebase user for recipient payment phone', { error: result.error });
 
-		return result.success
-			? resultOk({ kind: 'removed', previousPhone })
-			: resultFail(`Failed to delete Firebase user: ${result.error}`);
+			return resultFail('Could not delete recipient authentication user');
+		}
+
+		return resultOk({ kind: 'removed', previousPhone });
 	}
 	if (previousPhone && nextPhone && previousPhone !== nextPhone) {
 		const result = await updateFirebaseUserByPhoneNumber(previousPhone, nextPhone);
+		if (!result.success) {
+			console.error('Could not update Firebase user for recipient payment phone', { error: result.error });
 
-		return result.success
-			? resultOk({ kind: 'changed', previousPhone, nextPhone })
-			: resultFail(`Failed to update Firebase user: ${result.error}`);
+			return resultFail('Could not update recipient authentication user');
+		}
+
+		return resultOk({ kind: 'changed', previousPhone, nextPhone });
 	}
 
 	return resultOk(null);
@@ -1322,13 +1335,19 @@ const processStatusRows = (
 
 const mapCsvRowToRecipient = (rowNumber: number, row: Record<string, string>): ServiceResult<CreateRecipientInput> => {
 	if (!row.firstName || !row.lastName) {
-		return resultFail(`Row ${rowNumber}: firstName and lastName are required`);
+		console.warn('Recipient CSV row is missing a name', { rowNumber });
+
+		return resultFail('Recipient first name and last name are required');
 	}
 	if (!row.programId) {
-		return resultFail(`Row ${rowNumber}: programId is required`);
+		console.warn('Recipient CSV row is missing a program', { rowNumber });
+
+		return resultFail('Recipient program is required');
 	}
 	if (!row.localPartnerId) {
-		return resultFail(`Row ${rowNumber}: localPartnerId is required`);
+		console.warn('Recipient CSV row is missing a local partner', { rowNumber });
+
+		return resultFail('Recipient local partner is required');
 	}
 
 	const optionalFieldsResult = parseCsvOptionalFields(rowNumber, row);

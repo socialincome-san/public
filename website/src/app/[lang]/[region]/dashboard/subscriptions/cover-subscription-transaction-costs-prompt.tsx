@@ -4,7 +4,7 @@ import { type Currency } from '@/generated/prisma/client';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
-import { getOnlineTransactionCost } from '@/modules/subscriptions/subscription.types';
+import { getOnlineTransactionCost } from './subscription-amount';
 
 const feeCurrencyFormatOptions = {
 	minimumFractionDigits: 2,

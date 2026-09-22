@@ -15,7 +15,7 @@ import {
 	shouldSkipStripeSubscriptionStatus,
 } from '@/integrations/stripe/stripe.integration';
 import { prisma } from '@/lib/database/prisma';
-import { mapCoverTransactionCostsMetadata } from '@/modules/subscriptions/subscription.types';
+import { subscriptionAmount } from '@/modules/subscriptions/subscription-amount.service';
 import Stripe from 'stripe';
 import {
 	assertDatabaseUrl,
@@ -243,7 +243,7 @@ const processSubscription = async (context: ProcessContext, subscription: Stripe
 				status: lifecycle.status,
 				paymentMethod: SubscriptionPaymentMethod.stripe,
 				canceledAt: lifecycle.canceledAt,
-				coverTransactionCosts: mapCoverTransactionCostsMetadata(subscription.metadata),
+				coverTransactionCosts: subscriptionAmount.mapCoverTransactionCostsMetadata(subscription.metadata),
 			},
 		});
 	}
