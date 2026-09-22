@@ -4,10 +4,10 @@ import type { TransparencySummary } from '@/generated/storyblok/types/109655/sto
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import type { DisplayAmount } from '@/modules/currency-display/currency-display.types';
+import { getTransparencySummaryAction } from '@/modules/transparency/transparency.actions';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type ReserveAccount = {
@@ -25,7 +25,7 @@ type Props = {
 
 export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const dataResult = await services.transparency.getTransparencySummary();
+	const dataResult = await getTransparencySummaryAction();
 
 	if (!dataResult.success) {
 		return null;

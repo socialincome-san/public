@@ -9,17 +9,9 @@ import type { TransparencyCountries } from '@/generated/storyblok/types/109655/s
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import {
-	formatPercentageDisplay,
-	TOP_CONTRIBUTING_COUNTRIES_LIMIT,
-} from '@/lib/services/transparency/countries-distribution';
-import {
-	OTHER_COUNTRY_SEGMENT_CODE,
-	type TransparencyFinancialPeriod,
-} from '@/lib/services/transparency/transparency.types';
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
+import { getContributionsByCountryDataAction } from '@/modules/transparency/transparency.actions';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
@@ -28,12 +20,11 @@ type Props = {
 };
 
 export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
-	const financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' };
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const dataResult = await services.transparency.getContributionsByCountryData(
-		TOP_CONTRIBUTING_COUNTRIES_LIMIT,
-		financialPeriod,
-	);
+	const dataResult = await getContributionsByCountryDataAction({
+		limit: 15,
+		financialPeriod: { kind: 'all-time' },
+	});
 
 	if (!dataResult.success) {
 		return null;
@@ -60,15 +51,13 @@ export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
 	const formattedCountriesCount = formatNumberLocale(data.countriesCount, locale, { maximumFractionDigits: 0 });
 	const segments: CountriesSectionSegment[] = data.segments.map((segment, index) => {
 		const countryName =
-			segment.countryCode === OTHER_COUNTRY_SEGMENT_CODE
-				? otherCountriesLabel
-				: translator.t(segment.countryCode, { namespace: 'countries' });
+			segment.countryCode === 'OTHER' ? otherCountriesLabel : translator.t(segment.countryCode, { namespace: 'countries' });
 		const formattedAmount = formattedAmounts[index + 1] ?? formatCurrencyLocale(segment.totalChf, 'CHF', locale);
 		const formattedPercentage = formatPercentageDisplay(segment.percentageOfTotal, segment.totalChf);
 
 		return {
 			id: segment.countryCode,
-			countryCode: segment.countryCode === OTHER_COUNTRY_SEGMENT_CODE ? null : segment.countryCode,
+			countryCode: segment.countryCode === 'OTHER' ? null : segment.countryCode,
 			countryName,
 			formattedAmount,
 			formattedPercentage,
@@ -114,4 +103,12 @@ export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
 			</section>
 		</BlockWrapper>
 	);
+};
+
+const formatPercentageDisplay = (percentageOfTotal: number, amount: number): string => {
+	if (amount > 0 && Math.round(percentageOfTotal) === 0) {
+		return '<1%';
+	}
+
+	return `${Math.round(percentageOfTotal)}%`;
 };

@@ -2,7 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema } from '@/components/dynamic-form/helper';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import { handleServiceResult } from '@/lib/service-result-client';
 import {
 	createOrganizationAction,
 	deleteOrganizationAction,

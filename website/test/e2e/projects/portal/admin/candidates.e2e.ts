@@ -4,9 +4,10 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 import {
 	clickDataTableActionItem,
+	createFirebaseUserByPhoneNumber,
 	deleteFirebasePhonesIfExist,
+	deleteFirebaseUserByPhoneNumberIfExists,
 	getCandidateByName,
-	getFirebaseAdminService,
 	selectOptionByTestId,
 } from '../../../utils';
 
@@ -160,16 +161,15 @@ test('add candidate with payment phone keeps Firebase user in sync', async ({ pa
 });
 
 test('delete candidate removes Firebase user for payment phone', async ({ page }) => {
-	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const firstName = `Delete-${unique}`;
 	const lastName = 'Candidate';
 	const paymentPhone = `+23277${String(unique).slice(-6)}`;
 
-	await firebaseService.deleteByPhoneNumberIfExists(paymentPhone);
+	await deleteFirebaseUserByPhoneNumberIfExists(paymentPhone);
 
 	try {
-		await firebaseService.createByPhoneNumber(paymentPhone);
+		await createFirebaseUserByPhoneNumber(paymentPhone);
 
 		const localPartner = await prisma.localPartner.findFirst({
 			select: { id: true },
@@ -219,7 +219,7 @@ test('delete candidate removes Firebase user for payment phone', async ({ page }
 		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(paymentPhone);
 		await expect(page.getByRole('cell', { name: paymentPhone })).toHaveCount(0);
 	} finally {
-		await firebaseService.deleteByPhoneNumberIfExists(paymentPhone);
+		await deleteFirebaseUserByPhoneNumberIfExists(paymentPhone);
 	}
 });
 

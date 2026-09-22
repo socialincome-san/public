@@ -2,7 +2,7 @@ import type { Program } from '@/generated/storyblok/types/109655/storyblok-compo
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import { STORYBLOK_PROGRAMS_FOLDER } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoriesParams, ISbStoryData } from '@storyblok/js';
-import { getStoryblokContentClient } from './storyblok-content.integration';
+import { fetchStoryblokStories } from './storyblok-content.integration';
 
 export const fetchStoryblokPrograms = async (
 	language: string,
@@ -14,14 +14,19 @@ export const fetchStoryblokPrograms = async (
 			version,
 			starts_with: `${STORYBLOK_PROGRAMS_FOLDER}/`,
 		};
-		const stories = await getStoryblokContentClient().getAll('cdn/stories', params);
-		let programs = stories.filter(isProgramStory);
+		const storiesResult = await fetchStoryblokStories<ISbStoryData<Program>>(params);
+		if (!storiesResult.success) {
+			return resultFail('Could not fetch Storyblok programs');
+		}
+		let programs = storiesResult.data.filter(isProgramStory);
 		if (programs.length === 0 && process.env.NODE_ENV !== 'production' && version === 'published') {
-			const draftStories = await getStoryblokContentClient().getAll('cdn/stories', {
+			const draftStoriesResult = await fetchStoryblokStories<ISbStoryData<Program>>({
 				...params,
 				version: 'draft',
 			});
-			programs = draftStories.filter(isProgramStory);
+			if (draftStoriesResult.success) {
+				programs = draftStoriesResult.data.filter(isProgramStory);
+			}
 		}
 
 		return resultOk(programs);

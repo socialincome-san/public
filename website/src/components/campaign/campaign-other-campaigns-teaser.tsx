@@ -4,8 +4,8 @@ import { resolveCampaignsWithCmsEntries } from '@/components/campaign/campaigns-
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { getAllCampaignsForCmsJoinWithStatsAction } from '@/modules/campaigns/campaign.actions';
+import { getCampaignsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 
 const TEASER_LIMIT = 3;
 
@@ -18,7 +18,7 @@ type Props = {
 export const CampaignOtherCampaignsTeaser = async ({ currentCampaignSlug, lang, region }: Props) => {
 	const [translator, campaignStoriesResult, campaignsResult] = await Promise.all([
 		Translator.getInstance({ language: lang, namespaces: ['website-campaign'] }),
-		services.storyblok.getCampaigns(lang),
+		getCampaignsAction(lang),
 		getAllCampaignsForCmsJoinWithStatsAction('active'),
 	]);
 

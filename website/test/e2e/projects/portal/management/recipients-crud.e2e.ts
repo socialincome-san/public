@@ -5,8 +5,9 @@ import { readFile } from 'node:fs/promises';
 import {
 	assertContactExistsByEmail,
 	clickDataTableActionItem,
+	createFirebaseUserByPhoneNumber,
 	deleteFirebasePhonesIfExist,
-	getFirebaseAdminService,
+	deleteFirebaseUserByPhoneNumberIfExists,
 	getRecipientIdByName,
 	getRecipientProgramAndLocalPartnerByName,
 	selectOptionByTestId,
@@ -157,10 +158,9 @@ test('add recipient with payment phone keeps Firebase user in sync', async ({ pa
 });
 
 test('Edit existing recipient', async ({ page }) => {
-	const firebaseService = await getFirebaseAdminService();
-	await firebaseService.deleteByPhoneNumberIfExists(EDIT_RECIPIENT.phone);
-	await firebaseService.deleteByPhoneNumberIfExists(EXISTING_RECIPIENT.paymentPhone);
-	await firebaseService.createByPhoneNumber(EXISTING_RECIPIENT.paymentPhone);
+	await deleteFirebaseUserByPhoneNumberIfExists(EDIT_RECIPIENT.phone);
+	await deleteFirebaseUserByPhoneNumberIfExists(EXISTING_RECIPIENT.paymentPhone);
+	await createFirebaseUserByPhoneNumber(EXISTING_RECIPIENT.paymentPhone);
 
 	try {
 		await page.goto('/portal/management/recipients');
@@ -208,9 +208,9 @@ test('Edit existing recipient', async ({ page }) => {
 		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill('666666');
 		await expect(page.getByRole('cell', { name: EDIT_RECIPIENT.phone })).toBeVisible();
 	} finally {
-		await firebaseService.deleteByPhoneNumberIfExists(EDIT_RECIPIENT.phone);
-		await firebaseService.deleteByPhoneNumberIfExists(EXISTING_RECIPIENT.paymentPhone);
-		await firebaseService.createByPhoneNumber(EXISTING_RECIPIENT.paymentPhone);
+		await deleteFirebaseUserByPhoneNumberIfExists(EDIT_RECIPIENT.phone);
+		await deleteFirebaseUserByPhoneNumberIfExists(EXISTING_RECIPIENT.paymentPhone);
+		await createFirebaseUserByPhoneNumber(EXISTING_RECIPIENT.paymentPhone);
 	}
 });
 
@@ -386,7 +386,6 @@ test('edit recipient can clear suspendedAt date', async ({ page }) => {
 
 test('recipient payment phone stays aligned in Firebase after phone changes', async ({ page }) => {
 	const unusedPhones = await buildUnusedPaymentPhoneNumbers();
-	const firebaseService = await getFirebaseAdminService();
 	await deleteFirebasePhonesIfExist(unusedPhones.first, unusedPhones.second);
 
 	try {
@@ -418,8 +417,8 @@ test('recipient payment phone stays aligned in Firebase after phone changes', as
 		expect(existingRecipient?.paymentInformation?.phone?.number).toBeTruthy();
 
 		const existingPhone = existingRecipient!.paymentInformation!.phone!.number;
-		await firebaseService.deleteByPhoneNumberIfExists(existingPhone);
-		await firebaseService.createByPhoneNumber(existingPhone);
+		await deleteFirebaseUserByPhoneNumberIfExists(existingPhone);
+		await createFirebaseUserByPhoneNumber(existingPhone);
 
 		await page.goto(
 			`/portal/management/recipients?page=1&pageSize=10&search=${encodeURIComponent(existingRecipient!.contact.firstName)}`,
@@ -466,7 +465,7 @@ test('recipient payment phone stays aligned in Firebase after phone changes', as
 		await expect(page.getByRole('cell', { name: unusedPhones.first })).toHaveCount(0);
 	} finally {
 		await deleteFirebasePhonesIfExist(unusedPhones.first, unusedPhones.second, EXISTING_RECIPIENT.paymentPhone);
-		await firebaseService.createByPhoneNumber(EXISTING_RECIPIENT.paymentPhone);
+		await createFirebaseUserByPhoneNumber(EXISTING_RECIPIENT.paymentPhone);
 	}
 });
 
@@ -476,10 +475,9 @@ test('Delete recipient', async ({ page }) => {
 	const lastName = 'recipient_delete';
 	const unusedPhones = await buildUnusedPaymentPhoneNumbers();
 	const phone = unusedPhones.first;
-	const firebaseService = await getFirebaseAdminService();
 
-	await firebaseService.deleteByPhoneNumberIfExists(phone);
-	await firebaseService.createByPhoneNumber(phone);
+	await deleteFirebaseUserByPhoneNumberIfExists(phone);
+	await createFirebaseUserByPhoneNumber(phone);
 
 	const localPartner = await prisma.localPartner.findFirst({
 		where: { id: 'local-partner-sl-1' },
@@ -554,7 +552,7 @@ test('Delete recipient', async ({ page }) => {
 		await page.getByPlaceholder('Search by user UID, email address, phone number, or display name').fill(phone);
 		await expect(page.getByRole('cell', { name: phone })).toHaveCount(0);
 	} finally {
-		await firebaseService.deleteByPhoneNumberIfExists(phone);
+		await deleteFirebaseUserByPhoneNumberIfExists(phone);
 	}
 });
 

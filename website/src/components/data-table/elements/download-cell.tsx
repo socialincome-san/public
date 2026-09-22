@@ -1,9 +1,8 @@
 'use client';
 
 import { CellType } from '@/components/data-table/elements/types';
-import { useStorage, useStorageDownloadURL } from '@/lib/firebase/hooks/useStorage';
+import { createStorageReference, useStorage, useStorageDownloadURL } from '@/lib/firebase/hooks/useStorage';
 import type { RowData } from '@tanstack/react-table';
-import { ref } from 'firebase/storage';
 import { Download } from 'lucide-react';
 import Link from 'next/link';
 
@@ -11,7 +10,7 @@ export const DownloadCell = <TData extends RowData, TValue>({ ctx }: CellType<TD
 	const storagePath = String(ctx.getValue() ?? '');
 	const storage = useStorage();
 	const isDownloadablePath = storagePath.startsWith('users/');
-	const storageRef = storagePath && isDownloadablePath ? ref(storage, storagePath) : undefined;
+	const storageRef = storagePath && isDownloadablePath ? createStorageReference(storage, storagePath) : undefined;
 	const { data, loading } = useStorageDownloadURL(storageRef);
 
 	if (!storagePath) {

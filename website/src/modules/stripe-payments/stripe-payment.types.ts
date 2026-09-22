@@ -78,38 +78,6 @@ export type UpdateContributorReferralAfterCheckoutInput = {
 
 export type UpdateContributorReferralAfterCheckoutResult = ContributorRecord;
 
-export type StripeSubscriptionRow = {
-	id: string;
-	created: Date;
-	status: string;
-	amount: number;
-	interval: string;
-	currency: string;
-	paymentMethod: StripePaymentMethod;
-};
-
-export type StripeSubscriptionTableView = {
-	rows: StripeSubscriptionRow[];
-};
-
-export type StripeSubscriptionTableQuery = {
-	page: number;
-	pageSize: number;
-	search: string;
-	sortBy?: string;
-	sortDirection?: 'asc' | 'desc';
-};
-
-export type StripeSubscriptionPaginatedTableView = {
-	rows: StripeSubscriptionRow[];
-	totalCount: number;
-};
-
-export type StripePaymentMethod = {
-	type: 'card' | 'other';
-	label: string;
-};
-
 export type StripeSubscriptionDetails = {
 	brand?: string;
 	last4?: string;

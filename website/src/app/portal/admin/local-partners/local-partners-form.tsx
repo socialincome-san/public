@@ -3,8 +3,8 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getContactValuesFromPayload } from '@/components/dynamic-form/helper';
-import { ServiceResult } from '@/lib/services/core/base.types';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import type { ServiceResult } from '@/lib/service-result';
+import { handleServiceResult } from '@/lib/service-result-client';
 import { SLUG_REGEX } from '@/lib/utils/regex';
 import { getFocusOptionsAction } from '@/modules/focuses/focus.actions';
 import {

@@ -10,7 +10,7 @@ jest.mock('@/modules/countries/country.service', () => ({
 	getCountryIsoCode: jest.fn(),
 }));
 
-jest.mock('@/integrations/firebase/firebase-auth.integration', () => ({}));
+jest.mock('@/modules/auth/auth.service', () => ({}));
 
 jest.mock('./candidate.repository', () => ({
 	findCandidateById: mockFindCandidateById,

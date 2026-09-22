@@ -9,4 +9,6 @@ export const verifyOtpSchema = z.object({
 	otp: z.string(),
 });
 
+export const sessionIdTokenSchema = z.string().min(1, 'missing-id-token');
+
 export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>;

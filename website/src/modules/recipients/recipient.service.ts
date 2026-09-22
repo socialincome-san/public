@@ -1,16 +1,16 @@
 import { Currency, Gender, PayoutInterval, PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
+import type { Session } from '@/lib/firebase/current-account';
+import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
+import { now } from '@/lib/utils/now';
+import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
 import {
 	createFirebaseUserByPhoneNumber,
 	decodeFirebaseTokenFromRequest,
 	deleteFirebaseUserByPhoneNumberIfExists,
 	getPhoneNumberFromFirebaseToken,
 	updateFirebaseUserByPhoneNumber,
-} from '@/integrations/firebase/firebase-auth.integration';
-import type { Session } from '@/lib/firebase/current-account';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
-import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
-import { now } from '@/lib/utils/now';
-import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
+} from '@/modules/auth/auth.service';
 import { getLocalPartnerOptions } from '@/modules/local-partners/local-partner.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
@@ -44,13 +44,13 @@ import type {
 	RecipientLifecycleStatusFromExpectedIntervalsInput,
 	RecipientLifecycleStatusInput,
 	RecipientMessagingTarget,
+	RecipientMonthlySummarySource,
 	RecipientOption,
 	RecipientPaginatedTableView,
 	RecipientPayload,
 	RecipientProgramAssignment,
 	RecipientProgramFilterOption,
 	RecipientTableQuery,
-	RecipientTableView,
 	RecipientTableViewRow,
 	RecipientUpcomingOnboardingPaginatedTableView,
 	RecipientWithPaymentInfo,
@@ -58,6 +58,19 @@ import type {
 	UnassignedRecipientCountry,
 	UpcomingOnboardingTableViewRow,
 } from './recipient.types';
+
+export const getRecipientMonthlySummarySource = async (
+	from: Date,
+	to: Date,
+): Promise<ServiceResult<RecipientMonthlySummarySource>> => {
+	try {
+		return resultOk(await recipientRepository.findRecipientMonthlySummarySource(from, to));
+	} catch (error) {
+		console.error('Could not fetch recipient monthly summary source', { error });
+
+		return resultFail('Could not fetch recipient monthly summary source');
+	}
+};
 
 const validateRecipientCreateInput = (input: CreateRecipientInput): ServiceResult<CreateRecipientInput> => {
 	const parsedInput = recipientCreateSchema.safeParse(input);
@@ -634,10 +647,11 @@ export const getAuthenticatedRecipientFromRequest = async (
 			return resultFail(tokenResult.error, 401);
 		}
 
-		const phone = getPhoneNumberFromFirebaseToken(tokenResult.data);
-		if (!phone) {
+		const phoneResult = getPhoneNumberFromFirebaseToken(tokenResult.data);
+		if (!phoneResult.success || !phoneResult.data) {
 			return resultFail('Phone number not present in token', 400);
 		}
+		const phone = phoneResult.data;
 
 		if (shouldBypassRecipientAuthentication(phone)) {
 			return resultOk(createAppReviewRecipient(phone));
@@ -748,31 +762,6 @@ export const getPublicRecipientsTableView = async (programId: string): Promise<S
 	}
 };
 
-const getRecipientTableView = async (userId: string): Promise<ServiceResult<RecipientTableView>> => {
-	try {
-		const accessResult = await getAccessiblePrograms(userId);
-		if (!accessResult.success) {
-			return resultFail(accessResult.error);
-		}
-		if (accessResult.data.length === 0) {
-			return resultOk({ tableRows: [], permission: ProgramPermission.owner });
-		}
-
-		const recipients = await recipientRepository.findAllRecipientTableSource(
-			accessResult.data.map(({ programId }) => programId),
-		);
-
-		return resultOk({
-			tableRows: mapRecipientTableRows(recipients, accessResult.data, true, now()),
-			permission: getTablePermission(accessResult.data),
-		});
-	} catch (error) {
-		console.error(error);
-
-		return resultFail('Could not fetch recipients');
-	}
-};
-
 export const getPaginatedRecipientTableView = async (
 	userId: string,
 	query: RecipientTableQuery,
@@ -865,55 +854,6 @@ export const getPaginatedUpcomingOnboardingRecipientTableView = async (
 		console.error(error);
 
 		return resultFail('Could not fetch upcoming onboarding recipients');
-	}
-};
-
-const getProgramScopedRecipientTableView = async (
-	userId: string,
-	programId: string,
-): Promise<ServiceResult<RecipientTableView>> => {
-	try {
-		const accessResult = await getAccessiblePrograms(userId);
-		if (!accessResult.success) {
-			return resultFail(accessResult.error);
-		}
-
-		const tableResult = await getRecipientTableView(userId);
-		if (!tableResult.success) {
-			return tableResult;
-		}
-
-		return resultOk({
-			tableRows: tableResult.data.tableRows.filter(({ programId: rowProgramId }) => rowProgramId === programId),
-			permission: accessResult.data.some(
-				(access) => access.programId === programId && access.permission === ProgramPermission.operator,
-			)
-				? ProgramPermission.operator
-				: ProgramPermission.owner,
-		});
-	} catch (error) {
-		console.error(error);
-
-		return resultFail('Could not fetch program scoped recipients');
-	}
-};
-
-const getRecipientTableViewByLocalPartnerId = async (localPartnerId: string): Promise<ServiceResult<RecipientTableView>> => {
-	try {
-		const result = await getPaginatedRecipientTableViewByLocalPartnerId(localPartnerId, {
-			page: 1,
-			pageSize: 10_000,
-			search: '',
-		});
-		if (!result.success) {
-			return resultFail(result.error);
-		}
-
-		return resultOk({ tableRows: result.data.tableRows, permission: result.data.permission });
-	} catch (error) {
-		console.error(error);
-
-		return resultFail('Could not fetch local partner recipients table view');
 	}
 };
 
@@ -1140,30 +1080,6 @@ export const countCandidatesForLocalPartners = async (localPartnerIds: string[])
 
 		return resultFail('Could not count candidates');
 	}
-};
-
-export const recipientService = {
-	create: createRecipient,
-	update: updateRecipient,
-	updateSelf: updateRecipientSelf,
-	removeFromProgram: removeRecipientFromProgram,
-	delete: deleteRecipient,
-	get: getRecipientById,
-	getEditableRecipientOptions,
-	getFormOptions: getRecipientFormOptions,
-	getSurveyRecipients,
-	getByPaymentPhoneNumber: getRecipientByPaymentPhoneNumber,
-	getRecipientFromRequest: getAuthenticatedRecipientFromRequest,
-	exportCsv: exportRecipientsCsv,
-	getPublicRecipientsTableView,
-	getTableView: getRecipientTableView,
-	getPaginatedTableView: getPaginatedRecipientTableView,
-	getPaginatedTableViewByProgramId: getPaginatedRecipientTableViewByProgramId,
-	getPaginatedUpcomingOnboardingTableView: getPaginatedUpcomingOnboardingRecipientTableView,
-	getTableViewProgramScoped: getProgramScopedRecipientTableView,
-	getTableViewByLocalPartnerId: getRecipientTableViewByLocalPartnerId,
-	getPaginatedTableViewByLocalPartnerId: getPaginatedRecipientTableViewByLocalPartnerId,
-	importCsv: importRecipientsCsv,
 };
 
 export const recipientStatusService = {

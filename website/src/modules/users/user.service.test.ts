@@ -25,7 +25,7 @@ jest.mock('./user.repository', () => ({
 	deleteUserData: mockDeleteUserData,
 }));
 
-jest.mock('@/integrations/firebase/firebase-auth.integration', () => ({
+jest.mock('@/modules/auth/auth.service', () => ({
 	findFirebaseUserByEmail: mockFindFirebaseUserByEmail,
 	createFirebaseUserByEmail: mockCreateFirebaseUserByEmail,
 	updateFirebaseUserByUid: mockUpdateFirebaseUserByUid,

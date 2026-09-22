@@ -1,3 +1,4 @@
+import { getCurrentAuthToken } from '@/modules/auth/auth.service';
 import { getCurrentContributorSession } from '@/modules/contributors/contributor.service';
 import type { ContributorSession } from '@/modules/contributors/contributor.types';
 import { getCurrentLocalPartnerSession } from '@/modules/local-partners/local-partner.service';
@@ -5,18 +6,12 @@ import type { LocalPartnerSession } from '@/modules/local-partners/local-partner
 import { getCurrentUserSession } from '@/modules/users/user.service';
 import type { UserSession } from '@/modules/users/user.types';
 import { redirect } from 'next/navigation';
-import { ServiceResult } from '../services/core/base.types';
-import { resultFail, resultOk } from '../services/core/service-result';
-import { services } from '../services/services';
+import { resultFail, resultOk, type ServiceResult } from '../service-result';
 
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
 const getAuthUserIdFromCookie = async (): Promise<string | null> => {
-	const cookieResult = await services.firebaseSession.readSessionCookie();
-	if (!cookieResult.success || !cookieResult.data) {
-		return null;
-	}
-	const result = await services.firebaseSession.verifySessionCookie(cookieResult.data);
+	const result = await getCurrentAuthToken();
 
 	return result.success ? result.data.uid : null;
 };
@@ -69,6 +64,8 @@ export const getSessionByType = async <T extends Session['type']>(type: T): Prom
 
 		return resultOk(session);
 	} catch (error) {
-		return resultFail(`Could not resolve session: ${JSON.stringify(error)}`);
+		console.error('Could not resolve session', { type, error });
+
+		return resultFail('Could not resolve session');
 	}
 };

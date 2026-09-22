@@ -2,7 +2,7 @@ import { type MultiSelectOption } from '@/components/multi-select/multi-select';
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { SurveyQuestionnaire } from '@/generated/prisma/client';
 import { RECIPIENT_AGE_GROUPS } from '@/lib/constants/recipient-age-groups';
-import { services } from '@/lib/services/services';
+import { getFocuses } from '@/modules/storyblok-content/storyblok-content.service';
 import { getSurveyImpactFilterOptions } from '@/modules/surveys/survey.service';
 import { questionnaireLabelKeys } from './config';
 import { ImpactMeasurementFilters } from './filters';
@@ -34,7 +34,7 @@ export const ImpactMeasurementFilterSection = async ({ lang, searchParams }: Imp
 	const [translator, filterOptionsResult, storyblokFocusesResult] = await Promise.all([
 		getImpactTranslator(lang),
 		getSurveyImpactFilterOptions(),
-		services.storyblok.getFocuses(lang),
+		getFocuses(lang),
 	]);
 	const filterOptions = filterOptionsResult.success
 		? filterOptionsResult.data

@@ -3,7 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutInterval, Profile } from '@/generated/prisma/enums';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import { handleServiceResult } from '@/lib/service-result-client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { SLUG_REGEX } from '@/lib/utils/regex';
 import { getProgramCountryFeasibilityAction } from '@/modules/countries/country.actions';

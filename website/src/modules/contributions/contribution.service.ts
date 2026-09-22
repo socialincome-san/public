@@ -1,4 +1,10 @@
-import { ContributionStatus, Currency, PaymentEventType, ProgramPermission } from '@/generated/prisma/enums';
+import {
+	ContributionStatus,
+	type CountryCode,
+	Currency,
+	PaymentEventType,
+	ProgramPermission,
+} from '@/generated/prisma/enums';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
@@ -6,6 +12,7 @@ import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { START_CHARACTER_REGEX, UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { findContributorById, getEditableContributorOptions } from '@/modules/contributors/contributor.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import { getCampaigns } from '@/modules/storyblok-content/storyblok-content.service';
 import type { ISbStoryData } from '@storyblok/js';
 import { endOfYear, startOfYear } from 'date-fns';
 import { canListContributions, canReadContribution, canWriteContribution } from './contribution.permissions';
@@ -18,11 +25,14 @@ import {
 } from './contribution.schemas';
 import type {
 	BankTransferUpsertInput,
+	ContributionCountryRow,
+	ContributionDateRange,
 	ContributionDonationEntry,
 	ContributionFormOptions,
 	ContributionPaginatedTableView,
 	ContributionPayload,
 	ContributionRecord,
+	ContributionSummary,
 	ContributionTableQuery,
 	ContributionTableViewRow,
 	ContributorContributionSummary,
@@ -42,6 +52,74 @@ const PAYMENT_EVENT_TYPES = [
 	PaymentEventType.cash,
 	PaymentEventType.raisenow,
 ] as const;
+
+export const getSucceededContributionTotal = async (dateRange?: ContributionDateRange): Promise<ServiceResult<number>> => {
+	try {
+		const aggregate = await contributionRepository.findSucceededContributionTotal(dateRange);
+
+		return resultOk(Number(aggregate._sum.amountChf ?? 0));
+	} catch (error) {
+		console.error('Could not fetch succeeded contribution total', { error });
+
+		return resultFail('Could not fetch contribution total');
+	}
+};
+
+export const getSucceededContributionSummary = async (
+	dateRange: ContributionDateRange,
+): Promise<ServiceResult<ContributionSummary>> => {
+	try {
+		const aggregate = await contributionRepository.findSucceededContributionSummary(dateRange);
+
+		return resultOk({
+			amountChf: Number(aggregate._sum.amountChf ?? 0),
+			count: aggregate._count._all,
+		});
+	} catch (error) {
+		console.error('Could not fetch succeeded contribution summary', { error });
+
+		return resultFail('Could not fetch contribution summary');
+	}
+};
+
+export const getSucceededContributionsByContributorCountry = async (
+	dateRange?: ContributionDateRange,
+): Promise<ServiceResult<ContributionCountryRow[]>> => {
+	try {
+		const contributions = await contributionRepository.findSucceededContributionsByContributorCountry(dateRange);
+		const countryMap = new Map<CountryCode, { totalChf: number; contributors: Set<string> }>();
+		for (const contribution of contributions) {
+			const country = contribution.contributor.contact?.address?.country;
+			if (!country) {
+				continue;
+			}
+
+			const current = countryMap.get(country);
+			if (current) {
+				current.totalChf += Number(contribution.amountChf);
+				current.contributors.add(contribution.contributorId);
+				continue;
+			}
+
+			countryMap.set(country, {
+				totalChf: Number(contribution.amountChf),
+				contributors: new Set([contribution.contributorId]),
+			});
+		}
+
+		return resultOk(
+			[...countryMap.entries()].map(([countryCode, data]) => ({
+				countryCode,
+				totalChf: data.totalChf,
+				contributorCount: data.contributors.size,
+			})),
+		);
+	} catch (error) {
+		console.error('Could not fetch contributions by contributor country', { error });
+
+		return resultFail('Could not fetch contributions by country');
+	}
+};
 
 export const getContribution = async (
 	userId: string,
@@ -523,8 +601,7 @@ const validateReferencesExist = async (input: {
 };
 
 const getCampaignStories = async (): Promise<ISbStoryData<Campaign>[]> => {
-	const { services } = await import('@/lib/services/services');
-	const result = await services.storyblok.getCampaigns(defaultLanguage);
+	const result = await getCampaigns(defaultLanguage);
 
 	return result.success ? result.data : [];
 };

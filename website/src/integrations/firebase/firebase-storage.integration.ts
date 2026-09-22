@@ -1,5 +1,5 @@
-import { storageAdmin } from '@/lib/firebase/firebase-admin';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { getFirebaseAdminStorage } from './firebase-admin.integration';
 
 export type FirebaseStorageFile = {
 	name: string;
@@ -11,7 +11,7 @@ export const isFirebaseStorageConfigured = (): boolean => Boolean(process.env.NE
 
 export const listFirebaseStorageFileNames = async (bucketName: string): Promise<ServiceResult<string[]>> => {
 	try {
-		const [files] = await storageAdmin.storage.bucket(bucketName).getFiles();
+		const [files] = await getFirebaseAdminStorage().bucket(bucketName).getFiles();
 
 		return resultOk(files.map(({ name }) => name));
 	} catch (error) {
@@ -33,8 +33,9 @@ export const uploadFileToFirebaseStorage = async (
 	}
 
 	try {
-		const bucket = storageAdmin.storage.bucket(bucketName);
-		await storageAdmin.uploadFile({ bucket, sourceFilePath, destinationFilePath });
+		await getFirebaseAdminStorage().bucket(bucketName).upload(sourceFilePath, {
+			destination: destinationFilePath,
+		});
 
 		return resultOk(undefined);
 	} catch (error) {
@@ -49,7 +50,7 @@ export const listFirebaseStorageFiles = async (
 	fileNamePattern?: RegExp,
 ): Promise<ServiceResult<FirebaseStorageFile[]>> => {
 	try {
-		const [files] = await storageAdmin.storage.bucket(bucketName).getFiles();
+		const [files] = await getFirebaseAdminStorage().bucket(bucketName).getFiles();
 		const storageFiles = await Promise.all(
 			files
 				.filter((file) => !fileNamePattern || fileNamePattern.test(file.name))
@@ -74,7 +75,7 @@ export const listFirebaseStorageFiles = async (
 
 export const downloadFirebaseStorageFile = async (bucketName: string, fileName: string): Promise<ServiceResult<Buffer>> => {
 	try {
-		const [contents] = await storageAdmin.storage.bucket(bucketName).file(fileName).download();
+		const [contents] = await getFirebaseAdminStorage().bucket(bucketName).file(fileName).download();
 
 		return resultOk(contents);
 	} catch (error) {
@@ -90,7 +91,7 @@ export const uploadBufferToFirebaseStorage = async (
 	destinationFilePath: string,
 ): Promise<ServiceResult<void>> => {
 	try {
-		await storageAdmin.storage.bucket(bucketName).file(destinationFilePath).save(contents);
+		await getFirebaseAdminStorage().bucket(bucketName).file(destinationFilePath).save(contents);
 
 		return resultOk(undefined);
 	} catch (error) {

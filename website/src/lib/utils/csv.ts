@@ -1,7 +1,6 @@
 import { Gender } from '@/generated/prisma/enums';
+import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import { format, isValid, parse } from 'date-fns';
-import { ServiceResult } from '../services/core/base.types';
-import { resultFail, resultOk } from '../services/core/service-result';
 import { CSV_DOUBLE_QUOTES_REGEX, CSV_NEEDS_QUOTES_REGEX } from './regex';
 
 export type CsvRow = Record<string, string>;

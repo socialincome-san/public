@@ -7,7 +7,7 @@ import { ContributionStatus } from '@/generated/prisma/enums';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import { handleServiceResult } from '@/lib/service-result-client';
 import { allCurrencies } from '@/lib/types/currency';
 import { CampaignOption } from '@/modules/campaigns/campaign.types';
 import {

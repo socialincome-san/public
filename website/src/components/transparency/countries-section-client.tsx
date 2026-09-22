@@ -4,7 +4,6 @@ import { CountryFlag } from '@/components/country-flag/country-flag';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/dialog';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { splitTranslationTemplate } from '@/lib/i18n/translation-template';
-import { OTHER_COUNTRY_SEGMENT_CODE } from '@/lib/services/transparency/transparency.types';
 import { cn } from '@/lib/utils/cn';
 import { Fragment, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 
@@ -86,8 +85,8 @@ export const CountriesSectionClient = ({
 	const [isOtherDialogOpen, setIsOtherDialogOpen] = useState(false);
 	const interactionRef = useRef<HTMLDivElement>(null);
 	const resolvedActiveSegmentId =
-		isOtherDialogOpen && segments.some(({ id }) => id === OTHER_COUNTRY_SEGMENT_CODE)
-			? OTHER_COUNTRY_SEGMENT_CODE
+		isOtherDialogOpen && segments.some(({ countryCode }) => countryCode === null)
+			? (segments.find(({ countryCode }) => countryCode === null)?.id ?? null)
 			: segments.some(({ id }) => id === activeSegmentId)
 				? activeSegmentId
 				: null;
@@ -101,7 +100,7 @@ export const CountriesSectionClient = ({
 		})),
 	);
 
-	const isOtherActive = activeSegment?.id === OTHER_COUNTRY_SEGMENT_CODE;
+	const isOtherActive = activeSegment?.countryCode === null;
 	const headlineValues =
 		activeSegment === undefined
 			? {
@@ -187,7 +186,7 @@ export const CountriesSectionClient = ({
 					>
 						{segments.map((segment) => {
 							const isActive = resolvedActiveSegmentId === segment.id;
-							const isOther = segment.id === OTHER_COUNTRY_SEGMENT_CODE;
+							const isOther = segment.countryCode === null;
 							const rowClassName = cn(
 								'flex w-full min-w-0 items-center gap-3 rounded-lg px-2 py-2 text-left',
 								'transition-colors duration-150 motion-reduce:transition-none',

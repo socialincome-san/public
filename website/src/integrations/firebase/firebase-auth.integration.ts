@@ -1,8 +1,10 @@
-import { authAdmin } from '@/lib/firebase/firebase-admin';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
-import type { DecodedIdToken, UpdateRequest, UserRecord } from 'firebase-admin/auth';
+import type { DecodedIdToken, UserRecord } from 'firebase-admin/auth';
+import { getFirebaseAdminAppCheck, getFirebaseAdminAuth } from './firebase-admin.integration';
 
-export const createFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<ServiceResult<UserRecord>> => {
+export const createFirebaseUserByPhoneNumber = async (
+	phoneNumber: string,
+): Promise<ServiceResult<FirebaseAuthUserRecord>> => {
 	try {
 		const existingUserResult = await findFirebaseUserByPhoneNumber(phoneNumber);
 		if (!existingUserResult.success) {
@@ -15,7 +17,7 @@ export const createFirebaseUserByPhoneNumber = async (phoneNumber: string): Prom
 			return resultFail('User already exists for phone number');
 		}
 
-		return resultOk(await authAdmin.auth.createUser({ phoneNumber }));
+		return resultOk(toFirebaseAuthUserRecord(await getFirebaseAdminAuth().createUser({ phoneNumber })));
 	} catch (error) {
 		console.error('Error creating user by phone number:', { error });
 
@@ -26,7 +28,7 @@ export const createFirebaseUserByPhoneNumber = async (phoneNumber: string): Prom
 export const updateFirebaseUserByPhoneNumber = async (
 	oldPhoneNumber: string,
 	newPhoneNumber: string,
-): Promise<ServiceResult<UserRecord>> => {
+): Promise<ServiceResult<FirebaseAuthUserRecord>> => {
 	try {
 		const existingUserResult = await findFirebaseUserByPhoneNumber(oldPhoneNumber);
 		if (!existingUserResult.success) {
@@ -39,10 +41,14 @@ export const updateFirebaseUserByPhoneNumber = async (
 				newPhoneNumber,
 			});
 
-			return resultOk(await authAdmin.auth.createUser({ phoneNumber: newPhoneNumber }));
+			return resultOk(toFirebaseAuthUserRecord(await getFirebaseAdminAuth().createUser({ phoneNumber: newPhoneNumber })));
 		}
 
-		return resultOk(await authAdmin.auth.updateUser(existingUserResult.data.uid, { phoneNumber: newPhoneNumber }));
+		return resultOk(
+			toFirebaseAuthUserRecord(
+				await getFirebaseAdminAuth().updateUser(existingUserResult.data.uid, { phoneNumber: newPhoneNumber }),
+			),
+		);
 	} catch (error) {
 		console.error('Error updating user by phone number:', { oldPhoneNumber, newPhoneNumber, error });
 
@@ -58,7 +64,7 @@ export const deleteFirebaseUserByPhoneNumberIfExists = async (phoneNumber: strin
 		}
 
 		if (existingUserResult.data) {
-			await authAdmin.auth.deleteUser(existingUserResult.data.uid);
+			await getFirebaseAdminAuth().deleteUser(existingUserResult.data.uid);
 		}
 
 		return resultOk(true);
@@ -69,9 +75,11 @@ export const deleteFirebaseUserByPhoneNumberIfExists = async (phoneNumber: strin
 	}
 };
 
-export const findFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<ServiceResult<UserRecord | null>> => {
+export const findFirebaseUserByPhoneNumber = async (
+	phoneNumber: string,
+): Promise<ServiceResult<FirebaseAuthUserRecord | null>> => {
 	try {
-		return resultOk(await authAdmin.auth.getUserByPhoneNumber(phoneNumber));
+		return resultOk(toFirebaseAuthUserRecord(await getFirebaseAdminAuth().getUserByPhoneNumber(phoneNumber)));
 	} catch (error: unknown) {
 		if (isFirebaseUserNotFoundError(error)) {
 			return resultOk(null);
@@ -85,7 +93,7 @@ export const findFirebaseUserByPhoneNumber = async (phoneNumber: string): Promis
 
 export const createFirebaseCustomToken = async (uid: string): Promise<ServiceResult<string>> => {
 	try {
-		return resultOk(await authAdmin.auth.createCustomToken(uid));
+		return resultOk(await getFirebaseAdminAuth().createCustomToken(uid));
 	} catch (error) {
 		console.error('Error creating Firebase custom token', { uid, error });
 
@@ -93,9 +101,9 @@ export const createFirebaseCustomToken = async (uid: string): Promise<ServiceRes
 	}
 };
 
-export const findFirebaseUserByEmail = async (email: string): Promise<ServiceResult<UserRecord | null>> => {
+export const findFirebaseUserByEmail = async (email: string): Promise<ServiceResult<FirebaseAuthUserRecord | null>> => {
 	try {
-		return resultOk(await authAdmin.auth.getUserByEmail(email));
+		return resultOk(toFirebaseAuthUserRecord(await getFirebaseAdminAuth().getUserByEmail(email)));
 	} catch (error: unknown) {
 		if (isFirebaseUserNotFoundError(error)) {
 			return resultOk(null);
@@ -110,13 +118,15 @@ export const findFirebaseUserByEmail = async (email: string): Promise<ServiceRes
 export const createFirebaseUserByEmail = async (input: {
 	email: string;
 	displayName: string;
-}): Promise<ServiceResult<UserRecord>> => {
+}): Promise<ServiceResult<FirebaseAuthUserRecord>> => {
 	try {
 		return resultOk(
-			await authAdmin.auth.createUser({
-				email: input.email,
-				displayName: input.displayName,
-			}),
+			toFirebaseAuthUserRecord(
+				await getFirebaseAdminAuth().createUser({
+					email: input.email,
+					displayName: input.displayName,
+				}),
+			),
 		);
 	} catch (error) {
 		console.error('Error creating Firebase user by email', { email: input.email, error });
@@ -127,7 +137,7 @@ export const createFirebaseUserByEmail = async (input: {
 
 export const createFirebaseSurveyUser = async (email: string, password: string): Promise<ServiceResult<{ uid: string }>> => {
 	try {
-		const user = await authAdmin.auth.createUser({
+		const user = await getFirebaseAdminAuth().createUser({
 			email,
 			password,
 			emailVerified: true,
@@ -153,13 +163,13 @@ export const synchronizeFirebaseSurveyUser = async (input: {
 		}
 
 		if (existingUserResult.data) {
-			await authAdmin.auth.updateUser(existingUserResult.data.uid, {
+			await getFirebaseAdminAuth().updateUser(existingUserResult.data.uid, {
 				email: input.nextEmail,
 				password: input.nextPassword,
 				emailVerified: true,
 			});
 		} else {
-			await authAdmin.auth.createUser({
+			await getFirebaseAdminAuth().createUser({
 				email: input.nextEmail,
 				password: input.nextPassword,
 				emailVerified: true,
@@ -172,7 +182,7 @@ export const synchronizeFirebaseSurveyUser = async (input: {
 				return resultFail(previousUserResult.error);
 			}
 			if (previousUserResult.data) {
-				await authAdmin.auth.deleteUser(previousUserResult.data.uid);
+				await getFirebaseAdminAuth().deleteUser(previousUserResult.data.uid);
 			}
 		}
 
@@ -188,11 +198,14 @@ export const synchronizeFirebaseSurveyUser = async (input: {
 	}
 };
 
-export const updateFirebaseUserByUid = async (uid: string, updates: UpdateRequest): Promise<ServiceResult<UserRecord>> => {
+export const updateFirebaseUserByUid = async (
+	uid: string,
+	updates: FirebaseAuthUserUpdate,
+): Promise<ServiceResult<FirebaseAuthUserRecord>> => {
 	try {
-		await authAdmin.auth.getUser(uid);
+		await getFirebaseAdminAuth().getUser(uid);
 
-		return resultOk(await authAdmin.auth.updateUser(uid, updates));
+		return resultOk(toFirebaseAuthUserRecord(await getFirebaseAdminAuth().updateUser(uid, updates)));
 	} catch (error) {
 		console.error('Error updating Firebase user by UID', { uid, updates, error });
 
@@ -202,7 +215,7 @@ export const updateFirebaseUserByUid = async (uid: string, updates: UpdateReques
 
 export const deleteFirebaseUserByUidIfExists = async (uid: string): Promise<ServiceResult<boolean>> => {
 	try {
-		await authAdmin.auth.deleteUser(uid);
+		await getFirebaseAdminAuth().deleteUser(uid);
 
 		return resultOk(true);
 	} catch (error: unknown) {
@@ -216,14 +229,14 @@ export const deleteFirebaseUserByUidIfExists = async (uid: string): Promise<Serv
 	}
 };
 
-export const decodeFirebaseTokenFromRequest = async (request: Request): Promise<ServiceResult<DecodedIdToken>> => {
+export const decodeFirebaseTokenFromRequest = async (request: Request): Promise<ServiceResult<FirebaseDecodedToken>> => {
 	const header = request.headers.get('authorization');
 	if (!header?.startsWith('Bearer ')) {
 		return resultFail('Missing or invalid authorization header');
 	}
 
 	try {
-		return resultOk(await authAdmin.auth.verifyIdToken(header.slice('Bearer '.length)));
+		return resultOk(toFirebaseDecodedToken(await getFirebaseAdminAuth().verifyIdToken(header.slice('Bearer '.length))));
 	} catch (error) {
 		console.error('Error verifying ID token:', { error });
 
@@ -231,9 +244,76 @@ export const decodeFirebaseTokenFromRequest = async (request: Request): Promise<
 	}
 };
 
-export const getPhoneNumberFromFirebaseToken = (decodedToken: DecodedIdToken): string | null => {
-	return decodedToken.phone_number ?? null;
+export const createFirebaseSessionCookie = async (idToken: string, expiresIn: number): Promise<ServiceResult<string>> => {
+	try {
+		return resultOk(await getFirebaseAdminAuth().createSessionCookie(idToken, { expiresIn }));
+	} catch (error) {
+		console.error('Could not create Firebase session cookie', { error });
+
+		return resultFail('invalid-token');
+	}
 };
+
+export const verifyFirebaseSessionCookie = async (sessionCookie: string): Promise<ServiceResult<FirebaseDecodedToken>> => {
+	try {
+		return resultOk(toFirebaseDecodedToken(await getFirebaseAdminAuth().verifySessionCookie(sessionCookie, true)));
+	} catch (error) {
+		console.info('Firebase session cookie is invalid or expired', { error });
+
+		return resultFail('Invalid or expired session cookie');
+	}
+};
+
+export const verifyFirebaseAppCheckToken = async (token: string): Promise<ServiceResult<{ appId: string }>> => {
+	try {
+		const decodedToken = await getFirebaseAdminAppCheck().verifyToken(token);
+
+		return resultOk({ appId: decodedToken.appId });
+	} catch (error) {
+		console.warn('Firebase App Check token is invalid', { error });
+
+		return resultFail('invalid-app-check-token', 401);
+	}
+};
+
+const toFirebaseAuthUserRecord = (user: UserRecord): FirebaseAuthUserRecord => ({
+	uid: user.uid,
+	email: user.email ?? null,
+	emailVerified: user.emailVerified,
+	displayName: user.displayName ?? null,
+	phoneNumber: user.phoneNumber ?? null,
+	disabled: user.disabled,
+});
+
+const toFirebaseDecodedToken = (token: DecodedIdToken): FirebaseDecodedToken => ({
+	uid: token.uid,
+	email: token.email ?? null,
+	phoneNumber: token.phone_number ?? null,
+});
 
 const isFirebaseUserNotFoundError = (error: unknown): boolean =>
 	typeof error === 'object' && error !== null && 'code' in error && error.code === 'auth/user-not-found';
+
+type FirebaseAuthUserRecord = {
+	uid: string;
+	email: string | null;
+	emailVerified: boolean;
+	displayName: string | null;
+	phoneNumber: string | null;
+	disabled: boolean;
+};
+
+type FirebaseAuthUserUpdate = {
+	email?: string;
+	emailVerified?: boolean;
+	phoneNumber?: string;
+	password?: string;
+	displayName?: string;
+	disabled?: boolean;
+};
+
+type FirebaseDecodedToken = {
+	uid: string;
+	email: string | null;
+	phoneNumber: string | null;
+};

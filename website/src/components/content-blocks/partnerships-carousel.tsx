@@ -3,7 +3,7 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/carousel';
 import type { Partnership, PartnershipsCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getScaledDimensions } from '@/lib/services/storyblok/storyblok.utils';
+import { getScaledDimensions } from '@/lib/storyblok/storyblok-utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextImage from 'next/image';

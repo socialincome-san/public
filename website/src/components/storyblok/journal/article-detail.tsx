@@ -6,25 +6,30 @@ import { ArticleDetailHeader, ArticleDetailHeroImage } from '@/components/storyb
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getArticleHeroImageSrc, hasArticleHeroLayout } from '@/lib/services/journal/journal.utils';
-import { ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
+import type { JournalArticle } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
 
+const ARTICLE_HERO_IMAGE_WIDTH = 960;
+const ARTICLE_HERO_IMAGE_HEIGHT = 960;
+
 type Props = {
-	story: ISbStoryData<ResolvedArticle>;
+	story: ISbStoryData<JournalArticle>;
 	slug: string;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
-	relatedArticles: ISbStoryData<ResolvedArticle>[];
+	relatedArticles: ISbStoryData<JournalArticle>[];
 	translator: Translator;
 	breadcrumbs: BreadcrumbLinkType[];
 };
 
 export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, translator, breadcrumbs }: Props) => {
 	const article = story.content;
-	const hasHero = hasArticleHeroLayout(article);
-	const heroImageSrc = getArticleHeroImageSrc(article);
+	const hasHero = !article.useImageOnlyForPreview && Boolean(article.image?.filename);
+	const heroImageSrc = article.image?.filename
+		? formatStoryblokUrl(article.image.filename, ARTICLE_HERO_IMAGE_WIDTH, ARTICLE_HERO_IMAGE_HEIGHT, article.image.focus)
+		: null;
 
 	return (
 		<article className={cn('w-full', hasHero && 'full-bleed-hero')}>

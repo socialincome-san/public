@@ -35,6 +35,11 @@ export type PayoutPayload = {
 	comments: string | null;
 };
 
+export type PayoutSummary = {
+	amountChf: number;
+	count: number;
+};
+
 export type PayoutProcessCreateInput = {
 	recipientId: string;
 	amount: number;
@@ -170,4 +175,9 @@ export type PayoutForecastPaginatedTableView = {
 
 export type CountryPayoutTotals = {
 	totalPayoutsChf: number;
+};
+
+export type PayoutDateRange = {
+	gte: Date;
+	lt: Date;
 };

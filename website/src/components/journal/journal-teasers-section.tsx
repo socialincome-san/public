@@ -2,14 +2,14 @@ import { Button } from '@/components/button/button';
 import { SectionHeading } from '@/components/section-heading';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
 import { cn } from '@/lib/utils/cn';
+import type { JournalArticle } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 type Props = {
-	articles: ISbStoryData<ResolvedArticle>[];
+	articles: ISbStoryData<JournalArticle>[];
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	heading?: ReactNode;

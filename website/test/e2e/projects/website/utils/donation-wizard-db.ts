@@ -1,7 +1,7 @@
 import { ContributorReferralSource } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { expect } from '@playwright/test';
-import { deleteFirebaseEmailsIfExist, getFirebaseAdminService } from '../../../utils';
+import { deleteFirebaseEmailsIfExist, findFirebaseUserByEmail } from '../../../utils';
 
 export type DonationWizardDonor = {
 	email: string;
@@ -19,8 +19,7 @@ const findContributorByEmail = (email: string) =>
 	});
 
 const expectFirebaseAuthUser = async (email: string, expectedUid: string) => {
-	const firebase = await getFirebaseAdminService();
-	const firebaseUser = await firebase.getByEmail(email);
+	const firebaseUser = await findFirebaseUserByEmail(email);
 
 	expect(firebaseUser.success).toBe(true);
 	if (!firebaseUser.success) {
@@ -70,8 +69,7 @@ export const expectNoDonationWizardRecords = async (email: string) => {
 
 	expect(contributor).toBeNull();
 
-	const firebase = await getFirebaseAdminService();
-	const firebaseUser = await firebase.getByEmail(email);
+	const firebaseUser = await findFirebaseUserByEmail(email);
 
 	expect(firebaseUser.success).toBe(true);
 	if (!firebaseUser.success) {

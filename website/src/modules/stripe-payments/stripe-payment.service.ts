@@ -25,7 +25,6 @@ import {
 	retrieveStripeCharge,
 	retrieveStripeCheckoutSession,
 	retrieveStripeCustomer,
-	retrieveStripePaymentMethod,
 	retrieveStripeSubscription,
 	retrieveStripeSubscriptionForCharge,
 	updateStripeSubscription,
@@ -34,7 +33,6 @@ import {
 	type StripeApiCheckoutSession,
 	type StripeApiCustomer,
 	type StripeApiEvent,
-	type StripeApiPaymentMethod,
 	type StripeApiSubscription,
 } from '@/integrations/stripe/stripe.integration';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
@@ -43,7 +41,6 @@ import { isValidCurrency } from '@/lib/types/currency';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import { titleCase } from '@/lib/utils/string-utils';
-import { toSortKey } from '@/lib/utils/to-sort-key';
 import { getCampaignById, getDefaultCampaignForProgram, getFallbackCampaign } from '@/modules/campaigns/campaign.service';
 import { upsertFromStripeEvent } from '@/modules/contributions/contribution.service';
 import type { PaymentEventCreateData, StripeContributionCreateData } from '@/modules/contributions/contribution.types';
@@ -85,12 +82,7 @@ import {
 	type StripeContributorNameParts,
 	type StripeEmbeddedCheckoutResult,
 	type StripeEmbeddedCheckoutSessionInput,
-	type StripePaymentMethod,
 	type StripeSubscriptionDetails,
-	type StripeSubscriptionPaginatedTableView,
-	type StripeSubscriptionRow,
-	type StripeSubscriptionTableQuery,
-	type StripeSubscriptionTableView,
 	type StripeWebhookResult,
 	type UpdateContributorAfterCheckoutInput,
 	type UpdateContributorAfterCheckoutResult,
@@ -400,70 +392,6 @@ export const updateContributorReferralAfterCheckout = async (
 		console.error(error);
 
 		return resultFail('Could not update contributor referral after checkout');
-	}
-};
-
-export const getSubscriptionsTableView = async (
-	stripeCustomerId: string | null,
-): Promise<ServiceResult<StripeSubscriptionTableView>> => {
-	try {
-		const paginated = await getPaginatedSubscriptionsTableView(stripeCustomerId, {
-			page: 1,
-			pageSize: 10_000,
-			search: '',
-		});
-		if (!paginated.success) {
-			return resultFail(paginated.error);
-		}
-
-		return resultOk({ rows: paginated.data.rows });
-	} catch (error) {
-		console.error(error);
-
-		return resultFail('Could not fetch subscriptions table view');
-	}
-};
-
-export const getPaginatedSubscriptionsTableView = async (
-	stripeCustomerId: string | null,
-	query: StripeSubscriptionTableQuery,
-): Promise<ServiceResult<StripeSubscriptionPaginatedTableView>> => {
-	try {
-		if (!stripeCustomerId) {
-			return resultOk({ rows: [], totalCount: 0 });
-		}
-
-		const subscriptionsResult = await listStripeSubscriptions({ customerId: stripeCustomerId, status: 'all' });
-		if (!subscriptionsResult.success) {
-			return subscriptionsResult;
-		}
-
-		const rows: StripeSubscriptionRow[] = await Promise.all(
-			subscriptionsResult.data.map(async (subscription) => {
-				const item = subscription.items.data[0];
-				const price = item?.price;
-				const paymentMethod = await resolveSubscriptionPaymentMethod(subscription.default_payment_method);
-
-				return {
-					id: subscription.id,
-					created: new Date(subscription.start_date * 1000),
-					status: subscription.status,
-					amount: price?.unit_amount ? price.unit_amount / 100 : 0,
-					interval: price?.recurring?.interval_count?.toString() ?? '',
-					currency: price?.currency?.toUpperCase() ?? '',
-					paymentMethod,
-				};
-			}),
-		);
-
-		const sortedRows = sortSubscriptionRows(rows, query);
-		const offset = (query.page - 1) * query.pageSize;
-
-		return resultOk({ rows: sortedRows.slice(offset, offset + query.pageSize), totalCount: sortedRows.length });
-	} catch (error) {
-		console.error(error);
-
-		return resultFail('Could not fetch subscriptions');
 	}
 };
 
@@ -1328,65 +1256,6 @@ const createCheckoutSession = async (input: {
 		clientSecret: result.data.clientSecret,
 		url: result.data.url,
 	});
-};
-
-const resolveSubscriptionPaymentMethod = async (
-	defaultPaymentMethod: StripeApiSubscription['default_payment_method'],
-): Promise<StripePaymentMethod> => {
-	if (defaultPaymentMethod && typeof defaultPaymentMethod !== 'string') {
-		return mapPaymentMethod(defaultPaymentMethod);
-	}
-	if (typeof defaultPaymentMethod !== 'string' || defaultPaymentMethod.trim() === '') {
-		return { type: 'other', label: 'Unknown' };
-	}
-
-	const methodResult = await retrieveStripePaymentMethod(defaultPaymentMethod);
-	if (!methodResult.success || !methodResult.data) {
-		return { type: 'other', label: 'Unknown' };
-	}
-
-	return mapPaymentMethod(methodResult.data);
-};
-
-const mapPaymentMethod = (paymentMethod: StripeApiPaymentMethod): StripePaymentMethod => {
-	if (paymentMethod.type === 'card' && paymentMethod.card) {
-		return {
-			type: 'card',
-			label: titleCase(paymentMethod.card.brand),
-		};
-	}
-
-	return {
-		type: 'other',
-		label: titleCase(paymentMethod.type),
-	};
-};
-
-const sortSubscriptionRows = (
-	rows: StripeSubscriptionRow[],
-	query: StripeSubscriptionTableQuery,
-): StripeSubscriptionRow[] => {
-	const direction = query.sortDirection === 'asc' ? 1 : -1;
-	const sortedRows = [...rows];
-	const sortBy = toSortKey(query.sortBy, ['created', 'status', 'interval', 'paymentMethod', 'amount'] as const);
-	sortedRows.sort((left, right) => {
-		switch (sortBy) {
-			case 'created':
-				return (left.created.getTime() - right.created.getTime()) * direction;
-			case 'status':
-				return left.status.localeCompare(right.status) * direction;
-			case 'interval':
-				return left.interval.localeCompare(right.interval) * direction;
-			case 'paymentMethod':
-				return left.paymentMethod.label.localeCompare(right.paymentMethod.label) * direction;
-			case 'amount':
-				return (left.amount - right.amount) * direction;
-			default:
-				return right.created.getTime() - left.created.getTime();
-		}
-	});
-
-	return sortedRows;
 };
 
 const getCheckoutMetadata = async (charge: StripeApiCharge): Promise<CheckoutMetadata | null> => {

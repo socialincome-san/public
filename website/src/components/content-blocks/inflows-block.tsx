@@ -6,9 +6,9 @@ import type { Inflows as InflowsBlok } from '@/generated/storyblok/types/109655/
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
+import { getTransparencySummaryAction } from '@/modules/transparency/transparency.actions';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
@@ -19,7 +19,7 @@ type Props = {
 export const InflowsBlock = async ({ blok, lang }: Props) => {
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
 	const [dataResult, translator] = await Promise.all([
-		services.transparency.getTransparencySummary(),
+		getTransparencySummaryAction(),
 		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
 	]);
 

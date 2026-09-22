@@ -3,7 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
 import { UserRole } from '@/generated/prisma/enums';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import { handleServiceResult } from '@/lib/service-result-client';
 import {
 	createUserAction,
 	deleteUserAction,

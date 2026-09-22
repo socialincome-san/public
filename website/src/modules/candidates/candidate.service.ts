@@ -1,12 +1,12 @@
 import { CountryCode, Gender, type Profile } from '@/generated/prisma/enums';
+import type { Session } from '@/lib/firebase/current-account';
+import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import {
 	createFirebaseUserByPhoneNumber,
 	deleteFirebaseUserByPhoneNumberIfExists,
 	updateFirebaseUserByPhoneNumber,
-} from '@/integrations/firebase/firebase-auth.integration';
-import type { Session } from '@/lib/firebase/current-account';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
-import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
+} from '@/modules/auth/auth.service';
 import { getCountryIsoCode } from '@/modules/countries/country.service';
 import { isAdmin } from '@/modules/users/user.service';
 import * as candidateRepository from './candidate.repository';

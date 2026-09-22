@@ -3,7 +3,7 @@ import { fetchStoryblokCampaignGlobals } from '@/integrations/storyblok/storyblo
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getMetadata } from '@/lib/utils/metadata';
 import type { ISbStoryData } from '@storyblok/js';
 import type { Metadata } from 'next';

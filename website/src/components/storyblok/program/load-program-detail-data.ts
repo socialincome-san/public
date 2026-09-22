@@ -1,7 +1,6 @@
 import { getProgramImages, getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import type { Program, ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import { services } from '@/lib/services/services';
 import { getProgramStoryPath, getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { getDefaultCampaignForProgramAction } from '@/modules/campaigns/campaign.actions';
 import {
@@ -12,6 +11,7 @@ import {
 	getPublicProgramStatsByIdAction,
 } from '@/modules/programs/program.actions';
 import type { ProgramDashboardStats, PublicProgramDetails, PublicProgramStats } from '@/modules/programs/program.types';
+import { getProgramBySlugAction, getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
 import { HeroHeaderImage } from '../shared/hero-header';
 
@@ -56,7 +56,7 @@ export const loadProgramDetailPortalData = async (portalSlug: string): Promise<P
 };
 
 export const loadProgramDetailData = async (urlSlug: string, lang: string): Promise<ProgramDetailData | null> => {
-	const programResult = await services.storyblok.getProgramBySlug(urlSlug, lang);
+	const programResult = await getProgramBySlugAction({ slug: urlSlug, language: lang });
 
 	if (programResult.success) {
 		const story = programResult.data;
@@ -76,7 +76,10 @@ export const loadProgramDetailData = async (urlSlug: string, lang: string): Prom
 
 	const [previewProgramResult, overviewResult] = await Promise.all([
 		getPublicPreviewProgramBySlugAction(urlSlug),
-		services.storyblok.getStoryWithFallback<ISbStoryData<ProgramOverview>>(getProgramsOverviewStoryPath(), lang),
+		getStoryWithFallbackAction<ISbStoryData<ProgramOverview>>({
+			storyPath: getProgramsOverviewStoryPath(),
+			language: lang,
+		}),
 	]);
 
 	if (!previewProgramResult.success) {

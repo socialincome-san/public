@@ -64,6 +64,11 @@ const campaignReferenceSelect = {
 	programId: true,
 } as const;
 
+export const countCampaignsCreatedBetween = async (from: Date, to: Date) =>
+	prisma.campaign.count({
+		where: { createdAt: { gte: from, lt: to } },
+	});
+
 export const findCampaignPageById = async (campaignId: string) =>
 	prisma.campaign.findFirst({
 		where: { OR: [{ legacyFirestoreId: campaignId }, { id: campaignId }] },

@@ -48,6 +48,22 @@ export type RecipientProgramAssignment = {
 	localPartnerId: string;
 };
 
+export type RecipientMonthlySummarySource = {
+	newRecipientCount: number;
+	recipients: {
+		programId: string | null;
+		startDate: Date | null;
+		suspendedAt: Date | null;
+		program: {
+			programDurationInMonths: number;
+			payoutInterval: PayoutInterval;
+			country: { isoCode: CountryCode };
+		} | null;
+		localPartner: { name: string };
+		payouts: { status: PayoutStatus }[];
+	}[];
+};
+
 export type PayoutProcessRecipient = {
 	id: string;
 	startDate: Date | null;
@@ -140,11 +156,6 @@ export type RecipientTableViewRow = {
 	payoutsProgressPercent: number;
 	createdAt: Date;
 	status: RecipientLifecycleStatus;
-};
-
-export type RecipientTableView = {
-	tableRows: RecipientTableViewRow[];
-	permission: ProgramPermission;
 };
 
 export type RecipientTableQuery = {

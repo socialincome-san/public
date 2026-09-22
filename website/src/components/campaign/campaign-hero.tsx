@@ -7,7 +7,7 @@ import { Progress } from '@/components/progress/progress';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import type { CampaignPage } from '@/modules/campaigns/campaign.types';
 import { isCampaignActive } from '@/modules/campaigns/campaign.types';

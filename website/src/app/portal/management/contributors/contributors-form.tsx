@@ -4,7 +4,7 @@ import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getContactValuesFromPayload } from '@/components/dynamic-form/helper';
 import { ContributorReferralSource } from '@/generated/prisma/enums';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import { handleServiceResult } from '@/lib/service-result-client';
 import {
 	createContributorAction,
 	getContributorAction,

@@ -1,20 +1,20 @@
-import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import {
-	createWebsiteJournalArticleCanonicalUrl,
-	generateMetaDataForArticle,
-} from '@/lib/services/storyblok/storyblok.utils';
+import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { createWebsiteJournalArticleCanonicalUrl, generateMetaDataForArticle } from '@/lib/storyblok/storyblok-utils';
+import { getJournalArticle, getJournalArticlePageData } from '@/modules/journal/journal.service';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
 export const revalidate = 900;
 
-const getArticle = cache((lang: string, slug: string) => services.storyblok.getArticle(lang, slug));
+type JournalArticlePageProps = {
+	params: Promise<{ slug: string; lang: WebsiteLanguage; region: WebsiteRegion }>;
+};
 
-export const generateMetadata = async (props: DefaultLayoutPropsWithSlug) => {
+const getArticle = cache((lang: string, slug: string) => getJournalArticle(lang, slug));
+
+export const generateMetadata = async (props: JournalArticlePageProps) => {
 	const { slug, lang } = await props.params;
 	const articleResponse = await getArticle(lang, slug);
 	if (!articleResponse.success) {
@@ -27,21 +27,21 @@ export const generateMetadata = async (props: DefaultLayoutPropsWithSlug) => {
 	);
 };
 
-export default async function Page(props: DefaultLayoutPropsWithSlug) {
+export default async function Page(props: JournalArticlePageProps) {
 	const { slug, lang, region } = await props.params;
 
 	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
+		language: lang,
 		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-common'],
 	});
 
-	const pageResult = await services.journal.getArticlePageData(
+	const pageResult = await getJournalArticlePageData({
 		lang,
 		region,
 		slug,
-		translator.t('overview.title'),
-		translator.t('breadcrumb.home', { namespace: 'website-common' }),
-	);
+		journalLabel: translator.t('overview.title'),
+		homeLabel: translator.t('breadcrumb.home', { namespace: 'website-common' }),
+	});
 
 	if (!pageResult.success) {
 		notFound();
@@ -51,8 +51,8 @@ export default async function Page(props: DefaultLayoutPropsWithSlug) {
 		<ArticleDetail
 			story={pageResult.data.story}
 			slug={slug}
-			lang={lang as WebsiteLanguage}
-			region={region as WebsiteRegion}
+			lang={lang}
+			region={region}
 			relatedArticles={pageResult.data.relatedArticles}
 			translator={translator}
 			breadcrumbs={pageResult.data.breadcrumbs}

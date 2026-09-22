@@ -20,6 +20,7 @@ import type {
 	PayoutConfirmationPaginatedTableView,
 	PayoutConfirmationTableQuery,
 	PayoutConfirmationTableViewRow,
+	PayoutDateRange,
 	PayoutForecastPaginatedTableView,
 	PayoutForecastTableQuery,
 	PayoutForecastTableView,
@@ -30,9 +31,37 @@ import type {
 	PayoutProcessCreateInput,
 	PayoutProcessCreateSummary,
 	PayoutRecord,
+	PayoutSummary,
 	PayoutTableQuery,
 	PayoutTableViewRow,
 } from './payout.types';
+
+export const getPaidOrConfirmedPayoutTotal = async (dateRange?: PayoutDateRange): Promise<ServiceResult<number>> => {
+	try {
+		const aggregate = await payoutRepository.findPaidOrConfirmedPayoutTotal(dateRange);
+
+		return resultOk(Number(aggregate._sum.amountChf ?? 0));
+	} catch (error) {
+		console.error('Could not fetch paid or confirmed payout total', { error });
+
+		return resultFail('Could not fetch payout total');
+	}
+};
+
+export const getPaidPayoutSummary = async (dateRange: PayoutDateRange): Promise<ServiceResult<PayoutSummary>> => {
+	try {
+		const aggregate = await payoutRepository.findPaidPayoutSummary(dateRange);
+
+		return resultOk({
+			amountChf: Number(aggregate._sum.amountChf ?? 0),
+			count: aggregate._count._all,
+		});
+	} catch (error) {
+		console.error('Could not fetch paid payout summary', { error });
+
+		return resultFail('Could not fetch payout summary');
+	}
+};
 
 export const getPayoutTotalsForCountry = async (isoCode: string): Promise<ServiceResult<CountryPayoutTotals>> => {
 	const normalizedIsoCode = isoCode.trim().toUpperCase();

@@ -1,7 +1,7 @@
 'use client';
 
-import { updateStoryblokPreviewAction } from '@/lib/server-actions/storyblok-preview-actions';
 import { registerStoryblokBridge } from '@/lib/storyblok-preview/register-bridge';
+import { updateStoryblokPreviewAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
 import { loadStoryblokBridge } from '@storyblok/js';
 import { startTransition, useEffect, useRef } from 'react';

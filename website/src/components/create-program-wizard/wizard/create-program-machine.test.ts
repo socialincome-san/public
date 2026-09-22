@@ -21,7 +21,7 @@ jest.mock('@/modules/programs/program.actions', () => ({
 	createProgramAction: jest.fn(),
 	calculateProgramBudgetAction: jest.fn(),
 }));
-jest.mock('@/lib/server-actions/session-actions', () => ({
+jest.mock('@/modules/auth/auth.actions', () => ({
 	getIsAuthenticatedUserAction: jest.fn(),
 }));
 

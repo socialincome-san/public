@@ -1,16 +1,11 @@
-import { services } from '@/lib/services/services';
+import { getCurrentAuthToken } from '@/modules/auth/auth.service';
 import { getCurrentLocalPartnerSession } from '@/modules/local-partners/local-partner.service';
 import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
 const loadCurrentLocalPartner = async (): Promise<LocalPartnerSession | null> => {
-	const cookieResult = await services.firebaseSession.readSessionCookie();
-	if (!cookieResult.success || !cookieResult.data) {
-		return null;
-	}
-
-	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookieResult.data);
+	const decodedTokenResult = await getCurrentAuthToken();
 	if (!decodedTokenResult.success) {
 		return null;
 	}

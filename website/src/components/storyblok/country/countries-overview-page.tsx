@@ -5,8 +5,8 @@ import type { CountryStory } from '@/components/storyblok/country/country.types'
 import { getCountryIsoCode } from '@/components/storyblok/country/country.utils';
 import type { CountryOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { getPublicCountryStatsByIsoCodesAction } from '@/modules/countries/country.actions';
+import { getCountriesAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
 
 type Props = {
@@ -16,8 +16,8 @@ type Props = {
 };
 
 export const CountriesOverviewPage = async ({ overview, lang, region }: Props) => {
-	const countriesResult = await services.storyblok.getCountries(lang);
-	const countries = (countriesResult.success ? countriesResult.data : []) as CountryStory[];
+	const countriesResult = await getCountriesAction(lang);
+	const countries: CountryStory[] = countriesResult.success ? countriesResult.data : [];
 	const isoCodes = [...new Set(countries.map((country) => getCountryIsoCode(country.content)).filter(Boolean))];
 	const statsResult = await getPublicCountryStatsByIsoCodesAction(isoCodes);
 	const statsByIsoCode = statsResult.success ? statsResult.data : {};

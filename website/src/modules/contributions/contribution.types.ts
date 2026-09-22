@@ -1,4 +1,20 @@
-import type { ContributionStatus, Currency, PaymentEventType } from '@/generated/prisma/enums';
+import type { ContributionStatus, CountryCode, Currency, PaymentEventType } from '@/generated/prisma/enums';
+
+export type ContributionDateRange = {
+	gte: Date;
+	lt: Date;
+};
+
+export type ContributionSummary = {
+	amountChf: number;
+	count: number;
+};
+
+export type ContributionCountryRow = {
+	countryCode: CountryCode;
+	totalChf: number;
+	contributorCount: number;
+};
 
 export type GlobeContribution = {
 	key: string;

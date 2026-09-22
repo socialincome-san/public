@@ -12,7 +12,7 @@ jest.mock('./contributor.repository', () => ({
 	findContributorByEmailOrFirebaseAuthUserId: mockFindContributorByEmailOrFirebaseAuthUserId,
 }));
 
-jest.mock('@/integrations/firebase/firebase-auth.integration', () => ({
+jest.mock('@/modules/auth/auth.service', () => ({
 	findFirebaseUserByEmail: mockFindFirebaseUserByEmail,
 	createFirebaseUserByEmail: mockCreateFirebaseUserByEmail,
 	updateFirebaseUserByUid: jest.fn(),

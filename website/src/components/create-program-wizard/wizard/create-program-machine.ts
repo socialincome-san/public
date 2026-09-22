@@ -1,6 +1,6 @@
 import { Currency, PayoutInterval, Profile } from '@/generated/prisma/enums';
-import { getIsAuthenticatedUserAction } from '@/lib/server-actions/session-actions';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
+import { getIsAuthenticatedUserAction } from '@/modules/auth/auth.actions';
 import { getCandidateCountAction } from '@/modules/candidates/candidate.actions';
 import { getProgramCountryFeasibilityAction } from '@/modules/countries/country.actions';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';

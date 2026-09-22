@@ -9,7 +9,7 @@ import {
 	getZodEnum,
 } from '@/components/dynamic-form/helper';
 import type { Session } from '@/lib/firebase/current-account';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import { handleServiceResult } from '@/lib/service-result-client';
 import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
 import {
 	createCandidateAction,

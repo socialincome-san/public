@@ -8,7 +8,7 @@ import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import { handleServiceResult } from '@/lib/service-result-client';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { renameActiveOrganizationAction } from '@/modules/organizations/organization.actions';
 import type { OrganizationMemberTableViewRow } from '@/modules/organizations/organization.types';

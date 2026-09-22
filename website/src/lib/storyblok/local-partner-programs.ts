@@ -5,13 +5,13 @@ import {
 	getProgramTitle,
 } from '@/components/storyblok/program/program.utils';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { getDefaultCampaignForProgram } from '@/modules/campaigns/campaign.service';
 import { getProgramRecipientCountsByLocalPartnerSlug } from '@/modules/local-partners/local-partner.service';
 import {
 	getPublicProgramFilterDataByPortalSlugs,
 	getPublicProgramStatsByProgramPortalSlugs,
 } from '@/modules/programs/program.service';
+import { getPrograms } from '@/modules/storyblok-content/storyblok-content.service';
 import { LOCAL_PARTNER_PROGRAM_ROWS, selectLocalPartnerProgramStories } from './local-partner-programs.utils';
 
 export type LocalPartnerProgramSummary = {
@@ -80,7 +80,7 @@ export const getLocalPartnerProgramSummaries = async (
 	localPartnerPortalSlug: string,
 	countryIsoCode: string,
 ): Promise<LocalPartnerPrograms> => {
-	const programsResult = await services.storyblok.getPrograms(lang);
+	const programsResult = await getPrograms(lang);
 	if (!programsResult.success) {
 		return EMPTY;
 	}

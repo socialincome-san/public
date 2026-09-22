@@ -23,7 +23,7 @@ jest.mock('@/modules/recipients/recipient.service', () => ({
 	getSurveyRecipients: mockGetSurveyRecipients,
 }));
 
-jest.mock('@/integrations/firebase/firebase-auth.integration', () => ({
+jest.mock('@/modules/auth/auth.service', () => ({
 	createFirebaseSurveyUser: mockCreateFirebaseSurveyUser,
 	synchronizeFirebaseSurveyUser: mockSynchronizeFirebaseSurveyUser,
 }));

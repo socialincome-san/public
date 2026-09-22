@@ -9,7 +9,6 @@ import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/pr
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { cn } from '@/lib/utils/cn';
 import { resolveWalletPayoutDisplayAction } from '@/modules/currency-display/currency-display.actions';
 import { getPublicLocalPartnersByProgramIdAction } from '@/modules/local-partners/local-partner.actions';
@@ -18,6 +17,11 @@ import {
 	getPublicProgramStatsByIdAction,
 	getPublicTargetFocusesByProgramIdAction,
 } from '@/modules/programs/program.actions';
+import {
+	getFocusesAction,
+	getLocalPartnersAction,
+	getProgramsAction,
+} from '@/modules/storyblok-content/storyblok-content.actions';
 import Link from 'next/link';
 
 type Props = {
@@ -86,12 +90,12 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 		localPartnerStoriesResult,
 		translator,
 	] = await Promise.all([
-		services.storyblok.getPrograms(lang),
+		getProgramsAction(lang),
 		getPublicProgramStatsByIdAction(programId),
 		getPublicTargetFocusesByProgramIdAction(programId),
 		getPublicLocalPartnersByProgramIdAction(programId),
-		services.storyblok.getFocuses(lang),
-		services.storyblok.getLocalPartners(lang),
+		getFocusesAction(lang),
+		getLocalPartnersAction(lang),
 		Translator.getInstance({ language: lang, namespaces: ['website-campaign', 'website-common'] }),
 	]);
 	if (!programsResult.success) {

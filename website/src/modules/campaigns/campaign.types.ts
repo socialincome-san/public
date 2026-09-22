@@ -1,4 +1,3 @@
-import { parseStoryblokFocus } from '@/components/campaign/campaign-submission/storyblok-image-focus';
 import { Currency } from '@/generated/prisma/enums';
 import type { Faq } from '@/generated/storyblok/types/109655/storyblok-components';
 import {
@@ -7,6 +6,7 @@ import {
 	type CampaignSubmissionPermittedImageMimeType,
 } from '@/lib/config/campaign-submission.config';
 import type { Translator } from '@/lib/i18n/translator';
+import { parseStoryblokFocus } from '@/lib/storyblok/storyblok-image-focus';
 import { nowMs } from '@/lib/utils/now';
 import type { ISbStoryData } from '@storyblok/js';
 import { addDays, format, startOfDay } from 'date-fns';

@@ -1,12 +1,8 @@
 import { CountryCode, ProgramPermission } from '@/generated/prisma/enums';
-import {
-	createFirebaseUserByEmail,
-	findFirebaseUserByEmail,
-	updateFirebaseUserByUid,
-} from '@/integrations/firebase/firebase-auth.integration';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import { nowMs } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
+import { createFirebaseUserByEmail, findFirebaseUserByEmail, updateFirebaseUserByUid } from '@/modules/auth/auth.service';
 import { subscribeToNewsletter, toNewsletterLanguage } from '@/modules/newsletter/newsletter.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import {
@@ -39,6 +35,16 @@ import type {
 	ContributorWithContact,
 	StripeContributorData,
 } from './contributor.types';
+
+export const countContributorsCreatedBetween = async (from: Date, to: Date): Promise<ServiceResult<number>> => {
+	try {
+		return resultOk(await contributorRepository.countContributorsCreatedBetween(from, to));
+	} catch (error) {
+		console.error('Could not count newly created contributors', { error });
+
+		return resultFail('Could not count newly created contributors');
+	}
+};
 
 export const getCommunityStats = async (): Promise<ServiceResult<ContributorCommunityStats>> => {
 	try {

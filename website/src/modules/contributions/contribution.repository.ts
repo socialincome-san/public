@@ -5,6 +5,7 @@ import { toSortKey } from '@/lib/utils/to-sort-key';
 import { DateTime } from 'luxon';
 import type {
 	BankTransferUpsertInput,
+	ContributionDateRange,
 	ContributionTableQuery,
 	PaymentEventCreateData,
 	StripeContributionCreateData,
@@ -12,6 +13,43 @@ import type {
 } from './contribution.types';
 
 const RECENT_GLOBE_CONTRIBUTION_LIMIT = 200;
+
+export const findSucceededContributionTotal = async (createdAt: ContributionDateRange | undefined) =>
+	prisma.contribution.aggregate({
+		where: { status: ContributionStatus.succeeded, createdAt },
+		_sum: { amountChf: true },
+	});
+
+export const findSucceededContributionSummary = async (createdAt: ContributionDateRange) =>
+	prisma.contribution.aggregate({
+		where: { status: ContributionStatus.succeeded, createdAt },
+		_sum: { amountChf: true },
+		_count: { _all: true },
+	});
+
+export const findSucceededContributionsByContributorCountry = async (createdAt: ContributionDateRange | undefined) =>
+	prisma.contribution.findMany({
+		where: {
+			status: ContributionStatus.succeeded,
+			createdAt,
+			contributor: { contact: { address: { isNot: null } } },
+		},
+		select: {
+			amountChf: true,
+			contributorId: true,
+			contributor: {
+				select: {
+					contact: {
+						select: {
+							address: {
+								select: { country: true },
+							},
+						},
+					},
+				},
+			},
+		},
+	});
 
 export const findContribution = async (contributionId: string) =>
 	prisma.contribution.findUnique({

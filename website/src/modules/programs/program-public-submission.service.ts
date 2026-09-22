@@ -2,7 +2,7 @@ import type { Program } from '@/generated/storyblok/types/109655/storyblok-compo
 import { fetchStoryblokPrograms } from '@/integrations/storyblok/storyblok-program.integration';
 import { defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import * as programRepository from './program.repository';
 import type { PublicSubmissionProgramOption } from './program.types';
 

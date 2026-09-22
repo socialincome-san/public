@@ -2,7 +2,7 @@ import type { Campaign, CampaignGlobals } from '@/generated/storyblok/types/1096
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import { STORYBLOK_CAMPAIGN_GLOBALS_PATH, STORYBLOK_CAMPAIGNS_FOLDER } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoriesParams, ISbStoryData } from '@storyblok/js';
-import { getStoryblokContentClient } from './storyblok-content.integration';
+import { fetchStoryblokStories, fetchStoryblokStory } from './storyblok-content.integration';
 
 const CAMPAIGN_GLOBALS_RELATIONS = 'campaignGlobals.faq';
 
@@ -33,14 +33,19 @@ export const fetchStoryblokListedCampaigns = async (language: string): Promise<S
 			version: 'published',
 			starts_with: `${STORYBLOK_CAMPAIGNS_FOLDER}/`,
 		};
-		const stories = await getStoryblokContentClient().getAll('cdn/stories', params);
-		let campaigns = stories.filter(isListedCampaignStory);
+		const storiesResult = await fetchStoryblokStories<ISbStoryData<Campaign>>(params);
+		if (!storiesResult.success) {
+			return resultOk([]);
+		}
+		let campaigns = storiesResult.data.filter(isListedCampaignStory);
 		if (campaigns.length === 0 && process.env.NODE_ENV !== 'production') {
-			const draftStories = await getStoryblokContentClient().getAll('cdn/stories', {
+			const draftStoriesResult = await fetchStoryblokStories<ISbStoryData<Campaign>>({
 				...params,
 				version: 'draft',
 			});
-			campaigns = draftStories.filter(isListedCampaignStory);
+			if (draftStoriesResult.success) {
+				campaigns = draftStoriesResult.data.filter(isListedCampaignStory);
+			}
 		}
 
 		return resultOk(campaigns);
@@ -87,16 +92,23 @@ const isStoryblokStoryData = <T>(value: unknown): value is ISbStoryData<T> => {
 };
 
 const fetchStory = async <T>(slug: string, language: string, resolveRelations: string): Promise<ISbStoryData<T>> => {
-	const response = await getStoryblokContentClient().get(`cdn/stories/${slug}`, {
+	const result = await fetchStoryblokStory<ISbStoryData<T>>(slug, {
 		language,
 		version: 'published',
 		resolve_relations: resolveRelations,
 	});
-	if (!isObjectRecord(response) || !isObjectRecord(response.data) || !isStoryblokStoryData<T>(response.data.story)) {
+	if (!result.success) {
+		const error = new Error(result.error);
+		if (result.status !== undefined) {
+			Object.defineProperty(error, 'status', { value: result.status });
+		}
+		throw error;
+	}
+	if (!isStoryblokStoryData<T>(result.data)) {
 		throw new Error('Storyblok story response was invalid');
 	}
 
-	return response.data.story;
+	return result.data;
 };
 
 const isListedCampaignStory = (story: unknown): story is ISbStoryData<Campaign> => {

@@ -4,7 +4,7 @@ import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import { handleServiceResult } from '@/lib/service-result-client';
 import type { RecipientOption } from '@/modules/recipients/recipient.types';
 import {
 	createSurveyAction,

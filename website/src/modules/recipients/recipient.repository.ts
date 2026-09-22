@@ -3,6 +3,32 @@ import { prisma } from '@/lib/database/prisma';
 import type { CreateRecipientInput, UpdateRecipientInput, UpdateRecipientSelfInput } from './recipient.schemas';
 import type { RecipientTableQuery } from './recipient.types';
 
+export const findRecipientMonthlySummarySource = async (from: Date, to: Date) => {
+	const [newRecipientCount, recipients] = await Promise.all([
+		prisma.recipient.count({
+			where: { createdAt: { gte: from, lt: to } },
+		}),
+		prisma.recipient.findMany({
+			select: {
+				programId: true,
+				startDate: true,
+				suspendedAt: true,
+				program: {
+					select: {
+						programDurationInMonths: true,
+						payoutInterval: true,
+						country: { select: { isoCode: true } },
+					},
+				},
+				localPartner: { select: { name: true } },
+				payouts: { select: { status: true } },
+			},
+		}),
+	]);
+
+	return { newRecipientCount, recipients };
+};
+
 export const findRecipientOwnership = async (recipientId: string) =>
 	prisma.recipient.findUnique({
 		where: { id: recipientId },
@@ -292,15 +318,6 @@ export const findRecipientTableSource = async ({
 
 	return { recipients, totalCount, filteredProgramIds };
 };
-
-export const findAllRecipientTableSource = async (programIds: string[]) =>
-	prisma.recipient.findMany({
-		where: {
-			programId: { in: programIds },
-		},
-		select: recipientTableSelect,
-		orderBy: { createdAt: 'desc' },
-	});
 
 export const findUpcomingOnboardingRecipientTableSource = async ({
 	programIds,

@@ -2,7 +2,7 @@ import { FocusDetail } from '@/components/storyblok/focus/focus-detail';
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { getFocusBySlugAction } from '@/modules/storyblok-content/storyblok-content.actions';
 
 type Props = {
 	storyPath: string;
@@ -27,7 +27,7 @@ export const StoryblokPreviewFocusPage = async ({
 		previewRoutePath,
 		searchParams,
 		loadStory: async (_path, language) => {
-			const storyResult = await services.storyblok.getFocusBySlug(slug, language);
+			const storyResult = await getFocusBySlugAction({ slug, language });
 
 			return storyResult.success ? storyResult.data : null;
 		},

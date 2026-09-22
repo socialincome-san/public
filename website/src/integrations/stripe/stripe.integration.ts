@@ -7,7 +7,6 @@ export type StripeApiCheckoutSession = Stripe.Checkout.Session;
 export type StripeApiCustomer = Stripe.Customer;
 export type StripeApiCharge = Stripe.Charge;
 export type StripeApiSubscription = Stripe.Subscription;
-export type StripeApiPaymentMethod = Stripe.PaymentMethod;
 export type StripeApiInvoice = Stripe.Invoice;
 export type StripeApiEvent = Stripe.Event;
 export type StripeApiPrice = Stripe.Price;
@@ -575,27 +574,6 @@ export const createStripeBillingPortalSession = async (
 		console.error('Could not create Stripe billing portal session', { error });
 
 		return resultFail('Could not create billing portal session');
-	}
-};
-
-export const retrieveStripePaymentMethod = async (
-	paymentMethodId: string,
-): Promise<ServiceResult<StripeApiPaymentMethod | null>> => {
-	const clientResult = getStripeClient();
-	if (!clientResult.success) {
-		return clientResult;
-	}
-
-	try {
-		return resultOk(await clientResult.data.paymentMethods.retrieve(paymentMethodId));
-	} catch (error) {
-		if (isMissingStripeResource(error)) {
-			return resultOk(null);
-		}
-
-		console.error('Could not retrieve Stripe payment method', { error });
-
-		return resultFail('Could not retrieve Stripe payment method');
 	}
 };
 

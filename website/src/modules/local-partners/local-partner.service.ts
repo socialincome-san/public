@@ -1,11 +1,11 @@
+import type { Session } from '@/lib/firebase/current-account';
+import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import {
 	createFirebaseUserByEmail,
 	deleteFirebaseUserByUidIfExists,
 	findFirebaseUserByEmail,
 	updateFirebaseUserByUid,
-} from '@/integrations/firebase/firebase-auth.integration';
-import type { Session } from '@/lib/firebase/current-account';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+} from '@/modules/auth/auth.service';
 import { isAdmin } from '@/modules/users/user.service';
 import * as localPartnerRepository from './local-partner.repository';
 import type { LocalPartnerCreateInput, LocalPartnerUpdateInput } from './local-partner.schemas';

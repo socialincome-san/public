@@ -1,24 +1,22 @@
 import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
 import { TagBadge } from '@/components/storyblok/journal/tag-badge';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { ARTICLE_HERO_IMAGE_HEIGHT, ARTICLE_HERO_IMAGE_WIDTH } from '@/lib/services/journal/journal.utils';
-import {
-	createWebsitePersonLink,
-	formatStoryblokDate,
-	getPersonDisplayName,
-	ResolvedArticle,
-} from '@/lib/services/storyblok/storyblok.utils';
+import { createWebsitePersonLink, formatStoryblokDate, getPersonDisplayName } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
+import type { JournalArticle } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
 import Link from 'next/link';
 
 type Props = {
-	story: ISbStoryData<ResolvedArticle>;
+	story: ISbStoryData<JournalArticle>;
 	hasHero: boolean;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
+
+const ARTICLE_HERO_IMAGE_WIDTH = 960;
+const ARTICLE_HERO_IMAGE_HEIGHT = 960;
 
 export const ArticleDetailHeader = ({ story, hasHero, lang, region }: Props) => {
 	const article = story.content;

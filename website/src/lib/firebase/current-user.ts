@@ -1,15 +1,11 @@
-import { services } from '@/lib/services/services';
+import { getCurrentAuthToken } from '@/modules/auth/auth.service';
 import { getCurrentUserSession } from '@/modules/users/user.service';
 import type { UserSession } from '@/modules/users/user.types';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
 
 const loadCurrentUser = async (): Promise<UserSession | null> => {
-	const cookieResult = await services.firebaseSession.readSessionCookie();
-	if (!cookieResult.success || !cookieResult.data) {
-		return null;
-	}
-	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookieResult.data);
+	const decodedTokenResult = await getCurrentAuthToken();
 	if (!decodedTokenResult.success) {
 		return null;
 	}

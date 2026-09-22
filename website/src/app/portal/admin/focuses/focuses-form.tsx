@@ -2,7 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import { handleServiceResult } from '@/lib/service-result-client';
 import { SLUG_REGEX } from '@/lib/utils/regex';
 import { createFocusAction, deleteFocusAction, getFocusAction, updateFocusAction } from '@/modules/focuses/focus.actions';
 import type { FocusPayload } from '@/modules/focuses/focus.types';

@@ -3,7 +3,7 @@ import type { ServiceResult } from '@/lib/service-result';
 const mockFindPublicLocalPartnersByProgramId = jest.fn();
 const mockIsAdmin = jest.fn();
 
-jest.mock('@/integrations/firebase/firebase-auth.integration', () => ({}));
+jest.mock('@/modules/auth/auth.service', () => ({}));
 
 jest.mock('./local-partner.repository', () => ({
 	findPublicLocalPartnersByProgramId: mockFindPublicLocalPartnersByProgramId,

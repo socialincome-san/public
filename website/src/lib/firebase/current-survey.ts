@@ -1,14 +1,10 @@
-import { services } from '@/lib/services/services';
+import { getCurrentAuthToken } from '@/modules/auth/auth.service';
 import { getSurveyByAccessEmail } from '@/modules/surveys/survey.service';
 import type { SurveyPayload } from '@/modules/surveys/survey.types';
 import { cache } from 'react';
 
 const loadCurrentSurvey = async (): Promise<SurveyPayload | null> => {
-	const cookieResult = await services.firebaseSession.readSessionCookie();
-	if (!cookieResult.success || !cookieResult.data) {
-		return null;
-	}
-	const decodedTokenResult = await services.firebaseSession.verifySessionCookie(cookieResult.data);
+	const decodedTokenResult = await getCurrentAuthToken();
 	if (!decodedTokenResult.success) {
 		return null;
 	}

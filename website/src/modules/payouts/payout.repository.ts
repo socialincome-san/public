@@ -6,9 +6,29 @@ import type { CreatePayoutInput, UpdatePayoutInput } from './payout.schemas';
 import type {
 	OngoingPayoutTableQuery,
 	PayoutConfirmationTableQuery,
+	PayoutDateRange,
 	PayoutProcessCreateInput,
 	PayoutTableQuery,
 } from './payout.types';
+
+export const findPaidOrConfirmedPayoutTotal = async (paymentAt: PayoutDateRange | undefined) =>
+	prisma.payout.aggregate({
+		where: {
+			status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] },
+			paymentAt,
+		},
+		_sum: { amountChf: true },
+	});
+
+export const findPaidPayoutSummary = async (paymentAt: PayoutDateRange) =>
+	prisma.payout.aggregate({
+		where: {
+			status: PayoutStatus.paid,
+			paymentAt,
+		},
+		_sum: { amountChf: true },
+		_count: { _all: true },
+	});
 
 export const findPayoutTotalForCountry = async (isoCode: CountryCode) =>
 	prisma.payout.aggregate({

@@ -15,6 +15,7 @@ const mockCreatePayout = jest.fn();
 const mockUpdatePayout = jest.fn();
 const mockUpdatePayoutStatus = jest.fn();
 const mockDeletePayout = jest.fn();
+const mockFindPaidOrConfirmedPayoutTotal = jest.fn();
 
 jest.mock('./payout.repository', () => ({
 	findPayout: mockFindPayout,
@@ -25,6 +26,7 @@ jest.mock('./payout.repository', () => ({
 	updatePayout: mockUpdatePayout,
 	updatePayoutStatus: mockUpdatePayoutStatus,
 	deletePayout: mockDeletePayout,
+	findPaidOrConfirmedPayoutTotal: mockFindPaidOrConfirmedPayoutTotal,
 }));
 
 jest.mock('@/modules/program-access/program-access.service', () => ({
@@ -57,6 +59,7 @@ jest.mock('@/lib/utils/now', () => ({
 import {
 	createPayout,
 	deletePayout,
+	getPaidOrConfirmedPayoutTotal,
 	getPayout,
 	getPayoutForecastTableView,
 	getPublicPayoutForecastTableView,
@@ -108,6 +111,14 @@ const payoutInput = {
 	phoneNumber: null,
 	comments: null,
 };
+
+describe('getPaidOrConfirmedPayoutTotal', () => {
+	test('returns the CHF aggregate from the payout repository', async () => {
+		mockFindPaidOrConfirmedPayoutTotal.mockResolvedValue({ _sum: { amountChf: 80 } });
+
+		expect(await getPaidOrConfirmedPayoutTotal()).toEqual({ success: true, data: 80 });
+	});
+});
 
 const payoutPayloadSource = {
 	id: 'payout-1',

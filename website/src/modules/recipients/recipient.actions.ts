@@ -4,6 +4,7 @@ import { getSessionByType, type Session } from '@/lib/firebase/current-account';
 import { resultFail } from '@/lib/service-result';
 import { revalidatePath } from 'next/cache';
 import {
+	publicRecipientProgramIdSchema,
 	recipientCreateSchema,
 	recipientCsvFileSchema,
 	recipientIdSchema,
@@ -14,6 +15,7 @@ import {
 	createRecipient,
 	deleteRecipient,
 	exportRecipientsCsv,
+	getPublicRecipientsTableView,
 	getRecipientById,
 	getRecipientFormOptions,
 	importRecipientsCsv,
@@ -136,6 +138,15 @@ export const downloadRecipientsCsvAction = async (sessionType: unknown = 'user')
 	}
 
 	return exportRecipientsCsv(sessionResult.data);
+};
+
+export const getPublicRecipientsTableAction = async (programId: unknown) => {
+	const programIdResult = publicRecipientProgramIdSchema.safeParse(programId);
+	if (!programIdResult.success) {
+		return resultFail(programIdResult.error.issues[0]?.message ?? 'Invalid program id');
+	}
+
+	return getPublicRecipientsTableView(programIdResult.data);
 };
 
 const getRecipientActionSession = async (sessionType: unknown) => {

@@ -1,11 +1,11 @@
 import { ProgramPermission, UserRole } from '@/generated/prisma/enums';
+import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import {
 	createFirebaseUserByEmail,
 	deleteFirebaseUserByUidIfExists,
 	findFirebaseUserByEmail,
 	updateFirebaseUserByUid,
-} from '@/integrations/firebase/firebase-auth.integration';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+} from '@/modules/auth/auth.service';
 import { isAdminRole } from './user.permissions';
 import * as userRepository from './user.repository';
 import type { CreateUserInput, UpdateUserInput, UpdateUserSelfInput } from './user.schemas';

@@ -5,6 +5,11 @@ import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { CreateContributorInput, UpdateContributorInput, UpdateContributorSelfInput } from './contributor.schemas';
 import type { ContributorTableQuery } from './contributor.types';
 
+export const countContributorsCreatedBetween = async (from: Date, to: Date) =>
+	prisma.contributor.count({
+		where: { createdAt: { gte: from, lt: to } },
+	});
+
 export const findCommunityContributionCountries = async () =>
 	prisma.contribution.findMany({
 		where: { status: 'succeeded' },

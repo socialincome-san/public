@@ -3,8 +3,8 @@ import type { CampaignStory } from '@/components/storyblok/campaign/campaign.typ
 import { getCampaignPortalSlug, getCampaignTitle } from '@/components/storyblok/campaign/campaign.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { getCampaignByPortalSlugAction } from '@/modules/campaigns/campaign.actions';
+import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { notFound } from 'next/navigation';
 
 type Props = {
@@ -22,7 +22,7 @@ export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, pr
 		previewRoutePath,
 		searchParams,
 		loadStory: async (path, language) => {
-			const storyResult = await services.storyblok.getStoryWithFallback<CampaignStory>(path, language);
+			const storyResult = await getStoryWithFallbackAction<CampaignStory>({ storyPath: path, language });
 
 			return storyResult.success ? storyResult.data : null;
 		},

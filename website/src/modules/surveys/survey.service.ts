@@ -1,10 +1,10 @@
 import { Gender, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
-import { createFirebaseSurveyUser, synchronizeFirebaseSurveyUser } from '@/integrations/firebase/firebase-auth.integration';
 import { RECIPIENT_AGE_GROUP_BOUNDS, RECIPIENT_AGE_GROUPS } from '@/lib/constants/recipient-age-groups';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import { QUESTIONS } from '@/lib/types/question';
 import { now, nowMs } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
+import { createFirebaseSurveyUser, synchronizeFirebaseSurveyUser } from '@/modules/auth/auth.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import { getRecipientProgramAssignment, getSurveyRecipients } from '@/modules/recipients/recipient.service';
 import { addMonths, differenceInDays, endOfMonth, max, min, startOfMonth, subMonths } from 'date-fns';

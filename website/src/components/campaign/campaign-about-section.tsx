@@ -1,15 +1,15 @@
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Button } from '@/components/button/button';
-import { focusToObjectPosition } from '@/components/campaign/campaign-submission/storyblok-image-focus';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import { InstagramIcon } from '@/components/svg/instagram';
 import { TiktokIcon } from '@/components/svg/tiktok';
 import { XIcon } from '@/components/svg/x';
+import { focusToObjectPosition } from '@/lib/storyblok/storyblok-image-focus';
 import {
 	formatStoryblokResizeUrl,
 	getDimensionsFromStoryblokImageUrl,
 	getScaledAssetDimensions,
-} from '@/lib/services/storyblok/storyblok.utils';
+} from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import { ExternalLink } from 'lucide-react';

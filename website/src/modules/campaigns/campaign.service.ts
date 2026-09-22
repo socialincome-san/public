@@ -4,7 +4,7 @@ import { listCampaignDefaultImages } from '@/integrations/storyblok/storyblok-ma
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { nowMs } from '@/lib/utils/now';
 import { getLatestRateForCurrency } from '@/modules/exchange-rates/exchange-rate.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
@@ -24,6 +24,16 @@ import {
 	type PublicCampaignStats,
 	type PublicCampaignStatsMap,
 } from './campaign.types';
+
+export const countCampaignsCreatedBetween = async (from: Date, to: Date): Promise<ServiceResult<number>> => {
+	try {
+		return resultOk(await campaignRepository.countCampaignsCreatedBetween(from, to));
+	} catch (error) {
+		console.error('Could not count newly created campaigns', { error });
+
+		return resultFail('Could not count newly created campaigns');
+	}
+};
 
 export const getCampaignById = async (campaignId: string): Promise<ServiceResult<CampaignPage>> => {
 	try {
