@@ -1,6 +1,6 @@
 'use client';
 
-import { DialogHeader, DialogTitle } from '@/components/dialog';
+import { DialogHeader, DialogTitle } from '@/components/dialog/dialog';
 import { CircleCheck, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { useSyncExternalStore } from 'react';

@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, DialogContent } from '@/components/dialog';
+import { Dialog, DialogContent } from '@/components/dialog/dialog';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { type ReactNode, useState } from 'react';
 import { CampaignSubmissionForm } from './campaign-submission/campaign-submission-form';

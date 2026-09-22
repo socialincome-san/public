@@ -1,7 +1,7 @@
 'use client';
 
 import { Checkbox } from '@/components/checkbox/checkbox';
-import { SelectableCard } from '@/components/selectable-card';
+import { SelectableCard } from '@/components/selectable-card/selectable-card';
 import type { MessagingChannel } from '@/generated/prisma/client';
 import type {
 	MessagingPhoneSource,

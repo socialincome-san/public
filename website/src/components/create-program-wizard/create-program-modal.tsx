@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import type { KeyboardEvent, ReactNode } from 'react';
 import { useEffect } from 'react';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../dialog/dialog';
 import { createProgramWizardMachine } from './wizard/create-program-machine';
 import { CreateProgramWizard } from './wizard/create-program-wizard';
 
