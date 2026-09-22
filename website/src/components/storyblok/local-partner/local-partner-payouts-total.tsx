@@ -2,6 +2,7 @@ import { StoryblokPayoutsTotal } from '@/components/storyblok/shared/storyblok-p
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { getPublicLocalPartnerPayoutTotalsAction } from '@/modules/payouts/payout.actions';
 import type { LocalPartnerStory } from './local-partner.types';
 
 type Props = {
@@ -15,7 +16,7 @@ export const LocalPartnerPayoutsTotal = async ({ localPartner, lang, region }: P
 	const localPartnerSlug = localPartner.content.portalSlug?.trim();
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
 	const [totalsResult, rates] = await Promise.all([
-		localPartnerSlug ? services.read.payout.getPayoutTotalsForLocalPartnerSlug(localPartnerSlug) : Promise.resolve(null),
+		localPartnerSlug ? getPublicLocalPartnerPayoutTotalsAction(localPartnerSlug) : Promise.resolve(null),
 		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
 	]);
 

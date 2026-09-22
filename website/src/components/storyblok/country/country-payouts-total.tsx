@@ -2,6 +2,7 @@ import { StoryblokPayoutsTotal } from '@/components/storyblok/shared/storyblok-p
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { services } from '@/lib/services/services';
+import { getPublicCountryPayoutTotalsAction } from '@/modules/payouts/payout.actions';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode } from './country.utils';
 
@@ -16,7 +17,7 @@ export const CountryPayoutsTotal = async ({ country, lang, region }: Props) => {
 	const isoCode = getCountryIsoCode(country.content);
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
 	const [totalsResult, rates] = await Promise.all([
-		services.read.payout.getPayoutTotalsForCountry(isoCode),
+		getPublicCountryPayoutTotalsAction(isoCode),
 		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
 	]);
 	const totalChf = totalsResult.success ? totalsResult.data.totalPayoutsChf : 0;

@@ -7,9 +7,9 @@ import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton'
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { PAYOUT_FORECAST_MONTHS_AHEAD } from '@/lib/services/payout/payout-forecast.constants';
-import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedPayoutForecastTableView } from '@/modules/payouts/payout.service';
+import { PAYOUT_FORECAST_MONTHS_AHEAD } from '@/modules/payouts/payout.types';
 import { Suspense } from 'react';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
@@ -33,12 +33,7 @@ const FinancesProgramScopedDataLoader = async ({ params, searchParams }: Props) 
 	const user = await getAuthenticatedUserOrRedirect();
 	const translator = await Translator.getInstance({ language: defaultLanguage, namespaces: ['website-common'] });
 
-	const result = await services.read.payout.getPaginatedForecastTableView(
-		user.id,
-		programId,
-		PAYOUT_FORECAST_MONTHS_AHEAD,
-		tableQuery,
-	);
+	const result = await getPaginatedPayoutForecastTableView(user.id, programId, PAYOUT_FORECAST_MONTHS_AHEAD, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];

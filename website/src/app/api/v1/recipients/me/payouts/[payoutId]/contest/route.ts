@@ -1,6 +1,6 @@
 import { ContestPayoutBody } from '@/app/api/v1/models';
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { services } from '@/lib/services/services';
+import { updatePayoutStatusByRecipient } from '@/modules/payouts/payout.service';
 import { getAuthenticatedRecipientFromRequest } from '@/modules/recipients/recipient.service';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -46,7 +46,7 @@ export const POST = withAppCheck(async (request: NextRequest, { params }: { para
 		return new Response(parsed.error.message, { status: 400 });
 	}
 
-	const contestResult = await services.write.payout.updateStatusByRecipient(
+	const contestResult = await updatePayoutStatusByRecipient(
 		recipientResult.data.id,
 		payoutId,
 		'contested',

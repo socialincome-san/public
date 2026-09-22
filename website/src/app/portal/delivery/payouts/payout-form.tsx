@@ -3,16 +3,16 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutStatus } from '@/generated/prisma/enums';
+import { handleServiceResult } from '@/lib/services/core/service-result-client';
+import { allCurrencies } from '@/lib/types/currency';
 import {
 	createPayoutAction,
 	deletePayoutAction,
 	getPayoutAction,
 	getPayoutRecipientOptionsAction,
 	updatePayoutAction,
-} from '@/lib/server-actions/payout-actions';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import type { PayoutPayload } from '@/lib/services/payout/payout.types';
-import { allCurrencies } from '@/lib/types/currency';
+} from '@/modules/payouts/payout.actions';
+import type { PayoutPayload } from '@/modules/payouts/payout.types';
 import type { RecipientOption } from '@/modules/recipients/recipient.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';

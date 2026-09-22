@@ -1,6 +1,39 @@
-import { Currency, PayoutStatus, Prisma, ProgramPermission } from '@/generated/prisma/client';
+import type { Currency, PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
 
-export type PayoutEntity = Prisma.PayoutGetPayload<Prisma.PayoutDefaultArgs>;
+export const PAYOUT_FORECAST_MONTHS_AHEAD = 6;
+
+export type PayoutRecord = {
+	id: string;
+	legacyFirestoreId: string | null;
+	amount: string;
+	amountChf: string | null;
+	currency: Currency;
+	paymentAt: Date;
+	status: PayoutStatus;
+	phoneNumber: string | null;
+	comments: string | null;
+	recipientId: string;
+	createdAt: Date;
+	updatedAt: Date | null;
+};
+
+export type PayoutPayload = {
+	id: string;
+	recipient: {
+		id: string;
+		firstName: string;
+		lastName: string;
+		programId: string | null;
+		programName: string | null;
+	};
+	amount: number;
+	amountChf: number | null;
+	currency: Currency;
+	status: PayoutStatus;
+	paymentAt: Date;
+	phoneNumber: string | null;
+	comments: string | null;
+};
 
 export type PayoutTableViewRow = {
 	id: string;
@@ -28,18 +61,9 @@ export type PayoutTableQuery = {
 export type PayoutPaginatedTableView = {
 	tableRows: PayoutTableViewRow[];
 	totalCount: number;
-	programFilterOptions: {
-		id: string;
-		name: string;
-	}[];
-	statusFilterOptions: {
-		value: string;
-		label: string;
-	}[];
-	mobileMoneyProviderFilterOptions: {
-		id: string;
-		name: string;
-	}[];
+	programFilterOptions: { id: string; name: string }[];
+	statusFilterOptions: { value: string; label: string }[];
+	mobileMoneyProviderFilterOptions: { id: string; name: string }[];
 };
 
 export type PayoutConfirmationTableViewRow = {
@@ -67,14 +91,8 @@ export type PayoutConfirmationTableQuery = {
 export type PayoutConfirmationPaginatedTableView = {
 	tableRows: PayoutConfirmationTableViewRow[];
 	totalCount: number;
-	programFilterOptions: {
-		id: string;
-		name: string;
-	}[];
-	statusFilterOptions: {
-		value: string;
-		label: string;
-	}[];
+	programFilterOptions: { id: string; name: string }[];
+	statusFilterOptions: { value: string; label: string }[];
 };
 
 export type PayoutMonth = {
@@ -107,10 +125,7 @@ export type OngoingPayoutTableQuery = {
 export type OngoingPayoutPaginatedTableView = {
 	tableRows: OngoingPayoutTableViewRow[];
 	totalCount: number;
-	programFilterOptions: {
-		id: string;
-		name: string;
-	}[];
+	programFilterOptions: { id: string; name: string }[];
 };
 
 export type PayoutForecastTableViewRow = {
@@ -140,22 +155,4 @@ export type PayoutForecastPaginatedTableView = {
 
 export type CountryPayoutTotals = {
 	totalPayoutsChf: number;
-};
-
-export type PayoutPayload = {
-	id: string;
-	recipient: {
-		id: string;
-		firstName: string;
-		lastName: string;
-		programId: string | null;
-		programName: string | null;
-	};
-	amount: number;
-	amountChf: number | null;
-	currency: Currency;
-	status: PayoutStatus;
-	paymentAt: Date;
-	phoneNumber: string | null;
-	comments: string | null;
 };

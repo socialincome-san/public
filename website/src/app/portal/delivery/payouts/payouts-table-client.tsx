@@ -3,7 +3,7 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { getPayoutsTableFilters, payoutsTableConfig } from '@/components/data-table/configs/payouts-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
+import type { PayoutTableViewRow } from '@/modules/payouts/payout.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { PayoutFormDialog } from './payout-form-dialog';

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { PayoutFormCreateInput, PayoutFormUpdateInput } from '@/lib/services/payout/payout-form-input';
-import { PayoutPayload } from '@/lib/services/payout/payout.types';
-import { PayoutFormSchema } from './payout-form';
+import type { CreatePayoutInput, UpdatePayoutInput } from '@/modules/payouts/payout.schemas';
+import type { PayoutPayload } from '@/modules/payouts/payout.types';
+import type { PayoutFormSchema } from './payout-form';
 
-export const buildCreatePayoutInput = (schema: PayoutFormSchema): PayoutFormCreateInput => {
+export const buildCreatePayoutInput = (schema: PayoutFormSchema): CreatePayoutInput => {
 	return {
 		recipientId: schema.fields.recipientId.value,
 		amount: schema.fields.amount.value,
@@ -16,8 +16,8 @@ export const buildCreatePayoutInput = (schema: PayoutFormSchema): PayoutFormCrea
 	};
 };
 
-export const buildUpdatePayoutInput = (schema: PayoutFormSchema, existing: PayoutPayload): PayoutFormUpdateInput => {
-	const data: PayoutFormUpdateInput = {
+export const buildUpdatePayoutInput = (schema: PayoutFormSchema, existing: PayoutPayload): UpdatePayoutInput => {
+	const data: UpdatePayoutInput = {
 		id: existing.id,
 		recipientId: existing.recipient.id,
 		amount: schema.fields.amount.value,

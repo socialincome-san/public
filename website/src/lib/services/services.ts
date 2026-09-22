@@ -47,9 +47,6 @@ import { PostFinanceBalanceService } from './payment-file-import/postfinance-bal
 import { OrangeMoneyCsvPayoutProcessService } from './payout-process/orange-money-csv-payout-process.service';
 import { PayoutProcessCoreService } from './payout-process/payout-process-core.service';
 import { TelecelCsvPayoutProcessService } from './payout-process/telecel-csv-payout-process.service';
-import { PayoutReadService } from './payout/payout-read.service';
-import { PayoutValidationService } from './payout/payout-validation.service';
-import { PayoutWriteService } from './payout/payout-write.service';
 import { QrBillService } from './qr-bill/qr-bill.service';
 import { ReserveReadService } from './reserves/reserve-read.service';
 import { ReserveWriteService } from './reserves/reserve-write.service';
@@ -99,8 +96,6 @@ const monthlySummary = new MonthlySummaryService(prisma, recipientStatus);
 const recipientRead = recipientService;
 const recipientWrite = recipientService;
 const recipientImport = recipientService;
-const payoutValidation = new PayoutValidationService(prisma);
-const payoutWrite = new PayoutWriteService(prisma, programAccessRead, payoutValidation);
 const twilioOtp = new TwilioOtpService(prisma, firebaseAdmin, appReviewMode);
 const messagingTwilioTemplates = new TwilioTemplateService(prisma);
 
@@ -125,7 +120,6 @@ const campaignRead: CampaignReadService = {
 	getFallbackCampaign,
 	getDefaultCampaignForProgram,
 };
-const payoutRead = new PayoutReadService(prisma, programAccessRead, exchangeRateRead, recipientStatus);
 const payoutProcessCore = new PayoutProcessCoreService(
 	prisma,
 	programAccessRead,
@@ -174,13 +168,11 @@ const createReservesCalculation = (bucketName: string) =>
 export const services = {
 	read: {
 		donationCertificate: donationCertificateRead,
-		payout: payoutRead,
 		recipient: recipientRead,
 		survey: surveyRead,
 	},
 	write: {
 		donationCertificate: donationCertificateWrite,
-		payout: payoutWrite,
 		recipient: recipientWrite,
 		survey: surveyWrite,
 	},
