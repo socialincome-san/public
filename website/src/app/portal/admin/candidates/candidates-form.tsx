@@ -9,18 +9,18 @@ import {
 	getZodEnum,
 } from '@/components/dynamic-form/helper';
 import type { Session } from '@/lib/firebase/current-account';
+import { handleServiceResult } from '@/lib/service-result-client';
+import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
 import {
 	createCandidateAction,
 	deleteCandidateAction,
 	getCandidateAction,
-	getCandidateOptions,
+	getCandidateOptionsAction,
 	updateCandidateAction,
-} from '@/lib/server-actions/candidate-actions';
-import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
-import { CandidatePayload } from '@/lib/services/candidate/candidate.types';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
-import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
+} from '@/modules/candidates/candidate.actions';
+import type { CandidatePayload } from '@/modules/candidates/candidate.types';
+import type { LocalPartnerOption } from '@/modules/local-partners/local-partner.types';
+import { getSupportedMobileMoneyProviderOptionsAction } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCandidateInput, buildUpdateCandidateInput } from './candidate-form-helpers';
@@ -241,7 +241,7 @@ export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessi
 	useEffect(() => {
 		startTransition(async () => {
 			const [candidateOptionsResult, supportedProviders] = await Promise.all([
-				getCandidateOptions(sessionType),
+				getCandidateOptionsAction(sessionType),
 				getSupportedMobileMoneyProviderOptionsAction(sessionType),
 			]);
 			if (!candidateOptionsResult.success) {

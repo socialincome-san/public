@@ -8,11 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/switch/switch';
 import { ContributorReferralSource, Gender } from '@/generated/prisma/enums';
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
-import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
-import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
-import { UserSession } from '@/lib/services/user/user.types';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
+import { ContributorSession } from '@/modules/contributors/contributor.types';
+import { getFocusOptionsAction } from '@/modules/focuses/focus.actions';
+import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
+import type { UserSession } from '@/modules/users/user.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';

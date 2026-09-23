@@ -5,8 +5,11 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { MultiSelect, MultiSelectOption } from '@/components/multi-select/multi-select';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { Switch } from '@/components/switch/switch';
-import { generateDonationCertificates, getContributorOptions } from '@/lib/server-actions/donation-certificates-actions';
-import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, LanguageCode } from '@/lib/types/language';
+import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, type LanguageCode } from '@/lib/types/language';
+import {
+	createDonationCertificatesAction,
+	getDonationCertificateContributorOptionsAction,
+} from '@/modules/donation-certificates/donation-certificate.actions';
 import { useRef, useState, useTransition } from 'react';
 
 import { now } from '@/lib/utils/now';
@@ -30,7 +33,7 @@ export default function GenerateDonationCertificatesDialog({
 	const optionsLoadedRef = useRef(false);
 
 	const loadContributorsOption = async () => {
-		const contributors = await getContributorOptions();
+		const contributors = await getDonationCertificateContributorOptionsAction();
 		if (contributors.success) {
 			setOptions(
 				contributors.data.map((c) => ({
@@ -45,7 +48,11 @@ export default function GenerateDonationCertificatesDialog({
 		setSuccess(undefined);
 		setError(undefined);
 		startTransition(async () => {
-			const result = await generateDonationCertificates(year, selectedContributors, language);
+			const result = await createDonationCertificatesAction({
+				year,
+				contributorIds: selectedContributors,
+				language,
+			});
 			if (!result.success) {
 				setError(result.error);
 			} else {
@@ -93,7 +100,13 @@ export default function GenerateDonationCertificatesDialog({
 						<p className="text-muted-foreground mb-1 text-xs">
 							Specify for which language the certificate(s) should be generated in:
 						</p>
-						<Select value={language} disabled={!language} onValueChange={(l: string) => setLanguage(l as LanguageCode)}>
+						<Select
+							value={language}
+							disabled={!language}
+							onValueChange={(selectedLanguage: string) =>
+								setLanguage(LANGUAGES.find((candidate) => candidate === selectedLanguage))
+							}
+						>
 							<SelectTrigger>
 								<SelectValue placeholder={'Select language'} />
 							</SelectTrigger>

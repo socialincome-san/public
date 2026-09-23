@@ -3,7 +3,10 @@ import { Carousel, CarouselContent, CarouselItem, CarouselScrollNextButton } fro
 import { PersonCard } from '@/components/storyblok/shared/person-card';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import {
+	getPersonsByCountryOfficeAction,
+	getPrimaryRoleLabelsAction,
+} from '@/modules/storyblok-content/storyblok-content.actions';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryTitle } from './country.utils';
 
@@ -15,8 +18,8 @@ type Props = {
 export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 	const isoCode = getCountryIsoCode(country.content);
 	const [countryOfficePersonsResult, roleLabelsResult] = await Promise.all([
-		services.storyblok.getPersonsByCountryOffice(lang, [isoCode]),
-		services.storyblok.getPrimaryRoleLabels(lang),
+		getPersonsByCountryOfficeAction({ language: lang, values: [isoCode] }),
+		getPrimaryRoleLabelsAction(lang),
 	]);
 	const persons = countryOfficePersonsResult.success ? countryOfficePersonsResult.data : [];
 	const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};

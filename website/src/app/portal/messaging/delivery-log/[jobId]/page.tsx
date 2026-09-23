@@ -3,9 +3,9 @@ import { SummaryCard } from '@/app/portal/messaging/delivery-log/[jobId]/summary
 import { SyncStatusButton } from '@/app/portal/messaging/delivery-log/[jobId]/sync-status-button';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { getMessagingJobDetailAction } from '@/lib/server-actions/messaging-actions';
-import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
+import { getMessagingJobDetailAction } from '@/modules/messaging/messaging.actions';
+import { getTwilioTemplate } from '@/modules/messaging/messaging.service';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
@@ -43,7 +43,7 @@ const MessagingJobDetailDataLoader = async ({ params, searchParams }: MessagingJ
 
 	const twilioAccountSid = process.env.TWILIO_ACCOUNT_SID ?? null;
 
-	const templateResult = await services.messagingTwilioTemplates.getTwilioTemplate(result.data.job.templateSid);
+	const templateResult = await getTwilioTemplate(result.data.job.templateSid, user.id);
 	const templateBody = templateResult.success ? templateResult.data.body : null;
 	const templateError = templateResult.success ? null : templateResult.error;
 

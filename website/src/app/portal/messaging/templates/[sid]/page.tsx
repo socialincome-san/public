@@ -1,7 +1,7 @@
 import { MessagingTemplateSummaryCard } from '@/app/portal/messaging/templates/[sid]/messaging-template-summary-card';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
+import { getTwilioTemplate } from '@/modules/messaging/messaging.service';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
@@ -22,7 +22,7 @@ const MessagingTemplateDataLoader = async ({ params }: MessagingTemplatePageProp
 	requireAdmin(user);
 
 	const { sid } = await params;
-	const result = await services.messagingTwilioTemplates.getTwilioTemplate(sid);
+	const result = await getTwilioTemplate(sid, user.id);
 
 	if (!result.success) {
 		return <p className="text-destructive text-sm">{result.error}</p>;

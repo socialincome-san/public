@@ -1,35 +1,38 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { JournalOverview } from '@/components/storyblok/journal/journal-overview';
 import { Translator } from '@/lib/i18n/translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { parseJournalArticleTypeSlug, parseJournalTagSlug } from '@/lib/services/journal/journal.utils';
-import { services } from '@/lib/services/services';
+import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getJournalOverviewPageData } from '@/modules/journal/journal.service';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
-export default async function Page({ params, searchParams }: DefaultPageProps) {
+type JournalOverviewPageProps = {
+	params: Promise<{ lang: WebsiteLanguage; region: WebsiteRegion }>;
+	searchParams: Promise<Record<string, string>>;
+};
+
+export default async function Page({ params, searchParams }: JournalOverviewPageProps) {
 	const { lang, region } = await params;
 	const resolvedSearchParams = await searchParams;
-	const tagSlug = parseJournalTagSlug(resolvedSearchParams);
-	const articleTypeSlug = parseJournalArticleTypeSlug(resolvedSearchParams);
+	const tagSlug = typeof resolvedSearchParams.tag === 'string' ? resolvedSearchParams.tag : undefined;
+	const articleTypeSlug = typeof resolvedSearchParams.type === 'string' ? resolvedSearchParams.type : undefined;
 
 	const translator = await Translator.getInstance({
-		language: lang as WebsiteLanguage,
+		language: lang,
 		namespaces: ['website-journal', 'common', 'website-common'],
 	});
 
-	const pageResult = await services.journal.getOverviewPageData(
+	const pageResult = await getJournalOverviewPageData({
 		lang,
 		region,
-		{
+		labels: {
 			homeLabel: translator.t('breadcrumb.home', { namespace: 'website-common' }),
 			journalLabel: translator.t('overview.title'),
 			overviewTitle: translator.t('overview.title'),
 			overviewDescription: translator.t('overview.description'),
 		},
-		{ tagSlug, articleTypeSlug },
-	);
+		filter: { tagSlug, articleTypeSlug },
+	});
 
 	if (!pageResult.success) {
 		notFound();

@@ -5,8 +5,8 @@ import { ProgramsOverview } from '@/components/storyblok/program/programs-overvi
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
+import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
+import { getPublicProgramStatsByPortalSlugsAction } from '@/modules/programs/program.actions';
 import NextLink from 'next/link';
 
 type Props = {
@@ -19,7 +19,7 @@ type Props = {
 
 export const ProgramGridView = async ({ programs, allProgramsCount = 0, blok, lang, region }: Props) => {
 	const programPortalSlugs = [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
-	const statsResult = await services.read.program.getPublicProgramStatsByProgramPortalSlugs(programPortalSlugs);
+	const statsResult = await getPublicProgramStatsByPortalSlugsAction(programPortalSlugs);
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const button = blok.button?.[0];

@@ -3,18 +3,18 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutInterval, Profile } from '@/generated/prisma/enums';
-import { getProgramCountryFeasibilityAction } from '@/lib/server-actions/country-action';
-import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
+import { handleServiceResult } from '@/lib/service-result-client';
+import { getCountryNameByCode } from '@/lib/types/country';
+import { SLUG_REGEX } from '@/lib/utils/regex';
+import { getProgramCountryFeasibilityAction } from '@/modules/countries/country.actions';
+import { getFocusOptionsAction } from '@/modules/focuses/focus.actions';
 import {
 	deleteProgramAction,
 	getProgramOrganizationOptionsAction,
 	getProgramSettingsAction,
 	updateProgramSettingsAction,
-} from '@/lib/server-actions/program-actions';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import { ProgramSettingsPayload } from '@/lib/services/program/program.types';
-import { getCountryNameByCode } from '@/lib/types/country';
-import { SLUG_REGEX } from '@/lib/utils/regex';
+} from '@/modules/programs/program.actions';
+import type { ProgramSettingsPayload } from '@/modules/programs/program.types';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';

@@ -1,10 +1,9 @@
 'use client';
 
+import { getCountryGeoJson, isAbortError } from '@/lib/country-geojson';
 import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
-import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
-import { getCountryGeoJson } from '@/lib/services/country/country-geojson.client';
-import { isAbortError } from '@/lib/services/country/country-geojson.utils';
 import { cn } from '@/lib/utils/cn';
+import type { GlobeContribution } from '@/modules/contributions/contribution.types';
 import { useEffect, useRef } from 'react';
 import styles from './globe-client.module.css';
 import { createGlobeRenderer, type GlobeRendererHandle } from './globe-renderer';

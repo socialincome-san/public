@@ -1,10 +1,10 @@
 import { CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
-import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
-import { UserSession } from '@/lib/services/user/user.types';
 import { COUNTRY_CODES } from '@/lib/types/country';
+import { ContributorSession } from '@/modules/contributors/contributor.types';
+import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
+import type { UserSession } from '@/modules/users/user.types';
 import { ProfileForm } from './form';
 
 export type ProfileFormTranslations = {

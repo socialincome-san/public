@@ -1,5 +1,6 @@
-import { getContributorCommunityStatsAction } from '@/lib/server-actions/contributor-public-actions';
-import type { ContributorCommunityStats } from '@/lib/services/contributor/contributor.types';
+import { getContributorCommunityStatsAction } from '@/modules/contributors/contributor.actions';
+import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
+import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
 import { assign, fromPromise, setup } from 'xstate';
 import { buildCompletedDonationSummary } from '../steps/step-stripe-checkout/map-wizard-to-stripe-checkout';
 import {
@@ -48,7 +49,12 @@ export const donationWizardMachine = setup({
 			| { type: 'COMPLETE' }
 			| { type: 'START_QR_FLOW' }
 			| { type: 'QR_CONTACT_SUBMIT'; donor: Omit<QrDonorContext, 'language'>; language: string }
-			| { type: 'QR_BILL_READY'; contributorReferenceId: string; contributionReferenceId: string; qrBillSvg: string }
+			| {
+					type: 'QR_BILL_READY';
+					contributorReferenceId: string;
+					contributionReferenceId: string;
+					display: QrBillDisplay;
+			  }
 			| { type: 'QR_BILL_ERROR'; message: string }
 			| { type: 'QR_PAYMENT_CONFIRMED' }
 			| { type: 'START_STRIPE_CHECKOUT' }
@@ -384,7 +390,7 @@ export const donationWizardMachine = setup({
 					actions: assign({
 						qrContributorReferenceId: ({ event }) => event.contributorReferenceId,
 						qrContributionReferenceId: ({ event }) => event.contributionReferenceId,
-						qrBillSvg: ({ event }) => event.qrBillSvg,
+						qrBillDisplay: ({ event }) => event.display,
 						qrBillStatus: () => 'ready' as const,
 						qrBillError: () => null,
 					}),
@@ -411,7 +417,7 @@ export const donationWizardMachine = setup({
 					target: 'stepOnboardingPersonal',
 					actions: assign(({ context }) => ({
 						completedDonationSummary: buildCompletedDonationSummary(context),
-						qrBillSvg: null,
+						qrBillDisplay: null,
 					})),
 				},
 				CLOSE: {

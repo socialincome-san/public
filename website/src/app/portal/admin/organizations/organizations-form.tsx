@@ -2,6 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema } from '@/components/dynamic-form/helper';
+import { handleServiceResult } from '@/lib/service-result-client';
 import {
 	createOrganizationAction,
 	deleteOrganizationAction,
@@ -9,9 +10,8 @@ import {
 	getOrganizationProgramOptionsAction,
 	getOrganizationUserOptionsAction,
 	updateOrganizationAction,
-} from '@/lib/server-actions/organization-action';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import { OrganizationPayload } from '@/lib/services/organization/organization.types';
+} from '@/modules/organizations/organization.actions';
+import type { OrganizationPayload } from '@/modules/organizations/organization.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateOrganizationInput, buildUpdateOrganizationInput } from './organizations-form-helper';

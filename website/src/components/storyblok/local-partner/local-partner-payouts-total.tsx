@@ -1,7 +1,8 @@
 import { StoryblokPayoutsTotal } from '@/components/storyblok/shared/storyblok-payouts-total';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
+import { getPublicLocalPartnerPayoutTotalsAction } from '@/modules/payouts/payout.actions';
 import type { LocalPartnerStory } from './local-partner.types';
 
 type Props = {
@@ -14,13 +15,12 @@ export const LocalPartnerPayoutsTotal = async ({ localPartner, lang, region }: P
 	const blok = localPartner.content.payouts?.[0];
 	const localPartnerSlug = localPartner.content.portalSlug?.trim();
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const [totalsResult, rates] = await Promise.all([
-		localPartnerSlug ? services.read.payout.getPayoutTotalsForLocalPartnerSlug(localPartnerSlug) : Promise.resolve(null),
-		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
-	]);
+	const totalsResult = localPartnerSlug ? await getPublicLocalPartnerPayoutTotalsAction(localPartnerSlug) : null;
 
 	const totalChf = localPartnerSlug && totalsResult?.success ? totalsResult.data.totalPayoutsChf : 0;
-	const { amount: totalAmount, currency } = services.currencyDisplay.resolveFromChf(totalChf, displayCurrency, rates);
+	const displayResult = await resolveChfAmountsAction({ amounts: [totalChf], displayCurrency });
+	const displayAmount = displayResult.success ? displayResult.data[0] : undefined;
+	const { amount: totalAmount, currency } = displayAmount ?? { amount: totalChf, currency: 'CHF' as const };
 
 	return <StoryblokPayoutsTotal blok={blok} totalAmount={totalAmount} currency={currency} lang={lang} region={region} />;
 };

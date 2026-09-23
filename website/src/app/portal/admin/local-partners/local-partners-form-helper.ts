@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { mapContactFormFields } from '@/components/dynamic-form/contact-form-input-mapper';
 import { FormField } from '@/components/dynamic-form/dynamic-form';
-import {
-	LocalPartnerFormCreateInput,
-	LocalPartnerFormUpdateInput,
-} from '@/lib/services/local-partner/local-partner-form-input';
-import { LocalPartnerPayload } from '@/lib/services/local-partner/local-partner.types';
+import { type LocalPartnerCreateInput, type LocalPartnerUpdateInput } from '@/modules/local-partners/local-partner.schemas';
+import type { LocalPartnerPayload } from '@/modules/local-partners/local-partner.types';
 import { LocalPartnerFormSchema } from './local-partners-form';
 
 export const buildUpdateLocalPartnerInput = (
 	schema: LocalPartnerFormSchema,
 	localPartner: LocalPartnerPayload,
 	contactFields: Record<string, FormField>,
-): LocalPartnerFormUpdateInput => {
+): LocalPartnerUpdateInput => {
 	return {
 		id: localPartner.id,
 		name: schema.fields.name.value,
@@ -25,7 +22,7 @@ export const buildUpdateLocalPartnerInput = (
 export const buildCreateLocalPartnerInput = (
 	schema: LocalPartnerFormSchema,
 	contactFields: Record<string, FormField>,
-): LocalPartnerFormCreateInput => {
+): LocalPartnerCreateInput => {
 	return {
 		name: schema.fields.name.value,
 		slug: schema.fields.slug.value,

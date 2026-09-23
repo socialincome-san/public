@@ -1,5 +1,5 @@
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
-import type { CampaignCmsJoin } from '@/lib/services/campaign/campaign.types';
+import type { CampaignCmsJoin } from '@/modules/campaigns/campaign.types';
 import { resolveCampaignsWithCmsEntries } from './campaigns-overview.server';
 
 const createStory = (portalSlug: string, storySlug: string): CampaignStory =>

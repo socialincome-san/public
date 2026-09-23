@@ -1,4 +1,4 @@
-import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
+import type { GlobeContribution } from '@/modules/contributions/contribution.types';
 import { GlobeClientShell } from './globe-client-shell';
 import { GlobeFallback } from './globe-fallback';
 

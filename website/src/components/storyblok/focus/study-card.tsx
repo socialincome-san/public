@@ -1,6 +1,6 @@
 import type { Study } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
+import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { ExternalLink } from 'lucide-react';

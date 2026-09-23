@@ -1,11 +1,11 @@
 import type { MessagingChannel } from '@/generated/prisma/client';
-import type { MessagingRecipientType } from '@/lib/services/twilio/messaging/recipients/recipients.types';
-import { getSelectedCount } from '@/lib/services/twilio/messaging/recipients/selection';
-import type { SelectionState } from '@/lib/services/twilio/messaging/recipients/selection.types';
 import type {
+	MessagingRecipientType,
 	ParsedVariable,
+	SelectionState,
 	VariableAssignments,
-} from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
+} from '@/modules/messaging/messaging.types';
+import { getSelectedCount } from './selection';
 import { getAssignment } from './variable-assignments';
 
 export type WizardStep = 1 | 2 | 3 | 4;

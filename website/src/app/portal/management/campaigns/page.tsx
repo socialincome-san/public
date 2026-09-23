@@ -2,9 +2,10 @@ import { tableQueryFromSearchParams } from '@/components/data-table/query-state'
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
-import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getCampaignTableEntries } from '@/modules/campaigns/campaign.service';
+import type { CampaignTableViewRow } from '@/modules/campaigns/campaign.types';
+import { getCampaigns, getPrograms } from '@/modules/storyblok-content/storyblok-content.service';
 import { Suspense } from 'react';
 import CampaignsTable from './campaigns-table';
 import { getCampaignTableView } from './campaigns-table.server';
@@ -23,9 +24,9 @@ const CampaignsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
 	const [campaignsResult, campaignStoriesResult, programsResult] = await Promise.all([
-		services.read.campaign.getTableEntries(user.id),
-		services.storyblok.getCampaigns(defaultLanguage),
-		services.storyblok.getPrograms(defaultLanguage),
+		getCampaignTableEntries(user.id),
+		getCampaigns(defaultLanguage),
+		getPrograms(defaultLanguage),
 	]);
 	const campaignStories = campaignStoriesResult.success ? campaignStoriesResult.data : [];
 	const programStories = programsResult.success ? programsResult.data : [];

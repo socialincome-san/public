@@ -4,13 +4,13 @@ import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getContactValuesFromPayload } from '@/components/dynamic-form/helper';
 import { ContributorReferralSource } from '@/generated/prisma/enums';
+import { handleServiceResult } from '@/lib/service-result-client';
 import {
 	createContributorAction,
 	getContributorAction,
 	updateContributorAction,
-} from '@/lib/server-actions/contributor-actions';
-import { ContributorPayload } from '@/lib/services/contributor/contributor.types';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
+} from '@/modules/contributors/contributor.actions';
+import { ContributorPayload } from '@/modules/contributors/contributor.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateContributorInput, buildUpdateContributorsInput } from './contributors-form-helper';

@@ -11,9 +11,9 @@ import { Layout } from '@/generated/storyblok/types/109655/storyblok-components'
 import type { Session } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
 import { cn } from '@/lib/utils/cn';
+import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { ISbStoryData } from '@storyblok/js';
 import NextLink from 'next/link';
 
@@ -27,7 +27,10 @@ type Props = {
 export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 	const session = displaySession(sessions, scope);
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate', 'website-common'] });
-	const result = await services.storyblok.getStoryWithFallback<ISbStoryData<Layout>>(STORYBLOK_LAYOUT_PATH, lang);
+	const result = await getStoryWithFallbackAction<ISbStoryData<Layout>>({
+		storyPath: STORYBLOK_LAYOUT_PATH,
+		language: lang,
+	});
 	const menu = result?.success ? result.data.content.menu : [];
 
 	return (

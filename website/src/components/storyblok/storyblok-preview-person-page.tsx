@@ -1,9 +1,9 @@
 import { PersonProfile } from '@/components/storyblok/journal/person-profile';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { getJournalPersonAction, getJournalPersonPageDataAction } from '@/modules/journal/journal.actions';
+import type { JournalPerson } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
@@ -29,24 +29,27 @@ export const StoryblokPreviewPersonPage = async ({
 		namespaces: ['website-journal', 'common', 'website-common'],
 	});
 
-	return await StoryblokPreviewStory<ISbStoryData<Person>>({
+	return await StoryblokPreviewStory<ISbStoryData<JournalPerson>>({
 		storyPath,
 		lang,
 		previewRoutePath,
 		searchParams,
-		loadStory: async (path, language) => {
-			const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Person>>(path, language);
+		loadStory: async (_path, language) => {
+			const storyResult = await getJournalPersonAction({
+				slug,
+				language,
+			});
 
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async () => {
-			const pageResult = await services.journal.getPersonPageData(
+			const pageResult = await getJournalPersonPageDataAction({
 				lang,
 				region,
 				slug,
-				translator.t('overview.title'),
-				translator.t('breadcrumb.home', { namespace: 'website-common' }),
-			);
+				journalLabel: translator.t('overview.title'),
+				homeLabel: translator.t('breadcrumb.home', { namespace: 'website-common' }),
+			});
 
 			if (!pageResult.success) {
 				return notFound();

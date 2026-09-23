@@ -1,7 +1,7 @@
 import { createActor, fromPromise } from 'xstate';
 import { editSubscriptionMachine } from './edit-subscription-machine';
 
-jest.mock('@/lib/server-actions/subscription-actions', () => ({
+jest.mock('@/modules/subscriptions/subscription.actions', () => ({
 	updateSubscriptionAmountAction: jest.fn(),
 	cancelSubscriptionAction: jest.fn(),
 }));

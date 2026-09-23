@@ -13,9 +13,9 @@
  */
 
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
+import { fetchStoryblokStories } from '@/integrations/storyblok/storyblok-content.integration';
 import { prisma } from '@/lib/database/prisma';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { getStoryblokApi } from '@/lib/services/storyblok/storyblok.config';
 import { STORYBLOK_CAMPAIGNS_FOLDER } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import {
@@ -56,27 +56,28 @@ const isCampaignStory = (story: unknown): story is ISbStoryData<Campaign> => {
 		return false;
 	}
 
-	const { content } = story as { content?: unknown };
+	const { content } = story;
 	if (!content || typeof content !== 'object') {
 		return false;
 	}
+	if (!('component' in content)) {
+		return false;
+	}
 
-	const campaign = content as Campaign;
-
-	return campaign.component?.toLowerCase() === 'campaign';
+	return typeof content.component === 'string' && content.component.toLowerCase() === 'campaign';
 };
 
 const isListedCampaignStory = (story: ISbStoryData<Campaign>) =>
 	story.content.public === true && story.content.approved === true;
 
 const fetchCampaignStories = async (version: ISbStoriesParams['version']) => {
-	const stories = await getStoryblokApi().getAll('cdn/stories', {
+	const result = await fetchStoryblokStories<ISbStoryData<Campaign>>({
 		language: defaultLanguage,
 		version,
 		starts_with: `${STORYBLOK_CAMPAIGNS_FOLDER}/`,
 	});
 
-	return stories.filter(isCampaignStory);
+	return result.success ? result.data.filter(isCampaignStory) : [];
 };
 
 const loadCmsCampaigns = async () => {

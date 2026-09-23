@@ -2,11 +2,10 @@
 
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
-import { createWizardPendingContributionAction } from '@/lib/server-actions/qr-wizard-actions';
 import { cn } from '@/lib/utils/cn';
+import { createWizardPendingContributionAction } from '@/modules/qr-bills/qr-bill.actions';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { getDonationDisplayAmount } from '../../utils/donation-amount';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import { selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
@@ -20,8 +19,7 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 	const view = selectPaymentView(state.context);
 	const [confirming, setConfirming] = useState(false);
 
-	const { qrBillSvg, qrDonor, qrContributorReferenceId, qrContributionReferenceId } = state.context;
-	const displayAmount = getDonationDisplayAmount(state.context);
+	const { qrBillDisplay, qrDonor, qrContributorReferenceId, qrContributionReferenceId } = state.context;
 
 	const paymentTypeLabel =
 		state.context.cadence === 'monthly' ? t('stepQrBill.paymentTypeStandingOrder') : t('stepQrBill.paymentTypeOneTime');
@@ -68,7 +66,7 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 		}
 	};
 
-	if (!qrBillSvg || !qrContributorReferenceId || !qrContributionReferenceId) {
+	if (!qrBillDisplay || !qrContributorReferenceId || !qrContributionReferenceId) {
 		return null;
 	}
 
@@ -97,14 +95,7 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 				)}
 			</div>
 
-			<QrBillPaymentCard
-				qrBillSvg={qrBillSvg}
-				amount={displayAmount}
-				currency={currency}
-				contributorReferenceId={qrContributorReferenceId}
-				contributionReferenceId={qrContributionReferenceId}
-				paymentTypeLabel={paymentTypeLabel}
-			/>
+			<QrBillPaymentCard display={qrBillDisplay} paymentTypeLabel={paymentTypeLabel} />
 
 			<QrWizardStepFooter
 				showBack={false}

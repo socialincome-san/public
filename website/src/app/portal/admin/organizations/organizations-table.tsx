@@ -5,8 +5,8 @@ import { ConfiguredDataTableClient } from '@/components/data-table/clients/confi
 import { organizationsTableConfig } from '@/components/data-table/configs/organizations-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
+import type { OrganizationTableViewRow } from '@/modules/organizations/organization.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import OrganizationsForm from './organizations-form';

@@ -7,7 +7,7 @@ import {
 	getRoleLabel,
 	getVolunteerDurationParts,
 	type VolunteerDurationParts,
-} from '@/lib/services/storyblok/storyblok.utils';
+} from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import NextImage from 'next/image';

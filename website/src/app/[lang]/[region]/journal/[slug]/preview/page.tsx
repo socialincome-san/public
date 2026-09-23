@@ -1,9 +1,9 @@
-import { DefaultLayoutProps, DefaultParams } from '@/app/[lang]/[region]';
 import { StoryblokPreviewJournalArticlePage } from '@/components/storyblok/storyblok-preview-journal-article-page';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getJournalArticleStoryPath } from '@/lib/storyblok/storyblok-paths';
 
-type PreviewPageProps = DefaultLayoutProps<DefaultParams & { slug: string }> & {
+type PreviewPageProps = {
+	params: Promise<{ slug: string; lang: WebsiteLanguage; region: WebsiteRegion }>;
 	searchParams: Promise<Record<string, string | undefined>>;
 };
 
@@ -15,8 +15,8 @@ export default async function PreviewJournalArticlePage({ params, searchParams }
 		<StoryblokPreviewJournalArticlePage
 			storyPath={getJournalArticleStoryPath(slug)}
 			slug={slug}
-			lang={lang as WebsiteLanguage}
-			region={region as WebsiteRegion}
+			lang={lang}
+			region={region}
 			previewRoutePath={`/${lang}/${region}/journal/${slug}/preview`}
 			searchParams={resolvedSearchParams}
 		/>

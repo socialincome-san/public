@@ -6,9 +6,8 @@ import {
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
-
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedUpcomingSurveyTableView } from '@/modules/surveys/survey.service';
 import { Suspense } from 'react';
 
 export default function UpcomingSurveysPage({ searchParams }: SearchParamsPageProps) {
@@ -24,7 +23,7 @@ const UpcomingSurveysDataLoader = async ({ searchParams }: SearchParamsPageProps
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await services.read.survey.getPaginatedUpcomingSurveyTableView(user.id, tableQuery);
+	const result = await getPaginatedUpcomingSurveyTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];

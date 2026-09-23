@@ -3,10 +3,7 @@
 import { Checkbox } from '@/components/checkbox/checkbox';
 import { SelectableCard } from '@/components/selectable-card';
 import type { MessagingChannel } from '@/generated/prisma/client';
-import type {
-	MessagingPhoneSource,
-	MessagingRecipientType,
-} from '@/lib/services/twilio/messaging/recipients/recipients.types';
+import type { MessagingPhoneSource, MessagingRecipientType } from '@/modules/messaging/messaging.types';
 
 const TYPE_OPTIONS: { value: MessagingRecipientType; label: string }[] = [
 	{ value: 'contributor', label: 'Contributor' },

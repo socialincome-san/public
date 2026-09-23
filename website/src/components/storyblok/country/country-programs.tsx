@@ -1,7 +1,7 @@
 import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
 import { StoryblokProgramGrid } from '@/components/storyblok/shared/storyblok-program-grid';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { CountryStory } from './country.types';
 
 type Props = {
@@ -16,7 +16,7 @@ export const CountryPrograms = async ({ country, lang, region }: Props) => {
 		return null;
 	}
 
-	const programsResult = await services.storyblok.getPrograms(lang);
+	const programsResult = await getProgramsAction(lang);
 	const allPrograms = programsResult.success ? programsResult.data : [];
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
 

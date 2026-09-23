@@ -5,7 +5,7 @@ import { Button } from '@/components/button/button';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { RichtextButtonHeader } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
+import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextLink from 'next/link';
 

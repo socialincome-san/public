@@ -1,4 +1,4 @@
-import { services } from '@/lib/services/services';
+import { getPublicCountryStatsByIsoCode } from '@/modules/countries/country.service';
 
 type CountryPageStats = {
 	activeProgramsCount: number;
@@ -16,7 +16,7 @@ export const getCountryPageStats = async (isoCode: string): Promise<CountryPageS
 		return emptyStats;
 	}
 
-	const statsResult = await services.read.country.getPublicCountryStatsByIsoCode(normalizedIsoCode);
+	const statsResult = await getPublicCountryStatsByIsoCode(normalizedIsoCode);
 
 	if (!statsResult.success) {
 		return emptyStats;

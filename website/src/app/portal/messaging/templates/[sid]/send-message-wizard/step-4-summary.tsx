@@ -1,21 +1,19 @@
 'use client';
 
 import type { MessagingChannel } from '@/generated/prisma/client';
-import { previewMessagingChannelAction } from '@/lib/server-actions/messaging-actions';
-import type { ChannelPreviewSummary } from '@/lib/services/twilio/messaging/dispatch/dispatch.types';
+import { previewMessagingChannelAction } from '@/modules/messaging/messaging.actions';
 import type {
+	ChannelPreviewSummary,
 	MessagingPhoneSource,
 	MessagingRecipientType,
-} from '@/lib/services/twilio/messaging/recipients/recipients.types';
-import { getSelectedCount } from '@/lib/services/twilio/messaging/recipients/selection';
-import type { SelectionState } from '@/lib/services/twilio/messaging/recipients/selection.types';
-import type {
 	ParsedVariable,
+	SelectionState,
 	VariableAssignments,
-} from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
+} from '@/modules/messaging/messaging.types';
 import { useEffect, useState } from 'react';
 import { phoneChoiceLabels } from './phone-labels';
 import { renderTemplatePreview } from './render-template-preview';
+import { getSelectedCount } from './selection';
 
 type Props = {
 	body: string | null;

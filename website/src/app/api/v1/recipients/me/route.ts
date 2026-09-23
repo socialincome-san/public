@@ -1,6 +1,5 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { RecipientPrismaUpdateInput } from '@/lib/services/recipient/recipient.types';
-import { services } from '@/lib/services/services';
+import { getAuthenticatedRecipientFromRequest, updateRecipientSelf } from '@/modules/recipients/recipient.service';
 import { NextRequest, NextResponse } from 'next/server';
 import { RecipientSelfUpdate } from '../../models';
 
@@ -11,7 +10,7 @@ import { RecipientSelfUpdate } from '../../models';
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {
-	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
+	const recipientResult = await getAuthenticatedRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		console.warn('[GET /recipients/me] Failed', {
@@ -40,7 +39,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 		contentType: request.headers.get('content-type'),
 	});
 
-	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
+	const recipientResult = await getAuthenticatedRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		console.warn('[PATCH /recipients/me] Recipient resolution failed', {
@@ -75,14 +74,12 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 		return new Response(parsed.error.message, { status: 400 });
 	}
 
-	const data = parsed.data;
-
 	const oldPaymentPhone = recipient.paymentInformation?.phone?.number ?? null;
-	const newPaymentPhone = data.paymentPhone ?? null;
+	const newPaymentPhone = parsed.data.paymentPhone ?? null;
 	let contactPhoneState: 'provided' | 'unchanged' | null = 'unchanged';
-	if (data.contactPhone === null) {
+	if (parsed.data.contactPhone === null) {
 		contactPhoneState = null;
-	} else if (typeof data.contactPhone === 'string') {
+	} else if (typeof parsed.data.contactPhone === 'string') {
 		contactPhoneState = 'provided';
 	}
 
@@ -92,67 +89,7 @@ export const PATCH = withAppCheck(async (request: NextRequest) => {
 		contactPhone: contactPhoneState,
 	});
 
-	const updateData: RecipientPrismaUpdateInput = {
-		contact: {
-			update: {
-				firstName: data.firstName,
-				lastName: data.lastName,
-				callingName: data.callingName,
-				gender: data.gender,
-				dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
-				language: data.language,
-				email: data.email,
-				phone:
-					data.contactPhone === null
-						? { disconnect: true }
-						: typeof data.contactPhone === 'string'
-							? {
-									connectOrCreate: {
-										where: { number: data.contactPhone },
-										create: { number: data.contactPhone },
-									},
-								}
-							: undefined,
-			},
-		},
-
-		successorName: data.successorName,
-		termsAccepted: data.termsAccepted,
-
-		paymentInformation:
-			data.paymentPhone || data.paymentProvider
-				? {
-						upsert: {
-							update: {
-								mobileMoneyProvider: data.paymentProvider ? { connect: { id: data.paymentProvider } } : { disconnect: true },
-								phone: data.paymentPhone
-									? {
-											connectOrCreate: {
-												where: { number: data.paymentPhone },
-												create: { number: data.paymentPhone },
-											},
-										}
-									: undefined,
-							},
-							create: {
-								mobileMoneyProvider: data.paymentProvider ? { connect: { id: data.paymentProvider } } : undefined,
-								code: recipient.paymentInformation?.code ?? '',
-								phone: {
-									connectOrCreate: {
-										where: { number: data.paymentPhone! },
-										create: { number: data.paymentPhone! },
-									},
-								},
-							},
-						},
-					}
-				: undefined,
-	};
-
-	const updateResult = await services.write.recipient.updateSelf(recipient.id, updateData, {
-		oldPaymentPhone,
-		newPaymentPhone,
-	});
+	const updateResult = await updateRecipientSelf(recipient.id, parsed.data);
 
 	if (!updateResult.success) {
 		console.error('[PATCH /recipients/me] Update failed', {

@@ -1,7 +1,6 @@
-import { WebsiteLanguage, mainWebsiteLanguages } from '@/lib/i18n/utils';
-import { subscribeToNewsletterAction, unsubscribeFromNewsletterAction } from '@/lib/server-actions/newsletter-actions';
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
-import { SupportedLanguage } from '@/lib/services/sendgrid/types';
+import { toNewsletterLanguage } from '@/components/newsletter/newsletter-language';
+import { ContributorSession } from '@/modules/contributors/contributor.types';
+import { subscribeToNewsletterAction, unsubscribeFromNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { ProfileFormOutput } from './schemas';
 
 export const toggleNewsletter = async (values: ProfileFormOutput, session: ContributorSession, isSubscribed: boolean) => {
@@ -19,7 +18,7 @@ export const toggleNewsletter = async (values: ProfileFormOutput, session: Contr
 		return { success: true };
 	}
 
-	const language = formatNewsletterLanguage(values.language);
+	const language = toNewsletterLanguage(values.language);
 
 	if (newsletter) {
 		return subscribeToNewsletterAction({
@@ -33,8 +32,4 @@ export const toggleNewsletter = async (values: ProfileFormOutput, session: Contr
 	}
 
 	return unsubscribeFromNewsletterAction();
-};
-
-const formatNewsletterLanguage = (lang?: string): SupportedLanguage => {
-	return lang && mainWebsiteLanguages.includes(lang as WebsiteLanguage) ? (lang as SupportedLanguage) : 'en';
 };

@@ -1,5 +1,5 @@
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import type { WalletImage } from './wallet.types';
 
 const WALLET_IMAGE_WIDTH = 760;

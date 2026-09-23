@@ -4,7 +4,7 @@ import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header'
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 
 const PROFILE_PICTURE_SIZE = 87;
 

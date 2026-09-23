@@ -3,28 +3,17 @@
 import { FacebookTracking } from '@/components/analytics/facebook-tracking';
 import { GoogleTagManager } from '@/components/analytics/google-tag-manager';
 import { LinkedInTracking } from '@/components/analytics/linkedin-tracking';
+import { initializeAnalytics, setAnalyticsConsent } from '@/lib/firebase/client-analytics';
 import { useFirebaseApp } from '@/lib/firebase/hooks/useFirebaseApp';
-import { ConsentSettings, ConsentStatusString, initializeAnalytics, setConsent } from 'firebase/analytics';
 import { useEffect, useState } from 'react';
-
-const getAnalyticsCookieConsent = (mode: ConsentStatusString) =>
-	({
-		analytics_storage: mode,
-		ad_storage: mode,
-		ad_user_data: mode,
-		ad_personalization: mode,
-		functionality_storage: mode,
-		security_storage: mode,
-		personalization_storage: mode,
-	}) as ConsentSettings;
 
 if (typeof window !== 'undefined') {
 	const cookieConsent = localStorage.getItem('cookie_consent');
 	if (cookieConsent === 'granted') {
-		setConsent(getAnalyticsCookieConsent('granted'));
+		setAnalyticsConsent('granted');
 		console.debug('Set default consent mode to granted');
 	} else {
-		setConsent(getAnalyticsCookieConsent('denied'));
+		setAnalyticsConsent('denied');
 		console.debug('Set default consent mode to denied');
 	}
 }
@@ -38,11 +27,11 @@ export const AnalyticsInitializer = () => {
 			initializeAnalytics(app);
 			const cookieConsent = localStorage.getItem('cookie_consent');
 			if (cookieConsent === 'granted') {
-				setConsent(getAnalyticsCookieConsent('granted'));
+				setAnalyticsConsent('granted');
 				// eslint-disable-next-line react-hooks/set-state-in-effect
 				setAllowTracking(true);
 			} else {
-				setConsent(getAnalyticsCookieConsent('denied'));
+				setAnalyticsConsent('denied');
 			}
 		}
 	}, [app]);

@@ -1,6 +1,6 @@
 'use client';
 
-import { getPublicCampaignTitleAction } from '@/lib/server-actions/campaign-public-actions';
+import { getPublicCampaignTitleAction } from '@/modules/campaigns/campaign.actions';
 import { useEffect, useState } from 'react';
 
 type FetchedCampaignTitle = {

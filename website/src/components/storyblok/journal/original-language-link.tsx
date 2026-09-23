@@ -1,4 +1,4 @@
-import { createWebsiteJournalArticleLink } from '@/lib/services/storyblok/storyblok.utils';
+import { createWebsiteJournalArticleLink } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';
 

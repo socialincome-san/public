@@ -8,8 +8,8 @@ import {
 } from '@/components/data-table/configs/contributors-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
+import type { ContributorTableViewRow } from '@/modules/contributors/contributor.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import ContributorsForm from './contributors-form';

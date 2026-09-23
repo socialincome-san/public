@@ -4,7 +4,7 @@ import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/com
 import { SectionHeading } from '@/components/section-heading';
 import { PersonCard } from '@/components/storyblok/shared/person-card';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
-import { createWebsitePersonLink } from '@/lib/services/storyblok/storyblok.utils';
+import { createWebsitePersonLink } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import { ChevronRightIcon } from 'lucide-react';

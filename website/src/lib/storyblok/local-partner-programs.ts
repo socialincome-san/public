@@ -5,7 +5,13 @@ import {
 	getProgramTitle,
 } from '@/components/storyblok/program/program.utils';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { getDefaultCampaignForProgram } from '@/modules/campaigns/campaign.service';
+import { getProgramRecipientCountsByLocalPartnerSlug } from '@/modules/local-partners/local-partner.service';
+import {
+	getPublicProgramFilterDataByPortalSlugs,
+	getPublicProgramStatsByProgramPortalSlugs,
+} from '@/modules/programs/program.service';
+import { getPrograms } from '@/modules/storyblok-content/storyblok-content.service';
 import { LOCAL_PARTNER_PROGRAM_ROWS, selectLocalPartnerProgramStories } from './local-partner-programs.utils';
 
 export type LocalPartnerProgramSummary = {
@@ -74,7 +80,7 @@ export const getLocalPartnerProgramSummaries = async (
 	localPartnerPortalSlug: string,
 	countryIsoCode: string,
 ): Promise<LocalPartnerPrograms> => {
-	const programsResult = await services.storyblok.getPrograms(lang);
+	const programsResult = await getPrograms(lang);
 	if (!programsResult.success) {
 		return EMPTY;
 	}
@@ -82,9 +88,9 @@ export const getLocalPartnerProgramSummaries = async (
 	const stories = programsResult.data.filter((story) => getProgramPortalSlug(story.content)) as ProgramStory[];
 	const portalSlugs = [...new Set(stories.map((story) => getProgramPortalSlug(story.content)))];
 	const [countsResult, filterDataResult, statsResult] = await Promise.all([
-		services.read.localPartner.getProgramRecipientCountsByLocalPartnerSlug(localPartnerPortalSlug),
-		services.read.program.getPublicProgramFilterDataByPortalSlugs(portalSlugs),
-		services.read.program.getPublicProgramStatsByProgramPortalSlugs(portalSlugs),
+		getProgramRecipientCountsByLocalPartnerSlug(localPartnerPortalSlug),
+		getPublicProgramFilterDataByPortalSlugs(portalSlugs),
+		getPublicProgramStatsByProgramPortalSlugs(portalSlugs),
 	]);
 	const isDevelopment = process.env.NODE_ENV === 'development';
 	const recipientsCountByProgramId = countsResult.success ? countsResult.data : {};
@@ -122,9 +128,7 @@ export const getLocalPartnerProgramSummaries = async (
 	// Campaigns are only resolved for the programs the card actually shows.
 	const programs = await Promise.all(
 		countedStories.slice(0, LOCAL_PARTNER_PROGRAM_ROWS).map(async (entry) => {
-			const campaignResult = entry.programId
-				? await services.read.campaign.getDefaultCampaignForProgram(entry.programId)
-				: null;
+			const campaignResult = entry.programId ? await getDefaultCampaignForProgram(entry.programId) : null;
 
 			return {
 				programId: entry.programId ?? entry.portalSlug,

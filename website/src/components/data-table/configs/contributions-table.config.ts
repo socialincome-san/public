@@ -1,7 +1,7 @@
 import { makeContributionsColumns } from '@/components/data-table/columns/contributions';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
-import type { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
+import type { ContributionTableViewRow } from '@/modules/contributions/contribution.types';
 
 type ContributionFiltersArgs = {
 	query?: TableQueryState & { totalRows: number };

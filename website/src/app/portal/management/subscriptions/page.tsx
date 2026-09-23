@@ -1,9 +1,9 @@
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
-import { type SubscriptionTableViewRow } from '@/lib/services/subscription/subscription.types';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedTableView } from '@/modules/subscriptions/subscription.service';
+import { type SubscriptionTableViewRow } from '@/modules/subscriptions/subscription.types';
 import { Suspense } from 'react';
 import { SubscriptionsTableClient } from './subscriptions-table-client';
 
@@ -20,7 +20,7 @@ const SubscriptionsDataLoader = async ({ searchParams }: SearchParamsPageProps) 
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await services.read.subscription.getPaginatedTableView(user.id, tableQuery);
+	const result = await getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: SubscriptionTableViewRow[] = result.success ? result.data.tableRows : [];

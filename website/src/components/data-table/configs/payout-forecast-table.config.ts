@@ -1,6 +1,6 @@
 import { makePayoutForecastColumns } from '@/components/data-table/columns/payout-forecast';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
-import type { PayoutForecastTableViewRow } from '@/lib/services/payout/payout.types';
+import type { PayoutForecastTableViewRow } from '@/modules/payouts/payout.types';
 
 export const payoutForecastTableConfig: DataTableConfig<PayoutForecastTableViewRow> = {
 	id: 'payout-forecast',

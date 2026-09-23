@@ -5,14 +5,14 @@ import { tableQueryFromSearchParams } from '@/components/data-table/query-state'
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedRecipientTableViewByProgramId } from '@/modules/recipients/recipient.service';
+import type { RecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import { Suspense } from 'react';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
 
-export default function RecipientsPageProgramScoped({ params, searchParams }: Props) {
+const RecipientsPageProgramScoped = ({ params, searchParams }: Props) => {
 	return (
 		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 			<Card>
@@ -22,7 +22,9 @@ export default function RecipientsPageProgramScoped({ params, searchParams }: Pr
 			</Card>
 		</BlockWrapper>
 	);
-}
+};
+
+export default RecipientsPageProgramScoped;
 
 const RecipientsProgramScopedDataLoader = async ({ params, searchParams }: Props) => {
 	const { programId } = await params;
@@ -31,7 +33,7 @@ const RecipientsProgramScopedDataLoader = async ({ params, searchParams }: Props
 	const tableQuery = { ...baseQuery, programId };
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const recipientsResult = await services.read.recipient.getPaginatedTableViewByProgramId(user.id, programId, tableQuery);
+	const recipientsResult = await getPaginatedRecipientTableViewByProgramId(user.id, programId, tableQuery);
 
 	const error = recipientsResult.success ? null : recipientsResult.error;
 	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];

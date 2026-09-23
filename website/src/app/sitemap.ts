@@ -6,14 +6,14 @@ import {
 	type WebsiteRegion,
 	websiteRegions,
 } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import type { StoryblokPublishedLink } from '@/lib/services/storyblok/storyblok.service';
 import {
 	getWebsitePathTailFromStoryblokSlug,
 	getWebsitePublicPath,
 	isRoutableWebsiteStoryblokSlug,
 	WEBSITE_JOURNAL_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
+import { getCampaigns, getPublishedPageLinks } from '@/modules/storyblok-content/storyblok-content.service';
+import type { StoryblokPublishedLink } from '@/modules/storyblok-content/storyblok-content.types';
 import type { MetadataRoute } from 'next';
 
 export const revalidate = 86400;
@@ -89,7 +89,7 @@ const collectStoryblokEntries = (links: StoryblokPublishedLink[]): PathTailByLan
 };
 
 const collectCampaignEntries = async (): Promise<PathTailByLanguage[]> => {
-	const result = await services.storyblok.getCampaigns(defaultLanguage);
+	const result = await getCampaigns(defaultLanguage);
 	if (!result.success) {
 		return [];
 	}
@@ -161,7 +161,7 @@ const buildRegionalEntries = (languages: PathTailByLanguage): MetadataRoute.Site
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 	try {
-		const linksResult = await services.storyblok.getPublishedPageLinks();
+		const linksResult = await getPublishedPageLinks();
 		if (!linksResult.success) {
 			throw new Error(linksResult.error ?? 'Failed to fetch Storyblok page links');
 		}

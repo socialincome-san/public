@@ -1,8 +1,12 @@
 import { FilterBar } from '@/components/filters/filter-bar';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
+import {
+	getPublicProgramFilterDataByPortalSlugsAction,
+	getPublicProgramStatsByPortalSlugsAction,
+} from '@/modules/programs/program.actions';
+import { getFocusesAction, getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { FocusStory } from '../focus/focus.types';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug } from './program.utils';
@@ -34,13 +38,13 @@ type Props = {
 export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixedFocusSlug }: Props) => {
 	const hasFixedFocus = fixedFocusSlug !== undefined;
 	const [programsResult, storyblokFocusesResult] = await Promise.all([
-		services.storyblok.getPrograms(lang),
-		hasFixedFocus ? Promise.resolve(undefined) : services.storyblok.getFocuses(lang),
+		getProgramsAction(lang),
+		hasFixedFocus ? Promise.resolve(undefined) : getFocusesAction(lang),
 	]);
 	const programs = (programsResult.success ? programsResult.data : []) as ProgramStory[];
 	const storyblokFocuses = (storyblokFocusesResult?.success ? storyblokFocusesResult.data : []) as FocusStory[];
 	const programPortalSlugs = [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
-	const filterDataResult = await services.read.program.getPublicProgramFilterDataByPortalSlugs(programPortalSlugs);
+	const filterDataResult = await getPublicProgramFilterDataByPortalSlugsAction(programPortalSlugs);
 	const filterDataByPortalSlug = filterDataResult.success ? filterDataResult.data : {};
 	const fixedFocusId = hasFixedFocus ? getFocusIdBySlug(filterDataByPortalSlug, fixedFocusSlug) : undefined;
 	const focusScopedPrograms = hasFixedFocus
@@ -52,7 +56,7 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 	const statsFilterData = hasFixedFocus ? focusScopedFilterData : filterDataByPortalSlug;
 	const statsPortalSlugs = Object.keys(statsFilterData);
 	const [statsResult, translator] = await Promise.all([
-		services.read.program.getPublicProgramStatsByProgramPortalSlugs(statsPortalSlugs),
+		getPublicProgramStatsByPortalSlugsAction(statsPortalSlugs),
 		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
 	]);
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};

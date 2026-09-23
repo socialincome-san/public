@@ -2,8 +2,8 @@ import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import type { ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
+import { getJournalArticleAction, getJournalArticlePageDataAction } from '@/modules/journal/journal.actions';
+import type { JournalArticle } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
@@ -29,24 +29,24 @@ export const StoryblokPreviewJournalArticlePage = async ({
 		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-common'],
 	});
 
-	return await StoryblokPreviewStory<ISbStoryData<ResolvedArticle>>({
+	return await StoryblokPreviewStory<ISbStoryData<JournalArticle>>({
 		storyPath,
 		lang,
 		previewRoutePath,
 		searchParams,
 		loadStory: async (_path, language) => {
-			const storyResult = await services.storyblok.getArticle(language, slug);
+			const storyResult = await getJournalArticleAction({ slug, language });
 
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async (story) => {
-			const pageResult = await services.journal.getArticlePageData(
+			const pageResult = await getJournalArticlePageDataAction({
 				lang,
 				region,
 				slug,
-				translator.t('overview.title'),
-				translator.t('breadcrumb.home', { namespace: 'website-common' }),
-			);
+				journalLabel: translator.t('overview.title'),
+				homeLabel: translator.t('breadcrumb.home', { namespace: 'website-common' }),
+			});
 
 			if (!pageResult.success) {
 				return notFound();

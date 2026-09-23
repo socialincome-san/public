@@ -1,7 +1,7 @@
 import { makeCandidateColumns } from '@/components/data-table/columns/candidates';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
-import type { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
+import type { CandidatesTableViewRow } from '@/modules/candidates/candidate.types';
 
 type CandidatesFilterArgs = {
 	query?: TableQueryState & { totalRows: number };

@@ -3,7 +3,7 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { mobileMoneyProvidersTableConfig } from '@/components/data-table/configs/mobile-money-providers-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import type { MobileMoneyProviderTableViewRow } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
+import type { MobileMoneyProviderTableViewRow } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { MobileMoneyProviderDialog } from './mobile-money-provider-dialog';

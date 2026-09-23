@@ -1,5 +1,5 @@
 import { readPendingClaimIds } from '@/components/campaign/campaign-submission/pending-claim-ids';
-import { type Auth, sendSignInLinkToEmail } from 'firebase/auth';
+import { sendSignInLink, type ClientAuth } from '@/lib/firebase/client-auth';
 
 const mergeClaimIds = (storedClaimIds: string[], claimId?: string): string[] => {
 	const trimmed = claimId?.trim();
@@ -23,7 +23,7 @@ export const buildMagicLoginContinueUrl = (origin: string, email: string, claimI
 };
 
 export const sendMagicLoginLink = async (input: {
-	auth: Auth;
+	auth: ClientAuth;
 	email: string;
 	origin?: string;
 	claimId?: string;
@@ -33,8 +33,12 @@ export const sendMagicLoginLink = async (input: {
 		return;
 	}
 
-	await sendSignInLinkToEmail(input.auth, input.email, {
-		url: buildMagicLoginContinueUrl(origin, input.email, input.claimId),
-		handleCodeInApp: true,
-	});
+	const result = await sendSignInLink(
+		input.auth,
+		input.email,
+		buildMagicLoginContinueUrl(origin, input.email, input.claimId),
+	);
+	if (!result.success) {
+		throw new Error(result.error);
+	}
 };

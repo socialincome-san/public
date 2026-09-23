@@ -4,14 +4,14 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { ExpenseType } from '@/generated/prisma/enums';
+import { handleServiceResult } from '@/lib/service-result-client';
 import {
 	createExpenseAction,
 	getExpenseAction,
 	getExpenseOptionsAction,
 	updateExpenseAction,
-} from '@/lib/server-actions/expense-action';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import { ExpensePayload } from '@/lib/services/expense/expense.types';
+} from '@/modules/expenses/expense.actions';
+import type { ExpensePayload } from '@/modules/expenses/expense.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateExpenseInput, buildUpdateExpenseInput } from './expenses-form-helper';

@@ -1,10 +1,7 @@
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import type { CampaignDefaultImageOption } from '@/lib/server-actions/campaign-public-actions';
-import {
-	type CampaignSubmissionErrorCode,
-	type CampaignSubmissionFormValues,
-} from '@/lib/services/campaign/campaign-submission-input';
-import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
+import type { CampaignDefaultImageOption } from '@/modules/campaigns/campaign.actions';
+import { type CampaignSubmissionErrorCode, type CampaignSubmissionFormValues } from '@/modules/campaigns/campaign.types';
+import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
 import type { RefObject } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 

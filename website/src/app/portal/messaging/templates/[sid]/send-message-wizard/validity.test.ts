@@ -1,10 +1,10 @@
 import type { MessagingChannel } from '@/generated/prisma/client';
-import type { MessagingRecipientType } from '@/lib/services/twilio/messaging/recipients/recipients.types';
-import type { SelectionState } from '@/lib/services/twilio/messaging/recipients/selection.types';
 import type {
+	MessagingRecipientType,
 	ParsedVariable,
+	SelectionState,
 	VariableAssignments,
-} from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
+} from '@/modules/messaging/messaging.types';
 import { canAdvanceFromStep, canAdvanceFromStep1, canAdvanceFromStep2, canAdvanceFromStep3 } from './validity';
 
 const includeSelection = (ids: string[]): SelectionState => ({

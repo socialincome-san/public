@@ -1,19 +1,17 @@
+import { getCurrentContributorSession } from '@/modules/contributors/contributor.service';
+import type { ContributorSession } from '@/modules/contributors/contributor.types';
+import { getCurrentLocalPartnerSession } from '@/modules/local-partners/local-partner.service';
+import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
+import { getCurrentUserSession } from '@/modules/users/user.service';
+import type { UserSession } from '@/modules/users/user.types';
 import { redirect } from 'next/navigation';
-import { ContributorSession } from '../services/contributor/contributor.types';
-import { ServiceResult } from '../services/core/base.types';
-import { resultFail, resultOk } from '../services/core/service-result';
-import { LocalPartnerSession } from '../services/local-partner/local-partner.types';
-import { services } from '../services/services';
-import { UserSession } from '../services/user/user.types';
+import { resultFail, resultOk, type ServiceResult } from '../service-result';
+import { getCurrentAuthToken } from './session-cookie';
 
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
 
 const getAuthUserIdFromCookie = async (): Promise<string | null> => {
-	const cookieResult = await services.firebaseSession.readSessionCookie();
-	if (!cookieResult.success || !cookieResult.data) {
-		return null;
-	}
-	const result = await services.firebaseSession.verifySessionCookie(cookieResult.data);
+	const result = await getCurrentAuthToken();
 
 	return result.success ? result.data.uid : null;
 };
@@ -25,15 +23,15 @@ export const getCurrentSessions = async (): Promise<Session[]> => {
 	}
 
 	const out: Session[] = [];
-	const contributorResult = await services.read.contributor.getCurrentContributorSession(authUserId);
+	const contributorResult = await getCurrentContributorSession(authUserId);
 	if (contributorResult.success && contributorResult.data) {
 		out.push(contributorResult.data);
 	}
-	const userResult = await services.read.user.getCurrentUserSession(authUserId);
+	const userResult = await getCurrentUserSession(authUserId);
 	if (userResult.success && userResult.data) {
 		out.push(userResult.data);
 	}
-	const partnerResult = await services.read.localPartner.getCurrentLocalPartnerSession(authUserId);
+	const partnerResult = await getCurrentLocalPartnerSession(authUserId);
 	if (partnerResult.success && partnerResult.data) {
 		out.push(partnerResult.data);
 	}
@@ -66,6 +64,8 @@ export const getSessionByType = async <T extends Session['type']>(type: T): Prom
 
 		return resultOk(session);
 	} catch (error) {
-		return resultFail(`Could not resolve session: ${JSON.stringify(error)}`);
+		console.error('Could not resolve session', { type, error });
+
+		return resultFail('Could not resolve session');
 	}
 };

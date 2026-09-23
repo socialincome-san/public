@@ -4,8 +4,8 @@ import { Button } from '@/components/button/button';
 import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramPayoutForecastTable } from '@/components/storyblok/program/program-payout-forecast-table';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { getPublicPayoutForecastTableAction } from '@/lib/server-actions/program-detail-public-actions';
-import type { PayoutForecastTableViewRow } from '@/lib/services/payout/payout.types';
+import { getPublicPayoutForecastTableAction } from '@/modules/payouts/payout.actions';
+import type { PayoutForecastTableViewRow } from '@/modules/payouts/payout.types';
 import Link from 'next/link';
 import { type ReactNode, useEffect, useState } from 'react';
 

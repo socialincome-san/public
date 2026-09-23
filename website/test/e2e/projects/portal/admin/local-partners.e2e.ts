@@ -5,7 +5,7 @@ import {
 	clickDataTableActionItem,
 	deleteFirebaseEmailsIfExist,
 	expectToHaveScreenshot,
-	getFirebaseAdminService,
+	findFirebaseUserByEmail,
 } from '../../../utils';
 
 test.beforeEach(async () => {
@@ -279,7 +279,6 @@ test('delete local partner from admin table', async ({ page }) => {
 });
 
 test('local partner create update delete keeps Firebase user in sync', async ({ page }) => {
-	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const partnerName = `e2e-firebase-partner-${unique}`;
 	const slug = `e2e-firebase-partner-${unique}`;
@@ -314,7 +313,7 @@ test('local partner create update delete keeps Firebase user in sync', async ({ 
 		});
 		expect(createdPartner?.slug).toBe(slug);
 
-		const firebaseCreatedResult = await firebaseService.getByEmail(initialEmail);
+		const firebaseCreatedResult = await findFirebaseUserByEmail(initialEmail);
 		expect(firebaseCreatedResult.success).toBeTruthy();
 		if (!firebaseCreatedResult.success) {
 			throw new Error(firebaseCreatedResult.error);
@@ -330,14 +329,14 @@ test('local partner create update delete keeps Firebase user in sync', async ({ 
 		await page.getByRole('button', { name: 'Save' }).click();
 		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-		const firebaseOldEmailResult = await firebaseService.getByEmail(initialEmail);
+		const firebaseOldEmailResult = await findFirebaseUserByEmail(initialEmail);
 		expect(firebaseOldEmailResult.success).toBeTruthy();
 		if (!firebaseOldEmailResult.success) {
 			throw new Error(firebaseOldEmailResult.error);
 		}
 		expect(firebaseOldEmailResult.data).toBeNull();
 
-		const firebaseUpdatedResult = await firebaseService.getByEmail(updatedEmail);
+		const firebaseUpdatedResult = await findFirebaseUserByEmail(updatedEmail);
 		expect(firebaseUpdatedResult.success).toBeTruthy();
 		if (!firebaseUpdatedResult.success) {
 			throw new Error(firebaseUpdatedResult.error);
@@ -350,7 +349,7 @@ test('local partner create update delete keeps Firebase user in sync', async ({ 
 		await page.getByRole('button', { name: 'Delete permanently' }).click();
 		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-		const firebaseDeletedResult = await firebaseService.getByEmail(updatedEmail);
+		const firebaseDeletedResult = await findFirebaseUserByEmail(updatedEmail);
 		expect(firebaseDeletedResult.success).toBeTruthy();
 		if (!firebaseDeletedResult.success) {
 			throw new Error(firebaseDeletedResult.error);

@@ -1,5 +1,5 @@
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
-import { type ActiveSubscriptionView } from '@/lib/services/subscription/subscription.types';
+import { type ActiveSubscriptionView } from '@/modules/subscriptions/subscription.types';
 import { EditSubscriptionRow } from './edit-subscription/edit-subscription-row';
 import { WireSubscriptionRow } from './wire-subscription-row';
 

@@ -1,5 +1,5 @@
-import type { PublicLocalPartnerOverviewStatsMap } from '@/lib/services/local-partner/local-partner.types';
-import { services } from '@/lib/services/services';
+import { getPublicLocalPartnerOverviewStatsBySlugs } from '@/modules/local-partners/local-partner.service';
+import type { PublicLocalPartnerOverviewStatsMap } from '@/modules/local-partners/local-partner.types';
 
 // Snapshot of public production recipient totals plus candidate placeholders for local design previews.
 const developmentOverviewStatsByPortalSlug: PublicLocalPartnerOverviewStatsMap = {
@@ -22,7 +22,7 @@ const developmentOverviewStatsByPortalSlug: PublicLocalPartnerOverviewStatsMap =
 };
 
 export const getLocalPartnerOverviewStats = async (portalSlugs: string[]): Promise<PublicLocalPartnerOverviewStatsMap> => {
-	const statsResult = await services.read.localPartner.getPublicLocalPartnerOverviewStatsBySlugs(portalSlugs);
+	const statsResult = await getPublicLocalPartnerOverviewStatsBySlugs(portalSlugs);
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 
 	if (process.env.NODE_ENV !== 'development') {

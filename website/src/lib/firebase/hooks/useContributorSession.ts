@@ -1,7 +1,7 @@
 'use client';
 
-import { getOptionalContributorAction } from '@/lib/server-actions/contributor-actions';
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
+import { getOptionalContributorAction } from '@/modules/contributors/contributor.actions';
+import { ContributorSession } from '@/modules/contributors/contributor.types';
 import { useEffect, useState } from 'react';
 
 export const useContributorSession = () => {

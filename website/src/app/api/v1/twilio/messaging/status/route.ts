@@ -1,8 +1,7 @@
-import { services } from '@/lib/services/services';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { handleTwilioStatusWebhook } from '@/modules/messaging/messaging.service';
 import { NextRequest, NextResponse } from 'next/server';
-import twilio from 'twilio';
 
 /**
  * Twilio status callback webhook (POST /api/v1/twilio/messaging/status).
@@ -14,7 +13,6 @@ import twilio from 'twilio';
  */
 export async function POST(request: NextRequest) {
 	const signature = request.headers.get('x-twilio-signature');
-	const authToken = process.env.TWILIO_AUTH_TOKEN;
 
 	// Twilio signs the exact callback URL, so BASE_URL must be present and free of
 	// a trailing slash — otherwise the reconstructed URL won't match and
@@ -33,27 +31,20 @@ export async function POST(request: NextRequest) {
 		params[key] = typeof value === 'string' ? value : '';
 	}
 
-	if (!signature || !authToken) {
-		console.warn('Missing Twilio signature or TWILIO_AUTH_TOKEN');
+	if (!signature) {
+		console.warn('Missing Twilio signature');
 
 		return NextResponse.json({ error: 'forbidden' }, { status: 403 });
 	}
 
-	const valid = twilio.validateRequest(authToken, signature, url, params);
-	if (!valid) {
-		console.warn('Invalid Twilio signature on messaging status webhook');
-
-		return NextResponse.json({ error: 'forbidden' }, { status: 403 });
-	}
-
-	const result = await services.messagingWebhook.handleStatusCallback({
-		messageSid: params.MessageSid ?? '',
-		status: params.MessageStatus ?? '',
-		errorCode: params.ErrorCode ?? null,
-		errorMessage: params.ErrorMessage ?? null,
-	});
+	const result = await handleTwilioStatusWebhook({ signature, url, params });
 
 	if (!result.success) {
+		if (result.status === 403) {
+			console.warn('Invalid Twilio signature on messaging status webhook');
+
+			return NextResponse.json({ error: 'forbidden' }, { status: 403 });
+		}
 		console.error(`${SLACK_ALERT}: Twilio messaging status webhook handler failed: ${result.error}`);
 
 		return NextResponse.json({ error: 'internal' }, { status: 500 });

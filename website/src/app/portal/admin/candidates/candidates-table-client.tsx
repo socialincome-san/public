@@ -8,9 +8,9 @@ import type { ActionMenuItem } from '@/components/data-table/elements/action-men
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { Session } from '@/lib/firebase/current-account';
 import type { Translator } from '@/lib/i18n/translator';
-import { downloadCandidatesCsvAction, importCandidatesCsvAction } from '@/lib/server-actions/candidate-actions';
-import type { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
+import { downloadCandidatesCsvAction, importCandidatesCsvAction } from '@/modules/candidates/candidate.actions';
+import type { CandidatesTableViewRow } from '@/modules/candidates/candidate.types';
 import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
 import { useState } from 'react';
 import { CandidateDialog } from './candidate-dialog';

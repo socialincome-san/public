@@ -1,5 +1,5 @@
 import type { Tag } from '@/generated/storyblok/types/109655/storyblok-components';
-import { createWebsiteJournalTagLink } from '@/lib/services/storyblok/storyblok.utils';
+import { createWebsiteJournalTagLink } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';

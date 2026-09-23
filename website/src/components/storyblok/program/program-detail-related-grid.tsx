@@ -3,8 +3,8 @@ import type { ProgramStory } from '@/components/storyblok/program/program.types'
 import type { Button, ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
+import { getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 
 type Props = {
 	currentProgramFullSlug: string;
@@ -16,7 +16,7 @@ const RELATED_PROGRAMS_COUNT = 3;
 
 export const ProgramDetailRelatedGrid = async ({ currentProgramFullSlug, lang, region }: Props) => {
 	const [programsResult, translator] = await Promise.all([
-		services.storyblok.getPrograms(lang),
+		getProgramsAction(lang),
 		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
 	]);
 	const allPrograms = (programsResult.success ? programsResult.data : []) as ProgramStory[];

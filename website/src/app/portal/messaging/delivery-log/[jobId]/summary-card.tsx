@@ -1,7 +1,7 @@
 import { jobStatusVariant } from '@/app/portal/messaging/delivery-log/messaging-job-status';
 import { Badge } from '@/components/badge/badge';
-import type { MessagingJobDetailView } from '@/lib/services/twilio/messaging/logs/log.types';
-import { twilioTemplateUrl } from '@/lib/services/twilio/messaging/twilio-console-urls';
+import { twilioTemplateUrl } from '@/lib/utils/twilio-console-url';
+import type { MessagingJobDetailView } from '@/modules/messaging/messaging.types';
 import { ExternalLink } from 'lucide-react';
 
 type SummaryCardProps = {

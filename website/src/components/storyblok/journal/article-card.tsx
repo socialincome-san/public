@@ -10,9 +10,9 @@ import {
 	formatStoryblokUrl,
 	getArticleTitle,
 	getPersonDisplayName,
-	ResolvedArticle,
-} from '@/lib/services/storyblok/storyblok.utils';
+} from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
+import type { JournalArticle } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -27,7 +27,7 @@ const SECONDARY_IMAGE_HEIGHT = 230;
 type Variant = 'grid' | 'featured' | 'secondary';
 
 type Props = {
-	article: ISbStoryData<ResolvedArticle>;
+	article: ISbStoryData<JournalArticle>;
 	lang: string;
 	region: string;
 	variant?: Variant;

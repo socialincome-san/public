@@ -16,7 +16,7 @@ import type { DropdownItem, Layout } from '@/generated/storyblok/types/109655/st
 import { Session } from '@/lib/firebase/current-account';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
+import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
 import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowRight, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';

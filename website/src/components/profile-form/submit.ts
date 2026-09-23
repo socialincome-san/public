@@ -1,12 +1,13 @@
 import { ContributorReferralSource } from '@/generated/prisma/enums';
-import { updateSelfAction as updateContributorSelfAction } from '@/lib/server-actions/contributor-actions';
-import { updateLocalPartnerAction } from '@/lib/server-actions/local-partner-action';
-import { updateUserSelfAction } from '@/lib/server-actions/user-actions';
-import { ContributorSession, ContributorUpdateInput } from '@/lib/services/contributor/contributor.types';
-import { LocalPartnerFormUpdateInput } from '@/lib/services/local-partner/local-partner-form-input';
-import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
-import { UserSession } from '@/lib/services/user/user.types';
 import { slugify } from '@/lib/utils/string-utils';
+import { updateContributorSelfAction } from '@/modules/contributors/contributor.actions';
+import type { UpdateContributorSelfInput } from '@/modules/contributors/contributor.schemas';
+import { ContributorSession } from '@/modules/contributors/contributor.types';
+import { updateLocalPartnerAction } from '@/modules/local-partners/local-partner.actions';
+import type { LocalPartnerUpdateInput } from '@/modules/local-partners/local-partner.schemas';
+import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
+import { updateUserSelfAction } from '@/modules/users/user.actions';
+import type { UserSession } from '@/modules/users/user.types';
 import { toggleNewsletter } from './newsletter';
 import { ProfileFormOutput } from './schemas';
 
@@ -24,26 +25,15 @@ export const submitProfileForm = async (
 			};
 		}
 
-		const update: ContributorUpdateInput = {
+		const update: UpdateContributorSelfInput = {
 			referral: values.referral ?? (session as ContributorSession).referral ?? ContributorReferralSource.other,
 			contact: {
-				update: {
-					data: {
-						firstName: values.firstName,
-						lastName: values.lastName,
-						email: values.email,
-						gender: values.gender ?? null,
-						language: values.language,
-						address: values.address
-							? {
-									upsert: {
-										update: values.address,
-										create: values.address,
-									},
-								}
-							: undefined,
-					},
-				},
+				firstName: values.firstName,
+				lastName: values.lastName,
+				email: values.email,
+				gender: values.gender ?? null,
+				language: values.language,
+				address: values.address,
 			},
 		};
 
@@ -51,7 +41,7 @@ export const submitProfileForm = async (
 	}
 
 	if (values.type === 'local-partner') {
-		const update: LocalPartnerFormUpdateInput = {
+		const update: LocalPartnerUpdateInput = {
 			name: values.name,
 			slug: slugify(values.name),
 			focuses: values.focuses ?? [],

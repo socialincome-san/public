@@ -1,6 +1,4 @@
-import { createWizardQrReferencesAction } from '@/lib/server-actions/qr-wizard-actions';
-import { resolveWizardQrPayment } from '@/lib/services/qr-bill/wizard-qr-payment';
-import { generateQrBillSvg } from '@/lib/utils/qr-bill';
+import { createWizardQrBillAction } from '@/modules/qr-bills/qr-bill.actions';
 import type { DonationAmountContext } from '../../utils/donation-amount';
 import type { QrDonorContext } from '../../wizard/donation-wizard-context';
 import type { DonationWizardSend } from '../../wizard/types';
@@ -23,42 +21,27 @@ export const requestQrBillGeneration = async ({ context, donor, send, currency }
 		language: donor.language,
 	});
 
-	const paymentResult = resolveWizardQrPayment(context, currency);
-	if (!paymentResult.success) {
-		send({ type: 'QR_BILL_ERROR', message: paymentResult.error });
-
-		return;
-	}
-
-	const referencesResult = await createWizardQrReferencesAction({
-		email: donor.email,
-		firstName: donor.firstName,
-		lastName: donor.lastName,
-		language: donor.language,
+	const result = await createWizardQrBillAction({
+		wizardContext: context,
+		donor: {
+			email: donor.email,
+			firstName: donor.firstName,
+			lastName: donor.lastName,
+			language: donor.language,
+		},
+		currency,
 	});
 
-	if (!referencesResult.success) {
-		send({ type: 'QR_BILL_ERROR', message: referencesResult.error });
+	if (!result.success) {
+		send({ type: 'QR_BILL_ERROR', message: result.error });
 
 		return;
 	}
 
-	try {
-		const qrBillSvg = generateQrBillSvg({
-			amount: paymentResult.data.amount,
-			contributorReferenceId: referencesResult.data.contributorReferenceId,
-			contributionReferenceId: referencesResult.data.contributionReferenceId,
-			currency: paymentResult.data.currency as 'CHF' | 'EUR',
-			type: 'QRCODE',
-		});
-
-		send({
-			type: 'QR_BILL_READY',
-			contributorReferenceId: referencesResult.data.contributorReferenceId,
-			contributionReferenceId: referencesResult.data.contributionReferenceId,
-			qrBillSvg,
-		});
-	} catch {
-		send({ type: 'QR_BILL_ERROR', message: 'QR bill generation failed' });
-	}
+	send({
+		type: 'QR_BILL_READY',
+		contributorReferenceId: result.data.contributorReferenceId,
+		contributionReferenceId: result.data.contributionReferenceId,
+		display: result.data.display,
+	});
 };

@@ -1,6 +1,6 @@
-import type { PublicFocusStatsBySlugMap } from '@/lib/services/focus/focus.types';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { AnySearchParams } from '@/lib/types/page-props';
+import type { PublicFocusStatsBySlugMap } from '@/modules/focuses/focus.types';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusText, getFocusTitle } from './focus.utils';
 import { COUNTRY_QUERY_KEY, SDG_QUERY_KEY, SEARCH_QUERY_KEY } from './focuses-overview-query';

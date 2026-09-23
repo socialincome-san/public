@@ -1,7 +1,7 @@
 import { makePayoutColumns } from '@/components/data-table/columns/payouts';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
-import type { PayoutTableViewRow } from '@/lib/services/payout/payout.types';
+import type { PayoutTableViewRow } from '@/modules/payouts/payout.types';
 
 type PayoutsFilterArgs = {
 	query?: TableQueryState & { totalRows: number };

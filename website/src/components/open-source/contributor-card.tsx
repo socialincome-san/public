@@ -1,4 +1,4 @@
-import type { GithubContributor } from '@/lib/services/github-api/github-api.types';
+import type { GithubContributor } from '@/modules/github/github.types';
 import Image from 'next/image';
 import Link from 'next/link';
 

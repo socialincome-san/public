@@ -1,6 +1,6 @@
 import { Card } from '@/components/card/card';
-import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
+import type { ProgramDashboardStats } from '@/modules/programs/program.types';
 import { DonationForm } from './donation-form';
 import { SectionBox } from './section-box';
 import { SectionTitle } from './section-title';

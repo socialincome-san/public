@@ -4,7 +4,8 @@ import type { ReservesBlock as ReservesBlockBlok } from '@/generated/storyblok/t
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
+import { getLatestReservesAction } from '@/modules/reserves/reserve.actions';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 const FINANCIAL_INSTITUTIONS = [
@@ -20,17 +21,26 @@ type Props = {
 
 export const ReservesBlock = async ({ blok, lang }: Props) => {
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const [translator, reservesResult, rates] = await Promise.all([
+	const [translator, reservesResult] = await Promise.all([
 		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
-		services.transparency.getLatestReservesChf(),
-		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
+		getLatestReservesAction(),
 	]);
 
 	if (!reservesResult.success) {
 		return null;
 	}
 
-	const reserves = services.currencyDisplay.resolveFromChf(reservesResult.data, displayCurrency, rates);
+	const displayResult = await resolveChfAmountsAction({
+		amounts: [reservesResult.data.total],
+		displayCurrency,
+	});
+	if (!displayResult.success) {
+		return null;
+	}
+	const reserves = displayResult.data[0];
+	if (!reserves) {
+		return null;
+	}
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
