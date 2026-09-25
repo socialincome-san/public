@@ -14,6 +14,8 @@ const badgeVariants = cva('inline-flex items-center rounded-full border px-1.5 p
 			country: 'bg-background border-border text-foreground',
 			video: 'bg-black/60 border-white/40 text-white backdrop-blur-sm',
 			fundraising: 'bg-green-200 border-green-300 text-foreground px-2 py-1 text-sm leading-none font-medium',
+			circle: 'bg-primary border-primary text-primary-foreground px-2.5 py-1 gap-1.5 font-medium',
+			'circle-outline': 'bg-transparent border-primary/40 text-primary px-2.5 py-1 gap-1.5 font-medium',
 		},
 	},
 	defaultVariants: {

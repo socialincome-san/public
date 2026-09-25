@@ -5,8 +5,11 @@ import { JournalArticleCard } from '@/components/storyblok/journal/article-card'
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
 import { JournalPageShell } from '@/components/storyblok/journal/journal-page-shell';
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
-import { PersonProfileHeader } from '@/components/storyblok/journal/person-profile-header';
+import { PersonProfileHeader, type PersonProfileTranslations } from '@/components/storyblok/journal/person-profile-header';
+import type { VolunteerDurationConfig } from '@/components/storyblok/shared/person-card';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { Translator } from '@/lib/i18n/translator';
+import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getPersonPortraitSrc } from '@/lib/services/journal/journal.utils';
 import { getPersonDisplayName, ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
 import type { ISbStoryData } from '@storyblok/js';
@@ -16,6 +19,7 @@ type Props = {
 	person: ISbStoryData<Person>;
 	articles: ISbStoryData<ResolvedArticle>[];
 	articlesHeading: string;
+	profileTranslations: PersonProfileTranslations;
 	lang: string;
 	region: string;
 	pathname: string;
@@ -23,13 +27,36 @@ type Props = {
 	videoLabel: string;
 	showMoreArticlesLink: boolean;
 	roleLabels: Record<string, string>;
+	circleLabels: Record<string, string>;
+	volunteerDuration?: VolunteerDurationConfig;
 };
+
+// The duration labels are "{{count}}" templates shared with the person cards, so they are collected
+// here rather than at each person page.
+export const buildVolunteerDurationConfig = (translator: Translator, lang: WebsiteLanguage): VolunteerDurationConfig => ({
+	lang,
+	translations: {
+		startedToday: translator.t('person-grid.duration-started-today'),
+		daySingular: translator.t('person-grid.duration-day-singular'),
+		dayPlural: translator.t('person-grid.duration-day-plural'),
+		monthSingular: translator.t('person-grid.duration-month-singular'),
+		monthPlural: translator.t('person-grid.duration-month-plural'),
+		yearSingular: translator.t('person-grid.duration-year-singular'),
+		yearPlural: translator.t('person-grid.duration-year-plural'),
+		monthAnniversarySingular: translator.t('person-grid.duration-month-anniversary-singular'),
+		monthAnniversaryPlural: translator.t('person-grid.duration-month-anniversary-plural'),
+		yearAnniversarySingular: translator.t('person-grid.duration-year-anniversary-singular'),
+		yearAnniversaryPlural: translator.t('person-grid.duration-year-anniversary-plural'),
+		since: translator.t('person-grid.duration-since'),
+	},
+});
 
 export const PersonProfile = ({
 	breadcrumbs,
 	person,
 	articles,
 	articlesHeading,
+	profileTranslations,
 	lang,
 	region,
 	pathname,
@@ -37,6 +64,8 @@ export const PersonProfile = ({
 	videoLabel,
 	showMoreArticlesLink,
 	roleLabels,
+	circleLabels,
+	volunteerDuration,
 }: Props) => (
 	<JournalPageShell className="px-6 sm:px-6">
 		<JournalBreadcrumb links={breadcrumbs} className="mb-12 w-full px-0" />
@@ -45,6 +74,9 @@ export const PersonProfile = ({
 			name={getPersonDisplayName(person)}
 			portraitSrc={getPersonPortraitSrc(person)}
 			roleLabels={roleLabels}
+			circleLabels={circleLabels}
+			translations={profileTranslations}
+			volunteerDuration={volunteerDuration}
 		/>
 
 		{articles.length > 0 && (

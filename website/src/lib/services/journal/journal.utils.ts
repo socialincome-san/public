@@ -2,7 +2,7 @@ import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
 import type { Article, Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { JournalOverviewFilter } from '@/lib/services/journal/journal.types';
 import {
-	createWebsiteJournalPath,
+	createWebsitePeoplePath,
 	createWebsitePersonLink,
 	formatStoryblokUrl,
 } from '@/lib/services/storyblok/storyblok.utils';
@@ -66,17 +66,19 @@ export const buildJournalArticleBreadcrumbs = (
 	{ label: articleTitle, href: articleHref },
 ];
 
+// A person page sits under the People page, not under the journal — an author's articles are listed
+// on their profile, but the profile itself belongs to the people overview.
 export const buildJournalPersonBreadcrumbs = (
 	homeLabel: string,
-	journalLabel: string,
-	journalPath: string,
+	peopleLabel: string,
+	peoplePath: string,
 	personName: string,
 	personHref: string,
 	lang: string,
 	region: string,
 ): BreadcrumbLinkType[] => [
 	buildHomeBreadcrumb(homeLabel, lang, region),
-	{ label: journalLabel, href: journalPath },
+	{ label: peopleLabel, href: peoplePath },
 	{ label: personName, href: personHref },
 ];
 
@@ -109,5 +111,5 @@ export const getArticleHeroImageSrc = (article: Pick<Article, 'image'>) => {
 export const getJournalPersonPagePaths = (slug: string, lang: string, region: string) => {
 	const pathname = createWebsitePersonLink(slug, lang, region);
 
-	return { pathname, journalPath: createWebsiteJournalPath(lang, region) };
+	return { pathname, peoplePath: createWebsitePeoplePath(lang, region) };
 };

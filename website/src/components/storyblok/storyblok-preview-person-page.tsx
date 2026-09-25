@@ -1,4 +1,4 @@
-import { PersonProfile } from '@/components/storyblok/journal/person-profile';
+import { buildVolunteerDurationConfig, PersonProfile } from '@/components/storyblok/journal/person-profile';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
@@ -44,7 +44,7 @@ export const StoryblokPreviewPersonPage = async ({
 				lang,
 				region,
 				slug,
-				translator.t('overview.title'),
+				translator.t('person.breadcrumb'),
 				translator.t('breadcrumb.home', { namespace: 'website-common' }),
 			);
 
@@ -56,6 +56,18 @@ export const StoryblokPreviewPersonPage = async ({
 				<PersonProfile
 					{...pageResult.data}
 					articlesHeading={translator.t('person.articles')}
+					profileTranslations={{
+						circles: translator.t('person.circles'),
+						activeCircle: translator.t('person.circle-active'),
+						interestedCircle: translator.t('person.circle-interested'),
+						workStyle: translator.t('person.work-style'),
+						likesDeadline: translator.t('person.likes-deadline'),
+						likesDeadlineYes: translator.t('person.likes-deadline-yes'),
+						likesDeadlineNo: translator.t('person.likes-deadline-no'),
+						timeCommitment: translator.t('person.time-commitment'),
+						timeCommitmentUnit: translator.t('person.time-commitment-unit'),
+					}}
+					volunteerDuration={buildVolunteerDurationConfig(translator, lang)}
 					lang={lang}
 					region={region}
 					moreArticlesLabel={translator.t('overview.more-articles')}

@@ -74,7 +74,8 @@ const formatDuration = (parts: VolunteerDurationParts, translations: VolunteerDu
 		: pluralize(parts.years, translations.yearSingular, translations.yearPlural);
 };
 
-const getDurationLabels = (volunteerSince: string | undefined, config: VolunteerDurationConfig) => {
+// Also used by the person profile page, which shows the same pill on the portrait.
+export const getDurationLabels = (volunteerSince: string | undefined, config: VolunteerDurationConfig) => {
 	const parts = getVolunteerDurationParts(volunteerSince, config.lang);
 
 	return parts

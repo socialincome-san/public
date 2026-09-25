@@ -10,7 +10,17 @@
 		"more-articles": "There are more articles available in English"
 	},
 	"person": {
-		"articles": "Articles"
+		"articles": "Articles",
+		"circle-active": "Active member",
+		"circle-interested": "Interested member",
+		"work-style": "Work style",
+		"likes-deadline": "Deadlines",
+		"likes-deadline-yes": "Likes deadlines",
+		"likes-deadline-no": "Prefers no deadlines",
+		"time-commitment": "Time commitment",
+		"time-commitment-unit": "hrs / week",
+		"breadcrumb": "Person",
+		"circles": "Circles"
 	},
 	"article": {
 		"keep-reading": "Keep reading",

@@ -128,6 +128,7 @@ export class StoryblokService extends BaseService {
 	private static readonly storiesPath = 'cdn/stories';
 	private static readonly linksPath = 'cdn/links';
 	private static readonly datasourceSlug = {
+		circles: 'circles',
 		primaryRoles: 'primaryroles',
 	} as const;
 	private static readonly countriesPath = STORYBLOK_COUNTRIES_FOLDER;
@@ -505,6 +506,12 @@ export class StoryblokService extends BaseService {
 	// Labels for the datasource backing the Person.primaryRole field, keyed by stored value.
 	async getPrimaryRoleLabels(lang: string): Promise<ServiceResult<Record<string, string>>> {
 		return this.getDatasourceEntries(StoryblokService.datasourceSlug.primaryRoles, lang);
+	}
+
+	// Labels for the datasource backing the Person.activeCircleMember and Person.interestedCircleMember
+	// fields, keyed by stored value.
+	async getCircleLabels(lang: string): Promise<ServiceResult<Record<string, string>>> {
+		return this.getDatasourceEntries(StoryblokService.datasourceSlug.circles, lang);
 	}
 
 	async getAllPersons(lang: string): Promise<ServiceResult<ISbStoryData<Person>[]>> {

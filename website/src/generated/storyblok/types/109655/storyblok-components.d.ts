@@ -38,6 +38,7 @@ export interface ArticleType {
   value?: string;
   description?: string;
   displayInOverviewPage?: boolean;
+  sortOrder?: string;
   component: "articleType";
   _uid: string;
   _editable?: string | undefined;
@@ -557,7 +558,6 @@ export interface PartnershipsCarousel {
 }
 
 export interface Person {
-  displayInOverviewPage?: boolean;
   fullName: string;
   firstName: string;
   lastName: string;
@@ -565,14 +565,20 @@ export interface Person {
   bio?: string;
   githubName?: string;
   linkedinName?: string;
-  volunteerSince?: string;
   volunteerStatus?: "" | "active" | "inactive";
-  primaryRole?: number | string;
+  volunteerSince?: string;
   fieldTrips?: {
     [k: string]: unknown;
   }[];
-  countryOffice?: (number | string)[];
   country?: number | string;
+  primaryRole?: number | string;
+  countryOffice?: (number | string)[];
+  interestedCircleMember?: (number | string)[];
+  activeCircleMember?: (number | string)[];
+  displayInOverviewPage?: boolean;
+  workStyle?: number | string;
+  likesDeadline?: boolean;
+  timeCommitment?: number | string;
   component: "person";
   _uid: string;
   _editable?: string | undefined;

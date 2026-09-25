@@ -10,7 +10,17 @@
 		"more-articles": "Weitere Artikel sind auf Englisch verfügbar"
 	},
 	"person": {
-		"articles": "Artikel"
+		"articles": "Artikel",
+		"circle-active": "Aktives Mitglied",
+		"circle-interested": "Interessiertes Mitglied",
+		"work-style": "Arbeitsweise",
+		"likes-deadline": "Deadlines",
+		"likes-deadline-yes": "Mag Deadlines",
+		"likes-deadline-no": "Lieber ohne Deadlines",
+		"time-commitment": "Zeitaufwand",
+		"time-commitment-unit": "Std. / Woche",
+		"breadcrumb": "Person",
+		"circles": "Kreise"
 	},
 	"article": {
 		"keep-reading": "Weiterlesen",

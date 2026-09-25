@@ -36,4 +36,5 @@ export type JournalPersonPageData = {
 	pathname: string;
 	breadcrumbs: BreadcrumbLinkType[];
 	roleLabels: Record<string, string>;
+	circleLabels: Record<string, string>;
 };

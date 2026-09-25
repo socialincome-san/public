@@ -188,7 +188,7 @@ export class JournalService extends BaseService {
 		lang: string,
 		region: string,
 		slug: string,
-		journalLabel: string,
+		peopleLabel: string,
 		homeLabel: string,
 	): Promise<ServiceResult<JournalPersonPageData>> {
 		const personResult = await this.storyblok.getPerson(slug, lang);
@@ -197,17 +197,19 @@ export class JournalService extends BaseService {
 		}
 
 		const person = personResult.data;
-		const [articlesResult, roleLabelsResult] = await Promise.all([
+		const [articlesResult, roleLabelsResult, circleLabelsResult] = await Promise.all([
 			this.storyblok.getArticlesByAuthor(person.uuid, lang),
 			this.storyblok.getPrimaryRoleLabels(lang),
+			this.storyblok.getCircleLabels(lang),
 		]);
 		const articles = articlesResult.success ? articlesResult.data : [];
 		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
+		const circleLabels = circleLabelsResult.success ? circleLabelsResult.data : {};
 		const totalInDefault = await this.storyblok.resolveArticleCountInDefaultLanguage(lang, articles.length, () =>
 			this.storyblok.getArticleCountByAuthorForDefaultLang(person.uuid),
 		);
 
-		const { pathname, journalPath } = getJournalPersonPagePaths(slug, lang, region);
+		const { pathname, peoplePath } = getJournalPersonPagePaths(slug, lang, region);
 		const personName = getPersonDisplayName(person);
 
 		return this.resultOk({
@@ -217,14 +219,15 @@ export class JournalService extends BaseService {
 			pathname,
 			breadcrumbs: buildJournalPersonBreadcrumbs(
 				homeLabel,
-				journalLabel,
-				journalPath,
+				peopleLabel,
+				peoplePath,
 				personName,
 				createWebsitePersonLink(slug, lang, region),
 				lang,
 				region,
 			),
 			roleLabels,
+			circleLabels,
 		});
 	}
 }

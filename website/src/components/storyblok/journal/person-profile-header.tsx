@@ -1,30 +1,124 @@
+import { Badge } from '@/components/badge/badge';
+import { Button } from '@/components/button/button';
+import { Card } from '@/components/card/card';
 import { SectionHeading } from '@/components/section-heading';
+import { getDurationLabels, type VolunteerDurationConfig } from '@/components/storyblok/shared/person-card';
+import { GithubIcon } from '@/components/svg/github';
+import { LinkedinIcon } from '@/components/svg/linkedin';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getPersonGitHubUrl, getPersonLinkedInUrl, getRoleLabel } from '@/lib/services/storyblok/storyblok.utils';
+import {
+	getOptionCode,
+	getPersonCircles,
+	getPersonGitHubUrl,
+	getPersonLinkedInUrl,
+	getRoleLabel,
+} from '@/lib/services/storyblok/storyblok.utils';
+import { cn } from '@/lib/utils/cn';
+import { HOURS_RANGE_REGEX } from '@/lib/utils/regex';
 import type { ISbStoryData } from '@storyblok/js';
-import { ExternalLinkIcon } from 'lucide-react';
+import { CalendarIcon, CircleIcon, ClockIcon, CompassIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import React from 'react';
 
-const socialLinkClassName =
-	'text-foreground inline-flex items-center gap-1.5 text-sm font-medium underline-offset-4 hover:underline';
+const labelClassName = 'text-muted-foreground text-xs';
+
+export type PersonProfileTranslations = {
+	// Heading above the circle pills.
+	circles: string;
+	// Membership status of a circle pill, shown as its tooltip.
+	activeCircle: string;
+	interestedCircle: string;
+	// Labels for the fact cards below the circle pills.
+	workStyle: string;
+	likesDeadline: string;
+	likesDeadlineYes: string;
+	likesDeadlineNo: string;
+	timeCommitment: string;
+	// Unit shown after a numeric time commitment, e.g. "4-8" + "hrs / week".
+	timeCommitmentUnit: string;
+};
+
+type PersonFact = {
+	label: string;
+	value: string;
+	// Only the hour counts carry a unit; a worded entry such as "On a break" stands on its own.
+	unit?: string;
+	Icon: React.ComponentType<{ className?: string }>;
+};
 
 type Props = {
 	person: ISbStoryData<Person>;
 	name: string;
 	portraitSrc: string | null;
 	roleLabels?: Record<string, string>;
+	circleLabels?: Record<string, string>;
+	translations: PersonProfileTranslations;
+	// Presence enables the "volunteering since" pill on the portrait, as on the person cards.
+	volunteerDuration?: VolunteerDurationConfig;
 };
 
-export const PersonProfileHeader = ({ person, name, portraitSrc, roleLabels }: Props) => {
-	const { avatar, bio, githubName, linkedinName, primaryRole } = person.content;
+export const PersonProfileHeader = ({
+	person,
+	name,
+	portraitSrc,
+	roleLabels,
+	circleLabels,
+	translations,
+	volunteerDuration,
+}: Props) => {
+	const { avatar, bio, githubName, likesDeadline, linkedinName, primaryRole, volunteerSince, volunteerStatus } =
+		person.content;
 	const roleLabel = getRoleLabel(primaryRole, roleLabels);
+	const circles = getPersonCircles(person, circleLabels);
 	const bioText = bio?.trim();
+	const duration =
+		volunteerDuration && volunteerStatus === 'active' ? getDurationLabels(volunteerSince, volunteerDuration) : null;
+
+	// The `work-style` and `time-commitment` datasources store the display text as the entry value,
+	// so the stored value is shown as is. An unset boolean stays hidden, while an explicit `false`
+	// is a statement about the person and is shown.
+	const workStyle = getOptionCode(person.content.workStyle);
+	const timeCommitment = getOptionCode(person.content.timeCommitment);
+	const facts: PersonFact[] = [
+		...(workStyle ? [{ label: translations.workStyle, value: workStyle, Icon: CompassIcon }] : []),
+		...(typeof likesDeadline === 'boolean'
+			? [
+					{
+						label: translations.likesDeadline,
+						value: likesDeadline ? translations.likesDeadlineYes : translations.likesDeadlineNo,
+						Icon: CalendarIcon,
+					},
+				]
+			: []),
+		...(timeCommitment
+			? [
+					{
+						label: translations.timeCommitment,
+						value: timeCommitment,
+						unit: HOURS_RANGE_REGEX.test(timeCommitment) ? translations.timeCommitmentUnit : undefined,
+						Icon: ClockIcon,
+					},
+				]
+			: []),
+	];
 
 	return (
 		<header className="flex flex-col gap-8 sm:flex-row sm:items-start sm:gap-10">
 			{portraitSrc && (
 				<div className="bg-muted relative mx-auto aspect-4/5 w-44 shrink-0 overflow-hidden rounded-2xl sm:mx-0 sm:w-48">
+					{duration && (
+						<Badge
+							variant="default"
+							// Hover-only content is invisible to assistive tech, so the date rides along as the accessible
+							// description; an aria-label would instead replace the duration as the accessible name.
+							title={duration.since}
+							className="group/duration text-foreground absolute top-3 left-3 z-20 border-white/40 bg-white/80 whitespace-nowrap backdrop-blur-sm"
+						>
+							<span className="group-hover/duration:hidden">{duration.label}</span>
+							<span className="hidden group-hover/duration:inline">{duration.since}</span>
+						</Badge>
+					)}
 					<Image
 						src={portraitSrc}
 						alt={avatar?.alt ?? name}
@@ -41,35 +135,63 @@ export const PersonProfileHeader = ({ person, name, portraitSrc, roleLabels }: P
 					<SectionHeading as="h1" size={1} align="left" bold className="text-foreground mb-0 leading-tight md:mb-0">
 						{name}
 					</SectionHeading>
-					{roleLabel && <p className="text-muted-foreground text-base sm:text-lg">{roleLabel}</p>}
+					{(roleLabel || (linkedinName ?? githubName)) && (
+						<div className="flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+							{roleLabel && <p className="text-muted-foreground text-base sm:text-lg">{roleLabel}</p>}
+							{linkedinName && (
+								<Button asChild size="sm" variant="outline">
+									<Link href={getPersonLinkedInUrl(linkedinName)} target="_blank" rel="noopener noreferrer">
+										<LinkedinIcon />
+										LinkedIn
+									</Link>
+								</Button>
+							)}
+							{githubName && (
+								<Button asChild size="sm" variant="outline">
+									<Link href={getPersonGitHubUrl(githubName)} target="_blank" rel="noopener noreferrer">
+										<GithubIcon />
+										GitHub
+									</Link>
+								</Button>
+							)}
+						</div>
+					)}
 				</div>
-				{bioText && <p className="text-foreground max-w-2xl text-base leading-7 sm:text-lg sm:leading-8">{bioText}</p>}
-				{(linkedinName ?? githubName) && (
-					<div className="flex flex-wrap justify-center gap-4 sm:justify-start">
-						{linkedinName && (
-							<Link
-								href={getPersonLinkedInUrl(linkedinName)}
-								target="_blank"
-								rel="noopener noreferrer"
-								className={socialLinkClassName}
-							>
-								LinkedIn
-								<ExternalLinkIcon className="size-3.5" aria-hidden="true" />
-							</Link>
-						)}
-						{githubName && (
-							<Link
-								href={getPersonGitHubUrl(githubName)}
-								target="_blank"
-								rel="noopener noreferrer"
-								className={socialLinkClassName}
-							>
-								GitHub
-								<ExternalLinkIcon className="size-3.5" aria-hidden="true" />
-							</Link>
-						)}
+
+				{circles.length > 0 && (
+					<div className="space-y-2">
+						<p className={labelClassName}>{translations.circles}</p>
+						<div className="flex flex-wrap justify-center gap-2 sm:justify-start">
+							{circles.map((circle) => (
+								<Badge
+									key={`${circle.status}-${circle.code}`}
+									variant={circle.status === 'active' ? 'circle' : 'circle-outline'}
+									title={circle.status === 'active' ? translations.activeCircle : translations.interestedCircle}
+								>
+									<CircleIcon className="size-3 shrink-0" aria-hidden="true" />
+									{circle.label}
+								</Badge>
+							))}
+						</div>
 					</div>
 				)}
+
+				{facts.length > 0 && (
+					<div className="grid gap-4 sm:grid-cols-3">
+						{facts.map(({ label, value, unit, Icon }) => (
+							<Card key={label} variant="noPadding" className="px-6 py-4">
+								<Icon className="text-muted-foreground mx-auto size-4 sm:mx-0" />
+								<p className={cn(labelClassName, 'mt-2')}>{label}</p>
+								<p className="text-xl">
+									{value}
+									{unit && <span className={cn(labelClassName, 'ml-1')}>{unit}</span>}
+								</p>
+							</Card>
+						))}
+					</div>
+				)}
+
+				{bioText && <p className="text-foreground max-w-2xl text-base leading-7 sm:text-lg sm:leading-8">{bioText}</p>}
 			</div>
 		</header>
 	);

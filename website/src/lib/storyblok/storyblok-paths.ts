@@ -64,6 +64,8 @@ const STORYBLOK_PERSONS_FOLDER = `${STORYBLOK_PAGES_FOLDER}/persons`;
 
 export const WEBSITE_PERSON_PATH_SEGMENT = 'person';
 
+export const WEBSITE_PEOPLE_PATH_SEGMENT = 'people';
+
 export const getPersonStoryPath = (personSlug: string) => `${STORYBLOK_PERSONS_FOLDER}/${personSlug}`;
 
 const STORYBLOK_JOURNAL_FOLDER = `${STORYBLOK_PAGES_FOLDER}/journal`;
