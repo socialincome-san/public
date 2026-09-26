@@ -1,6 +1,6 @@
 'use client';
 
-import { SelectableCard } from '@/components/selectable-card';
+import { SelectableCard } from '@/components/selectable-card/selectable-card';
 import type { PlanTierBenefit } from './plan-tier-benefit';
 import { PlanTierCardContent } from './plan-tier-card-content';
 

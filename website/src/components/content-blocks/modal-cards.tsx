@@ -1,7 +1,7 @@
 'use client';
 
 import { BlockWrapper } from '@/components/block-wrapper';
-import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/dialog/dialog';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { ModalCards } from '@/generated/storyblok/types/109655/storyblok-components';

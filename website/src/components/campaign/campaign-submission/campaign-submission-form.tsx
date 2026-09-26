@@ -1,6 +1,6 @@
 'use client';
 
-import { DialogHeader, DialogTitle } from '@/components/dialog';
+import { DialogHeader, DialogTitle } from '@/components/dialog/dialog';
 import { Form } from '@/components/form';
 import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';

@@ -7,7 +7,7 @@ import {
 	getContributorsTableFilters,
 } from '@/components/data-table/configs/contributors-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog/dialog';
 import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { PlusIcon } from 'lucide-react';

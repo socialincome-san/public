@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button/button';
-import { Combobox } from '@/components/combo-box';
+import { Combobox } from '@/components/combo-box/combo-box';
 import { RadioCard } from '@/components/create-program-wizard/radio-card';
 import { RadioCardGroup } from '@/components/create-program-wizard/radio-card-group';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/form';

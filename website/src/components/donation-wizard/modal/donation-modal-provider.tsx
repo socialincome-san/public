@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/dialog/dialog';
 import { DonationCurrencySelector } from '@/components/donation/currency-selector';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';

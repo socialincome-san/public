@@ -1,7 +1,7 @@
 'use client';
 
 import { CountryFlag } from '@/components/country-flag/country-flag';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/dialog/dialog';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { splitTranslationTemplate } from '@/lib/i18n/translation-template';
 import { OTHER_COUNTRY_SEGMENT_CODE } from '@/lib/services/transparency/transparency.types';

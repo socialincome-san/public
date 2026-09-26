@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/dialog/dialog';
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
