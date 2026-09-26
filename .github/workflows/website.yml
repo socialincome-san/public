@@ -140,7 +140,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4
         with:
-          terraform_version: v1.16.3
+          terraform_version: v1.16.4
       - run: terraform -chdir=website/infra init -backend=false
       - run: terraform -chdir=website/infra fmt -check
       - run: terraform -chdir=website/infra validate
