@@ -156,7 +156,7 @@
 		"eslint": "9.39.5",
 		"eslint-config-next": "16.3.5",
 		"eslint-plugin-react": "7.37.5",
-		"firebase-tools": "15.30.2",
+		"firebase-tools": "15.31.0",
 		"jest": "30.5.2",
 		"jest-environment-jsdom": "30.5.2",
 		"knip": "6.36.0",
