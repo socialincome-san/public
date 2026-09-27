@@ -3,8 +3,7 @@ import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem } from '../../../utils';
 
 const makeCsvWithManyValidationErrors = (rows = 40) => {
-	const header =
-		'firstName,lastName,localPartnerId,contactPhone,paymentPhone,dateOfBirth,gender,paymentInformationCode';
+	const header = 'firstName,lastName,localPartnerId,contactPhone,paymentPhone,dateOfBirth,gender,paymentInformationCode';
 	const invalidRows = Array.from({ length: rows }, (_, index) => `Long${index + 1},Error${index + 1},,,,,,`);
 
 	return [header, ...invalidRows].join('\n');

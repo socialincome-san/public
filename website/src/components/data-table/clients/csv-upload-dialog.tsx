@@ -88,7 +88,7 @@ export const CsvUploadDialog = ({ open, onOpenChange, title, template, onImport 
 				{result && !result.success && (
 					<Alert variant="destructive">
 						<AlertTitle>Import failed</AlertTitle>
-						<AlertDescription className="min-w-0 whitespace-pre-wrap break-words">{result.error}</AlertDescription>
+						<AlertDescription className="min-w-0 break-words whitespace-pre-wrap">{result.error}</AlertDescription>
 					</Alert>
 				)}
 
