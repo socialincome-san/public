@@ -37,6 +37,16 @@ test('CSV upload keeps long validation errors inside the dialog viewport', async
 	expect(dialogBox!.y).toBeGreaterThanOrEqual(0);
 	expect(dialogBox!.y + dialogBox!.height).toBeLessThanOrEqual(viewport!.height + 1);
 
+	const scrollMetrics = await dialog.evaluate((element) => ({
+		scrollHeight: element.scrollHeight,
+		clientHeight: element.clientHeight,
+		scrollTop: element.scrollTop,
+	}));
+	expect(scrollMetrics.scrollHeight).toBeGreaterThan(scrollMetrics.clientHeight);
+
+	await dialog.evaluate((element) => element.scrollBy({ top: 500 }));
+	await expect.poll(() => dialog.evaluate((element) => element.scrollTop)).toBeGreaterThan(scrollMetrics.scrollTop);
+
 	const cancelButton = page.getByRole('button', { name: 'Cancel' });
 	await cancelButton.scrollIntoViewIfNeeded();
 	await expect(cancelButton).toBeInViewport();
