@@ -2,7 +2,7 @@
 
 import { setSessionCookie } from './session';
 
-export async function login(formData: FormData) {
+export async function login(prevState: string | null, formData: FormData): Promise<string | null> {
 	const password = formData.get('password');
 
 	const appPassword = process.env.APP_PASSWORD;
@@ -13,7 +13,8 @@ export async function login(formData: FormData) {
 		throw new Error('Invalid password');
 	}
 	if (password != appPassword) {
-		return;
+		return 'Wrong password';
 	}
 	await setSessionCookie();
+	return null;
 }
