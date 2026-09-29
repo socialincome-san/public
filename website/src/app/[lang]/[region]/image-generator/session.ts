@@ -5,7 +5,7 @@ const COOKIE_NAME = 'image-generator-session';
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
 function getSessionSecret() {
-	if (SESSION_SECRET == undefined) {
+	if (!SESSION_SECRET) {
 		throw new Error('Missing SESSION_SECRET');
 	}
 	return SESSION_SECRET;
@@ -56,7 +56,7 @@ export async function isSessionValid(): Promise<boolean> {
 	if (signatureBuffer.length !== expectedSignatureBuffer.length) {
 		return false;
 	}
-	if (timingSafeEqual(signatureBuffer, expectedSignatureBuffer) == false) {
+	if (!timingSafeEqual(signatureBuffer, expectedSignatureBuffer)) {
 		return false;
 	}
 	return true;
