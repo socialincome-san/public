@@ -81,7 +81,7 @@
 		"@scalar/api-reference-react": "0.9.72",
 		"@sendgrid/client": "8.1.6",
 		"@sendgrid/mail": "^8.1.6",
-		"@storyblok/js": "6.3.2",
+		"@storyblok/js": "6.3.3",
 		"@storyblok/react": "7.0.1",
 		"@stripe/react-stripe-js": "6.10.0",
 		"@stripe/stripe-js": "9.16.0",
