@@ -1,6 +1,7 @@
 'use server';
 
 import { isSessionValid } from './session';
+import { buildPrompt } from './style-template';
 
 export async function generateImage(prevState: string | null, formData: FormData): Promise<string | null> {
 	const authenticated = await isSessionValid();
@@ -14,6 +15,7 @@ export async function generateImage(prevState: string | null, formData: FormData
 	if (prompt.trim() === '') {
 		return 'Cant send without text';
 	}
+	const fullPrompt = buildPrompt(prompt);
 
 	return null;
 }
