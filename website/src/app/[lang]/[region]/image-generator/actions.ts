@@ -10,7 +10,7 @@ export async function login(prevState: string | null, formData: FormData): Promi
 	if (!appPassword) {
 		return 'App is not configured';
 	}
-	if (typeof password != 'string') {
+	if (typeof password !== 'string') {
 		return 'Missing Password';
 	}
 	const passwordHash = hashText(password);
@@ -19,6 +19,7 @@ export async function login(prevState: string | null, formData: FormData): Promi
 		return 'Wrong password';
 	}
 	await setSessionCookie();
+
 	return null;
 }
 function hashText(text: string): Buffer {

@@ -7,6 +7,7 @@ import { login } from './actions';
 
 export function LoginForm() {
 	const [error, formAction] = useActionState(login, null);
+
 	return (
 		<form
 			action={formAction}

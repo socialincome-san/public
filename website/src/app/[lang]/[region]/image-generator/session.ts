@@ -8,6 +8,7 @@ function getSessionSecret() {
 	if (!SESSION_SECRET) {
 		throw new Error('Missing SESSION_SECRET');
 	}
+
 	return SESSION_SECRET;
 }
 function signSession(value: string): string {
@@ -16,6 +17,7 @@ function signSession(value: string): string {
 function createSessionValue(): string {
 	const authenticated = 'authenticated';
 	const signature = signSession(authenticated);
+
 	return `${authenticated}.${signature}`;
 }
 export async function setSessionCookie(): Promise<void> {
@@ -33,11 +35,12 @@ export async function setSessionCookie(): Promise<void> {
 async function getSessionCookie(): Promise<string | null> {
 	const store = await cookies();
 	const value = store.get(COOKIE_NAME)?.value;
+
 	return value ?? null;
 }
 export async function isSessionValid(): Promise<boolean> {
 	const cookie = await getSessionCookie();
-	if (cookie == null) {
+	if (cookie === null) {
 		return false;
 	}
 	const parts = cookie.split('.');
@@ -59,6 +62,7 @@ export async function isSessionValid(): Promise<boolean> {
 	if (!timingSafeEqual(signatureBuffer, expectedSignatureBuffer)) {
 		return false;
 	}
+
 	return true;
 }
 export async function clearSessionCookie(): Promise<void> {
