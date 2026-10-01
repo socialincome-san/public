@@ -28,7 +28,7 @@ export function GeneratorForm() {
 						alt="Generated"
 						className="h-auto w-full max-w-xl rounded-lg shadow-lg"
 					/>
-					<a href={`/de/ch/image-generator/download?url=${encodeURIComponent(report.fileUrl)}`}>Download PNG</a>
+					<a href={`/de/ch/image-generator/download?url=${encodeURIComponent(state.imageUrl)}`}>Download PNG</a>
 				</>
 			)}
 		</form>
