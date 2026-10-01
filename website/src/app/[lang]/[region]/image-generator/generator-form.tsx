@@ -18,7 +18,14 @@ export function GeneratorForm() {
 			<Button type="submit" disabled={isPending} className="mx-auto rounded-full px-6">
 				{isPending ? 'Generating...' : 'Generate'}
 			</Button>
-			{isPending && <p className="text-muted-foreground text-sm">Generating your image, this can take up to a minute...</p>}
+			{isPending && (
+				<>
+					<p className="text-muted-foreground text-sm">Generating your image, this can take up to a minute...</p>
+					<div className="bg-muted h-2 w-full max-w-xl overflow-hidden rounded-full">
+						<div className="bg-primary h-full w-1/3 animate-pulse rounded-full"></div>
+					</div>
+				</>
+			)}
 			{state.imageUrl && (
 				<>
 					<Image
