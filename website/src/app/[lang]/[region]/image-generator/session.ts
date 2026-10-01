@@ -65,15 +65,3 @@ export async function isSessionValid(): Promise<boolean> {
 
 	return true;
 }
-export async function clearSessionCookie(): Promise<void> {
-	const store = await cookies();
-	store.set({
-		name: COOKIE_NAME,
-		value: '',
-		secure: process.env.NODE_ENV === 'production',
-		httpOnly: true,
-		sameSite: 'lax',
-		path: '/',
-		maxAge: 0,
-	});
-}
