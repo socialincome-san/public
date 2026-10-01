@@ -16,17 +16,23 @@ const mockSetApiKey = sgMail.setApiKey as jest.Mock;
 const mockSend = sgMail.send as jest.Mock;
 
 describe('SendgridMailService', () => {
-	const db = {
+	const createDb = () => ({
 		contact: { findUnique: jest.fn().mockResolvedValue(null) },
 		sentEmail: { create: jest.fn().mockResolvedValue({}) },
-	};
+	});
+	let db = createDb();
 	const originalApiKey = process.env.SENDGRID_API_KEY;
 	const originalFromEmail = process.env.SENDGRID_FROM_EMAIL;
+
+	beforeEach(() => {
+		db = createDb();
+		mockSetApiKey.mockReset();
+		mockSend.mockReset();
+	});
 
 	afterEach(() => {
 		process.env.SENDGRID_API_KEY = originalApiKey;
 		process.env.SENDGRID_FROM_EMAIL = originalFromEmail;
-		jest.clearAllMocks();
 	});
 
 	test('returns an error when SendGrid configuration is missing', async () => {

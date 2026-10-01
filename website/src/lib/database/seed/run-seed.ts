@@ -27,6 +27,7 @@ import { programsData } from './data/programs.data';
 import { recipientsData } from './data/recipients.data';
 import { reservesData } from './data/reserves.data';
 import { sourceLinksData } from './data/source-links.data';
+import { sentEmailsData } from './data/sent-emails.data';
 import { subscriptionsData } from './data/subscriptions.data';
 import { surveySchedulesData } from './data/survey-schedules.data';
 import { surveysData } from './data/surveys.data';
@@ -55,6 +56,7 @@ export const seedDatabase = async () => {
 		await tx.focus.deleteMany();
 		await tx.organizationAccess.deleteMany();
 		await tx.messageLog.deleteMany();
+		await tx.sentEmail.deleteMany();
 		await tx.messagingJob.deleteMany();
 		await tx.expense.deleteMany();
 		await tx.user.deleteMany();
@@ -82,6 +84,7 @@ export const seedDatabase = async () => {
 		await tx.address.createMany({ data: addressesData, skipDuplicates: true });
 		await tx.phone.createMany({ data: phonesData, skipDuplicates: true });
 		await tx.contact.createMany({ data: contactsData, skipDuplicates: true });
+		await tx.sentEmail.createMany({ data: sentEmailsData, skipDuplicates: true });
 		await tx.organization.createMany({ data: organizationsData, skipDuplicates: true });
 		await tx.user.createMany({ data: usersData, skipDuplicates: true });
 		await tx.organizationAccess.createMany({ data: organizationAccessesData, skipDuplicates: true });

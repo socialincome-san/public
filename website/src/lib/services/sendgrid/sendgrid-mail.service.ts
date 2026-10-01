@@ -18,51 +18,62 @@ export class SendgridMailService extends BaseService {
 
 	async send(input: SendEmailInput): Promise<ServiceResult<void>> {
 		try {
-			const apiKey = process.env.SENDGRID_API_KEY;
 			const from = process.env.SENDGRID_FROM_EMAIL;
 
-			if (!apiKey || !from) {
+			if (!process.env.SENDGRID_API_KEY || !from) {
 				return {
 					success: false,
 					error: 'Missing required SendGrid environment variables',
 				};
 			}
 
-			if (!this.initialized) {
-				sgMail.setApiKey(apiKey);
-				this.initialized = true;
-			}
-
-			await sgMail.send({
-				to: input.to,
-				from,
-				subject: input.subject,
-				text: input.text,
-			});
-
-			const recipients = Array.isArray(input.to) ? input.to : [input.to];
-			await Promise.all(
-				recipients.map(async (toEmail) => {
-					const contact = await this.db.contact.findUnique({ where: { email: toEmail } });
-
-					return this.db.sentEmail.create({
-						data: {
-							toEmail,
-							fromEmail: from,
-							subject: input.subject,
-							body: input.text,
-							contactId: contact?.id,
-						},
-					});
-				}),
-			);
+			await this.sendEmail(input, from);
+			await this.storeSentEmails(input, from);
 
 			return { success: true, data: undefined };
 		} catch (error) {
+			console.error('Error sending email:', error);
+
 			return {
 				success: false,
 				error: `Unable to send email: ${String(error)}`,
 			};
 		}
+	}
+
+	private async sendEmail(input: SendEmailInput, from: string): Promise<void> {
+		const apiKey = process.env.SENDGRID_API_KEY;
+
+		if (!this.initialized && apiKey) {
+			sgMail.setApiKey(apiKey);
+			this.initialized = true;
+		}
+
+		await sgMail.send({
+			to: input.to,
+			from,
+			subject: input.subject,
+			text: input.text,
+		});
+	}
+
+	private async storeSentEmails(input: SendEmailInput, from: string): Promise<void> {
+		const recipients = Array.isArray(input.to) ? input.to : [input.to];
+
+		await Promise.all(
+			recipients.map(async (toEmail) => {
+				const contact = await this.db.contact.findUnique({ where: { email: toEmail } });
+
+				return this.db.sentEmail.create({
+					data: {
+						toEmail,
+						fromEmail: from,
+						subject: input.subject,
+						body: input.text,
+						contactId: contact?.id,
+					},
+				});
+			}),
+		);
 	}
 }
