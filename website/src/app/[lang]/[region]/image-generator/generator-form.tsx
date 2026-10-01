@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button/button';
+import Image from 'next/image';
 import { useActionState } from 'react';
 import { generateImage } from './generate-actions';
 
@@ -17,6 +18,15 @@ export function GeneratorForm() {
 			<Button type="submit" className="mx-auto rounded-full px-6">
 				Generate
 			</Button>
+			{state.imageUrl && (
+				<Image
+					src={state.imageUrl}
+					width={1920}
+					height={1080}
+					alt="Generated"
+					className="h-auto w-full max-w-xl rounded-lg shadow-lg"
+				/>
+			)}
 		</form>
 	);
 }
