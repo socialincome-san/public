@@ -20,13 +20,16 @@ export function GeneratorForm() {
 			</Button>
 			{isPending && <p className="text-muted-foreground text-sm">Generating your image, this can take up to a minute...</p>}
 			{state.imageUrl && (
-				<Image
-					src={state.imageUrl}
-					width={1920}
-					height={1080}
-					alt="Generated"
-					className="h-auto w-full max-w-xl rounded-lg shadow-lg"
-				/>
+				<>
+					<Image
+						src={state.imageUrl}
+						width={1920}
+						height={1080}
+						alt="Generated"
+						className="h-auto w-full max-w-xl rounded-lg shadow-lg"
+					/>
+					<a href={`/de/ch/image-generator/download?url=${encodeURIComponent(report.fileUrl)}`}>Download PNG</a>
+				</>
 			)}
 		</form>
 	);
