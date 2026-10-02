@@ -26,19 +26,27 @@ type CardProps = React.HTMLAttributes<HTMLDivElement> &
 		href?: string;
 	};
 
-const Card = React.forwardRef<HTMLDivElement, CardProps>(({ className, variant, href, children, ...props }, ref) => {
-	const content = (
-		<div ref={ref} className={cn(cardVariants({ variant, clickable: !!href }), 'relative', className)} {...props}>
-			{href && <ChevronRightIcon className="text-muted-foreground absolute top-6 right-6 h-5 w-5" />}
-			{children}
-		</div>
-	);
-	if (href) {
-		return <Link href={href}>{content}</Link>;
-	}
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+	({ className, variant, clickable, href, children, ...props }, ref) => {
+		// A card without an href can still be interactive — a dialog trigger, for instance — and then
+		// opts into the clickable styling explicitly.
+		const content = (
+			<div
+				ref={ref}
+				className={cn(cardVariants({ variant, clickable: clickable ?? !!href }), 'relative', className)}
+				{...props}
+			>
+				{href && <ChevronRightIcon className="text-muted-foreground absolute top-6 right-6 h-5 w-5" />}
+				{children}
+			</div>
+		);
+		if (href) {
+			return <Link href={href}>{content}</Link>;
+		}
 
-	return content;
-});
+		return content;
+	},
+);
 
 Card.displayName = 'Card';
 

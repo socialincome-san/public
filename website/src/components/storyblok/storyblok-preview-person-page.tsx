@@ -60,6 +60,7 @@ export const StoryblokPreviewPersonPage = async ({
 						circles: translator.t('person.circles'),
 						activeCircle: translator.t('person.circle-active'),
 						interestedCircle: translator.t('person.circle-interested'),
+						commitment: translator.t('person.commitment'),
 						workStyle: translator.t('person.work-style'),
 						likesDeadline: translator.t('person.likes-deadline'),
 						likesDeadlineYes: translator.t('person.likes-deadline-yes'),

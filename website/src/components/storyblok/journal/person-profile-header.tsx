@@ -2,6 +2,7 @@ import { Badge } from '@/components/badge/badge';
 import { Button } from '@/components/button/button';
 import { Card } from '@/components/card/card';
 import { SectionHeading } from '@/components/section-heading';
+import { PersonCommitmentCard, type PersonCommitmentDetail } from '@/components/storyblok/journal/person-commitment-card';
 import { getDurationLabels, type VolunteerDurationConfig } from '@/components/storyblok/shared/person-card';
 import { GithubIcon } from '@/components/svg/github';
 import { LinkedinIcon } from '@/components/svg/linkedin';
@@ -16,10 +17,9 @@ import {
 import { cn } from '@/lib/utils/cn';
 import { HOURS_RANGE_REGEX } from '@/lib/utils/regex';
 import type { ISbStoryData } from '@storyblok/js';
-import { CalendarIcon, CircleIcon, ClockIcon, CompassIcon } from 'lucide-react';
+import { CircleIcon, UsersIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
 
 const labelClassName = 'text-muted-foreground text-xs';
 
@@ -29,7 +29,9 @@ export type PersonProfileTranslations = {
 	// Membership status of a circle pill, shown as its tooltip.
 	activeCircle: string;
 	interestedCircle: string;
-	// Labels for the fact cards below the circle pills.
+	// Title of the volunteer commitment card and of the dialog it opens.
+	commitment: string;
+	// Labels for the facts inside the volunteer commitment card.
 	workStyle: string;
 	likesDeadline: string;
 	likesDeadlineYes: string;
@@ -37,14 +39,6 @@ export type PersonProfileTranslations = {
 	timeCommitment: string;
 	// Unit shown after a numeric time commitment, e.g. "4-8" + "hrs / week".
 	timeCommitmentUnit: string;
-};
-
-type PersonFact = {
-	label: string;
-	value: string;
-	// Only the hour counts carry a unit; a worded entry such as "On a break" stands on its own.
-	unit?: string;
-	Icon: React.ComponentType<{ className?: string }>;
 };
 
 type Props = {
@@ -80,28 +74,21 @@ export const PersonProfileHeader = ({
 	// is a statement about the person and is shown.
 	const workStyle = getOptionCode(person.content.workStyle);
 	const timeCommitment = getOptionCode(person.content.timeCommitment);
-	const facts: PersonFact[] = [
-		...(workStyle ? [{ label: translations.workStyle, value: workStyle, Icon: CompassIcon }] : []),
+	// Only the time commitment is on the card itself — the rest is a click away, since it speaks to
+	// volunteers rather than to a first-time visitor.
+	const commitmentDetails: PersonCommitmentDetail[] = [
+		...(workStyle ? [{ label: translations.workStyle, value: workStyle }] : []),
 		...(typeof likesDeadline === 'boolean'
 			? [
 					{
 						label: translations.likesDeadline,
 						value: likesDeadline ? translations.likesDeadlineYes : translations.likesDeadlineNo,
-						Icon: CalendarIcon,
-					},
-				]
-			: []),
-		...(timeCommitment
-			? [
-					{
-						label: translations.timeCommitment,
-						value: timeCommitment,
-						unit: HOURS_RANGE_REGEX.test(timeCommitment) ? translations.timeCommitmentUnit : undefined,
-						Icon: ClockIcon,
 					},
 				]
 			: []),
 	];
+	const hasCirclesCard = Boolean(roleLabel) || circles.length > 0;
+	const hasCommitmentCard = Boolean(timeCommitment) || commitmentDetails.length > 0;
 
 	return (
 		<header className="flex flex-col gap-8 sm:flex-row sm:items-start sm:gap-10">
@@ -135,9 +122,8 @@ export const PersonProfileHeader = ({
 					<SectionHeading as="h1" size={1} align="left" bold className="text-foreground mb-0 leading-tight md:mb-0">
 						{name}
 					</SectionHeading>
-					{(roleLabel || (linkedinName ?? githubName)) && (
-						<div className="flex flex-wrap items-center justify-center gap-3 sm:justify-start">
-							{roleLabel && <p className="text-muted-foreground text-base sm:text-lg">{roleLabel}</p>}
+					{(linkedinName ?? githubName) && (
+						<div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
 							{linkedinName && (
 								<Button asChild size="sm" variant="outline">
 									<Link href={getPersonLinkedInUrl(linkedinName)} target="_blank" rel="noopener noreferrer">
@@ -158,36 +144,40 @@ export const PersonProfileHeader = ({
 					)}
 				</div>
 
-				{circles.length > 0 && (
-					<div className="space-y-2">
-						<p className={labelClassName}>{translations.circles}</p>
-						<div className="flex flex-wrap justify-center gap-2 sm:justify-start">
-							{circles.map((circle) => (
-								<Badge
-									key={`${circle.status}-${circle.code}`}
-									variant={circle.status === 'active' ? 'circle' : 'circle-outline'}
-									title={circle.status === 'active' ? translations.activeCircle : translations.interestedCircle}
-								>
-									<CircleIcon className="size-3 shrink-0" aria-hidden="true" />
-									{circle.label}
-								</Badge>
-							))}
-						</div>
-					</div>
-				)}
-
-				{facts.length > 0 && (
-					<div className="grid gap-4 sm:grid-cols-3">
-						{facts.map(({ label, value, unit, Icon }) => (
-							<Card key={label} variant="noPadding" className="px-6 py-4">
-								<Icon className="text-muted-foreground mx-auto size-4 sm:mx-0" />
-								<p className={cn(labelClassName, 'mt-2')}>{label}</p>
-								<p className="text-xl">
-									{value}
-									{unit && <span className={cn(labelClassName, 'ml-1')}>{unit}</span>}
-								</p>
+				{/* A lone card fills the row rather than leaving half of it empty. */}
+				{(hasCirclesCard || hasCommitmentCard) && (
+					<div className={cn('grid gap-4', hasCirclesCard && hasCommitmentCard && 'sm:grid-cols-2')}>
+						{hasCirclesCard && (
+							<Card variant="noPadding" className="h-full px-6 py-4">
+								<UsersIcon className="text-muted-foreground mx-auto size-4 sm:mx-0" />
+								{roleLabel && <p className="mt-2 text-xl">{roleLabel}</p>}
+								{circles.length > 0 && (
+									<>
+										<p className={cn(labelClassName, 'mt-2')}>{translations.circles}</p>
+										<div className="mt-2 flex flex-wrap justify-center gap-2 sm:justify-start">
+											{circles.map((circle) => (
+												<Badge
+													key={`${circle.status}-${circle.code}`}
+													variant={circle.status === 'active' ? 'circle' : 'circle-outline'}
+													title={circle.status === 'active' ? translations.activeCircle : translations.interestedCircle}
+												>
+													<CircleIcon className="size-3 shrink-0" aria-hidden="true" />
+													{circle.label}
+												</Badge>
+											))}
+										</div>
+									</>
+								)}
 							</Card>
-						))}
+						)}
+						{hasCommitmentCard && (
+							<PersonCommitmentCard
+								title={translations.commitment}
+								value={timeCommitment}
+								unit={HOURS_RANGE_REGEX.test(timeCommitment) ? translations.timeCommitmentUnit : undefined}
+								details={commitmentDetails}
+							/>
+						)}
 					</div>
 				)}
 
