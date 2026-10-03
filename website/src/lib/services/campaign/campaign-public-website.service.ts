@@ -2,7 +2,12 @@ import type { Campaign, CampaignGlobals, Faq } from '@/generated/storyblok/types
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { STORYBLOK_CAMPAIGN_GLOBALS_PATH } from '@/lib/storyblok/storyblok-paths';
-import { getMetadata } from '@/lib/utils/metadata';
+import {
+	DEFAULT_OPEN_GRAPH_IMAGE_URL,
+	DEFAULT_TWITTER_IMAGE_URL,
+	getMetadata,
+	toProductionMetadataUrl,
+} from '@/lib/utils/metadata';
 import type { ISbStoryData } from '@storyblok/js';
 import { BaseService } from '../core/base.service';
 import type { ServiceResult } from '../core/base.types';
@@ -120,14 +125,14 @@ export class CampaignPublicWebsiteService extends BaseService {
 						openGraph: {
 							title: campaign.title,
 							description: campaign.description,
-							images: primaryImage,
+							images: toProductionMetadataUrl(primaryImage, DEFAULT_OPEN_GRAPH_IMAGE_URL),
 						},
 						twitter: {
 							title: campaign.title,
 							card: 'summary_large_image' as const,
 							site: '@so_income',
 							creator: '@so_income',
-							images: primaryImage,
+							images: toProductionMetadataUrl(primaryImage, DEFAULT_TWITTER_IMAGE_URL),
 						},
 					}
 				: {}),
