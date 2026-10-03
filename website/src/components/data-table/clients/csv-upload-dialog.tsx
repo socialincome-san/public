@@ -76,7 +76,7 @@ export const CsvUploadDialog = ({ open, onOpenChange, title, template, onImport 
 
 	return (
 		<Dialog open={open} onOpenChange={(next) => !next && handleDialogClose()}>
-			<DialogContent className="space-y-4 sm:max-w-3xl">
+			<DialogContent className="space-y-4 overflow-y-auto sm:max-h-[90vh] sm:max-w-3xl">
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
 				</DialogHeader>
@@ -88,7 +88,7 @@ export const CsvUploadDialog = ({ open, onOpenChange, title, template, onImport 
 				{result && !result.success && (
 					<Alert variant="destructive">
 						<AlertTitle>Import failed</AlertTitle>
-						<AlertDescription>{result.error}</AlertDescription>
+						<AlertDescription className="min-w-0 break-words whitespace-pre-wrap">{result.error}</AlertDescription>
 					</Alert>
 				)}
 
