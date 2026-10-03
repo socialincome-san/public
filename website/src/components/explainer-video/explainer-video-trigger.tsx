@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/dialog/dialog';
 import { cn } from '@/lib/utils/cn';
 import { PlayIcon } from 'lucide-react';
 import NextImage from 'next/image';

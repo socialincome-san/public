@@ -1,7 +1,7 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog/dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import CountriesForm from './countries-form';
 

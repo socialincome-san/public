@@ -4,7 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { expensesTableConfig } from '@/components/data-table/configs/expenses-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog/dialog';
 import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { PlusIcon } from 'lucide-react';

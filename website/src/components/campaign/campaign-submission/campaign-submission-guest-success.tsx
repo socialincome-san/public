@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button/button';
-import { DialogHeader, DialogTitle } from '@/components/dialog';
+import { DialogHeader, DialogTitle } from '@/components/dialog/dialog';
 import { Heart } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { CampaignSubmissionFormCard, CampaignSubmissionFormCardColumn } from './form-layout';

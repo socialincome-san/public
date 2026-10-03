@@ -2,7 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog/dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { Settings } from 'lucide-react';
 import { useState } from 'react';

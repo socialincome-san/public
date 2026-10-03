@@ -1,6 +1,6 @@
 'use client';
 
-import { DialogTitle } from '@/components/dialog';
+import { DialogTitle } from '@/components/dialog/dialog';
 import type { MessagingChannel } from '@/generated/prisma/client';
 import type { ChannelPreviewSummary } from '@/lib/services/twilio/messaging/dispatch/dispatch.types';
 import type {
