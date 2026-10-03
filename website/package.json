@@ -56,6 +56,7 @@
 		"storyblok:generate": "npm run storyblok:login && npm run storyblok:pull && npm run storyblok:types"
 	},
 	"dependencies": {
+		"@fal-ai/client": "^1.10.1",
 		"@hookform/resolvers": "5.9.1",
 		"@lottiefiles/dotlottie-react": "^0.19.10",
 		"@mux/mux-video-react": "0.31.4",
