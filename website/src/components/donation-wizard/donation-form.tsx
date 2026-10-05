@@ -23,7 +23,7 @@ export const DonationForm = ({ campaignId, onBeforeOpen, translations, currency 
 	return (
 		<div data-testid="donation-wizard-hero-form" className="w-full">
 			<DonationAmountFields
-				className={cn(getDonationWizardCardClass('stepAmount'), 'mx-0 max-w-none lg:mx-auto lg:max-w-[400px]')}
+				className={cn(getDonationWizardCardClass('stepAmount'), 'mx-0 max-w-none lg:mx-auto lg:w-[400px]')}
 				translations={translations}
 				currency={currency}
 				values={selectStep1FormView(form.context)}
