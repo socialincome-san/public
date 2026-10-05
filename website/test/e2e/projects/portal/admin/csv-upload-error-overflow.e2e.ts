@@ -2,12 +2,8 @@ import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
 import { clickDataTableActionItem } from '../../../utils';
 
-const makeCsvWithManyInvalidRows = (rows = 40) => {
-	const header = 'firstName,lastName,localPartnerId,contactPhone,paymentPhone,dateOfBirth,gender,paymentInformationCode';
-	const invalidRows = Array.from({ length: rows }, (_, index) => `Long${index + 1},Error${index + 1},,,,,,`);
-
-	return [header, ...invalidRows].join('\n');
-};
+const makeLongMultilineError = (rows = 40) =>
+	Array.from({ length: rows }, (_, index) => `Row ${index + 1}: ${'validationdetail'.repeat(12)}`).join('\n');
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -18,17 +14,29 @@ test('CSV upload errors stay inside the scrollable dialog viewport', async ({ pa
 	await page.goto('/portal/admin/candidates');
 	await clickDataTableActionItem(page, 'data-table-action-item-upload-csv');
 
+	const longError = makeLongMultilineError();
+
+	// Candidate imports intentionally return a generic validation error.
+	// Inject a long client-side read failure to exercise the dialog layout
+	// without changing the backend error contract.
+	await page.evaluate((message) => {
+		File.prototype.text = () => Promise.reject(new Error(message));
+	}, longError);
+
 	await page.getByTestId('csv-dropzone-input').setInputFiles({
-		name: 'many-invalid-candidates.csv',
+		name: 'long-error.csv',
 		mimeType: 'text/csv',
-		buffer: Buffer.from(makeCsvWithManyInvalidRows()),
+		buffer: Buffer.from('firstName,lastName\nAda,Lovelace'),
 	});
-	await page.getByTestId('import-button').click();
 
 	const alert = page.getByRole('alert');
-	await expect(alert).toContainText('CSV contains invalid candidate data');
+	await expect(alert).toContainText('Import failed');
 
 	const alertDescription = alert.locator('[data-slot="alert-description"]');
+	await expect(alertDescription).toContainText('Row 1:');
+	await expect(alertDescription).toContainText('Row 40:');
+	expect(await alertDescription.textContent()).toBe(longError);
+
 	await expect(alertDescription).toHaveCSS('white-space', 'pre-wrap');
 	await expect(alertDescription).toHaveCSS('overflow-wrap', 'break-word');
 
