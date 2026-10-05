@@ -20,6 +20,15 @@ describe('recipient permissions', () => {
 		expect(canCreateRecipient({ type: 'user', id: 'user-1' }, 'program-2', operatorAccess)).toBe(false);
 	});
 
+	test('allows local partners to create only in programs where they already have a recipient', () => {
+		expect(canCreateRecipient({ type: 'local-partner', id: 'partner-1' }, 'program-a', [], true)).toBe(true);
+		expect(canCreateRecipient({ type: 'local-partner', id: 'partner-1' }, 'program-b', [], false)).toBe(false);
+	});
+
+	test('denies non-operator users even when a partner eligibility flag is true', () => {
+		expect(canCreateRecipient({ type: 'user', id: 'user-1' }, 'program-2', operatorAccess, true)).toBe(false);
+	});
+
 	test('restricts local partners to their own recipients', () => {
 		expect(
 			canReadRecipient(

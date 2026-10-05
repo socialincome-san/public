@@ -457,13 +457,6 @@ export const updateContributorStripeCustomerId = async (contributorId: string, s
 		select: contributorWithContactSelect,
 	});
 
-export const updateContributorPaymentReferenceId = async (contributorId: string, paymentReferenceId: string) =>
-	prisma.contributor.update({
-		where: { id: contributorId },
-		data: { paymentReferenceId },
-		select: contributorRecordSelect,
-	});
-
 export const deletePhoneIfOrphaned = async (phoneId: string) => {
 	const phone = await prisma.phone.findUnique({
 		where: { id: phoneId },

@@ -172,7 +172,16 @@ export const createRecipient = async (
 			return resultFail(accessResult.error);
 		}
 
-		if (!canCreateRecipient(session, recipientInput.programId, accessResult.data)) {
+		let partnerHasRecipientInProgram = false;
+		if (session.type === 'local-partner') {
+			const existingInProgram = await recipientRepository.countRecipientsForProgramsAndLocalPartners(
+				[recipientInput.programId],
+				[session.id],
+			);
+			partnerHasRecipientInProgram = existingInProgram > 0;
+		}
+
+		if (!canCreateRecipient(session, recipientInput.programId, accessResult.data, partnerHasRecipientInProgram)) {
 			return resultFail('Permission denied');
 		}
 

@@ -86,11 +86,16 @@ export const findOwnedBankTransferSubscription = async (contributorId: string, s
 		select: { id: true, status: true },
 	});
 
+export const findBankStandingOrderByReference = async (bankStandingOrderReference: string) =>
+	prisma.subscription.findUnique({
+		where: { bankStandingOrderReference },
+		select: { id: true, contributorId: true },
+	});
+
 export const updateBankStandingOrder = async (input: UpsertBankStandingOrderInput) => {
 	const status = input.status ?? SubscriptionStatus.active;
 	const canceledAt = input.canceledAt ?? null;
 	const sharedFields = {
-		contributorId: input.contributorId,
 		campaignId: input.campaignId,
 		amount: input.amount,
 		currency: input.currency,
@@ -105,6 +110,7 @@ export const updateBankStandingOrder = async (input: UpsertBankStandingOrderInpu
 		where: { bankStandingOrderReference: input.bankStandingOrderReference },
 		create: {
 			bankStandingOrderReference: input.bankStandingOrderReference,
+			contributorId: input.contributorId,
 			...sharedFields,
 		},
 		update: sharedFields,

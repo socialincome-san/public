@@ -3,7 +3,7 @@ import { buildQrBillDisplayData, generateQrBillPdf, generateQrBillSvg } from '@/
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import { nowMs } from '@/lib/utils/now';
 import { getCampaignById, getFallbackCampaign } from '@/modules/campaigns/campaign.service';
-import { upsertFromBankTransfer } from '@/modules/contributions/contribution.service';
+import { getContributorContributionSummary, upsertFromBankTransfer } from '@/modules/contributions/contribution.service';
 import type { BankTransferUpsertInput } from '@/modules/contributions/contribution.types';
 import {
 	findContributorsByPaymentReferenceIds,
@@ -337,12 +337,33 @@ const verifyContributorByPaymentReference = async (
 			return resultFail('Contributor email does not match QR donor email');
 		}
 
+		const wizardAccessResult = await assertUnauthenticatedWizardContributor(contributor);
+		if (!wizardAccessResult.success) {
+			return resultFail(wizardAccessResult.error);
+		}
+
 		return resultOk({ contributor, email: normalizedEmail });
 	} catch (error) {
 		console.error('Could not verify QR bill contributor', { error });
 
 		return resultFail('Could not verify contributor for payment reference');
 	}
+};
+
+const assertUnauthenticatedWizardContributor = async (contributor: ContributorWithContact): Promise<ServiceResult<void>> => {
+	if (contributor.stripeCustomerId || contributor.legacyFirestoreId) {
+		return resultFail('An account already exists for this email. Please sign in.');
+	}
+
+	const summaryResult = await getContributorContributionSummary(contributor.id);
+	if (!summaryResult.success) {
+		return resultFail(summaryResult.error);
+	}
+	if (summaryResult.data.count > 0) {
+		return resultFail('An account already exists for this email. Please sign in.');
+	}
+
+	return resultOk(undefined);
 };
 
 const resolveCampaignId = async (campaignId?: string): Promise<ServiceResult<string>> => {

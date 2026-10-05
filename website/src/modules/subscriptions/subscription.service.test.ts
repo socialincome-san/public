@@ -1,4 +1,4 @@
-import { ProgramPermission, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/enums';
+import { Currency, ProgramPermission, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/enums';
 import type { ServiceResult } from '@/lib/service-result';
 import { getContributorContributionSummary } from '@/modules/contributions/contribution.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
@@ -9,6 +9,7 @@ import {
 	getDashboardView,
 	getPaginatedTableView,
 	updateBankTransferAmount,
+	upsertFromBankStandingOrder,
 } from './subscription.service';
 import type { SubscriptionTableQuery } from './subscription.types';
 import { UPCOMING_PAYMENTS_PER_SUBSCRIPTION } from './subscription.types';
@@ -20,6 +21,7 @@ jest.mock('./subscription.repository', () => ({
 	findOwnedActiveBankTransferSubscription: jest.fn(),
 	findOwnedActiveBankTransferQrBill: jest.fn(),
 	findOwnedBankTransferSubscription: jest.fn(),
+	findBankStandingOrderByReference: jest.fn(),
 	updateBankStandingOrder: jest.fn(),
 	updateBankTransferSubscriptionAmount: jest.fn(),
 	updateBankTransferSubscriptionCancellation: jest.fn(),
@@ -49,6 +51,8 @@ const mockFindOwnedActiveBankTransferSubscription = jest.mocked(
 	subscriptionRepository.findOwnedActiveBankTransferSubscription,
 );
 const mockFindOwnedBankTransferSubscription = jest.mocked(subscriptionRepository.findOwnedBankTransferSubscription);
+const mockFindBankStandingOrderByReference = jest.mocked(subscriptionRepository.findBankStandingOrderByReference);
+const mockUpdateBankStandingOrder = jest.mocked(subscriptionRepository.updateBankStandingOrder);
 const mockUpdateBankTransferSubscriptionAmount = jest.mocked(subscriptionRepository.updateBankTransferSubscriptionAmount);
 const mockUpdateBankTransferSubscriptionCancellation = jest.mocked(
 	subscriptionRepository.updateBankTransferSubscriptionCancellation,
@@ -451,5 +455,54 @@ describe('bank transfer mutations', () => {
 		});
 		expect(ended).toEqual({ success: false, error: 'Subscription not found' });
 		expect(mockUpdateBankTransferSubscriptionCancellation).not.toHaveBeenCalled();
+	});
+});
+
+describe('upsertFromBankStandingOrder', () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
+	const standingOrderInput = {
+		bankStandingOrderReference: '1731700000',
+		contributorId: 'contributor-b',
+		campaignId: 'campaign-1',
+		amount: 50,
+		currency: Currency.CHF,
+	};
+
+	it('refuses to reassign a standing-order reference owned by another contributor', async () => {
+		mockFindBankStandingOrderByReference.mockResolvedValue({
+			id: 'sub-a',
+			contributorId: 'contributor-a',
+		});
+
+		const result = await upsertFromBankStandingOrder(standingOrderInput);
+
+		expect(result).toEqual({ success: false, error: 'Standing order reference is already in use' });
+		expect(mockUpdateBankStandingOrder).not.toHaveBeenCalled();
+	});
+
+	it('allows the same contributor to refresh their monthly standing order', async () => {
+		mockFindBankStandingOrderByReference.mockResolvedValue({
+			id: 'sub-b',
+			contributorId: 'contributor-b',
+		});
+		mockUpdateBankStandingOrder.mockResolvedValue({ id: 'sub-b' } as never);
+
+		const result = await upsertFromBankStandingOrder(standingOrderInput);
+
+		expect(result).toEqual({ success: true, data: { id: 'sub-b' } });
+		expect(mockUpdateBankStandingOrder).toHaveBeenCalledWith(standingOrderInput);
+	});
+
+	it('creates a standing order when the reference is unused', async () => {
+		mockFindBankStandingOrderByReference.mockResolvedValue(null);
+		mockUpdateBankStandingOrder.mockResolvedValue({ id: 'sub-new' } as never);
+
+		const result = await upsertFromBankStandingOrder(standingOrderInput);
+
+		expect(result).toEqual({ success: true, data: { id: 'sub-new' } });
+		expect(mockUpdateBankStandingOrder).toHaveBeenCalledWith(standingOrderInput);
 	});
 });

@@ -539,18 +539,11 @@ export const getOrCreateContributorForAccount = async (
 export const getOrCreateReferenceIdByEmail = async (email: string): Promise<ServiceResult<string>> => {
 	try {
 		const existingContributor = await contributorRepository.findContributorPaymentReferenceByEmail(email);
-		const referenceId =
-			existingContributor?.paymentReferenceId && existingContributor.paymentReferenceId.length > 0
-				? existingContributor.paymentReferenceId
-				: nowMs().toString();
-		if (existingContributor && !existingContributor.paymentReferenceId) {
-			const updated = await contributorRepository.updateContributorPaymentReferenceId(existingContributor.id, referenceId);
-			if (!updated) {
-				return resultFail('Could not update existing contributor with newly created reference ID');
-			}
+		if (existingContributor) {
+			return resultFail('An account already exists for this email. Please sign in.');
 		}
 
-		return resultOk(referenceId);
+		return resultOk(nowMs().toString());
 	} catch (error) {
 		console.error(error);
 

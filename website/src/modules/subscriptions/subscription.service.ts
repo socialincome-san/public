@@ -175,6 +175,11 @@ export const upsertFromBankStandingOrder = async (
 	input: UpsertBankStandingOrderInput,
 ): Promise<ServiceResult<SubscriptionUpsertResult>> => {
 	try {
+		const existing = await subscriptionRepository.findBankStandingOrderByReference(input.bankStandingOrderReference);
+		if (existing && existing.contributorId !== input.contributorId) {
+			return resultFail('Standing order reference is already in use');
+		}
+
 		const subscription = await subscriptionRepository.updateBankStandingOrder(input);
 
 		return resultOk(subscription);

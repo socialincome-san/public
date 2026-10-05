@@ -45,6 +45,15 @@ describe('program access service', () => {
 		expect(mockFindProgramAccessesByOrganizationId).not.toHaveBeenCalled();
 	});
 
+	test('fails closed when a stale activeOrganizationId no longer has organization access', async () => {
+		mockFindActiveOrganizationId.mockResolvedValue(null);
+
+		const result = await getAccessiblePrograms('revoked-user');
+
+		expectFailure(result, 'User has no active organization');
+		expect(mockFindProgramAccessesByOrganizationId).not.toHaveBeenCalled();
+	});
+
 	test('maps persistence records to accessible programs', async () => {
 		mockFindActiveOrganizationId.mockResolvedValue('organization-1');
 		mockFindProgramAccessesByOrganizationId.mockResolvedValue([

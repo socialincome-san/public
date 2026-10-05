@@ -7,8 +7,22 @@ export const findActiveOrganizationId = async (userId: string) => {
 		where: { id: userId },
 		select: { activeOrganizationId: true },
 	});
+	const activeOrganizationId = user?.activeOrganizationId ?? null;
+	if (!activeOrganizationId) {
+		return null;
+	}
 
-	return user?.activeOrganizationId ?? null;
+	const access = await prisma.organizationAccess.findUnique({
+		where: {
+			userId_organizationId: {
+				userId,
+				organizationId: activeOrganizationId,
+			},
+		},
+		select: { organizationId: true },
+	});
+
+	return access?.organizationId ?? null;
 };
 
 export const findProgramAccessesByOrganizationId = async (organizationId: string) =>

@@ -6,12 +6,17 @@ export const canCreateRecipient = (
 	actor: RecipientActor,
 	programId: string,
 	accessiblePrograms: AccessibleProgram[],
+	partnerHasRecipientInProgram = false,
 ): boolean => {
 	if (actor.type === 'contributor') {
 		return false;
 	}
 
-	return actor.type === 'local-partner' || hasOperatorAccess(accessiblePrograms, programId);
+	if (actor.type === 'local-partner') {
+		return partnerHasRecipientInProgram;
+	}
+
+	return hasOperatorAccess(accessiblePrograms, programId);
 };
 
 export const canReadRecipient = (

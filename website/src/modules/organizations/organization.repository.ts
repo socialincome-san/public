@@ -9,8 +9,22 @@ export const findActiveOrganizationId = async (userId: string) => {
 		where: { id: userId },
 		select: { activeOrganizationId: true },
 	});
+	const activeOrganizationId = user?.activeOrganizationId ?? null;
+	if (!activeOrganizationId) {
+		return null;
+	}
 
-	return user?.activeOrganizationId ?? null;
+	const access = await prisma.organizationAccess.findUnique({
+		where: {
+			userId_organizationId: {
+				userId,
+				organizationId: activeOrganizationId,
+			},
+		},
+		select: { organizationId: true },
+	});
+
+	return access?.organizationId ?? null;
 };
 
 export const findOrganizationSummary = async (organizationId: string) =>
@@ -219,6 +233,13 @@ export const findOrganizationIdentity = async (organizationId: string) =>
 
 export const updateOrganization = async (input: UpdateOrganizationInput) =>
 	prisma.$transaction(async (transaction) => {
+		const previousMembers = await transaction.organizationAccess.findMany({
+			where: { organizationId: input.id },
+			select: { userId: true },
+		});
+		const nextUserIds = new Set(input.userIds);
+		const removedUserIds = previousMembers.map(({ userId }) => userId).filter((userId) => !nextUserIds.has(userId));
+
 		const organization = await transaction.organization.update({
 			where: { id: input.id },
 			data: { name: input.name },
@@ -239,6 +260,27 @@ export const updateOrganization = async (input: UpdateOrganizationInput) =>
 		const programAccesses = buildProgramAccessRows(input.id, input.ownedProgramIds, input.operatedProgramIds);
 		if (programAccesses.length > 0) {
 			await transaction.programAccess.createMany({ data: programAccesses });
+		}
+
+		for (const removedUserId of removedUserIds) {
+			const user = await transaction.user.findUnique({
+				where: { id: removedUserId },
+				select: { activeOrganizationId: true },
+			});
+			if (user?.activeOrganizationId !== input.id) {
+				continue;
+			}
+
+			const remainingAccess = await transaction.organizationAccess.findFirst({
+				where: { userId: removedUserId },
+				select: { organizationId: true },
+				orderBy: { createdAt: 'asc' },
+			});
+
+			await transaction.user.update({
+				where: { id: removedUserId },
+				data: { activeOrganizationId: remainingAccess?.organizationId ?? null },
+			});
 		}
 
 		return organization;

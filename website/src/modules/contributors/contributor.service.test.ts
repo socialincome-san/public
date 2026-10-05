@@ -6,10 +6,13 @@ const mockFindContributorByEmailOrFirebaseAuthUserId = jest.fn();
 const mockFindFirebaseUserByEmail = jest.fn();
 const mockCreateFirebaseUserByEmail = jest.fn();
 
+const mockFindContributorPaymentReferenceByEmail = jest.fn();
+
 jest.mock('./contributor.repository', () => ({
 	findContributorByEmail: mockFindContributorByEmail,
 	createContributorFromEmailAndName: mockCreateContributorFromEmailAndName,
 	findContributorByEmailOrFirebaseAuthUserId: mockFindContributorByEmailOrFirebaseAuthUserId,
+	findContributorPaymentReferenceByEmail: mockFindContributorPaymentReferenceByEmail,
 }));
 
 jest.mock('@/modules/auth/auth.service', () => ({
@@ -27,7 +30,7 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 	getAccessiblePrograms: jest.fn(),
 }));
 
-import { getOrCreateContributorFromEmailAndName } from './contributor.service';
+import { getOrCreateContributorFromEmailAndName, getOrCreateReferenceIdByEmail } from './contributor.service';
 
 const expectSuccess = <T>(result: ServiceResult<T>): T => {
 	expect(result.success).toBe(true);
@@ -149,5 +152,49 @@ describe('getOrCreateContributorFromEmailAndName', () => {
 		if (!result.success) {
 			expect(result.error).toContain('Could not get or create contributor from email');
 		}
+	});
+});
+
+describe('getOrCreateReferenceIdByEmail', () => {
+	const previousFixedTime = process.env.NEXT_PUBLIC_FIXED_TIME;
+
+	beforeEach(() => {
+		jest.clearAllMocks();
+		process.env.NEXT_PUBLIC_FIXED_TIME = '2023-11-14T22:13:20.000Z';
+	});
+
+	afterEach(() => {
+		if (previousFixedTime === undefined) {
+			delete process.env.NEXT_PUBLIC_FIXED_TIME;
+		} else {
+			process.env.NEXT_PUBLIC_FIXED_TIME = previousFixedTime;
+		}
+	});
+
+	test('refuses to return an existing donor payment reference', async () => {
+		mockFindContributorPaymentReferenceByEmail.mockResolvedValue({
+			id: 'contributor-1',
+			paymentReferenceId: 'stolen-reference',
+			contact: { email: 'victim@example.com' },
+		});
+
+		const result = await getOrCreateReferenceIdByEmail('victim@example.com');
+
+		expect(result).toEqual({
+			success: false,
+			error: 'An account already exists for this email. Please sign in.',
+		});
+	});
+
+	test('mints a new reference for an unused email', async () => {
+		mockFindContributorPaymentReferenceByEmail.mockResolvedValue(null);
+
+		const result = await getOrCreateReferenceIdByEmail('new@example.com');
+
+		expect(result.success).toBe(true);
+		if (!result.success) {
+			throw new Error(result.error);
+		}
+		expect(result.data).toBe(String(new Date('2023-11-14T22:13:20.000Z').getTime()));
 	});
 });

@@ -15,6 +15,9 @@ import { getFallbackCampaign } from '@/modules/campaigns/campaign.service';
 import { upsertFromBankTransfer } from '@/modules/contributions/contribution.service';
 import type { BankTransferUpsertInput, PaymentEventRecord } from '@/modules/contributions/contribution.types';
 import { findContributorsByPaymentReferenceIds } from '@/modules/contributors/contributor.service';
+import { convertAmount } from '@/modules/currency-display/currency-display.service';
+import { getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
+import type { ExchangeRates } from '@/modules/exchange-rates/exchange-rate.types';
 import { parseQrBillReference } from '@/modules/qr-bills/qr-bill-reference.service';
 import type { QrBillReferenceParts } from '@/modules/qr-bills/qr-bill.types';
 import { DOMParser, XMLSerializer, type Element, type Node as XmlNode } from '@xmldom/xmldom';
@@ -53,26 +56,37 @@ export const importPaymentFiles = async (bucketName: string): Promise<ServiceRes
 		return resultFail('Error importing payment files');
 	}
 
-	const allContributions: BankContribution[] = [];
+	const allCreated: PaymentEventRecord[] = [];
 	for (const report of reportsResult.data) {
 		if (!report.name.startsWith('camt.054_P_')) {
 			console.info(`Skipped processing ${report.name} because it does not contain relevant payment data. Storing anyway.`);
-		} else {
-			console.info(`Importing contributions from file ${report.name}.`);
-			const contributionsResult = parseCamt054Contributions(report.contents.toString('utf8'));
-			if (!contributionsResult.success) {
+			const uploadResult = await uploadBufferToFirebaseStorage(bucketResult.data, report.contents, report.name);
+			if (!uploadResult.success) {
 				return resultFail('Error importing payment files');
 			}
-			allContributions.push(...contributionsResult.data);
+			continue;
+		}
+
+		console.info(`Importing contributions from file ${report.name}.`);
+		const contributionsResult = parseCamt054Contributions(report.contents.toString('utf8'));
+		if (!contributionsResult.success) {
+			return resultFail('Error importing payment files');
+		}
+
+		const persistResult = await createOrUpdateContributions(contributionsResult.data);
+		if (!persistResult.success) {
+			return resultFail(persistResult.error);
 		}
 
 		const uploadResult = await uploadBufferToFirebaseStorage(bucketResult.data, report.contents, report.name);
 		if (!uploadResult.success) {
 			return resultFail('Error importing payment files');
 		}
+
+		allCreated.push(...persistResult.data);
 	}
 
-	return createOrUpdateContributions(allContributions);
+	return resultOk(allCreated);
 };
 
 export const parseCamt054Contributions = (xml: string): ServiceResult<BankContribution[]> => {
@@ -239,6 +253,11 @@ const createOrUpdateContributions = async (
 			return resultFail(fallbackCampaignResult.error);
 		}
 
+		const ratesResult = await resolveImportExchangeRates(bankContributions);
+		if (!ratesResult.success) {
+			return resultFail(ratesResult.error);
+		}
+
 		const referenceIds: QrBillReferenceParts[] = [];
 		for (const { referenceId } of bankContributions) {
 			const referenceResult = parseQrBillReference(referenceId);
@@ -273,6 +292,17 @@ const createOrUpdateContributions = async (
 				console.info(`Legacy reference ID detected for contributor ${contributor.id}.`);
 			}
 
+			const amountChfResult = resolveContributionAmountChf(contribution.amount, contribution.currency, ratesResult.data);
+			if (!amountChfResult.success) {
+				console.error('Could not convert payment contribution amount to CHF', {
+					contributionReferenceId,
+					currency: contribution.currency,
+					error: amountChfResult.error,
+				});
+				failedPaymentEvents.push(contributionReferenceId);
+				continue;
+			}
+
 			const paymentEvent: BankTransferUpsertInput = {
 				type: PaymentEventType.bank_transfer,
 				transactionId:
@@ -284,7 +314,7 @@ const createOrUpdateContributions = async (
 				},
 				contribution: {
 					amount: contribution.amount,
-					amountChf: contribution.amount,
+					amountChf: amountChfResult.data,
 					currency: contribution.currency,
 					feesChf: 0,
 					status: ContributionStatus.succeeded,
@@ -322,6 +352,35 @@ const createOrUpdateContributions = async (
 
 		return resultFail('Error creating contributions from payment file');
 	}
+};
+
+const resolveImportExchangeRates = async (
+	bankContributions: BankContribution[],
+): Promise<ServiceResult<ExchangeRates | undefined>> => {
+	const needsRates = bankContributions.some(({ currency }) => currency !== Currency.CHF);
+	if (!needsRates) {
+		return resultOk(undefined);
+	}
+
+	const ratesResult = await getLatestRates();
+	if (!ratesResult.success) {
+		return resultFail(ratesResult.error);
+	}
+
+	return resultOk(ratesResult.data);
+};
+
+const resolveContributionAmountChf = (
+	amount: number,
+	currency: Currency,
+	rates: ExchangeRates | undefined,
+): ServiceResult<number> => {
+	const converted = convertAmount(amount, currency, Currency.CHF, rates);
+	if (!converted.success) {
+		return resultFail(converted.error);
+	}
+
+	return resultOk(Math.round(converted.data * 100) / 100);
 };
 
 const findPreferredBalance = (report: XmlNode): Element | undefined => {

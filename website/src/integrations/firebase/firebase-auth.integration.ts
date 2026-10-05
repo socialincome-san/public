@@ -157,13 +157,27 @@ export const synchronizeFirebaseSurveyUser = async (input: {
 	previousEmail?: string;
 }): Promise<ServiceResult<void>> => {
 	try {
-		const existingUserResult = await findFirebaseUserByEmail(input.nextEmail);
-		if (!existingUserResult.success) {
-			return resultFail(existingUserResult.error);
+		const nextUserResult = await findFirebaseUserByEmail(input.nextEmail);
+		if (!nextUserResult.success) {
+			return resultFail(nextUserResult.error);
 		}
 
-		if (existingUserResult.data) {
-			await getFirebaseAdminAuth().updateUser(existingUserResult.data.uid, {
+		let previousSurveyUserUid: string | null = null;
+		if (input.previousEmail) {
+			const previousUserResult = await findFirebaseUserByEmail(input.previousEmail);
+			if (!previousUserResult.success) {
+				return resultFail(previousUserResult.error);
+			}
+			previousSurveyUserUid = previousUserResult.data?.uid ?? null;
+		}
+
+		if (nextUserResult.data) {
+			const isOwnedSurveyUser = previousSurveyUserUid !== null && previousSurveyUserUid === nextUserResult.data.uid;
+			if (!isOwnedSurveyUser) {
+				return resultFail('Survey email is already in use');
+			}
+
+			await getFirebaseAdminAuth().updateUser(nextUserResult.data.uid, {
 				email: input.nextEmail,
 				password: input.nextPassword,
 				emailVerified: true,
@@ -176,14 +190,13 @@ export const synchronizeFirebaseSurveyUser = async (input: {
 			});
 		}
 
-		if (input.previousEmail && input.previousEmail !== input.nextEmail) {
-			const previousUserResult = await findFirebaseUserByEmail(input.previousEmail);
-			if (!previousUserResult.success) {
-				return resultFail(previousUserResult.error);
-			}
-			if (previousUserResult.data) {
-				await getFirebaseAdminAuth().deleteUser(previousUserResult.data.uid);
-			}
+		if (
+			input.previousEmail &&
+			input.previousEmail !== input.nextEmail &&
+			previousSurveyUserUid &&
+			previousSurveyUserUid !== nextUserResult.data?.uid
+		) {
+			await getFirebaseAdminAuth().deleteUser(previousSurveyUserUid);
 		}
 
 		return resultOk(undefined);
