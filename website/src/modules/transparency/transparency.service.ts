@@ -119,17 +119,18 @@ export const getContributionsByCountryData = async (
 
 const getFinancialPeriodDateRange = (
 	period: TransparencyFinancialPeriod,
-	referenceDate = DateTime.now(),
+	referenceDate = DateTime.utc(),
 ): { gte: Date; lt: Date } | undefined => {
 	if (period.kind === 'all-time') {
 		return undefined;
 	}
 
-	const start = referenceDate.set({ year: period.kind === 'year' ? period.year : referenceDate.year }).startOf('year');
+	const utcReference = referenceDate.setZone('utc');
+	const start = utcReference.set({ year: period.kind === 'year' ? period.year : utcReference.year }).startOf('year');
 
 	return {
 		gte: start.toJSDate(),
-		lt: period.kind === 'year' ? start.plus({ years: 1 }).toJSDate() : referenceDate.toJSDate(),
+		lt: period.kind === 'year' ? start.plus({ years: 1 }).toJSDate() : utcReference.toJSDate(),
 	};
 };
 

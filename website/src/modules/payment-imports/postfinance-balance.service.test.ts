@@ -20,6 +20,9 @@ jest.mock('@/modules/contributions/contribution.service', () => ({
 jest.mock('@/modules/contributors/contributor.service', () => ({
 	findContributorsByPaymentReferenceIds: jest.fn(),
 }));
+jest.mock('@/modules/exchange-rates/exchange-rate.service', () => ({
+	getLatestRates: jest.fn(),
+}));
 
 const camt052Balances = `<?xml version="1.0" encoding="UTF-8"?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.052.001.08">
