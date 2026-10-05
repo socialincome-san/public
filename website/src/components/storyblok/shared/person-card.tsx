@@ -1,4 +1,3 @@
-import { Badge } from '@/components/badge/badge';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import {
@@ -8,7 +7,8 @@ import {
 	getVolunteerDurationParts,
 	type VolunteerDurationParts,
 } from '@/lib/storyblok/storyblok-utils';
-import { cn } from '@/lib/utils/cn';
+import { Badge } from '@socialincome/design-system/badge/badge';
+import { cn } from '@socialincome/design-system/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import NextImage from 'next/image';
 import NextLink from 'next/link';

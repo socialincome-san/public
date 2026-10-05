@@ -69,8 +69,9 @@ Social Income is an open-source platform for unconditional basic income.
 Instructions for a specific app live next to that app, so they load only
 when work is happening there.
 
+- `design-system/` — shared React components (`@socialincome/design-system`) and Storybook. No Storyblok, Prisma, or website modules. Rules: `design-system/AGENTS.md`.
 - `website/` — Next.js app (public site, portal, dashboard, partner space, API). Run commands from this directory. Node is pinned in `website/mise.toml`. Rules: `website/AGENTS.md`.
 - `recipients_app/` — Flutter app for recipients. Rules: `recipients_app/AGENTS.md`.
 - `seed/` — Firebase emulator seed data.
 
-From `website/`: `mise dev` starts Postgres, the Firebase emulators, Next.js, and Storybook. `npm run lint` runs the architecture tests, then ESLint. Also `npm run typecheck` and `npm run test:unit`.
+Install dependencies with `npm ci` from the repository root (`npm ci --prefix ..` from `website/`). From `website/`: `mise dev` starts Postgres, the Firebase emulators, and Next.js. `npm run lint` runs the architecture tests, then ESLint. Also `npm run typecheck` and `npm run test:unit`. Storybook runs from `design-system/`.

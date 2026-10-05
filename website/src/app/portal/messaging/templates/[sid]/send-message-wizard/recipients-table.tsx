@@ -1,11 +1,5 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Checkbox } from '@/components/checkbox/checkbox';
-import { Input } from '@/components/input/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import { listMessagingRecipientsAction } from '@/modules/messaging/messaging.actions';
 import type {
 	MessagingRecipientFilterOption,
@@ -15,6 +9,12 @@ import type {
 	MessagingRecipientType,
 	SelectionState,
 } from '@/modules/messaging/messaging.types';
+import { Button } from '@socialincome/design-system/button/button';
+import { Checkbox } from '@socialincome/design-system/checkbox/checkbox';
+import { Input } from '@socialincome/design-system/input/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/popover/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@socialincome/design-system/table/table';
 import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from 'lucide-react';
 import { type ReactNode, useEffect, useRef, useState, useTransition } from 'react';
 import {

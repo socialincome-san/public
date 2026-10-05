@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent } from '@/components/dialog';
 import type { TwilioTemplateDetail } from '@/modules/messaging/messaging.types';
+import { Button } from '@socialincome/design-system/button/button';
+import { Dialog, DialogContent } from '@socialincome/design-system/dialog/dialog';
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 import { SendMessageWizard } from './send-message-wizard';

@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/button/button';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { Button } from '@socialincome/design-system/button/button';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 

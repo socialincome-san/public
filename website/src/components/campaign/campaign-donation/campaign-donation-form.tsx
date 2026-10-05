@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/button/button';
 import { useDonationFormState } from '@/components/donation-wizard/hooks/use-donation-form-state';
 import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
 import type { DonationAmountFieldsTranslations } from '@/components/donation-wizard/i18n/donation-amount-fields-translations';
@@ -11,9 +10,10 @@ import {
 } from '@/components/donation-wizard/utils/donation-amount';
 import { getDonationWizardCardClass } from '@/components/donation-wizard/utils/donation-wizard-layout';
 import { selectStep1FormView } from '@/components/donation-wizard/wizard/donation-machine-selectors';
-import { Input } from '@/components/input/input';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
+import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
+import { Input } from '@socialincome/design-system/input/input';
 import NextImage from 'next/image';
 
 const ZEWO_NPO_DETAIL_URL = 'https://zewo.ch/npo-detail/?relief_organization=social-income';

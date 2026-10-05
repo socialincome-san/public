@@ -11,9 +11,9 @@ import { Layout } from '@/generated/storyblok/types/109655/storyblok-components'
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
-import { cn } from '@/lib/utils/cn';
 import type { Session } from '@/modules/auth/auth.types';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
+import { cn } from '@socialincome/design-system/cn';
 import { ISbStoryData } from '@storyblok/js';
 import NextLink from 'next/link';
 

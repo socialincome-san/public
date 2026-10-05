@@ -1,9 +1,9 @@
 'use client';
 
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
 import { formatSummaryMetricAmount } from '@/components/transparency/summary-metric-format';
 import { useCountUp } from '@/lib/hooks/use-count-up';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
 import { Info } from 'lucide-react';
 import { useInView } from 'motion/react';
 import { useRef } from 'react';

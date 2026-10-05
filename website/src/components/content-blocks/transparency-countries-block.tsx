@@ -1,5 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Card } from '@/components/card/card';
 import {
 	CountriesSectionClient,
 	type CountriesSectionOtherCountry,
@@ -12,6 +10,8 @@ import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/util
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getContributionsByCountryDataAction } from '@/modules/transparency/transparency.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Card } from '@socialincome/design-system/card/card';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {

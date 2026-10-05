@@ -1,8 +1,8 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import NextImage from 'next/image';
 import type { ReactNode } from 'react';
 

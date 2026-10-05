@@ -3,8 +3,8 @@
 import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
 import { ImpactPaymentLogos } from '@/components/payment-logos/impact-payment-logos';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { cn } from '@/lib/utils/cn';
 import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
+import { cn } from '@socialincome/design-system/cn';
 import { CircleCheckBig } from 'lucide-react';
 import Image from 'next/image';
 import { getSupportersImpactLabel } from '../utils/community-stats';

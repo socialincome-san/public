@@ -1,6 +1,4 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
-import { SectionHeading } from '@/components/section-heading';
-import { Separator } from '@/components/separator';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
 import { JournalPageShell } from '@/components/storyblok/journal/journal-page-shell';
@@ -9,6 +7,8 @@ import { PersonProfileHeader } from '@/components/storyblok/journal/person-profi
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { formatStoryblokUrl, getPersonDisplayName } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
+import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
+import { Separator } from '@socialincome/design-system/separator/separator';
 import type { ISbStoryData } from '@storyblok/js';
 
 const PERSON_PORTRAIT_WIDTH = 384;

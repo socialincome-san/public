@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button/button';
+import { Button } from '@socialincome/design-system/button/button';
 import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
 import type { CampaignSubmissionStepId, SubmissionLabels } from './types';
 

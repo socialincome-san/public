@@ -1,6 +1,6 @@
 import type { ImageWithCaption as ImageWithCaptionBlok } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getDimensionsFromStoryblokImageUrl } from '@/lib/storyblok/storyblok-utils';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import Image from 'next/image';
 
 type Props = ImageWithCaptionBlok;

@@ -1,5 +1,5 @@
-import { Card } from '@/components/card/card';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { Card } from '@socialincome/design-system/card/card';
 
 type Props = {
 	label: string;

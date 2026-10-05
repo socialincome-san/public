@@ -1,10 +1,10 @@
-import { ShowMoreToggle } from '@/components/show-more-toggle/show-more-toggle';
 import { StoryblokAssetThumbnail } from '@/components/storyblok/storyblok-asset-thumbnail';
 import type { ReferenceArticle, ReferencesGroup } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { formatStoryblokDate } from '@/lib/storyblok/storyblok-utils';
 import type { LanguageCode } from '@/lib/types/language';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
+import { ShowMoreToggle } from '@socialincome/design-system/show-more-toggle/show-more-toggle';
 import Link from 'next/link';
 
 const defaultThumbnail = { filename: '/assets/metadata/placeholder/news-outlet.svg', alt: 'news-outlet' };

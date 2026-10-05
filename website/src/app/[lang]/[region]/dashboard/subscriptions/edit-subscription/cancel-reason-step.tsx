@@ -1,10 +1,10 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Label } from '@/components/label';
-import { RadioGroup, RadioGroupItem } from '@/components/radio-group/radio-group';
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
 import { SUBSCRIPTION_CANCEL_REASONS } from '@/modules/subscriptions/subscription.types';
+import { Button } from '@socialincome/design-system/button/button';
+import { Label } from '@socialincome/design-system/label/label';
+import { RadioGroup, RadioGroupItem } from '@socialincome/design-system/radio-group/radio-group';
 import { isSubscriptionCancellationReason } from '../subscription-cancellation';
 
 type Props = {

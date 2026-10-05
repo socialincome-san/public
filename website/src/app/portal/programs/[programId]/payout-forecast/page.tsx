@@ -1,6 +1,4 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Card } from '@/components/card/card';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { payoutForecastTableConfig } from '@/components/data-table/configs/payout-forecast-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
@@ -10,6 +8,8 @@ import { defaultLanguage } from '@/lib/i18n/utils';
 import { getPaginatedPayoutForecastTableView } from '@/modules/payouts/payout.service';
 import { PAYOUT_FORECAST_MONTHS_AHEAD } from '@/modules/payouts/payout.types';
 import { requireSession } from '@/server/session';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Card } from '@socialincome/design-system/card/card';
 import { Suspense } from 'react';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };

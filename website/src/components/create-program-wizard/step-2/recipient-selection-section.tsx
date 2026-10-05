@@ -1,10 +1,10 @@
 'use client';
 
-import { Badge } from '@/components/badge/badge';
 import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
 import { Profile } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { cn } from '@/lib/utils/cn';
+import { Badge } from '@socialincome/design-system/badge/badge';
+import { cn } from '@socialincome/design-system/cn';
 import { Loader2 } from 'lucide-react';
 import { RadioCard } from '../radio-card';
 import { RadioCardGroup } from '../radio-card-group';

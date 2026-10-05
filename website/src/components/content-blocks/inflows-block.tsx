@@ -1,4 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { getDonationExplainerVideo } from '@/components/donation-wizard/utils/donation-explainer-video';
 import { InflowsSection, type InflowsSectionSegment } from '@/components/inflows/inflows-section';
 import { buildInflowSegments, parseChfAmount, resolveInflowSegmentAmountsChf } from '@/components/inflows/inflows-segments';
@@ -9,6 +8,7 @@ import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/util
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getTransparencySummaryAction } from '@/modules/transparency/transparency.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {

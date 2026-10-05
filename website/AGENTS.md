@@ -9,7 +9,9 @@ Success and failure cross these boundaries as `Result<T>` from
 `handleResult` from `src/lib/result-client.ts`.
 
 ```text
-app / components -> module services and actions, plus request helpers in src/server
+app / feature components -> module services and actions, plus request helpers in src/server
+feature components -> design-system
+design-system -> React, Radix, Tailwind, and cn. No modules, CMS, generated types, or app code
 modules -> repositories and integrations
 repositories -> Prisma (src/lib/database), raw data, no Result
 integrations -> external APIs
@@ -33,10 +35,16 @@ Lint does not prove that the caller is allowed to do this, that every
 untrusted field is validated on the server, that business rules stayed
 in the service, or that the DTO is safe to send to the client.
 
-UI lives in `src/components`. Follow an existing component before adding
-one: `src/components/button/button.tsx` uses `forwardRef`, CVA, and
-Radix. Style with Tailwind utilities and merge classes with `cn` from
-`src/lib/utils/cn.ts`.
+Design system primitives live in `design-system` and are imported as
+`@socialincome/design-system`. Follow
+`design-system/src/components/button/button.tsx`: `forwardRef`, CVA,
+Radix, and Tailwind, with classes merged through `cn` from
+`design-system/src/cn.ts`. That package does not import the website.
+Feature screens, wizards, data tables, and CMS blocks stay in
+`src/components` and may call module actions. `src/app/globals.css`
+imports `@socialincome/design-system/styles.css` and adds `@source` for
+`design-system/src`, so Tailwind still scans the package when that CSS
+is resolved through `node_modules`.
 
 Local auth users come from the Firebase emulator seed. While the
 emulators are running, the list is at http://localhost:4000/auth.

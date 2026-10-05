@@ -1,7 +1,7 @@
 'use client';
 
 import { CellType } from '@/components/data-table/elements/types';
-import { Progress } from '@/components/progress/progress';
+import { Progress } from '@socialincome/design-system/progress/progress';
 import type { RowData } from '@tanstack/react-table';
 
 export const ProgressCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, TValue>) => {

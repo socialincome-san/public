@@ -1,10 +1,10 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ExplainerVideoHeader } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { VimeoVideoMatchAndExtract } from '@/lib/utils/url-video-parser';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {

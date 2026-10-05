@@ -1,8 +1,6 @@
 'use client';
 
-import { DialogTitle } from '@/components/dialog';
 import type { MessagingChannel } from '@/generated/prisma/client';
-import { cn } from '@/lib/utils/cn';
 import type {
 	ChannelPreviewSummary,
 	MessagingPhoneSource,
@@ -11,6 +9,8 @@ import type {
 	TwilioTemplateDetail,
 	VariableAssignments,
 } from '@/modules/messaging/messaging.types';
+import { cn } from '@socialincome/design-system/cn';
+import { DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { useEffect, useState } from 'react';
 import type { RecipientsTableQuery } from './recipients-table';
 import { emptySelection } from './selection';

@@ -1,7 +1,7 @@
 'use client';
 
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import { useDonationFormState } from './hooks/use-donation-form-state';
 import { useDonationModal } from './hooks/use-donation-modal';
 import type { DonationAmountFieldsTranslations } from './i18n/donation-amount-fields-translations';

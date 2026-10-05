@@ -1,7 +1,7 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { LandingPageCard } from '@/components/storyblok/shared/landing-page-card';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import NextImage from 'next/image';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountrySlug, getCountryTitle } from './country.utils';

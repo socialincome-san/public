@@ -5,8 +5,8 @@ import {
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { LOCAL_PARTNER_PROGRAM_ROWS } from '@/lib/storyblok/local-partner-programs.utils';
-import { cn } from '@/lib/utils/cn';
 import type { LocalPartnerPrograms } from '@/modules/local-partners/local-partner.types';
+import { cn } from '@socialincome/design-system/cn';
 import NextLink from 'next/link';
 import { BuildOwnProgramLink } from './build-own-program-link';
 import { LocalPartnerProgramRow } from './local-partner-program-row';

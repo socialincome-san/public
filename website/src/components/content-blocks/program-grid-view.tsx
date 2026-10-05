@@ -1,4 +1,3 @@
-import { Button } from '@/components/button/button';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import { getProgramPortalSlug } from '@/components/storyblok/program/program.utils';
 import { ProgramsOverview } from '@/components/storyblok/program/programs-overview';
@@ -7,6 +6,7 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { getPublicProgramStatsByPortalSlugsAction } from '@/modules/programs/program.actions';
+import { Button } from '@socialincome/design-system/button/button';
 import NextLink from 'next/link';
 
 type Props = {

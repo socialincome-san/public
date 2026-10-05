@@ -1,13 +1,13 @@
 import { COUNTRY_COOKIE } from '@/app/[lang]/[region]';
-import { BlockWrapper } from '@/components/block-wrapper';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
-import { cn } from '@/lib/utils/cn';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getCountryStatisticsComparisonAction } from '@/modules/countries/country.actions';
 import type { CountryStatisticFormat } from '@/modules/countries/country.types';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { cn } from '@socialincome/design-system/cn';
 import { cookies, headers } from 'next/headers';
 import NextImage from 'next/image';
 

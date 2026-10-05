@@ -1,5 +1,3 @@
-import { Badge } from '@/components/badge/badge';
-import { BlockWrapper } from '@/components/block-wrapper';
 import { FocusSdgs } from '@/components/storyblok/focus/focus-sdgs';
 import { getFocusSlug, getFocusTitle } from '@/components/storyblok/focus/focus.utils';
 import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
@@ -9,7 +7,6 @@ import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/pr
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
 import { resolveWalletPayoutDisplayAction } from '@/modules/currency-display/currency-display.actions';
 import { getPublicLocalPartnersByProgramIdAction } from '@/modules/local-partners/local-partner.actions';
 import {
@@ -22,6 +19,9 @@ import {
 	getLocalPartnersAction,
 	getProgramsAction,
 } from '@/modules/storyblok-content/storyblok-content.actions';
+import { Badge } from '@socialincome/design-system/badge/badge';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { cn } from '@socialincome/design-system/cn';
 import Link from 'next/link';
 
 type Props = {

@@ -1,10 +1,10 @@
 'use client';
 
-import { CountryFlag } from '@/components/country-flag/country-flag';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/dialog';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { splitTranslationTemplate } from '@/lib/i18n/translation-template';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
+import { CountryFlag } from '@socialincome/design-system/country-flag/country-flag';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { Fragment, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 
 export type CountriesSectionSegment = {

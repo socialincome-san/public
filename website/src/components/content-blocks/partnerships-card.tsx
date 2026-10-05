@@ -1,7 +1,7 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Marquee } from '@/components/marquee/marquee';
-import { PartnershipBadge } from '@/components/partnership-badge/partnership-badge';
 import type { Partnership, PartnershipsCard } from '@/generated/storyblok/types/109655/storyblok-components';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { PartnershipBadge } from '@socialincome/design-system/partnership-badge/partnership-badge';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import Markdown from 'react-markdown';
@@ -66,9 +66,20 @@ export const PartnershipsCardBlock = ({ blok }: Props) => {
 							className="-mx-4 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] px-4 py-1"
 						>
 							<div className="flex gap-6 pr-3 motion-reduce:w-full motion-reduce:flex-wrap">
-								{fillRow(row).map((entry, index) => (
-									<PartnershipBadge key={`${entry._uid}-${index}`} partnership={entry} />
-								))}
+								{fillRow(row).map((entry, index) => {
+									const href = [entry.website.url, entry.website.cached_url].find((value) => value.length > 0) ?? '#';
+									const logoFilename = entry.logoIcon?.filename;
+
+									return (
+										<PartnershipBadge
+											key={`${entry._uid}-${index}`}
+											name={entry.name}
+											href={href}
+											logoSrc={logoFilename ?? undefined}
+											logoAlt={entry.logoIcon?.alt ?? undefined}
+										/>
+									);
+								})}
 							</div>
 						</Marquee>
 					))}

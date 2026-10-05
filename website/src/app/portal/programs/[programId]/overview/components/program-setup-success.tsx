@@ -1,6 +1,6 @@
-import { Button } from '@/components/button/button';
-import { Card } from '@/components/card/card';
-import { SuccessBanner } from '@/components/success-banner/success-banner';
+import { Button } from '@socialincome/design-system/button/button';
+import { Card } from '@socialincome/design-system/card/card';
+import { SuccessBanner } from '@socialincome/design-system/success-banner/success-banner';
 import { ChevronRightIcon, ExternalLinkIcon } from 'lucide-react';
 import Link from 'next/link';
 

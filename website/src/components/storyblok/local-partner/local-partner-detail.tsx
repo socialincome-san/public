@@ -1,4 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
@@ -9,6 +8,7 @@ import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/sto
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getLocalPartnerProgramSummariesAction } from '@/modules/local-partners/local-partner.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { LocalPartnerAboutMetaCard, LocalPartnerFocusBadges } from './local-partner-about-meta';
 import { LocalPartnerPartners } from './local-partner-partners';
 import { LocalPartnerPayoutsTotal } from './local-partner-payouts-total';

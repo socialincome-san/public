@@ -1,5 +1,5 @@
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
+import { Button } from '@socialincome/design-system/button/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { useState } from 'react';
 
 export type ExtraAction = {

@@ -1,7 +1,5 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/dialog';
 import { QrBillPaymentCard } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-payment-card';
 import { QrBillPdfDownloadLink } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-pdf-download-link';
 import { type Currency } from '@/generated/prisma/client';
@@ -11,6 +9,14 @@ import { formatCurrencyLocale, formatDateLocale, wholeCurrencyFormatOptions } fr
 import { getSubscriptionQrBillDisplayAction } from '@/modules/qr-bills/qr-bill.actions';
 import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
 import { type BankTransferQrBillView } from '@/modules/subscriptions/subscription.types';
+import { Button } from '@socialincome/design-system/button/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/dialog/dialog';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

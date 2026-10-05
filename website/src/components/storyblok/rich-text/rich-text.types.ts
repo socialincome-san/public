@@ -1,4 +1,4 @@
-import type { HeadingSize } from '@/components/heading-styles';
+import type { HeadingSize } from '@socialincome/design-system/section-heading/heading-styles';
 
 export type RichTextLinkProps = {
 	href?: string;

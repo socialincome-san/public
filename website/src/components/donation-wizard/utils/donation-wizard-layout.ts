@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import type { ActiveDonationWizardStep } from '../wizard/get-active-wizard-step';
 
 const COLUMN_NARROW = 'w-full min-w-0 md:w-[400px] md:shrink-0';

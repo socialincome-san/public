@@ -1,7 +1,7 @@
 'use client';
 
 import { MapImage, buildMapUrls } from '@/components/storyblok/country/map-image';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 
 type MapRectangleProps = {
 	isoCode: string;
