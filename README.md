@@ -41,7 +41,7 @@ The main Next.js application. It contains:
 - Backend: a modular monolith under `website/src/modules`. Pages and route
   handlers call module services and actions. Services call repositories
   (Prisma) and integrations (external APIs). The module contract is in
-  `AGENTS.md`.
+  `website/AGENTS.md`.
 - Infrastructure: Terraform configuration under `website/infra`.
 - Tests: unit tests and Playwright end-to-end tests.
 
