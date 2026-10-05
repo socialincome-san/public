@@ -1,7 +1,7 @@
 'use client';
 
-import { cn } from '@/lib/utils/cn';
 import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import {
 	DropdownMenu,
 	DropdownMenuContent,

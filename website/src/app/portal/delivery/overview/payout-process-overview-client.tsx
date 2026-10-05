@@ -1,11 +1,11 @@
 'use client';
 
 import { formatPayoutProcessLabel } from '@/lib/payout-process-options';
-import { cn } from '@/lib/utils/cn';
 import { now } from '@/lib/utils/now';
 import type { PayoutProcessOverviewOption } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { getPayoutRecipientCountsAction } from '@/modules/payout-processes/payout-process.actions';
 import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import { DatePicker, normalizeToNoon } from '@socialincome/design-system/date-picker/date-picker';
 import { format } from 'date-fns';
 import { CalendarIcon, CircleDollarSignIcon, FileSpreadsheet } from 'lucide-react';

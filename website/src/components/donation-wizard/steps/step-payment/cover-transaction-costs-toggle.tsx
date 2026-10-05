@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import { Switch } from '@socialincome/design-system/switch/switch';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
 import { CircleHelp } from 'lucide-react';

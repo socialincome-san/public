@@ -1,8 +1,8 @@
 'use client';
 
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
 import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import { Input } from '@socialincome/design-system/input/input';
 import type { DonationAmountFieldsTranslations } from '../../i18n/donation-amount-fields-translations';
 import {

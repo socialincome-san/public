@@ -20,9 +20,7 @@
 			}
 		],
 		"paths": {
-			"@/*": ["./src/*"],
-			"@socialincome/design-system/cn": ["../design-system/src/cn.ts"],
-			"@socialincome/design-system/*": ["../design-system/src/components/*"]
+			"@/*": ["./src/*"]
 		},
 		"allowJs": true,
 		"types": ["jest", "node"]

@@ -4,10 +4,10 @@ import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-
 import { ProgramDropdown } from '@/components/app-shells/portal/navbar/program-dropdown';
 import { UserMenu } from '@/components/app-shells/portal/navbar/user-menu';
 import { SILogo } from '@/components/svg/si-logo';
-import { cn } from '@/lib/utils/cn';
 import type { Session } from '@/modules/auth/auth.types';
 import type { UserSession } from '@/modules/users/user.types';
 import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import { Separator } from '@socialincome/design-system/separator/separator';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';

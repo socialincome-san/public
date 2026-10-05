@@ -2,11 +2,11 @@
 
 import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-navbar-links';
 import { useLogout } from '@/components/app-shells/use-logout';
-import { cn } from '@/lib/utils/cn';
 import type { Session } from '@/modules/auth/auth.types';
 import type { UserSession } from '@/modules/users/user.types';
 import { Avatar, AvatarFallback } from '@socialincome/design-system/avatar/avatar';
 import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import {
 	DropdownMenu,
 	DropdownMenuContent,

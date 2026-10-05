@@ -1,7 +1,7 @@
 import { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
 import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { cn } from '@socialincome/design-system/cn';
 
 const SkeletonBar = ({ className }: { className: string }) => (
 	<div className={cn('bg-border animate-pulse rounded-full', className)} />

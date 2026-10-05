@@ -2,9 +2,9 @@
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getCountryNameByCode } from '@/lib/types/country';
-import { cn } from '@/lib/utils/cn';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
 import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import { CountryFlag } from '@socialincome/design-system/country-flag/country-flag';
 import { RadioGroupItem } from '@socialincome/design-system/radio-group/radio-group';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@socialincome/design-system/table/table';

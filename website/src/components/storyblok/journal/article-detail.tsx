@@ -6,8 +6,8 @@ import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadc
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
-import { cn } from '@/lib/utils/cn';
 import type { JournalArticle } from '@/modules/journal/journal.types';
+import { cn } from '@socialincome/design-system/cn';
 import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
 

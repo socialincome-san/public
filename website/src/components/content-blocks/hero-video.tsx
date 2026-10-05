@@ -2,10 +2,10 @@
 import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
 import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
 import MuxVideo from '@mux/mux-video-react';
 import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import { VideoControlButton } from '@socialincome/design-system/video-control-button/video-control-button';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { Maximize2, MessageSquareText, Minimize2, Pause, Play, Volume2, VolumeX } from 'lucide-react';

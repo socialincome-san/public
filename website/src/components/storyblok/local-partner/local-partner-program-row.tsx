@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils/cn';
 import type { LocalPartnerProgramSummary } from '@/modules/local-partners/local-partner.types';
+import { cn } from '@socialincome/design-system/cn';
 import { ChevronRight } from 'lucide-react';
 import NextLink from 'next/link';
 

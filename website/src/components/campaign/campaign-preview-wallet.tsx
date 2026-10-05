@@ -1,9 +1,9 @@
 import { createWalletImageFromStoryblokAsset, WALLET_IMAGE_SIZES } from '@/components/wallet/wallet-image-utils';
 import type { TranslateFunction } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import type { PublicCampaignCard, PublicCampaignStats } from '@/modules/campaigns/campaign.types';
+import { cn } from '@socialincome/design-system/cn';
 import { Progress } from '@socialincome/design-system/progress/progress';
 import NextImage from 'next/image';
 import Link from 'next/link';

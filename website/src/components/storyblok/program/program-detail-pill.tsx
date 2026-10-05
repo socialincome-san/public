@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import { ChevronRight, ExternalLink } from 'lucide-react';
 import type { LinkProps } from 'next/link';
 import Link from 'next/link';

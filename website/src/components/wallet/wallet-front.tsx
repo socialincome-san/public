@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils/cn';
 import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import { PlusIcon } from 'lucide-react';
 import type { WalletBadge, WalletFooterColumn, WalletVariant } from './wallet.types';
 

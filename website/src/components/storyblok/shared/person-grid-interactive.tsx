@@ -6,8 +6,8 @@ import type { Person } from '@/generated/storyblok/types/109655/storyblok-compon
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getRoleCode, getRoleLabel, personHasRole } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameFromIsoCode } from '@/lib/types/country';
-import { cn } from '@/lib/utils/cn';
 import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,

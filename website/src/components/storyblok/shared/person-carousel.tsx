@@ -3,8 +3,8 @@
 import { PersonCard } from '@/components/storyblok/shared/person-card';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { createWebsitePersonLink } from '@/lib/storyblok/storyblok-utils';
-import { cn } from '@/lib/utils/cn';
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@socialincome/design-system/carousel/carousel';
+import { cn } from '@socialincome/design-system/cn';
 import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
 import { ChevronRightIcon } from 'lucide-react';

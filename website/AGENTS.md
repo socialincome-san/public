@@ -41,8 +41,9 @@ Design system primitives live in `design-system` and are imported as
 Radix, and Tailwind, with classes merged through `cn` from
 `design-system/src/cn.ts`. That package does not import the website.
 Feature screens, wizards, data tables, and CMS blocks stay in
-`src/components` and may call module actions. Tailwind scans the package
-from `src/app/globals.css` via `@source`.
+`src/components` and may call module actions. `src/app/globals.css`
+imports `@socialincome/design-system/styles.css`, which tells Tailwind
+to scan the package via `@source`.
 
 Local auth users come from the Firebase emulator seed. While the
 emulators are running, the list is at http://localhost:4000/auth.

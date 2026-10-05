@@ -1,8 +1,8 @@
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { ImageText } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getScaledDimensions } from '@/lib/storyblok/storyblok-utils';
-import { cn } from '@/lib/utils/cn';
 import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { cn } from '@socialincome/design-system/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextImage from 'next/image';
 

@@ -1,8 +1,8 @@
 'use client';
 
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
-import { cn } from '@/lib/utils/cn';
 import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { X } from 'lucide-react';
 import { type ReactNode, useState } from 'react';

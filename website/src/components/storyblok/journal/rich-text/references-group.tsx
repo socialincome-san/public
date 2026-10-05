@@ -3,7 +3,7 @@ import type { ReferenceArticle, ReferencesGroup } from '@/generated/storyblok/ty
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { formatStoryblokDate } from '@/lib/storyblok/storyblok-utils';
 import type { LanguageCode } from '@/lib/types/language';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import { ShowMoreToggle } from '@socialincome/design-system/show-more-toggle/show-more-toggle';
 import Link from 'next/link';
 

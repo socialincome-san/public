@@ -14,8 +14,8 @@ import {
 	type WebsiteLanguage,
 	type WebsiteRegion,
 } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
 import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import { CountryFlag } from '@socialincome/design-system/country-flag/country-flag';
 import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/popover/popover';
 import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/tabs/tabs';

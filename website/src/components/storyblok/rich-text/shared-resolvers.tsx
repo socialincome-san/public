@@ -7,7 +7,7 @@ import type {
 	RichTextLinkProps,
 	RichTextTableCellProps,
 } from '@/components/storyblok/rich-text/rich-text.types';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import { headingStyles } from '@socialincome/design-system/section-heading/heading-styles';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/design-system/table/table';
 import NextLink from 'next/link';

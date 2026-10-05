@@ -6,7 +6,8 @@
 	"exports": {
 		"./styles.css": "./src/styles.css",
 		"./cn": "./src/cn.ts",
-		"./*": "./src/components/*"
+		"./section-heading/heading-styles": "./src/components/section-heading/heading-styles.ts",
+		"./*": "./src/components/*.tsx"
 	},
 	"scripts": {
 		"storybook": "storybook dev -p 6006 --no-open",

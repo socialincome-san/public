@@ -1,7 +1,7 @@
 'use client';
 
 import { campaignSubmissionConfig } from '@/lib/campaign-submission';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import { Label } from '@socialincome/design-system/label/label';
 import { Camera, Trash2, Upload } from 'lucide-react';
 import { useEffect, useId, useRef, type RefObject } from 'react';

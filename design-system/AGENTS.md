@@ -13,4 +13,6 @@ which is what Vercel deploys. `npm run lint`, `npm run typecheck`, and
 `npm run test:unit` stay in this package.
 
 Styles live in `src/styles.css`. Components use `next/link` and
-`next/image`.
+`next/image`. Fonts are bundled through `src/styles.css`. `CountryFlag`
+loads `/assets/flags/<country>.svg`, so the consuming app must serve
+those files. Storybook serves them from `website/public/assets/flags`.

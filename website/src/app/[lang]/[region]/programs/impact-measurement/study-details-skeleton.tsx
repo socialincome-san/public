@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 
 const SkeletonBar = ({ className }: { className: string }) => (
 	<div className={cn('bg-border animate-pulse rounded-full', className)} />

@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import { RadioGroupItem } from '@socialincome/design-system/radio-group/radio-group';
 import { ReactNode } from 'react';
 

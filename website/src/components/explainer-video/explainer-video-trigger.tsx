@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { PlayIcon } from 'lucide-react';
 import NextImage from 'next/image';

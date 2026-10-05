@@ -62,7 +62,7 @@ RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+RUN rm -rf ./node_modules/@socialincome
 COPY --from=builder /app/website/.next/standalone ./
 COPY --from=builder /app/website/src ./src
 COPY --from=builder /app/website/prisma.config.ts ./prisma.config.ts

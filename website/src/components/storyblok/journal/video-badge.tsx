@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils/cn';
 import { Badge } from '@socialincome/design-system/badge/badge';
+import { cn } from '@socialincome/design-system/cn';
 import { PlayIcon } from 'lucide-react';
 
 type Props = {

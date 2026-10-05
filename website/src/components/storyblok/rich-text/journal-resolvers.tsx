@@ -7,7 +7,7 @@ import {
 	removeStoryblokPagesFolder,
 	storyblokRichTextNodeResolvers,
 } from '@/components/storyblok/rich-text/shared-resolvers';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import type { HeadingSize } from '@socialincome/design-system/section-heading/heading-styles';
 import { Table, TableBody } from '@socialincome/design-system/table/table';
 import NextLink from 'next/link';

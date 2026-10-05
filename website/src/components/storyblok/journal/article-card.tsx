@@ -11,8 +11,8 @@ import {
 	getArticleTitle,
 	getPersonDisplayName,
 } from '@/lib/storyblok/storyblok-utils';
-import { cn } from '@/lib/utils/cn';
 import type { JournalArticle } from '@/modules/journal/journal.types';
+import { cn } from '@socialincome/design-system/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
 import Link from 'next/link';

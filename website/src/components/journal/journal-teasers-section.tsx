@@ -1,8 +1,8 @@
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';

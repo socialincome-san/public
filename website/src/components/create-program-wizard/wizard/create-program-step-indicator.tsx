@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import { CreateProgramWizardState } from './types';
 
 const getCurrentStepIndex = (state: CreateProgramWizardState): number => {

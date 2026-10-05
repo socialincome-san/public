@@ -4,8 +4,8 @@ import { hasDropdownChildren, isDropdownItem, isMenuItem } from '@/components/ap
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
-import { cn } from '@/lib/utils/cn';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
+import { cn } from '@socialincome/design-system/cn';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import NextLink from 'next/link';
 import type { PointerEvent, ReactNode } from 'react';

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import Image from 'next/image';
 import { type PaymentLogoId, paymentLogos } from './payment-logo-config';
 

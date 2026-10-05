@@ -7,7 +7,7 @@ const config: StorybookConfig = {
 		name: '@storybook/nextjs-vite',
 		options: {},
 	},
-	staticDirs: ['../public'],
+	staticDirs: ['../public', { from: '../../website/public/assets/flags', to: '/assets/flags' }],
 };
 
 export default config;

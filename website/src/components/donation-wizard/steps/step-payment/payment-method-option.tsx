@@ -1,7 +1,7 @@
 'use client';
 
-import { cn } from '@/lib/utils/cn';
 import { Badge } from '@socialincome/design-system/badge/badge';
+import { cn } from '@socialincome/design-system/cn';
 import { SelectableCard } from '@socialincome/design-system/selectable-card/selectable-card';
 import type { ReactNode } from 'react';
 

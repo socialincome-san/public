@@ -16,9 +16,9 @@ import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton'
 import { Translator } from '@/lib/i18n/translator';
 import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
 import { DATA_TABLE_FETCH_PREFIX_REGEX } from '@/lib/utils/regex';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
+import { cn } from '@socialincome/design-system/cn';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
 import type { RowData, SortingState } from '@tanstack/react-table';
 import { functionalUpdate } from '@tanstack/react-table';

@@ -1,7 +1,7 @@
-import { cn } from '@/lib/utils/cn';
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import type { ProgramDashboardStats } from '@/modules/programs/program.types';
 import { Card } from '@socialincome/design-system/card/card';
+import { cn } from '@socialincome/design-system/cn';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
 import { AlertCircle, CheckCircle, CircleHelp, TriangleAlert } from 'lucide-react';
 import { AdditionalNumbers } from './additional-numbers';
