@@ -1,5 +1,5 @@
+import type { AnySearchParams } from '@/app/page-props';
 import { getCountryNameByCode } from '@/lib/types/country';
-import type { AnySearchParams } from '@/lib/types/page-props';
 import type { PublicFocusStatsBySlugMap } from '@/modules/focuses/focus.types';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusText, getFocusTitle } from './focus.utils';

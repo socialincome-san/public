@@ -1,6 +1,6 @@
 'use client';
 
-import { useCountUp } from '@/lib/hooks/use-count-up';
+import { useCountUp } from '@/components/hooks/use-count-up';
 import { useInView, useMotionValue, useSpring, type MotionValue } from 'motion/react';
 import { useEffect, useRef } from 'react';
 

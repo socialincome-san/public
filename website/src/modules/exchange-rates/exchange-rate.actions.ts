@@ -1,7 +1,7 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
 import type { Result } from '@/lib/result';
+import { getSessionByType } from '@/modules/auth/session.service';
 import { triggerExchangeRateImportAsAdmin } from '@/modules/exchange-rates/exchange-rate.service';
 import { revalidatePath } from 'next/cache';
 

@@ -75,11 +75,41 @@ Success and failure cross these boundaries as `Result<T>` from
 `handleResult` from `website/src/lib/result-client.ts`.
 
 ```text
-app -> modules
+app / components -> modules, and request helpers in src/server
 modules -> repositories + integrations
-repositories -> Prisma
+repositories -> Prisma (website/src/lib/database)
 integrations -> external APIs
+everyone -> lib kernel
 ```
+
+## Shared kernel (`website/src/lib`)
+
+`lib` is shared infrastructure. A file belongs here when it would still
+make sense after deleting one product area. It must not import
+`modules`, `app`, `components`, or `src/server`. ESLint enforces that.
+
+Keep:
+
+- `result.ts` and `result-client.ts`
+- Prisma client, schema, migrations, and seed under `lib/database`
+- i18n runtime, locale JSON, cookie names, and translator hooks
+- Reference data used across modules: country, currency, language
+- Pure helpers with no product owner (`cn`, `now`, `regex`, sort keys)
+- Storyblok path and presentation helpers that do not call services
+- Firebase client wiring
+
+React UI hooks live in `components`. Page search-param types live in `app`.
+
+Product behavior lives in the owning module. Request helpers that call
+`redirect` or `notFound` live in `website/src/server`, because services
+cannot use Next.js navigation. Session resolution itself lives in
+`modules/auth/session.service.ts`.
+
+Shared config that both a module and an integration need, such as
+campaign submission limits, stays in `lib` so integrations do not import
+modules. Sync display helpers shared by a service and the UI, such as
+payout labels, stay in `lib` because module type files cannot export
+functions and service exports must return `Result`.
 
 ## Module file roles
 

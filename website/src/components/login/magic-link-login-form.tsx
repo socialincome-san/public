@@ -6,7 +6,7 @@ import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
-import { useTranslator } from '@/lib/hooks/useTranslator';
+import { useTranslator } from '@/lib/i18n/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';

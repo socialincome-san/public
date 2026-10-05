@@ -1,10 +1,10 @@
+import type { AnySearchParams } from '@/app/page-props';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import {
 	getCampaignPortalSlug,
 	getCampaignStoryblokSlug,
 	getCampaignTitle,
 } from '@/components/storyblok/campaign/campaign.utils';
-import type { AnySearchParams } from '@/lib/types/page-props';
 import type {
 	CampaignCmsJoin,
 	PublicCampaignCard,

@@ -5,10 +5,10 @@ import {
 } from '@/components/data-table/configs/payout-confirmation-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { getPaginatedPayoutConfirmationTableView } from '@/modules/payouts/payout.service';
+import { requireSession } from '@/server/session';
 
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { Suspense } from 'react';
 
 export default function ConfirmPayoutsPage({ searchParams }: SearchParamsPageProps) {
@@ -20,7 +20,7 @@ export default function ConfirmPayoutsPage({ searchParams }: SearchParamsPagePro
 }
 
 const ConfirmPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 

@@ -1,6 +1,6 @@
 import { jobStatusVariant } from '@/app/portal/messaging/delivery-log/messaging-job-status';
+import { twilioTemplateUrl } from '@/app/portal/messaging/twilio-console-url';
 import { Badge } from '@/components/badge/badge';
-import { twilioTemplateUrl } from '@/lib/utils/twilio-console-url';
 import type { MessagingJobDetailView } from '@/modules/messaging/messaging.types';
 import { ExternalLink } from 'lucide-react';
 

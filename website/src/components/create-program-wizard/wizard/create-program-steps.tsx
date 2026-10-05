@@ -1,7 +1,7 @@
 'use client';
 
 import { Currency } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { CountrySelectionStep } from '../step-1/country-selection-step';
 import { ProgramSetupStep } from '../step-2/program-setup-step';
 import { BudgetStep } from '../step-3/budget-step';

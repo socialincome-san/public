@@ -3,8 +3,6 @@ import { NextRequest } from 'next/server';
 
 type Handler<T> = (request: NextRequest, context: { params: T }) => Promise<Response>;
 
-// Checks Firebase App Check token from the request before proceeding to the handler
-// https://firebase.google.com/docs/app-check
 export const withAppCheck = <T>(handler: Handler<T>) => {
 	return async (request: NextRequest, context: { params: T }): Promise<Response> => {
 		const appCheckResult = await verifyAppCheckFromRequest(request);

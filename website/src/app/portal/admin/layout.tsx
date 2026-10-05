@@ -3,7 +3,7 @@ import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
 
-import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
+import { requireAdmin } from '@/server/session';
 import { ReactNode } from 'react';
 
 type MonitoringLayoutProps = {
@@ -11,8 +11,7 @@ type MonitoringLayoutProps = {
 };
 
 export default async function DeliveryLayout({ children }: MonitoringLayoutProps) {
-	const user = await getAuthenticatedUserOrRedirect();
-	requireAdmin(user);
+	await requireAdmin();
 
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },

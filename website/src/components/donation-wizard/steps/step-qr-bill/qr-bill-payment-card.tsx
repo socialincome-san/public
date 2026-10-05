@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { formatQrBillIban, formatQrBillReference } from '@/lib/utils/qr-bill-format';
+import { formatQrBillIban, formatQrBillReference } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-format';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
 import { Scan } from 'lucide-react';
 import Image from 'next/image';

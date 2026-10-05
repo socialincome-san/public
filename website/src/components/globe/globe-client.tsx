@@ -1,7 +1,7 @@
 'use client';
 
+import { usePrefersReducedMotion } from '@/components/hooks/use-prefers-reduced-motion';
 import { getCountryGeoJson, isAbortError } from '@/lib/country-geojson';
-import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
 import { cn } from '@/lib/utils/cn';
 import type { GlobeContribution } from '@/modules/contributions/contribution.types';
 import { useEffect, useRef } from 'react';

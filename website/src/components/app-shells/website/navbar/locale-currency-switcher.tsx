@@ -2,12 +2,12 @@
 
 import { Button } from '@/components/button/button';
 import { CountryFlag } from '@/components/country-flag/country-flag';
+import { useIsPage } from '@/components/hooks/useIsPage';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
 import { Tabs, TabsList, TabsTrigger } from '@/components/tabs/tabs';
 import { type CountryCode } from '@/generated/prisma/enums';
-import { useIsPage } from '@/lib/hooks/useIsPage';
-import { useTranslator } from '@/lib/hooks/useTranslator';
 import { useI18n } from '@/lib/i18n/useI18n';
+import { useTranslator } from '@/lib/i18n/useTranslator';
 import {
 	allWebsiteLanguages,
 	isWebsiteCurrency,

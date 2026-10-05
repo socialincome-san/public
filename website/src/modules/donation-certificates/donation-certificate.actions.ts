@@ -1,7 +1,7 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
 import { resultFail, type Result } from '@/lib/result';
+import { getSessionByType } from '@/modules/auth/session.service';
 import type { ContributorDonationCertificate } from '@/modules/contributors/contributor.types';
 import { revalidatePath } from 'next/cache';
 import { donationCertificateBatchCreateSchema, donationCertificateCreateSchema } from './donation-certificate.schemas';

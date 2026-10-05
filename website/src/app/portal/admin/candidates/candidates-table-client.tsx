@@ -6,9 +6,9 @@ import { makeCandidateColumns } from '@/components/data-table/columns/candidates
 import { candidatesTableConfig, getCandidatesTableFilters } from '@/components/data-table/configs/candidates-table.config';
 import type { ActionMenuItem } from '@/components/data-table/elements/action-menu';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import type { Session } from '@/lib/firebase/current-account';
 import type { Translator } from '@/lib/i18n/translator';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
+import type { Session } from '@/modules/auth/auth.types';
 import { downloadCandidatesCsvAction, importCandidatesCsvAction } from '@/modules/candidates/candidate.actions';
 import type { CandidatesTableViewRow } from '@/modules/candidates/candidate.types';
 import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';

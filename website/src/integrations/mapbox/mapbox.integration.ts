@@ -1,5 +1,7 @@
+import { resultOk, type Result } from '@/lib/result';
+
 type CountryBoundingBox = [number, number, number, number];
-type MapboxMapVariant = 'main' | 'inset';
+export type MapboxMapVariant = 'main' | 'inset';
 
 type BoundaryStyle = {
 	fill: string;
@@ -286,33 +288,31 @@ const MAP_VARIANT_CONFIG: Record<MapboxMapVariant, VariantConfig> = {
 	},
 };
 
-export const isMapboxMapVariant = (value: string): value is MapboxMapVariant => {
-	return value === 'main' || value === 'inset';
-};
-
 export const getCountryStaticMapUrl = async ({
 	accessToken,
 	isoCode,
 	variant = 'main',
-}: CountryStaticMapUrlOptions): Promise<string | null> => {
+}: CountryStaticMapUrlOptions): Promise<Result<string | null>> => {
 	const normalizedIsoCode = normalizeIsoCode(isoCode);
 
 	if (!normalizedIsoCode) {
-		return null;
+		return resultOk(null);
 	}
 
 	const countryMapData = await getCountryMapData(normalizedIsoCode, accessToken);
 
 	if (!countryMapData) {
-		return null;
+		return resultOk(null);
 	}
 
-	return buildMapboxStaticImageUrl({
-		accessToken,
-		boundingBox: getViewportBoundingBox(countryMapData, variant),
-		isoCode: countryMapData.isoCode,
-		variant,
-	});
+	return resultOk(
+		buildMapboxStaticImageUrl({
+			accessToken,
+			boundingBox: getViewportBoundingBox(countryMapData, variant),
+			isoCode: countryMapData.isoCode,
+			variant,
+		}),
+	);
 };
 
 const normalizeIsoCode = (isoCode: string): string | null => {

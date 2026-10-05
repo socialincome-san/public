@@ -1,6 +1,6 @@
 import { CellType } from '@/components/data-table/elements/types';
 import { cn } from '@/lib/utils/cn';
-import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
+import { OBFUSCATED_SENTINEL } from '@/modules/recipients/recipient.types';
 import type { RowData } from '@tanstack/react-table';
 
 type Props<TData extends RowData, TValue> = CellType<TData, TValue> & {

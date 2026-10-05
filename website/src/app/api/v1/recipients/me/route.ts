@@ -1,5 +1,5 @@
-import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { getAuthenticatedRecipientFromRequest, updateRecipientSelf } from '@/modules/recipients/recipient.service';
+import { withAppCheck } from '@/server/app-check';
 import { NextRequest, NextResponse } from 'next/server';
 import { RecipientSelfUpdate } from '../../models';
 

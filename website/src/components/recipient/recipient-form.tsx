@@ -8,9 +8,9 @@ import {
 	getOptionalDropdownFieldConfig,
 	getZodEnum,
 } from '@/components/dynamic-form/helper';
-import type { Session } from '@/lib/firebase/current-account';
 import { handleResult } from '@/lib/result-client';
 import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
+import type { Session } from '@/modules/auth/auth.types';
 import type { LocalPartnerOption } from '@/modules/local-partners/local-partner.types';
 import { getSupportedMobileMoneyProviderOptionsAction } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
 import type { ProgramOption } from '@/modules/programs/program.types';

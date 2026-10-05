@@ -15,8 +15,8 @@ import {
 	journalRichTextNodeResolvers as storyblokRichTextNodeResolvers,
 } from '@/components/storyblok/rich-text/journal-resolvers';
 import type { Lottie } from '@/generated/storyblok/types/109655/storyblok-components';
-import { useTranslator } from '@/lib/hooks/useTranslator';
 import type { Translator } from '@/lib/i18n/translator';
+import { useTranslator } from '@/lib/i18n/useTranslator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ComponentProps, ReactNode } from 'react';
 import { render, type StoryblokRichtext } from 'storyblok-rich-text-react-renderer';

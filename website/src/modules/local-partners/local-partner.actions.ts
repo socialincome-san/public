@@ -1,12 +1,26 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
 import { resultFail, type Result } from '@/lib/result';
-import type { LocalPartnerPayload, PublicProgramLocalPartner } from '@/modules/local-partners/local-partner.types';
+import { getSessionByType } from '@/modules/auth/session.service';
+import type {
+	LocalPartnerDashboardStats,
+	LocalPartnerPayload,
+	LocalPartnerPrograms,
+	PublicLocalPartnerOverviewStatsMap,
+	PublicProgramLocalPartner,
+} from '@/modules/local-partners/local-partner.types';
 import { revalidatePath } from 'next/cache';
 import {
+	getLocalPartnerDashboardStats,
+	getLocalPartnerOverviewStats,
+	getLocalPartnerProgramSummaries,
+} from './local-partner-public.service';
+import {
 	localPartnerCreateSchema,
+	localPartnerDashboardSlugSchema,
 	localPartnerIdSchema,
+	localPartnerOverviewSlugsSchema,
+	localPartnerProgramSummariesSchema,
 	localPartnerSessionTypeSchema,
 	localPartnerUpdateSchema,
 } from './local-partner.schemas';
@@ -99,4 +113,37 @@ export const getPublicLocalPartnersByProgramIdAction = async (
 	}
 
 	return getPublicLocalPartnersByProgramId(idResult.data);
+};
+
+export const getLocalPartnerDashboardStatsAction = async (input: unknown): Promise<Result<LocalPartnerDashboardStats>> => {
+	const parsedInput = localPartnerDashboardSlugSchema.safeParse(input);
+	if (!parsedInput.success) {
+		return resultFail('Invalid local partner slug');
+	}
+
+	return getLocalPartnerDashboardStats(parsedInput.data);
+};
+
+export const getLocalPartnerOverviewStatsAction = async (
+	input: unknown,
+): Promise<Result<PublicLocalPartnerOverviewStatsMap>> => {
+	const parsedInput = localPartnerOverviewSlugsSchema.safeParse(input);
+	if (!parsedInput.success) {
+		return resultFail('Invalid local partner slugs');
+	}
+
+	return getLocalPartnerOverviewStats(parsedInput.data);
+};
+
+export const getLocalPartnerProgramSummariesAction = async (input: unknown): Promise<Result<LocalPartnerPrograms>> => {
+	const parsedInput = localPartnerProgramSummariesSchema.safeParse(input);
+	if (!parsedInput.success) {
+		return resultFail('Invalid local partner programs request');
+	}
+
+	return getLocalPartnerProgramSummaries(
+		parsedInput.data.lang,
+		parsedInput.data.localPartnerPortalSlug,
+		parsedInput.data.countryIsoCode,
+	);
 };

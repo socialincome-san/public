@@ -3,8 +3,8 @@ import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
 import { ProgramPermission } from '@/generated/prisma/enums';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { getProgramWallet } from '@/modules/programs/program.service';
+import { requireSession } from '@/server/session';
 import { ReactNode } from 'react';
 import { ProgramSettingsDialog } from './components/program-settings-dialog';
 
@@ -15,7 +15,7 @@ type ProgramLayoutProps = {
 
 export default async function ProgramLayout({ children, params }: ProgramLayoutProps) {
 	const { programId } = await params;
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 
 	const result = await getProgramWallet(user.id, programId);
 

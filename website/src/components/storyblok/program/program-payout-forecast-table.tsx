@@ -3,7 +3,7 @@
 import { makePayoutForecastColumns } from '@/components/data-table/columns/payout-forecast';
 import { BaseTable } from '@/components/data-table/elements/base-table';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import type { PayoutForecastTableViewRow } from '@/modules/payouts/payout.types';
 import { InfoIcon } from 'lucide-react';
 

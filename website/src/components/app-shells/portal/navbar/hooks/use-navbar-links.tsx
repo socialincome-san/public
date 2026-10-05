@@ -1,4 +1,4 @@
-import type { Session } from '@/lib/firebase/current-account';
+import type { Session } from '@/modules/auth/auth.types';
 import type { UserSession } from '@/modules/users/user.types';
 import { LayoutDashboard, LucideIcon, Settings, User } from 'lucide-react';
 

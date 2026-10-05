@@ -1,7 +1,7 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
 import { resultFail, type Result } from '@/lib/result';
+import { getSessionByType } from '@/modules/auth/session.service';
 import type { PreviewPayout } from '@/modules/payout-processes/payout-process.types';
 import { revalidatePath } from 'next/cache';
 import {

@@ -1,9 +1,9 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { getPaginatedFocusTableView } from '@/modules/focuses/focus.service';
 import type { FocusTableViewRow } from '@/modules/focuses/focus.types';
+import { requireAdmin } from '@/server/session';
 import { Suspense } from 'react';
 import FocusesTable from './focuses-table';
 
@@ -16,8 +16,7 @@ export default function FocusesPage({ searchParams }: SearchParamsPageProps) {
 }
 
 const FocusesDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
-	requireAdmin(user);
+	const user = await requireAdmin();
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 

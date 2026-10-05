@@ -2,7 +2,7 @@
 
 import { OnlinePaymentLogos } from '@/components/payment-logos/online-payment-logos';
 import { QrPaymentLogo } from '@/components/payment-logos/qr-payment-logo';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { cn } from '@/lib/utils/cn';
 import { useEffect } from 'react';

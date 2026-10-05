@@ -1,6 +1,6 @@
-import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { verifyOtpSchema } from '@/modules/auth/auth.schemas';
 import { verifyOtp } from '@/modules/auth/auth.service';
+import { withAppCheck } from '@/server/app-check';
 import { NextResponse } from 'next/server';
 
 /**

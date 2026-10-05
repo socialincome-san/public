@@ -1,9 +1,7 @@
 import { Currency, Gender, PayoutInterval, PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
-import type { Session } from '@/lib/firebase/current-account';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
-import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
 import {
 	createFirebaseUserByPhoneNumber,
 	decodeFirebaseTokenFromRequest,
@@ -11,6 +9,7 @@ import {
 	getPhoneNumberFromFirebaseToken,
 	updateFirebaseUserByPhoneNumber,
 } from '@/modules/auth/auth.service';
+import type { Session } from '@/modules/auth/auth.types';
 import { getLocalPartnerOptions } from '@/modules/local-partners/local-partner.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
@@ -35,8 +34,8 @@ import {
 	type UpdateRecipientInput,
 	type UpdateRecipientSelfInput,
 } from './recipient.schemas';
-import type {
-	PayoutProcessRecipient,
+import {
+	OBFUSCATED_SENTINEL,
 	PublicRecipientTableView,
 	PublicRecipientTableViewRow,
 	RecipientFormOptions,
@@ -57,6 +56,7 @@ import type {
 	SurveyRecipientOption,
 	UnassignedRecipientCountry,
 	UpcomingOnboardingTableViewRow,
+	type PayoutProcessRecipient,
 } from './recipient.types';
 
 export const getRecipientMonthlySummarySource = async (

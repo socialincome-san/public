@@ -1,9 +1,9 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { getPaginatedExchangeRateTableView } from '@/modules/exchange-rates/exchange-rate.service';
 import type { ExchangeRatesTableViewRow } from '@/modules/exchange-rates/exchange-rate.types';
+import { requireAdmin } from '@/server/session';
 import { Suspense } from 'react';
 import ExchangeRatesTable from './exchange-rates-table';
 
@@ -16,8 +16,7 @@ export default function ExchangeRatesPage({ searchParams }: SearchParamsPageProp
 }
 
 const ExchangeRatesDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
-	requireAdmin(user);
+	const user = await requireAdmin();
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 

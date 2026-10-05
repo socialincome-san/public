@@ -26,11 +26,8 @@ jest.mock('next/cache', () => ({
 	revalidatePath: jest.fn(),
 }));
 
-jest.mock('@/lib/firebase/current-account', () => ({
+jest.mock('@/modules/auth/session.service', () => ({
 	getSessionByType: mockGetSessionByType,
-}));
-
-jest.mock('@/lib/firebase/current-contributor', () => ({
 	getOptionalContributor: mockGetOptionalContributor,
 }));
 
@@ -99,7 +96,7 @@ const createValidFormData = () => {
 describe('submitCampaignAction', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
-		mockGetOptionalContributor.mockResolvedValue(null);
+		mockGetOptionalContributor.mockResolvedValue({ success: true, data: null });
 	});
 
 	test('returns submission-failed with service status when eligibility orchestration fails', async () => {
@@ -182,7 +179,7 @@ describe('submitCampaignAction', () => {
 	});
 
 	test('does not create a guest account when a contributor is already logged in', async () => {
-		mockGetOptionalContributor.mockResolvedValue({ type: 'contributor', id: 'contributor-1' });
+		mockGetOptionalContributor.mockResolvedValue({ success: true, data: { type: 'contributor', id: 'contributor-1' } });
 		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
 
 		const formData = createValidFormData();
@@ -197,7 +194,7 @@ describe('submitCampaignAction', () => {
 	});
 
 	test('omits claimId from the result when the service does not return one', async () => {
-		mockGetOptionalContributor.mockResolvedValue({ type: 'contributor', id: 'contributor-1' });
+		mockGetOptionalContributor.mockResolvedValue({ success: true, data: { type: 'contributor', id: 'contributor-1' } });
 		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
 
 		const result = await submitCampaignAction(createValidFormData());
@@ -206,7 +203,7 @@ describe('submitCampaignAction', () => {
 	});
 
 	test('passes contributorId from the contributor session when logged in', async () => {
-		mockGetOptionalContributor.mockResolvedValue({ type: 'contributor', id: 'contributor-1' });
+		mockGetOptionalContributor.mockResolvedValue({ success: true, data: { type: 'contributor', id: 'contributor-1' } });
 		mockSubmit.mockResolvedValue({ success: true, data: { slug: 'my-campaign' } });
 
 		const result = await submitCampaignAction(createValidFormData());

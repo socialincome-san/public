@@ -1,9 +1,9 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { getPaginatedSurveyTableView } from '@/modules/surveys/survey.service';
 import type { SurveyTableViewRow } from '@/modules/surveys/survey.types';
+import { requireSession } from '@/server/session';
 import { Suspense } from 'react';
 import { SurveysTableClient } from './surveys-table-client';
 
@@ -16,7 +16,7 @@ export default function SurveysPage({ searchParams }: SearchParamsPageProps) {
 }
 
 const SurveysDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 

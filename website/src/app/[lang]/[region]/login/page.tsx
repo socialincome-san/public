@@ -1,8 +1,8 @@
 import type { DefaultPageProps } from '@/app/[lang]/[region]';
-import { getCurrentSessions } from '@/lib/firebase/current-account';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/lib/utils/metadata';
 import { getRedirectPathAfterLoginAction } from '@/modules/auth/auth.actions';
+import { getCurrentSessions } from '@/modules/auth/session.service';
 import { redirect } from 'next/navigation';
 import { LoginPageContent } from './login-page-content';
 
@@ -24,7 +24,8 @@ const LoginPage = async ({ params, searchParams }: DefaultPageProps) => {
 		redirect(`/${lang}/${region}/auth/confirm-login${search}`);
 	}
 
-	const sessions = await getCurrentSessions();
+	const sessionsResult = await getCurrentSessions();
+	const sessions = sessionsResult.success ? sessionsResult.data : [];
 	if (sessions.length > 0) {
 		const redirectPathResult = await getRedirectPathAfterLoginAction();
 		if (redirectPathResult.success) {

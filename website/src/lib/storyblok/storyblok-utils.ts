@@ -2,14 +2,12 @@ import type { ArticleType, Person } from '@/generated/storyblok/types/109655/sto
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
-import type { ResolvedArticle } from '@/modules/storyblok-content/storyblok-content.types';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import type { Metadata } from 'next';
+import type { ResolvedArticle } from './storyblok-article';
 import { normalizeStoryblokFocusForImageService } from './storyblok-image-focus';
 import { getWebsitePathTailFromStoryblokSlug, getWebsitePublicPath, WEBSITE_PERSON_PATH_SEGMENT } from './storyblok-paths';
-
-export type { ResolvedArticle } from '@/modules/storyblok-content/storyblok-content.types';
 
 export const toStringArray = (value: string | number | (string | number)[] | undefined): string[] => {
 	const list = Array.isArray(value) ? value : value !== undefined ? [value] : [];

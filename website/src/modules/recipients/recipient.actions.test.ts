@@ -3,7 +3,7 @@ import type { PublicRecipientTableView } from './recipient.types';
 
 const mockGetPublicRecipientsTableView = jest.fn<Promise<Result<PublicRecipientTableView>>, [string]>();
 
-jest.mock('@/lib/firebase/current-account', () => ({
+jest.mock('@/modules/auth/session.service', () => ({
 	getSessionByType: jest.fn(),
 }));
 

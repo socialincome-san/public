@@ -4,7 +4,7 @@ import { Button } from '@/components/button/button';
 import { CountryFlag } from '@/components/country-flag/country-flag';
 import { RadioGroupItem } from '@/components/radio-group/radio-group';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { cn } from '@/lib/utils/cn';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';

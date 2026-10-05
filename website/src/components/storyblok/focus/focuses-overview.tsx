@@ -1,9 +1,9 @@
+import type { AnySearchParams } from '@/app/page-props';
 import { BlockWrapper } from '@/components/block-wrapper';
 import { FilterBar } from '@/components/filters/filter-bar';
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { AnySearchParams } from '@/lib/types/page-props';
 import { getPublicFocusStatsBySlugsAction } from '@/modules/focuses/focus.actions';
 import { FocusDetailCard } from './focus-detail-card';
 import type { FocusStory } from './focus.types';

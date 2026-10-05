@@ -1,41 +1,56 @@
-import type { ProgramStory } from '@/components/storyblok/program/program.types';
-import {
-	getProgramPortalSlug,
-	getProgramStoryblokSlug,
-	getProgramTitle,
-} from '@/components/storyblok/program/program.utils';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { resultOk, type Result } from '@/lib/result';
+import { LOCAL_PARTNER_PROGRAM_ROWS, selectLocalPartnerProgramStories } from '@/lib/storyblok/local-partner-programs.utils';
+import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from '@/lib/storyblok/program-story';
 import { getDefaultCampaignForProgram } from '@/modules/campaigns/campaign.service';
-import { getProgramRecipientCountsByLocalPartnerSlug } from '@/modules/local-partners/local-partner.service';
 import {
 	getPublicProgramFilterDataByPortalSlugs,
 	getPublicProgramStatsByProgramPortalSlugs,
 } from '@/modules/programs/program.service';
 import { getPrograms } from '@/modules/storyblok-content/storyblok-content.service';
-import { LOCAL_PARTNER_PROGRAM_ROWS, selectLocalPartnerProgramStories } from './local-partner-programs.utils';
+import {
+	getProgramRecipientCountsByLocalPartnerSlug,
+	getPublicLocalPartnerDashboardStatsBySlug,
+	getPublicLocalPartnerOverviewStatsBySlugs,
+} from './local-partner.service';
+import type {
+	LocalPartnerDashboardStats,
+	LocalPartnerPrograms,
+	PublicLocalPartnerOverviewStatsMap,
+} from './local-partner.types';
 
-export type LocalPartnerProgramSummary = {
-	programId: string;
-	title: string;
-	/** Slug of the Storyblok story, used for the link to the program page. */
-	storyblokSlug: string;
-	recipientsCount: number;
-	/** True while the program's default campaign is still open. */
-	isFundraising: boolean;
+const emptyDashboardStats: LocalPartnerDashboardStats = {
+	recipientsCount: 0,
+	completedSurveysCount: 0,
 };
 
-export type LocalPartnerPrograms = {
-	/** Only the programs the card can render; the rest are covered by programCount. */
-	programs: LocalPartnerProgramSummary[];
-	programCount: number;
-	recipientsTotal: number;
-	/** False when the country fallback was used, so the card does not present the total as the partner's own. */
-	isPartnerScoped: boolean;
+const emptyPrograms: LocalPartnerPrograms = {
+	programs: [],
+	programCount: 0,
+	recipientsTotal: 0,
+	isPartnerScoped: false,
 };
 
-const EMPTY: LocalPartnerPrograms = { programs: [], programCount: 0, recipientsTotal: 0, isPartnerScoped: false };
+const developmentOverviewStatsByPortalSlug: PublicLocalPartnerOverviewStatsMap = {
+	'the-ark-foundation': { recipientsCount: 0, candidatesCount: 35 },
+	'rev-dr-karla-j-cooper-foundation': { recipientsCount: 20, candidatesCount: 18 },
+	ephraim: { recipientsCount: 20, candidatesCount: 12 },
+	'reunion-freetown': { recipientsCount: 11, candidatesCount: 9 },
+	'we-yone-child-foundation': { recipientsCount: 65, candidatesCount: 24 },
+	'united-polio-brothers-and-sisters': { recipientsCount: 29, candidatesCount: 16 },
+	'rainbo-initiative': { recipientsCount: 46, candidatesCount: 21 },
+	'lizard-earth': { recipientsCount: 100, candidatesCount: 14 },
+	'help-a-mother-and-newborn-initiative': { recipientsCount: 29, candidatesCount: 11 },
+	'one-village-partners': { recipientsCount: 39, candidatesCount: 19 },
+	'freetown-city-council': { recipientsCount: 15, candidatesCount: 8 },
+	'equal-rights-alliance': { recipientsCount: 29, candidatesCount: 17 },
+	'reachout-salone': { recipientsCount: 36, candidatesCount: 13 },
+	'jamil-nyanga-jaward': { recipientsCount: 35, candidatesCount: 15 },
+	'aurora-foundation': { recipientsCount: 42, candidatesCount: 10 },
+	'sierra-leone-association-of-ebola-survivors': { recipientsCount: 62, candidatesCount: 22 },
+};
 
-const DEVELOPMENT_PROGRAM_DATA_BY_PORTAL_SLUG: Record<
+const developmentProgramDataByPortalSlug: Record<
 	string,
 	{ programId: string; countryIsoCode: string; recipientsCount: number }
 > = {
@@ -63,29 +78,56 @@ const DEVELOPMENT_PROGRAM_DATA_BY_PORTAL_SLUG: Record<
 	'island-income': { programId: 'program-island-income', countryIsoCode: 'LR', recipientsCount: 5 },
 };
 
-/**
- * Programs a local partner runs, with the partner's own recipient count per program.
- *
- * The link is `Recipient.localPartnerId` x `Recipient.programId`: every recipient belongs to a partner and may
- * belong to a program, so grouping a partner's recipients by program yields both the program set and the
- * partner-scoped counts.
- *
- * PROTOTYPE FALLBACK: no local partner page is linked to recipients in the seed yet, so a partner without
- * enrolled recipients falls back to the programs running in its country, counted platform-wide. That case reports
- * `isPartnerScoped: false` so the card can avoid quoting a total the partner does not own. Remove the fallback
- * once partners are linked; the primary path above needs no change.
- */
+export const getLocalPartnerDashboardStats = async (portalSlug?: string): Promise<Result<LocalPartnerDashboardStats>> => {
+	const normalizedSlug = portalSlug?.trim();
+	if (!normalizedSlug) {
+		return resultOk(emptyDashboardStats);
+	}
+
+	const statsResult = await getPublicLocalPartnerDashboardStatsBySlug(normalizedSlug);
+
+	return resultOk(statsResult.success ? statsResult.data : emptyDashboardStats);
+};
+
+export const getLocalPartnerOverviewStats = async (
+	portalSlugs: string[],
+): Promise<Result<PublicLocalPartnerOverviewStatsMap>> => {
+	const statsResult = await getPublicLocalPartnerOverviewStatsBySlugs(portalSlugs);
+	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
+
+	if (process.env.NODE_ENV !== 'development') {
+		return resultOk(statsByPortalSlug);
+	}
+
+	return resultOk(
+		Object.fromEntries(
+			[...new Set(portalSlugs)].map((portalSlug) => {
+				const stats = statsByPortalSlug[portalSlug];
+				const developmentStats = developmentOverviewStatsByPortalSlug[portalSlug];
+
+				return [
+					portalSlug,
+					{
+						recipientsCount: stats?.recipientsCount ?? developmentStats?.recipientsCount ?? 0,
+						candidatesCount: stats?.candidatesCount ?? developmentStats?.candidatesCount ?? 0,
+					},
+				];
+			}),
+		),
+	);
+};
+
 export const getLocalPartnerProgramSummaries = async (
 	lang: WebsiteLanguage,
 	localPartnerPortalSlug: string,
 	countryIsoCode: string,
-): Promise<LocalPartnerPrograms> => {
+): Promise<Result<LocalPartnerPrograms>> => {
 	const programsResult = await getPrograms(lang);
 	if (!programsResult.success) {
-		return EMPTY;
+		return resultOk(emptyPrograms);
 	}
 
-	const stories = programsResult.data.filter((story) => getProgramPortalSlug(story.content)) as ProgramStory[];
+	const stories = programsResult.data.filter((story) => getProgramPortalSlug(story.content));
 	const portalSlugs = [...new Set(stories.map((story) => getProgramPortalSlug(story.content)))];
 	const [countsResult, filterDataResult, statsResult] = await Promise.all([
 		getProgramRecipientCountsByLocalPartnerSlug(localPartnerPortalSlug),
@@ -95,26 +137,23 @@ export const getLocalPartnerProgramSummaries = async (
 	const isDevelopment = process.env.NODE_ENV === 'development';
 	const recipientsCountByProgramId = countsResult.success ? countsResult.data : {};
 	const filterDataByPortalSlug = {
-		...(isDevelopment ? DEVELOPMENT_PROGRAM_DATA_BY_PORTAL_SLUG : {}),
+		...(isDevelopment ? developmentProgramDataByPortalSlug : {}),
 		...(filterDataResult.success ? filterDataResult.data : {}),
 	};
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
-
-	// Country fallback is prototype-only: production must not invent a program list from the partner's country.
 	const { stories: selectedStories, isPartnerScoped } = selectLocalPartnerProgramStories(
 		stories,
 		filterDataByPortalSlug,
 		recipientsCountByProgramId,
 		isDevelopment ? countryIsoCode : '',
 	);
-
 	const countedStories = selectedStories
 		.map((story) => {
 			const portalSlug = getProgramPortalSlug(story.content);
 			const programId = filterDataByPortalSlug[portalSlug]?.programId;
 			const partnerCount = programId !== undefined ? recipientsCountByProgramId[programId] : undefined;
 			const statsCount = statsByPortalSlug[portalSlug]?.recipientsCount;
-			const developmentCount = DEVELOPMENT_PROGRAM_DATA_BY_PORTAL_SLUG[portalSlug]?.recipientsCount;
+			const developmentCount = developmentProgramDataByPortalSlug[portalSlug]?.recipientsCount;
 
 			return {
 				story,
@@ -123,9 +162,7 @@ export const getLocalPartnerProgramSummaries = async (
 				recipientsCount: partnerCount ?? (isDevelopment ? (statsCount ?? developmentCount) : statsCount) ?? 0,
 			};
 		})
-		.sort((a, b) => b.recipientsCount - a.recipientsCount);
-
-	// Campaigns are only resolved for the programs the card actually shows.
+		.sort((left, right) => right.recipientsCount - left.recipientsCount);
 	const programs = await Promise.all(
 		countedStories.slice(0, LOCAL_PARTNER_PROGRAM_ROWS).map(async (entry) => {
 			const campaignResult = entry.programId ? await getDefaultCampaignForProgram(entry.programId) : null;
@@ -140,13 +177,12 @@ export const getLocalPartnerProgramSummaries = async (
 		}),
 	);
 
-	return {
+	return resultOk({
 		programs,
-		// Partner-scoped totals come from the DB so a missing Storyblok story cannot zero the hero-matching count.
 		programCount: isPartnerScoped ? Object.keys(recipientsCountByProgramId).length : countedStories.length,
 		recipientsTotal: isPartnerScoped
 			? Object.values(recipientsCountByProgramId).reduce((total, count) => total + count, 0)
 			: countedStories.reduce((total, entry) => total + entry.recipientsCount, 0),
 		isPartnerScoped,
-	};
+	});
 };

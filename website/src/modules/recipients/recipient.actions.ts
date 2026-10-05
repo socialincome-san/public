@@ -1,7 +1,8 @@
 'use server';
 
-import { getSessionByType, type Session } from '@/lib/firebase/current-account';
 import { resultFail, type Result } from '@/lib/result';
+import type { Session } from '@/modules/auth/auth.types';
+import { getSessionByType } from '@/modules/auth/session.service';
 import type { PublicRecipientTableView, RecipientFormOptions, RecipientPayload } from '@/modules/recipients/recipient.types';
 import { revalidatePath } from 'next/cache';
 import {

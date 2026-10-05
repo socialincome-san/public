@@ -2,7 +2,7 @@ import { CountryDetail } from '@/components/storyblok/country/country-detail';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { Country } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getCountryPageStats } from '@/lib/storyblok/country-page-stats';
+import { getCountryPageStatsAction } from '@/modules/countries/country.actions';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
 
@@ -28,7 +28,10 @@ export const StoryblokPreviewCountryPage = async ({ storyPath, lang, region, pre
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async (story) => {
-			const { activeProgramsCount, recipientsCount } = await getCountryPageStats(story.content.isoCode.toString());
+			const statsResult = await getCountryPageStatsAction(story.content.isoCode.toString());
+			const { activeProgramsCount, recipientsCount } = statsResult.success
+				? statsResult.data
+				: { activeProgramsCount: 0, recipientsCount: 0 };
 
 			return (
 				<CountryDetail

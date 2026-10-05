@@ -1,7 +1,7 @@
 /** @jest-environment jsdom */
 
+import { usePrefersReducedMotion } from '@/components/hooks/use-prefers-reduced-motion';
 import { getCountryGeoJson, type CountryGeoJson } from '@/lib/country-geojson';
-import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { GlobeClient } from './globe-client';
@@ -9,7 +9,7 @@ import { createGlobeRenderer, type GlobeRendererHandle } from './globe-renderer'
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-jest.mock('@/lib/hooks/use-prefers-reduced-motion');
+jest.mock('@/components/hooks/use-prefers-reduced-motion');
 jest.mock('@/lib/country-geojson');
 jest.mock('./globe-client.module.css', () => ({ globe: 'globe' }));
 jest.mock('./globe-renderer');

@@ -1,6 +1,6 @@
 import type { CountryCode, Gender, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
-import type { RecipientAgeGroup } from '@/lib/constants/recipient-age-groups';
-import type { Question } from '@/lib/types/question';
+import type { RecipientAgeGroup } from '@/modules/surveys/survey-age-groups.types';
+import type { Question } from '@/modules/surveys/survey-questions.types';
 
 export type SurveyJsonValue = string | number | boolean | null | SurveyJsonObject | SurveyJsonValue[];
 

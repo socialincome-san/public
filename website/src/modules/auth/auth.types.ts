@@ -1,3 +1,11 @@
+import type { ContributorSession } from '@/modules/contributors/contributor.types';
+import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
+import type { UserSession } from '@/modules/users/user.types';
+
+export const SESSION_COOKIE_NAME = 'session';
+
+export type Session = ContributorSession | LocalPartnerSession | UserSession;
+
 export type VerifyOtpResult = {
 	customToken: string;
 	isNewUser: boolean;

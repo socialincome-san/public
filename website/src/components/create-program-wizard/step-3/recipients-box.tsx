@@ -2,7 +2,7 @@
 
 import { Input } from '@/components/input/input';
 import { Slider } from '@/components/slider/slider';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { useState } from 'react';
 import { IndirectImpactNotice } from './indirect-impact-notice';
 

@@ -1,9 +1,9 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { UpcomingOnboardingTableClient } from '@/components/data-table/clients/upcoming-onboarding-table-client';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { getPaginatedUpcomingOnboardingRecipientTableView } from '@/modules/recipients/recipient.service';
+import { requireSession } from '@/server/session';
 import { Suspense } from 'react';
 
 const UpcomingOnboardingPage = ({ searchParams }: SearchParamsPageProps) => {
@@ -17,7 +17,7 @@ const UpcomingOnboardingPage = ({ searchParams }: SearchParamsPageProps) => {
 export default UpcomingOnboardingPage;
 
 const UpcomingOnboardingDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 

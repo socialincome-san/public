@@ -1,4 +1,4 @@
-import { CURRENCY_COOKIE } from '@/app/[lang]/[region]';
+import { CURRENCY_COOKIE } from '@/lib/i18n/cookies';
 import { isWebsiteCurrency, type WebsiteCurrency } from '@/lib/i18n/utils';
 import { cookies } from 'next/headers';
 

@@ -1,8 +1,9 @@
 'use server';
 
-import { getCurrentSessions, getSessionByType } from '@/lib/firebase/current-account';
-import { SESSION_COOKIE_NAME } from '@/lib/firebase/session-cookie';
 import { resultFail, resultOk, type Result } from '@/lib/result';
+import { SESSION_COOKIE_NAME } from '@/modules/auth/auth.types';
+import { getCurrentSessions, getCurrentUser, getSessionByType } from '@/modules/auth/session.service';
+import type { UserSession } from '@/modules/users/user.types';
 import { cookies } from 'next/headers';
 import { sessionIdTokenSchema } from './auth.schemas';
 import { createSessionCookie } from './auth.service';
@@ -63,9 +64,11 @@ export const getIsAuthenticatedUserAction = async (): Promise<Result<boolean>> =
 	return resultOk(sessionResult.success);
 };
 
+export const getCurrentUserAction = async (): Promise<Result<UserSession | null>> => getCurrentUser();
+
 export const getRedirectPathAfterLoginAction = async (): Promise<Result<string>> => {
-	const sessions = await getCurrentSessions();
-	const session = sessions[0];
+	const sessionsResult = await getCurrentSessions();
+	const session = sessionsResult.success ? sessionsResult.data[0] : undefined;
 
 	if (!session) {
 		return resultOk('/');

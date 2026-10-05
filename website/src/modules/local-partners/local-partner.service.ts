@@ -1,4 +1,3 @@
-import type { Session } from '@/lib/firebase/current-account';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	createFirebaseUserByEmail,
@@ -6,6 +5,7 @@ import {
 	findFirebaseUserByEmail,
 	updateFirebaseUserByUid,
 } from '@/modules/auth/auth.service';
+import type { Session } from '@/modules/auth/auth.types';
 import { isAdmin } from '@/modules/users/user.service';
 import * as localPartnerRepository from './local-partner.repository';
 import type { LocalPartnerCreateInput, LocalPartnerUpdateInput } from './local-partner.schemas';

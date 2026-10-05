@@ -1,7 +1,7 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
 import { resultFail, resultOk, type Result } from '@/lib/result';
+import { getSessionByType } from '@/modules/auth/session.service';
 import type { CandidatePayload } from '@/modules/candidates/candidate.types';
 import { getLocalPartnerOptions } from '@/modules/local-partners/local-partner.service';
 import type { LocalPartnerOption } from '@/modules/local-partners/local-partner.types';

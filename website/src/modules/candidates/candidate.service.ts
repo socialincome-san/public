@@ -1,5 +1,4 @@
 import { CountryCode, Gender, type Profile } from '@/generated/prisma/enums';
-import type { Session } from '@/lib/firebase/current-account';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import {
@@ -7,6 +6,7 @@ import {
 	deleteFirebaseUserByPhoneNumberIfExists,
 	updateFirebaseUserByPhoneNumber,
 } from '@/modules/auth/auth.service';
+import type { Session } from '@/modules/auth/auth.types';
 import { getCountryIsoCode } from '@/modules/countries/country.service';
 import { isAdmin } from '@/modules/users/user.service';
 import * as candidateRepository from './candidate.repository';

@@ -6,7 +6,7 @@ import type {
 	PayoutStatus,
 	ProgramPermission,
 } from '@/generated/prisma/enums';
-import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
+export const OBFUSCATED_SENTINEL = 'OBFUSCATED';
 
 export type UnassignedRecipientCountry = {
 	contactCountry: CountryCode | null;

@@ -1,9 +1,9 @@
 'use client';
 
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
+import { usePrefersReducedMotion } from '@/components/hooks/use-prefers-reduced-motion';
 import { type OutflowsSectionRow } from '@/components/outflows/outflows-spend';
 import { Progress } from '@/components/progress/progress';
-import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
 import { cn } from '@/lib/utils/cn';
 import { useInView } from 'motion/react';
 import Image from 'next/image';

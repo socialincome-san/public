@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
 import type { CompletedDonationSummary } from '../steps/step-stripe-checkout/map-wizard-to-stripe-checkout';
 

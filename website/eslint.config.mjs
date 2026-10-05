@@ -450,4 +450,20 @@ export default [
 			],
 		},
 	},
+	{
+		files: ['src/lib/**/*.{ts,tsx}'],
+		rules: {
+			'@typescript-eslint/no-restricted-imports': [
+				'error',
+				{
+					patterns: [
+						{
+							group: ['@/modules/**', '@/app/**', '@/components/**', '@/server/**'],
+							message: 'lib is the shared kernel. It must not import modules, app routes, components, or request adapters.',
+						},
+					],
+				},
+			],
+		},
+	},
 ];

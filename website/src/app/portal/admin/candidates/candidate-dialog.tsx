@@ -2,8 +2,8 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import type { Session } from '@/lib/firebase/current-account';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
+import type { Session } from '@/modules/auth/auth.types';
 import { CandidateForm } from './candidates-form';
 
 type Props = {

@@ -1,8 +1,8 @@
 'use client';
 
+import { getIndirectBeneficiaryCount, INDIRECT_BENEFICIARY_FACTOR } from '@/components/program/indirect-beneficiaries';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/tool-tip/tool-tip';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { getIndirectBeneficiaryCount, INDIRECT_BENEFICIARY_FACTOR } from '@/lib/utils/indirect-beneficiaries';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 
 type Props = {
 	recipients: number;

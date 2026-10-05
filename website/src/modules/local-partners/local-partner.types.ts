@@ -101,6 +101,26 @@ export type PublicProgramLocalPartner = {
 	slug: string;
 };
 
+export type LocalPartnerDashboardStats = {
+	recipientsCount: number;
+	completedSurveysCount: number;
+};
+
+export type LocalPartnerProgramSummary = {
+	programId: string;
+	title: string;
+	storyblokSlug: string;
+	recipientsCount: number;
+	isFundraising: boolean;
+};
+
+export type LocalPartnerPrograms = {
+	programs: LocalPartnerProgramSummary[];
+	programCount: number;
+	recipientsTotal: number;
+	isPartnerScoped: boolean;
+};
+
 export type LocalPartnerSession = {
 	type: 'local-partner';
 	id: string;
