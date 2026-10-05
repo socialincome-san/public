@@ -31,6 +31,8 @@ export const countryIdSchema = z.string().trim().min(1, 'Country id is required.
 
 export const countryIsoCodesSchema = z.array(z.string());
 
+export const countryPageIsoCodeSchema = z.string();
+
 export const countryStatisticsComparisonSchema = z.object({
 	countryCode: z.nativeEnum(CountryCode),
 	visitorCountryCode: z.nativeEnum(CountryCode),

@@ -1,7 +1,7 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
 import { resultFail, type Result } from '@/lib/result';
+import { getSessionByType } from '@/modules/auth/session.service';
 import { subscribeToNewsletterSchema } from './newsletter.schemas';
 import { subscribeToNewsletter, unsubscribeFromNewsletter } from './newsletter.service';
 

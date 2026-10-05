@@ -4,7 +4,7 @@ import {
 } from '@/components/storyblok/local-partner/local-partner-teaser-card';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getLocalPartnerOverviewStats } from '@/lib/storyblok/local-partner-overview-stats';
+import { getLocalPartnerOverviewStatsAction } from '@/modules/local-partners/local-partner.actions';
 import type { LocalPartnerStory } from './local-partner.types';
 import { getLocalPartnerPortalSlug } from './local-partner.utils';
 
@@ -17,10 +17,11 @@ type Props = {
 
 export const LocalPartnersGrid = async ({ localPartners, lang, region, hasActiveFilters = false }: Props) => {
 	const portalSlugs = localPartners.map((localPartner) => getLocalPartnerPortalSlug(localPartner.content)).filter(Boolean);
-	const [translator, statsByPortalSlug] = await Promise.all([
+	const [translator, statsResult] = await Promise.all([
 		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
-		getLocalPartnerOverviewStats(portalSlugs),
+		getLocalPartnerOverviewStatsAction(portalSlugs),
 	]);
+	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 
 	if (localPartners.length === 0) {
 		return (

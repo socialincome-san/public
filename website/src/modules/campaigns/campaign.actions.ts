@@ -1,9 +1,8 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
-import { getOptionalContributor } from '@/lib/firebase/current-contributor';
 import { defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
+import { getOptionalContributor, getSessionByType } from '@/modules/auth/session.service';
 import type {
 	CampaignCmsJoinWithStats,
 	CampaignDefaultImageOption,
@@ -189,7 +188,8 @@ export const submitCampaignAction = async (
 		return submissionFail(optionalImagesResult.error, 400, optionalImagesResult.field);
 	}
 
-	const contributor = await getOptionalContributor();
+	const contributorResult = await getOptionalContributor();
+	const contributor = contributorResult.success ? contributorResult.data : null;
 	const submissionResult = await submitCampaign(
 		fieldsResult.data,
 		imageSourceResult.data,

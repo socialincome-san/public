@@ -3,7 +3,7 @@
 import { Button } from '@/components/button/button';
 import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramPayoutForecastTable } from '@/components/storyblok/program/program-payout-forecast-table';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getPublicPayoutForecastTableAction } from '@/modules/payouts/payout.actions';
 import type { PayoutForecastTableViewRow } from '@/modules/payouts/payout.types';
 import Link from 'next/link';

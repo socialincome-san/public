@@ -2,7 +2,7 @@
 
 import { makePublicRecipientColumns } from '@/components/data-table/columns/recipients';
 import { BaseTable } from '@/components/data-table/elements/base-table';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import type { PublicRecipientTableViewRow } from '@/modules/recipients/recipient.types';
 
 type Props = {

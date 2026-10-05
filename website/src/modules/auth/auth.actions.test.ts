@@ -9,8 +9,9 @@ jest.mock('next/headers', () => ({
 	cookies: (...args: unknown[]): unknown => mockCookies(...args),
 }));
 
-jest.mock('@/lib/firebase/current-account', () => ({
+jest.mock('@/modules/auth/session.service', () => ({
 	getCurrentSessions: jest.fn(),
+	getCurrentUser: jest.fn(),
 	getSessionByType: jest.fn(),
 }));
 

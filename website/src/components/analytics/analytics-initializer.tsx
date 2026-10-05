@@ -4,7 +4,7 @@ import { FacebookTracking } from '@/components/analytics/facebook-tracking';
 import { GoogleTagManager } from '@/components/analytics/google-tag-manager';
 import { LinkedInTracking } from '@/components/analytics/linkedin-tracking';
 import { initializeAnalytics, setAnalyticsConsent } from '@/lib/firebase/client-analytics';
-import { useFirebaseApp } from '@/lib/firebase/hooks/useFirebaseApp';
+import { useFirebaseApp } from '@/lib/firebase/hooks/use-firebase-app';
 import { useEffect, useState } from 'react';
 
 if (typeof window !== 'undefined') {

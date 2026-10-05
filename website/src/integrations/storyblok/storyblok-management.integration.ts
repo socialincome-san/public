@@ -1,6 +1,6 @@
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { randomUUID } from 'crypto';

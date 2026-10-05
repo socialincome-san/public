@@ -1,11 +1,11 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { ProgramPermission } from '@/generated/prisma/enums';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { getPaginatedRecipientTableView } from '@/modules/recipients/recipient.service';
 import type { RecipientTableViewRow } from '@/modules/recipients/recipient.types';
+import { requireSession } from '@/server/session';
 import { Suspense } from 'react';
 
 const RecipientsPage = ({ searchParams }: SearchParamsPageProps) => {
@@ -19,7 +19,7 @@ const RecipientsPage = ({ searchParams }: SearchParamsPageProps) => {
 export default RecipientsPage;
 
 const RecipientsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 

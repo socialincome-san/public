@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { QrBillPaymentCard } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-payment-card';
 import { QrBillPdfDownloadLink } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-pdf-download-link';
 import { type Currency } from '@/generated/prisma/client';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale, formatDateLocale, wholeCurrencyFormatOptions } from '@/lib/utils/string-utils';
 import { getSubscriptionQrBillDisplayAction } from '@/modules/qr-bills/qr-bill.actions';

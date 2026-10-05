@@ -9,6 +9,7 @@ import type { CountryCreateInput, CountryUpdateInput } from './country.schemas';
 import {
 	CountryCondition,
 	NETWORK_TECH_LABELS,
+	type CountryPageStats,
 	type CountryPaginatedTableView,
 	type CountryPayload,
 	type CountryStatisticRow,
@@ -245,7 +246,7 @@ export const getProgramCountryFeasibility = async (): Promise<Result<ProgramCoun
 	}
 };
 
-export const getPublicCountryStatsByIsoCode = async (isoCode: string): Promise<Result<PublicCountryStats>> => {
+const getPublicCountryStatsByIsoCode = async (isoCode: string): Promise<Result<PublicCountryStats>> => {
 	const normalizedIsoCode = isoCode.trim().toUpperCase();
 	if (!isValidCountryCode(normalizedIsoCode)) {
 		return resultFail(normalizedIsoCode ? 'Country not found' : 'Missing isoCode');
@@ -259,6 +260,28 @@ export const getPublicCountryStatsByIsoCode = async (isoCode: string): Promise<R
 	const countryStats = statsByIsoCodesResult.data[normalizedIsoCode];
 
 	return countryStats ? resultOk(countryStats) : resultFail('Country not found');
+};
+
+const emptyCountryPageStats: CountryPageStats = {
+	activeProgramsCount: 0,
+	recipientsCount: 0,
+};
+
+export const getCountryPageStats = async (isoCode: string): Promise<Result<CountryPageStats>> => {
+	const normalizedIsoCode = isoCode.trim();
+	if (!normalizedIsoCode || normalizedIsoCode === '-') {
+		return resultOk(emptyCountryPageStats);
+	}
+
+	const statsResult = await getPublicCountryStatsByIsoCode(normalizedIsoCode);
+	if (!statsResult.success) {
+		return resultOk(emptyCountryPageStats);
+	}
+
+	return resultOk({
+		activeProgramsCount: statsResult.data.programsCount,
+		recipientsCount: statsResult.data.recipientsCount,
+	});
 };
 
 export const getPublicCountryStatsByIsoCodes = async (isoCodes: string[]): Promise<Result<PublicCountryStatsMap>> => {

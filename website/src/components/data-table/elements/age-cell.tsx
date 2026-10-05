@@ -3,7 +3,7 @@
 import { type CellContext } from '@/components/data-table/tanstack-table';
 import { cn } from '@/lib/utils/cn';
 import { now } from '@/lib/utils/now';
-import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
+import { OBFUSCATED_SENTINEL } from '@/modules/recipients/recipient.types';
 import type { RowData } from '@tanstack/react-table';
 import { differenceInYears } from 'date-fns';
 

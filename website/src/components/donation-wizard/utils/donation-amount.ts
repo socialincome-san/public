@@ -1,4 +1,4 @@
-import { getIndirectBeneficiaryCount } from '@/lib/utils/indirect-beneficiaries';
+import { getIndirectBeneficiaryCount } from '@/components/program/indirect-beneficiaries';
 import { ONLINE_TRANSACTION_FEE_RATE } from '@/modules/subscriptions/subscription.types';
 
 export type PresetAmount = 25 | 50 | 100;

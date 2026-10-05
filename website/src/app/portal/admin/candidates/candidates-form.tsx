@@ -8,9 +8,9 @@ import {
 	getOptionalDropdownFieldConfig,
 	getZodEnum,
 } from '@/components/dynamic-form/helper';
-import type { Session } from '@/lib/firebase/current-account';
 import { handleResult } from '@/lib/result-client';
 import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
+import type { Session } from '@/modules/auth/auth.types';
 import {
 	createCandidateAction,
 	deleteCandidateAction,

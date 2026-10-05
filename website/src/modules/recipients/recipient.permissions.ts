@@ -1,5 +1,5 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
-import type { Session } from '@/lib/firebase/current-account';
+import type { Session } from '@/modules/auth/auth.types';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
 
 export const canCreateRecipient = (

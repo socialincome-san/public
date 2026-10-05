@@ -1,7 +1,7 @@
 'use client';
 
 import { CellType } from '@/components/data-table/elements/types';
-import { createStorageReference, useStorage, useStorageDownloadURL } from '@/lib/firebase/hooks/useStorage';
+import { createStorageReference, useStorage, useStorageDownloadURL } from '@/lib/firebase/hooks/use-storage';
 import type { RowData } from '@tanstack/react-table';
 import { Download } from 'lucide-react';
 import Link from 'next/link';

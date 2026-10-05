@@ -2,7 +2,7 @@
 
 import { CardAlertFooter } from '@/components/card-alert-footer';
 import { CountryFlag } from '@/components/country-flag/country-flag';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { cn } from '@/lib/utils/cn';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';

@@ -1,6 +1,6 @@
 import { PayoutInterval, PayoutStatus } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
-import { OBFUSCATED_SENTINEL } from '@/lib/utils/obfuscation';
+import { OBFUSCATED_SENTINEL } from './recipient.types';
 
 const mockGetProgramNameById = jest.fn();
 const mockFindPublicRecipientTableSource = jest.fn();

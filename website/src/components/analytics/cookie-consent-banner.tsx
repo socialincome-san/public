@@ -3,7 +3,7 @@
 import { Button } from '@/components/button/button';
 import { Card } from '@/components/card/card';
 import type { ConsentStatus } from '@/lib/firebase/client-analytics';
-import { useIsPage } from '@/lib/hooks/useIsPage';
+import { useIsPage } from '@/lib/hooks/use-is-page';
 import { useEffect, useState } from 'react';
 
 type CookieConsentBannerProps = {

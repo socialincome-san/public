@@ -9,8 +9,8 @@ import type {
 	Program,
 } from '@/generated/storyblok/types/109655/storyblok-components';
 import { resultFail, resultOk, type Result } from '@/lib/result';
-import { buildPreviewCacheKey, setPreviewCache } from '@/lib/storyblok-preview/preview-cache';
-import { verifyStoryblokPreviewToken } from '@/lib/storyblok-preview/preview-token';
+import { buildPreviewCacheKey, setPreviewCache } from '@/lib/storyblok/preview/preview-cache';
+import { verifyStoryblokPreviewToken } from '@/lib/storyblok/preview/preview-token';
 import type { ISbStoryData } from '@storyblok/js';
 import { revalidatePath } from 'next/cache';
 import {

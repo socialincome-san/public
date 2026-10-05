@@ -1,5 +1,5 @@
 import { COUNTRY_CODES } from '@/lib/types/country';
-import { GENDER_OPTIONS } from '@/lib/types/user';
+import { GENDER_OPTIONS } from '@/modules/contributors/contributor.types';
 import * as z from 'zod';
 
 const qrContactSchema = z.object({

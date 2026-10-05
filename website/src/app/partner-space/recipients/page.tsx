@@ -1,10 +1,10 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedLocalPartnerOrRedirect } from '@/lib/firebase/current-local-partner';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { getPaginatedRecipientTableViewByLocalPartnerId } from '@/modules/recipients/recipient.service';
 import type { RecipientTableViewRow } from '@/modules/recipients/recipient.types';
+import { requireSession } from '@/server/session';
 import { Suspense } from 'react';
 
 const RecipientsPage = ({ searchParams }: SearchParamsPageProps) => {
@@ -18,7 +18,7 @@ const RecipientsPage = ({ searchParams }: SearchParamsPageProps) => {
 export default RecipientsPage;
 
 const RecipientsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const partner = await getAuthenticatedLocalPartnerOrRedirect();
+	const partner = await requireSession('local-partner');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 

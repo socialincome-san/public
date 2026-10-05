@@ -1,13 +1,9 @@
 import { PortalAppShell } from '@/components/app-shells/portal/app-shell';
-import { getSessionsOrRedirect } from '@/lib/firebase/current-account';
-import { redirect } from 'next/navigation';
+import { requireSessions } from '@/server/session';
 import type { ReactNode } from 'react';
 
 export default async function PortalLayout({ children }: { children: ReactNode }) {
-	const sessions = await getSessionsOrRedirect();
-	if (!sessions.some((s) => s.type === 'user')) {
-		redirect('/login');
-	}
+	const sessions = await requireSessions('user');
 
 	return <PortalAppShell sessions={sessions}>{children}</PortalAppShell>;
 }

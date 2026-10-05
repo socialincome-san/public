@@ -1,4 +1,4 @@
-import { VimeoVideoMatchAndExtract, YouTubeVideoMatchAndExtract } from './UrlVideoParser';
+import { VimeoVideoMatchAndExtract, YouTubeVideoMatchAndExtract } from './url-video-parser';
 
 const YOUTUBE_TEST_CASES: { url: string; expectedId: string }[] = [
 	{ url: 'https://youtube.com/live/eLlxrBmD3H4', expectedId: 'eLlxrBmD3H4' },

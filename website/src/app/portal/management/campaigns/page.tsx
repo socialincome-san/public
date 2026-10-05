@@ -1,11 +1,11 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { getCampaignTableEntries } from '@/modules/campaigns/campaign.service';
 import type { CampaignTableViewRow } from '@/modules/campaigns/campaign.types';
 import { getCampaigns, getPrograms } from '@/modules/storyblok-content/storyblok-content.service';
+import { requireSession } from '@/server/session';
 import { Suspense } from 'react';
 import CampaignsTable from './campaigns-table';
 import { getCampaignTableView } from './campaigns-table.server';
@@ -19,7 +19,7 @@ export default function CampaignsPage({ searchParams }: SearchParamsPageProps) {
 }
 
 const CampaignsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 

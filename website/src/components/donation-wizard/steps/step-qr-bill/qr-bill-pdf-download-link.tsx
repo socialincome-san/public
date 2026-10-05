@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { cn } from '@/lib/utils/cn';
 import { downloadQrBillPdfAction, downloadSubscriptionQrBillPdfAction } from '@/modules/qr-bills/qr-bill.actions';
 import { Download } from 'lucide-react';

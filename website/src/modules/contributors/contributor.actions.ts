@@ -1,8 +1,7 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
-import { getOptionalContributor } from '@/lib/firebase/current-contributor';
-import { resultFail, resultOk, type Result } from '@/lib/result';
+import { resultFail, type Result } from '@/lib/result';
+import { getOptionalContributor, getSessionByType } from '@/modules/auth/session.service';
 import type {
 	ContributorCommunityStats,
 	ContributorPayload,
@@ -72,8 +71,7 @@ export const getContributorAction = async (contributorId: unknown): Promise<Resu
 	return getContributor(sessionResult.data.id, contributorIdResult.data);
 };
 
-export const getOptionalContributorAction = async (): Promise<Result<null | ContributorSession>> =>
-	resultOk(await getOptionalContributor());
+export const getOptionalContributorAction = async (): Promise<Result<ContributorSession | null>> => getOptionalContributor();
 
 export const updateContributorSelfAction = async (input: unknown): Promise<Result<ContributorRecord>> => {
 	const sessionResult = await getSessionByType('contributor');

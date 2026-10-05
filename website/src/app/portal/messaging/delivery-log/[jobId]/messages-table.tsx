@@ -1,6 +1,6 @@
+import { twilioMessageLogUrl } from '@/app/portal/messaging/twilio-console-url';
 import { Badge } from '@/components/badge/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
-import { twilioMessageLogUrl } from '@/lib/utils/twilio-console-url';
 import type { MessagingJobDetailView, MessagingJobMessageRow } from '@/modules/messaging/messaging.types';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';

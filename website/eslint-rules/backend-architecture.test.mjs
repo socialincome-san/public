@@ -301,3 +301,59 @@ export { calculateExample };
 
 	assert.deepEqual(messageIds(messages), ['runtimeFunction', 'runtimeFunction', 'runtimeFunction']);
 });
+
+test('kebab-case-paths accepts dotted suffixes and Next.js route segments', () => {
+	for (const filename of [
+		'src/modules/example/example.service.ts',
+		'src/lib/i18n/use-translator.ts',
+		'src/lib/utils/video-match-and-extract.test.ts',
+		'src/app/portal/programs/[programId]/page.tsx',
+		'src/app/[lang]/[...not-found]/page.tsx',
+		'src/app/robots.txt/route.ts',
+		'src/app/(portal)/layout.tsx',
+	]) {
+		const messages = lint({
+			filename,
+			rules: { 'backend-architecture/kebab-case-paths': 'error' },
+			code: 'export const value = 1;\n',
+		});
+
+		assert.deepEqual(messages, [], filename);
+	}
+});
+
+test('kebab-case-paths rejects camelCase file and directory names', () => {
+	for (const filename of [
+		'src/lib/i18n/useTranslator.ts',
+		'src/lib/utils/UrlVideoParser.ts',
+		'src/components/hooks/useIsPage.ts',
+		'src/components/UseHooks/use-auth.ts',
+	]) {
+		const messages = lint({
+			filename,
+			rules: { 'backend-architecture/kebab-case-paths': 'error' },
+			code: 'export const value = 1;\n',
+		});
+
+		assert.equal(messages.length > 0, true, filename);
+		assert.ok(
+			messages.every((message) => message.messageId === 'kebabCase'),
+			filename,
+		);
+	}
+});
+
+test('kebab-case-paths ignores generated code and Prisma migrations', () => {
+	for (const filename of [
+		'src/generated/prisma/models/Campaign.ts',
+		'src/lib/database/migrations/20260114_login_as_local_partner/migration.ts',
+	]) {
+		const messages = lint({
+			filename,
+			rules: { 'backend-architecture/kebab-case-paths': 'error' },
+			code: 'export const value = 1;\n',
+		});
+
+		assert.deepEqual(messages, [], filename);
+	}
+});

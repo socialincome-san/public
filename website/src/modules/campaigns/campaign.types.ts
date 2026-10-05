@@ -4,7 +4,7 @@ import type {
 	CampaignSubmissionAllowedCurrency,
 	CampaignSubmissionDurationPreset,
 	CampaignSubmissionPermittedImageMimeType,
-} from '@/lib/config/campaign-submission.config';
+} from '@/lib/campaign-submission';
 import type { Translator } from '@/lib/i18n/translator';
 import type { ISbStoryData } from '@storyblok/js';
 import type { CampaignSubmissionFields } from './campaign.schemas';

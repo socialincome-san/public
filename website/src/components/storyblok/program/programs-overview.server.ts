@@ -1,6 +1,6 @@
+import type { AnySearchParams } from '@/app/page-props';
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { getCountryNameByCode } from '@/lib/types/country';
-import type { AnySearchParams } from '@/lib/types/page-props';
 import type { PublicProgramFilterDataMap } from '@/modules/programs/program.types';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from './program.utils';

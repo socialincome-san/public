@@ -1,7 +1,7 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { FocusDetail } from '@/components/storyblok/focus/focus-detail';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { getFocusBySlug } from '@/modules/storyblok-content/storyblok-content.service';
 import { notFound } from 'next/navigation';
 

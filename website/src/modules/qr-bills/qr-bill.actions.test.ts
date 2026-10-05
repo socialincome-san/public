@@ -6,7 +6,7 @@ jest.mock('next/cache', () => ({
 	revalidatePath: jest.fn(),
 }));
 
-jest.mock('@/lib/firebase/current-account', () => ({
+jest.mock('@/modules/auth/session.service', () => ({
 	getSessionByType: mockGetSessionByType,
 }));
 

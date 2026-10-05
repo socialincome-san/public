@@ -1,9 +1,9 @@
 import { ProgramFinancesCard } from '@/components/storyblok/program/program-finances-card';
 import { ProgramFinancesDialog } from '@/components/storyblok/program/program-finances-dialog';
-import { getCurrentUser } from '@/lib/firebase/current-user';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getCurrentUserAction } from '@/modules/auth/auth.actions';
 import { resolveProgramFinancesDisplayAmountsAction } from '@/modules/programs/program.actions';
 import type { ProgramDashboardStats } from '@/modules/programs/program.types';
 
@@ -15,8 +15,8 @@ type Props = {
 };
 
 export const ProgramFinances = async ({ stats, programId, translator, lang }: Props) => {
-	const [user, displayCurrency] = await Promise.all([getCurrentUser(), getWebsiteCurrencyFromCookie()]);
-	const isLoggedIn = user !== null;
+	const [userResult, displayCurrency] = await Promise.all([getCurrentUserAction(), getWebsiteCurrencyFromCookie()]);
+	const isLoggedIn = userResult.success && userResult.data !== null;
 	const displayAmountsResult = await resolveProgramFinancesDisplayAmountsAction(stats, displayCurrency);
 	const displayAmounts = displayAmountsResult.success
 		? displayAmountsResult.data

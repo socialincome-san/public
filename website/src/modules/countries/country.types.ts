@@ -122,6 +122,11 @@ export type CountryStatisticRow = {
 	visitorValue: number;
 };
 
+export type CountryPageStats = {
+	activeProgramsCount: number;
+	recipientsCount: number;
+};
+
 export const NETWORK_TECH_LABELS: Record<NetworkTechnology, string> = {
 	g3: '3G',
 	g4: '4G',

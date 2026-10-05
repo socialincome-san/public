@@ -1,6 +1,6 @@
 import { ImpactMeasurementView } from '@/app/[lang]/[region]/programs/impact-measurement/view';
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
 

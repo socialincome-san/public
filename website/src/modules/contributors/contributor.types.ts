@@ -1,5 +1,7 @@
 import type { ContributorReferralSource, CountryCode, Gender } from '@/generated/prisma/enums';
 
+export const GENDER_OPTIONS = ['male', 'female', 'other', 'private'] as const;
+
 export type ContributorCommunityStats = {
 	supporterCount: number;
 	countryCount: number;

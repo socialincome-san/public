@@ -1,10 +1,10 @@
+import type { AnySearchParams } from '@/app/page-props';
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { AnySearchParams } from '@/lib/types/page-props';
 import type { ISbStoryData } from '@storyblok/js';
 import { ProgramsOverviewSection } from './programs-overview-section';
 

@@ -1,16 +1,16 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { resolveWebsiteLanguage } from '@/lib/i18n/utils';
 import { getPaginatedContributorDonationCertificates } from '@/modules/donation-certificates/donation-certificate.service';
 import type { YourDonationCertificateTableViewRow } from '@/modules/donation-certificates/donation-certificate.types';
+import { requireSession } from '@/server/session';
 import { YourDonationCertificateTable } from './your-donation-certificate-table-client';
 
 export default async function YourDonationCertificates({
 	lang,
 	searchParams,
 }: DefaultParams & { searchParams: Promise<Record<string, string>> }) {
-	const contributor = await getAuthenticatedContributorOrRedirect();
+	const contributor = await requireSession('contributor');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 

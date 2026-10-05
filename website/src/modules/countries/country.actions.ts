@@ -1,11 +1,12 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
 import { resultFail, type Result } from '@/lib/result';
+import { getSessionByType } from '@/modules/auth/session.service';
 import {
 	countryCreateInputSchema,
 	countryIdSchema,
 	countryIsoCodesSchema,
+	countryPageIsoCodeSchema,
 	countryStatisticsComparisonSchema,
 	countryUpdateInputSchema,
 } from '@/modules/countries/country.schemas';
@@ -13,12 +14,14 @@ import {
 	createCountry,
 	deleteCountry,
 	getCountry,
+	getCountryPageStats,
 	getCountryStatisticsComparison,
 	getProgramCountryFeasibility,
 	getPublicCountryStatsByIsoCodes,
 	updateCountry,
 } from '@/modules/countries/country.service';
 import type {
+	CountryPageStats,
 	CountryPayload,
 	CountryStatisticRow,
 	ProgramCountryFeasibilityView,
@@ -91,6 +94,15 @@ export const getCountryAction = async (input: unknown): Promise<Result<CountryPa
 
 export const getProgramCountryFeasibilityAction = async (): Promise<Result<ProgramCountryFeasibilityView>> =>
 	getProgramCountryFeasibility();
+
+export const getCountryPageStatsAction = async (input: unknown): Promise<Result<CountryPageStats>> => {
+	const parsedInput = countryPageIsoCodeSchema.safeParse(input);
+	if (!parsedInput.success) {
+		return resultFail('Invalid country code');
+	}
+
+	return getCountryPageStats(parsedInput.data);
+};
 
 export const getPublicCountryStatsByIsoCodesAction = async (input: unknown): Promise<Result<PublicCountryStatsMap>> => {
 	const parsedInput = countryIsoCodesSchema.safeParse(input);

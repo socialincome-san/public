@@ -1,11 +1,11 @@
+import type { AnySearchParams } from '@/app/page-props';
 import { MessagesTable } from '@/app/portal/messaging/delivery-log/[jobId]/messages-table';
 import { SummaryCard } from '@/app/portal/messaging/delivery-log/[jobId]/summary-card';
 import { SyncStatusButton } from '@/app/portal/messaging/delivery-log/[jobId]/sync-status-button';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import type { AnySearchParams } from '@/lib/types/page-props';
 import { getMessagingJobDetailAction } from '@/modules/messaging/messaging.actions';
 import { getTwilioTemplate } from '@/modules/messaging/messaging.service';
+import { requireAdmin } from '@/server/session';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
@@ -25,8 +25,7 @@ export default function MessagingJobDetailPage(props: MessagingJobDetailPageProp
 }
 
 const MessagingJobDetailDataLoader = async ({ params, searchParams }: MessagingJobDetailPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
-	requireAdmin(user);
+	const user = await requireAdmin();
 
 	const { jobId } = await params;
 	const resolvedSearchParams = await searchParams;

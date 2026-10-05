@@ -1,7 +1,7 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
 import { resultFail, type Result } from '@/lib/result';
+import { getSessionByType } from '@/modules/auth/session.service';
 import { expenseCreateInputSchema, expenseIdSchema, expenseUpdateInputSchema } from '@/modules/expenses/expense.schemas';
 import { createExpense, getExpense, getExpenseOptions, updateExpense } from '@/modules/expenses/expense.service';
 import type { ExpensePayload } from '@/modules/expenses/expense.types';

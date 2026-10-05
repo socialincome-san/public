@@ -1,7 +1,7 @@
 import { PayoutProcessOverviewClient } from '@/app/portal/delivery/overview/payout-process-overview-client';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { getPayoutProcessOverviewOptions } from '@/modules/mobile-money-providers/mobile-money-provider.service';
+import { requireSession } from '@/server/session';
 import { Suspense } from 'react';
 
 export default function PayoutProcessOverviewPage() {
@@ -13,7 +13,7 @@ export default function PayoutProcessOverviewPage() {
 }
 
 const PayoutProcessOverviewDataLoader = async () => {
-	await getAuthenticatedUserOrRedirect();
+	await requireSession('user');
 
 	const result = await getPayoutProcessOverviewOptions();
 

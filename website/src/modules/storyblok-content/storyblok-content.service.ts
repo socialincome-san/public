@@ -16,6 +16,7 @@ import {
 	fetchStoryblokStory,
 } from '@/integrations/storyblok/storyblok-content.integration';
 import { fetchStoryblokPrograms } from '@/integrations/storyblok/storyblok-program.integration';
+import { verifyStoryblokWebhookSignature } from '@/integrations/storyblok/storyblok-webhook.integration';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
@@ -616,6 +617,15 @@ const findCountry = async (
 	const result = await getCountries(language);
 
 	return result.success ? result.data.find(predicate) : undefined;
+};
+
+export const verifyStoryblokWebhook = (rawBody: string, signature: string | null): Result<true> => {
+	const valid = verifyStoryblokWebhookSignature(rawBody, signature, process.env.STORYBLOK_WEBHOOK_SECRET);
+	if (!valid) {
+		return resultFail('Unauthorized');
+	}
+
+	return resultOk(true);
 };
 
 const findLocalPartner = async (language: string, slug: string): Promise<ISbStoryData<LocalPartner> | undefined> => {

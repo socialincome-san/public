@@ -1,8 +1,7 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
-import { getCurrentSurvey } from '@/lib/firebase/current-survey';
 import { resultFail, type Result } from '@/lib/result';
+import { getCurrentSurvey, getSessionByType } from '@/modules/auth/session.service';
 import { getEditableRecipientOptions } from '@/modules/recipients/recipient.service';
 import type { RecipientOption } from '@/modules/recipients/recipient.types';
 import type {
@@ -111,7 +110,8 @@ export const getSurveyByIdAndRecipientAction = async (input: unknown): Promise<R
 	if (!inputResult.success) {
 		return resultFail('Invalid survey lookup');
 	}
-	const currentSurvey = await getCurrentSurvey();
+	const currentSurveyResult = await getCurrentSurvey();
+	const currentSurvey = currentSurveyResult.success ? currentSurveyResult.data : null;
 	if (currentSurvey?.id !== inputResult.data.surveyId || currentSurvey.recipientId !== inputResult.data.recipientId) {
 		return resultFail('Unauthorized');
 	}
@@ -124,7 +124,8 @@ export const saveSurveyChangesAction = async (input: unknown): Promise<Result<Su
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
 	}
-	const currentSurvey = await getCurrentSurvey();
+	const currentSurveyResult = await getCurrentSurvey();
+	const currentSurvey = currentSurveyResult.success ? currentSurveyResult.data : null;
 	if (currentSurvey?.id !== inputResult.data.surveyId) {
 		return resultFail('Unauthorized');
 	}

@@ -1,13 +1,13 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { BlockWrapper } from '@/components/block-wrapper';
 import { Card } from '@/components/card/card';
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { ProgramPermission } from '@/generated/prisma/enums';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
 import { getPaginatedRecipientTableViewByProgramId } from '@/modules/recipients/recipient.service';
 import type { RecipientTableViewRow } from '@/modules/recipients/recipient.types';
+import { requireSession } from '@/server/session';
 import { Suspense } from 'react';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
@@ -31,7 +31,7 @@ const RecipientsProgramScopedDataLoader = async ({ params, searchParams }: Props
 	const resolvedSearchParams = await searchParams;
 	const baseQuery = tableQueryFromSearchParams(resolvedSearchParams);
 	const tableQuery = { ...baseQuery, programId };
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 
 	const recipientsResult = await getPaginatedRecipientTableViewByProgramId(user.id, programId, tableQuery);
 

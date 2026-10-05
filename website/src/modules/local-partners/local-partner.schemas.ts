@@ -60,5 +60,15 @@ export const localPartnerUpdateSchema = localPartnerCreateSchema.extend({
 export const localPartnerIdSchema = z.string().trim().min(1, 'Local partner id is required.');
 export const localPartnerSessionTypeSchema = z.enum(['user', 'local-partner', 'contributor']);
 
+export const localPartnerOverviewSlugsSchema = z.array(z.string());
+
+export const localPartnerDashboardSlugSchema = z.string().optional();
+
+export const localPartnerProgramSummariesSchema = z.object({
+	lang: z.enum(['en', 'de', 'fr', 'it', 'kri']),
+	localPartnerPortalSlug: z.string(),
+	countryIsoCode: z.string(),
+});
+
 export type LocalPartnerCreateInput = z.infer<typeof localPartnerCreateSchema>;
 export type LocalPartnerUpdateInput = z.infer<typeof localPartnerUpdateSchema>;

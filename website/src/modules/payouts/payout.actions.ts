@@ -1,8 +1,8 @@
 'use server';
 
 import { PayoutStatus } from '@/generated/prisma/enums';
-import { getSessionByType } from '@/lib/firebase/current-account';
 import { resultFail, type Result } from '@/lib/result';
+import { getSessionByType } from '@/modules/auth/session.service';
 import type { CountryPayoutTotals, PayoutForecastTableView, PayoutPayload } from '@/modules/payouts/payout.types';
 import { getEditableRecipientOptions } from '@/modules/recipients/recipient.service';
 import type { RecipientOption } from '@/modules/recipients/recipient.types';

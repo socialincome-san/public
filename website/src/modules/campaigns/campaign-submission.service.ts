@@ -9,7 +9,7 @@ import {
 	uploadStoryblokAsset,
 } from '@/integrations/storyblok/storyblok-management.integration';
 import { verifyTurnstileToken } from '@/integrations/turnstile/turnstile.integration';
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { slugify } from '@/lib/utils/string-utils';
 import { isProgramEligibleForPublicSubmission } from '@/modules/programs/program-public-submission.service';

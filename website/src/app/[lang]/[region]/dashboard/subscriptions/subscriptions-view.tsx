@@ -1,8 +1,8 @@
 import { Button } from '@/components/button/button';
-import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { getDashboardView } from '@/modules/subscriptions/subscription.service';
+import { requireSession } from '@/server/session';
 import Link from 'next/link';
 import { ActiveSubscriptionsList } from './active-subscriptions-list';
 import { SubscriptionSummaryCards } from './subscription-summary-cards';
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const SubscriptionsView = async ({ lang, region }: Props) => {
-	const contributor = await getAuthenticatedContributorOrRedirect();
+	const contributor = await requireSession('contributor');
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
 
 	const dashboardResult = await getDashboardView(contributor.id);

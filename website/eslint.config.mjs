@@ -450,4 +450,27 @@ export default [
 			],
 		},
 	},
+	{
+		files: ['src/**/*.{ts,tsx}'],
+		ignores: ['src/generated/**', 'src/lib/database/migrations/**'],
+		rules: {
+			'backend-architecture/kebab-case-paths': 'error',
+		},
+	},
+	{
+		files: ['src/lib/**/*.{ts,tsx}'],
+		rules: {
+			'@typescript-eslint/no-restricted-imports': [
+				'error',
+				{
+					patterns: [
+						{
+							group: ['@/modules/**', '@/app/**', '@/components/**', '@/server/**'],
+							message: 'lib is the shared kernel. It must not import modules, app routes, components, or request adapters.',
+						},
+					],
+				},
+			],
+		},
+	},
 ];

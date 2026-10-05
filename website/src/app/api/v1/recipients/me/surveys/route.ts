@@ -1,6 +1,6 @@
-import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { getAuthenticatedRecipientFromRequest } from '@/modules/recipients/recipient.service';
 import { getSurveysByRecipientId } from '@/modules/surveys/survey.service';
+import { withAppCheck } from '@/server/app-check';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**

@@ -1,7 +1,7 @@
+import type { AnySearchParams } from '@/app/page-props';
 import { FilterBar } from '@/components/filters/filter-bar';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { AnySearchParams } from '@/lib/types/page-props';
 import {
 	getPublicProgramFilterDataByPortalSlugsAction,
 	getPublicProgramStatsByPortalSlugsAction,

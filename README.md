@@ -41,7 +41,7 @@ The main Next.js application. It contains:
 - Backend: a modular monolith under `website/src/modules`. Pages and route
   handlers call module services and actions. Services call repositories
   (Prisma) and integrations (external APIs). The module contract is in
-  `AGENTS.md`.
+  `website/AGENTS.md`.
 - Infrastructure: Terraform configuration under `website/infra`.
 - Tests: unit tests and Playwright end-to-end tests.
 
@@ -337,7 +337,7 @@ and card linkability use that derived state; deep links to published stories
 still work after a campaign becomes inactive.
 
 Server-only configuration lives in
-`website/src/lib/config/campaign-submission.config.ts`. Local development and
+`website/src/lib/campaign-submission.ts`. Local development and
 deployed environments need `STORYBLOK_MANAGEMENT_TOKEN`; see
 [Storyblok Management Token](#storyblok-management-token) for creation and
 storage.

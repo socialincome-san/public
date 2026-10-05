@@ -1,7 +1,7 @@
 import { Currency, ProgramPermission } from '@/generated/prisma/enums';
 import { fetchStoryblokListedCampaigns } from '@/integrations/storyblok/storyblok-campaign.integration';
 import { listCampaignDefaultImages } from '@/integrations/storyblok/storyblok-management.integration';
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';

@@ -7,7 +7,7 @@ import { Input } from '@/components/input/input';
 import { Separator } from '@/components/separator';
 import { Slider } from '@/components/slider/slider';
 import { type Currency } from '@/generated/prisma/client';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import {
 	SUBSCRIPTION_AMOUNT_MAX,
 	SUBSCRIPTION_AMOUNT_MIN,

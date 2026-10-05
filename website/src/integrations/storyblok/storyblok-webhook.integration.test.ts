@@ -1,4 +1,4 @@
-import { getStoryblokWebhookSignature, verifyStoryblokWebhookSignature } from './storyblok-webhook-signature';
+import { getStoryblokWebhookSignature, verifyStoryblokWebhookSignature } from './storyblok-webhook.integration';
 
 describe('verifyStoryblokWebhookSignature', () => {
 	const secret = 'test-webhook-secret';

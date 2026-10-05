@@ -1,7 +1,7 @@
 'use client';
 
 import { Badge } from '@/components/badge/badge';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { CountryCondition } from '@/modules/countries/country.types';
 import { AlertTriangleIcon, CheckIcon, XCircleIcon } from 'lucide-react';
 import { ComponentType } from 'react';

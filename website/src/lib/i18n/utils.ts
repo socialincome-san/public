@@ -1,4 +1,4 @@
-import { LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
+import { LANGUAGE_COOKIE, REGION_COOKIE } from '@/lib/i18n/cookies';
 import langParser from 'accept-language-parser';
 import { NextRequest } from 'next/server';
 import { Currency } from '../../generated/prisma/enums';

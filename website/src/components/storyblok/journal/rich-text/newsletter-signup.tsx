@@ -3,7 +3,7 @@
 import { Button } from '@/components/button/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
-import { useTranslator } from '@/lib/hooks/useTranslator';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import type { LanguageCode } from '@/lib/types/language';
 import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { zodResolver } from '@hookform/resolvers/zod';

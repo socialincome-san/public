@@ -1,7 +1,7 @@
 'use client';
 
 import { type Currency } from '@/generated/prisma/client';
-import { useTranslator } from '@/lib/hooks/useTranslator';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { getOnlineTransactionCost } from './subscription-amount';

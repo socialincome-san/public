@@ -1,8 +1,7 @@
 'use server';
 
-import { getSessionByType } from '@/lib/firebase/current-account';
-import { getOptionalContributor } from '@/lib/firebase/current-contributor';
 import { resultFail, type Result } from '@/lib/result';
+import { getOptionalContributor, getSessionByType } from '@/modules/auth/session.service';
 import type { ContributorRecord } from '@/modules/contributors/contributor.types';
 import type {
 	StripeCheckoutOnboardingPrefill,
@@ -43,7 +42,8 @@ export const createStripeEmbeddedCheckoutAction = async (input: unknown): Promis
 		return resultFail('Invalid Stripe checkout input');
 	}
 
-	const contributor = await getOptionalContributor();
+	const contributorResult = await getOptionalContributor();
+	const contributor = contributorResult.success ? contributorResult.data : null;
 
 	return createEmbeddedCheckoutSession({
 		wizardContext: parsed.data.wizardContext,

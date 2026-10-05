@@ -3,7 +3,7 @@
 import { Button } from '@/components/button/button';
 import { RadioGroup, RadioGroupItem } from '@/components/radio-group/radio-group';
 import { ContributorReferralSource } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { updateContributorReferralAfterWizardQrAction } from '@/modules/qr-bills/qr-bill.actions';
 import { updateContributorReferralAfterWizardCheckoutAction } from '@/modules/stripe-payments/stripe-payment.actions';
 import { useState } from 'react';

@@ -1,7 +1,7 @@
 import { ContestPayoutBody } from '@/app/api/v1/models';
-import { withAppCheck } from '@/lib/firebase/with-app-check';
 import { updatePayoutStatusByRecipient } from '@/modules/payouts/payout.service';
 import { getAuthenticatedRecipientFromRequest } from '@/modules/recipients/recipient.service';
+import { withAppCheck } from '@/server/app-check';
 import { NextRequest, NextResponse } from 'next/server';
 
 type Params = Promise<{ payoutId: string }>;

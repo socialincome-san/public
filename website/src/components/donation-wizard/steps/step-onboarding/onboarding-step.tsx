@@ -1,7 +1,7 @@
 'use client';
 
 import { toNewsletterLanguage } from '@/components/newsletter/newsletter-language';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { getQrOnboardingPrefillAction, updateContributorAfterWizardQrAction } from '@/modules/qr-bills/qr-bill.actions';
 import {

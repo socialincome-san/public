@@ -2,7 +2,7 @@ import {
 	campaignSubmissionConfig,
 	type CampaignSubmissionAllowedCurrency,
 	type CampaignSubmissionPermittedImageMimeType,
-} from '@/lib/config/campaign-submission.config';
+} from '@/lib/campaign-submission';
 import { parseStoryblokFocus } from '@/lib/storyblok/storyblok-image-focus';
 import { isSafeHref, slugify } from '@/lib/utils/string-utils';
 import { addDays, format, isValid, parse, startOfDay } from 'date-fns';

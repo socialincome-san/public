@@ -7,7 +7,7 @@ import {
 	resolveCampaignSubmissionQuote,
 	validateCampaignSubmissionImageMeta,
 } from '@/components/campaign/campaign-submission/campaign-submission.client';
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { addDays, format, startOfDay } from 'date-fns';
 import {
 	parseCampaignSubmissionDefaultImageId,
