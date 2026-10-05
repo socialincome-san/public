@@ -167,6 +167,27 @@ to include unlisted campaigns, or `npm run db:seed:cms-campaigns` for a dry-run.
 
 Requires `STORYBLOK_PREVIEW_TOKEN` in `.env.local` (see `.env.local.sample`).
 
+### 5. Forward Stripe Webhooks
+
+Stripe cannot call `localhost` directly. To test payment webhooks locally, install the Stripe CLI and forward events to the website:
+
+```bash
+brew install stripe/stripe-cli/stripe
+stripe login
+stripe listen --forward-to localhost:3000/api/v1/stripe/webhook \
+  --events charge.succeeded,charge.updated,charge.failed,customer.updated,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted
+```
+
+Copy the webhook signing secret printed by the CLI into `website/.env.local`:
+
+```bash
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+Restart `mise dev`, then make a test contribution. The CLI forwards those events to the local server.
+
+The production Stripe webhook endpoint needs the same events: `charge.succeeded`, `charge.updated`, `charge.failed`, `customer.updated`, `customer.subscription.created`, `customer.subscription.updated`, and `customer.subscription.deleted`.
+
 ## Local Login
 
 Open the website at:

@@ -29,7 +29,7 @@ export const createWizardQrBillAction = async (input: unknown) => {
 		return resultFail('Invalid QR bill request');
 	}
 
-	return createWizardQrBill(parsed.data);
+	return createWizardQrBill(parsed.data, await readOptionalContributorId());
 };
 
 export const createWizardPendingContributionAction = async (input: unknown) => {
@@ -38,7 +38,7 @@ export const createWizardPendingContributionAction = async (input: unknown) => {
 		return resultFail('Invalid pending contribution request');
 	}
 
-	const result = await createPendingContributionFromWizard(parsed.data);
+	const result = await createPendingContributionFromWizard(parsed.data, await readOptionalContributorId());
 	if (result.success) {
 		revalidatePath('/dashboard');
 	}
@@ -89,7 +89,7 @@ export const downloadQrBillPdfAction = async (input: unknown) => {
 		return resultFail('Invalid QR bill PDF request');
 	}
 
-	return downloadWizardQrBillPdf(parsed.data);
+	return downloadWizardQrBillPdf(parsed.data, await readOptionalContributorId());
 };
 
 export const getSubscriptionQrBillDisplayAction = async (input: unknown) => {
@@ -122,4 +122,10 @@ export const downloadSubscriptionQrBillPdfAction = async (input: unknown) => {
 	}
 
 	return downloadSubscriptionQrBillPdf(sessionResult.data.id, parsed.data.subscriptionId);
+};
+
+const readOptionalContributorId = async (): Promise<string | undefined> => {
+	const sessionResult = await getSessionByType('contributor');
+
+	return sessionResult.success ? sessionResult.data.id : undefined;
 };

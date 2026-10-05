@@ -40,6 +40,18 @@ type EnrichedSubscription = {
 	scheduleAnchor: Date | null;
 };
 
+export const isBankStandingOrderReferenceTaken = async (reference: string): Promise<ServiceResult<boolean>> => {
+	try {
+		const existing = await subscriptionRepository.findBankStandingOrderByReference(reference);
+
+		return resultOk(Boolean(existing));
+	} catch (error) {
+		console.error('Could not check standing order reference', { error });
+
+		return resultFail('Could not check standing order reference');
+	}
+};
+
 export const getPaginatedTableView = async (
 	userId: string,
 	query: SubscriptionTableQuery,

@@ -53,6 +53,18 @@ const PAYMENT_EVENT_TYPES = [
 	PaymentEventType.raisenow,
 ] as const;
 
+export const isPaymentTransactionIdTaken = async (transactionId: string): Promise<ServiceResult<boolean>> => {
+	try {
+		const existing = await contributionRepository.findPaymentEventByTransactionId(transactionId);
+
+		return resultOk(Boolean(existing));
+	} catch (error) {
+		console.error('Could not check payment transaction id', { error });
+
+		return resultFail('Could not check payment transaction id');
+	}
+};
+
 export const getSucceededContributionTotal = async (dateRange?: ContributionDateRange): Promise<ServiceResult<number>> => {
 	try {
 		const aggregate = await contributionRepository.findSucceededContributionTotal(dateRange);

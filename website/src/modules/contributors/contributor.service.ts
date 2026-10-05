@@ -543,9 +543,46 @@ export const getOrCreateReferenceIdByEmail = async (email: string): Promise<Serv
 			return resultFail('An account already exists for this email. Please sign in.');
 		}
 
-		return resultOk(nowMs().toString());
+		return mintPaymentReferenceId();
 	} catch (error) {
 		console.error(error);
+
+		return resultFail('Could not get or generate contributor reference ID');
+	}
+};
+
+export const getOwnedPaymentReferenceId = async (
+	contributorId: string,
+	email: string,
+): Promise<ServiceResult<string | null>> => {
+	try {
+		const contributor = await contributorRepository.findContributorPaymentReferenceById(contributorId);
+		const contributorEmail = contributor?.contact?.email;
+		if (!contributor || !contributorEmail || normalizeEmail(contributorEmail) !== normalizeEmail(email)) {
+			return resultOk(null);
+		}
+
+		const existingReferenceId = contributor.paymentReferenceId?.trim();
+		if (existingReferenceId) {
+			return resultOk(existingReferenceId);
+		}
+
+		const referenceResult = await mintPaymentReferenceId();
+		if (!referenceResult.success) {
+			return referenceResult;
+		}
+
+		const updated = await updateContributorSelf(contributorId, {
+			paymentReferenceId: referenceResult.data,
+			contact: { email: contributorEmail },
+		});
+		if (!updated.success) {
+			return resultFail(updated.error);
+		}
+
+		return resultOk(referenceResult.data);
+	} catch (error) {
+		console.error('Could not get owned payment reference', { error });
 
 		return resultFail('Could not get or generate contributor reference ID');
 	}
@@ -777,6 +814,29 @@ const getOrCreateFirebaseUser = async (input: {
 
 	return resultOk({ uid: created.data.uid });
 };
+
+const CONTRIBUTOR_REFERENCE_ID_LENGTH = 13;
+
+const mintPaymentReferenceId = async (): Promise<ServiceResult<string>> => {
+	let candidate = nowMs();
+	for (let attempt = 0; attempt < 100; attempt += 1) {
+		const referenceId = String(candidate);
+		if (referenceId.length > CONTRIBUTOR_REFERENCE_ID_LENGTH) {
+			break;
+		}
+
+		const existing = await contributorRepository.findContributorByPaymentReferenceId(referenceId);
+		if (!existing) {
+			return resultOk(referenceId);
+		}
+
+		candidate += 1;
+	}
+
+	return resultFail('Could not get or generate contributor reference ID');
+};
+
+const normalizeEmail = (email: string): string => email.trim().toLowerCase();
 
 const getContributionSumsByContributorId = async (contributorIds: string[]): Promise<Map<string, number>> => {
 	const grouped = await contributorRepository.groupContributionSumsByContributorId(contributorIds);

@@ -238,6 +238,12 @@ export const findContributorPaymentReferenceByEmail = async (email: string) =>
 		select: { id: true, contact: { select: { email: true } }, paymentReferenceId: true },
 	});
 
+export const findContributorPaymentReferenceById = async (contributorId: string) =>
+	prisma.contributor.findUnique({
+		where: { id: contributorId },
+		select: { id: true, contact: { select: { email: true } }, paymentReferenceId: true },
+	});
+
 export const findContributorByPaymentReferenceId = async (paymentReferenceId: string) =>
 	prisma.contributor.findFirst({
 		where: { paymentReferenceId },

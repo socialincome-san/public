@@ -7,12 +7,20 @@ const mockFindFirebaseUserByEmail = jest.fn();
 const mockCreateFirebaseUserByEmail = jest.fn();
 
 const mockFindContributorPaymentReferenceByEmail = jest.fn();
+const mockFindContributorPaymentReferenceById = jest.fn();
+const mockFindContributorByPaymentReferenceId = jest.fn();
+const mockFindContributorForSelfUpdate = jest.fn();
+const mockUpdateContributorSelf = jest.fn();
 
 jest.mock('./contributor.repository', () => ({
 	findContributorByEmail: mockFindContributorByEmail,
 	createContributorFromEmailAndName: mockCreateContributorFromEmailAndName,
 	findContributorByEmailOrFirebaseAuthUserId: mockFindContributorByEmailOrFirebaseAuthUserId,
 	findContributorPaymentReferenceByEmail: mockFindContributorPaymentReferenceByEmail,
+	findContributorPaymentReferenceById: mockFindContributorPaymentReferenceById,
+	findContributorByPaymentReferenceId: mockFindContributorByPaymentReferenceId,
+	findContributorForSelfUpdate: mockFindContributorForSelfUpdate,
+	updateContributorSelf: mockUpdateContributorSelf,
 }));
 
 jest.mock('@/modules/auth/auth.service', () => ({
@@ -30,7 +38,11 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 	getAccessiblePrograms: jest.fn(),
 }));
 
-import { getOrCreateContributorFromEmailAndName, getOrCreateReferenceIdByEmail } from './contributor.service';
+import {
+	getOrCreateContributorFromEmailAndName,
+	getOrCreateReferenceIdByEmail,
+	getOwnedPaymentReferenceId,
+} from './contributor.service';
 
 const expectSuccess = <T>(result: ServiceResult<T>): T => {
 	expect(result.success).toBe(true);
@@ -160,6 +172,7 @@ describe('getOrCreateReferenceIdByEmail', () => {
 
 	beforeEach(() => {
 		jest.clearAllMocks();
+		mockFindContributorByPaymentReferenceId.mockResolvedValue(null);
 		process.env.NEXT_PUBLIC_FIXED_TIME = '2023-11-14T22:13:20.000Z';
 	});
 
@@ -184,6 +197,74 @@ describe('getOrCreateReferenceIdByEmail', () => {
 			success: false,
 			error: 'An account already exists for this email. Please sign in.',
 		});
+	});
+
+	test('returns the signed-in contributor payment reference when the email matches', async () => {
+		mockFindContributorPaymentReferenceById.mockResolvedValue({
+			id: 'contributor-1',
+			paymentReferenceId: '1735689600000',
+			contact: { email: 'Donor@Example.com' },
+		});
+
+		const result = await getOwnedPaymentReferenceId('contributor-1', 'donor@example.com');
+
+		expect(result).toEqual({ success: true, data: '1735689600000', status: undefined });
+	});
+
+	test('does not return a payment reference for a different email', async () => {
+		mockFindContributorPaymentReferenceById.mockResolvedValue({
+			id: 'contributor-1',
+			paymentReferenceId: '1735689600000',
+			contact: { email: 'owner@example.com' },
+		});
+
+		const result = await getOwnedPaymentReferenceId('contributor-1', 'other@example.com');
+
+		expect(result).toEqual({ success: true, data: null, status: undefined });
+	});
+
+	test('mints a payment reference for the signed-in contributor when one is missing', async () => {
+		mockFindContributorPaymentReferenceById.mockResolvedValue({
+			id: 'contributor-1',
+			paymentReferenceId: null,
+			contact: { email: 'donor@example.com' },
+		});
+		mockFindContributorForSelfUpdate.mockResolvedValue({
+			account: { firebaseAuthUserId: 'firebase-1' },
+			contact: { id: 'contact-1', email: 'donor@example.com', address: null },
+		});
+		mockUpdateContributorSelf.mockResolvedValue({ id: 'contributor-1' });
+
+		const result = await getOwnedPaymentReferenceId('contributor-1', 'donor@example.com');
+
+		expect(result.success).toBe(true);
+		if (!result.success) {
+			throw new Error(result.error);
+		}
+		expect(result.data).toBe(String(new Date('2023-11-14T22:13:20.000Z').getTime()));
+		expect(mockUpdateContributorSelf).toHaveBeenCalledWith(
+			'contributor-1',
+			expect.objectContaining({ paymentReferenceId: result.data }),
+			'contact-1',
+			undefined,
+		);
+	});
+
+	test('skips a payment reference that already belongs to another donor', async () => {
+		mockFindContributorPaymentReferenceByEmail.mockResolvedValue(null);
+		mockFindContributorByPaymentReferenceId.mockImplementation((referenceId: string) =>
+			Promise.resolve(
+				referenceId === String(new Date('2023-11-14T22:13:20.000Z').getTime()) ? { id: 'contributor-existing' } : null,
+			),
+		);
+
+		const result = await getOrCreateReferenceIdByEmail('new@example.com');
+
+		expect(result.success).toBe(true);
+		if (!result.success) {
+			throw new Error(result.error);
+		}
+		expect(result.data).toBe(String(new Date('2023-11-14T22:13:20.000Z').getTime() + 1));
 	});
 
 	test('mints a new reference for an unused email', async () => {

@@ -3,12 +3,17 @@ import { buildQrBillDisplayData, generateQrBillPdf, generateQrBillSvg } from '@/
 import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
 import { nowMs } from '@/lib/utils/now';
 import { getCampaignById, getFallbackCampaign } from '@/modules/campaigns/campaign.service';
-import { getContributorContributionSummary, upsertFromBankTransfer } from '@/modules/contributions/contribution.service';
+import {
+	getContributorContributionSummary,
+	isPaymentTransactionIdTaken,
+	upsertFromBankTransfer,
+} from '@/modules/contributions/contribution.service';
 import type { BankTransferUpsertInput } from '@/modules/contributions/contribution.types';
 import {
 	findContributorsByPaymentReferenceIds,
 	getOrCreateContributorByReferenceId,
 	getOrCreateReferenceIdByEmail,
+	getOwnedPaymentReferenceId,
 	updateContributorSelf,
 } from '@/modules/contributors/contributor.service';
 import type {
@@ -17,7 +22,11 @@ import type {
 	ContributorWithContact,
 } from '@/modules/contributors/contributor.types';
 import { getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
-import { getOwnedActiveBankTransferQrBill, upsertFromBankStandingOrder } from '@/modules/subscriptions/subscription.service';
+import {
+	getOwnedActiveBankTransferQrBill,
+	isBankStandingOrderReferenceTaken,
+	upsertFromBankStandingOrder,
+} from '@/modules/subscriptions/subscription.service';
 import type {
 	CreateWizardPendingContributionInput,
 	CreateWizardQrBillInput,
@@ -41,13 +50,16 @@ const DONATION_MONTHLY_INCOME_MAX = 1_000_000;
 const DONATION_AMOUNT_MIN = 1;
 const DONATION_AMOUNT_MAX = 1_000_000;
 
-export const createWizardQrBill = async (input: CreateWizardQrBillInput): Promise<ServiceResult<WizardQrBillResult>> => {
+export const createWizardQrBill = async (
+	input: CreateWizardQrBillInput,
+	ownerContributorId?: string,
+): Promise<ServiceResult<WizardQrBillResult>> => {
 	const paymentResult = resolveWizardQrPayment(input.wizardContext, input.currency);
 	if (!paymentResult.success) {
 		return resultFail(paymentResult.error);
 	}
 
-	const referencesResult = await getOrCreateQrReferences(input.donor);
+	const referencesResult = await getOrCreateQrReferences(input.donor, ownerContributorId);
 	if (!referencesResult.success) {
 		return resultFail(referencesResult.error);
 	}
@@ -69,6 +81,7 @@ export const createWizardQrBill = async (input: CreateWizardQrBillInput): Promis
 
 export const createPendingContributionFromWizard = async (
 	input: CreateWizardPendingContributionInput,
+	ownerContributorId?: string,
 ): Promise<ServiceResult<string>> => {
 	const paymentResult = resolveWizardQrPayment(input.wizardContext, input.currency);
 	if (!paymentResult.success) {
@@ -81,13 +94,19 @@ export const createPendingContributionFromWizard = async (
 			referenceId: input.contributionReferenceId,
 		},
 		input.userData,
+		ownerContributorId,
 	);
 };
 
 export const downloadWizardQrBillPdf = async (
 	input: DownloadWizardQrBillPdfInput,
+	ownerContributorId?: string,
 ): Promise<ServiceResult<DownloadQrBillPdfResult>> => {
-	const contributorResult = await verifyContributorByPaymentReference(input.contributorReferenceId, input.expectedEmail);
+	const contributorResult = await verifyContributorByPaymentReference(
+		input.contributorReferenceId,
+		input.expectedEmail,
+		ownerContributorId,
+	);
 	if (!contributorResult.success) {
 		return resultFail(contributorResult.error);
 	}
@@ -241,8 +260,9 @@ export const resolveWizardQrPayment = (
 
 const getOrCreateQrReferences = async (
 	contributorData: Omit<BankContributorData, 'paymentReferenceId'>,
+	ownerContributorId?: string,
 ): Promise<ServiceResult<QrBillReferenceResult>> => {
-	const referenceResult = await getOrCreateReferenceIdByEmail(contributorData.email);
+	const referenceResult = await resolveContributorReferenceId(contributorData.email, ownerContributorId);
 	if (!referenceResult.success) {
 		return resultFail(referenceResult.error);
 	}
@@ -255,18 +275,74 @@ const getOrCreateQrReferences = async (
 		return resultFail(contributorResult.error);
 	}
 
+	const contributionReferenceResult = await mintContributionReferenceId();
+	if (!contributionReferenceResult.success) {
+		return resultFail(contributionReferenceResult.error);
+	}
+
 	return resultOk({
 		contributorReferenceId: referenceResult.data,
-		contributionReferenceId: Math.round(nowMs() / 1000).toString(),
+		contributionReferenceId: contributionReferenceResult.data,
 	});
+};
+
+const CONTRIBUTION_REFERENCE_ID_LENGTH = 10;
+
+const mintContributionReferenceId = async (): Promise<ServiceResult<string>> => {
+	let candidate = Math.round(nowMs() / 1000);
+	for (let attempt = 0; attempt < 100; attempt += 1) {
+		const referenceId = String(candidate);
+		if (referenceId.length > CONTRIBUTION_REFERENCE_ID_LENGTH) {
+			break;
+		}
+
+		const [standingOrderTaken, transactionTaken] = await Promise.all([
+			isBankStandingOrderReferenceTaken(referenceId),
+			isPaymentTransactionIdTaken(referenceId),
+		]);
+		if (!standingOrderTaken.success) {
+			return resultFail(standingOrderTaken.error);
+		}
+		if (!transactionTaken.success) {
+			return resultFail(transactionTaken.error);
+		}
+		if (!standingOrderTaken.data && !transactionTaken.data) {
+			return resultOk(referenceId);
+		}
+
+		candidate += 1;
+	}
+
+	return resultFail('Could not generate contribution reference');
+};
+
+const resolveContributorReferenceId = async (email: string, ownerContributorId?: string): Promise<ServiceResult<string>> => {
+	if (!ownerContributorId) {
+		return getOrCreateReferenceIdByEmail(email);
+	}
+
+	const ownedResult = await getOwnedPaymentReferenceId(ownerContributorId, email);
+	if (!ownedResult.success) {
+		return resultFail(ownedResult.error);
+	}
+	if (ownedResult.data) {
+		return resultOk(ownedResult.data);
+	}
+
+	return getOrCreateReferenceIdByEmail(email);
 };
 
 const createPendingContribution = async (
 	payment: WizardQrPayment,
 	userData: BankContributorData,
+	ownerContributorId?: string,
 ): Promise<ServiceResult<string>> => {
 	try {
-		const verifiedContributor = await verifyContributorByPaymentReference(userData.paymentReferenceId, userData.email);
+		const verifiedContributor = await verifyContributorByPaymentReference(
+			userData.paymentReferenceId,
+			userData.email,
+			ownerContributorId,
+		);
 		if (!verifiedContributor.success) {
 			return resultFail(verifiedContributor.error);
 		}
@@ -315,6 +391,7 @@ const createPendingContribution = async (
 const verifyContributorByPaymentReference = async (
 	paymentReferenceId: string,
 	expectedEmail: string,
+	ownerContributorId?: string,
 ): Promise<ServiceResult<{ contributor: ContributorWithContact; email: string }>> => {
 	try {
 		const contributorsResult = await findContributorsByPaymentReferenceIds([paymentReferenceId]);
@@ -337,7 +414,7 @@ const verifyContributorByPaymentReference = async (
 			return resultFail('Contributor email does not match QR donor email');
 		}
 
-		const wizardAccessResult = await assertUnauthenticatedWizardContributor(contributor);
+		const wizardAccessResult = await assertUnauthenticatedWizardContributor(contributor, ownerContributorId);
 		if (!wizardAccessResult.success) {
 			return resultFail(wizardAccessResult.error);
 		}
@@ -350,7 +427,14 @@ const verifyContributorByPaymentReference = async (
 	}
 };
 
-const assertUnauthenticatedWizardContributor = async (contributor: ContributorWithContact): Promise<ServiceResult<void>> => {
+const assertUnauthenticatedWizardContributor = async (
+	contributor: ContributorWithContact,
+	ownerContributorId?: string,
+): Promise<ServiceResult<void>> => {
+	if (ownerContributorId && contributor.id === ownerContributorId) {
+		return resultOk(undefined);
+	}
+
 	if (contributor.stripeCustomerId || contributor.legacyFirestoreId) {
 		return resultFail('An account already exists for this email. Please sign in.');
 	}

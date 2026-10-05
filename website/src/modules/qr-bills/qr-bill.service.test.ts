@@ -4,6 +4,7 @@ const mockGenerateQrBillPdf = jest.fn();
 const mockFindContributorsByPaymentReferenceIds = jest.fn();
 const mockGetOwnedActiveBankTransferQrBill = jest.fn();
 const mockGetOrCreateReferenceIdByEmail = jest.fn();
+const mockGetOwnedPaymentReferenceId = jest.fn();
 const mockGetOrCreateContributorByReferenceId = jest.fn();
 const mockUpdateContributorSelf = jest.fn();
 const mockGetContributorContributionSummary = jest.fn();
@@ -36,12 +37,14 @@ jest.mock('@/modules/campaigns/campaign.service', () => ({
 jest.mock('@/modules/contributions/contribution.service', () => ({
 	upsertFromBankTransfer: mockUpsertFromBankTransfer,
 	getContributorContributionSummary: mockGetContributorContributionSummary,
+	isPaymentTransactionIdTaken: jest.fn().mockResolvedValue({ success: true, data: false }),
 }));
 
 jest.mock('@/modules/contributors/contributor.service', () => ({
 	findContributorsByPaymentReferenceIds: mockFindContributorsByPaymentReferenceIds,
 	getOrCreateContributorByReferenceId: mockGetOrCreateContributorByReferenceId,
 	getOrCreateReferenceIdByEmail: mockGetOrCreateReferenceIdByEmail,
+	getOwnedPaymentReferenceId: mockGetOwnedPaymentReferenceId,
 	updateContributorSelf: mockUpdateContributorSelf,
 }));
 
@@ -52,6 +55,7 @@ jest.mock('@/modules/exchange-rates/exchange-rate.service', () => ({
 jest.mock('@/modules/subscriptions/subscription.service', () => ({
 	getOwnedActiveBankTransferQrBill: mockGetOwnedActiveBankTransferQrBill,
 	upsertFromBankStandingOrder: mockUpsertFromBankStandingOrder,
+	isBankStandingOrderReferenceTaken: jest.fn().mockResolvedValue({ success: true, data: false }),
 }));
 
 import {
@@ -192,6 +196,36 @@ describe('QR bill service', () => {
 			contributorReferenceId: '1735689600000',
 			contributionReferenceId: '1731700000',
 		});
+	});
+
+	test('uses the signed-in contributor payment reference', async () => {
+		mockGetOwnedPaymentReferenceId.mockResolvedValue({ success: true, data: '1735689600000' });
+		mockGetOrCreateContributorByReferenceId.mockResolvedValue({
+			success: true,
+			data: freshWizardContributor,
+		});
+
+		const result = await createWizardQrBill(
+			{
+				wizardContext: wizardContext(),
+				donor: {
+					email: 'donor@example.com',
+					firstName: 'New',
+					lastName: 'Donor',
+					language: 'en',
+				},
+				currency: 'CHF',
+			},
+			'contributor-new',
+		);
+
+		expect(result.success).toBe(true);
+		if (!result.success) {
+			throw new Error(result.error);
+		}
+		expect(result.data.contributorReferenceId).toBe('1735689600000');
+		expect(mockGetOrCreateReferenceIdByEmail).not.toHaveBeenCalled();
+		expect(mockGetOwnedPaymentReferenceId).toHaveBeenCalledWith('contributor-new', 'donor@example.com');
 	});
 
 	test('does not return an existing donor payment reference from the wizard', async () => {
