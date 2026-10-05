@@ -1,5 +1,5 @@
 import { BlockWrapper } from '@/components/block-wrapper';
-import { Carousel, CarouselContent, CarouselItem, CarouselScrollNextButton } from '@/components/carousel';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/carousel';
 import {
 	getLocalPartnerCandidateFooter,
 	LocalPartnerTeaserCard,
@@ -30,7 +30,6 @@ export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, regio
 		getLocalPartnerOverviewStatsAction(portalSlugs),
 	]);
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
-	const nextButtonAriaLabel = translator.t('local-partners-page.teaser-next-button-aria');
 
 	return (
 		<BlockWrapper className="max-2xl:overflow-visible">
@@ -40,7 +39,7 @@ export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, regio
 				</div>
 				<div className="relative min-w-0 lg:col-span-2">
 					<Carousel opts={{ align: 'start' }}>
-						<CarouselContent className="-ml-6">
+						<CarouselContent className="-ml-6" scrollFade>
 							{localPartners.map((localPartner) => {
 								const portalSlug = getLocalPartnerPortalSlug(localPartner.content);
 								const recipientsCount = statsByPortalSlug[portalSlug]?.recipientsCount ?? 0;
@@ -65,7 +64,6 @@ export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, regio
 								);
 							})}
 						</CarouselContent>
-						<CarouselScrollNextButton aria-label={nextButtonAriaLabel} />
 					</Carousel>
 				</div>
 			</div>
