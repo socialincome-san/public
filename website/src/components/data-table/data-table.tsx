@@ -15,7 +15,7 @@ import type { ColumnDef, VisibilityState } from '@/components/data-table/tanstac
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
 import { Translator } from '@/lib/i18n/translator';
-import { useTranslator } from '@/lib/i18n/useTranslator';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { DATA_TABLE_FETCH_PREFIX_REGEX } from '@/lib/utils/regex';

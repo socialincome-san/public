@@ -2,7 +2,7 @@
 
 import { LanguageCode } from '@/lib/types/language';
 import { useParams } from 'next/navigation';
-import { useTranslator } from './useTranslator';
+import { useTranslator } from './use-translator';
 
 type TranslateContext = Record<string, unknown>;
 

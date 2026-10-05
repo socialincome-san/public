@@ -98,7 +98,7 @@ Keep:
 - Storyblok path and presentation helpers that do not call services
 - Firebase client wiring
 
-React UI hooks live in `components`. Page search-param types live in `app`.
+Shared hooks live in `lib/hooks`. Page search-param types live in `app`.
 
 Product behavior lives in the owning module. Request helpers that call
 `redirect` or `notFound` live in `website/src/server`, because services
@@ -239,6 +239,10 @@ Architecture rules for modules and integrations live in
 Additional enforced contracts:
 
 - Filename suffix allowlist for modules and integrations
+- Kebab-case file and folder names under `src`. Dotted suffixes such as
+  `.service.ts` are allowed. Next.js route segments and metadata folders
+  such as `robots.txt` are allowed. Generated code and Prisma migrations
+  are excluded.
 - No cross-module deep imports (use the owning module service)
 - Provider SDKs only inside `src/integrations/**`
 - Action params typed as `unknown` / `FormData`

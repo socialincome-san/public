@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { SurveyStatus } from '@/generated/prisma/enums';
-import { useTranslator } from '@/lib/i18n/useTranslator';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { useEffect } from 'react';
 import { Model } from 'survey-core';

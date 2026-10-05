@@ -1,4 +1,4 @@
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 import {
 	campaignStoryExists,

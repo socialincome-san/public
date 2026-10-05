@@ -4,8 +4,8 @@ import { useContributorSession } from '@/components/contributor/use-contributor-
 import { DialogHeader, DialogTitle } from '@/components/dialog';
 import { Form } from '@/components/form';
 import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { campaignSubmissionConfig } from '@/lib/campaign-submission';
+import { useAuth } from '@/lib/firebase/hooks/use-auth';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import {

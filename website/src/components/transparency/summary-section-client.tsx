@@ -1,8 +1,8 @@
 'use client';
 
-import { useCountUp } from '@/components/hooks/use-count-up';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
 import { formatSummaryMetricAmount } from '@/components/transparency/summary-metric-format';
+import { useCountUp } from '@/lib/hooks/use-count-up';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { Info } from 'lucide-react';
 import { useInView } from 'motion/react';

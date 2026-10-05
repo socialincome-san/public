@@ -451,6 +451,13 @@ export default [
 		},
 	},
 	{
+		files: ['src/**/*.{ts,tsx}'],
+		ignores: ['src/generated/**', 'src/lib/database/migrations/**'],
+		rules: {
+			'backend-architecture/kebab-case-paths': 'error',
+		},
+	},
+	{
 		files: ['src/lib/**/*.{ts,tsx}'],
 		rules: {
 			'@typescript-eslint/no-restricted-imports': [

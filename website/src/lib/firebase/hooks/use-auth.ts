@@ -6,7 +6,7 @@ import {
 	type FirebaseClientAuth,
 } from '@/integrations/firebase/firebase-client.integration';
 import { useEffect, useRef } from 'react';
-import { useFirebaseApp } from './useFirebaseApp';
+import { useFirebaseApp } from './use-firebase-app';
 
 const authEmulatorUrl = process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL;
 

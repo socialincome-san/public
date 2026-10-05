@@ -2,7 +2,7 @@ import {
 	campaignSubmissionConfig,
 	campaignSubmissionDurationPresets,
 	type CampaignSubmissionDurationPreset,
-} from '@/lib/config/campaign-submission.config';
+} from '@/lib/campaign-submission';
 import { isSafeHref, slugify } from '@/lib/utils/string-utils';
 import {
 	campaignSubmissionErrorCodes,

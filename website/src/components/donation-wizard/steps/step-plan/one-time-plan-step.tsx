@@ -1,7 +1,7 @@
 'use client';
 
+import { useI18n } from '@/lib/i18n/use-i18n';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { useI18n } from '@/lib/i18n/useI18n';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import {

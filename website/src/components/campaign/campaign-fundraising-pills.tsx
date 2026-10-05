@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/badge/badge';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/carousel';
-import { usePrefersReducedMotion } from '@/components/hooks/use-prefers-reduced-motion';
+import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
 import Autoplay from 'embla-carousel-autoplay';
 import { useMemo } from 'react';
 

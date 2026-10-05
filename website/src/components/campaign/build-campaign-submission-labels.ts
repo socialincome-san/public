@@ -1,4 +1,4 @@
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import type { Translator } from '@/lib/i18n/translator';
 import { campaignSubmissionErrorCodes, type CampaignSubmissionErrorCode } from '@/modules/campaigns/campaign.types';
 import type { SubmissionLabels } from './campaign-submission/types';

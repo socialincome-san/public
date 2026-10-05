@@ -1,7 +1,7 @@
 'use client';
 
 import { signOut } from '@/lib/firebase/client-auth';
-import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useAuth } from '@/lib/firebase/hooks/use-auth';
 import { logoutAction } from '@/modules/auth/auth.actions';
 import { useRouter } from 'next/navigation';
 

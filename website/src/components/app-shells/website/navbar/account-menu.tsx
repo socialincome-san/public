@@ -11,7 +11,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/dropdown-menu/dropdown-menu';
-import { useTranslator } from '@/lib/i18n/useTranslator';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { Session } from '@/modules/auth/auth.types';
 import { Building2, LayoutDashboard, LogOut, User, Users } from 'lucide-react';

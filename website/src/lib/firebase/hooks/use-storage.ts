@@ -9,7 +9,7 @@ import {
 	type FirebaseClientStorageReference,
 } from '@/integrations/firebase/firebase-client.integration';
 import { useEffect, useRef, useState } from 'react';
-import { useFirebaseApp } from './useFirebaseApp';
+import { useFirebaseApp } from './use-firebase-app';
 
 const storageEmulatorHost = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_EMULATOR_HOST;
 const storageEmulatorPort = Number(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_EMULATOR_PORT);

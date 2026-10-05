@@ -356,6 +356,103 @@ const safeResultErrors = {
 	},
 };
 
+const kebabCasePattern = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+const routeParamPattern = /^[A-Za-z][A-Za-z0-9]*$/;
+
+const isKebabCase = (value) => kebabCasePattern.test(value);
+
+const isRouteParamName = (value) => isKebabCase(value) || routeParamPattern.test(value);
+
+const isAllowedDirectorySegment = (segment) => {
+	if (isKebabCase(segment)) {
+		return true;
+	}
+
+	const routeGroup = segment.match(/^\((.+)\)$/);
+	if (routeGroup) {
+		return isKebabCase(routeGroup[1]);
+	}
+
+	const parallelRoute = segment.match(/^@(.+)$/);
+	if (parallelRoute) {
+		return isKebabCase(parallelRoute[1]);
+	}
+
+	const privateFolder = segment.match(/^_(.+)$/);
+	if (privateFolder) {
+		return isKebabCase(privateFolder[1]);
+	}
+
+	const optionalCatchAll = segment.match(/^\[\[\.\.\.(.+)\]\]$/);
+	if (optionalCatchAll) {
+		return isRouteParamName(optionalCatchAll[1]);
+	}
+
+	const catchAll = segment.match(/^\[\.\.\.(.+)\]$/);
+	if (catchAll) {
+		return isRouteParamName(catchAll[1]);
+	}
+
+	const routeParam = segment.match(/^\[(.+)\]$/);
+	if (routeParam) {
+		return isRouteParamName(routeParam[1]);
+	}
+
+	// Next.js metadata route folders, for example src/app/robots.txt/route.ts.
+	return /^[a-z0-9]+(-[a-z0-9]+)*\.[a-z0-9]+$/.test(segment);
+};
+
+const isAllowedSourceFilename = (filename) => isKebabCase(filename.split('.')[0]);
+
+const srcRelativeSegments = (filename) => {
+	const match = normalizePath(filename).match(/(?:^|\/)src\/(.*)$/);
+	if (!match?.[1]) {
+		return null;
+	}
+
+	return match[1].split('/').filter(Boolean);
+};
+
+const isIgnoredKebabPath = (filename) => {
+	const normalized = normalizePath(filename);
+
+	return normalized.includes('/src/generated/') || normalized.includes('/src/lib/database/migrations/');
+};
+
+const kebabCasePaths = {
+	meta: {
+		type: 'problem',
+		docs: {
+			description: 'Require kebab-case source file and directory names under src.',
+		},
+		schema: [],
+		messages: {
+			kebabCase:
+				'Rename "{{name}}" to kebab-case. A dotted suffix such as ".service.ts" is allowed; the name before the first dot must be kebab-case.',
+		},
+	},
+	create(context) {
+		const filename = normalizePath(context.filename);
+		const segments = srcRelativeSegments(filename);
+
+		return {
+			Program(node) {
+				if (!segments || isIgnoredKebabPath(filename)) {
+					return;
+				}
+
+				segments.forEach((segment, index) => {
+					const isFilename = index === segments.length - 1;
+					const allowed = isFilename ? isAllowedSourceFilename(segment) : isAllowedDirectorySegment(segment);
+					if (!allowed) {
+						context.report({ node, messageId: 'kebabCase', data: { name: segment } });
+					}
+				});
+			},
+		};
+	},
+};
+
 const filenameContract = {
 	meta: {
 		type: 'problem',
@@ -669,6 +766,7 @@ const backendArchitecturePlugin = {
 		'result-contract': resultContract,
 		'safe-result-errors': safeResultErrors,
 		'filename-contract': filenameContract,
+		'kebab-case-paths': kebabCasePaths,
 		'no-cross-module-deep-imports': noCrossModuleDeepImports,
 		'repository-export-naming': repositoryExportNaming,
 		'action-unknown-params': actionUnknownParams,

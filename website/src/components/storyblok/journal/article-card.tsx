@@ -1,8 +1,8 @@
 'use client';
 
-import { useIsMobile } from '@/components/hooks/use-is-mobile';
 import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
 import { VideoBadge } from '@/components/storyblok/journal/video-badge';
+import { useIsMobile } from '@/lib/hooks/use-is-mobile';
 import {
 	createWebsiteJournalArticleLink,
 	createWebsiteJournalPath,

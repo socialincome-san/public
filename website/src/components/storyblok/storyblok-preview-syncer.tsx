@@ -1,6 +1,6 @@
 'use client';
 
-import { registerStoryblokBridge } from '@/lib/storyblok-preview/register-bridge';
+import { registerStoryblokBridge } from '@/lib/storyblok/preview/register-bridge';
 import { updateStoryblokPreviewAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
 import { loadStoryblokBridge } from '@storyblok/js';

@@ -2,7 +2,6 @@ import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCurrentContributorSession } from '@/modules/contributors/contributor.service';
 import type { ContributorSession } from '@/modules/contributors/contributor.types';
 import { getCurrentLocalPartnerSession } from '@/modules/local-partners/local-partner.service';
-import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import { getSurveyByAccessEmail } from '@/modules/surveys/survey.service';
 import type { SurveyPayload } from '@/modules/surveys/survey.types';
 import { getCurrentUserSession } from '@/modules/users/user.service';
@@ -95,17 +94,6 @@ const loadCurrentContributor = cache(async (): Promise<ContributorSession | null
 	}
 
 	const result = await getCurrentContributorSession(tokenResult.data.uid);
-
-	return result.success ? result.data : null;
-});
-
-const loadCurrentLocalPartner = cache(async (): Promise<LocalPartnerSession | null> => {
-	const tokenResult = await loadAuthToken();
-	if (!tokenResult.success) {
-		return null;
-	}
-
-	const result = await getCurrentLocalPartnerSession(tokenResult.data.uid);
 
 	return result.success ? result.data : null;
 });

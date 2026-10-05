@@ -1,8 +1,8 @@
 'use client';
 
-import { useCountUp } from '@/components/hooks/use-count-up';
-import { usePrefersReducedMotion } from '@/components/hooks/use-prefers-reduced-motion';
 import { formatSummaryMetricAmount } from '@/components/transparency/summary-metric-format';
+import { useCountUp } from '@/lib/hooks/use-count-up';
+import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { useInView } from 'motion/react';

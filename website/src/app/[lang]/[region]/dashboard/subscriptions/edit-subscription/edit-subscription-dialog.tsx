@@ -2,7 +2,7 @@
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/dialog';
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
-import { useTranslator } from '@/lib/i18n/useTranslator';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { createUpdatePaymentMethodSessionAction } from '@/modules/subscriptions/subscription.actions';
 import { SUBSCRIPTION_CANCEL_REASONS } from '@/modules/subscriptions/subscription.types';

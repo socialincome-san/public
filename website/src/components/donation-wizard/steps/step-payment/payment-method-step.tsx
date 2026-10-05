@@ -2,8 +2,8 @@
 
 import { OnlinePaymentLogos } from '@/components/payment-logos/online-payment-logos';
 import { QrPaymentLogo } from '@/components/payment-logos/qr-payment-logo';
+import { useI18n } from '@/lib/i18n/use-i18n';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { useI18n } from '@/lib/i18n/useI18n';
 import { cn } from '@/lib/utils/cn';
 import { useEffect } from 'react';
 import { DonationStepFooter } from '../../shared/donation-step-footer';

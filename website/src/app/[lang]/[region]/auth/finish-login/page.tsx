@@ -3,7 +3,7 @@
 import { claimPendingCampaignsFromLogin } from '@/components/login/claim-pending-campaigns-from-login';
 import { parseCampaignsQueryParam } from '@/components/login/parse-campaigns-query-param';
 import { finishSignInWithEmailLink, isSignInLink, signOut } from '@/lib/firebase/client-auth';
-import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useAuth } from '@/lib/firebase/hooks/use-auth';
 import { createSessionAction, getRedirectPathAfterLoginAction } from '@/modules/auth/auth.actions';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';

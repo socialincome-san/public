@@ -1,4 +1,4 @@
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 
 const mockVerifyTurnstileToken = jest.fn();
 const mockIsProgramEligibleForPublicSubmission = jest.fn();

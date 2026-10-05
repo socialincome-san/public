@@ -1,7 +1,7 @@
 'use client';
 
 import { SurveyQuestionnaire } from '@/generated/prisma/enums';
-import { useTranslator } from '@/lib/i18n/useTranslator';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import { LANGUAGE_CODES, type LanguageCode } from '@/lib/types/language';
 import { use } from 'react';
 import { Model } from 'survey-core';

@@ -3,8 +3,8 @@
 import { useContributorSession } from '@/components/contributor/use-contributor-session';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/form';
 import { Input } from '@/components/input/input';
+import { useI18n } from '@/lib/i18n/use-i18n';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { useI18n } from '@/lib/i18n/useI18n';
 import { cn } from '@/lib/utils/cn';
 import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
