@@ -1,5 +1,5 @@
-import { pathsForStory } from '@/lib/services/storyblok/revalidation';
-import { verifyStoryblokWebhookSignature } from '@/lib/services/storyblok/storyblok-webhook-signature';
+import { pathsForStory } from '@/lib/storyblok/storyblok-revalidation';
+import { verifyStoryblokWebhookSignature } from '@/lib/storyblok/storyblok-webhook-signature';
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 

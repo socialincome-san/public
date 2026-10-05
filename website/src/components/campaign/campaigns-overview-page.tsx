@@ -5,8 +5,9 @@ import { getStateQuery, resolveCampaignsWithCmsEntries } from '@/components/camp
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import type { CampaignOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
+import { getAllCampaignsForCmsJoinWithStatsAction } from '@/modules/campaigns/campaign.actions';
+import { getCampaignsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
 import { BlockWrapper } from '../block-wrapper';
 
@@ -20,9 +21,9 @@ type Props = {
 export const CampaignsOverviewPage = async ({ overview, lang, region, searchParams }: Props) => {
 	const selectedState = getStateQuery(searchParams);
 	const [campaignStoriesResult, campaignsResult] = await Promise.all([
-		services.storyblok.getCampaigns(lang),
+		getCampaignsAction(lang),
 		// Activity filter is applied in CampaignsOverview via isCampaignPubliclyActive.
-		services.read.campaign.getAllCampaignsForCmsJoinWithStats({ activity: 'all' }),
+		getAllCampaignsForCmsJoinWithStatsAction('all'),
 	]);
 	const campaignStories = (campaignStoriesResult.success ? campaignStoriesResult.data : []) as CampaignStory[];
 	const campaignsData = campaignsResult.success ? campaignsResult.data : { campaigns: [], statsById: {} };

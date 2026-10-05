@@ -1,15 +1,15 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { CountryDetail } from '@/components/storyblok/country/country-detail';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { getCountryPageStats } from '@/lib/storyblok/country-page-stats';
+import { getCountryBySlug } from '@/modules/storyblok-content/storyblok-content.service';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
 
 export default async function CountryPage({ params }: DefaultLayoutPropsWithSlug) {
 	const { slug, lang, region } = await params;
-	const countryResult = await services.storyblok.getCountryBySlug(slug, lang);
+	const countryResult = await getCountryBySlug(slug, lang);
 
 	if (!countryResult.success) {
 		return notFound();

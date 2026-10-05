@@ -1,6 +1,6 @@
 import { makeOrganizationAdminColumns } from '@/components/data-table/columns/organizations';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
-import type { OrganizationTableViewRow } from '@/lib/services/organization/organization.types';
+import type { OrganizationTableViewRow } from '@/modules/organizations/organization.types';
 
 export const organizationsTableConfig: DataTableConfig<OrganizationTableViewRow> = {
 	id: 'organizations-admin',

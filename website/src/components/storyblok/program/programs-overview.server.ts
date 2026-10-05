@@ -1,7 +1,7 @@
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
-import type { PublicProgramFilterDataMap } from '@/lib/services/program/program.types';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { AnySearchParams } from '@/lib/types/page-props';
+import type { PublicProgramFilterDataMap } from '@/modules/programs/program.types';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug, getProgramStoryblokSlug, getProgramTitle } from './program.utils';
 import { COUNTRY_QUERY_KEY, FOCUS_QUERY_KEY, SEARCH_QUERY_KEY } from './programs-overview-query';

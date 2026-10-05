@@ -4,8 +4,7 @@ import {
 	GLOBE_SPHERE_OPACITY,
 	INITIAL_GLOBE_VIEW,
 } from '@/components/globe/globe-config';
-import type { CountryGeoJson } from '@/lib/services/country/country-geojson.types';
-import { isCountryGeoJson } from '@/lib/services/country/country-geojson.utils';
+import { isCountryGeoJson, type CountryGeoJson } from '@/lib/country-geojson';
 import { geoOrthographic, geoPath } from 'd3-geo';
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';

@@ -1,10 +1,9 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-
-import { YourDonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
+import { resolveWebsiteLanguage } from '@/lib/i18n/utils';
+import { getPaginatedContributorDonationCertificates } from '@/modules/donation-certificates/donation-certificate.service';
+import type { YourDonationCertificateTableViewRow } from '@/modules/donation-certificates/donation-certificate.types';
 import { YourDonationCertificateTable } from './your-donation-certificate-table-client';
 
 export default async function YourDonationCertificates({
@@ -15,7 +14,7 @@ export default async function YourDonationCertificates({
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await services.read.donationCertificate.getPaginatedYourCertificatesTableView(contributor.id, tableQuery);
+	const result = await getPaginatedContributorDonationCertificates(contributor.id, tableQuery);
 	const error = result.success ? null : result.error;
 	const rows: YourDonationCertificateTableViewRow[] = result.success ? result.data.tableRows : [];
 	const totalRows = result.success ? result.data.totalCount : 0;
@@ -24,7 +23,7 @@ export default async function YourDonationCertificates({
 		<YourDonationCertificateTable
 			rows={rows}
 			error={error}
-			lang={lang as WebsiteLanguage}
+			lang={resolveWebsiteLanguage({ pathnameLanguage: lang })}
 			query={{ ...tableQuery, totalRows }}
 		/>
 	);

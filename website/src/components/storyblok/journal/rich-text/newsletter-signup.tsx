@@ -4,9 +4,8 @@ import { Button } from '@/components/button/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
 import { useTranslator } from '@/lib/hooks/useTranslator';
-import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
-import type { CreateNewsletterSubscription } from '@/lib/services/sendgrid/types';
 import type { LanguageCode } from '@/lib/types/language';
+import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -30,7 +29,7 @@ export const NewsletterSignup = ({ lang }: Props) => {
 	}
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		const subscription: CreateNewsletterSubscription = {
+		const subscription = {
 			email: values.email,
 			language: lang === 'de' ? 'de' : 'en',
 		};

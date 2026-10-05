@@ -8,11 +8,11 @@ import { RadioGroup } from '@/components/radio-group/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { Switch } from '@/components/switch/switch';
 import { campaignSubmissionConfig, type CampaignSubmissionDurationPreset } from '@/lib/config/campaign-submission.config';
-import { endDateFromDurationPreset } from '@/lib/services/campaign/campaign-submission-input';
 import { cn } from '@/lib/utils/cn';
 import { addDays, format } from 'date-fns';
 import { Camera, Check, Trash2 } from 'lucide-react';
 import { useEffect, useId, useRef } from 'react';
+import { endDateFromDurationPreset } from '../campaign-submission.client';
 import { ImageFocusPoint } from '../image-focus-point';
 import type { DetailsStepProps } from '../types';
 

@@ -1,13 +1,13 @@
 'use client';
 
+import { toNewsletterLanguage } from '@/components/newsletter/newsletter-language';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
-import { getQrOnboardingPrefillAction, updateContributorAfterWizardQrAction } from '@/lib/server-actions/qr-wizard-actions';
+import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
+import { getQrOnboardingPrefillAction, updateContributorAfterWizardQrAction } from '@/modules/qr-bills/qr-bill.actions';
 import {
 	getStripeCheckoutOnboardingPrefillAction,
 	updateContributorAfterWizardCheckoutAction,
-} from '@/lib/server-actions/stripe-wizard-actions';
-import { type SupportedLanguage } from '@/lib/services/sendgrid/types';
+} from '@/modules/stripe-payments/stripe-payment.actions';
 import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -142,7 +142,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 					firstname: submitted.firstname,
 					lastname: submitted.lastname,
 					email: submitted.email,
-					language: language as SupportedLanguage,
+					language: toNewsletterLanguage(language),
 				});
 
 				send({ type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE', email: submitted.email });
@@ -185,7 +185,7 @@ export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
 					firstname: submitted.firstname,
 					lastname: submitted.lastname,
 					email: submitted.email,
-					language: language as SupportedLanguage,
+					language: toNewsletterLanguage(language),
 				});
 
 				send({ type: 'DONATION_ONBOARDING_PERSONAL_COMPLETE', email: submitted.email });

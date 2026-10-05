@@ -1,5 +1,5 @@
-import { services } from '@/lib/services/services';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { handleWebhookEvent } from '@/modules/stripe-payments/stripe-payment.service';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
@@ -17,7 +17,7 @@ export const POST = async (request: NextRequest) => {
 		}
 
 		const body = await request.text();
-		const result = await services.stripe.handleWebhookEvent(body, signature, webhookSecret);
+		const result = await handleWebhookEvent(body, signature, webhookSecret);
 
 		if (!result.success) {
 			return NextResponse.json({ error: result.error }, { status: result.status ?? 500 });

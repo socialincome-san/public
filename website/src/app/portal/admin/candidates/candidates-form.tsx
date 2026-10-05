@@ -9,18 +9,18 @@ import {
 	getZodEnum,
 } from '@/components/dynamic-form/helper';
 import type { Session } from '@/lib/firebase/current-account';
+import { handleResult } from '@/lib/result-client';
+import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
 import {
 	createCandidateAction,
 	deleteCandidateAction,
 	getCandidateAction,
-	getCandidateOptions,
+	getCandidateOptionsAction,
 	updateCandidateAction,
-} from '@/lib/server-actions/candidate-actions';
-import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
-import { CandidatePayload } from '@/lib/services/candidate/candidate.types';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
-import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
+} from '@/modules/candidates/candidate.actions';
+import type { CandidatePayload } from '@/modules/candidates/candidate.types';
+import type { LocalPartnerOption } from '@/modules/local-partners/local-partner.types';
+import { getSupportedMobileMoneyProviderOptionsAction } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateCandidateInput, buildUpdateCandidateInput } from './candidate-form-helpers';
@@ -156,7 +156,7 @@ export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessi
 				candidateId && candidate
 					? await updateCandidateAction(buildUpdateCandidateInput(schema, candidate, contactFields), sessionType)
 					: await createCandidateAction(buildCreateCandidateInput(schema, contactFields), sessionType);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -170,7 +170,7 @@ export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessi
 
 		startTransition(async () => {
 			const result = await deleteCandidateAction(candidateId, sessionType);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -181,7 +181,7 @@ export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessi
 		if (candidateId) {
 			startTransition(async () => {
 				const result = await getCandidateAction(candidateId, sessionType);
-				handleServiceResult(result, {
+				handleResult(result, {
 					onSuccess: (data) => {
 						setCandidate(data);
 						setFormSchema((previousSchema) => {
@@ -241,7 +241,7 @@ export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessi
 	useEffect(() => {
 		startTransition(async () => {
 			const [candidateOptionsResult, supportedProviders] = await Promise.all([
-				getCandidateOptions(sessionType),
+				getCandidateOptionsAction(sessionType),
 				getSupportedMobileMoneyProviderOptionsAction(sessionType),
 			]);
 			if (!candidateOptionsResult.success) {

@@ -1,4 +1,4 @@
-import { services } from '@/lib/services/services';
+import { getPublicLocalPartnerDashboardStatsBySlug } from '@/modules/local-partners/local-partner.service';
 
 type LocalPartnerDashboardStats = {
 	recipientsCount: number;
@@ -16,7 +16,7 @@ export const getLocalPartnerDashboardStats = async (portalSlug?: string): Promis
 		return emptyStats;
 	}
 
-	const statsResult = await services.read.localPartner.getPublicLocalPartnerDashboardStatsBySlug(normalizedSlug);
+	const statsResult = await getPublicLocalPartnerDashboardStatsBySlug(normalizedSlug);
 
 	return statsResult.success ? statsResult.data : emptyStats;
 };

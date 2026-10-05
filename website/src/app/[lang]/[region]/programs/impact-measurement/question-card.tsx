@@ -1,5 +1,5 @@
 import { Card } from '@/components/card/card';
-import { SurveyImpactQuestion } from '@/lib/services/survey/survey-impact.types';
+import type { SurveyImpactQuestion } from '@/modules/surveys/survey.types';
 import { ReactNode } from 'react';
 import { ImpactMeasurementQuestionContent } from './question-content';
 import { getImpactTranslator } from './translator';

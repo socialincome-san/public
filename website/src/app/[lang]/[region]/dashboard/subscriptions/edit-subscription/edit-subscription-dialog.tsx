@@ -4,8 +4,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
-import { createUpdatePaymentMethodSessionAction } from '@/lib/server-actions/subscription-actions';
-import { SUBSCRIPTION_CANCEL_REASONS } from '@/lib/services/subscription/subscription-cancellation';
+import { createUpdatePaymentMethodSessionAction } from '@/modules/subscriptions/subscription.actions';
+import { SUBSCRIPTION_CANCEL_REASONS } from '@/modules/subscriptions/subscription.types';
 import { ChevronLeft } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { type ActorRefFrom, type SnapshotFrom } from 'xstate';

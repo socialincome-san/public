@@ -5,8 +5,8 @@ import { ConfiguredDataTableClient } from '@/components/data-table/clients/confi
 import { usersTableConfig } from '@/components/data-table/configs/users-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import type { UserTableViewRow } from '@/lib/services/user/user.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
+import type { UserTableViewRow } from '@/modules/users/user.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import UsersForm from './users-form';

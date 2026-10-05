@@ -1,4 +1,4 @@
-import { formatStoryblokResizeUrl, getScaledAssetDimensions } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokResizeUrl, getScaledAssetDimensions } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
 import { motion, MotionValue, useTransform } from 'motion/react';
 import NextImage from 'next/image';

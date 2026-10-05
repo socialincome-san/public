@@ -2,7 +2,7 @@ import { Button } from '@/components/button/button';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { getDashboardView } from '@/modules/subscriptions/subscription.service';
 import Link from 'next/link';
 import { ActiveSubscriptionsList } from './active-subscriptions-list';
 import { SubscriptionSummaryCards } from './subscription-summary-cards';
@@ -18,7 +18,7 @@ export const SubscriptionsView = async ({ lang, region }: Props) => {
 	const contributor = await getAuthenticatedContributorOrRedirect();
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
 
-	const dashboardResult = await services.read.subscription.getDashboardView(contributor.id);
+	const dashboardResult = await getDashboardView(contributor.id);
 	if (!dashboardResult.success) {
 		return (
 			<div className="border-destructive/30 text-destructive rounded-xl border p-6 text-sm" role="alert">

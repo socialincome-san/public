@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/badge/badge';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { CountryCondition } from '@/lib/services/country/country.types';
+import { CountryCondition } from '@/modules/countries/country.types';
 import { AlertTriangleIcon, CheckIcon, XCircleIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 

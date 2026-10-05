@@ -1,8 +1,8 @@
 'use client';
 
+import { signOut } from '@/lib/firebase/client-auth';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
-import { logoutAction } from '@/lib/server-actions/session-actions';
-import { signOut } from 'firebase/auth';
+import { logoutAction } from '@/modules/auth/auth.actions';
 import { useRouter } from 'next/navigation';
 
 export const useLogout = () => {
@@ -17,9 +17,10 @@ export const useLogout = () => {
 				console.error('Logout failed', { error: result.error });
 			}
 
-			await signOut(auth).catch((err: unknown) => {
-				console.error('Firebase sign-out error', err);
-			});
+			const firebaseResult = await signOut(auth);
+			if (!firebaseResult.success) {
+				console.error('Firebase sign-out error', { error: firebaseResult.error });
+			}
 
 			router.push('/login');
 		} catch (error) {

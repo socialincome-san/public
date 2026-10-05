@@ -1,6 +1,6 @@
-import { VerifyOtpRequest } from '@/app/api/v1/models';
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { services } from '@/lib/services/services';
+import { verifyOtpSchema } from '@/modules/auth/auth.schemas';
+import { verifyOtp } from '@/modules/auth/auth.service';
 import { NextResponse } from 'next/server';
 
 /**
@@ -19,13 +19,13 @@ export const POST = withAppCheck(async (request: Request) => {
 		return new Response('Invalid JSON body', { status: 400 });
 	}
 
-	const parsed = VerifyOtpRequest.safeParse(body);
+	const parsed = verifyOtpSchema.safeParse(body);
 
 	if (!parsed.success) {
 		return new Response(parsed.error.message, { status: 400 });
 	}
 
-	const result = await services.twilioOtp.verifyOtp(parsed.data);
+	const result = await verifyOtp(parsed.data);
 
 	if (!result.success) {
 		return new Response(result.error, { status: result.status ?? 400 });

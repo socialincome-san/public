@@ -6,8 +6,13 @@ import { PersonGridInteractive } from '@/components/storyblok/shared/person-grid
 import type { Person, PersonGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import { personHasRole, resolveStoryblokLink, toStringArray } from '@/lib/services/storyblok/storyblok.utils';
+import { personHasRole, resolveStoryblokLink, toStringArray } from '@/lib/storyblok/storyblok-utils';
+import {
+	getAllPersonsAction,
+	getPersonsByCountryOfficeAction,
+	getPersonsByUuidsAction,
+	getPrimaryRoleLabelsAction,
+} from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextLink from 'next/link';
@@ -47,12 +52,12 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 
 	const [personsResult, translator, roleLabelsResult] = await Promise.all([
 		manualUuids.length
-			? services.storyblok.getPersonsByUuids(lang, manualUuids)
+			? getPersonsByUuidsAction({ language: lang, values: manualUuids })
 			: countryOfficeCodes.length
-				? services.storyblok.getPersonsByCountryOffice(lang, countryOfficeCodes)
-				: services.storyblok.getAllPersons(lang),
+				? getPersonsByCountryOfficeAction({ language: lang, values: countryOfficeCodes })
+				: getAllPersonsAction(lang),
 		isInteractive || showVolunteerDuration ? Translator.getInstance({ language: lang, namespaces: 'website-common' }) : null,
-		services.storyblok.getPrimaryRoleLabels(lang),
+		getPrimaryRoleLabelsAction(lang),
 	]);
 	const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 	// Exclusions run before everything else — manual picks, role/status filters and the interactive

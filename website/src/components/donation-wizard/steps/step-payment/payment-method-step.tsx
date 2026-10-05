@@ -4,12 +4,11 @@ import { OnlinePaymentLogos } from '@/components/payment-logos/online-payment-lo
 import { QrPaymentLogo } from '@/components/payment-logos/qr-payment-logo';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
 import { useI18n } from '@/lib/i18n/useI18n';
-import { isWizardQrCurrencySupported } from '@/lib/services/qr-bill/wizard-qr-payment';
 import { cn } from '@/lib/utils/cn';
 import { useEffect } from 'react';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
-import { selectPaymentView } from '../../wizard/donation-machine-selectors';
+import { isWizardQrCurrencySupported, selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { requestStripeEmbeddedCheckout } from '../step-stripe-checkout/request-stripe-embedded-checkout';
 import { CoverTransactionCostsToggle } from './cover-transaction-costs-toggle';

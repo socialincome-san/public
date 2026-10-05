@@ -5,10 +5,9 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { useTranslator } from '@/lib/hooks/useTranslator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { generateDonationCertificateForCurrentUser } from '@/lib/server-actions/donation-certificates-actions';
-import { DonationCertificateError } from '@/lib/services/donation-certificate/types';
-import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, LanguageCode } from '@/lib/types/language';
+import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, type LanguageCode } from '@/lib/types/language';
 import { now } from '@/lib/utils/now';
+import { createCurrentContributorDonationCertificateAction } from '@/modules/donation-certificates/donation-certificate.actions';
 import { useState, useTransition } from 'react';
 
 const CURRENT_YEAR = now().getFullYear();
@@ -27,14 +26,14 @@ export default function GenerateDonationCertificateDialog({
 	const [language, setLanguage] = useState<LanguageCode | undefined>(DEFAULT_LANGUAGE);
 	const [isLoading, startTransition] = useTransition();
 	const [success, setSuccess] = useState<boolean>();
-	const [error, setError] = useState<DonationCertificateError | string | undefined>();
+	const [error, setError] = useState<string | undefined>();
 	const translator = useTranslator(lang, 'website-me');
 
 	const generateCertificates = () => {
 		setSuccess(false);
 		setError(undefined);
 		startTransition(async () => {
-			const result = await generateDonationCertificateForCurrentUser(year, language);
+			const result = await createCurrentContributorDonationCertificateAction({ year, language });
 			if (!result.success) {
 				setError(result.error);
 			} else {
@@ -43,7 +42,7 @@ export default function GenerateDonationCertificateDialog({
 		});
 	};
 
-	const getErrorMessage = (errorCode: DonationCertificateError | string) => {
+	const getErrorMessage = (errorCode: string) => {
 		if (errorCode === 'noContributions') {
 			return translator?.t('donation-certificates.no-contributions');
 		}
@@ -92,7 +91,13 @@ export default function GenerateDonationCertificateDialog({
 						<p className="text-muted-foreground mb-1 text-xs">
 							{translator?.t('donation-certificates.generate-dialog.description_language')}
 						</p>
-						<Select value={language} disabled={!language} onValueChange={(l: string) => setLanguage(l as LanguageCode)}>
+						<Select
+							value={language}
+							disabled={!language}
+							onValueChange={(selectedLanguage: string) =>
+								setLanguage(LANGUAGES.find((candidate) => candidate === selectedLanguage))
+							}
+						>
 							<SelectTrigger>
 								<SelectValue placeholder={translator?.t('donation-certificates.generate-dialog.placeholder_language')} />
 							</SelectTrigger>

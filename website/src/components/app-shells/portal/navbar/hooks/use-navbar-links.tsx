@@ -1,5 +1,5 @@
 import type { Session } from '@/lib/firebase/current-account';
-import type { UserSession } from '@/lib/services/user/user.types';
+import type { UserSession } from '@/modules/users/user.types';
 import { LayoutDashboard, LucideIcon, Settings, User } from 'lucide-react';
 
 type NavLink = {

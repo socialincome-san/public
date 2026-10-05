@@ -9,20 +9,20 @@ import {
 	getZodEnum,
 } from '@/components/dynamic-form/helper';
 import type { Session } from '@/lib/firebase/current-account';
-import { getSupportedMobileMoneyProviderOptionsAction } from '@/lib/server-actions/mobile-money-provider-action';
+import { handleResult } from '@/lib/result-client';
+import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
+import type { LocalPartnerOption } from '@/modules/local-partners/local-partner.types';
+import { getSupportedMobileMoneyProviderOptionsAction } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
+import type { ProgramOption } from '@/modules/programs/program.types';
 import {
 	createRecipientAction,
 	deleteRecipientAction,
 	getRecipientAction,
-	getRecipientOptions,
+	getRecipientOptionsAction,
 	removeRecipientFromProgramAction,
 	updateRecipientAction,
-} from '@/lib/server-actions/recipient-actions';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import { LocalPartnerOption } from '@/lib/services/local-partner/local-partner.types';
-import { ProgramOption } from '@/lib/services/program/program.types';
-import { RecipientPayload } from '@/lib/services/recipient/recipient.types';
-import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
+} from '@/modules/recipients/recipient.actions';
+import type { RecipientPayload } from '@/modules/recipients/recipient.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateRecipientInput, buildUpdateRecipientInput } from './recipient-form-helpers';
@@ -151,7 +151,7 @@ export const RecipientForm = ({
 					? await updateRecipientAction(buildUpdateRecipientInput(schema, recipient, contactFields), sessionType)
 					: await createRecipientAction(buildCreateRecipientInput(schema, contactFields), sessionType);
 
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -165,7 +165,7 @@ export const RecipientForm = ({
 
 		startTransition(async () => {
 			const result = await deleteRecipientAction(recipientId, sessionType);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -179,7 +179,7 @@ export const RecipientForm = ({
 
 		startTransition(async () => {
 			const result = await removeRecipientFromProgramAction(recipientId, sessionType);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -191,7 +191,7 @@ export const RecipientForm = ({
 			// Load recipient in edit mode
 			startTransition(async () => {
 				const result = await getRecipientAction(recipientId, sessionType);
-				handleServiceResult(result, {
+				handleResult(result, {
 					onSuccess: (data) => {
 						setRecipient(data);
 						setFormSchema((previousSchema) => {
@@ -261,7 +261,7 @@ export const RecipientForm = ({
 		// load options for program, local partners, and supported mobile money providers
 		startTransition(async () => {
 			const [recipientOptionsResult, supportedProviders] = await Promise.all([
-				getRecipientOptions(sessionType),
+				getRecipientOptionsAction(sessionType),
 				getSupportedMobileMoneyProviderOptionsAction(sessionType),
 			]);
 			if (!recipientOptionsResult.success) {

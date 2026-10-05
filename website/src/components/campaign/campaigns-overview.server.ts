@@ -4,13 +4,13 @@ import {
 	getCampaignStoryblokSlug,
 	getCampaignTitle,
 } from '@/components/storyblok/campaign/campaign.utils';
+import type { AnySearchParams } from '@/lib/types/page-props';
 import type {
 	CampaignCmsJoin,
 	PublicCampaignCard,
 	PublicCampaignStatsMap,
 	PublicCampaignsWithStats,
-} from '@/lib/services/campaign/campaign.types';
-import type { AnySearchParams } from '@/lib/types/page-props';
+} from '@/modules/campaigns/campaign.types';
 import {
 	DEFAULT_CAMPAIGN_STATE,
 	isCampaignStateFilter,

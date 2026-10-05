@@ -1,8 +1,8 @@
 import { MessagingJobsTable } from '@/app/portal/messaging/delivery-log/messaging-jobs-table';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { listMessagingJobsAction } from '@/lib/server-actions/messaging-actions';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { listMessagingJobsAction } from '@/modules/messaging/messaging.actions';
 import { Suspense } from 'react';
 
 const PAGE_SIZE = 10;

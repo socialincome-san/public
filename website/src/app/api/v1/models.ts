@@ -119,6 +119,8 @@ const Survey = z.object({
 
 export const SurveyListResponse = z.array(Survey);
 
+// Defined locally so next-openapi-gen can emit the schema. Keep in sync with
+// recipientSelfUpdateSchema in the recipients module (runtime validation source).
 export const RecipientSelfUpdate = z.object({
 	firstName: z.string().min(1).optional(),
 	lastName: z.string().min(1).optional(),

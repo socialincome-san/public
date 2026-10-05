@@ -1,9 +1,9 @@
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import type { FocusTableViewRow } from '@/lib/services/focus/focus.types';
-import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedFocusTableView } from '@/modules/focuses/focus.service';
+import type { FocusTableViewRow } from '@/modules/focuses/focus.types';
 import { Suspense } from 'react';
 import FocusesTable from './focuses-table';
 
@@ -21,7 +21,7 @@ const FocusesDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await services.read.focus.getPaginatedTableView(user.id, tableQuery);
+	const result = await getPaginatedFocusTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: FocusTableViewRow[] = result.success ? result.data.tableRows : [];

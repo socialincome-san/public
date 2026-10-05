@@ -1,6 +1,6 @@
 import { makeCampaignColumns } from '@/components/data-table/columns/campaigns';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
-import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
+import type { CampaignTableViewRow } from '@/modules/campaigns/campaign.types';
 
 export const campaignsTableConfig: DataTableConfig<CampaignTableViewRow> = {
 	id: 'campaigns',

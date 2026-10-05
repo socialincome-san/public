@@ -1,4 +1,4 @@
-import { services } from '@/lib/services/services';
+import { verifyAppCheckFromRequest } from '@/modules/auth/auth.service';
 import { NextRequest } from 'next/server';
 
 type Handler<T> = (request: NextRequest, context: { params: T }) => Promise<Response>;
@@ -7,7 +7,7 @@ type Handler<T> = (request: NextRequest, context: { params: T }) => Promise<Resp
 // https://firebase.google.com/docs/app-check
 export const withAppCheck = <T>(handler: Handler<T>) => {
 	return async (request: NextRequest, context: { params: T }): Promise<Response> => {
-		const appCheckResult = await services.firebaseAdmin.verifyAppCheckFromRequest(request);
+		const appCheckResult = await verifyAppCheckFromRequest(request);
 		if (!appCheckResult.success) {
 			console.warn('[withAppCheck] App Check verification failed', {
 				error: appCheckResult.error,

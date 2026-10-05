@@ -2,9 +2,9 @@
 
 import { claimPendingCampaignsFromLogin } from '@/components/login/claim-pending-campaigns-from-login';
 import { parseCampaignsQueryParam } from '@/components/login/parse-campaigns-query-param';
+import { finishSignInWithEmailLink, isSignInLink, signOut } from '@/lib/firebase/client-auth';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
-import { createSessionAction, getRedirectPathAfterLoginAction } from '@/lib/server-actions/session-actions';
-import { isSignInWithEmailLink, signInWithEmailLink, signOut } from 'firebase/auth';
+import { createSessionAction, getRedirectPathAfterLoginAction } from '@/modules/auth/auth.actions';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -35,7 +35,7 @@ export default function FinishLoginPage() {
 		const run = async () => {
 			const url = window.location.href;
 
-			if (!isSignInWithEmailLink(auth, url)) {
+			if (!isSignInLink(auth, url)) {
 				setStatus('error');
 
 				return;
@@ -49,15 +49,14 @@ export default function FinishLoginPage() {
 					throw new Error('Missing email in login URL');
 				}
 
-				await signInWithEmailLink(auth, email, url);
+				const signInResult = await finishSignInWithEmailLink(auth, email, url);
+				if (!signInResult.success) {
+					setStatus('error');
 
-				const user = auth.currentUser;
-				if (!user) {
-					throw new Error('No user after login');
+					return;
 				}
 
-				const idToken = await user.getIdToken(true);
-				const result = await createSessionAction(idToken);
+				const result = await createSessionAction(signInResult.data.idToken);
 
 				if (!result.success) {
 					await signOut(auth);

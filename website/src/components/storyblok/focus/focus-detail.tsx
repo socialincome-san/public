@@ -5,8 +5,8 @@ import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { ProgramsOverviewSection } from '@/components/storyblok/program/programs-overview-section';
 import type { Study } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
+import { getSurveyImpactFilterOptionsAction } from '@/modules/surveys/survey.actions';
 import type { ISbStoryData } from '@storyblok/js';
 import { CmsHeader } from '../shared/cms-header';
 import type { FocusStory } from './focus.types';
@@ -42,7 +42,7 @@ const getImpactMeasurementFocusId = async (focus: FocusStory) => {
 		return '';
 	}
 
-	const filterOptionsResult = await services.surveyImpact.getImpactFilterOptions();
+	const filterOptionsResult = await getSurveyImpactFilterOptionsAction();
 	if (!filterOptionsResult.success) {
 		return '';
 	}

@@ -2,12 +2,12 @@ jest.mock('@/components/campaign/campaign-submission/pending-claim-ids', () => (
 	removePendingClaimIds: jest.fn(),
 }));
 
-jest.mock('@/lib/server-actions/campaign-submission-actions', () => ({
+jest.mock('@/modules/campaigns/campaign.actions', () => ({
 	claimPendingCampaignsAction: jest.fn(),
 }));
 
 import { removePendingClaimIds } from '@/components/campaign/campaign-submission/pending-claim-ids';
-import { claimPendingCampaignsAction } from '@/lib/server-actions/campaign-submission-actions';
+import { claimPendingCampaignsAction } from '@/modules/campaigns/campaign.actions';
 import { claimPendingCampaignsFromLogin } from './claim-pending-campaigns-from-login';
 
 const mockRemovePendingClaimIds = jest.mocked(removePendingClaimIds);

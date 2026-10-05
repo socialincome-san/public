@@ -4,8 +4,8 @@ import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { FocusesOverview } from '@/components/storyblok/focus/focuses-overview';
 import type { FocusOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import type { AnySearchParams } from '@/lib/types/page-props';
+import { getFocusesAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const FocusesOverviewPage = async ({ overview, lang, region, searchParams }: Props) => {
-	const focusesResult = await services.storyblok.getFocuses(lang);
+	const focusesResult = await getFocusesAction(lang);
 	const focuses = (focusesResult.success ? focusesResult.data : []) as FocusStory[];
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();

@@ -1,5 +1,6 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { services } from '@/lib/services/services';
+import { getAuthenticatedRecipientFromRequest } from '@/modules/recipients/recipient.service';
+import { getSurveysByRecipientId } from '@/modules/surveys/survey.service';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
@@ -10,13 +11,13 @@ import { NextRequest, NextResponse } from 'next/server';
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {
-	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
+	const recipientResult = await getAuthenticatedRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
 	}
 
-	const surveysResult = await services.read.survey.getByRecipientId(recipientResult.data.id);
+	const surveysResult = await getSurveysByRecipientId(recipientResult.data.id);
 
 	if (!surveysResult.success) {
 		return new Response(surveysResult.error, { status: 500 });

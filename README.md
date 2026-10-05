@@ -38,6 +38,10 @@ The main Next.js application. It contains:
 - API routes: backend endpoints used by the website and the recipient mobile
   app.
 - Database layer: Prisma ORM with PostgreSQL.
+- Backend: a modular monolith under `website/src/modules`. Pages and route
+  handlers call module services and actions. Services call repositories
+  (Prisma) and integrations (external APIs). The module contract is in
+  `AGENTS.md`.
 - Infrastructure: Terraform configuration under `website/infra`.
 - Tests: unit tests and Playwright end-to-end tests.
 
@@ -119,7 +123,7 @@ mise dev
 This starts:
 
 - PostgreSQL in Docker
-- Firebase emulators for Auth and Firestore
+- Firebase emulators for Auth, Firestore, and Storage
 - Next.js at `http://localhost:3000`
 - Storybook at `http://localhost:6006`
 
@@ -166,6 +170,27 @@ This is create-only: it adds missing campaigns matched by Storyblok
 to include unlisted campaigns, or `npm run db:seed:cms-campaigns` for a dry-run.
 
 Requires `STORYBLOK_PREVIEW_TOKEN` in `.env.local` (see `.env.local.sample`).
+
+### 5. Forward Stripe Webhooks
+
+Stripe cannot call `localhost` directly. To test payment webhooks locally, install the Stripe CLI and forward events to the website:
+
+```bash
+brew install stripe/stripe-cli/stripe
+stripe login
+stripe listen --forward-to localhost:3000/api/v1/stripe/webhook \
+  --events charge.succeeded,charge.updated,charge.failed,customer.updated,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted
+```
+
+Copy the webhook signing secret printed by the CLI into `website/.env.local`:
+
+```bash
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+Restart `mise dev`, then make a test contribution. The CLI forwards those events to the local server.
+
+The production Stripe webhook endpoint needs the same events: `charge.succeeded`, `charge.updated`, `charge.failed`, `customer.updated`, `customer.subscription.created`, `customer.subscription.updated`, and `customer.subscription.deleted`.
 
 ## Local Login
 
@@ -469,8 +494,7 @@ We receive in-kind donations from
 [Mux](https://www.mux.com),
 [Sentry](https://sentry.io), and
 [Lineto](https://www.lineto.com). Our tools also use open-source technologies
-such as [FireCMS](https://firecms.co),
-[Storybook](https://storybook.js.org), and
+such as [Storybook](https://storybook.js.org) and
 [Tailwind CSS](https://tailwindcss.com).
 
 ## License

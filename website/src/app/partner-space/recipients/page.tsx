@@ -2,25 +2,27 @@ import { RecipientsTableClient } from '@/components/data-table/clients/recipient
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedLocalPartnerOrRedirect } from '@/lib/firebase/current-local-partner';
-import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import { services } from '@/lib/services/services';
 import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedRecipientTableViewByLocalPartnerId } from '@/modules/recipients/recipient.service';
+import type { RecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import { Suspense } from 'react';
 
-export default function RecipientsPage({ searchParams }: SearchParamsPageProps) {
+const RecipientsPage = ({ searchParams }: SearchParamsPageProps) => {
 	return (
 		<Suspense fallback={<AppLoadingSkeleton />}>
 			<RecipientsDataLoader searchParams={searchParams} />
 		</Suspense>
 	);
-}
+};
+
+export default RecipientsPage;
 
 const RecipientsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const partner = await getAuthenticatedLocalPartnerOrRedirect();
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await services.read.recipient.getPaginatedTableViewByLocalPartnerId(partner.id, tableQuery);
+	const result = await getPaginatedRecipientTableViewByLocalPartnerId(partner.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];

@@ -1,6 +1,6 @@
 'use client';
 
-import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
+import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
 import { ActiveCountryCards } from './active-country-cards';
 import { CountryTable } from './country-table';
 

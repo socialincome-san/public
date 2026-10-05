@@ -1,8 +1,8 @@
 import type { DefaultPageProps } from '@/app/[lang]/[region]';
 import { getCurrentSessions } from '@/lib/firebase/current-account';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { getRedirectPathAfterLoginAction } from '@/lib/server-actions/session-actions';
 import { getMetadata } from '@/lib/utils/metadata';
+import { getRedirectPathAfterLoginAction } from '@/modules/auth/auth.actions';
 import { redirect } from 'next/navigation';
 import { LoginPageContent } from './login-page-content';
 

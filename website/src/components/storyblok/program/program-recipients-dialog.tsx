@@ -4,8 +4,8 @@ import { Button } from '@/components/button/button';
 import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramRecipientsTable } from '@/components/storyblok/program/program-recipients-table';
 import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { getPublicRecipientsTableAction } from '@/lib/server-actions/program-detail-public-actions';
-import type { PublicRecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import { getPublicRecipientsTableAction } from '@/modules/recipients/recipient.actions';
+import type { PublicRecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 

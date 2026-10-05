@@ -1,5 +1,6 @@
 import { withAppCheck } from '@/lib/firebase/with-app-check';
-import { services } from '@/lib/services/services';
+import { getPayoutsByRecipientId } from '@/modules/payouts/payout.service';
+import { getAuthenticatedRecipientFromRequest } from '@/modules/recipients/recipient.service';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
@@ -10,13 +11,13 @@ import { NextRequest, NextResponse } from 'next/server';
  * @openapi
  */
 export const GET = withAppCheck(async (request: NextRequest) => {
-	const recipientResult = await services.read.recipient.getRecipientFromRequest(request);
+	const recipientResult = await getAuthenticatedRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
 	}
 
-	const payoutsResult = await services.read.payout.getByRecipientId(recipientResult.data.id);
+	const payoutsResult = await getPayoutsByRecipientId(recipientResult.data.id);
 
 	if (!payoutsResult.success) {
 		return new Response(payoutsResult.error, { status: 500 });

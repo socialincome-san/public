@@ -1,7 +1,7 @@
 import { PayoutProcessOverviewClient } from '@/app/portal/delivery/overview/payout-process-overview-client';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
+import { getPayoutProcessOverviewOptions } from '@/modules/mobile-money-providers/mobile-money-provider.service';
 import { Suspense } from 'react';
 
 export default function PayoutProcessOverviewPage() {
@@ -15,7 +15,7 @@ export default function PayoutProcessOverviewPage() {
 const PayoutProcessOverviewDataLoader = async () => {
 	await getAuthenticatedUserOrRedirect();
 
-	const result = await services.read.mobileMoneyProvider.getPayoutProcessOverviewOptions();
+	const result = await getPayoutProcessOverviewOptions();
 
 	return (
 		<PayoutProcessOverviewClient options={result.success ? result.data : []} error={result.success ? null : result.error} />
