@@ -4,7 +4,7 @@ import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-vi
 import { InflowsGauge } from '@/components/inflows/inflows-gauge';
 import type { InflowSegmentKey } from '@/components/inflows/inflows-segments';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 
 export type InflowsSectionSegment = {
 	key: InflowSegmentKey;

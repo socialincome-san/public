@@ -1,8 +1,8 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import type { RunwayMonthGrid as RunwayMonthGridBlok } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getRunwayMonthsAction } from '@/modules/transparency/transparency.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { RunwayMonthGrid } from '../runway-month-grid/runway-month-grid';
 

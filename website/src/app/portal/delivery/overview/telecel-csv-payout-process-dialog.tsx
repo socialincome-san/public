@@ -1,13 +1,13 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
 import { StepResultBox } from '@/components/step-result-box';
 import {
 	generateTelecelCurrentMonthPayoutsAction,
 	generateTelecelPayoutCsvAction,
 	previewTelecelCurrentMonthPayoutsAction,
 } from '@/modules/payout-processes/payout-process.actions';
+import { Button } from '@socialincome/design-system/button/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { format } from 'date-fns';
 import { EyeIcon, PlayIcon, TableIcon } from 'lucide-react';
 import { useState } from 'react';

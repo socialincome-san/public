@@ -1,11 +1,11 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { SuccessBanner } from '@/components/success-banner/success-banner';
 import type { Result } from '@/lib/result';
 import { CsvRow, parseCsvFile } from '@/lib/utils/csv';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
+import { Button } from '@socialincome/design-system/button/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { SuccessBanner } from '@socialincome/design-system/success-banner/success-banner';
 import { useState } from 'react';
 import { CsvDropzone } from './csv-dropzone';
 import { CsvPreviewTable } from './csv-preview-table';

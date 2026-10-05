@@ -1,4 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { CampaignsGridSection } from '@/components/campaign/campaigns-grid-section';
 import { resolveCampaignsWithCmsEntries } from '@/components/campaign/campaigns-overview.server';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
@@ -6,6 +5,7 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getAllCampaignsForCmsJoinWithStatsAction } from '@/modules/campaigns/campaign.actions';
 import { getCampaignsAction } from '@/modules/storyblok-content/storyblok-content.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 
 const TEASER_LIMIT = 3;
 

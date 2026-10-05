@@ -1,9 +1,9 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
+import { Button } from '@socialincome/design-system/button/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { Settings } from 'lucide-react';
 import { useState } from 'react';
 import { ProgramSettingsForm } from './program-settings-form';

@@ -1,7 +1,7 @@
 'use client';
 
-import { Badge } from '@/components/badge/badge';
 import { ContributionStatus } from '@/generated/prisma/enums';
+import { Badge } from '@socialincome/design-system/badge/badge';
 import { CheckIcon, HourglassIcon, UserXIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 

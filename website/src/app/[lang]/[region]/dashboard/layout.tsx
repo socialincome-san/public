@@ -1,9 +1,9 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
-import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { requireSessions } from '@/server/session';
+import { Card } from '@socialincome/design-system/card/card';
 import type { PropsWithChildren } from 'react';
 import { DefaultLayoutProps } from '..';
 

@@ -1,5 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Carousel, CarouselContent, CarouselItem, CarouselScrollNextButton } from '@/components/carousel';
 import { PersonCard } from '@/components/storyblok/shared/person-card';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
@@ -7,6 +5,13 @@ import {
 	getPersonsByCountryOfficeAction,
 	getPrimaryRoleLabelsAction,
 } from '@/modules/storyblok-content/storyblok-content.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselScrollNextButton,
+} from '@socialincome/design-system/carousel/carousel';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryTitle } from './country.utils';
 

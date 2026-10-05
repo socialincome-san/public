@@ -1,10 +1,10 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getJournalArticlesByUuidsAction, getLatestJournalArticlesAction } from '@/modules/journal/journal.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 const JOURNAL_TEASER_LIMIT = 3;

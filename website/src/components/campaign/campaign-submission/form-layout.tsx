@@ -1,7 +1,7 @@
 'use client';
 
-import { Card } from '@/components/card/card';
-import { cn } from '@/lib/utils/cn';
+import { Card } from '@socialincome/design-system/card/card';
+import { cn } from '@socialincome/design-system/cn';
 import type { ReactNode } from 'react';
 
 const formCardClassName = 'border-border rounded-xl border p-6 shadow-sm';

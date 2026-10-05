@@ -1,7 +1,7 @@
 'use client';
 
-import { RadioGroupItem } from '@/components/radio-group/radio-group';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
+import { RadioGroupItem } from '@socialincome/design-system/radio-group/radio-group';
 import { ReactNode } from 'react';
 
 type Props = {

@@ -1,8 +1,8 @@
 'use client';
 
-import { Badge } from '@/components/badge/badge';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/carousel';
 import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
+import { Badge } from '@socialincome/design-system/badge/badge';
+import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/carousel/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import { useMemo } from 'react';
 

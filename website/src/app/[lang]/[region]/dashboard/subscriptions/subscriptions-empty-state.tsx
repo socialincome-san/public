@@ -1,7 +1,7 @@
-import { Button } from '@/components/button/button';
 import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { formatCurrencyLocale, wholeCurrencyFormatOptions } from '@/lib/utils/string-utils';
 import { type ContributorContributionSummary } from '@/modules/contributions/contribution.types';
+import { Button } from '@socialincome/design-system/button/button';
 import Link from 'next/link';
 
 type Props = {

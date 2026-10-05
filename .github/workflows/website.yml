@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: website/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install Safe Chain (CI)
         run: |
@@ -32,7 +32,6 @@ jobs:
           echo "$HOME/.safe-chain/bin" >> $GITHUB_PATH
 
       - name: Install dependencies (protected by Safe Chain)
-        working-directory: website
         run: npm ci --no-audit --no-fund
 
   lint:
@@ -44,9 +43,8 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: website/package-lock.json
-      - working-directory: website
-        run: npm ci --no-audit --no-fund
+          cache-dependency-path: package-lock.json
+      - run: npm ci --no-audit --no-fund
       - working-directory: website
         run: npm run db:generate
       - working-directory: website
@@ -61,9 +59,8 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: website/package-lock.json
-      - working-directory: website
-        run: npm ci --no-audit --no-fund
+          cache-dependency-path: package-lock.json
+      - run: npm ci --no-audit --no-fund
       - working-directory: website
         run: npm run format:check
 
@@ -76,9 +73,8 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: website/package-lock.json
-      - working-directory: website
-        run: npm ci --no-audit --no-fund
+          cache-dependency-path: package-lock.json
+      - run: npm ci --no-audit --no-fund
       - working-directory: website
         run: npm run db:generate
       - working-directory: website
@@ -93,28 +89,12 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: website/package-lock.json
-      - working-directory: website
-        run: npm ci --no-audit --no-fund
+          cache-dependency-path: package-lock.json
+      - run: npm ci --no-audit --no-fund
       - working-directory: website
         run: npm run db:generate
       - working-directory: website
         run: npm run typecheck
-
-  storybook-build:
-    name: "📚 Storybook Build"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
-        with:
-          node-version: 24
-          cache: npm
-          cache-dependency-path: website/package-lock.json
-      - working-directory: website
-        run: npm ci --no-audit --no-fund
-      - working-directory: website
-        run: npm run build-storybook
 
   unit-test:
     name: "🧪 Unit Tests"
@@ -125,9 +105,8 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: website/package-lock.json
-      - working-directory: website
-        run: npm ci --no-audit --no-fund
+          cache-dependency-path: package-lock.json
+      - run: npm ci --no-audit --no-fund
       - working-directory: website
         run: npm run db:generate
       - working-directory: website
@@ -154,7 +133,6 @@ jobs:
       - format-check
       - check-unused
       - typecheck
-      - storybook-build
       - unit-test
       - terraform
 

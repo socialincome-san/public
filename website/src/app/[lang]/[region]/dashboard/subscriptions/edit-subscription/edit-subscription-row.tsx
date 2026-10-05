@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/button/button';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale, formatDateLocale, fractionalCurrencyFormatOptions } from '@/lib/utils/string-utils';
+import { Button } from '@socialincome/design-system/button/button';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/navigation';
 import { CoverSubscriptionTransactionCostsPrompt } from '../cover-subscription-transaction-costs-prompt';

@@ -1,12 +1,12 @@
 'use client';
 
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/carousel';
-import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { Testimonial } from '@/components/testimonial';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
-import { cn } from '@/lib/utils/cn';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@socialincome/design-system/carousel/carousel';
+import { cn } from '@socialincome/design-system/cn';
+import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import Autoplay from 'embla-carousel-autoplay';
 import { useEffect, useMemo, useRef, useState } from 'react';

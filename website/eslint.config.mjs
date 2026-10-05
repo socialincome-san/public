@@ -97,15 +97,7 @@ const moduleSyntaxRules = {
 
 export default [
 	{
-		ignores: [
-			'eslint.config.mjs',
-			'eslint-rules/**',
-			'prettier.config.cjs',
-			'public/storybook/**',
-			'src/generated/**',
-			'storybook-static/**',
-			'**/playwright-report/**',
-		],
+		ignores: ['eslint.config.mjs', 'eslint-rules/**', 'prettier.config.cjs', 'src/generated/**', '**/playwright-report/**'],
 	},
 	...smartiveNextConfig,
 	{

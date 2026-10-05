@@ -1,12 +1,12 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { expensesTableConfig } from '@/components/data-table/configs/expenses-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { ExpenseTableViewRow } from '@/modules/expenses/expense.types';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import ExpensesForm from './expenses-form';

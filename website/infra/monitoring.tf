@@ -215,6 +215,7 @@ resource "google_monitoring_alert_policy" "uptime_health" {
   for_each     = local.uptime_health_checks
   display_name = each.value.alert_name
   combiner     = "OR"
+  enabled      = local.prod_alerts_enabled
 
   documentation {
     subject   = each.value.alert_name

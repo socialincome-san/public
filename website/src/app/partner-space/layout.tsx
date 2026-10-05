@@ -1,9 +1,9 @@
 import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
-import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { defaultRegion } from '@/lib/i18n/utils';
 import { requireSessions } from '@/server/session';
+import { Card } from '@socialincome/design-system/card/card';
 import type { ReactNode } from 'react';
 
 export default async function PartnerSpaceLayout({ children }: { children: ReactNode }) {

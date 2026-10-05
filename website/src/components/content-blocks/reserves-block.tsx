@@ -1,4 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { ReservesTotal } from '@/components/reserves/reserves-total';
 import type { ReservesBlock as ReservesBlockBlok } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
@@ -6,6 +5,7 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getLatestReservesAction } from '@/modules/reserves/reserve.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 const FINANCIAL_INSTITUTIONS = [

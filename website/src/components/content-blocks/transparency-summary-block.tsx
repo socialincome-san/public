@@ -1,4 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { SummarySectionClient, type SummaryMetric } from '@/components/transparency/summary-section-client';
 import type { TransparencySummary } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
@@ -8,6 +7,7 @@ import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import type { DisplayAmount } from '@/modules/currency-display/currency-display.types';
 import { getTransparencySummaryAction } from '@/modules/transparency/transparency.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type ReserveAccount = {

@@ -1,6 +1,6 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { TwoColumnLayout } from '@/components/content-blocks/two-column-layout';
 import type { TwoColumn } from '@/generated/storyblok/types/109655/storyblok-components';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import type { ReactNode } from 'react';
 

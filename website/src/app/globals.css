@@ -1,9 +1,3 @@
-@import './styles/fonts.css';
-@import 'tailwindcss';
-@import 'tw-animate-css';
-@import './styles/theme.css';
+@import '@socialincome/design-system/styles.css';
+@source '../../../design-system/src';
 @import './styles/utilities.css';
-@import './styles/tokens.css';
-@import './styles/base.css';
-
-@plugin '@tailwindcss/typography';

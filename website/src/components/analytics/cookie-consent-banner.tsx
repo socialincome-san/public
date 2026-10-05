@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Card } from '@/components/card/card';
 import type { ConsentStatus } from '@/lib/firebase/client-analytics';
 import { useIsPage } from '@/lib/hooks/use-is-page';
+import { Button } from '@socialincome/design-system/button/button';
+import { Card } from '@socialincome/design-system/card/card';
 import { useEffect, useState } from 'react';
 
 type CookieConsentBannerProps = {

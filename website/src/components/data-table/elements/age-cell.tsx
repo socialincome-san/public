@@ -1,9 +1,9 @@
 'use client';
 
 import { type CellContext } from '@/components/data-table/tanstack-table';
-import { cn } from '@/lib/utils/cn';
 import { now } from '@/lib/utils/now';
 import { OBFUSCATED_SENTINEL } from '@/modules/recipients/recipient.types';
+import { cn } from '@socialincome/design-system/cn';
 import type { RowData } from '@tanstack/react-table';
 import { differenceInYears } from 'date-fns';
 

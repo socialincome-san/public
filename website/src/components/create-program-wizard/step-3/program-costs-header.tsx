@@ -1,10 +1,10 @@
 'use client';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
 import { CircleHelp } from 'lucide-react';
 
 type Props = {

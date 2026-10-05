@@ -1,5 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button/button';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import { InstagramIcon } from '@/components/svg/instagram';
 import { TiktokIcon } from '@/components/svg/tiktok';
@@ -10,8 +8,10 @@ import {
 	getDimensionsFromStoryblokImageUrl,
 	getScaledAssetDimensions,
 } from '@/lib/storyblok/storyblok-utils';
-import { cn } from '@/lib/utils/cn';
 import { isSafeHref } from '@/lib/utils/string-utils';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import { ExternalLink } from 'lucide-react';
 import NextImage from 'next/image';
 import type { CSSProperties, ReactNode } from 'react';

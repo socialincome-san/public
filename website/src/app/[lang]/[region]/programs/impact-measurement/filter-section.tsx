@@ -1,9 +1,9 @@
-import { type MultiSelectOption } from '@/components/multi-select/multi-select';
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { SurveyQuestionnaire } from '@/generated/prisma/client';
 import { getFocuses } from '@/modules/storyblok-content/storyblok-content.service';
 import { RECIPIENT_AGE_GROUPS } from '@/modules/surveys/survey-age-groups.types';
 import { getSurveyImpactFilterOptions } from '@/modules/surveys/survey.service';
+import { type MultiSelectOption } from '@socialincome/design-system/multi-select/multi-select';
 import { questionnaireLabelKeys } from './config';
 import { ImpactMeasurementFilters } from './filters';
 import { FILTER_PREFIX, ImpactFilterQueryParams } from './filters.constants';

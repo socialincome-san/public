@@ -1,5 +1,5 @@
-import { Button } from '@/components/button/button';
 import { NotFound } from '@/components/not-found';
+import { Button } from '@socialincome/design-system/button/button';
 import Link from 'next/link';
 
 export default function RootNotFound() {
