@@ -1,19 +1,15 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
-import { getSessionsOrRedirect } from '@/lib/firebase/current-account';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { redirect } from 'next/navigation';
+import { requireSessions } from '@/server/session';
 import type { PropsWithChildren } from 'react';
 import { DefaultLayoutProps } from '..';
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	const { lang } = await params;
-	const sessions = await getSessionsOrRedirect();
-	if (!sessions.find((s) => s.type === 'contributor')) {
-		redirect('/login');
-	}
+	await requireSessions('contributor');
 
 	const translator = await Translator.getInstance({ language: lang as WebsiteLanguage, namespaces: ['website-me'] });
 

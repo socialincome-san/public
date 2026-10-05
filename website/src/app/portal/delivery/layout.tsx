@@ -2,7 +2,7 @@ import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
-import { getSessionByType } from '@/lib/firebase/current-account';
+import { requireSession } from '@/server/session';
 
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
@@ -12,11 +12,8 @@ type MonitoringLayoutProps = {
 };
 
 export default async function DeliveryLayout({ children }: MonitoringLayoutProps) {
-	const userSessionResult = await getSessionByType('user');
-	if (!userSessionResult.success) {
-		redirect('/login');
-	}
-	if (!userSessionResult.data.hasAnyOperatorProgramAccess) {
+	const user = await requireSession('user');
+	if (!user.hasAnyOperatorProgramAccess) {
 		redirect('/portal/programs');
 	}
 

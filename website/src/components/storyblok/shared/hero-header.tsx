@@ -2,7 +2,7 @@ import { BlockWrapper } from '@/components/block-wrapper';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import NextImage from 'next/image';
 import type { ReactNode } from 'react';
 

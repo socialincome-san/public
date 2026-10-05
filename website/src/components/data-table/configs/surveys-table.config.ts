@@ -1,7 +1,7 @@
 import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
-import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
+import type { SurveyTableViewRow } from '@/modules/surveys/survey.types';
 
 type SurveyFiltersArgs = {
 	query?: TableQueryState & { totalRows: number };

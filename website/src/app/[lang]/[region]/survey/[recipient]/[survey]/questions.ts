@@ -1,6 +1,6 @@
 // Generic set of question pages and choices
 import { TranslateFunction } from '@/lib/i18n/translator';
-import { QUESTIONS, Question } from '@/lib/types/question';
+import { QUESTIONS, Question } from '@/modules/surveys/survey-questions.types';
 
 // Final question pages
 export const welcomePage = (t: TranslateFunction, name: string) => {

@@ -9,8 +9,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/dropdown-menu/dropdown-menu';
-import type { Session } from '@/lib/firebase/current-account';
-import type { UserSession } from '@/lib/services/user/user.types';
+import type { Session } from '@/modules/auth/auth.types';
+import type { UserSession } from '@/modules/users/user.types';
 import { ChevronDown, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { FC } from 'react';

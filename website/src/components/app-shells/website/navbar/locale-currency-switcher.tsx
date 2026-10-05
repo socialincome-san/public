@@ -5,9 +5,9 @@ import { CountryFlag } from '@/components/country-flag/country-flag';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
 import { Tabs, TabsList, TabsTrigger } from '@/components/tabs/tabs';
 import { type CountryCode } from '@/generated/prisma/enums';
-import { useIsPage } from '@/lib/hooks/useIsPage';
-import { useTranslator } from '@/lib/hooks/useTranslator';
-import { useI18n } from '@/lib/i18n/useI18n';
+import { useIsPage } from '@/lib/hooks/use-is-page';
+import { useI18n } from '@/lib/i18n/use-i18n';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import {
 	allWebsiteLanguages,
 	isWebsiteCurrency,

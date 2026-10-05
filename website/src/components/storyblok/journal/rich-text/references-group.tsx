@@ -2,7 +2,7 @@ import { ShowMoreToggle } from '@/components/show-more-toggle/show-more-toggle';
 import { StoryblokAssetThumbnail } from '@/components/storyblok/storyblok-asset-thumbnail';
 import type { ReferenceArticle, ReferencesGroup } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import { formatStoryblokDate } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokDate } from '@/lib/storyblok/storyblok-utils';
 import type { LanguageCode } from '@/lib/types/language';
 import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';

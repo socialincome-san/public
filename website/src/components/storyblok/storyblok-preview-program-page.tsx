@@ -4,7 +4,7 @@ import type { ProgramStory } from '@/components/storyblok/program/program.types'
 import { getProgramImages, getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 
 type Props = {
 	storyPath: string;
@@ -21,7 +21,7 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, pre
 		previewRoutePath,
 		searchParams,
 		loadStory: async (path, language) => {
-			const storyResult = await services.storyblok.getStoryWithFallback<ProgramStory>(path, language);
+			const storyResult = await getStoryWithFallbackAction<ProgramStory>({ storyPath: path, language });
 
 			return storyResult.success ? storyResult.data : null;
 		},

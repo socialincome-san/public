@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/button/button';
 import { Dialog, DialogContent } from '@/components/dialog';
-import type { TwilioTemplateDetail } from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
+import type { TwilioTemplateDetail } from '@/modules/messaging/messaging.types';
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 import { SendMessageWizard } from './send-message-wizard';

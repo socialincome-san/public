@@ -1,8 +1,8 @@
 'use client';
 
 import { TableCell, TableRow } from '@/components/table';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
 import Link from 'next/link';
 
 type Props = {

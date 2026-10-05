@@ -3,17 +3,17 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutStatus } from '@/generated/prisma/enums';
+import { handleResult } from '@/lib/result-client';
+import { allCurrencies } from '@/lib/types/currency';
 import {
 	createPayoutAction,
 	deletePayoutAction,
 	getPayoutAction,
 	getPayoutRecipientOptionsAction,
 	updatePayoutAction,
-} from '@/lib/server-actions/payout-actions';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import type { PayoutPayload } from '@/lib/services/payout/payout.types';
-import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
-import { allCurrencies } from '@/lib/types/currency';
+} from '@/modules/payouts/payout.actions';
+import type { PayoutPayload } from '@/modules/payouts/payout.types';
+import type { RecipientOption } from '@/modules/recipients/recipient.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreatePayoutInput, buildUpdatePayoutInput } from './payout-form-helpers';
@@ -90,7 +90,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 
 		startTransition(async () => {
 			const result = await getPayoutAction(payoutId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: (data) => {
 					setPayout(data);
 					setFormSchema((prev) => {
@@ -119,7 +119,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 	useEffect(() => {
 		startTransition(async () => {
 			const res = await getPayoutRecipientOptionsAction();
-			handleServiceResult(res, {
+			handleResult(res, {
 				onSuccess: (data) => {
 					const recipientEnum = getZodEnum(data.map((r: RecipientOption) => ({ id: r.id, label: r.fullName })));
 
@@ -145,7 +145,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 				payoutId && payout
 					? await updatePayoutAction(buildUpdatePayoutInput(schema, payout))
 					: await createPayoutAction(buildCreatePayoutInput(schema));
-			handleServiceResult(res, {
+			handleResult(res, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -157,7 +157,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 			? () => {
 					startTransition(async () => {
 						const res = await deletePayoutAction(payoutId);
-						handleServiceResult(res, {
+						handleResult(res, {
 							onSuccess: () => onSuccess?.(),
 							onError: (error) => onError?.(error),
 						});

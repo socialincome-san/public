@@ -5,8 +5,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Input } from '@/components/input/input';
 import { Label } from '@/components/label';
 import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
-import { useAuth } from '@/lib/firebase/hooks/useAuth';
-import { useTranslator } from '@/lib/hooks/useTranslator';
+import { useAuth } from '@/lib/firebase/hooks/use-auth';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';

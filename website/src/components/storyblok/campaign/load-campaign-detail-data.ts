@@ -1,10 +1,11 @@
 import type { CampaignDetailData } from '@/components/storyblok/campaign/campaign.types';
 import { getCampaignPortalSlug, getCampaignTitle } from '@/components/storyblok/campaign/campaign.utils';
-import { services } from '@/lib/services/services';
+import { getCampaignByPortalSlugAction } from '@/modules/campaigns/campaign.actions';
+import { getCampaignBySlugAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { cache } from 'react';
 
 export const loadCampaignDetailData = cache(async (urlSlug: string, lang: string): Promise<CampaignDetailData | null> => {
-	const storyResult = await services.storyblok.getCampaignBySlug(urlSlug, lang);
+	const storyResult = await getCampaignBySlugAction({ slug: urlSlug, language: lang });
 	if (!storyResult.success) {
 		return null;
 	}
@@ -15,7 +16,7 @@ export const loadCampaignDetailData = cache(async (urlSlug: string, lang: string
 		return null;
 	}
 
-	const campaignResult = await services.read.campaign.getByPortalSlug(portalSlug);
+	const campaignResult = await getCampaignByPortalSlugAction(portalSlug);
 	if (!campaignResult.success || !campaignResult.data) {
 		return null;
 	}

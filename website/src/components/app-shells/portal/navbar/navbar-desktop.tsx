@@ -4,8 +4,8 @@ import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-
 import { ProgramDropdown } from '@/components/app-shells/portal/navbar/program-dropdown';
 import { UserMenu } from '@/components/app-shells/portal/navbar/user-menu';
 import { SILogo } from '@/components/svg/si-logo';
-import type { Session } from '@/lib/firebase/current-account';
-import type { UserSession } from '@/lib/services/user/user.types';
+import type { Session } from '@/modules/auth/auth.types';
+import type { UserSession } from '@/modules/users/user.types';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';

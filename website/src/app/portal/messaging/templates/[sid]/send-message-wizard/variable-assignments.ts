@@ -1,7 +1,4 @@
-import type {
-	Assignment,
-	VariableAssignments,
-} from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
+import type { Assignment, VariableAssignments } from '@/modules/messaging/messaging.types';
 
 export const emptyAssignments = (): VariableAssignments => ({});
 

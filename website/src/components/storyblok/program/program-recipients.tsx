@@ -1,8 +1,8 @@
 import { ProgramRecipientsDialog } from '@/components/storyblok/program/program-recipients-dialog';
-import { getCurrentUser } from '@/lib/firebase/current-user';
 import type { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
+import { getCurrentUserAction } from '@/modules/auth/auth.actions';
 
 type Props = {
 	count: number;
@@ -13,8 +13,8 @@ type Props = {
 
 export const ProgramRecipients = async ({ count, programId, translator, lang }: Props) => {
 	const locale = getSafeNumberFormatLocale(lang);
-	const user = await getCurrentUser();
-	const isLoggedIn = user !== null;
+	const userResult = await getCurrentUserAction();
+	const isLoggedIn = userResult.success && userResult.data !== null;
 
 	return (
 		<div className="bg-card flex h-full flex-col items-start gap-8 rounded-xl p-4 shadow-lg lg:p-6">

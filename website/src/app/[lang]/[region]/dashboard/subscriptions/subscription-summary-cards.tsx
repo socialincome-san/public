@@ -1,12 +1,12 @@
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
-import { type ContributorContributionSummary } from '@/lib/services/contribution/contribution.types';
-import { type MonthlyContributionSummary } from '@/lib/services/subscription/subscription.types';
 import {
 	formatCurrencyLocale,
 	formatDateLocale,
 	fractionalCurrencyFormatOptions,
 	wholeCurrencyFormatOptions,
 } from '@/lib/utils/string-utils';
+import { type ContributorContributionSummary } from '@/modules/contributions/contribution.types';
+import { type MonthlyContributionSummary } from '@/modules/subscriptions/subscription.types';
 
 type Props = {
 	lang: WebsiteLanguage;

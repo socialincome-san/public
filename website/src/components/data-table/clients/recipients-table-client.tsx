@@ -4,11 +4,11 @@ import { ConfiguredDataTableClient } from '@/components/data-table/clients/confi
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import { getRecipientsTableFilters, recipientsTableConfig } from '@/components/data-table/configs/recipients-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
-import type { Session } from '@/lib/firebase/current-account';
 import type { Translator } from '@/lib/i18n/translator';
-import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/lib/server-actions/recipient-actions';
-import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
+import type { Session } from '@/modules/auth/auth.types';
+import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/modules/recipients/recipient.actions';
+import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
 import { useState } from 'react';
 import type { ActionMenuItem } from '../elements/action-menu';

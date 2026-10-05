@@ -1,6 +1,6 @@
 import { makeMobileMoneyProviderColumns } from '@/components/data-table/columns/mobile-money-providers';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
-import type { MobileMoneyProviderTableViewRow } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
+import type { MobileMoneyProviderTableViewRow } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 
 export const mobileMoneyProvidersTableConfig: DataTableConfig<MobileMoneyProviderTableViewRow> = {
 	id: 'admin-mobile-money-providers',
