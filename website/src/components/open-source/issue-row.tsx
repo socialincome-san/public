@@ -1,6 +1,6 @@
 import { buttonVariants } from '@/components/button/button';
-import type { GithubIssue } from '@/lib/services/github-api/github-api.types';
 import { cn } from '@/lib/utils/cn';
+import type { GithubIssue } from '@/modules/github/github.types';
 import Link from 'next/link';
 
 type Props = Pick<GithubIssue, 'title' | 'url'> & {

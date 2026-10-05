@@ -1,8 +1,8 @@
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import { APPLY_PAYMENT_METHOD_QUERY_PARAM } from '@/lib/services/stripe/stripe.types';
+import { applyCustomerDefaultPaymentMethodToOwnedSubscription } from '@/modules/stripe-payments/stripe-payment.service';
+import { APPLY_PAYMENT_METHOD_QUERY_PARAM } from '@/modules/stripe-payments/stripe-payment.types';
+import { requireSession } from '@/server/session';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { type DefaultPageProps } from '../..';
@@ -14,8 +14,8 @@ export default async function Page({ params, searchParams }: DefaultPageProps) {
 	const applyPaymentMethodSubscriptionId = query[APPLY_PAYMENT_METHOD_QUERY_PARAM];
 
 	if (applyPaymentMethodSubscriptionId) {
-		const contributor = await getAuthenticatedContributorOrRedirect();
-		const result = await services.stripe.applyCustomerDefaultPaymentMethodToOwnedSubscription({
+		const contributor = await requireSession('contributor');
+		const result = await applyCustomerDefaultPaymentMethodToOwnedSubscription({
 			contributorId: contributor.id,
 			stripeCustomerId: contributor.stripeCustomerId,
 			subscriptionId: applyPaymentMethodSubscriptionId,

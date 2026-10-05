@@ -3,7 +3,7 @@
 import { Badge } from '@/components/badge/badge';
 import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
 import { Profile } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { cn } from '@/lib/utils/cn';
 import { Loader2 } from 'lucide-react';
 import { RadioCard } from '../radio-card';

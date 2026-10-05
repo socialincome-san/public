@@ -1,6 +1,6 @@
 import { makeLocalPartnerColumns } from '@/components/data-table/columns/local-partners';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
-import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
+import type { LocalPartnerTableViewRow } from '@/modules/local-partners/local-partner.types';
 
 export const localPartnersTableConfig: DataTableConfig<LocalPartnerTableViewRow> = {
 	id: 'admin-local-partners',

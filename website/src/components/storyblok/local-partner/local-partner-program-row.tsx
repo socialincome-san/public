@@ -1,5 +1,5 @@
-import type { LocalPartnerProgramSummary } from '@/lib/storyblok/local-partner-programs';
 import { cn } from '@/lib/utils/cn';
+import type { LocalPartnerProgramSummary } from '@/modules/local-partners/local-partner.types';
 import { ChevronRight } from 'lucide-react';
 import NextLink from 'next/link';
 

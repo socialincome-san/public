@@ -1,6 +1,6 @@
 'use client';
 
-import type { Session } from '@/lib/firebase/current-account';
+import type { Session } from '@/modules/auth/auth.types';
 import { NavbarDesktop } from './navbar-desktop';
 import { NavbarMobile } from './navbar-mobile';
 

@@ -1,3 +1,4 @@
+import type { AnySearchParams } from '@/app/page-props';
 import { BlockWrapper } from '@/components/block-wrapper';
 import { FilterBar } from '@/components/filters/filter-bar';
 import { LocalPartnersGrid } from '@/components/storyblok/local-partner/local-partners-grid';
@@ -5,7 +6,6 @@ import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/l
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { AnySearchParams } from '@/lib/types/page-props';
 import type { LocalPartnerStory } from './local-partner.types';
 import { LocalPartnersOverviewCountryFilter } from './local-partners-overview-country-filter';
 import { LocalPartnersOverviewSearch } from './local-partners-overview-search';

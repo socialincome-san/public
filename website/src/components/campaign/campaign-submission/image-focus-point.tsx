@@ -1,8 +1,8 @@
 'use client';
 
+import { clickToStoryblokFocus, focusToMarkerPosition, focusToObjectPosition } from '@/lib/storyblok/storyblok-image-focus';
 import { cn } from '@/lib/utils/cn';
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
-import { clickToStoryblokFocus, focusToMarkerPosition, focusToObjectPosition } from './storyblok-image-focus';
 
 type ImageFocusPointProps = {
 	previewUrl: string;

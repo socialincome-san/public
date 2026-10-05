@@ -1,8 +1,8 @@
 'use client';
 
-import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
 import { isValidCountryCode } from '@/lib/types/country';
 import { getCountryCentroid } from '@/lib/types/country-centroids';
+import type { GlobeContribution } from '@/modules/contributions/contribution.types';
 import { useEffect, useRef, type RefObject } from 'react';
 import { MAX_BADGE_SLOTS, type GlobeRendererHandle } from './globe-renderer';
 

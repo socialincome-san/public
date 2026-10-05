@@ -1,5 +1,5 @@
-import { pathsForStory } from '@/lib/services/storyblok/revalidation';
-import { verifyStoryblokWebhookSignature } from '@/lib/services/storyblok/storyblok-webhook-signature';
+import { pathsForStory } from '@/lib/storyblok/storyblok-revalidation';
+import { verifyStoryblokWebhook } from '@/modules/storyblok-content/storyblok-content.service';
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -20,7 +20,8 @@ export const POST = async (request: NextRequest) => {
 	const rawBody = await request.text();
 	const signature = request.headers.get('webhook-signature');
 
-	if (!verifyStoryblokWebhookSignature(rawBody, signature, process.env.STORYBLOK_WEBHOOK_SECRET)) {
+	const verification = verifyStoryblokWebhook(rawBody, signature);
+	if (!verification.success) {
 		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 	}
 

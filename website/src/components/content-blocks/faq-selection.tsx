@@ -5,7 +5,7 @@ import { FaqSelectionContent } from '@/components/content-blocks/faq-selection-c
 import { resolveFaqItems } from '@/components/content-blocks/faq-selection.utils';
 import type { FaqSelection } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
+import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {

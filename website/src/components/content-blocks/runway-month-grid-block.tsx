@@ -2,8 +2,7 @@ import { BlockWrapper } from '@/components/block-wrapper';
 import type { RunwayMonthGrid as RunwayMonthGridBlok } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import { isRunwayInLineWithZewo } from '@/lib/services/transparency/transparency.types';
+import { getRunwayMonthsAction } from '@/modules/transparency/transparency.actions';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { RunwayMonthGrid } from '../runway-month-grid/runway-month-grid';
 
@@ -16,7 +15,7 @@ export const RunwayMonthGridBlock = async ({ blok, lang }: Props) => {
 	const language = lang === 'kri' ? 'en' : lang;
 	const [translator, runwayResult] = await Promise.all([
 		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
-		services.transparency.getRunwayMonths(),
+		getRunwayMonthsAction(),
 	]);
 	if (!runwayResult.success) {
 		return null;
@@ -47,3 +46,5 @@ export const RunwayMonthGridBlock = async ({ blok, lang }: Props) => {
 		</BlockWrapper>
 	);
 };
+
+const isRunwayInLineWithZewo = (months: number): boolean => months >= 3 && months <= 18;

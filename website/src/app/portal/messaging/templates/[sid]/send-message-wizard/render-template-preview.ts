@@ -1,7 +1,4 @@
-import type {
-	ParsedVariable,
-	VariableAssignments,
-} from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
+import type { ParsedVariable, VariableAssignments } from '@/modules/messaging/messaging.types';
 
 const VARIABLE_REGEX = /\{\{\s*([^}\s]+)\s*\}\}/g;
 

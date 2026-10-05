@@ -3,7 +3,7 @@
 import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
 import { StepResultBox } from '@/components/step-result-box';
-import { generateSurveysAction, previewSurveyGenerationAction } from '@/lib/server-actions/survey-actions';
+import { generateSurveysAction, previewSurveyGenerationAction } from '@/modules/surveys/survey.actions';
 import { EyeIcon, PlayIcon } from 'lucide-react';
 import { useState } from 'react';
 

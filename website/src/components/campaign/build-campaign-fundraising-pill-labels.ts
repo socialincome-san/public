@@ -3,8 +3,8 @@ import {
 	type FundraisingPillMessage,
 } from '@/components/campaign/get-campaign-fundraising-pill-messages';
 import type { Translator } from '@/lib/i18n/translator';
-import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
+import type { CampaignPage } from '@/modules/campaigns/campaign.types';
 
 const buildFundraisingPillLabel = (message: FundraisingPillMessage, translator: Translator, locale: string): string => {
 	switch (message.type) {

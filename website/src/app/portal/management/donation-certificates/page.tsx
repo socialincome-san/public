@@ -1,9 +1,9 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import type { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
-import { services } from '@/lib/services/services';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedDonationCertificates } from '@/modules/donation-certificates/donation-certificate.service';
+import type { DonationCertificateTableViewRow } from '@/modules/donation-certificates/donation-certificate.types';
+import { requireSession } from '@/server/session';
 import { Suspense } from 'react';
 import { DonationCertificateTable } from './donation-certificates-table';
 
@@ -16,11 +16,11 @@ export default function DonationCertificatesPage({ searchParams }: SearchParamsP
 }
 
 const DonationCertificatesDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const certificatesResult = await services.read.donationCertificate.getPaginatedTableView(user.id, tableQuery);
+	const certificatesResult = await getPaginatedDonationCertificates(user.id, tableQuery);
 
 	const error = certificatesResult.success ? null : certificatesResult.error;
 	const certificateRows: DonationCertificateTableViewRow[] = certificatesResult.success

@@ -1,12 +1,8 @@
 import { type Currency } from '@/generated/prisma/client';
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
-import { cancelSubscriptionAction, updateSubscriptionAmountAction } from '@/lib/server-actions/subscription-actions';
-import {
-	canUpdateSubscriptionAmount,
-	clampSubscriptionAmount,
-	isSubscriptionAmountInRange,
-} from '@/lib/services/subscription/subscription-amount';
+import { cancelSubscriptionAction, updateSubscriptionAmountAction } from '@/modules/subscriptions/subscription.actions';
 import { assign, fromPromise, setup } from 'xstate';
+import { canUpdateSubscriptionAmount, clampSubscriptionAmount, isSubscriptionAmountInRange } from '../subscription-amount';
 
 export type EditSubscriptionPaymentMethod = 'stripe' | 'bank_transfer';
 
@@ -54,7 +50,9 @@ export const editSubscriptionMachine = setup({
 	actors: {
 		updateAmount: fromPromise(
 			async ({ input }: { input: { subscriptionId: string; amount: number; coverTransactionCosts?: boolean } }) => {
-				const result = await updateSubscriptionAmountAction(input.subscriptionId, input.amount, {
+				const result = await updateSubscriptionAmountAction({
+					subscriptionId: input.subscriptionId,
+					amount: input.amount,
 					coverTransactionCosts: input.coverTransactionCosts,
 				});
 				if (!result.success) {
@@ -66,7 +64,10 @@ export const editSubscriptionMachine = setup({
 		),
 		cancelSubscription: fromPromise(
 			async ({ input }: { input: { subscriptionId: string; reason: SubscriptionCancellationReason } }) => {
-				const result = await cancelSubscriptionAction(input.subscriptionId, input.reason);
+				const result = await cancelSubscriptionAction({
+					subscriptionId: input.subscriptionId,
+					reason: input.reason,
+				});
 				if (!result.success) {
 					throw new Error(result.error);
 				}

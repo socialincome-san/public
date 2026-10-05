@@ -3,7 +3,7 @@
 import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
 import { DonationCurrencySelector } from '@/components/donation/currency-selector';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';
 import { cn } from '@/lib/utils/cn';
 import { useMachine } from '@xstate/react';

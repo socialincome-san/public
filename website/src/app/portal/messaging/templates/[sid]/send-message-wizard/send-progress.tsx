@@ -1,8 +1,8 @@
 'use client';
 
 import type { MessagingChannel } from '@/generated/prisma/client';
-import type { MessagingJobStatusView } from '@/lib/services/twilio/messaging/dispatch/dispatch.types';
 import { cn } from '@/lib/utils/cn';
+import type { MessagingJobStatusView } from '@/modules/messaging/messaging.types';
 import { Loader2 } from 'lucide-react';
 import type { SendPhase } from './use-messaging-send';
 

@@ -1,7 +1,7 @@
 import { PersonCard, type VolunteerDurationTranslations } from '@/components/storyblok/shared/person-card';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { createWebsitePersonLink } from '@/lib/services/storyblok/storyblok.utils';
+import { createWebsitePersonLink } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
 import type { ISbStoryData } from '@storyblok/js';
 

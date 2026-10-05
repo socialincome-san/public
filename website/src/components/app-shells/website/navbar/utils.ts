@@ -1,5 +1,5 @@
 import type { DropdownItem, Layout, MenuItem } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { Session } from '@/lib/firebase/current-account';
+import type { Session } from '@/modules/auth/auth.types';
 
 export type Scope = 'website' | 'dashboard' | 'partner-space';
 

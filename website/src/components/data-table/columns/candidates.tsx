@@ -9,7 +9,7 @@ import { SortableHeader } from '@/components/data-table/elements/sortable-header
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { Translator } from '@/lib/i18n/translator';
-import { CandidatesTableViewRow } from '@/lib/services/candidate/candidate.types';
+import type { CandidatesTableViewRow } from '@/modules/candidates/candidate.types';
 
 export const makeCandidateColumns = (
 	hideProgramName = false,

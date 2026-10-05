@@ -1,8 +1,8 @@
 import { Progress } from '@/components/progress/progress';
 import type { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
-import type { ProgramFinancesDisplayAmounts } from '@/lib/services/program-stats/program-stats.types';
 import { formatCompactNumberLocale } from '@/lib/utils/string-utils';
+import type { ProgramFinancesDisplayAmounts } from '@/modules/programs/program.types';
 
 type Props = {
 	displayAmounts: ProgramFinancesDisplayAmounts;
