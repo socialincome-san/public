@@ -3,7 +3,7 @@ import { CardAlertFooter, type CardAlertFooterVariant } from '@/components/card-
 import { CountryFlag } from '@/components/country-flag/country-flag';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { cn } from '@/lib/utils/cn';
 import NextImage from 'next/image';

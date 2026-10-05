@@ -1,7 +1,7 @@
 import { makeUpcomingOnboardingColumns } from '@/components/data-table/columns/upcoming-onboarding';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
-import type { RecipientProgramFilterOption, UpcomingOnboardingTableViewRow } from '@/lib/services/recipient/recipient.types';
+import type { RecipientProgramFilterOption, UpcomingOnboardingTableViewRow } from '@/modules/recipients/recipient.types';
 
 type UpcomingOnboardingFilterArgs = {
 	query?: TableQueryState & { totalRows: number };

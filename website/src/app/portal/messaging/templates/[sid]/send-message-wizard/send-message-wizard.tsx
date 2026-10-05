@@ -2,20 +2,18 @@
 
 import { DialogTitle } from '@/components/dialog';
 import type { MessagingChannel } from '@/generated/prisma/client';
-import type { ChannelPreviewSummary } from '@/lib/services/twilio/messaging/dispatch/dispatch.types';
+import { cn } from '@/lib/utils/cn';
 import type {
+	ChannelPreviewSummary,
 	MessagingPhoneSource,
 	MessagingRecipientType,
-} from '@/lib/services/twilio/messaging/recipients/recipients.types';
-import { emptySelection } from '@/lib/services/twilio/messaging/recipients/selection';
-import type { SelectionState } from '@/lib/services/twilio/messaging/recipients/selection.types';
-import type {
+	SelectionState,
 	TwilioTemplateDetail,
 	VariableAssignments,
-} from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
-import { cn } from '@/lib/utils/cn';
+} from '@/modules/messaging/messaging.types';
 import { useEffect, useState } from 'react';
 import type { RecipientsTableQuery } from './recipients-table';
+import { emptySelection } from './selection';
 import { SendProgress } from './send-progress';
 import { Step1RecipientType } from './step-1-recipient-type';
 import { Step2Recipients } from './step-2-recipients';

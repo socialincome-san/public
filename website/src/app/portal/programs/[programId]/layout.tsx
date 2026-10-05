@@ -3,8 +3,8 @@ import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
 import { ProgramPermission } from '@/generated/prisma/enums';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
+import { getProgramWallet } from '@/modules/programs/program.service';
+import { requireSession } from '@/server/session';
 import { ReactNode } from 'react';
 import { ProgramSettingsDialog } from './components/program-settings-dialog';
 
@@ -15,9 +15,9 @@ type ProgramLayoutProps = {
 
 export default async function ProgramLayout({ children, params }: ProgramLayoutProps) {
 	const { programId } = await params;
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 
-	const result = await services.read.program.getProgramWalletsProgramScoped(user.id, programId);
+	const result = await getProgramWallet(user.id, programId);
 
 	if (!result.success) {
 		return <div className="p-4">Error loading the program</div>;

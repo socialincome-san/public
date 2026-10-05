@@ -3,20 +3,20 @@
 import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
 import { StepResultBox } from '@/components/step-result-box';
+import { slugify } from '@/lib/utils/string-utils';
 import {
 	generateOrangeCurrentMonthPayoutsAction,
 	generateOrangePayoutCsvAction,
 	generateOrangeRegistrationCsvAction,
 	previewOrangeCurrentMonthPayoutsAction,
-} from '@/lib/server-actions/payout-process-actions';
-import type { ServiceResult } from '@/lib/services/core/base.types';
-import { slugify } from '@/lib/utils/string-utils';
+} from '@/modules/payout-processes/payout-process.actions';
 import { format } from 'date-fns';
 import { EyeIcon, PlayIcon, TableIcon } from 'lucide-react';
 import { useState } from 'react';
 import type { OrangeMoneyCsvPayoutProcessDialogProps } from './payout-process-dialog-props';
 
-type StepResult = string | object | string[] | null;
+type StepResult = string | object | null;
+type StepActionResult = { success: true; data: StepResult } | { success: false; error: string };
 
 export const OrangeMoneyCsvPayoutProcessDialog = ({
 	mobileMoneyProviderId,
@@ -34,14 +34,14 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 		setResults((previous) => ({ ...previous, [step]: value }));
 	};
 
-	const run = async (action: () => Promise<ServiceResult<unknown>>, step: number) => {
+	const run = async (action: () => Promise<StepActionResult>, step: number) => {
 		const result = await action();
 		if (!result.success) {
 			setResult(step, result.error);
 
 			return;
 		}
-		setResult(step, (result.data as StepResult) ?? 'Done');
+		setResult(step, result.data ?? 'Done');
 	};
 
 	const steps = [
@@ -52,7 +52,7 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 			description: 'Shows the CSV for recipients in programs ready for payouts (others are excluded) — no changes yet.',
 			icon: <TableIcon className="h-4 w-4" />,
 			variant: 'outline' as const,
-			run: () => run(() => generateOrangeRegistrationCsvAction(mobileMoneyProviderId), 1),
+			run: () => run(() => generateOrangeRegistrationCsvAction({ mobileMoneyProviderId }), 1),
 			filename: `registration-${providerSlug}-${monthKey}.csv`,
 		},
 		{
@@ -62,7 +62,7 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 			description: `Shows the payout CSV for ${selectedMonthLabel} — no changes yet.`,
 			icon: <TableIcon className="h-4 w-4" />,
 			variant: 'outline' as const,
-			run: () => run(() => generateOrangePayoutCsvAction(mobileMoneyProviderId, selectedDate), 2),
+			run: () => run(() => generateOrangePayoutCsvAction({ mobileMoneyProviderId, selectedDate }), 2),
 			filename: `payouts-${providerSlug}-${monthKey}.csv`,
 		},
 		{
@@ -72,7 +72,7 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 			description: `Previews payouts for ${selectedMonthLabel} (excluding any already paid this month) — nothing written yet.`,
 			icon: <EyeIcon className="h-4 w-4" />,
 			variant: 'outline' as const,
-			run: () => run(() => previewOrangeCurrentMonthPayoutsAction(mobileMoneyProviderId, selectedDate), 3),
+			run: () => run(() => previewOrangeCurrentMonthPayoutsAction({ mobileMoneyProviderId, selectedDate }), 3),
 			filename: `preview-payouts-${providerSlug}-${monthKey}.json`,
 		},
 		{
@@ -81,7 +81,7 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 			label: 'Generate payouts (apply changes)',
 			description: `Creates payouts in the database for ${selectedMonthLabel}.`,
 			icon: <PlayIcon className="h-4 w-4" />,
-			run: () => run(() => generateOrangeCurrentMonthPayoutsAction(mobileMoneyProviderId, selectedDate), 4),
+			run: () => run(() => generateOrangeCurrentMonthPayoutsAction({ mobileMoneyProviderId, selectedDate }), 4),
 			filename: `generated-payouts-${providerSlug}-${monthKey}.json`,
 		},
 	];

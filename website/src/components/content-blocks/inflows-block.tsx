@@ -6,8 +6,9 @@ import type { Inflows as InflowsBlok } from '@/generated/storyblok/types/109655/
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
+import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
+import { getTransparencySummaryAction } from '@/modules/transparency/transparency.actions';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
@@ -17,9 +18,8 @@ type Props = {
 
 export const InflowsBlock = async ({ blok, lang }: Props) => {
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const [dataResult, rates, translator] = await Promise.all([
-		services.transparency.getTransparencySummary(),
-		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
+	const [dataResult, translator] = await Promise.all([
+		getTransparencySummaryAction(),
 		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
 	]);
 
@@ -34,10 +34,17 @@ export const InflowsBlock = async ({ blok, lang }: Props) => {
 		parseChfAmount(blok.corporatePartnerInflows),
 	);
 
-	const totalInflows = services.currencyDisplay.resolveFromChf(totalInflowsChf, displayCurrency, rates);
-	const individuals = services.currencyDisplay.resolveFromChf(amountsChf.individuals, displayCurrency, rates);
-	const foundations = services.currencyDisplay.resolveFromChf(amountsChf.foundations, displayCurrency, rates);
-	const corporate = services.currencyDisplay.resolveFromChf(amountsChf.corporate, displayCurrency, rates);
+	const displayResult = await resolveChfAmountsAction({
+		amounts: [totalInflowsChf, amountsChf.individuals, amountsChf.foundations, amountsChf.corporate],
+		displayCurrency,
+	});
+	if (!displayResult.success) {
+		return null;
+	}
+	const [totalInflows, individuals, foundations, corporate] = displayResult.data;
+	if (!totalInflows || !individuals || !foundations || !corporate) {
+		return null;
+	}
 
 	const computedSegments = buildInflowSegments({
 		individuals: individuals.amount,

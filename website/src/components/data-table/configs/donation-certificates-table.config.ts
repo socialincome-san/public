@@ -1,6 +1,6 @@
 import { makeDonationCertificateColumns } from '@/components/data-table/columns/donation-certificates';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
-import type { DonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
+import type { DonationCertificateTableViewRow } from '@/modules/donation-certificates/donation-certificate.types';
 
 export const donationCertificatesTableConfig: DataTableConfig<DonationCertificateTableViewRow> = {
 	id: 'donation-certificates',

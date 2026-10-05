@@ -1,7 +1,7 @@
 'use client';
 
 import { Label } from '@/components/label';
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
+import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { cn } from '@/lib/utils/cn';
 import { Camera, Trash2, Upload } from 'lucide-react';
 import { useEffect, useId, useRef, type RefObject } from 'react';

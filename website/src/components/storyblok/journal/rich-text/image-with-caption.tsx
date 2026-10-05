@@ -1,5 +1,5 @@
 import type { ImageWithCaption as ImageWithCaptionBlok } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getDimensionsFromStoryblokImageUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { getDimensionsFromStoryblokImageUrl } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
 import Image from 'next/image';
 

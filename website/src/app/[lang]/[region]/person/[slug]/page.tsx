@@ -1,7 +1,7 @@
 import { PersonProfile } from '@/components/storyblok/journal/person-profile';
 import { Translator } from '@/lib/i18n/translator';
-import { services } from '@/lib/services/services';
 import { LanguageCode } from '@/lib/types/language';
+import { getJournalPersonPageData } from '@/modules/journal/journal.service';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
@@ -14,13 +14,13 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 		namespaces: ['website-journal', 'common', 'website-common'],
 	});
 
-	const pageResult = await services.journal.getPersonPageData(
+	const pageResult = await getJournalPersonPageData({
 		lang,
 		region,
 		slug,
-		translator.t('overview.title'),
-		translator.t('breadcrumb.home', { namespace: 'website-common' }),
-	);
+		journalLabel: translator.t('overview.title'),
+		homeLabel: translator.t('breadcrumb.home', { namespace: 'website-common' }),
+	});
 
 	if (!pageResult.success) {
 		notFound();

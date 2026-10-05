@@ -1,7 +1,7 @@
 'use client';
 
 import { Currency, PayoutInterval } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { PayoutBox } from './payout-box';
 import { ProgramCostsHeader } from './program-costs-header';
 import { RecipientsBox } from './recipients-box';

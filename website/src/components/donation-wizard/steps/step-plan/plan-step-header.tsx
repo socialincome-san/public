@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import type { Cadence } from '../../utils/donation-amount';
 import { donationStepTitleRowClass } from '../../utils/donation-wizard-layout';
 import type { DonationWizardSend } from '../../wizard/types';

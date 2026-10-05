@@ -5,15 +5,11 @@ import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
+import { getCurrentProgramWalletsAction } from '@/modules/programs/program.actions';
 
-type Props = {
-	userId: string;
-};
-
-export const UserPrograms = async ({ userId }: Props) => {
-	const result = await services.read.program.getProgramWallets(userId);
+export const UserPrograms = async () => {
+	const result = await getCurrentProgramWalletsAction();
 	const translator = await Translator.getInstance({ language: defaultLanguage, namespaces: ['website-common'] });
 
 	if (!result.success) {

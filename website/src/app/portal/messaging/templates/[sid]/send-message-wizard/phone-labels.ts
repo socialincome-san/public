@@ -1,7 +1,4 @@
-import type {
-	MessagingPhoneSource,
-	MessagingRecipientType,
-} from '@/lib/services/twilio/messaging/recipients/recipients.types';
+import type { MessagingPhoneSource, MessagingRecipientType } from '@/modules/messaging/messaging.types';
 
 const PHONE_WORDS: Record<MessagingPhoneSource, string> = { contact: 'contact phone', payment: 'payment phone' };
 

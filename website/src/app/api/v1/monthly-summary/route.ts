@@ -1,6 +1,7 @@
-import { MonthlySummaryEmailTemplate } from '@/lib/services/monthly-summary/monthly-summary-email';
-import { services } from '@/lib/services/services';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { sendMail } from '@/modules/mail/mail.service';
+import { createMonthlySummaryEmail } from '@/modules/monthly-summaries/monthly-summary-email.service';
+import { getLastMonthSummary } from '@/modules/monthly-summaries/monthly-summary.service';
 import { NextRequest, NextResponse } from 'next/server';
 
 const getRecipients = () =>
@@ -32,16 +33,24 @@ export const POST = async (request: NextRequest) => {
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 
-		const summaryResult = await services.monthlySummary.getLastMonth();
+		const summaryResult = await getLastMonthSummary();
 		if (!summaryResult.success) {
 			console.error(`${SLACK_ALERT}: Monthly summary failed: ${summaryResult.error}`, { summaryResult });
 
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 
-		const { subject, text } = new MonthlySummaryEmailTemplate().create(summaryResult.data);
+		const emailContentResult = createMonthlySummaryEmail(summaryResult.data);
+		if (!emailContentResult.success) {
+			console.error(`${SLACK_ALERT}: Monthly summary email creation failed: ${emailContentResult.error}`, {
+				emailContentResult,
+			});
 
-		const emailResult = await services.sendgridMail.send({
+			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
+		}
+
+		const { subject, text } = emailContentResult.data;
+		const emailResult = await sendMail({
 			to: recipients,
 			subject,
 			text,

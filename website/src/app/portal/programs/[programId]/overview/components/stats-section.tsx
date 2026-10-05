@@ -1,8 +1,8 @@
 import { Card } from '@/components/card/card';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
-import type { ProgramDashboardStats } from '@/lib/services/program-stats/program-stats.types';
 import { cn } from '@/lib/utils/cn';
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
+import type { ProgramDashboardStats } from '@/modules/programs/program.types';
 import { AlertCircle, CheckCircle, CircleHelp, TriangleAlert } from 'lucide-react';
 import { AdditionalNumbers } from './additional-numbers';
 import { SectionBox } from './section-box';

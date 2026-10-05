@@ -1,4 +1,4 @@
-import { isCountryGeoJson } from '@/lib/services/country/country-geojson.utils';
+import { isCountryGeoJson } from '@/lib/country-geojson';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { GLOBE_COLORS, GLOBE_SPHERE_OPACITY } from './globe-config';

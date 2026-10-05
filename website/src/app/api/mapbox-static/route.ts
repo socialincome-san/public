@@ -1,4 +1,6 @@
-import { getCountryStaticMapUrl, isMapboxMapVariant } from '@/lib/mapbox/country-map';
+import { getCountryStaticMapUrl } from '@/modules/mapbox/mapbox.service';
+
+const isMapboxMapVariant = (value: string): value is 'main' | 'inset' => value === 'main' || value === 'inset';
 
 const MAP_IMAGE_CACHE_SECONDS = 60 * 60 * 24; // 24 hours
 const MAP_IMAGE_CACHE_HEADER = `public, max-age=${MAP_IMAGE_CACHE_SECONDS}, s-maxage=${MAP_IMAGE_CACHE_SECONDS}, stale-while-revalidate=${MAP_IMAGE_CACHE_SECONDS}`;
@@ -24,15 +26,11 @@ export const GET = async (request: Request) => {
 		return Response.json({ error: 'Map service is not configured.' }, { status: 500 });
 	}
 
-	const mapboxStaticImageUrl = await getCountryStaticMapUrl({
-		accessToken: mapboxToken,
-		isoCode,
-		variant: variantParam,
-	});
-
-	if (!mapboxStaticImageUrl) {
+	const mapResult = await getCountryStaticMapUrl(mapboxToken, isoCode, variantParam);
+	if (!mapResult.success || !mapResult.data) {
 		return Response.json({ error: 'Unable to build map bounds.' }, { status: 404 });
 	}
+	const mapboxStaticImageUrl = mapResult.data;
 
 	const mapboxResponse = await fetch(mapboxStaticImageUrl, {
 		next: { revalidate: MAP_IMAGE_CACHE_SECONDS },

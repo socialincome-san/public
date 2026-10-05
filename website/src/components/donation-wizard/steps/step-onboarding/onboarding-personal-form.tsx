@@ -8,9 +8,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { LongHairIcon } from '@/components/icons/long-hair-icon';
 import { ShortHairIcon } from '@/components/icons/short-hair-icon';
 import { Input } from '@/components/input/input';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { COUNTRY_CODES } from '@/lib/types/country';
-import { GENDER_OPTIONS } from '@/lib/types/user';
+import { GENDER_OPTIONS } from '@/modules/contributors/contributor.types';
 import { type UseFormReturn } from 'react-hook-form';
 import { type OnboardingPersonalFields } from '../../utils/donation-wizard-validation';
 

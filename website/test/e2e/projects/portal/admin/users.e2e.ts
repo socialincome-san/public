@@ -5,7 +5,7 @@ import {
 	clickDataTableActionItem,
 	deleteFirebaseEmailsIfExist,
 	expectToHaveScreenshot,
-	getFirebaseAdminService,
+	findFirebaseUserByEmail,
 	selectMultiOptionsByTestId,
 	selectOptionByTestId,
 } from '../../../utils';
@@ -71,7 +71,6 @@ test('admin users can show and search by Firebase auth user ID', async ({ page }
 });
 
 test('add new user keeps Firebase user in sync', async ({ page }) => {
-	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const firstName = 'E2E';
 	const lastName = 'User';
@@ -123,7 +122,7 @@ test('add new user keeps Firebase user in sync', async ({ page }) => {
 		expect(created?.activeOrganizationId).toBeTruthy();
 		expect(created?.organizationAccesses.map((access) => access.organization.name).sort()).toEqual(organizationNames.sort());
 
-		const firebaseCreatedResult = await firebaseService.getByEmail(email);
+		const firebaseCreatedResult = await findFirebaseUserByEmail(email);
 		expect(firebaseCreatedResult.success).toBeTruthy();
 		if (!firebaseCreatedResult.success) {
 			throw new Error(firebaseCreatedResult.error);
@@ -150,7 +149,6 @@ test('shows uniqueness error when user email already exists', async ({ page }) =
 });
 
 test('update user keeps Firebase user in sync', async ({ page }) => {
-	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const initialFirstName = 'Firebase';
 	const initialLastName = 'User';
@@ -179,7 +177,7 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 		await page.getByRole('button', { name: 'Save' }).click();
 		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-		const firebaseCreatedResult = await firebaseService.getByEmail(initialEmail);
+		const firebaseCreatedResult = await findFirebaseUserByEmail(initialEmail);
 		expect(firebaseCreatedResult.success).toBeTruthy();
 		if (!firebaseCreatedResult.success) {
 			throw new Error(firebaseCreatedResult.error);
@@ -195,14 +193,14 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 		await page.getByRole('button', { name: 'Save' }).click();
 		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-		const firebaseOldEmailResult = await firebaseService.getByEmail(initialEmail);
+		const firebaseOldEmailResult = await findFirebaseUserByEmail(initialEmail);
 		expect(firebaseOldEmailResult.success).toBeTruthy();
 		if (!firebaseOldEmailResult.success) {
 			throw new Error(firebaseOldEmailResult.error);
 		}
 		expect(firebaseOldEmailResult.data).toBeNull();
 
-		const firebaseUpdatedResult = await firebaseService.getByEmail(updatedEmail);
+		const firebaseUpdatedResult = await findFirebaseUserByEmail(updatedEmail);
 		expect(firebaseUpdatedResult.success).toBeTruthy();
 		if (!firebaseUpdatedResult.success) {
 			throw new Error(firebaseUpdatedResult.error);
@@ -233,7 +231,6 @@ test('update user keeps Firebase user in sync', async ({ page }) => {
 });
 
 test('delete user removes database and Firebase entries', async ({ page }) => {
-	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const firstName = 'Delete';
 	const lastName = 'Me';
@@ -281,7 +278,7 @@ test('delete user removes database and Firebase entries', async ({ page }) => {
 		});
 		expect(deletedUser).toBeNull();
 
-		const firebaseUserResult = await firebaseService.getByEmail(email);
+		const firebaseUserResult = await findFirebaseUserByEmail(email);
 		expect(firebaseUserResult.success).toBeTruthy();
 		if (!firebaseUserResult.success) {
 			throw new Error(firebaseUserResult.error);

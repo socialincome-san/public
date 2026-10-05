@@ -1,5 +1,5 @@
 import { CountryCode, Gender, SurveyQuestionnaire } from '@/generated/prisma/client';
-import { RECIPIENT_AGE_GROUPS, RecipientAgeGroup } from '@/lib/constants/recipient-age-groups';
+import { RECIPIENT_AGE_GROUPS, RecipientAgeGroup } from '@/modules/surveys/survey-age-groups.types';
 import { FILTER_PREFIX, ImpactFilterQueryParams, parseCsvParam } from './filters.constants';
 
 const isEnumValue = <T extends Record<string, string>>(enumObj: T, value: string): value is T[keyof T] =>

@@ -1,4 +1,4 @@
-import { type ActiveSubscriptionView } from '@/lib/services/subscription/subscription.types';
+import { type ActiveSubscriptionView } from '@/modules/subscriptions/subscription.types';
 import { CreditCard, QrCode } from 'lucide-react';
 
 type PaymentDisplay = ActiveSubscriptionView['paymentDisplay'];

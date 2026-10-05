@@ -5,8 +5,8 @@ import { ConfiguredDataTableClient } from '@/components/data-table/clients/confi
 import { expensesTableConfig } from '@/components/data-table/configs/expenses-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
+import type { ExpenseTableViewRow } from '@/modules/expenses/expense.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import ExpensesForm from './expenses-form';

@@ -59,9 +59,6 @@ export const BaseTable = <TData extends RowData>({
 	const resolvedSorting = isServerSorting ? activeServerSorting.sorting : sorting;
 	const useClientPagination = !isServerPagination && !compact;
 
-	// TanStack Table's hook returns functions that React Compiler can warn about.
-	// We keep the call here and silence the specific rule to avoid false positives.
-	// eslint-disable-next-line react-hooks/incompatible-library
 	const table = useLegacyTable({
 		data,
 		columns,

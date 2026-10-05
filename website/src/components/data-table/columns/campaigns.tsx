@@ -5,7 +5,7 @@ import { SortableHeader } from '@/components/data-table/elements/sortable-header
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
-import type { CampaignTableViewRow } from '@/lib/services/campaign/campaign.types';
+import type { CampaignTableViewRow } from '@/modules/campaigns/campaign.types';
 import { CopyUrlCell } from '../elements/copy-url-cell';
 
 export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {

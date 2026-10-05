@@ -1,9 +1,9 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { ExchangeRatesTableViewRow } from '@/lib/services/exchange-rate/exchange-rate.types';
-import { services } from '@/lib/services/services';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedExchangeRateTableView } from '@/modules/exchange-rates/exchange-rate.service';
+import type { ExchangeRatesTableViewRow } from '@/modules/exchange-rates/exchange-rate.types';
+import { requireAdmin } from '@/server/session';
 import { Suspense } from 'react';
 import ExchangeRatesTable from './exchange-rates-table';
 
@@ -16,12 +16,11 @@ export default function ExchangeRatesPage({ searchParams }: SearchParamsPageProp
 }
 
 const ExchangeRatesDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
-	requireAdmin(user);
+	const user = await requireAdmin();
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await services.read.exchangeRate.getPaginatedTableView(user.id, tableQuery);
+	const result = await getPaginatedExchangeRateTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: ExchangeRatesTableViewRow[] = result.success ? result.data.tableRows : [];

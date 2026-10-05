@@ -9,7 +9,7 @@ import { getLocalPartnerPortalSlug } from '@/components/storyblok/local-partner/
 import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/local-partners-teaser-intro';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getLocalPartnerOverviewStats } from '@/lib/storyblok/local-partner-overview-stats';
+import { getLocalPartnerOverviewStatsAction } from '@/modules/local-partners/local-partner.actions';
 
 type ContentProps = {
 	localPartners: LocalPartnerStory[];
@@ -25,10 +25,11 @@ export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, regio
 	}
 
 	const portalSlugs = localPartners.map((localPartner) => getLocalPartnerPortalSlug(localPartner.content)).filter(Boolean);
-	const [translator, statsByPortalSlug] = await Promise.all([
+	const [translator, statsResult] = await Promise.all([
 		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
-		getLocalPartnerOverviewStats(portalSlugs),
+		getLocalPartnerOverviewStatsAction(portalSlugs),
 	]);
+	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 
 	return (
 		<BlockWrapper className="max-2xl:overflow-visible">
