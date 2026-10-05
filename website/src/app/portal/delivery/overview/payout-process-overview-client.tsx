@@ -1,12 +1,12 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { DatePicker, normalizeToNoon } from '@/components/date-picker/date-picker';
 import { formatPayoutProcessLabel } from '@/lib/payout-process-options';
 import { cn } from '@/lib/utils/cn';
 import { now } from '@/lib/utils/now';
 import type { PayoutProcessOverviewOption } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { getPayoutRecipientCountsAction } from '@/modules/payout-processes/payout-process.actions';
+import { Button } from '@socialincome/design-system/button/button';
+import { DatePicker, normalizeToNoon } from '@socialincome/design-system/date-picker/date-picker';
 import { format } from 'date-fns';
 import { CalendarIcon, CircleDollarSignIcon, FileSpreadsheet } from 'lucide-react';
 import { useEffect, useState } from 'react';

@@ -1,6 +1,5 @@
 'use client';
 
-import { headingStyles } from '@/components/heading-styles';
 import type {
 	RichTextAlignment,
 	RichTextAlignmentProps,
@@ -8,8 +7,9 @@ import type {
 	RichTextLinkProps,
 	RichTextTableCellProps,
 } from '@/components/storyblok/rich-text/rich-text.types';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/table';
 import { cn } from '@/lib/utils/cn';
+import { headingStyles } from '@socialincome/design-system/section-heading/heading-styles';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/design-system/table/table';
 import NextLink from 'next/link';
 import { createElement, ReactNode } from 'react';
 import {

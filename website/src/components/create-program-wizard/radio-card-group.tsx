@@ -1,7 +1,7 @@
 'use client';
 
-import { RadioGroup } from '@/components/radio-group/radio-group';
 import { cn } from '@/lib/utils/cn';
+import { RadioGroup } from '@socialincome/design-system/radio-group/radio-group';
 import { ReactNode } from 'react';
 
 type Props = {

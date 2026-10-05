@@ -1,9 +1,9 @@
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button/button';
-import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { Document, Downloads } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Button } from '@socialincome/design-system/button/button';
+import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { DownloadIcon } from 'lucide-react';

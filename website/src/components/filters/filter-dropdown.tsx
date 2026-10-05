@@ -1,13 +1,13 @@
 'use client';
 
-import { Button } from '@/components/button/button';
+import { cn } from '@/lib/utils/cn';
+import { Button } from '@socialincome/design-system/button/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from '@/components/dropdown-menu/dropdown-menu';
-import { cn } from '@/lib/utils/cn';
+} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 

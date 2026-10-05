@@ -1,5 +1,4 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
-import { Separator } from '@/components/separator';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
 import { JournalPageHeader } from '@/components/storyblok/journal/journal-page-header';
@@ -10,6 +9,7 @@ import type { ArticleType, Person } from '@/generated/storyblok/types/109655/sto
 import { createWebsiteJournalArticleTypeLink, getArticleTypeLabel } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
 import type { JournalArticle } from '@/modules/journal/journal.types';
+import { Separator } from '@socialincome/design-system/separator/separator';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';
 

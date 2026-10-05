@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/button/button';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { Button } from '@socialincome/design-system/button/button';
 import type { SubmissionLabels } from './campaign-submission/types';
 import { CreateCampaignDialog } from './create-campaign-dialog';
 

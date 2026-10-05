@@ -1,15 +1,15 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
-import { MultiSelect, MultiSelectOption } from '@/components/multi-select/multi-select';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
-import { Switch } from '@/components/switch/switch';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, type LanguageCode } from '@/lib/types/language';
 import {
 	createDonationCertificatesAction,
 	getDonationCertificateContributorOptionsAction,
 } from '@/modules/donation-certificates/donation-certificate.actions';
+import { Button } from '@socialincome/design-system/button/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { MultiSelect, MultiSelectOption } from '@socialincome/design-system/multi-select/multi-select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
+import { Switch } from '@socialincome/design-system/switch/switch';
 import { useRef, useState, useTransition } from 'react';
 
 import { now } from '@/lib/utils/now';

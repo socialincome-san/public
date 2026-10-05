@@ -1,8 +1,6 @@
 'use client';
 
 import { useContributorSession } from '@/components/contributor/use-contributor-session';
-import { DialogHeader, DialogTitle } from '@/components/dialog';
-import { Form } from '@/components/form';
 import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
 import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { useAuth } from '@/lib/firebase/hooks/use-auth';
@@ -23,6 +21,8 @@ import {
 } from '@/modules/campaigns/campaign.types';
 import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Form } from '@socialincome/design-system/form/form';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useForm, type FieldPath } from 'react-hook-form';
 import { CampaignSubmissionContributorSuccess } from './campaign-submission-contributor-success';

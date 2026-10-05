@@ -1,10 +1,10 @@
 import { CountryBadge } from '@/components/badges/country-badge';
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { getProgramWallet } from '@/modules/programs/program.service';
 import { requireSession } from '@/server/session';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { ReactNode } from 'react';
 import { ProgramSettingsDialog } from './components/program-settings-dialog';
 

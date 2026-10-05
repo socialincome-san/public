@@ -13,7 +13,7 @@
 	"aliases": {
 		"components": "@/components",
 		"utils": "@/lib/utils",
-		"ui": "@/components/ui",
+		"ui": "@socialincome/design-system",
 		"lib": "@/lib",
 		"hooks": "@/hooks"
 	},

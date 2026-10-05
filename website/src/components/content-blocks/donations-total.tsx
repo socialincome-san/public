@@ -1,9 +1,6 @@
 'use client';
 
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button/button';
 import { FloatingImage } from '@/components/floating-image';
-import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { Currency } from '@/generated/prisma/client';
 import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -13,6 +10,9 @@ import { getSafeNumberFormatLocale, WebsiteLanguage, WebsiteRegion } from '@/lib
 import { formatStoryblokResizeUrl, getScaledAssetDimensions, resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Button } from '@socialincome/design-system/button/button';
+import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextImage from 'next/image';
 import NextLink from 'next/link';

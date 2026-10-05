@@ -76,11 +76,12 @@ brew install mise
 ```bash
 cd website
 mise install
-npm ci
+npm ci --prefix ..
 ```
 
-The web app keeps its Node dependencies, mise tasks, formatting config, Prisma
-setup, and most local tooling inside `website/`.
+The web app and `design-system` share one npm workspace. The lockfile is
+at the repository root. Mise tasks, formatting, Prisma, and most local
+tooling stay inside `website/`. Storybook lives in `design-system/`.
 
 ### 2. Prepare Environment Variables
 
@@ -125,12 +126,16 @@ This starts:
 - PostgreSQL in Docker
 - Firebase emulators for Auth, Firestore, and Storage
 - Next.js at `http://localhost:3000`
-- Storybook at `http://localhost:6006`
 
-We use Storybook for reusable website UI components. It is started locally by
-`mise dev` and is available on staging and production at
-`https://staging.socialincome.org/storybook` and
-`https://socialincome.org/storybook`.
+Storybook for the shared components runs separately:
+
+```bash
+cd design-system
+npm run storybook
+```
+
+That serves Storybook at `http://localhost:6006`. Deploy that static build
+from the `design-system` directory. It is not part of the website.
 
 The Firebase emulator UI is available at:
 

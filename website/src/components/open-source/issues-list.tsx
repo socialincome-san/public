@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/components/button/button';
 import { IssueRow } from '@/components/open-source/issue-row';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import type { GithubIssue } from '@/modules/github/github.types';
+import { Button } from '@socialincome/design-system/button/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
 import { useState } from 'react';
 
 const INITIAL_VISIBLE_COUNT = 6;

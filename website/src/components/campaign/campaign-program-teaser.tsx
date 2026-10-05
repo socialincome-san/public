@@ -1,5 +1,3 @@
-import { Badge } from '@/components/badge/badge';
-import { BlockWrapper } from '@/components/block-wrapper';
 import { FocusSdgs } from '@/components/storyblok/focus/focus-sdgs';
 import { getFocusSlug, getFocusTitle } from '@/components/storyblok/focus/focus.utils';
 import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
@@ -22,6 +20,8 @@ import {
 	getLocalPartnersAction,
 	getProgramsAction,
 } from '@/modules/storyblok-content/storyblok-content.actions';
+import { Badge } from '@socialincome/design-system/badge/badge';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import Link from 'next/link';
 
 type Props = {

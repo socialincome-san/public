@@ -1,11 +1,11 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { RadioGroup, RadioGroupItem } from '@/components/radio-group/radio-group';
 import { ContributorReferralSource } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { updateContributorReferralAfterWizardQrAction } from '@/modules/qr-bills/qr-bill.actions';
 import { updateContributorReferralAfterWizardCheckoutAction } from '@/modules/stripe-payments/stripe-payment.actions';
+import { Button } from '@socialincome/design-system/button/button';
+import { RadioGroup, RadioGroupItem } from '@socialincome/design-system/radio-group/radio-group';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useOnboardingAmountLine } from '../../hooks/use-onboarding-amount-line';

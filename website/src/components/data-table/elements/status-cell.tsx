@@ -9,8 +9,8 @@ import { ContributionStatusBadge } from '@/components/badges/contribution-status
 import { PayoutStatusBadge } from '@/components/badges/payout-status-badge';
 import { RecipientStatusBadge } from '@/components/badges/recipient-status-badge';
 import { SurveyStatusBadge } from '@/components/badges/survey-status-badge';
-import { SubscriptionStatusBadge } from '@/components/subscription-status-badge/subscription-status-badge';
 import type { RecipientLifecycleStatus } from '@/modules/recipients/recipient.types';
+import { SubscriptionStatusBadge } from '@socialincome/design-system/subscription-status-badge/subscription-status-badge';
 import type { RowData } from '@tanstack/react-table';
 
 type StatusVariant = 'contribution' | 'payout' | 'recipient' | 'survey' | 'campaign' | 'subscription' | 'boolean';

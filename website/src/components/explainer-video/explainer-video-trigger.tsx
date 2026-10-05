@@ -1,7 +1,7 @@
 'use client';
 
-import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
 import { cn } from '@/lib/utils/cn';
+import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { PlayIcon } from 'lucide-react';
 import NextImage from 'next/image';
 import { useState } from 'react';

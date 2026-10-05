@@ -1,15 +1,5 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from '@/components/dropdown-menu/dropdown-menu';
-import { Input } from '@/components/input/input';
 import type { VolunteerDurationTranslations } from '@/components/storyblok/shared/person-card';
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -17,6 +7,16 @@ import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getRoleCode, getRoleLabel, personHasRole } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameFromIsoCode } from '@/lib/types/country';
 import { cn } from '@/lib/utils/cn';
+import { Button } from '@socialincome/design-system/button/button';
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
+import { Input } from '@socialincome/design-system/input/input';
 import type { ISbStoryData } from '@storyblok/js';
 import { ArrowUpDownIcon, ChevronDown, SearchIcon } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';

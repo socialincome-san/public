@@ -1,10 +1,10 @@
 'use client';
 
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
-import { Input } from '@/components/input/input';
-import { Label } from '@/components/label';
-import { Switch } from '@/components/switch/switch';
 import { cn } from '@/lib/utils/cn';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/form/form';
+import { Input } from '@socialincome/design-system/input/input';
+import { Label } from '@socialincome/design-system/label/label';
+import { Switch } from '@socialincome/design-system/switch/switch';
 import { useEffect, useRef } from 'react';
 import { CampaignSubmissionFormCard } from '../form-layout';
 import { ImageUploadField } from '../image-upload-field';

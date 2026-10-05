@@ -1,0 +1,16 @@
+{
+	"name": "socialincome",
+	"private": true,
+	"workspaces": ["website", "design-system"],
+	"overrides": {
+		"@radix-ui/react-dismissable-layer": "1.1.19",
+		"@radix-ui/react-focus-scope": "1.1.16",
+		"axios": "1.20.0",
+		"body-parser": "2.3.0",
+		"fast-xml-builder": "1.3.1",
+		"protobufjs": "8.8.0",
+		"uuid": "14.0.2",
+		"tabbable": "6.5.0",
+		"nanoid": "6.0.1"
+	}
+}

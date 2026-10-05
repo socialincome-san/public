@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import { cn } from '@/lib/utils/cn';
+import { Button } from '@socialincome/design-system/button/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { X } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 

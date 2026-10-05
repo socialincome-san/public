@@ -7,7 +7,6 @@ const SITE_URL = 'https://socialincome.org';
 const disallow = [
 	'/portal/',
 	'/partner-space/',
-	'/storybook/',
 	'/api/',
 	...websiteRegions.flatMap((region) => [
 		`/*/${region}/dashboard/`,

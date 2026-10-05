@@ -1,8 +1,8 @@
 'use client';
 
-import { Label } from '@/components/label';
 import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { cn } from '@/lib/utils/cn';
+import { Label } from '@socialincome/design-system/label/label';
 import { Camera, Trash2, Upload } from 'lucide-react';
 import { useEffect, useId, useRef, type RefObject } from 'react';
 import { ImageFocusPoint } from './image-focus-point';

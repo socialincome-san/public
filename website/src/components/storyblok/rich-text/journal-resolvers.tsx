@@ -1,6 +1,5 @@
 'use client';
 
-import type { HeadingSize } from '@/components/heading-styles';
 import type { RichTextAlignmentProps, RichTextHeadingProps } from '@/components/storyblok/rich-text/rich-text.types';
 import {
 	buildLinkRel,
@@ -8,8 +7,9 @@ import {
 	removeStoryblokPagesFolder,
 	storyblokRichTextNodeResolvers,
 } from '@/components/storyblok/rich-text/shared-resolvers';
-import { Table, TableBody } from '@/components/table';
 import { cn } from '@/lib/utils/cn';
+import type { HeadingSize } from '@socialincome/design-system/section-heading/heading-styles';
+import { Table, TableBody } from '@socialincome/design-system/table/table';
 import NextLink from 'next/link';
 import { createElement, ReactNode } from 'react';
 import {

@@ -23,27 +23,33 @@ RUN --mount=type=secret,id=NEXT_PUBLIC_APP_VERSION \
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 
-WORKDIR /app/website
+WORKDIR /app
 
-COPY website/package.json website/package-lock.json ./
-COPY website/.npmrc ./
+COPY package.json package-lock.json .npmrc ./
+COPY website/package.json ./website/package.json
+COPY design-system/package.json ./design-system/package.json
 RUN npm ci
 
-COPY website ./
+COPY website ./website
+COPY design-system ./design-system
 
 # -------- Build Layer --------
 FROM base AS builder
-WORKDIR /app/website
+WORKDIR /app
 
-COPY --from=deps /app/website/node_modules ./node_modules
-COPY --from=deps /app/website ./
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/package.json ./package.json
+COPY --from=deps /app/package-lock.json ./package-lock.json
+COPY --from=deps /app/website ./website
+COPY --from=deps /app/design-system ./design-system
 COPY --from=base /app/.env /app/.env
+
+WORKDIR /app/website
 
 RUN set -a && [ -f /app/.env ] && . /app/.env || true && set +a && \
     npx prisma generate \
       --schema=./src/lib/database/schema.prisma \
       --config=./prisma.config.ts && \
-    npm run build-storybook:website && \
     npm run build --loglevel verbose || (echo "🚨 Build failed. Printing log:" && cat /root/.npm/_logs/*-debug-0.log && false)
 # -------- Runtime Layer --------
 FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS runner
@@ -55,7 +61,8 @@ ENV PORT=3000
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/website/node_modules ./node_modules
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/website/.next/standalone ./
 COPY --from=builder /app/website/src ./src
 COPY --from=builder /app/website/prisma.config.ts ./prisma.config.ts

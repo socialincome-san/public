@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { confirmPayoutAction, contestPayoutAction } from '@/modules/payouts/payout.actions';
 import type { PayoutConfirmationTableViewRow } from '@/modules/payouts/payout.types';
+import { Button } from '@socialincome/design-system/button/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { CheckIcon, XIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
 

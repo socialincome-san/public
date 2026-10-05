@@ -4,7 +4,7 @@
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"skipLibCheck": true,
 		"strict": true,
-		"rootDir": ".",
+		"rootDir": "..",
 		"forceConsistentCasingInFileNames": true,
 		"noEmit": true,
 		"esModuleInterop": true,
@@ -20,13 +20,14 @@
 			}
 		],
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": ["./src/*"],
+			"@socialincome/design-system/cn": ["../design-system/src/cn.ts"],
+			"@socialincome/design-system/*": ["../design-system/src/components/*"]
 		},
 		"allowJs": true,
 		"types": ["jest", "node"]
 	},
 	"include": [
-		".storybook/**/*.ts",
 		"next-env.d.ts",
 		"**/*.ts",
 		"**/*.tsx",

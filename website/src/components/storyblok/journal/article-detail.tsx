@@ -1,5 +1,4 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
-import { SectionHeading } from '@/components/section-heading';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { ArticleDetailBody } from '@/components/storyblok/journal/article-detail-body';
 import { ArticleDetailHeader, ArticleDetailHeroImage } from '@/components/storyblok/journal/article-detail-header';
@@ -9,6 +8,7 @@ import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@/lib/utils/cn';
 import type { JournalArticle } from '@/modules/journal/journal.types';
+import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
 
 const ARTICLE_HERO_IMAGE_WIDTH = 960;

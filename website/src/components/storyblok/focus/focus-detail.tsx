@@ -1,5 +1,4 @@
 import type { AnySearchParams } from '@/app/page-props';
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
@@ -7,6 +6,7 @@ import { ProgramsOverviewSection } from '@/components/storyblok/program/programs
 import type { Study } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getSurveyImpactFilterOptionsAction } from '@/modules/surveys/survey.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import type { ISbStoryData } from '@storyblok/js';
 import { CmsHeader } from '../shared/cms-header';
 import type { FocusStory } from './focus.types';

@@ -1,7 +1,7 @@
 import { SendMessageDialog } from '@/app/portal/messaging/templates/[sid]/send-message-dialog';
 import { twilioTemplateUrl } from '@/app/portal/messaging/twilio-console-url';
-import { Badge } from '@/components/badge/badge';
 import type { TwilioTemplateDetail } from '@/modules/messaging/messaging.types';
+import { Badge } from '@socialincome/design-system/badge/badge';
 import { ExternalLink } from 'lucide-react';
 
 type MessagingTemplateSummaryCardProps = {

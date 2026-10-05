@@ -1,13 +1,13 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, type LanguageCode } from '@/lib/types/language';
 import { now } from '@/lib/utils/now';
 import { createCurrentContributorDonationCertificateAction } from '@/modules/donation-certificates/donation-certificate.actions';
+import { Button } from '@socialincome/design-system/button/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
 import { useState, useTransition } from 'react';
 
 const CURRENT_YEAR = now().getFullYear();

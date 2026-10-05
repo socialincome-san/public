@@ -1,12 +1,12 @@
 'use client';
 
-import { Button } from '@/components/button/button';
 import type { FaqItem } from '@/components/content-blocks/faq-selection.utils';
-import { SectionHeading } from '@/components/section-heading';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { storyblokRichTextMarkResolvers } from '@/components/storyblok/rich-text/shared-resolvers';
 import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
 import * as RadixAccordion from '@radix-ui/react-accordion';
+import { Button } from '@socialincome/design-system/button/button';
+import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 import { ChevronDownIcon } from 'lucide-react';
 import NextLink from 'next/link';
 import { type ReactNode } from 'react';

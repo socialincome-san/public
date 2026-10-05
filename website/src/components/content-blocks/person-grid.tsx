@@ -1,5 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button/button';
 import { getStoryUuids } from '@/components/content-blocks/overview-grid.utils';
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import { PersonGridInteractive } from '@/components/storyblok/shared/person-grid-interactive';
@@ -13,6 +11,8 @@ import {
 	getPersonsByUuidsAction,
 	getPrimaryRoleLabelsAction,
 } from '@/modules/storyblok-content/storyblok-content.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Button } from '@socialincome/design-system/button/button';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextLink from 'next/link';

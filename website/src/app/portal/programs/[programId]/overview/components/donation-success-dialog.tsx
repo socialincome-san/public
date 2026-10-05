@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
+import { Button } from '@socialincome/design-system/button/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export const DonationSuccessDialog = () => {

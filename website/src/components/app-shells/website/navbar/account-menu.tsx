@@ -2,18 +2,18 @@
 
 import { useLogout } from '@/components/app-shells/use-logout';
 import { displaySession, Scope } from '@/components/app-shells/website/navbar/utils';
-import { Avatar, AvatarFallback } from '@/components/avatar/avatar';
-import { Button } from '@/components/button/button';
+import { useTranslator } from '@/lib/i18n/use-translator';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { Session } from '@/modules/auth/auth.types';
+import { Avatar, AvatarFallback } from '@socialincome/design-system/avatar/avatar';
+import { Button } from '@socialincome/design-system/button/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@/components/dropdown-menu/dropdown-menu';
-import { useTranslator } from '@/lib/i18n/use-translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
-import type { Session } from '@/modules/auth/auth.types';
+} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
 import { Building2, LayoutDashboard, LogOut, User, Users } from 'lucide-react';
 import Link from 'next/link';
 

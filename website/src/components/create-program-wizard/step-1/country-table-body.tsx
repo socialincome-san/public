@@ -1,13 +1,13 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { CountryFlag } from '@/components/country-flag/country-flag';
-import { RadioGroupItem } from '@/components/radio-group/radio-group';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { cn } from '@/lib/utils/cn';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
+import { Button } from '@socialincome/design-system/button/button';
+import { CountryFlag } from '@socialincome/design-system/country-flag/country-flag';
+import { RadioGroupItem } from '@socialincome/design-system/radio-group/radio-group';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@socialincome/design-system/table/table';
 import { ChevronDown } from 'lucide-react';
 import { Fragment } from 'react';
 import { CountryConditionBadge } from './country-condition-badge';
