@@ -148,6 +148,13 @@ every one in the report. Don't invent URLs or pick photos.
 4. Look at it. Screenshot the file at 600px and 375px width with Playwright
    (Chromium is at `/opt/pw-browsers/chromium` in cloud sessions) and view the
    images. Check for broken blocks, missing dividers and leftover template content.
+5. Show it in the chat. The chat preview doesn't load images from other
+   websites, so the SendGrid images go missing there. Make a copy with the
+   images built in and send that one to the user:
+   ```bash
+   python3 <skill-dir>/scripts/preview.py <new>.html <scratchpad>/YYYY-MM-newsletter-preview.html
+   ```
+   Keep the copy in the scratchpad. It's for viewing only: never commit it.
 
 ## 6. Report
 
