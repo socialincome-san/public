@@ -3,7 +3,7 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { focusesTableConfig } from '@/components/data-table/configs/focuses-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import type { FocusTableViewRow } from '@/lib/services/focus/focus.types';
+import type { FocusTableViewRow } from '@/modules/focuses/focus.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { FocusDialog } from './focus-dialog';

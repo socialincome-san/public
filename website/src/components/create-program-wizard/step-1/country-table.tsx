@@ -1,10 +1,9 @@
 'use client';
 
 import { RadioGroup } from '@/components/radio-group/radio-group';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import type { ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
-import { CountryCondition } from '@/lib/services/country/country.types';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getCountryNameByCode } from '@/lib/types/country';
+import { CountryCondition, type ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
 import { useState } from 'react';
 import { CountryTableBody } from './country-table-body';
 import { CountryTableHeader } from './country-table-header';

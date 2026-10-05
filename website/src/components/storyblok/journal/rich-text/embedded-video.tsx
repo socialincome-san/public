@@ -1,5 +1,5 @@
 import type { EmbeddedVideo } from '@/generated/storyblok/types/109655/storyblok-components';
-import { VimeoVideoMatchAndExtract, YouTubeVideoMatchAndExtract } from '@/lib/utils/UrlVideoParser';
+import { VimeoVideoMatchAndExtract, YouTubeVideoMatchAndExtract } from '@/lib/utils/url-video-parser';
 
 const videoMatchers = [new YouTubeVideoMatchAndExtract(), new VimeoVideoMatchAndExtract()];
 

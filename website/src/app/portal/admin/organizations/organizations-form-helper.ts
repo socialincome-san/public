@@ -1,14 +1,11 @@
 import type { FormField } from '@/components/dynamic-form/dynamic-form';
-import type {
-	OrganizationFormCreateInput,
-	OrganizationFormUpdateInput,
-} from '@/lib/services/organization/organization-form-input';
+import type { CreateOrganizationInput, UpdateOrganizationInput } from '@/modules/organizations/organization.schemas';
 import type { OrganizationFormSchema } from './organizations-form';
 
 const toStringArray = (value: FormField['value']): string[] =>
 	Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0) : [];
 
-export const buildCreateOrganizationInput = (formSchema: OrganizationFormSchema): OrganizationFormCreateInput => {
+export const buildCreateOrganizationInput = (formSchema: OrganizationFormSchema): CreateOrganizationInput => {
 	const fields = formSchema.fields;
 
 	return {
@@ -22,7 +19,7 @@ export const buildCreateOrganizationInput = (formSchema: OrganizationFormSchema)
 export const buildUpdateOrganizationInput = (
 	formSchema: OrganizationFormSchema,
 	organizationId: string,
-): OrganizationFormUpdateInput => {
+): UpdateOrganizationInput => {
 	return {
 		id: organizationId,
 		...buildCreateOrganizationInput(formSchema),

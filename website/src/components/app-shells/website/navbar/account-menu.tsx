@@ -11,9 +11,9 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/dropdown-menu/dropdown-menu';
-import type { Session } from '@/lib/firebase/current-account';
-import { useTranslator } from '@/lib/hooks/useTranslator';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { Session } from '@/modules/auth/auth.types';
 import { Building2, LayoutDashboard, LogOut, User, Users } from 'lucide-react';
 import Link from 'next/link';
 

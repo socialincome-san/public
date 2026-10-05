@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { useI18n } from '@/lib/i18n/useI18n';
+import { useI18n } from '@/lib/i18n/use-i18n';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getDonationAmountFieldsTranslations } from '../../i18n/donation-amount-fields-translations';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import { createStep1Actions, selectStep1FormView } from '../../wizard/donation-machine-selectors';

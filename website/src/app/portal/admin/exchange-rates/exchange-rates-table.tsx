@@ -6,8 +6,8 @@ import {
 	getExchangeRatesTableFilters,
 } from '@/components/data-table/configs/exchange-rates-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import { importExchangeRatesAction } from '@/lib/server-actions/exchange-rates-actions';
-import { ExchangeRatesTableViewRow } from '@/lib/services/exchange-rate/exchange-rate.types';
+import { importExchangeRatesAction } from '@/modules/exchange-rates/exchange-rate.actions';
+import type { ExchangeRatesTableViewRow } from '@/modules/exchange-rates/exchange-rate.types';
 import { RefreshCwIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
 

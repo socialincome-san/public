@@ -1,7 +1,4 @@
-import type {
-	ParsedVariable,
-	VariableAssignments,
-} from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
+import type { ParsedVariable, VariableAssignments } from '@/modules/messaging/messaging.types';
 import { renderTemplatePreview } from './render-template-preview';
 
 const vars = (entries: [string, string | null][]): ParsedVariable[] =>

@@ -1,8 +1,8 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { MessagingJobsTable } from '@/app/portal/messaging/delivery-log/messaging-jobs-table';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import { listMessagingJobsAction } from '@/lib/server-actions/messaging-actions';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { listMessagingJobsAction } from '@/modules/messaging/messaging.actions';
+import { requireAdmin } from '@/server/session';
 import { Suspense } from 'react';
 
 const PAGE_SIZE = 10;
@@ -16,8 +16,7 @@ export default function MessagingDeliveryLogPage({ searchParams }: SearchParamsP
 }
 
 const MessagingDeliveryLogDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
-	requireAdmin(user);
+	await requireAdmin();
 
 	const resolvedSearchParams = await searchParams;
 	const rawPage = Array.isArray(resolvedSearchParams.page) ? resolvedSearchParams.page[0] : resolvedSearchParams.page;

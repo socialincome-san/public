@@ -1,9 +1,12 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
-import { services } from '@/lib/services/services';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import {
+	getActiveOrganizationSummary,
+	getPaginatedOrganizationMembersTableView,
+} from '@/modules/organizations/organization.service';
+import type { OrganizationMemberTableViewRow } from '@/modules/organizations/organization.types';
+import { requireSession } from '@/server/session';
 import { Suspense } from 'react';
 import MembersTable from './members-table';
 
@@ -16,15 +19,12 @@ export default function ProfileOrganizationPage({ searchParams }: SearchParamsPa
 }
 
 const ProfileOrganizationDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
-	if (user.type !== 'user') {
-		return <p className="text-muted-foreground">This section is available for portal users only.</p>;
-	}
+	const user = await requireSession('user');
 
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
-	const activeOrganizationSummaryResult = await services.read.organization.getActiveOrganizationSummary(user.id);
-	const result = await services.read.organization.getPaginatedOrganizationMembersTableView(user.id, tableQuery);
+	const activeOrganizationSummaryResult = await getActiveOrganizationSummary(user.id);
+	const result = await getPaginatedOrganizationMembersTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: OrganizationMemberTableViewRow[] = result.success ? result.data.tableRows : [];

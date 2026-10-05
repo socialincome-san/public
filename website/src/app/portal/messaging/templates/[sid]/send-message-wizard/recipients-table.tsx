@@ -6,14 +6,17 @@ import { Input } from '@/components/input/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
-import { listMessagingRecipientsAction } from '@/lib/server-actions/messaging-actions';
+import { listMessagingRecipientsAction } from '@/modules/messaging/messaging.actions';
 import type {
 	MessagingRecipientFilterOption,
 	MessagingRecipientFilterOptions,
 	MessagingRecipientFilters,
 	MessagingRecipientsPage,
 	MessagingRecipientType,
-} from '@/lib/services/twilio/messaging/recipients/recipients.types';
+	SelectionState,
+} from '@/modules/messaging/messaging.types';
+import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from 'lucide-react';
+import { type ReactNode, useEffect, useRef, useState, useTransition } from 'react';
 import {
 	clearSelection,
 	getPageCheckboxState,
@@ -22,10 +25,7 @@ import {
 	selectAllMatching,
 	togglePage,
 	toggleRow,
-} from '@/lib/services/twilio/messaging/recipients/selection';
-import type { SelectionState } from '@/lib/services/twilio/messaging/recipients/selection.types';
-import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from 'lucide-react';
-import { type ReactNode, useEffect, useRef, useState, useTransition } from 'react';
+} from './selection';
 
 const PAGE_SIZE = 10;
 const DEBOUNCE_MS = 300;

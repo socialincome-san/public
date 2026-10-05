@@ -1,26 +1,27 @@
 import { CountryCode } from '@/generated/prisma/enums';
-import { CountryCondition, type ProgramCountryFeasibilityRow } from '@/lib/services/country/country.types';
-import type { ProgramBudgetCalculation } from '@/lib/services/program-stats/program-stats.types';
-import type { CreateProgramInput, PublicOnboardingUserDetails } from '@/lib/services/program/program.types';
+import { CountryCondition, type ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
+import type {
+	ProgramCreateInput as CreateProgramInput,
+	PublicOnboardingUserDetailsInput as PublicOnboardingUserDetails,
+} from '@/modules/programs/program.schemas';
+import type { ProgramBudgetCalculation } from '@/modules/programs/program.types';
 import { createActor, fromPromise, waitFor } from 'xstate';
 import { createProgramWizardMachine } from './create-program-machine';
 
-jest.mock('@/lib/server-actions/candidate-actions', () => ({
+jest.mock('@/modules/candidates/candidate.actions', () => ({
 	getCandidateCountAction: jest.fn(),
 }));
-jest.mock('@/lib/server-actions/country-action', () => ({
+jest.mock('@/modules/countries/country.actions', () => ({
 	getProgramCountryFeasibilityAction: jest.fn(),
 }));
-jest.mock('@/lib/server-actions/focus-action', () => ({
+jest.mock('@/modules/focuses/focus.actions', () => ({
 	getFocusOptionsAction: jest.fn(),
 }));
-jest.mock('@/lib/server-actions/program-actions', () => ({
+jest.mock('@/modules/programs/program.actions', () => ({
 	createProgramAction: jest.fn(),
-}));
-jest.mock('@/lib/server-actions/program-stats-actions', () => ({
 	calculateProgramBudgetAction: jest.fn(),
 }));
-jest.mock('@/lib/server-actions/session-actions', () => ({
+jest.mock('@/modules/auth/auth.actions', () => ({
 	getIsAuthenticatedUserAction: jest.fn(),
 }));
 

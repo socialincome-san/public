@@ -1,5 +1,5 @@
 import { BlockWrapper } from '@/components/block-wrapper';
-import { services } from '@/lib/services/services';
+import { getSurveyImpactMeasurements } from '@/modules/surveys/survey.service';
 import { followUpConfigs, highlightedQuestionOrder, questionTypeLabelKeys } from './config';
 import { toImpactServiceFilters } from './filters.server';
 import { renderFollowUpSections } from './follow-ups';
@@ -12,7 +12,7 @@ type ImpactMeasurementResultsProps = {
 
 export const ImpactMeasurementResults = async ({ lang, searchParams }: ImpactMeasurementResultsProps) => {
 	const impactFilters = toImpactServiceFilters(searchParams);
-	const impactResult = await services.surveyImpact.getImpactMeasurements(impactFilters);
+	const impactResult = await getSurveyImpactMeasurements(impactFilters);
 
 	if (!impactResult.success) {
 		return null;

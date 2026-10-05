@@ -2,9 +2,9 @@
 
 import { Button } from '@/components/button/button';
 import { type Currency } from '@/generated/prisma/client';
-import { getSubscriptionCancelRetentionPresets } from '@/lib/services/subscription/subscription-cancellation';
 import { cn } from '@/lib/utils/cn';
 import { CircleX } from 'lucide-react';
+import { getSubscriptionCancelRetentionPresets } from '../subscription-cancellation';
 
 type Props = {
 	amount: number;

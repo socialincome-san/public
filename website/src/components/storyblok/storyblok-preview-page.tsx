@@ -2,7 +2,7 @@ import PageContentType from '@/components/content-types/page';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
 
 type Props = {
@@ -20,7 +20,10 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRou
 		previewRoutePath,
 		searchParams,
 		loadStory: async (path, language) => {
-			const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(path, language);
+			const storyResult = await getStoryWithFallbackAction<ISbStoryData<Page>>({
+				storyPath: path,
+				language,
+			});
 
 			return storyResult.success ? storyResult.data : null;
 		},

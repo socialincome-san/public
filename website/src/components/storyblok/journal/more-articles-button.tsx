@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button/button';
-import { switchToDefaultLanguageAction } from '@/lib/server-actions/i18n-actions';
+import { switchToDefaultLanguageAction } from '@/modules/i18n/i18n.actions';
 
 type Props = {
 	label: string;
@@ -10,7 +10,11 @@ type Props = {
 
 export const MoreArticlesButton = ({ label, pathname }: Props) => (
 	<div className="mt-10 flex justify-center">
-		<form action={() => switchToDefaultLanguageAction(pathname)}>
+		<form
+			action={async () => {
+				await switchToDefaultLanguageAction(pathname);
+			}}
+		>
 			<Button type="submit" variant="outline">
 				{label}
 			</Button>

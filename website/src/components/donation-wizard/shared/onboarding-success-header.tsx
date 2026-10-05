@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { CircleCheck } from 'lucide-react';
 
 type OnboardingSuccessHeaderProps = {

@@ -6,7 +6,7 @@ import {
 	getContributionsTableFilters,
 } from '@/components/data-table/configs/contributions-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
-import type { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
+import type { ContributionTableViewRow } from '@/modules/contributions/contribution.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { ContributionFormDialog } from './contributions-form-dialog';

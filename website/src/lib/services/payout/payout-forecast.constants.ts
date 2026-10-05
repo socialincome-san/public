@@ -1,1 +1,0 @@
-export const PAYOUT_FORECAST_MONTHS_AHEAD = 6;

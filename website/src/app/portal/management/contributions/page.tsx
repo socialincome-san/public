@@ -1,9 +1,9 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { ContributionTableViewRow } from '@/lib/services/contribution/contribution.types';
-import { services } from '@/lib/services/services';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedTableView } from '@/modules/contributions/contribution.service';
+import { ContributionTableViewRow } from '@/modules/contributions/contribution.types';
+import { requireSession } from '@/server/session';
 import { Suspense } from 'react';
 import { ContributionsTableClient } from './contributions-table-client';
 
@@ -16,11 +16,11 @@ export default function ContributionsPage({ searchParams }: SearchParamsPageProp
 }
 
 const ContributionsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await services.read.contribution.getPaginatedTableView(user.id, tableQuery);
+	const result = await getPaginatedTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: ContributionTableViewRow[] = result.success ? result.data.tableRows : [];

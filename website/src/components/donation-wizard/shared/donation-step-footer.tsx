@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/button/button';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { ChevronLeft } from 'lucide-react';
 import { formatDonationCurrencyAmount } from '../utils/donation-formatting';
 

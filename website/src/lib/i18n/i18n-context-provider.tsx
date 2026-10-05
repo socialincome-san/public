@@ -1,10 +1,10 @@
 'use client';
 
-import { COUNTRY_COOKIE, CURRENCY_COOKIE, LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
+import { COUNTRY_COOKIE, CURRENCY_COOKIE, LANGUAGE_COOKIE, REGION_COOKIE } from '@/lib/i18n/cookies';
 
 import { CountryCode } from '@/generated/prisma/enums';
-import { useCookieState } from '@/lib/hooks/useCookieState';
-import { useI18n } from '@/lib/i18n/useI18n';
+import { useCookieState } from '@/lib/i18n/use-cookie-state';
+import { useI18n } from '@/lib/i18n/use-i18n';
 import {
 	getLanguageFromPathname,
 	resolveWebsiteLanguage,

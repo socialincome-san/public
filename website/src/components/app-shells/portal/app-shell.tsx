@@ -1,4 +1,4 @@
-import type { Session } from '@/lib/firebase/current-account';
+import type { Session } from '@/modules/auth/auth.types';
 import { ReactNode } from 'react';
 import { Navbar } from './navbar/navbar';
 

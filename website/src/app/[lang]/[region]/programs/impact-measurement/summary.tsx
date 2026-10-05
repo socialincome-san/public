@@ -1,7 +1,7 @@
 import { Progress } from '@/components/progress/progress';
-import { services } from '@/lib/services/services';
-import { SurveyImpactStudyDetailItem } from '@/lib/services/survey/survey-impact.types';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
+import { getSurveyImpactStudyDetails } from '@/modules/surveys/survey.service';
+import type { SurveyImpactStudyDetailItem } from '@/modules/surveys/survey.types';
 import { ChevronDown } from 'lucide-react';
 import { toImpactServiceFilters } from './filters.server';
 import { getImpactTranslator } from './translator';
@@ -18,7 +18,7 @@ const topItems = (items: SurveyImpactStudyDetailItem[], limit = 4): SurveyImpact
 export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: ImpactMeasurementSummaryProps) => {
 	const translator = await getImpactTranslator(lang);
 	const filters = toImpactServiceFilters(searchParams);
-	const detailsResult = await services.surveyImpact.getImpactStudyDetails(filters);
+	const detailsResult = await getSurveyImpactStudyDetails(filters);
 	if (!detailsResult.success) {
 		return (
 			<p className="text-foreground text-sm leading-5 font-medium">{translator.t('survey.impactMeasurement.loadError')}</p>
