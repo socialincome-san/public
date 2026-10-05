@@ -1,5 +1,6 @@
 import type { CountryCode } from '@/generated/prisma/enums';
 import type {
+	Article,
 	ArticleType,
 	Campaign,
 	Country,
@@ -30,6 +31,7 @@ import type { ISbStories, ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
+import StoryblokClient from 'storyblok-js-client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { getStoryblokApi } from './storyblok.config';
@@ -39,6 +41,34 @@ type StoryblokDatasourceEntry = {
 	value: string;
 	name: string;
 	dimension_value?: string | null;
+};
+
+let journalRssApi: StoryblokClient | undefined;
+let journalRssToken: string | undefined;
+
+const getJournalRssApi = () => {
+	const accessToken = process.env.STORYBLOK_PREVIEW_TOKEN;
+	if (process.env.E2E_STORYBLOK_MOCK === '1' || !accessToken || process.env.NODE_ENV === 'test') {
+		return getStoryblokApi();
+	}
+
+	if (!journalRssApi || journalRssToken !== accessToken) {
+		journalRssToken = accessToken;
+		journalRssApi = new StoryblokClient({
+			// Use a feed-only token namespace: the SDK tracks content versions by token
+			// at module scope, even when clients are otherwise separate instances.
+			accessToken: `journal-rss:${accessToken}`,
+			...(process.env.STORYBLOK_API_ENDPOINT ? { endpoint: process.env.STORYBLOK_API_ENDPOINT } : {}),
+			fetch: async (url, options) => {
+				const requestUrl = new URL(typeof url === 'string' ? url : url instanceof URL ? url.href : url.url);
+				requestUrl.searchParams.set('token', accessToken);
+
+				return fetch(requestUrl, options);
+			},
+		});
+	}
+
+	return journalRssApi;
 };
 
 // Deduplicates identical datasource fetches within a single request render pass — several
@@ -1112,6 +1142,60 @@ export class StoryblokService extends BaseService {
 			console.error(error);
 
 			return this.resultOk([]);
+		}
+	}
+
+	async getPublishedJournalArticles(lang: string): Promise<ServiceResult<ISbStoryData<Article>[]>> {
+		try {
+			const params: ISbStoriesParams = {
+				language: lang,
+				version: 'published',
+				per_page: StoryblokService.defaultPageSize,
+				excluding_fields: StoryblokService.contentField,
+				resolve_relations: StoryblokService.standardArticleRelationsToResolve,
+				sort_by: 'first_published_at:desc',
+				content_type: StoryblokService.contentType.article,
+			};
+			if (process.env.E2E_STORYBLOK_MOCK === '1') {
+				const data = await getStoryblokApi().getAll(StoryblokService.storiesPath, params);
+
+				return this.resultOk(data as ISbStoryData<Article>[]);
+			}
+			const storyblokApi = getJournalRssApi();
+			// A cache-busting cv gets the current published snapshot without changing the
+			// SDK's token-global version state shared by unrelated readers.
+			const firstResponse = await storyblokApi.get(StoryblokService.storiesPath, {
+				...params,
+				page: 1,
+				cv: Date.now(),
+			});
+			const firstStories = (firstResponse.data as { stories?: ISbStoryData<Article>[] }).stories ?? [];
+			const publishedCv = (firstResponse.data as { cv?: unknown }).cv;
+			if (typeof publishedCv !== 'number') {
+				throw new Error('Storyblok did not return a published content version for the Journal RSS feed');
+			}
+			const perPage = firstResponse.perPage || StoryblokService.defaultPageSize;
+			const total = firstResponse.total || firstStories.length;
+			const pageCount = Math.max(1, Math.ceil(total / perPage));
+			const pages = await Promise.all(
+				Array.from({ length: pageCount - 1 }, (_, index) =>
+					storyblokApi.get(StoryblokService.storiesPath, {
+						...params,
+						page: index + 2,
+						cv: publishedCv,
+					}),
+				),
+			);
+			const data = [
+				...firstStories,
+				...pages.flatMap((page) => (page.data as { stories?: ISbStoryData<Article>[] }).stories ?? []),
+			];
+
+			return this.resultOk(data);
+		} catch (error) {
+			console.error(error);
+
+			return this.resultFail(`Failed to fetch published journal articles: ${JSON.stringify(error)}`);
 		}
 	}
 
