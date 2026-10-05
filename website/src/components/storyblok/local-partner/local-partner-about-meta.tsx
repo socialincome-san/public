@@ -1,11 +1,11 @@
-import { Badge } from '@/components/badge/badge';
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { getFocusSlug, getFocusTitle } from '@/components/storyblok/focus/focus.utils';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
-import { cn } from '@/lib/utils/cn';
+import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
+import { Badge } from '@socialincome/design-system/badge/badge';
+import { cn } from '@socialincome/design-system/cn';
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 

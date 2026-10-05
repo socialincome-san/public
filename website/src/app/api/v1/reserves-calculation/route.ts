@@ -1,5 +1,5 @@
-import { services } from '@/lib/services/services';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { calculateReserves } from '@/modules/reserves/reserve.service';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
@@ -23,10 +23,8 @@ export const POST = async (request: NextRequest) => {
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 
-	const service = services.createReservesCalculation(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
-
 	try {
-		const result = await service.calculate();
+		const result = await calculateReserves(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
 		if (!result.success) {
 			console.error(`${SLACK_ALERT}: Reserves calculation failed: ${result.error}`, { result });
 

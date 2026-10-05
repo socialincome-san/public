@@ -1,8 +1,8 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
-import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
-import { getSessionByType } from '@/lib/firebase/current-account';
+import { requireSession } from '@/server/session';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Card } from '@socialincome/design-system/card/card';
 
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
@@ -12,11 +12,8 @@ type ManagementLayoutProps = {
 };
 
 export default async function ManagementLayout({ children }: ManagementLayoutProps) {
-	const userSessionResult = await getSessionByType('user');
-	if (!userSessionResult.success) {
-		redirect('/login');
-	}
-	if (!userSessionResult.data.hasAnyOperatorProgramAccess) {
+	const user = await requireSession('user');
+	if (!user.hasAnyOperatorProgramAccess) {
 		redirect('/portal/programs');
 	}
 

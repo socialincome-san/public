@@ -1,5 +1,5 @@
-import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
 import { formatCurrencyLocale, formatDateLocale } from '@/lib/utils/string-utils';
+import type { GlobeContribution } from '@/modules/contributions/contribution.types';
 
 const buildBadgeContent = (contribution: GlobeContribution, locale: string): HTMLElement => {
 	const formattedAmount = formatCurrencyLocale(contribution.amount, contribution.currency, locale, {

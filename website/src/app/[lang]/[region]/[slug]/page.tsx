@@ -1,12 +1,12 @@
 import { DefaultLayoutPropsWithSlug, DefaultPageProps } from '@/app/[lang]/[region]';
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import PageContentType from '@/components/content-types/page';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { getPageStoryPath } from '@/lib/storyblok/storyblok-paths';
+import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.service';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
@@ -17,7 +17,7 @@ export default async function ContentPage({ params, searchParams }: DefaultLayou
 	const { slug, lang, region } = await params;
 	const resolvedSearchParams = await searchParams;
 
-	const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Page>>(getPageStoryPath(slug), lang);
+	const storyResult = await getStoryWithFallback<ISbStoryData<Page>>(getPageStoryPath(slug), lang);
 
 	if (!storyResult.success) {
 		return notFound();

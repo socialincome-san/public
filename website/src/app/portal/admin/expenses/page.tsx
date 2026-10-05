@@ -1,9 +1,9 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
-import type { ExpenseTableViewRow } from '@/lib/services/expense/expense.types';
-import { services } from '@/lib/services/services';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedExpenseTableView } from '@/modules/expenses/expense.service';
+import type { ExpenseTableViewRow } from '@/modules/expenses/expense.types';
+import { requireAdmin } from '@/server/session';
 import { Suspense } from 'react';
 import ExpensesTable from './expenses-table';
 
@@ -16,12 +16,11 @@ export default function ExpensesPage({ searchParams }: SearchParamsPageProps) {
 }
 
 const ExpensesDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
-	requireAdmin(user);
+	const user = await requireAdmin();
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await services.read.expense.getPaginatedTableView(user.id, tableQuery);
+	const result = await getPaginatedExpenseTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows: ExpenseTableViewRow[] = result.success ? result.data.tableRows : [];

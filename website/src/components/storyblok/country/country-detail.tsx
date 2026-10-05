@@ -1,4 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
@@ -6,6 +5,7 @@ import { DonationFormServer } from '@/components/donation-wizard/donation-form-s
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { Suspense } from 'react';
 import { CountryMap } from './country-map';
 import { CountryPayoutsTotal } from './country-payouts-total';

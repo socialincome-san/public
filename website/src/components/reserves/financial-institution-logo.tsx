@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 
 /** Logos are rendered as masks so every institution picks up the surrounding text color. */
 const FINANCIAL_INSTITUTION_LOGOS = {

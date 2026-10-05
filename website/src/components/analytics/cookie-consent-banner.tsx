@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Card } from '@/components/card/card';
-import { useIsPage } from '@/lib/hooks/useIsPage';
-import type { ConsentStatusString } from 'firebase/analytics';
+import type { ConsentStatus } from '@/lib/firebase/client-analytics';
+import { useIsPage } from '@/lib/hooks/use-is-page';
+import { Button } from '@socialincome/design-system/button/button';
+import { Card } from '@socialincome/design-system/card/card';
 import { useEffect, useState } from 'react';
 
 type CookieConsentBannerProps = {
@@ -24,7 +24,7 @@ export const CookieConsentBanner = ({ translations }: CookieConsentBannerProps) 
 		setHideBanner(Boolean(cookieConsent) || isSurveyPage);
 	}, [isSurveyPage]);
 
-	const setCookieConsent = (mode: ConsentStatusString) => {
+	const setCookieConsent = (mode: ConsentStatus) => {
 		localStorage.setItem('cookie_consent', mode);
 		window.location.reload();
 	};

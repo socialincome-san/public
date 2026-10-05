@@ -4,7 +4,7 @@ import { formatSummaryMetricAmount } from '@/components/transparency/summary-met
 import { useCountUp } from '@/lib/hooks/use-count-up';
 import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import { useInView } from 'motion/react';
 import { useMemo, useRef } from 'react';
 

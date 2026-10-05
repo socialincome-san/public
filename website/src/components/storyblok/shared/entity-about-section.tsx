@@ -1,8 +1,8 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { MapBubble } from '@/components/storyblok/country/map-bubble';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
-import { cn } from '@/lib/utils/cn';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { cn } from '@socialincome/design-system/cn';
 import type { ReactNode } from 'react';
 
 type Props = {

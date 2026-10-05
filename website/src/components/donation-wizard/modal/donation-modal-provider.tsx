@@ -1,11 +1,11 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogTitle } from '@/components/dialog';
 import { DonationCurrencySelector } from '@/components/donation/currency-selector';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
+import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
+import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { useMachine } from '@xstate/react';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';

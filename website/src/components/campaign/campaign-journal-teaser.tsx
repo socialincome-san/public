@@ -1,8 +1,8 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { getLatestJournalArticlesAction } from '@/modules/journal/journal.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 
 type Props = {
 	lang: WebsiteLanguage;
@@ -12,7 +12,7 @@ type Props = {
 export const CampaignJournalTeaser = async ({ lang, region }: Props) => {
 	const [translator, articlesResult] = await Promise.all([
 		Translator.getInstance({ language: lang, namespaces: ['website-journal'] }),
-		services.storyblok.getLatestJournalArticles(lang),
+		getLatestJournalArticlesAction(lang),
 	]);
 
 	const articles = articlesResult.success ? articlesResult.data : [];

@@ -1,8 +1,8 @@
-import { Button } from '@/components/button/button';
 import { CampaignsOverview } from '@/components/campaign/campaigns-overview';
-import { SectionHeading } from '@/components/section-heading';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { PublicCampaignsWithStats } from '@/lib/services/campaign/campaign.types';
+import type { PublicCampaignsWithStats } from '@/modules/campaigns/campaign.types';
+import { Button } from '@socialincome/design-system/button/button';
+import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 import NextLink from 'next/link';
 import type { ReactNode } from 'react';
 

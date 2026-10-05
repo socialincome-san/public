@@ -1,15 +1,15 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import {
 	contributorsTableConfig,
 	getContributorsTableFilters,
 } from '@/components/data-table/configs/contributors-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
+import type { ContributorTableViewRow } from '@/modules/contributors/contributor.types';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import ContributorsForm from './contributors-form';

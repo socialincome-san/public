@@ -1,19 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/accordion/accordion';
-import { Combobox } from '@/components/combo-box';
-import { DatePicker } from '@/components/date-picker/date-picker';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/form';
-import { Input } from '@/components/input/input';
-import { Label } from '@/components/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
-import { Switch } from '@/components/switch/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from '@socialincome/design-system/accordion/accordion';
+import { Combobox } from '@socialincome/design-system/combo-box/combo-box';
+import { DatePicker } from '@socialincome/design-system/date-picker/date-picker';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/design-system/form/form';
+import { Input } from '@socialincome/design-system/input/input';
+import { Label } from '@socialincome/design-system/label/label';
+import { MultiSelect } from '@socialincome/design-system/multi-select/multi-select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
+import { Switch } from '@socialincome/design-system/switch/switch';
 import { Loader2 } from 'lucide-react';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
-import { MultiSelect } from '../multi-select/multi-select';
 import { FormActions, type ExtraAction } from './form-actions';
 
 export type FormField = {

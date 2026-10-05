@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { mapContactFormFields, normalizeNullableString } from '@/components/dynamic-form/contact-form-input-mapper';
 import { FormField } from '@/components/dynamic-form/dynamic-form';
-import { ContributorFormCreateInput, ContributorFormUpdateInput } from '@/lib/services/contributor/contributor-form-input';
-import { ContributorPayload } from '@/lib/services/contributor/contributor.types';
+import type { CreateContributorInput, UpdateContributorInput } from '@/modules/contributors/contributor.schemas';
+import type { ContributorPayload } from '@/modules/contributors/contributor.types';
 import { ContributorFormSchema } from './contributors-form';
 
-export const buildCreateContributorInput = (schema: ContributorFormSchema): ContributorFormCreateInput => {
+export const buildCreateContributorInput = (schema: ContributorFormSchema): CreateContributorInput => {
 	const contactFields: Record<string, FormField> = schema.fields.contact.fields;
 
 	return {
@@ -19,7 +19,7 @@ export const buildCreateContributorInput = (schema: ContributorFormSchema): Cont
 export const buildUpdateContributorsInput = (
 	schema: ContributorFormSchema,
 	contributor: ContributorPayload,
-): ContributorFormUpdateInput => {
+): UpdateContributorInput => {
 	const contactFields: Record<string, FormField> = schema.fields.contact.fields;
 
 	return {

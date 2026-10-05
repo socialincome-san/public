@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import { WALLET_IMAGE_SIZES } from './wallet-image-utils';
 import { WalletLayerImage } from './wallet-layer-image';
 import type { WalletImages } from './wallet.types';

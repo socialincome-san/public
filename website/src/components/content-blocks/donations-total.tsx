@@ -1,22 +1,18 @@
 'use client';
 
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button/button';
 import { FloatingImage } from '@/components/floating-image';
-import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { Currency } from '@/generated/prisma/client';
 import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { useDonationTotalAnimations } from '@/lib/hooks/use-donation-total-animations';
 import { getSafeNumberFormatLocale, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import {
-	formatStoryblokResizeUrl,
-	getScaledAssetDimensions,
-	resolveStoryblokLink,
-} from '@/lib/services/storyblok/storyblok.utils';
-import { cn } from '@/lib/utils/cn';
+import { formatStoryblokResizeUrl, getScaledAssetDimensions, resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
+import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextImage from 'next/image';
 import NextLink from 'next/link';

@@ -2,18 +2,18 @@
 
 import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-navbar-links';
 import { useLogout } from '@/components/app-shells/use-logout';
-import { Avatar, AvatarFallback } from '@/components/avatar/avatar';
-import { Button } from '@/components/button/button';
+import type { Session } from '@/modules/auth/auth.types';
+import type { UserSession } from '@/modules/users/user.types';
+import { Avatar, AvatarFallback } from '@socialincome/design-system/avatar/avatar';
+import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@/components/dropdown-menu/dropdown-menu';
-import type { Session } from '@/lib/firebase/current-account';
-import type { UserSession } from '@/lib/services/user/user.types';
-import { cn } from '@/lib/utils/cn';
+} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 import Link from 'next/link';
 

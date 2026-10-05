@@ -1,15 +1,15 @@
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Card } from '@/components/card/card';
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { payoutForecastTableConfig } from '@/components/data-table/configs/payout-forecast-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { PAYOUT_FORECAST_MONTHS_AHEAD } from '@/lib/services/payout/payout-forecast.constants';
-import { services } from '@/lib/services/services';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedPayoutForecastTableView } from '@/modules/payouts/payout.service';
+import { PAYOUT_FORECAST_MONTHS_AHEAD } from '@/modules/payouts/payout.types';
+import { requireSession } from '@/server/session';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Card } from '@socialincome/design-system/card/card';
 import { Suspense } from 'react';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
@@ -30,15 +30,10 @@ const FinancesProgramScopedDataLoader = async ({ params, searchParams }: Props) 
 	const { programId } = await params;
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 	const translator = await Translator.getInstance({ language: defaultLanguage, namespaces: ['website-common'] });
 
-	const result = await services.read.payout.getPaginatedForecastTableView(
-		user.id,
-		programId,
-		PAYOUT_FORECAST_MONTHS_AHEAD,
-		tableQuery,
-	);
+	const result = await getPaginatedPayoutForecastTableView(user.id, programId, PAYOUT_FORECAST_MONTHS_AHEAD, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];

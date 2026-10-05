@@ -1,5 +1,5 @@
+import type { AnySearchParams } from '@/app/page-props';
 import { getCountryNameFromIsoCode } from '@/lib/types/country';
-import type { AnySearchParams } from '@/lib/types/page-props';
 import type { LocalPartnerStory } from './local-partner.types';
 import {
 	getLocalPartnerDescription,

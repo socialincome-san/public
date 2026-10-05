@@ -5,7 +5,7 @@ import {
 	bannerRichTextNodeResolvers,
 } from '@/components/storyblok/rich-text/journal-resolvers';
 import type { BannerSection } from '@/generated/storyblok/types/109655/storyblok-components';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import { ReactNode } from 'react';
 import { render } from 'storyblok-rich-text-react-renderer';
 

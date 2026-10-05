@@ -1,18 +1,25 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/dialog';
 import { QrBillPaymentCard } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-payment-card';
 import { QrBillPdfDownloadLink } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-pdf-download-link';
 import { type Currency } from '@/generated/prisma/client';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
-import { type BankTransferQrBillView } from '@/lib/services/subscription/subscription.types';
-import { generateQrBillSvg } from '@/lib/utils/qr-bill';
 import { formatCurrencyLocale, formatDateLocale, wholeCurrencyFormatOptions } from '@/lib/utils/string-utils';
+import { getSubscriptionQrBillDisplayAction } from '@/modules/qr-bills/qr-bill.actions';
+import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
+import { type BankTransferQrBillView } from '@/modules/subscriptions/subscription.types';
+import { Button } from '@socialincome/design-system/button/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/dialog/dialog';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EditSubscriptionDialog } from './edit-subscription/edit-subscription-dialog';
 import { editSubscriptionMachine } from './edit-subscription/edit-subscription-machine';
 import { SubscriptionPaymentMethodDisplay } from './subscription-payment-method-display';
@@ -47,29 +54,41 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 	const router = useRouter();
 	const [state, send] = useMachine(editSubscriptionMachine);
 	const [isQrOpen, setIsQrOpen] = useState(false);
+	const [qrBillDisplay, setQrBillDisplay] = useState<QrBillDisplay | null>(null);
 	const { id, amount, currency, createdAt, paymentDisplay } = subscription;
 	const qrBill = paymentDisplay.qrBill;
-	const qrCurrency = currency === 'CHF' || currency === 'EUR' ? currency : null;
 	const isEditOpen = !state.matches('closed');
 
-	let qrBillSvg: string | null = null;
-	if (isQrOpen && qrBill && qrCurrency) {
-		try {
-			qrBillSvg = generateQrBillSvg({
-				amount,
-				contributorReferenceId: qrBill.contributorReferenceId,
-				contributionReferenceId: qrBill.contributionReferenceId,
-				currency: qrCurrency,
-				type: 'QRCODE',
-			});
-		} catch {
-			qrBillSvg = null;
+	useEffect(() => {
+		if (!isQrOpen || !qrBill) {
+			return;
 		}
-	}
+
+		let cancelled = false;
+		const loadQrBill = async () => {
+			const result = await getSubscriptionQrBillDisplayAction(id);
+			if (!cancelled) {
+				setQrBillDisplay(result.success ? result.data : null);
+			}
+		};
+
+		void loadQrBill();
+
+		return () => {
+			cancelled = true;
+		};
+	}, [id, isQrOpen, qrBill]);
 
 	const dismissEditAndRefresh = () => {
 		send({ type: 'DONE' });
 		router.refresh();
+	};
+
+	const setQrDialogOpen = (open: boolean) => {
+		setIsQrOpen(open);
+		if (!open) {
+			setQrBillDisplay(null);
+		}
 	};
 
 	return (
@@ -114,7 +133,7 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 							variant="outline"
 							size="sm"
 							className="bg-background"
-							onClick={() => setIsQrOpen(true)}
+							onClick={() => setQrDialogOpen(true)}
 							aria-haspopup="dialog"
 							aria-expanded={isQrOpen}
 							data-testid="wire-subscription-view-qr"
@@ -133,7 +152,7 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 				canDownloadStandingOrderQr={Boolean(qrBill)}
 			/>
 
-			<Dialog open={isQrOpen} onOpenChange={setIsQrOpen}>
+			<Dialog open={isQrOpen} onOpenChange={setQrDialogOpen}>
 				<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[820px]">
 					<DialogHeader>
 						<div className="flex w-full items-start gap-4 pr-8">
@@ -141,7 +160,7 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 								<DialogTitle className="shrink-0">{labels.qrDialogTitle}</DialogTitle>
 								<DialogDescription className="sr-only">{labels.qrDialogTitle}</DialogDescription>
 							</div>
-							{qrBillSvg && qrBill && (
+							{qrBillDisplay && qrBill && (
 								<div className="flex min-w-0 flex-1 items-start justify-end">
 									<QrBillPdfDownloadLink variant="subscription" subscriptionId={id} />
 								</div>
@@ -149,17 +168,10 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 						</div>
 					</DialogHeader>
 
-					{qrBillSvg && qrBill && qrCurrency ? (
+					{qrBillDisplay && qrBill ? (
 						<div className="flex flex-col gap-6" data-testid="wire-subscription-qr-dialog">
-							<QrBillPaymentCard
-								qrBillSvg={qrBillSvg}
-								amount={amount}
-								currency={qrCurrency}
-								contributorReferenceId={qrBill.contributorReferenceId}
-								contributionReferenceId={qrBill.contributionReferenceId}
-								paymentTypeLabel={tWizard('stepQrBill.paymentTypeStandingOrder')}
-							/>
-							<Button type="button" className="w-full" onClick={() => setIsQrOpen(false)}>
+							<QrBillPaymentCard display={qrBillDisplay} paymentTypeLabel={tWizard('stepQrBill.paymentTypeStandingOrder')} />
+							<Button type="button" className="w-full" onClick={() => setQrDialogOpen(false)}>
 								{labels.close}
 							</Button>
 						</div>

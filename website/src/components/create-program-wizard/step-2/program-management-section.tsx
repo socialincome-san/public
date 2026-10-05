@@ -1,7 +1,7 @@
 'use client';
 
-import { Badge } from '@/components/badge/badge';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { Badge } from '@socialincome/design-system/badge/badge';
 import { RadioCard } from '../radio-card';
 import { RadioCardGroup } from '../radio-card-group';
 import type { ProgramManagementType } from '../wizard/types';

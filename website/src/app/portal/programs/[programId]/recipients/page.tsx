@@ -1,18 +1,18 @@
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Card } from '@/components/card/card';
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { ProgramPermission } from '@/generated/prisma/enums';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import type { RecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
-import { services } from '@/lib/services/services';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedRecipientTableViewByProgramId } from '@/modules/recipients/recipient.service';
+import type { RecipientTableViewRow } from '@/modules/recipients/recipient.types';
+import { requireSession } from '@/server/session';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Card } from '@socialincome/design-system/card/card';
 import { Suspense } from 'react';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
 
-export default function RecipientsPageProgramScoped({ params, searchParams }: Props) {
+const RecipientsPageProgramScoped = ({ params, searchParams }: Props) => {
 	return (
 		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 			<Card>
@@ -22,16 +22,18 @@ export default function RecipientsPageProgramScoped({ params, searchParams }: Pr
 			</Card>
 		</BlockWrapper>
 	);
-}
+};
+
+export default RecipientsPageProgramScoped;
 
 const RecipientsProgramScopedDataLoader = async ({ params, searchParams }: Props) => {
 	const { programId } = await params;
 	const resolvedSearchParams = await searchParams;
 	const baseQuery = tableQueryFromSearchParams(resolvedSearchParams);
 	const tableQuery = { ...baseQuery, programId };
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 
-	const recipientsResult = await services.read.recipient.getPaginatedTableViewByProgramId(user.id, programId, tableQuery);
+	const recipientsResult = await getPaginatedRecipientTableViewByProgramId(user.id, programId, tableQuery);
 
 	const error = recipientsResult.success ? null : recipientsResult.error;
 	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];

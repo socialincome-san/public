@@ -1,9 +1,9 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
-import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Card } from '@socialincome/design-system/card/card';
 
-import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
+import { requireAdmin } from '@/server/session';
 import { ReactNode } from 'react';
 
 type MessagingLayoutProps = {
@@ -11,8 +11,7 @@ type MessagingLayoutProps = {
 };
 
 export default async function MessagingLayout({ children }: MessagingLayoutProps) {
-	const user = await getAuthenticatedUserOrRedirect();
-	requireAdmin(user);
+	await requireAdmin();
 
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },

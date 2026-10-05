@@ -1,8 +1,8 @@
 'use client';
 
 import { Survey, SurveyLanguage } from '@/app/[lang]/[region]/survey/[recipient]/[survey]/survey';
-import { Button } from '@/components/button/button';
-import { Input } from '@/components/input/input';
+import { Button } from '@socialincome/design-system/button/button';
+import { Input } from '@socialincome/design-system/input/input';
 import { useSearchParams } from 'next/navigation';
 import { type FormEvent, use, useEffect, useState } from 'react';
 import { type SurveyPageProps } from './layout';

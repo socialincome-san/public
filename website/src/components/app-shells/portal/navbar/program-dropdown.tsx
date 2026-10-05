@@ -1,16 +1,16 @@
 'use client';
 
-import { Button } from '@/components/button/button';
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
+import type { Session } from '@/modules/auth/auth.types';
+import type { UserSession } from '@/modules/users/user.types';
+import { Button } from '@socialincome/design-system/button/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@/components/dropdown-menu/dropdown-menu';
-import type { Session } from '@/lib/firebase/current-account';
-import type { UserSession } from '@/lib/services/user/user.types';
+} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
 import { ChevronDown, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { FC } from 'react';

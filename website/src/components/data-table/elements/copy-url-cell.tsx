@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/button/button';
 import { CellType } from '@/components/data-table/elements/types';
+import { Button } from '@socialincome/design-system/button/button';
 import type { RowData } from '@tanstack/react-table';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';

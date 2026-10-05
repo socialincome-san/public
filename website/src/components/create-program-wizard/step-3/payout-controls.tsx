@@ -1,9 +1,9 @@
 'use client';
 
-import { Slider } from '@/components/slider/slider';
-import { Tabs, TabsList, TabsTrigger } from '@/components/tabs/tabs';
 import { PayoutInterval } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { Slider } from '@socialincome/design-system/slider/slider';
+import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/tabs/tabs';
 import { PayoutPerIntervalAmount, type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 
 type Props = {

@@ -1,28 +1,28 @@
 'use client';
 
-import { Button } from '@/components/button/button';
 import { CoverTransactionCostsToggle } from '@/components/donation-wizard/steps/step-payment/cover-transaction-costs-toggle';
 import { formatDonationCurrencyAmount } from '@/components/donation-wizard/utils/donation-formatting';
-import { Input } from '@/components/input/input';
-import { Separator } from '@/components/separator';
-import { Slider } from '@/components/slider/slider';
 import { type Currency } from '@/generated/prisma/client';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import {
-	getAmountWithTransactionCostCoverage,
-	getOnlineTransactionCost,
-} from '@/lib/services/subscription/cover-transaction-costs';
-import {
-	canUpdateSubscriptionAmount,
-	clampSubscriptionAmount,
-	isSubscriptionAmountInRange,
-	parseSubscriptionAmountInput,
 	SUBSCRIPTION_AMOUNT_MAX,
 	SUBSCRIPTION_AMOUNT_MIN,
 	SUBSCRIPTION_AMOUNT_SLIDER_MAX,
-} from '@/lib/services/subscription/subscription-amount';
+} from '@/modules/subscriptions/subscription.types';
+import { Button } from '@socialincome/design-system/button/button';
+import { Input } from '@socialincome/design-system/input/input';
+import { Separator } from '@socialincome/design-system/separator/separator';
+import { Slider } from '@socialincome/design-system/slider/slider';
 import { CircleX, CreditCard } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
+import {
+	canUpdateSubscriptionAmount,
+	clampSubscriptionAmount,
+	getAmountWithTransactionCostCoverage,
+	getOnlineTransactionCost,
+	isSubscriptionAmountInRange,
+	parseSubscriptionAmountInput,
+} from '../subscription-amount';
 
 type Props = {
 	amount: number;

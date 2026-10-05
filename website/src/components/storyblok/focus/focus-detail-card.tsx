@@ -1,5 +1,5 @@
 import { CardAlertFooter, type CardAlertFooterVariant } from '@/components/card-alert-footer';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import NextLink from 'next/link';
 import { FocusSdgs } from './focus-sdgs';
 import type { SdgValue } from './sdgs';

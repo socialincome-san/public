@@ -3,7 +3,7 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { getSurveysTableFilters, surveysTableConfig } from '@/components/data-table/configs/surveys-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
-import type { SurveyTableViewRow } from '@/lib/services/survey/survey.types';
+import type { SurveyTableViewRow } from '@/modules/surveys/survey.types';
 import { ClipboardListIcon, PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { GenerateSurveysDialog } from './generate-surveys-dialog';

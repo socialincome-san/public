@@ -13,12 +13,12 @@ import {
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
 import type { DropdownItem, Layout } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Session } from '@/lib/firebase/current-account';
-import { useTranslator } from '@/lib/hooks/useTranslator';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { resolveStoryblokLink } from '@/lib/services/storyblok/storyblok.utils';
-import { cn } from '@/lib/utils/cn';
+import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
+import type { Session } from '@/modules/auth/auth.types';
 import * as Dialog from '@radix-ui/react-dialog';
+import { cn } from '@socialincome/design-system/cn';
 import { ArrowRight, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';

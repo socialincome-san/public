@@ -1,11 +1,11 @@
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { ongoingPayoutsTableConfig } from '@/components/data-table/configs/ongoing-payouts-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import type { TableFilterConfig } from '@/components/data-table/table-config.types';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import { getPaginatedOngoingPayoutTableView } from '@/modules/payouts/payout.service';
+import { requireSession } from '@/server/session';
 import { Suspense } from 'react';
 
 export default function OngoingPayoutsPage({ searchParams }: SearchParamsPageProps) {
@@ -17,11 +17,11 @@ export default function OngoingPayoutsPage({ searchParams }: SearchParamsPagePro
 }
 
 const OngoingPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await services.read.payout.getPaginatedOngoingPayoutTableView(user.id, tableQuery);
+	const result = await getPaginatedOngoingPayoutTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];

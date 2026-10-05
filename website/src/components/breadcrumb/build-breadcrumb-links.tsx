@@ -2,8 +2,6 @@ import { getCountryTitle } from '@/components/storyblok/country/country.utils';
 import type { Country } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import type { StoryTitleData } from '@/lib/services/storyblok/storyblok.service';
 import {
 	getPageStoryPath,
 	getWebsitePathTailFromStoryblokSlug,
@@ -11,11 +9,11 @@ import {
 	normalizeStoryblokSlug,
 	STORYBLOK_PAGES_FOLDER,
 } from '@/lib/storyblok/storyblok-paths';
+import { getStoryTitleAction } from '@/modules/storyblok-content/storyblok-content.actions';
+import type { StoryTitleData } from '@/modules/storyblok-content/storyblok-content.types';
+import type { BreadcrumbLinkItem } from '@socialincome/design-system/breadcrumb/breadcrumb';
 
-export type BreadcrumbLink = {
-	label: string;
-	href: string;
-};
+export type BreadcrumbLink = BreadcrumbLinkItem;
 
 type BuildBreadcrumbLinksParams = {
 	fullSlug: string;
@@ -49,7 +47,7 @@ const getStoryLabel = (story: StoryTitleData, fallbackSegment: string) => {
 };
 
 const fetchStoryLabel = async (slugPath: string, lang: WebsiteLanguage, fallbackSegment: string) => {
-	const result = await services.storyblok.getStoryTitle(slugPath, lang);
+	const result = await getStoryTitleAction({ storyPath: slugPath, language: lang });
 
 	if (!result.success) {
 		return humanizeSlugSegment(fallbackSegment);

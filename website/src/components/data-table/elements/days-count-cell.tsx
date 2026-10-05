@@ -1,7 +1,7 @@
 'use client';
 
-import { Badge } from '@/components/badge/badge';
 import { CellType } from '@/components/data-table/elements/types';
+import { Badge } from '@socialincome/design-system/badge/badge';
 import type { RowData } from '@tanstack/react-table';
 import { Clock3Icon } from 'lucide-react';
 

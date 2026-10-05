@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Input } from '@/components/input/input';
-import { SegmentedToggle } from '@/components/segmented-toggle';
-import { createPortalProgramDonationCheckoutAction } from '@/lib/server-actions/stripe-wizard-actions';
+import { createPortalProgramDonationCheckoutAction } from '@/modules/stripe-payments/stripe-payment.actions';
+import { Button } from '@socialincome/design-system/button/button';
+import { Input } from '@socialincome/design-system/input/input';
+import { SegmentedToggle } from '@socialincome/design-system/segmented-toggle/segmented-toggle';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 

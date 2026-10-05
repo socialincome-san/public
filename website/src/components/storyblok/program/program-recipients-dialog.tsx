@@ -1,11 +1,11 @@
 'use client';
 
-import { Button } from '@/components/button/button';
 import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramRecipientsTable } from '@/components/storyblok/program/program-recipients-table';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { getPublicRecipientsTableAction } from '@/lib/server-actions/program-detail-public-actions';
-import type { PublicRecipientTableViewRow } from '@/lib/services/recipient/recipient.types';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { getPublicRecipientsTableAction } from '@/modules/recipients/recipient.actions';
+import type { PublicRecipientTableViewRow } from '@/modules/recipients/recipient.types';
+import { Button } from '@socialincome/design-system/button/button';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 

@@ -3,9 +3,9 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { getYourDonationCertificatesTableConfig } from '@/components/data-table/configs/your-donation-certificates-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import { useTranslator } from '@/lib/hooks/useTranslator';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { YourDonationCertificateTableViewRow } from '@/lib/services/donation-certificate/donation-certificate.types';
+import type { YourDonationCertificateTableViewRow } from '@/modules/donation-certificates/donation-certificate.types';
 import { FileTextIcon } from 'lucide-react';
 import { useState } from 'react';
 import GenerateDonationCertificateDialog from './generate-donation-certificate-dialog';

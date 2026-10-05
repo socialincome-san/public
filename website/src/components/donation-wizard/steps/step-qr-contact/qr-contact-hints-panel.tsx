@@ -1,8 +1,8 @@
 'use client';
 
-import { useContributorSession } from '@/lib/firebase/hooks/useContributorSession';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { cn } from '@/lib/utils/cn';
+import { useContributorSession } from '@/components/contributor/use-contributor-session';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { cn } from '@socialincome/design-system/cn';
 import { Info } from 'lucide-react';
 
 const hintItemClass = cn('flex items-start gap-2 text-left text-sm leading-normal text-muted-foreground');

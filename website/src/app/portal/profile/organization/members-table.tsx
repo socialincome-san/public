@@ -1,18 +1,18 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
-import { Button } from '@/components/button/button';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { organizationMembersTableConfig } from '@/components/data-table/configs/organization-members-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
-import { Input } from '@/components/input/input';
-import { renameActiveOrganizationAction } from '@/lib/server-actions/organization-action';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import type { OrganizationMemberTableViewRow } from '@/lib/services/organization/organization.types';
+import { handleResult } from '@/lib/result-client';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
+import { renameActiveOrganizationAction } from '@/modules/organizations/organization.actions';
+import type { OrganizationMemberTableViewRow } from '@/modules/organizations/organization.types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
+import { Button } from '@socialincome/design-system/button/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/form/form';
+import { Input } from '@socialincome/design-system/input/input';
 import { PencilIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
@@ -57,7 +57,7 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 	const onSubmit = ({ name }: RenameOrganizationFormValues) => {
 		startTransition(async () => {
 			const result = await renameActiveOrganizationAction({ name });
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => {
 					setIsRenameDialogOpen(false);
 					setErrorMessage(null);

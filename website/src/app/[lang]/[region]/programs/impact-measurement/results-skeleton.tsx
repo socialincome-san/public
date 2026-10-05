@@ -1,5 +1,5 @@
-import { BlockWrapper } from '@/components/block-wrapper';
-import { cn } from '@/lib/utils/cn';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { cn } from '@socialincome/design-system/cn';
 
 const SkeletonBar = ({ className }: { className: string }) => (
 	<div className={cn('bg-border animate-pulse rounded-full', className)} />

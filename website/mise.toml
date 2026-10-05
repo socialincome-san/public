@@ -3,7 +3,7 @@ node = "24"
 java = "23"
 
 [tasks.install]
-run = "npm ci"
+run = "npm ci --prefix .."
 
 [tasks.db]
 run = "npm run db:up"
@@ -20,12 +20,8 @@ depends = ["install", "db"]
 run = "npm run serve:ssl"
 depends = ["install", "db"]
 
-[tasks.storybook]
-run = "npm run storybook"
-depends = ["install"]
-
 [tasks.dev]
-depends = ["firebase", "website", "storybook"]
+depends = ["firebase", "website"]
 
 [tasks.dev-ssl]
-depends = ["firebase", "website-ssl", "storybook"]
+depends = ["firebase", "website-ssl"]

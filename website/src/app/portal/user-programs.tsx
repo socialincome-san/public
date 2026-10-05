@@ -1,19 +1,15 @@
-import { Badge } from '@/components/badge/badge';
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import { Wallet } from '@/components/wallet/wallet';
 import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
+import { getCurrentProgramWalletsAction } from '@/modules/programs/program.actions';
+import { Badge } from '@socialincome/design-system/badge/badge';
 
-type Props = {
-	userId: string;
-};
-
-export const UserPrograms = async ({ userId }: Props) => {
-	const result = await services.read.program.getProgramWallets(userId);
+export const UserPrograms = async () => {
+	const result = await getCurrentProgramWalletsAction();
 	const translator = await Translator.getInstance({ language: defaultLanguage, namespaces: ['website-common'] });
 
 	if (!result.success) {

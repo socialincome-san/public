@@ -1,5 +1,5 @@
-import { createWebsiteJournalArticleLink } from '@/lib/services/storyblok/storyblok.utils';
-import { cn } from '@/lib/utils/cn';
+import { createWebsiteJournalArticleLink } from '@/lib/storyblok/storyblok-utils';
+import { cn } from '@socialincome/design-system/cn';
 import Link from 'next/link';
 
 type Props = {

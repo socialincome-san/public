@@ -1,4 +1,4 @@
-import { SectionHeading } from '@/components/section-heading';
+import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 
 type Props = {
 	title: string;

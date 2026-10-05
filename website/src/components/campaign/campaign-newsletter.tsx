@@ -1,13 +1,12 @@
 'use client';
 
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
-import { Input } from '@/components/input/input';
-import { subscribeToNewsletterAction } from '@/lib/server-actions/newsletter-actions';
-import type { CreateNewsletterSubscription } from '@/lib/services/sendgrid/types';
 import type { LanguageCode } from '@/lib/types/language';
+import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Button } from '@socialincome/design-system/button/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/form/form';
+import { Input } from '@socialincome/design-system/input/input';
 import NextImage from 'next/image';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -48,7 +47,7 @@ export const CampaignNewsletter = ({ lang, title, senderName, imageSrc, imageAlt
 
 	const onSubmit = async (values: FormSchema) => {
 		const trimmedFirstName = values.firstname.trim();
-		const data: CreateNewsletterSubscription = {
+		const data = {
 			email: values.email,
 			language: lang === 'de' ? 'de' : 'en',
 			...(trimmedFirstName ? { firstname: trimmedFirstName } : {}),

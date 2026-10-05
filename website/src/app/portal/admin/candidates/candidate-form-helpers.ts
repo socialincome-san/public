@@ -5,15 +5,15 @@ import {
 	normalizeOptionalString,
 } from '@/components/dynamic-form/contact-form-input-mapper';
 import { FormField } from '@/components/dynamic-form/dynamic-form';
-import { CandidateFormCreateInput, CandidateFormUpdateInput } from '@/lib/services/candidate/candidate-form-input';
-import { CandidatePayload } from '@/lib/services/candidate/candidate.types';
+import type { CandidateCreateInput, CandidateUpdateInput } from '@/modules/candidates/candidate.schemas';
+import type { CandidatePayload } from '@/modules/candidates/candidate.types';
 import { CandidateFormSchema } from './candidates-form';
 
 export const buildUpdateCandidateInput = (
 	schema: CandidateFormSchema,
 	candidate: CandidatePayload,
 	contactFields: Record<string, FormField>,
-): CandidateFormUpdateInput => {
+): CandidateUpdateInput => {
 	return {
 		id: candidate.id,
 		suspendedAt: schema.fields.suspendedAt.value ?? null,
@@ -33,7 +33,7 @@ export const buildUpdateCandidateInput = (
 export const buildCreateCandidateInput = (
 	schema: CandidateFormSchema,
 	contactFields: Record<string, FormField>,
-): CandidateFormCreateInput => {
+): CandidateCreateInput => {
 	return {
 		suspendedAt: schema.fields.suspendedAt.value ?? null,
 		suspensionReason: normalizeNullableString(schema.fields.suspensionReason.value),

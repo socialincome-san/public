@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/button/button';
 import { ContributorCard } from '@/components/open-source/contributor-card';
-import type { GithubContributor } from '@/lib/services/github-api/github-api.types';
+import type { GithubContributor } from '@/modules/github/github.types';
+import { Button } from '@socialincome/design-system/button/button';
 import { useState } from 'react';
 
 const INITIAL_VISIBLE_COUNT = 16;

@@ -1,10 +1,10 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { ContributorsList } from '@/components/open-source/contributors-list';
 import { OpenSourceUnavailableMessage } from '@/components/open-source/unavailable-message';
 import type { OpenSourceContributors } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { getOpenSourceContributorsAction } from '@/modules/github/github.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
@@ -21,7 +21,7 @@ type ContributorsLabels = {
 
 export const OpenSourceContributorsBlock = async ({ blok, lang }: Props) => {
 	const [contributorsResult, translator] = await Promise.all([
-		services.githubApi.getOpenSourceContributors(),
+		getOpenSourceContributorsAction(),
 		Translator.getInstance({ language: lang, namespaces: ['website-open-source'] }),
 	]);
 

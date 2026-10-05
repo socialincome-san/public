@@ -1,6 +1,6 @@
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getPersonAvatarSrc, getPersonDisplayName } from '@/lib/services/storyblok/storyblok.utils';
-import { cn } from '@/lib/utils/cn';
+import { getPersonAvatarSrc, getPersonDisplayName } from '@/lib/storyblok/storyblok-utils';
+import { cn } from '@socialincome/design-system/cn';
 import type { ISbStoryData } from '@storyblok/js';
 import Image from 'next/image';
 

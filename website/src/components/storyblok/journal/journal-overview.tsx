@@ -1,5 +1,4 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
-import { Separator } from '@/components/separator';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
 import { JournalPageHeader } from '@/components/storyblok/journal/journal-page-header';
@@ -7,12 +6,10 @@ import { JournalPageShell } from '@/components/storyblok/journal/journal-page-sh
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
 import { PersonCarousel } from '@/components/storyblok/shared/person-carousel';
 import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
-import {
-	createWebsiteJournalArticleTypeLink,
-	getArticleTypeLabel,
-	ResolvedArticle,
-} from '@/lib/services/storyblok/storyblok.utils';
-import { cn } from '@/lib/utils/cn';
+import { createWebsiteJournalArticleTypeLink, getArticleTypeLabel } from '@/lib/storyblok/storyblok-utils';
+import type { JournalArticle } from '@/modules/journal/journal.types';
+import { cn } from '@socialincome/design-system/cn';
+import { Separator } from '@socialincome/design-system/separator/separator';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';
 
@@ -31,7 +28,7 @@ type Props = {
 	activeArticleTypeSlug?: string;
 	lang: string;
 	region: string;
-	articles: ISbStoryData<ResolvedArticle>[];
+	articles: ISbStoryData<JournalArticle>[];
 	authors: ISbStoryData<Person>[];
 	articleTypes: ISbStoryData<ArticleType>[];
 	showMoreArticlesLink: boolean;

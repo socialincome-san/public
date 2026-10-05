@@ -1,4 +1,4 @@
-import { Badge } from '@/components/badge/badge';
+import { Badge } from '@socialincome/design-system/badge/badge';
 
 type Props = {
 	value: boolean;

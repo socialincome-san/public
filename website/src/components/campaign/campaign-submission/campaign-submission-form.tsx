@@ -1,24 +1,37 @@
 'use client';
 
-import { DialogHeader, DialogTitle } from '@/components/dialog';
-import { Form } from '@/components/form';
+import { useContributorSession } from '@/components/contributor/use-contributor-session';
 import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
-import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { useAuth } from '@/lib/firebase/hooks/useAuth';
-import { useContributorSession } from '@/lib/firebase/hooks/useContributorSession';
+import { campaignSubmissionConfig } from '@/lib/campaign-submission';
+import { useAuth } from '@/lib/firebase/hooks/use-auth';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import {
 	getCampaignDefaultImagesAction,
 	getEligiblePublicSubmissionProgramsAction,
+	submitCampaignAction,
 	type CampaignDefaultImageOption,
-} from '@/lib/server-actions/campaign-public-actions';
-import { submitCampaignAction } from '@/lib/server-actions/campaign-submission-actions';
+} from '@/modules/campaigns/campaign.actions';
 import {
-	appendCampaignSubmissionFormData,
 	campaignSubmissionAboutFieldNames,
 	campaignSubmissionDefaultCurrency,
 	campaignSubmissionDetailsFieldNames,
 	campaignSubmissionPersonalFieldNames,
+	turnstileResponseFieldName,
+} from '@/modules/campaigns/campaign.types';
+import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Form } from '@socialincome/design-system/form/form';
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useForm, type FieldPath } from 'react-hook-form';
+import { CampaignSubmissionContributorSuccess } from './campaign-submission-contributor-success';
+import { CampaignSubmissionFooter } from './campaign-submission-footer';
+import { CampaignSubmissionGuestSuccess } from './campaign-submission-guest-success';
+import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
+import { CampaignSubmissionSteps } from './campaign-submission-steps';
+import {
+	appendCampaignSubmissionFormData,
 	createCampaignSubmissionDetailsSchema,
 	createCampaignSubmissionFormSchema,
 	createCampaignSubmissionPersonalSchema,
@@ -27,18 +40,7 @@ import {
 	isCampaignSubmissionImageErrorCode,
 	isCampaignSubmissionImageMultipartField,
 	resolveCampaignSubmissionQuote,
-} from '@/lib/services/campaign/campaign-submission-input';
-import { turnstileResponseFieldName } from '@/lib/services/campaign/turnstile-field';
-import type { PublicSubmissionProgramOption } from '@/lib/services/program/program-public-submission.service';
-import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { useForm, type FieldPath } from 'react-hook-form';
-import { CampaignSubmissionContributorSuccess } from './campaign-submission-contributor-success';
-import { CampaignSubmissionFooter } from './campaign-submission-footer';
-import { CampaignSubmissionGuestSuccess } from './campaign-submission-guest-success';
-import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
-import { CampaignSubmissionSteps } from './campaign-submission-steps';
+} from './campaign-submission.client';
 import { addPendingClaimId } from './pending-claim-ids';
 import type {
 	CampaignImageSelection,

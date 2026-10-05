@@ -1,7 +1,7 @@
 import { UserPrograms } from '@/app/portal/user-programs';
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
+import { requireSession } from '@/server/session';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { Suspense } from 'react';
 
 export default function PortalPage() {
@@ -13,7 +13,7 @@ export default function PortalPage() {
 }
 
 const PortalDataLoader = async () => {
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
@@ -31,7 +31,7 @@ const PortalDataLoader = async () => {
 				</div>
 
 				<div className="space-y-16">
-					<UserPrograms userId={user.id} />
+					<UserPrograms />
 				</div>
 			</BlockWrapper>
 		</>

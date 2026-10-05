@@ -8,16 +8,18 @@ test.beforeEach(async () => {
 
 test('dashboard subscriptions-page matches screenshot', async ({ page }) => {
 	await page.goto('/en/int/dashboard/subscriptions');
-	await expect(page.getByTestId('subscriptions-dashboard')).toBeVisible();
-	await expect(page.getByTestId('upcoming-payments')).toBeVisible();
+	const main = page.getByRole('main');
+	await expect(main.getByTestId('subscriptions-dashboard')).toBeVisible();
+	await expect(main.getByTestId('upcoming-payments')).toBeVisible();
 	await expectToHaveScreenshot(page);
 });
 
 test('dashboard wire subscription can view QR bill details', async ({ page }) => {
 	await page.goto('/en/int/dashboard/subscriptions');
-	await expect(page.getByTestId('subscriptions-dashboard')).toBeVisible();
+	const main = page.getByRole('main');
+	await expect(main.getByTestId('subscriptions-dashboard')).toBeVisible();
 
-	await page.getByTestId('wire-subscription-view-qr').first().click();
+	await main.getByTestId('wire-subscription-view-qr').first().click();
 
 	const dialog = page.getByTestId('wire-subscription-qr-dialog');
 	await expect(dialog).toBeVisible();
@@ -29,23 +31,25 @@ test('dashboard wire subscription can view QR bill details', async ({ page }) =>
 
 test('dashboard wire subscription can update amount', async ({ page }) => {
 	await page.goto('/en/int/dashboard/subscriptions');
-	await expect(page.getByTestId('subscriptions-dashboard')).toBeVisible();
+	const main = page.getByRole('main');
+	await expect(main.getByTestId('subscriptions-dashboard')).toBeVisible();
 
-	await page.getByTestId('wire-subscription-edit').first().click();
+	await main.getByTestId('wire-subscription-edit').first().click();
 	const amountInput = page.getByTestId('edit-subscription-amount-input');
 	await expect(amountInput).toBeVisible();
 	await amountInput.fill('75');
 	await page.getByRole('button', { name: 'Update Subscription' }).click();
 	await expect(page.getByTestId('edit-subscription-success-step')).toBeVisible();
 	await page.getByTestId('edit-subscription-done').click();
-	await expect(page.getByTestId('wire-subscription-row').first()).toContainText('CHF 75');
+	await expect(main.getByTestId('wire-subscription-row').first()).toContainText('CHF 75');
 });
 
 test('dashboard wire subscription can cancel through retention and reason', async ({ page }) => {
 	await page.goto('/en/int/dashboard/subscriptions');
-	await expect(page.getByTestId('subscriptions-dashboard')).toBeVisible();
+	const main = page.getByRole('main');
+	await expect(main.getByTestId('subscriptions-dashboard')).toBeVisible();
 
-	await page.getByTestId('wire-subscription-edit').first().click();
+	await main.getByTestId('wire-subscription-edit').first().click();
 	await page.getByTestId('edit-subscription-start-cancel').click();
 	await expect(page.getByTestId('cancel-retention-step')).toBeVisible();
 	await page.getByTestId('cancel-retention-continue').click();
@@ -53,5 +57,5 @@ test('dashboard wire subscription can cancel through retention and reason', asyn
 	await page.getByTestId('cancel-reason-confirm').click();
 	await expect(page.getByTestId('cancel-success-step')).toBeVisible();
 	await page.getByTestId('edit-subscription-done').click();
-	await expect(page.getByTestId('wire-subscription-row')).toHaveCount(0);
+	await expect(main.getByTestId('wire-subscription-row')).toHaveCount(0);
 });

@@ -4,7 +4,7 @@ import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblo
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 
 type Props = {
 	programDetailData: ProgramDetailData;
@@ -16,8 +16,9 @@ type Props = {
 export const ProgramPayoutsTotal = async ({ programDetailData, translator, lang, region }: Props) => {
 	const totalChf = programDetailData.dashboardStats?.paidOutSoFarChf ?? 0;
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const rates = await services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency);
-	const { amount: totalAmount, currency } = services.currencyDisplay.resolveFromChf(totalChf, displayCurrency, rates);
+	const displayResult = await resolveChfAmountsAction({ amounts: [totalChf], displayCurrency });
+	const displayAmount = displayResult.success ? displayResult.data[0] : undefined;
+	const { amount: totalAmount, currency } = displayAmount ?? { amount: totalChf, currency: 'CHF' as const };
 
 	const blok: DonationsTotal = {
 		component: 'donationsTotal',

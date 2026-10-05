@@ -1,11 +1,11 @@
 'use client';
 
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/carousel';
-import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
-import { cn } from '@/lib/utils/cn';
 import MuxVideo from '@mux/mux-video-react';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@socialincome/design-system/carousel/carousel';
+import { cn } from '@socialincome/design-system/cn';
+import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 import { useEffect, useState } from 'react';
 
 type Props = {

@@ -2,7 +2,8 @@ import { DonationsTotalBlock } from '@/components/content-blocks/donations-total
 import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
+import { getTotalContributionsChfAction } from '@/modules/transparency/transparency.actions';
 
 type Props = {
 	blok: DonationsTotal;
@@ -12,12 +13,11 @@ type Props = {
 
 export const DonationsTotalBlockServer = async ({ blok, lang, region }: Props) => {
 	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const [totalResult, rates] = await Promise.all([
-		services.transparency.getTotalContributionsChf(),
-		services.currencyDisplay.fetchWalletPayoutDisplayRates(displayCurrency),
-	]);
+	const totalResult = await getTotalContributionsChfAction();
 	const totalChf = totalResult.success ? totalResult.data : 0;
-	const { amount: totalAmount, currency } = services.currencyDisplay.resolveFromChf(totalChf, displayCurrency, rates);
+	const displayResult = await resolveChfAmountsAction({ amounts: [totalChf], displayCurrency });
+	const displayAmount = displayResult.success ? displayResult.data[0] : undefined;
+	const { amount: totalAmount, currency } = displayAmount ?? { amount: totalChf, currency: 'CHF' as const };
 
 	return <DonationsTotalBlock blok={blok} lang={lang} region={region} totalAmount={totalAmount} currency={currency} />;
 };

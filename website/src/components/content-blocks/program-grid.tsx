@@ -1,11 +1,11 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
 import { ProgramGridView } from '@/components/content-blocks/program-grid-view';
-import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import { getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
 import { SbBlokData, storyblokEditable } from '@storyblok/react';
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
-	const programsResult = await services.storyblok.getPrograms(lang);
+	const programsResult = await getProgramsAction(lang);
 	const allPrograms = programsResult.success ? programsResult.data : [];
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
 

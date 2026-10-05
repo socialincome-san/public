@@ -1,8 +1,8 @@
 'use client';
 
-import { Switch } from '@/components/switch/switch';
 import { PayoutInterval } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { Switch } from '@socialincome/design-system/switch/switch';
 import { PayoutControls } from './payout-controls';
 import { type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 import { PayoutSummary } from './payout-summary';

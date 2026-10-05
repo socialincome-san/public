@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
 import type { PropsWithChildren } from 'react';
 
 export const JournalPageShell = ({ children, className }: PropsWithChildren<{ className?: string }>) => (

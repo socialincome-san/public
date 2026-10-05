@@ -1,16 +1,15 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { buildCampaignFundraisingPillLabels } from '@/components/campaign/build-campaign-fundraising-pill-labels';
 import { CampaignDonationFormServer } from '@/components/campaign/campaign-donation/campaign-donation-form-server';
 import { CampaignFundraisingPills } from '@/components/campaign/campaign-fundraising-pills';
 import { getCampaignDaysRemaining } from '@/components/campaign/get-campaign-days-remaining';
-import { Progress } from '@/components/progress/progress';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { isCampaignActive } from '@/lib/services/campaign/campaign-public-activity';
-import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
+import type { CampaignPage } from '@/modules/campaigns/campaign.types';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { Progress } from '@socialincome/design-system/progress/progress';
 import NextImage from 'next/image';
 import type { ReactNode } from 'react';
 
@@ -60,11 +59,7 @@ export const CampaignHero = ({
 }: Props) => {
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
 	const raisedPercent = campaign.percentageCollected ?? 0;
-	const isActive = isCampaignActive({
-		endDate: campaign.endDate,
-		goal: campaign.goal,
-		amountCollected: campaign.amountCollected,
-	});
+	const isActive = campaign.isActive;
 	const heroImageSrc = primaryImage?.filename
 		? formatStoryblokUrl(primaryImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, primaryImage.focus)
 		: null;

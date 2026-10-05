@@ -1,4 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
@@ -8,7 +7,8 @@ import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getLocalPartnerProgramSummaries } from '@/lib/storyblok/local-partner-programs';
+import { getLocalPartnerProgramSummariesAction } from '@/modules/local-partners/local-partner.actions';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { LocalPartnerAboutMetaCard, LocalPartnerFocusBadges } from './local-partner-about-meta';
 import { LocalPartnerPartners } from './local-partner-partners';
 import { LocalPartnerPayoutsTotal } from './local-partner-payouts-total';
@@ -30,11 +30,14 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 	const localPartnerTitle = getLocalPartnerTitle(localPartner.content);
 	const isoCode = getLocalPartnerIsoCode(localPartner.content);
 	const focuses = (localPartner.content.focuses ?? []).filter(isFocusStory);
-	const partnerPrograms = await getLocalPartnerProgramSummaries(
+	const partnerProgramsResult = await getLocalPartnerProgramSummariesAction({
 		lang,
-		localPartner.content.portalSlug?.trim() ?? '',
-		isoCode ?? '',
-	);
+		localPartnerPortalSlug: localPartner.content.portalSlug?.trim() ?? '',
+		countryIsoCode: isoCode ?? '',
+	});
+	const partnerPrograms = partnerProgramsResult.success
+		? partnerProgramsResult.data
+		: { programs: [], programCount: 0, recipientsTotal: 0, isPartnerScoped: false };
 	const heroCard = <LocalPartnerProgramsCard partnerPrograms={partnerPrograms} lang={lang} region={region} />;
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: localPartner.full_slug,

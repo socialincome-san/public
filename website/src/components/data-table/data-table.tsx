@@ -13,13 +13,13 @@ import { TABLE_PAGE_SIZE_OPTIONS, TableQueryState } from '@/components/data-tabl
 import { TableFilterConfig } from '@/components/data-table/table-config.types';
 import type { ColumnDef, VisibilityState } from '@/components/data-table/tanstack-table';
 import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
-import { useTranslator } from '@/lib/hooks/useTranslator';
 import { Translator } from '@/lib/i18n/translator';
+import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { cn } from '@/lib/utils/cn';
 import { DATA_TABLE_FETCH_PREFIX_REGEX } from '@/lib/utils/regex';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
+import { cn } from '@socialincome/design-system/cn';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
 import type { RowData, SortingState } from '@tanstack/react-table';
 import { functionalUpdate } from '@tanstack/react-table';
 import DOMPurify from 'isomorphic-dompurify';

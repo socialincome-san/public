@@ -1,4 +1,3 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { buildCampaignSubmissionLabels } from '@/components/campaign/build-campaign-submission-labels';
@@ -14,9 +13,10 @@ import { CampaignVideoSlider } from '@/components/campaign/campaign-video-slider
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { CampaignPage } from '@/lib/services/campaign/campaign.types';
-import { services } from '@/lib/services/services';
 import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
+import { getCampaignPageContentAction } from '@/modules/campaigns/campaign.actions';
+import type { CampaignPage } from '@/modules/campaigns/campaign.types';
+import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 
 type Props = {
 	campaign: CampaignPage;
@@ -58,7 +58,7 @@ export const CampaignDetail = async ({
 	region,
 }: Props) => {
 	const [pageContentResult, breadcrumbLinks] = await Promise.all([
-		services.read.campaignPublicWebsite.getPageContent(lang, faq),
+		getCampaignPageContentAction(lang, faq),
 		buildBreadcrumbLinks({
 			fullSlug: getCampaignStoryPath(campaignSlug),
 			currentLabel: title,

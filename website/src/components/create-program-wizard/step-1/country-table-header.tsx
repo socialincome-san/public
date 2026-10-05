@@ -1,9 +1,9 @@
 'use client';
 
-import { Input } from '@/components/input/input';
-import { Label } from '@/components/label';
-import { Switch } from '@/components/switch/switch';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { Input } from '@socialincome/design-system/input/input';
+import { Label } from '@socialincome/design-system/label/label';
+import { Switch } from '@socialincome/design-system/switch/switch';
 
 type Props = {
 	search: string;

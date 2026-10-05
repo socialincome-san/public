@@ -1,12 +1,12 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
+import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/navigation';
 import type { KeyboardEvent, ReactNode } from 'react';
 import { useEffect } from 'react';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { createProgramWizardMachine } from './wizard/create-program-machine';
 import { CreateProgramWizard } from './wizard/create-program-wizard';
 
