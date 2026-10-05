@@ -96,8 +96,28 @@ House style in the HTML that the doc doesn't show:
 - **Links** keep the template's exact attributes:
   `clicktracking="off" target="_blank" rel="noopener noreferrer"` plus the
   inline style. Copy an existing `<a>` and change only the href and text.
+- **Titles in Title Case**, always: the `<h1>`, every `<h2>` section title
+  and journal article titles ("Mango Season", "Before You Go", "Money Without
+  Banks"), even when the doc writes them in sentence case. Small words stay
+  lowercase unless they come first (a, an, the, and, or, of, in, on, to,
+  for). News items in "My World in News" keep the doc's casing.
 - **Typography:** use curly apostrophes and quotes (’ “ ”), as the doc does.
   Use `&amp;` in text. Don't add em dashes that aren't in the doc.
+- **One style across the whole email.** The doc mixes styles. Make them
+  match:
+  - US spelling everywhere ("program", "organized", "traveled",
+    "organization"), because the site and the cards use US spelling.
+  - Curly apostrophes and quotes everywhere, including leftover template
+    text ("Here’s what has been happening").
+  - Source labels named the same way ("The Guardian" next to "The
+    Economist", not "Guardian").
+  - Rows of the same kind look the same: no bold on one journal row when the
+    others have none, the same `•` separators in every country card.
+  - Blue highlights spread evenly: every story and data figure gets one, not
+    just some of them.
+
+  List these changes in the report. They're the only edits allowed to the
+  doc's wording.
 - Doc text wins over the HTML's wording. Don't rewrite or "improve" the copy.
   It has been edited and proofread. If something looks like a typo, flag it in
   the report instead of fixing it silently.
@@ -131,10 +151,14 @@ so the user can add a link to the photo if they want one.
 2. Placeholders: `grep -nE "example\.com|\[PHOTO|TBD|TODO" <new>.html`. A `[PHOTO` hit is a mistake: remove it.
 3. Markup: compare the tag counts of `<table`, `<tr`, `<td` against their
    closing tags in the new file. They must balance like in the template.
-4. Look at it. Screenshot the file at 600px and 375px width with Playwright
+4. Consistency: read the whole email top to bottom once more. Check that
+   every title is in Title Case, the spelling is US throughout, the
+   apostrophes are curly and each story and data figure has its blue
+   highlight.
+5. Look at it. Screenshot the file at 600px and 375px width with Playwright
    (Chromium is at `/opt/pw-browsers/chromium` in cloud sessions) and view the
    images. Check for broken blocks, missing dividers and leftover template content.
-5. Show it in the chat. The chat preview doesn't load images from other
+6. Show it in the chat. The chat preview doesn't load images from other
    websites, so the SendGrid images go missing there. Make a copy with the
    images built in and send that one to the user:
    ```bash
