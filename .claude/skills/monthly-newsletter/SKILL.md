@@ -60,6 +60,7 @@ node <skill-dir>/scripts/program-counts.mjs
 It prints programs, recipients and "N candidates ready to enroll" per country.
 
 In cloud sessions, two things can get in the way:
+
 - `ERR_TUNNEL_CONNECTION_FAILED`: the environment's network policy blocks
   socialincome.org. The user has to allow the host in the environment settings.
 - `ERR_CERT_AUTHORITY_INVALID`: Chromium's certificate store (`~/.pki/nssdb`)
@@ -89,20 +90,20 @@ python3 <skill-dir>/scripts/outline.py website/emails/newsletter/<template>.html
 It prints every visible text, heading, link and image with its line number.
 Then replace content section by section:
 
-| Doc | HTML |
-|---|---|
-| `Subject:` | `<h1 class="feature">`, with a period at the end ("Shoes, Stablecoins and Schools.") |
-| first 1–2 sentences of the body | hidden preheader `<div>` right after `<body>` (keep the trailing `&zwnj;&nbsp;` padding). This is the inbox preview, so it has to be updated every month. September shipped with August's. |
-| `Hey *\|FNAME\|*!` | leave `Hi {{ insert first_name 'default=there' }},` unchanged (SendGrid syntax, not Mailchimp) |
-| intro paragraphs | the `<p>` blocks under the greeting |
-| date | `• Oct 2026` under the author name → target month |
+| Doc                                | HTML                                                                                                                                                                                                                            |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Subject:`                         | `<h1 class="feature">`, with a period at the end ("Shoes, Stablecoins and Schools.")                                                                                                                                            |
+| first 1–2 sentences of the body    | hidden preheader `<div>` right after `<body>` (keep the trailing `&zwnj;&nbsp;` padding). This is the inbox preview, so it has to be updated every month. September shipped with August's.                                      |
+| `Hey *\|FNAME\|*!`                 | leave `Hi {{ insert first_name 'default=there' }},` unchanged (SendGrid syntax, not Mailchimp)                                                                                                                                  |
+| intro paragraphs                   | the `<p>` blocks under the greeting                                                                                                                                                                                             |
+| date                               | `• Oct 2026` under the author name → target month                                                                                                                                                                               |
 | Country office news → each country | the country card ("Sierra Leone card" comments): `Country Office:` text, then `In the News:` items. Separate items with `•`. Each news item is the headline plus its source label linking to the article with the ↗ icon image. |
-| recipients / candidates | `573 Recipients` and `753 candidates ready for a program` in each card |
-| `New journal articles` | "Latest From Our Journal": one row per article, with `by <author>` + ↗ |
-| each bold-titled story | an `<h2 class="feature">` story section (color `#01579b`), separated by the `border-bottom: 1px solid #d4dadf` divider rows |
-| `My World in Data` | big number + paragraph + punchline, one block per figure |
-| `My World in News` | one row per item: title + source label + ↗ |
-| sign-off / donate / footer | leave as is, unless the draft says otherwise |
+| recipients / candidates            | `573 Recipients` and `753 candidates ready for a program` in each card                                                                                                                                                          |
+| `New journal articles`             | "Latest From Our Journal": one row per article, with `by <author>` + ↗                                                                                                                                                          |
+| each bold-titled story             | an `<h2 class="feature">` story section (color `#01579b`), separated by the `border-bottom: 1px solid #d4dadf` divider rows                                                                                                     |
+| `My World in Data`                 | big number + paragraph + punchline, one block per figure                                                                                                                                                                        |
+| `My World in News`                 | one row per item: title + source label + ↗                                                                                                                                                                                      |
+| sign-off / donate / footer         | leave as is, unless the draft says otherwise                                                                                                                                                                                    |
 
 House style in the HTML that the doc doesn't show:
 
