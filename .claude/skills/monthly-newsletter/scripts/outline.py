@@ -3,7 +3,7 @@
 
   outline.py <file.html>              visible text, headings, links, images with line numbers
   outline.py <new.html> --stale <prev.html>
-                                      text and links in <new> that are identical to <prev>
+                                      text, links and images in <new> that are identical to <prev>
                                       (boilerplate like footer/donate block is ignored)
 """
 import re
@@ -21,6 +21,11 @@ BOILERPLATE = re.compile(
 BOILERPLATE_LINKS = re.compile(
     r"^(https://socialincome\.org/?(about-us#team|countries/\w[\w-]*|programs\?country=\w+|donate/one-time|"
     r"en/int/journal|journal)?|mailto:.*|https://www\.linkedin\.com/in/.*|\{\{\{.*\}\}\})$"
+)
+# Images that appear in every issue (matched on alt text): logo, portraits, flags, icons, signature.
+BOILERPLATE_IMAGES = re.compile(
+    r"^(↗|Logo|Social Income|Signature|Payment Icons|Zewo Certified|SL|LR|GH|"
+    r"Portrait (Aurélie.*|Matthew|Ariea Burke))$"
 )
 
 
@@ -68,6 +73,7 @@ def main():
         new, prev = parse(sys.argv[1]), parse(sys.argv[3])
         prev_text = {v for _, k, v in prev if k == "text"}
         prev_links = {v for _, k, v in prev if k == "link"}
+        prev_images = {v.rsplit(" ", 1)[-1] for _, k, v in prev if k == "img"}
         found = 0
         for line, kind, value in new:
             if kind == "text" and value in prev_text and len(value) > 3 and not BOILERPLATE.match(value):
@@ -76,6 +82,11 @@ def main():
             elif kind == "link" and value in prev_links and not BOILERPLATE_LINKS.match(value):
                 print(f"{line}: same link as last month: {value}")
                 found += 1
+            elif kind == "img":
+                alt, src = value.rsplit(" ", 1)
+                if src in prev_images and not BOILERPLATE_IMAGES.match(alt):
+                    print(f"{line}: same image as last month: {value}")
+                    found += 1
         print(f"\n{found} possible leftovers from {sys.argv[3]}")
         return
     print(__doc__)
