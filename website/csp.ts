@@ -25,6 +25,8 @@ const DEVELOPMENT_SCRIPT_SRC_EXTRA = ["'unsafe-eval'"] as const;
 const STYLE_SRC = ["'self'", "'unsafe-inline'"] as const;
 
 const IMG_SRC = [
+	'https://v3.fal.media',
+	'https://v3b.fal.media',
 	"'self'",
 	'data:',
 	'blob:',
