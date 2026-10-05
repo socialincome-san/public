@@ -65,8 +65,14 @@ codebase better than you found it.
 
 # Backend Architecture
 
-This project is migrating toward a Next.js modular monolith. The
-`src/modules/recipients` module is the reference implementation.
+The website is a Next.js modular monolith. Business code lives in
+`website/src/modules`. External APIs are wrapped in
+`website/src/integrations`. `src/modules/recipients` is a representative
+module.
+
+Success and failure cross these boundaries as `Result<T>` from
+`website/src/lib/result.ts` (`resultOk`, `resultFail`). Client code uses
+`handleResult` from `website/src/lib/result-client.ts`.
 
 ```text
 app -> modules
@@ -74,10 +80,6 @@ modules -> repositories + integrations
 repositories -> Prisma
 integrations -> external APIs
 ```
-
-Legacy domains may not follow this structure yet. Apply it when
-migrating one domain at a time; do not broaden a focused change into an
-unrelated migration.
 
 ## Module file roles
 

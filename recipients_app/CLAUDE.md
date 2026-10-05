@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Flutter mobile app (Android/iOS) for recipients of a Social Income basic-income program. It lets recipients keep
 their personal data up-to-date, confirm monthly payments, and fill out impact-measurement surveys. This is the
-`recipients_app` workspace inside the SocialIncome monorepo; see `../CLAUDE.md` for repo-wide conventions.
+`recipients_app` inside the Social Income repository; see `../.claude/CLAUDE.md` for repo-wide conventions.
 
 ## Commands
 

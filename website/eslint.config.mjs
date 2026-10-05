@@ -422,7 +422,7 @@ export default [
 		},
 	},
 	{
-		files: ['src/app/**/*.{ts,tsx}', 'src/lib/server-actions/**/*.{ts,tsx}'],
+		files: ['src/app/**/*.{ts,tsx}'],
 		ignores: ['src/app/api/health/database/route.ts', 'src/app/api/v1/twilio/**/*.{ts,tsx}'],
 		rules: {
 			'@typescript-eslint/no-restricted-imports': [

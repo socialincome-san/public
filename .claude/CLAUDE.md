@@ -11,80 +11,70 @@
 ## Project Overview
 
 Social Income is an open-source platform for unconditional basic income.
-npm workspaces monorepo with Node 22.
+The repository holds a Next.js app in `website/` and a Flutter app in
+`recipients_app/`. Node 24 is pinned in `website/mise.toml`.
 
-**Workspaces:**
+**Apps:**
 
-- `website/` - Main Next.js 16 app (public site, portal, dashboard, API)
+- `website/` - Main Next.js app (public site, portal, dashboard, API)
 - `recipients_app/` - Flutter mobile app
 
-## Architecture Patterns
+## Architecture
 
-**Service Layer** (business logic):
-
-- Services extend `BaseService` and return `Result<T>`
-- Example: `website/src/lib/services/candidate/candidate.service.ts`
-
-**Server Actions** (API layer):
-
-- Use services, never access DB directly
-- Always call `getActorOrThrow()` for auth
-- Example: `website/src/lib/server-actions/candidate-actions.ts`
+Follow @../AGENTS.md. That file is the module, Result, and lint contract.
+Do not restate it here.
 
 **Components** (UI):
 
 - Use `React.forwardRef` with `displayName`
 - Use CVA (class-variance-authority) for variants
 - Use Radix UI primitives as base
-- Example: `ui/src/components/button.tsx`
+- Example: `website/src/components/button/button.tsx`
 
 ## Key File Locations
 
 - Prisma schema: `website/src/lib/database/schema.prisma`
-- Services: `website/src/lib/services/[domain]/`
-- Server Actions: `website/src/lib/server-actions/`
-- UI Components: `ui/src/components/`
+- Modules: `website/src/modules/[domain]/`
+- Integrations: `website/src/integrations/`
+- UI Components: `website/src/components/`
 - App Routes: `website/src/app/`
-- Utilities: `ui/src/lib/utils.ts` (cn function)
+- `cn`: `website/src/lib/utils/cn.ts`
 
 ## Tech Stack
 
-- React 19, Next.js 16, TypeScript 5.7
+- React 19, Next.js 16, TypeScript 6
 - Prisma ORM + PostgreSQL
-- Firebase (Auth, Storage)
+- Firebase (Auth, Firestore, Storage)
 - Storyblok CMS
 - Tailwind CSS + Radix UI
 - XState (state machines), Zod (validation)
-- lodash, date-fns, luxon
+- date-fns, luxon
 
 ## Commands
 
 ```bash
-mise dev                      # Full local environment
-npm run website:start         # Website + Firebase emulators
-npm run ui:serve              # Storybook (port 6006)
-npm run db:studio             # Prisma Studio
-npm run website:test:unit     # Jest tests
+cd website
+mise dev                      # Postgres, Firebase emulators, Next.js, Storybook
+npm run lint                  # Architecture rule tests, then ESLint
 npm run typecheck             # TypeScript check
-npm run website:lint          # ESLint
-npm run format-code           # Prettier
+npm run test:unit             # Jest tests
+npm run test:e2e              # Playwright
+npm run db:studio             # Prisma Studio
+npm run format:fix            # Prettier
 ```
 
 ## File Naming
 
 - All files: `kebab-case`
-- Semantic suffixes: `*.service.ts`, `*-actions.ts`, `*.types.ts`,
-  `*-form.tsx`, `*-helpers.ts`
+- Semantic suffixes: `*.service.ts`, `*.actions.ts`, `*.repository.ts`,
+  `*.types.ts`, `*-form.tsx`, `*-helpers.ts`
 - Default exports for pages, named exports for utilities
 
 ## Critical Rules
 
-- Use lodash for utilities before writing custom implementations
 - Use Tailwind classes only (no CSS modules, styled-components)
-- Use Zod for validation schemas
-- Use `cn()` from `ui/src/lib/utils.ts` for class merging
-- Follow Result pattern for error handling
-- Check existing implementations in codebase before adding dependencies
+- Use `cn()` from `website/src/lib/utils/cn.ts` for class merging
+- Check existing implementations in the codebase before adding dependencies
 
 ## Test Accounts (Local Dev)
 
@@ -95,5 +85,5 @@ npm run format-code           # Prettier
 ## Resources
 
 - API Docs: <https://socialincome.org/v1/api-docs>
-- Storybook: <http://design.socialincome.org>
+- Storybook: <https://socialincome.org/storybook>
 - Project README: `/README.md`

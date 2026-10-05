@@ -65,7 +65,7 @@ test('result-contract requires annotated Result returns', () => {
 	const valid = lint({
 		filename: 'src/modules/example/example.service.ts',
 		rules: { 'backend-architecture/result-contract': 'error' },
-		code: `import type { Result } from '@/lib/services/core/base.types';
+		code: `import type { Result } from '@/lib/result';
 
 export const createExample = async (): Promise<Result<{ id: string }>> => {
 	return { success: true, data: { id: '1' } };
@@ -119,7 +119,7 @@ test('result-contract allows sync integration helpers without Result', () => {
 	const messages = lint({
 		filename: 'src/integrations/example/example.integration.ts',
 		rules: { 'backend-architecture/result-contract': 'error' },
-		code: `import type { Result } from '@/lib/services/core/base.types';
+		code: `import type { Result } from '@/lib/result';
 
 export const mapExample = (value: string): string => value;
 
@@ -136,7 +136,7 @@ test('safe-result-errors accepts fixed resultFail messages', () => {
 	const valid = lint({
 		filename: 'src/modules/example/example.service.ts',
 		rules: { 'backend-architecture/safe-result-errors': 'error' },
-		code: `import { resultFail } from '@/lib/services/core/result';
+		code: `import { resultFail } from '@/lib/result';
 
 const fixedMessage = 'Could not create example' as const;
 
@@ -151,7 +151,7 @@ test('safe-result-errors rejects dynamic resultFail messages', () => {
 	const invalid = lint({
 		filename: 'src/modules/example/example.service.ts',
 		rules: { 'backend-architecture/safe-result-errors': 'error' },
-		code: `import { resultFail } from '@/lib/services/core/result';
+		code: `import { resultFail } from '@/lib/result';
 
 export const failExample = (error: { message: string }, parseResult: { error: { issues: { message: string }[] } }) => {
 	resultFail(\`Could not create example: \${error.message}\`);
