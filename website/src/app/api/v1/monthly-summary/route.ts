@@ -1,4 +1,4 @@
-import { MonthlySummaryEmailTemplate } from '@/lib/services/monthly-summary/monthly-summary-email';
+import { createMonthlySummaryTemplateData, MONTHLY_SUMMARY_TEMPLATE } from '@/lib/services/sendgrid/sendgrid-mail.service';
 import { services } from '@/lib/services/services';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import { NextRequest, NextResponse } from 'next/server';
@@ -39,12 +39,18 @@ export const POST = async (request: NextRequest) => {
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 
-		const { subject, text } = new MonthlySummaryEmailTemplate().create(summaryResult.data);
+		const month = summaryResult.data.period.from.toLocaleDateString('en-US', {
+			month: 'long',
+			year: 'numeric',
+			timeZone: 'UTC',
+		});
 
 		const emailResult = await services.sendgridMail.send({
 			to: recipients,
-			subject,
-			text,
+			subject: `Monthly summary — ${month}`,
+			text: '',
+			template: MONTHLY_SUMMARY_TEMPLATE,
+			data: createMonthlySummaryTemplateData(summaryResult.data),
 		});
 		if (!emailResult.success) {
 			console.error(`${SLACK_ALERT}: Monthly summary email failed: ${emailResult.error}`, { emailResult });
