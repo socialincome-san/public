@@ -37,6 +37,9 @@ const lint = (code, filename = buttonFile) => {
 
 test('allows imports that stay inside the design system', () => {
 	const messages = lint(`import { cn } from '../../cn';
+import { Slot } from '@radix-ui/react-slot';
+import Link from 'next/link';
+import path from 'node:path';
 export { Button } from './button';
 `);
 
@@ -51,4 +54,14 @@ import { flag } from '../../../../website/public/assets/flags/ch.svg';
 
 	assert.equal(messages.length, 3);
 	assert.ok(messages.every((entry) => entry.message.includes('cannot import the website')));
+});
+
+test('rejects packages that are not declared by the design system', () => {
+	const messages = lint(`import { storyblokEditable } from '@storyblok/react';
+import { PrismaClient } from '@prisma/client';
+import { z } from 'zod';
+`);
+
+	assert.equal(messages.length, 3);
+	assert.ok(messages.every((entry) => entry.message.includes('is not declared in design-system/package.json')));
 });

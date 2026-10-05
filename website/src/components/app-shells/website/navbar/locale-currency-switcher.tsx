@@ -1,5 +1,6 @@
 'use client';
 
+import { CountryFlag } from '@/components/country-flag';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { useIsPage } from '@/lib/hooks/use-is-page';
 import { useI18n } from '@/lib/i18n/use-i18n';
@@ -16,7 +17,6 @@ import {
 } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/design-system/button/button';
 import { cn } from '@socialincome/design-system/cn';
-import { CountryFlag } from '@socialincome/design-system/country-flag/country-flag';
 import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/popover/popover';
 import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/tabs/tabs';
 import { ChevronDown, Globe } from 'lucide-react';
