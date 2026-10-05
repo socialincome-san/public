@@ -2,7 +2,13 @@
 
 import { getSessionByType } from '@/lib/firebase/current-account';
 import { getOptionalContributor } from '@/lib/firebase/current-contributor';
-import { resultFail, resultOk } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
+import type {
+	ContributorCommunityStats,
+	ContributorPayload,
+	ContributorRecord,
+	ContributorSession,
+} from '@/modules/contributors/contributor.types';
 import { revalidatePath } from 'next/cache';
 import {
 	contributorCreateSchema,
@@ -18,7 +24,7 @@ import {
 	updateContributorSelf,
 } from './contributor.service';
 
-export const createContributorAction = async (input: unknown) => {
+export const createContributorAction = async (input: unknown): Promise<Result<ContributorRecord>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -35,7 +41,7 @@ export const createContributorAction = async (input: unknown) => {
 	return result;
 };
 
-export const updateContributorAction = async (input: unknown) => {
+export const updateContributorAction = async (input: unknown): Promise<Result<ContributorRecord>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -52,7 +58,7 @@ export const updateContributorAction = async (input: unknown) => {
 	return result;
 };
 
-export const getContributorAction = async (contributorId: unknown) => {
+export const getContributorAction = async (contributorId: unknown): Promise<Result<ContributorPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -66,9 +72,10 @@ export const getContributorAction = async (contributorId: unknown) => {
 	return getContributor(sessionResult.data.id, contributorIdResult.data);
 };
 
-export const getOptionalContributorAction = async () => resultOk(await getOptionalContributor());
+export const getOptionalContributorAction = async (): Promise<Result<null | ContributorSession>> =>
+	resultOk(await getOptionalContributor());
 
-export const updateContributorSelfAction = async (input: unknown) => {
+export const updateContributorSelfAction = async (input: unknown): Promise<Result<ContributorRecord>> => {
 	const sessionResult = await getSessionByType('contributor');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -85,4 +92,5 @@ export const updateContributorSelfAction = async (input: unknown) => {
 	return result;
 };
 
-export const getContributorCommunityStatsAction = async () => getCommunityStats();
+export const getContributorCommunityStatsAction = async (): Promise<Result<ContributorCommunityStats>> =>
+	getCommunityStats();

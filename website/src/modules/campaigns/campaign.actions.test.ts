@@ -1,4 +1,4 @@
-import type { ServiceResult } from '@/lib/service-result';
+import type { Result } from '@/lib/result';
 import { addDays, format, startOfDay } from 'date-fns';
 import type {
 	CampaignSubmissionFields,
@@ -14,7 +14,7 @@ const mockSubmit = jest.fn() as jest.MockedFunction<
 		optionalImages?: CampaignSubmissionOptionalImages,
 		contributorId?: string | null,
 		turnstileToken?: string | null,
-	) => Promise<ServiceResult<CampaignSubmissionResult>>
+	) => Promise<Result<CampaignSubmissionResult>>
 >;
 const mockGetOrCreateFromEmailAndName = jest.fn();
 const mockGetSessionByType = jest.fn();

@@ -1,10 +1,10 @@
-import { resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultOk, type Result } from '@/lib/result';
 import type { QrBillReferenceParts } from './qr-bill.types';
 
 const CONTRIBUTOR_REFERENCE_ID_LENGTH = 13;
 const CONTRIBUTION_REFERENCE_ID_LENGTH = 10;
 
-export const parseQrBillReference = (referenceId: string): ServiceResult<QrBillReferenceParts> => {
+export const parseQrBillReference = (referenceId: string): Result<QrBillReferenceParts> => {
 	if (referenceId.startsWith('0000000')) {
 		return resultOk({
 			contributorReferenceId: referenceId.slice(7, 20),

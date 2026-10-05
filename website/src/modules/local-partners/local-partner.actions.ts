@@ -1,7 +1,8 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
+import type { LocalPartnerPayload, PublicProgramLocalPartner } from '@/modules/local-partners/local-partner.types';
 import { revalidatePath } from 'next/cache';
 import {
 	localPartnerCreateSchema,
@@ -17,7 +18,7 @@ import {
 	updateLocalPartner,
 } from './local-partner.service';
 
-export const createLocalPartnerAction = async (input: unknown) => {
+export const createLocalPartnerAction = async (input: unknown): Promise<Result<LocalPartnerPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -33,7 +34,10 @@ export const createLocalPartnerAction = async (input: unknown) => {
 	return result;
 };
 
-export const updateLocalPartnerAction = async (input: unknown, sessionType: unknown = 'user') => {
+export const updateLocalPartnerAction = async (
+	input: unknown,
+	sessionType: unknown = 'user',
+): Promise<Result<LocalPartnerPayload>> => {
 	const sessionTypeResult = localPartnerSessionTypeSchema.safeParse(sessionType);
 	if (!sessionTypeResult.success) {
 		return resultFail('Invalid session type');
@@ -57,7 +61,7 @@ export const updateLocalPartnerAction = async (input: unknown, sessionType: unkn
 	return result;
 };
 
-export const getLocalPartnerAction = async (localPartnerId: unknown) => {
+export const getLocalPartnerAction = async (localPartnerId: unknown): Promise<Result<LocalPartnerPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -70,7 +74,7 @@ export const getLocalPartnerAction = async (localPartnerId: unknown) => {
 	return getLocalPartner(sessionResult.data.id, idResult.data);
 };
 
-export const deleteLocalPartnerAction = async (localPartnerId: unknown) => {
+export const deleteLocalPartnerAction = async (localPartnerId: unknown): Promise<Result<{ id: string }>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -86,7 +90,9 @@ export const deleteLocalPartnerAction = async (localPartnerId: unknown) => {
 	return result;
 };
 
-export const getPublicLocalPartnersByProgramIdAction = async (programId: unknown) => {
+export const getPublicLocalPartnersByProgramIdAction = async (
+	programId: unknown,
+): Promise<Result<PublicProgramLocalPartner[]>> => {
 	const idResult = localPartnerIdSchema.safeParse(programId);
 	if (!idResult.success) {
 		return resultFail('Missing program id');

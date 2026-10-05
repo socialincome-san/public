@@ -1,4 +1,4 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 
 export const turnstileSiteverifyUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 
@@ -12,7 +12,7 @@ const hasSuccessFlag = (value: unknown): value is { success: boolean } => {
 	return 'success' in value && typeof value.success === 'boolean';
 };
 
-export const verifyTurnstileToken = async (token: string | null): Promise<ServiceResult<void>> => {
+export const verifyTurnstileToken = async (token: string | null): Promise<Result<void>> => {
 	const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
 	if (!secret) {
 		console.error('TURNSTILE_SECRET_KEY is missing');

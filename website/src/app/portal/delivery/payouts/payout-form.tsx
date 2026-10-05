@@ -3,7 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutStatus } from '@/generated/prisma/enums';
-import { handleServiceResult } from '@/lib/service-result-client';
+import { handleResult } from '@/lib/result-client';
 import { allCurrencies } from '@/lib/types/currency';
 import {
 	createPayoutAction,
@@ -90,7 +90,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 
 		startTransition(async () => {
 			const result = await getPayoutAction(payoutId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: (data) => {
 					setPayout(data);
 					setFormSchema((prev) => {
@@ -119,7 +119,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 	useEffect(() => {
 		startTransition(async () => {
 			const res = await getPayoutRecipientOptionsAction();
-			handleServiceResult(res, {
+			handleResult(res, {
 				onSuccess: (data) => {
 					const recipientEnum = getZodEnum(data.map((r: RecipientOption) => ({ id: r.id, label: r.fullName })));
 
@@ -145,7 +145,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 				payoutId && payout
 					? await updatePayoutAction(buildUpdatePayoutInput(schema, payout))
 					: await createPayoutAction(buildCreatePayoutInput(schema));
-			handleServiceResult(res, {
+			handleResult(res, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -157,7 +157,7 @@ export const PayoutForm = ({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 			? () => {
 					startTransition(async () => {
 						const res = await deletePayoutAction(payoutId);
-						handleServiceResult(res, {
+						handleResult(res, {
 							onSuccess: () => onSuccess?.(),
 							onError: (error) => onError?.(error),
 						});

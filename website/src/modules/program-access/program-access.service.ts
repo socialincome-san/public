@@ -1,8 +1,8 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import * as programAccessRepository from './program-access.repository';
 import type { CreateInitialProgramAccessesInput, ProgramAccesses } from './program-access.types';
 
-export const getAccessiblePrograms = async (userId: string): Promise<ServiceResult<ProgramAccesses>> => {
+export const getAccessiblePrograms = async (userId: string): Promise<Result<ProgramAccesses>> => {
 	try {
 		const activeOrganizationId = await programAccessRepository.findActiveOrganizationId(userId);
 		if (!activeOrganizationId) {
@@ -25,9 +25,7 @@ export const getAccessiblePrograms = async (userId: string): Promise<ServiceResu
 	}
 };
 
-export const createInitialAccessesForProgram = async (
-	input: CreateInitialProgramAccessesInput,
-): Promise<ServiceResult<void>> => {
+export const createInitialAccessesForProgram = async (input: CreateInitialProgramAccessesInput): Promise<Result<void>> => {
 	try {
 		await programAccessRepository.createInitialProgramAccesses(input);
 

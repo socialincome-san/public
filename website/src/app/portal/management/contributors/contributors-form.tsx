@@ -4,7 +4,7 @@ import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getContactValuesFromPayload } from '@/components/dynamic-form/helper';
 import { ContributorReferralSource } from '@/generated/prisma/enums';
-import { handleServiceResult } from '@/lib/service-result-client';
+import { handleResult } from '@/lib/result-client';
 import {
 	createContributorAction,
 	getContributorAction,
@@ -74,7 +74,7 @@ export default function ContributorsForm({
 				contributorId && contributor
 					? await updateContributorAction(buildUpdateContributorsInput(schema, contributor))
 					: await createContributorAction(buildCreateContributorInput(schema));
-			handleServiceResult(res, {
+			handleResult(res, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -85,7 +85,7 @@ export default function ContributorsForm({
 		if (contributorId) {
 			startTransition(async () => {
 				const result = await getContributorAction(contributorId);
-				handleServiceResult(result, {
+				handleResult(result, {
 					onSuccess: (data) => {
 						setContributor(data);
 						setFormSchema((previousSchema) => {

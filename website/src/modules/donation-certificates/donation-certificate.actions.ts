@@ -1,7 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail, type ServiceResult } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
 import type { ContributorDonationCertificate } from '@/modules/contributors/contributor.types';
 import { revalidatePath } from 'next/cache';
 import { donationCertificateBatchCreateSchema, donationCertificateCreateSchema } from './donation-certificate.schemas';
@@ -12,7 +12,7 @@ import {
 } from './donation-certificate.service';
 
 export const getDonationCertificateContributorOptionsAction = async (): Promise<
-	ServiceResult<ContributorDonationCertificate[]>
+	Result<ContributorDonationCertificate[]>
 > => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
@@ -22,7 +22,7 @@ export const getDonationCertificateContributorOptionsAction = async (): Promise<
 	return getDonationCertificateContributorOptions(sessionResult.data.id);
 };
 
-export const createDonationCertificatesAction = async (input: unknown): Promise<ServiceResult<string>> => {
+export const createDonationCertificatesAction = async (input: unknown): Promise<Result<string>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -44,7 +44,7 @@ export const createDonationCertificatesAction = async (input: unknown): Promise<
 	return result;
 };
 
-export const createCurrentContributorDonationCertificateAction = async (input: unknown): Promise<ServiceResult<void>> => {
+export const createCurrentContributorDonationCertificateAction = async (input: unknown): Promise<Result<void>> => {
 	const sessionResult = await getSessionByType('contributor');
 	if (!sessionResult.success) {
 		return sessionResult;

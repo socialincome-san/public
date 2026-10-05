@@ -1,16 +1,16 @@
-import type { ServiceResult } from '@/lib/service-result';
+import type { Result } from '@/lib/result';
 import type { ContributionCountryRow, ContributionDateRange } from '@/modules/contributions/contribution.types';
 import type { PayoutDateRange } from '@/modules/payouts/payout.types';
 import type { LatestReserves } from '@/modules/reserves/reserve.types';
 import { format } from 'date-fns';
 
-const mockGetSucceededContributionTotal = jest.fn<Promise<ServiceResult<number>>, [dateRange?: ContributionDateRange]>();
+const mockGetSucceededContributionTotal = jest.fn<Promise<Result<number>>, [dateRange?: ContributionDateRange]>();
 const mockGetSucceededContributionsByContributorCountry = jest.fn<
-	Promise<ServiceResult<ContributionCountryRow[]>>,
+	Promise<Result<ContributionCountryRow[]>>,
 	[dateRange?: ContributionDateRange]
 >();
-const mockGetPaidOrConfirmedPayoutTotal = jest.fn<Promise<ServiceResult<number>>, [dateRange?: PayoutDateRange]>();
-const mockGetLatestReserves = jest.fn<Promise<ServiceResult<LatestReserves>>, []>();
+const mockGetPaidOrConfirmedPayoutTotal = jest.fn<Promise<Result<number>>, [dateRange?: PayoutDateRange]>();
+const mockGetLatestReserves = jest.fn<Promise<Result<LatestReserves>>, []>();
 
 jest.mock('@/modules/contributions/contribution.service', () => ({
 	getSucceededContributionTotal: mockGetSucceededContributionTotal,
@@ -32,7 +32,7 @@ import {
 	getTransparencySummary,
 } from './transparency.service';
 
-const expectSuccess = <T>(result: ServiceResult<T>): T => {
+const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
 	if (!result.success) {
 		throw new Error(result.error);

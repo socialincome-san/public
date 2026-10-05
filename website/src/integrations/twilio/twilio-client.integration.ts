@@ -1,9 +1,9 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import twilio from 'twilio';
 
 let twilioClient: twilio.Twilio | null = null;
 
-export const getTwilioClient = async (): Promise<ServiceResult<twilio.Twilio>> => {
+export const getTwilioClient = async (): Promise<Result<twilio.Twilio>> => {
 	if (twilioClient) {
 		return resultOk(twilioClient);
 	}

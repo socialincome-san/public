@@ -1,6 +1,6 @@
 'use client';
 
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { initializeAnalytics, setConsent, type ConsentSettings, type ConsentStatusString } from 'firebase/analytics';
 import { getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import {
@@ -69,7 +69,7 @@ export const createFirebaseStorageReference = (
 
 export const getFirebaseStorageDownloadUrl = async (
 	storageReference: FirebaseClientStorageReference,
-): Promise<ServiceResult<string>> => {
+): Promise<Result<string>> => {
 	try {
 		return resultOk(await getDownloadURL(storageReference));
 	} catch (error) {
@@ -83,7 +83,7 @@ export const signInFirebaseWithEmailAndPassword = async (
 	auth: FirebaseClientAuth,
 	email: string,
 	password: string,
-): Promise<ServiceResult<{ idToken: string }>> => {
+): Promise<Result<{ idToken: string }>> => {
 	try {
 		const credential = await signInWithEmailAndPassword(auth, email, password);
 
@@ -99,7 +99,7 @@ export const sendFirebaseSignInLink = async (
 	auth: FirebaseClientAuth,
 	email: string,
 	url: string,
-): Promise<ServiceResult<void>> => {
+): Promise<Result<void>> => {
 	try {
 		await sendSignInLinkToEmail(auth, email, { url, handleCodeInApp: true });
 
@@ -117,7 +117,7 @@ export const finishFirebaseSignInWithEmailLink = async (
 	auth: FirebaseClientAuth,
 	email: string,
 	url: string,
-): Promise<ServiceResult<{ idToken: string }>> => {
+): Promise<Result<{ idToken: string }>> => {
 	try {
 		const credential = await signInWithEmailLink(auth, email, url);
 
@@ -129,7 +129,7 @@ export const finishFirebaseSignInWithEmailLink = async (
 	}
 };
 
-export const signOutFromFirebase = async (auth: FirebaseClientAuth): Promise<ServiceResult<void>> => {
+export const signOutFromFirebase = async (auth: FirebaseClientAuth): Promise<Result<void>> => {
 	try {
 		await signOut(auth);
 

@@ -1,5 +1,5 @@
 import { Currency, DonationInterval, SubscriptionStatus } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { isValidCurrency } from '@/lib/types/currency';
 import Stripe from 'stripe';
 
@@ -284,7 +284,7 @@ export const constructStripeWebhookEvent = (
 	body: string,
 	signature: string,
 	webhookSecret: string,
-): ServiceResult<StripeApiEvent> => {
+): Result<StripeApiEvent> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -305,7 +305,7 @@ export const constructStripeWebhookEvent = (
 
 export const createStripeCheckoutSession = async (
 	input: StripeCheckoutCreateInput,
-): Promise<ServiceResult<StripeCheckoutSessionCreateResult>> => {
+): Promise<Result<StripeCheckoutSessionCreateResult>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -326,7 +326,7 @@ export const createStripeCheckoutSession = async (
 	}
 };
 
-export const retrieveStripeCheckoutSession = async (sessionId: string): Promise<ServiceResult<StripeApiCheckoutSession>> => {
+export const retrieveStripeCheckoutSession = async (sessionId: string): Promise<Result<StripeApiCheckoutSession>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -343,7 +343,7 @@ export const retrieveStripeCheckoutSession = async (sessionId: string): Promise<
 
 export const listStripeCheckoutSessionsByPaymentIntent = async (
 	paymentIntentId: string,
-): Promise<ServiceResult<StripeApiCheckoutSession[]>> => {
+): Promise<Result<StripeApiCheckoutSession[]>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -360,7 +360,7 @@ export const listStripeCheckoutSessionsByPaymentIntent = async (
 	}
 };
 
-export const createStripeCustomer = async (email: string, name?: string): Promise<ServiceResult<string>> => {
+export const createStripeCustomer = async (email: string, name?: string): Promise<Result<string>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -380,7 +380,7 @@ export const createStripeCustomer = async (email: string, name?: string): Promis
 	}
 };
 
-export const retrieveStripeCustomer = async (customerId: string): Promise<ServiceResult<StripeApiCustomer>> => {
+export const retrieveStripeCustomer = async (customerId: string): Promise<Result<StripeApiCustomer>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -400,7 +400,7 @@ export const retrieveStripeCustomer = async (customerId: string): Promise<Servic
 	}
 };
 
-export const retrieveStripeCharge = async (chargeId: string): Promise<ServiceResult<StripeApiCharge>> => {
+export const retrieveStripeCharge = async (chargeId: string): Promise<Result<StripeApiCharge>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -422,7 +422,7 @@ export const retrieveStripeCharge = async (chargeId: string): Promise<ServiceRes
 export const retrieveStripeSubscription = async (
 	subscriptionId: string,
 	expand?: string[],
-): Promise<ServiceResult<StripeApiSubscription | null>> => {
+): Promise<Result<StripeApiSubscription | null>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -447,7 +447,7 @@ export const listStripeSubscriptions = async (input: {
 	customerId: string;
 	status?: 'all';
 	limit?: number;
-}): Promise<ServiceResult<StripeApiSubscription[]>> => {
+}): Promise<Result<StripeApiSubscription[]>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -479,7 +479,7 @@ export const listStripeSubscriptions = async (input: {
 export const updateStripeSubscription = async (
 	subscriptionId: string,
 	input: StripeSubscriptionUpdateInput,
-): Promise<ServiceResult<StripeApiSubscription>> => {
+): Promise<Result<StripeApiSubscription>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -504,7 +504,7 @@ export const updateStripeSubscription = async (
 export const cancelStripeSubscription = async (
 	subscriptionId: string,
 	feedback: StripeCancellationFeedback,
-): Promise<ServiceResult<StripeApiSubscription>> => {
+): Promise<Result<StripeApiSubscription>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -525,7 +525,7 @@ export const cancelStripeSubscription = async (
 	}
 };
 
-export const createStripePrice = async (input: StripePriceCreateInput): Promise<ServiceResult<StripeApiPrice>> => {
+export const createStripePrice = async (input: StripePriceCreateInput): Promise<Result<StripeApiPrice>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -550,9 +550,7 @@ export const createStripePrice = async (input: StripePriceCreateInput): Promise<
 	}
 };
 
-export const createStripeBillingPortalSession = async (
-	input: StripeBillingPortalCreateInput,
-): Promise<ServiceResult<string>> => {
+export const createStripeBillingPortalSession = async (input: StripeBillingPortalCreateInput): Promise<Result<string>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -579,7 +577,7 @@ export const createStripeBillingPortalSession = async (
 
 export const retrieveStripeSubscriptionForCharge = async (
 	charge: StripeApiCharge,
-): Promise<ServiceResult<StripeApiSubscription | null>> => {
+): Promise<Result<StripeApiSubscription | null>> => {
 	try {
 		const legacyInvoiceId = getChargeInvoiceId(charge);
 		if (legacyInvoiceId) {
@@ -624,7 +622,7 @@ export const retrieveStripeSubscriptionForCharge = async (
 
 const listStripeInvoicePaymentsForPaymentIntent = async (
 	paymentIntentId: string,
-): Promise<ServiceResult<StripeApiInvoice | null>> => {
+): Promise<Result<StripeApiInvoice | null>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -657,7 +655,7 @@ const listStripeInvoicePaymentsForPaymentIntent = async (
 	}
 };
 
-const retrieveStripeInvoice = async (invoiceId: string): Promise<ServiceResult<StripeApiInvoice>> => {
+const retrieveStripeInvoice = async (invoiceId: string): Promise<Result<StripeApiInvoice>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -677,7 +675,7 @@ const retrieveStripeInvoice = async (invoiceId: string): Promise<ServiceResult<S
 	}
 };
 
-export const listOpenStripeInvoices = async (stripeSubscriptionId: string): Promise<ServiceResult<StripeApiInvoice[]>> => {
+export const listOpenStripeInvoices = async (stripeSubscriptionId: string): Promise<Result<StripeApiInvoice[]>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -701,7 +699,7 @@ export const listOpenStripeInvoices = async (stripeSubscriptionId: string): Prom
 	}
 };
 
-export const voidStripeInvoice = async (invoiceId: string): Promise<ServiceResult<void>> => {
+export const voidStripeInvoice = async (invoiceId: string): Promise<Result<void>> => {
 	const clientResult = getStripeClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -721,7 +719,7 @@ export const voidStripeInvoice = async (invoiceId: string): Promise<ServiceResul
 	}
 };
 
-const getStripeClient = (): ServiceResult<Stripe> => {
+const getStripeClient = (): Result<Stripe> => {
 	if (stripeClient) {
 		return resultOk(stripeClient);
 	}

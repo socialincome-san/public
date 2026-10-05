@@ -1,4 +1,4 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getFirebaseAdminStorage } from './firebase-admin.integration';
 
 export type FirebaseStorageFile = {
@@ -9,7 +9,7 @@ export type FirebaseStorageFile = {
 
 export const isFirebaseStorageConfigured = (): boolean => Boolean(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET);
 
-export const listFirebaseStorageFileNames = async (bucketName: string): Promise<ServiceResult<string[]>> => {
+export const listFirebaseStorageFileNames = async (bucketName: string): Promise<Result<string[]>> => {
 	try {
 		const [files] = await getFirebaseAdminStorage().bucket(bucketName).getFiles();
 
@@ -24,7 +24,7 @@ export const listFirebaseStorageFileNames = async (bucketName: string): Promise<
 export const uploadFileToFirebaseStorage = async (
 	sourceFilePath: string,
 	destinationFilePath: string,
-): Promise<ServiceResult<void>> => {
+): Promise<Result<void>> => {
 	const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
 	if (!bucketName) {
 		console.error('Firebase Storage bucket name missing');
@@ -48,7 +48,7 @@ export const uploadFileToFirebaseStorage = async (
 export const listFirebaseStorageFiles = async (
 	bucketName: string,
 	fileNamePattern?: RegExp,
-): Promise<ServiceResult<FirebaseStorageFile[]>> => {
+): Promise<Result<FirebaseStorageFile[]>> => {
 	try {
 		const [files] = await getFirebaseAdminStorage().bucket(bucketName).getFiles();
 		const storageFiles = await Promise.all(
@@ -73,7 +73,7 @@ export const listFirebaseStorageFiles = async (
 	}
 };
 
-export const downloadFirebaseStorageFile = async (bucketName: string, fileName: string): Promise<ServiceResult<Buffer>> => {
+export const downloadFirebaseStorageFile = async (bucketName: string, fileName: string): Promise<Result<Buffer>> => {
 	try {
 		const [contents] = await getFirebaseAdminStorage().bucket(bucketName).file(fileName).download();
 
@@ -89,7 +89,7 @@ export const uploadBufferToFirebaseStorage = async (
 	bucketName: string,
 	contents: Buffer,
 	destinationFilePath: string,
-): Promise<ServiceResult<void>> => {
+): Promise<Result<void>> => {
 	try {
 		await getFirebaseAdminStorage().bucket(bucketName).file(destinationFilePath).save(contents);
 

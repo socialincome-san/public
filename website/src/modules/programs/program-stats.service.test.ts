@@ -1,5 +1,5 @@
 import { Currency, PayoutInterval } from '@/generated/prisma/enums';
-import { resultOk } from '@/lib/service-result';
+import { resultOk } from '@/lib/result';
 
 const mockGetLatestRates = jest.fn();
 const mockFindProgramDashboardSource = jest.fn();

@@ -1,5 +1,5 @@
 import { CountryCode, Currency, ProgramPermission } from '@/generated/prisma/enums';
-import { resultOk } from '@/lib/service-result';
+import { resultOk } from '@/lib/result';
 
 const mockGetAccessiblePrograms = jest.fn();
 const mockIsReadyForFirstPayoutInterval = jest.fn();

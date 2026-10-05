@@ -1,5 +1,5 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
@@ -33,7 +33,7 @@ type PublicProgramStatsRecord = NonNullable<Awaited<ReturnType<typeof programRep
 
 export const getPublicProgramFilterDataByPortalSlugs = async (
 	portalSlugs: string[],
-): Promise<ServiceResult<PublicProgramFilterDataMap>> => {
+): Promise<Result<PublicProgramFilterDataMap>> => {
 	const normalizedSlugs = normalizeSlugs(portalSlugs);
 	if (normalizedSlugs.length === 0) {
 		return resultOk({});
@@ -61,9 +61,7 @@ export const getPublicProgramFilterDataByPortalSlugs = async (
 	}
 };
 
-export const getPublicTargetFocusesByProgramId = async (
-	programId: string,
-): Promise<ServiceResult<PublicProgramTargetFocus[]>> => {
+export const getPublicTargetFocusesByProgramId = async (programId: string): Promise<Result<PublicProgramTargetFocus[]>> => {
 	const normalizedProgramId = programId.trim();
 	if (!normalizedProgramId) {
 		return resultFail('Missing program id');
@@ -80,7 +78,7 @@ export const getPublicTargetFocusesByProgramId = async (
 	}
 };
 
-export const getProgramWallets = async (userId: string): Promise<ServiceResult<ProgramWallets>> => {
+export const getProgramWallets = async (userId: string): Promise<Result<ProgramWallets>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -120,7 +118,7 @@ export const getProgramWallets = async (userId: string): Promise<ServiceResult<P
 	}
 };
 
-export const getProgramWallet = async (userId: string, programId: string): Promise<ServiceResult<ProgramWallet>> => {
+export const getProgramWallet = async (userId: string, programId: string): Promise<Result<ProgramWallet>> => {
 	const walletsResult = await getProgramWallets(userId);
 	if (!walletsResult.success) {
 		return resultFail(walletsResult.error);
@@ -130,7 +128,7 @@ export const getProgramWallet = async (userId: string, programId: string): Promi
 	return wallet ? resultOk(wallet) : resultFail('Program not found or not accessible');
 };
 
-export const getPublicProgramBySlug = async (slug: string): Promise<ServiceResult<PublicProgramDetails>> => {
+export const getPublicProgramBySlug = async (slug: string): Promise<Result<PublicProgramDetails>> => {
 	try {
 		const program = await programRepository.findPublicProgramBySlug(slug);
 
@@ -142,7 +140,7 @@ export const getPublicProgramBySlug = async (slug: string): Promise<ServiceResul
 	}
 };
 
-export const getPublicPreviewProgramBySlug = async (slug: string): Promise<ServiceResult<PublicPreviewProgram>> => {
+export const getPublicPreviewProgramBySlug = async (slug: string): Promise<Result<PublicPreviewProgram>> => {
 	try {
 		const program = await programRepository.findPublicPreviewProgramBySlug(slug);
 
@@ -154,7 +152,7 @@ export const getPublicPreviewProgramBySlug = async (slug: string): Promise<Servi
 	}
 };
 
-export const getPublicProgramStatsById = async (programId: string): Promise<ServiceResult<PublicProgramStats>> => {
+export const getPublicProgramStatsById = async (programId: string): Promise<Result<PublicProgramStats>> => {
 	const normalizedProgramId = programId.trim();
 	if (!normalizedProgramId) {
 		return resultFail('Missing program id');
@@ -173,7 +171,7 @@ export const getPublicProgramStatsById = async (programId: string): Promise<Serv
 
 export const getPublicProgramStatsByProgramPortalSlugs = async (
 	portalSlugs: string[],
-): Promise<ServiceResult<PublicProgramStatsMap>> => {
+): Promise<Result<PublicProgramStatsMap>> => {
 	const normalizedSlugs = normalizeSlugs(portalSlugs);
 	if (normalizedSlugs.length === 0) {
 		return resultOk({});
@@ -190,7 +188,7 @@ export const getPublicProgramStatsByProgramPortalSlugs = async (
 	}
 };
 
-export const getProgramIdByPortalSlug = async (slug: string): Promise<ServiceResult<string>> => {
+export const getProgramIdByPortalSlug = async (slug: string): Promise<Result<string>> => {
 	try {
 		const program = await programRepository.findProgramIdBySlug(slug);
 
@@ -202,7 +200,7 @@ export const getProgramIdByPortalSlug = async (slug: string): Promise<ServiceRes
 	}
 };
 
-export const getProgramSlugById = async (programId: string): Promise<ServiceResult<string>> => {
+export const getProgramSlugById = async (programId: string): Promise<Result<string>> => {
 	try {
 		const program = await programRepository.findProgramSlugById(programId);
 
@@ -214,10 +212,7 @@ export const getProgramSlugById = async (programId: string): Promise<ServiceResu
 	}
 };
 
-export const getProgramSettings = async (
-	userId: string,
-	programId: string,
-): Promise<ServiceResult<ProgramSettingsPayload>> => {
+export const getProgramSettings = async (userId: string, programId: string): Promise<Result<ProgramSettingsPayload>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -269,7 +264,7 @@ export const getProgramSettings = async (
 export const getProgramOrganizationOptions = async (
 	userId: string,
 	programId: string,
-): Promise<ServiceResult<{ id: string; name: string }[]>> => {
+): Promise<Result<{ id: string; name: string }[]>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -296,7 +291,7 @@ export const getProgramOrganizationOptions = async (
 export const createProgram = async (
 	input: ProgramCreateInput,
 	actor: { userId: string } | PublicOnboardingUserDetailsInput,
-): Promise<ServiceResult<{ programId: string }>> => {
+): Promise<Result<{ programId: string }>> => {
 	try {
 		let userId: string;
 		if ('userId' in actor) {
@@ -375,7 +370,7 @@ export const createProgram = async (
 export const updateProgramSettings = async (
 	userId: string,
 	input: ProgramSettingsUpdateInput,
-): Promise<ServiceResult<{ id: string }>> => {
+): Promise<Result<{ id: string }>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -426,7 +421,7 @@ export const updateProgramSettings = async (
 	}
 };
 
-export const deleteProgram = async (userId: string, programId: string): Promise<ServiceResult<void>> => {
+export const deleteProgram = async (userId: string, programId: string): Promise<Result<void>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {

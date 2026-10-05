@@ -1,5 +1,5 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/service-result';
+import type { Result } from '@/lib/result';
 
 const mockFindActiveOrganizationId = jest.fn();
 const mockFindProgramAccessesByOrganizationId = jest.fn();
@@ -13,7 +13,7 @@ jest.mock('./program-access.repository', () => ({
 
 import { createInitialAccessesForProgram, getAccessiblePrograms } from './program-access.service';
 
-const expectSuccess = <T>(result: ServiceResult<T>): T => {
+const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
 	if (!result.success) {
 		throw new Error(result.error);
@@ -22,7 +22,7 @@ const expectSuccess = <T>(result: ServiceResult<T>): T => {
 	return result.data;
 };
 
-const expectFailure = (result: ServiceResult<unknown>, error: string): void => {
+const expectFailure = (result: Result<unknown>, error: string): void => {
 	expect(result.success).toBe(false);
 	if (result.success) {
 		throw new Error('Expected failure');

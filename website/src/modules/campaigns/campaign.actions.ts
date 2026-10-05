@@ -3,9 +3,17 @@
 import { getSessionByType } from '@/lib/firebase/current-account';
 import { getOptionalContributor } from '@/lib/firebase/current-contributor';
 import { defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { resultFail, resultOk } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
+import type {
+	CampaignCmsJoinWithStats,
+	CampaignDefaultImageOption,
+	CampaignPage,
+	CampaignPageContent,
+	CampaignReference,
+} from '@/modules/campaigns/campaign.types';
 import { getOrCreateContributorFromEmailAndName } from '@/modules/contributors/contributor.service';
 import { getEligibleProgramsForPublicSubmission } from '@/modules/programs/program-public-submission.service';
+import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
 import { revalidatePath } from 'next/cache';
 import { claimPendingCampaigns } from './campaign-pending-claim.service';
 import { getCampaignPageContent } from './campaign-public-website.service';
@@ -54,15 +62,18 @@ type ImageFieldError = {
 
 export type { CampaignDefaultImageOption } from './campaign.types';
 
-export type SubmitCampaignActionResult =
-	| { success: true; data: CampaignSubmissionResult; status?: number }
-	| { success: false; error: string; status?: number; field?: CampaignSubmissionImageMultipartField };
+type CampaignSubmissionActionFailure = {
+	success: false;
+	error: string;
+	status?: number;
+	field?: CampaignSubmissionImageMultipartField;
+};
 
 const submissionFail = (
 	error: string,
 	status?: number,
 	field?: CampaignSubmissionImageMultipartField,
-): SubmitCampaignActionResult => ({ success: false, error, status, ...(field ? { field } : {}) });
+): CampaignSubmissionActionFailure => ({ success: false, error, status, ...(field ? { field } : {}) });
 
 const resolveImageSource = async (
 	formData: FormData,
@@ -160,7 +171,9 @@ const resolveOptionalImages = async (
 	};
 };
 
-export const submitCampaignAction = async (formData: FormData): Promise<SubmitCampaignActionResult> => {
+export const submitCampaignAction = async (
+	formData: FormData,
+): Promise<Result<CampaignSubmissionResult, CampaignSubmissionActionFailure>> => {
 	const fieldsResult = parseCampaignSubmissionFields(formData);
 	if (!fieldsResult.success) {
 		return submissionFail(fieldsResult.error, 400);
@@ -213,7 +226,7 @@ export const submitCampaignAction = async (formData: FormData): Promise<SubmitCa
 	return resultOk(submissionResult.data);
 };
 
-export const claimPendingCampaignsAction = async (claimIds: unknown) => {
+export const claimPendingCampaignsAction = async (claimIds: unknown): Promise<Result<ClaimPendingCampaignsResult>> => {
 	const contributorSession = await getSessionByType('contributor');
 	if (!contributorSession.success) {
 		return resultOk(emptyClaimResult);
@@ -235,7 +248,7 @@ export const claimPendingCampaignsAction = async (claimIds: unknown) => {
 	return resultOk(result.data);
 };
 
-export const getPublicCampaignTitleAction = async (campaignId: unknown) => {
+export const getPublicCampaignTitleAction = async (campaignId: unknown): Promise<Result<{ title: string }>> => {
 	const parsedCampaignId = campaignIdSchema.safeParse(campaignId);
 	if (!parsedCampaignId.success) {
 		return resultFail('Invalid campaign id');
@@ -244,7 +257,9 @@ export const getPublicCampaignTitleAction = async (campaignId: unknown) => {
 	return getPublicCampaignTitle(parsedCampaignId.data);
 };
 
-export const getEligiblePublicSubmissionProgramsAction = async (lang: unknown) => {
+export const getEligiblePublicSubmissionProgramsAction = async (
+	lang: unknown,
+): Promise<Result<PublicSubmissionProgramOption[]>> => {
 	const parsedLanguage = campaignPublicLanguageSchema.safeParse(lang);
 	const candidate = parsedLanguage.success ? parsedLanguage.data : '';
 	const language = isWebsiteLanguage(candidate) ? candidate : defaultLanguage;
@@ -252,9 +267,10 @@ export const getEligiblePublicSubmissionProgramsAction = async (lang: unknown) =
 	return getEligibleProgramsForPublicSubmission(language);
 };
 
-export const getCampaignDefaultImagesAction = async () => getCampaignDefaultImages();
+export const getCampaignDefaultImagesAction = async (): Promise<Result<CampaignDefaultImageOption[]>> =>
+	getCampaignDefaultImages();
 
-export const getCampaignByPortalSlugAction = async (portalSlug: unknown) => {
+export const getCampaignByPortalSlugAction = async (portalSlug: unknown): Promise<Result<CampaignPage>> => {
 	const parsedSlug = campaignPortalSlugSchema.safeParse(portalSlug);
 	if (!parsedSlug.success) {
 		return resultFail('Missing campaign slug');
@@ -263,13 +279,18 @@ export const getCampaignByPortalSlugAction = async (portalSlug: unknown) => {
 	return getCampaignByPortalSlug(parsedSlug.data);
 };
 
-export const getAllCampaignsForCmsJoinWithStatsAction = async (activity: unknown) => {
+export const getAllCampaignsForCmsJoinWithStatsAction = async (
+	activity: unknown,
+): Promise<Result<CampaignCmsJoinWithStats>> => {
 	const parsedActivity = campaignActivitySchema.safeParse(activity);
 
 	return getAllCampaignsForCmsJoinWithStats(parsedActivity.success ? { activity: parsedActivity.data } : undefined);
 };
 
-export const getCampaignPageContentAction = async (lang: unknown, campaignFaqs: unknown = undefined) => {
+export const getCampaignPageContentAction = async (
+	lang: unknown,
+	campaignFaqs: unknown = undefined,
+): Promise<Result<CampaignPageContent>> => {
 	const parsedLanguage = campaignPublicLanguageSchema.safeParse(lang);
 	const candidate = parsedLanguage.success ? parsedLanguage.data : '';
 	const language = isWebsiteLanguage(candidate) ? candidate : defaultLanguage;
@@ -277,7 +298,7 @@ export const getCampaignPageContentAction = async (lang: unknown, campaignFaqs: 
 	return getCampaignPageContent(language, campaignFaqs);
 };
 
-export const getDefaultCampaignForProgramAction = async (programId: unknown) => {
+export const getDefaultCampaignForProgramAction = async (programId: unknown): Promise<Result<CampaignReference>> => {
 	const parsedProgramId = campaignProgramIdSchema.safeParse(programId);
 	if (!parsedProgramId.success) {
 		return resultFail('Missing program id');

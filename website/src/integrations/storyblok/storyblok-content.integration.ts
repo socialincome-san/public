@@ -1,4 +1,4 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { apiPlugin, storyblokInit, type ISbStoriesParams, type StoryblokClient } from '@storyblok/js';
 import { createStoryblokFixtureClient } from './storyblok-fixture.integration';
 
@@ -6,7 +6,7 @@ export type StoryblokContentClient = Pick<StoryblokClient, 'get' | 'getAll'>;
 
 let storyblokApi: StoryblokContentClient | undefined;
 
-export const fetchStoryblokStory = async <T>(slug: string, params: ISbStoriesParams): Promise<ServiceResult<T>> => {
+export const fetchStoryblokStory = async <T>(slug: string, params: ISbStoriesParams): Promise<Result<T>> => {
 	try {
 		const response = await getStoryblokContentClient().get(`cdn/stories/${slug}`, params);
 		const data: unknown = response.data;
@@ -22,7 +22,7 @@ export const fetchStoryblokStory = async <T>(slug: string, params: ISbStoriesPar
 	}
 };
 
-export const fetchStoryblokStories = async <T>(params: ISbStoriesParams): Promise<ServiceResult<T[]>> => {
+export const fetchStoryblokStories = async <T>(params: ISbStoriesParams): Promise<Result<T[]>> => {
 	try {
 		const stories: unknown = await getStoryblokContentClient().getAll('cdn/stories', params);
 		if (!isExpectedArray<T>(stories)) {
@@ -39,7 +39,7 @@ export const fetchStoryblokStories = async <T>(params: ISbStoriesParams): Promis
 
 export const fetchStoryblokStoriesPage = async <T>(
 	params: ISbStoriesParams,
-): Promise<ServiceResult<{ stories: T[]; total: number }>> => {
+): Promise<Result<{ stories: T[]; total: number }>> => {
 	try {
 		const response = await getStoryblokContentClient().get('cdn/stories', params);
 		const data: unknown = response.data;
@@ -55,7 +55,7 @@ export const fetchStoryblokStoriesPage = async <T>(
 	}
 };
 
-export const fetchStoryblokDatasourceEntries = async <T>(params: ISbStoriesParams): Promise<ServiceResult<T[]>> => {
+export const fetchStoryblokDatasourceEntries = async <T>(params: ISbStoriesParams): Promise<Result<T[]>> => {
 	try {
 		const entries: unknown = await getStoryblokContentClient().getAll('cdn/datasource_entries', params);
 		if (!isExpectedArray<T>(entries)) {
@@ -70,7 +70,7 @@ export const fetchStoryblokDatasourceEntries = async <T>(params: ISbStoriesParam
 	}
 };
 
-export const fetchStoryblokLinks = async <T>(params: ISbStoriesParams): Promise<ServiceResult<T[]>> => {
+export const fetchStoryblokLinks = async <T>(params: ISbStoriesParams): Promise<Result<T[]>> => {
 	try {
 		const links: unknown = await getStoryblokContentClient().getAll('cdn/links', params);
 		if (!isExpectedArray<T>(links)) {

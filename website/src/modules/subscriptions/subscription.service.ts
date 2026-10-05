@@ -4,7 +4,7 @@ import {
 	SubscriptionStatus,
 	type SubscriptionCancellationReason,
 } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now } from '@/lib/utils/now';
 import { getContributorContributionSummary } from '@/modules/contributions/contribution.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
@@ -40,7 +40,7 @@ type EnrichedSubscription = {
 	scheduleAnchor: Date | null;
 };
 
-export const isBankStandingOrderReferenceTaken = async (reference: string): Promise<ServiceResult<boolean>> => {
+export const isBankStandingOrderReferenceTaken = async (reference: string): Promise<Result<boolean>> => {
 	try {
 		const existing = await subscriptionRepository.findBankStandingOrderByReference(reference);
 
@@ -55,7 +55,7 @@ export const isBankStandingOrderReferenceTaken = async (reference: string): Prom
 export const getPaginatedTableView = async (
 	userId: string,
 	query: SubscriptionTableQuery,
-): Promise<ServiceResult<SubscriptionPaginatedTableView>> => {
+): Promise<Result<SubscriptionPaginatedTableView>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -97,7 +97,7 @@ export const getPaginatedTableView = async (
 	}
 };
 
-export const getDashboardView = async (contributorId: string): Promise<ServiceResult<SubscriptionsDashboardView>> => {
+export const getDashboardView = async (contributorId: string): Promise<Result<SubscriptionsDashboardView>> => {
 	try {
 		const [subscriptions, contributionSummaryResult] = await Promise.all([
 			subscriptionRepository.findActiveSubscriptionsByContributorId(contributorId),
@@ -128,7 +128,7 @@ export const getDashboardView = async (contributorId: string): Promise<ServiceRe
 export const getOwnedSubscriptionPaymentMethod = async (input: {
 	contributorId: string;
 	subscriptionId: string;
-}): Promise<ServiceResult<SubscriptionPaymentMethod>> => {
+}): Promise<Result<SubscriptionPaymentMethod>> => {
 	try {
 		const subscription = await subscriptionRepository.findOwnedSubscriptionPaymentMethod(
 			input.contributorId,
@@ -149,7 +149,7 @@ export const getOwnedSubscriptionPaymentMethod = async (input: {
 export const getOwnedActiveBankTransferQrBill = async (input: {
 	contributorId: string;
 	subscriptionId: string;
-}): Promise<ServiceResult<OwnedBankTransferQrBill>> => {
+}): Promise<Result<OwnedBankTransferQrBill>> => {
 	try {
 		const subscription = await subscriptionRepository.findOwnedActiveBankTransferQrBill(
 			input.contributorId,
@@ -185,7 +185,7 @@ export const getOwnedActiveBankTransferQrBill = async (input: {
 
 export const upsertFromBankStandingOrder = async (
 	input: UpsertBankStandingOrderInput,
-): Promise<ServiceResult<SubscriptionUpsertResult>> => {
+): Promise<Result<SubscriptionUpsertResult>> => {
 	try {
 		const existing = await subscriptionRepository.findBankStandingOrderByReference(input.bankStandingOrderReference);
 		if (existing && existing.contributorId !== input.contributorId) {
@@ -206,7 +206,7 @@ export const updateBankTransferAmount = async (input: {
 	contributorId: string;
 	subscriptionId: string;
 	amount: number;
-}): Promise<ServiceResult<{ amount: number; currency: string }>> => {
+}): Promise<Result<{ amount: number; currency: string }>> => {
 	try {
 		if (!subscriptionAmount.isSubscriptionAmountInRange(input.amount)) {
 			return resultFail('Amount must be an integer between 1 and 1000000');
@@ -234,7 +234,7 @@ export const cancelBankTransfer = async (input: {
 	contributorId: string;
 	subscriptionId: string;
 	reason: SubscriptionCancellationReason;
-}): Promise<ServiceResult<void>> => {
+}): Promise<Result<void>> => {
 	try {
 		const subscription = await subscriptionRepository.findOwnedBankTransferSubscription(
 			input.contributorId,

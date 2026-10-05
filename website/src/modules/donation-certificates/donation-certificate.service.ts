@@ -4,7 +4,7 @@ import {
 	uploadFileToFirebaseStorage,
 } from '@/integrations/firebase/firebase-storage.integration';
 import { Translator } from '@/lib/i18n/translator';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE, LANGUAGE_CODES, type LanguageCode } from '@/lib/types/language';
 import { now } from '@/lib/utils/now';
 import { getSucceededForContributorAndYear } from '@/modules/contributions/contribution.service';
@@ -30,7 +30,7 @@ import type {
 export const getPaginatedDonationCertificates = async (
 	userId: string,
 	query: DonationCertificateTableQuery,
-): Promise<ServiceResult<DonationCertificatePaginatedTableView>> => {
+): Promise<Result<DonationCertificatePaginatedTableView>> => {
 	try {
 		const accessibleProgramsResult = await getAccessiblePrograms(userId);
 		if (!accessibleProgramsResult.success) {
@@ -73,7 +73,7 @@ export const getPaginatedDonationCertificates = async (
 export const getPaginatedContributorDonationCertificates = async (
 	contributorId: string,
 	query: YourDonationCertificateTableQuery,
-): Promise<ServiceResult<YourDonationCertificatePaginatedTableView>> => {
+): Promise<Result<YourDonationCertificatePaginatedTableView>> => {
 	try {
 		const { certificates, totalCount } = await donationCertificateRepository.findPaginatedContributorDonationCertificates(
 			contributorId,
@@ -97,14 +97,14 @@ export const getPaginatedContributorDonationCertificates = async (
 
 export const getDonationCertificateContributorOptions = async (
 	userId: string,
-): Promise<ServiceResult<ContributorDonationCertificate[]>> => getContributorsByIds({ actorUserId: userId });
+): Promise<Result<ContributorDonationCertificate[]>> => getContributorsByIds({ actorUserId: userId });
 
 export const createDonationCertificatesForUser = async (
 	userId: string,
 	year: number,
 	contributorIds: string[],
 	language?: LanguageCode,
-): Promise<ServiceResult<string>> => {
+): Promise<Result<string>> => {
 	const scopedContributorsResult = await getContributorsByIds({
 		actorUserId: userId,
 		contributorIds,
@@ -127,7 +127,7 @@ export const createDonationCertificateForContributor = async (
 	year: number,
 	contributorId: string,
 	language?: LanguageCode,
-): Promise<ServiceResult<void>> => {
+): Promise<Result<void>> => {
 	try {
 		if (!isFirebaseStorageConfigured()) {
 			console.error('Firebase Storage bucket name missing');
@@ -209,7 +209,7 @@ const createDonationCertificates = async (
 	year: number,
 	contributorIds: string[],
 	language?: LanguageCode,
-): Promise<ServiceResult<string>> => {
+): Promise<Result<string>> => {
 	try {
 		let successCount = 0;
 		const creationWithFailures: string[] = [];
@@ -266,7 +266,7 @@ const writeDonationCertificatePdf = async (
 	contributor: ContributorDonationCertificate,
 	contributions: ContributionDonationEntry[],
 	year: number,
-): Promise<ServiceResult<void>> => {
+): Promise<Result<void>> => {
 	try {
 		const contributionsByCurrency = groupContributionsByCurrency(contributions, year);
 		const translator = await Translator.getInstance({
@@ -306,7 +306,7 @@ const writeDonationCertificatePdf = async (
 		const footerRightLine2 = translator.t('footer-right-line-2');
 		const footerRightLine3 = translator.t('footer-right-line-3');
 
-		return new Promise<ServiceResult<void>>((resolve) => {
+		return new Promise<Result<void>>((resolve) => {
 			const pdfDocument = new PDFDocument({ size: 'A4' });
 			const writeStream = createWriteStream(filePath);
 

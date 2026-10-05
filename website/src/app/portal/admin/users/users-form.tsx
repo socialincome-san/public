@@ -3,7 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
 import { UserRole } from '@/generated/prisma/enums';
-import { handleServiceResult } from '@/lib/service-result-client';
+import { handleResult } from '@/lib/result-client';
 import {
 	createUserAction,
 	deleteUserAction,
@@ -74,7 +74,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 
 	const loadUser = async (id: string) => {
 		const result = await getUserAction(id);
-		handleServiceResult(result, {
+		handleResult(result, {
 			onSuccess: (data) => {
 				setUser(data);
 				setFormSchema((prev) => {
@@ -120,7 +120,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 				userId && user
 					? await updateUserAction(buildUpdateUserInput(schema, user))
 					: await createUserAction(buildCreateUserInput(schema));
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -134,7 +134,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 
 		startTransition(async () => {
 			const result = await deleteUserAction(userId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});

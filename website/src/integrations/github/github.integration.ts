@@ -1,4 +1,4 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 
 const OWNER = 'socialincome-san';
 const REPO = 'public';
@@ -11,7 +11,7 @@ type GithubResponse = {
 	linkHeader: string | null;
 };
 
-export const fetchGithubData = async (path: string): Promise<ServiceResult<GithubResponse>> => {
+export const fetchGithubData = async (path: string): Promise<Result<GithubResponse>> => {
 	const headers: Record<string, string> = {
 		Accept: 'application/vnd.github+json',
 	};

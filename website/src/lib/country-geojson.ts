@@ -1,11 +1,11 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import type { FeatureCollection, GeoJsonProperties, Geometry } from 'geojson';
 
 export type CountryGeoJson = FeatureCollection<Geometry, GeoJsonProperties>;
 
 export const COUNTRY_GEOJSON_URL = '/assets/globe/countries-110m.json';
 
-export const getCountryGeoJson = async (signal?: AbortSignal): Promise<ServiceResult<CountryGeoJson>> => {
+export const getCountryGeoJson = async (signal?: AbortSignal): Promise<Result<CountryGeoJson>> => {
 	try {
 		const response = await fetch(COUNTRY_GEOJSON_URL, { signal });
 		if (!response.ok) {

@@ -2,7 +2,7 @@ import type { CampaignGlobals, Faq } from '@/generated/storyblok/types/109655/st
 import { fetchStoryblokCampaignGlobals } from '@/integrations/storyblok/storyblok-campaign.integration';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getMetadata } from '@/lib/utils/metadata';
 import type { ISbStoryData } from '@storyblok/js';
@@ -29,7 +29,7 @@ const emptyNewsletterContent: CampaignNewsletterContent = {
 export const getCampaignPageContent = async (
 	lang: WebsiteLanguage,
 	campaignFaqs?: unknown,
-): Promise<ServiceResult<CampaignPageContent>> => {
+): Promise<Result<CampaignPageContent>> => {
 	try {
 		const [translator, globalsResult] = await Promise.all([
 			Translator.getInstance({ language: lang, namespaces: [...campaignPageNamespaces] }),
@@ -61,7 +61,7 @@ export const getCampaignPageMetadata = async (
 		description: string;
 		primaryImage?: { filename?: string | null } | null;
 	},
-): Promise<ServiceResult<Metadata>> => {
+): Promise<Result<Metadata>> => {
 	const primaryImage = campaign.primaryImage?.filename?.trim();
 	const campaignMetadata = {
 		title: campaign.title,
@@ -87,7 +87,7 @@ export const getCampaignPageMetadata = async (
 	return resultOk(await getMetadata(lang, 'website-campaign', campaignMetadata));
 };
 
-export const getCampaignFallbackMetadata = async (lang: WebsiteLanguage): Promise<ServiceResult<Metadata>> =>
+export const getCampaignFallbackMetadata = async (lang: WebsiteLanguage): Promise<Result<Metadata>> =>
 	resultOk(await getMetadata(lang, 'website-campaign'));
 
 const toResolvedFaqs = (faqReferences: unknown[]): ISbStoryData<Faq>[] =>

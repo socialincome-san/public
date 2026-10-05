@@ -1,5 +1,5 @@
 import type { Campaign, CampaignGlobals } from '@/generated/storyblok/types/109655/storyblok-components';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { STORYBLOK_CAMPAIGN_GLOBALS_PATH, STORYBLOK_CAMPAIGNS_FOLDER } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { fetchStoryblokStories, fetchStoryblokStory } from './storyblok-content.integration';
@@ -10,7 +10,7 @@ const isObjectRecord = (value: unknown): value is Record<string, unknown> => typ
 
 export const fetchStoryblokCampaignGlobals = async (
 	language: string,
-): Promise<ServiceResult<ISbStoryData<CampaignGlobals> | null>> => {
+): Promise<Result<ISbStoryData<CampaignGlobals> | null>> => {
 	try {
 		const story = await fetchStoryWithLanguageFallback<CampaignGlobals>(
 			STORYBLOK_CAMPAIGN_GLOBALS_PATH,
@@ -26,7 +26,7 @@ export const fetchStoryblokCampaignGlobals = async (
 	}
 };
 
-export const fetchStoryblokListedCampaigns = async (language: string): Promise<ServiceResult<ISbStoryData<Campaign>[]>> => {
+export const fetchStoryblokListedCampaigns = async (language: string): Promise<Result<ISbStoryData<Campaign>[]>> => {
 	try {
 		const params: ISbStoriesParams = {
 			language,

@@ -1,4 +1,4 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import sgMail from '@sendgrid/mail';
 
 export type SendgridMailInput = {
@@ -8,7 +8,7 @@ export type SendgridMailInput = {
 	text: string;
 };
 
-export const sendSendgridEmail = async (input: SendgridMailInput): Promise<ServiceResult<void>> => {
+export const sendSendgridEmail = async (input: SendgridMailInput): Promise<Result<void>> => {
 	const apiKey = process.env.SENDGRID_API_KEY?.trim();
 	if (!apiKey) {
 		return resultFail('SendGrid is not configured');

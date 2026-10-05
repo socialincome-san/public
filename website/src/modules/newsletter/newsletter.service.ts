@@ -2,15 +2,13 @@ import {
 	searchSendgridNewsletterContact,
 	upsertSendgridNewsletterSubscription,
 } from '@/integrations/sendgrid/sendgrid-subscription.integration';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { toNewsletterLanguage, type SubscribeToNewsletterInput } from './newsletter.schemas';
 import type { NewsletterContact, NewsletterSubscriber } from './newsletter.types';
 
 export { toNewsletterLanguage };
 
-export const getActiveNewsletterSubscription = async (
-	email: string | null,
-): Promise<ServiceResult<NewsletterContact | null>> => {
+export const getActiveNewsletterSubscription = async (email: string | null): Promise<Result<NewsletterContact | null>> => {
 	if (!email) {
 		return resultFail('Email missing in contributor');
 	}
@@ -18,7 +16,7 @@ export const getActiveNewsletterSubscription = async (
 	return searchSendgridNewsletterContact(email);
 };
 
-export const subscribeToNewsletter = async (input: SubscribeToNewsletterInput): Promise<ServiceResult<void>> => {
+export const subscribeToNewsletter = async (input: SubscribeToNewsletterInput): Promise<Result<void>> => {
 	const result = await upsertSendgridNewsletterSubscription({
 		...input,
 		status: 'subscribed',
@@ -30,7 +28,7 @@ export const subscribeToNewsletter = async (input: SubscribeToNewsletterInput): 
 	return resultOk(undefined);
 };
 
-export const unsubscribeFromNewsletter = async (subscriber: NewsletterSubscriber): Promise<ServiceResult<void>> => {
+export const unsubscribeFromNewsletter = async (subscriber: NewsletterSubscriber): Promise<Result<void>> => {
 	if (!subscriber.email) {
 		return resultFail('Email missing contributor');
 	}

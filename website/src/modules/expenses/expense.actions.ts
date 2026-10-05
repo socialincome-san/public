@@ -1,14 +1,16 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
 import { expenseCreateInputSchema, expenseIdSchema, expenseUpdateInputSchema } from '@/modules/expenses/expense.schemas';
 import { createExpense, getExpense, getExpenseOptions, updateExpense } from '@/modules/expenses/expense.service';
+import type { ExpensePayload } from '@/modules/expenses/expense.types';
+import type { OrganizationOption } from '@/modules/organizations/organization.types';
 import { revalidatePath } from 'next/cache';
 
 const REVALIDATE_PATH = '/portal/admin/expenses';
 
-export const createExpenseAction = async (input: unknown) => {
+export const createExpenseAction = async (input: unknown): Promise<Result<ExpensePayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -24,7 +26,7 @@ export const createExpenseAction = async (input: unknown) => {
 	return result;
 };
 
-export const updateExpenseAction = async (input: unknown) => {
+export const updateExpenseAction = async (input: unknown): Promise<Result<ExpensePayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -40,7 +42,7 @@ export const updateExpenseAction = async (input: unknown) => {
 	return result;
 };
 
-export const getExpenseAction = async (input: unknown) => {
+export const getExpenseAction = async (input: unknown): Promise<Result<ExpensePayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -53,7 +55,7 @@ export const getExpenseAction = async (input: unknown) => {
 	return getExpense(sessionResult.data.id, parsedInput.data);
 };
 
-export const getExpenseOptionsAction = async () => {
+export const getExpenseOptionsAction = async (): Promise<Result<OrganizationOption[]>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;

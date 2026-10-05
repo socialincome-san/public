@@ -1,5 +1,5 @@
 import { Currency } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
 import type { ExchangeRates } from '@/modules/exchange-rates/exchange-rate.types';
 import type { ChfAmountsDisplayInput, DisplayAmount, WalletPayoutDisplayInput } from './currency-display.types';
@@ -9,7 +9,7 @@ export const convertAmount = (
 	fromCurrency: Currency,
 	toCurrency: Currency,
 	rates?: ExchangeRates,
-): ServiceResult<number> => {
+): Result<number> => {
 	if (fromCurrency === toCurrency) {
 		return resultOk(amount);
 	}
@@ -35,21 +35,19 @@ export const convertAmount = (
 export const resolveChfAmounts = async ({
 	amounts,
 	displayCurrency,
-}: ChfAmountsDisplayInput): Promise<ServiceResult<DisplayAmount[]>> => {
+}: ChfAmountsDisplayInput): Promise<Result<DisplayAmount[]>> => {
 	const rates = displayCurrency === Currency.CHF ? undefined : await getDisplayRates();
 
 	return resultOk(amounts.map((amount) => resolveFromChf(amount, displayCurrency, rates)));
 };
 
-export const resolveWalletPayoutDisplay = async (input: WalletPayoutDisplayInput): Promise<ServiceResult<DisplayAmount>> => {
+export const resolveWalletPayoutDisplay = async (input: WalletPayoutDisplayInput): Promise<Result<DisplayAmount>> => {
 	const rates = input.displayCurrency === Currency.CHF ? undefined : await getDisplayRates();
 
 	return resultOk(resolveWalletPayout(input, rates));
 };
 
-export const resolveWalletPayoutDisplays = async (
-	inputs: WalletPayoutDisplayInput[],
-): Promise<ServiceResult<DisplayAmount[]>> => {
+export const resolveWalletPayoutDisplays = async (inputs: WalletPayoutDisplayInput[]): Promise<Result<DisplayAmount[]>> => {
 	const rates = inputs.some(({ displayCurrency }) => displayCurrency !== Currency.CHF) ? await getDisplayRates() : undefined;
 
 	return resultOk(inputs.map((input) => resolveWalletPayout(input, rates)));

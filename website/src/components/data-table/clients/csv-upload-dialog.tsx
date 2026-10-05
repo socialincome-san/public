@@ -4,7 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { Button } from '@/components/button/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { SuccessBanner } from '@/components/success-banner/success-banner';
-import type { ServiceResult } from '@/lib/service-result';
+import type { Result } from '@/lib/result';
 import { CsvRow, parseCsvFile } from '@/lib/utils/csv';
 import { useState } from 'react';
 import { CsvDropzone } from './csv-dropzone';
@@ -22,14 +22,14 @@ type Props = {
 	onOpenChange: (open: boolean) => void;
 	title: string;
 	template: CsvTemplate;
-	onImport: (file: File) => Promise<ServiceResult<{ created: number }>>;
+	onImport: (file: File) => Promise<Result<{ created: number }>>;
 };
 
 export const CsvUploadDialog = ({ open, onOpenChange, title, template, onImport }: Props) => {
 	const [file, setFile] = useState<File | null>(null);
 	const [previewRows, setPreviewRows] = useState<CsvRow[] | null>(null);
 	const [isImporting, setIsImporting] = useState(false);
-	const [result, setResult] = useState<ServiceResult<{ created: number }> | null>(null);
+	const [result, setResult] = useState<Result<{ created: number }> | null>(null);
 
 	const resetState = () => {
 		setFile(null);

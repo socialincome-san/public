@@ -1,7 +1,20 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
+import type {
+	ProgramBudgetCalculation,
+	ProgramDashboardStats,
+	ProgramFinancesDisplayAmounts,
+	ProgramSettingsPayload,
+	ProgramWallets,
+	PublicPreviewProgram,
+	PublicProgramDetails,
+	PublicProgramFilterDataMap,
+	PublicProgramStats,
+	PublicProgramStatsMap,
+	PublicProgramTargetFocus,
+} from '@/modules/programs/program.types';
 import { revalidatePath } from 'next/cache';
 import {
 	calculateProgramBudget,
@@ -36,7 +49,7 @@ import {
 	updateProgramSettings,
 } from './program.service';
 
-export const createProgramAction = async (input: unknown, userDetails?: unknown) => {
+export const createProgramAction = async (input: unknown, userDetails?: unknown): Promise<Result<{ programId: string }>> => {
 	const parsedInput = programCreateSchema.safeParse(input);
 	if (!parsedInput.success) {
 		return resultFail('Invalid program input.');
@@ -54,7 +67,7 @@ export const createProgramAction = async (input: unknown, userDetails?: unknown)
 	return createProgram(parsedInput.data, parsedUserDetails.data);
 };
 
-export const getProgramSettingsAction = async (programId: unknown) => {
+export const getProgramSettingsAction = async (programId: unknown): Promise<Result<ProgramSettingsPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -66,13 +79,15 @@ export const getProgramSettingsAction = async (programId: unknown) => {
 		: resultFail('Invalid program id.');
 };
 
-export const getCurrentProgramWalletsAction = async () => {
+export const getCurrentProgramWalletsAction = async (): Promise<Result<ProgramWallets>> => {
 	const sessionResult = await getSessionByType('user');
 
 	return sessionResult.success ? getProgramWallets(sessionResult.data.id) : sessionResult;
 };
 
-export const getProgramOrganizationOptionsAction = async (programId: unknown) => {
+export const getProgramOrganizationOptionsAction = async (
+	programId: unknown,
+): Promise<Result<{ id: string; name: string }[]>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -84,7 +99,7 @@ export const getProgramOrganizationOptionsAction = async (programId: unknown) =>
 		: resultFail('Invalid program id.');
 };
 
-export const updateProgramSettingsAction = async (input: unknown) => {
+export const updateProgramSettingsAction = async (input: unknown): Promise<Result<{ id: string }>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -102,7 +117,7 @@ export const updateProgramSettingsAction = async (input: unknown) => {
 	return result;
 };
 
-export const deleteProgramAction = async (programId: unknown) => {
+export const deleteProgramAction = async (programId: unknown): Promise<Result<void>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -121,13 +136,15 @@ export const deleteProgramAction = async (programId: unknown) => {
 	return result;
 };
 
-export const calculateProgramBudgetAction = async (input: unknown) => {
+export const calculateProgramBudgetAction = async (input: unknown): Promise<Result<ProgramBudgetCalculation>> => {
 	const parsedInput = programBudgetCalculationSchema.safeParse(input);
 
 	return parsedInput.success ? calculateProgramBudget(parsedInput.data) : resultFail('Invalid program budget input.');
 };
 
-export const getPublicProgramFilterDataByPortalSlugsAction = async (slugs: unknown) => {
+export const getPublicProgramFilterDataByPortalSlugsAction = async (
+	slugs: unknown,
+): Promise<Result<PublicProgramFilterDataMap>> => {
 	const parsedSlugs = programSlugsSchema.safeParse(slugs);
 
 	return parsedSlugs.success
@@ -135,7 +152,7 @@ export const getPublicProgramFilterDataByPortalSlugsAction = async (slugs: unkno
 		: resultFail('Invalid program slugs.');
 };
 
-export const getPublicProgramStatsByPortalSlugsAction = async (slugs: unknown) => {
+export const getPublicProgramStatsByPortalSlugsAction = async (slugs: unknown): Promise<Result<PublicProgramStatsMap>> => {
 	const parsedSlugs = programSlugsSchema.safeParse(slugs);
 
 	return parsedSlugs.success
@@ -143,13 +160,15 @@ export const getPublicProgramStatsByPortalSlugsAction = async (slugs: unknown) =
 		: resultFail('Invalid program slugs.');
 };
 
-export const getPublicProgramStatsByIdAction = async (programId: unknown) => {
+export const getPublicProgramStatsByIdAction = async (programId: unknown): Promise<Result<PublicProgramStats>> => {
 	const parsedProgramId = programIdSchema.safeParse(programId);
 
 	return parsedProgramId.success ? getPublicProgramStatsById(parsedProgramId.data) : resultFail('Invalid program id.');
 };
 
-export const getPublicTargetFocusesByProgramIdAction = async (programId: unknown) => {
+export const getPublicTargetFocusesByProgramIdAction = async (
+	programId: unknown,
+): Promise<Result<PublicProgramTargetFocus[]>> => {
 	const parsedProgramId = programIdSchema.safeParse(programId);
 
 	return parsedProgramId.success
@@ -157,37 +176,40 @@ export const getPublicTargetFocusesByProgramIdAction = async (programId: unknown
 		: resultFail('Invalid program id.');
 };
 
-export const getProgramIdByPortalSlugAction = async (slug: unknown) => {
+export const getProgramIdByPortalSlugAction = async (slug: unknown): Promise<Result<string>> => {
 	const parsedSlug = programSlugSchema.safeParse(slug);
 
 	return parsedSlug.success ? getProgramIdByPortalSlug(parsedSlug.data) : resultFail('Invalid program slug.');
 };
 
-export const getProgramSlugByIdAction = async (programId: unknown) => {
+export const getProgramSlugByIdAction = async (programId: unknown): Promise<Result<string>> => {
 	const parsedProgramId = programIdSchema.safeParse(programId);
 
 	return parsedProgramId.success ? getProgramSlugById(parsedProgramId.data) : resultFail('Invalid program id.');
 };
 
-export const getPublicProgramBySlugAction = async (slug: unknown) => {
+export const getPublicProgramBySlugAction = async (slug: unknown): Promise<Result<PublicProgramDetails>> => {
 	const parsedSlug = programSlugSchema.safeParse(slug);
 
 	return parsedSlug.success ? getPublicProgramBySlug(parsedSlug.data) : resultFail('Invalid program slug.');
 };
 
-export const getPublicPreviewProgramBySlugAction = async (slug: unknown) => {
+export const getPublicPreviewProgramBySlugAction = async (slug: unknown): Promise<Result<PublicPreviewProgram>> => {
 	const parsedSlug = programSlugSchema.safeParse(slug);
 
 	return parsedSlug.success ? getPublicPreviewProgramBySlug(parsedSlug.data) : resultFail('Invalid program slug.');
 };
 
-export const getProgramDashboardStatsAction = async (programId: unknown) => {
+export const getProgramDashboardStatsAction = async (programId: unknown): Promise<Result<ProgramDashboardStats>> => {
 	const parsedProgramId = programIdSchema.safeParse(programId);
 
 	return parsedProgramId.success ? getProgramDashboardStats(parsedProgramId.data) : resultFail('Invalid program id.');
 };
 
-export const resolveProgramFinancesDisplayAmountsAction = async (input: unknown, displayCurrency: unknown) => {
+export const resolveProgramFinancesDisplayAmountsAction = async (
+	input: unknown,
+	displayCurrency: unknown,
+): Promise<Result<ProgramFinancesDisplayAmounts>> => {
 	const parsedStats = programFinancesStatsSchema.safeParse(input);
 	const parsedDisplayCurrency = programDisplayCurrencySchema.safeParse(displayCurrency);
 	if (!parsedStats.success || !parsedDisplayCurrency.success) {

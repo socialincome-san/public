@@ -1,7 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail, type ServiceResult } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
 import { revalidatePath } from 'next/cache';
 import {
 	organizationCreateSchema,
@@ -22,7 +22,7 @@ import type { OrganizationPayload } from './organization.types';
 
 const REVALIDATE_PATH = '/portal/admin/organizations';
 
-export const createOrganizationAction = async (input: unknown): Promise<ServiceResult<OrganizationPayload>> => {
+export const createOrganizationAction = async (input: unknown): Promise<Result<OrganizationPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -39,7 +39,7 @@ export const createOrganizationAction = async (input: unknown): Promise<ServiceR
 	return result;
 };
 
-export const updateOrganizationAction = async (input: unknown): Promise<ServiceResult<OrganizationPayload>> => {
+export const updateOrganizationAction = async (input: unknown): Promise<Result<OrganizationPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -56,9 +56,7 @@ export const updateOrganizationAction = async (input: unknown): Promise<ServiceR
 	return result;
 };
 
-export const renameActiveOrganizationAction = async (
-	input: unknown,
-): Promise<ServiceResult<{ id: string; name: string }>> => {
+export const renameActiveOrganizationAction = async (input: unknown): Promise<Result<{ id: string; name: string }>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -77,7 +75,7 @@ export const renameActiveOrganizationAction = async (
 	return result;
 };
 
-export const deleteOrganizationAction = async (organizationId: unknown): Promise<ServiceResult<void>> => {
+export const deleteOrganizationAction = async (organizationId: unknown): Promise<Result<void>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -94,7 +92,7 @@ export const deleteOrganizationAction = async (organizationId: unknown): Promise
 	return result;
 };
 
-export const getOrganizationAction = async (organizationId: unknown): Promise<ServiceResult<OrganizationPayload>> => {
+export const getOrganizationAction = async (organizationId: unknown): Promise<Result<OrganizationPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -108,7 +106,7 @@ export const getOrganizationAction = async (organizationId: unknown): Promise<Se
 	return getOrganization(sessionResult.data.id, parsedOrganizationId.data);
 };
 
-export const getOrganizationUserOptionsAction = async (): Promise<ServiceResult<{ id: string; name: string }[]>> => {
+export const getOrganizationUserOptionsAction = async (): Promise<Result<{ id: string; name: string }[]>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -117,7 +115,7 @@ export const getOrganizationUserOptionsAction = async (): Promise<ServiceResult<
 	return getOrganizationUserOptions(sessionResult.data.id);
 };
 
-export const getOrganizationProgramOptionsAction = async (): Promise<ServiceResult<{ id: string; name: string }[]>> => {
+export const getOrganizationProgramOptionsAction = async (): Promise<Result<{ id: string; name: string }[]>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;

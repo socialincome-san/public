@@ -1,5 +1,5 @@
 import type { Session } from '@/lib/firebase/current-account';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	createFirebaseUserByEmail,
 	deleteFirebaseUserByUidIfExists,
@@ -23,9 +23,7 @@ import type {
 
 type LocalPartnerRecord = NonNullable<Awaited<ReturnType<typeof localPartnerRepository.findLocalPartnerById>>>;
 
-export const getPublicLocalPartnersByProgramId = async (
-	programId: string,
-): Promise<ServiceResult<PublicProgramLocalPartner[]>> => {
+export const getPublicLocalPartnersByProgramId = async (programId: string): Promise<Result<PublicProgramLocalPartner[]>> => {
 	const normalizedProgramId = programId.trim();
 	if (!normalizedProgramId) {
 		return resultFail('Missing program id');
@@ -42,7 +40,7 @@ export const getPublicLocalPartnersByProgramId = async (
 
 export const getPublicLocalPartnerOverviewStatsBySlugs = async (
 	localPartnerSlugs: string[],
-): Promise<ServiceResult<PublicLocalPartnerOverviewStatsMap>> => {
+): Promise<Result<PublicLocalPartnerOverviewStatsMap>> => {
 	const normalizedSlugs = [...new Set(localPartnerSlugs.map((slug) => slug.trim()).filter(Boolean))];
 	if (normalizedSlugs.length === 0) {
 		return resultOk({});
@@ -79,7 +77,7 @@ export const getPublicLocalPartnerOverviewStatsBySlugs = async (
 
 export const getProgramRecipientCountsByLocalPartnerSlug = async (
 	localPartnerSlug: string,
-): Promise<ServiceResult<Record<string, number>>> => {
+): Promise<Result<Record<string, number>>> => {
 	const normalizedSlug = localPartnerSlug.trim();
 	if (!normalizedSlug) {
 		return resultOk({});
@@ -104,7 +102,7 @@ export const getProgramRecipientCountsByLocalPartnerSlug = async (
 
 export const getPublicLocalPartnerDashboardStatsBySlug = async (
 	localPartnerSlug: string,
-): Promise<ServiceResult<{ recipientsCount: number; completedSurveysCount: number }>> => {
+): Promise<Result<{ recipientsCount: number; completedSurveysCount: number }>> => {
 	const normalizedSlug = localPartnerSlug.trim();
 	if (!normalizedSlug) {
 		return resultFail('Missing local partner slug');
@@ -128,10 +126,7 @@ export const getPublicLocalPartnerDashboardStatsBySlug = async (
 	}
 };
 
-export const getLocalPartner = async (
-	userId: string,
-	localPartnerId: string,
-): Promise<ServiceResult<LocalPartnerPayload>> => {
+export const getLocalPartner = async (userId: string, localPartnerId: string): Promise<Result<LocalPartnerPayload>> => {
 	try {
 		const adminResult = await isAdmin(userId);
 		if (!adminResult.success) {
@@ -151,7 +146,7 @@ export const getLocalPartner = async (
 export const getPaginatedLocalPartnerTableView = async (
 	userId: string,
 	query: LocalPartnerTableQuery,
-): Promise<ServiceResult<LocalPartnerPaginatedTableView>> => {
+): Promise<Result<LocalPartnerPaginatedTableView>> => {
 	try {
 		const adminResult = await isAdmin(userId);
 		if (!adminResult.success) {
@@ -190,7 +185,7 @@ export const getPaginatedLocalPartnerTableView = async (
 	}
 };
 
-export const getLocalPartnerOptions = async (): Promise<ServiceResult<LocalPartnerOption[]>> => {
+export const getLocalPartnerOptions = async (): Promise<Result<LocalPartnerOption[]>> => {
 	try {
 		return resultOk(await localPartnerRepository.findLocalPartnerOptions());
 	} catch (error) {
@@ -202,7 +197,7 @@ export const getLocalPartnerOptions = async (): Promise<ServiceResult<LocalPartn
 
 export const getLocalPartnerMessagingTargets = async (
 	localPartnerIds: string[],
-): Promise<ServiceResult<LocalPartnerMessagingTarget[]>> => {
+): Promise<Result<LocalPartnerMessagingTarget[]>> => {
 	try {
 		return resultOk(await localPartnerRepository.findLocalPartnerMessagingTargets(localPartnerIds));
 	} catch (error) {
@@ -212,7 +207,7 @@ export const getLocalPartnerMessagingTargets = async (
 	}
 };
 
-export const getLocalPartnerIdBySlug = async (slug: string): Promise<ServiceResult<string>> => {
+export const getLocalPartnerIdBySlug = async (slug: string): Promise<Result<string>> => {
 	const normalizedSlug = slug.trim();
 	if (!normalizedSlug) {
 		return resultFail('Missing local partner slug');
@@ -229,9 +224,7 @@ export const getLocalPartnerIdBySlug = async (slug: string): Promise<ServiceResu
 	}
 };
 
-export const getCurrentLocalPartnerSession = async (
-	firebaseAuthUserId: string,
-): Promise<ServiceResult<LocalPartnerSession>> => {
+export const getCurrentLocalPartnerSession = async (firebaseAuthUserId: string): Promise<Result<LocalPartnerSession>> => {
 	try {
 		const partner = await localPartnerRepository.findLocalPartnerSession(firebaseAuthUserId);
 		if (!partner) {
@@ -264,7 +257,7 @@ export const getCurrentLocalPartnerSession = async (
 export const createLocalPartner = async (
 	userId: string,
 	input: LocalPartnerCreateInput,
-): Promise<ServiceResult<LocalPartnerPayload>> => {
+): Promise<Result<LocalPartnerPayload>> => {
 	const adminResult = await isAdmin(userId);
 	if (!adminResult.success) {
 		return resultFail(adminResult.error);
@@ -314,7 +307,7 @@ export const createLocalPartner = async (
 export const updateLocalPartner = async (
 	session: Session,
 	input: LocalPartnerUpdateInput,
-): Promise<ServiceResult<LocalPartnerPayload>> => {
+): Promise<Result<LocalPartnerPayload>> => {
 	try {
 		if (session.type === 'contributor') {
 			return resultFail('Permission denied');
@@ -377,7 +370,7 @@ export const updateLocalPartner = async (
 	}
 };
 
-export const deleteLocalPartner = async (userId: string, localPartnerId: string): Promise<ServiceResult<{ id: string }>> => {
+export const deleteLocalPartner = async (userId: string, localPartnerId: string): Promise<Result<{ id: string }>> => {
 	const adminResult = await isAdmin(userId);
 	if (!adminResult.success) {
 		return resultFail(adminResult.error);
@@ -420,9 +413,7 @@ export const deleteLocalPartner = async (userId: string, localPartnerId: string)
 	}
 };
 
-const getPublicLocalPartnerStatsByIds = async (
-	localPartnerIds: string[],
-): Promise<ServiceResult<PublicLocalPartnerStatsMap>> => {
+const getPublicLocalPartnerStatsByIds = async (localPartnerIds: string[]): Promise<Result<PublicLocalPartnerStatsMap>> => {
 	const normalizedIds = [...new Set(localPartnerIds.map((id) => id.trim()).filter(Boolean))];
 	if (normalizedIds.length === 0) {
 		return resultOk({});
@@ -459,7 +450,7 @@ const getPublicLocalPartnerStatsByIds = async (
 	}
 };
 
-const validateCreateUniqueness = async (input: LocalPartnerCreateInput): Promise<ServiceResult<void>> => {
+const validateCreateUniqueness = async (input: LocalPartnerCreateInput): Promise<Result<void>> => {
 	if (await localPartnerRepository.findLocalPartnerByName(input.name)) {
 		return resultFail('A local partner with this name already exists.');
 	}
@@ -479,7 +470,7 @@ const validateCreateUniqueness = async (input: LocalPartnerCreateInput): Promise
 const validateUpdateUniqueness = async (
 	input: LocalPartnerUpdateInput,
 	existing: NonNullable<Awaited<ReturnType<typeof localPartnerRepository.findLocalPartnerForUpdate>>>,
-): Promise<ServiceResult<void>> => {
+): Promise<Result<void>> => {
 	if (input.name !== existing.name) {
 		const conflict = await localPartnerRepository.findLocalPartnerByName(input.name);
 		if (conflict && conflict.id !== existing.id) {

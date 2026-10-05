@@ -1,7 +1,7 @@
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { randomUUID } from 'crypto';
 
@@ -33,7 +33,7 @@ const isStoryblokManagementError = (error: unknown): error is StoryblokManagemen
 	return 'statusCode' in error && 'retryable' in error;
 };
 
-const toServiceFailure = (error: unknown): ServiceResult<never> => {
+const toServiceFailure = (error: unknown): Result<never> => {
 	if (isStoryblokManagementError(error)) {
 		console.error('Storyblok management request failed', { error });
 
@@ -327,7 +327,7 @@ const listAssetsInFolder = async (
 
 export const listCampaignDefaultImages = async (
 	limit = campaignSubmissionConfig.maxCampaignDefaultImages,
-): Promise<ServiceResult<StoryblokListedAsset[]>> => {
+): Promise<Result<StoryblokListedAsset[]>> => {
 	try {
 		const assets = await listAssetsInFolder(campaignSubmissionConfig.storyblokCampaignDefaultImagesFolderId, {
 			perPage: Math.max(limit * 3, 15),
@@ -340,7 +340,7 @@ export const listCampaignDefaultImages = async (
 	}
 };
 
-export const getStoryblokAsset = async (assetId: number): Promise<ServiceResult<StoryblokListedAsset | null>> => {
+export const getStoryblokAsset = async (assetId: number): Promise<Result<StoryblokListedAsset | null>> => {
 	try {
 		const body = await requestManagement(`/spaces/${spaceId}/assets/${assetId}`, { method: 'GET' });
 		const asset = unwrapAsset(body);
@@ -361,7 +361,7 @@ export const getStoryblokAsset = async (assetId: number): Promise<ServiceResult<
 	}
 };
 
-export const downloadStoryblokAssetBuffer = async (filename: string): Promise<ServiceResult<Buffer>> => {
+export const downloadStoryblokAssetBuffer = async (filename: string): Promise<Result<Buffer>> => {
 	try {
 		const assetUrl = assertAllowedStoryblokAssetUrl(filename);
 		const response = await fetch(assetUrl, {
@@ -385,7 +385,7 @@ export const uploadStoryblokAsset = async (
 	filename: string,
 	mimeType: string,
 	options?: { focus?: string | null },
-): Promise<ServiceResult<{ assetId: number; asset: StoryblokAsset }>> => {
+): Promise<Result<{ assetId: number; asset: StoryblokAsset }>> => {
 	try {
 		const signedResponse = await requestManagement(`/spaces/${spaceId}/assets/`, {
 			method: 'POST',
@@ -455,7 +455,7 @@ const updateAssetFocus = async (assetId: number, focus: string): Promise<void> =
 	});
 };
 
-export const campaignStoryExists = async (slug: string): Promise<ServiceResult<boolean>> => {
+export const campaignStoryExists = async (slug: string): Promise<Result<boolean>> => {
 	try {
 		const storyPath = getCampaignStoryPath(slug);
 		const query = new URLSearchParams({ with_slug: storyPath });
@@ -499,7 +499,7 @@ export type CreatePublishedCampaignStoryInput = {
 
 export const createPublishedCampaignStory = async (
 	input: CreatePublishedCampaignStoryInput,
-): Promise<ServiceResult<{ storyId: number; storyUuid: string }>> => {
+): Promise<Result<{ storyId: number; storyUuid: string }>> => {
 	try {
 		const content: Campaign = {
 			component: 'Campaign',
@@ -544,7 +544,7 @@ export const createPublishedCampaignStory = async (
 	}
 };
 
-export const deleteStoryblokAsset = async (assetId: number): Promise<ServiceResult<void>> => {
+export const deleteStoryblokAsset = async (assetId: number): Promise<Result<void>> => {
 	try {
 		await requestManagement(`/spaces/${spaceId}/assets/${assetId}`, {
 			method: 'DELETE',
@@ -558,7 +558,7 @@ export const deleteStoryblokAsset = async (assetId: number): Promise<ServiceResu
 	}
 };
 
-export const deleteStoryblokStory = async (storyId: number): Promise<ServiceResult<void>> => {
+export const deleteStoryblokStory = async (storyId: number): Promise<Result<void>> => {
 	try {
 		await requestManagement(`/spaces/${spaceId}/stories/${storyId}`, {
 			method: 'DELETE',

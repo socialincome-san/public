@@ -1,4 +1,4 @@
-import type { ServiceResult } from '@/lib/service-result';
+import type { Result } from '@/lib/result';
 
 const mockIsAdmin = jest.fn();
 const mockFindCountryById = jest.fn();
@@ -38,7 +38,7 @@ jest.mock('./country.repository', () => ({
 
 import { getPaginatedCountryTableView, getProgramCountryFeasibility } from './country.service';
 
-const expectSuccess = <T>(result: ServiceResult<T>): T => {
+const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
 	if (!result.success) {
 		throw new Error(result.error);

@@ -1,6 +1,6 @@
 import { Currency, PayoutInterval, PayoutStatus, SurveyStatus } from '@/generated/prisma/enums';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now } from '@/lib/utils/now';
 import { getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
 import { recipientStatusService } from '@/modules/recipients/recipient.service';
@@ -17,7 +17,7 @@ type ExchangeRates = Partial<Record<Currency, number>>;
 const { countPaidOrConfirmedPayouts, getExpectedIntervals, getRecipientLifecycleStatusFromExpectedIntervals } =
 	recipientStatusService;
 
-export const isReadyForFirstPayoutInterval = async (programId: string): Promise<ServiceResult<boolean>> => {
+export const isReadyForFirstPayoutInterval = async (programId: string): Promise<Result<boolean>> => {
 	try {
 		const program = await programRepository.findProgramDashboardSource(programId);
 		if (!program) {
@@ -60,7 +60,7 @@ export const isReadyForFirstPayoutInterval = async (programId: string): Promise<
 
 export const calculateProgramBudget = async (
 	input: ProgramBudgetCalculationInput,
-): Promise<ServiceResult<ProgramBudgetCalculation>> => {
+): Promise<Result<ProgramBudgetCalculation>> => {
 	try {
 		return resultOk(calculateProgramBudgetWithRates(input, await getLatestRatesOrUndefined()));
 	} catch (error) {
@@ -73,7 +73,7 @@ export const calculateProgramBudget = async (
 export const resolveProgramFinancesDisplayAmounts = async (
 	stats: ProgramFinancesStatsInput,
 	displayCurrency: WebsiteCurrency,
-): Promise<ServiceResult<ProgramFinancesDisplayAmounts>> => {
+): Promise<Result<ProgramFinancesDisplayAmounts>> => {
 	if (displayCurrency === stats.payoutCurrency) {
 		return resultOk(toPayoutCurrencyAmounts(stats));
 	}
@@ -98,7 +98,7 @@ export const resolveProgramFinancesDisplayAmounts = async (
 	}
 };
 
-export const getProgramDashboardStats = async (programId: string): Promise<ServiceResult<ProgramDashboardStats>> => {
+export const getProgramDashboardStats = async (programId: string): Promise<Result<ProgramDashboardStats>> => {
 	try {
 		const program = await programRepository.findProgramDashboardSource(programId);
 		if (!program) {

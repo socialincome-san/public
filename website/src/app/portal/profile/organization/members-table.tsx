@@ -8,7 +8,7 @@ import type { TableQueryState } from '@/components/data-table/query-state';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
 import { Input } from '@/components/input/input';
-import { handleServiceResult } from '@/lib/service-result-client';
+import { handleResult } from '@/lib/result-client';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { renameActiveOrganizationAction } from '@/modules/organizations/organization.actions';
 import type { OrganizationMemberTableViewRow } from '@/modules/organizations/organization.types';
@@ -57,7 +57,7 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 	const onSubmit = ({ name }: RenameOrganizationFormValues) => {
 		startTransition(async () => {
 			const result = await renameActiveOrganizationAction({ name });
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => {
 					setIsRenameDialogOpen(false);
 					setErrorMessage(null);

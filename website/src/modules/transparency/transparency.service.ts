@@ -1,4 +1,4 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { assignFlagColors } from '@/lib/utils/country-flag-color';
 import { getCountryFlagColors } from '@/lib/utils/country-flag-colors';
 import {
@@ -25,7 +25,7 @@ const OTHER_SEGMENT_COLOR = 'hsl(var(--muted-foreground) / 0.4)';
 
 export const getTotalContributionsChf = async (
 	financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' },
-): Promise<ServiceResult<number>> => {
+): Promise<Result<number>> => {
 	try {
 		const result = await getSucceededContributionTotal(getFinancialPeriodDateRange(financialPeriod));
 
@@ -39,7 +39,7 @@ export const getTotalContributionsChf = async (
 
 export const getTransparencySummary = async (
 	financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' },
-): Promise<ServiceResult<TransparencySummaryData>> => {
+): Promise<Result<TransparencySummaryData>> => {
 	try {
 		const dateRange = getFinancialPeriodDateRange(financialPeriod);
 		const [inflowsResult, outflowsResult, latestReservesResult] = await Promise.all([
@@ -72,7 +72,7 @@ export const getTransparencySummary = async (
 	}
 };
 
-export const getRunwayMonths = async (): Promise<ServiceResult<number>> => {
+export const getRunwayMonths = async (): Promise<Result<number>> => {
 	try {
 		const latestReservesResult = await getLatestReserves();
 		if (!latestReservesResult.success) {
@@ -102,7 +102,7 @@ export const getRunwayMonths = async (): Promise<ServiceResult<number>> => {
 export const getContributionsByCountryData = async (
 	limit: number = TOP_CONTRIBUTING_COUNTRIES_LIMIT,
 	financialPeriod: TransparencyFinancialPeriod = { kind: 'all-time' },
-): Promise<ServiceResult<TransparencyCountriesData>> => {
+): Promise<Result<TransparencyCountriesData>> => {
 	try {
 		const rowsResult = await getSucceededContributionsByContributorCountry(getFinancialPeriodDateRange(financialPeriod));
 		if (!rowsResult.success) {

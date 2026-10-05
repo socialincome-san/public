@@ -1,7 +1,14 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
+import type {
+	ChannelPreviewSummary,
+	MessagingJobDetailView,
+	MessagingJobListRow,
+	MessagingJobStatusView,
+	MessagingRecipientsPage,
+} from '@/modules/messaging/messaging.types';
 import { revalidatePath } from 'next/cache';
 import {
 	channelPreviewSchema,
@@ -21,7 +28,9 @@ import {
 	syncMessagingJobStatuses,
 } from './messaging.service';
 
-export const listMessagingJobsAction = async (query: unknown) => {
+export const listMessagingJobsAction = async (
+	query: unknown,
+): Promise<Result<{ rows: MessagingJobListRow[]; totalCount: number }>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -34,7 +43,10 @@ export const listMessagingJobsAction = async (query: unknown) => {
 	return listMessagingJobs(queryResult.data, sessionResult.data.id);
 };
 
-export const getMessagingJobDetailAction = async (jobId: unknown, query: unknown) => {
+export const getMessagingJobDetailAction = async (
+	jobId: unknown,
+	query: unknown,
+): Promise<Result<MessagingJobDetailView>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -48,7 +60,9 @@ export const getMessagingJobDetailAction = async (jobId: unknown, query: unknown
 	return getMessagingJobDetail(jobIdResult.data, queryResult.data, sessionResult.data.id);
 };
 
-export const syncMessagingJobStatusesAction = async (jobId: unknown) => {
+export const syncMessagingJobStatusesAction = async (
+	jobId: unknown,
+): Promise<Result<{ checked: number; updated: number }>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -64,7 +78,10 @@ export const syncMessagingJobStatusesAction = async (jobId: unknown) => {
 	return result;
 };
 
-export const listMessagingRecipientsAction = async (type: unknown, query: unknown) => {
+export const listMessagingRecipientsAction = async (
+	type: unknown,
+	query: unknown,
+): Promise<Result<MessagingRecipientsPage>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -78,7 +95,7 @@ export const listMessagingRecipientsAction = async (type: unknown, query: unknow
 	return listMessagingRecipients(typeResult.data, queryResult.data, sessionResult.data.id);
 };
 
-export const startMessagingSendAction = async (input: unknown) => {
+export const startMessagingSendAction = async (input: unknown): Promise<Result<{ jobId: string }>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -94,7 +111,7 @@ export const startMessagingSendAction = async (input: unknown) => {
 	return result;
 };
 
-export const getMessagingJobAction = async (jobId: unknown) => {
+export const getMessagingJobAction = async (jobId: unknown): Promise<Result<MessagingJobStatusView>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -107,7 +124,7 @@ export const getMessagingJobAction = async (jobId: unknown) => {
 	return getMessagingJobStatus(jobIdResult.data, sessionResult.data.id);
 };
 
-export const previewMessagingChannelAction = async (input: unknown) => {
+export const previewMessagingChannelAction = async (input: unknown): Promise<Result<ChannelPreviewSummary>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;

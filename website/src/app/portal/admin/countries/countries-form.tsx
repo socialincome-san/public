@@ -3,7 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { NetworkTechnology, SanctionRegime } from '@/generated/prisma/enums';
-import { handleServiceResult } from '@/lib/service-result-client';
+import { handleResult } from '@/lib/result-client';
 import { COUNTRY_OPTIONS, isValidCountryCode } from '@/lib/types/country';
 import { allCurrencies, bestGuessCurrency } from '@/lib/types/currency';
 import {
@@ -210,7 +210,7 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 				countryId && country
 					? await updateCountryAction(buildUpdateCountryInput(schema, country))
 					: await createCountryAction(buildCreateCountryInput(schema));
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -224,7 +224,7 @@ export default function CountriesForm({ onSuccess, onError, onCancel, countryId 
 
 		startTransition(async () => {
 			const result = await deleteCountryAction(countryId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});

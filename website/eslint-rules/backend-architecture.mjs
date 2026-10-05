@@ -27,9 +27,9 @@ const typeNodeText = (sourceCode, typeNode) => {
 	return sourceCode.getText(typeNode).replace(/\s+/g, '');
 };
 
-const isServiceResultTypeAnnotation = (sourceCode, typeNode) => {
+const isResultTypeAnnotation = (sourceCode, typeNode) => {
 	const text = typeNodeText(sourceCode, typeNode);
-	return /^ServiceResult<.+>$/.test(text) || /^Promise<ServiceResult<.+>>$/.test(text);
+	return /^Result<.+>$/.test(text) || /^Promise<Result<.+>>$/.test(text);
 };
 
 const findVariable = (scope, name) => {
@@ -261,11 +261,11 @@ const actionFileContract = {
 	},
 };
 
-const serviceResultContract = {
+const resultContract = {
 	meta: {
 		type: 'problem',
 		docs: {
-			description: 'Require exported service and integration functions to return ServiceResult.',
+			description: 'Require exported service, action, and integration functions to return Result.',
 		},
 		schema: [
 			{
@@ -278,14 +278,15 @@ const serviceResultContract = {
 		],
 		messages: {
 			missingResultType:
-				'Exported functions in services and integrations must declare ServiceResult<T> or Promise<ServiceResult<T>> return types.',
+				'Exported functions in services, actions, and integrations must declare Result<T> or Promise<Result<T>> return types.',
 		},
 	},
 	create(context) {
 		const filename = normalizePath(context.filename);
 		const isServiceFile = filename.endsWith('.service.ts') || filename.endsWith('.service.tsx');
+		const isActionFile = filename.endsWith('.actions.ts') || filename.endsWith('.actions.tsx');
 		const isIntegrationFile = filename.endsWith('.integration.ts') || filename.endsWith('.integration.tsx');
-		if (!isServiceFile && !isIntegrationFile) {
+		if (!isServiceFile && !isActionFile && !isIntegrationFile) {
 			return {};
 		}
 
@@ -301,7 +302,7 @@ const serviceResultContract = {
 				return;
 			}
 
-			if (!isServiceResultTypeAnnotation(sourceCode, node.returnType?.typeAnnotation)) {
+			if (!isResultTypeAnnotation(sourceCode, node.returnType?.typeAnnotation)) {
 				context.report({ node: idNode ?? node, messageId: 'missingResultType' });
 			}
 		};
@@ -329,7 +330,7 @@ const safeResultErrors = {
 	meta: {
 		type: 'problem',
 		docs: {
-			description: 'Forbid leaking infrastructure details into ServiceResult error messages.',
+			description: 'Forbid leaking infrastructure details into Result error messages.',
 		},
 		schema: [],
 		messages: {
@@ -564,7 +565,7 @@ const noServiceThrow = {
 	meta: {
 		type: 'problem',
 		docs: {
-			description: 'Forbid throwing from services; use ServiceResult failures for expected errors.',
+			description: 'Forbid throwing from services; use Result failures for expected errors.',
 		},
 		schema: [],
 		messages: {
@@ -665,7 +666,7 @@ const backendArchitecturePlugin = {
 	},
 	rules: {
 		'action-file-contract': actionFileContract,
-		'service-result-contract': serviceResultContract,
+		'result-contract': resultContract,
 		'safe-result-errors': safeResultErrors,
 		'filename-contract': filenameContract,
 		'no-cross-module-deep-imports': noCrossModuleDeepImports,

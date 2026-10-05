@@ -5,7 +5,7 @@ import type { LocalPartnerSession } from '@/modules/local-partners/local-partner
 import { getCurrentUserSession } from '@/modules/users/user.service';
 import type { UserSession } from '@/modules/users/user.types';
 import { redirect } from 'next/navigation';
-import { resultFail, resultOk, type ServiceResult } from '../service-result';
+import { resultFail, resultOk, type Result } from '../result';
 import { getCurrentAuthToken } from './session-cookie';
 
 export type Session = ContributorSession | LocalPartnerSession | UserSession;
@@ -50,7 +50,7 @@ export const getSessionsOrRedirect = async (): Promise<Session[]> => {
 
 type SessionByType<T extends Session['type']> = Extract<Session, { type: T }>;
 
-export const getSessionByType = async <T extends Session['type']>(type: T): Promise<ServiceResult<SessionByType<T>>> => {
+export const getSessionByType = async <T extends Session['type']>(type: T): Promise<Result<SessionByType<T>>> => {
 	try {
 		const sessions = await getCurrentSessions();
 		if (sessions.length === 0) {

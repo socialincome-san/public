@@ -1,8 +1,8 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import * as bankAccountRepository from './bank-account.repository';
 import type { BankAccountRecord, BankAccountSummary } from './bank-account.types';
 
-export const getBankAccounts = async (): Promise<ServiceResult<BankAccountRecord[]>> => {
+export const getBankAccounts = async (): Promise<Result<BankAccountRecord[]>> => {
 	try {
 		return resultOk(await bankAccountRepository.findBankAccounts());
 	} catch (error) {
@@ -12,7 +12,7 @@ export const getBankAccounts = async (): Promise<ServiceResult<BankAccountRecord
 	}
 };
 
-export const getBankAccountSummaries = async (): Promise<ServiceResult<BankAccountSummary[]>> => {
+export const getBankAccountSummaries = async (): Promise<Result<BankAccountSummary[]>> => {
 	try {
 		return resultOk(await bankAccountRepository.findBankAccountSummaries());
 	} catch (error) {
@@ -22,7 +22,7 @@ export const getBankAccountSummaries = async (): Promise<ServiceResult<BankAccou
 	}
 };
 
-export const ensurePawaPayWallets = async (walletKeys: string[]): Promise<ServiceResult<BankAccountRecord[]>> => {
+export const ensurePawaPayWallets = async (walletKeys: string[]): Promise<Result<BankAccountRecord[]>> => {
 	const uniqueWalletKeys = [...new Set(walletKeys)];
 	if (uniqueWalletKeys.length === 0) {
 		return resultOk([]);

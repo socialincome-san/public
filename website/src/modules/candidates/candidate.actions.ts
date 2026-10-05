@@ -1,8 +1,10 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail, resultOk } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
+import type { CandidatePayload } from '@/modules/candidates/candidate.types';
 import { getLocalPartnerOptions } from '@/modules/local-partners/local-partner.service';
+import type { LocalPartnerOption } from '@/modules/local-partners/local-partner.types';
 import { revalidatePath } from 'next/cache';
 import {
 	candidateCountSchema,
@@ -25,7 +27,10 @@ import {
 const ADMIN_CANDIDATES_PATH = '/portal/admin/candidates';
 const PARTNER_CANDIDATES_PATH = '/partner-space/candidates';
 
-export const createCandidateAction = async (input: unknown, sessionType: unknown = 'user') => {
+export const createCandidateAction = async (
+	input: unknown,
+	sessionType: unknown = 'user',
+): Promise<Result<CandidatePayload>> => {
 	const sessionResult = await getCandidateActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -41,7 +46,10 @@ export const createCandidateAction = async (input: unknown, sessionType: unknown
 	return result;
 };
 
-export const updateCandidateAction = async (input: unknown, sessionType: unknown = 'user') => {
+export const updateCandidateAction = async (
+	input: unknown,
+	sessionType: unknown = 'user',
+): Promise<Result<CandidatePayload>> => {
 	const sessionResult = await getCandidateActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -57,7 +65,10 @@ export const updateCandidateAction = async (input: unknown, sessionType: unknown
 	return result;
 };
 
-export const deleteCandidateAction = async (candidateId: unknown, sessionType: unknown = 'user') => {
+export const deleteCandidateAction = async (
+	candidateId: unknown,
+	sessionType: unknown = 'user',
+): Promise<Result<{ id: string }>> => {
 	const sessionResult = await getCandidateActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -73,7 +84,10 @@ export const deleteCandidateAction = async (candidateId: unknown, sessionType: u
 	return result;
 };
 
-export const getCandidateAction = async (candidateId: unknown, sessionType: unknown = 'user') => {
+export const getCandidateAction = async (
+	candidateId: unknown,
+	sessionType: unknown = 'user',
+): Promise<Result<CandidatePayload>> => {
 	const sessionResult = await getCandidateActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -86,7 +100,9 @@ export const getCandidateAction = async (candidateId: unknown, sessionType: unkn
 	return getCandidate(sessionResult.data, idResult.data);
 };
 
-export const getCandidateOptionsAction = async (sessionType: unknown = 'user') => {
+export const getCandidateOptionsAction = async (
+	sessionType: unknown = 'user',
+): Promise<Result<{ localPartners: LocalPartnerOption[] }>> => {
 	const sessionTypeResult = candidateSessionTypeSchema.safeParse(sessionType);
 	if (!sessionTypeResult.success) {
 		return resultFail('Invalid session type');
@@ -106,7 +122,11 @@ export const getCandidateOptionsAction = async (sessionType: unknown = 'user') =
 	return resultOk({ localPartners: localPartnersResult.data });
 };
 
-export const getCandidateCountAction = async (focuses: unknown, profiles: unknown, countryId: unknown) => {
+export const getCandidateCountAction = async (
+	focuses: unknown,
+	profiles: unknown,
+	countryId: unknown,
+): Promise<Result<{ count: number }>> => {
 	const inputResult = candidateCountSchema.safeParse({ focuses, profiles, countryId });
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -115,7 +135,10 @@ export const getCandidateCountAction = async (focuses: unknown, profiles: unknow
 	return getCandidateCount(inputResult.data.focuses, inputResult.data.profiles, inputResult.data.countryId);
 };
 
-export const importCandidatesCsvAction = async (file: unknown, sessionType: unknown = 'user') => {
+export const importCandidatesCsvAction = async (
+	file: unknown,
+	sessionType: unknown = 'user',
+): Promise<Result<{ created: number }>> => {
 	const sessionResult = await getCandidateActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -131,7 +154,7 @@ export const importCandidatesCsvAction = async (file: unknown, sessionType: unkn
 	return result;
 };
 
-export const downloadCandidatesCsvAction = async (sessionType: unknown = 'user') => {
+export const downloadCandidatesCsvAction = async (sessionType: unknown = 'user'): Promise<Result<string>> => {
 	const sessionResult = await getCandidateActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;

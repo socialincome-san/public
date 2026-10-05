@@ -1,11 +1,11 @@
-import { resultFail, type ServiceResult } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
 import { verifySessionCookie } from '@/modules/auth/auth.service';
 import type { AuthToken } from '@/modules/auth/auth.types';
 import { cookies } from 'next/headers';
 
 export const SESSION_COOKIE_NAME = 'session';
 
-export const getCurrentAuthToken = async (): Promise<ServiceResult<AuthToken>> => {
+export const getCurrentAuthToken = async (): Promise<Result<AuthToken>> => {
 	try {
 		const sessionCookie = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
 		if (!sessionCookie) {

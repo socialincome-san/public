@@ -1,7 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
 import {
 	countryCreateInputSchema,
 	countryIdSchema,
@@ -18,11 +18,17 @@ import {
 	getPublicCountryStatsByIsoCodes,
 	updateCountry,
 } from '@/modules/countries/country.service';
+import type {
+	CountryPayload,
+	CountryStatisticRow,
+	ProgramCountryFeasibilityView,
+	PublicCountryStatsMap,
+} from '@/modules/countries/country.types';
 import { revalidatePath } from 'next/cache';
 
 const REVALIDATE_PATH = '/portal/admin/countries';
 
-export const createCountryAction = async (input: unknown) => {
+export const createCountryAction = async (input: unknown): Promise<Result<CountryPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -38,7 +44,7 @@ export const createCountryAction = async (input: unknown) => {
 	return result;
 };
 
-export const updateCountryAction = async (input: unknown) => {
+export const updateCountryAction = async (input: unknown): Promise<Result<CountryPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -54,7 +60,7 @@ export const updateCountryAction = async (input: unknown) => {
 	return result;
 };
 
-export const deleteCountryAction = async (input: unknown) => {
+export const deleteCountryAction = async (input: unknown): Promise<Result<{ id: string }>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -70,7 +76,7 @@ export const deleteCountryAction = async (input: unknown) => {
 	return result;
 };
 
-export const getCountryAction = async (input: unknown) => {
+export const getCountryAction = async (input: unknown): Promise<Result<CountryPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -83,9 +89,10 @@ export const getCountryAction = async (input: unknown) => {
 	return getCountry(sessionResult.data.id, parsedInput.data);
 };
 
-export const getProgramCountryFeasibilityAction = async () => getProgramCountryFeasibility();
+export const getProgramCountryFeasibilityAction = async (): Promise<Result<ProgramCountryFeasibilityView>> =>
+	getProgramCountryFeasibility();
 
-export const getPublicCountryStatsByIsoCodesAction = async (input: unknown) => {
+export const getPublicCountryStatsByIsoCodesAction = async (input: unknown): Promise<Result<PublicCountryStatsMap>> => {
 	const parsedInput = countryIsoCodesSchema.safeParse(input);
 	if (!parsedInput.success) {
 		return resultFail('Invalid input.');
@@ -94,7 +101,7 @@ export const getPublicCountryStatsByIsoCodesAction = async (input: unknown) => {
 	return getPublicCountryStatsByIsoCodes(parsedInput.data);
 };
 
-export const getCountryStatisticsComparisonAction = async (input: unknown) => {
+export const getCountryStatisticsComparisonAction = async (input: unknown): Promise<Result<CountryStatisticRow[]>> => {
 	const parsedInput = countryStatisticsComparisonSchema.safeParse(input);
 	if (!parsedInput.success) {
 		return resultFail('Invalid input.');

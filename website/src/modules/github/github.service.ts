@@ -1,11 +1,11 @@
 import { fetchGithubData } from '@/integrations/github/github.integration';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now } from '@/lib/utils/now';
 import type { GithubContributor, GithubIssue, GithubOpenSourceIssuesData, GithubRepoStats } from './github.types';
 
 const RENOVATE_BOT_LOGIN = 'renovate[bot]';
 
-export const getOpenSourceStats = async (): Promise<ServiceResult<GithubRepoStats>> => {
+export const getOpenSourceStats = async (): Promise<Result<GithubRepoStats>> => {
 	const repoResult = await fetchGithubData('');
 	if (!repoResult.success) {
 		return resultFail(repoResult.error);
@@ -30,7 +30,7 @@ export const getOpenSourceStats = async (): Promise<ServiceResult<GithubRepoStat
 	});
 };
 
-export const getOpenSourceContributors = async (): Promise<ServiceResult<GithubContributor[]>> => {
+export const getOpenSourceContributors = async (): Promise<Result<GithubContributor[]>> => {
 	const contributors: GithubContributor[] = [];
 	let page = 1;
 	let hasMore = true;
@@ -67,7 +67,7 @@ export const getOpenSourceContributors = async (): Promise<ServiceResult<GithubC
 	return resultOk(contributors.sort((left, right) => right.commits - left.commits));
 };
 
-export const getOpenSourceIssues = async (): Promise<ServiceResult<GithubOpenSourceIssuesData>> => {
+export const getOpenSourceIssues = async (): Promise<Result<GithubOpenSourceIssuesData>> => {
 	const issues: GithubIssue[] = [];
 	const labels = new Set<string>();
 	let page = 1;
@@ -102,7 +102,7 @@ export const getOpenSourceIssues = async (): Promise<ServiceResult<GithubOpenSou
 	return resultOk({ issues, labels: [...labels] });
 };
 
-const loadCommitStats = async (): Promise<ServiceResult<{ totalCommits: number; newCommits: number }>> => {
+const loadCommitStats = async (): Promise<Result<{ totalCommits: number; newCommits: number }>> => {
 	const endDate = now().toISOString();
 	const startDate = now();
 	startDate.setDate(startDate.getDate() - 30);
@@ -128,7 +128,7 @@ const loadCommitStats = async (): Promise<ServiceResult<{ totalCommits: number; 
 	});
 };
 
-const countRecentForks = async (): Promise<ServiceResult<number>> => {
+const countRecentForks = async (): Promise<Result<number>> => {
 	const since = now();
 	since.setDate(since.getDate() - 30);
 

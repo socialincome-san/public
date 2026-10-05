@@ -1,4 +1,4 @@
-import { resultFail, resultOk } from '@/lib/service-result';
+import { resultFail, resultOk } from '@/lib/result';
 import { createSessionCookie, requestOtp, verifyOtp, verifySessionCookie } from './auth.service';
 
 const mockValidateConfiguration = jest.fn();

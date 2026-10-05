@@ -10,7 +10,11 @@ type Props = {
 
 export const MoreArticlesButton = ({ label, pathname }: Props) => (
 	<div className="mt-10 flex justify-center">
-		<form action={() => switchToDefaultLanguageAction(pathname)}>
+		<form
+			action={async () => {
+				await switchToDefaultLanguageAction(pathname);
+			}}
+		>
 			<Button type="submit" variant="outline">
 				{label}
 			</Button>

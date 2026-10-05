@@ -1,10 +1,10 @@
 import { sendSendgridEmail } from '@/integrations/sendgrid/sendgrid-mail.integration';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { isAdmin } from '@/modules/users/user.service';
 import * as mailRepository from './mail.repository';
 import type { SendMailInput, SentEmailPaginatedTableView, SentEmailTableQuery, SentEmailTableViewRow } from './mail.types';
 
-export const sendMail = async (input: SendMailInput): Promise<ServiceResult<void>> => {
+export const sendMail = async (input: SendMailInput): Promise<Result<void>> => {
 	try {
 		const from = process.env.SENDGRID_FROM_EMAIL?.trim();
 		if (!process.env.SENDGRID_API_KEY?.trim() || !from) {
@@ -34,7 +34,7 @@ export const sendMail = async (input: SendMailInput): Promise<ServiceResult<void
 export const getPaginatedSentEmailTableView = async (
 	userId: string,
 	query: SentEmailTableQuery,
-): Promise<ServiceResult<SentEmailPaginatedTableView>> => {
+): Promise<Result<SentEmailPaginatedTableView>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {

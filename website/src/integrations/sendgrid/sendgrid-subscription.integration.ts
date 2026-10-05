@@ -1,5 +1,5 @@
 import { CountryCode } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { Client } from '@sendgrid/client';
 
 type NewsletterLanguage = 'de' | 'en' | 'fr' | 'it';
@@ -19,9 +19,7 @@ export type SendgridNewsletterUpsertInput = {
 	isContributor?: boolean;
 };
 
-export const searchSendgridNewsletterContact = async (
-	email: string,
-): Promise<ServiceResult<SendgridNewsletterContact | null>> => {
+export const searchSendgridNewsletterContact = async (email: string): Promise<Result<SendgridNewsletterContact | null>> => {
 	const configResult = getSendgridConfig();
 	if (!configResult.success) {
 		return resultFail(configResult.error);
@@ -38,9 +36,7 @@ export const searchSendgridNewsletterContact = async (
 	}
 };
 
-export const upsertSendgridNewsletterSubscription = async (
-	input: SendgridNewsletterUpsertInput,
-): Promise<ServiceResult<void>> => {
+export const upsertSendgridNewsletterSubscription = async (input: SendgridNewsletterUpsertInput): Promise<Result<void>> => {
 	const configResult = getSendgridConfig();
 	if (!configResult.success) {
 		return resultFail(configResult.error);
@@ -73,7 +69,7 @@ type SendgridConfig = {
 	suppressionListId: number;
 };
 
-const getSendgridConfig = (): ServiceResult<SendgridConfig> => {
+const getSendgridConfig = (): Result<SendgridConfig> => {
 	const apiKey = process.env.SENDGRID_API_KEY?.trim();
 	const listId = process.env.SENDGRID_LIST_ID?.trim();
 	const suppressionListIdRaw = process.env.SENDGRID_SUPPRESSION_LIST_ID?.trim();

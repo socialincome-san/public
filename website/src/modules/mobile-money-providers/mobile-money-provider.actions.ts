@@ -1,7 +1,11 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail, resultOk } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
+import type {
+	MobileMoneyProviderOption,
+	MobileMoneyProviderPayload,
+} from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { revalidatePath } from 'next/cache';
 import {
 	mobileMoneyProviderCreateSchema,
@@ -21,7 +25,7 @@ import {
 
 const REVALIDATE_PATH = '/portal/admin/mobile-money-providers';
 
-export const createMobileMoneyProviderAction = async (input: unknown) => {
+export const createMobileMoneyProviderAction = async (input: unknown): Promise<Result<MobileMoneyProviderPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -37,7 +41,7 @@ export const createMobileMoneyProviderAction = async (input: unknown) => {
 	return result;
 };
 
-export const updateMobileMoneyProviderAction = async (input: unknown) => {
+export const updateMobileMoneyProviderAction = async (input: unknown): Promise<Result<MobileMoneyProviderPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -53,7 +57,7 @@ export const updateMobileMoneyProviderAction = async (input: unknown) => {
 	return result;
 };
 
-export const getMobileMoneyProviderAction = async (providerId: unknown) => {
+export const getMobileMoneyProviderAction = async (providerId: unknown): Promise<Result<MobileMoneyProviderPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -66,7 +70,7 @@ export const getMobileMoneyProviderAction = async (providerId: unknown) => {
 	return getMobileMoneyProvider(sessionResult.data.id, providerIdResult.data);
 };
 
-export const deleteMobileMoneyProviderAction = async (providerId: unknown) => {
+export const deleteMobileMoneyProviderAction = async (providerId: unknown): Promise<Result<{ id: string }>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -82,7 +86,7 @@ export const deleteMobileMoneyProviderAction = async (providerId: unknown) => {
 	return result;
 };
 
-export const getMobileMoneyProviderOptionsAction = async () => {
+export const getMobileMoneyProviderOptionsAction = async (): Promise<Result<MobileMoneyProviderOption[]>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -91,7 +95,7 @@ export const getMobileMoneyProviderOptionsAction = async () => {
 	return getMobileMoneyProviderOptions(sessionResult.data.id);
 };
 
-export const getRootMobileMoneyProviderOptionsAction = async () => {
+export const getRootMobileMoneyProviderOptionsAction = async (): Promise<Result<MobileMoneyProviderOption[]>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -100,7 +104,9 @@ export const getRootMobileMoneyProviderOptionsAction = async () => {
 	return getRootMobileMoneyProviderOptions(sessionResult.data.id);
 };
 
-export const getSupportedMobileMoneyProviderOptionsAction = async (sessionType: unknown = 'user') => {
+export const getSupportedMobileMoneyProviderOptionsAction = async (
+	sessionType: unknown = 'user',
+): Promise<Result<MobileMoneyProviderOption[]>> => {
 	const sessionTypeResult = mobileMoneyProviderSessionTypeSchema.safeParse(sessionType);
 	if (!sessionTypeResult.success) {
 		return resultFail('Invalid session type');

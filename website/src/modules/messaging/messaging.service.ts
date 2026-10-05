@@ -10,7 +10,7 @@ import {
 	parseTwilioTemplateVariables,
 	renderTwilioTemplateBody,
 } from '@/integrations/twilio/twilio-template.integration';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getPaginatedContributorTableView } from '@/modules/contributors/contributor.service';
 import {
 	getLocalPartnerMessagingTargets,
@@ -56,7 +56,7 @@ const RECIPIENT_STATUS_FILTER_OPTIONS = [
 	{ value: 'completed', label: 'Completed' },
 ];
 
-export const listTwilioTemplates = async (currentUserId: string): Promise<ServiceResult<TwilioTemplateSummary[]>> => {
+export const listTwilioTemplates = async (currentUserId: string): Promise<Result<TwilioTemplateSummary[]>> => {
 	const permissionResult = await assertMessagingAdmin(currentUserId);
 	if (!permissionResult.success) {
 		return permissionResult;
@@ -83,10 +83,7 @@ export const listTwilioTemplates = async (currentUserId: string): Promise<Servic
 	);
 };
 
-export const getTwilioTemplate = async (
-	sid: string,
-	currentUserId: string,
-): Promise<ServiceResult<TwilioTemplateDetail>> => {
+export const getTwilioTemplate = async (sid: string, currentUserId: string): Promise<Result<TwilioTemplateDetail>> => {
 	const permissionResult = await assertMessagingAdmin(currentUserId);
 	if (!permissionResult.success) {
 		return permissionResult;
@@ -117,7 +114,7 @@ export const listMessagingRecipients = async (
 	type: MessagingRecipientType,
 	query: MessagingRecipientsQuery,
 	currentUserId: string,
-): Promise<ServiceResult<MessagingRecipientsPage>> => {
+): Promise<Result<MessagingRecipientsPage>> => {
 	if (type === 'contributor') {
 		const result = await getPaginatedContributorTableView(currentUserId, {
 			page: query.page,
@@ -195,7 +192,7 @@ export const listMessagingRecipients = async (
 export const previewMessagingChannel = async (
 	input: ChannelPreviewInput,
 	currentUserId: string,
-): Promise<ServiceResult<ChannelPreviewSummary>> => {
+): Promise<Result<ChannelPreviewSummary>> => {
 	const permissionResult = await assertMessagingAdmin(currentUserId);
 	if (!permissionResult.success) {
 		return permissionResult;
@@ -235,7 +232,7 @@ export const previewMessagingChannel = async (
 export const dispatchMessagingSend = async (
 	input: DispatchSendInput,
 	currentUserId: string,
-): Promise<ServiceResult<{ jobId: string }>> => {
+): Promise<Result<{ jobId: string }>> => {
 	const permissionResult = await assertMessagingAdmin(currentUserId);
 	if (!permissionResult.success) {
 		return permissionResult;
@@ -416,7 +413,7 @@ export const dispatchMessagingSend = async (
 export const getMessagingJobStatus = async (
 	jobId: string,
 	currentUserId: string,
-): Promise<ServiceResult<MessagingJobStatusView>> => {
+): Promise<Result<MessagingJobStatusView>> => {
 	const permissionResult = await assertMessagingAdmin(currentUserId);
 	if (!permissionResult.success) {
 		return permissionResult;
@@ -449,7 +446,7 @@ export const getMessagingJobStatus = async (
 export const listMessagingJobs = async (
 	query: { page: number; pageSize: number },
 	currentUserId: string,
-): Promise<ServiceResult<{ rows: MessagingJobListRow[]; totalCount: number }>> => {
+): Promise<Result<{ rows: MessagingJobListRow[]; totalCount: number }>> => {
 	const permissionResult = await assertMessagingAdmin(currentUserId);
 	if (!permissionResult.success) {
 		return permissionResult;
@@ -486,7 +483,7 @@ export const getMessagingJobDetail = async (
 	jobId: string,
 	query: { page: number; pageSize: number },
 	currentUserId: string,
-): Promise<ServiceResult<MessagingJobDetailView>> => {
+): Promise<Result<MessagingJobDetailView>> => {
 	const permissionResult = await assertMessagingAdmin(currentUserId);
 	if (!permissionResult.success) {
 		return permissionResult;
@@ -549,7 +546,7 @@ export const getMessagingJobDetail = async (
 export const syncMessagingJobStatuses = async (
 	jobId: string,
 	currentUserId: string,
-): Promise<ServiceResult<{ checked: number; updated: number }>> => {
+): Promise<Result<{ checked: number; updated: number }>> => {
 	const permissionResult = await assertMessagingAdmin(currentUserId);
 	if (!permissionResult.success) {
 		return permissionResult;
@@ -588,7 +585,7 @@ export const syncMessagingJobStatuses = async (
 
 export const handleMessagingStatusCallback = async (
 	input: TwilioStatusCallbackInput,
-): Promise<ServiceResult<{ updated: boolean }>> => {
+): Promise<Result<{ updated: boolean }>> => {
 	try {
 		const existing = await messagingRepository.findMessageLogByTwilioSid(input.messageSid);
 		if (!existing) {
@@ -626,7 +623,7 @@ export const handleTwilioStatusWebhook = async (input: {
 	signature: string;
 	url: string;
 	params: Record<string, string>;
-}): Promise<ServiceResult<{ updated: boolean }>> => {
+}): Promise<Result<{ updated: boolean }>> => {
 	const validationResult = await validateTwilioWebhook(input);
 	if (!validationResult.success) {
 		return resultFail(validationResult.error, validationResult.status);
@@ -640,7 +637,7 @@ export const handleTwilioStatusWebhook = async (input: {
 	});
 };
 
-const assertMessagingAdmin = async (currentUserId: string): Promise<ServiceResult<true>> => {
+const assertMessagingAdmin = async (currentUserId: string): Promise<Result<true>> => {
 	const adminResult = await isAdmin(currentUserId);
 	if (!adminResult.success || !canManageMessaging(adminResult.data)) {
 		return resultFail(adminResult.success ? 'Permission denied' : adminResult.error);
@@ -655,7 +652,7 @@ const resolveTargets = async (
 	phoneSource: MessagingPhoneSource,
 	phoneFallbackAllowed: boolean,
 	currentUserId: string,
-): Promise<ServiceResult<MessagingTarget[]>> => {
+): Promise<Result<MessagingTarget[]>> => {
 	const idsResult = await resolveSelectionToIds(selection, type, currentUserId);
 	if (!idsResult.success) {
 		return idsResult;
@@ -701,7 +698,7 @@ const resolveSelectionToIds = async (
 	selection: SelectionState,
 	type: MessagingRecipientType,
 	currentUserId: string,
-): Promise<ServiceResult<string[]>> => {
+): Promise<Result<string[]>> => {
 	if (selection.mode === 'include') {
 		return resultOk(Array.from(selection.ids));
 	}
@@ -737,7 +734,7 @@ const fetchSelectionPage = async (
 	pageSize: number,
 	search: string,
 	filters: MessagingRecipientFilters,
-): Promise<ServiceResult<{ ids: string[]; totalCount: number }>> => {
+): Promise<Result<{ ids: string[]; totalCount: number }>> => {
 	if (type === 'recipient') {
 		const result = await getPaginatedRecipientTableView(currentUserId, {
 			page,

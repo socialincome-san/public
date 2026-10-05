@@ -1,5 +1,5 @@
 import { PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { isValidCountryCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
 import { getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
@@ -36,7 +36,7 @@ import type {
 	PayoutTableViewRow,
 } from './payout.types';
 
-export const getPaidOrConfirmedPayoutTotal = async (dateRange?: PayoutDateRange): Promise<ServiceResult<number>> => {
+export const getPaidOrConfirmedPayoutTotal = async (dateRange?: PayoutDateRange): Promise<Result<number>> => {
 	try {
 		const aggregate = await payoutRepository.findPaidOrConfirmedPayoutTotal(dateRange);
 
@@ -48,7 +48,7 @@ export const getPaidOrConfirmedPayoutTotal = async (dateRange?: PayoutDateRange)
 	}
 };
 
-export const getPaidPayoutSummary = async (dateRange: PayoutDateRange): Promise<ServiceResult<PayoutSummary>> => {
+export const getPaidPayoutSummary = async (dateRange: PayoutDateRange): Promise<Result<PayoutSummary>> => {
 	try {
 		const aggregate = await payoutRepository.findPaidPayoutSummary(dateRange);
 
@@ -63,7 +63,7 @@ export const getPaidPayoutSummary = async (dateRange: PayoutDateRange): Promise<
 	}
 };
 
-export const getPayoutTotalsForCountry = async (isoCode: string): Promise<ServiceResult<CountryPayoutTotals>> => {
+export const getPayoutTotalsForCountry = async (isoCode: string): Promise<Result<CountryPayoutTotals>> => {
 	const normalizedIsoCode = isoCode.trim().toUpperCase();
 	if (!normalizedIsoCode) {
 		return resultFail('Missing isoCode');
@@ -83,9 +83,7 @@ export const getPayoutTotalsForCountry = async (isoCode: string): Promise<Servic
 	}
 };
 
-export const getPayoutTotalsForLocalPartnerSlug = async (
-	localPartnerSlug: string,
-): Promise<ServiceResult<CountryPayoutTotals>> => {
+export const getPayoutTotalsForLocalPartnerSlug = async (localPartnerSlug: string): Promise<Result<CountryPayoutTotals>> => {
 	const normalizedSlug = localPartnerSlug.trim();
 	if (!normalizedSlug) {
 		return resultFail('Missing local partner slug');
@@ -110,7 +108,7 @@ export const getPayoutTotalsForLocalPartnerSlug = async (
 export const getPaginatedPayoutTableView = async (
 	userId: string,
 	query: PayoutTableQuery,
-): Promise<ServiceResult<PayoutPaginatedTableView>> => {
+): Promise<Result<PayoutPaginatedTableView>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -197,7 +195,7 @@ export const getPaginatedPayoutTableView = async (
 export const getPaginatedOngoingPayoutTableView = async (
 	userId: string,
 	query: OngoingPayoutTableQuery,
-): Promise<ServiceResult<OngoingPayoutPaginatedTableView>> => {
+): Promise<Result<OngoingPayoutPaginatedTableView>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -264,13 +262,13 @@ export const getPaginatedOngoingPayoutTableView = async (
 export const getPublicPayoutForecastTableView = async (
 	programId: string,
 	monthsAhead: number,
-): Promise<ServiceResult<PayoutForecastTableView>> => buildPayoutForecastTableView(programId, monthsAhead);
+): Promise<Result<PayoutForecastTableView>> => buildPayoutForecastTableView(programId, monthsAhead);
 
 export const getPayoutForecastTableView = async (
 	userId: string,
 	programId: string,
 	monthsAhead: number,
-): Promise<ServiceResult<PayoutForecastTableView>> => {
+): Promise<Result<PayoutForecastTableView>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -293,7 +291,7 @@ export const getPaginatedPayoutForecastTableView = async (
 	programId: string,
 	monthsAhead: number,
 	query: PayoutForecastTableQuery,
-): Promise<ServiceResult<PayoutForecastPaginatedTableView>> => {
+): Promise<Result<PayoutForecastPaginatedTableView>> => {
 	const forecastResult = await getPayoutForecastTableView(userId, programId, monthsAhead);
 	if (!forecastResult.success) {
 		return resultFail(forecastResult.error);
@@ -321,7 +319,7 @@ export const getPaginatedPayoutForecastTableView = async (
 export const getPaginatedPayoutConfirmationTableView = async (
 	userId: string,
 	query: PayoutConfirmationTableQuery,
-): Promise<ServiceResult<PayoutConfirmationPaginatedTableView>> => {
+): Promise<Result<PayoutConfirmationPaginatedTableView>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -381,7 +379,7 @@ export const getPaginatedPayoutConfirmationTableView = async (
 	}
 };
 
-export const getPayout = async (userId: string, payoutId: string): Promise<ServiceResult<PayoutPayload>> => {
+export const getPayout = async (userId: string, payoutId: string): Promise<Result<PayoutPayload>> => {
 	try {
 		const payout = await payoutRepository.findPayout(payoutId);
 		if (!payout) {
@@ -406,7 +404,7 @@ export const getPayout = async (userId: string, payoutId: string): Promise<Servi
 	}
 };
 
-export const getPayoutsByRecipientId = async (recipientId: string): Promise<ServiceResult<PayoutRecord[]>> => {
+export const getPayoutsByRecipientId = async (recipientId: string): Promise<Result<PayoutRecord[]>> => {
 	try {
 		const payouts = await payoutRepository.findPayoutsByRecipientId(recipientId);
 
@@ -421,7 +419,7 @@ export const getPayoutsByRecipientId = async (recipientId: string): Promise<Serv
 export const getPayoutByRecipientAndId = async (
 	recipientId: string,
 	payoutId: string,
-): Promise<ServiceResult<PayoutRecord | null>> => {
+): Promise<Result<PayoutRecord | null>> => {
 	if (!recipientId || !payoutId) {
 		return resultFail('Recipient ID and Payout ID are required');
 	}
@@ -441,7 +439,7 @@ export const createPayoutProcessPayouts = async (
 	userId: string,
 	inputs: PayoutProcessCreateInput[],
 	selectedDate: Date,
-): Promise<ServiceResult<PayoutProcessCreateSummary>> => {
+): Promise<Result<PayoutProcessCreateSummary>> => {
 	if (inputs.length === 0) {
 		return resultOk({ createdCount: 0, skippedCount: 0 });
 	}
@@ -485,7 +483,7 @@ export const updatePayoutStatus = async (
 	userId: string,
 	payoutId: string,
 	newStatus: PayoutStatus,
-): Promise<ServiceResult<string>> => {
+): Promise<Result<string>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -516,7 +514,7 @@ export const updatePayoutStatus = async (
 	}
 };
 
-export const createPayout = async (userId: string, input: CreatePayoutInput): Promise<ServiceResult<PayoutPayload>> => {
+export const createPayout = async (userId: string, input: CreatePayoutInput): Promise<Result<PayoutPayload>> => {
 	const inputResult = payoutCreateSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -550,7 +548,7 @@ export const createPayout = async (userId: string, input: CreatePayoutInput): Pr
 	}
 };
 
-export const updatePayout = async (userId: string, input: UpdatePayoutInput): Promise<ServiceResult<PayoutPayload>> => {
+export const updatePayout = async (userId: string, input: UpdatePayoutInput): Promise<Result<PayoutPayload>> => {
 	const inputResult = payoutUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -595,7 +593,7 @@ export const updatePayout = async (userId: string, input: UpdatePayoutInput): Pr
 	}
 };
 
-export const deletePayout = async (userId: string, payoutId: string): Promise<ServiceResult<{ id: string }>> => {
+export const deletePayout = async (userId: string, payoutId: string): Promise<Result<{ id: string }>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -629,7 +627,7 @@ export const updatePayoutStatusByRecipient = async (
 	payoutId: string,
 	status: PayoutStatus,
 	comments?: string | null,
-): Promise<ServiceResult<PayoutRecord>> => {
+): Promise<Result<PayoutRecord>> => {
 	try {
 		const payout = await payoutRepository.findPayoutForRecipientStatusUpdate(recipientId, payoutId);
 		if (!payout) {
@@ -651,7 +649,7 @@ export const updatePayoutStatusByRecipient = async (
 const buildPayoutForecastTableView = async (
 	programId: string,
 	monthsAhead: number,
-): Promise<ServiceResult<PayoutForecastTableView>> => {
+): Promise<Result<PayoutForecastTableView>> => {
 	try {
 		const programResult = await getProgramPayoutForecastSource(programId);
 		if (!programResult.success) {

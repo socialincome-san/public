@@ -1,4 +1,4 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 
 const ETHERSCAN_API_URL = 'https://api.etherscan.io/v2/api';
 
@@ -8,7 +8,7 @@ export type FiatExchangeRateResponse = {
 	rates: Record<string, number>;
 };
 
-export const fetchFiatExchangeRates = async (day: string): Promise<ServiceResult<FiatExchangeRateResponse>> => {
+export const fetchFiatExchangeRates = async (day: string): Promise<Result<FiatExchangeRateResponse>> => {
 	const apiKey = process.env.EXCHANGE_RATES_API?.trim();
 	if (!apiKey) {
 		return resultFail('Exchange rates API is not configured');
@@ -44,7 +44,7 @@ export const fetchFiatExchangeRates = async (day: string): Promise<ServiceResult
 	}
 };
 
-export const fetchEthUsdPrice = async (): Promise<ServiceResult<number>> => {
+export const fetchEthUsdPrice = async (): Promise<Result<number>> => {
 	const apiKey = process.env.ETHERSCAN_API_KEY?.trim();
 	if (!apiKey) {
 		return resultFail('Etherscan API is not configured');

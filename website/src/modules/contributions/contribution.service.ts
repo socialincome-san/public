@@ -1,13 +1,13 @@
 import {
 	ContributionStatus,
-	type CountryCode,
 	Currency,
 	PaymentEventType,
 	ProgramPermission,
+	type CountryCode,
 } from '@/generated/prisma/enums';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { START_CHARACTER_REGEX, UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { findContributorById, getEditableContributorOptions } from '@/modules/contributors/contributor.service';
@@ -53,7 +53,7 @@ const PAYMENT_EVENT_TYPES = [
 	PaymentEventType.raisenow,
 ] as const;
 
-export const isPaymentTransactionIdTaken = async (transactionId: string): Promise<ServiceResult<boolean>> => {
+export const isPaymentTransactionIdTaken = async (transactionId: string): Promise<Result<boolean>> => {
 	try {
 		const existing = await contributionRepository.findPaymentEventByTransactionId(transactionId);
 
@@ -65,7 +65,7 @@ export const isPaymentTransactionIdTaken = async (transactionId: string): Promis
 	}
 };
 
-export const getSucceededContributionTotal = async (dateRange?: ContributionDateRange): Promise<ServiceResult<number>> => {
+export const getSucceededContributionTotal = async (dateRange?: ContributionDateRange): Promise<Result<number>> => {
 	try {
 		const aggregate = await contributionRepository.findSucceededContributionTotal(dateRange);
 
@@ -79,7 +79,7 @@ export const getSucceededContributionTotal = async (dateRange?: ContributionDate
 
 export const getSucceededContributionSummary = async (
 	dateRange: ContributionDateRange,
-): Promise<ServiceResult<ContributionSummary>> => {
+): Promise<Result<ContributionSummary>> => {
 	try {
 		const aggregate = await contributionRepository.findSucceededContributionSummary(dateRange);
 
@@ -96,7 +96,7 @@ export const getSucceededContributionSummary = async (
 
 export const getSucceededContributionsByContributorCountry = async (
 	dateRange?: ContributionDateRange,
-): Promise<ServiceResult<ContributionCountryRow[]>> => {
+): Promise<Result<ContributionCountryRow[]>> => {
 	try {
 		const contributions = await contributionRepository.findSucceededContributionsByContributorCountry(dateRange);
 		const countryMap = new Map<CountryCode, { totalChf: number; contributors: Set<string> }>();
@@ -133,10 +133,7 @@ export const getSucceededContributionsByContributorCountry = async (
 	}
 };
 
-export const getContribution = async (
-	userId: string,
-	contributionId: string,
-): Promise<ServiceResult<ContributionPayload>> => {
+export const getContribution = async (userId: string, contributionId: string): Promise<Result<ContributionPayload>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -162,7 +159,7 @@ export const getContribution = async (
 export const getPaginatedTableView = async (
 	userId: string,
 	query: ContributionTableQuery,
-): Promise<ServiceResult<ContributionPaginatedTableView>> => {
+): Promise<Result<ContributionPaginatedTableView>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -280,7 +277,7 @@ export const getPaginatedTableView = async (
 export const getSucceededForContributorAndYear = async (
 	contributorId: string,
 	year: number,
-): Promise<ServiceResult<ContributionDonationEntry[]>> => {
+): Promise<Result<ContributionDonationEntry[]>> => {
 	try {
 		const start = startOfYear(new Date(year, 0, 1));
 		const end = endOfYear(new Date(year, 0, 1));
@@ -306,7 +303,7 @@ export const getSucceededForContributorAndYear = async (
 
 export const getContributorContributionSummary = async (
 	contributorId: string,
-): Promise<ServiceResult<ContributorContributionSummary>> => {
+): Promise<Result<ContributorContributionSummary>> => {
 	try {
 		const summary = await contributionRepository.findContributorContributionSummary(contributorId);
 
@@ -325,7 +322,7 @@ export const getContributorContributionSummary = async (
 export const getPaginatedYourContributionsTableView = async (
 	contributorId: string,
 	query: YourContributionsTableQuery,
-): Promise<ServiceResult<YourContributionsPaginatedTableView>> => {
+): Promise<Result<YourContributionsPaginatedTableView>> => {
 	try {
 		const search = query.search.trim();
 		const matchedCurrency = parseCurrency(search);
@@ -372,7 +369,7 @@ export const getPaginatedYourContributionsTableView = async (
 	}
 };
 
-export const getRecentSuccessfulContributions = async (cutoff: Date): Promise<ServiceResult<GlobeContribution[]>> => {
+export const getRecentSuccessfulContributions = async (cutoff: Date): Promise<Result<GlobeContribution[]>> => {
 	try {
 		const rows = await contributionRepository.findRecentSuccessfulContributions(cutoff);
 		let skipped = 0;
@@ -406,7 +403,7 @@ export const getRecentSuccessfulContributions = async (cutoff: Date): Promise<Se
 	}
 };
 
-export const getContributionFormOptions = async (userId: string): Promise<ServiceResult<ContributionFormOptions>> => {
+export const getContributionFormOptions = async (userId: string): Promise<Result<ContributionFormOptions>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -448,7 +445,7 @@ export const getContributionFormOptions = async (userId: string): Promise<Servic
 export const updateContribution = async (
 	userId: string,
 	input: UpdateContributionInput,
-): Promise<ServiceResult<ContributionPayload>> => {
+): Promise<Result<ContributionPayload>> => {
 	const validatedInputResult = validateUpdateInput(input);
 	if (!validatedInputResult.success) {
 		return resultFail(validatedInputResult.error);
@@ -498,7 +495,7 @@ export const updateContribution = async (
 export const createContribution = async (
 	userId: string,
 	input: CreateContributionInput,
-): Promise<ServiceResult<ContributionPayload>> => {
+): Promise<Result<ContributionPayload>> => {
 	const validatedInputResult = validateCreateInput(input);
 	if (!validatedInputResult.success) {
 		return resultFail(validatedInputResult.error);
@@ -540,7 +537,7 @@ export const createContribution = async (
 export const upsertFromStripeEvent = async (
 	contributionData: StripeContributionCreateData,
 	paymentEventData: PaymentEventCreateData,
-): Promise<ServiceResult<ContributionRecord>> => {
+): Promise<Result<ContributionRecord>> => {
 	try {
 		const paymentEvent = await contributionRepository.updatePaymentEventFromStripe(contributionData, paymentEventData);
 		if (!paymentEvent.contribution) {
@@ -555,9 +552,7 @@ export const upsertFromStripeEvent = async (
 	}
 };
 
-export const upsertFromBankTransfer = async (
-	paymentEvent: BankTransferUpsertInput,
-): Promise<ServiceResult<PaymentEventRecord>> => {
+export const upsertFromBankTransfer = async (paymentEvent: BankTransferUpsertInput): Promise<Result<PaymentEventRecord>> => {
 	try {
 		const existing = await contributionRepository.findPaymentEventByTransactionId(paymentEvent.transactionId);
 		if (existing?.contribution?.status === ContributionStatus.pending) {
@@ -575,22 +570,19 @@ export const upsertFromBankTransfer = async (
 	}
 };
 
-const validateCreateInput = (input: CreateContributionInput): ServiceResult<CreateContributionInput> => {
+const validateCreateInput = (input: CreateContributionInput): Result<CreateContributionInput> => {
 	const parsedInput = contributionCreateSchema.safeParse(input);
 
 	return parsedInput.success ? resultOk(parsedInput.data) : resultFail('Invalid input.');
 };
 
-const validateUpdateInput = (input: UpdateContributionInput): ServiceResult<UpdateContributionInput> => {
+const validateUpdateInput = (input: UpdateContributionInput): Result<UpdateContributionInput> => {
 	const parsedInput = contributionUpdateSchema.safeParse(input);
 
 	return parsedInput.success ? resultOk(parsedInput.data) : resultFail('Invalid input.');
 };
 
-const validateReferencesExist = async (input: {
-	contributorId: string;
-	campaignId: string;
-}): Promise<ServiceResult<void>> => {
+const validateReferencesExist = async (input: { contributorId: string; campaignId: string }): Promise<Result<void>> => {
 	const [contributorResult, campaign] = await Promise.all([
 		findContributorById(input.contributorId),
 		contributionRepository.findCampaignById(input.campaignId),

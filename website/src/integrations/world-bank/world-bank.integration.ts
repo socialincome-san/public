@@ -1,5 +1,5 @@
 import type { CountryCode } from '@/generated/prisma/enums';
-import { resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultOk, type Result } from '@/lib/result';
 
 const WORLD_BANK_BASE_URL = 'https://api.worldbank.org/v2/country';
 const WORLD_BANK_RECENT_VALUE_COUNT = 10;
@@ -8,7 +8,7 @@ const WORLD_BANK_REVALIDATE_SECONDS = 60 * 60 * 24;
 export const fetchWorldBankIndicator = async (
 	countryCode: CountryCode,
 	indicator: string,
-): Promise<ServiceResult<number | null>> => {
+): Promise<Result<number | null>> => {
 	try {
 		const query = new URLSearchParams({
 			format: 'json',

@@ -3,8 +3,8 @@
 import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getContactValuesFromPayload } from '@/components/dynamic-form/helper';
-import type { ServiceResult } from '@/lib/service-result';
-import { handleServiceResult } from '@/lib/service-result-client';
+import type { Result } from '@/lib/result';
+import { handleResult } from '@/lib/result-client';
 import { SLUG_REGEX } from '@/lib/utils/regex';
 import { getFocusOptionsAction } from '@/modules/focuses/focus.actions';
 import {
@@ -106,7 +106,7 @@ export default function LocalPartnersForm({
 		});
 
 		if (partnerId && partnerResult) {
-			handleServiceResult(partnerResult, {
+			handleResult(partnerResult, {
 				onSuccess: applyPartnerToSchema,
 				onError: (error) => onError?.(error),
 			});
@@ -116,7 +116,7 @@ export default function LocalPartnersForm({
 	const onSubmit = (schema: typeof initialFormSchema) => {
 		startTransition(async () => {
 			const result = await submitLocalPartner(schema);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -130,14 +130,14 @@ export default function LocalPartnersForm({
 
 		startTransition(async () => {
 			const result = await deleteLocalPartnerAction(localPartnerId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
 		});
 	};
 
-	const submitLocalPartner = async (schema: typeof initialFormSchema): Promise<ServiceResult<unknown>> => {
+	const submitLocalPartner = async (schema: typeof initialFormSchema): Promise<Result<unknown>> => {
 		const contactFields: Record<string, FormField> = schema.fields.contact.fields;
 
 		if (localPartnerId && localPartner) {

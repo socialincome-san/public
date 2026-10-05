@@ -1,4 +1,4 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import SFTPClient from 'ssh2-sftp-client';
 import { z } from 'zod';
 
@@ -14,7 +14,7 @@ const postFinanceSftpConfigSchema = z.object({
 	privateKeyBase64: z.string().min(1),
 });
 
-export const listPostFinanceReportFileNames = async (): Promise<ServiceResult<string[]>> => {
+export const listPostFinanceReportFileNames = async (): Promise<Result<string[]>> => {
 	const configResult = getPostFinanceSftpConfig();
 	if (!configResult.success) {
 		return configResult;
@@ -35,7 +35,7 @@ export const listPostFinanceReportFileNames = async (): Promise<ServiceResult<st
 	}
 };
 
-export const downloadPostFinanceReports = async (fileNames: string[]): Promise<ServiceResult<PostFinanceReport[]>> => {
+export const downloadPostFinanceReports = async (fileNames: string[]): Promise<Result<PostFinanceReport[]>> => {
 	if (fileNames.length === 0) {
 		return resultOk([]);
 	}
@@ -69,7 +69,7 @@ export const downloadPostFinanceReports = async (fileNames: string[]): Promise<S
 	}
 };
 
-const getPostFinanceSftpConfig = (): ServiceResult<{
+const getPostFinanceSftpConfig = (): Result<{
 	host: string;
 	port: number;
 	username: string;

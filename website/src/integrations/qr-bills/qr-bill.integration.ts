@@ -1,4 +1,4 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import DOMPurify from 'isomorphic-dompurify';
 import PDFDocument from 'pdfkit';
 import { SwissQRBill as SwissQrBillPdf } from 'swissqrbill/pdf';
@@ -47,14 +47,14 @@ export const generateQrBillSvg = (input: QrBillInput): string => {
 	return DOMPurify.sanitize(rawSvg, { USE_PROFILES: { svg: true, svgFilters: true } });
 };
 
-export const generateQrBillPdf = async (input: QrBillInput): Promise<ServiceResult<Buffer>> => {
+export const generateQrBillPdf = async (input: QrBillInput): Promise<Result<Buffer>> => {
 	try {
 		const data = buildQrBillData(input);
 		const chunks: Buffer[] = [];
 		const pdf = new PDFDocument({ size: 'A4' });
 		const qrBill = new SwissQrBillPdf(data);
 
-		return await new Promise<ServiceResult<Buffer>>((resolve) => {
+		return await new Promise<Result<Buffer>>((resolve) => {
 			pdf.on('data', (chunk: Buffer) => chunks.push(chunk));
 			pdf.on('end', () => resolve(resultOk(Buffer.concat(chunks))));
 			pdf.on('error', (error) => {

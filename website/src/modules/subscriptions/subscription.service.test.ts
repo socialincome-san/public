@@ -1,5 +1,5 @@
 import { Currency, ProgramPermission, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/service-result';
+import type { Result } from '@/lib/result';
 import { getContributorContributionSummary } from '@/modules/contributions/contribution.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import { getSubscriptionStripeDetails } from '@/modules/stripe-payments/stripe-payment.service';
@@ -66,7 +66,7 @@ const mockGetSubscriptionStripeDetails = getSubscriptionStripeDetails as jest.Mo
 >;
 const mockGetAccessiblePrograms = getAccessiblePrograms as jest.MockedFunction<typeof getAccessiblePrograms>;
 
-const expectSuccess = <T>(result: ServiceResult<T>) => {
+const expectSuccess = <T>(result: Result<T>) => {
 	expect(result.success).toBe(true);
 	if (!result.success) {
 		throw new Error(result.error);

@@ -1,5 +1,5 @@
 import { CountryCode, PayoutProcess, PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { stringifyCsvLines } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
 import { getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
@@ -26,7 +26,7 @@ const LIBERIA_PHONE_DIGITS = 9;
 const ORANGE_PROVIDER_ERROR = 'Mobile money provider is not configured for Orange Money CSV upload';
 const TELECEL_PROVIDER_ERROR = 'No mobile money providers are configured for Telecel CSV upload';
 
-export const buildOrangeRegistrationCsv = (recipients: PayoutProcessRecipient[]): ServiceResult<string> => {
+export const buildOrangeRegistrationCsv = (recipients: PayoutProcessRecipient[]): Result<string> => {
 	try {
 		const rows: string[][] = [['Mobile Number*', 'Unique Code*', 'User Type*']];
 
@@ -42,7 +42,7 @@ export const buildOrangeRegistrationCsv = (recipients: PayoutProcessRecipient[])
 	}
 };
 
-export const buildOrangePayoutCsv = (recipients: PayoutProcessRecipient[], selectedDate: Date): ServiceResult<string> => {
+export const buildOrangePayoutCsv = (recipients: PayoutProcessRecipient[], selectedDate: Date): Result<string> => {
 	try {
 		const monthLabel = format(selectedDate, 'MMMM yyyy');
 		const rows: string[][] = [
@@ -69,7 +69,7 @@ export const buildOrangePayoutCsv = (recipients: PayoutProcessRecipient[], selec
 	}
 };
 
-export const buildTelecelPayoutCsv = (recipients: PayoutProcessRecipient[]): ServiceResult<string> => {
+export const buildTelecelPayoutCsv = (recipients: PayoutProcessRecipient[]): Result<string> => {
 	try {
 		const rows: string[][] = [['MSISDN', 'Amount', 'Telco']];
 
@@ -90,7 +90,7 @@ export const buildTelecelPayoutCsv = (recipients: PayoutProcessRecipient[]): Ser
 export const generateOrangeRegistrationCsv = async (
 	userId: string,
 	input: OrangeMoneyRegistrationPayoutProcessInput,
-): Promise<ServiceResult<string>> => {
+): Promise<Result<string>> => {
 	const recipientsResult = await getOrangeRecipients(userId, input.mobileMoneyProviderId, now());
 	if (!recipientsResult.success) {
 		return resultFail(recipientsResult.error);
@@ -102,7 +102,7 @@ export const generateOrangeRegistrationCsv = async (
 export const generateOrangePayoutCsv = async (
 	userId: string,
 	input: OrangeMoneyPayoutProcessInput,
-): Promise<ServiceResult<string>> => {
+): Promise<Result<string>> => {
 	const recipientsResult = await getOrangeRecipients(userId, input.mobileMoneyProviderId, input.selectedDate);
 	if (!recipientsResult.success) {
 		return resultFail(recipientsResult.error);
@@ -114,7 +114,7 @@ export const generateOrangePayoutCsv = async (
 export const previewOrangeCurrentMonthPayouts = async (
 	userId: string,
 	input: OrangeMoneyPayoutProcessInput,
-): Promise<ServiceResult<PreviewPayout[]>> => {
+): Promise<Result<PreviewPayout[]>> => {
 	const recipientsResult = await getOrangeRecipients(userId, input.mobileMoneyProviderId, input.selectedDate);
 	if (!recipientsResult.success) {
 		return resultFail(recipientsResult.error);
@@ -126,7 +126,7 @@ export const previewOrangeCurrentMonthPayouts = async (
 export const generateOrangeCurrentMonthPayouts = async (
 	userId: string,
 	input: OrangeMoneyPayoutProcessInput,
-): Promise<ServiceResult<string>> => {
+): Promise<Result<string>> => {
 	const previewResult = await previewOrangeCurrentMonthPayouts(userId, input);
 	if (!previewResult.success) {
 		return resultFail(previewResult.error);
@@ -135,10 +135,7 @@ export const generateOrangeCurrentMonthPayouts = async (
 	return generateCurrentMonthPayouts(userId, previewResult.data, input.selectedDate);
 };
 
-export const generateTelecelPayoutCsv = async (
-	userId: string,
-	input: PayoutProcessDateInput,
-): Promise<ServiceResult<string>> => {
+export const generateTelecelPayoutCsv = async (userId: string, input: PayoutProcessDateInput): Promise<Result<string>> => {
 	const recipientsResult = await getTelecelRecipients(userId, input.selectedDate);
 	if (!recipientsResult.success) {
 		return resultFail(recipientsResult.error);
@@ -150,7 +147,7 @@ export const generateTelecelPayoutCsv = async (
 export const previewTelecelCurrentMonthPayouts = async (
 	userId: string,
 	input: PayoutProcessDateInput,
-): Promise<ServiceResult<PreviewPayout[]>> => {
+): Promise<Result<PreviewPayout[]>> => {
 	const recipientsResult = await getTelecelRecipients(userId, input.selectedDate);
 	if (!recipientsResult.success) {
 		return resultFail(recipientsResult.error);
@@ -162,7 +159,7 @@ export const previewTelecelCurrentMonthPayouts = async (
 export const generateTelecelCurrentMonthPayouts = async (
 	userId: string,
 	input: PayoutProcessDateInput,
-): Promise<ServiceResult<string>> => {
+): Promise<Result<string>> => {
 	const previewResult = await previewTelecelCurrentMonthPayouts(userId, input);
 	if (!previewResult.success) {
 		return resultFail(previewResult.error);
@@ -174,7 +171,7 @@ export const generateTelecelCurrentMonthPayouts = async (
 export const getPayoutRecipientCounts = async (
 	userId: string,
 	input: PayoutProcessDateInput,
-): Promise<ServiceResult<Record<string, number>>> => {
+): Promise<Result<Record<string, number>>> => {
 	const optionsResult = await getPayoutProcessOverviewOptions();
 	if (!optionsResult.success) {
 		return resultFail(optionsResult.error);
@@ -200,7 +197,7 @@ const getOrangeRecipients = async (
 	userId: string,
 	mobileMoneyProviderId: string,
 	referenceDate: Date,
-): Promise<ServiceResult<PayoutProcessRecipient[]>> => {
+): Promise<Result<PayoutProcessRecipient[]>> => {
 	const providerResult = await getMobileMoneyProviderPayoutProcess(mobileMoneyProviderId);
 	if (!providerResult.success) {
 		return resultFail(providerResult.error);
@@ -212,10 +209,7 @@ const getOrangeRecipients = async (
 	return getRecipientsReadyForPayout(userId, [mobileMoneyProviderId], referenceDate);
 };
 
-const getTelecelRecipients = async (
-	userId: string,
-	referenceDate: Date,
-): Promise<ServiceResult<PayoutProcessRecipient[]>> => {
+const getTelecelRecipients = async (userId: string, referenceDate: Date): Promise<Result<PayoutProcessRecipient[]>> => {
 	const providersResult = await getMobileMoneyProviderIdsByPayoutProcess(PayoutProcess.telecel_csv);
 	if (!providersResult.success) {
 		return resultFail(providersResult.error);
@@ -231,7 +225,7 @@ const getRecipientsReadyForPayout = async (
 	userId: string,
 	providerIds: string[],
 	referenceDate: Date,
-): Promise<ServiceResult<PayoutProcessRecipient[]>> => {
+): Promise<Result<PayoutProcessRecipient[]>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -292,7 +286,7 @@ const countCurrentMonthPayouts = (recipients: PayoutProcessRecipient[], selected
 const previewCurrentMonthPayouts = async (
 	recipients: PayoutProcessRecipient[],
 	selectedDate: Date,
-): Promise<ServiceResult<PreviewPayout[]>> => {
+): Promise<Result<PreviewPayout[]>> => {
 	if (recipients.length === 0) {
 		return resultOk([]);
 	}
@@ -338,7 +332,7 @@ const generateCurrentMonthPayouts = async (
 	userId: string,
 	previewPayouts: PreviewPayout[],
 	selectedDate: Date,
-): Promise<ServiceResult<string>> => {
+): Promise<Result<string>> => {
 	if (previewPayouts.length === 0) {
 		return resultOk('No payouts to create for this month');
 	}

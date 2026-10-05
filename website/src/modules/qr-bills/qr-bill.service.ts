@@ -1,6 +1,6 @@
 import { ContributionStatus, CountryCode, Currency, PaymentEventType } from '@/generated/prisma/enums';
 import { buildQrBillDisplayData, generateQrBillPdf, generateQrBillSvg } from '@/integrations/qr-bills/qr-bill.integration';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { nowMs } from '@/lib/utils/now';
 import { getCampaignById, getFallbackCampaign } from '@/modules/campaigns/campaign.service';
 import {
@@ -53,7 +53,7 @@ const DONATION_AMOUNT_MAX = 1_000_000;
 export const createWizardQrBill = async (
 	input: CreateWizardQrBillInput,
 	ownerContributorId?: string,
-): Promise<ServiceResult<WizardQrBillResult>> => {
+): Promise<Result<WizardQrBillResult>> => {
 	const paymentResult = resolveWizardQrPayment(input.wizardContext, input.currency);
 	if (!paymentResult.success) {
 		return resultFail(paymentResult.error);
@@ -82,7 +82,7 @@ export const createWizardQrBill = async (
 export const createPendingContributionFromWizard = async (
 	input: CreateWizardPendingContributionInput,
 	ownerContributorId?: string,
-): Promise<ServiceResult<string>> => {
+): Promise<Result<string>> => {
 	const paymentResult = resolveWizardQrPayment(input.wizardContext, input.currency);
 	if (!paymentResult.success) {
 		return resultFail(paymentResult.error);
@@ -101,7 +101,7 @@ export const createPendingContributionFromWizard = async (
 export const downloadWizardQrBillPdf = async (
 	input: DownloadWizardQrBillPdfInput,
 	ownerContributorId?: string,
-): Promise<ServiceResult<DownloadQrBillPdfResult>> => {
+): Promise<Result<DownloadQrBillPdfResult>> => {
 	const contributorResult = await verifyContributorByPaymentReference(
 		input.contributorReferenceId,
 		input.expectedEmail,
@@ -127,7 +127,7 @@ export const downloadWizardQrBillPdf = async (
 export const getSubscriptionQrBillDisplay = async (
 	contributorId: string,
 	subscriptionId: string,
-): Promise<ServiceResult<QrBillDisplay>> => {
+): Promise<Result<QrBillDisplay>> => {
 	const subscriptionResult = await getOwnedActiveBankTransferQrBill({ contributorId, subscriptionId });
 	if (!subscriptionResult.success) {
 		return resultFail(subscriptionResult.error);
@@ -147,7 +147,7 @@ export const getSubscriptionQrBillDisplay = async (
 export const downloadSubscriptionQrBillPdf = async (
 	contributorId: string,
 	subscriptionId: string,
-): Promise<ServiceResult<DownloadQrBillPdfResult>> => {
+): Promise<Result<DownloadQrBillPdfResult>> => {
 	const subscriptionResult = await getOwnedActiveBankTransferQrBill({ contributorId, subscriptionId });
 	if (!subscriptionResult.success) {
 		return resultFail(subscriptionResult.error);
@@ -164,9 +164,7 @@ export const downloadSubscriptionQrBillPdf = async (
 	});
 };
 
-export const getOnboardingPrefill = async (
-	input: GetQrOnboardingPrefillInput,
-): Promise<ServiceResult<QrBillOnboardingPrefill>> => {
+export const getOnboardingPrefill = async (input: GetQrOnboardingPrefillInput): Promise<Result<QrBillOnboardingPrefill>> => {
 	const contributorResult = await verifyContributorByPaymentReference(input.paymentReferenceId, input.expectedEmail);
 	if (!contributorResult.success) {
 		return resultFail(contributorResult.error);
@@ -187,7 +185,7 @@ export const getOnboardingPrefill = async (
 
 export const updateContributorAfterQrPayment = async (
 	input: UpdateContributorAfterQrPaymentInput,
-): Promise<ServiceResult<ContributorRecord>> => {
+): Promise<Result<ContributorRecord>> => {
 	const { paymentReferenceId, expectedEmail, user } = input;
 	const contributorResult = await verifyContributorByPaymentReference(paymentReferenceId, expectedEmail);
 	if (!contributorResult.success) {
@@ -214,7 +212,7 @@ export const updateContributorAfterQrPayment = async (
 
 export const updateReferralAfterQrPayment = async (
 	input: UpdateContributorReferralAfterQrPaymentInput,
-): Promise<ServiceResult<ContributorRecord>> => {
+): Promise<Result<ContributorRecord>> => {
 	const { paymentReferenceId, expectedEmail, referral } = input;
 	const contributorResult = await verifyContributorByPaymentReference(paymentReferenceId, expectedEmail);
 	if (!contributorResult.success) {
@@ -229,10 +227,7 @@ export const updateReferralAfterQrPayment = async (
 	});
 };
 
-export const resolveWizardQrPayment = (
-	context: WizardDonationContextInput,
-	currency?: string,
-): ServiceResult<WizardQrPayment> => {
+export const resolveWizardQrPayment = (context: WizardDonationContextInput, currency?: string): Result<WizardQrPayment> => {
 	if (context.paymentMethod !== 'qr') {
 		return resultFail('QR payment requires QR payment method');
 	}
@@ -261,7 +256,7 @@ export const resolveWizardQrPayment = (
 const getOrCreateQrReferences = async (
 	contributorData: Omit<BankContributorData, 'paymentReferenceId'>,
 	ownerContributorId?: string,
-): Promise<ServiceResult<QrBillReferenceResult>> => {
+): Promise<Result<QrBillReferenceResult>> => {
 	const referenceResult = await resolveContributorReferenceId(contributorData.email, ownerContributorId);
 	if (!referenceResult.success) {
 		return resultFail(referenceResult.error);
@@ -288,7 +283,7 @@ const getOrCreateQrReferences = async (
 
 const CONTRIBUTION_REFERENCE_ID_LENGTH = 10;
 
-const mintContributionReferenceId = async (): Promise<ServiceResult<string>> => {
+const mintContributionReferenceId = async (): Promise<Result<string>> => {
 	let candidate = Math.round(nowMs() / 1000);
 	for (let attempt = 0; attempt < 100; attempt += 1) {
 		const referenceId = String(candidate);
@@ -316,7 +311,7 @@ const mintContributionReferenceId = async (): Promise<ServiceResult<string>> => 
 	return resultFail('Could not generate contribution reference');
 };
 
-const resolveContributorReferenceId = async (email: string, ownerContributorId?: string): Promise<ServiceResult<string>> => {
+const resolveContributorReferenceId = async (email: string, ownerContributorId?: string): Promise<Result<string>> => {
 	if (!ownerContributorId) {
 		return getOrCreateReferenceIdByEmail(email);
 	}
@@ -336,7 +331,7 @@ const createPendingContribution = async (
 	payment: WizardQrPayment,
 	userData: BankContributorData,
 	ownerContributorId?: string,
-): Promise<ServiceResult<string>> => {
+): Promise<Result<string>> => {
 	try {
 		const verifiedContributor = await verifyContributorByPaymentReference(
 			userData.paymentReferenceId,
@@ -392,7 +387,7 @@ const verifyContributorByPaymentReference = async (
 	paymentReferenceId: string,
 	expectedEmail: string,
 	ownerContributorId?: string,
-): Promise<ServiceResult<{ contributor: ContributorWithContact; email: string }>> => {
+): Promise<Result<{ contributor: ContributorWithContact; email: string }>> => {
 	try {
 		const contributorsResult = await findContributorsByPaymentReferenceIds([paymentReferenceId]);
 		if (!contributorsResult.success) {
@@ -430,7 +425,7 @@ const verifyContributorByPaymentReference = async (
 const assertUnauthenticatedWizardContributor = async (
 	contributor: ContributorWithContact,
 	ownerContributorId?: string,
-): Promise<ServiceResult<void>> => {
+): Promise<Result<void>> => {
 	if (ownerContributorId && contributor.id === ownerContributorId) {
 		return resultOk(undefined);
 	}
@@ -450,7 +445,7 @@ const assertUnauthenticatedWizardContributor = async (
 	return resultOk(undefined);
 };
 
-const resolveCampaignId = async (campaignId?: string): Promise<ServiceResult<string>> => {
+const resolveCampaignId = async (campaignId?: string): Promise<Result<string>> => {
 	if (campaignId) {
 		const campaignResult = await getCampaignById(campaignId);
 		if (campaignResult.success) {
@@ -470,7 +465,7 @@ const buildContribution = async (
 	payment: WizardQrPayment,
 	contributorId: string,
 	campaignId: string,
-): Promise<ServiceResult<BankTransferUpsertInput>> => {
+): Promise<Result<BankTransferUpsertInput>> => {
 	const amountChfResult = await resolveAmountChf(payment.amount, payment.currency);
 	if (!amountChfResult.success) {
 		return resultFail(amountChfResult.error);
@@ -492,7 +487,7 @@ const buildContribution = async (
 	});
 };
 
-const resolveAmountChf = async (amount: number, currency: Currency): Promise<ServiceResult<number>> => {
+const resolveAmountChf = async (amount: number, currency: Currency): Promise<Result<number>> => {
 	if (currency === Currency.CHF) {
 		return resultOk(amount);
 	}
@@ -518,7 +513,7 @@ const createQrBillDisplay = (input: {
 	contributorReferenceId: string;
 	contributionReferenceId: string;
 	currency: 'CHF' | 'EUR';
-}): ServiceResult<QrBillDisplay> => {
+}): Result<QrBillDisplay> => {
 	try {
 		const data = buildQrBillDisplayData(input);
 
@@ -541,7 +536,7 @@ const generateQrBillPdfResult = async (input: {
 	contributorReferenceId: string;
 	contributionReferenceId: string;
 	currency: 'CHF' | 'EUR';
-}): Promise<ServiceResult<DownloadQrBillPdfResult>> => {
+}): Promise<Result<DownloadQrBillPdfResult>> => {
 	const pdfResult = await generateQrBillPdf(input);
 	if (!pdfResult.success) {
 		return resultFail(pdfResult.error);

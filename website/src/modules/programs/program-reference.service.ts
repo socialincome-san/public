@@ -1,8 +1,8 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import * as programRepository from './program.repository';
 import type { ProgramOption, ProgramPayoutForecastSource } from './program.types';
 
-export const getProgramNameById = async (programId: string): Promise<ServiceResult<string>> => {
+export const getProgramNameById = async (programId: string): Promise<Result<string>> => {
 	try {
 		const program = await programRepository.findProgramNameById(programId);
 
@@ -14,7 +14,7 @@ export const getProgramNameById = async (programId: string): Promise<ServiceResu
 	}
 };
 
-export const getProgramReferenceOptions = async (): Promise<ServiceResult<ProgramOption[]>> => {
+export const getProgramReferenceOptions = async (): Promise<Result<ProgramOption[]>> => {
 	try {
 		return resultOk(await programRepository.findProgramOptions());
 	} catch (error) {
@@ -24,7 +24,7 @@ export const getProgramReferenceOptions = async (): Promise<ServiceResult<Progra
 	}
 };
 
-export const validateProgramIds = async (programIds: string[]): Promise<ServiceResult<boolean>> => {
+export const validateProgramIds = async (programIds: string[]): Promise<Result<boolean>> => {
 	try {
 		const uniqueIds = [...new Set(programIds)];
 		const programs = await programRepository.findProgramsByIds(uniqueIds);
@@ -37,7 +37,7 @@ export const validateProgramIds = async (programIds: string[]): Promise<ServiceR
 	}
 };
 
-export const countProgramsCreatedBetween = async (from: Date, to: Date): Promise<ServiceResult<number>> => {
+export const countProgramsCreatedBetween = async (from: Date, to: Date): Promise<Result<number>> => {
 	try {
 		return resultOk(await programRepository.countProgramsCreatedBetween(from, to));
 	} catch (error) {
@@ -47,9 +47,7 @@ export const countProgramsCreatedBetween = async (from: Date, to: Date): Promise
 	}
 };
 
-export const getProgramPayoutForecastSource = async (
-	programId: string,
-): Promise<ServiceResult<ProgramPayoutForecastSource>> => {
+export const getProgramPayoutForecastSource = async (programId: string): Promise<Result<ProgramPayoutForecastSource>> => {
 	try {
 		const program = await programRepository.findProgramPayoutForecastSource(programId);
 		if (!program) {

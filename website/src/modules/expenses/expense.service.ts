@@ -1,4 +1,4 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getOrganization, getOrganizationOptions } from '@/modules/organizations/organization.service';
 import type { OrganizationOption } from '@/modules/organizations/organization.types';
 import { isAdmin } from '@/modules/users/user.service';
@@ -8,7 +8,7 @@ import type { ExpensePaginatedTableView, ExpensePayload, ExpenseTableQuery } fro
 
 type ExpenseRecord = NonNullable<Awaited<ReturnType<typeof expenseRepository.findExpenseById>>>;
 
-export const getExpense = async (userId: string, expenseId: string): Promise<ServiceResult<ExpensePayload>> => {
+export const getExpense = async (userId: string, expenseId: string): Promise<Result<ExpensePayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -28,7 +28,7 @@ export const getExpense = async (userId: string, expenseId: string): Promise<Ser
 export const getPaginatedExpenseTableView = async (
 	userId: string,
 	query: ExpenseTableQuery,
-): Promise<ServiceResult<ExpensePaginatedTableView>> => {
+): Promise<Result<ExpensePaginatedTableView>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -55,10 +55,10 @@ export const getPaginatedExpenseTableView = async (
 	}
 };
 
-export const getExpenseOptions = async (userId: string): Promise<ServiceResult<OrganizationOption[]>> =>
+export const getExpenseOptions = async (userId: string): Promise<Result<OrganizationOption[]>> =>
 	getOrganizationOptions(userId);
 
-export const createExpense = async (userId: string, input: ExpenseCreateInput): Promise<ServiceResult<ExpensePayload>> => {
+export const createExpense = async (userId: string, input: ExpenseCreateInput): Promise<Result<ExpensePayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -80,7 +80,7 @@ export const createExpense = async (userId: string, input: ExpenseCreateInput): 
 	}
 };
 
-export const updateExpense = async (userId: string, input: ExpenseUpdateInput): Promise<ServiceResult<ExpensePayload>> => {
+export const updateExpense = async (userId: string, input: ExpenseUpdateInput): Promise<Result<ExpensePayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {

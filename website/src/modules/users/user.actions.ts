@@ -1,13 +1,13 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail, type ServiceResult } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
 import { revalidatePath } from 'next/cache';
 import { userCreateSchema, userIdSchema, userSelfUpdateSchema, userUpdateSchema } from './user.schemas';
 import { createUser, deleteUser, getUser, getUserOptions, updateUser, updateUserSelf } from './user.service';
 import type { UserPayload } from './user.types';
 
-export const createUserAction = async (input: unknown): Promise<ServiceResult<UserPayload>> => {
+export const createUserAction = async (input: unknown): Promise<Result<UserPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -26,7 +26,7 @@ export const createUserAction = async (input: unknown): Promise<ServiceResult<Us
 	return result;
 };
 
-export const updateUserAction = async (input: unknown): Promise<ServiceResult<UserPayload>> => {
+export const updateUserAction = async (input: unknown): Promise<Result<UserPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -45,7 +45,7 @@ export const updateUserAction = async (input: unknown): Promise<ServiceResult<Us
 	return result;
 };
 
-export const deleteUserAction = async (userId: unknown): Promise<ServiceResult<void>> => {
+export const deleteUserAction = async (userId: unknown): Promise<Result<void>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -64,7 +64,7 @@ export const deleteUserAction = async (userId: unknown): Promise<ServiceResult<v
 	return result;
 };
 
-export const updateUserSelfAction = async (input: unknown): Promise<ServiceResult<UserPayload>> => {
+export const updateUserSelfAction = async (input: unknown): Promise<Result<UserPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -84,7 +84,7 @@ export const updateUserSelfAction = async (input: unknown): Promise<ServiceResul
 	return result;
 };
 
-export const getUserAction = async (userId: unknown): Promise<ServiceResult<UserPayload>> => {
+export const getUserAction = async (userId: unknown): Promise<Result<UserPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -98,7 +98,7 @@ export const getUserAction = async (userId: unknown): Promise<ServiceResult<User
 	return getUser(sessionResult.data.id, parsedUserId.data);
 };
 
-export const getUserOptionsAction = async (): Promise<ServiceResult<{ id: string; name: string }[]>> => {
+export const getUserOptionsAction = async (): Promise<Result<{ id: string; name: string }[]>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;

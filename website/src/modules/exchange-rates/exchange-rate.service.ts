@@ -4,7 +4,7 @@ import {
 	fetchFiatExchangeRates,
 	type FiatExchangeRateResponse,
 } from '@/integrations/exchange-rates/exchange-rate.integration';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { isValidCurrency } from '@/lib/types/currency';
 import { now, nowMs } from '@/lib/utils/now';
 import { isAdmin } from '@/modules/users/user.service';
@@ -21,7 +21,7 @@ import type {
 
 const DAY_IN_MILLISECONDS = 60 * 60 * 24 * 1000;
 
-export const getLatestRates = async (): Promise<ServiceResult<ExchangeRates>> => {
+export const getLatestRates = async (): Promise<Result<ExchangeRates>> => {
 	try {
 		const rates = await exchangeRateRepository.findLatestRates();
 		if (rates.length === 0) {
@@ -36,7 +36,7 @@ export const getLatestRates = async (): Promise<ServiceResult<ExchangeRates>> =>
 	}
 };
 
-export const getLatestRateForCurrency = async (currency: Currency): Promise<ServiceResult<ExchangeRate>> => {
+export const getLatestRateForCurrency = async (currency: Currency): Promise<Result<ExchangeRate>> => {
 	try {
 		const rate = await exchangeRateRepository.findLatestRateForCurrency(currency);
 		if (!rate) {
@@ -57,7 +57,7 @@ export const getLatestRateForCurrency = async (currency: Currency): Promise<Serv
 export const getPaginatedExchangeRateTableView = async (
 	userId: string,
 	query: ExchangeRateTableQuery,
-): Promise<ServiceResult<ExchangeRatesPaginatedTableView>> => {
+): Promise<Result<ExchangeRatesPaginatedTableView>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -90,7 +90,7 @@ export const getPaginatedExchangeRateTableView = async (
 	}
 };
 
-export const triggerExchangeRateImportAsAdmin = async (userId: string): Promise<ServiceResult<void>> => {
+export const triggerExchangeRateImportAsAdmin = async (userId: string): Promise<Result<void>> => {
 	const isAdminResult = await isAdmin(userId);
 	if (!isAdminResult.success) {
 		return resultFail(isAdminResult.error);
@@ -99,7 +99,7 @@ export const triggerExchangeRateImportAsAdmin = async (userId: string): Promise<
 	return importExchangeRates();
 };
 
-export const importExchangeRates = async (): Promise<ServiceResult<void>> => {
+export const importExchangeRates = async (): Promise<Result<void>> => {
 	try {
 		const oneMonthAgo = now();
 		oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
@@ -149,7 +149,7 @@ export const importExchangeRates = async (): Promise<ServiceResult<void>> => {
 	}
 };
 
-const fetchAndStoreFiatExchangeRates = async (date: DateTime): Promise<ServiceResult<FiatExchangeRateResponse>> => {
+const fetchAndStoreFiatExchangeRates = async (date: DateTime): Promise<Result<FiatExchangeRateResponse>> => {
 	const day = date.toFormat('yyyy-MM-dd');
 	console.info('Fetching exchange rates for day', { day });
 	const ratesResult = await fetchFiatExchangeRates(day);
@@ -167,9 +167,7 @@ const fetchAndStoreFiatExchangeRates = async (date: DateTime): Promise<ServiceRe
 	return ratesResult;
 };
 
-const storeFiatExchangeRates = async (
-	response: FiatExchangeRateResponse,
-): Promise<ServiceResult<ExchangeRateCreateInput[]>> => {
+const storeFiatExchangeRates = async (response: FiatExchangeRateResponse): Promise<Result<ExchangeRateCreateInput[]>> => {
 	const data: ExchangeRateCreateInput[] = [];
 	for (const [currency, rate] of Object.entries(response.rates)) {
 		if (isValidCurrency(currency)) {
@@ -192,7 +190,7 @@ const storeFiatExchangeRates = async (
 	}
 };
 
-const importTodayEthExchangeRate = async (): Promise<ServiceResult<void>> => {
+const importTodayEthExchangeRate = async (): Promise<Result<void>> => {
 	try {
 		const today = DateTime.utc().startOf('day');
 		const tomorrow = today.plus({ days: 1 });

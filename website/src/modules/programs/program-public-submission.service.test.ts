@@ -1,5 +1,5 @@
 import { CountryCode } from '@/generated/prisma/enums';
-import { resultOk } from '@/lib/service-result';
+import { resultOk } from '@/lib/result';
 
 const mockFetchStoryblokPrograms = jest.fn();
 const mockFindEligiblePrograms = jest.fn();

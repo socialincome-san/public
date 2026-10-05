@@ -149,7 +149,7 @@ export default [
 	{
 		files: ['src/modules/**/*.service.ts'],
 		rules: {
-			'backend-architecture/service-result-contract': 'error',
+			'backend-architecture/result-contract': 'error',
 			'backend-architecture/no-service-throw': 'error',
 			'@typescript-eslint/no-restricted-imports': [
 				'error',
@@ -188,6 +188,7 @@ export default [
 		rules: {
 			'backend-architecture/action-file-contract': 'error',
 			'backend-architecture/action-unknown-params': 'error',
+			'backend-architecture/result-contract': 'error',
 			'@typescript-eslint/naming-convention': [
 				'error',
 				{
@@ -361,7 +362,7 @@ export default [
 		files: ['src/integrations/**/*.{ts,tsx}'],
 		ignores: ['src/integrations/**/*.test.{ts,tsx}'],
 		rules: {
-			'backend-architecture/service-result-contract': 'error',
+			'backend-architecture/result-contract': 'error',
 			'@typescript-eslint/no-restricted-imports': [
 				'error',
 				{

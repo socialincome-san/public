@@ -9,7 +9,7 @@ import {
 	downloadPostFinanceReports,
 	listPostFinanceReportFileNames,
 } from '@/integrations/postfinance/postfinance-sftp.integration';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
 import { getFallbackCampaign } from '@/modules/campaigns/campaign.service';
 import { upsertFromBankTransfer } from '@/modules/contributions/contribution.service';
@@ -25,7 +25,7 @@ import { DateTime } from 'luxon';
 import { paymentImportBucketSchema } from './payment-import.schemas';
 import type { BankContribution, PostFinanceBalance } from './payment-import.types';
 
-export const importPaymentFiles = async (bucketName: string): Promise<ServiceResult<PaymentEventRecord[]>> => {
+export const importPaymentFiles = async (bucketName: string): Promise<Result<PaymentEventRecord[]>> => {
 	const bucketResult = paymentImportBucketSchema.safeParse(bucketName);
 	if (!bucketResult.success) {
 		return resultFail('PostFinance payments files bucket is not configured');
@@ -89,7 +89,7 @@ export const importPaymentFiles = async (bucketName: string): Promise<ServiceRes
 	return resultOk(allCreated);
 };
 
-export const parseCamt054Contributions = (xml: string): ServiceResult<BankContribution[]> => {
+export const parseCamt054Contributions = (xml: string): Result<BankContribution[]> => {
 	try {
 		const document = new DOMParser().parseFromString(xml, 'text/xml');
 		const transactionDetails = findDescendants(document, 'TxDtls');
@@ -131,7 +131,7 @@ export const parseCamt054Contributions = (xml: string): ServiceResult<BankContri
 export const getLatestPostFinanceBalances = async (
 	bucketName: string,
 	ibans: string[],
-): Promise<ServiceResult<PostFinanceBalance[]>> => {
+): Promise<Result<PostFinanceBalance[]>> => {
 	const bucketResult = paymentImportBucketSchema.safeParse(bucketName);
 	if (!bucketResult.success) {
 		return resultFail('PostFinance payments files bucket is not configured');
@@ -196,7 +196,7 @@ export const getLatestPostFinanceBalances = async (
 	return resultOk([...balancesByIban.values()]);
 };
 
-export const parseCamt052Balances = (xml: string): ServiceResult<PostFinanceBalance[]> => {
+export const parseCamt052Balances = (xml: string): Result<PostFinanceBalance[]> => {
 	try {
 		const document = new DOMParser().parseFromString(xml, 'text/xml');
 		if (!document.documentElement?.namespaceURI?.includes(':camt.052.')) {
@@ -244,9 +244,7 @@ export const parseCamt052Balances = (xml: string): ServiceResult<PostFinanceBala
 	}
 };
 
-const createOrUpdateContributions = async (
-	bankContributions: BankContribution[],
-): Promise<ServiceResult<PaymentEventRecord[]>> => {
+const createOrUpdateContributions = async (bankContributions: BankContribution[]): Promise<Result<PaymentEventRecord[]>> => {
 	try {
 		const fallbackCampaignResult = await getFallbackCampaign();
 		if (!fallbackCampaignResult.success) {
@@ -356,7 +354,7 @@ const createOrUpdateContributions = async (
 
 const resolveImportExchangeRates = async (
 	bankContributions: BankContribution[],
-): Promise<ServiceResult<ExchangeRates | undefined>> => {
+): Promise<Result<ExchangeRates | undefined>> => {
 	const needsRates = bankContributions.some(({ currency }) => currency !== Currency.CHF);
 	if (!needsRates) {
 		return resultOk(undefined);
@@ -374,7 +372,7 @@ const resolveContributionAmountChf = (
 	amount: number,
 	currency: Currency,
 	rates: ExchangeRates | undefined,
-): ServiceResult<number> => {
+): Result<number> => {
 	const converted = convertAmount(amount, currency, Currency.CHF, rates);
 	if (!converted.success) {
 		return resultFail(converted.error);

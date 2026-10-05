@@ -1,7 +1,8 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
+import type { PreviewPayout } from '@/modules/payout-processes/payout-process.types';
 import { revalidatePath } from 'next/cache';
 import {
 	orangeMoneyPayoutProcessSchema,
@@ -19,7 +20,7 @@ import {
 	previewTelecelCurrentMonthPayouts,
 } from './payout-process.service';
 
-export const generateOrangeRegistrationCsvAction = async (input: unknown) => {
+export const generateOrangeRegistrationCsvAction = async (input: unknown): Promise<Result<string>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -33,7 +34,7 @@ export const generateOrangeRegistrationCsvAction = async (input: unknown) => {
 	return generateOrangeRegistrationCsv(sessionResult.data.id, inputResult.data);
 };
 
-export const generateOrangePayoutCsvAction = async (input: unknown) => {
+export const generateOrangePayoutCsvAction = async (input: unknown): Promise<Result<string>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -47,7 +48,7 @@ export const generateOrangePayoutCsvAction = async (input: unknown) => {
 	return generateOrangePayoutCsv(sessionResult.data.id, inputResult.data);
 };
 
-export const previewOrangeCurrentMonthPayoutsAction = async (input: unknown) => {
+export const previewOrangeCurrentMonthPayoutsAction = async (input: unknown): Promise<Result<PreviewPayout[]>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -61,7 +62,7 @@ export const previewOrangeCurrentMonthPayoutsAction = async (input: unknown) => 
 	return previewOrangeCurrentMonthPayouts(sessionResult.data.id, inputResult.data);
 };
 
-export const generateOrangeCurrentMonthPayoutsAction = async (input: unknown) => {
+export const generateOrangeCurrentMonthPayoutsAction = async (input: unknown): Promise<Result<string>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -80,7 +81,7 @@ export const generateOrangeCurrentMonthPayoutsAction = async (input: unknown) =>
 	return result;
 };
 
-export const generateTelecelPayoutCsvAction = async (input: unknown) => {
+export const generateTelecelPayoutCsvAction = async (input: unknown): Promise<Result<string>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -94,7 +95,7 @@ export const generateTelecelPayoutCsvAction = async (input: unknown) => {
 	return generateTelecelPayoutCsv(sessionResult.data.id, inputResult.data);
 };
 
-export const previewTelecelCurrentMonthPayoutsAction = async (input: unknown) => {
+export const previewTelecelCurrentMonthPayoutsAction = async (input: unknown): Promise<Result<PreviewPayout[]>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -108,7 +109,7 @@ export const previewTelecelCurrentMonthPayoutsAction = async (input: unknown) =>
 	return previewTelecelCurrentMonthPayouts(sessionResult.data.id, inputResult.data);
 };
 
-export const generateTelecelCurrentMonthPayoutsAction = async (input: unknown) => {
+export const generateTelecelCurrentMonthPayoutsAction = async (input: unknown): Promise<Result<string>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -127,7 +128,7 @@ export const generateTelecelCurrentMonthPayoutsAction = async (input: unknown) =
 	return result;
 };
 
-export const getPayoutRecipientCountsAction = async (input: unknown) => {
+export const getPayoutRecipientCountsAction = async (input: unknown): Promise<Result<Record<string, number>>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;

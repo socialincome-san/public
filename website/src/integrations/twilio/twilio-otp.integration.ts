@@ -1,7 +1,7 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getTwilioClient } from './twilio-client.integration';
 
-export const validateTwilioOtpConfiguration = async (): Promise<ServiceResult<boolean>> => {
+export const validateTwilioOtpConfiguration = async (): Promise<Result<boolean>> => {
 	const serviceSidResult = getVerifyServiceSid();
 	if (!serviceSidResult.success) {
 		return serviceSidResult;
@@ -12,7 +12,7 @@ export const validateTwilioOtpConfiguration = async (): Promise<ServiceResult<bo
 	return clientResult.success ? resultOk(true) : resultFail(clientResult.error);
 };
 
-export const requestTwilioOtp = async (phoneNumber: string): Promise<ServiceResult<boolean>> => {
+export const requestTwilioOtp = async (phoneNumber: string): Promise<Result<boolean>> => {
 	const serviceSidResult = getVerifyServiceSid();
 	if (!serviceSidResult.success) {
 		return serviceSidResult;
@@ -37,7 +37,7 @@ export const requestTwilioOtp = async (phoneNumber: string): Promise<ServiceResu
 	}
 };
 
-export const verifyTwilioOtp = async (phoneNumber: string, otp: string): Promise<ServiceResult<{ approved: boolean }>> => {
+export const verifyTwilioOtp = async (phoneNumber: string, otp: string): Promise<Result<{ approved: boolean }>> => {
 	const serviceSidResult = getVerifyServiceSid();
 	if (!serviceSidResult.success) {
 		return serviceSidResult;
@@ -65,7 +65,7 @@ export const verifyTwilioOtp = async (phoneNumber: string, otp: string): Promise
 	}
 };
 
-const getVerifyServiceSid = (): ServiceResult<string> => {
+const getVerifyServiceSid = (): Result<string> => {
 	const serviceSid = process.env.TWILIO_VERIFY_SERVICE_SID;
 	if (!serviceSid) {
 		return resultFail('Missing TWILIO_VERIFY_SERVICE_SID');

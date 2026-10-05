@@ -21,7 +21,7 @@ jest.mock('@/lib/utils/now', () => ({
 }));
 
 import { ProgramPermission, type Currency } from '@/generated/prisma/enums';
-import { resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultOk, type Result } from '@/lib/result';
 import { getLatestRateForCurrency } from '@/modules/exchange-rates/exchange-rate.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import * as campaignRepository from './campaign.repository';
@@ -38,7 +38,7 @@ const mockFindEditableCampaignOptions = campaignRepository.findEditableCampaignO
 const mockGetLatestRateForCurrency = getLatestRateForCurrency as jest.Mock;
 const mockGetAccessiblePrograms = getAccessiblePrograms as jest.Mock;
 
-const expectSuccess = <T>(result: ServiceResult<T>) => {
+const expectSuccess = <T>(result: Result<T>) => {
 	expect(result.success).toBe(true);
 	if (!result.success) {
 		throw new Error(result.error);

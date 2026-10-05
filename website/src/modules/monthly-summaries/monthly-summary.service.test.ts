@@ -1,5 +1,5 @@
 import { PayoutInterval, PayoutStatus } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/service-result';
+import type { Result } from '@/lib/result';
 import type { ContributionSummary } from '@/modules/contributions/contribution.types';
 import type { PayoutSummary } from '@/modules/payouts/payout.types';
 import type {
@@ -8,13 +8,13 @@ import type {
 	RecipientMonthlySummarySource,
 } from '@/modules/recipients/recipient.types';
 
-const mockGetSucceededContributionSummary = jest.fn<Promise<ServiceResult<ContributionSummary>>, []>();
-const mockGetPaidPayoutSummary = jest.fn<Promise<ServiceResult<PayoutSummary>>, []>();
-const mockCountContributorsCreatedBetween = jest.fn<Promise<ServiceResult<number>>, []>();
-const mockCountCampaignsCreatedBetween = jest.fn<Promise<ServiceResult<number>>, []>();
-const mockCountProgramsCreatedBetween = jest.fn<Promise<ServiceResult<number>>, []>();
-const mockGetRecipientMonthlySummarySource = jest.fn<Promise<ServiceResult<RecipientMonthlySummarySource>>, []>();
-const mockGetRecipientLifecycleStatus = jest.fn<ServiceResult<RecipientLifecycleStatus>, [RecipientLifecycleStatusInput]>();
+const mockGetSucceededContributionSummary = jest.fn<Promise<Result<ContributionSummary>>, []>();
+const mockGetPaidPayoutSummary = jest.fn<Promise<Result<PayoutSummary>>, []>();
+const mockCountContributorsCreatedBetween = jest.fn<Promise<Result<number>>, []>();
+const mockCountCampaignsCreatedBetween = jest.fn<Promise<Result<number>>, []>();
+const mockCountProgramsCreatedBetween = jest.fn<Promise<Result<number>>, []>();
+const mockGetRecipientMonthlySummarySource = jest.fn<Promise<Result<RecipientMonthlySummarySource>>, []>();
+const mockGetRecipientLifecycleStatus = jest.fn<Result<RecipientLifecycleStatus>, [RecipientLifecycleStatusInput]>();
 
 jest.mock('@/modules/contributions/contribution.service', () => ({
 	getSucceededContributionSummary: mockGetSucceededContributionSummary,

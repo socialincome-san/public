@@ -1,7 +1,7 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import type { MonthlySummary, MonthlySummaryEmail, MonthlySummaryStats } from './monthly-summary.types';
 
-export const createMonthlySummaryEmail = (summary: MonthlySummary): ServiceResult<MonthlySummaryEmail> => {
+export const createMonthlySummaryEmail = (summary: MonthlySummary): Result<MonthlySummaryEmail> => {
 	try {
 		const { from } = summary.period;
 		const month = from.toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });

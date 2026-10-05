@@ -1,11 +1,12 @@
 'use server';
 
 import { defaultLanguage } from '@/lib/i18n/utils';
+import type { Result } from '@/lib/result';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { switchToDefaultLanguageInputSchema } from './i18n.schemas';
 
-export const switchToDefaultLanguageAction = async (input: unknown) => {
+export const switchToDefaultLanguageAction = async (input: unknown): Promise<Result<never>> => {
 	const pathname = switchToDefaultLanguageInputSchema.parse(input);
 	const segments = pathname.split('/').filter(Boolean);
 	if (segments.length < 2) {

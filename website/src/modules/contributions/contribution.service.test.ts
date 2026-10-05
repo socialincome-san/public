@@ -1,4 +1,4 @@
-import type { ServiceResult } from '@/lib/service-result';
+import type { Result } from '@/lib/result';
 import type { GlobeContribution } from './contribution.types';
 
 type ContributionRow = {
@@ -67,7 +67,7 @@ const getFindManyQuery = () => {
 	return query;
 };
 
-const expectSuccess = <T>(result: ServiceResult<T>) => {
+const expectSuccess = <T>(result: Result<T>) => {
 	expect(result.success).toBe(true);
 	if (!result.success) {
 		throw new Error(result.error);
@@ -76,7 +76,7 @@ const expectSuccess = <T>(result: ServiceResult<T>) => {
 	return result.data;
 };
 
-let getRecentSuccessfulContributions: (cutoff: Date) => Promise<ServiceResult<GlobeContribution[]>>;
+let getRecentSuccessfulContributions: (cutoff: Date) => Promise<Result<GlobeContribution[]>>;
 
 beforeAll(async () => {
 	({ getRecentSuccessfulContributions } = await import('./contribution.service'));

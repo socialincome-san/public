@@ -1,4 +1,4 @@
-import { resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultOk, type Result } from '@/lib/result';
 import * as campaignRepository from './campaign.repository';
 import type { ClaimPendingCampaignsResult } from './campaign.types';
 
@@ -23,7 +23,7 @@ const normalizeClaimIds = (claimIds: readonly string[]): string[] => {
 export const claimPendingCampaigns = async (
 	contributorId: string,
 	claimIds: readonly string[],
-): Promise<ServiceResult<ClaimPendingCampaignsResult>> => {
+): Promise<Result<ClaimPendingCampaignsResult>> => {
 	const successfulClaimIds: string[] = [];
 	let campaignSlug: string | undefined;
 

@@ -1,6 +1,6 @@
 import { PayoutProcess } from '@/generated/prisma/enums';
 import { formatPayoutProcessLabel } from '@/lib/payout-process-options';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { isAdmin } from '@/modules/users/user.service';
 import * as mobileMoneyProviderRepository from './mobile-money-provider.repository';
 import type { MobileMoneyProviderCreateInput, MobileMoneyProviderUpdateInput } from './mobile-money-provider.schemas';
@@ -15,7 +15,7 @@ import type {
 export const getMobileMoneyProvider = async (
 	userId: string,
 	providerId: string,
-): Promise<ServiceResult<MobileMoneyProviderPayload>> => {
+): Promise<Result<MobileMoneyProviderPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -38,7 +38,7 @@ export const getMobileMoneyProvider = async (
 export const getPaginatedMobileMoneyProviderTableView = async (
 	userId: string,
 	query: MobileMoneyProviderTableQuery,
-): Promise<ServiceResult<MobileMoneyProviderPaginatedTableView>> => {
+): Promise<Result<MobileMoneyProviderPaginatedTableView>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -68,7 +68,7 @@ export const getPaginatedMobileMoneyProviderTableView = async (
 	}
 };
 
-export const getMobileMoneyProviderOptions = async (userId: string): Promise<ServiceResult<MobileMoneyProviderOption[]>> => {
+export const getMobileMoneyProviderOptions = async (userId: string): Promise<Result<MobileMoneyProviderOption[]>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -83,9 +83,7 @@ export const getMobileMoneyProviderOptions = async (userId: string): Promise<Ser
 	}
 };
 
-export const getRootMobileMoneyProviderOptions = async (
-	userId: string,
-): Promise<ServiceResult<MobileMoneyProviderOption[]>> => {
+export const getRootMobileMoneyProviderOptions = async (userId: string): Promise<Result<MobileMoneyProviderOption[]>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -106,7 +104,7 @@ export const getRootMobileMoneyProviderOptions = async (
 	}
 };
 
-export const getSupportedMobileMoneyProviderOptions = async (): Promise<ServiceResult<MobileMoneyProviderOption[]>> => {
+export const getSupportedMobileMoneyProviderOptions = async (): Promise<Result<MobileMoneyProviderOption[]>> => {
 	try {
 		return resultOk(await mobileMoneyProviderRepository.findMobileMoneyProviderOptions());
 	} catch (error) {
@@ -118,7 +116,7 @@ export const getSupportedMobileMoneyProviderOptions = async (): Promise<ServiceR
 	}
 };
 
-export const getPayoutProcessOverviewOptions = async (): Promise<ServiceResult<PayoutProcessOverviewOption[]>> => {
+export const getPayoutProcessOverviewOptions = async (): Promise<Result<PayoutProcessOverviewOption[]>> => {
 	try {
 		const providers = await mobileMoneyProviderRepository.findMobileMoneyProvidersWithPayoutProcess();
 		const options: PayoutProcessOverviewOption[] = [];
@@ -161,9 +159,7 @@ export const getPayoutProcessOverviewOptions = async (): Promise<ServiceResult<P
 	}
 };
 
-export const getMobileMoneyProviderPayoutProcess = async (
-	providerId: string,
-): Promise<ServiceResult<PayoutProcess | null>> => {
+export const getMobileMoneyProviderPayoutProcess = async (providerId: string): Promise<Result<PayoutProcess | null>> => {
 	try {
 		const provider = await mobileMoneyProviderRepository.findMobileMoneyProviderPayoutProcess(providerId);
 		if (!provider) {
@@ -178,9 +174,7 @@ export const getMobileMoneyProviderPayoutProcess = async (
 	}
 };
 
-export const getMobileMoneyProviderIdsByPayoutProcess = async (
-	payoutProcess: PayoutProcess,
-): Promise<ServiceResult<string[]>> => {
+export const getMobileMoneyProviderIdsByPayoutProcess = async (payoutProcess: PayoutProcess): Promise<Result<string[]>> => {
 	try {
 		const providers = await mobileMoneyProviderRepository.findMobileMoneyProviderIdsByPayoutProcess(payoutProcess);
 
@@ -195,7 +189,7 @@ export const getMobileMoneyProviderIdsByPayoutProcess = async (
 export const createMobileMoneyProvider = async (
 	userId: string,
 	input: MobileMoneyProviderCreateInput,
-): Promise<ServiceResult<MobileMoneyProviderPayload>> => {
+): Promise<Result<MobileMoneyProviderPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -223,7 +217,7 @@ export const createMobileMoneyProvider = async (
 export const updateMobileMoneyProvider = async (
 	userId: string,
 	input: MobileMoneyProviderUpdateInput,
-): Promise<ServiceResult<MobileMoneyProviderPayload>> => {
+): Promise<Result<MobileMoneyProviderPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -258,10 +252,7 @@ export const updateMobileMoneyProvider = async (
 	}
 };
 
-export const deleteMobileMoneyProvider = async (
-	userId: string,
-	providerId: string,
-): Promise<ServiceResult<{ id: string }>> => {
+export const deleteMobileMoneyProvider = async (userId: string, providerId: string): Promise<Result<{ id: string }>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -289,7 +280,7 @@ export const deleteMobileMoneyProvider = async (
 	}
 };
 
-const validateParentId = async (parentId: string | null | undefined, providerId?: string): Promise<ServiceResult<void>> => {
+const validateParentId = async (parentId: string | null | undefined, providerId?: string): Promise<Result<void>> => {
 	if (!parentId) {
 		return resultOk(undefined);
 	}

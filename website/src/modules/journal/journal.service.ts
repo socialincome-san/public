@@ -1,5 +1,5 @@
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import {
 	createWebsiteJournalArticleLink,
@@ -28,7 +28,7 @@ const JOURNAL_RELATED_ARTICLES_COUNT = 3;
 
 export const getJournalOverviewPageData = async (
 	request: JournalOverviewRequest,
-): Promise<ServiceResult<JournalOverviewPageData>> => {
+): Promise<Result<JournalOverviewPageData>> => {
 	try {
 		const { lang, region, labels, filter } = request;
 		const journalPath = createWebsiteJournalPath(lang, region);
@@ -127,9 +127,7 @@ export const getJournalOverviewPageData = async (
 	}
 };
 
-export const getJournalArticlePageData = async (
-	request: JournalPageRequest,
-): Promise<ServiceResult<JournalArticlePageData>> => {
+export const getJournalArticlePageData = async (request: JournalPageRequest): Promise<Result<JournalArticlePageData>> => {
 	try {
 		const { lang, region, slug, journalLabel, homeLabel } = request;
 		const articleResult = await storyblokContent.getArticle(lang, slug);
@@ -166,9 +164,7 @@ export const getJournalArticlePageData = async (
 	}
 };
 
-export const getJournalPersonPageData = async (
-	request: JournalPageRequest,
-): Promise<ServiceResult<JournalPersonPageData>> => {
+export const getJournalPersonPageData = async (request: JournalPageRequest): Promise<Result<JournalPersonPageData>> => {
 	try {
 		const { lang, region, slug, journalLabel, homeLabel } = request;
 		const personResult = await storyblokContent.getPerson(slug, lang);
@@ -211,10 +207,7 @@ export const getJournalPersonPageData = async (
 	}
 };
 
-export const getJournalArticle = async (
-	language: string,
-	slug: string,
-): Promise<ServiceResult<ISbStoryData<JournalArticle>>> => {
+export const getJournalArticle = async (language: string, slug: string): Promise<Result<ISbStoryData<JournalArticle>>> => {
 	try {
 		const result = await storyblokContent.getArticle(language, slug);
 
@@ -226,10 +219,7 @@ export const getJournalArticle = async (
 	}
 };
 
-export const getJournalPerson = async (
-	language: string,
-	slug: string,
-): Promise<ServiceResult<ISbStoryData<JournalPerson>>> => {
+export const getJournalPerson = async (language: string, slug: string): Promise<Result<ISbStoryData<JournalPerson>>> => {
 	try {
 		const result = await storyblokContent.getPerson(slug, language);
 
@@ -241,7 +231,7 @@ export const getJournalPerson = async (
 	}
 };
 
-export const getLatestJournalArticles = async (language: string): Promise<ServiceResult<ISbStoryData<JournalArticle>[]>> => {
+export const getLatestJournalArticles = async (language: string): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
 	try {
 		const result = await storyblokContent.getLatestJournalArticles(language);
 
@@ -256,7 +246,7 @@ export const getLatestJournalArticles = async (language: string): Promise<Servic
 export const getJournalArticlesByUuids = async (
 	language: string,
 	articleUuids: string[],
-): Promise<ServiceResult<ISbStoryData<JournalArticle>[]>> => {
+): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
 	try {
 		const result = await storyblokContent.getArticlesByUuids(language, articleUuids);
 
@@ -271,7 +261,7 @@ export const getJournalArticlesByUuids = async (
 const getDefaultLanguageCount = async (
 	language: string,
 	selectedLanguageCount: number,
-	getDefaultLanguageResult: () => Promise<ServiceResult<number>>,
+	getDefaultLanguageResult: () => Promise<Result<number>>,
 ): Promise<number> => {
 	if (language === defaultLanguage) {
 		return selectedLanguageCount;

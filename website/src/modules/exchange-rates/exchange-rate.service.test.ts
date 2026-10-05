@@ -1,5 +1,5 @@
 import { Currency } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/service-result';
+import type { Result } from '@/lib/result';
 
 const mockFetchEthUsdPrice = jest.fn();
 const mockFetchFiatExchangeRates = jest.fn();
@@ -36,7 +36,7 @@ import { getLatestRates, getPaginatedExchangeRateTableView, importExchangeRates 
 const fixedTime = '2025-01-01T13:00:00.000Z';
 const systemTime = '2026-08-14T12:00:00.000Z';
 
-const expectSuccess = <T>(result: ServiceResult<T>): T => {
+const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
 	if (!result.success) {
 		throw new Error(result.error);

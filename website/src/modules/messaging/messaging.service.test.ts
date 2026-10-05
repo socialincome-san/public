@@ -1,4 +1,4 @@
-import { resultOk } from '@/lib/service-result';
+import { resultOk } from '@/lib/result';
 import * as messagingRepository from './messaging.repository';
 import {
 	dispatchMessagingSend,

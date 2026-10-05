@@ -4,7 +4,7 @@ import {
 	type CustodianStablecoinWalletBalance,
 } from '@/integrations/etherscan/etherscan-balance.integration';
 import { fetchPawaPayBalances, type PawaPayBalance } from '@/integrations/pawapay/pawapay-balance.integration';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	ensurePawaPayWallets,
 	getBankAccounts,
@@ -19,7 +19,7 @@ import type { PostFinanceBalance } from '@/modules/payment-imports/payment-impor
 import * as reserveRepository from './reserve.repository';
 import type { BankAccountLatestReserve, LatestReserves, ReserveCreateInput } from './reserve.types';
 
-export const getLatestReserves = async (): Promise<ServiceResult<LatestReserves>> => {
+export const getLatestReserves = async (): Promise<Result<LatestReserves>> => {
 	try {
 		const latestDates = await reserveRepository.groupLatestReserveDates();
 		const latestReserveFilters = latestDates.flatMap(({ bankAccountId, _max: { date } }) =>
@@ -67,7 +67,7 @@ export const getLatestReserves = async (): Promise<ServiceResult<LatestReserves>
 	}
 };
 
-export const calculateReserves = async (bucketName: string): Promise<ServiceResult<number>> => {
+export const calculateReserves = async (bucketName: string): Promise<Result<number>> => {
 	const bankAccountsResult = await getBankAccounts();
 	if (!bankAccountsResult.success) {
 		return resultFail(bankAccountsResult.error);
@@ -161,7 +161,7 @@ const buildReserves = ({
 	custodianAccounts,
 	custodianBalances,
 	rates,
-}: ReserveSources): ServiceResult<ReserveCreateInput[]> => {
+}: ReserveSources): Result<ReserveCreateInput[]> => {
 	const balancesByIban = new Map(postFinanceBalances.map((balance) => [normalizeIban(balance.iban), balance]));
 	const pawaPayAccountsByWalletKey = new Map(pawaPayAccounts.map((account) => [account.description, account]));
 	const custodianBalancesByAddressAndCurrency = new Map(
@@ -237,7 +237,7 @@ const toReserveInput = (
 	amount: number,
 	currency: Currency,
 	rates: ExchangeRates | undefined,
-): ServiceResult<ReserveCreateInput> => {
+): Result<ReserveCreateInput> => {
 	const amountChf = convertAmount(amount, currency, Currency.CHF, rates);
 	if (!amountChf.success) {
 		console.error('Could not convert reserve amount to CHF', {

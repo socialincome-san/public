@@ -1,4 +1,4 @@
-import { resultOk } from '@/lib/service-result';
+import { resultOk } from '@/lib/result';
 import { createSessionAction, logoutAction } from './auth.actions';
 
 const mockCookies = jest.fn();

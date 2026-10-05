@@ -1,5 +1,5 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getProgramReferenceOptions, validateProgramIds } from '@/modules/programs/program-reference.service';
 import { getUserRole, isAdmin } from '@/modules/users/user.service';
 import { canRenameOrganization } from './organization.permissions';
@@ -17,7 +17,7 @@ import type {
 	OrganizationTableViewRow,
 } from './organization.types';
 
-export const getActiveOrganizationSummary = async (userId: string): Promise<ServiceResult<ActiveOrganizationSummary>> => {
+export const getActiveOrganizationSummary = async (userId: string): Promise<Result<ActiveOrganizationSummary>> => {
 	try {
 		const organizationIdResult = await getActiveOrganizationId(userId);
 		if (!organizationIdResult.success) {
@@ -40,7 +40,7 @@ export const getActiveOrganizationSummary = async (userId: string): Promise<Serv
 export const getPaginatedOrganizationMembersTableView = async (
 	userId: string,
 	query: OrganizationMemberTableQuery,
-): Promise<ServiceResult<OrganizationMemberPaginatedTableView>> => {
+): Promise<Result<OrganizationMemberPaginatedTableView>> => {
 	try {
 		const organizationIdResult = await getActiveOrganizationId(userId);
 		if (!organizationIdResult.success) {
@@ -70,7 +70,7 @@ export const getPaginatedOrganizationMembersTableView = async (
 export const getPaginatedOrganizationAdminTableView = async (
 	userId: string,
 	query: OrganizationTableQuery,
-): Promise<ServiceResult<OrganizationPaginatedTableView>> => {
+): Promise<Result<OrganizationPaginatedTableView>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -98,7 +98,7 @@ export const getPaginatedOrganizationAdminTableView = async (
 	}
 };
 
-export const getOrganizationOptions = async (userId: string): Promise<ServiceResult<OrganizationOption[]>> => {
+export const getOrganizationOptions = async (userId: string): Promise<Result<OrganizationOption[]>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -113,7 +113,7 @@ export const getOrganizationOptions = async (userId: string): Promise<ServiceRes
 	}
 };
 
-export const getOrganizationReferenceOptions = async (): Promise<ServiceResult<OrganizationOption[]>> => {
+export const getOrganizationReferenceOptions = async (): Promise<Result<OrganizationOption[]>> => {
 	try {
 		return resultOk(await organizationRepository.findOrganizationOptions());
 	} catch (error) {
@@ -123,7 +123,7 @@ export const getOrganizationReferenceOptions = async (): Promise<ServiceResult<O
 	}
 };
 
-export const getOperatorFallbackOrganizationId = async (): Promise<ServiceResult<string>> => {
+export const getOperatorFallbackOrganizationId = async (): Promise<Result<string>> => {
 	try {
 		const organization = await organizationRepository.findOperatorFallbackOrganization();
 
@@ -135,7 +135,7 @@ export const getOperatorFallbackOrganizationId = async (): Promise<ServiceResult
 	}
 };
 
-export const validateOrganizationIds = async (organizationIds: string[]): Promise<ServiceResult<boolean>> => {
+export const validateOrganizationIds = async (organizationIds: string[]): Promise<Result<boolean>> => {
 	try {
 		const uniqueIds = [...new Set(organizationIds)];
 		const organizations = await organizationRepository.findOrganizationsByIds(uniqueIds);
@@ -148,10 +148,7 @@ export const validateOrganizationIds = async (organizationIds: string[]): Promis
 	}
 };
 
-export const getOrganization = async (
-	userId: string,
-	organizationId: string,
-): Promise<ServiceResult<OrganizationPayload>> => {
+export const getOrganization = async (userId: string, organizationId: string): Promise<Result<OrganizationPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -181,7 +178,7 @@ export const getOrganization = async (
 	}
 };
 
-export const getOrganizationUserOptions = async (userId: string): Promise<ServiceResult<{ id: string; name: string }[]>> => {
+export const getOrganizationUserOptions = async (userId: string): Promise<Result<{ id: string; name: string }[]>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -203,9 +200,7 @@ export const getOrganizationUserOptions = async (userId: string): Promise<Servic
 	}
 };
 
-export const getOrganizationProgramOptions = async (
-	userId: string,
-): Promise<ServiceResult<{ id: string; name: string }[]>> => {
+export const getOrganizationProgramOptions = async (userId: string): Promise<Result<{ id: string; name: string }[]>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -225,7 +220,7 @@ export const getOrganizationProgramOptions = async (
 	}
 };
 
-export const createOrganizationFromEmail = async (email: string): Promise<ServiceResult<OrganizationPayload>> => {
+export const createOrganizationFromEmail = async (email: string): Promise<Result<OrganizationPayload>> => {
 	try {
 		const organization = await organizationRepository.createOrganizationFromEmail(email);
 
@@ -246,7 +241,7 @@ export const createOrganizationFromEmail = async (email: string): Promise<Servic
 export const createOrganization = async (
 	userId: string,
 	input: CreateOrganizationInput,
-): Promise<ServiceResult<OrganizationPayload>> => {
+): Promise<Result<OrganizationPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -271,7 +266,7 @@ export const createOrganization = async (
 export const updateOrganization = async (
 	userId: string,
 	input: UpdateOrganizationInput,
-): Promise<ServiceResult<OrganizationPayload>> => {
+): Promise<Result<OrganizationPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -301,7 +296,7 @@ export const updateOrganization = async (
 export const renameActiveOrganization = async (
 	userId: string,
 	input: RenameOrganizationInput,
-): Promise<ServiceResult<{ id: string; name: string }>> => {
+): Promise<Result<{ id: string; name: string }>> => {
 	try {
 		const organizationIdResult = await getActiveOrganizationId(userId);
 		if (!organizationIdResult.success) {
@@ -331,7 +326,7 @@ export const renameActiveOrganization = async (
 	}
 };
 
-export const deleteOrganization = async (userId: string, organizationId: string): Promise<ServiceResult<void>> => {
+export const deleteOrganization = async (userId: string, organizationId: string): Promise<Result<void>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -358,7 +353,7 @@ export const deleteOrganization = async (userId: string, organizationId: string)
 	}
 };
 
-const getActiveOrganizationId = async (userId: string): Promise<ServiceResult<string>> => {
+const getActiveOrganizationId = async (userId: string): Promise<Result<string>> => {
 	const organizationId = await organizationRepository.findActiveOrganizationId(userId);
 
 	return organizationId ? resultOk(organizationId) : resultFail('User has no active organization');
@@ -367,7 +362,7 @@ const getActiveOrganizationId = async (userId: string): Promise<ServiceResult<st
 const validateOrganizationInput = async (
 	input: CreateOrganizationInput | UpdateOrganizationInput,
 	currentOrganizationId?: string,
-): Promise<ServiceResult<void>> => {
+): Promise<Result<void>> => {
 	const uniquenessResult = await validateOrganizationNameUniqueness(input.name, currentOrganizationId);
 	if (!uniquenessResult.success) {
 		return uniquenessResult;
@@ -395,10 +390,7 @@ const validateOrganizationInput = async (
 	return resultOk(undefined);
 };
 
-const validateOrganizationNameUniqueness = async (
-	name: string,
-	currentOrganizationId?: string,
-): Promise<ServiceResult<void>> => {
+const validateOrganizationNameUniqueness = async (name: string, currentOrganizationId?: string): Promise<Result<void>> => {
 	const existingOrganization = await organizationRepository.findOrganizationByName(name);
 	if (existingOrganization && existingOrganization.id !== currentOrganizationId) {
 		return resultFail('An organization with this name already exists.');

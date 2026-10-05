@@ -103,7 +103,9 @@ export const createProgramWizardMachine = setup({
 			const [countryResult, focusOptionsResult, isAuthenticated] = await Promise.all([
 				getProgramCountryFeasibilityAction(),
 				getFocusOptionsAction(),
-				input.isAuthenticated ? Promise.resolve(true) : getIsAuthenticatedUserAction(),
+				input.isAuthenticated
+					? Promise.resolve(true)
+					: getIsAuthenticatedUserAction().then((result) => result.success && result.data),
 			]);
 			if (!countryResult.success) {
 				throw new Error(countryResult.error);

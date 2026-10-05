@@ -61,13 +61,13 @@ export default async function broken() {}
 	assert.deepEqual(new Set(messageIds(messages)), new Set(['missingUseServer', 'namedFunctionsOnly', 'noDefaultExport']));
 });
 
-test('service-result-contract requires annotated ServiceResult returns', () => {
+test('result-contract requires annotated Result returns', () => {
 	const valid = lint({
 		filename: 'src/modules/example/example.service.ts',
-		rules: { 'backend-architecture/service-result-contract': 'error' },
-		code: `import type { ServiceResult } from '@/lib/services/core/base.types';
+		rules: { 'backend-architecture/result-contract': 'error' },
+		code: `import type { Result } from '@/lib/services/core/base.types';
 
-export const createExample = async (): Promise<ServiceResult<{ id: string }>> => {
+export const createExample = async (): Promise<Result<{ id: string }>> => {
 	return { success: true, data: { id: '1' } };
 };
 
@@ -80,7 +80,7 @@ export const exampleHelpers = {
 
 	const invalid = lint({
 		filename: 'src/modules/example/example.service.ts',
-		rules: { 'backend-architecture/service-result-contract': 'error' },
+		rules: { 'backend-architecture/result-contract': 'error' },
 		code: `export const createExample = async () => {
 	return { id: '1' };
 };
@@ -89,15 +89,41 @@ export const exampleHelpers = {
 	assert.deepEqual(messageIds(invalid), ['missingResultType']);
 });
 
-test('service-result-contract allows sync integration helpers without ServiceResult', () => {
+test('result-contract requires annotated Result returns on actions', () => {
+	const valid = lint({
+		filename: 'src/modules/example/example.actions.ts',
+		rules: { 'backend-architecture/result-contract': 'error' },
+		code: `'use server';
+
+export const createExampleAction = async (input: unknown): Promise<Result<{ id: string }>> => {
+	return { success: true, data: { id: '1' } };
+};
+`,
+	});
+	assert.deepEqual(valid, []);
+
+	const invalid = lint({
+		filename: 'src/modules/example/example.actions.ts',
+		rules: { 'backend-architecture/result-contract': 'error' },
+		code: `'use server';
+
+export const createExampleAction = async (input: unknown) => {
+	return { id: '1' };
+};
+`,
+	});
+	assert.deepEqual(messageIds(invalid), ['missingResultType']);
+});
+
+test('result-contract allows sync integration helpers without Result', () => {
 	const messages = lint({
 		filename: 'src/integrations/example/example.integration.ts',
-		rules: { 'backend-architecture/service-result-contract': 'error' },
-		code: `import type { ServiceResult } from '@/lib/services/core/base.types';
+		rules: { 'backend-architecture/result-contract': 'error' },
+		code: `import type { Result } from '@/lib/services/core/base.types';
 
 export const mapExample = (value: string): string => value;
 
-export const createExample = async (): Promise<ServiceResult<{ id: string }>> => {
+export const createExample = async (): Promise<Result<{ id: string }>> => {
 	return { success: true, data: { id: '1' } };
 };
 `,
@@ -110,7 +136,7 @@ test('safe-result-errors accepts fixed resultFail messages', () => {
 	const valid = lint({
 		filename: 'src/modules/example/example.service.ts',
 		rules: { 'backend-architecture/safe-result-errors': 'error' },
-		code: `import { resultFail } from '@/lib/services/core/service-result';
+		code: `import { resultFail } from '@/lib/services/core/result';
 
 const fixedMessage = 'Could not create example' as const;
 
@@ -125,7 +151,7 @@ test('safe-result-errors rejects dynamic resultFail messages', () => {
 	const invalid = lint({
 		filename: 'src/modules/example/example.service.ts',
 		rules: { 'backend-architecture/safe-result-errors': 'error' },
-		code: `import { resultFail } from '@/lib/services/core/service-result';
+		code: `import { resultFail } from '@/lib/services/core/result';
 
 export const failExample = (error: { message: string }, parseResult: { error: { issues: { message: string }[] } }) => {
 	resultFail(\`Could not create example: \${error.message}\`);

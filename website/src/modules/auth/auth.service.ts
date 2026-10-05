@@ -20,11 +20,11 @@ import {
 	validateTwilioOtpConfiguration,
 	verifyTwilioOtp,
 } from '@/integrations/twilio/twilio-otp.integration';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import type { VerifyOtpInput } from './auth.schemas';
 import type { AuthToken, AuthUser, AuthUserUpdate, SessionCookie, VerifyOtpResult } from './auth.types';
 
-export const requestOtp = async (phoneNumber: string): Promise<ServiceResult<boolean>> => {
+export const requestOtp = async (phoneNumber: string): Promise<Result<boolean>> => {
 	const configurationResult = await validateTwilioOtpConfiguration();
 	if (!configurationResult.success) {
 		return configurationResult;
@@ -44,7 +44,7 @@ export const requestOtp = async (phoneNumber: string): Promise<ServiceResult<boo
 	return requestTwilioOtp(phoneResult.data);
 };
 
-export const verifyOtp = async (input: VerifyOtpInput): Promise<ServiceResult<VerifyOtpResult>> => {
+export const verifyOtp = async (input: VerifyOtpInput): Promise<Result<VerifyOtpResult>> => {
 	const configurationResult = await validateTwilioOtpConfiguration();
 	if (!configurationResult.success) {
 		return configurationResult;
@@ -73,41 +73,39 @@ export const verifyOtp = async (input: VerifyOtpInput): Promise<ServiceResult<Ve
 	return finalizeOtpVerification(phoneResult.data);
 };
 
-export const createFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<ServiceResult<AuthUser>> =>
+export const createFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<Result<AuthUser>> =>
 	createFirebaseUserByPhoneNumberIntegration(phoneNumber);
 
 export const updateFirebaseUserByPhoneNumber = async (
 	oldPhoneNumber: string,
 	newPhoneNumber: string,
-): Promise<ServiceResult<AuthUser>> => updateFirebaseUserByPhoneNumberIntegration(oldPhoneNumber, newPhoneNumber);
+): Promise<Result<AuthUser>> => updateFirebaseUserByPhoneNumberIntegration(oldPhoneNumber, newPhoneNumber);
 
-export const deleteFirebaseUserByPhoneNumberIfExists = async (phoneNumber: string): Promise<ServiceResult<boolean>> =>
+export const deleteFirebaseUserByPhoneNumberIfExists = async (phoneNumber: string): Promise<Result<boolean>> =>
 	deleteFirebaseUserByPhoneNumberIfExistsIntegration(phoneNumber);
 
-export const findFirebaseUserByEmail = async (email: string): Promise<ServiceResult<AuthUser | null>> =>
+export const findFirebaseUserByEmail = async (email: string): Promise<Result<AuthUser | null>> =>
 	findFirebaseUserByEmailIntegration(email);
 
-export const createFirebaseUserByEmail = async (input: {
-	email: string;
-	displayName: string;
-}): Promise<ServiceResult<AuthUser>> => createFirebaseUserByEmailIntegration(input);
+export const createFirebaseUserByEmail = async (input: { email: string; displayName: string }): Promise<Result<AuthUser>> =>
+	createFirebaseUserByEmailIntegration(input);
 
-export const createFirebaseSurveyUser = async (email: string, password: string): Promise<ServiceResult<{ uid: string }>> =>
+export const createFirebaseSurveyUser = async (email: string, password: string): Promise<Result<{ uid: string }>> =>
 	createFirebaseSurveyUserIntegration(email, password);
 
 export const synchronizeFirebaseSurveyUser = async (input: {
 	nextEmail: string;
 	nextPassword: string;
 	previousEmail?: string;
-}): Promise<ServiceResult<void>> => synchronizeFirebaseSurveyUserIntegration(input);
+}): Promise<Result<void>> => synchronizeFirebaseSurveyUserIntegration(input);
 
-export const updateFirebaseUserByUid = async (uid: string, updates: AuthUserUpdate): Promise<ServiceResult<AuthUser>> =>
+export const updateFirebaseUserByUid = async (uid: string, updates: AuthUserUpdate): Promise<Result<AuthUser>> =>
 	updateFirebaseUserByUidIntegration(uid, updates);
 
-export const deleteFirebaseUserByUidIfExists = async (uid: string): Promise<ServiceResult<boolean>> =>
+export const deleteFirebaseUserByUidIfExists = async (uid: string): Promise<Result<boolean>> =>
 	deleteFirebaseUserByUidIfExistsIntegration(uid);
 
-export const deleteFirebaseUserByEmailIfExists = async (email: string): Promise<ServiceResult<boolean>> => {
+export const deleteFirebaseUserByEmailIfExists = async (email: string): Promise<Result<boolean>> => {
 	const existingUserResult = await findFirebaseUserByEmail(email);
 	if (!existingUserResult.success) {
 		return resultFail(existingUserResult.error);
@@ -119,13 +117,13 @@ export const deleteFirebaseUserByEmailIfExists = async (email: string): Promise<
 	return deleteFirebaseUserByUidIfExists(existingUserResult.data.uid);
 };
 
-export const decodeFirebaseTokenFromRequest = async (request: Request): Promise<ServiceResult<AuthToken>> =>
+export const decodeFirebaseTokenFromRequest = async (request: Request): Promise<Result<AuthToken>> =>
 	decodeFirebaseTokenFromRequestIntegration(request);
 
-export const getPhoneNumberFromFirebaseToken = (decodedToken: AuthToken): ServiceResult<string | null> =>
+export const getPhoneNumberFromFirebaseToken = (decodedToken: AuthToken): Result<string | null> =>
 	resultOk(decodedToken.phoneNumber);
 
-export const createSessionCookie = async (idToken: string): Promise<ServiceResult<SessionCookie>> => {
+export const createSessionCookie = async (idToken: string): Promise<Result<SessionCookie>> => {
 	if (!idToken) {
 		return resultFail('missing-id-token');
 	}
@@ -146,10 +144,10 @@ export const createSessionCookie = async (idToken: string): Promise<ServiceResul
 	});
 };
 
-export const verifySessionCookie = async (sessionCookie: string): Promise<ServiceResult<AuthToken>> =>
+export const verifySessionCookie = async (sessionCookie: string): Promise<Result<AuthToken>> =>
 	verifyFirebaseSessionCookieIntegration(sessionCookie);
 
-export const verifyAppCheckFromRequest = async (request: Request): Promise<ServiceResult<boolean>> => {
+export const verifyAppCheckFromRequest = async (request: Request): Promise<Result<boolean>> => {
 	const token = request.headers.get('X-Firebase-AppCheck');
 	if (!token) {
 		console.warn('App Check failed: missing token', {
@@ -178,7 +176,7 @@ export const verifyAppCheckFromRequest = async (request: Request): Promise<Servi
 	return resultOk(true);
 };
 
-const finalizeOtpVerification = async (phoneNumber: string): Promise<ServiceResult<VerifyOtpResult>> => {
+const finalizeOtpVerification = async (phoneNumber: string): Promise<Result<VerifyOtpResult>> => {
 	const existingUserResult = await findFirebaseUserByPhoneNumber(phoneNumber);
 	if (!existingUserResult.success) {
 		return resultFail(existingUserResult.error);
@@ -204,10 +202,10 @@ const finalizeOtpVerification = async (phoneNumber: string): Promise<ServiceResu
 	});
 };
 
-const findFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<ServiceResult<AuthUser | null>> =>
+const findFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<Result<AuthUser | null>> =>
 	findFirebaseUserByPhoneNumberIntegration(phoneNumber);
 
-const normalizePhoneNumber = (phoneNumber: string | undefined): ServiceResult<string> => {
+const normalizePhoneNumber = (phoneNumber: string | undefined): Result<string> => {
 	if (!phoneNumber) {
 		return resultFail('Phone number is required');
 	}

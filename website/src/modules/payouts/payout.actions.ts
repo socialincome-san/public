@@ -2,8 +2,10 @@
 
 import { PayoutStatus } from '@/generated/prisma/enums';
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
+import type { CountryPayoutTotals, PayoutForecastTableView, PayoutPayload } from '@/modules/payouts/payout.types';
 import { getEditableRecipientOptions } from '@/modules/recipients/recipient.service';
+import type { RecipientOption } from '@/modules/recipients/recipient.types';
 import { revalidatePath } from 'next/cache';
 import {
 	payoutCountryCodeSchema,
@@ -26,7 +28,7 @@ import {
 } from './payout.service';
 import { PAYOUT_FORECAST_MONTHS_AHEAD } from './payout.types';
 
-export const createPayoutAction = async (input: unknown) => {
+export const createPayoutAction = async (input: unknown): Promise<Result<PayoutPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -43,7 +45,7 @@ export const createPayoutAction = async (input: unknown) => {
 	return result;
 };
 
-export const updatePayoutAction = async (input: unknown) => {
+export const updatePayoutAction = async (input: unknown): Promise<Result<PayoutPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -60,7 +62,7 @@ export const updatePayoutAction = async (input: unknown) => {
 	return result;
 };
 
-export const deletePayoutAction = async (payoutId: unknown) => {
+export const deletePayoutAction = async (payoutId: unknown): Promise<Result<{ id: string }>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -80,7 +82,7 @@ export const deletePayoutAction = async (payoutId: unknown) => {
 	return result;
 };
 
-export const getPayoutAction = async (payoutId: unknown) => {
+export const getPayoutAction = async (payoutId: unknown): Promise<Result<PayoutPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -94,7 +96,7 @@ export const getPayoutAction = async (payoutId: unknown) => {
 	return getPayout(sessionResult.data.id, payoutIdResult.data);
 };
 
-export const getPayoutRecipientOptionsAction = async (input: unknown = undefined) => {
+export const getPayoutRecipientOptionsAction = async (input: unknown = undefined): Promise<Result<RecipientOption[]>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -108,7 +110,7 @@ export const getPayoutRecipientOptionsAction = async (input: unknown = undefined
 	return getEditableRecipientOptions(sessionResult.data.id);
 };
 
-export const confirmPayoutAction = async (payoutId: unknown) => {
+export const confirmPayoutAction = async (payoutId: unknown): Promise<Result<string>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -125,7 +127,7 @@ export const confirmPayoutAction = async (payoutId: unknown) => {
 	return result;
 };
 
-export const contestPayoutAction = async (payoutId: unknown) => {
+export const contestPayoutAction = async (payoutId: unknown): Promise<Result<string>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -142,7 +144,7 @@ export const contestPayoutAction = async (payoutId: unknown) => {
 	return result;
 };
 
-export const getPublicPayoutForecastTableAction = async (programId: unknown) => {
+export const getPublicPayoutForecastTableAction = async (programId: unknown): Promise<Result<PayoutForecastTableView>> => {
 	const programIdResult = payoutProgramIdSchema.safeParse(programId);
 	if (!programIdResult.success) {
 		return resultFail('Invalid program id');
@@ -151,7 +153,7 @@ export const getPublicPayoutForecastTableAction = async (programId: unknown) => 
 	return getPublicPayoutForecastTableView(programIdResult.data, PAYOUT_FORECAST_MONTHS_AHEAD);
 };
 
-export const getPublicCountryPayoutTotalsAction = async (isoCode: unknown) => {
+export const getPublicCountryPayoutTotalsAction = async (isoCode: unknown): Promise<Result<CountryPayoutTotals>> => {
 	const isoCodeResult = payoutCountryCodeSchema.safeParse(isoCode);
 	if (!isoCodeResult.success) {
 		return resultFail('Invalid country code');
@@ -160,7 +162,9 @@ export const getPublicCountryPayoutTotalsAction = async (isoCode: unknown) => {
 	return getPayoutTotalsForCountry(isoCodeResult.data);
 };
 
-export const getPublicLocalPartnerPayoutTotalsAction = async (localPartnerSlug: unknown) => {
+export const getPublicLocalPartnerPayoutTotalsAction = async (
+	localPartnerSlug: unknown,
+): Promise<Result<CountryPayoutTotals>> => {
 	const slugResult = payoutLocalPartnerSlugSchema.safeParse(localPartnerSlug);
 	if (!slugResult.success) {
 		return resultFail('Missing local partner slug');

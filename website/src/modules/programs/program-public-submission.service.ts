@@ -1,7 +1,7 @@
 import type { Program } from '@/generated/storyblok/types/109655/storyblok-components';
 import { fetchStoryblokPrograms } from '@/integrations/storyblok/storyblok-program.integration';
 import { defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import * as programRepository from './program.repository';
 import type { PublicSubmissionProgramOption } from './program.types';
@@ -11,7 +11,7 @@ const PROGRAM_DETAILS_IMAGE_HEIGHT = 140;
 
 export const getEligibleProgramsForPublicSubmission = async (
 	language: WebsiteLanguage = defaultLanguage,
-): Promise<ServiceResult<PublicSubmissionProgramOption[]>> => {
+): Promise<Result<PublicSubmissionProgramOption[]>> => {
 	const needsLocalizedEnrichment = language !== defaultLanguage;
 	const [eligibilityProgramsResult, enrichmentProgramsResult] = await Promise.all([
 		fetchStoryblokPrograms(defaultLanguage),
@@ -70,7 +70,7 @@ export const getEligibleProgramsForPublicSubmission = async (
 	}
 };
 
-export const isProgramEligibleForPublicSubmission = async (programId: string): Promise<ServiceResult<boolean>> => {
+export const isProgramEligibleForPublicSubmission = async (programId: string): Promise<Result<boolean>> => {
 	const programsResult = await fetchStoryblokPrograms(defaultLanguage);
 	if (!programsResult.success) {
 		return resultFail(programsResult.error);

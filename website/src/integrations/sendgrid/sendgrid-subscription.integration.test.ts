@@ -1,4 +1,4 @@
-import { resultFail, resultOk } from '@/lib/service-result';
+import { resultFail, resultOk } from '@/lib/result';
 import { Client } from '@sendgrid/client';
 import { searchSendgridNewsletterContact, upsertSendgridNewsletterSubscription } from './sendgrid-subscription.integration';
 

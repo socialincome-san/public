@@ -1,7 +1,8 @@
 'use server';
 
 import { getSessionByType, type Session } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
+import type { PublicRecipientTableView, RecipientFormOptions, RecipientPayload } from '@/modules/recipients/recipient.types';
 import { revalidatePath } from 'next/cache';
 import {
 	publicRecipientProgramIdSchema,
@@ -21,9 +22,13 @@ import {
 	importRecipientsCsv,
 	removeRecipientFromProgram,
 	updateRecipient,
+	type RecipientWriteResult,
 } from './recipient.service';
 
-export const createRecipientAction = async (input: unknown, sessionType: unknown = 'user') => {
+export const createRecipientAction = async (
+	input: unknown,
+	sessionType: unknown = 'user',
+): Promise<Result<RecipientWriteResult>> => {
 	const sessionResult = await getRecipientActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -40,7 +45,10 @@ export const createRecipientAction = async (input: unknown, sessionType: unknown
 	return result;
 };
 
-export const updateRecipientAction = async (input: unknown, sessionType: unknown = 'user') => {
+export const updateRecipientAction = async (
+	input: unknown,
+	sessionType: unknown = 'user',
+): Promise<Result<RecipientWriteResult>> => {
 	const sessionResult = await getRecipientActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -57,7 +65,10 @@ export const updateRecipientAction = async (input: unknown, sessionType: unknown
 	return result;
 };
 
-export const removeRecipientFromProgramAction = async (recipientId: unknown, sessionType: unknown = 'user') => {
+export const removeRecipientFromProgramAction = async (
+	recipientId: unknown,
+	sessionType: unknown = 'user',
+): Promise<Result<{ id: string }>> => {
 	const sessionResult = await getRecipientActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -74,7 +85,10 @@ export const removeRecipientFromProgramAction = async (recipientId: unknown, ses
 	return result;
 };
 
-export const deleteRecipientAction = async (recipientId: unknown, sessionType: unknown = 'user') => {
+export const deleteRecipientAction = async (
+	recipientId: unknown,
+	sessionType: unknown = 'user',
+): Promise<Result<{ id: string }>> => {
 	const sessionResult = await getRecipientActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -91,7 +105,10 @@ export const deleteRecipientAction = async (recipientId: unknown, sessionType: u
 	return result;
 };
 
-export const getRecipientAction = async (recipientId: unknown, sessionType: unknown = 'user') => {
+export const getRecipientAction = async (
+	recipientId: unknown,
+	sessionType: unknown = 'user',
+): Promise<Result<RecipientPayload>> => {
 	const sessionResult = await getRecipientActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -105,7 +122,7 @@ export const getRecipientAction = async (recipientId: unknown, sessionType: unkn
 	return getRecipientById(sessionResult.data, recipientIdResult.data);
 };
 
-export const getRecipientOptionsAction = async (sessionType: unknown = 'user') => {
+export const getRecipientOptionsAction = async (sessionType: unknown = 'user'): Promise<Result<RecipientFormOptions>> => {
 	const sessionResult = await getRecipientActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -114,7 +131,10 @@ export const getRecipientOptionsAction = async (sessionType: unknown = 'user') =
 	return getRecipientFormOptions(sessionResult.data);
 };
 
-export const importRecipientsCsvAction = async (file: unknown, sessionType: unknown = 'user') => {
+export const importRecipientsCsvAction = async (
+	file: unknown,
+	sessionType: unknown = 'user',
+): Promise<Result<{ created: number }>> => {
 	const sessionResult = await getRecipientActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -131,7 +151,7 @@ export const importRecipientsCsvAction = async (file: unknown, sessionType: unkn
 	return result;
 };
 
-export const downloadRecipientsCsvAction = async (sessionType: unknown = 'user') => {
+export const downloadRecipientsCsvAction = async (sessionType: unknown = 'user'): Promise<Result<string>> => {
 	const sessionResult = await getRecipientActionSession(sessionType);
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -140,7 +160,7 @@ export const downloadRecipientsCsvAction = async (sessionType: unknown = 'user')
 	return exportRecipientsCsv(sessionResult.data);
 };
 
-export const getPublicRecipientsTableAction = async (programId: unknown) => {
+export const getPublicRecipientsTableAction = async (programId: unknown): Promise<Result<PublicRecipientTableView>> => {
 	const programIdResult = publicRecipientProgramIdSchema.safeParse(programId);
 	if (!programIdResult.success) {
 		return resultFail('Invalid program id');

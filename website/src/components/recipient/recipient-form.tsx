@@ -9,7 +9,7 @@ import {
 	getZodEnum,
 } from '@/components/dynamic-form/helper';
 import type { Session } from '@/lib/firebase/current-account';
-import { handleServiceResult } from '@/lib/service-result-client';
+import { handleResult } from '@/lib/result-client';
 import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
 import type { LocalPartnerOption } from '@/modules/local-partners/local-partner.types';
 import { getSupportedMobileMoneyProviderOptionsAction } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
@@ -151,7 +151,7 @@ export const RecipientForm = ({
 					? await updateRecipientAction(buildUpdateRecipientInput(schema, recipient, contactFields), sessionType)
 					: await createRecipientAction(buildCreateRecipientInput(schema, contactFields), sessionType);
 
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -165,7 +165,7 @@ export const RecipientForm = ({
 
 		startTransition(async () => {
 			const result = await deleteRecipientAction(recipientId, sessionType);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -179,7 +179,7 @@ export const RecipientForm = ({
 
 		startTransition(async () => {
 			const result = await removeRecipientFromProgramAction(recipientId, sessionType);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -191,7 +191,7 @@ export const RecipientForm = ({
 			// Load recipient in edit mode
 			startTransition(async () => {
 				const result = await getRecipientAction(recipientId, sessionType);
-				handleServiceResult(result, {
+				handleResult(result, {
 					onSuccess: (data) => {
 						setRecipient(data);
 						setFormSchema((previousSchema) => {

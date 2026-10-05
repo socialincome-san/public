@@ -1,5 +1,5 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
-import type { ServiceResult } from '@/lib/service-result';
+import type { Result } from '@/lib/result';
 
 const mockIsFirebaseStorageConfigured = jest.fn();
 const mockUploadFileToFirebaseStorage = jest.fn();
@@ -41,7 +41,7 @@ import {
 	getPaginatedDonationCertificates,
 } from './donation-certificate.service';
 
-const expectFailure = (result: ServiceResult<unknown>, error: string): void => {
+const expectFailure = (result: Result<unknown>, error: string): void => {
 	expect(result.success).toBe(false);
 	if (result.success) {
 		throw new Error('Expected failure');

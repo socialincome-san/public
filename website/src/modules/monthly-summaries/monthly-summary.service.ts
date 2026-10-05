@@ -1,5 +1,5 @@
 import { PayoutInterval, PayoutStatus } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { countCampaignsCreatedBetween } from '@/modules/campaigns/campaign.service';
 import { getSucceededContributionSummary } from '@/modules/contributions/contribution.service';
 import { countContributorsCreatedBetween } from '@/modules/contributors/contributor.service';
@@ -9,7 +9,7 @@ import { getRecipientMonthlySummarySource, recipientStatusService } from '@/modu
 import type { RecipientMonthlySummarySource } from '@/modules/recipients/recipient.types';
 import type { MonthlySummary, MonthlySummaryStats } from './monthly-summary.types';
 
-export const getLastMonthSummary = async (): Promise<ServiceResult<MonthlySummary>> => {
+export const getLastMonthSummary = async (): Promise<Result<MonthlySummary>> => {
 	try {
 		const now = new Date();
 		const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1));

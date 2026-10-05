@@ -1,6 +1,7 @@
 'use server';
 
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
+import type { TransparencyCountriesData, TransparencySummaryData } from '@/modules/transparency/transparency.types';
 import { transparencyCountriesInputSchema } from './transparency.schemas';
 import {
 	getContributionsByCountryData,
@@ -9,13 +10,13 @@ import {
 	getTransparencySummary,
 } from './transparency.service';
 
-export const getTotalContributionsChfAction = async () => getTotalContributionsChf();
+export const getTotalContributionsChfAction = async (): Promise<Result<number>> => getTotalContributionsChf();
 
-export const getTransparencySummaryAction = async () => getTransparencySummary();
+export const getTransparencySummaryAction = async (): Promise<Result<TransparencySummaryData>> => getTransparencySummary();
 
-export const getRunwayMonthsAction = async () => getRunwayMonths();
+export const getRunwayMonthsAction = async (): Promise<Result<number>> => getRunwayMonths();
 
-export const getContributionsByCountryDataAction = async (input: unknown) => {
+export const getContributionsByCountryDataAction = async (input: unknown): Promise<Result<TransparencyCountriesData>> => {
 	const result = transparencyCountriesInputSchema.safeParse(input);
 	if (!result.success) {
 		return resultFail('Invalid transparency countries input');

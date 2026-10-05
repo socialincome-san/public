@@ -1,10 +1,8 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import type { DecodedIdToken, UserRecord } from 'firebase-admin/auth';
 import { getFirebaseAdminAppCheck, getFirebaseAdminAuth } from './firebase-admin.integration';
 
-export const createFirebaseUserByPhoneNumber = async (
-	phoneNumber: string,
-): Promise<ServiceResult<FirebaseAuthUserRecord>> => {
+export const createFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<Result<FirebaseAuthUserRecord>> => {
 	try {
 		const existingUserResult = await findFirebaseUserByPhoneNumber(phoneNumber);
 		if (!existingUserResult.success) {
@@ -28,7 +26,7 @@ export const createFirebaseUserByPhoneNumber = async (
 export const updateFirebaseUserByPhoneNumber = async (
 	oldPhoneNumber: string,
 	newPhoneNumber: string,
-): Promise<ServiceResult<FirebaseAuthUserRecord>> => {
+): Promise<Result<FirebaseAuthUserRecord>> => {
 	try {
 		const existingUserResult = await findFirebaseUserByPhoneNumber(oldPhoneNumber);
 		if (!existingUserResult.success) {
@@ -56,7 +54,7 @@ export const updateFirebaseUserByPhoneNumber = async (
 	}
 };
 
-export const deleteFirebaseUserByPhoneNumberIfExists = async (phoneNumber: string): Promise<ServiceResult<boolean>> => {
+export const deleteFirebaseUserByPhoneNumberIfExists = async (phoneNumber: string): Promise<Result<boolean>> => {
 	try {
 		const existingUserResult = await findFirebaseUserByPhoneNumber(phoneNumber);
 		if (!existingUserResult.success) {
@@ -75,9 +73,7 @@ export const deleteFirebaseUserByPhoneNumberIfExists = async (phoneNumber: strin
 	}
 };
 
-export const findFirebaseUserByPhoneNumber = async (
-	phoneNumber: string,
-): Promise<ServiceResult<FirebaseAuthUserRecord | null>> => {
+export const findFirebaseUserByPhoneNumber = async (phoneNumber: string): Promise<Result<FirebaseAuthUserRecord | null>> => {
 	try {
 		return resultOk(toFirebaseAuthUserRecord(await getFirebaseAdminAuth().getUserByPhoneNumber(phoneNumber)));
 	} catch (error: unknown) {
@@ -91,7 +87,7 @@ export const findFirebaseUserByPhoneNumber = async (
 	}
 };
 
-export const createFirebaseCustomToken = async (uid: string): Promise<ServiceResult<string>> => {
+export const createFirebaseCustomToken = async (uid: string): Promise<Result<string>> => {
 	try {
 		return resultOk(await getFirebaseAdminAuth().createCustomToken(uid));
 	} catch (error) {
@@ -101,7 +97,7 @@ export const createFirebaseCustomToken = async (uid: string): Promise<ServiceRes
 	}
 };
 
-export const findFirebaseUserByEmail = async (email: string): Promise<ServiceResult<FirebaseAuthUserRecord | null>> => {
+export const findFirebaseUserByEmail = async (email: string): Promise<Result<FirebaseAuthUserRecord | null>> => {
 	try {
 		return resultOk(toFirebaseAuthUserRecord(await getFirebaseAdminAuth().getUserByEmail(email)));
 	} catch (error: unknown) {
@@ -118,7 +114,7 @@ export const findFirebaseUserByEmail = async (email: string): Promise<ServiceRes
 export const createFirebaseUserByEmail = async (input: {
 	email: string;
 	displayName: string;
-}): Promise<ServiceResult<FirebaseAuthUserRecord>> => {
+}): Promise<Result<FirebaseAuthUserRecord>> => {
 	try {
 		return resultOk(
 			toFirebaseAuthUserRecord(
@@ -135,7 +131,7 @@ export const createFirebaseUserByEmail = async (input: {
 	}
 };
 
-export const createFirebaseSurveyUser = async (email: string, password: string): Promise<ServiceResult<{ uid: string }>> => {
+export const createFirebaseSurveyUser = async (email: string, password: string): Promise<Result<{ uid: string }>> => {
 	try {
 		const user = await getFirebaseAdminAuth().createUser({
 			email,
@@ -155,7 +151,7 @@ export const synchronizeFirebaseSurveyUser = async (input: {
 	nextEmail: string;
 	nextPassword: string;
 	previousEmail?: string;
-}): Promise<ServiceResult<void>> => {
+}): Promise<Result<void>> => {
 	try {
 		const nextUserResult = await findFirebaseUserByEmail(input.nextEmail);
 		if (!nextUserResult.success) {
@@ -214,7 +210,7 @@ export const synchronizeFirebaseSurveyUser = async (input: {
 export const updateFirebaseUserByUid = async (
 	uid: string,
 	updates: FirebaseAuthUserUpdate,
-): Promise<ServiceResult<FirebaseAuthUserRecord>> => {
+): Promise<Result<FirebaseAuthUserRecord>> => {
 	try {
 		await getFirebaseAdminAuth().getUser(uid);
 
@@ -226,7 +222,7 @@ export const updateFirebaseUserByUid = async (
 	}
 };
 
-export const deleteFirebaseUserByUidIfExists = async (uid: string): Promise<ServiceResult<boolean>> => {
+export const deleteFirebaseUserByUidIfExists = async (uid: string): Promise<Result<boolean>> => {
 	try {
 		await getFirebaseAdminAuth().deleteUser(uid);
 
@@ -242,7 +238,7 @@ export const deleteFirebaseUserByUidIfExists = async (uid: string): Promise<Serv
 	}
 };
 
-export const decodeFirebaseTokenFromRequest = async (request: Request): Promise<ServiceResult<FirebaseDecodedToken>> => {
+export const decodeFirebaseTokenFromRequest = async (request: Request): Promise<Result<FirebaseDecodedToken>> => {
 	const header = request.headers.get('authorization');
 	if (!header?.startsWith('Bearer ')) {
 		return resultFail('Missing or invalid authorization header');
@@ -257,7 +253,7 @@ export const decodeFirebaseTokenFromRequest = async (request: Request): Promise<
 	}
 };
 
-export const createFirebaseSessionCookie = async (idToken: string, expiresIn: number): Promise<ServiceResult<string>> => {
+export const createFirebaseSessionCookie = async (idToken: string, expiresIn: number): Promise<Result<string>> => {
 	try {
 		return resultOk(await getFirebaseAdminAuth().createSessionCookie(idToken, { expiresIn }));
 	} catch (error) {
@@ -267,7 +263,7 @@ export const createFirebaseSessionCookie = async (idToken: string, expiresIn: nu
 	}
 };
 
-export const verifyFirebaseSessionCookie = async (sessionCookie: string): Promise<ServiceResult<FirebaseDecodedToken>> => {
+export const verifyFirebaseSessionCookie = async (sessionCookie: string): Promise<Result<FirebaseDecodedToken>> => {
 	try {
 		return resultOk(toFirebaseDecodedToken(await getFirebaseAdminAuth().verifySessionCookie(sessionCookie, true)));
 	} catch (error) {
@@ -277,7 +273,7 @@ export const verifyFirebaseSessionCookie = async (sessionCookie: string): Promis
 	}
 };
 
-export const verifyFirebaseAppCheckToken = async (token: string): Promise<ServiceResult<{ appId: string }>> => {
+export const verifyFirebaseAppCheckToken = async (token: string): Promise<Result<{ appId: string }>> => {
 	try {
 		const decodedToken = await getFirebaseAdminAppCheck().verifyToken(token);
 

@@ -2,12 +2,12 @@
 
 import { getCurrentSessions, getSessionByType } from '@/lib/firebase/current-account';
 import { SESSION_COOKIE_NAME } from '@/lib/firebase/session-cookie';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { cookies } from 'next/headers';
 import { sessionIdTokenSchema } from './auth.schemas';
 import { createSessionCookie } from './auth.service';
 
-export const createSessionAction = async (input: unknown): Promise<ServiceResult<boolean>> => {
+export const createSessionAction = async (input: unknown): Promise<Result<boolean>> => {
 	const inputResult = sessionIdTokenSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('missing-id-token');
@@ -37,7 +37,7 @@ export const createSessionAction = async (input: unknown): Promise<ServiceResult
 	}
 };
 
-export const logoutAction = async (): Promise<ServiceResult<boolean>> => {
+export const logoutAction = async (): Promise<Result<boolean>> => {
 	try {
 		(await cookies()).set({
 			name: SESSION_COOKIE_NAME,
@@ -57,13 +57,13 @@ export const logoutAction = async (): Promise<ServiceResult<boolean>> => {
 	}
 };
 
-export const getIsAuthenticatedUserAction = async (): Promise<boolean> => {
+export const getIsAuthenticatedUserAction = async (): Promise<Result<boolean>> => {
 	const sessionResult = await getSessionByType('user');
 
-	return sessionResult.success;
+	return resultOk(sessionResult.success);
 };
 
-export const getRedirectPathAfterLoginAction = async (): Promise<ServiceResult<string>> => {
+export const getRedirectPathAfterLoginAction = async (): Promise<Result<string>> => {
 	const sessions = await getCurrentSessions();
 	const session = sessions[0];
 

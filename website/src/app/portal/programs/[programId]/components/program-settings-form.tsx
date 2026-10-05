@@ -3,7 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutInterval, Profile } from '@/generated/prisma/enums';
-import { handleServiceResult } from '@/lib/service-result-client';
+import { handleResult } from '@/lib/result-client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { SLUG_REGEX } from '@/lib/utils/regex';
 import { getProgramCountryFeasibilityAction } from '@/modules/countries/country.actions';
@@ -221,7 +221,7 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 			const updateInput = buildUpdateProgramSettingsInput(programId, schema);
 			const result = await updateProgramSettingsAction(updateInput);
 
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -234,7 +234,7 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 		}
 		startTransition(async () => {
 			const result = await deleteProgramAction(programId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => {
 					onSuccess?.();
 					router.push('/portal');
@@ -256,7 +256,7 @@ export const ProgramSettingsForm = ({ programId, readOnly, onSuccess, onCancel, 
 				getFocusOptionsAction(),
 			]);
 
-			handleServiceResult(settingsResult, {
+			handleResult(settingsResult, {
 				onSuccess: (settings) => {
 					setLoadedSettings(settings);
 					setFormSchema((previousSchema) => {

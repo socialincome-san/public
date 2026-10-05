@@ -1,4 +1,4 @@
-import { resultFail, resultOk } from '@/lib/service-result';
+import { resultFail, resultOk } from '@/lib/result';
 
 const mockFindProgramNameById = jest.fn();
 const mockFindProgramOptions = jest.fn();

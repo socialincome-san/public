@@ -3,7 +3,7 @@ import { fetchStoryblokListedCampaigns } from '@/integrations/storyblok/storyblo
 import { listCampaignDefaultImages } from '@/integrations/storyblok/storyblok-management.integration';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { nowMs } from '@/lib/utils/now';
 import { getLatestRateForCurrency } from '@/modules/exchange-rates/exchange-rate.service';
@@ -23,7 +23,7 @@ import {
 	type PublicCampaignStatsMap,
 } from './campaign.types';
 
-export const countCampaignsCreatedBetween = async (from: Date, to: Date): Promise<ServiceResult<number>> => {
+export const countCampaignsCreatedBetween = async (from: Date, to: Date): Promise<Result<number>> => {
 	try {
 		return resultOk(await campaignRepository.countCampaignsCreatedBetween(from, to));
 	} catch (error) {
@@ -33,7 +33,7 @@ export const countCampaignsCreatedBetween = async (from: Date, to: Date): Promis
 	}
 };
 
-export const getCampaignById = async (campaignId: string): Promise<ServiceResult<CampaignPage>> => {
+export const getCampaignById = async (campaignId: string): Promise<Result<CampaignPage>> => {
 	try {
 		const campaign = await campaignRepository.findCampaignPageById(campaignId);
 		if (!campaign) {
@@ -48,7 +48,7 @@ export const getCampaignById = async (campaignId: string): Promise<ServiceResult
 	}
 };
 
-export const getCampaignByPortalSlug = async (portalSlug: string): Promise<ServiceResult<CampaignPage>> => {
+export const getCampaignByPortalSlug = async (portalSlug: string): Promise<Result<CampaignPage>> => {
 	try {
 		const normalizedSlug = portalSlug.trim();
 		if (!normalizedSlug) {
@@ -68,9 +68,7 @@ export const getCampaignByPortalSlug = async (portalSlug: string): Promise<Servi
 	}
 };
 
-const getPublicCampaignReferenceById = async (
-	campaignId: string,
-): Promise<ServiceResult<{ campaignPortalSlug: string }>> => {
+const getPublicCampaignReferenceById = async (campaignId: string): Promise<Result<{ campaignPortalSlug: string }>> => {
 	try {
 		const normalizedId = campaignId.trim();
 		if (!normalizedId) {
@@ -92,7 +90,7 @@ const getPublicCampaignReferenceById = async (
 
 export const getCampaignsForCmsJoin = async (options?: {
 	activity?: PublicCampaignActivity;
-}): Promise<ServiceResult<CampaignCmsJoin[]>> => {
+}): Promise<Result<CampaignCmsJoin[]>> => {
 	const activity = options?.activity ?? 'active';
 
 	try {
@@ -145,7 +143,7 @@ export const getCampaignsForCmsJoin = async (options?: {
 
 export const getAllCampaignsForCmsJoinWithStats = async (options?: {
 	activity?: PublicCampaignActivity;
-}): Promise<ServiceResult<CampaignCmsJoinWithStats>> => {
+}): Promise<Result<CampaignCmsJoinWithStats>> => {
 	const campaignsResult = await getCampaignsForCmsJoin(options);
 	if (!campaignsResult.success) {
 		return resultFail(campaignsResult.error);
@@ -154,7 +152,7 @@ export const getAllCampaignsForCmsJoinWithStats = async (options?: {
 	return getPublicCampaignsWithStats(campaignsResult.data);
 };
 
-export const getPublicCampaignStatsByIds = async (campaignIds: string[]): Promise<ServiceResult<PublicCampaignStatsMap>> => {
+export const getPublicCampaignStatsByIds = async (campaignIds: string[]): Promise<Result<PublicCampaignStatsMap>> => {
 	try {
 		const normalizedCampaignIds = [...new Set(campaignIds.map((campaignId) => campaignId.trim()).filter(Boolean))];
 		if (!normalizedCampaignIds.length) {
@@ -191,7 +189,7 @@ export const getPublicCampaignStatsByIds = async (campaignIds: string[]): Promis
 
 export const getPublicCampaignsWithStats = async (
 	campaigns: CampaignCmsJoin[],
-): Promise<ServiceResult<CampaignCmsJoinWithStats>> => {
+): Promise<Result<CampaignCmsJoinWithStats>> => {
 	const campaignIds = [...new Set(campaigns.map((campaign) => campaign.id))];
 	const statsResult = await getPublicCampaignStatsByIds(campaignIds);
 
@@ -201,7 +199,7 @@ export const getPublicCampaignsWithStats = async (
 	});
 };
 
-export const getEditableCampaignOptions = async (userId: string): Promise<ServiceResult<CampaignOption[]>> => {
+export const getEditableCampaignOptions = async (userId: string): Promise<Result<CampaignOption[]>> => {
 	try {
 		const accessibleProgramsResult = await getAccessiblePrograms(userId);
 		if (!accessibleProgramsResult.success) {
@@ -231,7 +229,7 @@ export const getEditableCampaignOptions = async (userId: string): Promise<Servic
 	}
 };
 
-export const getCampaignTableEntries = async (userId: string): Promise<ServiceResult<CampaignTableEntry[]>> => {
+export const getCampaignTableEntries = async (userId: string): Promise<Result<CampaignTableEntry[]>> => {
 	try {
 		const accessibleProgramsResult = await getAccessiblePrograms(userId);
 		if (!accessibleProgramsResult.success) {
@@ -290,7 +288,7 @@ export const getCampaignTableEntries = async (userId: string): Promise<ServiceRe
 	}
 };
 
-export const getFallbackCampaign = async (): Promise<ServiceResult<CampaignReference>> => {
+export const getFallbackCampaign = async (): Promise<Result<CampaignReference>> => {
 	try {
 		const campaign = await campaignRepository.findFallbackCampaign();
 		if (!campaign) {
@@ -305,7 +303,7 @@ export const getFallbackCampaign = async (): Promise<ServiceResult<CampaignRefer
 	}
 };
 
-export const getDefaultCampaignForProgram = async (programId: string): Promise<ServiceResult<CampaignReference>> => {
+export const getDefaultCampaignForProgram = async (programId: string): Promise<Result<CampaignReference>> => {
 	try {
 		const campaign = await campaignRepository.findDefaultCampaignForProgram(programId);
 		if (!campaign) {
@@ -323,7 +321,7 @@ export const getDefaultCampaignForProgram = async (programId: string): Promise<S
 const DEFAULT_IMAGE_THUMB_WIDTH = 160;
 const DEFAULT_IMAGE_THUMB_HEIGHT = 160;
 
-export const getCampaignDefaultImages = async (): Promise<ServiceResult<CampaignDefaultImageOption[]>> => {
+export const getCampaignDefaultImages = async (): Promise<Result<CampaignDefaultImageOption[]>> => {
 	const assetsResult = await listCampaignDefaultImages(campaignSubmissionConfig.maxCampaignDefaultImages);
 	if (!assetsResult.success) {
 		return resultFail('Could not load campaign default images.', assetsResult.status);
@@ -338,7 +336,7 @@ export const getCampaignDefaultImages = async (): Promise<ServiceResult<Campaign
 	);
 };
 
-export const getPublicCampaignTitle = async (campaignId: string): Promise<ServiceResult<{ title: string }>> => {
+export const getPublicCampaignTitle = async (campaignId: string): Promise<Result<{ title: string }>> => {
 	const campaignReference = await getPublicCampaignReferenceById(campaignId);
 	if (!campaignReference.success) {
 		return campaignReference;

@@ -2,7 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
-import { handleServiceResult } from '@/lib/service-result-client';
+import { handleResult } from '@/lib/result-client';
 import { SLUG_REGEX } from '@/lib/utils/regex';
 import { createFocusAction, deleteFocusAction, getFocusAction, updateFocusAction } from '@/modules/focuses/focus.actions';
 import type { FocusPayload } from '@/modules/focuses/focus.types';
@@ -52,7 +52,7 @@ export default function FocusesForm({ onSuccess, onError, onCancel, focusId }: F
 				focusId && focus
 					? await updateFocusAction(buildUpdateFocusInput(schema, focus))
 					: await createFocusAction(buildCreateFocusInput(schema));
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -66,7 +66,7 @@ export default function FocusesForm({ onSuccess, onError, onCancel, focusId }: F
 
 		startTransition(async () => {
 			const result = await deleteFocusAction(focusId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -79,7 +79,7 @@ export default function FocusesForm({ onSuccess, onError, onCancel, focusId }: F
 		}
 		startTransition(async () => {
 			const result = await getFocusAction(focusId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: (data) => {
 					setFocus(data);
 					setFormSchema((prev) => {

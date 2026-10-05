@@ -1,5 +1,5 @@
 import { Currency } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 
 const PAWAPAY_BALANCES_URL = 'https://api.pawapay.io/v2/wallet-balances';
 
@@ -10,7 +10,7 @@ export type PawaPayBalance = {
 	currency: Currency;
 };
 
-export const fetchPawaPayBalances = async (): Promise<ServiceResult<PawaPayBalance[]>> => {
+export const fetchPawaPayBalances = async (): Promise<Result<PawaPayBalance[]>> => {
 	const token = process.env.PAWAPAY_API_TOKEN?.trim();
 	if (!token) {
 		return resultFail('PawaPay API token is not configured');

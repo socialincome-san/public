@@ -1,7 +1,12 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
+import type {
+	ContributionFormOptions,
+	ContributionPayload,
+	GlobeContribution,
+} from '@/modules/contributions/contribution.types';
 import { revalidatePath } from 'next/cache';
 import {
 	contributionCreateSchema,
@@ -17,7 +22,7 @@ import {
 	updateContribution,
 } from './contribution.service';
 
-export const createContributionAction = async (input: unknown) => {
+export const createContributionAction = async (input: unknown): Promise<Result<ContributionPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -34,7 +39,7 @@ export const createContributionAction = async (input: unknown) => {
 	return result;
 };
 
-export const updateContributionAction = async (input: unknown) => {
+export const updateContributionAction = async (input: unknown): Promise<Result<ContributionPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -51,7 +56,7 @@ export const updateContributionAction = async (input: unknown) => {
 	return result;
 };
 
-export const getContributionAction = async (contributionId: unknown) => {
+export const getContributionAction = async (contributionId: unknown): Promise<Result<ContributionPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -65,7 +70,7 @@ export const getContributionAction = async (contributionId: unknown) => {
 	return getContribution(sessionResult.data.id, contributionIdResult.data);
 };
 
-export const getContributionsOptionsAction = async () => {
+export const getContributionsOptionsAction = async (): Promise<Result<ContributionFormOptions>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -74,7 +79,7 @@ export const getContributionsOptionsAction = async () => {
 	return getContributionFormOptions(sessionResult.data.id);
 };
 
-export const getRecentSuccessfulContributionsAction = async (cutoff: unknown) => {
+export const getRecentSuccessfulContributionsAction = async (cutoff: unknown): Promise<Result<GlobeContribution[]>> => {
 	const cutoffResult = contributionGlobeCutoffSchema.safeParse(cutoff);
 	if (!cutoffResult.success) {
 		return resultFail('Invalid cutoff date.');

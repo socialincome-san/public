@@ -1,5 +1,5 @@
 import type { CountryCode } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	countCandidatesForLocalPartners,
 	countRecipientsForProgramsAndLocalPartners,
@@ -18,7 +18,7 @@ import type {
 type FocusStatsSource = Awaited<ReturnType<typeof focusRepository.findFocusStatsBySlugs>>[number];
 type PublicFocusStats = PublicFocusStatsBySlugMap[string];
 
-export const getFocus = async (userId: string, focusId: string): Promise<ServiceResult<FocusPayload>> => {
+export const getFocus = async (userId: string, focusId: string): Promise<Result<FocusPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -38,7 +38,7 @@ export const getFocus = async (userId: string, focusId: string): Promise<Service
 export const getPaginatedFocusTableView = async (
 	userId: string,
 	query: FocusTableQuery,
-): Promise<ServiceResult<FocusPaginatedTableView>> => {
+): Promise<Result<FocusPaginatedTableView>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -58,7 +58,7 @@ export const getPaginatedFocusTableView = async (
 	}
 };
 
-export const getFocusOptions = async (): Promise<ServiceResult<FocusOption[]>> => {
+export const getFocusOptions = async (): Promise<Result<FocusOption[]>> => {
 	try {
 		return resultOk(await focusRepository.findFocusOptions());
 	} catch (error) {
@@ -68,9 +68,7 @@ export const getFocusOptions = async (): Promise<ServiceResult<FocusOption[]>> =
 	}
 };
 
-export const getPublicFocusStatsBySlugs = async (
-	focusSlugs: string[],
-): Promise<ServiceResult<PublicFocusStatsBySlugMap>> => {
+export const getPublicFocusStatsBySlugs = async (focusSlugs: string[]): Promise<Result<PublicFocusStatsBySlugMap>> => {
 	try {
 		const normalizedFocusSlugs = [...new Set(focusSlugs.map((focusSlug) => focusSlug.trim()).filter(Boolean))];
 		if (normalizedFocusSlugs.length === 0) {
@@ -99,7 +97,7 @@ export const getPublicFocusStatsBySlugs = async (
 	}
 };
 
-export const createFocus = async (userId: string, input: FocusCreateInput): Promise<ServiceResult<FocusPayload>> => {
+export const createFocus = async (userId: string, input: FocusCreateInput): Promise<Result<FocusPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -123,7 +121,7 @@ export const createFocus = async (userId: string, input: FocusCreateInput): Prom
 	}
 };
 
-export const updateFocus = async (userId: string, input: FocusUpdateInput): Promise<ServiceResult<FocusPayload>> => {
+export const updateFocus = async (userId: string, input: FocusUpdateInput): Promise<Result<FocusPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -155,7 +153,7 @@ export const updateFocus = async (userId: string, input: FocusUpdateInput): Prom
 	}
 };
 
-export const deleteFocus = async (userId: string, focusId: string): Promise<ServiceResult<{ id: string }>> => {
+export const deleteFocus = async (userId: string, focusId: string): Promise<Result<{ id: string }>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -180,7 +178,7 @@ export const deleteFocus = async (userId: string, focusId: string): Promise<Serv
 	}
 };
 
-const buildPublicFocusStats = async (focus: FocusStatsSource): Promise<ServiceResult<PublicFocusStats>> => {
+const buildPublicFocusStats = async (focus: FocusStatsSource): Promise<Result<PublicFocusStats>> => {
 	const programIds = [...new Set(focus.programs.map(({ programId }) => programId))];
 	const localPartnerIds = [...new Set(focus.localPartners.map(({ localPartnerId }) => localPartnerId))];
 	const countryIsoCodes = [

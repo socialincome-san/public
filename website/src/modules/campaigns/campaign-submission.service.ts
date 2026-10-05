@@ -10,7 +10,7 @@ import {
 } from '@/integrations/storyblok/storyblok-management.integration';
 import { verifyTurnstileToken } from '@/integrations/turnstile/turnstile.integration';
 import { campaignSubmissionConfig } from '@/lib/config/campaign-submission.config';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { slugify } from '@/lib/utils/string-utils';
 import { isProgramEligibleForPublicSubmission } from '@/modules/programs/program-public-submission.service';
 import { randomBytes, randomUUID } from 'crypto';
@@ -56,7 +56,7 @@ export const submitCampaign = async (
 	optionalImages: CampaignSubmissionOptionalImages = { profilePicture: null, sectionImage: null },
 	contributorId?: string | null,
 	turnstileToken?: string | null,
-): Promise<ServiceResult<CampaignSubmissionResult>> => {
+): Promise<Result<CampaignSubmissionResult>> => {
 	const turnstileResult = await verifyTurnstileToken(turnstileToken ?? null);
 	if (!turnstileResult.success) {
 		return resultFail(turnstileResult.error, turnstileResult.error === 'submission-failed' ? 503 : 400);
@@ -190,7 +190,7 @@ const createCampaignPendingRecord = async (campaignId: string): Promise<string |
 const uploadImage = async (
 	image: CampaignSubmissionImageValidation,
 	cleanupState: SubmissionCleanupState,
-): Promise<ServiceResult<StoryblokAsset>> => {
+): Promise<Result<StoryblokAsset>> => {
 	const uploaded = await uploadStoryblokAsset(image.buffer, image.filename, image.mimeType, {
 		focus: image.focus,
 	});
@@ -205,7 +205,7 @@ const uploadImage = async (
 const uploadOptionalImage = async (
 	image: CampaignSubmissionImageValidation | null,
 	cleanupState: SubmissionCleanupState,
-): Promise<ServiceResult<StoryblokAsset | undefined>> => {
+): Promise<Result<StoryblokAsset | undefined>> => {
 	if (!image) {
 		return resultOk(undefined);
 	}
@@ -225,7 +225,7 @@ const failDefaultImage = (defaultImageId: number, reason: string, assetFolderId:
 
 const resolveImage = async (
 	imageSource: CampaignSubmissionImageSource,
-): Promise<ServiceResult<CampaignSubmissionImageValidation>> => {
+): Promise<Result<CampaignSubmissionImageValidation>> => {
 	if (imageSource.kind === 'upload') {
 		return resultOk(imageSource.image);
 	}
@@ -291,7 +291,7 @@ const compensateSubmissionFailure = async (state: SubmissionCleanupState): Promi
 	}
 };
 
-const generateUniqueSlug = async (title: string): Promise<ServiceResult<string>> => {
+const generateUniqueSlug = async (title: string): Promise<Result<string>> => {
 	const baseSlug = slugify(title);
 	if (!baseSlug) {
 		return resultFail('title-not-slugifiable', 400);
@@ -325,7 +325,7 @@ const generateUniqueSlug = async (title: string): Promise<ServiceResult<string>>
 	}
 };
 
-const isSlugAvailable = async (slug: string): Promise<ServiceResult<boolean>> => {
+const isSlugAvailable = async (slug: string): Promise<Result<boolean>> => {
 	const existing = await campaignRepository.findCampaignIdBySlug(slug);
 	if (existing) {
 		return resultOk(false);

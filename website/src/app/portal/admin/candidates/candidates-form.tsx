@@ -9,7 +9,7 @@ import {
 	getZodEnum,
 } from '@/components/dynamic-form/helper';
 import type { Session } from '@/lib/firebase/current-account';
-import { handleServiceResult } from '@/lib/service-result-client';
+import { handleResult } from '@/lib/result-client';
 import { E164_OPTIONAL_PHONE_REGEX } from '@/lib/utils/regex';
 import {
 	createCandidateAction,
@@ -156,7 +156,7 @@ export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessi
 				candidateId && candidate
 					? await updateCandidateAction(buildUpdateCandidateInput(schema, candidate, contactFields), sessionType)
 					: await createCandidateAction(buildCreateCandidateInput(schema, contactFields), sessionType);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -170,7 +170,7 @@ export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessi
 
 		startTransition(async () => {
 			const result = await deleteCandidateAction(candidateId, sessionType);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -181,7 +181,7 @@ export const CandidateForm = ({ onSuccess, onError, onCancel, candidateId, sessi
 		if (candidateId) {
 			startTransition(async () => {
 				const result = await getCandidateAction(candidateId, sessionType);
-				handleServiceResult(result, {
+				handleResult(result, {
 					onSuccess: (data) => {
 						setCandidate(data);
 						setFormSchema((previousSchema) => {

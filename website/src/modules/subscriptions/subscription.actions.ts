@@ -2,7 +2,7 @@
 
 import { SubscriptionPaymentMethod } from '@/generated/prisma/enums';
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
 import {
 	cancelContributorSubscription,
 	createManageSubscriptionsSession,
@@ -11,7 +11,9 @@ import {
 import { cancelSubscriptionSchema, subscriptionIdSchema, updateSubscriptionAmountSchema } from './subscription.schemas';
 import { cancelBankTransfer, getOwnedSubscriptionPaymentMethod, updateBankTransferAmount } from './subscription.service';
 
-export const updateSubscriptionAmountAction = async (input: unknown) => {
+export const updateSubscriptionAmountAction = async (
+	input: unknown,
+): Promise<Result<{ amount: number; currency: string }>> => {
 	const ownership = await resolveOwnedSubscriptionPaymentMethod(input);
 	if (!ownership.success) {
 		return ownership;
@@ -39,7 +41,7 @@ export const updateSubscriptionAmountAction = async (input: unknown) => {
 	});
 };
 
-export const createUpdatePaymentMethodSessionAction = async (input: unknown) => {
+export const createUpdatePaymentMethodSessionAction = async (input: unknown): Promise<Result<string>> => {
 	const ownership = await resolveOwnedSubscriptionPaymentMethod(input);
 	if (!ownership.success) {
 		return ownership;
@@ -58,7 +60,7 @@ export const createUpdatePaymentMethodSessionAction = async (input: unknown) => 
 	});
 };
 
-export const cancelSubscriptionAction = async (input: unknown) => {
+export const cancelSubscriptionAction = async (input: unknown): Promise<Result<void>> => {
 	const parsed = cancelSubscriptionSchema.safeParse(input);
 	if (!parsed.success) {
 		return resultFail('Invalid cancellation reason');

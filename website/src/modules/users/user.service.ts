@@ -1,5 +1,5 @@
 import { ProgramPermission, UserRole } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	createFirebaseUserByEmail,
 	deleteFirebaseUserByUidIfExists,
@@ -18,7 +18,7 @@ import type {
 	UserTableViewRow,
 } from './user.types';
 
-export const getUser = async (actorUserId: string, userId: string): Promise<ServiceResult<UserPayload>> => {
+export const getUser = async (actorUserId: string, userId: string): Promise<Result<UserPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(actorUserId);
 		if (!isAdminResult.success) {
@@ -46,7 +46,7 @@ export const getUser = async (actorUserId: string, userId: string): Promise<Serv
 	}
 };
 
-export const getUserOptions = async (actorUserId: string): Promise<ServiceResult<{ id: string; name: string }[]>> => {
+export const getUserOptions = async (actorUserId: string): Promise<Result<{ id: string; name: string }[]>> => {
 	try {
 		const isAdminResult = await isAdmin(actorUserId);
 		if (!isAdminResult.success) {
@@ -64,7 +64,7 @@ export const getUserOptions = async (actorUserId: string): Promise<ServiceResult
 export const getPaginatedUserTableView = async (
 	actorUserId: string,
 	query: UserTableQuery,
-): Promise<ServiceResult<UserPaginatedTableView>> => {
+): Promise<Result<UserPaginatedTableView>> => {
 	try {
 		const isAdminResult = await isAdmin(actorUserId);
 		if (!isAdminResult.success) {
@@ -95,7 +95,7 @@ export const getPaginatedUserTableView = async (
 	}
 };
 
-export const getCurrentUserSession = async (firebaseAuthUserId: string): Promise<ServiceResult<UserSession>> => {
+export const getCurrentUserSession = async (firebaseAuthUserId: string): Promise<Result<UserSession>> => {
 	try {
 		const user = await userRepository.findUserSessionByFirebaseAuthUserId(firebaseAuthUserId);
 		if (!user) {
@@ -150,7 +150,7 @@ export const getCurrentUserSession = async (firebaseAuthUserId: string): Promise
 	}
 };
 
-export const getUserStripeCheckoutContext = async (userId: string): Promise<ServiceResult<UserStripeCheckoutContext>> => {
+export const getUserStripeCheckoutContext = async (userId: string): Promise<Result<UserStripeCheckoutContext>> => {
 	try {
 		const user = await userRepository.findUserStripeCheckoutContext(userId);
 		if (!user) {
@@ -171,7 +171,7 @@ export const getUserStripeCheckoutContext = async (userId: string): Promise<Serv
 	}
 };
 
-export const getUserContactIdByAccountId = async (accountId: string): Promise<ServiceResult<string | null>> => {
+export const getUserContactIdByAccountId = async (accountId: string): Promise<Result<string | null>> => {
 	try {
 		const user = await userRepository.findUserContactIdByAccountId(accountId);
 
@@ -183,7 +183,7 @@ export const getUserContactIdByAccountId = async (accountId: string): Promise<Se
 	}
 };
 
-export const isAdmin = async (userId: string): Promise<ServiceResult<true>> => {
+export const isAdmin = async (userId: string): Promise<Result<true>> => {
 	const roleResult = await getUserRole(userId);
 	if (!roleResult.success) {
 		return roleResult;
@@ -192,7 +192,7 @@ export const isAdmin = async (userId: string): Promise<ServiceResult<true>> => {
 	return isAdminRole(roleResult.data) ? resultOk(true) : resultFail('Permission denied');
 };
 
-export const getUserRole = async (userId: string): Promise<ServiceResult<UserRole>> => {
+export const getUserRole = async (userId: string): Promise<Result<UserRole>> => {
 	try {
 		const user = await userRepository.findUserRole(userId);
 		if (!user) {
@@ -207,7 +207,7 @@ export const getUserRole = async (userId: string): Promise<ServiceResult<UserRol
 	}
 };
 
-export const getActiveOrganizationId = async (userId: string): Promise<ServiceResult<string>> => {
+export const getActiveOrganizationId = async (userId: string): Promise<Result<string>> => {
 	try {
 		const user = await userRepository.findActiveOrganizationIdByUserId(userId);
 
@@ -219,7 +219,7 @@ export const getActiveOrganizationId = async (userId: string): Promise<ServiceRe
 	}
 };
 
-export const isUserEmailAvailable = async (email: string): Promise<ServiceResult<boolean>> => {
+export const isUserEmailAvailable = async (email: string): Promise<Result<boolean>> => {
 	try {
 		return resultOk(!(await userRepository.findContactByEmail(email.trim().toLowerCase())));
 	} catch (error) {
@@ -229,7 +229,7 @@ export const isUserEmailAvailable = async (email: string): Promise<ServiceResult
 	}
 };
 
-export const createUser = async (actorUserId: string, input: CreateUserInput): Promise<ServiceResult<UserPayload>> => {
+export const createUser = async (actorUserId: string, input: CreateUserInput): Promise<Result<UserPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(actorUserId);
 		if (!isAdminResult.success) {
@@ -309,7 +309,7 @@ export const createPublicOnboardingUser = async (input: {
 	firstName: string;
 	lastName: string;
 	organizationId: string;
-}): Promise<ServiceResult<{ userId: string }>> => {
+}): Promise<Result<{ userId: string }>> => {
 	try {
 		const uniquenessResult = await validateEmailUniqueness(input.email);
 		if (!uniquenessResult.success) {
@@ -368,7 +368,7 @@ export const createPublicOnboardingUser = async (input: {
 	}
 };
 
-export const updateUser = async (actorUserId: string, input: UpdateUserInput): Promise<ServiceResult<UserPayload>> => {
+export const updateUser = async (actorUserId: string, input: UpdateUserInput): Promise<Result<UserPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(actorUserId);
 		if (!isAdminResult.success) {
@@ -413,7 +413,7 @@ export const updateUser = async (actorUserId: string, input: UpdateUserInput): P
 	}
 };
 
-export const updateUserSelf = async (userId: string, input: UpdateUserSelfInput): Promise<ServiceResult<UserPayload>> => {
+export const updateUserSelf = async (userId: string, input: UpdateUserSelfInput): Promise<Result<UserPayload>> => {
 	try {
 		const existingUser = await userRepository.findUserForSelfUpdate(userId);
 		if (!existingUser) {
@@ -442,7 +442,7 @@ export const updateUserSelf = async (userId: string, input: UpdateUserSelfInput)
 	}
 };
 
-export const deleteUser = async (actorUserId: string, targetUserId: string): Promise<ServiceResult<void>> => {
+export const deleteUser = async (actorUserId: string, targetUserId: string): Promise<Result<void>> => {
 	try {
 		const isAdminResult = await isAdmin(actorUserId);
 		if (!isAdminResult.success) {
@@ -477,7 +477,7 @@ export const deleteUser = async (actorUserId: string, targetUserId: string): Pro
 	}
 };
 
-const validateEmailUniqueness = async (email: string, existingContactId?: string): Promise<ServiceResult<void>> => {
+const validateEmailUniqueness = async (email: string, existingContactId?: string): Promise<Result<void>> => {
 	const emailConflict = await userRepository.findContactByEmail(email);
 	if (emailConflict && emailConflict.id !== existingContactId) {
 		return resultFail('A user with this email already exists.');

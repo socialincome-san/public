@@ -1,6 +1,6 @@
 import { CountryCode, Gender, type Profile } from '@/generated/prisma/enums';
 import type { Session } from '@/lib/firebase/current-account';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import {
 	createFirebaseUserByPhoneNumber,
@@ -18,7 +18,7 @@ import type {
 	CandidatesTableViewRow,
 } from './candidate.types';
 
-export const getCandidate = async (session: Session, candidateId: string): Promise<ServiceResult<CandidatePayload>> => {
+export const getCandidate = async (session: Session, candidateId: string): Promise<Result<CandidatePayload>> => {
 	if (session.type === 'contributor') {
 		return resultFail('Permission denied');
 	}
@@ -47,7 +47,7 @@ export const getCandidate = async (session: Session, candidateId: string): Promi
 export const getPaginatedCandidateTableView = async (
 	userId: string,
 	query: CandidatesTableQuery,
-): Promise<ServiceResult<CandidatesPaginatedTableView>> => {
+): Promise<Result<CandidatesPaginatedTableView>> => {
 	const adminResult = await isAdmin(userId);
 	if (!adminResult.success) {
 		return resultFail(adminResult.error);
@@ -59,13 +59,13 @@ export const getPaginatedCandidateTableView = async (
 export const getPaginatedCandidateTableViewByLocalPartner = async (
 	localPartnerId: string,
 	query: CandidatesTableQuery,
-): Promise<ServiceResult<CandidatesPaginatedTableView>> => getPaginatedCandidates(query, localPartnerId);
+): Promise<Result<CandidatesPaginatedTableView>> => getPaginatedCandidates(query, localPartnerId);
 
 export const getCandidateCount = async (
 	focuses?: string[],
 	profiles?: Profile[],
 	countryId?: string | null,
-): Promise<ServiceResult<{ count: number }>> => {
+): Promise<Result<{ count: number }>> => {
 	try {
 		let countryCode: CountryCode | null = null;
 		if (countryId) {
@@ -86,7 +86,7 @@ export const getCandidateCount = async (
 	}
 };
 
-export const exportCandidatesCsv = async (session: Session): Promise<ServiceResult<string>> => {
+export const exportCandidatesCsv = async (session: Session): Promise<Result<string>> => {
 	if (session.type === 'contributor') {
 		return resultFail('Permission denied');
 	}
@@ -143,10 +143,7 @@ export const exportCandidatesCsv = async (session: Session): Promise<ServiceResu
 	}
 };
 
-export const createCandidate = async (
-	session: Session,
-	input: CandidateCreateInput,
-): Promise<ServiceResult<CandidatePayload>> => {
+export const createCandidate = async (session: Session, input: CandidateCreateInput): Promise<Result<CandidatePayload>> => {
 	if (session.type === 'contributor') {
 		return resultFail('Permission denied');
 	}
@@ -195,10 +192,7 @@ export const createCandidate = async (
 	}
 };
 
-export const updateCandidate = async (
-	session: Session,
-	input: CandidateUpdateInput,
-): Promise<ServiceResult<CandidatePayload>> => {
+export const updateCandidate = async (session: Session, input: CandidateUpdateInput): Promise<Result<CandidatePayload>> => {
 	if (session.type === 'contributor') {
 		return resultFail('Permission denied');
 	}
@@ -270,7 +264,7 @@ export const updateCandidate = async (
 	}
 };
 
-export const deleteCandidate = async (session: Session, candidateId: string): Promise<ServiceResult<{ id: string }>> => {
+export const deleteCandidate = async (session: Session, candidateId: string): Promise<Result<{ id: string }>> => {
 	if (session.type === 'contributor') {
 		return resultFail('Permission denied');
 	}
@@ -311,7 +305,7 @@ export const deleteCandidate = async (session: Session, candidateId: string): Pr
 	}
 };
 
-export const importCandidatesCsv = async (session: Session, file: File): Promise<ServiceResult<{ created: number }>> => {
+export const importCandidatesCsv = async (session: Session, file: File): Promise<Result<{ created: number }>> => {
 	try {
 		const rows = parseCsvText(await file.text());
 		const candidates: CandidateCreateInput[] = [];
@@ -365,7 +359,7 @@ export const assignRandomCandidatesToProgram = async (
 	countryCode: CountryCode,
 	focuses?: string[],
 	profiles?: Profile[],
-): Promise<ServiceResult<{ assigned: number }>> => {
+): Promise<Result<{ assigned: number }>> => {
 	try {
 		const candidates = await candidateRepository.findCandidateIdsForAssignment(focuses, profiles, countryCode);
 		if (candidates.length < amount) {
@@ -393,7 +387,7 @@ export const assignRandomCandidatesToProgram = async (
 const getPaginatedCandidates = async (
 	query: CandidatesTableQuery,
 	localPartnerId?: string,
-): Promise<ServiceResult<CandidatesPaginatedTableView>> => {
+): Promise<Result<CandidatesPaginatedTableView>> => {
 	try {
 		const country = Object.values(CountryCode).find((value) => value === query.country?.trim());
 		const gender = Object.values(Gender).find((value) => value === query.gender?.trim());
@@ -459,7 +453,7 @@ const getPaginatedCandidates = async (
 	}
 };
 
-const validateCandidateAccess = async (session: Session, localPartnerId: string): Promise<ServiceResult<true>> => {
+const validateCandidateAccess = async (session: Session, localPartnerId: string): Promise<Result<true>> => {
 	if (session.type === 'user') {
 		return isAdmin(session.id);
 	}
@@ -469,7 +463,7 @@ const validateCandidateAccess = async (session: Session, localPartnerId: string)
 		: resultFail('Permission denied');
 };
 
-const validateCandidateCreateUniqueness = async (input: CandidateCreateInput): Promise<ServiceResult<void>> => {
+const validateCandidateCreateUniqueness = async (input: CandidateCreateInput): Promise<Result<void>> => {
 	if (input.contact.phone && input.paymentInformation.phone && input.contact.phone === input.paymentInformation.phone) {
 		return resultFail('Contact phone and payment phone must be different.');
 	}
@@ -495,7 +489,7 @@ const validateCandidateCreateUniqueness = async (input: CandidateCreateInput): P
 const validateCandidateUpdateUniqueness = async (
 	input: CandidateUpdateInput,
 	existing: NonNullable<Awaited<ReturnType<typeof candidateRepository.findCandidateForUpdate>>>,
-): Promise<ServiceResult<void>> => {
+): Promise<Result<void>> => {
 	if (input.contact.phone && input.paymentInformation.phone && input.contact.phone === input.paymentInformation.phone) {
 		return resultFail('Contact phone and payment phone must be different.');
 	}
@@ -578,7 +572,7 @@ const compensateFirebaseChange = async (
 	}
 };
 
-const mapCsvRowToCandidate = (rowNumber: number, row: Record<string, string>): ServiceResult<CandidateCreateInput> => {
+const mapCsvRowToCandidate = (rowNumber: number, row: Record<string, string>): Result<CandidateCreateInput> => {
 	if (!row.firstName || !row.lastName) {
 		console.warn('Candidate CSV row is missing a name', { rowNumber });
 

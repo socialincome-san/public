@@ -1,4 +1,4 @@
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { validateRequest } from 'twilio';
 import { getTwilioClient } from './twilio-client.integration';
 
@@ -26,7 +26,7 @@ export type TwilioMessageStatus = {
 	errorMessage: string | null;
 };
 
-export const listTwilioContent = async (): Promise<ServiceResult<TwilioContentSummary[]>> => {
+export const listTwilioContent = async (): Promise<Result<TwilioContentSummary[]>> => {
 	const clientResult = await getTwilioClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -56,7 +56,7 @@ export const listTwilioContent = async (): Promise<ServiceResult<TwilioContentSu
 	}
 };
 
-export const getTwilioContent = async (sid: string): Promise<ServiceResult<TwilioContentDetail>> => {
+export const getTwilioContent = async (sid: string): Promise<Result<TwilioContentDetail>> => {
 	const clientResult = await getTwilioClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -93,7 +93,7 @@ export const sendTwilioContentMessage = async (input: {
 	contentVariables: Record<string, string>;
 	to: string;
 	statusCallback?: string;
-}): Promise<ServiceResult<{ sid: string }>> => {
+}): Promise<Result<{ sid: string }>> => {
 	const clientResult = await getTwilioClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -116,7 +116,7 @@ export const sendTwilioContentMessage = async (input: {
 	}
 };
 
-export const getTwilioMessageStatus = async (sid: string): Promise<ServiceResult<TwilioMessageStatus>> => {
+export const getTwilioMessageStatus = async (sid: string): Promise<Result<TwilioMessageStatus>> => {
 	const clientResult = await getTwilioClient();
 	if (!clientResult.success) {
 		return clientResult;
@@ -141,7 +141,7 @@ export const validateTwilioWebhook = async (input: {
 	signature: string;
 	url: string;
 	params: Record<string, string>;
-}): Promise<ServiceResult<boolean>> => {
+}): Promise<Result<boolean>> => {
 	const authToken = process.env.TWILIO_AUTH_TOKEN;
 	if (!authToken) {
 		return resultFail('Twilio webhook authentication is not configured', 403);

@@ -1,7 +1,7 @@
-import type { ServiceResult } from './service-result';
+import type { Result } from './result';
 
-export const handleServiceResult = <T>(
-	result: ServiceResult<T>,
+export const handleResult = <T>(
+	result: Result<T>,
 	handlers: {
 		onSuccess?: (data: T) => void;
 		onError?: (error: string) => void;

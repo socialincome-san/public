@@ -2,8 +2,16 @@
 
 import { getSessionByType } from '@/lib/firebase/current-account';
 import { getCurrentSurvey } from '@/lib/firebase/current-survey';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
 import { getEditableRecipientOptions } from '@/modules/recipients/recipient.service';
+import type { RecipientOption } from '@/modules/recipients/recipient.types';
+import type {
+	SurveyGenerationPreviewResult,
+	SurveyGenerationResult,
+	SurveyImpactFilterOptions,
+	SurveyPayload,
+	SurveyWithRecipient,
+} from '@/modules/surveys/survey.types';
 import { revalidatePath } from 'next/cache';
 import {
 	surveyCreateSchema,
@@ -23,7 +31,7 @@ import {
 	updateSurvey,
 } from './survey.service';
 
-export const createSurveyAction = async (input: unknown) => {
+export const createSurveyAction = async (input: unknown): Promise<Result<SurveyPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -39,7 +47,7 @@ export const createSurveyAction = async (input: unknown) => {
 	return result;
 };
 
-export const getSurveyAction = async (surveyId: unknown) => {
+export const getSurveyAction = async (surveyId: unknown): Promise<Result<SurveyPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -52,7 +60,7 @@ export const getSurveyAction = async (surveyId: unknown) => {
 	return getSurvey(sessionResult.data.id, surveyIdResult.data);
 };
 
-export const updateSurveyAction = async (input: unknown) => {
+export const updateSurveyAction = async (input: unknown): Promise<Result<SurveyPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -68,7 +76,7 @@ export const updateSurveyAction = async (input: unknown) => {
 	return result;
 };
 
-export const getSurveyRecipientOptionsAction = async () => {
+export const getSurveyRecipientOptionsAction = async (): Promise<Result<RecipientOption[]>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -77,7 +85,7 @@ export const getSurveyRecipientOptionsAction = async () => {
 	return getEditableRecipientOptions(sessionResult.data.id);
 };
 
-export const previewSurveyGenerationAction = async () => {
+export const previewSurveyGenerationAction = async (): Promise<Result<SurveyGenerationPreviewResult>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -86,7 +94,7 @@ export const previewSurveyGenerationAction = async () => {
 	return previewSurveyGeneration(sessionResult.data.id);
 };
 
-export const generateSurveysAction = async () => {
+export const generateSurveysAction = async (): Promise<Result<SurveyGenerationResult>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -98,7 +106,7 @@ export const generateSurveysAction = async () => {
 	return result;
 };
 
-export const getSurveyByIdAndRecipientAction = async (input: unknown) => {
+export const getSurveyByIdAndRecipientAction = async (input: unknown): Promise<Result<SurveyWithRecipient>> => {
 	const inputResult = surveyPublicLookupSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid survey lookup');
@@ -111,7 +119,7 @@ export const getSurveyByIdAndRecipientAction = async (input: unknown) => {
 	return getSurveyByIdAndRecipient(inputResult.data.surveyId, inputResult.data.recipientId);
 };
 
-export const saveSurveyChangesAction = async (input: unknown) => {
+export const saveSurveyChangesAction = async (input: unknown): Promise<Result<SurveyPayload>> => {
 	const inputResult = surveySaveActionSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -124,4 +132,5 @@ export const saveSurveyChangesAction = async (input: unknown) => {
 	return saveSurveyChanges(inputResult.data.surveyId, inputResult.data.input);
 };
 
-export const getSurveyImpactFilterOptionsAction = async () => getSurveyImpactFilterOptions();
+export const getSurveyImpactFilterOptionsAction = async (): Promise<Result<SurveyImpactFilterOptions>> =>
+	getSurveyImpactFilterOptions();

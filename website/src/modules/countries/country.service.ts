@@ -1,6 +1,6 @@
 import { CountryCode, type NetworkTechnology, type SanctionRegime } from '@/generated/prisma/enums';
 import { fetchWorldBankIndicator } from '@/integrations/world-bank/world-bank.integration';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { getUnassignedRecipientCountries } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
@@ -8,13 +8,13 @@ import * as countryRepository from './country.repository';
 import type { CountryCreateInput, CountryUpdateInput } from './country.schemas';
 import {
 	CountryCondition,
+	NETWORK_TECH_LABELS,
 	type CountryPaginatedTableView,
 	type CountryPayload,
 	type CountryStatisticRow,
 	type CountryTableQuery,
 	type CountryTableViewRow,
 	type MobileMoneyProviderRef,
-	NETWORK_TECH_LABELS,
 	type ProgramCountryFeasibilityRow,
 	type ProgramCountryFeasibilityView,
 	type PublicCountryStats,
@@ -58,7 +58,7 @@ type CountryRecord = NonNullable<Awaited<ReturnType<typeof countryRepository.fin
 type CountryStatisticKey = (typeof COUNTRY_STATISTIC_DEFINITIONS)[number]['key'];
 type CountryStatisticValueMap = Record<CountryStatisticKey, number | null>;
 
-export const getCountry = async (userId: string, countryId: string): Promise<ServiceResult<CountryPayload>> => {
+export const getCountry = async (userId: string, countryId: string): Promise<Result<CountryPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -78,7 +78,7 @@ export const getCountry = async (userId: string, countryId: string): Promise<Ser
 	}
 };
 
-export const getCountryIsoCode = async (countryId: string): Promise<ServiceResult<CountryCode>> => {
+export const getCountryIsoCode = async (countryId: string): Promise<Result<CountryCode>> => {
 	try {
 		const country = await countryRepository.findCountryById(countryId);
 
@@ -93,7 +93,7 @@ export const getCountryIsoCode = async (countryId: string): Promise<ServiceResul
 export const getPaginatedCountryTableView = async (
 	userId: string,
 	query: CountryTableQuery,
-): Promise<ServiceResult<CountryPaginatedTableView>> => {
+): Promise<Result<CountryPaginatedTableView>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -122,7 +122,7 @@ export const getPaginatedCountryTableView = async (
 	}
 };
 
-export const getProgramCountryFeasibility = async (): Promise<ServiceResult<ProgramCountryFeasibilityView>> => {
+export const getProgramCountryFeasibility = async (): Promise<Result<ProgramCountryFeasibilityView>> => {
 	try {
 		const [countries, candidatesResult] = await Promise.all([
 			countryRepository.findCountriesForFeasibility(),
@@ -245,7 +245,7 @@ export const getProgramCountryFeasibility = async (): Promise<ServiceResult<Prog
 	}
 };
 
-export const getPublicCountryStatsByIsoCode = async (isoCode: string): Promise<ServiceResult<PublicCountryStats>> => {
+export const getPublicCountryStatsByIsoCode = async (isoCode: string): Promise<Result<PublicCountryStats>> => {
 	const normalizedIsoCode = isoCode.trim().toUpperCase();
 	if (!isValidCountryCode(normalizedIsoCode)) {
 		return resultFail(normalizedIsoCode ? 'Country not found' : 'Missing isoCode');
@@ -261,7 +261,7 @@ export const getPublicCountryStatsByIsoCode = async (isoCode: string): Promise<S
 	return countryStats ? resultOk(countryStats) : resultFail('Country not found');
 };
 
-export const getPublicCountryStatsByIsoCodes = async (isoCodes: string[]): Promise<ServiceResult<PublicCountryStatsMap>> => {
+export const getPublicCountryStatsByIsoCodes = async (isoCodes: string[]): Promise<Result<PublicCountryStatsMap>> => {
 	try {
 		const normalizedIsoCodes = [
 			...new Set(isoCodes.map((isoCode) => isoCode.trim().toUpperCase()).filter(isValidCountryCode)),
@@ -290,7 +290,7 @@ export const getPublicCountryStatsByIsoCodes = async (isoCodes: string[]): Promi
 export const getCountryStatisticsComparison = async (
 	countryCode: CountryCode,
 	visitorCountryCode: CountryCode,
-): Promise<ServiceResult<CountryStatisticRow[]>> => {
+): Promise<Result<CountryStatisticRow[]>> => {
 	const [countryValuesResult, visitorValuesResult] = await Promise.all([
 		loadCountryStatisticValues(countryCode),
 		loadCountryStatisticValues(visitorCountryCode),
@@ -323,7 +323,7 @@ export const getCountryStatisticsComparison = async (
 	return resultOk(rows);
 };
 
-export const createCountry = async (userId: string, input: CountryCreateInput): Promise<ServiceResult<CountryPayload>> => {
+export const createCountry = async (userId: string, input: CountryCreateInput): Promise<Result<CountryPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -343,7 +343,7 @@ export const createCountry = async (userId: string, input: CountryCreateInput): 
 	}
 };
 
-export const updateCountry = async (userId: string, input: CountryUpdateInput): Promise<ServiceResult<CountryPayload>> => {
+export const updateCountry = async (userId: string, input: CountryUpdateInput): Promise<Result<CountryPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -369,7 +369,7 @@ export const updateCountry = async (userId: string, input: CountryUpdateInput): 
 	}
 };
 
-export const deleteCountry = async (userId: string, countryId: string): Promise<ServiceResult<{ id: string }>> => {
+export const deleteCountry = async (userId: string, countryId: string): Promise<Result<{ id: string }>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
 		if (!isAdminResult.success) {
@@ -412,7 +412,7 @@ const toCountryPayload = (country: CountryRecord): CountryPayload => ({
 	networkSourceLink: country.networkSourceLink,
 });
 
-const loadCountryStatisticValues = async (countryCode: CountryCode): Promise<ServiceResult<CountryStatisticValueMap>> => {
+const loadCountryStatisticValues = async (countryCode: CountryCode): Promise<Result<CountryStatisticValueMap>> => {
 	const indicatorResults = await Promise.all(
 		COUNTRY_STATISTIC_DEFINITIONS.map(async (definition) => ({
 			key: definition.key,

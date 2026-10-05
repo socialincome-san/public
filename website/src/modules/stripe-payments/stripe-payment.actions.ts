@@ -2,7 +2,12 @@
 
 import { getSessionByType } from '@/lib/firebase/current-account';
 import { getOptionalContributor } from '@/lib/firebase/current-contributor';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
+import type { ContributorRecord } from '@/modules/contributors/contributor.types';
+import type {
+	StripeCheckoutOnboardingPrefill,
+	StripeEmbeddedCheckoutResult,
+} from '@/modules/stripe-payments/stripe-payment.types';
 import {
 	portalProgramDonationCheckoutSchema,
 	stripeCheckoutSessionIdSchema,
@@ -18,7 +23,7 @@ import {
 	updateContributorReferralAfterCheckout,
 } from './stripe-payment.service';
 
-export const createPortalProgramDonationCheckoutAction = async (input: unknown) => {
+export const createPortalProgramDonationCheckoutAction = async (input: unknown): Promise<Result<string>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -32,7 +37,7 @@ export const createPortalProgramDonationCheckoutAction = async (input: unknown) 
 	return createPortalProgramDonationCheckout(sessionResult.data.id, parsed.data);
 };
 
-export const createStripeEmbeddedCheckoutAction = async (input: unknown) => {
+export const createStripeEmbeddedCheckoutAction = async (input: unknown): Promise<Result<StripeEmbeddedCheckoutResult>> => {
 	const parsed = stripeEmbeddedCheckoutActionSchema.safeParse(input);
 	if (!parsed.success) {
 		return resultFail('Invalid Stripe checkout input');
@@ -48,7 +53,9 @@ export const createStripeEmbeddedCheckoutAction = async (input: unknown) => {
 	});
 };
 
-export const getStripeCheckoutOnboardingPrefillAction = async (sessionId: unknown) => {
+export const getStripeCheckoutOnboardingPrefillAction = async (
+	sessionId: unknown,
+): Promise<Result<StripeCheckoutOnboardingPrefill>> => {
 	const parsed = stripeCheckoutSessionIdSchema.safeParse(sessionId);
 	if (!parsed.success) {
 		return resultFail('Missing checkout session id');
@@ -57,7 +64,7 @@ export const getStripeCheckoutOnboardingPrefillAction = async (sessionId: unknow
 	return getCheckoutOnboardingPrefill(parsed.data);
 };
 
-export const updateContributorAfterWizardCheckoutAction = async (input: unknown) => {
+export const updateContributorAfterWizardCheckoutAction = async (input: unknown): Promise<Result<ContributorRecord>> => {
 	const parsed = updateContributorAfterCheckoutSchema.safeParse(input);
 	if (!parsed.success) {
 		return resultFail('Invalid contributor checkout update');
@@ -66,7 +73,9 @@ export const updateContributorAfterWizardCheckoutAction = async (input: unknown)
 	return updateContributorAfterCheckout(parsed.data);
 };
 
-export const updateContributorReferralAfterWizardCheckoutAction = async (input: unknown) => {
+export const updateContributorReferralAfterWizardCheckoutAction = async (
+	input: unknown,
+): Promise<Result<ContributorRecord>> => {
 	const parsed = updateContributorReferralAfterCheckoutSchema.safeParse(input);
 	if (!parsed.success) {
 		return resultFail('Invalid contributor referral update');

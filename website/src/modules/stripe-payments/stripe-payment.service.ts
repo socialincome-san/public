@@ -35,7 +35,7 @@ import {
 	type StripeApiEvent,
 	type StripeApiSubscription,
 } from '@/integrations/stripe/stripe.integration';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { isValidCurrency } from '@/lib/types/currency';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
@@ -102,7 +102,7 @@ const DONATION_CUSTOM_AMOUNT_MAX = 1_000_000;
 export const createPortalProgramDonationCheckout = async (
 	userId: string,
 	input: PortalProgramDonationCheckoutInput,
-): Promise<ServiceResult<string>> => {
+): Promise<Result<string>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success || !canCreatePortalProgramDonation(accessResult.data, input.programId)) {
@@ -175,7 +175,7 @@ export const createPortalProgramDonationCheckout = async (
 
 export const createEmbeddedCheckoutSession = async (
 	input: StripeEmbeddedCheckoutSessionInput,
-): Promise<ServiceResult<StripeEmbeddedCheckoutResult>> => {
+): Promise<Result<StripeEmbeddedCheckoutResult>> => {
 	try {
 		const resolved = resolveWizardEmbeddedCheckout(input.wizardContext, input.currency);
 		if (!resolved.success) {
@@ -232,9 +232,7 @@ export const createEmbeddedCheckoutSession = async (
 	}
 };
 
-export const getCheckoutOnboardingPrefill = async (
-	sessionId: string,
-): Promise<ServiceResult<StripeCheckoutOnboardingPrefill>> => {
+export const getCheckoutOnboardingPrefill = async (sessionId: string): Promise<Result<StripeCheckoutOnboardingPrefill>> => {
 	try {
 		const sessionResult = await retrieveStripeCheckoutSession(sessionId);
 		if (!sessionResult.success) {
@@ -273,7 +271,7 @@ export const getCheckoutOnboardingPrefill = async (
 
 export const updateContributorAfterCheckout = async (
 	input: UpdateContributorAfterCheckoutInput,
-): Promise<ServiceResult<UpdateContributorAfterCheckoutResult>> => {
+): Promise<Result<UpdateContributorAfterCheckoutResult>> => {
 	try {
 		const { stripeCheckoutSessionId, user } = input;
 		const sessionResult = await retrieveStripeCheckoutSession(stripeCheckoutSessionId);
@@ -350,7 +348,7 @@ export const updateContributorAfterCheckout = async (
 
 export const updateContributorReferralAfterCheckout = async (
 	input: UpdateContributorReferralAfterCheckoutInput,
-): Promise<ServiceResult<UpdateContributorReferralAfterCheckoutResult>> => {
+): Promise<Result<UpdateContributorReferralAfterCheckoutResult>> => {
 	try {
 		const sessionResult = await retrieveStripeCheckoutSession(input.stripeCheckoutSessionId);
 		if (!sessionResult.success) {
@@ -398,7 +396,7 @@ export const updateContributorReferralAfterCheckout = async (
 
 export const createManageSubscriptionsSession = async (
 	input: CreateManageSubscriptionsSessionInput,
-): Promise<ServiceResult<StripeBillingPortalSessionUrl>> => {
+): Promise<Result<StripeBillingPortalSessionUrl>> => {
 	try {
 		if (!input.stripeCustomerId) {
 			return resultFail('Missing Stripe customer ID');
@@ -422,7 +420,7 @@ export const createManageSubscriptionsSession = async (
 
 export const applyCustomerDefaultPaymentMethodToOwnedSubscription = async (
 	input: ApplyCustomerDefaultPaymentMethodInput,
-): Promise<ServiceResult<void>> => {
+): Promise<Result<void>> => {
 	try {
 		if (!input.stripeCustomerId) {
 			return resultFail('Missing Stripe customer ID');
@@ -451,7 +449,7 @@ export const applyCustomerDefaultPaymentMethodToOwnedSubscription = async (
 
 export const updateContributorSubscriptionAmount = async (
 	input: UpdateContributorSubscriptionAmountInput,
-): Promise<ServiceResult<{ amount: number; currency: string }>> => {
+): Promise<Result<{ amount: number; currency: string }>> => {
 	try {
 		const { contributorId, subscriptionId, amount, coverTransactionCosts } = input;
 		if (!isSubscriptionAmountInRange(amount)) {
@@ -502,9 +500,7 @@ export const updateContributorSubscriptionAmount = async (
 	}
 };
 
-export const cancelContributorSubscription = async (
-	input: CancelContributorSubscriptionInput,
-): Promise<ServiceResult<void>> => {
+export const cancelContributorSubscription = async (input: CancelContributorSubscriptionInput): Promise<Result<void>> => {
 	try {
 		const subscription = await stripePaymentRepository.findOwnedStripeSubscription(
 			input.contributorId,
@@ -569,7 +565,7 @@ export const handleWebhookEvent = async (
 	body: string,
 	signature: string,
 	webhookSecret: string,
-): Promise<ServiceResult<StripeWebhookResult>> => {
+): Promise<Result<StripeWebhookResult>> => {
 	try {
 		const eventResult = constructStripeWebhookEvent(body, signature, webhookSecret);
 		if (!eventResult.success) {
@@ -586,7 +582,7 @@ export const handleWebhookEvent = async (
 
 export const getSubscriptionStripeDetails = async (
 	stripeSubscriptionId: string,
-): Promise<ServiceResult<StripeSubscriptionDetails | null>> => {
+): Promise<Result<StripeSubscriptionDetails | null>> => {
 	try {
 		const subscriptionResult = await retrieveStripeSubscription(stripeSubscriptionId, ['default_payment_method']);
 		if (!subscriptionResult.success) {
@@ -622,7 +618,7 @@ export const getSubscriptionStripeDetails = async (
 	}
 };
 
-const processWebhookEvent = async (event: StripeApiEvent): Promise<ServiceResult<StripeWebhookResult>> => {
+const processWebhookEvent = async (event: StripeApiEvent): Promise<Result<StripeWebhookResult>> => {
 	switch (event.type) {
 		case 'charge.succeeded':
 		case 'charge.updated':
@@ -691,7 +687,7 @@ const processWebhookEvent = async (event: StripeApiEvent): Promise<ServiceResult
 	}
 };
 
-const processChargeEvent = async (charge: StripeApiCharge): Promise<ServiceResult<StripeWebhookResult>> => {
+const processChargeEvent = async (charge: StripeApiCharge): Promise<Result<StripeWebhookResult>> => {
 	try {
 		const fullChargeResult = await retrieveStripeCharge(charge.id);
 		if (!fullChargeResult.success) {
@@ -815,9 +811,7 @@ const processChargeEvent = async (charge: StripeApiCharge): Promise<ServiceResul
 	}
 };
 
-const processSubscriptionEvent = async (
-	subscription: StripeApiSubscription,
-): Promise<ServiceResult<StripeWebhookResult>> => {
+const processSubscriptionEvent = async (subscription: StripeApiSubscription): Promise<Result<StripeWebhookResult>> => {
 	try {
 		const customerId = resolveStripeResourceId(subscription.customer);
 		if (!customerId) {
@@ -880,7 +874,7 @@ const resolveContributorForCharge = async (
 	stripeCustomer: StripeApiCustomer,
 	checkoutMetadata: CheckoutMetadata | null,
 ): Promise<
-	ServiceResult<
+	Result<
 		| { contributor: ContributorWithContact; isNewContributor: boolean; skipReason?: undefined }
 		| { skipReason: string; contributor?: undefined; isNewContributor?: undefined }
 	>
@@ -965,7 +959,7 @@ const syncStripeSubscriptionAmount = async (input: {
 	campaignId: string;
 	subscriptionId: string;
 	stripeSubscriptionId: string;
-}): Promise<ServiceResult<void>> => {
+}): Promise<Result<void>> => {
 	const upsertResult = await syncMappedStripeSubscription(input);
 	if (!upsertResult.success || !upsertResult.data) {
 		console.error(`${SLACK_ALERT}: Stripe subscription amount updated but database sync failed`, {
@@ -984,7 +978,7 @@ const syncMappedStripeSubscription = async (input: {
 	stripeSubscription: StripeApiSubscription;
 	contributorId: string;
 	campaignId: string;
-}): Promise<ServiceResult<{ id: string } | null>> => {
+}): Promise<Result<{ id: string } | null>> => {
 	const mapped = mapStripeSubscriptionFields(input.stripeSubscription);
 	if (!mapped) {
 		return resultOk(null);
@@ -1015,7 +1009,7 @@ const syncFromStripeSubscriptionEvent = async (input: {
 	stripeSubscription: StripeApiSubscription;
 	contributorId: string;
 	campaignId: string;
-}): Promise<ServiceResult<{ id: string } | null>> => {
+}): Promise<Result<{ id: string } | null>> => {
 	const lifecycle = mapStripeSubscriptionLifecycle(input.stripeSubscription);
 	if (!lifecycle) {
 		return resultOk(null);
@@ -1056,7 +1050,7 @@ const updateStripeSubscriptionUnitAmount = async (input: {
 	expectedCurrency: string;
 	unitAmount: number;
 	metadata?: Record<string, string>;
-}): Promise<ServiceResult<StripeApiSubscription>> => {
+}): Promise<Result<StripeApiSubscription>> => {
 	const retrieveResult = await retrieveStripeSubscription(input.stripeSubscriptionId);
 	if (!retrieveResult.success) {
 		return retrieveResult;
@@ -1115,9 +1109,7 @@ const updateStripeSubscriptionUnitAmount = async (input: {
 	});
 };
 
-const copyCustomerDefaultPaymentMethodToSubscriptions = async (
-	customer: StripeApiCustomer,
-): Promise<ServiceResult<void>> => {
+const copyCustomerDefaultPaymentMethodToSubscriptions = async (customer: StripeApiCustomer): Promise<Result<void>> => {
 	try {
 		const defaultPaymentMethodId = resolveStripeResourceId(customer.invoice_settings.default_payment_method);
 		if (!defaultPaymentMethodId) {
@@ -1162,7 +1154,7 @@ const voidOpenSubscriptionInvoices = async (stripeSubscriptionId: string): Promi
 	}
 };
 
-const resolveEmbeddedCheckoutReturnUrl = (returnPath: string | undefined): ServiceResult<string | undefined> => {
+const resolveEmbeddedCheckoutReturnUrl = (returnPath: string | undefined): Result<string | undefined> => {
 	if (!returnPath) {
 		return resultOk(undefined);
 	}
@@ -1195,7 +1187,7 @@ const createHostedCheckoutSession = async (input: {
 	source?: string;
 	stripeCustomerId?: string | null;
 	coverTransactionCosts?: boolean;
-}): Promise<ServiceResult<string>> => {
+}): Promise<Result<string>> => {
 	const checkoutResult = await createCheckoutSession({
 		...input,
 		successUrl: input.successUrl,
@@ -1223,7 +1215,7 @@ const createCheckoutSession = async (input: {
 	source?: string;
 	coverTransactionCosts?: boolean;
 	uiMode?: 'embedded_page';
-}): Promise<ServiceResult<{ sessionId: string; clientSecret: string | null; url: string | null }>> => {
+}): Promise<Result<{ sessionId: string; clientSecret: string | null; url: string | null }>> => {
 	const productId = input.recurring ? process.env.STRIPE_PRODUCT_RECURRING : process.env.STRIPE_PRODUCT_ONETIME;
 	if (!productId) {
 		return resultFail(input.recurring ? 'Missing STRIPE_PRODUCT_RECURRING' : 'Missing STRIPE_PRODUCT_ONETIME');
@@ -1335,7 +1327,7 @@ const splitContributorName = (fullName?: string | null): StripeContributorNamePa
 	};
 };
 
-const assertEmbeddedCheckoutSessionPaid = (session: StripeApiCheckoutSession): ServiceResult<void> => {
+const assertEmbeddedCheckoutSessionPaid = (session: StripeApiCheckoutSession): Result<void> => {
 	if (session.ui_mode !== 'embedded_page') {
 		return resultFail('Invalid checkout session type');
 	}
@@ -1351,10 +1343,7 @@ const assertEmbeddedCheckoutSessionPaid = (session: StripeApiCheckoutSession): S
 
 const normalizeCheckoutEmail = (email: string): string => email.trim().toLowerCase();
 
-const assertContributorEmailMatchesCheckout = (
-	session: StripeApiCheckoutSession,
-	userEmail: string,
-): ServiceResult<string> => {
+const assertContributorEmailMatchesCheckout = (session: StripeApiCheckoutSession, userEmail: string): Result<string> => {
 	const sessionEmail = session.customer_details?.email;
 	if (!sessionEmail) {
 		return resultOk(normalizeCheckoutEmail(userEmail));
@@ -1395,7 +1384,7 @@ const parseCheckoutCustomerDetails = (
 const resolveWizardEmbeddedCheckout = (
 	context: DonationWizardAmountContext,
 	currency?: string,
-): ServiceResult<{
+): Result<{
 	unitAmount: number;
 	recurring: boolean;
 	campaignId?: string;

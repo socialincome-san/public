@@ -109,6 +109,7 @@ unrelated migration.
 - Every runtime export must be an async function named `*Action`.
 - Action files must start with `'use server'`.
 - Exported action parameters must be typed as `unknown` or `FormData`.
+- Every exported action must declare `Promise<Result<T>>`.
 
 ## Services
 
@@ -116,8 +117,8 @@ unrelated migration.
   orchestration.
 - May call repositories and integrations.
 - Must not import Prisma directly.
-- Every exported function must declare `ServiceResult<T>` or
-  `Promise<ServiceResult<T>>`.
+- Every exported function must declare `Result<T>` or
+  `Promise<Result<T>>`.
 - `resultFail` messages must be stable and client-safe. Log raw errors
   server-side; never pass `JSON.stringify(error)` to `resultFail`.
 - Do not throw for expected business failures; return `resultFail`.
@@ -130,7 +131,7 @@ unrelated migration.
   permissions.
 - Do not create generic or base repositories.
 - Return raw persistence data; do not wrap repository results in
-  `ServiceResult`.
+  `Result`.
 - Exported functions use persistence verbs: `find*`, `create*`,
   `update*`, `delete*`, `remove*`, `count*`, or `group*`.
 - Use explicit Prisma `select`; never `include`.
@@ -140,7 +141,7 @@ unrelated migration.
 - Wrap external APIs only.
 - Must not access Prisma or import business modules.
 - Dependency direction is `modules -> integrations`, never the reverse.
-- Async exported operations return `Promise<ServiceResult<T>>`.
+- Async exported operations return `Promise<Result<T>>`.
 - Pure synchronous mappers may return raw values.
 
 ## Validation
@@ -209,6 +210,7 @@ Additional enforced contracts:
 - No cross-module deep imports (use the owning module service)
 - Provider SDKs only inside `src/integrations/**`
 - Action params typed as `unknown` / `FormData`
+- Exported actions declare `Promise<Result<T>>`
 - No Prisma `include` in repositories
 - No service throws for expected failures
 - `no-console` allowing only `warn`, `info`, and `error`

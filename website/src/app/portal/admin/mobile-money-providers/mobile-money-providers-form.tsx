@@ -3,7 +3,7 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { PAYOUT_PROCESS_OPTIONS } from '@/lib/payout-process-options';
-import { handleServiceResult } from '@/lib/service-result-client';
+import { handleResult } from '@/lib/result-client';
 import {
 	createMobileMoneyProviderAction,
 	deleteMobileMoneyProviderAction,
@@ -78,7 +78,7 @@ export default function MobileMoneyProvidersForm({
 				providerId && provider
 					? await updateMobileMoneyProviderAction(buildUpdateMobileMoneyProviderInput(schema, provider))
 					: await createMobileMoneyProviderAction(buildCreateMobileMoneyProviderInput(schema));
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -92,7 +92,7 @@ export default function MobileMoneyProvidersForm({
 
 		startTransition(async () => {
 			const result = await deleteMobileMoneyProviderAction(providerId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});

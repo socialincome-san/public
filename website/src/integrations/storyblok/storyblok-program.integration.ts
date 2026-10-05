@@ -1,5 +1,5 @@
 import type { Program } from '@/generated/storyblok/types/109655/storyblok-components';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { STORYBLOK_PROGRAMS_FOLDER } from '@/lib/storyblok/storyblok-paths';
 import type { ISbStoriesParams, ISbStoryData } from '@storyblok/js';
 import { fetchStoryblokStories } from './storyblok-content.integration';
@@ -7,7 +7,7 @@ import { fetchStoryblokStories } from './storyblok-content.integration';
 export const fetchStoryblokPrograms = async (
 	language: string,
 	version: ISbStoriesParams['version'] = 'published',
-): Promise<ServiceResult<ISbStoryData<Program>[]>> => {
+): Promise<Result<ISbStoryData<Program>[]>> => {
 	try {
 		const params: ISbStoriesParams = {
 			language,

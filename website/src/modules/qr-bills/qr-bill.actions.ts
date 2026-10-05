@@ -1,7 +1,14 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
+import type { ContributorRecord } from '@/modules/contributors/contributor.types';
+import type {
+	DownloadQrBillPdfResult,
+	QrBillDisplay,
+	QrBillOnboardingPrefill,
+	WizardQrBillResult,
+} from '@/modules/qr-bills/qr-bill.types';
 import { revalidatePath } from 'next/cache';
 import {
 	createWizardPendingContributionSchema,
@@ -23,7 +30,7 @@ import {
 	updateReferralAfterQrPayment,
 } from './qr-bill.service';
 
-export const createWizardQrBillAction = async (input: unknown) => {
+export const createWizardQrBillAction = async (input: unknown): Promise<Result<WizardQrBillResult>> => {
 	const parsed = createWizardQrBillSchema.safeParse(input);
 	if (!parsed.success) {
 		return resultFail('Invalid QR bill request');
@@ -32,7 +39,7 @@ export const createWizardQrBillAction = async (input: unknown) => {
 	return createWizardQrBill(parsed.data, await readOptionalContributorId());
 };
 
-export const createWizardPendingContributionAction = async (input: unknown) => {
+export const createWizardPendingContributionAction = async (input: unknown): Promise<Result<string>> => {
 	const parsed = createWizardPendingContributionSchema.safeParse(input);
 	if (!parsed.success) {
 		return resultFail('Invalid pending contribution request');
@@ -46,7 +53,7 @@ export const createWizardPendingContributionAction = async (input: unknown) => {
 	return result;
 };
 
-export const getQrOnboardingPrefillAction = async (input: unknown) => {
+export const getQrOnboardingPrefillAction = async (input: unknown): Promise<Result<QrBillOnboardingPrefill>> => {
 	const parsed = getQrOnboardingPrefillSchema.safeParse(input);
 	if (!parsed.success) {
 		return resultFail('Invalid QR onboarding request');
@@ -55,7 +62,7 @@ export const getQrOnboardingPrefillAction = async (input: unknown) => {
 	return getOnboardingPrefill(parsed.data);
 };
 
-export const updateContributorAfterWizardQrAction = async (input: unknown) => {
+export const updateContributorAfterWizardQrAction = async (input: unknown): Promise<Result<ContributorRecord>> => {
 	const parsed = updateContributorAfterQrPaymentSchema.safeParse(input);
 	if (!parsed.success) {
 		return resultFail('Invalid contributor QR update');
@@ -69,7 +76,7 @@ export const updateContributorAfterWizardQrAction = async (input: unknown) => {
 	return result;
 };
 
-export const updateContributorReferralAfterWizardQrAction = async (input: unknown) => {
+export const updateContributorReferralAfterWizardQrAction = async (input: unknown): Promise<Result<ContributorRecord>> => {
 	const parsed = updateContributorReferralAfterQrPaymentSchema.safeParse(input);
 	if (!parsed.success) {
 		return resultFail('Invalid contributor referral update');
@@ -83,7 +90,7 @@ export const updateContributorReferralAfterWizardQrAction = async (input: unknow
 	return result;
 };
 
-export const downloadQrBillPdfAction = async (input: unknown) => {
+export const downloadQrBillPdfAction = async (input: unknown): Promise<Result<DownloadQrBillPdfResult>> => {
 	const parsed = downloadWizardQrBillPdfSchema.safeParse(input);
 	if (!parsed.success) {
 		return resultFail('Invalid QR bill PDF request');
@@ -92,7 +99,7 @@ export const downloadQrBillPdfAction = async (input: unknown) => {
 	return downloadWizardQrBillPdf(parsed.data, await readOptionalContributorId());
 };
 
-export const getSubscriptionQrBillDisplayAction = async (input: unknown) => {
+export const getSubscriptionQrBillDisplayAction = async (input: unknown): Promise<Result<QrBillDisplay>> => {
 	const sessionResult = await getSessionByType('contributor');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -108,7 +115,7 @@ export const getSubscriptionQrBillDisplayAction = async (input: unknown) => {
 	return getSubscriptionQrBillDisplay(sessionResult.data.id, parsed.data.subscriptionId);
 };
 
-export const downloadSubscriptionQrBillPdfAction = async (input: unknown) => {
+export const downloadSubscriptionQrBillPdfAction = async (input: unknown): Promise<Result<DownloadQrBillPdfResult>> => {
 	const sessionResult = await getSessionByType('contributor');
 	if (!sessionResult.success) {
 		return sessionResult;

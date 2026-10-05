@@ -1,5 +1,5 @@
 import { Currency } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 
 const ETHERSCAN_API_URL = 'https://api.etherscan.io/v2/api';
 const ETHEREUM_CHAIN_ID = '1';
@@ -15,7 +15,7 @@ export type CustodianStablecoinWalletBalance = {
 
 export const fetchCustodianStablecoinWalletBalances = async (
 	addresses: string[],
-): Promise<ServiceResult<CustodianStablecoinWalletBalance[]>> => {
+): Promise<Result<CustodianStablecoinWalletBalance[]>> => {
 	if (addresses.length === 0) {
 		return resultOk([]);
 	}
@@ -89,7 +89,7 @@ export const fetchCustodianStablecoinWalletBalances = async (
 	}
 };
 
-const fetchBalance = async (parameters: URLSearchParams, asset: 'ETH' | 'USDC'): Promise<ServiceResult<string>> => {
+const fetchBalance = async (parameters: URLSearchParams, asset: 'ETH' | 'USDC'): Promise<Result<string>> => {
 	try {
 		const response = await fetch(`${ETHERSCAN_API_URL}?${parameters.toString()}`, { method: 'GET' });
 		if (!response.ok) {

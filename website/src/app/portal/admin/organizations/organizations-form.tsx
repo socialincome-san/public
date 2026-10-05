@@ -2,7 +2,7 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema } from '@/components/dynamic-form/helper';
-import { handleServiceResult } from '@/lib/service-result-client';
+import { handleResult } from '@/lib/result-client';
 import {
 	createOrganizationAction,
 	deleteOrganizationAction,
@@ -73,7 +73,7 @@ export default function OrganizationsForm({ onSuccess, onError, onCancel, organi
 				organizationId && organization
 					? await updateOrganizationAction(buildUpdateOrganizationInput(schema, organization.id))
 					: await createOrganizationAction(buildCreateOrganizationInput(schema));
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -87,7 +87,7 @@ export default function OrganizationsForm({ onSuccess, onError, onCancel, organi
 
 		startTransition(async () => {
 			const result = await deleteOrganizationAction(organizationId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});

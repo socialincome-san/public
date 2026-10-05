@@ -22,7 +22,7 @@ npm workspaces monorepo with Node 22.
 
 **Service Layer** (business logic):
 
-- Services extend `BaseService` and return `ServiceResult<T>`
+- Services extend `BaseService` and return `Result<T>`
 - Example: `website/src/lib/services/candidate/candidate.service.ts`
 
 **Server Actions** (API layer):
@@ -83,7 +83,7 @@ npm run format-code           # Prettier
 - Use Tailwind classes only (no CSS modules, styled-components)
 - Use Zod for validation schemas
 - Use `cn()` from `ui/src/lib/utils.ts` for class merging
-- Follow ServiceResult pattern for error handling
+- Follow Result pattern for error handling
 - Check existing implementations in codebase before adding dependencies
 
 ## Test Accounts (Local Dev)

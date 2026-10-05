@@ -17,7 +17,7 @@ import {
 } from '@/integrations/storyblok/storyblok-content.integration';
 import { fetchStoryblokPrograms } from '@/integrations/storyblok/storyblok-program.integration';
 import { defaultLanguage } from '@/lib/i18n/utils';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	getCampaignStoryPath,
 	getJournalArticleStoryPath,
@@ -84,7 +84,7 @@ type StoryblokDatasourceEntry = {
 type StoryblokFilterQuery = Record<string, unknown>;
 
 const fetchDatasourceEntriesCached = cache(
-	async (datasourceSlug: string, language: string): Promise<ServiceResult<StoryblokDatasourceEntry[]>> =>
+	async (datasourceSlug: string, language: string): Promise<Result<StoryblokDatasourceEntry[]>> =>
 		fetchStoryblokDatasourceEntries<StoryblokDatasourceEntry>({
 			datasource: datasourceSlug,
 			dimension: language,
@@ -92,7 +92,7 @@ const fetchDatasourceEntriesCached = cache(
 		}),
 );
 
-export const getStoryWithFallback = async <T>(slug: string, language: string): Promise<ServiceResult<T>> => {
+export const getStoryWithFallback = async <T>(slug: string, language: string): Promise<Result<T>> => {
 	const params = await getStoryParams(language);
 	const result = await fetchStoryblokStory<T>(slug, {
 		...params,
@@ -110,30 +110,30 @@ export const getStoryWithFallback = async <T>(slug: string, language: string): P
 	return fallback.success ? fallback : resultFail('Could not fetch Storyblok story', fallback.status);
 };
 
-export const getStoryTitle = async (slug: string, language: string): Promise<ServiceResult<StoryTitleData>> => {
+export const getStoryTitle = async (slug: string, language: string): Promise<Result<StoryTitleData>> => {
 	const result = await fetchStoryWithOptionalLanguageFallback<StoryTitleData>(slug, language);
 
 	return result ?? resultFail('Story not found', 404);
 };
 
-export const getOverviewArticlesCountForDefaultLang = async (): Promise<ServiceResult<number>> =>
+export const getOverviewArticlesCountForDefaultLang = async (): Promise<Result<number>> =>
 	getArticleCount({
 		displayInOverviewPage: { is: true },
 	});
 
-export const getArticleCountByTagForDefaultLang = async (tagId: string): Promise<ServiceResult<number>> =>
+export const getArticleCountByTagForDefaultLang = async (tagId: string): Promise<Result<number>> =>
 	getArticleCount(articleByTagsFilter(tagId));
 
-export const getArticleCountByArticleTypeForDefaultLang = async (articleTypeId: string): Promise<ServiceResult<number>> =>
+export const getArticleCountByArticleTypeForDefaultLang = async (articleTypeId: string): Promise<Result<number>> =>
 	getArticleCount(articlesByArticleTypeFilter(articleTypeId));
 
-export const getArticleCountByAuthorForDefaultLang = async (authorId: string): Promise<ServiceResult<number>> =>
+export const getArticleCountByAuthorForDefaultLang = async (authorId: string): Promise<Result<number>> =>
 	getArticleCount(articlesByAuthorFilter(authorId));
 
 export const getPersonsByUuids = async (
 	language: string,
 	personUuids: string[],
-): Promise<ServiceResult<ISbStoryData<Person>[]>> => {
+): Promise<Result<ISbStoryData<Person>[]>> => {
 	const uuids = uniqueTrimmed(personUuids);
 	if (uuids.length === 0) {
 		return resultOk([]);
@@ -147,7 +147,7 @@ export const getPersonsByUuids = async (
 	});
 };
 
-export const getOverviewAuthors = async (language: string): Promise<ServiceResult<ISbStoryData<Person>[]>> => {
+export const getOverviewAuthors = async (language: string): Promise<Result<ISbStoryData<Person>[]>> => {
 	const result = await fetchStoryblokStories<ISbStoryData<Person>>({
 		...(await getStoryParams(language)),
 		content_type: CONTENT_TYPE.person,
@@ -160,7 +160,7 @@ export const getOverviewAuthors = async (language: string): Promise<ServiceResul
 export const getPersonsByCountryOffice = async (
 	language: string,
 	isoCodes: string[],
-): Promise<ServiceResult<ISbStoryData<Person>[]>> => {
+): Promise<Result<ISbStoryData<Person>[]>> => {
 	const countryOfficeCodes = isoCodes.map((code) => code.trim()).filter(Boolean);
 	if (countryOfficeCodes.length === 0) {
 		return resultOk([]);
@@ -173,10 +173,7 @@ export const getPersonsByCountryOffice = async (
 	});
 };
 
-const getDatasourceEntries = async (
-	datasourceSlug: string,
-	language: string,
-): Promise<ServiceResult<Record<string, string>>> => {
+const getDatasourceEntries = async (datasourceSlug: string, language: string): Promise<Result<Record<string, string>>> => {
 	const result = await fetchDatasourceEntriesCached(datasourceSlug, language);
 	if (!result.success) {
 		return resultFail('Could not fetch Storyblok datasource entries');
@@ -185,16 +182,16 @@ const getDatasourceEntries = async (
 	return resultOk(Object.fromEntries(result.data.map((entry) => [entry.value, entry.dimension_value ?? entry.name])));
 };
 
-export const getPrimaryRoleLabels = async (language: string): Promise<ServiceResult<Record<string, string>>> =>
+export const getPrimaryRoleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
 	getDatasourceEntries(PRIMARY_ROLES_DATASOURCE, language);
 
-export const getAllPersons = async (language: string): Promise<ServiceResult<ISbStoryData<Person>[]>> =>
+export const getAllPersons = async (language: string): Promise<Result<ISbStoryData<Person>[]>> =>
 	fetchStoryblokStories<ISbStoryData<Person>>({
 		...(await getStoryParams(language)),
 		content_type: CONTENT_TYPE.person,
 	});
 
-export const getOverviewArticleTypes = async (language: string): Promise<ServiceResult<ISbStoryData<ArticleType>[]>> => {
+export const getOverviewArticleTypes = async (language: string): Promise<Result<ISbStoryData<ArticleType>[]>> => {
 	const result = await fetchStoryblokStories<ISbStoryData<ArticleType>>({
 		...(await getStoryParams(language)),
 		content_type: CONTENT_TYPE.articleType,
@@ -205,7 +202,7 @@ export const getOverviewArticleTypes = async (language: string): Promise<Service
 	return result.success ? result : resultOk([]);
 };
 
-export const getPublishedPageLinks = async (): Promise<ServiceResult<StoryblokPublishedLink[]>> => {
+export const getPublishedPageLinks = async (): Promise<Result<StoryblokPublishedLink[]>> => {
 	const result = await fetchStoryblokLinks<unknown>({
 		version: 'published',
 		starts_with: `${STORYBLOK_PAGES_FOLDER}/`,
@@ -217,13 +214,13 @@ export const getPublishedPageLinks = async (): Promise<ServiceResult<StoryblokPu
 	return resultOk(result.data.filter(isStoryblokPublishedLink));
 };
 
-export const getTag = async (slug: string, language: string): Promise<ServiceResult<ISbStoryData<Tag>>> =>
+export const getTag = async (slug: string, language: string): Promise<Result<ISbStoryData<Tag>>> =>
 	fetchTypedStoryWithFallback<ISbStoryData<Tag>>(getJournalTagStoryPath(slug), language);
 
-export const getArticleType = async (slug: string, language: string): Promise<ServiceResult<ISbStoryData<ArticleType>>> =>
+export const getArticleType = async (slug: string, language: string): Promise<Result<ISbStoryData<ArticleType>>> =>
 	fetchTypedStoryWithFallback<ISbStoryData<ArticleType>>(getJournalArticleTypeStoryPath(slug), language);
 
-export const getCountries = async (language: string): Promise<ServiceResult<ISbStoryData<Country>[]>> => {
+export const getCountries = async (language: string): Promise<Result<ISbStoryData<Country>[]>> => {
 	const result = await fetchFilteredStoriesWithDraftFallback(
 		language,
 		STORIES_PATH_PARAMS.countries,
@@ -234,19 +231,19 @@ export const getCountries = async (language: string): Promise<ServiceResult<ISbS
 	return result.success ? result : resultOk([]);
 };
 
-export const getPrograms = async (language: string): Promise<ServiceResult<ISbStoryData<Program>[]>> => {
+export const getPrograms = async (language: string): Promise<Result<ISbStoryData<Program>[]>> => {
 	const { version } = await getStoryParams(language);
 
 	return fetchStoryblokPrograms(language, version);
 };
 
-export const getCampaigns = async (language: string): Promise<ServiceResult<ISbStoryData<Campaign>[]>> => {
+export const getCampaigns = async (language: string): Promise<Result<ISbStoryData<Campaign>[]>> => {
 	const result = await fetchFilteredStoriesWithDraftFallback(language, STORIES_PATH_PARAMS.campaigns, isListedCampaignStory);
 
 	return result.success ? result : resultOk([]);
 };
 
-export const getProgramBySlug = async (slug: string, language: string): Promise<ServiceResult<ISbStoryData<Program>>> => {
+export const getProgramBySlug = async (slug: string, language: string): Promise<Result<ISbStoryData<Program>>> => {
 	const result = await fetchStoryWithOptionalLanguageFallback<ISbStoryData<Program>>(
 		getProgramStoryPath(slug),
 		language,
@@ -256,7 +253,7 @@ export const getProgramBySlug = async (slug: string, language: string): Promise<
 	return result ?? resultFail('Program not found', 404);
 };
 
-export const getCampaignBySlug = async (slug: string, language: string): Promise<ServiceResult<ISbStoryData<Campaign>>> => {
+export const getCampaignBySlug = async (slug: string, language: string): Promise<Result<ISbStoryData<Campaign>>> => {
 	const result = await fetchStoryWithOptionalLanguageFallback<ISbStoryData<Campaign>>(
 		getCampaignStoryPath(slug),
 		language,
@@ -266,7 +263,7 @@ export const getCampaignBySlug = async (slug: string, language: string): Promise
 	return result ?? resultFail('Campaign not found', 404);
 };
 
-export const getCountryBySlug = async (slug: string, language: string): Promise<ServiceResult<ISbStoryData<Country>>> => {
+export const getCountryBySlug = async (slug: string, language: string): Promise<Result<ISbStoryData<Country>>> => {
 	const selected = await findCountry(language, (country) => matchesStorySlug(country, slug));
 	if (selected) {
 		return resultOk(selected);
@@ -281,10 +278,7 @@ export const getCountryBySlug = async (slug: string, language: string): Promise<
 	return resultFail('Country not found', 404);
 };
 
-export const getCountryByIsoCode = async (
-	isoCode: string,
-	language: string,
-): Promise<ServiceResult<ISbStoryData<Country>>> => {
+export const getCountryByIsoCode = async (isoCode: string, language: string): Promise<Result<ISbStoryData<Country>>> => {
 	const normalizedIsoCode = isoCode.trim().toLowerCase();
 	const matchesIsoCode = (country: ISbStoryData<Country>) =>
 		country.content.isoCode?.toString().trim().toLowerCase() === normalizedIsoCode;
@@ -302,7 +296,7 @@ export const getCountryByIsoCode = async (
 	return resultFail('Country not found', 404);
 };
 
-export const getLocalPartners = async (language: string): Promise<ServiceResult<ISbStoryData<LocalPartner>[]>> => {
+export const getLocalPartners = async (language: string): Promise<Result<ISbStoryData<LocalPartner>[]>> => {
 	const result = await fetchFilteredStoriesWithDraftFallback(
 		language,
 		STORIES_PATH_PARAMS.localPartners,
@@ -313,10 +307,7 @@ export const getLocalPartners = async (language: string): Promise<ServiceResult<
 	return result.success ? result : resultFail('Could not fetch Storyblok local partners');
 };
 
-export const getLocalPartnerBySlug = async (
-	slug: string,
-	language: string,
-): Promise<ServiceResult<ISbStoryData<LocalPartner>>> => {
+export const getLocalPartnerBySlug = async (slug: string, language: string): Promise<Result<ISbStoryData<LocalPartner>>> => {
 	const selected = await findLocalPartner(language, slug);
 	if (selected) {
 		return resultOk(selected);
@@ -331,7 +322,7 @@ export const getLocalPartnerBySlug = async (
 	return resultFail('Local partner not found', 404);
 };
 
-export const getFocuses = async (language: string): Promise<ServiceResult<ISbStoryData<Focus>[]>> => {
+export const getFocuses = async (language: string): Promise<Result<ISbStoryData<Focus>[]>> => {
 	const result = await fetchFilteredStoriesWithDraftFallback(
 		language,
 		STORIES_PATH_PARAMS.focuses,
@@ -342,7 +333,7 @@ export const getFocuses = async (language: string): Promise<ServiceResult<ISbSto
 	return result.success ? result : resultFail('Could not fetch Storyblok focuses');
 };
 
-export const getFocusBySlug = async (slug: string, language: string): Promise<ServiceResult<ISbStoryData<Focus>>> => {
+export const getFocusBySlug = async (slug: string, language: string): Promise<Result<ISbStoryData<Focus>>> => {
 	const selected = await findFocus(language, slug);
 	if (selected) {
 		return resultOk(selected);
@@ -357,31 +348,28 @@ export const getFocusBySlug = async (slug: string, language: string): Promise<Se
 	return resultFail('Focus not found', 404);
 };
 
-export const getPerson = async (slug: string, language: string): Promise<ServiceResult<ISbStoryData<Person>>> =>
+export const getPerson = async (slug: string, language: string): Promise<Result<ISbStoryData<Person>>> =>
 	fetchTypedStoryWithFallback<ISbStoryData<Person>>(getPersonStoryPath(slug), language);
 
-export const getArticlesByTag = async (
-	tagId: string,
-	language: string,
-): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> => fetchResolvedArticles(language, articleByTagsFilter(tagId));
+export const getArticlesByTag = async (tagId: string, language: string): Promise<Result<ISbStoryData<ResolvedArticle>[]>> =>
+	fetchResolvedArticles(language, articleByTagsFilter(tagId));
 
 export const getArticlesByArticleType = async (
 	articleTypeId: string,
 	language: string,
-): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> =>
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> =>
 	fetchResolvedArticles(language, articlesByArticleTypeFilter(articleTypeId));
 
 export const getArticlesByAuthor = async (
 	authorId: string,
 	language: string,
-): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> =>
-	fetchResolvedArticles(language, articlesByAuthorFilter(authorId));
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => fetchResolvedArticles(language, articlesByAuthorFilter(authorId));
 
 export const getOverviewArticles = async (
 	language: string,
 	idsToIgnore?: string,
 	limit?: number,
-): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> => {
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
 	const params: ISbStoriesParams = {
 		...(await getStoryParams(language)),
 		per_page: limit ?? DEFAULT_PAGE_SIZE,
@@ -404,7 +392,7 @@ export const getOverviewArticles = async (
 export const getLatestJournalArticles = async (
 	language: string,
 	limit = JOURNAL_TEASER_LIMIT,
-): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> => {
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
 	const result = await getOverviewArticles(language, undefined, limit);
 
 	return resultOk(result.success ? result.data.slice(0, limit) : []);
@@ -413,7 +401,7 @@ export const getLatestJournalArticles = async (
 export const getArticlesByUuids = async (
 	language: string,
 	articleUuids: string[],
-): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> => {
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
 	const uuids = uniqueTrimmed(articleUuids);
 	if (uuids.length === 0) {
 		return resultOk([]);
@@ -430,7 +418,7 @@ export const getArticlesByUuids = async (
 	return result.success ? resultOk(result.data.stories.filter(isResolvedArticle)) : resultOk([]);
 };
 
-export const getArticle = async (language: string, slug: string): Promise<ServiceResult<ISbStoryData<ResolvedArticle>>> => {
+export const getArticle = async (language: string, slug: string): Promise<Result<ISbStoryData<ResolvedArticle>>> => {
 	const result = await fetchStoryWithOptionalLanguageFallback<unknown>(
 		getJournalArticleStoryPath(slug),
 		language,
@@ -455,7 +443,7 @@ export const getRelativeArticles = async (
 	tags: string[],
 	language: string,
 	numberOfArticles: number,
-): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> => {
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
 	const related = await fetchStoryblokStoriesPage<unknown>({
 		...(await getStoryParams(language)),
 		per_page: numberOfArticles,
@@ -487,7 +475,7 @@ const fetchStoryWithOptionalLanguageFallback = async <T>(
 	slug: string,
 	language: string,
 	resolveRelations?: string[],
-): Promise<ServiceResult<T> | undefined> => {
+): Promise<Result<T> | undefined> => {
 	const result = await fetchStoryblokStory<T>(slug, {
 		...(await getStoryParams(language)),
 		...(resolveRelations ? { resolve_relations: resolveRelations } : {}),
@@ -506,7 +494,7 @@ const fetchStoryWithOptionalLanguageFallback = async <T>(
 	return fallback.success || fallback.status !== 404 ? fallback : undefined;
 };
 
-const fetchTypedStoryWithFallback = async <T>(slug: string, language: string): Promise<ServiceResult<T>> => {
+const fetchTypedStoryWithFallback = async <T>(slug: string, language: string): Promise<Result<T>> => {
 	const result = await fetchStoryWithOptionalLanguageFallback<T>(slug, language);
 
 	return result ?? resultFail('Storyblok content not found', 404);
@@ -517,7 +505,7 @@ const fetchFilteredStoriesWithDraftFallback = async <T>(
 	folder: string,
 	isExpectedStory: (story: unknown) => story is T,
 	resolveRelations?: string[],
-): Promise<ServiceResult<T[]>> => {
+): Promise<Result<T[]>> => {
 	const baseParams: ISbStoriesParams = {
 		...(await getStoryParams(language)),
 		starts_with: `${folder}/`,
@@ -542,7 +530,7 @@ const fetchFilteredStoriesWithDraftFallback = async <T>(
 const shouldFallbackToDraft = (version: ISbStoriesParams['version']): boolean =>
 	process.env.NODE_ENV !== 'production' && version === 'published';
 
-const getArticleCount = async (filterQuery: StoryblokFilterQuery): Promise<ServiceResult<number>> => {
+const getArticleCount = async (filterQuery: StoryblokFilterQuery): Promise<Result<number>> => {
 	const result = await fetchStoryblokStoriesPage<unknown>({
 		...(await getStoryParams(defaultLanguage)),
 		per_page: 1,
@@ -557,7 +545,7 @@ const getArticleCount = async (filterQuery: StoryblokFilterQuery): Promise<Servi
 const fetchResolvedArticles = async (
 	language: string,
 	filterQuery: StoryblokFilterQuery,
-): Promise<ServiceResult<ISbStoryData<ResolvedArticle>[]>> => {
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
 	const result = await fetchStoryblokStories<unknown>({
 		...(await getStoryParams(language)),
 		per_page: DEFAULT_PAGE_SIZE,

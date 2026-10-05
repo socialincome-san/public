@@ -1,7 +1,7 @@
 'use server';
 
 import { getSessionByType } from '@/lib/firebase/current-account';
-import { resultFail } from '@/lib/service-result';
+import { resultFail, type Result } from '@/lib/result';
 import {
 	focusCreateInputSchema,
 	focusIdSchema,
@@ -16,11 +16,12 @@ import {
 	getPublicFocusStatsBySlugs,
 	updateFocus,
 } from '@/modules/focuses/focus.service';
+import type { FocusOption, FocusPayload, PublicFocusStatsBySlugMap } from '@/modules/focuses/focus.types';
 import { revalidatePath } from 'next/cache';
 
 const REVALIDATE_PATH = '/portal/admin/focuses';
 
-export const createFocusAction = async (input: unknown) => {
+export const createFocusAction = async (input: unknown): Promise<Result<FocusPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -36,7 +37,7 @@ export const createFocusAction = async (input: unknown) => {
 	return result;
 };
 
-export const updateFocusAction = async (input: unknown) => {
+export const updateFocusAction = async (input: unknown): Promise<Result<FocusPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -52,7 +53,7 @@ export const updateFocusAction = async (input: unknown) => {
 	return result;
 };
 
-export const getFocusAction = async (input: unknown) => {
+export const getFocusAction = async (input: unknown): Promise<Result<FocusPayload>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -65,7 +66,7 @@ export const getFocusAction = async (input: unknown) => {
 	return getFocus(sessionResult.data.id, parsedInput.data);
 };
 
-export const deleteFocusAction = async (input: unknown) => {
+export const deleteFocusAction = async (input: unknown): Promise<Result<{ id: string }>> => {
 	const sessionResult = await getSessionByType('user');
 	if (!sessionResult.success) {
 		return sessionResult;
@@ -81,9 +82,9 @@ export const deleteFocusAction = async (input: unknown) => {
 	return result;
 };
 
-export const getFocusOptionsAction = async () => getFocusOptions();
+export const getFocusOptionsAction = async (): Promise<Result<FocusOption[]>> => getFocusOptions();
 
-export const getPublicFocusStatsBySlugsAction = async (input: unknown) => {
+export const getPublicFocusStatsBySlugsAction = async (input: unknown): Promise<Result<PublicFocusStatsBySlugMap>> => {
 	const parsedInput = focusSlugsSchema.safeParse(input);
 	if (!parsedInput.success) {
 		return resultFail('Invalid input.');

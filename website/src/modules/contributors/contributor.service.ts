@@ -1,5 +1,5 @@
 import { CountryCode, ProgramPermission } from '@/generated/prisma/enums';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { nowMs } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import { createFirebaseUserByEmail, findFirebaseUserByEmail, updateFirebaseUserByUid } from '@/modules/auth/auth.service';
@@ -36,7 +36,7 @@ import type {
 	StripeContributorData,
 } from './contributor.types';
 
-export const countContributorsCreatedBetween = async (from: Date, to: Date): Promise<ServiceResult<number>> => {
+export const countContributorsCreatedBetween = async (from: Date, to: Date): Promise<Result<number>> => {
 	try {
 		return resultOk(await contributorRepository.countContributorsCreatedBetween(from, to));
 	} catch (error) {
@@ -46,7 +46,7 @@ export const countContributorsCreatedBetween = async (from: Date, to: Date): Pro
 	}
 };
 
-export const getCommunityStats = async (): Promise<ServiceResult<ContributorCommunityStats>> => {
+export const getCommunityStats = async (): Promise<Result<ContributorCommunityStats>> => {
 	try {
 		const contributions = await contributorRepository.findCommunityContributionCountries();
 		const countries = new Set(
@@ -66,7 +66,7 @@ export const getCommunityStats = async (): Promise<ServiceResult<ContributorComm
 	}
 };
 
-export const getContributor = async (userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> => {
+export const getContributor = async (userId: string, contributorId: string): Promise<Result<ContributorPayload>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -92,7 +92,7 @@ export const getContributor = async (userId: string, contributorId: string): Pro
 	}
 };
 
-export const getEditableContributorOptions = async (userId: string): Promise<ServiceResult<ContributorOption[]>> => {
+export const getEditableContributorOptions = async (userId: string): Promise<Result<ContributorOption[]>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -126,7 +126,7 @@ export const getEditableContributorOptions = async (userId: string): Promise<Ser
 export const getPaginatedContributorTableView = async (
 	userId: string,
 	query: ContributorTableQuery,
-): Promise<ServiceResult<ContributorPaginatedTableView>> => {
+): Promise<Result<ContributorPaginatedTableView>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -219,7 +219,7 @@ export const getPaginatedContributorTableView = async (
 export const getContributorsByIds = async (params?: {
 	actorUserId?: string;
 	contributorIds?: string[];
-}): Promise<ServiceResult<ContributorDonationCertificate[]>> => {
+}): Promise<Result<ContributorDonationCertificate[]>> => {
 	try {
 		let accessibleProgramIds: string[] | undefined;
 		if (params?.actorUserId) {
@@ -256,7 +256,7 @@ export const getContributorsByIds = async (params?: {
 	}
 };
 
-export const findContributorById = async (contributorId: string): Promise<ServiceResult<{ id: string } | null>> => {
+export const findContributorById = async (contributorId: string): Promise<Result<{ id: string } | null>> => {
 	try {
 		return resultOk(await contributorRepository.findContributorId(contributorId));
 	} catch (error) {
@@ -266,9 +266,7 @@ export const findContributorById = async (contributorId: string): Promise<Servic
 	}
 };
 
-export const findContributorByAccountId = async (
-	accountId: string,
-): Promise<ServiceResult<ContributorWithContact | null>> => {
+export const findContributorByAccountId = async (accountId: string): Promise<Result<ContributorWithContact | null>> => {
 	try {
 		return resultOk(await contributorRepository.findContributorByAccountId(accountId));
 	} catch (error) {
@@ -281,7 +279,7 @@ export const findContributorByAccountId = async (
 export const findContributorByStripeCustomerOrEmail = async (
 	stripeCustomerId: string,
 	email?: string,
-): Promise<ServiceResult<ContributorWithContact | null>> => {
+): Promise<Result<ContributorWithContact | null>> => {
 	try {
 		const byStripeCustomer = await contributorRepository.findContributorByStripeCustomerId(stripeCustomerId);
 		if (byStripeCustomer) {
@@ -299,9 +297,7 @@ export const findContributorByStripeCustomerOrEmail = async (
 	}
 };
 
-export const getCurrentContributorSession = async (
-	firebaseAuthUserId: string,
-): Promise<ServiceResult<ContributorSession>> => {
+export const getCurrentContributorSession = async (firebaseAuthUserId: string): Promise<Result<ContributorSession>> => {
 	try {
 		const contributor = await contributorRepository.findContributorSessionByFirebaseAuthUserId(firebaseAuthUserId);
 		if (!contributor) {
@@ -333,7 +329,7 @@ export const getCurrentContributorSession = async (
 
 export const findContributorsByPaymentReferenceIds = async (
 	paymentReferenceIds: string[],
-): Promise<ServiceResult<ContributorWithContact[]>> => {
+): Promise<Result<ContributorWithContact[]>> => {
 	try {
 		return resultOk(await contributorRepository.findContributorsByPaymentReferenceIds(paymentReferenceIds));
 	} catch (error) {
@@ -346,7 +342,7 @@ export const findContributorsByPaymentReferenceIds = async (
 export const updateContributor = async (
 	userId: string,
 	input: UpdateContributorInput,
-): Promise<ServiceResult<ContributorRecord>> => {
+): Promise<Result<ContributorRecord>> => {
 	const inputResult = validateContributorUpdateInput(input);
 	if (!inputResult.success) {
 		return resultFail(inputResult.error);
@@ -428,7 +424,7 @@ export const updateContributor = async (
 export const updateContributorSelf = async (
 	contributorId: string,
 	input: UpdateContributorSelfInput,
-): Promise<ServiceResult<ContributorRecord>> => {
+): Promise<Result<ContributorRecord>> => {
 	try {
 		const existing = await contributorRepository.findContributorForSelfUpdate(contributorId);
 		if (!existing?.contact) {
@@ -463,7 +459,7 @@ export const updateContributorSelf = async (
 
 export const getOrCreateContributorWithFirebaseAuth = async (
 	contributorData: StripeContributorData,
-): Promise<ServiceResult<{ contributor: ContributorWithContact; isNewContributor: boolean }>> => {
+): Promise<Result<{ contributor: ContributorWithContact; isNewContributor: boolean }>> => {
 	try {
 		const existingResult = await findContributorByStripeCustomerOrEmail(
 			contributorData.stripeCustomerId,
@@ -513,7 +509,7 @@ export const getOrCreateContributorForAccount = async (
 	accountId: string,
 	stripeCustomerId: string,
 	contactId: string,
-): Promise<ServiceResult<{ contributor: ContributorWithContact; isNewContributor: boolean }>> => {
+): Promise<Result<{ contributor: ContributorWithContact; isNewContributor: boolean }>> => {
 	try {
 		const existing = await contributorRepository.findContributorByAccountId(accountId);
 		if (existing) {
@@ -536,7 +532,7 @@ export const getOrCreateContributorForAccount = async (
 	}
 };
 
-export const getOrCreateReferenceIdByEmail = async (email: string): Promise<ServiceResult<string>> => {
+export const getOrCreateReferenceIdByEmail = async (email: string): Promise<Result<string>> => {
 	try {
 		const existingContributor = await contributorRepository.findContributorPaymentReferenceByEmail(email);
 		if (existingContributor) {
@@ -551,10 +547,7 @@ export const getOrCreateReferenceIdByEmail = async (email: string): Promise<Serv
 	}
 };
 
-export const getOwnedPaymentReferenceId = async (
-	contributorId: string,
-	email: string,
-): Promise<ServiceResult<string | null>> => {
+export const getOwnedPaymentReferenceId = async (contributorId: string, email: string): Promise<Result<string | null>> => {
 	try {
 		const contributor = await contributorRepository.findContributorPaymentReferenceById(contributorId);
 		const contributorEmail = contributor?.contact?.email;
@@ -590,7 +583,7 @@ export const getOwnedPaymentReferenceId = async (
 
 export const getOrCreateContributorByReferenceId = async (
 	contributorData: BankContributorData,
-): Promise<ServiceResult<ContributorRecord>> => {
+): Promise<Result<ContributorRecord>> => {
 	try {
 		const existingContributor = await contributorRepository.findContributorByPaymentReferenceId(
 			contributorData.paymentReferenceId,
@@ -654,7 +647,7 @@ export const getOrCreateContributorByReferenceId = async (
 
 export const getOrCreateContributorFromEmailAndName = async (
 	accountData: CampaignGuestAccountData,
-): Promise<ServiceResult<{ contributor: ContributorWithContact; isNewContributor: boolean }>> => {
+): Promise<Result<{ contributor: ContributorWithContact; isNewContributor: boolean }>> => {
 	try {
 		const existing = await contributorRepository.findContributorByEmail(accountData.email);
 		if (existing) {
@@ -703,7 +696,7 @@ export const getOrCreateContributorFromEmailAndName = async (
 export const createContributor = async (
 	userId: string,
 	input: CreateContributorInput,
-): Promise<ServiceResult<ContributorRecord>> => {
+): Promise<Result<ContributorRecord>> => {
 	const inputResult = validateContributorCreateInput(input);
 	if (!inputResult.success) {
 		return resultFail(inputResult.error);
@@ -745,19 +738,19 @@ export const createContributor = async (
 	}
 };
 
-const validateContributorCreateInput = (input: CreateContributorInput): ServiceResult<CreateContributorInput> => {
+const validateContributorCreateInput = (input: CreateContributorInput): Result<CreateContributorInput> => {
 	const parsedInput = contributorCreateSchema.safeParse(input);
 
 	return parsedInput.success ? resultOk(parsedInput.data) : resultFail('Invalid input.');
 };
 
-const validateContributorUpdateInput = (input: UpdateContributorInput): ServiceResult<UpdateContributorInput> => {
+const validateContributorUpdateInput = (input: UpdateContributorInput): Result<UpdateContributorInput> => {
 	const parsedInput = contributorUpdateSchema.safeParse(input);
 
 	return parsedInput.success ? resultOk(parsedInput.data) : resultFail('Invalid input.');
 };
 
-const validateCreateUniqueness = async (input: CreateContributorInput): Promise<ServiceResult<void>> => {
+const validateCreateUniqueness = async (input: CreateContributorInput): Promise<Result<void>> => {
 	const emailConflict = await contributorRepository.findContactByEmail(input.contact.email);
 	if (emailConflict) {
 		return resultFail('A contact with this email already exists.');
@@ -776,7 +769,7 @@ const validateCreateUniqueness = async (input: CreateContributorInput): Promise<
 const validateUpdateUniqueness = async (
 	input: UpdateContributorInput,
 	context: ContributorUpdateUniquenessContext,
-): Promise<ServiceResult<void>> => {
+): Promise<Result<void>> => {
 	if (input.contact.email !== context.existingEmail) {
 		const emailConflict = await contributorRepository.findContactByEmail(input.contact.email);
 		if (emailConflict && emailConflict.id !== context.existingContactId) {
@@ -795,10 +788,7 @@ const validateUpdateUniqueness = async (
 	return resultOk(undefined);
 };
 
-const getOrCreateFirebaseUser = async (input: {
-	email: string;
-	displayName: string;
-}): Promise<ServiceResult<{ uid: string }>> => {
+const getOrCreateFirebaseUser = async (input: { email: string; displayName: string }): Promise<Result<{ uid: string }>> => {
 	const existing = await findFirebaseUserByEmail(input.email);
 	if (!existing.success) {
 		return resultFail(existing.error);
@@ -817,7 +807,7 @@ const getOrCreateFirebaseUser = async (input: {
 
 const CONTRIBUTOR_REFERENCE_ID_LENGTH = 13;
 
-const mintPaymentReferenceId = async (): Promise<ServiceResult<string>> => {
+const mintPaymentReferenceId = async (): Promise<Result<string>> => {
 	let candidate = nowMs();
 	for (let attempt = 0; attempt < 100; attempt += 1) {
 		const referenceId = String(candidate);

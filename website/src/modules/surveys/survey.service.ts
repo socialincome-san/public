@@ -1,6 +1,6 @@
 import { Gender, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
 import { RECIPIENT_AGE_GROUP_BOUNDS, RECIPIENT_AGE_GROUPS } from '@/lib/constants/recipient-age-groups';
-import { resultFail, resultOk, type ServiceResult } from '@/lib/service-result';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { QUESTIONS } from '@/lib/types/question';
 import { now, nowMs } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
@@ -48,7 +48,7 @@ import type {
 export const getPaginatedSurveyTableView = async (
 	userId: string,
 	query: SurveyTableQuery,
-): Promise<ServiceResult<SurveyPaginatedTableView>> => {
+): Promise<Result<SurveyPaginatedTableView>> => {
 	const queryResult = surveyTableQuerySchema.safeParse(query);
 	if (!queryResult.success) {
 		return resultFail('Invalid survey table query');
@@ -74,7 +74,7 @@ export const getPaginatedSurveyTableView = async (
 export const getPaginatedUpcomingSurveyTableView = async (
 	userId: string,
 	query: SurveyTableQuery,
-): Promise<ServiceResult<SurveyPaginatedTableView>> => {
+): Promise<Result<SurveyPaginatedTableView>> => {
 	const queryResult = surveyTableQuerySchema.safeParse(query);
 	if (!queryResult.success) {
 		return resultFail('Invalid survey table query');
@@ -100,7 +100,7 @@ export const getPaginatedUpcomingSurveyTableView = async (
 	}
 };
 
-export const getSurvey = async (userId: string, surveyId: string): Promise<ServiceResult<SurveyPayload>> => {
+export const getSurvey = async (userId: string, surveyId: string): Promise<Result<SurveyPayload>> => {
 	try {
 		const survey = await surveyRepository.findSurveyById(surveyId);
 		if (!survey) {
@@ -128,7 +128,7 @@ export const getSurvey = async (userId: string, surveyId: string): Promise<Servi
 	}
 };
 
-export const getSurveysByRecipientId = async (recipientId: string): Promise<ServiceResult<SurveyPayload[]>> => {
+export const getSurveysByRecipientId = async (recipientId: string): Promise<Result<SurveyPayload[]>> => {
 	try {
 		const surveys = await surveyRepository.findSurveyByRecipientId(recipientId);
 
@@ -140,7 +140,7 @@ export const getSurveysByRecipientId = async (recipientId: string): Promise<Serv
 	}
 };
 
-export const getSurveyByAccessEmail = async (email: string): Promise<ServiceResult<SurveyPayload>> => {
+export const getSurveyByAccessEmail = async (email: string): Promise<Result<SurveyPayload>> => {
 	try {
 		const survey = await surveyRepository.findSurveyByAccessEmail(email);
 		if (!survey) {
@@ -158,7 +158,7 @@ export const getSurveyByAccessEmail = async (email: string): Promise<ServiceResu
 export const getSurveyByIdAndRecipient = async (
 	surveyId: string,
 	recipientId: string,
-): Promise<ServiceResult<SurveyWithRecipient>> => {
+): Promise<Result<SurveyWithRecipient>> => {
 	try {
 		const survey = await surveyRepository.findSurveyByIdAndRecipient(surveyId, recipientId);
 		if (!survey) {
@@ -181,9 +181,7 @@ export const getSurveyByIdAndRecipient = async (
 	}
 };
 
-export const getSurveySchedulesByProgramIds = async (
-	programIds: string[],
-): Promise<ServiceResult<SurveySchedulePayload[]>> => {
+export const getSurveySchedulesByProgramIds = async (programIds: string[]): Promise<Result<SurveySchedulePayload[]>> => {
 	try {
 		return resultOk(await surveyRepository.findSurveySchedulesByProgramIds(programIds));
 	} catch (error) {
@@ -193,7 +191,7 @@ export const getSurveySchedulesByProgramIds = async (
 	}
 };
 
-export const previewSurveyGeneration = async (userId: string): Promise<ServiceResult<SurveyGenerationPreviewResult>> => {
+export const previewSurveyGeneration = async (userId: string): Promise<Result<SurveyGenerationPreviewResult>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
@@ -263,7 +261,7 @@ export const previewSurveyGeneration = async (userId: string): Promise<ServiceRe
 	}
 };
 
-export const createSurvey = async (userId: string, input: SurveyCreateInput): Promise<ServiceResult<SurveyPayload>> => {
+export const createSurvey = async (userId: string, input: SurveyCreateInput): Promise<Result<SurveyPayload>> => {
 	const inputResult = surveyCreateSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -317,7 +315,7 @@ export const createSurvey = async (userId: string, input: SurveyCreateInput): Pr
 	}
 };
 
-export const updateSurvey = async (userId: string, input: SurveyUpdateInput): Promise<ServiceResult<SurveyPayload>> => {
+export const updateSurvey = async (userId: string, input: SurveyUpdateInput): Promise<Result<SurveyPayload>> => {
 	const inputResult = surveyUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -402,7 +400,7 @@ export const updateSurvey = async (userId: string, input: SurveyUpdateInput): Pr
 	}
 };
 
-export const generateSurveys = async (userId: string): Promise<ServiceResult<SurveyGenerationResult>> => {
+export const generateSurveys = async (userId: string): Promise<Result<SurveyGenerationResult>> => {
 	try {
 		const previewResult = await previewSurveyGeneration(userId);
 		if (!previewResult.success) {
@@ -438,7 +436,7 @@ export const generateSurveys = async (userId: string): Promise<ServiceResult<Sur
 export const saveSurveyChanges = async (
 	surveyId: string,
 	input: SurveyResponseUpdateInput,
-): Promise<ServiceResult<SurveyPayload>> => {
+): Promise<Result<SurveyPayload>> => {
 	const inputResult = surveyResponseUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -458,9 +456,7 @@ export const saveSurveyChanges = async (
 	}
 };
 
-export const getSurveyImpactMeasurements = async (
-	filters?: SurveyImpactFilters,
-): Promise<ServiceResult<SurveyImpactData>> => {
+export const getSurveyImpactMeasurements = async (filters?: SurveyImpactFilters): Promise<Result<SurveyImpactData>> => {
 	try {
 		const surveys = await surveyRepository.findCompletedSurveyImpactSource(toImpactQuery(filters));
 		const surveyAnswers: SurveyAnswerRecord[] = [];
@@ -502,7 +498,7 @@ export const getSurveyImpactMeasurements = async (
 	}
 };
 
-export const getSurveyImpactFilterOptions = async (): Promise<ServiceResult<SurveyImpactFilterOptions>> => {
+export const getSurveyImpactFilterOptions = async (): Promise<Result<SurveyImpactFilterOptions>> => {
 	try {
 		const surveys = await surveyRepository.findSurveyImpactFilterSource();
 		const countrySet = new Set<string>();
@@ -539,7 +535,7 @@ export const getSurveyImpactFilterOptions = async (): Promise<ServiceResult<Surv
 
 export const getSurveyImpactStudyDetails = async (
 	filters?: SurveyImpactFilters,
-): Promise<ServiceResult<SurveyImpactStudyDetails>> => {
+): Promise<Result<SurveyImpactStudyDetails>> => {
 	try {
 		const surveys = await surveyRepository.findSurveyImpactStudySource(toImpactQuery(filters));
 		const uniqueRecipients = new Map<string, (typeof surveys)[number]['recipient']>();
@@ -598,7 +594,7 @@ const getPaginatedSurveyTableViewForPrograms = async (
 	accessiblePrograms: { programId: string; programName: string }[],
 	query: SurveyTableQuery,
 	upcomingRange?: { from: Date; to: Date },
-): Promise<ServiceResult<SurveyPaginatedTableView>> => {
+): Promise<Result<SurveyPaginatedTableView>> => {
 	const programFilterOptions = Array.from(
 		new Map(
 			accessiblePrograms.map((program) => [program.programId, { id: program.programId, name: program.programName }]),
@@ -648,7 +644,7 @@ const getPaginatedSurveyTableViewForPrograms = async (
 const validateSurveyUniqueness = async (
 	input: SurveyCreateInput | SurveyUpdateInput,
 	existing?: { id: string; recipientId: string; name: string; accessEmail: string },
-): Promise<ServiceResult<void>> => {
+): Promise<Result<void>> => {
 	if (input.accessEmail !== existing?.accessEmail) {
 		const emailConflict = await surveyRepository.findSurveyByAccessEmail(input.accessEmail);
 		if (emailConflict && emailConflict.id !== existing?.id) {
