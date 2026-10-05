@@ -42,8 +42,9 @@ Radix, and Tailwind, with classes merged through `cn` from
 `design-system/src/cn.ts`. That package does not import the website.
 Feature screens, wizards, data tables, and CMS blocks stay in
 `src/components` and may call module actions. `src/app/globals.css`
-imports `@socialincome/design-system/styles.css`, which tells Tailwind
-to scan the package via `@source`.
+imports `@socialincome/design-system/styles.css` and adds `@source` for
+`design-system/src`, so Tailwind still scans the package when that CSS
+is resolved through `node_modules`.
 
 Local auth users come from the Firebase emulator seed. While the
 emulators are running, the list is at http://localhost:4000/auth.

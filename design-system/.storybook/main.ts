@@ -1,4 +1,6 @@
 import type { StorybookConfig } from '@storybook/nextjs-vite';
+import tailwindcss from '@tailwindcss/vite';
+import { mergeConfig } from 'vite';
 
 const config: StorybookConfig = {
 	stories: ['./design-system.mdx', '../src/**/*.stories.@(ts|tsx)'],
@@ -7,7 +9,12 @@ const config: StorybookConfig = {
 		name: '@storybook/nextjs-vite',
 		options: {},
 	},
-	staticDirs: ['../public', { from: '../../website/public/assets/flags', to: '/assets/flags' }],
+	staticDirs: ['../public'],
+	// Vite handles CSS @import before PostCSS, which drops @theme and the token files.
+	viteFinal: (config) =>
+		mergeConfig(config, {
+			plugins: [tailwindcss()],
+		}),
 };
 
 export default config;

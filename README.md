@@ -13,15 +13,20 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 
 ## What Is In This Repository?
 
-This repository contains the public website, internal tools, local development
-seed data, infrastructure code, and the recipient mobile app.
+This repository contains the public website, internal tools, the shared
+design system, local development seed data, infrastructure code, and the
+recipient mobile app.
 
 ```text
 /
+├─ design-system/         Shared React components and Storybook
 ├─ recipients_app/        Mobile app for Social Income recipients
 ├─ seed/                  Firebase emulator seed data
 └─ website/               Next.js app, APIs, database, infra, and tests
 ```
+
+`website/` and `design-system/` are npm workspaces. They share one
+lockfile at the repository root.
 
 ### `website/`
 
@@ -44,6 +49,17 @@ The main Next.js application. It contains:
   `website/AGENTS.md`.
 - Infrastructure: Terraform configuration under `website/infra`.
 - Tests: unit tests and Playwright end-to-end tests.
+
+### `design-system/`
+
+Shared UI components (`@socialincome/design-system`): buttons, dialogs,
+forms, badges, and other primitives built with Radix and Tailwind. It also
+holds the global styles and fonts. The website imports the package, but the
+package never imports the website, so other Next.js apps can reuse it.
+
+The components are documented in Storybook. Storybook is deployed as its own
+Vercel project with `design-system` as the root directory. See
+`design-system/AGENTS.md` for the conventions.
 
 ### `recipients_app/`
 
@@ -79,9 +95,8 @@ mise install
 npm ci --prefix ..
 ```
 
-The web app and `design-system` share one npm workspace. The lockfile is
-at the repository root. Mise tasks, formatting, Prisma, and most local
-tooling stay inside `website/`. Storybook lives in `design-system/`.
+Dependencies are installed once from the repository root for both
+`website/` and `design-system/`.
 
 ### 2. Prepare Environment Variables
 
@@ -127,15 +142,12 @@ This starts:
 - Firebase emulators for Auth, Firestore, and Storage
 - Next.js at `http://localhost:3000`
 
-Storybook for the shared components runs separately:
+To work on shared components, start Storybook at `http://localhost:6006`:
 
 ```bash
 cd design-system
 npm run storybook
 ```
-
-That serves Storybook at `http://localhost:6006`. Deploy that static build
-from the `design-system` directory. It is not part of the website.
 
 The Firebase emulator UI is available at:
 
@@ -207,11 +219,11 @@ http://localhost:3000
 
 Click `Login` in the top navigation and enter one of these local test users:
 
-| Area | Purpose | Email |
-| --- | --- | --- |
-| Portal | Internal operations and admin tool | `power@portal.test` |
-| Dashboard | Contributor self-service area | `coreh@dashboard.test` |
-| Partner Space | Local partner self-service area | `sl@partner.test` |
+| Area          | Purpose                            | Email                  |
+| ------------- | ---------------------------------- | ---------------------- |
+| Portal        | Internal operations and admin tool | `power@portal.test`    |
+| Dashboard     | Contributor self-service area      | `coreh@dashboard.test` |
+| Partner Space | Local partner self-service area    | `sl@partner.test`      |
 
 In staging and production, login sends a magic link by email. Locally, the
 Firebase emulator logs the magic link instead. Copy it from the terminal
@@ -239,7 +251,8 @@ git pull
 git checkout -b fix/issue-2064-short-description
 ```
 
-Website checks run for pull requests and for pushes to `main`.
+Website and design system checks run for pull requests and for pushes to
+`main`.
 Staging deployment is connected to `main`; production releases are handled
 by maintainers.
 
@@ -251,6 +264,15 @@ npm run lint
 npm run typecheck
 npm run test:unit
 npm run test:e2e
+```
+
+Useful local checks for design system changes:
+
+```bash
+cd design-system
+npm run lint
+npm run typecheck
+npm run test:unit
 ```
 
 For many small UI or content changes, `lint` and `typecheck` are a good

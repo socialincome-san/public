@@ -1,3 +1,4 @@
+/* Bundled from design-system/public/fonts. The website does not serve a /fonts folder. */
 @font-face {
 	font-family: 'Unica77';
 	src: url('../../public/fonts/Unica77LLWeb-Light.woff2') format('woff2');
