@@ -1,11 +1,11 @@
 'use client';
 
+import { CountryFlag } from '@/components/country-flag';
 import type { CountryCode } from '@/generated/prisma/client';
 import * as RadixAccordion from '@radix-ui/react-accordion';
 import { Badge } from '@socialincome/design-system/badge/badge';
 import { Button } from '@socialincome/design-system/button/button';
 import { cn } from '@socialincome/design-system/cn';
-import { CountryFlag } from '@socialincome/design-system/country-flag/country-flag';
 import { RadioGroupItem } from '@socialincome/design-system/radio-group/radio-group';
 import { ChevronDown } from 'lucide-react';
 import NextImage from 'next/image';

@@ -67,7 +67,7 @@ export const PartnershipsCardBlock = ({ blok }: Props) => {
 						>
 							<div className="flex gap-6 pr-3 motion-reduce:w-full motion-reduce:flex-wrap">
 								{fillRow(row).map((entry, index) => {
-									const href = [entry.website.url, entry.website.cached_url].find((value) => value.length > 0) ?? '#';
+									const href = entry.website.url || entry.website.cached_url || '#';
 									const logoFilename = entry.logoIcon?.filename;
 
 									return (

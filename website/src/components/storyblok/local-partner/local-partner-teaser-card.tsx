@@ -1,11 +1,11 @@
 import { CardAlertFooter, type CardAlertFooterVariant } from '@/components/card-alert-footer';
+import { CountryFlag } from '@/components/country-flag';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { Badge } from '@socialincome/design-system/badge/badge';
 import { cn } from '@socialincome/design-system/cn';
-import { CountryFlag } from '@socialincome/design-system/country-flag/country-flag';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
 import type { LocalPartnerStory } from './local-partner.types';
