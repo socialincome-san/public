@@ -12,10 +12,7 @@ type WalletFrontProps = {
 };
 
 export const WalletFront = ({ variant, title, subtitle, badge, footerLeft, footerRight }: WalletFrontProps) => (
-	<div
-		className="flex min-h-[calc(100cqw/1.9)] w-full min-w-0 grow drop-shadow-[0_4px_20px_rgba(0,0,0,0.09)]"
-		data-testid="wallet-front"
-	>
+	<div className="drop-shadow-card flex min-h-[calc(100cqw/1.9)] w-full min-w-0 grow" data-testid="wallet-front">
 		<WalletFrontContent
 			variant={variant}
 			title={title}

@@ -143,6 +143,12 @@ const singleColors: SingleColor[] = [
 	{ name: 'input', token: '--input', swatchClass: 'bg-input', usage: 'Form control borders, active filters.' },
 	{ name: 'ring', token: '--ring', swatchClass: 'bg-ring', usage: 'Focus rings.' },
 	{ name: 'banner-blue', token: '--banner-blue', swatchClass: 'bg-banner-blue', usage: 'Journal banner sections.' },
+	{
+		name: 'highlight',
+		token: '--highlight',
+		swatchClass: 'bg-highlight',
+		usage: 'Warm callouts, e.g. the cover-costs prompt.',
+	},
 ];
 
 const SingleColorSwatch = ({ name, token, swatchClass, usage }: SingleColor) => {
@@ -208,9 +214,11 @@ const ColorsOverview = () => (
 					WCAG contrast of each pair.
 				</p>
 				<p>
-					Tailwind&apos;s default palette (<TokenName>slate-600</TokenName>, <TokenName>cyan-950</TokenName>, …) and
-					arbitrary values (<TokenName>bg-[#…]</TokenName>) are not part of the design system. If a color is missing, add a
-					token here instead.
+					Tailwind&apos;s default palette is removed from the theme, so classes like <TokenName>text-slate-600</TokenName>{' '}
+					generate nothing, and arbitrary colors (<TokenName>bg-[#…]</TokenName>) are not allowed. The exceptions are{' '}
+					<TokenName>white</TokenName> and <TokenName>black</TokenName> for content on photos and videos (e.g.{' '}
+					<TokenName>bg-black/60</TokenName>). If a color is missing, add a token here. The{' '}
+					<TokenName>no-arbitrary-design-values</TokenName> lint rule enforces this in both packages.
 				</p>
 			</>
 		}

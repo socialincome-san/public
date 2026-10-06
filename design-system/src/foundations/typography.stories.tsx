@@ -21,6 +21,7 @@ type TypeStep = {
 };
 
 const typeScale: TypeStep[] = [
+	{ name: 'text-2xs', sizeClass: 'text-2xs', usage: 'Tiny labels: small badges, field captions' },
 	{ name: 'text-xs', sizeClass: 'text-xs', usage: 'Badges, captions, table meta' },
 	{ name: 'text-sm', sizeClass: 'text-sm', usage: 'Controls, labels, dense UI' },
 	{ name: 'text-base', sizeClass: 'text-base', usage: 'Body text' },
@@ -31,6 +32,10 @@ const typeScale: TypeStep[] = [
 	{ name: 'text-4xl', sizeClass: 'text-4xl', usage: 'Section headings' },
 	{ name: 'text-5xl', sizeClass: 'text-5xl', usage: 'Page titles' },
 	{ name: 'text-6xl', sizeClass: 'text-6xl', usage: 'Page titles (desktop)' },
+	{ name: 'text-7xl', sizeClass: 'text-7xl', usage: 'Key figures (mobile)' },
+	{ name: 'text-8xl', sizeClass: 'text-8xl', usage: 'Key figures (tablet)' },
+	{ name: 'text-display', sizeClass: 'text-display', usage: 'Key figures, e.g. reserves total' },
+	{ name: 'text-display-lg', sizeClass: 'text-display-lg', usage: 'Hero figure, e.g. donations total' },
 ];
 
 const TypeStepRow = ({ name, sizeClass, usage }: TypeStep) => {
@@ -72,8 +77,9 @@ const TypographyOverview = () => (
 					on small screens.
 				</p>
 				<p>
-					Arbitrary sizes such as <TokenName>text-[10px]</TokenName> or <TokenName>text-[10rem]</TokenName> are not part of
-					the system. If a size is missing, add it to the scale.
+					Arbitrary sizes such as <TokenName>text-[10px]</TokenName> are not allowed; relative sizes like{' '}
+					<TokenName>text-[0.45em]</TokenName> are. If a size is missing, add it to the scale. The{' '}
+					<TokenName>no-arbitrary-design-values</TokenName> lint rule enforces this in both packages.
 				</p>
 			</>
 		}
@@ -108,6 +114,24 @@ const TypographyOverview = () => (
 						</SectionHeading>
 					</div>
 				))}
+			</div>
+		</FoundationSection>
+
+		<FoundationSection
+			title="Long-form text"
+			description="CMS and journal text uses the prose class. Its colors come from the tokens (see src/styles/utilities.css)."
+		>
+			<div className="prose max-w-2xl">
+				<h3>Why cash?</h3>
+				<p>
+					Direct cash transfers let people decide what they need most. <a href="#prose">Read the research</a> or see the{' '}
+					<strong>numbers</strong>.
+				</p>
+				<blockquote>Every month, the money arrives on my phone.</blockquote>
+				<ul>
+					<li>Paid out monthly</li>
+					<li>For three years</li>
+				</ul>
 			</div>
 		</FoundationSection>
 

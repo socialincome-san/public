@@ -14,7 +14,7 @@ export const CardAlertFooter = ({ text, variant, trailingText }: Props) => (
 				<span className="bg-confirm relative inline-flex size-2 rounded-full" />
 			</span>
 		) : null}
-		<p className="text-xs font-medium text-slate-950">{text}</p>
-		{trailingText ? <p className="ml-auto text-xs font-medium text-slate-950">{trailingText}</p> : null}
+		<p className="text-foreground text-xs font-medium">{text}</p>
+		{trailingText ? <p className="text-foreground ml-auto text-xs font-medium">{trailingText}</p> : null}
 	</div>
 );

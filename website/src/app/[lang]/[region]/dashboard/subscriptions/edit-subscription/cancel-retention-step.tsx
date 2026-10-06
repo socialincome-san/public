@@ -45,7 +45,7 @@ export const CancelRetentionStep = ({ amount, currency, labels, onReduceAmount, 
 							onClick={() => onReduceAmount(preset)}
 							data-testid={`cancel-retention-preset-${preset}`}
 						>
-							<span className="text-muted-foreground text-[10px] leading-none">{currency}</span>
+							<span className="text-muted-foreground text-2xs leading-none">{currency}</span>
 							<span className="text-lg leading-none font-medium">{preset}</span>
 						</button>
 					))}
@@ -61,7 +61,7 @@ export const CancelRetentionStep = ({ amount, currency, labels, onReduceAmount, 
 
 				<div className="flex items-center gap-3">
 					<div className="bg-border h-px flex-1" />
-					<span className="text-muted-foreground text-[10px] font-medium uppercase">{labels.or}</span>
+					<span className="text-muted-foreground text-2xs font-medium uppercase">{labels.or}</span>
 					<div className="bg-border h-px flex-1" />
 				</div>
 

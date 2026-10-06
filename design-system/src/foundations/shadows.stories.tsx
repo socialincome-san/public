@@ -26,6 +26,17 @@ const elevations: Elevation[] = [
 	{ name: 'shadow-xl', shadowClass: 'shadow-xl', usage: 'Interactive cards on hover' },
 ];
 
+const namedShadows: Elevation[] = [
+	{ name: 'shadow-card', shadowClass: 'shadow-card', usage: 'Soft cards and panels on light backgrounds' },
+	{ name: 'shadow-raised', shadowClass: 'shadow-raised', usage: 'Floating controls such as carousel buttons' },
+	{ name: 'shadow-overlay', shadowClass: 'shadow-overlay', usage: 'Large floating panels: navigation flyout, survey shell' },
+];
+
+const dropShadows = [
+	{ name: 'drop-shadow-card', shadowClass: 'drop-shadow-card', usage: 'Follows the shape of the content, e.g. the wallet' },
+	{ name: 'drop-shadow-on-media', shadowClass: 'drop-shadow-on-media', usage: 'Keeps text legible on photos' },
+];
+
 // Tailwind's unused shadow layers resolve to transparent
 const visibleShadowLayers = (boxShadow: string) =>
 	boxShadow
@@ -54,9 +65,10 @@ const ShadowsOverview = () => (
 		title="Shadows"
 		intro={
 			<p>
-				Elevation uses the Tailwind shadow scale. The higher a surface floats, the larger its shadow. Arbitrary shadows (
-				<TokenName>shadow-[0_4px_20px_rgba(…)]</TokenName>) are not part of the system; if none of these fit, add a named
-				shadow token instead.
+				Components use the Tailwind scale; feature sections use the named shadows. The higher a surface floats, the larger
+				its shadow. Arbitrary shadows (<TokenName>shadow-[0_4px_20px_rgba(…)]</TokenName>) are not allowed; if none of these
+				fit, add a named token. The <TokenName>no-arbitrary-design-values</TokenName> lint rule enforces this in both
+				packages.
 			</p>
 		}
 	>
@@ -64,6 +76,29 @@ const ShadowsOverview = () => (
 			<div className="bg-muted grid grid-cols-1 gap-8 rounded-3xl p-8 sm:grid-cols-3 lg:grid-cols-5">
 				{elevations.map((elevation) => (
 					<ElevationSwatch key={elevation.name} {...elevation} />
+				))}
+			</div>
+		</FoundationSection>
+
+		<FoundationSection title="Named shadows" description="Defined in src/styles/theme.css.">
+			<div className="bg-muted grid grid-cols-1 gap-8 rounded-3xl p-8 sm:grid-cols-3">
+				{namedShadows.map((elevation) => (
+					<ElevationSwatch key={elevation.name} {...elevation} />
+				))}
+			</div>
+		</FoundationSection>
+
+		<FoundationSection
+			title="Drop shadows"
+			description="A filter instead of a box shadow, so it follows transparent shapes and text."
+		>
+			<div className="from-primary to-muted-foreground grid grid-cols-1 gap-8 rounded-3xl bg-linear-to-br p-8 sm:grid-cols-2">
+				{dropShadows.map((dropShadow) => (
+					<div key={dropShadow.name} className="flex flex-col gap-2">
+						<span className={`text-primary-foreground text-3xl font-medium ${dropShadow.shadowClass}`}>CHF 1&apos;250</span>
+						<span className="text-primary-foreground font-mono text-xs">{dropShadow.name}</span>
+						<span className="text-primary-foreground text-sm">{dropShadow.usage}</span>
+					</div>
 				))}
 			</div>
 		</FoundationSection>

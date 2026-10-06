@@ -54,7 +54,7 @@ export const HeroHeader = ({
 
 	return (
 		<section className="full-bleed-hero flex flex-col gap-6">
-			<div className="bg-foreground relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden rounded-b-3xl md:min-h-160 md:rounded-b-[56px]">
+			<div className="bg-foreground md:rounded-b-5xl relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden rounded-b-3xl md:min-h-160">
 				{heroImageSrc ? (
 					<NextImage src={heroImageSrc} alt={heroImageAlt} fill sizes="100vw" className="object-cover" priority />
 				) : (

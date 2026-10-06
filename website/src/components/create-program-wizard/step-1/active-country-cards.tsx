@@ -50,7 +50,7 @@ export const ActiveCountryCards = ({ rows, selectedCountryId, onSelectCountry }:
 									label={
 										<div className="flex items-center gap-2">
 											<CountryFlag country={row.country.isoCode} size="lg" />
-											<span className="font-medium text-cyan-950">{getCountryNameByCode(row.country.isoCode)}</span>
+											<span className="text-foreground font-medium">{getCountryNameByCode(row.country.isoCode)}</span>
 										</div>
 									}
 									programCount={row.stats.programCount}

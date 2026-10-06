@@ -70,7 +70,7 @@ export const Variants: Story = {
 
 export const OnMedia: Story = {
 	render: () => (
-		<div className="flex flex-wrap items-center gap-3 rounded-3xl bg-slate-500 p-8">
+		<div className="bg-muted-foreground flex flex-wrap items-center gap-3 rounded-3xl p-8">
 			<Badge variant="video">Video</Badge>
 			<Badge variant="frosted">Frosted</Badge>
 		</div>

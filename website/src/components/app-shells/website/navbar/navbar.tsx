@@ -37,7 +37,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 		<nav
 			className={cn(
 				'bg-card max-w-content static inset-x-0 top-5 z-50 mx-auto flex h-18 w-full items-center justify-between px-4 py-2',
-				'lg:w-site-width lg:absolute lg:top-5 lg:h-14 lg:rounded-full lg:px-2 lg:shadow-[0_0_28px_rgba(0,0,0,0.05)]',
+				'lg:w-site-width lg:shadow-card lg:absolute lg:top-5 lg:h-14 lg:rounded-full lg:px-2',
 			)}
 		>
 			<NextLink

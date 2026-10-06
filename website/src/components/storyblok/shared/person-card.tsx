@@ -103,7 +103,7 @@ export const PersonCard = ({ person, href, size = 'default', volunteerDuration, 
 	const card = (
 		<div
 			className={cn(
-				'bg-card flex h-full w-full flex-col overflow-hidden rounded-xl shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]',
+				'bg-card shadow-card flex h-full w-full flex-col overflow-hidden rounded-xl',
 				isSmall ? 'p-2.5' : 'p-3',
 				href && 'transition-transform hover:scale-[1.01]',
 			)}

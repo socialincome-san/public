@@ -73,7 +73,7 @@ export const MenuDesktop = ({ menu, lang, region, donationForm }: Props) => (
 						<NavigationMenu.Content
 							onPointerEnter={preventHoverOpen}
 							onPointerLeave={preventHoverOpen}
-							className="bg-muted rounded-3xl p-8 shadow-[0_24px_48px_rgba(15,23,42,0.16)]"
+							className="bg-muted shadow-overlay rounded-3xl p-8"
 						>
 							<div className="flex items-start gap-10">
 								<div className="grid flex-1 grid-cols-3 gap-8 p-8">

@@ -47,8 +47,8 @@ export const PartnershipsCardBlock = ({ blok }: Props) => {
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok)}>
-			<div className="bg-background flex flex-col gap-6 overflow-hidden rounded-[32px] p-6 shadow-[0_0_20px_rgba(0,0,0,0.05)] sm:p-10">
-				<p className="text-sm leading-5 font-medium text-cyan-900">Inflows</p>
+			<div className="bg-background shadow-card flex flex-col gap-6 overflow-hidden rounded-4xl p-6 sm:p-10">
+				<p className="text-foreground text-sm leading-5 font-medium">Inflows</p>
 
 				<h2 className="max-w-3xl text-2xl leading-snug font-normal md:text-3xl md:leading-tight">{blok.title}</h2>
 

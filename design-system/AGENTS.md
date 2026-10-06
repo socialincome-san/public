@@ -38,3 +38,11 @@ Foundations (colors, typography, spacing and layout, radius, shadows,
 motion) are documented in `src/foundations/*.stories.tsx`. Those stories
 read the resolved CSS values at runtime, so update them when you add or
 rename a token in `src/styles/`.
+
+Design values come from tokens only. `src/styles/theme.css` removes
+Tailwind's default palette (`--color-*: initial`), so classes like
+`text-slate-600` generate nothing; `white` and `black` stay for content
+on media. `eslint-rules/no-arbitrary-design-values.mjs` rejects palette
+colors and arbitrary colors, font sizes (px/rem), radii and shadows in
+both packages. If a value is missing, add a token to `src/styles/` and
+document it in the matching foundations story.

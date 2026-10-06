@@ -15,8 +15,8 @@ type CountryFlagProps = {
 };
 
 const containerSizeClasses = {
-	sm: 'size-4 text-[10px]',
-	lg: 'size-9 text-[12px]',
+	sm: 'size-4 text-2xs',
+	lg: 'size-9 text-xs',
 	inline: 'size-[1em] text-[length:inherit]',
 };
 

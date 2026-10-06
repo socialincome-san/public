@@ -130,7 +130,7 @@ export const CampaignDonationForm = ({
 									<span className="text-sm leading-none font-medium">{translations.other}</span>
 								) : (
 									<span className="flex flex-col items-center leading-none">
-										<span className="text-[10px] font-medium">{currency}</span>
+										<span className="text-2xs font-medium">{currency}</span>
 										<span className="text-lg font-medium">{option}</span>
 									</span>
 								)}

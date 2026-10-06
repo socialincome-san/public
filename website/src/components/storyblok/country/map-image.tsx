@@ -20,8 +20,7 @@ export const MapImage = ({ src, alt, sizes, shape }: MapImageProps) => {
 		<div
 			className={cn(
 				'relative h-full w-full overflow-hidden',
-				shape === 'circle' &&
-					'border-primary-foreground bg-primary-foreground rounded-full border-4 shadow-[0_0_22px_rgba(0,0,0,0.1)]',
+				shape === 'circle' && 'border-primary-foreground bg-primary-foreground shadow-raised rounded-full border-4',
 			)}
 		>
 			<div className="bg-muted/20 absolute inset-0 flex items-center justify-center">

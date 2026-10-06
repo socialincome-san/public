@@ -38,7 +38,7 @@ export const InflowsSection = ({ copy, segments, totalAmount, videoEmbedUrl, vid
 	return (
 		<section className="grid gap-8 py-6 sm:grid-cols-2 sm:items-start sm:gap-12 md:gap-20 md:py-10">
 			<div className="flex max-w-3xl flex-col gap-3 sm:pt-8">
-				<p className="text-sm font-medium text-cyan-900">{copy.eyebrow}</p>
+				<p className="text-foreground text-sm font-medium">{copy.eyebrow}</p>
 				<h2 className="text-foreground text-4xl leading-tight font-normal md:text-5xl md:leading-[54px]">
 					{copy.headlineBeforeBold}
 					<span className="font-bold">{copy.headlineBold}</span>
@@ -56,8 +56,8 @@ export const InflowsSection = ({ copy, segments, totalAmount, videoEmbedUrl, vid
 				</div>
 			</div>
 
-			<div className="relative flex w-full flex-col items-center gap-8 rounded-[32px] bg-white px-6 pt-6 pb-8 shadow-[0px_0px_20px_rgba(0,0,0,0.05)] sm:px-8 sm:pt-7 sm:pb-10">
-				<h3 className="w-full text-2xl leading-none font-medium text-cyan-950">{copy.breakdownTitle}</h3>
+			<div className="bg-card shadow-card relative flex w-full flex-col items-center gap-8 rounded-4xl px-6 pt-6 pb-8 sm:px-8 sm:pt-7 sm:pb-10">
+				<h3 className="text-foreground w-full text-2xl leading-none font-medium">{copy.breakdownTitle}</h3>
 				<InflowsGauge
 					segments={segments}
 					centerValue={totalAmount}

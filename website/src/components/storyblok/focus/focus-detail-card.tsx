@@ -28,8 +28,8 @@ type FocusDetailCardStatProps = {
 
 const FocusDetailCardStat = ({ value, label }: FocusDetailCardStatProps) => (
 	<div className="flex flex-col gap-0">
-		<div className="text-2xl font-semibold text-slate-600">{value}</div>
-		<div className="text-sm font-medium text-slate-600">{label}</div>
+		<div className="text-muted-foreground text-2xl font-semibold">{value}</div>
+		<div className="text-muted-foreground text-sm font-medium">{label}</div>
 	</div>
 );
 
@@ -51,16 +51,16 @@ export const FocusDetailCard = ({
 				alertVariant === 'confirm' ? 'bg-confirm-foreground' : 'bg-secondary',
 			)}
 		>
-			<div className="border-border relative flex min-w-0 flex-1 flex-col gap-3 rounded-2xl border bg-white p-6">
+			<div className="border-border bg-card relative flex min-w-0 flex-1 flex-col gap-3 rounded-2xl border p-6">
 				<NextLink
 					href={href}
-					className="absolute inset-0 z-0 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-950"
+					className="focus-visible:outline-foreground absolute inset-0 z-0 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2"
 					aria-labelledby={titleId}
 				/>
 				<div className="pointer-events-none relative flex flex-col gap-3">
 					<h2
 						id={titleId}
-						className="line-clamp-2 min-h-18 min-w-0 font-sans text-3xl leading-9 font-medium wrap-break-word text-cyan-950"
+						className="text-foreground line-clamp-2 min-h-18 min-w-0 font-sans text-3xl leading-9 font-medium wrap-break-word"
 					>
 						{focusTitle}
 					</h2>

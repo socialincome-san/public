@@ -25,6 +25,8 @@ const radii: RadiusStep[] = [
 	{ name: 'rounded-xl', radiusClass: 'rounded-xl', usage: 'Selectable cards, table containers' },
 	{ name: 'rounded-2xl', radiusClass: 'rounded-2xl', usage: 'Media, inner panels' },
 	{ name: 'rounded-3xl', radiusClass: 'rounded-3xl', usage: 'Cards and dialogs' },
+	{ name: 'rounded-4xl', radiusClass: 'rounded-4xl', usage: 'Large feature panels' },
+	{ name: 'rounded-5xl', radiusClass: 'rounded-5xl', usage: 'Bottom corners of page heroes' },
 	{ name: 'rounded-full', radiusClass: 'rounded-full', usage: 'Buttons, inputs, badges, avatars' },
 ];
 
@@ -53,12 +55,13 @@ const RadiusOverview = () => (
 			<p>
 				<TokenName>rounded-sm</TokenName>, <TokenName>rounded-md</TokenName> and <TokenName>rounded-lg</TokenName> derive
 				from <TokenName>--radius</TokenName> in <TokenName>src/styles/tokens.css</TokenName>; the larger steps are Tailwind
-				defaults used by components. Arbitrary radii (<TokenName>rounded-[32px]</TokenName>) are not part of the system.
+				defaults used by components. Arbitrary radii (<TokenName>rounded-[32px]</TokenName>) are not allowed. The{' '}
+				<TokenName>no-arbitrary-design-values</TokenName> lint rule enforces this in both packages.
 			</p>
 		}
 	>
 		<FoundationSection title="Scale">
-			<div className="grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-7">
+			<div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
 				{radii.map((radius) => (
 					<RadiusSwatch key={radius.name} {...radius} />
 				))}

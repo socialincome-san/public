@@ -38,21 +38,21 @@ export const FocusSdgs = ({ values = [], label, layout = 'stacked' }: Props) => 
 					</span>
 				))
 			) : (
-				<span className="text-2xl font-semibold text-slate-600" aria-hidden>
+				<span className="text-muted-foreground text-2xl font-semibold" aria-hidden>
 					-
 				</span>
 			)}
 		</div>
 	);
 	const labelWithTooltip = (
-		<div className="flex items-center gap-1 text-sm font-medium text-slate-600">
+		<div className="text-muted-foreground flex items-center gap-1 text-sm font-medium">
 			<span>{label}</span>
 			{sdgs.length > 0 ? (
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<button
 							type="button"
-							className="pointer-events-auto relative z-10 inline-flex text-slate-600 hover:text-slate-950"
+							className="text-muted-foreground hover:text-foreground pointer-events-auto relative z-10 inline-flex"
 							aria-label={`${label} information`}
 						>
 							<InfoIcon className="size-3" aria-hidden />

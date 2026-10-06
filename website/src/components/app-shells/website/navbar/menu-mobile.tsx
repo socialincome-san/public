@@ -177,7 +177,7 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 								)}
 							</div>
 						</div>
-						<div className="border-muted flex h-18 shrink-0 items-center justify-between gap-2 border-t px-4 shadow-[0_-3px_14px_rgba(0,0,0,0.05)]">
+						<div className="border-muted shadow-card flex h-18 shrink-0 items-center justify-between gap-2 border-t px-4">
 							{!session && (
 								<OpenDonationWizardButton
 									label={donateTranslator?.t('donation-form.donate-now') ?? 'Donate now'}

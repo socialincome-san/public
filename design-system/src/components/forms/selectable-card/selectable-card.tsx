@@ -3,7 +3,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
-const selectableCardVariants = cva('text-foreground w-full min-w-0 rounded-[10px] border transition-colors', {
+const selectableCardVariants = cva('text-foreground w-full min-w-0 rounded-lg border transition-colors', {
 	variants: {
 		size: {
 			default: 'p-4 text-left',

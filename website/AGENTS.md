@@ -42,9 +42,12 @@ CVA, Radix, and Tailwind, with classes merged through `cn` from
 `design-system/src/cn.ts`. That package does not import the website.
 Components, in both packages, do not accept `className` props: pick a
 variant or add one to the component, and handle layout in the parent.
-Feature screens, wizards, data tables, and CMS blocks stay in
-`src/components` and may call module actions. `src/app/globals.css`
-imports `@socialincome/design-system/styles.css` and adds `@source` for
+Colors, font sizes, radii and shadows come from design-system tokens
+(Storybook › Foundations); Tailwind's default palette and arbitrary
+values for these are rejected by lint. Feature screens, wizards, data
+tables, and CMS blocks stay in `src/components` and may call module
+actions. `src/app/globals.css` imports
+`@socialincome/design-system/styles.css` and adds `@source` for
 `design-system/src`, so Tailwind still scans the package when that CSS
 is resolved through `node_modules`.
 
