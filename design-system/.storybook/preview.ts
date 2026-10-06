@@ -11,6 +11,22 @@ const preview: Preview = {
 		docs: {
 			codePanel: true,
 		},
+		options: {
+			storySort: {
+				order: [
+					'Design System',
+					'Foundations',
+					['Colors', 'Typography', 'Spacing & Layout', 'Radius', 'Shadows', 'Motion'],
+					'Actions',
+					'Forms',
+					'Overlays',
+					'Navigation',
+					'Feedback',
+					'Data Display',
+					'Layout',
+				],
+			},
+		},
 	},
 };
 
