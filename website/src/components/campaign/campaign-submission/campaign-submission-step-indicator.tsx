@@ -12,7 +12,7 @@ type Props = {
 	detailsLabel: string;
 	aboutLabel: string;
 	personalLabel: string;
-	variant?: 'circles' | 'bars';
+	variant?: 'dots' | 'bars';
 };
 
 export const CampaignSubmissionStepIndicator = ({
@@ -24,7 +24,7 @@ export const CampaignSubmissionStepIndicator = ({
 	detailsLabel,
 	aboutLabel,
 	personalLabel,
-	variant = 'circles',
+	variant = 'dots',
 }: Props) => {
 	const activeIndex = steps.indexOf(currentStep);
 
@@ -49,7 +49,7 @@ export const CampaignSubmissionStepIndicator = ({
 
 	return (
 		<StepIndicator
-			variant={variant === 'bars' ? 'bars' : 'dots'}
+			variant={variant}
 			steps={steps.map((_, index) => ({ label: getStepAriaLabel(index) }))}
 			activeIndex={activeIndex}
 			ariaLabel={formStepsLabel}

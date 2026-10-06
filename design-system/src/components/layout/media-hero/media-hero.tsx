@@ -85,9 +85,9 @@ export const MediaHero = ({
 			) : null}
 
 			{controlsStart || controlsEnd ? (
-				<div className="absolute inset-x-8 bottom-8 z-30 flex items-center justify-between">
-					<div className="flex items-center gap-2">{controlsStart}</div>
-					<div className="flex items-center gap-2">{controlsEnd}</div>
+				<div className="pointer-events-none absolute inset-x-8 bottom-8 z-30 flex items-center justify-between">
+					<div className="pointer-events-auto flex items-center gap-2">{controlsStart}</div>
+					<div className="pointer-events-auto flex items-center gap-2">{controlsEnd}</div>
 				</div>
 			) : null}
 
