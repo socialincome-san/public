@@ -5,7 +5,7 @@ import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { VimeoVideoMatchAndExtract } from '@/lib/utils/url-video-parser';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: ExplainerVideoHeader;
@@ -36,11 +36,7 @@ export const ExplainerVideoHeaderBlock = ({ blok, lang, region }: Props) => {
 	}
 
 	return (
-		<BlockWrapper
-			disableMarginBottom={disableMarginBottom}
-			disableMarginTop={disableMarginTop}
-			{...storyblokEditable(blok as SbBlokData)}
-		>
+		<BlockWrapper disableMarginBottom={disableMarginBottom} disableMarginTop={disableMarginTop} {...storyblokEditable(blok)}>
 			<div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
 				{headingText && (
 					<div className="text-primary text-4xl whitespace-pre-line md:text-5xl [&_strong]:font-bold">

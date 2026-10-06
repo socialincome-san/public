@@ -12,7 +12,7 @@ import { resolveChfAmountsAction } from '@/modules/currency-display/currency-dis
 import { getContributionsByCountryDataAction } from '@/modules/transparency/transparency.actions';
 import { Card } from '@socialincome/design-system/data-display/card/card';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: TransparencyCountries;
@@ -80,7 +80,7 @@ export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
 	}));
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<section>
 				<Card>
 					<CountriesSectionClient

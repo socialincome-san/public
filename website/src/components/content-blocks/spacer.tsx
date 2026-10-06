@@ -1,5 +1,5 @@
 import type { Spacer } from '@/generated/storyblok/types/109655/storyblok-components';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: Spacer;
@@ -24,7 +24,7 @@ export const SpacerBlock = ({ blok }: Props) => {
 		<div
 			className={`storyblok__outline w-site-width max-w-content mx-auto ${sizeClasses[size]}`}
 			aria-hidden
-			{...storyblokEditable(blok as SbBlokData)}
+			{...storyblokEditable(blok)}
 		/>
 	);
 };

@@ -5,7 +5,7 @@ import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { ModalCards } from '@/generated/storyblok/types/109655/storyblok-components';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 import { PlusIcon } from 'lucide-react';
 import NextImage from 'next/image';
 import { useState } from 'react';
@@ -24,11 +24,7 @@ export const ModalCardsBlock = ({ blok }: Props) => {
 	const [openCardId, setOpenCardId] = useState<string | null>(null);
 
 	return (
-		<BlockWrapper
-			disableMarginBottom={disableMarginBottom}
-			disableMarginTop={disableMarginTop}
-			{...storyblokEditable(blok as SbBlokData)}
-		>
+		<BlockWrapper disableMarginBottom={disableMarginBottom} disableMarginTop={disableMarginTop} {...storyblokEditable(blok)}>
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 				{cards?.map(({ image, heading, modalContent, _uid }) => {
 					if (!image.filename) {

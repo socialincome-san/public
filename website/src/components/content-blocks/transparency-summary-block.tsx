@@ -8,7 +8,7 @@ import { resolveChfAmountsAction } from '@/modules/currency-display/currency-dis
 import type { DisplayAmount } from '@/modules/currency-display/currency-display.types';
 import { getTransparencySummaryAction } from '@/modules/transparency/transparency.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 
 type ReserveAccount = {
 	bankAccountId: string;
@@ -104,7 +104,7 @@ export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
 	}));
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<SummarySectionClient metrics={metrics} lang={lang} />
 		</BlockWrapper>
 	);

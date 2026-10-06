@@ -1,7 +1,7 @@
 import { TwoColumnLayout } from '@/components/content-blocks/two-column-layout';
 import type { TwoColumn } from '@/generated/storyblok/types/109655/storyblok-components';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 import type { ReactNode } from 'react';
 
 type Props = {
@@ -18,11 +18,7 @@ export const TwoColumnBlock = ({ blok, leftColumn, rightColumn }: Props) => {
 	}
 
 	return (
-		<BlockWrapper
-			disableMarginBottom={disableMarginBottom}
-			disableMarginTop={disableMarginTop}
-			{...storyblokEditable(blok as SbBlokData)}
-		>
+		<BlockWrapper disableMarginBottom={disableMarginBottom} disableMarginTop={disableMarginTop} {...storyblokEditable(blok)}>
 			<TwoColumnLayout leftColumn={leftColumn} rightColumn={rightColumn} columnRatio={columnRatio} content="blocks" />
 		</BlockWrapper>
 	);

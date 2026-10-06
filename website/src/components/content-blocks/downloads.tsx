@@ -5,7 +5,7 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 import { DownloadIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -27,7 +27,7 @@ export const DownloadsBlock = ({ blok }: Props) => {
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<div className="space-y-6">
 				{blok.heading && (
 					<SectionHeading align="left">
