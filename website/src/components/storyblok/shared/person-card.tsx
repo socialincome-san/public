@@ -118,8 +118,7 @@ export const PersonCard = ({ person, href, size = 'default', volunteerDuration, 
 					<div className="group/duration absolute top-3 left-3 z-20">
 						<Badge
 							variant="frosted"
-							// Hover-only content is invisible to assistive tech, so the date rides along as the accessible
-							// description; an aria-label would instead replace the duration as the accessible name.
+							// The hover-only date is exposed via title; an aria-label would replace the duration as the accessible name
 							title={duration.since}
 						>
 							<span className="group-hover/duration:hidden">{duration.label}</span>

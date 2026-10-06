@@ -8,11 +8,10 @@ type MapImageProps = {
 	src: string;
 	alt: string;
 	sizes: string;
-	/** Rectangle fills its container; circle is a framed round map (also used for the inset locator map) */
 	shape: 'rectangle' | 'circle';
 };
 
-// Fills its parent, which sets the size and position
+// The parent sets the size
 export const MapImage = ({ src, alt, sizes, shape }: MapImageProps) => {
 	const [hasImageError, setHasImageError] = useState(false);
 	const placeholderShape = shape === 'circle' ? 'rounded-full' : 'rounded-md';

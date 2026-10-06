@@ -10,7 +10,6 @@ const slugifyCountry = (name: string): string => {
 
 type CountryFlagProps = {
 	country: string;
-	/** Inline scales with the surrounding text (1em) */
 	size?: 'sm' | 'lg' | 'inline';
 	decorative?: boolean;
 };

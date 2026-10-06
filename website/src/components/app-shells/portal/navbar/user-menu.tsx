@@ -21,7 +21,6 @@ type DropdownAlign = 'start' | 'center' | 'end';
 type UserMenuProps = {
 	sessions: Session[];
 	align?: DropdownAlign;
-	/** A pill in the desktop navigation bar or a full-width row in the mobile menu */
 	variant: 'bar' | 'menu';
 	onNavigate?: () => void;
 };

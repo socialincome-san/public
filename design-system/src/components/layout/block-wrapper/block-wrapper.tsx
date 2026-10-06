@@ -5,9 +5,7 @@ import { type WithoutClassName } from '../../../without-class-name';
 type Props = WithoutClassName<ComponentPropsWithoutRef<'div'>> & {
 	disableMarginTop?: boolean;
 	disableMarginBottom?: boolean;
-	/** Compact is for pages that stack many short sections, such as campaign pages */
 	spacing?: 'default' | 'compact';
-	/** Bleed drops the side padding from md upwards, e.g. for carousels that run to the content edge */
 	width?: 'content' | 'bleed';
 };
 

@@ -60,7 +60,7 @@ export const ImageTextBlock = ({ blok }: Props) => {
 				{imageFilename && (
 					<div className={cn('order-2 md:order-none', widthClasses.image)}>
 						{isSvg ? (
-							// SVGs should keep their original vector source instead of going through the Storyblok raster loader.
+							// SVGs bypass the Storyblok raster loader to stay vector
 							// eslint-disable-next-line @next/next/no-img-element
 							<img
 								src={imageFilename}

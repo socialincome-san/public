@@ -91,7 +91,6 @@ const tooltipContentVariants = cva(
 		variants: {
 			size: {
 				default: 'max-w-xs px-3 py-1.5 text-xs',
-				// For longer explanations
 				lg: 'max-w-[min(36rem,calc(100vw-2rem))] px-4 py-3 text-sm',
 			},
 		},

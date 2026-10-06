@@ -19,7 +19,6 @@ export const CreateProgramWizardFooter = ({ state, send }: Props) => {
 				{t('common.back')}
 			</Button>
 
-			{/* On mobile the indicator takes its own first row above the buttons */}
 			<div className="order-first w-full sm:order-none sm:w-auto sm:flex-1">
 				<CreateProgramStepIndicator state={state} />
 			</div>

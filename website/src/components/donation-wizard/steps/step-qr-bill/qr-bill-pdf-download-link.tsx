@@ -10,7 +10,6 @@ import { type DonationAmountContext } from '../../utils/donation-amount';
 
 type QrBillPdfDownloadAppearance = {
 	disabled?: boolean;
-	/** Link: an underlined text link. Button: a small outline button. */
 	appearance?: 'link' | 'button';
 	children?: ReactNode;
 };

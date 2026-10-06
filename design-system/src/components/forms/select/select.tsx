@@ -12,7 +12,6 @@ const Select = SelectPrimitive.Root;
 
 const SelectValue = SelectPrimitive.Value;
 
-// Shared with other field-like triggers (combobox, date picker) so all pickers look like a select.
 const selectTriggerVariants = cva(
 	'border-input ring-offset-background data-placeholder:text-muted-foreground focus:ring-ring flex w-full items-center justify-between gap-2 rounded-full border bg-transparent px-3 text-sm whitespace-nowrap shadow-xs focus:ring-1 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
 	{

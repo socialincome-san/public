@@ -3,7 +3,6 @@ import { ChevronDown } from 'lucide-react';
 import * as React from 'react';
 import { type WithoutClassName } from '../../../without-class-name';
 
-// Shared with other filter-like triggers (for example MultiSelect with trigger="filter")
 const filterTriggerVariants = cva(
 	'border-border text-foreground hover:bg-muted data-[state=open]:bg-muted focus-visible:ring-ring flex h-10 w-full min-w-0 items-center justify-between gap-2 rounded-full border px-4 text-sm font-medium transition-colors focus-visible:ring-1 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50',
 	{

@@ -19,7 +19,6 @@ type CarouselProps = {
 	opts?: CarouselOptions;
 	plugins?: CarouselPlugin;
 	orientation?: 'horizontal' | 'vertical';
-	/** Space between slides */
 	gap?: CarouselGap;
 	setApi?: (api: CarouselApi) => void;
 };
@@ -186,11 +185,9 @@ const carouselItemVariants = cva('min-w-0 shrink-0 grow-0', {
 	variants: {
 		size: {
 			full: 'basis-full',
-			// One slide in focus with the neighbours peeking in
 			featured: 'basis-full md:basis-4/5 lg:basis-3/5',
 			card: 'basis-[305px]',
 			'card-sm': 'basis-[260px]',
-			// Several small items such as logos
 			tile: 'basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5',
 		},
 	},

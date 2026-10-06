@@ -35,7 +35,6 @@ export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) =
 			data-testid="country-table"
 			className="max-h-96 w-full max-w-full min-w-0 overflow-x-auto overflow-y-auto rounded-xl border"
 		>
-			{/* Keeps the seven columns readable; the container scrolls horizontally on narrow screens */}
 			<div className="min-w-[820px]">
 				<Table>
 					<TableHeader>
@@ -53,7 +52,7 @@ export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) =
 					<TableBody>
 						{rows.map((row) => {
 							const isOpen = openIds.includes(row.id);
-							// Open rows share the highlight so they read as one group with their expansion row
+							// Open rows share the highlight with their expansion row
 							const rowState = value === row.id || isOpen ? 'selected' : undefined;
 
 							return (

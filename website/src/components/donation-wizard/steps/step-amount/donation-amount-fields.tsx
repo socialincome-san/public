@@ -53,7 +53,6 @@ type Props = {
 	values: DonationAmountFieldsValues;
 	actions: DonationAmountFieldsActions;
 	onSubmit: () => void;
-	/** Wizard: the amount step inside the donation modal. Hero: the standalone form next to a page hero. */
 	placement?: 'wizard' | 'hero';
 	translations: DonationAmountFieldsTranslations;
 	currency: WebsiteCurrency;

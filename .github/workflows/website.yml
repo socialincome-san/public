@@ -127,9 +127,8 @@ jobs:
   e2e:
     name: "🏗️ Build & 📸 E2E Tests"
     runs-on: ubuntu-latest
-    # A normal run takes ~15 minutes; fail fast instead of hanging until GitHub's 6-hour default
     timeout-minutes: 30
-    # Starts alongside the other checks; only the dependency scan has to pass before installing and building
+    # Only the dependency scan gates installing; the other checks run in parallel
     needs:
       - safe-chain
 
@@ -177,7 +176,6 @@ jobs:
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
 
-      # Lets next build reuse compiled output from earlier runs
       - name: Cache Next.js build
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:

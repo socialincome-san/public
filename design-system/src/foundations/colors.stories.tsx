@@ -64,8 +64,7 @@ const colorPairs: ColorPair[] = [
 	},
 ];
 
-// Status colors come in two forms: a solid fill with *-foreground text, and a soft tint where *-foreground is the
-// background and the status color is the text (badges, alerts, success banners).
+// Soft variants flip the pair: *-foreground is the background and the status color is the text
 const statusPairs: ColorPair[] = [
 	{
 		name: 'destructive (solid)',

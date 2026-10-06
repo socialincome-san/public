@@ -12,7 +12,6 @@ const popoverContentVariants = cva(
 		variants: {
 			variant: {
 				default: 'w-72 p-4',
-				// Flush content such as option lists or calendars, at least as wide as the trigger
 				picker: 'pointer-events-auto w-auto min-w-(--radix-popover-trigger-width) overflow-hidden p-0',
 			},
 		},

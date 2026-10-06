@@ -12,7 +12,6 @@ const radioGroupVariants = cva('', {
 			stack: 'grid gap-3',
 			row: 'flex flex-wrap gap-4',
 			grid: 'grid grid-cols-1 gap-4 sm:grid-cols-2',
-			// Items bring their own dividers and spacing
 			list: 'grid min-w-0',
 		},
 	},

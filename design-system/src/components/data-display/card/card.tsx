@@ -11,14 +11,12 @@ const cardVariants = cva('relative overflow-hidden rounded-3xl transition-all', 
 		},
 		elevation: {
 			raised: 'shadow-lg',
-			// Bordered, for cards stacked inside forms or on muted backgrounds
 			flat: 'border-border border shadow-sm',
 		},
 		surface: {
 			default: 'bg-background',
 			gradient: 'bg-donation-modal-gradient',
 		},
-		// Lifts on hover, for cards wrapped in a link
 		interactive: {
 			true: 'hover:-translate-y-1 hover:shadow-xl',
 		},

@@ -30,7 +30,7 @@ const dialogContentVariants = cva(
 	{
 		variants: {
 			size: {
-				// Short confirmations: a bottom sheet on mobile instead of a full-screen dialog
+				// Bottom sheet on mobile instead of full screen
 				alert:
 					'sm:max-w-[400px] max-sm:inset-x-4 max-sm:top-auto max-sm:bottom-4 max-sm:w-auto max-sm:translate-x-0 max-sm:translate-y-0',
 				sm: 'sm:max-w-md',
@@ -42,14 +42,12 @@ const dialogContentVariants = cva(
 				default: 'bg-background rounded-3xl border',
 				gradient: 'bg-donation-modal-gradient rounded-3xl border-0 shadow-lg',
 			},
-			// --dialog-px lets header, body and footer bleed to the edges whatever the padding
+			// Header, body and footer use --dialog-px to bleed to the edges
 			padding: {
 				default: 'gap-4 px-(--dialog-px) py-6 [--dialog-px:--spacing(6)]',
-				// For content with its own full-width sections that set their own horizontal padding
 				vertical: 'gap-4 py-6 [--dialog-px:0px]',
 				none: 'gap-0 p-0 [--dialog-px:0px]',
 			},
-			// Fixed keeps multi-step dialogs from resizing between steps
 			height: {
 				auto: '',
 				fixed: 'sm:h-[min(46rem,90dvh)]',
@@ -140,14 +138,11 @@ const DialogContent = React.forwardRef<
 );
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
-// Header, body and footer span the full dialog width so their dividers reach the edges.
-// The header leaves room on the right for the close button.
 const DialogHeader = (props: WithoutClassName<React.HTMLAttributes<HTMLDivElement>>) => (
 	<div className="-mx-(--dialog-px) flex shrink-0 flex-col gap-1.5 border-b px-6 pr-12 pb-6 text-left" {...props} />
 );
 DialogHeader.displayName = 'DialogHeader';
 
-// Scrolls on its own so the header and footer stay visible
 const DialogBody = (props: WithoutClassName<React.HTMLAttributes<HTMLDivElement>>) => (
 	<div className="-mx-(--dialog-px) flex min-h-0 flex-1 flex-col overflow-y-auto px-6" {...props} />
 );

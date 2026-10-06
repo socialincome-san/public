@@ -40,7 +40,6 @@ const RemoveUploadedImageButton = ({
 	onRemove,
 }: {
 	ariaLabel: string;
-	/** Small fits on thumbnails, default on the full preview */
 	size: 'sm' | 'default';
 	onRemove: () => void;
 }) => (

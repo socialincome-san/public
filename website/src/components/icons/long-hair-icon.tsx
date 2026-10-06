@@ -1,5 +1,4 @@
 type Props = {
-	/** Width and height in pixels, like lucide icons */
 	size?: number;
 };
 

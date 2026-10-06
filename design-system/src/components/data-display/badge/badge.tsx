@@ -17,7 +17,6 @@ const badgeVariants = cva(
 				verified: 'bg-confirm-foreground border-confirm/30 text-confirm',
 				country: 'bg-background border-border text-foreground',
 				fundraising: 'bg-green-200 border-green-300 text-foreground text-sm leading-none font-medium whitespace-nowrap',
-				// For badges placed on photos or videos
 				video: 'bg-black/60 border-white/40 text-white backdrop-blur-sm',
 				frosted: 'bg-white/80 border-white/40 text-foreground whitespace-nowrap backdrop-blur-sm',
 			},
@@ -44,7 +43,7 @@ const badgeVariants = cva(
 type BadgeProps = WithoutClassName<React.HTMLAttributes<HTMLDivElement>> & VariantProps<typeof badgeVariants>;
 
 const Badge = ({ variant, size, ...props }: BadgeProps) => {
-	// cn lets variant and compound classes (e.g. the fundraising text size) override the base
+	// cn so variant and compound classes override conflicting base classes
 	return <div className={cn(badgeVariants({ variant, size }))} {...props} />;
 };
 

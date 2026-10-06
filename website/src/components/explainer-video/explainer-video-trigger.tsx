@@ -12,7 +12,6 @@ type Props = {
 	thumbnailSrc?: string;
 	thumbnailAlt?: string;
 	dialogTitle?: string;
-	/** Stacked: thumbnail above the label. Row: a full-width list row. Inline: thumbnail and label inside running content. */
 	layout?: 'stacked' | 'row' | 'inline';
 };
 

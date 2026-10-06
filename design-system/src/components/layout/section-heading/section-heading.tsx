@@ -10,7 +10,6 @@ type Props = {
 	size?: HeadingSize;
 };
 
-// No outer margin: the surrounding layout spaces the heading. Line breaks from the CMS are kept.
 export const SectionHeading = ({ children, align = 'center', as: Tag = 'h2', bold = false, size = 2 }: Props) => (
 	<Tag
 		className={cn(

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { type WithoutClassName } from '../../../without-class-name';
 
 type TableProps = WithoutClassName<React.HTMLAttributes<HTMLTableElement>> & {
-	/** Row density, read by the cells through the group/table data attribute */
+	/** Read by the cells through the group/table data attribute */
 	size?: 'sm' | 'default' | 'lg';
 };
 
@@ -30,8 +30,7 @@ const TableBody = React.forwardRef<HTMLTableSectionElement, WithoutClassName<Rea
 );
 TableBody.displayName = 'TableBody';
 
-// Rows with an onClick handler are highlighted on hover; data-state="selected" marks the selected row.
-// Cells can react to hovering the row with group-hover/row.
+// Rows with an onClick handler get hover styles
 const TableRow = React.forwardRef<HTMLTableRowElement, WithoutClassName<React.HTMLAttributes<HTMLTableRowElement>>>(
 	(props, ref) => (
 		<tr
@@ -49,7 +48,6 @@ TableRow.displayName = 'TableRow';
 
 const cellVariants = cva('border-b align-middle', {
 	variants: {
-		// Fit shrinks the column to its content, e.g. for checkboxes or row actions
 		width: {
 			auto: '',
 			fit: 'w-px whitespace-nowrap',
@@ -70,9 +68,8 @@ type CellVariantProps = VariantProps<typeof cellVariants>;
 const tableHeadVariants = cva('px-2 text-left', {
 	variants: {
 		variant: {
-			// Column labels of a data table
 			default: 'text-muted-foreground h-10 font-medium whitespace-nowrap group-data-[size=sm]/table:h-9',
-			// Header cells of a content table (e.g. from the CMS): may wrap and read like body text
+			// CMS tables: headers wrap and read like body text
 			content: 'text-foreground py-2 font-bold',
 		},
 	},

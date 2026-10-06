@@ -13,7 +13,6 @@ const inputVariants = cva(
 					'read-only:bg-muted/50 read-only:text-muted-foreground read-only:cursor-default read-only:focus-visible:ring-0',
 					'aria-invalid:ring-destructive/20 aria-invalid:border-destructive',
 				].join(' '),
-				// No box of its own: sits inside a custom field container and takes over its typography
 				bare: 'bg-transparent p-0 [font:inherit] [text-align:inherit]',
 			},
 		},

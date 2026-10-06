@@ -10,14 +10,13 @@ const buttonVariants = cva(
 			variant: {
 				default: [
 					'text-primary-foreground shadow-sm bg-primary/90',
-					// Use a pseudo element to allow the gradient transition effect
+					// Gradients can't be transitioned, so the gradient fades out on a pseudo element instead
 					'after:bg-linear-to-r after:from-[hsl(var(--gradient-button-from))] after:to-[hsl(var(--gradient-button-to))] after:inset-0 after:-z-10 after:rounded-full after:absolute after:opacity-100 hover:after:opacity-0 focus:after:opacity-0 after:transition-opacity',
 				].join(' '),
 				destructive: 'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90',
 				'destructive-outline':
 					'border border-destructive/30 bg-card text-destructive hover:bg-destructive-foreground hover:text-destructive',
 				outline: 'border border-input text-primary hover:bg-accent hover:text-accent-foreground bg-background',
-				// For buttons placed on photos or videos
 				'outline-inverse':
 					'border border-input text-primary-foreground hover:bg-accent hover:text-accent-foreground bg-background/5',
 				overlay: 'text-primary-foreground bg-foreground/45 hover:bg-foreground/60',

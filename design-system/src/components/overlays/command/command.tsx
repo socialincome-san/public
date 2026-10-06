@@ -63,7 +63,6 @@ const commandItemVariants = cva(
 		variants: {
 			variant: {
 				default: '',
-				// Centered footer actions such as "Clear" or "Close" that share a row
 				action: 'flex-1 justify-center',
 			},
 		},

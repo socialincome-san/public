@@ -28,7 +28,6 @@ const AlertTitle = (props: WithoutClassName<React.ComponentProps<'div'>>) => {
 	return <div data-slot="alert-title" className="col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight" {...props} />;
 };
 
-// Long messages such as server errors scroll instead of widening the alert
 const AlertDescription = (props: WithoutClassName<React.ComponentProps<'div'>>) => {
 	return (
 		<div

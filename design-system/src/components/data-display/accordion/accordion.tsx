@@ -15,7 +15,6 @@ const accordionItemVariants = cva('', {
 	variants: {
 		variant: {
 			default: 'border-b last:border-b-0',
-			// A self-contained box, e.g. a group of fields inside a form
 			boxed: 'border-border bg-muted rounded-xl border px-2',
 		},
 	},
@@ -49,7 +48,7 @@ const AccordionTrigger = ({
 	);
 };
 
-// With forceMount the content stays mounted while closed (e.g. to keep form fields registered), so it is hidden instead
+// forceMount keeps closed content mounted (e.g. registered form fields), so it has to be hidden
 const AccordionContent = ({
 	children,
 	forceMount,

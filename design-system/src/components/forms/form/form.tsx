@@ -63,11 +63,8 @@ const FormItemContext = React.createContext<FormItemContextValue>({} as FormItem
 const formItemVariants = cva('flex', {
 	variants: {
 		layout: {
-			// Label above the control
 			stack: 'flex-col gap-2',
-			// Label next to the control, e.g. for switches
 			inline: 'flex-row items-center gap-2',
-			// Takes the remaining height of a flex column so its content can scroll
 			fill: 'min-h-0 flex-1 flex-col',
 		},
 	},

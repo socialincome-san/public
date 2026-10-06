@@ -18,7 +18,6 @@ import { FC } from 'react';
 type ProgramDropdownProps = {
 	sessions: Session[];
 	active?: boolean;
-	/** Matches the surrounding links: the desktop navigation bar or the stacked mobile menu */
 	variant: 'bar' | 'menu';
 };
 

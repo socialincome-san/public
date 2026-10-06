@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 
-// Foundation stories show the values the browser actually resolves, so the docs can't drift from the tokens.
-// getComputedStyle returns a live declaration, so reading it during render always reflects the current styles.
+// getComputedStyle returns a live declaration, so reading it during render stays current
 export const useComputedStyle = () => {
 	const [style, setStyle] = useState<CSSStyleDeclaration | null>(null);
 	const ref = useCallback((element: HTMLElement | null) => {

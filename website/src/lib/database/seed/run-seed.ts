@@ -105,8 +105,7 @@ export const seedDatabase = async () => {
 		await tx.surveySchedule.createMany({ data: surveySchedulesData, skipDuplicates: true });
 		await tx.survey.createMany({ data: surveysData, skipDuplicates: true });
 		await tx.expense.createMany({ data: expensesData, skipDuplicates: true });
-		// Exchange rates are read-only reference data and make up most of the seed (3000+ rows, ~60% of its time),
-		// so they survive reseeding and are only rewritten when they don't match the seed data
+		// Read-only reference data and ~60% of the seed time, so it survives reseeding
 		if ((await tx.exchangeRate.count()) !== exchangeRatesData.length) {
 			await tx.exchangeRate.deleteMany();
 			await tx.exchangeRate.createMany({ data: exchangeRatesData });

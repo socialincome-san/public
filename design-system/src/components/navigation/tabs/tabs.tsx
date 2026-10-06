@@ -5,7 +5,6 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { type WithoutClassName } from '../../../without-class-name';
 
-// Triggers always get equal widths, sized either by the widest label or by the container
 const tabsListVariants = cva(
 	'bg-muted text-muted-foreground h-10 auto-cols-fr grid-flow-col items-center rounded-full p-[3px]',
 	{

@@ -26,7 +26,7 @@ const elevations: Elevation[] = [
 	{ name: 'shadow-xl', shadowClass: 'shadow-xl', usage: 'Interactive cards on hover' },
 ];
 
-// Tailwind composes shadows from several layers; the unused ones resolve to transparent and are hidden here
+// Tailwind's unused shadow layers resolve to transparent
 const visibleShadowLayers = (boxShadow: string) =>
 	boxShadow
 		.split(/,(?![^(]*\))/)

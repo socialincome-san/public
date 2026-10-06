@@ -10,10 +10,8 @@ type Props = ImageWithCaptionBlok;
 const WIDE_BREAKOUT_CLASSES = 'lg:relative lg:left-1/2 lg:w-screen lg:max-w-[800px] lg:-translate-x-1/2';
 
 const figureLayoutClasses = {
-	// Inside the text column
 	default: 'my-8 w-full',
 	wide: cn('my-8 w-full', WIDE_BREAKOUT_CLASSES),
-	// One of two figures next to each other
 	half: 'w-full lg:w-1/2',
 };
 

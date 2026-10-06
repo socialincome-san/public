@@ -7,7 +7,6 @@ const selectableCardVariants = cva('text-foreground w-full min-w-0 rounded-[10px
 	variants: {
 		size: {
 			default: 'p-4 text-left',
-			// A short centred label, e.g. one option of a small choice
 			sm: 'px-4 py-3 text-center text-sm font-medium',
 		},
 		state: {

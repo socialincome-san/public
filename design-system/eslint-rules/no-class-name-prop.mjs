@@ -24,7 +24,6 @@ const unwrapComponentFunction = (node) => {
 	return null;
 };
 
-// className itself and escape hatches such as wrapperClassName or imageClassName
 const isClassNameProp = (name) => name === 'className' || name.endsWith('ClassName');
 
 const findClassNameProp = (checker, type) =>
@@ -77,7 +76,6 @@ const noClassNameProp = {
 					checkComponent(node.id.name, node);
 				}
 			},
-			// Anonymous default exports (export default function () {} / export default () => …) are components too
 			ExportDefaultDeclaration: (node) => {
 				const { declaration } = node;
 				if (declaration.type === 'FunctionDeclaration' && !declaration.id) {

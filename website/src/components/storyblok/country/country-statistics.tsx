@@ -61,7 +61,6 @@ type CountryHeaderProps = {
 	countryCode: CountryCode;
 	countryName: string;
 	align?: 'left' | 'right';
-	/** Small is used in the compact mobile comparison */
 	size?: 'sm' | 'default';
 };
 

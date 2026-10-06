@@ -12,7 +12,6 @@ type WalletLayerImageProps = {
 	image: WalletImage;
 	decorative?: boolean;
 	sizes: string;
-	/** How the layer fans out when the wallet (group) is hovered */
 	hoverMotion?: keyof typeof hoverMotionClasses;
 };
 

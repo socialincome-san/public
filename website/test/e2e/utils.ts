@@ -92,7 +92,7 @@ export const assertContactExistsByEmail = async (email: string) => {
 	});
 };
 
-// Nested form fields (section.field) live in accordion sections that stay hidden until opened
+// Nested fields (section.field) are hidden until their accordion section is opened
 export const expandFormSectionOf = async (page: Page, fieldName: string) => {
 	const sectionName = fieldName.includes('.') ? fieldName.split('.')[0] : null;
 	if (!sectionName) {

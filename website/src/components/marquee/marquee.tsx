@@ -17,7 +17,7 @@ const speedClassMap = {
 	fast: '[animation-duration:35s]',
 };
 
-// Bleeds slightly past its container (with matching padding) so item shadows aren't clipped, and fades out at the edges
+// -mx-4 with px-4 keeps item shadows from being clipped
 export const Marquee = ({ children, direction = 'left', speed = 'regular' }: Props) => (
 	<div className="group -mx-4 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] px-4 py-1 [contain-intrinsic-size:auto_300px] [content-visibility:auto]">
 		<div
