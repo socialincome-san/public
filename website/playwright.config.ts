@@ -36,15 +36,21 @@ export default defineConfig({
 	workers: 1,
 
 	forbidOnly: !!process.env.CI,
-	retries: process.env.CI ? 2 : 0,
+	retries: process.env.CI ? 1 : 0,
+	// A broken build stops early instead of running (and retrying) every test
+	maxFailures: process.env.CI ? 10 : undefined,
 
 	snapshotDir: 'snapshots',
 	snapshotPathTemplate: '{testDir}/__screenshots__/{projectName}/{testFilePath}/{testName}{ext}',
 
-	reporter: [['html', { open: 'never' }]],
+	// In CI, list prints one line per test so progress is visible in the log, and github annotates failures on the PR
+	reporter: process.env.CI ? [['list'], ['github'], ['html', { open: 'never' }]] : [['html', { open: 'never' }]],
+	reportSlowTests: { max: 10, threshold: 15_000 },
 
 	use: {
 		baseURL,
+		// A blocked click or fill fails after 10s instead of using up the whole test timeout
+		actionTimeout: 10_000,
 		screenshot: 'only-on-failure',
 		trace: 'retain-on-failure',
 		video: 'retain-on-failure',
