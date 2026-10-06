@@ -14,7 +14,7 @@ import {
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { ISbStoryData } from '@storyblok/js';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 import NextLink from 'next/link';
 
 type Props = {
@@ -139,7 +139,7 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 
 	return (
 		<BlockWrapper
-			{...storyblokEditable(blok as SbBlokData)}
+			{...storyblokEditable(blok)}
 			disableMarginTop={blok.disableMarginTop}
 			disableMarginBottom={blok.disableMarginBottom}
 		>

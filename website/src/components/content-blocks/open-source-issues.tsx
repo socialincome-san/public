@@ -6,7 +6,7 @@ import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getOpenSourceIssuesAction } from '@/modules/github/github.actions';
 import { EMPTY_GITHUB_OPEN_SOURCE_ISSUES_DATA } from '@/modules/github/github.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: OpenSourceIssues;
@@ -33,7 +33,7 @@ export const OpenSourceIssuesBlock = async ({ blok, lang }: Props) => {
 	const errorMessage = translator.t<string>('error.unavailable');
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			{!issuesResult.success ? <OpenSourceUnavailableMessage message={errorMessage} /> : null}
 
 			<IssuesList

@@ -6,7 +6,7 @@ import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getOpenSourceStatsAction } from '@/modules/github/github.actions';
 import { EMPTY_GITHUB_REPO_STATS } from '@/modules/github/github.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: OpenSourceStats;
@@ -30,7 +30,7 @@ export const OpenSourceStatsBlock = async ({ blok, lang }: Props) => {
 	const errorMessage = translator.t<string>('error.unavailable');
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			{!statsResult.success ? <OpenSourceUnavailableMessage message={errorMessage} /> : null}
 
 			<StatsOverview

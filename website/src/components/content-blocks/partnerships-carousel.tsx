@@ -5,7 +5,7 @@ import { getScaledDimensions } from '@/lib/storyblok/storyblok-utils';
 import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/data-display/carousel/carousel';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { ISbStoryData } from '@storyblok/js';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 import NextImage from 'next/image';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
@@ -49,7 +49,7 @@ export const PartnershipsCarouselBlock = ({ blok }: Props) => {
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			{blok.heading && <h2 className="text-3xl font-bold">{blok.heading}</h2>}
 			{blok.description && (
 				<div className="text-foreground mt-4 text-lg">

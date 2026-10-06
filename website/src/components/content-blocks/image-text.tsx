@@ -3,7 +3,7 @@ import { ImageText } from '@/generated/storyblok/types/109655/storyblok-componen
 import { getScaledDimensions } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@socialincome/design-system/cn';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 import NextImage from 'next/image';
 
 type Props = {
@@ -46,11 +46,7 @@ export const ImageTextBlock = ({ blok }: Props) => {
 	const widthClasses = widthClassesByRatio[resolvedImageToTextRatio] ?? widthClassesByRatio['1/2'];
 
 	return (
-		<BlockWrapper
-			{...storyblokEditable(blok as SbBlokData)}
-			disableMarginBottom={disableMarginBottom}
-			disableMarginTop={disableMarginTop}
-		>
+		<BlockWrapper {...storyblokEditable(blok)} disableMarginBottom={disableMarginBottom} disableMarginTop={disableMarginTop}>
 			<div
 				className={cn(
 					'text-foreground flex flex-col gap-14 text-lg md:flex-row md:items-center',

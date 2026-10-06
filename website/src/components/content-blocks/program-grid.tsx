@@ -6,7 +6,7 @@ import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
-import { SbBlokData, storyblokEditable } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: ProgramGrid;
@@ -23,7 +23,7 @@ export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
 		<BlockWrapper
 			disableMarginTop={blok.disableMarginTop}
 			disableMarginBottom={blok.disableMarginBottom}
-			{...storyblokEditable(blok as SbBlokData)}
+			{...storyblokEditable(blok)}
 		>
 			{blok.heading && (
 				<div className="mb-8 md:mb-10">

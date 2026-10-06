@@ -12,7 +12,7 @@ import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
 
@@ -77,7 +77,7 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency,
 			ref={sectionRef}
 			disableMarginBottom={disableMarginBottom}
 			disableMarginTop={disableMarginTop}
-			{...storyblokEditable(blok as SbBlokData)}
+			{...storyblokEditable(blok)}
 		>
 			{images.map((image, index) => (
 				<FloatingImage key={image.id} image={image} index={index} smoothMouseX={smoothMouseX} smoothMouseY={smoothMouseY} />

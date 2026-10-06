@@ -7,7 +7,7 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { VideoControlButton } from '@socialincome/design-system/actions/video-control-button/video-control-button';
 import { cn } from '@socialincome/design-system/cn';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 import { Maximize2, MessageSquareText, Minimize2, Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { useRef, useState, type ReactNode } from 'react';
 import Markdown from 'react-markdown';
@@ -68,7 +68,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 	};
 
 	return (
-		<div {...storyblokEditable(blok as SbBlokData)} className="storyblok__outline full-bleed-hero flex flex-col gap-6">
+		<div {...storyblokEditable(blok)} className="storyblok__outline full-bleed-hero flex flex-col gap-6">
 			<div
 				className={cn(
 					'bg-foreground relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden transition-[border-radius] duration-300 ease-out md:min-h-160',

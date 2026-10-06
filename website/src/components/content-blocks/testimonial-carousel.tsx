@@ -12,7 +12,7 @@ import {
 } from '@socialincome/design-system/data-display/carousel/carousel';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 import Autoplay from 'embla-carousel-autoplay';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -122,7 +122,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 			<BlockWrapper
 				disableMarginBottom={disableMarginBottom}
 				disableMarginTop={disableMarginTop}
-				{...storyblokEditable(blok as SbBlokData)}
+				{...storyblokEditable(blok)}
 			>
 				{blok.heading && (
 					<div className="mb-8 md:mb-10">
@@ -143,7 +143,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 			width="bleed"
 			disableMarginBottom={disableMarginBottom}
 			disableMarginTop={disableMarginTop}
-			{...storyblokEditable(blok as SbBlokData)}
+			{...storyblokEditable(blok)}
 		>
 			{blok.heading && (
 				<div className="mb-8 md:mb-10">

@@ -5,7 +5,7 @@ import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-c
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: ProgramGrid;
@@ -21,7 +21,7 @@ export const StoryblokProgramGrid = ({ blok, programs, allProgramsCount = 0, lan
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			{blok.heading && (
 				<div className="mb-8 md:mb-10">
 					<SectionHeading size={3}>

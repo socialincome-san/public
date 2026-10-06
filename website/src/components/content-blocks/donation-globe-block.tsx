@@ -8,7 +8,7 @@ import { getRecentSuccessfulContributionsAction } from '@/modules/contributions/
 import { getContributorCommunityStatsAction } from '@/modules/contributors/contributor.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 import { unstable_cache } from 'next/cache';
 
 const getCachedCommunityStats = unstable_cache(
@@ -54,7 +54,7 @@ export const DonationGlobeBlock = async ({ blok, lang }: Props) => {
 				});
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<div className="flex flex-col gap-8 md:flex-row md:items-center md:gap-14">
 				<div className="flex flex-col justify-center space-y-2 md:w-1/2">
 					{blok.title && (

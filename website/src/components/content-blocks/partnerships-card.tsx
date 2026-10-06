@@ -3,7 +3,7 @@ import type { Partnership, PartnershipsCard } from '@/generated/storyblok/types/
 import { PartnershipBadge } from '@socialincome/design-system/data-display/partnership-badge/partnership-badge';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { ISbStoryData } from '@storyblok/js';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 import Markdown from 'react-markdown';
 
 type Props = {
@@ -46,7 +46,7 @@ export const PartnershipsCardBlock = ({ blok }: Props) => {
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<div className="bg-background flex flex-col gap-6 overflow-hidden rounded-[32px] p-6 shadow-[0_0_20px_rgba(0,0,0,0.05)] sm:p-10">
 				<p className="text-sm leading-5 font-medium text-cyan-900">Inflows</p>
 

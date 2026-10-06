@@ -12,7 +12,7 @@ import type { Outflows as OutflowsBlok } from '@/generated/storyblok/types/10965
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: OutflowsBlok;
@@ -40,7 +40,7 @@ export const OutflowsBlock = async ({ blok, lang, region }: Props) => {
 	});
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<OutflowsSection
 				downloadsHref={downloadsHref}
 				ngoAverageSourceUrl={OUTFLOW_NGO_AVERAGE_SOURCE_URL}
