@@ -91,7 +91,7 @@ export const DonationAmountFields = ({
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
-					<label htmlFor={monthlyIncomeInputId} className="text-[10px] font-medium">
+					<label htmlFor={monthlyIncomeInputId} className="text-2xs font-medium">
 						{translations.monthlyIncomeLabel} ({currency})
 					</label>
 					<div className={monthlyAmountTextClass}>
@@ -132,7 +132,7 @@ export const DonationAmountFields = ({
 							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
 					)}
 				>
-					<div className="text-[10px] font-medium">{translations.yourOnePercent}</div>
+					<div className="text-2xs font-medium">{translations.yourOnePercent}</div>
 					<div className={cn(monthlyAmountTextClass, 'whitespace-nowrap')}>
 						{currency} {values.onePercent}
 					</div>
@@ -141,7 +141,7 @@ export const DonationAmountFields = ({
 
 			<div className="mb-3 flex items-center gap-4">
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
-				<div className="text-center text-[10px] font-medium">{translations.chooseOwnAmount}</div>
+				<div className="text-2xs text-center font-medium">{translations.chooseOwnAmount}</div>
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
 			</div>
 			<div
@@ -166,7 +166,7 @@ export const DonationAmountFields = ({
 								isSelected ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
 							)}
 						>
-							<span className={cn(option.labelKey === 'other' ? 'text-base' : 'text-[10px]')}>
+							<span className={cn(option.labelKey === 'other' ? 'text-base' : 'text-2xs')}>
 								{option.labelKey === 'other' ? translations.other : currency}
 							</span>
 							{option.value !== 'other' && <span>{option.value}</span>}

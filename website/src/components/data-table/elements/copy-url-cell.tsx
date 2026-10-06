@@ -1,53 +1,9 @@
 'use client';
 
 import { CellType } from '@/components/data-table/elements/types';
-import { Button } from '@socialincome/design-system/actions/button/button';
+import { DataTableCopyUrlCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 import type { RowData } from '@tanstack/react-table';
-import { Check, Copy } from 'lucide-react';
-import { useState } from 'react';
 
-const useCopyToClipboard = (timeout = 1500) => {
-	const [copied, setCopied] = useState(false);
-
-	const copy = (text: string) => {
-		if (!text) {
-			return;
-		}
-		void navigator.clipboard.writeText(text).then(() => {
-			setCopied(true);
-			setTimeout(() => setCopied(false), timeout);
-		});
-	};
-
-	return { copied, copy };
-};
-
-export const CopyUrlCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, TValue>) => {
-	const url = String(ctx.getValue() ?? '');
-	const { copied, copy } = useCopyToClipboard();
-
-	if (!url) {
-		return null;
-	}
-
-	const handleCopy = (e: React.MouseEvent) => {
-		e.stopPropagation();
-		copy(url);
-	};
-
-	return (
-		<Button variant="outline" size="sm" onClick={handleCopy}>
-			{copied ? (
-				<>
-					<Check className="text-confirm mr-2 h-4 w-4" />
-					Copied!
-				</>
-			) : (
-				<>
-					<Copy className="mr-2 h-4 w-4" />
-					Copy URL
-				</>
-			)}
-		</Button>
-	);
-};
+export const CopyUrlCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, TValue>) => (
+	<DataTableCopyUrlCell url={String(ctx.getValue() ?? '')} />
+);

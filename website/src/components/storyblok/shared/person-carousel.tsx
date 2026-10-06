@@ -68,7 +68,7 @@ export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default',
 						type="button"
 						onClick={() => api?.scrollNext()}
 						aria-label="Show next person"
-						className="bg-primary-foreground absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full shadow-[0px_4px_28px_0px_rgba(0,30,101,0.12)]"
+						className="bg-primary-foreground shadow-raised absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full"
 					>
 						<ChevronRightIcon className="size-5" aria-hidden="true" />
 					</button>

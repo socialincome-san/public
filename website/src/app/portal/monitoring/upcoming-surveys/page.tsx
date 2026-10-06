@@ -5,9 +5,9 @@ import {
 	upcomingSurveysTableConfig,
 } from '@/components/data-table/configs/upcoming-surveys-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getPaginatedUpcomingSurveyTableView } from '@/modules/surveys/survey.service';
 import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 
 export default function UpcomingSurveysPage({ searchParams }: SearchParamsPageProps) {

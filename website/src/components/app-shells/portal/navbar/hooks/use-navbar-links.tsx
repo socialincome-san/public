@@ -1,29 +1,24 @@
 import type { Session } from '@/modules/auth/auth.types';
 import type { UserSession } from '@/modules/users/user.types';
-import { LayoutDashboard, LucideIcon, Settings, User } from 'lucide-react';
+import { type PortalNavbarLink } from '@socialincome/design-system/navigation/portal-navbar/portal-navbar';
+import { type PortalUserMenuLink } from '@socialincome/design-system/navigation/portal-user-menu/portal-user-menu';
+import { LayoutDashboard, Settings, User } from 'lucide-react';
 
-type NavLink = {
+type MainNavLink = {
 	href: string;
 	label: string;
-	activeBase?: string;
-	icon?: LucideIcon;
-	isDropdown?: boolean;
+	activeBase: string;
 };
 
-export const useNavbarLinks = (sessions: Session[]) => {
+export const useNavbarLinks = (sessions: Session[], pathname: string) => {
 	const user = sessions.find((s): s is UserSession => s.type === 'user');
 	const hasContributor = sessions.some((s) => s.type === 'contributor');
 	const canAccessOperatorSections = Boolean(user?.hasAnyOperatorProgramAccess);
 	const isAdmin = user?.role === 'admin';
-	const mainNavLinks: NavLink[] = [
-		{
-			href: '/portal/programs',
-			activeBase: '/portal/programs',
-			label: 'Programs',
-			isDropdown: true,
-		},
+
+	const mainNavLinks: MainNavLink[] = [
 		...(canAccessOperatorSections
-			? ([
+			? [
 					{
 						href: '/portal/monitoring/payout-confirmation',
 						activeBase: '/portal/monitoring',
@@ -39,48 +34,30 @@ export const useNavbarLinks = (sessions: Session[]) => {
 						activeBase: '/portal/delivery',
 						label: 'Delivery',
 					},
-				] satisfies NavLink[])
+				]
 			: []),
 		...(isAdmin
-			? ([
+			? [
 					{
 						href: '/portal/messaging/templates',
 						activeBase: '/portal/messaging',
 						label: 'Messaging',
 					},
-				] satisfies NavLink[])
-			: []),
-	];
-
-	const userMenuNavLinks: NavLink[] = [
-		{
-			href: '/portal/profile/account',
-			activeBase: '/portal/profile',
-			label: 'Profile',
-			icon: User,
-		},
-		...(hasContributor
-			? [
-					{
-						href: '/dashboard/subscriptions',
-						label: 'Switch to dashboard',
-						icon: LayoutDashboard,
-					},
-				]
-			: []),
-		...(isAdmin
-			? [
-					{
-						href: '/portal/admin/organizations',
-						activeBase: '/portal/admin',
-						label: 'Admin',
-						icon: Settings,
-					},
 				]
 			: []),
 	];
 
-	const isActiveLink = (path: string, href: string, activeBase?: string) => path.startsWith(activeBase ?? href);
+	const userMenuNavLinks: PortalUserMenuLink[] = [
+		{ href: '/portal/profile/account', label: 'Profile', icon: User },
+		...(hasContributor ? [{ href: '/dashboard/subscriptions', label: 'Switch to dashboard', icon: LayoutDashboard }] : []),
+		...(isAdmin ? [{ href: '/portal/admin/organizations', label: 'Admin', icon: Settings }] : []),
+	];
 
-	return { mainNavLinks, userMenuNavLinks, isActiveLink };
+	const links: PortalNavbarLink[] = mainNavLinks.map(({ href, label, activeBase }) => ({
+		href,
+		label,
+		active: pathname.startsWith(activeBase),
+	}));
+
+	return { links, isProgramsActive: pathname.startsWith('/portal/programs'), userMenuNavLinks };
 };

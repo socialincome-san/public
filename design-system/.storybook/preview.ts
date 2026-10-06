@@ -24,6 +24,8 @@ const preview: Preview = {
 					'Feedback',
 					'Data Display',
 					'Layout',
+					'Brand',
+					'Icons',
 				],
 			},
 		},

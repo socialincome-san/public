@@ -1,12 +1,12 @@
 'use client';
 
-import { CardAlertFooter } from '@/components/card-alert-footer';
 import { CountryFlag } from '@/components/country-flag';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
 import { cn } from '@socialincome/design-system/cn';
-import { RadioCardGroup } from '../radio-card-group';
+import { CardAlertFooter } from '@socialincome/design-system/feedback/card-alert-footer/card-alert-footer';
+import { RadioCardGroup } from '@socialincome/design-system/forms/radio-card/radio-card';
 import { CountryRadioCard } from './country-radio-card';
 
 type Props = {
@@ -50,7 +50,7 @@ export const ActiveCountryCards = ({ rows, selectedCountryId, onSelectCountry }:
 									label={
 										<div className="flex items-center gap-2">
 											<CountryFlag country={row.country.isoCode} size="lg" />
-											<span className="font-medium text-cyan-950">{getCountryNameByCode(row.country.isoCode)}</span>
+											<span className="text-foreground font-medium">{getCountryNameByCode(row.country.isoCode)}</span>
 										</div>
 									}
 									programCount={row.stats.programCount}

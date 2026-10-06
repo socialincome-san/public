@@ -1,4 +1,4 @@
-import { FallbackPage } from '@/components/fallback-page';
+import { FallbackPage } from '@socialincome/design-system/feedback/fallback-page/fallback-page';
 
 type NotFoundProps = {
 	title?: string;

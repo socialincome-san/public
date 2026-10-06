@@ -5,9 +5,8 @@ import { Profile } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { cn } from '@socialincome/design-system/cn';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import { RadioCard, RadioCardGroup } from '@socialincome/design-system/forms/radio-card/radio-card';
 import { Loader2 } from 'lucide-react';
-import { RadioCard } from '../radio-card';
-import { RadioCardGroup } from '../radio-card-group';
 import { PillMultiSelect } from './pill-multi-select';
 
 type Props = {

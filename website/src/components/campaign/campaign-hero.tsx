@@ -82,7 +82,7 @@ export const CampaignHero = ({
 
 	return (
 		<section className="full-bleed-hero flex flex-col gap-6">
-			<div className="bg-foreground relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden rounded-b-3xl md:min-h-160 md:rounded-b-[56px]">
+			<div className="bg-foreground md:rounded-b-5xl relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden rounded-b-3xl md:min-h-160">
 				{heroImageSrc ? (
 					<NextImage src={heroImageSrc} alt={heroImageAlt} fill sizes="100vw" className="object-cover" priority />
 				) : (
@@ -99,7 +99,7 @@ export const CampaignHero = ({
 
 				<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto mb-8 flex flex-row items-end justify-between gap-8 md:mb-24">
 					<div className="flex min-w-0 flex-1 flex-col gap-10 px-4">
-						<div className="flex max-w-2xl flex-col gap-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+						<div className="drop-shadow-on-media flex max-w-2xl flex-col gap-4">
 							<p className="text-lg">{translator.t('campaign.by', { context: { creator: creatorName } })}</p>
 							<h1 className="text-5xl leading-tight font-bold text-pretty md:text-6xl">{title}</h1>
 						</div>

@@ -1,4 +1,3 @@
-import { Wallet } from '@/components/wallet/wallet';
 import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { createWalletImageFromStoryblokAsset } from '@/components/wallet/wallet-image-utils';
 import type { Translator } from '@/lib/i18n/translator';
@@ -6,6 +5,7 @@ import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { DisplayAmount } from '@/modules/currency-display/currency-display.types';
 import type { PublicProgramStats } from '@/modules/programs/program.types';
+import { Wallet } from '@socialincome/design-system/data-display/wallet/wallet';
 import type { ProgramStory } from './program.types';
 import { getProgramStoryblokSlug, getProgramTitle } from './program.utils';
 

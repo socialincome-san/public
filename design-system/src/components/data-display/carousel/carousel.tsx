@@ -237,7 +237,7 @@ const CarouselScrollNextButton = React.forwardRef<HTMLButtonElement, CarouselScr
 					scrollNext();
 					onClick?.(event);
 				}}
-				className="bg-primary-foreground absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full shadow-[0px_4px_28px_0px_rgba(0,30,101,0.12)] disabled:hidden"
+				className="bg-primary-foreground shadow-raised absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full disabled:hidden"
 				{...props}
 			>
 				<ChevronRightIcon className="size-5" aria-hidden="true" />

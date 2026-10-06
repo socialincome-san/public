@@ -1,5 +1,4 @@
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
-import { Wallet } from '@/components/wallet/wallet';
 import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
@@ -7,6 +6,7 @@ import { defaultLanguage } from '@/lib/i18n/utils';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { getCurrentProgramWalletsAction } from '@/modules/programs/program.actions';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import { Wallet } from '@socialincome/design-system/data-display/wallet/wallet';
 
 export const UserPrograms = async () => {
 	const result = await getCurrentProgramWalletsAction();

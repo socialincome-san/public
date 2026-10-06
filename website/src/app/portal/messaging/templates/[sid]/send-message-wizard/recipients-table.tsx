@@ -161,7 +161,7 @@ const FiltersToolbar = ({ filterDefs, onFilterChange, onClearFilters }: FiltersT
 				<Button type="button" variant="outline" size="icon-lg" aria-label="Filters">
 					<FilterIcon className="size-4" />
 					{activeFilterCount > 0 ? (
-						<span className="bg-primary text-primary-foreground absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 text-[11px] leading-none">
+						<span className="bg-primary text-primary-foreground text-2xs absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 leading-none">
 							{activeFilterCount}
 						</span>
 					) : null}

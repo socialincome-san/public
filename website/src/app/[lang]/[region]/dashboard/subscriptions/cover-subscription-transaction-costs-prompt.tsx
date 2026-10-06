@@ -26,7 +26,7 @@ export const CoverSubscriptionTransactionCostsPrompt = ({ lang, amount, currency
 	return (
 		<button
 			type="button"
-			className="w-full bg-[#fef8ee] px-3 py-3 text-left text-sm leading-snug text-[#083344] transition-opacity hover:opacity-90 sm:px-4 sm:py-3.5 sm:leading-5"
+			className="bg-highlight text-foreground w-full px-3 py-3 text-left text-sm leading-snug transition-opacity hover:opacity-90 sm:px-4 sm:py-3.5 sm:leading-5"
 			onClick={onOpen}
 			data-testid="cover-subscription-transaction-costs-prompt"
 		>

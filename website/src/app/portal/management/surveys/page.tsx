@@ -1,9 +1,9 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getPaginatedSurveyTableView } from '@/modules/surveys/survey.service';
 import type { SurveyTableViewRow } from '@/modules/surveys/survey.types';
 import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 import { SurveysTableClient } from './surveys-table-client';
 

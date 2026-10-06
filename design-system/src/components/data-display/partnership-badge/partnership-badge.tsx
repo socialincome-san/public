@@ -16,7 +16,7 @@ export const PartnershipBadge = ({ name, href, logoSrc, logoAlt }: PartnershipBa
 			href={href}
 			target="_blank"
 			rel="noopener noreferrer"
-			className="inline-flex h-12 shrink-0 items-center gap-2.5 rounded-full border border-slate-200 bg-slate-100 py-0 pr-4 pl-3 shadow-sm"
+			className="border-border bg-muted inline-flex h-12 shrink-0 items-center gap-2.5 rounded-full border py-0 pr-4 pl-3 shadow-sm"
 		>
 			{logoSrc && (
 				<span className="flex size-8 shrink-0 items-center justify-center">

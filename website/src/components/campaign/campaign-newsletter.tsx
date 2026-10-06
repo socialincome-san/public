@@ -67,7 +67,7 @@ export const CampaignNewsletter = ({ lang, title, senderName, imageSrc, imageAlt
 
 	return (
 		<BlockWrapper spacing="compact">
-			<div className="border-border bg-card flex flex-col gap-8 rounded-3xl border p-6 shadow-[0_4px_20px_rgba(0,0,0,0.05),0_4px_6px_rgba(0,0,0,0.1)] md:gap-10 md:p-10">
+			<div className="border-border bg-card shadow-card flex flex-col gap-8 rounded-3xl border p-6 md:gap-10 md:p-10">
 				{trimmedTitle ? <h2 className="text-foreground text-3xl leading-9 font-medium">{trimmedTitle}</h2> : null}
 
 				<div className="flex flex-col gap-8">
@@ -114,7 +114,7 @@ export const CampaignNewsletter = ({ lang, title, senderName, imageSrc, imageAlt
 
 					{trimmedSenderName || imageSrc ? (
 						<div className="flex items-center gap-3">
-							<div className="size-[60px] shrink-0 overflow-hidden rounded-full border-2 border-white shadow-[0_4px_20px_rgba(0,0,0,0.05),0_4px_6px_-4px_rgba(0,0,0,0.1)]">
+							<div className="shadow-card size-[60px] shrink-0 overflow-hidden rounded-full border-2 border-white">
 								{imageSrc ? (
 									<NextImage
 										src={imageSrc}

@@ -1,4 +1,25 @@
 @layer utilities {
+	/* The typography plugin defaults to Tailwind's gray palette, which the theme removes. Same layer as the plugin, so these win. */
+	.prose {
+		--tw-prose-body: hsl(var(--foreground));
+		--tw-prose-headings: hsl(var(--foreground));
+		--tw-prose-lead: hsl(var(--muted-foreground));
+		--tw-prose-links: hsl(var(--foreground));
+		--tw-prose-bold: hsl(var(--foreground));
+		--tw-prose-counters: hsl(var(--muted-foreground));
+		--tw-prose-bullets: hsl(var(--border));
+		--tw-prose-hr: hsl(var(--border));
+		--tw-prose-quotes: hsl(var(--foreground));
+		--tw-prose-quote-borders: hsl(var(--border));
+		--tw-prose-captions: hsl(var(--muted-foreground));
+		--tw-prose-kbd: hsl(var(--foreground));
+		--tw-prose-code: hsl(var(--foreground));
+		--tw-prose-pre-code: hsl(var(--muted));
+		--tw-prose-pre-bg: hsl(var(--foreground));
+		--tw-prose-th-borders: hsl(var(--border));
+		--tw-prose-td-borders: hsl(var(--border));
+	}
+
 	.bg-donation-modal-gradient {
 		background: linear-gradient(-17deg, var(--gradient-background-from) 19%, var(--gradient-background-to) 50%), white;
 	}
@@ -16,5 +37,30 @@
 		mask-repeat: no-repeat;
 
 		--scroll-fade-e: var(--_scroll-fade-size-e);
+	}
+
+	.bg-website-gradient {
+		background: repeating-linear-gradient(
+			330deg,
+			var(--gradient-background-from) 0px,
+			var(--gradient-background-to) 600px,
+			var(--gradient-background-from) 1200px
+		);
+	}
+
+	@keyframes marquee-left {
+		to {
+			transform: translateX(-50%);
+		}
+	}
+
+	@keyframes marquee-right {
+		from {
+			transform: translateX(-50%);
+		}
+
+		to {
+			transform: translateX(0);
+		}
 	}
 }

@@ -44,7 +44,7 @@ type TeaserMetaRowProps = {
 
 const TeaserMetaRow = ({ label, items, showDivider = false }: TeaserMetaRowProps) => (
 	<div className={cn('grid gap-3 py-4 sm:grid-cols-[140px_1fr] sm:items-center', showDivider && 'border-border border-t')}>
-		<p className="text-sm font-medium text-slate-600">{label}</p>
+		<p className="text-muted-foreground text-sm font-medium">{label}</p>
 		<div className="flex flex-wrap gap-2">
 			{items.map((item) => {
 				const badge = <Badge size="lg">{item.name}</Badge>;
@@ -57,7 +57,7 @@ const TeaserMetaRow = ({ label, items, showDivider = false }: TeaserMetaRowProps
 					<Link
 						key={item.id}
 						href={item.href}
-						className="rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-950"
+						className="focus-visible:outline-foreground rounded-full focus-visible:outline-2 focus-visible:outline-offset-2"
 					>
 						{badge}
 					</Link>

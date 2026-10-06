@@ -44,7 +44,7 @@ export const OutflowsSection = ({ copy, rows, downloadsHref, ngoAverageSourceUrl
 	return (
 		<section className="grid gap-8 py-6 sm:grid-cols-2 sm:items-start sm:gap-12 md:gap-20 md:py-10">
 			<div className="flex max-w-3xl flex-col gap-6 sm:pt-8">
-				<p className="text-sm font-medium text-cyan-900">{copy.eyebrow}</p>
+				<p className="text-foreground text-sm font-medium">{copy.eyebrow}</p>
 				<h2 className="text-foreground text-4xl leading-tight font-normal md:text-5xl md:leading-[54px]">
 					{copy.headlineBeforeBold}
 					<span className="font-bold">{copy.headlineBold}</span>
@@ -63,8 +63,8 @@ export const OutflowsSection = ({ copy, rows, downloadsHref, ngoAverageSourceUrl
 			</div>
 
 			<div className="flex flex-col gap-4">
-				<div className="relative flex w-full flex-col gap-6 rounded-[32px] bg-white px-6 pt-6 pb-8 shadow-[0px_0px_20px_rgba(0,0,0,0.05)] sm:gap-7 sm:px-8 sm:pt-7 sm:pb-10">
-					<h3 className="text-2xl leading-none font-medium text-cyan-950">{copy.breakdownTitle}</h3>
+				<div className="bg-card shadow-card relative flex w-full flex-col gap-6 rounded-4xl px-6 pt-6 pb-8 sm:gap-7 sm:px-8 sm:pt-7 sm:pb-10">
+					<h3 className="text-foreground text-2xl leading-none font-medium">{copy.breakdownTitle}</h3>
 
 					<ul
 						ref={breakdownListRef}
@@ -75,8 +75,8 @@ export const OutflowsSection = ({ copy, rows, downloadsHref, ngoAverageSourceUrl
 							<li key={row.id} className="flex w-full flex-col gap-2">
 								<div className="flex flex-col gap-1">
 									<div className="flex items-baseline justify-between gap-4">
-										<span className="min-w-0 text-base leading-6 font-medium text-cyan-950">{row.label}</span>
-										<span className="shrink-0 text-base leading-6 font-medium text-cyan-950 tabular-nums">
+										<span className="text-foreground min-w-0 text-base leading-6 font-medium">{row.label}</span>
+										<span className="text-foreground shrink-0 text-base leading-6 font-medium tabular-nums">
 											CHF {row.chf}
 										</span>
 									</div>
@@ -93,7 +93,7 @@ export const OutflowsSection = ({ copy, rows, downloadsHref, ngoAverageSourceUrl
 							{copy.ngoAverageBefore}
 							<a
 								href={ngoAverageSourceUrl}
-								className="underline underline-offset-2 hover:text-cyan-900"
+								className="hover:text-foreground underline underline-offset-2"
 								target="_blank"
 								rel="noreferrer"
 							>

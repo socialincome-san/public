@@ -72,7 +72,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 			<div
 				className={cn(
 					'bg-foreground relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden transition-[border-radius] duration-300 ease-out md:min-h-160',
-					isExpanded ? 'z-60' : 'rounded-b-3xl md:rounded-b-[56px]',
+					isExpanded ? 'z-60' : 'md:rounded-b-5xl rounded-b-3xl',
 				)}
 			>
 				<MuxVideo

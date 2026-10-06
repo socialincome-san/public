@@ -20,12 +20,12 @@ export const CountryStatisticsSkeleton = async ({ lang }: Props) => {
 					<h2 className="text-primary text-center text-3xl leading-tight font-bold md:text-4xl">
 						{translator.t('countries-page.statistics.title')}
 					</h2>
-					<div className="border-border bg-background w-full overflow-hidden rounded-[calc(var(--radius)+4px)] border shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]">
+					<div className="border-border bg-background shadow-card w-full overflow-hidden rounded-xl border">
 						<div className="lg:hidden">
 							<div className="bg-accent relative overflow-hidden">
 								<div className="bg-border absolute inset-y-0 left-1/2 z-10 w-px -translate-x-1/2" />
 								<div className="grid grid-cols-2 items-stretch">
-									<div className="bg-background rounded-l-[calc(var(--radius)+4px)] px-6 py-6">
+									<div className="bg-background rounded-l-xl px-6 py-6">
 										<div className={cn(skeletonBarClassName, 'h-7 w-7 rounded-full')} />
 										<div className={cn(skeletonBarClassName, 'mt-3 h-5 w-28 rounded-md')} />
 										<div className="mt-8 flex flex-col gap-7">
@@ -71,7 +71,7 @@ export const CountryStatisticsSkeleton = async ({ lang }: Props) => {
 											))}
 										</div>
 									</div>
-									<div className="border-border bg-background rounded-l-[calc(var(--radius)+4px)] border-l p-12">
+									<div className="border-border bg-background rounded-l-xl border-l p-12">
 										<div className={cn(skeletonBarClassName, 'h-7 w-7 rounded-full')} />
 										<div className={cn(skeletonBarClassName, 'mt-3 h-8 w-40 rounded-md')} />
 										<div className="mt-8 flex flex-col gap-4">

@@ -26,7 +26,7 @@
 	::before,
 	::backdrop,
 	::file-selector-button {
-		border-color: var(--color-gray-200, currentColor);
+		border-color: var(--color-border, currentColor);
 	}
 
 	/* Typography plugin customization (prose colors) */
@@ -35,9 +35,6 @@
 		color: hsl(var(--foreground));
 	}
 	.prose {
-		--tw-prose-headings: hsl(var(--foreground));
-		--tw-prose-quotes: hsl(var(--accent));
-		--tw-prose-links: hsl(var(--foreground));
 		-webkit-font-feature-settings: 'ss04' on;
 		font-feature-settings: 'ss04' on;
 	}

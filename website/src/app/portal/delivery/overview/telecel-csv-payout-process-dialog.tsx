@@ -1,12 +1,12 @@
 'use client';
 
-import { StepResultBox } from '@/components/step-result-box';
 import {
 	generateTelecelCurrentMonthPayoutsAction,
 	generateTelecelPayoutCsvAction,
 	previewTelecelCurrentMonthPayoutsAction,
 } from '@/modules/payout-processes/payout-process.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { StepResultBox } from '@socialincome/design-system/data-display/step-result-box/step-result-box';
 import {
 	Dialog,
 	DialogContent,

@@ -1,6 +1,5 @@
 'use client';
 
-import { CountryFlag } from '@/components/country-flag';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { useIsPage } from '@/lib/hooks/use-is-page';
 import { useI18n } from '@/lib/i18n/use-i18n';
@@ -15,10 +14,10 @@ import {
 	type WebsiteLanguage,
 	type WebsiteRegion,
 } from '@/lib/i18n/utils';
-import { Button } from '@socialincome/design-system/actions/button/button';
-import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/navigation/tabs/tabs';
-import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/overlays/popover/popover';
-import { ChevronDown, Globe } from 'lucide-react';
+import {
+	LocaleCurrencySwitcher as DesignSystemLocaleCurrencySwitcher,
+	type LocaleRegionOption,
+} from '@socialincome/design-system/navigation/locale-currency-switcher/locale-currency-switcher';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
@@ -78,9 +77,13 @@ export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Prop
 	const currentCurrency = currency ?? getDefaultCurrency(currentRegion);
 	const languageOptions = isSurveyPage ? surveyLanguages : mainWebsiteLanguages;
 	const currentSwitcherLanguage = languageOptions.includes(currentLanguage) ? currentLanguage : (languageOptions[0] ?? 'en');
-	const regionOptions: { value: WebsiteRegion; label: string }[] = [
+	const regionOptions: (LocaleRegionOption & { value: WebsiteRegion })[] = [
 		{ value: 'int', label: translator?.t('locale-currency-switcher.regions.int') ?? 'International' },
-		{ value: 'ch', label: translator?.t('locale-currency-switcher.regions.ch') ?? 'Switzerland' },
+		{
+			value: 'ch',
+			label: translator?.t('locale-currency-switcher.regions.ch') ?? 'Switzerland',
+			flagCountry: SWISS_COUNTRY_CODE,
+		},
 	];
 
 	const navigateToLocale = (nextLanguage: WebsiteLanguage, nextRegion: WebsiteRegion) => {
@@ -115,66 +118,29 @@ export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Prop
 	};
 
 	return (
-		<Popover open={open} onOpenChange={setOpen}>
-			<PopoverTrigger asChild>
-				<Button
-					type="button"
-					variant={variant}
-					size="md"
-					aria-label={translator?.t('locale-currency-switcher.aria-label') ?? 'Change language, region, and currency'}
-				>
-					{currentRegion === 'ch' ? <CountryFlag country={SWISS_COUNTRY_CODE} size="sm" /> : <Globe className="size-4" />}
-					<span>{currentCurrency}</span>
-					<ChevronDown className="text-muted-foreground size-3.5" />
-				</Button>
-			</PopoverTrigger>
-			<PopoverContent align="end">
-				<div className="space-y-4">
-					<div className="space-y-2">
-						<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.language') ?? 'Language'}</div>
-						<Tabs value={currentSwitcherLanguage} onValueChange={handleLanguageChange}>
-							<TabsList fullWidth>
-								{languageOptions.map((language) => (
-									<TabsTrigger key={language} value={language}>
-										{language.toUpperCase()}
-									</TabsTrigger>
-								))}
-							</TabsList>
-						</Tabs>
-					</div>
-
-					<div className="space-y-2">
-						<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.region') ?? 'Region'}</div>
-						<Tabs value={currentRegion} onValueChange={handleRegionChange}>
-							<TabsList fullWidth>
-								{regionOptions.map((option) => (
-									<TabsTrigger key={option.value} value={option.value}>
-										{option.value === 'ch' ? (
-											<CountryFlag country={SWISS_COUNTRY_CODE} size="sm" />
-										) : (
-											<Globe className="size-4" />
-										)}
-										<span>{option.label}</span>
-									</TabsTrigger>
-								))}
-							</TabsList>
-						</Tabs>
-					</div>
-
-					<div className="space-y-2">
-						<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.currency') ?? 'Currency'}</div>
-						<Tabs value={currentCurrency} onValueChange={handleCurrencyChange}>
-							<TabsList fullWidth>
-								{websiteCurrencies.map((currency) => (
-									<TabsTrigger key={currency} value={currency}>
-										{currency}
-									</TabsTrigger>
-								))}
-							</TabsList>
-						</Tabs>
-					</div>
-				</div>
-			</PopoverContent>
-		</Popover>
+		<DesignSystemLocaleCurrencySwitcher
+			ariaLabel={translator?.t('locale-currency-switcher.aria-label') ?? 'Change language, region, and currency'}
+			variant={variant}
+			open={open}
+			onOpenChange={setOpen}
+			language={{
+				label: translator?.t('locale-currency-switcher.language') ?? 'Language',
+				value: currentSwitcherLanguage,
+				options: languageOptions.map((option) => ({ value: option, label: option.toUpperCase() })),
+				onChange: handleLanguageChange,
+			}}
+			region={{
+				label: translator?.t('locale-currency-switcher.region') ?? 'Region',
+				value: currentRegion,
+				options: regionOptions,
+				onChange: handleRegionChange,
+			}}
+			currency={{
+				label: translator?.t('locale-currency-switcher.currency') ?? 'Currency',
+				value: currentCurrency,
+				options: websiteCurrencies.map((option) => ({ value: option, label: option })),
+				onChange: handleCurrencyChange,
+			}}
+		/>
 	);
 };

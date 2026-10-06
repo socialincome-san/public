@@ -78,7 +78,7 @@ export const WithContent: Story = {
 						<Avatar>
 							<AvatarFallback>SS</AvatarFallback>
 						</Avatar>
-						<span className="font-semibold text-slate-800">Sandino Scheidegger</span>
+						<span className="text-foreground font-semibold">Sandino Scheidegger</span>
 					</div>
 				</div>
 

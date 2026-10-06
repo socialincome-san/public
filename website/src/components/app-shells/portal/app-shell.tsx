@@ -1,5 +1,6 @@
 import type { Session } from '@/modules/auth/auth.types';
-import { ReactNode } from 'react';
+import { PortalAppShell as PortalAppShellLayout } from '@socialincome/design-system/layout/portal-app-shell/portal-app-shell';
+import { type ReactNode } from 'react';
 import { Navbar } from './navbar/navbar';
 
 type PortalAppShellProps = {
@@ -7,11 +8,6 @@ type PortalAppShellProps = {
 	sessions: Session[];
 };
 
-export const PortalAppShell = ({ children, sessions }: PortalAppShellProps) => {
-	return (
-		<div className="bg-website-gradient text-primary flex min-h-screen w-full flex-col antialiased">
-			<Navbar sessions={sessions} />
-			<main className="pb-8">{children}</main>
-		</div>
-	);
-};
+export const PortalAppShell = ({ children, sessions }: PortalAppShellProps) => (
+	<PortalAppShellLayout navbar={<Navbar sessions={sessions} />}>{children}</PortalAppShellLayout>
+);

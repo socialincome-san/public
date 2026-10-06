@@ -1,5 +1,5 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 import { DefaultPageProps } from '../..';
 import { ContributionsTable } from './contributions-table';

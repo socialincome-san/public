@@ -1,9 +1,9 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { UpcomingOnboardingTableClient } from '@/components/data-table/clients/upcoming-onboarding-table-client';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getPaginatedUpcomingOnboardingRecipientTableView } from '@/modules/recipients/recipient.service';
 import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 
 const UpcomingOnboardingPage = ({ searchParams }: SearchParamsPageProps) => {

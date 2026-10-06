@@ -1,4 +1,5 @@
 import { config } from '@smartive/eslint-config';
+import designTokensPlugin from '@socialincome/design-system/eslint-rules/no-arbitrary-design-values';
 import classNamePlugin from '@socialincome/design-system/eslint-rules/no-class-name-prop';
 import reactPlugin from 'eslint-plugin-react';
 import tseslint from 'typescript-eslint';
@@ -107,10 +108,12 @@ export default [
 			react: reactPlugin,
 			'backend-architecture': backendArchitecturePlugin,
 			'class-name': classNamePlugin,
+			'design-tokens': designTokensPlugin,
 		},
 		rules: {
 			'react/forbid-component-props': ['error', { forbid: ['style'] }],
 			'class-name/no-class-name-prop': 'error',
+			'design-tokens/no-arbitrary-design-values': 'error',
 		},
 	},
 	{

@@ -1,7 +1,7 @@
 import { PayoutProcessOverviewClient } from '@/app/portal/delivery/overview/payout-process-overview-client';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getPayoutProcessOverviewOptions } from '@/modules/mobile-money-providers/mobile-money-provider.service';
 import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 
 export default function PayoutProcessOverviewPage() {

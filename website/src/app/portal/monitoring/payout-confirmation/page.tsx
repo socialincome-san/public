@@ -4,9 +4,9 @@ import {
 	payoutConfirmationTableConfig,
 } from '@/components/data-table/configs/payout-confirmation-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getPaginatedPayoutConfirmationTableView } from '@/modules/payouts/payout.service';
 import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { Suspense } from 'react';

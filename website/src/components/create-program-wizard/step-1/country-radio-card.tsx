@@ -21,8 +21,8 @@ type CountryRadioCardStatProps = {
 
 const CountryRadioCardStat = ({ value, label }: CountryRadioCardStatProps) => (
 	<div className="flex flex-col gap-0">
-		<div className="text-2xl font-semibold text-slate-600">{value}</div>
-		<div className="text-sm font-medium text-slate-600">{label}</div>
+		<div className="text-muted-foreground text-2xl font-semibold">{value}</div>
+		<div className="text-muted-foreground text-sm font-medium">{label}</div>
 	</div>
 );
 
@@ -38,8 +38,8 @@ export const CountryRadioCard = ({
 	<label
 		data-testid={`radio-card-${value}`}
 		className={cn(
-			'border-border relative flex h-full flex-1 cursor-pointer items-start gap-3 rounded-2xl border bg-white p-4 transition-colors',
-			checked && 'border-slate-500 bg-slate-100',
+			'border-border bg-card relative flex h-full flex-1 cursor-pointer items-start gap-3 rounded-2xl border p-4 transition-colors',
+			checked && 'border-muted-foreground bg-muted',
 		)}
 	>
 		<span className="absolute top-3 right-3 flex">

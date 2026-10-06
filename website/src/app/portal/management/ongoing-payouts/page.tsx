@@ -3,9 +3,9 @@ import { ConfiguredDataTableClient } from '@/components/data-table/clients/confi
 import { ongoingPayoutsTableConfig } from '@/components/data-table/configs/ongoing-payouts-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
 import type { TableFilterConfig } from '@/components/data-table/table-config.types';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getPaginatedOngoingPayoutTableView } from '@/modules/payouts/payout.service';
 import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 
 export default function OngoingPayoutsPage({ searchParams }: SearchParamsPageProps) {

@@ -16,12 +16,13 @@ const badgeVariants = cva(
 				destructive: 'bg-destructive-foreground border-destructive/30 text-destructive',
 				verified: 'bg-confirm-foreground border-confirm/30 text-confirm',
 				country: 'bg-background border-border text-foreground',
-				fundraising: 'bg-green-200 border-green-300 text-foreground text-sm leading-none font-medium whitespace-nowrap',
+				fundraising:
+					'bg-confirm-foreground border-confirm/30 text-foreground text-sm leading-none font-medium whitespace-nowrap',
 				video: 'bg-black/60 border-white/40 text-white backdrop-blur-sm',
 				frosted: 'bg-white/80 border-white/40 text-foreground whitespace-nowrap backdrop-blur-sm',
 			},
 			size: {
-				sm: 'gap-0.5 px-2 py-0.5 text-[10px]',
+				sm: 'gap-0.5 px-2 py-0.5 text-2xs',
 				default: 'px-1.5 py-1',
 				lg: 'px-3 py-1.5 font-medium',
 			},

@@ -38,7 +38,7 @@ export const CoverTransactionCostsToggle = ({
 			<div
 				className={cn(
 					'flex min-w-0 items-center gap-3 overflow-hidden rounded-md px-4 py-3',
-					tone === 'warning' ? 'bg-[#fef8ee]' : 'bg-accent',
+					tone === 'warning' ? 'bg-highlight' : 'bg-accent',
 				)}
 			>
 				<Switch
