@@ -19,7 +19,15 @@ export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: Web
 
 	return (
 		<DonationModalProvider>
-			<div className="bg-website-gradient text-primary flex min-h-screen w-full flex-col antialiased">
+			{/*
+			 * data-app-shell is the slab the "behind the scenes" panel slides out from under.
+			 * relative + z-10 keep it painting above the fixed panel; overflow-x-clip stops the
+			 * translate from producing a horizontal scrollbar. Inert unless a page mounts BehindTheScenesProvider.
+			 */}
+			<div
+				data-app-shell
+				className="bg-website-gradient text-primary relative z-10 flex min-h-screen w-full flex-col overflow-x-clip antialiased"
+			>
 				<Navbar sessions={sessions} lang={lang} region={region} scope={scope} />
 				<main
 					className={

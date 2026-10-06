@@ -1,4 +1,4 @@
-import { fetchGithubData } from '@/integrations/github/github.integration';
+import { fetchGithubData, searchGithubIssues } from '@/integrations/github/github.integration';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now } from '@/lib/utils/now';
 import type { GithubContributor, GithubIssue, GithubOpenSourceIssuesData, GithubRepoStats } from './github.types';
@@ -152,6 +152,19 @@ const countRecentForks = async (): Promise<Result<number>> => {
 	return resultOk(newForks);
 };
 
+/** Open issues nobody is assigned to, the same filter as the "no:assignee" list on GitHub. */
+export const getUnassignedIssueCount = async (): Promise<Result<number>> => {
+	const result = await searchGithubIssues('is:issue is:open no:assignee');
+	if (!result.success) {
+		return resultFail(result.error);
+	}
+	if (!isSearchResponse(result.data.data)) {
+		return resultFail('GitHub search data is invalid');
+	}
+
+	return resultOk(result.data.data.total_count);
+};
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
 	typeof value === 'object' && value !== null && !Array.isArray(value);
 
@@ -195,3 +208,6 @@ const isIssueResponse = (
 
 const isForkResponse = (value: unknown): value is { created_at: string }[] =>
 	Array.isArray(value) && value.every((item) => isRecord(item) && typeof item.created_at === 'string');
+
+const isSearchResponse = (value: unknown): value is { total_count: number } =>
+	isRecord(value) && typeof value.total_count === 'number';

@@ -229,6 +229,11 @@ export const createWebsiteJournalArticleTypeLink = (articleTypeSlug: string, lan
 export const createWebsitePersonLink = (slug: string, language: string, region: string) =>
 	createWebsitePath(language, region, WEBSITE_PERSON_PATH_SEGMENT, slug);
 
+export const createWebsitePeopleLink = (language: string, region: string) => createWebsitePath(language, region, 'people');
+
+export const createWebsiteCountryLink = (slug: string, language: string, region: string) =>
+	createWebsitePath(language, region, 'countries', slug);
+
 export const createWebsiteJournalArticleCanonicalUrl = (slug: string, language: string) =>
 	`https://socialincome.org/${language}/journal/${slug}`;
 

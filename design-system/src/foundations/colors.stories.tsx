@@ -66,6 +66,7 @@ const colorGroups: { title: string; tokens: ColorToken[] }[] = [
 		tokens: [
 			{ name: 'highlight', swatchClass: 'bg-highlight' },
 			{ name: 'banner-blue', swatchClass: 'bg-banner-blue' },
+			{ name: 'backstage', swatchClass: 'bg-backstage' },
 			{ name: 'white', swatchClass: 'bg-white' },
 			{ name: 'black', swatchClass: 'bg-black' },
 		],

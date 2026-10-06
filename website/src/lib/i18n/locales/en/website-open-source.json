@@ -31,5 +31,83 @@
 	},
 	"error": {
 		"unavailable": "GitHub data is currently unavailable. Please try again later."
+	},
+	"behind-the-scenes": {
+		"teaser": {
+			"_ticker-comment": "Keep these lines within a character or two of each other — the pill sizes to the widest one, so uneven lines leave dead space on the short ones.",
+			"ticker": {
+				"open": "An open source project",
+				"volunteers_one": "Made by {{count}} volunteer",
+				"volunteers_other": "Made by {{count}} volunteers",
+				"contribute": "Anyone can contribute",
+				"cta": "See who keeps it going"
+			},
+			"aria": "Show the people behind Social Income"
+		},
+		"panel": {
+			"title-lead": "Made by many.",
+			"title-emphasis": "Open to all.",
+			"close": "Close",
+			"join-button": "Join the community",
+			"ways-in": "Still no idea? Here are some ways in.",
+			"route": {
+				"field": {
+					"name": "Join a field trip",
+					"cost": "Applications twice a year"
+				},
+				"code": {
+					"name": "Pick up a coding task",
+					"cost": "An evening"
+				},
+				"writing": {
+					"name": "Write for the journal",
+					"cost": "A few hours"
+				},
+				"translation": {
+					"name": "Translate a page",
+					"cost": "~2 hours"
+				}
+			},
+			"intro": "<link>{{people}} volunteers</link> across {{countries}} countries make Social Income possible. Everyone owns what they contribute. This page is maintained by:",
+			"world": {
+				"countries": {
+					"name": "In the countries",
+					"what": "Recipient onboarding, partner visits and payout monitoring in Freetown, Accra and Monrovia."
+				},
+				"code": {
+					"name": "In the code",
+					"what": "An open repository anyone can read, fork and fix.",
+					"issues_one": "<link>{{count}} open issue</link> has nobody on it — take it.",
+					"issues_other": "<link>{{count}} open issues</link> have nobody on them — take one."
+				},
+				"table": {
+					"name": "In the day-to-day",
+					"what": "Fundraising, communication, translation, research, finance and the board — the majority of this community.",
+					"roles": "{{roles}} — the majority of this community.",
+					"roles-more": "{{roles}} and many more — the majority of this community."
+				},
+				"tag": {
+					"remote": "Remote",
+					"onsite": "On site"
+				}
+			},
+			"more-people_one": "+{{count}} person",
+			"more-people_other": "+{{count}} people",
+			"where": "Join on the ground or from anywhere",
+			"further-reading": "Further reading",
+			"by-author": "Article by {{author}}",
+			"contact-person": "Reach out to {{name}} about {{role}}",
+			"contact-action": "Reach out",
+			"roles": "Which one are you?",
+			"roles-note": "Social Income runs on {{total}} roles. Here are {{shown}} — ask the person doing it how to join in.",
+			"roles-all": "See all roles",
+			"page-credits": {
+				"show-more": "Show more",
+				"show-less": "Show less",
+				"more": "+{{count}}",
+				"mistake": "Found a mistake?",
+				"reach-out-aria": "Reach out to {{name}} about this page"
+			}
+		}
 	}
 }

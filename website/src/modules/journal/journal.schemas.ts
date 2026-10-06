@@ -17,6 +17,11 @@ export const journalArticleRequestSchema = z.object({
 
 export const journalLanguageRequestSchema = journalLanguageSchema;
 
+export const journalTagRequestSchema = z.object({
+	language: journalLanguageSchema,
+	tagSlug: z.string().trim().min(1),
+});
+
 export const journalArticlesByUuidsRequestSchema = z.object({
 	language: journalLanguageSchema,
 	articleUuids: z.array(z.string().trim().min(1)),

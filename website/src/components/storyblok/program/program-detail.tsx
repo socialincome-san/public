@@ -1,3 +1,7 @@
+import { buildTeaserAvatars, loadBehindTheScenesData } from '@/components/behind-the-scenes/behind-the-scenes-data';
+import { BehindTheScenesPanel } from '@/components/behind-the-scenes/behind-the-scenes-panel';
+import { BehindTheScenesProvider } from '@/components/behind-the-scenes/behind-the-scenes-provider';
+import { BehindTheScenesTeaser } from '@/components/behind-the-scenes/behind-the-scenes-teaser';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
@@ -26,7 +30,13 @@ type Props = {
 };
 
 export const ProgramDetail = async ({ programDetailData, lang, region }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common', 'website-faq'] });
+	const translator = await Translator.getInstance({
+		language: lang,
+		namespaces: ['website-common', 'website-faq', 'website-open-source'],
+	});
+	// PROTOTYPE: the "people behind this page" panel, mounted on the program page only.
+	const programSlug = programDetailData.fullSlug.split('/').filter(Boolean).pop() ?? '';
+	const behindTheScenesData = await loadBehindTheScenesData(programSlug, lang);
 	const countryIsoCode = programDetailData.programDetails?.countryIsoCode ?? programDetailData.stats?.countryIsoCode;
 	const recipientsCount =
 		programDetailData.dashboardStats?.recipientsCount ??
@@ -49,7 +59,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 	const faqItems = resolveFaqItems(programDetailData.faq ?? []);
 
 	return (
-		<>
+		<BehindTheScenesProvider panel={<BehindTheScenesPanel data={behindTheScenesData} lang={lang} region={region} />}>
 			<HeroHeader
 				lang={lang}
 				showDonationsFormMobile={false}
@@ -74,7 +84,24 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				}
 			/>
 			<div className="flex flex-col gap-8 py-8">
-				<Breadcrumb links={breadcrumbLinks} layout="section" />
+				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+					<div className="flex items-center justify-between gap-4">
+						<Breadcrumb links={breadcrumbLinks} layout="inline" />
+						<BehindTheScenesTeaser
+							tickerItems={[
+								translator.t('behind-the-scenes.teaser.ticker.open', { namespace: 'website-open-source' }),
+								translator.t('behind-the-scenes.teaser.ticker.volunteers', {
+									namespace: 'website-open-source',
+									context: { count: behindTheScenesData.peopleTotal },
+								}),
+								translator.t('behind-the-scenes.teaser.ticker.contribute', { namespace: 'website-open-source' }),
+								translator.t('behind-the-scenes.teaser.ticker.cta', { namespace: 'website-open-source' }),
+							]}
+							ariaLabel={translator.t('behind-the-scenes.teaser.aria', { namespace: 'website-open-source' })}
+							avatars={buildTeaserAvatars(behindTheScenesData)}
+						/>
+					</div>
+				</BlockWrapper>
 				<div className="lg:hidden">
 					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 						<DonationFormServer lang={lang} campaignId={programDetailData.campaignId} />
@@ -132,6 +159,6 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 					</BlockWrapper>
 				)}
 			</div>
-		</>
+		</BehindTheScenesProvider>
 	);
 };

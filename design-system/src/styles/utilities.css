@@ -40,12 +40,15 @@
 	}
 
 	.bg-website-gradient {
-		background: repeating-linear-gradient(
-			330deg,
-			var(--gradient-background-from) 0px,
-			var(--gradient-background-to) 600px,
-			var(--gradient-background-from) 1200px
-		);
+		/* The white base keeps the semi-transparent gradient opaque, so nothing layered behind the page shows through */
+		background:
+			repeating-linear-gradient(
+				330deg,
+				var(--gradient-background-from) 0px,
+				var(--gradient-background-to) 600px,
+				var(--gradient-background-from) 1200px
+			),
+			white;
 	}
 
 	@keyframes marquee-left {

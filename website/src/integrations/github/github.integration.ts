@@ -2,7 +2,8 @@ import { resultFail, resultOk, type Result } from '@/lib/result';
 
 const OWNER = 'socialincome-san';
 const REPO = 'public';
-const API_BASE = `https://api.github.com/repos/${OWNER}/${REPO}`;
+const API_ROOT = 'https://api.github.com';
+const API_BASE = `${API_ROOT}/repos/${OWNER}/${REPO}`;
 const GITHUB_REVALIDATE_SECONDS = 60 * 60 * 24;
 const MAX_ERROR_DETAILS_LENGTH = 200;
 
@@ -11,7 +12,17 @@ type GithubResponse = {
 	linkHeader: string | null;
 };
 
-export const fetchGithubData = async (path: string): Promise<Result<GithubResponse>> => {
+export const fetchGithubData = async (path: string): Promise<Result<GithubResponse>> =>
+	fetchGithubUrl(`${API_BASE}${path}`, path);
+
+/** Searches issues and pull requests of this repository. The query is scoped to the repository automatically. */
+export const searchGithubIssues = async (query: string, perPage = 1): Promise<Result<GithubResponse>> => {
+	const path = `/search/issues?q=${encodeURIComponent(`repo:${OWNER}/${REPO} ${query}`)}&per_page=${perPage}`;
+
+	return fetchGithubUrl(`${API_ROOT}${path}`, path);
+};
+
+const fetchGithubUrl = async (url: string, path: string): Promise<Result<GithubResponse>> => {
 	const headers: Record<string, string> = {
 		Accept: 'application/vnd.github+json',
 	};
@@ -21,7 +32,7 @@ export const fetchGithubData = async (path: string): Promise<Result<GithubRespon
 	}
 
 	try {
-		const response = await fetch(`${API_BASE}${path}`, {
+		const response = await fetch(url, {
 			headers,
 			next: { revalidate: GITHUB_REVALIDATE_SECONDS },
 		});

@@ -243,6 +243,37 @@ export const getLatestJournalArticles = async (language: string): Promise<Result
 	}
 };
 
+export const getJournalArticlesByTagSlug = async (
+	language: string,
+	tagSlug: string,
+): Promise<Result<ISbStoryData<JournalArticle>[]>> => {
+	try {
+		const tagResult = await storyblokContent.getTag(tagSlug, language);
+		if (!tagResult.success) {
+			return resultFail('Journal tag not found', tagResult.status);
+		}
+		const result = await storyblokContent.getArticlesByTag(tagResult.data.uuid, language);
+
+		return result.success ? result : resultFail('Could not load journal articles', result.status);
+	} catch (error) {
+		console.error('Could not load journal articles by tag', { error });
+
+		return resultFail('Could not load journal articles');
+	}
+};
+
+export const getJournalAuthors = async (language: string): Promise<Result<ISbStoryData<JournalPerson>[]>> => {
+	try {
+		const result = await storyblokContent.getOverviewAuthors(language);
+
+		return result.success ? result : resultFail('Could not load journal authors', result.status);
+	} catch (error) {
+		console.error('Could not load journal authors', { error });
+
+		return resultFail('Could not load journal authors');
+	}
+};
+
 export const getJournalArticlesByUuids = async (
 	language: string,
 	articleUuids: string[],

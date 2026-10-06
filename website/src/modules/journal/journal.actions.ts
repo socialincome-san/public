@@ -10,11 +10,14 @@ import {
 	journalArticlesByUuidsRequestSchema,
 	journalLanguageRequestSchema,
 	journalPageRequestSchema,
+	journalTagRequestSchema,
 } from './journal.schemas';
 import {
 	getJournalArticle,
 	getJournalArticlePageData,
+	getJournalArticlesByTagSlug,
 	getJournalArticlesByUuids,
+	getJournalAuthors,
 	getJournalPerson,
 	getJournalPersonPageData,
 	getLatestJournalArticles,
@@ -52,6 +55,22 @@ export const getLatestJournalArticlesAction = async (input: unknown): Promise<Re
 	const parsed = journalLanguageRequestSchema.safeParse(input);
 
 	return parsed.success ? getLatestJournalArticles(parsed.data) : resultFail('Invalid journal language');
+};
+
+export const getJournalArticlesByTagSlugAction = async (
+	input: unknown,
+): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
+	const parsed = journalTagRequestSchema.safeParse(input);
+
+	return parsed.success
+		? getJournalArticlesByTagSlug(parsed.data.language, parsed.data.tagSlug)
+		: resultFail('Invalid journal tag request');
+};
+
+export const getJournalAuthorsAction = async (input: unknown): Promise<Result<ISbStoryData<Person>[]>> => {
+	const parsed = journalLanguageRequestSchema.safeParse(input);
+
+	return parsed.success ? getJournalAuthors(parsed.data) : resultFail('Invalid journal language');
 };
 
 export const getJournalArticlesByUuidsAction = async (input: unknown): Promise<Result<ISbStoryData<ResolvedArticle>[]>> => {
