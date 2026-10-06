@@ -1,8 +1,5 @@
-import { cn } from '@socialincome/design-system/cn';
-import {
-	CardAlertFooter,
-	type CardAlertFooterVariant,
-} from '@socialincome/design-system/feedback/card-alert-footer/card-alert-footer';
+import { StatusCard } from '@socialincome/design-system/data-display/status-card/status-card';
+import { type CardAlertFooterVariant } from '@socialincome/design-system/feedback/card-alert-footer/card-alert-footer';
 import NextLink from 'next/link';
 import { FocusSdgs } from './focus-sdgs';
 import type { SdgValue } from './sdgs';
@@ -48,33 +45,25 @@ export const FocusDetailCard = ({
 	const titleId = `focus-card-title-${href}`;
 
 	return (
-		<div
-			className={cn(
-				'flex h-full flex-col rounded-2xl drop-shadow-md',
-				alertVariant === 'confirm' ? 'bg-confirm-foreground' : 'bg-secondary',
-			)}
-		>
-			<div className="border-border bg-card relative flex min-w-0 flex-1 flex-col gap-3 rounded-2xl border p-6">
-				<NextLink
-					href={href}
-					className="focus-visible:outline-foreground absolute inset-0 z-0 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2"
-					aria-labelledby={titleId}
-				/>
-				<div className="pointer-events-none relative flex flex-col gap-3">
-					<h2
-						id={titleId}
-						className="text-foreground line-clamp-2 min-h-18 min-w-0 font-sans text-3xl leading-9 font-medium wrap-break-word"
-					>
-						{focusTitle}
-					</h2>
-					<div className="grid grid-cols-3 gap-3">
-						<FocusDetailCardStat value={recipientsCount} label={labels.recipients} />
-						<FocusDetailCardStat value={programsCount} label={labels.programs} />
-						<FocusSdgs values={sdgValues} label={labels.sdgs} />
-					</div>
+		<StatusCard status={{ text: labels.candidatesReady, variant: alertVariant }}>
+			<NextLink
+				href={href}
+				className="focus-visible:outline-foreground absolute inset-0 z-0 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2"
+				aria-labelledby={titleId}
+			/>
+			<div className="pointer-events-none relative flex flex-col gap-3">
+				<h2
+					id={titleId}
+					className="text-foreground line-clamp-2 min-h-18 min-w-0 font-sans text-3xl leading-9 font-medium wrap-break-word"
+				>
+					{focusTitle}
+				</h2>
+				<div className="grid grid-cols-3 gap-3">
+					<FocusDetailCardStat value={recipientsCount} label={labels.recipients} />
+					<FocusDetailCardStat value={programsCount} label={labels.programs} />
+					<FocusSdgs values={sdgValues} label={labels.sdgs} />
 				</div>
 			</div>
-			{labels.candidatesReady ? <CardAlertFooter text={labels.candidatesReady} variant={alertVariant} /> : null}
-		</div>
+		</StatusCard>
 	);
 };

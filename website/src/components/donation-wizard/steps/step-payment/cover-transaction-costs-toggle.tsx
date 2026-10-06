@@ -3,8 +3,7 @@
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { cn } from '@socialincome/design-system/cn';
 import { Switch } from '@socialincome/design-system/forms/switch/switch';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
-import { CircleHelp } from 'lucide-react';
+import { InfoTooltip } from '@socialincome/design-system/overlays/info-tooltip/info-tooltip';
 import type { Cadence } from '../../utils/donation-amount';
 import { formatDonationCurrencyAmount } from '../../utils/donation-formatting';
 
@@ -53,18 +52,7 @@ export const CoverTransactionCostsToggle = ({
 						? t('stepPayment.cover-costs-label-monthly', { fee })
 						: t('stepPayment.cover-costs-label-one-time', { fee })}
 				</label>
-				<Tooltip>
-					<TooltipTrigger asChild>
-						<button
-							type="button"
-							aria-label={t('stepPayment.cover-costs-tooltip-aria')}
-							className="text-muted-foreground hover:text-foreground inline-flex shrink-0"
-						>
-							<CircleHelp className="size-4" aria-hidden />
-						</button>
-					</TooltipTrigger>
-					<TooltipContent sideOffset={8}>{t('stepPayment.cover-costs-tooltip')}</TooltipContent>
-				</Tooltip>
+				<InfoTooltip label={t('stepPayment.cover-costs-tooltip-aria')}>{t('stepPayment.cover-costs-tooltip')}</InfoTooltip>
 			</div>
 		</div>
 	);

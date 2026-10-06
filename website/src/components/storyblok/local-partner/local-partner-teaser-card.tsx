@@ -3,14 +3,10 @@ import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
-import { cn } from '@socialincome/design-system/cn';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
-import {
-	CardAlertFooter,
-	type CardAlertFooterVariant,
-} from '@socialincome/design-system/feedback/card-alert-footer/card-alert-footer';
+import { StatusCard } from '@socialincome/design-system/data-display/status-card/status-card';
+import { type CardAlertFooterVariant } from '@socialincome/design-system/feedback/card-alert-footer/card-alert-footer';
 import NextImage from 'next/image';
-import NextLink from 'next/link';
 import type { LocalPartnerStory } from './local-partner.types';
 import {
 	getLocalPartnerDescription,
@@ -72,46 +68,35 @@ export const LocalPartnerTeaserCard = ({
 		: null;
 
 	return (
-		<NextLink
-			href={href}
-			className={cn(
-				'group flex h-full w-full flex-col overflow-hidden rounded-xl',
-				alertVariant === 'confirm' ? 'bg-confirm-foreground' : 'bg-secondary',
-				'drop-shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5',
-				'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-			)}
-		>
-			<div className="border-border bg-card flex flex-1 flex-col rounded-xl border p-3">
-				<div className="bg-muted relative aspect-[280/180] w-full overflow-hidden rounded-lg">
-					{imageSource ? (
-						<NextImage
-							src={imageSource}
-							alt={heroImage?.alt ?? title}
-							fill
-							sizes="(min-width: 1280px) 281px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
-							className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
-						/>
-					) : null}
-				</div>
-				<div className="flex flex-1 flex-col gap-3 px-2 pt-4 pb-2">
-					<h2 className="text-foreground text-xl leading-7 font-bold">{title}</h2>
-					{description ? <p className="text-muted-foreground line-clamp-4 flex-1 text-sm leading-6">{description}</p> : null}
-					<div className="mt-auto flex flex-wrap gap-2">
-						{countryCode ? (
-							<Badge variant="country">
-								<CountryFlag country={countryCode} size="sm" />
-								<span>{getCountryNameByCode(countryCode)}</span>
-							</Badge>
-						) : null}
+		<StatusCard href={href} inset="sm" status={{ text: candidatesLabel, variant: alertVariant }}>
+			<div className="bg-muted relative aspect-[280/180] w-full overflow-hidden rounded-lg">
+				{imageSource ? (
+					<NextImage
+						src={imageSource}
+						alt={heroImage?.alt ?? title}
+						fill
+						sizes="(min-width: 1280px) 281px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+						className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.02]"
+					/>
+				) : null}
+			</div>
+			<div className="flex flex-1 flex-col gap-3 px-2 pt-4 pb-2">
+				<h2 className="text-foreground text-xl leading-7 font-bold">{title}</h2>
+				{description ? <p className="text-muted-foreground line-clamp-4 flex-1 text-sm leading-6">{description}</p> : null}
+				<div className="mt-auto flex flex-wrap gap-2">
+					{countryCode ? (
 						<Badge variant="country">
-							<span>
-								{recipientsCount} {recipientsLabel}
-							</span>
+							<CountryFlag country={countryCode} size="sm" />
+							<span>{getCountryNameByCode(countryCode)}</span>
 						</Badge>
-					</div>
+					) : null}
+					<Badge variant="country">
+						<span>
+							{recipientsCount} {recipientsLabel}
+						</span>
+					</Badge>
 				</div>
 			</div>
-			<CardAlertFooter text={candidatesLabel} variant={alertVariant} />
-		</NextLink>
+		</StatusCard>
 	);
 };

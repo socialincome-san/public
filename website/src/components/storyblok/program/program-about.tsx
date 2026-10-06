@@ -4,6 +4,7 @@ import type { ProgramDetailData } from '@/components/storyblok/program/load-prog
 import { ProgramAboutDialog } from '@/components/storyblok/program/program-about-dialog';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { DetailPanel } from '@socialincome/design-system/data-display/detail-panel/detail-panel';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
@@ -27,9 +28,7 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region, reso
 	const hasDialogContent = content.overlaySections.length > 0;
 
 	return (
-		<div className="bg-card flex flex-col gap-6 rounded-xl p-4 shadow-lg lg:p-6">
-			<h2 className="text-foreground text-xl font-bold">{aboutTitle}</h2>
-
+		<DetailPanel title={aboutTitle}>
 			{content.description ? <p className="text-foreground text-base">{content.description}</p> : null}
 
 			<dl className="flex flex-col gap-1 text-base">
@@ -60,6 +59,6 @@ export const ProgramAbout = ({ programDetailData, translator, lang, region, reso
 					content={content}
 				/>
 			) : null}
-		</div>
+		</DetailPanel>
 	);
 };

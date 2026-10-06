@@ -3,6 +3,7 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveWalletPayoutDisplaysAction } from '@/modules/currency-display/currency-display.actions';
 import type { PublicProgramStatsMap } from '@/modules/programs/program.types';
+import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
 import { ProgramWallet } from './program-wallet';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug } from './program.utils';
@@ -39,29 +40,25 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 
 	return (
 		<div className="flex w-full flex-col gap-6">
-			{programs.length === 0 ? (
-				<p className="text-muted-foreground">{translator.t('programs-page.empty')}</p>
-			) : (
-				<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-					{programs.map((program) => {
-						const portalSlug = getProgramPortalSlug(program.content);
-						const stats = portalSlug ? statsByPortalSlug[portalSlug] : undefined;
+			<CardGrid emptyMessage={translator.t('programs-page.empty')}>
+				{programs.map((program) => {
+					const portalSlug = getProgramPortalSlug(program.content);
+					const stats = portalSlug ? statsByPortalSlug[portalSlug] : undefined;
 
-						return (
-							<li key={program.uuid} className="h-full">
-								<ProgramWallet
-									program={program}
-									stats={stats}
-									walletDisplay={displaysByProgramId.get(program.uuid)}
-									translator={translator}
-									lang={lang}
-									region={region}
-								/>
-							</li>
-						);
-					})}
-				</ul>
-			)}
+					return (
+						<CardGridItem key={program.uuid}>
+							<ProgramWallet
+								program={program}
+								stats={stats}
+								walletDisplay={displaysByProgramId.get(program.uuid)}
+								translator={translator}
+								lang={lang}
+								region={region}
+							/>
+						</CardGridItem>
+					);
+				})}
+			</CardGrid>
 		</div>
 	);
 };
