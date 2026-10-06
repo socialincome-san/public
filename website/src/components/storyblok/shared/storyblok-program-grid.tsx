@@ -3,8 +3,8 @@ import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
@@ -23,9 +23,11 @@ export const StoryblokProgramGrid = ({ blok, programs, allProgramsCount = 0, lan
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			{blok.heading && (
-				<SectionHeading size={3} className="leading-[1.2] whitespace-pre-line">
-					<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
-				</SectionHeading>
+				<div className="mb-8 md:mb-10">
+					<SectionHeading size={3}>
+						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
+					</SectionHeading>
+				</div>
 			)}
 			{blok.description && (
 				<div className="text-foreground -mt-4 mb-10 text-center text-lg leading-7 font-normal whitespace-pre-line">

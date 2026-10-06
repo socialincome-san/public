@@ -4,16 +4,15 @@ import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-
 import { useLogout } from '@/components/app-shells/use-logout';
 import type { Session } from '@/modules/auth/auth.types';
 import type { UserSession } from '@/modules/users/user.types';
-import { Avatar, AvatarFallback } from '@socialincome/design-system/avatar/avatar';
-import { Button } from '@socialincome/design-system/button/button';
 import { cn } from '@socialincome/design-system/cn';
+import { Avatar, AvatarFallback } from '@socialincome/design-system/data-display/avatar/avatar';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
+} from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 import Link from 'next/link';
 
@@ -22,11 +21,11 @@ type DropdownAlign = 'start' | 'center' | 'end';
 type UserMenuProps = {
 	sessions: Session[];
 	align?: DropdownAlign;
-	triggerClassName?: string;
+	variant: 'bar' | 'menu';
 	onNavigate?: () => void;
 };
 
-export const UserMenu = ({ sessions, align = 'end', triggerClassName, onNavigate }: UserMenuProps) => {
+export const UserMenu = ({ sessions, align = 'end', variant, onNavigate }: UserMenuProps) => {
 	const user = sessions.find((s): s is UserSession => s.type === 'user');
 	const { userMenuNavLinks } = useNavbarLinks(sessions);
 	const { logout } = useLogout();
@@ -38,9 +37,15 @@ export const UserMenu = ({ sessions, align = 'end', triggerClassName, onNavigate
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="outline" className={cn('flex items-center gap-2 rounded-full px-3', triggerClassName)}>
+				<button
+					type="button"
+					className={cn(
+						'border-input bg-background text-primary hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex items-center border text-left transition-colors focus-visible:ring-1 focus-visible:outline-hidden',
+						variant === 'bar' ? 'h-12 gap-2 rounded-full px-3' : 'w-full gap-3 rounded-xl p-3',
+					)}
+				>
 					<Avatar>
-						<AvatarFallback className="bg-primary text-background">
+						<AvatarFallback>
 							{user.firstName?.[0]}
 							{user.lastName?.[0]}
 						</AvatarFallback>
@@ -54,10 +59,10 @@ export const UserMenu = ({ sessions, align = 'end', triggerClassName, onNavigate
 						</p>
 					</div>
 					<ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
-				</Button>
+				</button>
 			</DropdownMenuTrigger>
 
-			<DropdownMenuContent align={align} className="w-64">
+			<DropdownMenuContent align={align}>
 				{userMenuNavLinks.map(({ href, label, icon: Icon }) => (
 					<DropdownMenuItem asChild key={href}>
 						<Link href={href} onClick={onNavigate} className="flex items-center gap-2">
@@ -74,7 +79,7 @@ export const UserMenu = ({ sessions, align = 'end', triggerClassName, onNavigate
 						e.preventDefault();
 						void logout();
 					}}
-					className="text-destructive focus:text-destructive"
+					variant="destructive"
 				>
 					<LogOut className="mr-2 h-4 w-4" />
 					<span>Sign out</span>

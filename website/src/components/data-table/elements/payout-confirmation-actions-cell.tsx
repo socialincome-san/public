@@ -2,8 +2,15 @@
 
 import { confirmPayoutAction, contestPayoutAction } from '@/modules/payouts/payout.actions';
 import type { PayoutConfirmationTableViewRow } from '@/modules/payouts/payout.types';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { CheckIcon, XIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
 
@@ -31,12 +38,12 @@ export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 			</div>
 
 			<Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-				<DialogContent>
+				<DialogContent size="alert">
 					<DialogHeader>
 						<DialogTitle>Confirm payout?</DialogTitle>
+						<DialogDescription>This action will mark the payout as confirmed.</DialogDescription>
 					</DialogHeader>
-					<p className="text-muted-foreground text-sm">This action will mark the payout as confirmed.</p>
-					<div className="mt-4 flex justify-end gap-2">
+					<DialogFooter>
 						<Button variant="outline" onClick={() => setConfirmOpen(false)}>
 							Cancel
 						</Button>
@@ -51,17 +58,17 @@ export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 						>
 							Confirm payout
 						</Button>
-					</div>
+					</DialogFooter>
 				</DialogContent>
 			</Dialog>
 
 			<Dialog open={contestOpen} onOpenChange={setContestOpen}>
-				<DialogContent>
+				<DialogContent size="alert">
 					<DialogHeader>
 						<DialogTitle>Contest payout?</DialogTitle>
+						<DialogDescription>This action will mark the payout as contested.</DialogDescription>
 					</DialogHeader>
-					<p className="text-muted-foreground text-sm">This action will mark the payout as contested.</p>
-					<div className="mt-4 flex justify-end gap-2">
+					<DialogFooter>
 						<Button variant="outline" onClick={() => setContestOpen(false)}>
 							Cancel
 						</Button>
@@ -77,7 +84,7 @@ export const PayoutConfirmationActionsCell = ({ payout }: Props) => {
 						>
 							Contest payout
 						</Button>
-					</div>
+					</DialogFooter>
 				</DialogContent>
 			</Dialog>
 		</>

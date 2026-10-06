@@ -2,7 +2,7 @@ import { DonationFormServer } from '@/components/donation-wizard/donation-form-s
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import NextImage from 'next/image';
 import type { ReactNode } from 'react';
 
@@ -101,9 +101,11 @@ export const HeroHeader = ({
 			</div>
 
 			{showDonationsFormMobile ? (
-				<BlockWrapper className="lg:hidden" disableMarginTop={true} disableMarginBottom={true}>
-					{heroCardNode}
-				</BlockWrapper>
+				<div className="lg:hidden">
+					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+						{heroCardNode}
+					</BlockWrapper>
+				</div>
 			) : null}
 		</section>
 	);

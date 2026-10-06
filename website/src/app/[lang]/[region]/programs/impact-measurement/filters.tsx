@@ -1,6 +1,6 @@
 'use client';
 
-import { MultiSelect, type MultiSelectOption } from '@socialincome/design-system/multi-select/multi-select';
+import { MultiSelect, type MultiSelectOption } from '@socialincome/design-system/forms/multi-select/multi-select';
 import { Funnel } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { FILTER_PREFIX, IMPACT_FILTER_QUERY_KEYS } from './filters.constants';
@@ -70,22 +70,22 @@ export const ImpactMeasurementFilters = ({
 
 	return (
 		<div className="flex flex-wrap items-center gap-2">
-			<MultiSelect
-				data-testid="impact-measurement-filters-trigger"
-				options={filterGroups}
-				defaultValue={selectedFilters}
-				onValueChange={updateMultiFilter}
-				placeholder={allFiltersPlaceholder}
-				placeholderIcon={Funnel}
-				placeholderClassName="text-foreground"
-				responsive={true}
-				hideSelectAll
-				searchable={false}
-				maxCount={3}
-				className="!text-foreground border-border bg-card hover:bg-muted data-[state=open]:bg-muted h-10 min-w-52 px-2 text-sm font-medium sm:min-w-72"
-				popoverClassName="max-w-sm"
-				popoverAlign="end"
-			/>
+			<div className="min-w-52 sm:min-w-72">
+				<MultiSelect
+					data-testid="impact-measurement-filters-trigger"
+					trigger="filter"
+					options={filterGroups}
+					defaultValue={selectedFilters}
+					onValueChange={updateMultiFilter}
+					placeholder={allFiltersPlaceholder}
+					placeholderIcon={Funnel}
+					responsive={true}
+					hideSelectAll
+					searchable={false}
+					maxCount={3}
+					popoverAlign="end"
+				/>
+			</div>
 		</div>
 	);
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import { switchToDefaultLanguageAction } from '@/modules/i18n/i18n.actions';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 
 type Props = {
 	label: string;

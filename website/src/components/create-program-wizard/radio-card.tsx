@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@socialincome/design-system/cn';
-import { RadioGroupItem } from '@socialincome/design-system/radio-group/radio-group';
+import { RadioGroupItem } from '@socialincome/design-system/forms/radio-group/radio-group';
 import { ReactNode } from 'react';
 
 type Props = {
@@ -25,7 +25,9 @@ export const RadioCard = ({ value, checked, disabled, label, description, badge,
 				disabled && 'cursor-not-allowed opacity-60',
 			)}
 		>
-			<RadioGroupItem value={value} disabled={disabled} className="absolute top-1/2 right-3 -translate-y-1/2" />
+			<span className="absolute top-1/2 right-3 flex -translate-y-1/2">
+				<RadioGroupItem value={value} disabled={disabled} />
+			</span>
 
 			<div className="flex-1 space-y-1 pr-6">
 				<div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">

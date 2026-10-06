@@ -1,7 +1,7 @@
 import { jobStatusVariant } from '@/app/portal/messaging/delivery-log/messaging-job-status';
 import { twilioTemplateUrl } from '@/app/portal/messaging/twilio-console-url';
 import type { MessagingJobDetailView } from '@/modules/messaging/messaging.types';
-import { Badge } from '@socialincome/design-system/badge/badge';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { ExternalLink } from 'lucide-react';
 
 type SummaryCardProps = {
@@ -38,9 +38,7 @@ export const SummaryCard = ({ job, templateBody, templateError, twilioAccountSid
 					</div>
 				</div>
 				<div className="flex shrink-0 gap-2">
-					<Badge variant="default" className="uppercase">
-						{job.channelRequested}
-					</Badge>
+					<Badge variant="default">{job.channelRequested}</Badge>
 					<Badge variant={jobStatusVariant(job.status)}>{job.status}</Badge>
 				</div>
 			</header>

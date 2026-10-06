@@ -15,10 +15,9 @@ import {
 	type WebsiteLanguage,
 	type WebsiteRegion,
 } from '@/lib/i18n/utils';
-import { Button } from '@socialincome/design-system/button/button';
-import { cn } from '@socialincome/design-system/cn';
-import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/popover/popover';
-import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/tabs/tabs';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/navigation/tabs/tabs';
+import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/overlays/popover/popover';
 import { ChevronDown, Globe } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
@@ -61,10 +60,10 @@ const createLocalePath = ({
 type Props = {
 	lang: WebsiteLanguage;
 	region: string;
-	className?: string;
+	variant?: 'ghost' | 'outline';
 };
 
-export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
+export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Props) => {
 	const [open, setOpen] = useState(false);
 	const router = useRouter();
 	const pathname = usePathname();
@@ -120,8 +119,8 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 			<PopoverTrigger asChild>
 				<Button
 					type="button"
-					variant="ghost"
-					className={cn('h-10 gap-2 rounded-full px-3 text-sm font-bold lg:h-11', className)}
+					variant={variant}
+					size="md"
 					aria-label={translator?.t('locale-currency-switcher.aria-label') ?? 'Change language, region, and currency'}
 				>
 					{currentRegion === 'ch' ? <CountryFlag country={SWISS_COUNTRY_CODE} size="sm" /> : <Globe className="size-4" />}
@@ -129,52 +128,51 @@ export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
 					<ChevronDown className="text-muted-foreground size-3.5" />
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent
-				align="end"
-				className="bg-popover z-[110] w-72 space-y-4 rounded-3xl p-4 shadow-[0_24px_48px_rgba(15,23,42,0.16)]"
-			>
-				<div className="space-y-2">
-					<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.language') ?? 'Language'}</div>
-					<Tabs value={currentSwitcherLanguage} onValueChange={handleLanguageChange}>
-						<TabsList className={cn('grid h-10 w-full rounded-full', isSurveyPage ? 'grid-cols-2' : 'grid-cols-4')}>
-							{languageOptions.map((language) => (
-								<TabsTrigger key={language} value={language} className="rounded-full">
-									{language.toUpperCase()}
-								</TabsTrigger>
-							))}
-						</TabsList>
-					</Tabs>
-				</div>
+			<PopoverContent align="end">
+				<div className="space-y-4">
+					<div className="space-y-2">
+						<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.language') ?? 'Language'}</div>
+						<Tabs value={currentSwitcherLanguage} onValueChange={handleLanguageChange}>
+							<TabsList fullWidth>
+								{languageOptions.map((language) => (
+									<TabsTrigger key={language} value={language}>
+										{language.toUpperCase()}
+									</TabsTrigger>
+								))}
+							</TabsList>
+						</Tabs>
+					</div>
 
-				<div className="space-y-2">
-					<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.region') ?? 'Region'}</div>
-					<Tabs value={currentRegion} onValueChange={handleRegionChange}>
-						<TabsList className="grid h-10 w-full grid-cols-2 rounded-full">
-							{regionOptions.map((option) => (
-								<TabsTrigger key={option.value} value={option.value} className="rounded-full">
-									{option.value === 'ch' ? (
-										<CountryFlag country={SWISS_COUNTRY_CODE} size="sm" />
-									) : (
-										<Globe className="size-4" />
-									)}
-									<span>{option.label}</span>
-								</TabsTrigger>
-							))}
-						</TabsList>
-					</Tabs>
-				</div>
+					<div className="space-y-2">
+						<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.region') ?? 'Region'}</div>
+						<Tabs value={currentRegion} onValueChange={handleRegionChange}>
+							<TabsList fullWidth>
+								{regionOptions.map((option) => (
+									<TabsTrigger key={option.value} value={option.value}>
+										{option.value === 'ch' ? (
+											<CountryFlag country={SWISS_COUNTRY_CODE} size="sm" />
+										) : (
+											<Globe className="size-4" />
+										)}
+										<span>{option.label}</span>
+									</TabsTrigger>
+								))}
+							</TabsList>
+						</Tabs>
+					</div>
 
-				<div className="space-y-2">
-					<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.currency') ?? 'Currency'}</div>
-					<Tabs value={currentCurrency} onValueChange={handleCurrencyChange}>
-						<TabsList className="grid h-10 w-full grid-cols-3 rounded-full">
-							{websiteCurrencies.map((currency) => (
-								<TabsTrigger key={currency} value={currency} className="rounded-full">
-									{currency}
-								</TabsTrigger>
-							))}
-						</TabsList>
-					</Tabs>
+					<div className="space-y-2">
+						<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.currency') ?? 'Currency'}</div>
+						<Tabs value={currentCurrency} onValueChange={handleCurrencyChange}>
+							<TabsList fullWidth>
+								{websiteCurrencies.map((currency) => (
+									<TabsTrigger key={currency} value={currency}>
+										{currency}
+									</TabsTrigger>
+								))}
+							</TabsList>
+						</Tabs>
+					</div>
 				</div>
 			</PopoverContent>
 		</Popover>

@@ -10,11 +10,7 @@ import Image from 'next/image';
 import { getSupportersImpactLabel } from '../utils/community-stats';
 import type { Cadence } from '../utils/donation-amount';
 import { getDonationExplainerVideo } from '../utils/donation-explainer-video';
-import {
-	donationImpactChecklistItemClass,
-	donationImpactExplainerClass,
-	donationImpactRowClass,
-} from '../utils/donation-wizard-layout';
+import { donationImpactChecklistItemClass, donationImpactRowClass } from '../utils/donation-wizard-layout';
 
 const ZEWO_HOMEPAGE_URL = 'https://www.zewo.ch';
 
@@ -59,7 +55,6 @@ export const DonationImpactPanel = ({ cadence, communityStats }: Props) => {
 				</a>
 				<ExplainerVideoTrigger
 					layout="row"
-					className={donationImpactExplainerClass}
 					label={whyOnePercentLabel}
 					embedUrl={explainerVideo.embedUrl}
 					thumbnailSrc={explainerVideo.thumbnailSrc}

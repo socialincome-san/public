@@ -1,7 +1,7 @@
 'use client';
 
 import { QrBillPdfDownloadLink } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-pdf-download-link';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { CircleCheck, QrCode } from 'lucide-react';
 
 type Props = {
@@ -44,15 +44,15 @@ export const EditSubscriptionSuccessStep = ({ labels, onDone, standingOrderSubsc
 							<QrCode className="size-5" aria-hidden />
 						</div>
 					</div>
-					<Button variant="outline" size="sm" className="bg-background w-fit" asChild>
-						<QrBillPdfDownloadLink variant="subscription" subscriptionId={standingOrderSubscriptionId}>
+					<div>
+						<QrBillPdfDownloadLink variant="subscription" subscriptionId={standingOrderSubscriptionId} appearance="button">
 							<QrCode className="size-4" aria-hidden />
 							{labels.downloadQr}
 						</QrBillPdfDownloadLink>
-					</Button>
+					</div>
 				</div>
 			) : null}
-			<Button type="button" className="w-full" onClick={onDone} data-testid="edit-subscription-done">
+			<Button type="button" fullWidth onClick={onDone} data-testid="edit-subscription-done">
 				{labels.done}
 			</Button>
 		</div>

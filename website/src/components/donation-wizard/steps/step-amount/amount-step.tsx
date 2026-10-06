@@ -3,7 +3,6 @@
 import { useI18n } from '@/lib/i18n/use-i18n';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getDonationAmountFieldsTranslations } from '../../i18n/donation-amount-fields-translations';
-import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import { createStep1Actions, selectStep1FormView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { DonationAmountFields } from './donation-amount-fields';
@@ -14,7 +13,6 @@ export const AmountStep = ({ state, send }: DonationWizardStepProps) => {
 
 	return (
 		<DonationAmountFields
-			className={getDonationWizardCardClass('stepAmount')}
 			translations={getDonationAmountFieldsTranslations(t)}
 			currency={currency}
 			values={selectStep1FormView(state.context)}

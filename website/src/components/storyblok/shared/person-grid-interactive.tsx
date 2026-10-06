@@ -6,8 +6,9 @@ import type { Person } from '@/generated/storyblok/types/109655/storyblok-compon
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getRoleCode, getRoleLabel, personHasRole } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameFromIsoCode } from '@/lib/types/country';
-import { Button } from '@socialincome/design-system/button/button';
-import { cn } from '@socialincome/design-system/cn';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { FilterTrigger } from '@socialincome/design-system/actions/filter-trigger/filter-trigger';
+import { SearchInput } from '@socialincome/design-system/forms/search-input/search-input';
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -15,10 +16,9 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
-import { Input } from '@socialincome/design-system/input/input';
+} from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import type { ISbStoryData } from '@storyblok/js';
-import { ArrowUpDownIcon, ChevronDown, SearchIcon } from 'lucide-react';
+import { ArrowUpDownIcon } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
 type SortOption = 'alphabetical' | 'startDate';
@@ -58,9 +58,6 @@ const STATUS_LABEL_KEYS: Record<PersonStatus, keyof PersonGridTranslations> = {
 	active: 'statusActive',
 	inactive: 'statusInactive',
 };
-
-const FILTER_TRIGGER_CLASSNAME =
-	'text-foreground border-border bg-card hover:bg-card h-10 min-w-0 max-w-40 shrink px-4 text-sm font-medium';
 
 // Alphabetical sorting goes by first name, falling back to the full name when it's unset.
 const getSortableName = (person: ISbStoryData<Person>) => person.content.firstName || person.content.fullName;
@@ -107,44 +104,39 @@ const FilterDropdown = <T extends string>({
 	const isActive = selected.length > 0 && selected.length !== items.length;
 
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button
-					type="button"
-					variant="outline"
-					className={cn(FILTER_TRIGGER_CLASSNAME, isActive && 'bg-input hover:bg-input')}
-				>
-					<span className="min-w-0 truncate">{triggerLabel}</span>
-					<ChevronDown className="text-foreground size-4 shrink-0 opacity-70" />
-				</Button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent align="start" className="w-56">
-				<DropdownMenuItem
-					onSelect={(event) => {
-						event.preventDefault();
+		<div className="max-w-40 min-w-0 shrink">
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<FilterTrigger active={isActive}>{triggerLabel}</FilterTrigger>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align="start">
+					<DropdownMenuItem
+						onSelect={(event) => {
+							event.preventDefault();
 
-						if (selected.length === 0) {
-							onSelectAll();
-						} else {
-							onClearAll();
-						}
-					}}
-				>
-					{selected.length === 0 ? selectAllLabel : clearAllLabel}
-				</DropdownMenuItem>
-				<DropdownMenuSeparator />
-				{items.map((item) => (
-					<DropdownMenuCheckboxItem
-						key={item}
-						checked={selected.includes(item)}
-						onCheckedChange={() => onToggle(item)}
-						onSelect={(event) => event.preventDefault()}
+							if (selected.length === 0) {
+								onSelectAll();
+							} else {
+								onClearAll();
+							}
+						}}
 					>
-						{getLabel(item)}
-					</DropdownMenuCheckboxItem>
-				))}
-			</DropdownMenuContent>
-		</DropdownMenu>
+						{selected.length === 0 ? selectAllLabel : clearAllLabel}
+					</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					{items.map((item) => (
+						<DropdownMenuCheckboxItem
+							key={item}
+							checked={selected.includes(item)}
+							onCheckedChange={() => onToggle(item)}
+							onSelect={(event) => event.preventDefault()}
+						>
+							{getLabel(item)}
+						</DropdownMenuCheckboxItem>
+					))}
+				</DropdownMenuContent>
+			</DropdownMenu>
+		</div>
 	);
 };
 
@@ -292,13 +284,7 @@ export const PersonGridInteractive = ({
 	const sortDropdown = showSort ? (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button
-					type="button"
-					variant="outline"
-					size="icon"
-					className="h-10 w-10 shrink-0"
-					aria-label={translations.sortAriaLabel}
-				>
+				<Button type="button" variant="outline" size="icon-lg" aria-label={translations.sortAriaLabel}>
 					<ArrowUpDownIcon className="size-4" />
 				</Button>
 			</DropdownMenuTrigger>
@@ -362,15 +348,12 @@ export const PersonGridInteractive = ({
 					<div className="flex flex-nowrap items-center gap-2">
 						{hasFilters ? <div className="hidden lg:block">{sortDropdown}</div> : sortDropdown}
 						{showSearch ? (
-							<div className="relative w-full lg:w-64 lg:shrink-0">
-								<SearchIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-								<Input
-									type="search"
+							<div className="w-full lg:w-64 lg:shrink-0">
+								<SearchInput
 									aria-label={translations.searchPlaceholder}
 									placeholder={translations.searchPlaceholder}
 									value={searchTerm}
 									onChange={(event) => setSearchTerm(event.target.value)}
-									className="bg-card h-10 pl-9"
 								/>
 							</div>
 						) : null}

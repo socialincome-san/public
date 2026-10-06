@@ -3,7 +3,7 @@
 import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { CONFIRM_LOGIN_PATH_REGEX } from '@/lib/utils/regex';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 

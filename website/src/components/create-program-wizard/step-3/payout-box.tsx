@@ -2,7 +2,7 @@
 
 import { PayoutInterval } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Switch } from '@socialincome/design-system/switch/switch';
+import { Switch } from '@socialincome/design-system/forms/switch/switch';
 import { PayoutControls } from './payout-controls';
 import { type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 import { PayoutSummary } from './payout-summary';

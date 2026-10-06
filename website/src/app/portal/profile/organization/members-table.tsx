@@ -8,11 +8,11 @@ import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { renameActiveOrganizationAction } from '@/modules/organizations/organization.actions';
 import type { OrganizationMemberTableViewRow } from '@/modules/organizations/organization.types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { PencilIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
@@ -82,7 +82,7 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 			/>
 
 			<Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>
-				<DialogContent className="sm:max-w-[425px]">
+				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>Rename organization</DialogTitle>
 					</DialogHeader>
@@ -90,7 +90,7 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 

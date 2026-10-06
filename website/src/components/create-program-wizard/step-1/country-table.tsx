@@ -3,7 +3,7 @@
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { CountryCondition, type ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
-import { RadioGroup } from '@socialincome/design-system/radio-group/radio-group';
+import { RadioGroup } from '@socialincome/design-system/forms/radio-group/radio-group';
 import { useState } from 'react';
 import { CountryTableBody } from './country-table-body';
 import { CountryTableHeader } from './country-table-header';

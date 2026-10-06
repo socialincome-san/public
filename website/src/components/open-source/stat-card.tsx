@@ -1,5 +1,5 @@
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Card } from '@socialincome/design-system/card/card';
+import { Card } from '@socialincome/design-system/data-display/card/card';
 
 type Props = {
 	label: string;

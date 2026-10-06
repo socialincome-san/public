@@ -1,6 +1,6 @@
 import { ImpactMeasurementView } from '@/app/[lang]/[region]/programs/impact-measurement/view';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import Link from 'next/link';
 
 type Props = {
@@ -30,7 +30,7 @@ export const ImpactMeasurementPreviewWrapper = ({ focusId, lang, region, teaserB
 						<p className="text-foreground min-w-0 text-center text-xl font-bold sm:text-left">{trimmedTeaserText}</p>
 					)}
 					{trimmedTeaserButtonLabel && (
-						<Button variant="outline" size="lg" className="w-full shrink-0 sm:w-auto" asChild>
+						<Button variant="outline" size="lg" asChild>
 							<Link href={{ pathname: `/${lang}/${region}/impact-measurement`, query: { focus: focusId } }}>
 								{trimmedTeaserButtonLabel}
 							</Link>

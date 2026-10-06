@@ -1,12 +1,9 @@
-import { cn } from '@socialincome/design-system/cn';
-
 type Props = {
 	title?: string;
 	text?: string;
-	textClassName?: string;
 };
 
-export const CmsHeader = ({ title, text, textClassName }: Props) => {
+export const CmsHeader = ({ title, text }: Props) => {
 	const normalizedTitle = title?.trim();
 	const normalizedText = text?.trim();
 
@@ -20,7 +17,7 @@ export const CmsHeader = ({ title, text, textClassName }: Props) => {
 				<h1 className="text-foreground text-5xl leading-tight font-bold md:text-6xl">{normalizedTitle}</h1>
 			) : null}
 			{normalizedText ? (
-				<p className={cn('text-foreground text-base leading-6 sm:text-lg sm:leading-7', textClassName)}>{normalizedText}</p>
+				<p className="text-foreground max-w-2xl text-base leading-6 sm:text-lg sm:leading-7">{normalizedText}</p>
 			) : null}
 		</div>
 	);

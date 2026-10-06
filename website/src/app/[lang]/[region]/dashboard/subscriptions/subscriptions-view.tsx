@@ -2,7 +2,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { getDashboardView } from '@/modules/subscriptions/subscription.service';
 import { requireSession } from '@/server/session';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import Link from 'next/link';
 import { ActiveSubscriptionsList } from './active-subscriptions-list';
 import { SubscriptionSummaryCards } from './subscription-summary-cards';

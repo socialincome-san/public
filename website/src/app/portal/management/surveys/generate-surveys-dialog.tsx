@@ -2,8 +2,14 @@
 
 import { StepResultBox } from '@/components/step-result-box';
 import { generateSurveysAction, previewSurveyGenerationAction } from '@/modules/surveys/survey.actions';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { EyeIcon, PlayIcon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -65,7 +71,7 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+			<DialogContent size="md">
 				<DialogHeader>
 					<DialogTitle>Survey generation process</DialogTitle>
 				</DialogHeader>
@@ -80,7 +86,6 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 
 							<Button
 								data-testid={`survey-step-${step.id}-button`}
-								className="flex w-full items-center justify-center gap-2"
 								variant={step.variant ?? 'default'}
 								onClick={() => run(step)}
 							>
@@ -98,7 +103,7 @@ export const GenerateSurveysDialog = ({ open, setOpen }: { open: boolean; setOpe
 					))}
 				</div>
 
-				<DialogFooter className="mt-4">
+				<DialogFooter>
 					<Button variant="outline" onClick={() => setOpen(false)}>
 						Close
 					</Button>

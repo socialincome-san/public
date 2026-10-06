@@ -24,7 +24,7 @@ type Props = {
 	region: string;
 };
 
-const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.ComponentType<{ className?: string }>> = {
+const IconMap: Record<NonNullable<Exclude<MenuItem['icon'], ''>>, React.ComponentType> = {
 	instagram: InstagramIcon,
 	linkedin: LinkedinIcon,
 	facebook: FacebookIcon,
@@ -89,7 +89,11 @@ export const Footer = async ({ lang, region }: Props) => {
 													rel={item.newTab ? 'noopener noreferrer' : undefined}
 													className="text-primary-foreground/50 hover:text-primary-foreground flex items-center gap-3 font-medium transition-colors"
 												>
-													{Icon && <Icon className="text-input" />}
+													{Icon && (
+														<span className="text-input">
+															<Icon />
+														</span>
+													)}
 													{item.label}
 												</NextLink>
 											</li>

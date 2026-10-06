@@ -3,26 +3,25 @@
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
 import type { Session } from '@/modules/auth/auth.types';
 import type { UserSession } from '@/modules/users/user.types';
-import { Button } from '@socialincome/design-system/button/button';
+import { cn } from '@socialincome/design-system/cn';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
+} from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { ChevronDown, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { FC } from 'react';
-import { twMerge } from 'tailwind-merge';
 
 type ProgramDropdownProps = {
 	sessions: Session[];
 	active?: boolean;
-	className?: string;
+	variant: 'bar' | 'menu';
 };
 
-export const ProgramDropdown: FC<ProgramDropdownProps> = ({ sessions, active = false, className }) => {
+export const ProgramDropdown: FC<ProgramDropdownProps> = ({ sessions, active = false, variant }) => {
 	const user = sessions.find((s): s is UserSession => s.type === 'user');
 	if (!user) {
 		return null;
@@ -31,20 +30,21 @@ export const ProgramDropdown: FC<ProgramDropdownProps> = ({ sessions, active = f
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button
-					variant="ghost"
-					className={twMerge(
-						'text-primary hover:bg-accent relative rounded-md px-3 py-2 text-lg font-medium transition-colors duration-200',
-						className,
+				<button
+					type="button"
+					className={cn(
+						'text-primary hover:bg-accent relative flex items-center gap-1 rounded-md px-3 py-2 font-medium transition-colors duration-200',
+						variant === 'bar' ? 'text-lg' : 'w-full text-base',
+						variant === 'menu' && active && 'bg-accent',
 					)}
 				>
-					{active && <span className="bg-primary absolute -bottom-1 left-0 h-1 w-full rounded-t-lg" />}
+					{variant === 'bar' && active && <span className="bg-primary absolute -bottom-1 left-0 h-1 w-full rounded-t-lg" />}
 					<span>Programs</span>
-					<ChevronDown className="ml-1 h-4 w-4 opacity-70" />
-				</Button>
+					<ChevronDown className="h-4 w-4 opacity-70" />
+				</button>
 			</DropdownMenuTrigger>
 
-			<DropdownMenuContent align="start" className="w-56">
+			<DropdownMenuContent align="start">
 				{user.programs?.length ? (
 					user.programs.map((program) => (
 						<DropdownMenuItem asChild key={program.id}>

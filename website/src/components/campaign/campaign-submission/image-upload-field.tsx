@@ -2,7 +2,7 @@
 
 import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { cn } from '@socialincome/design-system/cn';
-import { Label } from '@socialincome/design-system/label/label';
+import { Label } from '@socialincome/design-system/forms/label/label';
 import { Camera, Trash2, Upload } from 'lucide-react';
 import { useEffect, useId, useRef, type RefObject } from 'react';
 import { ImageFocusPoint } from './image-focus-point';
@@ -67,7 +67,7 @@ export const ImageUploadField = ({
 
 	return (
 		<div className="flex flex-col gap-3">
-			<Label className={cn(error && 'text-destructive')}>{label}</Label>
+			<Label invalid={Boolean(error)}>{label}</Label>
 			{variant === 'avatar' ? (
 				<div
 					className="border-border relative aspect-[16/10] min-h-48 w-full rounded-2xl border border-dashed"
@@ -99,7 +99,6 @@ export const ImageUploadField = ({
 										shape={focusShape}
 										disabled={disabled}
 										ariaLabel={focusAriaLabel!}
-										className="size-40"
 									/>
 								</span>
 							) : (
@@ -159,7 +158,6 @@ export const ImageUploadField = ({
 							shape={focusShape}
 							disabled={disabled}
 							ariaLabel={focusAriaLabel!}
-							className="rounded-2xl"
 						/>
 					) : (
 						/* eslint-disable-next-line @next/next/no-img-element -- local object URL preview */

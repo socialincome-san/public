@@ -14,7 +14,7 @@ export const GenderCell = <TData extends RowData, TValue>({ ctx }: CellType<TDat
 	if (value === Gender.male) {
 		return (
 			<span className="inline-flex items-center gap-1">
-				<ShortHairIcon className="size-4" />
+				<ShortHairIcon size={16} />
 				Male
 			</span>
 		);
@@ -23,7 +23,7 @@ export const GenderCell = <TData extends RowData, TValue>({ ctx }: CellType<TDat
 	if (value === Gender.female) {
 		return (
 			<span className="inline-flex items-center gap-1">
-				<LongHairIcon className="size-4" />
+				<LongHairIcon size={16} />
 				Female
 			</span>
 		);

@@ -11,7 +11,7 @@ import {
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-} from '@socialincome/design-system/dialog/dialog';
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { ChevronLeft } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { type ActorRefFrom, type SnapshotFrom } from 'xstate';
@@ -138,14 +138,14 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 			}}
 		>
 			<DialogContent
-				className="max-h-[90dvh] overflow-y-auto sm:w-[min(640px,90vw)] sm:max-w-[640px]"
+				size="md"
 				closeOnClickOutside={!isInFlight}
 				closeOnEscape={!isInFlight}
 				hideCloseButton={isInFlight}
 				aria-busy={isInFlight}
 			>
 				<DialogHeader>
-					<DialogTitle className="flex items-center gap-2">
+					<div className="flex items-center gap-2">
 						{showBackButton && (
 							<button
 								type="button"
@@ -157,9 +157,9 @@ export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh,
 								<ChevronLeft className="size-5" aria-hidden />
 							</button>
 						)}
-						<span>{dialogTitle}</span>
-					</DialogTitle>
-					<DialogDescription className="sr-only">{dialogTitle}</DialogDescription>
+						<DialogTitle>{dialogTitle}</DialogTitle>
+					</div>
+					<DialogDescription visuallyHidden>{dialogTitle}</DialogDescription>
 				</DialogHeader>
 
 				{isSuccessStep ? (

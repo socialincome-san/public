@@ -5,3 +5,27 @@ import { Meta } from '@storybook/addon-docs/blocks';
 # Design System
 
 Shared UI components for Social Income Next.js apps.
+
+## Foundations
+
+Colors, typography, spacing, radius, shadows and motion. Components and
+the website build on these tokens only: no Tailwind default palette, no
+arbitrary values such as `text-[10px]` or `shadow-[…]`. If something is
+missing, add a token to the design system.
+
+## Components
+
+Components are grouped by purpose. Import them by their path, e.g.
+`@socialincome/design-system/forms/input/input`.
+
+- **Actions**: buttons and toggles that trigger something
+- **Forms**: inputs, pickers and form structure
+- **Overlays**: dialogs, popovers, menus and tooltips
+- **Navigation**: moving between pages and views
+- **Feedback**: status, progress and messages
+- **Data Display**: presenting content such as tables, cards, badges and
+  media
+- **Layout**: page structure and section headings
+
+Components own their styling and never accept `className`. Choose a
+variant, or add one to the component.

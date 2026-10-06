@@ -1,6 +1,6 @@
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import type { ProgramDashboardStats } from '@/modules/programs/program.types';
-import { Card } from '@socialincome/design-system/card/card';
+import { Card } from '@socialincome/design-system/data-display/card/card';
 import { DonationForm } from './donation-form';
 import { SectionBox } from './section-box';
 import { SectionTitle } from './section-title';

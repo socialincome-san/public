@@ -2,7 +2,7 @@
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { CountryCondition } from '@/modules/countries/country.types';
-import { Badge } from '@socialincome/design-system/badge/badge';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { AlertTriangleIcon, CheckIcon, XCircleIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 

@@ -7,10 +7,10 @@ import { ShortHairIcon } from '@/components/icons/short-hair-icon';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { GENDER_OPTIONS } from '@/modules/contributors/contributor.types';
-import { Button } from '@socialincome/design-system/button/button';
-import { Combobox } from '@socialincome/design-system/combo-box/combo-box';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Combobox } from '@socialincome/design-system/forms/combo-box/combo-box';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
 import { type UseFormReturn } from 'react-hook-form';
 import { type OnboardingPersonalFields } from '../../utils/donation-wizard-validation';
 
@@ -52,8 +52,8 @@ export const OnboardingPersonalForm = ({
 							control={form.control}
 							name="firstname"
 							render={({ field }) => (
-								<FormItem className="gap-2">
-									<FormLabel className="text-sm font-medium">{t('onboarding.firstName')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('onboarding.firstName')}</FormLabel>
 									<FormControl>
 										<Input type="text" autoComplete="given-name" {...field} />
 									</FormControl>
@@ -64,8 +64,8 @@ export const OnboardingPersonalForm = ({
 							control={form.control}
 							name="lastname"
 							render={({ field }) => (
-								<FormItem className="gap-2">
-									<FormLabel className="text-sm font-medium">{t('onboarding.lastName')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('onboarding.lastName')}</FormLabel>
 									<FormControl>
 										<Input type="text" autoComplete="family-name" {...field} />
 									</FormControl>
@@ -76,8 +76,8 @@ export const OnboardingPersonalForm = ({
 							control={form.control}
 							name="email"
 							render={({ field }) => (
-								<FormItem className="gap-2">
-									<FormLabel className="text-sm font-medium">{t('onboarding.email')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('onboarding.email')}</FormLabel>
 									<FormControl>
 										<Input
 											type="email"
@@ -95,8 +95,8 @@ export const OnboardingPersonalForm = ({
 							control={form.control}
 							name="country"
 							render={({ field }) => (
-								<FormItem className="gap-2">
-									<FormLabel className="text-sm font-medium">{t('onboarding.country')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('onboarding.country')}</FormLabel>
 									<FormControl>
 										<Combobox
 											options={COUNTRY_CODES.map((countryCode) => ({
@@ -123,26 +123,28 @@ export const OnboardingPersonalForm = ({
 						control={form.control}
 						name="gender"
 						render={({ field }) => (
-							<FormItem className="flex min-w-0 flex-1 flex-col gap-3">
-								<FormControl>
-									<RadioCardGroup value={field.value} onChange={field.onChange} layout="stack">
-										{GENDER_WIZARD_OPTIONS.map(({ value }) => (
-											<RadioCard
-												key={value}
-												value={value}
-												checked={field.value === value}
-												label={
-													<span className="text-foreground flex items-center gap-2 text-sm font-medium">
-														{value === 'male' ? <ShortHairIcon className="size-5" /> : null}
-														{value === 'female' ? <LongHairIcon className="size-5" /> : null}
-														{value === 'private' ? t('onboarding.genderOtherPrivate') : tCommon(`genders.${value}`)}
-													</span>
-												}
-											/>
-										))}
-									</RadioCardGroup>
-								</FormControl>
-							</FormItem>
+							<div className="min-w-0 flex-1">
+								<FormItem>
+									<FormControl>
+										<RadioCardGroup value={field.value} onChange={field.onChange} layout="stack">
+											{GENDER_WIZARD_OPTIONS.map(({ value }) => (
+												<RadioCard
+													key={value}
+													value={value}
+													checked={field.value === value}
+													label={
+														<span className="text-foreground flex items-center gap-2 text-sm font-medium">
+															{value === 'male' ? <ShortHairIcon /> : null}
+															{value === 'female' ? <LongHairIcon /> : null}
+															{value === 'private' ? t('onboarding.genderOtherPrivate') : tCommon(`genders.${value}`)}
+														</span>
+													}
+												/>
+											))}
+										</RadioCardGroup>
+									</FormControl>
+								</FormItem>
+							</div>
 						)}
 					/>
 				</div>

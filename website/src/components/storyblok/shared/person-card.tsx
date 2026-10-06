@@ -7,8 +7,8 @@ import {
 	getVolunteerDurationParts,
 	type VolunteerDurationParts,
 } from '@/lib/storyblok/storyblok-utils';
-import { Badge } from '@socialincome/design-system/badge/badge';
 import { cn } from '@socialincome/design-system/cn';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import type { ISbStoryData } from '@storyblok/js';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
@@ -47,7 +47,6 @@ type Props = {
 	// 'small' and 'compact' are this component's own visual tiers (also used by the person carousel);
 	// the person grid's medium/small cards map onto them — see PersonCardGrid's MEDIUM_CARDS/SMALL_CARDS.
 	size?: 'default' | 'small' | 'compact';
-	className?: string;
 	// Presence enables the "volunteering since" pill (on active volunteers with a start date).
 	volunteerDuration?: VolunteerDurationConfig;
 	roleLabels?: Record<string, string>;
@@ -85,7 +84,7 @@ const getDurationLabels = (volunteerSince: string | undefined, config: Volunteer
 		: null;
 };
 
-export const PersonCard = ({ person, href, size = 'default', className, volunteerDuration, roleLabels }: Props) => {
+export const PersonCard = ({ person, href, size = 'default', volunteerDuration, roleLabels }: Props) => {
 	const { avatar, firstName, fullName, lastName, primaryRole, volunteerStatus, volunteerSince } = person.content;
 	const imageSource = avatar?.filename
 		? formatStoryblokUrl(avatar.filename, PERSON_CARD_IMAGE_WIDTH, PERSON_CARD_IMAGE_HEIGHT, avatar.focus)
@@ -105,9 +104,8 @@ export const PersonCard = ({ person, href, size = 'default', className, voluntee
 		<div
 			className={cn(
 				'bg-card flex h-full w-full flex-col overflow-hidden rounded-xl shadow-[0px_4px_28px_0px_rgba(0,30,101,0.07)]',
-				isSmall ? 'max-w-[260px] p-2.5' : 'max-w-[305px] p-3',
+				isSmall ? 'p-2.5' : 'p-3',
 				href && 'transition-transform hover:scale-[1.01]',
-				className,
 			)}
 		>
 			<div
@@ -117,16 +115,16 @@ export const PersonCard = ({ person, href, size = 'default', className, voluntee
 				)}
 			>
 				{duration ? (
-					<Badge
-						variant="default"
-						// Hover-only content is invisible to assistive tech, so the date rides along as the accessible
-						// description; an aria-label would instead replace the duration as the accessible name.
-						title={duration.since}
-						className="group/duration text-foreground absolute top-3 left-3 z-20 border-white/40 bg-white/80 whitespace-nowrap backdrop-blur-sm"
-					>
-						<span className="group-hover/duration:hidden">{duration.label}</span>
-						<span className="hidden group-hover/duration:inline">{duration.since}</span>
-					</Badge>
+					<div className="group/duration absolute top-3 left-3 z-20">
+						<Badge
+							variant="frosted"
+							// The hover-only date is exposed via title; an aria-label would replace the duration as the accessible name
+							title={duration.since}
+						>
+							<span className="group-hover/duration:hidden">{duration.label}</span>
+							<span className="hidden group-hover/duration:inline">{duration.since}</span>
+						</Badge>
+					</div>
 				) : null}
 				{imageSource ? (
 					<NextImage
@@ -196,7 +194,7 @@ export const PersonCard = ({ person, href, size = 'default', className, voluntee
 	}
 
 	return (
-		<NextLink href={href} className={cn('block h-full w-full', isSmall ? 'max-w-[260px]' : 'max-w-[305px]', className)}>
+		<NextLink href={href} className="block h-full w-full">
 			{card}
 		</NextLink>
 	);

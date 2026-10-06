@@ -2,10 +2,23 @@
 
 import { TABLE_PAGE_SIZE_OPTIONS } from '@/components/data-table/query-state';
 import { type ColumnDef, type VisibilityState } from '@/components/data-table/tanstack-table';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@socialincome/design-system/table/table';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@socialincome/design-system/data-display/table/table';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
 import { flexRender, functionalUpdate, type RowData, type SortingState } from '@tanstack/react-table';
 import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, useLegacyTable } from '@tanstack/react-table/legacy';
 import { useState } from 'react';
@@ -129,12 +142,12 @@ export const BaseTable = <TData extends RowData>({
 	return (
 		<div className={cn('flex flex-col', stableTableMinHeightClass)} data-testid="data-table-base">
 			<div className="overflow-hidden rounded-none">
-				<Table className="w-full border-separate border-spacing-0">
+				<Table size="lg">
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id} className="bg-accent">
+							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map((header) => (
-									<TableHead key={header.id} className="border-b font-medium">
+									<TableHead key={header.id}>
 										{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
 									</TableHead>
 								))}
@@ -144,25 +157,16 @@ export const BaseTable = <TData extends RowData>({
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									className={cn(
-										'group h-16 border-b transition-colors duration-200 ease-out',
-										onRowClick && 'hover:bg-accent/60 cursor-pointer',
-									)}
-									onClick={() => onRowClick?.(row.original)}
-								>
+								<TableRow key={row.id} onClick={onRowClick ? () => onRowClick(row.original) : undefined}>
 									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id} className="border-b">
-											{flexRender(cell.column.columnDef.cell, cell.getContext())}
-										</TableCell>
+										<TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
 									))}
 								</TableRow>
 							))
 						) : (
-							<TableRow className="h-16">
-								<TableCell colSpan={columns.length} className="border-b text-center">
-									{emptyMessage}
+							<TableRow>
+								<TableCell colSpan={columns.length}>
+									<div className="text-center">{emptyMessage}</div>
 								</TableCell>
 							</TableRow>
 						)}
@@ -177,9 +181,11 @@ export const BaseTable = <TData extends RowData>({
 							<>
 								<span className="text-muted-foreground text-sm">Rows per page</span>
 								<Select value={`${pageSize}`} onValueChange={handlePageSizeChange}>
-									<SelectTrigger className="h-8 w-[80px]" data-testid="data-table-page-size-trigger">
-										<SelectValue />
-									</SelectTrigger>
+									<div className="w-20">
+										<SelectTrigger size="sm" data-testid="data-table-page-size-trigger">
+											<SelectValue />
+										</SelectTrigger>
+									</div>
 									<SelectContent>
 										{pageSizeOptions.map((size) => (
 											<SelectItem key={size} value={`${size}`}>

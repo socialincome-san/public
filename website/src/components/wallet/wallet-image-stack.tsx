@@ -33,18 +33,9 @@ export const WalletImageStack = ({ images }: WalletImageStackProps) => {
 							<WalletLayerImage image={hoverEffectImage2} sizes={WALLET_IMAGE_SIZES} decorative />
 						) : null}
 						{hoverEffectImage1?.src ? (
-							<WalletLayerImage
-								image={hoverEffectImage1}
-								sizes={WALLET_IMAGE_SIZES}
-								decorative
-								className="transition duration-300 ease-out will-change-transform group-hover:translate-x-1 group-hover:-translate-y-5 group-hover:rotate-[5deg] motion-reduce:transform-none motion-reduce:transition-none"
-							/>
+							<WalletLayerImage image={hoverEffectImage1} sizes={WALLET_IMAGE_SIZES} decorative hoverMotion="tilt-right" />
 						) : null}
-						<WalletLayerImage
-							image={primaryImage}
-							sizes={WALLET_IMAGE_SIZES}
-							className="transition duration-300 ease-out will-change-transform group-hover:-translate-x-1 group-hover:-translate-y-7 group-hover:-rotate-5 motion-reduce:transform-none motion-reduce:transition-none"
-						/>
+						<WalletLayerImage image={primaryImage} sizes={WALLET_IMAGE_SIZES} hoverMotion="tilt-left" />
 					</>
 				) : null}
 			</div>

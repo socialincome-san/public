@@ -3,10 +3,10 @@
 import type { LanguageCode } from '@/lib/types/language';
 import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Button } from '@socialincome/design-system/button/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import NextImage from 'next/image';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -66,7 +66,7 @@ export const CampaignNewsletter = ({ lang, title, senderName, imageSrc, imageAlt
 	const trimmedSenderName = senderName.trim();
 
 	return (
-		<BlockWrapper className="my-8 md:my-12 lg:my-16">
+		<BlockWrapper spacing="compact">
 			<div className="border-border bg-card flex flex-col gap-8 rounded-3xl border p-6 shadow-[0_4px_20px_rgba(0,0,0,0.05),0_4px_6px_rgba(0,0,0,0.1)] md:gap-10 md:p-10">
 				{trimmedTitle ? <h2 className="text-foreground text-3xl leading-9 font-medium">{trimmedTitle}</h2> : null}
 
@@ -80,35 +80,33 @@ export const CampaignNewsletter = ({ lang, title, senderName, imageSrc, imageAlt
 								control={form.control}
 								name="firstname"
 								render={({ field }) => (
-									<FormItem className="min-w-0 flex-1">
-										<FormLabel>{translations.firstNameLabel}</FormLabel>
-										<FormControl>
-											<Input type="text" autoComplete="given-name" className="h-9 rounded-full" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
+									<div className="min-w-0 flex-1">
+										<FormItem>
+											<FormLabel>{translations.firstNameLabel}</FormLabel>
+											<FormControl>
+												<Input type="text" autoComplete="given-name" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									</div>
 								)}
 							/>
 							<FormField
 								control={form.control}
 								name="email"
 								render={({ field }) => (
-									<FormItem className="min-w-0 flex-1">
-										<FormLabel>{translations.emailLabel}</FormLabel>
-										<FormControl>
-											<Input
-												type="email"
-												autoComplete="email"
-												placeholder={translations.emailPlaceholder}
-												className="h-9 rounded-full"
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
+									<div className="min-w-0 flex-1">
+										<FormItem>
+											<FormLabel>{translations.emailLabel}</FormLabel>
+											<FormControl>
+												<Input type="email" autoComplete="email" placeholder={translations.emailPlaceholder} {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									</div>
 								)}
 							/>
-							<Button type="submit" className="h-9 shrink-0 sm:self-end">
+							<Button type="submit" size="md">
 								{translations.buttonAddSubscriber}
 							</Button>
 						</form>

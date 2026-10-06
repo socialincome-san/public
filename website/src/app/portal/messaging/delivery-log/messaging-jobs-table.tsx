@@ -1,7 +1,14 @@
 import { jobStatusVariant } from '@/app/portal/messaging/delivery-log/messaging-job-status';
 import type { MessagingJobListRow } from '@/modules/messaging/messaging.types';
-import { Badge } from '@socialincome/design-system/badge/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@socialincome/design-system/table/table';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@socialincome/design-system/data-display/table/table';
 import Link from 'next/link';
 
 type MessagingJobsTableProps = {
@@ -48,19 +55,21 @@ export const MessagingJobsTable = ({ rows, error, page, pageSize, totalCount }: 
 					<TableBody>
 						{rows.map((job) => (
 							<TableRow key={job.id}>
-								<TableCell className="font-medium">
-									<Link href={`/portal/messaging/delivery-log/${job.id}`} className="hover:underline">
+								<TableCell>
+									<Link href={`/portal/messaging/delivery-log/${job.id}`} className="font-medium hover:underline">
 										{job.templateFriendlyName}
 									</Link>
 								</TableCell>
-								<TableCell className="uppercase">{job.channelRequested}</TableCell>
+								<TableCell>{job.channelRequested}</TableCell>
 								<TableCell>
 									{job.sentCount} / {job.totalSelected}
 								</TableCell>
 								<TableCell>
 									<Badge variant={jobStatusVariant(job.status)}>{job.status}</Badge>
 								</TableCell>
-								<TableCell className="text-muted-foreground text-sm">{formatStartedAt(job.startedAt)}</TableCell>
+								<TableCell>
+									<span className="text-muted-foreground">{formatStartedAt(job.startedAt)}</span>
+								</TableCell>
 								<TableCell>{job.createdByName}</TableCell>
 							</TableRow>
 						))}

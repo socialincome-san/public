@@ -9,12 +9,25 @@ import type {
 	MessagingRecipientType,
 	SelectionState,
 } from '@/modules/messaging/messaging.types';
-import { Button } from '@socialincome/design-system/button/button';
-import { Checkbox } from '@socialincome/design-system/checkbox/checkbox';
-import { Input } from '@socialincome/design-system/input/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/popover/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@socialincome/design-system/table/table';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@socialincome/design-system/data-display/table/table';
+import { Checkbox } from '@socialincome/design-system/forms/checkbox/checkbox';
+import { SearchInput } from '@socialincome/design-system/forms/search-input/search-input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/overlays/popover/popover';
 import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from 'lucide-react';
 import { type ReactNode, useEffect, useRef, useState, useTransition } from 'react';
 import {
@@ -30,14 +43,13 @@ import {
 const PAGE_SIZE = 10;
 const DEBOUNCE_MS = 300;
 
-type SearchInputProps = {
+type DebouncedSearchInputProps = {
 	value: string;
 	onDebouncedChange: (value: string) => void;
 	placeholder?: string;
-	className?: string;
 };
 
-const SearchInput = ({ value, onDebouncedChange, placeholder, className }: SearchInputProps) => {
+const DebouncedSearchInput = ({ value, onDebouncedChange, placeholder }: DebouncedSearchInputProps) => {
 	const [local, setLocal] = useState(value);
 	const [prevValue, setPrevValue] = useState(value);
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -75,12 +87,11 @@ const SearchInput = ({ value, onDebouncedChange, placeholder, className }: Searc
 	};
 
 	return (
-		<Input
-			type="search"
+		<SearchInput
+			aria-label={placeholder ?? 'Search'}
 			value={local}
 			onChange={(e) => handleChange(e.target.value)}
 			placeholder={placeholder ?? 'Search…'}
-			className={className}
 		/>
 	);
 };
@@ -147,7 +158,7 @@ const FiltersToolbar = ({ filterDefs, onFilterChange, onClearFilters }: FiltersT
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
-				<Button type="button" variant="outline" size="icon" className="relative size-10 shrink-0" aria-label="Filters">
+				<Button type="button" variant="outline" size="icon-lg" aria-label="Filters">
 					<FilterIcon className="size-4" />
 					{activeFilterCount > 0 ? (
 						<span className="bg-primary text-primary-foreground absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 text-[11px] leading-none">
@@ -156,46 +167,48 @@ const FiltersToolbar = ({ filterDefs, onFilterChange, onClearFilters }: FiltersT
 					) : null}
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent align="end" className="w-[280px] space-y-3 p-3">
-				<div className="flex items-center justify-between">
-					<p className="text-sm font-medium">Filter results</p>
-					<Button type="button" variant="ghost" size="sm" onClick={onClearFilters} disabled={activeFilterCount === 0}>
-						Clear
-					</Button>
-				</div>
-				<div className="space-y-2">
-					{filterDefs.map((filter) => {
-						const hasOptions = filter.options.length > 0;
+			<PopoverContent align="end">
+				<div className="space-y-3">
+					<div className="flex items-center justify-between">
+						<p className="text-sm font-medium">Filter results</p>
+						<Button type="button" variant="ghost" size="sm" onClick={onClearFilters} disabled={activeFilterCount === 0}>
+							Clear
+						</Button>
+					</div>
+					<div className="space-y-2">
+						{filterDefs.map((filter) => {
+							const hasOptions = filter.options.length > 0;
 
-						return (
-							<div key={filter.id} className="space-y-1">
-								<label className="text-muted-foreground text-xs">{filter.label}</label>
-								<Select
-									key={`${filter.id}-${filter.value ?? 'none'}`}
-									value={hasOptions ? filter.value : undefined}
-									onValueChange={(value) => onFilterChange(filter.key, value)}
-									disabled={!hasOptions}
-								>
-									<SelectTrigger className="h-9 w-full">
-										<SelectValue placeholder={hasOptions ? filter.placeholder : 'No options available'} />
-									</SelectTrigger>
-									<SelectContent align="end">
-										{hasOptions ? (
-											filter.options.map((option) => (
-												<SelectItem key={option.value} value={option.value}>
-													{option.label}
+							return (
+								<div key={filter.id} className="space-y-1">
+									<label className="text-muted-foreground text-xs">{filter.label}</label>
+									<Select
+										key={`${filter.id}-${filter.value ?? 'none'}`}
+										value={hasOptions ? filter.value : undefined}
+										onValueChange={(value) => onFilterChange(filter.key, value)}
+										disabled={!hasOptions}
+									>
+										<SelectTrigger>
+											<SelectValue placeholder={hasOptions ? filter.placeholder : 'No options available'} />
+										</SelectTrigger>
+										<SelectContent align="end">
+											{hasOptions ? (
+												filter.options.map((option) => (
+													<SelectItem key={option.value} value={option.value}>
+														{option.label}
+													</SelectItem>
+												))
+											) : (
+												<SelectItem value="no-options-available" disabled>
+													No options available
 												</SelectItem>
-											))
-										) : (
-											<SelectItem value="no-options-available" disabled>
-												No options available
-											</SelectItem>
-										)}
-									</SelectContent>
-								</Select>
-							</div>
-						);
-					})}
+											)}
+										</SelectContent>
+									</Select>
+								</div>
+							);
+						})}
+					</div>
 				</div>
 			</PopoverContent>
 		</Popover>
@@ -299,11 +312,11 @@ export const RecipientsTable = ({
 
 		return (
 			<div className="min-h-0 flex-1 overflow-y-auto">
-				<Table>
+				<Table size="sm">
 					<TableHeader>
 						<TableRow>
 							{isSelectable && (
-								<TableHead className="h-9 w-10 py-1.5">
+								<TableHead width="fit">
 									<Checkbox
 										aria-label="Select all rows on this page"
 										checked={pageCheckboxState === 'all' ? true : pageCheckboxState === 'some' ? 'indeterminate' : false}
@@ -311,15 +324,15 @@ export const RecipientsTable = ({
 									/>
 								</TableHead>
 							)}
-							<TableHead className="h-9 py-1.5">Name</TableHead>
-							<TableHead className="h-9 py-1.5">Details</TableHead>
+							<TableHead>Name</TableHead>
+							<TableHead>Details</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{data.rows.map((row) => (
 							<TableRow key={row.id}>
 								{isSelectable && (
-									<TableCell className="w-10 py-1.5">
+									<TableCell width="fit">
 										<Checkbox
 											aria-label={`Select ${row.name}`}
 											checked={isRowSelected(selection, row.id)}
@@ -327,8 +340,10 @@ export const RecipientsTable = ({
 										/>
 									</TableCell>
 								)}
-								<TableCell className="py-1.5">{row.name}</TableCell>
-								<TableCell className="text-muted-foreground py-1.5">{row.subtitle ?? '—'}</TableCell>
+								<TableCell>{row.name}</TableCell>
+								<TableCell>
+									<span className="text-muted-foreground">{row.subtitle ?? '—'}</span>
+								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
@@ -394,8 +409,7 @@ export const RecipientsTable = ({
 					<div className="flex gap-1">
 						<Button
 							variant="outline"
-							size="icon"
-							className="size-8"
+							size="icon-sm"
 							aria-label="Previous page"
 							disabled={data.page <= 1 || isPending}
 							onClick={() => onPageChange(Math.max(1, query.page - 1))}
@@ -404,8 +418,7 @@ export const RecipientsTable = ({
 						</Button>
 						<Button
 							variant="outline"
-							size="icon"
-							className="size-8"
+							size="icon-sm"
 							aria-label="Next page"
 							disabled={data.page >= totalPages || isPending}
 							onClick={() => onPageChange(query.page + 1)}
@@ -421,7 +434,9 @@ export const RecipientsTable = ({
 	return (
 		<div className="flex min-h-0 flex-1 flex-col gap-2">
 			<div className="flex shrink-0 items-center gap-2">
-				<SearchInput value={search} onDebouncedChange={onSearchChange} className="flex-1" />
+				<div className="flex-1">
+					<DebouncedSearchInput value={search} onDebouncedChange={onSearchChange} />
+				</div>
 				{filtersToolbar}
 			</div>
 			{renderTableRegion()}

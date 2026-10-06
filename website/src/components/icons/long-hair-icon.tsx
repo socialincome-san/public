@@ -1,18 +1,16 @@
-import { cn } from '@socialincome/design-system/cn';
-
 type Props = {
-	className?: string;
+	size?: number;
 };
 
-export const LongHairIcon = ({ className }: Props) => (
+export const LongHairIcon = ({ size = 20 }: Props) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
-		width="20"
-		height="20"
+		width={size}
+		height={size}
 		viewBox="0 0 20 20"
 		fill="none"
 		aria-hidden
-		className={cn('shrink-0', className)}
+		className="shrink-0"
 	>
 		<path
 			d="M5.47656 17.2455L6.29073 17.013C7.00656 16.8088 7.4999 16.1546 7.4999 15.4105V14.168"

@@ -2,7 +2,7 @@
 
 import { useI18n } from '@/lib/i18n/use-i18n';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -34,17 +34,12 @@ export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => 
 		>
 			{stripeCheckoutStatus === 'error' && (
 				<div className="flex flex-col gap-4 p-4">
-					<div className="flex flex-col gap-2 sm:flex-row">
-						<Button type="button" className="sm:order-2" onClick={retryCheckout}>
-							{t('stepStripeCheckout.try-again')}
-						</Button>
-						<Button
-							type="button"
-							variant="outline"
-							className="sm:order-1"
-							onClick={() => send({ type: 'STRIPE_CHECKOUT_BACK' })}
-						>
+					<div className="flex flex-col-reverse gap-2 sm:flex-row">
+						<Button type="button" variant="outline" onClick={() => send({ type: 'STRIPE_CHECKOUT_BACK' })}>
 							{t('stepPlan.back')}
+						</Button>
+						<Button type="button" onClick={retryCheckout}>
+							{t('stepStripeCheckout.try-again')}
 						</Button>
 					</div>
 				</div>

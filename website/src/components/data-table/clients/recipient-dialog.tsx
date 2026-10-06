@@ -3,8 +3,8 @@
 import { RecipientForm } from '@/components/recipient/recipient-form';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { Session } from '@/modules/auth/auth.types';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 
 type Props = {
 	open: boolean;
@@ -35,7 +35,7 @@ export const RecipientDialog = ({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[600px]">
+			<DialogContent size="md">
 				<DialogHeader>
 					<DialogTitle>{dialogTitle}</DialogTitle>
 				</DialogHeader>
@@ -43,7 +43,7 @@ export const RecipientDialog = ({
 				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+						<AlertDescription>{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 

@@ -11,7 +11,7 @@ export const ActionCell = <TData extends RowData, TValue>({ ctx }: ActionCellPro
 
 	return (
 		<div className="flex items-center justify-center opacity-70" aria-hidden="true" data-testid="action-cell-icon">
-			<ChevronRightIcon className="h-5 w-5 transition-transform duration-200 ease-out group-hover:translate-x-1" />
+			<ChevronRightIcon className="h-5 w-5 transition-transform duration-200 ease-out group-hover/row:translate-x-1" />
 		</div>
 	);
 };

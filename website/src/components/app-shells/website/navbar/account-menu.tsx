@@ -5,15 +5,15 @@ import { displaySession, Scope } from '@/components/app-shells/website/navbar/ut
 import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { Session } from '@/modules/auth/auth.types';
-import { Avatar, AvatarFallback } from '@socialincome/design-system/avatar/avatar';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Avatar, AvatarFallback } from '@socialincome/design-system/data-display/avatar/avatar';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
+} from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { Building2, LayoutDashboard, LogOut, User, Users } from 'lucide-react';
 import Link from 'next/link';
 
@@ -90,9 +90,9 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="outline" className="flex h-10 items-center gap-2 rounded-full px-3">
-					<Avatar className="h-7 w-7">
-						<AvatarFallback className="text-sm">
+				<Button variant="outline" size="md">
+					<Avatar size="sm">
+						<AvatarFallback>
 							{session.firstName?.[0]}
 							{session.lastName?.[0]}
 						</AvatarFallback>
@@ -104,7 +104,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 				</Button>
 			</DropdownMenuTrigger>
 
-			<DropdownMenuContent align="end" className="z-[110] w-64">
+			<DropdownMenuContent align="end">
 				{items.map((item) => {
 					const Icon = item.icon;
 
@@ -125,7 +125,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 						e.preventDefault();
 						void logout();
 					}}
-					className="text-destructive focus:text-destructive"
+					variant="destructive"
 				>
 					<LogOut className="mr-2 h-4 w-4" />
 					<span>{translator.t('security.sign-out.button')}</span>

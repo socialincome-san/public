@@ -1,8 +1,8 @@
 'use client';
 
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useState } from 'react';
 import { SurveyForm } from './survey-form';
 
@@ -30,14 +30,14 @@ export const SurveyFormDialog = ({ open, onOpenChange, surveyId }: SurveyFormDia
 
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+			<DialogContent size="md">
 				<DialogHeader>
 					<DialogTitle>{surveyId ? 'Edit Survey' : 'Add Survey'}</DialogTitle>
 				</DialogHeader>
 				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+						<AlertDescription>{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 				<SurveyForm

@@ -9,10 +9,9 @@ import { useDonationTotalAnimations } from '@/lib/hooks/use-donation-total-anima
 import { getSafeNumberFormatLocale, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokResizeUrl, getScaledAssetDimensions, resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Button } from '@socialincome/design-system/button/button';
-import { cn } from '@socialincome/design-system/cn';
-import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
@@ -21,16 +20,15 @@ const MOBILE_IMAGE_MAX_WIDTH = 140;
 
 type MobileImageRowProps = {
 	images: (StoryblokAsset & { filename: string })[];
-	className?: string;
 };
 
-const MobileImageRow = ({ images, className }: MobileImageRowProps) => {
+const MobileImageRow = ({ images }: MobileImageRowProps) => {
 	if (images.length === 0) {
 		return null;
 	}
 
 	return (
-		<div className={cn('flex items-center justify-center gap-4 md:hidden', className)}>
+		<div className="flex items-center justify-center gap-4 md:hidden">
 			{images.map((image) => {
 				const dimensions = getScaledAssetDimensions(image, MOBILE_IMAGE_MAX_WIDTH);
 				const imageSrc = formatStoryblokResizeUrl(image.filename, dimensions.width, dimensions.height);
@@ -85,16 +83,18 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency,
 				<FloatingImage key={image.id} image={image} index={index} smoothMouseX={smoothMouseX} smoothMouseY={smoothMouseY} />
 			))}
 
-			<div className="relative z-10 flex flex-col items-center justify-center py-8 text-center md:py-24 lg:py-32">
-				<MobileImageRow images={images.slice(0, 2)} className="mb-6" />
+			<div className="relative z-10 flex flex-col items-center justify-center gap-6 py-8 text-center md:py-24 lg:py-32">
+				<MobileImageRow images={images.slice(0, 2)} />
 
 				{blok.heading && (
-					<SectionHeading className="mb-6 max-w-sm leading-tight whitespace-pre-wrap md:mb-6" size={3}>
-						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
-					</SectionHeading>
+					<div className="max-w-sm">
+						<SectionHeading size={3}>
+							<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
+						</SectionHeading>
+					</div>
 				)}
 
-				<div className="mb-6 flex justify-center">
+				<div className="flex justify-center">
 					<div className="flex items-baseline">
 						<span className="text-primary text-xl md:text-2xl">{currency}</span>
 						<span className="text-primary text-6xl font-light tracking-tight md:text-8xl lg:text-[10rem]">

@@ -1,7 +1,7 @@
 'use client';
 
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { Dialog, DialogContent } from '@socialincome/design-system/dialog/dialog';
+import { Dialog, DialogContent } from '@socialincome/design-system/overlays/dialog/dialog';
 import { type ReactNode, useState } from 'react';
 import { CampaignSubmissionForm } from './campaign-submission/campaign-submission-form';
 import type { SubmissionLabels } from './campaign-submission/types';
@@ -25,10 +25,7 @@ export const CreateCampaignDialog = ({ labels, lang, region, trigger }: Props) =
 		<>
 			{trigger({ openDialog })}
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent
-					variant="large"
-					className="flex h-[90dvh] max-h-[90dvh] flex-col overflow-hidden px-0 max-sm:h-dvh max-sm:max-h-dvh"
-				>
+				<DialogContent size="full" height="fixed" padding="vertical">
 					<CampaignSubmissionForm labels={labels} lang={lang} region={region} />
 				</DialogContent>
 			</Dialog>

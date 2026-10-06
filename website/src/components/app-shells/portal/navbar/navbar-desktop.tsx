@@ -38,7 +38,7 @@ export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 								key={href}
 								sessions={sessions}
 								active={isActiveLink(pathname, href, activeBase)}
-								className="relative text-lg"
+								variant="bar"
 							/>
 						) : (
 							<Link
@@ -58,7 +58,7 @@ export const NavbarDesktop = ({ sessions }: NavbarDesktopProps) => {
 				</nav>
 			</div>
 
-			<UserMenu sessions={sessions} triggerClassName="h-12" />
+			<UserMenu sessions={sessions} variant="bar" />
 		</nav>
 	);
 };

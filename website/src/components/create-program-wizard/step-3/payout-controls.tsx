@@ -2,8 +2,8 @@
 
 import { PayoutInterval } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Slider } from '@socialincome/design-system/slider/slider';
-import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/tabs/tabs';
+import { Slider } from '@socialincome/design-system/forms/slider/slider';
+import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/navigation/tabs/tabs';
 import { PayoutPerIntervalAmount, type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 
 type Props = {
@@ -76,7 +76,7 @@ export const PayoutControls = ({
 				<p className="text-sm font-medium">{t('step3.payout_controls.payout_interval')}</p>
 
 				<Tabs value={payoutInterval} onValueChange={(v) => onIntervalChange(v as PayoutInterval)}>
-					<TabsList className="grid w-fit grid-cols-3">
+					<TabsList>
 						<TabsTrigger value="monthly">{t('common.interval.monthly')}</TabsTrigger>
 						<TabsTrigger value="quarterly">{t('common.interval.quarterly')}</TabsTrigger>
 						<TabsTrigger value="yearly">{t('common.interval.yearly')}</TabsTrigger>

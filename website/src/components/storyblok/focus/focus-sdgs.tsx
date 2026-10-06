@@ -1,4 +1,4 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { InfoIcon } from 'lucide-react';
 import { getSdg, type SdgValue } from './sdgs';
 
@@ -58,7 +58,7 @@ export const FocusSdgs = ({ values = [], label, layout = 'stacked' }: Props) => 
 							<InfoIcon className="size-3" aria-hidden />
 						</button>
 					</TooltipTrigger>
-					<TooltipContent sideOffset={8} className="max-w-[280px]">
+					<TooltipContent sideOffset={8}>
 						<ul>
 							{sdgs.map((sdg) => (
 								<li key={sdg.number}>{`SDG ${sdg.number}: ${sdg.title}`}</li>

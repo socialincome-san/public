@@ -1,10 +1,10 @@
 'use client';
 
 import { cn } from '@socialincome/design-system/cn';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
-import { Label } from '@socialincome/design-system/label/label';
-import { Switch } from '@socialincome/design-system/switch/switch';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { Label } from '@socialincome/design-system/forms/label/label';
+import { Switch } from '@socialincome/design-system/forms/switch/switch';
 import { useEffect, useRef } from 'react';
 import { CampaignSubmissionFormCard } from '../form-layout';
 import { ImageUploadField } from '../image-upload-field';

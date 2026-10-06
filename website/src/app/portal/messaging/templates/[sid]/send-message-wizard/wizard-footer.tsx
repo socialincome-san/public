@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { Loader2 } from 'lucide-react';
 import type { SendPhase } from './use-messaging-send';
 

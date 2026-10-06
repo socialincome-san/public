@@ -1,18 +1,16 @@
 type Props = {
 	width?: number;
 	height?: number;
-	className?: string;
 	decorative?: boolean;
 };
 
-export const SocialIncomeLogo = ({ width = 153, height = 16, className = '', decorative = false }: Props) => (
+export const SocialIncomeLogo = ({ width = 153, height = 16, decorative = false }: Props) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		width={width}
 		height={height}
 		viewBox="0 0 153 16"
 		fill="none"
-		className={className}
 		aria-hidden={decorative ? true : undefined}
 	>
 		<path

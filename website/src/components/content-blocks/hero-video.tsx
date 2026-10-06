@@ -3,10 +3,10 @@ import { useDonationModal } from '@/components/donation-wizard/hooks/use-donatio
 import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import MuxVideo from '@mux/mux-video-react';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { VideoControlButton } from '@socialincome/design-system/actions/video-control-button/video-control-button';
 import { cn } from '@socialincome/design-system/cn';
-import { VideoControlButton } from '@socialincome/design-system/video-control-button/video-control-button';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { Maximize2, MessageSquareText, Minimize2, Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { useRef, useState, type ReactNode } from 'react';
@@ -136,14 +136,15 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 						</VideoControlButton>
 					</div>
 				) : (
-					<VideoControlButton
-						className="absolute right-8 bottom-8 z-30"
-						onClick={toggleExpanded}
-						aria-label={translations.expandVideoView}
-						title={translations.expandVideoView}
-					>
-						<Maximize2 className="size-5" />
-					</VideoControlButton>
+					<div className="absolute right-8 bottom-8 z-30">
+						<VideoControlButton
+							onClick={toggleExpanded}
+							aria-label={translations.expandVideoView}
+							title={translations.expandVideoView}
+						>
+							<Maximize2 className="size-5" />
+						</VideoControlButton>
+					</div>
 				)}
 
 				{!isExpanded && (
@@ -158,9 +159,8 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 							<div>
 								<Button
 									type="button"
-									variant="outline"
+									variant="outline-inverse"
 									size="lg"
-									className="text-primary-foreground"
 									aria-haspopup="dialog"
 									onClick={() => openWizardAtAmountStep()}
 								>

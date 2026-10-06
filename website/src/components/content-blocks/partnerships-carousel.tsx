@@ -2,8 +2,8 @@
 
 import type { Partnership, PartnershipsCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getScaledDimensions } from '@/lib/storyblok/storyblok-utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/carousel/carousel';
+import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/data-display/carousel/carousel';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextImage from 'next/image';
@@ -72,10 +72,7 @@ export const PartnershipsCarouselBlock = ({ blok }: Props) => {
 						};
 
 						return (
-							<CarouselItem
-								key={entry._uid ?? `${entry.name}-${index}`}
-								className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
-							>
+							<CarouselItem key={entry._uid ?? `${entry.name}-${index}`} size="tile">
 								<Link
 									href={href ?? '#'}
 									target="_blank"

@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionMenu, type ActionMenuItem } from '@/components/data-table/elements/action-menu';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import DOMPurify from 'isomorphic-dompurify';
 import { InboxIcon } from 'lucide-react';
 

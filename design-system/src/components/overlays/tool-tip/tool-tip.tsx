@@ -1,0 +1,125 @@
+'use client';
+
+import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react';
+import { type WithoutClassName } from '../../../without-class-name';
+
+type TooltipContextValue = {
+	open: boolean;
+	openRef: React.MutableRefObject<boolean>;
+	setOpen: (open: boolean) => void;
+};
+
+const TooltipContext = React.createContext<TooltipContextValue | null>(null);
+
+const isCoarsePointer = () => typeof window !== 'undefined' && window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+const TooltipProvider = ({ delayDuration = 0, ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>) => {
+	return <TooltipPrimitive.Provider data-slot="tooltip-provider" delayDuration={delayDuration} {...props} />;
+};
+
+const Tooltip = ({
+	open,
+	defaultOpen = false,
+	onOpenChange,
+	...props
+}: React.ComponentProps<typeof TooltipPrimitive.Root>) => {
+	const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+	const isControlled = open !== undefined;
+	const currentOpen = open ?? uncontrolledOpen;
+	const openRef = React.useRef(currentOpen);
+
+	const setOpen = React.useCallback(
+		(nextOpen: boolean) => {
+			openRef.current = nextOpen;
+
+			if (!isControlled) {
+				setUncontrolledOpen(nextOpen);
+			}
+
+			onOpenChange?.(nextOpen);
+		},
+		[isControlled, onOpenChange],
+	);
+
+	React.useEffect(() => {
+		openRef.current = currentOpen;
+	}, [currentOpen]);
+
+	return (
+		<TooltipProvider>
+			<TooltipContext.Provider value={{ open: currentOpen, openRef, setOpen }}>
+				<TooltipPrimitive.Root data-slot="tooltip" open={currentOpen} onOpenChange={setOpen} {...props} />
+			</TooltipContext.Provider>
+		</TooltipProvider>
+	);
+};
+
+const TooltipTrigger = ({
+	onClick,
+	onPointerDown,
+	...props
+}: WithoutClassName<React.ComponentProps<typeof TooltipPrimitive.Trigger>>) => {
+	const tooltip = React.useContext(TooltipContext);
+
+	return (
+		<TooltipPrimitive.Trigger
+			data-slot="tooltip-trigger"
+			onPointerDown={(event) => {
+				onPointerDown?.(event);
+
+				if (event.defaultPrevented || !tooltip || !isCoarsePointer()) {
+					return;
+				}
+
+				event.preventDefault();
+				tooltip.setOpen(!tooltip.openRef.current);
+			}}
+			onClick={(event) => {
+				onClick?.(event);
+			}}
+			{...props}
+		/>
+	);
+};
+
+// z-[110] keeps tooltips above dialogs and the mobile navigation overlay
+const tooltipContentVariants = cva(
+	'bg-foreground text-background animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-[110] w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md leading-snug text-balance',
+	{
+		variants: {
+			size: {
+				default: 'max-w-xs px-3 py-1.5 text-xs',
+				lg: 'max-w-[min(36rem,calc(100vw-2rem))] px-4 py-3 text-sm',
+			},
+		},
+		defaultVariants: {
+			size: 'default',
+		},
+	},
+);
+
+const TooltipContent = ({
+	size,
+	sideOffset = 0,
+	children,
+	...props
+}: WithoutClassName<React.ComponentProps<typeof TooltipPrimitive.Content>> &
+	VariantProps<typeof tooltipContentVariants>) => {
+	return (
+		<TooltipPrimitive.Portal>
+			<TooltipPrimitive.Content
+				data-slot="tooltip-content"
+				sideOffset={sideOffset}
+				className={tooltipContentVariants({ size })}
+				{...props}
+			>
+				{children}
+				<TooltipPrimitive.Arrow className="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px]" />
+			</TooltipPrimitive.Content>
+		</TooltipPrimitive.Portal>
+	);
+};
+
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };

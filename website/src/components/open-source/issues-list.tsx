@@ -2,8 +2,14 @@
 
 import { IssueRow } from '@/components/open-source/issue-row';
 import type { GithubIssue } from '@/modules/github/github.types';
-import { Button } from '@socialincome/design-system/button/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
 import { useState } from 'react';
 
 const INITIAL_VISIBLE_COUNT = 6;

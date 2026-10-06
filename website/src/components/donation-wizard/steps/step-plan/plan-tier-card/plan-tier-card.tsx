@@ -1,6 +1,6 @@
 'use client';
 
-import { SelectableCard } from '@socialincome/design-system/selectable-card/selectable-card';
+import { SelectableCard } from '@socialincome/design-system/forms/selectable-card/selectable-card';
 import type { PlanTierBenefit } from './plan-tier-benefit';
 import { PlanTierCardContent } from './plan-tier-card-content';
 
@@ -30,7 +30,6 @@ export const PlanTierCard = ({
 	<SelectableCard
 		selected={selected}
 		onSelect={onSelect}
-		className="w-full p-4"
 		testId={heartCount === 2 ? 'donation-wizard-plan-tier-2x' : 'donation-wizard-plan-tier-1x'}
 	>
 		<PlanTierCardContent

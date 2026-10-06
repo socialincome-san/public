@@ -11,7 +11,7 @@ import {
 } from '@/lib/storyblok/storyblok-paths';
 import { getStoryTitleAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { StoryTitleData } from '@/modules/storyblok-content/storyblok-content.types';
-import type { BreadcrumbLinkItem } from '@socialincome/design-system/breadcrumb/breadcrumb';
+import type { BreadcrumbLinkItem } from '@socialincome/design-system/navigation/breadcrumb/breadcrumb';
 
 export type BreadcrumbLink = BreadcrumbLinkItem;
 

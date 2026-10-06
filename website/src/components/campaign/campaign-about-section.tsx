@@ -9,9 +9,9 @@ import {
 	getScaledAssetDimensions,
 } from '@/lib/storyblok/storyblok-utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { ExternalLink } from 'lucide-react';
 import NextImage from 'next/image';
 import type { CSSProperties, ReactNode } from 'react';
@@ -76,7 +76,7 @@ type SocialLinkProps = {
 };
 
 const SocialLink = ({ href, label, iconOnly = false, children }: SocialLinkProps) => (
-	<Button variant="outline" size={iconOnly ? 'icon' : 'sm'} className={iconOnly ? undefined : 'h-9 px-4'} asChild>
+	<Button variant="outline" size={iconOnly ? 'icon' : 'md'} asChild>
 		<a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
 			{children}
 		</a>
@@ -120,7 +120,7 @@ export const CampaignAboutSection = ({
 	}
 
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true} className="my-10">
+		<BlockWrapper spacing="compact">
 			<section
 				className={cn(
 					'grid items-stretch gap-8',

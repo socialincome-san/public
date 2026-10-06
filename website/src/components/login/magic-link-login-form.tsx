@@ -5,10 +5,10 @@ import { useAuth } from '@/lib/firebase/hooks/use-auth';
 import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@socialincome/design-system/button/button';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
-import { Label } from '@socialincome/design-system/label/label';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { Label } from '@socialincome/design-system/forms/label/label';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -82,7 +82,7 @@ export const MagicLinkLoginForm = ({ lang, prefilledEmail = '' }: Props) => {
 							)}
 						/>
 
-						<Button type="submit" className="w-full">
+						<Button type="submit" fullWidth>
 							{translator?.t('submit-button')}
 						</Button>
 
@@ -97,7 +97,7 @@ export const MagicLinkLoginForm = ({ lang, prefilledEmail = '' }: Props) => {
 				<div className="space-y-4 text-center">
 					<p className="text-sm">{translator?.t('flyout.sent-message', { context: { email: submittedEmail } })}</p>
 
-					<Button variant="outline" onClick={retry} className="w-full">
+					<Button variant="outline" onClick={retry} fullWidth>
 						{translator?.t('flyout.retry')}
 					</Button>
 

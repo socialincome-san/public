@@ -1,7 +1,7 @@
 import { SendMessageDialog } from '@/app/portal/messaging/templates/[sid]/send-message-dialog';
 import { twilioTemplateUrl } from '@/app/portal/messaging/twilio-console-url';
 import type { TwilioTemplateDetail } from '@/modules/messaging/messaging.types';
-import { Badge } from '@socialincome/design-system/badge/badge';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { ExternalLink } from 'lucide-react';
 
 type MessagingTemplateSummaryCardProps = {
@@ -51,7 +51,7 @@ export const MessagingTemplateSummaryCard = ({ template, twilioAccountSid }: Mes
 					<dd className="flex flex-wrap gap-1">
 						{template.supportedChannels.length > 0 ? (
 							template.supportedChannels.map((channel) => (
-								<Badge key={channel} variant="default" className="uppercase">
+								<Badge key={channel} variant="default">
 									{channel}
 								</Badge>
 							))

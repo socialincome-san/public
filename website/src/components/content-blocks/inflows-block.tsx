@@ -8,7 +8,7 @@ import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/util
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getTransparencySummaryAction } from '@/modules/transparency/transparency.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {

@@ -1,7 +1,7 @@
 'use client';
 
 import { CellType } from '@/components/data-table/elements/types';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import type { RowData } from '@tanstack/react-table';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
@@ -32,8 +32,7 @@ export const IdCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, T
 			<Button
 				type="button"
 				variant="ghost"
-				size="icon"
-				className="h-6 w-6"
+				size="icon-sm"
 				onClick={onCopy}
 				aria-label={copied ? 'ID copied' : 'Copy ID to clipboard'}
 			>

@@ -3,7 +3,7 @@
 import { formatSummaryMetricAmount } from '@/components/transparency/summary-metric-format';
 import { useCountUp } from '@/lib/hooks/use-count-up';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { Info } from 'lucide-react';
 import { useInView } from 'motion/react';
 import { useRef } from 'react';
@@ -70,7 +70,7 @@ export const SummarySectionClient = ({ metrics, lang }: Props) => {
 											<Info aria-hidden="true" className="size-4" />
 										</button>
 									</TooltipTrigger>
-									<TooltipContent sideOffset={8} className="max-w-[calc(100vw-2rem)] px-4 py-3 text-sm sm:max-w-xl">
+									<TooltipContent size="lg" sideOffset={8}>
 										{tooltip.rows.length > 0 ? (
 											<ul className="space-y-1.5">
 												{tooltip.rows.map((row) => (

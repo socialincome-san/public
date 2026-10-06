@@ -2,9 +2,9 @@
 
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
 import { SUBSCRIPTION_CANCEL_REASONS } from '@/modules/subscriptions/subscription.types';
-import { Button } from '@socialincome/design-system/button/button';
-import { Label } from '@socialincome/design-system/label/label';
-import { RadioGroup, RadioGroupItem } from '@socialincome/design-system/radio-group/radio-group';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Label } from '@socialincome/design-system/forms/label/label';
+import { RadioGroup, RadioGroupItem } from '@socialincome/design-system/forms/radio-group/radio-group';
 import { isSubscriptionCancellationReason } from '../subscription-cancellation';
 
 type Props = {
@@ -41,11 +41,10 @@ export const CancelReasonStep = ({
 						onSelectReason(value);
 					}
 				}}
-				className="gap-4"
 				aria-label={labels.heading}
 			>
 				{SUBSCRIPTION_CANCEL_REASONS.map((reason) => (
-					<Label key={reason} htmlFor={`cancel-reason-${reason}`} className="flex cursor-pointer items-center gap-3">
+					<Label key={reason} htmlFor={`cancel-reason-${reason}`}>
 						<RadioGroupItem id={`cancel-reason-${reason}`} value={reason} data-testid={`cancel-reason-${reason}`} />
 						<span className="text-sm">{reasonLabels[reason]}</span>
 					</Label>
@@ -61,7 +60,7 @@ export const CancelReasonStep = ({
 			<Button
 				type="button"
 				variant="destructive"
-				className="w-full"
+				fullWidth
 				disabled={!selectedReason || isSubmitting}
 				onClick={onConfirm}
 				aria-busy={isSubmitting}

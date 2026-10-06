@@ -2,7 +2,7 @@ import type { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
 import { formatCompactNumberLocale } from '@/lib/utils/string-utils';
 import type { ProgramFinancesDisplayAmounts } from '@/modules/programs/program.types';
-import { Progress } from '@socialincome/design-system/progress/progress';
+import { Progress } from '@socialincome/design-system/feedback/progress/progress';
 
 type Props = {
 	displayAmounts: ProgramFinancesDisplayAmounts;

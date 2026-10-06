@@ -6,15 +6,21 @@ import {
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
-} from '@socialincome/design-system/accordion/accordion';
-import { Combobox } from '@socialincome/design-system/combo-box/combo-box';
-import { DatePicker } from '@socialincome/design-system/date-picker/date-picker';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
-import { Label } from '@socialincome/design-system/label/label';
-import { MultiSelect } from '@socialincome/design-system/multi-select/multi-select';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
-import { Switch } from '@socialincome/design-system/switch/switch';
+} from '@socialincome/design-system/data-display/accordion/accordion';
+import { Combobox } from '@socialincome/design-system/forms/combo-box/combo-box';
+import { DatePicker } from '@socialincome/design-system/forms/date-picker/date-picker';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { Label } from '@socialincome/design-system/forms/label/label';
+import { MultiSelect } from '@socialincome/design-system/forms/multi-select/multi-select';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
+import { Switch } from '@socialincome/design-system/forms/switch/switch';
 import { Loader2 } from 'lucide-react';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
@@ -265,26 +271,25 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 								)
 							}
 						>
-							<AccordionItem
-								value={`accordion-${option}`}
-								className="border-border bg-muted rounded-xl border px-2 [&[data-state=closed]>div]:h-0"
-							>
+							<AccordionItem value={`accordion-${option}`} variant="boxed">
 								<AccordionTrigger data-testid={`form-accordion-trigger-${option}`}>
 									{formSchema.fields[option].label}
 								</AccordionTrigger>
-								<AccordionContent className="flex flex-col gap-6 p-5 [&_*[aria-hidden='true']]:h-0!" forceMount>
-									{getOptions(option).map((nestedOption) => (
-										<GenericFormField
-											option={nestedOption}
-											zodSchema={zodSchema}
-											form={form}
-											formSchema={formSchema}
-											isLoading={isLoading}
-											parentOption={option}
-											readOnly={mode === 'readonly'}
-											key={nestedOption}
-										/>
-									))}
+								<AccordionContent forceMount>
+									<div className="flex flex-col gap-6 px-5 pt-5 pb-1">
+										{getOptions(option).map((nestedOption) => (
+											<GenericFormField
+												option={nestedOption}
+												zodSchema={zodSchema}
+												form={form}
+												formSchema={formSchema}
+												isLoading={isLoading}
+												parentOption={option}
+												readOnly={mode === 'readonly'}
+												key={nestedOption}
+											/>
+										))}
+									</div>
 								</AccordionContent>
 							</AccordionItem>
 						</Accordion>
@@ -560,7 +565,7 @@ const GenericFormField = ({
 						name={optionKey}
 						key={optionKey}
 						render={({ field }) => (
-							<FormItem className="flex gap-2">
+							<FormItem layout="inline">
 								<Label htmlFor={optionKey}>{label}</Label>
 								<Switch
 									id={optionKey}

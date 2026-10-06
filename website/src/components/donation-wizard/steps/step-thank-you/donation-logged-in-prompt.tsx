@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 
@@ -27,7 +27,7 @@ export const DonationLoggedInPrompt = ({ onDashboardClick }: Props) => {
 			</div>
 
 			<div className="flex w-full flex-col items-center gap-3">
-				<Button asChild className="min-w-32">
+				<Button asChild>
 					<Link href="/dashboard/subscriptions" onClick={onDashboardClick} data-testid="donation-wizard-dashboard-link">
 						{t('thankYou.loggedInPrompt.dashboardButton')}
 					</Link>

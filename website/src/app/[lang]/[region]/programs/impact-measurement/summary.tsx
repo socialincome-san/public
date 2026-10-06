@@ -1,7 +1,7 @@
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getSurveyImpactStudyDetails } from '@/modules/surveys/survey.service';
 import type { SurveyImpactStudyDetailItem } from '@/modules/surveys/survey.types';
-import { Progress } from '@socialincome/design-system/progress/progress';
+import { Progress } from '@socialincome/design-system/feedback/progress/progress';
 import { ChevronDown } from 'lucide-react';
 import { toImpactServiceFilters } from './filters.server';
 import { getImpactTranslator } from './translator';
@@ -54,7 +54,7 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 					{topBreakdownItems.map((item) => (
 						<div key={`${label}-${item.value}`} className="grid grid-cols-[minmax(120px,1fr)_100px_auto] items-center gap-3">
 							<p className="text-foreground truncate text-sm">{formatter(item.value)}</p>
-							<Progress value={item.percentage} className="bg-border h-1.5" />
+							<Progress value={item.percentage} size="sm" />
 							<p className="text-foreground text-xs font-bold">{item.count}</p>
 						</div>
 					))}

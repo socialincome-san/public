@@ -10,8 +10,8 @@ import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/util
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getContributionsByCountryDataAction } from '@/modules/transparency/transparency.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Card } from '@socialincome/design-system/card/card';
+import { Card } from '@socialincome/design-system/data-display/card/card';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
@@ -82,7 +82,7 @@ export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<section>
-				<Card variant="noPadding" className="overflow-hidden px-6 py-8 sm:px-10">
+				<Card>
 					<CountriesSectionClient
 						sectionTitle={translator.t('transparency-page.inflows.title-name')}
 						headlineTemplate={translator.t('transparency-page.countries.headline', {

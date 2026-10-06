@@ -3,8 +3,8 @@
 import { MagicLinkLoginForm } from '@/components/login/magic-link-login-form';
 import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { UserRound } from 'lucide-react';
 import { useState } from 'react';
 
@@ -19,20 +19,18 @@ export const LoginFlyout = ({ lang }: Props) => {
 
 	return (
 		<>
-			<Button className="text-sm" data-testid="login-button" onClick={() => setOpen(true)} variant="ghost" size="sm">
+			<Button data-testid="login-button" onClick={() => setOpen(true)} variant="ghost" size="md">
 				<UserRound />
 				{translator?.t('flyout.login-button')}
 			</Button>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="z-200" overlayClassName="z-200">
+				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{translator?.t('flyout.title')}</DialogTitle>
 					</DialogHeader>
 
-					<div className="mt-4">
-						<MagicLinkLoginForm key={open ? 'open' : 'closed'} lang={lang} />
-					</div>
+					<MagicLinkLoginForm key={open ? 'open' : 'closed'} lang={lang} />
 				</DialogContent>
 			</Dialog>
 		</>

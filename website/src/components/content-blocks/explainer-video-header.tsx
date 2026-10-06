@@ -4,7 +4,7 @@ import type { ExplainerVideoHeader } from '@/generated/storyblok/types/109655/st
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { VimeoVideoMatchAndExtract } from '@/lib/utils/url-video-parser';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
@@ -55,7 +55,6 @@ export const ExplainerVideoHeaderBlock = ({ blok, lang, region }: Props) => {
 						thumbnailSrc={explainerVideoThumbnailSrc ?? undefined}
 						thumbnailAlt={explainerVideoThumbnail?.alt ?? undefined}
 						dialogTitle={explainerVideoLabel}
-						className="self-start md:self-center"
 					/>
 				)}
 			</div>

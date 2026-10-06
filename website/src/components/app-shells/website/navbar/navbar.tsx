@@ -61,12 +61,7 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 				<div className="hidden lg:block">
 					{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
 				</div>
-				{!session && (
-					<OpenDonationWizardButton
-						label={translator.t('donation-form.donate-now')}
-						className="rounded-full px-5 text-sm font-bold lg:h-11"
-					/>
-				)}
+				{!session && <OpenDonationWizardButton label={translator.t('donation-form.donate-now')} size="md" />}
 				<MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />
 			</div>
 		</nav>

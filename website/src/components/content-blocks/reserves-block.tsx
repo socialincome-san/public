@@ -5,7 +5,7 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getLatestReservesAction } from '@/modules/reserves/reserve.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 const FINANCIAL_INSTITUTIONS = [

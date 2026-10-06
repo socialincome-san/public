@@ -1,11 +1,17 @@
 'use client';
 
 import { ActionMenu, type ActionMenuItem } from '@/components/data-table/elements/action-menu';
-import { Button } from '@socialincome/design-system/button/button';
-import { Input } from '@socialincome/design-system/input/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/popover/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
-import { Switch } from '@socialincome/design-system/switch/switch';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
+import { Switch } from '@socialincome/design-system/forms/switch/switch';
+import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/overlays/popover/popover';
 import { ArrowUpDownIcon, Columns3Icon, FilterIcon, SearchIcon } from 'lucide-react';
 
 type ToolbarFilterOption = {
@@ -90,36 +96,31 @@ export const DataTableToolbar = ({
 				{hasSearch ? (
 					<Popover>
 						<PopoverTrigger asChild>
-							<Button
-								type="button"
-								variant="outline"
-								size="icon"
-								className="relative"
-								aria-label="Search"
-								data-testid="data-table-search-button"
-							>
+							<Button type="button" variant="outline" size="icon" aria-label="Search" data-testid="data-table-search-button">
 								<SearchIcon className="size-4" />
 								{hasSearchValue ? (
 									<span className="bg-primary absolute -top-1 -right-1 size-2 rounded-full" aria-hidden />
 								) : null}
 							</Button>
 						</PopoverTrigger>
-						<PopoverContent align="end" className="w-[320px] space-y-2 p-3">
-							<div className="flex items-center justify-between">
-								<p className="text-sm font-medium">Search</p>
-								<Button type="button" variant="ghost" size="sm" onClick={clearSearch} disabled={!hasSearchValue}>
-									Clear
-								</Button>
+						<PopoverContent align="end">
+							<div className="space-y-3">
+								<div className="flex items-center justify-between">
+									<p className="text-sm font-medium">Search</p>
+									<Button type="button" variant="ghost" size="sm" onClick={clearSearch} disabled={!hasSearchValue}>
+										Clear
+									</Button>
+								</div>
+								<Input
+									key={`table-search-${searchValue ?? ''}`}
+									placeholder="Search..."
+									defaultValue={searchValue}
+									onChange={(e) => onSearchChange(e.target.value)}
+									autoFocus
+									data-testid="data-table-search-input"
+								/>
+								<p className="text-muted-foreground text-xs">Fields: {searchKeys.join(', ')}</p>
 							</div>
-							<Input
-								key={`table-search-${searchValue ?? ''}`}
-								placeholder="Search..."
-								defaultValue={searchValue}
-								onChange={(e) => onSearchChange(e.target.value)}
-								autoFocus
-								data-testid="data-table-search-input"
-							/>
-							<p className="text-muted-foreground text-xs">Fields: {searchKeys.join(', ')}</p>
 						</PopoverContent>
 					</Popover>
 				) : null}
@@ -136,28 +137,36 @@ export const DataTableToolbar = ({
 								<Columns3Icon className="size-4" />
 							</Button>
 						</PopoverTrigger>
-						<PopoverContent align="end" className="w-[260px] space-y-3 p-3">
-							<div className="flex items-center justify-between">
-								<p className="text-sm font-medium">Visible columns</p>
-								<Button type="button" variant="ghost" size="sm" onClick={clearAllColumns} disabled={hiddenColumnCount === 0}>
-									Clear
-								</Button>
-							</div>
-							<div className="space-y-1">
-								{columns.map((column) => (
-									<label
-										key={column.id}
-										className="flex items-center justify-between gap-3 text-sm"
-										data-testid={`data-table-column-${column.id}-label`}
+						<PopoverContent align="end">
+							<div className="space-y-3">
+								<div className="flex items-center justify-between">
+									<p className="text-sm font-medium">Visible columns</p>
+									<Button
+										type="button"
+										variant="ghost"
+										size="sm"
+										onClick={clearAllColumns}
+										disabled={hiddenColumnCount === 0}
 									>
-										<span>{column.label}</span>
-										<Switch
-											checked={column.visible}
-											onCheckedChange={column.onToggle}
-											data-testid={`data-table-column-${column.id}-toggle`}
-										/>
-									</label>
-								))}
+										Clear
+									</Button>
+								</div>
+								<div className="space-y-1">
+									{columns.map((column) => (
+										<label
+											key={column.id}
+											className="flex items-center justify-between gap-3 text-sm"
+											data-testid={`data-table-column-${column.id}-label`}
+										>
+											<span>{column.label}</span>
+											<Switch
+												checked={column.visible}
+												onCheckedChange={column.onToggle}
+												data-testid={`data-table-column-${column.id}-toggle`}
+											/>
+										</label>
+									))}
+								</div>
 							</div>
 						</PopoverContent>
 					</Popover>
@@ -165,64 +174,59 @@ export const DataTableToolbar = ({
 				{hasSorting ? (
 					<Popover>
 						<PopoverTrigger asChild>
-							<Button
-								type="button"
-								variant="outline"
-								size="icon"
-								className="relative"
-								aria-label="Sort"
-								data-testid="data-table-sort-button"
-							>
+							<Button type="button" variant="outline" size="icon" aria-label="Sort" data-testid="data-table-sort-button">
 								<ArrowUpDownIcon className="size-4" />
 								{hasSortingValue ? (
 									<span className="bg-primary absolute -top-1 -right-1 size-2 rounded-full" aria-hidden />
 								) : null}
 							</Button>
 						</PopoverTrigger>
-						<PopoverContent align="end" className="w-[280px] space-y-3 p-3">
-							<div className="flex items-center justify-between">
-								<p className="text-sm font-medium">Sort by</p>
-								<Button
-									type="button"
-									variant="ghost"
-									size="sm"
-									onClick={() => onSortChange?.(undefined, undefined)}
-									disabled={!hasSortingValue}
-								>
-									Clear
-								</Button>
-							</div>
-							<div className="space-y-2">
-								<div className="space-y-1">
-									<label className="text-muted-foreground text-xs">Field</label>
-									<Select value={sortBy} onValueChange={(value) => onSortChange?.(value, sortDirection ?? 'asc')}>
-										<SelectTrigger className="h-9 w-full" data-testid="data-table-sort-field-trigger">
-											<SelectValue placeholder="Choose field" />
-										</SelectTrigger>
-										<SelectContent align="end">
-											{sortOptions.map((option) => (
-												<SelectItem key={option.id} value={option.id}>
-													{option.label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-								</div>
-								<div className="space-y-1">
-									<label className="text-muted-foreground text-xs">Direction</label>
-									<Select
-										value={sortDirection}
-										onValueChange={(value) => onSortChange?.(sortBy, value as 'asc' | 'desc')}
-										disabled={!sortBy}
+						<PopoverContent align="end">
+							<div className="space-y-3">
+								<div className="flex items-center justify-between">
+									<p className="text-sm font-medium">Sort by</p>
+									<Button
+										type="button"
+										variant="ghost"
+										size="sm"
+										onClick={() => onSortChange?.(undefined, undefined)}
+										disabled={!hasSortingValue}
 									>
-										<SelectTrigger className="h-9 w-full" data-testid="data-table-sort-direction-trigger">
-											<SelectValue placeholder="Choose direction" />
-										</SelectTrigger>
-										<SelectContent align="end">
-											<SelectItem value="asc">Ascending</SelectItem>
-											<SelectItem value="desc">Descending</SelectItem>
-										</SelectContent>
-									</Select>
+										Clear
+									</Button>
+								</div>
+								<div className="space-y-2">
+									<div className="space-y-1">
+										<label className="text-muted-foreground text-xs">Field</label>
+										<Select value={sortBy} onValueChange={(value) => onSortChange?.(value, sortDirection ?? 'asc')}>
+											<SelectTrigger data-testid="data-table-sort-field-trigger">
+												<SelectValue placeholder="Choose field" />
+											</SelectTrigger>
+											<SelectContent align="end">
+												{sortOptions.map((option) => (
+													<SelectItem key={option.id} value={option.id}>
+														{option.label}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									</div>
+									<div className="space-y-1">
+										<label className="text-muted-foreground text-xs">Direction</label>
+										<Select
+											value={sortDirection}
+											onValueChange={(value) => onSortChange?.(sortBy, value as 'asc' | 'desc')}
+											disabled={!sortBy}
+										>
+											<SelectTrigger data-testid="data-table-sort-direction-trigger">
+												<SelectValue placeholder="Choose direction" />
+											</SelectTrigger>
+											<SelectContent align="end">
+												<SelectItem value="asc">Ascending</SelectItem>
+												<SelectItem value="desc">Descending</SelectItem>
+											</SelectContent>
+										</Select>
+									</div>
 								</div>
 							</div>
 						</PopoverContent>
@@ -235,7 +239,6 @@ export const DataTableToolbar = ({
 								type="button"
 								variant="outline"
 								size="icon"
-								className="relative"
 								aria-label="Filters"
 								data-testid="data-table-filters-button"
 							>
@@ -247,46 +250,54 @@ export const DataTableToolbar = ({
 								) : null}
 							</Button>
 						</PopoverTrigger>
-						<PopoverContent align="end" className="w-[280px] space-y-3 p-3">
-							<div className="flex items-center justify-between">
-								<p className="text-sm font-medium">Filter results</p>
-								<Button type="button" variant="ghost" size="sm" onClick={clearAllFilters} disabled={activeFilterCount === 0}>
-									Clear
-								</Button>
-							</div>
-							<div className="space-y-2">
-								{filters.map((filter) => {
-									const hasOptions = filter.options.length > 0;
+						<PopoverContent align="end">
+							<div className="space-y-3">
+								<div className="flex items-center justify-between">
+									<p className="text-sm font-medium">Filter results</p>
+									<Button
+										type="button"
+										variant="ghost"
+										size="sm"
+										onClick={clearAllFilters}
+										disabled={activeFilterCount === 0}
+									>
+										Clear
+									</Button>
+								</div>
+								<div className="space-y-2">
+									{filters.map((filter) => {
+										const hasOptions = filter.options.length > 0;
 
-									return (
-										<div key={filter.id} className="space-y-1">
-											<label className="text-muted-foreground text-xs">{filter.label}</label>
-											<Select
-												key={`${filter.id}-${filter.value ?? 'none'}`}
-												value={hasOptions ? filter.value : undefined}
-												onValueChange={(value) => filter.onChange(value)}
-												disabled={!hasOptions}
-											>
-												<SelectTrigger className="h-9 w-full" data-testid={`data-table-filter-${filter.id}-trigger`}>
-													<SelectValue placeholder={hasOptions ? filter.placeholder : 'No options available'} />
-												</SelectTrigger>
-												<SelectContent align="end">
-													{hasOptions ? (
-														filter.options.map((option) => (
-															<SelectItem key={option.value} value={option.value}>
-																{option.label}
+										return (
+											<div key={filter.id} className="space-y-1">
+												<label className="text-muted-foreground text-xs">{filter.label}</label>
+												<Select
+													key={`${filter.id}-${filter.value ?? 'none'}`}
+													value={hasOptions ? filter.value : undefined}
+													onValueChange={(value) => filter.onChange(value)}
+													disabled={!hasOptions}
+												>
+													<SelectTrigger data-testid={`data-table-filter-${filter.id}-trigger`}>
+														<SelectValue placeholder={hasOptions ? filter.placeholder : 'No options available'} />
+													</SelectTrigger>
+													<SelectContent align="end">
+														{hasOptions ? (
+															filter.options.map((option) => (
+																<SelectItem key={option.value} value={option.value}>
+																	{option.label}
+																</SelectItem>
+															))
+														) : (
+															<SelectItem value="no-options-available" disabled>
+																No options available
 															</SelectItem>
-														))
-													) : (
-														<SelectItem value="no-options-available" disabled>
-															No options available
-														</SelectItem>
-													)}
-												</SelectContent>
-											</Select>
-										</div>
-									);
-								})}
+														)}
+													</SelectContent>
+												</Select>
+											</div>
+										);
+									})}
+								</div>
 							</div>
 						</PopoverContent>
 					</Popover>

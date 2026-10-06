@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { ChevronLeft } from 'lucide-react';
 import { formatDonationCurrencyAmount } from '../utils/donation-formatting';
 
@@ -40,8 +40,13 @@ export const DonationStepFooter = ({ onBack, onContinue, continueLabel, continue
 				</div>
 			)}
 
-			<div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
-				<div className="flex w-full flex-col gap-2 sm:order-2 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
+			<div className="flex flex-col-reverse gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
+				<Button type="button" data-testid="donation-wizard-back" variant="outline" onClick={onBack}>
+					<ChevronLeft className="size-4" aria-hidden />
+					{t('stepPlan.back')}
+				</Button>
+
+				<div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
 					{summary && (
 						<div className="hidden min-w-0 items-center gap-1.5 text-sm sm:flex">
 							<span>{t('stepPayment.your-donation')}</span>
@@ -58,11 +63,6 @@ export const DonationStepFooter = ({ onBack, onContinue, continueLabel, continue
 						{continueLabel}
 					</Button>
 				</div>
-
-				<Button type="button" data-testid="donation-wizard-back" variant="outline" className="sm:order-1" onClick={onBack}>
-					<ChevronLeft className="size-4" aria-hidden />
-					{t('stepPlan.back')}
-				</Button>
 			</div>
 		</div>
 	);

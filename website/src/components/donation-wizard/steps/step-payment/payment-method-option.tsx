@@ -1,8 +1,7 @@
 'use client';
 
-import { Badge } from '@socialincome/design-system/badge/badge';
-import { cn } from '@socialincome/design-system/cn';
-import { SelectableCard } from '@socialincome/design-system/selectable-card/selectable-card';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import { SelectableCard } from '@socialincome/design-system/forms/selectable-card/selectable-card';
 import type { ReactNode } from 'react';
 
 type Props = {
@@ -26,22 +25,13 @@ export const PaymentMethodOption = ({
 	trailing,
 	testId,
 }: Props) => (
-	<SelectableCard
-		selected={selected}
-		onSelect={onSelect}
-		disabled={disabled}
-		testId={testId}
-		className={cn(
-			'flex w-full max-w-full min-w-0 flex-col gap-2 p-3 sm:min-h-16 sm:justify-center sm:p-4',
-			!selected && !disabled && 'hover:bg-muted/50',
-		)}
-	>
-		<div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-2">
+	<SelectableCard selected={selected} onSelect={onSelect} disabled={disabled} testId={testId}>
+		<div className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 sm:min-h-8">
 			<div className="flex min-w-0 flex-col gap-1">
 				<div className="flex min-w-0 flex-wrap items-center gap-2">
 					<span className="text-base leading-snug font-medium sm:text-lg sm:leading-none">{label}</span>
 					{badge && (
-						<Badge variant="verified" className="shrink-0 gap-0.5 px-2 py-0.5 text-[10px]">
+						<Badge variant="verified" size="sm">
 							{badge}
 						</Badge>
 					)}

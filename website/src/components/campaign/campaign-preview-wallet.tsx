@@ -4,7 +4,7 @@ import { getSafeNumberFormatLocale, type WebsiteLanguage, type WebsiteRegion } f
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import type { PublicCampaignCard, PublicCampaignStats } from '@/modules/campaigns/campaign.types';
 import { cn } from '@socialincome/design-system/cn';
-import { Progress } from '@socialincome/design-system/progress/progress';
+import { Progress } from '@socialincome/design-system/feedback/progress/progress';
 import NextImage from 'next/image';
 import Link from 'next/link';
 
@@ -70,7 +70,11 @@ export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Prop
 						</div>
 					) : null}
 				</div>
-				{showProgress ? <Progress value={stats?.percentageCollected ?? 0} variant="onDark" className="mt-3 h-2" /> : null}
+				{showProgress ? (
+					<div className="mt-3">
+						<Progress value={stats?.percentageCollected ?? 0} variant="onDark" />
+					</div>
+				) : null}
 			</div>
 		</article>
 	);

@@ -52,7 +52,6 @@ export const LocalPartnersGrid = async ({ localPartners, lang, region, hasActive
 							recipientsLabel={recipientsLabel}
 							candidatesLabel={candidatesLabel}
 							alertVariant={alertVariant}
-							className="max-w-none"
 						/>
 					</li>
 				);

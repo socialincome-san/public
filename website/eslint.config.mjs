@@ -1,4 +1,5 @@
 import { config } from '@smartive/eslint-config';
+import classNamePlugin from '@socialincome/design-system/eslint-rules/no-class-name-prop';
 import reactPlugin from 'eslint-plugin-react';
 import tseslint from 'typescript-eslint';
 import backendArchitecturePlugin from './eslint-rules/backend-architecture.mjs';
@@ -105,9 +106,11 @@ export default [
 			'@typescript-eslint': tseslint.plugin,
 			react: reactPlugin,
 			'backend-architecture': backendArchitecturePlugin,
+			'class-name': classNamePlugin,
 		},
 		rules: {
 			'react/forbid-component-props': ['error', { forbid: ['style'] }],
+			'class-name/no-class-name-prop': 'error',
 		},
 	},
 	{

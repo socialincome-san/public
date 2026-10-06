@@ -1,7 +1,7 @@
 'use client';
 
 import { type Currency } from '@/generated/prisma/client';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { CircleX } from 'lucide-react';
 import { getSubscriptionCancelRetentionPresets } from '../subscription-cancellation';
@@ -65,13 +65,7 @@ export const CancelRetentionStep = ({ amount, currency, labels, onReduceAmount, 
 					<div className="bg-border h-px flex-1" />
 				</div>
 
-				<Button
-					type="button"
-					variant="outline"
-					className="bg-background w-full"
-					onClick={onContinueCancel}
-					data-testid="cancel-retention-continue"
-				>
+				<Button type="button" variant="outline" fullWidth onClick={onContinueCancel} data-testid="cancel-retention-continue">
 					{labels.continueCancel}
 				</Button>
 			</div>
