@@ -8,6 +8,7 @@ import { GET } from './route';
 
 describe('journal RSS route', () => {
 	beforeEach(() => {
+		mockGetPublishedJournalArticles.mockClear();
 		mockGetPublishedJournalArticles.mockResolvedValue({
 			success: true,
 			data: [
@@ -23,7 +24,7 @@ describe('journal RSS route', () => {
 	});
 
 	it('honors every language while keeping int and ch feeds identical', async () => {
-		for (const language of ['en', 'de', 'fr', 'it'] as const) {
+		for (const language of ['en', 'de', 'fr', 'it', 'kri'] as const) {
 			const international = await GET(new Request(`https://socialincome.org/${language}/int/journal/rss.xml`), {
 				params: Promise.resolve({ lang: language, region: 'int' }),
 			});
@@ -38,5 +39,14 @@ describe('journal RSS route', () => {
 			expect(internationalText).toContain(`https://socialincome.org/${language}/journal/stable-story`);
 			expect(mockGetPublishedJournalArticles).toHaveBeenCalledWith(language);
 		}
+	});
+
+	it('rejects unsupported route languages before loading content', async () => {
+		const response = await GET(new Request('https://socialincome.org/unknown/int/journal/rss.xml'), {
+			params: Promise.resolve({ lang: 'unknown', region: 'int' }),
+		});
+
+		expect(response.status).toBe(404);
+		expect(mockGetPublishedJournalArticles).not.toHaveBeenCalled();
 	});
 });

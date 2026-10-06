@@ -1,15 +1,20 @@
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import { buildJournalRssFeed } from '@/lib/storyblok/journal-rss';
 import { getPublishedJournalArticles } from '@/modules/journal/journal.service';
 
 export const revalidate = 900;
 
 type JournalRssRouteContext = {
-	params: Promise<{ lang: WebsiteLanguage; region: WebsiteRegion }>;
+	params: Promise<{ lang: string; region: string }>;
 };
 
 export const GET = async (_request: Request, context: JournalRssRouteContext) => {
-	const { lang } = await context.params;
+	const { lang: requestedLanguage } = await context.params;
+	const lang = allWebsiteLanguages.find((language) => language === requestedLanguage);
+	if (!lang) {
+		return new Response('Journal feed language not found.', { status: 404 });
+	}
+
 	const result = await getPublishedJournalArticles(lang);
 
 	if (!result.success) {
