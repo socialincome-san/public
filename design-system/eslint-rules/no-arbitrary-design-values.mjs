@@ -1,21 +1,32 @@
 const colorUtilities =
-	'(?:bg|text|border(?:-[trblxy])?|ring(?:-offset)?|outline|fill|stroke|from|via|to|decoration|divide|placeholder|caret|accent|shadow|inset-shadow|drop-shadow)';
+	'(?:bg|text|border(?:-[trblxyse])?|ring(?:-offset)?|inset-ring|outline|fill|stroke|from|via|to|decoration|divide|placeholder|caret|accent|shadow|inset-shadow|drop-shadow)';
 const tailwindPalette =
 	'(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)';
+const nonColorKeywords = 'inherit|initial|unset|revert|transparent|currentcolor|none|auto|thin|medium|thick';
 
 const checks = [
 	{
-		pattern: new RegExp(`^${colorUtilities}-${tailwindPalette}-\\d{2,3}(?:/\\d+)?$`),
+		pattern: new RegExp(`^${colorUtilities}-${tailwindPalette}-\\d{2,3}(?:/(?:\\d+|\\[[^\\]]+\\]))?$`),
+		foundation: 'Colors',
+	},
+	{
+		// The theme removes the palette, so these generate nothing
+		pattern: new RegExp(
+			`^${colorUtilities}-(?:\\((?:color:)?--color-${tailwindPalette}-|\\[(?:color:)?var\\(--color-${tailwindPalette}-)`,
+		),
 		foundation: 'Colors',
 	},
 	{
 		// Literal colors only: values built from tokens, such as [hsl(var(--primary))], are fine
-		pattern: new RegExp(`^${colorUtilities}-\\[(?:#|rgba?\\(|hsla?\\(\\s*\\d|oklch\\(|color\\()`),
+		pattern: new RegExp(
+			`^${colorUtilities}-\\[(?:color:)?(?:#|rgba?\\(|hsla?\\(\\s*\\d|oklch\\(|color\\(|(?!(?:${nonColorKeywords})\\])[a-z]+\\])`,
+			'i',
+		),
 		foundation: 'Colors',
 	},
 	{
 		// Relative sizes such as text-[0.45em] are fine
-		pattern: /^text-\[\d*\.?\d+(?:px|rem)\]$/,
+		pattern: /^text-\[(?:length:)?\d*\.?\d+(?:px|rem)\](?:\/\S+)?$/,
 		foundation: 'Typography',
 	},
 	{

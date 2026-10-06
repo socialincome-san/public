@@ -22,6 +22,7 @@ const radii = [
 	'rounded-4xl',
 	'rounded-5xl',
 	'rounded-full',
+	'rounded-control',
 ];
 
 // rounded-full resolves to an effectively infinite radius

@@ -150,7 +150,7 @@ export const SiteMenuMobile = ({ entries, homeHref, labels, footerControls, rend
 								)}
 							</div>
 						</div>
-						<div className="border-muted shadow-card flex h-18 shrink-0 items-center justify-between gap-2 border-t px-4">
+						<div className="border-muted shadow-dock flex h-18 shrink-0 items-center justify-between gap-2 border-t px-4">
 							{renderDonateAction?.(closeMenu)}
 							<div className="flex min-w-0 items-center gap-2">{footerControls}</div>
 						</div>

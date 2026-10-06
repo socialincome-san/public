@@ -42,6 +42,7 @@
 	--shadow-card: 0 4px 28px 0 rgb(0 30 101 / 0.07);
 	--shadow-raised: 0 4px 28px 0 rgb(0 30 101 / 0.12);
 	--shadow-overlay: 0 24px 80px 0 rgb(31 65 101 / 0.12);
+	--shadow-dock: 0 -3px 14px 0 rgb(0 0 0 / 0.05);
 	--drop-shadow-card: 0 4px 20px rgb(0 0 0 / 0.09);
 	--drop-shadow-on-media: 0 2px 4px rgb(0 0 0 / 0.8);
 
@@ -49,6 +50,7 @@
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-5xl: 3.5rem;
+	--radius-control: 0.25rem;
 
 	--spacing-content: 1400px;
 	--spacing-site-width: 94vw;

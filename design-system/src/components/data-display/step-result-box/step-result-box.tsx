@@ -1,7 +1,7 @@
 'use client';
 
 import { CheckIcon, CopyIcon, DownloadIcon, XIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useCopyToClipboard } from '../../../use-copy-to-clipboard';
 import { Button } from '../../actions/button/button';
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const StepResultBox = ({ id, value, filename, onClear }: Props) => {
-	const [copied, setCopied] = useState(false);
+	const { copied, copy } = useCopyToClipboard(1200);
 
 	if (!value) {
 		return null;
@@ -20,12 +20,6 @@ export const StepResultBox = ({ id, value, filename, onClear }: Props) => {
 
 	const isObject = typeof value === 'object';
 	const text = isObject ? JSON.stringify(value, null, 2) : String(value);
-
-	const handleCopy = async () => {
-		await navigator.clipboard.writeText(text);
-		setCopied(true);
-		setTimeout(() => setCopied(false), 1200);
-	};
 
 	const handleDownload = () => {
 		const blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
@@ -40,7 +34,7 @@ export const StepResultBox = ({ id, value, filename, onClear }: Props) => {
 	return (
 		<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
 			<div className="mb-1 flex items-center justify-end gap-1">
-				<Button size="icon" variant="ghost" onClick={handleCopy} title="Copy to clipboard">
+				<Button size="icon" variant="ghost" onClick={() => copy(text)} title="Copy to clipboard">
 					{copied ? <CheckIcon className="text-confirm h-3 w-3" /> : <CopyIcon className="h-3 w-3" />}
 				</Button>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { cn } from '../../../cn';
 import { RadioGroup, RadioGroupItem } from '../radio-group/radio-group';
 

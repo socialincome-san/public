@@ -17,6 +17,7 @@ const named = [
 	{ name: 'shadow-card', value: 'Cards, panels' },
 	{ name: 'shadow-raised', value: 'Floating controls' },
 	{ name: 'shadow-overlay', value: 'Flyouts' },
+	{ name: 'shadow-dock', value: 'Bars pinned to the bottom' },
 ];
 
 const dropShadows = [

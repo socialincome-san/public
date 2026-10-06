@@ -59,6 +59,32 @@ export const A = () => (
 	]);
 });
 
+test('rejects type hints, modifiers, named colors and palette variables', () => {
+	const messages = lint(`
+export const A = () => (
+	<div className="text-[14px]/6 text-[length:14px] bg-[color:#fff] text-[red] bg-red-500/[0.5] bg-(--color-red-500) border-s-slate-200" />
+);
+`);
+
+	assert.deepEqual(reportedClasses(messages), [
+		'text-[14px]/6',
+		'text-[length:14px]',
+		'bg-[color:#fff]',
+		'text-[red]',
+		'bg-red-500/[0.5]',
+		'bg-(--color-red-500)',
+		'border-s-slate-200',
+	]);
+});
+
+test('allows CSS keywords as arbitrary values', () => {
+	const messages = lint(`
+export const A = () => <div className="text-[length:inherit] bg-[transparent] border-[thin] text-[inherit]" />;
+`);
+
+	assert.deepEqual(messages, []);
+});
+
 test('points to the matching foundation', () => {
 	const [message] = lint(`export const A = () => <div className="rounded-[10px]" />;`);
 

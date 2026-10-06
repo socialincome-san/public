@@ -218,7 +218,9 @@ export default function DataTable<Row extends RowData>({
 		});
 	};
 
-	const sanitizedEmptyMessage = <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}></div>;
+	const renderSanitizedEmptyMessage = () => (
+		<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}></div>
+	);
 
 	return (
 		<div data-testid="data-table">
@@ -249,9 +251,9 @@ export default function DataTable<Row extends RowData>({
 			) : isLoading ? (
 				<AppLoadingSkeleton message="Loading..." />
 			) : isDatasetEmpty ? (
-				<DataTableEmptyState message={sanitizedEmptyMessage} />
+				<DataTableEmptyState message={renderSanitizedEmptyMessage()} />
 			) : isEmpty ? (
-				<DataTableNoResults message={sanitizedEmptyMessage} />
+				<DataTableNoResults message={renderSanitizedEmptyMessage()} />
 			) : (
 				<BaseTable
 					data={displayedData}

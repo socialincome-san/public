@@ -1,5 +1,6 @@
 import { cn } from '../../../cn';
 import { AnimatedSILogoIcon } from '../../brand/logo/logo';
+import { dataTableStableMinHeight } from '../../data-display/data-table/data-table';
 
 type AppLoadingSkeletonProps = {
 	message?: string;
@@ -28,7 +29,7 @@ export const AppLoadingSkeleton = ({ message, variant = 'card' }: AppLoadingSkel
 				'flex w-full items-center justify-center',
 				variant === 'page'
 					? 'bg-website-gradient min-h-screen rounded-none'
-					: 'bg-card min-h-[680px] rounded-xl md:min-h-[760px]',
+					: ['bg-card rounded-xl', dataTableStableMinHeight],
 			)}
 			data-testid="app-loading-skeleton"
 		>

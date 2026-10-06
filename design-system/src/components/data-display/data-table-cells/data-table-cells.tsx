@@ -2,24 +2,12 @@
 
 import { Check, ChevronRightIcon, Clock3Icon, Copy, Download } from 'lucide-react';
 import Link from 'next/link';
-import { type MouseEvent, type ReactNode, useState } from 'react';
+import { type MouseEvent, type ReactNode } from 'react';
+import { useCopyToClipboard } from '../../../use-copy-to-clipboard';
 import { Button } from '../../actions/button/button';
 import { Progress } from '../../feedback/progress/progress';
 import { LongHairIcon, ShortHairIcon } from '../../icons/custom-icons/custom-icons';
 import { Badge } from '../badge/badge';
-
-const useCopyToClipboard = (timeout: number) => {
-	const [copied, setCopied] = useState(false);
-
-	const copy = (text: string) => {
-		void navigator.clipboard.writeText(text).then(() => {
-			setCopied(true);
-			setTimeout(() => setCopied(false), timeout);
-		});
-	};
-
-	return { copied, copy };
-};
 
 type DataTableTextCellProps = {
 	value?: string | null;
