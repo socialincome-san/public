@@ -30,7 +30,6 @@ export const PlanTierCard = ({
 	<SelectableCard
 		selected={selected}
 		onSelect={onSelect}
-		className="w-full p-4"
 		testId={heartCount === 2 ? 'donation-wizard-plan-tier-2x' : 'donation-wizard-plan-tier-1x'}
 	>
 		<PlanTierCardContent

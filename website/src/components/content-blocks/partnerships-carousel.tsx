@@ -72,10 +72,7 @@ export const PartnershipsCarouselBlock = ({ blok }: Props) => {
 						};
 
 						return (
-							<CarouselItem
-								key={entry._uid ?? `${entry.name}-${index}`}
-								className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5"
-							>
+							<CarouselItem key={entry._uid ?? `${entry.name}-${index}`} size="tile">
 								<Link
 									href={href ?? '#'}
 									target="_blank"

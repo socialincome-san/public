@@ -33,7 +33,7 @@ export const CountriesOverviewPage = async ({ overview, lang, region }: Props) =
 
 	return (
 		<div className="flex flex-col gap-8 py-8">
-			<Breadcrumb links={breadcrumbLinks} className="py-0" />
+			<Breadcrumb links={breadcrumbLinks} layout="section" />
 			<CountriesOverview
 				countries={countries}
 				statsByIsoCode={statsByIsoCode}

@@ -1,4 +1,3 @@
-import { cn } from '@socialincome/design-system/cn';
 import type { ReactNode } from 'react';
 
 type FallbackPageProps = {
@@ -7,12 +6,11 @@ type FallbackPageProps = {
 	description: string;
 	detail?: ReactNode;
 	children?: ReactNode;
-	className?: string;
 };
 
-export const FallbackPage = ({ eyebrow, title, description, detail, children, className }: FallbackPageProps) => {
+export const FallbackPage = ({ eyebrow, title, description, detail, children }: FallbackPageProps) => {
 	return (
-		<section className={cn('flex min-h-[680px] items-center justify-center px-4 py-16', className)}>
+		<section className="flex min-h-[680px] items-center justify-center px-4 py-16">
 			<div className="relative w-full max-w-3xl overflow-hidden rounded-[2rem] bg-white/70 p-8 text-center shadow-xl ring-1 ring-black/5 backdrop-blur md:p-12">
 				<div className="from-primary/15 via-secondary/20 absolute inset-x-10 top-0 h-24 rounded-full bg-linear-to-r to-transparent blur-3xl" />
 				<div className="relative mx-auto flex max-w-2xl flex-col items-center gap-6">

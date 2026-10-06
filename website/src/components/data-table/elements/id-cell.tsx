@@ -32,8 +32,7 @@ export const IdCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, T
 			<Button
 				type="button"
 				variant="ghost"
-				size="icon"
-				className="h-6 w-6"
+				size="icon-sm"
 				onClick={onCopy}
 				aria-label={copied ? 'ID copied' : 'Copy ID to clipboard'}
 			>

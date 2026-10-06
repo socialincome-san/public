@@ -74,7 +74,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				}
 			/>
 			<div className="flex flex-col gap-8 py-8">
-				<Breadcrumb className="py-0" links={breadcrumbLinks} />
+				<Breadcrumb links={breadcrumbLinks} layout="section" />
 				<div className="lg:hidden">
 					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 						<DonationFormServer lang={lang} campaignId={programDetailData.campaignId} />

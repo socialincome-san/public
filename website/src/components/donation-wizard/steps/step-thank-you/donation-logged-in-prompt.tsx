@@ -27,7 +27,7 @@ export const DonationLoggedInPrompt = ({ onDashboardClick }: Props) => {
 			</div>
 
 			<div className="flex w-full flex-col items-center gap-3">
-				<Button asChild className="min-w-32">
+				<Button asChild>
 					<Link href="/dashboard/subscriptions" onClick={onDashboardClick} data-testid="donation-wizard-dashboard-link">
 						{t('thankYou.loggedInPrompt.dashboardButton')}
 					</Link>

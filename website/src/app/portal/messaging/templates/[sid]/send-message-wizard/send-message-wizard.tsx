@@ -10,7 +10,7 @@ import type {
 	VariableAssignments,
 } from '@/modules/messaging/messaging.types';
 import { cn } from '@socialincome/design-system/cn';
-import { DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { DialogBody, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { useEffect, useState } from 'react';
 import type { RecipientsTableQuery } from './recipients-table';
 import { emptySelection } from './selection';
@@ -152,21 +152,19 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 
 	return (
 		<>
-			<div className="-mx-6 border-b px-6 pb-2">
-				<DialogTitle className="pr-8 text-lg">
+			<DialogHeader>
+				<DialogTitle>
 					Send <span className="text-muted-foreground">“{template.friendlyName}”</span>
 				</DialogTitle>
-				<div className="mt-2">
-					<WizardStepIndicator
-						steps={steps}
-						currentStep={currentStep}
-						allComplete={isSending}
-						onStepSelect={isSending ? undefined : handleStepSelect}
-					/>
-				</div>
-			</div>
+				<WizardStepIndicator
+					steps={steps}
+					currentStep={currentStep}
+					allComplete={isSending}
+					onStepSelect={isSending ? undefined : handleStepSelect}
+				/>
+			</DialogHeader>
 
-			<div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+			<DialogBody>
 				{isSending && channel ? (
 					<SendProgress
 						phase={send.phase}
@@ -234,7 +232,7 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 						)}
 					</div>
 				)}
-			</div>
+			</DialogBody>
 
 			<WizardFooter
 				sendPhase={send.phase}

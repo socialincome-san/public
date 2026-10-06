@@ -76,7 +76,7 @@ export const CsvUploadDialog = ({ open, onOpenChange, title, template, onImport 
 
 	return (
 		<Dialog open={open} onOpenChange={(next) => !next && handleDialogClose()}>
-			<DialogContent className="space-y-4 sm:max-w-3xl">
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
 				</DialogHeader>

@@ -265,26 +265,25 @@ const DynamicForm: FC<Props> = ({ formSchema, isLoading, onSubmit, onCancel, onD
 								)
 							}
 						>
-							<AccordionItem
-								value={`accordion-${option}`}
-								className="border-border bg-muted rounded-xl border px-2 [&[data-state=closed]>div]:h-0"
-							>
+							<AccordionItem value={`accordion-${option}`} variant="boxed">
 								<AccordionTrigger data-testid={`form-accordion-trigger-${option}`}>
 									{formSchema.fields[option].label}
 								</AccordionTrigger>
-								<AccordionContent className="flex flex-col gap-6 p-5 [&_*[aria-hidden='true']]:h-0!" forceMount>
-									{getOptions(option).map((nestedOption) => (
-										<GenericFormField
-											option={nestedOption}
-											zodSchema={zodSchema}
-											form={form}
-											formSchema={formSchema}
-											isLoading={isLoading}
-											parentOption={option}
-											readOnly={mode === 'readonly'}
-											key={nestedOption}
-										/>
-									))}
+								<AccordionContent forceMount>
+									<div className="flex flex-col gap-6 px-5 pt-5 pb-1">
+										{getOptions(option).map((nestedOption) => (
+											<GenericFormField
+												option={nestedOption}
+												zodSchema={zodSchema}
+												form={form}
+												formSchema={formSchema}
+												isLoading={isLoading}
+												parentOption={option}
+												readOnly={mode === 'readonly'}
+												key={nestedOption}
+											/>
+										))}
+									</div>
 								</AccordionContent>
 							</AccordionItem>
 						</Accordion>
@@ -560,7 +559,7 @@ const GenericFormField = ({
 						name={optionKey}
 						key={optionKey}
 						render={({ field }) => (
-							<FormItem className="flex gap-2">
+							<FormItem layout="inline">
 								<Label htmlFor={optionKey}>{label}</Label>
 								<Switch
 									id={optionKey}

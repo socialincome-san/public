@@ -85,8 +85,8 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 							control={form.control}
 							name="firstName"
 							render={({ field }) => (
-								<FormItem className="w-full gap-2">
-									<FormLabel className="text-sm font-medium">{t('stepQrContact.firstName')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('stepQrContact.firstName')}</FormLabel>
 									<FormControl>
 										<Input {...field} autoComplete="given-name" disabled={isLoading} />
 									</FormControl>
@@ -97,8 +97,8 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 							control={form.control}
 							name="lastName"
 							render={({ field }) => (
-								<FormItem className="w-full gap-2">
-									<FormLabel className="text-sm font-medium">{t('stepQrContact.lastName')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('stepQrContact.lastName')}</FormLabel>
 									<FormControl>
 										<Input {...field} autoComplete="family-name" disabled={isLoading} />
 									</FormControl>
@@ -109,8 +109,8 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 							control={form.control}
 							name="email"
 							render={({ field }) => (
-								<FormItem className="w-full gap-2">
-									<FormLabel className="text-sm font-medium">{t('stepQrContact.email')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('stepQrContact.email')}</FormLabel>
 									<FormControl>
 										<Input {...field} type="email" autoComplete="email" disabled={isLoading} />
 									</FormControl>

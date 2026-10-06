@@ -3,7 +3,6 @@
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { type OutflowsSectionRow } from '@/components/outflows/outflows-spend';
 import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
-import { cn } from '@socialincome/design-system/cn';
 import { Progress } from '@socialincome/design-system/progress/progress';
 import { useInView } from 'motion/react';
 import Image from 'next/image';
@@ -34,17 +33,16 @@ type Props = {
 	rows: OutflowsSectionRow[];
 	downloadsHref: string;
 	ngoAverageSourceUrl: string;
-	className?: string;
 };
 
-export const OutflowsSection = ({ copy, rows, downloadsHref, ngoAverageSourceUrl, className }: Props) => {
+export const OutflowsSection = ({ copy, rows, downloadsHref, ngoAverageSourceUrl }: Props) => {
 	const breakdownListRef = useRef<HTMLUListElement>(null);
 	const reduceMotion = usePrefersReducedMotion();
 	const barsInView = useInView(breakdownListRef, { once: true, amount: 0.25 });
 	const showBars = reduceMotion || barsInView;
 
 	return (
-		<section className={cn('grid gap-8 py-6 sm:grid-cols-2 sm:items-start sm:gap-12 md:gap-20 md:py-10', className)}>
+		<section className="grid gap-8 py-6 sm:grid-cols-2 sm:items-start sm:gap-12 md:gap-20 md:py-10">
 			<div className="flex max-w-3xl flex-col gap-6 sm:pt-8">
 				<p className="text-sm font-medium text-cyan-900">{copy.eyebrow}</p>
 				<h2 className="text-foreground text-4xl leading-tight font-normal md:text-5xl md:leading-[54px]">
@@ -104,7 +102,7 @@ export const OutflowsSection = ({ copy, rows, downloadsHref, ngoAverageSourceUrl
 							{copy.ngoAverageAfter}
 						</p>
 
-						<OpenDonationWizardButton label={copy.donateNow} className="w-full" />
+						<OpenDonationWizardButton label={copy.donateNow} fullWidth />
 					</div>
 				</div>
 

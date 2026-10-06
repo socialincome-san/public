@@ -109,7 +109,6 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 						type="button"
 						variant="outline"
 						size="sm"
-						className="bg-background"
 						onClick={() =>
 							send({
 								type: 'OPEN',
@@ -132,7 +131,6 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 							type="button"
 							variant="outline"
 							size="sm"
-							className="bg-background"
 							onClick={() => setQrDialogOpen(true)}
 							aria-haspopup="dialog"
 							aria-expanded={isQrOpen}
@@ -153,12 +151,12 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 			/>
 
 			<Dialog open={isQrOpen} onOpenChange={setQrDialogOpen}>
-				<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[820px]">
+				<DialogContent size="lg">
 					<DialogHeader>
 						<div className="flex w-full items-start gap-4 pr-8">
 							<div className="flex min-w-0 flex-col gap-1">
-								<DialogTitle className="shrink-0">{labels.qrDialogTitle}</DialogTitle>
-								<DialogDescription className="sr-only">{labels.qrDialogTitle}</DialogDescription>
+								<DialogTitle>{labels.qrDialogTitle}</DialogTitle>
+								<DialogDescription visuallyHidden>{labels.qrDialogTitle}</DialogDescription>
 							</div>
 							{qrBillDisplay && qrBill && (
 								<div className="flex min-w-0 flex-1 items-start justify-end">
@@ -171,7 +169,7 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 					{qrBillDisplay && qrBill ? (
 						<div className="flex flex-col gap-6" data-testid="wire-subscription-qr-dialog">
 							<QrBillPaymentCard display={qrBillDisplay} paymentTypeLabel={tWizard('stepQrBill.paymentTypeStandingOrder')} />
-							<Button type="button" className="w-full" onClick={() => setQrDialogOpen(false)}>
+							<Button type="button" onClick={() => setQrDialogOpen(false)}>
 								{labels.close}
 							</Button>
 						</div>

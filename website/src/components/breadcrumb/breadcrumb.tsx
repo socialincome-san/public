@@ -1,14 +1,33 @@
 import type { BreadcrumbLink } from '@/components/breadcrumb/build-breadcrumb-links';
 import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { Breadcrumb as BreadcrumbNav } from '@socialincome/design-system/breadcrumb/breadcrumb';
-import { cn } from '@socialincome/design-system/cn';
 
 export type { BreadcrumbLink as BreadcrumbLinkType } from '@/components/breadcrumb/build-breadcrumb-links';
 
-export const Breadcrumb = ({ links, className }: { links: BreadcrumbLink[]; className?: string }) => {
+type Props = {
+	links: BreadcrumbLink[];
+	/**
+	 * page: its own padded block at the top of a page.
+	 * section: aligned to the content width, spaced by the surrounding layout.
+	 * inline: just the links, inside an existing content column.
+	 */
+	layout?: 'page' | 'section' | 'inline';
+};
+
+export const Breadcrumb = ({ links, layout = 'page' }: Props) => {
+	if (layout === 'inline') {
+		return <BreadcrumbNav links={links} />;
+	}
+
 	return (
-		<BlockWrapper className={cn('py-9', className)} disableMarginTop={true} disableMarginBottom={true}>
-			<BreadcrumbNav links={links} />
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			{layout === 'page' ? (
+				<div className="py-9">
+					<BreadcrumbNav links={links} />
+				</div>
+			) : (
+				<BreadcrumbNav links={links} />
+			)}
 		</BlockWrapper>
 	);
 };

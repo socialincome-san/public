@@ -18,7 +18,7 @@ export const CreateCampaignButton = ({ label, labels, lang, region }: Props) => 
 		lang={lang}
 		region={region}
 		trigger={({ openDialog }) => (
-			<Button type="button" className="rounded-full px-5 text-sm font-bold lg:h-11" onClick={openDialog}>
+			<Button type="button" onClick={openDialog}>
 				{label}
 			</Button>
 		)}

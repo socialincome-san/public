@@ -28,7 +28,7 @@ export const ProgramsOverviewPage = async ({ overview, lang, region, searchParam
 
 	return (
 		<div className="flex flex-col gap-8 py-8">
-			<Breadcrumb links={breadcrumbLinks} className="py-0" />
+			<Breadcrumb links={breadcrumbLinks} layout="section" />
 			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 				<CmsHeader title={title} text={text} />
 				<section className="mt-8 flex flex-col gap-6">

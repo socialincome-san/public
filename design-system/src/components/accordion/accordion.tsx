@@ -1,29 +1,45 @@
 'use client';
 
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { ChevronDownIcon } from 'lucide-react';
 import * as React from 'react';
 import { cn } from '../../cn';
+import { type WithoutClassName } from '../../without-class-name';
 
-const Accordion = ({ ...props }: React.ComponentProps<typeof AccordionPrimitive.Root>) => {
+const Accordion = (props: WithoutClassName<React.ComponentProps<typeof AccordionPrimitive.Root>>) => {
 	return <AccordionPrimitive.Root data-slot="accordion" {...props} />;
 };
 
-const AccordionItem = ({ className, ...props }: React.ComponentProps<typeof AccordionPrimitive.Item>) => {
-	return (
-		<AccordionPrimitive.Item data-slot="accordion-item" className={cn('border-b last:border-b-0', className)} {...props} />
-	);
+const accordionItemVariants = cva('', {
+	variants: {
+		variant: {
+			default: 'border-b last:border-b-0',
+			// A self-contained box, e.g. a group of fields inside a form
+			boxed: 'border-border bg-muted rounded-xl border px-2',
+		},
+	},
+	defaultVariants: {
+		variant: 'default',
+	},
+});
+
+const AccordionItem = ({
+	variant,
+	...props
+}: WithoutClassName<React.ComponentProps<typeof AccordionPrimitive.Item>> & VariantProps<typeof accordionItemVariants>) => {
+	return <AccordionPrimitive.Item data-slot="accordion-item" className={accordionItemVariants({ variant })} {...props} />;
 };
 
-const AccordionTrigger = ({ className, children, ...props }: React.ComponentProps<typeof AccordionPrimitive.Trigger>) => {
+const AccordionTrigger = ({
+	children,
+	...props
+}: WithoutClassName<React.ComponentProps<typeof AccordionPrimitive.Trigger>>) => {
 	return (
 		<AccordionPrimitive.Header className="flex">
 			<AccordionPrimitive.Trigger
 				data-slot="accordion-trigger"
-				className={cn(
-					'focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium outline-hidden transition-all hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180',
-					className,
-				)}
+				className="focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium outline-hidden transition-all hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180"
 				{...props}
 			>
 				{children}
@@ -33,14 +49,23 @@ const AccordionTrigger = ({ className, children, ...props }: React.ComponentProp
 	);
 };
 
-const AccordionContent = ({ className, children, ...props }: React.ComponentProps<typeof AccordionPrimitive.Content>) => {
+// With forceMount the content stays mounted while closed (e.g. to keep form fields registered), so it is hidden instead
+const AccordionContent = ({
+	children,
+	forceMount,
+	...props
+}: WithoutClassName<React.ComponentProps<typeof AccordionPrimitive.Content>>) => {
 	return (
 		<AccordionPrimitive.Content
 			data-slot="accordion-content"
-			className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm"
+			forceMount={forceMount}
+			className={cn(
+				'data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm',
+				forceMount && 'data-[state=closed]:hidden',
+			)}
 			{...props}
 		>
-			<div className={cn('pt-0 pb-4', className)}>{children}</div>
+			<div className="pt-0 pb-4">{children}</div>
 		</AccordionPrimitive.Content>
 	);
 };

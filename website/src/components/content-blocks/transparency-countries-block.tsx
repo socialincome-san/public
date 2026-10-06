@@ -82,7 +82,7 @@ export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
 	return (
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<section>
-				<Card variant="noPadding" className="overflow-hidden px-6 py-8 sm:px-10">
+				<Card>
 					<CountriesSectionClient
 						sectionTitle={translator.t('transparency-page.inflows.title-name')}
 						headlineTemplate={translator.t('transparency-page.countries.headline', {

@@ -17,7 +17,7 @@ export const ProgressCell = <TData extends RowData, TValue>({ ctx }: CellType<TD
 
 	return (
 		<div className="flex items-center gap-2">
-			<Progress value={percent} variant={variant} className="flex-1" />
+			<Progress value={percent} variant={variant} />
 			<span className="whitespace-nowrap">
 				{payoutsReceived} / {payoutsTotal}
 			</span>

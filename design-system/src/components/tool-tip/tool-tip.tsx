@@ -1,8 +1,9 @@
 'use client';
 
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
-import { cn } from '../../cn';
+import { type WithoutClassName } from '../../without-class-name';
 
 type TooltipContextValue = {
 	open: boolean;
@@ -55,7 +56,11 @@ const Tooltip = ({
 	);
 };
 
-const TooltipTrigger = ({ onClick, onPointerDown, ...props }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) => {
+const TooltipTrigger = ({
+	onClick,
+	onPointerDown,
+	...props
+}: WithoutClassName<React.ComponentProps<typeof TooltipPrimitive.Trigger>>) => {
 	const tooltip = React.useContext(TooltipContext);
 
 	return (
@@ -79,21 +84,36 @@ const TooltipTrigger = ({ onClick, onPointerDown, ...props }: React.ComponentPro
 	);
 };
 
+// z-[110] keeps tooltips above dialogs and the mobile navigation overlay
+const tooltipContentVariants = cva(
+	'bg-foreground text-background animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-[110] w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md leading-snug text-balance',
+	{
+		variants: {
+			size: {
+				default: 'max-w-xs px-3 py-1.5 text-xs',
+				// For longer explanations
+				lg: 'max-w-[min(36rem,calc(100vw-2rem))] px-4 py-3 text-sm',
+			},
+		},
+		defaultVariants: {
+			size: 'default',
+		},
+	},
+);
+
 const TooltipContent = ({
-	className,
+	size,
 	sideOffset = 0,
 	children,
 	...props
-}: React.ComponentProps<typeof TooltipPrimitive.Content>) => {
+}: WithoutClassName<React.ComponentProps<typeof TooltipPrimitive.Content>> &
+	VariantProps<typeof tooltipContentVariants>) => {
 	return (
 		<TooltipPrimitive.Portal>
 			<TooltipPrimitive.Content
 				data-slot="tooltip-content"
 				sideOffset={sideOffset}
-				className={cn(
-					'bg-foreground text-background animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-xs text-balance',
-					className,
-				)}
+				className={tooltipContentVariants({ size })}
 				{...props}
 			>
 				{children}

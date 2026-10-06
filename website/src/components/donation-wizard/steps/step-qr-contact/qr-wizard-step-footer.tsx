@@ -17,7 +17,7 @@ type QrWizardStepFooterProps = {
 	onContinue: () => void;
 	continueLabel: string;
 	continueDisabled?: boolean;
-	continueClassName?: string;
+	continueVariant?: 'default' | 'foreground';
 	continueTestId?: string;
 	showBack?: boolean;
 	summary?: Summary;
@@ -28,7 +28,7 @@ export const QrWizardStepFooter = ({
 	onContinue,
 	continueLabel,
 	continueDisabled = false,
-	continueClassName,
+	continueVariant = 'default',
 	continueTestId = 'donation-wizard-continue',
 	showBack = true,
 	summary,
@@ -49,24 +49,24 @@ export const QrWizardStepFooter = ({
 			<div
 				className={cn(
 					'flex gap-3',
-					showBack ? 'flex-col sm:flex-row sm:items-center sm:justify-between' : 'flex-col sm:items-end',
+					showBack ? 'flex-col-reverse sm:flex-row sm:items-center sm:justify-between' : 'flex-col sm:items-end',
 				)}
 			>
+				{showBack && onBack ? (
+					<Button type="button" data-testid="donation-wizard-back" variant="outline" onClick={onBack}>
+						<ChevronLeft className="size-4" aria-hidden />
+						{t('stepPlan.back')}
+					</Button>
+				) : null}
 				<Button
 					type="button"
 					data-testid={continueTestId}
-					className={cn(showBack ? 'sm:order-2' : 'sm:ml-auto')}
+					variant={continueVariant}
 					disabled={continueDisabled}
 					onClick={onContinue}
 				>
 					{continueLabel}
 				</Button>
-				{showBack && onBack ? (
-					<Button type="button" data-testid="donation-wizard-back" variant="outline" className="sm:order-1" onClick={onBack}>
-						<ChevronLeft className="size-4" aria-hidden />
-						{t('stepPlan.back')}
-					</Button>
-				) : null}
 			</div>
 		);
 	}
@@ -80,11 +80,17 @@ export const QrWizardStepFooter = ({
 
 			<div
 				className={cn(
-					'flex gap-3 md:flex-row md:items-center',
-					showBack ? 'flex-col md:justify-between' : 'flex-col md:justify-end',
+					'flex flex-col-reverse gap-3 md:flex-row md:items-center',
+					showBack ? 'md:justify-between' : 'md:justify-end',
 				)}
 			>
-				<div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-4 md:order-2">
+				{showBack && onBack ? (
+					<Button type="button" data-testid="donation-wizard-back" variant="outline" onClick={onBack}>
+						<ChevronLeft className="size-4" aria-hidden />
+						{t('stepPlan.back')}
+					</Button>
+				) : null}
+				<div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
 					<div className="hidden min-w-0 items-center gap-1.5 text-sm md:flex">
 						<span className="shrink-0">{t('stepPayment.your-donation')}</span>
 						{amountLine}
@@ -92,20 +98,13 @@ export const QrWizardStepFooter = ({
 					<Button
 						type="button"
 						data-testid={continueTestId}
-						variant="default"
-						className={cn('text-center whitespace-normal sm:whitespace-nowrap', continueClassName)}
+						variant={continueVariant}
 						disabled={continueDisabled}
 						onClick={onContinue}
 					>
 						{continueLabel}
 					</Button>
 				</div>
-				{showBack && onBack ? (
-					<Button type="button" data-testid="donation-wizard-back" variant="outline" className="md:order-1" onClick={onBack}>
-						<ChevronLeft className="size-4" aria-hidden />
-						{t('stepPlan.back')}
-					</Button>
-				) : null}
 			</div>
 		</div>
 	);

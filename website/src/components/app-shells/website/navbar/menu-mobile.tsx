@@ -181,14 +181,12 @@ export const MenuMobile: FC<Props> = ({ sessions, scope, menu, lang, region }) =
 							{!session && (
 								<OpenDonationWizardButton
 									label={donateTranslator?.t('donation-form.donate-now') ?? 'Donate now'}
-									className="h-11 rounded-full px-4 text-sm font-medium"
+									size="md"
 									onBeforeOpen={() => handleOpenChange(false)}
 								/>
 							)}
 							<div className="flex min-w-0 items-center gap-2">
-								{scope === 'website' && (
-									<LocaleCurrencySwitcher lang={lang} region={region} className="border-input h-11 border px-3" />
-								)}
+								{scope === 'website' && <LocaleCurrencySwitcher lang={lang} region={region} variant="outline" />}
 								{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
 							</div>
 						</div>

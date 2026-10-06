@@ -25,7 +25,7 @@ export const PlanTierCardContent = ({
 	benefits,
 }: Props) => (
 	<>
-		<div className="text-foreground mb-2.5 flex items-center gap-x-1.5">
+		<div className="text-foreground mb-2.5 flex items-center justify-between gap-x-1.5">
 			<div className="flex min-w-0 items-center gap-x-1.5">
 				<span className="text-lg leading-none font-medium whitespace-nowrap">
 					{currency} {amount}
@@ -35,10 +35,7 @@ export const PlanTierCardContent = ({
 				) : null}
 			</div>
 			{planLabel ? (
-				<Badge
-					variant={badgeVariant === 'preferred' ? 'verified' : 'default'}
-					className="ml-auto shrink-0 gap-0.5 px-2 py-0.5 text-[10px]"
-				>
+				<Badge variant={badgeVariant === 'preferred' ? 'verified' : 'default'} size="sm">
 					{planLabel}
 					{badgeVariant === 'plan' &&
 						Array.from({ length: heartCount }).map((_, index) => (

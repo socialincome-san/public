@@ -38,7 +38,7 @@ export const PersonProfileHeader = ({ person, name, portraitSrc, roleLabels }: P
 
 			<div className="min-w-0 flex-1 space-y-4 text-center sm:text-left">
 				<div className="space-y-2">
-					<SectionHeading as="h1" size={1} align="left" bold className="text-foreground mb-0 leading-tight md:mb-0">
+					<SectionHeading as="h1" size={1} align="left" bold>
 						{name}
 					</SectionHeading>
 					{roleLabel && <p className="text-muted-foreground text-base sm:text-lg">{roleLabel}</p>}

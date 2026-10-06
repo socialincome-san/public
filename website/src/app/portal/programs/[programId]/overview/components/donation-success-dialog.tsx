@@ -1,7 +1,14 @@
 'use client';
 
 import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/dialog/dialog';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export const DonationSuccessDialog = () => {
@@ -19,13 +26,13 @@ export const DonationSuccessDialog = () => {
 
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent>
+			<DialogContent size="alert">
 				<DialogHeader>
 					<DialogTitle>Thank you for your donation</DialogTitle>
+					<DialogDescription>
+						Your payment was successful. The contribution will be reflected in the program overview shortly.
+					</DialogDescription>
 				</DialogHeader>
-				<p className="text-muted-foreground text-sm">
-					Your payment was successful. The contribution will be reflected in the program overview shortly.
-				</p>
 				<DialogFooter>
 					<Button onClick={() => handleOpenChange(false)}>Close</Button>
 				</DialogFooter>

@@ -56,10 +56,10 @@ export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 					) : null}
 				</div>
 				<div className="relative min-w-0 lg:col-span-2">
-					<Carousel opts={{ align: 'start' }}>
-						<CarouselContent className="-ml-6">
+					<Carousel opts={{ align: 'start' }} gap="lg">
+						<CarouselContent>
 							{persons.map((person) => (
-								<CarouselItem key={person.uuid} className="basis-[305px] pl-6">
+								<CarouselItem key={person.uuid} size="card">
 									<PersonCard person={person} roleLabels={roleLabels} />
 								</CarouselItem>
 							))}

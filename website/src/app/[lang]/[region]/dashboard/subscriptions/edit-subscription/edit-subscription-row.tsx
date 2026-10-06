@@ -69,7 +69,7 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 					{labels.perMonth} · {labels.since} {formatDateLocale(subscription.createdAt, lang)}
 				</span>
 			</p>
-			<div className="flex flex-wrap items-center gap-3">
+			<div className="flex flex-wrap items-center justify-between gap-3 sm:justify-start">
 				<SubscriptionPaymentMethodDisplay
 					paymentDisplay={{
 						type: 'stripe',
@@ -82,7 +82,6 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 					type="button"
 					variant="outline"
 					size="sm"
-					className="bg-background ml-auto sm:ml-0"
 					onClick={() => send({ type: 'OPEN', subscription: openInput() })}
 					aria-haspopup="dialog"
 					aria-expanded={isOpen}

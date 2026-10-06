@@ -3,10 +3,9 @@
 type Props = {
 	width?: number;
 	height?: number;
-	className?: string;
 };
 
-export const AnimatedSILogoIcon = ({ width = 64, height = 37, className = '' }: Props) => {
+export const AnimatedSILogoIcon = ({ width = 64, height = 37 }: Props) => {
 	return (
 		<>
 			<style>{`
@@ -24,7 +23,6 @@ export const AnimatedSILogoIcon = ({ width = 64, height = 37, className = '' }: 
 				height={height}
 				viewBox="0 -2 65 43"
 				fill="none"
-				className={className}
 				style={{ overflow: 'visible' }}
 				aria-label="Social Income loading logo"
 			>

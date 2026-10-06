@@ -1,20 +1,26 @@
 'use client';
 
+import { cva, type VariantProps } from 'class-variance-authority';
 import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-react';
 import { ChevronRightIcon } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '../../cn';
+import { type WithoutClassName } from '../../without-class-name';
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
 type CarouselOptions = UseCarouselParameters[0];
 type CarouselPlugin = UseCarouselParameters[1];
 
+type CarouselGap = 'none' | 'default' | 'lg';
+
 type CarouselProps = {
 	opts?: CarouselOptions;
 	plugins?: CarouselPlugin;
 	orientation?: 'horizontal' | 'vertical';
+	/** Space between slides */
+	gap?: CarouselGap;
 	setApi?: (api: CarouselApi) => void;
 };
 
@@ -39,8 +45,8 @@ function useCarousel() {
 	return context;
 }
 
-const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & CarouselProps>(
-	({ orientation = 'horizontal', opts, setApi, plugins, className, children, ...props }, ref) => {
+const Carousel = React.forwardRef<HTMLDivElement, WithoutClassName<React.HTMLAttributes<HTMLDivElement>> & CarouselProps>(
+	({ orientation = 'horizontal', gap = 'default', opts, setApi, plugins, children, ...props }, ref) => {
 		const [carouselRef, api] = useEmblaCarousel(
 			{
 				...opts,
@@ -120,6 +126,7 @@ const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 					api: api,
 					opts,
 					orientation: orientation,
+					gap,
 					scrollPrev,
 					scrollNext,
 					canScrollPrev,
@@ -129,7 +136,7 @@ const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 				<div
 					ref={ref}
 					onKeyDownCapture={handleKeyDown}
-					className={cn('relative', className)}
+					className="relative"
 					role="region"
 					aria-roledescription="carousel"
 					{...props}
@@ -142,53 +149,80 @@ const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 );
 Carousel.displayName = 'Carousel';
 
-type CarouselContentProps = React.HTMLAttributes<HTMLDivElement> & {
+// The track pulls back by the slide padding so the first slide stays aligned with the content edge
+const trackGapClasses: Record<'horizontal' | 'vertical', Record<CarouselGap, string>> = {
+	horizontal: { none: '', default: '-ml-4', lg: '-ml-6' },
+	vertical: { none: '', default: '-mt-4', lg: '-mt-6' },
+};
+
+const slideGapClasses: Record<'horizontal' | 'vertical', Record<CarouselGap, string>> = {
+	horizontal: { none: '', default: 'pl-4', lg: 'pl-6' },
+	vertical: { none: '', default: 'pt-4', lg: 'pt-6' },
+};
+
+type CarouselContentProps = WithoutClassName<React.HTMLAttributes<HTMLDivElement>> & {
 	scrollFade?: boolean;
 };
 
-const CarouselContent = React.forwardRef<HTMLDivElement, CarouselContentProps>(
-	({ className, scrollFade = false, ...props }, ref) => {
-		const { carouselRef, orientation, canScrollNext } = useCarousel();
+const CarouselContent = React.forwardRef<HTMLDivElement, CarouselContentProps>(({ scrollFade = false, ...props }, ref) => {
+	const { carouselRef, orientation = 'horizontal', gap = 'default', canScrollNext } = useCarousel();
 
-		return (
-			<div
-				ref={carouselRef}
-				className={cn('overflow-hidden', scrollFade && orientation === 'horizontal' && canScrollNext && 'scroll-fade-e')}
-			>
-				<div
-					ref={ref}
-					className={cn('flex', orientation === 'horizontal' ? '-ml-4' : '-mt-4 flex-col', className)}
-					{...props}
-				/>
-			</div>
-		);
-	},
-);
-CarouselContent.displayName = 'CarouselContent';
-
-const CarouselItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-	({ className, ...props }, ref) => {
-		const { orientation } = useCarousel();
-
-		return (
+	return (
+		<div
+			ref={carouselRef}
+			className={cn('overflow-hidden', scrollFade && orientation === 'horizontal' && canScrollNext && 'scroll-fade-e')}
+		>
 			<div
 				ref={ref}
-				role="group"
-				aria-roledescription="slide"
-				className={cn('min-w-0 shrink-0 grow-0 basis-full', orientation === 'horizontal' ? 'pl-4' : 'pt-4', className)}
+				className={cn('flex', orientation === 'vertical' && 'flex-col', trackGapClasses[orientation][gap])}
 				{...props}
 			/>
-		);
+		</div>
+	);
+});
+CarouselContent.displayName = 'CarouselContent';
+
+const carouselItemVariants = cva('min-w-0 shrink-0 grow-0', {
+	variants: {
+		size: {
+			full: 'basis-full',
+			// One slide in focus with the neighbours peeking in
+			featured: 'basis-full md:basis-4/5 lg:basis-3/5',
+			card: 'basis-[305px]',
+			'card-sm': 'basis-[260px]',
+			// Several small items such as logos
+			tile: 'basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5',
+		},
 	},
-);
+	defaultVariants: {
+		size: 'full',
+	},
+});
+
+const CarouselItem = React.forwardRef<
+	HTMLDivElement,
+	WithoutClassName<React.HTMLAttributes<HTMLDivElement>> & VariantProps<typeof carouselItemVariants>
+>(({ size, ...props }, ref) => {
+	const { orientation = 'horizontal', gap = 'default' } = useCarousel();
+
+	return (
+		<div
+			ref={ref}
+			role="group"
+			aria-roledescription="slide"
+			className={cn(carouselItemVariants({ size }), slideGapClasses[orientation][gap])}
+			{...props}
+		/>
+	);
+});
 CarouselItem.displayName = 'CarouselItem';
 
-type CarouselScrollNextButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+type CarouselScrollNextButtonProps = WithoutClassName<React.ButtonHTMLAttributes<HTMLButtonElement>> & {
 	'aria-label': string;
 };
 
 const CarouselScrollNextButton = React.forwardRef<HTMLButtonElement, CarouselScrollNextButtonProps>(
-	({ className, disabled, onClick, ...props }, ref) => {
+	({ disabled, onClick, ...props }, ref) => {
 		const { scrollNext, canScrollNext } = useCarousel();
 		const isDisabled = disabled ?? !canScrollNext;
 
@@ -206,10 +240,7 @@ const CarouselScrollNextButton = React.forwardRef<HTMLButtonElement, CarouselScr
 					scrollNext();
 					onClick?.(event);
 				}}
-				className={cn(
-					'bg-primary-foreground absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full shadow-[0px_4px_28px_0px_rgba(0,30,101,0.12)] disabled:hidden',
-					className,
-				)}
+				className="bg-primary-foreground absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full shadow-[0px_4px_28px_0px_rgba(0,30,101,0.12)] disabled:hidden"
 				{...props}
 			>
 				<ChevronRightIcon className="size-5" aria-hidden="true" />

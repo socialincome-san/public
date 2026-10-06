@@ -165,7 +165,7 @@ export const CampaignDonationForm = ({
 				<Button
 					type="button"
 					data-testid="donation-wizard-amount-continue"
-					className="w-full"
+					fullWidth
 					disabled={!values.isValid}
 					onClick={() => {
 						if (!form.isValid) {

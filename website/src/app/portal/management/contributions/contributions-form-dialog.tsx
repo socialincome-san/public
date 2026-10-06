@@ -36,14 +36,14 @@ export const ContributionFormDialog = ({
 
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
+			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>{dialogTitle}</DialogTitle>
 				</DialogHeader>
 				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+						<AlertDescription>{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 

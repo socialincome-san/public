@@ -18,10 +18,10 @@ const SelectableCardExample = () => {
 
 	return (
 		<div className="flex w-80 flex-col gap-3">
-			<SelectableCard selected={selected === 'card'} onSelect={() => setSelected('card')} className="p-4">
+			<SelectableCard selected={selected === 'card'} onSelect={() => setSelected('card')}>
 				Card
 			</SelectableCard>
-			<SelectableCard selected={selected === 'bank'} onSelect={() => setSelected('bank')} className="p-4">
+			<SelectableCard selected={selected === 'bank'} onSelect={() => setSelected('bank')}>
 				Bank transfer
 			</SelectableCard>
 		</div>

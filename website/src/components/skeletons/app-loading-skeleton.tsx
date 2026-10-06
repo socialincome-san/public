@@ -33,7 +33,9 @@ export const AppLoadingSkeleton = ({ message, variant = 'card' }: AppLoadingSkel
 			data-testid="app-loading-skeleton"
 		>
 			<div className="flex flex-col items-center gap-3 px-6 text-center">
-				<AnimatedSILogoIcon className="text-primary h-9 w-auto" />
+				<span className="text-primary">
+					<AnimatedSILogoIcon width={62} height={36} />
+				</span>
 				<p className="text-muted-foreground text-sm">{message ?? defaultMessage}</p>
 			</div>
 		</div>

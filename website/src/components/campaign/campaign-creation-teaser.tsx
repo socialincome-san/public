@@ -42,9 +42,11 @@ export const CampaignCreationTeaser = ({ translations, labels, lang, region }: P
 					<div className="relative z-10 flex flex-col gap-5">
 						<h2 className="text-4xl leading-none font-medium text-pretty text-white">{translations.title}</h2>
 						<p className="max-w-[488px] text-base leading-6 text-white">{translations.description}</p>
-						<Button type="button" variant="secondary" className="w-fit rounded-full" onClick={openDialog}>
-							{translations.button}
-						</Button>
+						<div>
+							<Button type="button" variant="secondary" onClick={openDialog}>
+								{translations.button}
+							</Button>
+						</div>
 					</div>
 				</section>
 			)}

@@ -10,22 +10,21 @@ const slugifyCountry = (name: string): string => {
 
 type CountryFlagProps = {
 	country: string;
-	size?: 'sm' | 'lg';
+	/** Inline scales with the surrounding text (1em) */
+	size?: 'sm' | 'lg' | 'inline';
 	decorative?: boolean;
-	className?: string;
 };
 
-const CountryFlagImage = ({
-	country,
-	size,
-	decorative,
-	className,
-}: Required<Omit<CountryFlagProps, 'className'>> & {
-	className?: string;
-}) => {
+const containerSizeClasses = {
+	sm: 'size-4 text-[10px]',
+	lg: 'size-9 text-[12px]',
+	inline: 'size-[1em] text-[length:inherit]',
+};
+
+const CountryFlagImage = ({ country, size, decorative }: Required<CountryFlagProps>) => {
 	const [hasError, setHasError] = useState(false);
 
-	const containerSize = size === 'sm' ? 'size-4 text-[10px]' : 'size-9 text-[12px]';
+	const containerSize = containerSizeClasses[size];
 
 	const slug = slugifyCountry(country);
 
@@ -33,9 +32,8 @@ const CountryFlagImage = ({
 		return (
 			<span
 				className={cn(
-					'bg-muted text-muted-foreground inline-flex items-center justify-center rounded-full uppercase',
+					'bg-muted text-muted-foreground inline-flex shrink-0 items-center justify-center rounded-full uppercase',
 					containerSize,
-					className,
 				)}
 				aria-hidden={decorative || undefined}
 			>
@@ -46,7 +44,7 @@ const CountryFlagImage = ({
 
 	return (
 		<span
-			className={cn('inline-flex overflow-hidden rounded-full', containerSize, className)}
+			className={cn('inline-flex shrink-0 overflow-hidden rounded-full', containerSize)}
 			aria-hidden={decorative || undefined}
 		>
 			<Image
@@ -61,6 +59,6 @@ const CountryFlagImage = ({
 	);
 };
 
-export const CountryFlag = ({ country, size = 'lg', decorative = false, className }: CountryFlagProps) => {
-	return <CountryFlagImage key={country} country={country} size={size} decorative={decorative} className={className} />;
+export const CountryFlag = ({ country, size = 'lg', decorative = false }: CountryFlagProps) => {
+	return <CountryFlagImage key={country} country={country} size={size} decorative={decorative} />;
 };

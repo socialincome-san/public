@@ -60,14 +60,14 @@ export default function LocalPartnersTable({
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
+				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{partnerId ? 'Edit' : 'Add'} local partner</DialogTitle>
 					</DialogHeader>
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 					<LocalPartnersForm

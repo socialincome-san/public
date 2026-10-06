@@ -58,7 +58,7 @@ export const DonationGlobeBlock = async ({ blok, lang }: Props) => {
 			<div className="flex flex-col gap-8 md:flex-row md:items-center md:gap-14">
 				<div className="flex flex-col justify-center space-y-2 md:w-1/2">
 					{blok.title && (
-						<SectionHeading align="left" className="mb-0 whitespace-pre-line md:mb-0">
+						<SectionHeading align="left">
 							<StoryblokMarkdown>{blok.title}</StoryblokMarkdown>
 						</SectionHeading>
 					)}

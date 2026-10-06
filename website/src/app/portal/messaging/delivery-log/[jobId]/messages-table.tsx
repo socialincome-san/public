@@ -67,9 +67,9 @@ export const MessagesTable = ({ jobId, messages, twilioAccountSid }: MessagesTab
 										<div>{m.contactName}</div>
 										<div className="text-muted-foreground text-xs">{m.phoneNumber ?? '—'}</div>
 									</TableCell>
-									<TableCell className="uppercase">
+									<TableCell>
 										{m.channelUsed ?? '—'}
-										{m.fellBack && <span className="text-muted-foreground ml-1 normal-case">(fallback)</span>}
+										{m.fellBack && <span className="text-muted-foreground ml-1">(fallback)</span>}
 									</TableCell>
 									<TableCell>
 										<div className="flex items-center gap-2">
@@ -92,7 +92,9 @@ export const MessagesTable = ({ jobId, messages, twilioAccountSid }: MessagesTab
 										{m.twilioErrorMessage && <div className="text-muted-foreground text-xs">{m.twilioErrorMessage}</div>}
 										{!m.twilioErrorCode && !m.twilioErrorMessage && <span className="text-muted-foreground">—</span>}
 									</TableCell>
-									<TableCell className="text-muted-foreground text-sm">{formatDate(m.createdAt)}</TableCell>
+									<TableCell>
+										<span className="text-muted-foreground">{formatDate(m.createdAt)}</span>
+									</TableCell>
 								</TableRow>
 							);
 						})}

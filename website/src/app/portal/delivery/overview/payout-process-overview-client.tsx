@@ -110,7 +110,6 @@ const PayoutProcessGrid = ({
 											</div>
 											<Button
 												data-testid={`start-payout-process-${option.id}`}
-												className="w-full"
 												disabled={!canStartProcess}
 												onClick={() => onStartOption(option)}
 											>

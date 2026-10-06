@@ -38,17 +38,18 @@ export const CampaignSubmissionFooter = ({
 				) : null}
 			</div>
 
-			<CampaignSubmissionStepIndicator
-				currentStep={currentStep}
-				steps={visibleSteps}
-				formStepsLabel={labels.formSteps}
-				stepLabel={labels.stepLabel}
-				programLabel={labels.program}
-				detailsLabel={labels.details}
-				aboutLabel={labels.about}
-				personalLabel={labels.personal}
-				className="hidden sm:flex"
-			/>
+			<div className="hidden sm:block">
+				<CampaignSubmissionStepIndicator
+					currentStep={currentStep}
+					steps={visibleSteps}
+					formStepsLabel={labels.formSteps}
+					stepLabel={labels.stepLabel}
+					programLabel={labels.program}
+					detailsLabel={labels.details}
+					aboutLabel={labels.about}
+					personalLabel={labels.personal}
+				/>
+			</div>
 
 			<div className="flex min-w-0 flex-1 justify-end">
 				{isLastStep ? (

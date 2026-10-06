@@ -41,11 +41,10 @@ export const CancelReasonStep = ({
 						onSelectReason(value);
 					}
 				}}
-				className="gap-4"
 				aria-label={labels.heading}
 			>
 				{SUBSCRIPTION_CANCEL_REASONS.map((reason) => (
-					<Label key={reason} htmlFor={`cancel-reason-${reason}`} className="flex cursor-pointer items-center gap-3">
+					<Label key={reason} htmlFor={`cancel-reason-${reason}`}>
 						<RadioGroupItem id={`cancel-reason-${reason}`} value={reason} data-testid={`cancel-reason-${reason}`} />
 						<span className="text-sm">{reasonLabels[reason]}</span>
 					</Label>
@@ -61,7 +60,7 @@ export const CancelReasonStep = ({
 			<Button
 				type="button"
 				variant="destructive"
-				className="w-full"
+				fullWidth
 				disabled={!selectedReason || isSubmitting}
 				onClick={onConfirm}
 				aria-busy={isSubmitting}

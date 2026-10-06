@@ -3,8 +3,9 @@
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import * as React from 'react';
 import { cn } from '../../cn';
+import { type WithoutClassName } from '../../without-class-name';
 
-const Switch = ({ className, ...props }: React.ComponentProps<typeof SwitchPrimitive.Root>) => {
+const Switch = (props: WithoutClassName<React.ComponentProps<typeof SwitchPrimitive.Root>>) => {
 	return (
 		<SwitchPrimitive.Root
 			data-slot="switch"
@@ -15,7 +16,6 @@ const Switch = ({ className, ...props }: React.ComponentProps<typeof SwitchPrimi
 				'disabled:cursor-not-allowed disabled:opacity-50',
 				'bg-input',
 				'data-[state=checked]:bg-[linear-gradient(to_right,hsl(var(--gradient-button-from)),hsl(var(--gradient-button-to)))]',
-				className,
 			)}
 			{...props}
 		>

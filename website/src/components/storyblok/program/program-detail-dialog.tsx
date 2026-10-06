@@ -1,17 +1,13 @@
 'use client';
 
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
-import { Button } from '@socialincome/design-system/button/button';
-import { cn } from '@socialincome/design-system/cn';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
-import { X } from 'lucide-react';
+import { Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
 import { type ReactNode, useState } from 'react';
 
 type Props = {
 	title: string;
 	triggerLabel: string;
 	headerActions?: ReactNode;
-	bodyClassName?: string;
 	closeAriaLabel?: string;
 	onOpenChange?: (open: boolean) => void;
 	children: ReactNode;
@@ -21,7 +17,6 @@ export const ProgramDetailDialog = ({
 	title,
 	triggerLabel,
 	headerActions,
-	bodyClassName,
 	closeAriaLabel = 'Close',
 	onOpenChange,
 	children,
@@ -38,29 +33,19 @@ export const ProgramDetailDialog = ({
 			<ProgramDetailPill label={triggerLabel} isOpen={isOpen} onClick={() => handleOpenChange(true)} />
 
 			<Dialog open={isOpen} onOpenChange={handleOpenChange}>
-				<DialogContent
-					variant="large"
-					hideCloseButton
-					className="w-site-width flex max-h-[85vh] max-w-none flex-col gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-none"
-				>
-					<DialogHeader className="border-border bg-background sticky top-0 z-10 mx-0 flex shrink-0 items-start gap-4 space-y-0 rounded-t-3xl border-b p-4 lg:p-6">
-						<DialogTitle className="mt-2 min-w-0 text-2xl leading-none font-medium">{title}</DialogTitle>
-						<div className="ml-auto flex flex-col-reverse items-end gap-2 sm:flex-row sm:items-center">
-							{headerActions}
-							<Button
-								type="button"
-								size="icon"
-								variant="ghost"
-								className="size-8 shrink-0 rounded-full"
-								onClick={() => handleOpenChange(false)}
-								aria-label={closeAriaLabel}
-							>
-								<X aria-hidden="true" />
-							</Button>
+				<DialogContent size="full" closeLabel={closeAriaLabel}>
+					<DialogHeader>
+						<div className="flex items-start justify-between gap-4">
+							<DialogTitle size="lg">{title}</DialogTitle>
+							{headerActions ? (
+								<div className="flex flex-col-reverse items-end gap-2 sm:flex-row sm:items-center">{headerActions}</div>
+							) : null}
 						</div>
 					</DialogHeader>
 
-					<div className={cn('overflow-y-auto p-4 lg:p-6', bodyClassName)}>{children}</div>
+					<DialogBody>
+						<div className="flex flex-col gap-8">{children}</div>
+					</DialogBody>
 				</DialogContent>
 			</Dialog>
 		</>

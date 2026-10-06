@@ -79,7 +79,6 @@ export const ProgramRecipientsDialog = ({
 			title={dialogTitle}
 			triggerLabel={viewDemographicsLabel}
 			closeAriaLabel={t('program-detail-page.close')}
-			bodyClassName="min-w-0"
 			onOpenChange={setIsOpen}
 			headerActions={
 				<Button asChild size="sm" variant="outline">
@@ -94,17 +93,18 @@ export const ProgramRecipientsDialog = ({
 			) : hasError ? (
 				<div className="text-destructive border-destructive/20 bg-destructive-foreground flex flex-col gap-4 rounded-md border p-4">
 					<p className="font-medium">{t('program-detail-page.load-recipients-error')}</p>
-					<Button
-						type="button"
-						variant="outline"
-						className="text-destructive border-destructive/30 bg-card hover:bg-destructive-foreground self-start"
-						onClick={() => {
-							setHasError(false);
-							setRetryKey((current) => current + 1);
-						}}
-					>
-						{t('program-detail-page.try-again')}
-					</Button>
+					<div>
+						<Button
+							type="button"
+							variant="destructive-outline"
+							onClick={() => {
+								setHasError(false);
+								setRetryKey((current) => current + 1);
+							}}
+						>
+							{t('program-detail-page.try-again')}
+						</Button>
+					</div>
 				</div>
 			) : rows && totalCount !== null ? (
 				<ProgramRecipientsTable rows={rows} totalCount={totalCount} />

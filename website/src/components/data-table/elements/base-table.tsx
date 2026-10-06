@@ -129,12 +129,12 @@ export const BaseTable = <TData extends RowData>({
 	return (
 		<div className={cn('flex flex-col', stableTableMinHeightClass)} data-testid="data-table-base">
 			<div className="overflow-hidden rounded-none">
-				<Table className="w-full border-separate border-spacing-0">
+				<Table size="lg">
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id} className="bg-accent">
+							<TableRow key={headerGroup.id}>
 								{headerGroup.headers.map((header) => (
-									<TableHead key={header.id} className="border-b font-medium">
+									<TableHead key={header.id}>
 										{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
 									</TableHead>
 								))}
@@ -144,25 +144,16 @@ export const BaseTable = <TData extends RowData>({
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									className={cn(
-										'group h-16 border-b transition-colors duration-200 ease-out',
-										onRowClick && 'hover:bg-accent/60 cursor-pointer',
-									)}
-									onClick={() => onRowClick?.(row.original)}
-								>
+								<TableRow key={row.id} onClick={onRowClick ? () => onRowClick(row.original) : undefined}>
 									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id} className="border-b">
-											{flexRender(cell.column.columnDef.cell, cell.getContext())}
-										</TableCell>
+										<TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
 									))}
 								</TableRow>
 							))
 						) : (
-							<TableRow className="h-16">
-								<TableCell colSpan={columns.length} className="border-b text-center">
-									{emptyMessage}
+							<TableRow>
+								<TableCell colSpan={columns.length}>
+									<div className="text-center">{emptyMessage}</div>
 								</TableCell>
 							</TableRow>
 						)}
@@ -177,9 +168,11 @@ export const BaseTable = <TData extends RowData>({
 							<>
 								<span className="text-muted-foreground text-sm">Rows per page</span>
 								<Select value={`${pageSize}`} onValueChange={handlePageSizeChange}>
-									<SelectTrigger className="h-8 w-[80px]" data-testid="data-table-page-size-trigger">
-										<SelectValue />
-									</SelectTrigger>
+									<div className="w-20">
+										<SelectTrigger size="sm" data-testid="data-table-page-size-trigger">
+											<SelectValue />
+										</SelectTrigger>
+									</div>
 									<SelectContent>
 										{pageSizeOptions.map((size) => (
 											<SelectItem key={size} value={`${size}`}>

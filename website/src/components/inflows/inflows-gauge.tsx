@@ -4,7 +4,6 @@ import { formatSummaryMetricAmount } from '@/components/transparency/summary-met
 import { useCountUp } from '@/lib/hooks/use-count-up';
 import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
-import { cn } from '@socialincome/design-system/cn';
 import { useInView } from 'motion/react';
 import { useMemo, useRef } from 'react';
 
@@ -21,7 +20,6 @@ type Props = {
 	centerLabel: string;
 	centerCurrencyLabel: string;
 	lang: WebsiteLanguage;
-	className?: string;
 };
 
 const ARC_START_DEG = 180;
@@ -82,7 +80,7 @@ const buildSegmentArcs = (segments: GaugeSegment[]): SegmentArc[] => {
 	});
 };
 
-export const InflowsGauge = ({ segments, centerValue, centerLabel, centerCurrencyLabel, lang, className }: Props) => {
+export const InflowsGauge = ({ segments, centerValue, centerLabel, centerCurrencyLabel, lang }: Props) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const reduceMotion = usePrefersReducedMotion();
 
@@ -101,11 +99,7 @@ export const InflowsGauge = ({ segments, centerValue, centerLabel, centerCurrenc
 	].join(', ');
 
 	return (
-		<div
-			ref={containerRef}
-			className={cn('relative w-full', className)}
-			style={{ aspectRatio: `${VIEW_BOX_W} / ${VIEW_BOX_H}` }}
-		>
+		<div ref={containerRef} className="relative w-full" style={{ aspectRatio: `${VIEW_BOX_W} / ${VIEW_BOX_H}` }}>
 			{/* The sub-pixel blur widens the antialiased edge of the thick curved stroke so it stops reading as stair-stepped on 1x displays. */}
 			<svg
 				role="img"

@@ -32,13 +32,13 @@ export const ProgramSettingsDialog = ({ programId, readOnly }: ProgramSettingsDi
 
 	return (
 		<>
-			<Button variant="outline" className="gap-2" onClick={() => setIsOpen(true)}>
+			<Button variant="outline" onClick={() => setIsOpen(true)}>
 				<Settings className="size-4" />
 				Program settings
 			</Button>
 
 			<Dialog open={isOpen} onOpenChange={closeDialog}>
-				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[500px]">
+				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{readOnly ? 'View program settings' : 'Program settings'}</DialogTitle>
 					</DialogHeader>
@@ -46,7 +46,7 @@ export const ProgramSettingsDialog = ({ programId, readOnly }: ProgramSettingsDi
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 

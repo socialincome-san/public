@@ -90,7 +90,7 @@ export const ProgramStep = ({ form, labels, programs, programsLoading, programsE
 				control={form.control}
 				name="programId"
 				render={({ field }) => (
-					<FormItem className="flex min-h-0 flex-1 flex-col gap-0">
+					<FormItem layout="fill">
 						<div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
 							{statusMessage ? (
 								<p
@@ -109,7 +109,7 @@ export const ProgramStep = ({ form, labels, programs, programsLoading, programsE
 											field.onChange(value);
 											form.clearErrors('programId');
 										}}
-										className="min-w-0 gap-0"
+										layout="list"
 										aria-label={labels.program}
 									>
 										{filteredPrograms.map((program) => (

@@ -23,7 +23,7 @@ export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onE
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
+			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>{countryId ? 'Edit' : 'Add'} country</DialogTitle>
 				</DialogHeader>
@@ -31,7 +31,7 @@ export const CountryDialog = ({ open, onOpenChange, countryId, errorMessage, onE
 				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+						<AlertDescription>{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 

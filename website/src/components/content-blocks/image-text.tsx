@@ -50,38 +50,41 @@ export const ImageTextBlock = ({ blok }: Props) => {
 			{...storyblokEditable(blok as SbBlokData)}
 			disableMarginBottom={disableMarginBottom}
 			disableMarginTop={disableMarginTop}
-			className={cn(
-				'text-foreground flex flex-col gap-14 text-lg md:flex-row md:items-center',
-				layout === 'imageRight' && 'md:flex-row-reverse',
-			)}
 		>
-			{imageFilename && (
-				<div className={cn('order-2 md:order-none', widthClasses.image)}>
-					{isSvg ? (
-						// SVGs should keep their original vector source instead of going through the Storyblok raster loader.
-						// eslint-disable-next-line @next/next/no-img-element
-						<img
-							src={imageFilename}
-							alt={image.alt ?? ''}
-							width={image.width ?? undefined}
-							height={image.height ?? undefined}
-							className="h-auto w-full rounded-2xl"
-						/>
-					) : (
-						dimensions && (
-							<NextImage
+			<div
+				className={cn(
+					'text-foreground flex flex-col gap-14 text-lg md:flex-row md:items-center',
+					layout === 'imageRight' && 'md:flex-row-reverse',
+				)}
+			>
+				{imageFilename && (
+					<div className={cn('order-2 md:order-none', widthClasses.image)}>
+						{isSvg ? (
+							// SVGs should keep their original vector source instead of going through the Storyblok raster loader.
+							// eslint-disable-next-line @next/next/no-img-element
+							<img
 								src={imageFilename}
 								alt={image.alt ?? ''}
-								width={dimensions.width}
-								height={dimensions.height}
+								width={image.width ?? undefined}
+								height={image.height ?? undefined}
 								className="h-auto w-full rounded-2xl"
 							/>
-						)
-					)}
+						) : (
+							dimensions && (
+								<NextImage
+									src={imageFilename}
+									alt={image.alt ?? ''}
+									width={dimensions.width}
+									height={dimensions.height}
+									className="h-auto w-full rounded-2xl"
+								/>
+							)
+						)}
+					</div>
+				)}
+				<div className={cn('order-1 flex-1 md:order-none', widthClasses.text)}>
+					<RichTextRenderer richTextDocument={content} />
 				</div>
-			)}
-			<div className={cn('order-1 flex-1 md:order-none', widthClasses.text)}>
-				<RichTextRenderer richTextDocument={content} />
 			</div>
 		</BlockWrapper>
 	);

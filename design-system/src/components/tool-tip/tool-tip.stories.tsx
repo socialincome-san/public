@@ -29,7 +29,7 @@ export const LongContent: Story = {
 			<TooltipTrigger asChild>
 				<Button variant="outline">More information</Button>
 			</TooltipTrigger>
-			<TooltipContent className="max-w-60">
+			<TooltipContent>
 				Social Income sends direct cash transfers to people living in poverty, funded by a small share of your income.
 			</TooltipContent>
 		</Tooltip>

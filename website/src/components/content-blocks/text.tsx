@@ -1,6 +1,7 @@
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { Text } from '@/generated/storyblok/types/109655/storyblok-components';
 import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { cn } from '@socialincome/design-system/cn';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {
@@ -29,12 +30,11 @@ export const TextBlock = ({ blok }: Props) => {
 
 	return (
 		<BlockWrapper
-			className="text-foreground text-lg"
 			disableMarginBottom={disableMarginBottom}
 			disableMarginTop={disableMarginTop}
 			{...storyblokEditable(blok as SbBlokData)}
 		>
-			<div className={widthClass}>
+			<div className={cn('text-foreground text-lg', widthClass)}>
 				<RichTextRenderer richTextDocument={content} />
 			</div>
 		</BlockWrapper>

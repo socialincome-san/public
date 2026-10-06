@@ -33,12 +33,7 @@ export const LocalPartnerFocusBadges = ({ lang, region, focuses }: FocusBadgesPr
 
 				return (
 					<Link key={focusStory.uuid} href={`/${lang}/${region}/focuses/${focusSlug}`}>
-						<Badge
-							variant="outline"
-							className="border-accent bg-accent text-accent-foreground hover:bg-accent/80 transition-colors"
-						>
-							{focusTitle}
-						</Badge>
+						<Badge variant="outline">{focusTitle}</Badge>
 					</Link>
 				);
 			})}

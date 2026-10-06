@@ -36,7 +36,7 @@ export const CopyUrlCell = <TData extends RowData, TValue>({ ctx }: CellType<TDa
 	};
 
 	return (
-		<Button variant="outline" size="sm" onClick={handleCopy} className="h-8">
+		<Button variant="outline" size="sm" onClick={handleCopy}>
 			{copied ? (
 				<>
 					<Check className="text-confirm mr-2 h-4 w-4" />

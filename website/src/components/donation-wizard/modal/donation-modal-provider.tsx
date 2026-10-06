@@ -4,8 +4,14 @@ import { DonationCurrencySelector } from '@/components/donation/currency-selecto
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/design-system/button/button';
-import { cn } from '@socialincome/design-system/cn';
-import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/dialog/dialog';
 import { useMachine } from '@xstate/react';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
@@ -96,21 +102,17 @@ export const DonationModalProvider = ({ children }: Props) => {
 				}}
 			>
 				<DialogContent
-					hasGradient
+					size={isNarrowModal ? 'sm' : 'lg'}
+					surface="gradient"
+					padding="none"
 					closeOnClickOutside={false}
 					closeOnEscape={false}
 					onCloseClick={requestClose}
 					data-testid="donation-wizard-modal"
-					className={cn(
-						'!flex min-w-0 flex-col gap-0 overflow-hidden overscroll-contain !p-0',
-						isNarrowModal
-							? 'sm:max-h-[90dvh] sm:min-h-[200px] sm:w-[min(474px,90vw)] sm:max-w-[474px]'
-							: 'sm:max-h-[90dvh] sm:w-[min(890px,90vw)] sm:max-w-[890px]',
-					)}
 				>
 					{isPostCheckoutStep ? (
 						<>
-							<DialogTitle className="sr-only">{t('thankYou.message')}</DialogTitle>
+							<DialogTitle visuallyHidden>{t('thankYou.message')}</DialogTitle>
 							<div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
 								<DonationSteps state={state} send={send} />
 							</div>
@@ -118,15 +120,12 @@ export const DonationModalProvider = ({ children }: Props) => {
 					) : (
 						<>
 							<div className="flex shrink-0 flex-col gap-1 px-4 pt-[max(1rem,env(safe-area-inset-top))] pr-14 pb-4 sm:px-6 sm:pt-6 sm:pr-20 sm:pb-6 md:pl-9">
-								<div className="flex min-h-9 items-center gap-2 sm:gap-3">
-									<DialogTitle className="text-foreground min-w-0 flex-1 text-xl leading-none font-medium text-pretty sm:text-2xl">
-										{t('modal.title')}
-									</DialogTitle>
+								<div className="flex min-h-9 items-center justify-between gap-2 sm:gap-3">
+									<DialogTitle size="lg">{t('modal.title')}</DialogTitle>
 									{showCurrencySelector ? (
-										<DonationCurrencySelector
-											currencies={websiteCurrencies}
-											className="border-input w-[4.75rem] shrink-0 px-2.5"
-										/>
+										<div className="w-20 shrink-0">
+											<DonationCurrencySelector currencies={websiteCurrencies} />
+										</div>
 									) : null}
 								</div>
 								{campaignId && campaignTitle ? (
@@ -142,25 +141,19 @@ export const DonationModalProvider = ({ children }: Props) => {
 			</Dialog>
 
 			<Dialog open={closeConfirmOpen} onOpenChange={setCloseConfirmOpen}>
-				<DialogContent
-					hideCloseButton
-					className="z-[120] max-sm:inset-x-4 max-sm:top-auto max-sm:bottom-4 max-sm:h-auto max-sm:min-h-0 max-sm:w-auto max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-2xl max-sm:p-5 sm:max-w-[400px]"
-					overlayClassName="z-[120]"
-				>
-					<div className="flex flex-col gap-2">
-						<DialogTitle className="text-foreground text-xl leading-tight font-medium sm:text-lg">
-							{t('modal.closeConfirm.title')}
-						</DialogTitle>
-						<p className="text-muted-foreground text-sm leading-6">{t('modal.closeConfirm.description')}</p>
-					</div>
-					<div className="mt-2 flex flex-col gap-2 sm:flex-row sm:justify-end">
-						<Button type="button" variant="outline" className="w-full sm:w-auto" onClick={() => setCloseConfirmOpen(false)}>
+				<DialogContent size="alert" hideCloseButton>
+					<DialogHeader>
+						<DialogTitle>{t('modal.closeConfirm.title')}</DialogTitle>
+						<DialogDescription>{t('modal.closeConfirm.description')}</DialogDescription>
+					</DialogHeader>
+					<DialogFooter>
+						<Button type="button" variant="outline" onClick={() => setCloseConfirmOpen(false)}>
 							{t('modal.closeConfirm.cancel')}
 						</Button>
-						<Button type="button" variant="destructive" className="w-full sm:w-auto" onClick={confirmClose}>
+						<Button type="button" variant="destructive" onClick={confirmClose}>
 							{t('modal.closeConfirm.confirm')}
 						</Button>
-					</div>
+					</DialogFooter>
 				</DialogContent>
 			</Dialog>
 		</DonationModalContext.Provider>

@@ -136,14 +136,15 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 						</VideoControlButton>
 					</div>
 				) : (
-					<VideoControlButton
-						className="absolute right-8 bottom-8 z-30"
-						onClick={toggleExpanded}
-						aria-label={translations.expandVideoView}
-						title={translations.expandVideoView}
-					>
-						<Maximize2 className="size-5" />
-					</VideoControlButton>
+					<div className="absolute right-8 bottom-8 z-30">
+						<VideoControlButton
+							onClick={toggleExpanded}
+							aria-label={translations.expandVideoView}
+							title={translations.expandVideoView}
+						>
+							<Maximize2 className="size-5" />
+						</VideoControlButton>
+					</div>
 				)}
 
 				{!isExpanded && (
@@ -158,9 +159,8 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 							<div>
 								<Button
 									type="button"
-									variant="outline"
+									variant="outline-inverse"
 									size="lg"
-									className="text-primary-foreground"
 									aria-haspopup="dialog"
 									onClick={() => openWizardAtAmountStep()}
 								>

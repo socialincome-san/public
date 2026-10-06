@@ -19,8 +19,6 @@ export const ImpactMeasurementPrivacyTooltip = ({ message }: ImpactMeasurementPr
 				<Info className="size-4" />
 			</button>
 		</TooltipTrigger>
-		<TooltipContent sideOffset={6} className="max-w-xs">
-			{message}
-		</TooltipContent>
+		<TooltipContent sideOffset={6}>{message}</TooltipContent>
 	</Tooltip>
 );

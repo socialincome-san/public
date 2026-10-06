@@ -101,7 +101,7 @@ export const ManyOptions: Story = {
 			<SelectTrigger>
 				<SelectValue placeholder="Choose a currency" />
 			</SelectTrigger>
-			<SelectContent className="max-h-64">
+			<SelectContent>
 				{currencies.map((currency) => (
 					<SelectItem key={currency.value} value={currency.value}>
 						{currency.label}

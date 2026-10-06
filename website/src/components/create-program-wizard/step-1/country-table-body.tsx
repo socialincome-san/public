@@ -28,41 +28,33 @@ export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) =
 			data-testid="country-table"
 			className="max-h-96 w-full max-w-full min-w-0 overflow-x-auto overflow-y-auto rounded-xl border"
 		>
-			<Table className="min-w-[820px]">
-				<TableHeader className="bg-muted/40">
+			<Table>
+				<TableHeader>
 					<TableRow>
-						<TableHead className="w-10 min-w-10" />
-						<TableHead className="min-w-38 whitespace-nowrap" />
-						<TableHead className="min-w-28 whitespace-nowrap">{t('step1.table.cash')}</TableHead>
-						<TableHead className="min-w-32 whitespace-nowrap">{t('step1.table.mobile_money')}</TableHead>
-						<TableHead className="min-w-32 whitespace-nowrap">{t('step1.table.mobile_network')}</TableHead>
-						<TableHead className="min-w-28 whitespace-nowrap">{t('step1.table.sanctions')}</TableHead>
-						<TableHead className="w-10 min-w-10" />
+						<TableHead width="fit" />
+						<TableHead />
+						<TableHead>{t('step1.table.cash')}</TableHead>
+						<TableHead>{t('step1.table.mobile_money')}</TableHead>
+						<TableHead>{t('step1.table.mobile_network')}</TableHead>
+						<TableHead>{t('step1.table.sanctions')}</TableHead>
+						<TableHead width="fit" />
 					</TableRow>
 				</TableHeader>
 
 				<TableBody>
-					{rows.map((row, index) => {
+					{rows.map((row) => {
 						const isOpen = openIds.includes(row.id);
-						const isSelected = value === row.id;
-						let bgClass = 'hover:bg-muted/40';
-						if (isSelected) {
-							bgClass = 'bg-muted';
-						} else if (isOpen) {
-							bgClass = 'bg-muted/50';
-						}
+						// Open rows share the highlight so they read as one group with their expansion row
+						const rowState = value === row.id || isOpen ? 'selected' : undefined;
 
 						return (
 							<Fragment key={row.id}>
-								<TableRow
-									onClick={() => onToggleRow(row.id)}
-									className={cn('cursor-pointer transition-colors', bgClass, index !== 0 && 'border-t')}
-								>
+								<TableRow onClick={() => onToggleRow(row.id)} data-state={rowState}>
 									<TableCell onClick={(e) => e.stopPropagation()}>
 										<RadioGroupItem value={row.id} />
 									</TableCell>
 
-									<TableCell className="min-w-38">
+									<TableCell>
 										<div className="flex items-center gap-3 whitespace-nowrap">
 											<CountryFlag country={row.country.isoCode} />
 											<span>{getCountryNameByCode(row.country.isoCode)}</span>
@@ -89,7 +81,7 @@ export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) =
 									</TableCell>
 								</TableRow>
 
-								{isOpen && <ExpansionRow row={row} bgClass={bgClass} />}
+								{isOpen && <ExpansionRow row={row} />}
 							</Fragment>
 						);
 					})}

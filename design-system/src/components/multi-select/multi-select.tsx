@@ -5,8 +5,7 @@ import { CheckIcon, ChevronDown, WandSparkles, XCircle, XIcon } from 'lucide-rea
 import * as React from 'react';
 
 import { cn } from '../../cn';
-import { Badge } from '../badge/badge';
-import { Button } from '../button/button';
+import { badgeVariants } from '../badge/badge';
 import {
 	Command,
 	CommandEmpty,
@@ -16,6 +15,7 @@ import {
 	CommandList,
 	CommandSeparator,
 } from '../command/command';
+import { filterTriggerVariants } from '../filter-trigger/filter-trigger';
 import { Popover, PopoverContent, PopoverTrigger } from '../popover/popover';
 import { Separator } from '../separator/separator';
 
@@ -25,8 +25,6 @@ import { Separator } from '../separator/separator';
 type AnimationConfig = {
 	/** Badge animation type */
 	badgeAnimation?: 'bounce' | 'pulse' | 'wiggle' | 'fade' | 'slide' | 'none';
-	/** Popover animation type */
-	popoverAnimation?: 'scale' | 'slide' | 'fade' | 'flip' | 'none';
 	/** Option hover animation type */
 	optionHoverAnimation?: 'highlight' | 'scale' | 'glow' | 'none';
 	/** Animation duration in seconds */
@@ -124,11 +122,6 @@ type MultiSelectProps = {
 	placeholderIcon?: React.ComponentType<{ className?: string }>;
 
 	/**
-	 * Optional class name for placeholder text row when no values are selected.
-	 */
-	placeholderClassName?: string;
-
-	/**
 	 * Animation duration in seconds for the visual effects (e.g., bouncing badges).
 	 * Optional, defaults to 0 (no animation).
 	 */
@@ -160,10 +153,9 @@ type MultiSelectProps = {
 	asChild?: boolean;
 
 	/**
-	 * Additional class names to apply custom styles to the multi-select component.
-	 * Optional, can be used to add custom styles.
+	 * Look of the trigger: a form field (default) or a pill used in filter toolbars.
 	 */
-	className?: string;
+	trigger?: 'field' | 'filter';
 
 	/**
 	 * If true, disables the select all functionality.
@@ -197,12 +189,6 @@ type MultiSelectProps = {
 	 * Optional, defaults to false.
 	 */
 	singleLine?: boolean;
-
-	/**
-	 * Custom CSS class for the popover content.
-	 * Optional, can be used to customize popover appearance.
-	 */
-	popoverClassName?: string;
 
 	/**
 	 * Alignment of popover content relative to trigger.
@@ -277,7 +263,7 @@ type MultiSelectProps = {
 	 * Optional, defaults to false.
 	 */
 	closeOnSelect?: boolean;
-} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'animationConfig'> &
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'animationConfig' | 'className'> &
 	VariantProps<typeof multiSelectVariants>;
 
 /**
@@ -315,18 +301,16 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			defaultValue = [],
 			placeholder = 'Select options',
 			placeholderIcon: PlaceholderIcon,
-			placeholderClassName,
 			animation = 0,
 			animationConfig,
 			maxCount = 3,
 			modalPopover = false,
-			className,
+			trigger = 'field',
 			hideSelectAll = false,
 			searchable = true,
 			emptyIndicator,
 			autoSize = false,
 			singleLine = false,
-			popoverClassName,
 			popoverAlign = 'start',
 			disabled = false,
 			responsive,
@@ -505,27 +489,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			}
 
 			return isAnimating ? 'animate-bounce' : '';
-		};
-
-		const getPopoverAnimationClass = () => {
-			if (animationConfig?.popoverAnimation) {
-				switch (animationConfig.popoverAnimation) {
-					case 'scale':
-						return 'animate-scaleIn';
-					case 'slide':
-						return 'animate-slideInDown';
-					case 'fade':
-						return 'animate-fadeIn';
-					case 'flip':
-						return 'animate-flipIn';
-					case 'none':
-						return '';
-					default:
-						return '';
-				}
-			}
-
-			return '';
 		};
 
 		const getAllOptions = React.useCallback((): MultiSelectOption[] => {
@@ -781,8 +744,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 					</div>
 
 					<PopoverTrigger asChild>
-						<Button
-							variant="outline"
+						<button
+							type="button"
 							ref={buttonRef}
 							{...props}
 							onClick={handleTogglePopover}
@@ -796,14 +759,15 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 								getAllOptions().length
 							} options selected. ${placeholder}`}
 							className={cn(
-								'flex h-auto min-h-10 items-center justify-between rounded-full border bg-inherit p-1 hover:bg-inherit [&_svg]:pointer-events-auto',
+								trigger === 'filter'
+									? cn(filterTriggerVariants(), 'px-2')
+									: 'border-input focus-visible:ring-ring flex h-auto min-h-10 items-center justify-between rounded-full border p-1 text-sm focus-visible:ring-1 focus-visible:outline-hidden',
+								'[&_svg]:pointer-events-auto',
 								autoSize ? 'w-auto' : 'w-full',
-								responsiveSettings.compactMode && 'min-h-8 text-sm',
-								screenSize === 'mobile' && 'min-h-12 text-base',
+								trigger === 'field' && responsiveSettings.compactMode && 'min-h-8',
+								trigger === 'field' && screenSize === 'mobile' && 'min-h-12 text-base',
 								disabled && 'cursor-not-allowed opacity-50',
-								className,
 							)}
-							// eslint-disable-next-line react/forbid-component-props
 							style={{
 								...widthConstraints,
 								maxWidth: `min(${widthConstraints.maxWidth}, 100%)`,
@@ -846,9 +810,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 												};
 
 												return (
-													<Badge
+													<span
 														key={value}
 														className={cn(
+															badgeVariants(),
 															getBadgeAnimationClass(),
 															multiSelectVariants({ variant }),
 															customStyle?.gradient && 'text-primary-foreground border-transparent',
@@ -857,7 +822,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 															singleLine && 'shrink-0 whitespace-nowrap',
 															'[&>svg]:pointer-events-auto',
 														)}
-														// eslint-disable-next-line react/forbid-component-props
 														style={{
 															...badgeStyle,
 															animationDuration: `${animationConfig?.duration ?? animation}s`,
@@ -896,13 +860,14 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 														>
 															<XCircle className={cn('h-3 w-3', responsiveSettings.compactMode && 'h-2.5 w-2.5')} />
 														</div>
-													</Badge>
+													</span>
 												);
 											})
 											.filter(Boolean)}
 										{selectedValues.length > responsiveSettings.maxCount && (
-											<Badge
+											<span
 												className={cn(
+													badgeVariants(),
 													'text-foreground border-foreground/1 bg-transparent hover:bg-transparent',
 													getBadgeAnimationClass(),
 													multiSelectVariants({ variant }),
@@ -910,7 +875,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 													singleLine && 'shrink-0 whitespace-nowrap',
 													'[&>svg]:pointer-events-auto',
 												)}
-												// eslint-disable-next-line react/forbid-component-props
 												style={{
 													animationDuration: `${animationConfig?.duration ?? animation}s`,
 													animationDelay: `${animationConfig?.delay ?? 0}s`,
@@ -924,7 +888,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 														clearExtraOptions();
 													}}
 												/>
-											</Badge>
+											</span>
 										)}
 									</div>
 									<div className="flex items-center justify-between">
@@ -947,34 +911,34 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 										>
 											<XIcon className="h-4 w-4" />
 										</div>
-										<Separator orientation="vertical" className="flex h-full min-h-6" />
+										<div className="flex h-6">
+											<Separator orientation="vertical" />
+										</div>
 										<ChevronDown className="text-muted-foreground mx-2 h-4 cursor-pointer" aria-hidden="true" />
 									</div>
 								</div>
 							) : (
 								<div className="mx-auto flex w-full items-center justify-between">
-									<div className={cn('text-muted-foreground mx-3 flex items-center gap-2 text-sm', placeholderClassName)}>
-										{PlaceholderIcon ? <PlaceholderIcon className={cn('h-4 w-4', placeholderClassName)} /> : null}
+									<div
+										className={cn(
+											'mx-3 flex items-center gap-2 text-sm',
+											trigger === 'filter' ? 'text-foreground' : 'text-muted-foreground',
+										)}
+									>
+										{PlaceholderIcon ? <PlaceholderIcon className="h-4 w-4" /> : null}
 										<span>{placeholder}</span>
 									</div>
 									<ChevronDown className="text-muted-foreground mx-2 h-4 cursor-pointer" />
 								</div>
 							)}
-						</Button>
+						</button>
 					</PopoverTrigger>
 					<PopoverContent
 						id={listboxId}
 						role="listbox"
 						aria-multiselectable="true"
 						aria-label="Available options"
-						className={cn(
-							'w-auto p-0',
-							getPopoverAnimationClass(),
-							screenSize === 'mobile' && 'w-[85vw] max-w-[280px]',
-							screenSize === 'tablet' && 'w-[70vw] max-w-md',
-							screenSize === 'desktop' && 'min-w-[300px]',
-							popoverClassName,
-						)}
+						variant="picker"
 						// eslint-disable-next-line react/forbid-component-props
 						style={{
 							animationDuration: `${animationConfig?.duration ?? animation}s`,
@@ -1002,13 +966,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 									Type to filter options. Use arrow keys to navigate results.
 								</div>
 							)}
-							<CommandList
-								className={cn(
-									'multiselect-scrollbar max-h-[40vh] overflow-y-auto',
-									screenSize === 'mobile' && 'max-h-[50vh]',
-									'overscroll-behavior-y-contain',
-								)}
-							>
+							<CommandList>
 								<CommandEmpty>{emptyIndicator ?? 'No results found.'}</CommandEmpty>{' '}
 								{!hideSelectAll && !searchValue && (
 									<CommandGroup>
@@ -1018,7 +976,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 											role="option"
 											aria-selected={selectedValues.length === getAllOptions().filter((opt) => !opt.disabled).length}
 											aria-label={`Select all ${getAllOptions().length} options`}
-											className="cursor-pointer"
 										>
 											<div
 												className={cn(
@@ -1054,7 +1011,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 														aria-label={`${option.label}${
 															isSelected ? ', selected' : ', not selected'
 														}${option.disabled ? ', disabled' : ''}`}
-														className={cn('cursor-pointer', option.disabled && 'cursor-not-allowed opacity-50')}
 														disabled={option.disabled}
 													>
 														<div
@@ -1090,7 +1046,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 													aria-label={`${option.label}${
 														isSelected ? ', selected' : ', not selected'
 													}${option.disabled ? ', disabled' : ''}`}
-													className={cn('cursor-pointer', option.disabled && 'cursor-not-allowed opacity-50')}
 													disabled={option.disabled}
 												>
 													<div
@@ -1114,16 +1069,15 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 									<div className="flex items-center justify-between">
 										{selectedValues.length > 0 && (
 											<>
-												<CommandItem onSelect={handleClear} className="flex-1 cursor-pointer justify-center">
+												<CommandItem variant="action" onSelect={handleClear}>
 													Clear
 												</CommandItem>
-												<Separator orientation="vertical" className="flex h-full min-h-6" />
+												<div className="flex h-6">
+													<Separator orientation="vertical" />
+												</div>
 											</>
 										)}
-										<CommandItem
-											onSelect={() => setIsPopoverOpen(false)}
-											className="max-w-full flex-1 cursor-pointer justify-center"
-										>
+										<CommandItem variant="action" onSelect={() => setIsPopoverOpen(false)}>
 											Close
 										</CommandItem>
 									</div>

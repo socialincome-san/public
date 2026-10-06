@@ -19,20 +19,18 @@ export const LoginFlyout = ({ lang }: Props) => {
 
 	return (
 		<>
-			<Button className="text-sm" data-testid="login-button" onClick={() => setOpen(true)} variant="ghost" size="sm">
+			<Button data-testid="login-button" onClick={() => setOpen(true)} variant="ghost" size="md">
 				<UserRound />
 				{translator?.t('flyout.login-button')}
 			</Button>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="z-200" overlayClassName="z-200">
+				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{translator?.t('flyout.title')}</DialogTitle>
 					</DialogHeader>
 
-					<div className="mt-4">
-						<MagicLinkLoginForm key={open ? 'open' : 'closed'} lang={lang} />
-					</div>
+					<MagicLinkLoginForm key={open ? 'open' : 'closed'} lang={lang} />
 				</DialogContent>
 			</Dialog>
 		</>

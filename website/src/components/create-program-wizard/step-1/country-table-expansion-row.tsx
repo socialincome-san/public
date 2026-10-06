@@ -7,10 +7,9 @@ import Link from 'next/link';
 
 type Props = {
 	row: ProgramCountryFeasibilityRow;
-	bgClass: string;
 };
 
-export const ExpansionRow = ({ row, bgClass }: Props) => {
+export const ExpansionRow = ({ row }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
 
 	const renderSource = (source: ProgramCountryFeasibilityRow['cash']['details']['source'] | undefined) => {
@@ -49,13 +48,13 @@ export const ExpansionRow = ({ row, bgClass }: Props) => {
 	};
 
 	return (
-		<TableRow className={bgClass}>
+		<TableRow data-state="selected">
 			<TableCell />
 			<TableCell />
-			<TableCell className="p-4 align-top">{renderDetails(row.cash.details)}</TableCell>
-			<TableCell className="p-4 align-top">{renderDetails(row.mobileMoney.details)}</TableCell>
-			<TableCell className="p-4 align-top">{renderDetails(row.mobileNetwork.details)}</TableCell>
-			<TableCell className="p-4 align-top">{renderDetails(row.sanctions.details)}</TableCell>
+			<TableCell verticalAlign="top">{renderDetails(row.cash.details)}</TableCell>
+			<TableCell verticalAlign="top">{renderDetails(row.mobileMoney.details)}</TableCell>
+			<TableCell verticalAlign="top">{renderDetails(row.mobileNetwork.details)}</TableCell>
+			<TableCell verticalAlign="top">{renderDetails(row.sanctions.details)}</TableCell>
 			<TableCell />
 		</TableRow>
 	);

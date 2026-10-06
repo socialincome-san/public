@@ -43,7 +43,7 @@ const HeroStat = ({ label, value, trailing, progress }: HeroStatProps) => (
 			</div>
 			{trailing}
 		</div>
-		<Progress value={progress} variant="onDark" className="h-2" />
+		<Progress value={progress} variant="onDark" />
 	</div>
 );
 
@@ -138,9 +138,11 @@ export const CampaignHero = ({
 			</div>
 
 			{isActive ? (
-				<BlockWrapper className="lg:hidden" disableMarginTop={true}>
-					<CampaignDonationFormServer {...donationFormProps} />
-				</BlockWrapper>
+				<div className="lg:hidden">
+					<BlockWrapper disableMarginTop={true}>
+						<CampaignDonationFormServer {...donationFormProps} />
+					</BlockWrapper>
+				</div>
 			) : null}
 		</section>
 	);

@@ -53,7 +53,7 @@ const VariableAssignmentRow = ({
 				)}
 			</div>
 
-			<RadioGroup value={source} onValueChange={handleSourceChange} disabled={disabled} className="flex gap-4">
+			<RadioGroup value={source} onValueChange={handleSourceChange} disabled={disabled} layout="row">
 				<label className="flex items-center gap-2 text-sm">
 					<RadioGroupItem value="field" />
 					Field

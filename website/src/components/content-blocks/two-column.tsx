@@ -10,8 +10,6 @@ type Props = {
 	rightColumn?: ReactNode;
 };
 
-const nestedBlockClassName = '[&>*]:m-0 [&>*]:w-full [&>*]:max-w-none [&>*]:px-0';
-
 export const TwoColumnBlock = ({ blok, leftColumn, rightColumn }: Props) => {
 	const { columnRatio, disableMarginBottom, disableMarginTop } = blok;
 
@@ -25,12 +23,7 @@ export const TwoColumnBlock = ({ blok, leftColumn, rightColumn }: Props) => {
 			disableMarginTop={disableMarginTop}
 			{...storyblokEditable(blok as SbBlokData)}
 		>
-			<TwoColumnLayout
-				leftColumn={leftColumn}
-				rightColumn={rightColumn}
-				columnRatio={columnRatio}
-				columnClassName={nestedBlockClassName}
-			/>
+			<TwoColumnLayout leftColumn={leftColumn} rightColumn={rightColumn} columnRatio={columnRatio} content="blocks" />
 		</BlockWrapper>
 	);
 };

@@ -30,7 +30,7 @@ export const DownloadsBlock = ({ blok }: Props) => {
 		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
 			<div className="space-y-6">
 				{blok.heading && (
-					<SectionHeading align="left" className="mb-0 md:mb-0">
+					<SectionHeading align="left">
 						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
 					</SectionHeading>
 				)}

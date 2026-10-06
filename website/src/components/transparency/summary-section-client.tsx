@@ -70,7 +70,7 @@ export const SummarySectionClient = ({ metrics, lang }: Props) => {
 											<Info aria-hidden="true" className="size-4" />
 										</button>
 									</TooltipTrigger>
-									<TooltipContent sideOffset={8} className="max-w-[calc(100vw-2rem)] px-4 py-3 text-sm sm:max-w-xl">
+									<TooltipContent size="lg" sideOffset={8}>
 										{tooltip.rows.length > 0 ? (
 											<ul className="space-y-1.5">
 												{tooltip.rows.map((row) => (

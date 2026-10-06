@@ -104,9 +104,11 @@ export const CampaignDetail = async ({
 				translator={translator}
 				lang={lang}
 			/>
-			<Breadcrumb links={breadcrumbLinks} className="pb-0" />
+			<div className="pt-9">
+				<Breadcrumb links={breadcrumbLinks} layout="section" />
+			</div>
 			{trimmedDescription ? (
-				<BlockWrapper className="my-15" disableMarginTop={true} disableMarginBottom={true}>
+				<BlockWrapper spacing="compact">
 					<p className="text-foreground max-w-2xl text-lg whitespace-pre-wrap">{trimmedDescription}</p>
 				</BlockWrapper>
 			) : null}

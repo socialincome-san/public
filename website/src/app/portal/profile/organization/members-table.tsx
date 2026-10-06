@@ -82,7 +82,7 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 			/>
 
 			<Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>
-				<DialogContent className="sm:max-w-[425px]">
+				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>Rename organization</DialogTitle>
 					</DialogHeader>
@@ -90,7 +90,7 @@ export default function MembersTable({ rows, error, organizationName, query }: M
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 

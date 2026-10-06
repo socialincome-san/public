@@ -68,7 +68,7 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 			)}
 
 			<Dialog open={isOpen} onOpenChange={(nextOpen) => send({ type: nextOpen ? 'OPEN' : 'CLOSE' })}>
-				<DialogContent variant="large" className="flex max-h-[90dvh] flex-col overflow-hidden">
+				<DialogContent size="full">
 					<DialogHeader>
 						<DialogTitle>{t('modal.title')}</DialogTitle>
 					</DialogHeader>

@@ -3,7 +3,6 @@
 import type { ConsentStatus } from '@/lib/firebase/client-analytics';
 import { useIsPage } from '@/lib/hooks/use-is-page';
 import { Button } from '@socialincome/design-system/button/button';
-import { Card } from '@socialincome/design-system/card/card';
 import { useEffect, useState } from 'react';
 
 type CookieConsentBannerProps = {
@@ -34,10 +33,7 @@ export const CookieConsentBanner = ({ translations }: CookieConsentBannerProps) 
 	}
 
 	return (
-		<Card
-			variant="noPadding"
-			className="border-border fixed right-2 bottom-2 z-50 mx-auto w-fit max-w-6xl rounded-full border px-4 md:right-4"
-		>
+		<div className="border-border bg-background fixed right-2 bottom-2 z-50 mx-auto w-fit max-w-6xl rounded-full border px-4 shadow-lg md:right-4">
 			<div className="flex flex-col space-y-2 p-4 md:h-full md:flex-row md:items-center md:justify-between">
 				<p className="text-foreground md:mr-4 md:flex-1 md:self-center">
 					<span dangerouslySetInnerHTML={{ __html: translations.text }} />
@@ -51,6 +47,6 @@ export const CookieConsentBanner = ({ translations }: CookieConsentBannerProps) 
 					</Button>
 				</div>
 			</div>
-		</Card>
+		</div>
 	);
 };

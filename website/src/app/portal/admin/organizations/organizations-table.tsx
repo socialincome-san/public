@@ -61,7 +61,7 @@ export default function OrganizationsTable({
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
+				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{organizationId ? 'Edit' : 'Add'} organization</DialogTitle>
 					</DialogHeader>
@@ -69,7 +69,7 @@ export default function OrganizationsTable({
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 

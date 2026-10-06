@@ -9,7 +9,7 @@ type Props = {
 
 export const CountryBadge = ({ country }: Props) => {
 	return (
-		<Badge variant="country" className="inline-flex items-center gap-2">
+		<Badge variant="country">
 			<CountryFlag country={country} size="sm" />
 			<span className="font-medium">{getCountryNameByCode(country)}</span>
 		</Badge>

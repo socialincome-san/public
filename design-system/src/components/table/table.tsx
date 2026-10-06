@@ -1,65 +1,101 @@
+import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
-import { cn } from '../../cn';
+import { type WithoutClassName } from '../../without-class-name';
 
-const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(({ className, ...props }, ref) => (
+const tableVariants = cva('group/table w-full caption-bottom border-separate border-spacing-0 text-sm', {
+	variants: {
+		// Row density, read by the cells through the group/table data attribute
+		size: {
+			sm: '',
+			default: '',
+			lg: '',
+		},
+	},
+	defaultVariants: {
+		size: 'default',
+	},
+});
+
+const Table = React.forwardRef<
+	HTMLTableElement,
+	WithoutClassName<React.HTMLAttributes<HTMLTableElement>> & VariantProps<typeof tableVariants>
+>(({ size = 'default', ...props }, ref) => (
 	<div className="relative w-full overflow-auto">
-		<table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
+		<table ref={ref} data-size={size} className={tableVariants({ size })} {...props} />
 	</div>
 ));
 Table.displayName = 'Table';
 
-const TableHeader = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
-	({ className, ...props }, ref) => <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />,
-);
+const TableHeader = React.forwardRef<
+	HTMLTableSectionElement,
+	WithoutClassName<React.HTMLAttributes<HTMLTableSectionElement>>
+>((props, ref) => <thead ref={ref} className="bg-muted" {...props} />);
 TableHeader.displayName = 'TableHeader';
 
-const TableBody = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
-	({ className, ...props }, ref) => <tbody ref={ref} className={cn('[&_tr:last-child]:border-0', className)} {...props} />,
+const TableBody = React.forwardRef<HTMLTableSectionElement, WithoutClassName<React.HTMLAttributes<HTMLTableSectionElement>>>(
+	(props, ref) => <tbody ref={ref} className="[&>tr:last-child>*]:border-b-0" {...props} />,
 );
 TableBody.displayName = 'TableBody';
 
-const TableFooter = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
-	({ className, ...props }, ref) => (
-		<tfoot ref={ref} className={cn('bg-muted/50 border-t font-medium last:[&>tr]:border-b-0', className)} {...props} />
+// Rows with an onClick handler are highlighted on hover; data-state="selected" marks the selected row.
+// Cells can react to hovering the row with group-hover/row.
+const TableRow = React.forwardRef<HTMLTableRowElement, WithoutClassName<React.HTMLAttributes<HTMLTableRowElement>>>(
+	(props, ref) => (
+		<tr
+			ref={ref}
+			className={
+				props.onClick
+					? 'group/row hover:bg-muted/60 data-[state=selected]:bg-muted cursor-pointer transition-colors'
+					: 'group/row data-[state=selected]:bg-muted'
+			}
+			{...props}
+		/>
 	),
-);
-TableFooter.displayName = 'TableFooter';
-
-const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(
-	({ className, ...props }, ref) => <tr ref={ref} className={className} {...props} />,
 );
 TableRow.displayName = 'TableRow';
 
-const TableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTableCellElement>>(
-	({ className, ...props }, ref) => (
-		<th
-			ref={ref}
-			className={cn(
-				'text-muted-foreground h-10 px-2 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0 *:[[role=checkbox]]:translate-y-[2px]',
-				className,
-			)}
-			{...props}
-		/>
-	),
-);
+const cellVariants = cva('border-b align-middle', {
+	variants: {
+		// Fit shrinks the column to its content, e.g. for checkboxes or row actions
+		width: {
+			auto: '',
+			fit: 'w-px whitespace-nowrap',
+		},
+		verticalAlign: {
+			middle: '',
+			top: 'align-top',
+		},
+	},
+	defaultVariants: {
+		width: 'auto',
+		verticalAlign: 'middle',
+	},
+});
+
+type CellVariantProps = VariantProps<typeof cellVariants>;
+
+const TableHead = React.forwardRef<
+	HTMLTableCellElement,
+	WithoutClassName<React.ThHTMLAttributes<HTMLTableCellElement>> & CellVariantProps
+>(({ width, verticalAlign, ...props }, ref) => (
+	<th
+		ref={ref}
+		className={`${cellVariants({ width, verticalAlign })} text-muted-foreground h-10 px-2 text-left font-medium whitespace-nowrap group-data-[size=sm]/table:h-9`}
+		{...props}
+	/>
+));
 TableHead.displayName = 'TableHead';
 
-const TableCell = React.forwardRef<HTMLTableCellElement, React.TdHTMLAttributes<HTMLTableCellElement>>(
-	({ className, ...props }, ref) => (
-		<td
-			ref={ref}
-			className={cn('p-2 align-middle [&:has([role=checkbox])]:pr-0 *:[[role=checkbox]]:translate-y-[2px]', className)}
-			{...props}
-		/>
-	),
-);
+const TableCell = React.forwardRef<
+	HTMLTableCellElement,
+	WithoutClassName<React.TdHTMLAttributes<HTMLTableCellElement>> & CellVariantProps
+>(({ width, verticalAlign, ...props }, ref) => (
+	<td
+		ref={ref}
+		className={`${cellVariants({ width, verticalAlign })} p-2 group-data-[size=lg]/table:h-16 group-data-[size=sm]/table:py-1.5`}
+		{...props}
+	/>
+));
 TableCell.displayName = 'TableCell';
-
-const TableCaption = React.forwardRef<HTMLTableCaptionElement, React.HTMLAttributes<HTMLTableCaptionElement>>(
-	({ className, ...props }, ref) => (
-		<caption ref={ref} className={cn('text-muted-foreground mt-4 text-sm', className)} {...props} />
-	),
-);
-TableCaption.displayName = 'TableCaption';
 
 export { Table, TableBody, TableCell, TableHead, TableHeader, TableRow };

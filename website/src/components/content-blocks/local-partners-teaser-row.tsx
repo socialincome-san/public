@@ -32,14 +32,14 @@ export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, regio
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 
 	return (
-		<BlockWrapper className="max-2xl:overflow-visible">
+		<BlockWrapper>
 			<div className="grid gap-8 max-2xl:w-[calc(100%+max(0px,calc((100vw-100%)/2)))] lg:grid-cols-3 lg:items-center">
 				<div className="pr-8 lg:col-span-1 lg:pr-0">
 					<LocalPartnersTeaserIntro lang={lang} />
 				</div>
 				<div className="relative min-w-0 lg:col-span-2">
-					<Carousel opts={{ align: 'start' }}>
-						<CarouselContent className="-ml-6" scrollFade>
+					<Carousel opts={{ align: 'start' }} gap="lg">
+						<CarouselContent scrollFade>
 							{localPartners.map((localPartner) => {
 								const portalSlug = getLocalPartnerPortalSlug(localPartner.content);
 								const recipientsCount = statsByPortalSlug[portalSlug]?.recipientsCount ?? 0;
@@ -50,7 +50,7 @@ export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, regio
 								const { candidatesLabel, alertVariant } = getLocalPartnerCandidateFooter(translator, candidatesCount);
 
 								return (
-									<CarouselItem key={localPartner.uuid} className="basis-[305px] pl-6">
+									<CarouselItem key={localPartner.uuid} size="card">
 										<LocalPartnerTeaserCard
 											localPartner={localPartner}
 											lang={lang}

@@ -17,8 +17,9 @@ const meta = {
 			control: 'select',
 			options: ['text', 'number', 'email', 'password', 'search'],
 		},
-		className: {
-			control: 'text',
+		variant: {
+			control: 'select',
+			options: ['default', 'bare'],
 		},
 		placeholder: {
 			control: 'text',

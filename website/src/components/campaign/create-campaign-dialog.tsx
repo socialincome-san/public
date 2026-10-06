@@ -25,10 +25,7 @@ export const CreateCampaignDialog = ({ labels, lang, region, trigger }: Props) =
 		<>
 			{trigger({ openDialog })}
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent
-					variant="large"
-					className="flex h-[90dvh] max-h-[90dvh] flex-col overflow-hidden px-0 max-sm:h-dvh max-sm:max-h-dvh"
-				>
+				<DialogContent size="full" height="fixed" padding="vertical">
 					<CampaignSubmissionForm labels={labels} lang={lang} region={region} />
 				</DialogContent>
 			</Dialog>

@@ -85,18 +85,20 @@ export const journalRichTextNodeResolvers = {
 	[NODE_OL]: (children: ReactNode) => <ol className="my-4 list-decimal space-y-1 pl-6 text-lg md:text-xl">{children}</ol>,
 	[NODE_LI]: (children: ReactNode) => <li className="[&::marker]:text-foreground my-1 *:m-0 *:p-0">{children}</li>,
 	[NODE_TABLE]: (children: ReactNode) => (
-		<Table
+		<div
 			className={cn(
 				'text-foreground my-6',
 				// Cell content is rendered by the paragraph/list resolvers above, so scale it
 				// down here to keep tables smaller than the article body text.
 				'[&_li]:my-0 [&_ol]:my-0 [&_p]:my-0 [&_ul]:my-0',
-				'text-base [&_ol]:text-base [&_p]:text-base [&_ul]:text-base',
-				'md:text-lg md:[&_ol]:text-lg md:[&_p]:text-lg md:[&_ul]:text-lg',
+				'[&_ol]:text-base [&_p]:text-base [&_ul]:text-base',
+				'md:[&_ol]:text-lg md:[&_p]:text-lg md:[&_ul]:text-lg',
 			)}
 		>
-			<TableBody>{children}</TableBody>
-		</Table>
+			<Table>
+				<TableBody>{children}</TableBody>
+			</Table>
+		</div>
 	),
 };
 

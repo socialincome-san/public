@@ -34,26 +34,28 @@ export const ImpactMeasurementResults = async ({ lang, searchParams }: ImpactMea
 	];
 
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true} className="space-y-10 py-0">
-			{await Promise.all(
-				orderedQuestions.map(async (question, index) => (
-					<ImpactMeasurementQuestionCard
-						key={question.name}
-						lang={lang}
-						question={question}
-						index={index}
-						questionTypeLabelKey={
-							questionTypeLabelKeys[question.inputType] ?? 'survey.impactMeasurement.questionTypes.fallback'
-						}
-						followUpSections={await renderFollowUpSections({
-							lang,
-							question,
-							questionsByName,
-							followUpConfigs,
-						})}
-					/>
-				)),
-			)}
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<div className="space-y-10">
+				{await Promise.all(
+					orderedQuestions.map(async (question, index) => (
+						<ImpactMeasurementQuestionCard
+							key={question.name}
+							lang={lang}
+							question={question}
+							index={index}
+							questionTypeLabelKey={
+								questionTypeLabelKeys[question.inputType] ?? 'survey.impactMeasurement.questionTypes.fallback'
+							}
+							followUpSections={await renderFollowUpSections({
+								lang,
+								question,
+								questionsByName,
+								followUpConfigs,
+							})}
+						/>
+					)),
+				)}
+			</div>
 		</BlockWrapper>
 	);
 };

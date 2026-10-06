@@ -35,7 +35,9 @@ export default async function ContentPage({ params, searchParams }: DefaultLayou
 	return (
 		<>
 			<BlockWrapper disableMarginTop disableMarginBottom>
-				<Breadcrumb links={breadcrumbLinks} className="pb-0 pl-0" />
+				<div className="pt-9">
+					<Breadcrumb links={breadcrumbLinks} layout="inline" />
+				</div>
 			</BlockWrapper>
 			<PageContentType
 				blok={story.content}

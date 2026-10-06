@@ -41,12 +41,12 @@ export const RichtextButtonHeaderBlock = ({ blok, lang, region, buttonAction }: 
 					</div>
 				)}
 				{buttonLabel && buttonHref && !buttonAction && (
-					<Button variant="outline" className="self-start md:self-center" asChild>
+					<Button variant="outline" asChild>
 						<NextLink href={buttonHref}>{buttonLabel}</NextLink>
 					</Button>
 				)}
 				{buttonLabel && buttonAction && (
-					<Button type="button" variant="outline" className="self-start md:self-center" onClick={buttonAction}>
+					<Button type="button" variant="outline" onClick={buttonAction}>
 						{buttonLabel}
 					</Button>
 				)}

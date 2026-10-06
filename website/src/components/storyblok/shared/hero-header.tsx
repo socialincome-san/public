@@ -101,9 +101,11 @@ export const HeroHeader = ({
 			</div>
 
 			{showDonationsFormMobile ? (
-				<BlockWrapper className="lg:hidden" disableMarginTop={true} disableMarginBottom={true}>
-					{heroCardNode}
-				</BlockWrapper>
+				<div className="lg:hidden">
+					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+						{heroCardNode}
+					</BlockWrapper>
+				</div>
 			) : null}
 		</section>
 	);

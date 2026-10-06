@@ -14,9 +14,9 @@ export type BreadcrumbLinkItem = {
 	href: string;
 };
 
-export const Breadcrumb = ({ links, className }: { links: BreadcrumbLinkItem[]; className?: string }) => {
+export const Breadcrumb = ({ links }: { links: BreadcrumbLinkItem[] }) => {
 	return (
-		<BreadcrumbElements className={className}>
+		<BreadcrumbElements>
 			<BreadcrumbList>
 				{links.map((link, index) => {
 					const isLast = index === links.length - 1;

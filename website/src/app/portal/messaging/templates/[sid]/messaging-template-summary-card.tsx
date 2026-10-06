@@ -51,7 +51,7 @@ export const MessagingTemplateSummaryCard = ({ template, twilioAccountSid }: Mes
 					<dd className="flex flex-wrap gap-1">
 						{template.supportedChannels.length > 0 ? (
 							template.supportedChannels.map((channel) => (
-								<Badge key={channel} variant="default" className="uppercase">
+								<Badge key={channel} variant="default">
 									{channel}
 								</Badge>
 							))

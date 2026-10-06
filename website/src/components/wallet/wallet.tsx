@@ -56,19 +56,18 @@ export const Wallet = ({
 
 	const content = (
 		<div className="group relative h-full w-full min-w-0" style={walletStyle} data-testid="wallet">
-			<Card
-				variant="noPadding"
-				className="@container flex h-full max-w-full min-w-0 flex-col overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl"
-			>
-				<WalletImageStack images={images} />
-				<WalletFront
-					variant={variant}
-					title={title}
-					subtitle={subtitle}
-					badge={badge}
-					footerLeft={footerLeft}
-					footerRight={footerRight}
-				/>
+			<Card padding="none" interactive fullHeight>
+				<div className="@container flex h-full min-w-0 flex-col">
+					<WalletImageStack images={images} />
+					<WalletFront
+						variant={variant}
+						title={title}
+						subtitle={subtitle}
+						badge={badge}
+						footerLeft={footerLeft}
+						footerRight={footerRight}
+					/>
+				</div>
 			</Card>
 			<WalletOverlayImages images={images} />
 		</div>

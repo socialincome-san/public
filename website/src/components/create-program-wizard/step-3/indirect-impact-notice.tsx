@@ -25,9 +25,7 @@ export const IndirectImpactNotice = ({ recipients }: Props) => {
 								{t('step3.indirect_notice.indirect_people', { indirect: indirect.toLocaleString('de-CH') })}
 							</span>
 						</TooltipTrigger>
-						<TooltipContent className="max-w-[220px] text-left">
-							{t('step3.indirect_notice.tooltip', { factor: INDIRECT_BENEFICIARY_FACTOR })}
-						</TooltipContent>
+						<TooltipContent>{t('step3.indirect_notice.tooltip', { factor: INDIRECT_BENEFICIARY_FACTOR })}</TooltipContent>
 					</Tooltip>
 				</TooltipProvider>{' '}
 				{t('step3.indirect_notice.suffix')}

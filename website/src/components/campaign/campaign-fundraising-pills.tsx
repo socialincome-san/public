@@ -13,7 +13,7 @@ type Props = {
 };
 
 const FundraisingPillBadge = ({ label }: { label: string }) => (
-	<Badge variant="fundraising" className="w-fit whitespace-nowrap">
+	<Badge variant="fundraising" size="lg">
 		{label}
 	</Badge>
 );
@@ -33,14 +33,10 @@ export const CampaignFundraisingPills = ({ labels }: Props) => {
 
 	return (
 		<div aria-live="polite" className="min-h-[1.375rem] w-fit max-w-full">
-			<Carousel
-				opts={{ loop: true, align: 'start' }}
-				plugins={shouldAutoplay ? [autoplayPlugin] : []}
-				className="w-fit max-w-full"
-			>
-				<CarouselContent className="-ml-0">
+			<Carousel opts={{ loop: true, align: 'start' }} plugins={shouldAutoplay ? [autoplayPlugin] : []} gap="none">
+				<CarouselContent>
 					{labels.map((label, index) => (
-						<CarouselItem key={`${label}-${index}`} className="basis-full pl-0">
+						<CarouselItem key={`${label}-${index}`}>
 							<FundraisingPillBadge label={label} />
 						</CarouselItem>
 					))}

@@ -30,7 +30,7 @@ export const ImpactMeasurementPreviewWrapper = ({ focusId, lang, region, teaserB
 						<p className="text-foreground min-w-0 text-center text-xl font-bold sm:text-left">{trimmedTeaserText}</p>
 					)}
 					{trimmedTeaserButtonLabel && (
-						<Button variant="outline" size="lg" className="w-full shrink-0 sm:w-auto" asChild>
+						<Button variant="outline" size="lg" asChild>
 							<Link href={{ pathname: `/${lang}/${region}/impact-measurement`, query: { focus: focusId } }}>
 								{trimmedTeaserButtonLabel}
 							</Link>

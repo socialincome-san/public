@@ -61,10 +61,11 @@ type CountryHeaderProps = {
 	countryCode: CountryCode;
 	countryName: string;
 	align?: 'left' | 'right';
-	nameClassName?: string;
+	/** Small is used in the compact mobile comparison */
+	size?: 'sm' | 'default';
 };
 
-const CountryHeader = ({ countryCode, countryName, align = 'left', nameClassName }: CountryHeaderProps) => {
+const CountryHeader = ({ countryCode, countryName, align = 'left', size = 'default' }: CountryHeaderProps) => {
 	const alignmentClassName = align === 'right' ? 'items-end text-right' : 'items-start text-left';
 
 	return (
@@ -77,7 +78,7 @@ const CountryHeader = ({ countryCode, countryName, align = 'left', nameClassName
 				className="h-7 w-7 rounded-full object-cover"
 			/>
 			<div className="space-y-1">
-				<p className={cn('text-primary leading-tight font-medium', nameClassName ?? 'text-2xl md:text-3xl')}>
+				<p className={cn('text-primary leading-tight font-medium', size === 'sm' ? 'text-base' : 'text-2xl')}>
 					{countryName}
 				</p>
 			</div>
@@ -139,11 +140,7 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 								<div className="bg-border absolute inset-y-0 left-1/2 z-10 w-px -translate-x-1/2" aria-hidden="true" />
 								<div className="grid grid-cols-2 items-stretch">
 									<div className="bg-background rounded-l-[calc(var(--radius)+4px)] px-6 py-6">
-										<CountryHeader
-											countryCode={normalizedCountryIsoCode}
-											countryName={countryName}
-											nameClassName="text-[16px]"
-										/>
+										<CountryHeader countryCode={normalizedCountryIsoCode} countryName={countryName} size="sm" />
 										<div className="mt-8 flex flex-col gap-7">
 											{formattedRows.map((row) => (
 												<MobileStatisticRow key={row.key} label={row.label} value={row.countryValue} />
@@ -151,11 +148,7 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 										</div>
 									</div>
 									<div className="bg-background px-6 py-6">
-										<CountryHeader
-											countryCode={visitorCountryCode}
-											countryName={visitorCountryName}
-											nameClassName="text-[16px]"
-										/>
+										<CountryHeader countryCode={visitorCountryCode} countryName={visitorCountryName} size="sm" />
 										<div className="mt-8 flex flex-col gap-7">
 											{formattedRows.map((row) => (
 												<MobileStatisticRow key={row.key} label={row.label} value={row.visitorValue} showLabel={false} />
@@ -178,11 +171,7 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 								<div className="grid grid-cols-[320px_minmax(0,1fr)_minmax(0,1fr)] items-stretch">
 									<div className="bg-accent p-12">
 										<div className="pointer-events-none invisible select-none">
-											<CountryHeader
-												countryCode={normalizedCountryIsoCode}
-												countryName={countryName}
-												nameClassName="text-2xl font-medium"
-											/>
+											<CountryHeader countryCode={normalizedCountryIsoCode} countryName={countryName} />
 										</div>
 										<div className="mt-8 flex flex-col gap-4">
 											{formattedRows.map((row) => (
@@ -193,11 +182,7 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 										</div>
 									</div>
 									<div className="border-border bg-background rounded-l-[calc(var(--radius)+4px)] border-l p-12">
-										<CountryHeader
-											countryCode={normalizedCountryIsoCode}
-											countryName={countryName}
-											nameClassName="text-2xl font-medium"
-										/>
+										<CountryHeader countryCode={normalizedCountryIsoCode} countryName={countryName} />
 										<div className="mt-8 flex flex-col gap-4">
 											{formattedRows.map((row) => (
 												<p key={row.key} className="text-primary text-base leading-6 font-normal">
@@ -207,11 +192,7 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 										</div>
 									</div>
 									<div className="bg-background p-12">
-										<CountryHeader
-											countryCode={visitorCountryCode}
-											countryName={visitorCountryName}
-											nameClassName="text-2xl font-medium"
-										/>
+										<CountryHeader countryCode={visitorCountryCode} countryName={visitorCountryName} />
 										<div className="mt-8 flex flex-col gap-4">
 											{formattedRows.map((row) => (
 												<p key={row.key} className="text-primary text-base leading-6 font-normal">

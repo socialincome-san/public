@@ -4,11 +4,16 @@ import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react
 import * as React from 'react';
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
 import { cn } from '../../cn';
-import { Button, buttonVariants } from '../button/button';
+import { type Button, buttonVariants } from '../button/button';
+
+// Distributes over DayPicker's mode union (single, multiple, range) so mode-specific props stay typed
+type WithoutStyling<T> = T extends unknown ? Omit<T, 'className' | 'classNames'> : never;
+
+type CalendarProps = WithoutStyling<React.ComponentProps<typeof DayPicker>> & {
+	buttonVariant?: React.ComponentProps<typeof Button>['variant'];
+};
 
 const Calendar = ({
-	className,
-	classNames,
 	showOutsideDays = true,
 	captionLayout = 'label',
 	buttonVariant = 'ghost',
@@ -17,9 +22,7 @@ const Calendar = ({
 	startMonth,
 	endMonth,
 	...props
-}: React.ComponentProps<typeof DayPicker> & {
-	buttonVariant?: React.ComponentProps<typeof Button>['variant'];
-}) => {
+}: CalendarProps) => {
 	const defaultClassNames = getDefaultClassNames();
 
 	return (
@@ -31,7 +34,6 @@ const Calendar = ({
 				'bg-background group/calendar p-3 [--cell-size:--spacing(8)] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent',
 				String.raw`[.rdp-button\_next>svg]:**:rtl:rotate-180`,
 				String.raw`[.rdp-button\_previous>svg]:**:rtl:rotate-180`,
-				className,
 			)}
 			captionLayout={captionLayout}
 			formatters={{
@@ -92,7 +94,6 @@ const Calendar = ({
 				outside: cn('text-muted-foreground aria-selected:text-muted-foreground', defaultClassNames.outside),
 				disabled: cn('text-muted-foreground opacity-50', defaultClassNames.disabled),
 				hidden: cn('invisible', defaultClassNames.hidden),
-				...classNames,
 			}}
 			components={{
 				Root: ({ className, rootRef, ...props }) => {
@@ -125,6 +126,8 @@ const Calendar = ({
 	);
 };
 
+// react-day-picker passes its day classes to this adapter, so it has to accept className.
+// eslint-disable-next-line class-name/no-class-name-prop
 const CalendarDayButton = ({ className, day, modifiers, ...props }: React.ComponentProps<typeof DayButton>) => {
 	const defaultClassNames = getDefaultClassNames();
 
@@ -136,16 +139,15 @@ const CalendarDayButton = ({ className, day, modifiers, ...props }: React.Compon
 	}, [modifiers.focused]);
 
 	return (
-		<Button
+		<button
 			ref={ref}
-			variant="ghost"
-			size="icon"
 			data-day={day.date.toLocaleDateString()}
 			data-selected-single={modifiers.selected && !modifiers.range_start && !modifiers.range_end && !modifiers.range_middle}
 			data-range-start={modifiers.range_start}
 			data-range-end={modifiers.range_end}
 			data-range-middle={modifiers.range_middle}
 			className={cn(
+				buttonVariants({ variant: 'ghost', size: 'icon' }),
 				'data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70',
 				defaultClassNames.day,
 				className,

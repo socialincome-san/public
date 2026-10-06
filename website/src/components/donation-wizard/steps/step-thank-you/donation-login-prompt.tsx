@@ -29,7 +29,7 @@ export const DonationLoginPrompt = ({ prefilledEmail, onLoginClick }: Props) => 
 			</div>
 
 			<div className="flex w-full flex-col items-center gap-3">
-				<Button asChild className="min-w-32">
+				<Button asChild>
 					<Link href={loginHref} onClick={onLoginClick} data-testid="donation-wizard-login-link">
 						{t('thankYou.loginPrompt.loginButton')}
 					</Link>

@@ -90,9 +90,9 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="outline" className="flex h-10 items-center gap-2 rounded-full px-3">
-					<Avatar className="h-7 w-7">
-						<AvatarFallback className="text-sm">
+				<Button variant="outline" size="md">
+					<Avatar size="sm">
+						<AvatarFallback>
 							{session.firstName?.[0]}
 							{session.lastName?.[0]}
 						</AvatarFallback>
@@ -104,7 +104,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 				</Button>
 			</DropdownMenuTrigger>
 
-			<DropdownMenuContent align="end" className="z-[110] w-64">
+			<DropdownMenuContent align="end">
 				{items.map((item) => {
 					const Icon = item.icon;
 
@@ -125,7 +125,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 						e.preventDefault();
 						void logout();
 					}}
-					className="text-destructive focus:text-destructive"
+					variant="destructive"
 				>
 					<LogOut className="mr-2 h-4 w-4" />
 					<span>{translator.t('security.sign-out.button')}</span>

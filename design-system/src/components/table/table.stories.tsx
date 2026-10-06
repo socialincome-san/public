@@ -34,3 +34,45 @@ export const Default: Story = {
 		</Table>
 	),
 };
+
+export const Sizes: Story = {
+	render: () => (
+		<div className="flex flex-col gap-8">
+			{(['sm', 'default', 'lg'] as const).map((size) => (
+				<Table key={size} size={size}>
+					<TableHeader>
+						<TableRow>
+							<TableHead>Country ({size})</TableHead>
+							<TableHead>Recipients</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						<TableRow>
+							<TableCell>Ghana</TableCell>
+							<TableCell>128</TableCell>
+						</TableRow>
+						<TableRow>
+							<TableCell>Sierra Leone</TableCell>
+							<TableCell>86</TableCell>
+						</TableRow>
+					</TableBody>
+				</Table>
+			))}
+		</div>
+	),
+};
+
+export const InteractiveRows: Story = {
+	render: () => (
+		<Table>
+			<TableBody>
+				<TableRow onClick={() => undefined} data-state="selected">
+					<TableCell>Selected row</TableCell>
+				</TableRow>
+				<TableRow onClick={() => undefined}>
+					<TableCell>Clickable row</TableCell>
+				</TableRow>
+			</TableBody>
+		</Table>
+	),
+};

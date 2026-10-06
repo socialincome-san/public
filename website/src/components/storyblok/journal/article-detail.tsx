@@ -40,23 +40,25 @@ export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, tran
 				</div>
 			) : (
 				<div className="w-site-width max-w-content mx-auto space-y-8 px-4 pt-8 sm:px-0 sm:pt-10">
-					<JournalBreadcrumb links={breadcrumbs} className="mb-8 pl-0" />
+					<JournalBreadcrumb links={breadcrumbs} />
 					<ArticleDetailHeader story={story} hasHero={false} lang={lang} region={region} />
 				</div>
 			)}
 
 			<div className="w-site-width max-w-content mx-auto px-4 py-8 sm:px-0 sm:py-10">
 				<div className="mx-auto max-w-2xl space-y-10">
-					{hasHero && heroImageSrc && <JournalBreadcrumb links={breadcrumbs} className="mb-10 pl-0" />}
+					{hasHero && heroImageSrc && <JournalBreadcrumb links={breadcrumbs} />}
 					<ArticleDetailBody story={story} slug={slug} lang={lang} region={region} translator={translator} />
 				</div>
 			</div>
 
 			{article.showRelativeArticles && relatedArticles.length > 0 && (
 				<section className="w-site-width max-w-content mx-auto px-4 pb-16 sm:px-0">
-					<SectionHeading size={4} bold className="text-foreground">
-						{translator.t('article.keep-reading')}
-					</SectionHeading>
+					<div className="mb-8 md:mb-10">
+						<SectionHeading size={4} bold>
+							{translator.t('article.keep-reading')}
+						</SectionHeading>
+					</div>
 					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 						{relatedArticles.map((related) => (
 							<JournalArticleCard

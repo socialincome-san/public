@@ -14,16 +14,18 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	render: () => (
-		<Command className="w-80 rounded-lg border">
-			<CommandInput placeholder="Search components" />
-			<CommandList>
-				<CommandEmpty>No results.</CommandEmpty>
-				<CommandGroup>
-					<CommandItem>Button</CommandItem>
-					<CommandItem>Dialog</CommandItem>
-					<CommandItem>Input</CommandItem>
-				</CommandGroup>
-			</CommandList>
-		</Command>
+		<div className="w-80 rounded-lg border">
+			<Command>
+				<CommandInput placeholder="Search components" />
+				<CommandList>
+					<CommandEmpty>No results.</CommandEmpty>
+					<CommandGroup>
+						<CommandItem>Button</CommandItem>
+						<CommandItem>Dialog</CommandItem>
+						<CommandItem>Input</CommandItem>
+					</CommandGroup>
+				</CommandList>
+			</Command>
+		</div>
 	),
 };

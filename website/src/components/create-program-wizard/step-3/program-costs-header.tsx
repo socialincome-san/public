@@ -43,9 +43,7 @@ export const ProgramCostsHeader = ({
 								<CircleHelp className="h-4 w-4" />
 							</button>
 						</TooltipTrigger>
-						<TooltipContent sideOffset={8} className="max-w-[320px]">
-							{totalBudgetTooltipText}
-						</TooltipContent>
+						<TooltipContent sideOffset={8}>{totalBudgetTooltipText}</TooltipContent>
 					</Tooltip>
 				</div>
 
@@ -66,9 +64,11 @@ export const ProgramCostsHeader = ({
 
 			<div className="flex flex-col items-start gap-1 sm:items-end">
 				<Select value={currency} onValueChange={onCurrencyChange}>
-					<SelectTrigger className="w-24">
-						<SelectValue />
-					</SelectTrigger>
+					<div className="w-24">
+						<SelectTrigger>
+							<SelectValue />
+						</SelectTrigger>
+					</div>
 					<SelectContent>
 						{websiteCurrencies.map((currencyOption) => (
 							<SelectItem key={currencyOption} value={currencyOption}>

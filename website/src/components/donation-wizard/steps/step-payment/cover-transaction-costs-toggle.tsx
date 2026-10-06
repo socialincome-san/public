@@ -63,9 +63,7 @@ export const CoverTransactionCostsToggle = ({
 							<CircleHelp className="size-4" aria-hidden />
 						</button>
 					</TooltipTrigger>
-					<TooltipContent sideOffset={8} className="max-w-[280px] leading-snug">
-						{t('stepPayment.cover-costs-tooltip')}
-					</TooltipContent>
+					<TooltipContent sideOffset={8}>{t('stepPayment.cover-costs-tooltip')}</TooltipContent>
 				</Tooltip>
 			</div>
 		</div>

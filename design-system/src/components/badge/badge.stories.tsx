@@ -24,12 +24,24 @@ const meta = {
 	argTypes: {
 		variant: {
 			control: 'select',
-			options: ['default', 'secondary', 'outline', 'outline-solid', 'destructive', 'verified', 'country', 'video'],
+			options: [
+				'default',
+				'secondary',
+				'outline',
+				'outline-solid',
+				'destructive',
+				'verified',
+				'country',
+				'fundraising',
+				'video',
+				'frosted',
+			],
+		},
+		size: {
+			control: 'select',
+			options: ['sm', 'default', 'lg'],
 		},
 		children: {
-			control: 'text',
-		},
-		className: {
 			control: 'text',
 		},
 	},
@@ -51,7 +63,26 @@ export const Variants: Story = {
 			<Badge variant="destructive">Destructive</Badge>
 			<Badge variant="verified">Verified</Badge>
 			<Badge variant="country">Country</Badge>
+			<Badge variant="fundraising">Fundraising</Badge>
+		</div>
+	),
+};
+
+export const OnMedia: Story = {
+	render: () => (
+		<div className="flex flex-wrap items-center gap-3 rounded-3xl bg-slate-500 p-8">
 			<Badge variant="video">Video</Badge>
+			<Badge variant="frosted">Frosted</Badge>
+		</div>
+	),
+};
+
+export const Sizes: Story = {
+	render: () => (
+		<div className="flex flex-wrap items-center gap-3">
+			<Badge size="sm">Small</Badge>
+			<Badge>Default</Badge>
+			<Badge size="lg">Large</Badge>
 		</div>
 	),
 };

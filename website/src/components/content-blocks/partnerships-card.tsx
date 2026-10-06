@@ -63,7 +63,6 @@ export const PartnershipsCardBlock = ({ blok }: Props) => {
 							key={rowIndex === 0 ? 'first-row' : 'second-row'}
 							direction={rowIndex === 0 ? 'left' : 'right'}
 							speed="regular"
-							className="-mx-4 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] px-4 py-1"
 						>
 							<div className="flex gap-6 pr-3 motion-reduce:w-full motion-reduce:flex-wrap">
 								{fillRow(row).map((entry, index) => {

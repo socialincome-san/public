@@ -1,5 +1,3 @@
-import { cn } from '@socialincome/design-system/cn';
-
 /** Logos are rendered as masks so every institution picks up the surrounding text color. */
 const FINANCIAL_INSTITUTION_LOGOS = {
 	postfinance: {
@@ -24,17 +22,16 @@ export type FinancialInstitutionLogoId = keyof typeof FINANCIAL_INSTITUTION_LOGO
 type Props = {
 	id: FinancialInstitutionLogoId;
 	label: string;
-	className?: string;
 };
 
-export const FinancialInstitutionLogo = ({ id, label, className }: Props) => {
+export const FinancialInstitutionLogo = ({ id, label }: Props) => {
 	const logo = FINANCIAL_INSTITUTION_LOGOS[id];
 
 	return (
 		<span
 			role="img"
 			aria-label={label}
-			className={cn('bg-foreground inline-block shrink-0', className)}
+			className="bg-foreground inline-block shrink-0"
 			style={{
 				width: logo.width,
 				height: logo.height,

@@ -80,7 +80,7 @@ export const ActionMenu = ({ items = [] }: ActionMenuProps) => {
 						<MoreHorizontalIcon />
 					</Button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent align="end" className="w-56" data-testid="data-table-actions-menu">
+				<DropdownMenuContent align="end" data-testid="data-table-actions-menu">
 					{items.map((item, index) => (
 						<DropdownMenuItem
 							key={`${item.label}-${index}`}

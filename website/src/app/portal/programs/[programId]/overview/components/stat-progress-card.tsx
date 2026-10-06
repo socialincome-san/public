@@ -45,9 +45,7 @@ export const StatProgressCard = ({
 									<CircleHelp className="h-3.5 w-3.5" />
 								</button>
 							</TooltipTrigger>
-							<TooltipContent sideOffset={8} className="max-w-[320px] text-sm">
-								{leftTooltipText}
-							</TooltipContent>
+							<TooltipContent sideOffset={8}>{leftTooltipText}</TooltipContent>
 						</Tooltip>
 					)}
 				</div>
@@ -64,9 +62,7 @@ export const StatProgressCard = ({
 									<CircleHelp className="h-3.5 w-3.5" />
 								</button>
 							</TooltipTrigger>
-							<TooltipContent sideOffset={8} className="max-w-[320px] text-sm">
-								{rightTooltipText}
-							</TooltipContent>
+							<TooltipContent sideOffset={8}>{rightTooltipText}</TooltipContent>
 						</Tooltip>
 					)}
 				</div>

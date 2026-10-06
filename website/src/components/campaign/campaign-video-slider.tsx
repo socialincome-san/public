@@ -52,10 +52,10 @@ export const CampaignVideoSlider = ({ translations, videoPlaybackIds }: Props) =
 	};
 
 	return (
-		<BlockWrapper className="overflow-visible md:w-full md:px-0">
+		<BlockWrapper width="bleed">
 			<div className="flex flex-col items-center gap-12">
 				<div className="flex max-w-4xl flex-col items-center gap-7 text-center">
-					<SectionHeading size={1} className="mb-0 md:mb-0">
+					<SectionHeading size={1}>
 						<StoryblokMarkdown>{translations.title}</StoryblokMarkdown>
 					</SectionHeading>
 					<p className="text-foreground max-w-[840px] text-lg leading-7">{translations.description}</p>
@@ -68,10 +68,11 @@ export const CampaignVideoSlider = ({ translations, videoPlaybackIds }: Props) =
 							align: 'center',
 							loop: videoPlaybackIds.length > 1,
 						}}
+						gap="lg"
 					>
-						<CarouselContent className="-ml-8">
+						<CarouselContent>
 							{videoPlaybackIds.map((playbackId, index) => (
-								<CarouselItem key={playbackId} className="basis-full pl-8 md:basis-4/5 lg:basis-3/5">
+								<CarouselItem key={playbackId} size="featured">
 									<div className="bg-foreground aspect-video overflow-hidden rounded-2xl">
 										{index === activeIndex ? (
 											<MuxVideo

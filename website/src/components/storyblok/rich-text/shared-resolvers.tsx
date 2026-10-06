@@ -102,14 +102,14 @@ const getRichTextTableCellSpanProps = ({ colspan, rowspan }: RichTextTableCellPr
 
 const storyblokRichTextTableNodeResolvers = {
 	[NODE_TABLE]: (children: ReactNode) => (
-		<Table className="text-foreground my-6">
-			<TableBody>{children}</TableBody>
-		</Table>
+		<div className="text-foreground my-6">
+			<Table>
+				<TableBody>{children}</TableBody>
+			</Table>
+		</div>
 	),
 	[NODE_TABLE_HEADER]: (children: ReactNode, props?: RichTextTableCellProps) => (
-		<TableHead className="font-bold" {...getRichTextTableCellSpanProps(props)}>
-			{children}
-		</TableHead>
+		<TableHead {...getRichTextTableCellSpanProps(props)}>{children}</TableHead>
 	),
 	[NODE_TABLE_ROW]: (children: ReactNode) => <TableRow>{children}</TableRow>,
 	[NODE_TABLE_CELL]: (children: ReactNode, props?: RichTextTableCellProps) => (

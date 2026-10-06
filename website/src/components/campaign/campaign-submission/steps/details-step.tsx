@@ -30,18 +30,19 @@ const durationOptions: {
 
 const RemoveUploadedImageButton = ({
 	ariaLabel,
-	className,
+	size,
 	onRemove,
 }: {
 	ariaLabel: string;
-	className?: string;
+	/** Small fits on thumbnails, default on the full preview */
+	size: 'sm' | 'default';
 	onRemove: () => void;
 }) => (
 	<button
 		type="button"
 		className={cn(
 			'bg-background text-foreground hover:bg-muted absolute top-1 right-1 z-10 flex items-center justify-center rounded-full border shadow-xs',
-			className,
+			size === 'sm' ? 'size-5' : 'size-8',
 		)}
 		aria-label={ariaLabel}
 		onClick={(event) => {
@@ -259,7 +260,6 @@ export const DetailsStep = ({
 					onValueChange={(value) => {
 						form.setValue('isPublic', value === 'public', { shouldDirty: true, shouldValidate: true });
 					}}
-					className="flex flex-col gap-2"
 				>
 					<RadioCard
 						value="public"
@@ -282,7 +282,7 @@ export const DetailsStep = ({
 			</div>
 
 			<div className="flex flex-col gap-3">
-				<Label className={cn(imageError && 'text-destructive')}>{labels.campaignBackground}</Label>
+				<Label invalid={Boolean(imageError)}>{labels.campaignBackground}</Label>
 
 				{previewSrc ? (
 					<div className="border-border relative aspect-[16/10] w-full overflow-hidden rounded-2xl border">
@@ -294,7 +294,6 @@ export const DetailsStep = ({
 								aspectRatio={16 / 10}
 								shape="rect"
 								ariaLabel={labels.campaignBackground}
-								className="rounded-2xl"
 							/>
 						) : (
 							/* eslint-disable-next-line @next/next/no-img-element -- Storyblok CDN preview */
@@ -303,7 +302,7 @@ export const DetailsStep = ({
 						{imageSelection?.type === 'upload' ? (
 							<RemoveUploadedImageButton
 								ariaLabel={labels.removeUploadedImage}
-								className="size-8"
+								size="default"
 								onRemove={() => onPrimaryImageChange(null)}
 							/>
 						) : null}
@@ -343,7 +342,7 @@ export const DetailsStep = ({
 						{previewUrl && imageSelection?.type === 'upload' ? (
 							<RemoveUploadedImageButton
 								ariaLabel={labels.removeUploadedImage}
-								className="size-5"
+								size="sm"
 								onRemove={() => onPrimaryImageChange(null)}
 							/>
 						) : null}

@@ -30,7 +30,8 @@ export const SendMessageDialog = ({ template }: SendMessageDialogProps) => {
 
 			<Dialog open={open} onOpenChange={(next) => (next ? setOpen(true) : requestClose())}>
 				<DialogContent
-					className="flex max-h-[90dvh] w-full flex-col overflow-hidden sm:h-[46rem] sm:!max-w-4xl"
+					size="lg"
+					height="fixed"
 					closeOnClickOutside={!locked}
 					closeOnEscape={!locked}
 					hideCloseButton={locked}

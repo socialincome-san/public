@@ -38,9 +38,7 @@ export const SummaryCard = ({ job, templateBody, templateError, twilioAccountSid
 					</div>
 				</div>
 				<div className="flex shrink-0 gap-2">
-					<Badge variant="default" className="uppercase">
-						{job.channelRequested}
-					</Badge>
+					<Badge variant="default">{job.channelRequested}</Badge>
 					<Badge variant={jobStatusVariant(job.status)}>{job.status}</Badge>
 				</div>
 			</header>

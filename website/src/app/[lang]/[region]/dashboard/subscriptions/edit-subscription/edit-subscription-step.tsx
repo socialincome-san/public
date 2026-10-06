@@ -118,25 +118,27 @@ export const EditSubscriptionStep = ({
 				<EditSection title={labels.monthlyContribution}>
 					<div className="border-border flex items-center gap-2 rounded-xl border px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
 						<span className="text-muted-foreground text-sm">{currency}</span>
-						<Input
-							type="number"
-							inputMode="numeric"
-							min={SUBSCRIPTION_AMOUNT_MIN}
-							max={SUBSCRIPTION_AMOUNT_MAX}
-							value={amountInput}
-							onChange={(event) => {
-								const nextValue = event.target.value;
-								setAmountDraft(nextValue);
-								const parsed = parseSubscriptionAmountInput(nextValue);
-								if (parsed !== null) {
-									onAmountChange(parsed);
-								}
-							}}
-							onBlur={() => setAmountDraft(null)}
-							className="h-auto flex-1 rounded-none border-0 bg-transparent px-0 text-center text-2xl font-medium shadow-none focus-visible:ring-0 sm:text-3xl"
-							aria-label={labels.monthlyContribution}
-							data-testid="edit-subscription-amount-input"
-						/>
+						<div className="min-w-0 flex-1 text-center text-2xl font-medium sm:text-3xl">
+							<Input
+								variant="bare"
+								type="number"
+								inputMode="numeric"
+								min={SUBSCRIPTION_AMOUNT_MIN}
+								max={SUBSCRIPTION_AMOUNT_MAX}
+								value={amountInput}
+								onChange={(event) => {
+									const nextValue = event.target.value;
+									setAmountDraft(nextValue);
+									const parsed = parseSubscriptionAmountInput(nextValue);
+									if (parsed !== null) {
+										onAmountChange(parsed);
+									}
+								}}
+								onBlur={() => setAmountDraft(null)}
+								aria-label={labels.monthlyContribution}
+								data-testid="edit-subscription-amount-input"
+							/>
+						</div>
 						<span className="text-muted-foreground text-xs whitespace-nowrap sm:text-sm">{labels.perMonthSuffix}</span>
 					</div>
 					<div className="flex flex-col gap-2">
@@ -195,7 +197,6 @@ export const EditSubscriptionStep = ({
 										type="button"
 										variant="outline"
 										size="sm"
-										className="bg-background w-full shrink-0 sm:w-auto"
 										disabled={isSubmitting || isUpdatingCard}
 										onClick={onUpdateCard}
 									>
@@ -213,7 +214,6 @@ export const EditSubscriptionStep = ({
 											type="button"
 											variant="outline"
 											size="sm"
-											className="w-full sm:w-auto"
 											disabled={isSubmitting || isUpdatingCard}
 											onClick={cardUpdateConfirm.onStay}
 										>
@@ -222,7 +222,6 @@ export const EditSubscriptionStep = ({
 										<Button
 											type="button"
 											size="sm"
-											className="w-full sm:w-auto"
 											disabled={isSubmitting || isUpdatingCard}
 											onClick={cardUpdateConfirm.onLeave}
 										>
@@ -265,13 +264,7 @@ export const EditSubscriptionStep = ({
 				) : null}
 
 				<div className="flex flex-col-reverse gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
-					<Button
-						type="button"
-						variant="outline"
-						className="w-full sm:w-auto"
-						onClick={onCancel}
-						disabled={isSubmitting || isUpdatingCard}
-					>
+					<Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting || isUpdatingCard}>
 						{labels.cancel}
 					</Button>
 
@@ -286,13 +279,7 @@ export const EditSubscriptionStep = ({
 								{totalSummary}
 							</div>
 						) : null}
-						<Button
-							type="button"
-							className="w-full sm:w-auto"
-							onClick={onSubmit}
-							disabled={!canSubmit}
-							aria-busy={isSubmitting}
-						>
+						<Button type="button" onClick={onSubmit} disabled={!canSubmit} aria-busy={isSubmitting}>
 							{isSubmitting ? labels.updatingSubscription : labels.updateSubscription}
 						</Button>
 					</div>

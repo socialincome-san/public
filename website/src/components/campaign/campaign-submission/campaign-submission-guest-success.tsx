@@ -44,12 +44,12 @@ const renderGuestDescription = (template: string, email: string): ReactNode => {
 
 export const CampaignSubmissionGuestSuccess = ({ labels, email, isRetrying, onRetry }: Props) => (
 	<div className="flex min-h-0 flex-1 flex-col" data-testid="campaign-submission-guest-success">
-		<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left">
-			<DialogTitle className="leading-snug text-balance">{labels.successCreatedTitle}</DialogTitle>
+		<DialogHeader>
+			<DialogTitle>{labels.successCreatedTitle}</DialogTitle>
 		</DialogHeader>
 
 		<CampaignSubmissionFormCardColumn>
-			<CampaignSubmissionFormCard className="bg-donation-modal-gradient">
+			<CampaignSubmissionFormCard surface="gradient">
 				<div className="flex flex-col items-center gap-6 py-4">
 					<div className="flex items-center gap-2">
 						<Heart className="text-foreground size-4 fill-current" strokeWidth={1.5} aria-hidden />
@@ -65,7 +65,7 @@ export const CampaignSubmissionGuestSuccess = ({ labels, email, isRetrying, onRe
 
 					<div className="flex w-full flex-col items-center gap-3">
 						<p className="text-foreground text-sm">{labels.successDidntGetIt}</p>
-						<Button type="button" className="min-w-32" disabled={isRetrying} onClick={onRetry}>
+						<Button type="button" disabled={isRetrying} onClick={onRetry}>
 							{isRetrying ? labels.successRetrySending : labels.successRetry}
 						</Button>
 					</div>

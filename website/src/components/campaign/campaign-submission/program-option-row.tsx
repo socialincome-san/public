@@ -95,7 +95,7 @@ export const ProgramOptionRow = ({
 
 	const programLabel = (
 		<label className="flex min-w-0 flex-1 cursor-pointer items-center gap-3">
-			<RadioGroupItem value={value} className="shrink-0" />
+			<RadioGroupItem value={value} />
 			<span className="flex min-w-0 flex-1 flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-3">
 				<span className="text-foreground min-w-0 truncate text-base font-medium sm:flex-1">{name}</span>
 				<span className="flex shrink-0 items-center gap-2">
@@ -143,8 +143,7 @@ export const ProgramOptionRow = ({
 										<Button
 											type="button"
 											variant="outline"
-											size="sm"
-											className="h-9 shrink-0 px-4 pr-3 text-sm"
+											size="md"
 											aria-controls={detailsContentId}
 											onClick={(event) => {
 												event.stopPropagation();
@@ -182,7 +181,7 @@ export const ProgramOptionRow = ({
 									{tags.length > 0 ? (
 										<div className="flex flex-wrap items-center gap-2">
 											{tags.map((tag) => (
-												<Badge key={tag} variant="default" className="border-transparent px-3 py-1.5 text-xs font-medium">
+												<Badge key={tag} variant="default" size="lg">
 													{tag}
 												</Badge>
 											))}

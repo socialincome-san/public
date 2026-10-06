@@ -105,7 +105,6 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 								setSelectedReferral(option.value);
 							}
 						}}
-						className="gap-4"
 					>
 						{WIZARD_REFERRAL_OPTIONS.map(({ value, labelKey }) => {
 							const optionId = `donation-wizard-referral-${value}`;
@@ -122,25 +121,23 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 					</RadioGroup>
 				</div>
 
-				<div className="flex flex-col gap-3 px-6 sm:flex-row sm:items-center sm:justify-between">
-					<Button
-						type="button"
-						data-testid="donation-wizard-referral-submit"
-						className="sm:order-2"
-						disabled={selectedReferral === undefined || submitting}
-						onClick={() => void onSubmit()}
-					>
-						{submitting ? t('onboarding.referral.submitting') : t('onboarding.referral.submit')}
-					</Button>
+				<div className="flex flex-col-reverse gap-3 px-6 sm:flex-row sm:items-center sm:justify-between">
 					<Button
 						type="button"
 						variant="outline"
 						data-testid="donation-wizard-referral-skip"
-						className="sm:order-1"
 						disabled={submitting}
 						onClick={() => send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU' })}
 					>
 						{t('onboarding.referral.skip')}
+					</Button>
+					<Button
+						type="button"
+						data-testid="donation-wizard-referral-submit"
+						disabled={selectedReferral === undefined || submitting}
+						onClick={() => void onSubmit()}
+					>
+						{submitting ? t('onboarding.referral.submitting') : t('onboarding.referral.submit')}
 					</Button>
 				</div>
 			</div>

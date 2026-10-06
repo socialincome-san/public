@@ -1,4 +1,3 @@
-import { Button } from '@socialincome/design-system/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { PlusIcon } from 'lucide-react';
 import type { WalletBadge, WalletFooterColumn, WalletVariant } from './wallet.types';
@@ -74,9 +73,13 @@ const WalletFrontContent = ({ variant, title, subtitle, badge, footerLeft, foote
 				</div>
 			) : (
 				<div className="flex h-full min-w-0 flex-col items-center justify-center gap-4">
-					<Button variant="secondary" size="icon" className="h-12 w-12 rounded-full shadow-xs" aria-label="Add">
-						<PlusIcon className="h-6 w-6" />
-					</Button>
+					{/* Decorative: the whole wallet is the link, so this must not be a nested button */}
+					<span
+						className="bg-secondary text-secondary-foreground flex size-12 items-center justify-center rounded-full shadow-xs"
+						aria-hidden
+					>
+						<PlusIcon className="size-6" />
+					</span>
 					<p className="line-clamp-2 min-h-[2.5em] w-full min-w-0 text-center text-2xl leading-tight wrap-break-word whitespace-normal">
 						{title}
 					</p>

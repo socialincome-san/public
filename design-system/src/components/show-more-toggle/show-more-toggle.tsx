@@ -19,14 +19,11 @@ export const ShowMoreToggle = ({ children, initialCount = 3, showMoreLabel, show
 		<div>
 			{visibleItems}
 			{children.length > initialCount && (
-				<Button
-					type="button"
-					variant="link"
-					className="mt-6 h-auto p-0 text-sm"
-					onClick={() => setExpanded((value) => !value)}
-				>
-					{expanded ? showLessLabel : showMoreLabel}
-				</Button>
+				<div className="mt-6">
+					<Button type="button" variant="link" size="inline" onClick={() => setExpanded((value) => !value)}>
+						{expanded ? showLessLabel : showMoreLabel}
+					</Button>
+				</div>
 			)}
 		</div>
 	);

@@ -2,7 +2,6 @@ import { cn } from '@socialincome/design-system/cn';
 import type { PropsWithChildren } from 'react';
 
 type Props = PropsWithChildren<{
-	className?: string;
 	direction?: 'left' | 'right';
 	speed?: 'slow' | 'regular' | 'fast';
 }>;
@@ -18,8 +17,9 @@ const speedClassMap = {
 	fast: '[animation-duration:35s]',
 };
 
-export const Marquee = ({ children, className, direction = 'left', speed = 'regular' }: Props) => (
-	<div className={cn('group overflow-hidden [contain-intrinsic-size:auto_300px] [content-visibility:auto]', className)}>
+// Bleeds slightly past its container (with matching padding) so item shadows aren't clipped, and fades out at the edges
+export const Marquee = ({ children, direction = 'left', speed = 'regular' }: Props) => (
+	<div className="group -mx-4 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] px-4 py-1 [contain-intrinsic-size:auto_300px] [content-visibility:auto]">
 		<div
 			className={cn(
 				'flex w-max will-change-transform group-hover:[animation-play-state:paused] motion-reduce:w-full motion-reduce:animate-none',

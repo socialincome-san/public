@@ -10,16 +10,15 @@ type SegmentedToggleProps = {
 	value: string;
 	onValueChange: (value: string) => void;
 	options: readonly Option[];
-	className?: string;
 };
 
-export const SegmentedToggle = ({ value, onValueChange, options, className }: SegmentedToggleProps) => {
+export const SegmentedToggle = ({ value, onValueChange, options }: SegmentedToggleProps) => {
 	return (
 		<ToggleGroupPrimitive.Root
 			type="single"
 			value={value}
 			onValueChange={(v) => v && onValueChange(v)}
-			className={cn('bg-muted/40 border-input inline-flex rounded-full border p-1', className)}
+			className="bg-muted/40 border-input inline-flex rounded-full border p-1"
 		>
 			{options.map((opt) => (
 				<ToggleGroupPrimitive.Item

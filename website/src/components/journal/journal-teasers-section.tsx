@@ -24,11 +24,7 @@ export const JournalTeasersSection = ({ articles, lang, region, heading, journal
 	return (
 		<div>
 			<div className="mb-8 flex flex-col justify-between gap-4 md:mb-10 md:flex-row md:items-center">
-				{heading && (
-					<SectionHeading align="left" className="mb-0 md:mb-0">
-						{heading}
-					</SectionHeading>
-				)}
+				{heading && <SectionHeading align="left">{heading}</SectionHeading>}
 				<div>
 					<Button variant="outline" asChild>
 						<Link href={`/${lang}/${region}/journal`}>{journalCtaLabel}</Link>

@@ -1,9 +1,5 @@
-type Props = {
-	className?: string;
-};
-
-export const GithubIcon = ({ className = '' }: Props) => (
-	<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" className={className}>
+export const GithubIcon = () => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
 		<g clipPath="url(#clip0_26560_8315)">
 			<path
 				fillRule="evenodd"

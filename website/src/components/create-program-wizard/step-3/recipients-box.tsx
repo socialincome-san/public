@@ -50,26 +50,28 @@ export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange
 				<h3 className="font-medium">{recipientsLabel}</h3>
 
 				<div className="flex justify-center">
-					<Input
-						type="number"
-						inputMode="numeric"
-						name="amountOfRecipients"
-						autoComplete="off"
-						min={RECIPIENTS_MIN}
-						max={filteredRecipients}
-						disabled={noCandidates}
-						value={recipientCountInput}
-						onChange={(event) => setRecipientCountDraft(event.target.value)}
-						onBlur={(event) => commitRecipientCount(event.target.value)}
-						onKeyDown={(event) => {
-							if (event.key === 'Enter') {
-								event.currentTarget.blur();
-							}
-						}}
-						className="h-auto w-32 rounded-lg px-5 py-2 text-center text-3xl tabular-nums shadow-none"
-						aria-label={recipientsLabel}
-						data-testid="recipients-count-input"
-					/>
+					<div className="border-input focus-within:border-ring focus-within:ring-ring/50 w-32 rounded-lg border px-5 py-2 text-center text-3xl tabular-nums focus-within:ring-[3px]">
+						<Input
+							variant="bare"
+							type="number"
+							inputMode="numeric"
+							name="amountOfRecipients"
+							autoComplete="off"
+							min={RECIPIENTS_MIN}
+							max={filteredRecipients}
+							disabled={noCandidates}
+							value={recipientCountInput}
+							onChange={(event) => setRecipientCountDraft(event.target.value)}
+							onBlur={(event) => commitRecipientCount(event.target.value)}
+							onKeyDown={(event) => {
+								if (event.key === 'Enter') {
+									event.currentTarget.blur();
+								}
+							}}
+							aria-label={recipientsLabel}
+							data-testid="recipients-count-input"
+						/>
+					</div>
 				</div>
 
 				{noCandidates ? (

@@ -41,7 +41,11 @@ export const FaqSelectionContent = ({ heading, items, cta }: Props) => {
 
 	return (
 		<div className="mx-auto max-w-4xl">
-			{heading && <SectionHeading bold>{heading}</SectionHeading>}
+			{heading && (
+				<div className="mb-8 md:mb-10">
+					<SectionHeading bold>{heading}</SectionHeading>
+				</div>
+			)}
 			<RadixAccordion.Root type="single" collapsible className="border-input w-full border-b">
 				{items.map((item) => (
 					<RadixAccordion.Item key={item.id} value={item.id} className="border-input border-b last:border-b-0">

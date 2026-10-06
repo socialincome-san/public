@@ -11,7 +11,7 @@ const meta = {
 	parameters: {
 		docs: {
 			description: {
-				component: 'A reusable card component for content with optional link behavior.',
+				component: 'A surface for grouping content.',
 			},
 		},
 		design: {
@@ -20,18 +20,23 @@ const meta = {
 		},
 	},
 	argTypes: {
-		href: {
-			control: 'text',
-		},
 		children: {
 			control: 'text',
 		},
-		variant: {
+		padding: {
 			control: 'select',
-			options: ['default', 'noPadding'],
+			options: ['default', 'compact', 'none'],
 		},
-		className: {
-			control: 'text',
+		elevation: {
+			control: 'select',
+			options: ['raised', 'flat'],
+		},
+		surface: {
+			control: 'select',
+			options: ['default', 'gradient'],
+		},
+		interactive: {
+			control: 'boolean',
 		},
 	},
 } satisfies Meta<typeof Card>;
@@ -42,7 +47,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	args: {
-		href: 'https://smartive.ch',
 		children: 'Test',
 	},
 };
@@ -51,7 +55,13 @@ export const Variants: Story = {
 	render: () => (
 		<div className="flex items-stretch gap-6">
 			<Card>Default</Card>
-			<Card variant="noPadding">
+			<Card padding="compact" elevation="flat">
+				Compact and flat
+			</Card>
+			<Card padding="compact" surface="gradient">
+				Gradient
+			</Card>
+			<Card padding="none">
 				<div className="p-10">No padding</div>
 			</Card>
 		</div>

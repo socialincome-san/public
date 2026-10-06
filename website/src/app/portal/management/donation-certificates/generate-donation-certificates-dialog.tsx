@@ -71,7 +71,7 @@ export default function GenerateDonationCertificatesDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+			<DialogContent size="md">
 				<DialogHeader>
 					<DialogTitle>Generate Donation Certificates</DialogTitle>
 				</DialogHeader>
@@ -137,11 +137,7 @@ export default function GenerateDonationCertificatesDialog({
 							placeholder="Select contributors"
 						/>
 					</div>
-					<Button
-						disabled={isLoading || !selectedContributors.length}
-						className="flex w-full items-center justify-center gap-2"
-						onClick={() => generateCertificates()}
-					>
+					<Button disabled={isLoading || !selectedContributors.length} fullWidth onClick={() => generateCertificates()}>
 						{isLoading ? 'Generating...' : 'Generate Certificates'}
 					</Button>
 					{Boolean(success ?? error) && (
@@ -152,7 +148,7 @@ export default function GenerateDonationCertificatesDialog({
 					)}
 				</div>
 
-				<DialogFooter className="mt-4">
+				<DialogFooter>
 					<Button variant="outline" onClick={() => setOpen(false)}>
 						Close
 					</Button>

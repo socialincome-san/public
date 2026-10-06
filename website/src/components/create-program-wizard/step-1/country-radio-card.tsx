@@ -42,7 +42,9 @@ export const CountryRadioCard = ({
 			checked && 'border-slate-500 bg-slate-100',
 		)}
 	>
-		<RadioGroupItem value={value} className="absolute top-3 right-3" />
+		<span className="absolute top-3 right-3 flex">
+			<RadioGroupItem value={value} />
+		</span>
 
 		<div className="flex-1 space-y-3 pr-6">
 			<div className="flex items-center gap-2">{label}</div>

@@ -1,7 +1,6 @@
 'use client';
 
-import { Input } from '@socialincome/design-system/input/input';
-import { SearchIcon } from 'lucide-react';
+import { SearchInput } from '@socialincome/design-system/search-input/search-input';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { SEARCH_QUERY_KEY } from './focuses-overview-query';
@@ -50,16 +49,11 @@ export const FocusesOverviewSearch = ({ defaultValue, label, placeholder }: Prop
 	};
 
 	return (
-		<div className="relative w-full">
-			<SearchIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-			<Input
-				type="search"
-				aria-label={label}
-				placeholder={placeholder}
-				defaultValue={currentValue}
-				onChange={(event) => updateSearch(event.target.value)}
-				className="bg-card pl-9"
-			/>
-		</div>
+		<SearchInput
+			aria-label={label}
+			placeholder={placeholder}
+			defaultValue={currentValue}
+			onChange={(event) => updateSearch(event.target.value)}
+		/>
 	);
 };

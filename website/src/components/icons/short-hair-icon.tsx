@@ -1,18 +1,17 @@
-import { cn } from '@socialincome/design-system/cn';
-
 type Props = {
-	className?: string;
+	/** Width and height in pixels, like lucide icons */
+	size?: number;
 };
 
-export const ShortHairIcon = ({ className }: Props) => (
+export const ShortHairIcon = ({ size = 20 }: Props) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
-		width="20"
-		height="20"
+		width={size}
+		height={size}
 		viewBox="0 0 20 20"
 		fill="none"
 		aria-hidden
-		className={cn('shrink-0', className)}
+		className="shrink-0"
 	>
 		<g clipPath="url(#short-hair-clip)">
 			<path

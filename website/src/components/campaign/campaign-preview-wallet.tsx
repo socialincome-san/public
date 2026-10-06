@@ -70,7 +70,11 @@ export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Prop
 						</div>
 					) : null}
 				</div>
-				{showProgress ? <Progress value={stats?.percentageCollected ?? 0} variant="onDark" className="mt-3 h-2" /> : null}
+				{showProgress ? (
+					<div className="mt-3">
+						<Progress value={stats?.percentageCollected ?? 0} variant="onDark" />
+					</div>
+				) : null}
 			</div>
 		</article>
 	);

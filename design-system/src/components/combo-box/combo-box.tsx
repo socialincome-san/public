@@ -3,9 +3,9 @@
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '../../cn';
-import { Button } from '../button/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../command/command';
 import { Popover, PopoverContent, PopoverTrigger } from '../popover/popover';
+import { selectTriggerVariants } from '../select/select';
 
 type ComboboxOption = {
 	id: string;
@@ -31,18 +31,22 @@ export const Combobox = ({
 	return (
 		<Popover open={open} onOpenChange={setOpen} modal>
 			<PopoverTrigger asChild>
-				<Button variant="outline" role="combobox" className="w-full justify-between font-normal" disabled={disabled}>
-					{selected ? selected.label : <span className="text-muted-foreground">{placeholder}</span>}
+				<button
+					type="button"
+					role="combobox"
+					aria-expanded={open}
+					className={selectTriggerVariants()}
+					data-placeholder={selected ? undefined : ''}
+					disabled={disabled}
+				>
+					{selected ? selected.label : placeholder}
 					<ChevronsUpDown className="h-4 w-4 opacity-50" />
-				</Button>
+				</button>
 			</PopoverTrigger>
 
-			<PopoverContent className="bg-popover pointer-events-auto w-[260px] rounded-md border p-0 shadow-md" align="start">
+			<PopoverContent variant="picker" align="start">
 				<Command>
-					<CommandInput
-						placeholder="Search..."
-						className="h-9 outline-hidden focus-visible:ring-0 focus-visible:ring-offset-0"
-					/>
+					<CommandInput placeholder="Search..." />
 					<CommandList>
 						<CommandEmpty>No results found.</CommandEmpty>
 

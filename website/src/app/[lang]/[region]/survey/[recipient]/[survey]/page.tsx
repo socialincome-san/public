@@ -56,9 +56,7 @@ export default function Page({ params }: SurveyPageProps) {
 				<Input name="email" type="email" placeholder="Email" />
 				<Input name="password" type="password" placeholder="Password" />
 			</div>
-			<Button type="submit" className="mx-auto rounded-full px-6">
-				Open survey
-			</Button>
+			<Button type="submit">Open survey</Button>
 		</form>
 	);
 }

@@ -3,9 +3,9 @@
 import * as React from 'react';
 
 import { ChevronDownIcon } from 'lucide-react';
-import { Button } from '../button/button';
 import { Calendar } from '../calendar/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../popover/popover';
+import { selectTriggerVariants } from '../select/select';
 
 // avoid time zone issues by normalizing date to noon
 export const normalizeToNoon = (date: Date) => {
@@ -40,20 +40,20 @@ export const DatePicker = ({
 		<div className="flex w-full flex-col gap-3">
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>
-					<Button
+					<button
+						type="button"
 						data-testid="date-picker-button"
 						disabled={disabled}
-						variant="outline"
 						id="date"
-						className="w-full justify-between font-normal"
+						className={selectTriggerVariants()}
+						data-placeholder={date ? undefined : ''}
 					>
 						{date ? formatter.format(date) : placeholder}
 						<ChevronDownIcon className="h-4 w-4 opacity-50" />
-					</Button>
+					</button>
 				</PopoverTrigger>
-				<PopoverContent className="pointer-events-auto w-72 overflow-hidden p-0" align="start">
+				<PopoverContent variant="picker" align="start">
 					<Calendar
-						className="w-72"
 						mode="single"
 						selected={date}
 						defaultMonth={date}

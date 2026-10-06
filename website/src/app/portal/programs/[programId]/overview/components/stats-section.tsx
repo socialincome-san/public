@@ -132,7 +132,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 			<Card>
 				<div className="space-y-6">
 					<div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3">
-						<SectionBox href="/portal/management/contributions" className="h-full">
+						<SectionBox href="/portal/management/contributions">
 							<div className="flex h-full flex-col">
 								<div className="flex-1 space-y-6">
 									<StatProgressCard
@@ -181,7 +181,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 							</div>
 						</SectionBox>
 
-						<SectionBox href="/portal/delivery/payouts" className="h-full">
+						<SectionBox href="/portal/delivery/payouts">
 							<div className="flex h-full flex-col">
 								<div className="flex-1 space-y-6">
 									<StatProgressCard
@@ -226,7 +226,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 							</div>
 						</SectionBox>
 
-						<SectionBox href={`/portal/programs/${programId}/payout-forecast`} className="h-full">
+						<SectionBox href={`/portal/programs/${programId}/payout-forecast`}>
 							<div className="flex h-full flex-col">
 								<div className="flex-1 space-y-6">
 									<h2 className="text-lg font-bold">Available Credits</h2>
@@ -242,9 +242,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 													<CircleHelp className="h-4 w-4" />
 												</button>
 											</TooltipTrigger>
-											<TooltipContent sideOffset={8} className="max-w-[340px] text-sm">
-												{intervalsExplanation}
-											</TooltipContent>
+											<TooltipContent sideOffset={8}>{intervalsExplanation}</TooltipContent>
 										</Tooltip>
 									</div>
 								</div>
@@ -272,9 +270,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 														<CircleHelp className="h-3 w-3" />
 													</button>
 												</TooltipTrigger>
-												<TooltipContent sideOffset={8} className="max-w-[280px] text-sm">
-													{creditStatusLabelExplanation}
-												</TooltipContent>
+												<TooltipContent sideOffset={8}>{creditStatusLabelExplanation}</TooltipContent>
 											</Tooltip>
 										</div>
 										<Tooltip>
@@ -313,9 +309,7 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 												<CircleHelp className="h-3.5 w-3.5" />
 											</button>
 										</TooltipTrigger>
-										<TooltipContent sideOffset={8} className="max-w-[280px] text-sm">
-											{recipientsTotalExplanation}
-										</TooltipContent>
+										<TooltipContent sideOffset={8}>{recipientsTotalExplanation}</TooltipContent>
 									</Tooltip>
 								</div>
 								<AdditionalNumbers>

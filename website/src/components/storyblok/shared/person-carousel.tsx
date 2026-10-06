@@ -39,19 +39,15 @@ export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default',
 			{hasSidebar && (
 				<div className="space-y-4 lg:col-span-1">
 					{sidebar?.title && <p className="text-foreground text-4xl font-bold break-words">{sidebar.title}</p>}
-					{sidebar?.heading && (
-						<SectionHeading align="left" className="text-foreground mb-0 font-normal break-words md:mb-0">
-							{sidebar.heading}
-						</SectionHeading>
-					)}
+					{sidebar?.heading && <SectionHeading align="left">{sidebar.heading}</SectionHeading>}
 					{sidebar?.description && <p className="text-muted-foreground text-lg leading-7">{sidebar.description}</p>}
 				</div>
 			)}
 			<div className={cn('relative min-w-0', hasSidebar ? 'lg:col-span-2' : 'w-full')}>
-				<Carousel setApi={setApi} opts={{ align: 'start', loop: persons.length > 1 }}>
-					<CarouselContent className="-ml-6">
+				<Carousel setApi={setApi} opts={{ align: 'start', loop: persons.length > 1 }} gap="lg">
+					<CarouselContent>
 						{persons.map((person) => (
-							<CarouselItem key={person.uuid} className={cn('pl-6', isSmall ? 'basis-[260px]' : 'basis-[305px]')}>
+							<CarouselItem key={person.uuid} size={isSmall ? 'card-sm' : 'card'}>
 								<PersonCard
 									person={person}
 									size={size}

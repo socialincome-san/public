@@ -65,13 +65,7 @@ export const CancelRetentionStep = ({ amount, currency, labels, onReduceAmount, 
 					<div className="bg-border h-px flex-1" />
 				</div>
 
-				<Button
-					type="button"
-					variant="outline"
-					className="bg-background w-full"
-					onClick={onContinueCancel}
-					data-testid="cancel-retention-continue"
-				>
+				<Button type="button" variant="outline" fullWidth onClick={onContinueCancel} data-testid="cancel-retention-continue">
 					{labels.continueCancel}
 				</Button>
 			</div>

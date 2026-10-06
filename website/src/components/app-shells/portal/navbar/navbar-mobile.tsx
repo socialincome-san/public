@@ -33,11 +33,7 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 	return (
 		<nav className="mb-4 lg:hidden">
 			<div className={cn('flex h-14 items-center justify-between px-4', !isMenuOpen && 'border-border border-b')}>
-				<Button
-					variant="ghost"
-					onClick={toggleMenu}
-					className="relative -ml-2 flex h-9 w-9 items-center justify-center [&_svg]:size-5"
-				>
+				<Button variant="ghost" size="icon" onClick={toggleMenu}>
 					<span
 						className={cn(
 							'absolute transition-all duration-300',
@@ -56,7 +52,9 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 					</span>
 				</Button>
 
-				<SILogo className="absolute left-1/2 -translate-x-1/2 transform" />
+				<span className="absolute left-1/2 -translate-x-1/2">
+					<SILogo />
+				</span>
 			</div>
 
 			{isMenuOpen && (
@@ -69,7 +67,7 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 										key={href}
 										sessions={sessions}
 										active={isActiveLink(pathname, href, activeBase)}
-										className="w-full justify-start px-3 py-2 text-base font-medium"
+										variant="menu"
 									/>
 								) : (
 									<Link
@@ -92,12 +90,7 @@ export const NavbarMobile = ({ sessions }: NavbarMobileProps) => {
 						<Separator />
 
 						<div className="p-2">
-							<UserMenu
-								sessions={sessions}
-								align="start"
-								triggerClassName="h-auto w-full justify-start gap-3 rounded-xl p-3"
-								onNavigate={() => setIsMenuOpen(false)}
-							/>
+							<UserMenu sessions={sessions} align="start" variant="menu" onNavigate={() => setIsMenuOpen(false)} />
 						</div>
 					</div>
 				</div>

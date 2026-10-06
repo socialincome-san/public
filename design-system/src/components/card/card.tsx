@@ -1,44 +1,45 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import { ChevronRightIcon } from 'lucide-react';
-import Link from 'next/link';
 import * as React from 'react';
-import { cn } from '../../cn';
+import { type WithoutClassName } from '../../without-class-name';
 
-const cardVariants = cva('bg-background rounded-3xl shadow-lg transition-all', {
+const cardVariants = cva('relative overflow-hidden rounded-3xl transition-all', {
 	variants: {
-		variant: {
-			default: 'p-10',
-			noPadding: '',
+		padding: {
+			default: 'px-6 py-8 sm:p-10',
+			compact: 'p-6',
+			none: '',
 		},
-		clickable: {
-			true: 'hover:shadow-xl hover:-translate-y-1 cursor-pointer',
-			false: '',
+		elevation: {
+			raised: 'shadow-lg',
+			// Bordered, for cards stacked inside forms or on muted backgrounds
+			flat: 'border-border border shadow-sm',
+		},
+		surface: {
+			default: 'bg-background',
+			gradient: 'bg-donation-modal-gradient',
+		},
+		// Lifts on hover, for cards wrapped in a link
+		interactive: {
+			true: 'hover:-translate-y-1 hover:shadow-xl',
+		},
+		fullHeight: {
+			true: 'h-full',
 		},
 	},
 	defaultVariants: {
-		variant: 'default',
-		clickable: false,
+		padding: 'default',
+		elevation: 'raised',
+		surface: 'default',
 	},
 });
 
-type CardProps = React.HTMLAttributes<HTMLDivElement> &
-	VariantProps<typeof cardVariants> & {
-		href?: string;
-	};
+type CardProps = WithoutClassName<React.HTMLAttributes<HTMLDivElement>> & VariantProps<typeof cardVariants>;
 
-const Card = React.forwardRef<HTMLDivElement, CardProps>(({ className, variant, href, children, ...props }, ref) => {
-	const content = (
-		<div ref={ref} className={cn(cardVariants({ variant, clickable: !!href }), 'relative', className)} {...props}>
-			{href && <ChevronRightIcon className="text-muted-foreground absolute top-6 right-6 h-5 w-5" />}
-			{children}
-		</div>
-	);
-	if (href) {
-		return <Link href={href}>{content}</Link>;
-	}
-
-	return content;
-});
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+	({ padding, elevation, surface, interactive, fullHeight, ...props }, ref) => (
+		<div ref={ref} className={cardVariants({ padding, elevation, surface, interactive, fullHeight })} {...props} />
+	),
+);
 
 Card.displayName = 'Card';
 

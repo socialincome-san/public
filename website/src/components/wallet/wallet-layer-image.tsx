@@ -2,15 +2,30 @@ import { cn } from '@socialincome/design-system/cn';
 import Image from 'next/image';
 import type { WalletImage } from './wallet.types';
 
-type WalletLayerImageProps = {
-	image: WalletImage;
-	className?: string;
-	decorative?: boolean;
-	sizes: string;
+const hoverMotionClasses = {
+	none: '',
+	'tilt-right': 'group-hover:translate-x-1 group-hover:-translate-y-5 group-hover:rotate-[5deg]',
+	'tilt-left': 'group-hover:-translate-x-1 group-hover:-translate-y-7 group-hover:-rotate-5',
 };
 
-export const WalletLayerImage = ({ image, className, decorative = false, sizes }: WalletLayerImageProps) => (
-	<div className={cn('absolute inset-0 origin-bottom rounded-sm', className)} aria-hidden={decorative ? true : undefined}>
+type WalletLayerImageProps = {
+	image: WalletImage;
+	decorative?: boolean;
+	sizes: string;
+	/** How the layer fans out when the wallet (group) is hovered */
+	hoverMotion?: keyof typeof hoverMotionClasses;
+};
+
+export const WalletLayerImage = ({ image, decorative = false, sizes, hoverMotion = 'none' }: WalletLayerImageProps) => (
+	<div
+		className={cn(
+			'absolute inset-0 origin-bottom rounded-sm',
+			hoverMotion !== 'none' &&
+				'transition duration-300 ease-out will-change-transform motion-reduce:transform-none motion-reduce:transition-none',
+			hoverMotionClasses[hoverMotion],
+		)}
+		aria-hidden={decorative ? true : undefined}
+	>
 		<Image src={image.src} alt={decorative ? '' : image.alt} fill sizes={sizes} className="rounded-sm object-cover" />
 	</div>
 );

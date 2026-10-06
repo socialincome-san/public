@@ -82,7 +82,7 @@ export const MagicLinkLoginForm = ({ lang, prefilledEmail = '' }: Props) => {
 							)}
 						/>
 
-						<Button type="submit" className="w-full">
+						<Button type="submit" fullWidth>
 							{translator?.t('submit-button')}
 						</Button>
 
@@ -97,7 +97,7 @@ export const MagicLinkLoginForm = ({ lang, prefilledEmail = '' }: Props) => {
 				<div className="space-y-4 text-center">
 					<p className="text-sm">{translator?.t('flyout.sent-message', { context: { email: submittedEmail } })}</p>
 
-					<Button variant="outline" onClick={retry} className="w-full">
+					<Button variant="outline" onClick={retry} fullWidth>
 						{translator?.t('flyout.retry')}
 					</Button>
 
