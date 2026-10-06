@@ -1,57 +1,55 @@
 'use client';
 
-import { ActionMenu, type ActionMenuItem } from '@/components/data-table/elements/action-menu';
-import { Button } from '@socialincome/design-system/actions/button/button';
-import { Input } from '@socialincome/design-system/forms/input/input';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@socialincome/design-system/forms/select/select';
-import { Switch } from '@socialincome/design-system/forms/switch/switch';
-import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/overlays/popover/popover';
 import { ArrowUpDownIcon, Columns3Icon, FilterIcon, SearchIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { Button } from '../../actions/button/button';
+import { Input } from '../../forms/input/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../forms/select/select';
+import { Switch } from '../../forms/switch/switch';
+import { Popover, PopoverContent, PopoverTrigger } from '../../overlays/popover/popover';
 
-type ToolbarFilterOption = {
+type DataTableToolbarFilterOption = {
 	value: string;
 	label: string;
 };
 
-export type ToolbarFilter = {
+export type DataTableToolbarFilter = {
 	id: string;
 	label: string;
 	placeholder: string;
 	value?: string;
-	options: ToolbarFilterOption[];
+	options: DataTableToolbarFilterOption[];
 	onChange: (value: string | undefined) => void;
 };
 
-type ToolbarColumn = {
+export type DataTableToolbarColumn = {
 	id: string;
 	label: string;
 	visible: boolean;
 	onToggle: (visible: boolean) => void;
 };
 
-export type ToolbarSortOption = {
+export type DataTableToolbarSortOption = {
 	id: string;
 	label: string;
 };
+
+export type DataTableSortDirection = 'asc' | 'desc';
+
+const isSortDirection = (value: string): value is DataTableSortDirection => value === 'asc' || value === 'desc';
 
 type DataTableToolbarProps = {
 	showControls: boolean;
 	searchKeys: string[];
 	searchValue?: string;
 	onSearchChange: (value: string) => void;
-	actionMenuItems?: ActionMenuItem[];
-	filters?: ToolbarFilter[];
-	columns?: ToolbarColumn[];
-	sortOptions?: ToolbarSortOption[];
+	actions?: ReactNode;
+	filters?: DataTableToolbarFilter[];
+	columns?: DataTableToolbarColumn[];
+	sortOptions?: DataTableToolbarSortOption[];
 	sortBy?: string;
-	sortDirection?: 'asc' | 'desc';
-	onSortChange?: (sortBy?: string, sortDirection?: 'asc' | 'desc') => void;
+	sortDirection?: DataTableSortDirection;
+	onSortChange?: (sortBy?: string, sortDirection?: DataTableSortDirection) => void;
 	onClearFilters?: () => void;
 };
 
@@ -60,7 +58,7 @@ export const DataTableToolbar = ({
 	searchKeys,
 	searchValue,
 	onSearchChange,
-	actionMenuItems,
+	actions,
 	filters = [],
 	columns = [],
 	sortOptions = [],
@@ -215,7 +213,11 @@ export const DataTableToolbar = ({
 										<label className="text-muted-foreground text-xs">Direction</label>
 										<Select
 											value={sortDirection}
-											onValueChange={(value) => onSortChange?.(sortBy, value as 'asc' | 'desc')}
+											onValueChange={(value) => {
+												if (isSortDirection(value)) {
+													onSortChange?.(sortBy, value);
+												}
+											}}
 											disabled={!sortBy}
 										>
 											<SelectTrigger data-testid="data-table-sort-direction-trigger">
@@ -302,7 +304,7 @@ export const DataTableToolbar = ({
 						</PopoverContent>
 					</Popover>
 				) : null}
-				{showControls ? <ActionMenu items={actionMenuItems} /> : null}
+				{showControls ? actions : null}
 			</div>
 		</div>
 	);

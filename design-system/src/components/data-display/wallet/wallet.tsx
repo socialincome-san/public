@@ -1,12 +1,14 @@
 'use client';
 
-import { Card } from '@socialincome/design-system/data-display/card/card';
 import Link from 'next/link';
-import type { CSSProperties } from 'react';
+import { type CSSProperties } from 'react';
+import { Card } from '../card/card';
 import { WalletFront } from './wallet-front';
 import { WalletImageStack } from './wallet-image-stack';
 import { WalletOverlayImages } from './wallet-overlay-images';
-import type { WalletBadge, WalletFooterColumn, WalletImages, WalletVariant } from './wallet.types';
+import { type WalletBadge, type WalletFooterColumn, type WalletImages, type WalletVariant } from './wallet.types';
+
+export type { WalletImage } from './wallet.types';
 
 type WalletProps = {
 	variant?: WalletVariant;

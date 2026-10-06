@@ -1,6 +1,5 @@
 'use client';
 
-import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { AgeCell } from '@/components/data-table/elements/age-cell';
 import { CountryFlagCell } from '@/components/data-table/elements/country-flag-cell';
 import { GenderCell } from '@/components/data-table/elements/gender-cell';
@@ -10,6 +9,7 @@ import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { Translator } from '@/lib/i18n/translator';
 import type { CandidatesTableViewRow } from '@/modules/candidates/candidate.types';
+import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 
 export const makeCandidateColumns = (
 	hideProgramName = false,
@@ -67,7 +67,7 @@ export const makeCandidateColumns = (
 			id: 'actions',
 			header: '',
 			enableHiding: false,
-			cell: (ctx) => <ActionCell ctx={ctx} />,
+			cell: () => <DataTableRowChevronCell />,
 		});
 	}
 

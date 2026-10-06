@@ -3,7 +3,10 @@
 import { type CellContext } from '@/components/data-table/tanstack-table';
 import { now } from '@/lib/utils/now';
 import { OBFUSCATED_SENTINEL } from '@/modules/recipients/recipient.types';
-import { cn } from '@socialincome/design-system/cn';
+import {
+	DataTableTextCell,
+	DataTableValueCell,
+} from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 import type { RowData } from '@tanstack/react-table';
 import { differenceInYears } from 'date-fns';
 
@@ -29,17 +32,10 @@ type AgeCellProps<TData extends RowData, TValue> = {
 
 export const AgeCell = <TData extends RowData, TValue>({ ctx }: AgeCellProps<TData, TValue>) => {
 	const date = ctx.getValue() as Date | string | null;
-	const isObfuscated = date === OBFUSCATED_SENTINEL;
 
-	if (isObfuscated) {
-		return <span className={cn('inline-block px-1 blur-[6px] saturate-150 select-none')}>OB</span>;
+	if (date === OBFUSCATED_SENTINEL) {
+		return <DataTableTextCell value="OB" obfuscated />;
 	}
 
-	const age = calculateAge(date);
-
-	if (age === null) {
-		return <span className="text-muted-foreground">–</span>;
-	}
-
-	return <span>{age}</span>;
+	return <DataTableValueCell value={calculateAge(date)} />;
 };

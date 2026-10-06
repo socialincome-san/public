@@ -1,11 +1,11 @@
 'use client';
 
-import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { FocusTableViewRow } from '@/modules/focuses/focus.types';
+import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 
 export const makeFocusColumns = (): ColumnDef<FocusTableViewRow>[] => [
 	{
@@ -22,6 +22,6 @@ export const makeFocusColumns = (): ColumnDef<FocusTableViewRow>[] => [
 		id: 'actions',
 		header: '',
 		enableHiding: false,
-		cell: (ctx) => <ActionCell ctx={ctx} />,
+		cell: () => <DataTableRowChevronCell />,
 	},
 ];

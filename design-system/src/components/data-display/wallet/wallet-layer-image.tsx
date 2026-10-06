@@ -1,6 +1,8 @@
-import { cn } from '@socialincome/design-system/cn';
 import Image from 'next/image';
-import type { WalletImage } from './wallet.types';
+import { cn } from '../../../cn';
+import { type WalletImage } from './wallet.types';
+
+export const WALLET_IMAGE_SIZES = '(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw';
 
 const hoverMotionClasses = {
 	none: '',

@@ -1,12 +1,12 @@
 'use client';
 
-import { ActionCell } from '@/components/data-table/elements/action-cell';
 import { CurrencyCell } from '@/components/data-table/elements/currency-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { ExpenseTableViewRow } from '@/modules/expenses/expense.types';
+import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 
 export const makeExpenseColumns = (): ColumnDef<ExpenseTableViewRow>[] => {
 	return [
@@ -40,7 +40,7 @@ export const makeExpenseColumns = (): ColumnDef<ExpenseTableViewRow>[] => {
 			id: 'actions',
 			header: '',
 			enableHiding: false,
-			cell: (ctx) => <ActionCell ctx={ctx} />,
+			cell: () => <DataTableRowChevronCell />,
 		},
 	];
 };

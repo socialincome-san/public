@@ -1,9 +1,8 @@
 import { AccountMenu } from '@/components/app-shells/website/navbar/account-menu';
 import { LocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/locale-currency-switcher';
 import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout';
-import { MenuDesktop } from '@/components/app-shells/website/navbar/menu-desktop';
 import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
-import { displaySession, type Scope } from '@/components/app-shells/website/navbar/utils';
+import { displaySession, toSiteMenuEntries, type Scope } from '@/components/app-shells/website/navbar/utils';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -12,10 +11,9 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
 import type { Session } from '@/modules/auth/auth.types';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
-import { SocialIncomeLogo } from '@socialincome/design-system/brand/logo/logo';
-import { cn } from '@socialincome/design-system/cn';
+import { SiteHeader } from '@socialincome/design-system/navigation/site-header/site-header';
+import { SiteMenuDesktop } from '@socialincome/design-system/navigation/site-header/site-menu-desktop';
 import { ISbStoryData } from '@storyblok/js';
-import NextLink from 'next/link';
 
 type Props = {
 	sessions: Session[];
@@ -31,39 +29,17 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 		storyPath: STORYBLOK_LAYOUT_PATH,
 		language: lang,
 	});
-	const menu = result?.success ? result.data.content.menu : [];
+	const menuEntries = toSiteMenuEntries(result?.success ? result.data.content.menu : [], lang, region);
 
 	return (
-		<nav
-			className={cn(
-				'bg-card max-w-content static inset-x-0 top-5 z-50 mx-auto flex h-18 w-full items-center justify-between px-4 py-2',
-				'lg:w-site-width lg:shadow-card lg:absolute lg:top-5 lg:h-14 lg:rounded-full lg:px-2',
-			)}
-		>
-			<NextLink
-				href={`/${lang}/${region}`}
-				className="text-accent-foreground lg:ml-4"
-				aria-label={translator.t('logo.home-link-aria')}
-			>
-				<SocialIncomeLogo decorative />
-			</NextLink>
-
-			<div className="hidden lg:block">
-				<MenuDesktop menu={menu} lang={lang} region={region} donationForm={<DonationFormServer lang={lang} />} />
-			</div>
-
-			<div className="flex items-center gap-4">
-				{scope === 'website' && (
-					<div className="hidden sm:block">
-						<LocaleCurrencySwitcher lang={lang} region={region} />
-					</div>
-				)}
-				<div className="hidden lg:block">
-					{session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
-				</div>
-				{!session && <OpenDonationWizardButton label={translator.t('donation-form.donate-now')} size="md" />}
-				<MenuMobile sessions={sessions} scope={scope} lang={lang} menu={menu} region={region} />
-			</div>
-		</nav>
+		<SiteHeader
+			homeHref={`/${lang}/${region}`}
+			homeLinkLabel={translator.t('logo.home-link-aria')}
+			desktopMenu={<SiteMenuDesktop entries={menuEntries} dropdownAside={<DonationFormServer lang={lang} />} />}
+			localeSwitcher={scope === 'website' && <LocaleCurrencySwitcher lang={lang} region={region} />}
+			account={session ? <AccountMenu sessions={sessions} scope={scope} lang={lang} /> : <LoginFlyout lang={lang} />}
+			donateAction={!session && <OpenDonationWizardButton label={translator.t('donation-form.donate-now')} size="md" />}
+			mobileMenu={<MenuMobile sessions={sessions} scope={scope} lang={lang} menuEntries={menuEntries} region={region} />}
+		/>
 	);
 };

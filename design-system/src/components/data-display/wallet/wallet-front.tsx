@@ -1,6 +1,6 @@
-import { cn } from '@socialincome/design-system/cn';
 import { PlusIcon } from 'lucide-react';
-import type { WalletBadge, WalletFooterColumn, WalletVariant } from './wallet.types';
+import { cn } from '../../../cn';
+import { type WalletBadge, type WalletFooterColumn, type WalletVariant } from './wallet.types';
 
 type WalletFrontProps = {
 	variant: WalletVariant;
