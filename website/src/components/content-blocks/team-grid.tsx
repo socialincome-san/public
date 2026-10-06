@@ -2,7 +2,7 @@ import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getPersonsByUuidsAction } from '@/modules/storyblok-content/storyblok-content.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextImage from 'next/image';
 

@@ -5,11 +5,23 @@ import {
 	createDonationCertificatesAction,
 	getDonationCertificateContributorOptionsAction,
 } from '@/modules/donation-certificates/donation-certificate.actions';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
-import { MultiSelect, MultiSelectOption } from '@socialincome/design-system/multi-select/multi-select';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
-import { Switch } from '@socialincome/design-system/switch/switch';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { MultiSelect, MultiSelectOption } from '@socialincome/design-system/forms/multi-select/multi-select';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
+import { Switch } from '@socialincome/design-system/forms/switch/switch';
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { useRef, useState, useTransition } from 'react';
 
 import { now } from '@/lib/utils/now';

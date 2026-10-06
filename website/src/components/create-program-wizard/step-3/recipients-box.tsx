@@ -1,8 +1,8 @@
 'use client';
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Input } from '@socialincome/design-system/input/input';
-import { Slider } from '@socialincome/design-system/slider/slider';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { Slider } from '@socialincome/design-system/forms/slider/slider';
 import { useState } from 'react';
 import { IndirectImpactNotice } from './indirect-impact-notice';
 

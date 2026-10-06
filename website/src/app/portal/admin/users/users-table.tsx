@@ -5,8 +5,8 @@ import { usersTableConfig } from '@/components/data-table/configs/users-table.co
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { UserTableViewRow } from '@/modules/users/user.types';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import UsersForm from './users-form';

@@ -2,7 +2,7 @@
 
 import type { ConsentStatus } from '@/lib/firebase/client-analytics';
 import { useIsPage } from '@/lib/hooks/use-is-page';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { useEffect, useState } from 'react';
 
 type CookieConsentBannerProps = {

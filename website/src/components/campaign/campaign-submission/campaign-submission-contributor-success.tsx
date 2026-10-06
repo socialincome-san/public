@@ -1,6 +1,6 @@
 'use client';
 
-import { DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { CircleCheck, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { useSyncExternalStore } from 'react';

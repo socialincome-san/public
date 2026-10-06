@@ -1,7 +1,7 @@
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale, formatUtcDate, fractionalCurrencyFormatOptions } from '@/lib/utils/string-utils';
 import { type UpcomingPaymentView } from '@/modules/subscriptions/subscription.types';
-import { Badge } from '@socialincome/design-system/badge/badge';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { CalendarIcon } from 'lucide-react';
 import { SubscriptionPaymentMethodDisplay } from './subscription-payment-method-display';
 

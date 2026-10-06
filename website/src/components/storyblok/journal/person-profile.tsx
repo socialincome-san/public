@@ -7,8 +7,8 @@ import { PersonProfileHeader } from '@/components/storyblok/journal/person-profi
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { formatStoryblokUrl, getPersonDisplayName } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
-import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
-import { Separator } from '@socialincome/design-system/separator/separator';
+import { Separator } from '@socialincome/design-system/data-display/separator/separator';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
 
 const PERSON_PORTRAIT_WIDTH = 384;

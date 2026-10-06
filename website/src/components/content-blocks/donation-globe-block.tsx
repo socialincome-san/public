@@ -6,8 +6,8 @@ import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/util
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getRecentSuccessfulContributionsAction } from '@/modules/contributions/contribution.actions';
 import { getContributorCommunityStatsAction } from '@/modules/contributors/contributor.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { unstable_cache } from 'next/cache';
 

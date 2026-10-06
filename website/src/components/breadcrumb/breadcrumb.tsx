@@ -1,6 +1,6 @@
 import type { BreadcrumbLink } from '@/components/breadcrumb/build-breadcrumb-links';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Breadcrumb as BreadcrumbNav } from '@socialincome/design-system/breadcrumb/breadcrumb';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { Breadcrumb as BreadcrumbNav } from '@socialincome/design-system/navigation/breadcrumb/breadcrumb';
 
 export type { BreadcrumbLink as BreadcrumbLinkType } from '@/components/breadcrumb/build-breadcrumb-links';
 

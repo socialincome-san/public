@@ -1,7 +1,7 @@
 'use client';
 
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
 import { useEffect, useRef } from 'react';
 import { CampaignSubmissionFormCard } from '../form-layout';
 import { TurnstileWidget } from '../turnstile/turnstile-widget';

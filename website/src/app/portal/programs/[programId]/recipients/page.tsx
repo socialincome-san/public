@@ -6,8 +6,8 @@ import { ProgramPermission } from '@/generated/prisma/enums';
 import { getPaginatedRecipientTableViewByProgramId } from '@/modules/recipients/recipient.service';
 import type { RecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import { requireSession } from '@/server/session';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Card } from '@socialincome/design-system/card/card';
+import { Card } from '@socialincome/design-system/data-display/card/card';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Suspense } from 'react';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };

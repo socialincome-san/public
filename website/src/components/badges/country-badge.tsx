@@ -1,7 +1,7 @@
 import { CountryFlag } from '@/components/country-flag';
 import { CountryCode } from '@/generated/prisma/enums';
 import { getCountryNameByCode } from '@/lib/types/country';
-import { Badge } from '@socialincome/design-system/badge/badge';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 
 type Props = {
 	country: CountryCode;

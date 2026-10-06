@@ -8,8 +8,8 @@ import { defaultLanguage } from '@/lib/i18n/utils';
 import { getPaginatedPayoutForecastTableView } from '@/modules/payouts/payout.service';
 import { PAYOUT_FORECAST_MONTHS_AHEAD } from '@/modules/payouts/payout.types';
 import { requireSession } from '@/server/session';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Card } from '@socialincome/design-system/card/card';
+import { Card } from '@socialincome/design-system/data-display/card/card';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Suspense } from 'react';
 
 type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };

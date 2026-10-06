@@ -1,7 +1,7 @@
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getSurveyImpactStudyDetails } from '@/modules/surveys/survey.service';
 import type { SurveyImpactStudyDetailItem } from '@/modules/surveys/survey.types';
-import { Progress } from '@socialincome/design-system/progress/progress';
+import { Progress } from '@socialincome/design-system/feedback/progress/progress';
 import { ChevronDown } from 'lucide-react';
 import { toImpactServiceFilters } from './filters.server';
 import { getImpactTranslator } from './translator';

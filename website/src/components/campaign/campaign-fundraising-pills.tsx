@@ -1,8 +1,8 @@
 'use client';
 
 import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
-import { Badge } from '@socialincome/design-system/badge/badge';
-import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/carousel/carousel';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/data-display/carousel/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import { useMemo } from 'react';
 
@@ -12,11 +12,7 @@ type Props = {
 	labels: string[];
 };
 
-const FundraisingPillBadge = ({ label }: { label: string }) => (
-	<Badge variant="fundraising" size="lg">
-		{label}
-	</Badge>
-);
+const FundraisingPillBadge = ({ label }: { label: string }) => <Badge variant="fundraising">{label}</Badge>;
 
 export const CampaignFundraisingPills = ({ labels }: Props) => {
 	const reducedMotion = usePrefersReducedMotion();

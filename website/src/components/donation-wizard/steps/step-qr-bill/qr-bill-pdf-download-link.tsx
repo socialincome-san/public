@@ -2,7 +2,7 @@
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { downloadQrBillPdfAction, downloadSubscriptionQrBillPdfAction } from '@/modules/qr-bills/qr-bill.actions';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { Download } from 'lucide-react';
 import { forwardRef, useState, type ReactNode } from 'react';
 import toast from 'react-hot-toast';

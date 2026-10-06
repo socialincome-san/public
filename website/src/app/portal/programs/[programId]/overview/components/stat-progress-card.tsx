@@ -1,5 +1,5 @@
-import { Progress } from '@socialincome/design-system/progress/progress';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
+import { Progress } from '@socialincome/design-system/feedback/progress/progress';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { CircleHelp } from 'lucide-react';
 
 type StatProgressCardProps = {

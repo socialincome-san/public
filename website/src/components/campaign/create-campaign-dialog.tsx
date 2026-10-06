@@ -1,7 +1,7 @@
 'use client';
 
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { Dialog, DialogContent } from '@socialincome/design-system/dialog/dialog';
+import { Dialog, DialogContent } from '@socialincome/design-system/overlays/dialog/dialog';
 import { type ReactNode, useState } from 'react';
 import { CampaignSubmissionForm } from './campaign-submission/campaign-submission-form';
 import type { SubmissionLabels } from './campaign-submission/types';

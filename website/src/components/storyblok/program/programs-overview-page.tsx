@@ -4,7 +4,7 @@ import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-l
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import type { ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { ISbStoryData } from '@storyblok/js';
 import { ProgramsOverviewSection } from './programs-overview-section';
 

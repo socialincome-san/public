@@ -8,7 +8,7 @@ import {
 	generateOrangeRegistrationCsvAction,
 	previewOrangeCurrentMonthPayoutsAction,
 } from '@/modules/payout-processes/payout-process.actions';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import {
 	Dialog,
 	DialogContent,
@@ -16,7 +16,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from '@socialincome/design-system/dialog/dialog';
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { format } from 'date-fns';
 import { EyeIcon, PlayIcon, TableIcon } from 'lucide-react';
 import { useState } from 'react';

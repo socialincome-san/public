@@ -1,6 +1,6 @@
 'use client';
 
-import { Card } from '@socialincome/design-system/card/card';
+import { Card } from '@socialincome/design-system/data-display/card/card';
 import type { ReactNode } from 'react';
 
 type Props = {

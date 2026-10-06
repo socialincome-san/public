@@ -4,15 +4,15 @@ import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-
 import { useLogout } from '@/components/app-shells/use-logout';
 import type { Session } from '@/modules/auth/auth.types';
 import type { UserSession } from '@/modules/users/user.types';
-import { Avatar, AvatarFallback } from '@socialincome/design-system/avatar/avatar';
 import { cn } from '@socialincome/design-system/cn';
+import { Avatar, AvatarFallback } from '@socialincome/design-system/data-display/avatar/avatar';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
+} from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 import Link from 'next/link';
 

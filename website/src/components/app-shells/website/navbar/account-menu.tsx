@@ -5,15 +5,15 @@ import { displaySession, Scope } from '@/components/app-shells/website/navbar/ut
 import { useTranslator } from '@/lib/i18n/use-translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { Session } from '@/modules/auth/auth.types';
-import { Avatar, AvatarFallback } from '@socialincome/design-system/avatar/avatar';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Avatar, AvatarFallback } from '@socialincome/design-system/data-display/avatar/avatar';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
+} from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { Building2, LayoutDashboard, LogOut, User, Users } from 'lucide-react';
 import Link from 'next/link';
 

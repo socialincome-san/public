@@ -1,7 +1,7 @@
 'use client';
 
-import { Badge } from '@socialincome/design-system/badge/badge';
 import { cn } from '@socialincome/design-system/cn';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { Check, Heart } from 'lucide-react';
 import type { PlanTierBenefit } from './plan-tier-benefit';
 

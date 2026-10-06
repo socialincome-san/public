@@ -7,8 +7,8 @@ import {
 	getVolunteerDurationParts,
 	type VolunteerDurationParts,
 } from '@/lib/storyblok/storyblok-utils';
-import { Badge } from '@socialincome/design-system/badge/badge';
 import { cn } from '@socialincome/design-system/cn';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import type { ISbStoryData } from '@storyblok/js';
 import NextImage from 'next/image';
 import NextLink from 'next/link';

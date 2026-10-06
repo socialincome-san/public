@@ -16,7 +16,7 @@ import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { getCampaignPageContentAction } from '@/modules/campaigns/campaign.actions';
 import type { CampaignPage } from '@/modules/campaigns/campaign.types';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 type Props = {
 	campaign: CampaignPage;

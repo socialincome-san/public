@@ -2,10 +2,15 @@
 
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import MuxVideo from '@mux/mux-video-react';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@socialincome/design-system/carousel/carousel';
 import { cn } from '@socialincome/design-system/cn';
-import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	type CarouselApi,
+} from '@socialincome/design-system/data-display/carousel/carousel';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { useEffect, useState } from 'react';
 
 type Props = {

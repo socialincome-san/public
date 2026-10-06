@@ -1,11 +1,17 @@
 'use client';
 
 import { ActionMenu, type ActionMenuItem } from '@/components/data-table/elements/action-menu';
-import { Button } from '@socialincome/design-system/button/button';
-import { Input } from '@socialincome/design-system/input/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/popover/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
-import { Switch } from '@socialincome/design-system/switch/switch';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
+import { Switch } from '@socialincome/design-system/forms/switch/switch';
+import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/overlays/popover/popover';
 import { ArrowUpDownIcon, Columns3Icon, FilterIcon, SearchIcon } from 'lucide-react';
 
 type ToolbarFilterOption = {

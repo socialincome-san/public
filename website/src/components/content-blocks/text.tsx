@@ -1,7 +1,7 @@
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { Text } from '@/generated/storyblok/types/109655/storyblok-components';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { cn } from '@socialincome/design-system/cn';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {

@@ -1,7 +1,13 @@
 'use client';
 
 import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
-import { Dialog, DialogBody, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import {
+	Dialog,
+	DialogBody,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { type ReactNode, useState } from 'react';
 
 type Props = {

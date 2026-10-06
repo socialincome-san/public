@@ -3,10 +3,10 @@
 import type { LanguageCode } from '@/lib/types/language';
 import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Button } from '@socialincome/design-system/button/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import NextImage from 'next/image';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';

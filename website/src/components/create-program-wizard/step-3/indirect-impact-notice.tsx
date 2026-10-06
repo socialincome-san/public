@@ -2,7 +2,12 @@
 
 import { getIndirectBeneficiaryCount, INDIRECT_BENEFICIARY_FACTOR } from '@/components/program/indirect-beneficiaries';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 
 type Props = {
 	recipients: number;

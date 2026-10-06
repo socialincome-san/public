@@ -1,9 +1,8 @@
+import { skeletonBarClassName } from '@/components/skeletons/skeleton-bar';
 import { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { cn } from '@socialincome/design-system/cn';
-
-const skeletonBar = 'bg-border animate-pulse rounded-full';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 const SKELETON_ROW_COUNT = 5;
 
@@ -27,25 +26,25 @@ export const CountryStatisticsSkeleton = async ({ lang }: Props) => {
 								<div className="bg-border absolute inset-y-0 left-1/2 z-10 w-px -translate-x-1/2" />
 								<div className="grid grid-cols-2 items-stretch">
 									<div className="bg-background rounded-l-[calc(var(--radius)+4px)] px-6 py-6">
-										<div className={cn(skeletonBar, 'h-7 w-7 rounded-full')} />
-										<div className={cn(skeletonBar, 'mt-3 h-5 w-28 rounded-md')} />
+										<div className={cn(skeletonBarClassName, 'h-7 w-7 rounded-full')} />
+										<div className={cn(skeletonBarClassName, 'mt-3 h-5 w-28 rounded-md')} />
 										<div className="mt-8 flex flex-col gap-7">
 											{Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
 												<div key={`country-statistics-skeleton-mobile-left-${index}`} className="flex flex-col gap-0">
-													<div className={cn(skeletonBar, 'h-5 w-20 rounded-md')} />
-													<div className={cn(skeletonBar, 'mt-0.5 h-5 w-16 rounded-md')} />
+													<div className={cn(skeletonBarClassName, 'h-5 w-20 rounded-md')} />
+													<div className={cn(skeletonBarClassName, 'mt-0.5 h-5 w-16 rounded-md')} />
 												</div>
 											))}
 										</div>
 									</div>
 									<div className="bg-background px-6 py-6">
-										<div className={cn(skeletonBar, 'h-7 w-7 rounded-full')} />
-										<div className={cn(skeletonBar, 'mt-3 h-5 w-28 rounded-md')} />
+										<div className={cn(skeletonBarClassName, 'h-7 w-7 rounded-full')} />
+										<div className={cn(skeletonBarClassName, 'mt-3 h-5 w-28 rounded-md')} />
 										<div className="mt-8 flex flex-col gap-7">
 											{Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
 												<div key={`country-statistics-skeleton-mobile-right-${index}`} className="flex flex-col gap-0">
-													<div className={cn(skeletonBar, 'pointer-events-none invisible h-5 w-20 rounded-md')} />
-													<div className={cn(skeletonBar, 'mt-0.5 h-5 w-16 rounded-md')} />
+													<div className={cn(skeletonBarClassName, 'pointer-events-none invisible h-5 w-20 rounded-md')} />
+													<div className={cn(skeletonBarClassName, 'mt-0.5 h-5 w-16 rounded-md')} />
 												</div>
 											))}
 										</div>
@@ -60,38 +59,38 @@ export const CountryStatisticsSkeleton = async ({ lang }: Props) => {
 								<div className="grid grid-cols-[320px_minmax(0,1fr)_minmax(0,1fr)] items-stretch">
 									<div className="bg-accent p-12">
 										<div className="pointer-events-none invisible select-none">
-											<div className={cn(skeletonBar, 'h-7 w-7 rounded-full')} />
-											<div className={cn(skeletonBar, 'mt-3 h-8 w-40 rounded-md')} />
+											<div className={cn(skeletonBarClassName, 'h-7 w-7 rounded-full')} />
+											<div className={cn(skeletonBarClassName, 'mt-3 h-8 w-40 rounded-md')} />
 										</div>
 										<div className="mt-8 flex flex-col gap-4">
 											{Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
 												<div
 													key={`country-statistics-skeleton-label-${index}`}
-													className={cn(skeletonBar, 'h-6 w-32 rounded-md')}
+													className={cn(skeletonBarClassName, 'h-6 w-32 rounded-md')}
 												/>
 											))}
 										</div>
 									</div>
 									<div className="border-border bg-background rounded-l-[calc(var(--radius)+4px)] border-l p-12">
-										<div className={cn(skeletonBar, 'h-7 w-7 rounded-full')} />
-										<div className={cn(skeletonBar, 'mt-3 h-8 w-40 rounded-md')} />
+										<div className={cn(skeletonBarClassName, 'h-7 w-7 rounded-full')} />
+										<div className={cn(skeletonBarClassName, 'mt-3 h-8 w-40 rounded-md')} />
 										<div className="mt-8 flex flex-col gap-4">
 											{Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
 												<div
 													key={`country-statistics-skeleton-country-${index}`}
-													className={cn(skeletonBar, 'h-6 w-24 rounded-md')}
+													className={cn(skeletonBarClassName, 'h-6 w-24 rounded-md')}
 												/>
 											))}
 										</div>
 									</div>
 									<div className="bg-background p-12">
-										<div className={cn(skeletonBar, 'h-7 w-7 rounded-full')} />
-										<div className={cn(skeletonBar, 'mt-3 h-8 w-40 rounded-md')} />
+										<div className={cn(skeletonBarClassName, 'h-7 w-7 rounded-full')} />
+										<div className={cn(skeletonBarClassName, 'mt-3 h-8 w-40 rounded-md')} />
 										<div className="mt-8 flex flex-col gap-4">
 											{Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
 												<div
 													key={`country-statistics-skeleton-visitor-${index}`}
-													className={cn(skeletonBar, 'h-6 w-24 rounded-md')}
+													className={cn(skeletonBarClassName, 'h-6 w-24 rounded-md')}
 												/>
 											))}
 										</div>

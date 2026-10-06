@@ -2,7 +2,7 @@
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
-import { TableCell, TableRow } from '@socialincome/design-system/table/table';
+import { TableCell, TableRow } from '@socialincome/design-system/data-display/table/table';
 import Link from 'next/link';
 
 type Props = {

@@ -9,9 +9,9 @@ import {
 	getScaledAssetDimensions,
 } from '@/lib/storyblok/storyblok-utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { ExternalLink } from 'lucide-react';
 import NextImage from 'next/image';
 import type { CSSProperties, ReactNode } from 'react';

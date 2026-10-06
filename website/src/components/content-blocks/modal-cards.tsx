@@ -3,8 +3,8 @@
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { ModalCards } from '@/generated/storyblok/types/109655/storyblok-components';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import { PlusIcon } from 'lucide-react';
 import NextImage from 'next/image';

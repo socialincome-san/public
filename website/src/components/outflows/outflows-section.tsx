@@ -3,7 +3,7 @@
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { type OutflowsSectionRow } from '@/components/outflows/outflows-spend';
 import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
-import { Progress } from '@socialincome/design-system/progress/progress';
+import { Progress } from '@socialincome/design-system/feedback/progress/progress';
 import { useInView } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';

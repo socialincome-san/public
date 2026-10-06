@@ -11,8 +11,8 @@ import {
 	getPersonsByUuidsAction,
 	getPrimaryRoleLabelsAction,
 } from '@/modules/storyblok-content/storyblok-content.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { ISbStoryData } from '@storyblok/js';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 import NextLink from 'next/link';

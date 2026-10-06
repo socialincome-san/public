@@ -1,5 +1,5 @@
 import type { GithubIssue } from '@/modules/github/github.types';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import Link from 'next/link';
 
 type Props = Pick<GithubIssue, 'title' | 'url'> & {

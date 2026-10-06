@@ -1,6 +1,6 @@
 'use client';
 
-import { SearchInput } from '@socialincome/design-system/search-input/search-input';
+import { SearchInput } from '@socialincome/design-system/forms/search-input/search-input';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { SEARCH_QUERY_KEY } from './local-partners-overview-query';

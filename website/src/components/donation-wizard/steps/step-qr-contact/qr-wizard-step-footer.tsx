@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { ChevronLeft } from 'lucide-react';
 import { formatDonationCurrencyAmount } from '../../utils/donation-formatting';

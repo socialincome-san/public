@@ -7,10 +7,10 @@ import { ShortHairIcon } from '@/components/icons/short-hair-icon';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { GENDER_OPTIONS } from '@/modules/contributors/contributor.types';
-import { Button } from '@socialincome/design-system/button/button';
-import { Combobox } from '@socialincome/design-system/combo-box/combo-box';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Combobox } from '@socialincome/design-system/forms/combo-box/combo-box';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
 import { type UseFormReturn } from 'react-hook-form';
 import { type OnboardingPersonalFields } from '../../utils/donation-wizard-validation';
 

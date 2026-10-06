@@ -6,8 +6,8 @@ import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getCountryStatisticsComparisonAction } from '@/modules/countries/country.actions';
 import type { CountryStatisticFormat } from '@/modules/countries/country.types';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { cn } from '@socialincome/design-system/cn';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { cookies, headers } from 'next/headers';
 import NextImage from 'next/image';
 

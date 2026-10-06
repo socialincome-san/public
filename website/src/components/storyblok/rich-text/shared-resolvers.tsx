@@ -8,8 +8,8 @@ import type {
 	RichTextTableCellProps,
 } from '@/components/storyblok/rich-text/rich-text.types';
 import { cn } from '@socialincome/design-system/cn';
-import { headingStyles } from '@socialincome/design-system/section-heading/heading-styles';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/design-system/table/table';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/design-system/data-display/table/table';
+import { headingStyles } from '@socialincome/design-system/layout/section-heading/heading-styles';
 import NextLink from 'next/link';
 import { createElement, ReactNode } from 'react';
 import {
@@ -109,7 +109,9 @@ const storyblokRichTextTableNodeResolvers = {
 		</div>
 	),
 	[NODE_TABLE_HEADER]: (children: ReactNode, props?: RichTextTableCellProps) => (
-		<TableHead {...getRichTextTableCellSpanProps(props)}>{children}</TableHead>
+		<TableHead variant="content" {...getRichTextTableCellSpanProps(props)}>
+			{children}
+		</TableHead>
 	),
 	[NODE_TABLE_ROW]: (children: ReactNode) => <TableRow>{children}</TableRow>,
 	[NODE_TABLE_CELL]: (children: ReactNode, props?: RichTextTableCellProps) => (

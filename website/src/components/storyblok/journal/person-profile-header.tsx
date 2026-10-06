@@ -1,6 +1,6 @@
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getPersonGitHubUrl, getPersonLinkedInUrl, getRoleLabel } from '@/lib/storyblok/storyblok-utils';
-import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
 import { ExternalLinkIcon } from 'lucide-react';
 import Image from 'next/image';

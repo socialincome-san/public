@@ -2,7 +2,13 @@
 
 import { useI18n } from '@/lib/i18n/use-i18n';
 import { WebsiteCurrency, websiteCurrencies } from '@/lib/i18n/utils';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
 
 type Props = {
 	currencies: WebsiteCurrency[];

@@ -1,9 +1,9 @@
 'use client';
 
 import { createPortalProgramDonationCheckoutAction } from '@/modules/stripe-payments/stripe-payment.actions';
-import { Button } from '@socialincome/design-system/button/button';
-import { Input } from '@socialincome/design-system/input/input';
-import { SegmentedToggle } from '@socialincome/design-system/segmented-toggle/segmented-toggle';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { SegmentedToggle } from '@socialincome/design-system/actions/segmented-toggle/segmented-toggle';
+import { Input } from '@socialincome/design-system/forms/input/input';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 

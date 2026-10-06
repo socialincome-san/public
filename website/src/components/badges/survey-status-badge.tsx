@@ -1,7 +1,7 @@
 'use client';
 
 import type { SurveyStatus } from '@/generated/prisma/enums';
-import { Badge } from '@socialincome/design-system/badge/badge';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { CalendarClockIcon, CheckIcon, CirclePlusIcon, CircleSlashIcon, HourglassIcon, SendIcon } from 'lucide-react';
 import type { ComponentType } from 'react';
 

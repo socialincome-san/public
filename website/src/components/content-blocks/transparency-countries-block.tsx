@@ -10,8 +10,8 @@ import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/util
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getContributionsByCountryDataAction } from '@/modules/transparency/transparency.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Card } from '@socialincome/design-system/card/card';
+import { Card } from '@socialincome/design-system/data-display/card/card';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {

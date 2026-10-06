@@ -5,7 +5,7 @@ import { ProgramRecipientsTable } from '@/components/storyblok/program/program-r
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getPublicRecipientsTableAction } from '@/modules/recipients/recipient.actions';
 import type { PublicRecipientTableViewRow } from '@/modules/recipients/recipient.types';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 

@@ -2,8 +2,8 @@
 
 import type { MessagingChannel } from '@/generated/prisma/client';
 import type { MessagingPhoneSource, MessagingRecipientType } from '@/modules/messaging/messaging.types';
-import { Checkbox } from '@socialincome/design-system/checkbox/checkbox';
-import { SelectableCard } from '@socialincome/design-system/selectable-card/selectable-card';
+import { Checkbox } from '@socialincome/design-system/forms/checkbox/checkbox';
+import { SelectableCard } from '@socialincome/design-system/forms/selectable-card/selectable-card';
 
 const TYPE_OPTIONS: { value: MessagingRecipientType; label: string }[] = [
 	{ value: 'contributor', label: 'Contributor' },

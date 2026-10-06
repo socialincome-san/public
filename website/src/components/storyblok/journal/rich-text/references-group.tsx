@@ -3,8 +3,8 @@ import type { ReferenceArticle, ReferencesGroup } from '@/generated/storyblok/ty
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { formatStoryblokDate } from '@/lib/storyblok/storyblok-utils';
 import type { LanguageCode } from '@/lib/types/language';
+import { ShowMoreToggle } from '@socialincome/design-system/actions/show-more-toggle/show-more-toggle';
 import { cn } from '@socialincome/design-system/cn';
-import { ShowMoreToggle } from '@socialincome/design-system/show-more-toggle/show-more-toggle';
 import Link from 'next/link';
 
 const defaultThumbnail = { filename: '/assets/metadata/placeholder/news-outlet.svg', alt: 'news-outlet' };

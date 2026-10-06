@@ -1,6 +1,13 @@
 import type { TwilioTemplateSummary } from '@/modules/messaging/messaging.types';
-import { Badge } from '@socialincome/design-system/badge/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@socialincome/design-system/table/table';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@socialincome/design-system/data-display/table/table';
 import Link from 'next/link';
 
 type MessagingTemplatesTableProps = {

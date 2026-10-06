@@ -8,8 +8,8 @@ import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/util
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import type { CampaignPage } from '@/modules/campaigns/campaign.types';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Progress } from '@socialincome/design-system/progress/progress';
+import { Progress } from '@socialincome/design-system/feedback/progress/progress';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import NextImage from 'next/image';
 import type { ReactNode } from 'react';
 

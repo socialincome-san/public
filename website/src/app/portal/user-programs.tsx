@@ -6,7 +6,7 @@ import { Translator } from '@/lib/i18n/translator';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { getCurrentProgramWalletsAction } from '@/modules/programs/program.actions';
-import { Badge } from '@socialincome/design-system/badge/badge';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 
 export const UserPrograms = async () => {
 	const result = await getCurrentProgramWalletsAction();

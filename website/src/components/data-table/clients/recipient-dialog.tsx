@@ -3,8 +3,8 @@
 import { RecipientForm } from '@/components/recipient/recipient-form';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { Session } from '@/modules/auth/auth.types';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 
 type Props = {
 	open: boolean;

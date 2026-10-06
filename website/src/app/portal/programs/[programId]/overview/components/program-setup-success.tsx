@@ -1,6 +1,6 @@
-import { Button } from '@socialincome/design-system/button/button';
-import { Card } from '@socialincome/design-system/card/card';
-import { SuccessBanner } from '@socialincome/design-system/success-banner/success-banner';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Card } from '@socialincome/design-system/data-display/card/card';
+import { SuccessBanner } from '@socialincome/design-system/feedback/success-banner/success-banner';
 import { ChevronRightIcon, ExternalLinkIcon } from 'lucide-react';
 import Link from 'next/link';
 

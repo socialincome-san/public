@@ -5,7 +5,7 @@ import { ProgramPayoutForecastTable } from '@/components/storyblok/program/progr
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getPublicPayoutForecastTableAction } from '@/modules/payouts/payout.actions';
 import type { PayoutForecastTableViewRow } from '@/modules/payouts/payout.types';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import Link from 'next/link';
 import { type ReactNode, useEffect, useState } from 'react';
 

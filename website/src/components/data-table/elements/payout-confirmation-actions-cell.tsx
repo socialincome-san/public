@@ -2,7 +2,7 @@
 
 import { confirmPayoutAction, contestPayoutAction } from '@/modules/payouts/payout.actions';
 import type { PayoutConfirmationTableViewRow } from '@/modules/payouts/payout.types';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import {
 	Dialog,
 	DialogContent,
@@ -10,7 +10,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from '@socialincome/design-system/dialog/dialog';
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { CheckIcon, XIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
 

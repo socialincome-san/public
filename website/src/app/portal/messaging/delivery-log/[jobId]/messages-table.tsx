@@ -1,7 +1,14 @@
 import { twilioMessageLogUrl } from '@/app/portal/messaging/twilio-console-url';
 import type { MessagingJobDetailView, MessagingJobMessageRow } from '@/modules/messaging/messaging.types';
-import { Badge } from '@socialincome/design-system/badge/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@socialincome/design-system/table/table';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@socialincome/design-system/data-display/table/table';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 

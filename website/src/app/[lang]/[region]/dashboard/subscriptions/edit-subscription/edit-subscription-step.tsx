@@ -9,10 +9,10 @@ import {
 	SUBSCRIPTION_AMOUNT_MIN,
 	SUBSCRIPTION_AMOUNT_SLIDER_MAX,
 } from '@/modules/subscriptions/subscription.types';
-import { Button } from '@socialincome/design-system/button/button';
-import { Input } from '@socialincome/design-system/input/input';
-import { Separator } from '@socialincome/design-system/separator/separator';
-import { Slider } from '@socialincome/design-system/slider/slider';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Separator } from '@socialincome/design-system/data-display/separator/separator';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { Slider } from '@socialincome/design-system/forms/slider/slider';
 import { CircleX, CreditCard } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 import {

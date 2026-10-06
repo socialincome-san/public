@@ -2,7 +2,7 @@
 
 import { ContributorCard } from '@/components/open-source/contributor-card';
 import type { GithubContributor } from '@/modules/github/github.types';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { useState } from 'react';
 
 const INITIAL_VISIBLE_COUNT = 16;

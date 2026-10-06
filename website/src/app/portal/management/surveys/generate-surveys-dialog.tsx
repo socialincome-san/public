@@ -2,8 +2,14 @@
 
 import { StepResultBox } from '@/components/step-result-box';
 import { generateSurveysAction, previewSurveyGenerationAction } from '@/modules/surveys/survey.actions';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { EyeIcon, PlayIcon } from 'lucide-react';
 import { useState } from 'react';
 

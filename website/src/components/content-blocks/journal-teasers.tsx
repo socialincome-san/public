@@ -4,7 +4,7 @@ import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-com
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getJournalArticlesByUuidsAction, getLatestJournalArticlesAction } from '@/modules/journal/journal.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 const JOURNAL_TEASER_LIMIT = 3;

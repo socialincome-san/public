@@ -42,7 +42,7 @@ const noClassNameProp = {
 		schema: [],
 		messages: {
 			classNameProp:
-				'"{{name}}" must not accept {{prop}}. Expose a named prop (for example size="s" | "m" | "l" or variant="negative") and map it to classes inside the component. Use Omit<…, "className"> when spreading third-party or HTML props.',
+				'"{{name}}" must not accept {{prop}}. Expose a named prop (for example size="s" | "m" | "l" or variant="negative") and map it to classes inside the component. Wrap third-party or HTML prop types in WithoutClassName<…> (design-system/src/without-class-name.ts) when spreading them.',
 		},
 	},
 	create: (context) => {
@@ -75,6 +75,15 @@ const noClassNameProp = {
 			FunctionDeclaration: (node) => {
 				if (node.id && isPascalCase(node.id.name)) {
 					checkComponent(node.id.name, node);
+				}
+			},
+			// Anonymous default exports (export default function () {} / export default () => …) are components too
+			ExportDefaultDeclaration: (node) => {
+				const { declaration } = node;
+				if (declaration.type === 'FunctionDeclaration' && !declaration.id) {
+					checkComponent('default export', declaration);
+				} else {
+					checkComponent('default export', unwrapComponentFunction(declaration));
 				}
 			},
 		};

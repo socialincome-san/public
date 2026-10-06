@@ -8,8 +8,8 @@ import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/l
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getLocalPartnerOverviewStatsAction } from '@/modules/local-partners/local-partner.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/carousel/carousel';
+import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/data-display/carousel/carousel';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 type ContentProps = {
 	localPartners: LocalPartnerStory[];

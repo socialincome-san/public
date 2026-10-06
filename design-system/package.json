@@ -6,7 +6,7 @@
 	"exports": {
 		"./styles.css": "./src/styles.css",
 		"./cn": "./src/cn.ts",
-		"./section-heading/heading-styles": "./src/components/section-heading/heading-styles.ts",
+		"./layout/section-heading/heading-styles": "./src/components/layout/section-heading/heading-styles.ts",
 		"./eslint-rules/no-class-name-prop": "./eslint-rules/no-class-name-prop.mjs",
 		"./*": "./src/components/*.tsx"
 	},
@@ -18,6 +18,7 @@
 		"format:check": "prettier --check . --config prettier.config.cjs",
 		"format:fix": "prettier --write . --config prettier.config.cjs",
 		"typecheck": "tsc --noEmit",
+		"check:unused": "knip --config knip.config.ts",
 		"test:unit": "jest --forceExit"
 	},
 	"peerDependencies": {
@@ -71,6 +72,7 @@
 		"eslint-plugin-react": "7.37.5",
 		"jest": "30.5.2",
 		"jest-environment-jsdom": "30.5.2",
+		"knip": "6.39.0",
 		"next": "16.3.8",
 		"prettier": "3.9.9",
 		"prettier-plugin-organize-imports": "4.3.0",

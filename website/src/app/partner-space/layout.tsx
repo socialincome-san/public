@@ -3,7 +3,7 @@ import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
 import { defaultRegion } from '@/lib/i18n/utils';
 import { requireSessions } from '@/server/session';
-import { Card } from '@socialincome/design-system/card/card';
+import { Card } from '@socialincome/design-system/data-display/card/card';
 import type { ReactNode } from 'react';
 
 export default async function PartnerSpaceLayout({ children }: { children: ReactNode }) {

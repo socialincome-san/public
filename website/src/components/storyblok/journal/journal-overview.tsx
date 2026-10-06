@@ -9,7 +9,7 @@ import type { ArticleType, Person } from '@/generated/storyblok/types/109655/sto
 import { createWebsiteJournalArticleTypeLink, getArticleTypeLabel } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { cn } from '@socialincome/design-system/cn';
-import { Separator } from '@socialincome/design-system/separator/separator';
+import { Separator } from '@socialincome/design-system/data-display/separator/separator';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';
 

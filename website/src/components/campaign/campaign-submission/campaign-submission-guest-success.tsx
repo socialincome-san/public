@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@socialincome/design-system/button/button';
-import { DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { Heart } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { CampaignSubmissionFormCard, CampaignSubmissionFormCardColumn } from './form-layout';

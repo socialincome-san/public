@@ -33,6 +33,8 @@ jobs:
         run: npm run lint
       - working-directory: design-system
         run: npm run format:check
+      - working-directory: design-system
+        run: npm run check:unused
 
   typecheck:
     name: "🔍 Type Check"

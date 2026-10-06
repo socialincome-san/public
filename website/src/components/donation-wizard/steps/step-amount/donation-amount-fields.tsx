@@ -1,9 +1,9 @@
 'use client';
 
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
-import { Input } from '@socialincome/design-system/input/input';
+import { Input } from '@socialincome/design-system/forms/input/input';
 import type { DonationAmountFieldsTranslations } from '../../i18n/donation-amount-fields-translations';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,

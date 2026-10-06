@@ -2,8 +2,8 @@
 
 import { PayoutInterval } from '@/generated/prisma/enums';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Slider } from '@socialincome/design-system/slider/slider';
-import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/tabs/tabs';
+import { Slider } from '@socialincome/design-system/forms/slider/slider';
+import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/navigation/tabs/tabs';
 import { PayoutPerIntervalAmount, type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 
 type Props = {

@@ -1,8 +1,8 @@
 'use client';
 
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import NextImage from 'next/image';
 import type { SubmissionLabels } from './campaign-submission/types';
 import { CreateCampaignDialog } from './create-campaign-dialog';

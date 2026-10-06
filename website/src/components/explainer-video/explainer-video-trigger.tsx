@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@socialincome/design-system/cn';
-import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { PlayIcon } from 'lucide-react';
 import NextImage from 'next/image';
 import { useState } from 'react';
@@ -66,7 +66,7 @@ export const ExplainerVideoTrigger = ({
 			</button>
 
 			<Dialog open={isOpen} onOpenChange={setIsOpen}>
-				<DialogContent size="full" padding="none">
+				<DialogContent size="lg" padding="none">
 					<DialogTitle visuallyHidden>{dialogTitle ?? label}</DialogTitle>
 					<iframe
 						src={embedUrl}

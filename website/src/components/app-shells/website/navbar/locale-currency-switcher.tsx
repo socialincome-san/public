@@ -15,9 +15,9 @@ import {
 	type WebsiteLanguage,
 	type WebsiteRegion,
 } from '@/lib/i18n/utils';
-import { Button } from '@socialincome/design-system/button/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/popover/popover';
-import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/tabs/tabs';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/navigation/tabs/tabs';
+import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/overlays/popover/popover';
 import { ChevronDown, Globe } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';

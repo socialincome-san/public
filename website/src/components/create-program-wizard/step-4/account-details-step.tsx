@@ -2,8 +2,8 @@
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

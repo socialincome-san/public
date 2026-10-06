@@ -9,14 +9,14 @@ import { formatCurrencyLocale, formatDateLocale, wholeCurrencyFormatOptions } fr
 import { getSubscriptionQrBillDisplayAction } from '@/modules/qr-bills/qr-bill.actions';
 import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
 import { type BankTransferQrBillView } from '@/modules/subscriptions/subscription.types';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-} from '@socialincome/design-system/dialog/dialog';
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

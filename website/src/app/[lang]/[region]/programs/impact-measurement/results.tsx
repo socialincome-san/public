@@ -1,5 +1,5 @@
 import { getSurveyImpactMeasurements } from '@/modules/surveys/survey.service';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { followUpConfigs, highlightedQuestionOrder, questionTypeLabelKeys } from './config';
 import { toImpactServiceFilters } from './filters.server';
 import { renderFollowUpSections } from './follow-ups';

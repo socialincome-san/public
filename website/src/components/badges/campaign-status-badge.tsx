@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge } from '@socialincome/design-system/badge/badge';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { CircleSlashIcon, HourglassIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 

@@ -37,8 +37,8 @@ in the service, or that the DTO is safe to send to the client.
 
 Design system primitives live in `design-system` and are imported as
 `@socialincome/design-system`. Follow
-`design-system/src/components/button/button.tsx`: `forwardRef`, CVA,
-Radix, and Tailwind, with classes merged through `cn` from
+`design-system/src/components/actions/button/button.tsx`: `forwardRef`,
+CVA, Radix, and Tailwind, with classes merged through `cn` from
 `design-system/src/cn.ts`. That package does not import the website.
 Components, in both packages, do not accept `className` props: pick a
 variant or add one to the component, and handle layout in the parent.

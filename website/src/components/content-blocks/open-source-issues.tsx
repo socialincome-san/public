@@ -5,7 +5,7 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getOpenSourceIssuesAction } from '@/modules/github/github.actions';
 import { EMPTY_GITHUB_OPEN_SOURCE_ISSUES_DATA } from '@/modules/github/github.types';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable, type SbBlokData } from '@storyblok/react';
 
 type Props = {

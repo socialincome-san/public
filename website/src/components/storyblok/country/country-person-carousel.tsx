@@ -5,13 +5,13 @@ import {
 	getPersonsByCountryOfficeAction,
 	getPrimaryRoleLabelsAction,
 } from '@/modules/storyblok-content/storyblok-content.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
 	CarouselScrollNextButton,
-} from '@socialincome/design-system/carousel/carousel';
+} from '@socialincome/design-system/data-display/carousel/carousel';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryTitle } from './country.utils';
 

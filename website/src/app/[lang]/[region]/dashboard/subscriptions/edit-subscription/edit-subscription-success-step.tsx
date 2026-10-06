@@ -1,7 +1,7 @@
 'use client';
 
 import { QrBillPdfDownloadLink } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-pdf-download-link';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { CircleCheck, QrCode } from 'lucide-react';
 
 type Props = {

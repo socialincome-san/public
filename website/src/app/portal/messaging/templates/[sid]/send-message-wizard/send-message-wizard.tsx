@@ -10,7 +10,7 @@ import type {
 	VariableAssignments,
 } from '@/modules/messaging/messaging.types';
 import { cn } from '@socialincome/design-system/cn';
-import { DialogBody, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { DialogBody, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useEffect, useState } from 'react';
 import type { RecipientsTableQuery } from './recipients-table';
 import { emptySelection } from './selection';

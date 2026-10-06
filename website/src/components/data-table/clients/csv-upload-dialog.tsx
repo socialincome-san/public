@@ -2,10 +2,10 @@
 
 import type { Result } from '@/lib/result';
 import { CsvRow, parseCsvFile } from '@/lib/utils/csv';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
-import { SuccessBanner } from '@socialincome/design-system/success-banner/success-banner';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { SuccessBanner } from '@socialincome/design-system/feedback/success-banner/success-banner';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useState } from 'react';
 import { CsvDropzone } from './csv-dropzone';
 import { CsvPreviewTable } from './csv-preview-table';

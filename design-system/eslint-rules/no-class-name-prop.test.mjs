@@ -96,6 +96,18 @@ test('rejects className escape hatches with a prefix', () => {
 	assert.match(messages[0].message, /must not accept imageClassName/);
 });
 
+test('rejects anonymous default-exported components', () => {
+	const functionMessages = lint(`export default function ({ className }: { className?: string }) {
+	return <div className={className} />;
+}
+`);
+	const arrowMessages = lint(`export default ({ className }: { className?: string }) => <div className={className} />;
+`);
+
+	assert.match(functionMessages[0]?.message ?? '', /"default export" must not accept className/);
+	assert.match(arrowMessages[0]?.message ?? '', /"default export" must not accept className/);
+});
+
 test('rejects className on one member of a props union', () => {
 	const messages = lint(`type Props = { kind: 'a' } | { kind: 'b'; className?: string };
 export const Choice = (props: Props) => <div>{props.kind}</div>;

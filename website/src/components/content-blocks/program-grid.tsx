@@ -4,8 +4,8 @@ import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { SbBlokData, storyblokEditable } from '@storyblok/react';
 
 type Props = {

@@ -1,7 +1,7 @@
 'use client';
 
-import { Badge } from '@socialincome/design-system/badge/badge';
-import { SelectableCard } from '@socialincome/design-system/selectable-card/selectable-card';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import { SelectableCard } from '@socialincome/design-system/forms/selectable-card/selectable-card';
 import type { ReactNode } from 'react';
 
 type Props = {

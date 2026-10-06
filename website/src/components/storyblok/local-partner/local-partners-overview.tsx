@@ -5,7 +5,7 @@ import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/l
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { LocalPartnerStory } from './local-partner.types';
 import { LocalPartnersOverviewCountryFilter } from './local-partners-overview-country-filter';
 import { LocalPartnersOverviewSearch } from './local-partners-overview-search';

@@ -1,6 +1,6 @@
 'use client';
 
-import { MultiSelect, type MultiSelectOption } from '@socialincome/design-system/multi-select/multi-select';
+import { MultiSelect, type MultiSelectOption } from '@socialincome/design-system/forms/multi-select/multi-select';
 import { Funnel } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { FILTER_PREFIX, IMPACT_FILTER_QUERY_KEYS } from './filters.constants';

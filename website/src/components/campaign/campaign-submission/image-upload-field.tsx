@@ -2,7 +2,7 @@
 
 import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { cn } from '@socialincome/design-system/cn';
-import { Label } from '@socialincome/design-system/label/label';
+import { Label } from '@socialincome/design-system/forms/label/label';
 import { Camera, Trash2, Upload } from 'lucide-react';
 import { useEffect, useId, useRef, type RefObject } from 'react';
 import { ImageFocusPoint } from './image-focus-point';

@@ -11,7 +11,7 @@ import {
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-} from '@socialincome/design-system/dialog/dialog';
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { ChevronLeft } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { type ActorRefFrom, type SnapshotFrom } from 'xstate';

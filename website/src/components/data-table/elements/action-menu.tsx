@@ -1,13 +1,13 @@
 'use client';
 
 import { LEADING_TRAILING_DASHES_REGEX, NON_ALPHANUMERIC_DASH_REGEX } from '@/lib/utils/regex';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
+} from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { MoreHorizontalIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';

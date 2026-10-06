@@ -9,12 +9,25 @@ import type {
 	MessagingRecipientType,
 	SelectionState,
 } from '@/modules/messaging/messaging.types';
-import { Button } from '@socialincome/design-system/button/button';
-import { Checkbox } from '@socialincome/design-system/checkbox/checkbox';
-import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/popover/popover';
-import { SearchInput } from '@socialincome/design-system/search-input/search-input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@socialincome/design-system/table/table';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@socialincome/design-system/data-display/table/table';
+import { Checkbox } from '@socialincome/design-system/forms/checkbox/checkbox';
+import { SearchInput } from '@socialincome/design-system/forms/search-input/search-input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/overlays/popover/popover';
 import { ChevronLeftIcon, ChevronRightIcon, FilterIcon } from 'lucide-react';
 import { type ReactNode, useEffect, useRef, useState, useTransition } from 'react';
 import {

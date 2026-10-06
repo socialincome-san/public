@@ -3,7 +3,7 @@
 import { DonationCurrencySelector } from '@/components/donation/currency-selector';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import {
 	Dialog,
 	DialogContent,
@@ -11,7 +11,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from '@socialincome/design-system/dialog/dialog';
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { useMachine } from '@xstate/react';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';

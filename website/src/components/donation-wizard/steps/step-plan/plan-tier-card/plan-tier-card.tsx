@@ -1,6 +1,6 @@
 'use client';
 
-import { SelectableCard } from '@socialincome/design-system/selectable-card/selectable-card';
+import { SelectableCard } from '@socialincome/design-system/forms/selectable-card/selectable-card';
 import type { PlanTierBenefit } from './plan-tier-benefit';
 import { PlanTierCardContent } from './plan-tier-card-content';
 

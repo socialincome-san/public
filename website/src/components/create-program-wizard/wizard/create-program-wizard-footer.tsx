@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { CreateProgramStepIndicator } from './create-program-step-indicator';
 import { CreateProgramWizardSend, CreateProgramWizardState } from './types';
 

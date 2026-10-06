@@ -19,9 +19,9 @@ import {
 	getLocalPartnersAction,
 	getProgramsAction,
 } from '@/modules/storyblok-content/storyblok-content.actions';
-import { Badge } from '@socialincome/design-system/badge/badge';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { cn } from '@socialincome/design-system/cn';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import Link from 'next/link';
 
 type Props = {

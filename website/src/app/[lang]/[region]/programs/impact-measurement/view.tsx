@@ -1,4 +1,4 @@
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { ParsedUrlQueryInput } from 'querystring';
 import { Suspense } from 'react';
 import { ImpactMeasurementFilterSection } from './filter-section';

@@ -6,7 +6,9 @@ import type { Person } from '@/generated/storyblok/types/109655/storyblok-compon
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getRoleCode, getRoleLabel, personHasRole } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameFromIsoCode } from '@/lib/types/country';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { FilterTrigger } from '@socialincome/design-system/actions/filter-trigger/filter-trigger';
+import { SearchInput } from '@socialincome/design-system/forms/search-input/search-input';
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -14,9 +16,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
-import { FilterTrigger } from '@socialincome/design-system/filter-trigger/filter-trigger';
-import { SearchInput } from '@socialincome/design-system/search-input/search-input';
+} from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import type { ISbStoryData } from '@storyblok/js';
 import { ArrowUpDownIcon } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';

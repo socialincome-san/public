@@ -10,7 +10,7 @@ import {
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-} from '@socialincome/design-system/dialog/dialog';
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { Fragment, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 
 export type CountriesSectionSegment = {

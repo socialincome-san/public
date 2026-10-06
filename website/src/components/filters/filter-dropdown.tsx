@@ -1,12 +1,12 @@
 'use client';
 
+import { FilterTrigger } from '@socialincome/design-system/actions/filter-trigger/filter-trigger';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
-import { FilterTrigger } from '@socialincome/design-system/filter-trigger/filter-trigger';
+} from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 type FilterOption = {

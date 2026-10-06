@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import type { ComponentProps } from 'react';
 import { useDonationModal } from '../hooks/use-donation-modal';
 

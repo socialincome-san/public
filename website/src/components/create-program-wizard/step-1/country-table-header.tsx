@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Label } from '@socialincome/design-system/label/label';
-import { SearchInput } from '@socialincome/design-system/search-input/search-input';
-import { Switch } from '@socialincome/design-system/switch/switch';
+import { Label } from '@socialincome/design-system/forms/label/label';
+import { SearchInput } from '@socialincome/design-system/forms/search-input/search-input';
+import { Switch } from '@socialincome/design-system/forms/switch/switch';
 
 type Props = {
 	search: string;
