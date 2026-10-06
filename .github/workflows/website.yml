@@ -127,6 +127,8 @@ jobs:
   e2e:
     name: "🏗️ Build & 📸 E2E Tests"
     runs-on: ubuntu-latest
+    # A normal run takes ~15 minutes; fail fast instead of hanging until GitHub's 6-hour default
+    timeout-minutes: 30
     needs:
       - safe-chain
       - lint
