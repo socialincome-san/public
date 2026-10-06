@@ -17,21 +17,23 @@ import {
 import { cn } from '@/lib/utils/cn';
 import { HOURS_RANGE_REGEX } from '@/lib/utils/regex';
 import type { ISbStoryData } from '@storyblok/js';
-import { CircleIcon, UsersIcon } from 'lucide-react';
+import { CircleIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 const labelClassName = 'text-muted-foreground text-xs';
 
 export type PersonProfileTranslations = {
+	// Label above the person's primary role.
+	role: string;
 	// Heading above the circle pills.
 	circles: string;
 	// Membership status of a circle pill, shown as its tooltip.
 	activeCircle: string;
 	interestedCircle: string;
-	// Title of the volunteer commitment card and of the dialog it opens.
+	// Title of the dialog the volunteer commitment card opens.
 	commitment: string;
-	// Labels for the facts inside the volunteer commitment card.
+	// Labels for the facts in the volunteer commitment card and its dialog.
 	workStyle: string;
 	likesDeadline: string;
 	likesDeadlineYes: string;
@@ -87,8 +89,8 @@ export const PersonProfileHeader = ({
 				]
 			: []),
 	];
-	const hasCirclesCard = Boolean(roleLabel) || circles.length > 0;
 	const hasCommitmentCard = Boolean(timeCommitment) || commitmentDetails.length > 0;
+	const cardCount = [Boolean(roleLabel), hasCommitmentCard, circles.length > 0].filter(Boolean).length;
 
 	return (
 		<header className="flex flex-col gap-8 sm:flex-row sm:items-start sm:gap-10">
@@ -117,8 +119,8 @@ export const PersonProfileHeader = ({
 				</div>
 			)}
 
-			<div className="min-w-0 flex-1 space-y-4 text-center sm:text-left">
-				<div className="space-y-2">
+			<div className="flex min-w-0 flex-1 flex-col gap-6 text-center sm:text-left">
+				<div className="flex flex-col gap-4">
 					<SectionHeading as="h1" size={1} align="left" bold className="text-foreground mb-0 leading-tight md:mb-0">
 						{name}
 					</SectionHeading>
@@ -144,39 +146,43 @@ export const PersonProfileHeader = ({
 					)}
 				</div>
 
-				{/* A lone card fills the row rather than leaving half of it empty. */}
-				{(hasCirclesCard || hasCommitmentCard) && (
-					<div className={cn('grid gap-4', hasCirclesCard && hasCommitmentCard && 'sm:grid-cols-2')}>
-						{hasCirclesCard && (
+				{/* All three cards share a row where there is room; in between, circles span a row of their own
+				below the other two. A lone card fills the row rather than leaving half of it empty. */}
+				{cardCount > 0 && (
+					<div
+						className={cn('grid gap-4 text-left', cardCount > 1 && 'sm:grid-cols-2', cardCount === 3 && 'lg:grid-cols-3')}
+					>
+						{roleLabel && (
 							<Card variant="noPadding" className="h-full px-6 py-4">
-								<UsersIcon className="text-muted-foreground mx-auto size-4 sm:mx-0" />
-								{roleLabel && <p className="mt-2 text-xl">{roleLabel}</p>}
-								{circles.length > 0 && (
-									<>
-										<p className={cn(labelClassName, 'mt-2')}>{translations.circles}</p>
-										<div className="mt-2 flex flex-wrap justify-center gap-2 sm:justify-start">
-											{circles.map((circle) => (
-												<Badge
-													key={`${circle.status}-${circle.code}`}
-													variant={circle.status === 'active' ? 'circle' : 'circle-outline'}
-													title={circle.status === 'active' ? translations.activeCircle : translations.interestedCircle}
-												>
-													<CircleIcon className="size-3 shrink-0" aria-hidden="true" />
-													{circle.label}
-												</Badge>
-											))}
-										</div>
-									</>
-								)}
+								<p className={labelClassName}>{translations.role}</p>
+								<p className="text-xl">{roleLabel}</p>
 							</Card>
 						)}
 						{hasCommitmentCard && (
 							<PersonCommitmentCard
 								title={translations.commitment}
+								valueLabel={translations.timeCommitment}
 								value={timeCommitment}
 								unit={HOURS_RANGE_REGEX.test(timeCommitment) ? translations.timeCommitmentUnit : undefined}
 								details={commitmentDetails}
 							/>
+						)}
+						{circles.length > 0 && (
+							<Card variant="noPadding" className={cn('h-full px-6 py-4', cardCount === 3 && 'sm:col-span-2 lg:col-span-1')}>
+								<p className={labelClassName}>{translations.circles}</p>
+								<div className="mt-2 flex flex-wrap gap-2">
+									{circles.map((circle) => (
+										<Badge
+											key={`${circle.status}-${circle.code}`}
+											variant={circle.status === 'active' ? 'circle' : 'circle-outline'}
+											title={circle.status === 'active' ? translations.activeCircle : translations.interestedCircle}
+										>
+											<CircleIcon className="size-3 shrink-0" aria-hidden="true" />
+											{circle.label}
+										</Badge>
+									))}
+								</div>
+							</Card>
 						)}
 					</div>
 				)}

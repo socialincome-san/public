@@ -57,6 +57,7 @@ export const StoryblokPreviewPersonPage = async ({
 					{...pageResult.data}
 					articlesHeading={translator.t('person.articles')}
 					profileTranslations={{
+						role: translator.t('person.role'),
 						circles: translator.t('person.circles'),
 						activeCircle: translator.t('person.circle-active'),
 						interestedCircle: translator.t('person.circle-interested'),

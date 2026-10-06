@@ -2,7 +2,6 @@
 
 import { Card } from '@/components/card/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { ClockIcon } from 'lucide-react';
 import { useState } from 'react';
 
 export type PersonCommitmentDetail = {
@@ -12,6 +11,8 @@ export type PersonCommitmentDetail = {
 
 type Props = {
 	title: string;
+	// Label shown above the time commitment.
+	valueLabel: string;
 	// The time commitment, the one fact a visitor sees without opening the card.
 	value: string;
 	unit?: string;
@@ -19,19 +20,23 @@ type Props = {
 	details: PersonCommitmentDetail[];
 };
 
-export const PersonCommitmentCard = ({ title, value, unit, details }: Props) => {
+export const PersonCommitmentCard = ({ title, valueLabel, value, unit, details }: Props) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const hasDetails = details.length > 0;
+	const displayValue = unit ? `${value} ${unit}` : value;
 
 	const card = (
 		<Card variant="noPadding" clickable={hasDetails} className="h-full px-6 py-4">
-			<ClockIcon className="text-muted-foreground mx-auto size-4 sm:mx-0" />
-			<p className="text-muted-foreground mt-2 text-xs">{title}</p>
-			{value && (
-				<p className="text-xl">
-					{value}
-					{unit && <span className="text-muted-foreground ml-1 text-xs">{unit}</span>}
-				</p>
+			<p className="text-muted-foreground text-xs">{valueLabel}</p>
+			{value && <p className="text-xl">{displayValue}</p>}
+			{/* Stretched over the card rather than wrapping it, since a button may not contain block content. */}
+			{hasDetails && (
+				<button
+					type="button"
+					onClick={() => setIsOpen(true)}
+					aria-label={title}
+					className="focus-visible:ring-ring absolute inset-0 rounded-3xl focus-visible:ring-2 focus-visible:outline-none"
+				/>
 			)}
 		</Card>
 	);
@@ -42,26 +47,16 @@ export const PersonCommitmentCard = ({ title, value, unit, details }: Props) => 
 
 	return (
 		<>
-			<button type="button" onClick={() => setIsOpen(true)} className="block h-full w-full">
-				{card}
-			</button>
+			{card}
 
 			<Dialog open={isOpen} onOpenChange={setIsOpen}>
-				<DialogContent>
+				{/* Only a few facts, so it stays a centred box on small screens rather than going full screen. */}
+				<DialogContent className="max-sm:inset-x-4 max-sm:top-1/2 max-sm:bottom-auto max-sm:h-auto max-sm:min-h-0 max-sm:w-auto max-sm:translate-y-[-50%] max-sm:rounded-2xl">
 					<DialogHeader>
 						<DialogTitle>{title}</DialogTitle>
 					</DialogHeader>
 					<dl className="space-y-4">
-						{value && (
-							<div>
-								<dt className="text-muted-foreground text-xs">{title}</dt>
-								<dd className="text-xl">
-									{value}
-									{unit && <span className="text-muted-foreground ml-1 text-xs">{unit}</span>}
-								</dd>
-							</div>
-						)}
-						{details.map((detail) => (
+						{[...(value ? [{ label: valueLabel, value: displayValue }] : []), ...details].map((detail) => (
 							<div key={detail.label}>
 								<dt className="text-muted-foreground text-xs">{detail.label}</dt>
 								<dd className="text-xl">{detail.value}</dd>
