@@ -2,7 +2,7 @@ import { JournalTeasersSection } from '@/components/journal/journal-teasers-sect
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getLatestJournalArticlesAction } from '@/modules/journal/journal.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 type Props = {
 	lang: WebsiteLanguage;

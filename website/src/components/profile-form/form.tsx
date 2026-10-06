@@ -8,13 +8,19 @@ import { getFocusOptionsAction } from '@/modules/focuses/focus.actions';
 import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import type { UserSession } from '@/modules/users/user.types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@socialincome/design-system/button/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
-import { Label } from '@socialincome/design-system/label/label';
-import { MultiSelect, MultiSelectOption } from '@socialincome/design-system/multi-select/multi-select';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
-import { Switch } from '@socialincome/design-system/switch/switch';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { Label } from '@socialincome/design-system/forms/label/label';
+import { MultiSelect, MultiSelectOption } from '@socialincome/design-system/forms/multi-select/multi-select';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
+import { Switch } from '@socialincome/design-system/forms/switch/switch';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -199,7 +205,7 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 										<SelectValue placeholder={translations.selectOptionPlaceholder} />
 									</SelectTrigger>
 								</FormControl>
-								<SelectContent className="max-h-64 overflow-y-auto">
+								<SelectContent>
 									{COUNTRY_OPTIONS.map((c) => (
 										<SelectItem key={c.code} value={c.code}>
 											{c.name}

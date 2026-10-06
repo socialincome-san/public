@@ -4,8 +4,8 @@ import { useContributorSession } from '@/components/contributor/use-contributor-
 import { useI18n } from '@/lib/i18n/use-i18n';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { cn } from '@socialincome/design-system/cn';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
 import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -85,8 +85,8 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 							control={form.control}
 							name="firstName"
 							render={({ field }) => (
-								<FormItem className="w-full gap-2">
-									<FormLabel className="text-sm font-medium">{t('stepQrContact.firstName')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('stepQrContact.firstName')}</FormLabel>
 									<FormControl>
 										<Input {...field} autoComplete="given-name" disabled={isLoading} />
 									</FormControl>
@@ -97,8 +97,8 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 							control={form.control}
 							name="lastName"
 							render={({ field }) => (
-								<FormItem className="w-full gap-2">
-									<FormLabel className="text-sm font-medium">{t('stepQrContact.lastName')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('stepQrContact.lastName')}</FormLabel>
 									<FormControl>
 										<Input {...field} autoComplete="family-name" disabled={isLoading} />
 									</FormControl>
@@ -109,8 +109,8 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 							control={form.control}
 							name="email"
 							render={({ field }) => (
-								<FormItem className="w-full gap-2">
-									<FormLabel className="text-sm font-medium">{t('stepQrContact.email')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('stepQrContact.email')}</FormLabel>
 									<FormControl>
 										<Input {...field} type="email" autoComplete="email" disabled={isLoading} />
 									</FormControl>

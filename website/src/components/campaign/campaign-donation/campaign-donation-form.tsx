@@ -11,9 +11,9 @@ import {
 import { getDonationWizardCardClass } from '@/components/donation-wizard/utils/donation-wizard-layout';
 import { selectStep1FormView } from '@/components/donation-wizard/wizard/donation-machine-selectors';
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
-import { Input } from '@socialincome/design-system/input/input';
+import { Input } from '@socialincome/design-system/forms/input/input';
 import NextImage from 'next/image';
 
 const ZEWO_NPO_DETAIL_URL = 'https://zewo.ch/npo-detail/?relief_organization=social-income';
@@ -130,7 +130,7 @@ export const CampaignDonationForm = ({
 									<span className="text-sm leading-none font-medium">{translations.other}</span>
 								) : (
 									<span className="flex flex-col items-center leading-none">
-										<span className="text-[10px] font-medium">{currency}</span>
+										<span className="text-2xs font-medium">{currency}</span>
 										<span className="text-lg font-medium">{option}</span>
 									</span>
 								)}
@@ -165,7 +165,7 @@ export const CampaignDonationForm = ({
 				<Button
 					type="button"
 					data-testid="donation-wizard-amount-continue"
-					className="w-full"
+					fullWidth
 					disabled={!values.isValid}
 					onClick={() => {
 						if (!form.isValid) {

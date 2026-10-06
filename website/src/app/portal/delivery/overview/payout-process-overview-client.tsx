@@ -4,9 +4,9 @@ import { formatPayoutProcessLabel } from '@/lib/payout-process-options';
 import { now } from '@/lib/utils/now';
 import type { PayoutProcessOverviewOption } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { getPayoutRecipientCountsAction } from '@/modules/payout-processes/payout-process.actions';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
-import { DatePicker, normalizeToNoon } from '@socialincome/design-system/date-picker/date-picker';
+import { DatePicker, normalizeToNoon } from '@socialincome/design-system/forms/date-picker/date-picker';
 import { format } from 'date-fns';
 import { CalendarIcon, CircleDollarSignIcon, FileSpreadsheet } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -110,7 +110,6 @@ const PayoutProcessGrid = ({
 											</div>
 											<Button
 												data-testid={`start-payout-process-${option.id}`}
-												className="w-full"
 												disabled={!canStartProcess}
 												onClick={() => onStartOption(option)}
 											>

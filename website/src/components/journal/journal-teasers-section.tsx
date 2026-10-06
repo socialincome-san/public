@@ -1,9 +1,9 @@
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
-import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
@@ -24,11 +24,7 @@ export const JournalTeasersSection = ({ articles, lang, region, heading, journal
 	return (
 		<div>
 			<div className="mb-8 flex flex-col justify-between gap-4 md:mb-10 md:flex-row md:items-center">
-				{heading && (
-					<SectionHeading align="left" className="mb-0 md:mb-0">
-						{heading}
-					</SectionHeading>
-				)}
+				{heading && <SectionHeading align="left">{heading}</SectionHeading>}
 				<div>
 					<Button variant="outline" asChild>
 						<Link href={`/${lang}/${region}/journal`}>{journalCtaLabel}</Link>

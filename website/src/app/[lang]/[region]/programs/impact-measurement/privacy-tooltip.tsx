@@ -1,6 +1,6 @@
 'use client';
 
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { Info } from 'lucide-react';
 
 type ImpactMeasurementPrivacyTooltipProps = {
@@ -19,8 +19,6 @@ export const ImpactMeasurementPrivacyTooltip = ({ message }: ImpactMeasurementPr
 				<Info className="size-4" />
 			</button>
 		</TooltipTrigger>
-		<TooltipContent sideOffset={6} className="max-w-xs">
-			{message}
-		</TooltipContent>
+		<TooltipContent sideOffset={6}>{message}</TooltipContent>
 	</Tooltip>
 );

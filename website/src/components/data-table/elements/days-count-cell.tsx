@@ -1,38 +1,11 @@
 'use client';
 
 import { CellType } from '@/components/data-table/elements/types';
-import { Badge } from '@socialincome/design-system/badge/badge';
+import { DataTableDaysCountCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 import type { RowData } from '@tanstack/react-table';
-import { Clock3Icon } from 'lucide-react';
-
-const formatDaysUntilStart = (days: number): string => {
-	if (days <= 0) {
-		return 'Today';
-	}
-
-	return `In ${days} day${days === 1 ? '' : 's'}`;
-};
 
 export const DaysCountCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const rawValue = ctx.getValue();
-	const days = typeof rawValue === 'number' ? rawValue : Number(rawValue ?? 0);
-	const safeDays = Number.isFinite(days) ? Math.max(0, Math.floor(days)) : 0;
-	let badgeVariant: 'default' | 'secondary' | 'outline' | 'destructive' | 'verified' = 'verified';
 
-	if (safeDays < 7) {
-		badgeVariant = 'destructive';
-	} else if (safeDays < 14) {
-		badgeVariant = 'secondary';
-	} else if (safeDays < 30) {
-		badgeVariant = 'outline';
-	} else if (safeDays < 60) {
-		badgeVariant = 'default';
-	}
-
-	return (
-		<Badge variant={badgeVariant}>
-			<Clock3Icon className="mr-1 h-4 w-4" />
-			{formatDaysUntilStart(safeDays)}
-		</Badge>
-	);
+	return <DataTableDaysCountCell days={typeof rawValue === 'number' ? rawValue : Number(rawValue ?? 0)} />;
 };

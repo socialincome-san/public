@@ -1,5 +1,5 @@
-import { Progress } from '@socialincome/design-system/progress/progress';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
+import { Progress } from '@socialincome/design-system/feedback/progress/progress';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { CircleHelp } from 'lucide-react';
 
 type StatProgressCardProps = {
@@ -45,9 +45,7 @@ export const StatProgressCard = ({
 									<CircleHelp className="h-3.5 w-3.5" />
 								</button>
 							</TooltipTrigger>
-							<TooltipContent sideOffset={8} className="max-w-[320px] text-sm">
-								{leftTooltipText}
-							</TooltipContent>
+							<TooltipContent sideOffset={8}>{leftTooltipText}</TooltipContent>
 						</Tooltip>
 					)}
 				</div>
@@ -64,9 +62,7 @@ export const StatProgressCard = ({
 									<CircleHelp className="h-3.5 w-3.5" />
 								</button>
 							</TooltipTrigger>
-							<TooltipContent sideOffset={8} className="max-w-[320px] text-sm">
-								{rightTooltipText}
-							</TooltipContent>
+							<TooltipContent sideOffset={8}>{rightTooltipText}</TooltipContent>
 						</Tooltip>
 					)}
 				</div>

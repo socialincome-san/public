@@ -1,9 +1,9 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getPaginatedExchangeRateTableView } from '@/modules/exchange-rates/exchange-rate.service';
 import type { ExchangeRatesTableViewRow } from '@/modules/exchange-rates/exchange-rate.types';
 import { requireAdmin } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 import ExchangeRatesTable from './exchange-rates-table';
 

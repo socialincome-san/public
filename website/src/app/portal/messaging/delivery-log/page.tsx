@@ -1,8 +1,8 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { MessagingJobsTable } from '@/app/portal/messaging/delivery-log/messaging-jobs-table';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { listMessagingJobsAction } from '@/modules/messaging/messaging.actions';
 import { requireAdmin } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 
 const PAGE_SIZE = 10;

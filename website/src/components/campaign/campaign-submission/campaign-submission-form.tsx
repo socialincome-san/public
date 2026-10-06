@@ -21,8 +21,8 @@ import {
 } from '@/modules/campaigns/campaign.types';
 import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
-import { Form } from '@socialincome/design-system/form/form';
+import { Form } from '@socialincome/design-system/forms/form/form';
+import { DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useForm, type FieldPath } from 'react-hook-form';
 import { CampaignSubmissionContributorSuccess } from './campaign-submission-contributor-success';
@@ -756,22 +756,21 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 	return (
 		<Form {...form}>
 			<form className="flex min-h-0 flex-1 flex-col" noValidate onSubmit={handleSubmit}>
-				<div className="-mt-6 flex h-[52px] shrink-0 items-center border-b pr-12 pl-6 sm:hidden">
-					<CampaignSubmissionStepIndicator
-						currentStep={currentStep}
-						steps={visibleSteps}
-						formStepsLabel={labels.formSteps}
-						stepLabel={labels.stepLabel}
-						programLabel={labels.program}
-						detailsLabel={labels.details}
-						aboutLabel={labels.about}
-						personalLabel={labels.personal}
-						variant="bars"
-						className="min-w-0 flex-1"
-					/>
-				</div>
-				<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left max-sm:border-b-0 max-sm:pt-4 max-sm:pb-0">
-					<DialogTitle ref={stepTitleRef} tabIndex={-1} className="leading-snug text-balance outline-none">
+				<DialogHeader>
+					<div className="mb-3 sm:hidden">
+						<CampaignSubmissionStepIndicator
+							currentStep={currentStep}
+							steps={visibleSteps}
+							formStepsLabel={labels.formSteps}
+							stepLabel={labels.stepLabel}
+							programLabel={labels.program}
+							detailsLabel={labels.details}
+							aboutLabel={labels.about}
+							personalLabel={labels.personal}
+							variant="bars"
+						/>
+					</div>
+					<DialogTitle ref={stepTitleRef} tabIndex={-1}>
 						{stepTitle}
 					</DialogTitle>
 				</DialogHeader>

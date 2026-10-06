@@ -2,8 +2,8 @@
 
 import type { MessagingChannel } from '@/generated/prisma/client';
 import type { MessagingPhoneSource, MessagingRecipientType } from '@/modules/messaging/messaging.types';
-import { Checkbox } from '@socialincome/design-system/checkbox/checkbox';
-import { SelectableCard } from '@socialincome/design-system/selectable-card/selectable-card';
+import { Checkbox } from '@socialincome/design-system/forms/checkbox/checkbox';
+import { SelectableCard } from '@socialincome/design-system/forms/selectable-card/selectable-card';
 
 const TYPE_OPTIONS: { value: MessagingRecipientType; label: string }[] = [
 	{ value: 'contributor', label: 'Contributor' },
@@ -54,7 +54,7 @@ export const Step1RecipientType = ({
 							key={option.value}
 							selected={type === option.value}
 							onSelect={() => onTypeChange(option.value)}
-							className="px-4 py-3 text-center text-sm font-medium"
+							size="sm"
 						>
 							{option.label}
 						</SelectableCard>
@@ -71,7 +71,7 @@ export const Step1RecipientType = ({
 								<SelectableCard
 									selected={phoneSource === option.value}
 									onSelect={() => onPhoneSourceChange(option.value)}
-									className="w-full px-4 py-3 text-center text-sm font-medium"
+									size="sm"
 								>
 									{option.label}
 								</SelectableCard>
@@ -101,7 +101,7 @@ export const Step1RecipientType = ({
 									selected={channel === option.value}
 									disabled={!supported}
 									onSelect={() => onChannelChange(option.value)}
-									className="w-full px-4 py-3 text-center text-sm font-medium"
+									size="sm"
 								>
 									{option.label}
 								</SelectableCard>

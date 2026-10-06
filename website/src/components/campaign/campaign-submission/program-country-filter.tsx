@@ -1,9 +1,9 @@
 'use client';
 
+import { CountryFlag } from '@/components/country-flag';
 import type { CountryCode } from '@/generated/prisma/client';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { cn } from '@socialincome/design-system/cn';
-import { CountryFlag } from '@socialincome/design-system/country-flag/country-flag';
 
 export type ProgramCountryFilterOption = {
 	countryId: string;

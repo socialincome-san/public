@@ -65,7 +65,11 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid', vi
 							sizes="(min-width: 1280px) 596px, 100vw"
 							className="aspect-[658/380] w-full rounded-xl object-cover"
 						/>
-						{content.videoLabel && <VideoBadge label={videoLabel} className="absolute top-3 left-3" />}
+						{content.videoLabel && (
+							<div className="absolute top-3 left-3">
+								<VideoBadge label={videoLabel} />
+							</div>
+						)}
 					</div>
 				)}
 				<div className="flex flex-1 flex-col justify-between gap-3 p-4 lg:p-6">
@@ -105,7 +109,11 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid', vi
 							sizes="281px"
 							className="h-auto w-full rounded-xl object-cover"
 						/>
-						{content.videoLabel && <VideoBadge label={videoLabel} className="absolute top-2 left-2" />}
+						{content.videoLabel && (
+							<div className="absolute top-2 left-2">
+								<VideoBadge label={videoLabel} />
+							</div>
+						)}
 					</div>
 				)}
 			</Link>
@@ -127,7 +135,11 @@ export const JournalArticleCard = ({ article, lang, region, variant = 'grid', vi
 						sizes="(min-width: 1024px) 33vw, 100vw"
 						className="aspect-[658/380] w-full object-cover"
 					/>
-					{content.videoLabel && <VideoBadge label={videoLabel} className="absolute top-3 left-3" />}
+					{content.videoLabel && (
+						<div className="absolute top-3 left-3">
+							<VideoBadge label={videoLabel} />
+						</div>
+					)}
 				</div>
 			)}
 			<div className="flex flex-1 flex-col gap-4 p-4 lg:p-6">

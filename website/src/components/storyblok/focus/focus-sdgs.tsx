@@ -1,4 +1,4 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { InfoIcon } from 'lucide-react';
 import { getSdg, type SdgValue } from './sdgs';
 
@@ -38,27 +38,27 @@ export const FocusSdgs = ({ values = [], label, layout = 'stacked' }: Props) => 
 					</span>
 				))
 			) : (
-				<span className="text-2xl font-semibold text-slate-600" aria-hidden>
+				<span className="text-muted-foreground text-2xl font-semibold" aria-hidden>
 					-
 				</span>
 			)}
 		</div>
 	);
 	const labelWithTooltip = (
-		<div className="flex items-center gap-1 text-sm font-medium text-slate-600">
+		<div className="text-muted-foreground flex items-center gap-1 text-sm font-medium">
 			<span>{label}</span>
 			{sdgs.length > 0 ? (
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<button
 							type="button"
-							className="pointer-events-auto relative z-10 inline-flex text-slate-600 hover:text-slate-950"
+							className="text-muted-foreground hover:text-foreground pointer-events-auto relative z-10 inline-flex"
 							aria-label={`${label} information`}
 						>
 							<InfoIcon className="size-3" aria-hidden />
 						</button>
 					</TooltipTrigger>
-					<TooltipContent sideOffset={8} className="max-w-[280px]">
+					<TooltipContent sideOffset={8}>
 						<ul>
 							{sdgs.map((sdg) => (
 								<li key={sdg.number}>{`SDG ${sdg.number}: ${sdg.title}`}</li>

@@ -5,9 +5,21 @@ import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, type LanguageCode } from '@/lib/types/language';
 import { now } from '@/lib/utils/now';
 import { createCurrentContributorDonationCertificateAction } from '@/modules/donation-certificates/donation-certificate.actions';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { useState, useTransition } from 'react';
 
 const CURRENT_YEAR = now().getFullYear();
@@ -61,7 +73,7 @@ export default function GenerateDonationCertificateDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+			<DialogContent size="md">
 				<DialogHeader>
 					<DialogTitle>{translator?.t('donation-certificates.generate-dialog.dialog_title')}</DialogTitle>
 				</DialogHeader>
@@ -111,11 +123,7 @@ export default function GenerateDonationCertificateDialog({
 						</Select>
 					</div>
 
-					<Button
-						disabled={isLoading}
-						className="flex w-full items-center justify-center gap-2"
-						onClick={() => generateCertificates()}
-					>
+					<Button disabled={isLoading} fullWidth onClick={() => generateCertificates()}>
 						{isLoading
 							? translator?.t('donation-certificates.generate-dialog.state_generating')
 							: translator?.t('donation-certificates.generate-dialog.button_generate')}
@@ -133,7 +141,7 @@ export default function GenerateDonationCertificateDialog({
 					)}
 				</div>
 
-				<DialogFooter className="mt-4">
+				<DialogFooter>
 					<Button variant="outline" onClick={() => onOpenChange(false)}>
 						{translator?.t('donation-certificates.generate-dialog.button_close')}
 					</Button>

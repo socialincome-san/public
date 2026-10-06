@@ -1,11 +1,11 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { ProgramPermission } from '@/generated/prisma/enums';
 import { getPaginatedRecipientTableView } from '@/modules/recipients/recipient.service';
 import type { RecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 
 const RecipientsPage = ({ searchParams }: SearchParamsPageProps) => {

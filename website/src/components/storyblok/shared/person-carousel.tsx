@@ -3,9 +3,14 @@
 import { PersonCard } from '@/components/storyblok/shared/person-card';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { createWebsitePersonLink } from '@/lib/storyblok/storyblok-utils';
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@socialincome/design-system/carousel/carousel';
 import { cn } from '@socialincome/design-system/cn';
-import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	type CarouselApi,
+} from '@socialincome/design-system/data-display/carousel/carousel';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
 import { ChevronRightIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -39,19 +44,15 @@ export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default',
 			{hasSidebar && (
 				<div className="space-y-4 lg:col-span-1">
 					{sidebar?.title && <p className="text-foreground text-4xl font-bold break-words">{sidebar.title}</p>}
-					{sidebar?.heading && (
-						<SectionHeading align="left" className="text-foreground mb-0 font-normal break-words md:mb-0">
-							{sidebar.heading}
-						</SectionHeading>
-					)}
+					{sidebar?.heading && <SectionHeading align="left">{sidebar.heading}</SectionHeading>}
 					{sidebar?.description && <p className="text-muted-foreground text-lg leading-7">{sidebar.description}</p>}
 				</div>
 			)}
 			<div className={cn('relative min-w-0', hasSidebar ? 'lg:col-span-2' : 'w-full')}>
-				<Carousel setApi={setApi} opts={{ align: 'start', loop: persons.length > 1 }}>
-					<CarouselContent className="-ml-6">
+				<Carousel setApi={setApi} opts={{ align: 'start', loop: persons.length > 1 }} gap="lg">
+					<CarouselContent>
 						{persons.map((person) => (
-							<CarouselItem key={person.uuid} className={cn('pl-6', isSmall ? 'basis-[260px]' : 'basis-[305px]')}>
+							<CarouselItem key={person.uuid} size={isSmall ? 'card-sm' : 'card'}>
 								<PersonCard
 									person={person}
 									size={size}
@@ -67,7 +68,7 @@ export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default',
 						type="button"
 						onClick={() => api?.scrollNext()}
 						aria-label="Show next person"
-						className="bg-primary-foreground absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full shadow-[0px_4px_28px_0px_rgba(0,30,101,0.12)]"
+						className="bg-primary-foreground shadow-raised absolute top-1/2 right-6 z-30 flex size-11 -translate-y-1/2 items-center justify-center rounded-full"
 					>
 						<ChevronRightIcon className="size-5" aria-hidden="true" />
 					</button>

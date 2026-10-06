@@ -1,9 +1,9 @@
 'use client';
 
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
-import { Input } from '@socialincome/design-system/input/input';
+import { Input } from '@socialincome/design-system/forms/input/input';
 import type { DonationAmountFieldsTranslations } from '../../i18n/donation-amount-fields-translations';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
@@ -53,7 +53,7 @@ type Props = {
 	values: DonationAmountFieldsValues;
 	actions: DonationAmountFieldsActions;
 	onSubmit: () => void;
-	className?: string;
+	placement?: 'wizard' | 'hero';
 	translations: DonationAmountFieldsTranslations;
 	currency: WebsiteCurrency;
 	showTitle?: boolean;
@@ -63,13 +63,20 @@ export const DonationAmountFields = ({
 	values,
 	actions,
 	onSubmit,
-	className = getDonationWizardCardClass('stepAmount'),
+	placement = 'wizard',
 	translations,
 	currency,
 	showTitle = true,
 }: Props) => {
 	return (
-		<div className={cn(className, 'text-foreground md:px-9 md:py-9')} data-testid="donation-wizard-step-amount">
+		<div
+			className={cn(
+				getDonationWizardCardClass('stepAmount'),
+				placement === 'hero' && 'mx-0 max-w-none lg:mx-auto lg:w-[400px]',
+				'text-foreground md:px-9 md:py-9',
+			)}
+			data-testid="donation-wizard-step-amount"
+		>
 			{showTitle && (
 				<h2 className="text-foreground mb-5 text-xl leading-tight font-bold text-pretty sm:text-2xl sm:leading-none">
 					{translations.title}
@@ -84,35 +91,34 @@ export const DonationAmountFields = ({
 						values.onePercentSelected ? 'text-foreground' : 'text-muted-foreground',
 					)}
 				>
-					<label htmlFor={monthlyIncomeInputId} className="text-[10px] font-medium">
+					<label htmlFor={monthlyIncomeInputId} className="text-2xs font-medium">
 						{translations.monthlyIncomeLabel} ({currency})
 					</label>
-					<Input
-						id={monthlyIncomeInputId}
-						data-testid="donation-wizard-monthly-income"
-						type="number"
-						min={DONATION_MONTHLY_INCOME_MIN}
-						max={DONATION_MONTHLY_INCOME_MAX}
-						value={values.monthlyIncome ?? ''}
-						onFocus={actions.selectOnePercent}
-						onChange={(e) => {
-							const raw = e.target.value;
-							if (raw === '') {
-								actions.setMonthlyIncome(null);
+					<div className={monthlyAmountTextClass}>
+						<Input
+							variant="bare"
+							id={monthlyIncomeInputId}
+							data-testid="donation-wizard-monthly-income"
+							type="number"
+							min={DONATION_MONTHLY_INCOME_MIN}
+							max={DONATION_MONTHLY_INCOME_MAX}
+							value={values.monthlyIncome ?? ''}
+							onFocus={actions.selectOnePercent}
+							onChange={(e) => {
+								const raw = e.target.value;
+								if (raw === '') {
+									actions.setMonthlyIncome(null);
 
-								return;
-							}
+									return;
+								}
 
-							const parsed = parseFloat(raw);
-							if (!isNaN(parsed) && parsed <= DONATION_MONTHLY_INCOME_MAX) {
-								actions.setMonthlyIncome(parsed);
-							}
-						}}
-						className={cn(
-							monthlyAmountTextClass,
-							'h-auto w-full rounded-none border-0 bg-transparent px-0 py-0 shadow-none focus-visible:ring-0',
-						)}
-					/>
+								const parsed = parseFloat(raw);
+								if (!isNaN(parsed) && parsed <= DONATION_MONTHLY_INCOME_MAX) {
+									actions.setMonthlyIncome(parsed);
+								}
+							}}
+						/>
+					</div>
 				</div>
 				<button
 					type="button"
@@ -126,7 +132,7 @@ export const DonationAmountFields = ({
 							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
 					)}
 				>
-					<div className="text-[10px] font-medium">{translations.yourOnePercent}</div>
+					<div className="text-2xs font-medium">{translations.yourOnePercent}</div>
 					<div className={cn(monthlyAmountTextClass, 'whitespace-nowrap')}>
 						{currency} {values.onePercent}
 					</div>
@@ -135,7 +141,7 @@ export const DonationAmountFields = ({
 
 			<div className="mb-3 flex items-center gap-4">
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
-				<div className="text-center text-[10px] font-medium">{translations.chooseOwnAmount}</div>
+				<div className="text-2xs text-center font-medium">{translations.chooseOwnAmount}</div>
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
 			</div>
 			<div
@@ -160,7 +166,7 @@ export const DonationAmountFields = ({
 								isSelected ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
 							)}
 						>
-							<span className={cn(option.labelKey === 'other' ? 'text-base' : 'text-[10px]')}>
+							<span className={cn(option.labelKey === 'other' ? 'text-base' : 'text-2xs')}>
 								{option.labelKey === 'other' ? translations.other : currency}
 							</span>
 							{option.value !== 'other' && <span>{option.value}</span>}
@@ -170,27 +176,28 @@ export const DonationAmountFields = ({
 			</div>
 
 			{values.selectedAmount === 'other' && (
-				<Input
-					type="number"
-					data-testid="donation-wizard-custom-amount"
-					min={DONATION_CUSTOM_AMOUNT_MIN}
-					max={DONATION_CUSTOM_AMOUNT_MAX}
-					placeholder={translations.customAmountPlaceholder}
-					value={values.customAmount ?? ''}
-					onChange={(e) => {
-						const raw = e.target.value;
-						if (raw === '') {
-							actions.setCustomAmount(null);
+				<div className="-mt-2 mb-4">
+					<Input
+						type="number"
+						data-testid="donation-wizard-custom-amount"
+						min={DONATION_CUSTOM_AMOUNT_MIN}
+						max={DONATION_CUSTOM_AMOUNT_MAX}
+						placeholder={translations.customAmountPlaceholder}
+						value={values.customAmount ?? ''}
+						onChange={(e) => {
+							const raw = e.target.value;
+							if (raw === '') {
+								actions.setCustomAmount(null);
 
-							return;
-						}
-						const parsed = parseFloat(raw);
-						if (!isNaN(parsed) && parsed <= DONATION_CUSTOM_AMOUNT_MAX) {
-							actions.setCustomAmount(parsed);
-						}
-					}}
-					className="-mt-2 mb-4"
-				/>
+								return;
+							}
+							const parsed = parseFloat(raw);
+							if (!isNaN(parsed) && parsed <= DONATION_CUSTOM_AMOUNT_MAX) {
+								actions.setCustomAmount(parsed);
+							}
+						}}
+					/>
+				</div>
 			)}
 
 			<div className="bg-accent mb-4 grid grid-cols-2 rounded-md p-1">
@@ -227,7 +234,7 @@ export const DonationAmountFields = ({
 			<Button
 				type="button"
 				data-testid="donation-wizard-amount-continue"
-				className="w-full font-bold"
+				fullWidth
 				disabled={!values.isValid}
 				onClick={onSubmit}
 			>

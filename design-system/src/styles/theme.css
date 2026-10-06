@@ -2,6 +2,10 @@
 	--font-sans: 'Unica77', ui-sans-serif, system-ui, sans-serif;
 	--font-sans--font-feature-settings: 'ss04' on;
 
+	/* Only the tokens below exist: Tailwind's default palette (slate-600, cyan-950, …) is removed */
+	--color-*: initial;
+	--color-white: #fff;
+	--color-black: #000;
 	--color-border: hsl(var(--border));
 	--color-input: hsl(var(--input));
 	--color-ring: hsl(var(--ring));
@@ -26,10 +30,27 @@
 	--color-card: hsl(var(--card));
 	--color-card-foreground: hsl(var(--card-foreground));
 	--color-banner-blue: hsl(var(--banner-blue));
+	--color-highlight: hsl(var(--highlight));
+
+	--text-2xs: 0.625rem;
+	--text-2xs--line-height: 0.875rem;
+	--text-display: 7rem;
+	--text-display--line-height: 1;
+	--text-display-lg: 10rem;
+	--text-display-lg--line-height: 1;
+
+	--shadow-card: 0 4px 28px 0 rgb(0 30 101 / 0.07);
+	--shadow-raised: 0 4px 28px 0 rgb(0 30 101 / 0.12);
+	--shadow-overlay: 0 24px 80px 0 rgb(31 65 101 / 0.12);
+	--shadow-dock: 0 -3px 14px 0 rgb(0 0 0 / 0.05);
+	--drop-shadow-card: 0 4px 20px rgb(0 0 0 / 0.09);
+	--drop-shadow-on-media: 0 2px 4px rgb(0 0 0 / 0.8);
 
 	--radius-lg: var(--radius);
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-sm: calc(var(--radius) - 4px);
+	--radius-5xl: 3.5rem;
+	--radius-control: 0.25rem;
 
 	--spacing-content: 1400px;
 	--spacing-site-width: 94vw;

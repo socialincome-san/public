@@ -1,8 +1,8 @@
 'use client';
 
 import { Survey, SurveyLanguage } from '@/app/[lang]/[region]/survey/[recipient]/[survey]/survey';
-import { Button } from '@socialincome/design-system/button/button';
-import { Input } from '@socialincome/design-system/input/input';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Input } from '@socialincome/design-system/forms/input/input';
 import { useSearchParams } from 'next/navigation';
 import { type FormEvent, use, useEffect, useState } from 'react';
 import { type SurveyPageProps } from './layout';
@@ -56,9 +56,7 @@ export default function Page({ params }: SurveyPageProps) {
 				<Input name="email" type="email" placeholder="Email" />
 				<Input name="password" type="password" placeholder="Password" />
 			</div>
-			<Button type="submit" className="mx-auto rounded-full px-6">
-				Open survey
-			</Button>
+			<Button type="submit">Open survey</Button>
 		</form>
 	);
 }

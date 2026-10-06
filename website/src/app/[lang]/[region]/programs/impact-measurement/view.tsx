@@ -1,4 +1,4 @@
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { ParsedUrlQueryInput } from 'querystring';
 import { Suspense } from 'react';
 import { ImpactMeasurementFilterSection } from './filter-section';
@@ -32,8 +32,8 @@ export const ImpactMeasurementView = ({
 	return (
 		<div className="space-y-3 pb-16">
 			{variant === 'standalone' ? (
-				<BlockWrapper className="pb-6" disableMarginTop={true} disableMarginBottom={true}>
-					<div className="space-y-5">
+				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+					<div className="space-y-5 pb-6">
 						<div className="flex w-full justify-end">
 							<div className="w-full sm:w-auto">
 								<ImpactMeasurementFilterSection lang={lang} searchParams={normalizedSearchParams} />
@@ -47,10 +47,12 @@ export const ImpactMeasurementView = ({
 				</BlockWrapper>
 			) : null}
 			{variant === 'embedded' && showStudyDetails ? (
-				<BlockWrapper className="pb-6" disableMarginTop={true} disableMarginBottom={true}>
-					<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>
-						<ImpactMeasurementStudyDetails lang={lang} searchParams={normalizedSearchParams} />
-					</Suspense>
+				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+					<div className="pb-6">
+						<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>
+							<ImpactMeasurementStudyDetails lang={lang} searchParams={normalizedSearchParams} />
+						</Suspense>
+					</div>
 				</BlockWrapper>
 			) : null}
 			<Suspense key={suspenseKey} fallback={<ImpactMeasurementResultsSkeleton />}>

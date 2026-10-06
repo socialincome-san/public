@@ -1,8 +1,8 @@
 'use client';
 
 import type { TwilioTemplateDetail } from '@/modules/messaging/messaging.types';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent } from '@socialincome/design-system/dialog/dialog';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Dialog, DialogContent } from '@socialincome/design-system/overlays/dialog/dialog';
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 import { SendMessageWizard } from './send-message-wizard';
@@ -30,7 +30,8 @@ export const SendMessageDialog = ({ template }: SendMessageDialogProps) => {
 
 			<Dialog open={open} onOpenChange={(next) => (next ? setOpen(true) : requestClose())}>
 				<DialogContent
-					className="flex max-h-[90dvh] w-full flex-col overflow-hidden sm:h-[46rem] sm:!max-w-4xl"
+					size="lg"
+					height="fixed"
 					closeOnClickOutside={!locked}
 					closeOnEscape={!locked}
 					hideCloseButton={locked}

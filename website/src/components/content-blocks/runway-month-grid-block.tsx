@@ -2,8 +2,8 @@ import type { RunwayMonthGrid as RunwayMonthGridBlok } from '@/generated/storybl
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getRunwayMonthsAction } from '@/modules/transparency/transparency.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
 import { RunwayMonthGrid } from '../runway-month-grid/runway-month-grid';
 
 type Props = {
@@ -24,7 +24,7 @@ export const RunwayMonthGridBlock = async ({ blok, lang }: Props) => {
 	const amountOfMonths = runwayResult.data;
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<div className="space-y-6">
 				<div className="space-y-2">
 					{blok.title && <h2 className="text-primary text-xl font-semibold">{blok.title}</h2>}

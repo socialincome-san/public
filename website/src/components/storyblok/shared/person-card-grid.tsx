@@ -57,7 +57,6 @@ export const PersonCardGrid = ({
 						person={person}
 						href={getHref(person)}
 						size={personCardSize}
-						className="w-full max-w-none"
 						volunteerDuration={volunteerDuration}
 						roleLabels={roleLabels}
 					/>

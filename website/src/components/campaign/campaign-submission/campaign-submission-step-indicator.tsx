@@ -27,7 +27,6 @@ type Props = {
 	aboutLabel: string;
 	personalLabel: string;
 	variant?: 'circles' | 'bars';
-	className?: string;
 };
 
 export const CampaignSubmissionStepIndicator = ({
@@ -40,7 +39,6 @@ export const CampaignSubmissionStepIndicator = ({
 	aboutLabel,
 	personalLabel,
 	variant = 'circles',
-	className,
 }: Props) => {
 	const activeIndex = steps.indexOf(currentStep);
 	const stepCount = steps.length;
@@ -66,7 +64,7 @@ export const CampaignSubmissionStepIndicator = ({
 
 	if (variant === 'bars') {
 		return (
-			<div className={cn('flex items-center gap-2', className)} role="list" aria-label={formStepsLabel}>
+			<div className="flex w-full items-center gap-2" role="list" aria-label={formStepsLabel}>
 				{Array.from({ length: stepCount }).map((_, index) => {
 					const isActiveOrCompleted = index <= activeIndex;
 					const stepNumber = index + 1;
@@ -91,7 +89,7 @@ export const CampaignSubmissionStepIndicator = ({
 	}
 
 	return (
-		<div className={cn('flex items-center gap-3', className)} role="list" aria-label={formStepsLabel}>
+		<div className="flex items-center gap-3" role="list" aria-label={formStepsLabel}>
 			{Array.from({ length: stepCount }).map((_, index) => {
 				const isActive = index === activeIndex;
 				const isCompleted = index < activeIndex;

@@ -102,7 +102,7 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 				onContinue={() => void onConfirm()}
 				continueLabel={confirming ? t('stepQrBill.confirming') : confirmLabel}
 				continueDisabled={confirming}
-				continueClassName="bg-foreground text-primary-foreground shadow-xs after:opacity-0 hover:bg-foreground/90 hover:after:opacity-0"
+				continueVariant="foreground"
 				summary={{
 					amount: view.summary.amount,
 					currency,

@@ -1,6 +1,6 @@
 import { DonutChart } from '@/components/charts/donut-chart';
 import type { SurveyImpactQuestion } from '@/modules/surveys/survey.types';
-import { Progress } from '@socialincome/design-system/progress/progress';
+import { Progress } from '@socialincome/design-system/feedback/progress/progress';
 import { ImpactMeasurementPrivacyTooltip } from './privacy-tooltip';
 import { getImpactTranslator } from './translator';
 

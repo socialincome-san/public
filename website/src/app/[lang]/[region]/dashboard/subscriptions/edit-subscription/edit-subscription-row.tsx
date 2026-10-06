@@ -2,7 +2,7 @@
 
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale, formatDateLocale, fractionalCurrencyFormatOptions } from '@/lib/utils/string-utils';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { useMachine } from '@xstate/react';
 import { useRouter } from 'next/navigation';
 import { CoverSubscriptionTransactionCostsPrompt } from '../cover-subscription-transaction-costs-prompt';
@@ -69,7 +69,7 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 					{labels.perMonth} · {labels.since} {formatDateLocale(subscription.createdAt, lang)}
 				</span>
 			</p>
-			<div className="flex flex-wrap items-center gap-3">
+			<div className="flex flex-wrap items-center justify-between gap-3 sm:justify-start">
 				<SubscriptionPaymentMethodDisplay
 					paymentDisplay={{
 						type: 'stripe',
@@ -82,7 +82,6 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 					type="button"
 					variant="outline"
 					size="sm"
-					className="bg-background ml-auto sm:ml-0"
 					onClick={() => send({ type: 'OPEN', subscription: openInput() })}
 					aria-haspopup="dialog"
 					aria-expanded={isOpen}

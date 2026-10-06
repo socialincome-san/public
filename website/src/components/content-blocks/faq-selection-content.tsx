@@ -5,8 +5,8 @@ import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { storyblokRichTextMarkResolvers } from '@/components/storyblok/rich-text/shared-resolvers';
 import type { StoryblokRichtext } from '@/generated/storyblok/types/storyblok';
 import * as RadixAccordion from '@radix-ui/react-accordion';
-import { Button } from '@socialincome/design-system/button/button';
-import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { ChevronDownIcon } from 'lucide-react';
 import NextLink from 'next/link';
 import { type ReactNode } from 'react';
@@ -41,7 +41,11 @@ export const FaqSelectionContent = ({ heading, items, cta }: Props) => {
 
 	return (
 		<div className="mx-auto max-w-4xl">
-			{heading && <SectionHeading bold>{heading}</SectionHeading>}
+			{heading && (
+				<div className="mb-8 md:mb-10">
+					<SectionHeading bold>{heading}</SectionHeading>
+				</div>
+			)}
 			<RadixAccordion.Root type="single" collapsible className="border-input w-full border-b">
 				{items.map((item) => (
 					<RadixAccordion.Item key={item.id} value={item.id} className="border-input border-b last:border-b-0">

@@ -3,9 +3,9 @@
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { ModalCards } from '@/generated/storyblok/types/109655/storyblok-components';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Dialog, DialogContent, DialogTitle } from '@socialincome/design-system/dialog/dialog';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
+import { storyblokEditable } from '@storyblok/react';
 import { PlusIcon } from 'lucide-react';
 import NextImage from 'next/image';
 import { useState } from 'react';
@@ -24,11 +24,7 @@ export const ModalCardsBlock = ({ blok }: Props) => {
 	const [openCardId, setOpenCardId] = useState<string | null>(null);
 
 	return (
-		<BlockWrapper
-			disableMarginBottom={disableMarginBottom}
-			disableMarginTop={disableMarginTop}
-			{...storyblokEditable(blok as SbBlokData)}
-		>
+		<BlockWrapper disableMarginBottom={disableMarginBottom} disableMarginTop={disableMarginTop} {...storyblokEditable(blok)}>
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 				{cards?.map(({ image, heading, modalContent, _uid }) => {
 					if (!image.filename) {
@@ -57,15 +53,14 @@ export const ModalCardsBlock = ({ blok }: Props) => {
 									<StoryblokMarkdown>{heading}</StoryblokMarkdown>
 								</span>
 							</button>
-							<DialogContent
-								className="flex max-h-[85vh] flex-col gap-0 overflow-y-auto sm:max-w-2xl"
-								onOpenAutoFocus={focusDialogTitleOnOpen}
-							>
-								<DialogTitle tabIndex={-1} className="pr-10 outline-none">
-									<StoryblokMarkdown>{heading}</StoryblokMarkdown>
-								</DialogTitle>
+							<DialogContent size="md" onOpenAutoFocus={focusDialogTitleOnOpen}>
+								<DialogHeader>
+									<DialogTitle tabIndex={-1}>
+										<StoryblokMarkdown>{heading}</StoryblokMarkdown>
+									</DialogTitle>
+								</DialogHeader>
 								{modalContent && (
-									<div className="text-foreground mt-4 text-base [&>*:first-child]:mt-0">
+									<div className="text-foreground text-base [&>*:first-child]:mt-0">
 										<RichTextRenderer richTextDocument={modalContent} />
 									</div>
 								)}

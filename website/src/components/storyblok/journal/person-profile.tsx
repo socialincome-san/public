@@ -7,8 +7,8 @@ import { PersonProfileHeader } from '@/components/storyblok/journal/person-profi
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import { formatStoryblokUrl, getPersonDisplayName } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
-import { SectionHeading } from '@socialincome/design-system/section-heading/section-heading';
-import { Separator } from '@socialincome/design-system/separator/separator';
+import { Separator } from '@socialincome/design-system/data-display/separator/separator';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
 
 const PERSON_PORTRAIT_WIDTH = 384;
@@ -47,8 +47,8 @@ export const PersonProfile = ({
 		: null;
 
 	return (
-		<JournalPageShell className="px-6 sm:px-6">
-			<JournalBreadcrumb links={breadcrumbs} className="mb-12 w-full px-0" />
+		<JournalPageShell>
+			<JournalBreadcrumb links={breadcrumbs} />
 			<PersonProfileHeader
 				person={person}
 				name={getPersonDisplayName(person)}
@@ -59,7 +59,7 @@ export const PersonProfile = ({
 			{articles.length > 0 && (
 				<section className="space-y-8">
 					<Separator />
-					<SectionHeading align="left" size={4} bold className="text-foreground mb-4 md:mb-6">
+					<SectionHeading align="left" size={4} bold>
 						{articlesHeading}
 					</SectionHeading>
 					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

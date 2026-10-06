@@ -30,7 +30,7 @@ export const FocusesOverviewPage = async ({ overview, lang, region, searchParams
 
 	return (
 		<div className="flex flex-col gap-8 py-8">
-			<Breadcrumb links={breadcrumbLinks} className="py-0" />
+			<Breadcrumb links={breadcrumbLinks} layout="section" />
 			<FocusesOverview focuses={focuses} lang={lang} region={region} title={title} text={text} searchParams={searchParams} />
 		</div>
 	);

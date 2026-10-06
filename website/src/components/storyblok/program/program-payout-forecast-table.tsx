@@ -4,7 +4,7 @@ import { makePayoutForecastColumns } from '@/components/data-table/columns/payou
 import { BaseTable } from '@/components/data-table/elements/base-table';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import type { PayoutForecastTableViewRow } from '@/modules/payouts/payout.types';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { InfoIcon } from 'lucide-react';
 
 type Props = {

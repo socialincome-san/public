@@ -17,7 +17,7 @@ import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getCountryNameByCode } from '@/lib/types/country';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 type Props = {
 	programDetailData: ProgramDetailData;
@@ -74,7 +74,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				}
 			/>
 			<div className="flex flex-col gap-8 py-8">
-				<Breadcrumb className="py-0" links={breadcrumbLinks} />
+				<Breadcrumb links={breadcrumbLinks} layout="section" />
 				<div className="lg:hidden">
 					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 						<DonationFormServer lang={lang} campaignId={programDetailData.campaignId} />

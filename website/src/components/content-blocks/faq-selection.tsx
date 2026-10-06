@@ -5,8 +5,8 @@ import { resolveFaqItems } from '@/components/content-blocks/faq-selection.utils
 import type { FaqSelection } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: FaqSelection;
@@ -28,7 +28,7 @@ export const FaqSelectionBlock = ({ blok, lang, region }: Props) => {
 		<BlockWrapper
 			disableMarginTop={blok.disableMarginTop === true}
 			disableMarginBottom={blok.disableMarginBottom === true}
-			{...storyblokEditable(blok as SbBlokData)}
+			{...storyblokEditable(blok)}
 		>
 			<FaqSelectionContent heading={blok.heading} items={items} cta={cta} />
 		</BlockWrapper>

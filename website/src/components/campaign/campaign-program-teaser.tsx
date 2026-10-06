@@ -19,9 +19,9 @@ import {
 	getLocalPartnersAction,
 	getProgramsAction,
 } from '@/modules/storyblok-content/storyblok-content.actions';
-import { Badge } from '@socialincome/design-system/badge/badge';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { cn } from '@socialincome/design-system/cn';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import Link from 'next/link';
 
 type Props = {
@@ -44,14 +44,10 @@ type TeaserMetaRowProps = {
 
 const TeaserMetaRow = ({ label, items, showDivider = false }: TeaserMetaRowProps) => (
 	<div className={cn('grid gap-3 py-4 sm:grid-cols-[140px_1fr] sm:items-center', showDivider && 'border-border border-t')}>
-		<p className="text-sm font-medium text-slate-600">{label}</p>
+		<p className="text-muted-foreground text-sm font-medium">{label}</p>
 		<div className="flex flex-wrap gap-2">
 			{items.map((item) => {
-				const badge = (
-					<Badge className={cn('px-3 py-1.5 font-medium', item.href && 'hover:bg-muted/80 transition-colors')}>
-						{item.name}
-					</Badge>
-				);
+				const badge = <Badge size="lg">{item.name}</Badge>;
 
 				if (!item.href) {
 					return <div key={item.id}>{badge}</div>;
@@ -61,7 +57,7 @@ const TeaserMetaRow = ({ label, items, showDivider = false }: TeaserMetaRowProps
 					<Link
 						key={item.id}
 						href={item.href}
-						className="rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-950"
+						className="focus-visible:outline-foreground rounded-full focus-visible:outline-2 focus-visible:outline-offset-2"
 					>
 						{badge}
 					</Link>
@@ -160,7 +156,7 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 		: null;
 
 	return (
-		<BlockWrapper disableMarginTop={true} className="mt-10">
+		<BlockWrapper spacing="compact">
 			<section className="bg-card grid gap-8 rounded-2xl p-6 shadow-sm md:grid-cols-[minmax(0,4fr)_minmax(280px,2fr)] md:gap-12 md:p-3 md:pl-10">
 				<div className="min-w-0 py-8">
 					<p className="text-muted-foreground text-sm font-medium">{translator.t('campaign.program-teaser.heading')}</p>

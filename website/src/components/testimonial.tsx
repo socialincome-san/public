@@ -1,5 +1,5 @@
-import { QuoteIcon } from '@/components/svg/quote';
 import type { Testimonial as StoryblokTestimonial } from '@/generated/storyblok/types/109655/storyblok-components';
+import { QuoteIcon } from '@socialincome/design-system/icons/custom-icons/custom-icons';
 import NextImage from 'next/image';
 
 type Props = {
@@ -10,7 +10,9 @@ export const Testimonial = ({ entry }: Props) => (
 	<div className="bg-card overflow-hidden rounded-xl p-3">
 		<div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_281px]">
 			<div className="flex flex-col justify-between gap-8 p-8 md:p-10">
-				<QuoteIcon className="text-primary h-8 w-auto self-start" />
+				<span className="text-primary self-start">
+					<QuoteIcon />
+				</span>
 				<p className="text-foreground text-lg leading-snug lg:text-2xl">{entry.quote}</p>
 				<div className="flex items-center gap-3">
 					{entry.image?.filename && (

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import type { KeyboardEvent, ReactNode } from 'react';
 import { useEffect } from 'react';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { createProgramWizardMachine } from './wizard/create-program-machine';
 import { CreateProgramWizard } from './wizard/create-program-wizard';
 
@@ -68,7 +68,7 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 			)}
 
 			<Dialog open={isOpen} onOpenChange={(nextOpen) => send({ type: nextOpen ? 'OPEN' : 'CLOSE' })}>
-				<DialogContent variant="large" className="flex max-h-[90dvh] flex-col overflow-hidden">
+				<DialogContent size="full">
 					<DialogHeader>
 						<DialogTitle>{t('modal.title')}</DialogTitle>
 					</DialogHeader>

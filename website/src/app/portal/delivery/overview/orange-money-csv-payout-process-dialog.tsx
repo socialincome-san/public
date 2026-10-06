@@ -1,6 +1,5 @@
 'use client';
 
-import { StepResultBox } from '@/components/step-result-box';
 import { slugify } from '@/lib/utils/string-utils';
 import {
 	generateOrangeCurrentMonthPayoutsAction,
@@ -8,8 +7,16 @@ import {
 	generateOrangeRegistrationCsvAction,
 	previewOrangeCurrentMonthPayoutsAction,
 } from '@/modules/payout-processes/payout-process.actions';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { StepResultBox } from '@socialincome/design-system/data-display/step-result-box/step-result-box';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { format } from 'date-fns';
 import { EyeIcon, PlayIcon, TableIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -88,14 +95,13 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 
 	return (
 		<Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
-				<DialogHeader className="flex-col items-start gap-0 border-b-0 pr-12">
-					<DialogTitle className="text-pretty">Orange Money CSV upload — {providerName}</DialogTitle>
+			<DialogContent size="md">
+				<DialogHeader>
+					<DialogTitle>Orange Money CSV upload — {providerName}</DialogTitle>
+					<DialogDescription>
+						Payout month: <span className="text-foreground font-medium">{selectedMonthLabel}</span>
+					</DialogDescription>
 				</DialogHeader>
-
-				<p className="text-muted-foreground -mt-2 pr-12 text-sm">
-					Payout month: <span className="text-foreground font-medium">{selectedMonthLabel}</span>
-				</p>
 
 				<div className="flex flex-col gap-5">
 					{steps.map((step) => (
@@ -105,12 +111,7 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 							</p>
 							<p className="text-muted-foreground mb-1 text-xs">{step.description}</p>
 
-							<Button
-								data-testid={`payout-step-${step.id}-button`}
-								className="flex w-full items-center justify-center gap-2"
-								variant={step.variant ?? 'default'}
-								onClick={step.run}
-							>
+							<Button data-testid={`payout-step-${step.id}-button`} variant={step.variant ?? 'default'} onClick={step.run}>
 								{step.icon}
 								{step.label}
 							</Button>
@@ -125,7 +126,7 @@ export const OrangeMoneyCsvPayoutProcessDialog = ({
 					))}
 				</div>
 
-				<DialogFooter className="mt-4">
+				<DialogFooter>
 					<Button variant="outline" onClick={onClose}>
 						Close
 					</Button>

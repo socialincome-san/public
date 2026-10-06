@@ -1,7 +1,7 @@
 'use client';
 
 import { syncMessagingJobStatusesAction } from '@/modules/messaging/messaging.actions';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';

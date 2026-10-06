@@ -16,7 +16,7 @@ import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { getCampaignPageContentAction } from '@/modules/campaigns/campaign.actions';
 import type { CampaignPage } from '@/modules/campaigns/campaign.types';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 type Props = {
 	campaign: CampaignPage;
@@ -104,9 +104,11 @@ export const CampaignDetail = async ({
 				translator={translator}
 				lang={lang}
 			/>
-			<Breadcrumb links={breadcrumbLinks} className="pb-0" />
+			<div className="pt-9">
+				<Breadcrumb links={breadcrumbLinks} layout="section" />
+			</div>
 			{trimmedDescription ? (
-				<BlockWrapper className="my-15" disableMarginTop={true} disableMarginBottom={true}>
+				<BlockWrapper spacing="compact">
 					<p className="text-foreground max-w-2xl text-lg whitespace-pre-wrap">{trimmedDescription}</p>
 				</BlockWrapper>
 			) : null}

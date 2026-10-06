@@ -18,7 +18,7 @@ const buildBadgeContent = (contribution: GlobeContribution, locale: string): HTM
 	const badge = document.createElement('div');
 	badge.dataset.globeBadge = 'true';
 	badge.className =
-		'flex w-max flex-col items-start gap-0.5 whitespace-nowrap rounded-md bg-white px-3 py-2 text-left shadow-md';
+		'flex w-max flex-col items-start gap-0.5 whitespace-nowrap rounded-md bg-card px-3 py-2 text-left shadow-md';
 
 	const countryRow = document.createElement('span');
 	countryRow.className = 'inline-flex items-center gap-1';
@@ -31,13 +31,13 @@ const buildBadgeContent = (contribution: GlobeContribution, locale: string): HTM
 	flag.className = 'size-[14px] shrink-0 rounded-full object-cover';
 
 	const countryLabel = document.createElement('span');
-	countryLabel.className = 'text-muted-foreground text-[9px] font-medium uppercase tracking-[0.05em]';
+	countryLabel.className = 'text-muted-foreground text-2xs font-medium uppercase tracking-[0.05em]';
 	countryLabel.textContent = contribution.countryName;
 
 	countryRow.append(countryLabel, flag);
 
 	const meta = document.createElement('span');
-	meta.className = 'text-foreground text-[10px] font-bold';
+	meta.className = 'text-foreground text-2xs font-bold';
 	meta.textContent = `${formattedDate} · ${formattedAmount}`;
 
 	badge.append(countryRow, meta);

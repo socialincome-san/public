@@ -1,8 +1,8 @@
 import { VideoTextContent } from '@/components/content-blocks/video-text-content';
 import type { VideoText } from '@/generated/storyblok/types/109655/storyblok-components';
 import { VimeoVideoMatchAndExtract } from '@/lib/utils/url-video-parser';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: VideoText;
@@ -18,7 +18,7 @@ export const VideoTextBlock = ({ blok }: Props) => {
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<VideoTextContent
 				content={blok.content}
 				vimeoEmbedUrl={vimeoEmbedUrl}

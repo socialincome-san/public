@@ -1,4 +1,4 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { CircleHelp } from 'lucide-react';
 import { ReactNode } from 'react';
 
@@ -24,9 +24,7 @@ export const Stat = ({ label, value, tooltipText }: StatProps) => {
 								<CircleHelp className="h-3 w-3" />
 							</button>
 						</TooltipTrigger>
-						<TooltipContent sideOffset={8} className="max-w-[280px] text-sm">
-							{tooltipText}
-						</TooltipContent>
+						<TooltipContent sideOffset={8}>{tooltipText}</TooltipContent>
 					</Tooltip>
 				)}
 			</div>

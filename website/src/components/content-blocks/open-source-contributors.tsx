@@ -4,8 +4,8 @@ import type { OpenSourceContributors } from '@/generated/storyblok/types/109655/
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getOpenSourceContributorsAction } from '@/modules/github/github.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: OpenSourceContributors;
@@ -30,7 +30,7 @@ export const OpenSourceContributorsBlock = async ({ blok, lang }: Props) => {
 	const errorMessage = translator.t<string>('error.unavailable');
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			{!contributorsResult.success ? <OpenSourceUnavailableMessage message={errorMessage} /> : null}
 
 			<ContributorsList

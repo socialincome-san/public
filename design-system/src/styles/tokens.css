@@ -11,10 +11,10 @@
 		--secondary: 210 40% 96%;
 		--secondary-foreground: 197 79% 15%;
 		--muted: 210 40% 96%;
-		--muted-foreground: 215 16% 47%;
+		--muted-foreground: 215 16% 44%;
 		--accent: 210 40% 96%;
 		--accent-foreground: 197 79% 15%;
-		--destructive: 0 84% 60%;
+		--destructive: 0 74% 45%;
 		--destructive-foreground: 0 86% 97%;
 		--border: 214 32% 91%;
 		--input: 213 27% 84%;
@@ -30,7 +30,8 @@
 		--gradient-background-from: rgba(251, 237, 209, 0.6);
 		--gradient-background-to: rgba(202, 221, 233, 0.6);
 		--banner-blue: 202 41% 83%;
-		--confirm: 142 76% 36%;
+		--highlight: 37 87% 96%;
+		--confirm: 142 72% 29%;
 		--confirm-foreground: 141 84% 93%;
 		--warning: 38 92% 50%;
 		--warning-foreground: 48 96% 89%;

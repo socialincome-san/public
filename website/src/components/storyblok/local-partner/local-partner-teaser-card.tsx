@@ -1,11 +1,14 @@
-import { CardAlertFooter, type CardAlertFooterVariant } from '@/components/card-alert-footer';
+import { CountryFlag } from '@/components/country-flag';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
-import { Badge } from '@socialincome/design-system/badge/badge';
 import { cn } from '@socialincome/design-system/cn';
-import { CountryFlag } from '@socialincome/design-system/country-flag/country-flag';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import {
+	CardAlertFooter,
+	type CardAlertFooterVariant,
+} from '@socialincome/design-system/feedback/card-alert-footer/card-alert-footer';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
 import type { LocalPartnerStory } from './local-partner.types';
@@ -46,7 +49,6 @@ type Props = {
 	recipientsLabel: string;
 	candidatesLabel: string;
 	alertVariant: CardAlertFooterVariant;
-	className?: string;
 };
 
 export const LocalPartnerTeaserCard = ({
@@ -57,7 +59,6 @@ export const LocalPartnerTeaserCard = ({
 	recipientsLabel,
 	candidatesLabel,
 	alertVariant,
-	className,
 }: Props) => {
 	const title = getLocalPartnerTitle(localPartner.content);
 	const description = getLocalPartnerDescription(localPartner.content);
@@ -74,9 +75,8 @@ export const LocalPartnerTeaserCard = ({
 		<NextLink
 			href={href}
 			className={cn(
-				'group flex h-full w-full max-w-[305px] flex-col overflow-hidden rounded-xl',
+				'group flex h-full w-full flex-col overflow-hidden rounded-xl',
 				alertVariant === 'confirm' ? 'bg-confirm-foreground' : 'bg-secondary',
-				className,
 				'drop-shadow-md transition-transform duration-200 ease-out hover:-translate-y-0.5',
 				'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
 			)}
@@ -98,15 +98,12 @@ export const LocalPartnerTeaserCard = ({
 					{description ? <p className="text-muted-foreground line-clamp-4 flex-1 text-sm leading-6">{description}</p> : null}
 					<div className="mt-auto flex flex-wrap gap-2">
 						{countryCode ? (
-							<Badge
-								variant="country"
-								className="gap-2 border-slate-300 bg-white px-2 py-1 leading-none font-medium text-cyan-900"
-							>
+							<Badge variant="country">
 								<CountryFlag country={countryCode} size="sm" />
 								<span>{getCountryNameByCode(countryCode)}</span>
 							</Badge>
 						) : null}
-						<Badge variant="country" className="border-slate-300 bg-white px-2 py-1 leading-none font-medium text-cyan-900">
+						<Badge variant="country">
 							<span>
 								{recipientsCount} {recipientsLabel}
 							</span>

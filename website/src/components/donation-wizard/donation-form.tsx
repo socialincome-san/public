@@ -1,12 +1,10 @@
 'use client';
 
 import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { cn } from '@socialincome/design-system/cn';
 import { useDonationFormState } from './hooks/use-donation-form-state';
 import { useDonationModal } from './hooks/use-donation-modal';
 import type { DonationAmountFieldsTranslations } from './i18n/donation-amount-fields-translations';
 import { DonationAmountFields } from './steps/step-amount/donation-amount-fields';
-import { getDonationWizardCardClass } from './utils/donation-wizard-layout';
 import { selectStep1FormView } from './wizard/donation-machine-selectors';
 
 type Props = {
@@ -23,7 +21,7 @@ export const DonationForm = ({ campaignId, onBeforeOpen, translations, currency 
 	return (
 		<div data-testid="donation-wizard-hero-form" className="w-full">
 			<DonationAmountFields
-				className={cn(getDonationWizardCardClass('stepAmount'), 'mx-0 max-w-none lg:mx-auto lg:w-[400px]')}
+				placement="hero"
 				translations={translations}
 				currency={currency}
 				values={selectStep1FormView(form.context)}

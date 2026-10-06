@@ -4,8 +4,8 @@ import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
-import { Badge } from '@socialincome/design-system/badge/badge';
 import { cn } from '@socialincome/design-system/cn';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -33,12 +33,7 @@ export const LocalPartnerFocusBadges = ({ lang, region, focuses }: FocusBadgesPr
 
 				return (
 					<Link key={focusStory.uuid} href={`/${lang}/${region}/focuses/${focusSlug}`}>
-						<Badge
-							variant="outline"
-							className="border-accent bg-accent text-accent-foreground hover:bg-accent/80 transition-colors"
-						>
-							{focusTitle}
-						</Badge>
+						<Badge variant="outline">{focusTitle}</Badge>
 					</Link>
 				);
 			})}

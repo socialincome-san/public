@@ -6,7 +6,7 @@ import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getPageStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.service';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
@@ -35,7 +35,9 @@ export default async function ContentPage({ params, searchParams }: DefaultLayou
 	return (
 		<>
 			<BlockWrapper disableMarginTop disableMarginBottom>
-				<Breadcrumb links={breadcrumbLinks} className="pb-0 pl-0" />
+				<div className="pt-9">
+					<Breadcrumb links={breadcrumbLinks} layout="inline" />
+				</div>
 			</BlockWrapper>
 			<PageContentType
 				blok={story.content}

@@ -38,18 +38,17 @@ const stepClasses = {
 };
 
 type Props = {
-	className?: string;
 	state: CreateProgramWizardState;
 };
 
-export const CreateProgramStepIndicator = ({ className, state }: Props) => {
+export const CreateProgramStepIndicator = ({ state }: Props) => {
 	const activeIndex = getCurrentStepIndex(state);
 
 	const showFourthStep = state.context.isAuthenticated === false;
 	const stepCount = showFourthStep ? 4 : 3;
 
 	return (
-		<div className={cn('flex items-center gap-2 sm:gap-3', className)}>
+		<div className="flex items-center justify-center gap-2 sm:gap-3">
 			{Array.from({ length: stepCount }).map((_, index) => {
 				const isActive = index === activeIndex;
 				const isCompleted = index < activeIndex;

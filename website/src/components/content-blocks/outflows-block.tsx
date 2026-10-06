@@ -6,13 +6,13 @@ import {
 	OUTFLOW_NGO_UPPER_LIMIT_PERCENT,
 	OUTFLOW_REACH_PERCENT,
 } from '@/components/outflows/outflows-spend';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 import type { Outflows as OutflowsBlok } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: OutflowsBlok;
@@ -40,7 +40,7 @@ export const OutflowsBlock = async ({ blok, lang, region }: Props) => {
 	});
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<OutflowsSection
 				downloadsHref={downloadsHref}
 				ngoAverageSourceUrl={OUTFLOW_NGO_AVERAGE_SOURCE_URL}

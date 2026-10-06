@@ -1,0 +1,20 @@
+export type CardAlertFooterVariant = 'confirm' | 'secondary';
+
+type Props = {
+	text: string;
+	variant: CardAlertFooterVariant;
+	trailingText?: string;
+};
+
+export const CardAlertFooter = ({ text, variant, trailingText }: Props) => (
+	<div className="flex items-center gap-2 rounded-b-2xl px-4 py-2">
+		{variant === 'confirm' ? (
+			<span className="relative flex size-2 shrink-0" aria-hidden>
+				<span className="bg-confirm animation-duration-[2s] absolute inline-flex size-full animate-ping rounded-full opacity-75 motion-reduce:animate-none" />
+				<span className="bg-confirm relative inline-flex size-2 rounded-full" />
+			</span>
+		) : null}
+		<p className="text-foreground text-xs font-medium">{text}</p>
+		{trailingText ? <p className="text-foreground ml-auto text-xs font-medium">{trailingText}</p> : null}
+	</div>
+);

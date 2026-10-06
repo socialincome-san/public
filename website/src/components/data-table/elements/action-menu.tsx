@@ -1,14 +1,6 @@
 'use client';
 
-import { LEADING_TRAILING_DASHES_REGEX, NON_ALPHANUMERIC_DASH_REGEX } from '@/lib/utils/regex';
-import { Button } from '@socialincome/design-system/button/button';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
-import { MoreHorizontalIcon } from 'lucide-react';
+import { DataTableActionMenu } from '@socialincome/design-system/data-display/data-table-action-menu/data-table-action-menu';
 import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 
@@ -24,81 +16,26 @@ type ActionMenuProps = {
 	items?: ActionMenuItem[];
 };
 
-const toTestIdSlug = (label: string): string =>
-	label.toLowerCase().trim().replace(NON_ALPHANUMERIC_DASH_REGEX, '-').replace(LEADING_TRAILING_DASHES_REGEX, '');
-
 export const ActionMenu = ({ items = [] }: ActionMenuProps) => {
 	const router = useRouter();
 
-	if (items.length === 0) {
-		return null;
-	}
+	return (
+		<DataTableActionMenu
+			items={items.map(({ label, icon, disabled, onSelect, href }) => ({
+				label,
+				icon,
+				disabled,
+				onSelect: () => {
+					if (onSelect) {
+						onSelect();
 
-	const runAction = (item: ActionMenuItem) => {
-		if (item.onSelect) {
-			item.onSelect();
-
-			return;
-		}
-		if (item.href) {
-			router.push(item.href);
-		}
-	};
-
-	const renderPrimaryButton = () => {
-		const item = items[0];
-
-		return (
-			<Button
-				type="button"
-				variant="default"
-				onClick={(event) => {
-					event.preventDefault();
-					runAction(item);
-				}}
-				disabled={item.disabled}
-				data-testid={`data-table-action-item-${toTestIdSlug(item.label)}`}
-				aria-label={item.label}
-			>
-				{item.icon}
-				<span>{item.label}</span>
-			</Button>
-		);
-	};
-
-	const renderDropdownMenu = () => {
-		return (
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button
-						type="button"
-						variant="outline"
-						size="icon"
-						aria-label="Table actions"
-						data-testid="data-table-actions-button"
-					>
-						<MoreHorizontalIcon />
-					</Button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent align="end" className="w-56" data-testid="data-table-actions-menu">
-					{items.map((item, index) => (
-						<DropdownMenuItem
-							key={`${item.label}-${index}`}
-							disabled={item.disabled}
-							data-testid={`data-table-action-item-${toTestIdSlug(item.label)}`}
-							onSelect={(event) => {
-								event.preventDefault();
-								runAction(item);
-							}}
-						>
-							{item.icon}
-							<span>{item.label}</span>
-						</DropdownMenuItem>
-					))}
-				</DropdownMenuContent>
-			</DropdownMenu>
-		);
-	};
-
-	return items.length === 1 ? renderPrimaryButton() : renderDropdownMenu();
+						return;
+					}
+					if (href) {
+						router.push(href);
+					}
+				},
+			}))}
+		/>
+	);
 };

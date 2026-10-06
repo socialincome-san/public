@@ -4,9 +4,9 @@ import { useTranslator } from '@/lib/i18n/use-translator';
 import type { LanguageCode } from '@/lib/types/language';
 import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@socialincome/design-system/button/button';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
@@ -52,20 +52,22 @@ export const NewsletterSignup = ({ lang }: Props) => {
 						control={form.control}
 						name="email"
 						render={({ field }) => (
-							<FormItem className="flex-1">
-								<FormControl>
-									<Input
-										type="email"
-										autoComplete="email"
-										placeholder={translator.t('popup.email-placeholder')}
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
+							<div className="flex-1">
+								<FormItem>
+									<FormControl>
+										<Input
+											type="email"
+											autoComplete="email"
+											placeholder={translator.t('popup.email-placeholder')}
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							</div>
 						)}
 					/>
-					<Button type="submit" className="shrink-0">
+					<Button type="submit" size="md">
 						{translator.t('popup.button-subscribe')}
 					</Button>
 				</form>

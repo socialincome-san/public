@@ -5,7 +5,7 @@ import { ProgramPayoutForecastTable } from '@/components/storyblok/program/progr
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getPublicPayoutForecastTableAction } from '@/modules/payouts/payout.actions';
 import type { PayoutForecastTableViewRow } from '@/modules/payouts/payout.types';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import Link from 'next/link';
 import { type ReactNode, useEffect, useState } from 'react';
 
@@ -77,7 +77,6 @@ export const ProgramFinancesDialog = ({
 			title={dialogTitle}
 			triggerLabel={viewBreakdownLabel}
 			closeAriaLabel={t('program-detail-page.close')}
-			bodyClassName="flex flex-col gap-8"
 			onOpenChange={setIsOpen}
 			headerActions={
 				<Button asChild size="sm" variant="outline">
@@ -93,17 +92,18 @@ export const ProgramFinancesDialog = ({
 			) : hasError ? (
 				<div className="text-destructive border-destructive/20 bg-destructive-foreground flex flex-col gap-4 rounded-md border p-4">
 					<p className="font-medium">{t('program-detail-page.load-payout-forecast-error')}</p>
-					<Button
-						type="button"
-						variant="outline"
-						className="text-destructive border-destructive/30 bg-card hover:bg-destructive-foreground self-start"
-						onClick={() => {
-							setHasError(false);
-							setRetryKey((current) => current + 1);
-						}}
-					>
-						{t('program-detail-page.try-again')}
-					</Button>
+					<div>
+						<Button
+							type="button"
+							variant="destructive-outline"
+							onClick={() => {
+								setHasError(false);
+								setRetryKey((current) => current + 1);
+							}}
+						>
+							{t('program-detail-page.try-again')}
+						</Button>
+					</div>
 				</div>
 			) : rows ? (
 				<ProgramPayoutForecastTable rows={rows} titleInfoTooltip={payoutForecastInfoTooltip} />

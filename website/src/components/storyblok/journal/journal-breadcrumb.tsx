@@ -1,6 +1,7 @@
 import { Breadcrumb, type BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
-import { cn } from '@socialincome/design-system/cn';
 
-export const JournalBreadcrumb = ({ links, className }: { links: BreadcrumbLinkType[]; className?: string }) => (
-	<Breadcrumb links={links} className={cn('py-0', className)} />
+export const JournalBreadcrumb = ({ links }: { links: BreadcrumbLinkType[] }) => (
+	<div className="mb-8">
+		<Breadcrumb links={links} layout="inline" />
+	</div>
 );

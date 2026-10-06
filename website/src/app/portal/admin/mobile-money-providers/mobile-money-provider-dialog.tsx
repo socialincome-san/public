@@ -1,8 +1,8 @@
 'use client';
 
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import MobileMoneyProvidersForm from './mobile-money-providers-form';
 
 type Props = {
@@ -23,14 +23,14 @@ export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId, erro
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
+			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>{providerId ? 'Edit' : 'Add'} mobile money provider</DialogTitle>
 				</DialogHeader>
 				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+						<AlertDescription>{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 				<MobileMoneyProvidersForm

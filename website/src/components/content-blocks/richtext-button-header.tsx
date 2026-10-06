@@ -4,9 +4,9 @@ import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { RichtextButtonHeader } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Button } from '@socialincome/design-system/button/button';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
 import NextLink from 'next/link';
 
 type Props = {
@@ -29,11 +29,7 @@ export const RichtextButtonHeaderBlock = ({ blok, lang, region, buttonAction }: 
 	}
 
 	return (
-		<BlockWrapper
-			disableMarginBottom={disableMarginBottom}
-			disableMarginTop={disableMarginTop}
-			{...storyblokEditable(blok as SbBlokData)}
-		>
+		<BlockWrapper disableMarginBottom={disableMarginBottom} disableMarginTop={disableMarginTop} {...storyblokEditable(blok)}>
 			<div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
 				{heading && (
 					<div className="text-foreground text-lg">
@@ -41,12 +37,12 @@ export const RichtextButtonHeaderBlock = ({ blok, lang, region, buttonAction }: 
 					</div>
 				)}
 				{buttonLabel && buttonHref && !buttonAction && (
-					<Button variant="outline" className="self-start md:self-center" asChild>
+					<Button variant="outline" asChild>
 						<NextLink href={buttonHref}>{buttonLabel}</NextLink>
 					</Button>
 				)}
 				{buttonLabel && buttonAction && (
-					<Button type="button" variant="outline" className="self-start md:self-center" onClick={buttonAction}>
+					<Button type="button" variant="outline" onClick={buttonAction}>
 						{buttonLabel}
 					</Button>
 				)}

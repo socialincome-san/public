@@ -5,8 +5,8 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getLatestReservesAction } from '@/modules/reserves/reserve.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
 
 const FINANCIAL_INSTITUTIONS = [
 	{ id: 'postfinance', labelKey: 'transparency-page.reserves.institutions.postfinance' },
@@ -43,7 +43,7 @@ export const ReservesBlock = async ({ blok, lang }: Props) => {
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<ReservesTotal
 				amount={reserves.amount}
 				title={translator.t('transparency-page.reserves.total-today')}
