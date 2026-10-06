@@ -69,7 +69,7 @@
 		"@storyblok/js": "6.3.3",
 		"@storyblok/react": "7.0.1",
 		"@stripe/react-stripe-js": "7.0.0",
-		"@stripe/stripe-js": "9.17.0",
+		"@stripe/stripe-js": "10.0.0",
 		"@tanstack/react-table": "9.2.4",
 		"@xmldom/xmldom": "0.9.12",
 		"@xstate/react": "6.1.0",
