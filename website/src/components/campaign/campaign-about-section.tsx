@@ -1,7 +1,4 @@
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
-import { InstagramIcon } from '@/components/svg/instagram';
-import { TiktokIcon } from '@/components/svg/tiktok';
-import { XIcon } from '@/components/svg/x';
 import { focusToObjectPosition } from '@/lib/storyblok/storyblok-image-focus';
 import {
 	formatStoryblokResizeUrl,
@@ -11,6 +8,7 @@ import {
 import { isSafeHref } from '@/lib/utils/string-utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
+import { InstagramIcon, TiktokIcon, XIcon } from '@socialincome/design-system/icons/social-icons/social-icons';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { ExternalLink } from 'lucide-react';
 import NextImage from 'next/image';

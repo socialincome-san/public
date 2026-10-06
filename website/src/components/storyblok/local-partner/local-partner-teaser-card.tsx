@@ -1,4 +1,3 @@
-import { CardAlertFooter, type CardAlertFooterVariant } from '@/components/card-alert-footer';
 import { CountryFlag } from '@/components/country-flag';
 import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -6,6 +5,10 @@ import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { cn } from '@socialincome/design-system/cn';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import {
+	CardAlertFooter,
+	type CardAlertFooterVariant,
+} from '@socialincome/design-system/feedback/card-alert-footer/card-alert-footer';
 import NextImage from 'next/image';
 import NextLink from 'next/link';
 import type { LocalPartnerStory } from './local-partner.types';

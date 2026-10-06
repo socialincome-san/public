@@ -1,11 +1,11 @@
 'use client';
 
-import { RadioCard } from '@/components/create-program-wizard/radio-card';
 import { campaignSubmissionConfig, type CampaignSubmissionDurationPreset } from '@/lib/campaign-submission';
 import { cn } from '@socialincome/design-system/cn';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
 import { Input } from '@socialincome/design-system/forms/input/input';
 import { Label } from '@socialincome/design-system/forms/label/label';
+import { RadioCard } from '@socialincome/design-system/forms/radio-card/radio-card';
 import { RadioGroup } from '@socialincome/design-system/forms/radio-group/radio-group';
 import {
 	Select,

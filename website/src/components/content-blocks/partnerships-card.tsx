@@ -1,5 +1,5 @@
-import { Marquee } from '@/components/marquee/marquee';
 import type { Partnership, PartnershipsCard } from '@/generated/storyblok/types/109655/storyblok-components';
+import { Marquee } from '@socialincome/design-system/data-display/marquee/marquee';
 import { PartnershipBadge } from '@socialincome/design-system/data-display/partnership-badge/partnership-badge';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { ISbStoryData } from '@storyblok/js';

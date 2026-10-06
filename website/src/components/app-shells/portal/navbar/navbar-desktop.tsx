@@ -3,9 +3,9 @@
 import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-navbar-links';
 import { ProgramDropdown } from '@/components/app-shells/portal/navbar/program-dropdown';
 import { UserMenu } from '@/components/app-shells/portal/navbar/user-menu';
-import { SILogo } from '@/components/svg/si-logo';
 import type { Session } from '@/modules/auth/auth.types';
 import type { UserSession } from '@/modules/users/user.types';
+import { SILogo } from '@socialincome/design-system/brand/logo/logo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';

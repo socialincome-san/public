@@ -1,11 +1,11 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { getCampaignTableEntries } from '@/modules/campaigns/campaign.service';
 import type { CampaignTableViewRow } from '@/modules/campaigns/campaign.types';
 import { getCampaigns, getPrograms } from '@/modules/storyblok-content/storyblok-content.service';
 import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 import CampaignsTable from './campaigns-table';
 import { getCampaignTableView } from './campaigns-table.server';

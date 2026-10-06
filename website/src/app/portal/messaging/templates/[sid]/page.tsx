@@ -1,7 +1,7 @@
 import { MessagingTemplateSummaryCard } from '@/app/portal/messaging/templates/[sid]/messaging-template-summary-card';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getTwilioTemplate } from '@/modules/messaging/messaging.service';
 import { requireAdmin } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import Link from 'next/link';
 import { Suspense } from 'react';
 

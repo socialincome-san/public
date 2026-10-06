@@ -1,8 +1,8 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { applyCustomerDefaultPaymentMethodToOwnedSubscription } from '@/modules/stripe-payments/stripe-payment.service';
 import { APPLY_PAYMENT_METHOD_QUERY_PARAM } from '@/modules/stripe-payments/stripe-payment.types';
 import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { type DefaultPageProps } from '../..';

@@ -3,10 +3,10 @@
 import { useNavbarLinks } from '@/components/app-shells/portal/navbar/hooks/use-navbar-links';
 import { ProgramDropdown } from '@/components/app-shells/portal/navbar/program-dropdown';
 import { UserMenu } from '@/components/app-shells/portal/navbar/user-menu';
-import { SILogo } from '@/components/svg/si-logo';
 import type { Session } from '@/modules/auth/auth.types';
 import type { UserSession } from '@/modules/users/user.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { SILogo } from '@socialincome/design-system/brand/logo/logo';
 import { cn } from '@socialincome/design-system/cn';
 import { Separator } from '@socialincome/design-system/data-display/separator/separator';
 import { Menu, X } from 'lucide-react';

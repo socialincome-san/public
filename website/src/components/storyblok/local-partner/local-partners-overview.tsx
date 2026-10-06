@@ -1,11 +1,11 @@
 import type { AnySearchParams } from '@/app/page-props';
-import { FilterBar } from '@/components/filters/filter-bar';
 import { LocalPartnersGrid } from '@/components/storyblok/local-partner/local-partners-grid';
 import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/local-partners-teaser-intro';
 import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
 import type { LocalPartnerStory } from './local-partner.types';
 import { LocalPartnersOverviewCountryFilter } from './local-partners-overview-country-filter';
 import { LocalPartnersOverviewSearch } from './local-partners-overview-search';

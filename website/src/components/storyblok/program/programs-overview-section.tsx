@@ -1,5 +1,4 @@
 import type { AnySearchParams } from '@/app/page-props';
-import { FilterBar } from '@/components/filters/filter-bar';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import {
@@ -7,6 +6,7 @@ import {
 	getPublicProgramStatsByPortalSlugsAction,
 } from '@/modules/programs/program.actions';
 import { getFocusesAction, getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
+import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
 import type { FocusStory } from '../focus/focus.types';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug } from './program.utils';

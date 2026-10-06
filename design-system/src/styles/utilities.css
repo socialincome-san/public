@@ -38,4 +38,29 @@
 
 		--scroll-fade-e: var(--_scroll-fade-size-e);
 	}
+
+	.bg-website-gradient {
+		background: repeating-linear-gradient(
+			330deg,
+			var(--gradient-background-from) 0px,
+			var(--gradient-background-to) 600px,
+			var(--gradient-background-from) 1200px
+		);
+	}
+
+	@keyframes marquee-left {
+		to {
+			transform: translateX(-50%);
+		}
+	}
+
+	@keyframes marquee-right {
+		from {
+			transform: translateX(-50%);
+		}
+
+		to {
+			transform: translateX(0);
+		}
+	}
 }

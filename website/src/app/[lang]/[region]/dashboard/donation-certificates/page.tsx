@@ -1,4 +1,4 @@
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 import { DefaultPageProps } from '../..';
 import YourDonationCertificates from './your-donation-certificates';

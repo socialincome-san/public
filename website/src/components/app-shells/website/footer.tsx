@@ -1,13 +1,3 @@
-import { AppStoreIcon } from '@/components/svg/app-store';
-import { ContactIcon } from '@/components/svg/contact';
-import { FacebookIcon } from '@/components/svg/facebook';
-import { GithubIcon } from '@/components/svg/github';
-import { GooglePlayIcon } from '@/components/svg/google-play';
-import { InstagramIcon } from '@/components/svg/instagram';
-import { LinkedinIcon } from '@/components/svg/linkedin';
-import { PaperPlaneIcon } from '@/components/svg/paper-plane';
-import { SocialIncomeLogo } from '@/components/svg/social-income-logo';
-import { YoutubeIcon } from '@/components/svg/youtube';
 import { Layout, MenuItem } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
@@ -15,6 +5,17 @@ import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { now } from '@/lib/utils/now';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
+import { SocialIncomeLogo } from '@socialincome/design-system/brand/logo/logo';
+import { ContactIcon, PaperPlaneIcon } from '@socialincome/design-system/icons/custom-icons/custom-icons';
+import {
+	AppStoreIcon,
+	FacebookIcon,
+	GithubIcon,
+	GooglePlayIcon,
+	InstagramIcon,
+	LinkedinIcon,
+	YoutubeIcon,
+} from '@socialincome/design-system/icons/social-icons/social-icons';
 import { ISbStoryData } from '@storyblok/js';
 import NextImage from 'next/image';
 import NextLink from 'next/link';

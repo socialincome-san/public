@@ -1,5 +1,5 @@
-import { cn } from '@socialincome/design-system/cn';
 import type { PropsWithChildren } from 'react';
+import { cn } from '../../../cn';
 
 type Props = PropsWithChildren<{
 	direction?: 'left' | 'right';

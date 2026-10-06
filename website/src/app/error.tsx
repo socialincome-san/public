@@ -1,7 +1,7 @@
 'use client';
 
-import { FallbackPage } from '@/components/fallback-page';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { FallbackPage } from '@socialincome/design-system/feedback/fallback-page/fallback-page';
 import Link from 'next/link';
 
 export default function Error({ error }: { error: Error & { digest?: string } }) {

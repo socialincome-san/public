@@ -1,5 +1,5 @@
-import { QuoteIcon } from '@/components/svg/quote';
 import type { Testimonial as StoryblokTestimonial } from '@/generated/storyblok/types/109655/storyblok-components';
+import { QuoteIcon } from '@socialincome/design-system/icons/custom-icons/custom-icons';
 import NextImage from 'next/image';
 
 type Props = {

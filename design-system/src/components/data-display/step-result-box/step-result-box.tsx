@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@socialincome/design-system/actions/button/button';
 import { CheckIcon, CopyIcon, DownloadIcon, XIcon } from 'lucide-react';
 import { useState } from 'react';
+import { Button } from '../../actions/button/button';
 
 type Props = {
 	id: number;

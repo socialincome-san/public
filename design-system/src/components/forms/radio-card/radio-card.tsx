@@ -1,10 +1,10 @@
 'use client';
 
-import { cn } from '@socialincome/design-system/cn';
-import { RadioGroupItem } from '@socialincome/design-system/forms/radio-group/radio-group';
 import { ReactNode } from 'react';
+import { cn } from '../../../cn';
+import { RadioGroup, RadioGroupItem } from '../radio-group/radio-group';
 
-type Props = {
+type RadioCardProps = {
 	value: string;
 	checked?: boolean;
 	disabled?: boolean;
@@ -14,7 +14,7 @@ type Props = {
 	children?: ReactNode;
 };
 
-export const RadioCard = ({ value, checked, disabled, label, description, badge, children }: Props) => {
+export const RadioCard = ({ value, checked, disabled, label, description, badge, children }: RadioCardProps) => {
 	return (
 		<label
 			data-testid={`radio-card-${value}`}
@@ -49,5 +49,20 @@ export const RadioCard = ({ value, checked, disabled, label, description, badge,
 				)}
 			</div>
 		</label>
+	);
+};
+
+type RadioCardGroupProps = {
+	value?: string;
+	onChange: (value: string) => void;
+	layout?: 'stack' | 'grid' | 'wrap';
+	children: ReactNode;
+};
+
+export const RadioCardGroup = ({ value, onChange, layout = 'stack', children }: RadioCardGroupProps) => {
+	return (
+		<RadioGroup value={value} onValueChange={onChange} layout={layout === 'wrap' ? 'row' : layout}>
+			{children}
+		</RadioGroup>
 	);
 };

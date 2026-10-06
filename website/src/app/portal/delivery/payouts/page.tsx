@@ -1,10 +1,10 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { PayoutsTableClient } from '@/app/portal/delivery/payouts/payouts-table-client';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getPaginatedPayoutTableView } from '@/modules/payouts/payout.service';
 import type { PayoutTableViewRow } from '@/modules/payouts/payout.types';
 import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 
 export default function PayoutsPage({ searchParams }: SearchParamsPageProps) {

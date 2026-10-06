@@ -2,10 +2,10 @@ import type { AnySearchParams } from '@/app/page-props';
 import { MessagesTable } from '@/app/portal/messaging/delivery-log/[jobId]/messages-table';
 import { SummaryCard } from '@/app/portal/messaging/delivery-log/[jobId]/summary-card';
 import { SyncStatusButton } from '@/app/portal/messaging/delivery-log/[jobId]/sync-status-button';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getMessagingJobDetailAction } from '@/modules/messaging/messaging.actions';
 import { getTwilioTemplate } from '@/modules/messaging/messaging.service';
 import { requireAdmin } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import Link from 'next/link';
 import { Suspense } from 'react';
 

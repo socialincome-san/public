@@ -1,7 +1,6 @@
 import { CellType } from '@/components/data-table/elements/types';
-import { LongHairIcon } from '@/components/icons/long-hair-icon';
-import { ShortHairIcon } from '@/components/icons/short-hair-icon';
 import { Gender } from '@/generated/prisma/enums';
+import { LongHairIcon, ShortHairIcon } from '@socialincome/design-system/icons/custom-icons/custom-icons';
 import type { RowData } from '@tanstack/react-table';
 
 export const GenderCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, TValue>) => {

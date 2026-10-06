@@ -29,10 +29,11 @@ enforces this in both packages.
 
 Components live in purpose groups under
 `src/components/<group>/<name>/`: `actions`, `forms`, `overlays`,
-`navigation`, `feedback`, `data-display`, `layout`. Import them by path,
-for example `@socialincome/design-system/forms/input/input`; there are
-no barrel files. Storybook titles mirror the folders (`Forms/Input`),
-and the sidebar order is set in `.storybook/preview.ts`.
+`navigation`, `feedback`, `data-display`, `layout`, `brand`, `icons`.
+Import them by path, for example
+`@socialincome/design-system/forms/input/input`; there are no barrel
+files. Storybook titles mirror the folders (`Forms/Input`), and the
+sidebar order is set in `.storybook/preview.ts`.
 
 Foundations (colors, typography, spacing and layout, radius, shadows,
 motion) are documented in `src/foundations/*.stories.tsx`. Those stories

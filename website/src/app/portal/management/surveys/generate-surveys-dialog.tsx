@@ -1,8 +1,8 @@
 'use client';
 
-import { StepResultBox } from '@/components/step-result-box';
 import { generateSurveysAction, previewSurveyGenerationAction } from '@/modules/surveys/survey.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { StepResultBox } from '@socialincome/design-system/data-display/step-result-box/step-result-box';
 import {
 	Dialog,
 	DialogContent,
