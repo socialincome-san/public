@@ -1,5 +1,6 @@
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
+import type { JournalRssArticle } from '@/lib/storyblok/journal-rss';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import {
 	createWebsiteJournalArticleLink,
@@ -238,6 +239,18 @@ export const getLatestJournalArticles = async (language: string): Promise<Result
 		return result.success ? result : resultFail('Could not load journal articles', result.status);
 	} catch (error) {
 		console.error('Could not load journal articles', { error });
+
+		return resultFail('Could not load journal articles');
+	}
+};
+
+export const getPublishedJournalArticles = async (language: string): Promise<Result<JournalRssArticle[]>> => {
+	try {
+		const result = await storyblokContent.getPublishedJournalArticles(language);
+
+		return result.success ? result : resultFail('Could not load journal articles', result.status);
+	} catch (error) {
+		console.error('Could not load published journal articles', { error });
 
 		return resultFail('Could not load journal articles');
 	}

@@ -1,8 +1,15 @@
 import { resultFail, resultOk, type Result } from '@/lib/result';
-import { apiPlugin, storyblokInit, type ISbStoriesParams, type StoryblokClient } from '@storyblok/js';
+import {
+	apiPlugin,
+	StoryblokClient,
+	storyblokInit,
+	type ISbResult,
+	type ISbStoriesParams,
+	type StoryblokClient as StoryblokClientType,
+} from '@storyblok/js';
 import { createStoryblokFixtureClient } from './storyblok-fixture.integration';
 
-export type StoryblokContentClient = Pick<StoryblokClient, 'get' | 'getAll'>;
+export type StoryblokContentClient = Pick<StoryblokClientType, 'get' | 'getAll'>;
 
 let storyblokApi: StoryblokContentClient | undefined;
 
@@ -52,6 +59,65 @@ export const fetchStoryblokStoriesPage = async <T>(
 		console.error('Could not fetch Storyblok stories page', { error });
 
 		return resultFail('Could not fetch Storyblok stories', getErrorStatus(error));
+	}
+};
+
+export const fetchPublishedStoryblokArticles = async <T>(params: ISbStoriesParams): Promise<Result<T[]>> => {
+	if (process.env.E2E_STORYBLOK_MOCK === '1') {
+		return fetchStoryblokStories<T>(params);
+	}
+
+	try {
+		const accessToken = process.env.STORYBLOK_PREVIEW_TOKEN;
+		if (!accessToken) {
+			return resultFail('Storyblok preview token is not configured');
+		}
+
+		const client = new StoryblokClient({
+			// Storyblok's SDK keeps the latest content version in module-global state keyed
+			// by token. Use a feed-only namespace and restore the real token on the wire so
+			// overlapping RSS reads cannot advance the shared application client's cv.
+			accessToken: `journal-rss:${accessToken}`,
+			cache: { type: 'none', cv: 'manual' },
+			...(process.env.STORYBLOK_API_ENDPOINT ? { endpoint: process.env.STORYBLOK_API_ENDPOINT } : {}),
+			fetch: async (input, options) => {
+				const requestUrl = toRequestUrl(input);
+				requestUrl.searchParams.set('token', accessToken);
+
+				return fetch(requestUrl, options);
+			},
+		});
+		const firstResponse = await client.get('cdn/stories', {
+			...params,
+			page: 1,
+			cv: Date.now(),
+		});
+		const firstPage = getStoriesPage<T>(firstResponse);
+		if (!firstPage) {
+			return resultFail('Storyblok returned an invalid published articles response');
+		}
+
+		const perPage = firstResponse.perPage > 0 ? firstResponse.perPage : (params.per_page ?? firstPage.stories.length ?? 1);
+		const pageCount = firstResponse.total > 0 ? Math.ceil(firstResponse.total / perPage) : 1;
+		const stories = [...firstPage.stories];
+		for (let page = 2; page <= pageCount; page += 1) {
+			const response = await client.get('cdn/stories', {
+				...params,
+				page,
+				cv: firstPage.cv,
+			});
+			const result = getStoriesPage<T>(response);
+			if (!result) {
+				return resultFail('Storyblok returned an invalid published articles response');
+			}
+			stories.push(...result.stories);
+		}
+
+		return resultOk(stories);
+	} catch (error) {
+		console.error('Could not fetch published Storyblok articles', { error });
+
+		return resultFail('Could not fetch published Storyblok articles', getErrorStatus(error));
 	}
 };
 
@@ -111,6 +177,17 @@ const getStoryblokContentClient = (): StoryblokContentClient => {
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 
+const toRequestUrl = (input: RequestInfo | URL): URL => {
+	if (typeof input === 'string') {
+		return new URL(input);
+	}
+	if (input instanceof URL) {
+		return new URL(input.href);
+	}
+
+	return new URL(input.url);
+};
+
 const isExpectedValue = <T>(value: unknown): value is T => value !== undefined;
 
 const isExpectedArray = <T>(value: unknown): value is T[] => Array.isArray(value) && value.every(isExpectedValue<T>);
@@ -120,6 +197,14 @@ const isStoryResponse = <T>(value: unknown): value is { story: T } =>
 
 const isStoriesPageResponse = <T>(value: unknown): value is { stories: T[] } =>
 	isRecord(value) && isExpectedArray<T>(value.stories);
+
+const getStoriesPage = <T>(response: ISbResult): { stories: T[]; cv: number } | undefined => {
+	if (!isRecord(response.data) || !isExpectedArray<T>(response.data.stories) || typeof response.data.cv !== 'number') {
+		return undefined;
+	}
+
+	return { stories: response.data.stories, cv: response.data.cv };
+};
 
 const getErrorStatus = (error: unknown): number | undefined => {
 	if (!isRecord(error) || typeof error.status !== 'number') {
