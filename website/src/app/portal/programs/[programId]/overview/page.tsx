@@ -10,7 +10,7 @@ type Props = {
 
 export default function OverviewPageProgramScoped({ params }: Props) {
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+		<BlockWrapper marginTop="none" marginBottom="none">
 			<Suspense fallback={<AppLoadingSkeleton />}>
 				<OverviewProgramScopedDataLoader params={params} />
 				<DonationSuccessDialog />

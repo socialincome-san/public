@@ -66,7 +66,7 @@ export const CampaignNewsletter = ({ lang, title, senderName, imageSrc, imageAlt
 	const trimmedSenderName = senderName.trim();
 
 	return (
-		<BlockWrapper spacing="compact">
+		<BlockWrapper marginTop="lg" marginBottom="lg">
 			<div className="border-border bg-card shadow-card flex flex-col gap-8 rounded-3xl border p-6 md:gap-10 md:p-10">
 				{trimmedTitle ? <h2 className="text-foreground text-3xl leading-9 font-medium">{trimmedTitle}</h2> : null}
 

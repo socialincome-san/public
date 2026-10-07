@@ -40,7 +40,7 @@ export default async function ManagementLayout({ children }: ManagementLayoutPro
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<BlockWrapper marginTop="none" marginBottom="none">
 				<h1 className="py-8 text-5xl">Management</h1>
 
 				<TabNavigation sections={sections} />

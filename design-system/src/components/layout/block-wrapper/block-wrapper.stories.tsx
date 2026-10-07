@@ -15,10 +15,44 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+const children = 'Page content stays inside the site width.';
+
+export const None: Story = {
 	args: {
-		disableMarginTop: true,
-		disableMarginBottom: true,
-		children: 'Page content stays inside the site width.',
+		marginTop: 'none',
+		marginBottom: 'none',
+		children,
+	},
+};
+
+export const Small: Story = {
+	args: {
+		marginTop: 'sm',
+		marginBottom: 'sm',
+		children,
+	},
+};
+
+export const Medium: Story = {
+	args: {
+		marginTop: 'md',
+		marginBottom: 'md',
+		children,
+	},
+};
+
+export const Large: Story = {
+	args: {
+		marginTop: 'lg',
+		marginBottom: 'lg',
+		children,
+	},
+};
+
+export const ExtraLarge: Story = {
+	args: {
+		marginTop: 'xl',
+		marginBottom: 'xl',
+		children,
 	},
 };

@@ -23,7 +23,7 @@ type Props = {
 const AUTOPLAY_DELAY_MS = 14000;
 
 export const TestimonialCarouselBlock = ({ blok }: Props) => {
-	const { disableMarginBottom, disableMarginTop } = blok;
+	const { marginBottom, marginTop } = blok;
 	const entries = blok.testimonials;
 	const autoplayEnabled = Boolean(blok.autoplay);
 
@@ -119,11 +119,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 
 	if (entries.length === 1) {
 		return (
-			<BlockWrapper
-				disableMarginBottom={disableMarginBottom}
-				disableMarginTop={disableMarginTop}
-				{...storyblokEditable(blok)}
-			>
+			<BlockWrapper marginBottom={marginBottom} marginTop={marginTop} {...storyblokEditable(blok)}>
 				{blok.heading && (
 					<div className="mb-8 md:mb-10">
 						<SectionHeading>
@@ -139,12 +135,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 	}
 
 	return (
-		<BlockWrapper
-			width="bleed"
-			disableMarginBottom={disableMarginBottom}
-			disableMarginTop={disableMarginTop}
-			{...storyblokEditable(blok)}
-		>
+		<BlockWrapper width="bleed" marginBottom={marginBottom} marginTop={marginTop} {...storyblokEditable(blok)}>
 			{blok.heading && (
 				<div className="mb-8 md:mb-10">
 					<SectionHeading>

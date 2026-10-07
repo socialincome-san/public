@@ -34,7 +34,7 @@ export default async function ContentPage({ params, searchParams }: DefaultLayou
 
 	return (
 		<>
-			<BlockWrapper disableMarginTop disableMarginBottom>
+			<BlockWrapper marginTop="none" marginBottom="none">
 				<div className="pt-9">
 					<Breadcrumb links={breadcrumbLinks} layout="inline" />
 				</div>

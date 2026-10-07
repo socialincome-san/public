@@ -56,7 +56,7 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 	const sortedFocuses = sortFocusesByCandidatesCountDesc(filteredFocuses, statsBySlug);
 
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+		<BlockWrapper marginTop="none" marginBottom="none">
 			<div className="flex w-full flex-col gap-8">
 				<CmsHeader title={title} text={text} />
 				<FilterBar

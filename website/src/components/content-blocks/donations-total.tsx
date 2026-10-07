@@ -61,7 +61,7 @@ type Props = {
 export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency, disableAnimation = false }: Props) => {
 	const hasFilename = (image: StoryblokAsset): image is StoryblokAsset & { filename: string } => Boolean(image.filename);
 	const locale = getSafeNumberFormatLocale(lang);
-	const { disableMarginBottom, disableMarginTop } = blok;
+	const { marginBottom, marginTop } = blok;
 
 	const { sectionRef, displayValue, smoothMouseX, smoothMouseY } = useDonationTotalAnimations({
 		totalAmount,
@@ -73,12 +73,7 @@ export const DonationsTotalBlock = ({ blok, lang, region, totalAmount, currency,
 	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, region) : null;
 
 	return (
-		<BlockWrapper
-			ref={sectionRef}
-			disableMarginBottom={disableMarginBottom}
-			disableMarginTop={disableMarginTop}
-			{...storyblokEditable(blok)}
-		>
+		<BlockWrapper ref={sectionRef} marginBottom={marginBottom} marginTop={marginTop} {...storyblokEditable(blok)}>
 			{images.map((image, index) => (
 				<FloatingImage key={image.id} image={image} index={index} smoothMouseX={smoothMouseX} smoothMouseY={smoothMouseY} />
 			))}

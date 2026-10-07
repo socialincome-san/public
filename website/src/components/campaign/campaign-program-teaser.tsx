@@ -156,7 +156,7 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 		: null;
 
 	return (
-		<BlockWrapper spacing="compact">
+		<BlockWrapper marginTop="lg" marginBottom="lg">
 			<section className="bg-card grid gap-8 rounded-2xl p-6 shadow-sm md:grid-cols-[minmax(0,4fr)_minmax(280px,2fr)] md:gap-12 md:p-3 md:pl-10">
 				<div className="min-w-0 py-8">
 					<p className="text-muted-foreground text-sm font-medium">{translator.t('campaign.program-teaser.heading')}</p>

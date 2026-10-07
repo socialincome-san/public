@@ -24,7 +24,7 @@ export default function ProfileLayout({ children }: ProfileLayoutProps) {
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<BlockWrapper marginTop="none" marginBottom="none">
 				<h1 className="py-8 text-5xl">Profile</h1>
 				<TabNavigation sections={sections} />
 

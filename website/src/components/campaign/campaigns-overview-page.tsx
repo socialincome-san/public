@@ -44,7 +44,7 @@ export const CampaignsOverviewPage = async ({ overview, lang, region, searchPara
 	return (
 		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} layout="section" />
-			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<BlockWrapper marginTop="none" marginBottom="none">
 				<CampaignsOverview
 					campaigns={campaigns}
 					statsById={statsById}

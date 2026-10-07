@@ -139,7 +139,7 @@ export const CampaignHero = ({
 
 			{isActive ? (
 				<div className="lg:hidden">
-					<BlockWrapper disableMarginTop={true}>
+					<BlockWrapper marginTop="none">
 						<CampaignDonationFormServer {...donationFormProps} />
 					</BlockWrapper>
 				</div>

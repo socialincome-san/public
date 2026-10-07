@@ -42,7 +42,7 @@ export const LocalPartnersOverview = async ({ localPartners, lang, region, title
 		: countryFilteredLocalPartners;
 
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+		<BlockWrapper marginTop="none" marginBottom="none">
 			<div className="flex w-full flex-col gap-8">
 				{hasCmsHeader ? <CmsHeader title={title} text={text} /> : <LocalPartnersTeaserIntro lang={lang} />}
 				<FilterBar

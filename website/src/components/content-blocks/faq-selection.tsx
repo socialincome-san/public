@@ -25,11 +25,7 @@ export const FaqSelectionBlock = ({ blok, lang, region }: Props) => {
 	}
 
 	return (
-		<BlockWrapper
-			disableMarginTop={blok.disableMarginTop === true}
-			disableMarginBottom={blok.disableMarginBottom === true}
-			{...storyblokEditable(blok)}
-		>
+		<BlockWrapper marginTop={blok.marginTop} marginBottom={blok.marginBottom} {...storyblokEditable(blok)}>
 			<FaqSelectionContent heading={blok.heading} items={items} cta={cta} />
 		</BlockWrapper>
 	);

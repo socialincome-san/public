@@ -78,7 +78,7 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 			/>
 			<Breadcrumb links={breadcrumbLinks} />
 			<div className="lg:hidden">
-				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					{heroCard}
 				</BlockWrapper>
 			</div>

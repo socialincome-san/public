@@ -1,33 +1,41 @@
+import { cva, type VariantProps } from 'class-variance-authority';
 import { type ComponentPropsWithoutRef, forwardRef } from 'react';
-import { cn } from '../../../cn';
 import { type WithoutClassName } from '../../../without-class-name';
 
-type Props = WithoutClassName<ComponentPropsWithoutRef<'div'>> & {
-	disableMarginTop?: boolean;
-	disableMarginBottom?: boolean;
-	spacing?: 'default' | 'compact';
-	width?: 'content' | 'bleed';
-};
+const blockWrapperVariants = cva('storyblok__outline w-site-width max-w-content relative mx-auto px-6', {
+	variants: {
+		marginTop: {
+			none: 'mt-0',
+			sm: 'mt-2 md:mt-4 lg:mt-6',
+			md: 'mt-4 md:mt-8 lg:mt-12',
+			lg: 'mt-6 md:mt-12 lg:mt-16',
+			xl: 'mt-12 md:mt-24 lg:mt-32',
+		},
+		marginBottom: {
+			none: 'mb-0',
+			sm: 'mb-2 md:mb-4 lg:mb-6',
+			md: 'mb-4 md:mb-8 lg:mb-12',
+			lg: 'mb-6 md:mb-12 lg:mb-16',
+			xl: 'mb-12 md:mb-24 lg:mb-32',
+		},
+		width: {
+			content: '',
+			bleed: 'md:w-full md:px-0',
+		},
+	},
+	defaultVariants: {
+		marginTop: 'xl',
+		marginBottom: 'xl',
+		width: 'content',
+	},
+});
 
-const marginTopClasses = { default: 'mt-12 md:mt-24 lg:mt-32', compact: 'mt-8 md:mt-12 lg:mt-16' };
-const marginBottomClasses = { default: 'mb-12 md:mb-24 lg:mb-32', compact: 'mb-8 md:mb-12 lg:mb-16' };
+type Props = WithoutClassName<ComponentPropsWithoutRef<'div'>> & VariantProps<typeof blockWrapperVariants>;
 
 export const BlockWrapper = forwardRef<HTMLDivElement, Props>(
-	(
-		{ children, disableMarginTop = false, disableMarginBottom = false, spacing = 'default', width = 'content', ...rest },
-		ref,
-	) => {
+	({ children, marginTop, marginBottom, width, ...rest }, ref) => {
 		return (
-			<div
-				className={cn(
-					'storyblok__outline w-site-width max-w-content relative mx-auto px-6',
-					width === 'bleed' && 'md:w-full md:px-0',
-					disableMarginTop ? 'mt-0' : marginTopClasses[spacing],
-					disableMarginBottom ? 'mb-0' : marginBottomClasses[spacing],
-				)}
-				ref={ref}
-				{...rest}
-			>
+			<div className={blockWrapperVariants({ marginTop, marginBottom, width })} ref={ref} {...rest}>
 				{children}
 			</div>
 		);

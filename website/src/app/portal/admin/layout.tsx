@@ -35,7 +35,7 @@ export default async function DeliveryLayout({ children }: MonitoringLayoutProps
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<BlockWrapper marginTop="none" marginBottom="none">
 				<h1 className="py-8 text-5xl">Admin</h1>
 
 				<TabNavigation sections={sections} />

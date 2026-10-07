@@ -73,7 +73,7 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 	return (
 		<div className="py-8 pb-16">
 			<Breadcrumb links={breadcrumbLinks} layout="section" />
-			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<BlockWrapper marginTop="none" marginBottom="none">
 				<div className="pt-8">
 					<CmsHeader title={title} text={text} />
 

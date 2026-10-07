@@ -65,7 +65,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 
 			<Breadcrumb links={breadcrumbLinks} />
 			<div className="lg:hidden">
-				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					<DonationFormServer lang={lang} />
 				</BlockWrapper>
 			</div>

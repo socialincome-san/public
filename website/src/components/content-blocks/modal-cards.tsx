@@ -20,11 +20,11 @@ const focusDialogTitleOnOpen = (event: Event) => {
 };
 
 export const ModalCardsBlock = ({ blok }: Props) => {
-	const { cards, disableMarginBottom, disableMarginTop } = blok;
+	const { cards, marginBottom, marginTop } = blok;
 	const [openCardId, setOpenCardId] = useState<string | null>(null);
 
 	return (
-		<BlockWrapper disableMarginBottom={disableMarginBottom} disableMarginTop={disableMarginTop} {...storyblokEditable(blok)}>
+		<BlockWrapper marginBottom={marginBottom} marginTop={marginTop} {...storyblokEditable(blok)}>
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 				{cards?.map(({ image, heading, modalContent, _uid }) => {
 					if (!image.filename) {

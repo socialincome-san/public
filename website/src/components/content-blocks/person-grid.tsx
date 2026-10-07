@@ -138,11 +138,7 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 		);
 
 	return (
-		<BlockWrapper
-			{...storyblokEditable(blok)}
-			disableMarginTop={blok.disableMarginTop}
-			disableMarginBottom={blok.disableMarginBottom}
-		>
+		<BlockWrapper {...storyblokEditable(blok)} marginTop={blok.marginTop} marginBottom={blok.marginBottom}>
 			{content}
 			{button && buttonHref ? (
 				<div className="mt-10 flex justify-center">

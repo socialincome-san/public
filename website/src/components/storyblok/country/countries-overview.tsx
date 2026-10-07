@@ -20,7 +20,7 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, regio
 	const hasCmsHeader = Boolean(title?.trim()) || Boolean(text?.trim());
 
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+		<BlockWrapper marginTop="none" marginBottom="none">
 			<div className="flex w-full flex-col gap-8">
 				{hasCmsHeader ? (
 					<div className="space-y-5">

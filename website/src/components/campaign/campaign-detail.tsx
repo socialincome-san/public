@@ -108,7 +108,7 @@ export const CampaignDetail = async ({
 				<Breadcrumb links={breadcrumbLinks} layout="section" />
 			</div>
 			{trimmedDescription ? (
-				<BlockWrapper spacing="compact">
+				<BlockWrapper marginTop="lg" marginBottom="lg">
 					<p className="text-foreground max-w-2xl text-lg whitespace-pre-wrap">{trimmedDescription}</p>
 				</BlockWrapper>
 			) : null}

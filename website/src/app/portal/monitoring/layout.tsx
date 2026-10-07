@@ -32,7 +32,7 @@ export default async function MonitoringLayout({ children }: MonitoringLayoutPro
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<BlockWrapper marginTop="none" marginBottom="none">
 				<h1 className="py-8 text-5xl">Monitoring</h1>
 
 				<TabNavigation sections={sections} />
