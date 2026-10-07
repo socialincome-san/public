@@ -8,6 +8,12 @@
 		"axios": "1.20.0",
 		"body-parser": "2.3.0",
 		"fast-xml-builder": "1.3.1",
+		"firebase-admin": {
+			"jwks-rsa": "3.2.2"
+		},
+		"isomorphic-dompurify": {
+			"jsdom": "26.1.0"
+		},
 		"protobufjs": "8.8.0",
 		"uuid": "14.0.2",
 		"tabbable": "6.5.0",
