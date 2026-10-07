@@ -7,8 +7,8 @@ import type { Study } from '@/generated/storyblok/types/109655/storyblok-compone
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getSurveyImpactFilterOptionsAction } from '@/modules/surveys/survey.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
 import type { ISbStoryData } from '@storyblok/js';
-import { CmsHeader } from '../shared/cms-header';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusText, getFocusTitle } from './focus.utils';
 import { ImpactMeasurementPreviewWrapper } from './impact-measurement-preview-wrapper';
@@ -75,7 +75,7 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 			<Breadcrumb links={breadcrumbLinks} layout="section" />
 			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 				<div className="pt-8">
-					<CmsHeader title={title} text={text} />
+					<PageIntro title={title} description={text} />
 
 					<section className="mt-8 flex flex-col gap-6">
 						<ProgramsOverviewSection

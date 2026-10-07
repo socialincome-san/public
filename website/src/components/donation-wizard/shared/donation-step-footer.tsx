@@ -2,6 +2,7 @@
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { CheckoutFooter } from '@socialincome/design-system/navigation/checkout-footer/checkout-footer';
 import { ChevronLeft } from 'lucide-react';
 import { formatDonationCurrencyAmount } from '../utils/donation-formatting';
 
@@ -22,48 +23,33 @@ type Props = {
 export const DonationStepFooter = ({ onBack, onContinue, continueLabel, continueDisabled = false, summary }: Props) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 
-	const summaryAmount = summary ? (
-		<>
-			<span className="text-lg leading-none font-medium">
-				{formatDonationCurrencyAmount(summary.currency, summary.amount)}
-			</span>
-			{summary.showPerMonth && <span className="text-muted-foreground shrink-0 text-sm">{t('stepPlan.per-month')}</span>}
-		</>
-	) : null;
-
 	return (
-		<div className="flex flex-col gap-3">
-			{summary && (
-				<div className="border-border flex items-center justify-between gap-2 border-y py-2.5 text-sm sm:hidden">
-					<span className="text-muted-foreground shrink-0">{t('stepPayment.your-donation')}</span>
-					<div className="flex min-w-0 items-center gap-1.5">{summaryAmount}</div>
-				</div>
-			)}
-
-			<div className="flex flex-col-reverse gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
+		<CheckoutFooter
+			back={
 				<Button type="button" data-testid="donation-wizard-back" variant="outline" onClick={onBack}>
 					<ChevronLeft className="size-4" aria-hidden />
 					{t('stepPlan.back')}
 				</Button>
-
-				<div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
-					{summary && (
-						<div className="hidden min-w-0 items-center gap-1.5 text-sm sm:flex">
-							<span>{t('stepPayment.your-donation')}</span>
-							{summaryAmount}
-						</div>
-					)}
-
-					<Button
-						type="button"
-						data-testid="donation-wizard-continue"
-						disabled={continueDisabled || !onContinue}
-						onClick={onContinue}
-					>
-						{continueLabel}
-					</Button>
-				</div>
-			</div>
-		</div>
+			}
+			summary={
+				summary
+					? {
+							label: t('stepPayment.your-donation'),
+							amount: formatDonationCurrencyAmount(summary.currency, summary.amount),
+							suffix: summary.showPerMonth ? t('stepPlan.per-month') : undefined,
+						}
+					: undefined
+			}
+			primary={
+				<Button
+					type="button"
+					data-testid="donation-wizard-continue"
+					disabled={continueDisabled || !onContinue}
+					onClick={onContinue}
+				>
+					{continueLabel}
+				</Button>
+			}
+		/>
 	);
 };

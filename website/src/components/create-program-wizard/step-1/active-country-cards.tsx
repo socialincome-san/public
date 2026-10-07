@@ -4,8 +4,7 @@ import { CountryFlag } from '@/components/country-flag';
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
-import { cn } from '@socialincome/design-system/cn';
-import { CardAlertFooter } from '@socialincome/design-system/feedback/card-alert-footer/card-alert-footer';
+import { StatusCard } from '@socialincome/design-system/data-display/status-card/status-card';
 import { RadioCardGroup } from '@socialincome/design-system/forms/radio-card/radio-card';
 import { CountryRadioCard } from './country-radio-card';
 
@@ -37,12 +36,10 @@ export const ActiveCountryCards = ({ rows, selectedCountryId, onSelectCountry }:
 							: t('step1.no_candidates');
 
 						return (
-							<div
+							<StatusCard
 								key={row.id}
-								className={cn(
-									'flex h-full flex-col rounded-2xl drop-shadow-md',
-									hasCandidates ? 'bg-confirm-foreground' : 'bg-secondary',
-								)}
+								inset="none"
+								status={{ text: candidateAlertText, variant: hasCandidates ? 'confirm' : 'secondary' }}
 							>
 								<CountryRadioCard
 									value={row.id}
@@ -58,8 +55,7 @@ export const ActiveCountryCards = ({ rows, selectedCountryId, onSelectCountry }:
 									recipientCount={row.stats.recipientCount}
 									recipientLabel={t('step1.recipients')}
 								/>
-								<CardAlertFooter text={candidateAlertText} variant={hasCandidates ? 'confirm' : 'secondary'} />
-							</div>
+							</StatusCard>
 						);
 					})}
 				</RadioCardGroup>

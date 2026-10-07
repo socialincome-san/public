@@ -10,8 +10,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@socialincome/design-system/forms/select/select';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
-import { CircleHelp } from 'lucide-react';
+import { InfoTooltip } from '@socialincome/design-system/overlays/info-tooltip/info-tooltip';
 
 type Props = {
 	totalBudget: number;
@@ -39,18 +38,7 @@ export const ProgramCostsHeader = ({
 			<div className="min-w-0 space-y-1">
 				<div className="flex items-center gap-2">
 					<p className="text-sm font-medium">{t('step3.total_costs.title')}</p>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<button
-								type="button"
-								aria-label={t('step3.total_costs.aria')}
-								className="text-muted-foreground hover:text-foreground inline-flex"
-							>
-								<CircleHelp className="h-4 w-4" />
-							</button>
-						</TooltipTrigger>
-						<TooltipContent sideOffset={8}>{totalBudgetTooltipText}</TooltipContent>
-					</Tooltip>
+					<InfoTooltip label={t('step3.total_costs.aria')}>{totalBudgetTooltipText}</InfoTooltip>
 				</div>
 
 				<div className="flex flex-wrap items-end gap-x-4 gap-y-1" aria-busy={isCalculatingBudget}>

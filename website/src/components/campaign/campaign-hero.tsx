@@ -8,10 +8,12 @@ import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/util
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import type { CampaignPage } from '@/modules/campaigns/campaign.types';
-import { Progress } from '@socialincome/design-system/feedback/progress/progress';
-import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
-import NextImage from 'next/image';
-import type { ReactNode } from 'react';
+import {
+	MediaHero,
+	MediaHeroIntro,
+	MediaHeroStat,
+	MediaHeroStats,
+} from '@socialincome/design-system/layout/media-hero/media-hero';
 
 const HERO_HEADER_IMAGE_WIDTH = 1920;
 const HERO_HEADER_IMAGE_HEIGHT = 1080;
@@ -26,26 +28,6 @@ type Props = {
 	translator: Translator;
 	lang: WebsiteLanguage;
 };
-
-type HeroStatProps = {
-	label: string;
-	value: string;
-	trailing?: ReactNode;
-	progress: number;
-};
-
-const HeroStat = ({ label, value, trailing, progress }: HeroStatProps) => (
-	<div className="flex min-w-0 flex-1 flex-col gap-3">
-		<div className="flex items-end justify-between gap-4">
-			<div className="flex min-w-0 flex-col gap-1">
-				<p className="text-sm font-medium">{label}</p>
-				<p className="text-4xl font-normal md:text-6xl">{value}</p>
-			</div>
-			{trailing}
-		</div>
-		<Progress value={progress} variant="onDark" />
-	</div>
-);
 
 export const CampaignHero = ({
 	campaign,
@@ -81,69 +63,33 @@ export const CampaignHero = ({
 		: [];
 
 	return (
-		<section className="full-bleed-hero flex flex-col gap-6">
-			<div className="bg-foreground md:rounded-b-5xl relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden rounded-b-3xl md:min-h-160">
-				{heroImageSrc ? (
-					<NextImage src={heroImageSrc} alt={heroImageAlt} fill sizes="100vw" className="object-cover" priority />
-				) : (
-					<div className="bg-primary/20 absolute inset-0" />
-				)}
-
-				<div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,hsl(var(--foreground))_0%,hsl(var(--foreground)/0.85)_22%,transparent_55%)]" />
-
-				{fundraisingPillLabels.length > 0 ? (
-					<div className="w-site-width max-w-content absolute inset-x-0 top-10 z-30 mx-auto px-4 lg:top-[calc(1.25rem+3.5rem+2.5rem)]">
-						<CampaignFundraisingPills labels={fundraisingPillLabels} />
-					</div>
-				) : null}
-
-				<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto mb-8 flex flex-row items-end justify-between gap-8 md:mb-24">
-					<div className="flex min-w-0 flex-1 flex-col gap-10 px-4">
-						<div className="drop-shadow-on-media flex max-w-2xl flex-col gap-4">
-							<p className="text-lg">{translator.t('campaign.by', { context: { creator: creatorName } })}</p>
-							<h1 className="text-5xl leading-tight font-bold text-pretty md:text-6xl">{title}</h1>
-						</div>
-
-						<div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-16">
-							<HeroStat
-								label={translator.t('campaigns-page.raised-percentage', {
-									namespace: 'website-common',
-									context: {
-										percentage: raisedPercent,
-										currency: campaign.currency,
-									},
-								})}
-								value={formatNumberLocale(campaign.amountCollected ?? 0, locale)}
-								trailing={
-									hasGoal ? (
-										<p className="pb-1 text-xl font-medium opacity-40">{formatNumberLocale(campaign.goal ?? 0, locale)}</p>
-									) : null
-								}
-								progress={raisedPercent}
-							/>
-							<HeroStat
-								label={translator.t('campaign.days-left')}
-								value={formatNumberLocale(remainingDays, locale)}
-								progress={daysProgress}
-							/>
-						</div>
-					</div>
-
-					{isActive ? (
-						<div className="hidden shrink-0 lg:block">
-							<CampaignDonationFormServer {...donationFormProps} />
-						</div>
-					) : null}
-				</div>
-			</div>
-
-			{isActive ? (
-				<div className="lg:hidden">
-					<BlockWrapper disableMarginTop={true}>
-						<CampaignDonationFormServer {...donationFormProps} />
-					</BlockWrapper>
-				</div>
-			) : null}
-		</section>
+		<MediaHero
+			image={heroImageSrc ? { src: heroImageSrc, alt: heroImageAlt } : null}
+			overlay="strong"
+			top={fundraisingPillLabels.length > 0 ? <CampaignFundraisingPills labels={fundraisingPillLabels} /> : null}
+			aside={isActive ? <CampaignDonationFormServer {...donationFormProps} /> : null}
+			mobileAside={isActive ? <CampaignDonationFormServer {...donationFormProps} /> : null}
+		>
+			<MediaHeroIntro title={title} kicker={translator.t('campaign.by', { context: { creator: creatorName } })} shadow />
+			<MediaHeroStats>
+				<MediaHeroStat
+					label={translator.t('campaigns-page.raised-percentage', {
+						namespace: 'website-common',
+						context: {
+							percentage: raisedPercent,
+							currency: campaign.currency,
+						},
+					})}
+					value={formatNumberLocale(campaign.amountCollected ?? 0, locale)}
+					target={hasGoal ? formatNumberLocale(campaign.goal ?? 0, locale) : undefined}
+					progress={raisedPercent}
+				/>
+				<MediaHeroStat
+					label={translator.t('campaign.days-left')}
+					value={formatNumberLocale(remainingDays, locale)}
+					progress={daysProgress}
+				/>
+			</MediaHeroStats>
+		</MediaHero>
 	);
 };

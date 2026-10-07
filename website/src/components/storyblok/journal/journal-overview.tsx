@@ -1,7 +1,6 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
-import { JournalPageHeader } from '@/components/storyblok/journal/journal-page-header';
 import { JournalPageShell } from '@/components/storyblok/journal/journal-page-shell';
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
 import { PersonCarousel } from '@/components/storyblok/shared/person-carousel';
@@ -10,6 +9,7 @@ import { createWebsiteJournalArticleTypeLink, getArticleTypeLabel } from '@/lib/
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { cn } from '@socialincome/design-system/cn';
 import { Separator } from '@socialincome/design-system/data-display/separator/separator';
+import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';
 
@@ -66,7 +66,7 @@ export const JournalOverview = ({
 }: Props) => (
 	<JournalPageShell>
 		<JournalBreadcrumb links={breadcrumbs} />
-		<JournalPageHeader title={pageTitle} description={pageDescription} />
+		<PageIntro title={pageTitle} description={pageDescription} />
 
 		<section className="flex flex-wrap items-center gap-2">
 			<Link href={journalPath} className={articleTypeFilterClassName(!activeTagSlug && !activeArticleTypeSlug)}>

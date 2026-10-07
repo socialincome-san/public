@@ -2,9 +2,8 @@ import type { Study } from '@/generated/storyblok/types/109655/storyblok-compone
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
+import { LinkPill } from '@socialincome/design-system/actions/link-pill/link-pill';
 import type { ISbStoryData } from '@storyblok/js';
-import { ExternalLink } from 'lucide-react';
-import Link from 'next/link';
 
 type Props = {
 	study: ISbStoryData<Study>;
@@ -24,17 +23,7 @@ export const StudyCard = ({ study, lang, region }: Props) => {
 			<h3 className="text-foreground line-clamp-3 text-2xl font-bold">{title}</h3>
 			<p className="text-foreground line-clamp-5 text-base font-normal">{description}</p>
 			{metadata && <p className="text-foreground text-base font-light">{metadata}</p>}
-			{href && linkLabel && (
-				<Link
-					href={href}
-					target="_blank"
-					rel="noopener noreferrer"
-					className="bg-muted inline-flex w-fit items-center gap-1.5 rounded-full py-1.5 pr-2 pl-3"
-				>
-					<span className="text-foreground text-xs font-bold">{linkLabel}</span>
-					<ExternalLink className="text-foreground size-3.5" aria-hidden="true" />
-				</Link>
-			)}
+			{href && linkLabel && <LinkPill href={href} label={linkLabel} external />}
 		</article>
 	);
 };

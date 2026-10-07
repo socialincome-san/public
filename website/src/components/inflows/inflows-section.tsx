@@ -4,6 +4,8 @@ import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-vi
 import { InflowsGauge } from '@/components/inflows/inflows-gauge';
 import type { InflowSegmentKey } from '@/components/inflows/inflows-segments';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { BreakdownList, BreakdownRow } from '@socialincome/design-system/data-display/breakdown-list/breakdown-list';
+import { SplitSection, SplitSectionCard } from '@socialincome/design-system/layout/split-section/split-section';
 
 export type InflowsSectionSegment = {
 	key: InflowSegmentKey;
@@ -36,28 +38,27 @@ type Props = {
 
 export const InflowsSection = ({ copy, segments, totalAmount, videoEmbedUrl, videoThumbnailSrc, lang }: Props) => {
 	return (
-		<section className="grid gap-8 py-6 sm:grid-cols-2 sm:items-start sm:gap-12 md:gap-20 md:py-10">
-			<div className="flex max-w-3xl flex-col gap-3 sm:pt-8">
-				<p className="text-foreground text-sm font-medium">{copy.eyebrow}</p>
-				<h2 className="text-foreground text-4xl leading-tight font-normal md:text-5xl md:leading-[54px]">
+		<SplitSection
+			eyebrow={copy.eyebrow}
+			headline={
+				<>
 					{copy.headlineBeforeBold}
-					<span className="font-bold">{copy.headlineBold}</span>
+					<strong>{copy.headlineBold}</strong>
 					{copy.headlineAfterBold}
-				</h2>
-				<div className="mt-4">
-					<ExplainerVideoTrigger
-						layout="inline"
-						label={copy.videoLabel}
-						embedUrl={videoEmbedUrl}
-						thumbnailSrc={videoThumbnailSrc}
-						thumbnailAlt={copy.videoLabel}
-						dialogTitle={copy.videoLabel}
-					/>
-				</div>
-			</div>
-
-			<div className="bg-card shadow-card relative flex w-full flex-col items-center gap-8 rounded-4xl px-6 pt-6 pb-8 sm:px-8 sm:pt-7 sm:pb-10">
-				<h3 className="text-foreground w-full text-2xl leading-none font-medium">{copy.breakdownTitle}</h3>
+				</>
+			}
+			intro={
+				<ExplainerVideoTrigger
+					layout="inline"
+					label={copy.videoLabel}
+					embedUrl={videoEmbedUrl}
+					thumbnailSrc={videoThumbnailSrc}
+					thumbnailAlt={copy.videoLabel}
+					dialogTitle={copy.videoLabel}
+				/>
+			}
+		>
+			<SplitSectionCard title={copy.breakdownTitle} align="center">
 				<InflowsGauge
 					segments={segments}
 					centerValue={totalAmount}
@@ -65,23 +66,18 @@ export const InflowsSection = ({ copy, segments, totalAmount, videoEmbedUrl, vid
 					centerCurrencyLabel={copy.totalCurrencyLabel}
 					lang={lang}
 				/>
-				<ul className="flex w-full flex-col gap-6">
+				<BreakdownList>
 					{segments.map((seg) => (
-						<li key={seg.key} className="flex flex-col gap-1">
-							<div className="flex items-center justify-between gap-4">
-								<div className="flex min-w-0 items-center gap-2">
-									<span className="size-3 shrink-0 rounded-full" style={{ backgroundColor: seg.color }} aria-hidden />
-									<span className="text-foreground text-base font-semibold">{seg.label}</span>
-								</div>
-								<span className="text-foreground shrink-0 text-base font-semibold tabular-nums">{seg.percent}%</span>
-							</div>
-							<p className="text-muted-foreground text-sm leading-5">
-								{seg.description}: {seg.amountLabel}
-							</p>
-						</li>
+						<BreakdownRow
+							key={seg.key}
+							label={seg.label}
+							value={`${seg.percent}%`}
+							description={`${seg.description}: ${seg.amountLabel}`}
+							markerColor={seg.color}
+						/>
 					))}
-				</ul>
-			</div>
-		</section>
+				</BreakdownList>
+			</SplitSectionCard>
+		</SplitSection>
 	);
 };

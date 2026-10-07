@@ -6,6 +6,7 @@ import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCurrentUserAction } from '@/modules/auth/auth.actions';
 import { resolveProgramFinancesDisplayAmountsAction } from '@/modules/programs/program.actions';
 import type { ProgramDashboardStats } from '@/modules/programs/program.types';
+import { DetailPanel } from '@socialincome/design-system/data-display/detail-panel/detail-panel';
 
 type Props = {
 	stats: ProgramDashboardStats;
@@ -29,11 +30,7 @@ export const ProgramFinances = async ({ stats, programId, translator, lang }: Pr
 	const financesCard = <ProgramFinancesCard displayAmounts={displayAmounts} translator={translator} lang={lang} embedded />;
 
 	return (
-		<div className="bg-card flex flex-col gap-6 rounded-xl p-4 shadow-lg lg:p-6">
-			<div className="flex items-center justify-between">
-				<h2 className="text-foreground text-xl font-bold">{translator.t('navigation.finances')}</h2>
-			</div>
-
+		<DetailPanel title={translator.t('navigation.finances')}>
 			{financesCard}
 			<ProgramFinancesDialog
 				dialogTitle={translator.t('program-detail-page.program-finances-title')}
@@ -46,6 +43,6 @@ export const ProgramFinances = async ({ stats, programId, translator, lang }: Pr
 				financesCard={financesCard}
 				programId={programId}
 			/>
-		</div>
+		</DetailPanel>
 	);
 };

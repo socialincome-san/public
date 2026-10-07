@@ -13,6 +13,7 @@ import { Button } from '@socialincome/design-system/actions/button/button';
 import { Separator } from '@socialincome/design-system/data-display/separator/separator';
 import { Input } from '@socialincome/design-system/forms/input/input';
 import { Slider } from '@socialincome/design-system/forms/slider/slider';
+import { CheckoutFooter } from '@socialincome/design-system/navigation/checkout-footer/checkout-footer';
 import { CircleX, CreditCard } from 'lucide-react';
 import { type ReactNode, useState } from 'react';
 import {
@@ -104,13 +105,6 @@ export const EditSubscriptionStep = ({
 	const totalAmount = coverTransactionCosts ? getAmountWithTransactionCostCoverage(amount) : amount;
 	const showPaymentMethod = Boolean(onUpdateCard);
 	const showFees = Boolean(showCoverTransactionCosts && onCoverTransactionCostsChange);
-
-	const totalSummary = (
-		<>
-			<span className="text-lg leading-none font-medium">{formatDonationCurrencyAmount(currency, totalAmount)}</span>
-			<span className="text-muted-foreground shrink-0 text-sm">{tWizard('stepPlan.per-month')}</span>
-		</>
-	);
 
 	return (
 		<div className="flex flex-col gap-4 sm:gap-6" data-testid="edit-subscription-step">
@@ -253,37 +247,28 @@ export const EditSubscriptionStep = ({
 			</div>
 
 			<div className="bg-background sticky bottom-0 z-10 -mx-6 mt-2 border-t px-6 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:static sm:mx-0 sm:mt-0 sm:border-0 sm:bg-transparent sm:px-0 sm:pt-2 sm:pb-0">
-				{showFees ? (
-					<div
-						className="border-border mb-3 flex items-center justify-between gap-2 border-y py-2.5 text-sm sm:hidden"
-						data-testid="edit-subscription-total-mobile"
-					>
-						<span className="text-muted-foreground shrink-0">{tWizard('stepPayment.your-donation')}</span>
-						<div className="flex min-w-0 items-center gap-1.5">{totalSummary}</div>
-					</div>
-				) : null}
-
-				<div className="flex flex-col-reverse gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
-					<Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting || isUpdatingCard}>
-						{labels.cancel}
-					</Button>
-
-					<div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
-						{showFees ? (
-							<div
-								className="hidden min-w-0 items-center gap-1.5 text-sm sm:flex"
-								data-testid="edit-subscription-total"
-								aria-live="polite"
-							>
-								<span>{tWizard('stepPayment.your-donation')}</span>
-								{totalSummary}
-							</div>
-						) : null}
+				<CheckoutFooter
+					back={
+						<Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting || isUpdatingCard}>
+							{labels.cancel}
+						</Button>
+					}
+					summary={
+						showFees
+							? {
+									label: tWizard('stepPayment.your-donation'),
+									amount: formatDonationCurrencyAmount(currency, totalAmount),
+									suffix: tWizard('stepPlan.per-month'),
+									testId: 'edit-subscription-total',
+								}
+							: undefined
+					}
+					primary={
 						<Button type="button" onClick={onSubmit} disabled={!canSubmit} aria-busy={isSubmitting}>
 							{isSubmitting ? labels.updatingSubscription : labels.updateSubscription}
 						</Button>
-					</div>
-				</div>
+					}
+				/>
 			</div>
 		</div>
 	);

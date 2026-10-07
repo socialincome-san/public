@@ -3,6 +3,7 @@ import type { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getCurrentUserAction } from '@/modules/auth/auth.actions';
+import { DetailPanel } from '@socialincome/design-system/data-display/detail-panel/detail-panel';
 
 type Props = {
 	count: number;
@@ -17,9 +18,7 @@ export const ProgramRecipients = async ({ count, programId, translator, lang }: 
 	const isLoggedIn = userResult.success && userResult.data !== null;
 
 	return (
-		<div className="bg-card flex h-full flex-col items-start gap-8 rounded-xl p-4 shadow-lg lg:p-6">
-			<h2 className="text-foreground text-xl font-bold">{translator.t('navigation.recipients')}</h2>
-			<p className="text-foreground text-6xl font-light">{formatNumberLocale(count, locale)}</p>
+		<DetailPanel title={translator.t('navigation.recipients')} value={formatNumberLocale(count, locale)}>
 			{programId ? (
 				<ProgramRecipientsDialog
 					dialogTitle={translator.t('program-detail-page.program-recipients-title')}
@@ -31,6 +30,6 @@ export const ProgramRecipients = async ({ count, programId, translator, lang }: 
 					programId={programId}
 				/>
 			) : null}
-		</div>
+		</DetailPanel>
 	);
 };
