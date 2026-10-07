@@ -2,6 +2,7 @@ import { COUNTRY_COOKIE, CURRENCY_COOKIE } from '@/app/[lang]/[region]';
 import {
 	findBestLocale,
 	getLanguageFromPathname,
+	VISITOR_COUNTRY_HEADER,
 	WEBSITE_LANGUAGE_HEADER,
 	WebsiteRegion,
 	websiteRegions,
@@ -10,9 +11,6 @@ import { isValidCountryCode } from '@/lib/types/country';
 import { NextRequest, NextResponse } from 'next/server';
 import { CountryCode } from './generated/prisma/enums';
 import { bestGuessCurrency, isValidCurrency } from './lib/types/currency';
-
-// https://developers.cloudflare.com/fundamentals/reference/http-headers/#cf-ipcountry
-const CLOUDFLARE_IP_COUNTRY_HEADER = 'cf-ipcountry';
 
 export const config = {
 	matcher: [
@@ -30,7 +28,7 @@ const countryMiddleware = (request: NextRequest, response: NextResponse) => {
 		return response;
 	}
 
-	const country = request.headers.get(CLOUDFLARE_IP_COUNTRY_HEADER)?.toUpperCase();
+	const country = request.headers.get(VISITOR_COUNTRY_HEADER)?.toUpperCase();
 	if (country) {
 		response.cookies.set({
 			name: COUNTRY_COOKIE,

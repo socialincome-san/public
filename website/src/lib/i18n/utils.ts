@@ -9,6 +9,8 @@ export const defaultLanguage: WebsiteLanguage = 'en';
 export const mainWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it'];
 export const allWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it', 'kri'];
 export const WEBSITE_LANGUAGE_HEADER = 'x-website-language';
+// https://vercel.com/docs/headers/request-headers#x-vercel-ip-country
+export const VISITOR_COUNTRY_HEADER = 'x-vercel-ip-country';
 
 const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
 	allWebsiteLanguages.includes(value as WebsiteLanguage);
@@ -81,7 +83,7 @@ export const findBestLocale = (
 	}
 
 	const options = langParser.parse(request.headers.get('Accept-Language') ?? 'en');
-	const cfCountry = request.headers.get('cf-ipcountry')?.toLowerCase();
+	const visitorCountry = request.headers.get(VISITOR_COUNTRY_HEADER)?.toLowerCase();
 
 	const bestOption = options.find(
 		(option) =>
@@ -93,7 +95,9 @@ export const findBestLocale = (
 
 	const language = (bestOption?.code as WebsiteLanguage) ?? defaultLanguage;
 	const regionFromCountry =
-		cfCountry && websiteRegions.includes(cfCountry as WebsiteRegion) ? (cfCountry as WebsiteRegion) : undefined;
+		visitorCountry && websiteRegions.includes(visitorCountry as WebsiteRegion)
+			? (visitorCountry as WebsiteRegion)
+			: undefined;
 	const regionFromLanguage = bestOption?.region?.toLowerCase() as WebsiteRegion | undefined;
 
 	return {

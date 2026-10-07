@@ -1,7 +1,7 @@
 import { COUNTRY_COOKIE } from '@/app/[lang]/[region]';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { Translator } from '@/lib/i18n/translator';
-import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, VISITOR_COUNTRY_HEADER, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getCountryStatisticsComparisonAction } from '@/modules/countries/country.actions';
@@ -49,7 +49,7 @@ const resolveVisitorCountryCode = async (): Promise<CountryCode> => {
 	}
 
 	const headerStore = await headers();
-	const countryFromHeader = normalizeCountryCode(headerStore.get('cf-ipcountry') ?? undefined);
+	const countryFromHeader = normalizeCountryCode(headerStore.get(VISITOR_COUNTRY_HEADER) ?? undefined);
 	if (countryFromHeader) {
 		return countryFromHeader;
 	}
