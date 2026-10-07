@@ -3,6 +3,9 @@
 	"version": "1.0.0",
 	"private": true,
 	"type": "module",
+	"engines": {
+		"node": "24.x"
+	},
 	"scripts": {
 		"dev": "npm run openapi:generate && npm run db:generate && next dev -p 3000",
 		"dev:ssl": "npm run openapi:generate && npm run db:generate && next dev --experimental-https -p 3000",
