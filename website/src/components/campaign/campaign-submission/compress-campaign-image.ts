@@ -28,11 +28,7 @@ const encodeJpeg = async (bitmap: ImageBitmap, maxDimension: number, quality: nu
 	return { blob: await canvas.convertToBlob({ type: 'image/jpeg', quality }), scale };
 };
 
-/**
- * Shrinks an image so that all submission images fit into one Vercel function request (4.5 MB).
- * The Storyblok focus point is stored in image pixels, so it is scaled along with the image.
- * Falls back to the original file when compression fails or does not help; the caller's size check then decides.
- */
+// The Storyblok focus point is stored in image pixels, so it is scaled along with the image.
 export const compressCampaignImage = async ({ file, focus }: CampaignImage): Promise<CampaignImage> => {
 	if (file.size <= campaignSubmissionConfig.maxCompressedImageBytes) {
 		return { file, focus };
@@ -63,7 +59,6 @@ export const compressCampaignImage = async ({ file, focus }: CampaignImage): Pro
 			focus: focusPoint ? toStoryblokFocus(Math.round(focusPoint.x * scale), Math.round(focusPoint.y * scale)) : focus,
 		};
 	} catch (error) {
-		// For example browsers without OffscreenCanvas, or files the browser cannot decode.
 		console.warn('Campaign image compression failed', { error });
 
 		return { file, focus };

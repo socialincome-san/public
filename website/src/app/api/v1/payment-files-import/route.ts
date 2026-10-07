@@ -3,10 +3,7 @@ import { importPaymentFiles } from '@/modules/payment-imports/payment-import.ser
 import { withSchedulerAuth } from '@/server/scheduler-auth';
 import { NextResponse } from 'next/server';
 
-// The SFTP download and import can be slow; matches the former Cloud Run request timeout.
-export const maxDuration = 300;
-
-const importPaymentFilesJob = withSchedulerAuth(async () => {
+export const GET = withSchedulerAuth(async () => {
 	if (!process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET) {
 		sendSlackAlert('Payment files storage bucket env var not set');
 
@@ -35,7 +32,3 @@ const importPaymentFilesJob = withSchedulerAuth(async () => {
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 });
-
-// Vercel Cron calls GET; POST stays for manual runs.
-export const GET = importPaymentFilesJob;
-export const POST = importPaymentFilesJob;

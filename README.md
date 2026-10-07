@@ -257,14 +257,13 @@ Vercel deploys through its Git integration: `main` goes to the `staging`
 environment, the `production` branch to production, and pull requests get
 preview deployments. A release is a pull request from `main` into
 `production`, which also deploys the Firebase rules to production.
-The build command in `website/vercel.json` applies the Prisma migrations
-first and then builds, so a failed migration fails the deployment and the
-previous one stays live. The previous deployment also keeps serving against
-the migrated schema until the new one is live, so migrations must stay
-backwards compatible. Previews migrate their own Neon database branch.
-Vercel Cron only runs on production; `.github/workflows/staging-cron.yml`
-calls the same jobs on staging with the `STAGING_CRON_SECRET` repository
-secret, which must match `CRON_SECRET` in the Vercel staging environment.
+Vercel runs `npm run build`, which applies the Prisma migrations before
+`next build`, so a failed migration fails the deployment and the previous
+one stays live. The previous deployment keeps serving against the migrated
+schema until the new one is live, so migrations must stay backwards
+compatible. Previews migrate their own Neon database branch.
+The cron jobs in `website/vercel.json` only run on production. To run one
+on staging, call it with `Authorization: Bearer $CRON_SECRET`.
 Production releases are handled by maintainers.
 
 Useful local checks for website changes:

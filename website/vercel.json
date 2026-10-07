@@ -1,8 +1,6 @@
 {
 	"$schema": "https://openapi.vercel.sh/vercel.json",
 	"regions": ["fra1"],
-	"buildCommand": "DATABASE_URL=${DATABASE_URL_UNPOOLED:-$DATABASE_URL} npm run db:migrate:deploy && NEXT_PUBLIC_APP_BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ) npm run build",
-	"ignoreCommand": "[ -n \"$VERCEL_GIT_PREVIOUS_SHA\" ] && git diff --quiet \"$VERCEL_GIT_PREVIOUS_SHA\" HEAD -- . ../design-system ../package.json ../package-lock.json || exit 1",
 	"crons": [
 		{
 			"path": "/api/v1/exchange-rate",

@@ -3,8 +3,7 @@ import { after } from 'next/server';
 export const SLACK_ALERT = 'SLACK_ALERT';
 
 const SLACK_WEBHOOK_TIMEOUT_MS = 5000;
-// Same limit as the former Cloud Monitoring alert. It is kept per function instance, so it caps bursts
-// rather than guaranteeing a single message across all instances.
+// Per function instance, so it caps bursts rather than being a global limit.
 const SLACK_ALERT_MIN_INTERVAL_MS = 5 * 60 * 1000;
 
 let lastSlackAlertSentAt = 0;
@@ -26,11 +25,7 @@ const postSlackAlert = async (webhookUrl: string, text: string) => {
 	}
 };
 
-/**
- * Logs the alert and posts the message to Slack when SLACK_ALERT_WEBHOOK_URL is set.
- * Only the message goes to Slack: keep personal data, payment data and error details in the context, which stays in the logs.
- * Delivery runs after the response is sent, and at most one message goes out every 5 minutes.
- */
+// Only the message goes to Slack; keep personal data and error details in the context, which is only logged.
 export const sendSlackAlert = (message: string, context?: Record<string, unknown>) => {
 	const logMessage = `${SLACK_ALERT}: ${message}`;
 	if (context) {
@@ -61,7 +56,7 @@ export const sendSlackAlert = (message: string, context?: Record<string, unknown
 	try {
 		after(() => postSlackAlert(webhookUrl, text));
 	} catch {
-		// Outside a request (scripts, tests) there is no `after`; send right away instead.
+		// `after` only works inside a request.
 		void postSlackAlert(webhookUrl, text);
 	}
 };

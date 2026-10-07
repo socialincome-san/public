@@ -11,7 +11,7 @@ const getRecipients = () =>
 		.map((recipient) => recipient.trim())
 		.filter(Boolean);
 
-const sendMonthlySummaryJob = withSchedulerAuth(async () => {
+export const GET = withSchedulerAuth(async () => {
 	try {
 		const recipients = getRecipients();
 		if (recipients.length === 0) {
@@ -35,7 +35,7 @@ const sendMonthlySummaryJob = withSchedulerAuth(async () => {
 		}
 
 		const { subject, text } = emailContentResult.data;
-		// Vercel Cron can deliver the same event twice; the subject names the month, so a match means it was already sent.
+		// Vercel Cron can deliver the same event twice.
 		const alreadySentResult = await hasSentMailWithSubject(subject);
 		if (!alreadySentResult.success) {
 			sendSlackAlert('Monthly summary failed', { alreadySentResult });
@@ -66,7 +66,3 @@ const sendMonthlySummaryJob = withSchedulerAuth(async () => {
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 });
-
-// Vercel Cron calls GET; POST stays for manual runs.
-export const GET = sendMonthlySummaryJob;
-export const POST = sendMonthlySummaryJob;

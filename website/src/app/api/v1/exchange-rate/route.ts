@@ -3,7 +3,7 @@ import { importExchangeRates } from '@/modules/exchange-rates/exchange-rate.serv
 import { withSchedulerAuth } from '@/server/scheduler-auth';
 import { NextResponse } from 'next/server';
 
-const importExchangeRatesJob = withSchedulerAuth(async () => {
+export const GET = withSchedulerAuth(async () => {
 	try {
 		const result = await importExchangeRates();
 		if (!result.success) {
@@ -19,7 +19,3 @@ const importExchangeRatesJob = withSchedulerAuth(async () => {
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 });
-
-// Vercel Cron calls GET; POST stays for manual runs.
-export const GET = importExchangeRatesJob;
-export const POST = importExchangeRatesJob;

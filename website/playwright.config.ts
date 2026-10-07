@@ -120,7 +120,7 @@ export default defineConfig({
 		},
 	],
 	webServer: {
-		command: 'npm run build && npm run start',
+		command: 'npm run build && npm run test:e2e:server',
 		url: baseURL,
 		reuseExistingServer: !process.env.CI,
 		timeout: 180_000,

@@ -22,10 +22,8 @@ export const campaignSubmissionConfig = {
 	allowedCurrencies: [Currency.CHF, Currency.EUR, Currency.USD, Currency.GBP] as const,
 	minCampaignDurationDays: 7,
 	maxCampaignDurationDays: 365,
-	// Vercel rejects function request bodies over 4.5 MB, so the browser compresses each of the
-	// up to three images below this size before submitting.
+	// Vercel rejects request bodies over 4.5 MB, so the browser compresses up to three images to fit.
 	maxCompressedImageBytes: 1.3 * 1024 * 1024,
-	// Total image bytes per submission; the rest of the 4.5 MB is left for the text fields.
 	maxMultipartBodyBytes: 4 * 1024 * 1024,
 	durationPresetDays: {
 		'30': 30,
