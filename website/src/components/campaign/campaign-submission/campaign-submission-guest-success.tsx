@@ -1,8 +1,8 @@
 'use client';
 
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { ThankYouPanel } from '@socialincome/design-system/feedback/thank-you-panel/thank-you-panel';
 import { DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
-import { Heart } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { CampaignSubmissionFormCard, CampaignSubmissionFormCardColumn } from './form-layout';
 import type { SubmissionLabels } from './types';
@@ -50,33 +50,19 @@ export const CampaignSubmissionGuestSuccess = ({ labels, email, isRetrying, onRe
 
 		<CampaignSubmissionFormCardColumn>
 			<CampaignSubmissionFormCard surface="gradient">
-				<div className="flex flex-col items-center gap-6 py-4">
-					<div className="flex items-center gap-2">
-						<Heart className="text-foreground size-4 fill-current" strokeWidth={1.5} aria-hidden />
-						<p className="text-foreground text-base leading-normal font-medium">{labels.successThankYou}</p>
-					</div>
-
-					<div className="flex w-full flex-col gap-4 text-center">
-						<p className="text-foreground text-2xl leading-normal font-medium">{labels.successLiveTitle}</p>
-						<p className="text-foreground text-base leading-normal">
-							{renderGuestDescription(labels.successGuestDescription, email)}
-						</p>
-					</div>
-
-					<div className="flex w-full flex-col items-center gap-3">
-						<p className="text-foreground text-sm">{labels.successDidntGetIt}</p>
+				<ThankYouPanel
+					padding="compact"
+					message={labels.successThankYou}
+					title={labels.successLiveTitle}
+					description={renderGuestDescription(labels.successGuestDescription, email)}
+					actionHint={labels.successDidntGetIt}
+					action={
 						<Button type="button" disabled={isRetrying} onClick={onRetry}>
 							{isRetrying ? labels.successRetrySending : labels.successRetry}
 						</Button>
-					</div>
-
-					<p className="text-foreground text-center text-sm leading-none">
-						{labels.successSupportPrefix}{' '}
-						<a className="underline" href={`mailto:${SUPPORT_EMAIL}`}>
-							{SUPPORT_EMAIL}
-						</a>
-					</p>
-				</div>
+					}
+					support={{ prefix: labels.successSupportPrefix, email: SUPPORT_EMAIL }}
+				/>
 			</CampaignSubmissionFormCard>
 		</CampaignSubmissionFormCardColumn>
 	</div>

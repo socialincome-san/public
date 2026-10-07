@@ -5,6 +5,7 @@ import {
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getLocalPartnerOverviewStatsAction } from '@/modules/local-partners/local-partner.actions';
+import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
 import type { LocalPartnerStory } from './local-partner.types';
 import { getLocalPartnerPortalSlug } from './local-partner.utils';
 
@@ -23,16 +24,8 @@ export const LocalPartnersGrid = async ({ localPartners, lang, region, hasActive
 	]);
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 
-	if (localPartners.length === 0) {
-		return (
-			<p className="text-muted-foreground">
-				{translator.t(hasActiveFilters ? 'local-partners-page.no-results' : 'local-partners-page.empty')}
-			</p>
-		);
-	}
-
 	return (
-		<ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+		<CardGrid emptyMessage={translator.t(hasActiveFilters ? 'local-partners-page.no-results' : 'local-partners-page.empty')}>
 			{localPartners.map((localPartner) => {
 				const portalSlug = getLocalPartnerPortalSlug(localPartner.content);
 				const recipientsCount = statsByPortalSlug[portalSlug]?.recipientsCount ?? 0;
@@ -43,7 +36,7 @@ export const LocalPartnersGrid = async ({ localPartners, lang, region, hasActive
 				const { candidatesLabel, alertVariant } = getLocalPartnerCandidateFooter(translator, candidatesCount);
 
 				return (
-					<li key={localPartner.uuid} className="flex">
+					<CardGridItem key={localPartner.uuid}>
 						<LocalPartnerTeaserCard
 							localPartner={localPartner}
 							lang={lang}
@@ -53,9 +46,9 @@ export const LocalPartnersGrid = async ({ localPartners, lang, region, hasActive
 							candidatesLabel={candidatesLabel}
 							alertVariant={alertVariant}
 						/>
-					</li>
+					</CardGridItem>
 				);
 			})}
-		</ul>
+		</CardGrid>
 	);
 };

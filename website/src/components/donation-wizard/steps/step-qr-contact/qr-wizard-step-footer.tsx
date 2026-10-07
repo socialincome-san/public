@@ -2,7 +2,7 @@
 
 import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { Button } from '@socialincome/design-system/actions/button/button';
-import { cn } from '@socialincome/design-system/cn';
+import { CheckoutFooter } from '@socialincome/design-system/navigation/checkout-footer/checkout-footer';
 import { ChevronLeft } from 'lucide-react';
 import { formatDonationCurrencyAmount } from '../../utils/donation-formatting';
 
@@ -35,29 +35,26 @@ export const QrWizardStepFooter = ({
 }: QrWizardStepFooterProps) => {
 	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
 
-	const amountLine = summary ? (
-		<span className="text-foreground inline-flex flex-wrap items-baseline gap-1">
-			<span className="text-lg leading-none font-medium">
-				{formatDonationCurrencyAmount(summary.currency, summary.amount)}
-			</span>
-			{summary.showPerMonth && <span className="text-muted-foreground text-sm">{t('stepPlan.per-month')}</span>}
-		</span>
-	) : null;
-
-	if (!summary) {
-		return (
-			<div
-				className={cn(
-					'flex gap-3',
-					showBack ? 'flex-col-reverse sm:flex-row sm:items-center sm:justify-between' : 'flex-col sm:items-end',
-				)}
-			>
-				{showBack && onBack ? (
+	return (
+		<CheckoutFooter
+			back={
+				showBack && onBack ? (
 					<Button type="button" data-testid="donation-wizard-back" variant="outline" onClick={onBack}>
 						<ChevronLeft className="size-4" aria-hidden />
 						{t('stepPlan.back')}
 					</Button>
-				) : null}
+				) : undefined
+			}
+			summary={
+				summary
+					? {
+							label: t('stepPayment.your-donation'),
+							amount: formatDonationCurrencyAmount(summary.currency, summary.amount),
+							suffix: summary.showPerMonth ? t('stepPlan.per-month') : undefined,
+						}
+					: undefined
+			}
+			primary={
 				<Button
 					type="button"
 					data-testid={continueTestId}
@@ -67,45 +64,7 @@ export const QrWizardStepFooter = ({
 				>
 					{continueLabel}
 				</Button>
-			</div>
-		);
-	}
-
-	return (
-		<div className="flex flex-col gap-3">
-			<div className="border-border flex items-center justify-between gap-2 border-y py-2.5 text-sm md:hidden">
-				<span className="text-muted-foreground shrink-0">{t('stepPayment.your-donation')}</span>
-				{amountLine}
-			</div>
-
-			<div
-				className={cn(
-					'flex flex-col-reverse gap-3 md:flex-row md:items-center',
-					showBack ? 'md:justify-between' : 'md:justify-end',
-				)}
-			>
-				{showBack && onBack ? (
-					<Button type="button" data-testid="donation-wizard-back" variant="outline" onClick={onBack}>
-						<ChevronLeft className="size-4" aria-hidden />
-						{t('stepPlan.back')}
-					</Button>
-				) : null}
-				<div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
-					<div className="hidden min-w-0 items-center gap-1.5 text-sm md:flex">
-						<span className="shrink-0">{t('stepPayment.your-donation')}</span>
-						{amountLine}
-					</div>
-					<Button
-						type="button"
-						data-testid={continueTestId}
-						variant={continueVariant}
-						disabled={continueDisabled}
-						onClick={onContinue}
-					>
-						{continueLabel}
-					</Button>
-				</div>
-			</div>
-		</div>
+			}
+		/>
 	);
 };

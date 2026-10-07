@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@socialincome/design-system/cn';
+import { StepIndicator } from '@socialincome/design-system/navigation/step-indicator/step-indicator';
 import { CreateProgramWizardState } from './types';
 
 const getCurrentStepIndex = (state: CreateProgramWizardState): number => {
@@ -23,20 +23,6 @@ const getCurrentStepIndex = (state: CreateProgramWizardState): number => {
 	return 0;
 };
 
-const stepClasses = {
-	base: 'flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium transition-colors',
-	active: [
-		'relative isolate z-10',
-		'text-primary-foreground bg-primary/90 shadow-sm',
-		'after:absolute after:inset-0 after:-z-10 after:rounded-full',
-		'after:bg-linear-to-r after:from-[hsl(var(--gradient-button-from))] after:to-[hsl(var(--gradient-button-to))]',
-		'after:opacity-100 hover:after:opacity-0',
-		'after:transition-opacity',
-	],
-	completed: 'bg-muted text-foreground',
-	inactive: 'text-muted-foreground border',
-};
-
 type Props = {
 	state: CreateProgramWizardState;
 };
@@ -47,29 +33,5 @@ export const CreateProgramStepIndicator = ({ state }: Props) => {
 	const showFourthStep = state.context.isAuthenticated === false;
 	const stepCount = showFourthStep ? 4 : 3;
 
-	return (
-		<div className="flex items-center justify-center gap-2 sm:gap-3">
-			{Array.from({ length: stepCount }).map((_, index) => {
-				const isActive = index === activeIndex;
-				const isCompleted = index < activeIndex;
-
-				return (
-					<div key={index} className="flex items-center gap-2 sm:gap-3">
-						<div
-							className={cn(
-								stepClasses.base,
-								isActive && stepClasses.active,
-								isCompleted && stepClasses.completed,
-								!isActive && !isCompleted && stepClasses.inactive,
-							)}
-						>
-							{index + 1}
-						</div>
-
-						{index < stepCount - 1 && <div className="bg-muted hidden h-px w-6 sm:block" />}
-					</div>
-				);
-			})}
-		</div>
-	);
+	return <StepIndicator steps={Array.from({ length: stepCount }, () => ({}))} activeIndex={activeIndex} />;
 };

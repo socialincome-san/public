@@ -1,7 +1,8 @@
-import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import type { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, type WebsiteRegion, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
+import { LinkPill } from '@socialincome/design-system/actions/link-pill/link-pill';
+import { DetailPanel } from '@socialincome/design-system/data-display/detail-panel/detail-panel';
 
 type Props = {
 	completedCount: number;
@@ -18,12 +19,11 @@ export const ProgramSurveys = ({ completedCount, translator, lang, region, progr
 		: undefined;
 
 	return (
-		<div className="bg-card flex h-full flex-col items-start gap-8 rounded-xl p-4 shadow-lg lg:p-6">
-			<h2 className="text-foreground text-xl font-bold">{translator.t('program-detail-page.completed-surveys')}</h2>
-			<p className="text-foreground text-6xl font-light">{formatNumberLocale(completedCount, locale)}</p>
-			{impactHref ? (
-				<ProgramDetailPill href={impactHref} label={translator.t('program-detail-page.view-impact-data')} />
-			) : null}
-		</div>
+		<DetailPanel
+			title={translator.t('program-detail-page.completed-surveys')}
+			value={formatNumberLocale(completedCount, locale)}
+		>
+			{impactHref ? <LinkPill href={impactHref} label={translator.t('program-detail-page.view-impact-data')} /> : null}
+		</DetailPanel>
 	);
 };

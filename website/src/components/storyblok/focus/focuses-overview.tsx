@@ -1,10 +1,11 @@
 import type { AnySearchParams } from '@/app/page-props';
-import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getPublicFocusStatsBySlugsAction } from '@/modules/focuses/focus.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
 import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
+import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
 import { FocusDetailCard } from './focus-detail-card';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusTitle } from './focus.utils';
@@ -58,7 +59,7 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 	return (
 		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 			<div className="flex w-full flex-col gap-8">
-				<CmsHeader title={title} text={text} />
+				<PageIntro title={title} description={text} />
 				<FilterBar
 					filters={
 						<>
@@ -87,51 +88,45 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 					}
 				/>
 				{hasStatsError ? <p className="text-destructive">{translator.t('focuses-page.load-stats-error')}</p> : null}
-				{sortedFocuses.length === 0 ? (
-					<p className="text-muted-foreground">
-						{translator.t(hasActiveFilters ? 'focuses-page.no-results' : 'focuses-page.empty')}
-					</p>
-				) : (
-					<ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
-						{sortedFocuses.map((focus) => {
-							const focusSlug = getFocusSlug(focus);
-							const focusTitle = getFocusTitle(focus.content);
-							const stats = statsBySlug[focusSlug] ?? {
-								programsCount: 0,
-								recipientsInProgramsCount: 0,
-								candidatesCount: 0,
-								countryIsoCodes: [],
-							};
+				<CardGrid emptyMessage={translator.t(hasActiveFilters ? 'focuses-page.no-results' : 'focuses-page.empty')}>
+					{sortedFocuses.map((focus) => {
+						const focusSlug = getFocusSlug(focus);
+						const focusTitle = getFocusTitle(focus.content);
+						const stats = statsBySlug[focusSlug] ?? {
+							programsCount: 0,
+							recipientsInProgramsCount: 0,
+							candidatesCount: 0,
+							countryIsoCodes: [],
+						};
 
-							return (
-								<li key={focus.uuid} className="h-full">
-									<FocusDetailCard
-										href={`/${lang}/${region}/focuses/${focusSlug}`}
-										focusTitle={focusTitle}
-										recipientsCount={stats.recipientsInProgramsCount}
-										programsCount={stats.programsCount}
-										sdgValues={focus.content.sdgs}
-										alertVariant={stats.candidatesCount > 0 ? 'confirm' : 'secondary'}
-										labels={{
-											recipients: translator.t('focuses-page.recipients'),
-											programs: translator.t('focuses-page.programs'),
-											sdgs: translator.t('focuses-page.sdgs'),
-											candidatesReady:
-												stats.candidatesCount > 0
-													? translator.t(
-															stats.candidatesCount === 1
-																? 'focuses-page.candidates-ready-to-enroll_one'
-																: 'focuses-page.candidates-ready-to-enroll_other',
-															{ context: { count: stats.candidatesCount } },
-														)
-													: translator.t('focuses-page.no-candidates'),
-										}}
-									/>
-								</li>
-							);
-						})}
-					</ul>
-				)}
+						return (
+							<CardGridItem key={focus.uuid}>
+								<FocusDetailCard
+									href={`/${lang}/${region}/focuses/${focusSlug}`}
+									focusTitle={focusTitle}
+									recipientsCount={stats.recipientsInProgramsCount}
+									programsCount={stats.programsCount}
+									sdgValues={focus.content.sdgs}
+									alertVariant={stats.candidatesCount > 0 ? 'confirm' : 'secondary'}
+									labels={{
+										recipients: translator.t('focuses-page.recipients'),
+										programs: translator.t('focuses-page.programs'),
+										sdgs: translator.t('focuses-page.sdgs'),
+										candidatesReady:
+											stats.candidatesCount > 0
+												? translator.t(
+														stats.candidatesCount === 1
+															? 'focuses-page.candidates-ready-to-enroll_one'
+															: 'focuses-page.candidates-ready-to-enroll_other',
+														{ context: { count: stats.candidatesCount } },
+													)
+												: translator.t('focuses-page.no-candidates'),
+									}}
+								/>
+							</CardGridItem>
+						);
+					})}
+				</CardGrid>
 			</div>
 		</BlockWrapper>
 	);

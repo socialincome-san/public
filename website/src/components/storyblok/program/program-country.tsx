@@ -1,8 +1,9 @@
 import { MapRectangle } from '@/components/storyblok/country/map-rectangle';
 import type { ResolvedProgramCountry } from '@/components/storyblok/country/resolve-country-name';
-import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { Translator } from '@/lib/i18n/translator';
+import { LinkPill } from '@socialincome/design-system/actions/link-pill/link-pill';
+import { DetailPanel } from '@socialincome/design-system/data-display/detail-panel/detail-panel';
 
 type Props = {
 	resolvedCountry: ResolvedProgramCountry;
@@ -13,19 +14,13 @@ export const ProgramCountry = ({ resolvedCountry, translator }: Props) => {
 	const { isoCode, name, description, href } = resolvedCountry;
 
 	return (
-		<div className="bg-card flex flex-col items-stretch overflow-hidden rounded-xl p-4 shadow-lg md:flex-row">
-			<div className="flex flex-1 flex-col items-start gap-5 lg:p-2">
-				<h2 className="text-foreground text-xl font-bold">{name}</h2>
-				{description ? (
-					<div className="text-foreground prose line-clamp-8 max-w-none text-base">
-						<RichTextRenderer richTextDocument={description} />
-					</div>
-				) : null}
-				{href ? <ProgramDetailPill href={href} label={translator.t('program-detail-page.country-analysis')} /> : null}
-			</div>
-			<div className="mt-5 h-[341px] w-full shrink-0 md:mt-0 md:w-[274px]">
-				<MapRectangle isoCode={isoCode} countryName={name} />
-			</div>
-		</div>
+		<DetailPanel title={name} media={<MapRectangle isoCode={isoCode} countryName={name} />}>
+			{description ? (
+				<div className="text-foreground prose line-clamp-8 max-w-none text-base">
+					<RichTextRenderer richTextDocument={description} />
+				</div>
+			) : null}
+			{href ? <LinkPill href={href} label={translator.t('program-detail-page.country-analysis')} /> : null}
+		</DetailPanel>
 	);
 };

@@ -1,11 +1,11 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { LocalPartnersGrid } from '@/components/storyblok/local-partner/local-partners-grid';
 import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/local-partners-teaser-intro';
-import { CmsHeader } from '@/components/storyblok/shared/cms-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
+import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
 import type { LocalPartnerStory } from './local-partner.types';
 import { LocalPartnersOverviewCountryFilter } from './local-partners-overview-country-filter';
 import { LocalPartnersOverviewSearch } from './local-partners-overview-search';
@@ -44,7 +44,7 @@ export const LocalPartnersOverview = async ({ localPartners, lang, region, title
 	return (
 		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 			<div className="flex w-full flex-col gap-8">
-				{hasCmsHeader ? <CmsHeader title={title} text={text} /> : <LocalPartnersTeaserIntro lang={lang} />}
+				{hasCmsHeader ? <PageIntro title={title} description={text} /> : <LocalPartnersTeaserIntro lang={lang} />}
 				<FilterBar
 					filters={
 						<LocalPartnersOverviewCountryFilter
