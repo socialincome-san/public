@@ -33,12 +33,11 @@ const nextConfig: NextConfig = {
 		loader: 'custom',
 		loaderFile: './src/lib/utils/storyblock-image-loader.ts',
 	},
-	output: 'standalone',
 	serverExternalPackages: ['pdfkit', 'ssh2', 'ssh2-sftp-client'],
-	// Match campaignSubmissionConfig.maxMultipartBodyBytes (primary + optional images).
+	// Vercel's request body limit for functions. Campaign submission images are compressed in the browser to fit.
 	experimental: {
 		serverActions: {
-			bodySizeLimit: '18mb',
+			bodySizeLimit: '4.5mb',
 		},
 	},
 };

@@ -15,9 +15,9 @@ export const viewport: Viewport = {
 	themeColor: '#3373BB',
 };
 
-const appVersion = process.env.NEXT_PUBLIC_APP_VERSION ?? 'unknown';
-const appEnv = process.env.NEXT_PUBLIC_APP_ENVIRONMENT ?? 'unknown';
-const buildTime = process.env.APP_BUILD_TIMESTAMP ?? 'unknown';
+const appVersion = process.env.NEXT_PUBLIC_APP_VERSION ?? process.env.VERCEL_GIT_COMMIT_SHA ?? 'unknown';
+const appEnv = process.env.NEXT_PUBLIC_APP_ENVIRONMENT ?? process.env.VERCEL_TARGET_ENV ?? 'unknown';
+const buildTime = process.env.NEXT_PUBLIC_APP_BUILD_TIMESTAMP ?? 'unknown';
 
 export default async function RootLayout({ children }: PropsWithChildren) {
 	const headerStore = await headers();

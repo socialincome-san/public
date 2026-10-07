@@ -41,6 +41,7 @@ import {
 	isCampaignSubmissionImageMultipartField,
 	resolveCampaignSubmissionQuote,
 } from './campaign-submission.client';
+import { compressCampaignImage } from './compress-campaign-image';
 import { addPendingClaimId } from './pending-claim-ids';
 import type {
 	CampaignImageSelection,
@@ -579,15 +580,6 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			return;
 		}
 
-		const primaryImageUploadBytes = imageSelection.type === 'upload' ? imageSelection.file.size : 0;
-		const sectionImageBytes = values.hasAdditionalInformation ? (sectionImageFile?.size ?? 0) : 0;
-		const totalImageBytes = primaryImageUploadBytes + (profilePictureFile?.size ?? 0) + sectionImageBytes;
-		if (totalImageBytes > campaignSubmissionConfig.maxMultipartBodyBytes) {
-			setSubmitError(resolveError('payload-too-large'));
-
-			return;
-		}
-
 		const submissionValues = {
 			...values,
 			quote: resolveCampaignSubmissionQuote(values.quote, labels.quotePlaceholder),
@@ -607,14 +599,33 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 		setIsSubmitting(true);
 
 		try {
+			const [primaryUpload, profileUpload, sectionUpload] = await Promise.all([
+				imageSelection.type === 'upload'
+					? compressCampaignImage({ file: imageSelection.file, focus: primaryImageFocus })
+					: undefined,
+				profilePictureFile ? compressCampaignImage({ file: profilePictureFile, focus: profilePictureFocus }) : undefined,
+				values.hasAdditionalInformation && sectionImageFile
+					? compressCampaignImage({ file: sectionImageFile, focus: sectionImageFocus })
+					: undefined,
+			]);
+			const totalImageBytes = [primaryUpload, profileUpload, sectionUpload].reduce(
+				(total, image) => total + (image?.file.size ?? 0),
+				0,
+			);
+			if (totalImageBytes > campaignSubmissionConfig.maxMultipartBodyBytes) {
+				setSubmitError(resolveError('payload-too-large'));
+
+				return;
+			}
+
 			const formData = appendCampaignSubmissionFormData(new FormData(), submissionValues, {
-				primaryImage: imageSelection.type === 'upload' ? imageSelection.file : undefined,
-				primaryImageFocus: imageSelection.type === 'upload' ? primaryImageFocus : undefined,
+				primaryImage: primaryUpload?.file,
+				primaryImageFocus: primaryUpload?.focus,
 				defaultImageId: imageSelection.type === 'default' ? imageSelection.id : undefined,
-				profilePicture: profilePictureFile ?? undefined,
-				profilePictureFocus: profilePictureFile ? profilePictureFocus : undefined,
-				sectionImage: values.hasAdditionalInformation ? (sectionImageFile ?? undefined) : undefined,
-				sectionImageFocus: values.hasAdditionalInformation && sectionImageFile ? sectionImageFocus : undefined,
+				profilePicture: profileUpload?.file,
+				profilePictureFocus: profileUpload?.focus,
+				sectionImage: sectionUpload?.file,
+				sectionImageFocus: sectionUpload?.focus,
 				includePersonalData: !isLoggedInContributor,
 			});
 			if (turnstileToken) {

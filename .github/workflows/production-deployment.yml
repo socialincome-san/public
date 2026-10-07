@@ -1,8 +1,8 @@
 name: Deploy production environment
 on:
   push:
-    tags:
-      - release-*
+    branches:
+      - production
 jobs:
   deploy-rules:
     name: Deploy rules to social-income-prod Firebase Project

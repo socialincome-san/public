@@ -1,34 +1,25 @@
-import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { sendSlackAlert } from '@/lib/utils/slack-alert';
 import { importExchangeRates } from '@/modules/exchange-rates/exchange-rate.service';
-import { NextRequest, NextResponse } from 'next/server';
+import { withSchedulerAuth } from '@/server/scheduler-auth';
+import { NextResponse } from 'next/server';
 
-export const POST = async (request: NextRequest) => {
-	const apiKey = request.headers.get('x-api-key');
-
-	if (!process.env.SCHEDULER_API_KEY) {
-		console.error(`${SLACK_ALERT}: Scheduler API key not set`);
-
-		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
-	}
-
-	if (apiKey !== process.env.SCHEDULER_API_KEY) {
-		console.warn('Scheduler API key wrong');
-
-		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
-	}
-
+const importExchangeRatesJob = withSchedulerAuth(async () => {
 	try {
 		const result = await importExchangeRates();
 		if (!result.success) {
-			console.error(`${SLACK_ALERT}: Exchange rate import failed: ${String(result.error)}`, { result });
+			sendSlackAlert('Exchange rate import failed', { result });
 
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 
 		return NextResponse.json({}, { status: 201 });
 	} catch (error) {
-		console.error(`${SLACK_ALERT}: Exchange rate import failed: ${String(error)}`, { error });
+		sendSlackAlert('Exchange rate import failed', { error });
 
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
-};
+});
+
+// Vercel Cron calls GET; POST stays for manual runs.
+export const GET = importExchangeRatesJob;
+export const POST = importExchangeRatesJob;

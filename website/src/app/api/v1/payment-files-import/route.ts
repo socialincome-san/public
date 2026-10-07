@@ -1,27 +1,14 @@
-import { SLACK_ALERT } from '@/lib/utils/slack-alert';
-import { paymentImportRequestSchema } from '@/modules/payment-imports/payment-import.schemas';
+import { sendSlackAlert } from '@/lib/utils/slack-alert';
 import { importPaymentFiles } from '@/modules/payment-imports/payment-import.service';
-import { NextRequest, NextResponse } from 'next/server';
+import { withSchedulerAuth } from '@/server/scheduler-auth';
+import { NextResponse } from 'next/server';
 
-export const POST = async (request: NextRequest) => {
-	const requestInput = paymentImportRequestSchema.safeParse({
-		apiKey: request.headers.get('x-api-key'),
-	});
+// The SFTP download and import can be slow; matches the former Cloud Run request timeout.
+export const maxDuration = 300;
 
-	if (!process.env.SCHEDULER_API_KEY) {
-		console.error(`${SLACK_ALERT}: Scheduler API key not set`);
-
-		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
-	}
-
-	if (!requestInput.success || requestInput.data.apiKey !== process.env.SCHEDULER_API_KEY) {
-		console.warn('Scheduler API key wrong');
-
-		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
-	}
-
+const importPaymentFilesJob = withSchedulerAuth(async () => {
 	if (!process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET) {
-		console.error(`${SLACK_ALERT}: Payment files storage bucket env var not set`);
+		sendSlackAlert('Payment files storage bucket env var not set');
 
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
@@ -29,7 +16,7 @@ export const POST = async (request: NextRequest) => {
 	try {
 		const result = await importPaymentFiles(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
 		if (!result.success) {
-			console.error(`${SLACK_ALERT}: Payment files import failed: ${result.error}`, { result });
+			sendSlackAlert('Payment files import failed', { result });
 
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
@@ -43,8 +30,12 @@ export const POST = async (request: NextRequest) => {
 
 		return NextResponse.json(result.data, { status: 201 });
 	} catch (error) {
-		console.error(`${SLACK_ALERT}: Payment files import failed: ${String(error)}`, { error });
+		sendSlackAlert('Payment files import failed', { error });
 
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
-};
+});
+
+// Vercel Cron calls GET; POST stays for manual runs.
+export const GET = importPaymentFilesJob;
+export const POST = importPaymentFilesJob;
