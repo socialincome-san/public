@@ -106,7 +106,7 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "1.60.0",
-		"@smartive/eslint-config": "7.0.3",
+		"@smartive/eslint-config": "10.0.0",
 		"@smartive/prettier-config": "3.1.2",
 		"@tailwindcss/postcss": "4.3.3",
 		"@types/accept-language-parser": "1.5.8",
