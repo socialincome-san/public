@@ -182,6 +182,12 @@ jobs:
         working-directory: website
         run: npm run test:e2e
 
+      # Uses the production build from the E2E web server, so it also runs when E2E tests fail.
+      - name: Check external modules load on Vercel
+        if: ${{ !cancelled() }}
+        working-directory: website
+        run: npm run check:vercel-externals
+
       - name: Mark repo as safe
         if: env.SKIP_SNAPSHOT_UPDATE != 'true'
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
