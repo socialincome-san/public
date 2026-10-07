@@ -41,6 +41,18 @@ describe('journal RSS route', () => {
 		}
 	});
 
+	it('returns 503 when article retrieval fails', async () => {
+		mockGetPublishedJournalArticles.mockResolvedValue({ success: false, error: 'Load failed' });
+
+		const response = await GET(new Request('https://socialincome.org/en/int/journal/rss.xml'), {
+			params: Promise.resolve({ lang: 'en', region: 'int' }),
+		});
+
+		expect(response.status).toBe(503);
+		expect(await response.text()).toBe('Unable to load the journal feed.');
+		expect(mockGetPublishedJournalArticles).toHaveBeenCalledWith('en');
+	});
+
 	it('rejects unsupported route languages before loading content', async () => {
 		const response = await GET(new Request('https://socialincome.org/unknown/int/journal/rss.xml'), {
 			params: Promise.resolve({ lang: 'unknown', region: 'int' }),
