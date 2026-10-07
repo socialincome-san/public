@@ -1,55 +1,121 @@
 # Website
 
-Next.js modular monolith. Business code lives in `src/modules`. External
-APIs live in `src/integrations`. `src/modules/recipients` is a
-representative module. Prisma schema: `src/lib/database/schema.prisma`.
+Next.js app: public site (`src/app/[lang]/[region]`), portal, dashboard,
+partner space, API routes (`src/app/api`) and backend.
 
-Success and failure cross these boundaries as `Result<T>` from
-`src/lib/result.ts` (`resultOk`, `resultFail`). Client code uses
-`handleResult` from `src/lib/result-client.ts`.
+- `src/app`: routes, pages, route handlers
+- `src/components`: composition of design-system components with data
+- `src/modules/<domain>`: business logic
+- `src/integrations/<vendor>`: external APIs and provider SDKs
+- `src/lib`: shared kernel (Result, i18n, utils, Prisma client)
+- `src/server`: request helpers (`requireSession`, scheduler auth)
+- `src/generated`: Prisma and Storyblok output, never edit
 
-```text
-app / feature components -> module services and actions, plus request helpers in src/server
-feature components -> design-system
-design-system -> React, Radix, Tailwind, and cn. No modules, CMS, generated types, or app code
-modules -> repositories and integrations
-repositories -> Prisma (src/lib/database), raw data, no Result
-integrations -> external APIs
-everyone -> lib, and only for code that still makes sense after deleting one product area
-```
+Rules live in `eslint.config.mjs` and
+`eslint-rules/backend-architecture.mjs`. Read them when an error is
+unclear.
 
-`redirect` and `notFound` live in `src/server`. Session resolution lives
-in `modules/auth/session.service.ts`. Shared config used by both a
-module and an integration stays in `lib`.
+## Backend
 
-Suffixes: `*.actions.ts` authenticates, parses `unknown` with Zod, calls
-the service, then revalidates or redirects. `*.service.ts` owns the use
-case and authorization. `*.repository.ts` is the only Prisma access.
-`*.schemas.ts`, `*.permissions.ts`, and `*.types.ts` hold boundary
-schemas, pure auth predicates, and serializable DTOs.
+Why: each domain stays in one folder with fixed file roles, so changes
+stay local and reviewers know where validation, authorization and
+queries are. Vendors (Stripe, Twilio, SendGrid, Firebase Admin) are
+reachable only through `src/integrations`, so their SDKs, secrets and
+error shapes stay in one place. `src/lib` only holds code that still
+makes sense after deleting any product area; it imports no modules, app,
+components or `src/server`.
 
-ESLint is the contract for imports, filenames, Result types, and syntax.
-Read `eslint.config.mjs` when an error is unclear.
+Module files (`src/modules/recipients` is the reference):
 
-Lint does not prove that the caller is allowed to do this, that every
-untrusted field is validated on the server, that business rules stayed
-in the service, or that the DTO is safe to send to the client.
+- `*.actions.ts`: trust boundary for client calls. `'use server'`, async
+  exports named `…Action`, params typed `unknown` or `FormData`. Resolve
+  session, parse with Zod, call the service, then `revalidatePath` or
+  `redirect`.
+- `*.service.ts`: use case, business rules and authorization. Never
+  throws, never uses `next/cache` or `next/navigation`.
+- `*.repository.ts`: the only Prisma access. Exports start with
+  `find|create|update|delete|remove|count|group`, use `select` (never
+  `include`), return raw data.
+- `*.permissions.ts`: pure predicates `can…|has…|is…|assert…`.
+- `*.schemas.ts`: Zod schemas named `…Schema` and their inferred types.
+- `*.types.ts`: serializable DTOs and inert constants, no functions.
+- `*.test.ts`: Jest, next to the tested file.
 
-Design system primitives live in `design-system` and are imported as
-`@socialincome/design-system`. Follow
-`design-system/src/components/actions/button/button.tsx`: `forwardRef`,
-CVA, Radix, and Tailwind, with classes merged through `cn` from
-`design-system/src/cn.ts`. That package does not import the website.
-Components, in both packages, do not accept `className` props: pick a
-variant or add one to the component, and handle layout in the parent.
-Colors, font sizes, radii and shadows come from design-system tokens
-(Storybook › Foundations); Tailwind's default palette and arbitrary
-values for these are rejected by lint. Feature screens, wizards, data
-tables, and CMS blocks stay in `src/components` and may call module
-actions. `src/app/globals.css` imports
-`@socialincome/design-system/styles.css` and adds `@source` for
-`design-system/src`, so Tailwind still scans the package when that CSS
-is resolved through `node_modules`.
+Integrations: `src/integrations/<vendor>/<name>.integration.ts`. No
+Prisma, modules, app, components or `next/*` APIs.
 
-Local auth users come from the Firebase emulator seed. While the
-emulators are running, the list is at http://localhost:4000/auth.
+Dependency direction:
+
+- app → services, actions, `src/server`
+- components → actions, `*.types`, type-only `*.schemas`
+- actions → services
+- services → own repository and permissions, other modules' services,
+  integrations
+- Across modules: only `*.service`, or type-only `*.types`/`*.schemas`
+
+Services, actions and async integration exports return `Result<T>` from
+`src/lib/result.ts`: `resultOk(data)` or `resultFail('Fixed message.')`.
+Never put `error.message` or interpolated text in `resultFail`; log
+details with `console.error`. Clients unwrap with `handleResult`
+(`src/lib/result-client.ts`). Route handlers return generic JSON errors
+and call `sendSlackAlert` for production failures that must not stay
+silent.
+
+In modules and integrations: arrow functions, named exports, no classes,
+no `as` (except `as const`), no `!`. All paths under `src` are
+kebab-case.
+
+Lint cannot check these, so verify them yourself:
+
+- authorization happens in the service, not only in the UI;
+- every untrusted field is validated on the server;
+- business rules stay in the service;
+- DTOs sent to the client contain only what it may see.
+
+Prisma schema: `src/lib/database/schema.prisma`. Create migrations with
+`npm run db:migrate:create`. They must stay backwards compatible,
+because the previous deployment runs against the migrated schema.
+
+## Frontend
+
+UI comes from the design system. Read `design-system/AGENTS.md` first.
+
+1. Use an existing design-system component.
+2. If it almost fits, add a variant or prop there.
+3. Otherwise create a generic component with a story there, then use it.
+
+The website side is composition and data:
+
+- Pages are server components: `requireSession` from `src/server`, call
+  services, pass plain data down.
+- `src/components` maps data to design-system props. Storyblok blocks
+  turn CMS content into props, flows such as wizards hold state and call
+  actions, text is translated here.
+- Allowed here: layout glue (flex, grid, gap, spacing) and thin type
+  adapters such as `src/components/country-flag.tsx`.
+- Not allowed here: new visual elements (cards, panels, heroes, step
+  indicators) built from raw markup. Older components still do this;
+  don't copy them, and move their visuals to the design system when you
+  touch them.
+- Never pass a Storyblok story, blok or Prisma type to a design-system
+  component.
+
+The same lint rules as in the design system apply: no `className` or
+`style` props, tokens only for colors, font sizes, radii and shadows.
+
+Text: translations live in
+`src/lib/i18n/locales/<lang>/<namespace>.json`. Use `Translator`
+(server) or `useTranslator` (client) and add new keys to every language
+that has the namespace.
+
+## Commands
+
+- `mise dev`: Postgres, Firebase emulators, Next.js on :3000
+- `npm run lint` (architecture rule tests, then ESLint), `typecheck`,
+  `test:unit`, `format:check`, `check:unused`
+- `npm run test:e2e`: Playwright, needs the local environment
+- `npm run db:seed`, `db:migrate:create`, `db:studio`,
+  `storyblok:generate` (maintainer credentials)
+
+Local test users are in the README; while the emulators run they are at
+http://localhost:4000/auth.

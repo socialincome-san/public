@@ -1,77 +1,52 @@
-<!-- BEGIN:smartive-agent-rules -->
+# Social Income
 
-> Managed by @smartive-private/ai-playbook v1.9.0.
+Open-source platform for unconditional basic income. Read the
+`AGENTS.md` next to the code you change.
 
-# Philosophy
+- `design-system/`: generic React components, design tokens, Storybook
+- `website/`: Next.js app (public site, portal, dashboard, partner
+  space, API) and its backend
+- `recipients_app/`: Flutter app, own rules
+- `seed/`: Firebase emulator seed data
 
-Write code that stays maintainable under repeated change. Prefer small,
-verifiable improvements over clever shortcuts. Fight entropy. Leave the
-codebase better than you found it.
+## Architecture
 
-## General Rules
+- Every visual building block lives in `design-system/`: generic, styled
+  only with tokens, unaware of Storyblok, Prisma, actions, i18n or the
+  website. `website/` composes these components and feeds them data.
+  Need something that looks new? Build or extend it in the design
+  system.
+- The website backend is a modular monolith: `src/modules` (business
+  logic), `src/integrations` (external APIs), `src/lib` (domain-free
+  kernel). Expected failures are returned as `Result<T>`, not thrown.
+- ESLint enforces most of this. Fix the code, never disable a rule.
 
-- Ask questions until you have enough context to give an accurate and
-  confident answer
-- Only make changes that are directly requested. Keep solutions simple
-  and focused.
-- Prefer clear function/variable names over inline comments
-- Prefer simple inline expressions over extracting single-use helper
-  functions
-- Always read and understand relevant files before proposing edits. Do
-  not speculate about code you have not inspected.
+## Working Rules
 
-# React Rules
+- Read the relevant code before editing. Reuse what exists before
+  adding.
+- Change only what the task needs. Keep it simple; no speculative
+  abstractions or single-use helpers.
+- Prefer clear names over comments.
+- Never edit `website/src/generated/**` or applied Prisma migrations.
 
-- Customize behavior through composition; reserve boolean props for
-  clear semantics (for example `disabled`).
-- Split massive JSX blocks into understandable and composable smaller
-  components
-- Colocate code and state that changes together
-- Keep state minimal; derive values when possible.
-- Consolidate related state transitions with `useReducer` when multiple
-  state updates belong together
-- Use `useEffect` only for external synchronization; if unsure, check
-  `.ai-playbook/react-use-effect.md`
+## TypeScript And React
 
-# Web App Rules
+- No `any`, `@ts-ignore` or `@ts-expect-error`. Prefer type guards over
+  `as`.
+- Arrow functions, named exports, `type` over `interface`,
+  `import { type X }` for types.
+- Compose with `children` and slot props; boolean props only for clear
+  states such as `disabled`.
+- Keep state minimal and derive the rest during render. Use `useReducer`
+  when several updates belong together.
+- `useEffect` only to sync with something outside React. Not for derived
+  values, event responses or resetting state (use `key`).
 
-- When creating web UIs, follow Web Interface Guidelines in
-  `.ai-playbook/web-interface-guidelines.md`
-- When creating web animations, follow Web Animation Design in
-  `.ai-playbook/web-animation-design.md`
+## Commands
 
-# TypeScript Rules
-
-- NEVER use any, as any, or @ts-ignore. If types are complex, take the
-  time to define them properly or ask for clarification.
-- Prefer arrow functions over function declarations
-- Prefer destructuring over assigning to a variable
-- Prefer template literals over string concatenation
-- Prefer types over interfaces
-- Prefer type guards over type assertions
-- Prefer importing types using the type keyword (e.g.
-  `import { type MyType } from 'package';`), to ensure they are erased
-  at runtime
-
-# Terraform Rules
-
-- Keep plans deterministic; pin provider versions and avoid implicit
-  behavior.
-- Treat `terraform plan` output as a required review artifact.
-- Prefer modules and variables over duplicated infrastructure blocks.
-- Protect state and credentials; never store secrets in plaintext.
-
-<!-- END:smartive-agent-rules -->
-
-# Repository
-
-Social Income is an open-source platform for unconditional basic income.
-Instructions for a specific app live next to that app, so they load only
-when work is happening there.
-
-- `design-system/` — shared React components (`@socialincome/design-system`) and Storybook. No Storyblok, Prisma, or website modules. Rules: `design-system/AGENTS.md`.
-- `website/` — Next.js app (public site, portal, dashboard, partner space, API). Run commands from this directory. Node is pinned in `website/mise.toml`. Rules: `website/AGENTS.md`.
-- `recipients_app/` — Flutter app for recipients. Rules: `recipients_app/AGENTS.md`.
-- `seed/` — Firebase emulator seed data.
-
-Install dependencies with `npm ci` from the repository root (`npm ci --prefix ..` from `website/`). From `website/`: `mise dev` starts Postgres, the Firebase emulators, and Next.js. `npm run lint` runs the architecture tests, then ESLint. Also `npm run typecheck` and `npm run test:unit`. Storybook runs from `design-system/`.
+Install once from the root with `npm ci`. Run everything else inside the
+workspace (`website/` or `design-system/`). Before finishing, run in
+each workspace you changed: `npm run lint`, `npm run typecheck`,
+`npm run test:unit`, `npm run format:check` (`format:fix` to fix) and
+`npm run check:unused`. Setup and local login: `README.md`.
