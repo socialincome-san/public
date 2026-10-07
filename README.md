@@ -285,6 +285,9 @@ npm run typecheck
 npm run test:unit
 ```
 
+In CI, the E2E job reads Stripe test keys and tokens from the `E2E_*`
+repository secrets (see `.github/workflows/website.yml`).
+
 For many small UI or content changes, `lint` and `typecheck` are a good
 minimum before opening a PR. Run the broader test suite when touching shared
 logic, authentication, database behavior, or user flows.
