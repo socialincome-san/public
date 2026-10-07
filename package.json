@@ -11,6 +11,9 @@
 		"firebase-admin": {
 			"jwks-rsa": "3.2.2"
 		},
+		"gaxios": {
+			"uuid": "11.1.1"
+		},
 		"isomorphic-dompurify": {
 			"jsdom": "26.1.0"
 		},
