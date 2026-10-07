@@ -6,6 +6,9 @@ import { getRedirects } from './redirects';
 const nextConfig: NextConfig = {
 	transpilePackages: ['@socialincome/design-system', 'storyblok-rich-text-react-renderer'],
 	reactStrictMode: true,
+	env: {
+		NEXT_PUBLIC_APP_BUILD_TIMESTAMP: new Date().toISOString(),
+	},
 	redirects: getRedirects,
 	headers: () =>
 		Promise.resolve([
@@ -33,12 +36,11 @@ const nextConfig: NextConfig = {
 		loader: 'custom',
 		loaderFile: './src/lib/utils/storyblock-image-loader.ts',
 	},
-	output: 'standalone',
 	serverExternalPackages: ['pdfkit', 'ssh2', 'ssh2-sftp-client'],
-	// Match campaignSubmissionConfig.maxMultipartBodyBytes (primary + optional images).
+	// Vercel's function request body limit.
 	experimental: {
 		serverActions: {
-			bodySizeLimit: '18mb',
+			bodySizeLimit: '4.5mb',
 		},
 	},
 };

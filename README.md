@@ -14,15 +14,14 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 ## What Is In This Repository?
 
 This repository contains the public website, internal tools, the shared
-design system, local development seed data, infrastructure code, and the
-recipient mobile app.
+design system, local development seed data, and the recipient mobile app.
 
 ```text
 /
 ├─ design-system/         Shared React components and Storybook
 ├─ recipients_app/        Mobile app for Social Income recipients
 ├─ seed/                  Firebase emulator seed data
-└─ website/               Next.js app, APIs, database, infra, and tests
+└─ website/               Next.js app, APIs, database, and tests
 ```
 
 `website/` and `design-system/` are npm workspaces. They share one
@@ -47,7 +46,8 @@ The main Next.js application. It contains:
   handlers call module services and actions. Services call repositories
   (Prisma) and integrations (external APIs). The module contract is in
   `website/AGENTS.md`.
-- Infrastructure: Terraform configuration under `website/infra`.
+- Hosting: Vercel. Settings and cron jobs are in `website/vercel.json`. The
+  PostgreSQL database runs on Neon. Firebase stays for auth and storage.
 - Tests: unit tests and Playwright end-to-end tests.
 
 ### `design-system/`
@@ -253,8 +253,18 @@ git checkout -b fix/issue-2064-short-description
 
 Website and design system checks run for pull requests and for pushes to
 `main`.
-Staging deployment is connected to `main`; production releases are handled
-by maintainers.
+Vercel deploys through its Git integration: `main` goes to the `staging`
+environment, the `production` branch to production, and pull requests get
+preview deployments. A release is a pull request from `main` into
+`production`, which also deploys the Firebase rules to production.
+Vercel runs `npm run build`, which applies the Prisma migrations before
+`next build`, so a failed migration fails the deployment and the previous
+one stays live. The previous deployment keeps serving against the migrated
+schema until the new one is live, so migrations must stay backwards
+compatible. Previews migrate their own Neon database branch.
+The cron jobs in `website/vercel.json` only run on production. To run one
+on staging, call it with `Authorization: Bearer $CRON_SECRET`.
+Production releases are handled by maintainers.
 
 Useful local checks for website changes:
 
@@ -339,12 +349,10 @@ Store the token in these places:
   ```
 
 - **1Password**: Social Income maintainer vault (for team access and rotation).
-- **GitHub Actions** (staging and production deploys): repository secrets
-  `TF_STAGING_STORYBLOK_MANAGEMENT_TOKEN` and
-  `TF_PROD_STORYBLOK_MANAGEMENT_TOKEN`.
+- **Vercel** (staging and production): project environment variable
+  `STORYBLOK_MANAGEMENT_TOKEN`.
 
-Terraform passes the secret to Cloud Run as `STORYBLOK_MANAGEMENT_TOKEN` at
-deploy time. Set a calendar reminder to rotate the token before it expires.
+Set a calendar reminder to rotate the token before it expires.
 
 ### Anonymous Campaign Submissions
 
@@ -390,15 +398,17 @@ https://socialincome.org/v1/api-docs
 The website pages Slack (`#social-income-monitoring`) for production
 failures that must not stay silent:
 
-- Cloud Run logs that contain `SLACK_ALERT` (Stripe webhooks, payment
-  imports, scheduler jobs). Prefix `console.error` with that token.
-  Staging still writes the logs but does not page Slack, because its
-  Stripe and campaign data is incomplete. At most one Slack message is
-  sent every 5 minutes.
-- Uptime checks every 60s: `/api/health/website`, `/api/health/database`,
-  and the public homepage `/en/int`.
-- Cloud Run 5xx bursts, Cloud Scheduler job errors, Cloud SQL CPU and
-  connections, and Cloud Run memory / OOM.
+- `sendSlackAlert` from `website/src/lib/utils/slack-alert.ts` (Stripe
+  webhooks, payment imports, scheduler jobs). It logs the message with a
+  `SLACK_ALERT` prefix and, when `SLACK_ALERT_WEBHOOK_URL` is set, posts
+  it to Slack after the response, at most once every 5 minutes per
+  function instance. Only the message goes to Slack; details stay in the
+  logs. Staging leaves the webhook unset and does not page Slack,
+  because its Stripe and campaign data is incomplete.
+- Health endpoints for uptime monitoring: `/api/health/website`,
+  `/api/health/database`, and the public homepage `/en/int`.
+- Cron runs and function errors are visible in the Vercel dashboard
+  (Logs and Observability).
 
 The recipients app still reports errors to Sentry.
 
