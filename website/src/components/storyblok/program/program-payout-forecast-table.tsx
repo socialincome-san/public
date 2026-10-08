@@ -14,7 +14,7 @@ type Props = {
 
 export const ProgramPayoutForecastTable = ({ rows, titleInfoTooltip }: Props) => {
 	const t = useTranslations('website-common');
-	const columns = makePayoutForecastColumns(undefined, undefined, t, true);
+	const columns = makePayoutForecastColumns(undefined, undefined, undefined, t);
 
 	return (
 		<div className="flex flex-col gap-4">

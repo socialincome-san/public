@@ -19,9 +19,5 @@ type ColumnLabelKey =
 	| 'country'
 	| 'start-date';
 
-export const columnLabel = (
-	localizeLabels: boolean,
-	t: ColumnLabelTranslator | undefined,
-	key: ColumnLabelKey,
-	fallback: string,
-): string => (localizeLabels && t ? t(`program-detail-page.${key}`) : fallback);
+export const columnLabel = (t: ColumnLabelTranslator | undefined, key: ColumnLabelKey, fallback: string): string =>
+	t ? t(`program-detail-page.${key}`) : fallback;

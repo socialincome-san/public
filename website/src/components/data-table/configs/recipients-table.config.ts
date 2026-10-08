@@ -32,7 +32,7 @@ export const recipientsTableConfig: DataTableConfig<RecipientTableViewRow> = {
 		{ id: 'status', label: 'Status' },
 		{ id: 'createdAt', label: 'Created' },
 	],
-	makeColumns: (hideProgramName, hideLocalPartner) => makeRecipientColumns(hideProgramName, hideLocalPartner),
+	makeColumns: makeRecipientColumns,
 	showColumnVisibilitySelector: true,
 };
 
