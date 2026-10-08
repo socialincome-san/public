@@ -100,5 +100,6 @@
         "overlays-dropdownmenu--with-submenu"
       ]
     }
-  }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
 }
