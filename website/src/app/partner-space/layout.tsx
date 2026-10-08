@@ -1,10 +1,16 @@
+import { RootDocument, rootViewport } from '@/app/root-document';
 import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
-import { defaultRegion } from '@/lib/i18n/utils';
+import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
+import { getMetadata } from '@/lib/utils/metadata';
 import { requireSessions } from '@/server/session';
 import { Card } from '@socialincome/design-system/data-display/card/card';
 import type { ReactNode } from 'react';
+
+export const viewport = rootViewport;
+
+export const generateMetadata = () => getMetadata(defaultLanguage, 'website-common');
 
 export default async function PartnerSpaceLayout({ children }: { children: ReactNode }) {
 	const sessions = await requireSessions('local-partner');
@@ -21,13 +27,15 @@ export default async function PartnerSpaceLayout({ children }: { children: React
 	];
 
 	return (
-		<WebsiteAppShell sessions={sessions} lang="en" region={defaultRegion} scope="partner-space">
-			<Breadcrumb links={breadcrumbLinks} />
-			<h1 data-testid="welcome-message-partner-space" className="py-8 text-5xl">
-				Partner Space
-			</h1>
-			<TabNavigation sections={sections} />
-			<Card>{children}</Card>
-		</WebsiteAppShell>
+		<RootDocument lang={defaultLanguage}>
+			<WebsiteAppShell sessions={sessions} lang={defaultLanguage} region={defaultRegion} scope="partner-space">
+				<Breadcrumb links={breadcrumbLinks} />
+				<h1 data-testid="welcome-message-partner-space" className="py-8 text-5xl">
+					Partner Space
+				</h1>
+				<TabNavigation sections={sections} />
+				<Card>{children}</Card>
+			</WebsiteAppShell>
+		</RootDocument>
 	);
 }

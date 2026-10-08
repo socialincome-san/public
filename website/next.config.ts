@@ -40,6 +40,8 @@ const nextConfig: NextConfig = {
 	serverExternalPackages: ['pdfkit', 'ssh2', 'ssh2-sftp-client'],
 	// Vercel's function request body limit.
 	experimental: {
+		// The website, portal, partner space and API docs have separate root layouts.
+		globalNotFound: true,
 		serverActions: {
 			bodySizeLimit: '4.5mb',
 		},

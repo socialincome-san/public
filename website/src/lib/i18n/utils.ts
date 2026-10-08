@@ -8,7 +8,6 @@ export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'fr' | 'it' | 
 export const defaultLanguage: WebsiteLanguage = 'en';
 export const mainWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it'];
 export const allWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it', 'kri'];
-export const WEBSITE_LANGUAGE_HEADER = 'x-website-language';
 // https://vercel.com/docs/headers/request-headers#x-vercel-ip-country
 export const VISITOR_COUNTRY_HEADER = 'x-vercel-ip-country';
 
