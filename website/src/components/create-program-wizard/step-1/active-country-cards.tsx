@@ -1,11 +1,11 @@
 'use client';
 
 import { CountryFlag } from '@/components/country-flag';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
 import { StatusCard } from '@socialincome/design-system/data-display/status-card/status-card';
 import { RadioCardGroup } from '@socialincome/design-system/forms/radio-card/radio-card';
+import { useTranslations } from 'next-intl';
 import { CountryRadioCard } from './country-radio-card';
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const ActiveCountryCards = ({ rows, selectedCountryId, onSelectCountry }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	return (
 		<div className="space-y-3">
@@ -27,12 +27,7 @@ export const ActiveCountryCards = ({ rows, selectedCountryId, onSelectCountry }:
 						const candidatesCount = row.stats.candidateCount;
 						const hasCandidates = candidatesCount > 0;
 						const candidateAlertText = hasCandidates
-							? t(
-									candidatesCount === 1 ? 'step1.candidates_ready_to_enroll_one' : 'step1.candidates_ready_to_enroll_other',
-									{
-										count: candidatesCount,
-									},
-								)
+							? t('step1.candidates_ready_to_enroll', { count: candidatesCount })
 							: t('step1.no_candidates');
 
 						return (

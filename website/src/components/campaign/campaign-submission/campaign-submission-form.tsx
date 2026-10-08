@@ -773,7 +773,6 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 							currentStep={currentStep}
 							steps={visibleSteps}
 							formStepsLabel={labels.formSteps}
-							stepLabel={labels.stepLabel}
 							programLabel={labels.program}
 							detailsLabel={labels.details}
 							aboutLabel={labels.about}

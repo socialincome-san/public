@@ -29,8 +29,7 @@
 		"no_active_programs": "No active programs",
 		"programs": "Programs",
 		"recipients": "Recipients",
-		"candidates_ready_to_enroll_one": "{{count}} candidate ready to enroll",
-		"candidates_ready_to_enroll_other": "{{count}} candidates ready to enroll",
+		"candidates_ready_to_enroll": "{count, plural, one {{count} candidate ready to enroll} other {{count} candidates ready to enroll}}",
 		"no_candidates": "There are currently no candidates",
 		"table": {
 			"cash": "Suitability of cash",
@@ -45,22 +44,22 @@
 		},
 		"details": {
 			"cash": {
-				"met": "Market functionality in {{country}} appears intact.",
-				"not_met": "Market functionality in {{country}} may be impaired."
+				"met": "Market functionality in {country} appears intact.",
+				"not_met": "Market functionality in {country} may be impaired."
 			},
 			"mobile_money": {
-				"met": "Mobile money infrastructure appears sufficient. {{providerCount}} active {{providerLabel}}: {{providers}}.",
+				"met": "Mobile money infrastructure appears sufficient. {providerCount} active {providerLabel}: {providers}.",
 				"not_met": "Mobile money infrastructure appears insufficient."
 			},
 			"mobile_network": {
-				"met": "Mobile network coverage is considered sufficient, with {{populationCoverage}}% population coverage.",
-				"met_with_tech": "Mobile network coverage is considered sufficient, with {{populationCoverage}}% population coverage on {{tech}}.",
-				"not_met": "Mobile network coverage is considered insufficient. Only {{populationCoverage}}% of the population is covered.",
+				"met": "Mobile network coverage is considered sufficient, with {populationCoverage}% population coverage.",
+				"met_with_tech": "Mobile network coverage is considered sufficient, with {populationCoverage}% population coverage on {tech}.",
+				"not_met": "Mobile network coverage is considered insufficient. Only {populationCoverage}% of the population is covered.",
 				"not_met_unknown": "Mobile network coverage is considered insufficient."
 			},
 			"sanctions": {
-				"met": "{{country}} is not subject to international sanctions.",
-				"restrictions_apply": "{{country}} is subject to international sanctions."
+				"met": "{country} is not subject to international sanctions.",
+				"restrictions_apply": "{country} is subject to international sanctions."
 			}
 		},
 		"source": {
@@ -114,9 +113,9 @@
 			"max_hint": "The maximum is determined by the number of candidates currently available for your selected focuses."
 		},
 		"indirect_notice": {
-			"prefix": "{{recipients}} recipients benefit",
-			"indirect_people": "{{indirect}} additional indirect people",
-			"tooltip": "On average, each supported recipient positively impacts around {{factor}} additional people in their household and community.",
+			"prefix": "{recipients} recipients benefit",
+			"indirect_people": "{indirect} additional indirect people",
+			"tooltip": "On average, each supported recipient positively impacts around {factor} additional people in their household and community.",
 			"suffix": "in poverty."
 		},
 		"payouts": {
@@ -137,7 +136,7 @@
 			"title": "Total program costs",
 			"aria": "Show total program cost calculation",
 			"updating": "Updating total cost...",
-			"tooltip": "{{recipients}} recipients x {{payoutPerInterval}} {{payoutCurrency}} payout per interval x {{numberOfIntervals}} {{intervalLabel}} = {{totalBudget}} {{displayCurrency}}",
+			"tooltip": "{recipients} recipients x {payoutPerInterval} {payoutCurrency} payout per interval x {numberOfIntervals} {intervalLabel} = {totalBudget} {displayCurrency}",
 			"interval_label": {
 				"monthly": "monthly intervals",
 				"quarterly": "quarterly intervals",

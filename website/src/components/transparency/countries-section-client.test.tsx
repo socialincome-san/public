@@ -17,9 +17,9 @@ jest.mock('next/image', () => ({
 
 const baseProps: CountriesSectionClientProps = {
 	sectionTitle: 'Inflows',
-	headlineTemplate: '{{amount}} donations arrived from {{countriesCount}} countries',
-	headlineCountryTemplate: '{{amount}} donations arrived from {{country}}',
-	headlineOtherTemplate: '{{amount}} donations arrived from other countries',
+	headlineTemplate: '{amount} donations arrived from {countriesCount} countries',
+	headlineCountryTemplate: '{amount} donations arrived from {country}',
+	headlineOtherTemplate: '{amount} donations arrived from other countries',
 	otherCountriesLabel: 'Other countries',
 	emptyLabel: 'No donations from any country in this period.',
 	chartAriaLabel: 'Donation amounts by country of origin',

@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { useMachine } from '@xstate/react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import type { KeyboardEvent, ReactNode } from 'react';
 import { useEffect } from 'react';
@@ -24,7 +24,7 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 	const [state, send] = useMachine(createProgramWizardMachine, {
 		input: { isAuthenticated },
 	});
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	const router = useRouter();
 

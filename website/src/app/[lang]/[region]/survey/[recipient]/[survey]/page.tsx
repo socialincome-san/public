@@ -1,6 +1,6 @@
 'use client';
 
-import { Survey, SurveyLanguage } from '@/app/[lang]/[region]/survey/[recipient]/[survey]/survey';
+import { Survey } from '@/app/[lang]/[region]/survey/[recipient]/[survey]/survey';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Input } from '@socialincome/design-system/forms/input/input';
 import { useSearchParams } from 'next/navigation';
@@ -9,7 +9,7 @@ import { type SurveyPageProps } from './layout';
 import { useSurvey } from './use-survey';
 
 export default function Page({ params }: SurveyPageProps) {
-	const { recipient, survey, lang } = use(params);
+	const { recipient, survey } = use(params);
 	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 	const searchParams = useSearchParams();
 	const { hasError, login } = useSurvey();
@@ -35,7 +35,7 @@ export default function Page({ params }: SurveyPageProps) {
 	};
 
 	if (isLoggedIn && !hasError) {
-		return <Survey surveyId={survey} recipientId={recipient} lang={lang as SurveyLanguage} />;
+		return <Survey surveyId={survey} recipientId={recipient} />;
 	}
 
 	if (hasError) {

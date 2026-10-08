@@ -1,4 +1,4 @@
-import { PersonCard, type VolunteerDurationTranslations } from '@/components/storyblok/shared/person-card';
+import { PersonCard } from '@/components/storyblok/shared/person-card';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { createWebsitePersonLink } from '@/lib/storyblok/storyblok-utils';
@@ -13,8 +13,8 @@ type Props = {
 	smallCards?: boolean;
 	// Turns each card into a link to the person's page; cards stay unlinked otherwise.
 	linkToPersonPage?: boolean;
-	// Presence enables the "volunteering since" pill on the cards.
-	volunteerDurationTranslations?: VolunteerDurationTranslations;
+	// Enables the "volunteering since" pill on the cards.
+	showVolunteerDuration?: boolean;
 	roleLabels?: Record<string, string>;
 };
 
@@ -39,15 +39,12 @@ export const PersonCardGrid = ({
 	region,
 	smallCards = false,
 	linkToPersonPage = false,
-	volunteerDurationTranslations,
+	showVolunteerDuration = false,
 	roleLabels,
 }: Props) => {
 	const { personCardSize, gridCols } = smallCards ? SMALL_CARDS : MEDIUM_CARDS;
 	const getHref = (person: ISbStoryData<Person>) =>
 		linkToPersonPage ? createWebsitePersonLink(person.slug, lang, region) : undefined;
-	const volunteerDuration = volunteerDurationTranslations
-		? { lang, translations: volunteerDurationTranslations }
-		: undefined;
 
 	return (
 		<ul className={cn('grid gap-6', gridCols)}>
@@ -57,7 +54,7 @@ export const PersonCardGrid = ({
 						person={person}
 						href={getHref(person)}
 						size={personCardSize}
-						volunteerDuration={volunteerDuration}
+						showVolunteerDuration={showVolunteerDuration}
 						roleLabels={roleLabels}
 					/>
 				</li>

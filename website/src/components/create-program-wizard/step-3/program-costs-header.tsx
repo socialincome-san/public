@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { websiteCurrencies } from '@/lib/i18n/utils';
 import { cn } from '@socialincome/design-system/cn';
 import {
@@ -11,6 +10,7 @@ import {
 	SelectValue,
 } from '@socialincome/design-system/forms/select/select';
 import { InfoTooltip } from '@socialincome/design-system/overlays/info-tooltip/info-tooltip';
+import { useTranslations } from 'next-intl';
 
 type Props = {
 	totalBudget: number;
@@ -31,7 +31,7 @@ export const ProgramCostsHeader = ({
 	isCalculatingBudget,
 	onCurrencyChange,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	return (
 		<div className="text-foreground flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">

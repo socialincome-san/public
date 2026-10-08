@@ -6,15 +6,15 @@ import { GenderCell } from '@/components/data-table/elements/gender-cell';
 import { IdCell } from '@/components/data-table/elements/id-cell';
 import { SortableHeader } from '@/components/data-table/elements/sortable-header';
 import { TextCell } from '@/components/data-table/elements/text-cell';
+import type { DataTableTranslator } from '@/components/data-table/table-config.types';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
-import type { Translator } from '@/lib/i18n/translator';
 import type { CandidatesTableViewRow } from '@/modules/candidates/candidate.types';
 import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 
 export const makeCandidateColumns = (
 	hideProgramName = false,
 	hideLocalPartner = false,
-	translator?: Translator,
+	translator?: DataTableTranslator,
 	readOnly = false,
 ): ColumnDef<CandidatesTableViewRow>[] => {
 	void hideProgramName;

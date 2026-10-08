@@ -107,7 +107,7 @@ export const EditSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 				) : null}
 			</div>
 
-			<EditSubscriptionDialog lang={lang} state={state} send={send} onDismissAndRefresh={dismissAndRefresh} />
+			<EditSubscriptionDialog state={state} send={send} onDismissAndRefresh={dismissAndRefresh} />
 		</>
 	);
 };

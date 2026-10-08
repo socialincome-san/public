@@ -1,11 +1,11 @@
 import { CountryFlag } from '@/components/country-flag';
-import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { StatusCard } from '@socialincome/design-system/data-display/status-card/status-card';
 import { type CardAlertFooterVariant } from '@socialincome/design-system/feedback/card-alert-footer/card-alert-footer';
+import { type useTranslations } from 'next-intl';
 import NextImage from 'next/image';
 import type { LocalPartnerStory } from './local-partner.types';
 import {
@@ -18,21 +18,19 @@ import {
 const CARD_IMAGE_WIDTH = 400;
 const CARD_IMAGE_HEIGHT = 240;
 
-export const getLocalPartnerCandidateFooter = (translator: Translator, candidatesCount: number) => {
+export const getLocalPartnerCandidateFooter = (
+	t: ReturnType<typeof useTranslations<'website-common'>>,
+	candidatesCount: number,
+) => {
 	if (candidatesCount > 0) {
 		return {
-			candidatesLabel: translator.t(
-				candidatesCount === 1
-					? 'local-partners-page.candidates-ready-to-enroll_one'
-					: 'local-partners-page.candidates-ready-to-enroll_other',
-				{ context: { count: candidatesCount } },
-			),
+			candidatesLabel: t('local-partners-page.candidates-ready-to-enroll', { count: candidatesCount }),
 			alertVariant: 'confirm' as const satisfies CardAlertFooterVariant,
 		};
 	}
 
 	return {
-		candidatesLabel: translator.t('local-partners-page.no-candidates'),
+		candidatesLabel: t('local-partners-page.no-candidates'),
 		alertVariant: 'secondary' as const satisfies CardAlertFooterVariant,
 	};
 };

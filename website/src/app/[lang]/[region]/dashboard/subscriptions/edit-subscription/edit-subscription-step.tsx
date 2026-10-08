@@ -3,7 +3,6 @@
 import { CoverTransactionCostsToggle } from '@/components/donation-wizard/steps/step-payment/cover-transaction-costs-toggle';
 import { formatDonationCurrencyAmount } from '@/components/donation-wizard/utils/donation-formatting';
 import { type Currency } from '@/generated/prisma/client';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import {
 	SUBSCRIPTION_AMOUNT_MAX,
 	SUBSCRIPTION_AMOUNT_MIN,
@@ -15,6 +14,7 @@ import { Input } from '@socialincome/design-system/forms/input/input';
 import { Slider } from '@socialincome/design-system/forms/slider/slider';
 import { CheckoutFooter } from '@socialincome/design-system/navigation/checkout-footer/checkout-footer';
 import { CircleX, CreditCard } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { type ReactNode, useState } from 'react';
 import {
 	canUpdateSubscriptionAmount,
@@ -92,7 +92,7 @@ export const EditSubscriptionStep = ({
 	onUpdateCard,
 	cardUpdateConfirm,
 }: Props) => {
-	const { t: tWizard } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const tWizard = useTranslations('donation-wizard');
 	const cardLabel = brand && last4 ? `${brand} •••• ${last4}` : labels.cardFallback;
 	const amountChanged = canUpdateSubscriptionAmount(amount, initialAmount);
 	const coverChanged = coverTransactionCosts !== initialCoverTransactionCosts;

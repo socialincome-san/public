@@ -6,11 +6,10 @@ import { renderFollowUpSections } from './follow-ups';
 import { ImpactMeasurementQuestionCard } from './question-card';
 
 type ImpactMeasurementResultsProps = {
-	lang: string;
 	searchParams: Record<string, string | undefined>;
 };
 
-export const ImpactMeasurementResults = async ({ lang, searchParams }: ImpactMeasurementResultsProps) => {
+export const ImpactMeasurementResults = async ({ searchParams }: ImpactMeasurementResultsProps) => {
 	const impactFilters = toImpactServiceFilters(searchParams);
 	const impactResult = await getSurveyImpactMeasurements(impactFilters);
 
@@ -40,14 +39,12 @@ export const ImpactMeasurementResults = async ({ lang, searchParams }: ImpactMea
 					orderedQuestions.map(async (question, index) => (
 						<ImpactMeasurementQuestionCard
 							key={question.name}
-							lang={lang}
 							question={question}
 							index={index}
 							questionTypeLabelKey={
 								questionTypeLabelKeys[question.inputType] ?? 'survey.impactMeasurement.questionTypes.fallback'
 							}
 							followUpSections={await renderFollowUpSections({
-								lang,
 								question,
 								questionsByName,
 								followUpConfigs,

@@ -29,8 +29,7 @@
 		"no_active_programs": "Aucun programme actif",
 		"programs": "Programmes",
 		"recipients": "Beneficiaires",
-		"candidates_ready_to_enroll_one": "{{count}} candidat prêt à s'inscrire",
-		"candidates_ready_to_enroll_other": "{{count}} candidats prêts à s'inscrire",
+		"candidates_ready_to_enroll": "{count, plural, one {{count} candidat prêt à s'inscrire} other {{count} candidats prêts à s'inscrire}}",
 		"no_candidates": "Il n'y a actuellement aucun candidat",
 		"table": {
 			"cash": "Adequation du cash",
@@ -45,22 +44,22 @@
 		},
 		"details": {
 			"cash": {
-				"met": "Le fonctionnement du marche en {{country}} semble intact.",
-				"not_met": "Le fonctionnement du marche en {{country}} pourrait etre degrade."
+				"met": "Le fonctionnement du marche en {country} semble intact.",
+				"not_met": "Le fonctionnement du marche en {country} pourrait etre degrade."
 			},
 			"mobile_money": {
-				"met": "L'infrastructure mobile money semble suffisante. {{providerCount}} fournisseurs actifs : {{providers}}.",
+				"met": "L'infrastructure mobile money semble suffisante. {providerCount} fournisseurs actifs : {providers}.",
 				"not_met": "L'infrastructure mobile money semble insuffisante."
 			},
 			"mobile_network": {
-				"met": "La couverture du reseau mobile est consideree comme suffisante, avec {{populationCoverage}}% de couverture de la population.",
-				"met_with_tech": "La couverture du reseau mobile est consideree comme suffisante, avec {{populationCoverage}}% de couverture de la population sur {{tech}}.",
-				"not_met": "La couverture du reseau mobile est consideree comme insuffisante. Seulement {{populationCoverage}}% de la population est couverte.",
+				"met": "La couverture du reseau mobile est consideree comme suffisante, avec {populationCoverage}% de couverture de la population.",
+				"met_with_tech": "La couverture du reseau mobile est consideree comme suffisante, avec {populationCoverage}% de couverture de la population sur {tech}.",
+				"not_met": "La couverture du reseau mobile est consideree comme insuffisante. Seulement {populationCoverage}% de la population est couverte.",
 				"not_met_unknown": "La couverture du reseau mobile est consideree comme insuffisante."
 			},
 			"sanctions": {
-				"met": "{{country}} n'est pas soumis a des sanctions internationales.",
-				"restrictions_apply": "{{country}} est soumis a des sanctions internationales."
+				"met": "{country} n'est pas soumis a des sanctions internationales.",
+				"restrictions_apply": "{country} est soumis a des sanctions internationales."
 			}
 		},
 		"source": {
@@ -114,9 +113,9 @@
 			"max_hint": "Le maximum est determine par le nombre de candidats actuellement disponibles pour les axes selectionnes."
 		},
 		"indirect_notice": {
-			"prefix": "{{recipients}} beneficiaires profitent",
-			"indirect_people": "{{indirect}} personnes indirectement touchees en plus",
-			"tooltip": "En moyenne, chaque beneficiaire soutenu a un impact positif sur environ {{factor}} autres personnes dans son foyer et sa communaute.",
+			"prefix": "{recipients} beneficiaires profitent",
+			"indirect_people": "{indirect} personnes indirectement touchees en plus",
+			"tooltip": "En moyenne, chaque beneficiaire soutenu a un impact positif sur environ {factor} autres personnes dans son foyer et sa communaute.",
 			"suffix": "de la pauvrete."
 		},
 		"payouts": {
@@ -137,7 +136,7 @@
 			"title": "Cout total du programme",
 			"aria": "Afficher le calcul du cout total du programme",
 			"updating": "Mise a jour du cout total...",
-			"tooltip": "{{recipients}} beneficiaires x {{payoutPerInterval}} {{payoutCurrency}} paiement par intervalle x {{numberOfIntervals}} {{intervalLabel}} = {{totalBudget}} {{displayCurrency}}",
+			"tooltip": "{recipients} beneficiaires x {payoutPerInterval} {payoutCurrency} paiement par intervalle x {numberOfIntervals} {intervalLabel} = {totalBudget} {displayCurrency}",
 			"interval_label": {
 				"monthly": "intervalles mensuels",
 				"quarterly": "intervalles trimestriels",

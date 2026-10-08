@@ -1,6 +1,11 @@
-import { Translator } from '@/lib/i18n/translator';
+import { type Messages } from '@/lib/i18n/messages';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Metadata } from 'next';
+import { getMessages } from 'next-intl/server';
+
+type MetadataKey = keyof Messages['website-common']['metadata'];
+
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 
 /**
  * Get metadata for a page. The metadata is read from the i18n translation file. If a key is missing in the translation file,
@@ -10,12 +15,22 @@ import { Metadata } from 'next';
  * @param metadata - The metadata to merge with the default metadata
  * @returns The metadata for the website
  */
-export const getMetadata = async (language: WebsiteLanguage, namespace: string, metadata?: Metadata): Promise<Metadata> => {
-	const namespaces = namespace ? [namespace, 'website-common'] : ['website-common'];
-	const translator = await Translator.getInstance({ language, namespaces });
-	const title = translator.t('metadata.title');
-	const description = translator.t('metadata.description');
-	const keywords = translator.t('metadata.keywords');
+export const getMetadata = async (
+	language: WebsiteLanguage,
+	namespace: keyof Messages,
+	metadata?: Metadata,
+): Promise<Metadata> => {
+	const messages = await getMessages({ locale: language });
+	const translate = (key: MetadataKey): string => {
+		const namespaceMessages: unknown = messages[namespace];
+		const value =
+			isRecord(namespaceMessages) && isRecord(namespaceMessages.metadata) ? namespaceMessages.metadata[key] : undefined;
+
+		return typeof value === 'string' ? value : messages['website-common'].metadata[key];
+	};
+	const title = translate('title');
+	const description = translate('description');
+	const keywords = translate('keywords');
 	const defaultMetadata = {
 		title,
 		description,
@@ -34,14 +49,14 @@ export const getMetadata = async (language: WebsiteLanguage, namespace: string, 
 		openGraph: {
 			title,
 			description,
-			images: translator.t('metadata.og-image'),
+			images: translate('og-image'),
 		},
 		twitter: {
 			title,
 			card: 'summary_large_image',
 			site: '@so_income',
 			creator: '@so_income',
-			images: translator.t('metadata.twitter-image'),
+			images: translate('twitter-image'),
 		},
 	} satisfies Metadata;
 

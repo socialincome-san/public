@@ -157,8 +157,8 @@
 			"monthly-contribution": "Monatlicher Beitrag",
 			"total-contributions": "Gesamtbeiträge",
 			"no-active-subscriptions": "Keine aktiven Abonnemente",
-			"active-subscriptions-count": "{{count}} aktive Abonnemente",
-			"contributions-since": "{{count}} Beiträge seit {{date}}",
+			"active-subscriptions-count": "{count} aktive Abonnemente",
+			"contributions-since": "{count} Beiträge seit {date}",
 			"no-contributions-yet": "Noch keine Beiträge"
 		},
 		"active-subscriptions": "Aktive Abonnemente",
@@ -169,12 +169,12 @@
 		"card-fallback": "Karte",
 		"cover-transaction-costs": {
 			"nudge-prefix": "Kartenzahlungen kosten ca.",
-			"nudge-fee": "{{fee}}/Mt.",
+			"nudge-fee": "{fee}/Mt.",
 			"nudge-middle": "an Gebühren.",
 			"nudge-cta": "Hilf mit, Kosten tief zu halten — übernimm die Transaktionsgebühren."
 		},
 		"empty": {
-			"description": "Du hast {{amount}} über {{count}} Überweisungen beigetragen.\nMöchtest du dort weitermachen, wo du aufgehört hast?",
+			"description": "Du hast {amount} über {count} Überweisungen beigetragen.\nMöchtest du dort weitermachen, wo du aufgehört hast?",
 			"description-no-contributions": "Beginne heute, jemanden zu unterstützen."
 		}
 	},
@@ -183,7 +183,7 @@
 		"language": "Sprache",
 		"year": "Jahr",
 		"generate-certificate": "Spendebescheinigung erstellen",
-		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen. Erstelle welche mit \"Spendebescheinigung erstellen\". <br></br> Bei Fragen kannst du uns jederzeit <a href='mailto:hello@socialincome.org' class='underline'>kontaktieren</a>.",
+		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen. Erstelle welche mit \"Spendebescheinigung erstellen\". <br></br> Bei Fragen kannst du uns jederzeit <contact>kontaktieren</contact>.",
 		"no-contributions": "Keine Beiträge gefunden, daher kein Zertifikat. Wenn das nicht stimmt, melde dich bei contributors@socialincome.org.",
 		"already-exists": "Zertifikat für ausgewähltes Jahr und Sprache existiert bereits. Wenn das nicht stimmt, melde dich bei contributors@socialincome.org.",
 		"technical-error": "Es ist ein technischer Fehler aufgetreten, bitte probiere es noch einmal. Wenn dies weiterhin passiert, melde dich bei contributors@socialincome.org.",

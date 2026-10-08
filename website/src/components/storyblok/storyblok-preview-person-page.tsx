@@ -1,10 +1,10 @@
 import { PersonProfile } from '@/components/storyblok/journal/person-profile';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getJournalPersonAction, getJournalPersonPageDataAction } from '@/modules/journal/journal.actions';
 import type { JournalPerson } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 type Props = {
@@ -24,10 +24,7 @@ export const StoryblokPreviewPersonPage = async ({
 	previewRoutePath,
 	searchParams,
 }: Props) => {
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-journal', 'common', 'website-common'],
-	});
+	const [t, tCommon] = await Promise.all([getTranslations('website-journal'), getTranslations('website-common')]);
 
 	return await StoryblokPreviewStory<ISbStoryData<JournalPerson>>({
 		storyPath,
@@ -47,8 +44,8 @@ export const StoryblokPreviewPersonPage = async ({
 				lang,
 				region,
 				slug,
-				journalLabel: translator.t('overview.title'),
-				homeLabel: translator.t('breadcrumb.home', { namespace: 'website-common' }),
+				journalLabel: t('overview.title'),
+				homeLabel: tCommon('breadcrumb.home'),
 			});
 
 			if (!pageResult.success) {
@@ -58,11 +55,11 @@ export const StoryblokPreviewPersonPage = async ({
 			return (
 				<PersonProfile
 					{...pageResult.data}
-					articlesHeading={translator.t('person.articles')}
+					articlesHeading={t('person.articles')}
 					lang={lang}
 					region={region}
-					moreArticlesLabel={translator.t('overview.more-articles')}
-					videoLabel={translator.t('badge.video')}
+					moreArticlesLabel={t('overview.more-articles')}
+					videoLabel={t('badge.video')}
 				/>
 			);
 		},

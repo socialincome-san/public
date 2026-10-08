@@ -1,7 +1,7 @@
 {
 	"modal": {
 		"title": "Make a donation",
-		"campaign-for": "For {{title}}",
+		"campaign-for": "For {title}",
 		"closeConfirm": {
 			"title": "Close donation?",
 			"description": "If you close now, your progress in this donation will be lost.",
@@ -18,7 +18,7 @@
 		"monthly": "Monthly",
 		"one-time": "One-time",
 		"donate-now": "Donate now",
-		"donate-now-with-amount": "Donate {{amount}} now",
+		"donate-now-with-amount": "Donate {amount} now",
 		"custom-amount-placeholder": "Amount"
 	},
 	"stepPlan": {
@@ -33,8 +33,8 @@
 		"plan-1x": "1 % Plan",
 		"plan-2x": "2 % Plan",
 		"double-impact-badge": "Double the impact",
-		"benefit-beneficiaries": "{{directCount}} direct, {{indirectCount}} indirect beneficiaries",
-		"benefit-community": "Join a community of {{count}} supporters",
+		"benefit-beneficiaries": "{directCount} direct, {indirectCount} indirect beneficiaries",
+		"benefit-community": "Join a community of {count} supporters",
 		"benefit-double-impact": "Double the impact",
 		"back": "Back",
 		"choose-payment": "Choose Payment Method"
@@ -84,8 +84,8 @@
 		"generate-qr-code": "Generate QR-Code",
 		"pay-online": "Pay online",
 		"cover-costs-description": "Ensure your full donation reaches us.",
-		"cover-costs-label-monthly": "Cover transaction fees of {{fee}}/month",
-		"cover-costs-label-one-time": "Cover transaction fees of {{fee}}",
+		"cover-costs-label-monthly": "Cover transaction fees of {fee}/month",
+		"cover-costs-label-one-time": "Cover transaction fees of {fee}",
 		"cover-costs-tooltip-aria": "How transaction costs are calculated",
 		"cover-costs-tooltip": "Payment providers charge a processing fee (approx. 3 %). By covering it, more of your donation goes directly to our mission."
 	},
@@ -104,8 +104,8 @@
 		}
 	},
 	"onboarding": {
-		"donatedThankYouMonthly": "{{currency}} {{amount}}/month donated. Thank you.",
-		"donatedThankYouOneTime": "{{currency}} {{amount}} donated. Thank you.",
+		"donatedThankYouMonthly": "{currency} {amount}/month donated. Thank you.",
+		"donatedThankYouOneTime": "{currency} {amount} donated. Thank you.",
 		"accountCreatedDescription": "We've set up your account.",
 		"isThisYou": "Please review your account details",
 		"firstName": "First Name",
@@ -139,8 +139,8 @@
 	"impact": {
 		"title": "Direct cash to people in need",
 		"cancel-anytime": "Cancel anytime",
-		"supporters": "{{supporterCount}} supporters from {{countryCount}} countries",
-		"supporters-no-countries": "{{supporterCount}} supporters worldwide",
+		"supporters": "{supporterCount} supporters from {countryCount} countries",
+		"supporters-no-countries": "{supporterCount} supporters worldwide",
 		"zewo": "ZEWO certified",
 		"why-one-percent": "Why donating 1%?",
 		"pay-with": "Pay with"
