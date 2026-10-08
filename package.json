@@ -15,7 +15,7 @@
 			"uuid": "11.1.1"
 		},
 		"isomorphic-dompurify": {
-			"jsdom": "26.1.0"
+			"jsdom": "30.1.2"
 		},
 		"protobufjs": "8.8.0",
 		"uuid": "14.0.2",
