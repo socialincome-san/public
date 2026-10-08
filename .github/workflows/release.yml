@@ -1,0 +1,28 @@
+name: Release
+
+# Pushes main to production. A push made by a workflow doesn't trigger
+# production-deployment.yml, so the Firebase rules are deployed here.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: Push main to production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+      - run: git push origin HEAD:production
+
+  deploy-rules:
+    name: Deploy rules to social-income-prod Firebase Project
+    needs: release
+    uses: ./.github/workflows/deployment.yml
+    secrets: inherit
+    with:
+      component: rules
+      project: social-income-prod
