@@ -1,9 +1,7 @@
 import { loadMessages } from '@/lib/i18n/messages';
-import { defaultLanguage, isWebsiteLanguage } from '@/lib/i18n/utils';
+import { defaultLanguage, isWebsiteLanguage, TIME_ZONE } from '@/lib/i18n/utils';
 import { getRequestConfig } from 'next-intl/server';
 import { lang } from 'next/root-params';
-
-export const TIME_ZONE = 'Europe/Zurich';
 
 // Root params throw in Route Handlers and Server Actions, so translate there with an explicit locale
 // (`getTranslations({ locale })`). Routes outside `[lang]`, like the portal, are English.

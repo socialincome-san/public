@@ -6,6 +6,7 @@ import { LanguageCode } from '../types/language';
 
 export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'fr' | 'it' | 'kri'>;
 export const defaultLanguage: WebsiteLanguage = 'en';
+export const TIME_ZONE = 'Europe/Zurich';
 export const mainWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it'];
 export const allWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it', 'kri'];
 // https://vercel.com/docs/headers/request-headers#x-vercel-ip-country
