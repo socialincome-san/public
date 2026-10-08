@@ -48,6 +48,7 @@ type PageContentTypeProps = {
 	region: WebsiteRegion;
 	searchParams?: ParsedUrlQueryInput;
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction;
+	afterHero?: ReactNode;
 };
 
 const renderPageBlock = (
@@ -161,12 +162,22 @@ export default function PageContentType({
 	region,
 	searchParams,
 	richtextButtonHeaderAction,
+	afterHero,
 }: PageContentTypeProps) {
-	return (
-		blok.content?.map((currentBlock) => (
+	const blocks = blok.content ?? [];
+	const heroCount = blocks[0]?.component === 'heroVideo' ? 1 : 0;
+	const renderBlocks = (pageBlocks: PageBlock[]) =>
+		pageBlocks.map((currentBlock) => (
 			<Fragment key={currentBlock._uid}>
 				{renderPageBlock(currentBlock, lang, region, searchParams, richtextButtonHeaderAction)}
 			</Fragment>
-		)) ?? null
+		));
+
+	return (
+		<>
+			{renderBlocks(blocks.slice(0, heroCount))}
+			{afterHero}
+			{renderBlocks(blocks.slice(heroCount))}
+		</>
 	);
 }

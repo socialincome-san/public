@@ -35,16 +35,20 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRou
 			const community = communityResult.success ? communityResult.data : null;
 
 			return (
-				<>
-					{community ? (
-						<BlockWrapper disableMarginTop disableMarginBottom>
-							<div className="flex justify-end pt-9">
-								<Community data={community} lang={lang} />
-							</div>
-						</BlockWrapper>
-					) : null}
-					<PageContentType blok={story.content} lang={lang} region={region} />
-				</>
+				<PageContentType
+					blok={story.content}
+					lang={lang}
+					region={region}
+					afterHero={
+						community ? (
+							<BlockWrapper disableMarginTop disableMarginBottom>
+								<div className="flex justify-end pt-9">
+									<Community data={community} lang={lang} />
+								</div>
+							</BlockWrapper>
+						) : null
+					}
+				/>
 			);
 		},
 	});

@@ -32,21 +32,21 @@ export default async function HomePage({ params, searchParams }: DefaultPageProp
 	const community = communityResult.success ? communityResult.data : null;
 
 	return (
-		<>
-			{community ? (
-				<BlockWrapper disableMarginTop disableMarginBottom>
-					<div className="flex justify-end pt-9">
-						<Community data={community} lang={lang as WebsiteLanguage} />
-					</div>
-				</BlockWrapper>
-			) : null}
-			<PageContentType
-				blok={story.content}
-				lang={lang as WebsiteLanguage}
-				region={region as WebsiteRegion}
-				searchParams={resolvedSearchParams}
-				richtextButtonHeaderAction="createProgram"
-			/>
-		</>
+		<PageContentType
+			blok={story.content}
+			lang={lang as WebsiteLanguage}
+			region={region as WebsiteRegion}
+			searchParams={resolvedSearchParams}
+			richtextButtonHeaderAction="createProgram"
+			afterHero={
+				community ? (
+					<BlockWrapper disableMarginTop disableMarginBottom>
+						<div className="flex justify-end pt-9">
+							<Community data={community} lang={lang as WebsiteLanguage} />
+						</div>
+					</BlockWrapper>
+				) : null
+			}
+		/>
 	);
 }
