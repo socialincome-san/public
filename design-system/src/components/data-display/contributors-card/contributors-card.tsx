@@ -24,7 +24,7 @@ type ContributorsCardProps = {
 
 const SUMMARY_LIMIT = 3;
 
-export const uniqueByName = (people: Contributor[]) => [...new Map(people.map((person) => [person.name, person])).values()];
+const uniqueByName = (people: Contributor[]) => [...new Map(people.map((person) => [person.name, person])).values()];
 
 export const ContributorsCard = ({ roles, showMoreLabel, showLessLabel, footer }: ContributorsCardProps) => {
 	const contentId = useId();

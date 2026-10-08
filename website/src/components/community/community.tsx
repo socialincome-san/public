@@ -3,7 +3,6 @@ import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
 import { CommunityPanel } from '@socialincome/design-system/data-display/community-panel/community-panel';
-import { uniqueByName } from '@socialincome/design-system/data-display/contributors-card/contributors-card';
 
 const VOLUNTEERS_PLACEHOLDER = '{volunteers}';
 const TICKER_PEOPLE_LIMIT = 3;
@@ -36,7 +35,7 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 			: { before: fill(data.intro) };
 
 	const tickerItems = data.tickerItems.map((item) => fill(item));
-	const maintainerPeople = uniqueByName(data.maintainers.flatMap((group) => group.people));
+	const maintainerPeople = [...new Map(data.maintainers.flatMap((group) => group.people).map((p) => [p.name, p])).values()];
 	const reachOut = translator.t('reach-out');
 
 	const panel = (
