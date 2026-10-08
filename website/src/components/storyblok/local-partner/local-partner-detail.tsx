@@ -6,11 +6,11 @@ import { isFocusStory } from '@/components/storyblok/focus/focus.utils';
 import { EntityAboutSection } from '@/components/storyblok/shared/entity-about-section';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
 import { getLocalPartnerProgramSummariesAction } from '@/modules/local-partners/local-partner.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 import { LocalPartnerAboutMetaCard, LocalPartnerFocusBadges } from './local-partner-about-meta';
 import { LocalPartnerPartners } from './local-partner-partners';
 import { LocalPartnerPayoutsTotal } from './local-partner-payouts-total';
@@ -36,15 +36,17 @@ export const LocalPartnerDetail = async ({
 	completedSurveysCount,
 	community,
 }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const localPartnerTitle = getLocalPartnerTitle(localPartner.content);
 	const isoCode = getLocalPartnerIsoCode(localPartner.content);
 	const focuses = (localPartner.content.focuses ?? []).filter(isFocusStory);
-	const partnerProgramsResult = await getLocalPartnerProgramSummariesAction({
-		lang,
-		localPartnerPortalSlug: localPartner.content.portalSlug?.trim() ?? '',
-		countryIsoCode: isoCode ?? '',
-	});
+	const [t, partnerProgramsResult] = await Promise.all([
+		getTranslations('website-common'),
+		getLocalPartnerProgramSummariesAction({
+			lang,
+			localPartnerPortalSlug: localPartner.content.portalSlug?.trim() ?? '',
+			countryIsoCode: isoCode ?? '',
+		}),
+	]);
 	const partnerPrograms = partnerProgramsResult.success
 		? partnerProgramsResult.data
 		: { programs: [], programCount: 0, recipientsTotal: 0, isPartnerScoped: false };
@@ -62,7 +64,6 @@ export const LocalPartnerDetail = async ({
 	return (
 		<>
 			<HeroHeader
-				lang={lang}
 				title={localPartnerTitle}
 				heroImage={localPartner.content.heroImage}
 				titleIcon={isoCode ? `/assets/flags/${isoCode.toLowerCase()}.svg` : undefined}
@@ -74,19 +75,19 @@ export const LocalPartnerDetail = async ({
 						value: recipientsCount,
 						label:
 							recipientsCount === 1
-								? translator.t('local-partners-page.recipient-singular')
-								: translator.t('local-partners-page.recipient-plural'),
+								? t('local-partners-page.recipient-singular')
+								: t('local-partners-page.recipient-plural'),
 					},
 					{
 						value: completedSurveysCount,
 						label:
 							completedSurveysCount === 1
-								? translator.t('local-partners-page.completed-survey-singular')
-								: translator.t('local-partners-page.completed-survey-plural'),
+								? t('local-partners-page.completed-survey-singular')
+								: t('local-partners-page.completed-survey-plural'),
 					},
 				]}
 			/>
-			<Breadcrumb links={breadcrumbLinks} aside={community ? <Community data={community} lang={lang} /> : null} />
+			<Breadcrumb links={breadcrumbLinks} aside={community ? <Community data={community} /> : null} />
 			<div className="lg:hidden">
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 					{heroCard}
@@ -95,7 +96,7 @@ export const LocalPartnerDetail = async ({
 			<EntityAboutSection
 				isoCode={isoCode}
 				mapLabel={localPartnerTitle}
-				aboutHeading={`${translator.t('local-partners-page.about')} ${localPartnerTitle}`}
+				aboutHeading={`${t('local-partners-page.about')} ${localPartnerTitle}`}
 				description={localPartner.content.description}
 				preDescription={<LocalPartnerFocusBadges lang={lang} region={region} focuses={focuses} />}
 				postDescription={

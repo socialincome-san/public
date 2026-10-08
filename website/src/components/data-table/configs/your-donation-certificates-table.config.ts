@@ -1,13 +1,14 @@
 import { makeYourCertificatesColumns } from '@/components/data-table/columns/your-donation-certificates';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
 import type { YourDonationCertificateTableViewRow } from '@/modules/donation-certificates/donation-certificate.types';
+import type { ReactNode } from 'react';
 
 export const getYourDonationCertificatesTableConfig = ({
 	title,
 	emptyMessage,
 }: {
 	title: string;
-	emptyMessage: string;
+	emptyMessage: ReactNode;
 }): DataTableConfig<YourDonationCertificateTableViewRow> => ({
 	id: 'your-donation-certificates',
 	title,

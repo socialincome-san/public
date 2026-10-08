@@ -1,27 +1,22 @@
 {
 	"campaign": {
 		"not-found": "Purtroppo, la campagna non è stata trovata.",
-		"by": "Di {{ creator }}",
+		"by": "Di {creator}",
 		"without-goal": {
-			"collected_zero": "Nessun contributo ancora. Sii il primo!",
-			"collected_one": "{{ amount, currency }} raccolti da {{ count }} sostenitore",
-			"collected_other": "{{ amount, currency }} raccolti da {{ count }} sostenitori"
+			"collected": "{count, plural, =0 {Nessun contributo ancora. Sii il primo!} one {{amount} raccolti da {count} sostenitore} other {{amount} raccolti da {count} sostenitori}}"
 		},
 		"with-goal": {
-			"collected-percentage": "Raggiunto il {{percentage}}%",
+			"collected-percentage": "Raggiunto il {percentage}%",
 			"goal-title": "Obiettivo",
-			"collected-amount_one": "{{ amount, currency }} da {{count}} sostenitore",
-			"collected-amount_other": "{{ amount, currency }} da {{count}} sostenitori",
-			"goal-amount": "{{ amount, currency }}"
+			"collected-amount": "{count, plural, one {{amount} da {count} sostenitore} other {{amount} da {count} sostenitori}}",
+			"goal-amount": "{amount}"
 		},
 		"ended": "La campagna è terminata. Per donazioni regolari, si prega di utilizzare la pagina principale delle donazioni.",
 		"days-left": "Giorni rimanenti",
 		"fundraising-pill": {
-			"days-left_one": "Solo {{count}} giorno rimasto",
-			"days-left_other": "Solo {{count}} giorni rimasti",
-			"amount-missing": "Mancano {{missing}} per raggiungere {{goal}}",
-			"supporters-left_one": "Mancano {{count}} sostenitore per raggiungere {{goal}}",
-			"supporters-left_other": "Mancano {{count}} sostenitori per raggiungere {{goal}}"
+			"days-left": "{count, plural, one {Solo {count} giorno rimasto} other {Solo {count} giorni rimasti}}",
+			"amount-missing": "Mancano {missing} per raggiungere {goal}",
+			"supporters-left": "{count, plural, one {Mancano {count} sostenitore per raggiungere {goal}} other {Mancano {count} sostenitori per raggiungere {goal}}}"
 		},
 		"program-teaser": {
 			"heading": "La tua donazione sostiene",
@@ -37,8 +32,8 @@
 		"video-slider": {
 			"title": "Cosa significa ricevere un **Social Income**?",
 			"description": "Ascolta direttamente i beneficiari dei nostri programmi spiegare cosa significa Social Income nella pratica.",
-			"show-video": "Mostra il video {{ index }}",
-			"video-title": "Video di beneficiario Social Income {{ index }}"
+			"show-video": "Mostra il video {index}",
+			"video-title": "Video di beneficiario Social Income {index}"
 		},
 		"other-campaigns": {
 			"heading-prefix": "Scopri altre ",

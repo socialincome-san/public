@@ -4,7 +4,6 @@ import { ConfiguredDataTableClient } from '@/components/data-table/clients/confi
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import { getRecipientsTableFilters, recipientsTableConfig } from '@/components/data-table/configs/recipients-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
-import type { Translator } from '@/lib/i18n/translator';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
 import type { Session } from '@/modules/auth/auth.types';
 import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/modules/recipients/recipient.actions';
@@ -44,8 +43,8 @@ export const RecipientsTableClient = ({
 	const canDownloadCsv = sessionType === 'local-partner' || !isReadOnly;
 	const tableConfig = {
 		...recipientsTableConfig,
-		makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, translator?: Translator) => {
-			return makeRecipientColumns(hideProgramName, hideLocalPartner, translator, isReadOnly);
+		makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean) => {
+			return makeRecipientColumns(hideProgramName, hideLocalPartner, undefined, isReadOnly);
 		},
 	};
 	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);

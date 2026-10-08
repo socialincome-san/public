@@ -1,8 +1,7 @@
 'use client';
 
 import { SurveyQuestionnaire } from '@/generated/prisma/enums';
-import { useTranslator } from '@/lib/i18n/use-translator';
-import { LANGUAGE_CODES, type LanguageCode } from '@/lib/types/language';
+import { useMessages, useTranslations } from 'next-intl';
 import { use } from 'react';
 import { Model } from 'survey-core';
 import 'survey-core/survey-core.min.css';
@@ -15,12 +14,14 @@ type DemoSurveyId = 'onboarding' | 'checkin' | 'offboarding' | 'followup';
 
 type DemoSurveyPageProps = {
 	params: Promise<{
-		lang: string;
 		survey: string;
 	}>;
 };
 
-const DEMO_SURVEYS: Record<DemoSurveyId, { questionnaire: SurveyQuestionnaire; titleKey: string }> = {
+const DEMO_SURVEYS: Record<
+	DemoSurveyId,
+	{ questionnaire: SurveyQuestionnaire; titleKey: 'titleOnboarding' | 'titleCheckin' | 'titleOffboarding' | 'titleFollowup' }
+> = {
 	onboarding: {
 		questionnaire: SurveyQuestionnaire.onboarding,
 		titleKey: 'titleOnboarding',
@@ -41,12 +42,10 @@ const DEMO_SURVEYS: Record<DemoSurveyId, { questionnaire: SurveyQuestionnaire; t
 
 const isDemoSurveyId = (value: string): value is DemoSurveyId => value in DEMO_SURVEYS;
 
-const isLanguageCode = (value: string): value is LanguageCode => LANGUAGE_CODES.some((code) => code === value);
-
 export default function Page({ params }: DemoSurveyPageProps) {
-	const { lang, survey } = use(params);
-	const language = isLanguageCode(lang) ? lang : 'en';
-	const translator = useTranslator(language, 'website-survey');
+	const { survey } = use(params);
+	const t = useTranslations('website-survey');
+	const messages = useMessages();
 
 	if (!isDemoSurveyId(survey)) {
 		return (
@@ -56,14 +55,10 @@ export default function Page({ params }: DemoSurveyPageProps) {
 		);
 	}
 
-	if (!translator) {
-		return <div>{'Loading...'}</div>;
-	}
-
 	const demoSurvey = DEMO_SURVEYS[survey];
 	const model = new Model({
-		...settings(translator.t),
-		pages: getQuestionnaire(demoSurvey.questionnaire, translator.t, 'Demo Recipient'),
+		...settings(t),
+		pages: getQuestionnaire(demoSurvey.questionnaire, t, messages, 'Demo Recipient'),
 	});
 	model.applyTheme(BorderlessLightPanelless);
 
@@ -72,8 +67,8 @@ export default function Page({ params }: DemoSurveyPageProps) {
 			<div className="bg-card/95 ring-foreground/5 shadow-overlay overflow-hidden rounded-4xl ring-1 backdrop-blur">
 				<div className="px-4 py-6 sm:px-8 sm:py-8 lg:px-10">
 					<div className="mb-6 space-y-2">
-						<h1 className="text-3xl font-bold tracking-tight">{translator.t(demoSurvey.titleKey)}</h1>
-						<p className="text-muted-foreground text-sm">{translator.t('demo')}</p>
+						<h1 className="text-3xl font-bold tracking-tight">{t(demoSurvey.titleKey)}</h1>
+						<p className="text-muted-foreground text-sm">{t('demo')}</p>
 					</div>
 					<SurveyReact model={model} />
 				</div>

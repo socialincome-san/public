@@ -1,9 +1,9 @@
 import { LandingPageCard } from '@/components/storyblok/shared/landing-page-card';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { CardGrid } from '@socialincome/design-system/layout/card-grid/card-grid';
 import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
+import { getTranslations } from 'next-intl/server';
 import NextImage from 'next/image';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountrySlug, getCountryTitle } from './country.utils';
@@ -18,13 +18,13 @@ type Props = {
 };
 
 export const CountriesOverview = async ({ countries, statsByIsoCode, lang, region, title, text }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const t = await getTranslations('website-common');
 
 	return (
 		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 			<div className="flex w-full flex-col gap-8">
 				<PageIntro title={title} description={text} />
-				<CardGrid emptyMessage={translator.t('countries-page.empty')}>
+				<CardGrid emptyMessage={t('countries-page.empty')}>
 					{countries.map((country) => {
 						const countryIsoCode = getCountryIsoCode(country.content);
 						const normalizedIsoCode = countryIsoCode.trim().toUpperCase();
@@ -55,16 +55,14 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, regio
 									{
 										value: stats.programsCount,
 										label:
-											stats.programsCount === 1
-												? translator.t('countries-page.program-singular')
-												: translator.t('countries-page.program-plural'),
+											stats.programsCount === 1 ? t('countries-page.program-singular') : t('countries-page.program-plural'),
 									},
 									{
 										value: stats.recipientsCount,
 										label:
 											stats.recipientsCount === 1
-												? translator.t('countries-page.recipient-singular')
-												: translator.t('countries-page.recipient-plural'),
+												? t('countries-page.recipient-singular')
+												: t('countries-page.recipient-plural'),
 									},
 								]}
 							/>

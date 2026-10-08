@@ -1,7 +1,7 @@
 'use client';
 
 import { Currency } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { useTranslations } from 'next-intl';
 import { CountrySelectionStep } from '../step-1/country-selection-step';
 import { ProgramSetupStep } from '../step-2/program-setup-step';
 import { BudgetStep } from '../step-3/budget-step';
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export const CreateProgramSteps = ({ state, send, onGoToLogin }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	if (state.matches('loading') || state.matches('saving')) {
 		return <WizardLoading />;

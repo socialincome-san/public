@@ -1,11 +1,11 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { LocalPartnersGrid } from '@/components/storyblok/local-partner/local-partners-grid';
 import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/local-partners-teaser-intro';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
 import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
+import { getTranslations } from 'next-intl/server';
 import type { LocalPartnerStory } from './local-partner.types';
 import { LocalPartnersOverviewCountryFilter } from './local-partners-overview-country-filter';
 import { LocalPartnersOverviewSearch } from './local-partners-overview-search';
@@ -27,7 +27,7 @@ type Props = {
 };
 
 export const LocalPartnersOverview = async ({ localPartners, lang, region, title, text, searchParams }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const t = await getTranslations('website-common');
 	const hasCmsHeader = Boolean(title?.trim()) || Boolean(text?.trim());
 	const searchQuery = getSearchQuery(searchParams);
 	const countryQuery = getCountryQuery(searchParams);
@@ -44,13 +44,11 @@ export const LocalPartnersOverview = async ({ localPartners, lang, region, title
 	return (
 		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 			<div className="flex w-full flex-col gap-8">
-				{hasCmsHeader ? <PageIntro title={title} description={text} /> : <LocalPartnersTeaserIntro lang={lang} />}
+				{hasCmsHeader ? <PageIntro title={title} description={text} /> : <LocalPartnersTeaserIntro />}
 				<FilterBar
 					filters={
 						<LocalPartnersOverviewCountryFilter
-							allCountriesLabel={translator.t('local-partners-page.all-countries', {
-								context: { count: countryOptions.length },
-							})}
+							allCountriesLabel={t('local-partners-page.all-countries', { count: countryOptions.length })}
 							countryOptions={countryOptions}
 							selectedCountryIsoCode={selectedCountryIsoCode}
 						/>
@@ -58,8 +56,8 @@ export const LocalPartnersOverview = async ({ localPartners, lang, region, title
 					search={
 						<LocalPartnersOverviewSearch
 							defaultValue={searchQuery}
-							label={translator.t('local-partners-page.search-label')}
-							placeholder={translator.t('local-partners-page.search-placeholder')}
+							label={t('local-partners-page.search-label')}
+							placeholder={t('local-partners-page.search-placeholder')}
 						/>
 					}
 				/>

@@ -1,11 +1,11 @@
 'use client';
 
 import { ContributorReferralSource } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { updateContributorReferralAfterWizardQrAction } from '@/modules/qr-bills/qr-bill.actions';
 import { updateContributorReferralAfterWizardCheckoutAction } from '@/modules/stripe-payments/stripe-payment.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { RadioGroup, RadioGroupItem } from '@socialincome/design-system/forms/radio-group/radio-group';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useOnboardingAmountLine } from '../../hooks/use-onboarding-amount-line';
@@ -15,7 +15,7 @@ import type { DonationWizardStepProps } from '../../wizard/types';
 import { WIZARD_REFERRAL_OPTIONS } from './wizard-referral-options';
 
 export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 	const { wizardPaymentSource, stripeCheckoutSessionId, qrContributorReferenceId, qrDonor, completedDonationSummary } =
 		state.context;
 	const amountLine = useOnboardingAmountLine(completedDonationSummary);

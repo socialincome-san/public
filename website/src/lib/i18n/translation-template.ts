@@ -1,6 +1,6 @@
 export type TranslationTemplatePart = { type: 'text'; value: string } | { type: 'placeholder'; key: string };
 
-const PLACEHOLDER_REGEX = /\{\{(\w+)\}\}/g;
+const PLACEHOLDER_REGEX = /\{(\w+)\}/g;
 
 export const splitTranslationTemplate = (template: string): TranslationTemplatePart[] => {
 	const parts: TranslationTemplatePart[] = [];

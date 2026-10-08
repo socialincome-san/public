@@ -1,8 +1,6 @@
 'use client';
 
 import { type SubscriptionCancellationReason } from '@/generated/prisma/enums';
-import { useTranslator } from '@/lib/i18n/use-translator';
-import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { createUpdatePaymentMethodSessionAction } from '@/modules/subscriptions/subscription.actions';
 import { SUBSCRIPTION_CANCEL_REASONS } from '@/modules/subscriptions/subscription.types';
 import {
@@ -13,6 +11,7 @@ import {
 	DialogTitle,
 } from '@socialincome/design-system/overlays/dialog/dialog';
 import { ChevronLeft } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 import { type ActorRefFrom, type SnapshotFrom } from 'xstate';
 import { CancelReasonStep } from './cancel-reason-step';
@@ -25,19 +24,17 @@ type EditSubscriptionActor = ActorRefFrom<typeof editSubscriptionMachine>;
 type EditSubscriptionSnapshot = SnapshotFrom<typeof editSubscriptionMachine>;
 
 type Props = {
-	lang: WebsiteLanguage;
 	state: EditSubscriptionSnapshot;
 	send: EditSubscriptionActor['send'];
 	onDismissAndRefresh: () => void;
 	canDownloadStandingOrderQr?: boolean;
 };
 
-export const EditSubscriptionDialog = ({ lang, state, send, onDismissAndRefresh, canDownloadStandingOrderQr }: Props) => {
-	const translator = useTranslator(lang, 'website-me');
+export const EditSubscriptionDialog = ({ state, send, onDismissAndRefresh, canDownloadStandingOrderQr }: Props) => {
+	const t = useTranslations('website-me');
 	const [isUpdatingCard, startUpdateCardTransition] = useTransition();
 	const [updateCardError, setUpdateCardError] = useState(false);
 	const [isConfirmingCardLeave, setIsConfirmingCardLeave] = useState(false);
-	const t = (key: string) => translator?.t(key) ?? '';
 	const isBankTransfer = state.context.paymentMethod === 'bank_transfer';
 	const isCanceledSuccess = state.matches('canceledSuccess');
 	const isInFlight = state.matches('submitting') || state.matches('canceling') || isUpdatingCard;

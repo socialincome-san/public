@@ -56,7 +56,7 @@ export const ImpactMeasurementView = ({
 				</BlockWrapper>
 			) : null}
 			<Suspense key={suspenseKey} fallback={<ImpactMeasurementResultsSkeleton />}>
-				<ImpactMeasurementResults lang={lang} searchParams={normalizedSearchParams} />
+				<ImpactMeasurementResults searchParams={normalizedSearchParams} />
 			</Suspense>
 		</div>
 	);

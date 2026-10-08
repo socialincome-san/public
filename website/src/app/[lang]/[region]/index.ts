@@ -1,4 +1,4 @@
-export { COUNTRY_COOKIE, CURRENCY_COOKIE, LANGUAGE_COOKIE } from '@/lib/i18n/cookies';
+export { COUNTRY_COOKIE, CURRENCY_COOKIE } from '@/lib/i18n/cookies';
 
 export type DefaultParams = {
 	lang: string;

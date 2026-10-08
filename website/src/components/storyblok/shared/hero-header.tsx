@@ -1,6 +1,5 @@
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import {
 	MediaHero,
@@ -21,7 +20,6 @@ type HeroHeaderStat = {
 export type HeroHeaderImage = Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'>;
 
 type Props = {
-	lang: WebsiteLanguage;
 	title: string;
 	heroImage?: HeroHeaderImage | null;
 	stats: HeroHeaderStat[];
@@ -37,7 +35,6 @@ type Props = {
 };
 
 export const HeroHeader = ({
-	lang,
 	title,
 	heroImage,
 	stats,
@@ -53,7 +50,7 @@ export const HeroHeader = ({
 	const heroImageSrc = heroImage?.filename
 		? formatStoryblokUrl(heroImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, heroImage.focus)
 		: null;
-	const heroCardNode = heroCard ?? <DonationFormServer lang={lang} campaignId={campaignId} />;
+	const heroCardNode = heroCard ?? <DonationFormServer campaignId={campaignId} />;
 
 	return (
 		<MediaHero

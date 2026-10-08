@@ -38,7 +38,7 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRou
 					blok={story.content}
 					lang={lang}
 					region={region}
-					afterHero={community ? <CommunityRow data={community} lang={lang} /> : null}
+					afterHero={community ? <CommunityRow data={community} /> : null}
 				/>
 			);
 		},

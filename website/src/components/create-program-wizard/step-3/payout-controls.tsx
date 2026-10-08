@@ -1,9 +1,9 @@
 'use client';
 
 import { PayoutInterval } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { Slider } from '@socialincome/design-system/forms/slider/slider';
 import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/navigation/tabs/tabs';
+import { useTranslations } from 'next-intl';
 import { PayoutPerIntervalAmount, type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 
 type Props = {
@@ -29,7 +29,7 @@ export const PayoutControls = ({
 	onPayoutChange,
 	onIntervalChange,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	return (
 		<div className="space-y-6">

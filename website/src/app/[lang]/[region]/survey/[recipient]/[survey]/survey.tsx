@@ -2,8 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { SurveyStatus } from '@/generated/prisma/enums';
-import { useTranslator } from '@/lib/i18n/use-translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { useMessages, useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { Model } from 'survey-core';
 import 'survey-core/survey-core.min.css';
@@ -13,15 +12,12 @@ import { settings } from './common';
 import { getQuestionnaire } from './questionnaires';
 import { useSurvey } from './use-survey';
 
-export type SurveyLanguage = Extract<WebsiteLanguage, 'en' | 'kri'>;
-
 type SurveyProps = {
 	surveyId: string;
 	recipientId: string;
-	lang: SurveyLanguage;
 };
 
-export const Survey = ({ surveyId, recipientId, lang }: SurveyProps) => {
+export const Survey = ({ surveyId, recipientId }: SurveyProps) => {
 	const { survey, hasError, loadSurvey, saveSurvey } = useSurvey();
 
 	useEffect(() => {
@@ -29,16 +25,17 @@ export const Survey = ({ surveyId, recipientId, lang }: SurveyProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [surveyId, recipientId]);
 
-	const translator = useTranslator(lang, 'website-survey');
+	const t = useTranslations('website-survey');
+	const messages = useMessages();
 
-	if (!hasError && survey && translator) {
+	if (!hasError && survey) {
 		if (survey.status === SurveyStatus.completed) {
 			return <div>Survey already completed</div>;
 		}
 
 		const model = new Model({
-			...settings(translator.t),
-			pages: getQuestionnaire(survey.questionnaire, translator.t, survey.nameOfRecipient),
+			...settings(t),
+			pages: getQuestionnaire(survey.questionnaire, t, messages, survey.nameOfRecipient),
 		});
 		model.applyTheme(BorderlessLightPanelless);
 		model.currentPageNo = (survey.data as Model).pageNo;

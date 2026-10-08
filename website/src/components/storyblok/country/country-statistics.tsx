@@ -1,6 +1,5 @@
 import { COUNTRY_COOKIE } from '@/app/[lang]/[region]';
 import { type CountryCode } from '@/generated/prisma/enums';
-import { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, VISITOR_COUNTRY_HEADER, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
@@ -8,6 +7,7 @@ import { getCountryStatisticsComparisonAction } from '@/modules/countries/countr
 import type { CountryStatisticFormat } from '@/modules/countries/country.types';
 import { cn } from '@socialincome/design-system/cn';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 import { cookies, headers } from 'next/headers';
 import NextImage from 'next/image';
 
@@ -114,14 +114,14 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 		return null;
 	}
 
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const t = await getTranslations('website-common');
 	const visitorCountryName = getCountryNameByCode(visitorCountryCode);
 	const locale = getSafeNumberFormatLocale(lang);
-	const yearsLabel = translator.t('countries-page.statistics.years');
+	const yearsLabel = t('countries-page.statistics.years');
 
 	const formattedRows = rows.map((row) => ({
 		...row,
-		label: translator.t(row.labelKey),
+		label: t(row.labelKey),
 		countryValue: formatStatisticValue(row.countryValue, row.format, locale, yearsLabel),
 		visitorValue: formatStatisticValue(row.visitorValue, row.format, locale, yearsLabel),
 	}));
@@ -131,7 +131,7 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 			<section className="mx-auto max-w-4xl">
 				<div className="flex flex-col items-center gap-6">
 					<h2 className="text-primary text-center text-4xl leading-tight font-bold">
-						{translator.t('countries-page.statistics.title')}
+						{t('countries-page.statistics.title')}
 					</h2>
 					<div className="border-border bg-background shadow-card w-full overflow-hidden rounded-xl border">
 						<div className="lg:hidden">
@@ -156,7 +156,7 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 									</div>
 								</div>
 								<div className="bg-muted text-muted-foreground text-2xs absolute top-16 left-1/2 z-20 flex size-5 -translate-x-1/2 items-center justify-center rounded-full font-bold uppercase">
-									{translator.t('countries-page.statistics.vs')}
+									{t('countries-page.statistics.vs')}
 								</div>
 							</div>
 						</div>
@@ -202,7 +202,7 @@ export const CountryStatistics = async ({ countryIsoCode, countryName, lang }: P
 									</div>
 								</div>
 								<div className="text-muted-foreground bg-muted absolute top-20 left-[calc(50%+160px)] z-20 flex size-10 -translate-x-1/2 items-center justify-center rounded-full text-xs font-normal uppercase">
-									{translator.t('countries-page.statistics.vs')}
+									{t('countries-page.statistics.vs')}
 								</div>
 							</div>
 						</div>

@@ -1,9 +1,9 @@
 import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveWalletPayoutDisplaysAction } from '@/modules/currency-display/currency-display.actions';
 import type { PublicProgramStatsMap } from '@/modules/programs/program.types';
 import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
+import { getTranslations } from 'next-intl/server';
 import { ProgramWallet } from './program-wallet';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug } from './program.utils';
@@ -16,10 +16,7 @@ type Props = {
 };
 
 export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, region }: Props) => {
-	const [displayCurrency, translator] = await Promise.all([
-		getWebsiteCurrencyFromCookie(),
-		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
-	]);
+	const [displayCurrency, t] = await Promise.all([getWebsiteCurrencyFromCookie(), getTranslations('website-common')]);
 	const programStats = programs.flatMap((program) => {
 		const portalSlug = getProgramPortalSlug(program.content);
 		const stats = portalSlug ? statsByPortalSlug[portalSlug] : undefined;
@@ -40,7 +37,7 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 
 	return (
 		<div className="flex w-full flex-col gap-6">
-			<CardGrid emptyMessage={translator.t('programs-page.empty')}>
+			<CardGrid emptyMessage={t('programs-page.empty')}>
 				{programs.map((program) => {
 					const portalSlug = getProgramPortalSlug(program.content);
 					const stats = portalSlug ? statsByPortalSlug[portalSlug] : undefined;
@@ -51,7 +48,6 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 								program={program}
 								stats={stats}
 								walletDisplay={displaysByProgramId.get(program.uuid)}
-								translator={translator}
 								lang={lang}
 								region={region}
 							/>

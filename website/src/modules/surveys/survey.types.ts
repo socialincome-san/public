@@ -143,8 +143,8 @@ type SurveyImpactOption = {
 export type SurveyImpactQuestion = {
 	name: string;
 	inputType: string;
-	translationKey: string;
-	descriptionTranslationKey?: string;
+	translationKey: Question['translationKey'];
+	descriptionTranslationKey?: Question['descriptionTranslationKey'];
 	choicesTranslationKey?: string;
 	questionnaires: SurveyQuestionnaire[];
 	answeredCount: number;

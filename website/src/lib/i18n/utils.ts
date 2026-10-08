@@ -6,13 +6,13 @@ import { LanguageCode } from '../types/language';
 
 export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'fr' | 'it' | 'kri'>;
 export const defaultLanguage: WebsiteLanguage = 'en';
+export const TIME_ZONE = 'Europe/Zurich';
 export const mainWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it'];
 export const allWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it', 'kri'];
-export const WEBSITE_LANGUAGE_HEADER = 'x-website-language';
 // https://vercel.com/docs/headers/request-headers#x-vercel-ip-country
 export const VISITOR_COUNTRY_HEADER = 'x-vercel-ip-country';
 
-const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
+export const isWebsiteLanguage = (value: string | undefined): value is WebsiteLanguage =>
 	allWebsiteLanguages.includes(value as WebsiteLanguage);
 
 export const getLanguageFromPathname = (pathname: string): WebsiteLanguage | undefined => {

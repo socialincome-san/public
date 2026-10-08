@@ -15,11 +15,11 @@ import { ProgramPayoutsTotal } from '@/components/storyblok/program/program-payo
 import { ProgramRecipients } from '@/components/storyblok/program/program-recipients';
 import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { CommunityPanelData } from '@/modules/community/community.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	programDetailData: ProgramDetailData;
@@ -29,7 +29,6 @@ type Props = {
 };
 
 export const ProgramDetail = async ({ programDetailData, lang, region, community }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common', 'website-faq'] });
 	const countryIsoCode = programDetailData.programDetails?.countryIsoCode ?? programDetailData.stats?.countryIsoCode;
 	const recipientsCount =
 		programDetailData.dashboardStats?.recipientsCount ??
@@ -39,7 +38,9 @@ export const ProgramDetail = async ({ programDetailData, lang, region, community
 	const completedSurveysCount =
 		programDetailData.dashboardStats?.completedSurveysCount ?? programDetailData.programDetails?.completedSurveysCount ?? 0;
 
-	const [breadcrumbLinks, resolvedCountry] = await Promise.all([
+	const [t, tFaq, breadcrumbLinks, resolvedCountry] = await Promise.all([
+		getTranslations('website-common'),
+		getTranslations('website-faq'),
 		buildBreadcrumbLinks({
 			fullSlug: programDetailData.fullSlug,
 			currentLabel: programDetailData.title,
@@ -54,7 +55,6 @@ export const ProgramDetail = async ({ programDetailData, lang, region, community
 	return (
 		<>
 			<HeroHeader
-				lang={lang}
 				showDonationsFormMobile={false}
 				campaignId={programDetailData.campaignId}
 				title={programDetailData.title}
@@ -69,22 +69,18 @@ export const ProgramDetail = async ({ programDetailData, lang, region, community
 									value: programDetailData.stats.recipientsCount,
 									label:
 										programDetailData.stats.recipientsCount === 1
-											? translator.t('programs-page.recipient-singular')
-											: translator.t('programs-page.recipient-plural'),
+											? t('programs-page.recipient-singular')
+											: t('programs-page.recipient-plural'),
 								},
 							]
 						: []
 				}
 			/>
 			<div className="flex flex-col gap-8 py-8">
-				<Breadcrumb
-					links={breadcrumbLinks}
-					layout="section"
-					aside={community ? <Community data={community} lang={lang} /> : null}
-				/>
+				<Breadcrumb links={breadcrumbLinks} layout="section" aside={community ? <Community data={community} /> : null} />
 				<div className="lg:hidden">
 					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
-						<DonationFormServer lang={lang} campaignId={programDetailData.campaignId} />
+						<DonationFormServer campaignId={programDetailData.campaignId} />
 					</BlockWrapper>
 				</div>
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
@@ -94,30 +90,22 @@ export const ProgramDetail = async ({ programDetailData, lang, region, community
 								<ProgramFinances
 									stats={programDetailData.dashboardStats}
 									programId={programDetailData.programId}
-									translator={translator}
 									lang={lang}
 								/>
 							) : null}
 							<ProgramAbout
 								programDetailData={programDetailData}
-								translator={translator}
 								lang={lang}
 								region={region}
 								resolvedCountry={resolvedCountry}
 							/>
 						</div>
 						<div className="flex flex-col gap-7">
-							{resolvedCountry ? <ProgramCountry resolvedCountry={resolvedCountry} translator={translator} /> : null}
+							{resolvedCountry ? <ProgramCountry resolvedCountry={resolvedCountry} /> : null}
 							<div className="grid flex-1 grid-cols-1 gap-7 sm:grid-cols-2">
-								<ProgramRecipients
-									count={recipientsCount}
-									programId={programDetailData.programId}
-									translator={translator}
-									lang={lang}
-								/>
+								<ProgramRecipients count={recipientsCount} programId={programDetailData.programId} lang={lang} />
 								<ProgramSurveys
 									completedCount={completedSurveysCount}
-									translator={translator}
 									lang={lang}
 									region={region}
 									programId={programDetailData.programId}
@@ -128,14 +116,14 @@ export const ProgramDetail = async ({ programDetailData, lang, region, community
 				</BlockWrapper>
 			</div>
 			{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0 ? (
-				<ProgramPayoutsTotal programDetailData={programDetailData} translator={translator} lang={lang} region={region} />
+				<ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} />
 			) : null}
 			<div className="flex flex-col gap-8 py-8">
 				<CampaignJournalTeaser lang={lang} region={region} />
 				<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
 				{faqItems.length > 0 && (
 					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
-						<FaqSelectionContent heading={translator.t('title', { namespace: 'website-faq' })} items={faqItems} />
+						<FaqSelectionContent heading={tFaq('title')} items={faqItems} />
 					</BlockWrapper>
 				)}
 			</div>

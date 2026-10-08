@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { Label } from '@socialincome/design-system/forms/label/label';
 import { SearchInput } from '@socialincome/design-system/forms/search-input/search-input';
 import { Switch } from '@socialincome/design-system/forms/switch/switch';
+import { useTranslations } from 'next-intl';
 
 type Props = {
 	search: string;
@@ -13,7 +13,7 @@ type Props = {
 };
 
 export const CountryTableHeader = ({ search, onSearchChange, onlyAllMet, onOnlyAllMetChange }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	return (
 		<div className="flex flex-wrap items-center justify-between gap-3">

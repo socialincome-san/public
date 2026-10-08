@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { useTranslations } from 'next-intl';
 
 type Props = {
 	message: string;
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const WizardError = ({ message, onRetry }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	return (
 		<div className="space-y-4 text-center">

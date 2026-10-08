@@ -1,8 +1,8 @@
 import { HeroVideoBlock } from '@/components/content-blocks/hero-video';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import type { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	blok: HeroVideo;
@@ -11,25 +11,25 @@ type Props = {
 };
 
 export const HeroVideoBlockServer = async ({ blok, lang }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-home' });
+	const t = await getTranslations('website-home');
 
 	return (
 		<HeroVideoBlock
 			blok={blok}
 			lang={lang}
-			subtitleUrl={translator.t('video-subtitle')}
+			subtitleUrl={t('video-subtitle')}
 			translations={{
-				playVideo: translator.t('video-controls.play-video'),
-				pauseVideo: translator.t('video-controls.pause-video'),
-				muteVideo: translator.t('video-controls.mute-video'),
-				unmuteVideo: translator.t('video-controls.unmute-video'),
-				showCaptions: translator.t('video-controls.show-captions'),
-				hideCaptions: translator.t('video-controls.hide-captions'),
-				expandVideoView: translator.t('video-controls.expand-video-view'),
-				exitExpandedVideoView: translator.t('video-controls.exit-expanded-video-view'),
-				donateNow: translator.t('donate-now'),
+				playVideo: t('video-controls.play-video'),
+				pauseVideo: t('video-controls.pause-video'),
+				muteVideo: t('video-controls.mute-video'),
+				unmuteVideo: t('video-controls.unmute-video'),
+				showCaptions: t('video-controls.show-captions'),
+				hideCaptions: t('video-controls.hide-captions'),
+				expandVideoView: t('video-controls.expand-video-view'),
+				exitExpandedVideoView: t('video-controls.exit-expanded-video-view'),
+				donateNow: t('donate-now'),
 			}}
-			donationForm={<DonationFormServer lang={lang} />}
+			donationForm={<DonationFormServer />}
 		/>
 	);
 };

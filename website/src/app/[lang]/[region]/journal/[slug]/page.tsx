@@ -1,8 +1,8 @@
 import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { createWebsiteJournalArticleCanonicalUrl, generateMetaDataForArticle } from '@/lib/storyblok/storyblok-utils';
 import { getJournalArticle, getJournalArticlePageData } from '@/modules/journal/journal.service';
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
@@ -30,17 +30,14 @@ export const generateMetadata = async (props: JournalArticlePageProps) => {
 export default async function Page(props: JournalArticlePageProps) {
 	const { slug, lang, region } = await props.params;
 
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-common'],
-	});
+	const [t, tCommon] = await Promise.all([getTranslations('website-journal'), getTranslations('website-common')]);
 
 	const pageResult = await getJournalArticlePageData({
 		lang,
 		region,
 		slug,
-		journalLabel: translator.t('overview.title'),
-		homeLabel: translator.t('breadcrumb.home', { namespace: 'website-common' }),
+		journalLabel: t('overview.title'),
+		homeLabel: tCommon('breadcrumb.home'),
 	});
 
 	if (!pageResult.success) {
@@ -54,7 +51,6 @@ export default async function Page(props: JournalArticlePageProps) {
 			lang={lang}
 			region={region}
 			relatedArticles={pageResult.data.relatedArticles}
-			translator={translator}
 			breadcrumbs={pageResult.data.breadcrumbs}
 		/>
 	);

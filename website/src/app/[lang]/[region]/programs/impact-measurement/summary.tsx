@@ -1,10 +1,11 @@
+import { isMessageKey } from '@/lib/i18n/message-keys';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getSurveyImpactStudyDetails } from '@/modules/surveys/survey.service';
 import type { SurveyImpactStudyDetailItem } from '@/modules/surveys/survey.types';
 import { Progress } from '@socialincome/design-system/feedback/progress/progress';
 import { ChevronDown } from 'lucide-react';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { toImpactServiceFilters } from './filters.server';
-import { getImpactTranslator } from './translator';
 
 type ImpactMeasurementSummaryProps = {
 	lang: string;
@@ -16,31 +17,31 @@ const topItems = (items: SurveyImpactStudyDetailItem[], limit = 4): SurveyImpact
 };
 
 export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: ImpactMeasurementSummaryProps) => {
-	const translator = await getImpactTranslator(lang);
-	const filters = toImpactServiceFilters(searchParams);
-	const detailsResult = await getSurveyImpactStudyDetails(filters);
+	const [t, tCountries, messages, detailsResult] = await Promise.all([
+		getTranslations('website-survey'),
+		getTranslations('countries'),
+		getMessages(),
+		getSurveyImpactStudyDetails(toImpactServiceFilters(searchParams)),
+	]);
 	if (!detailsResult.success) {
-		return (
-			<p className="text-foreground text-sm leading-5 font-medium">{translator.t('survey.impactMeasurement.loadError')}</p>
-		);
+		return <p className="text-foreground text-sm leading-5 font-medium">{t('survey.impactMeasurement.loadError')}</p>;
 	}
 
 	const details = detailsResult.data;
 	const dateFormatter = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short', year: 'numeric' });
 	const lastResponseLabel =
 		details.lastResponseDaysAgo === null
-			? translator.t('survey.impactMeasurement.lastResponseNotAvailable')
-			: translator
-					.t('survey.impactMeasurement.lastResponseDaysAgo')
-					.replace('{{days}}', String(details.lastResponseDaysAgo));
+			? t('survey.impactMeasurement.lastResponseNotAvailable')
+			: t('survey.impactMeasurement.lastResponseDaysAgo', { days: details.lastResponseDaysAgo });
 	const timeFrameLabel =
 		details.timeFrameStart && details.timeFrameEnd
 			? `${dateFormatter.format(details.timeFrameStart)} - ${dateFormatter.format(details.timeFrameEnd)}`
-			: translator.t('survey.impactMeasurement.notAvailable');
+			: t('survey.impactMeasurement.notAvailable');
 	const timeFrameDaysLabel =
 		details.timeFrameDays === null
-			? translator.t('survey.impactMeasurement.notAvailable')
-			: `${formatNumberLocale(details.timeFrameDays, 'de-CH')} ${translator.t('survey.impactMeasurement.days')}`;
+			? t('survey.impactMeasurement.notAvailable')
+			: `${formatNumberLocale(details.timeFrameDays, 'de-CH')} ${t('survey.impactMeasurement.days')}`;
+	const translateSurveyKey = (key: string) => (isMessageKey(messages, 'website-survey', key) ? t(key) : key);
 	const renderBreakdown = (label: string, items: SurveyImpactStudyDetailItem[], formatter: (value: string) => string) => {
 		const topBreakdownItems = topItems(items);
 		if (topBreakdownItems.length === 0) {
@@ -73,9 +74,9 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 					<span className="text-3xl leading-none font-bold">
 						{formatNumberLocale(details.totalCompletedSurveys, 'de-CH')}
 					</span>
-					<span>{translator.t('survey.impactMeasurement.surveyResponsesFrom')}</span>
+					<span>{t('survey.impactMeasurement.surveyResponsesFrom')}</span>
 					<span className="border-border bg-muted/50 rounded-full border px-2.5 py-0.5 text-sm font-medium">
-						{details.totalRecipients} {translator.t('survey.impactMeasurement.recipients')}
+						{details.totalRecipients} {t('survey.impactMeasurement.recipients')}
 					</span>
 				</div>
 				<ChevronDown className="text-foreground size-5 transition-transform group-open:rotate-180" />
@@ -85,22 +86,20 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 				<p className="text-muted-foreground text-sm font-medium">{lastResponseLabel}</p>
 				<div className="space-y-1">
 					<p className="text-muted-foreground text-xs font-bold tracking-wide uppercase">
-						{translator.t('survey.impactMeasurement.timeFrame')}
+						{t('survey.impactMeasurement.timeFrame')}
 					</p>
 					<p className="text-foreground text-base font-bold">{timeFrameLabel}</p>
 					<p className="text-muted-foreground text-sm">{timeFrameDaysLabel}</p>
 				</div>
 				<div className="grid gap-5 md:grid-cols-3">
-					{renderBreakdown(translator.t('survey.impactMeasurement.countryHeading'), details.countryBreakdown, (value) => {
-						const translated = translator.t(value);
-
-						return translated === value ? value : translated;
-					})}
-					{renderBreakdown(translator.t('survey.impactMeasurement.ageHeading'), details.ageBreakdown, (value) =>
-						translator.t(`survey.impactMeasurement.recipientsFilter.age.${value}`),
+					{renderBreakdown(t('survey.impactMeasurement.countryHeading'), details.countryBreakdown, (value) =>
+						isMessageKey(messages, 'countries', value) ? tCountries(value) : value,
 					)}
-					{renderBreakdown(translator.t('survey.impactMeasurement.genderHeading'), details.genderBreakdown, (value) =>
-						translator.t(`survey.impactMeasurement.recipientsFilter.gender.${value}`),
+					{renderBreakdown(t('survey.impactMeasurement.ageHeading'), details.ageBreakdown, (value) =>
+						translateSurveyKey(`survey.impactMeasurement.recipientsFilter.age.${value}`),
+					)}
+					{renderBreakdown(t('survey.impactMeasurement.genderHeading'), details.genderBreakdown, (value) =>
+						translateSurveyKey(`survey.impactMeasurement.recipientsFilter.gender.${value}`),
 					)}
 				</div>
 			</div>

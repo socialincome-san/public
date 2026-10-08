@@ -3,13 +3,13 @@ import { JournalArticleCard } from '@/components/storyblok/journal/article-card'
 import { ArticleDetailBody } from '@/components/storyblok/journal/article-detail-body';
 import { ArticleDetailHeader, ArticleDetailHeroImage } from '@/components/storyblok/journal/article-detail-header';
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
-import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { cn } from '@socialincome/design-system/cn';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
+import { getTranslations } from 'next-intl/server';
 
 const ARTICLE_HERO_IMAGE_WIDTH = 960;
 const ARTICLE_HERO_IMAGE_HEIGHT = 960;
@@ -20,11 +20,11 @@ type Props = {
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	relatedArticles: ISbStoryData<JournalArticle>[];
-	translator: Translator;
 	breadcrumbs: BreadcrumbLinkType[];
 };
 
-export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, translator, breadcrumbs }: Props) => {
+export const ArticleDetail = async ({ story, slug, lang, region, relatedArticles, breadcrumbs }: Props) => {
+	const t = await getTranslations('website-journal');
 	const article = story.content;
 	const hasHero = !article.useImageOnlyForPreview && Boolean(article.image?.filename);
 	const heroImageSrc = article.image?.filename
@@ -48,7 +48,7 @@ export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, tran
 			<div className="w-site-width max-w-content mx-auto px-4 py-8 sm:px-0 sm:py-10">
 				<div className="mx-auto max-w-2xl space-y-10">
 					{hasHero && heroImageSrc && <JournalBreadcrumb links={breadcrumbs} />}
-					<ArticleDetailBody story={story} slug={slug} lang={lang} region={region} translator={translator} />
+					<ArticleDetailBody story={story} slug={slug} lang={lang} region={region} />
 				</div>
 			</div>
 
@@ -56,7 +56,7 @@ export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, tran
 				<section className="w-site-width max-w-content mx-auto px-4 pb-16 sm:px-0">
 					<div className="mb-8 md:mb-10">
 						<SectionHeading size={4} bold>
-							{translator.t('article.keep-reading')}
+							{t('article.keep-reading')}
 						</SectionHeading>
 					</div>
 					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -66,7 +66,7 @@ export const ArticleDetail = ({ story, slug, lang, region, relatedArticles, tran
 								lang={lang}
 								region={region}
 								article={related}
-								videoLabel={translator.t('badge.video')}
+								videoLabel={t('badge.video')}
 							/>
 						))}
 					</div>

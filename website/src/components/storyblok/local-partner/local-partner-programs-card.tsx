@@ -2,11 +2,11 @@ import {
 	donationHeroCardSizeClass,
 	getDonationWizardCardClass,
 } from '@/components/donation-wizard/utils/donation-wizard-layout';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { LOCAL_PARTNER_PROGRAM_ROWS } from '@/lib/storyblok/local-partner-programs.utils';
 import type { LocalPartnerPrograms } from '@/modules/local-partners/local-partner.types';
 import { cn } from '@socialincome/design-system/cn';
+import { getTranslations } from 'next-intl/server';
 import NextLink from 'next/link';
 import { BuildOwnProgramLink } from './build-own-program-link';
 import { LocalPartnerProgramRow } from './local-partner-program-row';
@@ -27,17 +27,15 @@ type Props = {
 
 export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, region }: Props) => {
 	const { programs, programCount, recipientsTotal, isPartnerScoped } = partnerPrograms;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
-	const t = (key: string) => translator.t(`local-partners-page.${key}`);
-	const format = (key: string, count: number) => translator.t(`local-partners-page.${key}`, { context: { count } });
+	const t = await getTranslations('website-common');
 
 	const hasOverflow = programCount > LOCAL_PARTNER_PROGRAM_ROWS;
 	const visiblePrograms = hasOverflow ? programs.slice(0, LOCAL_PARTNER_PROGRAM_ROWS - 1) : programs;
 	const hiddenCount = programCount - visiblePrograms.length;
 	const slotCount = visiblePrograms.length + (hasOverflow ? 1 : 0);
-	const programCountLabel = format(
-		programCount === 1 ? 'programs-in-count-singular' : 'programs-in-count-plural',
-		programCount,
+	const programCountLabel = t(
+		programCount === 1 ? 'local-partners-page.programs-in-count-singular' : 'local-partners-page.programs-in-count-plural',
+		{ count: programCount },
 	);
 	const allProgramsHref = `/${lang}/${region}/programs`;
 
@@ -55,11 +53,18 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, region }
 			<div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
 				<p className="text-xl leading-none font-bold sm:text-2xl">
 					{isPartnerScoped
-						? format(
-								recipientsTotal === 1 ? 'recipient-singular-with-count' : 'recipient-plural-with-count',
-								recipientsTotal,
+						? t(
+								recipientsTotal === 1
+									? 'local-partners-page.recipient-singular-with-count'
+									: 'local-partners-page.recipient-plural-with-count',
+								{ count: recipientsTotal },
 							)
-						: format(programCount === 1 ? 'programs-count-singular' : 'programs-count-plural', programCount)}
+						: t(
+								programCount === 1
+									? 'local-partners-page.programs-count-singular'
+									: 'local-partners-page.programs-count-plural',
+								{ count: programCount },
+							)}
 				</p>
 				{isPartnerScoped ? <p className="text-muted-foreground text-xs leading-4">{programCountLabel}</p> : null}
 			</div>
@@ -70,11 +75,13 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, region }
 						key={program.programId}
 						program={program}
 						href={`/${lang}/${region}/programs/${program.storyblokSlug}`}
-						recipientsLabel={format(
-							program.recipientsCount === 1 ? 'recipient-singular-with-count' : 'recipient-plural-with-count',
-							program.recipientsCount,
+						recipientsLabel={t(
+							program.recipientsCount === 1
+								? 'local-partners-page.recipient-singular-with-count'
+								: 'local-partners-page.recipient-plural-with-count',
+							{ count: program.recipientsCount },
 						)}
-						fundraisingLabel={t('programs-fundraising')}
+						fundraisingLabel={t('local-partners-page.programs-fundraising')}
 					/>
 				))}
 
@@ -89,13 +96,13 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, region }
 								'focus-visible:ring-1 focus-visible:outline-hidden',
 							)}
 						>
-							{format('programs-more', hiddenCount)}
+							{t('local-partners-page.programs-more', { count: hiddenCount })}
 						</NextLink>
 					</li>
 				) : null}
 			</ul>
 
-			<BuildOwnProgramLink label={t('programs-build-own')} />
+			<BuildOwnProgramLink label={t('local-partners-page.programs-build-own')} />
 		</div>
 	);
 };

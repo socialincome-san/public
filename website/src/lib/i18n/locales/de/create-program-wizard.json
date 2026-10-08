@@ -29,8 +29,7 @@
 		"no_active_programs": "Keine aktiven Programme",
 		"programs": "Programme",
 		"recipients": "Empfänger",
-		"candidates_ready_to_enroll_one": "{{count}} Kandidat:in bereit für die Einschreibung",
-		"candidates_ready_to_enroll_other": "{{count}} Kandidat:innen bereit für die Einschreibung",
+		"candidates_ready_to_enroll": "{count, plural, one {{count} Kandidat:in bereit für die Einschreibung} other {{count} Kandidat:innen bereit für die Einschreibung}}",
 		"no_candidates": "Derzeit gibt es keine Kandidat:innen",
 		"table": {
 			"cash": "Eignung für Bargeld",
@@ -45,22 +44,22 @@
 		},
 		"details": {
 			"cash": {
-				"met": "Die Marktfunktionalität in {{country}} scheint intakt.",
-				"not_met": "Die Marktfunktionalität in {{country}} könnte eingeschränkt sein."
+				"met": "Die Marktfunktionalität in {country} scheint intakt.",
+				"not_met": "Die Marktfunktionalität in {country} könnte eingeschränkt sein."
 			},
 			"mobile_money": {
-				"met": "Die Mobile-Money-Infrastruktur scheint ausreichend. {{providerCount}} aktive Anbieter: {{providers}}.",
+				"met": "Die Mobile-Money-Infrastruktur scheint ausreichend. {providerCount} aktive Anbieter: {providers}.",
 				"not_met": "Die Mobile-Money-Infrastruktur scheint unzureichend."
 			},
 			"mobile_network": {
-				"met": "Die Mobilfunkabdeckung gilt als ausreichend, mit {{populationCoverage}}% Bevölkerungsabdeckung.",
-				"met_with_tech": "Die Mobilfunkabdeckung gilt als ausreichend, mit {{populationCoverage}}% Bevölkerungsabdeckung auf {{tech}}.",
-				"not_met": "Die Mobilfunkabdeckung gilt als unzureichend. Nur {{populationCoverage}}% der Bevölkerung sind abgedeckt.",
+				"met": "Die Mobilfunkabdeckung gilt als ausreichend, mit {populationCoverage}% Bevölkerungsabdeckung.",
+				"met_with_tech": "Die Mobilfunkabdeckung gilt als ausreichend, mit {populationCoverage}% Bevölkerungsabdeckung auf {tech}.",
+				"not_met": "Die Mobilfunkabdeckung gilt als unzureichend. Nur {populationCoverage}% der Bevölkerung sind abgedeckt.",
 				"not_met_unknown": "Die Mobilfunkabdeckung gilt als unzureichend."
 			},
 			"sanctions": {
-				"met": "{{country}} unterliegt keinen internationalen Sanktionen.",
-				"restrictions_apply": "{{country}} unterliegt internationalen Sanktionen."
+				"met": "{country} unterliegt keinen internationalen Sanktionen.",
+				"restrictions_apply": "{country} unterliegt internationalen Sanktionen."
 			}
 		},
 		"source": {
@@ -114,9 +113,9 @@
 			"max_hint": "Das Maximum richtet sich nach der Anzahl der aktuell verfügbaren Kandidatinnen und Kandidaten für Ihre ausgewählten Schwerpunkte."
 		},
 		"indirect_notice": {
-			"prefix": "{{recipients}} Empfänger profitieren",
-			"indirect_people": "{{indirect}} weitere indirekt betroffene Personen",
-			"tooltip": "Im Durchschnitt wirkt sich jede unterstützte empfangende Person positiv auf etwa {{factor}} weitere Personen im Haushalt und Umfeld aus.",
+			"prefix": "{recipients} Empfänger profitieren",
+			"indirect_people": "{indirect} weitere indirekt betroffene Personen",
+			"tooltip": "Im Durchschnitt wirkt sich jede unterstützte empfangende Person positiv auf etwa {factor} weitere Personen im Haushalt und Umfeld aus.",
 			"suffix": "von Armut."
 		},
 		"payouts": {
@@ -137,7 +136,7 @@
 			"title": "Gesamtkosten des Programms",
 			"aria": "Berechnung der gesamten Programmkosten anzeigen",
 			"updating": "Gesamtkosten werden aktualisiert...",
-			"tooltip": "{{recipients}} Empfänger x {{payoutPerInterval}} {{payoutCurrency}} Auszahlung pro Intervall x {{numberOfIntervals}} {{intervalLabel}} = {{totalBudget}} {{displayCurrency}}",
+			"tooltip": "{recipients} Empfänger x {payoutPerInterval} {payoutCurrency} Auszahlung pro Intervall x {numberOfIntervals} {intervalLabel} = {totalBudget} {displayCurrency}",
 			"interval_label": {
 				"monthly": "monatliche Intervalle",
 				"quarterly": "quartalsweise Intervalle",
