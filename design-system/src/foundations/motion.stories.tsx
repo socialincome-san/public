@@ -81,6 +81,13 @@ const MotionOverview = () => (
 			</TokenTable>
 		</FoundationSection>
 
+		<FoundationSection title="Easing">
+			<p className="text-muted-foreground text-sm">
+				<Code>ease-glide</Code> (<Code>cubic-bezier(0.32, 0.72, 0, 1)</Code>) for large surfaces that slide, such as the page
+				in <Code>Backstage</Code>.
+			</p>
+		</FoundationSection>
+
 		<FoundationSection title="Accordion">
 			<p className="text-muted-foreground text-sm">
 				<Code>animate-accordion-down</Code> and <Code>animate-accordion-up</Code> (200ms), used by <Code>Accordion</Code>.
