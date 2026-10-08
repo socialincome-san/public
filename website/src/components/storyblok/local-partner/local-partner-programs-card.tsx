@@ -11,7 +11,7 @@ import NextLink from 'next/link';
 import { BuildOwnProgramLink } from './build-own-program-link';
 import { LocalPartnerProgramRow } from './local-partner-program-row';
 
-/** Static classes so Tailwind can see them; the rows divide the fixed list height between them. */
+/** Static classes so Tailwind can see them; the visible rows stay equally sized. */
 const rowsClassBySlotCount: Record<number, string> = {
 	1: 'grid-rows-1',
 	2: 'grid-rows-2',
@@ -64,7 +64,12 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, region }
 				{isPartnerScoped ? <p className="text-muted-foreground text-xs leading-4">{programCountLabel}</p> : null}
 			</div>
 
-			<ul className={cn('grid min-h-0 flex-1 gap-2', rowsClassBySlotCount[slotCount])}>
+			<ul
+				className={cn(
+					'grid min-h-0 gap-2',
+					hasOverflow ? 'grid-rows-[repeat(3,68px)_44px]' : rowsClassBySlotCount[slotCount],
+				)}
+			>
 				{visiblePrograms.map((program) => (
 					<LocalPartnerProgramRow
 						key={program.programId}

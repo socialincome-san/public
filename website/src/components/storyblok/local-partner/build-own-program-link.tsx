@@ -18,7 +18,7 @@ export const BuildOwnProgramLink = ({ label }: Props) => (
 				onClick={open}
 				aria-haspopup="dialog"
 				data-testid="local-partner-programs-build-own"
-				className="text-muted-foreground hover:text-foreground focus-visible:ring-ring mt-4 self-start rounded-sm text-xs leading-4 underline underline-offset-2 transition-colors focus-visible:ring-1 focus-visible:outline-hidden"
+				className="text-muted-foreground hover:text-foreground focus-visible:ring-ring mt-auto self-start rounded-sm pt-4 text-xs leading-4 underline underline-offset-2 transition-colors focus-visible:ring-1 focus-visible:outline-hidden"
 			>
 				{label}
 			</button>
