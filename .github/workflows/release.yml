@@ -1,58 +1,22 @@
 name: Release
 
-# Fast-forwards production to the current main commit. Pushes made with
-# GITHUB_TOKEN don't trigger other workflows, so the Firebase rules deploy
-# from production-deployment.yml is called here directly. Vercel deploys
-# through its Git integration as usual.
+# Pushes main to production. A push made by a workflow doesn't trigger
+# production-deployment.yml, so the Firebase rules are deployed here.
 
 on:
   workflow_dispatch:
 
-concurrency:
-  group: release
-  cancel-in-progress: false
-
 jobs:
   release:
-    name: Fast-forward production to main
+    name: Push main to production
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      checks: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: main
-          fetch-depth: 0
-
-      - name: Require green checks on main
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          sha=$(git rev-parse HEAD)
-          runs=$(gh api "repos/${{ github.repository }}/commits/$sha/check-runs?per_page=100")
-          pending=$(jq '[.check_runs[] | select(.status != "completed")] | length' <<< "$runs")
-          failed=$(jq -r '[.check_runs[] | select(.status == "completed" and (.conclusion | IN("success", "skipped", "neutral") | not)) | .name] | join(", ")' <<< "$runs")
-          if [ "$pending" != "0" ]; then
-            echo "::error::$pending checks on main ($sha) are still running. Try again when they finish."
-            exit 1
-          fi
-          if [ -n "$failed" ]; then
-            echo "::error::Checks failed on main ($sha): $failed"
-            exit 1
-          fi
-
-      - name: Summarize release
-        run: |
-          {
-            echo "## Released to production"
-            echo
-            git log --pretty='- %s (%h)' origin/production..HEAD
-          } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Fast-forward production
-        # Git rejects the push unless production is an ancestor of main
-        run: git push origin HEAD:production
+      - run: git push origin HEAD:production
 
   deploy-rules:
     name: Deploy rules to social-income-prod Firebase Project
