@@ -1,7 +1,5 @@
 name: Design System
 
-# Runs on every pull request so the required checks always report. Jobs are
-# skipped (which counts as passing) when nothing they cover has changed.
 on:
   pull_request:
   merge_group:
@@ -10,32 +8,8 @@ on:
       - main
 
 jobs:
-  changes:
-    name: "🔎 Detect changes"
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-    outputs:
-      design-system: ${{ github.event_name == 'merge_group' || steps.filter.outputs.design-system == 'true' }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        if: github.event_name != 'merge_group'
-      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
-        id: filter
-        if: github.event_name != 'merge_group'
-        with:
-          filters: |
-            design-system:
-              - "design-system/**"
-              - "package.json"
-              - "package-lock.json"
-              - ".npmrc"
-
   lint:
-    name: "✨ DS Lint"
-    needs: changes
-    if: needs.changes.outputs.design-system == 'true'
+    name: "✨ Design System Lint"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -53,9 +27,7 @@ jobs:
         run: npm run check:unused
 
   typecheck:
-    name: "🔍 DS Type Check"
-    needs: changes
-    if: needs.changes.outputs.design-system == 'true'
+    name: "🔍 Design System Type Check"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -69,9 +41,7 @@ jobs:
         run: npm run typecheck
 
   unit-test:
-    name: "🧪 DS Unit Tests"
-    needs: changes
-    if: needs.changes.outputs.design-system == 'true'
+    name: "🧪 Design System Unit Tests"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -85,9 +55,7 @@ jobs:
         run: npm run test:unit
 
   storybook-build:
-    name: "📚 DS Storybook Build"
-    needs: changes
-    if: needs.changes.outputs.design-system == 'true'
+    name: "📚 Design System Storybook Build"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7

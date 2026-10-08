@@ -1,40 +1,14 @@
 name: Website
 
-# Runs on every pull request so the required checks always report. Jobs are
-# skipped (which counts as passing) when only the recipients app changed.
 on:
   pull_request:
   merge_group:
   push:
     branches:
       - main
-
 jobs:
-  changes:
-    name: "🔎 Detect changes"
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-    outputs:
-      website: ${{ github.event_name == 'merge_group' || steps.filter.outputs.website == 'true' }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        if: github.event_name != 'merge_group'
-      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
-        id: filter
-        if: github.event_name != 'merge_group'
-        with:
-          predicate-quantifier: every
-          filters: |
-            website:
-              - "**"
-              - "!recipients_app/**"
-
   safe-chain:
-    name: "🔒 Safe Chain Dependency Check"
-    needs: changes
-    if: needs.changes.outputs.website == 'true'
+    name: "🔒 Website Safe Chain Dependency Check"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -57,9 +31,7 @@ jobs:
         run: npm ci --no-audit --no-fund
 
   lint:
-    name: "✨ Lint"
-    needs: changes
-    if: needs.changes.outputs.website == 'true'
+    name: "✨ Website Lint"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -75,9 +47,7 @@ jobs:
         run: npm run lint
 
   format-check:
-    name: "💅 Format Check"
-    needs: changes
-    if: needs.changes.outputs.website == 'true'
+    name: "💅 Website Format Check"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -91,9 +61,7 @@ jobs:
         run: npm run format:check
 
   check-unused:
-    name: "✂️ Check unused Code"
-    needs: changes
-    if: needs.changes.outputs.website == 'true'
+    name: "✂️ Website Check unused Code"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -109,9 +77,7 @@ jobs:
         run: npm run check:unused
 
   typecheck:
-    name: "🔍 Type Check"
-    needs: changes
-    if: needs.changes.outputs.website == 'true'
+    name: "🔍 Website Type Check"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -127,9 +93,7 @@ jobs:
         run: npm run typecheck
 
   unit-test:
-    name: "🧪 Unit Tests"
-    needs: changes
-    if: needs.changes.outputs.website == 'true'
+    name: "🧪 Website Unit Tests"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -145,14 +109,12 @@ jobs:
         run: npm run test:unit
 
   e2e:
-    name: "🏗️ Build & 📸 E2E Tests"
+    name: "🏗️ Website Build & 📸 E2E Tests"
     runs-on: ubuntu-latest
     timeout-minutes: 30
     # Only the dependency scan gates installing; the other checks run in parallel
     needs:
-      - changes
       - safe-chain
-    if: needs.changes.outputs.website == 'true'
 
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-jammy@sha256:e1529a04087193966ea15d4a1617345bdaa0791690a24ab2c42b65f9ce5b2cdc
