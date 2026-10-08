@@ -10,11 +10,6 @@
 		"finances": "Finances",
 		"recipients": "Bénéficiaires"
 	},
-	"cookie-consent-banner": {
-		"text": "Nous utilisons des <a href='/legal/privacy' class='underline'>cookies</a>.",
-		"button-accept": "Accepter",
-		"button-refuse": "Refuser"
-	},
 	"menu": {
 		"open": "Ouvrir le menu",
 		"close": "Fermer le menu",

@@ -3,7 +3,8 @@ import { VimeoVideoMatchAndExtract, YouTubeVideoMatchAndExtract } from '@/lib/ut
 
 const videoMatchers = [new YouTubeVideoMatchAndExtract(), new VimeoVideoMatchAndExtract()];
 
-const getMuxPlayerUrl = (muxPlaybackId: string | undefined) => muxPlaybackId && `https://player.mux.com/${muxPlaybackId}`;
+const getMuxPlayerUrl = (muxPlaybackId: string | undefined) =>
+	muxPlaybackId && `https://player.mux.com/${muxPlaybackId}?disable-cookies=true`;
 
 export const EmbeddedVideoPlayer = ({ caption, muxPlaybackId, url, _uid }: EmbeddedVideo) => {
 	const videoUrl = url
