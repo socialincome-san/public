@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
 import path from 'path';
 import { getSecurityHeaders } from './csp';
 import { getRedirects } from './redirects';
@@ -45,4 +46,6 @@ const nextConfig: NextConfig = {
 	},
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin('./src/lib/i18n/request.ts');
+
+export default withNextIntl(nextConfig);

@@ -1,7 +1,7 @@
 module.exports = {
 	preset: 'ts-jest/presets/js-with-ts',
-	// ESM-only dependencies of i18next-icu that Jest cannot require untransformed.
-	transformIgnorePatterns: ['/node_modules/(?!(intl-messageformat|@formatjs)/)'],
+	// ESM-only i18n dependencies that Jest cannot require untransformed.
+	transformIgnorePatterns: ['/node_modules/(?!(intl-messageformat|@formatjs|next-intl|use-intl|icu-minify)/)'],
 	testEnvironment: 'node',
 	testPathIgnorePatterns: ['\\.d\\.ts$', '\\.js$'],
 	testTimeout: 60000,

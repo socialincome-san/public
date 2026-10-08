@@ -12,7 +12,7 @@ export const WEBSITE_LANGUAGE_HEADER = 'x-website-language';
 // https://vercel.com/docs/headers/request-headers#x-vercel-ip-country
 export const VISITOR_COUNTRY_HEADER = 'x-vercel-ip-country';
 
-const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
+export const isWebsiteLanguage = (value: string | undefined): value is WebsiteLanguage =>
 	allWebsiteLanguages.includes(value as WebsiteLanguage);
 
 export const getLanguageFromPathname = (pathname: string): WebsiteLanguage | undefined => {
