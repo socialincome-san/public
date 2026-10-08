@@ -269,9 +269,10 @@ Website and design system checks run for pull requests and for pushes to
 `main`.
 Vercel deploys through its Git integration: `main` goes to the `staging`
 environment, the `production` branch to production, and pull requests get
-preview deployments. To release, run the **Release** workflow in GitHub
-Actions. It pushes `main` to `production` and deploys the Firebase rules
-to production.
+preview deployments. To release, publish a
+[GitHub release](https://github.com/socialincome-san/public/releases/new)
+with a new tag on `main`. The **Release** workflow then pushes that commit
+to `production`, which deploys the website and the Firebase rules.
 Vercel runs `npm run build`, which applies the Prisma migrations before
 `next build`, so a failed migration fails the deployment and the previous
 one stays live. The previous deployment keeps serving against the migrated
