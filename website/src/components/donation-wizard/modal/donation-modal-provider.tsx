@@ -142,11 +142,11 @@ export const DonationModalProvider = ({ children }: Props) => {
 
 			<Dialog open={closeConfirmOpen} onOpenChange={setCloseConfirmOpen}>
 				<DialogContent size="alert" hideCloseButton>
-					<DialogHeader>
+					<DialogHeader divided={false}>
 						<DialogTitle>{t('modal.closeConfirm.title')}</DialogTitle>
 						<DialogDescription>{t('modal.closeConfirm.description')}</DialogDescription>
 					</DialogHeader>
-					<DialogFooter>
+					<DialogFooter divided={false}>
 						<Button type="button" variant="outline" onClick={() => setCloseConfirmOpen(false)}>
 							{t('modal.closeConfirm.cancel')}
 						</Button>
