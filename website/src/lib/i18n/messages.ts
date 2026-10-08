@@ -39,6 +39,22 @@ const englishMessages = {
 
 export type Messages = typeof englishMessages;
 
+// Only the namespaces read by `useTranslations` / `useMessages` are sent to the browser.
+export const pickClientMessages = (messages: Messages) => ({
+	common: messages.common,
+	countries: messages.countries,
+	'create-program-wizard': messages['create-program-wizard'],
+	'donation-wizard': messages['donation-wizard'],
+	'website-common': messages['website-common'],
+	'website-donate': messages['website-donate'],
+	'website-journal': messages['website-journal'],
+	'website-login': messages['website-login'],
+	'website-me': messages['website-me'],
+	'website-newsletter': messages['website-newsletter'],
+	'website-open-source': messages['website-open-source'],
+	'website-survey': messages['website-survey'],
+});
+
 const isMessageTree = (value: unknown): value is Record<string, unknown> =>
 	typeof value === 'object' && value !== null && !Array.isArray(value);
 
@@ -66,14 +82,23 @@ const loadNamespace = async (language: WebsiteLanguage, namespace: string): Prom
 	}
 };
 
-export const loadMessages = async (language: WebsiteLanguage): Promise<Messages> => {
-	if (language === 'en') {
-		return englishMessages;
-	}
-
+const mergeMessages = async (language: WebsiteLanguage): Promise<Messages> => {
 	const translations = await Promise.all(
 		Object.keys(englishMessages).map(async (namespace) => [namespace, await loadNamespace(language, namespace)] as const),
 	);
 
 	return withEnglishFallback(englishMessages, Object.fromEntries(translations)) as Messages;
+};
+
+const mergedMessages = new Map<WebsiteLanguage, Promise<Messages>>();
+
+export const loadMessages = (language: WebsiteLanguage): Promise<Messages> => {
+	if (language === 'en') {
+		return Promise.resolve(englishMessages);
+	}
+
+	const cached = mergedMessages.get(language) ?? mergeMessages(language);
+	mergedMessages.set(language, cached);
+
+	return cached;
 };

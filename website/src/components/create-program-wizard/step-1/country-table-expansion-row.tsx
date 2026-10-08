@@ -1,27 +1,10 @@
 'use client';
 
+import { isMessageKey } from '@/lib/i18n/message-keys';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
 import { TableCell, TableRow } from '@socialincome/design-system/data-display/table/table';
-import { useTranslations } from 'next-intl';
+import { useMessages, useTranslations } from 'next-intl';
 import Link from 'next/link';
-
-const conditionKeys = [
-	'step1.details.cash.met',
-	'step1.details.cash.not_met',
-	'step1.details.mobile_money.met',
-	'step1.details.mobile_money.not_met',
-	'step1.details.mobile_network.met',
-	'step1.details.mobile_network.met_with_tech',
-	'step1.details.mobile_network.not_met',
-	'step1.details.mobile_network.not_met_unknown',
-	'step1.details.sanctions.met',
-	'step1.details.sanctions.restrictions_apply',
-	'step1.source.si_research',
-	'step1.source.sanctions_lists',
-] as const;
-
-const isConditionKey = (key: string): key is (typeof conditionKeys)[number] =>
-	conditionKeys.some((conditionKey) => conditionKey === key);
 
 type Props = {
 	row: ProgramCountryFeasibilityRow;
@@ -29,6 +12,8 @@ type Props = {
 
 export const ExpansionRow = ({ row }: Props) => {
 	const t = useTranslations('create-program-wizard');
+	const messages = useMessages();
+	const isConditionKey = (key: string) => isMessageKey(messages, 'create-program-wizard', key);
 
 	const renderSource = (source: ProgramCountryFeasibilityRow['cash']['details']['source'] | undefined) => {
 		if (!source) {

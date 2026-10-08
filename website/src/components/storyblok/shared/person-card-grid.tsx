@@ -45,7 +45,6 @@ export const PersonCardGrid = ({
 	const { personCardSize, gridCols } = smallCards ? SMALL_CARDS : MEDIUM_CARDS;
 	const getHref = (person: ISbStoryData<Person>) =>
 		linkToPersonPage ? createWebsitePersonLink(person.slug, lang, region) : undefined;
-	const withVolunteerDuration = showVolunteerDuration;
 
 	return (
 		<ul className={cn('grid gap-6', gridCols)}>
@@ -55,7 +54,7 @@ export const PersonCardGrid = ({
 						person={person}
 						href={getHref(person)}
 						size={personCardSize}
-						showVolunteerDuration={withVolunteerDuration}
+						showVolunteerDuration={showVolunteerDuration}
 						roleLabels={roleLabels}
 					/>
 				</li>

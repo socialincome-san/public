@@ -1,5 +1,9 @@
 import { createTranslator } from 'next-intl';
-import { loadMessages } from './messages';
+import { readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
+import { loadMessages, pickClientMessages } from './messages';
+
+const srcDir = path.join(__dirname, '../..');
 
 describe('loadMessages', () => {
 	it('formats ICU plurals in the requested language', async () => {
@@ -15,5 +19,20 @@ describe('loadMessages', () => {
 
 		expect(messages['website-common']).toEqual((await loadMessages('en'))['website-common']);
 		expect(messages['website-survey']).not.toEqual((await loadMessages('en'))['website-survey']);
+	});
+});
+
+describe('pickClientMessages', () => {
+	it('includes every namespace that client hooks read', async () => {
+		const sourceFiles = readdirSync(srcDir, { recursive: true, encoding: 'utf8' }).filter((file) => /\.tsx?$/.test(file));
+		const usedNamespaces = new Set(
+			sourceFiles.flatMap((file) =>
+				[...readFileSync(path.join(srcDir, file), 'utf8').matchAll(/useTranslations(?:<[^>]*>)?\('([\w-]+)'\)/g)].map(
+					(match) => match[1],
+				),
+			),
+		);
+
+		expect(Object.keys(pickClientMessages(await loadMessages('en')))).toEqual(expect.arrayContaining([...usedNamespaces]));
 	});
 });
