@@ -2,6 +2,7 @@ import type {
 	Article,
 	ArticleType,
 	Campaign,
+	CommunityGlobals,
 	Country,
 	Focus,
 	LocalPartner,
@@ -29,6 +30,7 @@ import {
 	getPersonStoryPath,
 	getProgramStoryPath,
 	STORYBLOK_CAMPAIGNS_FOLDER,
+	STORYBLOK_COMMUNITY_GLOBALS_PATH,
 	STORYBLOK_COUNTRIES_FOLDER,
 	STORYBLOK_FOCUSES_FOLDER,
 	STORYBLOK_LOCAL_PARTNERS_FOLDER,
@@ -350,6 +352,9 @@ export const getFocusBySlug = async (slug: string, language: string): Promise<Re
 
 	return resultFail('Focus not found', 404);
 };
+
+export const getCommunityGlobals = async (language: string): Promise<Result<ISbStoryData<CommunityGlobals>>> =>
+	fetchTypedStoryWithFallback<ISbStoryData<CommunityGlobals>>(STORYBLOK_COMMUNITY_GLOBALS_PATH, language);
 
 export const getPerson = async (slug: string, language: string): Promise<Result<ISbStoryData<Person>>> =>
 	fetchTypedStoryWithFallback<ISbStoryData<Person>>(getPersonStoryPath(slug), language);

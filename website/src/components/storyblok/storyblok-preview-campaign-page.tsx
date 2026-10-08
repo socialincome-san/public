@@ -4,6 +4,7 @@ import { getCampaignPortalSlug, getCampaignTitle } from '@/components/storyblok/
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { getCampaignByPortalSlugAction } from '@/modules/campaigns/campaign.actions';
+import { getCommunityPanelDataAction } from '@/modules/community/community.actions';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { notFound } from 'next/navigation';
 
@@ -32,7 +33,10 @@ export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, pr
 				return notFound();
 			}
 
-			const campaignResult = await getCampaignByPortalSlugAction(portalSlug);
+			const [campaignResult, communityResult] = await Promise.all([
+				getCampaignByPortalSlugAction(portalSlug),
+				getCommunityPanelDataAction({ page: story.content, language: lang, region }),
+			]);
 			if (!campaignResult.success || !campaignResult.data) {
 				return notFound();
 			}
@@ -56,6 +60,7 @@ export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, pr
 					campaignSlug={story.slug}
 					lang={lang}
 					region={region}
+					community={communityResult.success ? communityResult.data : null}
 				/>
 			);
 		},

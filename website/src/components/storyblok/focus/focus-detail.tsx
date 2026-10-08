@@ -1,10 +1,12 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { Community } from '@/components/community/community';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { ProgramsOverviewSection } from '@/components/storyblok/program/programs-overview-section';
 import type { Study } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { CommunityPanelData } from '@/modules/community/community.types';
 import { getSurveyImpactFilterOptionsAction } from '@/modules/surveys/survey.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
@@ -19,6 +21,7 @@ type Props = {
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	searchParams?: AnySearchParams;
+	community: CommunityPanelData | null;
 };
 
 type StudyStory = ISbStoryData<Study>;
@@ -50,7 +53,7 @@ const getImpactMeasurementFocusId = async (focus: FocusStory) => {
 	return filterOptionsResult.data.focuses.find((option) => focusSlugs.has(option.label.trim()))?.value ?? '';
 };
 
-export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) => {
+export const FocusDetail = async ({ focus, lang, region, searchParams, community }: Props) => {
 	const title = getFocusTitle(focus.content);
 	const text = getFocusText(focus.content);
 	const focusPortalSlug = focus.content.portalSlug?.trim() ?? '';
@@ -72,7 +75,11 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 
 	return (
 		<div className="py-8 pb-16">
-			<Breadcrumb links={breadcrumbLinks} layout="section" />
+			<Breadcrumb
+				links={breadcrumbLinks}
+				layout="section"
+				aside={community ? <Community data={community} lang={lang} /> : null}
+			/>
 			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 				<div className="pt-8">
 					<PageIntro title={title} description={text} />

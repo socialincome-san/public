@@ -10,12 +10,14 @@ import { CampaignNewsletter } from '@/components/campaign/campaign-newsletter';
 import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-other-campaigns-teaser';
 import { CampaignProgramTeaser } from '@/components/campaign/campaign-program-teaser';
 import { CampaignVideoSlider } from '@/components/campaign/campaign-video-slider';
+import { Community } from '@/components/community/community';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { getCampaignPageContentAction } from '@/modules/campaigns/campaign.actions';
 import type { CampaignPage } from '@/modules/campaigns/campaign.types';
+import type { CommunityPanelData } from '@/modules/community/community.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 type Props = {
@@ -36,6 +38,7 @@ type Props = {
 	faq?: Campaign['faq'];
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
+	community: CommunityPanelData | null;
 };
 
 export const CampaignDetail = async ({
@@ -56,6 +59,7 @@ export const CampaignDetail = async ({
 	faq,
 	lang,
 	region,
+	community,
 }: Props) => {
 	const [pageContentResult, breadcrumbLinks] = await Promise.all([
 		getCampaignPageContentAction(lang, faq),
@@ -105,7 +109,11 @@ export const CampaignDetail = async ({
 				lang={lang}
 			/>
 			<div className="pt-9">
-				<Breadcrumb links={breadcrumbLinks} layout="section" />
+				<Breadcrumb
+					links={breadcrumbLinks}
+					layout="section"
+					aside={community ? <Community data={community} lang={lang} /> : null}
+				/>
 			</div>
 			{trimmedDescription ? (
 				<BlockWrapper spacing="compact">

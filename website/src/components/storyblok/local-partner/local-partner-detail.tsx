@@ -1,5 +1,6 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { Community } from '@/components/community/community';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
 import { isFocusStory } from '@/components/storyblok/focus/focus.utils';
 import { EntityAboutSection } from '@/components/storyblok/shared/entity-about-section';
@@ -7,6 +8,7 @@ import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { CommunityPanelData } from '@/modules/community/community.types';
 import { getLocalPartnerProgramSummariesAction } from '@/modules/local-partners/local-partner.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { LocalPartnerAboutMetaCard, LocalPartnerFocusBadges } from './local-partner-about-meta';
@@ -23,9 +25,17 @@ type Props = {
 	region: WebsiteRegion;
 	recipientsCount: number;
 	completedSurveysCount: number;
+	community: CommunityPanelData | null;
 };
 
-export const LocalPartnerDetail = async ({ localPartner, lang, region, recipientsCount, completedSurveysCount }: Props) => {
+export const LocalPartnerDetail = async ({
+	localPartner,
+	lang,
+	region,
+	recipientsCount,
+	completedSurveysCount,
+	community,
+}: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const localPartnerTitle = getLocalPartnerTitle(localPartner.content);
 	const isoCode = getLocalPartnerIsoCode(localPartner.content);
@@ -76,7 +86,7 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 					},
 				]}
 			/>
-			<Breadcrumb links={breadcrumbLinks} />
+			<Breadcrumb links={breadcrumbLinks} aside={community ? <Community data={community} lang={lang} /> : null} />
 			<div className="lg:hidden">
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 					{heroCard}

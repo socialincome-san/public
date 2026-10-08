@@ -1,10 +1,11 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { CommunityRow } from '@/components/community/community-row';
 import PageContentType from '@/components/content-types/page';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getHomeStoryPath } from '@/lib/storyblok/storyblok-paths';
+import { getCommunityPanelData } from '@/modules/community/community.service';
 import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.service';
-
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
@@ -26,6 +27,9 @@ export default async function HomePage({ params, searchParams }: DefaultPageProp
 		return notFound();
 	}
 
+	const communityResult = await getCommunityPanelData(story.content, lang, region);
+	const community = communityResult.success ? communityResult.data : null;
+
 	return (
 		<PageContentType
 			blok={story.content}
@@ -33,6 +37,7 @@ export default async function HomePage({ params, searchParams }: DefaultPageProp
 			region={region as WebsiteRegion}
 			searchParams={resolvedSearchParams}
 			richtextButtonHeaderAction="createProgram"
+			afterHero={community ? <CommunityRow data={community} lang={lang as WebsiteLanguage} /> : null}
 		/>
 	);
 }

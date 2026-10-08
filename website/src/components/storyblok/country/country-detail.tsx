@@ -1,10 +1,12 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { Community } from '@/components/community/community';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { CommunityPanelData } from '@/modules/community/community.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Suspense } from 'react';
 import { CountryMap } from './country-map';
@@ -22,9 +24,10 @@ type Props = {
 	region: WebsiteRegion;
 	activeProgramsCount: number;
 	recipientsCount: number;
+	community: CommunityPanelData | null;
 };
 
-export const CountryDetail = async ({ country, lang, region, activeProgramsCount, recipientsCount }: Props) => {
+export const CountryDetail = async ({ country, lang, region, activeProgramsCount, recipientsCount, community }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const isoCode = getCountryIsoCode(country.content);
 	const countryTitle = getCountryTitle(country.content);
@@ -63,7 +66,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 				]}
 			/>
 
-			<Breadcrumb links={breadcrumbLinks} />
+			<Breadcrumb links={breadcrumbLinks} aside={community ? <Community data={community} lang={lang} /> : null} />
 			<div className="lg:hidden">
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 					<DonationFormServer lang={lang} />

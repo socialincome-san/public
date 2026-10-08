@@ -3,6 +3,7 @@ import { CampaignDetail } from '@/components/campaign/campaign-detail';
 import { loadCampaignDetailData } from '@/components/storyblok/campaign/load-campaign-detail-data';
 import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { getCampaignFallbackMetadata, getCampaignPageMetadata } from '@/modules/campaigns/campaign-public-website.service';
+import { getCommunityPanelData } from '@/modules/community/community.service';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 900;
@@ -34,6 +35,8 @@ export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlu
 		return notFound();
 	}
 
+	const communityResult = await getCommunityPanelData(data.communityPage, lang, region);
+
 	return (
 		<CampaignDetail
 			campaign={data.campaign}
@@ -53,6 +56,7 @@ export default async function CampaignPage({ params }: DefaultLayoutPropsWithSlu
 			campaignSlug={slug}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
+			community={communityResult.success ? communityResult.data : null}
 		/>
 	);
 }

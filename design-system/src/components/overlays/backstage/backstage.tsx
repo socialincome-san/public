@@ -62,6 +62,8 @@ export const Backstage = ({ open, onOpenChange, panel, panelLabel, closeLabel, c
 					role="dialog"
 					aria-modal="true"
 					aria-label={panelLabel}
+					// Some tools, like Playwright's role queries, ignore inert, so the closed panel would still count as a dialog
+					aria-hidden={!open}
 					inert={!open}
 					className="bg-backstage text-primary fixed inset-y-0 right-0 z-0 w-(--backstage-width) overflow-y-auto overscroll-contain antialiased"
 				>

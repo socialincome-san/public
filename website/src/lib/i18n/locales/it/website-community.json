@@ -1,0 +1,18 @@
+{
+	"panel-label": "Le persone dietro questa pagina",
+	"close": "Chiudi",
+	"ticker-label": "Mostra le persone dietro questa pagina",
+	"volunteers_one": "{{count}} volontario",
+	"volunteers_other": "{{count}} volontari",
+	"countries_one": "{{count}} paese",
+	"countries_other": "{{count}} paesi",
+	"show-all-contributors": "Mostra tutte le persone che contribuiscono",
+	"show-fewer-contributors": "Mostra meno persone",
+	"more-people_one": "+{{count}} persona",
+	"more-people_other": "+{{count}} persone",
+	"show-less": "Mostra meno",
+	"reach-out": "Contatta",
+	"reach-out-about-page": "Contatta a proposito di questa pagina",
+	"reach-out-about-role": "Contatta {{name}} a proposito di {{role}}",
+	"article-by": "Articolo di {{name}}"
+}

@@ -1,5 +1,6 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]';
 import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
+import { CommunityBackstageProvider } from '@/components/community/community-backstage';
 import { I18nContextProvider } from '@/lib/i18n/i18n-context-provider';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCurrentSessions } from '@/modules/auth/session.service';
@@ -13,9 +14,11 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 
 	return (
 		<I18nContextProvider>
-			<WebsiteAppShell sessions={sessions} lang={lang as WebsiteLanguage} region={region} scope="website">
-				{children}
-			</WebsiteAppShell>
+			<CommunityBackstageProvider>
+				<WebsiteAppShell sessions={sessions} lang={lang as WebsiteLanguage} region={region} scope="website">
+					{children}
+				</WebsiteAppShell>
+			</CommunityBackstageProvider>
 		</I18nContextProvider>
 	);
 }

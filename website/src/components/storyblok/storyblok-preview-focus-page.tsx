@@ -2,6 +2,7 @@ import { FocusDetail } from '@/components/storyblok/focus/focus-detail';
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getCommunityPanelDataAction } from '@/modules/community/community.actions';
 import { getFocusBySlugAction } from '@/modules/storyblok-content/storyblok-content.actions';
 
 type Props = {
@@ -31,6 +32,18 @@ export const StoryblokPreviewFocusPage = async ({
 
 			return storyResult.success ? storyResult.data : null;
 		},
-		renderStory: (focus) => <FocusDetail focus={focus} lang={lang} region={region} searchParams={searchParams} />,
+		renderStory: async (focus) => {
+			const communityResult = await getCommunityPanelDataAction({ page: focus.content, language: lang, region });
+
+			return (
+				<FocusDetail
+					focus={focus}
+					lang={lang}
+					region={region}
+					searchParams={searchParams}
+					community={communityResult.success ? communityResult.data : null}
+				/>
+			);
+		},
 	});
 };

@@ -1,6 +1,7 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { CountryDetail } from '@/components/storyblok/country/country-detail';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getCommunityPanelData } from '@/modules/community/community.service';
 import { getCountryPageStats } from '@/modules/countries/country.service';
 import { getCountryBySlug } from '@/modules/storyblok-content/storyblok-content.service';
 import { notFound } from 'next/navigation';
@@ -15,7 +16,10 @@ export default async function CountryPage({ params }: DefaultLayoutPropsWithSlug
 		return notFound();
 	}
 
-	const statsResult = await getCountryPageStats(countryResult.data.content.isoCode.toString());
+	const [statsResult, communityResult] = await Promise.all([
+		getCountryPageStats(countryResult.data.content.isoCode.toString()),
+		getCommunityPanelData(countryResult.data.content, lang, region),
+	]);
 	const { activeProgramsCount, recipientsCount } = statsResult.success
 		? statsResult.data
 		: { activeProgramsCount: 0, recipientsCount: 0 };
@@ -27,6 +31,7 @@ export default async function CountryPage({ params }: DefaultLayoutPropsWithSlug
 			region={region as WebsiteRegion}
 			activeProgramsCount={activeProgramsCount}
 			recipientsCount={recipientsCount}
+			community={communityResult.success ? communityResult.data : null}
 		/>
 	);
 }
