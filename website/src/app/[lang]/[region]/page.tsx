@@ -1,12 +1,11 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { Community } from '@/components/community/community';
+import { CommunityRow } from '@/components/community/community-row';
 import PageContentType from '@/components/content-types/page';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getHomeStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { getCommunityPanelData } from '@/modules/community/community.service';
 import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.service';
-import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
@@ -38,15 +37,7 @@ export default async function HomePage({ params, searchParams }: DefaultPageProp
 			region={region as WebsiteRegion}
 			searchParams={resolvedSearchParams}
 			richtextButtonHeaderAction="createProgram"
-			afterHero={
-				community ? (
-					<BlockWrapper disableMarginTop disableMarginBottom>
-						<div className="flex justify-end pt-9">
-							<Community data={community} lang={lang as WebsiteLanguage} />
-						</div>
-					</BlockWrapper>
-				) : null
-			}
+			afterHero={community ? <CommunityRow data={community} lang={lang as WebsiteLanguage} /> : null}
 		/>
 	);
 }

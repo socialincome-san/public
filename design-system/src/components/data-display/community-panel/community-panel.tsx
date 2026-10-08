@@ -24,13 +24,13 @@ type CommunityPanelProps = {
 		link?: CommunityPanelLink;
 		after?: string;
 	};
-	maintainers?: {
+	contributors?: {
 		roles: ContributorRole[];
 		showMoreLabel: string;
 		showLessLabel: string;
-		mistake?: { text: string; action: CommunityPanelLink };
+		feedback?: { text: string; action: CommunityPanelLink };
 	};
-	worlds?: {
+	groups?: {
 		title: string;
 		lessLabel: string;
 		items: { name: string; tag?: string; text?: string; people: Contributor[]; moreLabel: string }[];
@@ -40,12 +40,12 @@ type CommunityPanelProps = {
 		text?: string;
 		items: { role: string; person: Contributor; action: CommunityPanelLink }[];
 	};
-	waysIn?: {
+	options?: {
 		title: string;
 		items: { name: string; effort?: string; href?: string }[];
 		cta?: CommunityPanelLink;
 	};
-	reading?: {
+	links?: {
 		title: string;
 		items: { title: string; meta: string; href: string; imageSrc?: string }[];
 	};
@@ -73,18 +73,18 @@ export const CommunityPanel = ({
 	heading,
 	headingEmphasis,
 	intro,
-	maintainers,
-	worlds,
+	contributors,
+	groups,
 	roles,
-	waysIn,
-	reading,
+	options,
+	links,
 }: CommunityPanelProps) => (
 	<BackstagePanel>
 		<h2 className="text-3xl md:text-4xl">
 			<span className="block">{heading}</span>
 			{headingEmphasis ? <strong className="block font-bold">{headingEmphasis}</strong> : null}
 		</h2>
-		{intro || maintainers ? (
+		{intro || contributors ? (
 			<div className="flex flex-col gap-3">
 				{intro ? (
 					<p className="text-base">
@@ -97,16 +97,16 @@ export const CommunityPanel = ({
 						{intro.after}
 					</p>
 				) : null}
-				{maintainers ? (
+				{contributors ? (
 					<ContributorsCard
-						roles={maintainers.roles}
-						showMoreLabel={maintainers.showMoreLabel}
-						showLessLabel={maintainers.showLessLabel}
+						roles={contributors.roles}
+						showMoreLabel={contributors.showMoreLabel}
+						showLessLabel={contributors.showLessLabel}
 						footer={
-							maintainers.mistake ? (
+							contributors.feedback ? (
 								<div className="flex flex-wrap items-center justify-between gap-3">
-									<span className="text-foreground text-base">{maintainers.mistake.text}</span>
-									<ActionButton action={maintainers.mistake.action} />
+									<span className="text-foreground text-base">{contributors.feedback.text}</span>
+									<ActionButton action={contributors.feedback.action} />
 								</div>
 							) : undefined
 						}
@@ -114,18 +114,18 @@ export const CommunityPanel = ({
 				) : null}
 			</div>
 		) : null}
-		{worlds && worlds.items.length > 0 ? (
-			<Section title={worlds.title}>
-				{worlds.items.map((world, index) => (
+		{groups && groups.items.length > 0 ? (
+			<Section title={groups.title}>
+				{groups.items.map((group, index) => (
 					<Card key={index} padding="compact">
 						<div className="flex flex-col gap-3">
 							<div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-								<span className="text-foreground text-xl font-bold">{world.name}</span>
-								{world.tag ? <Badge>{world.tag}</Badge> : null}
+								<span className="text-foreground text-xl font-bold">{group.name}</span>
+								{group.tag ? <Badge>{group.tag}</Badge> : null}
 							</div>
-							{world.text ? <p className="text-foreground text-base">{world.text}</p> : null}
-							{world.people.length > 0 ? (
-								<PeopleStack people={world.people} moreLabel={world.moreLabel} lessLabel={worlds.lessLabel} />
+							{group.text ? <p className="text-foreground text-base">{group.text}</p> : null}
+							{group.people.length > 0 ? (
+								<PeopleStack people={group.people} moreLabel={group.moreLabel} lessLabel={groups.lessLabel} />
 							) : null}
 						</div>
 					</Card>
@@ -162,37 +162,37 @@ export const CommunityPanel = ({
 				</Card>
 			</Section>
 		) : null}
-		{waysIn && waysIn.items.length > 0 ? (
-			<Section title={waysIn.title}>
+		{options && options.items.length > 0 ? (
+			<Section title={options.title}>
 				<Card padding="compact">
 					<div className="flex flex-col gap-4">
 						<dl className="flex flex-col">
-							{waysIn.items.map((way, index) => (
+							{options.items.map((option, index) => (
 								<div
 									key={index}
 									className="border-border flex items-baseline justify-between gap-4 border-b py-2 last:border-b-0"
 								>
 									<dt className="text-base">
-										{way.href ? (
-											<NextLink href={way.href} className="hover:underline">
-												{way.name}
+										{option.href ? (
+											<NextLink href={option.href} className="hover:underline">
+												{option.name}
 											</NextLink>
 										) : (
-											way.name
+											option.name
 										)}
 									</dt>
-									{way.effort ? <dd className="text-muted-foreground shrink-0 text-sm">{way.effort}</dd> : null}
+									{option.effort ? <dd className="text-muted-foreground shrink-0 text-sm">{option.effort}</dd> : null}
 								</div>
 							))}
 						</dl>
-						{waysIn.cta ? <ActionButton action={waysIn.cta} fullWidth /> : null}
+						{options.cta ? <ActionButton action={options.cta} fullWidth /> : null}
 					</div>
 				</Card>
 			</Section>
 		) : null}
-		{reading && reading.items.length > 0 ? (
-			<Section title={reading.title}>
-				{reading.items.map((item) => (
+		{links && links.items.length > 0 ? (
+			<Section title={links.title}>
+				{links.items.map((item) => (
 					<NextLink
 						key={item.href}
 						href={item.href}

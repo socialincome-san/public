@@ -50,19 +50,19 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	args: {
-		maintainers: {
+		contributors: {
 			roles: [
 				{ label: 'Content', people: people(['Aminata Kamara']) },
 				{ label: 'Translation', people: people(['Sara Rossi', 'Léa Dubois']) },
 			],
 			showMoreLabel: 'Show all contributors',
 			showLessLabel: 'Show fewer contributors',
-			mistake: {
+			feedback: {
 				text: 'Found a mistake?',
 				action: { label: 'Reach out', href: 'mailto:hello@example.org', ariaLabel: 'Email us about this page' },
 			},
 		},
-		worlds: {
+		groups: {
 			title: 'Join on the ground or from anywhere',
 			lessLabel: 'Show less',
 			items: [
@@ -98,7 +98,7 @@ export const Default: Story = {
 				},
 			],
 		},
-		waysIn: {
+		options: {
 			title: 'Still no idea? Here are some ways in.',
 			items: [
 				{ name: 'Join a field trip', effort: 'Applications twice a year' },
@@ -106,7 +106,7 @@ export const Default: Story = {
 			],
 			cta: { label: 'Join the community', href: '#' },
 		},
-		reading: {
+		links: {
 			title: 'Further reading',
 			items: [
 				{ title: 'Two weeks in Freetown', meta: 'Article by Sara Rossi', href: '#a', imageSrc: portrait },

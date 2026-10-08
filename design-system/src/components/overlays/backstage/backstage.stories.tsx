@@ -83,11 +83,11 @@ const BehindTheScenesPanel = () => (
 			link: { label: '64 volunteers', href: '#' },
 			after: ' across 9 countries make Social Income possible. This page is maintained by:',
 		}}
-		maintainers={{
+		contributors={{
 			roles: pageContributors,
 			showMoreLabel: 'Show all contributors',
 			showLessLabel: 'Show fewer contributors',
-			mistake: {
+			feedback: {
 				text: 'Found a mistake?',
 				action: {
 					label: 'Reach out',
@@ -96,7 +96,7 @@ const BehindTheScenesPanel = () => (
 				},
 			},
 		}}
-		worlds={{
+		groups={{
 			title: 'Join on the ground or from anywhere',
 			lessLabel: 'Show less',
 			items: worlds.map((world) => ({ ...world, moreLabel: `+${world.people.length - 3} people` })),
@@ -110,12 +110,12 @@ const BehindTheScenesPanel = () => (
 				action: { label: 'Reach out', href: `mailto:${email}`, ariaLabel: `Email ${person.name} about ${role}` },
 			})),
 		}}
-		waysIn={{
+		options={{
 			title: 'Still no idea? Here are some ways in.',
 			items: waysIn,
 			cta: { label: 'Join the community', href: '#' },
 		}}
-		reading={{
+		links={{
 			title: 'Further reading',
 			items: articles.map((article) => ({
 				title: article.title,

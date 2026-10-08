@@ -18,10 +18,14 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 	const volunteers = translator.t('volunteers', { context: { count: data.volunteerCount } });
 	const countries = translator.t('countries', { context: { count: data.countryCount } });
 	const fill = (text: string, values: Record<string, string | number> = {}) =>
-		Object.entries({ volunteers, countries, ...values }).reduce(
-			(result, [key, value]) => result.replaceAll(`{${key}}`, String(value)),
-			text,
-		);
+		Object.entries({
+			volunteers,
+			countries,
+			// Bare numbers let editors inflect the noun themselves, e.g. German "in {countryCount} Ländern"
+			volunteerCount: data.volunteerCount,
+			countryCount: data.countryCount,
+			...values,
+		}).reduce((result, [key, value]) => result.replaceAll(`{${key}}`, String(value)), text);
 
 	const [introBefore, ...introAfter] = (data.intro ?? '').split(VOLUNTEERS_PLACEHOLDER);
 	const intro = !data.intro
@@ -37,19 +41,20 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 	const tickerItems = data.tickerItems.map((item) => fill(item));
 	const maintainerPeople = [...new Map(data.maintainers.flatMap((group) => group.people).map((p) => [p.name, p])).values()];
 	const reachOut = translator.t('reach-out');
+	const panelLabel = translator.t('panel-label');
 
 	const panel = (
 		<CommunityPanel
 			heading={data.headline}
 			headingEmphasis={data.headlineEmphasis}
 			intro={intro}
-			maintainers={
+			contributors={
 				data.maintainers.length > 0
 					? {
 							roles: data.maintainers,
 							showMoreLabel: translator.t('show-all-contributors'),
 							showLessLabel: translator.t('show-fewer-contributors'),
-							mistake:
+							feedback:
 								data.mistakeText && data.contactEmail
 									? {
 											text: data.mistakeText,
@@ -63,7 +68,7 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 						}
 					: undefined
 			}
-			worlds={
+			groups={
 				data.worldsTitle
 					? {
 							title: data.worldsTitle,
@@ -94,8 +99,8 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 						}
 					: undefined
 			}
-			waysIn={data.waysInTitle ? { title: data.waysInTitle, items: data.waysIn, cta: data.cta } : undefined}
-			reading={
+			options={data.waysInTitle ? { title: data.waysInTitle, items: data.waysIn, cta: data.cta } : undefined}
+			links={
 				data.readingTitle
 					? {
 							title: data.readingTitle,
@@ -113,10 +118,12 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 
 	return (
 		<CommunityBackstageTrigger
-			items={tickerItems.length > 0 ? tickerItems : [translator.t('panel-label')]}
+			items={tickerItems.length > 0 ? tickerItems : [panelLabel]}
 			label={translator.t('ticker-label')}
 			people={maintainerPeople.slice(0, TICKER_PEOPLE_LIMIT)}
 			panel={panel}
+			panelLabel={panelLabel}
+			closeLabel={translator.t('close')}
 		/>
 	);
 };
