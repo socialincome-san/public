@@ -1,28 +1,28 @@
 name: Release
 
-# Pushes main to production. A push made by a workflow doesn't trigger
-# production-deployment.yml, so the Firebase rules are deployed here.
+# Publishing a GitHub release pushes its tagged commit to production. The
+# push uses the CI app token, so it triggers production-deployment.yml
+# (Firebase rules) like any other push.
 
 on:
-  workflow_dispatch:
+  release:
+    types: [published]
 
 jobs:
   release:
-    name: Push main to production
+    name: Push release to production
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
+        with:
+          client-id: ${{ vars.CI_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: main
+          ref: ${{ github.event.release.tag_name }}
+          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 0
+      - name: Require the tag to be on main
+        run: git merge-base --is-ancestor HEAD origin/main
       - run: git push origin HEAD:production
-
-  deploy-rules:
-    name: Deploy rules to social-income-prod Firebase Project
-    needs: release
-    uses: ./.github/workflows/deployment.yml
-    secrets: inherit
-    with:
-      component: rules
-      project: social-income-prod

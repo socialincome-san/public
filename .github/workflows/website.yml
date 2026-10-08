@@ -147,13 +147,23 @@ jobs:
       HOME: /root
       # Deterministic Storyblok fixtures for Playwright (no STORYBLOK_PREVIEW_TOKEN required).
       E2E_STORYBLOK_MOCK: '1'
-      # Fork PRs get a read-only GITHUB_TOKEN, so skip snapshot auto-commit like Renovate.
-      SKIP_SNAPSHOT_UPDATE: ${{ github.actor == 'renovate[bot]' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) }}
+      # Fork and Dependabot PRs can't read the CI app secret, so skip snapshot auto-commit like Renovate.
+      SKIP_SNAPSHOT_UPDATE: ${{ github.actor == 'renovate[bot]' || github.actor == 'dependabot[bot]' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) }}
 
     steps:
+      # Snapshot commits pushed with the CI app token trigger the checks again;
+      # pushes made with GITHUB_TOKEN don't, which left PRs waiting forever.
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
+        if: env.SKIP_SNAPSHOT_UPDATE != 'true'
+        with:
+          client-id: ${{ vars.CI_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          token: ${{ steps.app-token.outputs.token || github.token }}
           persist-credentials: true
 
       - name: Initialize repository
