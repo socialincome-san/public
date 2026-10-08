@@ -14,17 +14,9 @@ type Props = {
 	region: WebsiteRegion;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
-	withCommunity?: boolean;
 };
 
-export const StoryblokPreviewPage = async ({
-	storyPath,
-	lang,
-	region,
-	previewRoutePath,
-	searchParams,
-	withCommunity,
-}: Props) => {
+export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
 	return await StoryblokPreviewStory({
 		storyPath,
 		lang,
@@ -39,10 +31,8 @@ export const StoryblokPreviewPage = async ({
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async (story) => {
-			const communityResult = withCommunity
-				? await getCommunityPanelDataAction({ page: story.content, language: lang, region })
-				: null;
-			const community = communityResult?.success ? communityResult.data : null;
+			const communityResult = await getCommunityPanelDataAction({ page: story.content, language: lang, region });
+			const community = communityResult.success ? communityResult.data : null;
 
 			return (
 				<>
