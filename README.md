@@ -463,12 +463,12 @@ docker compose -f website/docker-compose.yml down --remove-orphans --volumes
 This removes the website Docker containers and named volumes, including local
 PostgreSQL data. Run `mise dev` and `npm run db:seed` again afterwards.
 
-### E2E Checks Look Stuck
+### E2E Screenshots Changed
 
-The Playwright CI job may update screenshots and commit them back into a PR.
-That creates a new commit. GitHub sometimes does not start a fresh workflow
-run for commits made by `github-actions`, so checks can appear stale even
-though the previous run passed. Ask a maintainer if this happens.
+The Playwright CI job updates changed screenshots and commits them back into
+the PR as the `socialincome-ci` GitHub App, which runs the checks again.
+Pull the branch before you push again. For Renovate, Dependabot and fork PRs
+the job only compares screenshots and fails if they changed.
 
 ## Useful Commands
 
