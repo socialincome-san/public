@@ -1,22 +1,17 @@
 import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { createWebsiteJournalArticleCanonicalUrl, generateMetaDataForArticle } from '@/lib/storyblok/storyblok-utils';
-import { getJournalArticle, getJournalArticlePageData } from '@/modules/journal/journal.service';
+import { getJournalArticle, getJournalArticlePageData } from '@/modules/journal/journal.cache';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { cache } from 'react';
-
-export const revalidate = 900;
 
 type JournalArticlePageProps = {
 	params: Promise<{ slug: string; lang: WebsiteLanguage; region: WebsiteRegion }>;
 };
 
-const getArticle = cache((lang: string, slug: string) => getJournalArticle(lang, slug));
-
 export const generateMetadata = async (props: JournalArticlePageProps) => {
 	const { slug, lang } = await props.params;
-	const articleResponse = await getArticle(lang, slug);
+	const articleResponse = await getJournalArticle(lang, slug);
 	if (!articleResponse.success) {
 		return {};
 	}

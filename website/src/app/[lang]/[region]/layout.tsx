@@ -9,6 +9,7 @@ import {
 	websiteRegions,
 	type WebsiteLanguage,
 } from '@/lib/i18n/utils';
+import { WebsiteRegionProvider } from '@/lib/i18n/website-currency';
 import { getMetadata } from '@/lib/utils/metadata';
 import { getCurrentSessions } from '@/modules/auth/session.service';
 import { notFound } from 'next/navigation';
@@ -46,10 +47,12 @@ const WebsiteShell = ({ lang, region, children }: PropsWithChildren<{ lang: Webs
 	const sessions = getCurrentSessions().then((result) => (result.success ? result.data : []));
 
 	return (
-		<CommunityBackstageProvider>
-			<WebsiteAppShell sessions={sessions} lang={lang} region={region} scope="website">
-				{children}
-			</WebsiteAppShell>
-		</CommunityBackstageProvider>
+		<WebsiteRegionProvider region={region}>
+			<CommunityBackstageProvider>
+				<WebsiteAppShell sessions={sessions} lang={lang} region={region} scope="website">
+					{children}
+				</WebsiteAppShell>
+			</CommunityBackstageProvider>
+		</WebsiteRegionProvider>
 	);
 };

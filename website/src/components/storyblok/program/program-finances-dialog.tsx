@@ -12,7 +12,7 @@ import { type ReactNode, useEffect, useState } from 'react';
 type Props = {
 	dialogTitle: string;
 	viewBreakdownLabel: string;
-	manageLabel: string;
+	manageLabel: ReactNode;
 	manageHref: string;
 	payoutForecastInfoTooltip: string;
 	financesCard: ReactNode;

@@ -14,13 +14,6 @@ import { verifyStoryblokPreviewToken } from '@/lib/storyblok/preview/preview-tok
 import type { ISbStoryData } from '@storyblok/js';
 import { revalidatePath } from 'next/cache';
 import {
-	storyblokLanguageSchema,
-	storyblokPreviewUpdateSchema,
-	storyblokSlugInputSchema,
-	storyblokStoryInputSchema,
-	storyblokStringListInputSchema,
-} from './storyblok-content.schemas';
-import {
 	getAllPersons,
 	getCampaignBySlug,
 	getCampaigns,
@@ -36,7 +29,14 @@ import {
 	getPrograms,
 	getStoryTitle,
 	getStoryWithFallback,
-} from './storyblok-content.service';
+} from './storyblok-content.cache';
+import {
+	storyblokLanguageSchema,
+	storyblokPreviewUpdateSchema,
+	storyblokSlugInputSchema,
+	storyblokStoryInputSchema,
+	storyblokStringListInputSchema,
+} from './storyblok-content.schemas';
 import type { StoryTitleData } from './storyblok-content.types';
 
 export const getStoryWithFallbackAction = async <T>(input: unknown): Promise<Result<T>> => {

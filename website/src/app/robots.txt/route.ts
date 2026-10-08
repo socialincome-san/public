@@ -1,7 +1,5 @@
 import { websiteRegions } from '@/lib/i18n/utils';
 
-export const revalidate = 86400;
-
 const SITE_URL = 'https://socialincome.org';
 
 const disallow = [

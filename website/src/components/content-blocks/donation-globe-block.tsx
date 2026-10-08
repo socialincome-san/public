@@ -9,20 +9,6 @@ import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/b
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { storyblokEditable } from '@storyblok/react';
 import { getTranslations } from 'next-intl/server';
-import { unstable_cache } from 'next/cache';
-
-const getCachedCommunityStats = unstable_cache(
-	async () => {
-		const result = await getContributorCommunityStatsAction();
-		if (!result.success) {
-			throw new Error(result.error);
-		}
-
-		return result.data;
-	},
-	['donation-globe-community-stats'],
-	{ revalidate: 300 },
-);
 
 type Props = {
 	blok: DonationGlobe;
@@ -30,16 +16,13 @@ type Props = {
 };
 
 export const DonationGlobeBlock = async ({ blok, lang }: Props) => {
-	const cutoff = new Date();
-	cutoff.setUTCDate(cutoff.getUTCDate() - 14);
-
-	const [communityStats, contributionsResult, t] = await Promise.all([
-		getCachedCommunityStats().catch(() => null),
-		getRecentSuccessfulContributionsAction(cutoff),
+	const [communityStatsResult, contributionsResult, t] = await Promise.all([
+		getContributorCommunityStatsAction(),
+		getRecentSuccessfulContributionsAction(14),
 		getTranslations('website-common'),
 	]);
 
-	const supporterCount = communityStats?.supporterCount ?? null;
+	const supporterCount = communityStatsResult.success ? communityStatsResult.data.supporterCount : null;
 	const contributions = contributionsResult.success ? contributionsResult.data : [];
 
 	const locale = getSafeNumberFormatLocale(lang);

@@ -2,8 +2,8 @@
 
 import { resultFail, type Result } from '@/lib/result';
 import { draftMode } from 'next/headers';
+import { getCommunityPanelData } from './community.cache';
 import { communityPanelInputSchema } from './community.schemas';
-import { getCommunityPanelData } from './community.service';
 import type { CommunityPanelData } from './community.types';
 
 // Only the Storyblok preview needs this, so it is closed to visitors without the draft mode cookie

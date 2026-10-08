@@ -9,12 +9,13 @@ import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-comp
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
+import { now } from '@/lib/utils/now';
 import { START_CHARACTER_REGEX, UNDERSCORE_REGEX } from '@/lib/utils/regex';
 import { findContributorById, getEditableContributorOptions } from '@/modules/contributors/contributor.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
-import { getCampaigns } from '@/modules/storyblok-content/storyblok-content.service';
+import { getCampaigns } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
-import { endOfYear, startOfYear } from 'date-fns';
+import { endOfYear, startOfYear, subDays } from 'date-fns';
 import { canListContributions, canReadContribution, canWriteContribution } from './contribution.permissions';
 import * as contributionRepository from './contribution.repository';
 import {
@@ -369,9 +370,9 @@ export const getPaginatedYourContributionsTableView = async (
 	}
 };
 
-export const getRecentSuccessfulContributions = async (cutoff: Date): Promise<Result<GlobeContribution[]>> => {
+export const getRecentSuccessfulContributions = async (days: number): Promise<Result<GlobeContribution[]>> => {
 	try {
-		const rows = await contributionRepository.findRecentSuccessfulContributions(cutoff);
+		const rows = await contributionRepository.findRecentSuccessfulContributions(subDays(now(), days));
 		let skipped = 0;
 		const contributions: GlobeContribution[] = [];
 

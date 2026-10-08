@@ -12,7 +12,7 @@ import {
 	getArticleTypeLabel,
 	getPersonDisplayName,
 } from '@/lib/storyblok/storyblok-utils';
-import * as storyblokContent from '@/modules/storyblok-content/storyblok-content.service';
+import * as storyblokContent from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import type {
 	JournalArticle,

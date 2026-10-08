@@ -1,12 +1,10 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { LocalPartnerDetail } from '@/components/storyblok/local-partner/local-partner-detail';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getCommunityPanelData } from '@/modules/community/community.service';
-import { getLocalPartnerDashboardStats } from '@/modules/local-partners/local-partner-public.service';
-import { getLocalPartnerBySlug } from '@/modules/storyblok-content/storyblok-content.service';
+import { getCommunityPanelData } from '@/modules/community/community.cache';
+import { getLocalPartnerDashboardStats } from '@/modules/local-partners/local-partner.cache';
+import { getLocalPartnerBySlug } from '@/modules/storyblok-content/storyblok-content.cache';
 import { notFound } from 'next/navigation';
-
-export const revalidate = 900;
 
 export default async function LocalPartnerPage({ params }: DefaultLayoutPropsWithSlug) {
 	const { slug, lang, region } = await params;

@@ -10,6 +10,7 @@ import { type SiteMenuEntry } from '@socialincome/design-system/navigation/site-
 import { SiteMenuMobile } from '@socialincome/design-system/navigation/site-header/site-menu-mobile';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
+import { Fragment, Suspense, type ReactNode } from 'react';
 
 type Props = {
 	sessions: Promise<Session[]>;
@@ -19,14 +20,13 @@ type Props = {
 	region: string;
 };
 
+const KeyedByPathname = ({ children }: { children: ReactNode }) => <Fragment key={usePathname()}>{children}</Fragment>;
+
 export const MenuMobile = ({ sessions, scope, menuEntries, lang, region }: Props) => {
 	const t = useTranslations('website-common');
 	const tDonate = useTranslations('website-donate');
-	const pathname = usePathname();
-
-	return (
+	const menu = (
 		<SiteMenuMobile
-			key={pathname}
 			entries={menuEntries}
 			homeHref={`/${lang}/${region}`}
 			labels={{
@@ -48,5 +48,13 @@ export const MenuMobile = ({ sessions, scope, menuEntries, lang, region }: Props
 				</>
 			}
 		/>
+	);
+
+	// Remounts the menu on navigation so it closes. The pathname is unknown while prerendering dynamic routes, so the
+	// static shell renders the menu without the key.
+	return (
+		<Suspense fallback={menu}>
+			<KeyedByPathname>{menu}</KeyedByPathname>
+		</Suspense>
 	);
 };

@@ -33,6 +33,9 @@ Module files (`src/modules/recipients` is the reference):
   `redirect`.
 - `*.service.ts`: use case, business rules and authorization. Never
   throws, never uses `next/cache` or `next/navigation`.
+- `*.cache.ts`: `'use cache'` wrappers around the module's public,
+  session-free service reads, each with `cacheLife` and `cacheTag`.
+  Callers that need cached data import these instead of the service.
 - `*.repository.ts`: the only Prisma access. Exports start with
   `find|create|update|delete|remove|count|group`, use `select` (never
   `include`), return raw data.
@@ -46,20 +49,22 @@ Prisma, modules, app, components or `next/*` APIs.
 
 Dependency direction:
 
-- app → services, actions, `src/server`
+- app → services, caches, actions, `src/server`
 - components → actions, `*.types`, type-only `*.schemas`
-- actions → services
-- services → own repository and permissions, other modules' services,
-  integrations
-- Across modules: only `*.service`, or type-only `*.types`/`*.schemas`
+- actions → services, caches
+- caches → own service
+- services → own repository and permissions, other modules' services and
+  caches, integrations
+- Across modules: only `*.service`/`*.cache`, or type-only
+  `*.types`/`*.schemas`
 
-Services, actions and async integration exports return `Result<T>` from
-`src/lib/result.ts`: `resultOk(data)` or `resultFail('Fixed message.')`.
-Never put `error.message` or interpolated text in `resultFail`; log
-details with `console.error`. Clients unwrap with `handleResult`
-(`src/lib/result-client.ts`). Route handlers return generic JSON errors
-and call `sendSlackAlert` for production failures that must not stay
-silent.
+Services, caches, actions and async integration exports return
+`Result<T>` from `src/lib/result.ts`: `resultOk(data)` or
+`resultFail('Fixed message.')`. Never put `error.message` or
+interpolated text in `resultFail`; log details with `console.error`.
+Clients unwrap with `handleResult` (`src/lib/result-client.ts`). Route
+handlers return generic JSON errors and call `sendSlackAlert` for
+production failures that must not stay silent.
 
 In modules and integrations: arrow functions, named exports, no classes,
 no `as` (except `as const`), no `!`. All paths under `src` are

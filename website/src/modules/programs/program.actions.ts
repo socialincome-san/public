@@ -17,11 +17,17 @@ import type {
 	PublicProgramTargetFocus,
 } from '@/modules/programs/program.types';
 import { revalidatePath } from 'next/cache';
+import { calculateProgramBudget } from './program-stats.service';
 import {
-	calculateProgramBudget,
 	getProgramDashboardStats,
+	getProgramIdByPortalSlug,
+	getPublicPreviewProgramBySlug,
+	getPublicProgramBySlug,
+	getPublicProgramFilterDataByPortalSlugs,
+	getPublicProgramStatsById,
+	getPublicProgramStatsByProgramPortalSlugs,
 	resolveProgramFinancesDisplayAmounts,
-} from './program-stats.service';
+} from './program.cache';
 import {
 	programBudgetCalculationSchema,
 	programCreateSchema,
@@ -35,16 +41,10 @@ import {
 import {
 	createProgram,
 	deleteProgram,
-	getProgramIdByPortalSlug,
 	getProgramOrganizationOptions,
 	getProgramSettings,
 	getProgramSlugById,
 	getProgramWallets,
-	getPublicPreviewProgramBySlug,
-	getPublicProgramBySlug,
-	getPublicProgramFilterDataByPortalSlugs,
-	getPublicProgramStatsById,
-	getPublicProgramStatsByProgramPortalSlugs,
 	getPublicTargetFocusesByProgramId,
 	updateProgramSettings,
 } from './program.service';

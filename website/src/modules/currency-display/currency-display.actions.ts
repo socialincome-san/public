@@ -2,8 +2,8 @@
 
 import { resultFail, type Result } from '@/lib/result';
 import type { DisplayAmountsByCurrency } from '@/modules/currency-display/currency-display.types';
+import { resolveChfAmounts, resolveWalletPayoutDisplays } from './currency-display.cache';
 import { chfAmountsDisplayInputSchema, walletPayoutDisplayInputsSchema } from './currency-display.schemas';
-import { resolveChfAmounts, resolveWalletPayoutDisplays } from './currency-display.service';
 
 export const resolveChfAmountsAction = async (input: unknown): Promise<Result<DisplayAmountsByCurrency>> => {
 	const parsed = chfAmountsDisplayInputSchema.safeParse(input);

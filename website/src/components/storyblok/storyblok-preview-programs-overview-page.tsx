@@ -34,7 +34,7 @@ export const StoryblokPreviewProgramsOverviewPage = async ({
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: (overview) => (
-			<ProgramsOverviewPage overview={overview} lang={lang} region={region} searchParams={searchParams} />
+			<ProgramsOverviewPage overview={overview} lang={lang} region={region} searchParams={Promise.resolve(searchParams)} />
 		),
 	});
 };

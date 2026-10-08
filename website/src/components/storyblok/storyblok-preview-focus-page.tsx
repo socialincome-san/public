@@ -40,7 +40,7 @@ export const StoryblokPreviewFocusPage = async ({
 					focus={focus}
 					lang={lang}
 					region={region}
-					searchParams={searchParams}
+					searchParams={Promise.resolve(searchParams)}
 					community={communityResult.success ? communityResult.data : null}
 				/>
 			);

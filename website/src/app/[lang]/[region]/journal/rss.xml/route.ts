@@ -1,8 +1,6 @@
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import { buildJournalRssFeed } from '@/lib/storyblok/journal-rss';
-import { getPublishedJournalArticles } from '@/modules/journal/journal.service';
-
-export const revalidate = 900;
+import { getPublishedJournalArticles } from '@/modules/journal/journal.cache';
 
 type JournalRssRouteContext = {
 	params: Promise<{ lang: string; region: string }>;

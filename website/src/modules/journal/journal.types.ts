@@ -66,3 +66,5 @@ export type JournalPersonPageData = {
 	breadcrumbs: JournalBreadcrumbLink[];
 	roleLabels: Record<string, string>;
 };
+
+export const JOURNAL_CACHE_TAG = 'journal';

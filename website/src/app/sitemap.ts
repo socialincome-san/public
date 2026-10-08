@@ -12,11 +12,9 @@ import {
 	isRoutableWebsiteStoryblokSlug,
 	WEBSITE_JOURNAL_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
-import { getCampaigns, getPublishedPageLinks } from '@/modules/storyblok-content/storyblok-content.service';
+import { getCampaigns, getPublishedPageLinks } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { StoryblokPublishedLink } from '@/modules/storyblok-content/storyblok-content.types';
 import type { MetadataRoute } from 'next';
-
-export const revalidate = 86400;
 
 const SITE_URL = 'https://socialincome.org';
 

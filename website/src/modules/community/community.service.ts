@@ -16,7 +16,7 @@ import {
 	getArticlesByUuids,
 	getCommunityGlobals,
 	getPrimaryRoleLabels,
-} from '@/modules/storyblok-content/storyblok-content.service';
+} from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import type { CommunityPage, StoryReference } from './community.schemas';
 import type { CommunityPanelData, CommunityPerson } from './community.types';

@@ -9,19 +9,14 @@ import type {
 	ContributorSession,
 } from '@/modules/contributors/contributor.types';
 import { revalidatePath } from 'next/cache';
+import { getCommunityStats } from './contributor.cache';
 import {
 	contributorCreateSchema,
 	contributorIdSchema,
 	contributorSelfUpdateSchema,
 	contributorUpdateSchema,
 } from './contributor.schemas';
-import {
-	createContributor,
-	getCommunityStats,
-	getContributor,
-	updateContributor,
-	updateContributorSelf,
-} from './contributor.service';
+import { createContributor, getContributor, updateContributor, updateContributorSelf } from './contributor.service';
 
 export const createContributorAction = async (input: unknown): Promise<Result<ContributorRecord>> => {
 	const sessionResult = await getSessionByType('user');

@@ -7,19 +7,28 @@ import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblo
 import { SiteFooter, type SiteFooterSupportedBy } from '@socialincome/design-system/navigation/site-footer/site-footer';
 import { ISbStoryData } from '@storyblok/js';
 import { getTranslations } from 'next-intl/server';
+import { cacheLife } from 'next/cache';
 
 type Props = {
 	lang: WebsiteLanguage;
 	region: string;
 };
 
+const getCurrentYear = async () => {
+	'use cache';
+	cacheLife('days');
+
+	return Promise.resolve(now().getFullYear());
+};
+
 export const Footer = async ({ lang, region }: Props) => {
-	const [t, result] = await Promise.all([
+	const [t, result, currentYear] = await Promise.all([
 		getTranslations('website-common'),
 		getStoryWithFallbackAction<ISbStoryData<Layout>>({
 			storyPath: STORYBLOK_LAYOUT_PATH,
 			language: lang,
 		}),
+		getCurrentYear(),
 	]);
 	const layoutContent = result.success ? result.data.content : undefined;
 	const supportedByLogo = layoutContent?.supportedByLogo;
@@ -55,7 +64,7 @@ export const Footer = async ({ lang, region }: Props) => {
 					icon: item.icon === '' ? undefined : item.icon,
 				})),
 			}))}
-			copyright={layoutContent?.copyrightNotice?.replace('%YEAR%', now().getFullYear().toString())}
+			copyright={layoutContent?.copyrightNotice?.replace('%YEAR%', currentYear.toString())}
 			supportedBy={supportedBy}
 		/>
 	);

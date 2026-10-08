@@ -1,4 +1,4 @@
-import { getSurveyImpactMeasurements } from '@/modules/surveys/survey.service';
+import { getSurveyImpactMeasurements } from '@/modules/surveys/survey.cache';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { followUpConfigs, highlightedQuestionOrder, questionTypeLabelKeys } from './config';
 import { toImpactServiceFilters } from './filters.server';

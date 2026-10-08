@@ -2,13 +2,13 @@
 
 import { resultFail, type Result } from '@/lib/result';
 import type { TransparencyCountriesData, TransparencySummaryData } from '@/modules/transparency/transparency.types';
-import { transparencyCountriesInputSchema } from './transparency.schemas';
 import {
 	getContributionsByCountryData,
 	getRunwayMonths,
 	getTotalContributionsChf,
 	getTransparencySummary,
-} from './transparency.service';
+} from './transparency.cache';
+import { transparencyCountriesInputSchema } from './transparency.schemas';
 
 export const getTotalContributionsChfAction = async (): Promise<Result<number>> => getTotalContributionsChf();
 

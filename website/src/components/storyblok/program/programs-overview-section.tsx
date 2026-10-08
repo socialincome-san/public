@@ -31,7 +31,7 @@ import {
 type Props = {
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
-	searchParams?: AnySearchParams;
+	searchParams: Promise<AnySearchParams>;
 	fixedFocusSlug?: string;
 };
 
@@ -63,9 +63,10 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 	const countryOptions = getCountryFilterOptions(focusScopedFilterData);
 	const focusTitleBySlug = getFocusTitleBySlug(storyblokFocuses);
 	const focusFilterOptions = hasFixedFocus ? [] : getFocusFilterOptions(filterDataByPortalSlug, focusTitleBySlug);
-	const searchQuery = getSearchQuery(searchParams);
-	const countryQuery = getCountryQuery(searchParams);
-	const focusQuery = getFocusQuery(searchParams);
+	const resolvedSearchParams = await searchParams;
+	const searchQuery = getSearchQuery(resolvedSearchParams);
+	const countryQuery = getCountryQuery(resolvedSearchParams);
+	const focusQuery = getFocusQuery(resolvedSearchParams);
 	const selectedCountryIsoCode = countryOptions.some((option) => option.value === countryQuery) ? countryQuery : undefined;
 	const selectedFocusId = hasFixedFocus
 		? fixedFocusId

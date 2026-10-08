@@ -6,7 +6,6 @@ import { CreateCampaignButton } from '@/components/campaign/create-campaign-butt
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { PublicCampaignCard, PublicCampaignStatsMap } from '@/modules/campaigns/campaign.types';
 import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
-import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
 import { getTranslations } from 'next-intl/server';
 import type { CampaignStateFilter } from './campaigns-overview-query';
 
@@ -15,8 +14,6 @@ type Props = {
 	statsById: PublicCampaignStatsMap;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
-	title?: string;
-	text?: string;
 	showStateFilter?: boolean;
 	selectedState?: CampaignStateFilter;
 };
@@ -26,8 +23,6 @@ export const CampaignsOverview = async ({
 	statsById,
 	lang,
 	region,
-	title,
-	text,
 	showStateFilter = false,
 	selectedState = 'active',
 }: Props) => {
@@ -47,7 +42,6 @@ export const CampaignsOverview = async ({
 
 	return (
 		<div className="flex w-full flex-col gap-8">
-			<PageIntro title={title} description={text} />
 			{showStateFilter ? (
 				<div className="flex flex-wrap items-center justify-between gap-4">
 					<CampaignsOverviewFilters

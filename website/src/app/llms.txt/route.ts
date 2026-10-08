@@ -1,7 +1,5 @@
 import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 
-export const revalidate = 86400;
-
 const SITE_URL = 'https://socialincome.org';
 
 const pageUrl = (pathTail = '') => `${SITE_URL}/${defaultLanguage}/${defaultRegion}${pathTail ? `/${pathTail}` : ''}`;

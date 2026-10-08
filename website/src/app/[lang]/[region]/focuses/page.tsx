@@ -3,15 +3,12 @@ import { FocusesOverviewPage } from '@/components/storyblok/focus/focuses-overvi
 import type { FocusOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getFocusesOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
-import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.service';
+import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
-export const revalidate = 900;
-
 export default async function FocusesOverviewRoute({ params, searchParams }: DefaultPageProps) {
 	const { lang, region } = await params;
-	const resolvedSearchParams = await searchParams;
 	const overviewResult = await getStoryWithFallback<ISbStoryData<FocusOverview>>(getFocusesOverviewStoryPath(), lang);
 
 	if (!overviewResult.success) {
@@ -23,7 +20,7 @@ export default async function FocusesOverviewRoute({ params, searchParams }: Def
 			overview={overviewResult.data}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
-			searchParams={resolvedSearchParams}
+			searchParams={searchParams}
 		/>
 	);
 }

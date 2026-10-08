@@ -22,3 +22,5 @@ export type StoryblokPublishedLink = {
 		translated_slug: string;
 	}[];
 };
+
+export const STORYBLOK_CACHE_TAG = 'storyblok';

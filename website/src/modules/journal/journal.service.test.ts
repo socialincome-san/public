@@ -19,7 +19,7 @@ const mockGetRelativeArticles = jest.fn();
 const mockGetLatestJournalArticles = jest.fn();
 const mockGetArticlesByUuids = jest.fn();
 
-jest.mock('@/modules/storyblok-content/storyblok-content.service', () => ({
+jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getOverviewAuthors: mockGetOverviewAuthors,
 	getOverviewArticleTypes: mockGetOverviewArticleTypes,
 	getPrimaryRoleLabels: mockGetPrimaryRoleLabels,

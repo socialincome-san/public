@@ -20,3 +20,5 @@ export type LatestReserves = {
 	accounts: BankAccountLatestReserve[];
 	total: number;
 };
+
+export const RESERVE_CACHE_TAG = 'reserves';

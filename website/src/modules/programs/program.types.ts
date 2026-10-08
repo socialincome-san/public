@@ -215,3 +215,5 @@ export type PublicSubmissionProgramOption = {
 	imageUrl: string | null;
 	tags: string[];
 };
+
+export const PROGRAM_CACHE_TAG = 'programs';

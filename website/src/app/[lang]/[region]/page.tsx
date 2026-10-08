@@ -4,16 +4,13 @@ import PageContentType from '@/components/content-types/page';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getHomeStoryPath } from '@/lib/storyblok/storyblok-paths';
-import { getCommunityPanelData } from '@/modules/community/community.service';
-import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.service';
+import { getCommunityPanelData } from '@/modules/community/community.cache';
+import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
 
-export const revalidate = 900;
-
 export default async function HomePage({ params, searchParams }: DefaultPageProps) {
 	const { lang, region } = await params;
-	const resolvedSearchParams = await searchParams;
 
 	const storyResult = await getStoryWithFallback<ISbStoryData<Page>>(getHomeStoryPath(), lang);
 
@@ -35,7 +32,7 @@ export default async function HomePage({ params, searchParams }: DefaultPageProp
 			blok={story.content}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
-			searchParams={resolvedSearchParams}
+			searchParams={searchParams}
 			richtextButtonHeaderAction="createProgram"
 			afterHero={community ? <CommunityRow data={community} /> : null}
 		/>

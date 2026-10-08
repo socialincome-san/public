@@ -1,10 +1,8 @@
 import { JournalOverview } from '@/components/storyblok/journal/journal-overview';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getJournalOverviewPageData } from '@/modules/journal/journal.service';
+import { getJournalOverviewPageData } from '@/modules/journal/journal.cache';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-
-export const revalidate = 900;
 
 type JournalOverviewPageProps = {
 	params: Promise<{ lang: WebsiteLanguage; region: WebsiteRegion }>;

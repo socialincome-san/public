@@ -3,7 +3,7 @@ const mockGetAllPersons = jest.fn();
 const mockGetPrimaryRoleLabels = jest.fn();
 const mockGetArticlesByUuids = jest.fn();
 
-jest.mock('@/modules/storyblok-content/storyblok-content.service', () => ({
+jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getCommunityGlobals: mockGetCommunityGlobals,
 	getAllPersons: mockGetAllPersons,
 	getPrimaryRoleLabels: mockGetPrimaryRoleLabels,

@@ -1,6 +1,6 @@
 const mockGetPublishedJournalArticles = jest.fn();
 
-jest.mock('@/modules/journal/journal.service', () => ({
+jest.mock('@/modules/journal/journal.cache', () => ({
 	getPublishedJournalArticles: mockGetPublishedJournalArticles,
 }));
 

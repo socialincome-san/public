@@ -3,10 +3,8 @@ import { CampaignDetail } from '@/components/campaign/campaign-detail';
 import { loadCampaignDetailData } from '@/components/storyblok/campaign/load-campaign-detail-data';
 import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { getCampaignFallbackMetadata, getCampaignPageMetadata } from '@/modules/campaigns/campaign-public-website.service';
-import { getCommunityPanelData } from '@/modules/community/community.service';
+import { getCommunityPanelData } from '@/modules/community/community.cache';
 import { notFound } from 'next/navigation';
-
-export const revalidate = 900;
 
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { slug, lang } = await params;

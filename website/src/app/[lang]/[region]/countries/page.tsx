@@ -3,11 +3,9 @@ import { CountriesOverviewPage } from '@/components/storyblok/country/countries-
 import type { CountryOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getCountriesOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
-import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.service';
+import { getStoryWithFallback } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
-
-export const revalidate = 900;
 
 export default async function CountriesOverviewRoute({ params }: DefaultPageProps) {
 	const { lang, region } = await params;

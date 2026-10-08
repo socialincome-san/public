@@ -1,3 +1,4 @@
+import type { AnySearchParams } from '@/app/page-props';
 import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
@@ -35,7 +36,6 @@ import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsletter-signup';
 import type { Page, TwoColumn } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { ParsedUrlQueryInput } from 'querystring';
 import { Fragment, type ReactNode } from 'react';
 
 type PageBlock = Page['content'][number];
@@ -46,7 +46,7 @@ type PageContentTypeProps = {
 	blok: Page;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
-	searchParams?: ParsedUrlQueryInput;
+	searchParams?: Promise<AnySearchParams>;
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction;
 	afterHero?: ReactNode;
 };
@@ -55,7 +55,7 @@ const renderPageBlock = (
 	block: PageBlock | NestedPageBlock,
 	lang: WebsiteLanguage,
 	region: WebsiteRegion,
-	searchParams?: ParsedUrlQueryInput,
+	searchParams?: Promise<AnySearchParams>,
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction,
 ): ReactNode => {
 	switch (block.component) {

@@ -20,7 +20,7 @@ import {
 import Cookies from 'js-cookie';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 const SWISS_COUNTRY_CODE: CountryCode = 'CH';
 const surveyLanguages: WebsiteLanguage[] = ['en', 'kri'];
@@ -44,10 +44,9 @@ type Props = {
 	variant?: 'ghost' | 'outline';
 };
 
-export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Props) => {
+const Switcher = ({ lang, region, variant = 'ghost', isSurveyPage }: Props & { isSurveyPage: boolean }) => {
 	const [open, setOpen] = useState(false);
 	const router = useRouter();
-	const isSurveyPage = useIsPage('survey');
 	const t = useTranslations('website-common');
 	const currency = useWebsiteCurrency();
 
@@ -121,3 +120,12 @@ export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Prop
 		/>
 	);
 };
+
+const SwitcherForCurrentPage = (props: Props) => <Switcher {...props} isSurveyPage={useIsPage('survey')} />;
+
+// The pathname is unknown while prerendering dynamic routes, so the static shell assumes a non-survey page.
+export const LocaleCurrencySwitcher = (props: Props) => (
+	<Suspense fallback={<Switcher {...props} isSurveyPage={false} />}>
+		<SwitcherForCurrentPage {...props} />
+	</Suspense>
+);
