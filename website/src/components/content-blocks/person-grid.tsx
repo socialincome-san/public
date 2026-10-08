@@ -2,7 +2,6 @@ import { getStoryUuids } from '@/components/content-blocks/overview-grid.utils';
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import { PersonGridInteractive } from '@/components/storyblok/shared/person-grid-interactive';
 import type { Person, PersonGrid } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { personHasRole, resolveStoryblokLink, toStringArray } from '@/lib/storyblok/storyblok-utils';
 import {
@@ -50,13 +49,12 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 	const showFilterPills = blok.showFilterPills ?? false;
 	const isInteractive = showSearch || showSort || showFilterPills;
 
-	const [personsResult, translator, roleLabelsResult] = await Promise.all([
+	const [personsResult, roleLabelsResult] = await Promise.all([
 		manualUuids.length
 			? getPersonsByUuidsAction({ language: lang, values: manualUuids })
 			: countryOfficeCodes.length
 				? getPersonsByCountryOfficeAction({ language: lang, values: countryOfficeCodes })
 				: getAllPersonsAction(lang),
-		isInteractive || showVolunteerDuration ? Translator.getInstance({ language: lang, namespaces: 'website-common' }) : null,
 		getPrimaryRoleLabelsAction(lang),
 	]);
 	const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
@@ -78,64 +76,30 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 	const button = blok.button?.[0];
 	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, region) : null;
 
-	const volunteerDurationTranslations =
-		showVolunteerDuration && translator
-			? {
-					startedToday: translator.t('person-grid.duration-started-today'),
-					daySingular: translator.t('person-grid.duration-day-singular'),
-					dayPlural: translator.t('person-grid.duration-day-plural'),
-					monthSingular: translator.t('person-grid.duration-month-singular'),
-					monthPlural: translator.t('person-grid.duration-month-plural'),
-					yearSingular: translator.t('person-grid.duration-year-singular'),
-					yearPlural: translator.t('person-grid.duration-year-plural'),
-					monthAnniversarySingular: translator.t('person-grid.duration-month-anniversary-singular'),
-					monthAnniversaryPlural: translator.t('person-grid.duration-month-anniversary-plural'),
-					yearAnniversarySingular: translator.t('person-grid.duration-year-anniversary-singular'),
-					yearAnniversaryPlural: translator.t('person-grid.duration-year-anniversary-plural'),
-					since: translator.t('person-grid.duration-since'),
-				}
-			: undefined;
-
-	const content =
-		isInteractive && translator ? (
-			<PersonGridInteractive
-				persons={persons}
-				lang={lang}
-				region={region}
-				smallCards={smallCards}
-				linkToPersonPage={linkToPersonPage}
-				volunteerDurationTranslations={volunteerDurationTranslations}
-				roleLabels={roleLabels}
-				showSearch={showSearch}
-				showSort={showSort}
-				showFilterPills={showFilterPills}
-				translations={{
-					searchPlaceholder: translator.t('person-grid.search-placeholder'),
-					sortAriaLabel: translator.t('person-grid.sort-aria-label'),
-					sortAlphabetical: translator.t('person-grid.sort-alphabetical'),
-					sortStartDate: translator.t('person-grid.sort-start-date'),
-					filterAllRoles: translator.t('person-grid.filter-all-roles'),
-					filterAllStatuses: translator.t('person-grid.filter-all-statuses'),
-					filterAllCountries: translator.t('person-grid.filter-all-countries'),
-					filterMultipleSelected: translator.t('person-grid.filter-multiple-selected'),
-					filterSelectAll: translator.t('person-grid.filter-select-all'),
-					filterClearAll: translator.t('person-grid.filter-clear-all'),
-					statusActive: translator.t('person-grid.status-active'),
-					statusInactive: translator.t('person-grid.status-inactive'),
-					noResults: translator.t('person-grid.no-results'),
-				}}
-			/>
-		) : (
-			<PersonCardGrid
-				persons={persons}
-				lang={lang}
-				region={region}
-				smallCards={smallCards}
-				linkToPersonPage={linkToPersonPage}
-				volunteerDurationTranslations={volunteerDurationTranslations}
-				roleLabels={roleLabels}
-			/>
-		);
+	const content = isInteractive ? (
+		<PersonGridInteractive
+			persons={persons}
+			lang={lang}
+			region={region}
+			smallCards={smallCards}
+			linkToPersonPage={linkToPersonPage}
+			showVolunteerDuration={showVolunteerDuration}
+			roleLabels={roleLabels}
+			showSearch={showSearch}
+			showSort={showSort}
+			showFilterPills={showFilterPills}
+		/>
+	) : (
+		<PersonCardGrid
+			persons={persons}
+			lang={lang}
+			region={region}
+			smallCards={smallCards}
+			linkToPersonPage={linkToPersonPage}
+			showVolunteerDuration={showVolunteerDuration}
+			roleLabels={roleLabels}
+		/>
+	);
 
 	return (
 		<BlockWrapper

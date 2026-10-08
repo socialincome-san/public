@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { cn } from '@socialincome/design-system/cn';
 import { Switch } from '@socialincome/design-system/forms/switch/switch';
 import { InfoTooltip } from '@socialincome/design-system/overlays/info-tooltip/info-tooltip';
+import { useTranslations } from 'next-intl';
 import type { Cadence } from '../../utils/donation-amount';
 import { formatDonationCurrencyAmount } from '../../utils/donation-formatting';
 
@@ -28,7 +28,7 @@ export const CoverTransactionCostsToggle = ({
 	switchId = 'cover-transaction-costs',
 	tone = 'accent',
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 	const fee = formatDonationCurrencyAmount(currency, transactionCost);
 
 	return (

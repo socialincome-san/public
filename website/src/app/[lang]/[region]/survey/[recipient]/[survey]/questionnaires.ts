@@ -1,5 +1,5 @@
 import { SurveyQuestionnaire } from '@/generated/prisma/enums';
-import { TranslateFunction } from '@/lib/i18n/translator';
+import { type Messages } from '@/lib/i18n/messages';
 import {
 	achievementsAchievedPage,
 	debtHouseholdPage,
@@ -22,87 +22,93 @@ import {
 	spendingPage,
 	unexpectedExpensesCoveredPage,
 	welcomePage,
+	type SurveyTranslator,
 } from './questions';
 
-export const getQuestionnaire = (questionnaire: SurveyQuestionnaire, t: TranslateFunction, name: string) => {
+export const getQuestionnaire = (
+	questionnaire: SurveyQuestionnaire,
+	t: SurveyTranslator,
+	messages: Messages,
+	name: string,
+) => {
 	switch (questionnaire) {
 		case SurveyQuestionnaire.onboarding:
-			return onboardingQuestionnaire(t, name);
+			return onboardingQuestionnaire(t, messages, name);
 		case SurveyQuestionnaire.checkin:
-			return checkinQuestionnaire(t, name);
+			return checkinQuestionnaire(t, messages, name);
 		case SurveyQuestionnaire.offboarding:
-			return offboardingQuestionnaire(t, name);
+			return offboardingQuestionnaire(t, messages, name);
 		case SurveyQuestionnaire.offboarded_checkin:
-			return offboardingCheckinQuestionnaire(t, name);
+			return offboardingCheckinQuestionnaire(t, messages, name);
 	}
 
 	return [];
 };
 
-const onboardingQuestionnaire = (t: TranslateFunction, name: string) => [
+const onboardingQuestionnaire = (t: SurveyTranslator, messages: Messages, name: string) => [
 	welcomePage(t, name),
-	plannedAchievementsPage(t),
-	livingLocationPage(t),
-	maritalStatusPage(t),
-	dependentsPage(t),
-	schoolAttendancePage(t),
-	employmentStatusPage(t),
-	disabilityPage(t),
-	skippingMealsPage(t),
-	unexpectedExpensesCoveredPage(t),
-	savingsPage(t),
-	debtPersonalPage(t),
-	debtHouseholdPage(t),
-	otherSupportPage(t),
+	plannedAchievementsPage(t, messages),
+	livingLocationPage(t, messages),
+	maritalStatusPage(t, messages),
+	dependentsPage(t, messages),
+	schoolAttendancePage(t, messages),
+	employmentStatusPage(t, messages),
+	disabilityPage(t, messages),
+	skippingMealsPage(t, messages),
+	unexpectedExpensesCoveredPage(t, messages),
+	savingsPage(t, messages),
+	debtPersonalPage(t, messages),
+	debtHouseholdPage(t, messages),
+	otherSupportPage(t, messages),
 ];
 
-const checkinQuestionnaire = (t: TranslateFunction, name: string) => [
+const checkinQuestionnaire = (t: SurveyTranslator, messages: Messages, name: string) => [
 	welcomePage(t, name),
-	spendingPage(t),
-	plannedAchievementsRemainingPage(t),
-	livingLocationPage(t),
-	maritalStatusPage(t),
-	dependentsPage(t),
-	schoolAttendancePage(t),
-	employmentStatusPage(t),
-	disabilityPage(t),
-	skippingMealsPage(t),
-	unexpectedExpensesCoveredPage(t),
-	savingsPage(t),
-	debtPersonalPage(t),
-	debtHouseholdPage(t),
-	otherSupportPage(t),
+	spendingPage(t, messages),
+	plannedAchievementsRemainingPage(t, messages),
+	livingLocationPage(t, messages),
+	maritalStatusPage(t, messages),
+	dependentsPage(t, messages),
+	schoolAttendancePage(t, messages),
+	employmentStatusPage(t, messages),
+	disabilityPage(t, messages),
+	skippingMealsPage(t, messages),
+	unexpectedExpensesCoveredPage(t, messages),
+	savingsPage(t, messages),
+	debtPersonalPage(t, messages),
+	debtHouseholdPage(t, messages),
+	otherSupportPage(t, messages),
 ];
 
-const offboardingQuestionnaire = (t: TranslateFunction, name: string) => [
+const offboardingQuestionnaire = (t: SurveyTranslator, messages: Messages, name: string) => [
 	welcomePage(t, name),
-	impactFinancialPage(t),
-	impactLifePage(t),
-	achievementsAchievedPage(t),
-	happierPage(t),
-	longEnoughPage(t),
-	livingLocationPage(t),
-	maritalStatusPage(t),
-	dependentsPage(t),
-	schoolAttendancePage(t),
-	employmentStatusPage(t),
-	disabilityPage(t),
-	skippingMealsPage(t),
-	unexpectedExpensesCoveredPage(t),
-	savingsPage(t),
+	impactFinancialPage(t, messages),
+	impactLifePage(t, messages),
+	achievementsAchievedPage(t, messages),
+	happierPage(t, messages),
+	longEnoughPage(t, messages),
+	livingLocationPage(t, messages),
+	maritalStatusPage(t, messages),
+	dependentsPage(t, messages),
+	schoolAttendancePage(t, messages),
+	employmentStatusPage(t, messages),
+	disabilityPage(t, messages),
+	skippingMealsPage(t, messages),
+	unexpectedExpensesCoveredPage(t, messages),
+	savingsPage(t, messages),
 ];
 
-const offboardingCheckinQuestionnaire = (t: TranslateFunction, name: string) => [
+const offboardingCheckinQuestionnaire = (t: SurveyTranslator, messages: Messages, name: string) => [
 	welcomePage(t, name),
-	impactFinancialPage(t),
-	longEnoughPage(t),
-	livingLocationPage(t),
-	maritalStatusPage(t),
-	dependentsPage(t),
-	schoolAttendancePage(t),
-	employmentStatusPage(t),
-	disabilityPage(t),
-	skippingMealsPage(t),
-	unexpectedExpensesCoveredPage(t),
-	savingsPage(t),
+	impactFinancialPage(t, messages),
+	longEnoughPage(t, messages),
+	livingLocationPage(t, messages),
+	maritalStatusPage(t, messages),
+	dependentsPage(t, messages),
+	schoolAttendancePage(t, messages),
+	employmentStatusPage(t, messages),
+	disabilityPage(t, messages),
+	skippingMealsPage(t, messages),
+	unexpectedExpensesCoveredPage(t, messages),
+	savingsPage(t, messages),
 ];

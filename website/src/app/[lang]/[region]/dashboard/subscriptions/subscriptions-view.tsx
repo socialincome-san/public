@@ -1,8 +1,8 @@
-import { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { getDashboardView } from '@/modules/subscriptions/subscription.service';
 import { requireSession } from '@/server/session';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { ActiveSubscriptionsList } from './active-subscriptions-list';
 import { SubscriptionSummaryCards } from './subscription-summary-cards';
@@ -16,16 +16,16 @@ type Props = {
 
 export const SubscriptionsView = async ({ lang, region }: Props) => {
 	const contributor = await requireSession('contributor');
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
+	const t = await getTranslations('website-me');
 
 	const dashboardResult = await getDashboardView(contributor.id);
 	if (!dashboardResult.success) {
 		return (
 			<div className="border-destructive/30 text-destructive rounded-xl border p-6 text-sm" role="alert">
-				<p>{translator.t('subscriptions.load-error')}</p>
+				<p>{t('subscriptions.load-error')}</p>
 				<div className="pt-4">
 					<Button asChild variant="outline">
-						<a href={`/${lang}/${region}/dashboard/subscriptions`}>{translator.t('subscriptions.retry')}</a>
+						<a href={`/${lang}/${region}/dashboard/subscriptions`}>{t('subscriptions.retry')}</a>
 					</Button>
 				</div>
 			</div>
@@ -35,28 +35,25 @@ export const SubscriptionsView = async ({ lang, region }: Props) => {
 	const { activeSubscriptions, upcomingPayments, monthlyContribution, contributionSummary } = dashboardResult.data;
 
 	const labels = {
-		title: translator.t('sections.contributions.subscriptions'),
-		donateNow: translator.t('donate-now'),
-		monthlyContribution: translator.t('subscriptions.summary.monthly-contribution'),
-		totalContributions: translator.t('subscriptions.summary.total-contributions'),
-		noActiveSubscriptions: translator.t('subscriptions.summary.no-active-subscriptions'),
-		activeSubscriptionsCount: translator.t('subscriptions.summary.active-subscriptions-count'),
-		contributionsSince: translator.t('subscriptions.summary.contributions-since'),
-		noContributionsYet: translator.t('subscriptions.summary.no-contributions-yet'),
-		activeSubscriptions: translator.t('subscriptions.active-subscriptions'),
-		perMonth: translator.t('subscriptions.per-month'),
-		since: translator.t('subscriptions.since'),
-		wireTransfer: translator.t('contributions.sources.wire-transfer'),
-		cardFallback: translator.t('subscriptions.card-fallback'),
-		edit: translator.t('subscriptions.edit'),
-		viewQr: translator.t('subscriptions.view-qr'),
-		qrDialogTitle: translator.t('subscriptions.qr-dialog.title'),
-		qrUnavailable: translator.t('subscriptions.qr-dialog.unavailable'),
-		close: translator.t('subscriptions.qr-dialog.close'),
-		upcomingPayments: translator.t('subscriptions.upcoming-payments'),
-		scheduled: translator.t('subscriptions.scheduled'),
-		emptyDescription: translator.t('subscriptions.empty.description'),
-		emptyDescriptionNoContributions: translator.t('subscriptions.empty.description-no-contributions'),
+		title: t('sections.contributions.subscriptions'),
+		donateNow: t('donate-now'),
+		monthlyContribution: t('subscriptions.summary.monthly-contribution'),
+		totalContributions: t('subscriptions.summary.total-contributions'),
+		noActiveSubscriptions: t('subscriptions.summary.no-active-subscriptions'),
+		noContributionsYet: t('subscriptions.summary.no-contributions-yet'),
+		activeSubscriptions: t('subscriptions.active-subscriptions'),
+		perMonth: t('subscriptions.per-month'),
+		since: t('subscriptions.since'),
+		wireTransfer: t('contributions.sources.wire-transfer'),
+		cardFallback: t('subscriptions.card-fallback'),
+		edit: t('subscriptions.edit'),
+		viewQr: t('subscriptions.view-qr'),
+		qrDialogTitle: t('subscriptions.qr-dialog.title'),
+		qrUnavailable: t('subscriptions.qr-dialog.unavailable'),
+		close: t('subscriptions.qr-dialog.close'),
+		upcomingPayments: t('subscriptions.upcoming-payments'),
+		scheduled: t('subscriptions.scheduled'),
+		emptyDescriptionNoContributions: t('subscriptions.empty.description-no-contributions'),
 	};
 
 	return (

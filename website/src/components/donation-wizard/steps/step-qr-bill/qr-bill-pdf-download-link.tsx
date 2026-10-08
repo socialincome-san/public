@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { downloadQrBillPdfAction, downloadSubscriptionQrBillPdfAction } from '@/modules/qr-bills/qr-bill.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Download } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { forwardRef, useState, type ReactNode } from 'react';
 import toast from 'react-hot-toast';
 import { type DonationAmountContext } from '../../utils/donation-amount';
@@ -44,7 +44,7 @@ const triggerPdfDownload = (pdfBase64: string, filename: string) => {
 };
 
 export const QrBillPdfDownloadLink = forwardRef<HTMLButtonElement, QrBillPdfDownloadLinkProps>((props, ref) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 	const [downloading, setDownloading] = useState(false);
 	const disabled = props.disabled ?? false;
 

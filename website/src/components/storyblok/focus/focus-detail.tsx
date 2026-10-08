@@ -75,11 +75,7 @@ export const FocusDetail = async ({ focus, lang, region, searchParams, community
 
 	return (
 		<div className="py-8 pb-16">
-			<Breadcrumb
-				links={breadcrumbLinks}
-				layout="section"
-				aside={community ? <Community data={community} lang={lang} /> : null}
-			/>
+			<Breadcrumb links={breadcrumbLinks} layout="section" aside={community ? <Community data={community} /> : null} />
 			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 				<div className="pt-8">
 					<PageIntro title={title} description={text} />

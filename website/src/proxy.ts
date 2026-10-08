@@ -3,7 +3,6 @@ import {
 	findBestLocale,
 	getLanguageFromPathname,
 	VISITOR_COUNTRY_HEADER,
-	WEBSITE_LANGUAGE_HEADER,
 	WebsiteRegion,
 	websiteRegions,
 } from '@/lib/i18n/utils';
@@ -90,13 +89,7 @@ export const proxy = (request: NextRequest) => {
 		return response;
 	}
 
-	const requestHeaders = new Headers(request.headers);
-	const language = getLanguageFromPathname(request.nextUrl.pathname);
-	if (language) {
-		requestHeaders.set(WEBSITE_LANGUAGE_HEADER, language);
-	}
-
-	response = NextResponse.next({ request: { headers: requestHeaders } });
+	response = NextResponse.next();
 	response = countryMiddleware(request, response);
 	response = currencyMiddleware(request, response);
 

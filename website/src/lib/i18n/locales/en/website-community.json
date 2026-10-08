@@ -2,17 +2,14 @@
 	"panel-label": "The people behind this page",
 	"close": "Close",
 	"ticker-label": "Show the people behind this page",
-	"volunteers_one": "{{count}} volunteer",
-	"volunteers_other": "{{count}} volunteers",
-	"countries_one": "{{count}} country",
-	"countries_other": "{{count}} countries",
+	"volunteers": "{count, plural, one {{count} volunteer} other {{count} volunteers}}",
+	"countries": "{count, plural, one {{count} country} other {{count} countries}}",
 	"show-all-contributors": "Show all contributors",
 	"show-fewer-contributors": "Show fewer contributors",
-	"more-people_one": "+{{count}} person",
-	"more-people_other": "+{{count}} people",
+	"more-people": "{count, plural, one {+{count} person} other {+{count} people}}",
 	"show-less": "Show less",
 	"reach-out": "Reach out",
 	"reach-out-about-page": "Reach out about this page",
-	"reach-out-about-role": "Reach out to {{name}} about {{role}}",
-	"article-by": "Article by {{name}}"
+	"reach-out-about-role": "Reach out to {name} about {role}",
+	"article-by": "Article by {name}"
 }

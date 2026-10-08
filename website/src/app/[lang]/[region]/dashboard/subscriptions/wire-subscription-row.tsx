@@ -3,7 +3,6 @@
 import { QrBillPaymentCard } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-payment-card';
 import { QrBillPdfDownloadLink } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-pdf-download-link';
 import { type Currency } from '@/generated/prisma/client';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale, formatDateLocale, wholeCurrencyFormatOptions } from '@/lib/utils/string-utils';
 import { getSubscriptionQrBillDisplayAction } from '@/modules/qr-bills/qr-bill.actions';
@@ -18,6 +17,7 @@ import {
 	DialogTitle,
 } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useMachine } from '@xstate/react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { EditSubscriptionDialog } from './edit-subscription/edit-subscription-dialog';
@@ -50,7 +50,7 @@ type Props = {
 };
 
 export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
-	const { t: tWizard } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const tWizard = useTranslations('donation-wizard');
 	const router = useRouter();
 	const [state, send] = useMachine(editSubscriptionMachine);
 	const [isQrOpen, setIsQrOpen] = useState(false);
@@ -143,7 +143,6 @@ export const WireSubscriptionRow = ({ lang, subscription, labels }: Props) => {
 			</div>
 
 			<EditSubscriptionDialog
-				lang={lang}
 				state={state}
 				send={send}
 				onDismissAndRefresh={dismissEditAndRefresh}

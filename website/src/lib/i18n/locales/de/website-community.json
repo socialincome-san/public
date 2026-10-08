@@ -2,17 +2,14 @@
 	"panel-label": "Die Menschen hinter dieser Seite",
 	"close": "Schliessen",
 	"ticker-label": "Die Menschen hinter dieser Seite anzeigen",
-	"volunteers_one": "{{count}} Freiwillige:r",
-	"volunteers_other": "{{count}} Freiwillige",
-	"countries_one": "{{count}} Land",
-	"countries_other": "{{count}} Ländern",
+	"volunteers": "{count, plural, one {{count} Freiwillige:r} other {{count} Freiwillige}}",
+	"countries": "{count, plural, one {{count} Land} other {{count} Ländern}}",
 	"show-all-contributors": "Alle Mitwirkenden anzeigen",
 	"show-fewer-contributors": "Weniger Mitwirkende anzeigen",
-	"more-people_one": "+{{count}} Person",
-	"more-people_other": "+{{count}} Personen",
+	"more-people": "{count, plural, one {+{count} Person} other {+{count} Personen}}",
 	"show-less": "Weniger anzeigen",
 	"reach-out": "Kontakt",
 	"reach-out-about-page": "Kontakt zu dieser Seite",
-	"reach-out-about-role": "Kontakt mit {{name}} zu {{role}}",
-	"article-by": "Artikel von {{name}}"
+	"reach-out-about-role": "Kontakt mit {name} zu {role}",
+	"article-by": "Artikel von {name}"
 }

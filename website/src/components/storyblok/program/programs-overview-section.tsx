@@ -1,5 +1,4 @@
 import type { AnySearchParams } from '@/app/page-props';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import {
 	getPublicProgramFilterDataByPortalSlugsAction,
@@ -7,6 +6,7 @@ import {
 } from '@/modules/programs/program.actions';
 import { getFocusesAction, getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
+import { getTranslations } from 'next-intl/server';
 import type { FocusStory } from '../focus/focus.types';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug } from './program.utils';
@@ -55,9 +55,9 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 	const focusScopedFilterData = getFilterDataForPrograms(focusScopedPrograms, filterDataByPortalSlug);
 	const statsFilterData = hasFixedFocus ? focusScopedFilterData : filterDataByPortalSlug;
 	const statsPortalSlugs = Object.keys(statsFilterData);
-	const [statsResult, translator] = await Promise.all([
+	const [statsResult, t] = await Promise.all([
 		getPublicProgramStatsByPortalSlugsAction(statsPortalSlugs),
-		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
+		getTranslations('website-common'),
 	]);
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 	const countryOptions = getCountryFilterOptions(focusScopedFilterData);
@@ -90,8 +90,8 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 			<FilterBar
 				filters={
 					<ProgramsOverviewFilters
-						allCountriesLabel={translator.t('programs-page.all-countries', { context: { count: countryOptions.length } })}
-						allFocusesLabel={translator.t('programs-page.all-focuses', { context: { count: focusFilterOptions.length } })}
+						allCountriesLabel={t('programs-page.all-countries', { count: countryOptions.length })}
+						allFocusesLabel={t('programs-page.all-focuses', { count: focusFilterOptions.length })}
 						countryOptions={countryOptions}
 						selectedCountryIsoCode={selectedCountryIsoCode}
 						focusOptions={focusFilterOptions}
@@ -103,8 +103,8 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 				search={
 					<ProgramsOverviewSearch
 						defaultValue={searchQuery}
-						label={translator.t('programs-page.search-label')}
-						placeholder={translator.t('programs-page.search-placeholder')}
+						label={t('programs-page.search-label')}
+						placeholder={t('programs-page.search-placeholder')}
 						queryParamOverrides={fixedQueryParams}
 					/>
 				}

@@ -1,8 +1,8 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { Input } from '@socialincome/design-system/forms/input/input';
 import { Slider } from '@socialincome/design-system/forms/slider/slider';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { IndirectImpactNotice } from './indirect-impact-notice';
 
@@ -29,7 +29,7 @@ const parseRecipientCountInput = (raw: string, max: number): number | null => {
 };
 
 export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 	const [recipientCountDraft, setRecipientCountDraft] = useState<string | null>(null);
 	const noCandidates = filteredRecipients === 0;
 	const atMax = !noCandidates && amountOfRecipients === filteredRecipients;

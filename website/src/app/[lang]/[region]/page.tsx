@@ -37,7 +37,7 @@ export default async function HomePage({ params, searchParams }: DefaultPageProp
 			region={region as WebsiteRegion}
 			searchParams={resolvedSearchParams}
 			richtextButtonHeaderAction="createProgram"
-			afterHero={community ? <CommunityRow data={community} lang={lang as WebsiteLanguage} /> : null}
+			afterHero={community ? <CommunityRow data={community} /> : null}
 		/>
 	);
 }

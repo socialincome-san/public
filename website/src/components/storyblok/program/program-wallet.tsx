@@ -1,11 +1,11 @@
 import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { createWalletImageFromStoryblokAsset } from '@/components/wallet/wallet-image-utils';
-import type { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { DisplayAmount } from '@/modules/currency-display/currency-display.types';
 import type { PublicProgramStats } from '@/modules/programs/program.types';
 import { Wallet } from '@socialincome/design-system/data-display/wallet/wallet';
+import { getTranslations } from 'next-intl/server';
 import type { ProgramStory } from './program.types';
 import { getProgramStoryblokSlug, getProgramTitle } from './program.utils';
 
@@ -13,12 +13,12 @@ type Props = {
 	program: ProgramStory;
 	stats?: PublicProgramStats;
 	walletDisplay?: DisplayAmount;
-	translator: Translator;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const ProgramWallet = ({ program, stats, walletDisplay, translator, lang, region }: Props) => {
+export const ProgramWallet = async ({ program, stats, walletDisplay, lang, region }: Props) => {
+	const t = await getTranslations('website-common');
 	const programTitle = getProgramTitle(program.content);
 	const storyblokSlug = getProgramStoryblokSlug(program);
 	const primaryImage = createWalletImageFromStoryblokAsset(program.content.primaryImage, programTitle);
@@ -44,7 +44,7 @@ export const ProgramWallet = ({ program, stats, walletDisplay, translator, lang,
 			footerLeft={
 				stats && walletDisplay
 					? {
-							label: translator.t('wallet.paid-out'),
+							label: t('wallet.paid-out'),
 							prefix: walletDisplay.currency,
 							value: formatWalletAmount(walletDisplay.amount),
 						}
@@ -53,7 +53,7 @@ export const ProgramWallet = ({ program, stats, walletDisplay, translator, lang,
 			footerRight={
 				stats
 					? {
-							label: translator.t('wallet.recipients'),
+							label: t('wallet.recipients'),
 							value: formatWalletAmount(stats.recipientsCount),
 						}
 					: undefined
