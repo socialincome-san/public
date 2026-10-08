@@ -537,6 +537,7 @@ have contributed to Social Income:
 ### Software And IP Contributions
 
 We receive in-kind donations from
+[Anthropic](https://www.anthropic.com),
 [Google Nonprofit](https://www.google.com/nonprofits/),
 [GitHub](https://socialimpact.github.com),
 [Codemagic](https://codemagic.io/start/),
@@ -548,7 +549,7 @@ We receive in-kind donations from
 [Storyblok](https://www.storyblok.com),
 [1Password](https://1password.com),
 [Mux](https://www.mux.com),
-[Sentry](https://sentry.io), and
+[Sentry](https://sentry.io), [Make](https://make.com),
 [Lineto](https://www.lineto.com). Our tools also use open-source technologies
 such as [Storybook](https://storybook.js.org) and
 [Tailwind CSS](https://tailwindcss.com).
