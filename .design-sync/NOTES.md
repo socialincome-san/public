@@ -45,9 +45,9 @@ Repo-specific gotchas for syncing `design-system/` to Claude Design.
   tiny next to Storybook. Crop the raw `__ds.png` to content and view 1:1 next to `__sb.png` before judging size.
 - [GENERAL] `/assets/...` images (flags, `/assets/storybook/placeholder-portrait.svg`) are app-served: both sides
   show the fallback (initials, country code). Faithful match (CountryFlag, Avatar, AvatarStack).
-- [GENERAL] [ASSETS_BLOCKED]: this cloud environment's network policy denies `a.storyblok.com` and
-  `placehold.co`, so remote story images break on both panels. Card "With Content" and PartnershipBadge
-  "Default" stay ungraded until those hosts are allowed; then `compare.mjs --force --components Card,PartnershipBadge`.
+- [GENERAL] [ASSETS_BLOCKED]: stories load remote images from `a.storyblok.com` and `placehold.co`. The cloud
+  environment's network policy must allow both hosts (Allowed domains), or those images break on both panels and
+  Card "With Content" / PartnershipBadge "Default" can't be graded.
 - `DropdownMenu` "With Submenu" is skipped (`cfg.overrides.DropdownMenu.skip`): the story builds its submenu from
   raw `@radix-ui/react-dropdown-menu` primitives, which the DS doesn't export. The preview bundled a second Radix
   copy, and opening the menu threw "`MenuSub` must be used within `Menu`". The design agent has no submenu API.
