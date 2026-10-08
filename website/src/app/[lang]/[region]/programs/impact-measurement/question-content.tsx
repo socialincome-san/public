@@ -1,6 +1,6 @@
 import { DonutChart } from '@/components/charts/donut-chart';
+import { isMessageKey } from '@/lib/i18n/message-keys';
 import { type Messages } from '@/lib/i18n/messages';
-import { isMessageKey } from '@/lib/utils/message-keys';
 import type { SurveyImpactQuestion } from '@/modules/surveys/survey.types';
 import { Progress } from '@socialincome/design-system/feedback/progress/progress';
 import { type useTranslations } from 'next-intl';

@@ -22,10 +22,13 @@ export const YourDonationCertificateTable = ({
 	const t = useTranslations('website-me');
 	const config = getYourDonationCertificatesTableConfig({
 		title: t('sections.contributions.donation-certificates-long'),
-		// The data table still renders `emptyMessage` as sanitized HTML.
-		emptyMessage: t.markup('donation-certificates.no-certificates-yet', {
-			br: () => '<br></br>',
-			contact: (chunks) => `<a href="mailto:hello@socialincome.org" class="underline">${chunks}</a>`,
+		emptyMessage: t.rich('donation-certificates.no-certificates-yet', {
+			br: () => <br />,
+			contact: (chunks) => (
+				<a href="mailto:hello@socialincome.org" className="underline">
+					{chunks}
+				</a>
+			),
 		}),
 	});
 

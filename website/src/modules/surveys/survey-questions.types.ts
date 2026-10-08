@@ -1,4 +1,4 @@
-import { type NamespaceMessageKey } from '@/lib/utils/message-keys';
+import { type NamespaceMessageKey } from '@/lib/i18n/message-keys';
 
 export type Question = {
 	type: QuestionInputType;

@@ -22,5 +22,8 @@
 		"retry": "Réessayer",
 		"support-prefix": "Si tu ne le reçois pas, contacte",
 		"no-account": "Tu n’as pas de compte ?"
+	},
+	"error": {
+		"invalid-email": "Adresse e-mail invalide"
 	}
 }

@@ -22,7 +22,6 @@ import {
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import type { RowData, SortingState } from '@tanstack/react-table';
 import { functionalUpdate } from '@tanstack/react-table';
-import DOMPurify from 'isomorphic-dompurify';
 import { useTranslations } from 'next-intl';
 import { ReactNode, useState } from 'react';
 
@@ -30,7 +29,7 @@ type DataTableProps<Row extends RowData> = {
 	title: ReactNode;
 	titleInfoTooltip?: string;
 	error?: string | null;
-	emptyMessage: string;
+	emptyMessage: ReactNode;
 	actionMenuItems?: ActionMenuItem[];
 	data: Row[];
 	makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, t?: DataTableTranslator) => ColumnDef<Row>[];
@@ -214,10 +213,6 @@ export default function DataTable<Row extends RowData>({
 		});
 	};
 
-	const renderSanitizedEmptyMessage = () => (
-		<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}></div>
-	);
-
 	return (
 		<div data-testid="data-table">
 			<DataTableHeader
@@ -247,9 +242,9 @@ export default function DataTable<Row extends RowData>({
 			) : isLoading ? (
 				<AppLoadingSkeleton message="Loading..." />
 			) : isDatasetEmpty ? (
-				<DataTableEmptyState message={renderSanitizedEmptyMessage()} />
+				<DataTableEmptyState message={emptyMessage} />
 			) : isEmpty ? (
-				<DataTableNoResults message={renderSanitizedEmptyMessage()} />
+				<DataTableNoResults message={emptyMessage} />
 			) : (
 				<BaseTable
 					data={displayedData}

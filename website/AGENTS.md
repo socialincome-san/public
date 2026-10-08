@@ -105,9 +105,14 @@ The same lint rules as in the design system apply: no `className` or
 
 Text: translations live in
 `src/lib/i18n/locales/<lang>/<namespace>.json` and use ICU MessageFormat
-(`{name}`, `{count, plural, one {…} other {…}}`). Use `Translator`
-(server) or `useTranslator` (client) and add new keys to every language
-that has the namespace.
+(`{name}`, `{count, plural, one {…} other {…}}`). Translate with
+next-intl: `getTranslations('namespace')` in server components,
+`useTranslations('namespace')` in client components. The locale comes
+from `next/root-params`, which throws in route handlers and server
+actions, so pass it there (`getTranslations({ locale, namespace })`) and
+use `createTranslator` with `loadMessages` in services. Pass values to
+`t()` instead of replacing placeholders, use `t.rich` for markup, and
+add new keys to every language that has the namespace.
 
 ## Commands
 

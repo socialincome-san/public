@@ -1,5 +1,5 @@
 import { SurveyQuestionnaire } from '@/generated/prisma/client';
-import { type NamespaceMessageKey } from '@/lib/utils/message-keys';
+import { type NamespaceMessageKey } from '@/lib/i18n/message-keys';
 
 type SurveyMessageKey = NamespaceMessageKey<'website-survey'>;
 

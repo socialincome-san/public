@@ -1,4 +1,4 @@
-import { isMessageKey } from '@/lib/utils/message-keys';
+import { isMessageKey } from '@/lib/i18n/message-keys';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getSurveyImpactStudyDetails } from '@/modules/surveys/survey.service';
 import type { SurveyImpactStudyDetailItem } from '@/modules/surveys/survey.types';

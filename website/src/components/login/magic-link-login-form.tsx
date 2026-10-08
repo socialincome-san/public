@@ -27,7 +27,7 @@ export const MagicLinkLoginForm = ({ prefilledEmail = '' }: Props) => {
 	const t = useTranslations('website-login');
 
 	const formSchema = z.object({
-		email: z.string().trim().email('Invalid email address'),
+		email: z.string().trim().email(t('error.invalid-email')),
 	});
 
 	const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');

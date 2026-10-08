@@ -338,7 +338,7 @@
 			"success-thank-you": "Merci",
 			"success-created-title": "Campagne créée",
 			"success-live-title": "Votre campagne est en ligne !",
-			"success-guest-description": "Ouvrez le lien de connexion que nous avons envoyé à {email} pour confirmer.",
+			"success-guest-description": "Ouvrez le lien de connexion que nous avons envoyé à <strong>{email}</strong> pour confirmer.",
 			"success-didnt-get-it": "Vous ne l'avez pas reçu ?",
 			"success-retry": "Réessayer",
 			"success-retry-sending": "Envoi…",

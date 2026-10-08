@@ -1,6 +1,6 @@
 // Generic set of question pages and choices
+import { isMessageKey } from '@/lib/i18n/message-keys';
 import { type Messages } from '@/lib/i18n/messages';
-import { isMessageKey } from '@/lib/utils/message-keys';
 import { QUESTIONS, Question } from '@/modules/surveys/survey-questions.types';
 import { type useTranslations } from 'next-intl';
 

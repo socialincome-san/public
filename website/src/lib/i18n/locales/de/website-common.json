@@ -338,7 +338,7 @@
 			"success-thank-you": "Danke",
 			"success-created-title": "Kampagne erstellt",
 			"success-live-title": "Deine Kampagne ist live!",
-			"success-guest-description": "Öffne den Anmeldelink, den wir an {email} gesendet haben, um zu bestätigen.",
+			"success-guest-description": "Öffne den Anmeldelink, den wir an <strong>{email}</strong> gesendet haben, um zu bestätigen.",
 			"success-didnt-get-it": "Nicht erhalten?",
 			"success-retry": "Erneut senden",
 			"success-retry-sending": "Wird gesendet…",

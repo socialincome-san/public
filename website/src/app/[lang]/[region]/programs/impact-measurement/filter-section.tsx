@@ -1,6 +1,6 @@
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { SurveyQuestionnaire } from '@/generated/prisma/client';
-import { isMessageKey } from '@/lib/utils/message-keys';
+import { isMessageKey } from '@/lib/i18n/message-keys';
 import { getFocuses } from '@/modules/storyblok-content/storyblok-content.service';
 import { RECIPIENT_AGE_GROUPS } from '@/modules/surveys/survey-age-groups.types';
 import { getSurveyImpactFilterOptions } from '@/modules/surveys/survey.service';

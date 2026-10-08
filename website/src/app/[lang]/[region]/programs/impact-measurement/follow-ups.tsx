@@ -1,4 +1,4 @@
-import { isMessageKey, type NamespaceMessageKey } from '@/lib/utils/message-keys';
+import { isMessageKey, type NamespaceMessageKey } from '@/lib/i18n/message-keys';
 import type { SurveyImpactQuestion } from '@/modules/surveys/survey.types';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { ReactNode } from 'react';
