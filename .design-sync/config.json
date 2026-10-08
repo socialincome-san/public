@@ -72,7 +72,8 @@
       "cardMode": "column"
     },
     "PortalNavbar": {
-      "cardMode": "column"
+      "cardMode": "column",
+      "viewport": "1280x800"
     },
     "SiteHeader": {
       "cardMode": "column"

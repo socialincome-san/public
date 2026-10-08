@@ -36,8 +36,10 @@ Repo-specific gotchas for syncing `design-system/` to Claude Design.
   Storybook. Judge the component, not the frame; compare raw PNGs (`_screenshots/compare/raw/`) for size.
 - [GENERAL] Stories that import `next/image` directly crash the preview (`process is not defined`). Own the
   preview and import the shim: `import Image from '@ds-stories/.design-sync/shims/next-image';` (Card).
-- [GENERAL] `CountryFlag` loads `/assets/flags/<code>.svg`, an app-served path. Neither the reference server nor
-  Claude Design serves it, so both sides show the letter-code fallback. That is a faithful match.
+- [GENERAL] `CountryFlag` loads `/assets/flags/<code>.svg`, an app-served path. Claude Design doesn't serve it, so
+  the product shows the letter-code fallback. `sb-reference` does ship the flags, but the compare harness's
+  `http-serve.mjs` has no `.svg` MIME type, so the reference side falls back too. The preview matches what Claude
+  Design shows; the real Storybook shows flags (LocaleCurrencySwitcher open, SiteHeader desktop).
 - Overlays (Dialog etc.) render their closed trigger in both Storybook and the preview.
 - [GENERAL] The compare sheet scales each column to its widest shot, so small or content-sized components look
   tiny next to Storybook. Crop the raw `__ds.png` to content and view 1:1 next to `__sb.png` before judging size.
@@ -55,6 +57,19 @@ Repo-specific gotchas for syncing `design-system/` to Claude Design.
 - `DataTableTextCell` "All Cells" is ~1000px tall; the 900x700 capture cuts the tail. Tail rows were verified with a
   full-page shot. A taller `viewport` override would capture it (needs a full rebuild and re-grade).
 - `InfoTooltip` `[RENDER_THIN]` is legitimate: the story itself is a lone 16px help icon with the tooltip closed.
+- [GENERAL] A story whose FIRST root child is hidden at 900px (`hidden lg:block`) gets a false `sb-error`: compare
+  waits for that child to become visible. Fix with a `viewport` override (PortalNavbar: `1280x800`).
+- SiteHeader renders its mobile header at the 900px capture (below `lg`); desktop at 1280x800 was checked by hand.
+- SiteMenuMobile `[RENDER_THIN]` is legitimate: the story is a closed menu, only the hamburger paints. Opened at
+  390x844 it matches. Optional: `viewport: "390x844"` to mirror the story's `mobile1` default.
+- Preview template quirk: card html pads `body` 24px; opening a modal Radix overlay (DropdownMenu-based menus)
+  makes react-remove-scroll zero that padding, so the story jumps 24px when a menu opens in the product card, and
+  a mouse click can land on the first item (PortalUserMenu/PortalProgramMenu "Bar"). Converter template issue,
+  not a component defect; closed-state captures are unaffected.
+- Fullscreen stories with a hoverable element at (0,0) show hover color in Storybook only (capture pointer rests
+  there) - Breadcrumb "Home".
+- PersonCard "Sizes": Storybook clips the third card (meta `w-72` decorator); MediaHero's donation card falls below
+  the 700px capture. Framing.
 - Carousel "Cards" has no width limit: Storybook grows to show all 5 cards, the 900px preview scrolls. Framing.
 
 ## Known render warns
