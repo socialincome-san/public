@@ -39,3 +39,11 @@ Repo-specific gotchas for syncing `design-system/` to Claude Design.
 - [GENERAL] `CountryFlag` loads `/assets/flags/<code>.svg`, an app-served path. Neither the reference server nor
   Claude Design serves it, so both sides show the letter-code fallback. That is a faithful match.
 - Overlays (Dialog etc.) render their closed trigger in both Storybook and the preview.
+- [GENERAL] The compare sheet scales each column to its widest shot, so small or content-sized components look
+  tiny next to Storybook. Crop the raw `__ds.png` to content and view 1:1 next to `__sb.png` before judging size.
+- [GENERAL] `/assets/...` images (flags, `/assets/storybook/placeholder-portrait.svg`) are app-served: both sides
+  show the fallback (initials, country code). Faithful match (CountryFlag, Avatar, AvatarStack).
+- [GENERAL] [ASSETS_BLOCKED]: this cloud environment's network policy denies `a.storyblok.com` and
+  `placehold.co`, so remote story images break on both panels. Card "With Content" and PartnershipBadge
+  "Default" stay ungraded until those hosts are allowed; then `compare.mjs --force --components Card,PartnershipBadge`.
+- Carousel "Cards" has no width limit: Storybook grows to show all 5 cards, the 900px preview scrolls. Framing.
