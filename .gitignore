@@ -39,5 +39,3 @@ ignored/
 # vim IDE
 *.swp
 tags
-.ai-playbook/
-.agents/

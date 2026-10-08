@@ -71,6 +71,20 @@ complete surveys. See `recipients_app/README.md` for mobile setup details.
 Seed data for the local Firebase emulators. Firebase Auth users are imported
 automatically when the local development environment starts.
 
+### Architecture And Conventions
+
+The conventions for each workspace live in `AGENTS.md` files, written for
+people and coding agents alike:
+
+- [`AGENTS.md`](AGENTS.md): repository overview and the checks to run
+- [`website/AGENTS.md`](website/AGENTS.md): backend modules,
+  integrations and `lib`, and how the website uses the design system
+- [`design-system/AGENTS.md`](design-system/AGENTS.md): what belongs in
+  the design system, component conventions, and design tokens
+
+Most of these rules are enforced by ESLint, so `npm run lint` tells you
+when code does not fit.
+
 ## Local Development Setup
 
 ### Requirements
