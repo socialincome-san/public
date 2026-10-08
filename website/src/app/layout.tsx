@@ -1,5 +1,4 @@
 import { LANGUAGE_COOKIE } from '@/app/[lang]/[region]';
-import { AnalyticsInitializer } from '@/components/analytics/analytics-initializer';
 import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
 import { resolveWebsiteLanguage, WEBSITE_LANGUAGE_HEADER } from '@/lib/i18n/utils';
 import { getMetadata } from '@/lib/utils/metadata';
@@ -42,7 +41,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 					{children}
 					<Analytics />
 				</body>
-				<AnalyticsInitializer />
 			</FirebaseAppProvider>
 		</html>
 	);
