@@ -1,50 +1,34 @@
 import { IssuesList } from '@/components/open-source/issues-list';
 import { OpenSourceUnavailableMessage } from '@/components/open-source/unavailable-message';
 import type { OpenSourceIssues } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getOpenSourceIssuesAction } from '@/modules/github/github.actions';
 import { EMPTY_GITHUB_OPEN_SOURCE_ISSUES_DATA } from '@/modules/github/github.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable } from '@storyblok/react';
+import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	blok: OpenSourceIssues;
-	lang: WebsiteLanguage;
 };
 
-type IssuesLabels = {
-	title: string;
-	header: string;
-	link: string;
-	filter: string;
-	showAll: string;
-	empty: string;
-};
-
-export const OpenSourceIssuesBlock = async ({ blok, lang }: Props) => {
-	const [issuesResult, translator] = await Promise.all([
-		getOpenSourceIssuesAction(),
-		Translator.getInstance({ language: lang, namespaces: ['website-open-source'] }),
-	]);
+export const OpenSourceIssuesBlock = async ({ blok }: Props) => {
+	const [issuesResult, t] = await Promise.all([getOpenSourceIssuesAction(), getTranslations('website-open-source')]);
 
 	const { issues, labels } = issuesResult.success ? issuesResult.data : EMPTY_GITHUB_OPEN_SOURCE_ISSUES_DATA;
-	const issuesLabels = translator.raw<IssuesLabels>('issues');
-	const errorMessage = translator.t<string>('error.unavailable');
+	const errorMessage = t('error.unavailable');
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok)}>
 			{!issuesResult.success ? <OpenSourceUnavailableMessage message={errorMessage} /> : null}
 
 			<IssuesList
-				title={issuesLabels.title}
+				title={t('issues.title')}
 				issues={issues}
 				labels={labels}
-				tableHeaderLabel={issuesLabels.header}
-				issueLinkLabel={issuesLabels.link}
-				filterAllLabel={issuesLabels.filter}
-				showAllLabel={issuesLabels.showAll}
-				emptyLabel={issuesLabels.empty}
+				tableHeaderLabel={t('issues.header')}
+				issueLinkLabel={t('issues.link')}
+				filterAllLabel={t('issues.filter')}
+				emptyLabel={t('issues.empty')}
 			/>
 		</BlockWrapper>
 	);

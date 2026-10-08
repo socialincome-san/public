@@ -90,9 +90,9 @@ const renderPageBlock = (
 		case 'openSourceStats':
 			return <OpenSourceStatsBlock blok={block} lang={lang} />;
 		case 'openSourceContributors':
-			return <OpenSourceContributorsBlock blok={block} lang={lang} />;
+			return <OpenSourceContributorsBlock blok={block} />;
 		case 'openSourceIssues':
-			return <OpenSourceIssuesBlock blok={block} lang={lang} />;
+			return <OpenSourceIssuesBlock blok={block} />;
 		case 'outflows':
 			return <OutflowsBlock blok={block} lang={lang} region={region} />;
 		case 'partnershipsCarousel':

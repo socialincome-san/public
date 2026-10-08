@@ -10,6 +10,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@socialincome/design-system/forms/select/select';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 const INITIAL_VISIBLE_COUNT = 6;
@@ -22,7 +23,6 @@ type Props = {
 	tableHeaderLabel: string;
 	issueLinkLabel: string;
 	filterAllLabel: string;
-	showAllLabel: string;
 	emptyLabel: string;
 };
 
@@ -33,9 +33,9 @@ export const IssuesList = ({
 	tableHeaderLabel,
 	issueLinkLabel,
 	filterAllLabel,
-	showAllLabel,
 	emptyLabel,
 }: Props) => {
+	const t = useTranslations('website-open-source');
 	const [filteredLabel, setFilteredLabel] = useState(ALL_FILTER_VALUE);
 	const [showAll, setShowAll] = useState(false);
 
@@ -95,7 +95,7 @@ export const IssuesList = ({
 			{!showAll && filteredIssues.length > INITIAL_VISIBLE_COUNT ? (
 				<div className="mt-6 flex justify-center">
 					<Button variant="link" onClick={() => setShowAll(true)}>
-						{showAllLabel.replace('{count}', String(filteredIssues.length))}
+						{t('issues.showAll', { count: filteredIssues.length })}
 					</Button>
 				</div>
 			) : null}
