@@ -3,6 +3,7 @@ import { AnalyticsInitializer } from '@/components/analytics/analytics-initializ
 import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
 import { resolveWebsiteLanguage, WEBSITE_LANGUAGE_HEADER } from '@/lib/i18n/utils';
 import { getMetadata } from '@/lib/utils/metadata';
+import { Analytics } from '@vercel/analytics/next';
 import type { Viewport } from 'next';
 import { cookies, headers } from 'next/headers';
 import { PropsWithChildren } from 'react';
@@ -39,6 +40,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 				<body>
 					<Toaster />
 					{children}
+					<Analytics />
 				</body>
 				<AnalyticsInitializer />
 			</FirebaseAppProvider>
