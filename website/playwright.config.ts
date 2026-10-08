@@ -20,12 +20,7 @@ const e2eStorageState: Awaited<ReturnType<BrowserContext['storageState']>> = {
 			sameSite: 'Lax',
 		},
 	],
-	origins: [
-		{
-			origin: baseURL,
-			localStorage: [{ name: 'cookie_consent', value: 'denied' }],
-		},
-	],
+	origins: [],
 };
 
 export default defineConfig({

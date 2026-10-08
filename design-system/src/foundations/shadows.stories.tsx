@@ -18,6 +18,7 @@ const named = [
 	{ name: 'shadow-raised', value: 'Floating controls' },
 	{ name: 'shadow-overlay', value: 'Flyouts' },
 	{ name: 'shadow-dock', value: 'Bars pinned to the bottom' },
+	{ name: 'shadow-backstage', value: 'Page slid aside over a Backstage panel' },
 ];
 
 const dropShadows = [

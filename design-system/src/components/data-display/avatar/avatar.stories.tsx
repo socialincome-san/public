@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { Avatar, AvatarFallback } from './avatar';
+import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 
 const meta = {
 	title: 'Data Display/Avatar',
@@ -27,5 +27,26 @@ export const Default: Story = {
 		<Avatar {...args}>
 			<AvatarFallback>AB</AvatarFallback>
 		</Avatar>
+	),
+};
+
+export const WithImage: Story = {
+	render: (args) => (
+		<Avatar {...args}>
+			<AvatarImage src="/assets/storybook/placeholder-portrait.svg" alt="Aminata Kamara" />
+			<AvatarFallback>AK</AvatarFallback>
+		</Avatar>
+	),
+};
+
+export const Sizes: Story = {
+	render: () => (
+		<div className="flex items-center gap-3">
+			{(['xs', 'sm', 'default', 'lg', 'xl'] as const).map((size) => (
+				<Avatar key={size} size={size}>
+					<AvatarFallback>AB</AvatarFallback>
+				</Avatar>
+			))}
+		</div>
 	),
 };
