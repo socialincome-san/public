@@ -1,6 +1,7 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-teaser';
+import { Community } from '@/components/community/community';
 import { FaqSelectionContent } from '@/components/content-blocks/faq-selection-content';
 import { resolveFaqItems } from '@/components/content-blocks/faq-selection.utils';
 import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
@@ -17,15 +18,17 @@ import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getCountryNameByCode } from '@/lib/types/country';
+import type { CommunityPanelData } from '@/modules/community/community.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 type Props = {
 	programDetailData: ProgramDetailData;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
+	community: CommunityPanelData | null;
 };
 
-export const ProgramDetail = async ({ programDetailData, lang, region }: Props) => {
+export const ProgramDetail = async ({ programDetailData, lang, region, community }: Props) => {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common', 'website-faq'] });
 	const countryIsoCode = programDetailData.programDetails?.countryIsoCode ?? programDetailData.stats?.countryIsoCode;
 	const recipientsCount =
@@ -74,7 +77,11 @@ export const ProgramDetail = async ({ programDetailData, lang, region }: Props) 
 				}
 			/>
 			<div className="flex flex-col gap-8 py-8">
-				<Breadcrumb links={breadcrumbLinks} layout="section" />
+				<Breadcrumb
+					links={breadcrumbLinks}
+					layout="section"
+					aside={community ? <Community data={community} lang={lang} /> : null}
+				/>
 				<div className="lg:hidden">
 					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 						<DonationFormServer lang={lang} campaignId={programDetailData.campaignId} />

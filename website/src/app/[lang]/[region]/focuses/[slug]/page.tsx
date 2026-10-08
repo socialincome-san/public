@@ -2,6 +2,7 @@ import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { FocusDetail } from '@/components/storyblok/focus/focus-detail';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getCommunityPanelData } from '@/modules/community/community.service';
 import { getFocusBySlug } from '@/modules/storyblok-content/storyblok-content.service';
 import { notFound } from 'next/navigation';
 
@@ -17,12 +18,15 @@ export default async function FocusPage({ params, searchParams }: FocusPageProps
 		return notFound();
 	}
 
+	const communityResult = await getCommunityPanelData(focusResult.data.content, lang, region);
+
 	return (
 		<FocusDetail
 			focus={focusResult.data}
 			lang={lang as WebsiteLanguage}
 			region={region as WebsiteRegion}
 			searchParams={await searchParams}
+			community={communityResult.success ? communityResult.data : null}
 		/>
 	);
 }

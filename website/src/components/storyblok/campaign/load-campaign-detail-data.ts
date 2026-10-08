@@ -37,5 +37,6 @@ export const loadCampaignDetailData = cache(async (urlSlug: string, lang: string
 		linkWebsite: story.content.linkWebsite,
 		faq: story.content.faq,
 		campaign: campaignResult.data,
+		communityPage: story.content,
 	};
 });

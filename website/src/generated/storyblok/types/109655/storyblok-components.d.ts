@@ -81,6 +81,10 @@ export interface Campaign {
   linkWebsite?: string;
   tiktokHandle?: string;
   faq?: (ISbStoryData<Faq> | string)[];
+  communityEnabled?: boolean;
+  communityContributors?: CommunityContributorGroup[];
+  communityContactEmail?: string;
+  communityArticles?: (ISbStoryData<Article> | string)[];
   component: "Campaign";
   _uid: string;
   _editable?: string | undefined;
@@ -192,6 +196,10 @@ export interface Country {
   partners?: (ISbStoryData<LocalPartner> | string)[];
   payouts?: DonationsTotal[];
   programs?: ProgramGrid[];
+  communityEnabled?: boolean;
+  communityContributors?: CommunityContributorGroup[];
+  communityContactEmail?: string;
+  communityArticles?: (ISbStoryData<Article> | string)[];
   component: "Country";
   _uid: string;
   _editable?: string | undefined;
@@ -312,6 +320,10 @@ export interface Focus {
   impactMeasurementTeaserText?: string;
   impactMeasurementTeaserButtonLabel?: string;
   sdgs?: (number | string)[];
+  communityEnabled?: boolean;
+  communityContributors?: CommunityContributorGroup[];
+  communityContactEmail?: string;
+  communityArticles?: (ISbStoryData<Article> | string)[];
   component: "Focus";
   _uid: string;
   _editable?: string | undefined;
@@ -423,6 +435,10 @@ export interface LocalPartner {
   programs?: ProgramGrid[];
   partners?: (ISbStoryData<LocalPartner> | string)[];
   testimonial?: TestimonialCarousel[];
+  communityEnabled?: boolean;
+  communityContributors?: CommunityContributorGroup[];
+  communityContactEmail?: string;
+  communityArticles?: (ISbStoryData<Article> | string)[];
   component: "Local Partner";
   _uid: string;
   _editable?: string | undefined;
@@ -684,6 +700,10 @@ export interface Program {
   tertiaryImage: StoryblokAsset;
   fourthImage: StoryblokAsset;
   faq?: (ISbStoryData<Faq> | string)[];
+  communityEnabled?: boolean;
+  communityContributors?: CommunityContributorGroup[];
+  communityContactEmail?: string;
+  communityArticles?: (ISbStoryData<Article> | string)[];
   component: "program";
   _uid: string;
   _editable?: string | undefined;
