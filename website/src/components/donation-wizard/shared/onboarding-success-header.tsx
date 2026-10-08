@@ -1,14 +1,14 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { CircleCheck } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type OnboardingSuccessHeaderProps = {
 	amountLine: string | undefined;
 };
 
 export const OnboardingSuccessHeader = ({ amountLine }: OnboardingSuccessHeaderProps) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 
 	return (
 		<div className="flex items-center gap-2 px-4">

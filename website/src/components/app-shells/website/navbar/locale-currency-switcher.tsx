@@ -3,7 +3,6 @@
 import { type CountryCode } from '@/generated/prisma/enums';
 import { useIsPage } from '@/lib/hooks/use-is-page';
 import { useI18n } from '@/lib/i18n/use-i18n';
-import { useTranslator } from '@/lib/i18n/use-translator';
 import {
 	allWebsiteLanguages,
 	isWebsiteCurrency,
@@ -18,6 +17,7 @@ import {
 	LocaleCurrencySwitcher as DesignSystemLocaleCurrencySwitcher,
 	type LocaleRegionOption,
 } from '@socialincome/design-system/navigation/locale-currency-switcher/locale-currency-switcher';
+import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
@@ -68,7 +68,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Prop
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const isSurveyPage = useIsPage('survey');
-	const translator = useTranslator(lang, 'website-common');
+	const t = useTranslations('website-common');
 	const { language, setLanguage, region: selectedRegion, setRegion, currency, setCurrency } = useI18n();
 
 	const initialRegion = isWebsiteRegion(region) ? region : 'int';
@@ -78,10 +78,10 @@ export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Prop
 	const languageOptions = isSurveyPage ? surveyLanguages : mainWebsiteLanguages;
 	const currentSwitcherLanguage = languageOptions.includes(currentLanguage) ? currentLanguage : (languageOptions[0] ?? 'en');
 	const regionOptions: (LocaleRegionOption & { value: WebsiteRegion })[] = [
-		{ value: 'int', label: translator?.t('locale-currency-switcher.regions.int') ?? 'International' },
+		{ value: 'int', label: t('locale-currency-switcher.regions.int') },
 		{
 			value: 'ch',
-			label: translator?.t('locale-currency-switcher.regions.ch') ?? 'Switzerland',
+			label: t('locale-currency-switcher.regions.ch'),
 			flagCountry: SWISS_COUNTRY_CODE,
 		},
 	];
@@ -119,24 +119,24 @@ export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Prop
 
 	return (
 		<DesignSystemLocaleCurrencySwitcher
-			ariaLabel={translator?.t('locale-currency-switcher.aria-label') ?? 'Change language, region, and currency'}
+			ariaLabel={t('locale-currency-switcher.aria-label')}
 			variant={variant}
 			open={open}
 			onOpenChange={setOpen}
 			language={{
-				label: translator?.t('locale-currency-switcher.language') ?? 'Language',
+				label: t('locale-currency-switcher.language'),
 				value: currentSwitcherLanguage,
 				options: languageOptions.map((option) => ({ value: option, label: option.toUpperCase() })),
 				onChange: handleLanguageChange,
 			}}
 			region={{
-				label: translator?.t('locale-currency-switcher.region') ?? 'Region',
+				label: t('locale-currency-switcher.region'),
 				value: currentRegion,
 				options: regionOptions,
 				onChange: handleRegionChange,
 			}}
 			currency={{
-				label: translator?.t('locale-currency-switcher.currency') ?? 'Currency',
+				label: t('locale-currency-switcher.currency'),
 				value: currentCurrency,
 				options: websiteCurrencies.map((option) => ({ value: option, label: option })),
 				onChange: handleCurrencyChange,

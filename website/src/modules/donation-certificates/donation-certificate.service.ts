@@ -3,7 +3,8 @@ import {
 	isFirebaseStorageConfigured,
 	uploadFileToFirebaseStorage,
 } from '@/integrations/firebase/firebase-storage.integration';
-import { Translator } from '@/lib/i18n/translator';
+import { loadMessages } from '@/lib/i18n/messages';
+import { TIME_ZONE } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE, LANGUAGE_CODES, type LanguageCode } from '@/lib/types/language';
 import { now } from '@/lib/utils/now';
@@ -12,6 +13,7 @@ import type { ContributionDonationEntry } from '@/modules/contributions/contribu
 import { getContributorsByIds } from '@/modules/contributors/contributor.service';
 import type { ContributorDonationCertificate } from '@/modules/contributors/contributor.types';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import { createTranslator } from 'next-intl';
 import { createWriteStream } from 'node:fs';
 import * as path from 'node:path';
 import PDFDocument from 'pdfkit';
@@ -269,42 +271,35 @@ const writeDonationCertificatePdf = async (
 ): Promise<Result<void>> => {
 	try {
 		const contributionsByCurrency = groupContributionsByCurrency(contributions, year);
-		const translator = await Translator.getInstance({
-			language,
-			namespaces: ['donation-certificate', 'countries'],
+		const messages = await loadMessages(language);
+		const t = createTranslator({ locale: language, messages, namespace: 'donation-certificate', timeZone: TIME_ZONE });
+		const tCountries = createTranslator({ locale: language, messages, namespace: 'countries', timeZone: TIME_ZONE });
+		const header = t('header');
+		const location = t('location', { date: now() });
+		const country = contributor.address?.country ? tCountries(contributor.address.country) : '';
+		const title = t('title', { year });
+		const text1 = t('text-1', {
+			firstname: contributor.firstName,
+			lastname: contributor.lastName,
+			year,
 		});
-		const header = translator.t('header');
-		const location = translator.t('location', { context: { date: now() } });
-		const country = contributor.address?.country
-			? translator.t(contributor.address.country, { namespace: 'countries' })
-			: '';
-		const title = translator.t('title', { context: { year } });
-		const text1 = translator.t('text-1', {
-			context: {
-				firstname: contributor.firstName,
-				lastname: contributor.lastName,
-				year,
-			},
+		const text2 = t('text-2', {
+			start: new Date(year, 0, 1),
+			end: new Date(year, 11, 31),
 		});
-		const text2 = translator.t('text-2', {
-			context: {
-				start: new Date(year, 0, 1),
-				end: new Date(year, 11, 31),
-			},
-		});
-		const text3 = translator.t('text-3');
-		const text4 = translator.t('text-4');
-		const text5 = translator.t('text-5');
-		const titleKerrin = translator.t('title-kerrin');
-		const footerLeftLine1 = translator.t('footer-left-line-1');
-		const footerLeftLine2 = translator.t('footer-left-line-2');
-		const footerLeftLine3 = translator.t('footer-left-line-3');
-		const footerMiddleLine1 = translator.t('footer-middle-line-1');
-		const footerMiddleLine2 = translator.t('footer-middle-line-2');
-		const footerMiddleLine3 = translator.t('footer-middle-line-3');
-		const footerRightLine1 = translator.t('footer-right-line-1');
-		const footerRightLine2 = translator.t('footer-right-line-2');
-		const footerRightLine3 = translator.t('footer-right-line-3');
+		const text3 = t('text-3');
+		const text4 = t('text-4');
+		const text5 = t('text-5');
+		const titleKerrin = t('title-kerrin');
+		const footerLeftLine1 = t('footer-left-line-1');
+		const footerLeftLine2 = t('footer-left-line-2');
+		const footerLeftLine3 = t('footer-left-line-3');
+		const footerMiddleLine1 = t('footer-middle-line-1');
+		const footerMiddleLine2 = t('footer-middle-line-2');
+		const footerMiddleLine3 = t('footer-middle-line-3');
+		const footerRightLine1 = t('footer-right-line-1');
+		const footerRightLine2 = t('footer-right-line-2');
+		const footerRightLine3 = t('footer-right-line-3');
 
 		return new Promise<Result<void>>((resolve) => {
 			const pdfDocument = new PDFDocument({ size: 'A4' });
@@ -343,14 +338,12 @@ const writeDonationCertificatePdf = async (
 
 			const currencyContributions = Object.entries(contributionsByCurrency);
 			if (currencyContributions.length === 0) {
-				pdfDocument.text(translator.t('no-contributions'), { underline: true });
+				pdfDocument.text(t('no-contributions'), { underline: true });
 			} else {
 				currencyContributions.forEach(([currency, amount]) => {
 					pdfDocument.text(
-						`– ${translator.t('contribution', {
-							context: {
-								amount: new Intl.NumberFormat('de-CH', { style: 'currency', currency }).format(amount),
-							},
+						`– ${t('contribution', {
+							amount: new Intl.NumberFormat('de-CH', { style: 'currency', currency }).format(amount),
 						})}`,
 					);
 				});

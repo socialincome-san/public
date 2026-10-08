@@ -1,13 +1,13 @@
 'use client';
 
 import { toNewsletterLanguage } from '@/components/newsletter/newsletter-language';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { getQrOnboardingPrefillAction, updateContributorAfterWizardQrAction } from '@/modules/qr-bills/qr-bill.actions';
 import {
 	getStripeCheckoutOnboardingPrefillAction,
 	updateContributorAfterWizardCheckoutAction,
 } from '@/modules/stripe-payments/stripe-payment.actions';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -19,7 +19,8 @@ import type { DonationWizardStepProps } from '../../wizard/types';
 import { OnboardingPersonalForm } from './onboarding-personal-form';
 
 export const OnboardingStep = ({ state, send }: DonationWizardStepProps) => {
-	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
+	const language = useLocale();
 	const { wizardPaymentSource, stripeCheckoutSessionId, qrContributorReferenceId, qrDonor, completedDonationSummary } =
 		state.context;
 	const amountLine = useOnboardingAmountLine(completedDonationSummary);

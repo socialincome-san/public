@@ -2,37 +2,33 @@ import {
 	getCampaignFundraisingPillMessages,
 	type FundraisingPillMessage,
 } from '@/components/campaign/get-campaign-fundraising-pill-messages';
-import type { Translator } from '@/lib/i18n/translator';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import type { CampaignPage } from '@/modules/campaigns/campaign.types';
+import { type useTranslations } from 'next-intl';
 
-const buildFundraisingPillLabel = (message: FundraisingPillMessage, translator: Translator, locale: string): string => {
+type CampaignT = ReturnType<typeof useTranslations<'website-campaign'>>;
+
+const buildFundraisingPillLabel = (message: FundraisingPillMessage, t: CampaignT, locale: string): string => {
 	switch (message.type) {
 		case 'days-left':
-			return translator.t('campaign.fundraising-pill.days-left', {
-				context: { count: message.remainingDays },
-			});
+			return t('campaign.fundraising-pill.days-left', { count: message.remainingDays });
 		case 'amount-missing':
-			return translator.t('campaign.fundraising-pill.amount-missing', {
-				context: {
-					missing: formatCurrencyLocale(message.missing, message.currency, locale, { maximumFractionDigits: 0 }),
-					goal: formatCurrencyLocale(message.goal, message.currency, locale, { maximumFractionDigits: 0 }),
-				},
+			return t('campaign.fundraising-pill.amount-missing', {
+				missing: formatCurrencyLocale(message.missing, message.currency, locale, { maximumFractionDigits: 0 }),
+				goal: formatCurrencyLocale(message.goal, message.currency, locale, { maximumFractionDigits: 0 }),
 			});
 		case 'supporters-left':
-			return translator.t('campaign.fundraising-pill.supporters-left', {
-				context: { count: message.supportersLeft, goal: message.supporterGoal },
-			});
+			return t('campaign.fundraising-pill.supporters-left', { count: message.supportersLeft, goal: message.supporterGoal });
 	}
 };
 
 export const buildCampaignFundraisingPillLabels = (
 	campaign: CampaignPage,
 	remainingDays: number,
-	translator: Translator,
+	t: CampaignT,
 	locale: string,
 ): string[] => {
 	const messages = getCampaignFundraisingPillMessages(campaign, remainingDays);
 
-	return messages.map((message) => buildFundraisingPillLabel(message, translator, locale));
+	return messages.map((message) => buildFundraisingPillLabel(message, t, locale));
 };

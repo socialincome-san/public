@@ -1,11 +1,11 @@
 'use client';
 
 import { useI18n } from '@/lib/i18n/use-i18n';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { useTranslations } from 'next-intl';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { requestStripeEmbeddedCheckout } from './request-stripe-embedded-checkout';
@@ -13,7 +13,7 @@ import { requestStripeEmbeddedCheckout } from './request-stripe-embedded-checkou
 const stripeCheckoutFrameClass = 'min-h-[520px]';
 
 export const StripeCheckoutStep = ({ state, send }: DonationWizardStepProps) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 	const { currency = 'CHF' } = useI18n();
 	const { context } = state;
 	const { stripeClientSecret, stripePublishableKey, stripeCheckoutStatus } = context;

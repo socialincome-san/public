@@ -1,8 +1,13 @@
 import { DonutChart } from '@/components/charts/donut-chart';
+import { type Messages } from '@/lib/i18n/messages';
+import { isMessageKey } from '@/lib/utils/message-keys';
 import type { SurveyImpactQuestion } from '@/modules/surveys/survey.types';
 import { Progress } from '@socialincome/design-system/feedback/progress/progress';
+import { type useTranslations } from 'next-intl';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { ImpactMeasurementPrivacyTooltip } from './privacy-tooltip';
-import { getImpactTranslator } from './translator';
+
+type SurveyTranslator = ReturnType<typeof useTranslations<'website-survey'>>;
 
 const isYesNoQuestion = (question: SurveyImpactQuestion): boolean => {
 	const normalizedValues = new Set(question.options.map((option) => option.value.toLowerCase()));
@@ -10,13 +15,21 @@ const isYesNoQuestion = (question: SurveyImpactQuestion): boolean => {
 	return normalizedValues.size === 2 && normalizedValues.has('true') && normalizedValues.has('false');
 };
 
-const renderOptionsDonut = (question: SurveyImpactQuestion, keyPrefix: string, translate: (key: string) => string) => {
+const getOptionLabel = (question: SurveyImpactQuestion, value: string, t: SurveyTranslator, messages: Messages) => {
+	if (!question.choicesTranslationKey) {
+		return value;
+	}
+
+	const key = `${question.choicesTranslationKey}.${value}`;
+
+	return isMessageKey(messages, 'website-survey', key) ? t(key) : key;
+};
+
+const renderOptionsDonut = (question: SurveyImpactQuestion, keyPrefix: string, t: SurveyTranslator, messages: Messages) => {
 	const sortedOptions = [...question.options].sort((left, right) => right.count - left.count);
 	const optionsWithMeta = sortedOptions.map((option) => ({
 		...option,
-		optionLabel: question.choicesTranslationKey
-			? translate(`${question.choicesTranslationKey}.${option.value}`)
-			: option.value,
+		optionLabel: getOptionLabel(question, option.value, t, messages),
 	}));
 
 	return (
@@ -27,7 +40,7 @@ const renderOptionsDonut = (question: SurveyImpactQuestion, keyPrefix: string, t
 				percentage: option.percentage,
 				weight: option.count,
 			}))}
-			emptyLabel={translate('survey.impactMeasurement.notAvailable')}
+			emptyLabel={t('survey.impactMeasurement.notAvailable')}
 		/>
 	);
 };
@@ -35,16 +48,15 @@ const renderOptionsDonut = (question: SurveyImpactQuestion, keyPrefix: string, t
 const renderOptionsProgressBars = (
 	question: SurveyImpactQuestion,
 	keyPrefix: string,
-	translate: (key: string) => string,
+	t: SurveyTranslator,
+	messages: Messages,
 ) => {
 	const sortedOptions = [...question.options].sort((left, right) => right.count - left.count);
 
 	return (
 		<div className="space-y-4" key={`${keyPrefix}-bars`}>
 			{sortedOptions.map((option) => {
-				const optionLabel = question.choicesTranslationKey
-					? translate(`${question.choicesTranslationKey}.${option.value}`)
-					: option.value;
+				const optionLabel = getOptionLabel(question, option.value, t, messages);
 
 				return (
 					<div key={`${keyPrefix}-${option.value}`} className="space-y-1">
@@ -63,32 +75,29 @@ const renderOptionsProgressBars = (
 export const ImpactMeasurementQuestionContent = async ({
 	question,
 	keyPrefix,
-	lang,
 }: {
 	question: SurveyImpactQuestion;
 	keyPrefix: string;
-	lang: string;
 }) => {
-	const translator = await getImpactTranslator(lang);
-	const translate = translator.t.bind(translator);
+	const [t, messages] = await Promise.all([getTranslations('website-survey'), getMessages()]);
 
 	if (question.options.length === 0) {
 		return (
 			<div className="space-y-3">
 				<div className="text-foreground flex items-center gap-2 text-sm font-medium">
-					<span>{translate('survey.impactMeasurement.textResponseInsights')}</span>
-					<ImpactMeasurementPrivacyTooltip message={translate('survey.impactMeasurement.textResponsePrivacyTooltip')} />
+					<span>{t('survey.impactMeasurement.textResponseInsights')}</span>
+					<ImpactMeasurementPrivacyTooltip message={t('survey.impactMeasurement.textResponsePrivacyTooltip')} />
 				</div>
 				<p className="text-foreground text-sm">
 					{question.answeredCount === 0
-						? translate('survey.impactMeasurement.noTextResponsesYet')
-						: `${question.answeredCount} ${translate('survey.impactMeasurement.textResponsesCollected')}`}
+						? t('survey.impactMeasurement.noTextResponsesYet')
+						: `${question.answeredCount} ${t('survey.impactMeasurement.textResponsesCollected')}`}
 				</p>
 			</div>
 		);
 	}
 
 	return isYesNoQuestion(question)
-		? renderOptionsDonut(question, keyPrefix, translate)
-		: renderOptionsProgressBars(question, keyPrefix, translate);
+		? renderOptionsDonut(question, keyPrefix, t, messages)
+		: renderOptionsProgressBars(question, keyPrefix, t, messages);
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { columnLabel } from '@/components/data-table/columns/column-label';
+import { columnLabel, type ColumnLabelTranslator } from '@/components/data-table/columns/column-label';
 import { AgeCell } from '@/components/data-table/elements/age-cell';
 import { CountryFlagCell } from '@/components/data-table/elements/country-flag-cell';
 import { DateCell } from '@/components/data-table/elements/date-cell';
@@ -10,12 +10,11 @@ import { SortableHeader } from '@/components/data-table/elements/sortable-header
 import { StatusCell } from '@/components/data-table/elements/status-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
-import type { Translator } from '@/lib/i18n/translator';
 import type { PublicRecipientTableViewRow, RecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 
 const buildRecipientLeadColumns = <TRow extends PublicRecipientTableViewRow>(
-	translator?: Translator,
+	translator?: ColumnLabelTranslator,
 	localizeLabels = false,
 ): ColumnDef<TRow>[] => [
 	{
@@ -46,7 +45,7 @@ const buildRecipientLeadColumns = <TRow extends PublicRecipientTableViewRow>(
 
 const buildRecipientTailColumns = <TRow extends PublicRecipientTableViewRow>(
 	hideLocalPartner: boolean,
-	translator?: Translator,
+	translator?: ColumnLabelTranslator,
 	localizeLabels = false,
 ): ColumnDef<TRow>[] => {
 	const columns: ColumnDef<TRow>[] = [
@@ -98,7 +97,10 @@ const buildRecipientTailColumns = <TRow extends PublicRecipientTableViewRow>(
 	return columns;
 };
 
-const buildRecipientProgramColumn = (translator?: Translator, localizeLabels = false): ColumnDef<RecipientTableViewRow> => ({
+const buildRecipientProgramColumn = (
+	translator?: ColumnLabelTranslator,
+	localizeLabels = false,
+): ColumnDef<RecipientTableViewRow> => ({
 	accessorKey: 'programName',
 	header: (ctx) => (
 		<SortableHeader ctx={ctx}>{columnLabel(localizeLabels, translator, 'column-program', 'Program')}</SortableHeader>
@@ -106,7 +108,7 @@ const buildRecipientProgramColumn = (translator?: Translator, localizeLabels = f
 	cell: (ctx) => <TextCell ctx={ctx} />,
 });
 
-export const makePublicRecipientColumns = (translator?: Translator): ColumnDef<PublicRecipientTableViewRow>[] => [
+export const makePublicRecipientColumns = (translator?: ColumnLabelTranslator): ColumnDef<PublicRecipientTableViewRow>[] => [
 	...buildRecipientLeadColumns<PublicRecipientTableViewRow>(translator, true),
 	...buildRecipientTailColumns<PublicRecipientTableViewRow>(false, translator, true),
 ];
@@ -114,7 +116,7 @@ export const makePublicRecipientColumns = (translator?: Translator): ColumnDef<P
 export const makeRecipientColumns = (
 	hideProgramName = false,
 	hideLocalPartner = false,
-	translator?: Translator,
+	translator?: ColumnLabelTranslator,
 	readOnly = false,
 	localizeLabels = false,
 	publicView = false,

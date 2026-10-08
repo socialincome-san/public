@@ -2,10 +2,10 @@
 
 import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramPayoutForecastTable } from '@/components/storyblok/program/program-payout-forecast-table';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getPublicPayoutForecastTableAction } from '@/modules/payouts/payout.actions';
 import type { PayoutForecastTableViewRow } from '@/modules/payouts/payout.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { type ReactNode, useEffect, useState } from 'react';
 
@@ -28,7 +28,7 @@ export const ProgramFinancesDialog = ({
 	financesCard,
 	programId,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'website-common' });
+	const t = useTranslations('website-common');
 	const [isOpen, setIsOpen] = useState(false);
 	const [rows, setRows] = useState<PayoutForecastTableViewRow[] | null>(null);
 	const [isLoading, setIsLoading] = useState(false);

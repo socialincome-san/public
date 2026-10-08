@@ -13,7 +13,7 @@ export const payoutForecastTableConfig: DataTableConfig<PayoutForecastTableViewR
 		{ id: 'amountInProgramCurrency', label: 'Amount (program currency)' },
 		{ id: 'amountUsd', label: 'Amount (USD)' },
 	],
-	makeColumns: makePayoutForecastColumns,
+	makeColumns: () => makePayoutForecastColumns(),
 	showColumnVisibilitySelector: true,
 	showEntityIdColumn: false,
 };

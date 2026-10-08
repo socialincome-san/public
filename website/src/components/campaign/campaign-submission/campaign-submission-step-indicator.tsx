@@ -1,13 +1,13 @@
 'use client';
 
 import { StepIndicator } from '@socialincome/design-system/navigation/step-indicator/step-indicator';
+import { useTranslations } from 'next-intl';
 import type { CampaignSubmissionStepId } from './types';
 
 type Props = {
 	currentStep: CampaignSubmissionStepId;
 	steps: readonly CampaignSubmissionStepId[];
 	formStepsLabel: string;
-	stepLabel: string;
 	programLabel: string;
 	detailsLabel: string;
 	aboutLabel: string;
@@ -19,13 +19,13 @@ export const CampaignSubmissionStepIndicator = ({
 	currentStep,
 	steps,
 	formStepsLabel,
-	stepLabel,
 	programLabel,
 	detailsLabel,
 	aboutLabel,
 	personalLabel,
 	variant = 'dots',
 }: Props) => {
+	const t = useTranslations('website-common');
 	const activeIndex = steps.indexOf(currentStep);
 
 	const getStepName = (stepId: CampaignSubmissionStepId) => {
@@ -45,7 +45,7 @@ export const CampaignSubmissionStepIndicator = ({
 	};
 
 	const getStepAriaLabel = (index: number) =>
-		stepLabel.replace('{number}', String(index + 1)).replace('{name}', getStepName(steps[index]));
+		t('campaigns-page.submission.step-label', { number: index + 1, name: getStepName(steps[index]) });
 
 	return (
 		<StepIndicator

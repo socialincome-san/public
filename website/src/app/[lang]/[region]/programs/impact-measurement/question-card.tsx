@@ -1,22 +1,21 @@
+import { type NamespaceMessageKey } from '@/lib/utils/message-keys';
 import type { SurveyImpactQuestion } from '@/modules/surveys/survey.types';
+import { getTranslations } from 'next-intl/server';
 import { ReactNode } from 'react';
 import { ImpactMeasurementQuestionContent } from './question-content';
-import { getImpactTranslator } from './translator';
 
 export const ImpactMeasurementQuestionCard = async ({
-	lang,
 	question,
 	index,
 	questionTypeLabelKey,
 	followUpSections,
 }: {
-	lang: string;
 	question: SurveyImpactQuestion;
 	index: number;
-	questionTypeLabelKey: string;
+	questionTypeLabelKey: NamespaceMessageKey<'website-survey'>;
 	followUpSections: ReactNode[];
 }) => {
-	const translator = await getImpactTranslator(lang);
+	const t = await getTranslations('website-survey');
 
 	return (
 		<div key={question.name} className="border-border bg-muted overflow-hidden rounded-3xl border shadow-sm">
@@ -24,19 +23,18 @@ export const ImpactMeasurementQuestionCard = async ({
 				<div className="grid gap-6 px-4 pt-6 pb-8 sm:px-6 sm:pt-8 sm:pb-12 lg:grid-cols-2">
 					<div className="space-y-5">
 						<p className="text-foreground text-sm">
-							{translator.t('survey.impactMeasurement.questionLabel', { context: { number: index + 1 } })} (
-							{translator.t(questionTypeLabelKey)})
+							{t('survey.impactMeasurement.questionLabel', { number: index + 1 })} ({t(questionTypeLabelKey)})
 						</p>
-						<h2 className="text-foreground text-2xl leading-8 font-bold">{translator.t(question.translationKey)}</h2>
+						<h2 className="text-foreground text-2xl leading-8 font-bold">{t(question.translationKey)}</h2>
 						<p className="text-foreground text-sm">
-							{question.answeredCount} {translator.t('survey.impactMeasurement.responsesIn')}{' '}
+							{question.answeredCount} {t('survey.impactMeasurement.responsesIn')}{' '}
 							<span className="underline decoration-dotted">
-								{question.surveyCount} {translator.t('survey.impactMeasurement.surveys')}
+								{question.surveyCount} {t('survey.impactMeasurement.surveys')}
 							</span>
 						</p>
 					</div>
 					<div className="space-y-4">
-						<ImpactMeasurementQuestionContent question={question} keyPrefix={question.name} lang={lang} />
+						<ImpactMeasurementQuestionContent question={question} keyPrefix={question.name} />
 					</div>
 				</div>
 				{followUpSections}

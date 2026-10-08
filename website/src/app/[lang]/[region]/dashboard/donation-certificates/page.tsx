@@ -3,10 +3,10 @@ import { Suspense } from 'react';
 import { DefaultPageProps } from '../..';
 import YourDonationCertificates from './your-donation-certificates';
 
-export default async function Page({ params, searchParams }: DefaultPageProps) {
+export default function Page({ searchParams }: DefaultPageProps) {
 	return (
 		<Suspense fallback={<AppLoadingSkeleton />}>
-			<YourDonationCertificates region={(await params).region} lang={(await params).lang} searchParams={searchParams} />
+			<YourDonationCertificates searchParams={searchParams} />
 		</Suspense>
 	);
 }

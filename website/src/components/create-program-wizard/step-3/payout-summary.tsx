@@ -1,7 +1,7 @@
 'use client';
 
 import { PayoutInterval } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { useTranslations } from 'next-intl';
 import { PayoutPerIntervalAmount, type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 
 type Props = {
@@ -17,7 +17,7 @@ export const PayoutSummary = ({
 	displayCurrency,
 	payoutToDisplayRate,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	const intervalLabel =
 		payoutInterval === 'monthly'

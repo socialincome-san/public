@@ -7,6 +7,7 @@ import {
 } from '@/lib/utils/string-utils';
 import { type ContributorContributionSummary } from '@/modules/contributions/contribution.types';
 import { type MonthlyContributionSummary } from '@/modules/subscriptions/subscription.types';
+import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	lang: WebsiteLanguage;
@@ -16,8 +17,6 @@ type Props = {
 		monthlyContribution: string;
 		totalContributions: string;
 		noActiveSubscriptions: string;
-		activeSubscriptionsCount: string;
-		contributionsSince: string;
 		noContributionsYet: string;
 	};
 };
@@ -35,21 +34,23 @@ const formatMonthlyAmount = (monthlyContribution: MonthlyContributionSummary, la
 	);
 };
 
-export const SubscriptionSummaryCards = ({ lang, monthlyContribution, contributionSummary, labels }: Props) => {
+export const SubscriptionSummaryCards = async ({ lang, monthlyContribution, contributionSummary, labels }: Props) => {
+	const t = await getTranslations('website-me');
 	const monthlyAmount = formatMonthlyAmount(monthlyContribution, lang);
 	const monthlySubtitle =
 		monthlyContribution.activeCount === 0
 			? labels.noActiveSubscriptions
-			: labels.activeSubscriptionsCount.replace('{count}', String(monthlyContribution.activeCount));
+			: t('subscriptions.summary.active-subscriptions-count', { count: monthlyContribution.activeCount });
 
 	const totalAmount = formatCurrencyLocale(contributionSummary.totalAmountChf, 'CHF', lang, wholeCurrencyFormatOptions);
 
 	const totalSubtitle =
 		contributionSummary.count === 0 || !contributionSummary.firstContributionAt
 			? labels.noContributionsYet
-			: labels.contributionsSince
-					.replace('{count}', String(contributionSummary.count))
-					.replace('{date}', formatDateLocale(contributionSummary.firstContributionAt, lang));
+			: t('subscriptions.summary.contributions-since', {
+					count: contributionSummary.count,
+					date: formatDateLocale(contributionSummary.firstContributionAt, lang),
+				});
 
 	return (
 		<div className="grid gap-4 md:grid-cols-2">

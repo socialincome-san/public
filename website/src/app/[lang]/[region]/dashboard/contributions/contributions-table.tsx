@@ -1,11 +1,11 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { getYourContributionsTableConfig } from '@/components/data-table/configs/your-contributions-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getPaginatedYourContributionsTableView } from '@/modules/contributions/contribution.service';
 import { YourContributionsTableViewRow } from '@/modules/contributions/contribution.types';
 import { requireSession } from '@/server/session';
+import { getTranslations } from 'next-intl/server';
 
 export const ContributionsTable = async ({
 	lang,
@@ -20,10 +20,10 @@ export const ContributionsTable = async ({
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
+	const t = await getTranslations('website-me');
 	const config = getYourContributionsTableConfig({
-		title: translator.t('sections.contributions.payments'),
-		emptyMessage: translator.t('contributions.no-contributions'),
+		title: t('sections.contributions.payments'),
+		emptyMessage: t('contributions.no-contributions'),
 	});
 
 	const result = await getPaginatedYourContributionsTableView(contributor.id, tableQuery);
@@ -41,11 +41,10 @@ export const ContributionsTable = async ({
 			query={{ ...tableQuery, totalRows }}
 			actionMenuItems={[
 				{
-					label: translator.t('donate-now'),
+					label: t('donate-now'),
 					href: `/${lang}/${region}`,
 				},
 			]}
-			lang={lang}
 		/>
 	);
 };

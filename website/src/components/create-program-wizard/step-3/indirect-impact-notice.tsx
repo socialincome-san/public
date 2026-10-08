@@ -1,20 +1,20 @@
 'use client';
 
 import { getIndirectBeneficiaryCount, INDIRECT_BENEFICIARY_FACTOR } from '@/components/program/indirect-beneficiaries';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
+import { useTranslations } from 'next-intl';
 
 type Props = {
 	recipients: number;
 };
 
 export const IndirectImpactNotice = ({ recipients }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 	const indirect = getIndirectBeneficiaryCount(recipients);
 
 	return (

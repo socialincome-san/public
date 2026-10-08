@@ -1,11 +1,9 @@
 'use client';
 
-import { useTranslator } from '@/lib/i18n/use-translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { CONFIRM_LOGIN_PATH_REGEX } from '@/lib/utils/regex';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
 /**
  * Interstitial for email sign-in links (e.g. from navbar login flyout).
@@ -15,9 +13,7 @@ import { useParams } from 'next/navigation';
  * to finish-login.
  */
 export default function ConfirmLoginPage() {
-	const params = useParams();
-	const lang = (params?.lang as WebsiteLanguage) ?? 'en';
-	const translator = useTranslator(lang, 'website-login');
+	const t = useTranslations('website-login');
 
 	const continueToFinish = () => {
 		const path = window.location.pathname.replace(CONFIRM_LOGIN_PATH_REGEX, '/finish-login');
@@ -26,13 +22,13 @@ export default function ConfirmLoginPage() {
 
 	return (
 		<div className="flex min-h-[40vh] flex-1 flex-col items-center justify-center gap-6 px-4 text-center">
-			<h1 className="text-xl font-bold">{translator?.t('confirm-login.title')}</h1>
-			<p className="text-muted-foreground max-w-sm">{translator?.t('confirm-login.body')}</p>
+			<h1 className="text-xl font-bold">{t('confirm-login.title')}</h1>
+			<p className="text-muted-foreground max-w-sm">{t('confirm-login.body')}</p>
 			<Button data-testid="confirm-login-button" onClick={continueToFinish}>
-				{translator?.t('confirm-login.cta')}
+				{t('confirm-login.cta')}
 			</Button>
 			<Link className="text-muted-foreground text-sm underline" href="/">
-				{translator?.t('confirm-login.return-home')}
+				{t('confirm-login.return-home')}
 			</Link>
 		</div>
 	);

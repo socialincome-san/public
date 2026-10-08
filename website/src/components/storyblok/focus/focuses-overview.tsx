@@ -1,11 +1,11 @@
 import type { AnySearchParams } from '@/app/page-props';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getPublicFocusStatsBySlugsAction } from '@/modules/focuses/focus.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
 import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
 import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
+import { getTranslations } from 'next-intl/server';
 import { FocusDetailCard } from './focus-detail-card';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusTitle } from './focus.utils';
@@ -34,9 +34,11 @@ type Props = {
 };
 
 export const FocusesOverview = async ({ focuses, lang, region, title, text, searchParams }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const focusSlugs = focuses.map((focus) => getFocusSlug(focus));
-	const statsResult = await getPublicFocusStatsBySlugsAction(focusSlugs);
+	const [t, statsResult] = await Promise.all([
+		getTranslations('website-common'),
+		getPublicFocusStatsBySlugsAction(focusSlugs),
+	]);
 	const statsBySlug = statsResult.success ? statsResult.data : {};
 	const hasStatsError = !statsResult.success;
 	const searchQuery = getSearchQuery(searchParams);
@@ -64,16 +66,12 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 					filters={
 						<>
 							<FocusesOverviewCountryFilter
-								allCountriesLabel={translator.t('focuses-page.all-countries', {
-									context: { count: countryOptions.length },
-								})}
+								allCountriesLabel={t('focuses-page.all-countries', { count: countryOptions.length })}
 								countryOptions={countryOptions}
 								selectedCountryIsoCode={selectedCountryIsoCode}
 							/>
 							<FocusesOverviewSdgFilter
-								allSdgsLabel={translator.t('focuses-page.all-sdgs', {
-									context: { count: sdgOptions.length },
-								})}
+								allSdgsLabel={t('focuses-page.all-sdgs', { count: sdgOptions.length })}
 								sdgOptions={sdgOptions}
 								selectedSdg={selectedSdg}
 							/>
@@ -82,13 +80,13 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 					search={
 						<FocusesOverviewSearch
 							defaultValue={searchQuery}
-							label={translator.t('focuses-page.search-label')}
-							placeholder={translator.t('focuses-page.search-placeholder')}
+							label={t('focuses-page.search-label')}
+							placeholder={t('focuses-page.search-placeholder')}
 						/>
 					}
 				/>
-				{hasStatsError ? <p className="text-destructive">{translator.t('focuses-page.load-stats-error')}</p> : null}
-				<CardGrid emptyMessage={translator.t(hasActiveFilters ? 'focuses-page.no-results' : 'focuses-page.empty')}>
+				{hasStatsError ? <p className="text-destructive">{t('focuses-page.load-stats-error')}</p> : null}
+				<CardGrid emptyMessage={t(hasActiveFilters ? 'focuses-page.no-results' : 'focuses-page.empty')}>
 					{sortedFocuses.map((focus) => {
 						const focusSlug = getFocusSlug(focus);
 						const focusTitle = getFocusTitle(focus.content);
@@ -109,18 +107,13 @@ export const FocusesOverview = async ({ focuses, lang, region, title, text, sear
 									sdgValues={focus.content.sdgs}
 									alertVariant={stats.candidatesCount > 0 ? 'confirm' : 'secondary'}
 									labels={{
-										recipients: translator.t('focuses-page.recipients'),
-										programs: translator.t('focuses-page.programs'),
-										sdgs: translator.t('focuses-page.sdgs'),
+										recipients: t('focuses-page.recipients'),
+										programs: t('focuses-page.programs'),
+										sdgs: t('focuses-page.sdgs'),
 										candidatesReady:
 											stats.candidatesCount > 0
-												? translator.t(
-														stats.candidatesCount === 1
-															? 'focuses-page.candidates-ready-to-enroll_one'
-															: 'focuses-page.candidates-ready-to-enroll_other',
-														{ context: { count: stats.candidatesCount } },
-													)
-												: translator.t('focuses-page.no-candidates'),
+												? t('focuses-page.candidates-ready-to-enroll', { count: stats.candidatesCount })
+												: t('focuses-page.no-candidates'),
 									}}
 								/>
 							</CardGridItem>

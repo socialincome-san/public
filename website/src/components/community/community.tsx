@@ -1,8 +1,7 @@
 import { CommunityBackstageTrigger } from '@/components/community/community-backstage';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
 import { CommunityPanel } from '@socialincome/design-system/data-display/community-panel/community-panel';
+import { getTranslations } from 'next-intl/server';
 
 const VOLUNTEERS_PLACEHOLDER = '{volunteers}';
 const TICKER_PEOPLE_LIMIT = 3;
@@ -10,13 +9,12 @@ const PEOPLE_STACK_VISIBLE = 3;
 
 type CommunityProps = {
 	data: CommunityPanelData;
-	lang: WebsiteLanguage;
 };
 
-export const Community = async ({ data, lang }: CommunityProps) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-community'] });
-	const volunteers = translator.t('volunteers', { context: { count: data.volunteerCount } });
-	const countries = translator.t('countries', { context: { count: data.countryCount } });
+export const Community = async ({ data }: CommunityProps) => {
+	const t = await getTranslations('website-community');
+	const volunteers = t('volunteers', { count: data.volunteerCount });
+	const countries = t('countries', { count: data.countryCount });
 	const fill = (text: string, values: Record<string, string | number> = {}) =>
 		Object.entries({
 			volunteers,
@@ -40,8 +38,8 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 
 	const tickerItems = data.tickerItems.map((item) => fill(item));
 	const maintainerPeople = [...new Map(data.maintainers.flatMap((group) => group.people).map((p) => [p.name, p])).values()];
-	const reachOut = translator.t('reach-out');
-	const panelLabel = translator.t('panel-label');
+	const reachOut = t('reach-out');
+	const panelLabel = t('panel-label');
 
 	const panel = (
 		<CommunityPanel
@@ -52,8 +50,8 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 				data.maintainers.length > 0
 					? {
 							roles: data.maintainers,
-							showMoreLabel: translator.t('show-all-contributors'),
-							showLessLabel: translator.t('show-fewer-contributors'),
+							showMoreLabel: t('show-all-contributors'),
+							showLessLabel: t('show-fewer-contributors'),
 							feedback:
 								data.mistakeText && data.contactEmail
 									? {
@@ -61,7 +59,7 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 											action: {
 												label: reachOut,
 												href: `mailto:${data.contactEmail}`,
-												ariaLabel: translator.t('reach-out-about-page'),
+												ariaLabel: t('reach-out-about-page'),
 											},
 										}
 									: undefined,
@@ -72,11 +70,11 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 				data.worldsTitle
 					? {
 							title: data.worldsTitle,
-							lessLabel: translator.t('show-less'),
+							lessLabel: t('show-less'),
 							items: data.worlds.map((world) => ({
 								...world,
-								moreLabel: translator.t('more-people', {
-									context: { count: Math.max(world.people.length - PEOPLE_STACK_VISIBLE, 0) },
+								moreLabel: t('more-people', {
+									count: Math.max(world.people.length - PEOPLE_STACK_VISIBLE, 0),
 								}),
 							})),
 						}
@@ -93,7 +91,7 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 								action: {
 									label: reachOut,
 									href: `mailto:${email}`,
-									ariaLabel: translator.t('reach-out-about-role', { context: { name: person.name, role } }),
+									ariaLabel: t('reach-out-about-role', { name: person.name, role }),
 								},
 							})),
 						}
@@ -106,7 +104,7 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 							title: data.readingTitle,
 							items: data.articles.map((article) => ({
 								title: article.title,
-								meta: translator.t('article-by', { context: { name: article.author } }),
+								meta: t('article-by', { name: article.author }),
 								href: article.href,
 								imageSrc: article.imageSrc,
 							})),
@@ -119,11 +117,11 @@ export const Community = async ({ data, lang }: CommunityProps) => {
 	return (
 		<CommunityBackstageTrigger
 			items={tickerItems.length > 0 ? tickerItems : [panelLabel]}
-			label={translator.t('ticker-label')}
+			label={t('ticker-label')}
 			people={maintainerPeople.slice(0, TICKER_PEOPLE_LIMIT)}
 			panel={panel}
 			panelLabel={panelLabel}
-			closeLabel={translator.t('close')}
+			closeLabel={t('close')}
 		/>
 	);
 };

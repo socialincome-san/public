@@ -1,13 +1,14 @@
 import type { LanguageCode } from '@/lib/types/language';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
+import { type useTranslations } from 'next-intl';
 
 const localeForLanguage = (language: LanguageCode): string => (language === 'de' ? 'de-CH' : language);
 
 const formatCommunityCount = (value: number, language: LanguageCode): string =>
 	formatNumberLocale(value, localeForLanguage(language));
 
-type Translate = (key: string, context?: Record<string, unknown>) => string;
+type Translate = ReturnType<typeof useTranslations<'donation-wizard'>>;
 
 export const getSupportersImpactLabel = (
 	t: Translate,

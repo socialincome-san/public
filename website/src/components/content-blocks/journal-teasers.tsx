@@ -1,11 +1,11 @@
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getJournalArticlesByUuidsAction, getLatestJournalArticlesAction } from '@/modules/journal/journal.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable } from '@storyblok/react';
+import { getTranslations } from 'next-intl/server';
 
 const JOURNAL_TEASER_LIMIT = 3;
 
@@ -46,10 +46,7 @@ const getArticles = async (blok: JournalTeasers, lang: WebsiteLanguage) => {
 
 export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 	const { disableMarginBottom, disableMarginTop, heading } = blok;
-	const [translator, articles] = await Promise.all([
-		Translator.getInstance({ language: lang, namespaces: ['website-journal'] }),
-		getArticles(blok, lang),
-	]);
+	const [t, articles] = await Promise.all([getTranslations('website-journal'), getArticles(blok, lang)]);
 
 	if (!articles.length) {
 		return null;
@@ -66,8 +63,8 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 				articles={articles}
 				lang={lang}
 				region={region}
-				journalCtaLabel={translator.t('teasers.goToJournal')}
-				videoLabel={translator.t('badge.video')}
+				journalCtaLabel={t('teasers.goToJournal')}
+				videoLabel={t('badge.video')}
 			/>
 		</BlockWrapper>
 	);

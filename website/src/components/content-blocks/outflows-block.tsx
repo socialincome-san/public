@@ -9,10 +9,10 @@ import {
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 import type { Outflows as OutflowsBlok } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import { storyblokEditable } from '@storyblok/react';
+import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	blok: OutflowsBlok;
@@ -21,21 +21,21 @@ type Props = {
 };
 
 export const OutflowsBlock = async ({ blok, lang, region }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const t = await getTranslations('website-common');
 	const downloadsHref = getWebsitePublicPath(lang, region, 'downloads');
 
 	const rows = buildOutflowsSectionRows({
 		'direct-cash': {
-			label: translator.t('transparency-page.outflows.segments.direct-cash.label'),
-			description: translator.t('transparency-page.outflows.segments.direct-cash.description'),
+			label: t('transparency-page.outflows.segments.direct-cash.label'),
+			description: t('transparency-page.outflows.segments.direct-cash.description'),
 		},
 		administration: {
-			label: translator.t('transparency-page.outflows.segments.administration.label'),
-			description: translator.t('transparency-page.outflows.segments.administration.description'),
+			label: t('transparency-page.outflows.segments.administration.label'),
+			description: t('transparency-page.outflows.segments.administration.description'),
 		},
 		fundraising: {
-			label: translator.t('transparency-page.outflows.segments.fundraising.label'),
-			description: translator.t('transparency-page.outflows.segments.fundraising.description'),
+			label: t('transparency-page.outflows.segments.fundraising.label'),
+			description: t('transparency-page.outflows.segments.fundraising.description'),
 		},
 	});
 
@@ -46,28 +46,22 @@ export const OutflowsBlock = async ({ blok, lang, region }: Props) => {
 				ngoAverageSourceUrl={OUTFLOW_NGO_AVERAGE_SOURCE_URL}
 				rows={rows}
 				copy={{
-					eyebrow: translator.t('transparency-page.outflows.eyebrow'),
-					headlineBeforeBold: translator.t('transparency-page.outflows.headline-before'),
-					headlineBold: translator.t('transparency-page.outflows.headline-bold', {
-						context: { percent: OUTFLOW_REACH_PERCENT },
-					}),
-					headlineAfterBold: translator.t('transparency-page.outflows.headline-after'),
-					zewoBefore: translator.t('transparency-page.outflows.zewo-before', {
-						context: { auditFirm: OUTFLOW_AUDIT_FIRM },
-					}),
-					zewoLink: translator.t('transparency-page.outflows.zewo-link'),
-					zewoAfter: translator.t('transparency-page.outflows.zewo-after'),
-					zewoAlt: translator.t('transparency-page.outflows.zewo-alt'),
-					breakdownTitle: translator.t('transparency-page.outflows.breakdown-title'),
-					breakdownAriaLabel: translator.t('transparency-page.outflows.breakdown-aria-label'),
-					ngoAverageBefore: translator.t('transparency-page.outflows.ngo-average-before'),
-					ngoAverageSource: translator.t('transparency-page.outflows.ngo-average-source'),
-					ngoAverageAfter: translator.t('transparency-page.outflows.ngo-average-after', {
-						context: { amount: OUTFLOW_NGO_UPPER_LIMIT_PERCENT },
-					}),
-					donateNow: translator.t('countries-page.donate-now'),
-					annualStatementBefore: translator.t('transparency-page.outflows.annual-statement-before'),
-					annualStatementLink: translator.t('transparency-page.outflows.annual-statement-link'),
+					eyebrow: t('transparency-page.outflows.eyebrow'),
+					headlineBeforeBold: t('transparency-page.outflows.headline-before'),
+					headlineBold: t('transparency-page.outflows.headline-bold', { percent: OUTFLOW_REACH_PERCENT }),
+					headlineAfterBold: t('transparency-page.outflows.headline-after'),
+					zewoBefore: t('transparency-page.outflows.zewo-before', { auditFirm: OUTFLOW_AUDIT_FIRM }),
+					zewoLink: t('transparency-page.outflows.zewo-link'),
+					zewoAfter: t('transparency-page.outflows.zewo-after'),
+					zewoAlt: t('transparency-page.outflows.zewo-alt'),
+					breakdownTitle: t('transparency-page.outflows.breakdown-title'),
+					breakdownAriaLabel: t('transparency-page.outflows.breakdown-aria-label'),
+					ngoAverageBefore: t('transparency-page.outflows.ngo-average-before'),
+					ngoAverageSource: t('transparency-page.outflows.ngo-average-source'),
+					ngoAverageAfter: t('transparency-page.outflows.ngo-average-after', { amount: OUTFLOW_NGO_UPPER_LIMIT_PERCENT }),
+					donateNow: t('countries-page.donate-now'),
+					annualStatementBefore: t('transparency-page.outflows.annual-statement-before'),
+					annualStatementLink: t('transparency-page.outflows.annual-statement-link'),
 				}}
 			/>
 		</BlockWrapper>

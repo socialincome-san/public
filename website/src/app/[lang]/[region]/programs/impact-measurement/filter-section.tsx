@@ -1,14 +1,15 @@
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { SurveyQuestionnaire } from '@/generated/prisma/client';
+import { isMessageKey } from '@/lib/utils/message-keys';
 import { getFocuses } from '@/modules/storyblok-content/storyblok-content.service';
 import { RECIPIENT_AGE_GROUPS } from '@/modules/surveys/survey-age-groups.types';
 import { getSurveyImpactFilterOptions } from '@/modules/surveys/survey.service';
 import { type MultiSelectOption } from '@socialincome/design-system/forms/multi-select/multi-select';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { questionnaireLabelKeys } from './config';
 import { ImpactMeasurementFilters } from './filters';
 import { FILTER_PREFIX, ImpactFilterQueryParams } from './filters.constants';
 import { toSelectedFilterTokens } from './filters.server';
-import { getImpactTranslator } from './translator';
 
 type ImpactMeasurementFilterSectionProps = {
 	lang: string;
@@ -31,8 +32,10 @@ const getFocusTitleBySlug = (focuses: FocusStory[]) => {
 };
 
 export const ImpactMeasurementFilterSection = async ({ lang, searchParams }: ImpactMeasurementFilterSectionProps) => {
-	const [translator, filterOptionsResult, storyblokFocusesResult] = await Promise.all([
-		getImpactTranslator(lang),
+	const [t, tCountries, messages, filterOptionsResult, storyblokFocusesResult] = await Promise.all([
+		getTranslations('website-survey'),
+		getTranslations('countries'),
+		getMessages(),
 		getSurveyImpactFilterOptions(),
 		getFocuses(lang),
 	]);
@@ -44,67 +47,63 @@ export const ImpactMeasurementFilterSection = async ({ lang, searchParams }: Imp
 
 	const localizedQuestionnaireOptions = filterOptions.questionnaires.map((questionnaire) => ({
 		value: questionnaire.value,
-		label: translator.t(
+		label: t(
 			questionnaireLabelKeys[questionnaire.value as SurveyQuestionnaire] ??
 				'survey.impactMeasurement.questionnaires.fallback',
 		),
 	}));
-	const localizedCountryOptions = filterOptions.countries.map((country) => {
-		const translatedCountry = translator.t(country.value);
-
-		return {
-			value: country.value,
-			label: translatedCountry === country.value ? country.label : translatedCountry,
-		};
-	});
+	const localizedCountryOptions = filterOptions.countries.map((country) => ({
+		value: country.value,
+		label: isMessageKey(messages, 'countries', country.value) ? tCountries(country.value) : country.label,
+	}));
 
 	const recipientFilterGroups = [
 		{
-			heading: translator.t('survey.impactMeasurement.recipientsFilter.genderHeading'),
+			heading: t('survey.impactMeasurement.recipientsFilter.genderHeading'),
 			options: [
 				{
 					value: `${FILTER_PREFIX.recipient}male`,
-					label: translator.t('survey.impactMeasurement.recipientsFilter.gender.male'),
+					label: t('survey.impactMeasurement.recipientsFilter.gender.male'),
 				},
 				{
 					value: `${FILTER_PREFIX.recipient}female`,
-					label: translator.t('survey.impactMeasurement.recipientsFilter.gender.female'),
+					label: t('survey.impactMeasurement.recipientsFilter.gender.female'),
 				},
 			],
 		},
 		{
-			heading: translator.t('survey.impactMeasurement.recipientsFilter.ageHeading'),
+			heading: t('survey.impactMeasurement.recipientsFilter.ageHeading'),
 			options: RECIPIENT_AGE_GROUPS.map((ageGroup) => ({
 				value: `${FILTER_PREFIX.recipient}${ageGroup}`,
-				label: translator.t(`survey.impactMeasurement.recipientsFilter.age.${ageGroup}`),
+				label: t(`survey.impactMeasurement.recipientsFilter.age.${ageGroup}`),
 			})),
 		},
 	];
 
 	const filterGroups: { heading: string; options: MultiSelectOption[] }[] = [
 		{
-			heading: translator.t('survey.impactMeasurement.filters.allCountries'),
+			heading: t('survey.impactMeasurement.filters.allCountries'),
 			options: localizedCountryOptions.map((option) => ({
 				value: `${FILTER_PREFIX.country}${option.value}`,
 				label: option.label,
 			})),
 		},
 		{
-			heading: translator.t('survey.impactMeasurement.filters.allPrograms'),
+			heading: t('survey.impactMeasurement.filters.allPrograms'),
 			options: filterOptions.programs.map((option) => ({
 				value: `${FILTER_PREFIX.program}${option.value}`,
 				label: option.label,
 			})),
 		},
 		{
-			heading: translator.t('survey.impactMeasurement.filters.allFocuses'),
+			heading: t('survey.impactMeasurement.filters.allFocuses'),
 			options: filterOptions.focuses.map((option) => ({
 				value: `${FILTER_PREFIX.focus}${option.value}`,
 				label: focusTitleBySlug.get(option.label) ?? option.label,
 			})),
 		},
 		{
-			heading: translator.t('survey.impactMeasurement.filters.allSurveys'),
+			heading: t('survey.impactMeasurement.filters.allSurveys'),
 			options: localizedQuestionnaireOptions.map((option) => ({
 				value: `${FILTER_PREFIX.questionnaire}${option.value}`,
 				label: option.label,
@@ -115,7 +114,7 @@ export const ImpactMeasurementFilterSection = async ({ lang, searchParams }: Imp
 
 	return (
 		<ImpactMeasurementFilters
-			allFiltersPlaceholder={translator.t('survey.impactMeasurement.filters.filter')}
+			allFiltersPlaceholder={t('survey.impactMeasurement.filters.filter')}
 			filterGroups={filterGroups}
 			selectedFilters={toSelectedFilterTokens(searchParams)}
 		/>

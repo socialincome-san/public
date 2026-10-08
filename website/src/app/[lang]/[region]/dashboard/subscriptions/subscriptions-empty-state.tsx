@@ -2,6 +2,7 @@ import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { formatCurrencyLocale, wholeCurrencyFormatOptions } from '@/lib/utils/string-utils';
 import { type ContributorContributionSummary } from '@/modules/contributions/contribution.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 type Props = {
@@ -10,21 +11,19 @@ type Props = {
 	contributionSummary: ContributorContributionSummary;
 	labels: {
 		noActiveSubscriptions: string;
-		emptyDescription: string;
 		emptyDescriptionNoContributions: string;
 		donateNow: string;
 	};
 };
 
-export const SubscriptionsEmptyState = ({ lang, region, contributionSummary, labels }: Props) => {
+export const SubscriptionsEmptyState = async ({ lang, region, contributionSummary, labels }: Props) => {
+	const t = await getTranslations('website-me');
 	const hasContributions = contributionSummary.count > 0;
 	const description = hasContributions
-		? labels.emptyDescription
-				.replace(
-					'{amount}',
-					formatCurrencyLocale(contributionSummary.totalAmountChf, 'CHF', lang, wholeCurrencyFormatOptions),
-				)
-				.replace('{count}', String(contributionSummary.count))
+		? t('subscriptions.empty.description', {
+				amount: formatCurrencyLocale(contributionSummary.totalAmountChf, 'CHF', lang, wholeCurrencyFormatOptions),
+				count: contributionSummary.count,
+			})
 		: labels.emptyDescriptionNoContributions;
 
 	return (

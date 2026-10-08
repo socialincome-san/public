@@ -4,7 +4,7 @@ import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { Input } from '@socialincome/design-system/forms/input/input';
-import type { DonationAmountFieldsTranslations } from '../../i18n/donation-amount-fields-translations';
+import { useTranslations } from 'next-intl';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
 	DONATION_CUSTOM_AMOUNT_MIN,
@@ -54,7 +54,6 @@ type Props = {
 	actions: DonationAmountFieldsActions;
 	onSubmit: () => void;
 	placement?: 'wizard' | 'hero';
-	translations: DonationAmountFieldsTranslations;
 	currency: WebsiteCurrency;
 	showTitle?: boolean;
 };
@@ -64,10 +63,11 @@ export const DonationAmountFields = ({
 	actions,
 	onSubmit,
 	placement = 'wizard',
-	translations,
 	currency,
 	showTitle = true,
 }: Props) => {
+	const t = useTranslations('donation-wizard');
+
 	return (
 		<div
 			className={cn(
@@ -79,7 +79,7 @@ export const DonationAmountFields = ({
 		>
 			{showTitle && (
 				<h2 className="text-foreground mb-5 text-xl leading-tight font-bold text-pretty sm:text-2xl sm:leading-none">
-					{translations.title}
+					{t('stepAmount.title')}
 				</h2>
 			)}
 
@@ -92,7 +92,7 @@ export const DonationAmountFields = ({
 					)}
 				>
 					<label htmlFor={monthlyIncomeInputId} className="text-2xs font-medium">
-						{translations.monthlyIncomeLabel} ({currency})
+						{t('stepAmount.monthly-income-label')} ({currency})
 					</label>
 					<div className={monthlyAmountTextClass}>
 						<Input
@@ -132,7 +132,7 @@ export const DonationAmountFields = ({
 							: 'text-muted-foreground bg-card hover:bg-muted/50 hover:text-foreground',
 					)}
 				>
-					<div className="text-2xs font-medium">{translations.yourOnePercent}</div>
+					<div className="text-2xs font-medium">{t('stepAmount.your-one-percent')}</div>
 					<div className={cn(monthlyAmountTextClass, 'whitespace-nowrap')}>
 						{currency} {values.onePercent}
 					</div>
@@ -141,7 +141,7 @@ export const DonationAmountFields = ({
 
 			<div className="mb-3 flex items-center gap-4">
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
-				<div className="text-2xs text-center font-medium">{translations.chooseOwnAmount}</div>
+				<div className="text-2xs text-center font-medium">{t('stepAmount.choose-own-amount')}</div>
 				<div className={cn(amountFieldBorder, 'h-px flex-1 border-t')} aria-hidden />
 			</div>
 			<div
@@ -167,7 +167,7 @@ export const DonationAmountFields = ({
 							)}
 						>
 							<span className={cn(option.labelKey === 'other' ? 'text-base' : 'text-2xs')}>
-								{option.labelKey === 'other' ? translations.other : currency}
+								{option.labelKey === 'other' ? t('stepAmount.other') : currency}
 							</span>
 							{option.value !== 'other' && <span>{option.value}</span>}
 						</button>
@@ -182,7 +182,7 @@ export const DonationAmountFields = ({
 						data-testid="donation-wizard-custom-amount"
 						min={DONATION_CUSTOM_AMOUNT_MIN}
 						max={DONATION_CUSTOM_AMOUNT_MAX}
-						placeholder={translations.customAmountPlaceholder}
+						placeholder={t('stepAmount.custom-amount-placeholder')}
 						value={values.customAmount ?? ''}
 						onChange={(e) => {
 							const raw = e.target.value;
@@ -213,7 +213,7 @@ export const DonationAmountFields = ({
 							: 'text-muted-foreground hover:text-foreground',
 					)}
 				>
-					{translations.monthly}
+					{t('stepAmount.monthly')}
 				</button>
 				<button
 					type="button"
@@ -227,7 +227,7 @@ export const DonationAmountFields = ({
 							: 'text-muted-foreground hover:text-foreground',
 					)}
 				>
-					{translations.oneTime}
+					{t('stepAmount.one-time')}
 				</button>
 			</div>
 
@@ -239,8 +239,8 @@ export const DonationAmountFields = ({
 				onClick={onSubmit}
 			>
 				{values.resolvedAmount !== null
-					? translations.donateNowWithAmount.replace('{amount}', `${currency} ${values.resolvedAmount}`)
-					: translations.donateNow}
+					? t('stepAmount.donate-now-with-amount', { amount: `${currency} ${values.resolvedAmount}` })
+					: t('stepAmount.donate-now')}
 			</Button>
 		</div>
 	);

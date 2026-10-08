@@ -1,9 +1,9 @@
-import { TranslateFunction } from '@/lib/i18n/translator';
+import { type SurveyTranslator } from './questions';
 
 /**
  * Shared settings among all surveys
  */
-export const settings = (t: TranslateFunction) => {
+export const settings = (t: SurveyTranslator) => {
 	return {
 		logoPosition: 'right',
 		showProgressBar: 'top',

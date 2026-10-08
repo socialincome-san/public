@@ -1,8 +1,27 @@
-import type { Translator } from '@/lib/i18n/translator';
+import { type useTranslations } from 'next-intl';
+
+export type ColumnLabelTranslator = ReturnType<typeof useTranslations<'website-common'>>;
+
+type ColumnLabelKey =
+	| 'column-period'
+	| 'column-recipients'
+	| 'column-amount'
+	| 'column-amount-usd'
+	| 'column-recipient'
+	| 'column-status'
+	| 'column-age'
+	| 'column-local-partner'
+	| 'column-program'
+	| 'column-progress'
+	| 'column-created'
+	| 'column-firebase-auth-user-id'
+	| 'column-payment-code'
+	| 'country'
+	| 'start-date';
 
 export const columnLabel = (
 	localizeLabels: boolean,
-	translator: Translator | undefined,
-	key: string,
+	t: ColumnLabelTranslator | undefined,
+	key: ColumnLabelKey,
 	fallback: string,
-): string => (localizeLabels && translator ? translator.t(`program-detail-page.${key}`) : fallback);
+): string => (localizeLabels && t ? t(`program-detail-page.${key}`) : fallback);

@@ -1,7 +1,5 @@
 'use client';
 
-import { useTranslator } from '@/lib/i18n/use-translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE, type LanguageCode } from '@/lib/types/language';
 import { now } from '@/lib/utils/now';
 import { createCurrentContributorDonationCertificateAction } from '@/modules/donation-certificates/donation-certificate.actions';
@@ -20,6 +18,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@socialincome/design-system/overlays/dialog/dialog';
+import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 
 const CURRENT_YEAR = now().getFullYear();
@@ -28,18 +27,16 @@ const LANGUAGES: LanguageCode[] = ['en', 'de', 'fr', 'it'];
 export default function GenerateDonationCertificateDialog({
 	open,
 	setOpen,
-	lang,
 }: {
 	open: boolean;
 	setOpen: (open: boolean) => void;
-	lang: WebsiteLanguage;
 }) {
 	const [year, setYear] = useState<number>(CURRENT_YEAR - 1);
 	const [language, setLanguage] = useState<LanguageCode | undefined>(DEFAULT_LANGUAGE);
 	const [isLoading, startTransition] = useTransition();
 	const [success, setSuccess] = useState<boolean>();
 	const [error, setError] = useState<string | undefined>();
-	const translator = useTranslator(lang, 'website-me');
+	const t = useTranslations('website-me');
 
 	const generateCertificates = () => {
 		setSuccess(false);
@@ -56,13 +53,13 @@ export default function GenerateDonationCertificateDialog({
 
 	const getErrorMessage = (errorCode: string) => {
 		if (errorCode === 'noContributions') {
-			return translator?.t('donation-certificates.no-contributions');
+			return t('donation-certificates.no-contributions');
 		}
 		if (errorCode === 'alreadyExists') {
-			return translator?.t('donation-certificates.already-exists');
+			return t('donation-certificates.already-exists');
 		}
 
-		return translator?.t('donation-certificates.technical-error');
+		return t('donation-certificates.technical-error');
 	};
 
 	const onOpenChange = (open: boolean) => {
@@ -75,18 +72,18 @@ export default function GenerateDonationCertificateDialog({
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent size="md">
 				<DialogHeader>
-					<DialogTitle>{translator?.t('donation-certificates.generate-dialog.dialog_title')}</DialogTitle>
+					<DialogTitle>{t('donation-certificates.generate-dialog.dialog_title')}</DialogTitle>
 				</DialogHeader>
 
 				<div className="flex flex-col gap-6">
 					<div className="flex flex-col gap-2">
-						<p className="font-medium">{translator?.t('donation-certificates.generate-dialog.label_year')}</p>
+						<p className="font-medium">{t('donation-certificates.generate-dialog.label_year')}</p>
 						<p className="text-muted-foreground mb-1 text-xs">
-							{translator?.t('donation-certificates.generate-dialog.description_year')}
+							{t('donation-certificates.generate-dialog.description_year')}
 						</p>
 						<Select value={year.toString()} onValueChange={(e: string) => setYear(parseInt(e))}>
 							<SelectTrigger>
-								<SelectValue placeholder={translator?.t('donation-certificates.generate-dialog.placeholder_year')} />
+								<SelectValue placeholder={t('donation-certificates.generate-dialog.placeholder_year')} />
 							</SelectTrigger>
 							<SelectContent>
 								{CERTIFICATE_YEARS.map((year) => (
@@ -99,9 +96,9 @@ export default function GenerateDonationCertificateDialog({
 					</div>
 
 					<div className="flex flex-col gap-2">
-						<p className="font-medium">{translator?.t('donation-certificates.generate-dialog.label_language')}</p>
+						<p className="font-medium">{t('donation-certificates.generate-dialog.label_language')}</p>
 						<p className="text-muted-foreground mb-1 text-xs">
-							{translator?.t('donation-certificates.generate-dialog.description_language')}
+							{t('donation-certificates.generate-dialog.description_language')}
 						</p>
 						<Select
 							value={language}
@@ -111,7 +108,7 @@ export default function GenerateDonationCertificateDialog({
 							}
 						>
 							<SelectTrigger>
-								<SelectValue placeholder={translator?.t('donation-certificates.generate-dialog.placeholder_language')} />
+								<SelectValue placeholder={t('donation-certificates.generate-dialog.placeholder_language')} />
 							</SelectTrigger>
 							<SelectContent>
 								{LANGUAGES.map((langCode) => (
@@ -125,16 +122,14 @@ export default function GenerateDonationCertificateDialog({
 
 					<Button disabled={isLoading} fullWidth onClick={() => generateCertificates()}>
 						{isLoading
-							? translator?.t('donation-certificates.generate-dialog.state_generating')
-							: translator?.t('donation-certificates.generate-dialog.button_generate')}
+							? t('donation-certificates.generate-dialog.state_generating')
+							: t('donation-certificates.generate-dialog.button_generate')}
 					</Button>
 
 					{Boolean(success ?? error) && (
 						<div className="bg-muted border-border max-w-[540px] rounded-lg border p-2 text-xs">
 							{success && (
-								<p className="text-confirm text-sm">
-									{translator?.t('donation-certificates.generate-dialog.status_success')}
-								</p>
+								<p className="text-confirm text-sm">{t('donation-certificates.generate-dialog.status_success')}</p>
 							)}
 							{error && <p className="text-destructive text-sm">{getErrorMessage(error)}</p>}
 						</div>
@@ -143,7 +138,7 @@ export default function GenerateDonationCertificateDialog({
 
 				<DialogFooter>
 					<Button variant="outline" onClick={() => onOpenChange(false)}>
-						{translator?.t('donation-certificates.generate-dialog.button_close')}
+						{t('donation-certificates.generate-dialog.button_close')}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

@@ -1,23 +1,44 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
 import { TableCell, TableRow } from '@socialincome/design-system/data-display/table/table';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+
+const conditionKeys = [
+	'step1.details.cash.met',
+	'step1.details.cash.not_met',
+	'step1.details.mobile_money.met',
+	'step1.details.mobile_money.not_met',
+	'step1.details.mobile_network.met',
+	'step1.details.mobile_network.met_with_tech',
+	'step1.details.mobile_network.not_met',
+	'step1.details.mobile_network.not_met_unknown',
+	'step1.details.sanctions.met',
+	'step1.details.sanctions.restrictions_apply',
+	'step1.source.si_research',
+	'step1.source.sanctions_lists',
+] as const;
+
+const isConditionKey = (key: string): key is (typeof conditionKeys)[number] =>
+	conditionKeys.some((conditionKey) => conditionKey === key);
 
 type Props = {
 	row: ProgramCountryFeasibilityRow;
 };
 
 export const ExpansionRow = ({ row }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	const renderSource = (source: ProgramCountryFeasibilityRow['cash']['details']['source'] | undefined) => {
 		if (!source) {
 			return null;
 		}
 
-		const translatedSourceText = source.translationKey ? t(source.translationKey, source.translationContext) : source.text;
+		const translatedSourceText =
+			source.translationKey && isConditionKey(source.translationKey)
+				? t(source.translationKey, source.translationContext)
+				: source.text;
 
 		if (source.href) {
 			return (
@@ -41,7 +62,11 @@ export const ExpansionRow = ({ row }: Props) => {
 	const renderDetails = (details: ProgramCountryFeasibilityRow['cash']['details']) => {
 		return (
 			<div className="space-y-1 text-sm">
-				<p>{t(details.translationKey, details.translationContext)}</p>
+				<p>
+					{isConditionKey(details.translationKey)
+						? t(details.translationKey, details.translationContext)
+						: details.translationKey}
+				</p>
 				{renderSource(details.source)}
 			</div>
 		);

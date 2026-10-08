@@ -1,9 +1,9 @@
 'use client';
 
 import { type Currency } from '@/generated/prisma/client';
-import { useTranslator } from '@/lib/i18n/use-translator';
 import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
+import { useTranslations } from 'next-intl';
 import { getOnlineTransactionCost } from './subscription-amount';
 
 const feeCurrencyFormatOptions = {
@@ -19,9 +19,8 @@ type Props = {
 };
 
 export const CoverSubscriptionTransactionCostsPrompt = ({ lang, amount, currency, onOpen }: Props) => {
-	const translator = useTranslator(lang, 'website-me');
+	const t = useTranslations('website-me');
 	const feeLabel = formatCurrencyLocale(getOnlineTransactionCost(amount), currency, lang, feeCurrencyFormatOptions);
-	const t = (key: string, context?: { fee: string }) => translator?.t(key, context ? { context } : undefined) ?? key;
 
 	return (
 		<button

@@ -1,6 +1,9 @@
 import { SurveyQuestionnaire } from '@/generated/prisma/client';
+import { type NamespaceMessageKey } from '@/lib/utils/message-keys';
 
-export const questionTypeLabelKeys: Record<string, string> = {
+type SurveyMessageKey = NamespaceMessageKey<'website-survey'>;
+
+export const questionTypeLabelKeys: Record<string, SurveyMessageKey> = {
 	checkbox: 'survey.impactMeasurement.questionTypes.multipleChoice',
 	radiogroup: 'survey.impactMeasurement.questionTypes.singleChoice',
 	ranking: 'survey.impactMeasurement.questionTypes.ranking',
@@ -9,7 +12,10 @@ export const questionTypeLabelKeys: Record<string, string> = {
 
 export const highlightedQuestionOrder = ['spendingV1', 'hasDependentsV1'];
 
-export const followUpConfigs: Record<string, { childName: string; triggerValue?: string; triggerDescription?: string }[]> = {
+export const followUpConfigs: Record<
+	string,
+	{ childName: string; triggerValue?: string; triggerDescription?: SurveyMessageKey }[]
+> = {
 	hasDependentsV1: [{ childName: 'nrDependentsV1', triggerValue: 'true' }],
 	employmentStatusV1: [{ childName: 'notEmployedV1', triggerValue: 'notEmployed' }],
 	skippingMealsV1: [{ childName: 'skippingMealsLastWeekV1', triggerValue: 'true' }],
@@ -26,7 +32,7 @@ export const followUpConfigs: Record<string, { childName: string; triggerValue?:
 	],
 };
 
-export const questionnaireLabelKeys: Record<SurveyQuestionnaire, string> = {
+export const questionnaireLabelKeys: Record<SurveyQuestionnaire, SurveyMessageKey> = {
 	onboarding: 'survey.impactMeasurement.questionnaires.onboarding',
 	checkin: 'survey.impactMeasurement.questionnaires.checkin',
 	offboarding: 'survey.impactMeasurement.questionnaires.offboarding',

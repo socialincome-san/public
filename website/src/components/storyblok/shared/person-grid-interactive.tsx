@@ -1,6 +1,5 @@
 'use client';
 
-import type { VolunteerDurationTranslations } from '@/components/storyblok/shared/person-card';
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -19,26 +18,11 @@ import {
 } from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import type { ISbStoryData } from '@storyblok/js';
 import { ArrowUpDownIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useCallback, useMemo, useState } from 'react';
 
 type SortOption = 'alphabetical' | 'startDate';
 type PersonStatus = 'active' | 'inactive';
-
-type PersonGridTranslations = {
-	searchPlaceholder: string;
-	sortAriaLabel: string;
-	sortAlphabetical: string;
-	sortStartDate: string;
-	filterAllRoles: string;
-	filterAllStatuses: string;
-	filterAllCountries: string;
-	filterMultipleSelected: string;
-	filterSelectAll: string;
-	filterClearAll: string;
-	statusActive: string;
-	statusInactive: string;
-	noResults: string;
-};
 
 type Props = {
 	persons: ISbStoryData<Person>[];
@@ -46,17 +30,11 @@ type Props = {
 	region: WebsiteRegion;
 	smallCards: boolean;
 	linkToPersonPage: boolean;
-	volunteerDurationTranslations?: VolunteerDurationTranslations;
+	showVolunteerDuration?: boolean;
 	roleLabels?: Record<string, string>;
 	showSearch: boolean;
 	showSort: boolean;
 	showFilterPills: boolean;
-	translations: PersonGridTranslations;
-};
-
-const STATUS_LABEL_KEYS: Record<PersonStatus, keyof PersonGridTranslations> = {
-	active: 'statusActive',
-	inactive: 'statusInactive',
 };
 
 // Alphabetical sorting goes by first name, falling back to the full name when it's unset.
@@ -146,13 +124,13 @@ export const PersonGridInteractive = ({
 	region,
 	smallCards,
 	linkToPersonPage,
-	volunteerDurationTranslations,
+	showVolunteerDuration = false,
 	roleLabels,
 	showSearch,
 	showSort,
 	showFilterPills,
-	translations,
 }: Props) => {
+	const t = useTranslations('website-common');
 	const [searchTerm, setSearchTerm] = useState('');
 	const [sortBy, setSortBy] = useState<SortOption>('alphabetical');
 	const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
@@ -255,22 +233,28 @@ export const PersonGridInteractive = ({
 		getLabel: (value: T) => string,
 	) =>
 		selected.length === 0 || selected.length === all.length
-			? allLabel.replace('{count}', String(all.length))
+			? allLabel
 			: selected.length === 1
 				? getLabel(selected[0])
-				: translations.filterMultipleSelected.replace('{count}', String(selected.length));
+				: t('person-grid.filter-multiple-selected', { count: selected.length });
 
-	const roleLabel = filterTriggerLabel(selectedRoles, roles, translations.filterAllRoles, roleLabelFor);
+	const statusLabelFor = (status: PersonStatus) => t(`person-grid.status-${status}`);
+	const roleLabel = filterTriggerLabel(
+		selectedRoles,
+		roles,
+		t('person-grid.filter-all-roles', { count: roles.length }),
+		roleLabelFor,
+	);
 	const statusLabel = filterTriggerLabel(
 		selectedStatuses,
 		statuses,
-		translations.filterAllStatuses,
-		(status) => translations[STATUS_LABEL_KEYS[status]],
+		t('person-grid.filter-all-statuses', { count: statuses.length }),
+		statusLabelFor,
 	);
 	const countryLabel = filterTriggerLabel(
 		selectedCountries,
 		countries,
-		translations.filterAllCountries,
+		t('person-grid.filter-all-countries', { count: countries.length }),
 		getCountryNameFromIsoCode,
 	);
 
@@ -284,13 +268,13 @@ export const PersonGridInteractive = ({
 	const sortDropdown = showSort ? (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button type="button" variant="outline" size="icon-lg" aria-label={translations.sortAriaLabel}>
+				<Button type="button" variant="outline" size="icon-lg" aria-label={t('person-grid.sort-aria-label')}>
 					<ArrowUpDownIcon className="size-4" />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="start">
-				<DropdownMenuItem onSelect={() => setSortBy('alphabetical')}>{translations.sortAlphabetical}</DropdownMenuItem>
-				<DropdownMenuItem onSelect={() => setSortBy('startDate')}>{translations.sortStartDate}</DropdownMenuItem>
+				<DropdownMenuItem onSelect={() => setSortBy('alphabetical')}>{t('person-grid.sort-alphabetical')}</DropdownMenuItem>
+				<DropdownMenuItem onSelect={() => setSortBy('startDate')}>{t('person-grid.sort-start-date')}</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	) : null;
@@ -310,8 +294,8 @@ export const PersonGridInteractive = ({
 									onSelectAll={() => setSelectedRoles(roles)}
 									onClearAll={() => setSelectedRoles([])}
 									getLabel={roleLabelFor}
-									selectAllLabel={translations.filterSelectAll}
-									clearAllLabel={translations.filterClearAll}
+									selectAllLabel={t('person-grid.filter-select-all')}
+									clearAllLabel={t('person-grid.filter-clear-all')}
 								/>
 							) : null}
 							{showFilterPills && showStatusFilter ? (
@@ -322,9 +306,9 @@ export const PersonGridInteractive = ({
 									onToggle={toggleStatus}
 									onSelectAll={() => setSelectedStatuses(statuses)}
 									onClearAll={() => setSelectedStatuses([])}
-									getLabel={(status) => translations[STATUS_LABEL_KEYS[status]]}
-									selectAllLabel={translations.filterSelectAll}
-									clearAllLabel={translations.filterClearAll}
+									getLabel={statusLabelFor}
+									selectAllLabel={t('person-grid.filter-select-all')}
+									clearAllLabel={t('person-grid.filter-clear-all')}
 								/>
 							) : null}
 							{showFilterPills && countries.length > 0 ? (
@@ -336,8 +320,8 @@ export const PersonGridInteractive = ({
 									onSelectAll={() => setSelectedCountries(countries)}
 									onClearAll={() => setSelectedCountries([])}
 									getLabel={getCountryNameFromIsoCode}
-									selectAllLabel={translations.filterSelectAll}
-									clearAllLabel={translations.filterClearAll}
+									selectAllLabel={t('person-grid.filter-select-all')}
+									clearAllLabel={t('person-grid.filter-clear-all')}
 								/>
 							) : null}
 						</div>
@@ -350,8 +334,8 @@ export const PersonGridInteractive = ({
 						{showSearch ? (
 							<div className="w-full lg:w-64 lg:shrink-0">
 								<SearchInput
-									aria-label={translations.searchPlaceholder}
-									placeholder={translations.searchPlaceholder}
+									aria-label={t('person-grid.search-placeholder')}
+									placeholder={t('person-grid.search-placeholder')}
 									value={searchTerm}
 									onChange={(event) => setSearchTerm(event.target.value)}
 								/>
@@ -362,7 +346,7 @@ export const PersonGridInteractive = ({
 			) : null}
 
 			{filteredPersons.length === 0 ? (
-				<p className="text-muted-foreground">{translations.noResults}</p>
+				<p className="text-muted-foreground">{t('person-grid.no-results')}</p>
 			) : (
 				<PersonCardGrid
 					persons={filteredPersons}
@@ -370,7 +354,7 @@ export const PersonGridInteractive = ({
 					region={region}
 					smallCards={smallCards}
 					linkToPersonPage={linkToPersonPage}
-					volunteerDurationTranslations={volunteerDurationTranslations}
+					showVolunteerDuration={showVolunteerDuration}
 					roleLabels={roleLabels}
 				/>
 			)}

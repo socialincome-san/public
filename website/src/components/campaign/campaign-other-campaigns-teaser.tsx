@@ -1,11 +1,11 @@
 import { CampaignsGridSection } from '@/components/campaign/campaigns-grid-section';
 import { resolveCampaignsWithCmsEntries } from '@/components/campaign/campaigns-overview.server';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getAllCampaignsForCmsJoinWithStatsAction } from '@/modules/campaigns/campaign.actions';
 import { getCampaignsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 
 const TEASER_LIMIT = 3;
 
@@ -16,8 +16,8 @@ type Props = {
 };
 
 export const CampaignOtherCampaignsTeaser = async ({ currentCampaignSlug, lang, region }: Props) => {
-	const [translator, campaignStoriesResult, campaignsResult] = await Promise.all([
-		Translator.getInstance({ language: lang, namespaces: ['website-campaign'] }),
+	const [t, campaignStoriesResult, campaignsResult] = await Promise.all([
+		getTranslations('website-campaign'),
 		getCampaignsAction(lang),
 		getAllCampaignsForCmsJoinWithStatsAction('active'),
 	]);
@@ -41,8 +41,8 @@ export const CampaignOtherCampaignsTeaser = async ({ currentCampaignSlug, lang, 
 			<CampaignsGridSection
 				heading={
 					<>
-						{translator.t('campaign.other-campaigns.heading-prefix')}
-						<strong>{translator.t('campaign.other-campaigns.heading-emphasis')}</strong>
+						{t('campaign.other-campaigns.heading-prefix')}
+						<strong>{t('campaign.other-campaigns.heading-emphasis')}</strong>
 					</>
 				}
 				data={{ campaigns, statsById }}
@@ -50,7 +50,7 @@ export const CampaignOtherCampaignsTeaser = async ({ currentCampaignSlug, lang, 
 				region={region}
 				cta={{
 					href: `/${lang}/${region}/campaigns`,
-					label: translator.t('campaign.other-campaigns.show-all'),
+					label: t('campaign.other-campaigns.show-all'),
 				}}
 			/>
 		</BlockWrapper>

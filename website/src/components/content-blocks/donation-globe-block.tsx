@@ -1,7 +1,6 @@
 import { GlobeStage } from '@/components/globe/globe-stage';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { DonationGlobe } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { getRecentSuccessfulContributionsAction } from '@/modules/contributions/contribution.actions';
@@ -9,6 +8,7 @@ import { getContributorCommunityStatsAction } from '@/modules/contributors/contr
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import { storyblokEditable } from '@storyblok/react';
+import { getTranslations } from 'next-intl/server';
 import { unstable_cache } from 'next/cache';
 
 const getCachedCommunityStats = unstable_cache(
@@ -33,24 +33,22 @@ export const DonationGlobeBlock = async ({ blok, lang }: Props) => {
 	const cutoff = new Date();
 	cutoff.setUTCDate(cutoff.getUTCDate() - 14);
 
-	const [communityStats, contributionsResult] = await Promise.all([
+	const [communityStats, contributionsResult, t] = await Promise.all([
 		getCachedCommunityStats().catch(() => null),
 		getRecentSuccessfulContributionsAction(cutoff),
+		getTranslations('website-common'),
 	]);
 
 	const supporterCount = communityStats?.supporterCount ?? null;
 	const contributions = contributionsResult.success ? contributionsResult.data : [];
 
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 	const locale = getSafeNumberFormatLocale(lang);
-	const globeLabel = translator.t('transparency-page.donation-globe.aria-label');
+	const globeLabel = t('transparency-page.donation-globe.aria-label');
 	const description =
 		supporterCount === null
 			? null
-			: translator.t('transparency-page.donation-globe.description', {
-					context: {
-						donatorsCount: formatNumberLocale(supporterCount, locale),
-					},
+			: t('transparency-page.donation-globe.description', {
+					donatorsCount: formatNumberLocale(supporterCount, locale),
 				});
 
 	return (
