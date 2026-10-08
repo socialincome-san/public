@@ -255,8 +255,9 @@ Website and design system checks run for pull requests and for pushes to
 `main`.
 Vercel deploys through its Git integration: `main` goes to the `staging`
 environment, the `production` branch to production, and pull requests get
-preview deployments. A release is a pull request from `main` into
-`production`, which also deploys the Firebase rules to production.
+preview deployments. To release, run the **Release** workflow in GitHub
+Actions. Once the checks on `main` are green, it fast-forwards
+`production` to `main` and deploys the Firebase rules to production.
 Vercel runs `npm run build`, which applies the Prisma migrations before
 `next build`, so a failed migration fails the deployment and the previous
 one stays live. The previous deployment keeps serving against the migrated
