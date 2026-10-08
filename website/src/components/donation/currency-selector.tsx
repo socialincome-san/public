@@ -1,7 +1,7 @@
 'use client';
 
-import { useI18n } from '@/lib/i18n/use-i18n';
-import { WebsiteCurrency, websiteCurrencies } from '@/lib/i18n/utils';
+import { isWebsiteCurrency, type WebsiteCurrency } from '@/lib/i18n/utils';
+import { setWebsiteCurrency, useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import {
 	Select,
 	SelectContent,
@@ -15,14 +15,14 @@ type Props = {
 };
 
 export const DonationCurrencySelector = ({ currencies }: Props) => {
-	const { currency, setCurrency } = useI18n();
+	const currency = useWebsiteCurrency();
 
 	return (
 		<Select
 			value={currency}
 			onValueChange={(value: string) => {
-				if (websiteCurrencies.includes(value as WebsiteCurrency)) {
-					setCurrency(value as WebsiteCurrency);
+				if (isWebsiteCurrency(value)) {
+					setWebsiteCurrency(value);
 				}
 			}}
 		>

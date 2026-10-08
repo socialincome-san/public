@@ -21,25 +21,6 @@ export const getLanguageFromPathname = (pathname: string): WebsiteLanguage | und
 	return isWebsiteLanguage(detectedLanguage) ? detectedLanguage : undefined;
 };
 
-export const resolveWebsiteLanguage = ({
-	pathnameLanguage,
-	cookieLanguage,
-	preferCookie = false,
-}: {
-	pathnameLanguage?: string;
-	cookieLanguage?: string;
-	preferCookie?: boolean;
-}): WebsiteLanguage => {
-	const fromPathname = pathnameLanguage && isWebsiteLanguage(pathnameLanguage) ? pathnameLanguage : undefined;
-	const fromCookie = cookieLanguage && isWebsiteLanguage(cookieLanguage) ? cookieLanguage : undefined;
-
-	if (preferCookie) {
-		return fromCookie ?? fromPathname ?? defaultLanguage;
-	}
-
-	return fromPathname ?? fromCookie ?? defaultLanguage;
-};
-
 export const getSafeNumberFormatLocale = (lang: WebsiteLanguage): string => {
 	try {
 		new Intl.NumberFormat(lang);
@@ -54,8 +35,19 @@ export type WebsiteRegion = 'int' | 'ch' | 'sl';
 export const defaultRegion: WebsiteRegion = 'int';
 export const websiteRegions: WebsiteRegion[] = ['int', 'ch'];
 
-export type WebsiteCurrency = Extract<Currency, 'USD' | 'EUR' | 'CHF' | 'SLE'>;
+export type WebsiteCurrency = Extract<Currency, 'USD' | 'EUR' | 'CHF'>;
 export const websiteCurrencies: WebsiteCurrency[] = ['CHF', 'EUR', 'USD'];
+
+export const isWebsiteRegion = (value: string | undefined): value is WebsiteRegion =>
+	websiteRegions.some((region) => region === value);
+
+export const getDefaultCurrency = (region: string | undefined): WebsiteCurrency => (region === 'ch' ? 'CHF' : 'USD');
+
+export const mapWebsiteCurrencies = <T>(map: (currency: WebsiteCurrency) => T): Record<WebsiteCurrency, T> => ({
+	CHF: map('CHF'),
+	EUR: map('EUR'),
+	USD: map('USD'),
+});
 
 export const isWebsiteCurrency = (value: string | undefined): value is WebsiteCurrency =>
 	value !== undefined && websiteCurrencies.some((currency) => currency === value);

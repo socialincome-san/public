@@ -1,9 +1,14 @@
+import { CurrencySwitch } from '@/components/currency/currency-switch';
 import { getDonationExplainerVideo } from '@/components/donation-wizard/utils/donation-explainer-video';
 import { InflowsSection, type InflowsSectionSegment } from '@/components/inflows/inflows-section';
 import { buildInflowSegments, parseChfAmount, resolveInflowSegmentAmountsChf } from '@/components/inflows/inflows-segments';
 import type { Inflows as InflowsBlok } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
+import {
+	getSafeNumberFormatLocale,
+	mapWebsiteCurrencies,
+	type WebsiteCurrency,
+	type WebsiteLanguage,
+} from '@/lib/i18n/utils';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getTransparencySummaryAction } from '@/modules/transparency/transparency.actions';
@@ -17,7 +22,6 @@ type Props = {
 };
 
 export const InflowsBlock = async ({ blok, lang }: Props) => {
-	const displayCurrency = await getWebsiteCurrencyFromCookie();
 	const [dataResult, t] = await Promise.all([getTransparencySummaryAction(), getTranslations('website-common')]);
 
 	if (!dataResult.success) {
@@ -33,26 +37,13 @@ export const InflowsBlock = async ({ blok, lang }: Props) => {
 
 	const displayResult = await resolveChfAmountsAction({
 		amounts: [totalInflowsChf, amountsChf.individuals, amountsChf.foundations, amountsChf.corporate],
-		displayCurrency,
 	});
 	if (!displayResult.success) {
 		return null;
 	}
-	const [totalInflows, individuals, foundations, corporate] = displayResult.data;
-	if (!totalInflows || !individuals || !foundations || !corporate) {
-		return null;
-	}
-
-	const computedSegments = buildInflowSegments({
-		individuals: individuals.amount,
-		foundations: foundations.amount,
-		corporate: corporate.amount,
-	});
 
 	const locale = getSafeNumberFormatLocale(lang);
-	const currency = totalInflows.currency;
-	const formatAmount = (amount: number) => formatCurrencyLocale(amount, currency, locale, { maximumFractionDigits: 0 });
-
+	const explainerVideo = getDonationExplainerVideo(lang);
 	const segmentCopy = {
 		individuals: {
 			label: t('transparency-page.inflows.segments.individuals.label'),
@@ -68,19 +59,28 @@ export const InflowsBlock = async ({ blok, lang }: Props) => {
 		},
 	} as const;
 
-	const segments: InflowsSectionSegment[] = computedSegments.map((segment) => ({
-		key: segment.key,
-		label: segmentCopy[segment.key].label,
-		description: segmentCopy[segment.key].description,
-		amountLabel: formatAmount(segment.amount),
-		percent: segment.percent,
-		color: segment.color,
-	}));
+	const renderInflows = (displayCurrency: WebsiteCurrency) => {
+		const [totalInflows, individuals, foundations, corporate] = displayResult.data[displayCurrency];
+		if (!totalInflows || !individuals || !foundations || !corporate) {
+			return null;
+		}
 
-	const explainerVideo = getDonationExplainerVideo(lang);
+		const currency = totalInflows.currency;
+		const formatAmount = (amount: number) => formatCurrencyLocale(amount, currency, locale, { maximumFractionDigits: 0 });
+		const segments: InflowsSectionSegment[] = buildInflowSegments({
+			individuals: individuals.amount,
+			foundations: foundations.amount,
+			corporate: corporate.amount,
+		}).map((segment) => ({
+			key: segment.key,
+			label: segmentCopy[segment.key].label,
+			description: segmentCopy[segment.key].description,
+			amountLabel: formatAmount(segment.amount),
+			percent: segment.percent,
+			color: segment.color,
+		}));
 
-	return (
-		<BlockWrapper {...storyblokEditable(blok)}>
+		return (
 			<InflowsSection
 				lang={lang}
 				totalAmount={totalInflows.amount}
@@ -98,6 +98,12 @@ export const InflowsBlock = async ({ blok, lang }: Props) => {
 					totalCurrencyLabel: t('transparency-page.inflows.title-currency', { currency }),
 				}}
 			/>
+		);
+	};
+
+	return (
+		<BlockWrapper {...storyblokEditable(blok)}>
+			<CurrencySwitch variants={mapWebsiteCurrencies(renderInflows)} />
 		</BlockWrapper>
 	);
 };

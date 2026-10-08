@@ -1,15 +1,15 @@
-import { COUNTRY_COOKIE, CURRENCY_COOKIE } from '@/app/[lang]/[region]';
+import { CURRENCY_COOKIE } from '@/lib/i18n/cookies';
 import {
 	findBestLocale,
 	getLanguageFromPathname,
+	isWebsiteCurrency,
 	VISITOR_COUNTRY_HEADER,
 	WebsiteRegion,
 	websiteRegions,
 } from '@/lib/i18n/utils';
 import { isValidCountryCode } from '@/lib/types/country';
+import { bestGuessCurrency } from '@/lib/types/currency';
 import { NextRequest, NextResponse } from 'next/server';
-import { CountryCode } from './generated/prisma/enums';
-import { bestGuessCurrency, isValidCurrency } from './lib/types/currency';
 
 export const config = {
 	matcher: [
@@ -18,42 +18,17 @@ export const config = {
 	],
 };
 
-/**
- * Checks if a valid country is set as a cookie and set it based on the request header if available.
- */
-const countryMiddleware = (request: NextRequest, response: NextResponse) => {
-	const countryCookie = request.cookies.get(COUNTRY_COOKIE);
-	if (countryCookie && isValidCountryCode(countryCookie.value)) {
+// Guesses the visitor's currency once from the geo header; the client reads and changes the preference.
+const currencyMiddleware = (request: NextRequest, response: NextResponse) => {
+	if (isWebsiteCurrency(request.cookies.get(CURRENCY_COOKIE)?.value)) {
 		return response;
 	}
 
 	const country = request.headers.get(VISITOR_COUNTRY_HEADER)?.toUpperCase();
-	if (country) {
-		response.cookies.set({
-			name: COUNTRY_COOKIE,
-			value: country,
-			path: '/',
-			maxAge: 60 * 60 * 24 * 7,
-		});
-	} // 1 week
-
-	return response;
-};
-
-/**
- * Checks if a valid currency is set as a cookie, and sets one based on the country cookie if available.
- */
-const currencyMiddleware = (request: NextRequest, response: NextResponse) => {
-	if (request.cookies.has(CURRENCY_COOKIE) && isValidCurrency(request.cookies.get(CURRENCY_COOKIE)?.value)) {
-		return response;
+	const currency = country && isValidCountryCode(country) ? bestGuessCurrency(country) : undefined;
+	if (isWebsiteCurrency(currency)) {
+		response.cookies.set({ name: CURRENCY_COOKIE, value: currency, path: '/', maxAge: 60 * 60 * 24 * 7 }); // 1 week
 	}
-	// We use the country code from the request header if available. If not, we use the region/country from the url path.
-	const country =
-		(response.cookies.get(COUNTRY_COOKIE)?.value as CountryCode | undefined) ??
-		(request.cookies.get(COUNTRY_COOKIE)?.value as CountryCode | undefined);
-	const currency = bestGuessCurrency(country);
-
-	response.cookies.set({ name: CURRENCY_COOKIE, value: currency, path: '/', maxAge: 60 * 60 * 24 * 7 }); // 1 week
 
 	return response;
 };
@@ -83,15 +58,5 @@ const i18nRedirectMiddleware = (request: NextRequest) => {
 	}
 };
 
-export const proxy = (request: NextRequest) => {
-	let response = i18nRedirectMiddleware(request);
-	if (response) {
-		return response;
-	}
-
-	response = NextResponse.next();
-	response = countryMiddleware(request, response);
-	response = currencyMiddleware(request, response);
-
-	return response;
-};
+export const proxy = (request: NextRequest) =>
+	i18nRedirectMiddleware(request) ?? currencyMiddleware(request, NextResponse.next());

@@ -1,7 +1,12 @@
+import { CurrencySwitch } from '@/components/currency/currency-switch';
 import { SummarySectionClient, type SummaryMetric } from '@/components/transparency/summary-section-client';
 import type { TransparencySummary } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
+import {
+	getSafeNumberFormatLocale,
+	mapWebsiteCurrencies,
+	type WebsiteCurrency,
+	type WebsiteLanguage,
+} from '@/lib/i18n/utils';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import type { DisplayAmount } from '@/modules/currency-display/currency-display.types';
@@ -24,7 +29,6 @@ type Props = {
 };
 
 export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
-	const displayCurrency = await getWebsiteCurrencyFromCookie();
 	const dataResult = await getTransparencySummaryAction();
 
 	if (!dataResult.success) {
@@ -37,24 +41,10 @@ export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
 	);
 	const displayResult = await resolveChfAmountsAction({
 		amounts: [inflowsChf, outflowsChf, reservesChf, ...reserveAmountsChf],
-		displayCurrency,
 	});
 	if (!displayResult.success) {
 		return null;
 	}
-	const [inflows, outflows, reserves, ...reserveDisplayAmounts] = displayResult.data;
-	if (!inflows || !outflows || !reserves) {
-		return null;
-	}
-	let reserveDisplayIndex = 0;
-	const reserveAccounts: ReserveAccount[] = dataResult.data.reserveAccounts.map(({ amountChf, ...account }) => {
-		const amount = amountChf === null ? null : (reserveDisplayAmounts[reserveDisplayIndex] ?? null);
-		if (amountChf !== null) {
-			reserveDisplayIndex += 1;
-		}
-
-		return { ...account, amount };
-	});
 
 	const t = await getTranslations('website-common');
 	const locale = getSafeNumberFormatLocale(lang);
@@ -65,45 +55,65 @@ export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
 		year: 'numeric',
 		timeZone: 'Europe/Zurich',
 	});
-	const reserveTooltipRows = reserveAccounts.map(
-		({ bankAccountId, bankAccountNumber, description, amount, recordedAt }) => ({
-			key: bankAccountId,
-			account: [description, bankAccountNumber].map((value) => value?.trim()).find(Boolean) ?? noData,
-			balance: amount ? formatCurrencyLocale(amount.amount, amount.currency, locale, { maximumFractionDigits: 0 }) : noData,
-			recordedAt: recordedAt ? dateFormatter.format(recordedAt) : noData,
-		}),
-	);
 	const descriptions = {
 		inflows: blok.inflowsDescription,
 		outflows: blok.outflowsDescription,
 		reserves: blok.reservesDescription,
 	};
-	const metrics: SummaryMetric[] = (
-		[
-			{ key: 'inflows', displayAmount: inflows },
-			{ key: 'outflows', displayAmount: outflows },
-			{ key: 'reserves', displayAmount: reserves },
-		] as const
-	).map(({ key, displayAmount }) => ({
-		key,
-		titleName: t(`transparency-page.${key}.title-name`),
-		titleCurrency: t(`transparency-page.${key}.title-currency`, { currency: displayAmount.currency }),
-		description: descriptions[key],
-		amount: displayAmount.amount,
-		...(key === 'reserves'
-			? {
-					tooltip: {
-						ariaLabel: t('transparency-page.reserves.tooltip-label'),
-						emptyMessage: noData,
-						rows: reserveTooltipRows,
-					},
-				}
-			: {}),
-	}));
+
+	const renderSummary = (displayCurrency: WebsiteCurrency) => {
+		const [inflows, outflows, reserves, ...reserveDisplayAmounts] = displayResult.data[displayCurrency];
+		if (!inflows || !outflows || !reserves) {
+			return null;
+		}
+		let reserveDisplayIndex = 0;
+		const reserveAccounts: ReserveAccount[] = dataResult.data.reserveAccounts.map(({ amountChf, ...account }) => {
+			const amount = amountChf === null ? null : (reserveDisplayAmounts[reserveDisplayIndex] ?? null);
+			if (amountChf !== null) {
+				reserveDisplayIndex += 1;
+			}
+
+			return { ...account, amount };
+		});
+		const reserveTooltipRows = reserveAccounts.map(
+			({ bankAccountId, bankAccountNumber, description, amount, recordedAt }) => ({
+				key: bankAccountId,
+				account: [description, bankAccountNumber].map((value) => value?.trim()).find(Boolean) ?? noData,
+				balance: amount
+					? formatCurrencyLocale(amount.amount, amount.currency, locale, { maximumFractionDigits: 0 })
+					: noData,
+				recordedAt: recordedAt ? dateFormatter.format(recordedAt) : noData,
+			}),
+		);
+		const metrics: SummaryMetric[] = (
+			[
+				{ key: 'inflows', displayAmount: inflows },
+				{ key: 'outflows', displayAmount: outflows },
+				{ key: 'reserves', displayAmount: reserves },
+			] as const
+		).map(({ key, displayAmount }) => ({
+			key,
+			titleName: t(`transparency-page.${key}.title-name`),
+			titleCurrency: t(`transparency-page.${key}.title-currency`, { currency: displayAmount.currency }),
+			description: descriptions[key],
+			amount: displayAmount.amount,
+			...(key === 'reserves'
+				? {
+						tooltip: {
+							ariaLabel: t('transparency-page.reserves.tooltip-label'),
+							emptyMessage: noData,
+							rows: reserveTooltipRows,
+						},
+					}
+				: {}),
+		}));
+
+		return <SummarySectionClient metrics={metrics} lang={lang} />;
+	};
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok)}>
-			<SummarySectionClient metrics={metrics} lang={lang} />
+			<CurrencySwitch variants={mapWebsiteCurrencies(renderSummary)} />
 		</BlockWrapper>
 	);
 };

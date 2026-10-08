@@ -9,7 +9,7 @@ import {
 } from '@/components/donation-wizard/utils/donation-amount';
 import { getDonationWizardCardClass } from '@/components/donation-wizard/utils/donation-wizard-layout';
 import { selectStep1FormView } from '@/components/donation-wizard/wizard/donation-machine-selectors';
-import type { WebsiteCurrency } from '@/lib/i18n/utils';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { Input } from '@socialincome/design-system/forms/input/input';
@@ -25,13 +25,13 @@ const segmentActive = 'bg-card shadow-xs';
 
 type Props = {
 	campaignId?: string;
-	currency: WebsiteCurrency;
 	quote: string;
 	profilePictureSrc?: string | null;
 	profilePictureAlt: string;
 };
 
-export const CampaignDonationForm = ({ campaignId, currency, quote, profilePictureSrc, profilePictureAlt }: Props) => {
+export const CampaignDonationForm = ({ campaignId, quote, profilePictureSrc, profilePictureAlt }: Props) => {
+	const currency = useWebsiteCurrency();
 	const t = useTranslations('donation-wizard');
 	const { openWizardWithFormAmount } = useDonationModal();
 	const form = useDonationFormState({ selectedAmount: 25 });

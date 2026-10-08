@@ -61,8 +61,6 @@ export const programFinancesStatsSchema = z.object({
 	availableCreditsProgramCurrency: z.number(),
 });
 
-export const programDisplayCurrencySchema = z.enum(['CHF', 'EUR', 'USD']);
-
 export type ProgramCreateInput = z.infer<typeof programCreateSchema>;
 export type PublicOnboardingUserDetailsInput = z.infer<typeof publicOnboardingUserDetailsSchema>;
 export type ProgramSettingsUpdateInput = z.infer<typeof programSettingsUpdateSchema>;

@@ -1,8 +1,14 @@
 import { Currency } from '@/generated/prisma/enums';
+import { mapWebsiteCurrencies, type WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
 import type { ExchangeRates } from '@/modules/exchange-rates/exchange-rate.types';
-import type { ChfAmountsDisplayInput, DisplayAmount, WalletPayoutDisplayInput } from './currency-display.types';
+import type {
+	ChfAmountsDisplayInput,
+	DisplayAmount,
+	DisplayAmountsByCurrency,
+	WalletPayoutDisplayInput,
+} from './currency-display.types';
 
 export const convertAmount = (
 	amount: number,
@@ -32,41 +38,42 @@ export const convertAmount = (
 	return resultOk(amount * (toRate / fromRate));
 };
 
-export const resolveChfAmounts = async ({
-	amounts,
-	displayCurrency,
-}: ChfAmountsDisplayInput): Promise<Result<DisplayAmount[]>> => {
-	const rates = displayCurrency === Currency.CHF ? undefined : await getDisplayRates();
+export const resolveChfAmounts = async ({ amounts }: ChfAmountsDisplayInput): Promise<Result<DisplayAmountsByCurrency>> => {
+	const rates = await getDisplayRates();
 
-	return resultOk(amounts.map((amount) => resolveFromChf(amount, displayCurrency, rates)));
+	return resultOk(
+		mapWebsiteCurrencies((displayCurrency) => amounts.map((amount) => resolveFromChf(amount, displayCurrency, rates))),
+	);
 };
 
-export const resolveWalletPayoutDisplay = async (input: WalletPayoutDisplayInput): Promise<Result<DisplayAmount>> => {
-	const rates = input.displayCurrency === Currency.CHF ? undefined : await getDisplayRates();
+export const resolveWalletPayoutDisplays = async (
+	inputs: WalletPayoutDisplayInput[],
+): Promise<Result<DisplayAmountsByCurrency>> => {
+	const rates = await getDisplayRates();
 
-	return resultOk(resolveWalletPayout(input, rates));
+	return resultOk(
+		mapWebsiteCurrencies((displayCurrency) => inputs.map((input) => resolveWalletPayout(input, displayCurrency, rates))),
+	);
 };
 
-export const resolveWalletPayoutDisplays = async (inputs: WalletPayoutDisplayInput[]): Promise<Result<DisplayAmount[]>> => {
-	const rates = inputs.some(({ displayCurrency }) => displayCurrency !== Currency.CHF) ? await getDisplayRates() : undefined;
-
-	return resultOk(inputs.map((input) => resolveWalletPayout(input, rates)));
-};
-
-const resolveWalletPayout = (input: WalletPayoutDisplayInput, rates: ExchangeRates | undefined): DisplayAmount => {
-	if (input.displayCurrency === input.payoutCurrency) {
+const resolveWalletPayout = (
+	input: WalletPayoutDisplayInput,
+	displayCurrency: WebsiteCurrency,
+	rates: ExchangeRates | undefined,
+): DisplayAmount => {
+	if (displayCurrency === input.payoutCurrency) {
 		return { amount: input.totalPayoutsSum, currency: input.payoutCurrency };
 	}
-	if (input.displayCurrency === Currency.CHF) {
+	if (displayCurrency === Currency.CHF) {
 		return { amount: input.totalPayoutsSumChf, currency: Currency.CHF };
 	}
 
-	const converted = convertAmount(input.totalPayoutsSumChf, Currency.CHF, input.displayCurrency, rates);
+	const converted = convertAmount(input.totalPayoutsSumChf, Currency.CHF, displayCurrency, rates);
 	if (!converted.success) {
 		return { amount: input.totalPayoutsSum, currency: input.payoutCurrency };
 	}
 
-	return { amount: converted.data, currency: input.displayCurrency };
+	return { amount: converted.data, currency: displayCurrency };
 };
 
 const getDisplayRates = async (): Promise<ExchangeRates | undefined> => {
@@ -75,11 +82,7 @@ const getDisplayRates = async (): Promise<ExchangeRates | undefined> => {
 	return latestRatesResult.success ? latestRatesResult.data : undefined;
 };
 
-const resolveFromChf = (
-	amountChf: number,
-	displayCurrency: ChfAmountsDisplayInput['displayCurrency'],
-	rates?: ExchangeRates,
-): DisplayAmount => {
+const resolveFromChf = (amountChf: number, displayCurrency: WebsiteCurrency, rates?: ExchangeRates): DisplayAmount => {
 	if (displayCurrency === Currency.CHF) {
 		return { amount: amountChf, currency: Currency.CHF };
 	}

@@ -8,7 +8,7 @@ import { ReactNode } from 'react';
 
 type WebsiteAppShellProps = {
 	children: ReactNode;
-	sessions: Session[];
+	sessions: Promise<Session[]>;
 	lang: WebsiteLanguage;
 	region: string;
 	scope: Scope;

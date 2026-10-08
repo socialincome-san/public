@@ -1,5 +1,4 @@
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { mapWebsiteCurrencies, type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
 import { resolveWalletPayoutDisplaysAction } from '@/modules/currency-display/currency-display.actions';
 import type { PublicProgramStatsMap } from '@/modules/programs/program.types';
 import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
@@ -16,7 +15,7 @@ type Props = {
 };
 
 export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, region }: Props) => {
-	const [displayCurrency, t] = await Promise.all([getWebsiteCurrencyFromCookie(), getTranslations('website-common')]);
+	const t = await getTranslations('website-common');
 	const programStats = programs.flatMap((program) => {
 		const portalSlug = getProgramPortalSlug(program.content);
 		const stats = portalSlug ? statsByPortalSlug[portalSlug] : undefined;
@@ -28,11 +27,13 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 			totalPayoutsSum: stats.totalPayoutsSum,
 			totalPayoutsSumChf: stats.totalPayoutsSumChf,
 			payoutCurrency: stats.payoutCurrency,
-			displayCurrency,
 		})),
 	);
 	const displaysByProgramId = new Map(
-		programStats.map(({ programId }, index) => [programId, displaysResult.success ? displaysResult.data[index] : undefined]),
+		programStats.map(({ programId }, index) => [
+			programId,
+			mapWebsiteCurrencies((currency) => (displaysResult.success ? displaysResult.data[currency][index] : undefined)),
+		]),
 	);
 
 	return (
@@ -47,7 +48,7 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 							<ProgramWallet
 								program={program}
 								stats={stats}
-								walletDisplay={displaysByProgramId.get(program.uuid)}
+								walletDisplays={displaysByProgramId.get(program.uuid)}
 								lang={lang}
 								region={region}
 							/>

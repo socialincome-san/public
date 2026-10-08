@@ -4,7 +4,7 @@ import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-te
 import { Community } from '@/components/community/community';
 import { FaqSelectionContent } from '@/components/content-blocks/faq-selection-content';
 import { resolveFaqItems } from '@/components/content-blocks/faq-selection.utils';
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { resolveProgramCountry } from '@/components/storyblok/country/resolve-country-name';
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramAbout } from '@/components/storyblok/program/program-about';
@@ -80,7 +80,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region, community
 				<Breadcrumb links={breadcrumbLinks} layout="section" aside={community ? <Community data={community} /> : null} />
 				<div className="lg:hidden">
 					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
-						<DonationFormServer campaignId={programDetailData.campaignId} />
+						<DonationForm campaignId={programDetailData.campaignId} />
 					</BlockWrapper>
 				</div>
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>

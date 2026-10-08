@@ -1,4 +1,4 @@
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import {
@@ -50,7 +50,7 @@ export const HeroHeader = ({
 	const heroImageSrc = heroImage?.filename
 		? formatStoryblokUrl(heroImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, heroImage.focus)
 		: null;
-	const heroCardNode = heroCard ?? <DonationFormServer campaignId={campaignId} />;
+	const heroCardNode = heroCard ?? <DonationForm campaignId={campaignId} />;
 
 	return (
 		<MediaHero

@@ -2,47 +2,31 @@
 
 import { type CountryCode } from '@/generated/prisma/enums';
 import { useIsPage } from '@/lib/hooks/use-is-page';
-import { useI18n } from '@/lib/i18n/use-i18n';
+import { LANGUAGE_COOKIE, REGION_COOKIE } from '@/lib/i18n/cookies';
 import {
-	allWebsiteLanguages,
 	isWebsiteCurrency,
+	isWebsiteLanguage,
+	isWebsiteRegion,
 	mainWebsiteLanguages,
 	websiteCurrencies,
-	websiteRegions,
-	type WebsiteCurrency,
 	type WebsiteLanguage,
 	type WebsiteRegion,
 } from '@/lib/i18n/utils';
+import { setWebsiteCurrency, useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import {
 	LocaleCurrencySwitcher as DesignSystemLocaleCurrencySwitcher,
 	type LocaleRegionOption,
 } from '@socialincome/design-system/navigation/locale-currency-switcher/locale-currency-switcher';
+import Cookies from 'js-cookie';
 import { useTranslations } from 'next-intl';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 const SWISS_COUNTRY_CODE: CountryCode = 'CH';
 const surveyLanguages: WebsiteLanguage[] = ['en', 'kri'];
 
-const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
-	allWebsiteLanguages.some((language) => language === value);
-
-const isWebsiteRegion = (value: string): value is WebsiteRegion => websiteRegions.some((region) => region === value);
-
-const getDefaultCurrency = (region: WebsiteRegion): WebsiteCurrency => (region === 'ch' ? 'CHF' : 'USD');
-
-const createLocalePath = ({
-	pathname,
-	searchParams,
-	language,
-	region,
-}: {
-	pathname: string;
-	searchParams: URLSearchParams;
-	language: WebsiteLanguage;
-	region: WebsiteRegion;
-}) => {
-	const segments = pathname.split('/');
+const createLocalePath = (language: WebsiteLanguage, region: WebsiteRegion) => {
+	const segments = window.location.pathname.split('/');
 
 	if (segments.length < 3) {
 		return `/${language}/${region}`;
@@ -51,9 +35,7 @@ const createLocalePath = ({
 	segments[1] = language;
 	segments[2] = region;
 
-	const queryString = searchParams.toString();
-
-	return `${segments.join('/')}${queryString ? `?${queryString}` : ''}`;
+	return `${segments.join('/')}${window.location.search}`;
 };
 
 type Props = {
@@ -65,18 +47,13 @@ type Props = {
 export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Props) => {
 	const [open, setOpen] = useState(false);
 	const router = useRouter();
-	const pathname = usePathname();
-	const searchParams = useSearchParams();
 	const isSurveyPage = useIsPage('survey');
 	const t = useTranslations('website-common');
-	const { language, setLanguage, region: selectedRegion, setRegion, currency, setCurrency } = useI18n();
+	const currency = useWebsiteCurrency();
 
-	const initialRegion = isWebsiteRegion(region) ? region : 'int';
-	const currentLanguage = language ?? lang;
-	const currentRegion = selectedRegion ?? initialRegion;
-	const currentCurrency = currency ?? getDefaultCurrency(currentRegion);
+	const currentRegion = isWebsiteRegion(region) ? region : 'int';
 	const languageOptions = isSurveyPage ? surveyLanguages : mainWebsiteLanguages;
-	const currentSwitcherLanguage = languageOptions.includes(currentLanguage) ? currentLanguage : (languageOptions[0] ?? 'en');
+	const currentSwitcherLanguage = languageOptions.includes(lang) ? lang : (languageOptions[0] ?? 'en');
 	const regionOptions: (LocaleRegionOption & { value: WebsiteRegion })[] = [
 		{ value: 'int', label: t('locale-currency-switcher.regions.int') },
 		{
@@ -88,7 +65,10 @@ export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Prop
 
 	const navigateToLocale = (nextLanguage: WebsiteLanguage, nextRegion: WebsiteRegion) => {
 		setOpen(false);
-		router.push(createLocalePath({ pathname, searchParams, language: nextLanguage, region: nextRegion }));
+		// Only read by the proxy to redirect URLs without a language and region.
+		Cookies.set(LANGUAGE_COOKIE, nextLanguage, { expires: 7 });
+		Cookies.set(REGION_COOKIE, nextRegion, { expires: 7 });
+		router.push(createLocalePath(nextLanguage, nextRegion));
 	};
 
 	const handleLanguageChange = (value: string) => {
@@ -96,7 +76,6 @@ export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Prop
 			return;
 		}
 
-		setLanguage(value);
 		navigateToLocale(value, currentRegion);
 	};
 
@@ -105,15 +84,13 @@ export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Prop
 			return;
 		}
 
-		setRegion(value);
-		navigateToLocale(currentLanguage, value);
+		navigateToLocale(lang, value);
 	};
 
 	const handleCurrencyChange = (value: string) => {
 		if (isWebsiteCurrency(value)) {
-			setCurrency(value);
+			setWebsiteCurrency(value);
 			setOpen(false);
-			router.refresh();
 		}
 	};
 
@@ -137,7 +114,7 @@ export const LocaleCurrencySwitcher = ({ lang, region, variant = 'ghost' }: Prop
 			}}
 			currency={{
 				label: t('locale-currency-switcher.currency'),
-				value: currentCurrency,
+				value: currency,
 				options: websiteCurrencies.map((option) => ({ value: option, label: option })),
 				onChange: handleCurrencyChange,
 			}}

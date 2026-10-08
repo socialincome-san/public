@@ -35,7 +35,12 @@ const PartnerSpaceShell = async ({ children }: { children: ReactNode }) => {
 	];
 
 	return (
-		<WebsiteAppShell sessions={sessions} lang={defaultLanguage} region={defaultRegion} scope="partner-space">
+		<WebsiteAppShell
+			sessions={Promise.resolve(sessions)}
+			lang={defaultLanguage}
+			region={defaultRegion}
+			scope="partner-space"
+		>
 			<Breadcrumb links={breadcrumbLinks} />
 			<h1 data-testid="welcome-message-partner-space" className="py-8 text-5xl">
 				Partner Space

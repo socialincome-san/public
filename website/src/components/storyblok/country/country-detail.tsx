@@ -2,7 +2,7 @@ import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { Community } from '@/components/community/community';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
@@ -67,7 +67,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 			<Breadcrumb links={breadcrumbLinks} aside={community ? <Community data={community} /> : null} />
 			<div className="lg:hidden">
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
-					<DonationFormServer />
+					<DonationForm />
 				</BlockWrapper>
 			</div>
 			<CountryMap country={country} />

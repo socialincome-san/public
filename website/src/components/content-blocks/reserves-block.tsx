@@ -1,7 +1,7 @@
+import { CurrencySwitch } from '@/components/currency/currency-switch';
 import { ReservesTotal } from '@/components/reserves/reserves-total';
 import type { ReservesBlock as ReservesBlockBlok } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { mapWebsiteCurrencies, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getLatestReservesAction } from '@/modules/reserves/reserve.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
@@ -20,37 +20,39 @@ type Props = {
 };
 
 export const ReservesBlock = async ({ blok, lang }: Props) => {
-	const displayCurrency = await getWebsiteCurrencyFromCookie();
 	const [t, reservesResult] = await Promise.all([getTranslations('website-common'), getLatestReservesAction()]);
 
 	if (!reservesResult.success) {
 		return null;
 	}
 
-	const displayResult = await resolveChfAmountsAction({
-		amounts: [reservesResult.data.total],
-		displayCurrency,
-	});
+	const displayResult = await resolveChfAmountsAction({ amounts: [reservesResult.data.total] });
 	if (!displayResult.success) {
-		return null;
-	}
-	const reserves = displayResult.data[0];
-	if (!reserves) {
 		return null;
 	}
 
 	return (
 		<BlockWrapper {...storyblokEditable(blok)}>
-			<ReservesTotal
-				amount={reserves.amount}
-				title={t('transparency-page.reserves.total-today')}
-				titleCurrency={t('transparency-page.reserves.title-currency', { currency: reserves.currency })}
-				institutionsHeading={t('transparency-page.reserves.institutions-heading')}
-				institutions={FINANCIAL_INSTITUTIONS.map(({ id, labelKey }) => ({
-					id,
-					label: t(labelKey),
-				}))}
-				lang={lang}
+			<CurrencySwitch
+				variants={mapWebsiteCurrencies((displayCurrency) => {
+					const reserves = displayResult.data[displayCurrency][0];
+
+					return (
+						reserves && (
+							<ReservesTotal
+								amount={reserves.amount}
+								title={t('transparency-page.reserves.total-today')}
+								titleCurrency={t('transparency-page.reserves.title-currency', { currency: reserves.currency })}
+								institutionsHeading={t('transparency-page.reserves.institutions-heading')}
+								institutions={FINANCIAL_INSTITUTIONS.map(({ id, labelKey }) => ({
+									id,
+									label: t(labelKey),
+								}))}
+								lang={lang}
+							/>
+						)
+					);
+				})}
 			/>
 		</BlockWrapper>
 	);

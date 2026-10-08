@@ -1,9 +1,8 @@
-import { AccountMenu } from '@/components/app-shells/website/navbar/account-menu';
 import { LocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/locale-currency-switcher';
-import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout';
 import { MenuMobile } from '@/components/app-shells/website/navbar/menu-mobile';
-import { displaySession, toSiteMenuEntries, type Scope } from '@/components/app-shells/website/navbar/utils';
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
+import { AccountSlot, SignedOutSlot } from '@/components/app-shells/website/navbar/session-slots';
+import { toSiteMenuEntries, type Scope } from '@/components/app-shells/website/navbar/utils';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
@@ -16,14 +15,13 @@ import { ISbStoryData } from '@storyblok/js';
 import { getTranslations } from 'next-intl/server';
 
 type Props = {
-	sessions: Session[];
+	sessions: Promise<Session[]>;
 	lang: WebsiteLanguage;
 	region: string;
 	scope: Scope;
 };
 
 export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
-	const session = displaySession(sessions, scope);
 	const [t, tDonate, result] = await Promise.all([
 		getTranslations('website-common'),
 		getTranslations('website-donate'),
@@ -38,10 +36,14 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 		<SiteHeader
 			homeHref={`/${lang}/${region}`}
 			homeLinkLabel={t('logo.home-link-aria')}
-			desktopMenu={<SiteMenuDesktop entries={menuEntries} dropdownAside={<DonationFormServer />} />}
+			desktopMenu={<SiteMenuDesktop entries={menuEntries} dropdownAside={<DonationForm />} />}
 			localeSwitcher={scope === 'website' && <LocaleCurrencySwitcher lang={lang} region={region} />}
-			account={session ? <AccountMenu sessions={sessions} scope={scope} /> : <LoginFlyout />}
-			donateAction={!session && <OpenDonationWizardButton label={tDonate('donation-form.donate-now')} size="md" />}
+			account={<AccountSlot sessions={sessions} scope={scope} />}
+			donateAction={
+				<SignedOutSlot sessions={sessions} scope={scope}>
+					<OpenDonationWizardButton label={tDonate('donation-form.donate-now')} size="md" />
+				</SignedOutSlot>
+			}
 			mobileMenu={<MenuMobile sessions={sessions} scope={scope} lang={lang} menuEntries={menuEntries} region={region} />}
 		/>
 	);

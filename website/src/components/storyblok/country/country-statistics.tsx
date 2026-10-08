@@ -1,4 +1,3 @@
-import { COUNTRY_COOKIE } from '@/app/[lang]/[region]';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { getSafeNumberFormatLocale, VISITOR_COUNTRY_HEADER, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
@@ -8,7 +7,7 @@ import type { CountryStatisticFormat } from '@/modules/countries/country.types';
 import { cn } from '@socialincome/design-system/cn';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
-import { cookies, headers } from 'next/headers';
+import { headers } from 'next/headers';
 import NextImage from 'next/image';
 
 type Props = {
@@ -41,21 +40,8 @@ const normalizeCountryCode = (value: string | undefined): CountryCode | null => 
 
 const FALLBACK_VISITOR_COUNTRY_CODE: CountryCode = 'CH';
 
-const resolveVisitorCountryCode = async (): Promise<CountryCode> => {
-	const cookieStore = await cookies();
-	const countryFromCookie = normalizeCountryCode(cookieStore.get(COUNTRY_COOKIE)?.value);
-	if (countryFromCookie) {
-		return countryFromCookie;
-	}
-
-	const headerStore = await headers();
-	const countryFromHeader = normalizeCountryCode(headerStore.get(VISITOR_COUNTRY_HEADER) ?? undefined);
-	if (countryFromHeader) {
-		return countryFromHeader;
-	}
-
-	return FALLBACK_VISITOR_COUNTRY_CODE;
-};
+const resolveVisitorCountryCode = async (): Promise<CountryCode> =>
+	normalizeCountryCode((await headers()).get(VISITOR_COUNTRY_HEADER) ?? undefined) ?? FALLBACK_VISITOR_COUNTRY_CODE;
 
 type CountryHeaderProps = {
 	countryCode: CountryCode;

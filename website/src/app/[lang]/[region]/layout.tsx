@@ -2,8 +2,13 @@ import { DefaultLayoutProps } from '@/app/[lang]/[region]';
 import { RootDocument, rootViewport } from '@/app/root-document';
 import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { CommunityBackstageProvider } from '@/components/community/community-backstage';
-import { I18nContextProvider } from '@/lib/i18n/i18n-context-provider';
-import { defaultLanguage, isWebsiteLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
+import {
+	defaultLanguage,
+	isWebsiteLanguage,
+	mainWebsiteLanguages,
+	websiteRegions,
+	type WebsiteLanguage,
+} from '@/lib/i18n/utils';
 import { getMetadata } from '@/lib/utils/metadata';
 import { getCurrentSessions } from '@/modules/auth/session.service';
 import { notFound } from 'next/navigation';
@@ -11,6 +16,9 @@ import { notFound } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
 
 export const viewport = rootViewport;
+
+export const generateStaticParams = () =>
+	mainWebsiteLanguages.flatMap((lang) => websiteRegions.map((region) => ({ lang, region })));
 
 export const generateMetadata = async ({ params }: DefaultLayoutProps) => {
 	const { lang } = await params;
@@ -33,17 +41,15 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	);
 }
 
-const WebsiteShell = async ({ lang, region, children }: PropsWithChildren<{ lang: WebsiteLanguage; region: string }>) => {
-	const sessionsResult = await getCurrentSessions();
-	const sessions = sessionsResult.success ? sessionsResult.data : [];
+const WebsiteShell = ({ lang, region, children }: PropsWithChildren<{ lang: WebsiteLanguage; region: string }>) => {
+	// Not awaited: only the navbar's session slots suspend on it, so the rest of the shell needs no request data.
+	const sessions = getCurrentSessions().then((result) => (result.success ? result.data : []));
 
 	return (
-		<I18nContextProvider>
-			<CommunityBackstageProvider>
-				<WebsiteAppShell sessions={sessions} lang={lang} region={region} scope="website">
-					{children}
-				</WebsiteAppShell>
-			</CommunityBackstageProvider>
-		</I18nContextProvider>
+		<CommunityBackstageProvider>
+			<WebsiteAppShell sessions={sessions} lang={lang} region={region} scope="website">
+				{children}
+			</WebsiteAppShell>
+		</CommunityBackstageProvider>
 	);
 };

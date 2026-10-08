@@ -2,7 +2,7 @@
 
 import { OnlinePaymentLogos } from '@/components/payment-logos/online-payment-logos';
 import { QrPaymentLogo } from '@/components/payment-logos/qr-payment-logo';
-import { useI18n } from '@/lib/i18n/use-i18n';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { cn } from '@socialincome/design-system/cn';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
@@ -16,7 +16,7 @@ import { PaymentMethodOption } from './payment-method-option';
 
 export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
 	const t = useTranslations('donation-wizard');
-	const { currency = 'CHF' } = useI18n();
+	const currency = useWebsiteCurrency();
 	const view = selectPaymentView(state.context, currency);
 	const isQrAvailable = isWizardQrCurrencySupported(currency);
 

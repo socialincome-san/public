@@ -1,7 +1,7 @@
+import { CurrencySwitch } from '@/components/currency/currency-switch';
 import { ProgramFinancesCard } from '@/components/storyblok/program/program-finances-card';
 import { ProgramFinancesDialog } from '@/components/storyblok/program/program-finances-dialog';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { mapWebsiteCurrencies, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCurrentUserAction } from '@/modules/auth/auth.actions';
 import { resolveProgramFinancesDisplayAmountsAction } from '@/modules/programs/program.actions';
 import type { ProgramDashboardStats } from '@/modules/programs/program.types';
@@ -15,22 +15,29 @@ type Props = {
 };
 
 export const ProgramFinances = async ({ stats, programId, lang }: Props) => {
-	const [t, userResult, displayCurrency] = await Promise.all([
+	const [t, userResult, displayAmountsResult] = await Promise.all([
 		getTranslations('website-common'),
 		getCurrentUserAction(),
-		getWebsiteCurrencyFromCookie(),
+		resolveProgramFinancesDisplayAmountsAction(stats),
 	]);
 	const isLoggedIn = userResult.success && userResult.data !== null;
-	const displayAmountsResult = await resolveProgramFinancesDisplayAmountsAction(stats, displayCurrency);
-	const displayAmounts = displayAmountsResult.success
-		? displayAmountsResult.data
-		: {
-				currency: stats.payoutCurrency,
-				paidOutSoFar: stats.paidOutSoFarProgramCurrency,
-				totalProgramCosts: stats.totalProgramCostsProgramCurrency,
-				availableCredits: stats.availableCreditsProgramCurrency,
-			};
-	const financesCard = <ProgramFinancesCard displayAmounts={displayAmounts} lang={lang} embedded />;
+	const fallbackDisplayAmounts = {
+		currency: stats.payoutCurrency,
+		paidOutSoFar: stats.paidOutSoFarProgramCurrency,
+		totalProgramCosts: stats.totalProgramCostsProgramCurrency,
+		availableCredits: stats.availableCreditsProgramCurrency,
+	};
+	const financesCard = (
+		<CurrencySwitch
+			variants={mapWebsiteCurrencies((currency) => (
+				<ProgramFinancesCard
+					displayAmounts={displayAmountsResult.success ? displayAmountsResult.data[currency] : fallbackDisplayAmounts}
+					lang={lang}
+					embedded
+				/>
+			))}
+		/>
+	);
 
 	return (
 		<DetailPanel title={t('navigation.finances')}>

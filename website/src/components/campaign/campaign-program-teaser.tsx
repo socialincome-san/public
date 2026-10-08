@@ -4,9 +4,8 @@ import type { LocalPartnerStory } from '@/components/storyblok/local-partner/loc
 import { getLocalPartnerSlug } from '@/components/storyblok/local-partner/local-partner.utils';
 import { ProgramWallet } from '@/components/storyblok/program/program-wallet';
 import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { resolveWalletPayoutDisplayAction } from '@/modules/currency-display/currency-display.actions';
+import { mapWebsiteCurrencies, type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
+import { resolveWalletPayoutDisplaysAction } from '@/modules/currency-display/currency-display.actions';
 import { getPublicLocalPartnersByProgramIdAction } from '@/modules/local-partners/local-partner.actions';
 import {
 	getProgramSlugByIdAction,
@@ -68,10 +67,7 @@ const TeaserMetaRow = ({ label, items, showDivider = false }: TeaserMetaRowProps
 );
 
 export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) => {
-	const [programSlugResult, displayCurrency] = await Promise.all([
-		getProgramSlugByIdAction(programId),
-		getWebsiteCurrencyFromCookie(),
-	]);
+	const programSlugResult = await getProgramSlugByIdAction(programId);
 	if (!programSlugResult.success) {
 		return null;
 	}
@@ -148,13 +144,14 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 	const hasSdgs = sdgValues.length > 0;
 	const programDescription = program.content.description.trim();
 	const stats = statsResult.success ? statsResult.data : undefined;
-	const walletDisplayResult = stats
-		? await resolveWalletPayoutDisplayAction({
-				totalPayoutsSum: stats.totalPayoutsSum,
-				totalPayoutsSumChf: stats.totalPayoutsSumChf,
-				payoutCurrency: stats.payoutCurrency,
-				displayCurrency,
-			})
+	const walletDisplaysResult = stats
+		? await resolveWalletPayoutDisplaysAction([
+				{
+					totalPayoutsSum: stats.totalPayoutsSum,
+					totalPayoutsSumChf: stats.totalPayoutsSumChf,
+					payoutCurrency: stats.payoutCurrency,
+				},
+			])
 		: null;
 
 	return (
@@ -190,7 +187,11 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 					<ProgramWallet
 						program={program}
 						stats={stats}
-						walletDisplay={walletDisplayResult?.success ? walletDisplayResult.data : undefined}
+						walletDisplays={
+							walletDisplaysResult?.success
+								? mapWebsiteCurrencies((currency) => walletDisplaysResult.data[currency][0])
+								: undefined
+						}
 						lang={lang}
 						region={region}
 					/>

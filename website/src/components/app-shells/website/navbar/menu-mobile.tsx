@@ -1,9 +1,8 @@
 'use client';
 
-import { AccountMenu } from '@/components/app-shells/website/navbar/account-menu';
 import { LocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/locale-currency-switcher';
-import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout';
-import { displaySession, type Scope } from '@/components/app-shells/website/navbar/utils';
+import { AccountSlot, SignedOutSlot } from '@/components/app-shells/website/navbar/session-slots';
+import { type Scope } from '@/components/app-shells/website/navbar/utils';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import type { Session } from '@/modules/auth/auth.types';
@@ -13,7 +12,7 @@ import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 
 type Props = {
-	sessions: Session[];
+	sessions: Promise<Session[]>;
 	scope: Scope;
 	menuEntries: SiteMenuEntry[];
 	lang: WebsiteLanguage;
@@ -21,7 +20,6 @@ type Props = {
 };
 
 export const MenuMobile = ({ sessions, scope, menuEntries, lang, region }: Props) => {
-	const session = displaySession(sessions, scope);
 	const t = useTranslations('website-common');
 	const tDonate = useTranslations('website-donate');
 	const pathname = usePathname();
@@ -38,17 +36,15 @@ export const MenuMobile = ({ sessions, scope, menuEntries, lang, region }: Props
 				back: t('menu.back'),
 				homeLink: t('logo.home-link-aria'),
 			}}
-			renderDonateAction={
-				session
-					? undefined
-					: (closeMenu) => (
-							<OpenDonationWizardButton label={tDonate('donation-form.donate-now')} size="md" onBeforeOpen={closeMenu} />
-						)
-			}
+			renderDonateAction={(closeMenu) => (
+				<SignedOutSlot sessions={sessions} scope={scope}>
+					<OpenDonationWizardButton label={tDonate('donation-form.donate-now')} size="md" onBeforeOpen={closeMenu} />
+				</SignedOutSlot>
+			)}
 			footerControls={
 				<>
 					{scope === 'website' && <LocaleCurrencySwitcher lang={lang} region={region} variant="outline" />}
-					{session ? <AccountMenu sessions={sessions} scope={scope} /> : <LoginFlyout />}
+					<AccountSlot sessions={sessions} scope={scope} />
 				</>
 			}
 		/>

@@ -1,20 +1,18 @@
-import { DonationsTotalBlock } from '@/components/content-blocks/donations-total';
-import type { Currency } from '@/generated/prisma/client';
+import { ChfDonationsTotalBlock } from '@/components/content-blocks/donations-total-server';
 import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 
 type Props = {
 	blok: DonationsTotal | undefined;
-	totalAmount: number;
-	currency: Currency;
+	totalChf: number;
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 };
 
-export const StoryblokPayoutsTotal = ({ blok, totalAmount, currency, lang, region }: Props) => {
-	if (!blok || totalAmount === 0) {
+export const StoryblokPayoutsTotal = ({ blok, totalChf, lang, region }: Props) => {
+	if (!blok || totalChf === 0) {
 		return null;
 	}
 
-	return <DonationsTotalBlock blok={blok} lang={lang} region={region} totalAmount={totalAmount} currency={currency} />;
+	return <ChfDonationsTotalBlock blok={blok} lang={lang} region={region} totalChf={totalChf} />;
 };

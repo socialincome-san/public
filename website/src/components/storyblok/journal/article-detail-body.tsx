@@ -1,4 +1,4 @@
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { ArticleRichText } from '@/components/storyblok/journal/article-rich-text';
 import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
 import { OriginalLanguageLink } from '@/components/storyblok/journal/original-language-link';
@@ -35,7 +35,7 @@ export const ArticleDetailBody = async ({ story, slug, lang, region }: Props) =>
 			/>
 
 			<div className="prose text-foreground prose-a:text-primary max-w-none [&_a]:[font-size:inherit]! [&_a]:[font-weight:inherit]! [&_a]:[color:inherit]!">
-				<ArticleRichText document={article.content as StoryblokRichtext} lang={lang} donationForm={<DonationFormServer />} />
+				<ArticleRichText document={article.content as StoryblokRichtext} lang={lang} donationForm={<DonationForm />} />
 			</div>
 
 			{article.footnotes && (
@@ -43,7 +43,7 @@ export const ArticleDetailBody = async ({ story, slug, lang, region }: Props) =>
 					<ArticleRichText
 						document={article.footnotes as StoryblokRichtext}
 						lang={lang}
-						donationForm={<DonationFormServer />}
+						donationForm={<DonationForm />}
 						variant="footnotes"
 					/>
 				</div>
