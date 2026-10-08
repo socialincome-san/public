@@ -38,6 +38,12 @@ describe('YouTube Video ID Extraction', () => {
 	});
 });
 
+test('YouTube embeds use the no-cookie host', () => {
+	expect(new YouTubeVideoMatchAndExtract().parseUrl('https://youtu.be/dQw4w9WgXcQ')).toBe(
+		'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ',
+	);
+});
+
 const VIMEO_TEST_CASES: { url: string; expectedId: string | null }[] = [
 	{ url: 'https://vimeo.com/62092214', expectedId: '62092214' },
 	{ url: 'http://vimeo.com/62092214', expectedId: '62092214' },
@@ -60,4 +66,10 @@ describe('Vimeo Video ID Extraction', () => {
 			expect(match).toBe(expectedId === null ? null : matcher.urlCreate(expectedId));
 		});
 	});
+});
+
+test('Vimeo embeds disable tracking', () => {
+	expect(new VimeoVideoMatchAndExtract().parseUrl('https://vimeo.com/62092214')).toBe(
+		'https://player.vimeo.com/video/62092214?dnt=1',
+	);
 });
