@@ -18,6 +18,7 @@ export default async function PreviewPage({ params, searchParams }: PreviewPageP
 			region={region as WebsiteRegion}
 			previewRoutePath={`/${lang}/${region}/${slug}/preview`}
 			searchParams={resolvedSearchParams}
+			withCommunity
 		/>
 	);
 }

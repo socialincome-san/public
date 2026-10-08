@@ -38,6 +38,7 @@ export interface ArticleType {
   value?: string;
   description?: string;
   displayInOverviewPage?: boolean;
+  sortOrder?: string;
   component: "articleType";
   _uid: string;
   _editable?: string | undefined;
@@ -112,6 +113,70 @@ export interface CampaignOverview {
   title?: string;
   text?: string;
   component: "Campaign Overview";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface CommunityContributorGroup {
+  label: string;
+  people: (ISbStoryData<Person> | string)[];
+  component: "communityContributorGroup";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface CommunityGlobals {
+  headline: string;
+  headlineEmphasis?: string;
+  intro?: string;
+  volunteersLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  tickerItems?: string;
+  mistakeText?: string;
+  worldsTitle?: string;
+  worlds?: CommunityWorld[];
+  rolesTitle?: string;
+  rolesText?: string;
+  roles?: CommunityRole[];
+  waysInTitle?: string;
+  waysIn?: CommunityWayIn[];
+  ctaLabel?: string;
+  ctaLink?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  readingTitle?: string;
+  defaultArticles?: (ISbStoryData<Article> | string)[];
+  component: "communityGlobals";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface CommunityRole {
+  role: number | string;
+  person: ISbStoryData<Person> | string;
+  email: string;
+  component: "communityRole";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface CommunityWayIn {
+  name: string;
+  effort?: string;
+  link?: Exclude<StoryblokMultilink, {linktype?: "email"} | {linktype?: "asset"}>;
+  component: "communityWayIn";
+  _uid: string;
+  _editable?: string | undefined;
+  [k: string]: unknown;
+}
+
+export interface CommunityWorld {
+  name: string;
+  tag?: string;
+  text?: string;
+  people?: (ISbStoryData<Person> | string)[];
+  component: "communityWorld";
   _uid: string;
   _editable?: string | undefined;
   [k: string]: unknown;
@@ -519,6 +584,10 @@ export interface Page {
     | Inflows
     | Outflows
   )[];
+  communityEnabled?: boolean;
+  communityContributors?: CommunityContributorGroup[];
+  communityContactEmail?: string;
+  communityArticles?: (ISbStoryData<Article> | string)[];
   component: "page";
   _uid: string;
   _editable?: string | undefined;
@@ -557,7 +626,6 @@ export interface PartnershipsCarousel {
 }
 
 export interface Person {
-  displayInOverviewPage?: boolean;
   fullName: string;
   firstName: string;
   lastName: string;
@@ -565,14 +633,20 @@ export interface Person {
   bio?: string;
   githubName?: string;
   linkedinName?: string;
-  volunteerSince?: string;
   volunteerStatus?: "" | "active" | "inactive";
-  primaryRole?: number | string;
+  volunteerSince?: string;
   fieldTrips?: {
     [k: string]: unknown;
   }[];
-  countryOffice?: (number | string)[];
   country?: number | string;
+  primaryRole?: number | string;
+  countryOffice?: (number | string)[];
+  interestedCircleMember?: (number | string)[];
+  activeCircleMember?: (number | string)[];
+  displayInOverviewPage?: boolean;
+  workStyle?: number | string;
+  likesDeadline?: boolean;
+  timeCommitment?: number | string;
   component: "person";
   _uid: string;
   _editable?: string | undefined;
@@ -895,6 +969,7 @@ export type ContentType =
   | Campaign
   | CampaignGlobals
   | CampaignOverview
+  | CommunityGlobals
   | Country
   | CountryOverview
   | Document

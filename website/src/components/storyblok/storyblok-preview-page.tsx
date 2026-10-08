@@ -1,8 +1,11 @@
+import { Community } from '@/components/community/community';
 import PageContentType from '@/components/content-types/page';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import { Page } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getCommunityPanelDataAction } from '@/modules/community/community.actions';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { ISbStoryData } from '@storyblok/js';
 
 type Props = {
@@ -11,9 +14,17 @@ type Props = {
 	region: WebsiteRegion;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
+	withCommunity?: boolean;
 };
 
-export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
+export const StoryblokPreviewPage = async ({
+	storyPath,
+	lang,
+	region,
+	previewRoutePath,
+	searchParams,
+	withCommunity,
+}: Props) => {
 	return await StoryblokPreviewStory({
 		storyPath,
 		lang,
@@ -27,6 +38,24 @@ export const StoryblokPreviewPage = async ({ storyPath, lang, region, previewRou
 
 			return storyResult.success ? storyResult.data : null;
 		},
-		renderStory: (story) => <PageContentType blok={story.content} lang={lang} region={region} />,
+		renderStory: async (story) => {
+			const communityResult = withCommunity
+				? await getCommunityPanelDataAction({ page: story.content, language: lang, region })
+				: null;
+			const community = communityResult?.success ? communityResult.data : null;
+
+			return (
+				<>
+					{community ? (
+						<BlockWrapper disableMarginTop disableMarginBottom>
+							<div className="flex justify-end pt-9">
+								<Community data={community} lang={lang} />
+							</div>
+						</BlockWrapper>
+					) : null}
+					<PageContentType blok={story.content} lang={lang} region={region} />
+				</>
+			);
+		},
 	});
 };

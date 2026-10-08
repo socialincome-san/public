@@ -10,6 +10,8 @@ export const STORYBLOK_LAYOUT_PATH = `${STORYBLOK_GLOBALS_FOLDER}/layout`;
 
 export const STORYBLOK_CAMPAIGN_GLOBALS_PATH = `${STORYBLOK_GLOBALS_FOLDER}/campaign-globals`;
 
+export const STORYBLOK_COMMUNITY_GLOBALS_PATH = `${STORYBLOK_GLOBALS_FOLDER}/community`;
+
 const pagesPrefix = `${STORYBLOK_PAGES_FOLDER}/`;
 
 export const getPageStoryPath = (pageSlug: string) => `${pagesPrefix}${pageSlug}`;
