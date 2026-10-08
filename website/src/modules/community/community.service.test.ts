@@ -78,18 +78,22 @@ describe('getCommunityPanelData', () => {
 	});
 
 	it('fails when the role labels are missing', async () => {
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
 		mockGetPrimaryRoleLabels.mockResolvedValue({ success: false, error: 'Not found', status: 404 });
 
 		const result = await getCommunityPanelData(page(), 'en', 'int');
 
 		expect(result.success).toBe(false);
+		expect(consoleError).toHaveBeenCalled();
 	});
 
 	it('fails when the community globals are missing', async () => {
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
 		mockGetCommunityGlobals.mockResolvedValue({ success: false, error: 'Not found', status: 404 });
 
 		const result = await getCommunityPanelData(page(), 'en', 'int');
 
 		expect(result.success).toBe(false);
+		expect(consoleError).toHaveBeenCalled();
 	});
 });

@@ -1,3 +1,4 @@
+import { pickCommunityPage } from '@/components/community/pick-community-page';
 import { getProgramImages, getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import type { Program, ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
@@ -72,7 +73,7 @@ export const loadProgramDetailData = async (urlSlug: string, lang: string): Prom
 			images: getProgramImages(story.content),
 			description: story.content.description?.trim() || undefined,
 			faq: story.content.faq,
-			communityPage: story.content,
+			communityPage: pickCommunityPage(story.content),
 			...portalData,
 		};
 	}

@@ -57,6 +57,12 @@ export const getCommunityPanelData = async (
 		articlesPromise,
 	]);
 	if (!globalsResult.success || !personsResult.success || !roleLabelsResult.success) {
+		console.error('Could not load the community panel', {
+			globals: globalsResult.success || globalsResult.error,
+			persons: personsResult.success || personsResult.error,
+			roleLabels: roleLabelsResult.success || roleLabelsResult.error,
+		});
+
 		return resultFail('Could not load the community panel.');
 	}
 

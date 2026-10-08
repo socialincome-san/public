@@ -1,3 +1,4 @@
+import { pickCommunityPage } from '@/components/community/pick-community-page';
 import type { CampaignDetailData } from '@/components/storyblok/campaign/campaign.types';
 import { getCampaignPortalSlug, getCampaignTitle } from '@/components/storyblok/campaign/campaign.utils';
 import { getCampaignByPortalSlugAction } from '@/modules/campaigns/campaign.actions';
@@ -37,6 +38,6 @@ export const loadCampaignDetailData = cache(async (urlSlug: string, lang: string
 		linkWebsite: story.content.linkWebsite,
 		faq: story.content.faq,
 		campaign: campaignResult.data,
-		communityPage: story.content,
+		communityPage: pickCommunityPage(story.content),
 	};
 });
