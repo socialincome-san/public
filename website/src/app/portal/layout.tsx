@@ -9,12 +9,16 @@ export const viewport = rootViewport;
 
 export const generateMetadata = () => getMetadata(defaultLanguage, 'website-common');
 
-export default async function PortalLayout({ children }: { children: ReactNode }) {
-	const sessions = await requireSessions('user');
-
+export default function PortalLayout({ children }: { children: ReactNode }) {
 	return (
 		<RootDocument lang={defaultLanguage}>
-			<PortalAppShell sessions={sessions}>{children}</PortalAppShell>
+			<PortalShell>{children}</PortalShell>
 		</RootDocument>
 	);
 }
+
+const PortalShell = async ({ children }: { children: ReactNode }) => {
+	const sessions = await requireSessions('user');
+
+	return <PortalAppShell sessions={sessions}>{children}</PortalAppShell>;
+};

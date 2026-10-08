@@ -12,7 +12,15 @@ export const viewport = rootViewport;
 
 export const generateMetadata = () => getMetadata(defaultLanguage, 'website-common');
 
-export default async function PartnerSpaceLayout({ children }: { children: ReactNode }) {
+export default function PartnerSpaceLayout({ children }: { children: ReactNode }) {
+	return (
+		<RootDocument lang={defaultLanguage}>
+			<PartnerSpaceShell>{children}</PartnerSpaceShell>
+		</RootDocument>
+	);
+}
+
+const PartnerSpaceShell = async ({ children }: { children: ReactNode }) => {
 	const sessions = await requireSessions('local-partner');
 
 	const sections = [
@@ -27,15 +35,13 @@ export default async function PartnerSpaceLayout({ children }: { children: React
 	];
 
 	return (
-		<RootDocument lang={defaultLanguage}>
-			<WebsiteAppShell sessions={sessions} lang={defaultLanguage} region={defaultRegion} scope="partner-space">
-				<Breadcrumb links={breadcrumbLinks} />
-				<h1 data-testid="welcome-message-partner-space" className="py-8 text-5xl">
-					Partner Space
-				</h1>
-				<TabNavigation sections={sections} />
-				<Card>{children}</Card>
-			</WebsiteAppShell>
-		</RootDocument>
+		<WebsiteAppShell sessions={sessions} lang={defaultLanguage} region={defaultRegion} scope="partner-space">
+			<Breadcrumb links={breadcrumbLinks} />
+			<h1 data-testid="welcome-message-partner-space" className="py-8 text-5xl">
+				Partner Space
+			</h1>
+			<TabNavigation sections={sections} />
+			<Card>{children}</Card>
+		</WebsiteAppShell>
 	);
-}
+};
