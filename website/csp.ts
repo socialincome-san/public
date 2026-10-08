@@ -84,8 +84,21 @@ const FORM_ACTION = ["'self'"] as const;
 
 const FRAME_ANCESTORS = ["'self'", 'https://app.storyblok.com'] as const;
 
+// Vercel injects its toolbar into preview deployments. Hosts from
+// https://vercel.com/docs/vercel-toolbar/managing-toolbar#using-a-content-security-policy
+const VERCEL_TOOLBAR_SRC = {
+	script: ['https://vercel.live'],
+	style: ['https://vercel.live'],
+	img: ['https://vercel.live', 'https://vercel.com'],
+	font: ['https://vercel.live', 'https://assets.vercel.com'],
+	connect: ['https://vercel.live', 'wss://ws-us3.pusher.com'],
+	frame: ['https://vercel.live'],
+} as const;
+
 const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== 'production' }: CspOptions = {}) => {
 	const isUsingFirebaseEmulators = Boolean(process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL);
+	const isVercelPreview = process.env.VERCEL_ENV === 'preview';
+	const toolbarSrc = (directive: keyof typeof VERCEL_TOOLBAR_SRC) => (isVercelPreview ? VERCEL_TOOLBAR_SRC[directive] : []);
 	const scriptSrc = isDevelopment ? [...PRODUCTION_SCRIPT_SRC, ...DEVELOPMENT_SCRIPT_SRC_EXTRA] : PRODUCTION_SCRIPT_SRC;
 
 	const connectSrc = [
@@ -96,12 +109,12 @@ const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== '
 
 	const directives = [
 		`default-src 'self'`,
-		`script-src ${joinSources(scriptSrc)}`,
-		`style-src ${joinSources(STYLE_SRC)}`,
-		`img-src ${joinSources(IMG_SRC)}`,
-		`font-src ${joinSources(FONT_SRC)}`,
-		`connect-src ${joinSources(connectSrc)}`,
-		`frame-src ${joinSources(FRAME_SRC)}`,
+		`script-src ${joinSources([...scriptSrc, ...toolbarSrc('script')])}`,
+		`style-src ${joinSources([...STYLE_SRC, ...toolbarSrc('style')])}`,
+		`img-src ${joinSources([...IMG_SRC, ...toolbarSrc('img')])}`,
+		`font-src ${joinSources([...FONT_SRC, ...toolbarSrc('font')])}`,
+		`connect-src ${joinSources([...connectSrc, ...toolbarSrc('connect')])}`,
+		`frame-src ${joinSources([...FRAME_SRC, ...toolbarSrc('frame')])}`,
 		`media-src ${joinSources(MEDIA_SRC)}`,
 		`worker-src ${joinSources(WORKER_SRC)}`,
 		`form-action ${joinSources(FORM_ACTION)}`,
