@@ -1,6 +1,6 @@
 {
-	"contribution": "{{ amount, currency }}",
-	"filename": "Social Income Certificato di Donazione {{ year }}.pdf",
+	"contribution": "{amount}",
+	"filename": "Social Income Certificato di Donazione {year}.pdf",
 	"footer-left-line-1": "Social Income",
 	"footer-left-line-2": "Zweierstrasse 103",
 	"footer-left-line-3": "CH-8003 Zurigo",
@@ -11,13 +11,13 @@
 	"footer-right-line-2": "hello@socialincome.org",
 	"footer-right-line-3": "socialincome.org",
 	"header": "Associazione esente da imposte\nin Svizzera",
-	"location": "Zurigo, {{ date, datetime }}",
+	"location": "Zurigo, {date, date}",
 	"no-contributions": "Nessuna donazione",
 	"title-kerrin": "Responsabile Finanze",
-	"text-1": "Confermiamo alle autorita fiscali che Social Income ha ricevuto le seguenti donazioni da {{ firstname }} {{ lastname }} nell'anno {{ year }}:",
-	"text-2": "Sono state considerate tutte le donazioni ricevute tra il {{ start, datetime }} e il {{ end, datetime }}.",
+	"text-1": "Confermiamo alle autorita fiscali che Social Income ha ricevuto le seguenti donazioni da {firstname} {lastname} nell'anno {year}:",
+	"text-2": "Sono state considerate tutte le donazioni ricevute tra il {start, date} e il {end, date}.",
 	"text-3": "Per un'eventuale deduzione fiscale, consulta la normativa fiscale locale.",
 	"text-4": "Grazie per il tuo sostegno.",
 	"text-5": "Un caro saluto,",
-	"title": "Ricevuta di donazione {{ year }}"
+	"title": "Ricevuta di donazione {year}"
 }

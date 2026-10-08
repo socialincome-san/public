@@ -104,7 +104,8 @@ The same lint rules as in the design system apply: no `className` or
 `style` props, tokens only for colors, font sizes, radii and shadows.
 
 Text: translations live in
-`src/lib/i18n/locales/<lang>/<namespace>.json`. Use `Translator`
+`src/lib/i18n/locales/<lang>/<namespace>.json` and use ICU MessageFormat
+(`{name}`, `{count, plural, one {…} other {…}}`). Use `Translator`
 (server) or `useTranslator` (client) and add new keys to every language
 that has the namespace.
 

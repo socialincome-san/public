@@ -157,8 +157,8 @@
 			"monthly-contribution": "Contribution mensuelle",
 			"total-contributions": "Contributions totales",
 			"no-active-subscriptions": "Aucune souscription active",
-			"active-subscriptions-count": "{{count}} souscriptions actives",
-			"contributions-since": "{{count}} contributions depuis le {{date}}",
+			"active-subscriptions-count": "{count} souscriptions actives",
+			"contributions-since": "{count} contributions depuis le {date}",
 			"no-contributions-yet": "Aucune contribution pour l'instant"
 		},
 		"active-subscriptions": "Souscriptions actives",
@@ -169,12 +169,12 @@
 		"card-fallback": "Carte",
 		"cover-transaction-costs": {
 			"nudge-prefix": "Les paiements par carte coûtent env.",
-			"nudge-fee": "{{fee}}/mois",
+			"nudge-fee": "{fee}/mois",
 			"nudge-middle": "de frais de traitement.",
 			"nudge-cta": "Aidez à garder les coûts bas — couvrez les frais de transaction."
 		},
 		"empty": {
-			"description": "Tu as contribué {{amount}} en {{count}} virements.\nPrêt·e à reprendre là où tu t'es arrêté·e ?",
+			"description": "Tu as contribué {amount} en {count} virements.\nPrêt·e à reprendre là où tu t'es arrêté·e ?",
 			"description-no-contributions": "Commence à soutenir quelqu'un aujourd'hui."
 		}
 	},
@@ -183,7 +183,7 @@
 		"language": "Langue",
 		"year": "Année",
 		"generate-certificate": "Générer une attestation de don",
-		"no-certificates-yet": "Tu n’as pas reçu d’attestation de don? Crée-en une en cliquant sur \"Générer une attestation de don\". <br></br> Pour toute question, prends <a href='mailto:hello@socialincome.org' class='underline'> contact avec nous</a>.",
+		"no-certificates-yet": "Tu n’as pas reçu d’attestation de don? Crée-en une en cliquant sur \"Générer une attestation de don\". <br></br> Pour toute question, prends <a href=\"mailto:hello@socialincome.org\" class=\"underline\"> contact avec nous</a>.",
 		"no-contributions": "Aucune contribution trouvée, donc pas de certificat. Si tu penses que c’est une erreur, écris à contributors@socialincome.org.",
 		"already-exists": "Le certificat pour l'année et la langue sélectionnées existe déjà. Si tu penses que c’est une erreur, écris à contributors@socialincome.org.",
 		"technical-error": "Une erreur technique est survenue, veuillez réessayer. Si cela persiste, veuillez contacter contributors@socialincome.org.",

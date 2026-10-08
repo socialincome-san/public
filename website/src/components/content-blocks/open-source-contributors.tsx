@@ -26,7 +26,7 @@ export const OpenSourceContributorsBlock = async ({ blok, lang }: Props) => {
 	]);
 
 	const contributors = contributorsResult.success ? contributorsResult.data : [];
-	const contributorsLabels = translator.t<ContributorsLabels>('contributors');
+	const contributorsLabels = translator.raw<ContributorsLabels>('contributors');
 	const errorMessage = translator.t<string>('error.unavailable');
 
 	return (

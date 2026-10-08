@@ -255,10 +255,10 @@ export const PersonGridInteractive = ({
 		getLabel: (value: T) => string,
 	) =>
 		selected.length === 0 || selected.length === all.length
-			? allLabel.replace('{{count}}', String(all.length))
+			? allLabel.replace('{count}', String(all.length))
 			: selected.length === 1
 				? getLabel(selected[0])
-				: translations.filterMultipleSelected.replace('{{count}}', String(selected.length));
+				: translations.filterMultipleSelected.replace('{count}', String(selected.length));
 
 	const roleLabel = filterTriggerLabel(selectedRoles, roles, translations.filterAllRoles, roleLabelFor);
 	const statusLabel = filterTriggerLabel(

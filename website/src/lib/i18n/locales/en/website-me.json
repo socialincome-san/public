@@ -157,8 +157,8 @@
 			"monthly-contribution": "Monthly contribution",
 			"total-contributions": "Total contributions",
 			"no-active-subscriptions": "No active subscriptions",
-			"active-subscriptions-count": "{{count}} active subscriptions",
-			"contributions-since": "{{count}} contributions since {{date}}",
+			"active-subscriptions-count": "{count} active subscriptions",
+			"contributions-since": "{count} contributions since {date}",
 			"no-contributions-yet": "No contributions yet"
 		},
 		"active-subscriptions": "Active subscriptions",
@@ -169,12 +169,12 @@
 		"card-fallback": "Card",
 		"cover-transaction-costs": {
 			"nudge-prefix": "Card payments cost approx.",
-			"nudge-fee": "{{fee}}/mo",
+			"nudge-fee": "{fee}/mo",
 			"nudge-middle": "in processing fees.",
 			"nudge-cta": "Help keep costs low — cover transaction costs."
 		},
 		"empty": {
-			"description": "You've contributed {{amount}} across {{count}} transfers.\nReady to pick up where you left off?",
+			"description": "You've contributed {amount} across {count} transfers.\nReady to pick up where you left off?",
 			"description-no-contributions": "Start supporting someone today."
 		}
 	},
@@ -183,7 +183,7 @@
 		"language": "Language",
 		"year": "Year",
 		"generate-certificate": "Generate Donation Certificate",
-		"no-certificates-yet": "You have no donation certificates yet. Create some by clicking \"Generate Donation Certificate\". <br></br> If you have any questions, feel free to <a href='mailto:hello@socialincome.org' class='underline'>contact</a>. us.",
+		"no-certificates-yet": "You have no donation certificates yet. Create some by clicking \"Generate Donation Certificate\". <br></br> If you have any questions, feel free to <a href=\"mailto:hello@socialincome.org\" class=\"underline\">contact</a>. us.",
 		"no-contributions": "No contributions found, so no certificate can be issued. If this seems wrong, contact contributors@socialincome.org.",
 		"already-exists": "Certificate for selected year and language already exists. If this seems wrong, please contact contributors@socialincome.org.",
 		"technical-error": "A technical error has occurred, please try again. If this continues to happen, please contact contributors@socialincome.org.",

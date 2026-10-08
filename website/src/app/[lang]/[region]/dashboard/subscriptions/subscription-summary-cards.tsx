@@ -40,7 +40,7 @@ export const SubscriptionSummaryCards = ({ lang, monthlyContribution, contributi
 	const monthlySubtitle =
 		monthlyContribution.activeCount === 0
 			? labels.noActiveSubscriptions
-			: labels.activeSubscriptionsCount.replace('{{count}}', String(monthlyContribution.activeCount));
+			: labels.activeSubscriptionsCount.replace('{count}', String(monthlyContribution.activeCount));
 
 	const totalAmount = formatCurrencyLocale(contributionSummary.totalAmountChf, 'CHF', lang, wholeCurrencyFormatOptions);
 
@@ -48,8 +48,8 @@ export const SubscriptionSummaryCards = ({ lang, monthlyContribution, contributi
 		contributionSummary.count === 0 || !contributionSummary.firstContributionAt
 			? labels.noContributionsYet
 			: labels.contributionsSince
-					.replace('{{count}}', String(contributionSummary.count))
-					.replace('{{date}}', formatDateLocale(contributionSummary.firstContributionAt, lang));
+					.replace('{count}', String(contributionSummary.count))
+					.replace('{date}', formatDateLocale(contributionSummary.firstContributionAt, lang));
 
 	return (
 		<div className="grid gap-4 md:grid-cols-2">

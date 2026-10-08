@@ -1,5 +1,6 @@
 import { LanguageCode } from '@/lib/types/language';
 import i18next, { i18n } from 'i18next';
+import ICU from 'i18next-icu';
 import resourcesToBackend from 'i18next-resources-to-backend';
 
 const FALLBACK_LANGUAGE = 'en';
@@ -37,6 +38,7 @@ export class Translator {
 					return import(`@/lib/i18n/locales/${lng}/${ns}.json`);
 				}),
 			)
+			.use(ICU)
 			.init({
 				lng: language,
 				ns: namespaces,
@@ -44,6 +46,13 @@ export class Translator {
 				returnObjects: true,
 				interpolation: {
 					escapeValue: false,
+				},
+				i18nFormat: {
+					parseErrorHandler: (error: Error, key: string, message: string) => {
+						console.error(`Failed to format translation "${key}"`, error);
+
+						return message;
+					},
 				},
 			});
 
@@ -56,5 +65,20 @@ export class Translator {
 			lng: translateProps?.language ?? this.language,
 			...translateProps?.context,
 		}) as T;
+	};
+
+	// Unformatted ICU message, for templates whose placeholders are filled in later, e.g. on the client.
+	public raw = <T = string>(key: string): T => {
+		const namespaces = Array.isArray(this.namespaces) ? this.namespaces : [this.namespaces];
+		for (const language of [this.language, FALLBACK_LANGUAGE]) {
+			for (const namespace of namespaces) {
+				const message: unknown = this.instance.getResource(language, namespace, key);
+				if (message !== undefined) {
+					return message as T;
+				}
+			}
+		}
+
+		return key as T;
 	};
 }

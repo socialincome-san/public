@@ -8,7 +8,7 @@ import { CampaignSubmissionFormCard, CampaignSubmissionFormCardColumn } from './
 import type { SubmissionLabels } from './types';
 
 const SUPPORT_EMAIL = 'support@socialincome.org';
-const EMAIL_PLACEHOLDER = '{{ email }}';
+const EMAIL_PLACEHOLDER = '{email}';
 
 type Props = {
 	labels: Pick<

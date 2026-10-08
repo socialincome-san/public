@@ -86,10 +86,11 @@ export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
 					<CountriesSectionClient
 						sectionTitle={translator.t('transparency-page.inflows.title-name')}
 						headlineTemplate={translator.t('transparency-page.countries.headline', {
-							context: { count: data.countriesCount },
+							// Only the plural form is resolved here; the client fills in the placeholders.
+							context: { count: data.countriesCount, amount: '{amount}', countriesCount: '{countriesCount}' },
 						})}
-						headlineCountryTemplate={translator.t('transparency-page.countries.headline-country')}
-						headlineOtherTemplate={translator.t('transparency-page.countries.headline-other')}
+						headlineCountryTemplate={translator.raw('transparency-page.countries.headline-country')}
+						headlineOtherTemplate={translator.raw('transparency-page.countries.headline-other')}
 						otherCountriesLabel={otherCountriesLabel}
 						emptyLabel={translator.t('transparency-page.countries.empty')}
 						chartAriaLabel={translator.t('transparency-page.countries.chart-aria-label')}

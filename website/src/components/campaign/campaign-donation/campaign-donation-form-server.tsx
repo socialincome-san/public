@@ -27,7 +27,7 @@ export const CampaignDonationFormServer = async ({ lang, campaignId, quote, crea
 	return (
 		<CampaignDonationForm
 			campaignId={campaignId}
-			translations={getDonationAmountFieldsTranslations(translator.t)}
+			translations={getDonationAmountFieldsTranslations(translator.t, translator.raw)}
 			currency={currency}
 			quote={quote}
 			profilePictureSrc={profilePictureSrc}

@@ -24,7 +24,7 @@ export const ImpactMeasurementQuestionCard = async ({
 				<div className="grid gap-6 px-4 pt-6 pb-8 sm:px-6 sm:pt-8 sm:pb-12 lg:grid-cols-2">
 					<div className="space-y-5">
 						<p className="text-foreground text-sm">
-							{translator.t('survey.impactMeasurement.questionLabel').replace('{{number}}', String(index + 1))} (
+							{translator.t('survey.impactMeasurement.questionLabel', { context: { number: index + 1 } })} (
 							{translator.t(questionTypeLabelKey)})
 						</p>
 						<h2 className="text-foreground text-2xl leading-8 font-bold">{translator.t(question.translationKey)}</h2>

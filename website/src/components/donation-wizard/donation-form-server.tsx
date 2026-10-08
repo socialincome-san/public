@@ -16,7 +16,7 @@ export const DonationFormServer = async ({ lang, campaignId }: Props) => {
 	return (
 		<DonationForm
 			campaignId={campaignId}
-			translations={getDonationAmountFieldsTranslations(translator.t)}
+			translations={getDonationAmountFieldsTranslations(translator.t, translator.raw)}
 			currency={currency}
 		/>
 	);

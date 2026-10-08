@@ -67,7 +67,7 @@ export const ProgramStep = ({ form, labels, programs, programsLoading, programsE
 		setExpandedProgramId((current) => (current === programId ? null : programId));
 	};
 
-	const getRecipientsLabel = (count: number) => labels.recipientsCount.replace('{{count}}', String(count));
+	const getRecipientsLabel = (count: number) => labels.recipientsCount.replace('{count}', String(count));
 
 	const statusMessage = programsLoading
 		? labels.programsLoading

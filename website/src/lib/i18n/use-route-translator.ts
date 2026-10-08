@@ -25,5 +25,7 @@ export const useRouteTranslator = ({ namespace, fallbackLanguage = 'en' }: Props
 		return translator.t<string>(key, { context });
 	};
 
-	return { t, translator, language };
+	const raw = (key: string): string => translator?.raw(key) ?? key;
+
+	return { t, raw, translator, language };
 };

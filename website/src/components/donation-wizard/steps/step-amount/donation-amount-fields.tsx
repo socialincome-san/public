@@ -239,7 +239,7 @@ export const DonationAmountFields = ({
 				onClick={onSubmit}
 			>
 				{values.resolvedAmount !== null
-					? translations.donateNowWithAmount.replace('{{amount}}', `${currency} ${values.resolvedAmount}`)
+					? translations.donateNowWithAmount.replace('{amount}', `${currency} ${values.resolvedAmount}`)
 					: translations.donateNow}
 			</Button>
 		</div>

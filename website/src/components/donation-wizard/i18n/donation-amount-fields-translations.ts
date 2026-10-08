@@ -13,7 +13,7 @@ export type DonationAmountFieldsTranslations = {
 
 type Translate = (key: string) => string;
 
-export const getDonationAmountFieldsTranslations = (t: Translate): DonationAmountFieldsTranslations => ({
+export const getDonationAmountFieldsTranslations = (t: Translate, raw: Translate): DonationAmountFieldsTranslations => ({
 	title: t('stepAmount.title'),
 	monthlyIncomeLabel: t('stepAmount.monthly-income-label'),
 	yourOnePercent: t('stepAmount.your-one-percent'),
@@ -23,5 +23,5 @@ export const getDonationAmountFieldsTranslations = (t: Translate): DonationAmoun
 	monthly: t('stepAmount.monthly'),
 	oneTime: t('stepAmount.one-time'),
 	donateNow: t('stepAmount.donate-now'),
-	donateNowWithAmount: t('stepAmount.donate-now-with-amount'),
+	donateNowWithAmount: raw('stepAmount.donate-now-with-amount'),
 });

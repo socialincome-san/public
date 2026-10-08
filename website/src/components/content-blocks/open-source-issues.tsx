@@ -29,7 +29,7 @@ export const OpenSourceIssuesBlock = async ({ blok, lang }: Props) => {
 	]);
 
 	const { issues, labels } = issuesResult.success ? issuesResult.data : EMPTY_GITHUB_OPEN_SOURCE_ISSUES_DATA;
-	const issuesLabels = translator.t<IssuesLabels>('issues');
+	const issuesLabels = translator.raw<IssuesLabels>('issues');
 	const errorMessage = translator.t<string>('error.unavailable');
 
 	return (

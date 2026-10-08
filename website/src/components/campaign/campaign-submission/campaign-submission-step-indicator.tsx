@@ -45,7 +45,7 @@ export const CampaignSubmissionStepIndicator = ({
 	};
 
 	const getStepAriaLabel = (index: number) =>
-		stepLabel.replace('{{number}}', String(index + 1)).replace('{{name}}', getStepName(steps[index]));
+		stepLabel.replace('{number}', String(index + 1)).replace('{name}', getStepName(steps[index]));
 
 	return (
 		<StepIndicator

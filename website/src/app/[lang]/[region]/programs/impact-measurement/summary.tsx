@@ -30,9 +30,7 @@ export const ImpactMeasurementStudyDetails = async ({ lang, searchParams }: Impa
 	const lastResponseLabel =
 		details.lastResponseDaysAgo === null
 			? translator.t('survey.impactMeasurement.lastResponseNotAvailable')
-			: translator
-					.t('survey.impactMeasurement.lastResponseDaysAgo')
-					.replace('{{days}}', String(details.lastResponseDaysAgo));
+			: translator.t('survey.impactMeasurement.lastResponseDaysAgo', { context: { days: details.lastResponseDaysAgo } });
 	const timeFrameLabel =
 		details.timeFrameStart && details.timeFrameEnd
 			? `${dateFormatter.format(details.timeFrameStart)} - ${dateFormatter.format(details.timeFrameEnd)}`

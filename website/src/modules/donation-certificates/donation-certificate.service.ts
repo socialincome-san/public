@@ -348,7 +348,9 @@ const writeDonationCertificatePdf = async (
 				currencyContributions.forEach(([currency, amount]) => {
 					pdfDocument.text(
 						`– ${translator.t('contribution', {
-							context: { currency, amount, locale: 'de-CH' },
+							context: {
+								amount: new Intl.NumberFormat('de-CH', { style: 'currency', currency }).format(amount),
+							},
 						})}`,
 					);
 				});

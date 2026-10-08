@@ -40,8 +40,8 @@ export const SubscriptionsView = async ({ lang, region }: Props) => {
 		monthlyContribution: translator.t('subscriptions.summary.monthly-contribution'),
 		totalContributions: translator.t('subscriptions.summary.total-contributions'),
 		noActiveSubscriptions: translator.t('subscriptions.summary.no-active-subscriptions'),
-		activeSubscriptionsCount: translator.t('subscriptions.summary.active-subscriptions-count'),
-		contributionsSince: translator.t('subscriptions.summary.contributions-since'),
+		activeSubscriptionsCount: translator.raw('subscriptions.summary.active-subscriptions-count'),
+		contributionsSince: translator.raw('subscriptions.summary.contributions-since'),
 		noContributionsYet: translator.t('subscriptions.summary.no-contributions-yet'),
 		activeSubscriptions: translator.t('subscriptions.active-subscriptions'),
 		perMonth: translator.t('subscriptions.per-month'),
@@ -55,7 +55,7 @@ export const SubscriptionsView = async ({ lang, region }: Props) => {
 		close: translator.t('subscriptions.qr-dialog.close'),
 		upcomingPayments: translator.t('subscriptions.upcoming-payments'),
 		scheduled: translator.t('subscriptions.scheduled'),
-		emptyDescription: translator.t('subscriptions.empty.description'),
+		emptyDescription: translator.raw('subscriptions.empty.description'),
 		emptyDescriptionNoContributions: translator.t('subscriptions.empty.description-no-contributions'),
 	};
 

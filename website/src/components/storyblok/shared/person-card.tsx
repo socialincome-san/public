@@ -13,7 +13,7 @@ import type { ISbStoryData } from '@storyblok/js';
 const PERSON_CARD_IMAGE_WIDTH = 400;
 const PERSON_CARD_IMAGE_HEIGHT = 500;
 
-// Every label is a "{{count}}" template rather than a translator call, because the person card also
+// Every label is a "{count}" template rather than a translator call, because the person card also
 // renders inside the client-side person grid where no translator instance is available.
 export type VolunteerDurationTranslations = {
 	// Standalone label for day zero, where a "0 days" count would read badly.
@@ -50,7 +50,7 @@ type Props = {
 };
 
 const pluralize = (count: number, singular: string, plural: string) =>
-	(count === 1 ? singular : plural).replace('{{count}}', String(count));
+	(count === 1 ? singular : plural).replace('{count}', String(count));
 
 const formatDuration = (parts: VolunteerDurationParts, translations: VolunteerDurationTranslations) => {
 	if (parts.unit === 'days') {
@@ -76,7 +76,7 @@ const getDurationLabels = (volunteerSince: string | undefined, config: Volunteer
 	return parts
 		? {
 				label: formatDuration(parts, config.translations),
-				since: config.translations.since.replace('{{date}}', formatStoryblokDateMedium(volunteerSince, config.lang)),
+				since: config.translations.since.replace('{date}', formatStoryblokDateMedium(volunteerSince, config.lang)),
 			}
 		: null;
 };

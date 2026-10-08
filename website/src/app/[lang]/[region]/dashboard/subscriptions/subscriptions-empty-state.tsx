@@ -21,10 +21,10 @@ export const SubscriptionsEmptyState = ({ lang, region, contributionSummary, lab
 	const description = hasContributions
 		? labels.emptyDescription
 				.replace(
-					'{{amount}}',
+					'{amount}',
 					formatCurrencyLocale(contributionSummary.totalAmountChf, 'CHF', lang, wholeCurrencyFormatOptions),
 				)
-				.replace('{{count}}', String(contributionSummary.count))
+				.replace('{count}', String(contributionSummary.count))
 		: labels.emptyDescriptionNoContributions;
 
 	return (

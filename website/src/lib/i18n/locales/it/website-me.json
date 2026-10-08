@@ -157,8 +157,8 @@
 			"monthly-contribution": "Contributo mensile",
 			"total-contributions": "Contributi totali",
 			"no-active-subscriptions": "Nessuna sottoscrizione attiva",
-			"active-subscriptions-count": "{{count}} sottoscrizioni attive",
-			"contributions-since": "{{count}} contributi dal {{date}}",
+			"active-subscriptions-count": "{count} sottoscrizioni attive",
+			"contributions-since": "{count} contributi dal {date}",
 			"no-contributions-yet": "Nessun contributo ancora"
 		},
 		"active-subscriptions": "Sottoscrizioni attive",
@@ -169,12 +169,12 @@
 		"card-fallback": "Carta",
 		"cover-transaction-costs": {
 			"nudge-prefix": "I pagamenti con carta costano circa",
-			"nudge-fee": "{{fee}}/mese",
+			"nudge-fee": "{fee}/mese",
 			"nudge-middle": "di commissioni.",
 			"nudge-cta": "Aiuta a tenere bassi i costi — copri le commissioni di transazione."
 		},
 		"empty": {
-			"description": "Hai contribuito con {{amount}} in {{count}} bonifici.\nPronto a riprendere da dove avevi lasciato?",
+			"description": "Hai contribuito con {amount} in {count} bonifici.\nPronto a riprendere da dove avevi lasciato?",
 			"description-no-contributions": "Inizia a sostenere qualcuno oggi."
 		}
 	},
@@ -183,7 +183,7 @@
 		"language": "Lingua",
 		"year": "Anno",
 		"generate-certificate": "Genera certificato di donazione",
-		"no-certificates-yet": "Non hai ancora certificati di donazione. Creane uno cliccando su \"Genera certificato di donazione\". <br></br> Se avete domande, non esitate a <a href='mailto:hello@socialincome.org' class='underline'>contattarci</a>.",
+		"no-certificates-yet": "Non hai ancora certificati di donazione. Creane uno cliccando su \"Genera certificato di donazione\". <br></br> Se avete domande, non esitate a <a href=\"mailto:hello@socialincome.org\" class=\"underline\">contattarci</a>.",
 		"no-contributions": "Nessuna contribuzione trovata, quindi niente certificato. Se pensi che sia un errore, contatta contributors@socialincome.org.",
 		"already-exists": "Il certificato per l'anno e la lingua selezionati esiste già. Se pensi che sia un errore, contatta contributors@socialincome.org.",
 		"technical-error": "Si è verificato un errore tecnico, riprova. Se questo continua ad accadere, contatta contributors@socialincome.org.",

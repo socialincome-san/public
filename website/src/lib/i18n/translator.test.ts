@@ -35,14 +35,15 @@ describe('Test translations', () => {
 			namespaces: ['website-common'],
 		});
 
-		expect(translator.t('transparency-page.countries.headline', { context: { count: 72 } })).toBe(
-			'Donations totaling {{amount}} arrived from {{countriesCount}} countries',
+		const placeholders = { amount: '{amount}', countriesCount: '{countriesCount}' };
+		expect(translator.t('transparency-page.countries.headline', { context: { count: 72, ...placeholders } })).toBe(
+			'Donations totaling {amount} arrived from {countriesCount} countries',
 		);
-		expect(translator.t('transparency-page.countries.headline', { context: { count: 1 } })).toBe(
-			'Donations totaling {{amount}} arrived from {{countriesCount}} country',
+		expect(translator.t('transparency-page.countries.headline', { context: { count: 1, ...placeholders } })).toBe(
+			'Donations totaling {amount} arrived from {countriesCount} country',
 		);
-		expect(translator.t('transparency-page.countries.headline-country')).toBe(
-			'Donations totaling {{amount}} arrived from {{country}}',
+		expect(translator.raw('transparency-page.countries.headline-country')).toBe(
+			'Donations totaling {amount} arrived from {country}',
 		);
 	});
 
@@ -52,8 +53,10 @@ describe('Test translations', () => {
 			namespaces: ['website-common'],
 		});
 
-		expect(translator.t('transparency-page.countries.headline', { context: { count: 1 } })).toBe(
-			'Des dons totalisant {{amount}} sont arrivés de {{countriesCount}} pays',
-		);
+		expect(
+			translator.t('transparency-page.countries.headline', {
+				context: { count: 1, amount: '{amount}', countriesCount: '{countriesCount}' },
+			}),
+		).toBe('Des dons totalisant {amount} sont arrivés de {countriesCount} pays');
 	});
 });

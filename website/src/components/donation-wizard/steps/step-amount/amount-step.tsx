@@ -8,12 +8,12 @@ import type { DonationWizardStepProps } from '../../wizard/types';
 import { DonationAmountFields } from './donation-amount-fields';
 
 export const AmountStep = ({ state, send }: DonationWizardStepProps) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const { t, raw } = useRouteTranslator({ namespace: 'donation-wizard' });
 	const { currency = 'CHF' } = useI18n();
 
 	return (
 		<DonationAmountFields
-			translations={getDonationAmountFieldsTranslations(t)}
+			translations={getDonationAmountFieldsTranslations(t, raw)}
 			currency={currency}
 			values={selectStep1FormView(state.context)}
 			actions={createStep1Actions(send)}

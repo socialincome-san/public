@@ -1,27 +1,22 @@
 {
 	"campaign": {
 		"not-found": "Die Kampagne konnte leider nicht gefunden werden.",
-		"by": "Von {{ creator }}",
+		"by": "Von {creator}",
 		"without-goal": {
-			"collected_zero": "Noch keine Spenden. Mache den ersten Schritt!",
-			"collected_one": "{{ amount, currency }} von {{ count }} Spender:in gesammelt",
-			"collected_other": "{{ amount, currency }} von {{ count }} Spender:innen gesammelt"
+			"collected": "{count, plural, =0 {Noch keine Spenden. Mache den ersten Schritt!} one {{amount} von {count} Spender:in gesammelt} other {{amount} von {count} Spender:innen gesammelt}}"
 		},
 		"with-goal": {
-			"collected-percentage": "{{percentage}}% gesammelt",
+			"collected-percentage": "{percentage}% gesammelt",
 			"goal-title": "Ziel",
-			"collected-amount_one": "{{ amount, currency }} von {{count}} Spender:in",
-			"collected-amount_other": "{{ amount, currency }} von {{count}} Spender:innen",
-			"goal-amount": "{{ amount, currency }}"
+			"collected-amount": "{count, plural, one {{amount} von {count} Spender:in} other {{amount} von {count} Spender:innen}}",
+			"goal-amount": "{amount}"
 		},
 		"ended": "Die Kampagne ist beendet. Für reguläre Spenden verwende bitte die Hauptspendeseite.",
 		"days-left": "Tage verbleibend",
 		"fundraising-pill": {
-			"days-left_one": "Nur noch {{count}} Tag",
-			"days-left_other": "Nur noch {{count}} Tage",
-			"amount-missing": "Noch {{missing}} bis zum Ziel von {{goal}}",
-			"supporters-left_one": "Noch {{count}} Spender:in bis {{goal}}",
-			"supporters-left_other": "Noch {{count}} Spender:innen bis {{goal}}"
+			"days-left": "{count, plural, one {Nur noch {count} Tag} other {Nur noch {count} Tage}}",
+			"amount-missing": "Noch {missing} bis zum Ziel von {goal}",
+			"supporters-left": "{count, plural, one {Noch {count} Spender:in bis {goal}} other {Noch {count} Spender:innen bis {goal}}}"
 		},
 		"program-teaser": {
 			"heading": "Deine Spende unterstützt",
@@ -37,8 +32,8 @@
 		"video-slider": {
 			"title": "Was bedeutet es, ein **Social Income** zu erhalten?",
 			"description": "Höre direkt von Empfänger:innen in unseren Programmen, was Social Income in der Praxis bedeutet.",
-			"show-video": "Video {{ index }} anzeigen",
-			"video-title": "Social Income Empfänger:in Video {{ index }}"
+			"show-video": "Video {index} anzeigen",
+			"video-title": "Social Income Empfänger:in Video {index}"
 		},
 		"other-campaigns": {
 			"heading-prefix": "Entdecke andere ",

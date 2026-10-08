@@ -26,7 +26,7 @@ export const OpenSourceStatsBlock = async ({ blok, lang }: Props) => {
 	]);
 
 	const stats = statsResult.success ? statsResult.data : EMPTY_GITHUB_REPO_STATS;
-	const overviewLabels = translator.t<OverviewLabels>('overview');
+	const overviewLabels = translator.raw<OverviewLabels>('overview');
 	const errorMessage = translator.t<string>('error.unavailable');
 
 	return (
