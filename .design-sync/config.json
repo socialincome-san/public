@@ -94,6 +94,11 @@
     "Backstage": {
       "cardMode": "single",
       "primaryStory": "Open"
+    },
+    "DropdownMenu": {
+      "skip": [
+        "overlays-dropdownmenu--with-submenu"
+      ]
     }
   }
 }

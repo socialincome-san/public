@@ -46,4 +46,17 @@ Repo-specific gotchas for syncing `design-system/` to Claude Design.
 - [GENERAL] [ASSETS_BLOCKED]: this cloud environment's network policy denies `a.storyblok.com` and
   `placehold.co`, so remote story images break on both panels. Card "With Content" and PartnershipBadge
   "Default" stay ungraded until those hosts are allowed; then `compare.mjs --force --components Card,PartnershipBadge`.
+- `DropdownMenu` "With Submenu" is skipped (`cfg.overrides.DropdownMenu.skip`): the story builds its submenu from
+  raw `@radix-ui/react-dropdown-menu` primitives, which the DS doesn't export. The preview bundled a second Radix
+  copy, and opening the menu threw "`MenuSub` must be used within `Menu`". The design agent has no submenu API.
+- Compare only captures closed overlays; interaction bugs (like the submenu crash) need a manual Playwright check.
+- `Select` "Many Options" (defaultOpen): compare crops the reference shot to the story root, clipping the open
+  list on the Storybook side only. Verified against a full-viewport Storybook screenshot: match.
+- `DataTableTextCell` "All Cells" is ~1000px tall; the 900x700 capture cuts the tail. Tail rows were verified with a
+  full-page shot. A taller `viewport` override would capture it (needs a full rebuild and re-grade).
+- `InfoTooltip` `[RENDER_THIN]` is legitimate: the story itself is a lone 16px help icon with the tooltip closed.
 - Carousel "Cards" has no width limit: Storybook grows to show all 5 cards, the 900px preview scrolls. Framing.
+
+## Known render warns
+
+- `[RENDER_THIN]` InfoTooltip, SiteMenuMobile - see grading notes (triaged, not defects).
