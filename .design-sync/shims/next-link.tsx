@@ -15,7 +15,7 @@ type LinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
 const toHref = (href: Href) =>
 	typeof href === 'string'
 		? href
-		: `${href.pathname ?? ''}${href.query ? `?${new URLSearchParams(href.query)}` : ''}${href.hash ? `#${href.hash}` : ''}`;
+		: `${href.pathname ?? ''}${href.query ? `?${new URLSearchParams(href.query)}` : ''}${href.hash ? `#${href.hash.replace(/^#/, '')}` : ''}`;
 
 const Link = forwardRef<HTMLAnchorElement, LinkProps>(
 	({ href, prefetch: _p, replace: _r, scroll: _s, shallow: _sh, locale: _l, ...props }, ref) => (
