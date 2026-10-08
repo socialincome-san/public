@@ -71,6 +71,20 @@ complete surveys. See `recipients_app/README.md` for mobile setup details.
 Seed data for the local Firebase emulators. Firebase Auth users are imported
 automatically when the local development environment starts.
 
+### Architecture And Conventions
+
+The conventions for each workspace live in `AGENTS.md` files, written for
+people and coding agents alike:
+
+- [`AGENTS.md`](AGENTS.md): repository overview and the checks to run
+- [`website/AGENTS.md`](website/AGENTS.md): backend modules,
+  integrations and `lib`, and how the website uses the design system
+- [`design-system/AGENTS.md`](design-system/AGENTS.md): what belongs in
+  the design system, component conventions, and design tokens
+
+Most of these rules are enforced by ESLint, so `npm run lint` tells you
+when code does not fit.
+
 ## Local Development Setup
 
 ### Requirements
@@ -255,8 +269,10 @@ Website and design system checks run for pull requests and for pushes to
 `main`.
 Vercel deploys through its Git integration: `main` goes to the `staging`
 environment, the `production` branch to production, and pull requests get
-preview deployments. A release is a pull request from `main` into
-`production`, which also deploys the Firebase rules to production.
+preview deployments. To release, publish a
+[GitHub release](https://github.com/socialincome-san/public/releases/new)
+with a new tag on `main`. The **Release** workflow then pushes that commit
+to `production`, which deploys the website and the Firebase rules.
 Vercel runs `npm run build`, which applies the Prisma migrations before
 `next build`, so a failed migration fails the deployment and the previous
 one stays live. The previous deployment keeps serving against the migrated
@@ -448,12 +464,12 @@ docker compose -f website/docker-compose.yml down --remove-orphans --volumes
 This removes the website Docker containers and named volumes, including local
 PostgreSQL data. Run `mise dev` and `npm run db:seed` again afterwards.
 
-### E2E Checks Look Stuck
+### E2E Screenshots Changed
 
-The Playwright CI job may update screenshots and commit them back into a PR.
-That creates a new commit. GitHub sometimes does not start a fresh workflow
-run for commits made by `github-actions`, so checks can appear stale even
-though the previous run passed. Ask a maintainer if this happens.
+The Playwright CI job updates changed screenshots and commits them back into
+the PR as the `socialincome-ci` GitHub App, which runs the checks again.
+Pull the branch before you push again. For Renovate, Dependabot and fork PRs
+the job only compares screenshots and fails if they changed.
 
 ## Useful Commands
 
