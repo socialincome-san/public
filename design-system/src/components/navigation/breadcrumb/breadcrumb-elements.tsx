@@ -12,16 +12,27 @@ const BreadcrumbList = React.forwardRef<HTMLOListElement, WithoutClassName<React
 	(props, ref) => (
 		<ol
 			ref={ref}
-			className="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm wrap-break-word sm:gap-2.5"
+			className="text-muted-foreground flex flex-nowrap items-center gap-1.5 overflow-hidden text-sm wrap-break-word sm:gap-2.5"
 			{...props}
 		/>
 	),
 );
 BreadcrumbList.displayName = 'BreadcrumbList';
 
-const BreadcrumbItem = React.forwardRef<HTMLLIElement, WithoutClassName<React.ComponentPropsWithoutRef<'li'>>>(
-	(props, ref) => <li ref={ref} className="inline-flex items-center gap-1.5" {...props} />,
-);
+const BreadcrumbItem = React.forwardRef<
+	HTMLLIElement,
+	WithoutClassName<React.ComponentPropsWithoutRef<'li'>> & { shrink?: boolean }
+>(({ shrink, ...props }, ref) => (
+	<li
+		ref={ref}
+		className={
+			shrink
+				? 'inline-flex max-w-full min-w-0 flex-1 items-center gap-1.5'
+				: 'inline-flex min-w-0 items-center gap-1.5 overflow-hidden whitespace-nowrap'
+		}
+		{...props}
+	/>
+));
 BreadcrumbItem.displayName = 'BreadcrumbItem';
 
 const BreadcrumbLink = React.forwardRef<
@@ -32,12 +43,18 @@ const BreadcrumbLink = React.forwardRef<
 >(({ asChild, ...props }, ref) => {
 	const Comp = asChild ? Slot : 'a';
 
-	return <Comp ref={ref} className="hover:text-foreground transition-colors" {...props} />;
+	return (
+		<Comp
+			ref={ref}
+			className="hover:text-foreground block min-w-0 overflow-hidden whitespace-nowrap transition-colors"
+			{...props}
+		/>
+	);
 });
 BreadcrumbLink.displayName = 'BreadcrumbLink';
 
 const BreadcrumbSeparator = ({ children, ...props }: WithoutClassName<React.ComponentProps<'li'>>) => (
-	<li role="presentation" aria-hidden="true" className="[&>svg]:h-3.5 [&>svg]:w-3.5" {...props}>
+	<li role="presentation" aria-hidden="true" className="shrink-0 [&>svg]:h-3.5 [&>svg]:w-3.5" {...props}>
 		{children ?? <ChevronRight />}
 	</li>
 );
