@@ -1,6 +1,5 @@
 'use server';
 
-import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
 import type {
@@ -33,6 +32,7 @@ import {
 import {
 	programBudgetCalculationSchema,
 	programCreateSchema,
+	programDisplayCurrencySchema,
 	programFinancesStatsSchema,
 	programIdSchema,
 	programSettingsUpdateSchema,
@@ -208,11 +208,13 @@ export const getProgramDashboardStatsAction = async (programId: unknown): Promis
 
 export const resolveProgramFinancesDisplayAmountsAction = async (
 	input: unknown,
-): Promise<Result<Record<WebsiteCurrency, ProgramFinancesDisplayAmounts>>> => {
+	displayCurrency: unknown,
+): Promise<Result<ProgramFinancesDisplayAmounts>> => {
 	const parsedStats = programFinancesStatsSchema.safeParse(input);
-	if (!parsedStats.success) {
+	const parsedDisplayCurrency = programDisplayCurrencySchema.safeParse(displayCurrency);
+	if (!parsedStats.success || !parsedDisplayCurrency.success) {
 		return resultFail('Invalid program finances input.');
 	}
 
-	return resolveProgramFinancesDisplayAmounts(parsedStats.data);
+	return resolveProgramFinancesDisplayAmounts(parsedStats.data, parsedDisplayCurrency.data);
 };

@@ -1,4 +1,4 @@
-import { defaultLanguage } from '@/lib/i18n/utils';
+import { defaultLanguage, type WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import type { JournalRssArticle } from '@/lib/storyblok/journal-rss';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
@@ -31,8 +31,8 @@ export const getJournalOverviewPageData = async (
 	request: JournalOverviewRequest,
 ): Promise<Result<JournalOverviewPageData>> => {
 	try {
-		const { lang, region, labels, filter } = request;
-		const journalPath = createWebsiteJournalPath(lang, region);
+		const { lang, currency, labels, filter } = request;
+		const journalPath = createWebsiteJournalPath(lang, currency);
 		const pathname = buildJournalOverviewPathname(journalPath, filter);
 		const [authorsResult, articleTypesResult, roleLabelsResult] = await Promise.all([
 			storyblokContent.getOverviewAuthors(lang),
@@ -64,9 +64,9 @@ export const getJournalOverviewPageData = async (
 				activeTagSlug: filter.tagSlug,
 				journalPath,
 				pathname,
-				breadcrumbs: buildJournalOverviewBreadcrumbs(labels, journalPath, lang, region, {
+				breadcrumbs: buildJournalOverviewBreadcrumbs(labels, journalPath, lang, currency, {
 					label: tagResult.data.content.value,
-					href: createWebsiteJournalTagLink(filter.tagSlug, lang, region),
+					href: createWebsiteJournalTagLink(filter.tagSlug, lang, currency),
 				}),
 				roleLabels,
 			});
@@ -95,9 +95,9 @@ export const getJournalOverviewPageData = async (
 				activeArticleTypeSlug: filter.articleTypeSlug,
 				journalPath,
 				pathname,
-				breadcrumbs: buildJournalOverviewBreadcrumbs(labels, journalPath, lang, region, {
+				breadcrumbs: buildJournalOverviewBreadcrumbs(labels, journalPath, lang, currency, {
 					label: articleTypeLabel,
-					href: createWebsiteJournalArticleTypeLink(filter.articleTypeSlug, lang, region),
+					href: createWebsiteJournalArticleTypeLink(filter.articleTypeSlug, lang, currency),
 				}),
 				roleLabels,
 			});
@@ -118,7 +118,7 @@ export const getJournalOverviewPageData = async (
 			pageDescription: labels.overviewDescription,
 			journalPath,
 			pathname,
-			breadcrumbs: buildJournalOverviewBreadcrumbs(labels, journalPath, lang, region),
+			breadcrumbs: buildJournalOverviewBreadcrumbs(labels, journalPath, lang, currency),
 			roleLabels,
 		});
 	} catch (error) {
@@ -130,7 +130,7 @@ export const getJournalOverviewPageData = async (
 
 export const getJournalArticlePageData = async (request: JournalPageRequest): Promise<Result<JournalArticlePageData>> => {
 	try {
-		const { lang, region, slug, journalLabel, homeLabel } = request;
+		const { lang, currency, slug, journalLabel, homeLabel } = request;
 		const articleResult = await storyblokContent.getArticle(lang, slug);
 		if (!articleResult.success) {
 			return resultFail('Journal article not found', articleResult.status);
@@ -143,7 +143,7 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 			lang,
 			JOURNAL_RELATED_ARTICLES_COUNT,
 		);
-		const journalPath = createWebsiteJournalPath(lang, region);
+		const journalPath = createWebsiteJournalPath(lang, currency);
 
 		return resultOk({
 			story,
@@ -153,9 +153,9 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 				journalLabel,
 				journalPath,
 				getArticleTitle(story, true),
-				createWebsiteJournalArticleLink(slug, lang, region),
+				createWebsiteJournalArticleLink(slug, lang, currency),
 				lang,
-				region,
+				currency,
 			),
 		});
 	} catch (error) {
@@ -167,7 +167,7 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 
 export const getJournalPersonPageData = async (request: JournalPageRequest): Promise<Result<JournalPersonPageData>> => {
 	try {
-		const { lang, region, slug, journalLabel, homeLabel } = request;
+		const { lang, currency, slug, journalLabel, homeLabel } = request;
 		const personResult = await storyblokContent.getPerson(slug, lang);
 		if (!personResult.success) {
 			return resultFail('Journal person not found', personResult.status);
@@ -182,8 +182,8 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 		const totalInDefault = await getDefaultLanguageCount(lang, articles.length, () =>
 			storyblokContent.getArticleCountByAuthorForDefaultLang(person.uuid),
 		);
-		const pathname = createWebsitePersonLink(slug, lang, region);
-		const journalPath = createWebsiteJournalPath(lang, region);
+		const pathname = createWebsitePersonLink(slug, lang, currency);
+		const journalPath = createWebsiteJournalPath(lang, currency);
 
 		return resultOk({
 			person,
@@ -197,7 +197,7 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 				getPersonDisplayName(person),
 				pathname,
 				lang,
-				region,
+				currency,
 			),
 			roleLabels,
 		});
@@ -295,20 +295,20 @@ const buildJournalOverviewPathname = (journalPath: string, filter: JournalOvervi
 	return journalPath;
 };
 
-const buildHomeBreadcrumb = (homeLabel: string, lang: string, region: string): JournalBreadcrumbLink => ({
+const buildHomeBreadcrumb = (homeLabel: string, lang: string, currency: WebsiteCurrency): JournalBreadcrumbLink => ({
 	label: homeLabel,
-	href: getWebsitePublicPath(lang, region, ''),
+	href: getWebsitePublicPath(lang, currency, ''),
 });
 
 const buildJournalOverviewBreadcrumbs = (
 	labels: JournalOverviewRequest['labels'],
 	journalPath: string,
 	lang: string,
-	region: string,
+	currency: WebsiteCurrency,
 	activeFilter?: JournalBreadcrumbLink,
 ): JournalBreadcrumbLink[] => {
 	const breadcrumbs = [
-		buildHomeBreadcrumb(labels.homeLabel, lang, region),
+		buildHomeBreadcrumb(labels.homeLabel, lang, currency),
 		{ label: labels.journalLabel, href: journalPath },
 	];
 
@@ -322,9 +322,9 @@ const buildJournalArticleBreadcrumbs = (
 	articleTitle: string,
 	articleHref: string,
 	lang: string,
-	region: string,
+	currency: WebsiteCurrency,
 ): JournalBreadcrumbLink[] => [
-	buildHomeBreadcrumb(homeLabel, lang, region),
+	buildHomeBreadcrumb(homeLabel, lang, currency),
 	{ label: journalLabel, href: journalPath },
 	{ label: articleTitle, href: articleHref },
 ];
@@ -336,9 +336,9 @@ const buildJournalPersonBreadcrumbs = (
 	personName: string,
 	personHref: string,
 	lang: string,
-	region: string,
+	currency: WebsiteCurrency,
 ): JournalBreadcrumbLink[] => [
-	buildHomeBreadcrumb(homeLabel, lang, region),
+	buildHomeBreadcrumb(homeLabel, lang, currency),
 	{ label: journalLabel, href: journalPath },
 	{ label: personName, href: personHref },
 ];

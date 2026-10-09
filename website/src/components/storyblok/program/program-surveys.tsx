@@ -1,4 +1,4 @@
-import { type WebsiteLanguage, type WebsiteRegion, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, getWebsiteBasePath, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { LinkPill } from '@socialincome/design-system/actions/link-pill/link-pill';
 import { DetailPanel } from '@socialincome/design-system/data-display/detail-panel/detail-panel';
@@ -7,15 +7,15 @@ import { getTranslations } from 'next-intl/server';
 type Props = {
 	completedCount: number;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	programId?: string;
 };
 
-export const ProgramSurveys = async ({ completedCount, lang, region, programId }: Props) => {
+export const ProgramSurveys = async ({ completedCount, lang, currency, programId }: Props) => {
 	const t = await getTranslations('website-common');
 	const locale = getSafeNumberFormatLocale(lang);
 	const impactHref = programId
-		? { pathname: `/${lang}/${region}/impact-measurement`, query: { program: programId } }
+		? { pathname: `${getWebsiteBasePath(lang, currency)}/impact-measurement`, query: { program: programId } }
 		: undefined;
 
 	return (

@@ -47,8 +47,11 @@ jest.mock('@/modules/programs/program-public-submission.service', () => ({
 	getEligibleProgramsForPublicSubmission: mockGetEligibleProgramsForPublicSubmission,
 }));
 
-jest.mock('./campaign.cache', () => ({
+jest.mock('./campaign-public-website.service', () => ({
 	getCampaignPageContent: jest.fn(),
+}));
+
+jest.mock('./campaign.cache', () => ({
 	getCampaignByPortalSlug: jest.fn(),
 	getAllCampaignsForCmsJoinWithStats: jest.fn(),
 	getDefaultCampaignForProgram: jest.fn(),

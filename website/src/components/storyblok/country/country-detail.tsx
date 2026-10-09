@@ -4,7 +4,7 @@ import { Community } from '@/components/community/community';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
 import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
@@ -21,13 +21,13 @@ import { getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './c
 type Props = {
 	country: CountryStory;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	activeProgramsCount: number;
 	recipientsCount: number;
 	community: CommunityPanelData | null;
 };
 
-export const CountryDetail = async ({ country, lang, region, activeProgramsCount, recipientsCount, community }: Props) => {
+export const CountryDetail = async ({ country, lang, currency, activeProgramsCount, recipientsCount, community }: Props) => {
 	const isoCode = getCountryIsoCode(country.content);
 	const countryTitle = getCountryTitle(country.content);
 	const localPartners = getCountryLocalPartners(country.content);
@@ -37,7 +37,7 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 			fullSlug: country.full_slug,
 			currentLabel: countryTitle,
 			lang,
-			region,
+			currency,
 		}),
 	]);
 
@@ -72,15 +72,15 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 			</div>
 			<CountryMap country={country} />
 			<CountryPersonCarousel country={country} lang={lang} />
-			<CountryPayoutsTotal country={country} lang={lang} region={region} />
+			<CountryPayoutsTotal country={country} lang={lang} currency={currency} />
 			{isoCode !== '-' && (
 				<Suspense fallback={<CountryStatisticsSkeleton />}>
 					<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
 				</Suspense>
 			)}
-			<CountryPrograms country={country} lang={lang} region={region} />
+			<CountryPrograms country={country} lang={lang} currency={currency} />
 			{localPartners.length > 0 && (
-				<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
+				<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} currency={currency} />
 			)}
 		</>
 	);

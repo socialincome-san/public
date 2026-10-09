@@ -1,5 +1,5 @@
 import { createWalletImageFromStoryblokAsset } from '@/components/wallet/wallet-image-utils';
-import { getSafeNumberFormatLocale, type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, getWebsiteBasePath, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import type { PublicCampaignCard, PublicCampaignStats } from '@/modules/campaigns/campaign.types';
 import { cn } from '@socialincome/design-system/cn';
@@ -13,12 +13,12 @@ type Props = {
 	campaign: PublicCampaignCard;
 	stats?: PublicCampaignStats;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const CampaignPreviewWallet = async ({ campaign, stats, lang, region }: Props) => {
+export const CampaignPreviewWallet = async ({ campaign, stats, lang, currency }: Props) => {
 	const t = await getTranslations('website-common');
-	const href = `/${lang}/${region}/campaigns/${campaign.slug}`;
+	const href = `${getWebsiteBasePath(lang, currency)}/campaigns/${campaign.slug}`;
 	const locale = getSafeNumberFormatLocale(lang);
 	const showProgress = stats?.percentageCollected !== null && stats?.percentageCollected !== undefined;
 	const contributionLabel =

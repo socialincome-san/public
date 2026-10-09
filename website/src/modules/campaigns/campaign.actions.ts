@@ -15,13 +15,9 @@ import { getEligibleProgramsForPublicSubmission } from '@/modules/programs/progr
 import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
 import { revalidatePath } from 'next/cache';
 import { claimPendingCampaigns } from './campaign-pending-claim.service';
+import { getCampaignPageContent } from './campaign-public-website.service';
 import { submitCampaign } from './campaign-submission.service';
-import {
-	getAllCampaignsForCmsJoinWithStats,
-	getCampaignByPortalSlug,
-	getCampaignPageContent,
-	getDefaultCampaignForProgram,
-} from './campaign.cache';
+import { getAllCampaignsForCmsJoinWithStats, getCampaignByPortalSlug, getDefaultCampaignForProgram } from './campaign.cache';
 import {
 	campaignActivitySchema,
 	campaignClaimIdsSchema,
@@ -220,7 +216,7 @@ export const submitCampaignAction = async (
 		}
 	}
 
-	revalidatePath('/[lang]/[region]/campaigns', 'layout');
+	revalidatePath('/[lang]/[currency]/campaigns', 'layout');
 
 	return resultOk(submissionResult.data);
 };

@@ -2,7 +2,7 @@ import { Footer } from '@/components/app-shells/website/footer';
 import { Navbar } from '@/components/app-shells/website/navbar/navbar';
 import { Scope } from '@/components/app-shells/website/navbar/utils';
 import { DonationModalProvider } from '@/components/donation-wizard/modal/donation-modal-provider';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { type WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import type { Session } from '@/modules/auth/auth.types';
 import { ReactNode } from 'react';
 
@@ -10,17 +10,17 @@ type WebsiteAppShellProps = {
 	children: ReactNode;
 	sessions: Promise<Session[]>;
 	lang: WebsiteLanguage;
-	region: string;
+	currency: WebsiteCurrency;
 	scope: Scope;
 };
 
-export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: WebsiteAppShellProps) => {
+export const WebsiteAppShell = ({ children, sessions, lang, currency, scope }: WebsiteAppShellProps) => {
 	const isContained = scope === 'dashboard' || scope === 'partner-space';
 
 	return (
 		<DonationModalProvider>
 			<div className="bg-website-gradient text-primary flex min-h-screen w-full flex-col antialiased">
-				<Navbar sessions={sessions} lang={lang} region={region} scope={scope} />
+				<Navbar sessions={sessions} lang={lang} currency={currency} scope={scope} />
 				<main
 					className={
 						isContained
@@ -30,7 +30,7 @@ export const WebsiteAppShell = ({ children, sessions, lang, region, scope }: Web
 				>
 					{children}
 				</main>
-				<Footer lang={lang} region={region} />
+				<Footer lang={lang} currency={currency} />
 			</div>
 		</DonationModalProvider>
 	);

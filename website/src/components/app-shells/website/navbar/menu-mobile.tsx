@@ -4,7 +4,7 @@ import { LocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/l
 import { AccountSlot, SignedOutSlot } from '@/components/app-shells/website/navbar/session-slots';
 import { type Scope } from '@/components/app-shells/website/navbar/utils';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteBasePath, WebsiteLanguage, type WebsiteCurrency } from '@/lib/i18n/utils';
 import type { Session } from '@/modules/auth/auth.types';
 import { type SiteMenuEntry } from '@socialincome/design-system/navigation/site-header/site-header';
 import { SiteMenuMobile } from '@socialincome/design-system/navigation/site-header/site-menu-mobile';
@@ -17,18 +17,18 @@ type Props = {
 	scope: Scope;
 	menuEntries: SiteMenuEntry[];
 	lang: WebsiteLanguage;
-	region: string;
+	currency: WebsiteCurrency;
 };
 
 const KeyedByPathname = ({ children }: { children: ReactNode }) => <Fragment key={usePathname()}>{children}</Fragment>;
 
-export const MenuMobile = ({ sessions, scope, menuEntries, lang, region }: Props) => {
+export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency }: Props) => {
 	const t = useTranslations('website-common');
 	const tDonate = useTranslations('website-donate');
 	const menu = (
 		<SiteMenuMobile
 			entries={menuEntries}
-			homeHref={`/${lang}/${region}`}
+			homeHref={getWebsiteBasePath(lang, currency)}
 			labels={{
 				openMenu: t('menu.open'),
 				closeMenu: t('menu.close'),
@@ -43,7 +43,7 @@ export const MenuMobile = ({ sessions, scope, menuEntries, lang, region }: Props
 			)}
 			footerControls={
 				<>
-					{scope === 'website' && <LocaleCurrencySwitcher lang={lang} region={region} variant="outline" />}
+					{scope === 'website' && <LocaleCurrencySwitcher lang={lang} currency={currency} variant="outline" />}
 					<AccountSlot sessions={sessions} scope={scope} />
 				</>
 			}

@@ -43,7 +43,7 @@ export const loginAs = async (browser: Browser, actor: Actor): Promise<void> => 
 
 	const { email, testId, expectedPath, state } = ACTORS[actor];
 
-	await page.goto('/en/int');
+	await page.goto('/en/usd');
 	await page.getByTestId('login-button').click();
 
 	const dialog = page.getByRole('dialog');

@@ -1,8 +1,7 @@
-import { CurrencySwitch } from '@/components/currency/currency-switch';
 import { ProgramFinancesCard } from '@/components/storyblok/program/program-finances-card';
 import { ProgramFinancesDialog } from '@/components/storyblok/program/program-finances-dialog';
 import { ProgramManageLabel } from '@/components/storyblok/program/program-manage-label';
-import { mapWebsiteCurrencies, type WebsiteLanguage } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveProgramFinancesDisplayAmountsAction } from '@/modules/programs/program.actions';
 import type { ProgramDashboardStats } from '@/modules/programs/program.types';
 import { DetailPanel } from '@socialincome/design-system/data-display/detail-panel/detail-panel';
@@ -12,30 +11,23 @@ type Props = {
 	stats: ProgramDashboardStats;
 	programId: string;
 	lang: WebsiteLanguage;
+	currency: WebsiteCurrency;
 };
 
-export const ProgramFinances = async ({ stats, programId, lang }: Props) => {
+export const ProgramFinances = async ({ stats, programId, lang, currency }: Props) => {
 	const [t, displayAmountsResult] = await Promise.all([
 		getTranslations('website-common'),
-		resolveProgramFinancesDisplayAmountsAction(stats),
+		resolveProgramFinancesDisplayAmountsAction(stats, currency),
 	]);
-	const fallbackDisplayAmounts = {
-		currency: stats.payoutCurrency,
-		paidOutSoFar: stats.paidOutSoFarProgramCurrency,
-		totalProgramCosts: stats.totalProgramCostsProgramCurrency,
-		availableCredits: stats.availableCreditsProgramCurrency,
-	};
-	const financesCard = (
-		<CurrencySwitch
-			variants={mapWebsiteCurrencies((currency) => (
-				<ProgramFinancesCard
-					displayAmounts={displayAmountsResult.success ? displayAmountsResult.data[currency] : fallbackDisplayAmounts}
-					lang={lang}
-					embedded
-				/>
-			))}
-		/>
-	);
+	const displayAmounts = displayAmountsResult.success
+		? displayAmountsResult.data
+		: {
+				currency: stats.payoutCurrency,
+				paidOutSoFar: stats.paidOutSoFarProgramCurrency,
+				totalProgramCosts: stats.totalProgramCostsProgramCurrency,
+				availableCredits: stats.availableCreditsProgramCurrency,
+			};
+	const financesCard = <ProgramFinancesCard displayAmounts={displayAmounts} lang={lang} embedded />;
 
 	return (
 		<DetailPanel title={t('navigation.finances')}>

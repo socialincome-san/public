@@ -21,17 +21,17 @@ export const Default: Story = {
 				id: 'about',
 				label: 'About',
 				links: [
-					{ id: 'team', label: 'Team', href: '/en/int/about-us/team' },
-					{ id: 'finances', label: 'Finances', href: '/en/int/about-us/finances' },
-					{ id: 'faq', label: 'FAQ', href: '/en/int/faq' },
+					{ id: 'team', label: 'Team', href: '/en/usd/about-us/team' },
+					{ id: 'finances', label: 'Finances', href: '/en/usd/about-us/finances' },
+					{ id: 'faq', label: 'FAQ', href: '/en/usd/faq' },
 				],
 			},
 			{
 				id: 'contact',
 				label: 'Contact',
 				links: [
-					{ id: 'newsletter', label: 'Newsletter', href: '/en/int/newsletter', icon: 'newsletter' },
-					{ id: 'contact', label: 'Contact', href: '/en/int/contact', icon: 'contact' },
+					{ id: 'newsletter', label: 'Newsletter', href: '/en/usd/newsletter', icon: 'newsletter' },
+					{ id: 'contact', label: 'Contact', href: '/en/usd/contact', icon: 'contact' },
 				],
 			},
 			{

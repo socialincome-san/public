@@ -4,7 +4,8 @@ import { useContributorSession } from '@/components/contributor/use-contributor-
 import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
 import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { useAuth } from '@/lib/firebase/hooks/use-auth';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import {
 	getCampaignDefaultImagesAction,
@@ -55,7 +56,7 @@ import { useCampaignImageUpload } from './use-campaign-image-upload';
 type Props = {
 	labels: SubmissionLabels;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	onSuccess?: () => void;
 };
 
@@ -85,8 +86,9 @@ const defaultFormValues = (): CampaignSubmissionFormValues => ({
 	email: '',
 });
 
-export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Props) => {
+export const CampaignSubmissionForm = ({ labels, lang, currency, onSuccess }: Props) => {
 	const { auth } = useAuth();
+	const websiteBasePath = useWebsiteBasePath();
 	const { contributorSession, loading: contributorSessionLoading } = useContributorSession();
 	const isLoggedInContributor = contributorSession?.type === 'contributor';
 	const visibleSteps = isLoggedInContributor ? contributorSteps : guestSteps;
@@ -669,6 +671,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 					await sendMagicLoginLink({
 						auth,
 						email: guestEmail,
+						websiteBasePath,
 						claimId: claimId || undefined,
 					});
 				} catch {
@@ -707,6 +710,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			await sendMagicLoginLink({
 				auth,
 				email: successGuestEmail,
+				websiteBasePath,
 				claimId: successClaimId || undefined,
 			});
 		} catch {
@@ -718,7 +722,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 
 	if (submitSuccess) {
 		if (isLoggedInContributor) {
-			const campaignHref = getWebsitePublicPath(lang, region, `campaigns/${successCampaignSlug}`);
+			const campaignHref = getWebsitePublicPath(lang, currency, `campaigns/${successCampaignSlug}`);
 
 			return <CampaignSubmissionContributorSuccess labels={labels} campaignHref={campaignHref} />;
 		}

@@ -3,7 +3,7 @@ import { JournalArticleCard } from '@/components/storyblok/journal/article-card'
 import { ArticleDetailBody } from '@/components/storyblok/journal/article-detail-body';
 import { ArticleDetailHeader, ArticleDetailHeroImage } from '@/components/storyblok/journal/article-detail-header';
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { cn } from '@socialincome/design-system/cn';
@@ -18,12 +18,12 @@ type Props = {
 	story: ISbStoryData<JournalArticle>;
 	slug: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	relatedArticles: ISbStoryData<JournalArticle>[];
 	breadcrumbs: BreadcrumbLinkType[];
 };
 
-export const ArticleDetail = async ({ story, slug, lang, region, relatedArticles, breadcrumbs }: Props) => {
+export const ArticleDetail = async ({ story, slug, lang, currency, relatedArticles, breadcrumbs }: Props) => {
 	const t = await getTranslations('website-journal');
 	const article = story.content;
 	const hasHero = !article.useImageOnlyForPreview && Boolean(article.image?.filename);
@@ -36,19 +36,19 @@ export const ArticleDetail = async ({ story, slug, lang, region, relatedArticles
 			{hasHero && heroImageSrc ? (
 				<div className="flex min-h-[70vh] flex-col lg:flex-row">
 					<ArticleDetailHeroImage heroImageSrc={heroImageSrc} alt={article.image?.alt ?? ''} />
-					<ArticleDetailHeader story={story} hasHero={hasHero} lang={lang} region={region} />
+					<ArticleDetailHeader story={story} hasHero={hasHero} lang={lang} currency={currency} />
 				</div>
 			) : (
 				<div className="w-site-width max-w-content mx-auto space-y-8 px-4 pt-8 sm:px-0 sm:pt-10">
 					<JournalBreadcrumb links={breadcrumbs} />
-					<ArticleDetailHeader story={story} hasHero={false} lang={lang} region={region} />
+					<ArticleDetailHeader story={story} hasHero={false} lang={lang} currency={currency} />
 				</div>
 			)}
 
 			<div className="w-site-width max-w-content mx-auto px-4 py-8 sm:px-0 sm:py-10">
 				<div className="mx-auto max-w-2xl space-y-10">
 					{hasHero && heroImageSrc && <JournalBreadcrumb links={breadcrumbs} />}
-					<ArticleDetailBody story={story} slug={slug} lang={lang} region={region} />
+					<ArticleDetailBody story={story} slug={slug} lang={lang} currency={currency} />
 				</div>
 			</div>
 
@@ -64,7 +64,7 @@ export const ArticleDetail = async ({ story, slug, lang, region, relatedArticles
 							<JournalArticleCard
 								key={related.uuid}
 								lang={lang}
-								region={region}
+								currency={currency}
 								article={related}
 								videoLabel={t('badge.video')}
 							/>

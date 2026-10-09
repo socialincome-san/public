@@ -23,14 +23,9 @@
 		"supported-by-link-aria": "Platform Partner website"
 	},
 	"locale-currency-switcher": {
-		"aria-label": "Change language, region, and currency",
+		"aria-label": "Change language and currency",
 		"language": "Language",
-		"region": "Region",
-		"currency": "Currency",
-		"regions": {
-			"int": "International",
-			"ch": "Switzerland"
-		}
+		"currency": "Currency"
 	},
 	"countries-page": {
 		"empty": "No countries found.",

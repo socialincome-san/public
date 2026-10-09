@@ -23,14 +23,9 @@
 		"supported-by-link-aria": "Sito web Plattform Partner"
 	},
 	"locale-currency-switcher": {
-		"aria-label": "Cambia lingua, regione e valuta",
+		"aria-label": "Cambia lingua e valuta",
 		"language": "Lingua",
-		"region": "Regione",
-		"currency": "Valuta",
-		"regions": {
-			"int": "Internazionale",
-			"ch": "Svizzera"
-		}
+		"currency": "Valuta"
 	},
 	"countries-page": {
 		"empty": "Nessun paese trovato.",

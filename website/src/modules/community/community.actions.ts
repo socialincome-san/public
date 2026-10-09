@@ -15,6 +15,6 @@ export const getCommunityPanelDataAction = async (input: unknown): Promise<Resul
 	const parsed = communityPanelInputSchema.safeParse(input);
 
 	return parsed.success
-		? getCommunityPanelData(parsed.data.page, parsed.data.language, parsed.data.region)
+		? getCommunityPanelData(parsed.data.page, parsed.data.language, parsed.data.currency)
 		: resultFail('Invalid community panel request');
 };

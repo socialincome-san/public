@@ -5,6 +5,7 @@ import { JournalPageShell } from '@/components/storyblok/journal/journal-page-sh
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
 import { PersonProfileHeader } from '@/components/storyblok/journal/person-profile-header';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { formatStoryblokUrl, getPersonDisplayName } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { Separator } from '@socialincome/design-system/data-display/separator/separator';
@@ -20,7 +21,7 @@ type Props = {
 	articles: ISbStoryData<JournalArticle>[];
 	articlesHeading: string;
 	lang: string;
-	region: string;
+	currency: WebsiteCurrency;
 	pathname: string;
 	moreArticlesLabel: string;
 	videoLabel: string;
@@ -34,7 +35,7 @@ export const PersonProfile = ({
 	articles,
 	articlesHeading,
 	lang,
-	region,
+	currency,
 	pathname,
 	moreArticlesLabel,
 	videoLabel,
@@ -64,7 +65,13 @@ export const PersonProfile = ({
 					</SectionHeading>
 					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 						{articles.map((article) => (
-							<JournalArticleCard key={article.uuid} lang={lang} region={region} article={article} videoLabel={videoLabel} />
+							<JournalArticleCard
+								key={article.uuid}
+								lang={lang}
+								currency={currency}
+								article={article}
+								videoLabel={videoLabel}
+							/>
 						))}
 					</div>
 				</section>

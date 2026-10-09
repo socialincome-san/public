@@ -1,4 +1,4 @@
-import { websiteRegions } from '@/lib/i18n/utils';
+import { toCurrencySegment, websiteCurrencies } from '@/lib/i18n/utils';
 
 const SITE_URL = 'https://socialincome.org';
 
@@ -6,13 +6,15 @@ const disallow = [
 	'/portal/',
 	'/partner-space/',
 	'/api/',
-	...websiteRegions.flatMap((region) => [
-		`/*/${region}/dashboard/`,
-		`/*/${region}/auth/`,
-		`/*/${region}/preview`,
-		`/*/${region}/*/preview`,
-		`/*/${region}/*/*/preview`,
-	]),
+	...websiteCurrencies
+		.map(toCurrencySegment)
+		.flatMap((currency) => [
+			`/*/${currency}/dashboard/`,
+			`/*/${currency}/auth/`,
+			`/*/${currency}/preview`,
+			`/*/${currency}/*/preview`,
+			`/*/${currency}/*/*/preview`,
+		]),
 ];
 
 const robotsTxt = [

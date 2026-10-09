@@ -8,14 +8,14 @@ test.beforeEach(async () => {
 });
 
 test('dashboard profile-page matches screenshot', async ({ page }) => {
-	await page.goto('/en/int/dashboard/profile');
+	await page.goto('/en/usd/dashboard/profile');
 	await expectToHaveScreenshot(page);
 });
 
 test('dashboard profile updates contributor personal info', async ({ page }) => {
 	const updatedFirstName = `Contributor-${Date.now()}`;
 
-	await page.goto('/en/int/dashboard/profile');
+	await page.goto('/en/usd/dashboard/profile');
 	await page.locator('input[name="firstName"]').fill(updatedFirstName);
 	await page.locator('button[type="submit"]').click();
 

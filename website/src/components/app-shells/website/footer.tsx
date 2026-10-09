@@ -1,5 +1,5 @@
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { type WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { now } from '@/lib/utils/now';
@@ -11,7 +11,7 @@ import { cacheLife } from 'next/cache';
 
 type Props = {
 	lang: WebsiteLanguage;
-	region: string;
+	currency: WebsiteCurrency;
 };
 
 const getCurrentYear = async () => {
@@ -21,7 +21,7 @@ const getCurrentYear = async () => {
 	return Promise.resolve(now().getFullYear());
 };
 
-export const Footer = async ({ lang, region }: Props) => {
+export const Footer = async ({ lang, currency }: Props) => {
 	const [t, result, currentYear] = await Promise.all([
 		getTranslations('website-common'),
 		getStoryWithFallbackAction<ISbStoryData<Layout>>({
@@ -33,7 +33,7 @@ export const Footer = async ({ lang, region }: Props) => {
 	const layoutContent = result.success ? result.data.content : undefined;
 	const supportedByLogo = layoutContent?.supportedByLogo;
 	const supportedByLink = layoutContent?.supportedByUrl;
-	const supportedByHref = supportedByLink ? resolveStoryblokLink(supportedByLink, lang, region) : undefined;
+	const supportedByHref = supportedByLink ? resolveStoryblokLink(supportedByLink, lang, currency) : undefined;
 	const supportedBy: SiteFooterSupportedBy | undefined =
 		layoutContent?.supportedByLabel && supportedByLogo?.filename
 			? {
@@ -59,7 +59,7 @@ export const Footer = async ({ lang, region }: Props) => {
 				links: (group.items ?? []).map((item) => ({
 					id: item._uid,
 					label: item.label,
-					href: resolveStoryblokLink(item.link, lang, region),
+					href: resolveStoryblokLink(item.link, lang, currency),
 					newTab: item.newTab,
 					icon: item.icon === '' ? undefined : item.icon,
 				})),

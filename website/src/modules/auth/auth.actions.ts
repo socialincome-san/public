@@ -1,11 +1,12 @@
 'use server';
 
+import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { SESSION_COOKIE_NAME } from '@/modules/auth/auth.types';
 import { getCurrentSessions, getCurrentUser, getSessionByType } from '@/modules/auth/session.service';
 import type { UserSession } from '@/modules/users/user.types';
 import { cookies } from 'next/headers';
-import { sessionIdTokenSchema } from './auth.schemas';
+import { sessionIdTokenSchema, websiteLocaleSchema } from './auth.schemas';
 import { createSessionCookie } from './auth.service';
 
 export const createSessionAction = async (input: unknown): Promise<Result<boolean>> => {
@@ -66,24 +67,24 @@ export const getIsAuthenticatedUserAction = async (): Promise<Result<boolean>> =
 
 export const getCurrentUserAction = async (): Promise<Result<UserSession | null>> => getCurrentUser();
 
-export const getRedirectPathAfterLoginAction = async (): Promise<Result<string>> => {
+// Website paths keep the language and currency of the page the visitor logged in on.
+export const getRedirectPathAfterLoginAction = async (locale: unknown): Promise<Result<string>> => {
+	const localeResult = websiteLocaleSchema.safeParse(locale);
+	const websiteBasePath = localeResult.success ? getWebsiteBasePath(localeResult.data.lang, localeResult.data.currency) : '';
 	const sessionsResult = await getCurrentSessions();
 	const session = sessionsResult.success ? sessionsResult.data[0] : undefined;
 
-	if (!session) {
-		return resultOk('/');
-	}
-	if (session.type === 'user') {
+	if (session?.type === 'user') {
 		return resultOk('/portal');
 	}
-	if (session.type === 'contributor') {
-		return resultOk('/dashboard/subscriptions');
+	if (session?.type === 'contributor') {
+		return resultOk(`${websiteBasePath}/dashboard/subscriptions`);
 	}
-	if (session.type === 'local-partner') {
+	if (session?.type === 'local-partner') {
 		return resultOk('/partner-space/recipients');
 	}
 
-	return resultOk('/');
+	return resultOk(websiteBasePath || '/');
 };
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';

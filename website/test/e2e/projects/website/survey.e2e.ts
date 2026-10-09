@@ -4,7 +4,7 @@ import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, type Page, test } from '@playwright/test';
 import { expectToHaveScreenshot } from '../../utils';
 
-const SEEDED_SURVEY_PATH = '/en/int/survey/candidate-sl-1/survey-recipient-candidate-sl-1-intake';
+const SEEDED_SURVEY_PATH = '/en/usd/survey/candidate-sl-1/survey-recipient-candidate-sl-1-intake';
 const SEEDED_SURVEY_URL = `${SEEDED_SURVEY_PATH}?email=candidate-sl-1%40survey.test&pw=seed-survey-pw`;
 const SEEDED_SURVEY_ID = 'survey-recipient-candidate-sl-1-intake';
 const SEEDED_SURVEY_EMAIL = 'candidate-sl-1@survey.test';

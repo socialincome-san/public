@@ -2,7 +2,7 @@ import {
 	getLocalPartnerCandidateFooter,
 	LocalPartnerTeaserCard,
 } from '@/components/storyblok/local-partner/local-partner-teaser-card';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getLocalPartnerOverviewStatsAction } from '@/modules/local-partners/local-partner.actions';
 import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
 import { getTranslations } from 'next-intl/server';
@@ -12,11 +12,11 @@ import { getLocalPartnerPortalSlug } from './local-partner.utils';
 type Props = {
 	localPartners: LocalPartnerStory[];
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	hasActiveFilters?: boolean;
 };
 
-export const LocalPartnersGrid = async ({ localPartners, lang, region, hasActiveFilters = false }: Props) => {
+export const LocalPartnersGrid = async ({ localPartners, lang, currency, hasActiveFilters = false }: Props) => {
 	const portalSlugs = localPartners.map((localPartner) => getLocalPartnerPortalSlug(localPartner.content)).filter(Boolean);
 	const [t, statsResult] = await Promise.all([
 		getTranslations('website-common'),
@@ -40,7 +40,7 @@ export const LocalPartnersGrid = async ({ localPartners, lang, region, hasActive
 						<LocalPartnerTeaserCard
 							localPartner={localPartner}
 							lang={lang}
-							region={region}
+							currency={currency}
 							recipientsCount={recipientsCount}
 							recipientsLabel={recipientsLabel}
 							candidatesLabel={candidatesLabel}

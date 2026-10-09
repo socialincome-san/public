@@ -1,5 +1,6 @@
 import { type Messages } from '@/lib/i18n/messages';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { defaultCurrency, defaultLanguage, mainWebsiteLanguages, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import { Metadata } from 'next';
 import { getMessages } from 'next-intl/server';
 
@@ -38,14 +39,6 @@ export const getMetadata = async (
 		// If VERCEL_URL is detected: https://${process.env.VERCEL_URL} otherwise it falls back to http://localhost:${process.env.PORT || 3000}.
 		// https://nextjs.org/docs/app/api-reference/functions/generate-metadata
 		metadataBase: null,
-		alternates: {
-			canonical: '/en/int',
-			languages: {
-				en: '/en/int',
-				de: '/de/int',
-				'de-CH': '/de/ch/',
-			},
-		},
 		openGraph: {
 			title,
 			description,
@@ -63,14 +56,6 @@ export const getMetadata = async (
 	return {
 		...defaultMetadata,
 		...metadata,
-		alternates: {
-			...defaultMetadata.alternates,
-			...metadata?.alternates,
-			languages: {
-				...defaultMetadata.alternates.languages,
-				...metadata?.alternates?.languages,
-			},
-		},
 		openGraph: {
 			...defaultMetadata.openGraph,
 			...metadata?.openGraph,
@@ -78,6 +63,24 @@ export const getMetadata = async (
 		twitter: {
 			...defaultMetadata.twitter,
 			...metadata?.twitter,
+		},
+	};
+};
+
+/**
+ * Currency variants of a page differ only in how amounts are shown, so every variant names the default
+ * currency's URL as canonical. hreflang lists languages only: currencies are not regions.
+ */
+export const getWebsiteAlternates = (lang: WebsiteLanguage, pathTail: string): Metadata => {
+	const path = (language: WebsiteLanguage) => getWebsitePublicPath(language, defaultCurrency, pathTail);
+
+	return {
+		alternates: {
+			canonical: path(lang),
+			languages: {
+				...Object.fromEntries(mainWebsiteLanguages.map((language) => [language, path(language)])),
+				'x-default': path(defaultLanguage),
+			},
 		},
 	};
 };

@@ -86,9 +86,10 @@ export const getProgramDashboardStats = async (programId: string): Promise<Resul
 
 export const resolveProgramFinancesDisplayAmounts = async (
 	stats: ProgramFinancesStatsInput,
-): Promise<Result<Record<WebsiteCurrency, ProgramFinancesDisplayAmounts>>> => {
+	displayCurrency: WebsiteCurrency,
+): Promise<Result<ProgramFinancesDisplayAmounts>> => {
 	'use cache';
 	cacheTag(PROGRAM_CACHE_TAG);
 
-	return cacheResult(statsService.resolveProgramFinancesDisplayAmounts(stats));
+	return cacheResult(statsService.resolveProgramFinancesDisplayAmounts(stats, displayCurrency));
 };

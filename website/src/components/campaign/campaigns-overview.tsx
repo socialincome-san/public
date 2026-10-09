@@ -3,7 +3,7 @@ import { isCampaignActive, matchesPublicCampaignActivity } from '@/components/ca
 import { CampaignPreviewWallet } from '@/components/campaign/campaign-preview-wallet';
 import { CampaignsOverviewFilters } from '@/components/campaign/campaigns-overview-filters';
 import { CreateCampaignButton } from '@/components/campaign/create-campaign-button';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import type { PublicCampaignCard, PublicCampaignStatsMap } from '@/modules/campaigns/campaign.types';
 import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
 import { getTranslations } from 'next-intl/server';
@@ -13,7 +13,7 @@ type Props = {
 	campaigns: PublicCampaignCard[];
 	statsById: PublicCampaignStatsMap;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	showStateFilter?: boolean;
 	selectedState?: CampaignStateFilter;
 };
@@ -22,7 +22,7 @@ export const CampaignsOverview = async ({
 	campaigns,
 	statsById,
 	lang,
-	region,
+	currency,
 	showStateFilter = false,
 	selectedState = 'active',
 }: Props) => {
@@ -54,14 +54,14 @@ export const CampaignsOverview = async ({
 						label={t('campaigns-page.create-campaign')}
 						labels={submissionLabels}
 						lang={lang}
-						region={region}
+						currency={currency}
 					/>
 				</div>
 			) : null}
 			<CardGrid emptyMessage={t('campaigns-page.empty')}>
 				{filteredCampaigns.map((campaign) => (
 					<CardGridItem key={campaign.id}>
-						<CampaignPreviewWallet campaign={campaign} stats={statsById[campaign.id]} lang={lang} region={region} />
+						<CampaignPreviewWallet campaign={campaign} stats={statsById[campaign.id]} lang={lang} currency={currency} />
 					</CardGridItem>
 				))}
 			</CardGrid>

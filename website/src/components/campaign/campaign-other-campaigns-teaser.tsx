@@ -1,7 +1,8 @@
 import { CampaignsGridSection } from '@/components/campaign/campaigns-grid-section';
 import { resolveCampaignsWithCmsEntries } from '@/components/campaign/campaigns-overview.server';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import { getAllCampaignsForCmsJoinWithStatsAction } from '@/modules/campaigns/campaign.actions';
 import { getCampaignsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
@@ -12,10 +13,10 @@ const TEASER_LIMIT = 3;
 type Props = {
 	currentCampaignSlug: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const CampaignOtherCampaignsTeaser = async ({ currentCampaignSlug, lang, region }: Props) => {
+export const CampaignOtherCampaignsTeaser = async ({ currentCampaignSlug, lang, currency }: Props) => {
 	const [t, campaignStoriesResult, campaignsResult] = await Promise.all([
 		getTranslations('website-campaign'),
 		getCampaignsAction(lang),
@@ -47,9 +48,9 @@ export const CampaignOtherCampaignsTeaser = async ({ currentCampaignSlug, lang, 
 				}
 				data={{ campaigns, statsById }}
 				lang={lang}
-				region={region}
+				currency={currency}
 				cta={{
-					href: `/${lang}/${region}/campaigns`,
+					href: `${getWebsiteBasePath(lang, currency)}/campaigns`,
 					label: t('campaign.other-campaigns.show-all'),
 				}}
 			/>

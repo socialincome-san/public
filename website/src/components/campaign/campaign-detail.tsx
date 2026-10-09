@@ -13,7 +13,7 @@ import { CampaignVideoSlider } from '@/components/campaign/campaign-video-slider
 import { Community } from '@/components/community/community';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { getCampaignPageContentAction } from '@/modules/campaigns/campaign.actions';
 import type { CampaignPage } from '@/modules/campaigns/campaign.types';
@@ -38,7 +38,7 @@ type Props = {
 	campaignSlug: string;
 	faq?: Campaign['faq'];
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	community: CommunityPanelData | null;
 };
 
@@ -59,7 +59,7 @@ export const CampaignDetail = async ({
 	campaignSlug,
 	faq,
 	lang,
-	region,
+	currency,
 	community,
 }: Props) => {
 	const [pageContentResult, breadcrumbLinks, t, tCommon, tNewsletter, tFaq] = await Promise.all([
@@ -68,7 +68,7 @@ export const CampaignDetail = async ({
 			fullSlug: getCampaignStoryPath(campaignSlug),
 			currentLabel: title,
 			lang,
-			region,
+			currency,
 		}),
 		getTranslations('website-campaign'),
 		getTranslations('website-common'),
@@ -125,7 +125,9 @@ export const CampaignDetail = async ({
 				tiktokHandle={tiktokHandle}
 				linkWebsite={linkWebsite}
 			/>
-			{campaign.program?.id ? <CampaignProgramTeaser programId={campaign.program.id} lang={lang} region={region} /> : null}
+			{campaign.program?.id ? (
+				<CampaignProgramTeaser programId={campaign.program.id} lang={lang} currency={currency} />
+			) : null}
 			<CampaignCreationTeaser
 				translations={{
 					title: t('campaign.creation-teaser.title'),
@@ -134,7 +136,7 @@ export const CampaignDetail = async ({
 				}}
 				labels={submissionLabels}
 				lang={lang}
-				region={region}
+				currency={currency}
 			/>
 			<CampaignNewsletter
 				lang={lang}
@@ -145,8 +147,8 @@ export const CampaignDetail = async ({
 				translations={newsletterTranslations}
 			/>
 			<CampaignVideoSlider translations={videoSliderTranslations} videoPlaybackIds={videoPlaybackIds} />
-			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />
-			<CampaignJournalTeaser lang={lang} region={region} />
+			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} currency={currency} />
+			<CampaignJournalTeaser lang={lang} currency={currency} />
 			{faqs.length > 0 && <CampaignFaqSection heading={tFaq('title')} faqs={faqs} />}
 		</>
 	);

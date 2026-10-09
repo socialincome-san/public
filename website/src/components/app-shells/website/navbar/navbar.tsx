@@ -5,7 +5,7 @@ import { toSiteMenuEntries, type Scope } from '@/components/app-shells/website/n
 import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { Layout } from '@/generated/storyblok/types/109655/storyblok-components';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteBasePath, WebsiteLanguage, type WebsiteCurrency } from '@/lib/i18n/utils';
 import { STORYBLOK_LAYOUT_PATH } from '@/lib/storyblok/storyblok-paths';
 import type { Session } from '@/modules/auth/auth.types';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
@@ -17,11 +17,11 @@ import { getTranslations } from 'next-intl/server';
 type Props = {
 	sessions: Promise<Session[]>;
 	lang: WebsiteLanguage;
-	region: string;
+	currency: WebsiteCurrency;
 	scope: Scope;
 };
 
-export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
+export const Navbar = async ({ sessions, lang, currency, scope }: Props) => {
 	const [t, tDonate, result] = await Promise.all([
 		getTranslations('website-common'),
 		getTranslations('website-donate'),
@@ -30,21 +30,21 @@ export const Navbar = async ({ sessions, lang, region, scope }: Props) => {
 			language: lang,
 		}),
 	]);
-	const menuEntries = toSiteMenuEntries(result?.success ? result.data.content.menu : [], lang, region);
+	const menuEntries = toSiteMenuEntries(result?.success ? result.data.content.menu : [], lang, currency);
 
 	return (
 		<SiteHeader
-			homeHref={`/${lang}/${region}`}
+			homeHref={getWebsiteBasePath(lang, currency)}
 			homeLinkLabel={t('logo.home-link-aria')}
 			desktopMenu={<SiteMenuDesktop entries={menuEntries} dropdownAside={<DonationForm />} />}
-			localeSwitcher={scope === 'website' && <LocaleCurrencySwitcher lang={lang} region={region} />}
+			localeSwitcher={scope === 'website' && <LocaleCurrencySwitcher lang={lang} currency={currency} />}
 			account={<AccountSlot sessions={sessions} scope={scope} />}
 			donateAction={
 				<SignedOutSlot sessions={sessions} scope={scope}>
 					<OpenDonationWizardButton label={tDonate('donation-form.donate-now')} size="md" />
 				</SignedOutSlot>
 			}
-			mobileMenu={<MenuMobile sessions={sessions} scope={scope} lang={lang} menuEntries={menuEntries} region={region} />}
+			mobileMenu={<MenuMobile sessions={sessions} scope={scope} lang={lang} menuEntries={menuEntries} currency={currency} />}
 		/>
 	);
 };

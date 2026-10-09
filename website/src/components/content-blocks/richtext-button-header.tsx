@@ -2,7 +2,7 @@
 
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { RichtextButtonHeader } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
@@ -12,15 +12,15 @@ import NextLink from 'next/link';
 type Props = {
 	blok: RichtextButtonHeader;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	buttonAction?: () => void;
 };
 
-export const RichtextButtonHeaderBlock = ({ blok, lang, region, buttonAction }: Props) => {
+export const RichtextButtonHeaderBlock = ({ blok, lang, currency, buttonAction }: Props) => {
 	const { heading, button, disableMarginTop, disableMarginBottom } = blok;
 	const firstButton = button?.[0];
 	const buttonLabel = firstButton?.label?.trim();
-	const buttonHref = firstButton?.link ? resolveStoryblokLink(firstButton.link, lang, region) : null;
+	const buttonHref = firstButton?.link ? resolveStoryblokLink(firstButton.link, lang, currency) : null;
 	const hasActionButton = Boolean(buttonLabel && buttonAction);
 	const hasLinkButton = Boolean(buttonLabel && buttonHref && !buttonAction);
 

@@ -23,7 +23,7 @@ const article = (
 	}) as unknown as JournalRssArticle;
 
 describe('buildJournalRssFeed', () => {
-	it('uses the language path and produces identical canonical feeds for int and ch', () => {
+	it('uses the language path and produces identical feeds for every currency', () => {
 		for (const language of ['en', 'de', 'fr', 'it']) {
 			const articles = [
 				article(`${language}-story`, `${language} story`, '2026-01-01T00:00:00.000Z', '2026-02-01T00:00:00.000Z', 'Excerpt'),

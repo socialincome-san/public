@@ -9,7 +9,7 @@ import {
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 import type { Outflows as OutflowsBlok } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import { storyblokEditable } from '@storyblok/react';
 import { getTranslations } from 'next-intl/server';
@@ -17,12 +17,12 @@ import { getTranslations } from 'next-intl/server';
 type Props = {
 	blok: OutflowsBlok;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const OutflowsBlock = async ({ blok, lang, region }: Props) => {
+export const OutflowsBlock = async ({ blok, lang, currency }: Props) => {
 	const t = await getTranslations('website-common');
-	const downloadsHref = getWebsitePublicPath(lang, region, 'downloads');
+	const downloadsHref = getWebsitePublicPath(lang, currency, 'downloads');
 
 	const rows = buildOutflowsSectionRows({
 		'direct-cash': {

@@ -1,95 +1,58 @@
 'use client';
 
-import { type CountryCode } from '@/generated/prisma/enums';
 import { useIsPage } from '@/lib/hooks/use-is-page';
-import { LANGUAGE_COOKIE, REGION_COOKIE } from '@/lib/i18n/cookies';
 import {
 	isWebsiteCurrency,
 	isWebsiteLanguage,
-	isWebsiteRegion,
 	mainWebsiteLanguages,
+	toCurrencySegment,
 	websiteCurrencies,
+	type WebsiteCurrency,
 	type WebsiteLanguage,
-	type WebsiteRegion,
 } from '@/lib/i18n/utils';
-import { setWebsiteCurrency, useWebsiteCurrency } from '@/lib/i18n/website-currency';
-import {
-	LocaleCurrencySwitcher as DesignSystemLocaleCurrencySwitcher,
-	type LocaleRegionOption,
-} from '@socialincome/design-system/navigation/locale-currency-switcher/locale-currency-switcher';
-import Cookies from 'js-cookie';
+import { LocaleCurrencySwitcher as DesignSystemLocaleCurrencySwitcher } from '@socialincome/design-system/navigation/locale-currency-switcher/locale-currency-switcher';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Suspense, useState } from 'react';
 
-const SWISS_COUNTRY_CODE: CountryCode = 'CH';
 const surveyLanguages: WebsiteLanguage[] = ['en', 'kri'];
 
-const createLocalePath = (language: WebsiteLanguage, region: WebsiteRegion) => {
-	const segments = window.location.pathname.split('/');
+// Read from `window.location` on click: `usePathname()` would keep the navbar out of the static shell.
+const createLocalePath = (language: WebsiteLanguage, currency: WebsiteCurrency) => {
+	const { pathname, search, hash } = window.location;
+	const [, , , ...pathTail] = pathname.split('/');
 
-	if (segments.length < 3) {
-		return `/${language}/${region}`;
-	}
-
-	segments[1] = language;
-	segments[2] = region;
-
-	return `${segments.join('/')}${window.location.search}`;
+	return `/${[language, toCurrencySegment(currency), ...pathTail].join('/')}${search}${hash}`;
 };
 
 type Props = {
 	lang: WebsiteLanguage;
-	region: string;
+	currency: WebsiteCurrency;
 	variant?: 'ghost' | 'outline';
 };
 
-const Switcher = ({ lang, region, variant = 'ghost', isSurveyPage }: Props & { isSurveyPage: boolean }) => {
+const Switcher = ({ lang, currency, variant = 'ghost', isSurveyPage }: Props & { isSurveyPage: boolean }) => {
 	const [open, setOpen] = useState(false);
 	const router = useRouter();
 	const t = useTranslations('website-common');
-	const currency = useWebsiteCurrency();
 
-	const currentRegion = isWebsiteRegion(region) ? region : 'int';
 	const languageOptions = isSurveyPage ? surveyLanguages : mainWebsiteLanguages;
 	const currentSwitcherLanguage = languageOptions.includes(lang) ? lang : (languageOptions[0] ?? 'en');
-	const regionOptions: (LocaleRegionOption & { value: WebsiteRegion })[] = [
-		{ value: 'int', label: t('locale-currency-switcher.regions.int') },
-		{
-			value: 'ch',
-			label: t('locale-currency-switcher.regions.ch'),
-			flagCountry: SWISS_COUNTRY_CODE,
-		},
-	];
 
-	const navigateToLocale = (nextLanguage: WebsiteLanguage, nextRegion: WebsiteRegion) => {
+	const navigateToLocale = (nextLanguage: WebsiteLanguage, nextCurrency: WebsiteCurrency) => {
 		setOpen(false);
-		// Only read by the proxy to redirect URLs without a language and region.
-		Cookies.set(LANGUAGE_COOKIE, nextLanguage, { expires: 7 });
-		Cookies.set(REGION_COOKIE, nextRegion, { expires: 7 });
-		router.push(createLocalePath(nextLanguage, nextRegion));
+		router.push(createLocalePath(nextLanguage, nextCurrency));
 	};
 
 	const handleLanguageChange = (value: string) => {
-		if (!isWebsiteLanguage(value) || !languageOptions.includes(value)) {
-			return;
+		if (isWebsiteLanguage(value) && languageOptions.includes(value)) {
+			navigateToLocale(value, currency);
 		}
-
-		navigateToLocale(value, currentRegion);
-	};
-
-	const handleRegionChange = (value: string) => {
-		if (!isWebsiteRegion(value)) {
-			return;
-		}
-
-		navigateToLocale(lang, value);
 	};
 
 	const handleCurrencyChange = (value: string) => {
 		if (isWebsiteCurrency(value)) {
-			setWebsiteCurrency(value);
-			setOpen(false);
+			navigateToLocale(lang, value);
 		}
 	};
 
@@ -104,12 +67,6 @@ const Switcher = ({ lang, region, variant = 'ghost', isSurveyPage }: Props & { i
 				value: currentSwitcherLanguage,
 				options: languageOptions.map((option) => ({ value: option, label: option.toUpperCase() })),
 				onChange: handleLanguageChange,
-			}}
-			region={{
-				label: t('locale-currency-switcher.region'),
-				value: currentRegion,
-				options: regionOptions,
-				onChange: handleRegionChange,
 			}}
 			currency={{
 				label: t('locale-currency-switcher.currency'),

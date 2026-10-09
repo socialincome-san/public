@@ -44,35 +44,35 @@ describe('getCommunityPanelData', () => {
 	});
 
 	it('returns null without loading anything when the page has not enabled it', async () => {
-		const result = await getCommunityPanelData(page({ communityEnabled: false }), 'en', 'int');
+		const result = await getCommunityPanelData(page({ communityEnabled: false }), 'en', 'USD');
 
 		expect(result).toEqual({ success: true, data: null });
 		expect(mockGetCommunityGlobals).not.toHaveBeenCalled();
 	});
 
 	it('counts active volunteers, their countries and the roles', async () => {
-		const result = await getCommunityPanelData(page(), 'en', 'int');
+		const result = await getCommunityPanelData(page(), 'en', 'USD');
 
 		expect(result.success && result.data).toMatchObject({ volunteerCount: 2, countryCount: 1, roleCount: 2 });
 	});
 
 	it('drops blank ticker lines and references to unknown persons', async () => {
-		const result = await getCommunityPanelData(page(), 'en', 'int');
+		const result = await getCommunityPanelData(page(), 'en', 'USD');
 
 		expect(result.success && result.data).toMatchObject({
 			tickerItems: ['One', 'Two'],
-			worlds: [{ name: 'In the code', people: [{ name: 'Ada Test', href: '/en/int/person/ada' }] }],
+			worlds: [{ name: 'In the code', people: [{ name: 'Ada Test', href: '/en/usd/person/ada' }] }],
 		});
 	});
 
 	it('prefers the page articles over the default articles', async () => {
-		await getCommunityPanelData(page({ communityArticles: ['page-article'] }), 'en', 'int');
+		await getCommunityPanelData(page({ communityArticles: ['page-article'] }), 'en', 'USD');
 
 		expect(mockGetArticlesByUuids).toHaveBeenCalledWith('en', ['page-article']);
 	});
 
 	it('falls back to the default articles', async () => {
-		await getCommunityPanelData(page(), 'en', 'int');
+		await getCommunityPanelData(page(), 'en', 'USD');
 
 		expect(mockGetArticlesByUuids).toHaveBeenCalledWith('en', ['default-article']);
 	});
@@ -81,7 +81,7 @@ describe('getCommunityPanelData', () => {
 		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
 		mockGetPrimaryRoleLabels.mockResolvedValue({ success: false, error: 'Not found', status: 404 });
 
-		const result = await getCommunityPanelData(page(), 'en', 'int');
+		const result = await getCommunityPanelData(page(), 'en', 'USD');
 
 		expect(result.success).toBe(false);
 		expect(consoleError).toHaveBeenCalled();
@@ -91,7 +91,7 @@ describe('getCommunityPanelData', () => {
 		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
 		mockGetCommunityGlobals.mockResolvedValue({ success: false, error: 'Not found', status: 404 });
 
-		const result = await getCommunityPanelData(page(), 'en', 'int');
+		const result = await getCommunityPanelData(page(), 'en', 'USD');
 
 		expect(result.success).toBe(false);
 		expect(consoleError).toHaveBeenCalled();

@@ -1,5 +1,5 @@
 import type { AnySearchParams } from '@/app/page-props';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import {
 	getPublicProgramFilterDataByPortalSlugsAction,
 	getPublicProgramStatsByPortalSlugsAction,
@@ -30,12 +30,12 @@ import {
 
 type Props = {
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	searchParams: Promise<AnySearchParams>;
 	fixedFocusSlug?: string;
 };
 
-export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixedFocusSlug }: Props) => {
+export const ProgramsOverviewSection = async ({ lang, currency, searchParams, fixedFocusSlug }: Props) => {
 	const hasFixedFocus = fixedFocusSlug !== undefined;
 	const [programsResult, storyblokFocusesResult] = await Promise.all([
 		getProgramsAction(lang),
@@ -110,7 +110,7 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 					/>
 				}
 			/>
-			<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} lang={lang} region={region} />
+			<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} lang={lang} currency={currency} />
 		</div>
 	);
 };

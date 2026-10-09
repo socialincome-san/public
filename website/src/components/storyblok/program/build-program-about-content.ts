@@ -1,7 +1,7 @@
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import type { PayoutInterval } from '@/generated/prisma/client';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getSafeNumberFormatLocale } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, getWebsiteBasePath } from '@/lib/i18n/utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import { type useTranslations } from 'next-intl';
 
@@ -29,7 +29,7 @@ type BuildProgramAboutContentInput = {
 	programDetailData: ProgramDetailData;
 	t: ProgramAboutTranslator;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	countryName?: string;
 };
 
@@ -159,14 +159,14 @@ export const buildProgramAboutContent = ({
 	programDetailData,
 	t,
 	lang,
-	region,
+	currency,
 	countryName,
 }: BuildProgramAboutContentInput): ProgramAboutContent => {
 	const { description, programDetails, dashboardStats } = programDetailData;
 	const locale = getSafeNumberFormatLocale(lang);
 	const durationMonths = dashboardStats?.programDurationInMonths ?? programDetails?.programDurationInMonths;
 	const localPartnerHref = programDetails?.localPartnerSlug
-		? `/${lang}/${region}/local-partners/${programDetails.localPartnerSlug}`
+		? `${getWebsiteBasePath(lang, currency)}/local-partners/${programDetails.localPartnerSlug}`
 		: undefined;
 
 	const overlaySections: ProgramAboutOverlaySection[] = [];

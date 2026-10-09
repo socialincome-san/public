@@ -1,7 +1,7 @@
 # Website
 
-Next.js app: public site (`src/app/[lang]/[region]`), portal, dashboard,
-partner space, API routes (`src/app/api`) and backend.
+Next.js app: public site (`src/app/[lang]/[currency]`), portal,
+dashboard, partner space, API routes (`src/app/api`) and backend.
 
 - `src/app`: routes, pages, route handlers
 - `src/components`: composition of design-system components with data

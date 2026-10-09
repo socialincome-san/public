@@ -5,7 +5,7 @@ import { CampaignsOverview } from '@/components/campaign/campaigns-overview';
 import { getStateQuery, resolveCampaignsWithCmsEntries } from '@/components/campaign/campaigns-overview.server';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import type { CampaignOverview } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getAllCampaignsForCmsJoinWithStatsAction } from '@/modules/campaigns/campaign.actions';
 import { getCampaignsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
@@ -17,11 +17,11 @@ import { Suspense } from 'react';
 type Props = {
 	overview: ISbStoryData<CampaignOverview>;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	searchParams: Promise<AnySearchParams>;
 };
 
-const FilteredCampaigns = async ({ lang, region, searchParams }: Omit<Props, 'overview'>) => {
+const FilteredCampaigns = async ({ lang, currency, searchParams }: Omit<Props, 'overview'>) => {
 	const [campaignStoriesResult, campaignsResult, resolvedSearchParams] = await Promise.all([
 		getCampaignsAction(lang),
 		// Activity filter is applied in CampaignsOverview via isCampaignPubliclyActive.
@@ -41,21 +41,21 @@ const FilteredCampaigns = async ({ lang, region, searchParams }: Omit<Props, 'ov
 			campaigns={campaigns}
 			statsById={statsById}
 			lang={lang}
-			region={region}
+			currency={currency}
 			showStateFilter={true}
 			selectedState={getStateQuery(resolvedSearchParams)}
 		/>
 	);
 };
 
-export const CampaignsOverviewPage = async ({ overview, lang, region, searchParams }: Props) => {
+export const CampaignsOverviewPage = async ({ overview, lang, currency, searchParams }: Props) => {
 	const title = overview.content.title?.trim() ?? overview.name;
 	const text = overview.content.text?.trim();
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: overview.full_slug,
 		currentLabel: title,
 		lang,
-		region,
+		currency,
 	});
 
 	return (
@@ -65,7 +65,7 @@ export const CampaignsOverviewPage = async ({ overview, lang, region, searchPara
 				<div className="flex w-full flex-col gap-8">
 					<PageIntro title={title} description={text} />
 					<Suspense fallback={<AppLoadingSkeleton />}>
-						<FilteredCampaigns lang={lang} region={region} searchParams={searchParams} />
+						<FilteredCampaigns lang={lang} currency={currency} searchParams={searchParams} />
 					</Suspense>
 				</div>
 			</BlockWrapper>

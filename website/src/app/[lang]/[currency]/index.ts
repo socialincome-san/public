@@ -1,0 +1,14 @@
+export type DefaultParams = {
+	lang: string;
+	currency: string;
+};
+
+export type DefaultLayoutProps<P extends DefaultParams = DefaultParams> = {
+	params: Promise<P>;
+};
+
+export type DefaultPageProps = DefaultLayoutProps & {
+	searchParams: Promise<Record<string, string>>;
+};
+
+export type DefaultLayoutPropsWithSlug = DefaultLayoutProps<DefaultParams & { slug: string }>;

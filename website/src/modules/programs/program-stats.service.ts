@@ -1,5 +1,5 @@
 import { Currency, PayoutInterval, PayoutStatus, SurveyStatus } from '@/generated/prisma/enums';
-import { mapWebsiteCurrencies, type WebsiteCurrency } from '@/lib/i18n/utils';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now } from '@/lib/utils/now';
 import { getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
@@ -72,11 +72,12 @@ export const calculateProgramBudget = async (
 
 export const resolveProgramFinancesDisplayAmounts = async (
 	stats: ProgramFinancesStatsInput,
-): Promise<Result<Record<WebsiteCurrency, ProgramFinancesDisplayAmounts>>> => {
+	displayCurrency: WebsiteCurrency,
+): Promise<Result<ProgramFinancesDisplayAmounts>> => {
 	try {
 		const rates = await getLatestRatesOrUndefined();
 
-		return resultOk(mapWebsiteCurrencies((displayCurrency) => toDisplayAmounts(stats, displayCurrency, rates)));
+		return resultOk(toDisplayAmounts(stats, displayCurrency, rates));
 	} catch (error) {
 		console.error('Could not resolve program finance display amounts', { error });
 

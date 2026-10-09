@@ -1,13 +1,13 @@
 import { Currency } from '@/generated/prisma/enums';
-import { mapWebsiteCurrencies, type WebsiteCurrency } from '@/lib/i18n/utils';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getLatestRates } from '@/modules/exchange-rates/exchange-rate.service';
 import type { ExchangeRates } from '@/modules/exchange-rates/exchange-rate.types';
 import type {
 	ChfAmountsDisplayInput,
 	DisplayAmount,
-	DisplayAmountsByCurrency,
 	WalletPayoutDisplayInput,
+	WalletPayoutDisplaysInput,
 } from './currency-display.types';
 
 export const convertAmount = (
@@ -38,22 +38,22 @@ export const convertAmount = (
 	return resultOk(amount * (toRate / fromRate));
 };
 
-export const resolveChfAmounts = async ({ amounts }: ChfAmountsDisplayInput): Promise<Result<DisplayAmountsByCurrency>> => {
-	const rates = await getDisplayRates();
+export const resolveChfAmounts = async ({
+	amounts,
+	displayCurrency,
+}: ChfAmountsDisplayInput): Promise<Result<DisplayAmount[]>> => {
+	const rates = await getDisplayRates(displayCurrency);
 
-	return resultOk(
-		mapWebsiteCurrencies((displayCurrency) => amounts.map((amount) => resolveFromChf(amount, displayCurrency, rates))),
-	);
+	return resultOk(amounts.map((amount) => resolveFromChf(amount, displayCurrency, rates)));
 };
 
-export const resolveWalletPayoutDisplays = async (
-	inputs: WalletPayoutDisplayInput[],
-): Promise<Result<DisplayAmountsByCurrency>> => {
-	const rates = await getDisplayRates();
+export const resolveWalletPayoutDisplays = async ({
+	payouts,
+	displayCurrency,
+}: WalletPayoutDisplaysInput): Promise<Result<DisplayAmount[]>> => {
+	const rates = await getDisplayRates(displayCurrency);
 
-	return resultOk(
-		mapWebsiteCurrencies((displayCurrency) => inputs.map((input) => resolveWalletPayout(input, displayCurrency, rates))),
-	);
+	return resultOk(payouts.map((payout) => resolveWalletPayout(payout, displayCurrency, rates)));
 };
 
 const resolveWalletPayout = (
@@ -76,7 +76,10 @@ const resolveWalletPayout = (
 	return { amount: converted.data, currency: displayCurrency };
 };
 
-const getDisplayRates = async (): Promise<ExchangeRates | undefined> => {
+const getDisplayRates = async (displayCurrency: WebsiteCurrency): Promise<ExchangeRates | undefined> => {
+	if (displayCurrency === Currency.CHF) {
+		return undefined;
+	}
 	const latestRatesResult = await getLatestRates();
 
 	return latestRatesResult.success ? latestRatesResult.data : undefined;

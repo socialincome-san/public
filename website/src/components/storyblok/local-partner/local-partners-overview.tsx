@@ -1,6 +1,6 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { LocalPartnersGrid } from '@/components/storyblok/local-partner/local-partners-grid';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
 import { getTranslations } from 'next-intl/server';
 import type { LocalPartnerStory } from './local-partner.types';
@@ -17,11 +17,11 @@ import {
 type Props = {
 	localPartners: LocalPartnerStory[];
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	searchParams: Promise<AnySearchParams>;
 };
 
-export const LocalPartnersOverview = async ({ localPartners, lang, region, searchParams }: Props) => {
+export const LocalPartnersOverview = async ({ localPartners, lang, currency, searchParams }: Props) => {
 	const [t, resolvedSearchParams] = await Promise.all([getTranslations('website-common'), searchParams]);
 	const searchQuery = getSearchQuery(resolvedSearchParams);
 	const countryQuery = getCountryQuery(resolvedSearchParams);
@@ -56,7 +56,7 @@ export const LocalPartnersOverview = async ({ localPartners, lang, region, searc
 			<LocalPartnersGrid
 				localPartners={filteredLocalPartners}
 				lang={lang}
-				region={region}
+				currency={currency}
 				hasActiveFilters={hasActiveFilters}
 			/>
 		</>

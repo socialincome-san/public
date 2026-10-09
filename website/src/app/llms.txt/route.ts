@@ -1,14 +1,15 @@
-import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
+import { defaultCurrency, defaultLanguage, getWebsiteBasePath } from '@/lib/i18n/utils';
 
 const SITE_URL = 'https://socialincome.org';
 
-const pageUrl = (pathTail = '') => `${SITE_URL}/${defaultLanguage}/${defaultRegion}${pathTail ? `/${pathTail}` : ''}`;
+const pageUrl = (pathTail = '') =>
+	`${SITE_URL}${getWebsiteBasePath(defaultLanguage, defaultCurrency)}${pathTail ? `/${pathTail}` : ''}`;
 
 const llmsTxt = `# Social Income
 
 > Social Income is a nonprofit that provides unconditional cash transfers to people living in poverty.
 
-Public pages are available in English, German, French, and Italian, under \`/{lang}/{region}/\` URLs. Use \`int\` for international or \`ch\` for Switzerland.
+Public pages are available in English, German, French, and Italian, under \`/{lang}/{currency}/\` URLs. The currency (\`chf\`, \`eur\` or \`usd\`) only changes how amounts are shown; the \`usd\` pages are canonical.
 
 ## Core pages
 

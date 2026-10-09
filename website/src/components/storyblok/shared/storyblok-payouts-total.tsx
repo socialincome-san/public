@@ -1,18 +1,18 @@
 import { ChfDonationsTotalBlock } from '@/components/content-blocks/donations-total-server';
 import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 
 type Props = {
 	blok: DonationsTotal | undefined;
 	totalChf: number;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const StoryblokPayoutsTotal = ({ blok, totalChf, lang, region }: Props) => {
+export const StoryblokPayoutsTotal = ({ blok, totalChf, lang, currency }: Props) => {
 	if (!blok || totalChf === 0) {
 		return null;
 	}
 
-	return <ChfDonationsTotalBlock blok={blok} lang={lang} region={region} totalChf={totalChf} />;
+	return <ChfDonationsTotalBlock blok={blok} lang={lang} currency={currency} totalChf={totalChf} />;
 };

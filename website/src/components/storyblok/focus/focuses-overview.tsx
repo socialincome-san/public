@@ -1,5 +1,6 @@
 import type { AnySearchParams } from '@/app/page-props';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import { getPublicFocusStatsBySlugsAction } from '@/modules/focuses/focus.actions';
 import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
 import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
@@ -25,11 +26,11 @@ import {
 type Props = {
 	focuses: FocusStory[];
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	searchParams: Promise<AnySearchParams>;
 };
 
-export const FocusesOverview = async ({ focuses, lang, region, searchParams }: Props) => {
+export const FocusesOverview = async ({ focuses, lang, currency, searchParams }: Props) => {
 	const focusSlugs = focuses.map((focus) => getFocusSlug(focus));
 	const [t, statsResult, resolvedSearchParams] = await Promise.all([
 		getTranslations('website-common'),
@@ -95,7 +96,7 @@ export const FocusesOverview = async ({ focuses, lang, region, searchParams }: P
 					return (
 						<CardGridItem key={focus.uuid}>
 							<FocusDetailCard
-								href={`/${lang}/${region}/focuses/${focusSlug}`}
+								href={`${getWebsiteBasePath(lang, currency)}/focuses/${focusSlug}`}
 								focusTitle={focusTitle}
 								recipientsCount={stats.recipientsInProgramsCount}
 								programsCount={stats.programsCount}

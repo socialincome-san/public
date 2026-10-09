@@ -1,16 +1,16 @@
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { StoryblokPayoutsTotal } from '@/components/storyblok/shared/storyblok-payouts-total';
 import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	programDetailData: ProgramDetailData;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const ProgramPayoutsTotal = async ({ programDetailData, lang, region }: Props) => {
+export const ProgramPayoutsTotal = async ({ programDetailData, lang, currency }: Props) => {
 	const totalChf = programDetailData.dashboardStats?.paidOutSoFarChf ?? 0;
 	const t = await getTranslations('website-common');
 
@@ -21,5 +21,5 @@ export const ProgramPayoutsTotal = async ({ programDetailData, lang, region }: P
 		images: programDetailData.images,
 	};
 
-	return <StoryblokPayoutsTotal blok={blok} totalChf={totalChf} lang={lang} region={region} />;
+	return <StoryblokPayoutsTotal blok={blok} totalChf={totalChf} lang={lang} currency={currency} />;
 };
