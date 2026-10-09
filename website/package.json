@@ -88,7 +88,7 @@
 		"pdfkit": "0.20.2",
 		"react": "19.3.0",
 		"react-dom": "19.3.0",
-		"react-dropzone": "15.0.0",
+		"react-dropzone": "20.1.2",
 		"react-hook-form": "7.89.0",
 		"react-hot-toast": "2.6.1",
 		"react-markdown": "10.1.0",
