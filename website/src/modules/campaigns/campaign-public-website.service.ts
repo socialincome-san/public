@@ -1,9 +1,9 @@
 import type { CampaignGlobals, Faq } from '@/generated/storyblok/types/109655/storyblok-components';
-import { fetchStoryblokCampaignGlobals } from '@/integrations/storyblok/storyblok-campaign.integration';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getMetadata } from '@/lib/utils/metadata';
+import { getCampaignGlobals } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import type { Metadata } from 'next';
 import type { CampaignNewsletterContent, CampaignPageContent } from './campaign.types';
@@ -22,7 +22,7 @@ export const getCampaignPageContent = async (
 	campaignFaqs?: unknown,
 ): Promise<Result<CampaignPageContent>> => {
 	try {
-		const globalsResult = await fetchStoryblokCampaignGlobals(lang);
+		const globalsResult = await getCampaignGlobals(lang);
 
 		const globals = globalsResult.success ? globalsResult.data?.content : null;
 		const faqs =

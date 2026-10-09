@@ -1,4 +1,4 @@
-import { defaultLanguage } from '@/lib/i18n/utils';
+import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import Link from 'next/link';
 
@@ -10,7 +10,7 @@ type Props = {
 const toDefaultLanguagePath = (pathname: string) => {
 	const segments = pathname.split('/').filter(Boolean);
 	if (segments.length < 2) {
-		return `/${defaultLanguage}/int`;
+		return `/${defaultLanguage}/${defaultRegion}`;
 	}
 	segments[0] = defaultLanguage;
 

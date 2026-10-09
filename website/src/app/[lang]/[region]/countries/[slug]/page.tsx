@@ -2,7 +2,7 @@ import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[region]';
 import { CountryDetail } from '@/components/storyblok/country/country-detail';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { getCommunityPanelData } from '@/modules/community/community.cache';
-import { getCountryPageStats } from '@/modules/countries/country.service';
+import { getCountryPageStats } from '@/modules/countries/country.cache';
 import { getCountryBySlug } from '@/modules/storyblok-content/storyblok-content.cache';
 import { notFound } from 'next/navigation';
 

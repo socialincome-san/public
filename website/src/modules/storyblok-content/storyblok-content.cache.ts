@@ -2,6 +2,7 @@ import type {
 	Article,
 	ArticleType,
 	Campaign,
+	CampaignGlobals,
 	CommunityGlobals,
 	Country,
 	Focus,
@@ -194,6 +195,12 @@ export const getCommunityGlobals = async (language: string): Promise<Result<ISbS
 	'use cache';
 
 	return withStoryblokCache(service.getCommunityGlobals(language));
+};
+
+export const getCampaignGlobals = async (language: string): Promise<Result<ISbStoryData<CampaignGlobals> | null>> => {
+	'use cache';
+
+	return withStoryblokCache(service.getCampaignGlobals(language));
 };
 
 export const getPerson = async (slug: string, language: string): Promise<Result<ISbStoryData<Person>>> => {

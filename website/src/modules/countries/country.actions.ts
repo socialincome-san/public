@@ -14,7 +14,6 @@ import {
 	createCountry,
 	deleteCountry,
 	getCountry,
-	getCountryPageStats,
 	getProgramCountryFeasibility,
 	updateCountry,
 } from '@/modules/countries/country.service';
@@ -26,7 +25,7 @@ import type {
 	PublicCountryStatsMap,
 } from '@/modules/countries/country.types';
 import { revalidatePath } from 'next/cache';
-import { getCountryStatisticsComparison, getPublicCountryStatsByIsoCodes } from './country.cache';
+import { getCountryPageStats, getCountryStatisticsComparison, getPublicCountryStatsByIsoCodes } from './country.cache';
 
 const REVALIDATE_PATH = '/portal/admin/countries';
 

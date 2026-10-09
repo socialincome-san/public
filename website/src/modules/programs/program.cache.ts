@@ -14,6 +14,7 @@ import {
 	type PublicProgramFilterDataMap,
 	type PublicProgramStats,
 	type PublicProgramStatsMap,
+	type PublicProgramTargetFocus,
 } from './program.types';
 
 export const getPublicProgramFilterDataByPortalSlugs = async (
@@ -46,6 +47,20 @@ export const getProgramIdByPortalSlug = async (slug: string): Promise<Result<str
 	cacheTag(PROGRAM_CACHE_TAG);
 
 	return cacheResult(service.getProgramIdByPortalSlug(slug));
+};
+
+export const getProgramSlugById = async (programId: string): Promise<Result<string>> => {
+	'use cache';
+	cacheTag(PROGRAM_CACHE_TAG);
+
+	return cacheResult(service.getProgramSlugById(programId));
+};
+
+export const getPublicTargetFocusesByProgramId = async (programId: string): Promise<Result<PublicProgramTargetFocus[]>> => {
+	'use cache';
+	cacheTag(PROGRAM_CACHE_TAG);
+
+	return cacheResult(service.getPublicTargetFocusesByProgramId(programId));
 };
 
 export const getPublicProgramBySlug = async (slug: string): Promise<Result<PublicProgramDetails>> => {

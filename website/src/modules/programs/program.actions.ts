@@ -21,11 +21,13 @@ import { calculateProgramBudget } from './program-stats.service';
 import {
 	getProgramDashboardStats,
 	getProgramIdByPortalSlug,
+	getProgramSlugById,
 	getPublicPreviewProgramBySlug,
 	getPublicProgramBySlug,
 	getPublicProgramFilterDataByPortalSlugs,
 	getPublicProgramStatsById,
 	getPublicProgramStatsByProgramPortalSlugs,
+	getPublicTargetFocusesByProgramId,
 	resolveProgramFinancesDisplayAmounts,
 } from './program.cache';
 import {
@@ -43,9 +45,7 @@ import {
 	deleteProgram,
 	getProgramOrganizationOptions,
 	getProgramSettings,
-	getProgramSlugById,
 	getProgramWallets,
-	getPublicTargetFocusesByProgramId,
 	updateProgramSettings,
 } from './program.service';
 
