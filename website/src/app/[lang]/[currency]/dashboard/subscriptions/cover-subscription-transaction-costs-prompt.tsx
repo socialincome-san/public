@@ -1,0 +1,41 @@
+'use client';
+
+import { type Currency } from '@/generated/prisma/client';
+import { type WebsiteLanguage } from '@/lib/i18n/utils';
+import { formatCurrencyLocale } from '@/lib/utils/string-utils';
+import { useTranslations } from 'next-intl';
+import { getOnlineTransactionCost } from './subscription-amount';
+
+const feeCurrencyFormatOptions = {
+	minimumFractionDigits: 2,
+	maximumFractionDigits: 2,
+} as const;
+
+type Props = {
+	lang: WebsiteLanguage;
+	amount: number;
+	currency: Currency;
+	onOpen: () => void;
+};
+
+export const CoverSubscriptionTransactionCostsPrompt = ({ lang, amount, currency, onOpen }: Props) => {
+	const t = useTranslations('website-me');
+	const feeLabel = formatCurrencyLocale(getOnlineTransactionCost(amount), currency, lang, feeCurrencyFormatOptions);
+
+	return (
+		<button
+			type="button"
+			className="bg-highlight text-foreground w-full px-3 py-3 text-left text-sm leading-snug transition-opacity hover:opacity-90 sm:px-4 sm:py-3.5 sm:leading-5"
+			onClick={onOpen}
+			data-testid="cover-subscription-transaction-costs-prompt"
+		>
+			<span>{t('subscriptions.cover-transaction-costs.nudge-prefix')} </span>
+			<span className="font-bold">{t('subscriptions.cover-transaction-costs.nudge-fee', { fee: feeLabel })}</span>
+			<span> {t('subscriptions.cover-transaction-costs.nudge-middle')} </span>
+			<span className="font-bold">
+				{t('subscriptions.cover-transaction-costs.nudge-cta')}
+				<span className="whitespace-nowrap"> ›</span>
+			</span>
+		</button>
+	);
+};

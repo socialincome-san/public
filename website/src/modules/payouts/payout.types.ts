@@ -181,3 +181,5 @@ export type PayoutDateRange = {
 	gte: Date;
 	lt: Date;
 };
+
+export const PAYOUT_CACHE_TAG = 'payouts';

@@ -1,9 +1,9 @@
 'use client';
 
-import { useI18n } from '@/lib/i18n/use-i18n';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { createWizardPendingContributionAction } from '@/modules/qr-bills/qr-bill.actions';
 import { cn } from '@socialincome/design-system/cn';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
@@ -14,8 +14,8 @@ import { QrBillPaymentCard } from './qr-bill-payment-card';
 import { QrBillPdfDownloadLink } from './qr-bill-pdf-download-link';
 
 export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
-	const { currency = 'CHF' } = useI18n();
+	const t = useTranslations('donation-wizard');
+	const currency = useWebsiteCurrency();
 	const view = selectPaymentView(state.context);
 	const [confirming, setConfirming] = useState(false);
 
@@ -102,7 +102,7 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 				onContinue={() => void onConfirm()}
 				continueLabel={confirming ? t('stepQrBill.confirming') : confirmLabel}
 				continueDisabled={confirming}
-				continueClassName="bg-foreground text-primary-foreground shadow-xs after:opacity-0 hover:bg-foreground/90 hover:after:opacity-0"
+				continueVariant="foreground"
 				summary={{
 					amount: view.summary.amount,
 					currency,

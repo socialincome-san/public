@@ -1,9 +1,9 @@
 'use client';
 
 import { createPortalProgramDonationCheckoutAction } from '@/modules/stripe-payments/stripe-payment.actions';
-import { Button } from '@socialincome/design-system/button/button';
-import { Input } from '@socialincome/design-system/input/input';
-import { SegmentedToggle } from '@socialincome/design-system/segmented-toggle/segmented-toggle';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { SegmentedToggle } from '@socialincome/design-system/actions/segmented-toggle/segmented-toggle';
+import { Input } from '@socialincome/design-system/forms/input/input';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -63,15 +63,9 @@ export const DonationForm = ({ costPerIntervalChf, programId }: DonationFormProp
 				<div className="space-y-3">
 					<div className="text-muted-foreground text-xs">Enter an amount to donate (CHF)</div>
 					<div className="flex items-center gap-3">
-						<Input
-							name="amount"
-							className="w-40 md:w-48"
-							type="number"
-							min={1}
-							step={1}
-							defaultValue={Math.round(costPerIntervalChf)}
-							required
-						/>
+						<div className="w-40 md:w-48">
+							<Input name="amount" type="number" min={1} step={1} defaultValue={Math.round(costPerIntervalChf)} required />
+						</div>
 						<Button type="submit" disabled={submitting}>
 							{submitting ? 'Redirecting…' : 'Donate now'}
 						</Button>

@@ -1,0 +1,40 @@
+import { cn } from '../../../cn';
+import { WALLET_IMAGE_SIZES, WalletLayerImage } from './wallet-layer-image';
+import { type WalletImages } from './wallet.types';
+
+type WalletOverlayImagesProps = {
+	images?: WalletImages;
+};
+
+export const WalletOverlayImages = ({ images }: WalletOverlayImagesProps) => {
+	const primaryImage = images?.primaryImage;
+	const hoverEffectImage1 = images?.hoverEffectImage1;
+
+	if (!primaryImage?.src) {
+		return null;
+	}
+
+	return (
+		<div
+			className={cn(
+				'pointer-events-none absolute z-20 h-[var(--stack-height)]',
+				'top-[calc(2*var(--shadow-size))]',
+				'right-[calc(2*var(--shadow-size))]',
+				'left-[calc(2*var(--shadow-size))]',
+			)}
+			data-testid="wallet-overlay-images"
+		>
+			<div
+				className={cn(
+					'relative h-full w-full overflow-visible rounded-sm',
+					'[clip-path:inset(calc(-4*var(--shadow-size))_calc(-2*var(--shadow-size))_calc(2*var(--shadow-size))_calc(-2*var(--shadow-size))_round_2px)]',
+				)}
+			>
+				{hoverEffectImage1?.src ? (
+					<WalletLayerImage image={hoverEffectImage1} sizes={WALLET_IMAGE_SIZES} decorative hoverMotion="tilt-right" />
+				) : null}
+				<WalletLayerImage image={primaryImage} sizes={WALLET_IMAGE_SIZES} decorative hoverMotion="tilt-left" />
+			</div>
+		</div>
+	);
+};

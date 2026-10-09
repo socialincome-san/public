@@ -1,17 +1,17 @@
 import { PersonCard } from '@/components/storyblok/shared/person-card';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import {
 	getPersonsByCountryOfficeAction,
 	getPrimaryRoleLabelsAction,
 } from '@/modules/storyblok-content/storyblok-content.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
 	CarouselScrollNextButton,
-} from '@socialincome/design-system/carousel/carousel';
+} from '@socialincome/design-system/data-display/carousel/carousel';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryTitle } from './country.utils';
 
@@ -38,9 +38,7 @@ export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 	const countryOfficeDescription = country.content.countryOfficeDescription?.trim();
 	const hasMultiplePersons = persons.length > 1;
 	const nextButtonAriaLabel = hasMultiplePersons
-		? (await Translator.getInstance({ language: lang, namespaces: ['website-common'] })).t(
-				'countries-page.person-carousel-next-button-aria',
-			)
+		? (await getTranslations('website-common'))('countries-page.person-carousel-next-button-aria')
 		: '';
 
 	return (
@@ -56,10 +54,10 @@ export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 					) : null}
 				</div>
 				<div className="relative min-w-0 lg:col-span-2">
-					<Carousel opts={{ align: 'start' }}>
-						<CarouselContent className="-ml-6">
+					<Carousel opts={{ align: 'start' }} gap="lg">
+						<CarouselContent>
 							{persons.map((person) => (
-								<CarouselItem key={person.uuid} className="basis-[305px] pl-6">
+								<CarouselItem key={person.uuid} size="card">
 									<PersonCard person={person} roleLabels={roleLabels} />
 								</CarouselItem>
 							))}

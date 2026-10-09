@@ -1,9 +1,13 @@
+import { VISITOR_COUNTRY_HEADER } from '@/lib/i18n/utils';
+
+// https://vercel.com/docs/headers/request-headers
 export const GET = (request: Request) => {
 	try {
-		const country = request.headers.get('cf-ipcountry') ?? 'Unknown';
-		const ip = request.headers.get('cf-connecting-ip') ?? 'Unknown';
-		const region = request.headers.get('cf-region') ?? 'Unknown';
-		const city = request.headers.get('cf-city') ?? 'Unknown';
+		const country = request.headers.get(VISITOR_COUNTRY_HEADER) ?? 'Unknown';
+		const ip = request.headers.get('x-real-ip') ?? 'Unknown';
+		const region = request.headers.get('x-vercel-ip-country-region') ?? 'Unknown';
+		const encodedCity = request.headers.get('x-vercel-ip-city');
+		const city = encodedCity ? decodeURIComponent(encodedCity) : 'Unknown';
 
 		return Response.json({
 			country,

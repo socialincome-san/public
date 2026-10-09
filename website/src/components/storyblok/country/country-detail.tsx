@@ -1,11 +1,13 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { Community } from '@/components/community/community';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import type { CommunityPanelData } from '@/modules/community/community.types';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 import { CountryMap } from './country-map';
 import { CountryPayoutsTotal } from './country-payouts-total';
@@ -19,27 +21,29 @@ import { getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './c
 type Props = {
 	country: CountryStory;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	activeProgramsCount: number;
 	recipientsCount: number;
+	community: CommunityPanelData | null;
 };
 
-export const CountryDetail = async ({ country, lang, region, activeProgramsCount, recipientsCount }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+export const CountryDetail = async ({ country, lang, currency, activeProgramsCount, recipientsCount, community }: Props) => {
 	const isoCode = getCountryIsoCode(country.content);
 	const countryTitle = getCountryTitle(country.content);
 	const localPartners = getCountryLocalPartners(country.content);
-	const breadcrumbLinks = await buildBreadcrumbLinks({
-		fullSlug: country.full_slug,
-		currentLabel: countryTitle,
-		lang,
-		region,
-	});
+	const [t, breadcrumbLinks] = await Promise.all([
+		getTranslations('website-common'),
+		buildBreadcrumbLinks({
+			fullSlug: country.full_slug,
+			currentLabel: countryTitle,
+			lang,
+			currency,
+		}),
+	]);
 
 	return (
 		<>
 			<HeroHeader
-				lang={lang}
 				title={countryTitle}
 				heroImage={country.content.heroImage}
 				showDonationsFormMobile={false}
@@ -50,36 +54,33 @@ export const CountryDetail = async ({ country, lang, region, activeProgramsCount
 						value: activeProgramsCount,
 						label:
 							activeProgramsCount === 1
-								? translator.t('countries-page.active-program-singular')
-								: translator.t('countries-page.active-program-plural'),
+								? t('countries-page.active-program-singular')
+								: t('countries-page.active-program-plural'),
 					},
 					{
 						value: recipientsCount,
-						label:
-							recipientsCount === 1
-								? translator.t('countries-page.recipient-singular')
-								: translator.t('countries-page.recipient-plural'),
+						label: recipientsCount === 1 ? t('countries-page.recipient-singular') : t('countries-page.recipient-plural'),
 					},
 				]}
 			/>
 
-			<Breadcrumb links={breadcrumbLinks} />
+			<Breadcrumb links={breadcrumbLinks} aside={community ? <Community data={community} /> : null} />
 			<div className="lg:hidden">
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
-					<DonationFormServer lang={lang} />
+					<DonationForm />
 				</BlockWrapper>
 			</div>
-			<CountryMap country={country} lang={lang} />
+			<CountryMap country={country} />
 			<CountryPersonCarousel country={country} lang={lang} />
-			<CountryPayoutsTotal country={country} lang={lang} region={region} />
+			<CountryPayoutsTotal country={country} lang={lang} currency={currency} />
 			{isoCode !== '-' && (
-				<Suspense fallback={<CountryStatisticsSkeleton lang={lang} />}>
+				<Suspense fallback={<CountryStatisticsSkeleton />}>
 					<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
 				</Suspense>
 			)}
-			<CountryPrograms country={country} lang={lang} region={region} />
+			<CountryPrograms country={country} lang={lang} currency={currency} />
 			{localPartners.length > 0 && (
-				<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
+				<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} currency={currency} />
 			)}
 		</>
 	);

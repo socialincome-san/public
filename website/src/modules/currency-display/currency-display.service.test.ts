@@ -4,7 +4,7 @@ jest.mock('@/modules/exchange-rates/exchange-rate.service', () => ({
 	getLatestRates: mockGetLatestRates,
 }));
 
-import { convertAmount, resolveChfAmounts, resolveWalletPayoutDisplay } from './currency-display.service';
+import { convertAmount, resolveChfAmounts, resolveWalletPayoutDisplays } from './currency-display.service';
 
 describe('currency display service', () => {
 	beforeEach(() => {
@@ -41,6 +41,14 @@ describe('currency display service', () => {
 		});
 	});
 
+	test('skips the rates lookup for CHF', async () => {
+		await expect(resolveChfAmounts({ amounts: [1_000], displayCurrency: 'CHF' })).resolves.toEqual({
+			success: true,
+			data: [{ amount: 1_000, currency: 'CHF' }],
+		});
+		expect(mockGetLatestRates).not.toHaveBeenCalled();
+	});
+
 	test('falls back to CHF when rates are unavailable', async () => {
 		mockGetLatestRates.mockResolvedValue({ success: false, error: 'No rates' });
 
@@ -54,15 +62,13 @@ describe('currency display service', () => {
 		mockGetLatestRates.mockResolvedValue({ success: false, error: 'No rates' });
 
 		await expect(
-			resolveWalletPayoutDisplay({
-				totalPayoutsSum: 24_000,
-				totalPayoutsSumChf: 1_000,
-				payoutCurrency: 'SLE',
+			resolveWalletPayoutDisplays({
+				payouts: [{ totalPayoutsSum: 24_000, totalPayoutsSumChf: 1_000, payoutCurrency: 'SLE' }],
 				displayCurrency: 'EUR',
 			}),
 		).resolves.toEqual({
 			success: true,
-			data: { amount: 24_000, currency: 'SLE' },
+			data: [{ amount: 24_000, currency: 'SLE' }],
 		});
 	});
 });

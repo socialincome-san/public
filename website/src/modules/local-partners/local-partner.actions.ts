@@ -14,7 +14,8 @@ import {
 	getLocalPartnerDashboardStats,
 	getLocalPartnerOverviewStats,
 	getLocalPartnerProgramSummaries,
-} from './local-partner-public.service';
+	getPublicLocalPartnersByProgramId,
+} from './local-partner.cache';
 import {
 	localPartnerCreateSchema,
 	localPartnerDashboardSlugSchema,
@@ -24,13 +25,7 @@ import {
 	localPartnerSessionTypeSchema,
 	localPartnerUpdateSchema,
 } from './local-partner.schemas';
-import {
-	createLocalPartner,
-	deleteLocalPartner,
-	getLocalPartner,
-	getPublicLocalPartnersByProgramId,
-	updateLocalPartner,
-} from './local-partner.service';
+import { createLocalPartner, deleteLocalPartner, getLocalPartner, updateLocalPartner } from './local-partner.service';
 
 export const createLocalPartnerAction = async (input: unknown): Promise<Result<LocalPartnerPayload>> => {
 	const sessionResult = await getSessionByType('user');

@@ -1,7 +1,8 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { WizardFooter } from '@socialincome/design-system/navigation/wizard-footer/wizard-footer';
+import { useTranslations } from 'next-intl';
 import { CreateProgramStepIndicator } from './create-program-step-indicator';
 import { CreateProgramWizardSend, CreateProgramWizardState } from './types';
 
@@ -11,24 +12,23 @@ type Props = {
 };
 
 export const CreateProgramWizardFooter = ({ state, send }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	return (
-		<div className="mt-6 flex shrink-0 flex-wrap items-center justify-between gap-3 border-t pt-4 sm:flex-nowrap sm:gap-4">
-			<CreateProgramStepIndicator className="order-1 w-full justify-center sm:order-2 sm:w-auto sm:flex-1" state={state} />
-
-			<Button
-				variant="outline"
-				className="order-2 sm:order-1"
-				onClick={() => send({ type: 'BACK' })}
-				disabled={!state.can({ type: 'BACK' })}
-			>
-				{t('common.back')}
-			</Button>
-
-			<Button className="order-3" onClick={() => send({ type: 'NEXT' })} disabled={!state.can({ type: 'NEXT' })}>
-				{t('common.continue')}
-			</Button>
+		<div className="mt-6">
+			<WizardFooter
+				back={
+					<Button variant="outline" onClick={() => send({ type: 'BACK' })} disabled={!state.can({ type: 'BACK' })}>
+						{t('common.back')}
+					</Button>
+				}
+				progress={<CreateProgramStepIndicator state={state} />}
+				primary={
+					<Button onClick={() => send({ type: 'NEXT' })} disabled={!state.can({ type: 'NEXT' })}>
+						{t('common.continue')}
+					</Button>
+				}
+			/>
 		</div>
 	);
 };

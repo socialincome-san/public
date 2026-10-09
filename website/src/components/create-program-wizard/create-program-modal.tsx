@@ -1,12 +1,13 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
 import { useMachine } from '@xstate/react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import type { KeyboardEvent, ReactNode } from 'react';
 import { useEffect } from 'react';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { createProgramWizardMachine } from './wizard/create-program-machine';
 import { CreateProgramWizard } from './wizard/create-program-wizard';
 
@@ -24,9 +25,10 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 	const [state, send] = useMachine(createProgramWizardMachine, {
 		input: { isAuthenticated },
 	});
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	const router = useRouter();
+	const loginPath = `${useWebsiteBasePath()}/login`;
 
 	const isOpen = !state.matches('closed');
 	const createdProgramId = state.context.createdProgramId;
@@ -68,12 +70,12 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 			)}
 
 			<Dialog open={isOpen} onOpenChange={(nextOpen) => send({ type: nextOpen ? 'OPEN' : 'CLOSE' })}>
-				<DialogContent variant="large" className="flex max-h-[90dvh] flex-col overflow-hidden">
+				<DialogContent size="full">
 					<DialogHeader>
 						<DialogTitle>{t('modal.title')}</DialogTitle>
 					</DialogHeader>
 
-					<CreateProgramWizard state={state} send={send} onGoToLogin={() => router.replace('/login')} />
+					<CreateProgramWizard state={state} send={send} onGoToLogin={() => router.replace(loginPath)} />
 				</DialogContent>
 			</Dialog>
 		</>

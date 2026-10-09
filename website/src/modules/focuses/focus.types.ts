@@ -40,3 +40,5 @@ type PublicFocusStats = {
 };
 
 export type PublicFocusStatsBySlugMap = Record<string, PublicFocusStats>;
+
+export const FOCUS_CACHE_TAG = 'focuses';

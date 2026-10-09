@@ -1,9 +1,9 @@
 import type { RunwayMonthGrid as RunwayMonthGridBlok } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getRunwayMonthsAction } from '@/modules/transparency/transparency.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
+import { getTranslations } from 'next-intl/server';
 import { RunwayMonthGrid } from '../runway-month-grid/runway-month-grid';
 
 type Props = {
@@ -13,10 +13,7 @@ type Props = {
 
 export const RunwayMonthGridBlock = async ({ blok, lang }: Props) => {
 	const language = lang === 'kri' ? 'en' : lang;
-	const [translator, runwayResult] = await Promise.all([
-		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
-		getRunwayMonthsAction(),
-	]);
+	const [t, runwayResult] = await Promise.all([getTranslations('website-common'), getRunwayMonthsAction()]);
 	if (!runwayResult.success) {
 		return null;
 	}
@@ -24,13 +21,11 @@ export const RunwayMonthGridBlock = async ({ blok, lang }: Props) => {
 	const amountOfMonths = runwayResult.data;
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<div className="space-y-6">
 				<div className="space-y-2">
 					{blok.title && <h2 className="text-primary text-xl font-semibold">{blok.title}</h2>}
-					<p className="text-foreground">
-						{translator.t('transparency-page.runway.description', { context: { count: amountOfMonths } })}
-					</p>
+					<p className="text-foreground">{t('transparency-page.runway.description', { count: amountOfMonths })}</p>
 				</div>
 				<RunwayMonthGrid numberOfMonths={amountOfMonths} language={language} />
 				{isRunwayInLineWithZewo(amountOfMonths) && (
@@ -39,7 +34,7 @@ export const RunwayMonthGridBlock = async ({ blok, lang }: Props) => {
 							<span className="bg-confirm animation-duration-[2s] absolute inline-flex size-full animate-ping rounded-full opacity-75 motion-reduce:animate-none" />
 							<span className="bg-confirm relative inline-flex size-2 rounded-full"></span>
 						</span>
-						<span>{translator.t('transparency-page.runway.zewo-hint')}</span>
+						<span>{t('transparency-page.runway.zewo-hint')}</span>
 					</div>
 				)}
 			</div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
 
 type OnboardingSkipFallbackProps = {
 	onContinue: () => void;

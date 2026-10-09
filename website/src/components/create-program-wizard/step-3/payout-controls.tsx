@@ -1,9 +1,9 @@
 'use client';
 
 import { PayoutInterval } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Slider } from '@socialincome/design-system/slider/slider';
-import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/tabs/tabs';
+import { Slider } from '@socialincome/design-system/forms/slider/slider';
+import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/navigation/tabs/tabs';
+import { useTranslations } from 'next-intl';
 import { PayoutPerIntervalAmount, type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 
 type Props = {
@@ -29,7 +29,7 @@ export const PayoutControls = ({
 	onPayoutChange,
 	onIntervalChange,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	return (
 		<div className="space-y-6">
@@ -76,7 +76,7 @@ export const PayoutControls = ({
 				<p className="text-sm font-medium">{t('step3.payout_controls.payout_interval')}</p>
 
 				<Tabs value={payoutInterval} onValueChange={(v) => onIntervalChange(v as PayoutInterval)}>
-					<TabsList className="grid w-fit grid-cols-3">
+					<TabsList>
 						<TabsTrigger value="monthly">{t('common.interval.monthly')}</TabsTrigger>
 						<TabsTrigger value="quarterly">{t('common.interval.quarterly')}</TabsTrigger>
 						<TabsTrigger value="yearly">{t('common.interval.yearly')}</TabsTrigger>

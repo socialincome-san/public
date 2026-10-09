@@ -1,6 +1,6 @@
-import { PersonCard, type VolunteerDurationTranslations } from '@/components/storyblok/shared/person-card';
+import { PersonCard } from '@/components/storyblok/shared/person-card';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { createWebsitePersonLink } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@socialincome/design-system/cn';
 import type { ISbStoryData } from '@storyblok/js';
@@ -8,13 +8,13 @@ import type { ISbStoryData } from '@storyblok/js';
 type Props = {
 	persons: ISbStoryData<Person>[];
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	// Switches the grid from the default medium cards to the denser compact ones.
 	smallCards?: boolean;
 	// Turns each card into a link to the person's page; cards stay unlinked otherwise.
 	linkToPersonPage?: boolean;
-	// Presence enables the "volunteering since" pill on the cards.
-	volunteerDurationTranslations?: VolunteerDurationTranslations;
+	// Enables the "volunteering since" pill on the cards.
+	showVolunteerDuration?: boolean;
 	roleLabels?: Record<string, string>;
 };
 
@@ -36,18 +36,15 @@ const SMALL_CARDS: CardSizeConfig = {
 export const PersonCardGrid = ({
 	persons,
 	lang,
-	region,
+	currency,
 	smallCards = false,
 	linkToPersonPage = false,
-	volunteerDurationTranslations,
+	showVolunteerDuration = false,
 	roleLabels,
 }: Props) => {
 	const { personCardSize, gridCols } = smallCards ? SMALL_CARDS : MEDIUM_CARDS;
 	const getHref = (person: ISbStoryData<Person>) =>
-		linkToPersonPage ? createWebsitePersonLink(person.slug, lang, region) : undefined;
-	const volunteerDuration = volunteerDurationTranslations
-		? { lang, translations: volunteerDurationTranslations }
-		: undefined;
+		linkToPersonPage ? createWebsitePersonLink(person.slug, lang, currency) : undefined;
 
 	return (
 		<ul className={cn('grid gap-6', gridCols)}>
@@ -57,8 +54,7 @@ export const PersonCardGrid = ({
 						person={person}
 						href={getHref(person)}
 						size={personCardSize}
-						className="w-full max-w-none"
-						volunteerDuration={volunteerDuration}
+						showVolunteerDuration={showVolunteerDuration}
 						roleLabels={roleLabels}
 					/>
 				</li>

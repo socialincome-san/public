@@ -2,17 +2,17 @@
 
 import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramRecipientsTable } from '@/components/storyblok/program/program-recipients-table';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getPublicRecipientsTableAction } from '@/modules/recipients/recipient.actions';
 import type { PublicRecipientTableViewRow } from '@/modules/recipients/recipient.types';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
 type Props = {
 	dialogTitle: string;
 	viewDemographicsLabel: string;
-	manageLabel: string;
+	manageLabel: ReactNode;
 	manageHref: string;
 	programId: string;
 };
@@ -24,7 +24,7 @@ export const ProgramRecipientsDialog = ({
 	manageHref,
 	programId,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'website-common' });
+	const t = useTranslations('website-common');
 	const [isOpen, setIsOpen] = useState(false);
 	const [rows, setRows] = useState<PublicRecipientTableViewRow[] | null>(null);
 	const [totalCount, setTotalCount] = useState<number | null>(null);
@@ -79,7 +79,6 @@ export const ProgramRecipientsDialog = ({
 			title={dialogTitle}
 			triggerLabel={viewDemographicsLabel}
 			closeAriaLabel={t('program-detail-page.close')}
-			bodyClassName="min-w-0"
 			onOpenChange={setIsOpen}
 			headerActions={
 				<Button asChild size="sm" variant="outline">
@@ -94,17 +93,18 @@ export const ProgramRecipientsDialog = ({
 			) : hasError ? (
 				<div className="text-destructive border-destructive/20 bg-destructive-foreground flex flex-col gap-4 rounded-md border p-4">
 					<p className="font-medium">{t('program-detail-page.load-recipients-error')}</p>
-					<Button
-						type="button"
-						variant="outline"
-						className="text-destructive border-destructive/30 bg-card hover:bg-destructive-foreground self-start"
-						onClick={() => {
-							setHasError(false);
-							setRetryKey((current) => current + 1);
-						}}
-					>
-						{t('program-detail-page.try-again')}
-					</Button>
+					<div>
+						<Button
+							type="button"
+							variant="destructive-outline"
+							onClick={() => {
+								setHasError(false);
+								setRetryKey((current) => current + 1);
+							}}
+						>
+							{t('program-detail-page.try-again')}
+						</Button>
+					</div>
 				</div>
 			) : rows && totalCount !== null ? (
 				<ProgramRecipientsTable rows={rows} totalCount={totalCount} />

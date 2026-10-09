@@ -1,7 +1,7 @@
 import { UserPrograms } from '@/app/portal/user-programs';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { requireSession } from '@/server/session';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Suspense } from 'react';
 
 export default function PortalPage() {

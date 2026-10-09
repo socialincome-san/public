@@ -1,44 +1,42 @@
 'use client';
 
-import { type ActionMenuItem } from '@/components/data-table/elements/action-menu';
+import { ActionMenu, type ActionMenuItem } from '@/components/data-table/elements/action-menu';
 import { BaseTable } from '@/components/data-table/elements/base-table';
-import { DataTableEmptyState } from '@/components/data-table/elements/data-table-empty-state';
-import {
-	DataTableToolbar,
-	type ToolbarFilter,
-	type ToolbarSortOption,
-} from '@/components/data-table/elements/data-table-toolbar';
 import { IdCell } from '@/components/data-table/elements/id-cell';
 import { TABLE_PAGE_SIZE_OPTIONS, TableQueryState } from '@/components/data-table/query-state';
-import { TableFilterConfig } from '@/components/data-table/table-config.types';
+import { TableFilterConfig, type DataTableTranslator } from '@/components/data-table/table-config.types';
 import type { ColumnDef, VisibilityState } from '@/components/data-table/tanstack-table';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { Translator } from '@/lib/i18n/translator';
-import { useTranslator } from '@/lib/i18n/use-translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { DATA_TABLE_FETCH_PREFIX_REGEX } from '@/lib/utils/regex';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
-import { cn } from '@socialincome/design-system/cn';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
+import { DataTableHeader } from '@socialincome/design-system/data-display/data-table-header/data-table-header';
+import {
+	DataTableEmptyState,
+	DataTableErrorState,
+	DataTableNoResults,
+} from '@socialincome/design-system/data-display/data-table-states/data-table-states';
+import {
+	DataTableToolbar,
+	type DataTableSortDirection,
+	type DataTableToolbarFilter,
+} from '@socialincome/design-system/data-display/data-table-toolbar/data-table-toolbar';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import type { RowData, SortingState } from '@tanstack/react-table';
 import { functionalUpdate } from '@tanstack/react-table';
-import DOMPurify from 'isomorphic-dompurify';
-import { InfoIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { ReactNode, useState } from 'react';
 
 type DataTableProps<Row extends RowData> = {
 	title: ReactNode;
 	titleInfoTooltip?: string;
 	error?: string | null;
-	emptyMessage: string;
+	emptyMessage: ReactNode;
 	actionMenuItems?: ActionMenuItem[];
 	data: Row[];
-	makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, translator?: Translator) => ColumnDef<Row>[];
+	makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, t?: DataTableTranslator) => ColumnDef<Row>[];
 	hideProgramName?: boolean;
 	hideLocalPartner?: boolean;
 	onRowClick?: (row: Row) => void;
 	initialSorting?: SortingState;
-	lang?: WebsiteLanguage;
 	searchKeys?: (keyof Row)[];
 	sortOptions?: { id: string; label: string }[];
 	query?: TableQueryState & { totalRows: number };
@@ -79,7 +77,6 @@ export default function DataTable<Row extends RowData>({
 	hideLocalPartner = false,
 	onRowClick,
 	initialSorting,
-	lang,
 	searchKeys,
 	sortOptions = [],
 	query,
@@ -91,9 +88,8 @@ export default function DataTable<Row extends RowData>({
 	isLoading = false,
 	toolbarFilters = [],
 }: DataTableProps<Row>) {
-	const stableTableMinHeightClass = 'min-h-[680px] md:min-h-[760px]';
-	const translator = useTranslator(lang ?? 'en', 'website-me');
-	const baseColumns = makeColumns(hideProgramName, hideLocalPartner, translator);
+	const t = useTranslations('website-me');
+	const baseColumns = makeColumns(hideProgramName, hideLocalPartner, t);
 	const columns = showEntityIdColumn
 		? ([
 				{
@@ -158,7 +154,7 @@ export default function DataTable<Row extends RowData>({
 		});
 	};
 
-	const resolvedToolbarFilters: ToolbarFilter[] =
+	const resolvedToolbarFilters: DataTableToolbarFilter[] =
 		onQueryChange && toolbarFilters.length > 0
 			? toolbarFilters.map((filter) => ({
 					id: filter.id,
@@ -206,8 +202,7 @@ export default function DataTable<Row extends RowData>({
 				})
 				.filter((column): column is NonNullable<typeof column> => Boolean(column))
 		: [];
-	const toolbarSortOptions: ToolbarSortOption[] = sortOptions;
-	const onSortToolbarChange = (sortBy?: string, sortDirection?: 'asc' | 'desc') => {
+	const onSortToolbarChange = (sortBy?: string, sortDirection?: DataTableSortDirection) => {
 		if (!onQueryChange) {
 			return;
 		}
@@ -220,69 +215,36 @@ export default function DataTable<Row extends RowData>({
 
 	return (
 		<div data-testid="data-table">
-			<div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-				<div className="flex items-center gap-2">
-					<h2 className="text-3xl">
-						{title}{' '}
-						<span className="text-muted-foreground text-lg">
-							({activeQuery ? activeQuery.totalRows : displayedData.length})
-						</span>
-					</h2>
-					{titleInfoTooltip ? (
-						<Tooltip>
-							<TooltipTrigger asChild>
-								<button
-									type="button"
-									className="text-muted-foreground hover:text-foreground inline-flex items-center rounded-full p-1"
-									aria-label="Table information"
-								>
-									<InfoIcon className="size-4" />
-								</button>
-							</TooltipTrigger>
-							<TooltipContent side="right" sideOffset={8}>
-								{titleInfoTooltip}
-							</TooltipContent>
-						</Tooltip>
-					) : null}
-				</div>
-				<DataTableToolbar
-					showControls={showControls}
-					searchKeys={onQueryChange ? resolvedSearchKeys : []}
-					searchValue={activeQuery?.search ?? ''}
-					onSearchChange={onSearchChange}
-					sortOptions={onQueryChange ? toolbarSortOptions : []}
-					sortBy={activeQuery?.sortBy}
-					sortDirection={activeQuery?.sortDirection}
-					onSortChange={onSortToolbarChange}
-					filters={resolvedToolbarFilters}
-					columns={toolbarColumns}
-					onClearFilters={clearAllToolbarFilters}
-					actionMenuItems={actionMenuItems}
-				/>
-			</div>
+			<DataTableHeader
+				title={title}
+				count={activeQuery ? activeQuery.totalRows : displayedData.length}
+				infoTooltip={titleInfoTooltip}
+				toolbar={
+					<DataTableToolbar
+						showControls={showControls}
+						searchKeys={onQueryChange ? resolvedSearchKeys : []}
+						searchValue={activeQuery?.search ?? ''}
+						onSearchChange={onSearchChange}
+						sortOptions={onQueryChange ? sortOptions : []}
+						sortBy={activeQuery?.sortBy}
+						sortDirection={activeQuery?.sortDirection}
+						onSortChange={onSortToolbarChange}
+						filters={resolvedToolbarFilters}
+						columns={toolbarColumns}
+						onClearFilters={clearAllToolbarFilters}
+						actions={<ActionMenu items={actionMenuItems} />}
+					/>
+				}
+			/>
 
 			{error ? (
-				<div className={cn('flex items-center', stableTableMinHeightClass)}>
-					<div className="text-destructive border-destructive/20 bg-destructive-foreground w-full rounded-md border p-4">
-						<p className="font-medium">Could not load table data.</p>
-						<p className="mt-1 text-sm">{formatTableError(error)}</p>
-					</div>
-				</div>
+				<DataTableErrorState message={formatTableError(error)} />
 			) : isLoading ? (
 				<AppLoadingSkeleton message="Loading..." />
 			) : isDatasetEmpty ? (
-				<div className={cn('flex items-start pt-2', stableTableMinHeightClass)}>
-					<div className="w-full">
-						<DataTableEmptyState emptyMessage={emptyMessage} />
-					</div>
-				</div>
+				<DataTableEmptyState message={emptyMessage} />
 			) : isEmpty ? (
-				<div className={cn('flex items-start pt-2', stableTableMinHeightClass)}>
-					<div
-						className="text-muted-foreground w-full p-4"
-						dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}
-					></div>
-				</div>
+				<DataTableNoResults message={emptyMessage} />
 			) : (
 				<BaseTable
 					data={displayedData}

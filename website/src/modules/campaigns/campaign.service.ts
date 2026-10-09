@@ -382,7 +382,12 @@ const toCampaignPage = async (campaign: {
 	);
 
 	return {
-		...campaign,
+		id: campaign.id,
+		currency: campaign.currency,
+		endDate: campaign.endDate,
+		slug: campaign.slug,
+		program: campaign.program,
+		createdAt: campaign.createdAt,
 		goal: campaign.goal ? Number(campaign.goal) : null,
 		additionalAmountChf: campaign.additionalAmountChf ? Number(campaign.additionalAmountChf) : null,
 		numberOfContributions: campaign.contributions.length,

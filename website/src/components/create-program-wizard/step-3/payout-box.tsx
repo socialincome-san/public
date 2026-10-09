@@ -1,8 +1,8 @@
 'use client';
 
 import { PayoutInterval } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Switch } from '@socialincome/design-system/switch/switch';
+import { Switch } from '@socialincome/design-system/forms/switch/switch';
+import { useTranslations } from 'next-intl';
 import { PayoutControls } from './payout-controls';
 import { type PayoutPerIntervalAmountProps } from './payout-per-interval-amount';
 import { PayoutSummary } from './payout-summary';
@@ -34,7 +34,7 @@ export const PayoutBox = ({
 	onIntervalChange,
 	onToggleCustomizePayouts,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	return (
 		<div className="flex h-full flex-col rounded-xl border p-8">

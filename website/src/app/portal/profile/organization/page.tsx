@@ -1,12 +1,12 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import {
 	getActiveOrganizationSummary,
 	getPaginatedOrganizationMembersTableView,
 } from '@/modules/organizations/organization.service';
 import type { OrganizationMemberTableViewRow } from '@/modules/organizations/organization.types';
 import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 import MembersTable from './members-table';
 

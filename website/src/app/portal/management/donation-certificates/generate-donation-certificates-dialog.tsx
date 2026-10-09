@@ -5,11 +5,23 @@ import {
 	createDonationCertificatesAction,
 	getDonationCertificateContributorOptionsAction,
 } from '@/modules/donation-certificates/donation-certificate.actions';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
-import { MultiSelect, MultiSelectOption } from '@socialincome/design-system/multi-select/multi-select';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
-import { Switch } from '@socialincome/design-system/switch/switch';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { MultiSelect, MultiSelectOption } from '@socialincome/design-system/forms/multi-select/multi-select';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
+import { Switch } from '@socialincome/design-system/forms/switch/switch';
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { useRef, useState, useTransition } from 'react';
 
 import { now } from '@/lib/utils/now';
@@ -71,7 +83,7 @@ export default function GenerateDonationCertificatesDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+			<DialogContent size="md">
 				<DialogHeader>
 					<DialogTitle>Generate Donation Certificates</DialogTitle>
 				</DialogHeader>
@@ -137,11 +149,7 @@ export default function GenerateDonationCertificatesDialog({
 							placeholder="Select contributors"
 						/>
 					</div>
-					<Button
-						disabled={isLoading || !selectedContributors.length}
-						className="flex w-full items-center justify-center gap-2"
-						onClick={() => generateCertificates()}
-					>
+					<Button disabled={isLoading || !selectedContributors.length} fullWidth onClick={() => generateCertificates()}>
 						{isLoading ? 'Generating...' : 'Generate Certificates'}
 					</Button>
 					{Boolean(success ?? error) && (
@@ -152,7 +160,7 @@ export default function GenerateDonationCertificatesDialog({
 					)}
 				</div>
 
-				<DialogFooter className="mt-4">
+				<DialogFooter>
 					<Button variant="outline" onClick={() => setOpen(false)}>
 						Close
 					</Button>

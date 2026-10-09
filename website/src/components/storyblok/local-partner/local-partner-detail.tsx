@@ -1,14 +1,16 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { Community } from '@/components/community/community';
 import { TestimonialCarouselBlock } from '@/components/content-blocks/testimonial-carousel';
 import { isFocusStory } from '@/components/storyblok/focus/focus.utils';
 import { EntityAboutSection } from '@/components/storyblok/shared/entity-about-section';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import type { CommunityPanelData } from '@/modules/community/community.types';
 import { getLocalPartnerProgramSummariesAction } from '@/modules/local-partners/local-partner.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 import { LocalPartnerAboutMetaCard, LocalPartnerFocusBadges } from './local-partner-about-meta';
 import { LocalPartnerPartners } from './local-partner-partners';
 import { LocalPartnerPayoutsTotal } from './local-partner-payouts-total';
@@ -20,30 +22,40 @@ import { getLocalPartnerIsoCode, getLocalPartnerTitle } from './local-partner.ut
 type Props = {
 	localPartner: LocalPartnerStory;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	recipientsCount: number;
 	completedSurveysCount: number;
+	community: CommunityPanelData | null;
 };
 
-export const LocalPartnerDetail = async ({ localPartner, lang, region, recipientsCount, completedSurveysCount }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+export const LocalPartnerDetail = async ({
+	localPartner,
+	lang,
+	currency,
+	recipientsCount,
+	completedSurveysCount,
+	community,
+}: Props) => {
 	const localPartnerTitle = getLocalPartnerTitle(localPartner.content);
 	const isoCode = getLocalPartnerIsoCode(localPartner.content);
 	const focuses = (localPartner.content.focuses ?? []).filter(isFocusStory);
-	const partnerProgramsResult = await getLocalPartnerProgramSummariesAction({
-		lang,
-		localPartnerPortalSlug: localPartner.content.portalSlug?.trim() ?? '',
-		countryIsoCode: isoCode ?? '',
-	});
+	const [t, partnerProgramsResult] = await Promise.all([
+		getTranslations('website-common'),
+		getLocalPartnerProgramSummariesAction({
+			lang,
+			localPartnerPortalSlug: localPartner.content.portalSlug?.trim() ?? '',
+			countryIsoCode: isoCode ?? '',
+		}),
+	]);
 	const partnerPrograms = partnerProgramsResult.success
 		? partnerProgramsResult.data
 		: { programs: [], programCount: 0, recipientsTotal: 0, isPartnerScoped: false };
-	const heroCard = <LocalPartnerProgramsCard partnerPrograms={partnerPrograms} lang={lang} region={region} />;
+	const heroCard = <LocalPartnerProgramsCard partnerPrograms={partnerPrograms} lang={lang} currency={currency} />;
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: localPartner.full_slug,
 		currentLabel: localPartnerTitle,
 		lang,
-		region,
+		currency,
 	});
 
 	const { mission, partnerSince, foundingYear, location, website, linkedin, instagram, facebook, youtube } =
@@ -52,7 +64,6 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 	return (
 		<>
 			<HeroHeader
-				lang={lang}
 				title={localPartnerTitle}
 				heroImage={localPartner.content.heroImage}
 				titleIcon={isoCode ? `/assets/flags/${isoCode.toLowerCase()}.svg` : undefined}
@@ -64,19 +75,19 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 						value: recipientsCount,
 						label:
 							recipientsCount === 1
-								? translator.t('local-partners-page.recipient-singular')
-								: translator.t('local-partners-page.recipient-plural'),
+								? t('local-partners-page.recipient-singular')
+								: t('local-partners-page.recipient-plural'),
 					},
 					{
 						value: completedSurveysCount,
 						label:
 							completedSurveysCount === 1
-								? translator.t('local-partners-page.completed-survey-singular')
-								: translator.t('local-partners-page.completed-survey-plural'),
+								? t('local-partners-page.completed-survey-singular')
+								: t('local-partners-page.completed-survey-plural'),
 					},
 				]}
 			/>
-			<Breadcrumb links={breadcrumbLinks} />
+			<Breadcrumb links={breadcrumbLinks} aside={community ? <Community data={community} /> : null} />
 			<div className="lg:hidden">
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 					{heroCard}
@@ -85,13 +96,13 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 			<EntityAboutSection
 				isoCode={isoCode}
 				mapLabel={localPartnerTitle}
-				aboutHeading={`${translator.t('local-partners-page.about')} ${localPartnerTitle}`}
+				aboutHeading={`${t('local-partners-page.about')} ${localPartnerTitle}`}
 				description={localPartner.content.description}
-				preDescription={<LocalPartnerFocusBadges lang={lang} region={region} focuses={focuses} />}
+				preDescription={<LocalPartnerFocusBadges lang={lang} currency={currency} focuses={focuses} />}
 				postDescription={
 					<LocalPartnerAboutMetaCard
 						lang={lang}
-						region={region}
+						currency={currency}
 						mission={mission}
 						partnerSince={partnerSince}
 						foundingYear={foundingYear}
@@ -106,14 +117,14 @@ export const LocalPartnerDetail = async ({ localPartner, lang, region, recipient
 					/>
 				}
 			/>
-			<LocalPartnerPayoutsTotal localPartner={localPartner} lang={lang} region={region} />
+			<LocalPartnerPayoutsTotal localPartner={localPartner} lang={lang} currency={currency} />
 			{Array.isArray(localPartner.content.testimonial)
 				? localPartner.content.testimonial.map((blok: TestimonialCarousel) => (
 						<TestimonialCarouselBlock key={blok._uid} blok={blok} />
 					))
 				: null}
-			<LocalPartnerPrograms localPartner={localPartner} lang={lang} region={region} />
-			<LocalPartnerPartners localPartner={localPartner} lang={lang} region={region} />
+			<LocalPartnerPrograms localPartner={localPartner} lang={lang} currency={currency} />
+			<LocalPartnerPartners localPartner={localPartner} lang={lang} currency={currency} />
 		</>
 	);
 };

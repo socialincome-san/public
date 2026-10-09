@@ -5,8 +5,8 @@ import { organizationsTableConfig } from '@/components/data-table/configs/organi
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { OrganizationTableViewRow } from '@/modules/organizations/organization.types';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import OrganizationsForm from './organizations-form';
@@ -61,7 +61,7 @@ export default function OrganizationsTable({
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
+				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{organizationId ? 'Edit' : 'Add'} organization</DialogTitle>
 					</DialogHeader>
@@ -69,7 +69,7 @@ export default function OrganizationsTable({
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 

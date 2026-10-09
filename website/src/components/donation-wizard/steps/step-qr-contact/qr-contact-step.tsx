@@ -1,11 +1,11 @@
 'use client';
 
 import { useContributorSession } from '@/components/contributor/use-contributor-session';
-import { useI18n } from '@/lib/i18n/use-i18n';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { cn } from '@socialincome/design-system/cn';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -16,8 +16,9 @@ import { QrWizardStepFooter } from './qr-wizard-step-footer';
 import { requestQrBillGeneration } from './request-qr-bill-generation';
 
 export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
-	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
-	const { currency = 'CHF' } = useI18n();
+	const t = useTranslations('donation-wizard');
+	const language = useLocale();
+	const currency = useWebsiteCurrency();
 	const { contributorSession } = useContributorSession();
 	const isLoading = state.context.qrBillStatus === 'loading';
 	const canGoBack = state.context.qrContributorReferenceId === null;
@@ -85,8 +86,8 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 							control={form.control}
 							name="firstName"
 							render={({ field }) => (
-								<FormItem className="w-full gap-2">
-									<FormLabel className="text-sm font-medium">{t('stepQrContact.firstName')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('stepQrContact.firstName')}</FormLabel>
 									<FormControl>
 										<Input {...field} autoComplete="given-name" disabled={isLoading} />
 									</FormControl>
@@ -97,8 +98,8 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 							control={form.control}
 							name="lastName"
 							render={({ field }) => (
-								<FormItem className="w-full gap-2">
-									<FormLabel className="text-sm font-medium">{t('stepQrContact.lastName')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('stepQrContact.lastName')}</FormLabel>
 									<FormControl>
 										<Input {...field} autoComplete="family-name" disabled={isLoading} />
 									</FormControl>
@@ -109,8 +110,8 @@ export const QrContactStep = ({ state, send }: DonationWizardStepProps) => {
 							control={form.control}
 							name="email"
 							render={({ field }) => (
-								<FormItem className="w-full gap-2">
-									<FormLabel className="text-sm font-medium">{t('stepQrContact.email')}</FormLabel>
+								<FormItem>
+									<FormLabel>{t('stepQrContact.email')}</FormLabel>
 									<FormControl>
 										<Input {...field} type="email" autoComplete="email" disabled={isLoading} />
 									</FormControl>

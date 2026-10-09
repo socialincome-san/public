@@ -16,10 +16,9 @@ type Size = keyof typeof sizeClasses;
 type Props = {
 	author: ISbStoryData<Person>;
 	size?: Size;
-	className?: string;
 };
 
-export const AuthorAvatar = ({ author, size = 'md', className }: Props) => {
+export const AuthorAvatar = ({ author, size = 'md' }: Props) => {
 	const src = getPersonAvatarSrc(author);
 	if (!src) {
 		return null;
@@ -29,7 +28,7 @@ export const AuthorAvatar = ({ author, size = 'md', className }: Props) => {
 		<Image
 			src={src}
 			alt={`${getPersonDisplayName(author)} avatar`}
-			className={cn(sizeClasses[size], 'shrink-0 rounded-full object-cover object-top', className)}
+			className={cn(sizeClasses[size], 'shrink-0 rounded-full object-cover object-top')}
 			width={300}
 			height={300}
 		/>

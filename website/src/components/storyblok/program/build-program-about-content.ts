@@ -1,9 +1,9 @@
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import type { PayoutInterval } from '@/generated/prisma/client';
-import type { TranslateFunction } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getSafeNumberFormatLocale } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, getWebsiteBasePath } from '@/lib/i18n/utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
+import { type useTranslations } from 'next-intl';
 
 export type ProgramAboutDetailRow = {
 	label: string;
@@ -23,25 +23,18 @@ export type ProgramAboutContent = {
 	overlaySections: ProgramAboutOverlaySection[];
 };
 
+type ProgramAboutTranslator = ReturnType<typeof useTranslations<'website-common'>>;
+
 type BuildProgramAboutContentInput = {
 	programDetailData: ProgramDetailData;
-	translator: { t: TranslateFunction };
+	t: ProgramAboutTranslator;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	countryName?: string;
 };
 
-const payoutIntervalTranslationKey: Record<PayoutInterval, string> = {
-	monthly: 'program-detail-page.payout-interval-monthly',
-	quarterly: 'program-detail-page.payout-interval-quarterly',
-	yearly: 'program-detail-page.payout-interval-yearly',
-};
-
-const formatDuration = (durationMonths: number, translator: { t: TranslateFunction }): string => {
-	const monthLabel =
-		durationMonths === 1
-			? translator.t('program-detail-page.month-singular')
-			: translator.t('program-detail-page.month-plural');
+const formatDuration = (durationMonths: number, t: ProgramAboutTranslator): string => {
+	const monthLabel = durationMonths === 1 ? t('program-detail-page.month-singular') : t('program-detail-page.month-plural');
 
 	return `${durationMonths} ${monthLabel}`;
 };
@@ -54,13 +47,13 @@ const formatPaymentAmount = (
 	payoutCurrency: string,
 	payoutInterval: PayoutInterval,
 	locale: string,
-	translator: { t: TranslateFunction },
+	t: ProgramAboutTranslator,
 ): string => {
 	const formattedAmount = formatNumberLocale(payoutPerInterval, locale, {
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 0,
 	});
-	const intervalLabel = translator.t(payoutIntervalTranslationKey[payoutInterval]);
+	const intervalLabel = t(`program-detail-page.payout-interval-${payoutInterval}`);
 
 	return `${payoutCurrency} ${formattedAmount} (${intervalLabel})`;
 };
@@ -82,27 +75,27 @@ const partyRowsToOrderedArray = (partyRowsByRole: PartyRowsByRole, order: PartyR
 const buildPartyRowsByRole = (
 	programDetails: NonNullable<ProgramDetailData['programDetails']>,
 	localPartnerHref: string | undefined,
-	translator: { t: TranslateFunction },
+	t: ProgramAboutTranslator,
 ): PartyRowsByRole => {
 	const partyRowsByRole: PartyRowsByRole = {};
 
 	if (programDetails.ownerOrganizationName) {
 		partyRowsByRole.owner = {
-			label: translator.t('program-detail-page.program-owner'),
+			label: t('program-detail-page.program-owner'),
 			value: programDetails.ownerOrganizationName,
 		};
 	}
 
 	if (programDetails.operatorOrganizationName) {
 		partyRowsByRole.operator = {
-			label: translator.t('program-detail-page.program-operator'),
+			label: t('program-detail-page.program-operator'),
 			value: programDetails.operatorOrganizationName,
 		};
 	}
 
 	if (programDetails.localPartnerName) {
 		partyRowsByRole.localPartner = {
-			label: translator.t('program-detail-page.local-program-partner'),
+			label: t('program-detail-page.local-program-partner'),
 			value: programDetails.localPartnerName,
 			href: localPartnerHref,
 		};
@@ -116,33 +109,33 @@ const buildProgramDesignRows = (
 	durationMonths: number | undefined,
 	lang: WebsiteLanguage,
 	locale: string,
-	translator: { t: TranslateFunction },
+	t: ProgramAboutTranslator,
 ): ProgramDesignRows => {
 	const programDesignRows: ProgramDesignRows = {};
 
 	if (durationMonths !== undefined) {
 		programDesignRows.duration = {
-			label: translator.t('program-detail-page.duration'),
-			value: formatDuration(durationMonths, translator),
+			label: t('program-detail-page.duration'),
+			value: formatDuration(durationMonths, t),
 		};
 	}
 
 	if (programDetails.startedAt) {
 		programDesignRows.startDate = {
-			label: translator.t('program-detail-page.start-date'),
+			label: t('program-detail-page.start-date'),
 			value: formatStartDate(programDetails.startedAt, lang),
 		};
 	}
 
 	if (programDetails.payoutPerInterval !== undefined && programDetails.payoutCurrency && programDetails.payoutInterval) {
 		programDesignRows.paymentAmount = {
-			label: translator.t('program-detail-page.payment-amount'),
+			label: t('program-detail-page.payment-amount'),
 			value: formatPaymentAmount(
 				programDetails.payoutPerInterval,
 				programDetails.payoutCurrency,
 				programDetails.payoutInterval,
 				locale,
-				translator,
+				t,
 			),
 		};
 	}
@@ -164,30 +157,30 @@ const deriveCardRows = (partyRowsByRole: PartyRowsByRole, programDesignRows: Pro
 
 export const buildProgramAboutContent = ({
 	programDetailData,
-	translator,
+	t,
 	lang,
-	region,
+	currency,
 	countryName,
 }: BuildProgramAboutContentInput): ProgramAboutContent => {
 	const { description, programDetails, dashboardStats } = programDetailData;
 	const locale = getSafeNumberFormatLocale(lang);
 	const durationMonths = dashboardStats?.programDurationInMonths ?? programDetails?.programDurationInMonths;
 	const localPartnerHref = programDetails?.localPartnerSlug
-		? `/${lang}/${region}/local-partners/${programDetails.localPartnerSlug}`
+		? `${getWebsiteBasePath(lang, currency)}/local-partners/${programDetails.localPartnerSlug}`
 		: undefined;
 
 	const overlaySections: ProgramAboutOverlaySection[] = [];
 	let cardRows: ProgramAboutDetailRow[] = [];
 
 	if (programDetails) {
-		const partyRowsByRole = buildPartyRowsByRole(programDetails, localPartnerHref, translator);
-		const programDesignRows = buildProgramDesignRows(programDetails, durationMonths, lang, locale, translator);
+		const partyRowsByRole = buildPartyRowsByRole(programDetails, localPartnerHref, t);
+		const programDesignRows = buildProgramDesignRows(programDetails, durationMonths, lang, locale, t);
 
 		const partiesRows = partyRowsToOrderedArray(partyRowsByRole, OVERLAY_PARTY_ORDER);
 		if (partiesRows.length > 0) {
 			overlaySections.push({
 				id: 'parties',
-				title: translator.t('program-detail-page.parties-involved'),
+				title: t('program-detail-page.parties-involved'),
 				rows: partiesRows,
 			});
 		}
@@ -196,7 +189,7 @@ export const buildProgramAboutContent = ({
 		if (programDesignOverlayRows.length > 0) {
 			overlaySections.push({
 				id: 'program-design',
-				title: translator.t('program-detail-page.program-design'),
+				title: t('program-detail-page.program-design'),
 				rows: programDesignOverlayRows,
 			});
 		}
@@ -204,10 +197,10 @@ export const buildProgramAboutContent = ({
 		if (countryName) {
 			overlaySections.push({
 				id: 'delivery',
-				title: translator.t('program-detail-page.delivery'),
+				title: t('program-detail-page.delivery'),
 				rows: [
 					{
-						label: translator.t('program-detail-page.country'),
+						label: t('program-detail-page.country'),
 						value: countryName,
 					},
 				],

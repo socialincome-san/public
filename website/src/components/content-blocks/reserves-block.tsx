@@ -1,12 +1,11 @@
 import { ReservesTotal } from '@/components/reserves/reserves-total';
 import type { ReservesBlock as ReservesBlockBlok } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getLatestReservesAction } from '@/modules/reserves/reserve.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
+import { getTranslations } from 'next-intl/server';
 
 const FINANCIAL_INSTITUTIONS = [
 	{ id: 'postfinance', labelKey: 'transparency-page.reserves.institutions.postfinance' },
@@ -17,14 +16,11 @@ const FINANCIAL_INSTITUTIONS = [
 type Props = {
 	blok: ReservesBlockBlok;
 	lang: WebsiteLanguage;
+	currency: WebsiteCurrency;
 };
 
-export const ReservesBlock = async ({ blok, lang }: Props) => {
-	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const [translator, reservesResult] = await Promise.all([
-		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
-		getLatestReservesAction(),
-	]);
+export const ReservesBlock = async ({ blok, lang, currency }: Props) => {
+	const [t, reservesResult] = await Promise.all([getTranslations('website-common'), getLatestReservesAction()]);
 
 	if (!reservesResult.success) {
 		return null;
@@ -32,28 +28,23 @@ export const ReservesBlock = async ({ blok, lang }: Props) => {
 
 	const displayResult = await resolveChfAmountsAction({
 		amounts: [reservesResult.data.total],
-		displayCurrency,
+		displayCurrency: currency,
 	});
-	if (!displayResult.success) {
-		return null;
-	}
-	const reserves = displayResult.data[0];
+	const reserves = displayResult.success ? displayResult.data[0] : undefined;
 	if (!reserves) {
 		return null;
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<ReservesTotal
 				amount={reserves.amount}
-				title={translator.t('transparency-page.reserves.total-today')}
-				titleCurrency={translator.t('transparency-page.reserves.title-currency', {
-					context: { currency: reserves.currency },
-				})}
-				institutionsHeading={translator.t('transparency-page.reserves.institutions-heading')}
+				title={t('transparency-page.reserves.total-today')}
+				titleCurrency={t('transparency-page.reserves.title-currency', { currency: reserves.currency })}
+				institutionsHeading={t('transparency-page.reserves.institutions-heading')}
 				institutions={FINANCIAL_INSTITUTIONS.map(({ id, labelKey }) => ({
 					id,
-					label: translator.t(labelKey),
+					label: t(labelKey),
 				}))}
 				lang={lang}
 			/>

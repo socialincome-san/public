@@ -1,8 +1,9 @@
 'use client';
 
 import { getCountryNameByCode } from '@/lib/types/country';
-import { FormControl, FormField, FormItem, FormMessage } from '@socialincome/design-system/form/form';
-import { RadioGroup } from '@socialincome/design-system/radio-group/radio-group';
+import { FormControl, FormField, FormItem, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { RadioGroup } from '@socialincome/design-system/forms/radio-group/radio-group';
+import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { ProgramCountryFilter, type ProgramCountryFilterOption } from '../program-country-filter';
 import { ProgramOptionRow } from '../program-option-row';
@@ -11,6 +12,7 @@ import type { ProgramStepProps } from '../types';
 type Props = ProgramStepProps;
 
 export const ProgramStep = ({ form, labels, programs, programsLoading, programsError }: Props) => {
+	const t = useTranslations('website-common');
 	const [selectedCountryId, setSelectedCountryId] = useState<string | null>(null);
 	const [expandedProgramId, setExpandedProgramId] = useState<string | null>(null);
 
@@ -67,7 +69,7 @@ export const ProgramStep = ({ form, labels, programs, programsLoading, programsE
 		setExpandedProgramId((current) => (current === programId ? null : programId));
 	};
 
-	const getRecipientsLabel = (count: number) => labels.recipientsCount.replace('{{count}}', String(count));
+	const getRecipientsLabel = (count: number) => t('campaigns-page.submission.recipients-count', { count });
 
 	const statusMessage = programsLoading
 		? labels.programsLoading
@@ -90,7 +92,7 @@ export const ProgramStep = ({ form, labels, programs, programsLoading, programsE
 				control={form.control}
 				name="programId"
 				render={({ field }) => (
-					<FormItem className="flex min-h-0 flex-1 flex-col gap-0">
+					<FormItem layout="fill">
 						<div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
 							{statusMessage ? (
 								<p
@@ -109,7 +111,7 @@ export const ProgramStep = ({ form, labels, programs, programsLoading, programsE
 											field.onChange(value);
 											form.clearErrors('programId');
 										}}
-										className="min-w-0 gap-0"
+										layout="list"
 										aria-label={labels.program}
 									>
 										{filteredPrograms.map((program) => (

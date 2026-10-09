@@ -1,0 +1,37 @@
+import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group';
+import { cn } from '../../../cn';
+
+type Option = {
+	value: string;
+	label: string;
+};
+
+type SegmentedToggleProps = {
+	value: string;
+	onValueChange: (value: string) => void;
+	options: readonly Option[];
+};
+
+export const SegmentedToggle = ({ value, onValueChange, options }: SegmentedToggleProps) => {
+	return (
+		<ToggleGroupPrimitive.Root
+			type="single"
+			value={value}
+			onValueChange={(v) => v && onValueChange(v)}
+			className="bg-muted/40 border-input inline-flex rounded-full border p-1"
+		>
+			{options.map((opt) => (
+				<ToggleGroupPrimitive.Item
+					key={opt.value}
+					value={opt.value}
+					className={cn(
+						'text-muted-foreground data-[state=on]:text-foreground hover:text-foreground rounded-full px-3 py-1 text-sm transition-colors',
+						'data-[state=on]:bg-background data-[state=on]:shadow-2xs',
+					)}
+				>
+					{opt.label}
+				</ToggleGroupPrimitive.Item>
+			))}
+		</ToggleGroupPrimitive.Root>
+	);
+};

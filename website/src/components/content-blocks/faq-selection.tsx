@@ -3,21 +3,21 @@
 import { FaqSelectionContent } from '@/components/content-blocks/faq-selection-content';
 import { resolveFaqItems } from '@/components/content-blocks/faq-selection.utils';
 import type { FaqSelection } from '@/generated/storyblok/types/109655/storyblok-components';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: FaqSelection;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const FaqSelectionBlock = ({ blok, lang, region }: Props) => {
+export const FaqSelectionBlock = ({ blok, lang, currency }: Props) => {
 	const items = resolveFaqItems(blok.questions);
 	const button = blok.button?.[0];
-	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, region) : null;
+	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, currency) : null;
 	const cta = button && buttonHref && button.label ? { href: buttonHref, label: button.label } : undefined;
 
 	if (!items.length) {
@@ -28,7 +28,7 @@ export const FaqSelectionBlock = ({ blok, lang, region }: Props) => {
 		<BlockWrapper
 			disableMarginTop={blok.disableMarginTop === true}
 			disableMarginBottom={blok.disableMarginBottom === true}
-			{...storyblokEditable(blok as SbBlokData)}
+			{...storyblokEditable(blok)}
 		>
 			<FaqSelectionContent heading={blok.heading} items={items} cta={cta} />
 		</BlockWrapper>

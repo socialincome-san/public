@@ -37,7 +37,7 @@ export const ReservesTotal = ({ amount, title, titleCurrency, institutionsHeadin
 				<p className="text-lg leading-tight font-bold">
 					{title} <span className="text-sm font-normal">{titleCurrency}</span>
 				</p>
-				<p className="block text-7xl leading-none font-light tracking-normal md:text-8xl lg:text-[112px]">
+				<p className="lg:text-display block text-7xl leading-none font-light tracking-normal md:text-8xl">
 					{formatNumberLocale(Math.round(displayValue), locale, { maximumFractionDigits: 0 })}
 				</p>
 			</div>

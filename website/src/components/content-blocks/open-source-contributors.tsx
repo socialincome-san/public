@@ -1,44 +1,33 @@
 import { ContributorsList } from '@/components/open-source/contributors-list';
 import { OpenSourceUnavailableMessage } from '@/components/open-source/unavailable-message';
 import type { OpenSourceContributors } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { getOpenSourceContributorsAction } from '@/modules/github/github.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
+import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	blok: OpenSourceContributors;
-	lang: WebsiteLanguage;
 };
 
-type ContributorsLabels = {
-	heading: string;
-	showAll: string;
-	commitSingular: string;
-	commitPlural: string;
-};
-
-export const OpenSourceContributorsBlock = async ({ blok, lang }: Props) => {
-	const [contributorsResult, translator] = await Promise.all([
+export const OpenSourceContributorsBlock = async ({ blok }: Props) => {
+	const [contributorsResult, t] = await Promise.all([
 		getOpenSourceContributorsAction(),
-		Translator.getInstance({ language: lang, namespaces: ['website-open-source'] }),
+		getTranslations('website-open-source'),
 	]);
 
 	const contributors = contributorsResult.success ? contributorsResult.data : [];
-	const contributorsLabels = translator.t<ContributorsLabels>('contributors');
-	const errorMessage = translator.t<string>('error.unavailable');
+	const errorMessage = t('error.unavailable');
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			{!contributorsResult.success ? <OpenSourceUnavailableMessage message={errorMessage} /> : null}
 
 			<ContributorsList
 				contributors={contributors}
-				heading={contributorsLabels.heading}
-				showAllLabel={contributorsLabels.showAll}
-				commitSingularLabel={contributorsLabels.commitSingular}
-				commitPluralLabel={contributorsLabels.commitPlural}
+				heading={t('contributors.heading')}
+				commitSingularLabel={t('contributors.commitSingular')}
+				commitPluralLabel={t('contributors.commitPlural')}
 			/>
 		</BlockWrapper>
 	);

@@ -1,9 +1,9 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getPaginatedTableView } from '@/modules/subscriptions/subscription.service';
 import { type SubscriptionTableViewRow } from '@/modules/subscriptions/subscription.types';
 import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 import { SubscriptionsTableClient } from './subscriptions-table-client';
 

@@ -1,9 +1,9 @@
-import { Marquee } from '@/components/marquee/marquee';
 import type { Partnership, PartnershipsCard } from '@/generated/storyblok/types/109655/storyblok-components';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { PartnershipBadge } from '@socialincome/design-system/partnership-badge/partnership-badge';
+import { Marquee } from '@socialincome/design-system/data-display/marquee/marquee';
+import { PartnershipBadge } from '@socialincome/design-system/data-display/partnership-badge/partnership-badge';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import type { ISbStoryData } from '@storyblok/js';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 import Markdown from 'react-markdown';
 
 type Props = {
@@ -46,9 +46,9 @@ export const PartnershipsCardBlock = ({ blok }: Props) => {
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
-			<div className="bg-background flex flex-col gap-6 overflow-hidden rounded-[32px] p-6 shadow-[0_0_20px_rgba(0,0,0,0.05)] sm:p-10">
-				<p className="text-sm leading-5 font-medium text-cyan-900">Inflows</p>
+		<BlockWrapper {...storyblokEditable(blok)}>
+			<div className="bg-background shadow-card flex flex-col gap-6 overflow-hidden rounded-4xl p-6 sm:p-10">
+				<p className="text-foreground text-sm leading-5 font-medium">Inflows</p>
 
 				<h2 className="max-w-3xl text-2xl leading-snug font-normal md:text-3xl md:leading-tight">{blok.title}</h2>
 
@@ -63,11 +63,10 @@ export const PartnershipsCardBlock = ({ blok }: Props) => {
 							key={rowIndex === 0 ? 'first-row' : 'second-row'}
 							direction={rowIndex === 0 ? 'left' : 'right'}
 							speed="regular"
-							className="-mx-4 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] px-4 py-1"
 						>
 							<div className="flex gap-6 pr-3 motion-reduce:w-full motion-reduce:flex-wrap">
 								{fillRow(row).map((entry, index) => {
-									const href = [entry.website.url, entry.website.cached_url].find((value) => value.length > 0) ?? '#';
+									const href = entry.website.url || entry.website.cached_url || '#';
 									const logoFilename = entry.logoIcon?.filename;
 
 									return (

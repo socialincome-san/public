@@ -1,11 +1,11 @@
 'use client';
 
 import { ContributorReferralSource } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { updateContributorReferralAfterWizardQrAction } from '@/modules/qr-bills/qr-bill.actions';
 import { updateContributorReferralAfterWizardCheckoutAction } from '@/modules/stripe-payments/stripe-payment.actions';
-import { Button } from '@socialincome/design-system/button/button';
-import { RadioGroup, RadioGroupItem } from '@socialincome/design-system/radio-group/radio-group';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { RadioGroup, RadioGroupItem } from '@socialincome/design-system/forms/radio-group/radio-group';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useOnboardingAmountLine } from '../../hooks/use-onboarding-amount-line';
@@ -15,7 +15,7 @@ import type { DonationWizardStepProps } from '../../wizard/types';
 import { WIZARD_REFERRAL_OPTIONS } from './wizard-referral-options';
 
 export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 	const { wizardPaymentSource, stripeCheckoutSessionId, qrContributorReferenceId, qrDonor, completedDonationSummary } =
 		state.context;
 	const amountLine = useOnboardingAmountLine(completedDonationSummary);
@@ -105,7 +105,6 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 								setSelectedReferral(option.value);
 							}
 						}}
-						className="gap-4"
 					>
 						{WIZARD_REFERRAL_OPTIONS.map(({ value, labelKey }) => {
 							const optionId = `donation-wizard-referral-${value}`;
@@ -122,25 +121,23 @@ export const ReferralStep = ({ state, send }: DonationWizardStepProps) => {
 					</RadioGroup>
 				</div>
 
-				<div className="flex flex-col gap-3 px-6 sm:flex-row sm:items-center sm:justify-between">
-					<Button
-						type="button"
-						data-testid="donation-wizard-referral-submit"
-						className="sm:order-2"
-						disabled={selectedReferral === undefined || submitting}
-						onClick={() => void onSubmit()}
-					>
-						{submitting ? t('onboarding.referral.submitting') : t('onboarding.referral.submit')}
-					</Button>
+				<div className="flex flex-col-reverse gap-3 px-6 sm:flex-row sm:items-center sm:justify-between">
 					<Button
 						type="button"
 						variant="outline"
 						data-testid="donation-wizard-referral-skip"
-						className="sm:order-1"
 						disabled={submitting}
 						onClick={() => send({ type: 'DONATION_ONBOARDING_SKIP_TO_THANK_YOU' })}
 					>
 						{t('onboarding.referral.skip')}
+					</Button>
+					<Button
+						type="button"
+						data-testid="donation-wizard-referral-submit"
+						disabled={selectedReferral === undefined || submitting}
+						onClick={() => void onSubmit()}
+					>
+						{submitting ? t('onboarding.referral.submitting') : t('onboarding.referral.submit')}
 					</Button>
 				</div>
 			</div>

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { TabNavigation as TabNavigationLinks } from '@socialincome/design-system/navigation/tab-navigation/tab-navigation';
 import { usePathname } from 'next/navigation';
 
 type Section = {
@@ -15,27 +15,13 @@ type TabNavigationProps = {
 export const TabNavigation = ({ sections }: TabNavigationProps) => {
 	const pathname = usePathname();
 
-	const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`) || pathname.endsWith(href);
-
 	return (
-		<nav className="mb-9 flex gap-6 overflow-x-auto">
-			{sections.map((section) => {
-				const active = isActive(section.href);
-
-				return (
-					<Link
-						key={section.href}
-						href={section.href}
-						aria-current={active ? 'page' : undefined}
-						className={[
-							'flex items-center rounded-full px-2.5 py-2 text-center text-sm font-medium transition-colors',
-							active ? 'bg-primary text-primary-foreground font-medium' : 'hover:bg-accent',
-						].join(' ')}
-					>
-						{section.label}
-					</Link>
-				);
-			})}
-		</nav>
+		<TabNavigationLinks
+			links={sections.map(({ href, label }) => ({
+				href,
+				label,
+				active: pathname === href || pathname.startsWith(`${href}/`) || pathname.endsWith(href),
+			}))}
+		/>
 	);
 };

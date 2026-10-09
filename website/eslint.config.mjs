@@ -1,4 +1,6 @@
 import { config } from '@smartive/eslint-config';
+import designTokensPlugin from '@socialincome/design-system/eslint-rules/no-arbitrary-design-values';
+import classNamePlugin from '@socialincome/design-system/eslint-rules/no-class-name-prop';
 import reactPlugin from 'eslint-plugin-react';
 import tseslint from 'typescript-eslint';
 import backendArchitecturePlugin from './eslint-rules/backend-architecture.mjs';
@@ -105,9 +107,13 @@ export default [
 			'@typescript-eslint': tseslint.plugin,
 			react: reactPlugin,
 			'backend-architecture': backendArchitecturePlugin,
+			'class-name': classNamePlugin,
+			'design-tokens': designTokensPlugin,
 		},
 		rules: {
 			'react/forbid-component-props': ['error', { forbid: ['style'] }],
+			'class-name/no-class-name-prop': 'error',
+			'design-tokens/no-arbitrary-design-values': 'error',
 		},
 	},
 	{
@@ -150,7 +156,7 @@ export default [
 						...prismaClientImportPaths,
 						{
 							name: 'next/cache',
-							message: 'Services must not call Next.js cache APIs. Revalidate from actions.',
+							message: 'Services must not call Next.js cache APIs. Cache reads in *.cache.ts, revalidate from actions.',
 						},
 						{
 							name: 'next/navigation',
@@ -167,8 +173,49 @@ export default [
 							message: 'Services must not import Server Actions.',
 						},
 						{
+							group: ['./*.cache', './*.cache.*'],
+							message: 'A module cache wraps its own service, so the service must not import it.',
+						},
+						{
 							group: ['@/modules/*/*.repository', '@/modules/*/*.permissions'],
 							message: 'Cross-module imports must go through the owning module service, not internals.',
+						},
+					],
+				},
+			],
+		},
+	},
+	{
+		files: ['src/modules/**/*.cache.ts'],
+		rules: {
+			'backend-architecture/result-contract': 'error',
+			'@typescript-eslint/no-restricted-imports': [
+				'error',
+				{
+					paths: [
+						...prismaClientImportPaths,
+						{
+							name: 'next/cache',
+							importNames: ['revalidatePath', 'revalidateTag', 'updateTag', 'refresh', 'unstable_cache'],
+							message: 'Caches only declare cacheLife and cacheTag. Revalidate from actions.',
+						},
+						{
+							name: 'next/headers',
+							message: 'Cached reads must not depend on request data.',
+						},
+						{
+							name: 'next/navigation',
+							message: 'Caches must not call Next.js navigation APIs.',
+						},
+					],
+					patterns: [
+						{
+							group: ['@/app/**', '@/components/**', '@/integrations/**'],
+							message: 'Caches wrap their own module service.',
+						},
+						{
+							group: ['**/*.actions', '**/*.actions.*', '**/*.repository', '**/*.repository.*'],
+							message: 'Caches wrap their own module service, not actions or repositories.',
 						},
 					],
 				},
@@ -399,7 +446,12 @@ export default [
 							message: 'Components call module actions instead of integrations.',
 						},
 						{
-							group: ['@/modules/**/*.service', '@/modules/**/*.repository', '@/modules/**/*.permissions'],
+							group: [
+								'@/modules/**/*.service',
+								'@/modules/**/*.cache',
+								'@/modules/**/*.repository',
+								'@/modules/**/*.permissions',
+							],
 							message: 'Components may import module actions and type-only contracts, not services or internals.',
 						},
 						{

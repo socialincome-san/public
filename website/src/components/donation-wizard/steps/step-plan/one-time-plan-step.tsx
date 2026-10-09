@@ -1,7 +1,7 @@
 'use client';
 
-import { useI18n } from '@/lib/i18n/use-i18n';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
+import { useLocale, useTranslations } from 'next-intl';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import {
@@ -14,8 +14,9 @@ import { PlanStepHeader } from './plan-step-header';
 import { PlanTierCard } from './plan-tier-card/plan-tier-card';
 
 export const OneTimePlanStep = ({ state, send }: DonationWizardStepProps) => {
-	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
-	const { currency = 'CHF' } = useI18n();
+	const t = useTranslations('donation-wizard');
+	const language = useLocale();
+	const currency = useWebsiteCurrency();
 	const view = selectOneTimePlanView(state.context);
 	const toBenefits = (descriptors: PlanBenefitDescriptor[]) =>
 		descriptors.map((descriptor) => resolvePlanBenefit(descriptor, t, language));

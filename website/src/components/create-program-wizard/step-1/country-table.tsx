@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { CountryCondition, type ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
-import { RadioGroup } from '@socialincome/design-system/radio-group/radio-group';
+import { RadioGroup } from '@socialincome/design-system/forms/radio-group/radio-group';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { CountryTableBody } from './country-table-body';
 import { CountryTableHeader } from './country-table-header';
@@ -37,7 +37,7 @@ type Props = {
 };
 
 export const CountryTable = ({ rows, value, openIds, onValueChange, onToggleRow }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 	const [search, setSearch] = useState('');
 	const [onlyAllMet, setOnlyAllMet] = useState(false);
 

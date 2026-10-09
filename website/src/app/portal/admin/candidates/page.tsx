@@ -1,9 +1,9 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getPaginatedCandidateTableView } from '@/modules/candidates/candidate.service';
 import type { CandidatesTableViewRow } from '@/modules/candidates/candidate.types';
 import { requireAdmin } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 import { CandidatesTableClient } from './candidates-table-client';
 

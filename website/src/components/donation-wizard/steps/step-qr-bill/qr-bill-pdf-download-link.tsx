@@ -1,16 +1,16 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { downloadQrBillPdfAction, downloadSubscriptionQrBillPdfAction } from '@/modules/qr-bills/qr-bill.actions';
-import { cn } from '@socialincome/design-system/cn';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { Download } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { forwardRef, useState, type ReactNode } from 'react';
 import toast from 'react-hot-toast';
 import { type DonationAmountContext } from '../../utils/donation-amount';
 
 type QrBillPdfDownloadAppearance = {
 	disabled?: boolean;
-	className?: string;
+	appearance?: 'link' | 'button';
 	children?: ReactNode;
 };
 
@@ -44,7 +44,7 @@ const triggerPdfDownload = (pdfBase64: string, filename: string) => {
 };
 
 export const QrBillPdfDownloadLink = forwardRef<HTMLButtonElement, QrBillPdfDownloadLinkProps>((props, ref) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 	const [downloading, setDownloading] = useState(false);
 	const disabled = props.disabled ?? false;
 
@@ -77,32 +77,44 @@ export const QrBillPdfDownloadLink = forwardRef<HTMLButtonElement, QrBillPdfDown
 		}
 	};
 
+	const content = downloading ? (
+		<>
+			<Download className="size-3.5 shrink-0" strokeWidth={1.75} aria-hidden />
+			{t('stepQrBill.downloadingPdf')}
+		</>
+	) : (
+		(props.children ?? (
+			<>
+				<Download className="size-3.5 shrink-0" strokeWidth={1.75} aria-hidden />
+				{t('stepQrBill.downloadPdf')}
+			</>
+		))
+	);
+
+	if (props.appearance === 'button') {
+		return (
+			<Button
+				ref={ref}
+				type="button"
+				variant="outline"
+				size="sm"
+				disabled={disabled || downloading}
+				onClick={() => void onDownload()}
+			>
+				{content}
+			</Button>
+		);
+	}
+
 	return (
 		<button
 			ref={ref}
 			type="button"
 			disabled={disabled || downloading}
 			onClick={() => void onDownload()}
-			className={cn(
-				!props.children &&
-					'border-primary text-primary hover:text-primary/80 flex shrink-0 items-center gap-1 border-b pb-0.5 text-sm leading-5 font-normal',
-				'disabled:cursor-not-allowed disabled:opacity-50',
-				props.className,
-			)}
+			className="border-primary text-primary hover:text-primary/80 flex shrink-0 items-center gap-1 border-b pb-0.5 text-sm leading-5 font-normal disabled:cursor-not-allowed disabled:opacity-50"
 		>
-			{downloading ? (
-				<>
-					<Download className="size-3.5 shrink-0" strokeWidth={1.75} aria-hidden />
-					{t('stepQrBill.downloadingPdf')}
-				</>
-			) : (
-				(props.children ?? (
-					<>
-						<Download className="size-3.5 shrink-0" strokeWidth={1.75} aria-hidden />
-						{t('stepQrBill.downloadPdf')}
-					</>
-				))
-			)}
+			{content}
 		</button>
 	);
 });

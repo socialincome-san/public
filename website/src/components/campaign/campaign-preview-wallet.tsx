@@ -1,10 +1,11 @@
-import { createWalletImageFromStoryblokAsset, WALLET_IMAGE_SIZES } from '@/components/wallet/wallet-image-utils';
-import type { TranslateFunction } from '@/lib/i18n/translator';
-import { getSafeNumberFormatLocale, type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
+import { createWalletImageFromStoryblokAsset } from '@/components/wallet/wallet-image-utils';
+import { getSafeNumberFormatLocale, getWebsiteBasePath, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
 import type { PublicCampaignCard, PublicCampaignStats } from '@/modules/campaigns/campaign.types';
 import { cn } from '@socialincome/design-system/cn';
-import { Progress } from '@socialincome/design-system/progress/progress';
+import { WALLET_IMAGE_SIZES } from '@socialincome/design-system/data-display/wallet/wallet-layer-image';
+import { Progress } from '@socialincome/design-system/feedback/progress/progress';
+import { getTranslations } from 'next-intl/server';
 import NextImage from 'next/image';
 import Link from 'next/link';
 
@@ -12,12 +13,12 @@ type Props = {
 	campaign: PublicCampaignCard;
 	stats?: PublicCampaignStats;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
-	t: TranslateFunction;
+	currency: WebsiteCurrency;
 };
 
-export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Props) => {
-	const href = `/${lang}/${region}/campaigns/${campaign.slug}`;
+export const CampaignPreviewWallet = async ({ campaign, stats, lang, currency }: Props) => {
+	const t = await getTranslations('website-common');
+	const href = `${getWebsiteBasePath(lang, currency)}/campaigns/${campaign.slug}`;
 	const locale = getSafeNumberFormatLocale(lang);
 	const showProgress = stats?.percentageCollected !== null && stats?.percentageCollected !== undefined;
 	const contributionLabel =
@@ -53,7 +54,8 @@ export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Prop
 						{showProgress ? (
 							<p className="text-sm font-medium drop-shadow-sm">
 								{t('campaigns-page.raised-percentage', {
-									context: { percentage: stats?.percentageCollected, currency: campaign.currency },
+									percentage: stats?.percentageCollected ?? 0,
+									currency: campaign.currency,
 								})}
 							</p>
 						) : null}
@@ -70,7 +72,11 @@ export const CampaignPreviewWallet = ({ campaign, stats, lang, region, t }: Prop
 						</div>
 					) : null}
 				</div>
-				{showProgress ? <Progress value={stats?.percentageCollected ?? 0} variant="onDark" className="mt-3 h-2" /> : null}
+				{showProgress ? (
+					<div className="mt-3">
+						<Progress value={stats?.percentageCollected ?? 0} variant="onDark" />
+					</div>
+				) : null}
 			</div>
 		</article>
 	);

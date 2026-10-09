@@ -1,40 +1,15 @@
 'use client';
 
 import { MagicLinkLoginForm } from '@/components/login/magic-link-login-form';
-import { useTranslator } from '@/lib/i18n/use-translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
-import { UserRound } from 'lucide-react';
-import { useState } from 'react';
+import { LoginFlyout as DesignSystemLoginFlyout } from '@socialincome/design-system/navigation/login-flyout/login-flyout';
+import { useTranslations } from 'next-intl';
 
-type Props = {
-	lang: WebsiteLanguage;
-};
-
-export const LoginFlyout = ({ lang }: Props) => {
-	const translator = useTranslator(lang, 'website-login');
-
-	const [open, setOpen] = useState(false);
+export const LoginFlyout = () => {
+	const t = useTranslations('website-login');
 
 	return (
-		<>
-			<Button className="text-sm" data-testid="login-button" onClick={() => setOpen(true)} variant="ghost" size="sm">
-				<UserRound />
-				{translator?.t('flyout.login-button')}
-			</Button>
-
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="z-200" overlayClassName="z-200">
-					<DialogHeader>
-						<DialogTitle>{translator?.t('flyout.title')}</DialogTitle>
-					</DialogHeader>
-
-					<div className="mt-4">
-						<MagicLinkLoginForm key={open ? 'open' : 'closed'} lang={lang} />
-					</div>
-				</DialogContent>
-			</Dialog>
-		</>
+		<DesignSystemLoginFlyout buttonLabel={t('flyout.login-button')} title={t('flyout.title')}>
+			<MagicLinkLoginForm />
+		</DesignSystemLoginFlyout>
 	);
 };

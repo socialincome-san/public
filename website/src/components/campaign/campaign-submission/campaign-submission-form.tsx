@@ -4,7 +4,8 @@ import { useContributorSession } from '@/components/contributor/use-contributor-
 import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
 import { campaignSubmissionConfig } from '@/lib/campaign-submission';
 import { useAuth } from '@/lib/firebase/hooks/use-auth';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
 import {
 	getCampaignDefaultImagesAction,
@@ -21,8 +22,8 @@ import {
 } from '@/modules/campaigns/campaign.types';
 import type { PublicSubmissionProgramOption } from '@/modules/programs/program.types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
-import { Form } from '@socialincome/design-system/form/form';
+import { Form } from '@socialincome/design-system/forms/form/form';
+import { DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useForm, type FieldPath } from 'react-hook-form';
 import { CampaignSubmissionContributorSuccess } from './campaign-submission-contributor-success';
@@ -41,6 +42,7 @@ import {
 	isCampaignSubmissionImageMultipartField,
 	resolveCampaignSubmissionQuote,
 } from './campaign-submission.client';
+import { compressCampaignImage } from './compress-campaign-image';
 import { addPendingClaimId } from './pending-claim-ids';
 import type {
 	CampaignImageSelection,
@@ -54,7 +56,7 @@ import { useCampaignImageUpload } from './use-campaign-image-upload';
 type Props = {
 	labels: SubmissionLabels;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	onSuccess?: () => void;
 };
 
@@ -84,8 +86,9 @@ const defaultFormValues = (): CampaignSubmissionFormValues => ({
 	email: '',
 });
 
-export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Props) => {
+export const CampaignSubmissionForm = ({ labels, lang, currency, onSuccess }: Props) => {
 	const { auth } = useAuth();
+	const websiteBasePath = useWebsiteBasePath();
 	const { contributorSession, loading: contributorSessionLoading } = useContributorSession();
 	const isLoggedInContributor = contributorSession?.type === 'contributor';
 	const visibleSteps = isLoggedInContributor ? contributorSteps : guestSteps;
@@ -579,15 +582,6 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			return;
 		}
 
-		const primaryImageUploadBytes = imageSelection.type === 'upload' ? imageSelection.file.size : 0;
-		const sectionImageBytes = values.hasAdditionalInformation ? (sectionImageFile?.size ?? 0) : 0;
-		const totalImageBytes = primaryImageUploadBytes + (profilePictureFile?.size ?? 0) + sectionImageBytes;
-		if (totalImageBytes > campaignSubmissionConfig.maxMultipartBodyBytes) {
-			setSubmitError(resolveError('payload-too-large'));
-
-			return;
-		}
-
 		const submissionValues = {
 			...values,
 			quote: resolveCampaignSubmissionQuote(values.quote, labels.quotePlaceholder),
@@ -607,14 +601,33 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 		setIsSubmitting(true);
 
 		try {
+			const [primaryUpload, profileUpload, sectionUpload] = await Promise.all([
+				imageSelection.type === 'upload'
+					? compressCampaignImage({ file: imageSelection.file, focus: primaryImageFocus })
+					: undefined,
+				profilePictureFile ? compressCampaignImage({ file: profilePictureFile, focus: profilePictureFocus }) : undefined,
+				values.hasAdditionalInformation && sectionImageFile
+					? compressCampaignImage({ file: sectionImageFile, focus: sectionImageFocus })
+					: undefined,
+			]);
+			const totalImageBytes = [primaryUpload, profileUpload, sectionUpload].reduce(
+				(total, image) => total + (image?.file.size ?? 0),
+				0,
+			);
+			if (totalImageBytes > campaignSubmissionConfig.maxMultipartBodyBytes) {
+				setSubmitError(resolveError('payload-too-large'));
+
+				return;
+			}
+
 			const formData = appendCampaignSubmissionFormData(new FormData(), submissionValues, {
-				primaryImage: imageSelection.type === 'upload' ? imageSelection.file : undefined,
-				primaryImageFocus: imageSelection.type === 'upload' ? primaryImageFocus : undefined,
+				primaryImage: primaryUpload?.file,
+				primaryImageFocus: primaryUpload?.focus,
 				defaultImageId: imageSelection.type === 'default' ? imageSelection.id : undefined,
-				profilePicture: profilePictureFile ?? undefined,
-				profilePictureFocus: profilePictureFile ? profilePictureFocus : undefined,
-				sectionImage: values.hasAdditionalInformation ? (sectionImageFile ?? undefined) : undefined,
-				sectionImageFocus: values.hasAdditionalInformation && sectionImageFile ? sectionImageFocus : undefined,
+				profilePicture: profileUpload?.file,
+				profilePictureFocus: profileUpload?.focus,
+				sectionImage: sectionUpload?.file,
+				sectionImageFocus: sectionUpload?.focus,
 				includePersonalData: !isLoggedInContributor,
 			});
 			if (turnstileToken) {
@@ -658,6 +671,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 					await sendMagicLoginLink({
 						auth,
 						email: guestEmail,
+						websiteBasePath,
 						claimId: claimId || undefined,
 					});
 				} catch {
@@ -696,6 +710,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 			await sendMagicLoginLink({
 				auth,
 				email: successGuestEmail,
+				websiteBasePath,
 				claimId: successClaimId || undefined,
 			});
 		} catch {
@@ -707,7 +722,7 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 
 	if (submitSuccess) {
 		if (isLoggedInContributor) {
-			const campaignHref = getWebsitePublicPath(lang, region, `campaigns/${successCampaignSlug}`);
+			const campaignHref = getWebsitePublicPath(lang, currency, `campaigns/${successCampaignSlug}`);
 
 			return <CampaignSubmissionContributorSuccess labels={labels} campaignHref={campaignHref} />;
 		}
@@ -756,22 +771,20 @@ export const CampaignSubmissionForm = ({ labels, lang, region, onSuccess }: Prop
 	return (
 		<Form {...form}>
 			<form className="flex min-h-0 flex-1 flex-col" noValidate onSubmit={handleSubmit}>
-				<div className="-mt-6 flex h-[52px] shrink-0 items-center border-b pr-12 pl-6 sm:hidden">
-					<CampaignSubmissionStepIndicator
-						currentStep={currentStep}
-						steps={visibleSteps}
-						formStepsLabel={labels.formSteps}
-						stepLabel={labels.stepLabel}
-						programLabel={labels.program}
-						detailsLabel={labels.details}
-						aboutLabel={labels.about}
-						personalLabel={labels.personal}
-						variant="bars"
-						className="min-w-0 flex-1"
-					/>
-				</div>
-				<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left max-sm:border-b-0 max-sm:pt-4 max-sm:pb-0">
-					<DialogTitle ref={stepTitleRef} tabIndex={-1} className="leading-snug text-balance outline-none">
+				<DialogHeader>
+					<div className="mb-3 sm:hidden">
+						<CampaignSubmissionStepIndicator
+							currentStep={currentStep}
+							steps={visibleSteps}
+							formStepsLabel={labels.formSteps}
+							programLabel={labels.program}
+							detailsLabel={labels.details}
+							aboutLabel={labels.about}
+							personalLabel={labels.personal}
+							variant="bars"
+						/>
+					</div>
+					<DialogTitle ref={stepTitleRef} tabIndex={-1}>
 						{stepTitle}
 					</DialogTitle>
 				</DialogHeader>

@@ -1,13 +1,13 @@
 'use client';
 
-import type { VolunteerDurationTranslations } from '@/components/storyblok/shared/person-card';
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getRoleCode, getRoleLabel, personHasRole } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameFromIsoCode } from '@/lib/types/country';
-import { Button } from '@socialincome/design-system/button/button';
-import { cn } from '@socialincome/design-system/cn';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { FilterTrigger } from '@socialincome/design-system/actions/filter-trigger/filter-trigger';
+import { SearchInput } from '@socialincome/design-system/forms/search-input/search-input';
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -15,52 +15,27 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@socialincome/design-system/dropdown-menu/dropdown-menu';
-import { Input } from '@socialincome/design-system/input/input';
+} from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import type { ISbStoryData } from '@storyblok/js';
-import { ArrowUpDownIcon, ChevronDown, SearchIcon } from 'lucide-react';
+import { ArrowUpDownIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useCallback, useMemo, useState } from 'react';
 
 type SortOption = 'alphabetical' | 'startDate';
 type PersonStatus = 'active' | 'inactive';
 
-type PersonGridTranslations = {
-	searchPlaceholder: string;
-	sortAriaLabel: string;
-	sortAlphabetical: string;
-	sortStartDate: string;
-	filterAllRoles: string;
-	filterAllStatuses: string;
-	filterAllCountries: string;
-	filterMultipleSelected: string;
-	filterSelectAll: string;
-	filterClearAll: string;
-	statusActive: string;
-	statusInactive: string;
-	noResults: string;
-};
-
 type Props = {
 	persons: ISbStoryData<Person>[];
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	smallCards: boolean;
 	linkToPersonPage: boolean;
-	volunteerDurationTranslations?: VolunteerDurationTranslations;
+	showVolunteerDuration?: boolean;
 	roleLabels?: Record<string, string>;
 	showSearch: boolean;
 	showSort: boolean;
 	showFilterPills: boolean;
-	translations: PersonGridTranslations;
 };
-
-const STATUS_LABEL_KEYS: Record<PersonStatus, keyof PersonGridTranslations> = {
-	active: 'statusActive',
-	inactive: 'statusInactive',
-};
-
-const FILTER_TRIGGER_CLASSNAME =
-	'text-foreground border-border bg-card hover:bg-card h-10 min-w-0 max-w-40 shrink px-4 text-sm font-medium';
 
 // Alphabetical sorting goes by first name, falling back to the full name when it's unset.
 const getSortableName = (person: ISbStoryData<Person>) => person.content.firstName || person.content.fullName;
@@ -107,60 +82,55 @@ const FilterDropdown = <T extends string>({
 	const isActive = selected.length > 0 && selected.length !== items.length;
 
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button
-					type="button"
-					variant="outline"
-					className={cn(FILTER_TRIGGER_CLASSNAME, isActive && 'bg-input hover:bg-input')}
-				>
-					<span className="min-w-0 truncate">{triggerLabel}</span>
-					<ChevronDown className="text-foreground size-4 shrink-0 opacity-70" />
-				</Button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent align="start" className="w-56">
-				<DropdownMenuItem
-					onSelect={(event) => {
-						event.preventDefault();
+		<div className="max-w-40 min-w-0 shrink">
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<FilterTrigger active={isActive}>{triggerLabel}</FilterTrigger>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align="start">
+					<DropdownMenuItem
+						onSelect={(event) => {
+							event.preventDefault();
 
-						if (selected.length === 0) {
-							onSelectAll();
-						} else {
-							onClearAll();
-						}
-					}}
-				>
-					{selected.length === 0 ? selectAllLabel : clearAllLabel}
-				</DropdownMenuItem>
-				<DropdownMenuSeparator />
-				{items.map((item) => (
-					<DropdownMenuCheckboxItem
-						key={item}
-						checked={selected.includes(item)}
-						onCheckedChange={() => onToggle(item)}
-						onSelect={(event) => event.preventDefault()}
+							if (selected.length === 0) {
+								onSelectAll();
+							} else {
+								onClearAll();
+							}
+						}}
 					>
-						{getLabel(item)}
-					</DropdownMenuCheckboxItem>
-				))}
-			</DropdownMenuContent>
-		</DropdownMenu>
+						{selected.length === 0 ? selectAllLabel : clearAllLabel}
+					</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					{items.map((item) => (
+						<DropdownMenuCheckboxItem
+							key={item}
+							checked={selected.includes(item)}
+							onCheckedChange={() => onToggle(item)}
+							onSelect={(event) => event.preventDefault()}
+						>
+							{getLabel(item)}
+						</DropdownMenuCheckboxItem>
+					))}
+				</DropdownMenuContent>
+			</DropdownMenu>
+		</div>
 	);
 };
 
 export const PersonGridInteractive = ({
 	persons,
 	lang,
-	region,
+	currency,
 	smallCards,
 	linkToPersonPage,
-	volunteerDurationTranslations,
+	showVolunteerDuration = false,
 	roleLabels,
 	showSearch,
 	showSort,
 	showFilterPills,
-	translations,
 }: Props) => {
+	const t = useTranslations('website-common');
 	const [searchTerm, setSearchTerm] = useState('');
 	const [sortBy, setSortBy] = useState<SortOption>('alphabetical');
 	const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
@@ -263,22 +233,28 @@ export const PersonGridInteractive = ({
 		getLabel: (value: T) => string,
 	) =>
 		selected.length === 0 || selected.length === all.length
-			? allLabel.replace('{{count}}', String(all.length))
+			? allLabel
 			: selected.length === 1
 				? getLabel(selected[0])
-				: translations.filterMultipleSelected.replace('{{count}}', String(selected.length));
+				: t('person-grid.filter-multiple-selected', { count: selected.length });
 
-	const roleLabel = filterTriggerLabel(selectedRoles, roles, translations.filterAllRoles, roleLabelFor);
+	const statusLabelFor = (status: PersonStatus) => t(`person-grid.status-${status}`);
+	const roleLabel = filterTriggerLabel(
+		selectedRoles,
+		roles,
+		t('person-grid.filter-all-roles', { count: roles.length }),
+		roleLabelFor,
+	);
 	const statusLabel = filterTriggerLabel(
 		selectedStatuses,
 		statuses,
-		translations.filterAllStatuses,
-		(status) => translations[STATUS_LABEL_KEYS[status]],
+		t('person-grid.filter-all-statuses', { count: statuses.length }),
+		statusLabelFor,
 	);
 	const countryLabel = filterTriggerLabel(
 		selectedCountries,
 		countries,
-		translations.filterAllCountries,
+		t('person-grid.filter-all-countries', { count: countries.length }),
 		getCountryNameFromIsoCode,
 	);
 
@@ -292,19 +268,13 @@ export const PersonGridInteractive = ({
 	const sortDropdown = showSort ? (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button
-					type="button"
-					variant="outline"
-					size="icon"
-					className="h-10 w-10 shrink-0"
-					aria-label={translations.sortAriaLabel}
-				>
+				<Button type="button" variant="outline" size="icon-lg" aria-label={t('person-grid.sort-aria-label')}>
 					<ArrowUpDownIcon className="size-4" />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="start">
-				<DropdownMenuItem onSelect={() => setSortBy('alphabetical')}>{translations.sortAlphabetical}</DropdownMenuItem>
-				<DropdownMenuItem onSelect={() => setSortBy('startDate')}>{translations.sortStartDate}</DropdownMenuItem>
+				<DropdownMenuItem onSelect={() => setSortBy('alphabetical')}>{t('person-grid.sort-alphabetical')}</DropdownMenuItem>
+				<DropdownMenuItem onSelect={() => setSortBy('startDate')}>{t('person-grid.sort-start-date')}</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	) : null;
@@ -324,8 +294,8 @@ export const PersonGridInteractive = ({
 									onSelectAll={() => setSelectedRoles(roles)}
 									onClearAll={() => setSelectedRoles([])}
 									getLabel={roleLabelFor}
-									selectAllLabel={translations.filterSelectAll}
-									clearAllLabel={translations.filterClearAll}
+									selectAllLabel={t('person-grid.filter-select-all')}
+									clearAllLabel={t('person-grid.filter-clear-all')}
 								/>
 							) : null}
 							{showFilterPills && showStatusFilter ? (
@@ -336,9 +306,9 @@ export const PersonGridInteractive = ({
 									onToggle={toggleStatus}
 									onSelectAll={() => setSelectedStatuses(statuses)}
 									onClearAll={() => setSelectedStatuses([])}
-									getLabel={(status) => translations[STATUS_LABEL_KEYS[status]]}
-									selectAllLabel={translations.filterSelectAll}
-									clearAllLabel={translations.filterClearAll}
+									getLabel={statusLabelFor}
+									selectAllLabel={t('person-grid.filter-select-all')}
+									clearAllLabel={t('person-grid.filter-clear-all')}
 								/>
 							) : null}
 							{showFilterPills && countries.length > 0 ? (
@@ -350,8 +320,8 @@ export const PersonGridInteractive = ({
 									onSelectAll={() => setSelectedCountries(countries)}
 									onClearAll={() => setSelectedCountries([])}
 									getLabel={getCountryNameFromIsoCode}
-									selectAllLabel={translations.filterSelectAll}
-									clearAllLabel={translations.filterClearAll}
+									selectAllLabel={t('person-grid.filter-select-all')}
+									clearAllLabel={t('person-grid.filter-clear-all')}
 								/>
 							) : null}
 						</div>
@@ -362,15 +332,12 @@ export const PersonGridInteractive = ({
 					<div className="flex flex-nowrap items-center gap-2">
 						{hasFilters ? <div className="hidden lg:block">{sortDropdown}</div> : sortDropdown}
 						{showSearch ? (
-							<div className="relative w-full lg:w-64 lg:shrink-0">
-								<SearchIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-								<Input
-									type="search"
-									aria-label={translations.searchPlaceholder}
-									placeholder={translations.searchPlaceholder}
+							<div className="w-full lg:w-64 lg:shrink-0">
+								<SearchInput
+									aria-label={t('person-grid.search-placeholder')}
+									placeholder={t('person-grid.search-placeholder')}
 									value={searchTerm}
 									onChange={(event) => setSearchTerm(event.target.value)}
-									className="bg-card h-10 pl-9"
 								/>
 							</div>
 						) : null}
@@ -379,15 +346,15 @@ export const PersonGridInteractive = ({
 			) : null}
 
 			{filteredPersons.length === 0 ? (
-				<p className="text-muted-foreground">{translations.noResults}</p>
+				<p className="text-muted-foreground">{t('person-grid.no-results')}</p>
 			) : (
 				<PersonCardGrid
 					persons={filteredPersons}
 					lang={lang}
-					region={region}
+					currency={currency}
 					smallCards={smallCards}
 					linkToPersonPage={linkToPersonPage}
-					volunteerDurationTranslations={volunteerDurationTranslations}
+					showVolunteerDuration={showVolunteerDuration}
 					roleLabels={roleLabels}
 				/>
 			)}

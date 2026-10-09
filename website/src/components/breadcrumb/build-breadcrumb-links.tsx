@@ -1,7 +1,6 @@
 import { getCountryTitle } from '@/components/storyblok/country/country.utils';
 import type { Country } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import {
 	getPageStoryPath,
 	getWebsitePathTailFromStoryblokSlug,
@@ -11,7 +10,8 @@ import {
 } from '@/lib/storyblok/storyblok-paths';
 import { getStoryTitleAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { StoryTitleData } from '@/modules/storyblok-content/storyblok-content.types';
-import type { BreadcrumbLinkItem } from '@socialincome/design-system/breadcrumb/breadcrumb';
+import type { BreadcrumbLinkItem } from '@socialincome/design-system/navigation/breadcrumb/breadcrumb';
+import { getTranslations } from 'next-intl/server';
 
 export type BreadcrumbLink = BreadcrumbLinkItem;
 
@@ -19,7 +19,7 @@ type BuildBreadcrumbLinksParams = {
 	fullSlug: string;
 	currentLabel: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	includeCurrentLabel?: boolean;
 };
 
@@ -72,10 +72,10 @@ export const buildBreadcrumbLinks = async ({
 	fullSlug,
 	currentLabel,
 	lang,
-	region,
+	currency,
 	includeCurrentLabel = true,
 }: BuildBreadcrumbLinksParams): Promise<BreadcrumbLink[]> => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const t = await getTranslations('website-common');
 	const normalizedFullSlug = normalizeStoryblokSlug(fullSlug);
 	const segments = normalizedFullSlug.split('/').filter(Boolean);
 
@@ -85,8 +85,8 @@ export const buildBreadcrumbLinks = async ({
 
 	const links: BreadcrumbLink[] = [
 		{
-			href: getWebsitePublicPath(lang, region, ''),
-			label: capitalizeLabel(translator.t('breadcrumb.home')),
+			href: getWebsitePublicPath(lang, currency, ''),
+			label: capitalizeLabel(t('breadcrumb.home')),
 		},
 	];
 
@@ -99,7 +99,7 @@ export const buildBreadcrumbLinks = async ({
 				const label = await fetchStoryLabel(storyblokPath, lang, segment);
 
 				return {
-					href: getWebsitePublicPath(lang, region, getWebsitePathTailFromStoryblokSlug(storyblokPath)),
+					href: getWebsitePublicPath(lang, currency, getWebsitePathTailFromStoryblokSlug(storyblokPath)),
 					label: capitalizeLabel(label),
 				};
 			}),

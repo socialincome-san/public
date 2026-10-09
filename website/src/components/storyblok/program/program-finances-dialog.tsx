@@ -2,17 +2,17 @@
 
 import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramPayoutForecastTable } from '@/components/storyblok/program/program-payout-forecast-table';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getPublicPayoutForecastTableAction } from '@/modules/payouts/payout.actions';
 import type { PayoutForecastTableViewRow } from '@/modules/payouts/payout.types';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { type ReactNode, useEffect, useState } from 'react';
 
 type Props = {
 	dialogTitle: string;
 	viewBreakdownLabel: string;
-	manageLabel: string;
+	manageLabel: ReactNode;
 	manageHref: string;
 	payoutForecastInfoTooltip: string;
 	financesCard: ReactNode;
@@ -28,7 +28,7 @@ export const ProgramFinancesDialog = ({
 	financesCard,
 	programId,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'website-common' });
+	const t = useTranslations('website-common');
 	const [isOpen, setIsOpen] = useState(false);
 	const [rows, setRows] = useState<PayoutForecastTableViewRow[] | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
@@ -77,7 +77,6 @@ export const ProgramFinancesDialog = ({
 			title={dialogTitle}
 			triggerLabel={viewBreakdownLabel}
 			closeAriaLabel={t('program-detail-page.close')}
-			bodyClassName="flex flex-col gap-8"
 			onOpenChange={setIsOpen}
 			headerActions={
 				<Button asChild size="sm" variant="outline">
@@ -93,17 +92,18 @@ export const ProgramFinancesDialog = ({
 			) : hasError ? (
 				<div className="text-destructive border-destructive/20 bg-destructive-foreground flex flex-col gap-4 rounded-md border p-4">
 					<p className="font-medium">{t('program-detail-page.load-payout-forecast-error')}</p>
-					<Button
-						type="button"
-						variant="outline"
-						className="text-destructive border-destructive/30 bg-card hover:bg-destructive-foreground self-start"
-						onClick={() => {
-							setHasError(false);
-							setRetryKey((current) => current + 1);
-						}}
-					>
-						{t('program-detail-page.try-again')}
-					</Button>
+					<div>
+						<Button
+							type="button"
+							variant="destructive-outline"
+							onClick={() => {
+								setHasError(false);
+								setRetryKey((current) => current + 1);
+							}}
+						>
+							{t('program-detail-page.try-again')}
+						</Button>
+					</div>
 				</div>
 			) : rows ? (
 				<ProgramPayoutForecastTable rows={rows} titleInfoTooltip={payoutForecastInfoTooltip} />

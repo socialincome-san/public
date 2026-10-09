@@ -2,28 +2,18 @@ name: Design System
 
 on:
   pull_request:
-    paths:
-      - "design-system/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".npmrc"
   merge_group:
   push:
     branches:
       - main
-    paths:
-      - "design-system/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".npmrc"
 
 jobs:
   lint:
-    name: "✨ Lint"
+    name: "✨ Design System Lint"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: npm
@@ -33,13 +23,15 @@ jobs:
         run: npm run lint
       - working-directory: design-system
         run: npm run format:check
+      - working-directory: design-system
+        run: npm run check:unused
 
   typecheck:
-    name: "🔍 Type Check"
+    name: "🔍 Design System Type Check"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: npm
@@ -49,11 +41,11 @@ jobs:
         run: npm run typecheck
 
   unit-test:
-    name: "🧪 Unit Tests"
+    name: "🧪 Design System Unit Tests"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: npm
@@ -63,11 +55,11 @@ jobs:
         run: npm run test:unit
 
   storybook-build:
-    name: "📚 Storybook Build"
+    name: "📚 Design System Storybook Build"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: npm

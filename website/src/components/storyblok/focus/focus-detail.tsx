@@ -1,14 +1,18 @@
 import type { AnySearchParams } from '@/app/page-props';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
+import { Community } from '@/components/community/community';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { ProgramsOverviewSection } from '@/components/storyblok/program/programs-overview-section';
 import type { Study } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import type { CommunityPanelData } from '@/modules/community/community.types';
 import { getSurveyImpactFilterOptionsAction } from '@/modules/surveys/survey.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
 import type { ISbStoryData } from '@storyblok/js';
-import { CmsHeader } from '../shared/cms-header';
+import { Suspense } from 'react';
 import type { FocusStory } from './focus.types';
 import { getFocusSlug, getFocusText, getFocusTitle } from './focus.utils';
 import { ImpactMeasurementPreviewWrapper } from './impact-measurement-preview-wrapper';
@@ -17,8 +21,9 @@ import { StudyCard } from './study-card';
 type Props = {
 	focus: FocusStory;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
-	searchParams?: AnySearchParams;
+	currency: WebsiteCurrency;
+	searchParams: Promise<AnySearchParams>;
+	community: CommunityPanelData | null;
 };
 
 type StudyStory = ISbStoryData<Study>;
@@ -50,7 +55,7 @@ const getImpactMeasurementFocusId = async (focus: FocusStory) => {
 	return filterOptionsResult.data.focuses.find((option) => focusSlugs.has(option.label.trim()))?.value ?? '';
 };
 
-export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) => {
+export const FocusDetail = async ({ focus, lang, currency, searchParams, community }: Props) => {
 	const title = getFocusTitle(focus.content);
 	const text = getFocusText(focus.content);
 	const focusPortalSlug = focus.content.portalSlug?.trim() ?? '';
@@ -65,25 +70,27 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 			fullSlug: focus.full_slug,
 			currentLabel: title,
 			lang,
-			region,
+			currency,
 		}),
 		hasImpactMeasurementSection ? getImpactMeasurementFocusId(focus) : '',
 	]);
 
 	return (
 		<div className="py-8 pb-16">
-			<Breadcrumb links={breadcrumbLinks} className="py-0" />
+			<Breadcrumb links={breadcrumbLinks} layout="section" aside={community ? <Community data={community} /> : null} />
 			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 				<div className="pt-8">
-					<CmsHeader title={title} text={text} />
+					<PageIntro title={title} description={text} />
 
 					<section className="mt-8 flex flex-col gap-6">
-						<ProgramsOverviewSection
-							lang={lang}
-							region={region}
-							searchParams={searchParams}
-							fixedFocusSlug={focusPortalSlug}
-						/>
+						<Suspense fallback={<AppLoadingSkeleton />}>
+							<ProgramsOverviewSection
+								lang={lang}
+								currency={currency}
+								searchParams={searchParams}
+								fixedFocusSlug={focusPortalSlug}
+							/>
+						</Suspense>
 					</section>
 
 					{hasSecondarySections && (
@@ -98,7 +105,7 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 									{studyStories.length > 0 && (
 										<div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 											{studyStories.map((study) => (
-												<StudyCard key={study.uuid} study={study} lang={lang} region={region} />
+												<StudyCard key={study.uuid} study={study} lang={lang} currency={currency} />
 											))}
 										</div>
 									)}
@@ -115,7 +122,7 @@ export const FocusDetail = async ({ focus, lang, region, searchParams }: Props) 
 										<ImpactMeasurementPreviewWrapper
 											focusId={impactMeasurementFocusId}
 											lang={lang}
-											region={region}
+											currency={currency}
 											teaserText={impactMeasurementTeaserText}
 											teaserButtonLabel={impactMeasurementTeaserButtonLabel}
 										/>

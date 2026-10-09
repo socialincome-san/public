@@ -2,8 +2,8 @@
 
 import { makePublicRecipientColumns } from '@/components/data-table/columns/recipients';
 import { BaseTable } from '@/components/data-table/elements/base-table';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import type { PublicRecipientTableViewRow } from '@/modules/recipients/recipient.types';
+import { useTranslations } from 'next-intl';
 
 type Props = {
 	rows: PublicRecipientTableViewRow[];
@@ -11,8 +11,8 @@ type Props = {
 };
 
 export const ProgramRecipientsTable = ({ rows, totalCount }: Props) => {
-	const { t, translator } = useRouteTranslator({ namespace: 'website-common' });
-	const columns = makePublicRecipientColumns(translator);
+	const t = useTranslations('website-common');
+	const columns = makePublicRecipientColumns(t);
 	const displayedCount = totalCount ?? rows.length;
 	const countLabel =
 		displayedCount !== rows.length

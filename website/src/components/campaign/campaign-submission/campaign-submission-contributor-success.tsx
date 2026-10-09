@@ -1,6 +1,6 @@
 'use client';
 
-import { DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { CircleCheck, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { useSyncExternalStore } from 'react';
@@ -21,8 +21,8 @@ export const CampaignSubmissionContributorSuccess = ({ labels, campaignHref }: P
 
 	return (
 		<div className="flex min-h-0 flex-1 flex-col" data-testid="campaign-submission-contributor-success">
-			<DialogHeader className="mx-0 shrink-0 px-6 pr-12 text-left">
-				<DialogTitle className="leading-snug text-balance">{labels.successCreatedTitle}</DialogTitle>
+			<DialogHeader>
+				<DialogTitle>{labels.successCreatedTitle}</DialogTitle>
 			</DialogHeader>
 
 			<div className="flex items-center gap-3 px-6 pt-4">

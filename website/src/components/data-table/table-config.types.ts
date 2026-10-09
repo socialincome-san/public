@@ -1,7 +1,10 @@
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
-import { Translator } from '@/lib/i18n/translator';
 import type { RowData, SortingState } from '@tanstack/react-table';
+import { type useTranslations } from 'next-intl';
+import type { ReactNode } from 'react';
+
+export type DataTableTranslator = ReturnType<typeof useTranslations<'website-me'>>;
 
 type TableFilterOption = {
 	value: string;
@@ -21,9 +24,9 @@ export type TableFilterConfig = {
 export type DataTableConfig<Row extends RowData> = {
 	id: string;
 	title: string;
-	emptyMessage: string;
+	emptyMessage: ReactNode;
 	searchKeys: (keyof Row)[];
-	makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, translator?: Translator) => ColumnDef<Row>[];
+	makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, t?: DataTableTranslator) => ColumnDef<Row>[];
 	sortOptions?: {
 		id: string;
 		label: string;

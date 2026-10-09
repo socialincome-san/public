@@ -51,12 +51,15 @@ jest.mock('./campaign-public-website.service', () => ({
 	getCampaignPageContent: jest.fn(),
 }));
 
-jest.mock('./campaign.service', () => ({
-	getCampaignDefaultImages: jest.fn(),
-	getPublicCampaignTitle: jest.fn(),
+jest.mock('./campaign.cache', () => ({
 	getCampaignByPortalSlug: jest.fn(),
 	getAllCampaignsForCmsJoinWithStats: jest.fn(),
 	getDefaultCampaignForProgram: jest.fn(),
+}));
+
+jest.mock('./campaign.service', () => ({
+	getCampaignDefaultImages: jest.fn(),
+	getPublicCampaignTitle: jest.fn(),
 }));
 
 jest.mock('@/modules/users/user.service', () => ({

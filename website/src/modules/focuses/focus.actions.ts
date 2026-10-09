@@ -8,16 +8,10 @@ import {
 	focusSlugsSchema,
 	focusUpdateInputSchema,
 } from '@/modules/focuses/focus.schemas';
-import {
-	createFocus,
-	deleteFocus,
-	getFocus,
-	getFocusOptions,
-	getPublicFocusStatsBySlugs,
-	updateFocus,
-} from '@/modules/focuses/focus.service';
+import { createFocus, deleteFocus, getFocus, getFocusOptions, updateFocus } from '@/modules/focuses/focus.service';
 import type { FocusOption, FocusPayload, PublicFocusStatsBySlugMap } from '@/modules/focuses/focus.types';
 import { revalidatePath } from 'next/cache';
+import { getPublicFocusStatsBySlugs } from './focus.cache';
 
 const REVALIDATE_PATH = '/portal/admin/focuses';
 

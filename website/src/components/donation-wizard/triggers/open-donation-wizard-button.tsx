@@ -1,15 +1,15 @@
 'use client';
 
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import type { ComponentProps } from 'react';
 import { useDonationModal } from '../hooks/use-donation-modal';
 
 type Props = {
 	label: string;
-	className?: string;
 	onBeforeOpen?: () => void;
-};
+} & Pick<ComponentProps<typeof Button>, 'size' | 'fullWidth'>;
 
-export const OpenDonationWizardButton = ({ label, className, onBeforeOpen }: Props) => {
+export const OpenDonationWizardButton = ({ label, size, fullWidth, onBeforeOpen }: Props) => {
 	const { openWizardAtAmountStep } = useDonationModal();
 
 	return (
@@ -17,7 +17,8 @@ export const OpenDonationWizardButton = ({ label, className, onBeforeOpen }: Pro
 			type="button"
 			data-testid="donation-wizard-trigger"
 			aria-haspopup="dialog"
-			className={className}
+			size={size}
+			fullWidth={fullWidth}
 			onClick={() => {
 				onBeforeOpen?.();
 				openWizardAtAmountStep();

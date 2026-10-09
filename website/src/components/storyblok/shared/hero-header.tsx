@@ -1,9 +1,12 @@
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import NextImage from 'next/image';
+import {
+	MediaHero,
+	MediaHeroChips,
+	MediaHeroIntro,
+	MediaHeroPill,
+} from '@socialincome/design-system/layout/media-hero/media-hero';
 import type { ReactNode } from 'react';
 
 const HERO_HEADER_IMAGE_WIDTH = 1920;
@@ -17,7 +20,6 @@ type HeroHeaderStat = {
 export type HeroHeaderImage = Pick<StoryblokAsset, 'filename' | 'alt' | 'focus'>;
 
 type Props = {
-	lang: WebsiteLanguage;
 	title: string;
 	heroImage?: HeroHeaderImage | null;
 	stats: HeroHeaderStat[];
@@ -33,7 +35,6 @@ type Props = {
 };
 
 export const HeroHeader = ({
-	lang,
 	title,
 	heroImage,
 	stats,
@@ -49,62 +50,31 @@ export const HeroHeader = ({
 	const heroImageSrc = heroImage?.filename
 		? formatStoryblokUrl(heroImage.filename, HERO_HEADER_IMAGE_WIDTH, HERO_HEADER_IMAGE_HEIGHT, heroImage.focus)
 		: null;
-	const heroImageAlt = heroImage?.alt ?? title;
-	const heroCardNode = heroCard ?? <DonationFormServer lang={lang} campaignId={campaignId} />;
+	const heroCardNode = heroCard ?? <DonationForm campaignId={campaignId} />;
 
 	return (
-		<section className="full-bleed-hero flex flex-col gap-6">
-			<div className="bg-foreground relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden rounded-b-3xl md:min-h-160 md:rounded-b-[56px]">
-				{heroImageSrc ? (
-					<NextImage src={heroImageSrc} alt={heroImageAlt} fill sizes="100vw" className="object-cover" priority />
-				) : (
-					<div className="bg-primary/20 absolute inset-0" />
-				)}
-
-				<div className="from-foreground/70 via-foreground/35 to-foreground/15 absolute inset-0 bg-gradient-to-t" />
-
-				<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto mb-8 flex flex-row items-end justify-between gap-4 md:mb-24">
-					<div className="text-primary-foreground flex max-w-2xl flex-col gap-4">
-						{preTitle ? <div className="flex flex-wrap gap-2">{preTitle}</div> : null}
-						<h1 className="text-5xl leading-tight font-bold md:text-6xl">
-							{title}
-							{titleIcon ? (
-								<NextImage
-									src={titleIcon}
-									alt={titleIconAlt ?? title}
-									width={44}
-									height={32}
-									className="ml-3 inline-block h-8 w-11 rounded-sm align-baseline md:ml-4"
-								/>
-							) : null}
-						</h1>
-
-						{stats.length > 0 ? (
-							<div className="flex flex-wrap gap-2">
-								{stats.map((stat) => (
-									<span
-										key={stat.label}
-										className="text-primary-foreground border-primary-foreground/50 bg-foreground/40 inline-flex items-center justify-center rounded-full border px-3 py-1 text-xs leading-none font-medium"
-									>
-										{stat.value !== undefined ? `${stat.value} ` : ''}
-										{stat.label}
-									</span>
-								))}
-							</div>
-						) : null}
-
-						{badges ? <div className="flex flex-wrap gap-2">{badges}</div> : null}
-					</div>
-
-					{showDonationForm ? <div className="hidden shrink-0 lg:block">{heroCardNode}</div> : null}
-				</div>
-			</div>
-
-			{showDonationsFormMobile ? (
-				<BlockWrapper className="lg:hidden" disableMarginTop={true} disableMarginBottom={true}>
-					{heroCardNode}
-				</BlockWrapper>
-			) : null}
-		</section>
+		<MediaHero
+			image={heroImageSrc ? { src: heroImageSrc, alt: heroImage?.alt ?? title } : null}
+			aside={showDonationForm ? heroCardNode : null}
+			mobileAside={showDonationsFormMobile ? heroCardNode : null}
+		>
+			<MediaHeroIntro
+				title={title}
+				eyebrow={preTitle ? <MediaHeroChips>{preTitle}</MediaHeroChips> : null}
+				titleIcon={titleIcon ? { src: titleIcon, alt: titleIconAlt ?? title } : undefined}
+			>
+				{stats.length > 0 ? (
+					<MediaHeroChips>
+						{stats.map((stat) => (
+							<MediaHeroPill key={stat.label}>
+								{stat.value !== undefined ? `${stat.value} ` : ''}
+								{stat.label}
+							</MediaHeroPill>
+						))}
+					</MediaHeroChips>
+				) : null}
+				{badges ? <MediaHeroChips>{badges}</MediaHeroChips> : null}
+			</MediaHeroIntro>
+		</MediaHero>
 	);
 };

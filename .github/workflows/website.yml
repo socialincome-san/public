@@ -2,22 +2,18 @@ name: Website
 
 on:
   pull_request:
-    paths-ignore:
-      - "recipients_app/**"
   merge_group:
   push:
     branches:
       - main
-    paths-ignore:
-      - "recipients_app/**"
 jobs:
   safe-chain:
-    name: "🔒 Safe Chain Dependency Check"
+    name: "🔒 Website Safe Chain Dependency Check"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: npm
@@ -35,11 +31,11 @@ jobs:
         run: npm ci --no-audit --no-fund
 
   lint:
-    name: "✨ Lint"
+    name: "✨ Website Lint"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: npm
@@ -51,11 +47,11 @@ jobs:
         run: npm run lint
 
   format-check:
-    name: "💅 Format Check"
+    name: "💅 Website Format Check"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: npm
@@ -65,11 +61,11 @@ jobs:
         run: npm run format:check
 
   check-unused:
-    name: "✂️ Check unused Code"
+    name: "✂️ Website Check unused Code"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: npm
@@ -81,11 +77,11 @@ jobs:
         run: npm run check:unused
 
   typecheck:
-    name: "🔍 Type Check"
+    name: "🔍 Website Type Check"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: npm
@@ -97,11 +93,11 @@ jobs:
         run: npm run typecheck
 
   unit-test:
-    name: "🧪 Unit Tests"
+    name: "🧪 Website Unit Tests"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: npm
@@ -112,29 +108,13 @@ jobs:
       - working-directory: website
         run: npm run test:unit
 
-  terraform:
-    name: "📐 Terraform Validation"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4
-        with:
-          terraform_version: v1.16.5
-      - run: terraform -chdir=website/infra init -backend=false
-      - run: terraform -chdir=website/infra fmt -check
-      - run: terraform -chdir=website/infra validate
-
   e2e:
-    name: "🏗️ Build & 📸 E2E Tests"
+    name: "🏗️ Website Build & 📸 E2E Tests"
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Only the dependency scan gates installing; the other checks run in parallel
     needs:
       - safe-chain
-      - lint
-      - format-check
-      - check-unused
-      - typecheck
-      - unit-test
-      - terraform
 
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-jammy@sha256:e1529a04087193966ea15d4a1617345bdaa0791690a24ab2c42b65f9ce5b2cdc
@@ -157,28 +137,45 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://social-income:social-income@postgres:5432/social-income
-      STORYBLOK_PREVIEW_SECRET: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}
-      STORYBLOK_PREVIEW_TOKEN: ${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}
-      STRIPE_WEBHOOK_SECRET: ${{ secrets.TF_STAGING_STRIPE_WEBHOOK_SECRET }}
-      STRIPE_SECRET_KEY: ${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }}
-      STRIPE_PRODUCT_RECURRING: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }}
-      STRIPE_PRODUCT_ONETIME: ${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }}
-      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.TF_STAGING_STRIPE_PUBLISHABLE_KEY }}
-      GITHUB_PAT: ${{ secrets.TF_STAGING_GITHUB_PAT }}
+      STORYBLOK_PREVIEW_TOKEN: ${{ secrets.E2E_STORYBLOK_PREVIEW_TOKEN }}
+      STRIPE_WEBHOOK_SECRET: ${{ secrets.E2E_STRIPE_WEBHOOK_SECRET }}
+      STRIPE_SECRET_KEY: ${{ secrets.E2E_STRIPE_SECRET_KEY }}
+      STRIPE_PRODUCT_RECURRING: ${{ secrets.E2E_STRIPE_PRODUCT_RECURRING }}
+      STRIPE_PRODUCT_ONETIME: ${{ secrets.E2E_STRIPE_PRODUCT_ONETIME }}
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.E2E_STRIPE_PUBLISHABLE_KEY }}
+      GITHUB_PAT: ${{ secrets.E2E_GITHUB_PAT }}
       HOME: /root
       # Deterministic Storyblok fixtures for Playwright (no STORYBLOK_PREVIEW_TOKEN required).
       E2E_STORYBLOK_MOCK: '1'
-      # Fork PRs get a read-only GITHUB_TOKEN, so skip snapshot auto-commit like Renovate.
-      SKIP_SNAPSHOT_UPDATE: ${{ github.actor == 'renovate[bot]' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) }}
+      # Fork and Dependabot PRs can't read the CI app secret, so skip snapshot auto-commit like Renovate.
+      SKIP_SNAPSHOT_UPDATE: ${{ github.actor == 'renovate[bot]' || github.actor == 'dependabot[bot]' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) }}
 
     steps:
+      # Snapshot commits pushed with the CI app token trigger the checks again;
+      # pushes made with GITHUB_TOKEN don't, which left PRs waiting forever.
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
+        if: env.SKIP_SNAPSHOT_UPDATE != 'true'
+        with:
+          client-id: ${{ vars.CI_APP_CLIENT_ID }}
+          private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          token: ${{ steps.app-token.outputs.token || github.token }}
           persist-credentials: true
 
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
+
+      - name: Cache Next.js build
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: website/.next/cache
+          key: nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('website/src/**', 'design-system/src/**') }}
+          restore-keys: |
+            nextjs-${{ hashFiles('package-lock.json') }}-
 
       - name: Run E2E snapshot update
         if: env.SKIP_SNAPSHOT_UPDATE != 'true'
@@ -208,7 +205,7 @@ jobs:
 
       - name: Upload Test Report (only if failure)
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: playwright-report-${{ github.sha }}
           path: |

@@ -1,14 +1,13 @@
 import { SummarySectionClient, type SummaryMetric } from '@/components/transparency/summary-section-client';
 import type { TransparencySummary } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import { Translator } from '@/lib/i18n/translator';
-import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import type { DisplayAmount } from '@/modules/currency-display/currency-display.types';
 import { getTransparencySummaryAction } from '@/modules/transparency/transparency.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
+import { getTranslations } from 'next-intl/server';
 
 type ReserveAccount = {
 	bankAccountId: string;
@@ -21,10 +20,10 @@ type ReserveAccount = {
 type Props = {
 	blok: TransparencySummary;
 	lang: WebsiteLanguage;
+	currency: WebsiteCurrency;
 };
 
-export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
-	const displayCurrency = await getWebsiteCurrencyFromCookie();
+export const TransparencySummaryBlock = async ({ blok, lang, currency: displayCurrency }: Props) => {
 	const dataResult = await getTransparencySummaryAction();
 
 	if (!dataResult.success) {
@@ -56,9 +55,9 @@ export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
 		return { ...account, amount };
 	});
 
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+	const t = await getTranslations('website-common');
 	const locale = getSafeNumberFormatLocale(lang);
-	const noData = translator.t('transparency-page.reserves.no-data');
+	const noData = t('transparency-page.reserves.no-data');
 	const dateFormatter = new Intl.DateTimeFormat(locale, {
 		day: '2-digit',
 		month: '2-digit',
@@ -86,16 +85,14 @@ export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
 		] as const
 	).map(({ key, displayAmount }) => ({
 		key,
-		titleName: translator.t(`transparency-page.${key}.title-name`),
-		titleCurrency: translator.t(`transparency-page.${key}.title-currency`, {
-			context: { currency: displayAmount.currency },
-		}),
+		titleName: t(`transparency-page.${key}.title-name`),
+		titleCurrency: t(`transparency-page.${key}.title-currency`, { currency: displayAmount.currency }),
 		description: descriptions[key],
 		amount: displayAmount.amount,
 		...(key === 'reserves'
 			? {
 					tooltip: {
-						ariaLabel: translator.t('transparency-page.reserves.tooltip-label'),
+						ariaLabel: t('transparency-page.reserves.tooltip-label'),
 						emptyMessage: noData,
 						rows: reserveTooltipRows,
 					},
@@ -104,7 +101,7 @@ export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
 	}));
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			<SummarySectionClient metrics={metrics} lang={lang} />
 		</BlockWrapper>
 	);

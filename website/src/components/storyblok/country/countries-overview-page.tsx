@@ -4,7 +4,7 @@ import { CountriesOverview } from '@/components/storyblok/country/countries-over
 import type { CountryStory } from '@/components/storyblok/country/country.types';
 import { getCountryIsoCode } from '@/components/storyblok/country/country.utils';
 import type { CountryOverview } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getPublicCountryStatsByIsoCodesAction } from '@/modules/countries/country.actions';
 import { getCountriesAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
@@ -12,10 +12,10 @@ import type { ISbStoryData } from '@storyblok/js';
 type Props = {
 	overview: ISbStoryData<CountryOverview>;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const CountriesOverviewPage = async ({ overview, lang, region }: Props) => {
+export const CountriesOverviewPage = async ({ overview, lang, currency }: Props) => {
 	const countriesResult = await getCountriesAction(lang);
 	const countries: CountryStory[] = countriesResult.success ? countriesResult.data : [];
 	const isoCodes = [...new Set(countries.map((country) => getCountryIsoCode(country.content)).filter(Boolean))];
@@ -27,18 +27,18 @@ export const CountriesOverviewPage = async ({ overview, lang, region }: Props) =
 		fullSlug: overview.full_slug,
 		currentLabel: title,
 		lang,
-		region,
+		currency,
 		includeCurrentLabel: false,
 	});
 
 	return (
 		<div className="flex flex-col gap-8 py-8">
-			<Breadcrumb links={breadcrumbLinks} className="py-0" />
+			<Breadcrumb links={breadcrumbLinks} layout="section" />
 			<CountriesOverview
 				countries={countries}
 				statsByIsoCode={statsByIsoCode}
 				lang={lang}
-				region={region}
+				currency={currency}
 				title={title}
 				text={text}
 			/>

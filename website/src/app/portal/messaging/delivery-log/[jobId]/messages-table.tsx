@@ -1,7 +1,14 @@
 import { twilioMessageLogUrl } from '@/app/portal/messaging/twilio-console-url';
 import type { MessagingJobDetailView, MessagingJobMessageRow } from '@/modules/messaging/messaging.types';
-import { Badge } from '@socialincome/design-system/badge/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@socialincome/design-system/table/table';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@socialincome/design-system/data-display/table/table';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
@@ -67,9 +74,9 @@ export const MessagesTable = ({ jobId, messages, twilioAccountSid }: MessagesTab
 										<div>{m.contactName}</div>
 										<div className="text-muted-foreground text-xs">{m.phoneNumber ?? '—'}</div>
 									</TableCell>
-									<TableCell className="uppercase">
+									<TableCell>
 										{m.channelUsed ?? '—'}
-										{m.fellBack && <span className="text-muted-foreground ml-1 normal-case">(fallback)</span>}
+										{m.fellBack && <span className="text-muted-foreground ml-1">(fallback)</span>}
 									</TableCell>
 									<TableCell>
 										<div className="flex items-center gap-2">
@@ -92,7 +99,9 @@ export const MessagesTable = ({ jobId, messages, twilioAccountSid }: MessagesTab
 										{m.twilioErrorMessage && <div className="text-muted-foreground text-xs">{m.twilioErrorMessage}</div>}
 										{!m.twilioErrorCode && !m.twilioErrorMessage && <span className="text-muted-foreground">—</span>}
 									</TableCell>
-									<TableCell className="text-muted-foreground text-sm">{formatDate(m.createdAt)}</TableCell>
+									<TableCell>
+										<span className="text-muted-foreground">{formatDate(m.createdAt)}</span>
+									</TableCell>
 								</TableRow>
 							);
 						})}

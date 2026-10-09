@@ -1,8 +1,8 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Input } from '@socialincome/design-system/input/input';
-import { Slider } from '@socialincome/design-system/slider/slider';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { Slider } from '@socialincome/design-system/forms/slider/slider';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { IndirectImpactNotice } from './indirect-impact-notice';
 
@@ -29,7 +29,7 @@ const parseRecipientCountInput = (raw: string, max: number): number | null => {
 };
 
 export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 	const [recipientCountDraft, setRecipientCountDraft] = useState<string | null>(null);
 	const noCandidates = filteredRecipients === 0;
 	const atMax = !noCandidates && amountOfRecipients === filteredRecipients;
@@ -50,26 +50,28 @@ export const RecipientsBox = ({ amountOfRecipients, filteredRecipients, onChange
 				<h3 className="font-medium">{recipientsLabel}</h3>
 
 				<div className="flex justify-center">
-					<Input
-						type="number"
-						inputMode="numeric"
-						name="amountOfRecipients"
-						autoComplete="off"
-						min={RECIPIENTS_MIN}
-						max={filteredRecipients}
-						disabled={noCandidates}
-						value={recipientCountInput}
-						onChange={(event) => setRecipientCountDraft(event.target.value)}
-						onBlur={(event) => commitRecipientCount(event.target.value)}
-						onKeyDown={(event) => {
-							if (event.key === 'Enter') {
-								event.currentTarget.blur();
-							}
-						}}
-						className="h-auto w-32 rounded-lg px-5 py-2 text-center text-3xl tabular-nums shadow-none"
-						aria-label={recipientsLabel}
-						data-testid="recipients-count-input"
-					/>
+					<div className="border-input focus-within:border-ring focus-within:ring-ring/50 w-32 rounded-lg border px-5 py-2 text-center text-3xl tabular-nums focus-within:ring-[3px]">
+						<Input
+							variant="bare"
+							type="number"
+							inputMode="numeric"
+							name="amountOfRecipients"
+							autoComplete="off"
+							min={RECIPIENTS_MIN}
+							max={filteredRecipients}
+							disabled={noCandidates}
+							value={recipientCountInput}
+							onChange={(event) => setRecipientCountDraft(event.target.value)}
+							onBlur={(event) => commitRecipientCount(event.target.value)}
+							onKeyDown={(event) => {
+								if (event.key === 'Enter') {
+									event.currentTarget.blur();
+								}
+							}}
+							aria-label={recipientsLabel}
+							data-testid="recipients-count-input"
+						/>
+					</div>
 				</div>
 
 				{noCandidates ? (

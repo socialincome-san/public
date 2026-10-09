@@ -8,24 +8,8 @@ const port = process.env.PORT ?? '3000';
 const baseURL = `http://localhost:${port}`;
 
 const e2eStorageState: Awaited<ReturnType<BrowserContext['storageState']>> = {
-	cookies: [
-		{
-			name: 'si_currency',
-			value: 'CHF',
-			domain: 'localhost',
-			path: '/',
-			expires: -1,
-			httpOnly: false,
-			secure: false,
-			sameSite: 'Lax',
-		},
-	],
-	origins: [
-		{
-			origin: baseURL,
-			localStorage: [{ name: 'cookie_consent', value: 'denied' }],
-		},
-	],
+	cookies: [],
+	origins: [],
 };
 
 export default defineConfig({
@@ -36,15 +20,20 @@ export default defineConfig({
 	workers: 1,
 
 	forbidOnly: !!process.env.CI,
-	retries: process.env.CI ? 2 : 0,
+	retries: process.env.CI ? 1 : 0,
+	maxFailures: process.env.CI ? 10 : undefined,
 
 	snapshotDir: 'snapshots',
 	snapshotPathTemplate: '{testDir}/__screenshots__/{projectName}/{testFilePath}/{testName}{ext}',
 
-	reporter: [['html', { open: 'never' }]],
+	// list shows progress in the CI log (the default dot reporter only flushes every 80 tests)
+	reporter: process.env.CI ? [['list'], ['github'], ['html', { open: 'never' }]] : [['html', { open: 'never' }]],
+	reportSlowTests: { max: 10, threshold: 15_000 },
 
 	use: {
 		baseURL,
+		// Per action, not per test: a blocked click fails after 10s instead of using up the test timeout
+		actionTimeout: 10_000,
 		screenshot: 'only-on-failure',
 		trace: 'retain-on-failure',
 		video: 'retain-on-failure',
@@ -115,7 +104,7 @@ export default defineConfig({
 		},
 	],
 	webServer: {
-		command: 'npm run build && npm run start',
+		command: 'npm run build && npm run test:e2e:server',
 		url: baseURL,
 		reuseExistingServer: !process.env.CI,
 		timeout: 180_000,

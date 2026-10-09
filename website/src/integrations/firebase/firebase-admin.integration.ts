@@ -4,11 +4,18 @@ import { getAuth, type Auth } from 'firebase-admin/auth';
 import { getStorage, type Storage } from 'firebase-admin/storage';
 import { z } from 'zod';
 
-const serviceAccountSchema = z.object({
-	projectId: z.string(),
-	clientEmail: z.string(),
-	privateKey: z.string(),
-});
+// Matches the key file downloaded from Google Cloud.
+const serviceAccountSchema = z
+	.object({
+		project_id: z.string(),
+		client_email: z.string(),
+		private_key: z.string(),
+	})
+	.transform(({ project_id, client_email, private_key }) => ({
+		projectId: project_id,
+		clientEmail: client_email,
+		privateKey: private_key,
+	}));
 
 export const getFirebaseAdminAuth = (): Auth => getAuth(getFirebaseAdminApp());
 

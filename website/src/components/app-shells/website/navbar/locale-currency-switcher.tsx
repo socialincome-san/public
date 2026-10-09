@@ -1,182 +1,88 @@
 'use client';
 
-import { type CountryCode } from '@/generated/prisma/enums';
 import { useIsPage } from '@/lib/hooks/use-is-page';
-import { useI18n } from '@/lib/i18n/use-i18n';
-import { useTranslator } from '@/lib/i18n/use-translator';
 import {
-	allWebsiteLanguages,
 	isWebsiteCurrency,
+	isWebsiteLanguage,
 	mainWebsiteLanguages,
+	toCurrencySegment,
 	websiteCurrencies,
-	websiteRegions,
 	type WebsiteCurrency,
 	type WebsiteLanguage,
-	type WebsiteRegion,
 } from '@/lib/i18n/utils';
-import { Button } from '@socialincome/design-system/button/button';
-import { cn } from '@socialincome/design-system/cn';
-import { CountryFlag } from '@socialincome/design-system/country-flag/country-flag';
-import { Popover, PopoverContent, PopoverTrigger } from '@socialincome/design-system/popover/popover';
-import { Tabs, TabsList, TabsTrigger } from '@socialincome/design-system/tabs/tabs';
-import { ChevronDown, Globe } from 'lucide-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { LocaleCurrencySwitcher as DesignSystemLocaleCurrencySwitcher } from '@socialincome/design-system/navigation/locale-currency-switcher/locale-currency-switcher';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { Suspense, useState } from 'react';
 
-const SWISS_COUNTRY_CODE: CountryCode = 'CH';
 const surveyLanguages: WebsiteLanguage[] = ['en', 'kri'];
 
-const isWebsiteLanguage = (value: string): value is WebsiteLanguage =>
-	allWebsiteLanguages.some((language) => language === value);
+// Read from `window.location` on click: `usePathname()` would keep the navbar out of the static shell.
+const createLocalePath = (language: WebsiteLanguage, currency: WebsiteCurrency) => {
+	const { pathname, search, hash } = window.location;
+	const [, , , ...pathTail] = pathname.split('/');
 
-const isWebsiteRegion = (value: string): value is WebsiteRegion => websiteRegions.some((region) => region === value);
-
-const getDefaultCurrency = (region: WebsiteRegion): WebsiteCurrency => (region === 'ch' ? 'CHF' : 'USD');
-
-const createLocalePath = ({
-	pathname,
-	searchParams,
-	language,
-	region,
-}: {
-	pathname: string;
-	searchParams: URLSearchParams;
-	language: WebsiteLanguage;
-	region: WebsiteRegion;
-}) => {
-	const segments = pathname.split('/');
-
-	if (segments.length < 3) {
-		return `/${language}/${region}`;
-	}
-
-	segments[1] = language;
-	segments[2] = region;
-
-	const queryString = searchParams.toString();
-
-	return `${segments.join('/')}${queryString ? `?${queryString}` : ''}`;
+	return `/${[language, toCurrencySegment(currency), ...pathTail].join('/')}${search}${hash}`;
 };
 
 type Props = {
 	lang: WebsiteLanguage;
-	region: string;
-	className?: string;
+	currency: WebsiteCurrency;
+	variant?: 'ghost' | 'outline';
 };
 
-export const LocaleCurrencySwitcher = ({ lang, region, className }: Props) => {
+const Switcher = ({ lang, currency, variant = 'ghost', isSurveyPage }: Props & { isSurveyPage: boolean }) => {
 	const [open, setOpen] = useState(false);
 	const router = useRouter();
-	const pathname = usePathname();
-	const searchParams = useSearchParams();
-	const isSurveyPage = useIsPage('survey');
-	const translator = useTranslator(lang, 'website-common');
-	const { language, setLanguage, region: selectedRegion, setRegion, currency, setCurrency } = useI18n();
+	const t = useTranslations('website-common');
 
-	const initialRegion = isWebsiteRegion(region) ? region : 'int';
-	const currentLanguage = language ?? lang;
-	const currentRegion = selectedRegion ?? initialRegion;
-	const currentCurrency = currency ?? getDefaultCurrency(currentRegion);
 	const languageOptions = isSurveyPage ? surveyLanguages : mainWebsiteLanguages;
-	const currentSwitcherLanguage = languageOptions.includes(currentLanguage) ? currentLanguage : (languageOptions[0] ?? 'en');
-	const regionOptions: { value: WebsiteRegion; label: string }[] = [
-		{ value: 'int', label: translator?.t('locale-currency-switcher.regions.int') ?? 'International' },
-		{ value: 'ch', label: translator?.t('locale-currency-switcher.regions.ch') ?? 'Switzerland' },
-	];
+	const currentSwitcherLanguage = languageOptions.includes(lang) ? lang : (languageOptions[0] ?? 'en');
 
-	const navigateToLocale = (nextLanguage: WebsiteLanguage, nextRegion: WebsiteRegion) => {
+	const navigateToLocale = (nextLanguage: WebsiteLanguage, nextCurrency: WebsiteCurrency) => {
 		setOpen(false);
-		router.push(createLocalePath({ pathname, searchParams, language: nextLanguage, region: nextRegion }));
+		router.push(createLocalePath(nextLanguage, nextCurrency));
 	};
 
 	const handleLanguageChange = (value: string) => {
-		if (!isWebsiteLanguage(value) || !languageOptions.includes(value)) {
-			return;
+		if (isWebsiteLanguage(value) && languageOptions.includes(value)) {
+			navigateToLocale(value, currency);
 		}
-
-		setLanguage(value);
-		navigateToLocale(value, currentRegion);
-	};
-
-	const handleRegionChange = (value: string) => {
-		if (!isWebsiteRegion(value)) {
-			return;
-		}
-
-		setRegion(value);
-		navigateToLocale(currentLanguage, value);
 	};
 
 	const handleCurrencyChange = (value: string) => {
 		if (isWebsiteCurrency(value)) {
-			setCurrency(value);
-			setOpen(false);
-			router.refresh();
+			navigateToLocale(lang, value);
 		}
 	};
 
 	return (
-		<Popover open={open} onOpenChange={setOpen}>
-			<PopoverTrigger asChild>
-				<Button
-					type="button"
-					variant="ghost"
-					className={cn('h-10 gap-2 rounded-full px-3 text-sm font-bold lg:h-11', className)}
-					aria-label={translator?.t('locale-currency-switcher.aria-label') ?? 'Change language, region, and currency'}
-				>
-					{currentRegion === 'ch' ? <CountryFlag country={SWISS_COUNTRY_CODE} size="sm" /> : <Globe className="size-4" />}
-					<span>{currentCurrency}</span>
-					<ChevronDown className="text-muted-foreground size-3.5" />
-				</Button>
-			</PopoverTrigger>
-			<PopoverContent
-				align="end"
-				className="bg-popover z-[110] w-72 space-y-4 rounded-3xl p-4 shadow-[0_24px_48px_rgba(15,23,42,0.16)]"
-			>
-				<div className="space-y-2">
-					<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.language') ?? 'Language'}</div>
-					<Tabs value={currentSwitcherLanguage} onValueChange={handleLanguageChange}>
-						<TabsList className={cn('grid h-10 w-full rounded-full', isSurveyPage ? 'grid-cols-2' : 'grid-cols-4')}>
-							{languageOptions.map((language) => (
-								<TabsTrigger key={language} value={language} className="rounded-full">
-									{language.toUpperCase()}
-								</TabsTrigger>
-							))}
-						</TabsList>
-					</Tabs>
-				</div>
-
-				<div className="space-y-2">
-					<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.region') ?? 'Region'}</div>
-					<Tabs value={currentRegion} onValueChange={handleRegionChange}>
-						<TabsList className="grid h-10 w-full grid-cols-2 rounded-full">
-							{regionOptions.map((option) => (
-								<TabsTrigger key={option.value} value={option.value} className="rounded-full">
-									{option.value === 'ch' ? (
-										<CountryFlag country={SWISS_COUNTRY_CODE} size="sm" />
-									) : (
-										<Globe className="size-4" />
-									)}
-									<span>{option.label}</span>
-								</TabsTrigger>
-							))}
-						</TabsList>
-					</Tabs>
-				</div>
-
-				<div className="space-y-2">
-					<div className="text-sm font-bold">{translator?.t('locale-currency-switcher.currency') ?? 'Currency'}</div>
-					<Tabs value={currentCurrency} onValueChange={handleCurrencyChange}>
-						<TabsList className="grid h-10 w-full grid-cols-3 rounded-full">
-							{websiteCurrencies.map((currency) => (
-								<TabsTrigger key={currency} value={currency} className="rounded-full">
-									{currency}
-								</TabsTrigger>
-							))}
-						</TabsList>
-					</Tabs>
-				</div>
-			</PopoverContent>
-		</Popover>
+		<DesignSystemLocaleCurrencySwitcher
+			ariaLabel={t('locale-currency-switcher.aria-label')}
+			variant={variant}
+			open={open}
+			onOpenChange={setOpen}
+			language={{
+				label: t('locale-currency-switcher.language'),
+				value: currentSwitcherLanguage,
+				options: languageOptions.map((option) => ({ value: option, label: option.toUpperCase() })),
+				onChange: handleLanguageChange,
+			}}
+			currency={{
+				label: t('locale-currency-switcher.currency'),
+				value: currency,
+				options: websiteCurrencies.map((option) => ({ value: option, label: option })),
+				onChange: handleCurrencyChange,
+			}}
+		/>
 	);
 };
+
+const SwitcherForCurrentPage = (props: Props) => <Switcher {...props} isSurveyPage={useIsPage('survey')} />;
+
+// The pathname is unknown while prerendering dynamic routes, so the static shell assumes a non-survey page.
+export const LocaleCurrencySwitcher = (props: Props) => (
+	<Suspense fallback={<Switcher {...props} isSurveyPage={false} />}>
+		<SwitcherForCurrentPage {...props} />
+	</Suspense>
+);

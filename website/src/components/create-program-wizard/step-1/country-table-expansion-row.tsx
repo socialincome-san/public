@@ -1,24 +1,29 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { isMessageKey } from '@/lib/i18n/message-keys';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
-import { TableCell, TableRow } from '@socialincome/design-system/table/table';
+import { TableCell, TableRow } from '@socialincome/design-system/data-display/table/table';
+import { useMessages, useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 type Props = {
 	row: ProgramCountryFeasibilityRow;
-	bgClass: string;
 };
 
-export const ExpansionRow = ({ row, bgClass }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+export const ExpansionRow = ({ row }: Props) => {
+	const t = useTranslations('create-program-wizard');
+	const messages = useMessages();
+	const isConditionKey = (key: string) => isMessageKey(messages, 'create-program-wizard', key);
 
 	const renderSource = (source: ProgramCountryFeasibilityRow['cash']['details']['source'] | undefined) => {
 		if (!source) {
 			return null;
 		}
 
-		const translatedSourceText = source.translationKey ? t(source.translationKey, source.translationContext) : source.text;
+		const translatedSourceText =
+			source.translationKey && isConditionKey(source.translationKey)
+				? t(source.translationKey, source.translationContext)
+				: source.text;
 
 		if (source.href) {
 			return (
@@ -42,20 +47,24 @@ export const ExpansionRow = ({ row, bgClass }: Props) => {
 	const renderDetails = (details: ProgramCountryFeasibilityRow['cash']['details']) => {
 		return (
 			<div className="space-y-1 text-sm">
-				<p>{t(details.translationKey, details.translationContext)}</p>
+				<p>
+					{isConditionKey(details.translationKey)
+						? t(details.translationKey, details.translationContext)
+						: details.translationKey}
+				</p>
 				{renderSource(details.source)}
 			</div>
 		);
 	};
 
 	return (
-		<TableRow className={bgClass}>
+		<TableRow data-state="selected">
 			<TableCell />
 			<TableCell />
-			<TableCell className="p-4 align-top">{renderDetails(row.cash.details)}</TableCell>
-			<TableCell className="p-4 align-top">{renderDetails(row.mobileMoney.details)}</TableCell>
-			<TableCell className="p-4 align-top">{renderDetails(row.mobileNetwork.details)}</TableCell>
-			<TableCell className="p-4 align-top">{renderDetails(row.sanctions.details)}</TableCell>
+			<TableCell verticalAlign="top">{renderDetails(row.cash.details)}</TableCell>
+			<TableCell verticalAlign="top">{renderDetails(row.mobileMoney.details)}</TableCell>
+			<TableCell verticalAlign="top">{renderDetails(row.mobileNetwork.details)}</TableCell>
+			<TableCell verticalAlign="top">{renderDetails(row.sanctions.details)}</TableCell>
 			<TableCell />
 		</TableRow>
 	);

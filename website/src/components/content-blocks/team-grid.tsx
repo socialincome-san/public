@@ -2,8 +2,8 @@ import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getPersonsByUuidsAction } from '@/modules/storyblok-content/storyblok-content.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
 import NextImage from 'next/image';
 
 import type { Person, TeamGrid } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -26,7 +26,7 @@ export const TeamGridBlock = async ({ blok, lang }: Props) => {
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			{blok.title && <h2 className="text-3xl font-bold">{blok.title}</h2>}
 			{blok.description && (
 				<div className="text-foreground mt-4 text-lg">

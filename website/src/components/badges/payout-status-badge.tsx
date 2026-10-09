@@ -1,7 +1,7 @@
 'use client';
 
 import { PayoutStatus } from '@/generated/prisma/enums';
-import { Badge } from '@socialincome/design-system/badge/badge';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { AlertTriangleIcon, CheckIcon, CircleDollarSignIcon, CircleOffIcon, XCircleIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 

@@ -6,10 +6,16 @@ import type {
 	ParsedVariable,
 	VariableAssignments,
 } from '@/modules/messaging/messaging.types';
-import { Button } from '@socialincome/design-system/button/button';
-import { Input } from '@socialincome/design-system/input/input';
-import { RadioGroup, RadioGroupItem } from '@socialincome/design-system/radio-group/radio-group';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/design-system/select/select';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { RadioGroup, RadioGroupItem } from '@socialincome/design-system/forms/radio-group/radio-group';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
 import { getFieldCatalog, type FieldEntry } from './field-catalog';
 import { clearAssignment, getAssignment, setConstantSource, setFieldSource } from './variable-assignments';
 
@@ -53,7 +59,7 @@ const VariableAssignmentRow = ({
 				)}
 			</div>
 
-			<RadioGroup value={source} onValueChange={handleSourceChange} disabled={disabled} className="flex gap-4">
+			<RadioGroup value={source} onValueChange={handleSourceChange} disabled={disabled} layout="row">
 				<label className="flex items-center gap-2 text-sm">
 					<RadioGroupItem value="field" />
 					Field

@@ -2,7 +2,6 @@
 
 import { useDonationFormState } from '@/components/donation-wizard/hooks/use-donation-form-state';
 import { useDonationModal } from '@/components/donation-wizard/hooks/use-donation-modal';
-import type { DonationAmountFieldsTranslations } from '@/components/donation-wizard/i18n/donation-amount-fields-translations';
 import {
 	DONATION_CUSTOM_AMOUNT_MAX,
 	DONATION_CUSTOM_AMOUNT_MIN,
@@ -10,10 +9,11 @@ import {
 } from '@/components/donation-wizard/utils/donation-amount';
 import { getDonationWizardCardClass } from '@/components/donation-wizard/utils/donation-wizard-layout';
 import { selectStep1FormView } from '@/components/donation-wizard/wizard/donation-machine-selectors';
-import type { WebsiteCurrency } from '@/lib/i18n/utils';
-import { Button } from '@socialincome/design-system/button/button';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
+import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
-import { Input } from '@socialincome/design-system/input/input';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { useTranslations } from 'next-intl';
 import NextImage from 'next/image';
 
 const ZEWO_NPO_DETAIL_URL = 'https://zewo.ch/npo-detail/?relief_organization=social-income';
@@ -25,23 +25,14 @@ const segmentActive = 'bg-card shadow-xs';
 
 type Props = {
 	campaignId?: string;
-	translations: DonationAmountFieldsTranslations;
-	currency: WebsiteCurrency;
 	quote: string;
 	profilePictureSrc?: string | null;
 	profilePictureAlt: string;
-	zewoLabel: string;
 };
 
-export const CampaignDonationForm = ({
-	campaignId,
-	translations,
-	currency,
-	quote,
-	profilePictureSrc,
-	profilePictureAlt,
-	zewoLabel,
-}: Props) => {
+export const CampaignDonationForm = ({ campaignId, quote, profilePictureSrc, profilePictureAlt }: Props) => {
+	const currency = useWebsiteCurrency();
+	const t = useTranslations('donation-wizard');
 	const { openWizardWithFormAmount } = useDonationModal();
 	const form = useDonationFormState({ selectedAmount: 25 });
 	const values = selectStep1FormView(form.context);
@@ -60,7 +51,7 @@ export const CampaignDonationForm = ({
 					target="_blank"
 					rel="noopener noreferrer"
 					className="absolute top-5 right-4"
-					aria-label={zewoLabel}
+					aria-label={t('impact.zewo')}
 				>
 					<NextImage src="/assets/zewo.svg" alt="" width={38} height={37} className="size-[38px]" />
 				</a>
@@ -88,8 +79,8 @@ export const CampaignDonationForm = ({
 				<div className="bg-accent grid w-full grid-cols-2 rounded-md p-1">
 					{(
 						[
-							{ cadence: 'monthly', label: translations.monthly, testId: 'donation-wizard-cadence-monthly' },
-							{ cadence: 'one-time', label: translations.oneTime, testId: 'donation-wizard-cadence-one-time' },
+							{ cadence: 'monthly', label: t('stepAmount.monthly'), testId: 'donation-wizard-cadence-monthly' },
+							{ cadence: 'one-time', label: t('stepAmount.one-time'), testId: 'donation-wizard-cadence-one-time' },
 						] as const
 					).map(({ cadence, label, testId }) => (
 						<button
@@ -127,10 +118,10 @@ export const CampaignDonationForm = ({
 								)}
 							>
 								{option === 'other' ? (
-									<span className="text-sm leading-none font-medium">{translations.other}</span>
+									<span className="text-sm leading-none font-medium">{t('stepAmount.other')}</span>
 								) : (
 									<span className="flex flex-col items-center leading-none">
-										<span className="text-[10px] font-medium">{currency}</span>
+										<span className="text-2xs font-medium">{currency}</span>
 										<span className="text-lg font-medium">{option}</span>
 									</span>
 								)}
@@ -145,7 +136,7 @@ export const CampaignDonationForm = ({
 						data-testid="donation-wizard-custom-amount"
 						min={DONATION_CUSTOM_AMOUNT_MIN}
 						max={DONATION_CUSTOM_AMOUNT_MAX}
-						placeholder={translations.customAmountPlaceholder}
+						placeholder={t('stepAmount.custom-amount-placeholder')}
 						value={values.customAmount ?? ''}
 						onChange={(e) => {
 							const raw = e.target.value;
@@ -165,7 +156,7 @@ export const CampaignDonationForm = ({
 				<Button
 					type="button"
 					data-testid="donation-wizard-amount-continue"
-					className="w-full"
+					fullWidth
 					disabled={!values.isValid}
 					onClick={() => {
 						if (!form.isValid) {
@@ -175,7 +166,7 @@ export const CampaignDonationForm = ({
 						openWizardWithFormAmount(campaignId ? { ...form.context, campaignId } : form.context);
 					}}
 				>
-					{translations.donateNow}
+					{t('stepAmount.donate-now')}
 				</Button>
 			</div>
 		</div>

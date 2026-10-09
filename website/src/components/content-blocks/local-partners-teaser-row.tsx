@@ -5,56 +5,56 @@ import {
 import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
 import { getLocalPartnerPortalSlug } from '@/components/storyblok/local-partner/local-partner.utils';
 import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/local-partners-teaser-intro';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getLocalPartnerOverviewStatsAction } from '@/modules/local-partners/local-partner.actions';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/carousel/carousel';
+import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/data-display/carousel/carousel';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 
 type ContentProps = {
 	localPartners: LocalPartnerStory[];
 	title?: string;
 	text?: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, region }: ContentProps) => {
+export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, currency }: ContentProps) => {
 	if (localPartners.length === 0) {
 		return null;
 	}
 
 	const portalSlugs = localPartners.map((localPartner) => getLocalPartnerPortalSlug(localPartner.content)).filter(Boolean);
-	const [translator, statsResult] = await Promise.all([
-		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
+	const [t, statsResult] = await Promise.all([
+		getTranslations('website-common'),
 		getLocalPartnerOverviewStatsAction(portalSlugs),
 	]);
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 
 	return (
-		<BlockWrapper className="max-2xl:overflow-visible">
+		<BlockWrapper>
 			<div className="grid gap-8 max-2xl:w-[calc(100%+max(0px,calc((100vw-100%)/2)))] lg:grid-cols-3 lg:items-center">
 				<div className="pr-8 lg:col-span-1 lg:pr-0">
-					<LocalPartnersTeaserIntro lang={lang} />
+					<LocalPartnersTeaserIntro />
 				</div>
 				<div className="relative min-w-0 lg:col-span-2">
-					<Carousel opts={{ align: 'start' }}>
-						<CarouselContent className="-ml-6" scrollFade>
+					<Carousel opts={{ align: 'start' }} gap="lg">
+						<CarouselContent scrollFade>
 							{localPartners.map((localPartner) => {
 								const portalSlug = getLocalPartnerPortalSlug(localPartner.content);
 								const recipientsCount = statsByPortalSlug[portalSlug]?.recipientsCount ?? 0;
 								const candidatesCount = statsByPortalSlug[portalSlug]?.candidatesCount ?? 0;
-								const recipientsLabel = translator.t(
+								const recipientsLabel = t(
 									recipientsCount === 1 ? 'local-partners-page.recipient-singular' : 'local-partners-page.recipient-plural',
 								);
-								const { candidatesLabel, alertVariant } = getLocalPartnerCandidateFooter(translator, candidatesCount);
+								const { candidatesLabel, alertVariant } = getLocalPartnerCandidateFooter(t, candidatesCount);
 
 								return (
-									<CarouselItem key={localPartner.uuid} className="basis-[305px] pl-6">
+									<CarouselItem key={localPartner.uuid} size="card">
 										<LocalPartnerTeaserCard
 											localPartner={localPartner}
 											lang={lang}
-											region={region}
+											currency={currency}
 											recipientsCount={recipientsCount}
 											recipientsLabel={recipientsLabel}
 											candidatesLabel={candidatesLabel}

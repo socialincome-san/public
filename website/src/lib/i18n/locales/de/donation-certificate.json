@@ -1,6 +1,6 @@
 {
-	"contribution": "{{ amount, currency }}",
-	"filename": "Social Income Spendenbescheinigung {{ year }}.pdf",
+	"contribution": "{amount}",
+	"filename": "Social Income Spendenbescheinigung {year}.pdf",
 	"footer-left-line-1": "Social Income",
 	"footer-left-line-2": "Zweierstrasse 103",
 	"footer-left-line-3": "CH-8003 Zürich",
@@ -11,13 +11,13 @@
 	"footer-right-line-2": "hello@socialincome.org",
 	"footer-right-line-3": "socialincome.org",
 	"header": "Verein mit Steuerbefreiung\nim Kanton Zürich",
-	"location": "Zürich, {{ date, datetime }}",
+	"location": "Zürich, {date, date}",
 	"no-contributions": "Keine Spenden",
 	"title-kerrin": "Leiterin Finanzen",
-	"text-1": "Hiermit wird bestätigt, dass Social Income von {{ firstname }} {{ lastname }}, im Jahr {{ year }} gesamthaft folgende Zuwendungen erhalten hat:",
-	"text-2": "Berücksichtigt wurden sämtliche eingegangenen Spenden zwischen dem {{ start, datetime }} und dem {{ end, datetime }}.",
+	"text-1": "Hiermit wird bestätigt, dass Social Income von {firstname} {lastname}, im Jahr {year} gesamthaft folgende Zuwendungen erhalten hat:",
+	"text-2": "Berücksichtigt wurden sämtliche eingegangenen Spenden zwischen dem {start, date} und dem {end, date}.",
 	"text-3": "Bitte beachten Sie für einen möglichen Steuerabzug die geltenden lokalen Steuervorschriften.",
 	"text-4": "Vielen Dank für Ihre Unterstützung.",
 	"text-5": "Freundliche Grüsse",
-	"title": "Spendenbescheinigung {{ year }}"
+	"title": "Spendenbescheinigung {year}"
 }

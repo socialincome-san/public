@@ -21,11 +21,11 @@ export const requireAdmin = async (): Promise<UserSession> => {
 	return user;
 };
 
-export const requireSessions = async (type: Session['type']): Promise<Session[]> => {
+export const requireSessions = async (type: Session['type'], loginPath = '/login'): Promise<Session[]> => {
 	const result = await getCurrentSessions();
 	const sessions = result.success ? result.data : [];
 	if (!sessions.some((session) => session.type === type)) {
-		redirect('/login');
+		redirect(loginPath);
 	}
 
 	return sessions;

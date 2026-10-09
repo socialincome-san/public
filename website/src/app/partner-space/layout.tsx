@@ -1,12 +1,26 @@
+import { RootDocument, rootViewport } from '@/app/root-document';
 import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
-import { defaultRegion } from '@/lib/i18n/utils';
+import { defaultCurrency, defaultLanguage } from '@/lib/i18n/utils';
+import { getMetadata } from '@/lib/utils/metadata';
 import { requireSessions } from '@/server/session';
-import { Card } from '@socialincome/design-system/card/card';
+import { Card } from '@socialincome/design-system/data-display/card/card';
 import type { ReactNode } from 'react';
 
-export default async function PartnerSpaceLayout({ children }: { children: ReactNode }) {
+export const viewport = rootViewport;
+
+export const generateMetadata = () => getMetadata(defaultLanguage, 'website-common');
+
+export default function PartnerSpaceLayout({ children }: { children: ReactNode }) {
+	return (
+		<RootDocument lang={defaultLanguage}>
+			<PartnerSpaceShell>{children}</PartnerSpaceShell>
+		</RootDocument>
+	);
+}
+
+const PartnerSpaceShell = async ({ children }: { children: ReactNode }) => {
 	const sessions = await requireSessions('local-partner');
 
 	const sections = [
@@ -21,7 +35,12 @@ export default async function PartnerSpaceLayout({ children }: { children: React
 	];
 
 	return (
-		<WebsiteAppShell sessions={sessions} lang="en" region={defaultRegion} scope="partner-space">
+		<WebsiteAppShell
+			sessions={Promise.resolve(sessions)}
+			lang={defaultLanguage}
+			currency={defaultCurrency}
+			scope="partner-space"
+		>
 			<Breadcrumb links={breadcrumbLinks} />
 			<h1 data-testid="welcome-message-partner-space" className="py-8 text-5xl">
 				Partner Space
@@ -30,4 +49,4 @@ export default async function PartnerSpaceLayout({ children }: { children: React
 			<Card>{children}</Card>
 		</WebsiteAppShell>
 	);
-}
+};

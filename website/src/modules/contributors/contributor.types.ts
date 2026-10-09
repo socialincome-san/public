@@ -173,3 +173,5 @@ type ContributorContactRecord = {
 	createdAt: Date;
 	updatedAt: Date | null;
 };
+
+export const CONTRIBUTOR_CACHE_TAG = 'contributors';

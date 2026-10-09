@@ -1,5 +1,12 @@
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { useState } from 'react';
 
 export type ExtraAction = {
@@ -41,8 +48,7 @@ export const FormActions = ({ mode, isLoading = false, onCancel, onDelete, extra
 						{onDelete && (
 							<Button
 								type="button"
-								variant="ghost"
-								className="text-destructive hover:text-destructive"
+								variant="destructive-outline"
 								disabled={isLoading}
 								onClick={() =>
 									setConfirm({
@@ -104,14 +110,12 @@ export const FormActions = ({ mode, isLoading = false, onCancel, onDelete, extra
 					}
 				}}
 			>
-				<DialogContent>
+				<DialogContent size="alert">
 					<DialogHeader>
 						<DialogTitle>{confirm?.title}</DialogTitle>
+						<DialogDescription>{confirm?.description}</DialogDescription>
 					</DialogHeader>
-
-					<p className="text-muted-foreground text-sm">{confirm?.description}</p>
-
-					<div className="mt-4 flex justify-end gap-2">
+					<DialogFooter>
 						<Button variant="outline" onClick={closeConfirm}>
 							Cancel
 						</Button>
@@ -125,7 +129,7 @@ export const FormActions = ({ mode, isLoading = false, onCancel, onDelete, extra
 						>
 							{confirm?.confirmLabel}
 						</Button>
-					</div>
+					</DialogFooter>
 				</DialogContent>
 			</Dialog>
 		</>

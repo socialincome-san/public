@@ -1,7 +1,7 @@
 'use client';
 
 import { Currency, PayoutInterval } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { useTranslations } from 'next-intl';
 import { PayoutBox } from './payout-box';
 import { ProgramCostsHeader } from './program-costs-header';
 import { RecipientsBox } from './recipients-box';
@@ -105,7 +105,7 @@ const BudgetStepContent = ({
 	onCurrencyChange,
 	onToggleCustomizePayouts,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 	const numberOfIntervals =
 		payoutInterval === 'quarterly'
 			? programDuration / 3

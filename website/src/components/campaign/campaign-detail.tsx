@@ -10,13 +10,16 @@ import { CampaignNewsletter } from '@/components/campaign/campaign-newsletter';
 import { CampaignOtherCampaignsTeaser } from '@/components/campaign/campaign-other-campaigns-teaser';
 import { CampaignProgramTeaser } from '@/components/campaign/campaign-program-teaser';
 import { CampaignVideoSlider } from '@/components/campaign/campaign-video-slider';
+import { Community } from '@/components/community/community';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCampaignStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { getCampaignPageContentAction } from '@/modules/campaigns/campaign.actions';
 import type { CampaignPage } from '@/modules/campaigns/campaign.types';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
+import type { CommunityPanelData } from '@/modules/community/community.types';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	campaign: CampaignPage;
@@ -35,7 +38,8 @@ type Props = {
 	campaignSlug: string;
 	faq?: Campaign['faq'];
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
+	community: CommunityPanelData | null;
 };
 
 export const CampaignDetail = async ({
@@ -55,41 +59,42 @@ export const CampaignDetail = async ({
 	campaignSlug,
 	faq,
 	lang,
-	region,
+	currency,
+	community,
 }: Props) => {
-	const [pageContentResult, breadcrumbLinks] = await Promise.all([
+	const [pageContentResult, breadcrumbLinks, t, tCommon, tNewsletter, tFaq] = await Promise.all([
 		getCampaignPageContentAction(lang, faq),
 		buildBreadcrumbLinks({
 			fullSlug: getCampaignStoryPath(campaignSlug),
 			currentLabel: title,
 			lang,
-			region,
+			currency,
 		}),
+		getTranslations('website-campaign'),
+		getTranslations('website-common'),
+		getTranslations('website-newsletter'),
+		getTranslations('website-faq'),
 	]);
 	if (!pageContentResult.success) {
 		throw new Error(pageContentResult.error);
 	}
-	const { translator, faqs, videoPlaybackIds, newsletter } = pageContentResult.data;
+	const { faqs, videoPlaybackIds, newsletter } = pageContentResult.data;
 	const trimmedDescription = description.trim();
-	const submissionLabels = buildCampaignSubmissionLabels(translator);
+	const submissionLabels = buildCampaignSubmissionLabels(tCommon);
 	const newsletterTranslations = {
-		firstNameLabel: translator.t('popup.first-name'),
-		emailLabel: translator.t('popup.email'),
-		emailPlaceholder: translator.t('popup.email-placeholder'),
-		buttonAddSubscriber: translator.t('popup.button-subscribe'),
-		sentBy: translator.t('popup.sent-by'),
-		toastSuccess: translator.t('popup.toast-success'),
-		toastFailure: translator.t('popup.toast-failure'),
+		firstNameLabel: tNewsletter('popup.first-name'),
+		emailLabel: tNewsletter('popup.email'),
+		emailPlaceholder: tNewsletter('popup.email-placeholder'),
+		buttonAddSubscriber: tNewsletter('popup.button-subscribe'),
+		sentBy: tNewsletter('popup.sent-by'),
+		toastSuccess: tNewsletter('popup.toast-success'),
+		toastFailure: tNewsletter('popup.toast-failure'),
 	};
 	const videoSliderTranslations = {
-		title: translator.t('campaign.video-slider.title'),
-		description: translator.t('campaign.video-slider.description'),
-		videoTitles: videoPlaybackIds.map((_, index) =>
-			translator.t('campaign.video-slider.video-title', { context: { index: index + 1 } }),
-		),
-		showVideoLabels: videoPlaybackIds.map((_, index) =>
-			translator.t('campaign.video-slider.show-video', { context: { index: index + 1 } }),
-		),
+		title: t('campaign.video-slider.title'),
+		description: t('campaign.video-slider.description'),
+		videoTitles: videoPlaybackIds.map((_, index) => t('campaign.video-slider.video-title', { index: index + 1 })),
+		showVideoLabels: videoPlaybackIds.map((_, index) => t('campaign.video-slider.show-video', { index: index + 1 })),
 	};
 
 	return (
@@ -101,17 +106,18 @@ export const CampaignDetail = async ({
 				quote={quote}
 				primaryImage={primaryImage}
 				profilePicture={profilePicture}
-				translator={translator}
 				lang={lang}
 			/>
-			<Breadcrumb links={breadcrumbLinks} className="pb-0" />
+			<div className="pt-9">
+				<Breadcrumb links={breadcrumbLinks} layout="section" aside={community ? <Community data={community} /> : null} />
+			</div>
 			{trimmedDescription ? (
-				<BlockWrapper className="my-15" disableMarginTop={true} disableMarginBottom={true}>
+				<BlockWrapper spacing="compact">
 					<p className="text-foreground max-w-2xl text-lg whitespace-pre-wrap">{trimmedDescription}</p>
 				</BlockWrapper>
 			) : null}
 			<CampaignAboutSection
-				heading={translator.t('campaign.about-title')}
+				heading={t('campaign.about-title')}
 				sectionDescription={sectionDescription}
 				sectionImage={sectionImage}
 				instagramHandle={instagramHandle}
@@ -119,16 +125,18 @@ export const CampaignDetail = async ({
 				tiktokHandle={tiktokHandle}
 				linkWebsite={linkWebsite}
 			/>
-			{campaign.program?.id ? <CampaignProgramTeaser programId={campaign.program.id} lang={lang} region={region} /> : null}
+			{campaign.program?.id ? (
+				<CampaignProgramTeaser programId={campaign.program.id} lang={lang} currency={currency} />
+			) : null}
 			<CampaignCreationTeaser
 				translations={{
-					title: translator.t('campaign.creation-teaser.title'),
-					description: translator.t('campaign.creation-teaser.description'),
-					button: translator.t('campaign.creation-teaser.button'),
+					title: t('campaign.creation-teaser.title'),
+					description: t('campaign.creation-teaser.description'),
+					button: t('campaign.creation-teaser.button'),
 				}}
 				labels={submissionLabels}
 				lang={lang}
-				region={region}
+				currency={currency}
 			/>
 			<CampaignNewsletter
 				lang={lang}
@@ -139,9 +147,9 @@ export const CampaignDetail = async ({
 				translations={newsletterTranslations}
 			/>
 			<CampaignVideoSlider translations={videoSliderTranslations} videoPlaybackIds={videoPlaybackIds} />
-			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} region={region} />
-			<CampaignJournalTeaser lang={lang} region={region} />
-			{faqs.length > 0 && <CampaignFaqSection heading={translator.t('title', { namespace: 'website-faq' })} faqs={faqs} />}
+			<CampaignOtherCampaignsTeaser currentCampaignSlug={campaignSlug} lang={lang} currency={currency} />
+			<CampaignJournalTeaser lang={lang} currency={currency} />
+			{faqs.length > 0 && <CampaignFaqSection heading={tFaq('title')} faqs={faqs} />}
 		</>
 	);
 };

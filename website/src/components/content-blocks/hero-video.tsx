@@ -3,11 +3,11 @@ import { useDonationModal } from '@/components/donation-wizard/hooks/use-donatio
 import { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import MuxVideo from '@mux/mux-video-react';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { VideoControlButton } from '@socialincome/design-system/actions/video-control-button/video-control-button';
 import { cn } from '@socialincome/design-system/cn';
-import { VideoControlButton } from '@socialincome/design-system/video-control-button/video-control-button';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { MediaHero, MediaHeroIntro } from '@socialincome/design-system/layout/media-hero/media-hero';
+import { storyblokEditable } from '@storyblok/react';
 import { Maximize2, MessageSquareText, Minimize2, Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { useRef, useState, type ReactNode } from 'react';
 import Markdown from 'react-markdown';
@@ -68,13 +68,12 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 	};
 
 	return (
-		<div {...storyblokEditable(blok as SbBlokData)} className="storyblok__outline full-bleed-hero flex flex-col gap-6">
-			<div
-				className={cn(
-					'bg-foreground relative aspect-video max-h-[80vh] min-h-112 w-full overflow-hidden transition-[border-radius] duration-300 ease-out md:min-h-160',
-					isExpanded ? 'z-60' : 'rounded-b-3xl md:rounded-b-[56px]',
-				)}
-			>
+		<MediaHero
+			{...storyblokEditable(blok)}
+			align="center"
+			overlay="none"
+			expanded={isExpanded}
+			media={
 				<MuxVideo
 					ref={videoRef}
 					className={cn('z-10 size-full', isExpanded ? 'object-contain' : 'object-cover')}
@@ -99,86 +98,65 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
             }
           `}</style>
 				</MuxVideo>
-
-				{isExpanded ? (
-					<div className="absolute inset-x-8 bottom-8 z-30 flex items-center justify-between">
-						<div className="flex items-center gap-2">
-							<VideoControlButton
-								onClick={togglePlayback}
-								aria-label={isPlaying ? translations.pauseVideo : translations.playVideo}
-								title={isPlaying ? translations.pauseVideo : translations.playVideo}
-							>
-								{isPlaying ? <Pause className="size-5" /> : <Play className="size-5" />}
-							</VideoControlButton>
-							<VideoControlButton
-								onClick={() => setIsMuted((prev) => !prev)}
-								aria-label={isMuted ? translations.unmuteVideo : translations.muteVideo}
-								title={isMuted ? translations.unmuteVideo : translations.muteVideo}
-							>
-								{isMuted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
-							</VideoControlButton>
-							{subtitleUrl && (
-								<VideoControlButton
-									onClick={() => setShowCaptions((prev) => !prev)}
-									aria-label={showCaptions ? translations.hideCaptions : translations.showCaptions}
-									title={showCaptions ? translations.hideCaptions : translations.showCaptions}
-								>
-									<MessageSquareText className="size-5" />
-								</VideoControlButton>
-							)}
-						</div>
+			}
+			controlsStart={
+				isExpanded ? (
+					<>
 						<VideoControlButton
-							onClick={toggleExpanded}
-							aria-label={translations.exitExpandedVideoView}
-							title={translations.exitExpandedVideoView}
+							onClick={togglePlayback}
+							aria-label={isPlaying ? translations.pauseVideo : translations.playVideo}
+							title={isPlaying ? translations.pauseVideo : translations.playVideo}
 						>
-							<Minimize2 className="size-5" />
+							{isPlaying ? <Pause className="size-5" /> : <Play className="size-5" />}
 						</VideoControlButton>
-					</div>
-				) : (
-					<VideoControlButton
-						className="absolute right-8 bottom-8 z-30"
-						onClick={toggleExpanded}
-						aria-label={translations.expandVideoView}
-						title={translations.expandVideoView}
+						<VideoControlButton
+							onClick={() => setIsMuted((prev) => !prev)}
+							aria-label={isMuted ? translations.unmuteVideo : translations.muteVideo}
+							title={isMuted ? translations.unmuteVideo : translations.muteVideo}
+						>
+							{isMuted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
+						</VideoControlButton>
+						{subtitleUrl && (
+							<VideoControlButton
+								onClick={() => setShowCaptions((prev) => !prev)}
+								aria-label={showCaptions ? translations.hideCaptions : translations.showCaptions}
+								title={showCaptions ? translations.hideCaptions : translations.showCaptions}
+							>
+								<MessageSquareText className="size-5" />
+							</VideoControlButton>
+						)}
+					</>
+				) : null
+			}
+			controlsEnd={
+				<VideoControlButton
+					onClick={toggleExpanded}
+					aria-label={isExpanded ? translations.exitExpandedVideoView : translations.expandVideoView}
+					title={isExpanded ? translations.exitExpandedVideoView : translations.expandVideoView}
+				>
+					{isExpanded ? <Minimize2 className="size-5" /> : <Maximize2 className="size-5" />}
+				</VideoControlButton>
+			}
+			aside={donationForm}
+			mobileAside={donationForm}
+		>
+			<MediaHeroIntro
+				variant="light"
+				title={heading ? <Markdown components={{ p: ({ children }) => <>{children}</> }}>{heading}</Markdown> : null}
+				description={description}
+			>
+				<div>
+					<Button
+						type="button"
+						variant="outline-inverse"
+						size="lg"
+						aria-haspopup="dialog"
+						onClick={() => openWizardAtAmountStep()}
 					>
-						<Maximize2 className="size-5" />
-					</VideoControlButton>
-				)}
-
-				{!isExpanded && (
-					<div className="text-primary-foreground w-site-width max-w-content absolute inset-0 z-20 mx-auto mb-8 flex flex-row items-end justify-between gap-4 md:mb-0 md:items-center">
-						<div className="flex max-w-2xl flex-col gap-6">
-							{heading && (
-								<h1 className="text-4xl xl:text-6xl [&_strong]:font-bold">
-									<Markdown components={{ p: ({ children }) => <>{children}</> }}>{heading}</Markdown>
-								</h1>
-							)}
-							{description && <p className="text-xl">{description}</p>}
-							<div>
-								<Button
-									type="button"
-									variant="outline"
-									size="lg"
-									className="text-primary-foreground"
-									aria-haspopup="dialog"
-									onClick={() => openWizardAtAmountStep()}
-								>
-									{translations.donateNow}
-								</Button>
-							</div>
-						</div>
-						<div className="hidden shrink-0 lg:block">{donationForm}</div>
-					</div>
-				)}
-			</div>
-			{!isExpanded && (
-				<div className="lg:hidden">
-					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
-						{donationForm}
-					</BlockWrapper>
+						{translations.donateNow}
+					</Button>
 				</div>
-			)}
-		</div>
+			</MediaHeroIntro>
+		</MediaHero>
 	);
 };

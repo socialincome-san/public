@@ -2,19 +2,15 @@
 
 import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
 import { ImpactPaymentLogos } from '@/components/payment-logos/impact-payment-logos';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import type { ContributorCommunityStats } from '@/modules/contributors/contributor.types';
 import { cn } from '@socialincome/design-system/cn';
 import { CircleCheckBig } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { getSupportersImpactLabel } from '../utils/community-stats';
 import type { Cadence } from '../utils/donation-amount';
 import { getDonationExplainerVideo } from '../utils/donation-explainer-video';
-import {
-	donationImpactChecklistItemClass,
-	donationImpactExplainerClass,
-	donationImpactRowClass,
-} from '../utils/donation-wizard-layout';
+import { donationImpactChecklistItemClass, donationImpactRowClass } from '../utils/donation-wizard-layout';
 
 const ZEWO_HOMEPAGE_URL = 'https://www.zewo.ch';
 
@@ -24,7 +20,8 @@ type Props = {
 };
 
 export const DonationImpactPanel = ({ cadence, communityStats }: Props) => {
-	const { t, language } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
+	const language = useLocale();
 	const explainerVideo = getDonationExplainerVideo(language);
 	const whyOnePercentLabel = t('impact.why-one-percent');
 
@@ -59,7 +56,6 @@ export const DonationImpactPanel = ({ cadence, communityStats }: Props) => {
 				</a>
 				<ExplainerVideoTrigger
 					layout="row"
-					className={donationImpactExplainerClass}
 					label={whyOnePercentLabel}
 					embedUrl={explainerVideo.embedUrl}
 					thumbnailSrc={explainerVideo.thumbnailSrc}

@@ -4,10 +4,7 @@ import type { ActiveDonationWizardStep } from '../wizard/get-active-wizard-step'
 const COLUMN_NARROW = 'w-full min-w-0 md:w-[400px] md:shrink-0';
 const COLUMN_FULL = 'w-full min-w-0';
 
-const CARD_BASE = cn(
-	'border-input bg-card rounded-3xl border shadow-[0_2px_4px_rgba(0,0,0,0.05)]',
-	'px-4 pt-4 pb-6 sm:px-6 sm:pt-5 sm:pb-7',
-);
+const CARD_BASE = cn('border-input bg-card rounded-3xl border shadow-xs', 'px-4 pt-4 pb-6 sm:px-6 sm:pt-5 sm:pb-7');
 
 const CARD_NARROW = cn(CARD_BASE, 'mx-auto w-full max-w-[400px]');
 const CARD_FULL = cn(CARD_BASE, 'mx-0 w-full max-w-none');
@@ -47,8 +44,6 @@ export const donationStepTitleRowClass = cn('mb-5 flex items-start justify-betwe
 export const donationImpactChecklistItemClass = cn('flex items-center justify-start gap-2 text-left text-sm font-medium');
 
 export const donationImpactRowClass = cn('flex items-center justify-start gap-2 text-left text-sm font-medium');
-
-export const donationImpactExplainerClass = cn('justify-start text-left');
 
 /**
  * Size of the generic amount card in the desktop hero slot (lg+), measured in Chrome, English, default form state.

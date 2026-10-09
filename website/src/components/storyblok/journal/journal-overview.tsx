@@ -1,15 +1,16 @@
 import type { BreadcrumbLinkType } from '@/components/breadcrumb/breadcrumb';
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
 import { JournalBreadcrumb } from '@/components/storyblok/journal/journal-breadcrumb';
-import { JournalPageHeader } from '@/components/storyblok/journal/journal-page-header';
 import { JournalPageShell } from '@/components/storyblok/journal/journal-page-shell';
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
 import { PersonCarousel } from '@/components/storyblok/shared/person-carousel';
 import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { createWebsiteJournalArticleTypeLink, getArticleTypeLabel } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { cn } from '@socialincome/design-system/cn';
-import { Separator } from '@socialincome/design-system/separator/separator';
+import { Separator } from '@socialincome/design-system/data-display/separator/separator';
+import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
 import type { ISbStoryData } from '@storyblok/js';
 import Link from 'next/link';
 
@@ -27,7 +28,7 @@ type Props = {
 	activeTagSlug?: string;
 	activeArticleTypeSlug?: string;
 	lang: string;
-	region: string;
+	currency: WebsiteCurrency;
 	articles: ISbStoryData<JournalArticle>[];
 	authors: ISbStoryData<Person>[];
 	articleTypes: ISbStoryData<ArticleType>[];
@@ -57,7 +58,7 @@ export const JournalOverview = ({
 	activeTagSlug,
 	activeArticleTypeSlug,
 	lang,
-	region,
+	currency,
 	articles,
 	authors,
 	articleTypes,
@@ -65,8 +66,8 @@ export const JournalOverview = ({
 	roleLabels,
 }: Props) => (
 	<JournalPageShell>
-		<JournalBreadcrumb links={breadcrumbs} className="mb-8 pl-0" />
-		<JournalPageHeader title={pageTitle} description={pageDescription} />
+		<JournalBreadcrumb links={breadcrumbs} />
+		<PageIntro title={pageTitle} description={pageDescription} />
 
 		<section className="flex flex-wrap items-center gap-2">
 			<Link href={journalPath} className={articleTypeFilterClassName(!activeTagSlug && !activeArticleTypeSlug)}>
@@ -75,7 +76,7 @@ export const JournalOverview = ({
 			{articleTypes.map((articleType) => (
 				<Link
 					key={articleType.slug}
-					href={createWebsiteJournalArticleTypeLink(articleType.slug, lang, region)}
+					href={createWebsiteJournalArticleTypeLink(articleType.slug, lang, currency)}
 					className={articleTypeFilterClassName(activeArticleTypeSlug === articleType.slug)}
 				>
 					{getArticleTypeLabel(articleType)}
@@ -86,7 +87,7 @@ export const JournalOverview = ({
 
 		<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{articles.map((article) => (
-				<JournalArticleCard key={article.uuid} lang={lang} region={region} article={article} videoLabel={videoLabel} />
+				<JournalArticleCard key={article.uuid} lang={lang} currency={currency} article={article} videoLabel={videoLabel} />
 			))}
 		</div>
 
@@ -99,7 +100,7 @@ export const JournalOverview = ({
 				<PersonCarousel
 					persons={authors}
 					sidebar={{ heading: editorsHeading }}
-					personLink={{ lang, region }}
+					personLink={{ lang, currency }}
 					size="small"
 					roleLabels={roleLabels}
 				/>

@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Button } from '@socialincome/design-system/button/button';
-import { cn } from '@socialincome/design-system/cn';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { CheckoutFooter } from '@socialincome/design-system/navigation/checkout-footer/checkout-footer';
 import { ChevronLeft } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { formatDonationCurrencyAmount } from '../../utils/donation-formatting';
 
 type Summary = {
@@ -17,7 +17,7 @@ type QrWizardStepFooterProps = {
 	onContinue: () => void;
 	continueLabel: string;
 	continueDisabled?: boolean;
-	continueClassName?: string;
+	continueVariant?: 'default' | 'foreground';
 	continueTestId?: string;
 	showBack?: boolean;
 	summary?: Summary;
@@ -28,85 +28,43 @@ export const QrWizardStepFooter = ({
 	onContinue,
 	continueLabel,
 	continueDisabled = false,
-	continueClassName,
+	continueVariant = 'default',
 	continueTestId = 'donation-wizard-continue',
 	showBack = true,
 	summary,
 }: QrWizardStepFooterProps) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 
-	const amountLine = summary ? (
-		<span className="text-foreground inline-flex flex-wrap items-baseline gap-1">
-			<span className="text-lg leading-none font-medium">
-				{formatDonationCurrencyAmount(summary.currency, summary.amount)}
-			</span>
-			{summary.showPerMonth && <span className="text-muted-foreground text-sm">{t('stepPlan.per-month')}</span>}
-		</span>
-	) : null;
-
-	if (!summary) {
-		return (
-			<div
-				className={cn(
-					'flex gap-3',
-					showBack ? 'flex-col sm:flex-row sm:items-center sm:justify-between' : 'flex-col sm:items-end',
-				)}
-			>
+	return (
+		<CheckoutFooter
+			back={
+				showBack && onBack ? (
+					<Button type="button" data-testid="donation-wizard-back" variant="outline" onClick={onBack}>
+						<ChevronLeft className="size-4" aria-hidden />
+						{t('stepPlan.back')}
+					</Button>
+				) : undefined
+			}
+			summary={
+				summary
+					? {
+							label: t('stepPayment.your-donation'),
+							amount: formatDonationCurrencyAmount(summary.currency, summary.amount),
+							suffix: summary.showPerMonth ? t('stepPlan.per-month') : undefined,
+						}
+					: undefined
+			}
+			primary={
 				<Button
 					type="button"
 					data-testid={continueTestId}
-					className={cn(showBack ? 'sm:order-2' : 'sm:ml-auto')}
+					variant={continueVariant}
 					disabled={continueDisabled}
 					onClick={onContinue}
 				>
 					{continueLabel}
 				</Button>
-				{showBack && onBack ? (
-					<Button type="button" data-testid="donation-wizard-back" variant="outline" className="sm:order-1" onClick={onBack}>
-						<ChevronLeft className="size-4" aria-hidden />
-						{t('stepPlan.back')}
-					</Button>
-				) : null}
-			</div>
-		);
-	}
-
-	return (
-		<div className="flex flex-col gap-3">
-			<div className="border-border flex items-center justify-between gap-2 border-y py-2.5 text-sm md:hidden">
-				<span className="text-muted-foreground shrink-0">{t('stepPayment.your-donation')}</span>
-				{amountLine}
-			</div>
-
-			<div
-				className={cn(
-					'flex gap-3 md:flex-row md:items-center',
-					showBack ? 'flex-col md:justify-between' : 'flex-col md:justify-end',
-				)}
-			>
-				<div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-4 md:order-2">
-					<div className="hidden min-w-0 items-center gap-1.5 text-sm md:flex">
-						<span className="shrink-0">{t('stepPayment.your-donation')}</span>
-						{amountLine}
-					</div>
-					<Button
-						type="button"
-						data-testid={continueTestId}
-						variant="default"
-						className={cn('text-center whitespace-normal sm:whitespace-nowrap', continueClassName)}
-						disabled={continueDisabled}
-						onClick={onContinue}
-					>
-						{continueLabel}
-					</Button>
-				</div>
-				{showBack && onBack ? (
-					<Button type="button" data-testid="donation-wizard-back" variant="outline" className="md:order-1" onClick={onBack}>
-						<ChevronLeft className="size-4" aria-hidden />
-						{t('stepPlan.back')}
-					</Button>
-				) : null}
-			</div>
-		</div>
+			}
+		/>
 	);
 };

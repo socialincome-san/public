@@ -37,3 +37,5 @@ export const EMPTY_GITHUB_OPEN_SOURCE_ISSUES_DATA: GithubOpenSourceIssuesData = 
 	issues: [],
 	labels: [],
 };
+
+export const GITHUB_CACHE_TAG = 'github';

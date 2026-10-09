@@ -1,14 +1,15 @@
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import type { ProgramDashboardStats } from '@/modules/programs/program.types';
-import { Card } from '@socialincome/design-system/card/card';
 import { cn } from '@socialincome/design-system/cn';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
-import { AlertCircle, CheckCircle, CircleHelp, TriangleAlert } from 'lucide-react';
-import { AdditionalNumbers } from './additional-numbers';
-import { SectionBox } from './section-box';
+import { Card } from '@socialincome/design-system/data-display/card/card';
+import { StatGrid } from '@socialincome/design-system/data-display/stat-grid/stat-grid';
+import { StatHeadline } from '@socialincome/design-system/data-display/stat-headline/stat-headline';
+import { StatPanel } from '@socialincome/design-system/data-display/stat-panel/stat-panel';
+import { StatProgress } from '@socialincome/design-system/data-display/stat-progress/stat-progress';
+import { Stat } from '@socialincome/design-system/data-display/stat/stat';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
+import { AlertCircle, CheckCircle, TriangleAlert } from 'lucide-react';
 import { SectionTitle } from './section-title';
-import { Stat } from './stat';
-import { StatProgressCard } from './stat-progress-card';
 
 type StatsSectionProps = {
 	programId: string;
@@ -132,229 +133,168 @@ export const StatsSection = ({ programId, stats }: StatsSectionProps) => {
 			<Card>
 				<div className="space-y-6">
 					<div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3">
-						<SectionBox href="/portal/management/contributions" className="h-full">
-							<div className="flex h-full flex-col">
-								<div className="flex-1 space-y-6">
-									<StatProgressCard
-										title="Contributions Progress"
-										leftLabel="Total Contributions"
-										rightLabel="Total Program Cost"
-										leftTooltipText={totalContributionsExplanation}
-										rightTooltipText={totalProgramCostChfExplanation}
-										leftValue={formatMoney(stats.contributedToProgramSoFarChf, 'CHF')}
-										rightValue={formatMoney(stats.totalProgramCostsChf, 'CHF')}
-										percent={stats.fundingProgressPercent}
-									/>
-								</div>
-								<AdditionalNumbers>
-									<Stat
-										label="Contributors"
-										value={formatNumber(stats.contributorsCount)}
-										tooltipText={contributorsExplanation}
-									/>
-									<Stat
-										label="Contributions"
-										value={formatNumber(stats.contributionsCount)}
-										tooltipText={contributionsExplanation}
-									/>
-									<Stat
-										label="Avg Contribution"
-										value={formatMoney(stats.averageContributionChf, 'CHF')}
-										tooltipText={averageContributionExplanation}
-									/>
-									<Stat
-										label="Via Stripe"
-										value={formatMoney(stats.contributedViaStripeChf, 'CHF')}
-										tooltipText={contributedViaStripeExplanation}
-									/>
-									<Stat
-										label="Via Wire Transfer"
-										value={formatMoney(stats.contributedViaWireTransferChf, 'CHF')}
-										tooltipText={contributedViaWireTransferExplanation}
-									/>
-									<Stat
-										label="Others"
-										value={formatMoney(stats.contributedViaOthersChf, 'CHF')}
-										tooltipText={contributedViaOthersExplanation}
-									/>
-								</AdditionalNumbers>
-							</div>
-						</SectionBox>
+						<StatPanel href="/portal/management/contributions">
+							<StatProgress
+								title="Contributions Progress"
+								start={{
+									label: 'Total Contributions',
+									value: formatMoney(stats.contributedToProgramSoFarChf, 'CHF'),
+									info: totalContributionsExplanation,
+								}}
+								end={{
+									label: 'Total Program Cost',
+									value: formatMoney(stats.totalProgramCostsChf, 'CHF'),
+									info: totalProgramCostChfExplanation,
+								}}
+								percent={stats.fundingProgressPercent}
+							/>
+							<StatGrid>
+								<Stat label="Contributors" value={formatNumber(stats.contributorsCount)} info={contributorsExplanation} />
+								<Stat label="Contributions" value={formatNumber(stats.contributionsCount)} info={contributionsExplanation} />
+								<Stat
+									label="Avg Contribution"
+									value={formatMoney(stats.averageContributionChf, 'CHF')}
+									info={averageContributionExplanation}
+								/>
+								<Stat
+									label="Via Stripe"
+									value={formatMoney(stats.contributedViaStripeChf, 'CHF')}
+									info={contributedViaStripeExplanation}
+								/>
+								<Stat
+									label="Via Wire Transfer"
+									value={formatMoney(stats.contributedViaWireTransferChf, 'CHF')}
+									info={contributedViaWireTransferExplanation}
+								/>
+								<Stat
+									label="Others"
+									value={formatMoney(stats.contributedViaOthersChf, 'CHF')}
+									info={contributedViaOthersExplanation}
+								/>
+							</StatGrid>
+						</StatPanel>
 
-						<SectionBox href="/portal/delivery/payouts" className="h-full">
-							<div className="flex h-full flex-col">
-								<div className="flex-1 space-y-6">
-									<StatProgressCard
-										title="Payout Progress"
-										leftLabel="Paid out so far"
-										rightLabel="Total Program Cost"
-										leftTooltipText={paidOutSoFarExplanation}
-										rightTooltipText={totalProgramCostProgramCurrencyExplanation}
-										leftValue={formatMoney(stats.paidOutSoFarProgramCurrency, stats.payoutCurrency)}
-										rightValue={formatMoney(stats.totalProgramCostsProgramCurrency, stats.payoutCurrency)}
-										percent={stats.payoutProgressPercent}
-									/>
-								</div>
-								<AdditionalNumbers>
-									<Stat
-										label="Payout / Interval"
-										value={formatMoney(stats.payoutPerInterval, stats.payoutCurrency)}
-										tooltipText={payoutPerIntervalExplanation}
-									/>
-									<Stat label="Interval" value={stats.payoutInterval} tooltipText={payoutIntervalExplanation} />
-									<Stat
-										label="Program Duration"
-										value={`${formatNumber(stats.programDurationInMonths)} months`}
-										tooltipText={programDurationExplanation}
-									/>
-									<Stat
-										label="Projected Remaining"
-										value={formatMoney(projectedRemainingProgramCurrency, stats.payoutCurrency)}
-										tooltipText={projectedRemainingExplanation}
-									/>
-									<Stat
-										label="Payouts Done"
-										value={formatNumber(stats.payoutsDoneCount)}
-										tooltipText={payoutsDoneExplanation}
-									/>
-									<Stat
-										label="Remaining Payouts"
-										value={formatNumber(stats.remainingPayoutsCount)}
-										tooltipText={remainingPayoutsExplanation}
-									/>
-								</AdditionalNumbers>
-							</div>
-						</SectionBox>
+						<StatPanel href="/portal/delivery/payouts">
+							<StatProgress
+								title="Payout Progress"
+								start={{
+									label: 'Paid out so far',
+									value: formatMoney(stats.paidOutSoFarProgramCurrency, stats.payoutCurrency),
+									info: paidOutSoFarExplanation,
+								}}
+								end={{
+									label: 'Total Program Cost',
+									value: formatMoney(stats.totalProgramCostsProgramCurrency, stats.payoutCurrency),
+									info: totalProgramCostProgramCurrencyExplanation,
+								}}
+								percent={stats.payoutProgressPercent}
+							/>
+							<StatGrid>
+								<Stat
+									label="Payout / Interval"
+									value={formatMoney(stats.payoutPerInterval, stats.payoutCurrency)}
+									info={payoutPerIntervalExplanation}
+								/>
+								<Stat label="Interval" value={stats.payoutInterval} info={payoutIntervalExplanation} />
+								<Stat
+									label="Program Duration"
+									value={`${formatNumber(stats.programDurationInMonths)} months`}
+									info={programDurationExplanation}
+								/>
+								<Stat
+									label="Projected Remaining"
+									value={formatMoney(projectedRemainingProgramCurrency, stats.payoutCurrency)}
+									info={projectedRemainingExplanation}
+								/>
+								<Stat label="Payouts Done" value={formatNumber(stats.payoutsDoneCount)} info={payoutsDoneExplanation} />
+								<Stat
+									label="Remaining Payouts"
+									value={formatNumber(stats.remainingPayoutsCount)}
+									info={remainingPayoutsExplanation}
+								/>
+							</StatGrid>
+						</StatPanel>
 
-						<SectionBox href={`/portal/programs/${programId}/payout-forecast`} className="h-full">
-							<div className="flex h-full flex-col">
-								<div className="flex-1 space-y-6">
-									<h2 className="text-lg font-bold">Available Credits</h2>
-									<div className="flex items-center gap-2 text-xl font-bold">
-										<span>{`${formatNumber(stats.availableCreditsInIntervals, 1)} intervals`}</span>
+						<StatPanel href={`/portal/programs/${programId}/payout-forecast`}>
+							<StatHeadline
+								title="Available Credits"
+								value={`${formatNumber(stats.availableCreditsInIntervals, 1)} intervals`}
+								info={{ label: 'Show available intervals calculation', content: intervalsExplanation }}
+							/>
+							<StatGrid>
+								<Stat
+									label="Available Credits"
+									value={formatMoney(stats.availableCreditsProgramCurrency, stats.payoutCurrency)}
+									info={availableCreditsExplanation}
+								/>
+								<Stat
+									label="Cost / Interval"
+									value={formatMoney(stats.costPerIntervalProgramCurrency, stats.payoutCurrency)}
+									info={costPerIntervalProgramExplanation}
+								/>
+								<Stat
+									label="Credit Status"
+									info={creditStatusLabelExplanation}
+									value={
 										<Tooltip>
 											<TooltipTrigger asChild>
-												<button
-													type="button"
-													aria-label="Show available intervals calculation"
-													className="text-muted-foreground hover:text-foreground inline-flex"
-												>
-													<CircleHelp className="h-4 w-4" />
-												</button>
-											</TooltipTrigger>
-											<TooltipContent sideOffset={8} className="max-w-[340px] text-sm">
-												{intervalsExplanation}
-											</TooltipContent>
-										</Tooltip>
-									</div>
-								</div>
-								<AdditionalNumbers>
-									<Stat
-										label="Available Credits"
-										value={formatMoney(stats.availableCreditsProgramCurrency, stats.payoutCurrency)}
-										tooltipText={availableCreditsExplanation}
-									/>
-									<Stat
-										label="Cost / Interval"
-										value={formatMoney(stats.costPerIntervalProgramCurrency, stats.payoutCurrency)}
-										tooltipText={costPerIntervalProgramExplanation}
-									/>
-									<div>
-										<div className="text-muted-foreground flex items-center gap-1 text-xs">
-											<p>Credit Status</p>
-											<Tooltip>
-												<TooltipTrigger asChild>
-													<button
-														type="button"
-														aria-label="Show credit status explanation"
-														className="text-muted-foreground hover:text-foreground inline-flex"
-													>
-														<CircleHelp className="h-3 w-3" />
-													</button>
-												</TooltipTrigger>
-												<TooltipContent sideOffset={8} className="max-w-[280px] text-sm">
-													{creditStatusLabelExplanation}
-												</TooltipContent>
-											</Tooltip>
-										</div>
-										<Tooltip>
-											<TooltipTrigger asChild>
-												<div className="flex items-center gap-2 font-medium">
+												<span className="flex items-center gap-2">
 													<Icon className={cn(color, 'h-4 w-4')} aria-hidden />
 													<span>{creditStatus}</span>
-												</div>
+												</span>
 											</TooltipTrigger>
 											<TooltipContent sideOffset={8}>{creditExplanation}</TooltipContent>
 										</Tooltip>
-									</div>
-									<Stat
-										label="Remaining Intervals"
-										value={formatNumber(stats.remainingIntervalsCount)}
-										tooltipText={remainingIntervalsExplanation}
-									/>
-								</AdditionalNumbers>
-							</div>
-						</SectionBox>
+									}
+								/>
+								<Stat
+									label="Remaining Intervals"
+									value={formatNumber(stats.remainingIntervalsCount)}
+									info={remainingIntervalsExplanation}
+								/>
+							</StatGrid>
+						</StatPanel>
 					</div>
 
 					<div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
-						<SectionBox href={`/portal/programs/${programId}/recipients`}>
-							<div className="space-y-6">
-								<h2 className="text-lg font-bold">Recipient Status</h2>
-								<div className="flex items-center gap-2 text-xl font-bold">
-									<span>{formatNumber(stats.recipientsCount)} recipients</span>
-									<Tooltip>
-										<TooltipTrigger asChild>
-											<button
-												type="button"
-												aria-label="Show recipients total explanation"
-												className="text-muted-foreground hover:text-foreground inline-flex"
-											>
-												<CircleHelp className="h-3.5 w-3.5" />
-											</button>
-										</TooltipTrigger>
-										<TooltipContent sideOffset={8} className="max-w-[280px] text-sm">
-											{recipientsTotalExplanation}
-										</TooltipContent>
-									</Tooltip>
-								</div>
-								<AdditionalNumbers>
-									<Stat
-										label="Future"
-										value={formatNumber(stats.futureRecipientsCount)}
-										tooltipText={futureRecipientsExplanation}
-									/>
-									<Stat
-										label="Active"
-										value={formatNumber(stats.activeRecipientsCount)}
-										tooltipText={activeRecipientsExplanation}
-									/>
-									<Stat
-										label="Suspended"
-										value={formatNumber(stats.suspendedRecipientsCount)}
-										tooltipText={suspendedRecipientsExplanation}
-									/>
-									<Stat
-										label="Completed"
-										value={formatNumber(stats.completedRecipientsCount)}
-										tooltipText={completedRecipientsExplanation}
-									/>
-								</AdditionalNumbers>
-							</div>
-						</SectionBox>
+						<StatPanel href={`/portal/programs/${programId}/recipients`}>
+							<StatHeadline
+								title="Recipient Status"
+								value={`${formatNumber(stats.recipientsCount)} recipients`}
+								info={{ label: 'Show recipients total explanation', content: recipientsTotalExplanation }}
+							/>
+							<StatGrid>
+								<Stat label="Future" value={formatNumber(stats.futureRecipientsCount)} info={futureRecipientsExplanation} />
+								<Stat label="Active" value={formatNumber(stats.activeRecipientsCount)} info={activeRecipientsExplanation} />
+								<Stat
+									label="Suspended"
+									value={formatNumber(stats.suspendedRecipientsCount)}
+									info={suspendedRecipientsExplanation}
+								/>
+								<Stat
+									label="Completed"
+									value={formatNumber(stats.completedRecipientsCount)}
+									info={completedRecipientsExplanation}
+								/>
+							</StatGrid>
+						</StatPanel>
 
-						<SectionBox href={`/portal/programs/${programId}/surveys`}>
-							<StatProgressCard
+						<StatPanel href={`/portal/programs/${programId}/surveys`}>
+							<StatProgress
 								title="Survey Progress"
-								leftLabel="Completed Surveys"
-								rightLabel="Total Surveys"
-								leftTooltipText={completedSurveysExplanation}
-								rightTooltipText={totalSurveysExplanation}
-								leftValue={formatNumber(stats.completedSurveysCount)}
-								rightValue={formatNumber(stats.totalSurveysCount)}
+								start={{
+									label: 'Completed Surveys',
+									value: formatNumber(stats.completedSurveysCount),
+									info: completedSurveysExplanation,
+								}}
+								end={{
+									label: 'Total Surveys',
+									value: formatNumber(stats.totalSurveysCount),
+									info: totalSurveysExplanation,
+								}}
 								percent={stats.surveyCompletionPercent}
 							/>
-						</SectionBox>
+						</StatPanel>
 					</div>
 				</div>
 			</Card>

@@ -39,5 +39,13 @@ ignored/
 # vim IDE
 *.swp
 tags
-.ai-playbook/
-.agents/
+
+# design-sync (Claude Design)
+.design-sync/sb-reference/
+.design-sync/learnings/
+.design-sync/.cache/
+.design-sync/node_modules
+.design-sync/*.log
+.ds-sync/
+.ds-sync-install.log
+ds-bundle/

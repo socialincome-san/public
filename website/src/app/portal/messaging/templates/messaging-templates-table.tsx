@@ -1,6 +1,13 @@
 import type { TwilioTemplateSummary } from '@/modules/messaging/messaging.types';
-import { Badge } from '@socialincome/design-system/badge/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@socialincome/design-system/table/table';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '@socialincome/design-system/data-display/table/table';
 import Link from 'next/link';
 
 type MessagingTemplatesTableProps = {
@@ -44,12 +51,14 @@ export const MessagingTemplatesTable = ({ templates, error }: MessagingTemplates
 			<TableBody>
 				{templates.map((template) => (
 					<TableRow key={template.sid}>
-						<TableCell className="font-medium">
-							<Link href={`/portal/messaging/templates/${template.sid}`} className="hover:underline">
+						<TableCell>
+							<Link href={`/portal/messaging/templates/${template.sid}`} className="font-medium hover:underline">
 								{template.friendlyName}
 							</Link>
 						</TableCell>
-						<TableCell className="font-mono text-xs">{template.sid}</TableCell>
+						<TableCell>
+							<span className="font-mono text-xs">{template.sid}</span>
+						</TableCell>
 						<TableCell>{template.language}</TableCell>
 						<TableCell>{template.contentType ?? '—'}</TableCell>
 						<TableCell>

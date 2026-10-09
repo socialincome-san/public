@@ -32,13 +32,13 @@ test('CSV upload errors stay inside the scrollable dialog viewport', async ({ pa
 	const alert = page.getByRole('alert');
 	await expect(alert).toContainText('Import failed');
 
-	const alertDescription = alert.locator('[data-slot="alert-description"]');
-	await expect(alertDescription).toContainText('Row 1:');
-	await expect(alertDescription).toContainText('Row 40:');
-	expect(await alertDescription.textContent()).toBe(longError);
+	const errorText = alert.locator('[data-slot="alert-description"] > span');
+	await expect(errorText).toContainText('Row 1:');
+	await expect(errorText).toContainText('Row 40:');
+	expect(await errorText.textContent()).toBe(longError);
 
-	await expect(alertDescription).toHaveCSS('white-space', 'pre-wrap');
-	await expect(alertDescription).toHaveCSS('overflow-wrap', 'break-word');
+	await expect(errorText).toHaveCSS('white-space', 'pre-wrap');
+	await expect(errorText).toHaveCSS('overflow-wrap', 'break-word');
 
 	const dialog = page.getByRole('dialog');
 	const dialogBox = await dialog.boundingBox();

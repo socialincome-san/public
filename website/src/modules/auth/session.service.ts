@@ -11,24 +11,24 @@ import { cache } from 'react';
 import { verifySessionCookie } from './auth.service';
 import { SESSION_COOKIE_NAME, type AuthToken, type Session } from './auth.types';
 
+// `cookies()` stays outside try/catch: during the build it throws to mark the route as dynamic.
 export const getCurrentAuthToken = async (): Promise<Result<AuthToken>> => {
-	try {
-		const sessionCookie = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
-		if (!sessionCookie) {
-			return resultFail('Missing session cookie');
-		}
-
-		return verifySessionCookie(sessionCookie);
-	} catch (error) {
-		console.error('Could not read session cookie', { error });
-
-		return resultFail('Could not read session cookie');
+	const sessionCookie = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
+	if (!sessionCookie) {
+		return resultFail('Missing session cookie');
 	}
+
+	return verifySessionCookie(sessionCookie);
 };
 
 export const getCurrentSessions = async (): Promise<Result<Session[]>> => {
+	const tokenResult = await loadAuthToken();
+	if (!tokenResult.success) {
+		return resultOk([]);
+	}
+
 	try {
-		return resultOk(await loadCurrentSessions());
+		return resultOk(await loadSessionsForAuthUser(tokenResult.data.uid));
 	} catch (error) {
 		console.error('Could not resolve sessions', { error });
 
@@ -37,26 +37,20 @@ export const getCurrentSessions = async (): Promise<Result<Session[]>> => {
 };
 
 export const getSessionByType = async <T extends Session['type']>(type: T): Promise<Result<SessionByType<T>>> => {
-	try {
-		const sessionsResult = await getCurrentSessions();
-		if (!sessionsResult.success) {
-			return resultFail(sessionsResult.error, sessionsResult.status);
-		}
-		if (sessionsResult.data.length === 0) {
-			return resultFail('Not authenticated');
-		}
-
-		const session = sessionsResult.data.find((entry): entry is SessionByType<T> => entry.type === type);
-		if (!session) {
-			return resultFail(missingSessionMessage[type]);
-		}
-
-		return resultOk(session);
-	} catch (error) {
-		console.error('Could not resolve session', { type, error });
-
-		return resultFail('Could not resolve session');
+	const sessionsResult = await getCurrentSessions();
+	if (!sessionsResult.success) {
+		return resultFail(sessionsResult.error, sessionsResult.status);
 	}
+	if (sessionsResult.data.length === 0) {
+		return resultFail('Not authenticated');
+	}
+
+	const session = sessionsResult.data.find((entry): entry is SessionByType<T> => entry.type === type);
+	if (!session) {
+		return resultFail(missingSessionMessage[type]);
+	}
+
+	return resultOk(session);
 };
 
 export const getCurrentUser = async (): Promise<Result<UserSession | null>> => resultOk(await loadCurrentUser());
@@ -109,13 +103,7 @@ const loadCurrentSurvey = cache(async (): Promise<SurveyPayload | null> => {
 	return result.success ? result.data : null;
 });
 
-const loadCurrentSessions = async (): Promise<Session[]> => {
-	const tokenResult = await loadAuthToken();
-	if (!tokenResult.success) {
-		return [];
-	}
-
-	const authUserId = tokenResult.data.uid;
+const loadSessionsForAuthUser = async (authUserId: string): Promise<Session[]> => {
 	const [contributorResult, userResult, partnerResult] = await Promise.all([
 		getCurrentContributorSession(authUserId),
 		getCurrentUserSession(authUserId),

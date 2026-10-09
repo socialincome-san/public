@@ -1,21 +1,12 @@
 import type { CampaignGlobals, Faq } from '@/generated/storyblok/types/109655/storyblok-components';
-import { fetchStoryblokCampaignGlobals } from '@/integrations/storyblok/storyblok-campaign.integration';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getMetadata } from '@/lib/utils/metadata';
+import { getCampaignGlobals } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import type { Metadata } from 'next';
 import type { CampaignNewsletterContent, CampaignPageContent } from './campaign.types';
-
-const campaignPageNamespaces = [
-	'website-campaign',
-	'website-common',
-	'website-videos',
-	'website-newsletter',
-	'website-faq',
-] as const;
 
 const NEWSLETTER_IMAGE_SIZE = 60;
 
@@ -31,10 +22,7 @@ export const getCampaignPageContent = async (
 	campaignFaqs?: unknown,
 ): Promise<Result<CampaignPageContent>> => {
 	try {
-		const [translator, globalsResult] = await Promise.all([
-			Translator.getInstance({ language: lang, namespaces: [...campaignPageNamespaces] }),
-			fetchStoryblokCampaignGlobals(lang),
-		]);
+		const globalsResult = await getCampaignGlobals(lang);
 
 		const globals = globalsResult.success ? globalsResult.data?.content : null;
 		const faqs =
@@ -46,7 +34,7 @@ export const getCampaignPageContent = async (
 		const videoPlaybackIds = globals ? toVideoPlaybackIds(globals) : [];
 		const newsletter = globals ? toNewsletterContent(globals) : emptyNewsletterContent;
 
-		return resultOk({ translator, faqs, videoPlaybackIds, newsletter });
+		return resultOk({ faqs, videoPlaybackIds, newsletter });
 	} catch (error) {
 		console.error(error);
 

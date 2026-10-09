@@ -1,8 +1,9 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { Button } from '@socialincome/design-system/button/button';
-import { Heart } from 'lucide-react';
+import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { ThankYouPanel } from '@socialincome/design-system/feedback/thank-you-panel/thank-you-panel';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 const SUPPORT_EMAIL = 'support@socialincome.org';
@@ -12,34 +13,27 @@ type Props = {
 };
 
 export const DonationLoggedInPrompt = ({ onDashboardClick }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
+	const websiteBasePath = useWebsiteBasePath();
 
 	return (
-		<div className="flex w-full flex-col items-center gap-6 px-9 pt-6 pb-7" data-testid="donation-wizard-step-thank-you">
-			<div className="flex items-center gap-2">
-				<Heart className="text-foreground size-4 fill-current" strokeWidth={1.5} aria-hidden />
-				<p className="text-foreground text-base leading-normal font-medium">{t('thankYou.message')}</p>
-			</div>
-
-			<div className="flex w-full flex-col gap-4 text-center">
-				<p className="text-foreground text-2xl leading-normal font-medium">{t('thankYou.loggedInPrompt.title')}</p>
-				<p className="text-foreground text-base leading-normal">{t('thankYou.loggedInPrompt.description')}</p>
-			</div>
-
-			<div className="flex w-full flex-col items-center gap-3">
-				<Button asChild className="min-w-32">
-					<Link href="/dashboard/subscriptions" onClick={onDashboardClick} data-testid="donation-wizard-dashboard-link">
+		<ThankYouPanel
+			data-testid="donation-wizard-step-thank-you"
+			message={t('thankYou.message')}
+			title={t('thankYou.loggedInPrompt.title')}
+			description={t('thankYou.loggedInPrompt.description')}
+			support={{ prefix: t('thankYou.loginPrompt.supportPrefix'), email: SUPPORT_EMAIL }}
+			action={
+				<Button asChild>
+					<Link
+						href={`${websiteBasePath}/dashboard/subscriptions`}
+						onClick={onDashboardClick}
+						data-testid="donation-wizard-dashboard-link"
+					>
 						{t('thankYou.loggedInPrompt.dashboardButton')}
 					</Link>
 				</Button>
-			</div>
-
-			<p className="text-foreground text-center text-sm leading-none">
-				{t('thankYou.loginPrompt.supportPrefix')}{' '}
-				<a className="underline" href={`mailto:${SUPPORT_EMAIL}`}>
-					{SUPPORT_EMAIL}
-				</a>
-			</p>
-		</div>
+			}
+		/>
 	);
 };

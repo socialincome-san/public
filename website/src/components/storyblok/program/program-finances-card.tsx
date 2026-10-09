@@ -1,12 +1,11 @@
-import type { Translator } from '@/lib/i18n/translator';
 import { type WebsiteLanguage, getSafeNumberFormatLocale } from '@/lib/i18n/utils';
 import { formatCompactNumberLocale } from '@/lib/utils/string-utils';
 import type { ProgramFinancesDisplayAmounts } from '@/modules/programs/program.types';
-import { Progress } from '@socialincome/design-system/progress/progress';
+import { Progress } from '@socialincome/design-system/feedback/progress/progress';
+import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	displayAmounts: ProgramFinancesDisplayAmounts;
-	translator: Translator;
 	lang: WebsiteLanguage;
 	embedded?: boolean;
 };
@@ -19,7 +18,8 @@ const clampPercent = (value: number): number => {
 	return Math.min(100, Math.max(0, value));
 };
 
-export const ProgramFinancesCard = ({ displayAmounts, translator, lang, embedded = false }: Props) => {
+export const ProgramFinancesCard = async ({ displayAmounts, lang, embedded = false }: Props) => {
+	const t = await getTranslations('website-common');
 	const locale = getSafeNumberFormatLocale(lang);
 	const currency = displayAmounts.currency;
 	const sentToRecipients = formatCompactNumberLocale(displayAmounts.paidOutSoFar, locale);
@@ -32,14 +32,14 @@ export const ProgramFinancesCard = ({ displayAmounts, translator, lang, embedded
 		<>
 			<div className="text-foreground flex items-end justify-between">
 				<div className="flex flex-col gap-3.5">
-					<p className="text-xs">{translator.t('program-detail-page.sent-to-recipients')}</p>
+					<p className="text-xs">{t('program-detail-page.sent-to-recipients')}</p>
 					<p className="flex items-baseline gap-1">
 						<span className="text-sm font-bold">{currency}</span>
 						<span className="text-2xl">{sentToRecipients}</span>
 					</p>
 				</div>
 				<div className="flex flex-col items-end gap-3.5">
-					<p className="text-xs">{translator.t('program-detail-page.total-program-costs')}</p>
+					<p className="text-xs">{t('program-detail-page.total-program-costs')}</p>
 					<p className="flex items-baseline gap-1">
 						<span className="text-sm font-bold">{currency}</span>
 						<span className="text-2xl">{totalProgramCosts}</span>

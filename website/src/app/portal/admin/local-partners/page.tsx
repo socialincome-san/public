@@ -1,9 +1,9 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
 import { getPaginatedLocalPartnerTableView } from '@/modules/local-partners/local-partner.service';
 import type { LocalPartnerTableViewRow } from '@/modules/local-partners/local-partner.types';
 import { requireAdmin } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
 import LocalPartnersTable from './local-partners-table';
 

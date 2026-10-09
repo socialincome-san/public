@@ -1,10 +1,16 @@
 'use client';
 
+import { CountryFlag } from '@/components/country-flag';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { splitTranslationTemplate } from '@/lib/i18n/translation-template';
 import { cn } from '@socialincome/design-system/cn';
-import { CountryFlag } from '@socialincome/design-system/country-flag/country-flag';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { Fragment, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 
 export type CountriesSectionSegment = {
@@ -113,12 +119,7 @@ export const CountriesSectionClient = ({
 						<span className="inline-flex items-center gap-2 align-baseline">
 							<strong className="leading-none font-medium">{activeSegment.countryName}</strong>
 							{activeSegment.countryCode ? (
-								<CountryFlag
-									country={activeSegment.countryCode}
-									size="lg"
-									decorative
-									className="size-[1em] shrink-0 text-[length:inherit]"
-								/>
+								<CountryFlag country={activeSegment.countryCode} size="inline" decorative />
 							) : null}
 						</span>
 					),
@@ -230,10 +231,12 @@ export const CountriesSectionClient = ({
 			)}
 			{hasOtherCountries ? (
 				<Dialog open={isOtherDialogOpen} onOpenChange={setIsOtherDialogOpen}>
-					<DialogContent className="flex max-h-[min(85vh,40rem)] flex-col overflow-hidden rounded-3xl sm:max-w-md">
-						<DialogTitle>{dialogTitle}</DialogTitle>
-						<DialogDescription className="sr-only">{chartAriaLabel}</DialogDescription>
-						<ul className="min-h-0 overflow-y-auto">
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>{dialogTitle}</DialogTitle>
+							<DialogDescription visuallyHidden>{chartAriaLabel}</DialogDescription>
+						</DialogHeader>
+						<ul>
 							{otherCountries.map((country) => (
 								<li key={country.countryCode} className="flex items-center gap-3 py-2">
 									<CountryFlag country={country.countryCode} size="sm" decorative />

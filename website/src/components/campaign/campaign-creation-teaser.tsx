@@ -1,8 +1,8 @@
 'use client';
 
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
-import { Button } from '@socialincome/design-system/button/button';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import NextImage from 'next/image';
 import type { SubmissionLabels } from './campaign-submission/types';
 import { CreateCampaignDialog } from './create-campaign-dialog';
@@ -17,15 +17,15 @@ type Props = {
 	};
 	labels: SubmissionLabels;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const CampaignCreationTeaser = ({ translations, labels, lang, region }: Props) => (
+export const CampaignCreationTeaser = ({ translations, labels, lang, currency }: Props) => (
 	<BlockWrapper disableMarginTop={true}>
 		<CreateCampaignDialog
 			labels={labels}
 			lang={lang}
-			region={region}
+			currency={currency}
 			trigger={({ openDialog }) => (
 				<section className="bg-accent-foreground relative overflow-hidden rounded-3xl px-6 py-12 md:px-10 md:pt-16 md:pb-14">
 					<div aria-hidden className="pointer-events-none absolute inset-0">
@@ -42,9 +42,11 @@ export const CampaignCreationTeaser = ({ translations, labels, lang, region }: P
 					<div className="relative z-10 flex flex-col gap-5">
 						<h2 className="text-4xl leading-none font-medium text-pretty text-white">{translations.title}</h2>
 						<p className="max-w-[488px] text-base leading-6 text-white">{translations.description}</p>
-						<Button type="button" variant="secondary" className="w-fit rounded-full" onClick={openDialog}>
-							{translations.button}
-						</Button>
+						<div>
+							<Button type="button" variant="secondary" onClick={openDialog}>
+								{translations.button}
+							</Button>
+						</div>
 					</div>
 				</section>
 			)}

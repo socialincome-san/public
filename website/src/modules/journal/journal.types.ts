@@ -1,4 +1,5 @@
 import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import type { ResolvedArticle } from '@/modules/storyblok-content/storyblok-content.types';
 import type { ISbStoryData } from '@storyblok/js';
 
@@ -24,14 +25,14 @@ type JournalOverviewLabels = {
 
 export type JournalOverviewRequest = {
 	lang: string;
-	region: string;
+	currency: WebsiteCurrency;
 	labels: JournalOverviewLabels;
 	filter?: JournalOverviewFilter;
 };
 
 export type JournalPageRequest = {
 	lang: string;
-	region: string;
+	currency: WebsiteCurrency;
 	slug: string;
 	journalLabel: string;
 	homeLabel: string;
@@ -66,3 +67,5 @@ export type JournalPersonPageData = {
 	breadcrumbs: JournalBreadcrumbLink[];
 	roleLabels: Record<string, string>;
 };
+
+export const JOURNAL_CACHE_TAG = 'journal';

@@ -2,12 +2,8 @@
 
 import { resultFail, type Result } from '@/lib/result';
 import type { DisplayAmount } from '@/modules/currency-display/currency-display.types';
-import {
-	chfAmountsDisplayInputSchema,
-	walletPayoutDisplayInputSchema,
-	walletPayoutDisplayInputsSchema,
-} from './currency-display.schemas';
-import { resolveChfAmounts, resolveWalletPayoutDisplay, resolveWalletPayoutDisplays } from './currency-display.service';
+import { resolveChfAmounts, resolveWalletPayoutDisplays } from './currency-display.cache';
+import { chfAmountsDisplayInputSchema, walletPayoutDisplaysInputSchema } from './currency-display.schemas';
 
 export const resolveChfAmountsAction = async (input: unknown): Promise<Result<DisplayAmount[]>> => {
 	const parsed = chfAmountsDisplayInputSchema.safeParse(input);
@@ -18,17 +14,8 @@ export const resolveChfAmountsAction = async (input: unknown): Promise<Result<Di
 	return resolveChfAmounts(parsed.data);
 };
 
-export const resolveWalletPayoutDisplayAction = async (input: unknown): Promise<Result<DisplayAmount>> => {
-	const parsed = walletPayoutDisplayInputSchema.safeParse(input);
-	if (!parsed.success) {
-		return resultFail('Invalid wallet payout display input');
-	}
-
-	return resolveWalletPayoutDisplay(parsed.data);
-};
-
 export const resolveWalletPayoutDisplaysAction = async (input: unknown): Promise<Result<DisplayAmount[]>> => {
-	const parsed = walletPayoutDisplayInputsSchema.safeParse(input);
+	const parsed = walletPayoutDisplaysInputSchema.safeParse(input);
 	if (!parsed.success) {
 		return resultFail('Invalid wallet payout display input');
 	}

@@ -1,9 +1,9 @@
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { ImageText } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getScaledDimensions } from '@/lib/storyblok/storyblok-utils';
-import { BlockWrapper } from '@socialincome/design-system/block-wrapper/block-wrapper';
 import { cn } from '@socialincome/design-system/cn';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
 import NextImage from 'next/image';
 
 type Props = {
@@ -46,42 +46,41 @@ export const ImageTextBlock = ({ blok }: Props) => {
 	const widthClasses = widthClassesByRatio[resolvedImageToTextRatio] ?? widthClassesByRatio['1/2'];
 
 	return (
-		<BlockWrapper
-			{...storyblokEditable(blok as SbBlokData)}
-			disableMarginBottom={disableMarginBottom}
-			disableMarginTop={disableMarginTop}
-			className={cn(
-				'text-foreground flex flex-col gap-14 text-lg md:flex-row md:items-center',
-				layout === 'imageRight' && 'md:flex-row-reverse',
-			)}
-		>
-			{imageFilename && (
-				<div className={cn('order-2 md:order-none', widthClasses.image)}>
-					{isSvg ? (
-						// SVGs should keep their original vector source instead of going through the Storyblok raster loader.
-						// eslint-disable-next-line @next/next/no-img-element
-						<img
-							src={imageFilename}
-							alt={image.alt ?? ''}
-							width={image.width ?? undefined}
-							height={image.height ?? undefined}
-							className="h-auto w-full rounded-2xl"
-						/>
-					) : (
-						dimensions && (
-							<NextImage
+		<BlockWrapper {...storyblokEditable(blok)} disableMarginBottom={disableMarginBottom} disableMarginTop={disableMarginTop}>
+			<div
+				className={cn(
+					'text-foreground flex flex-col gap-14 text-lg md:flex-row md:items-center',
+					layout === 'imageRight' && 'md:flex-row-reverse',
+				)}
+			>
+				{imageFilename && (
+					<div className={cn('order-2 md:order-none', widthClasses.image)}>
+						{isSvg ? (
+							// SVGs bypass the Storyblok raster loader to stay vector
+							// eslint-disable-next-line @next/next/no-img-element
+							<img
 								src={imageFilename}
 								alt={image.alt ?? ''}
-								width={dimensions.width}
-								height={dimensions.height}
+								width={image.width ?? undefined}
+								height={image.height ?? undefined}
 								className="h-auto w-full rounded-2xl"
 							/>
-						)
-					)}
+						) : (
+							dimensions && (
+								<NextImage
+									src={imageFilename}
+									alt={image.alt ?? ''}
+									width={dimensions.width}
+									height={dimensions.height}
+									className="h-auto w-full rounded-2xl"
+								/>
+							)
+						)}
+					</div>
+				)}
+				<div className={cn('order-1 flex-1 md:order-none', widthClasses.text)}>
+					<RichTextRenderer richTextDocument={content} />
 				</div>
-			)}
-			<div className={cn('order-1 flex-1 md:order-none', widthClasses.text)}>
-				<RichTextRenderer richTextDocument={content} />
 			</div>
 		</BlockWrapper>
 	);

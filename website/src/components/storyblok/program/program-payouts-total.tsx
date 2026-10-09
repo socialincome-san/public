@@ -1,31 +1,25 @@
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { StoryblokPayoutsTotal } from '@/components/storyblok/shared/storyblok-payouts-total';
 import type { DonationsTotal } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import type { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	programDetailData: ProgramDetailData;
-	translator: Translator;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const ProgramPayoutsTotal = async ({ programDetailData, translator, lang, region }: Props) => {
+export const ProgramPayoutsTotal = async ({ programDetailData, lang, currency }: Props) => {
 	const totalChf = programDetailData.dashboardStats?.paidOutSoFarChf ?? 0;
-	const displayCurrency = await getWebsiteCurrencyFromCookie();
-	const displayResult = await resolveChfAmountsAction({ amounts: [totalChf], displayCurrency });
-	const displayAmount = displayResult.success ? displayResult.data[0] : undefined;
-	const { amount: totalAmount, currency } = displayAmount ?? { amount: totalChf, currency: 'CHF' as const };
+	const t = await getTranslations('website-common');
 
 	const blok: DonationsTotal = {
 		component: 'donationsTotal',
 		_uid: 'program-payouts-total',
-		heading: translator.t('program-detail-page.payouts-total-title'),
+		heading: t('program-detail-page.payouts-total-title'),
 		images: programDetailData.images,
 	};
 
-	return <StoryblokPayoutsTotal blok={blok} totalAmount={totalAmount} currency={currency} lang={lang} region={region} />;
+	return <StoryblokPayoutsTotal blok={blok} totalChf={totalChf} lang={lang} currency={currency} />;
 };

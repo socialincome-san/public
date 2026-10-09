@@ -1,7 +1,7 @@
 {
 	"modal": {
 		"title": "Fai una donazione",
-		"campaign-for": "Per {{title}}",
+		"campaign-for": "Per {title}",
 		"closeConfirm": {
 			"title": "Chiudere la donazione?",
 			"description": "Se chiudi ora, i progressi di questa donazione andranno persi.",
@@ -18,7 +18,7 @@
 		"monthly": "Mensile",
 		"one-time": "Una tantum",
 		"donate-now": "Dona ora",
-		"donate-now-with-amount": "Dona {{amount}} ora",
+		"donate-now-with-amount": "Dona {amount} ora",
 		"custom-amount-placeholder": "Importo"
 	},
 	"stepPlan": {
@@ -33,8 +33,8 @@
 		"plan-1x": "Piano 1 %",
 		"plan-2x": "Piano 2 %",
 		"double-impact-badge": "Raddoppia l'impatto",
-		"benefit-beneficiaries": "{{directCount}} beneficiari diretti, {{indirectCount}} indiretti",
-		"benefit-community": "Unisciti a una community di {{count}} sostenitori",
+		"benefit-beneficiaries": "{directCount} beneficiari diretti, {indirectCount} indiretti",
+		"benefit-community": "Unisciti a una community di {count} sostenitori",
 		"benefit-double-impact": "Raddoppia l'impatto",
 		"back": "Indietro",
 		"choose-payment": "Scegli metodo di pagamento"
@@ -84,8 +84,8 @@
 		"generate-qr-code": "Genera codice QR",
 		"pay-online": "Paga online",
 		"cover-costs-description": "Assicurati che l'intera donazione ci arrivi.",
-		"cover-costs-label-monthly": "Copri le commissioni di transazione di {{fee}}/mese",
-		"cover-costs-label-one-time": "Copri le commissioni di transazione di {{fee}}",
+		"cover-costs-label-monthly": "Copri le commissioni di transazione di {fee}/mese",
+		"cover-costs-label-one-time": "Copri le commissioni di transazione di {fee}",
 		"cover-costs-tooltip-aria": "Come vengono calcolati i costi di transazione",
 		"cover-costs-tooltip": "I fornitori di pagamento applicano una commissione di elaborazione (circa 3 %). Coprendola, una parte maggiore della tua donazione va direttamente alla nostra missione."
 	},
@@ -104,8 +104,8 @@
 		}
 	},
 	"onboarding": {
-		"donatedThankYouMonthly": "{{currency}} {{amount}}/mese donati. Grazie.",
-		"donatedThankYouOneTime": "{{currency}} {{amount}} donati. Grazie.",
+		"donatedThankYouMonthly": "{currency} {amount}/mese donati. Grazie.",
+		"donatedThankYouOneTime": "{currency} {amount} donati. Grazie.",
 		"accountCreatedDescription": "Abbiamo configurato il tuo account.",
 		"isThisYou": "Controlla i dati del tuo account",
 		"firstName": "Nome",
@@ -139,8 +139,8 @@
 	"impact": {
 		"title": "Contanti diretti a persone in difficoltà",
 		"cancel-anytime": "Annullabile in qualsiasi momento",
-		"supporters": "{{supporterCount}} sostenitori da {{countryCount}} paesi",
-		"supporters-no-countries": "{{supporterCount}} sostenitori in tutto il mondo",
+		"supporters": "{supporterCount} sostenitori da {countryCount} paesi",
+		"supporters-no-countries": "{supporterCount} sostenitori in tutto il mondo",
 		"zewo": "Certificato ZEWO",
 		"why-one-percent": "Perché donare l'1%?",
 		"pay-with": "Paga con"

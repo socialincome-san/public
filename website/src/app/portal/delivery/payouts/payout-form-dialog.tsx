@@ -1,8 +1,8 @@
 'use client';
 
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useState } from 'react';
 import { PayoutForm } from './payout-form';
 
@@ -31,7 +31,7 @@ export const PayoutFormDialog = ({ open, onOpenChange, payoutId }: PayoutFormDia
 
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+			<DialogContent size="md">
 				<DialogHeader>
 					<DialogTitle>{dialogTitle}</DialogTitle>
 				</DialogHeader>
@@ -39,7 +39,7 @@ export const PayoutFormDialog = ({ open, onOpenChange, payoutId }: PayoutFormDia
 				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+						<AlertDescription>{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 

@@ -1,6 +1,7 @@
 'use client';
 
-import { Button } from '@socialincome/design-system/button/button';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { WizardFooter } from '@socialincome/design-system/navigation/wizard-footer/wizard-footer';
 import { CampaignSubmissionStepIndicator } from './campaign-submission-step-indicator';
 import type { CampaignSubmissionStepId, SubmissionLabels } from './types';
 
@@ -29,29 +30,29 @@ export const CampaignSubmissionFooter = ({
 	const isLastStep = currentStep === visibleSteps[visibleSteps.length - 1];
 
 	return (
-		<div className="flex items-center justify-between gap-4 border-t px-6 pt-4">
-			<div className="flex min-w-0 flex-1 justify-start">
-				{!isFirstStep ? (
+		<WizardFooter
+			edge="inset"
+			progressOnMobile="hidden"
+			back={
+				isFirstStep ? null : (
 					<Button type="button" variant="outline" disabled={isSubmitting} onClick={onBack}>
 						{labels.back}
 					</Button>
-				) : null}
-			</div>
-
-			<CampaignSubmissionStepIndicator
-				currentStep={currentStep}
-				steps={visibleSteps}
-				formStepsLabel={labels.formSteps}
-				stepLabel={labels.stepLabel}
-				programLabel={labels.program}
-				detailsLabel={labels.details}
-				aboutLabel={labels.about}
-				personalLabel={labels.personal}
-				className="hidden sm:flex"
-			/>
-
-			<div className="flex min-w-0 flex-1 justify-end">
-				{isLastStep ? (
+				)
+			}
+			progress={
+				<CampaignSubmissionStepIndicator
+					currentStep={currentStep}
+					steps={visibleSteps}
+					formStepsLabel={labels.formSteps}
+					programLabel={labels.program}
+					detailsLabel={labels.details}
+					aboutLabel={labels.about}
+					personalLabel={labels.personal}
+				/>
+			}
+			primary={
+				isLastStep ? (
 					// Always type="button": swapping Continue → type="submit" mid-click submits the previous step immediately
 					<Button type="button" disabled={isSubmitting || isContinueDisabled} onClick={onSubmit}>
 						{isSubmitting ? labels.submitting : labels.submit}
@@ -60,8 +61,8 @@ export const CampaignSubmissionFooter = ({
 					<Button type="button" disabled={isContinueDisabled} onClick={onContinue}>
 						{labels.continue}
 					</Button>
-				)}
-			</div>
-		</div>
+				)
+			}
+		/>
 	);
 };

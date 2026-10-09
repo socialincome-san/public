@@ -1,0 +1,15 @@
+{
+	"panel-label": "Le persone dietro questa pagina",
+	"close": "Chiudi",
+	"ticker-label": "Mostra le persone dietro questa pagina",
+	"volunteers": "{count, plural, one {{count} volontario} other {{count} volontari}}",
+	"countries": "{count, plural, one {{count} paese} other {{count} paesi}}",
+	"show-all-contributors": "Mostra tutte le persone che contribuiscono",
+	"show-fewer-contributors": "Mostra meno persone",
+	"more-people": "{count, plural, one {+{count} persona} other {+{count} persone}}",
+	"show-less": "Mostra meno",
+	"reach-out": "Contatta",
+	"reach-out-about-page": "Contatta a proposito di questa pagina",
+	"reach-out-about-role": "Contatta {name} a proposito di {role}",
+	"article-by": "Articolo di {name}"
+}

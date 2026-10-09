@@ -1,3 +1,4 @@
+import type { AnySearchParams } from '@/app/page-props';
 import { DonationGlobeBlock } from '@/components/content-blocks/donation-globe-block';
 import { DonationsTotalBlockServer } from '@/components/content-blocks/donations-total-server';
 import { DownloadsBlock } from '@/components/content-blocks/downloads';
@@ -34,8 +35,7 @@ import { TwoColumnTextBlock } from '@/components/content-blocks/two-column-text'
 import { VideoTextBlock } from '@/components/content-blocks/video-text';
 import { NewsletterSignup } from '@/components/storyblok/journal/rich-text/newsletter-signup';
 import type { Page, TwoColumn } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import type { ParsedUrlQueryInput } from 'querystring';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { Fragment, type ReactNode } from 'react';
 
 type PageBlock = Page['content'][number];
@@ -45,39 +45,40 @@ type RichtextButtonHeaderAction = 'createProgram';
 type PageContentTypeProps = {
 	blok: Page;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
-	searchParams?: ParsedUrlQueryInput;
+	currency: WebsiteCurrency;
+	searchParams?: Promise<AnySearchParams>;
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction;
+	afterHero?: ReactNode;
 };
 
 const renderPageBlock = (
 	block: PageBlock | NestedPageBlock,
 	lang: WebsiteLanguage,
-	region: WebsiteRegion,
-	searchParams?: ParsedUrlQueryInput,
+	currency: WebsiteCurrency,
+	searchParams?: Promise<AnySearchParams>,
 	richtextButtonHeaderAction?: RichtextButtonHeaderAction,
 ): ReactNode => {
 	switch (block.component) {
 		case 'donationGlobe':
 			return <DonationGlobeBlock blok={block} lang={lang} />;
 		case 'donationsTotal':
-			return <DonationsTotalBlockServer blok={block} lang={lang} region={region} />;
+			return <DonationsTotalBlockServer blok={block} lang={lang} currency={currency} />;
 		case 'downloads':
 			return <DownloadsBlock blok={block} />;
 		case 'explainerVideoHeader':
-			return <ExplainerVideoHeaderBlock blok={block} lang={lang} region={region} />;
+			return <ExplainerVideoHeaderBlock blok={block} lang={lang} currency={currency} />;
 		case 'faqSelection':
-			return <FaqSelectionBlock blok={block} lang={lang} region={region} />;
+			return <FaqSelectionBlock blok={block} lang={lang} currency={currency} />;
 		case 'heroVideo':
-			return <HeroVideoBlockServer blok={block} lang={lang} region={region} />;
+			return <HeroVideoBlockServer blok={block} lang={lang} currency={currency} />;
 		case 'imageText':
 			return <ImageTextBlock blok={block} />;
 		case 'impactMeasurement':
 			return <ImpactMeasurementBlock blok={block} lang={lang} searchParams={searchParams} />;
 		case 'inflows':
-			return <InflowsBlock blok={block} lang={lang} />;
+			return <InflowsBlock blok={block} lang={lang} currency={currency} />;
 		case 'journalTeasers':
-			return <JournalTeasersBlock blok={block} lang={lang} region={region} />;
+			return <JournalTeasersBlock blok={block} lang={lang} currency={currency} />;
 		case 'lottie':
 			return <LottieBlock blok={block} />;
 		case 'modalCards':
@@ -89,27 +90,27 @@ const renderPageBlock = (
 		case 'openSourceStats':
 			return <OpenSourceStatsBlock blok={block} lang={lang} />;
 		case 'openSourceContributors':
-			return <OpenSourceContributorsBlock blok={block} lang={lang} />;
+			return <OpenSourceContributorsBlock blok={block} />;
 		case 'openSourceIssues':
-			return <OpenSourceIssuesBlock blok={block} lang={lang} />;
+			return <OpenSourceIssuesBlock blok={block} />;
 		case 'outflows':
-			return <OutflowsBlock blok={block} lang={lang} region={region} />;
+			return <OutflowsBlock blok={block} lang={lang} currency={currency} />;
 		case 'partnershipsCarousel':
 			return <PartnershipsCarouselBlock blok={block} />;
 		case 'partnershipsCard':
 			return <PartnershipsCardBlock blok={block} />;
 		case 'personGrid':
-			return <PersonGridBlock blok={block} lang={lang} region={region} />;
+			return <PersonGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'programGrid':
-			return <ProgramGridBlock blok={block} lang={lang} region={region} />;
+			return <ProgramGridBlock blok={block} lang={lang} currency={currency} />;
 		case 'reservesBlock':
-			return <ReservesBlock blok={block} lang={lang} />;
+			return <ReservesBlock blok={block} lang={lang} currency={currency} />;
 		case 'richtextButtonHeader':
 			if (richtextButtonHeaderAction === 'createProgram') {
-				return <HomePageRichtextButtonHeaderBlock blok={block} lang={lang} region={region} />;
+				return <HomePageRichtextButtonHeaderBlock blok={block} lang={lang} currency={currency} />;
 			}
 
-			return <RichtextButtonHeaderBlock blok={block} lang={lang} region={region} />;
+			return <RichtextButtonHeaderBlock blok={block} lang={lang} currency={currency} />;
 		case 'spacer':
 			return <SpacerBlock blok={block} />;
 		case 'teamGrid':
@@ -121,15 +122,15 @@ const renderPageBlock = (
 		case 'text':
 			return <TextBlock blok={block} />;
 		case 'transparencyCountries':
-			return <TransparencyCountriesBlock blok={block} lang={lang} />;
+			return <TransparencyCountriesBlock blok={block} lang={lang} currency={currency} />;
 		case 'transparencySummary':
-			return <TransparencySummaryBlock blok={block} lang={lang} />;
+			return <TransparencySummaryBlock blok={block} lang={lang} currency={currency} />;
 		case 'twoColumn': {
 			const renderColumn = (column: typeof block.leftColumn) =>
 				column.length > 0
 					? column.map((columnBlock) => (
 							<Fragment key={columnBlock._uid}>
-								{renderPageBlock(columnBlock, lang, region, searchParams, richtextButtonHeaderAction)}
+								{renderPageBlock(columnBlock, lang, currency, searchParams, richtextButtonHeaderAction)}
 							</Fragment>
 						))
 					: undefined;
@@ -158,15 +159,25 @@ const renderPageBlock = (
 export default function PageContentType({
 	blok,
 	lang,
-	region,
+	currency,
 	searchParams,
 	richtextButtonHeaderAction,
+	afterHero,
 }: PageContentTypeProps) {
-	return (
-		blok.content?.map((currentBlock) => (
+	const blocks = blok.content ?? [];
+	const heroCount = blocks[0]?.component === 'heroVideo' ? 1 : 0;
+	const renderBlocks = (pageBlocks: PageBlock[]) =>
+		pageBlocks.map((currentBlock) => (
 			<Fragment key={currentBlock._uid}>
-				{renderPageBlock(currentBlock, lang, region, searchParams, richtextButtonHeaderAction)}
+				{renderPageBlock(currentBlock, lang, currency, searchParams, richtextButtonHeaderAction)}
 			</Fragment>
-		)) ?? null
+		));
+
+	return (
+		<>
+			{renderBlocks(blocks.slice(0, heroCount))}
+			{afterHero}
+			{renderBlocks(blocks.slice(heroCount))}
+		</>
 	);
 }

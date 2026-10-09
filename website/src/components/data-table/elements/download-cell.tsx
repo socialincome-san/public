@@ -2,9 +2,8 @@
 
 import { CellType } from '@/components/data-table/elements/types';
 import { createStorageReference, useStorage, useStorageDownloadURL } from '@/lib/firebase/hooks/use-storage';
+import { DataTableDownloadCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 import type { RowData } from '@tanstack/react-table';
-import { Download } from 'lucide-react';
-import Link from 'next/link';
 
 export const DownloadCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const storagePath = String(ctx.getValue() ?? '');
@@ -17,23 +16,5 @@ export const DownloadCell = <TData extends RowData, TValue>({ ctx }: CellType<TD
 		return null;
 	}
 
-	if (!isDownloadablePath) {
-		return <span className="text-muted-foreground text-sm">Download unavailable</span>;
-	}
-
-	if (!data || loading) {
-		return null;
-	}
-
-	return (
-		<Link
-			className="text-primary inline-flex items-center font-medium underline-offset-4 hover:underline"
-			href={data}
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			<Download className="mr-2 h-4 w-4" />
-			Download
-		</Link>
-	);
+	return <DataTableDownloadCell unavailable={!isDownloadablePath} href={loading ? undefined : (data ?? undefined)} />;
 };

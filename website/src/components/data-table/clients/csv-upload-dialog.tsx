@@ -2,10 +2,10 @@
 
 import type { Result } from '@/lib/result';
 import { CsvRow, parseCsvFile } from '@/lib/utils/csv';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/alert/alert';
-import { Button } from '@socialincome/design-system/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/dialog/dialog';
-import { SuccessBanner } from '@socialincome/design-system/success-banner/success-banner';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { SuccessBanner } from '@socialincome/design-system/feedback/success-banner/success-banner';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useState } from 'react';
 import { CsvDropzone } from './csv-dropzone';
 import { CsvPreviewTable } from './csv-preview-table';
@@ -76,7 +76,7 @@ export const CsvUploadDialog = ({ open, onOpenChange, title, template, onImport 
 
 	return (
 		<Dialog open={open} onOpenChange={(next) => !next && handleDialogClose()}>
-			<DialogContent className="space-y-4 overflow-y-auto sm:max-h-[90vh] sm:max-w-3xl">
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
 				</DialogHeader>
@@ -88,7 +88,9 @@ export const CsvUploadDialog = ({ open, onOpenChange, title, template, onImport 
 				{result && !result.success && (
 					<Alert variant="destructive">
 						<AlertTitle>Import failed</AlertTitle>
-						<AlertDescription className="min-w-0 break-words whitespace-pre-wrap">{result.error}</AlertDescription>
+						<AlertDescription>
+							<span className="min-w-0 break-words whitespace-pre-wrap">{result.error}</span>
+						</AlertDescription>
 					</Alert>
 				)}
 

@@ -1,10 +1,9 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { cn } from '@socialincome/design-system/cn';
-import { Switch } from '@socialincome/design-system/switch/switch';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/tool-tip/tool-tip';
-import { CircleHelp } from 'lucide-react';
+import { Switch } from '@socialincome/design-system/forms/switch/switch';
+import { InfoTooltip } from '@socialincome/design-system/overlays/info-tooltip/info-tooltip';
+import { useTranslations } from 'next-intl';
 import type { Cadence } from '../../utils/donation-amount';
 import { formatDonationCurrencyAmount } from '../../utils/donation-formatting';
 
@@ -29,7 +28,7 @@ export const CoverTransactionCostsToggle = ({
 	switchId = 'cover-transaction-costs',
 	tone = 'accent',
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 	const fee = formatDonationCurrencyAmount(currency, transactionCost);
 
 	return (
@@ -38,7 +37,7 @@ export const CoverTransactionCostsToggle = ({
 			<div
 				className={cn(
 					'flex min-w-0 items-center gap-3 overflow-hidden rounded-md px-4 py-3',
-					tone === 'warning' ? 'bg-[#fef8ee]' : 'bg-accent',
+					tone === 'warning' ? 'bg-highlight' : 'bg-accent',
 				)}
 			>
 				<Switch
@@ -53,20 +52,7 @@ export const CoverTransactionCostsToggle = ({
 						? t('stepPayment.cover-costs-label-monthly', { fee })
 						: t('stepPayment.cover-costs-label-one-time', { fee })}
 				</label>
-				<Tooltip>
-					<TooltipTrigger asChild>
-						<button
-							type="button"
-							aria-label={t('stepPayment.cover-costs-tooltip-aria')}
-							className="text-muted-foreground hover:text-foreground inline-flex shrink-0"
-						>
-							<CircleHelp className="size-4" aria-hidden />
-						</button>
-					</TooltipTrigger>
-					<TooltipContent sideOffset={8} className="max-w-[280px] leading-snug">
-						{t('stepPayment.cover-costs-tooltip')}
-					</TooltipContent>
-				</Tooltip>
+				<InfoTooltip label={t('stepPayment.cover-costs-tooltip-aria')}>{t('stepPayment.cover-costs-tooltip')}</InfoTooltip>
 			</div>
 		</div>
 	);

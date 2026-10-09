@@ -2,13 +2,13 @@
 
 import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
 import { useAuth } from '@/lib/firebase/hooks/use-auth';
-import { useTranslator } from '@/lib/i18n/use-translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@socialincome/design-system/button/button';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/design-system/form/form';
-import { Input } from '@socialincome/design-system/input/input';
-import { Label } from '@socialincome/design-system/label/label';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { Label } from '@socialincome/design-system/forms/label/label';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -20,19 +20,16 @@ type FormValues = {
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 type Props = {
-	lang: WebsiteLanguage;
 	prefilledEmail?: string;
 };
 
-export const MagicLinkLoginForm = ({ lang, prefilledEmail = '' }: Props) => {
+export const MagicLinkLoginForm = ({ prefilledEmail = '' }: Props) => {
 	const { auth } = useAuth();
-	const translator = useTranslator(lang, 'website-login');
+	const websiteBasePath = useWebsiteBasePath();
+	const t = useTranslations('website-login');
 
 	const formSchema = z.object({
-		email: z
-			.string()
-			.trim()
-			.email(translator?.t('error.invalid-email') ?? 'Invalid email address'),
+		email: z.string().trim().email(t('error.invalid-email')),
 	});
 
 	const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
@@ -48,7 +45,7 @@ export const MagicLinkLoginForm = ({ lang, prefilledEmail = '' }: Props) => {
 		setSubmittedEmail(email);
 
 		try {
-			await sendMagicLoginLink({ auth, email });
+			await sendMagicLoginLink({ auth, email, websiteBasePath });
 		} catch {
 			// Intentionally ignore errors to avoid account enumeration.
 		}
@@ -73,7 +70,7 @@ export const MagicLinkLoginForm = ({ lang, prefilledEmail = '' }: Props) => {
 							name="email"
 							render={({ field }) => (
 								<FormItem>
-									<Label>{translator?.t('email')}</Label>
+									<Label>{t('email')}</Label>
 									<FormControl>
 										<Input type="email" placeholder="you@example.org" {...field} />
 									</FormControl>
@@ -82,27 +79,27 @@ export const MagicLinkLoginForm = ({ lang, prefilledEmail = '' }: Props) => {
 							)}
 						/>
 
-						<Button type="submit" className="w-full">
-							{translator?.t('submit-button')}
+						<Button type="submit" fullWidth>
+							{t('submit-button')}
 						</Button>
 
-						<p className="text-muted-foreground text-center text-xs">{translator?.t('flyout.magic-link-description')}</p>
+						<p className="text-muted-foreground text-center text-xs">{t('flyout.magic-link-description')}</p>
 					</form>
 				</Form>
 			)}
 
-			{status === 'sending' && <div className="text-center text-sm">{translator?.t('flyout.sending')}</div>}
+			{status === 'sending' && <div className="text-center text-sm">{t('flyout.sending')}</div>}
 
 			{status === 'sent' && (
 				<div className="space-y-4 text-center">
-					<p className="text-sm">{translator?.t('flyout.sent-message', { context: { email: submittedEmail } })}</p>
+					<p className="text-sm">{t('flyout.sent-message', { email: submittedEmail })}</p>
 
-					<Button variant="outline" onClick={retry} className="w-full">
-						{translator?.t('flyout.retry')}
+					<Button variant="outline" onClick={retry} fullWidth>
+						{t('flyout.retry')}
 					</Button>
 
 					<p className="text-muted-foreground text-xs">
-						{translator?.t('flyout.support-prefix')}{' '}
+						{t('flyout.support-prefix')}{' '}
 						<a className="underline" href="mailto:support@socialincome.org">
 							support@socialincome.org
 						</a>

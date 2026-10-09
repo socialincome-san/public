@@ -1,10 +1,10 @@
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import type { ProgramDashboardStats } from '@/modules/programs/program.types';
-import { Card } from '@socialincome/design-system/card/card';
+import { Card } from '@socialincome/design-system/data-display/card/card';
+import { StatPanel } from '@socialincome/design-system/data-display/stat-panel/stat-panel';
+import { StatProgress } from '@socialincome/design-system/data-display/stat-progress/stat-progress';
 import { DonationForm } from './donation-form';
-import { SectionBox } from './section-box';
 import { SectionTitle } from './section-title';
-import { StatProgressCard } from './stat-progress-card';
 
 type FirstIntervalFundingSectionProps = {
 	programId: string;
@@ -20,24 +20,26 @@ export const FirstIntervalFundingSection = ({ programId, stats }: FirstIntervalF
 			<SectionTitle>First Interval Funding</SectionTitle>
 			<Card>
 				<div className="space-y-6">
-					<SectionBox>
-						<StatProgressCard
+					<StatPanel>
+						<StatProgress
 							title="You need to cover the first interval to start the program"
-							leftLabel="Current Contributions"
-							rightLabel="Minimum Required"
-							leftValue={formatCurrencyLocale(stats.contributedToProgramSoFarChf, 'CHF', 'de-CH', {
-								compactThreshold: 1_000_000,
-							})}
-							rightValue={formatCurrencyLocale(stats.costPerIntervalChf, 'CHF', 'de-CH', {
-								compactThreshold: 1_000_000,
-							})}
+							start={{
+								label: 'Current Contributions',
+								value: formatCurrencyLocale(stats.contributedToProgramSoFarChf, 'CHF', 'de-CH', {
+									compactThreshold: 1_000_000,
+								}),
+							}}
+							end={{
+								label: 'Minimum Required',
+								value: formatCurrencyLocale(stats.costPerIntervalChf, 'CHF', 'de-CH', { compactThreshold: 1_000_000 }),
+							}}
 							percent={percent}
 						/>
-					</SectionBox>
+					</StatPanel>
 
-					<SectionBox>
+					<StatPanel>
 						<DonationForm costPerIntervalChf={stats.costPerIntervalChf} programId={programId} />
-					</SectionBox>
+					</StatPanel>
 				</div>
 			</Card>
 		</div>
