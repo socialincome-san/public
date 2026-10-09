@@ -2,7 +2,7 @@ import type { CampaignStory } from '@/components/storyblok/campaign/campaign.typ
 import { getStoryblokCampaignTitleForSlug } from '@/components/storyblok/campaign/campaign.utils';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
-import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
+import { defaultCurrency, defaultLanguage, getWebsiteBasePath } from '@/lib/i18n/utils';
 import type {
 	CampaignPaginatedTableView,
 	CampaignTableEntry,
@@ -60,7 +60,7 @@ export const getCampaignTableView = (
 		return {
 			...entry,
 			title: getStoryblokCampaignTitleForSlug(campaignStories, entry.slug),
-			link: `/${defaultLanguage}/${defaultRegion}/campaigns/${entry.slug}`,
+			link: `${getWebsiteBasePath(defaultLanguage, defaultCurrency)}/campaigns/${entry.slug}`,
 			programName: programStory ? getProgramTitle(programStory.content) : entry.programName,
 		};
 	});

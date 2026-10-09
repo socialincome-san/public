@@ -1,6 +1,6 @@
 import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { createWalletImageFromStoryblokAsset } from '@/components/wallet/wallet-image-utils';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getWebsiteBasePath, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { DisplayAmount } from '@/modules/currency-display/currency-display.types';
 import type { PublicProgramStats } from '@/modules/programs/program.types';
@@ -14,10 +14,10 @@ type Props = {
 	stats?: PublicProgramStats;
 	walletDisplay?: DisplayAmount;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const ProgramWallet = async ({ program, stats, walletDisplay, lang, region }: Props) => {
+export const ProgramWallet = async ({ program, stats, walletDisplay, lang, currency }: Props) => {
 	const t = await getTranslations('website-common');
 	const programTitle = getProgramTitle(program.content);
 	const storyblokSlug = getProgramStoryblokSlug(program);
@@ -38,7 +38,7 @@ export const ProgramWallet = async ({ program, stats, walletDisplay, lang, regio
 
 	return (
 		<Wallet
-			href={`/${lang}/${region}/programs/${storyblokSlug}`}
+			href={`${getWebsiteBasePath(lang, currency)}/programs/${storyblokSlug}`}
 			title={programTitle}
 			subtitle={stats ? getCountryNameByCode(stats.countryIsoCode) : undefined}
 			footerLeft={

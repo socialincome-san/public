@@ -2,6 +2,7 @@
 
 import { PersonCard } from '@/components/storyblok/shared/person-card';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { createWebsitePersonLink } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@socialincome/design-system/cn';
 import {
@@ -25,7 +26,7 @@ type Props = {
 	persons: ISbStoryData<Person>[];
 	sidebar?: PersonCarouselSidebar;
 	/** When set, each card links to the person profile. */
-	personLink?: { lang: string; region: string };
+	personLink?: { lang: string; currency: WebsiteCurrency };
 	size?: 'default' | 'small';
 	roleLabels?: Record<string, string>;
 };
@@ -56,7 +57,7 @@ export const PersonCarousel = ({ persons, sidebar, personLink, size = 'default',
 								<PersonCard
 									person={person}
 									size={size}
-									href={personLink ? createWebsitePersonLink(person.slug, personLink.lang, personLink.region) : undefined}
+									href={personLink ? createWebsitePersonLink(person.slug, personLink.lang, personLink.currency) : undefined}
 									roleLabels={roleLabels}
 								/>
 							</CarouselItem>

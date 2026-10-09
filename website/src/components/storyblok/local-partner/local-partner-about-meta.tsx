@@ -1,7 +1,8 @@
 import type { FocusStory } from '@/components/storyblok/focus/focus.types';
 import { getFocusSlug, getFocusTitle } from '@/components/storyblok/focus/focus.utils';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import { cn } from '@socialincome/design-system/cn';
@@ -16,11 +17,11 @@ type ExternalLink = {
 
 type FocusBadgesProps = {
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	focuses: FocusStory[];
 };
 
-export const LocalPartnerFocusBadges = ({ lang, region, focuses }: FocusBadgesProps) => {
+export const LocalPartnerFocusBadges = ({ lang, currency, focuses }: FocusBadgesProps) => {
 	if (focuses.length === 0) {
 		return null;
 	}
@@ -32,7 +33,7 @@ export const LocalPartnerFocusBadges = ({ lang, region, focuses }: FocusBadgesPr
 				const focusSlug = getFocusSlug(focusStory);
 
 				return (
-					<Link key={focusStory.uuid} href={`/${lang}/${region}/focuses/${focusSlug}`}>
+					<Link key={focusStory.uuid} href={`${getWebsiteBasePath(lang, currency)}/focuses/${focusSlug}`}>
 						<Badge variant="outline">{focusTitle}</Badge>
 					</Link>
 				);
@@ -43,7 +44,7 @@ export const LocalPartnerFocusBadges = ({ lang, region, focuses }: FocusBadgesPr
 
 type AboutMetaCardProps = {
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	mission?: string;
 	partnerSince?: string;
 	foundingYear?: string;
@@ -53,7 +54,7 @@ type AboutMetaCardProps = {
 
 export const LocalPartnerAboutMetaCard = ({
 	lang,
-	region,
+	currency,
 	mission,
 	partnerSince,
 	foundingYear,
@@ -62,7 +63,7 @@ export const LocalPartnerAboutMetaCard = ({
 }: AboutMetaCardProps) => {
 	const resolvedExternalLinks = externalLinks
 		.map(({ label, link }) => {
-			const resolvedHref = resolveStoryblokLink(link, lang, region);
+			const resolvedHref = resolveStoryblokLink(link, lang, currency);
 
 			return resolvedHref && resolvedHref !== '#' && isSafeHref(resolvedHref) ? { label, href: resolvedHref } : null;
 		})

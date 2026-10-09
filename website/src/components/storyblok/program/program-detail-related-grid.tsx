@@ -1,7 +1,7 @@
 import { ProgramGridBlock } from '@/components/content-blocks/program-grid';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import type { Button, ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { getTranslations } from 'next-intl/server';
@@ -9,12 +9,12 @@ import { getTranslations } from 'next-intl/server';
 type Props = {
 	currentProgramFullSlug: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
 const RELATED_PROGRAMS_COUNT = 3;
 
-export const ProgramDetailRelatedGrid = async ({ currentProgramFullSlug, lang, region }: Props) => {
+export const ProgramDetailRelatedGrid = async ({ currentProgramFullSlug, lang, currency }: Props) => {
 	const [programsResult, t] = await Promise.all([getProgramsAction(lang), getTranslations('website-common')]);
 	const allPrograms = (programsResult.success ? programsResult.data : []) as ProgramStory[];
 	const otherPrograms = allPrograms.filter((program) => program.full_slug !== currentProgramFullSlug);
@@ -53,5 +53,5 @@ export const ProgramDetailRelatedGrid = async ({ currentProgramFullSlug, lang, r
 		button: [button],
 	};
 
-	return <ProgramGridBlock blok={blok} lang={lang} region={region} />;
+	return <ProgramGridBlock blok={blok} lang={lang} currency={currency} />;
 };

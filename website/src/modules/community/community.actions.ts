@@ -2,8 +2,8 @@
 
 import { resultFail, type Result } from '@/lib/result';
 import { draftMode } from 'next/headers';
+import { getCommunityPanelData } from './community.cache';
 import { communityPanelInputSchema } from './community.schemas';
-import { getCommunityPanelData } from './community.service';
 import type { CommunityPanelData } from './community.types';
 
 // Only the Storyblok preview needs this, so it is closed to visitors without the draft mode cookie
@@ -15,6 +15,6 @@ export const getCommunityPanelDataAction = async (input: unknown): Promise<Resul
 	const parsed = communityPanelInputSchema.safeParse(input);
 
 	return parsed.success
-		? getCommunityPanelData(parsed.data.page, parsed.data.language, parsed.data.region)
+		? getCommunityPanelData(parsed.data.page, parsed.data.language, parsed.data.currency)
 		: resultFail('Invalid community panel request');
 };

@@ -4,8 +4,7 @@ import {
 	type CountriesSectionSegment,
 } from '@/components/transparency/countries-section-client';
 import type { TransparencyCountries } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale, formatNumberLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getContributionsByCountryDataAction } from '@/modules/transparency/transparency.actions';
@@ -17,10 +16,10 @@ import { getTranslations } from 'next-intl/server';
 type Props = {
 	blok: TransparencyCountries;
 	lang: WebsiteLanguage;
+	currency: WebsiteCurrency;
 };
 
-export const TransparencyCountriesBlock = async ({ blok, lang }: Props) => {
-	const displayCurrency = await getWebsiteCurrencyFromCookie();
+export const TransparencyCountriesBlock = async ({ blok, lang, currency: displayCurrency }: Props) => {
 	const dataResult = await getContributionsByCountryDataAction({
 		limit: 15,
 		financialPeriod: { kind: 'all-time' },

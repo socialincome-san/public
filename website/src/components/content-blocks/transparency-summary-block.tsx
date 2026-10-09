@@ -1,7 +1,6 @@
 import { SummarySectionClient, type SummaryMetric } from '@/components/transparency/summary-section-client';
 import type { TransparencySummary } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import type { DisplayAmount } from '@/modules/currency-display/currency-display.types';
@@ -21,10 +20,10 @@ type ReserveAccount = {
 type Props = {
 	blok: TransparencySummary;
 	lang: WebsiteLanguage;
+	currency: WebsiteCurrency;
 };
 
-export const TransparencySummaryBlock = async ({ blok, lang }: Props) => {
-	const displayCurrency = await getWebsiteCurrencyFromCookie();
+export const TransparencySummaryBlock = async ({ blok, lang, currency: displayCurrency }: Props) => {
 	const dataResult = await getTransparencySummaryAction();
 
 	if (!dataResult.success) {

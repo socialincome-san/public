@@ -2,8 +2,7 @@ import { getDonationExplainerVideo } from '@/components/donation-wizard/utils/do
 import { InflowsSection, type InflowsSectionSegment } from '@/components/inflows/inflows-section';
 import { buildInflowSegments, parseChfAmount, resolveInflowSegmentAmountsChf } from '@/components/inflows/inflows-segments';
 import type { Inflows as InflowsBlok } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { getSafeNumberFormatLocale, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatCurrencyLocale } from '@/lib/utils/string-utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getTransparencySummaryAction } from '@/modules/transparency/transparency.actions';
@@ -14,10 +13,10 @@ import { getTranslations } from 'next-intl/server';
 type Props = {
 	blok: InflowsBlok;
 	lang: WebsiteLanguage;
+	currency: WebsiteCurrency;
 };
 
-export const InflowsBlock = async ({ blok, lang }: Props) => {
-	const displayCurrency = await getWebsiteCurrencyFromCookie();
+export const InflowsBlock = async ({ blok, lang, currency: displayCurrency }: Props) => {
 	const [dataResult, t] = await Promise.all([getTransparencySummaryAction(), getTranslations('website-common')]);
 
 	if (!dataResult.success) {

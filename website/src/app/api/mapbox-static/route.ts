@@ -5,8 +5,6 @@ const isMapboxMapVariant = (value: string): value is 'main' | 'inset' => value =
 const MAP_IMAGE_CACHE_SECONDS = 60 * 60 * 24; // 24 hours
 const MAP_IMAGE_CACHE_HEADER = `public, max-age=${MAP_IMAGE_CACHE_SECONDS}, s-maxage=${MAP_IMAGE_CACHE_SECONDS}, stale-while-revalidate=${MAP_IMAGE_CACHE_SECONDS}`;
 
-export const runtime = 'nodejs';
-
 export const GET = async (request: Request) => {
 	const { searchParams } = new URL(request.url);
 	const isoCode = searchParams.get('isoCode')?.trim();

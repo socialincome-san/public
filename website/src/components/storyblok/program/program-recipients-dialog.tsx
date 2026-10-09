@@ -7,12 +7,12 @@ import type { PublicRecipientTableViewRow } from '@/modules/recipients/recipient
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
 type Props = {
 	dialogTitle: string;
 	viewDemographicsLabel: string;
-	manageLabel: string;
+	manageLabel: ReactNode;
 	manageHref: string;
 	programId: string;
 };

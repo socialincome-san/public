@@ -1,6 +1,6 @@
 'use client';
 
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import NextImage from 'next/image';
@@ -17,15 +17,15 @@ type Props = {
 	};
 	labels: SubmissionLabels;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const CampaignCreationTeaser = ({ translations, labels, lang, region }: Props) => (
+export const CampaignCreationTeaser = ({ translations, labels, lang, currency }: Props) => (
 	<BlockWrapper disableMarginTop={true}>
 		<CreateCampaignDialog
 			labels={labels}
 			lang={lang}
-			region={region}
+			currency={currency}
 			trigger={({ openDialog }) => (
 				<section className="bg-accent-foreground relative overflow-hidden rounded-3xl px-6 py-12 md:px-10 md:pt-16 md:pb-14">
 					<div aria-hidden className="pointer-events-none absolute inset-0">

@@ -2,7 +2,7 @@ import { RootDocument, rootViewport } from '@/app/root-document';
 import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { TabNavigation } from '@/components/tab-navigation';
-import { defaultLanguage, defaultRegion } from '@/lib/i18n/utils';
+import { defaultCurrency, defaultLanguage } from '@/lib/i18n/utils';
 import { getMetadata } from '@/lib/utils/metadata';
 import { requireSessions } from '@/server/session';
 import { Card } from '@socialincome/design-system/data-display/card/card';
@@ -35,7 +35,12 @@ const PartnerSpaceShell = async ({ children }: { children: ReactNode }) => {
 	];
 
 	return (
-		<WebsiteAppShell sessions={sessions} lang={defaultLanguage} region={defaultRegion} scope="partner-space">
+		<WebsiteAppShell
+			sessions={Promise.resolve(sessions)}
+			lang={defaultLanguage}
+			currency={defaultCurrency}
+			scope="partner-space"
+		>
 			<Breadcrumb links={breadcrumbLinks} />
 			<h1 data-testid="welcome-message-partner-space" className="py-8 text-5xl">
 				Partner Space

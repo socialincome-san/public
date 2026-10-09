@@ -1,9 +1,8 @@
 import { prisma } from '@/lib/database/prisma';
-import { NextResponse } from 'next/server';
-
-export const dynamic = 'force-dynamic';
+import { connection, NextResponse } from 'next/server';
 
 export const GET = async () => {
+	await connection();
 	try {
 		await prisma.$queryRaw`SELECT 1`;
 

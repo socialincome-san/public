@@ -7,6 +7,6 @@ test.beforeEach(async () => {
 });
 
 test('dashboard not found page matches screenshot', async ({ page }) => {
-	await page.goto('/en/int/dashboard/does-not-exist');
+	await page.goto('/en/usd/dashboard/does-not-exist');
 	await expectToHaveScreenshot(page);
 });

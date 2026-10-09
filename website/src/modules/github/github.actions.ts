@@ -1,7 +1,7 @@
 'use server';
 
 import type { Result } from '@/lib/result';
-import { getOpenSourceContributors, getOpenSourceIssues, getOpenSourceStats } from './github.service';
+import { getOpenSourceContributors, getOpenSourceIssues, getOpenSourceStats } from './github.cache';
 import type { GithubContributor, GithubOpenSourceIssuesData, GithubRepoStats } from './github.types';
 
 export const getOpenSourceStatsAction = async (): Promise<Result<GithubRepoStats>> => getOpenSourceStats();

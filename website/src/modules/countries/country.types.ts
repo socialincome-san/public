@@ -134,3 +134,5 @@ export const NETWORK_TECH_LABELS: Record<NetworkTechnology, string> = {
 	satellite: 'Satellite',
 	unknown: 'Unknown',
 };
+
+export const COUNTRY_CACHE_TAG = 'countries';

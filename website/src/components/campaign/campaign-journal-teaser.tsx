@@ -1,15 +1,15 @@
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getLatestJournalArticlesAction } from '@/modules/journal/journal.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const CampaignJournalTeaser = async ({ lang, region }: Props) => {
+export const CampaignJournalTeaser = async ({ lang, currency }: Props) => {
 	const [t, articlesResult] = await Promise.all([getTranslations('website-journal'), getLatestJournalArticlesAction(lang)]);
 
 	const articles = articlesResult.success ? articlesResult.data : [];
@@ -29,7 +29,7 @@ export const CampaignJournalTeaser = async ({ lang, region }: Props) => {
 				}
 				articles={articles}
 				lang={lang}
-				region={region}
+				currency={currency}
 				journalCtaLabel={t('teasers.goToJournal')}
 				videoLabel={t('badge.video')}
 			/>

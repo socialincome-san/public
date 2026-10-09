@@ -1,7 +1,7 @@
 import {
 	getSubscriptionCancelRetentionPresets,
 	isSubscriptionCancellationReason,
-} from '@/app/[lang]/[region]/dashboard/subscriptions/subscription-cancellation';
+} from '@/app/[lang]/[currency]/dashboard/subscriptions/subscription-cancellation';
 import { subscriptionCancellation } from './subscription-cancellation.service';
 
 describe('subscription cancellation helpers', () => {

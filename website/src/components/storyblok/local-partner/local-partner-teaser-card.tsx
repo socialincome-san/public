@@ -1,5 +1,6 @@
 import { CountryFlag } from '@/components/country-flag';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
@@ -38,7 +39,7 @@ export const getLocalPartnerCandidateFooter = (
 type Props = {
 	localPartner: LocalPartnerStory;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	recipientsCount: number;
 	recipientsLabel: string;
 	candidatesLabel: string;
@@ -48,7 +49,7 @@ type Props = {
 export const LocalPartnerTeaserCard = ({
 	localPartner,
 	lang,
-	region,
+	currency,
 	recipientsCount,
 	recipientsLabel,
 	candidatesLabel,
@@ -57,7 +58,7 @@ export const LocalPartnerTeaserCard = ({
 	const title = getLocalPartnerTitle(localPartner.content);
 	const description = getLocalPartnerDescription(localPartner.content);
 	const slug = getLocalPartnerSlug(localPartner);
-	const href = `/${lang}/${region}/local-partners/${slug}`;
+	const href = `${getWebsiteBasePath(lang, currency)}/local-partners/${slug}`;
 	const normalizedIsoCode = getLocalPartnerIsoCode(localPartner.content)?.toUpperCase();
 	const countryCode = normalizedIsoCode && isValidCountryCode(normalizedIsoCode) ? normalizedIsoCode : undefined;
 	const heroImage = localPartner.content.heroImage;

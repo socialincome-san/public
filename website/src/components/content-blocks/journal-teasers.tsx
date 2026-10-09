@@ -1,7 +1,7 @@
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getJournalArticlesByUuidsAction, getLatestJournalArticlesAction } from '@/modules/journal/journal.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable } from '@storyblok/react';
@@ -12,7 +12,7 @@ const JOURNAL_TEASER_LIMIT = 3;
 type Props = {
 	blok: JournalTeasers;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
 const getSelectedArticleUuids = (selectedArticles: JournalTeasers['selectedArticles']) => {
@@ -44,7 +44,7 @@ const getArticles = async (blok: JournalTeasers, lang: WebsiteLanguage) => {
 	return latestResult.success ? latestResult.data : [];
 };
 
-export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
+export const JournalTeasersBlock = async ({ blok, lang, currency }: Props) => {
 	const { disableMarginBottom, disableMarginTop, heading } = blok;
 	const [t, articles] = await Promise.all([getTranslations('website-journal'), getArticles(blok, lang)]);
 
@@ -62,7 +62,7 @@ export const JournalTeasersBlock = async ({ blok, lang, region }: Props) => {
 				heading={heading ? <StoryblokMarkdown>{heading}</StoryblokMarkdown> : undefined}
 				articles={articles}
 				lang={lang}
-				region={region}
+				currency={currency}
 				journalCtaLabel={t('teasers.goToJournal')}
 				videoLabel={t('badge.video')}
 			/>

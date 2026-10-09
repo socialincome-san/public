@@ -4,7 +4,7 @@ import { CampaignJournalTeaser } from '@/components/campaign/campaign-journal-te
 import { Community } from '@/components/community/community';
 import { FaqSelectionContent } from '@/components/content-blocks/faq-selection-content';
 import { resolveFaqItems } from '@/components/content-blocks/faq-selection.utils';
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { resolveProgramCountry } from '@/components/storyblok/country/resolve-country-name';
 import type { ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramAbout } from '@/components/storyblok/program/program-about';
@@ -15,7 +15,7 @@ import { ProgramPayoutsTotal } from '@/components/storyblok/program/program-payo
 import { ProgramRecipients } from '@/components/storyblok/program/program-recipients';
 import { ProgramSurveys } from '@/components/storyblok/program/program-surveys';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { CommunityPanelData } from '@/modules/community/community.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
@@ -24,11 +24,11 @@ import { getTranslations } from 'next-intl/server';
 type Props = {
 	programDetailData: ProgramDetailData;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	community: CommunityPanelData | null;
 };
 
-export const ProgramDetail = async ({ programDetailData, lang, region, community }: Props) => {
+export const ProgramDetail = async ({ programDetailData, lang, currency, community }: Props) => {
 	const countryIsoCode = programDetailData.programDetails?.countryIsoCode ?? programDetailData.stats?.countryIsoCode;
 	const recipientsCount =
 		programDetailData.dashboardStats?.recipientsCount ??
@@ -45,9 +45,9 @@ export const ProgramDetail = async ({ programDetailData, lang, region, community
 			fullSlug: programDetailData.fullSlug,
 			currentLabel: programDetailData.title,
 			lang,
-			region,
+			currency,
 		}),
-		resolveProgramCountry(countryIsoCode, lang, region),
+		resolveProgramCountry(countryIsoCode, lang, currency),
 	]);
 
 	const faqItems = resolveFaqItems(programDetailData.faq ?? []);
@@ -80,7 +80,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region, community
 				<Breadcrumb links={breadcrumbLinks} layout="section" aside={community ? <Community data={community} /> : null} />
 				<div className="lg:hidden">
 					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
-						<DonationFormServer campaignId={programDetailData.campaignId} />
+						<DonationForm campaignId={programDetailData.campaignId} />
 					</BlockWrapper>
 				</div>
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
@@ -91,12 +91,13 @@ export const ProgramDetail = async ({ programDetailData, lang, region, community
 									stats={programDetailData.dashboardStats}
 									programId={programDetailData.programId}
 									lang={lang}
+									currency={currency}
 								/>
 							) : null}
 							<ProgramAbout
 								programDetailData={programDetailData}
 								lang={lang}
-								region={region}
+								currency={currency}
 								resolvedCountry={resolvedCountry}
 							/>
 						</div>
@@ -107,7 +108,7 @@ export const ProgramDetail = async ({ programDetailData, lang, region, community
 								<ProgramSurveys
 									completedCount={completedSurveysCount}
 									lang={lang}
-									region={region}
+									currency={currency}
 									programId={programDetailData.programId}
 								/>
 							</div>
@@ -116,11 +117,11 @@ export const ProgramDetail = async ({ programDetailData, lang, region, community
 				</BlockWrapper>
 			</div>
 			{(programDetailData.dashboardStats?.paidOutSoFarChf ?? 0) > 0 ? (
-				<ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} region={region} />
+				<ProgramPayoutsTotal programDetailData={programDetailData} lang={lang} currency={currency} />
 			) : null}
 			<div className="flex flex-col gap-8 py-8">
-				<CampaignJournalTeaser lang={lang} region={region} />
-				<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} region={region} />
+				<CampaignJournalTeaser lang={lang} currency={currency} />
+				<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} currency={currency} />
 				{faqItems.length > 0 && (
 					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
 						<FaqSelectionContent heading={tFaq('title')} items={faqItems} />

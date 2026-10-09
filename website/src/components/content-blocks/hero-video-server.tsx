@@ -1,13 +1,13 @@
 import { HeroVideoBlock } from '@/components/content-blocks/hero-video';
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import type { HeroVideo } from '@/generated/storyblok/types/109655/storyblok-components';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	blok: HeroVideo;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
 export const HeroVideoBlockServer = async ({ blok, lang }: Props) => {
@@ -29,7 +29,7 @@ export const HeroVideoBlockServer = async ({ blok, lang }: Props) => {
 				exitExpandedVideoView: t('video-controls.exit-expanded-video-view'),
 				donateNow: t('donate-now'),
 			}}
-			donationForm={<DonationFormServer />}
+			donationForm={<DonationForm />}
 		/>
 	);
 };

@@ -45,7 +45,7 @@ describe('buildProgramAboutContent', () => {
 			programDetailData: baseProgramDetailData,
 			t,
 			lang: 'en',
-			region: 'ch',
+			currency: 'CHF',
 			countryName: 'Sierra Leone',
 		});
 
@@ -67,7 +67,7 @@ describe('buildProgramAboutContent', () => {
 			},
 			t,
 			lang: 'en',
-			region: 'ch',
+			currency: 'CHF',
 		});
 
 		expect(content.cardRows).toHaveLength(0);
@@ -85,7 +85,7 @@ describe('buildProgramAboutContent', () => {
 			},
 			t,
 			lang: 'en',
-			region: 'ch',
+			currency: 'CHF',
 		});
 
 		expect(content.overlaySections.map((section) => section.id)).toEqual(['parties', 'program-design']);
@@ -96,7 +96,7 @@ describe('buildProgramAboutContent', () => {
 			programDetailData: baseProgramDetailData,
 			t,
 			lang: 'en',
-			region: 'ch',
+			currency: 'CHF',
 			countryName: 'Sierra Leone',
 		});
 
@@ -112,14 +112,14 @@ describe('buildProgramAboutContent', () => {
 			programDetailData: baseProgramDetailData,
 			t,
 			lang: 'en',
-			region: 'ch',
+			currency: 'CHF',
 			countryName: 'Sierra Leone',
 		});
 
 		const localPartnerCardRow = content.cardRows.find((row) => row.value === 'Jamil Foundation');
 		const localPartnerOverlayRow = content.overlaySections[0]?.rows.find((row) => row.value === 'Jamil Foundation');
 
-		expect(localPartnerCardRow?.href).toBe('/en/ch/local-partners/jamil-foundation');
-		expect(localPartnerOverlayRow?.href).toBe('/en/ch/local-partners/jamil-foundation');
+		expect(localPartnerCardRow?.href).toBe('/en/chf/local-partners/jamil-foundation');
+		expect(localPartnerOverlayRow?.href).toBe('/en/chf/local-partners/jamil-foundation');
 	});
 });

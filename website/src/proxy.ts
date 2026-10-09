@@ -1,15 +1,11 @@
-import { COUNTRY_COOKIE, CURRENCY_COOKIE } from '@/app/[lang]/[region]';
 import {
 	findBestLocale,
-	getLanguageFromPathname,
-	VISITOR_COUNTRY_HEADER,
-	WebsiteRegion,
-	websiteRegions,
+	isWebsiteLanguage,
+	parseCurrencySegment,
+	toCurrencySegment,
+	type WebsiteCurrency,
 } from '@/lib/i18n/utils';
-import { isValidCountryCode } from '@/lib/types/country';
 import { NextRequest, NextResponse } from 'next/server';
-import { CountryCode } from './generated/prisma/enums';
-import { bestGuessCurrency, isValidCurrency } from './lib/types/currency';
 
 export const config = {
 	matcher: [
@@ -18,80 +14,50 @@ export const config = {
 	],
 };
 
-/**
- * Checks if a valid country is set as a cookie and set it based on the request header if available.
- */
-const countryMiddleware = (request: NextRequest, response: NextResponse) => {
-	const countryCookie = request.cookies.get(COUNTRY_COOKIE);
-	if (countryCookie && isValidCountryCode(countryCookie.value)) {
-		return response;
-	}
+// URLs before the currency replaced the region segment.
+const legacyRegionCurrencies = new Map<string, WebsiteCurrency>([
+	['ch', 'CHF'],
+	['int', 'USD'],
+]);
 
-	const country = request.headers.get(VISITOR_COUNTRY_HEADER)?.toUpperCase();
-	if (country) {
-		response.cookies.set({
-			name: COUNTRY_COOKIE,
-			value: country,
-			path: '/',
-			maxAge: 60 * 60 * 24 * 7,
-		});
-	} // 1 week
+const redirectToPath = (request: NextRequest, pathname: string, status: 307 | 308) => {
+	const url = request.nextUrl.clone();
+	url.pathname = pathname;
 
-	return response;
+	return NextResponse.redirect(url, status);
 };
 
 /**
- * Checks if a valid currency is set as a cookie, and sets one based on the country cookie if available.
+ * The URL is the only source of language and currency. A complete prefix passes through; old region and
+ * upper-case currency segments redirect permanently; any other path gets the visitor's best locale in front.
  */
-const currencyMiddleware = (request: NextRequest, response: NextResponse) => {
-	if (request.cookies.has(CURRENCY_COOKIE) && isValidCurrency(request.cookies.get(CURRENCY_COOKIE)?.value)) {
-		return response;
-	}
-	// We use the country code from the request header if available. If not, we use the region/country from the url path.
-	const country =
-		(response.cookies.get(COUNTRY_COOKIE)?.value as CountryCode | undefined) ??
-		(request.cookies.get(COUNTRY_COOKIE)?.value as CountryCode | undefined);
-	const currency = bestGuessCurrency(country);
-
-	response.cookies.set({ name: CURRENCY_COOKIE, value: currency, path: '/', maxAge: 60 * 60 * 24 * 7 }); // 1 week
-
-	return response;
-};
-
-const i18nRedirectMiddleware = (request: NextRequest) => {
-	// Checks if the language and country in the URL are supported, and redirects to the best locale if not.
-	const segments = request.nextUrl.pathname.split('/');
-	const pathnameLanguage = getLanguageFromPathname(request.nextUrl.pathname);
-	const detectedCountry = segments.at(2) ?? '';
-
-	const pathnameIsMissingLanguage = !pathnameLanguage;
-	const pathnameIsMissingCountry = !websiteRegions.includes(detectedCountry as WebsiteRegion);
-
-	if (pathnameIsMissingCountry || pathnameIsMissingLanguage) {
-		let { language, region } = findBestLocale(request);
-		language = pathnameIsMissingLanguage ? language : pathnameLanguage;
-		region = pathnameIsMissingCountry ? region : (detectedCountry as WebsiteRegion);
-
-		const url = request.nextUrl.clone();
-		url.pathname =
-			`/${language}/${region}` +
-			(pathnameIsMissingLanguage && segments.at(1) ? `/${segments.at(1)}` : '') +
-			(pathnameIsMissingCountry && segments.at(2) ? `/${segments.at(2)}` : '') +
-			`/${segments.slice(3).join('/')}`;
-
-		return NextResponse.redirect(url);
-	}
-};
-
 export const proxy = (request: NextRequest) => {
-	let response = i18nRedirectMiddleware(request);
-	if (response) {
-		return response;
+	const { pathname } = request.nextUrl;
+	const [, language = '', segment = ''] = pathname.split('/');
+
+	if (!isWebsiteLanguage(language)) {
+		const best = findBestLocale(request);
+
+		return redirectToPath(
+			request,
+			`/${best.language}/${toCurrencySegment(best.currency)}${pathname}`.replace(/\/$/, ''),
+			307,
+		);
 	}
 
-	response = NextResponse.next();
-	response = countryMiddleware(request, response);
-	response = currencyMiddleware(request, response);
+	if (parseCurrencySegment(segment)) {
+		return NextResponse.next();
+	}
 
-	return response;
+	const afterLanguage = pathname.slice(language.length + 1);
+	const knownCurrency = legacyRegionCurrencies.get(segment.toLowerCase()) ?? parseCurrencySegment(segment.toLowerCase());
+	if (knownCurrency) {
+		return redirectToPath(
+			request,
+			`/${language}/${toCurrencySegment(knownCurrency)}${afterLanguage.slice(segment.length + 1)}`,
+			308,
+		);
+	}
+
+	return redirectToPath(request, `/${language}/${toCurrencySegment(findBestLocale(request).currency)}${afterLanguage}`, 307);
 };

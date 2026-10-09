@@ -8,10 +8,10 @@ const SECURITY_HEADER_NAMES = [
 ] as const;
 
 test('security headers match snapshot', async ({ page }) => {
-	const response = await page.goto('/en/ch');
+	const response = await page.goto('/en/chf');
 
 	if (!response) {
-		throw new Error('Expected a response from /en/ch');
+		throw new Error('Expected a response from /en/chf');
 	}
 
 	expect(response.ok()).toBeTruthy();

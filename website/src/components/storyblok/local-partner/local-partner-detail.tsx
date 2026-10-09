@@ -6,7 +6,7 @@ import { isFocusStory } from '@/components/storyblok/focus/focus.utils';
 import { EntityAboutSection } from '@/components/storyblok/shared/entity-about-section';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
 import { getLocalPartnerProgramSummariesAction } from '@/modules/local-partners/local-partner.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
@@ -22,7 +22,7 @@ import { getLocalPartnerIsoCode, getLocalPartnerTitle } from './local-partner.ut
 type Props = {
 	localPartner: LocalPartnerStory;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	recipientsCount: number;
 	completedSurveysCount: number;
 	community: CommunityPanelData | null;
@@ -31,7 +31,7 @@ type Props = {
 export const LocalPartnerDetail = async ({
 	localPartner,
 	lang,
-	region,
+	currency,
 	recipientsCount,
 	completedSurveysCount,
 	community,
@@ -50,12 +50,12 @@ export const LocalPartnerDetail = async ({
 	const partnerPrograms = partnerProgramsResult.success
 		? partnerProgramsResult.data
 		: { programs: [], programCount: 0, recipientsTotal: 0, isPartnerScoped: false };
-	const heroCard = <LocalPartnerProgramsCard partnerPrograms={partnerPrograms} lang={lang} region={region} />;
+	const heroCard = <LocalPartnerProgramsCard partnerPrograms={partnerPrograms} lang={lang} currency={currency} />;
 	const breadcrumbLinks = await buildBreadcrumbLinks({
 		fullSlug: localPartner.full_slug,
 		currentLabel: localPartnerTitle,
 		lang,
-		region,
+		currency,
 	});
 
 	const { mission, partnerSince, foundingYear, location, website, linkedin, instagram, facebook, youtube } =
@@ -98,11 +98,11 @@ export const LocalPartnerDetail = async ({
 				mapLabel={localPartnerTitle}
 				aboutHeading={`${t('local-partners-page.about')} ${localPartnerTitle}`}
 				description={localPartner.content.description}
-				preDescription={<LocalPartnerFocusBadges lang={lang} region={region} focuses={focuses} />}
+				preDescription={<LocalPartnerFocusBadges lang={lang} currency={currency} focuses={focuses} />}
 				postDescription={
 					<LocalPartnerAboutMetaCard
 						lang={lang}
-						region={region}
+						currency={currency}
 						mission={mission}
 						partnerSince={partnerSince}
 						foundingYear={foundingYear}
@@ -117,14 +117,14 @@ export const LocalPartnerDetail = async ({
 					/>
 				}
 			/>
-			<LocalPartnerPayoutsTotal localPartner={localPartner} lang={lang} region={region} />
+			<LocalPartnerPayoutsTotal localPartner={localPartner} lang={lang} currency={currency} />
 			{Array.isArray(localPartner.content.testimonial)
 				? localPartner.content.testimonial.map((blok: TestimonialCarousel) => (
 						<TestimonialCarouselBlock key={blok._uid} blok={blok} />
 					))
 				: null}
-			<LocalPartnerPrograms localPartner={localPartner} lang={lang} region={region} />
-			<LocalPartnerPartners localPartner={localPartner} lang={lang} region={region} />
+			<LocalPartnerPrograms localPartner={localPartner} lang={lang} currency={currency} />
+			<LocalPartnerPartners localPartner={localPartner} lang={lang} currency={currency} />
 		</>
 	);
 };

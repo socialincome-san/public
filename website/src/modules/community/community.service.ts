@@ -1,5 +1,6 @@
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	createWebsiteJournalArticleLink,
@@ -16,7 +17,7 @@ import {
 	getArticlesByUuids,
 	getCommunityGlobals,
 	getPrimaryRoleLabels,
-} from '@/modules/storyblok-content/storyblok-content.service';
+} from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import type { CommunityPage, StoryReference } from './community.schemas';
 import type { CommunityPanelData, CommunityPerson } from './community.types';
@@ -25,8 +26,8 @@ const ARTICLE_IMAGE_SIZE = 128;
 
 const toUuid = (reference: StoryReference) => (typeof reference === 'string' ? reference : reference.uuid);
 
-const toHref = (link: StoryblokMultilink | undefined, language: string, region: string) => {
-	const href = resolveStoryblokLink(link, language, region);
+const toHref = (link: StoryblokMultilink | undefined, language: string, currency: WebsiteCurrency) => {
+	const href = resolveStoryblokLink(link, language, currency);
 
 	return href === '#' ? undefined : href;
 };
@@ -36,7 +37,7 @@ const blankToUndefined = (value: string | undefined) => (value?.trim() ? value.t
 export const getCommunityPanelData = async (
 	page: CommunityPage,
 	language: string,
-	region: string,
+	currency: WebsiteCurrency,
 ): Promise<Result<CommunityPanelData | null>> => {
 	if (!page.communityEnabled) {
 		return resultOk(null);
@@ -74,7 +75,7 @@ export const getCommunityPanelData = async (
 	const toPerson = (person: ISbStoryData<Person>): CommunityPerson => ({
 		name: getPersonDisplayName(person),
 		imageSrc: getPersonAvatarSrc(person) ?? undefined,
-		href: createWebsitePersonLink(person.slug, language, region),
+		href: createWebsitePersonLink(person.slug, language, currency),
 	});
 	const findPerson = (reference: StoryReference) => {
 		const person = personsByUuid.get(toUuid(reference));
@@ -87,7 +88,7 @@ export const getCommunityPanelData = async (
 	const activeVolunteers = persons.filter((person) => person.content.volunteerStatus === 'active');
 	const countries = new Set(activeVolunteers.map((person) => String(person.content.country ?? '')).filter(Boolean));
 	const ctaLabel = blankToUndefined(globals.ctaLabel);
-	const ctaHref = toHref(globals.ctaLink, language, region);
+	const ctaHref = toHref(globals.ctaLink, language, currency);
 
 	return resultOk({
 		volunteerCount: activeVolunteers.length,
@@ -96,7 +97,7 @@ export const getCommunityPanelData = async (
 		headline: globals.headline,
 		headlineEmphasis: blankToUndefined(globals.headlineEmphasis),
 		intro: blankToUndefined(globals.intro),
-		volunteersHref: toHref(globals.volunteersLink, language, region),
+		volunteersHref: toHref(globals.volunteersLink, language, currency),
 		tickerItems: (globals.tickerItems ?? '')
 			.split('\n')
 			.map((item) => item.trim())
@@ -124,14 +125,14 @@ export const getCommunityPanelData = async (
 		waysIn: (globals.waysIn ?? []).map((way) => ({
 			name: way.name,
 			effort: blankToUndefined(way.effort),
-			href: toHref(way.link, language, region),
+			href: toHref(way.link, language, currency),
 		})),
 		cta: ctaLabel && ctaHref ? { label: ctaLabel, href: ctaHref } : undefined,
 		readingTitle: blankToUndefined(globals.readingTitle),
 		articles: (articlesResult.success ? articlesResult.data : []).map((article) => ({
 			title: getArticleTitle(article),
 			author: getPersonDisplayName(article.content.author),
-			href: createWebsiteJournalArticleLink(article.slug, language, region),
+			href: createWebsiteJournalArticleLink(article.slug, language, currency),
 			imageSrc: article.content.image?.filename
 				? formatStoryblokUrl(
 						article.content.image.filename,

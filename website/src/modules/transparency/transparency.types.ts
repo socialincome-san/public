@@ -37,3 +37,5 @@ export type TransparencySummaryData = {
 	};
 	reserveAccounts: BankAccountLatestReserve[];
 };
+
+export const TRANSPARENCY_CACHE_TAG = 'transparency';

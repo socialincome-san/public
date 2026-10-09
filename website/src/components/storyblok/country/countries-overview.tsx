@@ -1,5 +1,6 @@
 import { LandingPageCard } from '@/components/storyblok/shared/landing-page-card';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { CardGrid } from '@socialincome/design-system/layout/card-grid/card-grid';
 import { PageIntro } from '@socialincome/design-system/layout/page-intro/page-intro';
@@ -12,12 +13,12 @@ type Props = {
 	countries: CountryStory[];
 	statsByIsoCode: Record<string, { programsCount: number; recipientsCount: number } | undefined>;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	title?: string;
 	text?: string;
 };
 
-export const CountriesOverview = async ({ countries, statsByIsoCode, lang, region, title, text }: Props) => {
+export const CountriesOverview = async ({ countries, statsByIsoCode, lang, currency, title, text }: Props) => {
 	const t = await getTranslations('website-common');
 
 	return (
@@ -38,7 +39,7 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, regio
 						return (
 							<LandingPageCard
 								key={country.uuid}
-								href={`/${lang}/${region}/countries/${countrySlug}`}
+								href={`${getWebsiteBasePath(lang, currency)}/countries/${countrySlug}`}
 								title={countryTitle}
 								heroImageFilename={heroImageFilename}
 								heroImageAlt={heroImageAlt}

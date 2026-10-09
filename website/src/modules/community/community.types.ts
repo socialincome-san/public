@@ -27,3 +27,5 @@ export type CommunityPanelData = {
 	readingTitle?: string;
 	articles: { title: string; author: string; href: string; imageSrc?: string }[];
 };
+
+export const COMMUNITY_CACHE_TAG = 'community';

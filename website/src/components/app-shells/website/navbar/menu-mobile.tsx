@@ -1,36 +1,34 @@
 'use client';
 
-import { AccountMenu } from '@/components/app-shells/website/navbar/account-menu';
 import { LocaleCurrencySwitcher } from '@/components/app-shells/website/navbar/locale-currency-switcher';
-import { LoginFlyout } from '@/components/app-shells/website/navbar/login-flyout';
-import { displaySession, type Scope } from '@/components/app-shells/website/navbar/utils';
+import { AccountSlot, SignedOutSlot } from '@/components/app-shells/website/navbar/session-slots';
+import { type Scope } from '@/components/app-shells/website/navbar/utils';
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteBasePath, WebsiteLanguage, type WebsiteCurrency } from '@/lib/i18n/utils';
 import type { Session } from '@/modules/auth/auth.types';
 import { type SiteMenuEntry } from '@socialincome/design-system/navigation/site-header/site-header';
 import { SiteMenuMobile } from '@socialincome/design-system/navigation/site-header/site-menu-mobile';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
+import { Fragment, Suspense, type ReactNode } from 'react';
 
 type Props = {
-	sessions: Session[];
+	sessions: Promise<Session[]>;
 	scope: Scope;
 	menuEntries: SiteMenuEntry[];
 	lang: WebsiteLanguage;
-	region: string;
+	currency: WebsiteCurrency;
 };
 
-export const MenuMobile = ({ sessions, scope, menuEntries, lang, region }: Props) => {
-	const session = displaySession(sessions, scope);
+const KeyedByPathname = ({ children }: { children: ReactNode }) => <Fragment key={usePathname()}>{children}</Fragment>;
+
+export const MenuMobile = ({ sessions, scope, menuEntries, lang, currency }: Props) => {
 	const t = useTranslations('website-common');
 	const tDonate = useTranslations('website-donate');
-	const pathname = usePathname();
-
-	return (
+	const menu = (
 		<SiteMenuMobile
-			key={pathname}
 			entries={menuEntries}
-			homeHref={`/${lang}/${region}`}
+			homeHref={getWebsiteBasePath(lang, currency)}
 			labels={{
 				openMenu: t('menu.open'),
 				closeMenu: t('menu.close'),
@@ -38,19 +36,25 @@ export const MenuMobile = ({ sessions, scope, menuEntries, lang, region }: Props
 				back: t('menu.back'),
 				homeLink: t('logo.home-link-aria'),
 			}}
-			renderDonateAction={
-				session
-					? undefined
-					: (closeMenu) => (
-							<OpenDonationWizardButton label={tDonate('donation-form.donate-now')} size="md" onBeforeOpen={closeMenu} />
-						)
-			}
+			renderDonateAction={(closeMenu) => (
+				<SignedOutSlot sessions={sessions} scope={scope}>
+					<OpenDonationWizardButton label={tDonate('donation-form.donate-now')} size="md" onBeforeOpen={closeMenu} />
+				</SignedOutSlot>
+			)}
 			footerControls={
 				<>
-					{scope === 'website' && <LocaleCurrencySwitcher lang={lang} region={region} variant="outline" />}
-					{session ? <AccountMenu sessions={sessions} scope={scope} /> : <LoginFlyout />}
+					{scope === 'website' && <LocaleCurrencySwitcher lang={lang} currency={currency} variant="outline" />}
+					<AccountSlot sessions={sessions} scope={scope} />
 				</>
 			}
 		/>
+	);
+
+	// Remounts the menu on navigation so it closes. The pathname is unknown while prerendering dynamic routes, so the
+	// static shell renders the menu without the key.
+	return (
+		<Suspense fallback={menu}>
+			<KeyedByPathname>{menu}</KeyedByPathname>
+		</Suspense>
 	);
 };

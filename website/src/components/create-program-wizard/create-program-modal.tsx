@@ -1,5 +1,6 @@
 'use client';
 
+import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
 import { useMachine } from '@xstate/react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -27,6 +28,7 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 	const t = useTranslations('create-program-wizard');
 
 	const router = useRouter();
+	const loginPath = `${useWebsiteBasePath()}/login`;
 
 	const isOpen = !state.matches('closed');
 	const createdProgramId = state.context.createdProgramId;
@@ -73,7 +75,7 @@ export const CreateProgramModal = ({ trigger, isAuthenticated = false }: Props) 
 						<DialogTitle>{t('modal.title')}</DialogTitle>
 					</DialogHeader>
 
-					<CreateProgramWizard state={state} send={send} onGoToLogin={() => router.replace('/login')} />
+					<CreateProgramWizard state={state} send={send} onGoToLogin={() => router.replace(loginPath)} />
 				</DialogContent>
 			</Dialog>
 		</>

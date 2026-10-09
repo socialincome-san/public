@@ -1,7 +1,7 @@
 import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ExplainerVideoHeader } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { VimeoVideoMatchAndExtract } from '@/lib/utils/url-video-parser';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
@@ -10,12 +10,12 @@ import { storyblokEditable } from '@storyblok/react';
 type Props = {
 	blok: ExplainerVideoHeader;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
 const vimeoMatcher = new VimeoVideoMatchAndExtract();
 
-export const ExplainerVideoHeaderBlock = ({ blok, lang, region }: Props) => {
+export const ExplainerVideoHeaderBlock = ({ blok, lang, currency }: Props) => {
 	const {
 		disableMarginBottom,
 		disableMarginTop,
@@ -26,7 +26,7 @@ export const ExplainerVideoHeaderBlock = ({ blok, lang, region }: Props) => {
 	} = blok;
 	const headingText = heading?.trim();
 	const explainerVideoLabel = labelForExplainerVideo?.trim();
-	const resolvedExplainerVideoUrl = linkToExplainerVideo ? resolveStoryblokLink(linkToExplainerVideo, lang, region) : null;
+	const resolvedExplainerVideoUrl = linkToExplainerVideo ? resolveStoryblokLink(linkToExplainerVideo, lang, currency) : null;
 	const explainerVideoEmbedUrl = resolvedExplainerVideoUrl ? vimeoMatcher.parseUrl(resolvedExplainerVideoUrl) : null;
 	const hasExplainerVideo = Boolean(explainerVideoLabel && explainerVideoEmbedUrl);
 	const explainerVideoThumbnailSrc = explainerVideoThumbnail?.filename;

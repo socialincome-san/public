@@ -259,3 +259,5 @@ export type CampaignSubmissionOptionalImages = {
 	profilePicture: CampaignSubmissionImageValidation | null;
 	sectionImage: CampaignSubmissionImageValidation | null;
 };
+
+export const CAMPAIGN_CACHE_TAG = 'campaigns';

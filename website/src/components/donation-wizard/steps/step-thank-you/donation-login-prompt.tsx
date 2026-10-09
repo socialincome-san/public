@@ -1,5 +1,6 @@
 'use client';
 
+import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { ThankYouPanel } from '@socialincome/design-system/feedback/thank-you-panel/thank-you-panel';
 import { useTranslations } from 'next-intl';
@@ -14,7 +15,8 @@ type Props = {
 
 export const DonationLoginPrompt = ({ prefilledEmail, onLoginClick }: Props) => {
 	const t = useTranslations('donation-wizard');
-	const loginHref = prefilledEmail ? `/login?email=${encodeURIComponent(prefilledEmail)}` : '/login';
+	const loginPath = `${useWebsiteBasePath()}/login`;
+	const loginHref = prefilledEmail ? `${loginPath}?email=${encodeURIComponent(prefilledEmail)}` : loginPath;
 
 	return (
 		<ThankYouPanel

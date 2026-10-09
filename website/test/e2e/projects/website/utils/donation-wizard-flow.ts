@@ -21,49 +21,8 @@ const clickWizardButton = async (scope: Locator, testId: string) => {
 	await button.click();
 };
 
-const applyTestLocaleCookies = async (page: Page, options: { region?: string; country?: string; currency: string }) => {
-	const { region = 'int', country = 'US', currency } = options;
-
-	await page.context().addCookies([
-		{
-			name: 'si_region',
-			value: region,
-			domain: 'localhost',
-			path: '/',
-			expires: -1,
-			httpOnly: false,
-			secure: false,
-			sameSite: 'Lax',
-		},
-		{
-			name: 'si_country',
-			value: country,
-			domain: 'localhost',
-			path: '/',
-			expires: -1,
-			httpOnly: false,
-			secure: false,
-			sameSite: 'Lax',
-		},
-		{
-			name: 'si_currency',
-			value: currency,
-			domain: 'localhost',
-			path: '/',
-			expires: -1,
-			httpOnly: false,
-			secure: false,
-			sameSite: 'Lax',
-		},
-	]);
-};
-
-const applySwissTestLocale = async (page: Page) => {
-	await applyTestLocaleCookies(page, { region: 'ch', country: 'CH', currency: 'CHF' });
-};
-
 export const openDonationWizardFromNav = async (page: Page) => {
-	await page.goto('/en/int');
+	await page.goto('/en/chf');
 	await page.getByTestId('donation-wizard-trigger').click();
 	await expect(wizard(page)).toBeVisible();
 	await waitForWizardStep(wizard(page), 'donation-wizard-step-amount');
@@ -91,8 +50,7 @@ export const openDonationWizardFromHero = async (
 ) => {
 	const { cadence = 'monthly' } = options;
 
-	await applySwissTestLocale(page);
-	await page.goto('/en/ch');
+	await page.goto('/en/chf');
 
 	const heroForm = page.getByTestId('donation-wizard-hero-form').first();
 	await expect(heroForm).toBeVisible();
