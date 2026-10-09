@@ -74,7 +74,7 @@ export const ScrollingBody: Story = {
 	render: () => <ScrollingDialogExample />,
 };
 
-const AlertDialogExample = () => {
+const AlertDialogExample = ({ divided = true }: { divided?: boolean }) => {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -84,11 +84,11 @@ const AlertDialogExample = () => {
 			</Button>
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent size="alert" hideCloseButton>
-					<DialogHeader>
+					<DialogHeader divided={divided}>
 						<DialogTitle>Delete this entry?</DialogTitle>
 						<DialogDescription>This cannot be undone.</DialogDescription>
 					</DialogHeader>
-					<DialogFooter>
+					<DialogFooter divided={divided}>
 						<Button variant="outline" onClick={() => setOpen(false)}>
 							Cancel
 						</Button>
@@ -104,4 +104,8 @@ const AlertDialogExample = () => {
 
 export const Alert: Story = {
 	render: () => <AlertDialogExample />,
+};
+
+export const AlertWithoutDividers: Story = {
+	render: () => <AlertDialogExample divided={false} />,
 };
