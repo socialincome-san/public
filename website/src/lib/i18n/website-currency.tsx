@@ -28,9 +28,9 @@ export const setWebsiteCurrency = (currency: WebsiteCurrency) => {
 	listeners.forEach((listener) => listener());
 };
 
-// The server and hydration render the region default, so static pages stay cacheable; the visitor's
-// preference (set by the switcher or guessed by the proxy) applies right after hydration.
-export const useWebsiteCurrency = (): WebsiteCurrency => {
+// Undefined while the server and hydration render: the visitor's preference (set by the switcher or guessed by the
+// proxy) lives in a cookie, and reading it there would keep static pages from being cached.
+export const usePreferredWebsiteCurrency = (): WebsiteCurrency | undefined => {
 	const defaultCurrency = getDefaultCurrency(use(WebsiteRegionContext));
 
 	return useSyncExternalStore(
@@ -40,6 +40,9 @@ export const useWebsiteCurrency = (): WebsiteCurrency => {
 
 			return isWebsiteCurrency(preference) ? preference : defaultCurrency;
 		},
-		() => defaultCurrency,
+		() => undefined,
 	);
 };
+
+export const useWebsiteCurrency = (): WebsiteCurrency =>
+	usePreferredWebsiteCurrency() ?? getDefaultCurrency(use(WebsiteRegionContext));
