@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown, Globe } from 'lucide-react';
+import { ChevronDown, Languages } from 'lucide-react';
 import { Button } from '../../actions/button/button';
 import { Popover, PopoverContent, PopoverTrigger } from '../../overlays/popover/popover';
 import { Tabs, TabsList, TabsTrigger } from '../tabs/tabs';
@@ -52,8 +52,10 @@ export const LocaleCurrencySwitcher = ({
 	<Popover open={open} onOpenChange={onOpenChange}>
 		<PopoverTrigger asChild>
 			<Button type="button" variant={variant} size="md" aria-label={ariaLabel}>
-				<Globe className="size-4" />
-				<span>{currency.value}</span>
+				<Languages className="size-4" />
+				<span>
+					{language.value.toUpperCase()} · {currency.value}
+				</span>
 				<ChevronDown className="text-muted-foreground size-3.5" />
 			</Button>
 		</PopoverTrigger>
