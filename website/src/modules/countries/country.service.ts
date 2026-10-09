@@ -59,6 +59,23 @@ type CountryRecord = NonNullable<Awaited<ReturnType<typeof countryRepository.fin
 type CountryStatisticKey = (typeof COUNTRY_STATISTIC_DEFINITIONS)[number]['key'];
 type CountryStatisticValueMap = Record<CountryStatisticKey, number | null>;
 
+const getCandidateCountsByCountry = async (): Promise<Result<Map<CountryCode, number>>> => {
+	const candidatesResult = await getUnassignedRecipientCountries();
+	if (!candidatesResult.success) {
+		return resultFail(candidatesResult.error);
+	}
+
+	const candidateCountsByCountry = new Map<CountryCode, number>();
+	for (const candidate of candidatesResult.data) {
+		const candidateCountry = candidate.contactCountry ?? candidate.localPartnerCountry;
+		if (candidateCountry) {
+			candidateCountsByCountry.set(candidateCountry, (candidateCountsByCountry.get(candidateCountry) ?? 0) + 1);
+		}
+	}
+
+	return resultOk(candidateCountsByCountry);
+};
+
 export const getCountry = async (userId: string, countryId: string): Promise<Result<CountryPayload>> => {
 	try {
 		const isAdminResult = await isAdmin(userId);
@@ -125,20 +142,14 @@ export const getPaginatedCountryTableView = async (
 
 export const getProgramCountryFeasibility = async (): Promise<Result<ProgramCountryFeasibilityView>> => {
 	try {
-		const [countries, candidatesResult] = await Promise.all([
+		const [countries, candidateCountsResult] = await Promise.all([
 			countryRepository.findCountriesForFeasibility(),
-			getUnassignedRecipientCountries(),
+			getCandidateCountsByCountry(),
 		]);
-		if (!candidatesResult.success) {
-			return resultFail(candidatesResult.error);
+		if (!candidateCountsResult.success) {
+			return resultFail(candidateCountsResult.error);
 		}
-		const candidateCountsByCountry = new Map<CountryCode, number>();
-		for (const candidate of candidatesResult.data) {
-			const candidateCountry = candidate.contactCountry ?? candidate.localPartnerCountry;
-			if (candidateCountry) {
-				candidateCountsByCountry.set(candidateCountry, (candidateCountsByCountry.get(candidateCountry) ?? 0) + 1);
-			}
-		}
+		const candidateCountsByCountry = candidateCountsResult.data;
 
 		const rows: ProgramCountryFeasibilityRow[] = countries.map((country) => {
 			const microfinanceIndex = country.microfinanceIndex === null ? null : Number(country.microfinanceIndex);
@@ -265,6 +276,7 @@ const getPublicCountryStatsByIsoCode = async (isoCode: string): Promise<Result<P
 const emptyCountryPageStats: CountryPageStats = {
 	activeProgramsCount: 0,
 	recipientsCount: 0,
+	candidatesCount: 0,
 };
 
 export const getCountryPageStats = async (isoCode: string): Promise<Result<CountryPageStats>> => {
@@ -281,6 +293,7 @@ export const getCountryPageStats = async (isoCode: string): Promise<Result<Count
 	return resultOk({
 		activeProgramsCount: statsResult.data.programsCount,
 		recipientsCount: statsResult.data.recipientsCount,
+		candidatesCount: statsResult.data.candidatesCount,
 	});
 };
 
@@ -293,12 +306,20 @@ export const getPublicCountryStatsByIsoCodes = async (isoCodes: string[]): Promi
 			return resultOk({});
 		}
 
-		const countries = await countryRepository.findPublicCountryStats(normalizedIsoCodes);
+		const [countries, candidateCountsResult] = await Promise.all([
+			countryRepository.findPublicCountryStats(normalizedIsoCodes),
+			getCandidateCountsByCountry(),
+		]);
+		if (!candidateCountsResult.success) {
+			return resultFail(candidateCountsResult.error);
+		}
+
 		const statsByIsoCode: PublicCountryStatsMap = {};
 		for (const country of countries) {
 			statsByIsoCode[country.isoCode] = {
 				programsCount: country._count.programs,
 				recipientsCount: country.programs.reduce((total, program) => total + program._count.recipients, 0),
+				candidatesCount: candidateCountsResult.data.get(country.isoCode) ?? 0,
 			};
 		}
 

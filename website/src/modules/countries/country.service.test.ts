@@ -36,7 +36,11 @@ jest.mock('./country.repository', () => ({
 	deleteCountry: mockDeleteCountry,
 }));
 
-import { getPaginatedCountryTableView, getProgramCountryFeasibility } from './country.service';
+import {
+	getPaginatedCountryTableView,
+	getProgramCountryFeasibility,
+	getPublicCountryStatsByIsoCodes,
+} from './country.service';
 
 const expectSuccess = <T>(result: Result<T>): T => {
 	expect(result.success).toBe(true);
@@ -115,5 +119,30 @@ describe('country service', () => {
 		expect(data.rows.find((row) => row.id === 'country-sl')?.stats.candidateCount).toBe(1);
 		expect(data.rows.find((row) => row.id === 'country-ke')?.stats.candidateCount).toBe(2);
 		expect(data.rows.find((row) => row.id === 'country-ug')?.stats.candidateCount).toBe(0);
+	});
+
+	test('reuses candidate country resolution for public country stats', async () => {
+		mockFindPublicCountryStats.mockResolvedValue([
+			{ ...createCountry('country-sl', 'SL'), programs: [{ _count: { recipients: 4 } }], _count: { programs: 1 } },
+			{ ...createCountry('country-ke', 'KE'), programs: [{ _count: { recipients: 7 } }], _count: { programs: 2 } },
+			createCountry('country-ug', 'UG'),
+		]);
+		mockFindUnassignedRecipientCountries.mockResolvedValue({
+			success: true,
+			data: [
+				createCandidate('SL', 'KE'),
+				createCandidate(null, 'KE'),
+				createCandidate(undefined, 'KE'),
+				createCandidate(null, null),
+			],
+		});
+
+		const data = expectSuccess(await getPublicCountryStatsByIsoCodes(['SL', 'KE', 'UG']));
+
+		expect(data).toEqual({
+			SL: { programsCount: 1, recipientsCount: 4, candidatesCount: 1 },
+			KE: { programsCount: 2, recipientsCount: 7, candidatesCount: 2 },
+			UG: { programsCount: 0, recipientsCount: 0, candidatesCount: 0 },
+		});
 	});
 });

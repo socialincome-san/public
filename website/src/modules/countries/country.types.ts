@@ -103,6 +103,7 @@ export type ProgramCountryFeasibilityView = {
 export type PublicCountryStats = {
 	programsCount: number;
 	recipientsCount: number;
+	candidatesCount: number;
 };
 
 export type PublicCountryStatsMap = Record<string, PublicCountryStats>;
@@ -125,6 +126,7 @@ export type CountryStatisticRow = {
 export type CountryPageStats = {
 	activeProgramsCount: number;
 	recipientsCount: number;
+	candidatesCount: number;
 };
 
 export const NETWORK_TECH_LABELS: Record<NetworkTechnology, string> = {
