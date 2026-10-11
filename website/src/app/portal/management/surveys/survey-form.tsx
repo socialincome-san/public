@@ -4,15 +4,15 @@ import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
 import { SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
+import { handleResult } from '@/lib/result-client';
+import type { RecipientOption } from '@/modules/recipients/recipient.types';
 import {
 	createSurveyAction,
 	getSurveyAction,
 	getSurveyRecipientOptionsAction,
 	updateSurveyAction,
-} from '@/lib/server-actions/survey-actions';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import type { RecipientOption } from '@/lib/services/recipient/recipient.types';
-import type { SurveyPayload } from '@/lib/services/survey/survey.types';
+} from '@/modules/surveys/survey.actions';
+import type { SurveyPayload } from '@/modules/surveys/survey.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateSurveyInput, buildUpdateSurveyInput } from './survey-form-helpers';
@@ -96,7 +96,7 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId }: SurveyFor
 
 		startTransition(async () => {
 			const surveyResult = await getSurveyAction(surveyId);
-			handleServiceResult(surveyResult, {
+			handleResult(surveyResult, {
 				onSuccess: (data) => {
 					setSurvey(data);
 					setFormSchema((prev) => {
@@ -125,7 +125,7 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId }: SurveyFor
 	useEffect(() => {
 		startTransition(async () => {
 			const res = await getSurveyRecipientOptionsAction();
-			handleServiceResult(res, {
+			handleResult(res, {
 				onSuccess: (data) => {
 					const recipientEnum = getZodEnum(data.map((r: RecipientOption) => ({ id: r.id, label: r.fullName })));
 					setFormSchema((prev) => ({
@@ -153,7 +153,7 @@ export const SurveyForm = ({ onSuccess, onError, onCancel, surveyId }: SurveyFor
 				surveyId && survey
 					? await updateSurveyAction(buildUpdateSurveyInput(schema, survey))
 					: await createSurveyAction(buildCreateSurveyInput(schema));
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});

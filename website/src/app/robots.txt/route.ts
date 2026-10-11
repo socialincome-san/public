@@ -1,21 +1,20 @@
-import { websiteRegions } from '@/lib/i18n/utils';
-
-export const revalidate = 86400;
+import { toCurrencySegment, websiteCurrencies } from '@/lib/i18n/utils';
 
 const SITE_URL = 'https://socialincome.org';
 
 const disallow = [
 	'/portal/',
 	'/partner-space/',
-	'/storybook/',
 	'/api/',
-	...websiteRegions.flatMap((region) => [
-		`/*/${region}/dashboard/`,
-		`/*/${region}/auth/`,
-		`/*/${region}/preview`,
-		`/*/${region}/*/preview`,
-		`/*/${region}/*/*/preview`,
-	]),
+	...websiteCurrencies
+		.map(toCurrencySegment)
+		.flatMap((currency) => [
+			`/*/${currency}/dashboard/`,
+			`/*/${currency}/auth/`,
+			`/*/${currency}/preview`,
+			`/*/${currency}/*/preview`,
+			`/*/${currency}/*/*/preview`,
+		]),
 ];
 
 const robotsTxt = [

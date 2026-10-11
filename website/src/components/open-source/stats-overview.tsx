@@ -1,6 +1,6 @@
 import { StatCard } from '@/components/open-source/stat-card';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
-import type { GithubRepoStats } from '@/lib/services/github-api/github-api.types';
+import type { GithubRepoStats } from '@/modules/github/github.types';
 
 type Props = {
 	stats: GithubRepoStats;

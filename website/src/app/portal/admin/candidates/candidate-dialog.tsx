@@ -1,9 +1,9 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import type { Session } from '@/lib/firebase/current-account';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
+import type { Session } from '@/modules/auth/auth.types';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { CandidateForm } from './candidates-form';
 
 type Props = {
@@ -26,7 +26,7 @@ export const CandidateDialog = ({ open, onOpenChange, candidateId, sessionType, 
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
+			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>{dialogTitle}</DialogTitle>
 				</DialogHeader>
@@ -34,7 +34,7 @@ export const CandidateDialog = ({ open, onOpenChange, candidateId, sessionType, 
 				{errorMessage && (
 					<Alert variant="destructive">
 						<AlertTitle>Error</AlertTitle>
-						<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+						<AlertDescription>{errorMessage}</AlertDescription>
 					</Alert>
 				)}
 

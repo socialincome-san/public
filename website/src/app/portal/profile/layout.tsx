@@ -1,7 +1,7 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
-import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
+import { Card } from '@socialincome/design-system/data-display/card/card';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
 import { ReactNode } from 'react';
 

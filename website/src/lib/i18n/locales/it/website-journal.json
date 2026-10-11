@@ -7,7 +7,8 @@
 		"title": "Giornale",
 		"description": "Storie e aggiornamenti sul nostro percorso per creare un impatto.",
 		"editors": "Redattori collaboratori",
-		"more-articles": "Ci sono altri articoli disponibili in inglese"
+		"more-articles": "Ci sono altri articoli disponibili in inglese",
+		"article-count": "{count, plural, one {{count} articolo} other {{count} articoli}}"
 	},
 	"person": {
 		"articles": "Articoli",
@@ -19,7 +20,7 @@
 		"likes-deadline-no": "Preferisce senza scadenze",
 		"time-commitment": "Impegno di tempo",
 		"time-commitment-unit": "ore / settimana",
-		"breadcrumb": "Persona",
+		"breadcrumb": "Persone",
 		"role": "Ruolo",
 		"circles": "Cerchi",
 		"commitment": "Impegno da volontario"
@@ -36,8 +37,8 @@
 	"reference-article": {
 		"show-more": "Mostrare più",
 		"show-less": "Mostra Tutto",
-		"author": "di {{author}}",
-		"publication-date": "il {{publicationDate}}",
+		"author": "di {author}",
+		"publication-date": "il {publicationDate}",
 		"context": {
 			"original": "Prima pubblicazione",
 			"related": "Queste fonti offrono contesto e informazioni"

@@ -1,9 +1,9 @@
 'use client';
 
-import { Badge } from '@/components/badge/badge';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { CountryCondition } from '@/lib/services/country/country.types';
+import { CountryCondition } from '@/modules/countries/country.types';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { AlertTriangleIcon, CheckIcon, XCircleIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { ComponentType } from 'react';
 
 const CONDITION_UI: Record<
@@ -36,7 +36,7 @@ type Props = {
 };
 
 export const CountryConditionBadge = ({ condition }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 	const { variant, label, Icon } = CONDITION_UI[condition];
 	const translatedLabel =
 		condition === CountryCondition.MET

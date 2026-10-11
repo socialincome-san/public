@@ -8,14 +8,14 @@
  */
 
 import { SubscriptionPaymentMethod } from '@/generated/prisma/client';
-import { prisma } from '@/lib/database/prisma';
-import { mapCoverTransactionCostsMetadata } from '@/lib/services/subscription/cover-transaction-costs';
 import {
 	mapStripeSubscriptionLifecycle,
 	mapStripeSubscriptionPriceFields,
 	resolveStripeResourceId,
 	shouldSkipStripeSubscriptionStatus,
-} from '@/lib/services/subscription/subscription.mappers';
+} from '@/integrations/stripe/stripe.integration';
+import { prisma } from '@/lib/database/prisma';
+import { subscriptionAmount } from '@/modules/subscriptions/subscription-amount.service';
 import Stripe from 'stripe';
 import {
 	assertDatabaseUrl,
@@ -243,7 +243,7 @@ const processSubscription = async (context: ProcessContext, subscription: Stripe
 				status: lifecycle.status,
 				paymentMethod: SubscriptionPaymentMethod.stripe,
 				canceledAt: lifecycle.canceledAt,
-				coverTransactionCosts: mapCoverTransactionCostsMetadata(subscription.metadata),
+				coverTransactionCosts: subscriptionAmount.mapCoverTransactionCostsMetadata(subscription.metadata),
 			},
 		});
 	}

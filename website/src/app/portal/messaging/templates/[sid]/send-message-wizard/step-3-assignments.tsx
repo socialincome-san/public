@@ -1,16 +1,22 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Input } from '@/components/input/input';
-import { RadioGroup, RadioGroupItem } from '@/components/radio-group/radio-group';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
-import type { MessagingRecipientType } from '@/lib/services/twilio/messaging/recipients/recipients.types';
-import { getFieldCatalog, type FieldEntry } from '@/lib/services/twilio/messaging/twilio-templates/field-catalog';
 import type {
 	Assignment,
+	MessagingRecipientType,
 	ParsedVariable,
 	VariableAssignments,
-} from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
+} from '@/modules/messaging/messaging.types';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { RadioGroup, RadioGroupItem } from '@socialincome/design-system/forms/radio-group/radio-group';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
+import { getFieldCatalog, type FieldEntry } from './field-catalog';
 import { clearAssignment, getAssignment, setConstantSource, setFieldSource } from './variable-assignments';
 
 type VariableAssignmentRowProps = {
@@ -53,7 +59,7 @@ const VariableAssignmentRow = ({
 				)}
 			</div>
 
-			<RadioGroup value={source} onValueChange={handleSourceChange} disabled={disabled} className="flex gap-4">
+			<RadioGroup value={source} onValueChange={handleSourceChange} disabled={disabled} layout="row">
 				<label className="flex items-center gap-2 text-sm">
 					<RadioGroupItem value="field" />
 					Field
@@ -105,7 +111,7 @@ export const Step3Assignments = ({ body, variables, type, assignments, onChange 
 	}
 
 	const disabled = type === null;
-	const catalog = getFieldCatalog(type ?? 'contributor');
+	const catalog = getFieldCatalog();
 
 	return (
 		<div className="space-y-4">

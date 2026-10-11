@@ -1,8 +1,9 @@
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
-import { Card } from '@/components/card/card';
 import { TabNavigation } from '@/components/tab-navigation';
+import { Card } from '@socialincome/design-system/data-display/card/card';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 
-import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
+import { requireAdmin } from '@/server/session';
 import { ReactNode } from 'react';
 
 type MessagingLayoutProps = {
@@ -10,8 +11,7 @@ type MessagingLayoutProps = {
 };
 
 export default async function MessagingLayout({ children }: MessagingLayoutProps) {
-	const user = await getAuthenticatedUserOrRedirect();
-	requireAdmin(user);
+	await requireAdmin();
 
 	const breadcrumbLinks = [
 		{ href: '/', label: 'Website' },
@@ -27,13 +27,15 @@ export default async function MessagingLayout({ children }: MessagingLayoutProps
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<h1 className="py-8 text-5xl">Messaging</h1>
+			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<h1 className="py-8 text-5xl">Messaging</h1>
 
-			<TabNavigation sections={sections} />
+				<TabNavigation sections={sections} />
 
-			<Card>
-				<div>{children}</div>
-			</Card>
+				<Card>
+					<div>{children}</div>
+				</Card>
+			</BlockWrapper>
 		</>
 	);
 }

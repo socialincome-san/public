@@ -1,25 +1,15 @@
 'use client';
 
-import { Button } from '@/components/button/button';
 import { TABLE_PAGE_SIZE_OPTIONS } from '@/components/data-table/query-state';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
-import { cn } from '@/lib/utils/cn';
-import {
-	ColumnDef,
-	flexRender,
-	functionalUpdate,
-	getCoreRowModel,
-	getPaginationRowModel,
-	getSortedRowModel,
-	SortingState,
-	useReactTable,
-	VisibilityState,
-} from '@tanstack/react-table';
+import { type ColumnDef, type VisibilityState } from '@/components/data-table/tanstack-table';
+import { DataTablePagination } from '@socialincome/design-system/data-display/data-table-pagination/data-table-pagination';
+import { DataTable } from '@socialincome/design-system/data-display/data-table/data-table';
+import { flexRender, functionalUpdate, type RowData, type SortingState } from '@tanstack/react-table';
+import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, useLegacyTable } from '@tanstack/react-table/legacy';
 import { useState } from 'react';
 
-type BaseTableProps<TData, TValue> = {
-	columns: ColumnDef<TData, TValue>[];
+type BaseTableProps<TData extends RowData> = {
+	columns: ColumnDef<TData>[];
 	data: TData[];
 	onRowClick?: (row: TData) => void;
 	initialSorting?: SortingState;
@@ -42,7 +32,7 @@ type BaseTableProps<TData, TValue> = {
 	emptyMessage?: string;
 };
 
-export const BaseTable = <TData, TValue>({
+export const BaseTable = <TData extends RowData>({
 	columns,
 	data,
 	onRowClick,
@@ -55,8 +45,7 @@ export const BaseTable = <TData, TValue>({
 	serverSorting,
 	compact = false,
 	emptyMessage = 'No results.',
-}: BaseTableProps<TData, TValue>) => {
-	const stableTableMinHeightClass = compact ? undefined : 'min-h-[680px] md:min-h-[760px]';
+}: BaseTableProps<TData>) => {
 	const [sorting, setSorting] = useState<SortingState>(initialSorting);
 	const [internalColumnVisibility, setInternalColumnVisibility] = useState<VisibilityState>({});
 	const activeServerPagination = serverPagination ?? null;
@@ -67,10 +56,7 @@ export const BaseTable = <TData, TValue>({
 	const resolvedSorting = isServerSorting ? activeServerSorting.sorting : sorting;
 	const useClientPagination = !isServerPagination && !compact;
 
-	// TanStack Table's `useReactTable()` returns functions that React Compiler can warn about.
-	// We keep the call here and silence the specific rule to avoid false positives.
-	// eslint-disable-next-line react-hooks/incompatible-library
-	const table = useReactTable({
+	const table = useLegacyTable({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
@@ -94,6 +80,7 @@ export const BaseTable = <TData, TValue>({
 		state: { sorting: resolvedSorting, columnVisibility: resolvedColumnVisibility },
 		initialState: {
 			pagination: {
+				pageIndex: 0,
 				pageSize: compact ? Math.max(data.length, 1) : 10,
 			},
 		},
@@ -108,8 +95,7 @@ export const BaseTable = <TData, TValue>({
 	const canPreviousPage = isServerPagination ? activeServerPagination.page > 1 : table.getCanPreviousPage();
 	const canNextPage = isServerPagination ? endRow < totalRows : table.getCanNextPage();
 
-	const handlePageSizeChange = (value: string) => {
-		const nextPageSize = Number(value);
+	const handlePageSizeChange = (nextPageSize: number) => {
 		if (isServerPagination) {
 			activeServerPagination.onPageSizeChange(nextPageSize);
 
@@ -137,96 +123,42 @@ export const BaseTable = <TData, TValue>({
 	};
 
 	return (
-		<div className={cn('flex flex-col', stableTableMinHeightClass)} data-testid="data-table-base">
-			<div className="overflow-hidden rounded-none">
-				<Table className="w-full border-separate border-spacing-0">
-					<TableHeader>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id} className="bg-accent">
-								{headerGroup.headers.map((header) => (
-									<TableHead key={header.id} className="border-b font-medium">
-										{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-									</TableHead>
-								))}
-							</TableRow>
-						))}
-					</TableHeader>
-					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row) => (
-								<TableRow
-									key={row.id}
-									className={cn(
-										'group h-16 border-b transition-colors duration-200 ease-out',
-										onRowClick && 'hover:bg-accent/60 cursor-pointer',
-									)}
-									onClick={() => onRowClick?.(row.original)}
-								>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id} className="border-b">
-											{flexRender(cell.column.columnDef.cell, cell.getContext())}
-										</TableCell>
-									))}
-								</TableRow>
-							))
-						) : (
-							<TableRow className="h-16">
-								<TableCell colSpan={columns.length} className="border-b text-center">
-									{emptyMessage}
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
-			</div>
-
-			{compact ? null : (
-				<div className="mt-auto flex items-center justify-between gap-4 py-4" data-testid="data-table-pagination">
-					<div className="flex items-center gap-2">
-						{showRowsPerPageSelector ? (
-							<>
-								<span className="text-muted-foreground text-sm">Rows per page</span>
-								<Select value={`${pageSize}`} onValueChange={handlePageSizeChange}>
-									<SelectTrigger className="h-8 w-[80px]" data-testid="data-table-page-size-trigger">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										{pageSizeOptions.map((size) => (
-											<SelectItem key={size} value={`${size}`}>
-												{size}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-							</>
-						) : null}
-					</div>
-
-					<div className="flex items-center gap-4">
-						<Button
-							variant="outline"
-							size="sm"
-							onClick={goToPreviousPage}
-							disabled={!canPreviousPage}
-							data-testid="data-table-pagination-previous"
-						>
-							Previous
-						</Button>
-						<span className="text-muted-foreground text-sm" data-testid="data-table-pagination-range">
-							{startRow}-{endRow} of {totalRows}
-						</span>
-						<Button
-							variant="outline"
-							size="sm"
-							onClick={goToNextPage}
-							disabled={!canNextPage}
-							data-testid="data-table-pagination-next"
-						>
-							Next
-						</Button>
-					</div>
-				</div>
-			)}
-		</div>
+		<DataTable
+			headerRows={table.getHeaderGroups().map((headerGroup) => ({
+				id: headerGroup.id,
+				cells: headerGroup.headers.map((header) => ({
+					id: header.id,
+					content: header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext()),
+				})),
+			}))}
+			rows={table.getRowModel().rows.map((row) => ({
+				id: row.id,
+				onClick: onRowClick ? () => onRowClick(row.original) : undefined,
+				cells: row.getVisibleCells().map((cell) => ({
+					id: cell.id,
+					content: flexRender(cell.column.columnDef.cell, cell.getContext()),
+				})),
+			}))}
+			columnCount={columns.length}
+			emptyMessage={emptyMessage}
+			stableHeight={!compact}
+			pagination={
+				compact ? null : (
+					<DataTablePagination
+						startRow={startRow}
+						endRow={endRow}
+						totalRows={totalRows}
+						canPreviousPage={canPreviousPage}
+						canNextPage={canNextPage}
+						onPreviousPage={goToPreviousPage}
+						onNextPage={goToNextPage}
+						pageSize={pageSize}
+						pageSizeOptions={pageSizeOptions}
+						onPageSizeChange={handlePageSizeChange}
+						showRowsPerPageSelector={showRowsPerPageSelector}
+					/>
+				)
+			}
+		/>
 	);
 };

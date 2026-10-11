@@ -6,7 +6,7 @@ import {
 	subscriptionsTableConfig,
 } from '@/components/data-table/configs/subscriptions-table.config';
 import { type TableQueryState } from '@/components/data-table/query-state';
-import { type SubscriptionTableViewRow } from '@/lib/services/subscription/subscription.types';
+import { type SubscriptionTableViewRow } from '@/modules/subscriptions/subscription.types';
 
 export const SubscriptionsTableClient = ({
 	rows,

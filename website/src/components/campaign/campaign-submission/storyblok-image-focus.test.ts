@@ -6,7 +6,7 @@ import {
 	normalizeStoryblokFocusForImageService,
 	parseStoryblokFocus,
 	toStoryblokFocus,
-} from './storyblok-image-focus';
+} from '@/lib/storyblok/storyblok-image-focus';
 
 describe('storyblok-image-focus', () => {
 	it('converts coordinates to Storyblok focus format', () => {

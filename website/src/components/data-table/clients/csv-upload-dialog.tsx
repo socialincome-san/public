@@ -1,11 +1,11 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import { SuccessBanner } from '@/components/success-banner/success-banner';
-import type { ServiceResult } from '@/lib/services/core/base.types';
+import type { Result } from '@/lib/result';
 import { CsvRow, parseCsvFile } from '@/lib/utils/csv';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { SuccessBanner } from '@socialincome/design-system/feedback/success-banner/success-banner';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useState } from 'react';
 import { CsvDropzone } from './csv-dropzone';
 import { CsvPreviewTable } from './csv-preview-table';
@@ -22,14 +22,14 @@ type Props = {
 	onOpenChange: (open: boolean) => void;
 	title: string;
 	template: CsvTemplate;
-	onImport: (file: File) => Promise<ServiceResult<{ created: number }>>;
+	onImport: (file: File) => Promise<Result<{ created: number }>>;
 };
 
 export const CsvUploadDialog = ({ open, onOpenChange, title, template, onImport }: Props) => {
 	const [file, setFile] = useState<File | null>(null);
 	const [previewRows, setPreviewRows] = useState<CsvRow[] | null>(null);
 	const [isImporting, setIsImporting] = useState(false);
-	const [result, setResult] = useState<ServiceResult<{ created: number }> | null>(null);
+	const [result, setResult] = useState<Result<{ created: number }> | null>(null);
 
 	const resetState = () => {
 		setFile(null);
@@ -76,7 +76,7 @@ export const CsvUploadDialog = ({ open, onOpenChange, title, template, onImport 
 
 	return (
 		<Dialog open={open} onOpenChange={(next) => !next && handleDialogClose()}>
-			<DialogContent className="space-y-4 sm:max-w-3xl">
+			<DialogContent size="lg">
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
 				</DialogHeader>

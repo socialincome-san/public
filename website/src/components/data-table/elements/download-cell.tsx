@@ -1,39 +1,20 @@
 'use client';
 
 import { CellType } from '@/components/data-table/elements/types';
-import { useStorage, useStorageDownloadURL } from '@/lib/firebase/hooks/useStorage';
-import { ref } from 'firebase/storage';
-import { Download } from 'lucide-react';
-import Link from 'next/link';
+import { createStorageReference, useStorage, useStorageDownloadURL } from '@/lib/firebase/hooks/use-storage';
+import { DataTableDownloadCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
+import type { RowData } from '@tanstack/react-table';
 
-export const DownloadCell = <TData, TValue>({ ctx }: CellType<TData, TValue>) => {
+export const DownloadCell = <TData extends RowData, TValue>({ ctx }: CellType<TData, TValue>) => {
 	const storagePath = String(ctx.getValue() ?? '');
 	const storage = useStorage();
 	const isDownloadablePath = storagePath.startsWith('users/');
-	const storageRef = storagePath && isDownloadablePath ? ref(storage, storagePath) : undefined;
+	const storageRef = storagePath && isDownloadablePath ? createStorageReference(storage, storagePath) : undefined;
 	const { data, loading } = useStorageDownloadURL(storageRef);
 
 	if (!storagePath) {
 		return null;
 	}
 
-	if (!isDownloadablePath) {
-		return <span className="text-muted-foreground text-sm">Download unavailable</span>;
-	}
-
-	if (!data || loading) {
-		return null;
-	}
-
-	return (
-		<Link
-			className="text-primary inline-flex items-center font-medium underline-offset-4 hover:underline"
-			href={data}
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			<Download className="mr-2 h-4 w-4" />
-			Download
-		</Link>
-	);
+	return <DataTableDownloadCell unavailable={!isDownloadablePath} href={loading ? undefined : (data ?? undefined)} />;
 };

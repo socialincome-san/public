@@ -1,18 +1,19 @@
 'use client';
 
-import { DialogTitle } from '@/components/dialog';
 import type { MessagingChannel } from '@/generated/prisma/client';
-import type { ChannelPreviewSummary } from '@/lib/services/twilio/messaging/dispatch/dispatch.types';
-import type { MessagingRecipientType } from '@/lib/services/twilio/messaging/recipients/recipients.types';
-import { emptySelection } from '@/lib/services/twilio/messaging/recipients/selection';
-import type { SelectionState } from '@/lib/services/twilio/messaging/recipients/selection.types';
 import type {
+	ChannelPreviewSummary,
+	MessagingPhoneSource,
+	MessagingRecipientType,
+	SelectionState,
 	TwilioTemplateDetail,
 	VariableAssignments,
-} from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
-import { cn } from '@/lib/utils/cn';
+} from '@/modules/messaging/messaging.types';
+import { cn } from '@socialincome/design-system/cn';
+import { DialogBody, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useEffect, useState } from 'react';
 import type { RecipientsTableQuery } from './recipients-table';
+import { emptySelection } from './selection';
 import { SendProgress } from './send-progress';
 import { Step1RecipientType } from './step-1-recipient-type';
 import { Step2Recipients } from './step-2-recipients';
@@ -58,6 +59,8 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 	const [currentStep, setCurrentStep] = useState<WizardStep>(1);
 	const [type, setType] = useState<MessagingRecipientType | null>(null);
 	const [channel, setChannel] = useState<MessagingChannel | null>(null);
+	const [phoneSource, setPhoneSource] = useState<MessagingPhoneSource>('contact');
+	const [phoneFallbackAllowed, setPhoneFallbackAllowed] = useState(false);
 	const [query, setQuery] = useState<RecipientsTableQuery | null>(null);
 	const [selection, setSelection] = useState<SelectionState>(emptySelection());
 	const [lastResetReason, setLastResetReason] = useState<ResetReason>(null);
@@ -93,6 +96,8 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 
 	const handleTypeChange = (next: MessagingRecipientType | null) => {
 		setType(next);
+		setPhoneSource('contact');
+		setPhoneFallbackAllowed(false);
 		setQuery(next ? { type: next, page: 1, search: '', filters: {} } : null);
 		setSelection(emptySelection());
 		setLastResetReason(null);
@@ -132,28 +137,34 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 		if (!type || !channel) {
 			return;
 		}
-		send.start({ templateSid: template.sid, channel, recipientType: type, selection, assignments });
+		send.start({
+			templateSid: template.sid,
+			channel,
+			recipientType: type,
+			phoneSource,
+			phoneFallbackAllowed,
+			selection,
+			assignments,
+		});
 	};
 
 	const meta = STEP_META[currentStep];
 
 	return (
 		<>
-			<div className="-mx-6 border-b px-6 pb-2">
-				<DialogTitle className="pr-8 text-lg">
+			<DialogHeader>
+				<DialogTitle>
 					Send <span className="text-muted-foreground">“{template.friendlyName}”</span>
 				</DialogTitle>
-				<div className="mt-2">
-					<WizardStepIndicator
-						steps={steps}
-						currentStep={currentStep}
-						allComplete={isSending}
-						onStepSelect={isSending ? undefined : handleStepSelect}
-					/>
-				</div>
-			</div>
+				<WizardStepIndicator
+					steps={steps}
+					currentStep={currentStep}
+					allComplete={isSending}
+					onStepSelect={isSending ? undefined : handleStepSelect}
+				/>
+			</DialogHeader>
 
-			<div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+			<DialogBody>
 				{isSending && channel ? (
 					<SendProgress
 						phase={send.phase}
@@ -174,8 +185,12 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 								type={type}
 								channel={channel}
 								supportedChannels={template.supportedChannels}
+								phoneSource={phoneSource}
+								phoneFallbackAllowed={phoneFallbackAllowed}
 								onTypeChange={handleTypeChange}
 								onChannelChange={setChannel}
+								onPhoneSourceChange={setPhoneSource}
+								onPhoneFallbackAllowedChange={setPhoneFallbackAllowed}
 							/>
 						)}
 
@@ -210,12 +225,14 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 								totalCount={totalCount}
 								type={type}
 								channel={channel}
+								phoneSource={phoneSource}
+								phoneFallbackAllowed={phoneFallbackAllowed}
 								onPreviewLoaded={setPreviewForSend}
 							/>
 						)}
 					</div>
 				)}
-			</div>
+			</DialogBody>
 
 			<WizardFooter
 				sendPhase={send.phase}

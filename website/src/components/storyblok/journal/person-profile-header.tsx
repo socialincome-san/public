@@ -1,11 +1,4 @@
-import { Badge } from '@/components/badge/badge';
-import { Button } from '@/components/button/button';
-import { Card } from '@/components/card/card';
-import { SectionHeading } from '@/components/section-heading';
-import { PersonCommitmentCard, type PersonCommitmentDetail } from '@/components/storyblok/journal/person-commitment-card';
-import { getDurationLabels, type VolunteerDurationConfig } from '@/components/storyblok/shared/person-card';
-import { GithubIcon } from '@/components/svg/github';
-import { LinkedinIcon } from '@/components/svg/linkedin';
+import { getDurationLabels } from '@/components/storyblok/shared/person-card';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import {
 	getOptionCode,
@@ -13,35 +6,20 @@ import {
 	getPersonGitHubUrl,
 	getPersonLinkedInUrl,
 	getRoleLabel,
-} from '@/lib/services/storyblok/storyblok.utils';
-import { cn } from '@/lib/utils/cn';
+} from '@/lib/storyblok/storyblok-utils';
 import { HOURS_RANGE_REGEX } from '@/lib/utils/regex';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { cn } from '@socialincome/design-system/cn';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import { DurationBadge } from '@socialincome/design-system/data-display/duration-badge/duration-badge';
+import { FactCard } from '@socialincome/design-system/data-display/fact-card/fact-card';
+import { GithubIcon, LinkedinIcon } from '@socialincome/design-system/icons/social-icons/social-icons';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
 import type { ISbStoryData } from '@storyblok/js';
 import { CircleIcon } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
-
-const labelClassName = 'text-muted-foreground text-xs';
-
-export type PersonProfileTranslations = {
-	// Label above the person's primary role.
-	role: string;
-	// Heading above the circle pills.
-	circles: string;
-	// Membership status of a circle pill, shown as its tooltip.
-	activeCircle: string;
-	interestedCircle: string;
-	// Title of the dialog the volunteer commitment card opens.
-	commitment: string;
-	// Labels for the facts in the volunteer commitment card and its dialog.
-	workStyle: string;
-	likesDeadline: string;
-	likesDeadlineYes: string;
-	likesDeadlineNo: string;
-	timeCommitment: string;
-	// Unit shown after a numeric time commitment, e.g. "4-8" + "hrs / week".
-	timeCommitmentUnit: string;
-};
 
 type Props = {
 	person: ISbStoryData<Person>;
@@ -49,42 +27,30 @@ type Props = {
 	portraitSrc: string | null;
 	roleLabels?: Record<string, string>;
 	circleLabels?: Record<string, string>;
-	translations: PersonProfileTranslations;
-	// Presence enables the "volunteering since" pill on the portrait, as on the person cards.
-	volunteerDuration?: VolunteerDurationConfig;
 };
 
-export const PersonProfileHeader = ({
-	person,
-	name,
-	portraitSrc,
-	roleLabels,
-	circleLabels,
-	translations,
-	volunteerDuration,
-}: Props) => {
+export const PersonProfileHeader = ({ person, name, portraitSrc, roleLabels, circleLabels }: Props) => {
+	const t = useTranslations('website-journal');
+	const tCommon = useTranslations('website-common');
+	const lang = useLocale();
 	const { avatar, bio, githubName, likesDeadline, linkedinName, primaryRole, volunteerSince, volunteerStatus } =
 		person.content;
 	const roleLabel = getRoleLabel(primaryRole, roleLabels);
-	const circles = getPersonCircles(person, circleLabels);
+	const circles = getPersonCircles(person.content, circleLabels);
 	const bioText = bio?.trim();
-	const duration =
-		volunteerDuration && volunteerStatus === 'active' ? getDurationLabels(volunteerSince, volunteerDuration) : null;
+	const duration = volunteerStatus === 'active' ? getDurationLabels(volunteerSince, lang, tCommon) : null;
 
-	// The `work-style` and `time-commitment` datasources store the display text as the entry value,
-	// so the stored value is shown as is. An unset boolean stays hidden, while an explicit `false`
-	// is a statement about the person and is shown.
+	// The `work-style` and `time-commitment` datasources store the display text as the entry value. An unset
+	// boolean stays hidden, while an explicit `false` is a statement about the person and is shown.
 	const workStyle = getOptionCode(person.content.workStyle);
 	const timeCommitment = getOptionCode(person.content.timeCommitment);
-	// Only the time commitment is on the card itself — the rest is a click away, since it speaks to
-	// volunteers rather than to a first-time visitor.
-	const commitmentDetails: PersonCommitmentDetail[] = [
-		...(workStyle ? [{ label: translations.workStyle, value: workStyle }] : []),
+	const commitmentDetails = [
+		...(workStyle ? [{ label: t('person.work-style'), value: workStyle }] : []),
 		...(typeof likesDeadline === 'boolean'
 			? [
 					{
-						label: translations.likesDeadline,
-						value: likesDeadline ? translations.likesDeadlineYes : translations.likesDeadlineNo,
+						label: t('person.likes-deadline'),
+						value: likesDeadline ? t('person.likes-deadline-yes') : t('person.likes-deadline-no'),
 					},
 				]
 			: []),
@@ -97,16 +63,9 @@ export const PersonProfileHeader = ({
 			{portraitSrc && (
 				<div className="bg-muted relative mx-auto aspect-4/5 w-44 shrink-0 overflow-hidden rounded-2xl sm:mx-0 sm:w-48">
 					{duration && (
-						<Badge
-							variant="default"
-							// Hover-only content is invisible to assistive tech, so the date rides along as the accessible
-							// description; an aria-label would instead replace the duration as the accessible name.
-							title={duration.since}
-							className="group/duration text-foreground absolute top-3 left-3 z-20 border-white/40 bg-white/80 whitespace-nowrap backdrop-blur-sm"
-						>
-							<span className="group-hover/duration:hidden">{duration.label}</span>
-							<span className="hidden group-hover/duration:inline">{duration.since}</span>
-						</Badge>
+						<div className="absolute top-3 left-3 z-20">
+							<DurationBadge label={duration.label} since={duration.since} />
+						</div>
 					)}
 					<Image
 						src={portraitSrc}
@@ -121,7 +80,7 @@ export const PersonProfileHeader = ({
 
 			<div className="flex min-w-0 flex-1 flex-col gap-6 text-center sm:text-left">
 				<div className="flex flex-col gap-4">
-					<SectionHeading as="h1" size={1} align="left" bold className="text-foreground mb-0 leading-tight md:mb-0">
+					<SectionHeading as="h1" size={1} align="left" bold>
 						{name}
 					</SectionHeading>
 					{(linkedinName ?? githubName) && (
@@ -152,37 +111,41 @@ export const PersonProfileHeader = ({
 					<div
 						className={cn('grid gap-4 text-left', cardCount > 1 && 'sm:grid-cols-2', cardCount === 3 && 'lg:grid-cols-3')}
 					>
-						{roleLabel && (
-							<Card variant="noPadding" className="h-full px-6 py-4">
-								<p className={labelClassName}>{translations.role}</p>
-								<p className="text-xl">{roleLabel}</p>
-							</Card>
-						)}
+						{roleLabel && <FactCard label={t('person.role')} value={roleLabel} />}
 						{hasCommitmentCard && (
-							<PersonCommitmentCard
-								title={translations.commitment}
-								valueLabel={translations.timeCommitment}
-								value={timeCommitment}
-								unit={HOURS_RANGE_REGEX.test(timeCommitment) ? translations.timeCommitmentUnit : undefined}
-								details={commitmentDetails}
+							<FactCard
+								label={timeCommitment ? t('person.time-commitment') : t('person.commitment')}
+								value={
+									HOURS_RANGE_REGEX.test(timeCommitment)
+										? `${timeCommitment} ${t('person.time-commitment-unit')}`
+										: timeCommitment
+								}
+								details={{ title: t('person.commitment'), facts: commitmentDetails }}
 							/>
 						)}
 						{circles.length > 0 && (
-							<Card variant="noPadding" className={cn('h-full px-6 py-4', cardCount === 3 && 'sm:col-span-2 lg:col-span-1')}>
-								<p className={labelClassName}>{translations.circles}</p>
-								<div className="mt-2 flex flex-wrap gap-2">
-									{circles.map((circle) => (
-										<Badge
-											key={`${circle.status}-${circle.code}`}
-											variant={circle.status === 'active' ? 'circle' : 'circle-outline'}
-											title={circle.status === 'active' ? translations.activeCircle : translations.interestedCircle}
-										>
-											<CircleIcon className="size-3 shrink-0" aria-hidden="true" />
-											{circle.label}
-										</Badge>
-									))}
-								</div>
-							</Card>
+							<div className={cn(cardCount === 3 && 'sm:col-span-2 lg:col-span-1')}>
+								<FactCard label={t('person.circles')}>
+									<div className="flex flex-wrap gap-2">
+										{circles.map((circle) => {
+											const status = circle.status === 'active' ? t('person.circle-active') : t('person.circle-interested');
+
+											return (
+												<Badge
+													key={`${circle.status}-${circle.code}`}
+													variant={circle.status === 'active' ? 'primary' : 'primary-outline'}
+													size="lg"
+													title={status}
+												>
+													<CircleIcon className="size-3 shrink-0" aria-hidden="true" />
+													{circle.label}
+													<span className="sr-only">({status})</span>
+												</Badge>
+											);
+										})}
+									</div>
+								</FactCard>
+							</div>
 						)}
 					</div>
 				)}

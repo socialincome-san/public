@@ -1,9 +1,9 @@
 'use client';
 
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/tool-tip/tool-tip';
 import { formatSummaryMetricAmount } from '@/components/transparency/summary-metric-format';
 import { useCountUp } from '@/lib/hooks/use-count-up';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@socialincome/design-system/overlays/tool-tip/tool-tip';
 import { Info } from 'lucide-react';
 import { useInView } from 'motion/react';
 import { useRef } from 'react';
@@ -43,8 +43,8 @@ const SummaryMetricValue = ({ amount, lang }: { amount: number; lang: WebsiteLan
 
 	return (
 		<div ref={sectionRef} className="mt-auto flex items-baseline pt-12">
-			<span className="text-6xl font-light tracking-tight">{value}</span>
-			{suffix ? <span className="text-3xl font-light tracking-tight">{suffix}</span> : null}
+			<span className="text-6xl font-normal tracking-tight">{value}</span>
+			{suffix ? <span className="text-3xl font-normal tracking-tight">{suffix}</span> : null}
 		</div>
 	);
 };
@@ -55,7 +55,7 @@ export const SummarySectionClient = ({ metrics, lang }: Props) => {
 			<div className="grid gap-8 md:grid-cols-3">
 				{metrics.map(({ key, titleName, titleCurrency, description, amount, tooltip }) => (
 					<div key={key} className="border-muted-foreground/30 text-foreground flex flex-col border-l pl-6">
-						<h2 className="flex items-center gap-1.5">
+						<h2 className="flex items-center gap-1.5 text-lg">
 							<span>
 								<strong>{titleName}</strong> {titleCurrency}
 							</span>
@@ -70,7 +70,7 @@ export const SummarySectionClient = ({ metrics, lang }: Props) => {
 											<Info aria-hidden="true" className="size-4" />
 										</button>
 									</TooltipTrigger>
-									<TooltipContent sideOffset={8} className="max-w-[calc(100vw-2rem)] px-4 py-3 text-sm sm:max-w-xl">
+									<TooltipContent size="lg" sideOffset={8}>
 										{tooltip.rows.length > 0 ? (
 											<ul className="space-y-1.5">
 												{tooltip.rows.map((row) => (
@@ -88,7 +88,7 @@ export const SummarySectionClient = ({ metrics, lang }: Props) => {
 								</Tooltip>
 							) : null}
 						</h2>
-						{description ? <p className="mt-2 text-sm">{description}</p> : null}
+						{description ? <p className="mt-2 text-base font-normal">{description}</p> : null}
 						<SummaryMetricValue amount={amount} lang={lang} />
 					</div>
 				))}

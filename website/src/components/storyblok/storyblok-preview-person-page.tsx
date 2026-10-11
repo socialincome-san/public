@@ -1,17 +1,17 @@
-import { buildVolunteerDurationConfig, PersonProfile } from '@/components/storyblok/journal/person-profile';
+import { PersonProfile } from '@/components/storyblok/journal/person-profile';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getJournalPersonAction, getJournalPersonPageDataAction } from '@/modules/journal/journal.actions';
+import type { JournalPerson } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 type Props = {
 	storyPath: string;
 	slug: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
@@ -20,33 +20,33 @@ export const StoryblokPreviewPersonPage = async ({
 	storyPath,
 	slug,
 	lang,
-	region,
+	currency,
 	previewRoutePath,
 	searchParams,
 }: Props) => {
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-journal', 'common', 'website-common'],
-	});
+	const [t, tCommon] = await Promise.all([getTranslations('website-journal'), getTranslations('website-common')]);
 
-	return await StoryblokPreviewStory<ISbStoryData<Person>>({
+	return await StoryblokPreviewStory<ISbStoryData<JournalPerson>>({
 		storyPath,
 		lang,
 		previewRoutePath,
 		searchParams,
-		loadStory: async (path, language) => {
-			const storyResult = await services.storyblok.getStoryWithFallback<ISbStoryData<Person>>(path, language);
+		loadStory: async (_path, language) => {
+			const storyResult = await getJournalPersonAction({
+				slug,
+				language,
+			});
 
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async () => {
-			const pageResult = await services.journal.getPersonPageData(
+			const pageResult = await getJournalPersonPageDataAction({
 				lang,
-				region,
+				currency,
 				slug,
-				translator.t('person.breadcrumb'),
-				translator.t('breadcrumb.home', { namespace: 'website-common' }),
-			);
+				parentLabel: t('person.breadcrumb'),
+				homeLabel: tCommon('breadcrumb.home'),
+			});
 
 			if (!pageResult.success) {
 				return notFound();
@@ -55,25 +55,11 @@ export const StoryblokPreviewPersonPage = async ({
 			return (
 				<PersonProfile
 					{...pageResult.data}
-					articlesHeading={translator.t('person.articles')}
-					profileTranslations={{
-						role: translator.t('person.role'),
-						circles: translator.t('person.circles'),
-						activeCircle: translator.t('person.circle-active'),
-						interestedCircle: translator.t('person.circle-interested'),
-						commitment: translator.t('person.commitment'),
-						workStyle: translator.t('person.work-style'),
-						likesDeadline: translator.t('person.likes-deadline'),
-						likesDeadlineYes: translator.t('person.likes-deadline-yes'),
-						likesDeadlineNo: translator.t('person.likes-deadline-no'),
-						timeCommitment: translator.t('person.time-commitment'),
-						timeCommitmentUnit: translator.t('person.time-commitment-unit'),
-					}}
-					volunteerDuration={buildVolunteerDurationConfig(translator, lang)}
+					articlesHeading={t('person.articles')}
 					lang={lang}
-					region={region}
-					moreArticlesLabel={translator.t('overview.more-articles')}
-					videoLabel={translator.t('badge.video')}
+					currency={currency}
+					moreArticlesLabel={t('overview.more-articles')}
+					videoLabel={t('badge.video')}
 				/>
 			);
 		},

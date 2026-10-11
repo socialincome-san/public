@@ -1,17 +1,15 @@
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Button } from '@/components/button/button';
-import { focusToObjectPosition } from '@/components/campaign/campaign-submission/storyblok-image-focus';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
-import { InstagramIcon } from '@/components/svg/instagram';
-import { TiktokIcon } from '@/components/svg/tiktok';
-import { XIcon } from '@/components/svg/x';
+import { focusToObjectPosition } from '@/lib/storyblok/storyblok-image-focus';
 import {
 	formatStoryblokResizeUrl,
 	getDimensionsFromStoryblokImageUrl,
 	getScaledAssetDimensions,
-} from '@/lib/services/storyblok/storyblok.utils';
-import { cn } from '@/lib/utils/cn';
+} from '@/lib/storyblok/storyblok-utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { cn } from '@socialincome/design-system/cn';
+import { InstagramIcon, TiktokIcon, XIcon } from '@socialincome/design-system/icons/social-icons/social-icons';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { ExternalLink } from 'lucide-react';
 import NextImage from 'next/image';
 import type { CSSProperties, ReactNode } from 'react';
@@ -76,7 +74,7 @@ type SocialLinkProps = {
 };
 
 const SocialLink = ({ href, label, iconOnly = false, children }: SocialLinkProps) => (
-	<Button variant="outline" size={iconOnly ? 'icon' : 'sm'} className={iconOnly ? undefined : 'h-9 px-4'} asChild>
+	<Button variant="outline" size={iconOnly ? 'icon' : 'md'} asChild>
 		<a href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
 			{children}
 		</a>
@@ -120,7 +118,7 @@ export const CampaignAboutSection = ({
 	}
 
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true} className="my-10">
+		<BlockWrapper spacing="compact">
 			<section
 				className={cn(
 					'grid items-stretch gap-8',

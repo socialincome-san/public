@@ -1,17 +1,19 @@
 'use client';
 
 import type { MessagingChannel } from '@/generated/prisma/client';
-import { previewMessagingChannelAction } from '@/lib/server-actions/messaging-actions';
-import type { ChannelPreviewSummary } from '@/lib/services/twilio/messaging/dispatch/dispatch.types';
-import type { MessagingRecipientType } from '@/lib/services/twilio/messaging/recipients/recipients.types';
-import { getSelectedCount } from '@/lib/services/twilio/messaging/recipients/selection';
-import type { SelectionState } from '@/lib/services/twilio/messaging/recipients/selection.types';
+import { previewMessagingChannelAction } from '@/modules/messaging/messaging.actions';
 import type {
+	ChannelPreviewSummary,
+	MessagingPhoneSource,
+	MessagingRecipientType,
 	ParsedVariable,
+	SelectionState,
 	VariableAssignments,
-} from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
+} from '@/modules/messaging/messaging.types';
 import { useEffect, useState } from 'react';
+import { phoneChoiceLabels } from './phone-labels';
 import { renderTemplatePreview } from './render-template-preview';
+import { getSelectedCount } from './selection';
 
 type Props = {
 	body: string | null;
@@ -21,6 +23,8 @@ type Props = {
 	totalCount: number;
 	type: MessagingRecipientType | null;
 	channel: MessagingChannel | null;
+	phoneSource: MessagingPhoneSource;
+	phoneFallbackAllowed: boolean;
 	onPreviewLoaded?: (s: ChannelPreviewSummary) => void;
 };
 
@@ -32,6 +36,8 @@ export const Step4Summary = ({
 	totalCount,
 	type,
 	channel,
+	phoneSource,
+	phoneFallbackAllowed,
 	onPreviewLoaded,
 }: Props) => {
 	const count = getSelectedCount(selection, totalCount);
@@ -43,7 +49,7 @@ export const Step4Summary = ({
 		selection.mode === 'include'
 			? `include:${[...selection.ids].sort().join(',')}`
 			: `all:${selection.search}:${[...selection.excludedIds].sort().join(',')}`;
-	const requestKey = type && channel ? `${type}|${channel}|${selectionKey}` : null;
+	const requestKey = type && channel ? `${type}|${channel}|${phoneSource}|${phoneFallbackAllowed}|${selectionKey}` : null;
 
 	const [loaded, setLoaded] = useState<{ key: string; data: ChannelPreviewSummary } | { key: string; error: string } | null>(
 		null,
@@ -54,28 +60,31 @@ export const Step4Summary = ({
 			return;
 		}
 		let cancelled = false;
-		void previewMessagingChannelAction(type, selection, channel).then((result) => {
-			if (cancelled) {
-				return;
-			}
-			if (result.success) {
-				setLoaded({ key: requestKey, data: result.data });
-				onPreviewLoaded?.(result.data);
-			} else {
-				setLoaded({ key: requestKey, error: result.error });
-			}
-		});
+		void previewMessagingChannelAction({ recipientType: type, selection, channel, phoneSource, phoneFallbackAllowed }).then(
+			(result) => {
+				if (cancelled) {
+					return;
+				}
+				if (result.success) {
+					setLoaded({ key: requestKey, data: result.data });
+					onPreviewLoaded?.(result.data);
+				} else {
+					setLoaded({ key: requestKey, error: result.error });
+				}
+			},
+		);
 
 		return () => {
 			cancelled = true;
 		};
-	}, [requestKey, type, channel, selection, onPreviewLoaded]);
+	}, [requestKey, type, channel, phoneSource, phoneFallbackAllowed, selection, onPreviewLoaded]);
 
 	const current = loaded?.key === requestKey ? loaded : null;
 	const preview = current && 'data' in current ? current.data : null;
 	const previewError = current && 'error' in current ? current.error : null;
 
 	const otherChannel = channel === 'whatsapp' ? 'SMS' : 'WhatsApp';
+	const labels = phoneChoiceLabels(type, phoneSource, phoneFallbackAllowed);
 
 	return (
 		<div className="space-y-6">
@@ -91,7 +100,7 @@ export const Step4Summary = ({
 							via <span className="font-medium">{channel.toUpperCase()}</span>
 						</>
 					)}
-					.
+					{labels.target !== null && ` ${labels.target}`}.
 				</p>
 
 				{channel && (
@@ -114,7 +123,7 @@ export const Step4Summary = ({
 								)}
 								{preview.skippedNoPhone > 0 && (
 									<div className="flex items-center justify-between gap-4">
-										<dt className="text-warning">Skipped — no phone number</dt>
+										<dt className="text-warning">{labels.skipped}</dt>
 										<dd className="text-warning font-medium tabular-nums">{preview.skippedNoPhone}</dd>
 									</div>
 								)}

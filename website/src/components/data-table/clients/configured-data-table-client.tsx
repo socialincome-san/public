@@ -4,10 +4,10 @@ import DataTable from '@/components/data-table/data-table';
 import { useTableQueryNavigation } from '@/components/data-table/hooks/use-table-query-navigation';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { RowData } from '@tanstack/react-table';
 import type { ActionMenuItem } from '../elements/action-menu';
 
-type ConfiguredDataTableClientProps<Row> = {
+type ConfiguredDataTableClientProps<Row extends RowData> = {
 	config: DataTableConfig<Row>;
 	titleInfoTooltip?: string;
 	rows: Row[];
@@ -20,10 +20,9 @@ type ConfiguredDataTableClientProps<Row> = {
 	hideLocalPartner?: boolean;
 	showEntityIdColumn?: boolean;
 	isLoading?: boolean;
-	lang?: WebsiteLanguage;
 };
 
-export const ConfiguredDataTableClient = <Row,>({
+export const ConfiguredDataTableClient = <Row extends RowData>({
 	config,
 	titleInfoTooltip,
 	rows,
@@ -36,7 +35,6 @@ export const ConfiguredDataTableClient = <Row,>({
 	hideLocalPartner = false,
 	showEntityIdColumn,
 	isLoading = false,
-	lang,
 }: ConfiguredDataTableClientProps<Row>) => {
 	const { isPending, updateQuery } = useTableQueryNavigation();
 
@@ -57,7 +55,6 @@ export const ConfiguredDataTableClient = <Row,>({
 			emptyMessage={config.emptyMessage}
 			data={rows}
 			makeColumns={config.makeColumns}
-			lang={lang}
 			hideProgramName={hideProgramName}
 			hideLocalPartner={hideLocalPartner}
 			actionMenuItems={actionMenuItems}

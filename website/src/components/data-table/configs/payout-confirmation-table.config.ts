@@ -1,7 +1,7 @@
 import { makePayoutConfirmationColumns } from '@/components/data-table/columns/payout-confirmation';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
-import type { PayoutConfirmationTableViewRow } from '@/lib/services/payout/payout.types';
+import type { PayoutConfirmationTableViewRow } from '@/modules/payouts/payout.types';
 
 type PayoutConfirmationFiltersArgs = {
 	query?: TableQueryState & { totalRows: number };

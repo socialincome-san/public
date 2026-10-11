@@ -1,7 +1,7 @@
 'use client';
 
-import { Badge } from '@/components/badge/badge';
 import { UserRole } from '@/generated/prisma/enums';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { ShieldCheckIcon, UserIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 

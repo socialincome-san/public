@@ -1,10 +1,6 @@
 import { seedDatabase } from '@/lib/database/seed/run-seed';
-import {
-	amountToStripeUnitAmount,
-	COVER_TRANSACTION_COSTS_METADATA_KEY,
-	getAmountWithTransactionCostCoverage,
-	toCoverTransactionCostsMetadataValue,
-} from '@/lib/services/subscription/cover-transaction-costs';
+import { subscriptionAmount } from '@/modules/subscriptions/subscription-amount.service';
+import { COVER_TRANSACTION_COSTS_METADATA_KEY } from '@/modules/subscriptions/subscription.types';
 import { expect, test, type Page } from '@playwright/test';
 import Stripe from 'stripe';
 import {
@@ -23,6 +19,9 @@ import {
 } from './utils/donation-wizard-flow';
 import { completeStripeEmbeddedCheckout } from './utils/donation-wizard-stripe';
 import { describeDonationWizardStripeE2e } from './utils/donation-wizard-stripe-e2e';
+
+const { amountToStripeUnitAmount, getAmountWithTransactionCostCoverage, toCoverTransactionCostsMetadataValue } =
+	subscriptionAmount;
 
 const MONTHLY_INCOME = 7500;
 const MONTHLY_DONATION_BASE = 75;

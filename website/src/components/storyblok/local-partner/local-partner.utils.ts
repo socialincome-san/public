@@ -35,6 +35,8 @@ const getLocalPartnerId = (localPartner: LocalPartner) => {
 export const getLocalPartnerDescription = (localPartner: LocalPartner) =>
 	storyblokRichtextToPlainText(localPartner.description).replaceAll(/\s+/g, ' ').trim();
 
+export const getLocalPartnerPortalSlug = (localPartner: LocalPartner) => localPartner.portalSlug?.trim() ?? '';
+
 export const getLocalPartnerSlug = (localPartner: LocalPartnerStory) => {
 	const fullSlugTail = localPartner.full_slug?.split('/').at(-1);
 

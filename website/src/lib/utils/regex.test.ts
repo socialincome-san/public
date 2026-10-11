@@ -95,13 +95,13 @@ describe('regex utils', () => {
 	});
 
 	test('WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX matches old website confirm path', () => {
-		expect(WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX.test('/en/int/auth/confirm-login')).toBe(true);
-		expect(WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX.test('/en/int/login')).toBe(false);
+		expect(WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX.test('/en/usd/auth/confirm-login')).toBe(true);
+		expect(WEBSITE_AUTH_CONFIRM_LOGIN_PATH_REGEX.test('/en/usd/login')).toBe(false);
 	});
 
 	test('WEBSITE_CONFIRM_LOGIN_PATH_REGEX matches confirm-login path', () => {
-		expect(CONFIRM_LOGIN_PATH_REGEX.test('/en/int/auth/confirm-login')).toBe(true);
-		expect(CONFIRM_LOGIN_PATH_REGEX.test('/en/int/auth/finish-login')).toBe(false);
+		expect(CONFIRM_LOGIN_PATH_REGEX.test('/en/usd/auth/confirm-login')).toBe(true);
+		expect(CONFIRM_LOGIN_PATH_REGEX.test('/en/usd/auth/finish-login')).toBe(false);
 	});
 
 	test('makeLanguagePrefixRegex escapes language and removes prefix', () => {

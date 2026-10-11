@@ -1,17 +1,17 @@
 import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import type { ResolvedArticle } from '@/lib/services/storyblok/storyblok.utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getJournalArticleAction, getJournalArticlePageDataAction } from '@/modules/journal/journal.actions';
+import type { JournalArticle } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 type Props = {
 	storyPath: string;
 	slug: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
@@ -20,33 +20,30 @@ export const StoryblokPreviewJournalArticlePage = async ({
 	storyPath,
 	slug,
 	lang,
-	region,
+	currency,
 	previewRoutePath,
 	searchParams,
 }: Props) => {
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-common'],
-	});
+	const [t, tCommon] = await Promise.all([getTranslations('website-journal'), getTranslations('website-common')]);
 
-	return await StoryblokPreviewStory<ISbStoryData<ResolvedArticle>>({
+	return await StoryblokPreviewStory<ISbStoryData<JournalArticle>>({
 		storyPath,
 		lang,
 		previewRoutePath,
 		searchParams,
 		loadStory: async (_path, language) => {
-			const storyResult = await services.storyblok.getArticle(language, slug);
+			const storyResult = await getJournalArticleAction({ slug, language });
 
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: async (story) => {
-			const pageResult = await services.journal.getArticlePageData(
+			const pageResult = await getJournalArticlePageDataAction({
 				lang,
-				region,
+				currency,
 				slug,
-				translator.t('overview.title'),
-				translator.t('breadcrumb.home', { namespace: 'website-common' }),
-			);
+				parentLabel: t('overview.title'),
+				homeLabel: tCommon('breadcrumb.home'),
+			});
 
 			if (!pageResult.success) {
 				return notFound();
@@ -57,9 +54,8 @@ export const StoryblokPreviewJournalArticlePage = async ({
 					story={story}
 					slug={slug}
 					lang={lang}
-					region={region}
+					currency={currency}
 					relatedArticles={pageResult.data.relatedArticles}
-					translator={translator}
 					breadcrumbs={pageResult.data.breadcrumbs}
 				/>
 			);

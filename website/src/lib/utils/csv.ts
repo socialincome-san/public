@@ -1,7 +1,6 @@
 import { Gender } from '@/generated/prisma/enums';
+import { resultFail, resultOk, type Result } from '@/lib/result';
 import { format, isValid, parse } from 'date-fns';
-import { ServiceResult } from '../services/core/base.types';
-import { resultFail, resultOk } from '../services/core/service-result';
 import { CSV_DOUBLE_QUOTES_REGEX, CSV_NEEDS_QUOTES_REGEX } from './regex';
 
 export type CsvRow = Record<string, string>;
@@ -54,7 +53,7 @@ const parseOptionalCsvValue = (value: string | undefined): string | undefined =>
 	return trimmedValue ?? undefined;
 };
 
-const parseCsvGender = (rowNumber: number, value: string | undefined): ServiceResult<Gender | null> => {
+const parseCsvGender = (rowNumber: number, value: string | undefined): Result<Gender | null> => {
 	const normalizedValue = parseOptionalCsvValue(value)?.toLowerCase();
 	if (!normalizedValue) {
 		return resultOk(null);
@@ -71,7 +70,7 @@ const parseCsvGender = (rowNumber: number, value: string | undefined): ServiceRe
 	}
 };
 
-const parseCsvDateOfBirth = (rowNumber: number, value: string | undefined): ServiceResult<Date | null> => {
+const parseCsvDateOfBirth = (rowNumber: number, value: string | undefined): Result<Date | null> => {
 	const normalizedValue = parseOptionalCsvValue(value);
 	if (!normalizedValue) {
 		return resultOk(null);
@@ -90,10 +89,7 @@ const parseCsvDateOfBirth = (rowNumber: number, value: string | undefined): Serv
 	return resultOk(new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12)));
 };
 
-export const parseCsvOptionalFields = (
-	rowNumber: number,
-	row: Record<string, string>,
-): ServiceResult<CsvOptionalFieldValues> => {
+export const parseCsvOptionalFields = (rowNumber: number, row: Record<string, string>): Result<CsvOptionalFieldValues> => {
 	const dateOfBirthResult = parseCsvDateOfBirth(rowNumber, row.dateOfBirth);
 	if (!dateOfBirthResult.success) {
 		return resultFail(dateOfBirthResult.error);

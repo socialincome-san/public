@@ -1,0 +1,73 @@
+import type { CountryCode, Gender, UserRole } from '@/generated/prisma/enums';
+
+export type UserPayload = {
+	id: string;
+	firstName: string | null;
+	lastName: string | null;
+	email: string | null;
+	role: UserRole;
+	organizationId: string | null;
+	organizationIds: string[];
+};
+
+export type UserTableViewRow = {
+	id: string;
+	firstName: string | null;
+	lastName: string | null;
+	email: string | null;
+	firebaseAuthUserId: string;
+	role: UserRole;
+	organizationName: string | null;
+	organizationNames: string;
+	createdAt: Date;
+};
+
+export type UserTableQuery = {
+	page: number;
+	pageSize: number;
+	search: string;
+	sortBy?: string;
+	sortDirection?: 'asc' | 'desc';
+};
+
+export type UserPaginatedTableView = {
+	tableRows: UserTableViewRow[];
+	totalCount: number;
+};
+
+export type UserSession = {
+	type: 'user';
+	id: string;
+	gender: Gender | null;
+	email: string | null;
+	firstName: string | null;
+	lastName: string | null;
+	language: string | null;
+	street: string | null;
+	number: string | null;
+	city: string | null;
+	zip: string | null;
+	country: CountryCode | null;
+	role: UserRole;
+	activeOrganization: {
+		id: string;
+		name: string;
+	} | null;
+	organizations: {
+		id: string;
+		name: string;
+	}[];
+	programs: {
+		id: string;
+		name: string;
+	}[];
+	hasAnyOperatorProgramAccess: boolean;
+};
+
+export type UserStripeCheckoutContext = {
+	accountId: string;
+	contactId: string;
+	email: string | null;
+	firstName: string | null;
+	lastName: string | null;
+};

@@ -7,13 +7,13 @@ test.beforeEach(async () => {
 });
 
 test('dashboard donation certificates page matches screenshot', async ({ page }) => {
-	await page.goto('/en/int/dashboard/donation-certificates?sortBy=createdAt&sortDirection=desc');
+	await page.goto('/en/usd/dashboard/donation-certificates?sortBy=createdAt&sortDirection=desc');
 	await expect(page.getByTestId('data-table')).toBeVisible();
 	await expectToHaveScreenshot(page);
 });
 
 test('dashboard donation certificates has downloadable PDF links', async ({ page }) => {
-	await page.goto('/en/int/dashboard/donation-certificates?sortBy=createdAt&sortDirection=desc');
+	await page.goto('/en/usd/dashboard/donation-certificates?sortBy=createdAt&sortDirection=desc');
 	await clickDataTableActionItem(page, 'data-table-action-item-generate-donation-certificate');
 
 	const dialog = page.getByRole('dialog');
@@ -28,7 +28,7 @@ test('dashboard donation certificates has downloadable PDF links', async ({ page
 	await expect(dialog).not.toBeVisible();
 
 	await page.goto(
-		'/en/int/dashboard/donation-certificates?page=1&pageSize=10&sortBy=createdAt&sortDirection=desc&search=2024',
+		'/en/usd/dashboard/donation-certificates?page=1&pageSize=10&sortBy=createdAt&sortDirection=desc&search=2024',
 	);
 	await expect(page.getByRole('cell', { name: '2024' }).first()).toBeVisible();
 	const downloadLink = page.getByTestId('data-table').getByRole('link', { name: 'Download', exact: true });

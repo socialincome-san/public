@@ -1,11 +1,14 @@
 'use client';
 
 import type { MessagingChannel } from '@/generated/prisma/client';
-import { getMessagingJobAction, startMessagingSendAction } from '@/lib/server-actions/messaging-actions';
-import type { MessagingJobStatusView } from '@/lib/services/twilio/messaging/dispatch/dispatch.types';
-import type { MessagingRecipientType } from '@/lib/services/twilio/messaging/recipients/recipients.types';
-import type { SelectionState } from '@/lib/services/twilio/messaging/recipients/selection.types';
-import type { VariableAssignments } from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
+import { getMessagingJobAction, startMessagingSendAction } from '@/modules/messaging/messaging.actions';
+import type {
+	MessagingJobStatusView,
+	MessagingPhoneSource,
+	MessagingRecipientType,
+	SelectionState,
+	VariableAssignments,
+} from '@/modules/messaging/messaging.types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type SendPhase = 'idle' | 'running' | 'results';
@@ -14,6 +17,8 @@ type StartInput = {
 	templateSid: string;
 	channel: MessagingChannel;
 	recipientType: MessagingRecipientType;
+	phoneSource: MessagingPhoneSource;
+	phoneFallbackAllowed: boolean;
 	selection: SelectionState;
 	assignments: VariableAssignments;
 };

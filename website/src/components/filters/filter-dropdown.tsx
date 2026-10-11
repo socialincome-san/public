@@ -1,9 +1,12 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu';
-import { cn } from '@/lib/utils/cn';
-import { ChevronDown } from 'lucide-react';
+import { FilterTrigger } from '@socialincome/design-system/actions/filter-trigger/filter-trigger';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@socialincome/design-system/overlays/dropdown-menu/dropdown-menu';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 type FilterOption = {
@@ -71,28 +74,20 @@ export const FilterDropdown = ({
 	};
 
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button
-					type="button"
-					variant="outline"
-					className={cn(
-						'text-foreground border-border bg-card hover:bg-card h-10 min-w-0 flex-auto justify-between px-4 text-sm font-medium',
-						isHighlighted && 'bg-input hover:bg-input',
-					)}
-				>
-					<span className="min-w-0 truncate">{buttonLabel}</span>
-					<ChevronDown className="text-foreground size-4 shrink-0 opacity-70" />
-				</Button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent align="start" className="bg-popover w-56">
-				{allLabel ? <DropdownMenuItem onSelect={() => updateFilter(undefined)}>{allLabel}</DropdownMenuItem> : null}
-				{options.map((option) => (
-					<DropdownMenuItem key={option.value} onSelect={() => updateFilter(option.value)}>
-						{option.label}
-					</DropdownMenuItem>
-				))}
-			</DropdownMenuContent>
-		</DropdownMenu>
+		<div className="min-w-0 flex-auto">
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<FilterTrigger active={isHighlighted}>{buttonLabel}</FilterTrigger>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align="start">
+					{allLabel ? <DropdownMenuItem onSelect={() => updateFilter(undefined)}>{allLabel}</DropdownMenuItem> : null}
+					{options.map((option) => (
+						<DropdownMenuItem key={option.value} onSelect={() => updateFilter(option.value)}>
+							{option.label}
+						</DropdownMenuItem>
+					))}
+				</DropdownMenuContent>
+			</DropdownMenu>
+		</div>
 	);
 };

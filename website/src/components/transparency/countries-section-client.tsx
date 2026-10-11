@@ -1,11 +1,16 @@
 'use client';
 
-import { CountryFlag } from '@/components/country-flag/country-flag';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/dialog';
+import { CountryFlag } from '@/components/country-flag';
 import { type CountryCode } from '@/generated/prisma/enums';
 import { splitTranslationTemplate } from '@/lib/i18n/translation-template';
-import { OTHER_COUNTRY_SEGMENT_CODE } from '@/lib/services/transparency/transparency.types';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { Fragment, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 
 export type CountriesSectionSegment = {
@@ -40,10 +45,24 @@ export type CountriesSectionClientProps = {
 	otherCountries: CountriesSectionOtherCountry[];
 };
 
+const LEADING_SPACES_REGEX = /^[^\S\n]+/;
+
+// Placeholders whose value must stay on the same line as the word following it, so the headline
+// never wraps between the count and its noun ("12 countries").
+const GLUED_TO_NEXT_WORD_KEYS = new Set(['countriesCount']);
+
 const interpolateHeadline = (template: string, values: Record<string, ReactNode>): ReactNode => {
-	return splitTranslationTemplate(template).map((part, index) => {
+	const parts = splitTranslationTemplate(template);
+
+	return parts.map((part, index) => {
 		if (part.type === 'text') {
-			return <Fragment key={index}>{part.value}</Fragment>;
+			const previousPart = parts[index - 1];
+			const value =
+				previousPart?.type === 'placeholder' && GLUED_TO_NEXT_WORD_KEYS.has(previousPart.key)
+					? part.value.replace(LEADING_SPACES_REGEX, '\u00a0')
+					: part.value;
+
+			return <Fragment key={index}>{value}</Fragment>;
 		}
 
 		return <Fragment key={index}>{values[part.key]}</Fragment>;
@@ -51,7 +70,7 @@ const interpolateHeadline = (template: string, values: Record<string, ReactNode>
 };
 
 const EmphasizedValue = ({ children }: { children: ReactNode }) => {
-	return <strong className="font-medium tabular-nums">{children}</strong>;
+	return <strong className="font-medium">{children}</strong>;
 };
 
 export const CountriesSectionClient = ({
@@ -72,8 +91,8 @@ export const CountriesSectionClient = ({
 	const [isOtherDialogOpen, setIsOtherDialogOpen] = useState(false);
 	const interactionRef = useRef<HTMLDivElement>(null);
 	const resolvedActiveSegmentId =
-		isOtherDialogOpen && segments.some(({ id }) => id === OTHER_COUNTRY_SEGMENT_CODE)
-			? OTHER_COUNTRY_SEGMENT_CODE
+		isOtherDialogOpen && segments.some(({ countryCode }) => countryCode === null)
+			? (segments.find(({ countryCode }) => countryCode === null)?.id ?? null)
 			: segments.some(({ id }) => id === activeSegmentId)
 				? activeSegmentId
 				: null;
@@ -87,7 +106,7 @@ export const CountriesSectionClient = ({
 		})),
 	);
 
-	const isOtherActive = activeSegment?.id === OTHER_COUNTRY_SEGMENT_CODE;
+	const isOtherActive = activeSegment?.countryCode === null;
 	const headlineValues =
 		activeSegment === undefined
 			? {
@@ -100,12 +119,7 @@ export const CountriesSectionClient = ({
 						<span className="inline-flex items-center gap-2 align-baseline">
 							<strong className="leading-none font-medium">{activeSegment.countryName}</strong>
 							{activeSegment.countryCode ? (
-								<CountryFlag
-									country={activeSegment.countryCode}
-									size="lg"
-									decorative
-									className="size-[1em] shrink-0 text-[length:inherit]"
-								/>
+								<CountryFlag country={activeSegment.countryCode} size="inline" decorative />
 							) : null}
 						</span>
 					),
@@ -137,7 +151,7 @@ export const CountriesSectionClient = ({
 		<div className="flex flex-col gap-8">
 			<div className="flex flex-col gap-2">
 				<p className="text-sm font-medium">{sectionTitle}</p>
-				<h2 className="min-h-[2lh] text-4xl leading-snug font-light md:text-5xl" aria-live="polite" aria-atomic="true">
+				<h2 className="min-h-[2lh] text-4xl leading-snug font-normal md:text-5xl" aria-live="polite" aria-atomic="true">
 					{headline}
 				</h2>
 			</div>
@@ -173,7 +187,7 @@ export const CountriesSectionClient = ({
 					>
 						{segments.map((segment) => {
 							const isActive = resolvedActiveSegmentId === segment.id;
-							const isOther = segment.id === OTHER_COUNTRY_SEGMENT_CODE;
+							const isOther = segment.countryCode === null;
 							const rowClassName = cn(
 								'flex w-full min-w-0 items-center gap-3 rounded-lg px-2 py-2 text-left',
 								'transition-colors duration-150 motion-reduce:transition-none',
@@ -217,10 +231,12 @@ export const CountriesSectionClient = ({
 			)}
 			{hasOtherCountries ? (
 				<Dialog open={isOtherDialogOpen} onOpenChange={setIsOtherDialogOpen}>
-					<DialogContent className="flex max-h-[min(85vh,40rem)] flex-col overflow-hidden rounded-3xl sm:max-w-md">
-						<DialogTitle>{dialogTitle}</DialogTitle>
-						<DialogDescription className="sr-only">{chartAriaLabel}</DialogDescription>
-						<ul className="min-h-0 overflow-y-auto">
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>{dialogTitle}</DialogTitle>
+							<DialogDescription visuallyHidden>{chartAriaLabel}</DialogDescription>
+						</DialogHeader>
+						<ul>
 							{otherCountries.map((country) => (
 								<li key={country.countryCode} className="flex items-center gap-3 py-2">
 									<CountryFlag country={country.countryCode} size="sm" decorative />

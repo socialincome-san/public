@@ -1,6 +1,6 @@
 import type { FormField } from '@/components/dynamic-form/dynamic-form';
 import { PayoutInterval, Profile } from '@/generated/prisma/enums';
-import { ProgramSettingsUpdateInput } from '@/lib/services/program/program.types';
+import type { ProgramSettingsUpdateInput } from '@/modules/programs/program.schemas';
 
 const toNumber = (value: FormField['value'], fallback = 0): number => {
 	if (typeof value === 'number' && Number.isFinite(value)) {

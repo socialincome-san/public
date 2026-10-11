@@ -1,13 +1,15 @@
 'use client';
 
-import { Card } from '@/components/card/card';
-import { cn } from '@/lib/utils/cn';
+import { Card } from '@socialincome/design-system/data-display/card/card';
 import type { ReactNode } from 'react';
 
-const formCardClassName = 'border-border rounded-xl border p-6 shadow-sm';
+type Props = {
+	children: ReactNode;
+	surface?: 'default' | 'gradient';
+};
 
-export const CampaignSubmissionFormCard = ({ children, className }: { children: ReactNode; className?: string }) => (
-	<Card variant="noPadding" className={cn(formCardClassName, className)}>
+export const CampaignSubmissionFormCard = ({ children, surface }: Props) => (
+	<Card padding="compact" elevation="flat" surface={surface}>
 		{children}
 	</Card>
 );

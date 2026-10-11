@@ -5,6 +5,7 @@ import { bestGuessCurrency } from '@/lib/types/currency';
 import { expect, test } from '@playwright/test';
 import {
 	clickDataTableActionItem,
+	expandFormSectionOf,
 	expectToHaveScreenshot,
 	selectMultiOptionsByTestId,
 	selectOptionByTestId,
@@ -115,6 +116,7 @@ test('update country', async ({ page }) => {
 	await page.getByTestId('data-table').locator('tbody tr').first().click();
 	await expect(page.getByTestId('dynamic-form')).toBeVisible();
 
+	await expandFormSectionOf(page, 'countrySettings.defaultPayoutAmount');
 	await page.getByTestId('form-item-countrySettings.defaultPayoutAmount').locator('input').fill(`${updatedPayoutAmount}`);
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
@@ -171,7 +173,9 @@ test('update country clears existing source URLs', async ({ page }) => {
 	await expect(microfinanceSourceHrefInput).toHaveValue('https://www.wfp.org');
 	await expect(networkSourceHrefInput).toHaveValue('https://www.itu.int');
 
+	await expandFormSectionOf(page, 'suitabilityOfCash.microfinanceSourceHref');
 	await microfinanceSourceHrefInput.clear();
+	await expandFormSectionOf(page, 'mobileNetwork.networkSourceHref');
 	await networkSourceHrefInput.clear();
 	await page.getByRole('button', { name: 'Save' }).click();
 	await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
