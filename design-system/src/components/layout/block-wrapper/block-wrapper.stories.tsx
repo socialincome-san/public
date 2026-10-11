@@ -8,6 +8,12 @@ const meta = {
 	tags: ['autodocs'],
 	parameters: {
 		layout: 'fullscreen',
+		docs: {
+			description: {
+				component:
+					'Centers a page section within the site width. `marginTop` and `marginBottom` set responsive vertical spacing from `none` to `xl` (the default).',
+			},
+		},
 	},
 } satisfies Meta<typeof BlockWrapper>;
 
