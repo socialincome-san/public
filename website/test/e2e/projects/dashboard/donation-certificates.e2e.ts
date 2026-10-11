@@ -8,7 +8,7 @@ test.beforeEach(async () => {
 
 test('dashboard donation certificates page matches screenshot', async ({ page }) => {
 	await page.goto('/en/usd/dashboard/donation-certificates?sortBy=createdAt&sortDirection=desc');
-	await expect(page.getByTestId('data-table')).toBeVisible();
+	await expect(page.getByTestId('data-table').filter({ visible: true })).toBeVisible();
 	await expectToHaveScreenshot(page);
 });
 
