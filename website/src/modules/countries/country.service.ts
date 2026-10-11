@@ -310,16 +310,16 @@ export const getPublicCountryStatsByIsoCodes = async (isoCodes: string[]): Promi
 			countryRepository.findPublicCountryStats(normalizedIsoCodes),
 			getCandidateCountsByCountry(),
 		]);
-		if (!candidateCountsResult.success) {
-			return resultFail(candidateCountsResult.error);
-		}
+		const candidateCountsByCountry = candidateCountsResult.success
+			? candidateCountsResult.data
+			: new Map<CountryCode, number>();
 
 		const statsByIsoCode: PublicCountryStatsMap = {};
 		for (const country of countries) {
 			statsByIsoCode[country.isoCode] = {
 				programsCount: country._count.programs,
 				recipientsCount: country.programs.reduce((total, program) => total + program._count.recipients, 0),
-				candidatesCount: candidateCountsResult.data.get(country.isoCode) ?? 0,
+				candidatesCount: candidateCountsByCountry.get(country.isoCode) ?? 0,
 			};
 		}
 

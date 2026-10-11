@@ -145,4 +145,18 @@ describe('country service', () => {
 			UG: { programsCount: 0, recipientsCount: 0, candidatesCount: 0 },
 		});
 	});
+
+	test('keeps public country stats when candidate lookup fails', async () => {
+		mockFindPublicCountryStats.mockResolvedValue([
+			{ ...createCountry('country-sl', 'SL'), programs: [{ _count: { recipients: 4 } }], _count: { programs: 1 } },
+		]);
+		mockFindUnassignedRecipientCountries.mockResolvedValue({
+			success: false,
+			error: 'Could not fetch unassigned recipient countries',
+		});
+
+		const data = expectSuccess(await getPublicCountryStatsByIsoCodes(['SL']));
+
+		expect(data).toEqual({ SL: { programsCount: 1, recipientsCount: 4, candidatesCount: 0 } });
+	});
 });
