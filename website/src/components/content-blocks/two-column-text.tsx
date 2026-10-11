@@ -8,14 +8,18 @@ type Props = {
 };
 
 export const TwoColumnTextBlock = ({ blok }: Props) => {
-	const { columnRatio, marginBottom, marginTop, leftText, rightText } = blok;
+	const { columnRatio, disableMarginBottom, disableMarginTop, leftText, rightText } = blok;
 
 	if (!leftText && !rightText) {
 		return null;
 	}
 
 	return (
-		<BlockWrapper marginBottom={marginBottom} marginTop={marginTop} {...storyblokEditable(blok)}>
+		<BlockWrapper
+			marginBottom={disableMarginBottom ? 'none' : undefined}
+			marginTop={disableMarginTop ? 'none' : undefined}
+			{...storyblokEditable(blok)}
+		>
 			<TwoColumnTextContent leftText={leftText} rightText={rightText} columnRatio={columnRatio} />
 		</BlockWrapper>
 	);

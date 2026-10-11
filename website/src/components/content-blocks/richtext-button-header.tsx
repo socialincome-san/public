@@ -17,7 +17,7 @@ type Props = {
 };
 
 export const RichtextButtonHeaderBlock = ({ blok, lang, currency, buttonAction }: Props) => {
-	const { heading, button, marginTop, marginBottom } = blok;
+	const { heading, button, disableMarginTop, disableMarginBottom } = blok;
 	const firstButton = button?.[0];
 	const buttonLabel = firstButton?.label?.trim();
 	const buttonHref = firstButton?.link ? resolveStoryblokLink(firstButton.link, lang, currency) : null;
@@ -29,7 +29,11 @@ export const RichtextButtonHeaderBlock = ({ blok, lang, currency, buttonAction }
 	}
 
 	return (
-		<BlockWrapper marginBottom={marginBottom} marginTop={marginTop} {...storyblokEditable(blok)}>
+		<BlockWrapper
+			marginBottom={disableMarginBottom ? 'none' : undefined}
+			marginTop={disableMarginTop ? 'none' : undefined}
+			{...storyblokEditable(blok)}
+		>
 			<div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
 				{heading && (
 					<div className="text-foreground text-lg">

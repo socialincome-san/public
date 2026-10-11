@@ -16,7 +16,14 @@ type Props = {
 const vimeoMatcher = new VimeoVideoMatchAndExtract();
 
 export const ExplainerVideoHeaderBlock = ({ blok, lang, currency }: Props) => {
-	const { marginBottom, marginTop, explainerVideoThumbnail, heading, labelForExplainerVideo, linkToExplainerVideo } = blok;
+	const {
+		disableMarginBottom,
+		disableMarginTop,
+		explainerVideoThumbnail,
+		heading,
+		labelForExplainerVideo,
+		linkToExplainerVideo,
+	} = blok;
 	const headingText = heading?.trim();
 	const explainerVideoLabel = labelForExplainerVideo?.trim();
 	const resolvedExplainerVideoUrl = linkToExplainerVideo ? resolveStoryblokLink(linkToExplainerVideo, lang, currency) : null;
@@ -29,7 +36,11 @@ export const ExplainerVideoHeaderBlock = ({ blok, lang, currency }: Props) => {
 	}
 
 	return (
-		<BlockWrapper marginBottom={marginBottom} marginTop={marginTop} {...storyblokEditable(blok)}>
+		<BlockWrapper
+			marginBottom={disableMarginBottom ? 'none' : undefined}
+			marginTop={disableMarginTop ? 'none' : undefined}
+			{...storyblokEditable(blok)}
+		>
 			<div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
 				{headingText && (
 					<div className="text-primary text-4xl whitespace-pre-line md:text-5xl [&_strong]:font-bold">

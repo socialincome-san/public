@@ -45,7 +45,7 @@ const getArticles = async (blok: JournalTeasers, lang: WebsiteLanguage) => {
 };
 
 export const JournalTeasersBlock = async ({ blok, lang, currency }: Props) => {
-	const { marginBottom, marginTop, heading } = blok;
+	const { disableMarginBottom, disableMarginTop, heading } = blok;
 	const [t, articles] = await Promise.all([getTranslations('website-journal'), getArticles(blok, lang)]);
 
 	if (!articles.length) {
@@ -53,7 +53,11 @@ export const JournalTeasersBlock = async ({ blok, lang, currency }: Props) => {
 	}
 
 	return (
-		<BlockWrapper marginBottom={marginBottom} marginTop={marginTop} {...(blok ? storyblokEditable(blok) : {})}>
+		<BlockWrapper
+			marginBottom={disableMarginBottom ? 'none' : undefined}
+			marginTop={disableMarginTop ? 'none' : undefined}
+			{...(blok ? storyblokEditable(blok) : {})}
+		>
 			<JournalTeasersSection
 				heading={heading ? <StoryblokMarkdown>{heading}</StoryblokMarkdown> : undefined}
 				articles={articles}

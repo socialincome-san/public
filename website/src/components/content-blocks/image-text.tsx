@@ -19,7 +19,7 @@ const isSvgAsset = (filename: string, contentType?: string) => {
 };
 
 export const ImageTextBlock = ({ blok }: Props) => {
-	const { content, marginBottom, marginTop, image, imageToTextRatio, layout } = blok;
+	const { content, disableMarginBottom, disableMarginTop, image, imageToTextRatio, layout } = blok;
 
 	if (!content) {
 		return null;
@@ -46,7 +46,11 @@ export const ImageTextBlock = ({ blok }: Props) => {
 	const widthClasses = widthClassesByRatio[resolvedImageToTextRatio] ?? widthClassesByRatio['1/2'];
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok)} marginBottom={marginBottom} marginTop={marginTop}>
+		<BlockWrapper
+			{...storyblokEditable(blok)}
+			marginBottom={disableMarginBottom ? 'none' : undefined}
+			marginTop={disableMarginTop ? 'none' : undefined}
+		>
 			<div
 				className={cn(
 					'text-foreground flex flex-col gap-14 text-lg md:flex-row md:items-center',
