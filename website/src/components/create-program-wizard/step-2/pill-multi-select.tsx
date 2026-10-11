@@ -1,7 +1,7 @@
 'use client';
 
-import { cn } from '@/lib/utils/cn';
 import { humanize } from '@/lib/utils/string-utils';
+import { cn } from '@socialincome/design-system/cn';
 import { X } from 'lucide-react';
 
 type PillMultiSelectProps = {

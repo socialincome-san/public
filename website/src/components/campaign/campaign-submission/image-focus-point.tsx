@@ -1,8 +1,8 @@
 'use client';
 
-import { cn } from '@/lib/utils/cn';
+import { clickToStoryblokFocus, focusToMarkerPosition, focusToObjectPosition } from '@/lib/storyblok/storyblok-image-focus';
+import { cn } from '@socialincome/design-system/cn';
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
-import { clickToStoryblokFocus, focusToMarkerPosition, focusToObjectPosition } from './storyblok-image-focus';
 
 type ImageFocusPointProps = {
 	previewUrl: string;
@@ -12,8 +12,6 @@ type ImageFocusPointProps = {
 	shape: 'rect' | 'circle';
 	disabled?: boolean;
 	ariaLabel: string;
-	className?: string;
-	imgClassName?: string;
 };
 
 export const ImageFocusPoint = ({
@@ -24,8 +22,6 @@ export const ImageFocusPoint = ({
 	shape,
 	disabled = false,
 	ariaLabel,
-	className,
-	imgClassName,
 }: ImageFocusPointProps) => {
 	const frameRef = useRef<HTMLButtonElement>(null);
 	const [loadedImage, setLoadedImage] = useState<{
@@ -122,8 +118,7 @@ export const ImageFocusPoint = ({
 			className={cn(
 				'relative block size-full overflow-hidden',
 				!disabled && 'cursor-crosshair',
-				shape === 'circle' && 'rounded-full',
-				className,
+				shape === 'circle' ? 'rounded-full' : 'rounded-2xl',
 			)}
 			style={{ aspectRatio }}
 		>
@@ -131,7 +126,7 @@ export const ImageFocusPoint = ({
 			<img
 				src={previewUrl}
 				alt=""
-				className={cn('size-full object-cover', shape === 'circle' && 'rounded-full', imgClassName)}
+				className={cn('size-full object-cover', shape === 'circle' && 'rounded-full')}
 				style={{ objectPosition }}
 			/>
 			{markerPosition ? (

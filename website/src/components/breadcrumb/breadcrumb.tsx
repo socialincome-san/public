@@ -1,50 +1,38 @@
-import { BlockWrapper } from '@/components/block-wrapper';
-import {
-	BreadcrumbElements,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbSeparator,
-} from '@/components/breadcrumb/breadcrumb-elements';
-import type { BreadcrumbLink as BreadcrumbLinkItem } from '@/components/breadcrumb/build-breadcrumb-links';
-import { cn } from '@/lib/utils/cn';
-import { Home } from 'lucide-react';
-import React from 'react';
+import type { BreadcrumbLink } from '@/components/breadcrumb/build-breadcrumb-links';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { Breadcrumb as BreadcrumbNav } from '@socialincome/design-system/navigation/breadcrumb/breadcrumb';
+import type { ReactNode } from 'react';
 
 export type { BreadcrumbLink as BreadcrumbLinkType } from '@/components/breadcrumb/build-breadcrumb-links';
 
-export const Breadcrumb = ({ links, className }: { links: BreadcrumbLinkItem[]; className?: string }) => {
+type Props = {
+	links: BreadcrumbLink[];
+	/**
+	 * page: its own padded block at the top of a page.
+	 * section: aligned to the content width, spaced by the surrounding layout.
+	 * inline: just the links, inside an existing content column.
+	 */
+	layout?: 'page' | 'section' | 'inline';
+	aside?: ReactNode;
+};
+
+export const Breadcrumb = ({ links, layout = 'page', aside }: Props) => {
+	const nav = aside ? (
+		<div className="flex flex-wrap items-center justify-between gap-4">
+			<BreadcrumbNav links={links} />
+			{aside}
+		</div>
+	) : (
+		<BreadcrumbNav links={links} />
+	);
+
+	if (layout === 'inline') {
+		return nav;
+	}
+
 	return (
-		<BlockWrapper className={cn('py-9', className)} disableMarginTop={true} disableMarginBottom={true}>
-			<BreadcrumbElements>
-				<BreadcrumbList>
-					{links.map((link: BreadcrumbLinkItem, index: number) => {
-						const isLast: boolean = index === links.length - 1;
-						const isHome: boolean = index === 0;
-
-						const content = isHome ? (
-							<>
-								<span aria-hidden="true">
-									<Home className="h-4 w-4 sm:hidden" />
-									<span className="hidden sm:inline">{link.label}</span>
-								</span>
-								<span className="sr-only">{link.label}</span>
-							</>
-						) : (
-							link.label
-						);
-
-						return (
-							<React.Fragment key={index}>
-								<BreadcrumbItem key={index}>
-									{isLast ? <span>{content}</span> : <BreadcrumbLink href={link.href}>{content}</BreadcrumbLink>}
-								</BreadcrumbItem>
-								{isLast ? null : <BreadcrumbSeparator />}
-							</React.Fragment>
-						);
-					})}
-				</BreadcrumbList>
-			</BreadcrumbElements>
+		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			{layout === 'page' ? <div className="py-9">{nav}</div> : nav}
 		</BlockWrapper>
 	);
 };

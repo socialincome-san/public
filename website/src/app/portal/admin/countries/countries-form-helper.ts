@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { CountryFormCreateInput, CountryFormUpdateInput } from '@/lib/services/country/country-form-input';
-import { CountryPayload } from '@/lib/services/country/country.types';
+import type { CountryCreateInput, CountryUpdateInput } from '@/modules/countries/country.schemas';
+import type { CountryPayload } from '@/modules/countries/country.types';
 import { CountryFormSchema } from './countries-form';
 
-export const buildCreateCountryInput = (schema: CountryFormSchema): CountryFormCreateInput => {
+export const buildCreateCountryInput = (schema: CountryFormSchema): CountryCreateInput => {
 	const countrySettings = schema.fields.countrySettings.fields;
 	const cash = schema.fields.suitabilityOfCash.fields;
 	const mobileMoney = schema.fields.mobileMoney.fields;
@@ -28,7 +28,7 @@ export const buildCreateCountryInput = (schema: CountryFormSchema): CountryFormC
 	};
 };
 
-export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: CountryPayload): CountryFormUpdateInput => {
+export const buildUpdateCountryInput = (schema: CountryFormSchema, existing: CountryPayload): CountryUpdateInput => {
 	const countrySettings = schema.fields.countrySettings.fields;
 	const cash = schema.fields.suitabilityOfCash.fields;
 	const mobileMoney = schema.fields.mobileMoney.fields;

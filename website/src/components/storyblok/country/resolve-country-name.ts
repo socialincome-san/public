@@ -1,8 +1,9 @@
 import { getCountryDescription, getCountrySlug, getCountryTitle } from '@/components/storyblok/country/country.utils';
 import type { Country } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import { getCountryNameFromIsoCode } from '@/lib/types/country';
+import { getCountryByIsoCodeAction } from '@/modules/storyblok-content/storyblok-content.actions';
 
 export { getCountryNameFromIsoCode } from '@/lib/types/country';
 
@@ -16,7 +17,7 @@ export type ResolvedProgramCountry = {
 export const resolveProgramCountry = async (
 	countryIsoCode: string | undefined,
 	lang: WebsiteLanguage,
-	region: WebsiteRegion,
+	currency: WebsiteCurrency,
 ): Promise<ResolvedProgramCountry | undefined> => {
 	if (!countryIsoCode || countryIsoCode === '-') {
 		return undefined;
@@ -25,14 +26,14 @@ export const resolveProgramCountry = async (
 	let resolvedCountry: ResolvedProgramCountry | undefined;
 
 	try {
-		const countryResult = await services.storyblok.getCountryByIsoCode(countryIsoCode, lang);
+		const countryResult = await getCountryByIsoCodeAction({ slug: countryIsoCode, language: lang });
 
 		if (countryResult.success) {
 			resolvedCountry = {
 				isoCode: countryIsoCode,
 				name: getCountryTitle(countryResult.data.content),
 				description: getCountryDescription(countryResult.data.content),
-				href: `/${lang}/${region}/countries/${getCountrySlug(countryResult.data)}`,
+				href: `${getWebsiteBasePath(lang, currency)}/countries/${getCountrySlug(countryResult.data)}`,
 			};
 		}
 	} finally {

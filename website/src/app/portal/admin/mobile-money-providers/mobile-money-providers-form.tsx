@@ -2,16 +2,16 @@
 
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { cloneFormSchema, getZodEnum } from '@/components/dynamic-form/helper';
+import { PAYOUT_PROCESS_OPTIONS } from '@/lib/payout-process-options';
+import { handleResult } from '@/lib/result-client';
 import {
 	createMobileMoneyProviderAction,
 	deleteMobileMoneyProviderAction,
 	getMobileMoneyProviderAction,
 	getMobileMoneyProviderOptionsAction,
 	updateMobileMoneyProviderAction,
-} from '@/lib/server-actions/mobile-money-provider-action';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import type { MobileMoneyProviderPayload } from '@/lib/services/mobile-money-provider/mobile-money-provider.types';
-import { PAYOUT_PROCESS_OPTIONS } from '@/lib/services/mobile-money-provider/payout-process-options';
+} from '@/modules/mobile-money-providers/mobile-money-provider.actions';
+import type { MobileMoneyProviderPayload } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import {
@@ -78,7 +78,7 @@ export default function MobileMoneyProvidersForm({
 				providerId && provider
 					? await updateMobileMoneyProviderAction(buildUpdateMobileMoneyProviderInput(schema, provider))
 					: await createMobileMoneyProviderAction(buildCreateMobileMoneyProviderInput(schema));
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -92,7 +92,7 @@ export default function MobileMoneyProvidersForm({
 
 		startTransition(async () => {
 			const result = await deleteMobileMoneyProviderAction(providerId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});

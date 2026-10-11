@@ -1,20 +1,27 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
-import { StepResultBox } from '@/components/step-result-box';
 import {
 	generateTelecelCurrentMonthPayoutsAction,
 	generateTelecelPayoutCsvAction,
 	previewTelecelCurrentMonthPayoutsAction,
-} from '@/lib/server-actions/payout-process-actions';
-import type { ServiceResult } from '@/lib/services/core/base.types';
+} from '@/modules/payout-processes/payout-process.actions';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { StepResultBox } from '@socialincome/design-system/data-display/step-result-box/step-result-box';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { format } from 'date-fns';
 import { EyeIcon, PlayIcon, TableIcon } from 'lucide-react';
 import { useState } from 'react';
 import type { TelecelCsvPayoutProcessDialogProps } from './payout-process-dialog-props';
 
-type StepResult = string | object | string[] | null;
+type StepResult = string | object | null;
+type StepActionResult = { success: true; data: StepResult } | { success: false; error: string };
 
 export const TelecelCsvPayoutProcessDialog = ({
 	selectedDate,
@@ -29,14 +36,14 @@ export const TelecelCsvPayoutProcessDialog = ({
 		setResults((previous) => ({ ...previous, [step]: value }));
 	};
 
-	const run = async (action: () => Promise<ServiceResult<unknown>>, step: number) => {
+	const run = async (action: () => Promise<StepActionResult>, step: number) => {
 		const result = await action();
 		if (!result.success) {
 			setResult(step, result.error);
 
 			return;
 		}
-		setResult(step, (result.data as StepResult) ?? 'Done');
+		setResult(step, result.data ?? 'Done');
 	};
 
 	const steps = [
@@ -47,7 +54,7 @@ export const TelecelCsvPayoutProcessDialog = ({
 			description: `Shows the payout CSV (MSISDN, Amount, Telco) for ${selectedMonthLabel} — no changes yet.`,
 			icon: <TableIcon className="h-4 w-4" />,
 			variant: 'outline' as const,
-			run: () => run(() => generateTelecelPayoutCsvAction(selectedDate), 1),
+			run: () => run(() => generateTelecelPayoutCsvAction({ selectedDate }), 1),
 			filename: `payouts-telecel-${monthKey}.csv`,
 		},
 		{
@@ -57,7 +64,7 @@ export const TelecelCsvPayoutProcessDialog = ({
 			description: `Previews payouts for ${selectedMonthLabel} (excluding any already paid this month) — nothing written yet.`,
 			icon: <EyeIcon className="h-4 w-4" />,
 			variant: 'outline' as const,
-			run: () => run(() => previewTelecelCurrentMonthPayoutsAction(selectedDate), 2),
+			run: () => run(() => previewTelecelCurrentMonthPayoutsAction({ selectedDate }), 2),
 			filename: `preview-payouts-telecel-${monthKey}.json`,
 		},
 		{
@@ -66,21 +73,20 @@ export const TelecelCsvPayoutProcessDialog = ({
 			label: 'Generate payouts (apply changes)',
 			description: `Creates payouts in the database for ${selectedMonthLabel}.`,
 			icon: <PlayIcon className="h-4 w-4" />,
-			run: () => run(() => generateTelecelCurrentMonthPayoutsAction(selectedDate), 3),
+			run: () => run(() => generateTelecelCurrentMonthPayoutsAction({ selectedDate }), 3),
 			filename: `generated-payouts-telecel-${monthKey}.json`,
 		},
 	];
 
 	return (
 		<Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
-				<DialogHeader className="flex-col items-start gap-0 border-b-0 pr-12">
-					<DialogTitle className="text-pretty">Telecel CSV upload</DialogTitle>
+			<DialogContent size="md">
+				<DialogHeader>
+					<DialogTitle>Telecel CSV upload</DialogTitle>
+					<DialogDescription>
+						Payout month: <span className="text-foreground font-medium">{selectedMonthLabel}</span>
+					</DialogDescription>
 				</DialogHeader>
-
-				<p className="text-muted-foreground -mt-2 pr-12 text-sm">
-					Payout month: <span className="text-foreground font-medium">{selectedMonthLabel}</span>
-				</p>
 
 				<div className="flex flex-col gap-5">
 					{steps.map((step) => (
@@ -90,12 +96,7 @@ export const TelecelCsvPayoutProcessDialog = ({
 							</p>
 							<p className="text-muted-foreground mb-1 text-xs">{step.description}</p>
 
-							<Button
-								data-testid={`payout-step-${step.id}-button`}
-								className="flex w-full items-center justify-center gap-2"
-								variant={step.variant ?? 'default'}
-								onClick={step.run}
-							>
+							<Button data-testid={`payout-step-${step.id}-button`} variant={step.variant ?? 'default'} onClick={step.run}>
 								{step.icon}
 								{step.label}
 							</Button>
@@ -110,7 +111,7 @@ export const TelecelCsvPayoutProcessDialog = ({
 					))}
 				</div>
 
-				<DialogFooter className="mt-4">
+				<DialogFooter>
 					<Button variant="outline" onClick={onClose}>
 						Close
 					</Button>

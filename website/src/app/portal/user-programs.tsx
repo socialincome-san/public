@@ -1,20 +1,15 @@
-import { Badge } from '@/components/badge/badge';
 import { CreateProgramModal } from '@/components/create-program-wizard/create-program-modal';
-import { Wallet } from '@/components/wallet/wallet';
 import { formatWalletAmount } from '@/components/wallet/wallet-format';
 import { ProgramPermission } from '@/generated/prisma/enums';
-import { Translator } from '@/lib/i18n/translator';
-import { defaultLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
 import { getCountryNameByCode } from '@/lib/types/country';
+import { getCurrentProgramWalletsAction } from '@/modules/programs/program.actions';
+import { Badge } from '@socialincome/design-system/data-display/badge/badge';
+import { Wallet } from '@socialincome/design-system/data-display/wallet/wallet';
+import { getTranslations } from 'next-intl/server';
 
-type Props = {
-	userId: string;
-};
-
-export const UserPrograms = async ({ userId }: Props) => {
-	const result = await services.read.program.getProgramWallets(userId);
-	const translator = await Translator.getInstance({ language: defaultLanguage, namespaces: ['website-common'] });
+export const UserPrograms = async () => {
+	const result = await getCurrentProgramWalletsAction();
+	const t = await getTranslations('website-common');
 
 	if (!result.success) {
 		return <div>{result.error}</div>;
@@ -39,12 +34,12 @@ export const UserPrograms = async ({ userId }: Props) => {
 								subtitle={getCountryNameByCode(program.country)}
 								badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
 								footerLeft={{
-									label: translator.t('wallet.paid-out'),
+									label: t('wallet.paid-out'),
 									prefix: program.payoutCurrency,
 									value: formatWalletAmount(program.totalPayoutsSum),
 								}}
 								footerRight={{
-									label: translator.t('wallet.recipients'),
+									label: t('wallet.recipients'),
 									value: formatWalletAmount(program.recipientsCount),
 								}}
 							/>
@@ -63,12 +58,12 @@ export const UserPrograms = async ({ userId }: Props) => {
 							subtitle={getCountryNameByCode(program.country)}
 							badge={!program.isReadyForFirstPayouts ? <Badge variant="secondary">Funding needed</Badge> : undefined}
 							footerLeft={{
-								label: translator.t('wallet.paid-out'),
+								label: t('wallet.paid-out'),
 								prefix: program.payoutCurrency,
 								value: formatWalletAmount(program.totalPayoutsSum),
 							}}
 							footerRight={{
-								label: translator.t('wallet.recipients'),
+								label: t('wallet.recipients'),
 								value: formatWalletAmount(program.recipientsCount),
 							}}
 						/>

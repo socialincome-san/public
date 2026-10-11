@@ -1,6 +1,6 @@
 /** @jest-environment jsdom */
 
-import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
+import type { GlobeContribution } from '@/modules/contributions/contribution.types';
 import { createBadgeSlotElement, mountBadgeContent } from './globe-badge';
 
 const makeContribution = (overrides: Partial<GlobeContribution> = {}): GlobeContribution => ({

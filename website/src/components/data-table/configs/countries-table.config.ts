@@ -1,6 +1,6 @@
 import { makeCountryColumns } from '@/components/data-table/columns/countries';
 import type { DataTableConfig } from '@/components/data-table/table-config.types';
-import type { CountryTableViewRow } from '@/lib/services/country/country.types';
+import type { CountryTableViewRow } from '@/modules/countries/country.types';
 
 export const countriesTableConfig: DataTableConfig<CountryTableViewRow> = {
 	id: 'admin-countries',

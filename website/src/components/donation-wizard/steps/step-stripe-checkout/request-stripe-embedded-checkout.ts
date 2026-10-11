@@ -1,4 +1,4 @@
-import { createStripeEmbeddedCheckoutAction } from '@/lib/server-actions/stripe-wizard-actions';
+import { createStripeEmbeddedCheckoutAction } from '@/modules/stripe-payments/stripe-payment.actions';
 import type { DonationWizardContext } from '../../wizard/donation-wizard-context';
 import { buildStripeCheckoutReturnPath, storeStripeCheckoutContext } from './stripe-checkout-return';
 

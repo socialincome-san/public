@@ -1,8 +1,8 @@
 import { TranslatedProfileForm } from '@/components/profile-form/translated-form';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
+import { requireSession } from '@/server/session';
 
 export default async function ProfileAccountPage() {
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 
 	return <TranslatedProfileForm session={user} />;
 }

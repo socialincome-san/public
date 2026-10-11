@@ -1,7 +1,7 @@
 import { makeContributorColumns } from '@/components/data-table/columns/contributors';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
-import type { ContributorTableViewRow } from '@/lib/services/contributor/contributor.types';
+import type { ContributorTableViewRow } from '@/modules/contributors/contributor.types';
 
 export const contributorsTableConfig: DataTableConfig<ContributorTableViewRow> = {
 	id: 'contributors',

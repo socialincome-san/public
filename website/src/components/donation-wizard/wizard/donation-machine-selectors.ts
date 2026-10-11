@@ -1,6 +1,6 @@
-import { resolveWizardPaymentMethod } from '@/lib/services/qr-bill/wizard-qr-payment';
 import type { LanguageCode } from '@/lib/types/language';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
+import { type useTranslations } from 'next-intl';
 import type { PlanTierBenefit } from '../steps/step-plan/plan-tier-card/plan-tier-benefit';
 import {
 	getBeneficiaryImpact,
@@ -16,6 +16,7 @@ import {
 	resolveAmount,
 	type Cadence,
 	type DonationAmountContext,
+	type PaymentMethod,
 	type PresetAmount,
 } from '../utils/donation-amount';
 import { getDonationWizardLayout } from '../utils/donation-wizard-layout';
@@ -28,7 +29,7 @@ const localeForLanguage = (language: LanguageCode): string => (language === 'de'
 const formatCommunityCount = (value: number, language: LanguageCode): string =>
 	formatNumberLocale(value, localeForLanguage(language));
 
-type Translate = (key: string, context?: Record<string, unknown>) => string;
+type Translate = ReturnType<typeof useTranslations<'donation-wizard'>>;
 
 export type PlanBenefitDescriptor =
 	| { id: string; type: 'beneficiaries'; directCount: number; indirectCount: number }
@@ -158,6 +159,12 @@ export const selectPaymentView = (context: DonationWizardContext, currency?: str
 		},
 	};
 };
+
+export const isWizardQrCurrencySupported = (currency: string): boolean =>
+	currency.toUpperCase() === 'CHF' || currency.toUpperCase() === 'EUR';
+
+const resolveWizardPaymentMethod = (paymentMethod: PaymentMethod, currency: string): PaymentMethod =>
+	paymentMethod === 'qr' && !isWizardQrCurrencySupported(currency) ? 'online' : paymentMethod;
 
 export const selectCadenceSwitchView = (currentCadence: Cadence) => ({
 	targetCadence: currentCadence === 'monthly' ? ('one-time' as const) : ('monthly' as const),

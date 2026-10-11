@@ -1,9 +1,8 @@
 'use client';
 
-import type { MessagingRecipientFilters } from '@/lib/services/twilio/messaging/recipients/recipients.types';
-import { emptySelection } from '@/lib/services/twilio/messaging/recipients/selection';
-import type { SelectionState } from '@/lib/services/twilio/messaging/recipients/selection.types';
+import type { MessagingRecipientFilters, SelectionState } from '@/modules/messaging/messaging.types';
 import { RecipientsTable, type RecipientsTableQuery } from './recipients-table';
+import { emptySelection } from './selection';
 import type { ResetReason } from './types';
 
 type Step2RecipientsProps = {

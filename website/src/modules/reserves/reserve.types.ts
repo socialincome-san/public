@@ -1,0 +1,24 @@
+import type { Currency } from '@/generated/prisma/enums';
+
+export type ReserveCreateInput = {
+	bankAccountId: string;
+	date: Date;
+	amount: number;
+	currency: Currency;
+	amountChf: number;
+};
+
+export type BankAccountLatestReserve = {
+	bankAccountId: string;
+	bankAccountNumber: string | null;
+	description: string | null;
+	amountChf: number | null;
+	recordedAt: Date | null;
+};
+
+export type LatestReserves = {
+	accounts: BankAccountLatestReserve[];
+	total: number;
+};
+
+export const RESERVE_CACHE_TAG = 'reserves';

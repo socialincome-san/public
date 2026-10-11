@@ -1,34 +1,19 @@
-import { services } from '@/lib/services/services';
-import { SLACK_ALERT } from '@/lib/utils/slack-alert';
-import { NextRequest, NextResponse } from 'next/server';
+import { sendSlackAlert } from '@/lib/utils/slack-alert';
+import { importPaymentFiles } from '@/modules/payment-imports/payment-import.service';
+import { withSchedulerAuth } from '@/server/scheduler-auth';
+import { NextResponse } from 'next/server';
 
-export const POST = async (request: NextRequest) => {
-	const apiKey = request.headers.get('x-api-key');
-
-	if (!process.env.SCHEDULER_API_KEY) {
-		console.error(`${SLACK_ALERT}: Scheduler API key not set`);
-
-		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
-	}
-
-	if (apiKey !== process.env.SCHEDULER_API_KEY) {
-		console.warn('Scheduler API key wrong');
-
-		return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
-	}
-
+export const GET = withSchedulerAuth(async () => {
 	if (!process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET) {
-		console.error(`${SLACK_ALERT}: Payment files storage bucket env var not set`);
+		sendSlackAlert('Payment files storage bucket env var not set');
 
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 
-	const service = services.createPaymentFileImport(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
-
 	try {
-		const result = await service.importPaymentFiles();
+		const result = await importPaymentFiles(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
 		if (!result.success) {
-			console.error(`${SLACK_ALERT}: Payment files import failed: ${result.error}`, { result });
+			sendSlackAlert('Payment files import failed', { result });
 
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
@@ -42,8 +27,8 @@ export const POST = async (request: NextRequest) => {
 
 		return NextResponse.json(result.data, { status: 201 });
 	} catch (error) {
-		console.error(`${SLACK_ALERT}: Payment files import failed: ${String(error)}`, { error });
+		sendSlackAlert('Payment files import failed', { error });
 
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
-};
+});

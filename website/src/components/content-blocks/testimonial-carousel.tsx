@@ -1,13 +1,18 @@
 'use client';
 
-import { BlockWrapper } from '@/components/block-wrapper';
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/carousel';
-import { SectionHeading } from '@/components/section-heading';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { Testimonial } from '@/components/testimonial';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
-import { cn } from '@/lib/utils/cn';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { cn } from '@socialincome/design-system/cn';
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	type CarouselApi,
+} from '@socialincome/design-system/data-display/carousel/carousel';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
+import { storyblokEditable } from '@storyblok/react';
 import Autoplay from 'embla-carousel-autoplay';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -117,12 +122,14 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 			<BlockWrapper
 				disableMarginBottom={disableMarginBottom}
 				disableMarginTop={disableMarginTop}
-				{...storyblokEditable(blok as SbBlokData)}
+				{...storyblokEditable(blok)}
 			>
 				{blok.heading && (
-					<SectionHeading>
-						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
-					</SectionHeading>
+					<div className="mb-8 md:mb-10">
+						<SectionHeading>
+							<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
+						</SectionHeading>
+					</div>
 				)}
 				<div className="mx-auto w-full max-w-4xl">
 					<Testimonial entry={entries[0]} />
@@ -133,15 +140,17 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 
 	return (
 		<BlockWrapper
-			className="overflow-visible md:w-full md:px-0"
+			width="bleed"
 			disableMarginBottom={disableMarginBottom}
 			disableMarginTop={disableMarginTop}
-			{...storyblokEditable(blok as SbBlokData)}
+			{...storyblokEditable(blok)}
 		>
 			{blok.heading && (
-				<SectionHeading>
-					<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
-				</SectionHeading>
+				<div className="mb-8 md:mb-10">
+					<SectionHeading>
+						<StoryblokMarkdown>{blok.heading}</StoryblokMarkdown>
+					</SectionHeading>
+				</div>
 			)}
 			<Carousel
 				setApi={setApi}
@@ -153,7 +162,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 			>
 				<CarouselContent>
 					{entries.map((entry, index) => (
-						<CarouselItem key={entry._uid ?? `${entry.name}-${index}`} className="basis-full md:basis-4/5 lg:basis-3/5">
+						<CarouselItem key={entry._uid ?? `${entry.name}-${index}`} size="featured">
 							<Testimonial entry={entry} />
 						</CarouselItem>
 					))}

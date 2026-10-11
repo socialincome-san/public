@@ -1,6 +1,7 @@
 'use client';
 
 import { type CellContext } from '@/components/data-table/tanstack-table';
+import { DataTableDateCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 import type { RowData } from '@tanstack/react-table';
 
 type DateCellProps<TData extends RowData> = {
@@ -20,20 +21,10 @@ export const DateCell = <TData extends RowData>({
 }: DateCellProps<TData>) => {
 	const value = ctx.getValue();
 
-	if (!value) {
-		return <span>-</span>;
-	}
+	const date =
+		value instanceof Date ? value : typeof value === 'string' || typeof value === 'number' ? new Date(value) : null;
+	const formattedDate =
+		value && date && !Number.isNaN(date.getTime()) ? new Intl.DateTimeFormat(locale, options).format(date) : undefined;
 
-	let date: Date | null = null;
-	if (value instanceof Date) {
-		date = value;
-	} else if (typeof value === 'string' || typeof value === 'number') {
-		date = new Date(value);
-	}
-	if (!date || Number.isNaN(date.getTime())) {
-		return <span>-</span>;
-	}
-	const formatted = new Intl.DateTimeFormat(locale, options).format(date);
-
-	return <span data-testid="date-cell">{formatted}</span>;
+	return <DataTableDateCell formattedDate={formattedDate} />;
 };

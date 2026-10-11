@@ -1,4 +1,4 @@
-import { mainWebsiteLanguages } from '@/lib/i18n/utils';
+import { getWebsiteBasePath, mainWebsiteLanguages, type WebsiteCurrency } from '@/lib/i18n/utils';
 
 export const STORYBLOK_PAGES_FOLDER = 'pages';
 
@@ -9,6 +9,8 @@ const STORYBLOK_HOME_PAGE_SLUG = 'home';
 export const STORYBLOK_LAYOUT_PATH = `${STORYBLOK_GLOBALS_FOLDER}/layout`;
 
 export const STORYBLOK_CAMPAIGN_GLOBALS_PATH = `${STORYBLOK_GLOBALS_FOLDER}/campaign-globals`;
+
+export const STORYBLOK_COMMUNITY_GLOBALS_PATH = `${STORYBLOK_GLOBALS_FOLDER}/community`;
 
 const pagesPrefix = `${STORYBLOK_PAGES_FOLDER}/`;
 
@@ -201,7 +203,7 @@ export const normalizeStoryblokSlug = (rawSlug: string): string => {
 };
 
 /**
- * Maps a Storyblok `full_slug` to the URL segment after `/{lang}/{region}/`.
+ * Maps a Storyblok `full_slug` to the URL segment after `/{lang}/{currency}/`.
  * `pages/about` → `about`; `pages/programs/foo` → `programs/foo`.
  */
 export const getWebsitePathTailFromStoryblokSlug = (storyblokSlug: string): string => {
@@ -256,10 +258,10 @@ export const getWebsiteRelativePathFromStoryblokSlug = (storyblokSlug: string): 
 	return tail ? `/${tail}` : '/';
 };
 
-export const getWebsitePublicPath = (lang: string, region: string, websitePathTail: string) => {
+export const getWebsitePublicPath = (lang: string, currency: WebsiteCurrency, websitePathTail: string) => {
 	const relativePath = websitePathTail ? `/${websitePathTail}` : '';
 
-	return `/${lang}/${region}${relativePath}`;
+	return `${getWebsiteBasePath(lang, currency)}${relativePath}`;
 };
 
 export const isRoutableWebsiteStoryblokSlug = (storyblokSlug: string) => {

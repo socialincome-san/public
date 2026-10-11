@@ -1,27 +1,22 @@
 {
 	"campaign": {
 		"not-found": "Unfortunately, the campaign couldn't be found.",
-		"by": "By {{ creator }}",
+		"by": "By {creator}",
 		"without-goal": {
-			"collected_zero": "No contributions yet. Be the first!",
-			"collected_one": "{{ amount, currency }} raised by {{ count }} contributor",
-			"collected_other": "{{ amount, currency }} raised by {{ count }} contributors"
+			"collected": "{count, plural, =0 {No contributions yet. Be the first!} one {{amount} raised by {count} contributor} other {{amount} raised by {count} contributors}}"
 		},
 		"with-goal": {
-			"collected-percentage": "Raised {{percentage}}%",
+			"collected-percentage": "Raised {percentage}%",
 			"goal-title": "Goal",
-			"collected-amount_one": "{{ amount, currency }} by {{count}} contributor",
-			"collected-amount_other": "{{ amount, currency }} by {{count}} contributors",
-			"goal-amount": "{{ amount, currency }}"
+			"collected-amount": "{count, plural, one {{amount} by {count} contributor} other {{amount} by {count} contributors}}",
+			"goal-amount": "{amount}"
 		},
 		"ended": "The campaign has ended.  For regular donations, please use the main donation page.",
 		"days-left": "Days left",
 		"fundraising-pill": {
-			"days-left_one": "Just {{count}} day left",
-			"days-left_other": "Just {{count}} days left",
-			"amount-missing": "{{missing}} missing to reach {{goal}}",
-			"supporters-left_one": "{{count}} supporter left to reach {{goal}}",
-			"supporters-left_other": "{{count}} supporters left to reach {{goal}}"
+			"days-left": "{count, plural, one {Just {count} day left} other {Just {count} days left}}",
+			"amount-missing": "{missing} missing to reach {goal}",
+			"supporters-left": "{count, plural, one {{count} supporter left to reach {goal}} other {{count} supporters left to reach {goal}}}"
 		},
 		"program-teaser": {
 			"heading": "Your donation supports",
@@ -37,8 +32,8 @@
 		"video-slider": {
 			"title": "What does it mean to receive a **Social Income**?",
 			"description": "Hear directly from recipients across our programs what Social Income means in practice.",
-			"show-video": "Show video {{ index }}",
-			"video-title": "Social Income recipient video {{ index }}"
+			"show-video": "Show video {index}",
+			"video-title": "Social Income recipient video {index}"
 		},
 		"other-campaigns": {
 			"heading-prefix": "Discover other ",

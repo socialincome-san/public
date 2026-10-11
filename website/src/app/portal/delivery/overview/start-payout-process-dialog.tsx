@@ -1,9 +1,15 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
-import { PayoutProcess } from '@/generated/prisma/enums';
-import type { PayoutProcessOverviewOption } from '@/lib/services/payout-process/payout-process-overview.types';
+import type { PayoutProcessOverviewOption } from '@/modules/mobile-money-providers/mobile-money-provider.types';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@socialincome/design-system/overlays/dialog/dialog';
 import { OrangeMoneyCsvPayoutProcessDialog } from './orange-money-csv-payout-process-dialog';
 import type { PayoutProcessDialogBaseProps } from './payout-process-dialog-props';
 import { TelecelCsvPayoutProcessDialog } from './telecel-csv-payout-process-dialog';
@@ -14,13 +20,13 @@ const UnsupportedPayoutProcessDialog = ({
 	onClose,
 }: PayoutProcessDialogBaseProps & { option: PayoutProcessOverviewOption }) => (
 	<Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-		<DialogContent className="sm:max-w-[480px]">
+		<DialogContent size="alert">
 			<DialogHeader>
 				<DialogTitle>Unsupported payout process</DialogTitle>
+				<DialogDescription>
+					The payout process &quot;{option.name}&quot; is not supported in the portal yet.
+				</DialogDescription>
 			</DialogHeader>
-			<p className="text-muted-foreground text-sm">
-				The payout process &quot;{option.name}&quot; is not supported in the portal yet.
-			</p>
 			<DialogFooter>
 				<Button variant="outline" onClick={onClose}>
 					Close
@@ -38,7 +44,7 @@ export const StartPayoutProcessDialog = ({
 		return <TelecelCsvPayoutProcessDialog {...props} />;
 	}
 
-	if (option.payoutProcess === PayoutProcess.orange_money_csv) {
+	if (option.payoutProcess === 'orange_money_csv') {
 		return <OrangeMoneyCsvPayoutProcessDialog {...props} mobileMoneyProviderId={option.id} providerName={option.name} />;
 	}
 

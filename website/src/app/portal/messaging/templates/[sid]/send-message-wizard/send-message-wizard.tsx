@@ -1,21 +1,19 @@
 'use client';
 
-import { DialogTitle } from '@/components/dialog';
 import type { MessagingChannel } from '@/generated/prisma/client';
-import type { ChannelPreviewSummary } from '@/lib/services/twilio/messaging/dispatch/dispatch.types';
 import type {
+	ChannelPreviewSummary,
 	MessagingPhoneSource,
 	MessagingRecipientType,
-} from '@/lib/services/twilio/messaging/recipients/recipients.types';
-import { emptySelection } from '@/lib/services/twilio/messaging/recipients/selection';
-import type { SelectionState } from '@/lib/services/twilio/messaging/recipients/selection.types';
-import type {
+	SelectionState,
 	TwilioTemplateDetail,
 	VariableAssignments,
-} from '@/lib/services/twilio/messaging/twilio-templates/twilio-template.types';
-import { cn } from '@/lib/utils/cn';
+} from '@/modules/messaging/messaging.types';
+import { cn } from '@socialincome/design-system/cn';
+import { DialogBody, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useEffect, useState } from 'react';
 import type { RecipientsTableQuery } from './recipients-table';
+import { emptySelection } from './selection';
 import { SendProgress } from './send-progress';
 import { Step1RecipientType } from './step-1-recipient-type';
 import { Step2Recipients } from './step-2-recipients';
@@ -154,21 +152,19 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 
 	return (
 		<>
-			<div className="-mx-6 border-b px-6 pb-2">
-				<DialogTitle className="pr-8 text-lg">
+			<DialogHeader>
+				<DialogTitle>
 					Send <span className="text-muted-foreground">“{template.friendlyName}”</span>
 				</DialogTitle>
-				<div className="mt-2">
-					<WizardStepIndicator
-						steps={steps}
-						currentStep={currentStep}
-						allComplete={isSending}
-						onStepSelect={isSending ? undefined : handleStepSelect}
-					/>
-				</div>
-			</div>
+				<WizardStepIndicator
+					steps={steps}
+					currentStep={currentStep}
+					allComplete={isSending}
+					onStepSelect={isSending ? undefined : handleStepSelect}
+				/>
+			</DialogHeader>
 
-			<div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+			<DialogBody>
 				{isSending && channel ? (
 					<SendProgress
 						phase={send.phase}
@@ -236,7 +232,7 @@ export const SendMessageWizard = ({ template, onClose, onLockChange }: SendMessa
 						)}
 					</div>
 				)}
-			</div>
+			</DialogBody>
 
 			<WizardFooter
 				sendPhase={send.phase}

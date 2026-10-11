@@ -1,23 +1,29 @@
 'use client';
 
-import { Button } from '@/components/button/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form';
-import { Input } from '@/components/input/input';
-import { Label } from '@/components/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select/select';
-import { Switch } from '@/components/switch/switch';
 import { ContributorReferralSource, Gender } from '@/generated/prisma/enums';
 import { mainWebsiteLanguages } from '@/lib/i18n/utils';
-import { getFocusOptionsAction } from '@/lib/server-actions/focus-action';
-import { ContributorSession } from '@/lib/services/contributor/contributor.types';
-import { LocalPartnerSession } from '@/lib/services/local-partner/local-partner.types';
-import { UserSession } from '@/lib/services/user/user.types';
 import { COUNTRY_OPTIONS } from '@/lib/types/country';
+import { ContributorSession } from '@/modules/contributors/contributor.types';
+import { getFocusOptionsAction } from '@/modules/focuses/focus.actions';
+import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
+import type { UserSession } from '@/modules/users/user.types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@socialincome/design-system/actions/button/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
+import { Input } from '@socialincome/design-system/forms/input/input';
+import { Label } from '@socialincome/design-system/forms/label/label';
+import { MultiSelect, MultiSelectOption } from '@socialincome/design-system/forms/multi-select/multi-select';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/design-system/forms/select/select';
+import { Switch } from '@socialincome/design-system/forms/switch/switch';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { MultiSelect, MultiSelectOption } from '../multi-select/multi-select';
 import { buildDefaultValues } from './defaults';
 import { ProfileFormInput, ProfileFormOutput, profileFormSchema } from './schemas';
 import { submitProfileForm } from './submit';
@@ -199,7 +205,7 @@ export const ProfileForm = ({ session, translations, isNewsletterSubscribed = fa
 										<SelectValue placeholder={translations.selectOptionPlaceholder} />
 									</SelectTrigger>
 								</FormControl>
-								<SelectContent className="max-h-64 overflow-y-auto">
+								<SelectContent>
 									{COUNTRY_OPTIONS.map((c) => (
 										<SelectItem key={c.code} value={c.code}>
 											{c.name}

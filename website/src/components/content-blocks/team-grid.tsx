@@ -1,9 +1,9 @@
-import { BlockWrapper } from '@/components/block-wrapper';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import { formatStoryblokUrl } from '@/lib/services/storyblok/storyblok.utils';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
+import { getPersonsByUuidsAction } from '@/modules/storyblok-content/storyblok-content.actions';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { storyblokEditable } from '@storyblok/react';
 import NextImage from 'next/image';
 
 import type { Person, TeamGrid } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -18,7 +18,7 @@ type Props = {
 
 export const TeamGridBlock = async ({ blok, lang }: Props) => {
 	const uuids = blok.person.map((person) => (typeof person === 'string' ? person : person.uuid));
-	const personsResult = await services.storyblok.getPersonsByUuids(lang, uuids);
+	const personsResult = await getPersonsByUuidsAction({ language: lang, values: uuids });
 	const persons = personsResult.success ? personsResult.data : [];
 
 	if (persons.length === 0) {
@@ -26,7 +26,7 @@ export const TeamGridBlock = async ({ blok, lang }: Props) => {
 	}
 
 	return (
-		<BlockWrapper {...storyblokEditable(blok as SbBlokData)}>
+		<BlockWrapper {...storyblokEditable(blok)}>
 			{blok.title && <h2 className="text-3xl font-bold">{blok.title}</h2>}
 			{blok.description && (
 				<div className="text-foreground mt-4 text-lg">

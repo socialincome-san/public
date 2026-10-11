@@ -6,12 +6,6 @@
 		"EUR": "Euro",
 		"SLE": "Leone della Sierra Leone"
 	},
-	"region": "Regione",
-	"regions": {
-		"int": "Internazionale",
-		"ch": "Svizzera",
-		"sl": "Sierra Leone"
-	},
 	"language": "Lingua",
 	"languages": {
 		"de": "DE",
