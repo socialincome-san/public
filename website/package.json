@@ -75,7 +75,7 @@
 		"date-fns": "4.4.0",
 		"dotenv": "18.0.5",
 		"embla-carousel-autoplay": "8.6.0",
-		"firebase": "12.19.0",
+		"firebase": "13.0.0",
 		"firebase-admin": "14.5.0",
 		"globe.gl": "^2.46.1",
 		"isomorphic-dompurify": "4.4.0",
