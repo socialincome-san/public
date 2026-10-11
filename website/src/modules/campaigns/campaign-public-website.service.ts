@@ -3,6 +3,7 @@ import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { getMetadata } from '@/lib/utils/metadata';
+import { DEFAULT_OPEN_GRAPH_IMAGE_URL, toProductionMetadataUrl } from '@/lib/utils/metadata-image';
 import { getCampaignGlobals } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { ISbStoryData } from '@storyblok/js';
 import type { Metadata } from 'next';
@@ -59,14 +60,14 @@ export const getCampaignPageMetadata = async (
 					openGraph: {
 						title: campaign.title,
 						description: campaign.description,
-						images: primaryImage,
+						images: toProductionMetadataUrl(primaryImage, DEFAULT_OPEN_GRAPH_IMAGE_URL),
 					},
 					twitter: {
 						title: campaign.title,
 						card: 'summary_large_image' as const,
 						site: '@so_income',
 						creator: '@so_income',
-						images: primaryImage,
+						images: toProductionMetadataUrl(primaryImage, DEFAULT_OPEN_GRAPH_IMAGE_URL),
 					},
 				}
 			: {}),

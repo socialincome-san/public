@@ -1,7 +1,8 @@
 import { type Messages } from '@/lib/i18n/messages';
 import { defaultCurrency, defaultLanguage, mainWebsiteLanguages, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getWebsitePublicPath } from '@/lib/storyblok/storyblok-paths';
-import { Metadata } from 'next';
+import { DEFAULT_OPEN_GRAPH_IMAGE_URL, toProductionMetadataUrl, WEBSITE_ORIGIN } from '@/lib/utils/metadata-image';
+import type { Metadata } from 'next';
 import { getMessages } from 'next-intl/server';
 
 type MetadataKey = keyof Messages['website-common']['metadata'];
@@ -36,20 +37,18 @@ export const getMetadata = async (
 		title,
 		description,
 		keywords,
-		// If VERCEL_URL is detected: https://${process.env.VERCEL_URL} otherwise it falls back to http://localhost:${process.env.PORT || 3000}.
-		// https://nextjs.org/docs/app/api-reference/functions/generate-metadata
-		metadataBase: null,
+		metadataBase: new URL(WEBSITE_ORIGIN),
 		openGraph: {
 			title,
 			description,
-			images: translate('og-image'),
+			images: toProductionMetadataUrl(translate('og-image'), DEFAULT_OPEN_GRAPH_IMAGE_URL),
 		},
 		twitter: {
 			title,
 			card: 'summary_large_image',
 			site: '@so_income',
 			creator: '@so_income',
-			images: translate('twitter-image'),
+			images: toProductionMetadataUrl(translate('twitter-image'), DEFAULT_OPEN_GRAPH_IMAGE_URL),
 		},
 	} satisfies Metadata;
 
