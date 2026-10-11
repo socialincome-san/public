@@ -1,3 +1,5 @@
+'use client';
+
 import { Home } from 'lucide-react';
 import React from 'react';
 
@@ -39,65 +41,75 @@ export const truncateBreadcrumbLabel = (label: string, limit: number) => {
 	return truncated ? `${truncated}…` : `${label.slice(0, limit)}…`;
 };
 
-const getBreadcrumbLimit = () =>
-	typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(min-width: 64rem)').matches
-		? 20
-		: 12;
+const DESKTOP_QUERY = '(min-width: 64rem)';
+
+const subscribeToDesktop = (onChange: () => void) => {
+	const query = window.matchMedia(DESKTOP_QUERY);
+	query.addEventListener('change', onChange);
+
+	return () => query.removeEventListener('change', onChange);
+};
 
 const BreadcrumbLabel = ({ label }: { label: string }) => {
 	const labelRef = React.useRef<HTMLSpanElement>(null);
 	const fullLabelRef = React.useRef<HTMLSpanElement>(null);
 	const truncatedLabelRef = React.useRef<HTMLSpanElement>(null);
 	const ellipsisRef = React.useRef<HTMLSpanElement>(null);
-	const [displayLabel, setDisplayLabel] = React.useState(label);
+	const isDesktop = React.useSyncExternalStore(
+		subscribeToDesktop,
+		() => window.matchMedia(DESKTOP_QUERY).matches,
+		() => false,
+	);
+	const truncatedLabel = truncateBreadcrumbLabel(label, isDesktop ? 20 : 12);
+	const [fit, setFit] = React.useState<{ candidate: string; label: string } | null>(null);
+	const isFitted = fit?.candidate === truncatedLabel;
+	const displayLabel = isFitted ? fit.label : label;
 
 	React.useLayoutEffect(() => {
-		const updateLabel = () => {
-			const element = labelRef.current;
-			if (!element || element.clientWidth === 0) {
-				return;
-			}
-
-			const truncatedLabel = truncateBreadcrumbLabel(label, getBreadcrumbLimit());
-			const fits = (candidate: HTMLSpanElement | null) => candidate !== null && candidate.offsetWidth <= element.clientWidth;
-
-			setDisplayLabel(
-				fits(fullLabelRef.current)
-					? label
-					: fits(truncatedLabelRef.current)
-						? truncatedLabel
-						: fits(ellipsisRef.current)
-							? '…'
-							: '',
-			);
-		};
-
-		updateLabel();
-		const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(updateLabel);
-		if (observer && labelRef.current) {
-			observer.observe(labelRef.current);
+		const element = labelRef.current;
+		if (isFitted || !element) {
+			return;
 		}
-		window.addEventListener('resize', updateLabel);
 
-		return () => {
-			observer?.disconnect();
-			window.removeEventListener('resize', updateLabel);
-		};
-	}, [label]);
+		// The current item does not shrink, so it can overflow the list instead of getting narrower.
+		const list = element.closest('ol');
+		const available = element.clientWidth - (list ? list.scrollWidth - list.clientWidth : 0);
+		const fits = (candidate: HTMLSpanElement | null) => candidate !== null && candidate.offsetWidth <= available;
+
+		setFit({
+			candidate: truncatedLabel,
+			label: fits(fullLabelRef.current)
+				? label
+				: fits(truncatedLabelRef.current)
+					? truncatedLabel
+					: fits(ellipsisRef.current)
+						? '…'
+						: '',
+		});
+	}, [isFitted, label, truncatedLabel]);
+
+	// The label is as wide as its text, so it can only tell whether a candidate fits while showing the full label.
+	React.useLayoutEffect(() => {
+		const list = labelRef.current?.closest('ol');
+		if (!list) {
+			return;
+		}
+
+		const observer = new ResizeObserver(() => setFit(null));
+		observer.observe(list);
+
+		return () => observer.disconnect();
+	}, []);
 
 	return (
-		<span
-			ref={labelRef}
-			title={label}
-			aria-label={label}
-			className="relative block min-w-0 overflow-hidden whitespace-nowrap"
-		>
-			{displayLabel}
+		<span ref={labelRef} className="relative block min-w-0 overflow-hidden whitespace-nowrap">
+			<span aria-hidden="true">{displayLabel}</span>
+			<span className="sr-only">{label}</span>
 			<span ref={fullLabelRef} aria-hidden="true" className="invisible absolute whitespace-nowrap">
 				{label}
 			</span>
 			<span ref={truncatedLabelRef} aria-hidden="true" className="invisible absolute whitespace-nowrap">
-				{truncateBreadcrumbLabel(label, getBreadcrumbLimit())}
+				{truncatedLabel}
 			</span>
 			<span ref={ellipsisRef} aria-hidden="true" className="invisible absolute whitespace-nowrap">
 				…
@@ -129,14 +141,14 @@ export const Breadcrumb = ({ links }: { links: BreadcrumbLinkItem[] }) => {
 
 					return (
 						<React.Fragment key={`${link.href}-${link.label}`}>
-							<BreadcrumbItem shrink={isLast}>
+							<BreadcrumbItem current={isLast}>
 								{isLast ? (
-									<span className="block max-w-full min-w-0 flex-1" title={link.label} aria-label={link.label}>
+									<span className="block min-w-0" title={link.label}>
 										{content}
 									</span>
 								) : (
 									<BreadcrumbLink href={link.href} title={link.label} aria-label={link.label}>
-										<span className="min-w-0">{content}</span>
+										{content}
 									</BreadcrumbLink>
 								)}
 							</BreadcrumbItem>

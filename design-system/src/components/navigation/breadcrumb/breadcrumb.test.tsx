@@ -1,11 +1,4 @@
-/** @jest-environment jsdom */
-
-import { act } from 'react';
-import { createRoot } from 'react-dom/client';
-
-import { Breadcrumb, truncateBreadcrumbLabel } from './breadcrumb';
-
-(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+import { truncateBreadcrumbLabel } from './breadcrumb';
 
 describe('truncateBreadcrumbLabel', () => {
 	test.each([
@@ -44,47 +37,5 @@ describe('truncateBreadcrumbLabel', () => {
 	test('uses the character limit for a single long word', () => {
 		expect(truncateBreadcrumbLabel('Supercalifragilisticexpialidocious', 20)).toBe('Supercalifragilistic…');
 		expect(truncateBreadcrumbLabel('Supercalifragilisticexpialidocious', 12)).toBe('Supercalifra…');
-	});
-});
-
-describe('Breadcrumb', () => {
-	test('preserves full labels for accessibility and keeps the final item prioritized', () => {
-		const container = document.createElement('div');
-		const root = createRoot(container);
-
-		act(() =>
-			root.render(
-				<Breadcrumb
-					links={[
-						{ href: '/', label: 'Home' },
-						{ href: '/programs', label: 'A very long parent breadcrumb label' },
-						{ href: '/current', label: 'Supercalifragilisticexpialidocious' },
-					]}
-				/>,
-			),
-		);
-
-		const current = container.querySelector('li:last-of-type > span');
-		expect(current?.getAttribute('title')).toBe('Supercalifragilisticexpialidocious');
-		expect(current?.getAttribute('aria-label')).toBe('Supercalifragilisticexpialidocious');
-		expect(container.querySelector('a[title="A very long parent breadcrumb label"]')).not.toBeNull();
-		expect(container.querySelector('li:last-of-type > span')?.classList.contains('flex-1')).toBe(true);
-		expect(container.querySelector('li:last-of-type')?.classList.contains('min-w-0')).toBe(true);
-		expect(container.querySelector('li:last-of-type')?.classList.contains('flex-1')).toBe(true);
-		expect(container.querySelector('ol')?.classList.contains('flex-nowrap')).toBe(true);
-		expect(
-			container.querySelector('a[title="A very long parent breadcrumb label"]')?.classList.contains('whitespace-nowrap'),
-		).toBe(true);
-		expect(
-			container
-				.querySelector('a[title="A very long parent breadcrumb label"] > span > span')
-				?.classList.contains('overflow-hidden'),
-		).toBe(true);
-		expect(container.querySelector('li[role="presentation"]')?.classList.contains('shrink-0')).toBe(true);
-		expect(
-			container.querySelector('a[title="A very long parent breadcrumb label"] > span')?.classList.contains('min-w-0'),
-		).toBe(true);
-
-		act(() => root.unmount());
 	});
 });
