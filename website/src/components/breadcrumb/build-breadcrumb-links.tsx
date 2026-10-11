@@ -1,6 +1,6 @@
 import { getCountryTitle } from '@/components/storyblok/country/country.utils';
 import type { Country } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import {
 	getPageStoryPath,
 	getWebsitePathTailFromStoryblokSlug,
@@ -19,7 +19,7 @@ type BuildBreadcrumbLinksParams = {
 	fullSlug: string;
 	currentLabel: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	includeCurrentLabel?: boolean;
 };
 
@@ -72,7 +72,7 @@ export const buildBreadcrumbLinks = async ({
 	fullSlug,
 	currentLabel,
 	lang,
-	region,
+	currency,
 	includeCurrentLabel = true,
 }: BuildBreadcrumbLinksParams): Promise<BreadcrumbLink[]> => {
 	const t = await getTranslations('website-common');
@@ -85,7 +85,7 @@ export const buildBreadcrumbLinks = async ({
 
 	const links: BreadcrumbLink[] = [
 		{
-			href: getWebsitePublicPath(lang, region, ''),
+			href: getWebsitePublicPath(lang, currency, ''),
 			label: capitalizeLabel(t('breadcrumb.home')),
 		},
 	];
@@ -99,7 +99,7 @@ export const buildBreadcrumbLinks = async ({
 				const label = await fetchStoryLabel(storyblokPath, lang, segment);
 
 				return {
-					href: getWebsitePublicPath(lang, region, getWebsitePathTailFromStoryblokSlug(storyblokPath)),
+					href: getWebsitePublicPath(lang, currency, getWebsitePathTailFromStoryblokSlug(storyblokPath)),
 					label: capitalizeLabel(label),
 				};
 			}),

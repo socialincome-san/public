@@ -3,6 +3,7 @@
 import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
 import { VideoBadge } from '@/components/storyblok/journal/video-badge';
 import { useIsMobile } from '@/lib/hooks/use-is-mobile';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import {
 	createWebsiteJournalArticleLink,
 	createWebsiteJournalPath,
@@ -29,19 +30,19 @@ type Variant = 'grid' | 'featured' | 'secondary';
 type Props = {
 	article: ISbStoryData<JournalArticle>;
 	lang: string;
-	region: string;
+	currency: WebsiteCurrency;
 	variant?: Variant;
 	videoLabel: string;
 };
 
-export const JournalArticleCard = ({ article, lang, region, variant = 'grid', videoLabel }: Props) => {
+export const JournalArticleCard = ({ article, lang, currency, variant = 'grid', videoLabel }: Props) => {
 	const isMobile = useIsMobile();
 	const effectiveVariant = isMobile ? 'featured' : variant;
 	const { content } = article;
 	const author = content.author;
 	const href = article.slug
-		? createWebsiteJournalArticleLink(article.slug, lang, region)
-		: createWebsiteJournalPath(lang, region);
+		? createWebsiteJournalArticleLink(article.slug, lang, currency)
+		: createWebsiteJournalPath(lang, currency);
 
 	const imageWidth = effectiveVariant === 'secondary' ? SECONDARY_IMAGE_WIDTH : GRID_IMAGE_WIDTH;
 	const imageHeight = effectiveVariant === 'secondary' ? SECONDARY_IMAGE_HEIGHT : GRID_IMAGE_HEIGHT;

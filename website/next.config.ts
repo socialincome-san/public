@@ -7,6 +7,7 @@ import { getRedirects } from './redirects';
 const nextConfig: NextConfig = {
 	transpilePackages: ['@socialincome/design-system', 'storyblok-rich-text-react-renderer'],
 	reactStrictMode: true,
+	cacheComponents: true,
 	env: {
 		NEXT_PUBLIC_APP_BUILD_TIMESTAMP: new Date().toISOString(),
 	},

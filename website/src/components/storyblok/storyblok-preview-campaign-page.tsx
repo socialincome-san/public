@@ -2,7 +2,7 @@ import { CampaignDetail } from '@/components/campaign/campaign-detail';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import { getCampaignPortalSlug, getCampaignTitle } from '@/components/storyblok/campaign/campaign.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import { type WebsiteLanguage, type WebsiteRegion } from '@/lib/i18n/utils';
+import { type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { getCampaignByPortalSlugAction } from '@/modules/campaigns/campaign.actions';
 import { getCommunityPanelDataAction } from '@/modules/community/community.actions';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
@@ -11,12 +11,12 @@ import { notFound } from 'next/navigation';
 type Props = {
 	storyPath: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
 
-export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
+export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, currency, previewRoutePath, searchParams }: Props) => {
 	return await StoryblokPreviewStory<CampaignStory>({
 		storyPath,
 		lang,
@@ -35,7 +35,7 @@ export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, pr
 
 			const [campaignResult, communityResult] = await Promise.all([
 				getCampaignByPortalSlugAction(portalSlug),
-				getCommunityPanelDataAction({ page: story.content, language: lang, region }),
+				getCommunityPanelDataAction({ page: story.content, language: lang, currency }),
 			]);
 			if (!campaignResult.success || !campaignResult.data) {
 				return notFound();
@@ -59,7 +59,7 @@ export const StoryblokPreviewCampaignPage = async ({ storyPath, lang, region, pr
 					faq={story.content.faq}
 					campaignSlug={story.slug}
 					lang={lang}
-					region={region}
+					currency={currency}
 					community={communityResult.success ? communityResult.data : null}
 				/>
 			);

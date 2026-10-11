@@ -23,14 +23,9 @@
 		"supported-by-link-aria": "Plattform Partner Webseite"
 	},
 	"locale-currency-switcher": {
-		"aria-label": "Sprache, Region und Währung ändern",
+		"aria-label": "Sprache und Währung ändern",
 		"language": "Sprache",
-		"region": "Region",
-		"currency": "Währung",
-		"regions": {
-			"int": "International",
-			"ch": "Schweiz"
-		}
+		"currency": "Währung"
 	},
 	"countries-page": {
 		"empty": "Keine Länder gefunden.",

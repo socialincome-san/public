@@ -1,29 +1,22 @@
 import { getCampaignStoryblokSlug } from '@/components/storyblok/campaign/campaign.utils';
-import {
-	defaultLanguage,
-	mainWebsiteLanguages,
-	type WebsiteLanguage,
-	type WebsiteRegion,
-	websiteRegions,
-} from '@/lib/i18n/utils';
+import { defaultCurrency, defaultLanguage, mainWebsiteLanguages, type WebsiteLanguage } from '@/lib/i18n/utils';
 import {
 	getWebsitePathTailFromStoryblokSlug,
 	getWebsitePublicPath,
 	isRoutableWebsiteStoryblokSlug,
 	WEBSITE_JOURNAL_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
-import { getCampaigns, getPublishedPageLinks } from '@/modules/storyblok-content/storyblok-content.service';
+import { getCampaigns, getPublishedPageLinks } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { StoryblokPublishedLink } from '@/modules/storyblok-content/storyblok-content.types';
 import type { MetadataRoute } from 'next';
-
-export const revalidate = 86400;
 
 const SITE_URL = 'https://socialincome.org';
 
 type PathTailByLanguage = Map<WebsiteLanguage, string>;
 
-const absoluteUrl = (lang: WebsiteLanguage, region: WebsiteRegion, pathTail: string) =>
-	`${SITE_URL}${getWebsitePublicPath(lang, region, pathTail)}`;
+// Only the canonical currency: the other currencies show the same content with converted amounts.
+const absoluteUrl = (lang: WebsiteLanguage, pathTail: string) =>
+	`${SITE_URL}${getWebsitePublicPath(lang, defaultCurrency, pathTail)}`;
 
 const isInvalidPathTail = (pathTail: string) =>
 	mainWebsiteLanguages.some((websiteLang) => pathTail === websiteLang || pathTail.startsWith(`${websiteLang}/`));
@@ -142,21 +135,23 @@ const dedupeEntries = (entries: PathTailByLanguage[]) => {
 	return [...byPathTail.values()];
 };
 
-const buildRegionalEntries = (languages: PathTailByLanguage): MetadataRoute.Sitemap => {
+const buildEntry = (languages: PathTailByLanguage): MetadataRoute.Sitemap => {
 	const primary = getPrimaryEntry(languages);
 	if (!primary) {
 		return [];
 	}
 
-	return websiteRegions.map((region) => ({
-		url: absoluteUrl(primary.lang, region, primary.pathTail),
-		alternates: {
-			languages: Object.fromEntries(
-				[...languages.entries()].map(([lang, pathTail]) => [lang, absoluteUrl(lang, region, pathTail)]),
-			),
+	return [
+		{
+			url: absoluteUrl(primary.lang, primary.pathTail),
+			alternates: {
+				languages: Object.fromEntries(
+					[...languages.entries()].map(([lang, pathTail]) => [lang, absoluteUrl(lang, pathTail)]),
+				),
+			},
+			changeFrequency: primary.pathTail.startsWith('journal/') ? 'monthly' : 'weekly',
 		},
-		changeFrequency: primary.pathTail.startsWith('journal/') ? 'monthly' : 'weekly',
-	}));
+	];
 };
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
@@ -174,7 +169,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 			(getPrimaryEntry(left)?.pathTail ?? '').localeCompare(getPrimaryEntry(right)?.pathTail ?? ''),
 		);
 
-		return entries.flatMap(buildRegionalEntries);
+		return entries.flatMap(buildEntry);
 	} catch (error) {
 		console.error('Failed to generate sitemap', error);
 

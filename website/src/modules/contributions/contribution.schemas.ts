@@ -20,7 +20,7 @@ export const contributionUpdateSchema = contributionCreateSchema.extend({
 
 export const contributionIdSchema = z.string().trim().min(1, 'Contribution id is required.');
 
-export const contributionGlobeCutoffSchema = z.coerce.date();
+export const contributionGlobeDaysSchema = z.number().int().min(1).max(365);
 
 export type CreateContributionInput = z.infer<typeof contributionCreateSchema>;
 export type UpdateContributionInput = z.infer<typeof contributionUpdateSchema>;

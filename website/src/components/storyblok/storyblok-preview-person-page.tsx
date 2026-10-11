@@ -1,6 +1,6 @@
 import { PersonProfile } from '@/components/storyblok/journal/person-profile';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getJournalPersonAction, getJournalPersonPageDataAction } from '@/modules/journal/journal.actions';
 import type { JournalPerson } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
@@ -11,7 +11,7 @@ type Props = {
 	storyPath: string;
 	slug: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
@@ -20,7 +20,7 @@ export const StoryblokPreviewPersonPage = async ({
 	storyPath,
 	slug,
 	lang,
-	region,
+	currency,
 	previewRoutePath,
 	searchParams,
 }: Props) => {
@@ -42,7 +42,7 @@ export const StoryblokPreviewPersonPage = async ({
 		renderStory: async () => {
 			const pageResult = await getJournalPersonPageDataAction({
 				lang,
-				region,
+				currency,
 				slug,
 				journalLabel: t('overview.title'),
 				homeLabel: tCommon('breadcrumb.home'),
@@ -57,7 +57,7 @@ export const StoryblokPreviewPersonPage = async ({
 					{...pageResult.data}
 					articlesHeading={t('person.articles')}
 					lang={lang}
-					region={region}
+					currency={currency}
 					moreArticlesLabel={t('overview.more-articles')}
 					videoLabel={t('badge.video')}
 				/>

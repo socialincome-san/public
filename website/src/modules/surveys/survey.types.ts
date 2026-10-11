@@ -206,3 +206,5 @@ export type SurveyImpactQuery = Omit<SurveyImpactFilters, 'recipientAgeGroups'> 
 		lte?: Date;
 	}[];
 };
+
+export const SURVEY_CACHE_TAG = 'surveys';

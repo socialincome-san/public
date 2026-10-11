@@ -1,6 +1,6 @@
 import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getJournalArticleAction, getJournalArticlePageDataAction } from '@/modules/journal/journal.actions';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
@@ -11,7 +11,7 @@ type Props = {
 	storyPath: string;
 	slug: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
@@ -20,7 +20,7 @@ export const StoryblokPreviewJournalArticlePage = async ({
 	storyPath,
 	slug,
 	lang,
-	region,
+	currency,
 	previewRoutePath,
 	searchParams,
 }: Props) => {
@@ -39,7 +39,7 @@ export const StoryblokPreviewJournalArticlePage = async ({
 		renderStory: async (story) => {
 			const pageResult = await getJournalArticlePageDataAction({
 				lang,
-				region,
+				currency,
 				slug,
 				journalLabel: t('overview.title'),
 				homeLabel: tCommon('breadcrumb.home'),
@@ -54,7 +54,7 @@ export const StoryblokPreviewJournalArticlePage = async ({
 					story={story}
 					slug={slug}
 					lang={lang}
-					region={region}
+					currency={currency}
 					relatedArticles={pageResult.data.relatedArticles}
 					breadcrumbs={pageResult.data.breadcrumbs}
 				/>

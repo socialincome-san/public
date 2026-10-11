@@ -180,6 +180,14 @@ test('filename-contract enforces approved suffixes', () => {
 	});
 	assert.deepEqual(valid, []);
 
+	const validCache = lint({
+		filename: 'src/modules/example/example.cache.ts',
+		rules: { 'backend-architecture/filename-contract': 'error' },
+		code: `export const getExample = async () => {};
+`,
+	});
+	assert.deepEqual(validCache, []);
+
 	const invalid = lint({
 		filename: 'src/modules/example/example.utils.ts',
 		rules: { 'backend-architecture/filename-contract': 'error' },
@@ -194,6 +202,7 @@ test('no-cross-module-deep-imports blocks repository imports from another module
 		filename: 'src/modules/example/example.service.ts',
 		rules: { 'backend-architecture/no-cross-module-deep-imports': 'error' },
 		code: `import { createOther } from '@/modules/other/other.service';
+import { getOther } from '@/modules/other/other.cache';
 import type { OtherType } from '@/modules/other/other.types';
 `,
 	});

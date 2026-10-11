@@ -5,7 +5,7 @@ import {
 import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
 import { getLocalPartnerPortalSlug } from '@/components/storyblok/local-partner/local-partner.utils';
 import { LocalPartnersTeaserIntro } from '@/components/storyblok/local-partner/local-partners-teaser-intro';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getLocalPartnerOverviewStatsAction } from '@/modules/local-partners/local-partner.actions';
 import { Carousel, CarouselContent, CarouselItem } from '@socialincome/design-system/data-display/carousel/carousel';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
@@ -16,10 +16,10 @@ type ContentProps = {
 	title?: string;
 	text?: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, region }: ContentProps) => {
+export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, currency }: ContentProps) => {
 	if (localPartners.length === 0) {
 		return null;
 	}
@@ -54,7 +54,7 @@ export const LocalPartnersTeaserRowContent = async ({ localPartners, lang, regio
 										<LocalPartnerTeaserCard
 											localPartner={localPartner}
 											lang={lang}
-											region={region}
+											currency={currency}
 											recipientsCount={recipientsCount}
 											recipientsLabel={recipientsLabel}
 											candidatesLabel={candidatesLabel}

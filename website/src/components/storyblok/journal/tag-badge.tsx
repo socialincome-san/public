@@ -1,4 +1,5 @@
 import type { Tag } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { createWebsiteJournalTagLink } from '@/lib/storyblok/storyblok-utils';
 import { cn } from '@socialincome/design-system/cn';
 import type { ISbStoryData } from '@storyblok/js';
@@ -7,11 +8,11 @@ import Link from 'next/link';
 type Props = {
 	tag: ISbStoryData<Tag>;
 	lang: string;
-	region: string;
+	currency: WebsiteCurrency;
 	variant?: 'hero' | 'default';
 };
 
-export const TagBadge = ({ tag, lang, region, variant = 'default' }: Props) => {
+export const TagBadge = ({ tag, lang, currency, variant = 'default' }: Props) => {
 	const label = tag.content?.value;
 	if (!label) {
 		return null;
@@ -19,7 +20,7 @@ export const TagBadge = ({ tag, lang, region, variant = 'default' }: Props) => {
 
 	return (
 		<Link
-			href={createWebsiteJournalTagLink(tag.slug, lang, region)}
+			href={createWebsiteJournalTagLink(tag.slug, lang, currency)}
 			className={cn(
 				'inline-flex rounded-full px-3 py-1 text-sm font-medium capitalize transition-colors',
 				variant === 'hero'

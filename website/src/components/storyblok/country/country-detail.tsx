@@ -2,9 +2,9 @@ import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { Community } from '@/components/community/community';
 import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local-partners-teaser-row';
-import { DonationFormServer } from '@/components/donation-wizard/donation-form-server';
+import { DonationForm } from '@/components/donation-wizard/donation-form';
 import { HeroHeader } from '@/components/storyblok/shared/hero-header';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import type { CommunityPanelData } from '@/modules/community/community.types';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { getTranslations } from 'next-intl/server';
@@ -21,7 +21,7 @@ import { getCountryIsoCode, getCountryLocalPartners, getCountryTitle } from './c
 type Props = {
 	country: CountryStory;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	activeProgramsCount: number;
 	recipientsCount: number;
 	candidatesCount: number;
@@ -31,7 +31,7 @@ type Props = {
 export const CountryDetail = async ({
 	country,
 	lang,
-	region,
+	currency,
 	activeProgramsCount,
 	recipientsCount,
 	candidatesCount,
@@ -46,7 +46,7 @@ export const CountryDetail = async ({
 			fullSlug: country.full_slug,
 			currentLabel: countryTitle,
 			lang,
-			region,
+			currency,
 		}),
 	]);
 
@@ -80,20 +80,20 @@ export const CountryDetail = async ({
 			<Breadcrumb links={breadcrumbLinks} aside={community ? <Community data={community} /> : null} />
 			<div className="lg:hidden">
 				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
-					<DonationFormServer />
+					<DonationForm />
 				</BlockWrapper>
 			</div>
 			<CountryMap country={country} />
 			<CountryPersonCarousel country={country} lang={lang} />
-			<CountryPayoutsTotal country={country} lang={lang} region={region} />
+			<CountryPayoutsTotal country={country} lang={lang} currency={currency} />
 			{isoCode !== '-' && (
 				<Suspense fallback={<CountryStatisticsSkeleton />}>
 					<CountryStatistics countryIsoCode={isoCode} countryName={countryTitle} lang={lang} />
 				</Suspense>
 			)}
-			<CountryPrograms country={country} lang={lang} region={region} />
+			<CountryPrograms country={country} lang={lang} currency={currency} />
 			{localPartners.length > 0 && (
-				<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} region={region} />
+				<LocalPartnersTeaserRowContent localPartners={localPartners} lang={lang} currency={currency} />
 			)}
 		</>
 	);

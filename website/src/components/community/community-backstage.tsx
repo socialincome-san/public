@@ -4,7 +4,7 @@ import { TickerPill } from '@socialincome/design-system/actions/ticker-pill/tick
 import type { AvatarStackPerson } from '@socialincome/design-system/data-display/avatar-stack/avatar-stack';
 import { Backstage } from '@socialincome/design-system/overlays/backstage/backstage';
 import { usePathname } from 'next/navigation';
-import { createContext, use, useState, type ReactNode } from 'react';
+import { createContext, Suspense, use, useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 type BackstageLabels = {
@@ -20,19 +20,20 @@ type CommunityBackstageContextValue = {
 
 const CommunityBackstageContext = createContext<CommunityBackstageContextValue | null>(null);
 
-export const CommunityBackstageProvider = ({ children }: { children: ReactNode }) => {
+// Reading the pathname suspends while prerendering dynamic routes, so it lives in its own boundary instead of
+// keeping the whole app shell out of the static shell.
+const CloseOnNavigation = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
 	const pathname = usePathname();
+	useEffect(() => setOpen(false), [pathname, setOpen]);
+
+	return null;
+};
+
+export const CommunityBackstageProvider = ({ children }: { children: ReactNode }) => {
 	const [open, setOpen] = useState(false);
 	// Set by the trigger, so the layout does not need to load the page's translations
 	const [labels, setLabels] = useState<BackstageLabels>({ panelLabel: '', closeLabel: '' });
-	const [openPathname, setOpenPathname] = useState(pathname);
 	const [panelHost, setPanelHost] = useState<HTMLDivElement | null>(null);
-
-	// Closes the backstage on navigation, e.g. via a link inside the panel
-	if (pathname !== openPathname) {
-		setOpenPathname(pathname);
-		setOpen(false);
-	}
 
 	const show = (nextLabels: BackstageLabels) => {
 		setLabels(nextLabels);
@@ -41,6 +42,10 @@ export const CommunityBackstageProvider = ({ children }: { children: ReactNode }
 
 	return (
 		<CommunityBackstageContext value={{ open, show, panelHost }}>
+			{/* Closes the backstage on navigation, e.g. via a link inside the panel */}
+			<Suspense fallback={null}>
+				<CloseOnNavigation setOpen={setOpen} />
+			</Suspense>
 			<Backstage
 				open={open}
 				onOpenChange={setOpen}

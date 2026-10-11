@@ -1,12 +1,12 @@
 'use client';
 
-import { useI18n } from '@/lib/i18n/use-i18n';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { createStep1Actions, selectStep1FormView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { DonationAmountFields } from './donation-amount-fields';
 
 export const AmountStep = ({ state, send }: DonationWizardStepProps) => {
-	const { currency = 'CHF' } = useI18n();
+	const currency = useWebsiteCurrency();
 
 	return (
 		<DonationAmountFields

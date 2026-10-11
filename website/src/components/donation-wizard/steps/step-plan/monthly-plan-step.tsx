@@ -1,6 +1,6 @@
 'use client';
 
-import { useI18n } from '@/lib/i18n/use-i18n';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { useLocale, useTranslations } from 'next-intl';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
@@ -16,7 +16,7 @@ import { PlanTierCard } from './plan-tier-card/plan-tier-card';
 export const MonthlyPlanStep = ({ state, send }: DonationWizardStepProps) => {
 	const t = useTranslations('donation-wizard');
 	const language = useLocale();
-	const { currency = 'CHF' } = useI18n();
+	const currency = useWebsiteCurrency();
 	const view = selectMonthlyPlanView(state.context);
 	const toBenefits = (descriptors: PlanBenefitDescriptor[]) =>
 		descriptors.map((descriptor) => resolvePlanBenefit(descriptor, t, language));

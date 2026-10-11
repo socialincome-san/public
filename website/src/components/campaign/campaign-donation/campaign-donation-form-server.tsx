@@ -1,6 +1,5 @@
 import { CampaignDonationForm } from '@/components/campaign/campaign-donation/campaign-donation-form';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 
 const PROFILE_PICTURE_SIZE = 87;
@@ -12,8 +11,7 @@ type Props = {
 	profilePicture?: HeroHeaderImage | null;
 };
 
-export const CampaignDonationFormServer = async ({ campaignId, quote, creatorName, profilePicture }: Props) => {
-	const currency = await getWebsiteCurrencyFromCookie();
+export const CampaignDonationFormServer = ({ campaignId, quote, creatorName, profilePicture }: Props) => {
 	const profilePictureSrc = profilePicture?.filename
 		? formatStoryblokUrl(profilePicture.filename, PROFILE_PICTURE_SIZE, PROFILE_PICTURE_SIZE, profilePicture.focus)
 		: null;
@@ -22,7 +20,6 @@ export const CampaignDonationFormServer = async ({ campaignId, quote, creatorNam
 	return (
 		<CampaignDonationForm
 			campaignId={campaignId}
-			currency={currency}
 			quote={quote}
 			profilePictureSrc={profilePictureSrc}
 			profilePictureAlt={profilePictureAlt}

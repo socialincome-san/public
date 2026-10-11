@@ -1,6 +1,6 @@
 import { AuthorAvatar } from '@/components/storyblok/journal/author-avatar';
 import { TagBadge } from '@/components/storyblok/journal/tag-badge';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { createWebsitePersonLink, formatStoryblokDate, getPersonDisplayName } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { cn } from '@socialincome/design-system/cn';
@@ -12,13 +12,13 @@ type Props = {
 	story: ISbStoryData<JournalArticle>;
 	hasHero: boolean;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
 const ARTICLE_HERO_IMAGE_WIDTH = 960;
 const ARTICLE_HERO_IMAGE_HEIGHT = 960;
 
-export const ArticleDetailHeader = ({ story, hasHero, lang, region }: Props) => {
+export const ArticleDetailHeader = ({ story, hasHero, lang, currency }: Props) => {
 	const article = story.content;
 	const author = article.author;
 
@@ -55,7 +55,7 @@ export const ArticleDetailHeader = ({ story, hasHero, lang, region }: Props) => 
 			</div>
 
 			<Link
-				href={createWebsitePersonLink(author.slug, lang, region)}
+				href={createWebsitePersonLink(author.slug, lang, currency)}
 				className="flex w-fit items-center gap-3 transition-opacity hover:opacity-80"
 			>
 				<AuthorAvatar author={author} size="lg" />
@@ -65,7 +65,7 @@ export const ArticleDetailHeader = ({ story, hasHero, lang, region }: Props) => 
 			{article.tags && article.tags.length > 0 && (
 				<div className="flex flex-wrap gap-2">
 					{article.tags.map((tag) => (
-						<TagBadge key={tag.slug} tag={tag} lang={lang} region={region} variant={hasHero ? 'hero' : 'default'} />
+						<TagBadge key={tag.slug} tag={tag} lang={lang} currency={currency} variant={hasHero ? 'hero' : 'default'} />
 					))}
 				</div>
 			)}
