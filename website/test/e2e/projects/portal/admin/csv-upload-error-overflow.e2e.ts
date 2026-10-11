@@ -32,12 +32,12 @@ test('CSV upload errors stay inside the scrollable dialog viewport', async ({ pa
 	const alert = page.getByRole('alert');
 	await expect(alert).toContainText('Import failed');
 
-	const errorText = alert.locator('[data-slot="alert-description"] > span');
+	const errorText = alert.locator('[data-slot="alert-description"]');
 	await expect(errorText).toContainText('Row 1:');
 	await expect(errorText).toContainText('Row 40:');
 	expect(await errorText.textContent()).toBe(longError);
 
-	await expect(errorText).toHaveCSS('white-space', 'pre-wrap');
+	await expect(errorText).toHaveCSS('white-space', 'pre-line');
 	await expect(errorText).toHaveCSS('overflow-wrap', 'break-word');
 
 	const dialog = page.getByRole('dialog');
@@ -59,7 +59,7 @@ test('CSV upload errors stay inside the scrollable dialog viewport', async ({ pa
 	await dialog.evaluate((element) => element.scrollBy({ top: 500 }));
 	await expect.poll(() => dialog.evaluate((element) => element.scrollTop)).toBeGreaterThan(scrollMetrics.scrollTop);
 
-	const cancelButton = page.getByRole('button', { name: 'Cancel' });
+	const cancelButton = dialog.getByRole('button', { name: 'Cancel', exact: true });
 	await cancelButton.scrollIntoViewIfNeeded();
 	await expect(cancelButton).toBeInViewport();
 	await cancelButton.click();
