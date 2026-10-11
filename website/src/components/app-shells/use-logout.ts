@@ -2,12 +2,14 @@
 
 import { signOut } from '@/lib/firebase/client-auth';
 import { useAuth } from '@/lib/firebase/hooks/use-auth';
+import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
 import { logoutAction } from '@/modules/auth/auth.actions';
 import { useRouter } from 'next/navigation';
 
 export const useLogout = () => {
 	const router = useRouter();
 	const { auth } = useAuth();
+	const loginPath = `${useWebsiteBasePath()}/login`;
 
 	const logout = async () => {
 		try {
@@ -22,7 +24,7 @@ export const useLogout = () => {
 				console.error('Firebase sign-out error', { error: firebaseResult.error });
 			}
 
-			router.push('/login');
+			router.push(loginPath);
 		} catch (error) {
 			console.error('Logout error', { error });
 		}

@@ -1,17 +1,18 @@
-import { ImpactMeasurementView } from '@/app/[lang]/[region]/programs/impact-measurement/view';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { ImpactMeasurementView } from '@/app/[lang]/[currency]/programs/impact-measurement/view';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import Link from 'next/link';
 
 type Props = {
 	focusId: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	teaserButtonLabel?: string;
 	teaserText?: string;
 };
 
-export const ImpactMeasurementPreviewWrapper = ({ focusId, lang, region, teaserButtonLabel, teaserText }: Props) => {
+export const ImpactMeasurementPreviewWrapper = ({ focusId, lang, currency, teaserButtonLabel, teaserText }: Props) => {
 	const trimmedTeaserText = teaserText?.trim();
 	const trimmedTeaserButtonLabel = teaserButtonLabel?.trim();
 	const hasTeaser = [trimmedTeaserText, trimmedTeaserButtonLabel].some(Boolean);
@@ -31,7 +32,9 @@ export const ImpactMeasurementPreviewWrapper = ({ focusId, lang, region, teaserB
 					)}
 					{trimmedTeaserButtonLabel && (
 						<Button variant="outline" size="lg" asChild>
-							<Link href={{ pathname: `/${lang}/${region}/impact-measurement`, query: { focus: focusId } }}>
+							<Link
+								href={{ pathname: `${getWebsiteBasePath(lang, currency)}/impact-measurement`, query: { focus: focusId } }}
+							>
 								{trimmedTeaserButtonLabel}
 							</Link>
 						</Button>

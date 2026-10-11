@@ -1,17 +1,17 @@
 import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getJournalArticleAction, getJournalArticlePageDataAction } from '@/modules/journal/journal.actions';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 type Props = {
 	storyPath: string;
 	slug: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
@@ -20,14 +20,11 @@ export const StoryblokPreviewJournalArticlePage = async ({
 	storyPath,
 	slug,
 	lang,
-	region,
+	currency,
 	previewRoutePath,
 	searchParams,
 }: Props) => {
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-common'],
-	});
+	const [t, tCommon] = await Promise.all([getTranslations('website-journal'), getTranslations('website-common')]);
 
 	return await StoryblokPreviewStory<ISbStoryData<JournalArticle>>({
 		storyPath,
@@ -42,10 +39,10 @@ export const StoryblokPreviewJournalArticlePage = async ({
 		renderStory: async (story) => {
 			const pageResult = await getJournalArticlePageDataAction({
 				lang,
-				region,
+				currency,
 				slug,
-				journalLabel: translator.t('overview.title'),
-				homeLabel: translator.t('breadcrumb.home', { namespace: 'website-common' }),
+				journalLabel: t('overview.title'),
+				homeLabel: tCommon('breadcrumb.home'),
 			});
 
 			if (!pageResult.success) {
@@ -57,9 +54,8 @@ export const StoryblokPreviewJournalArticlePage = async ({
 					story={story}
 					slug={slug}
 					lang={lang}
-					region={region}
+					currency={currency}
 					relatedArticles={pageResult.data.relatedArticles}
-					translator={translator}
 					breadcrumbs={pageResult.data.breadcrumbs}
 				/>
 			);

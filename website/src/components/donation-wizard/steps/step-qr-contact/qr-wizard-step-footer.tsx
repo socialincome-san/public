@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { CheckoutFooter } from '@socialincome/design-system/navigation/checkout-footer/checkout-footer';
 import { ChevronLeft } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { formatDonationCurrencyAmount } from '../../utils/donation-formatting';
 
 type Summary = {
@@ -33,7 +33,7 @@ export const QrWizardStepFooter = ({
 	showBack = true,
 	summary,
 }: QrWizardStepFooterProps) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 
 	return (
 		<CheckoutFooter

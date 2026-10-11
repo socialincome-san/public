@@ -45,7 +45,6 @@ export const CampaignSubmissionFooter = ({
 					currentStep={currentStep}
 					steps={visibleSteps}
 					formStepsLabel={labels.formSteps}
-					stepLabel={labels.stepLabel}
 					programLabel={labels.program}
 					detailsLabel={labels.details}
 					aboutLabel={labels.about}

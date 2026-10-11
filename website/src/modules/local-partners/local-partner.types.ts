@@ -137,3 +137,5 @@ export type LocalPartnerSession = {
 	zip: string | null;
 	country: CountryCode | null;
 };
+
+export const LOCAL_PARTNER_CACHE_TAG = 'local-partners';

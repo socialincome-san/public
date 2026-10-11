@@ -1,8 +1,5 @@
 'use client';
 
-import { DonationCurrencySelector } from '@/components/donation/currency-selector';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
-import { websiteCurrencies } from '@/lib/i18n/utils';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import {
 	Dialog,
@@ -13,6 +10,7 @@ import {
 	DialogTitle,
 } from '@socialincome/design-system/overlays/dialog/dialog';
 import { useMachine } from '@xstate/react';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useDonationCampaignTitle } from '../hooks/use-donation-campaign-title';
 import { DonationModalContext } from '../hooks/use-donation-modal';
@@ -33,7 +31,7 @@ type Props = {
 export const DonationModalProvider = ({ children }: Props) => {
 	const [state, send] = useMachine(donationWizardMachine);
 	const [closeConfirmOpen, setCloseConfirmOpen] = useState(false);
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 
 	const isOpen = !state.matches('closed');
 	const isThankYou = state.matches('stepThankYou');
@@ -42,8 +40,6 @@ export const DonationModalProvider = ({ children }: Props) => {
 	const isPostCheckoutStep = isThankYou || isOnboardingPersonal || isOnboardingReferral;
 	const isNarrowModal = isThankYou;
 	const campaignId = state.context.campaignId;
-	const showCurrencySelector =
-		state.matches('stepAmount') || state.matches('stepPlanMonthly') || state.matches('stepPlanOneTime');
 	const showWizardHeader = !isPostCheckoutStep;
 	const campaignTitle = useDonationCampaignTitle(campaignId, isOpen && showWizardHeader);
 
@@ -120,13 +116,8 @@ export const DonationModalProvider = ({ children }: Props) => {
 					) : (
 						<>
 							<div className="flex shrink-0 flex-col gap-1 px-4 pt-[max(1rem,env(safe-area-inset-top))] pr-14 pb-4 sm:px-6 sm:pt-6 sm:pr-20 sm:pb-6 md:pl-9">
-								<div className="flex min-h-9 items-center justify-between gap-2 sm:gap-3">
+								<div className="flex min-h-9 items-center">
 									<DialogTitle size="lg">{t('modal.title')}</DialogTitle>
-									{showCurrencySelector ? (
-										<div className="w-20 shrink-0">
-											<DonationCurrencySelector currencies={websiteCurrencies} />
-										</div>
-									) : null}
 								</div>
 								{campaignId && campaignTitle ? (
 									<p className="text-muted-foreground line-clamp-2 text-sm leading-snug font-normal">
@@ -142,11 +133,11 @@ export const DonationModalProvider = ({ children }: Props) => {
 
 			<Dialog open={closeConfirmOpen} onOpenChange={setCloseConfirmOpen}>
 				<DialogContent size="alert" hideCloseButton>
-					<DialogHeader>
+					<DialogHeader divided={false}>
 						<DialogTitle>{t('modal.closeConfirm.title')}</DialogTitle>
 						<DialogDescription>{t('modal.closeConfirm.description')}</DialogDescription>
 					</DialogHeader>
-					<DialogFooter>
+					<DialogFooter divided={false}>
 						<Button type="button" variant="outline" onClick={() => setCloseConfirmOpen(false)}>
 							{t('modal.closeConfirm.cancel')}
 						</Button>

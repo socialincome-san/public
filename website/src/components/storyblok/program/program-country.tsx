@@ -1,16 +1,16 @@
 import { MapRectangle } from '@/components/storyblok/country/map-rectangle';
 import type { ResolvedProgramCountry } from '@/components/storyblok/country/resolve-country-name';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
-import type { Translator } from '@/lib/i18n/translator';
 import { LinkPill } from '@socialincome/design-system/actions/link-pill/link-pill';
 import { DetailPanel } from '@socialincome/design-system/data-display/detail-panel/detail-panel';
+import { getTranslations } from 'next-intl/server';
 
 type Props = {
 	resolvedCountry: ResolvedProgramCountry;
-	translator: Translator;
 };
 
-export const ProgramCountry = ({ resolvedCountry, translator }: Props) => {
+export const ProgramCountry = async ({ resolvedCountry }: Props) => {
+	const t = await getTranslations('website-common');
 	const { isoCode, name, description, href } = resolvedCountry;
 
 	return (
@@ -20,7 +20,7 @@ export const ProgramCountry = ({ resolvedCountry, translator }: Props) => {
 					<RichTextRenderer richTextDocument={description} />
 				</div>
 			) : null}
-			{href ? <LinkPill href={href} label={translator.t('program-detail-page.country-analysis')} /> : null}
+			{href ? <LinkPill href={href} label={t('program-detail-page.country-analysis')} /> : null}
 		</DetailPanel>
 	);
 };

@@ -7,7 +7,7 @@ test.beforeEach(async () => {
 });
 
 test('dashboard subscriptions-page matches screenshot', async ({ page }) => {
-	await page.goto('/en/int/dashboard/subscriptions');
+	await page.goto('/en/usd/dashboard/subscriptions');
 	const main = page.getByRole('main');
 	await expect(main.getByTestId('subscriptions-dashboard')).toBeVisible();
 	await expect(main.getByTestId('upcoming-payments')).toBeVisible();
@@ -15,7 +15,7 @@ test('dashboard subscriptions-page matches screenshot', async ({ page }) => {
 });
 
 test('dashboard wire subscription can view QR bill details', async ({ page }) => {
-	await page.goto('/en/int/dashboard/subscriptions');
+	await page.goto('/en/usd/dashboard/subscriptions');
 	const main = page.getByRole('main');
 	await expect(main.getByTestId('subscriptions-dashboard')).toBeVisible();
 
@@ -30,7 +30,7 @@ test('dashboard wire subscription can view QR bill details', async ({ page }) =>
 });
 
 test('dashboard wire subscription can update amount', async ({ page }) => {
-	await page.goto('/en/int/dashboard/subscriptions');
+	await page.goto('/en/usd/dashboard/subscriptions');
 	const main = page.getByRole('main');
 	await expect(main.getByTestId('subscriptions-dashboard')).toBeVisible();
 
@@ -45,7 +45,7 @@ test('dashboard wire subscription can update amount', async ({ page }) => {
 });
 
 test('dashboard wire subscription can cancel through retention and reason', async ({ page }) => {
-	await page.goto('/en/int/dashboard/subscriptions');
+	await page.goto('/en/usd/dashboard/subscriptions');
 	const main = page.getByRole('main');
 	await expect(main.getByTestId('subscriptions-dashboard')).toBeVisible();
 

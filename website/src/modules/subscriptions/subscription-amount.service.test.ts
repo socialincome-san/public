@@ -3,7 +3,7 @@ import {
 	clampSubscriptionAmount,
 	isSubscriptionAmountInRange,
 	parseSubscriptionAmountInput,
-} from '@/app/[lang]/[region]/dashboard/subscriptions/subscription-amount';
+} from '@/app/[lang]/[currency]/dashboard/subscriptions/subscription-amount';
 import { SUBSCRIPTION_AMOUNT_MAX, SUBSCRIPTION_AMOUNT_MIN } from './subscription.types';
 
 describe('subscription amount helpers', () => {

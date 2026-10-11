@@ -2,11 +2,11 @@
 
 import { RecipientApproachType } from '@/components/create-program-wizard/wizard/types';
 import { Profile } from '@/generated/prisma/enums';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { cn } from '@socialincome/design-system/cn';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { RadioCard, RadioCardGroup } from '@socialincome/design-system/forms/radio-card/radio-card';
 import { Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { PillMultiSelect } from './pill-multi-select';
 
 type Props = {
@@ -23,6 +23,8 @@ type Props = {
 	onToggleProfile: (profile: Profile) => void;
 };
 
+const isProfile = (value: string): value is Profile => Object.values<string>(Profile).includes(value);
+
 export const RecipientSelectionSection = ({
 	value,
 	targetFocuses,
@@ -36,12 +38,12 @@ export const RecipientSelectionSection = ({
 	onToggleFocus,
 	onToggleProfile,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 	const noUniversalRecipients = value === 'universal' && totalRecipients === 0;
 	const noTargetedRecipients = value === 'targeted' && filteredRecipients === 0;
 	const focusLabelById = Object.fromEntries(focusOptions.map((focus) => [focus.id, focus.name]));
 	const focusLabel = (focusId: string) => focusLabelById[focusId] ?? focusId;
-	const profileLabel = (profile: string) => t(`step2.profiles.${profile}`);
+	const profileLabel = (profile: string) => (isProfile(profile) ? t(`step2.profiles.${profile}`) : profile);
 
 	return (
 		<div className="space-y-4">

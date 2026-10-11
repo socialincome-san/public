@@ -5,6 +5,7 @@ import { JournalPageShell } from '@/components/storyblok/journal/journal-page-sh
 import { MoreArticlesButton } from '@/components/storyblok/journal/more-articles-button';
 import { PersonCarousel } from '@/components/storyblok/shared/person-carousel';
 import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { createWebsiteJournalArticleTypeLink, getArticleTypeLabel } from '@/lib/storyblok/storyblok-utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { cn } from '@socialincome/design-system/cn';
@@ -27,7 +28,7 @@ type Props = {
 	activeTagSlug?: string;
 	activeArticleTypeSlug?: string;
 	lang: string;
-	region: string;
+	currency: WebsiteCurrency;
 	articles: ISbStoryData<JournalArticle>[];
 	authors: ISbStoryData<Person>[];
 	articleTypes: ISbStoryData<ArticleType>[];
@@ -57,7 +58,7 @@ export const JournalOverview = ({
 	activeTagSlug,
 	activeArticleTypeSlug,
 	lang,
-	region,
+	currency,
 	articles,
 	authors,
 	articleTypes,
@@ -75,7 +76,7 @@ export const JournalOverview = ({
 			{articleTypes.map((articleType) => (
 				<Link
 					key={articleType.slug}
-					href={createWebsiteJournalArticleTypeLink(articleType.slug, lang, region)}
+					href={createWebsiteJournalArticleTypeLink(articleType.slug, lang, currency)}
 					className={articleTypeFilterClassName(activeArticleTypeSlug === articleType.slug)}
 				>
 					{getArticleTypeLabel(articleType)}
@@ -86,7 +87,7 @@ export const JournalOverview = ({
 
 		<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{articles.map((article) => (
-				<JournalArticleCard key={article.uuid} lang={lang} region={region} article={article} videoLabel={videoLabel} />
+				<JournalArticleCard key={article.uuid} lang={lang} currency={currency} article={article} videoLabel={videoLabel} />
 			))}
 		</div>
 
@@ -99,7 +100,7 @@ export const JournalOverview = ({
 				<PersonCarousel
 					persons={authors}
 					sidebar={{ heading: editorsHeading }}
-					personLink={{ lang, region }}
+					personLink={{ lang, currency }}
 					size="small"
 					roleLabels={roleLabels}
 				/>

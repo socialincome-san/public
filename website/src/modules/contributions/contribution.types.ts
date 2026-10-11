@@ -172,3 +172,5 @@ export type ContributionFormOptions = {
 	contributorOptions: { id: string; name: string }[];
 	campaignOptions: { id: string; name: string }[];
 };
+
+export const CONTRIBUTION_CACHE_TAG = 'contributions';

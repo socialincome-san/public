@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
 import path from 'path';
 import { getSecurityHeaders } from './csp';
 import { getRedirects } from './redirects';
@@ -6,6 +7,7 @@ import { getRedirects } from './redirects';
 const nextConfig: NextConfig = {
 	transpilePackages: ['@socialincome/design-system', 'storyblok-rich-text-react-renderer'],
 	reactStrictMode: true,
+	cacheComponents: true,
 	env: {
 		NEXT_PUBLIC_APP_BUILD_TIMESTAMP: new Date().toISOString(),
 	},
@@ -39,10 +41,14 @@ const nextConfig: NextConfig = {
 	serverExternalPackages: ['pdfkit', 'ssh2', 'ssh2-sftp-client'],
 	// Vercel's function request body limit.
 	experimental: {
+		// The website, portal, partner space and API docs have separate root layouts.
+		globalNotFound: true,
 		serverActions: {
 			bodySizeLimit: '4.5mb',
 		},
 	},
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin('./src/lib/i18n/request.ts');
+
+export default withNextIntl(nextConfig);

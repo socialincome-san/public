@@ -1,7 +1,7 @@
 # Website
 
-Next.js app: public site (`src/app/[lang]/[region]`), portal, dashboard,
-partner space, API routes (`src/app/api`) and backend.
+Next.js app: public site (`src/app/[lang]/[currency]`), portal,
+dashboard, partner space, API routes (`src/app/api`) and backend.
 
 - `src/app`: routes, pages, route handlers
 - `src/components`: composition of design-system components with data
@@ -33,6 +33,9 @@ Module files (`src/modules/recipients` is the reference):
   `redirect`.
 - `*.service.ts`: use case, business rules and authorization. Never
   throws, never uses `next/cache` or `next/navigation`.
+- `*.cache.ts`: `'use cache'` wrappers around the module's public,
+  session-free service reads, each with `cacheLife` and `cacheTag`.
+  Callers that need cached data import these instead of the service.
 - `*.repository.ts`: the only Prisma access. Exports start with
   `find|create|update|delete|remove|count|group`, use `select` (never
   `include`), return raw data.
@@ -46,20 +49,22 @@ Prisma, modules, app, components or `next/*` APIs.
 
 Dependency direction:
 
-- app → services, actions, `src/server`
+- app → services, caches, actions, `src/server`
 - components → actions, `*.types`, type-only `*.schemas`
-- actions → services
-- services → own repository and permissions, other modules' services,
-  integrations
-- Across modules: only `*.service`, or type-only `*.types`/`*.schemas`
+- actions → services, caches
+- caches → own service
+- services → own repository and permissions, other modules' services and
+  caches, integrations
+- Across modules: only `*.service`/`*.cache`, or type-only
+  `*.types`/`*.schemas`
 
-Services, actions and async integration exports return `Result<T>` from
-`src/lib/result.ts`: `resultOk(data)` or `resultFail('Fixed message.')`.
-Never put `error.message` or interpolated text in `resultFail`; log
-details with `console.error`. Clients unwrap with `handleResult`
-(`src/lib/result-client.ts`). Route handlers return generic JSON errors
-and call `sendSlackAlert` for production failures that must not stay
-silent.
+Services, caches, actions and async integration exports return
+`Result<T>` from `src/lib/result.ts`: `resultOk(data)` or
+`resultFail('Fixed message.')`. Never put `error.message` or
+interpolated text in `resultFail`; log details with `console.error`.
+Clients unwrap with `handleResult` (`src/lib/result-client.ts`). Route
+handlers return generic JSON errors and call `sendSlackAlert` for
+production failures that must not stay silent.
 
 In modules and integrations: arrow functions, named exports, no classes,
 no `as` (except `as const`), no `!`. All paths under `src` are
@@ -104,9 +109,15 @@ The same lint rules as in the design system apply: no `className` or
 `style` props, tokens only for colors, font sizes, radii and shadows.
 
 Text: translations live in
-`src/lib/i18n/locales/<lang>/<namespace>.json`. Use `Translator`
-(server) or `useTranslator` (client) and add new keys to every language
-that has the namespace.
+`src/lib/i18n/locales/<lang>/<namespace>.json` and use ICU MessageFormat
+(`{name}`, `{count, plural, one {…} other {…}}`). Translate with
+next-intl: `getTranslations('namespace')` in server components,
+`useTranslations('namespace')` in client components. The locale comes
+from `next/root-params`, which throws in route handlers and server
+actions, so pass it there (`getTranslations({ locale, namespace })`) and
+use `createTranslator` with `loadMessages` in services. Pass values to
+`t()` instead of replacing placeholders, use `t.rich` for markup, and
+add new keys to every language that has the namespace.
 
 ## Commands
 

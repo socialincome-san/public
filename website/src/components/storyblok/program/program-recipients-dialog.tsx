@@ -2,17 +2,17 @@
 
 import { ProgramDetailDialog } from '@/components/storyblok/program/program-detail-dialog';
 import { ProgramRecipientsTable } from '@/components/storyblok/program/program-recipients-table';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getPublicRecipientsTableAction } from '@/modules/recipients/recipient.actions';
 import type { PublicRecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
 type Props = {
 	dialogTitle: string;
 	viewDemographicsLabel: string;
-	manageLabel: string;
+	manageLabel: ReactNode;
 	manageHref: string;
 	programId: string;
 };
@@ -24,7 +24,7 @@ export const ProgramRecipientsDialog = ({
 	manageHref,
 	programId,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'website-common' });
+	const t = useTranslations('website-common');
 	const [isOpen, setIsOpen] = useState(false);
 	const [rows, setRows] = useState<PublicRecipientTableViewRow[] | null>(null);
 	const [totalCount, setTotalCount] = useState<number | null>(null);

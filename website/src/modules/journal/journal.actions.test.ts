@@ -5,7 +5,7 @@ const mockGetJournalPerson = jest.fn();
 const mockGetJournalPersonPageData = jest.fn();
 const mockGetLatestJournalArticles = jest.fn();
 
-jest.mock('./journal.service', () => ({
+jest.mock('./journal.cache', () => ({
 	getJournalArticle: mockGetJournalArticle,
 	getJournalArticlePageData: mockGetJournalArticlePageData,
 	getJournalArticlesByUuids: mockGetJournalArticlesByUuids,

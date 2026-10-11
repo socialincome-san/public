@@ -2,7 +2,7 @@ import { resolveSelectedStories } from '@/components/content-blocks/overview-gri
 import { ProgramGridView } from '@/components/content-blocks/program-grid-view';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ProgramGrid } from '@/generated/storyblok/types/109655/storyblok-components';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { SectionHeading } from '@socialincome/design-system/layout/section-heading/section-heading';
@@ -11,10 +11,10 @@ import { storyblokEditable } from '@storyblok/react';
 type Props = {
 	blok: ProgramGrid;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
+export const ProgramGridBlock = async ({ blok, lang, currency }: Props) => {
 	const programsResult = await getProgramsAction(lang);
 	const allPrograms = programsResult.success ? programsResult.data : [];
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
@@ -37,7 +37,13 @@ export const ProgramGridBlock = async ({ blok, lang, region }: Props) => {
 					<StoryblokMarkdown>{blok.description}</StoryblokMarkdown>
 				</p>
 			)}
-			<ProgramGridView programs={programs} allProgramsCount={allPrograms.length} blok={blok} lang={lang} region={region} />
+			<ProgramGridView
+				programs={programs}
+				allProgramsCount={allPrograms.length}
+				blok={blok}
+				lang={lang}
+				currency={currency}
+			/>
 		</BlockWrapper>
 	);
 };

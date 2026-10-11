@@ -138,8 +138,16 @@ const DialogContent = React.forwardRef<
 );
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
-const DialogHeader = (props: WithoutClassName<React.HTMLAttributes<HTMLDivElement>>) => (
-	<div className="-mx-(--dialog-px) flex shrink-0 flex-col gap-1.5 border-b px-6 pr-12 pb-6 text-left" {...props} />
+type DialogSectionProps = WithoutClassName<React.HTMLAttributes<HTMLDivElement>> & {
+	/** Draws a divider between this section and the dialog body. Turn off for compact dialogs such as confirmations. */
+	divided?: boolean;
+};
+
+const DialogHeader = ({ divided = true, ...props }: DialogSectionProps) => (
+	<div
+		className={cn('-mx-(--dialog-px) flex shrink-0 flex-col gap-1.5 px-6 pr-12 text-left', divided && 'border-b pb-6')}
+		{...props}
+	/>
 );
 DialogHeader.displayName = 'DialogHeader';
 
@@ -148,9 +156,12 @@ const DialogBody = (props: WithoutClassName<React.HTMLAttributes<HTMLDivElement>
 );
 DialogBody.displayName = 'DialogBody';
 
-const DialogFooter = (props: WithoutClassName<React.HTMLAttributes<HTMLDivElement>>) => (
+const DialogFooter = ({ divided = true, ...props }: DialogSectionProps) => (
 	<div
-		className="-mx-(--dialog-px) flex shrink-0 flex-col-reverse gap-2 border-t px-6 pt-6 sm:flex-row sm:justify-end"
+		className={cn(
+			'-mx-(--dialog-px) flex shrink-0 flex-col-reverse gap-2 px-6 sm:flex-row sm:justify-end',
+			divided && 'border-t pt-6',
+		)}
 		{...props}
 	/>
 );

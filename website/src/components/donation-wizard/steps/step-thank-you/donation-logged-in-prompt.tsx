@@ -1,8 +1,9 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { ThankYouPanel } from '@socialincome/design-system/feedback/thank-you-panel/thank-you-panel';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 const SUPPORT_EMAIL = 'support@socialincome.org';
@@ -12,7 +13,8 @@ type Props = {
 };
 
 export const DonationLoggedInPrompt = ({ onDashboardClick }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
+	const websiteBasePath = useWebsiteBasePath();
 
 	return (
 		<ThankYouPanel
@@ -23,7 +25,11 @@ export const DonationLoggedInPrompt = ({ onDashboardClick }: Props) => {
 			support={{ prefix: t('thankYou.loginPrompt.supportPrefix'), email: SUPPORT_EMAIL }}
 			action={
 				<Button asChild>
-					<Link href="/dashboard/subscriptions" onClick={onDashboardClick} data-testid="donation-wizard-dashboard-link">
+					<Link
+						href={`${websiteBasePath}/dashboard/subscriptions`}
+						onClick={onDashboardClick}
+						data-testid="donation-wizard-dashboard-link"
+					>
 						{t('thankYou.loggedInPrompt.dashboardButton')}
 					</Link>
 				</Button>
