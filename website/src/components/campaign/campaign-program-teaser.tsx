@@ -4,10 +4,8 @@ import type { LocalPartnerStory } from '@/components/storyblok/local-partner/loc
 import { getLocalPartnerSlug } from '@/components/storyblok/local-partner/local-partner.utils';
 import { ProgramWallet } from '@/components/storyblok/program/program-wallet';
 import { getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { resolveWalletPayoutDisplayAction } from '@/modules/currency-display/currency-display.actions';
+import { getWebsiteBasePath, type WebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
+import { resolveWalletPayoutDisplaysAction } from '@/modules/currency-display/currency-display.actions';
 import { getPublicLocalPartnersByProgramIdAction } from '@/modules/local-partners/local-partner.actions';
 import {
 	getProgramSlugByIdAction,
@@ -22,12 +20,13 @@ import {
 import { cn } from '@socialincome/design-system/cn';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 type Props = {
 	programId: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
 type TeaserMetaItem = {
@@ -67,11 +66,8 @@ const TeaserMetaRow = ({ label, items, showDivider = false }: TeaserMetaRowProps
 	</div>
 );
 
-export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) => {
-	const [programSlugResult, displayCurrency] = await Promise.all([
-		getProgramSlugByIdAction(programId),
-		getWebsiteCurrencyFromCookie(),
-	]);
+export const CampaignProgramTeaser = async ({ programId, lang, currency }: Props) => {
+	const programSlugResult = await getProgramSlugByIdAction(programId);
 	if (!programSlugResult.success) {
 		return null;
 	}
@@ -84,7 +80,8 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 		localPartnersResult,
 		focusStoriesResult,
 		localPartnerStoriesResult,
-		translator,
+		t,
+		tCommon,
 	] = await Promise.all([
 		getProgramsAction(lang),
 		getPublicProgramStatsByIdAction(programId),
@@ -92,7 +89,8 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 		getPublicLocalPartnersByProgramIdAction(programId),
 		getFocusesAction(lang),
 		getLocalPartnersAction(lang),
-		Translator.getInstance({ language: lang, namespaces: ['website-campaign', 'website-common'] }),
+		getTranslations('website-campaign'),
+		getTranslations('website-common'),
 	]);
 	if (!programsResult.success) {
 		return null;
@@ -119,7 +117,7 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 			id: focus.id,
 			name: focusStory ? getFocusTitle(focusStory.content) : focus.name,
 			sdgs: focusStory?.content.sdgs ?? [],
-			href: focusStory ? `/${lang}/${region}/focuses/${getFocusSlug(focusStory)}` : undefined,
+			href: focusStory ? `${getWebsiteBasePath(lang, currency)}/focuses/${getFocusSlug(focusStory)}` : undefined,
 		};
 	});
 	const localPartnerStoriesByPortalSlug = new Map(
@@ -137,7 +135,9 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 		return {
 			id: localPartner.id,
 			name: localPartner.name,
-			href: localPartnerStory ? `/${lang}/${region}/local-partners/${getLocalPartnerSlug(localPartnerStory)}` : undefined,
+			href: localPartnerStory
+				? `${getWebsiteBasePath(lang, currency)}/local-partners/${getLocalPartnerSlug(localPartnerStory)}`
+				: undefined,
 		};
 	});
 	const sdgValues = focuses.flatMap(({ sdgs }) => sdgs);
@@ -146,12 +146,16 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 	const hasSdgs = sdgValues.length > 0;
 	const programDescription = program.content.description.trim();
 	const stats = statsResult.success ? statsResult.data : undefined;
-	const walletDisplayResult = stats
-		? await resolveWalletPayoutDisplayAction({
-				totalPayoutsSum: stats.totalPayoutsSum,
-				totalPayoutsSumChf: stats.totalPayoutsSumChf,
-				payoutCurrency: stats.payoutCurrency,
-				displayCurrency,
+	const walletDisplaysResult = stats
+		? await resolveWalletPayoutDisplaysAction({
+				payouts: [
+					{
+						totalPayoutsSum: stats.totalPayoutsSum,
+						totalPayoutsSumChf: stats.totalPayoutsSumChf,
+						payoutCurrency: stats.payoutCurrency,
+					},
+				],
+				displayCurrency: currency,
 			})
 		: null;
 
@@ -159,7 +163,7 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 		<BlockWrapper marginTop="lg" marginBottom="lg">
 			<section className="bg-card grid gap-8 rounded-2xl p-6 shadow-sm md:grid-cols-[minmax(0,4fr)_minmax(280px,2fr)] md:gap-12 md:p-3 md:pl-10">
 				<div className="min-w-0 py-8">
-					<p className="text-muted-foreground text-sm font-medium">{translator.t('campaign.program-teaser.heading')}</p>
+					<p className="text-muted-foreground text-sm font-medium">{t('campaign.program-teaser.heading')}</p>
 					<h2 className="text-foreground mt-3 text-4xl leading-tight font-bold text-pretty">
 						{getProgramTitle(program.content)}
 					</h2>
@@ -168,19 +172,17 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 					) : null}
 					{hasFocuses || hasLocalPartners || hasSdgs ? (
 						<div className="border-border mt-8 border-y">
-							{hasFocuses ? (
-								<TeaserMetaRow label={translator.t('campaign.program-teaser.focus-areas')} items={focuses} />
-							) : null}
+							{hasFocuses ? <TeaserMetaRow label={t('campaign.program-teaser.focus-areas')} items={focuses} /> : null}
 							{hasLocalPartners ? (
 								<TeaserMetaRow
-									label={translator.t('campaign.program-teaser.local-partners')}
+									label={t('campaign.program-teaser.local-partners')}
 									items={localPartners}
 									showDivider={hasFocuses}
 								/>
 							) : null}
 							{hasSdgs ? (
 								<div className={hasFocuses || hasLocalPartners ? 'border-border border-t' : undefined}>
-									<FocusSdgs values={sdgValues} label={translator.t('focuses-page.sdgs')} layout="row" />
+									<FocusSdgs values={sdgValues} label={tCommon('focuses-page.sdgs')} layout="row" />
 								</div>
 							) : null}
 						</div>
@@ -190,10 +192,9 @@ export const CampaignProgramTeaser = async ({ programId, lang, region }: Props) 
 					<ProgramWallet
 						program={program}
 						stats={stats}
-						walletDisplay={walletDisplayResult?.success ? walletDisplayResult.data : undefined}
-						translator={translator}
+						walletDisplay={walletDisplaysResult?.success ? walletDisplaysResult.data[0] : undefined}
 						lang={lang}
-						region={region}
+						currency={currency}
 					/>
 				</div>
 			</section>

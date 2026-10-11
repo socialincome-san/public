@@ -1,6 +1,9 @@
 import type {
+	Article,
 	ArticleType,
 	Campaign,
+	CampaignGlobals,
+	CommunityGlobals,
 	Country,
 	Focus,
 	LocalPartner,
@@ -8,7 +11,9 @@ import type {
 	Program,
 	Tag,
 } from '@/generated/storyblok/types/109655/storyblok-components';
+import { fetchStoryblokCampaignGlobals } from '@/integrations/storyblok/storyblok-campaign.integration';
 import {
+	fetchPublishedStoryblokArticles,
 	fetchStoryblokDatasourceEntries,
 	fetchStoryblokLinks,
 	fetchStoryblokStories,
@@ -27,6 +32,7 @@ import {
 	getPersonStoryPath,
 	getProgramStoryPath,
 	STORYBLOK_CAMPAIGNS_FOLDER,
+	STORYBLOK_COMMUNITY_GLOBALS_PATH,
 	STORYBLOK_COUNTRIES_FOLDER,
 	STORYBLOK_FOCUSES_FOLDER,
 	STORYBLOK_LOCAL_PARTNERS_FOLDER,
@@ -349,6 +355,12 @@ export const getFocusBySlug = async (slug: string, language: string): Promise<Re
 	return resultFail('Focus not found', 404);
 };
 
+export const getCommunityGlobals = async (language: string): Promise<Result<ISbStoryData<CommunityGlobals>>> =>
+	fetchTypedStoryWithFallback<ISbStoryData<CommunityGlobals>>(STORYBLOK_COMMUNITY_GLOBALS_PATH, language);
+
+export const getCampaignGlobals = async (language: string): Promise<Result<ISbStoryData<CampaignGlobals> | null>> =>
+	fetchStoryblokCampaignGlobals(language);
+
 export const getPerson = async (slug: string, language: string): Promise<Result<ISbStoryData<Person>>> =>
 	fetchTypedStoryWithFallback<ISbStoryData<Person>>(getPersonStoryPath(slug), language);
 
@@ -388,6 +400,20 @@ export const getOverviewArticles = async (
 	const stories = 'stories' in result.data ? result.data.stories : result.data;
 
 	return resultOk(stories.filter(isResolvedArticle));
+};
+
+export const getPublishedJournalArticles = async (language: string): Promise<Result<ISbStoryData<Article>[]>> => {
+	const result = await fetchPublishedStoryblokArticles<ISbStoryData<Article>>({
+		language,
+		version: 'published',
+		per_page: DEFAULT_PAGE_SIZE,
+		excluding_fields: CONTENT_FIELD,
+		resolve_relations: STANDARD_ARTICLE_RELATIONS,
+		sort_by: 'first_published_at:desc',
+		content_type: CONTENT_TYPE.article,
+	});
+
+	return result.success ? resultOk(result.data.filter(isArticleStory)) : result;
 };
 
 export const getLatestJournalArticles = async (
@@ -575,6 +601,11 @@ const isResolvedArticle = (story: unknown): story is ISbStoryData<ResolvedArticl
 
 	return tags === undefined || tags === null || (Array.isArray(tags) && tags.every(isResolvedRelation));
 };
+
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
+
+const isArticleStory = (story: unknown): story is ISbStoryData<Article> =>
+	isRecord(story) && isRecord(story.content) && story.content.component === CONTENT_TYPE.article;
 
 const isStoryWithComponent = (story: unknown, component: string): story is ISbStoryData<Record<string, unknown>> =>
 	isResolvedRelation(story) &&

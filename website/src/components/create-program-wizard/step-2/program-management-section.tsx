@@ -1,8 +1,8 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { RadioCard, RadioCardGroup } from '@socialincome/design-system/forms/radio-card/radio-card';
+import { useTranslations } from 'next-intl';
 import type { ProgramManagementType } from '../wizard/types';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 };
 
 export const ProgramManagementSection = ({ value, onChange }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	return (
 		<div className="space-y-4">

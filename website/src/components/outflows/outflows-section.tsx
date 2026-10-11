@@ -3,7 +3,9 @@
 import { OpenDonationWizardButton } from '@/components/donation-wizard/triggers/open-donation-wizard-button';
 import { type OutflowsSectionRow } from '@/components/outflows/outflows-spend';
 import { usePrefersReducedMotion } from '@/lib/hooks/use-prefers-reduced-motion';
+import { BreakdownList, BreakdownRow } from '@socialincome/design-system/data-display/breakdown-list/breakdown-list';
 import { Progress } from '@socialincome/design-system/feedback/progress/progress';
+import { SplitSection, SplitSectionCard } from '@socialincome/design-system/layout/split-section/split-section';
 import { useInView } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -42,15 +44,17 @@ export const OutflowsSection = ({ copy, rows, downloadsHref, ngoAverageSourceUrl
 	const showBars = reduceMotion || barsInView;
 
 	return (
-		<section className="grid gap-8 py-6 sm:grid-cols-2 sm:items-start sm:gap-12 md:gap-20 md:py-10">
-			<div className="flex max-w-3xl flex-col gap-6 sm:pt-8">
-				<p className="text-foreground text-sm font-medium">{copy.eyebrow}</p>
-				<h2 className="text-foreground text-4xl leading-tight font-normal md:text-5xl md:leading-[54px]">
+		<SplitSection
+			eyebrow={copy.eyebrow}
+			headline={
+				<>
 					{copy.headlineBeforeBold}
-					<span className="font-bold">{copy.headlineBold}</span>
+					<strong>{copy.headlineBold}</strong>
 					{copy.headlineAfterBold}
-				</h2>
-				<div className="mt-2 flex items-center gap-4">
+				</>
+			}
+			intro={
+				<div className="flex items-center gap-4">
 					<Image src="/assets/zewo.svg" alt={copy.zewoAlt} width={48} height={48} className="size-12 shrink-0" />
 					<p className="text-muted-foreground max-w-sm text-sm leading-6">
 						{copy.zewoBefore}
@@ -60,59 +64,42 @@ export const OutflowsSection = ({ copy, rows, downloadsHref, ngoAverageSourceUrl
 						{copy.zewoAfter}
 					</p>
 				</div>
-			</div>
+			}
+		>
+			<SplitSectionCard title={copy.breakdownTitle}>
+				<BreakdownList ref={breakdownListRef} ariaLabel={copy.breakdownAriaLabel}>
+					{rows.map((row) => (
+						<BreakdownRow key={row.id} label={row.label} value={`CHF ${row.chf}`} description={row.description}>
+							{/* Rows split a CHF 100 donation, so the amount is already the share in percent. */}
+							<Progress value={showBars ? row.chf : 0} />
+						</BreakdownRow>
+					))}
+				</BreakdownList>
 
-			<div className="flex flex-col gap-4">
-				<div className="bg-card shadow-card relative flex w-full flex-col gap-6 rounded-4xl px-6 pt-6 pb-8 sm:gap-7 sm:px-8 sm:pt-7 sm:pb-10">
-					<h3 className="text-foreground text-2xl leading-none font-medium">{copy.breakdownTitle}</h3>
+				<div className="flex flex-col gap-5 sm:gap-6">
+					<p className="text-foreground w-full text-sm leading-6">
+						{copy.ngoAverageBefore}
+						<a
+							href={ngoAverageSourceUrl}
+							className="hover:text-foreground underline underline-offset-2"
+							target="_blank"
+							rel="noreferrer"
+						>
+							{copy.ngoAverageSource}
+						</a>
+						{copy.ngoAverageAfter}
+					</p>
 
-					<ul
-						ref={breakdownListRef}
-						className="flex w-full list-none flex-col gap-6 pl-0 sm:gap-7"
-						aria-label={copy.breakdownAriaLabel}
-					>
-						{rows.map((row) => (
-							<li key={row.id} className="flex w-full flex-col gap-2">
-								<div className="flex flex-col gap-1">
-									<div className="flex items-baseline justify-between gap-4">
-										<span className="text-foreground min-w-0 text-base leading-6 font-medium">{row.label}</span>
-										<span className="text-foreground shrink-0 text-base leading-6 font-medium tabular-nums">
-											CHF {row.chf}
-										</span>
-									</div>
-									<p className="text-muted-foreground text-sm leading-5">{row.description}</p>
-								</div>
-								{/* Rows split a CHF 100 donation, so the amount is already the share in percent. */}
-								<Progress value={showBars ? row.chf : 0} />
-							</li>
-						))}
-					</ul>
-
-					<div className="flex flex-col gap-5 sm:gap-6">
-						<p className="text-foreground w-full text-sm leading-6">
-							{copy.ngoAverageBefore}
-							<a
-								href={ngoAverageSourceUrl}
-								className="hover:text-foreground underline underline-offset-2"
-								target="_blank"
-								rel="noreferrer"
-							>
-								{copy.ngoAverageSource}
-							</a>
-							{copy.ngoAverageAfter}
-						</p>
-
-						<OpenDonationWizardButton label={copy.donateNow} fullWidth />
-					</div>
+					<OpenDonationWizardButton label={copy.donateNow} fullWidth />
 				</div>
+			</SplitSectionCard>
 
-				<p className="text-muted-foreground text-center text-sm leading-6">
-					{copy.annualStatementBefore}
-					<Link href={downloadsHref} className="hover:text-foreground underline underline-offset-2">
-						{copy.annualStatementLink}
-					</Link>
-				</p>
-			</div>
-		</section>
+			<p className="text-muted-foreground text-center text-sm leading-6">
+				{copy.annualStatementBefore}
+				<Link href={downloadsHref} className="hover:text-foreground underline underline-offset-2">
+					{copy.annualStatementLink}
+				</Link>
+			</p>
+		</SplitSection>
 	);
 };

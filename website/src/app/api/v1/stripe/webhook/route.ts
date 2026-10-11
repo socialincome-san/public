@@ -1,4 +1,4 @@
-import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { sendSlackAlert } from '@/lib/utils/slack-alert';
 import { handleWebhookEvent } from '@/modules/stripe-payments/stripe-payment.service';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -11,7 +11,7 @@ export const POST = async (request: NextRequest) => {
 
 		const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 		if (!webhookSecret) {
-			console.error(`${SLACK_ALERT}: Missing Stripe webhook secret configuration`);
+			sendSlackAlert('Missing Stripe webhook secret configuration');
 
 			return NextResponse.json({ error: 'Missing webhook secret configuration' }, { status: 500 });
 		}
@@ -25,7 +25,7 @@ export const POST = async (request: NextRequest) => {
 
 		return NextResponse.json({ received: true });
 	} catch (error) {
-		console.error(`${SLACK_ALERT}: Stripe webhook error`, { error });
+		sendSlackAlert('Stripe webhook error', { error });
 
 		return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
 	}

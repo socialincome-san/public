@@ -15,5 +15,11 @@ export type WalletPayoutDisplayInput = {
 	totalPayoutsSum: number;
 	totalPayoutsSumChf: number;
 	payoutCurrency: Currency;
+};
+
+export type WalletPayoutDisplaysInput = {
+	payouts: WalletPayoutDisplayInput[];
 	displayCurrency: WebsiteCurrency;
 };
+
+export const CURRENCY_DISPLAY_CACHE_TAG = 'currency-display';

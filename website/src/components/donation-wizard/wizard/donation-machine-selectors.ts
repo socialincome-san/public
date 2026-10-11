@@ -1,5 +1,6 @@
 import type { LanguageCode } from '@/lib/types/language';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
+import { type useTranslations } from 'next-intl';
 import type { PlanTierBenefit } from '../steps/step-plan/plan-tier-card/plan-tier-benefit';
 import {
 	getBeneficiaryImpact,
@@ -28,7 +29,7 @@ const localeForLanguage = (language: LanguageCode): string => (language === 'de'
 const formatCommunityCount = (value: number, language: LanguageCode): string =>
 	formatNumberLocale(value, localeForLanguage(language));
 
-type Translate = (key: string, context?: Record<string, unknown>) => string;
+type Translate = ReturnType<typeof useTranslations<'donation-wizard'>>;
 
 export type PlanBenefitDescriptor =
 	| { id: string; type: 'beneficiaries'; directCount: number; indirectCount: number }

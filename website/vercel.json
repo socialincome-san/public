@@ -1,0 +1,22 @@
+{
+	"$schema": "https://openapi.vercel.sh/vercel.json",
+	"regions": ["fra1"],
+	"crons": [
+		{
+			"path": "/api/v1/exchange-rate",
+			"schedule": "0 0 * * *"
+		},
+		{
+			"path": "/api/v1/reserves-calculation",
+			"schedule": "0 0 * * *"
+		},
+		{
+			"path": "/api/v1/payment-files-import",
+			"schedule": "0 * * * *"
+		},
+		{
+			"path": "/api/v1/monthly-summary",
+			"schedule": "0 8 1 * *"
+		}
+	]
+}

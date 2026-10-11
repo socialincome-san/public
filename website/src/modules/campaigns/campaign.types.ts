@@ -5,7 +5,6 @@ import type {
 	CampaignSubmissionDurationPreset,
 	CampaignSubmissionPermittedImageMimeType,
 } from '@/lib/campaign-submission';
-import type { Translator } from '@/lib/i18n/translator';
 import type { ISbStoryData } from '@storyblok/js';
 import type { CampaignSubmissionFields } from './campaign.schemas';
 
@@ -140,7 +139,6 @@ export type CampaignNewsletterContent = {
 };
 
 export type CampaignPageContent = {
-	translator: Translator;
 	faqs: ISbStoryData<Faq>[];
 	videoPlaybackIds: string[];
 	newsletter: CampaignNewsletterContent;
@@ -261,3 +259,5 @@ export type CampaignSubmissionOptionalImages = {
 	profilePicture: CampaignSubmissionImageValidation | null;
 	sectionImage: CampaignSubmissionImageValidation | null;
 };
+
+export const CAMPAIGN_CACHE_TAG = 'campaigns';

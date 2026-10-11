@@ -1,6 +1,6 @@
 'use client';
 
-import { ProgramDetailPill } from '@/components/storyblok/program/program-detail-pill';
+import { LinkPill } from '@socialincome/design-system/actions/link-pill/link-pill';
 import {
 	Dialog,
 	DialogBody,
@@ -36,7 +36,7 @@ export const ProgramDetailDialog = ({
 
 	return (
 		<>
-			<ProgramDetailPill label={triggerLabel} isOpen={isOpen} onClick={() => handleOpenChange(true)} />
+			<LinkPill label={triggerLabel} isOpen={isOpen} onClick={() => handleOpenChange(true)} />
 
 			<Dialog open={isOpen} onOpenChange={handleOpenChange}>
 				<DialogContent size="full" closeLabel={closeAriaLabel}>

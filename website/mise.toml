@@ -13,11 +13,11 @@ run = "npm run emulator:start"
 depends = ["install"]
 
 [tasks.website]
-run = "npm run serve"
+run = "npm run dev"
 depends = ["install", "db"]
 
 [tasks.website-ssl]
-run = "npm run serve:ssl"
+run = "npm run dev:ssl"
 depends = ["install", "db"]
 
 [tasks.dev]

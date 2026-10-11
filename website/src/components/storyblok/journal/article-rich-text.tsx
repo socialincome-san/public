@@ -15,8 +15,6 @@ import {
 	journalRichTextNodeResolvers as storyblokRichTextNodeResolvers,
 } from '@/components/storyblok/rich-text/journal-resolvers';
 import type { Lottie } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { Translator } from '@/lib/i18n/translator';
-import { useTranslator } from '@/lib/i18n/use-translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ComponentProps, ReactNode } from 'react';
 import { render, type StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
@@ -30,23 +28,7 @@ type Props = {
 	variant?: 'article' | 'footnotes';
 };
 
-const buildReferenceLabels = (translator: Translator) => ({
-	showMore: translator.t('reference-article.show-more'),
-	showLess: translator.t('reference-article.show-less'),
-	author: (author: string) => translator.t('reference-article.author', { context: { author } }),
-	publicationDate: (publicationDate: string) =>
-		translator.t('reference-article.publication-date', { context: { publicationDate } }),
-	context: (contextKey: string) => translator.t(`reference-article.context.${contextKey}`),
-});
-
 export const ArticleRichText = ({ document, lang, donationForm, variant = 'article' }: Props) => {
-	const journalTranslator = useTranslator(lang, 'website-journal');
-
-	if (!journalTranslator) {
-		return null;
-	}
-
-	const referenceLabels = buildReferenceLabels(journalTranslator);
 	const isFootnotes = variant === 'footnotes';
 
 	return render(document, {
@@ -64,11 +46,7 @@ export const ArticleRichText = ({ document, lang, donationForm, variant = 'artic
 				<EmbeddedVideoPlayer {...(props as ComponentProps<typeof EmbeddedVideoPlayer>)} />
 			),
 			referencesGroup: (props: StoryblokBlockProps) => (
-				<ReferencesGroupBlock
-					{...(props as ComponentProps<typeof ReferencesGroupBlock>)}
-					lang={lang}
-					labels={referenceLabels}
-				/>
+				<ReferencesGroupBlock {...(props as ComponentProps<typeof ReferencesGroupBlock>)} lang={lang} />
 			),
 			actionButton: (props: StoryblokBlockProps) => (
 				<ActionButtonBlock {...(props as ComponentProps<typeof ActionButtonBlock>)} />

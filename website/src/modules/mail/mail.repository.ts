@@ -54,6 +54,12 @@ export const findPaginatedSentEmails = async (query: SentEmailTableQuery) => {
 	return { sentEmails, totalCount };
 };
 
+export const findSentEmailBySubject = async (subject: string) =>
+	prisma.sentEmail.findFirst({
+		where: { subject },
+		select: { id: true },
+	});
+
 export const createSentEmail = async (input: {
 	toEmail: string;
 	fromEmail: string;

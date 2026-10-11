@@ -17,6 +17,7 @@ import { revalidatePath } from 'next/cache';
 import { claimPendingCampaigns } from './campaign-pending-claim.service';
 import { getCampaignPageContent } from './campaign-public-website.service';
 import { submitCampaign } from './campaign-submission.service';
+import { getAllCampaignsForCmsJoinWithStats, getCampaignByPortalSlug, getDefaultCampaignForProgram } from './campaign.cache';
 import {
 	campaignActivitySchema,
 	campaignClaimIdsSchema,
@@ -34,13 +35,7 @@ import {
 	parseOptionalCampaignSubmissionImage,
 	readTurnstileToken,
 } from './campaign.schemas';
-import {
-	getAllCampaignsForCmsJoinWithStats,
-	getCampaignByPortalSlug,
-	getCampaignDefaultImages,
-	getDefaultCampaignForProgram,
-	getPublicCampaignTitle,
-} from './campaign.service';
+import { getCampaignDefaultImages, getPublicCampaignTitle } from './campaign.service';
 import type {
 	CampaignSubmissionImageMultipartField,
 	CampaignSubmissionImageSource,
@@ -221,7 +216,7 @@ export const submitCampaignAction = async (
 		}
 	}
 
-	revalidatePath('/[lang]/[region]/campaigns', 'layout');
+	revalidatePath('/[lang]/[currency]/campaigns', 'layout');
 
 	return resultOk(submissionResult.data);
 };

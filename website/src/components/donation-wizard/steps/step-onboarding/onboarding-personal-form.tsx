@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { GENDER_OPTIONS } from '@/modules/contributors/contributor.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
@@ -9,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@socialincome
 import { Input } from '@socialincome/design-system/forms/input/input';
 import { RadioCard, RadioCardGroup } from '@socialincome/design-system/forms/radio-card/radio-card';
 import { LongHairIcon, ShortHairIcon } from '@socialincome/design-system/icons/custom-icons/custom-icons';
+import { useTranslations } from 'next-intl';
 import { type UseFormReturn } from 'react-hook-form';
 import { type OnboardingPersonalFields } from '../../utils/donation-wizard-validation';
 
@@ -33,9 +33,9 @@ export const OnboardingPersonalForm = ({
 	submitting,
 	isEmailLocked,
 }: OnboardingPersonalFormProps) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
-	const { t: tCommon } = useRouteTranslator({ namespace: 'common' });
-	const { t: tCountries } = useRouteTranslator({ namespace: 'countries' });
+	const t = useTranslations('donation-wizard');
+	const tCommon = useTranslations('common');
+	const tCountries = useTranslations('countries');
 
 	return (
 		<Form {...form}>

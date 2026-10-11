@@ -1,14 +1,14 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { useTranslations } from 'next-intl';
 
 type Props = {
 	onGoToLogin: () => void;
 };
 
 export const SuccessStep = ({ onGoToLogin }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	return (
 		<div className="mx-auto max-w-2xl space-y-5 py-2 text-center">

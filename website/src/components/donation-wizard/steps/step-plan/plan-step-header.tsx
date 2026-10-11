@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { useTranslations } from 'next-intl';
 import type { Cadence } from '../../utils/donation-amount';
 import { donationStepTitleRowClass } from '../../utils/donation-wizard-layout';
 import type { DonationWizardSend } from '../../wizard/types';
@@ -13,7 +13,7 @@ type Props = {
 };
 
 export const PlanStepHeader = ({ titleKey, cadence, send }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 
 	return (
 		<div className={donationStepTitleRowClass}>

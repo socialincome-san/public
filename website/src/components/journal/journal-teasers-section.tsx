@@ -1,5 +1,6 @@
 import { JournalArticleCard } from '@/components/storyblok/journal/article-card';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import type { JournalArticle } from '@/modules/journal/journal.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
@@ -11,13 +12,13 @@ import type { ReactNode } from 'react';
 type Props = {
 	articles: ISbStoryData<JournalArticle>[];
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	heading?: ReactNode;
 	journalCtaLabel: string;
 	videoLabel: string;
 };
 
-export const JournalTeasersSection = ({ articles, lang, region, heading, journalCtaLabel, videoLabel }: Props) => {
+export const JournalTeasersSection = ({ articles, lang, currency, heading, journalCtaLabel, videoLabel }: Props) => {
 	const [featuredArticle, ...secondaryArticles] = articles;
 	const hasSecondaryArticles = secondaryArticles.length > 0;
 
@@ -27,7 +28,7 @@ export const JournalTeasersSection = ({ articles, lang, region, heading, journal
 				{heading && <SectionHeading align="left">{heading}</SectionHeading>}
 				<div>
 					<Button variant="outline" asChild>
-						<Link href={`/${lang}/${region}/journal`}>{journalCtaLabel}</Link>
+						<Link href={`${getWebsiteBasePath(lang, currency)}/journal`}>{journalCtaLabel}</Link>
 					</Button>
 				</div>
 			</div>
@@ -36,7 +37,7 @@ export const JournalTeasersSection = ({ articles, lang, region, heading, journal
 				<JournalArticleCard
 					article={featuredArticle}
 					lang={lang}
-					region={region}
+					currency={currency}
 					variant="featured"
 					videoLabel={videoLabel}
 				/>
@@ -47,7 +48,7 @@ export const JournalTeasersSection = ({ articles, lang, region, heading, journal
 								key={article.uuid}
 								article={article}
 								lang={lang}
-								region={region}
+								currency={currency}
 								variant="secondary"
 								videoLabel={videoLabel}
 							/>

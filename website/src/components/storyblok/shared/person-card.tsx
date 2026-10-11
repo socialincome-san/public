@@ -1,5 +1,4 @@
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import {
 	formatStoryblokDateMedium,
 	formatStoryblokUrl,
@@ -9,34 +8,10 @@ import {
 } from '@/lib/storyblok/storyblok-utils';
 import { PersonCard as DesignSystemPersonCard } from '@socialincome/design-system/data-display/person-card/person-card';
 import type { ISbStoryData } from '@storyblok/js';
+import { useLocale, useTranslations } from 'next-intl';
 
 const PERSON_CARD_IMAGE_WIDTH = 400;
 const PERSON_CARD_IMAGE_HEIGHT = 500;
-
-// Every label is a "{{count}}" template rather than a translator call, because the person card also
-// renders inside the client-side person grid where no translator instance is available.
-export type VolunteerDurationTranslations = {
-	// Standalone label for day zero, where a "0 days" count would read badly.
-	startedToday: string;
-	daySingular: string;
-	dayPlural: string;
-	monthSingular: string;
-	monthPlural: string;
-	yearSingular: string;
-	yearPlural: string;
-	// Used on the exact day a whole month (first year) or whole year is reached.
-	monthAnniversarySingular: string;
-	monthAnniversaryPlural: string;
-	yearAnniversarySingular: string;
-	yearAnniversaryPlural: string;
-	// "Since {{date}}" template shown when hovering the pill.
-	since: string;
-};
-
-export type VolunteerDurationConfig = {
-	lang: WebsiteLanguage;
-	translations: VolunteerDurationTranslations;
-};
 
 type Props = {
 	person: ISbStoryData<Person>;
@@ -44,44 +19,65 @@ type Props = {
 	// 'small' and 'compact' are this component's own visual tiers (also used by the person carousel);
 	// the person grid's medium/small cards map onto them — see PersonCardGrid's MEDIUM_CARDS/SMALL_CARDS.
 	size?: 'default' | 'small' | 'compact';
-	// Presence enables the "volunteering since" pill (on active volunteers with a start date).
-	volunteerDuration?: VolunteerDurationConfig;
+	// Enables the "volunteering since" pill (on active volunteers with a start date).
+	showVolunteerDuration?: boolean;
 	roleLabels?: Record<string, string>;
 };
 
-const pluralize = (count: number, singular: string, plural: string) =>
-	(count === 1 ? singular : plural).replace('{{count}}', String(count));
+type PersonCardTranslator = ReturnType<typeof useTranslations<'website-common'>>;
 
-const formatDuration = (parts: VolunteerDurationParts, translations: VolunteerDurationTranslations) => {
+const formatDuration = (parts: VolunteerDurationParts, t: PersonCardTranslator) => {
 	if (parts.unit === 'days') {
-		return parts.days === 0
-			? translations.startedToday
-			: pluralize(parts.days, translations.daySingular, translations.dayPlural);
+		// A "0 days" count would read badly, so day zero gets its own label.
+		if (parts.days === 0) {
+			return t('person-grid.duration-started-today');
+		}
+
+		return parts.days === 1
+			? t('person-grid.duration-day-singular', { count: parts.days })
+			: t('person-grid.duration-day-plural', { count: parts.days });
 	}
 
+	// The anniversary labels are used on the exact day a whole month (first year) or whole year is reached.
 	if (parts.unit === 'months') {
-		return parts.isAnniversary
-			? pluralize(parts.months, translations.monthAnniversarySingular, translations.monthAnniversaryPlural)
-			: pluralize(parts.months, translations.monthSingular, translations.monthPlural);
+		const count = parts.months;
+
+		if (parts.isAnniversary) {
+			return count === 1
+				? t('person-grid.duration-month-anniversary-singular', { count })
+				: t('person-grid.duration-month-anniversary-plural', { count });
+		}
+
+		return count === 1
+			? t('person-grid.duration-month-singular', { count })
+			: t('person-grid.duration-month-plural', { count });
 	}
 
-	return parts.isAnniversary
-		? pluralize(parts.years, translations.yearAnniversarySingular, translations.yearAnniversaryPlural)
-		: pluralize(parts.years, translations.yearSingular, translations.yearPlural);
+	const count = parts.years;
+
+	if (parts.isAnniversary) {
+		return count === 1
+			? t('person-grid.duration-year-anniversary-singular', { count })
+			: t('person-grid.duration-year-anniversary-plural', { count });
+	}
+
+	return count === 1 ? t('person-grid.duration-year-singular', { count }) : t('person-grid.duration-year-plural', { count });
 };
 
-const getDurationLabels = (volunteerSince: string | undefined, config: VolunteerDurationConfig) => {
-	const parts = getVolunteerDurationParts(volunteerSince, config.lang);
+const getDurationLabels = (volunteerSince: string | undefined, lang: string, t: PersonCardTranslator) => {
+	const parts = getVolunteerDurationParts(volunteerSince, lang);
 
 	return parts
 		? {
-				label: formatDuration(parts, config.translations),
-				since: config.translations.since.replace('{{date}}', formatStoryblokDateMedium(volunteerSince, config.lang)),
+				label: formatDuration(parts, t),
+				since: t('person-grid.duration-since', { date: formatStoryblokDateMedium(volunteerSince, lang) }),
 			}
 		: null;
 };
 
-export const PersonCard = ({ person, href, size = 'default', volunteerDuration, roleLabels }: Props) => {
+export const PersonCard = ({ person, href, size = 'default', showVolunteerDuration = false, roleLabels }: Props) => {
+	const t = useTranslations('website-common');
+	const lang = useLocale();
 	const { avatar, firstName, fullName, lastName, primaryRole, volunteerStatus, volunteerSince } = person.content;
 
 	return (
@@ -100,8 +96,8 @@ export const PersonCard = ({ person, href, size = 'default', volunteerDuration, 
 			href={href}
 			size={size}
 			duration={
-				volunteerDuration && size !== 'compact' && volunteerStatus === 'active'
-					? getDurationLabels(volunteerSince, volunteerDuration)
+				showVolunteerDuration && size !== 'compact' && volunteerStatus === 'active'
+					? getDurationLabels(volunteerSince, lang, t)
 					: null
 			}
 		/>

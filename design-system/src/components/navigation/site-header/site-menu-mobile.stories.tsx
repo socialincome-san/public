@@ -17,7 +17,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	args: {
-		homeHref: '/en/int',
+		homeHref: '/en/usd',
 		labels: {
 			openMenu: 'Open menu',
 			closeMenu: 'Close menu',
@@ -35,15 +35,15 @@ export const Default: Story = {
 						id: 'organisation',
 						label: 'Organisation',
 						links: [
-							{ id: 'team', label: 'Team', href: '/en/int/about-us/team' },
-							{ id: 'finances', label: 'Finances', href: '/en/int/about-us/finances' },
+							{ id: 'team', label: 'Team', href: '/en/usd/about-us/team' },
+							{ id: 'finances', label: 'Finances', href: '/en/usd/about-us/finances' },
 						],
-						overview: { label: 'All about us', href: '/en/int/about-us' },
+						overview: { label: 'All about us', href: '/en/usd/about-us' },
 					},
 				],
 			},
-			{ type: 'link', id: 'journal', label: 'Journal', href: '/en/int/journal' },
-			{ type: 'link', id: 'faq', label: 'FAQ', href: '/en/int/faq' },
+			{ type: 'link', id: 'journal', label: 'Journal', href: '/en/usd/journal' },
+			{ type: 'link', id: 'faq', label: 'FAQ', href: '/en/usd/faq' },
 		],
 		renderDonateAction: (closeMenu) => (
 			<Button size="md" onClick={closeMenu}>

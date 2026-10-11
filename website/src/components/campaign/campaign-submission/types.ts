@@ -59,7 +59,6 @@ export type SubmissionLabels = {
 	successThankYou: string;
 	successCreatedTitle: string;
 	successLiveTitle: string;
-	successGuestDescription: string;
 	successDidntGetIt: string;
 	successRetry: string;
 	successRetrySending: string;
@@ -73,8 +72,6 @@ export type SubmissionLabels = {
 	allCountries: string;
 	filterByCountry: string;
 	formSteps: string;
-	stepLabel: string;
-	recipientsCount: string;
 	details: string;
 	about: string;
 	personal: string;

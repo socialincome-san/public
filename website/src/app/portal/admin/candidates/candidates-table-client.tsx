@@ -6,7 +6,7 @@ import { makeCandidateColumns } from '@/components/data-table/columns/candidates
 import { candidatesTableConfig, getCandidatesTableFilters } from '@/components/data-table/configs/candidates-table.config';
 import type { ActionMenuItem } from '@/components/data-table/elements/action-menu';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import type { Translator } from '@/lib/i18n/translator';
+import type { DataTableTranslator } from '@/components/data-table/table-config.types';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
 import type { Session } from '@/modules/auth/auth.types';
 import { downloadCandidatesCsvAction, importCandidatesCsvAction } from '@/modules/candidates/candidate.actions';
@@ -43,8 +43,8 @@ export const CandidatesTableClient = ({
 	const isReadOnly = readOnly ?? false;
 	const tableConfig = {
 		...candidatesTableConfig,
-		makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, translator?: Translator) =>
-			makeCandidateColumns(hideProgramName, hideLocalPartner, translator, isReadOnly),
+		makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, t?: DataTableTranslator) =>
+			makeCandidateColumns(hideProgramName, hideLocalPartner, t, isReadOnly),
 	};
 	const [isCandidateDialogOpen, setIsCandidateDialogOpen] = useState(false);
 	const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>();

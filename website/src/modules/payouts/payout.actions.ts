@@ -7,6 +7,7 @@ import type { CountryPayoutTotals, PayoutForecastTableView, PayoutPayload } from
 import { getEditableRecipientOptions } from '@/modules/recipients/recipient.service';
 import type { RecipientOption } from '@/modules/recipients/recipient.types';
 import { revalidatePath } from 'next/cache';
+import { getPayoutTotalsForCountry, getPayoutTotalsForLocalPartnerSlug } from './payout.cache';
 import {
 	payoutCountryCodeSchema,
 	payoutCreateSchema,
@@ -20,8 +21,6 @@ import {
 	createPayout,
 	deletePayout,
 	getPayout,
-	getPayoutTotalsForCountry,
-	getPayoutTotalsForLocalPartnerSlug,
 	getPublicPayoutForecastTableView,
 	updatePayout,
 	updatePayoutStatus,

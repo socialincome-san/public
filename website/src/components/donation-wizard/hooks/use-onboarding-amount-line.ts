@@ -1,12 +1,12 @@
 'use client';
 
-import { useI18n } from '@/lib/i18n/use-i18n';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
+import { useTranslations } from 'next-intl';
 import type { CompletedDonationSummary } from '../steps/step-stripe-checkout/map-wizard-to-stripe-checkout';
 
 export const useOnboardingAmountLine = (completedDonationSummary: CompletedDonationSummary | null) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
-	const { currency = 'CHF' } = useI18n();
+	const t = useTranslations('donation-wizard');
+	const currency = useWebsiteCurrency();
 
 	if (!completedDonationSummary) {
 		return undefined;

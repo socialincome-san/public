@@ -19,7 +19,7 @@ const mockGetRelativeArticles = jest.fn();
 const mockGetLatestJournalArticles = jest.fn();
 const mockGetArticlesByUuids = jest.fn();
 
-jest.mock('@/modules/storyblok-content/storyblok-content.service', () => ({
+jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getOverviewAuthors: mockGetOverviewAuthors,
 	getOverviewArticleTypes: mockGetOverviewArticleTypes,
 	getPrimaryRoleLabels: mockGetPrimaryRoleLabels,
@@ -113,7 +113,7 @@ describe('getJournalOverviewPageData', () => {
 
 		const result = await getJournalOverviewPageData({
 			lang: 'de',
-			region: 'ch',
+			currency: 'CHF',
 			labels,
 			filter: { tagSlug: 'impact' },
 		});
@@ -127,12 +127,12 @@ describe('getJournalOverviewPageData', () => {
 			activeTagSlug: 'impact',
 			pageTitle: 'Impact',
 			pageDescription: 'Positive change',
-			pathname: '/de/ch/journal?tag=impact',
+			pathname: '/de/chf/journal?tag=impact',
 			showMoreArticlesLink: true,
 			breadcrumbs: [
-				{ label: 'Home', href: '/de/ch' },
-				{ label: 'Journal', href: '/de/ch/journal' },
-				{ label: 'Impact', href: '/de/ch/journal?tag=impact' },
+				{ label: 'Home', href: '/de/chf' },
+				{ label: 'Journal', href: '/de/chf/journal' },
+				{ label: 'Impact', href: '/de/chf/journal?tag=impact' },
 			],
 		});
 		expect(mockGetArticlesByTag).toHaveBeenCalledWith('tag-1', 'de');
@@ -141,7 +141,7 @@ describe('getJournalOverviewPageData', () => {
 	test('does not request a second count in the default language', async () => {
 		await getJournalOverviewPageData({
 			lang: defaultLanguage,
-			region: 'ch',
+			currency: 'CHF',
 			labels,
 		});
 
@@ -152,7 +152,7 @@ describe('getJournalOverviewPageData', () => {
 		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
 		mockGetOverviewAuthors.mockRejectedValue(new Error('provider details'));
 
-		await expect(getJournalOverviewPageData({ lang: 'de', region: 'ch', labels })).resolves.toEqual({
+		await expect(getJournalOverviewPageData({ lang: 'de', currency: 'CHF', labels })).resolves.toEqual({
 			success: false,
 			error: 'Could not load journal overview',
 			status: undefined,
@@ -165,7 +165,7 @@ describe('getJournalArticlePageData', () => {
 	test('resolves related articles and article breadcrumbs', async () => {
 		const result = await getJournalArticlePageData({
 			lang: 'de',
-			region: 'ch',
+			currency: 'CHF',
 			slug: 'a-story',
 			journalLabel: 'Journal',
 			homeLabel: 'Home',
@@ -177,9 +177,9 @@ describe('getJournalArticlePageData', () => {
 				story: article,
 				relatedArticles: [article],
 				breadcrumbs: [
-					{ label: 'Home', href: '/de/ch' },
-					{ label: 'Journal', href: '/de/ch/journal' },
-					{ label: 'A story with context', href: '/de/ch/journal/a-story' },
+					{ label: 'Home', href: '/de/chf' },
+					{ label: 'Journal', href: '/de/chf/journal' },
+					{ label: 'A story with context', href: '/de/chf/journal/a-story' },
 				],
 			},
 			status: undefined,
@@ -192,7 +192,7 @@ describe('getJournalPersonPageData', () => {
 	test('resolves articles, role labels, pagination, and person breadcrumbs', async () => {
 		const result = await getJournalPersonPageData({
 			lang: 'de',
-			region: 'ch',
+			currency: 'CHF',
 			slug: 'ada',
 			journalLabel: 'Journal',
 			homeLabel: 'Home',
@@ -207,11 +207,11 @@ describe('getJournalPersonPageData', () => {
 			articles: [article],
 			roleLabels: { editor: 'Editor' },
 			showMoreArticlesLink: true,
-			pathname: '/de/ch/person/ada',
+			pathname: '/de/chf/person/ada',
 			breadcrumbs: [
-				{ label: 'Home', href: '/de/ch' },
-				{ label: 'Journal', href: '/de/ch/journal' },
-				{ label: 'Ada Lovelace', href: '/de/ch/person/ada' },
+				{ label: 'Home', href: '/de/chf' },
+				{ label: 'Journal', href: '/de/chf/journal' },
+				{ label: 'Ada Lovelace', href: '/de/chf/person/ada' },
 			],
 		});
 	});

@@ -1,10 +1,11 @@
+import { Currency } from '@/generated/prisma/enums';
 import { z } from 'zod';
 
 const journalLanguageSchema = z.string().trim().min(1);
 
 export const journalPageRequestSchema = z.object({
 	lang: journalLanguageSchema,
-	region: z.string().trim().min(1),
+	currency: z.enum([Currency.CHF, Currency.EUR, Currency.USD]),
 	slug: z.string().trim().min(1),
 	journalLabel: z.string(),
 	homeLabel: z.string(),

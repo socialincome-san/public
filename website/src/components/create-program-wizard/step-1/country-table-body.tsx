@@ -1,7 +1,6 @@
 'use client';
 
 import { CountryFlag } from '@/components/country-flag';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { getCountryNameByCode } from '@/lib/types/country';
 import type { ProgramCountryFeasibilityRow } from '@/modules/countries/country.types';
 import { Button } from '@socialincome/design-system/actions/button/button';
@@ -16,6 +15,7 @@ import {
 } from '@socialincome/design-system/data-display/table/table';
 import { RadioGroupItem } from '@socialincome/design-system/forms/radio-group/radio-group';
 import { ChevronDown } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Fragment } from 'react';
 import { CountryConditionBadge } from './country-condition-badge';
 import { ExpansionRow } from './country-table-expansion-row';
@@ -28,7 +28,7 @@ type Props = {
 };
 
 export const CountryTableBody = ({ rows, value, openIds, onToggleRow }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 
 	return (
 		<div

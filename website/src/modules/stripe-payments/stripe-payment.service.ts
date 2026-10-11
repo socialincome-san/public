@@ -39,7 +39,7 @@ import { resultFail, resultOk, type Result } from '@/lib/result';
 import { COUNTRY_CODES } from '@/lib/types/country';
 import { isValidCurrency } from '@/lib/types/currency';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
-import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { sendSlackAlert } from '@/lib/utils/slack-alert';
 import { titleCase } from '@/lib/utils/string-utils';
 import { getCampaignById, getDefaultCampaignForProgram, getFallbackCampaign } from '@/modules/campaigns/campaign.service';
 import { upsertFromStripeEvent } from '@/modules/contributions/contribution.service';
@@ -544,7 +544,7 @@ export const cancelContributorSubscription = async (input: CancelContributorSubs
 				cancellationReason: input.reason,
 			});
 		} catch (error) {
-			console.error(`${SLACK_ALERT}: Stripe canceled the subscription but database update failed`, {
+			sendSlackAlert('Stripe canceled the subscription but database update failed', {
 				subscriptionId: subscription.id,
 				stripeSubscriptionId: subscription.stripeSubscriptionId,
 				error,
@@ -574,7 +574,7 @@ export const handleWebhookEvent = async (
 
 		return processWebhookEvent(eventResult.data);
 	} catch (error) {
-		console.error(`${SLACK_ALERT}: Stripe webhook handler failed`, { error });
+		sendSlackAlert('Stripe webhook handler failed', { error });
 
 		return resultFail('Failed to handle webhook event');
 	}
@@ -627,7 +627,8 @@ const processWebhookEvent = async (event: StripeApiEvent): Promise<Result<Stripe
 			console.info('Processing charge event', { eventType: event.type, chargeId: charge.id });
 			const result = await processChargeEvent(charge);
 			if (!result.success) {
-				console.error(`${SLACK_ALERT}: Stripe charge event processing failed: ${result.error}`, {
+				sendSlackAlert('Stripe charge event processing failed', {
+					error: result.error,
 					eventType: event.type,
 					chargeId: charge.id,
 				});
@@ -653,7 +654,8 @@ const processWebhookEvent = async (event: StripeApiEvent): Promise<Result<Stripe
 			console.info('Processing customer default payment method update', { customerId: customer.id });
 			const result = await copyCustomerDefaultPaymentMethodToSubscriptions(customer);
 			if (!result.success) {
-				console.error(`${SLACK_ALERT}: Stripe customer payment method sync failed: ${result.error}`, {
+				sendSlackAlert('Stripe customer payment method sync failed', {
+					error: result.error,
 					customerId: customer.id,
 				});
 
@@ -672,7 +674,8 @@ const processWebhookEvent = async (event: StripeApiEvent): Promise<Result<Stripe
 			});
 			const result = await processSubscriptionEvent(subscription);
 			if (!result.success) {
-				console.error(`${SLACK_ALERT}: Stripe subscription event processing failed: ${result.error}`, {
+				sendSlackAlert('Stripe subscription event processing failed', {
+					error: result.error,
 					eventType: event.type,
 					subscriptionId: subscription.id,
 				});
@@ -962,7 +965,7 @@ const syncStripeSubscriptionAmount = async (input: {
 }): Promise<Result<void>> => {
 	const upsertResult = await syncMappedStripeSubscription(input);
 	if (!upsertResult.success || !upsertResult.data) {
-		console.error(`${SLACK_ALERT}: Stripe subscription amount updated but database sync failed`, {
+		sendSlackAlert('Stripe subscription amount updated but database sync failed', {
 			subscriptionId: input.subscriptionId,
 			stripeSubscriptionId: input.stripeSubscriptionId,
 			error: upsertResult.success ? 'Could not sync updated subscription' : upsertResult.error,

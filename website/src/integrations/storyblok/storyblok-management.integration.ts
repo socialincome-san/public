@@ -47,7 +47,6 @@ const toServiceFailure = (error: unknown): Result<never> => {
 
 type SignedUploadResponse = {
 	id: number;
-	filename: string;
 	post_url: string;
 	fields: Record<string, string>;
 	pretty_url?: string;
@@ -145,12 +144,17 @@ const unwrapAsset = (body: unknown): ManagementAsset | null => {
 	return body;
 };
 
-const uploadSignedAsset = async (signed: SignedUploadResponse, fileBuffer: Buffer, mimeType: string): Promise<void> => {
+const uploadSignedAsset = async (
+	signed: SignedUploadResponse,
+	fileBuffer: Buffer,
+	filename: string,
+	mimeType: string,
+): Promise<void> => {
 	const formData = new FormData();
 	for (const [key, value] of Object.entries(signed.fields)) {
 		formData.append(key, value);
 	}
-	formData.append('file', new Blob([new Uint8Array(fileBuffer)], { type: mimeType }), signed.filename);
+	formData.append('file', new Blob([new Uint8Array(fileBuffer)], { type: mimeType }), filename);
 
 	const response = await fetch(signed.post_url, {
 		method: 'POST',
@@ -285,12 +289,7 @@ const isSignedUploadResponse = (value: unknown): value is SignedUploadResponse =
 		return false;
 	}
 
-	return (
-		typeof value.id === 'number' &&
-		typeof value.filename === 'string' &&
-		typeof value.post_url === 'string' &&
-		isObjectRecord(value.fields)
-	);
+	return typeof value.id === 'number' && typeof value.post_url === 'string' && isObjectRecord(value.fields);
 };
 
 const isStoryCreateResponse = (value: unknown): value is StoryCreateResponse => {
@@ -405,7 +404,7 @@ export const uploadStoryblokAsset = async (
 
 		const assetId = signedResponse.id;
 		try {
-			await uploadSignedAsset(signedResponse, fileBuffer, mimeType);
+			await uploadSignedAsset(signedResponse, fileBuffer, filename, mimeType);
 
 			const finishedAsset = unwrapAsset(
 				await requestManagement(`/spaces/${spaceId}/assets/${assetId}/finish_upload`, { method: 'GET' }),

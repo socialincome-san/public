@@ -1,24 +1,19 @@
 import { skeletonBarClassName } from '@/components/skeletons/skeleton-bar';
-import { Translator } from '@/lib/i18n/translator';
-import { type WebsiteLanguage } from '@/lib/i18n/utils';
 import { cn } from '@socialincome/design-system/cn';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 
 const SKELETON_ROW_COUNT = 5;
 
-type Props = {
-	lang: WebsiteLanguage;
-};
-
-export const CountryStatisticsSkeleton = async ({ lang }: Props) => {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
+export const CountryStatisticsSkeleton = async () => {
+	const t = await getTranslations('website-common');
 
 	return (
 		<BlockWrapper>
 			<section className="mx-auto max-w-4xl">
 				<div className="flex flex-col items-center gap-6">
 					<h2 className="text-primary text-center text-3xl leading-tight font-bold md:text-4xl">
-						{translator.t('countries-page.statistics.title')}
+						{t('countries-page.statistics.title')}
 					</h2>
 					<div className="border-border bg-background shadow-card w-full overflow-hidden rounded-xl border">
 						<div className="lg:hidden">

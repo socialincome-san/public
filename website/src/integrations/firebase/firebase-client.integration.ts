@@ -1,7 +1,6 @@
 'use client';
 
 import { resultFail, resultOk, type Result } from '@/lib/result';
-import { initializeAnalytics, setConsent, type ConsentSettings, type ConsentStatusString } from 'firebase/analytics';
 import { getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import {
 	connectAuthEmulator,
@@ -27,7 +26,6 @@ export type FirebaseClientApp = FirebaseApp;
 export type FirebaseClientAuth = Auth;
 export type FirebaseClientStorage = FirebaseStorage;
 export type FirebaseClientStorageReference = StorageReference;
-export type FirebaseConsentStatus = ConsentStatusString;
 
 export const initializeFirebaseClientApp = (): FirebaseClientApp => {
 	const existingApp = getApps().at(0);
@@ -39,7 +37,6 @@ export const initializeFirebaseClientApp = (): FirebaseClientApp => {
 		apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
 		appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 		authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-		measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 		messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 		projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
 		storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
@@ -139,21 +136,4 @@ export const signOutFromFirebase = async (auth: FirebaseClientAuth): Promise<Res
 
 		return resultFail('Could not sign out');
 	}
-};
-
-export const initializeFirebaseAnalytics = (app: FirebaseClientApp): void => {
-	initializeAnalytics(app);
-};
-
-export const setFirebaseConsent = (mode: FirebaseConsentStatus): void => {
-	const settings: ConsentSettings = {
-		analytics_storage: mode,
-		ad_storage: mode,
-		ad_user_data: mode,
-		ad_personalization: mode,
-		functionality_storage: mode,
-		security_storage: mode,
-		personalization_storage: mode,
-	};
-	setConsent(settings);
 };

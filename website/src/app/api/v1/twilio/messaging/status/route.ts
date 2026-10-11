@@ -1,5 +1,5 @@
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
-import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { sendSlackAlert } from '@/lib/utils/slack-alert';
 import { handleTwilioStatusWebhook } from '@/modules/messaging/messaging.service';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 	// validateRequest would reject legitimate webhooks.
 	const baseUrl = process.env.BASE_URL?.replace(TRAILING_SLASHES_REGEX, '');
 	if (!baseUrl) {
-		console.error(`${SLACK_ALERT}: Missing BASE_URL for Twilio messaging status webhook`);
+		sendSlackAlert('Missing BASE_URL for Twilio messaging status webhook');
 
 		return NextResponse.json({ error: 'internal' }, { status: 500 });
 	}
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 
 			return NextResponse.json({ error: 'forbidden' }, { status: 403 });
 		}
-		console.error(`${SLACK_ALERT}: Twilio messaging status webhook handler failed: ${result.error}`);
+		sendSlackAlert('Twilio messaging status webhook handler failed', { error: result.error });
 
 		return NextResponse.json({ error: 'internal' }, { status: 500 });
 	}

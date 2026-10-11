@@ -1,14 +1,14 @@
 import { CampaignsOverviewPage } from '@/components/campaign/campaigns-overview-page';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import type { CampaignOverview } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 import type { ISbStoryData } from '@storyblok/js';
 
 type Props = {
 	storyPath: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
@@ -16,7 +16,7 @@ type Props = {
 export const StoryblokPreviewCampaignsOverviewPage = async ({
 	storyPath,
 	lang,
-	region,
+	currency,
 	previewRoutePath,
 	searchParams,
 }: Props) => {
@@ -34,7 +34,12 @@ export const StoryblokPreviewCampaignsOverviewPage = async ({
 			return storyResult.success ? storyResult.data : null;
 		},
 		renderStory: (overview) => (
-			<CampaignsOverviewPage overview={overview} lang={lang} region={region} searchParams={searchParams} />
+			<CampaignsOverviewPage
+				overview={overview}
+				lang={lang}
+				currency={currency}
+				searchParams={Promise.resolve(searchParams)}
+			/>
 		),
 	});
 };

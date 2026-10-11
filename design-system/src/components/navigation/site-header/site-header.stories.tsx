@@ -18,17 +18,17 @@ const siteMenuEntries: SiteMenuEntry[] = [
 				id: 'organisation',
 				label: 'Organisation',
 				links: [
-					{ id: 'team', label: 'Team', href: '/en/int/about-us/team' },
-					{ id: 'finances', label: 'Finances', href: '/en/int/about-us/finances' },
+					{ id: 'team', label: 'Team', href: '/en/usd/about-us/team' },
+					{ id: 'finances', label: 'Finances', href: '/en/usd/about-us/finances' },
 				],
-				overview: { label: 'All about us', href: '/en/int/about-us' },
+				overview: { label: 'All about us', href: '/en/usd/about-us' },
 			},
 			{
 				id: 'programs',
 				label: 'Programs',
 				links: [
-					{ id: 'sierra-leone', label: 'Sierra Leone', href: '/en/int/programs/sierra-leone' },
-					{ id: 'transparency', label: 'Transparency', href: '/en/int/transparency' },
+					{ id: 'sierra-leone', label: 'Sierra Leone', href: '/en/usd/programs/sierra-leone' },
+					{ id: 'transparency', label: 'Transparency', href: '/en/usd/transparency' },
 				],
 			},
 			{
@@ -38,8 +38,8 @@ const siteMenuEntries: SiteMenuEntry[] = [
 			},
 		],
 	},
-	{ type: 'link', id: 'journal', label: 'Journal', href: '/en/int/journal' },
-	{ type: 'link', id: 'faq', label: 'FAQ', href: '/en/int/faq' },
+	{ type: 'link', id: 'journal', label: 'Journal', href: '/en/usd/journal' },
+	{ type: 'link', id: 'faq', label: 'FAQ', href: '/en/usd/faq' },
 ];
 
 const DonationFormPlaceholder = () => (
@@ -50,7 +50,7 @@ const DonateButton = () => <Button size="md">Donate now</Button>;
 
 const localeSwitcher = (variant: 'ghost' | 'outline') => (
 	<LocaleCurrencySwitcher
-		ariaLabel="Change language, region, and currency"
+		ariaLabel="Change language and currency"
 		variant={variant}
 		open={false}
 		onOpenChange={() => undefined}
@@ -60,15 +60,6 @@ const localeSwitcher = (variant: 'ghost' | 'outline') => (
 			options: [
 				{ value: 'en', label: 'EN' },
 				{ value: 'de', label: 'DE' },
-			],
-			onChange: () => undefined,
-		}}
-		region={{
-			label: 'Region',
-			value: 'ch',
-			options: [
-				{ value: 'int', label: 'International' },
-				{ value: 'ch', label: 'Switzerland', flagCountry: 'CH' },
 			],
 			onChange: () => undefined,
 		}}
@@ -93,7 +84,7 @@ const loginFlyout = (
 const mobileMenu = (
 	<SiteMenuMobile
 		entries={siteMenuEntries}
-		homeHref="/en/int"
+		homeHref="/en/usd"
 		labels={{
 			openMenu: 'Open menu',
 			closeMenu: 'Close menu',
@@ -133,7 +124,7 @@ type Story = StoryObj<typeof meta>;
 
 export const LoggedOut: Story = {
 	args: {
-		homeHref: '/en/int',
+		homeHref: '/en/usd',
 		homeLinkLabel: 'Social Income home',
 		desktopMenu: <SiteMenuDesktop entries={siteMenuEntries} dropdownAside={<DonationFormPlaceholder />} />,
 		localeSwitcher: localeSwitcher('ghost'),

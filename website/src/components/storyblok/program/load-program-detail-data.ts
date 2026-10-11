@@ -1,8 +1,10 @@
+import { pickCommunityPage } from '@/components/community/pick-community-page';
 import { getProgramImages, getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import type { Program, ProgramOverview } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
 import { getProgramStoryPath, getProgramsOverviewStoryPath } from '@/lib/storyblok/storyblok-paths';
 import { getDefaultCampaignForProgramAction } from '@/modules/campaigns/campaign.actions';
+import type { CommunityPage } from '@/modules/community/community.schemas';
 import {
 	getProgramDashboardStatsAction,
 	getProgramIdByPortalSlugAction,
@@ -30,6 +32,7 @@ export type ProgramDetailData = {
 	images?: StoryblokAsset[];
 	description?: string;
 	faq?: Program['faq'];
+	communityPage?: CommunityPage;
 } & ProgramDetailPortalData;
 
 export const loadProgramDetailPortalData = async (portalSlug: string): Promise<ProgramDetailPortalData> => {
@@ -70,6 +73,7 @@ export const loadProgramDetailData = async (urlSlug: string, lang: string): Prom
 			images: getProgramImages(story.content),
 			description: story.content.description?.trim() || undefined,
 			faq: story.content.faq,
+			communityPage: pickCommunityPage(story.content),
 			...portalData,
 		};
 	}

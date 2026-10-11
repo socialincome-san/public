@@ -10,7 +10,7 @@ import {
 	listPostFinanceReportFileNames,
 } from '@/integrations/postfinance/postfinance-sftp.integration';
 import { resultFail, resultOk, type Result } from '@/lib/result';
-import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { sendSlackAlert } from '@/lib/utils/slack-alert';
 import { getFallbackCampaign } from '@/modules/campaigns/campaign.service';
 import { upsertFromBankTransfer } from '@/modules/contributions/contribution.service';
 import type { BankTransferUpsertInput, PaymentEventRecord } from '@/modules/contributions/contribution.types';
@@ -99,7 +99,7 @@ export const parseCamt054Contributions = (xml: string): Result<BankContribution[
 			const referenceId = getNodeText(findDescendantPath(transaction, ['RmtInf', 'Strd', 'CdtrRefInf', 'Ref']));
 			const rawContent = new XMLSerializer().serializeToString(transaction);
 			if (!referenceId) {
-				console.error(`${SLACK_ALERT}: Skipped processing a payment entry without reference ID. Raw content: ${rawContent}`);
+				sendSlackAlert('Skipped processing a payment entry without reference ID', { rawContent });
 				continue;
 			}
 
@@ -272,6 +272,7 @@ const createOrUpdateContributions = async (bankContributions: BankContribution[]
 		}
 
 		const failedPaymentEvents: (string | undefined)[] = [];
+		const missingContributorReferenceIds: string[] = [];
 		const created: PaymentEventRecord[] = [];
 		for (const contribution of bankContributions) {
 			const referenceResult = parseQrBillReference(contribution.referenceId);
@@ -283,7 +284,7 @@ const createOrUpdateContributions = async (bankContributions: BankContribution[]
 				({ paymentReferenceId }) => paymentReferenceId === contributorReferenceId,
 			);
 			if (!contributor) {
-				console.error(`${SLACK_ALERT}: Contributor for reference ID ${contributorReferenceId} does not exist`);
+				missingContributorReferenceIds.push(contributorReferenceId);
 				continue;
 			}
 			if (!contributionReferenceId) {
@@ -334,6 +335,12 @@ const createOrUpdateContributions = async (bankContributions: BankContribution[]
 				});
 				failedPaymentEvents.push(contributionReferenceId);
 			}
+		}
+
+		if (missingContributorReferenceIds.length > 0) {
+			sendSlackAlert(`Skipped ${missingContributorReferenceIds.length} payment entries without a matching contributor`, {
+				missingContributorReferenceIds,
+			});
 		}
 
 		if (failedPaymentEvents.length > 0) {

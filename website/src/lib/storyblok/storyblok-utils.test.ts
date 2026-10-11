@@ -19,7 +19,7 @@ describe('Storyblok presentation utilities', () => {
 			cached_url: '',
 		};
 
-		expect(resolveStoryblokLink(link, 'en', 'int')).toBe('#');
+		expect(resolveStoryblokLink(link, 'en', 'USD')).toBe('#');
 	});
 
 	it('annotates image URLs with crop and ratio metadata', () => {

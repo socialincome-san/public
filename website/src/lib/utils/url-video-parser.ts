@@ -4,7 +4,7 @@ type VideoMatchAndExtract = {
 
 export class VimeoVideoMatchAndExtract implements VideoMatchAndExtract {
 	regex = /(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^/]*)\/videos\/|)(\d+)(?:|\/\?)/i;
-	urlCreate = (videoId: string) => `https://player.vimeo.com/video/${videoId}`;
+	urlCreate = (videoId: string) => `https://player.vimeo.com/video/${videoId}?dnt=1`;
 
 	parseUrl(url: string): string | null {
 		const match = url.match(this.regex);
@@ -19,7 +19,7 @@ export class VimeoVideoMatchAndExtract implements VideoMatchAndExtract {
 export class YouTubeVideoMatchAndExtract implements VideoMatchAndExtract {
 	regex =
 		/^(?:https?:\/\/)?(?:www\.)?(?:m\.)?(?:youtube(?:-nocookie)?\.com\/(?:.*?[?&]v=|embed\/|v\/|e\/|shorts\/|live\/|.*\/)|youtu\.be\/(?:.*\/)?)?([a-zA-Z0-9_-]{11})/i;
-	urlCreate = (videoId: string) => `https://www.youtube.com/embed/${videoId}`;
+	urlCreate = (videoId: string) => `https://www.youtube-nocookie.com/embed/${videoId}`;
 
 	parseUrl(url: string): string | null {
 		const match = url.match(this.regex);

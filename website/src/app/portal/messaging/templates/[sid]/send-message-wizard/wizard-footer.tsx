@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { WizardFooter as WizardFooterLayout } from '@socialincome/design-system/navigation/wizard-footer/wizard-footer';
 import { Loader2 } from 'lucide-react';
 import type { SendPhase } from './use-messaging-send';
 
@@ -29,37 +30,41 @@ export const WizardFooter = ({
 }: WizardFooterProps) => {
 	if (sendPhase === 'running') {
 		return (
-			<div className="-mx-6 flex items-center justify-end border-t px-6 pt-4">
-				<Button variant="outline" disabled>
-					<Loader2 className="animate-spin" />
-					Sending…
-				</Button>
-			</div>
+			<WizardFooterLayout
+				edge="bleed"
+				primary={
+					<Button variant="outline" disabled>
+						<Loader2 className="animate-spin" />
+						Sending…
+					</Button>
+				}
+			/>
 		);
 	}
 
 	if (sendPhase === 'results') {
-		return (
-			<div className="-mx-6 flex items-center justify-end border-t px-6 pt-4">
-				<Button onClick={onClose}>Done</Button>
-			</div>
-		);
+		return <WizardFooterLayout edge="bleed" primary={<Button onClick={onClose}>Done</Button>} />;
 	}
 
 	return (
-		<div className="-mx-6 flex items-center justify-between border-t px-6 pt-4">
-			<Button variant="outline" onClick={onBack} disabled={isFirstStep}>
-				Back
-			</Button>
-			{isFinalStep ? (
-				<Button variant="confirmed" onClick={onSend} disabled={!canSend}>
-					Send message
+		<WizardFooterLayout
+			edge="bleed"
+			back={
+				<Button variant="outline" onClick={onBack} disabled={isFirstStep}>
+					Back
 				</Button>
-			) : (
-				<Button onClick={onNext} disabled={!canAdvance}>
-					Next
-				</Button>
-			)}
-		</div>
+			}
+			primary={
+				isFinalStep ? (
+					<Button variant="confirmed" onClick={onSend} disabled={!canSend}>
+						Send message
+					</Button>
+				) : (
+					<Button onClick={onNext} disabled={!canAdvance}>
+						Next
+					</Button>
+				)
+			}
+		/>
 	);
 };
