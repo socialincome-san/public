@@ -1,10 +1,11 @@
-import type { TranslateFunction } from '../../../lib/i18n/translator';
+import { loadMessages } from '@/lib/i18n/messages';
+import { TIME_ZONE } from '@/lib/i18n/utils';
+import { createTranslator } from 'next-intl';
 import { buildProgramAboutContent } from './build-program-about-content';
 import type { ProgramDetailData } from './load-program-detail-data';
 
-const translator = {
-	t: ((key: string) => key) as TranslateFunction,
-};
+const createCommonTranslator = async () =>
+	createTranslator({ locale: 'en', messages: await loadMessages('en'), namespace: 'website-common', timeZone: TIME_ZONE });
 
 const baseProgramDetailData: ProgramDetailData = {
 	title: 'Test Program',
@@ -33,12 +34,18 @@ const baseProgramDetailData: ProgramDetailData = {
 };
 
 describe('buildProgramAboutContent', () => {
+	let t: Awaited<ReturnType<typeof createCommonTranslator>>;
+
+	beforeAll(async () => {
+		t = await createCommonTranslator();
+	});
+
 	test('builds card rows and grouped overlay sections from available data', () => {
 		const content = buildProgramAboutContent({
 			programDetailData: baseProgramDetailData,
-			translator,
+			t,
 			lang: 'en',
-			region: 'ch',
+			currency: 'CHF',
 			countryName: 'Sierra Leone',
 		});
 
@@ -58,9 +65,9 @@ describe('buildProgramAboutContent', () => {
 				fullSlug: 'programs/sparse-program',
 				description: 'Only intro text is available.',
 			},
-			translator,
+			t,
 			lang: 'en',
-			region: 'ch',
+			currency: 'CHF',
 		});
 
 		expect(content.cardRows).toHaveLength(0);
@@ -76,9 +83,9 @@ describe('buildProgramAboutContent', () => {
 					countryIsoCode: '-',
 				},
 			},
-			translator,
+			t,
 			lang: 'en',
-			region: 'ch',
+			currency: 'CHF',
 		});
 
 		expect(content.overlaySections.map((section) => section.id)).toEqual(['parties', 'program-design']);
@@ -87,9 +94,9 @@ describe('buildProgramAboutContent', () => {
 	test('orders card party rows with local partner before operator', () => {
 		const content = buildProgramAboutContent({
 			programDetailData: baseProgramDetailData,
-			translator,
+			t,
 			lang: 'en',
-			region: 'ch',
+			currency: 'CHF',
 			countryName: 'Sierra Leone',
 		});
 
@@ -103,16 +110,16 @@ describe('buildProgramAboutContent', () => {
 	test('includes local partner link when slug is available', () => {
 		const content = buildProgramAboutContent({
 			programDetailData: baseProgramDetailData,
-			translator,
+			t,
 			lang: 'en',
-			region: 'ch',
+			currency: 'CHF',
 			countryName: 'Sierra Leone',
 		});
 
 		const localPartnerCardRow = content.cardRows.find((row) => row.value === 'Jamil Foundation');
 		const localPartnerOverlayRow = content.overlaySections[0]?.rows.find((row) => row.value === 'Jamil Foundation');
 
-		expect(localPartnerCardRow?.href).toBe('/en/ch/local-partners/jamil-foundation');
-		expect(localPartnerOverlayRow?.href).toBe('/en/ch/local-partners/jamil-foundation');
+		expect(localPartnerCardRow?.href).toBe('/en/chf/local-partners/jamil-foundation');
+		expect(localPartnerOverlayRow?.href).toBe('/en/chf/local-partners/jamil-foundation');
 	});
 });

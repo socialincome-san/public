@@ -3,7 +3,6 @@ import { CampaignDonationFormServer } from '@/components/campaign/campaign-donat
 import { CampaignFundraisingPills } from '@/components/campaign/campaign-fundraising-pills';
 import { getCampaignDaysRemaining } from '@/components/campaign/get-campaign-days-remaining';
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
-import type { Translator } from '@/lib/i18n/translator';
 import { getSafeNumberFormatLocale, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { formatStoryblokUrl } from '@/lib/storyblok/storyblok-utils';
 import { formatNumberLocale } from '@/lib/utils/string-utils';
@@ -14,6 +13,7 @@ import {
 	MediaHeroStat,
 	MediaHeroStats,
 } from '@socialincome/design-system/layout/media-hero/media-hero';
+import { getTranslations } from 'next-intl/server';
 
 const HERO_HEADER_IMAGE_WIDTH = 1920;
 const HERO_HEADER_IMAGE_HEIGHT = 1080;
@@ -25,20 +25,11 @@ type Props = {
 	quote: string;
 	primaryImage?: HeroHeaderImage | null;
 	profilePicture?: HeroHeaderImage | null;
-	translator: Translator;
 	lang: WebsiteLanguage;
 };
 
-export const CampaignHero = ({
-	campaign,
-	title,
-	creatorName,
-	quote,
-	primaryImage,
-	profilePicture,
-	translator,
-	lang,
-}: Props) => {
+export const CampaignHero = async ({ campaign, title, creatorName, quote, primaryImage, profilePicture, lang }: Props) => {
+	const [t, tCommon] = await Promise.all([getTranslations('website-campaign'), getTranslations('website-common')]);
 	const hasGoal = campaign.goal !== null && campaign.goal !== undefined;
 	const raisedPercent = campaign.percentageCollected ?? 0;
 	const isActive = campaign.isActive;
@@ -52,15 +43,12 @@ export const CampaignHero = ({
 		createdAt: campaign.createdAt,
 	});
 	const donationFormProps = {
-		lang,
 		campaignId: campaign.id,
 		quote,
 		creatorName,
 		profilePicture,
 	};
-	const fundraisingPillLabels = isActive
-		? buildCampaignFundraisingPillLabels(campaign, remainingDays, translator, locale)
-		: [];
+	const fundraisingPillLabels = isActive ? buildCampaignFundraisingPillLabels(campaign, remainingDays, t, locale) : [];
 
 	return (
 		<MediaHero
@@ -70,22 +58,19 @@ export const CampaignHero = ({
 			aside={isActive ? <CampaignDonationFormServer {...donationFormProps} /> : null}
 			mobileAside={isActive ? <CampaignDonationFormServer {...donationFormProps} /> : null}
 		>
-			<MediaHeroIntro title={title} kicker={translator.t('campaign.by', { context: { creator: creatorName } })} shadow />
+			<MediaHeroIntro title={title} kicker={t('campaign.by', { creator: creatorName })} shadow />
 			<MediaHeroStats>
 				<MediaHeroStat
-					label={translator.t('campaigns-page.raised-percentage', {
-						namespace: 'website-common',
-						context: {
-							percentage: raisedPercent,
-							currency: campaign.currency,
-						},
+					label={tCommon('campaigns-page.raised-percentage', {
+						percentage: raisedPercent,
+						currency: campaign.currency,
 					})}
 					value={formatNumberLocale(campaign.amountCollected ?? 0, locale)}
 					target={hasGoal ? formatNumberLocale(campaign.goal ?? 0, locale) : undefined}
 					progress={raisedPercent}
 				/>
 				<MediaHeroStat
-					label={translator.t('campaign.days-left')}
+					label={t('campaign.days-left')}
 					value={formatNumberLocale(remainingDays, locale)}
 					progress={daysProgress}
 				/>

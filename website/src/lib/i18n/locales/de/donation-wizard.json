@@ -1,7 +1,7 @@
 {
 	"modal": {
 		"title": "Spenden",
-		"campaign-for": "Für {{title}}",
+		"campaign-for": "Für {title}",
 		"closeConfirm": {
 			"title": "Spende schliessen?",
 			"description": "Wenn du jetzt schliesst, geht dein Fortschritt in dieser Spende verloren.",
@@ -18,7 +18,7 @@
 		"monthly": "Monatlich",
 		"one-time": "Einmalig",
 		"donate-now": "Jetzt spenden",
-		"donate-now-with-amount": "Jetzt {{amount}} spenden",
+		"donate-now-with-amount": "Jetzt {amount} spenden",
 		"custom-amount-placeholder": "Betrag"
 	},
 	"stepPlan": {
@@ -33,8 +33,8 @@
 		"plan-1x": "1 %-Plan",
 		"plan-2x": "2 %-Plan",
 		"double-impact-badge": "Wirkung verdoppeln",
-		"benefit-beneficiaries": "{{directCount}} direkte, {{indirectCount}} indirekte Begünstigte",
-		"benefit-community": "Werde Teil einer Community mit {{count}} Unterstützern",
+		"benefit-beneficiaries": "{directCount} direkte, {indirectCount} indirekte Begünstigte",
+		"benefit-community": "Werde Teil einer Community mit {count} Unterstützern",
 		"benefit-double-impact": "Verdoppeln Sie die Wirkung",
 		"back": "Zurück",
 		"choose-payment": "Zahlungsmethode wählen"
@@ -84,8 +84,8 @@
 		"generate-qr-code": "QR-Code generieren",
 		"pay-online": "Online bezahlen",
 		"cover-costs-description": "Stelle sicher, dass deine vollständige Spende bei uns ankommt.",
-		"cover-costs-label-monthly": "Transaktionsgebühren von {{fee}}/Monat übernehmen",
-		"cover-costs-label-one-time": "Transaktionsgebühren von {{fee}} übernehmen",
+		"cover-costs-label-monthly": "Transaktionsgebühren von {fee}/Monat übernehmen",
+		"cover-costs-label-one-time": "Transaktionsgebühren von {fee} übernehmen",
 		"cover-costs-tooltip-aria": "So werden die Transaktionskosten berechnet",
 		"cover-costs-tooltip": "Zahlungsanbieter erheben eine Bearbeitungsgebühr (ca. 3 %). Wenn du sie übernimmst, fliesst mehr von deiner Spende direkt in unsere Mission."
 	},
@@ -104,8 +104,8 @@
 		}
 	},
 	"onboarding": {
-		"donatedThankYouMonthly": "{{currency}} {{amount}}/Monat gespendet. Vielen Dank.",
-		"donatedThankYouOneTime": "{{currency}} {{amount}} gespendet. Vielen Dank.",
+		"donatedThankYouMonthly": "{currency} {amount}/Monat gespendet. Vielen Dank.",
+		"donatedThankYouOneTime": "{currency} {amount} gespendet. Vielen Dank.",
 		"accountCreatedDescription": "Wir haben dein Konto eingerichtet.",
 		"isThisYou": "Bitte überprüfe deine Kontodaten",
 		"firstName": "Vorname",
@@ -139,8 +139,8 @@
 	"impact": {
 		"title": "Direktes Bargeld für Menschen in Not",
 		"cancel-anytime": "Jederzeit kündbar",
-		"supporters": "{{supporterCount}} Unterstützer aus {{countryCount}} Ländern",
-		"supporters-no-countries": "{{supporterCount}} Unterstützer weltweit",
+		"supporters": "{supporterCount} Unterstützer aus {countryCount} Ländern",
+		"supporters-no-countries": "{supporterCount} Unterstützer weltweit",
 		"zewo": "ZEWO zertifiziert",
 		"why-one-percent": "Warum 1% spenden?",
 		"pay-with": "Bezahlen mit"

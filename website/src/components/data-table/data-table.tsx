@@ -4,11 +4,8 @@ import { ActionMenu, type ActionMenuItem } from '@/components/data-table/element
 import { BaseTable } from '@/components/data-table/elements/base-table';
 import { IdCell } from '@/components/data-table/elements/id-cell';
 import { TABLE_PAGE_SIZE_OPTIONS, TableQueryState } from '@/components/data-table/query-state';
-import { TableFilterConfig } from '@/components/data-table/table-config.types';
+import { TableFilterConfig, type DataTableTranslator } from '@/components/data-table/table-config.types';
 import type { ColumnDef, VisibilityState } from '@/components/data-table/tanstack-table';
-import { Translator } from '@/lib/i18n/translator';
-import { useTranslator } from '@/lib/i18n/use-translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { DATA_TABLE_FETCH_PREFIX_REGEX } from '@/lib/utils/regex';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import { DataTableHeader } from '@socialincome/design-system/data-display/data-table-header/data-table-header';
@@ -25,22 +22,21 @@ import {
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import type { RowData, SortingState } from '@tanstack/react-table';
 import { functionalUpdate } from '@tanstack/react-table';
-import DOMPurify from 'isomorphic-dompurify';
+import { useTranslations } from 'next-intl';
 import { ReactNode, useState } from 'react';
 
 type DataTableProps<Row extends RowData> = {
 	title: ReactNode;
 	titleInfoTooltip?: string;
 	error?: string | null;
-	emptyMessage: string;
+	emptyMessage: ReactNode;
 	actionMenuItems?: ActionMenuItem[];
 	data: Row[];
-	makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, translator?: Translator) => ColumnDef<Row>[];
+	makeColumns: (hideProgramName?: boolean, hideLocalPartner?: boolean, t?: DataTableTranslator) => ColumnDef<Row>[];
 	hideProgramName?: boolean;
 	hideLocalPartner?: boolean;
 	onRowClick?: (row: Row) => void;
 	initialSorting?: SortingState;
-	lang?: WebsiteLanguage;
 	searchKeys?: (keyof Row)[];
 	sortOptions?: { id: string; label: string }[];
 	query?: TableQueryState & { totalRows: number };
@@ -81,7 +77,6 @@ export default function DataTable<Row extends RowData>({
 	hideLocalPartner = false,
 	onRowClick,
 	initialSorting,
-	lang,
 	searchKeys,
 	sortOptions = [],
 	query,
@@ -93,8 +88,8 @@ export default function DataTable<Row extends RowData>({
 	isLoading = false,
 	toolbarFilters = [],
 }: DataTableProps<Row>) {
-	const translator = useTranslator(lang ?? 'en', 'website-me');
-	const baseColumns = makeColumns(hideProgramName, hideLocalPartner, translator);
+	const t = useTranslations('website-me');
+	const baseColumns = makeColumns(hideProgramName, hideLocalPartner, t);
 	const columns = showEntityIdColumn
 		? ([
 				{
@@ -218,10 +213,6 @@ export default function DataTable<Row extends RowData>({
 		});
 	};
 
-	const renderSanitizedEmptyMessage = () => (
-		<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(emptyMessage) }}></div>
-	);
-
 	return (
 		<div data-testid="data-table">
 			<DataTableHeader
@@ -251,9 +242,9 @@ export default function DataTable<Row extends RowData>({
 			) : isLoading ? (
 				<AppLoadingSkeleton message="Loading..." />
 			) : isDatasetEmpty ? (
-				<DataTableEmptyState message={renderSanitizedEmptyMessage()} />
+				<DataTableEmptyState message={emptyMessage} />
 			) : isEmpty ? (
-				<DataTableNoResults message={renderSanitizedEmptyMessage()} />
+				<DataTableNoResults message={emptyMessage} />
 			) : (
 				<BaseTable
 					data={displayedData}

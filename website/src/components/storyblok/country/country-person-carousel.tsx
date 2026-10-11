@@ -1,5 +1,4 @@
 import { PersonCard } from '@/components/storyblok/shared/person-card';
-import { Translator } from '@/lib/i18n/translator';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import {
 	getPersonsByCountryOfficeAction,
@@ -12,6 +11,7 @@ import {
 	CarouselScrollNextButton,
 } from '@socialincome/design-system/data-display/carousel/carousel';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { getTranslations } from 'next-intl/server';
 import type { CountryStory } from './country.types';
 import { getCountryIsoCode, getCountryTitle } from './country.utils';
 
@@ -38,9 +38,7 @@ export const CountryPersonCarousel = async ({ country, lang }: Props) => {
 	const countryOfficeDescription = country.content.countryOfficeDescription?.trim();
 	const hasMultiplePersons = persons.length > 1;
 	const nextButtonAriaLabel = hasMultiplePersons
-		? (await Translator.getInstance({ language: lang, namespaces: ['website-common'] })).t(
-				'countries-page.person-carousel-next-button-aria',
-			)
+		? (await getTranslations('website-common'))('countries-page.person-carousel-next-button-aria')
 		: '';
 
 	return (

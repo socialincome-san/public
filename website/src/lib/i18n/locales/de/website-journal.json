@@ -8,8 +8,7 @@
 		"description": "News, Insights und Einblicke in die Arbeit von Social Income.",
 		"editors": "Mitwirkende Redakteure",
 		"more-articles": "Weitere Artikel sind auf Englisch verfügbar",
-		"article-count_one": "{{count}} Artikel",
-		"article-count_other": "{{count}} Artikel"
+		"article-count": "{count, plural, one {{count} Artikel} other {{count} Artikel}}"
 	},
 	"person": {
 		"articles": "Artikel"
@@ -26,8 +25,8 @@
 	"reference-article": {
 		"show-more": "Mehr anzeigen",
 		"show-less": "Weniger anzeigen",
-		"author": "von {{author}}",
-		"publication-date": "am {{publicationDate}}",
+		"author": "von {author}",
+		"publication-date": "am {publicationDate}",
 		"context": {
 			"original": "Erstveröffentlichung",
 			"related": "Diese Quellen lieferten Informationen und Kontext"

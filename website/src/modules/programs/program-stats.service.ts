@@ -74,28 +74,37 @@ export const resolveProgramFinancesDisplayAmounts = async (
 	stats: ProgramFinancesStatsInput,
 	displayCurrency: WebsiteCurrency,
 ): Promise<Result<ProgramFinancesDisplayAmounts>> => {
-	if (displayCurrency === stats.payoutCurrency) {
-		return resultOk(toPayoutCurrencyAmounts(stats));
-	}
-	if (displayCurrency === Currency.CHF) {
-		return resultOk(toChfAmounts(stats));
-	}
-
 	try {
 		const rates = await getLatestRatesOrUndefined();
-		const paidOutSoFar = convertAmount(stats.paidOutSoFarChf, Currency.CHF, displayCurrency, rates);
-		const totalProgramCosts = convertAmount(stats.totalProgramCostsChf, Currency.CHF, displayCurrency, rates);
-		const availableCredits = convertAmount(stats.availableCreditsChf, Currency.CHF, displayCurrency, rates);
-		if (paidOutSoFar === undefined || totalProgramCosts === undefined || availableCredits === undefined) {
-			return resultOk(toPayoutCurrencyAmounts(stats));
-		}
 
-		return resultOk({ currency: displayCurrency, paidOutSoFar, totalProgramCosts, availableCredits });
+		return resultOk(toDisplayAmounts(stats, displayCurrency, rates));
 	} catch (error) {
 		console.error('Could not resolve program finance display amounts', { error });
 
 		return resultFail('Could not resolve program finance display amounts');
 	}
+};
+
+const toDisplayAmounts = (
+	stats: ProgramFinancesStatsInput,
+	displayCurrency: WebsiteCurrency,
+	rates: ExchangeRates | undefined,
+): ProgramFinancesDisplayAmounts => {
+	if (displayCurrency === stats.payoutCurrency) {
+		return toPayoutCurrencyAmounts(stats);
+	}
+	if (displayCurrency === Currency.CHF) {
+		return toChfAmounts(stats);
+	}
+
+	const paidOutSoFar = convertAmount(stats.paidOutSoFarChf, Currency.CHF, displayCurrency, rates);
+	const totalProgramCosts = convertAmount(stats.totalProgramCostsChf, Currency.CHF, displayCurrency, rates);
+	const availableCredits = convertAmount(stats.availableCreditsChf, Currency.CHF, displayCurrency, rates);
+	if (paidOutSoFar === undefined || totalProgramCosts === undefined || availableCredits === undefined) {
+		return toPayoutCurrencyAmounts(stats);
+	}
+
+	return { currency: displayCurrency, paidOutSoFar, totalProgramCosts, availableCredits };
 };
 
 export const getProgramDashboardStats = async (programId: string): Promise<Result<ProgramDashboardStats>> => {

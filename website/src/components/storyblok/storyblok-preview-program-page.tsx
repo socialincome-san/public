@@ -3,18 +3,19 @@ import { ProgramDetail } from '@/components/storyblok/program/program-detail';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import { getProgramImages, getProgramPortalSlug, getProgramTitle } from '@/components/storyblok/program/program.utils';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
-import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getCommunityPanelDataAction } from '@/modules/community/community.actions';
 import { getStoryWithFallbackAction } from '@/modules/storyblok-content/storyblok-content.actions';
 
 type Props = {
 	storyPath: string;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	previewRoutePath: string;
 	searchParams: Record<string, string | undefined>;
 };
 
-export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, previewRoutePath, searchParams }: Props) => {
+export const StoryblokPreviewProgramPage = async ({ storyPath, lang, currency, previewRoutePath, searchParams }: Props) => {
 	return await StoryblokPreviewStory<ProgramStory>({
 		storyPath,
 		lang,
@@ -29,7 +30,10 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, pre
 			const programTitle = getProgramTitle(story.content);
 			const portalSlug = getProgramPortalSlug(story.content);
 
-			const programDetailPortalData = portalSlug ? await loadProgramDetailPortalData(portalSlug) : {};
+			const [programDetailPortalData, communityResult] = await Promise.all([
+				portalSlug ? loadProgramDetailPortalData(portalSlug) : {},
+				getCommunityPanelDataAction({ page: story.content, language: lang, currency }),
+			]);
 
 			return (
 				<ProgramDetail
@@ -43,7 +47,8 @@ export const StoryblokPreviewProgramPage = async ({ storyPath, lang, region, pre
 						...programDetailPortalData,
 					}}
 					lang={lang}
-					region={region}
+					currency={currency}
+					community={communityResult.success ? communityResult.data : null}
 				/>
 			);
 		},

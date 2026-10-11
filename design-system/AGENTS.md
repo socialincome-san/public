@@ -66,7 +66,8 @@ in Storybook › Foundations (`src/foundations/*.stories.tsx`).
   `text-display-lg`.
 - Radii and shadows: Tailwind's scales plus `rounded-5xl`,
   `rounded-control`, `shadow-card`, `shadow-raised`, `shadow-overlay`,
-  `shadow-dock`, `drop-shadow-card`, `drop-shadow-on-media`.
+  `shadow-dock`, `shadow-backstage`, `drop-shadow-card`,
+  `drop-shadow-on-media`.
 
 `no-arbitrary-design-values` rejects palette colors (`bg-red-500`) and
 arbitrary colors, px/rem font sizes, radii and shadows (`text-[13px]`,

@@ -30,6 +30,7 @@
 	--color-card: hsl(var(--card));
 	--color-card-foreground: hsl(var(--card-foreground));
 	--color-banner-blue: hsl(var(--banner-blue));
+	--color-backstage: hsl(var(--backstage));
 	--color-highlight: hsl(var(--highlight));
 
 	--text-2xs: 0.625rem;
@@ -43,6 +44,7 @@
 	--shadow-raised: 0 4px 28px 0 rgb(0 30 101 / 0.12);
 	--shadow-overlay: 0 24px 80px 0 rgb(31 65 101 / 0.12);
 	--shadow-dock: 0 -3px 14px 0 rgb(0 0 0 / 0.05);
+	--shadow-backstage: 0 0 28px 0 rgb(0 0 0 / 0.25);
 	--drop-shadow-card: 0 4px 20px rgb(0 0 0 / 0.09);
 	--drop-shadow-on-media: 0 2px 4px rgb(0 0 0 / 0.8);
 
@@ -57,6 +59,8 @@
 
 	--breakpoint-lg: 64rem;
 	--breakpoint-2xl: 87.5rem;
+
+	--ease-glide: cubic-bezier(0.32, 0.72, 0, 1);
 
 	--animate-accordion-down: accordion-down 0.2s ease-out;
 	--animate-accordion-up: accordion-up 0.2s ease-out;

@@ -2,6 +2,8 @@ import type {
 	Article,
 	ArticleType,
 	Campaign,
+	CampaignGlobals,
+	CommunityGlobals,
 	Country,
 	Focus,
 	LocalPartner,
@@ -9,6 +11,7 @@ import type {
 	Program,
 	Tag,
 } from '@/generated/storyblok/types/109655/storyblok-components';
+import { fetchStoryblokCampaignGlobals } from '@/integrations/storyblok/storyblok-campaign.integration';
 import {
 	fetchPublishedStoryblokArticles,
 	fetchStoryblokDatasourceEntries,
@@ -29,6 +32,7 @@ import {
 	getPersonStoryPath,
 	getProgramStoryPath,
 	STORYBLOK_CAMPAIGNS_FOLDER,
+	STORYBLOK_COMMUNITY_GLOBALS_PATH,
 	STORYBLOK_COUNTRIES_FOLDER,
 	STORYBLOK_FOCUSES_FOLDER,
 	STORYBLOK_LOCAL_PARTNERS_FOLDER,
@@ -350,6 +354,12 @@ export const getFocusBySlug = async (slug: string, language: string): Promise<Re
 
 	return resultFail('Focus not found', 404);
 };
+
+export const getCommunityGlobals = async (language: string): Promise<Result<ISbStoryData<CommunityGlobals>>> =>
+	fetchTypedStoryWithFallback<ISbStoryData<CommunityGlobals>>(STORYBLOK_COMMUNITY_GLOBALS_PATH, language);
+
+export const getCampaignGlobals = async (language: string): Promise<Result<ISbStoryData<CampaignGlobals> | null>> =>
+	fetchStoryblokCampaignGlobals(language);
 
 export const getPerson = async (slug: string, language: string): Promise<Result<ISbStoryData<Person>>> =>
 	fetchTypedStoryWithFallback<ISbStoryData<Person>>(getPersonStoryPath(slug), language);

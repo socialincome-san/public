@@ -1,6 +1,7 @@
 import type { HeroHeaderImage } from '@/components/storyblok/shared/hero-header';
 import type { Campaign } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { CampaignPage } from '@/modules/campaigns/campaign.types';
+import type { CommunityPage } from '@/modules/community/community.schemas';
 import type { ISbStoryData } from '@storyblok/js';
 
 export type CampaignStory = ISbStoryData<Campaign>;
@@ -21,4 +22,5 @@ export type CampaignDetailData = {
 	linkWebsite?: string;
 	faq?: Campaign['faq'];
 	campaign: CampaignPage;
+	communityPage: CommunityPage;
 };

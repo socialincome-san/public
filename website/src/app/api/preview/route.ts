@@ -1,3 +1,4 @@
+import { defaultCurrency, toCurrencySegment } from '@/lib/i18n/utils';
 import {
 	getWebsitePathTailFromStoryblokSlug,
 	isAllowedStoryblokPreviewSlug,
@@ -11,7 +12,6 @@ import { redirect, RedirectType } from 'next/navigation';
 const DEFAULT_LANGUAGE = 'en';
 const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
-const DEFAULT_REGION = 'int';
 
 const getLanguage = (slug: string | null) => {
 	if (slug) {
@@ -102,7 +102,7 @@ export const GET = async (request: Request) => {
 		}
 	}
 	const queryString = storyblokParams.toString();
-	const redirectUrl = `/${lang}/${DEFAULT_REGION}/${path}${queryString ? `?${queryString}` : ''}`;
+	const redirectUrl = `/${lang}/${toCurrencySegment(defaultCurrency)}/${path}${queryString ? `?${queryString}` : ''}`;
 
 	redirect(redirectUrl, RedirectType.push);
 };

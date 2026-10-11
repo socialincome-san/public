@@ -27,7 +27,9 @@ Open-source platform for unconditional basic income. Read the
   adding.
 - Change only what the task needs. Keep it simple; no speculative
   abstractions or single-use helpers.
-- Prefer clear names over comments.
+- Comment only what the code cannot say: a non-obvious why, a browser
+  quirk, a trap for the next person. Never restate what the code, a
+  name or a type already says. When in doubt, leave it out.
 - Never edit `website/src/generated/**` or applied Prisma migrations.
 
 ## TypeScript And React

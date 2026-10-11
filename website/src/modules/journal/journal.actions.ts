@@ -6,19 +6,19 @@ import type { JournalArticlePageData, JournalPersonPageData } from '@/modules/jo
 import type { ResolvedArticle } from '@/modules/storyblok-content/storyblok-content.types';
 import type { ISbStoryData } from '@storyblok/js';
 import {
-	journalArticleRequestSchema,
-	journalArticlesByUuidsRequestSchema,
-	journalLanguageRequestSchema,
-	journalPageRequestSchema,
-} from './journal.schemas';
-import {
 	getJournalArticle,
 	getJournalArticlePageData,
 	getJournalArticlesByUuids,
 	getJournalPerson,
 	getJournalPersonPageData,
 	getLatestJournalArticles,
-} from './journal.service';
+} from './journal.cache';
+import {
+	journalArticleRequestSchema,
+	journalArticlesByUuidsRequestSchema,
+	journalLanguageRequestSchema,
+	journalPageRequestSchema,
+} from './journal.schemas';
 
 export const getJournalArticlePageDataAction = async (input: unknown): Promise<Result<JournalArticlePageData>> => {
 	const parsed = journalPageRequestSchema.safeParse(input);

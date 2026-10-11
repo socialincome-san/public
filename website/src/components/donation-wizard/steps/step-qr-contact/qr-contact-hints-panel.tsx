@@ -1,14 +1,14 @@
 'use client';
 
 import { useContributorSession } from '@/components/contributor/use-contributor-session';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { cn } from '@socialincome/design-system/cn';
 import { Info } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 const hintItemClass = cn('flex items-start gap-2 text-left text-sm leading-normal text-muted-foreground');
 
 export const QrContactHintsPanel = () => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 	const { contributorSession } = useContributorSession();
 
 	return (

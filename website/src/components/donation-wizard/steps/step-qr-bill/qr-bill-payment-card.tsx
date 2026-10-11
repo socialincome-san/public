@@ -1,9 +1,9 @@
 'use client';
 
 import { formatQrBillIban, formatQrBillReference } from '@/components/donation-wizard/steps/step-qr-bill/qr-bill-format';
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import type { QrBillDisplay } from '@/modules/qr-bills/qr-bill.types';
 import { Scan } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { QrPaymentDetailField } from '../step-qr-contact/qr-payment-detail-field';
 
@@ -15,7 +15,7 @@ type QrBillPaymentCardProps = {
 const qrSvgClass = '[&_svg]:block [&_svg]:aspect-square [&_svg]:h-auto [&_svg]:w-full [&_svg]:max-w-full';
 
 export const QrBillPaymentCard = ({ display, paymentTypeLabel }: QrBillPaymentCardProps) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 	const { creditor, reference, amount, currency, qrBillSvg } = display;
 
 	const paymentToValue = [

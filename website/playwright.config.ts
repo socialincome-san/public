@@ -8,24 +8,8 @@ const port = process.env.PORT ?? '3000';
 const baseURL = `http://localhost:${port}`;
 
 const e2eStorageState: Awaited<ReturnType<BrowserContext['storageState']>> = {
-	cookies: [
-		{
-			name: 'si_currency',
-			value: 'CHF',
-			domain: 'localhost',
-			path: '/',
-			expires: -1,
-			httpOnly: false,
-			secure: false,
-			sameSite: 'Lax',
-		},
-	],
-	origins: [
-		{
-			origin: baseURL,
-			localStorage: [{ name: 'cookie_consent', value: 'denied' }],
-		},
-	],
+	cookies: [],
+	origins: [],
 };
 
 export default defineConfig({

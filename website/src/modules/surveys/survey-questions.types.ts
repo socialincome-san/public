@@ -1,10 +1,12 @@
+import { type NamespaceMessageKey } from '@/lib/i18n/message-keys';
+
 export type Question = {
 	type: QuestionInputType;
 	name: string;
 	choices: (string | boolean)[];
 	choicesTranslationKey?: string;
-	translationKey: string;
-	descriptionTranslationKey?: string;
+	translationKey: NamespaceMessageKey<'website-survey'>;
+	descriptionTranslationKey?: NamespaceMessageKey<'website-survey'>;
 };
 
 enum QuestionInputType {

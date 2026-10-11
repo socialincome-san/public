@@ -1,9 +1,9 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@socialincome/design-system/forms/form/form';
 import { Input } from '@socialincome/design-system/forms/input/input';
+import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -30,7 +30,7 @@ export const AccountDetailsStep = ({
 	onFirstNameChange,
 	onLastNameChange,
 }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'create-program-wizard' });
+	const t = useTranslations('create-program-wizard');
 	const accountDetailsSchema = z.object({
 		firstName: z.string().trim().min(1, t('step4.validation.first_name_required')),
 		lastName: z.string().trim().min(1, t('step4.validation.last_name_required')),

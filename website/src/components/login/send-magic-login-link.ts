@@ -10,8 +10,13 @@ const mergeClaimIds = (storedClaimIds: string[], claimId?: string): string[] => 
 	return [...storedClaimIds, trimmed];
 };
 
-export const buildMagicLoginContinueUrl = (origin: string, email: string, claimId?: string): string => {
-	const url = new URL('/auth/confirm-login', origin);
+export const buildMagicLoginContinueUrl = (
+	origin: string,
+	websiteBasePath: string,
+	email: string,
+	claimId?: string,
+): string => {
+	const url = new URL(`${websiteBasePath}/auth/confirm-login`, origin);
 	url.searchParams.set('email', email);
 
 	const claimIds = mergeClaimIds(readPendingClaimIds(), claimId);
@@ -25,6 +30,7 @@ export const buildMagicLoginContinueUrl = (origin: string, email: string, claimI
 export const sendMagicLoginLink = async (input: {
 	auth: ClientAuth;
 	email: string;
+	websiteBasePath: string;
 	origin?: string;
 	claimId?: string;
 }): Promise<void> => {
@@ -36,7 +42,7 @@ export const sendMagicLoginLink = async (input: {
 	const result = await sendSignInLink(
 		input.auth,
 		input.email,
-		buildMagicLoginContinueUrl(origin, input.email, input.claimId),
+		buildMagicLoginContinueUrl(origin, input.websiteBasePath, input.email, input.claimId),
 	);
 	if (!result.success) {
 		throw new Error(result.error);

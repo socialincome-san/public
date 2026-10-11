@@ -1,7 +1,7 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/i18n/use-route-translator';
 import { ArrowLeftRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import type { Cadence } from '../../utils/donation-amount';
 import { selectCadenceSwitchView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardSend } from '../../wizard/types';
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const CadenceSwitch = ({ currentCadence, send }: Props) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
+	const t = useTranslations('donation-wizard');
 	const { targetCadence, labelKey } = selectCadenceSwitchView(currentCadence);
 
 	return (

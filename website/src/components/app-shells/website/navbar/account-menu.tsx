@@ -2,27 +2,27 @@
 
 import { useLogout } from '@/components/app-shells/use-logout';
 import { displaySession, type Scope } from '@/components/app-shells/website/navbar/utils';
-import { useTranslator } from '@/lib/i18n/use-translator';
-import { WebsiteLanguage } from '@/lib/i18n/utils';
+import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
 import type { Session } from '@/modules/auth/auth.types';
 import {
 	SiteAccountMenu,
 	type SiteAccountMenuLink,
 } from '@socialincome/design-system/navigation/site-account-menu/site-account-menu';
 import { Building2, LayoutDashboard, User, Users } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type Props = {
 	sessions: Session[];
 	scope: Scope;
-	lang: WebsiteLanguage;
 };
 
-export const AccountMenu = ({ sessions, scope, lang }: Props) => {
+export const AccountMenu = ({ sessions, scope }: Props) => {
 	const { logout } = useLogout();
-	const translator = useTranslator(lang, 'website-me');
+	const dashboardPath = `${useWebsiteBasePath()}/dashboard`;
+	const t = useTranslations('website-me');
 	const session = displaySession(sessions, scope);
 
-	if (!session || !translator) {
+	if (!session) {
 		return null;
 	}
 
@@ -35,46 +35,46 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 	switch (scope) {
 		case 'website':
 			if (hasUser) {
-				links.push({ href: '/portal', label: translator.t('navigation.go-to-portal'), icon: Users });
+				links.push({ href: '/portal', label: t('navigation.go-to-portal'), icon: Users });
 			}
 			if (hasContributor) {
 				links.push({
-					href: '/dashboard/subscriptions',
-					label: translator.t('navigation.go-to-dashboard'),
+					href: `${dashboardPath}/subscriptions`,
+					label: t('navigation.go-to-dashboard'),
 					icon: LayoutDashboard,
 				});
 			}
 			if (hasLocalPartner) {
 				links.push({
 					href: '/partner-space/recipients',
-					label: translator.t('navigation.go-to-partner-space'),
+					label: t('navigation.go-to-partner-space'),
 					icon: Building2,
 				});
 			}
 			break;
 		case 'partner-space':
-			links.push({ href: '/partner-space/profile', label: translator.t('profile.link'), icon: User });
+			links.push({ href: '/partner-space/profile', label: t('profile.link'), icon: User });
 			if (hasUser) {
-				links.push({ href: '/portal', label: translator.t('navigation.go-to-portal'), icon: Users });
+				links.push({ href: '/portal', label: t('navigation.go-to-portal'), icon: Users });
 			}
 			if (hasContributor) {
 				links.push({
-					href: '/dashboard/subscriptions',
-					label: translator.t('navigation.go-to-dashboard'),
+					href: `${dashboardPath}/subscriptions`,
+					label: t('navigation.go-to-dashboard'),
 					icon: LayoutDashboard,
 				});
 			}
 			break;
 		case 'dashboard':
 		default:
-			links.push({ href: '/dashboard/profile', label: translator.t('profile.link'), icon: User });
+			links.push({ href: `${dashboardPath}/profile`, label: t('profile.link'), icon: User });
 			if (hasUser) {
-				links.push({ href: '/portal', label: translator.t('navigation.go-to-portal'), icon: Users });
+				links.push({ href: '/portal', label: t('navigation.go-to-portal'), icon: Users });
 			}
 			if (hasLocalPartner) {
 				links.push({
 					href: '/partner-space/recipients',
-					label: translator.t('navigation.go-to-partner-space'),
+					label: t('navigation.go-to-partner-space'),
 					icon: Building2,
 				});
 			}
@@ -86,7 +86,7 @@ export const AccountMenu = ({ sessions, scope, lang }: Props) => {
 			firstName={session.firstName}
 			lastName={session.lastName}
 			links={links}
-			signOutLabel={translator.t('security.sign-out.button')}
+			signOutLabel={t('security.sign-out.button')}
 			onSignOut={() => void logout()}
 		/>
 	);
