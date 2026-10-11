@@ -1,7 +1,7 @@
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import type { ProgramStory } from '@/components/storyblok/program/program.types';
 import { Currency } from '@/generated/prisma/client';
-import type { CampaignTableEntry } from '@/lib/services/campaign/campaign.types';
+import type { CampaignTableEntry } from '@/modules/campaigns/campaign.types';
 import { getCampaignTableView } from './campaigns-table.server';
 
 jest.mock('@/generated/prisma/client', () => ({

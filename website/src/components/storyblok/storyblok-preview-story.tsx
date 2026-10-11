@@ -1,7 +1,7 @@
 import { StoryblokPreviewSyncer } from '@/components/storyblok/storyblok-preview-syncer';
 import { WebsiteLanguage } from '@/lib/i18n/utils';
-import { buildPreviewCacheKey, getPreviewCache } from '@/lib/storyblok-preview/preview-cache';
-import { getStoryblokPreviewToken, verifyStoryblokPreviewToken } from '@/lib/storyblok-preview/preview-token';
+import { buildPreviewCacheKey, getPreviewCache } from '@/lib/storyblok/preview/preview-cache';
+import { getStoryblokPreviewToken, verifyStoryblokPreviewToken } from '@/lib/storyblok/preview/preview-token';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
 

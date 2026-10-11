@@ -3,15 +3,15 @@
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { clearFormSchemaValues, cloneFormSchema } from '@/components/dynamic-form/helper';
 import { UserRole } from '@/generated/prisma/enums';
+import { handleResult } from '@/lib/result-client';
 import {
 	createUserAction,
 	deleteUserAction,
 	getUserAction,
 	getUserOptionsAction,
 	updateUserAction,
-} from '@/lib/server-actions/user-actions';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import type { UserPayload } from '@/lib/services/user/user.types';
+} from '@/modules/users/user.actions';
+import type { UserPayload } from '@/modules/users/user.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreateUserInput, buildUpdateUserInput } from './users-form-helper';
@@ -74,7 +74,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 
 	const loadUser = async (id: string) => {
 		const result = await getUserAction(id);
-		handleServiceResult(result, {
+		handleResult(result, {
 			onSuccess: (data) => {
 				setUser(data);
 				setFormSchema((prev) => {
@@ -120,7 +120,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 				userId && user
 					? await updateUserAction(buildUpdateUserInput(schema, user))
 					: await createUserAction(buildCreateUserInput(schema));
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});
@@ -134,7 +134,7 @@ export default function UsersForm({ onSuccess, onError, onCancel, userId }: User
 
 		startTransition(async () => {
 			const result = await deleteUserAction(userId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});

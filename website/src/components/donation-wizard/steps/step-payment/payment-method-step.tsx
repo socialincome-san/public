@@ -2,22 +2,21 @@
 
 import { OnlinePaymentLogos } from '@/components/payment-logos/online-payment-logos';
 import { QrPaymentLogo } from '@/components/payment-logos/qr-payment-logo';
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { useI18n } from '@/lib/i18n/useI18n';
-import { isWizardQrCurrencySupported } from '@/lib/services/qr-bill/wizard-qr-payment';
-import { cn } from '@/lib/utils/cn';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
+import { cn } from '@socialincome/design-system/cn';
+import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 import { DonationStepFooter } from '../../shared/donation-step-footer';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
-import { selectPaymentView } from '../../wizard/donation-machine-selectors';
+import { isWizardQrCurrencySupported, selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
 import { requestStripeEmbeddedCheckout } from '../step-stripe-checkout/request-stripe-embedded-checkout';
 import { CoverTransactionCostsToggle } from './cover-transaction-costs-toggle';
 import { PaymentMethodOption } from './payment-method-option';
 
 export const PaymentMethodStep = ({ state, send }: DonationWizardStepProps) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
-	const { currency = 'CHF' } = useI18n();
+	const t = useTranslations('donation-wizard');
+	const currency = useWebsiteCurrency();
 	const view = selectPaymentView(state.context, currency);
 	const isQrAvailable = isWizardQrCurrencySupported(currency);
 

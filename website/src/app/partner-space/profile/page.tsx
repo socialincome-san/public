@@ -1,8 +1,8 @@
 import { TranslatedProfileForm } from '@/components/profile-form/translated-form';
-import { getAuthenticatedLocalPartnerOrRedirect } from '@/lib/firebase/current-local-partner';
+import { requireSession } from '@/server/session';
 
 export default async function Page() {
-	const session = await getAuthenticatedLocalPartnerOrRedirect();
+	const session = await requireSession('local-partner');
 
 	return <TranslatedProfileForm session={session} />;
 }

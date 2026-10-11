@@ -1,5 +1,4 @@
-import type { ProgramStory } from '@/components/storyblok/program/program.types';
-import { getProgramPortalSlug } from '@/components/storyblok/program/program.utils';
+import { getProgramPortalSlug, type ProgramStory } from '@/lib/storyblok/program-story';
 
 /** The card renders at most this many programs; the rest are summarised by a link. */
 export const LOCAL_PARTNER_PROGRAM_ROWS = 4;

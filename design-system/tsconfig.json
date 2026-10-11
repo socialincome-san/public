@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"target": "es6",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"strict": true,
+		"jsx": "react-jsx",
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"noEmit": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"isolatedModules": true,
+		"types": ["jest", "node", "react"]
+	},
+	"include": ["src/**/*.ts", "src/**/*.tsx", ".storybook/**/*.ts", ".storybook/**/*.tsx"]
+}

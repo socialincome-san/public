@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/database/prisma';
 import { seedDatabase } from '@/lib/database/seed/run-seed';
 import { expect, test } from '@playwright/test';
-import { clickDataTableActionItem, deleteFirebaseEmailsIfExist, getFirebaseAdminService } from '../../../utils';
+import { clickDataTableActionItem, deleteFirebaseEmailsIfExist, findFirebaseUserByEmail } from '../../../utils';
 
 test.beforeEach(async () => {
 	await seedDatabase();
@@ -189,7 +189,6 @@ test('edit contributor and remove phone and address', async ({ page }) => {
 });
 
 test('contributor create and update keeps Firebase user in sync', async ({ page }) => {
-	const firebaseService = await getFirebaseAdminService();
 	const unique = Date.now();
 	const initialFirstName = 'Firebase';
 	const initialLastName = 'Contributor';
@@ -217,7 +216,7 @@ test('contributor create and update keeps Firebase user in sync', async ({ page 
 		await page.getByRole('button', { name: 'Save' }).click();
 		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-		const firebaseCreatedResult = await firebaseService.getByEmail(initialEmail);
+		const firebaseCreatedResult = await findFirebaseUserByEmail(initialEmail);
 		expect(firebaseCreatedResult.success).toBeTruthy();
 		if (!firebaseCreatedResult.success) {
 			throw new Error(firebaseCreatedResult.error);
@@ -233,14 +232,14 @@ test('contributor create and update keeps Firebase user in sync', async ({ page 
 		await page.getByRole('button', { name: 'Save' }).click();
 		await page.getByTestId('dynamic-form').waitFor({ state: 'detached' });
 
-		const firebaseOldEmailResult = await firebaseService.getByEmail(initialEmail);
+		const firebaseOldEmailResult = await findFirebaseUserByEmail(initialEmail);
 		expect(firebaseOldEmailResult.success).toBeTruthy();
 		if (!firebaseOldEmailResult.success) {
 			throw new Error(firebaseOldEmailResult.error);
 		}
 		expect(firebaseOldEmailResult.data).toBeNull();
 
-		const firebaseUpdatedResult = await firebaseService.getByEmail(updatedEmail);
+		const firebaseUpdatedResult = await findFirebaseUserByEmail(updatedEmail);
 		expect(firebaseUpdatedResult.success).toBeTruthy();
 		if (!firebaseUpdatedResult.success) {
 			throw new Error(firebaseUpdatedResult.error);

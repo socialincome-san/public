@@ -1,0 +1,106 @@
+{
+  "projectId": "63065c78-8853-4b0c-a17d-903d2c8275c8",
+  "shape": "storybook",
+  "storybookConfigDir": "design-system/.storybook",
+  "storybookStatic": ".design-sync/sb-reference",
+  "pkg": "@socialincome/design-system",
+  "globalName": "SocialIncomeDS",
+  "buildCmd": "node .design-sync/build-dist.mjs",
+  "entry": "design-system/dist/index.js",
+  "titleMap": {
+    "Colors": null,
+    "Typography": null,
+    "Spacing&Layout": null,
+    "Radius": null,
+    "Shadows": null,
+    "Motion": null,
+    "DataTableCells": "DataTableTextCell",
+    "DataTableStates": "DataTableEmptyState",
+    "Logo": "SocialIncomeLogo",
+    "CustomIcons": "QuoteIcon",
+    "SocialIcons": "InstagramIcon"
+  },
+  "storyImports": {
+    "shim": [
+      "/design-system/src/components/"
+    ]
+  },
+  "overrides": {
+    "ContributorsCard": {
+      "cardMode": "column"
+    },
+    "DataTablePagination": {
+      "cardMode": "column"
+    },
+    "PeopleStack": {
+      "cardMode": "column"
+    },
+    "PersonCard": {
+      "cardMode": "column"
+    },
+    "RecordSummary": {
+      "cardMode": "column"
+    },
+    "StatPanel": {
+      "cardMode": "column"
+    },
+    "StatProgress": {
+      "cardMode": "column"
+    },
+    "Wallet": {
+      "cardMode": "column"
+    },
+    "Progress": {
+      "cardMode": "column"
+    },
+    "ThankYouPanel": {
+      "cardMode": "column"
+    },
+    "RadioCard": {
+      "cardMode": "column"
+    },
+    "BlockWrapper": {
+      "cardMode": "column"
+    },
+    "PortalAppShell": {
+      "cardMode": "column"
+    },
+    "SplitSection": {
+      "cardMode": "column"
+    },
+    "CheckoutFooter": {
+      "cardMode": "column"
+    },
+    "PortalNavbar": {
+      "cardMode": "column",
+      "viewport": "1280x800"
+    },
+    "SiteHeader": {
+      "cardMode": "column"
+    },
+    "StepIndicator": {
+      "cardMode": "column"
+    },
+    "WizardFooter": {
+      "cardMode": "column"
+    },
+    "CommunityPanel": {
+      "cardMode": "single",
+      "primaryStory": "Default"
+    },
+    "Select": {
+      "cardMode": "single",
+      "primaryStory": "Default"
+    },
+    "Backstage": {
+      "cardMode": "single",
+      "primaryStory": "Open"
+    },
+    "DropdownMenu": {
+      "skip": [
+        "overlays-dropdownmenu--with-submenu"
+      ]
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}

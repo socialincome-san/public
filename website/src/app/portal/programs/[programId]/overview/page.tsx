@@ -1,5 +1,5 @@
-import { BlockWrapper } from '@/components/block-wrapper';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
+import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { Suspense } from 'react';
 import { DonationSuccessDialog } from './components/donation-success-dialog';
 import OverviewProgramScopedDataLoader from './overview-data-loader';

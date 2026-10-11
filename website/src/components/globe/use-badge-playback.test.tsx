@@ -1,6 +1,6 @@
 /** @jest-environment jsdom */
 
-import type { GlobeContribution } from '@/lib/services/contribution/contribution-globe.types';
+import type { GlobeContribution } from '@/modules/contributions/contribution.types';
 import { act, useRef } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { clearBadgeSlot, createBadgeSlotElement, mountBadgeContent } from './globe-badge';

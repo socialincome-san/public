@@ -1,6 +1,5 @@
 'use client';
 
-import { headingStyles } from '@/components/heading-styles';
 import type {
 	RichTextAlignment,
 	RichTextAlignmentProps,
@@ -8,8 +7,9 @@ import type {
 	RichTextLinkProps,
 	RichTextTableCellProps,
 } from '@/components/storyblok/rich-text/rich-text.types';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@/components/table';
-import { cn } from '@/lib/utils/cn';
+import { cn } from '@socialincome/design-system/cn';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/design-system/data-display/table/table';
+import { headingStyles } from '@socialincome/design-system/layout/section-heading/heading-styles';
 import NextLink from 'next/link';
 import { createElement, ReactNode } from 'react';
 import {
@@ -102,12 +102,14 @@ const getRichTextTableCellSpanProps = ({ colspan, rowspan }: RichTextTableCellPr
 
 const storyblokRichTextTableNodeResolvers = {
 	[NODE_TABLE]: (children: ReactNode) => (
-		<Table className="text-foreground my-6">
-			<TableBody>{children}</TableBody>
-		</Table>
+		<div className="text-foreground my-6">
+			<Table>
+				<TableBody>{children}</TableBody>
+			</Table>
+		</div>
 	),
 	[NODE_TABLE_HEADER]: (children: ReactNode, props?: RichTextTableCellProps) => (
-		<TableHead className="font-bold" {...getRichTextTableCellSpanProps(props)}>
+		<TableHead variant="content" {...getRichTextTableCellSpanProps(props)}>
 			{children}
 		</TableHead>
 	),

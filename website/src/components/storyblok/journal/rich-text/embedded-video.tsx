@@ -1,9 +1,10 @@
 import type { EmbeddedVideo } from '@/generated/storyblok/types/109655/storyblok-components';
-import { VimeoVideoMatchAndExtract, YouTubeVideoMatchAndExtract } from '@/lib/utils/UrlVideoParser';
+import { VimeoVideoMatchAndExtract, YouTubeVideoMatchAndExtract } from '@/lib/utils/url-video-parser';
 
 const videoMatchers = [new YouTubeVideoMatchAndExtract(), new VimeoVideoMatchAndExtract()];
 
-const getMuxPlayerUrl = (muxPlaybackId: string | undefined) => muxPlaybackId && `https://player.mux.com/${muxPlaybackId}`;
+const getMuxPlayerUrl = (muxPlaybackId: string | undefined) =>
+	muxPlaybackId && `https://player.mux.com/${muxPlaybackId}?disable-cookies=true`;
 
 export const EmbeddedVideoPlayer = ({ caption, muxPlaybackId, url, _uid }: EmbeddedVideo) => {
 	const videoUrl = url

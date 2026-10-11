@@ -1,12 +1,11 @@
 'use client';
 
-import { useRouteTranslator } from '@/lib/hooks/use-route-translator';
-import { useI18n } from '@/lib/i18n/useI18n';
-import { createWizardPendingContributionAction } from '@/lib/server-actions/qr-wizard-actions';
-import { cn } from '@/lib/utils/cn';
+import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
+import { createWizardPendingContributionAction } from '@/modules/qr-bills/qr-bill.actions';
+import { cn } from '@socialincome/design-system/cn';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { getDonationDisplayAmount } from '../../utils/donation-amount';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import { selectPaymentView } from '../../wizard/donation-machine-selectors';
 import type { DonationWizardStepProps } from '../../wizard/types';
@@ -15,13 +14,12 @@ import { QrBillPaymentCard } from './qr-bill-payment-card';
 import { QrBillPdfDownloadLink } from './qr-bill-pdf-download-link';
 
 export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
-	const { t } = useRouteTranslator({ namespace: 'donation-wizard' });
-	const { currency = 'CHF' } = useI18n();
+	const t = useTranslations('donation-wizard');
+	const currency = useWebsiteCurrency();
 	const view = selectPaymentView(state.context);
 	const [confirming, setConfirming] = useState(false);
 
-	const { qrBillSvg, qrDonor, qrContributorReferenceId, qrContributionReferenceId } = state.context;
-	const displayAmount = getDonationDisplayAmount(state.context);
+	const { qrBillDisplay, qrDonor, qrContributorReferenceId, qrContributionReferenceId } = state.context;
 
 	const paymentTypeLabel =
 		state.context.cadence === 'monthly' ? t('stepQrBill.paymentTypeStandingOrder') : t('stepQrBill.paymentTypeOneTime');
@@ -68,7 +66,7 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 		}
 	};
 
-	if (!qrBillSvg || !qrContributorReferenceId || !qrContributionReferenceId) {
+	if (!qrBillDisplay || !qrContributorReferenceId || !qrContributionReferenceId) {
 		return null;
 	}
 
@@ -97,21 +95,14 @@ export const QrBillStep = ({ state, send }: DonationWizardStepProps) => {
 				)}
 			</div>
 
-			<QrBillPaymentCard
-				qrBillSvg={qrBillSvg}
-				amount={displayAmount}
-				currency={currency}
-				contributorReferenceId={qrContributorReferenceId}
-				contributionReferenceId={qrContributionReferenceId}
-				paymentTypeLabel={paymentTypeLabel}
-			/>
+			<QrBillPaymentCard display={qrBillDisplay} paymentTypeLabel={paymentTypeLabel} />
 
 			<QrWizardStepFooter
 				showBack={false}
 				onContinue={() => void onConfirm()}
 				continueLabel={confirming ? t('stepQrBill.confirming') : confirmLabel}
 				continueDisabled={confirming}
-				continueClassName="bg-foreground text-primary-foreground shadow-xs after:opacity-0 hover:bg-foreground/90 hover:after:opacity-0"
+				continueVariant="foreground"
 				summary={{
 					amount: view.summary.amount,
 					currency,

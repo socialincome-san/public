@@ -9,10 +9,6 @@ const PRODUCTION_SCRIPT_SRC = [
 	"'unsafe-inline'",
 	// The dotLottie renderer compiles a WASM module. Narrower than 'unsafe-eval': it does not permit eval().
 	"'wasm-unsafe-eval'",
-	'https://www.googletagmanager.com',
-	'https://www.google-analytics.com',
-	'https://connect.facebook.net',
-	'https://snap.licdn.com',
 	'https://js.stripe.com',
 	'https://checkout.stripe.com',
 	'https://app.storyblok.com',
@@ -20,7 +16,11 @@ const PRODUCTION_SCRIPT_SRC = [
 	'https://challenges.cloudflare.com',
 ] as const;
 
-const DEVELOPMENT_SCRIPT_SRC_EXTRA = ["'unsafe-eval'"] as const;
+const DEVELOPMENT_SCRIPT_SRC_EXTRA = [
+	"'unsafe-eval'",
+	// Vercel Analytics loads its debug script from here outside production.
+	'https://va.vercel-scripts.com',
+] as const;
 
 const STYLE_SRC = ["'self'", "'unsafe-inline'"] as const;
 
@@ -31,11 +31,6 @@ const IMG_SRC = [
 	'https://a.storyblok.com',
 	'https://avatars.githubusercontent.com',
 	'https://image.mux.com',
-	'https://www.googletagmanager.com',
-	'https://www.google-analytics.com',
-	'https://www.facebook.com',
-	'https://px.ads.linkedin.com',
-	'https://www.linkedin.com',
 	'https://*.stripe.com',
 ] as const;
 
@@ -49,13 +44,6 @@ const PRODUCTION_CONNECT_SRC = [
 	'https://firebaseinstallations.googleapis.com',
 	'https://firebasestorage.googleapis.com',
 	'https://storage.googleapis.com',
-	'https://www.googletagmanager.com',
-	'https://*.google-analytics.com',
-	'https://analytics.google.com',
-	'https://stats.g.doubleclick.net',
-	'https://www.facebook.com',
-	'https://connect.facebook.net',
-	'https://px.ads.linkedin.com',
 	'https://api.stripe.com',
 	'https://checkout.stripe.com',
 	'https://r.stripe.com',
@@ -79,12 +67,10 @@ const EMULATOR_CONNECT_SRC_EXTRA = ['http://127.0.0.1:*', 'ws://127.0.0.1:*'] as
 
 const FRAME_SRC = [
 	"'self'",
-	'https://www.googletagmanager.com',
 	'https://js.stripe.com',
 	'https://checkout.stripe.com',
 	'https://hooks.stripe.com',
 	'https://player.vimeo.com',
-	'https://www.youtube.com',
 	'https://www.youtube-nocookie.com',
 	'https://player.mux.com',
 	'https://challenges.cloudflare.com',
@@ -98,8 +84,21 @@ const FORM_ACTION = ["'self'"] as const;
 
 const FRAME_ANCESTORS = ["'self'", 'https://app.storyblok.com'] as const;
 
+// Vercel injects its toolbar into preview deployments. Hosts from
+// https://vercel.com/docs/vercel-toolbar/managing-toolbar#using-a-content-security-policy
+const VERCEL_TOOLBAR_SRC = {
+	script: ['https://vercel.live'],
+	style: ['https://vercel.live'],
+	img: ['https://vercel.live', 'https://vercel.com'],
+	font: ['https://vercel.live', 'https://assets.vercel.com'],
+	connect: ['https://vercel.live', 'wss://ws-us3.pusher.com'],
+	frame: ['https://vercel.live'],
+} as const;
+
 const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== 'production' }: CspOptions = {}) => {
 	const isUsingFirebaseEmulators = Boolean(process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL);
+	const isVercelPreview = process.env.VERCEL_ENV === 'preview';
+	const toolbarSrc = (directive: keyof typeof VERCEL_TOOLBAR_SRC) => (isVercelPreview ? VERCEL_TOOLBAR_SRC[directive] : []);
 	const scriptSrc = isDevelopment ? [...PRODUCTION_SCRIPT_SRC, ...DEVELOPMENT_SCRIPT_SRC_EXTRA] : PRODUCTION_SCRIPT_SRC;
 
 	const connectSrc = [
@@ -110,12 +109,12 @@ const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== '
 
 	const directives = [
 		`default-src 'self'`,
-		`script-src ${joinSources(scriptSrc)}`,
-		`style-src ${joinSources(STYLE_SRC)}`,
-		`img-src ${joinSources(IMG_SRC)}`,
-		`font-src ${joinSources(FONT_SRC)}`,
-		`connect-src ${joinSources(connectSrc)}`,
-		`frame-src ${joinSources(FRAME_SRC)}`,
+		`script-src ${joinSources([...scriptSrc, ...toolbarSrc('script')])}`,
+		`style-src ${joinSources([...STYLE_SRC, ...toolbarSrc('style')])}`,
+		`img-src ${joinSources([...IMG_SRC, ...toolbarSrc('img')])}`,
+		`font-src ${joinSources([...FONT_SRC, ...toolbarSrc('font')])}`,
+		`connect-src ${joinSources([...connectSrc, ...toolbarSrc('connect')])}`,
+		`frame-src ${joinSources([...FRAME_SRC, ...toolbarSrc('frame')])}`,
 		`media-src ${joinSources(MEDIA_SRC)}`,
 		`worker-src ${joinSources(WORKER_SRC)}`,
 		`form-action ${joinSources(FORM_ACTION)}`,

@@ -1,4 +1,4 @@
-import type { PublicFocusStatsBySlugMap } from '@/lib/services/focus/focus.types';
+import type { PublicFocusStatsBySlugMap } from '@/modules/focuses/focus.types';
 import type { FocusStory } from './focus.types';
 import {
 	focusMatchesCountryQuery,

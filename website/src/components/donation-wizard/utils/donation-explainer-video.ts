@@ -9,11 +9,11 @@ type DonationExplainerVideo = {
 const DONATION_EXPLAINER_THUMBNAIL_SRC = '/assets/donation/explainer-thumbnail.jpg';
 
 const DONATION_EXPLAINER_EMBED_URL_BY_LANGUAGE = {
-	en: 'https://player.vimeo.com/video/433937157',
-	de: 'https://player.vimeo.com/video/488184818',
-	fr: 'https://player.vimeo.com/video/488184818',
-	it: 'https://player.vimeo.com/video/433937157',
-	kri: 'https://player.vimeo.com/video/433937157',
+	en: 'https://player.vimeo.com/video/433937157?dnt=1',
+	de: 'https://player.vimeo.com/video/488184818?dnt=1',
+	fr: 'https://player.vimeo.com/video/488184818?dnt=1',
+	it: 'https://player.vimeo.com/video/433937157?dnt=1',
+	kri: 'https://player.vimeo.com/video/433937157?dnt=1',
 } satisfies Record<WebsiteLanguage, string>;
 
 const isWebsiteLanguage = (language: LanguageCode): language is WebsiteLanguage =>

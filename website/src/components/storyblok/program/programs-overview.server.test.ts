@@ -1,4 +1,4 @@
-import type { PublicProgramFilterDataMap } from '@/lib/services/program/program.types';
+import type { PublicProgramFilterDataMap } from '@/modules/programs/program.types';
 import type { ProgramStory } from './program.types';
 import {
 	getCountryFilterOptions,

@@ -1,7 +1,7 @@
 import { makeExchangeRatesColumns } from '@/components/data-table/columns/exchange-rates';
-import { TableQueryState } from '@/components/data-table/query-state';
+import type { TableQueryState } from '@/components/data-table/query-state';
 import type { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
-import type { ExchangeRatesTableViewRow } from '@/lib/services/exchange-rate/exchange-rate.types';
+import type { ExchangeRatesTableViewRow } from '@/modules/exchange-rates/exchange-rate.types';
 
 type ExchangeRatesFilterArgs = {
 	query?: TableQueryState & { totalRows: number };

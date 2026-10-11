@@ -1,4 +1,4 @@
-import type { ProgramStory } from '@/components/storyblok/program/program.types';
+import type { ProgramStory } from '@/lib/storyblok/program-story';
 import { selectLocalPartnerProgramStories } from './local-partner-programs.utils';
 
 const story = (portalSlug: string) => ({ content: { portalSlug, title: portalSlug } }) as unknown as ProgramStory;

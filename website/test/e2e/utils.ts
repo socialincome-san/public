@@ -1,24 +1,35 @@
 import { prisma } from '@/lib/database/prisma';
 import { expect, Locator, Page } from '@playwright/test';
 
-export const getFirebaseAdminService = async () => {
-	const { FirebaseAdminService } = await import('@/lib/services/firebase/firebase-admin.service');
-	const { prisma } = await import('@/lib/database/prisma');
+export const findFirebaseUserByEmail = async (email: string) => {
+	const { findFirebaseUserByEmail: findUser } = await import('@/modules/auth/auth.service');
 
-	return new FirebaseAdminService(prisma);
+	return findUser(email);
+};
+
+export const createFirebaseUserByPhoneNumber = async (phoneNumber: string) => {
+	const { createFirebaseUserByPhoneNumber: createUser } = await import('@/modules/auth/auth.service');
+
+	return createUser(phoneNumber);
+};
+
+export const deleteFirebaseUserByPhoneNumberIfExists = async (phoneNumber: string) => {
+	const { deleteFirebaseUserByPhoneNumberIfExists: deleteUser } = await import('@/modules/auth/auth.service');
+
+	return deleteUser(phoneNumber);
 };
 
 export const deleteFirebaseEmailsIfExist = async (...emails: string[]) => {
-	const firebaseService = await getFirebaseAdminService();
+	const { deleteFirebaseUserByEmailIfExists } = await import('@/modules/auth/auth.service');
 	for (const email of emails) {
-		await firebaseService.deleteByEmailIfExists(email);
+		await deleteFirebaseUserByEmailIfExists(email);
 	}
 };
 
 export const deleteFirebasePhonesIfExist = async (...phoneNumbers: string[]) => {
-	const firebaseService = await getFirebaseAdminService();
+	const { deleteFirebaseUserByPhoneNumberIfExists } = await import('@/modules/auth/auth.service');
 	for (const phoneNumber of phoneNumbers) {
-		await firebaseService.deleteByPhoneNumberIfExists(phoneNumber);
+		await deleteFirebaseUserByPhoneNumberIfExists(phoneNumber);
 	}
 };
 
@@ -81,17 +92,21 @@ export const assertContactExistsByEmail = async (email: string) => {
 	});
 };
 
-export const selectOptionByTestId = async (page: Page, fieldName: string, optionName?: string) => {
+// Nested fields (section.field) are hidden until their accordion section is opened
+export const expandFormSectionOf = async (page: Page, fieldName: string) => {
 	const sectionName = fieldName.includes('.') ? fieldName.split('.')[0] : null;
-	if (sectionName) {
-		const accordionTrigger = page.getByTestId(`form-accordion-trigger-${sectionName}`);
-		if ((await accordionTrigger.count()) > 0) {
-			const isExpanded = await accordionTrigger.getAttribute('aria-expanded');
-			if (isExpanded !== 'true') {
-				await accordionTrigger.click();
-			}
-		}
+	if (!sectionName) {
+		return;
 	}
+
+	const accordionTrigger = page.getByTestId(`form-accordion-trigger-${sectionName}`);
+	if ((await accordionTrigger.count()) > 0 && (await accordionTrigger.getAttribute('aria-expanded')) !== 'true') {
+		await accordionTrigger.click();
+	}
+};
+
+export const selectOptionByTestId = async (page: Page, fieldName: string, optionName?: string) => {
+	await expandFormSectionOf(page, fieldName);
 
 	const trigger = page.getByTestId(`form-item-${fieldName}`).locator('button').first();
 	await page.getByTestId(`form-item-${fieldName}`).waitFor({ state: 'visible' });

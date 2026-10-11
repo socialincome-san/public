@@ -1,8 +1,12 @@
-import { FilterBar } from '@/components/filters/filter-bar';
-import { Translator } from '@/lib/i18n/translator';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { services } from '@/lib/services/services';
-import type { AnySearchParams } from '@/lib/types/page-props';
+import type { AnySearchParams } from '@/app/page-props';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import {
+	getPublicProgramFilterDataByPortalSlugsAction,
+	getPublicProgramStatsByPortalSlugsAction,
+} from '@/modules/programs/program.actions';
+import { getFocusesAction, getProgramsAction } from '@/modules/storyblok-content/storyblok-content.actions';
+import { FilterBar } from '@socialincome/design-system/layout/filter-bar/filter-bar';
+import { getTranslations } from 'next-intl/server';
 import type { FocusStory } from '../focus/focus.types';
 import type { ProgramStory } from './program.types';
 import { getProgramPortalSlug } from './program.utils';
@@ -26,21 +30,21 @@ import {
 
 type Props = {
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
-	searchParams?: AnySearchParams;
+	currency: WebsiteCurrency;
+	searchParams: Promise<AnySearchParams>;
 	fixedFocusSlug?: string;
 };
 
-export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixedFocusSlug }: Props) => {
+export const ProgramsOverviewSection = async ({ lang, currency, searchParams, fixedFocusSlug }: Props) => {
 	const hasFixedFocus = fixedFocusSlug !== undefined;
 	const [programsResult, storyblokFocusesResult] = await Promise.all([
-		services.storyblok.getPrograms(lang),
-		hasFixedFocus ? Promise.resolve(undefined) : services.storyblok.getFocuses(lang),
+		getProgramsAction(lang),
+		hasFixedFocus ? Promise.resolve(undefined) : getFocusesAction(lang),
 	]);
 	const programs = (programsResult.success ? programsResult.data : []) as ProgramStory[];
 	const storyblokFocuses = (storyblokFocusesResult?.success ? storyblokFocusesResult.data : []) as FocusStory[];
 	const programPortalSlugs = [...new Set(programs.map((program) => getProgramPortalSlug(program.content)).filter(Boolean))];
-	const filterDataResult = await services.read.program.getPublicProgramFilterDataByPortalSlugs(programPortalSlugs);
+	const filterDataResult = await getPublicProgramFilterDataByPortalSlugsAction(programPortalSlugs);
 	const filterDataByPortalSlug = filterDataResult.success ? filterDataResult.data : {};
 	const fixedFocusId = hasFixedFocus ? getFocusIdBySlug(filterDataByPortalSlug, fixedFocusSlug) : undefined;
 	const focusScopedPrograms = hasFixedFocus
@@ -51,17 +55,18 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 	const focusScopedFilterData = getFilterDataForPrograms(focusScopedPrograms, filterDataByPortalSlug);
 	const statsFilterData = hasFixedFocus ? focusScopedFilterData : filterDataByPortalSlug;
 	const statsPortalSlugs = Object.keys(statsFilterData);
-	const [statsResult, translator] = await Promise.all([
-		services.read.program.getPublicProgramStatsByProgramPortalSlugs(statsPortalSlugs),
-		Translator.getInstance({ language: lang, namespaces: ['website-common'] }),
+	const [statsResult, t] = await Promise.all([
+		getPublicProgramStatsByPortalSlugsAction(statsPortalSlugs),
+		getTranslations('website-common'),
 	]);
 	const statsByPortalSlug = statsResult.success ? statsResult.data : {};
 	const countryOptions = getCountryFilterOptions(focusScopedFilterData);
 	const focusTitleBySlug = getFocusTitleBySlug(storyblokFocuses);
 	const focusFilterOptions = hasFixedFocus ? [] : getFocusFilterOptions(filterDataByPortalSlug, focusTitleBySlug);
-	const searchQuery = getSearchQuery(searchParams);
-	const countryQuery = getCountryQuery(searchParams);
-	const focusQuery = getFocusQuery(searchParams);
+	const resolvedSearchParams = await searchParams;
+	const searchQuery = getSearchQuery(resolvedSearchParams);
+	const countryQuery = getCountryQuery(resolvedSearchParams);
+	const focusQuery = getFocusQuery(resolvedSearchParams);
 	const selectedCountryIsoCode = countryOptions.some((option) => option.value === countryQuery) ? countryQuery : undefined;
 	const selectedFocusId = hasFixedFocus
 		? fixedFocusId
@@ -86,8 +91,8 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 			<FilterBar
 				filters={
 					<ProgramsOverviewFilters
-						allCountriesLabel={translator.t('programs-page.all-countries', { context: { count: countryOptions.length } })}
-						allFocusesLabel={translator.t('programs-page.all-focuses', { context: { count: focusFilterOptions.length } })}
+						allCountriesLabel={t('programs-page.all-countries', { count: countryOptions.length })}
+						allFocusesLabel={t('programs-page.all-focuses', { count: focusFilterOptions.length })}
 						countryOptions={countryOptions}
 						selectedCountryIsoCode={selectedCountryIsoCode}
 						focusOptions={focusFilterOptions}
@@ -99,13 +104,13 @@ export const ProgramsOverviewSection = async ({ lang, region, searchParams, fixe
 				search={
 					<ProgramsOverviewSearch
 						defaultValue={searchQuery}
-						label={translator.t('programs-page.search-label')}
-						placeholder={translator.t('programs-page.search-placeholder')}
+						label={t('programs-page.search-label')}
+						placeholder={t('programs-page.search-placeholder')}
 						queryParamOverrides={fixedQueryParams}
 					/>
 				}
 			/>
-			<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} lang={lang} region={region} />
+			<ProgramsOverview programs={filteredPrograms} statsByPortalSlug={statsByPortalSlug} lang={lang} currency={currency} />
 		</div>
 	);
 };

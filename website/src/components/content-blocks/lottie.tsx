@@ -2,7 +2,7 @@
 
 import type { Lottie } from '@/generated/storyblok/types/109655/storyblok-components';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { storyblokEditable, type SbBlokData } from '@storyblok/react';
+import { storyblokEditable } from '@storyblok/react';
 
 type Props = {
 	blok: Lottie;
@@ -14,7 +14,7 @@ export const LottieBlock = ({ blok }: Props) => {
 	}
 
 	return (
-		<div {...storyblokEditable(blok as SbBlokData)}>
+		<div {...storyblokEditable(blok)}>
 			<DotLottieReact src={blok.animation.filename} loop autoplay />
 		</div>
 	);

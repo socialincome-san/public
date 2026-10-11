@@ -8,8 +8,7 @@
 		"description": "Stories, insights and updates on our journey to create impact.",
 		"editors": "Contributing Editors",
 		"more-articles": "There are more articles available in English",
-		"article-count_one": "{{count}} article",
-		"article-count_other": "{{count}} articles"
+		"article-count": "{count, plural, one {{count} article} other {{count} articles}}"
 	},
 	"person": {
 		"articles": "Articles"
@@ -26,8 +25,8 @@
 	"reference-article": {
 		"show-more": "Show more",
 		"show-less": "Show less",
-		"author": "by {{author}}",
-		"publication-date": "on {{publicationDate}}",
+		"author": "by {author}",
+		"publication-date": "on {publicationDate}",
 		"context": {
 			"original": "Originally published as",
 			"related": "These sources provided background and insights"

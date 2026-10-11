@@ -1,3 +1,4 @@
+import type { AnySearchParams } from '@/app/page-props';
 import type { CampaignStory } from '@/components/storyblok/campaign/campaign.types';
 import {
 	getCampaignPortalSlug,
@@ -9,8 +10,7 @@ import type {
 	PublicCampaignCard,
 	PublicCampaignStatsMap,
 	PublicCampaignsWithStats,
-} from '@/lib/services/campaign/campaign.types';
-import type { AnySearchParams } from '@/lib/types/page-props';
+} from '@/modules/campaigns/campaign.types';
 import {
 	DEFAULT_CAMPAIGN_STATE,
 	isCampaignStateFilter,

@@ -1,12 +1,12 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert/alert';
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { localPartnersTableConfig } from '@/components/data-table/configs/local-partners-table.config';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
-import type { LocalPartnerTableViewRow } from '@/lib/services/local-partner/local-partner.types';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
+import type { LocalPartnerTableViewRow } from '@/modules/local-partners/local-partner.types';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import LocalPartnersForm from './local-partners-form';
@@ -60,14 +60,14 @@ export default function LocalPartnersTable({
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
+				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{partnerId ? 'Edit' : 'Add'} local partner</DialogTitle>
 					</DialogHeader>
 					{errorMessage && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription className="max-w-full overflow-auto">{errorMessage}</AlertDescription>
+							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
 					<LocalPartnersForm

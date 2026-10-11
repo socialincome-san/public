@@ -4,11 +4,11 @@ import {
 	payoutConfirmationTableConfig,
 } from '@/components/data-table/configs/payout-confirmation-table.config';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { AppLoadingSkeleton } from '@/components/skeletons/app-loading-skeleton';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { services } from '@/lib/services/services';
+import { getPaginatedPayoutConfirmationTableView } from '@/modules/payouts/payout.service';
+import { requireSession } from '@/server/session';
+import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 
-import type { SearchParamsPageProps } from '@/lib/types/page-props';
+import type { SearchParamsPageProps } from '@/app/page-props';
 import { Suspense } from 'react';
 
 export default function ConfirmPayoutsPage({ searchParams }: SearchParamsPageProps) {
@@ -20,11 +20,11 @@ export default function ConfirmPayoutsPage({ searchParams }: SearchParamsPagePro
 }
 
 const ConfirmPayoutsDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
-	const user = await getAuthenticatedUserOrRedirect();
+	const user = await requireSession('user');
 	const resolvedSearchParams = await searchParams;
 	const tableQuery = tableQueryFromSearchParams(resolvedSearchParams);
 
-	const result = await services.read.payout.getPaginatedPayoutConfirmationTableView(user.id, tableQuery);
+	const result = await getPaginatedPayoutConfirmationTableView(user.id, tableQuery);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];

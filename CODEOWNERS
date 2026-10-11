@@ -11,8 +11,7 @@ codemagic.yaml verena@socialincome.org mikolaj@socialincome.org sandino@socialin
 
 # Website
 website/ raphael@socialincome.org manuel@socialincome.org nando@socialincome.org kevin@socialincome.org fabrice@socialincome.org marco@socialincome.org levi@smartive.ch michael@socialincome.org sandino@socialincome.org dev@socialincome.org
-ui/ raphael@socialincome.org manuel@socialincome.org nando@socialincome.org kevin@socialincome.org fabrice@socialincome.org marco@socialincome.org levi@smartive.ch michael@socialincome.org sandino@socialincome.org
-.github/workflows/ui.yml raphael@socialincome.org manuel@socialincome.org nando@socialincome.org kevin@socialincome.org fabrice@socialincome.org marco@socialincome.org levi@smartive.ch michael@socialincome.org sandino@socialincome.org
+design-system/ raphael@socialincome.org manuel@socialincome.org nando@socialincome.org kevin@socialincome.org fabrice@socialincome.org marco@socialincome.org levi@smartive.ch michael@socialincome.org sandino@socialincome.org
 
 # General md files
 *.md sandino@socialincome.org raphael@socialincome.org manuel@socialincome.org nando@socialincome.org kevin@socialincome.org fabrice@socialincome.org marco@socialincome.org levi@smartive.ch michael@socialincome.org

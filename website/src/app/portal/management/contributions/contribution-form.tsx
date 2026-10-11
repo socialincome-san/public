@@ -7,17 +7,17 @@ import { ContributionStatus } from '@/generated/prisma/enums';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 
+import { handleResult } from '@/lib/result-client';
+import { allCurrencies } from '@/lib/types/currency';
+import { CampaignOption } from '@/modules/campaigns/campaign.types';
 import {
 	createContributionAction,
 	getContributionAction,
 	getContributionsOptionsAction,
 	updateContributionAction,
-} from '@/lib/server-actions/contributions-actions';
-import { CampaignOption } from '@/lib/services/campaign/campaign.types';
-import { ContributionPayload } from '@/lib/services/contribution/contribution.types';
-import { ContributorOption } from '@/lib/services/contributor/contributor.types';
-import { handleServiceResult } from '@/lib/services/core/service-result-client';
-import { allCurrencies } from '@/lib/types/currency';
+} from '@/modules/contributions/contribution.actions';
+import { ContributionPayload } from '@/modules/contributions/contribution.types';
+import { ContributorOption } from '@/modules/contributors/contributor.types';
 import { buildCreateContributionInput, buildUpdateContributionInput } from './contribution-form-helpers';
 
 type ContributionFormProps = {
@@ -90,7 +90,7 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId 
 	useEffect(() => {
 		startTransition(async () => {
 			const optionsResult = await getContributionsOptionsAction();
-			handleServiceResult(optionsResult, {
+			handleResult(optionsResult, {
 				onSuccess: (data) => {
 					const contributorEnum = getZodEnum(
 						data.contributorOptions.map((c: ContributorOption) => ({
@@ -134,7 +134,7 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId 
 
 		startTransition(async () => {
 			const result = await getContributionAction(contributionId);
-			handleServiceResult(result, {
+			handleResult(result, {
 				onSuccess: (data) => {
 					setContribution(data);
 
@@ -170,7 +170,7 @@ export const ContributionForm = ({ onSuccess, onError, onCancel, contributionId 
 				contributionId && contribution
 					? await updateContributionAction(buildUpdateContributionInput(schema, contribution))
 					: await createContributionAction(buildCreateContributionInput(schema));
-			handleServiceResult(response, {
+			handleResult(response, {
 				onSuccess: () => onSuccess?.(),
 				onError: (error) => onError?.(error),
 			});

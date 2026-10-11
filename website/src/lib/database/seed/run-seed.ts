@@ -61,7 +61,6 @@ export const seedDatabase = async () => {
 		await tx.expense.deleteMany();
 		await tx.user.deleteMany();
 		await tx.organization.deleteMany();
-		await tx.exchangeRate.deleteMany();
 		await tx.contact.deleteMany();
 		await tx.phone.deleteMany();
 		await tx.address.deleteMany();
@@ -106,6 +105,10 @@ export const seedDatabase = async () => {
 		await tx.surveySchedule.createMany({ data: surveySchedulesData, skipDuplicates: true });
 		await tx.survey.createMany({ data: surveysData, skipDuplicates: true });
 		await tx.expense.createMany({ data: expensesData, skipDuplicates: true });
-		await tx.exchangeRate.createMany({ data: exchangeRatesData, skipDuplicates: true });
+		// Read-only reference data and ~60% of the seed time, so it survives reseeding
+		if ((await tx.exchangeRate.count()) !== exchangeRatesData.length) {
+			await tx.exchangeRate.deleteMany();
+			await tx.exchangeRate.createMany({ data: exchangeRatesData });
+		}
 	});
 };

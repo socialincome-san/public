@@ -1,5 +1,5 @@
 import type { StoryblokAsset } from '@/generated/storyblok/types/storyblok';
-import { getDimensionsFromStoryblokImageUrl } from '@/lib/services/storyblok/storyblok.utils';
+import { getDimensionsFromStoryblokImageUrl } from '@/lib/storyblok/storyblok-utils';
 import Image from 'next/image';
 
 type Props = {
