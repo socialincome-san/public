@@ -2,6 +2,7 @@
 
 import { useLogout } from '@/components/app-shells/use-logout';
 import { displaySession, type Scope } from '@/components/app-shells/website/navbar/utils';
+import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
 import type { Session } from '@/modules/auth/auth.types';
 import {
 	SiteAccountMenu,
@@ -17,6 +18,7 @@ type Props = {
 
 export const AccountMenu = ({ sessions, scope }: Props) => {
 	const { logout } = useLogout();
+	const dashboardPath = `${useWebsiteBasePath()}/dashboard`;
 	const t = useTranslations('website-me');
 	const session = displaySession(sessions, scope);
 
@@ -37,7 +39,7 @@ export const AccountMenu = ({ sessions, scope }: Props) => {
 			}
 			if (hasContributor) {
 				links.push({
-					href: '/dashboard/subscriptions',
+					href: `${dashboardPath}/subscriptions`,
 					label: t('navigation.go-to-dashboard'),
 					icon: LayoutDashboard,
 				});
@@ -57,7 +59,7 @@ export const AccountMenu = ({ sessions, scope }: Props) => {
 			}
 			if (hasContributor) {
 				links.push({
-					href: '/dashboard/subscriptions',
+					href: `${dashboardPath}/subscriptions`,
 					label: t('navigation.go-to-dashboard'),
 					icon: LayoutDashboard,
 				});
@@ -65,7 +67,7 @@ export const AccountMenu = ({ sessions, scope }: Props) => {
 			break;
 		case 'dashboard':
 		default:
-			links.push({ href: '/dashboard/profile', label: t('profile.link'), icon: User });
+			links.push({ href: `${dashboardPath}/profile`, label: t('profile.link'), icon: User });
 			if (hasUser) {
 				links.push({ href: '/portal', label: t('navigation.go-to-portal'), icon: Users });
 			}

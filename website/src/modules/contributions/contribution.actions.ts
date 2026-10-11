@@ -8,19 +8,14 @@ import type {
 	GlobeContribution,
 } from '@/modules/contributions/contribution.types';
 import { revalidatePath } from 'next/cache';
+import { getRecentSuccessfulContributions } from './contribution.cache';
 import {
 	contributionCreateSchema,
-	contributionGlobeCutoffSchema,
+	contributionGlobeDaysSchema,
 	contributionIdSchema,
 	contributionUpdateSchema,
 } from './contribution.schemas';
-import {
-	createContribution,
-	getContribution,
-	getContributionFormOptions,
-	getRecentSuccessfulContributions,
-	updateContribution,
-} from './contribution.service';
+import { createContribution, getContribution, getContributionFormOptions, updateContribution } from './contribution.service';
 
 export const createContributionAction = async (input: unknown): Promise<Result<ContributionPayload>> => {
 	const sessionResult = await getSessionByType('user');
@@ -79,11 +74,11 @@ export const getContributionsOptionsAction = async (): Promise<Result<Contributi
 	return getContributionFormOptions(sessionResult.data.id);
 };
 
-export const getRecentSuccessfulContributionsAction = async (cutoff: unknown): Promise<Result<GlobeContribution[]>> => {
-	const cutoffResult = contributionGlobeCutoffSchema.safeParse(cutoff);
-	if (!cutoffResult.success) {
-		return resultFail('Invalid cutoff date.');
+export const getRecentSuccessfulContributionsAction = async (days: unknown): Promise<Result<GlobeContribution[]>> => {
+	const daysResult = contributionGlobeDaysSchema.safeParse(days);
+	if (!daysResult.success) {
+		return resultFail('Invalid number of days.');
 	}
 
-	return getRecentSuccessfulContributions(cutoffResult.data);
+	return getRecentSuccessfulContributions(daysResult.data);
 };

@@ -1,5 +1,4 @@
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveWalletPayoutDisplaysAction } from '@/modules/currency-display/currency-display.actions';
 import type { PublicProgramStatsMap } from '@/modules/programs/program.types';
 import { CardGrid, CardGridItem } from '@socialincome/design-system/layout/card-grid/card-grid';
@@ -12,25 +11,25 @@ type Props = {
 	programs: ProgramStory[];
 	statsByPortalSlug: PublicProgramStatsMap;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, region }: Props) => {
-	const [displayCurrency, t] = await Promise.all([getWebsiteCurrencyFromCookie(), getTranslations('website-common')]);
+export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, currency }: Props) => {
+	const t = await getTranslations('website-common');
 	const programStats = programs.flatMap((program) => {
 		const portalSlug = getProgramPortalSlug(program.content);
 		const stats = portalSlug ? statsByPortalSlug[portalSlug] : undefined;
 
 		return stats ? [{ programId: program.uuid, stats }] : [];
 	});
-	const displaysResult = await resolveWalletPayoutDisplaysAction(
-		programStats.map(({ stats }) => ({
+	const displaysResult = await resolveWalletPayoutDisplaysAction({
+		payouts: programStats.map(({ stats }) => ({
 			totalPayoutsSum: stats.totalPayoutsSum,
 			totalPayoutsSumChf: stats.totalPayoutsSumChf,
 			payoutCurrency: stats.payoutCurrency,
-			displayCurrency,
 		})),
-	);
+		displayCurrency: currency,
+	});
 	const displaysByProgramId = new Map(
 		programStats.map(({ programId }, index) => [programId, displaysResult.success ? displaysResult.data[index] : undefined]),
 	);
@@ -49,7 +48,7 @@ export const ProgramsOverview = async ({ programs, statsByPortalSlug, lang, regi
 								stats={stats}
 								walletDisplay={displaysByProgramId.get(program.uuid)}
 								lang={lang}
-								region={region}
+								currency={currency}
 							/>
 						</CardGridItem>
 					);

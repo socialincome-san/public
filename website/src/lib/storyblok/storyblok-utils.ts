@@ -1,6 +1,6 @@
 import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
-import { defaultLanguage } from '@/lib/i18n/utils';
+import { defaultCurrency, defaultLanguage, getWebsiteBasePath, type WebsiteCurrency } from '@/lib/i18n/utils';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
@@ -209,30 +209,35 @@ const formatStoryblokDateToIso = (date: string | null | undefined) => {
 	return dateObject.isValid ? dateObject.toISO() : '';
 };
 
-const createWebsitePath = (language: string, region: string, ...segments: string[]) => {
+const createWebsitePath = (language: string, currency: WebsiteCurrency, ...segments: string[]) => {
 	const pathTail = segments.join('/');
 
-	return `/${language}/${region}${pathTail ? `/${pathTail}` : ''}`;
+	return `${getWebsiteBasePath(language, currency)}${pathTail ? `/${pathTail}` : ''}`;
 };
 
-export const createWebsiteJournalPath = (language: string, region: string) => createWebsitePath(language, region, 'journal');
+export const createWebsiteJournalPath = (language: string, currency: WebsiteCurrency) =>
+	createWebsitePath(language, currency, 'journal');
 
-export const createWebsiteJournalArticleLink = (slug: string, language: string, region: string) =>
-	createWebsitePath(language, region, 'journal', slug);
+export const createWebsiteJournalArticleLink = (slug: string, language: string, currency: WebsiteCurrency) =>
+	createWebsitePath(language, currency, 'journal', slug);
 
-export const createWebsiteJournalTagLink = (tagSlug: string, language: string, region: string) =>
-	`${createWebsiteJournalPath(language, region)}?tag=${encodeURIComponent(tagSlug)}`;
+export const createWebsiteJournalTagLink = (tagSlug: string, language: string, currency: WebsiteCurrency) =>
+	`${createWebsiteJournalPath(language, currency)}?tag=${encodeURIComponent(tagSlug)}`;
 
-export const createWebsiteJournalArticleTypeLink = (articleTypeSlug: string, language: string, region: string) =>
-	`${createWebsiteJournalPath(language, region)}?type=${encodeURIComponent(articleTypeSlug)}`;
+export const createWebsiteJournalArticleTypeLink = (articleTypeSlug: string, language: string, currency: WebsiteCurrency) =>
+	`${createWebsiteJournalPath(language, currency)}?type=${encodeURIComponent(articleTypeSlug)}`;
 
-export const createWebsitePersonLink = (slug: string, language: string, region: string) =>
-	createWebsitePath(language, region, WEBSITE_PERSON_PATH_SEGMENT, slug);
+export const createWebsitePersonLink = (slug: string, language: string, currency: WebsiteCurrency) =>
+	createWebsitePath(language, currency, WEBSITE_PERSON_PATH_SEGMENT, slug);
 
 export const createWebsiteJournalArticleCanonicalUrl = (slug: string, language: string) =>
-	`https://socialincome.org/${language}/journal/${slug}`;
+	`https://socialincome.org${getWebsiteBasePath(language, defaultCurrency)}/journal/${slug}`;
 
-export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, language: string, region: string): string => {
+export const resolveStoryblokLink = (
+	link: StoryblokMultilink | undefined,
+	language: string,
+	currency: WebsiteCurrency,
+): string => {
 	if (!link) {
 		return '#';
 	}
@@ -249,7 +254,7 @@ export const resolveStoryblokLink = (link: StoryblokMultilink | undefined, langu
 	const withoutLanguage =
 		cachedUrl.toLowerCase() === language.toLowerCase() ? '' : cachedUrl.replace(new RegExp(`^${language}/`, 'i'), '');
 
-	return getWebsitePublicPath(language, region, getWebsitePathTailFromStoryblokSlug(withoutLanguage));
+	return getWebsitePublicPath(language, currency, getWebsitePathTailFromStoryblokSlug(withoutLanguage));
 };
 
 export const generateMetaDataForArticle = (story: ISbStoryData<ResolvedArticle>, url: string): Metadata => {

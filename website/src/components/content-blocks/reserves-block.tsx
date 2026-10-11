@@ -1,7 +1,6 @@
 import { ReservesTotal } from '@/components/reserves/reserves-total';
 import type { ReservesBlock as ReservesBlockBlok } from '@/generated/storyblok/types/109655/storyblok-components';
-import { getWebsiteCurrencyFromCookie } from '@/lib/i18n/get-website-currency';
-import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveChfAmountsAction } from '@/modules/currency-display/currency-display.actions';
 import { getLatestReservesAction } from '@/modules/reserves/reserve.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
@@ -17,10 +16,10 @@ const FINANCIAL_INSTITUTIONS = [
 type Props = {
 	blok: ReservesBlockBlok;
 	lang: WebsiteLanguage;
+	currency: WebsiteCurrency;
 };
 
-export const ReservesBlock = async ({ blok, lang }: Props) => {
-	const displayCurrency = await getWebsiteCurrencyFromCookie();
+export const ReservesBlock = async ({ blok, lang, currency }: Props) => {
 	const [t, reservesResult] = await Promise.all([getTranslations('website-common'), getLatestReservesAction()]);
 
 	if (!reservesResult.success) {
@@ -29,12 +28,9 @@ export const ReservesBlock = async ({ blok, lang }: Props) => {
 
 	const displayResult = await resolveChfAmountsAction({
 		amounts: [reservesResult.data.total],
-		displayCurrency,
+		displayCurrency: currency,
 	});
-	if (!displayResult.success) {
-		return null;
-	}
-	const reserves = displayResult.data[0];
+	const reserves = displayResult.success ? displayResult.data[0] : undefined;
 	if (!reserves) {
 		return null;
 	}

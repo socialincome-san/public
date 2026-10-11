@@ -76,7 +76,7 @@ const expectSuccess = <T>(result: Result<T>) => {
 	return result.data;
 };
 
-let getRecentSuccessfulContributions: (cutoff: Date) => Promise<Result<GlobeContribution[]>>;
+let getRecentSuccessfulContributions: (days: number) => Promise<Result<GlobeContribution[]>>;
 
 beforeAll(async () => {
 	({ getRecentSuccessfulContributions } = await import('./contribution.service'));
@@ -90,15 +90,26 @@ describe('getRecentSuccessfulContributions', () => {
 		consoleWarn.mockClear();
 	});
 
+	const fixedTime = process.env.NEXT_PUBLIC_FIXED_TIME;
+
+	beforeAll(() => {
+		process.env.NEXT_PUBLIC_FIXED_TIME = '2026-08-19T00:00:00.000Z';
+	});
+
 	afterAll(() => {
 		consoleWarn.mockRestore();
+		if (fixedTime === undefined) {
+			delete process.env.NEXT_PUBLIC_FIXED_TIME;
+		} else {
+			process.env.NEXT_PUBLIC_FIXED_TIME = fixedTime;
+		}
 	});
 
 	const cutoff = new Date('2026-08-05T00:00:00.000Z');
 
-	it('queries only succeeded contributions created at or after the cutoff', async () => {
+	it('queries only succeeded contributions created within the given days', async () => {
 		mockFindMany.mockResolvedValue([]);
-		await getRecentSuccessfulContributions(cutoff);
+		await getRecentSuccessfulContributions(14);
 
 		const { where } = getFindManyQuery();
 		expect(where.status).toBe('succeeded');
@@ -107,21 +118,21 @@ describe('getRecentSuccessfulContributions', () => {
 
 	it('orders by createdAt descending', async () => {
 		mockFindMany.mockResolvedValue([]);
-		await getRecentSuccessfulContributions(cutoff);
+		await getRecentSuccessfulContributions(14);
 
 		expect(getFindManyQuery().orderBy).toEqual({ createdAt: 'desc' });
 	});
 
 	it('caps the public contribution payload', async () => {
 		mockFindMany.mockResolvedValue([]);
-		await getRecentSuccessfulContributions(cutoff);
+		await getRecentSuccessfulContributions(14);
 
 		expect(getFindManyQuery().take).toBe(200);
 	});
 
 	it('selects only the public globe fields', async () => {
 		mockFindMany.mockResolvedValue([]);
-		await getRecentSuccessfulContributions(cutoff);
+		await getRecentSuccessfulContributions(14);
 
 		const { select } = getFindManyQuery();
 
@@ -136,7 +147,7 @@ describe('getRecentSuccessfulContributions', () => {
 
 	it('loads the country through contributor → contact → address', async () => {
 		mockFindMany.mockResolvedValue([]);
-		await getRecentSuccessfulContributions(cutoff);
+		await getRecentSuccessfulContributions(14);
 
 		const { select } = getFindManyQuery();
 
@@ -145,7 +156,7 @@ describe('getRecentSuccessfulContributions', () => {
 
 	it('maps a database row to the public GlobeContribution DTO', async () => {
 		mockFindMany.mockResolvedValue([makeRow()]);
-		const contributions = expectSuccess(await getRecentSuccessfulContributions(cutoff));
+		const contributions = expectSuccess(await getRecentSuccessfulContributions(14));
 
 		expect(contributions).toHaveLength(1);
 		const dto = contributions[0];
@@ -162,7 +173,7 @@ describe('getRecentSuccessfulContributions', () => {
 			makeRow({ contributor: { contact: { address: { country: null } } } }),
 			makeRow({ id: 'cid-2' }),
 		]);
-		const contributions = expectSuccess(await getRecentSuccessfulContributions(cutoff));
+		const contributions = expectSuccess(await getRecentSuccessfulContributions(14));
 
 		expect(contributions).toHaveLength(1);
 		expect(contributions[0]?.key).toBe('contribution-0');
@@ -171,7 +182,7 @@ describe('getRecentSuccessfulContributions', () => {
 
 	it('excludes contributions with no address at all', async () => {
 		mockFindMany.mockResolvedValue([makeRow({ contributor: { contact: { address: null } } })]);
-		const contributions = expectSuccess(await getRecentSuccessfulContributions(cutoff));
+		const contributions = expectSuccess(await getRecentSuccessfulContributions(14));
 
 		expect(contributions).toHaveLength(0);
 		expect(consoleWarn).toHaveBeenCalledWith(expect.stringContaining('Skipped 1'));
@@ -179,21 +190,21 @@ describe('getRecentSuccessfulContributions', () => {
 
 	it('returns an empty array without error when no contributions exist', async () => {
 		mockFindMany.mockResolvedValue([]);
-		const contributions = expectSuccess(await getRecentSuccessfulContributions(cutoff));
+		const contributions = expectSuccess(await getRecentSuccessfulContributions(14));
 
 		expect(contributions).toEqual([]);
 	});
 
 	it('returns a service failure when the database throws', async () => {
 		mockFindMany.mockRejectedValue(new Error('DB unavailable'));
-		const result = await getRecentSuccessfulContributions(cutoff);
+		const result = await getRecentSuccessfulContributions(14);
 
 		expect(result.success).toBe(false);
 	});
 
 	it('does not expose contributor ID in the DTO', async () => {
 		mockFindMany.mockResolvedValue([makeRow()]);
-		const contributions = expectSuccess(await getRecentSuccessfulContributions(cutoff));
+		const contributions = expectSuccess(await getRecentSuccessfulContributions(14));
 
 		const dto = contributions[0] as Record<string, unknown>;
 		expect(dto).not.toHaveProperty('id');

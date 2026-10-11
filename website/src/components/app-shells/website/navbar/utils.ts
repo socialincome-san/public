@@ -1,4 +1,5 @@
 import type { DropdownItem, Layout, MenuItem } from '@/generated/storyblok/types/109655/storyblok-components';
+import type { WebsiteCurrency } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import type { Session } from '@/modules/auth/auth.types';
 import { type SiteMenuEntry } from '@socialincome/design-system/navigation/site-header/site-header';
@@ -23,7 +24,7 @@ const isMenuItem = (item: NavbarMenuItem): item is MenuItem => item.component ==
 const hasDropdownChildren = (item: DropdownItem): boolean =>
 	item.menuItemGroups.some((group) => (group.items?.length ?? 0) > 0 || Boolean(group.overviewLink && group.overviewLabel));
 
-export const toSiteMenuEntries = (menu: Layout['menu'], lang: string, region: string): SiteMenuEntry[] =>
+export const toSiteMenuEntries = (menu: Layout['menu'], lang: string, currency: WebsiteCurrency): SiteMenuEntry[] =>
 	menu.flatMap((item): SiteMenuEntry[] => {
 		if (!item.label) {
 			return [];
@@ -35,7 +36,7 @@ export const toSiteMenuEntries = (menu: Layout['menu'], lang: string, region: st
 					type: 'link',
 					id: item._uid,
 					label: item.label,
-					href: resolveStoryblokLink(item.link, lang, region),
+					href: resolveStoryblokLink(item.link, lang, currency),
 					newTab: item.newTab,
 				},
 			];
@@ -56,12 +57,12 @@ export const toSiteMenuEntries = (menu: Layout['menu'], lang: string, region: st
 					links: (group.items ?? []).map((child) => ({
 						id: child._uid,
 						label: child.label ?? '',
-						href: resolveStoryblokLink(child.link, lang, region),
+						href: resolveStoryblokLink(child.link, lang, currency),
 						newTab: child.newTab,
 					})),
 					overview:
 						group.overviewLink && group.overviewLabel
-							? { label: group.overviewLabel, href: resolveStoryblokLink(group.overviewLink, lang, region) }
+							? { label: group.overviewLabel, href: resolveStoryblokLink(group.overviewLink, lang, currency) }
 							: undefined,
 				})),
 			},

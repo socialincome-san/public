@@ -2,7 +2,7 @@ import { getStoryUuids } from '@/components/content-blocks/overview-grid.utils';
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import { PersonGridInteractive } from '@/components/storyblok/shared/person-grid-interactive';
 import type { Person, PersonGrid } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { personHasRole, resolveStoryblokLink, toStringArray } from '@/lib/storyblok/storyblok-utils';
 import {
 	getAllPersonsAction,
@@ -19,7 +19,7 @@ import NextLink from 'next/link';
 type Props = {
 	blok: PersonGrid;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
 const matchesStatusFilter = (person: ISbStoryData<Person>, statusFilter: string) =>
@@ -33,7 +33,7 @@ const isRoleExcluded = (person: ISbStoryData<Person>, roleExcludeCodes: string[]
 
 const isCountryOfficeMember = (person: ISbStoryData<Person>) => Boolean(person.content.countryOffice?.length);
 
-export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
+export const PersonGridBlock = async ({ blok, lang, currency }: Props) => {
 	const manualUuids = getStoryUuids(blok.persons);
 	const countryOfficeCodes = toStringArray(blok.countryOffice);
 	const roleFilterCodes = toStringArray(blok.roleFilter);
@@ -74,13 +74,13 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 	}
 
 	const button = blok.button?.[0];
-	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, region) : null;
+	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, currency) : null;
 
 	const content = isInteractive ? (
 		<PersonGridInteractive
 			persons={persons}
 			lang={lang}
-			region={region}
+			currency={currency}
 			smallCards={smallCards}
 			linkToPersonPage={linkToPersonPage}
 			showVolunteerDuration={showVolunteerDuration}
@@ -93,7 +93,7 @@ export const PersonGridBlock = async ({ blok, lang, region }: Props) => {
 		<PersonCardGrid
 			persons={persons}
 			lang={lang}
-			region={region}
+			currency={currency}
 			smallCards={smallCards}
 			linkToPersonPage={linkToPersonPage}
 			showVolunteerDuration={showVolunteerDuration}

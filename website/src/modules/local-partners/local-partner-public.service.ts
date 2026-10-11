@@ -7,7 +7,7 @@ import {
 	getPublicProgramFilterDataByPortalSlugs,
 	getPublicProgramStatsByProgramPortalSlugs,
 } from '@/modules/programs/program.service';
-import { getPrograms } from '@/modules/storyblok-content/storyblok-content.service';
+import { getPrograms } from '@/modules/storyblok-content/storyblok-content.cache';
 import {
 	getProgramRecipientCountsByLocalPartnerSlug,
 	getPublicLocalPartnerDashboardStatsBySlug,

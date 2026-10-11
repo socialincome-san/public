@@ -3,7 +3,7 @@ import { tableQueryFromSearchParams } from '@/components/data-table/query-state'
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { getCampaignTableEntries } from '@/modules/campaigns/campaign.service';
 import type { CampaignTableViewRow } from '@/modules/campaigns/campaign.types';
-import { getCampaigns, getPrograms } from '@/modules/storyblok-content/storyblok-content.service';
+import { getCampaigns, getPrograms } from '@/modules/storyblok-content/storyblok-content.cache';
 import { requireSession } from '@/server/session';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';

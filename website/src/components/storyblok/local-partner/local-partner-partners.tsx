@@ -2,16 +2,16 @@ import { LocalPartnersTeaserRowContent } from '@/components/content-blocks/local
 import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
 import type { LocalPartnerStory } from '@/components/storyblok/local-partner/local-partner.types';
 import type { LocalPartner } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getLocalPartnersAction } from '@/modules/storyblok-content/storyblok-content.actions';
 
 type Props = {
 	localPartner: LocalPartnerStory;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const LocalPartnerPartners = async ({ localPartner, lang, region }: Props) => {
+export const LocalPartnerPartners = async ({ localPartner, lang, currency }: Props) => {
 	const partners = localPartner.content.partners ?? [];
 	if (partners.length === 0) {
 		return null;
@@ -21,5 +21,5 @@ export const LocalPartnerPartners = async ({ localPartner, lang, region }: Props
 	const allLocalPartners = localPartnersResult.success ? localPartnersResult.data : [];
 	const resolvedPartners = resolveSelectedStories<LocalPartner>(partners, allLocalPartners);
 
-	return <LocalPartnersTeaserRowContent localPartners={resolvedPartners} lang={lang} region={region} />;
+	return <LocalPartnersTeaserRowContent localPartners={resolvedPartners} lang={lang} currency={currency} />;
 };

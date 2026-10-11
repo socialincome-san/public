@@ -12,6 +12,7 @@ import type {
 	SurveyWithRecipient,
 } from '@/modules/surveys/survey.types';
 import { revalidatePath } from 'next/cache';
+import { getSurveyImpactFilterOptions } from './survey.cache';
 import {
 	surveyCreateSchema,
 	surveyIdSchema,
@@ -24,7 +25,6 @@ import {
 	generateSurveys,
 	getSurvey,
 	getSurveyByIdAndRecipient,
-	getSurveyImpactFilterOptions,
 	previewSurveyGeneration,
 	saveSurveyChanges,
 	updateSurvey,

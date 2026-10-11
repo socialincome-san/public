@@ -22,7 +22,7 @@ const IntlProvider = async ({ children }: PropsWithChildren) => (
 );
 
 // Shared by the root layouts of the website, portal, partner space and API docs. They are separate root
-// layouts so that the website's `[lang]` and `[region]` segments are available as `next/root-params`.
+// layouts so that the website's `[lang]` and `[currency]` segments are available as `next/root-params`.
 // Anything awaited for the page (sessions, messages) must load inside the Suspense boundary, e.g. as an async
 // component: when it is awaited before the document renders, React leaves nested streamed Suspense content
 // duplicated in hidden containers.

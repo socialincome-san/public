@@ -1,17 +1,11 @@
-import { pathsForStory } from '@/lib/storyblok/storyblok-revalidation';
 import { verifyStoryblokWebhook } from '@/modules/storyblok-content/storyblok-content.service';
-import { revalidatePath } from 'next/cache';
+import { STORYBLOK_CACHE_TAG } from '@/modules/storyblok-content/storyblok-content.types';
+import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'nodejs';
-
-type WebhookPayload = {
-	action?: string;
-	full_slug?: string;
-};
-
 /**
- * Storyblok webhook target: revalidate cached pages after content changes.
+ * Storyblok webhook target: revalidate cached Storyblok content after content changes. A story can appear on
+ * many pages (teasers, related articles, navigation), so all Storyblok reads share one cache tag.
  * Storyblok signs the raw body; we verify the `webhook-signature` header (HMAC-SHA1 hex) against
  * `STORYBLOK_WEBHOOK_SECRET`, which must match the webhook's "Secret key".
  * @see https://www.storyblok.com/tp/webhook-secret-with-different-technologies
@@ -25,17 +19,7 @@ export const POST = async (request: NextRequest) => {
 		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
-	let body: WebhookPayload;
-	try {
-		body = JSON.parse(rawBody) as WebhookPayload;
-	} catch {
-		return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
-	}
+	revalidateTag(STORYBLOK_CACHE_TAG, 'max');
 
-	const paths = pathsForStory(body.full_slug);
-	for (const path of paths) {
-		revalidatePath(path);
-	}
-
-	return NextResponse.json({ revalidated: paths.length });
+	return NextResponse.json({ revalidated: true });
 };

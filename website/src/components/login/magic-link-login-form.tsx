@@ -2,6 +2,7 @@
 
 import { sendMagicLoginLink } from '@/components/login/send-magic-login-link';
 import { useAuth } from '@/lib/firebase/hooks/use-auth';
+import { useWebsiteBasePath } from '@/lib/i18n/website-currency';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/design-system/forms/form/form';
@@ -24,6 +25,7 @@ type Props = {
 
 export const MagicLinkLoginForm = ({ prefilledEmail = '' }: Props) => {
 	const { auth } = useAuth();
+	const websiteBasePath = useWebsiteBasePath();
 	const t = useTranslations('website-login');
 
 	const formSchema = z.object({
@@ -43,7 +45,7 @@ export const MagicLinkLoginForm = ({ prefilledEmail = '' }: Props) => {
 		setSubmittedEmail(email);
 
 		try {
-			await sendMagicLoginLink({ auth, email });
+			await sendMagicLoginLink({ auth, email, websiteBasePath });
 		} catch {
 			// Intentionally ignore errors to avoid account enumeration.
 		}

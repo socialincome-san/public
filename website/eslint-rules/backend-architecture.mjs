@@ -150,6 +150,7 @@ const isAllowedModuleFilename = (filename) => {
 	return (
 		/\.actions\.tsx?$/.test(normalized) ||
 		/\.service\.tsx?$/.test(normalized) ||
+		/\.cache\.tsx?$/.test(normalized) ||
 		/\.repository\.tsx?$/.test(normalized) ||
 		/\.schemas\.tsx?$/.test(normalized) ||
 		/\.permissions\.tsx?$/.test(normalized) ||
@@ -265,7 +266,7 @@ const resultContract = {
 	meta: {
 		type: 'problem',
 		docs: {
-			description: 'Require exported service, action, and integration functions to return Result.',
+			description: 'Require exported service, cache, action, and integration functions to return Result.',
 		},
 		schema: [
 			{
@@ -278,15 +279,16 @@ const resultContract = {
 		],
 		messages: {
 			missingResultType:
-				'Exported functions in services, actions, and integrations must declare Result<T> or Promise<Result<T>> return types.',
+				'Exported functions in services, caches, actions, and integrations must declare Result<T> or Promise<Result<T>> return types.',
 		},
 	},
 	create(context) {
 		const filename = normalizePath(context.filename);
 		const isServiceFile = filename.endsWith('.service.ts') || filename.endsWith('.service.tsx');
 		const isActionFile = filename.endsWith('.actions.ts') || filename.endsWith('.actions.tsx');
+		const isCacheFile = filename.endsWith('.cache.ts') || filename.endsWith('.cache.tsx');
 		const isIntegrationFile = filename.endsWith('.integration.ts') || filename.endsWith('.integration.tsx');
-		if (!isServiceFile && !isActionFile && !isIntegrationFile) {
+		if (!isServiceFile && !isActionFile && !isCacheFile && !isIntegrationFile) {
 			return {};
 		}
 
@@ -462,7 +464,7 @@ const filenameContract = {
 		schema: [],
 		messages: {
 			invalidModuleFilename:
-				'Module files must use an approved suffix: .actions, .service, .repository, .schemas, .permissions, .types, or .test.',
+				'Module files must use an approved suffix: .actions, .service, .cache, .repository, .schemas, .permissions, .types, or .test.',
 			invalidIntegrationFilename: 'Integration files must use an approved suffix: .integration or .test.',
 		},
 	},
@@ -491,7 +493,8 @@ const noCrossModuleDeepImports = {
 		},
 		schema: [],
 		messages: {
-			deepImport: 'Cross-module imports may only target the owning module service, or type-only .types/.schemas contracts.',
+			deepImport:
+				'Cross-module imports may only target the owning module service or cache, or type-only .types/.schemas contracts.',
 		},
 	},
 	create(context) {
@@ -502,7 +505,12 @@ const noCrossModuleDeepImports = {
 		}
 
 		const isAllowedCrossModuleTarget = (importedPath, isTypeOnly) => {
-			if (importedPath.endsWith('.service') || importedPath.endsWith('.service.ts')) {
+			if (
+				importedPath.endsWith('.service') ||
+				importedPath.endsWith('.service.ts') ||
+				importedPath.endsWith('.cache') ||
+				importedPath.endsWith('.cache.ts')
+			) {
 				return true;
 			}
 

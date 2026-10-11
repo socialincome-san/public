@@ -1,5 +1,5 @@
 import type { Study } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { resolveStoryblokLink } from '@/lib/storyblok/storyblok-utils';
 import { isSafeHref } from '@/lib/utils/string-utils';
 import { LinkPill } from '@socialincome/design-system/actions/link-pill/link-pill';
@@ -8,14 +8,14 @@ import type { ISbStoryData } from '@storyblok/js';
 type Props = {
 	study: ISbStoryData<Study>;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const StudyCard = ({ study, lang, region }: Props) => {
+export const StudyCard = ({ study, lang, currency }: Props) => {
 	const { title, description, subtitle, year, link, linkText } = study.content;
 	const metadata = [subtitle?.trim(), year?.trim()].filter(Boolean).join(', ');
 	const linkLabel = linkText?.trim();
-	const resolvedHref = link ? resolveStoryblokLink(link, lang, region) : null;
+	const resolvedHref = link ? resolveStoryblokLink(link, lang, currency) : null;
 	const href = resolvedHref && resolvedHref !== '#' && isSafeHref(resolvedHref) ? resolvedHref : null;
 
 	return (

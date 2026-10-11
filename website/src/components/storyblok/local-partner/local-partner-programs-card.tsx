@@ -2,7 +2,8 @@ import {
 	donationHeroCardSizeClass,
 	getDonationWizardCardClass,
 } from '@/components/donation-wizard/utils/donation-wizard-layout';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getWebsiteBasePath } from '@/lib/i18n/utils';
 import { LOCAL_PARTNER_PROGRAM_ROWS } from '@/lib/storyblok/local-partner-programs.utils';
 import type { LocalPartnerPrograms } from '@/modules/local-partners/local-partner.types';
 import { cn } from '@socialincome/design-system/cn';
@@ -22,10 +23,10 @@ const rowsClassBySlotCount: Record<number, string> = {
 type Props = {
 	partnerPrograms: LocalPartnerPrograms;
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 };
 
-export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, region }: Props) => {
+export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, currency }: Props) => {
 	const { programs, programCount, recipientsTotal, isPartnerScoped } = partnerPrograms;
 	const t = await getTranslations('website-common');
 
@@ -37,7 +38,7 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, region }
 		programCount === 1 ? 'local-partners-page.programs-in-count-singular' : 'local-partners-page.programs-in-count-plural',
 		{ count: programCount },
 	);
-	const allProgramsHref = `/${lang}/${region}/programs`;
+	const allProgramsHref = `${getWebsiteBasePath(lang, currency)}/programs`;
 
 	return (
 		<div
@@ -74,7 +75,7 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, region }
 					<LocalPartnerProgramRow
 						key={program.programId}
 						program={program}
-						href={`/${lang}/${region}/programs/${program.storyblokSlug}`}
+						href={`${getWebsiteBasePath(lang, currency)}/programs/${program.storyblokSlug}`}
 						recipientsLabel={t(
 							program.recipientsCount === 1
 								? 'local-partners-page.recipient-singular-with-count'

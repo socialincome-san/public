@@ -2,7 +2,7 @@
 
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import type { Person } from '@/generated/storyblok/types/109655/storyblok-components';
-import type { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { getRoleCode, getRoleLabel, personHasRole } from '@/lib/storyblok/storyblok-utils';
 import { getCountryNameFromIsoCode } from '@/lib/types/country';
 import { Button } from '@socialincome/design-system/actions/button/button';
@@ -27,7 +27,7 @@ type PersonStatus = 'active' | 'inactive';
 type Props = {
 	persons: ISbStoryData<Person>[];
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	currency: WebsiteCurrency;
 	smallCards: boolean;
 	linkToPersonPage: boolean;
 	showVolunteerDuration?: boolean;
@@ -121,7 +121,7 @@ const FilterDropdown = <T extends string>({
 export const PersonGridInteractive = ({
 	persons,
 	lang,
-	region,
+	currency,
 	smallCards,
 	linkToPersonPage,
 	showVolunteerDuration = false,
@@ -351,7 +351,7 @@ export const PersonGridInteractive = ({
 				<PersonCardGrid
 					persons={filteredPersons}
 					lang={lang}
-					region={region}
+					currency={currency}
 					smallCards={smallCards}
 					linkToPersonPage={linkToPersonPage}
 					showVolunteerDuration={showVolunteerDuration}
