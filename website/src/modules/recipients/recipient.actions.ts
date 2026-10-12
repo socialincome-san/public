@@ -3,7 +3,12 @@
 import { resultFail, type Result } from '@/lib/result';
 import type { Session } from '@/modules/auth/auth.types';
 import { getSessionByType } from '@/modules/auth/session.service';
-import type { PublicRecipientTableView, RecipientFormOptions, RecipientPayload } from '@/modules/recipients/recipient.types';
+import type {
+	PublicRecipientTableView,
+	RecipientFormOptions,
+	RecipientPaginatedTableView,
+	RecipientPayload,
+} from '@/modules/recipients/recipient.types';
 import { revalidatePath } from 'next/cache';
 import {
 	publicRecipientProgramIdSchema,
@@ -11,12 +16,14 @@ import {
 	recipientCsvFileSchema,
 	recipientIdSchema,
 	recipientSessionTypeSchema,
+	recipientTableQuerySchema,
 	recipientUpdateSchema,
 } from './recipient.schemas';
 import {
 	createRecipient,
 	deleteRecipient,
 	exportRecipientsCsv,
+	getPaginatedRecipientTableView,
 	getPublicRecipientsTableView,
 	getRecipientById,
 	getRecipientFormOptions,
@@ -25,6 +32,20 @@ import {
 	updateRecipient,
 	type RecipientWriteResult,
 } from './recipient.service';
+
+export const getRecipientTableViewAction = async (query: unknown): Promise<Result<RecipientPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+
+	const queryResult = recipientTableQuerySchema.safeParse(query);
+	if (!queryResult.success) {
+		return resultFail('Invalid table query.');
+	}
+
+	return getPaginatedRecipientTableView(sessionResult.data.id, queryResult.data);
+};
 
 export const createRecipientAction = async (
 	input: unknown,

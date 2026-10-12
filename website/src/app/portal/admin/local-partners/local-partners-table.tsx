@@ -5,11 +5,9 @@ import { localPartnersTableConfig } from '@/components/data-table/configs/local-
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { LocalPartnerTableViewRow } from '@/modules/local-partners/local-partner.types';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
-import LocalPartnersForm from './local-partners-form';
+import { LocalPartnerDialog } from './local-partner-dialog';
 
 export default function LocalPartnersTable({
 	rows,
@@ -59,25 +57,13 @@ export default function LocalPartnersTable({
 				onRowClick={openEditForm}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>{partnerId ? 'Edit' : 'Add'} local partner</DialogTitle>
-					</DialogHeader>
-					{errorMessage && (
-						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
-						</Alert>
-					)}
-					<LocalPartnersForm
-						localPartnerId={partnerId}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-					/>
-				</DialogContent>
-			</Dialog>
+			<LocalPartnerDialog
+				open={open}
+				onOpenChange={setOpen}
+				localPartnerId={partnerId}
+				errorMessage={errorMessage}
+				onError={onError}
+			/>
 		</>
 	);
 }

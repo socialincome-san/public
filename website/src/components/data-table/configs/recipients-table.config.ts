@@ -6,6 +6,7 @@ import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/modu
 type RecipientsFilterArgs = {
 	query?: TableQueryState & { totalRows: number };
 	programFilterOptions: RecipientProgramFilterOption[];
+	localPartnerFilterOptions: { id: string; name: string }[];
 	showProgramFilter: boolean;
 };
 
@@ -36,9 +37,18 @@ export const recipientsTableConfig: DataTableConfig<RecipientTableViewRow> = {
 	showColumnVisibilitySelector: true,
 };
 
+export const localPartnerRecipientsTableConfig: DataTableConfig<RecipientTableViewRow> = {
+	...recipientsTableConfig,
+	id: 'local-partner-recipients',
+	searchKeys: ['id', 'firstName', 'lastName', 'paymentCode', 'programName'],
+	sortOptions: recipientsTableConfig.sortOptions?.filter(({ id }) => id !== 'localPartnerName'),
+	makeColumns: () => makeRecipientColumns(false, true),
+};
+
 export const getRecipientsTableFilters = ({
 	query,
 	programFilterOptions,
+	localPartnerFilterOptions,
 	showProgramFilter,
 }: RecipientsFilterArgs): TableFilterConfig[] => {
 	if (!query) {
@@ -64,6 +74,17 @@ export const getRecipientsTableFilters = ({
 			placeholder: 'All programs',
 			value: query.programId,
 			options: programFilterOptions.map((program) => ({ value: program.id, label: program.name })),
+		});
+	}
+
+	if (localPartnerFilterOptions.length > 0) {
+		filters.push({
+			id: 'localPartner',
+			queryKey: 'localPartnerId',
+			label: 'Local partner',
+			placeholder: 'All local partners',
+			value: query.localPartnerId,
+			options: localPartnerFilterOptions.map((localPartner) => ({ value: localPartner.id, label: localPartner.name })),
 		});
 	}
 

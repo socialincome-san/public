@@ -31,6 +31,14 @@ export const candidatesTableConfig: DataTableConfig<CandidatesTableViewRow> = {
 	showColumnVisibilitySelector: true,
 };
 
+export const localPartnerCandidatesTableConfig: DataTableConfig<CandidatesTableViewRow> = {
+	...candidatesTableConfig,
+	id: 'local-partner-candidates',
+	searchKeys: ['id', 'firstName', 'lastName', 'contactNumber', 'firebaseAuthUserId'],
+	sortOptions: candidatesTableConfig.sortOptions?.filter(({ id }) => id !== 'localPartnerName'),
+	makeColumns: () => makeCandidateColumns(false, true),
+};
+
 export const getCandidatesTableFilters = ({
 	query,
 	filterOptions,
