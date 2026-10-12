@@ -1,4 +1,5 @@
 import type { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[currency]';
+import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import { PersonProfile } from '@/components/storyblok/journal/person-profile';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { toWebsiteCurrency } from '@/lib/i18n/utils';
@@ -7,6 +8,9 @@ import { getWebsiteAlternates } from '@/lib/utils/metadata';
 import { getJournalPersonPageData } from '@/modules/journal/journal.cache';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { connection } from 'next/server';
+
+export const generateStaticParams = () => getPublishedSlugParams('person');
 
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { lang, slug } = await params;
@@ -15,6 +19,8 @@ export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) =
 };
 
 export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; currency: string }> }) {
+	// The volunteer duration counts up to today, so the profile renders per request; only the metadata is prerendered.
+	await connection();
 	const { slug, lang, currency: currencySegment } = await props.params;
 	const currency = toWebsiteCurrency(currencySegment);
 

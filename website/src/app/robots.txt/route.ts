@@ -1,6 +1,5 @@
 import { toCurrencySegment, websiteCurrencies } from '@/lib/i18n/utils';
-
-const SITE_URL = 'https://socialincome.org';
+import { WEBSITE_ORIGIN } from '@/lib/utils/metadata-image';
 
 const disallow = [
 	'/portal/',
@@ -21,7 +20,7 @@ const robotsTxt = [
 	'User-Agent: *',
 	...disallow.map((path) => `Disallow: ${path}`),
 	'',
-	`Sitemap: ${SITE_URL}/sitemap.xml`,
+	`Sitemap: ${WEBSITE_ORIGIN}/sitemap.xml`,
 ].join('\n');
 
 export const GET = () =>

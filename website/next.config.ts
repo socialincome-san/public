@@ -4,6 +4,8 @@ import path from 'path';
 import { getSecurityHeaders } from './csp';
 import { getRedirects } from './redirects';
 
+const isProduction = (process.env.NEXT_PUBLIC_APP_ENVIRONMENT ?? process.env.VERCEL_TARGET_ENV) === 'production';
+
 const nextConfig: NextConfig = {
 	transpilePackages: ['@socialincome/design-system', 'storyblok-rich-text-react-renderer'],
 	reactStrictMode: true,
@@ -16,7 +18,11 @@ const nextConfig: NextConfig = {
 		Promise.resolve([
 			{
 				source: '/:path*',
-				headers: [...getSecurityHeaders()],
+				headers: [
+					...getSecurityHeaders(),
+					// Staging is publicly reachable and would otherwise be indexed as a duplicate of production.
+					...(isProduction ? [] : [{ key: 'X-Robots-Tag', value: 'noindex' }]),
+				],
 			},
 		]),
 	turbopack: {

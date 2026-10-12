@@ -1,4 +1,5 @@
 import type { Article } from '@/generated/storyblok/types/109655/storyblok-components';
+import { WEBSITE_ORIGIN } from '@/lib/utils/metadata-image';
 
 export type JournalRssArticle = {
 	slug: string;
@@ -9,7 +10,7 @@ export type JournalRssArticle = {
 };
 
 const DEFAULT_FEED_LANGUAGE = 'en';
-const DEFAULT_FEED_BASE_URL = `https://socialincome.org/${DEFAULT_FEED_LANGUAGE}`;
+const DEFAULT_FEED_BASE_URL = `${WEBSITE_ORIGIN}/${DEFAULT_FEED_LANGUAGE}`;
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 

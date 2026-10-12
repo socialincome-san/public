@@ -1,9 +1,8 @@
 import { defaultCurrency, defaultLanguage, getWebsiteBasePath } from '@/lib/i18n/utils';
-
-const SITE_URL = 'https://socialincome.org';
+import { WEBSITE_ORIGIN } from '@/lib/utils/metadata-image';
 
 const pageUrl = (pathTail = '') =>
-	`${SITE_URL}${getWebsiteBasePath(defaultLanguage, defaultCurrency)}${pathTail ? `/${pathTail}` : ''}`;
+	`${WEBSITE_ORIGIN}${getWebsiteBasePath(defaultLanguage, defaultCurrency)}${pathTail ? `/${pathTail}` : ''}`;
 
 const llmsTxt = `# Social Income
 
@@ -25,8 +24,8 @@ Portal, contributor dashboard, and partner space require login and are not publi
 
 ## Optional
 
-- [Sitemap](${SITE_URL}/sitemap.xml): Machine-readable list of public URLs
-- [Robots](${SITE_URL}/robots.txt): Crawler rules for this site section
+- [Sitemap](${WEBSITE_ORIGIN}/sitemap.xml): Machine-readable list of public URLs
+- [Robots](${WEBSITE_ORIGIN}/robots.txt): Crawler rules for this site section
 `;
 
 export const GET = () =>

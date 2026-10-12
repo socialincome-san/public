@@ -1,4 +1,4 @@
-export const WEBSITE_ORIGIN = 'https://socialincome.org';
+export const WEBSITE_ORIGIN = 'https://www.socialincome.org';
 export const DEFAULT_OPEN_GRAPH_IMAGE_URL = `${WEBSITE_ORIGIN}/assets/metadata/og/default.jpg`;
 
 const BLOCKED_METADATA_HOST_PATTERNS = [/^localhost$/i, /\.localhost$/i, /^vercel\.app$/i, /\.vercel\.app$/i];
