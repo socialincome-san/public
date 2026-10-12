@@ -11,12 +11,14 @@ import type { SubscriptionTableQuery, UpsertBankStandingOrderInput } from './sub
 
 export const findSubscriptionTableSource = async ({
 	accessibleProgramIds,
+	contributorId,
 	query,
 }: {
 	accessibleProgramIds: string[];
+	contributorId: string | undefined;
 	query: SubscriptionTableQuery;
 }) => {
-	const where = buildSubscriptionTableWhere(accessibleProgramIds, query);
+	const where = buildSubscriptionTableWhere(accessibleProgramIds, contributorId, query);
 	const [subscriptions, totalCount] = await Promise.all([
 		prisma.subscription.findMany({
 			where,
@@ -142,6 +144,7 @@ export const updateBankTransferSubscriptionCancellation = async (input: {
 
 const buildSubscriptionTableWhere = (
 	accessibleProgramIds: string[],
+	contributorId: string | undefined,
 	query: SubscriptionTableQuery,
 ): Prisma.SubscriptionWhereInput => {
 	const search = query.search.trim();
@@ -152,6 +155,7 @@ const buildSubscriptionTableWhere = (
 
 	return {
 		campaign: { programId: { in: accessibleProgramIds } },
+		...(contributorId ? { contributorId } : {}),
 		...(selectedStatus ? { status: selectedStatus } : {}),
 		...(selectedPaymentMethod ? { paymentMethod: selectedPaymentMethod } : {}),
 		...(search

@@ -25,6 +25,14 @@ const SubscriptionsDataLoader = async ({ searchParams }: SearchParamsPageProps) 
 	const error = result.success ? null : result.error;
 	const rows: SubscriptionTableViewRow[] = result.success ? result.data.tableRows : [];
 	const totalRows = result.success ? result.data.totalCount : 0;
+	const contributorFilterOptions = result.success ? result.data.contributorFilterOptions : [];
 
-	return <SubscriptionsTableClient rows={rows} error={error} query={{ ...tableQuery, totalRows }} />;
+	return (
+		<SubscriptionsTableClient
+			rows={rows}
+			error={error}
+			query={{ ...tableQuery, totalRows }}
+			contributorFilterOptions={contributorFilterOptions}
+		/>
+	);
 };

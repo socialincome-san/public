@@ -13,19 +13,25 @@ import {
 	type SubscriptionTableViewRow,
 } from '@/modules/subscriptions/subscription.types';
 
-export const makeSubscriptionsColumns = (): ColumnDef<SubscriptionTableViewRow>[] => {
+const contributorColumns: ColumnDef<SubscriptionTableViewRow>[] = [
+	{
+		id: 'contributor',
+		accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
+		header: (ctx) => <SortableHeader ctx={ctx}>Contributor</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+	{
+		accessorKey: 'email',
+		header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+];
+
+export const makeSubscriptionsColumns = ({
+	hideContributor = false,
+}: { hideContributor?: boolean } = {}): ColumnDef<SubscriptionTableViewRow>[] => {
 	return [
-		{
-			id: 'contributor',
-			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
-			header: (ctx) => <SortableHeader ctx={ctx}>Contributor</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'email',
-			header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		...(hideContributor ? [] : contributorColumns),
 		{
 			id: 'amount',
 			header: (ctx) => <SortableHeader ctx={ctx}>Amount</SortableHeader>,

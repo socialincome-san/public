@@ -113,11 +113,13 @@ export type SubscriptionTableQuery = {
 	sortDirection?: 'asc' | 'desc';
 	subscriptionStatus?: string;
 	subscriptionPaymentMethod?: string;
+	contributorId?: string;
 };
 
 export type SubscriptionPaginatedTableView = {
 	tableRows: SubscriptionTableViewRow[];
 	totalCount: number;
+	contributorFilterOptions: { id: string; name: string }[];
 };
 
 export type SubscriptionUpsertResult = {
