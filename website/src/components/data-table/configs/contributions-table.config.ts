@@ -34,6 +34,14 @@ export const contributorContributionsTableConfig: DataTableConfig<ContributionTa
 	makeColumns: () => makeContributionsColumns({ hideContributor: true }),
 };
 
+export const campaignContributionsTableConfig: DataTableConfig<ContributionTableViewRow> = {
+	...contributionsTableConfig,
+	id: 'campaign-contributions',
+	searchKeys: ['id', 'firstName', 'lastName', 'email'],
+	sortOptions: contributionsTableConfig.sortOptions?.filter(({ id }) => id !== 'campaignTitle' && id !== 'programName'),
+	makeColumns: () => makeContributionsColumns({ hideCampaign: true }),
+};
+
 export const getContributionsTableFilters = ({ query, filterOptions }: ContributionFiltersArgs): TableFilterConfig[] => {
 	if (!query) {
 		return [];

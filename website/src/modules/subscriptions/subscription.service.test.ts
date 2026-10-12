@@ -1,5 +1,6 @@
 import { Currency, ProgramPermission, SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
+import { getCampaignFilterOption } from '@/modules/campaigns/campaign.service';
 import { getContributorContributionSummary } from '@/modules/contributions/contribution.service';
 import { getContributorFilterOption } from '@/modules/contributors/contributor.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
@@ -34,6 +35,10 @@ jest.mock('@/modules/contributions/contribution.service', () => ({
 
 jest.mock('@/modules/contributors/contributor.service', () => ({
 	getContributorFilterOption: jest.fn(),
+}));
+
+jest.mock('@/modules/campaigns/campaign.service', () => ({
+	getCampaignFilterOption: jest.fn(),
 }));
 
 jest.mock('@/modules/stripe-payments/stripe-payment.service', () => ({
@@ -71,6 +76,7 @@ const mockGetSubscriptionStripeDetails = getSubscriptionStripeDetails as jest.Mo
 >;
 const mockGetAccessiblePrograms = getAccessiblePrograms as jest.MockedFunction<typeof getAccessiblePrograms>;
 const mockGetContributorFilterOption = jest.mocked(getContributorFilterOption);
+const mockGetCampaignFilterOption = jest.mocked(getCampaignFilterOption);
 
 const expectSuccess = <T>(result: Result<T>) => {
 	expect(result.success).toBe(true);
@@ -320,6 +326,7 @@ describe('getPaginatedTableView', () => {
 			tableRows: [],
 			totalCount: 0,
 			contributorFilterOptions: [],
+			campaignFilterOptions: [],
 		});
 		expect(mockFindSubscriptionTableSource).not.toHaveBeenCalled();
 	});
@@ -349,6 +356,7 @@ describe('getPaginatedTableView', () => {
 		expect(mockFindSubscriptionTableSource).toHaveBeenCalledWith({
 			accessibleProgramIds: ['program-1'],
 			contributorId: undefined,
+			campaignId: undefined,
 			query: defaultTableQuery,
 		});
 	});
@@ -369,6 +377,17 @@ describe('getPaginatedTableView', () => {
 			expect.objectContaining({ contributorId: 'contributor-1' }),
 		);
 		expect(data.contributorFilterOptions).toEqual([{ id: 'contributor-1', name: 'Ada Lovelace' }]);
+	});
+
+	it('filters by an accessible campaign and offers it as filter option', async () => {
+		setupPortal({ subscriptions: [stripeTableSubscription] });
+		mockGetCampaignFilterOption.mockResolvedValue({ success: true, data: { id: 'campaign-1', name: 'core-campaign' } });
+
+		const data = expectSuccess(await getPaginatedTableView('user-1', { ...defaultTableQuery, campaignId: 'campaign-1' }));
+
+		expect(mockGetCampaignFilterOption).toHaveBeenCalledWith('campaign-1', ['program-1']);
+		expect(mockFindSubscriptionTableSource).toHaveBeenCalledWith(expect.objectContaining({ campaignId: 'campaign-1' }));
+		expect(data.campaignFilterOptions).toEqual([{ id: 'campaign-1', name: 'core-campaign' }]);
 	});
 
 	it('ignores a contributor outside the operated programs', async () => {
@@ -396,6 +415,7 @@ describe('getPaginatedTableView', () => {
 		expect(mockFindSubscriptionTableSource).toHaveBeenCalledWith({
 			accessibleProgramIds: ['program-1'],
 			contributorId: undefined,
+			campaignId: undefined,
 			query: {
 				...defaultTableQuery,
 				subscriptionStatus: 'ended',
@@ -436,6 +456,7 @@ describe('getPaginatedTableView', () => {
 		expect(mockFindSubscriptionTableSource).toHaveBeenCalledWith({
 			accessibleProgramIds: ['program-1'],
 			contributorId: undefined,
+			campaignId: undefined,
 			query: {
 				page: 3,
 				pageSize: 10,

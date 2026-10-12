@@ -6,6 +6,7 @@ export const subscriptionTableQuerySchema = tableQuerySchema.extend({
 	subscriptionStatus: tableQueryFilterSchema,
 	subscriptionPaymentMethod: tableQueryFilterSchema,
 	contributorId: tableQueryFilterSchema,
+	campaignId: tableQueryFilterSchema,
 });
 
 export const subscriptionIdSchema = z.string().trim().min(1, 'Subscription id is required.');

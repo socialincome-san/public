@@ -13,11 +13,13 @@ export const SubscriptionsTableClient = ({
 	error,
 	query,
 	contributorFilterOptions,
+	campaignFilterOptions,
 }: {
 	rows: SubscriptionTableViewRow[];
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 	contributorFilterOptions: { id: string; name: string }[];
+	campaignFilterOptions: { id: string; name: string }[];
 }) => {
 	return (
 		<ConfiguredDataTableClient
@@ -26,7 +28,7 @@ export const SubscriptionsTableClient = ({
 			rows={rows}
 			error={error}
 			query={query}
-			toolbarFilters={getSubscriptionsTableFilters({ query, contributorFilterOptions })}
+			toolbarFilters={getSubscriptionsTableFilters({ query, contributorFilterOptions, campaignFilterOptions })}
 		/>
 	);
 };
