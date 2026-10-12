@@ -8,19 +8,25 @@ import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { ContributionTableViewRow } from '@/modules/contributions/contribution.types';
 import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 
-export const makeContributionsColumns = (): ColumnDef<ContributionTableViewRow>[] => {
+const contributorColumns: ColumnDef<ContributionTableViewRow>[] = [
+	{
+		id: 'contributor',
+		accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
+		header: (ctx) => <SortableHeader ctx={ctx}>Contributor</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+	{
+		accessorKey: 'email',
+		header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+];
+
+export const makeContributionsColumns = ({
+	hideContributor = false,
+}: { hideContributor?: boolean } = {}): ColumnDef<ContributionTableViewRow>[] => {
 	return [
-		{
-			id: 'contributor',
-			accessorFn: (row) => `${row.firstName} ${row.lastName}`.trim(),
-			header: (ctx) => <SortableHeader ctx={ctx}>Contributor</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'email',
-			header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		...(hideContributor ? [] : contributorColumns),
 		{
 			id: 'amount',
 			header: (ctx) => <SortableHeader ctx={ctx}>Amount</SortableHeader>,

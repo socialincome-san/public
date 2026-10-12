@@ -106,6 +106,7 @@ export const findCampaignsByProgramIds = async (programIds: string[]) =>
 
 export const findContributionTableSource = async ({
 	campaignIds,
+	contributorId,
 	paymentEventType,
 	search,
 	campaignIdsMatchingTitle,
@@ -113,6 +114,7 @@ export const findContributionTableSource = async ({
 	paginate,
 }: {
 	campaignIds: string[];
+	contributorId: string | undefined;
 	paymentEventType: PaymentEventType | undefined;
 	search: string;
 	campaignIdsMatchingTitle: string[];
@@ -121,6 +123,7 @@ export const findContributionTableSource = async ({
 }) => {
 	const where = buildContributionTableWhere({
 		campaignIds,
+		contributorId,
 		paymentEventType,
 		search,
 		campaignIdsMatchingTitle,
@@ -364,16 +367,19 @@ export const updatePaymentEventFromStripe = async (
 
 const buildContributionTableWhere = ({
 	campaignIds,
+	contributorId,
 	paymentEventType,
 	search,
 	campaignIdsMatchingTitle,
 }: {
 	campaignIds: string[];
+	contributorId: string | undefined;
 	paymentEventType: PaymentEventType | undefined;
 	search: string;
 	campaignIdsMatchingTitle: string[];
 }): Prisma.ContributionWhereInput => ({
 	campaignId: { in: campaignIds },
+	...(contributorId ? { contributorId } : {}),
 	...(paymentEventType
 		? {
 				paymentEvent: {

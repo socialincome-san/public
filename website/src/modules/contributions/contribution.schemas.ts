@@ -1,4 +1,5 @@
 import { ContributionStatus, Currency } from '@/generated/prisma/enums';
+import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import { z } from 'zod';
 
 const requiredId = z.string().trim().min(1, 'This field is required.');
@@ -12,6 +13,13 @@ export const contributionCreateSchema = z.object({
 	status: z.nativeEnum(ContributionStatus),
 	contributorId: requiredId,
 	campaignId: requiredId,
+});
+
+export const contributionTableQuerySchema = tableQuerySchema.extend({
+	programId: tableQueryFilterSchema,
+	campaignId: tableQueryFilterSchema,
+	paymentEventType: tableQueryFilterSchema,
+	contributorId: tableQueryFilterSchema,
 });
 
 export const contributionUpdateSchema = contributionCreateSchema.extend({
