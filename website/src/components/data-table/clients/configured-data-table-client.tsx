@@ -13,6 +13,8 @@ type ConfiguredDataTableClientProps<Row extends RowData> = {
 	rows: Row[];
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
+	// Defaults to syncing the query with the URL
+	onQueryChange?: (patch: Partial<TableQueryState>, options?: { debounceMs?: number }) => void;
 	toolbarFilters?: TableFilterConfig[];
 	actionMenuItems?: ActionMenuItem[];
 	onRowClick?: (row: Row) => void;
@@ -28,6 +30,7 @@ export const ConfiguredDataTableClient = <Row extends RowData>({
 	rows,
 	error,
 	query,
+	onQueryChange,
 	toolbarFilters = [],
 	actionMenuItems,
 	onRowClick,
@@ -37,15 +40,7 @@ export const ConfiguredDataTableClient = <Row extends RowData>({
 	isLoading = false,
 }: ConfiguredDataTableClientProps<Row>) => {
 	const { isPending, updateQuery } = useTableQueryNavigation();
-
-	const handleQueryChange = (
-		patch: Partial<TableQueryState>,
-		options?: {
-			debounceMs?: number;
-		},
-	) => {
-		updateQuery(patch, options);
-	};
+	const handleQueryChange = onQueryChange ?? updateQuery;
 
 	return (
 		<DataTable
