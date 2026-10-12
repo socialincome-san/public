@@ -27,6 +27,9 @@ type Props = {
 	videoLabel: string;
 	showMoreArticlesLink: boolean;
 	roleLabels: Record<string, string>;
+	circleLabels: Record<string, string>;
+	workStyleLabels: Record<string, string>;
+	timeCommitmentLabels: Record<string, string>;
 };
 
 export const PersonProfile = ({
@@ -41,6 +44,9 @@ export const PersonProfile = ({
 	videoLabel,
 	showMoreArticlesLink,
 	roleLabels,
+	circleLabels,
+	workStyleLabels,
+	timeCommitmentLabels,
 }: Props) => {
 	const avatar = person.content.avatar;
 	const portraitSrc = avatar?.filename
@@ -55,6 +61,9 @@ export const PersonProfile = ({
 				name={getPersonDisplayName(person)}
 				portraitSrc={portraitSrc}
 				roleLabels={roleLabels}
+				circleLabels={circleLabels}
+				workStyleLabels={workStyleLabels}
+				timeCommitmentLabels={timeCommitmentLabels}
 			/>
 
 			{articles.length > 0 && (

@@ -24,7 +24,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 		lang,
 		currency,
 		slug,
-		journalLabel: t('overview.title'),
+		parentLabel: t('person.breadcrumb'),
 		homeLabel: tCommon('breadcrumb.home'),
 	});
 

@@ -1,13 +1,19 @@
 import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultCurrency, defaultLanguage, getWebsiteBasePath, type WebsiteCurrency } from '@/lib/i18n/utils';
+import { DEFAULT_OPEN_GRAPH_IMAGE_URL, toProductionMetadataImage } from '@/lib/utils/metadata-image';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
 import type { Metadata } from 'next';
 import type { ResolvedArticle } from './storyblok-article';
 import { normalizeStoryblokFocusForImageService } from './storyblok-image-focus';
-import { getWebsitePathTailFromStoryblokSlug, getWebsitePublicPath, WEBSITE_PERSON_PATH_SEGMENT } from './storyblok-paths';
+import {
+	getWebsitePathTailFromStoryblokSlug,
+	getWebsitePublicPath,
+	WEBSITE_PEOPLE_PATH_SEGMENT,
+	WEBSITE_PERSON_PATH_SEGMENT,
+} from './storyblok-paths';
 
 export const toStringArray = (value: string | number | (string | number)[] | undefined): string[] => {
 	const list = Array.isArray(value) ? value : value !== undefined ? [value] : [];
@@ -62,8 +68,11 @@ export const getPersonLinkedInUrl = (handle: string) => `https://www.linkedin.co
 
 export const getPersonGitHubUrl = (username: string) => `https://github.com/${encodeURIComponent(username)}`;
 
-export const getRoleCode = (role: Person['primaryRole']): string =>
-	role === undefined || role === null ? '' : String(role).trim();
+// Storyblok option fields can hold a numeric datasource id as well as a string value
+export const getOptionCode = (value: string | number | undefined | null): string =>
+	value === undefined || value === null ? '' : String(value).trim();
+
+export const getRoleCode = (role: Person['primaryRole']): string => getOptionCode(role);
 
 export const getRoleLabel = (role: Person['primaryRole'], roleLabels?: Record<string, string>): string => {
 	const code = getRoleCode(role);
@@ -75,6 +84,34 @@ export const personHasRole = (person: ISbStoryData<Person>, roleCodes: string[])
 	const code = getRoleCode(person.content.primaryRole);
 
 	return code.length > 0 && roleCodes.includes(code);
+};
+
+export type PersonCircle = {
+	code: string;
+	label: string;
+	status: 'active' | 'interested';
+};
+
+// Untranslated `circles` datasource entries are labelled with the circle slug (e.g. "partnership-circle")
+const getCircleLabel = (code: string, circleLabels?: Record<string, string>): string => {
+	const label = circleLabels?.[code] ?? code;
+
+	return label === code ? humanizeIdentifier(code) : label;
+};
+
+// Active memberships first; a circle listed as both active and interested is kept once, as active
+export const getPersonCircles = (
+	{ activeCircleMember, interestedCircleMember }: Pick<Person, 'activeCircleMember' | 'interestedCircleMember'>,
+	circleLabels?: Record<string, string>,
+): PersonCircle[] => {
+	const activeCodes = toStringArray(activeCircleMember);
+	const activeCodeSet = new Set(activeCodes);
+	const interestedCodes = toStringArray(interestedCircleMember).filter((code) => !activeCodeSet.has(code));
+
+	return [
+		...activeCodes.map((code) => ({ code, label: getCircleLabel(code, circleLabels), status: 'active' as const })),
+		...interestedCodes.map((code) => ({ code, label: getCircleLabel(code, circleLabels), status: 'interested' as const })),
+	];
 };
 
 export const getDimensionsFromStoryblokImageUrl = (url: string): { width?: number; height?: number } => {
@@ -131,7 +168,7 @@ export const formatStoryblokResizeUrl = (url: string, width: number, height: num
 	return `${url}?_ratio=${ratio}`;
 };
 
-const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) =>
+export const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) =>
 	`${url}/m/${width}x${height}${focus ? `/filters:focal(${normalizeStoryblokFocusForImageService(focus)})` : '/smart'}`;
 
 const STORYBLOK_SPACE_TIMEZONE = 'Europe/Zurich';
@@ -230,6 +267,9 @@ export const createWebsiteJournalArticleTypeLink = (articleTypeSlug: string, lan
 export const createWebsitePersonLink = (slug: string, language: string, currency: WebsiteCurrency) =>
 	createWebsitePath(language, currency, WEBSITE_PERSON_PATH_SEGMENT, slug);
 
+export const createWebsitePeoplePath = (language: string, currency: WebsiteCurrency) =>
+	createWebsitePath(language, currency, WEBSITE_PEOPLE_PATH_SEGMENT);
+
 export const createWebsiteJournalArticleCanonicalUrl = (slug: string, language: string) =>
 	`https://socialincome.org${getWebsiteBasePath(language, defaultCurrency)}/journal/${slug}`;
 
@@ -276,6 +316,7 @@ export const generateMetaDataForArticle = (story: ISbStoryData<ResolvedArticle>,
 					height: dimensions.height,
 				}
 			: undefined;
+	const metadataImage = toProductionMetadataImage(imageMetaData, DEFAULT_OPEN_GRAPH_IMAGE_URL);
 
 	return {
 		title: article.title,
@@ -285,14 +326,14 @@ export const generateMetaDataForArticle = (story: ISbStoryData<ResolvedArticle>,
 		openGraph: {
 			title: article.title,
 			description: article.leadText,
-			images: imageMetaData,
+			images: metadataImage,
 			url,
 			type: 'article',
 		},
 		twitter: {
 			title: article.title,
 			description: article.leadText,
-			images: imageMetaData,
+			images: metadataImage,
 			card: 'summary_large_image',
 			site: '@so_income',
 			creator: '@so_income',

@@ -27,3 +27,7 @@ export const Default: Story = {};
 export const WithInfo: Story = {
 	args: { info: 'The distinct count of contributors across succeeded contributions.' },
 };
+
+export const Large: Story = {
+	args: { size: 'lg' },
+};

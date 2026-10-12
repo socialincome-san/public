@@ -11,5 +11,26 @@
 	"automerge": true,
 	"automergeType": "pr",
 	"platformAutomerge": false,
-	"updateNotScheduled": false
+	"updateNotScheduled": false,
+	"packageRules": [
+		{
+			"description": "Overrides that keep CommonJS dependencies of externalized server packages: Vercel runs functions with --no-experimental-require-module, so their ESM-only majors break at runtime (#3073, #3077)",
+			"matchDepTypes": ["overrides"],
+			"matchPackageNames": ["jwks-rsa"],
+			"allowedVersions": "<4"
+		},
+		{
+			"description": "See above",
+			"matchDepTypes": ["overrides"],
+			"matchPackageNames": ["jsdom"],
+			"allowedVersions": "<27"
+		},
+		{
+			"description": "See above; only the gaxios pin, the top-level uuid override stays on latest",
+			"matchDepTypes": ["overrides"],
+			"matchPackageNames": ["uuid"],
+			"matchCurrentVersion": "<12",
+			"allowedVersions": "<12"
+		}
+	]
 }

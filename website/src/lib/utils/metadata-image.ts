@@ -1,0 +1,119 @@
+export const WEBSITE_ORIGIN = 'https://socialincome.org';
+export const DEFAULT_OPEN_GRAPH_IMAGE_URL = `${WEBSITE_ORIGIN}/assets/metadata/og/default.jpg`;
+
+const BLOCKED_METADATA_HOST_PATTERNS = [/^localhost$/i, /\.localhost$/i, /^vercel\.app$/i, /\.vercel\.app$/i];
+
+const getIpv4Parts = (hostname: string) => {
+	const parts = hostname.split('.');
+	if (parts.length !== 4) {
+		return null;
+	}
+
+	const numbers = parts.map((part) => Number(part));
+	if (numbers.some((part, index) => !Number.isInteger(part) || part < 0 || part > 255 || String(part) !== parts[index])) {
+		return null;
+	}
+
+	return numbers;
+};
+
+const isBlockedIpv4Host = (hostname: string) => {
+	const parts = getIpv4Parts(hostname);
+	if (!parts) {
+		return false;
+	}
+
+	const [first, second] = parts;
+
+	return (
+		first === 0 ||
+		first === 10 ||
+		first === 127 ||
+		(first === 169 && second === 254) ||
+		(first === 172 && second >= 16 && second <= 31) ||
+		(first === 192 && second === 168)
+	);
+};
+
+const getIpv4FromMappedIpv6 = (hostname: string) => {
+	const mappedIpv6Prefix = '::ffff:';
+	if (!hostname.startsWith(mappedIpv6Prefix)) {
+		return null;
+	}
+
+	const parts = hostname.slice(mappedIpv6Prefix.length).split(':');
+	if (parts.length !== 2) {
+		return null;
+	}
+
+	const high = Number.parseInt(parts[0], 16);
+	const low = Number.parseInt(parts[1], 16);
+	if (!Number.isInteger(high) || !Number.isInteger(low) || high < 0 || high > 0xffff || low < 0 || low > 0xffff) {
+		return null;
+	}
+
+	return `${(high >> 8) & 0xff}.${high & 0xff}.${(low >> 8) & 0xff}.${low & 0xff}`;
+};
+
+const isBlockedIpv6Host = (hostname: string) => {
+	const ipv6Host = hostname.replace(/^\[|\]$/g, '').toLowerCase();
+	if (!ipv6Host.includes(':')) {
+		return false;
+	}
+
+	const mappedIpv4 = getIpv4FromMappedIpv6(ipv6Host);
+	if (mappedIpv4) {
+		return isBlockedIpv4Host(mappedIpv4);
+	}
+
+	const firstSegment = ipv6Host.split(':')[0] ?? '';
+	const firstHextet = Number.parseInt(firstSegment, 16);
+
+	return (
+		ipv6Host === '::' ||
+		ipv6Host === '::1' ||
+		(Number.isInteger(firstHextet) && firstHextet >= 0xfc00 && firstHextet <= 0xfdff) ||
+		(Number.isInteger(firstHextet) && firstHextet >= 0xfe80 && firstHextet <= 0xfebf)
+	);
+};
+
+const isBlockedMetadataHost = (hostname: string) => {
+	const normalizedHostname = hostname.toLowerCase().replace(/\.$/, '');
+
+	return (
+		BLOCKED_METADATA_HOST_PATTERNS.some((pattern) => pattern.test(normalizedHostname)) ||
+		isBlockedIpv4Host(normalizedHostname) ||
+		isBlockedIpv6Host(normalizedHostname)
+	);
+};
+
+export const toProductionMetadataUrl = (url: string | null | undefined, fallback: string) => {
+	const value = url?.trim();
+	if (!value) {
+		return fallback;
+	}
+
+	try {
+		const metadataUrl = new URL(value, WEBSITE_ORIGIN);
+
+		if (metadataUrl.protocol !== 'https:' || isBlockedMetadataHost(metadataUrl.hostname)) {
+			return fallback;
+		}
+
+		return metadataUrl.toString();
+	} catch {
+		return fallback;
+	}
+};
+
+export type MetadataImage = { url: string; width?: number; height?: number; alt?: string };
+
+export const toProductionMetadataImage = (imageMetadata: MetadataImage | null | undefined, fallback: string) => {
+	if (!imageMetadata) {
+		return fallback;
+	}
+
+	const url = toProductionMetadataUrl(imageMetadata.url, fallback);
+
+	return url === fallback ? fallback : { ...imageMetadata, url };
+};

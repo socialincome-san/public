@@ -1,11 +1,17 @@
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import sgMail from '@sendgrid/mail';
 
+type SendgridTemplate = {
+	id: string;
+	data: Record<string, unknown>;
+};
+
 export type SendgridMailInput = {
 	to: string | string[];
 	from: string;
 	subject: string;
 	text: string;
+	template?: SendgridTemplate;
 };
 
 export const sendSendgridEmail = async (input: SendgridMailInput): Promise<Result<void>> => {
@@ -16,12 +22,21 @@ export const sendSendgridEmail = async (input: SendgridMailInput): Promise<Resul
 
 	try {
 		sgMail.setApiKey(apiKey);
-		await sgMail.send({
-			to: input.to,
-			from: input.from,
-			subject: input.subject,
-			text: input.text,
-		});
+		await sgMail.send(
+			input.template
+				? {
+						to: input.to,
+						from: input.from,
+						templateId: input.template.id,
+						dynamicTemplateData: input.template.data,
+					}
+				: {
+						to: input.to,
+						from: input.from,
+						subject: input.subject,
+						text: input.text,
+					},
+		);
 
 		return resultOk(undefined);
 	} catch (error) {

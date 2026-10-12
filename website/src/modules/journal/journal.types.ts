@@ -34,7 +34,8 @@ export type JournalPageRequest = {
 	lang: string;
 	currency: WebsiteCurrency;
 	slug: string;
-	journalLabel: string;
+	// Label of the page above this one in the breadcrumbs: the journal for articles, the people overview for persons
+	parentLabel: string;
 	homeLabel: string;
 };
 
@@ -66,6 +67,9 @@ export type JournalPersonPageData = {
 	pathname: string;
 	breadcrumbs: JournalBreadcrumbLink[];
 	roleLabels: Record<string, string>;
+	circleLabels: Record<string, string>;
+	workStyleLabels: Record<string, string>;
+	timeCommitmentLabels: Record<string, string>;
 };
 
 export const JOURNAL_CACHE_TAG = 'journal';

@@ -23,8 +23,6 @@ const fillStripeHostedCheckoutForm = async (scope: Page | FrameLocator, donor: D
 		await zipField.fill('12345');
 		await scope.getByRole('checkbox', { name: 'Save my information for' }).uncheck();
 	}
-
-	await scope.getByTestId('hosted-payment-submit-button').click();
 };
 
 export const completeStripeEmbeddedCheckout = async (page: Page, donor: DonationWizardDonor) => {
@@ -42,7 +40,14 @@ export const completeStripeEmbeddedCheckout = async (page: Page, donor: Donation
 
 	await fillStripeHostedCheckoutForm(stripeCheckout, donor);
 
-	await expect(modal.getByTestId('donation-wizard-step-onboarding')).toBeVisible({
-		timeout: STRIPE_CHECKOUT_TIMEOUT_MS,
-	});
+	const submitButton = stripeCheckout.getByTestId('hosted-payment-submit-button');
+	const onboardingStep = modal.getByTestId('donation-wizard-step-onboarding');
+
+	// Stripe silently drops a submit that lands while it still revalidates the form after the last field change
+	await expect(async () => {
+		if (!(await onboardingStep.isVisible())) {
+			await submitButton.click({ timeout: 5_000 });
+		}
+		await expect(onboardingStep).toBeVisible({ timeout: 15_000 });
+	}).toPass({ timeout: STRIPE_CHECKOUT_TIMEOUT_MS });
 };
