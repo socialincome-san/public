@@ -165,6 +165,10 @@ const getStoryblokContentClient = (): StoryblokContentClient => {
 	const result = storyblokInit({
 		accessToken: process.env.STORYBLOK_PREVIEW_TOKEN,
 		use: [apiPlugin],
+		// With `cv: 'auto'` a warm instance keeps resending the `cv` it saw first. Storyblok's CDN answers a
+		// previously requested `cv` from cache, so that instance never sees later publishes (e.g. a translation).
+		// Without `cv` Storyblok redirects to the latest version; Next.js caching and the webhook do the rest.
+		apiOptions: { cache: { type: 'none', cv: 'manual' } },
 	});
 	if (!result.storyblokApi) {
 		throw new Error('Failed to initialize Storyblok API client');
