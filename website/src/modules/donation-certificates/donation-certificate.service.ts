@@ -10,7 +10,7 @@ import { DEFAULT_DONATION_CERTIFICATE_LANGUAGE, LANGUAGE_CODES, type LanguageCod
 import { now } from '@/lib/utils/now';
 import { getSucceededForContributorAndYear } from '@/modules/contributions/contribution.service';
 import type { ContributionDonationEntry } from '@/modules/contributions/contribution.types';
-import { getContributorsByIds } from '@/modules/contributors/contributor.service';
+import { getContributorFilterOption, getContributorsByIds } from '@/modules/contributors/contributor.service';
 import type { ContributorDonationCertificate } from '@/modules/contributors/contributor.types';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import { createTranslator } from 'next-intl';
@@ -47,11 +47,22 @@ export const getPaginatedDonationCertificates = async (
 			),
 		);
 		if (accessibleProgramIds.length === 0) {
-			return resultOk({ tableRows: [], totalCount: 0 });
+			return resultOk({ tableRows: [], totalCount: 0, contributorFilterOptions: [] });
 		}
+
+		const requestedContributorId = query.contributorId?.trim();
+		// Unknown or inaccessible contributors are ignored, so the filter never hides rows behind an invisible value
+		const contributorOptionResult = requestedContributorId
+			? await getContributorFilterOption(requestedContributorId, accessibleProgramIds)
+			: resultOk(null);
+		if (!contributorOptionResult.success) {
+			return resultFail(contributorOptionResult.error);
+		}
+		const contributorOption = contributorOptionResult.data;
 
 		const { certificates, totalCount } = await donationCertificateRepository.findPaginatedDonationCertificates(
 			accessibleProgramIds,
+			contributorOption?.id,
 			query,
 		);
 		const tableRows: DonationCertificateTableViewRow[] = certificates.map((certificate) => ({
@@ -64,7 +75,7 @@ export const getPaginatedDonationCertificates = async (
 			createdAt: certificate.createdAt,
 		}));
 
-		return resultOk({ tableRows, totalCount });
+		return resultOk({ tableRows, totalCount, contributorFilterOptions: contributorOption ? [contributorOption] : [] });
 	} catch (error) {
 		console.error('Could not fetch donation certificates', { userId, error });
 

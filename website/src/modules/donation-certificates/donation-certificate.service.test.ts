@@ -5,6 +5,7 @@ const mockIsFirebaseStorageConfigured = jest.fn();
 const mockUploadFileToFirebaseStorage = jest.fn();
 const mockGetSucceededForContributorAndYear = jest.fn();
 const mockGetContributorsByIds = jest.fn();
+const mockGetContributorFilterOption = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
 const mockFindPaginatedDonationCertificates = jest.fn();
 const mockFindPaginatedContributorDonationCertificates = jest.fn();
@@ -21,6 +22,7 @@ jest.mock('@/modules/contributions/contribution.service', () => ({
 }));
 
 jest.mock('@/modules/contributors/contributor.service', () => ({
+	getContributorFilterOption: mockGetContributorFilterOption,
 	getContributorsByIds: mockGetContributorsByIds,
 }));
 
@@ -83,7 +85,7 @@ describe('donation certificate service', () => {
 
 		const result = await getPaginatedDonationCertificates('user-1', query);
 
-		expect(mockFindPaginatedDonationCertificates).toHaveBeenCalledWith(['operator-program'], query);
+		expect(mockFindPaginatedDonationCertificates).toHaveBeenCalledWith(['operator-program'], undefined, query);
 		expect(result).toEqual({
 			success: true,
 			data: {
@@ -99,8 +101,45 @@ describe('donation certificate service', () => {
 					},
 				],
 				totalCount: 1,
+				contributorFilterOptions: [],
 			},
 		});
+	});
+
+	test('filters by an accessible contributor and offers it as filter option', async () => {
+		mockGetAccessiblePrograms.mockResolvedValue({
+			success: true,
+			data: [{ programId: 'operator-program', programName: 'Operator', permission: ProgramPermission.operator }],
+		});
+		mockGetContributorFilterOption.mockResolvedValue({
+			success: true,
+			data: { id: 'contributor-1', name: 'Ada Lovelace' },
+		});
+		mockFindPaginatedDonationCertificates.mockResolvedValue({ certificates: [], totalCount: 0 });
+		const query = { page: 1, pageSize: 10, search: '', contributorId: 'contributor-1' };
+
+		const result = await getPaginatedDonationCertificates('user-1', query);
+
+		expect(mockGetContributorFilterOption).toHaveBeenCalledWith('contributor-1', ['operator-program']);
+		expect(mockFindPaginatedDonationCertificates).toHaveBeenCalledWith(['operator-program'], 'contributor-1', query);
+		expect(result).toEqual({
+			success: true,
+			data: { tableRows: [], totalCount: 0, contributorFilterOptions: [{ id: 'contributor-1', name: 'Ada Lovelace' }] },
+		});
+	});
+
+	test('ignores a contributor outside the operated programs', async () => {
+		mockGetAccessiblePrograms.mockResolvedValue({
+			success: true,
+			data: [{ programId: 'operator-program', programName: 'Operator', permission: ProgramPermission.operator }],
+		});
+		mockGetContributorFilterOption.mockResolvedValue({ success: true, data: null });
+		mockFindPaginatedDonationCertificates.mockResolvedValue({ certificates: [], totalCount: 0 });
+		const query = { page: 1, pageSize: 10, search: '', contributorId: 'contributor-other' };
+
+		await getPaginatedDonationCertificates('user-1', query);
+
+		expect(mockFindPaginatedDonationCertificates).toHaveBeenCalledWith(['operator-program'], undefined, query);
 	});
 
 	test('rejects certificate generation when any selected contributor is outside user scope', async () => {

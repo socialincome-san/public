@@ -2,8 +2,10 @@
 
 import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
 import { contributorContributionsTableConfig } from '@/components/data-table/configs/contributions-table.config';
+import { contributorDonationCertificatesTableConfig } from '@/components/data-table/configs/donation-certificates-table.config';
 import { contributorSubscriptionsTableConfig } from '@/components/data-table/configs/subscriptions-table.config';
 import { getContributionTableViewAction } from '@/modules/contributions/contribution.actions';
+import { getDonationCertificateTableViewAction } from '@/modules/donation-certificates/donation-certificate.actions';
 import { getSubscriptionTableViewAction } from '@/modules/subscriptions/subscription.actions';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
@@ -65,6 +67,16 @@ export const ContributorDialog = ({ open, onOpenChange, contributorId, errorMess
 							<RecordTableTab
 								config={contributorSubscriptionsTableConfig}
 								load={(query) => getSubscriptionTableViewAction({ ...query, contributorId })}
+							/>
+						),
+					},
+					{
+						value: 'donation-certificates',
+						label: 'Donation Certificates',
+						content: (
+							<RecordTableTab
+								config={contributorDonationCertificatesTableConfig}
+								load={(query) => getDonationCertificateTableViewAction({ ...query, contributorId })}
 							/>
 						),
 					},
