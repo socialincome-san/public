@@ -173,13 +173,15 @@ export const formatStoryblokUrlDirect = (url: string, width: number, height: num
 
 const STORYBLOK_SPACE_TIMEZONE = 'Europe/Zurich';
 
-const toDateObject = (date: string, language: string) => {
-	let dateObject = DateTime.fromISO(date, { zone: 'utc' });
-	if (!dateObject.isValid) {
-		dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' });
-	}
+const DATE_TIME_WITHOUT_OFFSET = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/;
 
-	return dateObject.setZone(STORYBLOK_SPACE_TIMEZONE).setLocale(language);
+// Luxon's parsers read the current time, which prerendering rejects outside a cache, so parse to a timestamp first.
+const toDateObject = (date: string, language: string) => {
+	const timestamp = Date.parse(DATE_TIME_WITHOUT_OFFSET.test(date) ? `${date.replace(' ', 'T')}Z` : date);
+
+	return Number.isNaN(timestamp)
+		? DateTime.invalid('unparsable')
+		: DateTime.fromMillis(timestamp, { zone: STORYBLOK_SPACE_TIMEZONE, locale: language });
 };
 
 export const formatStoryblokDate = (date: string | null | undefined, language: string) => {

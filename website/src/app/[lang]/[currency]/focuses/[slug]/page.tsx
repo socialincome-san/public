@@ -1,4 +1,5 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[currency]';
+import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { pickCommunityPage } from '@/components/community/pick-community-page';
 import { FocusDetail } from '@/components/storyblok/focus/focus-detail';
@@ -10,6 +11,8 @@ import { getFocusBySlug } from '@/modules/storyblok-content/storyblok-content.ca
 import { notFound } from 'next/navigation';
 
 type FocusPageProps = DefaultLayoutPropsWithSlug & SearchParamsPageProps;
+
+export const generateStaticParams = () => getPublishedSlugParams('focuses');
 
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { lang, slug } = await params;

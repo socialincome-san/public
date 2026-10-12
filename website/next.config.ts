@@ -1,6 +1,5 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
-import { HTML_LIMITED_BOT_UA_RE } from 'next/dist/shared/lib/router/utils/html-bots';
 import path from 'path';
 import { getSecurityHeaders } from './csp';
 import { getRedirects } from './redirects';
@@ -11,8 +10,6 @@ const nextConfig: NextConfig = {
 	transpilePackages: ['@socialincome/design-system', 'storyblok-rich-text-react-renderer'],
 	reactStrictMode: true,
 	cacheComponents: true,
-	// Streamed metadata lands in <body>, where Google ignores rel=canonical and hreflang.
-	htmlLimitedBots: new RegExp(`${HTML_LIMITED_BOT_UA_RE.source}|Googlebot`, 'i'),
 	env: {
 		NEXT_PUBLIC_APP_BUILD_TIMESTAMP: new Date().toISOString(),
 	},
