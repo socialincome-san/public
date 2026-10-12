@@ -1,7 +1,7 @@
 import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultCurrency, defaultLanguage, getWebsiteBasePath, type WebsiteCurrency } from '@/lib/i18n/utils';
-import { DEFAULT_OPEN_GRAPH_IMAGE_URL, toProductionMetadataImage } from '@/lib/utils/metadata-image';
+import { DEFAULT_OPEN_GRAPH_IMAGE_URL, toProductionMetadataImage, WEBSITE_ORIGIN } from '@/lib/utils/metadata-image';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
@@ -271,7 +271,7 @@ export const createWebsitePeoplePath = (language: string, currency: WebsiteCurre
 	createWebsitePath(language, currency, WEBSITE_PEOPLE_PATH_SEGMENT);
 
 export const createWebsiteJournalArticleCanonicalUrl = (slug: string, language: string) =>
-	`https://socialincome.org${getWebsiteBasePath(language, defaultCurrency)}/journal/${slug}`;
+	`${WEBSITE_ORIGIN}${getWebsiteBasePath(language, defaultCurrency)}/journal/${slug}`;
 
 export const resolveStoryblokLink = (
 	link: StoryblokMultilink | undefined,

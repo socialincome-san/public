@@ -36,7 +36,7 @@ describe('journal RSS route', () => {
 			const chfText = await chf.text();
 			expect(usdText).toBe(chfText);
 			expect(usdText).toContain(`<language>${language}</language>`);
-			expect(usdText).toContain(`https://socialincome.org/${language}/journal/stable-story`);
+			expect(usdText).toContain(`https://www.socialincome.org/${language}/journal/stable-story`);
 			expect(mockGetPublishedJournalArticles).toHaveBeenCalledWith(language);
 		}
 	});

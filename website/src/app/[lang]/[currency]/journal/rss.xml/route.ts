@@ -1,5 +1,6 @@
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
 import { buildJournalRssFeed } from '@/lib/storyblok/journal-rss';
+import { WEBSITE_ORIGIN } from '@/lib/utils/metadata-image';
 import { getPublishedJournalArticles } from '@/modules/journal/journal.cache';
 
 type JournalRssRouteContext = {
@@ -19,7 +20,7 @@ export const GET = async (_request: Request, context: JournalRssRouteContext) =>
 		return new Response('Unable to load the journal feed.', { status: 503 });
 	}
 
-	return new Response(buildJournalRssFeed(result.data, `https://socialincome.org/${lang}`, lang), {
+	return new Response(buildJournalRssFeed(result.data, `${WEBSITE_ORIGIN}/${lang}`, lang), {
 		headers: { 'Content-Type': 'application/rss+xml; charset=utf-8' },
 	});
 };
