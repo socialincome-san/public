@@ -1,5 +1,6 @@
 import type { RunwayMonthGrid as RunwayMonthGridBlok } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteLanguage } from '@/lib/i18n/utils';
+import { getTodayMs } from '@/lib/utils/today';
 import { getRunwayMonthsAction } from '@/modules/transparency/transparency.actions';
 import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
 import { storyblokEditable } from '@storyblok/react';
@@ -13,7 +14,11 @@ type Props = {
 
 export const RunwayMonthGridBlock = async ({ blok, lang }: Props) => {
 	const language = lang === 'kri' ? 'en' : lang;
-	const [t, runwayResult] = await Promise.all([getTranslations('website-common'), getRunwayMonthsAction()]);
+	const [t, runwayResult, todayMs] = await Promise.all([
+		getTranslations('website-common'),
+		getRunwayMonthsAction(),
+		getTodayMs(),
+	]);
 	if (!runwayResult.success) {
 		return null;
 	}
@@ -27,7 +32,7 @@ export const RunwayMonthGridBlock = async ({ blok, lang }: Props) => {
 					{blok.title && <h2 className="text-primary text-xl font-semibold">{blok.title}</h2>}
 					<p className="text-foreground">{t('transparency-page.runway.description', { count: amountOfMonths })}</p>
 				</div>
-				<RunwayMonthGrid numberOfMonths={amountOfMonths} language={language} />
+				<RunwayMonthGrid numberOfMonths={amountOfMonths} startMs={todayMs} language={language} />
 				{isRunwayInLineWithZewo(amountOfMonths) && (
 					<div className="flex items-center gap-2 text-sm">
 						<span className="relative flex size-2 shrink-0" aria-hidden>

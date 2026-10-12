@@ -15,7 +15,6 @@ import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/b
 import { getWebsiteAlternates } from '@/lib/utils/metadata';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
-import { connection } from 'next/server';
 
 export const generateStaticParams = () => getPublishedSlugParams();
 
@@ -26,8 +25,6 @@ export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) =
 };
 
 export default async function ContentPage({ params, searchParams }: DefaultLayoutPropsWithSlug & DefaultPageProps) {
-	// Storyblok blocks such as the person grid count up to today, so the page renders per request; only the metadata is prerendered.
-	await connection();
 	const { slug, lang, currency } = await params;
 
 	const storyResult = await getStoryWithFallback<ISbStoryData<Page>>(getPageStoryPath(slug), lang);
