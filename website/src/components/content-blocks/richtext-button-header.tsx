@@ -1,5 +1,6 @@
 'use client';
 
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import type { RichtextButtonHeader } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
@@ -17,7 +18,7 @@ type Props = {
 };
 
 export const RichtextButtonHeaderBlock = ({ blok, lang, currency, buttonAction }: Props) => {
-	const { heading, button, disableMarginTop, disableMarginBottom } = blok;
+	const { heading, button } = blok;
 	const firstButton = button?.[0];
 	const buttonLabel = firstButton?.label?.trim();
 	const buttonHref = firstButton?.link ? resolveStoryblokLink(firstButton.link, lang, currency) : null;
@@ -29,11 +30,7 @@ export const RichtextButtonHeaderBlock = ({ blok, lang, currency, buttonAction }
 	}
 
 	return (
-		<BlockWrapper
-			marginBottom={disableMarginBottom ? 'none' : undefined}
-			marginTop={disableMarginTop ? 'none' : undefined}
-			{...storyblokEditable(blok)}
-		>
+		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
 			<div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
 				{heading && (
 					<div className="text-foreground text-lg">

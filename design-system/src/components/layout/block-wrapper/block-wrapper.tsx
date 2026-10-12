@@ -8,14 +8,14 @@ const blockWrapperVariants = cva('storyblok__outline w-site-width max-w-content 
 			none: 'mt-0',
 			sm: 'mt-2 md:mt-4 lg:mt-6',
 			md: 'mt-4 md:mt-8 lg:mt-12',
-			lg: 'mt-6 md:mt-12 lg:mt-16',
+			lg: 'mt-8 md:mt-12 lg:mt-16',
 			xl: 'mt-12 md:mt-24 lg:mt-32',
 		},
 		marginBottom: {
 			none: 'mb-0',
 			sm: 'mb-2 md:mb-4 lg:mb-6',
 			md: 'mb-4 md:mb-8 lg:mb-12',
-			lg: 'mb-6 md:mb-12 lg:mb-16',
+			lg: 'mb-8 md:mb-12 lg:mb-16',
 			xl: 'mb-12 md:mb-24 lg:mb-32',
 		},
 		width: {

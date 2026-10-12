@@ -1,5 +1,6 @@
 'use client';
 
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import { FaqSelectionContent } from '@/components/content-blocks/faq-selection-content';
 import { resolveFaqItems } from '@/components/content-blocks/faq-selection.utils';
 import type { FaqSelection } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -25,11 +26,7 @@ export const FaqSelectionBlock = ({ blok, lang, currency }: Props) => {
 	}
 
 	return (
-		<BlockWrapper
-			marginTop={blok.disableMarginTop ? 'none' : undefined}
-			marginBottom={blok.disableMarginBottom ? 'none' : undefined}
-			{...storyblokEditable(blok)}
-		>
+		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
 			<FaqSelectionContent heading={blok.heading} items={items} cta={cta} />
 		</BlockWrapper>
 	);

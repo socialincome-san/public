@@ -1,3 +1,4 @@
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import { getStoryUuids } from '@/components/content-blocks/overview-grid.utils';
 import { PersonCardGrid } from '@/components/storyblok/shared/person-card-grid';
 import { PersonGridInteractive } from '@/components/storyblok/shared/person-grid-interactive';
@@ -102,11 +103,7 @@ export const PersonGridBlock = async ({ blok, lang, currency }: Props) => {
 	);
 
 	return (
-		<BlockWrapper
-			{...storyblokEditable(blok)}
-			marginTop={blok.disableMarginTop ? 'none' : undefined}
-			marginBottom={blok.disableMarginBottom ? 'none' : undefined}
-		>
+		<BlockWrapper {...storyblokEditable(blok)} {...blockMargins(blok)}>
 			{content}
 			{button && buttonHref ? (
 				<div className="mt-10 flex justify-center">

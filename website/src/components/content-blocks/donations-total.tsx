@@ -1,5 +1,6 @@
 'use client';
 
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import { FloatingImage } from '@/components/floating-image';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { Currency } from '@/generated/prisma/client';
@@ -68,7 +69,6 @@ export const DonationsTotalBlock = ({
 }: Props) => {
 	const hasFilename = (image: StoryblokAsset): image is StoryblokAsset & { filename: string } => Boolean(image.filename);
 	const locale = getSafeNumberFormatLocale(lang);
-	const { disableMarginBottom, disableMarginTop } = blok;
 
 	const { sectionRef, displayValue, smoothMouseX, smoothMouseY } = useDonationTotalAnimations({
 		totalAmount,
@@ -80,12 +80,7 @@ export const DonationsTotalBlock = ({
 	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, currency) : null;
 
 	return (
-		<BlockWrapper
-			ref={sectionRef}
-			marginBottom={disableMarginBottom ? 'none' : undefined}
-			marginTop={disableMarginTop ? 'none' : undefined}
-			{...storyblokEditable(blok)}
-		>
+		<BlockWrapper ref={sectionRef} {...blockMargins(blok)} {...storyblokEditable(blok)}>
 			{images.map((image, index) => (
 				<FloatingImage key={image.id} image={image} index={index} smoothMouseX={smoothMouseX} smoothMouseY={smoothMouseY} />
 			))}

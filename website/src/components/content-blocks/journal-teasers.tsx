@@ -1,3 +1,4 @@
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import { JournalTeasersSection } from '@/components/journal/journal-teasers-section';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { JournalTeasers } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -45,7 +46,7 @@ const getArticles = async (blok: JournalTeasers, lang: WebsiteLanguage) => {
 };
 
 export const JournalTeasersBlock = async ({ blok, lang, currency }: Props) => {
-	const { disableMarginBottom, disableMarginTop, heading } = blok;
+	const { heading } = blok;
 	const [t, articles] = await Promise.all([getTranslations('website-journal'), getArticles(blok, lang)]);
 
 	if (!articles.length) {
@@ -53,11 +54,7 @@ export const JournalTeasersBlock = async ({ blok, lang, currency }: Props) => {
 	}
 
 	return (
-		<BlockWrapper
-			marginBottom={disableMarginBottom ? 'none' : undefined}
-			marginTop={disableMarginTop ? 'none' : undefined}
-			{...(blok ? storyblokEditable(blok) : {})}
-		>
+		<BlockWrapper {...blockMargins(blok)} {...(blok ? storyblokEditable(blok) : {})}>
 			<JournalTeasersSection
 				heading={heading ? <StoryblokMarkdown>{heading}</StoryblokMarkdown> : undefined}
 				articles={articles}

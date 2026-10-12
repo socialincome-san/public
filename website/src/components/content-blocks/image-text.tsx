@@ -1,3 +1,4 @@
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { ImageText } from '@/generated/storyblok/types/109655/storyblok-components';
 import { getScaledDimensions } from '@/lib/storyblok/storyblok-utils';
@@ -19,7 +20,7 @@ const isSvgAsset = (filename: string, contentType?: string) => {
 };
 
 export const ImageTextBlock = ({ blok }: Props) => {
-	const { content, disableMarginBottom, disableMarginTop, image, imageToTextRatio, layout } = blok;
+	const { content, image, imageToTextRatio, layout } = blok;
 
 	if (!content) {
 		return null;
@@ -46,11 +47,7 @@ export const ImageTextBlock = ({ blok }: Props) => {
 	const widthClasses = widthClassesByRatio[resolvedImageToTextRatio] ?? widthClassesByRatio['1/2'];
 
 	return (
-		<BlockWrapper
-			{...storyblokEditable(blok)}
-			marginBottom={disableMarginBottom ? 'none' : undefined}
-			marginTop={disableMarginTop ? 'none' : undefined}
-		>
+		<BlockWrapper {...storyblokEditable(blok)} {...blockMargins(blok)}>
 			<div
 				className={cn(
 					'text-foreground flex flex-col gap-14 text-lg md:flex-row md:items-center',
