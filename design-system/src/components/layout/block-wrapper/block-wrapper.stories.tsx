@@ -11,7 +11,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'Centers a page section within the site width. `marginTop` and `marginBottom` set responsive vertical spacing from `none` to `xl` (the default).',
+					'Centers a page section within the site width. `marginTop` and `marginBottom` set responsive vertical spacing from `none` to `xl` (the default). `width="bleed"` lets the content run to the screen edges from tablet width up, for carousels.',
 			},
 		},
 	},
@@ -60,5 +60,14 @@ export const ExtraLarge: Story = {
 		marginTop: 'xl',
 		marginBottom: 'xl',
 		children,
+	},
+};
+
+export const Bleed: Story = {
+	args: {
+		width: 'bleed',
+		marginTop: 'none',
+		marginBottom: 'none',
+		children: 'From tablet width up, this content runs to the screen edges.',
 	},
 };
