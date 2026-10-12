@@ -22,6 +22,9 @@ type Props = {
 	disableAutoplay?: boolean;
 };
 
+// hls.js keeps buffering up to 600s while under 60MB, so the whole looping video would load upfront.
+const HLS_CONFIG = { maxBufferLength: 10, maxMaxBufferLength: 10 };
+
 type HeroVideoTranslations = {
 	playVideo: string;
 	pauseVideo: string;
@@ -84,6 +87,7 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 					playbackId={muxPlaybackId}
 					poster={posterUrl}
 					capRenditionToPlayerSize
+					_hlsConfig={HLS_CONFIG}
 					preload="metadata"
 					loop
 					muted={isMuted}
