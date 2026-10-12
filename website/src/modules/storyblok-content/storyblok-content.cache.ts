@@ -95,6 +95,24 @@ export const getPrimaryRoleLabels = async (language: string): Promise<Result<Rec
 	return withStoryblokCache(service.getPrimaryRoleLabels(language));
 };
 
+export const getCircleLabels = async (language: string): Promise<Result<Record<string, string>>> => {
+	'use cache';
+
+	return withStoryblokCache(service.getCircleLabels(language));
+};
+
+export const getWorkStyleLabels = async (language: string): Promise<Result<Record<string, string>>> => {
+	'use cache';
+
+	return withStoryblokCache(service.getWorkStyleLabels(language));
+};
+
+export const getTimeCommitmentLabels = async (language: string): Promise<Result<Record<string, string>>> => {
+	'use cache';
+
+	return withStoryblokCache(service.getTimeCommitmentLabels(language));
+};
+
 export const getAllPersons = async (language: string): Promise<Result<ISbStoryData<Person>[]>> => {
 	'use cache';
 

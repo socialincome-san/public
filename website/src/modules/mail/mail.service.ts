@@ -16,6 +16,7 @@ export const sendMail = async (input: SendMailInput): Promise<Result<void>> => {
 			from,
 			subject: input.subject,
 			text: input.text,
+			template: input.template,
 		});
 		if (!sendResult.success) {
 			return resultFail(sendResult.error);

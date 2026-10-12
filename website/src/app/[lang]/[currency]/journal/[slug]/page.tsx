@@ -36,7 +36,7 @@ export default async function Page(props: JournalArticlePageProps) {
 		lang,
 		currency,
 		slug,
-		journalLabel: t('overview.title'),
+		parentLabel: t('overview.title'),
 		homeLabel: tCommon('breadcrumb.home'),
 	});
 

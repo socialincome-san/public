@@ -7,6 +7,7 @@ import {
 	createWebsiteJournalArticleTypeLink,
 	createWebsiteJournalPath,
 	createWebsiteJournalTagLink,
+	createWebsitePeoplePath,
 	createWebsitePersonLink,
 	getArticleTitle,
 	getArticleTypeLabel,
@@ -130,7 +131,7 @@ export const getJournalOverviewPageData = async (
 
 export const getJournalArticlePageData = async (request: JournalPageRequest): Promise<Result<JournalArticlePageData>> => {
 	try {
-		const { lang, currency, slug, journalLabel, homeLabel } = request;
+		const { lang, currency, slug, parentLabel, homeLabel } = request;
 		const articleResult = await storyblokContent.getArticle(lang, slug);
 		if (!articleResult.success) {
 			return resultFail('Journal article not found', articleResult.status);
@@ -150,7 +151,7 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 			relatedArticles: relatedResult.success ? relatedResult.data : [],
 			breadcrumbs: buildJournalArticleBreadcrumbs(
 				homeLabel,
-				journalLabel,
+				parentLabel,
 				journalPath,
 				getArticleTitle(story, true),
 				createWebsiteJournalArticleLink(slug, lang, currency),
@@ -167,23 +168,30 @@ export const getJournalArticlePageData = async (request: JournalPageRequest): Pr
 
 export const getJournalPersonPageData = async (request: JournalPageRequest): Promise<Result<JournalPersonPageData>> => {
 	try {
-		const { lang, currency, slug, journalLabel, homeLabel } = request;
+		const { lang, currency, slug, parentLabel, homeLabel } = request;
 		const personResult = await storyblokContent.getPerson(slug, lang);
 		if (!personResult.success) {
 			return resultFail('Journal person not found', personResult.status);
 		}
 		const person = personResult.data;
-		const [articlesResult, roleLabelsResult] = await Promise.all([
-			storyblokContent.getArticlesByAuthor(person.uuid, lang),
-			storyblokContent.getPrimaryRoleLabels(lang),
-		]);
+		const [articlesResult, roleLabelsResult, circleLabelsResult, workStyleLabelsResult, timeCommitmentLabelsResult] =
+			await Promise.all([
+				storyblokContent.getArticlesByAuthor(person.uuid, lang),
+				storyblokContent.getPrimaryRoleLabels(lang),
+				storyblokContent.getCircleLabels(lang),
+				storyblokContent.getWorkStyleLabels(lang),
+				storyblokContent.getTimeCommitmentLabels(lang),
+			]);
 		const articles = articlesResult.success ? articlesResult.data : [];
 		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
+		const circleLabels = circleLabelsResult.success ? circleLabelsResult.data : {};
+		const workStyleLabels = workStyleLabelsResult.success ? workStyleLabelsResult.data : {};
+		const timeCommitmentLabels = timeCommitmentLabelsResult.success ? timeCommitmentLabelsResult.data : {};
 		const totalInDefault = await getDefaultLanguageCount(lang, articles.length, () =>
 			storyblokContent.getArticleCountByAuthorForDefaultLang(person.uuid),
 		);
 		const pathname = createWebsitePersonLink(slug, lang, currency);
-		const journalPath = createWebsiteJournalPath(lang, currency);
+		const peoplePath = createWebsitePeoplePath(lang, currency);
 
 		return resultOk({
 			person,
@@ -192,14 +200,17 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			pathname,
 			breadcrumbs: buildJournalPersonBreadcrumbs(
 				homeLabel,
-				journalLabel,
-				journalPath,
+				parentLabel,
+				peoplePath,
 				getPersonDisplayName(person),
 				pathname,
 				lang,
 				currency,
 			),
 			roleLabels,
+			circleLabels,
+			workStyleLabels,
+			timeCommitmentLabels,
 		});
 	} catch (error) {
 		console.error('Could not load journal person', { error });
@@ -329,16 +340,17 @@ const buildJournalArticleBreadcrumbs = (
 	{ label: articleTitle, href: articleHref },
 ];
 
+// A person page sits under the people overview, not under the journal
 const buildJournalPersonBreadcrumbs = (
 	homeLabel: string,
-	journalLabel: string,
-	journalPath: string,
+	peopleLabel: string,
+	peoplePath: string,
 	personName: string,
 	personHref: string,
 	lang: string,
 	currency: WebsiteCurrency,
 ): JournalBreadcrumbLink[] => [
 	buildHomeBreadcrumb(homeLabel, lang, currency),
-	{ label: journalLabel, href: journalPath },
+	{ label: peopleLabel, href: peoplePath },
 	{ label: personName, href: personHref },
 ];
