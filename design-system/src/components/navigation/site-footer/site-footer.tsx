@@ -58,11 +58,11 @@ type SiteFooterProps = {
 	supportedBy?: SiteFooterSupportedBy;
 };
 
-const Copyright = ({ text }: { text: string }) => <p className="text-primary-foreground/50 text-xs font-medium">{text}</p>;
+const Copyright = ({ text }: { text: string }) => <p className="text-primary-foreground/60 text-xs font-medium">{text}</p>;
 
 const SupportedBy = ({ label, logoSrc, logoAlt, link }: SiteFooterSupportedBy) => (
 	<div className="mt-8 flex flex-col gap-2 lg:col-start-1 lg:row-start-2 lg:mt-auto">
-		<p className="text-primary-foreground/50 text-xs leading-normal font-medium">{label}</p>
+		<p className="text-primary-foreground/60 text-xs leading-normal font-medium">{label}</p>
 		{link ? (
 			<NextLink
 				href={link.href}
@@ -100,7 +100,7 @@ export const SiteFooter = ({ groups, copyright, supportedBy }: SiteFooterProps) 
 												href={link.href}
 												target={link.newTab ? '_blank' : '_self'}
 												rel={link.newTab ? 'noopener noreferrer' : undefined}
-												className="text-primary-foreground/50 hover:text-primary-foreground flex items-center gap-3 font-medium transition-colors"
+												className="text-primary-foreground/60 hover:text-primary-foreground flex items-center gap-3 font-medium transition-colors"
 											>
 												{Icon && (
 													<span className="text-input">
