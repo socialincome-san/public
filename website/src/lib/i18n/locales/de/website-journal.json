@@ -11,7 +11,20 @@
 		"article-count": "{count, plural, one {{count} Artikel} other {{count} Artikel}}"
 	},
 	"person": {
-		"articles": "Artikel"
+		"articles": "Artikel",
+		"circle-active": "Aktives Mitglied",
+		"circle-interested": "Interessiertes Mitglied",
+		"work-style": "Arbeitsweise",
+		"likes-deadline": "Deadlines",
+		"likes-deadline-yes": "Mag Deadlines",
+		"likes-deadline-no": "Lieber ohne Deadlines",
+		"time-commitment": "Zeitaufwand",
+		"time-commitment-unit": "Std. / Woche",
+		"breadcrumb": "Personen",
+		"role": "Rolle",
+		"circles": "Kreise",
+		"commitment": "Freiwilligen-Engagement",
+		"opens-in-new-tab": "(öffnet in neuem Tab)"
 	},
 	"article": {
 		"keep-reading": "Weiterlesen",

@@ -8,6 +8,6 @@ test.beforeEach(async () => {
 
 test('partner-space candidates page matches screenshot', async ({ page }) => {
 	await page.goto('/partner-space/candidates?sortBy=candidate&sortDirection=asc');
-	await expect(page.getByTestId('data-table')).toBeVisible();
+	await expect(page.getByTestId('data-table').filter({ visible: true })).toBeVisible();
 	await expectToHaveScreenshot(page);
 });

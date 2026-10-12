@@ -79,8 +79,30 @@ describe('mail service', () => {
 			from: 'sender@example.com',
 			subject: 'Subject',
 			text: 'Body',
+			template: undefined,
 		});
 		expect(mockCreateSentEmail).toHaveBeenCalledTimes(2);
+	});
+
+	test('passes the template to SendGrid and stores the text as the body', async () => {
+		const template = { id: 'd-template-id', data: { month: 'August 2026' } };
+
+		await expect(
+			sendMail({
+				to: 'recipient@example.com',
+				subject: 'Subject',
+				text: 'Body',
+				template,
+			}),
+		).resolves.toEqual({ success: true, data: undefined });
+		expect(mockSendSendgridEmail).toHaveBeenCalledWith({
+			to: 'recipient@example.com',
+			from: 'sender@example.com',
+			subject: 'Subject',
+			text: 'Body',
+			template,
+		});
+		expect(mockCreateSentEmail).toHaveBeenCalledWith(expect.objectContaining({ subject: 'Subject', body: 'Body' }));
 	});
 
 	test('does not store emails when SendGrid fails', async () => {

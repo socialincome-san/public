@@ -11,7 +11,20 @@
 		"article-count": "{count, plural, one {{count} article} other {{count} articles}}"
 	},
 	"person": {
-		"articles": "Articles"
+		"articles": "Articles",
+		"circle-active": "Membre actif",
+		"circle-interested": "Membre intéressé",
+		"work-style": "Style de travail",
+		"likes-deadline": "Délais",
+		"likes-deadline-yes": "Aime les délais",
+		"likes-deadline-no": "Préfère sans délais",
+		"time-commitment": "Temps consacré",
+		"time-commitment-unit": "h / semaine",
+		"breadcrumb": "Personnes",
+		"role": "Rôle",
+		"circles": "Cercles",
+		"commitment": "Engagement bénévole",
+		"opens-in-new-tab": "(s’ouvre dans un nouvel onglet)"
 	},
 	"article": {
 		"keep-reading": "Lire la suite",

@@ -32,7 +32,7 @@ const AlertDescription = (props: WithoutClassName<React.ComponentProps<'div'>>) 
 	return (
 		<div
 			data-slot="alert-description"
-			className="text-muted-foreground col-start-2 grid max-w-full justify-items-start gap-1 overflow-auto text-sm [&_p]:leading-relaxed"
+			className="text-muted-foreground col-start-2 grid max-w-full justify-items-start gap-1 overflow-auto text-sm wrap-break-word whitespace-pre-line [&_p]:leading-relaxed"
 			{...props}
 		/>
 	);

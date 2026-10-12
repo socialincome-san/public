@@ -58,6 +58,27 @@ describe('sendSendgridEmail', () => {
 		});
 	});
 
+	test('sends a dynamic template instead of the text when a template is given', async () => {
+		process.env.SENDGRID_API_KEY = 'test-api-key';
+		mockSend.mockResolvedValue([] as never);
+
+		await expect(
+			sendSendgridEmail({
+				to: 'recipient@example.com',
+				from: 'sender@example.com',
+				subject: 'Subject',
+				text: 'Body',
+				template: { id: 'd-template-id', data: { month: 'August 2026' } },
+			}),
+		).resolves.toEqual({ success: true, data: undefined });
+		expect(mockSend).toHaveBeenCalledWith({
+			to: 'recipient@example.com',
+			from: 'sender@example.com',
+			templateId: 'd-template-id',
+			dynamicTemplateData: { month: 'August 2026' },
+		});
+	});
+
 	test('returns a stable error when SendGrid fails', async () => {
 		process.env.SENDGRID_API_KEY = 'test-api-key';
 		mockSend.mockRejectedValue(new Error('SendGrid unavailable'));
