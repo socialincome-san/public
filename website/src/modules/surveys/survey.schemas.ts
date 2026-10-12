@@ -1,5 +1,6 @@
 import { SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
 import { allWebsiteLanguages } from '@/lib/i18n/utils';
+import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import z from 'zod';
 import type { SurveyJsonValue } from './survey.types';
 
@@ -69,13 +70,9 @@ export const surveySaveActionSchema = z.object({
 	input: surveyResponseUpdateSchema,
 });
 
-export const surveyTableQuerySchema = z.object({
-	page: z.number().int().positive(),
-	pageSize: z.number().int().positive(),
-	search: z.string(),
-	sortBy: z.string().optional(),
-	sortDirection: z.enum(['asc', 'desc']).optional(),
-	programId: z.string().optional(),
+export const surveyTableQuerySchema = tableQuerySchema.extend({
+	programId: tableQueryFilterSchema,
+	recipientId: tableQueryFilterSchema,
 });
 
 export type SurveyCreateInput = z.infer<typeof surveyCreateSchema>;

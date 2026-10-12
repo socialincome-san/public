@@ -11,10 +11,12 @@ import type {
 
 export const findSurveyTableSource = async ({
 	programIds,
+	recipientId,
 	query,
 	upcomingRange,
 }: {
 	programIds: string[];
+	recipientId: string | undefined;
 	query: SurveyTableQuery;
 	upcomingRange?: { from: Date; to: Date };
 }) => {
@@ -24,6 +26,7 @@ export const findSurveyTableSource = async ({
 		: programIds;
 	const search = query.search.trim();
 	const baseWhere: Prisma.SurveyWhereInput = {
+		...(recipientId ? { recipientId } : {}),
 		recipient: { programId: { in: filteredProgramIds } },
 		...(upcomingRange
 			? {

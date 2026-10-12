@@ -188,6 +188,12 @@ export const findEditableRecipientOptions = async (programIds: string[]) =>
 		orderBy: [{ contact: { firstName: 'asc' } }],
 	});
 
+export const findRecipientFilterOption = async (recipientId: string, programIds: string[]) =>
+	prisma.recipient.findFirst({
+		where: { id: recipientId, programId: { in: programIds } },
+		select: { id: true, contact: { select: { firstName: true, lastName: true } } },
+	});
+
 export const findSurveyRecipients = async (programIds: string[], currentDate: Date) =>
 	prisma.recipient.findMany({
 		where: {

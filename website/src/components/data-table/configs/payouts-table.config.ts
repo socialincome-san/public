@@ -2,6 +2,7 @@ import { makePayoutColumns } from '@/components/data-table/columns/payouts';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
 import type { PayoutTableViewRow } from '@/modules/payouts/payout.types';
+import { linkedRecordFilter } from './linked-record-filter';
 
 type PayoutsFilterArgs = {
 	query?: TableQueryState & { totalRows: number };
@@ -43,7 +44,7 @@ export const getPayoutsTableFilters = ({ query, filterOptions }: PayoutsFilterAr
 		return [];
 	}
 
-	const filters: TableFilterConfig[] = [
+	return [
 		{
 			id: 'program',
 			queryKey: 'programId',
@@ -68,17 +69,13 @@ export const getPayoutsTableFilters = ({ query, filterOptions }: PayoutsFilterAr
 			value: query.mobileMoneyProviderId,
 			options: filterOptions.mobileMoneyProviders,
 		},
-		{
+		...linkedRecordFilter({
 			id: 'recipient',
 			queryKey: 'recipientId',
 			label: 'Recipient',
 			placeholder: 'All recipients',
 			value: query.recipientId,
 			options: filterOptions.recipients,
-			// Only reachable through a link, e.g. from the recipient dialog
-			hidden: filterOptions.recipients.length === 0,
-		},
+		}),
 	];
-
-	return filters.filter((filter) => !filter.hidden);
 };
