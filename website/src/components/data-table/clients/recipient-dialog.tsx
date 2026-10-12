@@ -1,9 +1,13 @@
 'use client';
 
+import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
+import { recipientPayoutsTableConfig } from '@/components/data-table/configs/payouts-table.config';
+import { recipientSurveysTableConfig } from '@/components/data-table/configs/surveys-table.config';
 import { RecipientForm } from '@/components/recipient/recipient-form';
-import { RecipientPayoutsTab } from '@/components/recipient/recipient-payouts-tab';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { Session } from '@/modules/auth/auth.types';
+import { getPayoutTableViewAction } from '@/modules/payouts/payout.actions';
+import { getSurveyTableViewAction } from '@/modules/surveys/survey.actions';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
@@ -53,8 +57,10 @@ export const RecipientDialog = ({
 		</>
 	);
 
-	// Payout reads need a portal user session; the service limits them to operated programs
+	// The tabs need a portal user session; their services limit rows to operated programs
 	if (recipientId && sessionType === 'user') {
+		const linkParams = (key: string, id: string) => new URLSearchParams({ recipientId, [key]: id });
+
 		return (
 			<TabbedDialog
 				open={open}
@@ -62,7 +68,28 @@ export const RecipientDialog = ({
 				title="Edit Recipient"
 				tabs={[
 					{ value: 'details', label: 'Details', content: form },
-					{ value: 'payouts', label: 'Payouts', content: <RecipientPayoutsTab recipientId={recipientId} /> },
+					{
+						value: 'payouts',
+						label: 'Payouts',
+						content: (
+							<RecordTableTab
+								config={recipientPayoutsTableConfig}
+								load={(query) => getPayoutTableViewAction({ ...query, recipientId })}
+								getRowHref={(row) => `/portal/delivery/payouts?${linkParams('payoutId', row.id)}`}
+							/>
+						),
+					},
+					{
+						value: 'surveys',
+						label: 'Surveys',
+						content: (
+							<RecordTableTab
+								config={recipientSurveysTableConfig}
+								load={(query) => getSurveyTableViewAction({ ...query, recipientId })}
+								getRowHref={(row) => `/portal/management/surveys?${linkParams('surveyId', row.id)}`}
+							/>
+						),
+					},
 				]}
 			/>
 		);

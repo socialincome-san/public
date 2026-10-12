@@ -137,6 +137,11 @@ export type RecipientLifecycleStatusFromExpectedIntervalsInput = {
 	nowDate: Date;
 };
 
+export type RecipientFilterOption = {
+	id: string;
+	name: string;
+};
+
 export type RecipientTableViewRow = {
 	id: string;
 	firebaseAuthUserId: string;

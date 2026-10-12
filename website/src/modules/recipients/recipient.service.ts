@@ -38,6 +38,7 @@ import {
 	OBFUSCATED_SENTINEL,
 	PublicRecipientTableView,
 	PublicRecipientTableViewRow,
+	RecipientFilterOption,
 	RecipientFormOptions,
 	RecipientLifecycleStatus,
 	RecipientLifecycleStatusFromExpectedIntervalsInput,
@@ -498,6 +499,24 @@ export const getRecipientById = async (session: Session, recipientId: string): P
 		console.error(error);
 
 		return resultFail('Could not fetch recipient');
+	}
+};
+
+// Label for a recipient filter set by a link; null when the recipient is outside the given programs
+export const getRecipientFilterOption = async (
+	recipientId: string,
+	programIds: string[],
+): Promise<Result<RecipientFilterOption | null>> => {
+	try {
+		const recipient = await recipientRepository.findRecipientFilterOption(recipientId, programIds);
+
+		return resultOk(
+			recipient ? { id: recipient.id, name: `${recipient.contact.firstName} ${recipient.contact.lastName}`.trim() } : null,
+		);
+	} catch (error) {
+		console.error('Could not fetch recipient filter option', { recipientId, error });
+
+		return resultFail('Could not fetch recipient filter option');
 	}
 };
 

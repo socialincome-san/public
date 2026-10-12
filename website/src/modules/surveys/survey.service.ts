@@ -4,7 +4,11 @@ import { now, nowMs } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
 import { createFirebaseSurveyUser, synchronizeFirebaseSurveyUser } from '@/modules/auth/auth.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
-import { getRecipientProgramAssignment, getSurveyRecipients } from '@/modules/recipients/recipient.service';
+import {
+	getRecipientFilterOption,
+	getRecipientProgramAssignment,
+	getSurveyRecipients,
+} from '@/modules/recipients/recipient.service';
 import { RECIPIENT_AGE_GROUP_BOUNDS, RECIPIENT_AGE_GROUPS } from '@/modules/surveys/survey-age-groups.types';
 import { QUESTIONS } from '@/modules/surveys/survey-questions.types';
 import { addMonths, differenceInDays, endOfMonth, max, min, startOfMonth, subMonths } from 'date-fns';
@@ -601,16 +605,31 @@ const getPaginatedSurveyTableViewForPrograms = async (
 		).values(),
 	);
 	if (accessiblePrograms.length === 0) {
-		return resultOk({ tableRows: [], totalCount: 0, programFilterOptions: [] });
+		return resultOk({ tableRows: [], totalCount: 0, programFilterOptions: [], recipientFilterOptions: [] });
 	}
 
 	const programIds = accessiblePrograms.map((program) => program.programId);
+	const requestedRecipientId = query.recipientId?.trim();
+	// Unknown or inaccessible recipients are ignored, so the filter never hides rows behind an invisible value
+	const recipientOptionResult = requestedRecipientId
+		? await getRecipientFilterOption(requestedRecipientId, programIds)
+		: resultOk(null);
+	if (!recipientOptionResult.success) {
+		return resultFail(recipientOptionResult.error);
+	}
+	const recipientOption = recipientOptionResult.data;
+	const recipientFilterOptions = recipientOption ? [recipientOption] : [];
 	const selectedProgramId = query.programId?.trim();
 	if (selectedProgramId && !programIds.includes(selectedProgramId)) {
-		return resultOk({ tableRows: [], totalCount: 0, programFilterOptions });
+		return resultOk({ tableRows: [], totalCount: 0, programFilterOptions, recipientFilterOptions });
 	}
 
-	const source = await surveyRepository.findSurveyTableSource({ programIds, query, upcomingRange });
+	const source = await surveyRepository.findSurveyTableSource({
+		programIds,
+		recipientId: recipientOption?.id,
+		query,
+		upcomingRange,
+	});
 	const tableRows: SurveyTableViewRow[] = [];
 	for (const survey of source.surveys) {
 		const program = survey.recipient.program;
@@ -638,7 +657,7 @@ const getPaginatedSurveyTableViewForPrograms = async (
 		});
 	}
 
-	return resultOk({ tableRows, totalCount: source.totalCount, programFilterOptions });
+	return resultOk({ tableRows, totalCount: source.totalCount, programFilterOptions, recipientFilterOptions });
 };
 
 const validateSurveyUniqueness = async (

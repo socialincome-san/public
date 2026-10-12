@@ -7,7 +7,11 @@ import { getLocalPartnerIdBySlug } from '@/modules/local-partners/local-partner.
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccesses } from '@/modules/program-access/program-access.types';
 import { getProgramPayoutForecastSource } from '@/modules/programs/program-reference.service';
-import { getRecipientProgramAssignment, recipientStatusService } from '@/modules/recipients/recipient.service';
+import {
+	getRecipientFilterOption,
+	getRecipientProgramAssignment,
+	recipientStatusService,
+} from '@/modules/recipients/recipient.service';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { canReadPayout, canWritePayout } from './payout.permissions';
 import * as payoutRepository from './payout.repository';
@@ -128,10 +132,14 @@ export const getPaginatedPayoutTableView = async (
 			: programIds;
 		const requestedRecipientId = normalizeOptionalFilter(query.recipientId);
 		// Unknown or inaccessible recipients are ignored, so the filter never hides rows behind an invisible value
-		const [mobileMoneyProviderFilterOptions, recipientOption] = await Promise.all([
+		const [mobileMoneyProviderFilterOptions, recipientOptionResult] = await Promise.all([
 			payoutRepository.findPayoutMobileMoneyProviderOptions(programIds),
-			requestedRecipientId ? payoutRepository.findPayoutRecipientOption(requestedRecipientId, programIds) : null,
+			requestedRecipientId ? getRecipientFilterOption(requestedRecipientId, programIds) : resultOk(null),
 		]);
+		if (!recipientOptionResult.success) {
+			return resultFail(recipientOptionResult.error);
+		}
+		const recipientOption = recipientOptionResult.data;
 		const selectedMobileMoneyProviderId = normalizeOptionalFilter(query.mobileMoneyProviderId);
 		const statusValues = Object.values(PayoutStatus);
 		const selectedStatus = statusValues.find((status) => status === query.payoutStatus);
@@ -139,14 +147,7 @@ export const getPaginatedPayoutTableView = async (
 			value: status,
 			label: `${status.charAt(0).toUpperCase()}${status.slice(1)}`,
 		}));
-		const recipientFilterOptions = recipientOption
-			? [
-					{
-						id: recipientOption.id,
-						name: `${recipientOption.contact.firstName} ${recipientOption.contact.lastName}`.trim(),
-					},
-				]
-			: [];
+		const recipientFilterOptions = recipientOption ? [recipientOption] : [];
 		const baseResult = {
 			tableRows: [],
 			totalCount: 0,
