@@ -73,7 +73,7 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, currency
 			<ul
 				className={cn(
 					'grid min-h-0 gap-2',
-					hasOverflow ? 'grid-rows-[repeat(3,68px)_44px]' : rowsClassBySlotCount[slotCount],
+					hasOverflow ? 'grid-rows-[repeat(3,1fr)_auto]' : rowsClassBySlotCount[slotCount],
 				)}
 			>
 				{visiblePrograms.map((program) => (
@@ -98,7 +98,7 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, currency
 							data-testid="local-partner-programs-more"
 							className={cn(
 								'border-input/60 hover:bg-muted/50 focus-visible:ring-ring text-muted-foreground hover:text-foreground',
-								'flex h-full items-center rounded-xl border px-5 text-sm leading-5 font-medium transition-colors',
+								'flex h-full items-center rounded-xl border px-5 py-3 text-sm leading-5 font-medium transition-colors',
 								'focus-visible:ring-1 focus-visible:outline-hidden',
 							)}
 						>

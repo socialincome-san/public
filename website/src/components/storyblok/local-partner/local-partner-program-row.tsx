@@ -9,7 +9,7 @@ import NextLink from 'next/link';
  */
 const rowClass = cn(
 	'from-[hsl(var(--gradient-card-from))] to-[hsl(var(--gradient-card-to))] bg-gradient-to-r',
-	'text-primary-foreground flex h-full min-w-0 items-center gap-3 rounded-xl py-3 pr-3 pl-[14px]',
+	'text-primary-foreground flex h-full min-w-0 items-center gap-3 rounded-xl py-3 pr-3 pl-3.5',
 	'transition-all hover:-translate-y-0.5 hover:shadow-md',
 	'focus-visible:ring-ring focus-visible:ring-1 focus-visible:outline-hidden',
 );
