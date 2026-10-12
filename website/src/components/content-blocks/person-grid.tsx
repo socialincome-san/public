@@ -5,6 +5,7 @@ import { PersonGridInteractive } from '@/components/storyblok/shared/person-grid
 import type { Person, PersonGrid } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
 import { personHasRole, resolveStoryblokLink, toStringArray } from '@/lib/storyblok/storyblok-utils';
+import { getTodayMs } from '@/lib/utils/today';
 import {
 	getAllPersonsAction,
 	getPersonsByCountryOfficeAction,
@@ -44,19 +45,19 @@ export const PersonGridBlock = async ({ blok, lang, currency }: Props) => {
 	const statusFilter = blok.statusFilter ?? 'all';
 	const smallCards = blok.smallCards ?? false;
 	const linkToPersonPage = blok.linkToPersonPage ?? false;
-	const showVolunteerDuration = blok.showVolunteerDuration ?? false;
 	const showSearch = blok.showSearch ?? false;
 	const showSort = blok.showSort ?? false;
 	const showFilterPills = blok.showFilterPills ?? false;
 	const isInteractive = showSearch || showSort || showFilterPills;
 
-	const [personsResult, roleLabelsResult] = await Promise.all([
+	const [personsResult, roleLabelsResult, todayMs] = await Promise.all([
 		manualUuids.length
 			? getPersonsByUuidsAction({ language: lang, values: manualUuids })
 			: countryOfficeCodes.length
 				? getPersonsByCountryOfficeAction({ language: lang, values: countryOfficeCodes })
 				: getAllPersonsAction(lang),
 		getPrimaryRoleLabelsAction(lang),
+		getTodayMs(),
 	]);
 	const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 	// Exclusions run before everything else — manual picks, role/status filters and the interactive
@@ -74,6 +75,7 @@ export const PersonGridBlock = async ({ blok, lang, currency }: Props) => {
 		return null;
 	}
 
+	const volunteerDurationUntil = blok.showVolunteerDuration ? todayMs : undefined;
 	const button = blok.button?.[0];
 	const buttonHref = button?.link ? resolveStoryblokLink(button.link, lang, currency) : null;
 
@@ -84,7 +86,7 @@ export const PersonGridBlock = async ({ blok, lang, currency }: Props) => {
 			currency={currency}
 			smallCards={smallCards}
 			linkToPersonPage={linkToPersonPage}
-			showVolunteerDuration={showVolunteerDuration}
+			volunteerDurationUntil={volunteerDurationUntil}
 			roleLabels={roleLabels}
 			showSearch={showSearch}
 			showSort={showSort}
@@ -97,7 +99,7 @@ export const PersonGridBlock = async ({ blok, lang, currency }: Props) => {
 			currency={currency}
 			smallCards={smallCards}
 			linkToPersonPage={linkToPersonPage}
-			showVolunteerDuration={showVolunteerDuration}
+			volunteerDurationUntil={volunteerDurationUntil}
 			roleLabels={roleLabels}
 		/>
 	);

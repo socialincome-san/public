@@ -5,10 +5,10 @@ import type { WebsiteLanguage } from '@/lib/i18n/utils';
 import { toWebsiteCurrency } from '@/lib/i18n/utils';
 import { LanguageCode } from '@/lib/types/language';
 import { getWebsiteAlternates } from '@/lib/utils/metadata';
+import { getTodayMs } from '@/lib/utils/today';
 import { getJournalPersonPageData } from '@/modules/journal/journal.cache';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { connection } from 'next/server';
 
 export const generateStaticParams = () => getPublishedSlugParams('person');
 
@@ -19,12 +19,14 @@ export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) =
 };
 
 export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; currency: string }> }) {
-	// The volunteer duration counts up to today, so the profile renders per request; only the metadata is prerendered.
-	await connection();
 	const { slug, lang, currency: currencySegment } = await props.params;
 	const currency = toWebsiteCurrency(currencySegment);
 
-	const [t, tCommon] = await Promise.all([getTranslations('website-journal'), getTranslations('website-common')]);
+	const [t, tCommon, todayMs] = await Promise.all([
+		getTranslations('website-journal'),
+		getTranslations('website-common'),
+		getTodayMs(),
+	]);
 
 	const pageResult = await getJournalPersonPageData({
 		lang,
@@ -46,6 +48,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 			currency={currency}
 			moreArticlesLabel={t('overview.more-articles')}
 			videoLabel={t('badge.video')}
+			todayMs={todayMs}
 		/>
 	);
 }

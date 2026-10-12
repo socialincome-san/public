@@ -27,6 +27,7 @@ type Props = {
 	circleLabels?: Record<string, string>;
 	workStyleLabels?: Record<string, string>;
 	timeCommitmentLabels?: Record<string, string>;
+	todayMs: number;
 };
 
 export const PersonProfileHeader = ({
@@ -37,6 +38,7 @@ export const PersonProfileHeader = ({
 	circleLabels,
 	workStyleLabels,
 	timeCommitmentLabels,
+	todayMs,
 }: Props) => {
 	const t = useTranslations('website-journal');
 	const tCommon = useTranslations('website-common');
@@ -45,7 +47,7 @@ export const PersonProfileHeader = ({
 		person.content;
 	const roleLabel = getRoleLabel(primaryRole, roleLabels);
 	const circles = getPersonCircles(person.content, circleLabels);
-	const duration = volunteerStatus === 'active' ? getDurationLabels(volunteerSince, lang, tCommon) : null;
+	const duration = volunteerStatus === 'active' ? getDurationLabels(volunteerSince, lang, todayMs, tCommon) : null;
 
 	// The `work-style` and `time-commitment` datasources store the English display text as the entry value.
 	// An unset boolean stays hidden, while an explicit `false` is a statement about the person and is shown.

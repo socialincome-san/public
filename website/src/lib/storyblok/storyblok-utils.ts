@@ -210,6 +210,7 @@ export type VolunteerDurationParts =
 export const getVolunteerDurationParts = (
 	date: string | null | undefined,
 	language: string,
+	todayMs: number,
 ): VolunteerDurationParts | null => {
 	if (!date) {
 		return null;
@@ -219,7 +220,7 @@ export const getVolunteerDurationParts = (
 		return null;
 	}
 	const start = dateObject.startOf('day');
-	const today = DateTime.now().setZone(STORYBLOK_SPACE_TIMEZONE).startOf('day');
+	const today = DateTime.fromMillis(todayMs, { zone: STORYBLOK_SPACE_TIMEZONE }).startOf('day');
 	const totalDays = Math.floor(today.diff(start, 'days').days);
 	if (totalDays < 0) {
 		return null;
