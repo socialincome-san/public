@@ -79,7 +79,14 @@
 		"programs-more": "+{count} autres programmes",
 		"programs-build-own": "Crée ton propre programme",
 		"programs-count-singular": "{count} programme",
-		"programs-count-plural": "{count} programmes"
+		"programs-count-plural": "{count} programmes",
+		"mission": "Mission",
+		"partner-since": "Partenaire depuis",
+		"founded": "Fondée en",
+		"location": "Lieu",
+		"learn-more": "En savoir plus",
+		"opens-in-new-tab": "(s'ouvre dans un nouvel onglet)",
+		"website": "Site web"
 	},
 	"focuses-page": {
 		"empty": "Aucun axe trouvé.",
@@ -431,5 +438,10 @@
 		"duration-year-anniversary-plural": "{count} ans aujourd'hui 🎉",
 		"duration-since": "Depuis {date}",
 		"no-results": "Aucune personne ne correspond à votre recherche."
+	},
+	"not-found": {
+		"title": "Nous n'avons pas trouvé cette page",
+		"description": "La page a peut-être été déplacée, ou le lien n'est plus valide.",
+		"home-link": "Aller à la page d'accueil"
 	}
 }
