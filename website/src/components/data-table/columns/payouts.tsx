@@ -22,18 +22,25 @@ const programColumn: ColumnDef<PayoutTableViewRow> = {
 	cell: (ctx) => <TextCell ctx={ctx} />,
 };
 
+const mobileMoneyProviderColumn: ColumnDef<PayoutTableViewRow> = {
+	accessorKey: 'mobileMoneyProviderName',
+	header: (ctx) => <SortableHeader ctx={ctx}>Mobile money provider</SortableHeader>,
+	cell: (ctx) => <TextCell ctx={ctx} />,
+};
+
 export const makePayoutColumns = ({
 	hideRecipient = false,
 	hideProgramName = false,
-}: { hideRecipient?: boolean; hideProgramName?: boolean } = {}): ColumnDef<PayoutTableViewRow>[] => {
+	hideMobileMoneyProvider = false,
+}: {
+	hideRecipient?: boolean;
+	hideProgramName?: boolean;
+	hideMobileMoneyProvider?: boolean;
+} = {}): ColumnDef<PayoutTableViewRow>[] => {
 	return [
 		...(hideRecipient ? [] : [recipientColumn]),
 		...(hideProgramName ? [] : [programColumn]),
-		{
-			accessorKey: 'mobileMoneyProviderName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Mobile money provider</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		...(hideMobileMoneyProvider ? [] : [mobileMoneyProviderColumn]),
 		{
 			id: 'amount',
 			header: (ctx) => <SortableHeader ctx={ctx}>Amount</SortableHeader>,

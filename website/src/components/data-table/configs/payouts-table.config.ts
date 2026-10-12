@@ -39,6 +39,14 @@ export const recipientPayoutsTableConfig: DataTableConfig<PayoutTableViewRow> = 
 	makeColumns: () => makePayoutColumns({ hideRecipient: true, hideProgramName: true }),
 };
 
+export const mobileMoneyProviderPayoutsTableConfig: DataTableConfig<PayoutTableViewRow> = {
+	...payoutsTableConfig,
+	id: 'mobile-money-provider-payouts',
+	searchKeys: ['id', 'recipientFirstName', 'recipientLastName', 'programName'],
+	sortOptions: payoutsTableConfig.sortOptions?.filter(({ id }) => id !== 'mobileMoneyProviderName'),
+	makeColumns: () => makePayoutColumns({ hideMobileMoneyProvider: true }),
+};
+
 export const getPayoutsTableFilters = ({ query, filterOptions }: PayoutsFilterArgs): TableFilterConfig[] => {
 	if (!query) {
 		return [];
