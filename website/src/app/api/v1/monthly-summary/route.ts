@@ -34,7 +34,7 @@ export const GET = withSchedulerAuth(async () => {
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 
-		const { subject, text } = emailContentResult.data;
+		const { subject, text, template } = emailContentResult.data;
 		// Vercel Cron can deliver the same event twice.
 		const alreadySentResult = await hasSentMailWithSubject(subject);
 		if (!alreadySentResult.success) {
@@ -52,6 +52,7 @@ export const GET = withSchedulerAuth(async () => {
 			to: recipients,
 			subject,
 			text,
+			template,
 		});
 		if (!emailResult.success) {
 			sendSlackAlert('Monthly summary email failed', { emailResult });

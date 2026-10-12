@@ -50,3 +50,20 @@ export const Destructive: Story = {
 		</Alert>
 	),
 };
+export const LongMessage: Story = {
+	args: {
+		variant: 'destructive',
+	},
+	render: (args) => (
+		<Alert {...args}>
+			<AlertTitle>Import failed</AlertTitle>
+			<AlertDescription>
+				{[
+					'Row 2: localPartnerId is required',
+					'Row 3: dateOfBirth must use the format dd.MM.yyyy',
+					`Row 4: unknown value ${'averyveryverylongunbrokenvalue'.repeat(6)}`,
+				].join('\n')}
+			</AlertDescription>
+		</Alert>
+	),
+};
