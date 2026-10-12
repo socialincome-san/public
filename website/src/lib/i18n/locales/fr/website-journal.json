@@ -23,7 +23,8 @@
 		"breadcrumb": "Personnes",
 		"role": "Rôle",
 		"circles": "Cercles",
-		"commitment": "Engagement bénévole"
+		"commitment": "Engagement bénévole",
+		"opens-in-new-tab": "(s’ouvre dans un nouvel onglet)"
 	},
 	"article": {
 		"keep-reading": "Lire la suite",

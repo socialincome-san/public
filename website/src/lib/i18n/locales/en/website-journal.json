@@ -23,7 +23,8 @@
 		"breadcrumb": "People",
 		"role": "Role",
 		"circles": "Circles",
-		"commitment": "Volunteer commitment"
+		"commitment": "Volunteer commitment",
+		"opens-in-new-tab": "(opens in a new tab)"
 	},
 	"article": {
 		"keep-reading": "Keep reading",

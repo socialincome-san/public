@@ -68,6 +68,8 @@ export type JournalPersonPageData = {
 	breadcrumbs: JournalBreadcrumbLink[];
 	roleLabels: Record<string, string>;
 	circleLabels: Record<string, string>;
+	workStyleLabels: Record<string, string>;
+	timeCommitmentLabels: Record<string, string>;
 };
 
 export const JOURNAL_CACHE_TAG = 'journal';

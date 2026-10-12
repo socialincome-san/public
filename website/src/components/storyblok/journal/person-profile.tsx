@@ -28,6 +28,8 @@ type Props = {
 	showMoreArticlesLink: boolean;
 	roleLabels: Record<string, string>;
 	circleLabels: Record<string, string>;
+	workStyleLabels: Record<string, string>;
+	timeCommitmentLabels: Record<string, string>;
 };
 
 export const PersonProfile = ({
@@ -43,6 +45,8 @@ export const PersonProfile = ({
 	showMoreArticlesLink,
 	roleLabels,
 	circleLabels,
+	workStyleLabels,
+	timeCommitmentLabels,
 }: Props) => {
 	const avatar = person.content.avatar;
 	const portraitSrc = avatar?.filename
@@ -58,6 +62,8 @@ export const PersonProfile = ({
 				portraitSrc={portraitSrc}
 				roleLabels={roleLabels}
 				circleLabels={circleLabels}
+				workStyleLabels={workStyleLabels}
+				timeCommitmentLabels={timeCommitmentLabels}
 			/>
 
 			{articles.length > 0 && (

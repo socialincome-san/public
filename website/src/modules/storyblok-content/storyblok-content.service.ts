@@ -80,6 +80,8 @@ const STORIES_PATH_PARAMS = {
 } as const;
 const PRIMARY_ROLES_DATASOURCE = 'primaryroles';
 const CIRCLES_DATASOURCE = 'circles';
+const WORK_STYLES_DATASOURCE = 'work-style';
+const TIME_COMMITMENTS_DATASOURCE = 'time-commitment';
 
 const JOURNAL_TEASER_LIMIT = 3;
 
@@ -195,6 +197,12 @@ export const getPrimaryRoleLabels = async (language: string): Promise<Result<Rec
 
 export const getCircleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
 	getDatasourceEntries(CIRCLES_DATASOURCE, language);
+
+export const getWorkStyleLabels = async (language: string): Promise<Result<Record<string, string>>> =>
+	getDatasourceEntries(WORK_STYLES_DATASOURCE, language);
+
+export const getTimeCommitmentLabels = async (language: string): Promise<Result<Record<string, string>>> =>
+	getDatasourceEntries(TIME_COMMITMENTS_DATASOURCE, language);
 
 export const getAllPersons = async (language: string): Promise<Result<ISbStoryData<Person>[]>> =>
 	fetchStoryblokStories<ISbStoryData<Person>>({

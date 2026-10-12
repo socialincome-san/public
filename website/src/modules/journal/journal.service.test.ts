@@ -4,6 +4,8 @@ const mockGetOverviewAuthors = jest.fn();
 const mockGetOverviewArticleTypes = jest.fn();
 const mockGetPrimaryRoleLabels = jest.fn();
 const mockGetCircleLabels = jest.fn();
+const mockGetWorkStyleLabels = jest.fn();
+const mockGetTimeCommitmentLabels = jest.fn();
 const mockGetTag = jest.fn();
 const mockGetArticleType = jest.fn();
 const mockGetArticlesByTag = jest.fn();
@@ -25,6 +27,8 @@ jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getOverviewArticleTypes: mockGetOverviewArticleTypes,
 	getPrimaryRoleLabels: mockGetPrimaryRoleLabels,
 	getCircleLabels: mockGetCircleLabels,
+	getWorkStyleLabels: mockGetWorkStyleLabels,
+	getTimeCommitmentLabels: mockGetTimeCommitmentLabels,
 	getTag: mockGetTag,
 	getArticleType: mockGetArticleType,
 	getArticlesByTag: mockGetArticlesByTag,
@@ -90,6 +94,8 @@ beforeEach(() => {
 	mockGetOverviewArticleTypes.mockResolvedValue({ success: true, data: [articleType] });
 	mockGetPrimaryRoleLabels.mockResolvedValue({ success: true, data: { editor: 'Editor' } });
 	mockGetCircleLabels.mockResolvedValue({ success: true, data: { 'tech-circle': 'tech-circle' } });
+	mockGetWorkStyleLabels.mockResolvedValue({ success: true, data: { Async: 'Asynchron' } });
+	mockGetTimeCommitmentLabels.mockResolvedValue({ success: true, data: { 'On a break': 'Pause' } });
 	mockGetArticlesByTag.mockResolvedValue({ success: true, data: [article] });
 	mockGetArticlesByArticleType.mockResolvedValue({ success: true, data: [article] });
 	mockGetArticlesByAuthor.mockResolvedValue({ success: true, data: [article] });
@@ -192,7 +198,7 @@ describe('getJournalArticlePageData', () => {
 });
 
 describe('getJournalPersonPageData', () => {
-	test('resolves articles, role and circle labels, pagination, and person breadcrumbs', async () => {
+	test('resolves articles, option labels, pagination, and person breadcrumbs', async () => {
 		const result = await getJournalPersonPageData({
 			lang: 'de',
 			currency: 'CHF',
@@ -210,6 +216,8 @@ describe('getJournalPersonPageData', () => {
 			articles: [article],
 			roleLabels: { editor: 'Editor' },
 			circleLabels: { 'tech-circle': 'tech-circle' },
+			workStyleLabels: { Async: 'Asynchron' },
+			timeCommitmentLabels: { 'On a break': 'Pause' },
 			showMoreArticlesLink: true,
 			pathname: '/de/chf/person/ada',
 			breadcrumbs: [

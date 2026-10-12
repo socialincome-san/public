@@ -118,4 +118,10 @@ describe('getPersonCircles', () => {
 			{ code: 'partnership-circle', label: 'Partnership Circle', status: 'interested' },
 		]);
 	});
+
+	it('keeps translated labels as they are', () => {
+		expect(getPersonCircles({ activeCircleMember: ['lead-team'] }, { 'lead-team': 'Lead-Team' })).toEqual([
+			{ code: 'lead-team', label: 'Lead-Team', status: 'active' },
+		]);
+	});
 });

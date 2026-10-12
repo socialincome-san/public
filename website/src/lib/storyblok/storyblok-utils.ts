@@ -91,9 +91,12 @@ export type PersonCircle = {
 	status: 'active' | 'interested';
 };
 
-// The `circles` datasource labels its entries with the circle slug (e.g. "partnership-circle"), so labels are humanized
-const getCircleLabel = (code: string, circleLabels?: Record<string, string>): string =>
-	humanizeIdentifier(circleLabels?.[code] ?? code);
+// Untranslated `circles` datasource entries are labelled with the circle slug (e.g. "partnership-circle")
+const getCircleLabel = (code: string, circleLabels?: Record<string, string>): string => {
+	const label = circleLabels?.[code] ?? code;
+
+	return label === code ? humanizeIdentifier(code) : label;
+};
 
 // Active memberships first; a circle listed as both active and interested is kept once, as active
 export const getPersonCircles = (

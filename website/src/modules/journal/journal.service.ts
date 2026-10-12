@@ -174,14 +174,19 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			return resultFail('Journal person not found', personResult.status);
 		}
 		const person = personResult.data;
-		const [articlesResult, roleLabelsResult, circleLabelsResult] = await Promise.all([
-			storyblokContent.getArticlesByAuthor(person.uuid, lang),
-			storyblokContent.getPrimaryRoleLabels(lang),
-			storyblokContent.getCircleLabels(lang),
-		]);
+		const [articlesResult, roleLabelsResult, circleLabelsResult, workStyleLabelsResult, timeCommitmentLabelsResult] =
+			await Promise.all([
+				storyblokContent.getArticlesByAuthor(person.uuid, lang),
+				storyblokContent.getPrimaryRoleLabels(lang),
+				storyblokContent.getCircleLabels(lang),
+				storyblokContent.getWorkStyleLabels(lang),
+				storyblokContent.getTimeCommitmentLabels(lang),
+			]);
 		const articles = articlesResult.success ? articlesResult.data : [];
 		const roleLabels = roleLabelsResult.success ? roleLabelsResult.data : {};
 		const circleLabels = circleLabelsResult.success ? circleLabelsResult.data : {};
+		const workStyleLabels = workStyleLabelsResult.success ? workStyleLabelsResult.data : {};
+		const timeCommitmentLabels = timeCommitmentLabelsResult.success ? timeCommitmentLabelsResult.data : {};
 		const totalInDefault = await getDefaultLanguageCount(lang, articles.length, () =>
 			storyblokContent.getArticleCountByAuthorForDefaultLang(person.uuid),
 		);
@@ -204,6 +209,8 @@ export const getJournalPersonPageData = async (request: JournalPageRequest): Pro
 			),
 			roleLabels,
 			circleLabels,
+			workStyleLabels,
+			timeCommitmentLabels,
 		});
 	} catch (error) {
 		console.error('Could not load journal person', { error });
