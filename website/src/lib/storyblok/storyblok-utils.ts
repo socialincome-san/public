@@ -1,6 +1,7 @@
 import type { ArticleType, Person } from '@/generated/storyblok/types/109655/storyblok-components';
 import type { StoryblokMultilink } from '@/generated/storyblok/types/storyblok.d.ts';
 import { defaultCurrency, defaultLanguage, getWebsiteBasePath, type WebsiteCurrency } from '@/lib/i18n/utils';
+import { DEFAULT_OPEN_GRAPH_IMAGE_URL, toProductionMetadataImage } from '@/lib/utils/metadata-image';
 import { humanizeIdentifier } from '@/lib/utils/string-utils';
 import type { ISbStoryData } from '@storyblok/js';
 import { DateTime } from 'luxon';
@@ -131,7 +132,7 @@ export const formatStoryblokResizeUrl = (url: string, width: number, height: num
 	return `${url}?_ratio=${ratio}`;
 };
 
-const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) =>
+export const formatStoryblokUrlDirect = (url: string, width: number, height: number, focus?: string | null) =>
 	`${url}/m/${width}x${height}${focus ? `/filters:focal(${normalizeStoryblokFocusForImageService(focus)})` : '/smart'}`;
 
 const STORYBLOK_SPACE_TIMEZONE = 'Europe/Zurich';
@@ -276,6 +277,7 @@ export const generateMetaDataForArticle = (story: ISbStoryData<ResolvedArticle>,
 					height: dimensions.height,
 				}
 			: undefined;
+	const metadataImage = toProductionMetadataImage(imageMetaData, DEFAULT_OPEN_GRAPH_IMAGE_URL);
 
 	return {
 		title: article.title,
@@ -285,14 +287,14 @@ export const generateMetaDataForArticle = (story: ISbStoryData<ResolvedArticle>,
 		openGraph: {
 			title: article.title,
 			description: article.leadText,
-			images: imageMetaData,
+			images: metadataImage,
 			url,
 			type: 'article',
 		},
 		twitter: {
 			title: article.title,
 			description: article.leadText,
-			images: imageMetaData,
+			images: metadataImage,
 			card: 'summary_large_image',
 			site: '@so_income',
 			creator: '@so_income',
