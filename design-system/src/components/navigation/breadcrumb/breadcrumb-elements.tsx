@@ -21,14 +21,16 @@ BreadcrumbList.displayName = 'BreadcrumbList';
 
 const BreadcrumbItem = React.forwardRef<
 	HTMLLIElement,
-	WithoutClassName<React.ComponentPropsWithoutRef<'li'>> & { current?: boolean }
->(({ current, ...props }, ref) => (
+	WithoutClassName<React.ComponentPropsWithoutRef<'li'>> & { current?: boolean; home?: boolean }
+>(({ current, home, ...props }, ref) => (
 	<li
 		ref={ref}
 		className={
 			current
 				? 'inline-flex max-w-full min-w-0 shrink-0 items-center gap-1.5'
-				: 'inline-flex min-w-0 items-center gap-1.5 overflow-hidden whitespace-nowrap'
+				: home
+					? 'inline-flex shrink-0 items-center gap-1.5'
+					: 'inline-flex min-w-0 items-center gap-1.5 overflow-hidden whitespace-nowrap'
 		}
 		{...props}
 	/>
@@ -46,7 +48,7 @@ const BreadcrumbLink = React.forwardRef<
 	return (
 		<Comp
 			ref={ref}
-			className="hover:text-foreground block min-w-0 overflow-hidden whitespace-nowrap transition-colors"
+			className="hover:text-foreground block min-w-4 overflow-hidden whitespace-nowrap transition-colors"
 			{...props}
 		/>
 	);

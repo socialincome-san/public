@@ -17,28 +17,43 @@ export type BreadcrumbLinkItem = {
 };
 
 export const truncateBreadcrumbLabel = (label: string, limit: number) => {
-	if (label.length <= limit) {
-		return label;
+	const trimmedLabel = label.trim();
+	if (trimmedLabel.length <= limit) {
+		return trimmedLabel;
 	}
 
-	const words = label.split(/\s+/);
+	const words = trimmedLabel.split(/\s+/);
+	const normalizedLabel = words.join(' ');
 	if (words.length === 1) {
-		return `${label.slice(0, limit)}…`;
+		return `${trimmedLabel.slice(0, limit)}…`;
 	}
 
 	let truncated = '';
+	let position = 0;
 	for (const [index, word] of words.entries()) {
-		const next = truncated ? `${truncated} ${word}` : word;
-		if (next.length > limit) {
-			if (index < words.length - 1) {
-				truncated = next;
-			}
-			break;
+		const wordStart = position;
+		const wordEnd = wordStart + word.length;
+		if (wordStart >= limit) {
+			return `${truncated}…`;
 		}
-		truncated = next;
+
+		truncated = truncated ? `${truncated} ${word}` : word;
+		position = wordEnd + 1;
+
+		if (wordEnd > limit) {
+			if (wordStart === 0) {
+				return `${word.slice(0, limit)}…`;
+			}
+
+			if (index === 1) {
+				return index === words.length - 1 ? normalizedLabel : `${truncated}…`;
+			}
+
+			return `${truncated.slice(0, truncated.lastIndexOf(' '))}…`;
+		}
 	}
 
-	return truncated ? `${truncated}…` : `${label.slice(0, limit)}…`;
+	return truncated ? normalizedLabel : `${trimmedLabel.slice(0, limit)}…`;
 };
 
 const DESKTOP_QUERY = '(min-width: 64rem)';
@@ -50,7 +65,17 @@ const subscribeToDesktop = (onChange: () => void) => {
 	return () => query.removeEventListener('change', onChange);
 };
 
+type BreadcrumbMeasurement = {
+	element: HTMLSpanElement;
+	reset: () => void;
+};
+
+const BreadcrumbMeasurementContext = React.createContext<{
+	register: (measurement: BreadcrumbMeasurement) => () => void;
+} | null>(null);
+
 const BreadcrumbLabel = ({ label }: { label: string }) => {
+	const measurementContext = React.useContext(BreadcrumbMeasurementContext);
 	const labelRef = React.useRef<HTMLSpanElement>(null);
 	const fullLabelRef = React.useRef<HTMLSpanElement>(null);
 	const truncatedLabelRef = React.useRef<HTMLSpanElement>(null);
@@ -61,8 +86,8 @@ const BreadcrumbLabel = ({ label }: { label: string }) => {
 		() => false,
 	);
 	const truncatedLabel = truncateBreadcrumbLabel(label, isDesktop ? 20 : 12);
-	const [fit, setFit] = React.useState<{ candidate: string; label: string } | null>(null);
-	const isFitted = fit?.candidate === truncatedLabel;
+	const [fit, setFit] = React.useState<{ candidate: string; source: string; label: string } | null>(null);
+	const isFitted = fit?.candidate === truncatedLabel && fit.source === label;
 	const displayLabel = isFitted ? fit.label : label;
 
 	React.useLayoutEffect(() => {
@@ -78,28 +103,27 @@ const BreadcrumbLabel = ({ label }: { label: string }) => {
 
 		setFit({
 			candidate: truncatedLabel,
-			label: fits(fullLabelRef.current)
-				? label
-				: fits(truncatedLabelRef.current)
-					? truncatedLabel
-					: fits(ellipsisRef.current)
-						? '…'
-						: '',
+			source: label,
+			label: fits(fullLabelRef.current) ? label : fits(truncatedLabelRef.current) ? truncatedLabel : '…',
 		});
 	}, [isFitted, label, truncatedLabel]);
 
-	// The label is as wide as its text, so it can only tell whether a candidate fits while showing the full label.
 	React.useLayoutEffect(() => {
-		const list = labelRef.current?.closest('ol');
-		if (!list) {
+		if (
+			!measurementContext ||
+			!labelRef.current ||
+			!fullLabelRef.current ||
+			!truncatedLabelRef.current ||
+			!ellipsisRef.current
+		) {
 			return;
 		}
 
-		const observer = new ResizeObserver(() => setFit(null));
-		observer.observe(list);
-
-		return () => observer.disconnect();
-	}, []);
+		return measurementContext.register({
+			element: labelRef.current,
+			reset: () => setFit(null),
+		});
+	}, [measurementContext]);
 
 	return (
 		<span ref={labelRef} className="relative block min-w-0 overflow-hidden whitespace-nowrap">
@@ -119,44 +143,83 @@ const BreadcrumbLabel = ({ label }: { label: string }) => {
 };
 
 export const Breadcrumb = ({ links }: { links: BreadcrumbLinkItem[] }) => {
+	const listRef = React.useRef<HTMLOListElement>(null);
+	const measurementsRef = React.useRef(new Set<BreadcrumbMeasurement>());
+	const resizeObserverRef = React.useRef<ResizeObserver | null>(null);
+	const measurementContext = React.useMemo(
+		() => ({
+			register: (measurement: BreadcrumbMeasurement) => {
+				measurementsRef.current.add(measurement);
+				resizeObserverRef.current?.observe(measurement.element);
+
+				return () => {
+					measurementsRef.current.delete(measurement);
+					resizeObserverRef.current?.unobserve(measurement.element);
+				};
+			},
+		}),
+		[],
+	);
+
+	React.useEffect(() => {
+		const list = listRef.current;
+		if (!list || typeof ResizeObserver === 'undefined') {
+			return;
+		}
+
+		const observer = new ResizeObserver(() => {
+			measurementsRef.current.forEach(({ reset }) => reset());
+		});
+		resizeObserverRef.current = observer;
+		observer.observe(list);
+		measurementsRef.current.forEach(({ element }) => observer.observe(element));
+
+		return () => {
+			observer.disconnect();
+			resizeObserverRef.current = null;
+		};
+	}, []);
+
 	return (
 		<BreadcrumbElements>
-			<BreadcrumbList>
-				{links.map((link, index) => {
-					const isLast = index === links.length - 1;
-					const isHome = index === 0;
-					const content = isHome ? (
-						<>
-							<span aria-hidden="true">
-								<Home className="h-4 w-4 sm:hidden" />
-								<span className="hidden sm:inline">
-									<BreadcrumbLabel label={link.label} />
-								</span>
-							</span>
-							<span className="sr-only">{link.label}</span>
-						</>
-					) : (
-						<BreadcrumbLabel label={link.label} />
-					);
-
-					return (
-						<React.Fragment key={`${link.href}-${link.label}`}>
-							<BreadcrumbItem current={isLast}>
-								{isLast ? (
-									<span className="block min-w-0" title={link.label}>
-										{content}
+			<BreadcrumbMeasurementContext.Provider value={measurementContext}>
+				<BreadcrumbList ref={listRef}>
+					{links.map((link, index) => {
+						const isLast = index === links.length - 1;
+						const isHome = index === 0;
+						const content = isHome ? (
+							<>
+								<span aria-hidden="true">
+									<Home className="h-4 w-4 sm:hidden" />
+									<span className="hidden sm:inline">
+										<BreadcrumbLabel label={link.label} />
 									</span>
-								) : (
-									<BreadcrumbLink href={link.href} title={link.label} aria-label={link.label}>
-										{content}
-									</BreadcrumbLink>
-								)}
-							</BreadcrumbItem>
-							{isLast ? null : <BreadcrumbSeparator />}
-						</React.Fragment>
-					);
-				})}
-			</BreadcrumbList>
+								</span>
+								<span className="sr-only">{link.label}</span>
+							</>
+						) : (
+							<BreadcrumbLabel label={link.label} />
+						);
+
+						return (
+							<React.Fragment key={`${link.href}-${link.label}`}>
+								<BreadcrumbItem current={isLast} home={isHome}>
+									{isLast ? (
+										<span className="block min-w-0" title={link.label}>
+											{content}
+										</span>
+									) : (
+										<BreadcrumbLink href={link.href} title={link.label} aria-label={link.label}>
+											{content}
+										</BreadcrumbLink>
+									)}
+								</BreadcrumbItem>
+								{isLast ? null : <BreadcrumbSeparator />}
+							</React.Fragment>
+						);
+					})}
+				</BreadcrumbList>
+			</BreadcrumbMeasurementContext.Provider>
 		</BreadcrumbElements>
 	);
 };
