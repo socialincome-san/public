@@ -41,7 +41,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<BlockWrapper marginTop="none" marginBottom="none">
 				<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
 					<h1 className="py-8 text-5xl">{programName}</h1>
 

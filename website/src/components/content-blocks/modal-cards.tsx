@@ -1,5 +1,6 @@
 'use client';
 
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { ModalCards } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -20,11 +21,11 @@ const focusDialogTitleOnOpen = (event: Event) => {
 };
 
 export const ModalCardsBlock = ({ blok }: Props) => {
-	const { cards, disableMarginBottom, disableMarginTop } = blok;
+	const { cards } = blok;
 	const [openCardId, setOpenCardId] = useState<string | null>(null);
 
 	return (
-		<BlockWrapper disableMarginBottom={disableMarginBottom} disableMarginTop={disableMarginTop} {...storyblokEditable(blok)}>
+		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 				{cards?.map(({ image, heading, modalContent, _uid }) => {
 					if (!image.filename) {

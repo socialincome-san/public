@@ -31,7 +31,7 @@ export const Breadcrumb = ({ links, layout = 'page', aside }: Props) => {
 	}
 
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+		<BlockWrapper marginTop="none" marginBottom="none">
 			{layout === 'page' ? <div className="py-9">{nav}</div> : nav}
 		</BlockWrapper>
 	);

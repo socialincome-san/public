@@ -50,7 +50,7 @@ export default async function ContentPage({ params, searchParams }: DefaultLayou
 			currency={toWebsiteCurrency(currency)}
 			searchParams={searchParams}
 			afterHero={
-				<BlockWrapper disableMarginTop disableMarginBottom>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					<div className="pt-9">
 						<Breadcrumb links={breadcrumbLinks} layout="inline" aside={community ? <Community data={community} /> : null} />
 					</div>

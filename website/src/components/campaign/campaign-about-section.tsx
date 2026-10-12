@@ -118,7 +118,7 @@ export const CampaignAboutSection = ({
 	}
 
 	return (
-		<BlockWrapper spacing="compact">
+		<BlockWrapper marginTop="lg" marginBottom="lg">
 			<section
 				className={cn(
 					'grid items-stretch gap-8',

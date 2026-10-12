@@ -21,7 +21,7 @@ type Props = {
 };
 
 export const CampaignCreationTeaser = ({ translations, labels, lang, currency }: Props) => (
-	<BlockWrapper disableMarginTop={true}>
+	<BlockWrapper marginTop="none">
 		<CreateCampaignDialog
 			labels={labels}
 			lang={lang}
