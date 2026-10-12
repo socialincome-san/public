@@ -1,4 +1,7 @@
-type BlockMargin = 'none' | 'sm' | 'md' | 'lg' | 'xl';
+import { type BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/block-wrapper';
+import { type ComponentProps } from 'react';
+
+type BlockMargin = NonNullable<ComponentProps<typeof BlockWrapper>['marginTop']>;
 
 type MarginFields = {
 	marginTop?: '' | BlockMargin;
@@ -9,7 +12,7 @@ type MarginFields = {
 
 // Storyblok stores an unselected option as ''. Content saved before the
 // margin fields existed only has the disableMargin* booleans; drop that
-// fallback once all stories are migrated.
+// fallback once all stories are migrated (#3119).
 const resolveMargin = (margin: '' | BlockMargin | undefined, disabled: boolean | undefined) => {
 	if (margin) {
 		return margin;

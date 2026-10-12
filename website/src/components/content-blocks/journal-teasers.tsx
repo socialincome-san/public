@@ -54,7 +54,7 @@ export const JournalTeasersBlock = async ({ blok, lang, currency }: Props) => {
 	}
 
 	return (
-		<BlockWrapper {...blockMargins(blok)} {...(blok ? storyblokEditable(blok) : {})}>
+		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
 			<JournalTeasersSection
 				heading={heading ? <StoryblokMarkdown>{heading}</StoryblokMarkdown> : undefined}
 				articles={articles}
