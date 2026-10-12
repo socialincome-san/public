@@ -1,7 +1,10 @@
 'use client';
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
-import { donationCertificatesTableConfig } from '@/components/data-table/configs/donation-certificates-table.config';
+import {
+	donationCertificatesTableConfig,
+	getDonationCertificatesTableFilters,
+} from '@/components/data-table/configs/donation-certificates-table.config';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { DonationCertificateTableViewRow } from '@/modules/donation-certificates/donation-certificate.types';
 import { FileTextIcon } from 'lucide-react';
@@ -12,10 +15,12 @@ export const DonationCertificateTable = ({
 	rows,
 	error,
 	query,
+	contributorFilterOptions,
 }: {
 	rows: DonationCertificateTableViewRow[];
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
+	contributorFilterOptions: { id: string; name: string }[];
 }) => {
 	const [open, setOpen] = useState<boolean>(false);
 
@@ -28,6 +33,7 @@ export const DonationCertificateTable = ({
 				rows={rows}
 				error={error}
 				query={query}
+				toolbarFilters={getDonationCertificatesTableFilters({ query, contributorFilterOptions })}
 				actionMenuItems={[
 					{
 						label: 'Generate Donation Certificates',
