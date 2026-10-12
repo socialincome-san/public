@@ -7,6 +7,7 @@ import {
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now } from '@/lib/utils/now';
 import { getContributorContributionSummary } from '@/modules/contributions/contribution.service';
+import { getContributorFilterOption } from '@/modules/contributors/contributor.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccesses } from '@/modules/program-access/program-access.types';
 import { getSubscriptionStripeDetails } from '@/modules/stripe-payments/stripe-payment.service';
@@ -62,16 +63,27 @@ export const getPaginatedTableView = async (
 			return resultFail(accessResult.error);
 		}
 		if (!canListSubscriptions(accessResult.data)) {
-			return resultOk({ tableRows: [], totalCount: 0 });
+			return resultOk({ tableRows: [], totalCount: 0, contributorFilterOptions: [] });
 		}
 
 		const accessibleProgramIds = uniqueOperatorProgramIds(accessResult.data);
 		if (accessibleProgramIds.length === 0) {
-			return resultOk({ tableRows: [], totalCount: 0 });
+			return resultOk({ tableRows: [], totalCount: 0, contributorFilterOptions: [] });
 		}
+
+		const requestedContributorId = query.contributorId?.trim();
+		// Unknown or inaccessible contributors are ignored, so the filter never hides rows behind an invisible value
+		const contributorOptionResult = requestedContributorId
+			? await getContributorFilterOption(requestedContributorId, accessibleProgramIds)
+			: resultOk(null);
+		if (!contributorOptionResult.success) {
+			return resultFail(contributorOptionResult.error);
+		}
+		const contributorOption = contributorOptionResult.data;
 
 		const { subscriptions, totalCount } = await subscriptionRepository.findSubscriptionTableSource({
 			accessibleProgramIds,
+			contributorId: contributorOption?.id,
 			query,
 		});
 		const tableRows: SubscriptionTableViewRow[] = subscriptions.map((subscription) => ({
@@ -89,7 +101,7 @@ export const getPaginatedTableView = async (
 			createdAt: subscription.createdAt,
 		}));
 
-		return resultOk({ tableRows, totalCount });
+		return resultOk({ tableRows, totalCount, contributorFilterOptions: contributorOption ? [contributorOption] : [] });
 	} catch (error) {
 		console.error(error);
 

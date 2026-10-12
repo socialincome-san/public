@@ -1,5 +1,12 @@
+import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import { z } from 'zod';
 import { SUBSCRIPTION_AMOUNT_MAX, SUBSCRIPTION_AMOUNT_MIN, SUBSCRIPTION_CANCEL_REASONS } from './subscription.types';
+
+export const subscriptionTableQuerySchema = tableQuerySchema.extend({
+	subscriptionStatus: tableQueryFilterSchema,
+	subscriptionPaymentMethod: tableQueryFilterSchema,
+	contributorId: tableQueryFilterSchema,
+});
 
 export const subscriptionIdSchema = z.string().trim().min(1, 'Subscription id is required.');
 
