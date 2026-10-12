@@ -79,7 +79,14 @@
 		"programs-more": "+{count} altri programmi",
 		"programs-build-own": "Crea il tuo programma",
 		"programs-count-singular": "{count} programma",
-		"programs-count-plural": "{count} programmi"
+		"programs-count-plural": "{count} programmi",
+		"mission": "Missione",
+		"partner-since": "Partner dal",
+		"founded": "Fondata nel",
+		"location": "Sede",
+		"learn-more": "Scopri di più",
+		"opens-in-new-tab": "(si apre in una nuova scheda)",
+		"website": "Sito web"
 	},
 	"focuses-page": {
 		"empty": "Nessun focus trovato.",
@@ -431,5 +438,10 @@
 		"duration-year-anniversary-plural": "Oggi {count} anni 🎉",
 		"duration-since": "Dal {date}",
 		"no-results": "Nessuna persona corrisponde alla tua ricerca."
+	},
+	"not-found": {
+		"title": "Non abbiamo trovato questa pagina",
+		"description": "La pagina potrebbe essere stata spostata o il link potrebbe non essere più valido.",
+		"home-link": "Vai alla homepage"
 	}
 }

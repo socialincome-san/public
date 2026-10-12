@@ -107,7 +107,7 @@ export const LocalPartnerDetail = async ({
 						foundingYear={foundingYear}
 						location={location}
 						externalLinks={[
-							{ label: 'Website', link: website },
+							{ label: t('local-partners-page.website'), link: website },
 							{ label: 'LinkedIn', link: linkedin },
 							{ label: 'Instagram', link: instagram },
 							{ label: 'Facebook', link: facebook },
