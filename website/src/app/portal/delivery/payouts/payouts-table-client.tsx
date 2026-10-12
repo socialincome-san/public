@@ -2,6 +2,7 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { getPayoutsTableFilters, payoutsTableConfig } from '@/components/data-table/configs/payouts-table.config';
+import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { PayoutTableViewRow } from '@/modules/payouts/payout.types';
 import { PlusIcon } from 'lucide-react';
@@ -15,6 +16,7 @@ export const PayoutsTableClient = ({
 	programFilterOptions,
 	statusFilterOptions,
 	mobileMoneyProviderFilterOptions,
+	recipientFilterOptions,
 }: {
 	rows: PayoutTableViewRow[];
 	error: string | null;
@@ -22,9 +24,10 @@ export const PayoutsTableClient = ({
 	programFilterOptions: { id: string; name: string }[];
 	statusFilterOptions: { value: string; label: string }[];
 	mobileMoneyProviderFilterOptions: { id: string; name: string }[];
+	recipientFilterOptions: { id: string; name: string }[];
 }) => {
-	const [isPayoutFormOpen, setIsPayoutFormOpen] = useState(false);
-	const [payoutId, setPayoutId] = useState<string | undefined>(undefined);
+	const [payoutId, setPayoutId] = useSearchParamState('payoutId');
+	const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
 	const toolbarFilters = getPayoutsTableFilters({
 		query,
 		filterOptions: {
@@ -34,22 +37,20 @@ export const PayoutsTableClient = ({
 				value: provider.id,
 				label: provider.name,
 			})),
+			recipients: recipientFilterOptions.map((recipient) => ({ value: recipient.id, label: recipient.name })),
 		},
 	});
 
 	const openEmptyForm = () => {
 		setPayoutId(undefined);
-		setIsPayoutFormOpen(true);
+		setIsCreateFormOpen(true);
 	};
 
-	const openEditForm = (row: PayoutTableViewRow) => {
-		setPayoutId(row.id);
-		setIsPayoutFormOpen(true);
-	};
+	const openEditForm = (row: PayoutTableViewRow) => setPayoutId(row.id);
 
 	const handlePayoutFormClose = (open: boolean) => {
-		setIsPayoutFormOpen(open);
 		if (!open) {
+			setIsCreateFormOpen(false);
 			setPayoutId(undefined);
 		}
 	};
@@ -73,7 +74,11 @@ export const PayoutsTableClient = ({
 				onRowClick={openEditForm}
 			/>
 
-			<PayoutFormDialog open={isPayoutFormOpen} onOpenChange={handlePayoutFormClose} payoutId={payoutId} />
+			<PayoutFormDialog
+				open={isCreateFormOpen || payoutId !== undefined}
+				onOpenChange={handlePayoutFormClose}
+				payoutId={payoutId}
+			/>
 		</>
 	);
 };

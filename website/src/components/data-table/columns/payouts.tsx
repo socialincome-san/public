@@ -9,19 +9,26 @@ import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { PayoutTableViewRow } from '@/modules/payouts/payout.types';
 import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 
-export const makePayoutColumns = (): ColumnDef<PayoutTableViewRow>[] => {
+const recipientColumn: ColumnDef<PayoutTableViewRow> = {
+	id: 'recipient',
+	accessorFn: (row) => `${row.recipientFirstName} ${row.recipientLastName}`.trim(),
+	header: (ctx) => <SortableHeader ctx={ctx}>Recipient</SortableHeader>,
+	cell: (ctx) => <TextCell ctx={ctx} />,
+};
+
+const programColumn: ColumnDef<PayoutTableViewRow> = {
+	accessorKey: 'programName',
+	header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
+	cell: (ctx) => <TextCell ctx={ctx} />,
+};
+
+export const makePayoutColumns = ({
+	hideRecipient = false,
+	hideProgramName = false,
+}: { hideRecipient?: boolean; hideProgramName?: boolean } = {}): ColumnDef<PayoutTableViewRow>[] => {
 	return [
-		{
-			id: 'recipient',
-			accessorFn: (row) => `${row.recipientFirstName} ${row.recipientLastName}`.trim(),
-			header: (ctx) => <SortableHeader ctx={ctx}>Recipient</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'programName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		...(hideRecipient ? [] : [recipientColumn]),
+		...(hideProgramName ? [] : [programColumn]),
 		{
 			accessorKey: 'mobileMoneyProviderName',
 			header: (ctx) => <SortableHeader ctx={ctx}>Mobile money provider</SortableHeader>,

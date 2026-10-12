@@ -2,7 +2,7 @@ import { useState, type ComponentProps } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 
-import { Tabs, TabsList, TabsTrigger } from './tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
 
 type TabItem = {
 	value: string;
@@ -33,7 +33,11 @@ const TabsExample = ({ args, items }: { args: ComponentProps<typeof Tabs>; items
 				))}
 			</TabsList>
 
-			<p className="pt-3 text-sm">{items.find((item) => item.value === value)?.content}</p>
+			{items.map((item) => (
+				<TabsContent key={item.value} value={item.value}>
+					<p className="pt-3 text-sm">{item.content}</p>
+				</TabsContent>
+			))}
 		</Tabs>
 	);
 };

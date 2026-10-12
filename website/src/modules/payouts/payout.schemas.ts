@@ -38,6 +38,20 @@ export const payoutUpdateSchema = payoutCreateSchema.extend({
 
 export const payoutIdSchema = z.string().trim().min(1, 'Payout id is required.');
 
+const tableQueryTokenSchema = z.string().trim().max(64).optional();
+
+export const payoutTableQuerySchema = z.object({
+	page: z.number().int().min(1),
+	pageSize: z.number().int().min(1).max(1000),
+	search: z.string().trim().max(120),
+	sortBy: tableQueryTokenSchema,
+	sortDirection: z.enum(['asc', 'desc']).optional(),
+	programId: tableQueryTokenSchema,
+	payoutStatus: tableQueryTokenSchema,
+	mobileMoneyProviderId: tableQueryTokenSchema,
+	recipientId: tableQueryTokenSchema,
+});
+
 export const payoutProgramIdSchema = z.string().trim().min(1, 'Invalid program id');
 
 export const payoutCountryCodeSchema = z.string().trim().min(1, 'Missing isoCode');

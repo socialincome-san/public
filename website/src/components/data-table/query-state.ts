@@ -26,6 +26,7 @@ export type TableQueryState = {
 	mobileMoneyProviderId?: string;
 	subscriptionStatus?: string;
 	subscriptionPaymentMethod?: string;
+	recipientId?: string;
 };
 
 type QueryValue = string | string[] | number | null | undefined;
@@ -48,6 +49,7 @@ type TableQueryInput = {
 	mobileMoneyProviderId?: QueryValue;
 	subscriptionStatus?: QueryValue;
 	subscriptionPaymentMethod?: QueryValue;
+	recipientId?: QueryValue;
 };
 
 const takeFirst = (value: QueryValue): string | undefined => {
@@ -112,6 +114,7 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	const mobileMoneyProviderId = normalizeToken(input.mobileMoneyProviderId, MAX_QUERY_TOKEN_LENGTH);
 	const subscriptionStatus = normalizeToken(input.subscriptionStatus, MAX_QUERY_TOKEN_LENGTH);
 	const subscriptionPaymentMethod = normalizeToken(input.subscriptionPaymentMethod, MAX_QUERY_TOKEN_LENGTH);
+	const recipientId = normalizeToken(input.recipientId, MAX_QUERY_TOKEN_LENGTH);
 
 	return {
 		page,
@@ -131,6 +134,7 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 		mobileMoneyProviderId: mobileMoneyProviderId || undefined,
 		subscriptionStatus: subscriptionStatus || undefined,
 		subscriptionPaymentMethod: subscriptionPaymentMethod || undefined,
+		recipientId: recipientId || undefined,
 	};
 };
 
@@ -153,6 +157,7 @@ export const tableQueryFromSearchParams = (searchParams: Record<string, string |
 		mobileMoneyProviderId: searchParams.mobileMoneyProviderId,
 		subscriptionStatus: searchParams.subscriptionStatus,
 		subscriptionPaymentMethod: searchParams.subscriptionPaymentMethod,
+		recipientId: searchParams.recipientId,
 	});
 };
 
@@ -186,6 +191,7 @@ export const applyTableQueryPatch = (
 		subscriptionPaymentMethod: hasPatchKey('subscriptionPaymentMethod')
 			? patch.subscriptionPaymentMethod
 			: currentSearchParams.get('subscriptionPaymentMethod'),
+		recipientId: hasPatchKey('recipientId') ? patch.recipientId : currentSearchParams.get('recipientId'),
 	});
 
 	const nextParams = new URLSearchParams(currentSearchParams.toString());
@@ -263,6 +269,11 @@ export const applyTableQueryPatch = (
 		nextParams.set('subscriptionPaymentMethod', nextQuery.subscriptionPaymentMethod);
 	} else {
 		nextParams.delete('subscriptionPaymentMethod');
+	}
+	if (nextQuery.recipientId) {
+		nextParams.set('recipientId', nextQuery.recipientId);
+	} else {
+		nextParams.delete('recipientId');
 	}
 
 	return nextParams;

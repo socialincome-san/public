@@ -9,6 +9,7 @@ type PayoutsFilterArgs = {
 		programs: { value: string; label: string }[];
 		statuses: { value: string; label: string }[];
 		mobileMoneyProviders: { value: string; label: string }[];
+		recipients: { value: string; label: string }[];
 	};
 };
 
@@ -25,8 +26,16 @@ export const payoutsTableConfig: DataTableConfig<PayoutTableViewRow> = {
 		{ id: 'status', label: 'Status' },
 		{ id: 'paymentAt', label: 'Payment date' },
 	],
-	makeColumns: makePayoutColumns,
+	makeColumns: () => makePayoutColumns(),
 	showColumnVisibilitySelector: true,
+};
+
+export const recipientPayoutsTableConfig: DataTableConfig<PayoutTableViewRow> = {
+	...payoutsTableConfig,
+	id: 'recipient-payouts',
+	searchKeys: ['id', 'mobileMoneyProviderName'],
+	sortOptions: payoutsTableConfig.sortOptions?.filter(({ id }) => id !== 'recipient' && id !== 'programName'),
+	makeColumns: () => makePayoutColumns({ hideRecipient: true, hideProgramName: true }),
 };
 
 export const getPayoutsTableFilters = ({ query, filterOptions }: PayoutsFilterArgs): TableFilterConfig[] => {
@@ -34,7 +43,7 @@ export const getPayoutsTableFilters = ({ query, filterOptions }: PayoutsFilterAr
 		return [];
 	}
 
-	return [
+	const filters: TableFilterConfig[] = [
 		{
 			id: 'program',
 			queryKey: 'programId',
@@ -59,5 +68,17 @@ export const getPayoutsTableFilters = ({ query, filterOptions }: PayoutsFilterAr
 			value: query.mobileMoneyProviderId,
 			options: filterOptions.mobileMoneyProviders,
 		},
+		{
+			id: 'recipient',
+			queryKey: 'recipientId',
+			label: 'Recipient',
+			placeholder: 'All recipients',
+			value: query.recipientId,
+			options: filterOptions.recipients,
+			// Only reachable through a link, e.g. from the recipient dialog
+			hidden: filterOptions.recipients.length === 0,
+		},
 	];
+
+	return filters.filter((filter) => !filter.hidden);
 };

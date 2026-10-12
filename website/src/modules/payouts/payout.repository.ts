@@ -66,18 +66,26 @@ export const findPayoutMobileMoneyProviderOptions = async (programIds: string[])
 		orderBy: { name: 'asc' },
 	});
 
+export const findPayoutRecipientOption = async (recipientId: string, programIds: string[]) =>
+	prisma.recipient.findFirst({
+		where: { id: recipientId, programId: { in: programIds } },
+		select: { id: true, contact: { select: { firstName: true, lastName: true } } },
+	});
+
 export const findPayoutTableSource = async ({
 	programIds,
 	mobileMoneyProviderId,
+	recipientId,
 	status,
 	query,
 }: {
 	programIds: string[];
 	mobileMoneyProviderId: string | undefined;
+	recipientId: string | undefined;
 	status: PayoutStatus | undefined;
 	query: PayoutTableQuery;
 }) => {
-	const where = buildPayoutTableWhere(programIds, mobileMoneyProviderId, status, query.search);
+	const where = buildPayoutTableWhere(programIds, mobileMoneyProviderId, recipientId, status, query.search);
 	const [payouts, totalCount] = await Promise.all([
 		prisma.payout.findMany({
 			where,
@@ -347,12 +355,14 @@ const payoutConfirmationTableSelect = {
 const buildPayoutTableWhere = (
 	programIds: string[],
 	mobileMoneyProviderId: string | undefined,
+	recipientId: string | undefined,
 	status: PayoutStatus | undefined,
 	searchInput: string,
 ): Prisma.PayoutWhereInput => {
 	const search = searchInput.trim();
 
 	return {
+		...(recipientId ? { recipientId } : {}),
 		recipient: {
 			programId: { in: programIds },
 			...(mobileMoneyProviderId ? { paymentInformation: { mobileMoneyProviderId } } : {}),
