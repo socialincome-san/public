@@ -13,6 +13,10 @@ export const DATA_TABLE_FETCH_PREFIX_REGEX = /^Could not fetch [^:]+:\s*/i;
 export const CSV_DOUBLE_QUOTES_REGEX = /"/g;
 export const CSV_NEEDS_QUOTES_REGEX = /[",\n]/;
 
+// Matches a time-commitment datasource value that is a plain number of hours ("1-2", "16+"), as
+// opposed to a worded entry such as "On a break" — only the former takes an "hrs/week" unit.
+export const HOURS_RANGE_REGEX = /^\d+(?:\s*[-–]\s*\d+)?\+?$/;
+
 export const CAMEL_CASE_BOUNDARY_REGEX = /([a-z0-9])([A-Z])/g;
 export const UNDERSCORE_DASH_SEQUENCE_REGEX = /[_-]+/g;
 export const WHITESPACE_SPLIT_REGEX = /\s+/;

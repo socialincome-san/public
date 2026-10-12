@@ -8,7 +8,12 @@ import { DateTime } from 'luxon';
 import type { Metadata } from 'next';
 import type { ResolvedArticle } from './storyblok-article';
 import { normalizeStoryblokFocusForImageService } from './storyblok-image-focus';
-import { getWebsitePathTailFromStoryblokSlug, getWebsitePublicPath, WEBSITE_PERSON_PATH_SEGMENT } from './storyblok-paths';
+import {
+	getWebsitePathTailFromStoryblokSlug,
+	getWebsitePublicPath,
+	WEBSITE_PEOPLE_PATH_SEGMENT,
+	WEBSITE_PERSON_PATH_SEGMENT,
+} from './storyblok-paths';
 
 export const toStringArray = (value: string | number | (string | number)[] | undefined): string[] => {
 	const list = Array.isArray(value) ? value : value !== undefined ? [value] : [];
@@ -63,8 +68,11 @@ export const getPersonLinkedInUrl = (handle: string) => `https://www.linkedin.co
 
 export const getPersonGitHubUrl = (username: string) => `https://github.com/${encodeURIComponent(username)}`;
 
-export const getRoleCode = (role: Person['primaryRole']): string =>
-	role === undefined || role === null ? '' : String(role).trim();
+// Storyblok option fields can hold a numeric datasource id as well as a string value
+export const getOptionCode = (value: string | number | undefined | null): string =>
+	value === undefined || value === null ? '' : String(value).trim();
+
+export const getRoleCode = (role: Person['primaryRole']): string => getOptionCode(role);
 
 export const getRoleLabel = (role: Person['primaryRole'], roleLabels?: Record<string, string>): string => {
 	const code = getRoleCode(role);
@@ -76,6 +84,34 @@ export const personHasRole = (person: ISbStoryData<Person>, roleCodes: string[])
 	const code = getRoleCode(person.content.primaryRole);
 
 	return code.length > 0 && roleCodes.includes(code);
+};
+
+export type PersonCircle = {
+	code: string;
+	label: string;
+	status: 'active' | 'interested';
+};
+
+// Untranslated `circles` datasource entries are labelled with the circle slug (e.g. "partnership-circle")
+const getCircleLabel = (code: string, circleLabels?: Record<string, string>): string => {
+	const label = circleLabels?.[code] ?? code;
+
+	return label === code ? humanizeIdentifier(code) : label;
+};
+
+// Active memberships first; a circle listed as both active and interested is kept once, as active
+export const getPersonCircles = (
+	{ activeCircleMember, interestedCircleMember }: Pick<Person, 'activeCircleMember' | 'interestedCircleMember'>,
+	circleLabels?: Record<string, string>,
+): PersonCircle[] => {
+	const activeCodes = toStringArray(activeCircleMember);
+	const activeCodeSet = new Set(activeCodes);
+	const interestedCodes = toStringArray(interestedCircleMember).filter((code) => !activeCodeSet.has(code));
+
+	return [
+		...activeCodes.map((code) => ({ code, label: getCircleLabel(code, circleLabels), status: 'active' as const })),
+		...interestedCodes.map((code) => ({ code, label: getCircleLabel(code, circleLabels), status: 'interested' as const })),
+	];
 };
 
 export const getDimensionsFromStoryblokImageUrl = (url: string): { width?: number; height?: number } => {
@@ -230,6 +266,9 @@ export const createWebsiteJournalArticleTypeLink = (articleTypeSlug: string, lan
 
 export const createWebsitePersonLink = (slug: string, language: string, currency: WebsiteCurrency) =>
 	createWebsitePath(language, currency, WEBSITE_PERSON_PATH_SEGMENT, slug);
+
+export const createWebsitePeoplePath = (language: string, currency: WebsiteCurrency) =>
+	createWebsitePath(language, currency, WEBSITE_PEOPLE_PATH_SEGMENT);
 
 export const createWebsiteJournalArticleCanonicalUrl = (slug: string, language: string) =>
 	`https://socialincome.org${getWebsiteBasePath(language, defaultCurrency)}/journal/${slug}`;

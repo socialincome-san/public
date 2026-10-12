@@ -44,7 +44,7 @@ export const StoryblokPreviewPersonPage = async ({
 				lang,
 				currency,
 				slug,
-				journalLabel: t('overview.title'),
+				parentLabel: t('person.breadcrumb'),
 				homeLabel: tCommon('breadcrumb.home'),
 			});
 

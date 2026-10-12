@@ -20,6 +20,8 @@ const badgeVariants = cva(
 					'bg-confirm-foreground border-confirm/30 text-foreground text-sm leading-none font-medium whitespace-nowrap',
 				video: 'bg-black/60 border-white/40 text-white backdrop-blur-sm',
 				frosted: 'bg-white/80 border-white/40 text-foreground whitespace-nowrap backdrop-blur-sm',
+				primary: 'bg-primary border-primary text-primary-foreground',
+				'primary-outline': 'border-primary/40 text-primary bg-transparent',
 			},
 			size: {
 				sm: 'gap-0.5 px-2 py-0.5 text-2xs',

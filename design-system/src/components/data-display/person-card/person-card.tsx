@@ -1,7 +1,7 @@
 import NextImage from 'next/image';
 import NextLink from 'next/link';
 import { cn } from '../../../cn';
-import { Badge } from '../badge/badge';
+import { DurationBadge } from '../duration-badge/duration-badge';
 
 type PersonCardImage = {
 	src: string;
@@ -44,15 +44,8 @@ export const PersonCard = ({ firstName, lastName, roleLabel, image, href, size =
 				)}
 			>
 				{duration && !isCompact ? (
-					<div className="group/duration absolute top-3 left-3 z-20">
-						<Badge
-							variant="frosted"
-							// The hover-only date is exposed via title; an aria-label would replace the duration as the accessible name
-							title={duration.since}
-						>
-							<span className="group-hover/duration:hidden">{duration.label}</span>
-							<span className="hidden group-hover/duration:inline">{duration.since}</span>
-						</Badge>
+					<div className="absolute top-3 left-3 z-20">
+						<DurationBadge label={duration.label} since={duration.since} />
 					</div>
 				) : null}
 				{image ? (

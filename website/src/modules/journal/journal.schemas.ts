@@ -7,7 +7,7 @@ export const journalPageRequestSchema = z.object({
 	lang: journalLanguageSchema,
 	currency: z.enum([Currency.CHF, Currency.EUR, Currency.USD]),
 	slug: z.string().trim().min(1),
-	journalLabel: z.string(),
+	parentLabel: z.string(),
 	homeLabel: z.string(),
 });
 

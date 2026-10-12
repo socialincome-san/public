@@ -35,6 +35,8 @@ const meta = {
 				'fundraising',
 				'video',
 				'frosted',
+				'primary',
+				'primary-outline',
 			],
 		},
 		size: {
@@ -64,6 +66,8 @@ export const Variants: Story = {
 			<Badge variant="verified">Verified</Badge>
 			<Badge variant="country">Country</Badge>
 			<Badge variant="fundraising">Fundraising</Badge>
+			<Badge variant="primary">Primary</Badge>
+			<Badge variant="primary-outline">Primary Outline</Badge>
 		</div>
 	),
 };
