@@ -1,5 +1,7 @@
+import { ProgramPermission } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
-import type { GlobeContribution } from './contribution.types';
+import type * as ContributionRepository from './contribution.repository';
+import type { ContributionPaginatedTableView, ContributionTableQuery, GlobeContribution } from './contribution.types';
 
 type ContributionRow = {
 	id: string;
@@ -36,13 +38,29 @@ jest.mock('@/lib/types/country', () => ({
 	isValidCountryCode: (code: string) => Boolean(code),
 }));
 
+const mockGetAccessiblePrograms = jest.fn();
+const mockGetContributorFilterOption = jest.fn();
+const mockFindCampaignsByProgramIds = jest.fn();
+const mockFindContributionTableSource = jest.fn();
+
 jest.mock('@/modules/program-access/program-access.service', () => ({
-	getAccessiblePrograms: jest.fn(),
+	getAccessiblePrograms: mockGetAccessiblePrograms,
 }));
 
 jest.mock('@/modules/contributors/contributor.service', () => ({
 	findContributorById: jest.fn(),
+	getContributorFilterOption: mockGetContributorFilterOption,
 	getEditableContributorOptions: jest.fn(),
+}));
+
+jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
+	getCampaigns: jest.fn().mockResolvedValue({ success: true, data: [] }),
+}));
+
+jest.mock('./contribution.repository', () => ({
+	...jest.requireActual<typeof ContributionRepository>('./contribution.repository'),
+	findCampaignsByProgramIds: mockFindCampaignsByProgramIds,
+	findContributionTableSource: mockFindContributionTableSource,
 }));
 
 const makeRow = (overrides: Partial<ContributionRow> = {}): ContributionRow => ({
@@ -77,9 +95,13 @@ const expectSuccess = <T>(result: Result<T>) => {
 };
 
 let getRecentSuccessfulContributions: (days: number) => Promise<Result<GlobeContribution[]>>;
+let getPaginatedTableView: (
+	userId: string,
+	query: ContributionTableQuery,
+) => Promise<Result<ContributionPaginatedTableView>>;
 
 beforeAll(async () => {
-	({ getRecentSuccessfulContributions } = await import('./contribution.service'));
+	({ getRecentSuccessfulContributions, getPaginatedTableView } = await import('./contribution.service'));
 });
 
 describe('getRecentSuccessfulContributions', () => {
@@ -212,5 +234,55 @@ describe('getRecentSuccessfulContributions', () => {
 		expect(dto).not.toHaveProperty('email');
 		expect(dto).not.toHaveProperty('firstName');
 		expect(dto).not.toHaveProperty('lastName');
+	});
+});
+
+describe('getPaginatedTableView contributor filter', () => {
+	const query = { page: 1, pageSize: 10, search: '', contributorId: 'contributor-1' };
+
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockGetAccessiblePrograms.mockResolvedValue({
+			success: true,
+			data: [{ programId: 'program-1', programName: 'Program 1', permission: ProgramPermission.operator }],
+		});
+		mockFindCampaignsByProgramIds.mockResolvedValue([
+			{ id: 'campaign-1', slug: null, program: { id: 'program-1', name: 'Program 1' } },
+		]);
+		mockFindContributionTableSource.mockResolvedValue({ contributions: [], totalCount: 0 });
+	});
+
+	test('filters by an accessible contributor and offers it as filter option', async () => {
+		mockGetContributorFilterOption.mockResolvedValue({ success: true, data: { id: 'contributor-1', name: 'Ada Lovelace' } });
+
+		const data = expectSuccess(await getPaginatedTableView('user-1', query));
+
+		expect(mockGetContributorFilterOption).toHaveBeenCalledWith('contributor-1', ['program-1']);
+		expect(mockFindContributionTableSource).toHaveBeenCalledWith(
+			expect.objectContaining({ campaignIds: ['campaign-1'], contributorId: 'contributor-1' }),
+		);
+		expect(data.filterOptions.contributors).toEqual([{ value: 'contributor-1', label: 'Ada Lovelace' }]);
+	});
+
+	test('ignores a contributor outside the operated programs', async () => {
+		mockGetContributorFilterOption.mockResolvedValue({ success: true, data: null });
+
+		const data = expectSuccess(await getPaginatedTableView('user-1', query));
+
+		expect(mockFindContributionTableSource).toHaveBeenCalledWith(expect.objectContaining({ contributorId: undefined }));
+		expect(data.filterOptions.contributors).toEqual([]);
+	});
+
+	test('returns no contributions without operator access', async () => {
+		mockGetAccessiblePrograms.mockResolvedValue({
+			success: true,
+			data: [{ programId: 'program-1', programName: 'Program 1', permission: ProgramPermission.owner }],
+		});
+
+		const data = expectSuccess(await getPaginatedTableView('user-1', query));
+
+		expect(data.tableRows).toEqual([]);
+		expect(mockGetContributorFilterOption).not.toHaveBeenCalled();
+		expect(mockFindContributionTableSource).not.toHaveBeenCalled();
 	});
 });

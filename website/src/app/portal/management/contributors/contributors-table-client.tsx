@@ -8,11 +8,9 @@ import {
 import { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { ContributorTableViewRow } from '@/modules/contributors/contributor.types';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
-import ContributorsForm from './contributors-form';
+import { ContributorDialog } from './contributor-dialog';
 
 export default function ContributorsTableClient({
 	rows,
@@ -47,8 +45,6 @@ export default function ContributorsTableClient({
 		console.error('Contributor Form Error', { error });
 	};
 
-	const dialogTitle = contributorId ? 'Edit Contributor' : 'New Contributor';
-
 	return (
 		<>
 			<ConfiguredDataTableClient
@@ -68,27 +64,13 @@ export default function ContributorsTableClient({
 				onRowClick={openEditForm}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>{dialogTitle}</DialogTitle>
-					</DialogHeader>
-
-					{errorMessage && (
-						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
-						</Alert>
-					)}
-
-					<ContributorsForm
-						contributorId={contributorId}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-					/>
-				</DialogContent>
-			</Dialog>
+			<ContributorDialog
+				open={open}
+				onOpenChange={setOpen}
+				contributorId={contributorId}
+				errorMessage={errorMessage}
+				onError={onError}
+			/>
 		</>
 	);
 }

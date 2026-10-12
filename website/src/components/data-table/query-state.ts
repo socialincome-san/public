@@ -27,6 +27,7 @@ export type TableQueryState = {
 	subscriptionStatus?: string;
 	subscriptionPaymentMethod?: string;
 	recipientId?: string;
+	contributorId?: string;
 };
 
 type QueryValue = string | string[] | number | null | undefined;
@@ -50,6 +51,7 @@ type TableQueryInput = {
 	subscriptionStatus?: QueryValue;
 	subscriptionPaymentMethod?: QueryValue;
 	recipientId?: QueryValue;
+	contributorId?: QueryValue;
 };
 
 const takeFirst = (value: QueryValue): string | undefined => {
@@ -115,6 +117,7 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	const subscriptionStatus = normalizeToken(input.subscriptionStatus, MAX_QUERY_TOKEN_LENGTH);
 	const subscriptionPaymentMethod = normalizeToken(input.subscriptionPaymentMethod, MAX_QUERY_TOKEN_LENGTH);
 	const recipientId = normalizeToken(input.recipientId, MAX_QUERY_TOKEN_LENGTH);
+	const contributorId = normalizeToken(input.contributorId, MAX_QUERY_TOKEN_LENGTH);
 
 	return {
 		page,
@@ -135,6 +138,7 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 		subscriptionStatus: subscriptionStatus || undefined,
 		subscriptionPaymentMethod: subscriptionPaymentMethod || undefined,
 		recipientId: recipientId || undefined,
+		contributorId: contributorId || undefined,
 	};
 };
 
@@ -158,6 +162,7 @@ export const tableQueryFromSearchParams = (searchParams: Record<string, string |
 		subscriptionStatus: searchParams.subscriptionStatus,
 		subscriptionPaymentMethod: searchParams.subscriptionPaymentMethod,
 		recipientId: searchParams.recipientId,
+		contributorId: searchParams.contributorId,
 	});
 };
 
@@ -192,6 +197,7 @@ export const applyTableQueryPatch = (
 			? patch.subscriptionPaymentMethod
 			: currentSearchParams.get('subscriptionPaymentMethod'),
 		recipientId: hasPatchKey('recipientId') ? patch.recipientId : currentSearchParams.get('recipientId'),
+		contributorId: hasPatchKey('contributorId') ? patch.contributorId : currentSearchParams.get('contributorId'),
 	});
 
 	const nextParams = new URLSearchParams(currentSearchParams.toString());
@@ -274,6 +280,11 @@ export const applyTableQueryPatch = (
 		nextParams.set('recipientId', nextQuery.recipientId);
 	} else {
 		nextParams.delete('recipientId');
+	}
+	if (nextQuery.contributorId) {
+		nextParams.set('contributorId', nextQuery.contributorId);
+	} else {
+		nextParams.delete('contributorId');
 	}
 
 	return nextParams;

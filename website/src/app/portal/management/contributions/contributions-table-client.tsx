@@ -5,8 +5,9 @@ import {
 	contributionsTableConfig,
 	getContributionsTableFilters,
 } from '@/components/data-table/configs/contributions-table.config';
+import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
 import { TableQueryState } from '@/components/data-table/query-state';
-import type { ContributionTableViewRow } from '@/modules/contributions/contribution.types';
+import type { ContributionFilterOptions, ContributionTableViewRow } from '@/modules/contributions/contribution.types';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { ContributionFormDialog } from './contributions-form-dialog';
@@ -20,28 +21,21 @@ export const ContributionsTableClient = ({
 	rows: ContributionTableViewRow[];
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
-	filterOptions?: {
-		programs: { value: string; label: string }[];
-		campaigns: { value: string; label: string }[];
-		paymentEventTypes: { value: string; label: string }[];
-	};
+	filterOptions?: ContributionFilterOptions;
 }) => {
-	const [isFormOpen, setIsFormOpen] = useState(false);
-	const [contributionId, setContributionId] = useState<string | undefined>(undefined);
+	const [contributionId, setContributionId] = useSearchParamState('contributionId');
+	const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
 
 	const openEmptyForm = () => {
 		setContributionId(undefined);
-		setIsFormOpen(true);
+		setIsCreateFormOpen(true);
 	};
 
-	const openEditForm = (row: ContributionTableViewRow) => {
-		setContributionId(row.id);
-		setIsFormOpen(true);
-	};
+	const openEditForm = (row: ContributionTableViewRow) => setContributionId(row.id);
 
 	const handleClose = (open: boolean) => {
-		setIsFormOpen(open);
 		if (!open) {
+			setIsCreateFormOpen(false);
 			setContributionId(undefined);
 		}
 	};
@@ -56,7 +50,7 @@ export const ContributionsTableClient = ({
 				query={query}
 				toolbarFilters={getContributionsTableFilters({
 					query,
-					filterOptions: filterOptions ?? { programs: [], campaigns: [], paymentEventTypes: [] },
+					filterOptions: filterOptions ?? { programs: [], campaigns: [], paymentEventTypes: [], contributors: [] },
 				})}
 				actionMenuItems={[
 					{
@@ -68,7 +62,11 @@ export const ContributionsTableClient = ({
 				onRowClick={openEditForm}
 			/>
 
-			<ContributionFormDialog open={isFormOpen} onOpenChange={handleClose} contributionId={contributionId} />
+			<ContributionFormDialog
+				open={isCreateFormOpen || contributionId !== undefined}
+				onOpenChange={handleClose}
+				contributionId={contributionId}
+			/>
 		</>
 	);
 };
