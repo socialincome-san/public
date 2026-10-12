@@ -911,6 +911,7 @@ export const getPaginatedRecipientTableViewByLocalPartnerId = async (
 			totalCount: shouldProcessStatus ? tableRows.length : totalCount,
 			permission: ProgramPermission.operator,
 			programFilterOptions,
+			localPartnerFilterOptions: [],
 		});
 	} catch (error) {
 		console.error(error);
@@ -1217,19 +1218,26 @@ const getPaginatedTableViewForPrograms = async (
 	const permission = getTablePermission(programs);
 	const programFilterOptions = getProgramFilterOptions(programs);
 	if (programs.length === 0) {
-		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions });
+		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions, localPartnerFilterOptions: [] });
 	}
 
+	const localPartnerOptionsResult = await getLocalPartnerOptions();
+	if (!localPartnerOptionsResult.success) {
+		return resultFail(localPartnerOptionsResult.error);
+	}
+	const localPartnerFilterOptions = localPartnerOptionsResult.data;
+	const selectedLocalPartnerId = localPartnerFilterOptions.find(({ id }) => id === query.localPartnerId)?.id;
 	const selectedProgramId = normalizeOptionalFilter(query.programId);
 	const programIds = programs.map(({ programId }) => programId);
 	if (selectedProgramId && !programIds.includes(selectedProgramId)) {
-		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions });
+		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions, localPartnerFilterOptions });
 	}
 
 	const selectedStatus = parseRecipientStatusFilter(query.recipientStatus);
 	const shouldProcessStatus = query.sortBy === 'status' || Boolean(selectedStatus);
 	const { recipients, totalCount } = await recipientRepository.findRecipientTableSource({
 		programIds,
+		localPartnerId: selectedLocalPartnerId,
 		query,
 		canSearchRecipientNames: permission === ProgramPermission.operator,
 		paginate: !shouldProcessStatus,
@@ -1244,6 +1252,7 @@ const getPaginatedTableViewForPrograms = async (
 		totalCount: shouldProcessStatus ? tableRows.length : totalCount,
 		permission,
 		programFilterOptions,
+		localPartnerFilterOptions,
 	});
 };
 

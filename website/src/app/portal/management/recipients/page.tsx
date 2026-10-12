@@ -30,6 +30,7 @@ const RecipientsDataLoader = async ({ searchParams }: SearchParamsPageProps) => 
 	const readOnly = result.success ? result.data.permission !== ProgramPermission.operator : true;
 	const totalRows = result.success ? result.data.totalCount : 0;
 	const programFilterOptions = result.success ? result.data.programFilterOptions : [];
+	const localPartnerFilterOptions = result.success ? result.data.localPartnerFilterOptions : [];
 
 	return (
 		<RecipientsTableClient
@@ -38,6 +39,7 @@ const RecipientsDataLoader = async ({ searchParams }: SearchParamsPageProps) => 
 			readOnly={readOnly}
 			query={{ ...tableQuery, totalRows }}
 			programFilterOptions={programFilterOptions}
+			localPartnerFilterOptions={localPartnerFilterOptions}
 		/>
 	);
 };

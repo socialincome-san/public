@@ -1,4 +1,5 @@
 import { CountryCode, Gender, Profile } from '@/generated/prisma/enums';
+import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import z from 'zod';
 
 const nullableTrimmedString = z.preprocess((value) => {
@@ -76,3 +77,9 @@ export const candidateCountSchema = z.object({
 
 export type CandidateCreateInput = z.infer<typeof candidateCreateSchema>;
 export type CandidateUpdateInput = z.infer<typeof candidateUpdateSchema>;
+
+export const candidateTableQuerySchema = tableQuerySchema.extend({
+	country: tableQueryFilterSchema,
+	gender: tableQueryFilterSchema,
+	localPartnerId: tableQueryFilterSchema,
+});

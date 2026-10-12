@@ -171,6 +171,7 @@ export type RecipientTableQuery = {
 	sortDirection?: 'asc' | 'desc';
 	programId?: string;
 	recipientStatus?: string;
+	localPartnerId?: string;
 };
 
 export type RecipientProgramFilterOption = {
@@ -183,6 +184,7 @@ export type RecipientPaginatedTableView = {
 	totalCount: number;
 	permission: ProgramPermission;
 	programFilterOptions: RecipientProgramFilterOption[];
+	localPartnerFilterOptions: { id: string; name: string }[];
 };
 
 export type PublicRecipientTableViewRow = {

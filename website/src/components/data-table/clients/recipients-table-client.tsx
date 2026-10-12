@@ -3,6 +3,7 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import { getRecipientsTableFilters, recipientsTableConfig } from '@/components/data-table/configs/recipients-table.config';
+import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
 import type { Session } from '@/modules/auth/auth.types';
@@ -23,6 +24,7 @@ type Props = {
 	sessionType?: Session['type'];
 	query?: TableQueryState & { totalRows: number };
 	programFilterOptions?: RecipientProgramFilterOption[];
+	localPartnerFilterOptions?: { id: string; name: string }[];
 	showProgramFilter?: boolean;
 	hideProgramName?: boolean;
 };
@@ -35,6 +37,7 @@ export const RecipientsTableClient = ({
 	sessionType = 'user',
 	query,
 	programFilterOptions = [],
+	localPartnerFilterOptions = [],
 	showProgramFilter = true,
 	hideProgramName = false,
 }: Props) => {
@@ -47,8 +50,8 @@ export const RecipientsTableClient = ({
 			return makeRecipientColumns(hideProgramName, hideLocalPartner, undefined, isReadOnly);
 		},
 	};
-	const [isRecipientDialogOpen, setIsRecipientDialogOpen] = useState(false);
-	const [selectedRecipientId, setSelectedRecipientId] = useState<string | undefined>();
+	const [selectedRecipientId, setSelectedRecipientId] = useSearchParamState('recipientId');
+	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 	const [recipientError, setRecipientError] = useState<string | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
@@ -56,7 +59,7 @@ export const RecipientsTableClient = ({
 	const openCreateRecipientDialog = () => {
 		setRecipientError(null);
 		setSelectedRecipientId(undefined);
-		setIsRecipientDialogOpen(true);
+		setIsCreateDialogOpen(true);
 	};
 
 	const openEditRecipientDialog = (row: RecipientTableViewRow) => {
@@ -66,11 +69,11 @@ export const RecipientsTableClient = ({
 
 		setRecipientError(null);
 		setSelectedRecipientId(row.id);
-		setIsRecipientDialogOpen(true);
 	};
 
 	const closeRecipientDialog = () => {
-		setIsRecipientDialogOpen(false);
+		setIsCreateDialogOpen(false);
+		setSelectedRecipientId(undefined);
 		setRecipientError(null);
 	};
 
@@ -128,7 +131,12 @@ export const RecipientsTableClient = ({
 				error={error}
 				actionMenuItems={actionMenuItems}
 				query={query}
-				toolbarFilters={getRecipientsTableFilters({ query, programFilterOptions, showProgramFilter })}
+				toolbarFilters={getRecipientsTableFilters({
+					query,
+					programFilterOptions,
+					localPartnerFilterOptions,
+					showProgramFilter,
+				})}
 				hideProgramName={hideProgramName}
 				hideLocalPartner={sessionType === 'local-partner'}
 				showEntityIdColumn={sessionType !== 'local-partner'}
@@ -137,7 +145,7 @@ export const RecipientsTableClient = ({
 
 			{!isReadOnly && (
 				<RecipientDialog
-					open={isRecipientDialogOpen}
+					open={isCreateDialogOpen || selectedRecipientId !== undefined}
 					onOpenChange={closeRecipientDialog}
 					recipientId={selectedRecipientId}
 					programId={programId}
