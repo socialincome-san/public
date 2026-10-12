@@ -26,6 +26,7 @@ const SubscriptionsDataLoader = async ({ searchParams }: SearchParamsPageProps) 
 	const rows: SubscriptionTableViewRow[] = result.success ? result.data.tableRows : [];
 	const totalRows = result.success ? result.data.totalCount : 0;
 	const contributorFilterOptions = result.success ? result.data.contributorFilterOptions : [];
+	const campaignFilterOptions = result.success ? result.data.campaignFilterOptions : [];
 
 	return (
 		<SubscriptionsTableClient
@@ -33,6 +34,7 @@ const SubscriptionsDataLoader = async ({ searchParams }: SearchParamsPageProps) 
 			error={error}
 			query={{ ...tableQuery, totalRows }}
 			contributorFilterOptions={contributorFilterOptions}
+			campaignFilterOptions={campaignFilterOptions}
 		/>
 	);
 };

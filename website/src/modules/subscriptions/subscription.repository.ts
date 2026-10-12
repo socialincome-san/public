@@ -12,13 +12,15 @@ import type { SubscriptionTableQuery, UpsertBankStandingOrderInput } from './sub
 export const findSubscriptionTableSource = async ({
 	accessibleProgramIds,
 	contributorId,
+	campaignId,
 	query,
 }: {
 	accessibleProgramIds: string[];
 	contributorId: string | undefined;
+	campaignId: string | undefined;
 	query: SubscriptionTableQuery;
 }) => {
-	const where = buildSubscriptionTableWhere(accessibleProgramIds, contributorId, query);
+	const where = buildSubscriptionTableWhere({ accessibleProgramIds, contributorId, campaignId, query });
 	const [subscriptions, totalCount] = await Promise.all([
 		prisma.subscription.findMany({
 			where,
@@ -142,11 +144,17 @@ export const updateBankTransferSubscriptionCancellation = async (input: {
 		select: { id: true },
 	});
 
-const buildSubscriptionTableWhere = (
-	accessibleProgramIds: string[],
-	contributorId: string | undefined,
-	query: SubscriptionTableQuery,
-): Prisma.SubscriptionWhereInput => {
+const buildSubscriptionTableWhere = ({
+	accessibleProgramIds,
+	contributorId,
+	campaignId,
+	query,
+}: {
+	accessibleProgramIds: string[];
+	contributorId: string | undefined;
+	campaignId: string | undefined;
+	query: SubscriptionTableQuery;
+}): Prisma.SubscriptionWhereInput => {
 	const search = query.search.trim();
 	const selectedStatus = Object.values(SubscriptionStatus).find((status) => status === query.subscriptionStatus);
 	const selectedPaymentMethod = Object.values(SubscriptionPaymentMethod).find(
@@ -156,6 +164,7 @@ const buildSubscriptionTableWhere = (
 	return {
 		campaign: { programId: { in: accessibleProgramIds } },
 		...(contributorId ? { contributorId } : {}),
+		...(campaignId ? { campaignId } : {}),
 		...(selectedStatus ? { status: selectedStatus } : {}),
 		...(selectedPaymentMethod ? { paymentMethod: selectedPaymentMethod } : {}),
 		...(search

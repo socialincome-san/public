@@ -22,9 +22,23 @@ const contributorColumns: ColumnDef<ContributionTableViewRow>[] = [
 	},
 ];
 
+const campaignColumns: ColumnDef<ContributionTableViewRow>[] = [
+	{
+		accessorKey: 'campaignTitle',
+		header: (ctx) => <SortableHeader ctx={ctx}>Campaign</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+	{
+		accessorKey: 'programName',
+		header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
+		cell: (ctx) => <TextCell ctx={ctx} />,
+	},
+];
+
 export const makeContributionsColumns = ({
 	hideContributor = false,
-}: { hideContributor?: boolean } = {}): ColumnDef<ContributionTableViewRow>[] => {
+	hideCampaign = false,
+}: { hideContributor?: boolean; hideCampaign?: boolean } = {}): ColumnDef<ContributionTableViewRow>[] => {
 	return [
 		...(hideContributor ? [] : contributorColumns),
 		{
@@ -33,16 +47,7 @@ export const makeContributionsColumns = ({
 			accessorFn: (row) => row.amount,
 			cell: (ctx) => <CurrencyCell ctx={ctx} currency={ctx.row.original.currency} />,
 		},
-		{
-			accessorKey: 'campaignTitle',
-			header: (ctx) => <SortableHeader ctx={ctx}>Campaign</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'programName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		...(hideCampaign ? [] : campaignColumns),
 		{
 			accessorKey: 'createdAt',
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,

@@ -114,12 +114,14 @@ export type SubscriptionTableQuery = {
 	subscriptionStatus?: string;
 	subscriptionPaymentMethod?: string;
 	contributorId?: string;
+	campaignId?: string;
 };
 
 export type SubscriptionPaginatedTableView = {
 	tableRows: SubscriptionTableViewRow[];
 	totalCount: number;
 	contributorFilterOptions: { id: string; name: string }[];
+	campaignFilterOptions: { id: string; name: string }[];
 };
 
 export type SubscriptionUpsertResult = {

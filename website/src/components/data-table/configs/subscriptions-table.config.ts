@@ -11,6 +11,7 @@ import { linkedRecordFilter } from './linked-record-filter';
 type SubscriptionFiltersArgs = {
 	query?: TableQueryState & { totalRows: number };
 	contributorFilterOptions: { id: string; name: string }[];
+	campaignFilterOptions: { id: string; name: string }[];
 };
 
 export const subscriptionsTableConfig: DataTableConfig<SubscriptionTableViewRow> = {
@@ -44,6 +45,7 @@ export const contributorSubscriptionsTableConfig: DataTableConfig<SubscriptionTa
 export const getSubscriptionsTableFilters = ({
 	query,
 	contributorFilterOptions,
+	campaignFilterOptions,
 }: SubscriptionFiltersArgs): TableFilterConfig[] => {
 	if (!query) {
 		return [];
@@ -73,6 +75,14 @@ export const getSubscriptionsTableFilters = ({
 			placeholder: 'All contributors',
 			value: query.contributorId,
 			options: contributorFilterOptions.map((contributor) => ({ value: contributor.id, label: contributor.name })),
+		}),
+		...linkedRecordFilter({
+			id: 'campaign',
+			queryKey: 'campaignId',
+			label: 'Campaign',
+			placeholder: 'All campaigns',
+			value: query.campaignId,
+			options: campaignFilterOptions.map((campaign) => ({ value: campaign.id, label: campaign.name })),
 		}),
 	];
 };
