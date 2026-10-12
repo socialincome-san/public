@@ -136,9 +136,5 @@ export const getLocalPartnerProgramSummariesAction = async (input: unknown): Pro
 		return resultFail('Invalid local partner programs request');
 	}
 
-	return getLocalPartnerProgramSummaries(
-		parsedInput.data.lang,
-		parsedInput.data.localPartnerPortalSlug,
-		parsedInput.data.countryIsoCode,
-	);
+	return getLocalPartnerProgramSummaries(parsedInput.data.lang, parsedInput.data.localPartnerPortalSlug);
 };

@@ -44,7 +44,6 @@ export const LocalPartnerDetail = async ({
 		getLocalPartnerProgramSummariesAction({
 			lang,
 			localPartnerPortalSlug: localPartner.content.portalSlug?.trim() ?? '',
-			countryIsoCode: isoCode ?? '',
 		}),
 	]);
 	const partnerPrograms = partnerProgramsResult.success

@@ -50,7 +50,7 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, currency
 				donationHeroCardSizeClass,
 			)}
 		>
-			{/* The recipient total is only the partner's own on the partner-scoped path; the fallback just counts programs. */}
+			{/* Without linked recipients there is no partner total, so only the (empty) program count is shown. */}
 			<div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
 				<p className="text-xl leading-none font-bold sm:text-2xl">
 					{isPartnerScoped

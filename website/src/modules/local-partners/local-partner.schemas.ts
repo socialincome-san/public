@@ -67,7 +67,6 @@ export const localPartnerDashboardSlugSchema = z.string().optional();
 export const localPartnerProgramSummariesSchema = z.object({
 	lang: z.enum(['en', 'de', 'fr', 'it', 'kri']),
 	localPartnerPortalSlug: z.string(),
-	countryIsoCode: z.string(),
 });
 
 export type LocalPartnerCreateInput = z.infer<typeof localPartnerCreateSchema>;
