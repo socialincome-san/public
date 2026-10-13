@@ -125,6 +125,22 @@ export type PublicProgramStats = {
 
 export type PublicProgramStatsMap = Record<string, PublicProgramStats>;
 
+export type ProgramCandidatePoolSetup = {
+	countryCode: CountryCode;
+	payoutCurrency: Currency;
+	payoutPerInterval: number;
+	payoutInterval: PayoutInterval;
+	programDurationInMonths: number;
+	totalAvailable: number;
+	focusOptions: { id: string; name: string }[];
+	localPartnerOptions: { id: string; name: string }[];
+};
+
+export type ProgramCandidatePoolPreview = {
+	matchingAvailable: number;
+	budget: ProgramBudgetCalculation;
+};
+
 export type ProgramSettingsPayload = {
 	id: string;
 	name: string;

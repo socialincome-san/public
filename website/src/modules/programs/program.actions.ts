@@ -3,6 +3,8 @@
 import { resultFail, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
 import type {
+	ProgramCandidatePoolPreview,
+	ProgramCandidatePoolSetup,
 	ProgramBudgetCalculation,
 	ProgramDashboardStats,
 	ProgramFinancesDisplayAmounts,
@@ -31,6 +33,8 @@ import {
 	resolveProgramFinancesDisplayAmounts,
 } from './program.cache';
 import {
+	programCandidatePoolAssignSchema,
+	programCandidatePoolPreviewSchema,
 	programBudgetCalculationSchema,
 	programCreateSchema,
 	programDisplayCurrencySchema,
@@ -43,8 +47,11 @@ import {
 	publicOnboardingUserDetailsSchema,
 } from './program.schemas';
 import {
+	assignProgramRecipientsFromPool,
 	createProgram,
 	deleteProgram,
+	getProgramCandidatePoolSetup,
+	previewProgramRecipientAssignment,
 	getPaginatedProgramTableView,
 	getProgramOrganizationOptions,
 	getProgramSettings,
@@ -148,6 +155,49 @@ export const deleteProgramAction = async (programId: unknown): Promise<Result<vo
 		revalidatePath('/portal/programs/[programId]', 'layout');
 	}
 
+	return result;
+};
+
+export const getProgramCandidatePoolSetupAction = async (programId: unknown): Promise<Result<ProgramCandidatePoolSetup>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsed = programIdSchema.safeParse(programId);
+	if (!parsed.success) {
+		return resultFail('Invalid program id.');
+	}
+	return getProgramCandidatePoolSetup(sessionResult.data.id, parsed.data);
+};
+
+export const previewProgramRecipientAssignmentAction = async (
+	input: unknown,
+): Promise<Result<ProgramCandidatePoolPreview>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsed = programCandidatePoolPreviewSchema.safeParse(input);
+	if (!parsed.success) {
+		return resultFail('Invalid recipient selection.');
+	}
+	return previewProgramRecipientAssignment(sessionResult.data.id, parsed.data);
+};
+
+export const assignProgramRecipientsFromPoolAction = async (input: unknown): Promise<Result<{ assigned: number }>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsed = programCandidatePoolAssignSchema.safeParse(input);
+	if (!parsed.success) {
+		return resultFail('Invalid recipient selection.');
+	}
+	const result = await assignProgramRecipientsFromPool(sessionResult.data.id, parsed.data);
+	if (result.success) {
+		revalidatePath('/portal/programs/[programId]/recipients', 'page');
+		revalidatePath('/portal/admin/candidates');
+	}
 	return result;
 };
 

@@ -39,6 +39,21 @@ export const programSettingsUpdateSchema = z.object({
 	operatorOrganizationIds: z.array(z.string().trim().min(1)).min(1, 'At least one operator organization is required.'),
 });
 
+export const programCandidatePoolFiltersSchema = z.object({
+	programId: z.string().trim().min(1),
+	focuses: z.array(z.string().trim().min(1)),
+	profiles: z.array(z.nativeEnum(Profile)),
+	localPartnerIds: z.array(z.string().trim().min(1)),
+});
+
+export const programCandidatePoolPreviewSchema = programCandidatePoolFiltersSchema.extend({
+	amountOfRecipients: nonNegativeIntegerSchema,
+});
+
+export const programCandidatePoolAssignSchema = programCandidatePoolFiltersSchema.extend({
+	amountOfRecipients: positiveIntegerSchema,
+});
+
 export const programIdSchema = z.string().trim().min(1, 'Program id is required.');
 export const programSlugSchema = z.string().trim().min(1, 'Program slug is required.');
 export const programSlugsSchema = z.array(programSlugSchema);
@@ -81,3 +96,6 @@ export type PublicOnboardingUserDetailsInput = z.infer<typeof publicOnboardingUs
 export type ProgramSettingsUpdateInput = z.infer<typeof programSettingsUpdateSchema>;
 export type ProgramBudgetCalculationInput = z.infer<typeof programBudgetCalculationSchema>;
 export type ProgramFinancesStatsInput = z.infer<typeof programFinancesStatsSchema>;
+
+export type ProgramCandidatePoolPreviewInput = z.infer<typeof programCandidatePoolPreviewSchema>;
+export type ProgramCandidatePoolAssignInput = z.infer<typeof programCandidatePoolAssignSchema>;

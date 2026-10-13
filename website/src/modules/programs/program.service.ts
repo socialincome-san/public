@@ -3,7 +3,13 @@ import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
-import { assignRandomCandidatesToProgram } from '@/modules/candidates/candidate.service';
+import {
+	assignRandomCandidatesToProgram,
+	countAvailableCandidatesInCountry,
+	getAvailableCandidateLocalPartners,
+} from '@/modules/candidates/candidate.service';
+import type { CandidatePoolFilters } from '@/modules/candidates/candidate.types';
+import { getFocusOptions } from '@/modules/focuses/focus.service';
 import { getCountryIsoCode } from '@/modules/countries/country.service';
 import {
 	createOrganizationFromEmail,
@@ -18,10 +24,18 @@ import {
 	isAdmin,
 	isUserEmailAvailable,
 } from '@/modules/users/user.service';
-import { isReadyForFirstPayoutInterval } from './program-stats.service';
+import { calculateProgramBudget, isReadyForFirstPayoutInterval } from './program-stats.service';
 import * as programRepository from './program.repository';
-import type { ProgramCreateInput, ProgramSettingsUpdateInput, PublicOnboardingUserDetailsInput } from './program.schemas';
 import type {
+	ProgramCandidatePoolAssignInput,
+	ProgramCandidatePoolPreviewInput,
+	ProgramCreateInput,
+	ProgramSettingsUpdateInput,
+	PublicOnboardingUserDetailsInput,
+} from './program.schemas';
+import type {
+	ProgramCandidatePoolPreview,
+	ProgramCandidatePoolSetup,
 	ProgramPaginatedTableView,
 	ProgramSettingsPayload,
 	ProgramTableQuery,
@@ -303,6 +317,123 @@ export const getProgramSettings = async (userId: string, programId: string): Pro
 		console.error('Could not load program settings', { userId, programId, error });
 
 		return resultFail('Could not load program settings');
+	}
+};
+
+const getOperatorProgramForPool = async (userId: string, programId: string) => {
+	const accessResult = await getAccessiblePrograms(userId);
+	if (
+		!accessResult.success ||
+		!accessResult.data.some((access) => access.programId === programId && access.permission === ProgramPermission.operator)
+	) {
+		return resultFail('Permission denied');
+	}
+	const program = await programRepository.findProgramSettings(programId);
+	if (!program) {
+		return resultFail('Program not found');
+	}
+
+	return resultOk(program);
+};
+
+export const getProgramCandidatePoolSetup = async (
+	userId: string,
+	programId: string,
+): Promise<Result<ProgramCandidatePoolSetup>> => {
+	try {
+		const programResult = await getOperatorProgramForPool(userId, programId);
+		if (!programResult.success) {
+			return resultFail(programResult.error);
+		}
+		const program = programResult.data;
+		const countryCode = program.country.isoCode;
+		const [focusesResult, partnersResult, countResult] = await Promise.all([
+			getFocusOptions(),
+			getAvailableCandidateLocalPartners(countryCode),
+			countAvailableCandidatesInCountry(countryCode, { focuses: [], profiles: [], localPartnerIds: [] }),
+		]);
+		if (!focusesResult.success || !partnersResult.success || !countResult.success) {
+			return resultFail('Could not load candidate pool');
+		}
+
+		return resultOk({
+			countryCode,
+			payoutCurrency: program.country.currency,
+			payoutPerInterval: Number(program.payoutPerInterval),
+			payoutInterval: program.payoutInterval,
+			programDurationInMonths: program.programDurationInMonths,
+			totalAvailable: countResult.data.count,
+			focusOptions: focusesResult.data,
+			localPartnerOptions: partnersResult.data,
+		});
+	} catch (error) {
+		console.error('Could not load program candidate pool', { programId, error });
+
+		return resultFail('Could not load candidate pool');
+	}
+};
+
+export const previewProgramRecipientAssignment = async (
+	userId: string,
+	input: ProgramCandidatePoolPreviewInput,
+): Promise<Result<ProgramCandidatePoolPreview>> => {
+	try {
+		const programResult = await getOperatorProgramForPool(userId, input.programId);
+		if (!programResult.success) {
+			return resultFail(programResult.error);
+		}
+		const program = programResult.data;
+		const filters: CandidatePoolFilters = {
+			focuses: input.focuses,
+			profiles: input.profiles,
+			localPartnerIds: input.localPartnerIds,
+		};
+		const countResult = await countAvailableCandidatesInCountry(program.country.isoCode, filters);
+		if (!countResult.success) {
+			return resultFail(countResult.error);
+		}
+		const budgetResult = await calculateProgramBudget({
+			amountOfRecipients: Math.min(input.amountOfRecipients, countResult.data.count),
+			programDuration: program.programDurationInMonths,
+			defaultPayoutPerInterval: Number(program.payoutPerInterval),
+			payoutPerInterval: Number(program.payoutPerInterval),
+			payoutInterval: program.payoutInterval,
+			payoutCurrency: program.country.currency,
+			displayCurrency: program.country.currency,
+		});
+		if (!budgetResult.success) {
+			return resultFail('Could not calculate additional cost');
+		}
+
+		return resultOk({ matchingAvailable: countResult.data.count, budget: budgetResult.data });
+	} catch (error) {
+		console.error('Could not preview program recipient assignment', { programId: input.programId, error });
+
+		return resultFail('Could not preview recipient assignment');
+	}
+};
+
+export const assignProgramRecipientsFromPool = async (
+	userId: string,
+	input: ProgramCandidatePoolAssignInput,
+): Promise<Result<{ assigned: number }>> => {
+	try {
+		const programResult = await getOperatorProgramForPool(userId, input.programId);
+		if (!programResult.success) {
+			return resultFail(programResult.error);
+		}
+		return assignRandomCandidatesToProgram(
+			input.programId,
+			input.amountOfRecipients,
+			programResult.data.country.isoCode,
+			input.focuses,
+			input.profiles,
+			input.localPartnerIds,
+		);
+	} catch (error) {
+		console.error('Could not assign program recipients', { programId: input.programId, error });
+
+		return resultFail('Could not assign recipients');
 	}
 };
 
