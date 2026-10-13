@@ -39,6 +39,10 @@ Module files (`src/modules/recipients` is the reference):
 - `*.repository.ts`: the only Prisma access. Exports start with
   `find|create|update|delete|remove|count|group`, use `select` (never
   `include`), return raw data.
+- `*.write.repository.ts`: in audited modules (recipients), the only
+  writes. Each export takes an `AuditContext` first and writes through
+  `auditedWrite`; the plain repository then only reads. See
+  `src/lib/audit/README.md`.
 - `*.permissions.ts`: pure predicates `can…|has…|is…|assert…`.
 - `*.schemas.ts`: Zod schemas named `…Schema` and their inferred types.
 - `*.types.ts`: serializable DTOs and inert constants, no functions.
@@ -46,14 +50,6 @@ Module files (`src/modules/recipients` is the reference):
 
 Integrations: `src/integrations/<vendor>/<name>.integration.ts`. No
 Prisma, modules, app, components or `next/*` APIs.
-
-Audit logging (`src/lib/audit/README.md`): business writes run inside
-`withAudit` in the service. Repository write functions take
-`transaction: AuditedTransaction` first and write through
-`getTransactionClient(transaction)`, never on the shared `prisma` client
-or in `prisma.$transaction`. Classify every snapshot field as `plain` or
-`personal`, keep external calls (Firebase) outside the transaction, and
-put only non-personal context in `metadata`.
 
 Dependency direction:
 

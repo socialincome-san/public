@@ -1,4 +1,5 @@
 import { CountryCode, Gender } from '@/generated/prisma/enums';
+import { AUDIT_ACTIONS, AUDIT_ACTOR_TYPES, AUDIT_SOURCES } from '@/lib/audit/audit-types';
 import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import { z } from 'zod';
 
@@ -105,3 +106,27 @@ export const recipientTableQuerySchema = tableQuerySchema.extend({
 	recipientStatus: tableQueryFilterSchema,
 	localPartnerId: tableQueryFilterSchema,
 });
+
+const auditScalarSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
+
+const auditValueSchema = z.union([auditScalarSchema, z.array(auditScalarSchema)]);
+
+const recipientAuditEventSchema = z.object({
+	id: z.string(),
+	occurredAt: z.date(),
+	actorType: z.enum(AUDIT_ACTOR_TYPES),
+	actorId: z.string(),
+	action: z.enum(AUDIT_ACTIONS),
+	source: z.enum(AUDIT_SOURCES),
+	changes: z.array(
+		z.union([
+			z.object({ path: z.string(), redacted: z.literal(true) }),
+			z.object({ path: z.string(), old: auditValueSchema, new: auditValueSchema }),
+		]),
+	),
+	metadata: z.record(auditScalarSchema).nullable(),
+});
+
+export const recipientAuditEventsSchema = z.array(recipientAuditEventSchema);
+
+export type RecipientAuditEvent = z.infer<typeof recipientAuditEventSchema>;

@@ -1,7 +1,5 @@
-import { Prisma } from '@/generated/prisma/client';
-import { getTransactionClient, type AuditedTransaction } from '@/lib/database/audited-transaction';
+import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/database/prisma';
-import type { CreateRecipientInput, UpdateRecipientInput, UpdateRecipientSelfInput } from './recipient.schemas';
 import type { RecipientTableQuery } from './recipient.types';
 
 export const findRecipientMonthlySummarySource = async (from: Date, to: Date) => {
@@ -92,14 +90,31 @@ export const findRecipient = async (recipientId: string) =>
 		select: recipientDetailSelect,
 	});
 
-export const findRecipientForUpdate = async (recipientId: string, transaction?: AuditedTransaction) =>
-	getClient(transaction).recipient.findUnique({
+export const findRecipientAuditEvents = async (recipientId: string, take: number) =>
+	prisma.auditEvent.findMany({
+		where: { entityType: 'recipient', entityId: recipientId },
+		orderBy: [{ occurredAt: 'desc' }, { id: 'desc' }],
+		take,
+		select: {
+			id: true,
+			occurredAt: true,
+			actorType: true,
+			actorId: true,
+			action: true,
+			source: true,
+			changes: true,
+			metadata: true,
+		},
+	});
+
+export const findRecipientForUpdate = async (recipientId: string) =>
+	prisma.recipient.findUnique({
 		where: { id: recipientId },
 		select: recipientUpdateContextSelect,
 	});
 
-export const findRecipientForSelfUpdate = async (recipientId: string, transaction?: AuditedTransaction) =>
-	getClient(transaction).recipient.findUnique({
+export const findRecipientForSelfUpdate = async (recipientId: string) =>
+	prisma.recipient.findUnique({
 		where: { id: recipientId },
 		select: {
 			contact: {
@@ -126,8 +141,8 @@ export const findRecipientForProgramRemoval = async (recipientId: string) =>
 		},
 	});
 
-export const findRecipientForDeletion = async (recipientId: string, transaction?: AuditedTransaction) =>
-	getClient(transaction).recipient.findUnique({
+export const findRecipientForDeletion = async (recipientId: string) =>
+	prisma.recipient.findUnique({
 		where: { id: recipientId },
 		select: {
 			id: true,
@@ -410,145 +425,6 @@ export const findLocalPartnerRecipientProgramFilterSource = async (localPartnerI
 		},
 	});
 
-// Locks the recipient rows (FOR UPDATE): every audited recipient write takes
-// this lock first, so concurrent writes serialize and before/after values
-// stay exact. Contact and payment rows belong to one recipient and are only
-// written through it, so the recipient lock covers them.
-export const findRecipientAuditSnapshots = async (transaction: AuditedTransaction, recipientIds: string[]) => {
-	const client = getTransactionClient(transaction);
-	await client.$queryRaw`SELECT id FROM recipient WHERE id IN (${Prisma.join(recipientIds)}) ORDER BY id FOR UPDATE`;
-
-	return client.recipient.findMany({
-		where: { id: { in: recipientIds } },
-		select: recipientAuditSnapshotSelect,
-	});
-};
-
-export const findRecipientIdsByProgram = async (programId: string) =>
-	prisma.recipient.findMany({
-		where: { programId },
-		select: { id: true },
-	});
-
-export const createRecipient = async (transaction: AuditedTransaction, input: CreateRecipientInput) =>
-	getTransactionClient(transaction).recipient.create({ data: buildRecipientCreateData(input) });
-
-export const updateRecipient = async (
-	transaction: AuditedTransaction,
-	input: UpdateRecipientInput,
-	context: RecipientUpdatePersistenceContext,
-) =>
-	getTransactionClient(transaction).recipient.update({
-		where: { id: input.id },
-		data: buildRecipientUpdateData(input, context),
-	});
-
-export const updateRecipientSelf = async (
-	transaction: AuditedTransaction,
-	recipientId: string,
-	input: UpdateRecipientSelfInput,
-	currentPaymentCode: string | null,
-) =>
-	getTransactionClient(transaction).recipient.update({
-		where: { id: recipientId },
-		data: buildRecipientSelfUpdateData(input, currentPaymentCode),
-		select: recipientWithPaymentInformationSelect,
-	});
-
-export const removeRecipientFromProgram = async (
-	transaction: AuditedTransaction,
-	recipientId: string,
-	expectedProgramId: string,
-) =>
-	getTransactionClient(transaction).recipient.updateMany({
-		where: {
-			id: recipientId,
-			programId: expectedProgramId,
-			payouts: { none: {} },
-		},
-		data: {
-			programId: null,
-			startDate: null,
-		},
-	});
-
-export const deleteRecipient = async (
-	transaction: AuditedTransaction,
-	{
-		recipientId,
-		contactId,
-		paymentInformationId,
-	}: {
-		recipientId: string;
-		contactId: string;
-		paymentInformationId: string | null;
-	},
-) => {
-	const client = getTransactionClient(transaction);
-	await client.recipient.delete({
-		where: { id: recipientId },
-	});
-
-	if (paymentInformationId) {
-		await client.paymentInformation.delete({
-			where: { id: paymentInformationId },
-		});
-	}
-
-	await client.contact.delete({
-		where: { id: contactId },
-	});
-
-	return { id: recipientId };
-};
-
-export const deletePhoneIfOrphaned = async (phoneId: string) => {
-	const phone = await prisma.phone.findUnique({
-		where: { id: phoneId },
-		select: {
-			_count: {
-				select: {
-					contacts: true,
-					paymentInformations: true,
-				},
-			},
-		},
-	});
-
-	if (!phone || phone._count.contacts > 0 || phone._count.paymentInformations > 0) {
-		return false;
-	}
-
-	await prisma.phone.delete({
-		where: { id: phoneId },
-	});
-
-	return true;
-};
-
-export const deleteAddressIfOrphaned = async (addressId: string) => {
-	const address = await prisma.address.findUnique({
-		where: { id: addressId },
-		select: {
-			_count: {
-				select: {
-					contacts: true,
-				},
-			},
-		},
-	});
-
-	if (!address || address._count.contacts > 0) {
-		return false;
-	}
-
-	await prisma.address.delete({
-		where: { id: addressId },
-	});
-
-	return true;
-};
-
 export const findUnassignedRecipientCountries = async () =>
 	prisma.recipient.findMany({
 		where: { programId: null },
@@ -593,51 +469,6 @@ export const countCandidatesForLocalPartners = async (localPartnerIds: string[])
 			localPartnerId: { in: localPartnerIds },
 		},
 	});
-
-const getClient = (transaction: AuditedTransaction | undefined): Prisma.TransactionClient =>
-	transaction ? getTransactionClient(transaction) : prisma;
-
-type RecipientUpdatePersistenceContext = {
-	contactId: string;
-	contactPhoneId: string | undefined;
-	contactPhoneNumber: string | undefined;
-	contactAddressId: string | undefined;
-	paymentInformationId: string | undefined;
-	paymentPhoneId: string | undefined;
-	paymentPhoneNumber: string | undefined;
-};
-
-const recipientAuditSnapshotSelect = {
-	id: true,
-	programId: true,
-	localPartnerId: true,
-	startDate: true,
-	suspendedAt: true,
-	suspensionReason: true,
-	successorName: true,
-	termsAccepted: true,
-	contact: {
-		select: {
-			firstName: true,
-			lastName: true,
-			callingName: true,
-			email: true,
-			gender: true,
-			language: true,
-			dateOfBirth: true,
-			profession: true,
-			phone: { select: { number: true, hasWhatsApp: true } },
-			address: { select: { street: true, number: true, city: true, zip: true, country: true } },
-		},
-	},
-	paymentInformation: {
-		select: {
-			code: true,
-			mobileMoneyProviderId: true,
-			phone: { select: { number: true } },
-		},
-	},
-} satisfies Prisma.RecipientSelect;
 
 const recipientDetailSelect = {
 	id: true,
@@ -901,7 +732,7 @@ const recipientContactRecordSelect = {
 	updatedAt: true,
 } satisfies Prisma.ContactSelect;
 
-const recipientWithPaymentInformationSelect = {
+export const recipientWithPaymentInformationSelect = {
 	id: true,
 	legacyFirestoreId: true,
 	contactId: true,
@@ -1132,286 +963,3 @@ const normalizeOptionalFilter = (value: string | undefined): string | undefined 
 
 	return normalizedValue;
 };
-
-const buildRecipientCreateData = (input: CreateRecipientInput): Prisma.RecipientCreateInput => {
-	if (!input.programId || !input.localPartnerId) {
-		throw new Error('Recipient persistence requires a program and local partner');
-	}
-
-	return {
-		startDate: input.startDate ?? null,
-		suspendedAt: input.suspendedAt ?? null,
-		suspensionReason: input.suspensionReason ?? null,
-		successorName: input.successorName ?? null,
-		termsAccepted: input.termsAccepted ?? false,
-		program: { connect: { id: input.programId } },
-		localPartner: { connect: { id: input.localPartnerId } },
-		contact: { create: buildContactCreateData(input) },
-		paymentInformation: buildPaymentInformationCreateData(input),
-	};
-};
-
-const buildContactCreateData = (input: CreateRecipientInput): Prisma.ContactCreateWithoutRecipientInput => ({
-	firstName: input.contact.firstName,
-	lastName: input.contact.lastName,
-	callingName: input.contact.callingName,
-	email: input.contact.email,
-	gender: input.contact.gender,
-	language: input.contact.language,
-	dateOfBirth: input.contact.dateOfBirth,
-	profession: input.contact.profession,
-	phone: input.contact.phone
-		? {
-				create: {
-					number: input.contact.phone,
-					hasWhatsApp: input.contact.hasWhatsApp,
-				},
-			}
-		: undefined,
-	address: buildAddressCreateOperation(input),
-});
-
-const buildPaymentInformationCreateData = (
-	input: CreateRecipientInput,
-): Prisma.PaymentInformationCreateNestedOneWithoutRecipientsInput | undefined => {
-	const { mobileMoneyProviderId, code, phone } = input.paymentInformation;
-	if (!mobileMoneyProviderId && !code && !phone) {
-		return undefined;
-	}
-
-	return {
-		create: {
-			mobileMoneyProvider: mobileMoneyProviderId ? { connect: { id: mobileMoneyProviderId } } : undefined,
-			code: code ?? null,
-			phone: phone ? { create: { number: phone } } : undefined,
-		},
-	};
-};
-
-const buildRecipientUpdateData = (
-	input: UpdateRecipientInput,
-	context: RecipientUpdatePersistenceContext,
-): Prisma.RecipientUpdateInput => {
-	const paymentInformation = buildPaymentInformationUpdateOperation(input, context);
-
-	return {
-		startDate: input.startDate ?? null,
-		suspendedAt: input.suspendedAt ?? null,
-		suspensionReason: input.suspensionReason ?? null,
-		successorName: input.successorName ?? null,
-		termsAccepted: input.termsAccepted ?? false,
-		program: input.programId ? { connect: { id: input.programId } } : undefined,
-		localPartner: input.localPartnerId ? { connect: { id: input.localPartnerId } } : undefined,
-		contact: {
-			update: {
-				where: { id: context.contactId },
-				data: {
-					firstName: input.contact.firstName,
-					lastName: input.contact.lastName,
-					callingName: input.contact.callingName,
-					email: input.contact.email,
-					gender: input.contact.gender,
-					language: input.contact.language,
-					dateOfBirth: input.contact.dateOfBirth,
-					profession: input.contact.profession,
-					phone: buildContactPhoneUpdateOperation(input, context),
-					address: buildAddressUpdateOperation(input, context.contactAddressId),
-				},
-			},
-		},
-		paymentInformation,
-	};
-};
-
-const buildContactPhoneUpdateOperation = (
-	input: UpdateRecipientInput,
-	context: RecipientUpdatePersistenceContext,
-): Prisma.PhoneUpdateOneWithoutContactsNestedInput | undefined => {
-	const nextPhoneNumber = input.contact.phone;
-	if (nextPhoneNumber) {
-		if (context.contactPhoneId && context.contactPhoneNumber === nextPhoneNumber) {
-			return {
-				update: {
-					where: { id: context.contactPhoneId },
-					data: { hasWhatsApp: input.contact.hasWhatsApp },
-				},
-			};
-		}
-
-		if (context.contactPhoneId) {
-			return {
-				connectOrCreate: {
-					where: { number: nextPhoneNumber },
-					create: {
-						number: nextPhoneNumber,
-						hasWhatsApp: input.contact.hasWhatsApp,
-					},
-				},
-			};
-		}
-
-		return {
-			create: {
-				number: nextPhoneNumber,
-				hasWhatsApp: input.contact.hasWhatsApp,
-			},
-		};
-	}
-
-	return context.contactPhoneId ? { disconnect: true } : undefined;
-};
-
-const buildPaymentInformationUpdateOperation = (
-	input: UpdateRecipientInput,
-	context: RecipientUpdatePersistenceContext,
-): Prisma.PaymentInformationUpdateOneWithoutRecipientsNestedInput | undefined => {
-	const { mobileMoneyProviderId, code, phone } = input.paymentInformation;
-	const hasPaymentPayload = Boolean(mobileMoneyProviderId ?? code ?? phone);
-	const create = {
-		mobileMoneyProvider: mobileMoneyProviderId ? { connect: { id: mobileMoneyProviderId } } : undefined,
-		code: code ?? null,
-		phone: phone ? { create: { number: phone } } : undefined,
-	};
-
-	if (!context.paymentInformationId) {
-		return hasPaymentPayload ? { create } : undefined;
-	}
-
-	return {
-		upsert: {
-			where: { id: context.paymentInformationId },
-			create,
-			update: {
-				mobileMoneyProvider: mobileMoneyProviderId ? { connect: { id: mobileMoneyProviderId } } : { disconnect: true },
-				code: code ?? null,
-				phone: buildPaymentPhoneUpdateOperation(phone, context),
-			},
-		},
-	};
-};
-
-const buildPaymentPhoneUpdateOperation = (
-	nextPhoneNumber: string | undefined,
-	context: RecipientUpdatePersistenceContext,
-): Prisma.PhoneUpdateOneWithoutPaymentInformationsNestedInput | undefined => {
-	if (nextPhoneNumber) {
-		if (context.paymentPhoneId && context.paymentPhoneNumber === nextPhoneNumber) {
-			return undefined;
-		}
-
-		if (context.paymentPhoneId) {
-			return {
-				connectOrCreate: {
-					where: { number: nextPhoneNumber },
-					create: { number: nextPhoneNumber },
-				},
-			};
-		}
-
-		return { create: { number: nextPhoneNumber } };
-	}
-
-	return context.paymentPhoneId ? { disconnect: true } : undefined;
-};
-
-const buildAddressCreateOperation = (
-	input: CreateRecipientInput,
-): Prisma.AddressCreateNestedOneWithoutContactsInput | undefined => {
-	const address = buildAddressData(input.contact);
-
-	return address ? { create: address } : undefined;
-};
-
-const buildAddressUpdateOperation = (
-	input: UpdateRecipientInput,
-	currentAddressId: string | undefined,
-): Prisma.AddressUpdateOneWithoutContactsNestedInput | undefined => {
-	const address = buildAddressData(input.contact);
-	if (address) {
-		return currentAddressId
-			? {
-					upsert: {
-						where: { id: currentAddressId },
-						update: address,
-						create: address,
-					},
-				}
-			: { create: address };
-	}
-
-	return currentAddressId ? { disconnect: true } : undefined;
-};
-
-const buildAddressData = (contact: CreateRecipientInput['contact']) => {
-	if (![contact.street, contact.number, contact.city, contact.zip, contact.country].some(Boolean)) {
-		return undefined;
-	}
-
-	return {
-		street: contact.street ?? '',
-		number: contact.number ?? '',
-		city: contact.city ?? '',
-		zip: contact.zip ?? '',
-		country: contact.country,
-	};
-};
-
-const buildRecipientSelfUpdateData = (
-	input: UpdateRecipientSelfInput,
-	currentPaymentCode: string | null,
-): Prisma.RecipientUpdateInput => ({
-	contact: {
-		update: {
-			firstName: input.firstName,
-			lastName: input.lastName,
-			callingName: input.callingName,
-			gender: input.gender,
-			dateOfBirth: input.dateOfBirth ? new Date(input.dateOfBirth) : undefined,
-			language: input.language,
-			email: input.email,
-			phone:
-				input.contactPhone === null
-					? { disconnect: true }
-					: input.contactPhone
-						? {
-								connectOrCreate: {
-									where: { number: input.contactPhone },
-									create: { number: input.contactPhone },
-								},
-							}
-						: undefined,
-		},
-	},
-	successorName: input.successorName,
-	termsAccepted: input.termsAccepted,
-	paymentInformation:
-		input.paymentPhone || input.paymentProvider
-			? {
-					upsert: {
-						update: {
-							mobileMoneyProvider: input.paymentProvider ? { connect: { id: input.paymentProvider } } : { disconnect: true },
-							phone: input.paymentPhone
-								? {
-										connectOrCreate: {
-											where: { number: input.paymentPhone },
-											create: { number: input.paymentPhone },
-										},
-									}
-								: undefined,
-						},
-						create: {
-							mobileMoneyProvider: input.paymentProvider ? { connect: { id: input.paymentProvider } } : undefined,
-							code: currentPaymentCode ?? '',
-							phone: input.paymentPhone
-								? {
-										connectOrCreate: {
-											where: { number: input.paymentPhone },
-											create: { number: input.paymentPhone },
-										},
-									}
-								: undefined,
-						},
-					},
-				}
-			: undefined,
-});

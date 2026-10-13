@@ -1,15 +1,11 @@
-import type { AuditedTransaction } from '@/lib/database/audited-transaction';
-
 export const AUDIT_ACTIONS = ['create', 'update', 'delete'] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
 export const AUDIT_ACTOR_TYPES = ['user', 'local-partner', 'contributor', 'recipient', 'system'] as const;
 
-export type AuditActorType = (typeof AUDIT_ACTOR_TYPES)[number];
-
-export type AuditActor = {
-	type: AuditActorType;
+type AuditActor = {
+	type: (typeof AUDIT_ACTOR_TYPES)[number];
 	id: string;
 };
 
@@ -44,19 +40,9 @@ type AuditPath<T> = {
 /** Every snapshot leaf must be classified, so a new field is never audited by accident. */
 export type AuditFieldPolicy<TSnapshot> = Record<AuditPath<TSnapshot>, AuditFieldClassification>;
 
-export type AuditedEntity<TSnapshot extends { id: string }> = {
-	type: string;
-	fields: AuditFieldPolicy<Omit<TSnapshot, 'id'>>;
-	/** Must lock the returned rows until the transaction ends. */
-	findSnapshots: (transaction: AuditedTransaction, ids: string[]) => Promise<TSnapshot[]>;
-};
-
-export type AuditEventRecord = {
+/** Who made a write, from where, and optional context such as a CSV import id. */
+export type AuditContext = {
 	actor: AuditActor;
-	entityType: string;
-	entityId: string;
-	action: AuditAction;
 	source: AuditSource;
-	changes: AuditChange[];
-	metadata: AuditMetadata | null;
+	metadata?: AuditMetadata;
 };

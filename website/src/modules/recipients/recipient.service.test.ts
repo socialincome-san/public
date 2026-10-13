@@ -21,7 +21,7 @@ jest.mock('./recipient.repository', () => ({
 }));
 
 jest.mock('@/modules/auth/auth.service', () => ({}));
-jest.mock('@/lib/database/audited-transaction', () => jest.requireActual<object>('@/lib/audit/audited-transaction.fake'));
+jest.mock('./recipient.write.repository', () => ({}));
 jest.mock('@/modules/users/user.service', () => ({
 	isAdmin: jest.fn(),
 }));

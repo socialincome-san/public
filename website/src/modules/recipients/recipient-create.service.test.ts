@@ -4,11 +4,17 @@ const mockGetAccessiblePrograms = jest.fn();
 
 jest.mock('./recipient.repository', () => ({
 	countRecipientsForProgramsAndLocalPartners: mockCountRecipientsForProgramsAndLocalPartners,
-	createRecipient: mockCreateRecipient,
 	findContactByEmail: jest.fn().mockResolvedValue(null),
 	findPhoneByNumber: jest.fn().mockResolvedValue(null),
 	findPaymentInformationByCode: jest.fn().mockResolvedValue(null),
-	findRecipientAuditSnapshots: (_transaction: unknown, ids: string[]) => Promise.resolve(ids.map((id) => ({ id }))),
+}));
+
+jest.mock('./recipient.write.repository', () => ({
+	createRecipient: mockCreateRecipient,
+}));
+
+jest.mock('@/modules/users/user.service', () => ({
+	isAdmin: jest.fn(),
 }));
 
 jest.mock('@/modules/program-access/program-access.service', () => ({
@@ -25,10 +31,6 @@ jest.mock('@/modules/local-partners/local-partner.service', () => ({
 
 jest.mock('@/modules/programs/program-reference.service', () => ({
 	getProgramNameById: jest.fn(),
-}));
-jest.mock('@/lib/database/audited-transaction', () => jest.requireActual<object>('@/lib/audit/audited-transaction.fake'));
-jest.mock('@/modules/users/user.service', () => ({
-	isAdmin: jest.fn(),
 }));
 
 import { ProgramPermission, UserRole } from '@/generated/prisma/enums';

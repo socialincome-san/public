@@ -1,90 +1,51 @@
 import { ProgramPermission, UserRole } from '@/generated/prisma/enums';
 
-type StoredRecipient = {
-	id: string;
-	programId: string | null;
-	localPartnerId: string;
-	startDate: Date | null;
-	suspendedAt: Date | null;
-	suspensionReason: string | null;
-	successorName: string | null;
-	termsAccepted: boolean;
-	contact: {
-		firstName: string;
-		lastName: string;
-		callingName: string | null;
-		email: string | null;
-		gender: string | null;
-		language: string | null;
-		dateOfBirth: Date | null;
-		profession: string | null;
-		phone: { number: string; hasWhatsApp: boolean } | null;
-		address: { street: string; number: string; city: string; zip: string; country: string | null } | null;
-	};
-	paymentInformation: { code: string | null; mobileMoneyProviderId: string | null; phone: { number: string } | null } | null;
+const mockWriteRepository = {
+	createRecipient: jest.fn(),
+	updateRecipient: jest.fn(),
+	updateRecipientSelf: jest.fn(),
+	removeRecipientFromProgram: jest.fn(),
+	deleteRecipient: jest.fn(),
 };
-
-// Repositories are mocked against this in-memory recipient so the audit
-// snapshots taken before and after a write see what the write changed.
-const mockStore = { recipients: new Map<string, StoredRecipient>() };
-
-const mockFindRecipientForUpdate = jest.fn();
-const mockUpdateRecipient = jest.fn();
-const mockUpdateRecipientSelf = jest.fn();
-const mockCreateRecipient = jest.fn();
-const mockDeleteRecipient = jest.fn();
-const mockRemoveRecipientFromProgram = jest.fn();
+const mockFindRecipientAuditEvents = jest.fn();
+const mockFindRecipientOwnership = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
 const mockIsAdmin = jest.fn();
-const mockFindRecipientOwnership = jest.fn();
 const mockCreateFirebaseUser = jest.fn();
-const mockUpdateFirebaseUser = jest.fn();
 const mockDeleteFirebaseUser = jest.fn();
 
-jest.mock('./recipient.repository', () => ({
-	findRecipientAuditSnapshots: (_transaction: unknown, ids: string[]) =>
-		Promise.resolve(
-			ids.flatMap((id) => {
-				const recipient = mockStore.recipients.get(id);
+const updateContext = {
+	programId: 'program-1',
+	localPartnerId: 'partner-1',
+	contact: { id: 'contact-1', email: null, phone: null, address: null },
+	paymentInformation: null,
+};
 
-				return recipient ? [structuredClone(recipient)] : [];
-			}),
-		),
-	findRecipientForUpdate: mockFindRecipientForUpdate,
-	findRecipientForSelfUpdate: mockFindRecipientForUpdate,
-	findRecipientForDeletion: (id: string) =>
-		Promise.resolve(
-			mockStore.recipients.has(id)
-				? {
-						id,
-						contactId: 'contact-1',
-						paymentInformationId: 'payment-1',
-						programId: 'program-1',
-						localPartnerId: 'partner-1',
-						contact: { phoneId: 'phone-1', addressId: null },
-						paymentInformation: { phone: { id: 'phone-2', number: '+23270000002' } },
-					}
-				: null,
-		),
+jest.mock('./recipient.write.repository', () => mockWriteRepository);
+jest.mock('./recipient.repository', () => ({
+	findRecipientForUpdate: () => Promise.resolve(updateContext),
+	findRecipientForSelfUpdate: () => Promise.resolve({ contact: { phone: null }, paymentInformation: null }),
 	findRecipientForProgramRemoval: () =>
 		Promise.resolve({ id: 'recipient-1', programId: 'program-1', _count: { payouts: 0 } }),
+	findRecipientForDeletion: () =>
+		Promise.resolve({
+			id: 'recipient-1',
+			contactId: 'contact-1',
+			paymentInformationId: 'payment-1',
+			programId: 'program-1',
+			localPartnerId: 'partner-1',
+			contact: { phoneId: null, addressId: null },
+			paymentInformation: { phone: { id: 'phone-1', number: '+23270000001' } },
+		}),
 	findRecipientOwnership: mockFindRecipientOwnership,
+	findRecipientAuditEvents: mockFindRecipientAuditEvents,
 	findContactByEmail: () => Promise.resolve(null),
 	findPhoneByNumber: () => Promise.resolve(null),
 	findPaymentInformationByCode: () => Promise.resolve(null),
 	countRecipientsForProgramsAndLocalPartners: () => Promise.resolve(1),
-	createRecipient: mockCreateRecipient,
-	updateRecipient: mockUpdateRecipient,
-	updateRecipientSelf: mockUpdateRecipientSelf,
-	deleteRecipient: mockDeleteRecipient,
-	removeRecipientFromProgram: mockRemoveRecipientFromProgram,
-	deletePhoneIfOrphaned: () => Promise.resolve(true),
-	deleteAddressIfOrphaned: () => Promise.resolve(true),
 }));
-jest.mock('@/lib/database/audited-transaction', () => jest.requireActual<object>('@/lib/audit/audited-transaction.fake'));
 jest.mock('@/modules/auth/auth.service', () => ({
 	createFirebaseUserByPhoneNumber: mockCreateFirebaseUser,
-	updateFirebaseUserByPhoneNumber: mockUpdateFirebaseUser,
 	deleteFirebaseUserByPhoneNumberIfExists: mockDeleteFirebaseUser,
 }));
 jest.mock('@/modules/program-access/program-access.service', () => ({
@@ -94,14 +55,13 @@ jest.mock('@/modules/users/user.service', () => ({ isAdmin: mockIsAdmin }));
 jest.mock('@/modules/local-partners/local-partner.service', () => ({ getLocalPartnerOptions: jest.fn() }));
 jest.mock('@/modules/programs/program-reference.service', () => ({ getProgramNameById: jest.fn() }));
 
-import { auditLog } from '@/lib/audit/audited-transaction.fake';
 import type { LocalPartnerSession } from '@/modules/local-partners/local-partner.types';
 import type { UserSession } from '@/modules/users/user.types';
 import type { UpdateRecipientInput } from './recipient.schemas';
 import {
-	authorizeRecipientAuditTrail,
 	createRecipient,
 	deleteRecipient,
+	getRecipientAuditTrail,
 	importRecipientsCsv,
 	removeRecipientFromProgram,
 	updateRecipient,
@@ -140,11 +100,13 @@ const partner: LocalPartnerSession = {
 	focuses: [],
 };
 
-const storedRecipient = (): StoredRecipient => ({
+const portal = { actor: { type: 'user', id: 'user-1' }, source: 'portal' };
+
+const input: UpdateRecipientInput = {
 	id: 'recipient-1',
 	programId: 'program-1',
 	localPartnerId: 'partner-1',
-	startDate: new Date('2026-01-01T00:00:00.000Z'),
+	startDate: null,
 	suspendedAt: null,
 	suspensionReason: null,
 	successorName: null,
@@ -155,311 +117,143 @@ const storedRecipient = (): StoredRecipient => ({
 		callingName: null,
 		email: null,
 		gender: null,
-		language: 'en',
+		language: null,
 		dateOfBirth: null,
 		profession: null,
-		phone: { number: '+23270000001', hasWhatsApp: false },
-		address: null,
-	},
-	paymentInformation: { code: 'P-1', mobileMoneyProviderId: 'provider-1', phone: { number: '+23270000002' } },
-});
-
-const updateContext = (paymentPhone: string) => ({
-	programId: 'program-1',
-	localPartnerId: 'partner-1',
-	contact: { id: 'contact-1', email: null, phone: { id: 'phone-1', number: '+23270000001' }, address: null },
-	paymentInformation: { id: 'payment-1', code: 'P-1', phone: { id: 'phone-2', number: paymentPhone } },
-});
-
-const updateInput: UpdateRecipientInput = {
-	id: 'recipient-1',
-	programId: 'program-1',
-	localPartnerId: 'partner-1',
-	startDate: new Date('2026-01-01T00:00:00.000Z'),
-	suspendedAt: null,
-	suspensionReason: null,
-	successorName: null,
-	termsAccepted: true,
-	contact: {
-		firstName: 'Ada',
-		lastName: 'Byron',
-		callingName: null,
-		email: null,
-		gender: null,
-		language: 'en',
-		dateOfBirth: null,
-		profession: null,
-		phone: '+23270000001',
 		hasWhatsApp: false,
-		street: 'Main Street',
-		number: '1',
-		city: 'Freetown',
-		zip: '1000',
-		country: 'SL',
+		street: null,
+		number: null,
+		city: null,
+		zip: null,
+		country: null,
 	},
-	paymentInformation: { mobileMoneyProviderId: 'provider-1', code: 'P-1', phone: '+23270000003' },
+	paymentInformation: { code: null },
 };
 
-const applyUpdateInput = (): void => {
-	const recipient = storedRecipient();
-	mockStore.recipients.set('recipient-1', {
-		...recipient,
-		contact: {
-			...recipient.contact,
-			lastName: 'Byron',
-			address: { street: 'Main Street', number: '1', city: 'Freetown', zip: '1000', country: 'SL' },
-		},
-		paymentInformation: { code: 'P-1', mobileMoneyProviderId: 'provider-1', phone: { number: '+23270000003' } },
-	});
-};
-
-describe('recipient audit trail', () => {
+describe('recipient write attribution', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
-		auditLog.reset();
-		mockStore.recipients = new Map([['recipient-1', storedRecipient()]]);
 		mockGetAccessiblePrograms.mockResolvedValue({
 			success: true,
 			data: [{ programId: 'program-1', programName: 'Program 1', permission: ProgramPermission.operator }],
 		});
-		mockFindRecipientForUpdate.mockResolvedValue(updateContext('+23270000002'));
-		mockUpdateRecipient.mockImplementation(() => {
-			applyUpdateInput();
-
-			return Promise.resolve({ id: 'recipient-1' });
-		});
 		mockCreateFirebaseUser.mockResolvedValue({ success: true, data: undefined });
-		mockUpdateFirebaseUser.mockResolvedValue({ success: true, data: undefined });
 		mockDeleteFirebaseUser.mockResolvedValue({ success: true, data: undefined });
+		Object.values(mockWriteRepository).forEach((write) => write.mockResolvedValue({ id: 'recipient-1', count: 1 }));
 	});
 
-	test('records related contact, address and payment changes as one recipient event', async () => {
-		const result = await updateRecipient(operator, updateInput);
+	test('attributes portal and partner-space updates to the session', async () => {
+		await updateRecipient(operator, input);
+		await updateRecipient(partner, input);
 
-		expect(result.success).toBe(true);
-		expect(auditLog.committed).toEqual([
-			{
-				actor: { type: 'user', id: 'user-1' },
-				entityType: 'recipient',
-				entityId: 'recipient-1',
-				action: 'update',
-				source: 'portal',
-				changes: [
-					{ path: 'contact.lastName', old: 'Lovelace', new: 'Byron' },
-					{ path: 'contact.address.street', old: null, new: 'Main Street' },
-					{ path: 'contact.address.number', old: null, new: '1' },
-					{ path: 'contact.address.city', old: null, new: 'Freetown' },
-					{ path: 'contact.address.zip', old: null, new: '1000' },
-					{ path: 'contact.address.country', old: null, new: 'SL' },
-					{ path: 'paymentInformation.phone.number', old: '+23270000002', new: '+23270000003' },
-				],
-				metadata: null,
-			},
-		]);
-	});
-
-	test('attributes partner-space edits to the local partner', async () => {
-		await updateRecipient(partner, updateInput);
-
-		expect(auditLog.committed).toMatchObject([
+		expect(mockWriteRepository.updateRecipient.mock.calls.map(([audit]: unknown[]) => audit)).toEqual([
+			portal,
 			{ actor: { type: 'local-partner', id: 'partner-1' }, source: 'partner-space' },
 		]);
 	});
 
-	test('rolls back and reverts Firebase when the audit event cannot be stored', async () => {
-		auditLog.failInserts = true;
-
-		const result = await updateRecipient(operator, updateInput);
-
-		expect(result).toEqual({ success: false, error: 'Could not update recipient. Please try again later.' });
-		expect(auditLog.committed).toEqual([]);
-		expect(auditLog.rollbacks).toBe(1);
-		expect(mockUpdateFirebaseUser).toHaveBeenNthCalledWith(1, '+23270000002', '+23270000003');
-		expect(mockUpdateFirebaseUser).toHaveBeenNthCalledWith(2, '+23270000003', '+23270000002');
-	});
-
-	test('gives up when the payment phone changed between the unlocked read and the audited write', async () => {
-		mockFindRecipientForUpdate
-			.mockResolvedValueOnce(updateContext('+23270000002'))
-			.mockResolvedValueOnce(updateContext('+23270000009'));
-
-		const result = await updateRecipient(operator, updateInput);
-
-		expect(result).toEqual({
-			success: false,
-			error: 'Recipient was changed in the meantime. Please try again.',
-			status: undefined,
-		});
-		expect(mockUpdateRecipient).not.toHaveBeenCalled();
-		expect(auditLog.committed).toEqual([]);
-		expect(mockUpdateFirebaseUser).toHaveBeenLastCalledWith('+23270000003', '+23270000002');
-	});
-
 	test('attributes mobile app self-updates to the recipient', async () => {
-		mockUpdateRecipientSelf.mockImplementation(() => {
-			const recipient = storedRecipient();
-			mockStore.recipients.set('recipient-1', { ...recipient, termsAccepted: false, successorName: 'Grace' });
+		await updateRecipientSelf('recipient-1', { termsAccepted: true });
 
-			return Promise.resolve({ id: 'recipient-1' });
-		});
-
-		const result = await updateRecipientSelf('recipient-1', { termsAccepted: false, successorName: 'Grace' });
-
-		expect(result.success).toBe(true);
-		expect(auditLog.committed).toEqual([
-			expect.objectContaining({
-				actor: { type: 'recipient', id: 'recipient-1' },
-				source: 'mobile-app',
-				changes: [
-					{ path: 'successorName', old: null, new: 'Grace' },
-					{ path: 'termsAccepted', old: true, new: false },
-				],
-			}),
-		]);
+		expect(mockWriteRepository.updateRecipientSelf).toHaveBeenCalledWith(
+			{ actor: { type: 'recipient', id: 'recipient-1' }, source: 'mobile-app' },
+			'recipient-1',
+			{ termsAccepted: true },
+			null,
+		);
 	});
 
-	test('records deletion without keeping personal values', async () => {
-		mockDeleteRecipient.mockImplementation(() => Promise.resolve(mockStore.recipients.delete('recipient-1')));
-
-		const result = await deleteRecipient(operator, 'recipient-1');
-
-		expect(result).toEqual({ success: true, data: { id: 'recipient-1' }, status: undefined });
-		expect(auditLog.committed).toHaveLength(1);
-		const [event] = auditLog.committed;
-		expect(event).toMatchObject({ action: 'delete', entityId: 'recipient-1' });
-		expect(event.changes).toContainEqual({ path: 'programId', old: 'program-1', new: null });
-		expect(event.changes).toContainEqual({ path: 'contact.firstName', redacted: true });
-		expect(JSON.stringify(event.changes)).not.toContain('Lovelace');
-		expect(mockDeleteFirebaseUser).toHaveBeenCalledWith('+23270000002');
-	});
-
-	test('records no event when program removal turns out to be impossible', async () => {
-		mockRemoveRecipientFromProgram.mockResolvedValue({ count: 0 });
-
-		const result = await removeRecipientFromProgram(operator, 'recipient-1');
-
-		expect(result.success).toBe(false);
-		expect(auditLog.committed).toEqual([]);
-	});
-
-	test('records program removal', async () => {
-		mockRemoveRecipientFromProgram.mockImplementation(() => {
-			mockStore.recipients.set('recipient-1', { ...storedRecipient(), programId: null, startDate: null });
-
-			return Promise.resolve({ count: 1 });
-		});
-
+	test('attributes program removal and deletion to the session', async () => {
 		await removeRecipientFromProgram(operator, 'recipient-1');
+		await deleteRecipient(operator, 'recipient-1');
 
-		expect(auditLog.committed).toMatchObject([
-			{
-				action: 'update',
-				changes: [
-					{ path: 'programId', old: 'program-1', new: null },
-					{ path: 'startDate', old: '2026-01-01T00:00:00.000Z', new: null },
-				],
-			},
-		]);
+		expect(mockWriteRepository.removeRecipientFromProgram).toHaveBeenCalledWith(portal, 'recipient-1', 'program-1');
+		expect(mockWriteRepository.deleteRecipient).toHaveBeenCalledWith(portal, 'recipient-1');
+		expect(mockDeleteFirebaseUser).toHaveBeenCalledWith('+23270000001');
 	});
 
 	test('links CSV imported recipients with one import id', async () => {
-		let created = 0;
-		mockCreateRecipient.mockImplementation(() => {
-			created += 1;
-			const id = `imported-${created}`;
-			mockStore.recipients.set(id, { ...storedRecipient(), id });
-
-			return Promise.resolve({ id });
-		});
 		const csv = new File(
 			['firstName,lastName,programId,localPartnerId\nAda,Lovelace,program-1,partner-1\nGrace,Hopper,program-1,partner-1\n'],
 			'recipients.csv',
 		);
 
-		const result = await importRecipientsCsv(partner, csv);
+		await expect(importRecipientsCsv(operator, csv)).resolves.toMatchObject({ success: true, data: { created: 2 } });
 
-		expect(result).toEqual({ success: true, data: { created: 2 }, status: undefined });
-		expect(auditLog.committed.map(({ action, entityId }) => ({ action, entityId }))).toEqual([
-			{ action: 'create', entityId: 'imported-1' },
-			{ action: 'create', entityId: 'imported-2' },
-		]);
-		const [first, second] = auditLog.committed;
-		expect(first.metadata).toMatchObject({ operation: 'csv-import' });
-		expect(typeof first.metadata?.importId).toBe('string');
-		expect(second.metadata).toEqual(first.metadata);
+		const [first, second] = mockWriteRepository.createRecipient.mock.calls.map(([audit]: unknown[]) => audit);
+		expect(first).toMatchObject({ ...portal, metadata: { operation: 'csv-import' } });
+		expect(first).toHaveProperty('metadata.importId');
+		expect(second).toEqual(first);
 	});
 
-	test('records the compensating delete when the Firebase user cannot be created', async () => {
-		mockCreateRecipient.mockImplementation(() => {
-			mockStore.recipients.set('recipient-2', { ...storedRecipient(), id: 'recipient-2' });
-
-			return Promise.resolve({ id: 'recipient-2' });
-		});
-		mockDeleteRecipient.mockImplementation(() => Promise.resolve(mockStore.recipients.delete('recipient-2')));
+	test('records why a created recipient is deleted again', async () => {
 		mockCreateFirebaseUser.mockResolvedValue({ success: false, error: 'Firebase down' });
 
-		const result = await createRecipient(operator, {
-			...updateInput,
-			paymentInformation: { code: null, phone: '+23270000004' },
-		});
+		const result = await createRecipient(operator, { ...input, paymentInformation: { code: null, phone: '+23270000004' } });
 
 		expect(result.success).toBe(false);
-		expect(auditLog.committed.map(({ action, metadata }) => ({ action, metadata }))).toEqual([
-			{ action: 'create', metadata: null },
-			{ action: 'delete', metadata: { reason: 'authentication-user-creation-failed' } },
-		]);
+		expect(mockWriteRepository.deleteRecipient).toHaveBeenCalledWith(
+			{ ...portal, metadata: { reason: 'authentication-user-creation-failed' } },
+			'recipient-1',
+		);
 	});
 });
 
-describe('recipient audit trail authorization', () => {
+describe('getRecipientAuditTrail', () => {
+	const storedEvent = {
+		id: 'event-1',
+		occurredAt: new Date('2026-10-01T00:00:00.000Z'),
+		actorType: 'user',
+		actorId: 'user-1',
+		action: 'update',
+		source: 'portal',
+		changes: [
+			{ path: 'paymentInformation.phone.number', old: '+23270000001', new: '+23270000002' },
+			{ path: 'contact.firstName', redacted: true },
+		],
+		metadata: null,
+	};
+
 	beforeEach(() => {
 		jest.clearAllMocks();
-		mockIsAdmin.mockResolvedValue({ success: false, error: 'Permission denied' });
-		mockGetAccessiblePrograms.mockResolvedValue({ success: true, data: [] });
 		mockFindRecipientOwnership.mockResolvedValue({ id: 'recipient-1', programId: 'program-1', localPartnerId: 'partner-1' });
+		mockGetAccessiblePrograms.mockResolvedValue({ success: true, data: [] });
+		mockIsAdmin.mockResolvedValue({ success: false, error: 'Permission denied' });
+		mockFindRecipientAuditEvents.mockResolvedValue([storedEvent]);
 	});
 
-	test('allows program operators and the owning local partner', async () => {
-		mockGetAccessiblePrograms.mockResolvedValue({
+	test('returns the events to whoever may read the recipient', async () => {
+		await expect(getRecipientAuditTrail(partner, 'recipient-1')).resolves.toEqual({
 			success: true,
-			data: [{ programId: 'program-1', programName: 'Program 1', permission: ProgramPermission.operator }],
+			data: [storedEvent],
+			status: undefined,
 		});
-
-		expect((await authorizeRecipientAuditTrail(operator, 'recipient-1')).success).toBe(true);
-		expect((await authorizeRecipientAuditTrail(partner, 'recipient-1')).success).toBe(true);
+		expect(mockFindRecipientAuditEvents).toHaveBeenCalledWith('recipient-1', 50);
 	});
 
-	test('denies program owners, other partners and contributors', async () => {
-		mockGetAccessiblePrograms.mockResolvedValue({
-			success: true,
-			data: [{ programId: 'program-1', programName: 'Program 1', permission: ProgramPermission.owner }],
-		});
-
-		expect(await authorizeRecipientAuditTrail(operator, 'recipient-1')).toMatchObject({ success: false });
-		expect(await authorizeRecipientAuditTrail({ ...partner, id: 'partner-2' }, 'recipient-1')).toMatchObject({
+	test('does not read events for sessions without access', async () => {
+		await expect(getRecipientAuditTrail(operator, 'recipient-1')).resolves.toMatchObject({ success: false });
+		await expect(getRecipientAuditTrail({ ...partner, id: 'partner-2' }, 'recipient-1')).resolves.toMatchObject({
 			success: false,
 		});
-		expect(
-			await authorizeRecipientAuditTrail(
-				{
-					...sessionDefaults,
-					type: 'contributor',
-					id: 'contributor-1',
-					referral: 'other',
-					stripeCustomerId: null,
-				},
-				'recipient-1',
-			),
-		).toMatchObject({ success: false });
+		expect(mockFindRecipientAuditEvents).not.toHaveBeenCalled();
 	});
 
 	test('lets only admins read the trail of a deleted recipient', async () => {
 		mockFindRecipientOwnership.mockResolvedValue(null);
-
-		expect(await authorizeRecipientAuditTrail(operator, 'recipient-1')).toMatchObject({ success: false });
+		await expect(getRecipientAuditTrail(operator, 'recipient-1')).resolves.toMatchObject({ success: false });
 
 		mockIsAdmin.mockResolvedValue({ success: true, data: true });
-		expect((await authorizeRecipientAuditTrail(operator, 'recipient-1')).success).toBe(true);
-		expect(await authorizeRecipientAuditTrail(partner, 'recipient-1')).toMatchObject({ success: false });
+		await expect(getRecipientAuditTrail(operator, 'recipient-1')).resolves.toMatchObject({ success: true });
+	});
+
+	test('fails instead of returning events that do not match the schema', async () => {
+		mockFindRecipientAuditEvents.mockResolvedValue([{ ...storedEvent, changes: 'broken' }]);
+
+		await expect(getRecipientAuditTrail(partner, 'recipient-1')).resolves.toEqual({
+			success: false,
+			error: 'Could not fetch recipient audit trail',
+			status: undefined,
+		});
 	});
 });

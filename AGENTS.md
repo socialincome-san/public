@@ -19,8 +19,8 @@ Open-source platform for unconditional basic income. Read the
 - The website backend is a modular monolith: `src/modules` (business
   logic), `src/integrations` (external APIs), `src/lib` (domain-free
   kernel). Expected failures are returned as `Result<T>`, not thrown.
-- Business database writes go through `withAudit` so they leave an
-  audit trail (`website/src/lib/audit/README.md`).
+- Recipient writes leave an audit trail through write repositories
+  (`website/src/lib/audit/README.md`).
 - ESLint enforces most of this. Fix the code, never disable a rule.
 
 ## Working Rules

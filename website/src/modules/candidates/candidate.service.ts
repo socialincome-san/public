@@ -1,6 +1,4 @@
 import { CountryCode, Gender, type Profile } from '@/generated/prisma/enums';
-import type { AuditActor, AuditMetadata, AuditSource } from '@/lib/audit/audit-types';
-import { getSessionAuditContext, withAudit } from '@/lib/audit/with-audit';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import {
@@ -10,7 +8,6 @@ import {
 } from '@/modules/auth/auth.service';
 import type { Session } from '@/modules/auth/auth.types';
 import { getCountryIsoCode } from '@/modules/countries/country.service';
-import { recipientAuditEntity } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
 import * as candidateRepository from './candidate.repository';
 import { candidateCreateSchema, type CandidateCreateInput, type CandidateUpdateInput } from './candidate.schemas';
@@ -146,11 +143,7 @@ export const exportCandidatesCsv = async (session: Session): Promise<Result<stri
 	}
 };
 
-export const createCandidate = async (
-	session: Session,
-	input: CandidateCreateInput,
-	auditMetadata?: AuditMetadata,
-): Promise<Result<CandidatePayload>> => {
+export const createCandidate = async (session: Session, input: CandidateCreateInput): Promise<Result<CandidatePayload>> => {
 	if (session.type === 'contributor') {
 		return resultFail('Permission denied');
 	}
@@ -183,15 +176,7 @@ export const createCandidate = async (
 		}
 
 		try {
-			return await withAudit(
-				{
-					entity: recipientAuditEntity,
-					action: 'create',
-					...getSessionAuditContext(session),
-					metadata: auditMetadata,
-				},
-				async (transaction) => resultOk(await candidateRepository.createCandidate(transaction, input, localPartnerId)),
-			);
+			return resultOk(await candidateRepository.createCandidate(input, localPartnerId));
 		} catch (error) {
 			if (paymentPhone) {
 				await deleteFirebaseUserByPhoneNumberIfExists(paymentPhone);
@@ -259,37 +244,18 @@ export const updateCandidate = async (session: Session, input: CandidateUpdateIn
 			firebaseChange = 'changed';
 		}
 
-		const updateResult = await withAudit(
-			{ entity: recipientAuditEntity, action: 'update', entityId: input.id, ...getSessionAuditContext(session) },
-			async (transaction) => {
-				// Firebase was synchronized from the unlocked read above. Re-read under
-				// the audit lock and give up if a concurrent write invalidated it.
-				const current = await candidateRepository.findCandidateForUpdate(input.id, transaction);
-				if (current?.programId !== null || (current.paymentInformation?.phone?.number ?? null) !== previousPaymentPhone) {
-					return resultFail('Candidate was changed in the meantime. Please try again.');
-				}
+		const updated = await candidateRepository.updateCandidate(effectiveInput, {
+			contactId: existing.contact.id,
+			contactPhoneId: existing.contact.phone?.id,
+			contactPhoneNumber: existing.contact.phone?.number,
+			contactAddressId: existing.contact.address?.id,
+			paymentInformationId: existing.paymentInformation?.id,
+			paymentPhoneId: existing.paymentInformation?.phone?.id,
+			paymentPhoneNumber: existing.paymentInformation?.phone?.number,
+		});
+		await cleanupCandidateRelations(existing, effectiveInput);
 
-				const candidate = await candidateRepository.updateCandidate(transaction, effectiveInput, {
-					contactId: current.contact.id,
-					contactPhoneId: current.contact.phone?.id,
-					contactPhoneNumber: current.contact.phone?.number,
-					contactAddressId: current.contact.address?.id,
-					paymentInformationId: current.paymentInformation?.id,
-					paymentPhoneId: current.paymentInformation?.phone?.id,
-					paymentPhoneNumber: current.paymentInformation?.phone?.number,
-				});
-
-				return resultOk({ candidate, previous: current });
-			},
-		);
-		if (!updateResult.success) {
-			await compensateFirebaseChange(firebaseChange, previousPaymentPhone, nextPaymentPhone);
-
-			return resultFail(updateResult.error);
-		}
-		await cleanupCandidateRelations(updateResult.data.previous, effectiveInput);
-
-		return resultOk(updateResult.data.candidate);
+		return resultOk(updated);
 	} catch (error) {
 		console.error('Could not update candidate', { candidateId: input.id, error });
 		await compensateFirebaseChange(firebaseChange, previousPaymentPhone, nextPaymentPhone);
@@ -313,21 +279,11 @@ export const deleteCandidate = async (session: Session, candidateId: string): Pr
 			return accessResult;
 		}
 
-		const deleteResult = await withAudit(
-			{ entity: recipientAuditEntity, action: 'delete', entityId: candidateId, ...getSessionAuditContext(session) },
-			async (transaction) => {
-				await candidateRepository.deleteCandidateData(transaction, {
-					candidateId,
-					contactId: existing.contactId,
-					paymentInformationId: existing.paymentInformationId,
-				});
-
-				return resultOk(undefined);
-			},
-		);
-		if (!deleteResult.success) {
-			return resultFail(deleteResult.error);
-		}
+		await candidateRepository.deleteCandidateData({
+			candidateId,
+			contactId: existing.contactId,
+			paymentInformationId: existing.paymentInformationId,
+		});
 		await cleanupDeletedCandidateRelations(candidateId, existing);
 
 		const paymentPhone = existing.paymentInformation?.phone?.number;
@@ -380,9 +336,8 @@ export const importCandidatesCsv = async (session: Session, file: File): Promise
 			return resultFail('CSV contains invalid candidate data');
 		}
 
-		const importId = crypto.randomUUID();
 		for (const candidate of candidates) {
-			const result = await createCandidate(session, candidate, { operation: 'csv-import', importId });
+			const result = await createCandidate(session, candidate);
 			if (!result.success) {
 				console.error('Could not create candidate from CSV', { error: result.error });
 
@@ -399,7 +354,6 @@ export const importCandidatesCsv = async (session: Session, file: File): Promise
 };
 
 export const assignRandomCandidatesToProgram = async (
-	auditContext: { actor: AuditActor; source: AuditSource },
 	programId: string,
 	amount: number,
 	countryCode: CountryCode,
@@ -420,21 +374,9 @@ export const assignRandomCandidatesToProgram = async (
 			.sort(() => Math.random() - 0.5)
 			.slice(0, amount)
 			.map(({ id }) => id);
+		await candidateRepository.updateCandidateProgramAssignments(selectedIds, programId);
 
-		return await withAudit(
-			{
-				entity: recipientAuditEntity,
-				action: 'update',
-				entityId: selectedIds,
-				...auditContext,
-				metadata: { operation: 'random-candidate-assignment' },
-			},
-			async (transaction) => {
-				await candidateRepository.updateCandidateProgramAssignments(transaction, selectedIds, programId);
-
-				return resultOk({ assigned: selectedIds.length });
-			},
-		);
+		return resultOk({ assigned: selectedIds.length });
 	} catch (error) {
 		console.error('Could not assign candidates', { programId, error });
 

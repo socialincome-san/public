@@ -12,8 +12,6 @@ const mockFindProgramSettings = jest.fn();
 const mockUpdateProgramSettings = jest.fn();
 const mockGetCountryIsoCode = jest.fn();
 const mockValidateOrganizationIds = jest.fn();
-const mockDeleteProgram = jest.fn();
-const mockProgramRecipients = new Map<string, string | null>();
 const mockIsAdmin = jest.fn();
 const mockFindPaginatedPrograms = jest.fn();
 
@@ -23,16 +21,6 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 }));
 jest.mock('@/modules/candidates/candidate.service', () => ({
 	assignRandomCandidatesToProgram: jest.fn(),
-}));
-jest.mock('@/lib/database/audited-transaction', () => jest.requireActual<object>('@/lib/audit/audited-transaction.fake'));
-jest.mock('@/modules/recipients/recipient.service', () => ({
-	getRecipientIdsByProgram: () => Promise.resolve({ success: true, data: ['recipient-1', 'recipient-2'] }),
-	recipientAuditEntity: {
-		type: 'recipient',
-		fields: { programId: 'plain' },
-		findSnapshots: (_transaction: unknown, ids: string[]) =>
-			Promise.resolve(ids.map((id) => ({ id, programId: mockProgramRecipients.get(id) ?? null }))),
-	},
 }));
 jest.mock('@/modules/countries/country.service', () => ({
 	getCountryIsoCode: mockGetCountryIsoCode,
@@ -60,15 +48,10 @@ jest.mock('./program.repository', () => ({
 	findProgramBySlug: mockFindProgramBySlug,
 	findProgramSettings: mockFindProgramSettings,
 	updateProgramSettings: mockUpdateProgramSettings,
-	findProgramNameById: () => Promise.resolve({ name: 'Program' }),
-	findProgramDeletionBlockers: () => Promise.resolve({ hasPayouts: false, hasContributions: false }),
-	deleteProgram: mockDeleteProgram,
 	findPaginatedPrograms: mockFindPaginatedPrograms,
 }));
 
-import { auditLog } from '@/lib/audit/audited-transaction.fake';
 import {
-	deleteProgram,
 	getPaginatedProgramTableView,
 	getProgramWallets,
 	getPublicProgramStatsByProgramPortalSlugs,
@@ -233,46 +216,5 @@ describe('program service', () => {
 
 		expect(result).toEqual({ success: false, error: 'Permission denied' });
 		expect(mockUpdateProgramSettings).not.toHaveBeenCalled();
-	});
-});
-
-describe('program deletion audit', () => {
-	beforeEach(() => {
-		jest.clearAllMocks();
-		auditLog.reset();
-		mockProgramRecipients.clear();
-		mockProgramRecipients.set('recipient-1', 'program-1');
-		mockProgramRecipients.set('recipient-2', 'program-1');
-		mockGetAccessiblePrograms.mockResolvedValue(
-			resultOk([{ programId: 'program-1', programName: 'Program', permission: ProgramPermission.operator }]),
-		);
-		mockDeleteProgram.mockImplementation(() => {
-			mockProgramRecipients.set('recipient-1', null);
-			mockProgramRecipients.set('recipient-2', null);
-		});
-	});
-
-	it('records that each recipient lost the deleted program', async () => {
-		await expect(deleteProgram('user-1', 'program-1')).resolves.toEqual(resultOk(undefined));
-
-		expect(mockDeleteProgram).toHaveBeenCalledWith(expect.anything(), 'program-1', ['recipient-1', 'recipient-2']);
-		expect(auditLog.committed).toEqual(
-			['recipient-1', 'recipient-2'].map((entityId) => ({
-				actor: { type: 'user', id: 'user-1' },
-				entityType: 'recipient',
-				entityId,
-				action: 'update',
-				source: 'portal',
-				changes: [{ path: 'programId', old: 'program-1', new: null }],
-				metadata: { operation: 'program-deletion' },
-			})),
-		);
-	});
-
-	it('keeps the program when the deletion cannot be audited', async () => {
-		auditLog.failInserts = true;
-
-		await expect(deleteProgram('user-1', 'program-1')).resolves.toMatchObject({ success: false });
-		expect(auditLog.rollbacks).toBe(1);
 	});
 });
