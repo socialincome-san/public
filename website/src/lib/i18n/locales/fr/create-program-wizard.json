@@ -15,7 +15,8 @@
 			"quarterly": "Trimestriel",
 			"yearly": "Annuel"
 		},
-		"error": "Erreur"
+		"error": "Erreur",
+		"remove": "Retirer"
 	},
 	"error": {
 		"generic": "Une erreur est survenue"

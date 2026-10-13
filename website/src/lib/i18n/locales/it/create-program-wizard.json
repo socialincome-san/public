@@ -15,7 +15,8 @@
 			"quarterly": "Trimestrale",
 			"yearly": "Annuale"
 		},
-		"error": "Errore"
+		"error": "Errore",
+		"remove": "Rimuovi"
 	},
 	"error": {
 		"generic": "Qualcosa è andato storto"

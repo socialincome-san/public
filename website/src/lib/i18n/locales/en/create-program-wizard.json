@@ -15,7 +15,8 @@
 			"quarterly": "Quarterly",
 			"yearly": "Yearly"
 		},
-		"error": "Error"
+		"error": "Error",
+		"remove": "Remove"
 	},
 	"error": {
 		"generic": "Something went wrong"

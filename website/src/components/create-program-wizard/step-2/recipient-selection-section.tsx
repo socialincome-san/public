@@ -7,7 +7,7 @@ import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { RadioCard, RadioCardGroup } from '@socialincome/design-system/forms/radio-card/radio-card';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { PillMultiSelect } from './pill-multi-select';
+import { PillMultiSelect } from '@socialincome/design-system/forms/pill-multi-select/pill-multi-select';
 
 type Props = {
 	value: RecipientApproachType | null;
@@ -27,7 +27,6 @@ type Props = {
 	onToggleLocalPartner: (localPartnerId: string) => void;
 };
 
-const isProfile = (value: string): value is Profile => Object.values<string>(Profile).includes(value);
 
 export const RecipientSelectionSection = ({
 	value,
@@ -49,11 +48,6 @@ export const RecipientSelectionSection = ({
 	const t = useTranslations('create-program-wizard');
 	const noUniversalRecipients = value === 'universal' && totalRecipients === 0;
 	const noTargetedRecipients = value === 'targeted' && filteredRecipients === 0;
-	const focusLabelById = Object.fromEntries(focusOptions.map((focus) => [focus.id, focus.name]));
-	const focusLabel = (focusId: string) => focusLabelById[focusId] ?? focusId;
-	const localPartnerLabelById = Object.fromEntries(localPartnerOptions.map((partner) => [partner.id, partner.name]));
-	const localPartnerLabel = (localPartnerId: string) => localPartnerLabelById[localPartnerId] ?? localPartnerId;
-	const profileLabel = (profile: string) => (isProfile(profile) ? t(`step2.profiles.${profile}`) : profile);
 
 	return (
 		<div className="space-y-4">
@@ -98,26 +92,26 @@ export const RecipientSelectionSection = ({
 					<div className="space-y-4">
 						<PillMultiSelect
 							label={t('step2.recipient_selection.focuses')}
-							values={focusOptions.map((focus) => focus.id)}
-							selected={targetFocuses}
+							items={focusOptions.map((focus) => ({ value: focus.id, label: focus.name }))}
+							selectedValues={targetFocuses}
 							onToggle={(selectedFocus) => onToggleFocus(selectedFocus)}
-							getLabel={focusLabel}
+							removeLabel={t('common.remove')}
 						/>
 
 						<PillMultiSelect
 							label={t('step2.recipient_selection.profiles')}
-							values={Object.values(Profile)}
-							selected={targetProfiles}
-							onToggle={(selectedProfile) => onToggleProfile(selectedProfile as Profile)}
-							getLabel={profileLabel}
+							items={Object.values(Profile).map((profile) => ({ value: profile, label: t(`step2.profiles.${profile}`) }))}
+							selectedValues={targetProfiles}
+							onToggle={(selectedProfile) => { const profile = Object.values(Profile).find((value) => value === selectedProfile); if (profile) onToggleProfile(profile); }}
+							removeLabel={t('common.remove')}
 						/>
 
 						<PillMultiSelect
 							label={t('step2.recipient_selection.local_partners')}
-							values={localPartnerOptions.map((partner) => partner.id)}
-							selected={targetLocalPartnerIds}
+							items={localPartnerOptions.map((partner) => ({ value: partner.id, label: partner.name }))}
+							selectedValues={targetLocalPartnerIds}
 							onToggle={onToggleLocalPartner}
-							getLabel={localPartnerLabel}
+							removeLabel={t('common.remove')}
 						/>
 
 						<div className={cn('text-sm', noTargetedRecipients ? 'text-destructive' : 'text-muted-foreground')}>
