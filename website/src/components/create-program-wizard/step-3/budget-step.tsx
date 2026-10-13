@@ -21,6 +21,7 @@ type Props = {
 	exchangeRateText?: string;
 	payoutToDisplayRate?: number;
 	isCalculatingBudget: boolean;
+	disabled?: boolean;
 	// Without it the payouts are fixed and only summarized
 	payoutCustomization?: PayoutCustomization;
 	onRecipientsChange: (value: number) => void;
@@ -42,6 +43,7 @@ export const BudgetStep = ({
 	exchangeRateText,
 	payoutToDisplayRate,
 	isCalculatingBudget,
+	disabled = false,
 	payoutCustomization,
 	onRecipientsChange,
 	onCurrencyChange,
@@ -79,6 +81,7 @@ export const BudgetStep = ({
 				exchangeRateText={exchangeRateText}
 				totalBudgetTooltipText={localizedTooltipText}
 				isCalculatingBudget={isCalculatingBudget}
+				disabled={disabled}
 				onCurrencyChange={onCurrencyChange}
 			/>
 
@@ -87,6 +90,7 @@ export const BudgetStep = ({
 					title={recipientsTitle}
 					amountOfRecipients={amountOfRecipients}
 					filteredRecipients={filteredRecipients}
+					disabled={disabled}
 					onChange={onRecipientsChange}
 				/>
 

@@ -328,6 +328,7 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 										exchangeRateText={state.budget?.exchangeRateText}
 										payoutToDisplayRate={state.budget?.payoutToDisplayRate}
 										isCalculatingBudget={state.isCalculatingBudget}
+										disabled={saving}
 										onRecipientsChange={(quantity) => dispatch({ type: 'setQuantity', quantity })}
 										onCurrencyChange={(value) => {
 											if (isCurrency(value)) {

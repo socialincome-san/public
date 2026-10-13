@@ -8,10 +8,11 @@ type Props = {
 	title: string;
 	amountOfRecipients: number;
 	filteredRecipients: number;
+	disabled?: boolean;
 	onChange: (value: number) => void;
 };
 
-export const RecipientsBox = ({ title, amountOfRecipients, filteredRecipients, onChange }: Props) => {
+export const RecipientsBox = ({ title, amountOfRecipients, filteredRecipients, disabled = false, onChange }: Props) => {
 	const t = useTranslations('create-program-wizard');
 	const noCandidates = filteredRecipients === 0;
 
@@ -23,6 +24,7 @@ export const RecipientsBox = ({ title, amountOfRecipients, filteredRecipients, o
 					value={noCandidates ? 0 : amountOfRecipients}
 					min={1}
 					max={filteredRecipients}
+					disabled={disabled}
 					onChange={onChange}
 					atMaxHint={t('step3.recipients.max_hint')}
 					emptyMessage={t('step3.recipients.no_candidates')}

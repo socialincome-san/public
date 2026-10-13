@@ -120,7 +120,7 @@ export const addRecipientsFromPoolReducer = (
 				totalCount: action.totalCount,
 				matchingCount: action.matchingCount,
 				quantity: clampCandidateQuantity(state.quantity, action.matchingCount),
-				...(state.status === 'preview' ? { isCalculatingBudget: true, budget: null } : {}),
+				...(state.status === 'preview' ? { isCalculatingBudget: true } : {}),
 			};
 		case 'countsFailed':
 			return { ...state, isCounting: false, error: action.error };
@@ -153,10 +153,9 @@ export const addRecipientsFromPoolReducer = (
 				...state,
 				quantity: clampCandidateQuantity(action.quantity, state.matchingCount),
 				isCalculatingBudget: true,
-				budget: null,
 			};
 		case 'setDisplayCurrency':
-			return { ...state, displayCurrency: action.currency, isCalculatingBudget: true, budget: null };
+			return { ...state, displayCurrency: action.currency, isCalculatingBudget: true };
 		case 'budgetLoaded':
 			return { ...state, budget: action.budget, isCalculatingBudget: false, error: keepNotEnoughError(state.error) };
 		case 'budgetFailed':

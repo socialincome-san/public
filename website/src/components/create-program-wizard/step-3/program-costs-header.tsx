@@ -20,6 +20,7 @@ type Props = {
 	exchangeRateText?: string;
 	totalBudgetTooltipText: string;
 	isCalculatingBudget: boolean;
+	disabled?: boolean;
 	onCurrencyChange: (value: string) => void;
 };
 
@@ -31,6 +32,7 @@ export const ProgramCostsHeader = ({
 	exchangeRateText,
 	totalBudgetTooltipText,
 	isCalculatingBudget,
+	disabled = false,
 	onCurrencyChange,
 }: Props) => {
 	const t = useTranslations('create-program-wizard');
@@ -59,7 +61,7 @@ export const ProgramCostsHeader = ({
 			</div>
 
 			<div className="flex flex-col items-start gap-1 sm:items-end">
-				<Select value={currency} onValueChange={onCurrencyChange}>
+				<Select value={currency} onValueChange={onCurrencyChange} disabled={disabled}>
 					<div className="w-24">
 						<SelectTrigger>
 							<SelectValue />
