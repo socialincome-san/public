@@ -264,6 +264,29 @@ describe('getPaginatedTableView contributor filter', () => {
 		expect(data.filterOptions.contributors).toEqual([{ value: 'contributor-1', label: 'Ada Lovelace' }]);
 	});
 
+	test('labels contributions and filter options of slugless campaigns with the campaign id', async () => {
+		mockGetContributorFilterOption.mockResolvedValue({ success: true, data: null });
+		mockFindContributionTableSource.mockResolvedValue({
+			contributions: [
+				{
+					id: 'contribution-1',
+					contributor: { contact: null },
+					amount: 41.2,
+					currency: 'CHF',
+					campaign: { id: 'campaign-1', slug: null, program: { name: 'Program 1' } },
+					paymentEvent: null,
+					createdAt: new Date('2025-01-01T00:00:00.000Z'),
+				},
+			],
+			totalCount: 1,
+		});
+
+		const data = expectSuccess(await getPaginatedTableView('user-1', query));
+
+		expect(data.filterOptions.campaigns).toEqual([{ value: 'campaign-1', label: 'Campaign campaign-1' }]);
+		expect(data.tableRows[0]?.campaignTitle).toBe('Campaign campaign-1');
+	});
+
 	test('ignores a contributor outside the operated programs', async () => {
 		mockGetContributorFilterOption.mockResolvedValue({ success: true, data: null });
 

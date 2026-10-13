@@ -1,7 +1,7 @@
 jest.mock('./campaign.repository', () => ({
 	findCampaignsForCmsJoin: jest.fn(),
 	findCampaignsForPublicStats: jest.fn(),
-	findEditableCampaignOptions: jest.fn(),
+	findCampaignTableEntries: jest.fn(),
 }));
 jest.mock('@/modules/exchange-rates/exchange-rate.service', () => ({
 	getLatestRateForCurrency: jest.fn(),
@@ -27,14 +27,14 @@ import { getAccessiblePrograms } from '@/modules/program-access/program-access.s
 import * as campaignRepository from './campaign.repository';
 import {
 	getCampaignsForCmsJoin,
-	getEditableCampaignOptions,
+	getCampaignTableEntries,
 	getPublicCampaignStatsByIds,
 	getPublicCampaignsWithStats,
 } from './campaign.service';
 
 const mockFindCampaignsForCmsJoin = campaignRepository.findCampaignsForCmsJoin as jest.Mock;
 const mockFindCampaignsForPublicStats = campaignRepository.findCampaignsForPublicStats as jest.Mock;
-const mockFindEditableCampaignOptions = campaignRepository.findEditableCampaignOptions as jest.Mock;
+const mockFindCampaignTableEntries = campaignRepository.findCampaignTableEntries as jest.Mock;
 const mockGetLatestRateForCurrency = getLatestRateForCurrency as jest.Mock;
 const mockGetAccessiblePrograms = getAccessiblePrograms as jest.Mock;
 
@@ -415,35 +415,33 @@ describe('campaign public preview data', () => {
 	});
 });
 
-describe('getEditableCampaignOptions', () => {
+describe('getCampaignTableEntries', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
+		setExchangeRates();
 	});
 
-	test('returns slug options for operator-accessible programs', async () => {
+	test('keeps campaigns without a slug', async () => {
 		mockGetAccessiblePrograms.mockResolvedValue(
-			resultOk([
-				{ programId: 'program-1', programName: 'Program', permission: ProgramPermission.operator },
-				{ programId: 'program-2', programName: 'Other', permission: ProgramPermission.owner },
-			]),
+			resultOk([{ programId: 'program-1', programName: 'Program', permission: ProgramPermission.operator }]),
 		);
-		mockFindEditableCampaignOptions.mockResolvedValue([
-			{ id: 'campaign-1', slug: 'holiday-fundraiser' },
-			{ id: 'campaign-2', slug: null },
+		mockFindCampaignTableEntries.mockResolvedValue([
+			{
+				id: 'campaign-1',
+				slug: '  ',
+				currency: 'CHF',
+				endDate: new Date('2025-07-15T12:00:00.000Z'),
+				goal: null,
+				additionalAmountChf: null,
+				program: { name: 'Program', slug: 'program' },
+				createdAt: new Date('2025-01-01T00:00:00.000Z'),
+				contributions: [{ amountChf: 41.2 }],
+			},
 		]);
 
-		await expect(getEditableCampaignOptions('user-1')).resolves.toEqual(
-			resultOk([{ id: 'campaign-1', name: 'holiday-fundraiser' }, { id: 'campaign-2', name: 'campaign-2' }]),
-		);
-		expect(mockFindEditableCampaignOptions).toHaveBeenCalledWith(['program-1']);
-	});
+		const entries = expectSuccess(await getCampaignTableEntries('user-1'));
 
-	test('returns an empty list when the user cannot list campaigns', async () => {
-		mockGetAccessiblePrograms.mockResolvedValue(
-			resultOk([{ programId: 'program-1', programName: 'Program', permission: ProgramPermission.owner }]),
-		);
-
-		await expect(getEditableCampaignOptions('user-1')).resolves.toEqual(resultOk([]));
-		expect(mockFindEditableCampaignOptions).not.toHaveBeenCalled();
+		expect(entries).toEqual([expect.objectContaining({ id: 'campaign-1', slug: null })]);
+		expect(mockFindCampaignTableEntries).toHaveBeenCalledWith(['program-1']);
 	});
 });
