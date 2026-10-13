@@ -7,8 +7,7 @@ const meta = {
 	component: CookieBanner,
 	tags: ['autodocs'],
 	args: {
-		title: 'We value your privacy',
-		description: 'We use cookies for anonymous usage statistics that help us improve the website.',
+		message: 'We use cookies for anonymous usage statistics that help us improve the website.',
 		acceptLabel: 'Accept',
 		declineLabel: 'Decline',
 		onAccept: fn(),
@@ -34,7 +33,7 @@ export const Default: Story = {};
 
 export const WithLink: Story = {
 	args: {
-		description: (
+		message: (
 			<>
 				We use cookies for anonymous usage statistics that help us improve the website. Read more in our{' '}
 				<a href="#privacy">privacy policy</a>.

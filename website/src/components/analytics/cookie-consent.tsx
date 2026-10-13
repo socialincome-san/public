@@ -37,8 +37,7 @@ window.gtag('consent', 'default', ${JSON.stringify(getConsentModeSignals('grante
 			)}
 			{(consent === 'undecided' || settingsOpen) && (
 				<CookieBanner
-					title={t('title')}
-					description={t.rich('description', {
+					message={t.rich('message', {
 						link: (chunks) => <NextLink href={privacyPolicyHref}>{chunks}</NextLink>,
 					})}
 					acceptLabel={t('accept')}
