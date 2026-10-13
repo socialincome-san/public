@@ -1,6 +1,13 @@
 'use client';
 
-import { describeAuditEvent, getAuditChangeItems, sourceLabels } from '@/components/audit/audit-summary';
+import {
+	describeAuditEvent,
+	getAuditActorName,
+	getAuditChangeItems,
+	getAuditEntityName,
+	getAuditEntityTypeLabel,
+	sourceLabels,
+} from '@/components/audit/audit-summary';
 import { DateCell } from '@/components/data-table/elements/date-cell';
 import { TextCell } from '@/components/data-table/elements/text-cell';
 import type { ColumnDef } from '@/components/data-table/tanstack-table';
@@ -15,19 +22,14 @@ export const makeAuditColumns = (): ColumnDef<AuditTableViewRow>[] => [
 		cell: (ctx) => <DateCell ctx={ctx} options={{ dateStyle: 'short', timeStyle: 'short' }} />,
 	},
 	{
-		accessorKey: 'entityTypeLabel',
+		id: 'entityType',
 		header: 'Type',
-		cell: (ctx) => <TextCell ctx={ctx} />,
+		cell: ({ row }) => <DataTableTextCell value={getAuditEntityTypeLabel(row.original)} />,
 	},
 	{
-		accessorKey: 'entityName',
+		id: 'entityName',
 		header: 'Name',
-		cell: (ctx) => <TextCell ctx={ctx} />,
-	},
-	{
-		accessorKey: 'context',
-		header: 'Context',
-		cell: (ctx) => <TextCell ctx={ctx} />,
+		cell: ({ row }) => <DataTableTextCell value={getAuditEntityName(row.original)} />,
 	},
 	{
 		id: 'changes',
@@ -43,9 +45,9 @@ export const makeAuditColumns = (): ColumnDef<AuditTableViewRow>[] => [
 		},
 	},
 	{
-		accessorKey: 'actorName',
+		id: 'actorName',
 		header: 'Changed by',
-		cell: (ctx) => <TextCell ctx={ctx} />,
+		cell: ({ row }) => <DataTableTextCell value={getAuditActorName(row.original)} />,
 	},
 	{
 		accessorKey: 'source',

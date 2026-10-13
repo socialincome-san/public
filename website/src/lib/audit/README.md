@@ -34,12 +34,13 @@ app. `metadata` is flat context such as
 
 ## Reading
 
-`/portal/monitoring/audit` lists every audit event the user may see,
-newest first, each diffed against the entity's previous snapshot
-(`diffSnapshots`, paths like `paymentInformation.phone.number`).
-`getAuditTableView` (`modules/audit`) asks each audited entity type
-which entities the user may see; recipients answer with
-`getRecipientsForAuditLog` (recipients in programs they operate).
+`/portal/admin/audit-log` lists every audit event to admins, newest
+first, paginated in the database and filtered by entity type or a search
+on entity id and actor name. Each row is diffed against the entity's
+previous snapshot (`diffSnapshots`, paths like
+`paymentInformation.phone.number`). Deleted entities stay listed. Type
+label, entity name (read from the latest snapshot) and field labels come
+from `auditEntityTypes` in `src/components/audit/audit-summary.ts`.
 
 ## Notes
 
@@ -57,5 +58,6 @@ which entities the user may see; recipients answer with
    move the writes into `<module>.repository.write.ts`, with an
    `AuditedEntity` whose `findSnapshot` selects the fields to keep.
 3. Pass an `AuditContext` from the service.
-4. To show it in the audit log, add a loader to `auditLogSources` and
-   field labels to `src/components/audit/audit-summary.ts`.
+4. Add the type to `auditEntityTypes` in
+   `src/components/audit/audit-summary.ts`: label, name paths and field
+   labels.

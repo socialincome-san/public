@@ -16,10 +16,10 @@ export const AuditTableClient = ({
 }) => (
 	<ConfiguredDataTableClient
 		config={auditTableConfig}
-		titleInfoTooltip="Audit log of everything you may see, such as recipients in programs you operate."
+		titleInfoTooltip="Every recorded change to audited data, newest first."
 		rows={view.tableRows}
 		error={error}
 		query={query}
-		toolbarFilters={getAuditTableFilters({ query, entityTypes: view.entityTypeFilterOptions })}
+		toolbarFilters={getAuditTableFilters(query)}
 	/>
 );

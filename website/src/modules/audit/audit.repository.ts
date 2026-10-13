@@ -1,10 +1,23 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/database/prisma';
 
-type EntityScope = { entityType: string; entityIds: string[] };
-
-export const findAuditEventPage = async ({ scopes, skip, take }: { scopes: EntityScope[]; skip: number; take: number }) => {
-	const where = scopeWhere(scopes);
+export const findAuditEventPage = async ({
+	entityType,
+	search,
+	skip,
+	take,
+}: {
+	entityType?: string;
+	search: string;
+	skip: number;
+	take: number;
+}) => {
+	const where: Prisma.AuditEventWhereInput = {
+		entityType,
+		OR: search
+			? [{ entityId: { contains: search, mode: 'insensitive' } }, { actorName: { contains: search, mode: 'insensitive' } }]
+			: undefined,
+	};
 	const [events, totalCount] = await Promise.all([
 		prisma.auditEvent.findMany({
 			where,
@@ -19,16 +32,12 @@ export const findAuditEventPage = async ({ scopes, skip, take }: { scopes: Entit
 	return { events, totalCount };
 };
 
-export const findAuditEventHistory = async (scopes: EntityScope[]) =>
+export const findAuditEventHistory = async (entities: { entityType: string; entityId: string }[]) =>
 	prisma.auditEvent.findMany({
-		where: scopeWhere(scopes),
+		where: { OR: entities },
 		orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
 		select: auditEventSelect,
 	});
-
-const scopeWhere = (scopes: EntityScope[]): Prisma.AuditEventWhereInput => ({
-	OR: scopes.map(({ entityType, entityIds }) => ({ entityType, entityId: { in: entityIds } })),
-});
 
 const auditEventSelect = {
 	id: true,

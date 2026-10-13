@@ -2,36 +2,71 @@ import type { JsonValue } from '@/lib/audit/audit-types';
 import type { AuditTableViewRow } from '@/modules/audit/audit.types';
 import type { ChangeListItem } from '@socialincome/design-system/data-display/change-list/change-list';
 
-// Readable names for snapshot paths, per entity type. Unknown paths show as is.
-const fieldLabels: Record<string, Record<string, string>> = {
+type AuditEntityType = {
+	label: string;
+	/** Snapshot paths joined to the entity name; the entity id is the fallback. */
+	namePaths: string[];
+	/** Readable names for snapshot paths. Unknown paths show as is. */
+	fieldLabels: Record<string, string>;
+};
+
+const auditEntityTypes: Record<string, AuditEntityType> = {
 	recipient: {
-		programId: 'Program',
-		localPartnerId: 'Local partner',
-		startDate: 'Start date',
-		suspendedAt: 'Suspended at',
-		suspensionReason: 'Suspension reason',
-		successorName: 'Successor',
-		termsAccepted: 'Terms accepted',
-		'contact.firstName': 'First name',
-		'contact.lastName': 'Last name',
-		'contact.callingName': 'Calling name',
-		'contact.email': 'Email',
-		'contact.gender': 'Gender',
-		'contact.language': 'Language',
-		'contact.dateOfBirth': 'Date of birth',
-		'contact.profession': 'Profession',
-		'contact.phone.number': 'Phone',
-		'contact.phone.hasWhatsApp': 'WhatsApp',
-		'contact.address.street': 'Street',
-		'contact.address.number': 'House number',
-		'contact.address.city': 'City',
-		'contact.address.zip': 'ZIP',
-		'contact.address.country': 'Country',
-		'paymentInformation.code': 'Payment code',
-		'paymentInformation.mobileMoneyProviderId': 'Mobile money provider',
-		'paymentInformation.phone.number': 'Payment phone',
+		label: 'Recipient',
+		namePaths: ['contact.firstName', 'contact.lastName'],
+		fieldLabels: {
+			programId: 'Program',
+			localPartnerId: 'Local partner',
+			startDate: 'Start date',
+			suspendedAt: 'Suspended at',
+			suspensionReason: 'Suspension reason',
+			successorName: 'Successor',
+			termsAccepted: 'Terms accepted',
+			'contact.firstName': 'First name',
+			'contact.lastName': 'Last name',
+			'contact.callingName': 'Calling name',
+			'contact.email': 'Email',
+			'contact.gender': 'Gender',
+			'contact.language': 'Language',
+			'contact.dateOfBirth': 'Date of birth',
+			'contact.profession': 'Profession',
+			'contact.phone.number': 'Phone',
+			'contact.phone.hasWhatsApp': 'WhatsApp',
+			'contact.address.street': 'Street',
+			'contact.address.number': 'House number',
+			'contact.address.city': 'City',
+			'contact.address.zip': 'ZIP',
+			'contact.address.country': 'Country',
+			'paymentInformation.code': 'Payment code',
+			'paymentInformation.mobileMoneyProviderId': 'Mobile money provider',
+			'paymentInformation.phone.number': 'Payment phone',
+		},
 	},
 };
+
+export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));
+
+export const getAuditEntityTypeLabel = ({ entityType }: AuditTableViewRow): string =>
+	auditEntityTypes[entityType]?.label ?? entityType;
+
+export const getAuditEntityName = ({ entityType, entityId, latestSnapshot }: AuditTableViewRow): string =>
+	(auditEntityTypes[entityType]?.namePaths ?? [])
+		.map((path) => readPath(latestSnapshot, path))
+		.filter((part): part is string => typeof part === 'string' && part !== '')
+		.join(' ') || entityId;
+
+/** Self-updates from the app store no actor name; they are made by the entity itself. */
+export const getAuditActorName = (row: AuditTableViewRow): string =>
+	row.actorName ?? (row.actorType === row.entityType ? getAuditEntityName(row) : row.actorType);
+
+const readPath = (value: JsonValue, path: string): JsonValue =>
+	path
+		.split('.')
+		.reduce<JsonValue>(
+			(current, key) =>
+				current !== null && typeof current === 'object' && !Array.isArray(current) ? (current[key] ?? null) : null,
+			value,
+		);
 
 const formatValue = (value: JsonValue): string | null => {
 	if (value === null || value === '') {
@@ -52,7 +87,7 @@ const dateFormat = new Intl.DateTimeFormat('de-CH', { dateStyle: 'short' });
 export const getAuditChangeItems = ({ entityType, action, changes }: AuditTableViewRow): ChangeListItem[] =>
 	action === 'update'
 		? changes.map((change) => ({
-				label: fieldLabels[entityType]?.[change.path] ?? change.path,
+				label: auditEntityTypes[entityType]?.fieldLabels[change.path] ?? change.path,
 				previous: formatValue(change.old),
 				next: formatValue(change.new),
 			}))

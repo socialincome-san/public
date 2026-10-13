@@ -4,7 +4,6 @@ import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
-import type { AuditLogEntity } from '@/modules/audit/audit.types';
 import {
 	createFirebaseUserByPhoneNumber,
 	decodeFirebaseTokenFromRequest,
@@ -448,37 +447,6 @@ export const deleteRecipient = async (session: Session, recipientId: string): Pr
 		console.error(error);
 
 		return resultFail('Could not delete recipient. Please try again later.');
-	}
-};
-
-/** Recipients whose audit events the user may see: those in programs they operate. */
-export const getRecipientsForAuditLog = async (userId: string): Promise<Result<AuditLogEntity[]>> => {
-	try {
-		const accessResult = await getAccessiblePrograms(userId);
-		if (!accessResult.success) {
-			return resultFail(accessResult.error);
-		}
-
-		const programIds = accessResult.data
-			.filter(({ permission }) => permission === ProgramPermission.operator)
-			.map(({ programId }) => programId);
-		if (programIds.length === 0) {
-			return resultOk([]);
-		}
-
-		const recipients = await recipientRepository.findRecipientsForAuditLog(programIds);
-
-		return resultOk(
-			recipients.map((recipient) => ({
-				id: recipient.id,
-				name: `${recipient.contact.firstName} ${recipient.contact.lastName}`,
-				context: recipient.program?.name ?? '',
-			})),
-		);
-	} catch (error) {
-		console.error('Could not fetch recipients for the audit log', { userId, error });
-
-		return resultFail('Could not fetch recipients for the audit log');
 	}
 };
 

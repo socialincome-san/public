@@ -1,12 +1,4 @@
-import type { AuditChange } from '@/lib/audit/audit-types';
-
-/** An entity whose audit events a user may see, as the owning module describes it. */
-export type AuditLogEntity = {
-	id: string;
-	name: string;
-	/** Where it belongs, e.g. a recipient's program. */
-	context: string;
-};
+import type { AuditChange, JsonValue } from '@/lib/audit/audit-types';
 
 export type AuditTableQuery = {
 	page: number;
@@ -19,12 +11,12 @@ export type AuditTableViewRow = {
 	id: string;
 	createdAt: Date;
 	entityType: string;
-	entityTypeLabel: string;
 	entityId: string;
-	entityName: string;
-	context: string;
+	/** Most recent snapshot of the entity, also for deleted ones; the entity name is read from it. */
+	latestSnapshot: JsonValue;
 	action: string;
-	actorName: string;
+	actorType: string;
+	actorName: string | null;
 	source: string;
 	changes: AuditChange[];
 };
@@ -32,5 +24,4 @@ export type AuditTableViewRow = {
 export type AuditTableView = {
 	tableRows: AuditTableViewRow[];
 	totalCount: number;
-	entityTypeFilterOptions: { value: string; label: string }[];
 };

@@ -66,7 +66,8 @@ test('recipient create, edit and delete in the portal are audited', async ({ pag
 		snapshot: { successorName: 'Grace', contact: { firstName, lastName: 'Audited' } },
 	});
 
-	await page.goto(`/portal/monitoring/audit?page=1&pageSize=10&search=${encodeURIComponent(firstName)}`);
+	const auditLogUrl = `/portal/admin/audit-log?page=1&pageSize=10&search=${encodeURIComponent(recipientId)}`;
+	await page.goto(auditLogUrl);
 	const rows = page.getByTestId('data-table').getByRole('row').filter({ hasText: firstName });
 	await expect(rows).toHaveCount(2);
 	await expect(rows.filter({ hasText: 'Created' })).toHaveCount(1);
@@ -87,4 +88,8 @@ test('recipient create, edit and delete in the portal are audited', async ({ pag
 	const afterDelete = await findAuditEvents(recipientId);
 	expect(afterDelete).toHaveLength(3);
 	expect(afterDelete[2]).toMatchObject({ action: 'delete', actorId: 'user-si-power', snapshot: null });
+
+	await page.goto(auditLogUrl);
+	await expect(rows).toHaveCount(3);
+	await expect(rows.filter({ hasText: 'Deleted' })).toHaveCount(1);
 });
