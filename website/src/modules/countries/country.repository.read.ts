@@ -2,10 +2,9 @@ import type { Prisma } from '@/generated/prisma/client';
 import { CountryCode, NetworkTechnology } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
-import type { CountryCreateInput, CountryUpdateInput } from './country.schemas';
 import type { CountryTableQuery } from './country.types';
 
-const countryPayloadSelect = {
+export const countryPayloadSelect = {
 	id: true,
 	isoCode: true,
 	isActive: true,
@@ -176,88 +175,6 @@ export const findCountryByIsoCode = async (isoCode: CountryCode) =>
 		select: { id: true, isoCode: true },
 	});
 
-export const createCountry = async (input: CountryCreateInput) =>
-	prisma.country.create({
-		data: {
-			isoCode: input.isoCode,
-			isActive: input.isActive,
-			currency: input.currency,
-			defaultPayoutAmount: input.defaultPayoutAmount,
-			microfinanceIndex: input.microfinanceIndex ?? undefined,
-			cashConditionOverride: input.cashConditionOverride,
-			populationCoverage: input.populationCoverage ?? undefined,
-			latestSurveyDate: input.latestSurveyDate ?? undefined,
-			networkTechnology: input.networkTechnology ?? undefined,
-			mobileMoneyProviders: input.mobileMoneyProviderIds.length
-				? {
-						createMany: {
-							data: input.mobileMoneyProviderIds.map((mobileMoneyProviderId) => ({
-								mobileMoneyProviderId,
-							})),
-							skipDuplicates: true,
-						},
-					}
-				: undefined,
-			mobileMoneyConditionOverride: input.mobileMoneyConditionOverride,
-			sanctions: input.sanctions,
-			microfinanceSourceLink: input.microfinanceSourceLink
-				? {
-						create: input.microfinanceSourceLink,
-					}
-				: undefined,
-			networkSourceLink: input.networkSourceLink
-				? {
-						create: input.networkSourceLink,
-					}
-				: undefined,
-		},
-		select: countryPayloadSelect,
-	});
-
-export const updateCountry = async (input: CountryUpdateInput) =>
-	prisma.country.update({
-		where: { id: input.id },
-		data: {
-			isoCode: input.isoCode,
-			isActive: input.isActive,
-			currency: input.currency,
-			defaultPayoutAmount: input.defaultPayoutAmount,
-			microfinanceIndex: input.microfinanceIndex,
-			cashConditionOverride: input.cashConditionOverride,
-			populationCoverage: input.populationCoverage,
-			latestSurveyDate: input.latestSurveyDate,
-			networkTechnology: input.networkTechnology ?? undefined,
-			mobileMoneyProviders: {
-				deleteMany: {},
-				createMany: {
-					data: input.mobileMoneyProviderIds.map((mobileMoneyProviderId) => ({
-						mobileMoneyProviderId,
-					})),
-					skipDuplicates: true,
-				},
-			},
-			mobileMoneyConditionOverride: input.mobileMoneyConditionOverride,
-			sanctions: input.sanctions,
-			microfinanceSourceLink: input.microfinanceSourceLink
-				? {
-						upsert: {
-							create: input.microfinanceSourceLink,
-							update: input.microfinanceSourceLink,
-						},
-					}
-				: { disconnect: true },
-			networkSourceLink: input.networkSourceLink
-				? {
-						upsert: {
-							create: input.networkSourceLink,
-							update: input.networkSourceLink,
-						},
-					}
-				: { disconnect: true },
-		},
-		select: countryPayloadSelect,
-	});
-
 export const findCountryForDeletion = async (countryId: string) =>
 	prisma.country.findUnique({
 		where: { id: countryId },
@@ -269,12 +186,6 @@ export const findCountryForDeletion = async (countryId: string) =>
 				},
 			},
 		},
-	});
-
-export const deleteCountry = async (countryId: string) =>
-	prisma.country.delete({
-		where: { id: countryId },
-		select: { id: true },
 	});
 
 const buildCountryOrderBy = (query: CountryTableQuery): Prisma.CountryOrderByWithRelationInput[] => {

@@ -1,10 +1,13 @@
 import { CountryCode, type NetworkTechnology, type SanctionRegime } from '@/generated/prisma/enums';
 import { fetchWorldBankIndicator } from '@/integrations/world-bank/world-bank.integration';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode, isValidCountryCode } from '@/lib/types/country';
 import { getUnassignedRecipientCountries } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
-import * as countryRepository from './country.repository';
+import type { UserSession } from '@/modules/users/user.types';
+import * as countryRepository from './country.repository.read';
+import * as countryWriteRepository from './country.repository.write';
 import type { CountryCreateInput, CountryUpdateInput } from './country.schemas';
 import {
 	CountryCondition,
@@ -346,9 +349,9 @@ export const getCountryStatisticsComparison = async (
 	return resultOk(rows);
 };
 
-export const createCountry = async (userId: string, input: CountryCreateInput): Promise<Result<CountryPayload>> => {
+export const createCountry = async (session: UserSession, input: CountryCreateInput): Promise<Result<CountryPayload>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -358,7 +361,7 @@ export const createCountry = async (userId: string, input: CountryCreateInput): 
 			return resultFail('A country with this ISO code already exists.');
 		}
 
-		return resultOk(toCountryPayload(await countryRepository.createCountry(input)));
+		return resultOk(toCountryPayload(await countryWriteRepository.createCountry(getSessionAuditContext(session), input)));
 	} catch (error) {
 		console.error('Could not create country', { error });
 
@@ -366,9 +369,9 @@ export const createCountry = async (userId: string, input: CountryCreateInput): 
 	}
 };
 
-export const updateCountry = async (userId: string, input: CountryUpdateInput): Promise<Result<CountryPayload>> => {
+export const updateCountry = async (session: UserSession, input: CountryUpdateInput): Promise<Result<CountryPayload>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -384,7 +387,7 @@ export const updateCountry = async (userId: string, input: CountryUpdateInput): 
 			}
 		}
 
-		return resultOk(toCountryPayload(await countryRepository.updateCountry(input)));
+		return resultOk(toCountryPayload(await countryWriteRepository.updateCountry(getSessionAuditContext(session), input)));
 	} catch (error) {
 		console.error('Could not update country', { countryId: input.id, error });
 
@@ -392,9 +395,9 @@ export const updateCountry = async (userId: string, input: CountryUpdateInput): 
 	}
 };
 
-export const deleteCountry = async (userId: string, countryId: string): Promise<Result<{ id: string }>> => {
+export const deleteCountry = async (session: UserSession, countryId: string): Promise<Result<{ id: string }>> => {
 	try {
-		const isAdminResult = await isAdmin(userId);
+		const isAdminResult = await isAdmin(session.id);
 		if (!isAdminResult.success) {
 			return resultFail(isAdminResult.error);
 		}
@@ -407,7 +410,7 @@ export const deleteCountry = async (userId: string, countryId: string): Promise<
 			return resultFail('Cannot delete country because it is still used by programs');
 		}
 
-		await countryRepository.deleteCountry(countryId);
+		await countryWriteRepository.deleteCountry(getSessionAuditContext(session), countryId);
 
 		return resultOk({ id: countryId });
 	} catch (error) {

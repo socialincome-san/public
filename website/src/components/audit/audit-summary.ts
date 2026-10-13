@@ -201,6 +201,28 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			amountChf: 'Amount (CHF)',
 		},
 	},
+	country: {
+		label: 'Country',
+		namePaths: ['isoCode'],
+		fieldLabels: {
+			isoCode: 'ISO code',
+			isActive: 'Active',
+			currency: 'Currency',
+			defaultPayoutAmount: 'Default payout amount',
+			cashConditionOverride: 'Cash condition override',
+			microfinanceIndex: 'Microfinance index',
+			latestSurveyDate: 'Latest survey date',
+			'microfinanceSourceLink.href': 'Microfinance source link',
+			'microfinanceSourceLink.text': 'Microfinance source text',
+			mobileMoneyConditionOverride: 'Mobile money condition override',
+			mobileMoneyProviders: 'Mobile money providers',
+			populationCoverage: 'Population coverage',
+			networkTechnology: 'Network technology',
+			'networkSourceLink.href': 'Network source link',
+			'networkSourceLink.text': 'Network source text',
+			sanctions: 'Sanctions',
+		},
+	},
 };
 
 export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));
