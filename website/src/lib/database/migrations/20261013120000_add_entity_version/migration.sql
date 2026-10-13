@@ -6,6 +6,7 @@ CREATE TABLE "entity_version" (
     "action" TEXT NOT NULL,
     "actor_type" TEXT NOT NULL,
     "actor_id" TEXT NOT NULL,
+    "actor_name" TEXT,
     "source" TEXT NOT NULL,
     "snapshot" JSONB,
     "metadata" JSONB,

@@ -8,9 +8,9 @@ const mockWriteRepository = {
 	deleteRecipient: jest.fn(),
 };
 const mockFindRecipientVersions = jest.fn();
-const mockFindRecipientOwnership = jest.fn();
+const mockFindRecipientsForChanges = jest.fn();
+const mockFindRecipientChangePage = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
-const mockIsAdmin = jest.fn();
 const mockCreateFirebaseUser = jest.fn();
 const mockDeleteFirebaseUser = jest.fn();
 
@@ -37,7 +37,8 @@ jest.mock('./recipient.repository', () => ({
 			contact: { phoneId: null, addressId: null },
 			paymentInformation: { phone: { id: 'phone-1', number: '+23270000001' } },
 		}),
-	findRecipientOwnership: mockFindRecipientOwnership,
+	findRecipientsForChanges: mockFindRecipientsForChanges,
+	findRecipientChangePage: mockFindRecipientChangePage,
 	findRecipientVersions: mockFindRecipientVersions,
 	findContactByEmail: () => Promise.resolve(null),
 	findPhoneByNumber: () => Promise.resolve(null),
@@ -51,7 +52,6 @@ jest.mock('@/modules/auth/auth.service', () => ({
 jest.mock('@/modules/program-access/program-access.service', () => ({
 	getAccessiblePrograms: mockGetAccessiblePrograms,
 }));
-jest.mock('@/modules/users/user.service', () => ({ isAdmin: mockIsAdmin }));
 jest.mock('@/modules/local-partners/local-partner.service', () => ({ getLocalPartnerOptions: jest.fn() }));
 jest.mock('@/modules/programs/program-reference.service', () => ({ getProgramNameById: jest.fn() }));
 
@@ -61,7 +61,7 @@ import type { UpdateRecipientInput } from './recipient.schemas';
 import {
 	createRecipient,
 	deleteRecipient,
-	getRecipientAuditTrail,
+	getRecipientChangeTableView,
 	importRecipientsCsv,
 	removeRecipientFromProgram,
 	updateRecipient,
@@ -100,7 +100,7 @@ const partner: LocalPartnerSession = {
 	focuses: [],
 };
 
-const portal = { actor: { type: 'user', id: 'user-1' }, source: 'portal' };
+const portal = { actor: { type: 'user', id: 'user-1', name: null }, source: 'portal' };
 
 const input: UpdateRecipientInput = {
 	id: 'recipient-1',
@@ -148,7 +148,7 @@ describe('recipient write attribution', () => {
 
 		expect(mockWriteRepository.updateRecipient.mock.calls.map(([audit]: unknown[]) => audit)).toEqual([
 			portal,
-			{ actor: { type: 'local-partner', id: 'partner-1' }, source: 'partner-space' },
+			{ actor: { type: 'local-partner', id: 'partner-1', name: 'Partner' }, source: 'partner-space' },
 		]);
 	});
 
@@ -199,76 +199,91 @@ describe('recipient write attribution', () => {
 	});
 });
 
-describe('getRecipientAuditTrail', () => {
-	const version = (id: string, action: string, snapshot: object | null) => ({
+describe('getRecipientChangeTableView', () => {
+	const version = (id: string, entityId: string, action: string, snapshot: object | null, actorName: string | null) => ({
 		id,
+		entityId,
 		action,
-		actorType: 'user',
-		actorId: 'user-1',
-		source: 'portal',
+		actorType: actorName ? 'user' : 'recipient',
+		actorName,
+		source: actorName ? 'portal' : 'mobile-app',
 		snapshot,
-		metadata: null,
 		createdAt: new Date('2026-10-01T00:00:00.000Z'),
 	});
+	const query = { page: 1, pageSize: 10, search: '' };
 
 	beforeEach(() => {
 		jest.clearAllMocks();
-		mockFindRecipientOwnership.mockResolvedValue({ id: 'recipient-1', programId: 'program-1', localPartnerId: 'partner-1' });
-		mockGetAccessiblePrograms.mockResolvedValue({ success: true, data: [] });
-		mockIsAdmin.mockResolvedValue({ success: false, error: 'Permission denied' });
-		mockFindRecipientVersions.mockResolvedValue([
-			version('v1', 'create', { successorName: null, paymentInformation: { phone: { number: '+232111' } } }),
-			version('v2', 'update', { successorName: null, paymentInformation: { phone: { number: '+232111' } } }),
-			version('v3', 'update', { successorName: 'Grace', paymentInformation: { phone: { number: '+232222' } } }),
+		mockGetAccessiblePrograms.mockResolvedValue({
+			success: true,
+			data: [
+				{ programId: 'program-1', programName: 'Program 1', permission: ProgramPermission.operator },
+				{ programId: 'program-2', programName: 'Program 2', permission: ProgramPermission.owner },
+			],
+		});
+		mockFindRecipientsForChanges.mockResolvedValue([
+			{
+				id: 'recipient-1',
+				contact: { firstName: 'Ada', lastName: 'Lovelace' },
+				program: { id: 'program-1', name: 'Program 1' },
+			},
+			{
+				id: 'recipient-2',
+				contact: { firstName: 'Grace', lastName: 'Hopper' },
+				program: { id: 'program-1', name: 'Program 1' },
+			},
 		]);
+		const history = [
+			version('v1', 'recipient-1', 'create', { paymentInformation: { phone: { number: '+232111' } } }, 'Max Operator'),
+			version('v2', 'recipient-1', 'update', { paymentInformation: { phone: { number: '+232222' } } }, null),
+		];
+		mockFindRecipientChangePage.mockResolvedValue({ versions: [history[1]], totalCount: 2 });
+		mockFindRecipientVersions.mockResolvedValue(history);
 	});
 
-	test('computes changes between versions, newest first, skipping updates without changes', async () => {
-		const result = await getRecipientAuditTrail(partner, 'recipient-1');
+	test('only covers recipients in programs the user operates', async () => {
+		await getRecipientChangeTableView('user-1', query);
 
-		expect(result.success && result.data.map(({ id, actor, changes }) => ({ id, actor, changes }))).toEqual([
-			{
-				id: 'v3',
-				actor: { type: 'user', id: 'user-1' },
-				changes: [
-					{ path: 'successorName', old: null, new: 'Grace' },
-					{ path: 'paymentInformation.phone.number', old: '+232111', new: '+232222' },
+		expect(mockFindRecipientsForChanges).toHaveBeenCalledWith(['program-1']);
+	});
+
+	test('returns nothing without operated programs', async () => {
+		mockGetAccessiblePrograms.mockResolvedValue({
+			success: true,
+			data: [{ programId: 'program-2', programName: 'Program 2', permission: ProgramPermission.owner }],
+		});
+
+		await expect(getRecipientChangeTableView('user-1', query)).resolves.toMatchObject({
+			success: true,
+			data: { tableRows: [], totalCount: 0 },
+		});
+		expect(mockFindRecipientChangePage).not.toHaveBeenCalled();
+	});
+
+	test('diffs each row against the previous version, also from an earlier page', async () => {
+		const result = await getRecipientChangeTableView('user-1', query);
+
+		expect(result).toMatchObject({
+			success: true,
+			data: {
+				totalCount: 2,
+				tableRows: [
+					{
+						id: 'v2',
+						recipientName: 'Ada Lovelace',
+						programName: 'Program 1',
+						actorName: 'Ada Lovelace',
+						source: 'mobile-app',
+						changes: [{ path: 'paymentInformation.phone.number', old: '+232111', new: '+232222' }],
+					},
 				],
 			},
-			{
-				id: 'v1',
-				actor: { type: 'user', id: 'user-1' },
-				changes: [{ path: 'paymentInformation.phone.number', old: null, new: '+232111' }],
-			},
-		]);
-	});
-
-	test('diffs the first change of an older recipient against its baseline without listing it', async () => {
-		mockFindRecipientVersions.mockResolvedValue([
-			version('v1', 'baseline', { successorName: null }),
-			version('v2', 'update', { successorName: 'Grace' }),
-		]);
-
-		const result = await getRecipientAuditTrail(partner, 'recipient-1');
-
-		expect(result.success && result.data.map(({ id, changes }) => ({ id, changes }))).toEqual([
-			{ id: 'v2', changes: [{ path: 'successorName', old: null, new: 'Grace' }] },
-		]);
-	});
-
-	test('does not read versions for sessions without access', async () => {
-		await expect(getRecipientAuditTrail(operator, 'recipient-1')).resolves.toMatchObject({ success: false });
-		await expect(getRecipientAuditTrail({ ...partner, id: 'partner-2' }, 'recipient-1')).resolves.toMatchObject({
-			success: false,
 		});
-		expect(mockFindRecipientVersions).not.toHaveBeenCalled();
 	});
 
-	test('lets only admins read the trail of a deleted recipient', async () => {
-		mockFindRecipientOwnership.mockResolvedValue(null);
-		await expect(getRecipientAuditTrail(operator, 'recipient-1')).resolves.toMatchObject({ success: false });
+	test('narrows to searched and filtered recipients before paging', async () => {
+		await getRecipientChangeTableView('user-1', { ...query, page: 2, search: 'grace' });
 
-		mockIsAdmin.mockResolvedValue({ success: true, data: true });
-		await expect(getRecipientAuditTrail(operator, 'recipient-1')).resolves.toMatchObject({ success: true });
+		expect(mockFindRecipientChangePage).toHaveBeenCalledWith({ recipientIds: ['recipient-2'], skip: 10, take: 10 });
 	});
 });

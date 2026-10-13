@@ -5,6 +5,8 @@ export type AuditContext = {
 	actor: {
 		type: 'user' | 'local-partner' | 'contributor' | 'recipient' | 'system';
 		id: string;
+		/** Display name at the time of the write. */
+		name?: string | null;
 	};
 	source: 'portal' | 'partner-space' | 'mobile-app' | 'website' | 'system';
 	metadata?: Record<string, string | number | boolean | null>;

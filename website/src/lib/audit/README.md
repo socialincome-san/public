@@ -23,10 +23,8 @@ export const updateRecipient = async (audit: AuditContext, input, context) =>
 `auditedWrite` runs the write, reads the snapshot
 (`recipientVersionSelect`, including contact, phones, address and
 payment information) and stores it in the same transaction. If storing
-the version fails, the write rolls back. A delete stores a version
-without snapshot. Recipients that existed before versioning get a
-`baseline` version of their current state on their first write, so that
-write diffs against it.
+the version fails, the write rolls back. Updates that change nothing
+store no version; a delete stores a version without snapshot.
 
 Services pass who is acting: `getSessionAuditContext(session)` for
 portal and partner space,
@@ -36,10 +34,11 @@ app. `metadata` is flat context such as
 
 ## Reading
 
-`getRecipientAuditTrail(session, recipientId)` loads the versions, diffs
-each against the previous one (`diffVersions`, paths like
-`paymentInformation.phone.number`) and returns them newest first, for
-whoever may read the recipient (only admins once it is deleted).
+`getRecipientChangeTableView(userId, query)` lists versions of
+recipients in programs the user operates, newest first, each diffed
+against the recipient's previous version (`diffVersions`, paths like
+`paymentInformation.phone.number`). It backs the portal home teaser and
+`/portal/monitoring/recipient-changes`.
 
 ## Notes
 

@@ -17,13 +17,11 @@ import { getLocalPartnerFilterOption, getLocalPartnerOptions } from '@/modules/l
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
 import { getProgramNameById } from '@/modules/programs/program-reference.service';
-import { isAdmin } from '@/modules/users/user.service';
 import { differenceInCalendarDays, startOfDay } from 'date-fns';
 import {
 	canCreateRecipient,
 	canExportRecipients,
 	canReadRecipient,
-	canReadRecipientAuditTrail,
 	canRemoveRecipientFromProgram,
 	canUpdateRecipient,
 	hasOperatorAccess,
@@ -43,7 +41,9 @@ import {
 	OBFUSCATED_SENTINEL,
 	PublicRecipientTableView,
 	PublicRecipientTableViewRow,
-	RecipientAuditEntry,
+	RecipientChangeTableQuery,
+	RecipientChangeTableView,
+	RecipientChangeTableViewRow,
 	RecipientFilterOption,
 	RecipientFormOptions,
 	RecipientLifecycleStatus,
@@ -455,40 +455,78 @@ export const deleteRecipient = async (session: Session, recipientId: string): Pr
 };
 
 /** Newest audit events of a recipient, for whoever may read its trail. */
-/** Changes of a recipient, newest first, computed from its stored versions. */
-export const getRecipientAuditTrail = async (
-	session: Session,
-	recipientId: string,
-): Promise<Result<RecipientAuditEntry[]>> => {
+/** Recipient changes in programs the user operates, newest first, computed from stored versions. */
+export const getRecipientChangeTableView = async (
+	userId: string,
+	query: RecipientChangeTableQuery,
+): Promise<Result<RecipientChangeTableView>> => {
 	try {
-		const recipient = await recipientRepository.findRecipientOwnership(recipientId);
-		const accessResult = recipient?.programId
-			? await getActorAccessiblePrograms(session)
-			: resultOk<AccessibleProgram[]>([]);
+		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
-		const isAdminUser = session.type === 'user' && !recipient?.programId && (await isAdmin(session.id)).success;
-		if (!canReadRecipientAuditTrail(session, recipient, accessResult.data, isAdminUser)) {
-			return resultFail('Permission denied');
+
+		const programs = accessResult.data.filter(({ permission }) => permission === ProgramPermission.operator);
+		const programFilterOptions = getProgramFilterOptions(programs);
+		const sources =
+			programs.length > 0
+				? await recipientRepository.findRecipientsForChanges(programs.map(({ programId }) => programId))
+				: [];
+		const search = query.search.trim().toLowerCase();
+		const recipients = sources
+			.map((recipient) => ({
+				id: recipient.id,
+				name: `${recipient.contact.firstName} ${recipient.contact.lastName}`,
+				programId: recipient.program?.id,
+				programName: recipient.program?.name ?? '',
+			}))
+			.filter(
+				(recipient) =>
+					(!query.programId || recipient.programId === query.programId) &&
+					(!query.recipientId || recipient.id === query.recipientId) &&
+					(!search || recipient.id.toLowerCase().includes(search) || recipient.name.toLowerCase().includes(search)),
+			);
+		const recipientFilterOptions = query.recipientId
+			? recipients.filter(({ id }) => id === query.recipientId).map(({ id, name }) => ({ id, name }))
+			: [];
+		if (recipients.length === 0) {
+			return resultOk({ tableRows: [], totalCount: 0, programFilterOptions, recipientFilterOptions });
 		}
 
-		const versions = await recipientRepository.findRecipientVersions(recipientId);
-		const entries = versions.map(({ actorType, actorId, snapshot, ...version }, index) => ({
-			...version,
-			actor: { type: actorType, id: actorId },
-			changes: diffVersions(versions[index - 1]?.snapshot ?? null, snapshot),
-		}));
+		const { versions, totalCount } = await recipientRepository.findRecipientChangePage({
+			recipientIds: recipients.map(({ id }) => id),
+			skip: (query.page - 1) * query.pageSize,
+			take: query.pageSize,
+		});
+		// The previous version of a row can be on another page, so load the
+		// full history of the recipients on this one.
+		const history = await recipientRepository.findRecipientVersions([...new Set(versions.map(({ entityId }) => entityId))]);
+		const recipientsById = new Map(recipients.map((recipient) => [recipient.id, recipient]));
+		const tableRows = versions.map((version): RecipientChangeTableViewRow => {
+			const recipient = recipientsById.get(version.entityId);
+			const recipientHistory = history.filter(({ entityId }) => entityId === version.entityId);
+			const previous = recipientHistory[recipientHistory.findIndex(({ id }) => id === version.id) - 1];
 
-		return resultOk(
-			entries
-				.filter(({ action, changes }) => action !== 'baseline' && (action !== 'update' || changes.length > 0))
-				.reverse(),
-		);
+			return {
+				id: version.id,
+				createdAt: version.createdAt,
+				recipientId: version.entityId,
+				recipientName: recipient?.name ?? '',
+				programName: recipient?.programName ?? '',
+				action: version.action,
+				actorName: version.actorName ?? (version.actorType === 'recipient' ? (recipient?.name ?? '') : version.actorType),
+				source: version.source,
+				// Recipients created before versioning have no previous version; their
+				// first one would list every field, so it shows no changes instead.
+				changes: previous || version.action !== 'update' ? diffVersions(previous?.snapshot ?? null, version.snapshot) : [],
+			};
+		});
+
+		return resultOk({ tableRows, totalCount, programFilterOptions, recipientFilterOptions });
 	} catch (error) {
-		console.error('Could not fetch recipient audit trail', { recipientId, error });
+		console.error('Could not fetch recipient changes', { userId, error });
 
-		return resultFail('Could not fetch recipient audit trail');
+		return resultFail('Could not fetch recipient changes');
 	}
 };
 

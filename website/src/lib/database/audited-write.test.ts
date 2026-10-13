@@ -1,4 +1,5 @@
-const mockCommitted: { rows: Map<string, string>; versions: unknown[] } = { rows: new Map(), versions: [] };
+type StoredVersion = { entityId: string; snapshot?: unknown };
+const mockCommitted: { rows: Map<string, string>; versions: StoredVersion[] } = { rows: new Map(), versions: [] };
 const mockFailVersionInsert = { value: false };
 const mockTransactionRows = new WeakMap<object, Map<string, string>>();
 
@@ -8,11 +9,12 @@ jest.mock('./prisma', () => ({
 	prisma: {
 		$transaction: async (work: (transaction: unknown) => Promise<unknown>) => {
 			const rows = new Map(mockCommitted.rows);
-			const versions: unknown[] = [];
+			const versions: StoredVersion[] = [];
 			const transaction = {
 				entityVersion: {
-					findFirst: () => Promise.resolve(mockCommitted.versions.length > 0 ? { id: 'version' } : null),
-					create: ({ data }: { data: unknown }) => {
+					findFirst: ({ where }: { where: { entityId: string } }) =>
+						Promise.resolve(mockCommitted.versions.filter(({ entityId }) => entityId === where.entityId).at(-1) ?? null),
+					create: ({ data }: { data: StoredVersion }) => {
 						if (mockFailVersionInsert.value) {
 							return Promise.reject(new Error('Version insert failed'));
 						}
@@ -53,7 +55,11 @@ const entity: VersionedEntity = {
 	},
 };
 
-const portal: AuditContext = { actor: { type: 'user', id: 'user-1' }, source: 'portal', metadata: { operation: 'test' } };
+const portal: AuditContext = {
+	actor: { type: 'user', id: 'user-1', name: 'Max Operator' },
+	source: 'portal',
+	metadata: { operation: 'test' },
+};
 
 describe('auditedWrite', () => {
 	beforeEach(() => {
@@ -74,18 +80,10 @@ describe('auditedWrite', () => {
 			{
 				entityType: 'thing',
 				entityId: 'a',
-				action: 'baseline',
-				actorType: 'system',
-				actorId: 'baseline',
-				source: 'system',
-				snapshot: { name: 'Ada' },
-			},
-			{
-				entityType: 'thing',
-				entityId: 'a',
 				action: 'update',
 				actorType: 'user',
 				actorId: 'user-1',
+				actorName: 'Max Operator',
 				source: 'portal',
 				snapshot: { name: 'Grace' },
 				metadata: { operation: 'test' },
@@ -110,13 +108,10 @@ describe('auditedWrite', () => {
 			return Promise.resolve();
 		});
 
-		expect(mockCommitted.versions).toMatchObject([
-			{ action: 'baseline', snapshot: { name: 'Ada' } },
-			{ entityId: 'a', action: 'delete', snapshot: undefined },
-		]);
+		expect(mockCommitted.versions).toMatchObject([{ entityId: 'a', action: 'delete', snapshot: undefined }]);
 	});
 
-	test('stores the baseline only before the first versioned write', async () => {
+	test('stores no version for an update that changes nothing', async () => {
 		const rename = (name: string) =>
 			auditedWrite({ entity, context: portal, action: 'update', entityId: 'a' }, (transaction) => {
 				rowsOf(transaction).set('a', name);
@@ -125,9 +120,9 @@ describe('auditedWrite', () => {
 			});
 
 		await rename('Grace');
-		await rename('Hedy');
+		await rename('Grace');
 
-		expect(mockCommitted.versions).toMatchObject([{ action: 'baseline' }, { action: 'update' }, { action: 'update' }]);
+		expect(mockCommitted.versions).toMatchObject([{ snapshot: { name: 'Grace' } }]);
 	});
 
 	test('rolls back the write when the version cannot be stored', async () => {

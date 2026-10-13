@@ -1,3 +1,4 @@
+import { RecentRecipientChanges } from '@/app/portal/recent-recipient-changes';
 import { UserPrograms } from '@/app/portal/user-programs';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { requireSession } from '@/server/session';
@@ -31,6 +32,7 @@ const PortalDataLoader = async () => {
 				</div>
 
 				<div className="space-y-16">
+					{user.hasAnyOperatorProgramAccess && <RecentRecipientChanges userId={user.id} />}
 					<UserPrograms />
 				</div>
 			</BlockWrapper>

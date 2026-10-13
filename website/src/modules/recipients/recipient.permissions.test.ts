@@ -2,7 +2,6 @@ import { ProgramPermission } from '@/generated/prisma/enums';
 import {
 	canCreateRecipient,
 	canReadRecipient,
-	canReadRecipientAuditTrail,
 	canRemoveRecipientFromProgram,
 	canUpdateRecipient,
 } from './recipient.permissions';
@@ -59,21 +58,5 @@ describe('recipient permissions', () => {
 		expect(canRemoveRecipientFromProgram({ type: 'local-partner', id: 'partner-1' }, 'program-1', operatorAccess)).toBe(
 			false,
 		);
-	});
-
-	test('limits audit trails of candidates and deleted recipients to admins and owning partners', () => {
-		const user = { type: 'user' as const, id: 'user-1' };
-		const partner = { type: 'local-partner' as const, id: 'partner-1' };
-		const candidate = { programId: null, localPartnerId: 'partner-1' };
-
-		expect(
-			canReadRecipientAuditTrail(user, { programId: 'program-1', localPartnerId: 'partner-1' }, operatorAccess, false),
-		).toBe(true);
-		expect(canReadRecipientAuditTrail(user, candidate, operatorAccess, false)).toBe(false);
-		expect(canReadRecipientAuditTrail(user, candidate, [], true)).toBe(true);
-		expect(canReadRecipientAuditTrail(partner, candidate, [], false)).toBe(true);
-		expect(canReadRecipientAuditTrail(user, null, operatorAccess, false)).toBe(false);
-		expect(canReadRecipientAuditTrail(user, null, [], true)).toBe(true);
-		expect(canReadRecipientAuditTrail(partner, null, [], false)).toBe(false);
 	});
 });
