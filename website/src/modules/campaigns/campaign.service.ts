@@ -219,7 +219,7 @@ export const getEditableCampaignOptions = async (userId: string): Promise<Result
 		}
 
 		const campaigns = await campaignRepository.findEditableCampaignOptions(programIds);
-		const options = campaigns.flatMap((campaign) => (campaign.slug ? [{ id: campaign.id, name: campaign.slug }] : []));
+		const options = campaigns.map((campaign) => ({ id: campaign.id, name: campaign.slug?.trim() || campaign.id }));
 
 		return resultOk(options);
 	} catch (error) {
@@ -269,9 +269,6 @@ export const getCampaignTableEntries = async (userId: string): Promise<Result<Ca
 		const entries: CampaignTableEntry[] = [];
 		for (const campaign of campaigns) {
 			const slug = campaign.slug?.trim();
-			if (!slug) {
-				continue;
-			}
 			const { amountCollected } = await computeCollectedAmount(
 				campaign.contributions,
 				campaign.additionalAmountChf,
@@ -282,7 +279,7 @@ export const getCampaignTableEntries = async (userId: string): Promise<Result<Ca
 
 			entries.push({
 				id: campaign.id,
-				slug,
+				slug: slug || null,
 				currency: campaign.currency,
 				endDate: campaign.endDate,
 				isActive: isCampaignActive({
