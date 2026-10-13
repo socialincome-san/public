@@ -46,10 +46,10 @@ export const makeCampaignColumns = (): ColumnDef<CampaignTableViewRow>[] => {
 			accessorFn: (row) => {
 				const origin = typeof window !== 'undefined' ? window.location.origin : '';
 
-				return `${origin}${row.link}`;
+				return row.link ? `${origin}${row.link}` : null;
 			},
 			header: (ctx) => <SortableHeader ctx={ctx}>Link</SortableHeader>,
-			cell: (ctx) => <CopyUrlCell ctx={ctx} />,
+			cell: (ctx) => (ctx.getValue() ? <CopyUrlCell ctx={ctx} /> : null),
 		},
 		{
 			id: 'actions',

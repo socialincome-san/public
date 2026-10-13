@@ -216,11 +216,10 @@ export const getPaginatedTableView = async (
 						.map((campaign) => [campaign.program.id, { value: campaign.program.id, label: campaign.program.name }]),
 				).values(),
 			),
-			campaigns: campaigns.flatMap((campaign) =>
-				campaign.slug
-					? [{ value: campaign.id, label: getStoryblokCampaignTitleForSlug(campaignStories, campaign.slug) }]
-					: [],
-			),
+			campaigns: campaigns.map((campaign) => ({
+				value: campaign.id,
+				label: getCampaignLabel(campaignStories, campaign),
+			})),
 			paymentEventTypes: PAYMENT_EVENT_TYPES.map((type) => ({
 				value: type,
 				label:
@@ -241,12 +240,8 @@ export const getPaginatedTableView = async (
 
 		const campaignIdsMatchingTitle = search
 			? campaigns
-					.filter(
-						(campaign) =>
-							campaign.slug &&
-							getStoryblokCampaignTitleForSlug(campaignStories, campaign.slug)
-								.toLocaleLowerCase()
-								.includes(search.toLocaleLowerCase()),
+					.filter((campaign) =>
+						getCampaignLabel(campaignStories, campaign).toLocaleLowerCase().includes(search.toLocaleLowerCase()),
 					)
 					.map((campaign) => campaign.id)
 			: [];
@@ -268,9 +263,7 @@ export const getPaginatedTableView = async (
 			amount: contribution.amount ? Number(contribution.amount) : 0,
 			currency: contribution.currency,
 			campaignId: contribution.campaign.id,
-			campaignTitle: contribution.campaign.slug
-				? getStoryblokCampaignTitleForSlug(campaignStories, contribution.campaign.slug)
-				: '',
+			campaignTitle: getCampaignLabel(campaignStories, contribution.campaign),
 			paymentEventType: contribution.paymentEvent?.type ?? null,
 			programName: contribution.campaign.program?.name ?? null,
 			createdAt: contribution.createdAt,
@@ -448,9 +441,10 @@ export const getContributionFormOptions = async (userId: string): Promise<Result
 
 		return resultOk({
 			contributorOptions: contributorOptionsResult.data,
-			campaignOptions: campaigns.flatMap((campaign) =>
-				campaign.slug ? [{ id: campaign.id, name: getStoryblokCampaignTitleForSlug(campaignStories, campaign.slug) }] : [],
-			),
+			campaignOptions: campaigns.map((campaign) => ({
+				id: campaign.id,
+				name: getCampaignLabel(campaignStories, campaign),
+			})),
 		});
 	} catch (error) {
 		console.error(error);
@@ -631,6 +625,12 @@ const getStoryblokCampaignTitleForSlug = (campaigns: ISbStoryData<Campaign>[], s
 	const campaign = campaigns.find((story) => getCampaignPortalSlug(story.content) === slug);
 
 	return campaign ? getCampaignTitle(campaign.content) : slug;
+};
+
+const getCampaignLabel = (campaigns: ISbStoryData<Campaign>[], campaign: { id: string; slug: string | null }): string => {
+	const slug = campaign.slug?.trim();
+
+	return slug ? getStoryblokCampaignTitleForSlug(campaigns, slug) : `Campaign ${campaign.id}`;
 };
 
 const toContributionPayload = (contribution: {

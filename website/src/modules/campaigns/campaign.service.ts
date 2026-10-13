@@ -199,36 +199,6 @@ export const getPublicCampaignsWithStats = async (
 	});
 };
 
-export const getEditableCampaignOptions = async (userId: string): Promise<Result<CampaignOption[]>> => {
-	try {
-		const accessibleProgramsResult = await getAccessiblePrograms(userId);
-		if (!accessibleProgramsResult.success) {
-			return resultFail(accessibleProgramsResult.error);
-		}
-		if (!canListCampaigns(accessibleProgramsResult.data)) {
-			return resultOk([]);
-		}
-
-		const programIds = uniqueIds(
-			accessibleProgramsResult.data
-				.filter((access) => access.permission === ProgramPermission.operator)
-				.map((access) => access.programId),
-		);
-		if (programIds.length === 0) {
-			return resultOk([]);
-		}
-
-		const campaigns = await campaignRepository.findEditableCampaignOptions(programIds);
-		const options = campaigns.flatMap((campaign) => (campaign.slug ? [{ id: campaign.id, name: campaign.slug }] : []));
-
-		return resultOk(options);
-	} catch (error) {
-		console.error(error);
-
-		return resultFail('Could not fetch editable campaign options');
-	}
-};
-
 // Label for a campaign filter set by a link; null when the campaign is outside the given programs
 export const getCampaignFilterOption = async (
 	campaignId: string,
@@ -236,8 +206,12 @@ export const getCampaignFilterOption = async (
 ): Promise<Result<CampaignOption | null>> => {
 	try {
 		const campaign = await campaignRepository.findCampaignFilterOption(campaignId, programIds);
+		if (!campaign) {
+			return resultOk(null);
+		}
+		const slug = campaign.slug?.trim();
 
-		return resultOk(campaign ? { id: campaign.id, name: campaign.slug ?? campaign.id } : null);
+		return resultOk({ id: campaign.id, name: slug?.length ? slug : `Campaign ${campaign.id}` });
 	} catch (error) {
 		console.error('Could not fetch campaign filter option', { campaignId, error });
 
@@ -269,9 +243,6 @@ export const getCampaignTableEntries = async (userId: string): Promise<Result<Ca
 		const entries: CampaignTableEntry[] = [];
 		for (const campaign of campaigns) {
 			const slug = campaign.slug?.trim();
-			if (!slug) {
-				continue;
-			}
 			const { amountCollected } = await computeCollectedAmount(
 				campaign.contributions,
 				campaign.additionalAmountChf,
@@ -282,7 +253,7 @@ export const getCampaignTableEntries = async (userId: string): Promise<Result<Ca
 
 			entries.push({
 				id: campaign.id,
-				slug,
+				slug: slug?.length ? slug : null,
 				currency: campaign.currency,
 				endDate: campaign.endDate,
 				isActive: isCampaignActive({

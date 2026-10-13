@@ -35,8 +35,8 @@ export type CampaignSubmissionFormValues = {
 
 export type CampaignTableViewRow = {
 	id: string;
-	link: string;
-	slug: string;
+	link: string | null;
+	slug: string | null;
 	title: string;
 	currency: Currency;
 	endDate: Date;
