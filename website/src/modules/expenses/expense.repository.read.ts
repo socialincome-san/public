@@ -2,10 +2,9 @@ import type { Prisma } from '@/generated/prisma/client';
 import { ExpenseType } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
-import type { ExpenseCreateInput, ExpenseUpdateInput } from './expense.schemas';
 import type { ExpenseTableQuery } from './expense.types';
 
-const expensePayloadSelect = {
+export const expensePayloadSelect = {
 	id: true,
 	type: true,
 	year: true,
@@ -66,33 +65,6 @@ export const findPaginatedExpenses = async (query: ExpenseTableQuery) => {
 
 	return { expenses, totalCount };
 };
-
-export const createExpense = async (input: ExpenseCreateInput) =>
-	prisma.expense.create({
-		data: {
-			type: input.type,
-			year: input.year,
-			amountChf: input.amountChf,
-			organization: {
-				connect: { id: input.organizationId },
-			},
-		},
-		select: expensePayloadSelect,
-	});
-
-export const updateExpense = async (input: ExpenseUpdateInput) =>
-	prisma.expense.update({
-		where: { id: input.id },
-		data: {
-			type: input.type,
-			year: input.year,
-			amountChf: input.amountChf,
-			organization: {
-				connect: { id: input.organizationId },
-			},
-		},
-		select: expensePayloadSelect,
-	});
 
 const buildExpenseOrderBy = (query: ExpenseTableQuery): Prisma.ExpenseOrderByWithRelationInput[] => {
 	const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';

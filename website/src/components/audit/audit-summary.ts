@@ -190,6 +190,17 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			surveyScheduleId: 'Survey schedule',
 		},
 	},
+	expense: {
+		label: 'Expense',
+		namePaths: ['type', 'year'],
+		fieldLabels: {
+			legacyFirestoreId: 'Legacy ID',
+			organizationId: 'Organization',
+			type: 'Type',
+			year: 'Year',
+			amountChf: 'Amount (CHF)',
+		},
+	},
 };
 
 export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));
