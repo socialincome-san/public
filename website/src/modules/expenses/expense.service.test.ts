@@ -49,6 +49,15 @@ describe('expense service', () => {
 		expect(mockFindPaginatedExpenses).not.toHaveBeenCalled();
 	});
 
+	test('passes the organization filter to the expense repository', async () => {
+		const query = { page: 1, pageSize: 10, search: '', organizationId: 'organization-1' };
+		mockFindPaginatedExpenses.mockResolvedValue({ expenses: [], totalCount: 0 });
+
+		await getPaginatedExpenseTableView('admin-1', query);
+
+		expect(mockFindPaginatedExpenses).toHaveBeenCalledWith(query);
+	});
+
 	test('rejects creation when the organization does not exist', async () => {
 		mockGetOrganization.mockResolvedValue({
 			success: false,

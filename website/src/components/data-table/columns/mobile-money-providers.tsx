@@ -7,31 +7,41 @@ import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { MobileMoneyProviderTableViewRow } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 
-export const makeMobileMoneyProviderColumns = (): ColumnDef<MobileMoneyProviderTableViewRow>[] => [
-	{
-		accessorKey: 'name',
-		header: (ctx) => <SortableHeader ctx={ctx}>Name</SortableHeader>,
-		cell: (ctx) => <TextCell ctx={ctx} />,
-	},
-	{
-		accessorKey: 'parentName',
-		header: (ctx) => <SortableHeader ctx={ctx}>Parent</SortableHeader>,
-		cell: (ctx) => <TextCell ctx={ctx} />,
-	},
-	{
-		accessorKey: 'payoutProcessLabel',
-		header: (ctx) => <SortableHeader ctx={ctx}>Payout process</SortableHeader>,
-		cell: (ctx) => <TextCell ctx={ctx} />,
-	},
-	{
-		accessorKey: 'createdAt',
-		header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
-		cell: (ctx) => <DateCell ctx={ctx} />,
-	},
-	{
-		id: 'actions',
-		header: '',
-		enableHiding: false,
-		cell: () => <DataTableRowChevronCell />,
-	},
-];
+export const makeMobileMoneyProviderColumns = (hideParent = false): ColumnDef<MobileMoneyProviderTableViewRow>[] => {
+	const columns: ColumnDef<MobileMoneyProviderTableViewRow>[] = [
+		{
+			accessorKey: 'name',
+			header: (ctx) => <SortableHeader ctx={ctx}>Name</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+	];
+
+	if (!hideParent) {
+		columns.push({
+			accessorKey: 'parentName',
+			header: (ctx) => <SortableHeader ctx={ctx}>Parent</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		});
+	}
+
+	columns.push(
+		{
+			accessorKey: 'payoutProcessLabel',
+			header: (ctx) => <SortableHeader ctx={ctx}>Payout process</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'createdAt',
+			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
+			cell: (ctx) => <DateCell ctx={ctx} />,
+		},
+		{
+			id: 'actions',
+			header: '',
+			enableHiding: false,
+			cell: () => <DataTableRowChevronCell />,
+		},
+	);
+
+	return columns;
+};

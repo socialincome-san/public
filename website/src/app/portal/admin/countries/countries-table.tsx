@@ -2,6 +2,7 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { countriesTableConfig } from '@/components/data-table/configs/countries-table.config';
+import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { CountryTableViewRow } from '@/modules/countries/country.types';
 import { PlusIcon } from 'lucide-react';
@@ -17,20 +18,27 @@ export default function CountriesTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [open, setOpen] = useState(false);
+	const [countryId, setCountryId] = useSearchParamState('countryId');
+	const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [countryId, setCountryId] = useState<string | undefined>(undefined);
+	const open = isCreateFormOpen || Boolean(countryId);
 
 	const openEmptyForm = () => {
 		setCountryId(undefined);
 		setErrorMessage(null);
-		setOpen(true);
+		setIsCreateFormOpen(true);
 	};
 
 	const openEditForm = (row: CountryTableViewRow) => {
 		setCountryId(row.id);
 		setErrorMessage(null);
-		setOpen(true);
+	};
+
+	const onOpenChange = (nextOpen: boolean) => {
+		if (!nextOpen) {
+			setCountryId(undefined);
+			setIsCreateFormOpen(false);
+		}
 	};
 
 	return (
@@ -53,7 +61,7 @@ export default function CountriesTable({
 
 			<CountryDialog
 				open={open}
-				onOpenChange={setOpen}
+				onOpenChange={onOpenChange}
 				countryId={countryId}
 				errorMessage={errorMessage}
 				onError={setErrorMessage}

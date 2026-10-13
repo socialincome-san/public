@@ -39,6 +39,7 @@ export type LocalPartnerTableQuery = {
 	search: string;
 	sortBy?: string;
 	sortDirection?: 'asc' | 'desc';
+	focusId?: string;
 };
 
 export type LocalPartnerPaginatedTableView = {

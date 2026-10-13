@@ -15,6 +15,10 @@ export type TableQueryState = {
 	sortBy?: string;
 	sortDirection?: 'asc' | 'desc';
 	programId?: string;
+	organizationId?: string;
+	countryId?: string;
+	focusId?: string;
+	parentProviderId?: string;
 	localPartnerId?: string;
 	country?: string;
 	currency?: string;
@@ -39,6 +43,10 @@ type TableQueryInput = {
 	sortBy?: QueryValue;
 	sortDirection?: QueryValue;
 	programId?: QueryValue;
+	organizationId?: QueryValue;
+	countryId?: QueryValue;
+	focusId?: QueryValue;
+	parentProviderId?: QueryValue;
 	localPartnerId?: QueryValue;
 	country?: QueryValue;
 	currency?: QueryValue;
@@ -105,6 +113,10 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	const rawSortDirection = normalizeToken(input.sortDirection, MAX_QUERY_TOKEN_LENGTH).toLowerCase();
 	const sortDirection = rawSortDirection === 'asc' || rawSortDirection === 'desc' ? rawSortDirection : undefined;
 	const programId = normalizeToken(input.programId, MAX_QUERY_TOKEN_LENGTH);
+	const organizationId = normalizeToken(input.organizationId, MAX_QUERY_TOKEN_LENGTH);
+	const countryId = normalizeToken(input.countryId, MAX_QUERY_TOKEN_LENGTH);
+	const focusId = normalizeToken(input.focusId, MAX_QUERY_TOKEN_LENGTH);
+	const parentProviderId = normalizeToken(input.parentProviderId, MAX_QUERY_TOKEN_LENGTH);
 	const localPartnerId = normalizeToken(input.localPartnerId, MAX_QUERY_TOKEN_LENGTH);
 	const country = normalizeToken(input.country, MAX_QUERY_TOKEN_LENGTH);
 	const currency = normalizeToken(input.currency, MAX_QUERY_TOKEN_LENGTH);
@@ -126,6 +138,10 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 		sortBy: sortBy || undefined,
 		sortDirection: sortBy ? sortDirection : undefined,
 		programId: programId || undefined,
+		organizationId: organizationId || undefined,
+		countryId: countryId || undefined,
+		focusId: focusId || undefined,
+		parentProviderId: parentProviderId || undefined,
 		localPartnerId: localPartnerId || undefined,
 		country: country || undefined,
 		currency: currency || undefined,
@@ -150,6 +166,10 @@ export const tableQueryFromSearchParams = (searchParams: Record<string, string |
 		sortBy: searchParams.sortBy,
 		sortDirection: searchParams.sortDirection,
 		programId: searchParams.programId,
+		organizationId: searchParams.organizationId,
+		countryId: searchParams.countryId,
+		focusId: searchParams.focusId,
+		parentProviderId: searchParams.parentProviderId,
 		localPartnerId: searchParams.localPartnerId,
 		country: searchParams.country,
 		currency: searchParams.currency,
@@ -179,6 +199,10 @@ export const applyTableQueryPatch = (
 		sortBy: hasPatchKey('sortBy') ? patch.sortBy : currentSearchParams.get('sortBy'),
 		sortDirection: hasPatchKey('sortDirection') ? patch.sortDirection : currentSearchParams.get('sortDirection'),
 		programId: hasPatchKey('programId') ? patch.programId : currentSearchParams.get('programId'),
+		organizationId: hasPatchKey('organizationId') ? patch.organizationId : currentSearchParams.get('organizationId'),
+		countryId: hasPatchKey('countryId') ? patch.countryId : currentSearchParams.get('countryId'),
+		focusId: hasPatchKey('focusId') ? patch.focusId : currentSearchParams.get('focusId'),
+		parentProviderId: hasPatchKey('parentProviderId') ? patch.parentProviderId : currentSearchParams.get('parentProviderId'),
 		localPartnerId: hasPatchKey('localPartnerId') ? patch.localPartnerId : currentSearchParams.get('localPartnerId'),
 		country: hasPatchKey('country') ? patch.country : currentSearchParams.get('country'),
 		currency: hasPatchKey('currency') ? patch.currency : currentSearchParams.get('currency'),
@@ -220,6 +244,26 @@ export const applyTableQueryPatch = (
 		nextParams.set('programId', nextQuery.programId);
 	} else {
 		nextParams.delete('programId');
+	}
+	if (nextQuery.organizationId) {
+		nextParams.set('organizationId', nextQuery.organizationId);
+	} else {
+		nextParams.delete('organizationId');
+	}
+	if (nextQuery.countryId) {
+		nextParams.set('countryId', nextQuery.countryId);
+	} else {
+		nextParams.delete('countryId');
+	}
+	if (nextQuery.focusId) {
+		nextParams.set('focusId', nextQuery.focusId);
+	} else {
+		nextParams.delete('focusId');
+	}
+	if (nextQuery.parentProviderId) {
+		nextParams.set('parentProviderId', nextQuery.parentProviderId);
+	} else {
+		nextParams.delete('parentProviderId');
 	}
 	if (nextQuery.localPartnerId) {
 		nextParams.set('localPartnerId', nextQuery.localPartnerId);

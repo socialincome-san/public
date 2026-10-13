@@ -1,7 +1,9 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { ContributionStatus, Currency, PayoutStatus, ProgramPermission, SurveyStatus } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
+import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { ProgramCreateInput, ProgramSettingsUpdateInput } from './program.schemas';
+import type { ProgramTableQuery } from './program.types';
 
 const completedPayoutStatuses = [PayoutStatus.paid, PayoutStatus.confirmed];
 
@@ -127,6 +129,61 @@ export const findProgramOptions = async () =>
 		select: { id: true, name: true },
 		orderBy: { name: 'asc' },
 	});
+
+export const findPaginatedPrograms = async (query: ProgramTableQuery) => {
+	const search = query.search.trim();
+	const where: Prisma.ProgramWhereInput = {
+		...(query.organizationId
+			? {
+					programAccesses: {
+						some: {
+							organizationId: query.organizationId,
+							...(query.programPermission ? { permission: query.programPermission } : {}),
+						},
+					},
+				}
+			: {}),
+		...(query.countryId ? { countryId: query.countryId } : {}),
+		...(query.focusId ? { targetFocuses: { some: { focusId: query.focusId } } } : {}),
+		...(search
+			? {
+					OR: [
+						{ id: { contains: search, mode: 'insensitive' } },
+						{ name: { contains: search, mode: 'insensitive' } },
+						{ programAccesses: { some: { organization: { name: { contains: search, mode: 'insensitive' } } } } },
+						{ targetFocuses: { some: { focus: { name: { contains: search, mode: 'insensitive' } } } } },
+					],
+				}
+			: {}),
+	};
+
+	const [programs, totalCount] = await Promise.all([
+		prisma.program.findMany({
+			where,
+			select: {
+				id: true,
+				name: true,
+				country: { select: { isoCode: true } },
+				programAccesses: {
+					select: { permission: true, organization: { select: { name: true } } },
+					orderBy: { organization: { name: 'asc' } },
+				},
+				targetFocuses: {
+					select: { focus: { select: { name: true } } },
+					orderBy: { focus: { name: 'asc' } },
+				},
+				_count: { select: { recipients: true } },
+				createdAt: true,
+			},
+			orderBy: buildProgramTableOrderBy(query),
+			skip: (query.page - 1) * query.pageSize,
+			take: query.pageSize,
+		}),
+		prisma.program.count({ where }),
+	]);
+
+	return { programs, totalCount };
+};
 
 export const findProgramsByIds = async (programIds: string[]) =>
 	prisma.program.findMany({
@@ -378,3 +435,23 @@ export const findEligiblePublicSubmissionProgram = async (programId: string, slu
 		},
 		select: { id: true },
 	});
+
+const buildProgramTableOrderBy = (query: ProgramTableQuery): Prisma.ProgramOrderByWithRelationInput[] => {
+	const direction: Prisma.SortOrder = query.sortDirection === 'asc' ? 'asc' : 'desc';
+	const sortBy = toSortKey(query.sortBy, ['id', 'name', 'country', 'recipientsCount', 'createdAt'] as const);
+
+	switch (sortBy) {
+		case 'id':
+			return [{ id: direction }];
+		case 'name':
+			return [{ name: direction }];
+		case 'country':
+			return [{ country: { isoCode: direction } }];
+		case 'recipientsCount':
+			return [{ recipients: { _count: direction } }];
+		case 'createdAt':
+			return [{ createdAt: direction }];
+		default:
+			return [{ name: 'asc' }];
+	}
+};

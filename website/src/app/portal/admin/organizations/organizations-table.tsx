@@ -2,14 +2,12 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { organizationsTableConfig } from '@/components/data-table/configs/organizations-table.config';
+import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { OrganizationTableViewRow } from '@/modules/organizations/organization.types';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
-import OrganizationsForm from './organizations-form';
+import { OrganizationDialog } from './organization-dialog';
 
 export default function OrganizationsTable({
 	rows,
@@ -20,26 +18,24 @@ export default function OrganizationsTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [open, setOpen] = useState(false);
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [organizationId, setOrganizationId] = useState<string | undefined>(undefined);
+	const [organizationId, setOrganizationId] = useSearchParamState('organizationId');
+	const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+	const open = isCreateFormOpen || Boolean(organizationId);
 
 	const openEmptyForm = () => {
 		setOrganizationId(undefined);
-		setErrorMessage(null);
-		setOpen(true);
+		setIsCreateFormOpen(true);
 	};
 
 	const openEditForm = (row: OrganizationTableViewRow) => {
 		setOrganizationId(row.id);
-		setErrorMessage(null);
-		setOpen(true);
 	};
 
-	const onError = (error: unknown) => {
-		const message = retrieveErrorMessage(error);
-		setErrorMessage(`Error saving organization: ${message}`);
-		console.error('Organization Form Error', { error });
+	const onOpenChange = (nextOpen: boolean) => {
+		if (!nextOpen) {
+			setOrganizationId(undefined);
+			setIsCreateFormOpen(false);
+		}
 	};
 
 	return (
@@ -60,27 +56,12 @@ export default function OrganizationsTable({
 				onRowClick={openEditForm}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>{organizationId ? 'Edit' : 'Add'} organization</DialogTitle>
-					</DialogHeader>
-
-					{errorMessage && (
-						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
-						</Alert>
-					)}
-
-					<OrganizationsForm
-						organizationId={organizationId}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-					/>
-				</DialogContent>
-			</Dialog>
+			<OrganizationDialog
+				key={organizationId ?? 'new'}
+				open={open}
+				onOpenChange={onOpenChange}
+				organizationId={organizationId}
+			/>
 		</>
 	);
 }

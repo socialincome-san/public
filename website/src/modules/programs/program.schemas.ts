@@ -1,4 +1,5 @@
-import { Currency, PayoutInterval, Profile } from '@/generated/prisma/enums';
+import { Currency, PayoutInterval, Profile, ProgramPermission } from '@/generated/prisma/enums';
+import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import { EMAIL_REGEX } from '@/lib/utils/regex';
 import z from 'zod';
 
@@ -40,6 +41,17 @@ export const programSettingsUpdateSchema = z.object({
 export const programIdSchema = z.string().trim().min(1, 'Program id is required.');
 export const programSlugSchema = z.string().trim().min(1, 'Program slug is required.');
 export const programSlugsSchema = z.array(programSlugSchema);
+
+export const programTableQuerySchema = tableQuerySchema
+	.extend({
+		organizationId: tableQueryFilterSchema,
+		programPermission: z.nativeEnum(ProgramPermission).optional(),
+		countryId: tableQueryFilterSchema,
+		focusId: tableQueryFilterSchema,
+	})
+	.refine((query) => !query.programPermission || query.organizationId, {
+		message: 'Organization is required for a permission filter.',
+	});
 
 export const programBudgetCalculationSchema = z.object({
 	amountOfRecipients: nonNegativeIntegerSchema,

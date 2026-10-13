@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import {
 	organizationCreateSchema,
 	organizationIdSchema,
+	organizationMemberTableQuerySchema,
 	organizationRenameSchema,
 	organizationUpdateSchema,
 } from './organization.schemas';
@@ -15,12 +16,27 @@ import {
 	getOrganization,
 	getOrganizationProgramOptions,
 	getOrganizationUserOptions,
+	getPaginatedOrganizationAdminMembersTableView,
 	renameActiveOrganization,
 	updateOrganization,
 } from './organization.service';
-import type { OrganizationPayload } from './organization.types';
+import type { OrganizationMemberPaginatedTableView, OrganizationPayload } from './organization.types';
 
 const REVALIDATE_PATH = '/portal/admin/organizations';
+
+export const getOrganizationMemberTableViewAction = async (
+	query: unknown,
+): Promise<Result<OrganizationMemberPaginatedTableView>> => {
+	const sessionResult = await getSessionByType('user');
+	if (!sessionResult.success) {
+		return sessionResult;
+	}
+	const parsedQuery = organizationMemberTableQuerySchema.safeParse(query);
+
+	return parsedQuery.success
+		? getPaginatedOrganizationAdminMembersTableView(sessionResult.data.id, parsedQuery.data)
+		: resultFail('Invalid organization member query.');
+};
 
 export const createOrganizationAction = async (input: unknown): Promise<Result<OrganizationPayload>> => {
 	const sessionResult = await getSessionByType('user');
