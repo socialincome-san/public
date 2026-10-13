@@ -29,7 +29,7 @@ describe('donation certificate repository', () => {
 	});
 
 	test('scopes the management table and applies pagination with an explicit select', async () => {
-		await findPaginatedDonationCertificates(['program-1'], {
+		await findPaginatedDonationCertificates(['program-1'], undefined, {
 			page: 2,
 			pageSize: 25,
 			search: '',

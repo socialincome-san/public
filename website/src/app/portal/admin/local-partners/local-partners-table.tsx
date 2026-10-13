@@ -2,14 +2,13 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { localPartnersTableConfig } from '@/components/data-table/configs/local-partners-table.config';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { LocalPartnerTableViewRow } from '@/modules/local-partners/local-partner.types';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
-import LocalPartnersForm from './local-partners-form';
+import { LocalPartnerDialog } from './local-partner-dialog';
 
 export default function LocalPartnersTable({
 	rows,
@@ -20,19 +19,17 @@ export default function LocalPartnersTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [open, setOpen] = useState(false);
+	const { recordId: partnerId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('localPartnerId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [partnerId, setPartnerId] = useState<string | undefined>(undefined);
+
 	const openEmptyForm = () => {
-		setPartnerId(undefined);
 		setErrorMessage(null);
-		setOpen(true);
+		openCreate();
 	};
 
 	const openEditForm = (row: LocalPartnerTableViewRow) => {
-		setPartnerId(row.id);
 		setErrorMessage(null);
-		setOpen(true);
+		openRecord(row.id);
 	};
 
 	const onError = (error: unknown) => {
@@ -59,25 +56,13 @@ export default function LocalPartnersTable({
 				onRowClick={openEditForm}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>{partnerId ? 'Edit' : 'Add'} local partner</DialogTitle>
-					</DialogHeader>
-					{errorMessage && (
-						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
-						</Alert>
-					)}
-					<LocalPartnersForm
-						localPartnerId={partnerId}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-					/>
-				</DialogContent>
-			</Dialog>
+			<LocalPartnerDialog
+				open={open}
+				onOpenChange={onOpenChange}
+				localPartnerId={partnerId}
+				errorMessage={errorMessage}
+				onError={onError}
+			/>
 		</>
 	);
 }

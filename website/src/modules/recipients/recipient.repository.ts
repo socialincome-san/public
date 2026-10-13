@@ -188,6 +188,12 @@ export const findEditableRecipientOptions = async (programIds: string[]) =>
 		orderBy: [{ contact: { firstName: 'asc' } }],
 	});
 
+export const findRecipientFilterOption = async (recipientId: string, programIds: string[]) =>
+	prisma.recipient.findFirst({
+		where: { id: recipientId, programId: { in: programIds } },
+		select: { id: true, contact: { select: { firstName: true, lastName: true } } },
+	});
+
 export const findSurveyRecipients = async (programIds: string[], currentDate: Date) =>
 	prisma.recipient.findMany({
 		where: {
@@ -278,11 +284,13 @@ export const findPublicRecipientTableSource = async (programId: string, maximumR
 
 export const findRecipientTableSource = async ({
 	programIds,
+	localPartnerId,
 	query,
 	canSearchRecipientNames,
 	paginate,
 }: {
 	programIds: string[];
+	localPartnerId: string | undefined;
 	query: RecipientTableQuery;
 	canSearchRecipientNames: boolean;
 	paginate: boolean;
@@ -291,7 +299,7 @@ export const findRecipientTableSource = async ({
 	const filteredProgramIds = selectedProgramId
 		? programIds.filter((programId) => programId === selectedProgramId)
 		: programIds;
-	const where = buildRecipientTableWhere(filteredProgramIds, query.search, canSearchRecipientNames);
+	const where = buildRecipientTableWhere(filteredProgramIds, localPartnerId, query.search, canSearchRecipientNames);
 	if (paginate) {
 		const [recipients, totalCount] = await Promise.all([
 			prisma.recipient.findMany({
@@ -898,12 +906,14 @@ const recipientWithPaymentInformationSelect = {
 
 const buildRecipientTableWhere = (
 	programIds: string[],
+	localPartnerId: string | undefined,
 	searchInput: string,
 	canSearchRecipientNames: boolean,
 ): Prisma.RecipientWhereInput => {
 	const search = searchInput.trim();
 	const baseWhere: Prisma.RecipientWhereInput = {
 		programId: { in: programIds },
+		...(localPartnerId ? { localPartnerId } : {}),
 	};
 
 	if (!search) {

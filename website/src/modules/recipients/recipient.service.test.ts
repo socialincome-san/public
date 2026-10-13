@@ -1,4 +1,4 @@
-import { PayoutInterval, PayoutStatus } from '@/generated/prisma/enums';
+import { PayoutInterval, PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
 import type { Result } from '@/lib/result';
 import { OBFUSCATED_SENTINEL } from './recipient.types';
 
@@ -7,20 +7,26 @@ const mockFindPublicRecipientTableSource = jest.fn();
 const mockFindUnassignedRecipientCountries = jest.fn();
 const mockCountRecipientsForProgramsAndLocalPartners = jest.fn();
 const mockCountCandidatesForLocalPartners = jest.fn();
+const mockFindRecipientTableSource = jest.fn();
+const mockGetLocalPartnerOptions = jest.fn();
+const mockGetLocalPartnerFilterOption = jest.fn();
+const mockGetAccessiblePrograms = jest.fn();
 
 jest.mock('./recipient.repository', () => ({
 	findPublicRecipientTableSource: mockFindPublicRecipientTableSource,
 	findUnassignedRecipientCountries: mockFindUnassignedRecipientCountries,
 	countRecipientsForProgramsAndLocalPartners: mockCountRecipientsForProgramsAndLocalPartners,
 	countCandidatesForLocalPartners: mockCountCandidatesForLocalPartners,
+	findRecipientTableSource: mockFindRecipientTableSource,
 }));
 
 jest.mock('@/modules/auth/auth.service', () => ({}));
 jest.mock('@/modules/local-partners/local-partner.service', () => ({
-	getLocalPartnerOptions: jest.fn(),
+	getLocalPartnerFilterOption: mockGetLocalPartnerFilterOption,
+	getLocalPartnerOptions: mockGetLocalPartnerOptions,
 }));
 jest.mock('@/modules/program-access/program-access.service', () => ({
-	getAccessiblePrograms: jest.fn(),
+	getAccessiblePrograms: mockGetAccessiblePrograms,
 }));
 jest.mock('@/modules/programs/program-reference.service', () => ({
 	getProgramNameById: mockGetProgramNameById,
@@ -32,6 +38,7 @@ jest.mock('@/lib/utils/now', () => ({
 import {
 	countCandidatesForLocalPartners,
 	countRecipientsForProgramsAndLocalPartners,
+	getPaginatedRecipientTableView,
 	getPublicRecipientsTableView,
 	getUnassignedRecipientCountries,
 } from './recipient.service';
@@ -72,6 +79,49 @@ const recipient = {
 	},
 	payouts: [{ status: PayoutStatus.paid }],
 };
+
+describe('getPaginatedRecipientTableView local partner filter', () => {
+	const query = { page: 1, pageSize: 10, search: '' };
+
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockGetAccessiblePrograms.mockResolvedValue({
+			success: true,
+			data: [{ programId: 'program-1', programName: 'Program 1', permission: ProgramPermission.operator }],
+		});
+		mockFindRecipientTableSource.mockResolvedValue({ recipients: [], totalCount: 0 });
+	});
+
+	test('filters by an accessible local partner and offers it as filter option', async () => {
+		mockGetLocalPartnerFilterOption.mockResolvedValue({ success: true, data: { id: 'partner-1', name: 'Partner A' } });
+
+		const data = expectSuccess(await getPaginatedRecipientTableView('user-1', { ...query, localPartnerId: 'partner-1' }));
+
+		expect(mockFindRecipientTableSource).toHaveBeenCalledWith(
+			expect.objectContaining({ programIds: ['program-1'], localPartnerId: 'partner-1' }),
+		);
+		expect(mockGetLocalPartnerFilterOption).toHaveBeenCalledWith('partner-1', ['program-1']);
+		expect(data.localPartnerFilterOptions).toEqual([{ id: 'partner-1', name: 'Partner A' }]);
+	});
+
+	test('ignores a local partner without recipients in the accessible programs', async () => {
+		mockGetLocalPartnerFilterOption.mockResolvedValue({ success: true, data: null });
+
+		const data = expectSuccess(
+			await getPaginatedRecipientTableView('user-1', { ...query, localPartnerId: 'partner-unknown' }),
+		);
+
+		expect(mockFindRecipientTableSource).toHaveBeenCalledWith(expect.objectContaining({ localPartnerId: undefined }));
+		expect(data.localPartnerFilterOptions).toEqual([]);
+	});
+
+	test('offers no local partner options without a linked filter', async () => {
+		const data = expectSuccess(await getPaginatedRecipientTableView('user-1', query));
+
+		expect(mockGetLocalPartnerFilterOption).not.toHaveBeenCalled();
+		expect(data.localPartnerFilterOptions).toEqual([]);
+	});
+});
 
 describe('recipient public table view', () => {
 	beforeEach(() => {

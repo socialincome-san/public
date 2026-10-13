@@ -1,4 +1,5 @@
 import { CountryCode, Gender } from '@/generated/prisma/enums';
+import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import { z } from 'zod';
 
 const nullableTrimmedString = z.preprocess((value) => {
@@ -98,3 +99,9 @@ export const recipientSelfUpdateSchema = z.object({
 export type CreateRecipientInput = z.infer<typeof recipientCreateSchema>;
 export type UpdateRecipientInput = z.infer<typeof recipientUpdateSchema>;
 export type UpdateRecipientSelfInput = z.infer<typeof recipientSelfUpdateSchema>;
+
+export const recipientTableQuerySchema = tableQuerySchema.extend({
+	programId: tableQueryFilterSchema,
+	recipientStatus: tableQueryFilterSchema,
+	localPartnerId: tableQueryFilterSchema,
+});

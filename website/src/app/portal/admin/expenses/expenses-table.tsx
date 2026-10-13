@@ -2,6 +2,7 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { expensesTableConfig } from '@/components/data-table/configs/expenses-table.config';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { ExpenseTableViewRow } from '@/modules/expenses/expense.types';
@@ -20,20 +21,17 @@ export default function ExpensesTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [open, setOpen] = useState(false);
+	const { recordId: expenseId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('expenseId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [expenseId, setExpenseId] = useState<string | undefined>(undefined);
 
 	const openEmptyForm = () => {
-		setExpenseId(undefined);
 		setErrorMessage(null);
-		setOpen(true);
+		openCreate();
 	};
 
 	const openEditForm = (row: ExpenseTableViewRow) => {
-		setExpenseId(row.id);
 		setErrorMessage(null);
-		setOpen(true);
+		openRecord(row.id);
 	};
 
 	const onError = (error: unknown) => {
@@ -60,7 +58,7 @@ export default function ExpensesTable({
 				onRowClick={openEditForm}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
+			<Dialog open={open} onOpenChange={onOpenChange}>
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{expenseId ? 'Edit' : 'Add'} expense</DialogTitle>
@@ -73,8 +71,8 @@ export default function ExpensesTable({
 					)}
 					<ExpensesForm
 						expenseId={expenseId}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
+						onSuccess={() => onOpenChange(false)}
+						onCancel={() => onOpenChange(false)}
 						onError={onError}
 					/>
 				</DialogContent>

@@ -56,15 +56,20 @@ export const findPaginatedCountries = async (query: CountryTableQuery) => {
 	const matchedNetworkTechnology = Object.values(NetworkTechnology).find(
 		(technology) => technology.toLowerCase() === search.toLowerCase(),
 	);
-	const where: Prisma.CountryWhereInput | undefined = search
-		? {
-				OR: [
-					{ id: { contains: search, mode: 'insensitive' } },
-					...(matchedIsoCode ? [{ isoCode: { equals: matchedIsoCode } }] : []),
-					...(matchedNetworkTechnology ? [{ networkTechnology: { equals: matchedNetworkTechnology } }] : []),
-				],
-			}
-		: undefined;
+	const where: Prisma.CountryWhereInput = {
+		...(query.mobileMoneyProviderId
+			? { mobileMoneyProviders: { some: { mobileMoneyProviderId: query.mobileMoneyProviderId } } }
+			: {}),
+		...(search
+			? {
+					OR: [
+						{ id: { contains: search, mode: 'insensitive' } },
+						...(matchedIsoCode ? [{ isoCode: { equals: matchedIsoCode } }] : []),
+						...(matchedNetworkTechnology ? [{ networkTechnology: { equals: matchedNetworkTechnology } }] : []),
+					],
+				}
+			: {}),
+	};
 
 	const [countries, totalCount] = await Promise.all([
 		prisma.country.findMany({

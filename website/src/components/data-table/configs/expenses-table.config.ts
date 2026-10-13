@@ -17,3 +17,11 @@ export const expensesTableConfig: DataTableConfig<ExpenseTableViewRow> = {
 	makeColumns: makeExpenseColumns,
 	showColumnVisibilitySelector: true,
 };
+
+export const organizationExpensesTableConfig: DataTableConfig<ExpenseTableViewRow> = {
+	...expensesTableConfig,
+	id: 'organization-expenses',
+	searchKeys: expensesTableConfig.searchKeys.filter((key) => key !== 'organizationName'),
+	sortOptions: expensesTableConfig.sortOptions?.filter(({ id }) => id !== 'organizationName'),
+	makeColumns: () => makeExpenseColumns(true),
+};

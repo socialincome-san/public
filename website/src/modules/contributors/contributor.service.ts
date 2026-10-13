@@ -92,6 +92,29 @@ export const getContributor = async (userId: string, contributorId: string): Pro
 	}
 };
 
+// Label for a contributor filter set by a link; null when the contributor is outside the given programs
+export const getContributorFilterOption = async (
+	contributorId: string,
+	accessibleProgramIds: string[],
+): Promise<Result<ContributorOption | null>> => {
+	try {
+		const contributor = await contributorRepository.findContributorFilterOption(contributorId, accessibleProgramIds);
+
+		return resultOk(
+			contributor
+				? {
+						id: contributor.id,
+						name: `${contributor.contact?.firstName ?? ''} ${contributor.contact?.lastName ?? ''}`.trim(),
+					}
+				: null,
+		);
+	} catch (error) {
+		console.error('Could not fetch contributor filter option', { contributorId, error });
+
+		return resultFail('Could not fetch contributor filter option');
+	}
+};
+
 export const getEditableContributorOptions = async (userId: string): Promise<Result<ContributorOption[]>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);

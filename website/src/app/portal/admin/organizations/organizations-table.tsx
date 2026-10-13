@@ -2,14 +2,11 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { organizationsTableConfig } from '@/components/data-table/configs/organizations-table.config';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { OrganizationTableViewRow } from '@/modules/organizations/organization.types';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { PlusIcon } from 'lucide-react';
-import { useState } from 'react';
-import OrganizationsForm from './organizations-form';
+import { OrganizationDialog } from './organization-dialog';
 
 export default function OrganizationsTable({
 	rows,
@@ -20,27 +17,7 @@ export default function OrganizationsTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [open, setOpen] = useState(false);
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [organizationId, setOrganizationId] = useState<string | undefined>(undefined);
-
-	const openEmptyForm = () => {
-		setOrganizationId(undefined);
-		setErrorMessage(null);
-		setOpen(true);
-	};
-
-	const openEditForm = (row: OrganizationTableViewRow) => {
-		setOrganizationId(row.id);
-		setErrorMessage(null);
-		setOpen(true);
-	};
-
-	const onError = (error: unknown) => {
-		const message = retrieveErrorMessage(error);
-		setErrorMessage(`Error saving organization: ${message}`);
-		console.error('Organization Form Error', { error });
-	};
+	const { recordId: organizationId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('organizationId');
 
 	return (
 		<>
@@ -54,33 +31,18 @@ export default function OrganizationsTable({
 					{
 						label: 'Add organization',
 						icon: <PlusIcon />,
-						onSelect: openEmptyForm,
+						onSelect: openCreate,
 					},
 				]}
-				onRowClick={openEditForm}
+				onRowClick={(row) => openRecord(row.id)}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>{organizationId ? 'Edit' : 'Add'} organization</DialogTitle>
-					</DialogHeader>
-
-					{errorMessage && (
-						<Alert variant="destructive">
-							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>{errorMessage}</AlertDescription>
-						</Alert>
-					)}
-
-					<OrganizationsForm
-						organizationId={organizationId}
-						onSuccess={() => setOpen(false)}
-						onCancel={() => setOpen(false)}
-						onError={onError}
-					/>
-				</DialogContent>
-			</Dialog>
+			<OrganizationDialog
+				key={organizationId ?? 'new'}
+				open={open}
+				onOpenChange={onOpenChange}
+				organizationId={organizationId}
+			/>
 		</>
 	);
 }

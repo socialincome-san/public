@@ -14,11 +14,13 @@ export type DonationCertificateTableQuery = {
 	search: string;
 	sortBy?: string;
 	sortDirection?: 'asc' | 'desc';
+	contributorId?: string;
 };
 
 export type DonationCertificatePaginatedTableView = {
 	tableRows: DonationCertificateTableViewRow[];
 	totalCount: number;
+	contributorFilterOptions: { id: string; name: string }[];
 };
 
 export type YourDonationCertificateTableViewRow = {

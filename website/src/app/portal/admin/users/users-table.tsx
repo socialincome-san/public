@@ -2,6 +2,7 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { usersTableConfig } from '@/components/data-table/configs/users-table.config';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { UserTableViewRow } from '@/modules/users/user.types';
@@ -20,20 +21,17 @@ export default function UsersTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [open, setOpen] = useState(false);
+	const { recordId: userId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('userId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [userId, setUserId] = useState<string | undefined>(undefined);
 
 	const openEmptyForm = () => {
-		setUserId(undefined);
 		setErrorMessage(null);
-		setOpen(true);
+		openCreate();
 	};
 
 	const openEditForm = (row: UserTableViewRow) => {
-		setUserId(row.id);
 		setErrorMessage(null);
-		setOpen(true);
+		openRecord(row.id);
 	};
 
 	const onError = (error: unknown) => {
@@ -60,7 +58,7 @@ export default function UsersTable({
 				onRowClick={openEditForm}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
+			<Dialog open={open} onOpenChange={onOpenChange}>
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{userId ? 'Edit' : 'Add'} user</DialogTitle>
@@ -73,7 +71,12 @@ export default function UsersTable({
 						</Alert>
 					)}
 
-					<UsersForm userId={userId} onSuccess={() => setOpen(false)} onCancel={() => setOpen(false)} onError={onError} />
+					<UsersForm
+						userId={userId}
+						onSuccess={() => onOpenChange(false)}
+						onCancel={() => onOpenChange(false)}
+						onError={onError}
+					/>
 				</DialogContent>
 			</Dialog>
 		</>

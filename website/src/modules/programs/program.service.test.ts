@@ -12,6 +12,8 @@ const mockFindProgramSettings = jest.fn();
 const mockUpdateProgramSettings = jest.fn();
 const mockGetCountryIsoCode = jest.fn();
 const mockValidateOrganizationIds = jest.fn();
+const mockIsAdmin = jest.fn();
+const mockFindPaginatedPrograms = jest.fn();
 
 jest.mock('@/modules/program-access/program-access.service', () => ({
 	createInitialAccessesForProgram: jest.fn(),
@@ -33,6 +35,7 @@ jest.mock('@/modules/users/user.service', () => ({
 	createPublicOnboardingUser: jest.fn(),
 	getActiveOrganizationId: jest.fn(),
 	isUserEmailAvailable: jest.fn(),
+	isAdmin: mockIsAdmin,
 }));
 jest.mock('./program-stats.service', () => ({
 	isReadyForFirstPayoutInterval: mockIsReadyForFirstPayoutInterval,
@@ -45,9 +48,11 @@ jest.mock('./program.repository', () => ({
 	findProgramBySlug: mockFindProgramBySlug,
 	findProgramSettings: mockFindProgramSettings,
 	updateProgramSettings: mockUpdateProgramSettings,
+	findPaginatedPrograms: mockFindPaginatedPrograms,
 }));
 
 import {
+	getPaginatedProgramTableView,
 	getProgramWallets,
 	getPublicProgramStatsByProgramPortalSlugs,
 	getPublicTargetFocusesByProgramId,
@@ -57,6 +62,55 @@ import {
 describe('program service', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
+		mockIsAdmin.mockResolvedValue(resultOk(true));
+	});
+
+	it('loads and maps programs for a related-record table', async () => {
+		const query = {
+			page: 1,
+			pageSize: 10,
+			search: '',
+			organizationId: 'organization-1',
+			programPermission: ProgramPermission.owner,
+		};
+		mockFindPaginatedPrograms.mockResolvedValue({
+			programs: [
+				{
+					id: 'program-1',
+					name: 'Program',
+					country: { isoCode: CountryCode.SL },
+					programAccesses: [
+						{ permission: ProgramPermission.owner, organization: { name: 'Owner' } },
+						{ permission: ProgramPermission.operator, organization: { name: 'Operator' } },
+					],
+					targetFocuses: [{ focus: { name: 'Education' } }],
+					_count: { recipients: 4 },
+					createdAt: new Date('2026-01-01T00:00:00.000Z'),
+				},
+			],
+			totalCount: 1,
+		});
+
+		const result = await getPaginatedProgramTableView('admin-1', query);
+
+		expect(mockFindPaginatedPrograms).toHaveBeenCalledWith(query);
+		expect(result).toEqual(
+			resultOk({
+				tableRows: [
+					{
+						id: 'program-1',
+						name: 'Program',
+						country: CountryCode.SL,
+						ownerOrganizations: 'Owner',
+						operatorOrganizations: 'Operator',
+						focuses: 'Education',
+						recipientsCount: 4,
+						createdAt: new Date('2026-01-01T00:00:00.000Z'),
+					},
+				],
+				totalCount: 1,
+			}),
+		);
 	});
 
 	it('maps public target focuses', async () => {

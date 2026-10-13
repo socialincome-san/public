@@ -229,6 +229,22 @@ export const getEditableCampaignOptions = async (userId: string): Promise<Result
 	}
 };
 
+// Label for a campaign filter set by a link; null when the campaign is outside the given programs
+export const getCampaignFilterOption = async (
+	campaignId: string,
+	programIds: string[],
+): Promise<Result<CampaignOption | null>> => {
+	try {
+		const campaign = await campaignRepository.findCampaignFilterOption(campaignId, programIds);
+
+		return resultOk(campaign ? { id: campaign.id, name: campaign.slug ?? campaign.id } : null);
+	} catch (error) {
+		console.error('Could not fetch campaign filter option', { campaignId, error });
+
+		return resultFail('Could not fetch campaign filter option');
+	}
+};
+
 export const getCampaignTableEntries = async (userId: string): Promise<Result<CampaignTableEntry[]>> => {
 	try {
 		const accessibleProgramsResult = await getAccessiblePrograms(userId);
