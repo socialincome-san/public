@@ -1,4 +1,5 @@
 import { CountryCode, Currency, NetworkTechnology, SanctionRegime } from '@/generated/prisma/enums';
+import { tableQueryFilterSchema, tableQuerySchema } from '@/lib/table-query-schema';
 import { z } from 'zod';
 
 const sourceLinkSchema = z.object({
@@ -28,6 +29,10 @@ export const countryUpdateInputSchema = countryCreateInputSchema.extend({
 });
 
 export const countryIdSchema = z.string().trim().min(1, 'Country id is required.');
+
+export const countryTableQuerySchema = tableQuerySchema.extend({
+	mobileMoneyProviderId: tableQueryFilterSchema,
+});
 
 export const countryIsoCodesSchema = z.array(z.string());
 

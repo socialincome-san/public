@@ -1,8 +1,12 @@
 'use client';
 
 import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
+import { mobileMoneyProviderCountriesTableConfig } from '@/components/data-table/configs/countries-table.config';
+import { mobileMoneyProviderChildrenTableConfig } from '@/components/data-table/configs/mobile-money-providers-table.config';
 import { mobileMoneyProviderPayoutsTableConfig } from '@/components/data-table/configs/payouts-table.config';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
+import { getCountryTableViewAction } from '@/modules/countries/country.actions';
+import { getMobileMoneyProviderTableViewAction } from '@/modules/mobile-money-providers/mobile-money-provider.actions';
 import { getPayoutTableViewAction } from '@/modules/payouts/payout.actions';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
@@ -59,6 +63,32 @@ export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId, erro
 								load={(query) => getPayoutTableViewAction({ ...query, mobileMoneyProviderId: providerId })}
 								getRowHref={(row) =>
 									`/portal/delivery/payouts?${new URLSearchParams({ mobileMoneyProviderId: providerId, payoutId: row.id })}`
+								}
+							/>
+						),
+					},
+					{
+						value: 'countries',
+						label: 'Countries',
+						content: (
+							<RecordTableTab
+								config={mobileMoneyProviderCountriesTableConfig}
+								load={(query) => getCountryTableViewAction({ ...query, mobileMoneyProviderId: providerId })}
+								getRowHref={(row) =>
+									`/portal/admin/countries?${new URLSearchParams({ mobileMoneyProviderId: providerId, countryId: row.id })}`
+								}
+							/>
+						),
+					},
+					{
+						value: 'child-providers',
+						label: 'Child providers',
+						content: (
+							<RecordTableTab
+								config={mobileMoneyProviderChildrenTableConfig}
+								load={(query) => getMobileMoneyProviderTableViewAction({ ...query, parentProviderId: providerId })}
+								getRowHref={(row) =>
+									`/portal/admin/mobile-money-providers?${new URLSearchParams({ parentProviderId: providerId, providerId: row.id })}`
 								}
 							/>
 						),

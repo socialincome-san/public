@@ -70,20 +70,23 @@ export const findLocalPartnerById = async (localPartnerId: string) =>
 
 export const findPaginatedLocalPartners = async (query: LocalPartnerTableQuery) => {
 	const search = query.search.trim();
-	const where: Prisma.LocalPartnerWhereInput | undefined = search
-		? {
-				OR: [
-					{ id: { contains: search, mode: 'insensitive' } },
-					{ name: { contains: search, mode: 'insensitive' } },
-					{ contact: { firstName: { contains: search, mode: 'insensitive' } } },
-					{ contact: { lastName: { contains: search, mode: 'insensitive' } } },
-					{ contact: { email: { contains: search, mode: 'insensitive' } } },
-					{ account: { firebaseAuthUserId: { contains: search, mode: 'insensitive' } } },
-					{ contact: { phone: { number: { contains: search, mode: 'insensitive' } } } },
-					{ focuses: { some: { focus: { name: { contains: search, mode: 'insensitive' } } } } },
-				],
-			}
-		: undefined;
+	const where: Prisma.LocalPartnerWhereInput = {
+		...(query.focusId ? { focuses: { some: { focusId: query.focusId } } } : {}),
+		...(search
+			? {
+					OR: [
+						{ id: { contains: search, mode: 'insensitive' } },
+						{ name: { contains: search, mode: 'insensitive' } },
+						{ contact: { firstName: { contains: search, mode: 'insensitive' } } },
+						{ contact: { lastName: { contains: search, mode: 'insensitive' } } },
+						{ contact: { email: { contains: search, mode: 'insensitive' } } },
+						{ account: { firebaseAuthUserId: { contains: search, mode: 'insensitive' } } },
+						{ contact: { phone: { number: { contains: search, mode: 'insensitive' } } } },
+						{ focuses: { some: { focus: { name: { contains: search, mode: 'insensitive' } } } } },
+					],
+				}
+			: {}),
+	};
 
 	const [partners, totalCount] = await Promise.all([
 		prisma.localPartner.findMany({

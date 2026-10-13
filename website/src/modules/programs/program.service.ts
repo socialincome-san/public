@@ -12,12 +12,19 @@ import {
 	validateOrganizationIds,
 } from '@/modules/organizations/organization.service';
 import { createInitialAccessesForProgram, getAccessiblePrograms } from '@/modules/program-access/program-access.service';
-import { createPublicOnboardingUser, getActiveOrganizationId, isUserEmailAvailable } from '@/modules/users/user.service';
+import {
+	createPublicOnboardingUser,
+	getActiveOrganizationId,
+	isAdmin,
+	isUserEmailAvailable,
+} from '@/modules/users/user.service';
 import { isReadyForFirstPayoutInterval } from './program-stats.service';
 import * as programRepository from './program.repository';
 import type { ProgramCreateInput, ProgramSettingsUpdateInput, PublicOnboardingUserDetailsInput } from './program.schemas';
 import type {
+	ProgramPaginatedTableView,
 	ProgramSettingsPayload,
+	ProgramTableQuery,
 	ProgramWallet,
 	ProgramWallets,
 	PublicPreviewProgram,
@@ -30,6 +37,44 @@ import type {
 
 type PublicProgramRecord = NonNullable<Awaited<ReturnType<typeof programRepository.findPublicProgramBySlug>>>;
 type PublicProgramStatsRecord = NonNullable<Awaited<ReturnType<typeof programRepository.findPublicProgramStatsById>>>;
+
+export const getPaginatedProgramTableView = async (
+	userId: string,
+	query: ProgramTableQuery,
+): Promise<Result<ProgramPaginatedTableView>> => {
+	try {
+		const isAdminResult = await isAdmin(userId);
+		if (!isAdminResult.success) {
+			return resultFail(isAdminResult.error);
+		}
+
+		const { programs, totalCount } = await programRepository.findPaginatedPrograms(query);
+
+		return resultOk({
+			tableRows: programs.map((program) => ({
+				id: program.id,
+				name: program.name,
+				country: program.country.isoCode,
+				ownerOrganizations: program.programAccesses
+					.filter(({ permission }) => permission === ProgramPermission.owner)
+					.map(({ organization }) => organization.name)
+					.join(', '),
+				operatorOrganizations: program.programAccesses
+					.filter(({ permission }) => permission === ProgramPermission.operator)
+					.map(({ organization }) => organization.name)
+					.join(', '),
+				focuses: program.targetFocuses.map(({ focus }) => focus.name).join(', '),
+				recipientsCount: program._count.recipients,
+				createdAt: program.createdAt,
+			})),
+			totalCount,
+		});
+	} catch (error) {
+		console.error('Could not fetch programs', { userId, error });
+
+		return resultFail('Could not fetch programs');
+	}
+};
 
 export const getPublicProgramFilterDataByPortalSlugs = async (
 	portalSlugs: string[],

@@ -94,6 +94,15 @@ describe('country service', () => {
 		expect(mockFindPaginatedCountries).not.toHaveBeenCalled();
 	});
 
+	test('passes the provider filter to the country repository', async () => {
+		const query = { page: 1, pageSize: 10, search: '', mobileMoneyProviderId: 'provider-1' };
+		mockFindPaginatedCountries.mockResolvedValue({ countries: [], totalCount: 0 });
+
+		await getPaginatedCountryTableView('admin-1', query);
+
+		expect(mockFindPaginatedCountries).toHaveBeenCalledWith(query);
+	});
+
 	test('aggregates candidate counts by resolved country', async () => {
 		mockFindCountriesForFeasibility.mockResolvedValue([
 			createCountry('country-sl', 'SL'),

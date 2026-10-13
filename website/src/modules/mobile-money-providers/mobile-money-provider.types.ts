@@ -15,6 +15,8 @@ export type MobileMoneyProviderTableQuery = {
 	search: string;
 	sortBy?: string;
 	sortDirection?: 'asc' | 'desc';
+	countryId?: string;
+	parentProviderId?: string;
 };
 
 export type MobileMoneyProviderPaginatedTableView = {

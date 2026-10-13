@@ -8,8 +8,8 @@ import type { ColumnDef } from '@/components/data-table/tanstack-table';
 import type { ExpenseTableViewRow } from '@/modules/expenses/expense.types';
 import { DataTableRowChevronCell } from '@socialincome/design-system/data-display/data-table-cells/data-table-cells';
 
-export const makeExpenseColumns = (): ColumnDef<ExpenseTableViewRow>[] => {
-	return [
+export const makeExpenseColumns = (hideOrganization = false): ColumnDef<ExpenseTableViewRow>[] => {
+	const columns: ColumnDef<ExpenseTableViewRow>[] = [
 		{
 			accessorKey: 'type',
 			header: (ctx) => <SortableHeader ctx={ctx}>Type</SortableHeader>,
@@ -26,11 +26,17 @@ export const makeExpenseColumns = (): ColumnDef<ExpenseTableViewRow>[] => {
 			accessorFn: (row) => row.amountChf,
 			cell: (ctx) => <CurrencyCell ctx={ctx} currency="CHF" />,
 		},
-		{
+	];
+
+	if (!hideOrganization) {
+		columns.push({
 			accessorKey: 'organizationName',
 			header: (ctx) => <SortableHeader ctx={ctx}>Organization</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		});
+	}
+
+	columns.push(
 		{
 			accessorKey: 'createdAt',
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
@@ -42,5 +48,7 @@ export const makeExpenseColumns = (): ColumnDef<ExpenseTableViewRow>[] => {
 			enableHiding: false,
 			cell: () => <DataTableRowChevronCell />,
 		},
-	];
+	);
+
+	return columns;
 };

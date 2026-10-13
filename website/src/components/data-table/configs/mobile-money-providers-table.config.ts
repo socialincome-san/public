@@ -16,3 +16,17 @@ export const mobileMoneyProvidersTableConfig: DataTableConfig<MobileMoneyProvide
 	makeColumns: makeMobileMoneyProviderColumns,
 	showColumnVisibilitySelector: true,
 };
+
+export const countryMobileMoneyProvidersTableConfig: DataTableConfig<MobileMoneyProviderTableViewRow> = {
+	...mobileMoneyProvidersTableConfig,
+	id: 'country-mobile-money-providers',
+};
+
+export const mobileMoneyProviderChildrenTableConfig: DataTableConfig<MobileMoneyProviderTableViewRow> = {
+	...mobileMoneyProvidersTableConfig,
+	id: 'mobile-money-provider-children',
+	title: 'Child providers',
+	searchKeys: mobileMoneyProvidersTableConfig.searchKeys.filter((key) => key !== 'parentName'),
+	sortOptions: mobileMoneyProvidersTableConfig.sortOptions?.filter(({ id }) => id !== 'parentName'),
+	makeColumns: () => makeMobileMoneyProviderColumns(true),
+};

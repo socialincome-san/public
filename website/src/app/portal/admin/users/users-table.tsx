@@ -2,6 +2,7 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { usersTableConfig } from '@/components/data-table/configs/users-table.config';
+import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { UserTableViewRow } from '@/modules/users/user.types';
@@ -20,20 +21,27 @@ export default function UsersTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [open, setOpen] = useState(false);
+	const [userId, setUserId] = useSearchParamState('userId');
+	const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const [userId, setUserId] = useState<string | undefined>(undefined);
+	const open = isCreateFormOpen || Boolean(userId);
 
 	const openEmptyForm = () => {
 		setUserId(undefined);
 		setErrorMessage(null);
-		setOpen(true);
+		setIsCreateFormOpen(true);
 	};
 
 	const openEditForm = (row: UserTableViewRow) => {
 		setUserId(row.id);
 		setErrorMessage(null);
-		setOpen(true);
+	};
+
+	const onOpenChange = (nextOpen: boolean) => {
+		if (!nextOpen) {
+			setUserId(undefined);
+			setIsCreateFormOpen(false);
+		}
 	};
 
 	const onError = (error: unknown) => {
@@ -60,7 +68,7 @@ export default function UsersTable({
 				onRowClick={openEditForm}
 			/>
 
-			<Dialog open={open} onOpenChange={setOpen}>
+			<Dialog open={open} onOpenChange={onOpenChange}>
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>{userId ? 'Edit' : 'Add'} user</DialogTitle>
@@ -73,7 +81,12 @@ export default function UsersTable({
 						</Alert>
 					)}
 
-					<UsersForm userId={userId} onSuccess={() => setOpen(false)} onCancel={() => setOpen(false)} onError={onError} />
+					<UsersForm
+						userId={userId}
+						onSuccess={() => onOpenChange(false)}
+						onCancel={() => onOpenChange(false)}
+						onError={onError}
+					/>
 				</DialogContent>
 			</Dialog>
 		</>

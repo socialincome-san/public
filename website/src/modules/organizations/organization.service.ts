@@ -7,6 +7,7 @@ import * as organizationRepository from './organization.repository';
 import type { CreateOrganizationInput, RenameOrganizationInput, UpdateOrganizationInput } from './organization.schemas';
 import type {
 	ActiveOrganizationSummary,
+	OrganizationAdminMemberTableQuery,
 	OrganizationMemberPaginatedTableView,
 	OrganizationMemberTableQuery,
 	OrganizationMemberTableViewRow,
@@ -16,6 +17,17 @@ import type {
 	OrganizationTableQuery,
 	OrganizationTableViewRow,
 } from './organization.types';
+
+const toOrganizationMemberTableRows = (
+	members: Awaited<ReturnType<typeof organizationRepository.findPaginatedOrganizationMembers>>['members'],
+): OrganizationMemberTableViewRow[] =>
+	members.map((member) => ({
+		id: member.user.id,
+		firstName: member.user.contact?.firstName ?? '',
+		lastName: member.user.contact?.lastName ?? '',
+		email: member.user.contact?.email ?? '',
+		role: member.user.role ?? null,
+	}));
 
 export const getActiveOrganizationSummary = async (userId: string): Promise<Result<ActiveOrganizationSummary>> => {
 	try {
@@ -51,17 +63,35 @@ export const getPaginatedOrganizationMembersTableView = async (
 			organizationIdResult.data,
 			query,
 		);
-		const tableRows: OrganizationMemberTableViewRow[] = members.map((member) => ({
-			id: member.user.id,
-			firstName: member.user.contact?.firstName ?? '',
-			lastName: member.user.contact?.lastName ?? '',
-			email: member.user.contact?.email ?? '',
-			role: member.user.role ?? null,
-		}));
+		const tableRows = toOrganizationMemberTableRows(members);
 
 		return resultOk({ tableRows, totalCount });
 	} catch (error) {
 		console.error('Could not fetch organization members', { userId, error });
+
+		return resultFail('Could not fetch organization members');
+	}
+};
+
+export const getPaginatedOrganizationAdminMembersTableView = async (
+	userId: string,
+	query: OrganizationAdminMemberTableQuery,
+): Promise<Result<OrganizationMemberPaginatedTableView>> => {
+	try {
+		const isAdminResult = await isAdmin(userId);
+		if (!isAdminResult.success) {
+			return resultFail(isAdminResult.error);
+		}
+
+		const { organizationId, ...tableQuery } = query;
+		const { members, totalCount } = await organizationRepository.findPaginatedOrganizationMembers(
+			organizationId,
+			tableQuery,
+		);
+
+		return resultOk({ tableRows: toOrganizationMemberTableRows(members), totalCount });
+	} catch (error) {
+		console.error('Could not fetch organization members for admin', { userId, organizationId: query.organizationId, error });
 
 		return resultFail('Could not fetch organization members');
 	}
