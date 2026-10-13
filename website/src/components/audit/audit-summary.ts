@@ -172,6 +172,24 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			campaignPendings: 'Pending claims',
 		},
 	},
+	survey: {
+		label: 'Survey',
+		namePaths: ['name'],
+		fieldLabels: {
+			legacyFirestoreId: 'Legacy ID',
+			name: 'Name',
+			questionnaire: 'Questionnaire',
+			language: 'Language',
+			dueAt: 'Due at',
+			completedAt: 'Completed at',
+			status: 'Status',
+			data: 'Answers',
+			accessEmail: 'Access email',
+			accessPw: 'Access password',
+			recipientId: 'Recipient',
+			surveyScheduleId: 'Survey schedule',
+		},
+	},
 };
 
 export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));

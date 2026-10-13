@@ -57,7 +57,7 @@ export const createSurveyAction = async (input: unknown): Promise<Result<SurveyP
 		return resultFail('Invalid input.');
 	}
 
-	const result = await createSurvey(sessionResult.data.id, inputResult.data);
+	const result = await createSurvey(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/management/surveys');
 
 	return result;
@@ -86,7 +86,7 @@ export const updateSurveyAction = async (input: unknown): Promise<Result<SurveyP
 		return resultFail('Invalid input.');
 	}
 
-	const result = await updateSurvey(sessionResult.data.id, inputResult.data);
+	const result = await updateSurvey(sessionResult.data, inputResult.data);
 	revalidatePath('/portal/management/surveys');
 
 	return result;
@@ -116,7 +116,7 @@ export const generateSurveysAction = async (): Promise<Result<SurveyGenerationRe
 		return sessionResult;
 	}
 
-	const result = await generateSurveys(sessionResult.data.id);
+	const result = await generateSurveys(sessionResult.data);
 	revalidatePath('/portal/management/surveys');
 
 	return result;

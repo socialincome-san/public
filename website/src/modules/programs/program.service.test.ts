@@ -16,6 +16,7 @@ const mockIsAdmin = jest.fn();
 const mockFindPaginatedPrograms = jest.fn();
 
 const mockCreateDefaultCampaign = jest.fn();
+const mockDetachProgramSurveys = jest.fn();
 const mockDeleteProgramCampaigns = jest.fn();
 
 jest.mock('@/modules/program-access/program-access.service', () => ({
@@ -24,6 +25,9 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 }));
 jest.mock('@/modules/candidates/candidate.service', () => ({
 	assignRandomCandidatesToProgram: jest.fn(),
+}));
+jest.mock('@/modules/surveys/survey.service', () => ({
+	detachProgramSurveys: mockDetachProgramSurveys,
 }));
 jest.mock('@/modules/campaigns/campaign.service', () => ({
 	createDefaultCampaign: mockCreateDefaultCampaign,

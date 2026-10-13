@@ -1,13 +1,7 @@
 import { Prisma, SurveyStatus } from '@/generated/prisma/client';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
-import type {
-	SurveyCreateData,
-	SurveyImpactQuery,
-	SurveyResponseUpdateInput,
-	SurveyTableQuery,
-	SurveyUpdateData,
-} from './survey.types';
+import type { SurveyImpactQuery, SurveyTableQuery } from './survey.types';
 
 export const findSurveyTableSource = async ({
 	programIds,
@@ -201,53 +195,13 @@ export const findExistingSurveyIdentities = async (recipientIds: string[]) =>
 		},
 	});
 
+export const findSurveyIdsByProgramSchedules = async (programId: string) =>
+	prisma.survey.findMany({ where: { surveySchedule: { programId } }, select: { id: true } });
+
 export const findSurveyByRecipientAndName = async (recipientId: string, name: string) =>
 	prisma.survey.findUnique({
 		where: { recipientId_name: { recipientId, name } },
 		select: { id: true },
-	});
-
-export const createSurvey = async (input: SurveyCreateData) =>
-	prisma.survey.create({
-		data: input,
-		select: {
-			id: true,
-			name: true,
-			questionnaire: true,
-			language: true,
-			dueAt: true,
-			completedAt: true,
-			status: true,
-			data: true,
-			accessEmail: true,
-			accessPw: true,
-			recipientId: true,
-			surveyScheduleId: true,
-			createdAt: true,
-			updatedAt: true,
-		},
-	});
-
-export const updateSurvey = async (surveyId: string, input: SurveyUpdateData | SurveyResponseUpdateInput) =>
-	prisma.survey.update({
-		where: { id: surveyId },
-		data: input,
-		select: {
-			id: true,
-			name: true,
-			questionnaire: true,
-			language: true,
-			dueAt: true,
-			completedAt: true,
-			status: true,
-			data: true,
-			accessEmail: true,
-			accessPw: true,
-			recipientId: true,
-			surveyScheduleId: true,
-			createdAt: true,
-			updatedAt: true,
-		},
 	});
 
 export const findCompletedSurveyImpactSource = async (query: SurveyImpactQuery) =>

@@ -16,6 +16,7 @@ import {
 } from '@/modules/organizations/organization.service';
 import { createInitialAccessesForProgram, getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import { removeRecipientsFromProgram } from '@/modules/recipients/recipient.service';
+import { detachProgramSurveys } from '@/modules/surveys/survey.service';
 import {
 	createPublicOnboardingUser,
 	getActiveOrganizationId,
@@ -509,7 +510,7 @@ export const deleteProgram = async (session: UserSession, programId: string): Pr
 			return resultFail('Program cannot be deleted because related campaigns already have contributions.');
 		}
 
-		// Recipients and campaigns belong to other modules, so they are removed
+		// Recipients, campaigns and surveys belong to other modules, so they are removed
 		// in separate steps before the program. Each step is safe to retry
 		// after a failed deletion.
 		const deletionAudit: AuditContext = {
@@ -523,6 +524,10 @@ export const deleteProgram = async (session: UserSession, programId: string): Pr
 		const campaignsResult = await deleteProgramCampaigns(deletionAudit, programId);
 		if (!campaignsResult.success) {
 			return resultFail(campaignsResult.error);
+		}
+		const surveysResult = await detachProgramSurveys(deletionAudit, programId);
+		if (!surveysResult.success) {
+			return resultFail(surveysResult.error);
 		}
 		await programRepository.deleteProgram(programId);
 

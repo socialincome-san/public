@@ -5,6 +5,7 @@ const mockRemoveRecipientsFromProgram = jest.fn();
 const mockDeleteProgram = jest.fn();
 
 const mockCreateDefaultCampaign = jest.fn();
+const mockDetachProgramSurveys = jest.fn();
 const mockDeleteProgramCampaigns = jest.fn();
 
 jest.mock('@/modules/program-access/program-access.service', () => ({
@@ -17,6 +18,9 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 }));
 jest.mock('@/modules/candidates/candidate.service', () => ({
 	assignRandomCandidatesToProgram: mockAssignRandomCandidatesToProgram,
+}));
+jest.mock('@/modules/surveys/survey.service', () => ({
+	detachProgramSurveys: mockDetachProgramSurveys,
 }));
 jest.mock('@/modules/campaigns/campaign.service', () => ({
 	createDefaultCampaign: mockCreateDefaultCampaign,
@@ -78,6 +82,7 @@ describe('program recipient write attribution', () => {
 		mockRemoveRecipientsFromProgram.mockResolvedValue({ success: true, data: undefined });
 		mockCreateDefaultCampaign.mockResolvedValue({ success: true, data: { id: 'campaign-1' } });
 		mockDeleteProgramCampaigns.mockResolvedValue({ success: true, data: undefined });
+		mockDetachProgramSurveys.mockResolvedValue({ success: true, data: undefined });
 	});
 
 	test('attributes candidate assignment and the default campaign to the portal user or the new website user', async () => {
@@ -101,12 +106,19 @@ describe('program recipient write attribution', () => {
 		]);
 	});
 
-	test('removes recipients and campaigns through their modules before deleting', async () => {
+	test('removes recipients, campaigns and survey schedules through their modules before deleting', async () => {
 		await expect(deleteProgram(operator, 'program-1')).resolves.toMatchObject({ success: true });
 
 		expect(mockDeleteProgramCampaigns).toHaveBeenCalledWith(
 			expect.objectContaining({ metadata: { operation: 'program-deletion', programId: 'program-1' } }),
 			'program-1',
+		);
+		expect(mockDetachProgramSurveys).toHaveBeenCalledWith(
+			expect.objectContaining({ metadata: { operation: 'program-deletion', programId: 'program-1' } }),
+			'program-1',
+		);
+		expect(mockDetachProgramSurveys.mock.invocationCallOrder[0]).toBeLessThan(
+			mockDeleteProgram.mock.invocationCallOrder[0] ?? 0,
 		);
 		expect(mockDeleteProgramCampaigns.mock.invocationCallOrder[0]).toBeLessThan(
 			mockDeleteProgram.mock.invocationCallOrder[0] ?? 0,

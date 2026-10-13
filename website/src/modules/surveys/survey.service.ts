@@ -1,4 +1,6 @@
 import { Gender, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@/generated/prisma/enums';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { now, nowMs } from '@/lib/utils/now';
 import { TRAILING_SLASHES_REGEX } from '@/lib/utils/regex';
@@ -11,10 +13,12 @@ import {
 } from '@/modules/recipients/recipient.service';
 import { RECIPIENT_AGE_GROUP_BOUNDS, RECIPIENT_AGE_GROUPS } from '@/modules/surveys/survey-age-groups.types';
 import { QUESTIONS } from '@/modules/surveys/survey-questions.types';
+import type { UserSession } from '@/modules/users/user.types';
 import { addMonths, differenceInDays, endOfMonth, max, min, startOfMonth, subMonths } from 'date-fns';
 import crypto from 'node:crypto';
 import { hasSurveyOperatorAccess, hasSurveyProgramAccess } from './survey.permissions';
-import * as surveyRepository from './survey.repository';
+import * as surveyRepository from './survey.repository.read';
+import * as surveyWriteRepository from './survey.repository.write';
 import {
 	surveyCreateSchema,
 	surveyResponseUpdateSchema,
@@ -265,7 +269,7 @@ export const previewSurveyGeneration = async (userId: string): Promise<Result<Su
 	}
 };
 
-export const createSurvey = async (userId: string, input: SurveyCreateInput): Promise<Result<SurveyPayload>> => {
+export const createSurvey = async (session: UserSession, input: SurveyCreateInput): Promise<Result<SurveyPayload>> => {
 	const inputResult = surveyCreateSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -283,7 +287,7 @@ export const createSurvey = async (userId: string, input: SurveyCreateInput): Pr
 			return resultFail('Recipient is not assigned to a program');
 		}
 
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -306,20 +310,20 @@ export const createSurvey = async (userId: string, input: SurveyCreateInput): Pr
 			return resultFail('Could not synchronize survey authentication user');
 		}
 
-		const survey = await surveyRepository.createSurvey({
+		const survey = await surveyWriteRepository.createSurvey(getSessionAuditContext(session), {
 			...inputResult.data,
 			data: {},
 		});
 
 		return resultOk(toSurveyPayload(survey));
 	} catch (error) {
-		console.error('Failed to create survey', { userId, error });
+		console.error('Failed to create survey', { userId: session.id, error });
 
 		return resultFail('Failed to create survey. Please try again later.');
 	}
 };
 
-export const updateSurvey = async (userId: string, input: SurveyUpdateInput): Promise<Result<SurveyPayload>> => {
+export const updateSurvey = async (session: UserSession, input: SurveyUpdateInput): Promise<Result<SurveyPayload>> => {
 	const inputResult = surveyUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -335,7 +339,7 @@ export const updateSurvey = async (userId: string, input: SurveyUpdateInput): Pr
 			return resultFail('Recipient is not assigned to a program');
 		}
 
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -396,17 +400,23 @@ export const updateSurvey = async (userId: string, input: SurveyUpdateInput): Pr
 			updateData.accessPw = inputResult.data.accessPw;
 		}
 
-		return resultOk(toSurveyPayload(await surveyRepository.updateSurvey(existing.id, updateData)));
+		return resultOk(
+			toSurveyPayload(await surveyWriteRepository.updateSurvey(getSessionAuditContext(session), existing.id, updateData)),
+		);
 	} catch (error) {
-		console.error('Failed to update survey', { userId, surveyId: input.id, error });
+		console.error('Failed to update survey', { userId: session.id, surveyId: input.id, error });
 
 		return resultFail('Failed to update survey. Please try again later.');
 	}
 };
 
-export const generateSurveys = async (userId: string): Promise<Result<SurveyGenerationResult>> => {
+export const generateSurveys = async (session: UserSession): Promise<Result<SurveyGenerationResult>> => {
 	try {
-		const previewResult = await previewSurveyGeneration(userId);
+		const previewResult = await previewSurveyGeneration(session.id);
+		const audit: AuditContext = {
+			...getSessionAuditContext(session),
+			metadata: { operation: 'survey-generation', generationId: crypto.randomUUID() },
+		};
 		if (!previewResult.success) {
 			return resultFail(previewResult.error);
 		}
@@ -422,7 +432,7 @@ export const generateSurveys = async (userId: string): Promise<Result<SurveyGene
 
 				return resultFail('Could not create survey authentication user');
 			}
-			await surveyRepository.createSurvey(surveyInput);
+			await surveyWriteRepository.createSurvey(audit, surveyInput);
 			surveysCreated += 1;
 		}
 
@@ -431,7 +441,7 @@ export const generateSurveys = async (userId: string): Promise<Result<SurveyGene
 			message: `Successfully created ${surveysCreated} surveys`,
 		});
 	} catch (error) {
-		console.error('Failed to generate surveys', { userId, error });
+		console.error('Failed to generate surveys', { userId: session.id, error });
 
 		return resultFail('Failed to generate surveys');
 	}
@@ -452,11 +462,36 @@ export const saveSurveyChanges = async (
 			return resultFail('Survey not found');
 		}
 
-		return resultOk(toSurveyPayload(await surveyRepository.updateSurvey(surveyId, inputResult.data)));
+		return resultOk(
+			toSurveyPayload(
+				await surveyWriteRepository.updateSurvey(
+					{ actor: { type: 'recipient', id: existing.recipientId }, source: 'website' },
+					surveyId,
+					inputResult.data,
+				),
+			),
+		);
 	} catch (error) {
 		console.error('Failed to save survey changes', { surveyId, error });
 
 		return resultFail('Failed to update survey');
+	}
+};
+
+/** Detaches surveys from a program's schedules, e.g. before the program is deleted. The caller authorizes. */
+export const detachProgramSurveys = async (audit: AuditContext, programId: string): Promise<Result<void>> => {
+	try {
+		const surveys = await surveyRepository.findSurveyIdsByProgramSchedules(programId);
+		await surveyWriteRepository.removeSurveySchedules(
+			audit,
+			surveys.map(({ id }) => id),
+		);
+
+		return resultOk(undefined);
+	} catch (error) {
+		console.error('Could not detach program surveys', { programId, error });
+
+		return resultFail('Could not detach program surveys');
 	}
 };
 
