@@ -4,7 +4,7 @@ import { prisma } from '@/lib/database/prisma';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { CandidateCreateInput, CandidateUpdateInput } from './candidate.schemas';
-import type { CandidatesTableQuery } from './candidate.types';
+import type { CandidatePoolFilters, CandidatesTableQuery } from './candidate.types';
 
 export const findCandidateById = async (candidateId: string) =>
 	prisma.recipient.findUnique({
@@ -173,21 +173,41 @@ export const countCandidates = async (
 	localPartnerIds?: string[],
 ) => prisma.recipient.count({ where: buildCandidateWhere(focuses, profiles, countryCode, localPartnerIds) });
 
-export const findCandidateIdsForAssignment = async (
-	focuses: string[] | undefined,
-	profiles: Profile[] | undefined,
-	countryCode: CountryCode,
-	localPartnerIds?: string[],
-) =>
-	prisma.recipient.findMany({
-		where: buildCandidateWhere(focuses, profiles, countryCode, localPartnerIds),
-		select: { id: true },
+
+export const findAvailableCandidateLocalPartners = async (countryCode: CountryCode) =>
+	prisma.localPartner.findMany({
+		where: { recipients: { some: buildCandidateWhere([], [], countryCode, []) } },
+		select: { id: true, name: true },
+		orderBy: { name: 'asc' },
 	});
 
-export const updateCandidateProgramAssignments = async (candidateIds: string[], programId: string) =>
-	prisma.recipient.updateMany({
-		where: { id: { in: candidateIds } },
-		data: { programId },
+export const updateCandidateProgramAssignmentsAtomically = async (
+	programId: string,
+	amount: number,
+	countryCode: CountryCode,
+	filters: CandidatePoolFilters,
+): Promise<number> =>
+	prisma.$transaction(async (transaction) => {
+		const candidates = await transaction.recipient.findMany({
+			where: buildCandidateWhere(filters.focuses, filters.profiles, countryCode, filters.localPartnerIds),
+			select: { id: true },
+		});
+		if (candidates.length < amount) {
+			throw new Error('CANDIDATE_POOL_EXHAUSTED');
+		}
+		const ids = [...candidates]
+			.sort(() => Math.random() - 0.5)
+			.slice(0, amount)
+			.map(({ id }) => id);
+		const updated = await transaction.recipient.updateMany({
+			where: { id: { in: ids }, programId: null },
+			data: { programId },
+		});
+		if (updated.count !== amount) {
+			throw new Error('CANDIDATE_POOL_EXHAUSTED');
+		}
+
+		return updated.count;
 	});
 
 type CandidateUpdatePersistenceContext = {
@@ -414,19 +434,19 @@ const buildCandidateWhere = (
 		andFilters.push({ localPartnerId: { in: localPartnerIds } });
 	}
 	if (focuses?.length) {
-		andFilters.push(
-			...focuses.map((focusId) => ({
-				localPartner: { focuses: { some: { focusId } } },
-			})),
-		);
+		andFilters.push({ localPartner: { focuses: { some: { focusId: { in: focuses } } } } });
 	}
 	if (profiles?.length) {
 		const contactFilters: Prisma.ContactWhereInput[] = [];
+		const genders: Gender[] = [];
 		if (profiles.includes(Profile.male)) {
-			contactFilters.push({ gender: Gender.male });
+			genders.push(Gender.male);
 		}
 		if (profiles.includes(Profile.female)) {
-			contactFilters.push({ gender: Gender.female });
+			genders.push(Gender.female);
+		}
+		if (genders.length) {
+			contactFilters.push({ OR: genders.map((gender) => ({ gender })) });
 		}
 		if (profiles.includes(Profile.youth)) {
 			const currentDate = now();

@@ -12,6 +12,7 @@ import { isAdmin } from '@/modules/users/user.service';
 import * as candidateRepository from './candidate.repository';
 import { candidateCreateSchema, type CandidateCreateInput, type CandidateUpdateInput } from './candidate.schemas';
 import type {
+	CandidatePoolFilters,
 	CandidatePayload,
 	CandidatesPaginatedTableView,
 	CandidatesTableQuery,
@@ -84,6 +85,39 @@ export const getCandidateCount = async (
 		console.error('Could not count candidates', { error });
 
 		return resultFail('Could not count candidates');
+	}
+};
+
+
+export const countAvailableCandidatesInCountry = async (
+	countryCode: CountryCode,
+	filters: CandidatePoolFilters,
+): Promise<Result<{ count: number }>> => {
+	try {
+		return resultOk({
+			count: await candidateRepository.countCandidates(
+				filters.focuses,
+				filters.profiles,
+				countryCode,
+				filters.localPartnerIds,
+			),
+		});
+	} catch (error) {
+		console.error('Could not count candidates in program country', { countryCode, error });
+
+		return resultFail('Could not count candidates');
+	}
+};
+
+export const getAvailableCandidateLocalPartners = async (
+	countryCode: CountryCode,
+): Promise<Result<{ id: string; name: string }[]>> => {
+	try {
+		return resultOk(await candidateRepository.findAvailableCandidateLocalPartners(countryCode));
+	} catch (error) {
+		console.error('Could not load available local partners', { countryCode, error });
+
+		return resultFail('Could not load local partners');
 	}
 };
 
@@ -354,37 +388,31 @@ export const importCandidatesCsv = async (session: Session, file: File): Promise
 	}
 };
 
+
 export const assignRandomCandidatesToProgram = async (
 	programId: string,
 	amount: number,
 	countryCode: CountryCode,
-	focuses?: string[],
-	profiles?: Profile[],
-	localPartnerIds?: string[],
+	focuses: string[] = [],
+	profiles: Profile[] = [],
+	localPartnerIds: string[] = [],
 ): Promise<Result<{ assigned: number }>> => {
+	if (!Number.isInteger(amount) || amount < 1) {
+		return resultFail('Invalid recipient count');
+	}
+
 	try {
-		const candidates = await candidateRepository.findCandidateIdsForAssignment(
+		const assigned = await candidateRepository.updateCandidateProgramAssignmentsAtomically(programId, amount, countryCode, {
 			focuses,
 			profiles,
-			countryCode,
 			localPartnerIds,
-		);
-		if (candidates.length < amount) {
-			console.warn('Not enough candidates available for assignment', {
-				available: candidates.length,
-				requested: amount,
-			});
+		});
 
+		return resultOk({ assigned });
+	} catch (error) {
+		if (error instanceof Error && error.message === 'CANDIDATE_POOL_EXHAUSTED') {
 			return resultFail('Not enough candidates available');
 		}
-		const selectedIds = [...candidates]
-			.sort(() => Math.random() - 0.5)
-			.slice(0, amount)
-			.map(({ id }) => id);
-		await candidateRepository.updateCandidateProgramAssignments(selectedIds, programId);
-
-		return resultOk({ assigned: selectedIds.length });
-	} catch (error) {
 		console.error('Could not assign candidates', { programId, error });
 
 		return resultFail('Could not assign candidates');

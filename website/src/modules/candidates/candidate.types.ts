@@ -1,4 +1,10 @@
-import type { CountryCode, Gender } from '@/generated/prisma/enums';
+import type { CountryCode, Gender, Profile } from '@/generated/prisma/enums';
+
+export type CandidatePoolFilters = {
+	focuses: string[];
+	profiles: Profile[];
+	localPartnerIds: string[];
+};
 
 type CandidatePhone = {
 	id: string;
