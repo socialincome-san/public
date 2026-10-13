@@ -6,6 +6,7 @@ import type {
 	PayoutStatus,
 	ProgramPermission,
 } from '@/generated/prisma/enums';
+import type { AuditChange, JsonValue } from '@/lib/audit/audit-types';
 export const OBFUSCATED_SENTINEL = 'OBFUSCATED';
 
 export type UnassignedRecipientCountry = {
@@ -333,4 +334,14 @@ type RecipientLocalPartnerRecord = {
 	createdAt: Date;
 	updatedAt: Date | null;
 	contact: RecipientContactRecord;
+};
+
+export type RecipientAuditEntry = {
+	id: string;
+	createdAt: Date;
+	action: string;
+	actor: { type: string; id: string };
+	source: string;
+	metadata: JsonValue;
+	changes: AuditChange[];
 };

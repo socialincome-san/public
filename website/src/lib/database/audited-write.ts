@@ -1,56 +1,47 @@
 import type { Prisma } from '@/generated/prisma/client';
-import { computeAuditChanges } from '@/lib/audit/audit-changes';
-import type { AuditAction, AuditContext, AuditFieldPolicy } from '@/lib/audit/audit-types';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { prisma } from './prisma';
 
-export type AuditedEntity<TSnapshot extends { id: string }> = {
+export type VersionedEntity = {
 	type: string;
-	fields: AuditFieldPolicy<Omit<TSnapshot, 'id'>>;
-	/** Must lock the row (SELECT … FOR UPDATE) so concurrent writes serialize. */
-	findSnapshot: (transaction: Prisma.TransactionClient, id: string) => Promise<TSnapshot | null>;
+	findSnapshot: (transaction: Prisma.TransactionClient, id: string) => Promise<Prisma.InputJsonObject | null>;
 };
 
-type AuditedWriteOptions<TSnapshot extends { id: string }> = {
-	entity: AuditedEntity<TSnapshot>;
+type AuditedWriteOptions = {
+	entity: VersionedEntity;
 	context: AuditContext;
 } & ({ action: 'create' } | { action: 'update' | 'delete'; entityId: string });
 
 /**
- * Runs `write` and stores its audit event in the same transaction: lock and
- * snapshot the entity, write, snapshot again, store the diff. Throws, and
- * rolls back the write, if the event cannot be stored. Updates that change
- * no audited field store nothing. `create` takes the id from the returned
- * row.
+ * Runs `write` and stores the entity's state afterwards as a new version in
+ * the same transaction, so the write rolls back if the version cannot be
+ * stored. `create` takes the id from the returned row.
+ *
+ * Entities that existed before versioning get a `baseline` version of their
+ * current state on their first write, so that write diffs against it.
  */
-export const auditedWrite = async <TSnapshot extends { id: string }, T>(
-	options: AuditedWriteOptions<TSnapshot>,
+export const auditedWrite = async <T>(
+	options: AuditedWriteOptions,
 	write: (transaction: Prisma.TransactionClient) => Promise<T>,
 ): Promise<T> =>
 	prisma.$transaction(async (transaction) => {
-		const before = 'entityId' in options ? await options.entity.findSnapshot(transaction, options.entityId) : null;
-		if ('entityId' in options && !before) {
-			throw new Error(`Audited ${options.entity.type} ${options.entityId} not found.`);
+		if ('entityId' in options) {
+			await storeBaselineIfMissing(transaction, options.entity, options.entityId);
 		}
 
 		const result = await write(transaction);
 		const entityId = 'entityId' in options ? options.entityId : getCreatedId(result);
-		const after = await options.entity.findSnapshot(transaction, entityId);
-		assertLifecycle(options.action, after !== null);
+		const snapshot = options.action === 'delete' ? null : await options.entity.findSnapshot(transaction, entityId);
 
-		const changes = computeAuditChanges(options.action, options.entity.fields, before, after);
-		if (options.action === 'update' && changes.length === 0) {
-			return result;
-		}
-
-		await transaction.auditEvent.create({
+		await transaction.entityVersion.create({
 			data: {
-				actorType: options.context.actor.type,
-				actorId: options.context.actor.id,
 				entityType: options.entity.type,
 				entityId,
 				action: options.action,
+				actorType: options.context.actor.type,
+				actorId: options.context.actor.id,
 				source: options.context.source,
-				changes,
+				snapshot: snapshot ?? undefined,
 				metadata: options.context.metadata,
 			},
 		});
@@ -58,16 +49,33 @@ export const auditedWrite = async <TSnapshot extends { id: string }, T>(
 		return result;
 	});
 
+const storeBaselineIfMissing = async (transaction: Prisma.TransactionClient, entity: VersionedEntity, entityId: string) => {
+	const hasVersion = await transaction.entityVersion.findFirst({
+		where: { entityType: entity.type, entityId },
+		select: { id: true },
+	});
+	const snapshot = hasVersion ? null : await entity.findSnapshot(transaction, entityId);
+	if (!snapshot) {
+		return;
+	}
+
+	await transaction.entityVersion.create({
+		data: {
+			entityType: entity.type,
+			entityId,
+			action: 'baseline',
+			actorType: 'system',
+			actorId: 'baseline',
+			source: 'system',
+			snapshot,
+		},
+	});
+};
+
 const getCreatedId = (data: unknown): string => {
 	if (typeof data === 'object' && data !== null && 'id' in data && typeof data.id === 'string') {
 		return data.id;
 	}
 
 	throw new Error('Audited create must return the created row with its id.');
-};
-
-const assertLifecycle = (action: AuditAction, existsAfter: boolean): void => {
-	if (action === 'delete' ? existsAfter : !existsAfter) {
-		throw new Error(`Audited ${action} left the entity in an unexpected state.`);
-	}
 };

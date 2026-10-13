@@ -1,265 +1,145 @@
-import type { AuditContext } from '@/lib/audit/audit-types';
+const mockCommitted: { rows: Map<string, string>; versions: unknown[] } = { rows: new Map(), versions: [] };
+const mockFailVersionInsert = { value: false };
+const mockTransactionRows = new WeakMap<object, Map<string, string>>();
 
-// In-memory stand-in for Postgres: transactions buffer writes and read
-// committed data (READ COMMITTED), row locks are held until commit or
-// rollback, and audit events only become visible on commit.
-
-type Row = { id: string; name: string; phone: string | null };
-
-type StoredEvent = {
-	entityId: string;
-	action: string;
-	actorType: string;
-	source: string;
-	changes: unknown;
-	metadata: unknown;
-};
-
-type FakeTransaction = {
-	writes: Map<string, Row | null>;
-	events: StoredEvent[];
-	held: Set<string>;
-	releases: (() => void)[];
-	auditEvent: { create: (args: { data: StoredEvent }) => Promise<void> };
-};
-
-const mockDatabase: {
-	rows: Map<string, Row>;
-	events: StoredEvent[];
-	failInsert: boolean;
-	locks: Map<string, Promise<void>>;
-} = {
-	rows: new Map(),
-	events: [],
-	failInsert: false,
-	locks: new Map(),
-};
-
+// Buffers writes and versions per transaction and applies them only on
+// commit, like a database transaction.
 jest.mock('./prisma', () => ({
 	prisma: {
-		$transaction: async (work: (transaction: FakeTransaction) => Promise<unknown>) => {
-			const transaction: FakeTransaction = {
-				writes: new Map(),
-				events: [],
-				held: new Set(),
-				releases: [],
-				auditEvent: {
-					create: ({ data }) => {
-						if (mockDatabase.failInsert) {
-							return Promise.reject(new Error('Audit insert failed'));
+		$transaction: async (work: (transaction: unknown) => Promise<unknown>) => {
+			const rows = new Map(mockCommitted.rows);
+			const versions: unknown[] = [];
+			const transaction = {
+				entityVersion: {
+					findFirst: () => Promise.resolve(mockCommitted.versions.length > 0 ? { id: 'version' } : null),
+					create: ({ data }: { data: unknown }) => {
+						if (mockFailVersionInsert.value) {
+							return Promise.reject(new Error('Version insert failed'));
 						}
-						transaction.events.push(data);
+						versions.push(data);
 
 						return Promise.resolve();
 					},
 				},
 			};
-			try {
-				const result = await work(transaction);
-				for (const [id, row] of transaction.writes) {
-					if (row) {
-						mockDatabase.rows.set(id, row);
-					} else {
-						mockDatabase.rows.delete(id);
-					}
-				}
-				mockDatabase.events.push(...transaction.events);
+			mockTransactionRows.set(transaction, rows);
+			const result = await work(transaction);
+			mockCommitted.rows = rows;
+			mockCommitted.versions.push(...versions);
 
-				return result;
-			} finally {
-				transaction.releases.forEach((release) => release());
-			}
+			return result;
 		},
 	},
 }));
 
-import { auditedWrite, type AuditedEntity } from './audited-write';
+import type { AuditContext } from '@/lib/audit/audit-types';
+import { auditedWrite, type VersionedEntity } from './audited-write';
 
-const isFake = (transaction: unknown): transaction is FakeTransaction =>
-	typeof transaction === 'object' && transaction !== null && 'writes' in transaction;
-
-const asFake = (transaction: unknown): FakeTransaction => {
-	if (!isFake(transaction)) {
+const rowsOf = (transaction: object): Map<string, string> => {
+	const rows = mockTransactionRows.get(transaction);
+	if (!rows) {
 		throw new Error('Unexpected transaction');
 	}
 
-	return transaction;
+	return rows;
 };
 
-const read = (transaction: FakeTransaction, id: string): Row | null => {
-	const row = transaction.writes.has(id) ? transaction.writes.get(id) : mockDatabase.rows.get(id);
-
-	return row ? { ...row } : null;
-};
-
-const lock = async (transaction: FakeTransaction, id: string): Promise<void> => {
-	if (transaction.held.has(id)) {
-		return;
-	}
-	while (mockDatabase.locks.has(id)) {
-		await mockDatabase.locks.get(id);
-	}
-
-	let release = (): void => undefined;
-	mockDatabase.locks.set(
-		id,
-		new Promise<void>((resolve) => {
-			release = () => {
-				mockDatabase.locks.delete(id);
-				resolve();
-			};
-		}),
-	);
-	transaction.held.add(id);
-	transaction.releases.push(release);
-};
-
-const entity: AuditedEntity<Row> = {
+const entity: VersionedEntity = {
 	type: 'thing',
-	fields: { name: 'plain', phone: 'personal' },
-	findSnapshot: async (transaction, id) => {
-		const fake = asFake(transaction);
-		await lock(fake, id);
+	findSnapshot: (transaction, id) => {
+		const name = rowsOf(transaction).get(id);
 
-		return read(fake, id);
+		return Promise.resolve(name === undefined ? null : { name });
 	},
 };
 
-const portal: AuditContext = { actor: { type: 'user', id: 'user-1' }, source: 'portal' };
-
-const nextTick = () => new Promise((resolve) => setTimeout(resolve, 5));
+const portal: AuditContext = { actor: { type: 'user', id: 'user-1' }, source: 'portal', metadata: { operation: 'test' } };
 
 describe('auditedWrite', () => {
 	beforeEach(() => {
-		mockDatabase.rows = new Map([['a', { id: 'a', name: 'Ada', phone: '+1' }]]);
-		mockDatabase.events = [];
-		mockDatabase.failInsert = false;
+		mockCommitted.rows = new Map([['a', 'Ada']]);
+		mockCommitted.versions = [];
+		mockFailVersionInsert.value = false;
 	});
 
-	test('stores the update with actor, source and metadata in the same commit', async () => {
-		const result = await auditedWrite(
-			{ entity, context: { ...portal, metadata: { operation: 'test' } }, action: 'update', entityId: 'a' },
-			(transaction) => {
-				asFake(transaction).writes.set('a', { id: 'a', name: 'Grace', phone: '+2' });
+	test('stores the state after the write with who made it', async () => {
+		const result = await auditedWrite({ entity, context: portal, action: 'update', entityId: 'a' }, (transaction) => {
+			rowsOf(transaction).set('a', 'Grace');
 
-				return Promise.resolve('done');
-			},
-		);
+			return Promise.resolve('done');
+		});
 
 		expect(result).toBe('done');
-		expect(mockDatabase.rows.get('a')?.name).toBe('Grace');
-		expect(mockDatabase.events).toEqual([
+		expect(mockCommitted.versions).toEqual([
 			{
-				actorType: 'user',
-				actorId: 'user-1',
+				entityType: 'thing',
+				entityId: 'a',
+				action: 'baseline',
+				actorType: 'system',
+				actorId: 'baseline',
+				source: 'system',
+				snapshot: { name: 'Ada' },
+			},
+			{
 				entityType: 'thing',
 				entityId: 'a',
 				action: 'update',
+				actorType: 'user',
+				actorId: 'user-1',
 				source: 'portal',
-				changes: [
-					{ path: 'name', old: 'Ada', new: 'Grace' },
-					{ path: 'phone', old: '+1', new: '+2' },
-				],
+				snapshot: { name: 'Grace' },
 				metadata: { operation: 'test' },
 			},
 		]);
 	});
 
-	test('stores nothing for an update that changes nothing audited', async () => {
-		await auditedWrite({ entity, context: portal, action: 'update', entityId: 'a' }, () => Promise.resolve());
-
-		expect(mockDatabase.events).toEqual([]);
-	});
-
-	test('stores a create with the returned id and redacts personal values', async () => {
+	test('takes the id of a created row from the result', async () => {
 		await auditedWrite({ entity, context: portal, action: 'create' }, (transaction) => {
-			const row = { id: 'c', name: 'Cleo', phone: '+3' };
-			asFake(transaction).writes.set('c', row);
+			rowsOf(transaction).set('b', 'Bob');
 
-			return Promise.resolve(row);
+			return Promise.resolve({ id: 'b' });
 		});
 
-		expect(mockDatabase.events).toMatchObject([
-			{
-				entityId: 'c',
-				action: 'create',
-				changes: [
-					{ path: 'name', old: null, new: 'Cleo' },
-					{ path: 'phone', redacted: true },
-				],
-			},
-		]);
+		expect(mockCommitted.versions).toMatchObject([{ entityId: 'b', action: 'create', snapshot: { name: 'Bob' } }]);
 	});
 
-	test('stores a delete without personal values', async () => {
+	test('stores no snapshot for a delete', async () => {
 		await auditedWrite({ entity, context: portal, action: 'delete', entityId: 'a' }, (transaction) => {
-			asFake(transaction).writes.set('a', null);
+			rowsOf(transaction).delete('a');
 
 			return Promise.resolve();
 		});
 
-		expect(mockDatabase.rows.has('a')).toBe(false);
-		expect(mockDatabase.events).toMatchObject([
-			{
-				action: 'delete',
-				changes: [
-					{ path: 'name', old: 'Ada', new: null },
-					{ path: 'phone', redacted: true },
-				],
-			},
+		expect(mockCommitted.versions).toMatchObject([
+			{ action: 'baseline', snapshot: { name: 'Ada' } },
+			{ entityId: 'a', action: 'delete', snapshot: undefined },
 		]);
 	});
 
-	test('rolls back the write when the audit event cannot be stored', async () => {
-		mockDatabase.failInsert = true;
+	test('stores the baseline only before the first versioned write', async () => {
+		const rename = (name: string) =>
+			auditedWrite({ entity, context: portal, action: 'update', entityId: 'a' }, (transaction) => {
+				rowsOf(transaction).set('a', name);
+
+				return Promise.resolve();
+			});
+
+		await rename('Grace');
+		await rename('Hedy');
+
+		expect(mockCommitted.versions).toMatchObject([{ action: 'baseline' }, { action: 'update' }, { action: 'update' }]);
+	});
+
+	test('rolls back the write when the version cannot be stored', async () => {
+		mockFailVersionInsert.value = true;
 
 		await expect(
 			auditedWrite({ entity, context: portal, action: 'update', entityId: 'a' }, (transaction) => {
-				asFake(transaction).writes.set('a', { id: 'a', name: 'Grace', phone: '+1' });
+				rowsOf(transaction).set('a', 'Grace');
 
 				return Promise.resolve();
 			}),
-		).rejects.toThrow('Audit insert failed');
-		expect(mockDatabase.rows.get('a')?.name).toBe('Ada');
-	});
-
-	test('fails before writing when the entity does not exist', async () => {
-		const write = jest.fn();
-
-		await expect(auditedWrite({ entity, context: portal, action: 'update', entityId: 'missing' }, write)).rejects.toThrow(
-			'not found',
-		);
-		expect(write).not.toHaveBeenCalled();
-	});
-
-	test('rolls back a delete that left the entity in place', async () => {
-		await expect(
-			auditedWrite({ entity, context: portal, action: 'delete', entityId: 'a' }, () => Promise.resolve()),
-		).rejects.toThrow('unexpected state');
-	});
-
-	test('serializes concurrent updates so each event has exact old values', async () => {
-		const first = auditedWrite({ entity, context: portal, action: 'update', entityId: 'a' }, async (transaction) => {
-			await nextTick();
-			asFake(transaction).writes.set('a', { id: 'a', name: 'Grace', phone: '+1' });
-		});
-		const second = auditedWrite(
-			{ entity, context: { actor: { type: 'recipient', id: 'a' }, source: 'mobile-app' }, action: 'update', entityId: 'a' },
-			(transaction) => {
-				const fake = asFake(transaction);
-				const current = read(fake, 'a');
-				fake.writes.set('a', { id: 'a', name: current?.name ?? '', phone: '+9' });
-
-				return Promise.resolve();
-			},
-		);
-
-		await Promise.all([first, second]);
-
-		expect(mockDatabase.rows.get('a')).toEqual({ id: 'a', name: 'Grace', phone: '+9' });
-		expect(mockDatabase.events.map(({ actorType, changes }) => ({ actorType, changes }))).toEqual([
-			{ actorType: 'user', changes: [{ path: 'name', old: 'Ada', new: 'Grace' }] },
-			{ actorType: 'recipient', changes: [{ path: 'phone', old: '+1', new: '+9' }] },
-		]);
+		).rejects.toThrow('Version insert failed');
+		expect(mockCommitted.rows.get('a')).toBe('Ada');
 	});
 });

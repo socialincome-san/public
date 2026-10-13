@@ -1,6 +1,7 @@
 import { Currency, Gender, PayoutInterval, PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
 import { getSessionAuditContext } from '@/lib/audit/audit-context';
-import type { AuditContext, AuditMetadata } from '@/lib/audit/audit-types';
+import { diffVersions } from '@/lib/audit/audit-diff';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
@@ -29,14 +30,12 @@ import {
 } from './recipient.permissions';
 import * as recipientRepository from './recipient.repository';
 import {
-	recipientAuditEventsSchema,
 	recipientCreateSchema,
 	recipientCsvFileSchema,
 	recipientIdSchema,
 	recipientSelfUpdateSchema,
 	recipientUpdateSchema,
 	type CreateRecipientInput,
-	type RecipientAuditEvent,
 	type UpdateRecipientInput,
 	type UpdateRecipientSelfInput,
 } from './recipient.schemas';
@@ -44,6 +43,7 @@ import {
 	OBFUSCATED_SENTINEL,
 	PublicRecipientTableView,
 	PublicRecipientTableViewRow,
+	RecipientAuditEntry,
 	RecipientFilterOption,
 	RecipientFormOptions,
 	RecipientLifecycleStatus,
@@ -163,7 +163,7 @@ const validateRecipientUpdateUniqueness = async (
 export const createRecipient = async (
 	session: Session,
 	input: CreateRecipientInput,
-	auditMetadata?: AuditMetadata,
+	auditMetadata?: AuditContext['metadata'],
 ): Promise<Result<RecipientWriteResult>> => {
 	try {
 		const inputResult = validateRecipientCreateInput(input);
@@ -455,11 +455,11 @@ export const deleteRecipient = async (session: Session, recipientId: string): Pr
 };
 
 /** Newest audit events of a recipient, for whoever may read its trail. */
+/** Changes of a recipient, newest first, computed from its stored versions. */
 export const getRecipientAuditTrail = async (
 	session: Session,
 	recipientId: string,
-	limit = 50,
-): Promise<Result<RecipientAuditEvent[]>> => {
+): Promise<Result<RecipientAuditEntry[]>> => {
 	try {
 		const recipient = await recipientRepository.findRecipientOwnership(recipientId);
 		const accessResult = recipient?.programId
@@ -473,16 +473,18 @@ export const getRecipientAuditTrail = async (
 			return resultFail('Permission denied');
 		}
 
-		const events = recipientAuditEventsSchema.safeParse(
-			await recipientRepository.findRecipientAuditEvents(recipientId, limit),
+		const versions = await recipientRepository.findRecipientVersions(recipientId);
+		const entries = versions.map(({ actorType, actorId, snapshot, ...version }, index) => ({
+			...version,
+			actor: { type: actorType, id: actorId },
+			changes: diffVersions(versions[index - 1]?.snapshot ?? null, snapshot),
+		}));
+
+		return resultOk(
+			entries
+				.filter(({ action, changes }) => action !== 'baseline' && (action !== 'update' || changes.length > 0))
+				.reverse(),
 		);
-		if (!events.success) {
-			console.error('Stored recipient audit events do not match their schema', { recipientId });
-
-			return resultFail('Could not fetch recipient audit trail');
-		}
-
-		return resultOk(events.data);
 	} catch (error) {
 		console.error('Could not fetch recipient audit trail', { recipientId, error });
 

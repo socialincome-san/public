@@ -1244,23 +1244,22 @@ model SourceLink {
   @@map("source_link")
 }
 
-// Append-only audit trail, written only by withAudit (src/lib/audit). No
-// foreign keys: events must outlive deleted entities and actors.
-// clock_timestamp(), not now(): events are inserted while holding the row
-// lock, so insert time follows the order of the changes; transaction start
-// time does not.
-model AuditEvent {
+// One row per write to an audited entity: who wrote it, from where, and the
+// entity's state afterwards (null after a delete). Changes are computed by
+// comparing consecutive versions. No foreign keys: versions outlive deleted
+// entities. clock_timestamp() orders versions by insert time.
+model EntityVersion {
   id         String   @id @default(cuid()) @map("id")
-  occurredAt DateTime @default(dbgenerated("clock_timestamp()")) @map("occurred_at") @db.Timestamptz(3)
-  actorType  String   @map("actor_type")
-  actorId    String   @map("actor_id")
   entityType String   @map("entity_type")
   entityId   String   @map("entity_id")
   action     String   @map("action")
+  actorType  String   @map("actor_type")
+  actorId    String   @map("actor_id")
   source     String   @map("source")
-  changes    Json     @map("changes")
+  snapshot   Json?    @map("snapshot")
   metadata   Json?    @map("metadata")
+  createdAt  DateTime @default(dbgenerated("clock_timestamp()")) @map("created_at") @db.Timestamptz(3)
 
-  @@index([entityType, entityId, occurredAt(sort: Desc)])
-  @@map("audit_event")
+  @@index([entityType, entityId, createdAt])
+  @@map("entity_version")
 }

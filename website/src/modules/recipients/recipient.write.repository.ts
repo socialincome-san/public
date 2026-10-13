@@ -1,14 +1,14 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type AuditedEntity } from '@/lib/database/audited-write';
+import { auditedWrite, type VersionedEntity } from '@/lib/database/audited-write';
 import { recipientWithPaymentInformationSelect } from './recipient.repository';
 import type { CreateRecipientInput, UpdateRecipientInput, UpdateRecipientSelfInput } from './recipient.schemas';
 
-// Every write here records an audit event in the same transaction. Reads
-// live in recipient.repository.ts.
+// Every write here stores a new recipient version in the same transaction.
+// Reads live in recipient.repository.ts.
 
 export const createRecipient = async (audit: AuditContext, input: CreateRecipientInput) =>
-	auditedWrite({ entity: recipientAuditEntity, context: audit, action: 'create' }, (transaction) =>
+	auditedWrite({ entity: recipientEntity, context: audit, action: 'create' }, (transaction) =>
 		transaction.recipient.create({ data: buildRecipientCreateData(input) }),
 	);
 
@@ -17,19 +17,16 @@ export const updateRecipient = async (
 	input: UpdateRecipientInput,
 	context: RecipientUpdatePersistenceContext,
 ) =>
-	auditedWrite(
-		{ entity: recipientAuditEntity, context: audit, action: 'update', entityId: input.id },
-		async (transaction) => {
-			const relations = await findRelationIds(transaction, input.id);
-			const recipient = await transaction.recipient.update({
-				where: { id: input.id },
-				data: buildRecipientUpdateData(input, context),
-			});
-			await deleteOrphanedRelations(transaction, relations);
+	auditedWrite({ entity: recipientEntity, context: audit, action: 'update', entityId: input.id }, async (transaction) => {
+		const relations = await findRelationIds(transaction, input.id);
+		const recipient = await transaction.recipient.update({
+			where: { id: input.id },
+			data: buildRecipientUpdateData(input, context),
+		});
+		await deleteOrphanedRelations(transaction, relations);
 
-			return recipient;
-		},
-	);
+		return recipient;
+	});
 
 export const updateRecipientSelf = async (
 	audit: AuditContext,
@@ -37,23 +34,20 @@ export const updateRecipientSelf = async (
 	input: UpdateRecipientSelfInput,
 	currentPaymentCode: string | null,
 ) =>
-	auditedWrite(
-		{ entity: recipientAuditEntity, context: audit, action: 'update', entityId: recipientId },
-		async (transaction) => {
-			const relations = await findRelationIds(transaction, recipientId);
-			const recipient = await transaction.recipient.update({
-				where: { id: recipientId },
-				data: buildRecipientSelfUpdateData(input, currentPaymentCode),
-				select: recipientWithPaymentInformationSelect,
-			});
-			await deleteOrphanedRelations(transaction, relations);
+	auditedWrite({ entity: recipientEntity, context: audit, action: 'update', entityId: recipientId }, async (transaction) => {
+		const relations = await findRelationIds(transaction, recipientId);
+		const recipient = await transaction.recipient.update({
+			where: { id: recipientId },
+			data: buildRecipientSelfUpdateData(input, currentPaymentCode),
+			select: recipientWithPaymentInformationSelect,
+		});
+		await deleteOrphanedRelations(transaction, relations);
 
-			return recipient;
-		},
-	);
+		return recipient;
+	});
 
 export const removeRecipientFromProgram = async (audit: AuditContext, recipientId: string, expectedProgramId: string) =>
-	auditedWrite({ entity: recipientAuditEntity, context: audit, action: 'update', entityId: recipientId }, (transaction) =>
+	auditedWrite({ entity: recipientEntity, context: audit, action: 'update', entityId: recipientId }, (transaction) =>
 		transaction.recipient.updateMany({
 			where: {
 				id: recipientId,
@@ -68,23 +62,22 @@ export const removeRecipientFromProgram = async (audit: AuditContext, recipientI
 	);
 
 export const deleteRecipient = async (audit: AuditContext, recipientId: string) =>
-	auditedWrite(
-		{ entity: recipientAuditEntity, context: audit, action: 'delete', entityId: recipientId },
-		async (transaction) => {
-			const relations = await findRelationIds(transaction, recipientId);
-			await transaction.recipient.delete({ where: { id: recipientId } });
-			if (relations.paymentInformationId) {
-				await transaction.paymentInformation.delete({ where: { id: relations.paymentInformationId } });
-			}
-			await transaction.contact.delete({ where: { id: relations.contactId } });
-			await deleteOrphanedRelations(transaction, relations);
+	auditedWrite({ entity: recipientEntity, context: audit, action: 'delete', entityId: recipientId }, async (transaction) => {
+		const relations = await findRelationIds(transaction, recipientId);
+		await transaction.recipient.delete({ where: { id: recipientId } });
+		if (relations.paymentInformationId) {
+			await transaction.paymentInformation.delete({ where: { id: relations.paymentInformationId } });
+		}
+		await transaction.contact.delete({ where: { id: relations.contactId } });
+		await deleteOrphanedRelations(transaction, relations);
 
-			return { id: recipientId };
-		},
-	);
+		return { id: recipientId };
+	});
 
-const recipientAuditSnapshotSelect = {
-	id: true,
+// The stored version of a recipient includes its contact, phones, address
+// and payment information, so a payment phone change shows up as
+// `paymentInformation.phone.number`.
+const recipientVersionSelect = {
 	programId: true,
 	localPartnerId: true,
 	startDate: true,
@@ -115,45 +108,10 @@ const recipientAuditSnapshotSelect = {
 	},
 } satisfies Prisma.RecipientSelect;
 
-// A recipient with its contact, phones, address and payment information is
-// one audited entity, so a payment phone change is recorded as
-// `paymentInformation.phone.number` on the recipient.
-const recipientAuditEntity: AuditedEntity<Prisma.RecipientGetPayload<{ select: typeof recipientAuditSnapshotSelect }>> = {
+const recipientEntity: VersionedEntity = {
 	type: 'recipient',
-	findSnapshot: async (transaction, recipientId) => {
-		// Contact and payment rows belong to one recipient and are only written
-		// through it, so locking the recipient row covers them.
-		await transaction.$queryRaw`SELECT id FROM recipient WHERE id = ${recipientId} FOR UPDATE`;
-
-		return transaction.recipient.findUnique({ where: { id: recipientId }, select: recipientAuditSnapshotSelect });
-	},
-	fields: {
-		programId: 'plain',
-		localPartnerId: 'plain',
-		startDate: 'plain',
-		suspendedAt: 'plain',
-		suspensionReason: 'personal',
-		successorName: 'personal',
-		termsAccepted: 'plain',
-		'contact.firstName': 'personal',
-		'contact.lastName': 'personal',
-		'contact.callingName': 'personal',
-		'contact.email': 'personal',
-		'contact.gender': 'personal',
-		'contact.language': 'plain',
-		'contact.dateOfBirth': 'personal',
-		'contact.profession': 'personal',
-		'contact.phone.number': 'personal',
-		'contact.phone.hasWhatsApp': 'plain',
-		'contact.address.street': 'personal',
-		'contact.address.number': 'personal',
-		'contact.address.city': 'personal',
-		'contact.address.zip': 'personal',
-		'contact.address.country': 'plain',
-		'paymentInformation.code': 'personal',
-		'paymentInformation.mobileMoneyProviderId': 'plain',
-		'paymentInformation.phone.number': 'personal',
-	},
+	findSnapshot: (transaction, recipientId) =>
+		transaction.recipient.findUnique({ where: { id: recipientId }, select: recipientVersionSelect }),
 };
 
 const findRelationIds = async (transaction: Prisma.TransactionClient, recipientId: string) => {

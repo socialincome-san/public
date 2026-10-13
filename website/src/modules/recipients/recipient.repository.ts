@@ -90,20 +90,19 @@ export const findRecipient = async (recipientId: string) =>
 		select: recipientDetailSelect,
 	});
 
-export const findRecipientAuditEvents = async (recipientId: string, take: number) =>
-	prisma.auditEvent.findMany({
+export const findRecipientVersions = async (recipientId: string) =>
+	prisma.entityVersion.findMany({
 		where: { entityType: 'recipient', entityId: recipientId },
-		orderBy: [{ occurredAt: 'desc' }, { id: 'desc' }],
-		take,
+		orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
 		select: {
 			id: true,
-			occurredAt: true,
+			action: true,
 			actorType: true,
 			actorId: true,
-			action: true,
 			source: true,
-			changes: true,
+			snapshot: true,
 			metadata: true,
+			createdAt: true,
 		},
 	});
 

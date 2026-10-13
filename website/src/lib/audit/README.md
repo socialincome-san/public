@@ -1,70 +1,50 @@
 # Audit logging
 
-Writes to audited modules record who changed what, when, from which
-value to which value and through which app area, in the `audit_event`
-table. Only recipients are audited so far.
+Every write to an audited entity stores a new version in
+`entity_version`: who wrote it, from where, and the entity's state
+afterwards. What changed is computed when reading, by comparing
+consecutive versions. Only recipients are audited so far.
 
-## Read and write repositories
+## Writing
 
 An audited module splits its repository:
 
 - `recipient.repository.ts` only reads (lint rejects writes).
-- `recipient.write.repository.ts` only writes, and every write goes
-  through `auditedWrite` (lint rejects importing the shared Prisma
-  client).
-
-Services pass who is acting as the first argument:
+- `recipient.write.repository.ts` only writes, each write through
+  `auditedWrite` (lint rejects the shared Prisma client there).
 
 ```ts
-await recipientWriteRepository.updateRecipient(
-	getSessionAuditContext(session),
-	input,
-	context,
-);
+export const updateRecipient = async (audit: AuditContext, input, context) =>
+	auditedWrite({ entity: recipientEntity, context: audit, action: 'update', entityId: input.id }, (transaction) =>
+		transaction.recipient.update({ … }),
+	);
 ```
 
-Use `getSessionAuditContext(session)` for portal and partner-space
-writes, `{ actor: { type: 'recipient', id }, source: 'mobile-app' }` for
-the app, and
-`{ actor: { type: 'system', id: 'job-name' }, source: 'system' }` for
-jobs. `metadata` is flat context such as
-`{ operation: 'csv-import', importId }`, never personal data.
+`auditedWrite` runs the write, reads the snapshot
+(`recipientVersionSelect`, including contact, phones, address and
+payment information) and stores it in the same transaction. If storing
+the version fails, the write rolls back. A delete stores a version
+without snapshot. Recipients that existed before versioning get a
+`baseline` version of their current state on their first write, so that
+write diffs against it.
 
-## auditedWrite
-
-`auditedWrite` (`lib/database/audited-write.ts`) runs the write in one
-transaction: lock and snapshot the entity, write, snapshot again, store
-the diff. If storing the event fails, the write rolls back. Updates that
-change nothing audited store nothing.
-
-The entity definition in the write repository has:
-
-- `findSnapshot`: locks the row (`SELECT … FOR UPDATE`) and selects the
-  snapshot. The lock serializes concurrent writes, so old values are
-  exact. `occurred_at` is the insert time, so ordering follows the lock.
-- `fields`: every snapshot leaf classified (TypeScript enforces it).
-  `plain` stores values; `personal` stores values on update but only
-  `{ redacted: true }` on create and delete.
-
-The recipient snapshot includes its contact, phones, address and payment
-information, so a payment phone change is recorded as
-`paymentInformation.phone.number` on the recipient.
-
-## Firebase
-
-Firebase cannot join the transaction. Services update it before the
-write and revert it if the write throws. When creating the Firebase user
-fails after a recipient was created, the recipient is deleted again with
-its own `delete` event (`reason: authentication-user-creation-failed`).
+Services pass who is acting: `getSessionAuditContext(session)` for
+portal and partner space,
+`{ actor: { type: 'recipient', id }, source: 'mobile-app' }` for the
+app. `metadata` is flat context such as
+`{ operation: 'csv-import', importId }`.
 
 ## Reading
 
-`getRecipientAuditTrail(session, recipientId)` returns the newest events
-to whoever may read the recipient; for deleted recipients and pool
-candidates only admins.
+`getRecipientAuditTrail(session, recipientId)` loads the versions, diffs
+each against the previous one (`diffVersions`, paths like
+`paymentInformation.phone.number`) and returns them newest first, for
+whoever may read the recipient (only admins once it is deleted).
 
-## Not covered yet
+## Notes
 
-Candidates and program deletion also write recipient rows and are not
-audited yet. `audit_event` is append-only (database trigger); erasure
-needs a migration that lifts it.
+- Firebase cannot join the transaction; services update it before the
+  write and revert it if the write throws, as before.
+- `entity_version` is append-only (database triggers).
+- Candidates and program deletion also write recipient rows and are not
+  versioned yet.

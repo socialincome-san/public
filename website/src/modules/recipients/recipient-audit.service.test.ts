@@ -7,7 +7,7 @@ const mockWriteRepository = {
 	removeRecipientFromProgram: jest.fn(),
 	deleteRecipient: jest.fn(),
 };
-const mockFindRecipientAuditEvents = jest.fn();
+const mockFindRecipientVersions = jest.fn();
 const mockFindRecipientOwnership = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
 const mockIsAdmin = jest.fn();
@@ -38,7 +38,7 @@ jest.mock('./recipient.repository', () => ({
 			paymentInformation: { phone: { id: 'phone-1', number: '+23270000001' } },
 		}),
 	findRecipientOwnership: mockFindRecipientOwnership,
-	findRecipientAuditEvents: mockFindRecipientAuditEvents,
+	findRecipientVersions: mockFindRecipientVersions,
 	findContactByEmail: () => Promise.resolve(null),
 	findPhoneByNumber: () => Promise.resolve(null),
 	findPaymentInformationByCode: () => Promise.resolve(null),
@@ -200,43 +200,68 @@ describe('recipient write attribution', () => {
 });
 
 describe('getRecipientAuditTrail', () => {
-	const storedEvent = {
-		id: 'event-1',
-		occurredAt: new Date('2026-10-01T00:00:00.000Z'),
+	const version = (id: string, action: string, snapshot: object | null) => ({
+		id,
+		action,
 		actorType: 'user',
 		actorId: 'user-1',
-		action: 'update',
 		source: 'portal',
-		changes: [
-			{ path: 'paymentInformation.phone.number', old: '+23270000001', new: '+23270000002' },
-			{ path: 'contact.firstName', redacted: true },
-		],
+		snapshot,
 		metadata: null,
-	};
+		createdAt: new Date('2026-10-01T00:00:00.000Z'),
+	});
 
 	beforeEach(() => {
 		jest.clearAllMocks();
 		mockFindRecipientOwnership.mockResolvedValue({ id: 'recipient-1', programId: 'program-1', localPartnerId: 'partner-1' });
 		mockGetAccessiblePrograms.mockResolvedValue({ success: true, data: [] });
 		mockIsAdmin.mockResolvedValue({ success: false, error: 'Permission denied' });
-		mockFindRecipientAuditEvents.mockResolvedValue([storedEvent]);
+		mockFindRecipientVersions.mockResolvedValue([
+			version('v1', 'create', { successorName: null, paymentInformation: { phone: { number: '+232111' } } }),
+			version('v2', 'update', { successorName: null, paymentInformation: { phone: { number: '+232111' } } }),
+			version('v3', 'update', { successorName: 'Grace', paymentInformation: { phone: { number: '+232222' } } }),
+		]);
 	});
 
-	test('returns the events to whoever may read the recipient', async () => {
-		await expect(getRecipientAuditTrail(partner, 'recipient-1')).resolves.toEqual({
-			success: true,
-			data: [storedEvent],
-			status: undefined,
-		});
-		expect(mockFindRecipientAuditEvents).toHaveBeenCalledWith('recipient-1', 50);
+	test('computes changes between versions, newest first, skipping updates without changes', async () => {
+		const result = await getRecipientAuditTrail(partner, 'recipient-1');
+
+		expect(result.success && result.data.map(({ id, actor, changes }) => ({ id, actor, changes }))).toEqual([
+			{
+				id: 'v3',
+				actor: { type: 'user', id: 'user-1' },
+				changes: [
+					{ path: 'successorName', old: null, new: 'Grace' },
+					{ path: 'paymentInformation.phone.number', old: '+232111', new: '+232222' },
+				],
+			},
+			{
+				id: 'v1',
+				actor: { type: 'user', id: 'user-1' },
+				changes: [{ path: 'paymentInformation.phone.number', old: null, new: '+232111' }],
+			},
+		]);
 	});
 
-	test('does not read events for sessions without access', async () => {
+	test('diffs the first change of an older recipient against its baseline without listing it', async () => {
+		mockFindRecipientVersions.mockResolvedValue([
+			version('v1', 'baseline', { successorName: null }),
+			version('v2', 'update', { successorName: 'Grace' }),
+		]);
+
+		const result = await getRecipientAuditTrail(partner, 'recipient-1');
+
+		expect(result.success && result.data.map(({ id, changes }) => ({ id, changes }))).toEqual([
+			{ id: 'v2', changes: [{ path: 'successorName', old: null, new: 'Grace' }] },
+		]);
+	});
+
+	test('does not read versions for sessions without access', async () => {
 		await expect(getRecipientAuditTrail(operator, 'recipient-1')).resolves.toMatchObject({ success: false });
 		await expect(getRecipientAuditTrail({ ...partner, id: 'partner-2' }, 'recipient-1')).resolves.toMatchObject({
 			success: false,
 		});
-		expect(mockFindRecipientAuditEvents).not.toHaveBeenCalled();
+		expect(mockFindRecipientVersions).not.toHaveBeenCalled();
 	});
 
 	test('lets only admins read the trail of a deleted recipient', async () => {
@@ -245,15 +270,5 @@ describe('getRecipientAuditTrail', () => {
 
 		mockIsAdmin.mockResolvedValue({ success: true, data: true });
 		await expect(getRecipientAuditTrail(operator, 'recipient-1')).resolves.toMatchObject({ success: true });
-	});
-
-	test('fails instead of returning events that do not match the schema', async () => {
-		mockFindRecipientAuditEvents.mockResolvedValue([{ ...storedEvent, changes: 'broken' }]);
-
-		await expect(getRecipientAuditTrail(partner, 'recipient-1')).resolves.toEqual({
-			success: false,
-			error: 'Could not fetch recipient audit trail',
-			status: undefined,
-		});
 	});
 });
