@@ -124,13 +124,14 @@ test('update expense', async ({ page }) => {
 			.getByRole('row')
 			.filter({ has: page.getByRole('cell', { name: `${searchYear}` }) })
 			.first();
-		await expect(row).toBeVisible();
-		await row.click();
-		if (await page.getByTestId('dynamic-form').isVisible()) {
-			return;
-		}
-		await row.click({ force: true });
-		await expect(page.getByTestId('dynamic-form')).toBeVisible();
+		// The dialog opens once the URL update commits, so wait for it; click again only if a click got lost
+		const form = page.getByTestId('dynamic-form');
+		await expect(async () => {
+			if (!(await form.isVisible())) {
+				await row.click();
+			}
+			await expect(form).toBeVisible({ timeout: 2_000 });
+		}).toPass();
 	};
 
 	await openExpenseByYear(initialYear);
