@@ -65,6 +65,7 @@ export const getCandidateCount = async (
 	focuses?: string[],
 	profiles?: Profile[],
 	countryId?: string | null,
+	localPartnerIds?: string[],
 ): Promise<Result<{ count: number }>> => {
 	try {
 		let countryCode: CountryCode | null = null;
@@ -77,7 +78,7 @@ export const getCandidateCount = async (
 		}
 
 		return resultOk({
-			count: await candidateRepository.countCandidates(focuses, profiles, countryCode),
+			count: await candidateRepository.countCandidates(focuses, profiles, countryCode, localPartnerIds),
 		});
 	} catch (error) {
 		console.error('Could not count candidates', { error });
@@ -359,9 +360,15 @@ export const assignRandomCandidatesToProgram = async (
 	countryCode: CountryCode,
 	focuses?: string[],
 	profiles?: Profile[],
+	localPartnerIds?: string[],
 ): Promise<Result<{ assigned: number }>> => {
 	try {
-		const candidates = await candidateRepository.findCandidateIdsForAssignment(focuses, profiles, countryCode);
+		const candidates = await candidateRepository.findCandidateIdsForAssignment(
+			focuses,
+			profiles,
+			countryCode,
+			localPartnerIds,
+		);
 		if (candidates.length < amount) {
 			console.warn('Not enough candidates available for assignment', {
 				available: candidates.length,

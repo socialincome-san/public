@@ -4,5 +4,4 @@ import { createProgramWizardMachine } from './create-program-machine';
 type CreateProgramWizardActor = ActorRefFrom<typeof createProgramWizardMachine>;
 export type CreateProgramWizardState = StateFrom<typeof createProgramWizardMachine>;
 export type CreateProgramWizardSend = CreateProgramWizardActor['send'];
-export type ProgramManagementType = 'social_income' | 'self_run';
 export type RecipientApproachType = 'universal' | 'targeted';

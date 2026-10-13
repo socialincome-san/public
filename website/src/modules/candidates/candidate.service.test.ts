@@ -1,6 +1,10 @@
+import { CountryCode } from '@/generated/prisma/enums';
+
 const mockIsAdmin = jest.fn();
 const mockFindCandidateById = jest.fn();
 const mockCountCandidates = jest.fn();
+const mockFindCandidateIdsForAssignment = jest.fn();
+const mockUpdateCandidateProgramAssignments = jest.fn();
 
 jest.mock('@/modules/users/user.service', () => ({
 	isAdmin: mockIsAdmin,
@@ -15,9 +19,11 @@ jest.mock('@/modules/auth/auth.service', () => ({}));
 jest.mock('./candidate.repository', () => ({
 	findCandidateById: mockFindCandidateById,
 	countCandidates: mockCountCandidates,
+	findCandidateIdsForAssignment: mockFindCandidateIdsForAssignment,
+	updateCandidateProgramAssignments: mockUpdateCandidateProgramAssignments,
 }));
 
-import { getCandidate, getCandidateCount } from './candidate.service';
+import { assignRandomCandidatesToProgram, getCandidate, getCandidateCount } from './candidate.service';
 
 describe('candidate service', () => {
 	beforeEach(() => {
@@ -67,5 +73,28 @@ describe('candidate service', () => {
 			data: { count: 12 },
 			status: undefined,
 		});
+	});
+
+	test('filters candidate counts by local partner', async () => {
+		mockCountCandidates.mockResolvedValue(4);
+
+		await expect(getCandidateCount([], [], null, ['partner-1'])).resolves.toEqual({
+			success: true,
+			data: { count: 4 },
+			status: undefined,
+		});
+		expect(mockCountCandidates).toHaveBeenCalledWith([], [], null, ['partner-1']);
+	});
+
+	test('assigns random candidates only from selected local partners', async () => {
+		mockFindCandidateIdsForAssignment.mockResolvedValue([{ id: 'candidate-1' }]);
+		mockUpdateCandidateProgramAssignments.mockResolvedValue({ count: 1 });
+
+		await expect(assignRandomCandidatesToProgram('program-1', 1, CountryCode.SL, [], [], ['partner-1'])).resolves.toEqual({
+			success: true,
+			data: { assigned: 1 },
+			status: undefined,
+		});
+		expect(mockFindCandidateIdsForAssignment).toHaveBeenCalledWith([], [], CountryCode.SL, ['partner-1']);
 	});
 });
