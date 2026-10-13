@@ -231,6 +231,15 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			slug: 'Slug',
 		},
 	},
+	'mobile-money-provider': {
+		label: 'Mobile money provider',
+		namePaths: ['name'],
+		fieldLabels: {
+			name: 'Name',
+			payoutProcess: 'Payout process',
+			parentId: 'Parent provider',
+		},
+	},
 };
 
 export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));

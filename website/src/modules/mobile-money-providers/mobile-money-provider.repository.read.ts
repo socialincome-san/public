@@ -2,7 +2,6 @@ import type { Prisma } from '@/generated/prisma/client';
 import type { PayoutProcess } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
-import type { MobileMoneyProviderCreateInput, MobileMoneyProviderUpdateInput } from './mobile-money-provider.schemas';
 import type { MobileMoneyProviderTableQuery } from './mobile-money-provider.types';
 
 export const findMobileMoneyProviderById = async (providerId: string) =>
@@ -102,34 +101,7 @@ export const findMobileMoneyProviderForDeletion = async (providerId: string) =>
 		},
 	});
 
-export const createMobileMoneyProvider = async (input: MobileMoneyProviderCreateInput) =>
-	prisma.mobileMoneyProvider.create({
-		data: {
-			name: input.name,
-			payoutProcess: input.payoutProcess ?? null,
-			parentId: input.parentId ?? null,
-		},
-		select: mobileMoneyProviderPayloadSelect,
-	});
-
-export const updateMobileMoneyProvider = async (input: MobileMoneyProviderUpdateInput) =>
-	prisma.mobileMoneyProvider.update({
-		where: { id: input.id },
-		data: {
-			name: input.name,
-			payoutProcess: input.payoutProcess ?? null,
-			parentId: input.parentId ?? null,
-		},
-		select: mobileMoneyProviderPayloadSelect,
-	});
-
-export const deleteMobileMoneyProvider = async (providerId: string) =>
-	prisma.mobileMoneyProvider.delete({
-		where: { id: providerId },
-		select: { id: true },
-	});
-
-const mobileMoneyProviderPayloadSelect = {
+export const mobileMoneyProviderPayloadSelect = {
 	id: true,
 	name: true,
 	payoutProcess: true,
