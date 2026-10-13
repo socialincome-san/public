@@ -1,5 +1,6 @@
 'use client';
 
+import { trackEvent } from '@/lib/analytics/analytics';
 import type { LanguageCode } from '@/lib/types/language';
 import { subscribeToNewsletterAction } from '@/modules/newsletter/newsletter.actions';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -54,7 +55,13 @@ export const CampaignNewsletter = ({ lang, title, senderName, imageSrc, imageAlt
 		};
 
 		try {
-			await subscribeToNewsletterAction(data);
+			const result = await subscribeToNewsletterAction(data);
+			if (!result.success) {
+				toast.error(translations.toastFailure);
+
+				return;
+			}
+			trackEvent('newsletter_signup_completed');
 			toast.success(translations.toastSuccess);
 			form.reset();
 		} catch {

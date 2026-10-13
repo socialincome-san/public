@@ -1,6 +1,7 @@
 import NextImage from 'next/image';
 import NextLink from 'next/link';
-import { type ComponentType } from 'react';
+import { type ComponentProps, type ComponentType, type ReactNode } from 'react';
+import { type WithoutClassName } from '../../../without-class-name';
 import { SocialIncomeLogo } from '../../brand/logo/logo';
 import { ContactIcon, PaperPlaneIcon } from '../../icons/custom-icons/custom-icons';
 import {
@@ -56,9 +57,24 @@ type SiteFooterProps = {
 	groups: SiteFooterGroup[];
 	copyright?: string;
 	supportedBy?: SiteFooterSupportedBy;
+	/** Shown next to the copyright, e.g. a `SiteFooterButton` to reopen the cookie settings. */
+	legal?: ReactNode;
 };
 
-const Copyright = ({ text }: { text: string }) => <p className="text-primary-foreground/60 text-xs font-medium">{text}</p>;
+export const SiteFooterButton = (props: WithoutClassName<ComponentProps<'button'>>) => (
+	<button
+		type="button"
+		className="text-primary-foreground/60 hover:text-primary-foreground focus-visible:ring-ring rounded-sm text-xs font-medium underline-offset-4 transition-colors hover:underline focus-visible:ring-1 focus-visible:outline-hidden"
+		{...props}
+	/>
+);
+
+const Legal = ({ copyright, legal }: Pick<SiteFooterProps, 'copyright' | 'legal'>) => (
+	<div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+		{copyright && <p className="text-primary-foreground/60 text-xs font-medium">{copyright}</p>}
+		{legal}
+	</div>
+);
 
 const SupportedBy = ({ label, logoSrc, logoAlt, link }: SiteFooterSupportedBy) => (
 	<div className="mt-8 flex flex-col gap-2 lg:col-start-1 lg:row-start-2 lg:mt-auto">
@@ -79,7 +95,7 @@ const SupportedBy = ({ label, logoSrc, logoAlt, link }: SiteFooterSupportedBy) =
 	</div>
 );
 
-export const SiteFooter = ({ groups, copyright, supportedBy }: SiteFooterProps) => (
+export const SiteFooter = ({ groups, copyright, supportedBy, legal }: SiteFooterProps) => (
 	<div className="bg-primary text-primary-foreground max-w-content mx-auto grid w-full grid-cols-1 gap-4 rounded-t-3xl px-8 pt-10 pb-8 sm:px-16 sm:pt-14 lg:mb-10 lg:grid-cols-[334px_auto] lg:grid-rows-[auto_1fr] lg:rounded-3xl">
 		<div className="order-1 lg:col-start-1 lg:row-start-1">
 			<SocialIncomeLogo width={222} height={22} />
@@ -116,16 +132,16 @@ export const SiteFooter = ({ groups, copyright, supportedBy }: SiteFooterProps) 
 						</div>
 					))}
 				</div>
-				{copyright && (
+				{(copyright !== undefined || legal !== undefined) && (
 					<div className="mt-16 max-lg:hidden">
-						<Copyright text={copyright} />
+						<Legal copyright={copyright} legal={legal} />
 					</div>
 				)}
 			</div>
 			{supportedBy && <SupportedBy {...supportedBy} />}
-			{copyright && (
+			{(copyright !== undefined || legal !== undefined) && (
 				<div className="mt-16 lg:hidden">
-					<Copyright text={copyright} />
+					<Legal copyright={copyright} legal={legal} />
 				</div>
 			)}
 		</div>

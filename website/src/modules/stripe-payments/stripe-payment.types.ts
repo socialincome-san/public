@@ -52,6 +52,13 @@ export type StripeCheckoutOnboardingPrefill = StripeCheckoutCustomerPrefill & {
 	needsOnboarding: boolean;
 };
 
+export type PaidCheckoutDonation = {
+	checkoutSessionId: string;
+	amount: number;
+	currency: string;
+	recurring: boolean;
+};
+
 export type UpdateContributorAfterCheckoutInput = {
 	stripeCheckoutSessionId: string;
 	user: {

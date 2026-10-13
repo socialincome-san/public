@@ -443,5 +443,12 @@
 		"title": "We could not find that page",
 		"description": "The page may have moved, or the link may no longer be valid.",
 		"home-link": "Go to homepage"
+	},
+	"cookie-consent": {
+		"title": "Cookies for statistics and marketing",
+		"description": "With your consent we use Google Analytics and Google Ads to understand how the website is used and to measure the impact of our campaigns. More in our <link>privacy policy</link>. You can change your choice at any time in the footer.",
+		"accept": "Accept",
+		"decline": "Decline",
+		"settings": "Cookie settings"
 	}
 }
