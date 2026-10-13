@@ -433,7 +433,7 @@ describe('getEditableCampaignOptions', () => {
 		]);
 
 		await expect(getEditableCampaignOptions('user-1')).resolves.toEqual(
-			resultOk([{ id: 'campaign-1', name: 'holiday-fundraiser' }]),
+			resultOk([{ id: 'campaign-1', name: 'holiday-fundraiser' }, { id: 'campaign-2', name: 'campaign-2' }]),
 		);
 		expect(mockFindEditableCampaignOptions).toHaveBeenCalledWith(['program-1']);
 	});
