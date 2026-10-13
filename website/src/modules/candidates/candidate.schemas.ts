@@ -73,7 +73,7 @@ export const candidateCountSchema = z.object({
 	focuses: z.array(z.string()),
 	profiles: z.array(z.nativeEnum(Profile)),
 	countryId: z.string().nullable(),
-	localPartnerIds: z.array(z.string()),
+	localPartnerIds: z.array(z.string().trim().min(1)),
 });
 
 export type CandidateCreateInput = z.infer<typeof candidateCreateSchema>;

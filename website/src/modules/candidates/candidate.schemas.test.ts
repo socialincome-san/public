@@ -1,4 +1,4 @@
-import { candidateCreateSchema, candidateUpdateSchema } from './candidate.schemas';
+import { candidateCountSchema, candidateCreateSchema, candidateUpdateSchema } from './candidate.schemas';
 
 const validInput = {
 	suspendedAt: null,
@@ -43,5 +43,24 @@ describe('candidate schemas', () => {
 
 	test('requires an id for updates', () => {
 		expect(candidateUpdateSchema.safeParse(validInput).success).toBe(false);
+	});
+
+	test('normalizes local partner ids for candidate counts', () => {
+		expect(
+			candidateCountSchema.parse({
+				focuses: [],
+				profiles: [],
+				countryId: null,
+				localPartnerIds: [' partner-1 '],
+			}),
+		).toMatchObject({ localPartnerIds: ['partner-1'] });
+		expect(
+			candidateCountSchema.safeParse({
+				focuses: [],
+				profiles: [],
+				countryId: null,
+				localPartnerIds: [' '],
+			}).success,
+		).toBe(false);
 	});
 });
