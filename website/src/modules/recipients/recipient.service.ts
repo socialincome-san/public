@@ -10,7 +10,7 @@ import {
 	updateFirebaseUserByPhoneNumber,
 } from '@/modules/auth/auth.service';
 import type { Session } from '@/modules/auth/auth.types';
-import { getLocalPartnerOptions } from '@/modules/local-partners/local-partner.service';
+import { getLocalPartnerFilterOption, getLocalPartnerOptions } from '@/modules/local-partners/local-partner.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
 import { getProgramNameById } from '@/modules/programs/program-reference.service';
@@ -1221,14 +1221,18 @@ const getPaginatedTableViewForPrograms = async (
 		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions, localPartnerFilterOptions: [] });
 	}
 
-	const localPartnerOptionsResult = await getLocalPartnerOptions();
-	if (!localPartnerOptionsResult.success) {
-		return resultFail(localPartnerOptionsResult.error);
-	}
-	const localPartnerFilterOptions = localPartnerOptionsResult.data;
-	const selectedLocalPartnerId = localPartnerFilterOptions.find(({ id }) => id === query.localPartnerId)?.id;
-	const selectedProgramId = normalizeOptionalFilter(query.programId);
 	const programIds = programs.map(({ programId }) => programId);
+	const requestedLocalPartnerId = normalizeOptionalFilter(query.localPartnerId);
+	// Unknown or inaccessible local partners are ignored, so the filter never hides rows behind an invisible value
+	const localPartnerOptionResult = requestedLocalPartnerId
+		? await getLocalPartnerFilterOption(requestedLocalPartnerId, programIds)
+		: resultOk(null);
+	if (!localPartnerOptionResult.success) {
+		return resultFail(localPartnerOptionResult.error);
+	}
+	const localPartnerOption = localPartnerOptionResult.data;
+	const localPartnerFilterOptions = localPartnerOption ? [localPartnerOption] : [];
+	const selectedProgramId = normalizeOptionalFilter(query.programId);
 	if (selectedProgramId && !programIds.includes(selectedProgramId)) {
 		return resultOk({ tableRows: [], totalCount: 0, permission, programFilterOptions, localPartnerFilterOptions });
 	}
@@ -1237,7 +1241,7 @@ const getPaginatedTableViewForPrograms = async (
 	const shouldProcessStatus = query.sortBy === 'status' || Boolean(selectedStatus);
 	const { recipients, totalCount } = await recipientRepository.findRecipientTableSource({
 		programIds,
-		localPartnerId: selectedLocalPartnerId,
+		localPartnerId: localPartnerOption?.id,
 		query,
 		canSearchRecipientNames: permission === ProgramPermission.operator,
 		paginate: !shouldProcessStatus,

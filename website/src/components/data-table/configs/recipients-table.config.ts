@@ -2,6 +2,7 @@ import { makeRecipientColumns } from '@/components/data-table/columns/recipients
 import { TableQueryState } from '@/components/data-table/query-state';
 import { DataTableConfig, TableFilterConfig } from '@/components/data-table/table-config.types';
 import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/modules/recipients/recipient.types';
+import { linkedRecordFilter } from './linked-record-filter';
 
 type RecipientsFilterArgs = {
 	query?: TableQueryState & { totalRows: number };
@@ -77,16 +78,15 @@ export const getRecipientsTableFilters = ({
 		});
 	}
 
-	if (localPartnerFilterOptions.length > 0) {
-		filters.push({
+	return [
+		...filters,
+		...linkedRecordFilter({
 			id: 'localPartner',
 			queryKey: 'localPartnerId',
 			label: 'Local partner',
 			placeholder: 'All local partners',
 			value: query.localPartnerId,
 			options: localPartnerFilterOptions.map((localPartner) => ({ value: localPartner.id, label: localPartner.name })),
-		});
-	}
-
-	return filters;
+		}),
+	];
 };

@@ -2,11 +2,10 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { mobileMoneyProvidersTableConfig } from '@/components/data-table/configs/mobile-money-providers-table.config';
-import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { MobileMoneyProviderTableViewRow } from '@/modules/mobile-money-providers/mobile-money-provider.types';
 import { PlusIcon } from 'lucide-react';
-import { useState } from 'react';
 import { MobileMoneyProviderDialog } from './mobile-money-provider-dialog';
 
 export default function MobileMoneyProvidersTable({
@@ -18,28 +17,7 @@ export default function MobileMoneyProvidersTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [providerId, setProviderId] = useSearchParamState('providerId');
-	const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const open = isCreateFormOpen || Boolean(providerId);
-
-	const openEmptyForm = () => {
-		setProviderId(undefined);
-		setErrorMessage(null);
-		setIsCreateFormOpen(true);
-	};
-
-	const openEditForm = (row: MobileMoneyProviderTableViewRow) => {
-		setProviderId(row.id);
-		setErrorMessage(null);
-	};
-
-	const onOpenChange = (nextOpen: boolean) => {
-		if (!nextOpen) {
-			setProviderId(undefined);
-			setIsCreateFormOpen(false);
-		}
-	};
+	const { recordId: providerId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('providerId');
 
 	return (
 		<>
@@ -53,19 +31,14 @@ export default function MobileMoneyProvidersTable({
 					{
 						label: 'Add provider',
 						icon: <PlusIcon />,
-						onSelect: openEmptyForm,
+						onSelect: openCreate,
 					},
 				]}
-				onRowClick={openEditForm}
+				onRowClick={(row) => openRecord(row.id)}
 			/>
 
-			<MobileMoneyProviderDialog
-				open={open}
-				onOpenChange={onOpenChange}
-				providerId={providerId}
-				errorMessage={errorMessage}
-				onError={setErrorMessage}
-			/>
+			{/* A child provider link reopens this dialog in place; the key resets its tabs and error for the new record */}
+			<MobileMoneyProviderDialog key={providerId ?? 'new'} open={open} onOpenChange={onOpenChange} providerId={providerId} />
 		</>
 	);
 }

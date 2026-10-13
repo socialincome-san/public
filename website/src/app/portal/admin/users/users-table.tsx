@@ -2,7 +2,7 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { usersTableConfig } from '@/components/data-table/configs/users-table.config';
-import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { UserTableViewRow } from '@/modules/users/user.types';
@@ -21,27 +21,17 @@ export default function UsersTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [userId, setUserId] = useSearchParamState('userId');
-	const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+	const { recordId: userId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('userId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const open = isCreateFormOpen || Boolean(userId);
 
 	const openEmptyForm = () => {
-		setUserId(undefined);
 		setErrorMessage(null);
-		setIsCreateFormOpen(true);
+		openCreate();
 	};
 
 	const openEditForm = (row: UserTableViewRow) => {
-		setUserId(row.id);
 		setErrorMessage(null);
-	};
-
-	const onOpenChange = (nextOpen: boolean) => {
-		if (!nextOpen) {
-			setUserId(undefined);
-			setIsCreateFormOpen(false);
-		}
+		openRecord(row.id);
 	};
 
 	const onError = (error: unknown) => {

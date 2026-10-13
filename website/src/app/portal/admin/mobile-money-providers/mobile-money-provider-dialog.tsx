@@ -11,21 +11,21 @@ import { getPayoutTableViewAction } from '@/modules/payouts/payout.actions';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@socialincome/design-system/overlays/dialog/dialog';
 import { TabbedDialog } from '@socialincome/design-system/overlays/tabbed-dialog/tabbed-dialog';
+import { useState } from 'react';
 import MobileMoneyProvidersForm from './mobile-money-providers-form';
 
 type Props = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	providerId?: string;
-	errorMessage: string | null;
-	onError: (errorMessage: string) => void;
 };
 
-export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId, errorMessage, onError }: Props) => {
+export const MobileMoneyProviderDialog = ({ open, onOpenChange, providerId }: Props) => {
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
 	const handleError = (error: unknown) => {
 		const action = providerId ? 'updating/deleting' : 'creating';
-		const errorMessage = retrieveErrorMessage(error);
-		onError(`Error ${action} mobile money provider: ${errorMessage}`);
+		setErrorMessage(`Error ${action} mobile money provider: ${retrieveErrorMessage(error)}`);
 		console.error('Mobile Money Provider Form Error', { error });
 	};
 

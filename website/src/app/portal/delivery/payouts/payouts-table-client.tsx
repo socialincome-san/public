@@ -2,11 +2,10 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { getPayoutsTableFilters, payoutsTableConfig } from '@/components/data-table/configs/payouts-table.config';
-import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import type { PayoutTableViewRow } from '@/modules/payouts/payout.types';
 import { PlusIcon } from 'lucide-react';
-import { useState } from 'react';
 import { PayoutFormDialog } from './payout-form-dialog';
 
 export const PayoutsTableClient = ({
@@ -26,8 +25,7 @@ export const PayoutsTableClient = ({
 	mobileMoneyProviderFilterOptions: { id: string; name: string }[];
 	recipientFilterOptions: { id: string; name: string }[];
 }) => {
-	const [payoutId, setPayoutId] = useSearchParamState('payoutId');
-	const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+	const { recordId: payoutId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('payoutId');
 	const toolbarFilters = getPayoutsTableFilters({
 		query,
 		filterOptions: {
@@ -40,20 +38,6 @@ export const PayoutsTableClient = ({
 			recipients: recipientFilterOptions.map((recipient) => ({ value: recipient.id, label: recipient.name })),
 		},
 	});
-
-	const openEmptyForm = () => {
-		setPayoutId(undefined);
-		setIsCreateFormOpen(true);
-	};
-
-	const openEditForm = (row: PayoutTableViewRow) => setPayoutId(row.id);
-
-	const handlePayoutFormClose = (open: boolean) => {
-		if (!open) {
-			setIsCreateFormOpen(false);
-			setPayoutId(undefined);
-		}
-	};
 
 	return (
 		<>
@@ -68,17 +52,13 @@ export const PayoutsTableClient = ({
 					{
 						label: 'Add manually',
 						icon: <PlusIcon />,
-						onSelect: openEmptyForm,
+						onSelect: openCreate,
 					},
 				]}
-				onRowClick={openEditForm}
+				onRowClick={(row) => openRecord(row.id)}
 			/>
 
-			<PayoutFormDialog
-				open={isCreateFormOpen || payoutId !== undefined}
-				onOpenChange={handlePayoutFormClose}
-				payoutId={payoutId}
-			/>
+			<PayoutFormDialog open={open} onOpenChange={onOpenChange} payoutId={payoutId} />
 		</>
 	);
 };

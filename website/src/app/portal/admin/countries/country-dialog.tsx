@@ -1,7 +1,5 @@
 'use client';
 
-'use client';
-
 import { RecordTableTab } from '@/components/data-table/clients/record-table-tab';
 import { countryMobileMoneyProvidersTableConfig } from '@/components/data-table/configs/mobile-money-providers-table.config';
 import { countryProgramsTableConfig } from '@/components/data-table/configs/programs-table.config';

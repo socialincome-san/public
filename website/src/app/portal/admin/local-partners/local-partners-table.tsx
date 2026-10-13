@@ -2,7 +2,7 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { localPartnersTableConfig } from '@/components/data-table/configs/local-partners-table.config';
-import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { LocalPartnerTableViewRow } from '@/modules/local-partners/local-partner.types';
@@ -19,26 +19,17 @@ export default function LocalPartnersTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [partnerId, setPartnerId] = useSearchParamState('localPartnerId');
-	const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+	const { recordId: partnerId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('localPartnerId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const open = isCreateFormOpen || Boolean(partnerId);
+
 	const openEmptyForm = () => {
-		setPartnerId(undefined);
 		setErrorMessage(null);
-		setIsCreateFormOpen(true);
+		openCreate();
 	};
 
 	const openEditForm = (row: LocalPartnerTableViewRow) => {
-		setPartnerId(row.id);
 		setErrorMessage(null);
-	};
-
-	const onOpenChange = (nextOpen: boolean) => {
-		if (!nextOpen) {
-			setPartnerId(undefined);
-			setIsCreateFormOpen(false);
-		}
+		openRecord(row.id);
 	};
 
 	const onError = (error: unknown) => {

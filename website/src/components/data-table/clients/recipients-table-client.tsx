@@ -3,7 +3,7 @@
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { makeRecipientColumns } from '@/components/data-table/columns/recipients';
 import { getRecipientsTableFilters, recipientsTableConfig } from '@/components/data-table/configs/recipients-table.config';
-import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import { TableQueryState } from '@/components/data-table/query-state';
 import { downloadCsv as downloadCsvFile } from '@/lib/utils/csv';
 import type { Session } from '@/modules/auth/auth.types';
@@ -50,16 +50,14 @@ export const RecipientsTableClient = ({
 			return makeRecipientColumns(hideProgramName, hideLocalPartner, undefined, isReadOnly);
 		},
 	};
-	const [selectedRecipientId, setSelectedRecipientId] = useSearchParamState('recipientId');
-	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+	const recipientDialog = useRecordDialog('recipientId');
 	const [recipientError, setRecipientError] = useState<string | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
 
 	const openCreateRecipientDialog = () => {
 		setRecipientError(null);
-		setSelectedRecipientId(undefined);
-		setIsCreateDialogOpen(true);
+		recipientDialog.openCreate();
 	};
 
 	const openEditRecipientDialog = (row: RecipientTableViewRow) => {
@@ -68,12 +66,11 @@ export const RecipientsTableClient = ({
 		}
 
 		setRecipientError(null);
-		setSelectedRecipientId(row.id);
+		recipientDialog.openRecord(row.id);
 	};
 
 	const closeRecipientDialog = () => {
-		setIsCreateDialogOpen(false);
-		setSelectedRecipientId(undefined);
+		recipientDialog.close();
 		setRecipientError(null);
 	};
 
@@ -145,9 +142,9 @@ export const RecipientsTableClient = ({
 
 			{!isReadOnly && (
 				<RecipientDialog
-					open={isCreateDialogOpen || selectedRecipientId !== undefined}
+					open={recipientDialog.open}
 					onOpenChange={closeRecipientDialog}
-					recipientId={selectedRecipientId}
+					recipientId={recipientDialog.recordId}
 					programId={programId}
 					sessionType={sessionType}
 					errorMessage={recipientError}

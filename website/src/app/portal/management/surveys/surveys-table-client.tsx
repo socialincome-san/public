@@ -2,7 +2,7 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { getSurveysTableFilters, surveysTableConfig } from '@/components/data-table/configs/surveys-table.config';
-import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { SurveyTableViewRow } from '@/modules/surveys/survey.types';
 import { ClipboardListIcon, PlusIcon } from 'lucide-react';
@@ -29,23 +29,8 @@ export const SurveysTableClient = ({
 	showProgramFilter = true,
 	hideProgramName = false,
 }: Props) => {
-	const [surveyId, setSurveyId] = useSearchParamState('surveyId');
-	const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+	const { recordId: surveyId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('surveyId');
 	const [isGenerationDialogOpen, setIsGenerationDialogOpen] = useState(false);
-
-	const openEmptyForm = () => {
-		setSurveyId(undefined);
-		setIsCreateFormOpen(true);
-	};
-
-	const openEditForm = (row: SurveyTableViewRow) => setSurveyId(row.id);
-
-	const handleSurveyFormClose = (open: boolean) => {
-		if (!open) {
-			setIsCreateFormOpen(false);
-			setSurveyId(undefined);
-		}
-	};
 
 	return (
 		<>
@@ -57,12 +42,12 @@ export const SurveysTableClient = ({
 				query={query}
 				toolbarFilters={getSurveysTableFilters({ query, programFilterOptions, recipientFilterOptions, showProgramFilter })}
 				hideProgramName={hideProgramName}
-				onRowClick={openEditForm}
+				onRowClick={(row) => openRecord(row.id)}
 				actionMenuItems={[
 					{
 						label: 'Add survey',
 						icon: <PlusIcon />,
-						onSelect: openEmptyForm,
+						onSelect: openCreate,
 					},
 					{
 						label: 'Generate surveys',
@@ -72,11 +57,7 @@ export const SurveysTableClient = ({
 				]}
 			/>
 
-			<SurveyFormDialog
-				open={isCreateFormOpen || surveyId !== undefined}
-				onOpenChange={handleSurveyFormClose}
-				surveyId={surveyId}
-			/>
+			<SurveyFormDialog open={open} onOpenChange={onOpenChange} surveyId={surveyId} />
 
 			<GenerateSurveysDialog open={isGenerationDialogOpen} setOpen={setIsGenerationDialogOpen} />
 		</>

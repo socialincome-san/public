@@ -2,7 +2,7 @@
 
 import { ConfiguredDataTableClient } from '@/components/data-table/clients/configured-data-table-client';
 import { expensesTableConfig } from '@/components/data-table/configs/expenses-table.config';
-import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import type { TableQueryState } from '@/components/data-table/query-state';
 import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import type { ExpenseTableViewRow } from '@/modules/expenses/expense.types';
@@ -21,27 +21,17 @@ export default function ExpensesTable({
 	error: string | null;
 	query?: TableQueryState & { totalRows: number };
 }) {
-	const [expenseId, setExpenseId] = useSearchParamState('expenseId');
-	const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+	const { recordId: expenseId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('expenseId');
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
-	const open = isCreateFormOpen || Boolean(expenseId);
 
 	const openEmptyForm = () => {
-		setExpenseId(undefined);
 		setErrorMessage(null);
-		setIsCreateFormOpen(true);
+		openCreate();
 	};
 
 	const openEditForm = (row: ExpenseTableViewRow) => {
-		setExpenseId(row.id);
 		setErrorMessage(null);
-	};
-
-	const onOpenChange = (nextOpen: boolean) => {
-		if (!nextOpen) {
-			setExpenseId(undefined);
-			setIsCreateFormOpen(false);
-		}
+		openRecord(row.id);
 	};
 
 	const onError = (error: unknown) => {

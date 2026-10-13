@@ -1,7 +1,8 @@
 'use client';
 
 import { TABLE_PAGE_SIZE_OPTIONS, type TableQueryState } from '@/components/data-table/query-state';
-import type { Result } from '@/lib/result';
+import { resultFail, type Result } from '@/lib/result';
+import { retrieveErrorMessage } from '@/lib/utils/error-message';
 import { useEffect, useEffectEvent, useState } from 'react';
 import { useDebouncedRunner } from './use-debounced-runner';
 
@@ -26,16 +27,19 @@ export const useLocalTableQuery = <Row>(load: (query: TableQueryState) => Promis
 
 	useEffect(() => {
 		let ignore = false;
-		void loadPage(query).then((result) => {
-			if (ignore) {
-				return;
-			}
-			setLoaded(
-				result.success
-					? { query, rows: result.data.tableRows, totalRows: result.data.totalCount, error: null }
-					: { query, rows: [], totalRows: 0, error: result.error },
-			);
-		});
+		// A server action can also reject, e.g. on a network error; that must end the loading state too
+		void loadPage(query)
+			.catch((error: unknown) => resultFail(retrieveErrorMessage(error)))
+			.then((result) => {
+				if (ignore) {
+					return;
+				}
+				setLoaded(
+					result.success
+						? { query, rows: result.data.tableRows, totalRows: result.data.totalCount, error: null }
+						: { query, rows: [], totalRows: 0, error: result.error },
+				);
+			});
 
 		return () => {
 			ignore = true;

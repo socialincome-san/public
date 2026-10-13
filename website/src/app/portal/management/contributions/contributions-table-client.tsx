@@ -5,11 +5,10 @@ import {
 	contributionsTableConfig,
 	getContributionsTableFilters,
 } from '@/components/data-table/configs/contributions-table.config';
-import { useSearchParamState } from '@/components/data-table/hooks/use-search-param-state';
+import { useRecordDialog } from '@/components/data-table/hooks/use-record-dialog';
 import { TableQueryState } from '@/components/data-table/query-state';
 import type { ContributionFilterOptions, ContributionTableViewRow } from '@/modules/contributions/contribution.types';
 import { PlusIcon } from 'lucide-react';
-import { useState } from 'react';
 import { ContributionFormDialog } from './contributions-form-dialog';
 
 export const ContributionsTableClient = ({
@@ -23,22 +22,7 @@ export const ContributionsTableClient = ({
 	query?: TableQueryState & { totalRows: number };
 	filterOptions?: ContributionFilterOptions;
 }) => {
-	const [contributionId, setContributionId] = useSearchParamState('contributionId');
-	const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
-
-	const openEmptyForm = () => {
-		setContributionId(undefined);
-		setIsCreateFormOpen(true);
-	};
-
-	const openEditForm = (row: ContributionTableViewRow) => setContributionId(row.id);
-
-	const handleClose = (open: boolean) => {
-		if (!open) {
-			setIsCreateFormOpen(false);
-			setContributionId(undefined);
-		}
-	};
+	const { recordId: contributionId, open, openCreate, openRecord, onOpenChange } = useRecordDialog('contributionId');
 
 	return (
 		<>
@@ -56,17 +40,13 @@ export const ContributionsTableClient = ({
 					{
 						label: 'Add contribution',
 						icon: <PlusIcon />,
-						onSelect: openEmptyForm,
+						onSelect: openCreate,
 					},
 				]}
-				onRowClick={openEditForm}
+				onRowClick={(row) => openRecord(row.id)}
 			/>
 
-			<ContributionFormDialog
-				open={isCreateFormOpen || contributionId !== undefined}
-				onOpenChange={handleClose}
-				contributionId={contributionId}
-			/>
+			<ContributionFormDialog open={open} onOpenChange={onOpenChange} contributionId={contributionId} />
 		</>
 	);
 };

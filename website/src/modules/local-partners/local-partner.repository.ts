@@ -132,6 +132,12 @@ export const findLocalPartnerOptions = async () =>
 		orderBy: { name: 'asc' },
 	});
 
+export const findLocalPartnerFilterOption = async (localPartnerId: string, programIds: string[]) =>
+	prisma.localPartner.findFirst({
+		where: { id: localPartnerId, recipients: { some: { programId: { in: programIds } } } },
+		select: { id: true, name: true },
+	});
+
 export const findLocalPartnerMessagingTargets = async (localPartnerIds: string[]) =>
 	prisma.localPartner.findMany({
 		where: { id: { in: localPartnerIds } },

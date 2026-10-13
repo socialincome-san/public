@@ -9,6 +9,7 @@ const mockCountRecipientsForProgramsAndLocalPartners = jest.fn();
 const mockCountCandidatesForLocalPartners = jest.fn();
 const mockFindRecipientTableSource = jest.fn();
 const mockGetLocalPartnerOptions = jest.fn();
+const mockGetLocalPartnerFilterOption = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
 
 jest.mock('./recipient.repository', () => ({
@@ -21,6 +22,7 @@ jest.mock('./recipient.repository', () => ({
 
 jest.mock('@/modules/auth/auth.service', () => ({}));
 jest.mock('@/modules/local-partners/local-partner.service', () => ({
+	getLocalPartnerFilterOption: mockGetLocalPartnerFilterOption,
 	getLocalPartnerOptions: mockGetLocalPartnerOptions,
 }));
 jest.mock('@/modules/program-access/program-access.service', () => ({
@@ -87,23 +89,37 @@ describe('getPaginatedRecipientTableView local partner filter', () => {
 			success: true,
 			data: [{ programId: 'program-1', programName: 'Program 1', permission: ProgramPermission.operator }],
 		});
-		mockGetLocalPartnerOptions.mockResolvedValue({ success: true, data: [{ id: 'partner-1', name: 'Partner A' }] });
 		mockFindRecipientTableSource.mockResolvedValue({ recipients: [], totalCount: 0 });
 	});
 
-	test('filters by a known local partner and offers all local partners as options', async () => {
+	test('filters by an accessible local partner and offers it as filter option', async () => {
+		mockGetLocalPartnerFilterOption.mockResolvedValue({ success: true, data: { id: 'partner-1', name: 'Partner A' } });
+
 		const data = expectSuccess(await getPaginatedRecipientTableView('user-1', { ...query, localPartnerId: 'partner-1' }));
 
 		expect(mockFindRecipientTableSource).toHaveBeenCalledWith(
 			expect.objectContaining({ programIds: ['program-1'], localPartnerId: 'partner-1' }),
 		);
+		expect(mockGetLocalPartnerFilterOption).toHaveBeenCalledWith('partner-1', ['program-1']);
 		expect(data.localPartnerFilterOptions).toEqual([{ id: 'partner-1', name: 'Partner A' }]);
 	});
 
-	test('ignores an unknown local partner', async () => {
-		await getPaginatedRecipientTableView('user-1', { ...query, localPartnerId: 'partner-unknown' });
+	test('ignores a local partner without recipients in the accessible programs', async () => {
+		mockGetLocalPartnerFilterOption.mockResolvedValue({ success: true, data: null });
+
+		const data = expectSuccess(
+			await getPaginatedRecipientTableView('user-1', { ...query, localPartnerId: 'partner-unknown' }),
+		);
 
 		expect(mockFindRecipientTableSource).toHaveBeenCalledWith(expect.objectContaining({ localPartnerId: undefined }));
+		expect(data.localPartnerFilterOptions).toEqual([]);
+	});
+
+	test('offers no local partner options without a linked filter', async () => {
+		const data = expectSuccess(await getPaginatedRecipientTableView('user-1', query));
+
+		expect(mockGetLocalPartnerFilterOption).not.toHaveBeenCalled();
+		expect(data.localPartnerFilterOptions).toEqual([]);
 	});
 });
 
