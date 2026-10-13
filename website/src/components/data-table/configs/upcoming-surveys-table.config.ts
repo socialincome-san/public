@@ -24,7 +24,7 @@ export const upcomingSurveysTableConfig: DataTableConfig<SurveyTableViewRow> = {
 		{ id: 'completedAt', label: 'Completed' },
 		{ id: 'createdAt', label: 'Created' },
 	],
-	makeColumns: (hideProgramName) => makeSurveyColumns({ hideProgramName }),
+	makeColumns: makeSurveyColumns,
 	showColumnVisibilitySelector: true,
 };
 

@@ -27,7 +27,7 @@ export const surveysTableConfig: DataTableConfig<SurveyTableViewRow> = {
 		{ id: 'completedAt', label: 'Completed' },
 		{ id: 'createdAt', label: 'Created' },
 	],
-	makeColumns: (hideProgramName) => makeSurveyColumns({ hideProgramName }),
+	makeColumns: makeSurveyColumns,
 	showColumnVisibilitySelector: true,
 };
 
@@ -36,7 +36,7 @@ export const recipientSurveysTableConfig: DataTableConfig<SurveyTableViewRow> = 
 	id: 'recipient-surveys',
 	searchKeys: ['id', 'name'],
 	sortOptions: surveysTableConfig.sortOptions?.filter(({ id }) => id !== 'recipientName' && id !== 'programName'),
-	makeColumns: () => makeSurveyColumns({ hideRecipient: true, hideProgramName: true }),
+	makeColumns: () => makeSurveyColumns(true, true),
 };
 
 export const getSurveysTableFilters = ({

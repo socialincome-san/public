@@ -14,10 +14,8 @@ const recipientColumn: ColumnDef<SurveyTableViewRow> = {
 	cell: (ctx) => <TextCell ctx={ctx} />,
 };
 
-export const makeSurveyColumns = ({
-	hideRecipient = false,
-	hideProgramName = false,
-}: { hideRecipient?: boolean; hideProgramName?: boolean } = {}): ColumnDef<SurveyTableViewRow>[] => {
+// Positional like DataTableConfig.makeColumns, so server pages can pass it to the client table as is
+export const makeSurveyColumns = (hideProgramName = false, hideRecipient = false): ColumnDef<SurveyTableViewRow>[] => {
 	const columns: ColumnDef<SurveyTableViewRow>[] = [
 		{
 			accessorKey: 'name',

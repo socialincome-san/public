@@ -20,6 +20,9 @@ const getOperatedProgramIds = async () => {
 	return accesses.map(({ programId }) => programId);
 };
 
+// With cacheComponents the previous route stays mounted but hidden, so its dialog form can still be in the DOM
+const visibleForm = (page: Page) => page.getByTestId('dynamic-form').filter({ visible: true });
+
 const dialogRows = (page: Page) => page.getByRole('dialog').getByTestId('data-table').locator('tbody tr');
 
 test('record dialog opens from the URL and clears it on close', async ({ page }) => {
@@ -94,7 +97,7 @@ test('recipient payouts tab links to the payout on the filtered payouts page', a
 	await dialogRows(page).first().click();
 
 	await expect(page).toHaveURL(new RegExp(`/portal/delivery/payouts\\?recipientId=${recipient.id}&payoutId=`));
-	await expect(page.getByTestId('dynamic-form')).toBeVisible();
+	await expect(visibleForm(page)).toHaveCount(1);
 });
 
 test('contributor contributions tab links to the contribution on the filtered contributions page', async ({ page }) => {
@@ -110,5 +113,5 @@ test('contributor contributions tab links to the contribution on the filtered co
 	await expect(page).toHaveURL(
 		new RegExp(`/portal/management/contributions\\?contributorId=${contributor.id}&contributionId=`),
 	);
-	await expect(page.getByTestId('dynamic-form')).toBeVisible();
+	await expect(visibleForm(page)).toHaveCount(1);
 });
