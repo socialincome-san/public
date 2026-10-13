@@ -830,7 +830,7 @@ const processChargeEvent = async (charge: StripeApiCharge): Promise<Result<Strip
 				balanceTransactionId: balanceTransaction?.id,
 			},
 		};
-		const contributionResult = await upsertFromStripeEvent(contributionData, paymentEventData);
+		const contributionResult = await upsertFromStripeEvent(stripeWebhookAudit, contributionData, paymentEventData);
 		if (!contributionResult.success) {
 			console.error(contributionResult.error);
 

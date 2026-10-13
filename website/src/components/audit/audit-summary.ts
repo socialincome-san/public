@@ -85,6 +85,20 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			'contact.address.country': 'Country',
 		},
 	},
+	contribution: {
+		label: 'Contribution',
+		namePaths: ['currency', 'amount'],
+		fieldLabels: {
+			legacyFirestoreId: 'Legacy ID',
+			amount: 'Amount',
+			currency: 'Currency',
+			amountChf: 'Amount (CHF)',
+			feesChf: 'Fees (CHF)',
+			status: 'Status',
+			contributorId: 'Contributor',
+			campaignId: 'Campaign',
+		},
+	},
 };
 
 export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));

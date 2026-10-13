@@ -374,7 +374,7 @@ const createPendingContribution = async (
 			return resultFail(contributionResult.error);
 		}
 
-		const upsertResult = await upsertFromBankTransfer(contributionResult.data);
+		const upsertResult = await upsertFromBankTransfer(qrBillAudit, contributionResult.data);
 		if (!upsertResult.success) {
 			return resultFail('Could not generate pending contribution');
 		}

@@ -2,15 +2,7 @@ import type { Prisma } from '@/generated/prisma/client';
 import { ContributionStatus, Currency, PaymentEventType } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
-import { DateTime } from 'luxon';
-import type {
-	BankTransferUpsertInput,
-	ContributionDateRange,
-	ContributionTableQuery,
-	PaymentEventCreateData,
-	StripeContributionCreateData,
-	YourContributionsTableQuery,
-} from './contribution.types';
+import type { ContributionDateRange, ContributionTableQuery, YourContributionsTableQuery } from './contribution.types';
 
 const RECENT_GLOBE_CONTRIBUTION_LIMIT = 200;
 
@@ -234,134 +226,12 @@ export const findRecentSuccessfulContributions = async (cutoff: Date) =>
 		take: RECENT_GLOBE_CONTRIBUTION_LIMIT,
 	});
 
-export const createContribution = async (input: {
-	amount: number;
-	currency: Currency;
-	amountChf: number;
-	feesChf: number;
-	status: ContributionStatus;
-	contributorId: string;
-	campaignId: string;
-}) =>
-	prisma.contribution.create({
-		data: {
-			amount: input.amount,
-			currency: input.currency,
-			amountChf: input.amountChf,
-			feesChf: input.feesChf,
-			status: input.status,
-			contributorId: input.contributorId,
-			campaignId: input.campaignId,
-		},
-		select: contributionPayloadSelect,
-	});
-
-export const updateContribution = async (
-	contributionId: string,
-	input: {
-		amount: number;
-		currency: Currency;
-		amountChf: number;
-		feesChf: number;
-		status: ContributionStatus;
-		contributorId: string;
-		campaignId: string;
-	},
-) =>
-	prisma.contribution.update({
-		where: { id: contributionId },
-		data: {
-			amount: input.amount,
-			currency: input.currency,
-			amountChf: input.amountChf,
-			feesChf: input.feesChf,
-			status: input.status,
-			contributorId: input.contributorId,
-			campaignId: input.campaignId,
-		},
-		select: contributionPayloadSelect,
-	});
-
 export const findPaymentEventByTransactionId = async (transactionId: string) =>
 	prisma.paymentEvent.findUnique({
 		where: { transactionId },
 		select: {
 			id: true,
-			contribution: { select: { status: true } },
-		},
-	});
-
-export const updatePaymentEventFromBankTransfer = async (paymentEventId: string, input: BankTransferUpsertInput) =>
-	prisma.paymentEvent.update({
-		where: { id: paymentEventId },
-		data: {
-			type: input.type,
-			transactionId: input.transactionId,
-			metadata: toInputJsonObject(input.metadata),
-			contribution: {
-				update: {
-					amount: input.contribution.amount,
-					currency: input.contribution.currency,
-					amountChf: input.contribution.amountChf,
-					feesChf: input.contribution.feesChf,
-					status: input.contribution.status,
-					campaignId: input.contribution.campaignId,
-					contributorId: input.contribution.contributorId,
-				},
-			},
-		},
-		select: paymentEventRecordSelect,
-	});
-
-export const createPaymentEventFromBankTransfer = async (input: BankTransferUpsertInput, suffixTransactionId: boolean) =>
-	prisma.paymentEvent.create({
-		data: {
-			type: input.type,
-			transactionId: suffixTransactionId
-				? `${input.transactionId}-${DateTime.now().toMillis().toString()}`
-				: input.transactionId,
-			metadata: toInputJsonObject(input.metadata),
-			contribution: {
-				create: {
-					amount: input.contribution.amount,
-					currency: input.contribution.currency,
-					amountChf: input.contribution.amountChf,
-					feesChf: input.contribution.feesChf,
-					status: input.contribution.status,
-					campaignId: input.contribution.campaignId,
-					contributorId: input.contribution.contributorId,
-				},
-			},
-		},
-		select: paymentEventRecordSelect,
-	});
-
-export const updatePaymentEventFromStripe = async (
-	contributionData: StripeContributionCreateData,
-	paymentEventData: PaymentEventCreateData,
-) =>
-	prisma.paymentEvent.upsert({
-		where: { transactionId: paymentEventData.transactionId },
-		create: {
-			type: paymentEventData.type,
-			transactionId: paymentEventData.transactionId,
-			metadata: toInputJsonObject(paymentEventData.metadata),
-			contribution: {
-				create: contributionData,
-			},
-		},
-		update: {
-			type: paymentEventData.type,
-			transactionId: paymentEventData.transactionId,
-			metadata: toInputJsonObject(paymentEventData.metadata),
-			contribution: {
-				update: contributionData,
-			},
-		},
-		select: {
-			contribution: {
-				select: contributionRecordSelect,
-			},
+			contribution: { select: { id: true, status: true } },
 		},
 	});
 
@@ -489,47 +359,7 @@ const buildYourContributionOrderBy = (query: YourContributionsTableQuery): Prism
 	}
 };
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-	typeof value === 'object' && value !== null && !Array.isArray(value);
-
-const toInputJsonValue = (value: unknown): Prisma.InputJsonValue | null | undefined => {
-	if (value === null) {
-		return null;
-	}
-	if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-		return value;
-	}
-	if (Array.isArray(value)) {
-		return value.flatMap((item) => {
-			const json = toInputJsonValue(item);
-
-			return json === undefined ? [] : [json];
-		});
-	}
-	if (isRecord(value)) {
-		return toInputJsonObject(value);
-	}
-
-	return undefined;
-};
-
-const toInputJsonObject = (metadata: Record<string, unknown> | undefined): Prisma.InputJsonValue | undefined => {
-	if (!metadata) {
-		return undefined;
-	}
-
-	const entries: [string, Prisma.InputJsonValue | null][] = [];
-	for (const [key, value] of Object.entries(metadata)) {
-		const json = toInputJsonValue(value);
-		if (json !== undefined) {
-			entries.push([key, json]);
-		}
-	}
-
-	return Object.fromEntries(entries);
-};
-
-const contributionPayloadSelect = {
+export const contributionPayloadSelect = {
 	id: true,
 	amount: true,
 	currency: true,
@@ -540,7 +370,7 @@ const contributionPayloadSelect = {
 	campaign: { select: { id: true } },
 } satisfies Prisma.ContributionSelect;
 
-const contributionRecordSelect = {
+export const contributionRecordSelect = {
 	id: true,
 	amount: true,
 	currency: true,
@@ -608,7 +438,7 @@ const recentSuccessfulContributionSelect = {
 	},
 } satisfies Prisma.ContributionSelect;
 
-const paymentEventRecordSelect = {
+export const paymentEventRecordSelect = {
 	id: true,
 	type: true,
 	transactionId: true,

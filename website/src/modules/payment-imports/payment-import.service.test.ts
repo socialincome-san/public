@@ -204,7 +204,7 @@ describe('importPaymentFiles', () => {
 		expect(downloadPostFinanceReports).toHaveBeenCalledWith([paymentReportName, balanceReportName]);
 		expect(findContributorsByPaymentReferenceIds).toHaveBeenCalledWith([contributorReferenceId, contributorReferenceId]);
 		expect(upsertFromBankTransfer).toHaveBeenCalledTimes(2);
-		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[0]).toMatchObject({
+		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[1]).toMatchObject({
 			transactionId: contributionReferenceId,
 			contribution: {
 				campaignId: 'fallback-campaign-id',
@@ -213,7 +213,7 @@ describe('importPaymentFiles', () => {
 				currency: 'CHF',
 			},
 		});
-		expect(jest.mocked(upsertFromBankTransfer).mock.calls[1]?.[0]).toMatchObject({
+		expect(jest.mocked(upsertFromBankTransfer).mock.calls[1]?.[1]).toMatchObject({
 			contribution: {
 				amountChf: 2,
 				currency: 'CHF',
@@ -309,14 +309,18 @@ describe('importPaymentFiles', () => {
 			success: true,
 			data: [paymentEvent],
 		});
-		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[0]).toMatchObject({
+		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[0]).toEqual({
+			actor: { type: 'system', id: 'payment-files-import' },
+			source: 'system',
+		});
+		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[1]).toMatchObject({
 			contribution: {
 				amount: 100,
 				currency: 'EUR',
 				amountChf: Math.round((100 / 0.95) * 100) / 100,
 			},
 		});
-		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[0].contribution.amountChf).not.toBe(100);
+		expect(jest.mocked(upsertFromBankTransfer).mock.calls[0]?.[1].contribution.amountChf).not.toBe(100);
 
 		jest.mocked(getLatestRates).mockResolvedValue({
 			success: false,
