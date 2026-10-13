@@ -31,9 +31,8 @@ export type AuditMetadata = Record<string, AuditScalar>;
  * - `plain`: old and new values are stored for every action.
  * - `personal`: values are stored for updates only. Create and delete record
  *   that the field was set, so the trail never holds a full copy of a person.
- * - `secret`: values are never stored, only the fact that the field changed.
  */
-export type AuditFieldClassification = 'plain' | 'personal' | 'secret';
+export type AuditFieldClassification = 'plain' | 'personal';
 
 type AuditLeaf = string | number | boolean | Date | null | undefined | readonly AuditScalar[];
 

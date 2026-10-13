@@ -82,8 +82,6 @@ export const withAudit = async <TSnapshot extends { id: string }, TData>(
 	}
 };
 
-export const systemActor = (name: string): AuditActor => ({ type: 'system', id: name });
-
 type SessionActor = {
 	type: 'user' | 'local-partner' | 'contributor';
 	id: string;

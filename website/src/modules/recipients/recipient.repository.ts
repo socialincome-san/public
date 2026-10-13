@@ -1,7 +1,6 @@
 import { Prisma } from '@/generated/prisma/client';
 import { getTransactionClient, type AuditedTransaction } from '@/lib/database/audited-transaction';
 import { prisma } from '@/lib/database/prisma';
-import { unauditedWrite } from '@/lib/database/unaudited-write';
 import type { CreateRecipientInput, UpdateRecipientInput, UpdateRecipientSelfInput } from './recipient.schemas';
 import type { RecipientTableQuery } from './recipient.types';
 
@@ -520,11 +519,9 @@ export const deletePhoneIfOrphaned = async (phoneId: string) => {
 		return false;
 	}
 
-	await unauditedWrite('orphan-cleanup', () =>
-		prisma.phone.delete({
-			where: { id: phoneId },
-		}),
-	);
+	await prisma.phone.delete({
+		where: { id: phoneId },
+	});
 
 	return true;
 };
@@ -545,11 +542,9 @@ export const deleteAddressIfOrphaned = async (addressId: string) => {
 		return false;
 	}
 
-	await unauditedWrite('orphan-cleanup', () =>
-		prisma.address.delete({
-			where: { id: addressId },
-		}),
-	);
+	await prisma.address.delete({
+		where: { id: addressId },
+	});
 
 	return true;
 };

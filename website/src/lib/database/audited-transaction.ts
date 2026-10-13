@@ -11,9 +11,7 @@ const transactionBrand = Symbol('AuditedTransaction');
  * Opaque handle for one audited transaction. Only `withAudit` creates it,
  * services pass it on, and repositories unwrap it with `getTransactionClient`.
  */
-export type AuditedTransaction = { readonly [transactionBrand]: true };
-
-const openTransactions = new WeakMap<AuditedTransaction, Prisma.TransactionClient>();
+export type AuditedTransaction = { readonly [transactionBrand]: Prisma.TransactionClient };
 
 // Bulk operations (program deletion, candidate assignment) snapshot every
 // entity twice; Prisma's 5 s default is too tight for them.
@@ -21,27 +19,10 @@ const TRANSACTION_TIMEOUT_MS = 30_000;
 
 /** Internal to `src/lib/audit`; everything else uses `withAudit`. */
 export const runAuditedTransaction = <T>(work: (transaction: AuditedTransaction) => Promise<T>): Promise<T> =>
-	prisma.$transaction(
-		async (client) => {
-			const transaction: AuditedTransaction = Object.freeze({ [transactionBrand]: true as const });
-			openTransactions.set(transaction, client);
-			try {
-				return await work(transaction);
-			} finally {
-				openTransactions.delete(transaction);
-			}
-		},
-		{ timeout: TRANSACTION_TIMEOUT_MS },
-	);
+	prisma.$transaction((client) => work({ [transactionBrand]: client }), { timeout: TRANSACTION_TIMEOUT_MS });
 
-export const getTransactionClient = (transaction: AuditedTransaction): Prisma.TransactionClient => {
-	const client = openTransactions.get(transaction);
-	if (!client) {
-		throw new Error('AuditedTransaction used outside of its withAudit callback.');
-	}
-
-	return client;
-};
+export const getTransactionClient = (transaction: AuditedTransaction): Prisma.TransactionClient =>
+	transaction[transactionBrand];
 
 /** Internal to `src/lib/audit`; everything else uses `withAudit`. */
 export const insertAuditEvents = async (transaction: AuditedTransaction, events: AuditEventRecord[]): Promise<void> => {

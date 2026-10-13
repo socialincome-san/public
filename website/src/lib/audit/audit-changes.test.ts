@@ -9,7 +9,6 @@ type Snapshot = {
 		firstName: string;
 		phone: { number: string; hasWhatsApp: boolean } | null;
 	};
-	token: string | null;
 };
 
 const fields: AuditFieldPolicy<Snapshot> = {
@@ -19,7 +18,6 @@ const fields: AuditFieldPolicy<Snapshot> = {
 	'contact.firstName': 'personal',
 	'contact.phone.number': 'personal',
 	'contact.phone.hasWhatsApp': 'plain',
-	token: 'secret',
 };
 
 const snapshot: Snapshot = {
@@ -30,7 +28,6 @@ const snapshot: Snapshot = {
 		firstName: 'Ada',
 		phone: { number: '+23270000001', hasWhatsApp: true },
 	},
-	token: 'secret-1',
 };
 
 describe('computeAuditChanges', () => {
@@ -86,13 +83,7 @@ describe('computeAuditChanges', () => {
 		]);
 	});
 
-	test('never stores secret values', () => {
-		expect(computeAuditChanges('update', fields, snapshot, { ...snapshot, token: 'secret-2' })).toEqual([
-			{ path: 'token', redacted: true },
-		]);
-	});
-
-	test('stores plain values on create but only marks personal and secret fields as set', () => {
+	test('stores plain values on create but only marks personal fields as set', () => {
 		expect(computeAuditChanges('create', fields, null, snapshot)).toEqual([
 			{ path: 'status', old: null, new: 'active' },
 			{ path: 'startDate', old: null, new: '2026-01-01T00:00:00.000Z' },
@@ -100,7 +91,6 @@ describe('computeAuditChanges', () => {
 			{ path: 'contact.firstName', redacted: true },
 			{ path: 'contact.phone.number', redacted: true },
 			{ path: 'contact.phone.hasWhatsApp', old: null, new: true },
-			{ path: 'token', redacted: true },
 		]);
 	});
 

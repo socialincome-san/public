@@ -14,27 +14,12 @@ describe('audited transaction adapter', () => {
 		jest.clearAllMocks();
 	});
 
-	test('unwraps the transaction client only while the transaction runs', async () => {
-		const leaked = await runAuditedTransaction((transaction) => {
+	test('hands repositories the transaction client', async () => {
+		await runAuditedTransaction((transaction) => {
 			expect(getTransactionClient(transaction)).toBe(mockClient);
 
-			return Promise.resolve(transaction);
+			return Promise.resolve();
 		});
-
-		expect(() => getTransactionClient(leaked)).toThrow('used outside of its withAudit callback');
-	});
-
-	test('revokes the handle when the transaction fails', async () => {
-		let leaked: Parameters<typeof getTransactionClient>[0] | undefined;
-		await expect(
-			runAuditedTransaction((transaction) => {
-				leaked = transaction;
-				throw new Error('boom');
-			}),
-		).rejects.toThrow('boom');
-
-		expect(leaked).toBeDefined();
-		expect(() => leaked && getTransactionClient(leaked)).toThrow('used outside of its withAudit callback');
 	});
 
 	test('stores events as flat rows and skips empty batches', async () => {

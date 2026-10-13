@@ -17,12 +17,6 @@ CREATE TABLE "audit_event" (
 -- CreateIndex
 CREATE INDEX "audit_event_entity_type_entity_id_occurred_at_idx" ON "audit_event"("entity_type", "entity_id", "occurred_at" DESC);
 
--- CreateIndex
-CREATE INDEX "audit_event_actor_type_actor_id_occurred_at_idx" ON "audit_event"("actor_type", "actor_id", "occurred_at" DESC);
-
--- CreateIndex
-CREATE INDEX "audit_event_occurred_at_idx" ON "audit_event"("occurred_at" DESC);
-
 
 -- Audit events are append-only. Retention or erasure needs a reviewed
 -- migration that drops or disables this trigger.

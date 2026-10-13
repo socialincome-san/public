@@ -1,26 +1,12 @@
 # Audit logging
 
-Every business write records who changed what, when, from which value to
-which value and through which app area. This is an audit trail, not
-event sourcing: the tables stay the source of truth and `audit_event`
-explains how they got there.
+Business writes record who changed what, when, from which value to which
+value and through which app area, in the `audit_event` table. It is an
+audit trail, not event sourcing.
 
-## Pieces
-
-| File                                                       | Role                                                                                                                                                        |
-| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `lib/audit/with-audit.ts`                                  | `withAudit`, the only way to start a write transaction. Also `getSessionAuditContext` and `systemActor`.                                                    |
-| `lib/audit/audit-changes.ts`                               | Diffs two snapshots with a field policy.                                                                                                                    |
-| `lib/audit/audit-types.ts`                                 | Actors, sources, changes, `AuditedEntity`.                                                                                                                  |
-| `lib/database/audited-transaction.ts`                      | Prisma adapter: opens the transaction, hands out the opaque `AuditedTransaction`, inserts events. The only Prisma-specific audit code besides repositories. |
-| `lib/database/unaudited-write.ts`                          | Marker for reviewed technical writes that change no business entity.                                                                                        |
-| `modules/audit`                                            | Read API (`getAuditTrail`, `getAuditTrailAction`) with per-entity authorization.                                                                            |
-| `eslint-rules/backend-architecture.mjs` (`audited-writes`) | Enforcement, see below.                                                                                                                                     |
-
-## How a write is recorded
+## Writing
 
 ```ts
-// recipient.service.ts
 const result = await withAudit(
 	{
 		entity: recipientAuditEntity,
@@ -39,177 +25,63 @@ const result = await withAudit(
 );
 ```
 
-Inside one database transaction `withAudit`
+In one database transaction `withAudit` locks and snapshots the
+entities, runs the callback, snapshots again and inserts one event per
+changed entity. A failed `Result` rolls back and is returned; an
+exception, including a failed audit insert, rolls back and is rethrown.
+Updates that change nothing audited record nothing. `create` reads the
+new id from the returned row.
 
-1. locks and snapshots the target entities (`entity.findSnapshots`),
-2. runs the callback with the `AuditedTransaction`,
-3. snapshots again, diffs with the entity's field policy and inserts one
-   `audit_event` per changed entity.
+Services never see Prisma: they pass the opaque `AuditedTransaction` to
+repository functions, which write through `getTransactionClient`.
 
-- A failed `Result` from the callback rolls back and is returned as is.
-- An exception, including a failed audit insert, rolls back and is
-  rethrown. Services keep their `try/catch`.
-- An update that changes no audited field records nothing.
-- `create` takes the new id from the returned row's `id`.
-- `entityId` may be a list for bulk operations (one event per entity).
+Actors: `getSessionAuditContext(session)`, `{ type: 'recipient', id }`
+with source `mobile-app`, or `{ type: 'system', id: 'job-name' }` with
+source `system`. `metadata` is flat operation context such as
+`{ operation: 'csv-import', importId }`, never personal data.
 
-Services never see Prisma: the callback receives an opaque handle and
-passes it to repository functions, which unwrap it with
-`getTransactionClient(transaction)`. The handle is revoked when the
-transaction ends.
+## Entities
 
-## Entities and field policies
+An entity is a logical aggregate: the recipient includes its contact,
+phones, address and payment information, so a payment phone change is
+recorded as `paymentInformation.phone.number` on the recipient. Its
+definition in the service has:
 
-An entity is a logical aggregate, not a table. The recipient entity
-covers its contact, phones, address and payment information, so a
-payment phone change is recorded on the recipient as
-`paymentInformation.phone.number`.
+- `findSnapshots`: a repository function that locks the rows
+  (`SELECT … FOR UPDATE`) and selects the snapshot. The lock serializes
+  concurrent writes, so old values are always exact.
+- `fields`: every snapshot leaf classified (TypeScript enforces it).
+  `plain` stores values; `personal` stores values on update but only
+  `{ redacted: true }` on create and delete, so the trail never keeps a
+  full copy of a person.
 
-```ts
-export const recipientAuditEntity: AuditedEntity<RecipientAuditSnapshot> =
-	{
-		type: 'recipient' satisfies AuditedEntityType,
-		findSnapshots: recipientRepository.findRecipientAuditSnapshots,
-		fields: {
-			programId: 'plain',
-			'contact.firstName': 'personal',
-			'paymentInformation.phone.number': 'personal',
-			// every other leaf of the snapshot …
-		},
-	};
-```
-
-The snapshot is an explicit `select` in the repository, never a raw row.
-Every leaf must be classified (TypeScript fails otherwise), so a new
-column is never stored by accident:
-
-| Classification | update                     | create / delete            |
-| -------------- | -------------------------- | -------------------------- |
-| `plain`        | old and new value          | value                      |
-| `personal`     | old and new value          | `{ path, redacted: true }` |
-| `secret`       | `{ path, redacted: true }` | `{ path, redacted: true }` |
-
-Personal values are kept for updates because that is what the trail is
-for (who changed the payment phone to what). Create and delete never
-copy a whole person into the trail. Dates are stored as ISO strings,
-missing relations read as `null`, arrays compare by content.
-
-`metadata` is a flat record for operation context such as
-`{ operation: 'csv-import', importId }` or
-`{ reason: 'authentication-user-creation-failed' }`. Never put personal
-data in it.
-
-## Concurrency
-
-`findSnapshots` must lock what it returns. The recipient repository runs
-`SELECT … FOR UPDATE` on the recipient rows, ordered by id. Every
-audited recipient write takes this lock first, so concurrent writes
-serialize and each event's old values are exactly the previous event's
-new values.
-
-`occurred_at` defaults to `clock_timestamp()` (insert time, taken while
-holding the lock), not the transaction start, so newest-first ordering
-matches the order of the changes.
-
-Services that prepare a write outside the transaction (for example a
-Firebase update based on the current payment phone) re-read inside the
-callback and fail with a "changed in the meantime" error if their
-assumption no longer holds. See `updateRecipient`.
+To add one: add the type to `AUDITED_ENTITY_TYPES` (`modules/audit`) and
+its authorizer in `audit.service.ts`, write the snapshot loader and
+policy, make the write functions take `AuditedTransaction`, and wrap the
+service writes in `withAudit`.
 
 ## External systems
 
-Firebase cannot join a PostgreSQL transaction, so the existing
-compensation order is kept:
+Firebase cannot join the transaction. It is updated before the audited
+write and reverted if the write fails. When creating the Firebase user
+fails after a recipient was created, the recipient is deleted again with
+its own `delete` event (`reason: authentication-user-creation-failed`).
 
-- Firebase is updated before the audited database write. If the write or
-  its audit insert fails, the service reverts Firebase.
-- On create, the database write (and its `create` event) commits first.
-  If creating the Firebase user then fails, the recipient is deleted
-  again with its own `delete` event carrying
-  `metadata.reason = 'authentication-user-creation-failed'`.
-- On delete, a failed Firebase deletion only logs a warning, as before.
-  The audit event records the database deletion.
-- If a compensation itself fails, the database and Firebase disagree and
-  the error is logged; the audit trail still reflects the database.
+## Reading
 
-## Reading the trail
+`getAuditTrail(session, { entityType, entityId, limit })` returns the
+newest events after asking the owning module whether the session may
+read that entity.
 
-`getAuditTrail(session, query)` in `modules/audit` returns newest events
-first with a cursor (`nextCursor`) and optional filters for actor,
-action and date range. It always needs an entity. Before reading, it
-asks the owning module whether the session may read that entity's trail
-(`authorizeRecipientAuditTrail`): the same people who can read the
-recipient, admins for pool candidates, and only admins once a recipient
-is deleted.
+## Guarantees
 
-## Enforcement
+- Write and event commit or roll back together (one transaction).
+- `audit_event` is append-only (database trigger).
+- Repository write functions need an `AuditedTransaction`, which only
+  `withAudit` creates; services cannot import the adapter.
+- Lint rejects `prisma.recipient` and `prisma.paymentInformation` writes
+  on the shared client.
 
-| Guarantee                                                                                                                                                                       | Mechanism                                                                                                   | Kind           |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | -------------- |
-| Writes to `recipient` and `paymentInformation` go through an `AuditedTransaction`, in every file                                                                                | `audited-writes` lint rule (`auditedModels`)                                                                | static         |
-| Repositories not in the legacy baseline write only through `getTransactionClient`, never `prisma.*.create/update/delete…`, `$transaction` or `$executeRaw` on the shared client | `audited-writes` lint rule (`requireAuditedWrites`)                                                         | static         |
-| Only repositories unwrap an `AuditedTransaction`; only `lib/audit` can open one or insert events                                                                                | `audited-writes` lint rule, opaque type                                                                     | static         |
-| Services cannot write without a handle                                                                                                                                          | repository write functions require `AuditedTransaction`                                                     | static (types) |
-| The legacy baseline only shrinks                                                                                                                                                | `eslint-rules/audited-writes-baseline.test.mjs` fails when a listed repository has no unaudited writes left | static (test)  |
-| A handle cannot be used after its transaction                                                                                                                                   | `getTransactionClient` throws                                                                               | runtime        |
-| Business write and audit event commit or roll back together                                                                                                                     | one database transaction in `withAudit`                                                                     | runtime        |
-| Audit events are append-only                                                                                                                                                    | `audit_event_append_only` trigger rejects `UPDATE` and `DELETE`                                             | database       |
-
-What remains convention:
-
-- The database does not refuse an unaudited write to `recipient`. Code
-  lint does not see (seeds, raw SQL, a disabled rule, a manual `psql`
-  session) can still write. A trigger that requires an audit context
-  would break the previous deployment during rollout, so it is a
-  follow-up once all writers are migrated.
-- Lint follows the Prisma client by name. Passing it through an unusual
-  alias (`const db = someObject.prisma`) is not detected.
-- Field classifications and snapshot contents are reviewed by humans.
-
-## Exemptions
-
-- `unauditedWrite('orphan-cleanup', …)`: deleting phone and address rows
-  that nothing references anymore. It changes no entity: the recipient
-  snapshot already shows the relation going away. Add new reasons to
-  `UnauditedWriteReason` only after review. It never exempts audited
-  models.
-- `src/lib/database/**`: migrations, seeds and the adapter.
-- `src/scripts/**`: maintenance scripts. They are still blocked from
-  writing audited models.
-- Tests.
-- `eslint-rules/audited-writes-baseline.mjs` lists repositories written
-  before audit logging. Their writes are not audited yet.
-
-## Adding an audited entity
-
-1. Add the type to `AUDITED_ENTITY_TYPES` in
-   `modules/audit/audit.types.ts`. TypeScript then requires an
-   authorizer in `audit.service.ts`; export it from the owning service
-   (`authorize<Entity>AuditTrail`).
-2. In the repository, add `find<Entity>AuditSnapshots(transaction, ids)`
-   that locks the rows (`SELECT … FOR UPDATE`) and selects the logical
-   snapshot, including related rows that belong to the entity.
-3. Define `<entity>AuditEntity` in the service and classify every leaf.
-4. Make write functions take `transaction: AuditedTransaction` first and
-   write through `getTransactionClient(transaction)`. Drop
-   `prisma.$transaction`: `withAudit` is the transaction.
-5. Wrap each service write in `withAudit` with the session context
-   (`getSessionAuditContext`), `{ type: 'recipient', id }` for the
-   mobile app, or `systemActor('job-name')` with source `system` for
-   jobs.
-6. Add the model to `auditedModels` in
-   `eslint-rules/audited-writes-baseline.mjs` and remove the repository
-   from `unauditedLegacyRepositories`.
-7. Test the events with the fake from `audited-transaction.fake.ts` (see
-   `recipient-audit.service.test.ts`).
-
-## Limitations
-
-- Program deletion records that each recipient lost its program; the
-  program itself is not an audited entity yet.
-- Phone rows can be shared between contacts. The recipient lock does not
-  cover writes to a shared phone from another, not yet audited module.
-- Audit events keep personal values of updates after a recipient is
-  deleted. Retention or erasure needs a reviewed migration that lifts
-  the append-only trigger.
-- Reads are per entity; there is no global activity feed yet.
+Not enforced: writes inside a raw `prisma.$transaction` callback, seeds,
+scripts and modules that are not migrated yet. Program deletion records
+the unassigned recipients, not the program itself.

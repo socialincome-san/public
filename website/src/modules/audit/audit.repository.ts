@@ -1,27 +1,9 @@
 import { prisma } from '@/lib/database/prisma';
-import type { AuditTrailFilter } from './audit.types';
 
-export const findAuditEvents = async ({
-	filter,
-	cursor,
-	take,
-}: {
-	filter: AuditTrailFilter;
-	cursor: string | undefined;
-	take: number;
-}) =>
+export const findAuditEvents = async (entityType: string, entityId: string, take: number) =>
 	prisma.auditEvent.findMany({
-		where: {
-			entityType: filter.entityType,
-			entityId: filter.entityId,
-			actorType: filter.actorType,
-			actorId: filter.actorId,
-			action: filter.action,
-			occurredAt: { gte: filter.from, lte: filter.to },
-		},
+		where: { entityType, entityId },
 		orderBy: [{ occurredAt: 'desc' }, { id: 'desc' }],
-		cursor: cursor ? { id: cursor } : undefined,
-		skip: cursor ? 1 : 0,
 		take,
 		select: {
 			id: true,

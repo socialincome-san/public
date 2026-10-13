@@ -64,79 +64,37 @@ describe('getAuditTrail', () => {
 		expect(mockFindAuditEvents).not.toHaveBeenCalled();
 	});
 
-	test('returns newest-first events with filters and a cursor for the next page', async () => {
+	test('returns the newest events of the entity', async () => {
 		mockFindAuditEvents.mockResolvedValue([
-			row('event-3', '2026-10-03T00:00:00.000Z'),
 			row('event-2', '2026-10-02T00:00:00.000Z'),
 			row('event-1', '2026-10-01T00:00:00.000Z'),
 		]);
 
-		const result = await getAuditTrail(session, {
-			entityType: 'recipient',
-			entityId: 'recipient-1',
-			actorType: 'user',
-			actorId: 'user-1',
-			action: 'update',
-			from: new Date('2026-10-01T00:00:00.000Z'),
-			to: new Date('2026-10-31T00:00:00.000Z'),
-			limit: 2,
-		});
+		const result = await getAuditTrail(session, { entityType: 'recipient', entityId: 'recipient-1', limit: 2 });
 
-		expect(mockFindAuditEvents).toHaveBeenCalledWith({
-			filter: {
-				entityType: 'recipient',
-				entityId: 'recipient-1',
-				actorType: 'user',
-				actorId: 'user-1',
-				action: 'update',
-				from: new Date('2026-10-01T00:00:00.000Z'),
-				to: new Date('2026-10-31T00:00:00.000Z'),
-			},
-			cursor: undefined,
-			take: 3,
-		});
+		expect(mockFindAuditEvents).toHaveBeenCalledWith('recipient', 'recipient-1', 2);
 		expect(result).toEqual({
 			success: true,
 			status: undefined,
-			data: {
-				events: [
-					expect.objectContaining({
-						id: 'event-3',
-						actor: { type: 'user', id: 'user-1' },
-						entity: { type: 'recipient', id: 'recipient-1' },
-						changes: [
-							{ path: 'paymentInformation.phone.number', old: '+23270000001', new: '+23270000002' },
-							{ path: 'contact.firstName', redacted: true },
-						],
-					}),
-					expect.objectContaining({ id: 'event-2' }),
-				],
-				nextCursor: 'event-2',
-			},
+			data: [
+				expect.objectContaining({
+					id: 'event-2',
+					actor: { type: 'user', id: 'user-1' },
+					entity: { type: 'recipient', id: 'recipient-1' },
+					changes: [
+						{ path: 'paymentInformation.phone.number', old: '+23270000001', new: '+23270000002' },
+						{ path: 'contact.firstName', redacted: true },
+					],
+				}),
+				expect.objectContaining({ id: 'event-1' }),
+			],
 		});
 	});
 
-	test('returns no cursor on the last page', async () => {
-		mockFindAuditEvents.mockResolvedValue([row('event-1', '2026-10-01T00:00:00.000Z')]);
-
-		const result = await getAuditTrail(session, { entityType: 'recipient', entityId: 'recipient-1', cursor: 'event-2' });
-
-		expect(result.success && result.data.nextCursor).toBeNull();
-		expect(mockFindAuditEvents).toHaveBeenCalledWith(expect.objectContaining({ cursor: 'event-2', take: 26 }));
-	});
-
-	test('rejects unknown entity types and inverted date ranges before authorizing', async () => {
+	test('rejects unknown entity types before authorizing', async () => {
 		await expect(getAuditTrail(session, { entityType: 'payout' as never, entityId: 'payout-1' })).resolves.toMatchObject({
 			success: false,
 		});
-		await expect(
-			getAuditTrail(session, {
-				entityType: 'recipient',
-				entityId: 'recipient-1',
-				from: new Date('2026-10-31T00:00:00.000Z'),
-				to: new Date('2026-10-01T00:00:00.000Z'),
-			}),
-		).resolves.toMatchObject({ success: false });
 		expect(mockAuthorizeRecipientAuditTrail).not.toHaveBeenCalled();
 	});
 

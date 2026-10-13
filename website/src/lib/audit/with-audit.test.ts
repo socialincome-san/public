@@ -51,7 +51,7 @@ jest.mock('@/lib/database/audited-transaction', () => ({
 	},
 }));
 
-import { getSessionAuditContext, systemActor, withAudit } from './with-audit';
+import { getSessionAuditContext, withAudit } from './with-audit';
 
 const fakeTransaction = (token: object): FakeTransaction => {
 	const transaction = mockDatabase.transactions.get(token);
@@ -207,7 +207,13 @@ describe('withAudit', () => {
 
 	test('records one event per entity of a bulk operation', async () => {
 		await withAudit(
-			{ ...auditOptions, action: 'update', entityId: ['a', 'b'], actor: systemActor('nightly-job'), source: 'system' },
+			{
+				...auditOptions,
+				action: 'update',
+				entityId: ['a', 'b'],
+				actor: { type: 'system', id: 'nightly-job' },
+				source: 'system',
+			},
 			(transaction) => {
 				write(transaction, 'a', { id: 'a', name: 'Ada', phone: null });
 				write(transaction, 'b', { id: 'b', name: 'Bob', phone: '+4' });

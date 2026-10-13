@@ -3,7 +3,6 @@ import designTokensPlugin from '@socialincome/design-system/eslint-rules/no-arbi
 import classNamePlugin from '@socialincome/design-system/eslint-rules/no-class-name-prop';
 import reactPlugin from 'eslint-plugin-react';
 import tseslint from 'typescript-eslint';
-import { auditedModels, unauditedLegacyRepositories } from './eslint-rules/audited-writes-baseline.mjs';
 import backendArchitecturePlugin from './eslint-rules/backend-architecture.mjs';
 
 const smartiveNextConfig = config('nextjs');
@@ -156,6 +155,11 @@ export default [
 					paths: [
 						...prismaClientImportPaths,
 						{
+							name: '@/lib/database/audited-transaction',
+							allowTypeImports: true,
+							message: 'Services write through withAudit; only repositories unwrap the transaction.',
+						},
+						{
 							name: 'next/cache',
 							message: 'Services must not call Next.js cache APIs. Cache reads in *.cache.ts, revalidate from actions.',
 						},
@@ -294,6 +298,12 @@ export default [
 				{
 					selector: 'Property[key.name="include"], Property[key.value="include"]',
 					message: 'Repositories must use explicit select instead of include.',
+				},
+				{
+					selector:
+						'CallExpression[callee.object.object.name="prisma"][callee.object.property.name=/^(recipient|paymentInformation)$/][callee.property.name=/^(create|createMany|createManyAndReturn|update|updateMany|updateManyAndReturn|upsert|delete|deleteMany)$/]',
+					message:
+						'Recipient writes must be audited: take an AuditedTransaction and write through getTransactionClient(transaction).',
 				},
 			],
 			'@typescript-eslint/no-restricted-imports': [
@@ -500,22 +510,6 @@ export default [
 		ignores: ['src/generated/**', 'src/lib/database/migrations/**'],
 		rules: {
 			'backend-architecture/kebab-case-paths': 'error',
-		},
-	},
-	{
-		files: ['src/**/*.{ts,tsx}'],
-		// lib/database and lib/audit implement the audited transaction; seeds
-		// and tests write fixtures.
-		ignores: ['src/generated/**', 'src/lib/database/**', 'src/lib/audit/**', 'src/**/*.test.{ts,tsx}'],
-		rules: {
-			'backend-architecture/audited-writes': ['error', { auditedModels }],
-		},
-	},
-	{
-		files: ['src/modules/**/*.repository.ts'],
-		ignores: unauditedLegacyRepositories,
-		rules: {
-			'backend-architecture/audited-writes': ['error', { auditedModels, requireAuditedWrites: true }],
 		},
 	},
 	{

@@ -21,18 +21,3 @@ export type AuditEventView = {
 	changes: AuditChange[];
 	metadata: AuditMetadata | null;
 };
-
-export type AuditTrailPage = {
-	events: AuditEventView[];
-	nextCursor: string | null;
-};
-
-export type AuditTrailFilter = {
-	entityType: AuditedEntityType;
-	entityId: string;
-	actorType?: AuditActorType;
-	actorId?: string;
-	action?: AuditAction;
-	from?: Date;
-	to?: Date;
-};

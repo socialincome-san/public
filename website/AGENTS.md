@@ -47,27 +47,13 @@ Module files (`src/modules/recipients` is the reference):
 Integrations: `src/integrations/<vendor>/<name>.integration.ts`. No
 Prisma, modules, app, components or `next/*` APIs.
 
-Audit logging (details and examples: `src/lib/audit/README.md`):
-
-- Every business write runs inside `withAudit` from the service, which
-  records one `audit_event` per changed entity in the same transaction.
-  Never call `prisma.$transaction` or write on the shared `prisma`
-  client in a repository; take `transaction: AuditedTransaction` as the
-  first parameter and write through `getTransactionClient(transaction)`.
-- An audited entity is a logical aggregate (a recipient with its
-  contact, phones and payment information), defined in its service with
-  a snapshot loader that locks the rows and a classification of every
-  field (`plain`, `personal`, `secret`).
-- Attribute writes with `getSessionAuditContext(session)`,
-  `{ type: 'recipient', id }` plus source `mobile-app`, or
-  `systemActor('job-name')` plus source `system`. Put operation context
-  in flat `metadata`, never personal data.
-- Keep external calls (Firebase) outside the transaction and compensate
-  on failure, as `updateRecipient` does.
-- Exemptions are narrow: `unauditedWrite('<reason>', …)` for technical
-  writes that change no entity, and the legacy list in
-  `eslint-rules/audited-writes-baseline.mjs`, which may only shrink.
-  Migrating a legacy module means removing it from that list.
+Audit logging (`src/lib/audit/README.md`): business writes run inside
+`withAudit` in the service. Repository write functions take
+`transaction: AuditedTransaction` first and write through
+`getTransactionClient(transaction)`, never on the shared `prisma` client
+or in `prisma.$transaction`. Classify every snapshot field as `plain` or
+`personal`, keep external calls (Firebase) outside the transaction, and
+put only non-personal context in `metadata`.
 
 Dependency direction:
 

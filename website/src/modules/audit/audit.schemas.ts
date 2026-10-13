@@ -5,18 +5,10 @@ import { AUDITED_ENTITY_TYPES } from './audit.types';
 export const auditTrailQuerySchema = z.object({
 	entityType: z.enum(AUDITED_ENTITY_TYPES),
 	entityId: z.string().trim().min(1),
-	actorType: z.enum(AUDIT_ACTOR_TYPES).optional(),
-	actorId: z.string().trim().min(1).optional(),
-	action: z.enum(AUDIT_ACTIONS).optional(),
-	from: z.coerce.date().optional(),
-	to: z.coerce.date().optional(),
-	cursor: z.string().trim().min(1).optional(),
-	limit: z.coerce.number().int().min(1).max(100).default(25),
+	limit: z.number().int().min(1).max(200).default(50),
 });
 
 export type AuditTrailQuery = z.input<typeof auditTrailQuerySchema>;
-
-export const auditSessionTypeSchema = z.enum(['user', 'local-partner']);
 
 const auditScalarSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 

@@ -16,9 +16,9 @@ export const computeAuditChanges = (
 			return [];
 		}
 
-		const storesValues = classification === 'plain' || (classification === 'personal' && action === 'update');
-
-		return [storesValues ? { path, old: previous, new: next } : { path, redacted: true }];
+		return [
+			classification === 'plain' || action === 'update' ? { path, old: previous, new: next } : { path, redacted: true },
+		];
 	});
 
 // A missing relation reads as null for all its fields, so connecting or

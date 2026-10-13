@@ -1262,7 +1262,5 @@ model AuditEvent {
   metadata   Json?    @map("metadata")
 
   @@index([entityType, entityId, occurredAt(sort: Desc)])
-  @@index([actorType, actorId, occurredAt(sort: Desc)])
-  @@index([occurredAt(sort: Desc)])
   @@map("audit_event")
 }
