@@ -15,6 +15,7 @@ export const programCreateSchema = z.object({
 	payoutInterval: z.nativeEnum(PayoutInterval),
 	targetFocuses: z.array(z.string().trim().min(1)).default([]),
 	targetProfiles: z.array(z.nativeEnum(Profile)).default([]),
+	targetLocalPartnerIds: z.array(z.string().trim().min(1)).default([]),
 });
 
 export const publicOnboardingUserDetailsSchema = z.object({

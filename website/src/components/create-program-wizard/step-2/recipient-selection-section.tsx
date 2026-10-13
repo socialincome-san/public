@@ -15,12 +15,16 @@ type Props = {
 	focusOptions: { id: string; name: string }[];
 	focusOptionsError?: string;
 	targetProfiles: Profile[];
+	targetLocalPartnerIds: string[];
+	localPartnerOptions: { id: string; name: string }[];
+	localPartnerOptionsError?: string;
 	totalRecipients: number;
 	filteredRecipients: number;
 	isCountingRecipients: boolean;
 	onChangeApproach: (value: RecipientApproachType) => void;
 	onToggleFocus: (focus: string) => void;
 	onToggleProfile: (profile: Profile) => void;
+	onToggleLocalPartner: (localPartnerId: string) => void;
 };
 
 const isProfile = (value: string): value is Profile => Object.values<string>(Profile).includes(value);
@@ -31,26 +35,32 @@ export const RecipientSelectionSection = ({
 	focusOptions,
 	focusOptionsError,
 	targetProfiles,
+	targetLocalPartnerIds,
+	localPartnerOptions,
+	localPartnerOptionsError,
 	totalRecipients,
 	filteredRecipients,
 	isCountingRecipients,
 	onChangeApproach,
 	onToggleFocus,
 	onToggleProfile,
+	onToggleLocalPartner,
 }: Props) => {
 	const t = useTranslations('create-program-wizard');
 	const noUniversalRecipients = value === 'universal' && totalRecipients === 0;
 	const noTargetedRecipients = value === 'targeted' && filteredRecipients === 0;
 	const focusLabelById = Object.fromEntries(focusOptions.map((focus) => [focus.id, focus.name]));
 	const focusLabel = (focusId: string) => focusLabelById[focusId] ?? focusId;
+	const localPartnerLabelById = Object.fromEntries(localPartnerOptions.map((partner) => [partner.id, partner.name]));
+	const localPartnerLabel = (localPartnerId: string) => localPartnerLabelById[localPartnerId] ?? localPartnerId;
 	const profileLabel = (profile: string) => (isProfile(profile) ? t(`step2.profiles.${profile}`) : profile);
 
 	return (
 		<div className="space-y-4">
 			<div className="text-lg font-medium">{t('step2.recipient_selection.title')}</div>
-			{focusOptionsError ? (
+			{focusOptionsError || localPartnerOptionsError ? (
 				<div className="text-muted-foreground text-sm">
-					{t('common.error')}: {focusOptionsError}
+					{t('common.error')}: {focusOptionsError ?? localPartnerOptionsError}
 				</div>
 			) : null}
 
@@ -102,6 +112,14 @@ export const RecipientSelectionSection = ({
 							getLabel={profileLabel}
 						/>
 
+						<PillMultiSelect
+							label={t('step2.recipient_selection.local_partners')}
+							values={localPartnerOptions.map((partner) => partner.id)}
+							selected={targetLocalPartnerIds}
+							onToggle={onToggleLocalPartner}
+							getLabel={localPartnerLabel}
+						/>
+
 						<div className={cn('text-sm', noTargetedRecipients ? 'text-destructive' : 'text-muted-foreground')}>
 							{isCountingRecipients ? (
 								<Loader2 className="inline-block h-4 w-4 animate-spin" aria-label="Loading" />
@@ -120,14 +138,6 @@ export const RecipientSelectionSection = ({
 						</div>
 					</div>
 				</RadioCard>
-
-				<RadioCard
-					value="custom"
-					disabled
-					label={t('step2.recipient_selection.custom.label')}
-					description={t('step2.recipient_selection.custom.description')}
-					badge={<Badge>{t('common.coming_soon')}</Badge>}
-				/>
 			</RadioCardGroup>
 		</div>
 	);

@@ -4,6 +4,7 @@ import { resultFail, type Result } from '@/lib/result';
 import { getSessionByType } from '@/modules/auth/session.service';
 import type {
 	LocalPartnerDashboardStats,
+	LocalPartnerOption,
 	LocalPartnerPaginatedTableView,
 	LocalPartnerPayload,
 	LocalPartnerPrograms,
@@ -31,6 +32,7 @@ import {
 	createLocalPartner,
 	deleteLocalPartner,
 	getLocalPartner,
+	getLocalPartnerOptions,
 	getPaginatedLocalPartnerTableView,
 	updateLocalPartner,
 } from './local-partner.service';
@@ -129,6 +131,8 @@ export const getPublicLocalPartnersByProgramIdAction = async (
 
 	return getPublicLocalPartnersByProgramId(idResult.data);
 };
+
+export const getLocalPartnerOptionsAction = async (): Promise<Result<LocalPartnerOption[]>> => getLocalPartnerOptions();
 
 export const getLocalPartnerDashboardStatsAction = async (input: unknown): Promise<Result<LocalPartnerDashboardStats>> => {
 	const parsedInput = localPartnerDashboardSlugSchema.safeParse(input);

@@ -17,6 +17,9 @@ jest.mock('@/modules/countries/country.actions', () => ({
 jest.mock('@/modules/focuses/focus.actions', () => ({
 	getFocusOptionsAction: jest.fn(),
 }));
+jest.mock('@/modules/local-partners/local-partner.actions', () => ({
+	getLocalPartnerOptionsAction: jest.fn(),
+}));
 jest.mock('@/modules/programs/program.actions', () => ({
 	createProgramAction: jest.fn(),
 	calculateProgramBudgetAction: jest.fn(),
@@ -34,6 +37,8 @@ type LoadCountriesOutput = {
 	countries: ProgramCountryFeasibilityRow[];
 	focusOptions: { id: string; name: string }[];
 	focusOptionsError: string | undefined;
+	localPartnerOptions: { id: string; name: string }[];
+	localPartnerOptionsError: string | undefined;
 	isAuthenticated: boolean;
 };
 
@@ -75,6 +80,8 @@ const createWizardActor = ({
 					countries: [countryRow],
 					focusOptions: [],
 					focusOptionsError: undefined,
+					localPartnerOptions: [{ id: 'partner-1', name: 'Partner One' }],
+					localPartnerOptionsError: undefined,
 					isAuthenticated: resolvedIsAuthenticated,
 				}),
 			),
@@ -138,7 +145,35 @@ describe('createProgramWizardMachine', () => {
 		await waitFor(actor, (state) => state.matches('closed'));
 		expect(savedInput?.userDetails).toBeUndefined();
 		expect(savedInput?.programInput.countryId).toBe('country-sl');
+		expect(savedInput?.programInput.targetLocalPartnerIds).toEqual([]);
 
+		actor.stop();
+	});
+
+	test('includes selected local partners in the program input', async () => {
+		let savedInput: SaveProgramInput | undefined;
+		const actor = createWizardActor({
+			isAuthenticated: true,
+			onSave: (input) => {
+				savedInput = input;
+			},
+		});
+
+		actor.send({ type: 'OPEN' });
+		await waitFor(actor, (state) => state.matches('countrySelection'));
+		actor.send({ type: 'SELECT_COUNTRY', id: 'country-sl' });
+		actor.send({ type: 'NEXT' });
+		await waitFor(actor, (state) => state.matches('programSetup') && !state.context.isCountingRecipients);
+		actor.send({ type: 'SELECT_RECIPIENT_APPROACH', value: 'targeted' });
+		await waitFor(actor, (state) => state.matches('programSetup') && !state.context.isCountingRecipients);
+		actor.send({ type: 'TOGGLE_TARGET_LOCAL_PARTNER', localPartnerId: 'partner-1' });
+		await waitFor(actor, (state) => state.matches('programSetup') && !state.context.isCountingRecipients);
+		actor.send({ type: 'NEXT' });
+		await waitFor(actor, (state) => state.matches('budget') && !state.context.isCalculatingBudget);
+		actor.send({ type: 'NEXT' });
+		await waitFor(actor, (state) => state.matches('closed'));
+
+		expect(savedInput?.programInput.targetLocalPartnerIds).toEqual(['partner-1']);
 		actor.stop();
 	});
 

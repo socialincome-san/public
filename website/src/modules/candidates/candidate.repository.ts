@@ -166,16 +166,21 @@ export const deleteAddressIfOrphaned = async (addressId: string) => {
 	return true;
 };
 
-export const countCandidates = async (focuses?: string[], profiles?: Profile[], countryCode?: CountryCode | null) =>
-	prisma.recipient.count({ where: buildCandidateWhere(focuses, profiles, countryCode) });
+export const countCandidates = async (
+	focuses?: string[],
+	profiles?: Profile[],
+	countryCode?: CountryCode | null,
+	localPartnerIds?: string[],
+) => prisma.recipient.count({ where: buildCandidateWhere(focuses, profiles, countryCode, localPartnerIds) });
 
 export const findCandidateIdsForAssignment = async (
 	focuses: string[] | undefined,
 	profiles: Profile[] | undefined,
 	countryCode: CountryCode,
+	localPartnerIds?: string[],
 ) =>
 	prisma.recipient.findMany({
-		where: buildCandidateWhere(focuses, profiles, countryCode),
+		where: buildCandidateWhere(focuses, profiles, countryCode, localPartnerIds),
 		select: { id: true },
 	});
 
@@ -399,10 +404,14 @@ const buildCandidateWhere = (
 	focuses?: string[],
 	profiles?: Profile[],
 	countryCode?: CountryCode | null,
+	localPartnerIds?: string[],
 ): Prisma.RecipientWhereInput => {
 	const andFilters: Prisma.RecipientWhereInput[] = [];
 	if (countryCode) {
 		andFilters.push(buildCountryFilter(countryCode));
+	}
+	if (localPartnerIds?.length) {
+		andFilters.push({ localPartnerId: { in: localPartnerIds } });
 	}
 	if (focuses?.length) {
 		andFilters.push(
