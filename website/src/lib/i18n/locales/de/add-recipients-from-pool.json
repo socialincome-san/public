@@ -1,0 +1,77 @@
+{
+	"title": "Empfänger:innen aus dem Pool hinzufügen",
+	"description": "Weisen Sie bestehende Kandidat:innen aus dem Pool diesem Programm zu. Land und Auszahlungsbedingungen des Programms bleiben unverändert.",
+	"close": "Schliessen",
+	"loading": "Kandidat:innen werden geladen",
+	"steps": {
+		"label": "Empfänger:innen aus dem Pool hinzufügen",
+		"selection": "Empfänger:innen",
+		"quantity": "Anzahl"
+	},
+	"country": {
+		"label": "Land"
+	},
+	"selection": {
+		"title": "Auswahl der Empfänger:innen",
+		"recommended": "Empfohlen",
+		"loading": "Kandidatenzahlen werden aktualisiert",
+		"clear_filters": "Alle verfügbaren Kandidat:innen verwenden",
+		"focuses": "Schwerpunkte",
+		"profiles": "Profile",
+		"local_partners": "Lokale Partner",
+		"all": {
+			"label": "Alle verfügbaren Kandidat:innen",
+			"description": "Nicht zugewiesene Kandidat:innen aus dem Programmland ohne weitere Filter hinzufügen.",
+			"available": "nicht zugewiesene Kandidat:innen in diesem Land verfügbar",
+			"empty": "In diesem Land gibt es keine nicht zugewiesenen Kandidat:innen."
+		},
+		"targeted": {
+			"label": "Gezielte Auswahl",
+			"description": "Grenzen Sie den Pool nach Schwerpunkt, Profil oder lokalem Partner ein.",
+			"matching": "{matching} von {total} Kandidat:innen entsprechen den aktuellen Filtern",
+			"empty": "Keine Kandidat:innen entsprechen diesen Filtern."
+		}
+	},
+	"profiles": {
+		"male": "Männlich",
+		"female": "Weiblich",
+		"youth": "Jugendliche"
+	},
+	"quantity": {
+		"title": "Wie viele Empfänger:innen",
+		"max_hint": "Das sind alle passenden Kandidat:innen.",
+		"empty": "Es sind keine passenden Kandidat:innen verfügbar."
+	},
+	"terms": {
+		"title": "Programmbedingungen",
+		"duration": "Programmdauer",
+		"months": "{count, plural, one {# Monat} other {# Monate}}",
+		"payout_amount": "Auszahlungsbetrag",
+		"payout_currency": "Auszahlungswährung",
+		"payout_interval": "Auszahlungsintervall",
+		"interval": {
+			"monthly": "Monatlich",
+			"quarterly": "Vierteljährlich",
+			"yearly": "Jährlich"
+		}
+	},
+	"cost": {
+		"title": "Zusätzliche Kosten",
+		"updating": "Kosten werden aktualisiert",
+		"display_currency": "Anzeigewährung"
+	},
+	"actions": {
+		"continue": "Weiter",
+		"back": "Zurück",
+		"retry": "Erneut versuchen",
+		"add": "{count, plural, one {# Empfänger:in hinzufügen} other {# Empfänger:innen hinzufügen}}",
+		"adding": "Empfänger:innen werden hinzugefügt"
+	},
+	"success": "{count, plural, one {# Empfänger:in wurde diesem Programm hinzugefügt.} other {# Empfänger:innen wurden diesem Programm hinzugefügt.}}",
+	"error": {
+		"title": "Fehler",
+		"generic": "Die Empfänger:innen konnten nicht hinzugefügt werden. Bitte versuchen Sie es erneut.",
+		"not_enough": "Es sind nicht mehr genug Kandidat:innen verfügbar. Passen Sie die Auswahl an und versuchen Sie es erneut.",
+		"load": "Der Kandidatenpool konnte nicht geladen werden."
+	}
+}

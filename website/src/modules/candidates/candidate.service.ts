@@ -16,6 +16,7 @@ import type {
 	CandidatesPaginatedTableView,
 	CandidatesTableQuery,
 	CandidatesTableViewRow,
+	UnassignedCandidateFilter,
 } from './candidate.types';
 
 export const getCandidate = async (session: Session, candidateId: string): Promise<Result<CandidatePayload>> => {
@@ -61,6 +62,28 @@ export const getPaginatedCandidateTableViewByLocalPartner = async (
 	query: CandidatesTableQuery,
 ): Promise<Result<CandidatesPaginatedTableView>> => getPaginatedCandidates(query, localPartnerId);
 
+export const countUnassignedCandidates = async (filter: UnassignedCandidateFilter): Promise<Result<{ count: number }>> => {
+	try {
+		return resultOk({ count: await candidateRepository.countCandidates(filter) });
+	} catch (error) {
+		console.error('Could not count candidates', { error });
+
+		return resultFail('Could not count candidates');
+	}
+};
+
+export const listLocalPartnersWithUnassignedCandidates = async (
+	countryCode: CountryCode,
+): Promise<Result<{ id: string; name: string }[]>> => {
+	try {
+		return resultOk(await candidateRepository.findLocalPartnersWithUnassignedCandidates(countryCode));
+	} catch (error) {
+		console.error('Could not list local partners with unassigned candidates', { error });
+
+		return resultFail('Could not list local partners');
+	}
+};
+
 export const getCandidateCount = async (
 	focuses?: string[],
 	profiles?: Profile[],
@@ -77,8 +100,11 @@ export const getCandidateCount = async (
 			countryCode = countryResult.data;
 		}
 
-		return resultOk({
-			count: await candidateRepository.countCandidates(focuses, profiles, countryCode, localPartnerIds),
+		return countUnassignedCandidates({
+			countryCode,
+			focusIds: focuses ?? [],
+			profiles: profiles ?? [],
+			localPartnerIds: localPartnerIds ?? [],
 		});
 	} catch (error) {
 		console.error('Could not count candidates', { error });
@@ -357,33 +383,21 @@ export const importCandidatesCsv = async (session: Session, file: File): Promise
 export const assignRandomCandidatesToProgram = async (
 	programId: string,
 	amount: number,
-	countryCode: CountryCode,
-	focuses?: string[],
-	profiles?: Profile[],
-	localPartnerIds?: string[],
+	filter: UnassignedCandidateFilter,
 ): Promise<Result<{ assigned: number }>> => {
+	if (!filter.countryCode) {
+		return resultFail('Could not assign candidates');
+	}
+
 	try {
-		const candidates = await candidateRepository.findCandidateIdsForAssignment(
-			focuses,
-			profiles,
-			countryCode,
-			localPartnerIds,
-		);
-		if (candidates.length < amount) {
-			console.warn('Not enough candidates available for assignment', {
-				available: candidates.length,
-				requested: amount,
-			});
+		const assignment = await candidateRepository.updateUnassignedCandidateAssignments(filter, programId, amount);
+		if (assignment.outcome === 'insufficient') {
+			console.warn('Not enough candidates available for assignment', { programId, requested: amount });
 
 			return resultFail('Not enough candidates available');
 		}
-		const selectedIds = [...candidates]
-			.sort(() => Math.random() - 0.5)
-			.slice(0, amount)
-			.map(({ id }) => id);
-		await candidateRepository.updateCandidateProgramAssignments(selectedIds, programId);
 
-		return resultOk({ assigned: selectedIds.length });
+		return resultOk({ assigned: assignment.assigned });
 	} catch (error) {
 		console.error('Could not assign candidates', { programId, error });
 

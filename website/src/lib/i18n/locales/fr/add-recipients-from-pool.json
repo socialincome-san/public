@@ -1,0 +1,77 @@
+{
+	"title": "Ajouter des bénéficiaires depuis le pool",
+	"description": "Affectez des candidats existants du pool à ce programme. Le pays et les conditions de versement du programme restent inchangés.",
+	"close": "Fermer",
+	"loading": "Chargement des candidats",
+	"steps": {
+		"label": "Ajouter des bénéficiaires depuis le pool",
+		"selection": "Bénéficiaires",
+		"quantity": "Quantité"
+	},
+	"country": {
+		"label": "Pays"
+	},
+	"selection": {
+		"title": "Sélection des bénéficiaires",
+		"recommended": "Recommandé",
+		"loading": "Mise à jour du nombre de candidats",
+		"clear_filters": "Utiliser tous les candidats disponibles",
+		"focuses": "Axes",
+		"profiles": "Profils",
+		"local_partners": "Partenaires locaux",
+		"all": {
+			"label": "Tous les candidats disponibles",
+			"description": "Ajouter les candidats non affectés du pays du programme, sans filtre supplémentaire.",
+			"available": "candidats non affectés disponibles dans ce pays",
+			"empty": "Il n'y a aucun candidat non affecté dans ce pays."
+		},
+		"targeted": {
+			"label": "Sélection ciblée",
+			"description": "Limitez le pool par axe, profil ou partenaire local.",
+			"matching": "{matching} sur {total} candidats correspondent aux filtres actuels",
+			"empty": "Aucun candidat ne correspond à ces filtres."
+		}
+	},
+	"profiles": {
+		"male": "Homme",
+		"female": "Femme",
+		"youth": "Jeunes"
+	},
+	"quantity": {
+		"title": "Combien de bénéficiaires",
+		"max_hint": "Il s'agit de tous les candidats correspondants.",
+		"empty": "Aucun candidat correspondant n'est disponible."
+	},
+	"terms": {
+		"title": "Conditions du programme",
+		"duration": "Durée du programme",
+		"months": "{count, plural, one {# mois} other {# mois}}",
+		"payout_amount": "Montant du versement",
+		"payout_currency": "Devise du versement",
+		"payout_interval": "Intervalle de versement",
+		"interval": {
+			"monthly": "Mensuel",
+			"quarterly": "Trimestriel",
+			"yearly": "Annuel"
+		}
+	},
+	"cost": {
+		"title": "Coût supplémentaire",
+		"updating": "Mise à jour du coût",
+		"display_currency": "Devise d'affichage"
+	},
+	"actions": {
+		"continue": "Continuer",
+		"back": "Retour",
+		"retry": "Réessayer",
+		"add": "{count, plural, one {Ajouter # bénéficiaire} other {Ajouter # bénéficiaires}}",
+		"adding": "Ajout des bénéficiaires"
+	},
+	"success": "{count, plural, one {# bénéficiaire a été ajouté à ce programme.} other {# bénéficiaires ont été ajoutés à ce programme.}}",
+	"error": {
+		"title": "Erreur",
+		"generic": "Les bénéficiaires n'ont pas pu être ajoutés. Veuillez réessayer.",
+		"not_enough": "Il n'y a plus assez de candidats. Ajustez la sélection et réessayez.",
+		"load": "Le pool de candidats n'a pas pu être chargé."
+	}
+}
