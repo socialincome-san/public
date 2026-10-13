@@ -128,6 +128,33 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			storagePath: 'File',
 		},
 	},
+	'local-partner': {
+		label: 'Local partner',
+		namePaths: ['name'],
+		fieldLabels: {
+			legacyFirestoreId: 'Legacy ID',
+			name: 'Name',
+			slug: 'Slug',
+			focuses: 'Focuses',
+			'account.firebaseAuthUserId': 'Firebase user',
+			'contact.firstName': 'First name',
+			'contact.lastName': 'Last name',
+			'contact.callingName': 'Calling name',
+			'contact.email': 'Email',
+			'contact.gender': 'Gender',
+			'contact.language': 'Language',
+			'contact.dateOfBirth': 'Date of birth',
+			'contact.profession': 'Profession',
+			'contact.isInstitution': 'Institution',
+			'contact.phone.number': 'Phone',
+			'contact.phone.hasWhatsApp': 'WhatsApp',
+			'contact.address.street': 'Street',
+			'contact.address.number': 'House number',
+			'contact.address.city': 'City',
+			'contact.address.zip': 'ZIP',
+			'contact.address.country': 'Country',
+		},
+	},
 };
 
 export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));

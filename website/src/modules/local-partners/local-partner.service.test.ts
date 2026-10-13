@@ -6,7 +6,9 @@ const mockFindPaginatedLocalPartners = jest.fn();
 
 jest.mock('@/modules/auth/auth.service', () => ({}));
 
-jest.mock('./local-partner.repository', () => ({
+jest.mock('./local-partner.repository.write', () => ({}));
+
+jest.mock('./local-partner.repository.read', () => ({
 	findPublicLocalPartnersByProgramId: mockFindPublicLocalPartnersByProgramId,
 	findPaginatedLocalPartners: mockFindPaginatedLocalPartners,
 }));
