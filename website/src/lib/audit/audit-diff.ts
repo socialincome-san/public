@@ -1,7 +1,7 @@
 import type { AuditChange, JsonValue } from './audit-types';
 
-/** Field changes between two stored versions, as dot paths such as `contact.phone.number`. */
-export const diffVersions = (before: JsonValue, after: JsonValue): AuditChange[] => {
+/** Field changes between two audit snapshots, as dot paths such as `contact.phone.number`. */
+export const diffSnapshots = (before: JsonValue, after: JsonValue): AuditChange[] => {
 	const previous = flatten(before);
 	const next = flatten(after);
 

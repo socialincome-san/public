@@ -1,24 +1,24 @@
-type StoredVersion = { entityId: string; snapshot?: unknown };
-const mockCommitted: { rows: Map<string, string>; versions: StoredVersion[] } = { rows: new Map(), versions: [] };
-const mockFailVersionInsert = { value: false };
+type StoredEvent = { entityId: string; snapshot?: unknown };
+const mockCommitted: { rows: Map<string, string>; events: StoredEvent[] } = { rows: new Map(), events: [] };
+const mockFailEventInsert = { value: false };
 const mockTransactionRows = new WeakMap<object, Map<string, string>>();
 
-// Buffers writes and versions per transaction and applies them only on
+// Buffers writes and events per transaction and applies them only on
 // commit, like a database transaction.
 jest.mock('@/lib/database/prisma', () => ({
 	prisma: {
 		$transaction: async (work: (transaction: unknown) => Promise<unknown>) => {
 			const rows = new Map(mockCommitted.rows);
-			const versions: StoredVersion[] = [];
+			const events: StoredEvent[] = [];
 			const transaction = {
-				entityVersion: {
+				auditEvent: {
 					findFirst: ({ where }: { where: { entityId: string } }) =>
-						Promise.resolve(mockCommitted.versions.filter(({ entityId }) => entityId === where.entityId).at(-1) ?? null),
-					create: ({ data }: { data: StoredVersion }) => {
-						if (mockFailVersionInsert.value) {
-							return Promise.reject(new Error('Version insert failed'));
+						Promise.resolve(mockCommitted.events.filter(({ entityId }) => entityId === where.entityId).at(-1) ?? null),
+					create: ({ data }: { data: StoredEvent }) => {
+						if (mockFailEventInsert.value) {
+							return Promise.reject(new Error('Audit event insert failed'));
 						}
-						versions.push(data);
+						events.push(data);
 
 						return Promise.resolve();
 					},
@@ -27,7 +27,7 @@ jest.mock('@/lib/database/prisma', () => ({
 			mockTransactionRows.set(transaction, rows);
 			const result = await work(transaction);
 			mockCommitted.rows = rows;
-			mockCommitted.versions.push(...versions);
+			mockCommitted.events.push(...events);
 
 			return result;
 		},
@@ -35,7 +35,7 @@ jest.mock('@/lib/database/prisma', () => ({
 }));
 
 import type { AuditContext } from './audit-types';
-import { auditedWrite, type VersionedEntity } from './audited-write';
+import { auditedWrite, type AuditedEntity } from './audited-write';
 
 const rowsOf = (transaction: object): Map<string, string> => {
 	const rows = mockTransactionRows.get(transaction);
@@ -46,7 +46,7 @@ const rowsOf = (transaction: object): Map<string, string> => {
 	return rows;
 };
 
-const entity: VersionedEntity = {
+const entity: AuditedEntity = {
 	type: 'thing',
 	findSnapshot: (transaction, id) => {
 		const name = rowsOf(transaction).get(id);
@@ -64,8 +64,8 @@ const portal: AuditContext = {
 describe('auditedWrite', () => {
 	beforeEach(() => {
 		mockCommitted.rows = new Map([['a', 'Ada']]);
-		mockCommitted.versions = [];
-		mockFailVersionInsert.value = false;
+		mockCommitted.events = [];
+		mockFailEventInsert.value = false;
 	});
 
 	test('stores the state after the write with who made it', async () => {
@@ -76,7 +76,7 @@ describe('auditedWrite', () => {
 		});
 
 		expect(result).toBe('done');
-		expect(mockCommitted.versions).toEqual([
+		expect(mockCommitted.events).toEqual([
 			{
 				entityType: 'thing',
 				entityId: 'a',
@@ -98,7 +98,7 @@ describe('auditedWrite', () => {
 			return Promise.resolve({ id: 'b' });
 		});
 
-		expect(mockCommitted.versions).toMatchObject([{ entityId: 'b', action: 'create', snapshot: { name: 'Bob' } }]);
+		expect(mockCommitted.events).toMatchObject([{ entityId: 'b', action: 'create', snapshot: { name: 'Bob' } }]);
 	});
 
 	test('stores no snapshot for a delete', async () => {
@@ -108,10 +108,10 @@ describe('auditedWrite', () => {
 			return Promise.resolve();
 		});
 
-		expect(mockCommitted.versions).toMatchObject([{ entityId: 'a', action: 'delete', snapshot: undefined }]);
+		expect(mockCommitted.events).toMatchObject([{ entityId: 'a', action: 'delete', snapshot: undefined }]);
 	});
 
-	test('stores no version for an update that changes nothing', async () => {
+	test('stores no audit event for an update that changes nothing', async () => {
 		const rename = (name: string) =>
 			auditedWrite({ entity, context: portal, action: 'update', entityId: 'a' }, (transaction) => {
 				rowsOf(transaction).set('a', name);
@@ -122,11 +122,11 @@ describe('auditedWrite', () => {
 		await rename('Grace');
 		await rename('Grace');
 
-		expect(mockCommitted.versions).toMatchObject([{ snapshot: { name: 'Grace' } }]);
+		expect(mockCommitted.events).toMatchObject([{ snapshot: { name: 'Grace' } }]);
 	});
 
-	test('rolls back the write when the version cannot be stored', async () => {
-		mockFailVersionInsert.value = true;
+	test('rolls back the write when the audit event cannot be stored', async () => {
+		mockFailEventInsert.value = true;
 
 		await expect(
 			auditedWrite({ entity, context: portal, action: 'update', entityId: 'a' }, (transaction) => {
@@ -134,7 +134,7 @@ describe('auditedWrite', () => {
 
 				return Promise.resolve();
 			}),
-		).rejects.toThrow('Version insert failed');
+		).rejects.toThrow('Audit event insert failed');
 		expect(mockCommitted.rows.get('a')).toBe('Ada');
 	});
 });

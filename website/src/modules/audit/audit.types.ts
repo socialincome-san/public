@@ -1,21 +1,21 @@
 import type { AuditChange } from '@/lib/audit/audit-types';
 
-/** An entity whose changes a user may see, as the owning module describes it. */
-export type ChangeLogEntity = {
+/** An entity whose audit events a user may see, as the owning module describes it. */
+export type AuditLogEntity = {
 	id: string;
 	name: string;
 	/** Where it belongs, e.g. a recipient's program. */
 	context: string;
 };
 
-export type ChangeTableQuery = {
+export type AuditTableQuery = {
 	page: number;
 	pageSize: number;
 	search: string;
 	entityType?: string;
 };
 
-export type ChangeTableViewRow = {
+export type AuditTableViewRow = {
 	id: string;
 	createdAt: Date;
 	entityType: string;
@@ -29,8 +29,8 @@ export type ChangeTableViewRow = {
 	changes: AuditChange[];
 };
 
-export type ChangeTableView = {
-	tableRows: ChangeTableViewRow[];
+export type AuditTableView = {
+	tableRows: AuditTableViewRow[];
 	totalCount: number;
 	entityTypeFilterOptions: { value: string; label: string }[];
 };

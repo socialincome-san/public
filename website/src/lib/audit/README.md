@@ -1,16 +1,17 @@
-# Audit logging
+# Audit log
 
-Every write to an audited entity stores a new version in
-`entity_version`: who wrote it, from where, and the entity's state
-afterwards. What changed is computed when reading, by comparing
-consecutive versions. Only recipients are audited so far.
+Every write to an audited entity stores an audit event in `audit_event`:
+who wrote it, from where, and a snapshot of the entity afterwards. What
+changed is computed when reading, by comparing consecutive snapshots.
+Only recipients are audited so far.
 
 ## Writing
 
-An audited model is written only in its module's
-`*.write.repository.ts`, each write through `auditedWrite`. Lint rejects
-writes to it in every other repository and the shared Prisma client in
-write repositories.
+An audited module splits its repository into
+`<module>.repository.read.ts` and `<module>.repository.write.ts`. An
+audited model is written only in a write repository, each write through
+`auditedWrite`. Lint rejects writes to it in every other repository and
+the shared Prisma client in write repositories.
 
 ```ts
 export const updateRecipient = async (audit: AuditContext, input, context) =>
@@ -20,10 +21,10 @@ export const updateRecipient = async (audit: AuditContext, input, context) =>
 ```
 
 `auditedWrite` runs the write, reads the snapshot
-(`recipientVersionSelect`, including contact, phones, address and
+(`recipientAuditSnapshotSelect`, including contact, phones, address and
 payment information) and stores it in the same transaction. If storing
-the version fails, the write rolls back. Updates that change nothing
-store no version; a delete stores a version without snapshot.
+the audit event fails, the write rolls back. Updates that change nothing
+store no event; a delete stores an event without snapshot.
 
 Services pass who is acting: `getSessionAuditContext(session)` for
 portal and partner space,
@@ -33,28 +34,28 @@ app. `metadata` is flat context such as
 
 ## Reading
 
-`/portal/monitoring/changes` lists every change the user may see, newest
-first, each diffed against the entity's previous version
-(`diffVersions`, paths like `paymentInformation.phone.number`).
-`getChangeTableView` (`modules/changes`) asks each versioned entity type
+`/portal/monitoring/audit` lists every audit event the user may see,
+newest first, each diffed against the entity's previous snapshot
+(`diffSnapshots`, paths like `paymentInformation.phone.number`).
+`getAuditTableView` (`modules/audit`) asks each audited entity type
 which entities the user may see; recipients answer with
-`getRecipientsForChangeLog` (recipients in programs they operate). To
-show a new entity type, see below.
+`getRecipientsForAuditLog` (recipients in programs they operate).
 
 ## Notes
 
 - Firebase cannot join the transaction; services update it before the
   write and revert it if the write throws, as before.
-- `entity_version` is append-only (database triggers).
+- `audit_event` is append-only (database triggers).
 - Candidates and program deletion also write recipient rows and are not
-  versioned yet (`unauditedWriteRepositories` in `eslint.config.mjs`).
+  audited yet (`unauditedWriteRepositories` in `eslint.config.mjs`).
 
 ## Auditing another model
 
 1. Add the model to `auditedModels` in `eslint.config.mjs`; lint lists
    every write to move.
-2. Move them into `<module>.write.repository.ts`, with a
-   `VersionedEntity` whose `findSnapshot` selects the fields to keep.
+2. Rename `<module>.repository.ts` to `<module>.repository.read.ts` and
+   move the writes into `<module>.repository.write.ts`, with an
+   `AuditedEntity` whose `findSnapshot` selects the fields to keep.
 3. Pass an `AuditContext` from the service.
-4. To show its changes, add a loader to `changeLogSources` and field
-   labels to `src/components/changes/change-summary.ts`.
+4. To show it in the audit log, add a loader to `auditLogSources` and
+   field labels to `src/components/audit/audit-summary.ts`.

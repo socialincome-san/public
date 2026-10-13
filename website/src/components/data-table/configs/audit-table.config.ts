@@ -1,17 +1,17 @@
-import { makeChangeColumns } from '@/components/data-table/columns/changes';
+import { makeAuditColumns } from '@/components/data-table/columns/audit';
 import type { TableQueryState } from '@/components/data-table/query-state';
-import type { ChangeTableViewRow } from '@/modules/changes/change.types';
+import type { AuditTableViewRow } from '@/modules/audit/audit.types';
 import type { DataTableConfig, TableFilterConfig } from '../table-config.types';
 
-export const changesTableConfig: DataTableConfig<ChangeTableViewRow> = {
-	id: 'changes',
-	title: 'Changes',
-	emptyMessage: 'No changes found',
+export const auditTableConfig: DataTableConfig<AuditTableViewRow> = {
+	id: 'audit',
+	title: 'Audit log',
+	emptyMessage: 'No audit events found',
 	searchKeys: ['entityId', 'entityName'],
-	makeColumns: makeChangeColumns,
+	makeColumns: makeAuditColumns,
 };
 
-export const getChangesTableFilters = ({
+export const getAuditTableFilters = ({
 	query,
 	entityTypes,
 }: {

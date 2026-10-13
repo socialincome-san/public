@@ -1,5 +1,5 @@
 import type { JsonValue } from '@/lib/audit/audit-types';
-import type { ChangeTableViewRow } from '@/modules/changes/change.types';
+import type { AuditTableViewRow } from '@/modules/audit/audit.types';
 import type { ChangeListItem } from '@socialincome/design-system/data-display/change-list/change-list';
 
 // Readable names for snapshot paths, per entity type. Unknown paths show as is.
@@ -49,7 +49,7 @@ const isoDatePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/;
 const dateFormat = new Intl.DateTimeFormat('de-CH', { dateStyle: 'short' });
 
 /** Field changes for ChangeList; empty for rows that are described by text instead. */
-export const getChangeItems = ({ entityType, action, changes }: ChangeTableViewRow): ChangeListItem[] =>
+export const getAuditChangeItems = ({ entityType, action, changes }: AuditTableViewRow): ChangeListItem[] =>
 	action === 'update'
 		? changes.map((change) => ({
 				label: fieldLabels[entityType]?.[change.path] ?? change.path,
@@ -59,7 +59,7 @@ export const getChangeItems = ({ entityType, action, changes }: ChangeTableViewR
 		: [];
 
 /** Text for rows without a field diff. */
-export const describeChange = ({ action, changes }: ChangeTableViewRow): string | null => {
+export const describeAuditEvent = ({ action, changes }: AuditTableViewRow): string | null => {
 	if (action === 'create') {
 		return 'Created';
 	}
@@ -67,7 +67,7 @@ export const describeChange = ({ action, changes }: ChangeTableViewRow): string 
 		return 'Deleted';
 	}
 
-	return changes.length === 0 ? 'First recorded version' : null;
+	return changes.length === 0 ? 'First recorded state' : null;
 };
 
 export const sourceLabels: Record<string, string> = {

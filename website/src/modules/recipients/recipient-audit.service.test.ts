@@ -7,7 +7,7 @@ const mockWriteRepository = {
 	removeRecipientFromProgram: jest.fn(),
 	deleteRecipient: jest.fn(),
 };
-const mockFindRecipientsForChanges = jest.fn();
+const mockFindRecipientsForAuditLog = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
 const mockCreateFirebaseUser = jest.fn();
 const mockDeleteFirebaseUser = jest.fn();
@@ -19,8 +19,8 @@ const updateContext = {
 	paymentInformation: null,
 };
 
-jest.mock('./recipient.write.repository', () => mockWriteRepository);
-jest.mock('./recipient.repository', () => ({
+jest.mock('./recipient.repository.write', () => mockWriteRepository);
+jest.mock('./recipient.repository.read', () => ({
 	findRecipientForUpdate: () => Promise.resolve(updateContext),
 	findRecipientForSelfUpdate: () => Promise.resolve({ contact: { phone: null }, paymentInformation: null }),
 	findRecipientForProgramRemoval: () =>
@@ -35,7 +35,7 @@ jest.mock('./recipient.repository', () => ({
 			contact: { phoneId: null, addressId: null },
 			paymentInformation: { phone: { id: 'phone-1', number: '+23270000001' } },
 		}),
-	findRecipientsForChanges: mockFindRecipientsForChanges,
+	findRecipientsForAuditLog: mockFindRecipientsForAuditLog,
 	findContactByEmail: () => Promise.resolve(null),
 	findPhoneByNumber: () => Promise.resolve(null),
 	findPaymentInformationByCode: () => Promise.resolve(null),
@@ -57,7 +57,7 @@ import type { UpdateRecipientInput } from './recipient.schemas';
 import {
 	createRecipient,
 	deleteRecipient,
-	getRecipientsForChangeLog,
+	getRecipientsForAuditLog,
 	importRecipientsCsv,
 	removeRecipientFromProgram,
 	updateRecipient,
@@ -195,10 +195,10 @@ describe('recipient write attribution', () => {
 	});
 });
 
-describe('getRecipientsForChangeLog', () => {
+describe('getRecipientsForAuditLog', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
-		mockFindRecipientsForChanges.mockResolvedValue([
+		mockFindRecipientsForAuditLog.mockResolvedValue([
 			{
 				id: 'recipient-1',
 				contact: { firstName: 'Ada', lastName: 'Lovelace' },
@@ -216,12 +216,12 @@ describe('getRecipientsForChangeLog', () => {
 			],
 		});
 
-		await expect(getRecipientsForChangeLog('user-1')).resolves.toEqual({
+		await expect(getRecipientsForAuditLog('user-1')).resolves.toEqual({
 			success: true,
 			data: [{ id: 'recipient-1', name: 'Ada Lovelace', context: 'Program 1' }],
 			status: undefined,
 		});
-		expect(mockFindRecipientsForChanges).toHaveBeenCalledWith(['program-1']);
+		expect(mockFindRecipientsForAuditLog).toHaveBeenCalledWith(['program-1']);
 	});
 
 	test('lists nothing without operated programs', async () => {
@@ -230,7 +230,7 @@ describe('getRecipientsForChangeLog', () => {
 			data: [{ programId: 'program-2', programName: 'Program 2', permission: ProgramPermission.owner }],
 		});
 
-		await expect(getRecipientsForChangeLog('user-1')).resolves.toMatchObject({ success: true, data: [] });
-		expect(mockFindRecipientsForChanges).not.toHaveBeenCalled();
+		await expect(getRecipientsForAuditLog('user-1')).resolves.toMatchObject({ success: true, data: [] });
+		expect(mockFindRecipientsForAuditLog).not.toHaveBeenCalled();
 	});
 });

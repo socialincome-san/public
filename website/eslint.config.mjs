@@ -83,11 +83,11 @@ const moduleSyntaxSelectors = [
 	},
 ];
 
-// Models whose writes are audited. Only *.write.repository.ts may write
+// Models whose writes are audited. Only *.repository.write.ts may write
 // them, each write through auditedWrite (src/lib/audit/README.md).
 const auditedModels = ['recipient'];
 
-// Repositories that still write audited models without a version. Move
+// Repositories that still write audited models without an audit event. Move
 // these writes into a write repository; never add to this list.
 const unauditedWriteRepositories = [
 	'src/modules/candidates/candidate.repository.ts',
@@ -96,7 +96,7 @@ const unauditedWriteRepositories = [
 
 const auditedModelWriteSelector = {
 	selector: `CallExpression[callee.object.property.name=/^(${auditedModels.join('|')})$/][callee.property.name=/^(create|createMany|createManyAndReturn|update|updateMany|updateManyAndReturn|upsert|delete|deleteMany)$/]`,
-	message: 'This model is audited. Write it in a *.write.repository.ts through auditedWrite.',
+	message: 'This model is audited. Write it in a *.repository.write.ts through auditedWrite.',
 };
 
 const repositoryIncludeSelector = {
@@ -198,7 +198,7 @@ export default [
 							message: 'A module cache wraps its own service, so the service must not import it.',
 						},
 						{
-							group: ['@/modules/*/*.repository', '@/modules/*/*.permissions'],
+							group: ['@/modules/*/*.repository', '@/modules/*/*.repository.*', '@/modules/*/*.permissions'],
 							message: 'Cross-module imports must go through the owning module service, not internals.',
 						},
 					],
@@ -305,7 +305,7 @@ export default [
 		},
 	},
 	{
-		files: ['src/modules/**/*.repository.ts'],
+		files: ['src/modules/**/*.repository{,.read,.write}.ts'],
 		rules: {
 			'backend-architecture/repository-export-naming': 'error',
 			'no-restricted-syntax': ['error', ...moduleSyntaxSelectors, repositoryIncludeSelector, auditedModelWriteSelector],
@@ -348,7 +348,7 @@ export default [
 		},
 	},
 	{
-		files: ['src/modules/**/*.write.repository.ts'],
+		files: ['src/modules/**/*.repository.write.ts'],
 		rules: {
 			'no-restricted-syntax': [
 				'error',
@@ -484,6 +484,7 @@ export default [
 								'@/modules/**/*.service',
 								'@/modules/**/*.cache',
 								'@/modules/**/*.repository',
+								'@/modules/**/*.repository.*',
 								'@/modules/**/*.permissions',
 							],
 							message: 'Components may import module actions and type-only contracts, not services or internals.',
@@ -519,7 +520,7 @@ export default [
 							message: 'App boundaries call module services instead of integrations.',
 						},
 						{
-							group: ['@/modules/**/*.repository', '@/modules/**/*.permissions'],
+							group: ['@/modules/**/*.repository', '@/modules/**/*.repository.*', '@/modules/**/*.permissions'],
 							message: 'App boundaries must not import module repositories or permissions directly.',
 						},
 						...providerSdkImportPatterns,

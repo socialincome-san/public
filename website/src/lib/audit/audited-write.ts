@@ -2,20 +2,20 @@ import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/database/prisma';
 import type { AuditContext } from './audit-types';
 
-export type VersionedEntity = {
+export type AuditedEntity = {
 	type: string;
 	findSnapshot: (transaction: Prisma.TransactionClient, id: string) => Promise<Prisma.InputJsonObject | null>;
 };
 
 type AuditedWriteOptions = {
-	entity: VersionedEntity;
+	entity: AuditedEntity;
 	context: AuditContext;
 } & ({ action: 'create' } | { action: 'update' | 'delete'; entityId: string });
 
 /**
- * Runs `write` and stores the entity's state afterwards as a new version in
- * the same transaction, so the write rolls back if the version cannot be
- * stored. Updates that change nothing store no version. `create` takes the
+ * Runs `write` and stores an audit event with the entity's state afterwards in
+ * the same transaction, so the write rolls back if the event cannot be
+ * stored. Updates that change nothing store no event. `create` takes the
  * id from the returned row.
  */
 export const auditedWrite = async <T>(
@@ -30,7 +30,7 @@ export const auditedWrite = async <T>(
 			return result;
 		}
 
-		await transaction.entityVersion.create({
+		await transaction.auditEvent.create({
 			data: {
 				entityType: options.entity.type,
 				entityId,
@@ -53,7 +53,7 @@ const hasChanged = async (
 	entityId: string,
 	snapshot: Prisma.InputJsonObject | null,
 ): Promise<boolean> => {
-	const latest = await transaction.entityVersion.findFirst({
+	const latest = await transaction.auditEvent.findFirst({
 		where: { entityType, entityId },
 		orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
 		select: { snapshot: true },
@@ -63,7 +63,7 @@ const hasChanged = async (
 };
 
 // Postgres reorders jsonb keys, so compare with sorted keys. Dates become
-// the same ISO strings the stored version holds.
+// the same ISO strings the stored snapshot holds.
 const toStableJson = (value: unknown): string =>
 	JSON.stringify(value, (_key, item: unknown) =>
 		item && typeof item === 'object' && !Array.isArray(item)

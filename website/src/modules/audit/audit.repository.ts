@@ -3,34 +3,34 @@ import { prisma } from '@/lib/database/prisma';
 
 type EntityScope = { entityType: string; entityIds: string[] };
 
-export const findVersionPage = async ({ scopes, skip, take }: { scopes: EntityScope[]; skip: number; take: number }) => {
+export const findAuditEventPage = async ({ scopes, skip, take }: { scopes: EntityScope[]; skip: number; take: number }) => {
 	const where = scopeWhere(scopes);
-	const [versions, totalCount] = await Promise.all([
-		prisma.entityVersion.findMany({
+	const [events, totalCount] = await Promise.all([
+		prisma.auditEvent.findMany({
 			where,
 			orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
 			skip,
 			take,
-			select: versionSelect,
+			select: auditEventSelect,
 		}),
-		prisma.entityVersion.count({ where }),
+		prisma.auditEvent.count({ where }),
 	]);
 
-	return { versions, totalCount };
+	return { events, totalCount };
 };
 
-export const findVersionHistory = async (scopes: EntityScope[]) =>
-	prisma.entityVersion.findMany({
+export const findAuditEventHistory = async (scopes: EntityScope[]) =>
+	prisma.auditEvent.findMany({
 		where: scopeWhere(scopes),
 		orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
-		select: versionSelect,
+		select: auditEventSelect,
 	});
 
-const scopeWhere = (scopes: EntityScope[]): Prisma.EntityVersionWhereInput => ({
+const scopeWhere = (scopes: EntityScope[]): Prisma.AuditEventWhereInput => ({
 	OR: scopes.map(({ entityType, entityIds }) => ({ entityType, entityId: { in: entityIds } })),
 });
 
-const versionSelect = {
+const auditEventSelect = {
 	id: true,
 	entityType: true,
 	entityId: true,
@@ -40,4 +40,4 @@ const versionSelect = {
 	source: true,
 	snapshot: true,
 	createdAt: true,
-} satisfies Prisma.EntityVersionSelect;
+} satisfies Prisma.AuditEventSelect;

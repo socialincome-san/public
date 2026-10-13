@@ -1,20 +1,20 @@
-import { diffVersions } from './audit-diff';
+import { diffSnapshots } from './audit-diff';
 
-const version = {
+const snapshot = {
 	successorName: null,
 	startDate: '2026-01-01T00:00:00.000Z',
 	contact: { lastName: 'Kamara', phone: { number: '+232111', hasWhatsApp: true }, address: null },
 };
 
-describe('diffVersions', () => {
-	test('returns nothing for identical versions', () => {
-		expect(diffVersions(version, structuredClone(version))).toEqual([]);
+describe('diffSnapshots', () => {
+	test('returns nothing for identical snapshots', () => {
+		expect(diffSnapshots(snapshot, structuredClone(snapshot))).toEqual([]);
 	});
 
 	test('returns changed leaves as dot paths', () => {
-		const next = { ...version, successorName: 'Grace', contact: { ...version.contact, lastName: 'Koroma' } };
+		const next = { ...snapshot, successorName: 'Grace', contact: { ...snapshot.contact, lastName: 'Koroma' } };
 
-		expect(diffVersions(version, next)).toEqual([
+		expect(diffSnapshots(snapshot, next)).toEqual([
 			{ path: 'successorName', old: null, new: 'Grace' },
 			{ path: 'contact.lastName', old: 'Kamara', new: 'Koroma' },
 		]);
@@ -22,11 +22,11 @@ describe('diffVersions', () => {
 
 	test('treats added and removed relations as null leaves', () => {
 		const next = {
-			...version,
-			contact: { ...version.contact, phone: null, address: { city: 'Freetown' } },
+			...snapshot,
+			contact: { ...snapshot.contact, phone: null, address: { city: 'Freetown' } },
 		};
 
-		expect(diffVersions(version, next)).toEqual([
+		expect(diffSnapshots(snapshot, next)).toEqual([
 			{ path: 'contact.phone.number', old: '+232111', new: null },
 			{ path: 'contact.phone.hasWhatsApp', old: true, new: null },
 			{ path: 'contact.address.city', old: null, new: 'Freetown' },
@@ -34,10 +34,10 @@ describe('diffVersions', () => {
 	});
 
 	test('lists every set field on create and delete', () => {
-		expect(diffVersions(null, { successorName: 'Grace', termsAccepted: false })).toEqual([
+		expect(diffSnapshots(null, { successorName: 'Grace', termsAccepted: false })).toEqual([
 			{ path: 'successorName', old: null, new: 'Grace' },
 			{ path: 'termsAccepted', old: null, new: false },
 		]);
-		expect(diffVersions({ successorName: 'Grace' }, null)).toEqual([{ path: 'successorName', old: 'Grace', new: null }]);
+		expect(diffSnapshots({ successorName: 'Grace' }, null)).toEqual([{ path: 'successorName', old: 'Grace', new: null }]);
 	});
 });

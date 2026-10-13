@@ -1,11 +1,11 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type VersionedEntity } from '@/lib/audit/audited-write';
-import { recipientWithPaymentInformationSelect } from './recipient.repository';
+import { auditedWrite, type AuditedEntity } from '@/lib/audit/audited-write';
+import { recipientWithPaymentInformationSelect } from './recipient.repository.read';
 import type { CreateRecipientInput, UpdateRecipientInput, UpdateRecipientSelfInput } from './recipient.schemas';
 
-// Every write here stores a new recipient version in the same transaction.
-// Reads live in recipient.repository.ts.
+// Every write here stores a recipient audit event in the same transaction.
+// Reads live in recipient.repository.read.ts.
 
 export const createRecipient = async (audit: AuditContext, input: CreateRecipientInput) =>
 	auditedWrite({ entity: recipientEntity, context: audit, action: 'create' }, (transaction) =>
@@ -74,10 +74,10 @@ export const deleteRecipient = async (audit: AuditContext, recipientId: string) 
 		return { id: recipientId };
 	});
 
-// The stored version of a recipient includes its contact, phones, address
+// The audit snapshot of a recipient includes its contact, phones, address
 // and payment information, so a payment phone change shows up as
 // `paymentInformation.phone.number`.
-const recipientVersionSelect = {
+const recipientAuditSnapshotSelect = {
 	programId: true,
 	localPartnerId: true,
 	startDate: true,
@@ -108,10 +108,10 @@ const recipientVersionSelect = {
 	},
 } satisfies Prisma.RecipientSelect;
 
-const recipientEntity: VersionedEntity = {
+const recipientEntity: AuditedEntity = {
 	type: 'recipient',
 	findSnapshot: (transaction, recipientId) =>
-		transaction.recipient.findUnique({ where: { id: recipientId }, select: recipientVersionSelect }),
+		transaction.recipient.findUnique({ where: { id: recipientId }, select: recipientAuditSnapshotSelect }),
 };
 
 const findRelationIds = async (transaction: Prisma.TransactionClient, recipientId: string) => {

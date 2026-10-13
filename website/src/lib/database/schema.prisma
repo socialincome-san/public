@@ -1246,9 +1246,9 @@ model SourceLink {
 
 // One row per write to an audited entity: who wrote it, from where, and the
 // entity's state afterwards (null after a delete). Changes are computed by
-// comparing consecutive versions. No foreign keys: versions outlive deleted
-// entities. clock_timestamp() orders versions by insert time.
-model EntityVersion {
+// comparing consecutive snapshots. No foreign keys: events outlive deleted
+// entities. clock_timestamp() orders events by insert time.
+model AuditEvent {
   id         String   @id @default(cuid()) @map("id")
   entityType String   @map("entity_type")
   entityId   String   @map("entity_id")
@@ -1262,5 +1262,5 @@ model EntityVersion {
   createdAt  DateTime @default(dbgenerated("clock_timestamp()")) @map("created_at") @db.Timestamptz(3)
 
   @@index([entityType, entityId, createdAt])
-  @@map("entity_version")
+  @@map("audit_event")
 }

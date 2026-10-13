@@ -1,27 +1,27 @@
 import type { SearchParamsPageProps } from '@/app/page-props';
 import { tableQueryFromSearchParams } from '@/components/data-table/query-state';
-import { getChangeTableView } from '@/modules/changes/change.service';
+import { getAuditTableView } from '@/modules/audit/audit.service';
 import { requireSession } from '@/server/session';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Suspense } from 'react';
-import { ChangesTableClient } from './changes-table-client';
+import { AuditTableClient } from './audit-table-client';
 
-export default function ChangesPage({ searchParams }: SearchParamsPageProps) {
+export default function AuditPage({ searchParams }: SearchParamsPageProps) {
 	return (
 		<Suspense fallback={<AppLoadingSkeleton />}>
-			<ChangesDataLoader searchParams={searchParams} />
+			<AuditDataLoader searchParams={searchParams} />
 		</Suspense>
 	);
 }
 
-const ChangesDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
+const AuditDataLoader = async ({ searchParams }: SearchParamsPageProps) => {
 	const user = await requireSession('user');
 	const tableQuery = tableQueryFromSearchParams(await searchParams);
-	const result = await getChangeTableView(user.id, tableQuery);
+	const result = await getAuditTableView(user.id, tableQuery);
 	const view = result.success ? result.data : { tableRows: [], totalCount: 0, entityTypeFilterOptions: [] };
 
 	return (
-		<ChangesTableClient
+		<AuditTableClient
 			view={view}
 			error={result.success ? null : result.error}
 			query={{ ...tableQuery, totalRows: view.totalCount }}

@@ -2,14 +2,14 @@ const mockCountRecipientsForProgramsAndLocalPartners = jest.fn();
 const mockCreateRecipient = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
 
-jest.mock('./recipient.repository', () => ({
+jest.mock('./recipient.repository.read', () => ({
 	countRecipientsForProgramsAndLocalPartners: mockCountRecipientsForProgramsAndLocalPartners,
 	findContactByEmail: jest.fn().mockResolvedValue(null),
 	findPhoneByNumber: jest.fn().mockResolvedValue(null),
 	findPaymentInformationByCode: jest.fn().mockResolvedValue(null),
 }));
 
-jest.mock('./recipient.write.repository', () => ({
+jest.mock('./recipient.repository.write', () => ({
 	createRecipient: mockCreateRecipient,
 }));
 
