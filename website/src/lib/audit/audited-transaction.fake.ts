@@ -7,8 +7,15 @@ import type { AuditEventRecord } from './audit-types';
 
 type FakeTransaction = { readonly fake: true };
 
-export const auditLog = {
-	committed: [] as AuditEventRecord[],
+type AuditLog = {
+	committed: AuditEventRecord[];
+	rollbacks: number;
+	failInserts: boolean;
+	reset: () => void;
+};
+
+export const auditLog: AuditLog = {
+	committed: [],
 	rollbacks: 0,
 	failInserts: false,
 	reset: () => {

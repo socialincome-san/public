@@ -53,8 +53,8 @@ export const findPaginatedCandidates = async ({
 	return { candidates, totalCount, filterSource };
 };
 
-export const findCandidateForUpdate = async (candidateId: string) =>
-	prisma.recipient.findUnique({
+export const findCandidateForUpdate = async (candidateId: string, transaction?: AuditedTransaction) =>
+	(transaction ? getTransactionClient(transaction) : prisma).recipient.findUnique({
 		where: { id: candidateId },
 		select: {
 			localPartnerId: true,

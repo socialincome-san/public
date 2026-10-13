@@ -1246,9 +1246,12 @@ model SourceLink {
 
 // Append-only audit trail, written only by withAudit (src/lib/audit). No
 // foreign keys: events must outlive deleted entities and actors.
+// clock_timestamp(), not now(): events are inserted while holding the row
+// lock, so insert time follows the order of the changes; transaction start
+// time does not.
 model AuditEvent {
   id         String   @id @default(cuid()) @map("id")
-  occurredAt DateTime @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  occurredAt DateTime @default(dbgenerated("clock_timestamp()")) @map("occurred_at") @db.Timestamptz(3)
   actorType  String   @map("actor_type")
   actorId    String   @map("actor_id")
   entityType String   @map("entity_type")

@@ -107,6 +107,10 @@ audited recipient write takes this lock first, so concurrent writes
 serialize and each event's old values are exactly the previous event's
 new values.
 
+`occurred_at` defaults to `clock_timestamp()` (insert time, taken while
+holding the lock), not the transaction start, so newest-first ordering
+matches the order of the changes.
+
 Services that prepare a write outside the transaction (for example a
 Firebase update based on the current payment phone) re-read inside the
 callback and fail with a "changed in the meantime" error if their

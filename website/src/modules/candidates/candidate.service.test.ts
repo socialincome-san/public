@@ -3,6 +3,8 @@ const mockFindCandidateById = jest.fn();
 const mockCountCandidates = jest.fn();
 const mockUpdateCandidateProgramAssignments = jest.fn();
 const mockDeleteCandidateData = jest.fn();
+const mockFindCandidateForUpdate = jest.fn();
+const mockUpdateCandidate = jest.fn();
 const mockCandidatePrograms = new Map<string, string | null>();
 
 jest.mock('@/modules/users/user.service', () => ({
@@ -42,10 +44,23 @@ jest.mock('./candidate.repository', () => ({
 			paymentInformation: null,
 		}),
 	deleteCandidateData: mockDeleteCandidateData,
+	findCandidateForUpdate: mockFindCandidateForUpdate,
+	updateCandidate: mockUpdateCandidate,
+	findContactByEmail: () => Promise.resolve(null),
+	findPhoneByNumber: () => Promise.resolve(null),
+	findPaymentInformationByCode: () => Promise.resolve(null),
+	deletePhoneIfOrphaned: () => Promise.resolve(true),
+	deleteAddressIfOrphaned: () => Promise.resolve(true),
 }));
 
 import { auditLog } from '@/lib/audit/audited-transaction.fake';
-import { assignRandomCandidatesToProgram, deleteCandidate, getCandidate, getCandidateCount } from './candidate.service';
+import {
+	assignRandomCandidatesToProgram,
+	deleteCandidate,
+	getCandidate,
+	getCandidateCount,
+	updateCandidate,
+} from './candidate.service';
 
 describe('candidate service', () => {
 	beforeEach(() => {
@@ -175,5 +190,69 @@ describe('candidate audit trail', () => {
 				source: 'partner-space',
 			},
 		]);
+	});
+
+	test('rejects an update when the candidate changed after the unlocked read', async () => {
+		mockCandidatePrograms.set('candidate-1', null);
+		const updateContext = {
+			localPartnerId: 'partner-1',
+			programId: null,
+			contact: { id: 'contact-1', email: null, phone: null, address: null },
+			paymentInformation: null,
+		};
+		mockFindCandidateForUpdate
+			.mockResolvedValueOnce(updateContext)
+			.mockResolvedValueOnce({ ...updateContext, programId: 'program-1' });
+
+		const result = await updateCandidate(
+			{
+				type: 'local-partner',
+				id: 'partner-1',
+				name: 'Partner',
+				focuses: [],
+				gender: null,
+				email: null,
+				firstName: null,
+				lastName: null,
+				language: null,
+				street: null,
+				number: null,
+				city: null,
+				zip: null,
+				country: null,
+			},
+			{
+				id: 'candidate-1',
+				suspendedAt: null,
+				suspensionReason: null,
+				successorName: null,
+				termsAccepted: false,
+				contact: {
+					firstName: 'Ada',
+					lastName: 'Lovelace',
+					callingName: null,
+					email: null,
+					gender: null,
+					language: null,
+					dateOfBirth: null,
+					profession: null,
+					hasWhatsApp: false,
+					street: null,
+					number: null,
+					city: null,
+					zip: null,
+					country: null,
+				},
+				paymentInformation: { code: null },
+			},
+		);
+
+		expect(result).toEqual({
+			success: false,
+			error: 'Candidate was changed in the meantime. Please try again.',
+			status: undefined,
+		});
+		expect(mockUpdateCandidate).not.toHaveBeenCalled();
+		expect(auditLog.committed).toEqual([]);
 	});
 });

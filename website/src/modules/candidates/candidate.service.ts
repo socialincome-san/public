@@ -261,27 +261,35 @@ export const updateCandidate = async (session: Session, input: CandidateUpdateIn
 
 		const updateResult = await withAudit(
 			{ entity: recipientAuditEntity, action: 'update', entityId: input.id, ...getSessionAuditContext(session) },
-			async (transaction) =>
-				resultOk(
-					await candidateRepository.updateCandidate(transaction, effectiveInput, {
-						contactId: existing.contact.id,
-						contactPhoneId: existing.contact.phone?.id,
-						contactPhoneNumber: existing.contact.phone?.number,
-						contactAddressId: existing.contact.address?.id,
-						paymentInformationId: existing.paymentInformation?.id,
-						paymentPhoneId: existing.paymentInformation?.phone?.id,
-						paymentPhoneNumber: existing.paymentInformation?.phone?.number,
-					}),
-				),
+			async (transaction) => {
+				// Firebase was synchronized from the unlocked read above. Re-read under
+				// the audit lock and give up if a concurrent write invalidated it.
+				const current = await candidateRepository.findCandidateForUpdate(input.id, transaction);
+				if (current?.programId !== null || (current.paymentInformation?.phone?.number ?? null) !== previousPaymentPhone) {
+					return resultFail('Candidate was changed in the meantime. Please try again.');
+				}
+
+				const candidate = await candidateRepository.updateCandidate(transaction, effectiveInput, {
+					contactId: current.contact.id,
+					contactPhoneId: current.contact.phone?.id,
+					contactPhoneNumber: current.contact.phone?.number,
+					contactAddressId: current.contact.address?.id,
+					paymentInformationId: current.paymentInformation?.id,
+					paymentPhoneId: current.paymentInformation?.phone?.id,
+					paymentPhoneNumber: current.paymentInformation?.phone?.number,
+				});
+
+				return resultOk({ candidate, previous: current });
+			},
 		);
 		if (!updateResult.success) {
 			await compensateFirebaseChange(firebaseChange, previousPaymentPhone, nextPaymentPhone);
 
-			return updateResult;
+			return resultFail(updateResult.error);
 		}
-		await cleanupCandidateRelations(existing, effectiveInput);
+		await cleanupCandidateRelations(updateResult.data.previous, effectiveInput);
 
-		return updateResult;
+		return resultOk(updateResult.data.candidate);
 	} catch (error) {
 		console.error('Could not update candidate', { candidateId: input.id, error });
 		await compensateFirebaseChange(firebaseChange, previousPaymentPhone, nextPaymentPhone);

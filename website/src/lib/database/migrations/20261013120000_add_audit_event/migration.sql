@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "audit_event" (
     "id" TEXT NOT NULL,
-    "occurred_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "occurred_at" TIMESTAMPTZ(3) NOT NULL DEFAULT clock_timestamp(),
     "actor_type" TEXT NOT NULL,
     "actor_id" TEXT NOT NULL,
     "entity_type" TEXT NOT NULL,

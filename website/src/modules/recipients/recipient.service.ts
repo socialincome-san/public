@@ -338,17 +338,17 @@ export const updateRecipient = async (
 					return resultFail(CONCURRENT_CHANGE_ERROR);
 				}
 
-				return resultOk(
-					await recipientRepository.updateRecipient(transaction, recipientInput, {
-						contactId: current.contact.id,
-						contactPhoneId: current.contact.phone?.id,
-						contactPhoneNumber: current.contact.phone?.number,
-						contactAddressId: current.contact.address?.id,
-						paymentInformationId: current.paymentInformation?.id,
-						paymentPhoneId: current.paymentInformation?.phone?.id,
-						paymentPhoneNumber: current.paymentInformation?.phone?.number,
-					}),
-				);
+				const recipient = await recipientRepository.updateRecipient(transaction, recipientInput, {
+					contactId: current.contact.id,
+					contactPhoneId: current.contact.phone?.id,
+					contactPhoneNumber: current.contact.phone?.number,
+					contactAddressId: current.contact.address?.id,
+					paymentInformationId: current.paymentInformation?.id,
+					paymentPhoneId: current.paymentInformation?.phone?.id,
+					paymentPhoneNumber: current.paymentInformation?.phone?.number,
+				});
+
+				return resultOk({ recipient, previous: current });
 			},
 		);
 		if (!updateResult.success) {
@@ -359,13 +359,14 @@ export const updateRecipient = async (
 			return updateResult;
 		}
 
+		const { recipient, previous } = updateResult.data;
 		await cleanupRecipientRelations({
-			contactPhoneId: existing.contact.phone?.id,
-			paymentPhoneId: existing.paymentInformation?.phone?.id,
-			addressId: hasAddressInput(recipientInput.contact) ? undefined : existing.contact.address?.id,
+			contactPhoneId: previous.contact.phone?.id,
+			paymentPhoneId: previous.paymentInformation?.phone?.id,
+			addressId: hasAddressInput(recipientInput.contact) ? undefined : previous.contact.address?.id,
 		});
 
-		return resultOk(updateResult.data);
+		return resultOk(recipient);
 	} catch (error) {
 		console.error(error);
 		if (firebaseCompensation) {
@@ -429,14 +430,14 @@ export const updateRecipientSelf = async (
 					return resultFail(CONCURRENT_CHANGE_ERROR);
 				}
 
-				return resultOk(
-					await recipientRepository.updateRecipientSelf(
-						transaction,
-						id,
-						inputResult.data,
-						current.paymentInformation?.code ?? null,
-					),
+				const recipient = await recipientRepository.updateRecipientSelf(
+					transaction,
+					id,
+					inputResult.data,
+					current.paymentInformation?.code ?? null,
 				);
+
+				return resultOk({ recipient, previous: current });
 			},
 		);
 		if (!updateResult.success) {
@@ -447,12 +448,13 @@ export const updateRecipientSelf = async (
 			return updateResult;
 		}
 
+		const { recipient, previous } = updateResult.data;
 		await cleanupRecipientRelations({
-			contactPhoneId: existing.contact.phone?.id,
-			paymentPhoneId: existing.paymentInformation?.phone?.id,
+			contactPhoneId: previous.contact.phone?.id,
+			paymentPhoneId: previous.paymentInformation?.phone?.id,
 		});
 
-		return resultOk(updateResult.data);
+		return resultOk(recipient);
 	} catch (error) {
 		console.error(error);
 		if (firebaseCompensation) {
@@ -560,12 +562,15 @@ export const deleteRecipient = async (session: Session, recipientId: string): Pr
 export const authorizeRecipientAuditTrail = async (session: Session, recipientId: string): Promise<Result<void>> => {
 	try {
 		const recipient = await recipientRepository.findRecipientOwnership(recipientId);
-		const accessResult = await getActorAccessiblePrograms(session);
+		const accessResult = recipient?.programId
+			? await getActorAccessiblePrograms(session)
+			: resultOk<AccessibleProgram[]>([]);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
 
-		const isAdminUser = session.type === 'user' && (await isAdmin(session.id)).success;
+		const needsAdminRole = session.type === 'user' && !recipient?.programId;
+		const isAdminUser = needsAdminRole && (await isAdmin(session.id)).success;
 
 		return canReadRecipientAuditTrail(session, recipient, accessResult.data, isAdminUser)
 			? resultOk(undefined)
@@ -1322,7 +1327,12 @@ const compensateFailedRecipientCreation = async (
 	auditContext: RecipientAuditContext,
 ): Promise<void> => {
 	try {
-		await deleteRecipientWithRelations(recipientId, auditContext, { reason: 'authentication-user-creation-failed' });
+		const deleteResult = await deleteRecipientWithRelations(recipientId, auditContext, {
+			reason: 'authentication-user-creation-failed',
+		});
+		if (!deleteResult.success) {
+			console.error('Failed to compensate recipient creation', { recipientId, error: deleteResult.error });
+		}
 	} catch (error) {
 		console.error('Failed to compensate recipient creation', { recipientId, error });
 	}
