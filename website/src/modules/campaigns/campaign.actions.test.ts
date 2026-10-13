@@ -96,6 +96,8 @@ const createValidFormData = () => {
 	return formData;
 };
 
+const guestAudit = { actor: { type: 'system', id: 'campaign-submission' }, source: 'system' };
+
 describe('submitCampaignAction', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
@@ -113,13 +115,14 @@ describe('submitCampaignAction', () => {
 
 		expect(result).toEqual({ success: false, error: 'submission-failed', status: 503 });
 		expect(mockSubmit).toHaveBeenCalledWith(
+			guestAudit,
 			expect.objectContaining({ programId: 'program-1', public: true, creatorName: 'Alex Creator' }),
 			expect.objectContaining({ kind: 'upload' }),
 			expect.objectContaining({ profilePicture: null, sectionImage: null }),
 			null,
 			null,
 		);
-		expect(mockSubmit.mock.calls[0]?.[1]).toMatchObject({
+		expect(mockSubmit.mock.calls[0]?.[2]).toMatchObject({
 			kind: 'upload',
 			image: { mimeType: 'image/png', filename: 'cover.png' },
 		});
@@ -132,6 +135,7 @@ describe('submitCampaignAction', () => {
 
 		expect(result).toEqual({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
 		expect(mockSubmit).toHaveBeenCalledWith(
+			guestAudit,
 			expect.objectContaining({ programId: 'program-1' }),
 			expect.objectContaining({ kind: 'upload' }),
 			expect.objectContaining({ profilePicture: null, sectionImage: null }),
@@ -156,10 +160,11 @@ describe('submitCampaignAction', () => {
 		const result = await submitCampaignAction(formData);
 
 		expect(result).toEqual({ success: true, data: { slug: 'my-campaign', claimId: 'Ab12Cd34' } });
-		expect(mockGetOrCreateFromEmailAndName).toHaveBeenCalledWith(
-			{ actor: { type: 'system', id: 'campaign-submission' }, source: 'system' },
-			{ email: 'ada@example.com', firstName: 'Ada', lastName: 'Lovelace' },
-		);
+		expect(mockGetOrCreateFromEmailAndName).toHaveBeenCalledWith(guestAudit, {
+			email: 'ada@example.com',
+			firstName: 'Ada',
+			lastName: 'Lovelace',
+		});
 	});
 
 	test('still succeeds when guest account creation fails after submission', async () => {
@@ -213,6 +218,7 @@ describe('submitCampaignAction', () => {
 		expect(result.success).toBe(true);
 		expect(mockGetOptionalContributor).toHaveBeenCalled();
 		expect(mockSubmit).toHaveBeenCalledWith(
+			{ actor: { type: 'contributor', id: 'contributor-1', name: null }, source: 'website' },
 			expect.objectContaining({ programId: 'program-1' }),
 			expect.objectContaining({ kind: 'upload' }),
 			expect.objectContaining({ profilePicture: null, sectionImage: null }),
@@ -240,6 +246,7 @@ describe('submitCampaignAction', () => {
 
 		expect(result.success).toBe(true);
 		expect(mockSubmit).toHaveBeenCalledWith(
+			guestAudit,
 			expect.objectContaining({ goal: null, public: false }),
 			{
 				kind: 'default',
@@ -273,13 +280,14 @@ describe('submitCampaignAction', () => {
 
 		expect(result.success).toBe(true);
 		expect(mockSubmit).toHaveBeenCalledWith(
+			guestAudit,
 			expect.objectContaining({ hasAdditionalInformation: true, sectionDescription: 'Extra' }),
 			expect.objectContaining({ kind: 'upload' }),
 			expect.anything(),
 			null,
 			null,
 		);
-		expect(mockSubmit.mock.calls[0]?.[2]).toMatchObject({
+		expect(mockSubmit.mock.calls[0]?.[3]).toMatchObject({
 			profilePicture: { filename: 'profile.png' },
 			sectionImage: { filename: 'section.png' },
 		});
@@ -294,6 +302,7 @@ describe('submitCampaignAction', () => {
 
 		expect(result.success).toBe(true);
 		expect(mockSubmit).toHaveBeenCalledWith(
+			guestAudit,
 			expect.anything(),
 			expect.anything(),
 			expect.anything(),
@@ -403,7 +412,9 @@ describe('claimPendingCampaignsAction', () => {
 			success: true,
 			data: { successfulClaimIds: ['Ab12Cd34'], campaignSlug: 'my-campaign' },
 		});
-		expect(mockClaimPendingCampaigns).toHaveBeenCalledWith('contributor-1', ['Ab12Cd34']);
+		expect(mockClaimPendingCampaigns).toHaveBeenCalledWith(expect.objectContaining({ source: 'website' }), 'contributor-1', [
+			'Ab12Cd34',
+		]);
 	});
 
 	test('returns an empty success list when claim ids are empty', async () => {

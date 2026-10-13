@@ -1,5 +1,5 @@
 import type { Prisma } from '@/generated/prisma/client';
-import { ContributionStatus, Currency, PayoutStatus, ProgramPermission, SurveyStatus } from '@/generated/prisma/enums';
+import { ContributionStatus, PayoutStatus, ProgramPermission, SurveyStatus } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { ProgramCreateInput, ProgramSettingsUpdateInput } from './program.schemas';
@@ -309,17 +309,6 @@ export const createProgram = async (input: ProgramCreateInput, name: string, slu
 		select: { id: true },
 	});
 
-export const createDefaultCampaign = async (programId: string, endDate: Date) =>
-	prisma.campaign.create({
-		data: {
-			currency: Currency.CHF,
-			endDate,
-			isDefault: true,
-			program: { connect: { id: programId } },
-		},
-		select: { id: true },
-	});
-
 export const findProgramByName = async (name: string) =>
 	prisma.program.findUnique({ where: { name }, select: { id: true } });
 
@@ -393,7 +382,6 @@ export const deleteProgram = async (programId: string) => {
 			where: { surveySchedule: { programId } },
 			data: { surveyScheduleId: null },
 		});
-		await transaction.campaign.deleteMany({ where: { programId } });
 		await transaction.surveySchedule.deleteMany({ where: { programId } });
 		await transaction.programAccess.deleteMany({ where: { programId } });
 		await transaction.program.delete({ where: { id: programId } });

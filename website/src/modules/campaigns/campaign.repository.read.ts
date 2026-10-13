@@ -1,4 +1,4 @@
-import { ContributionStatus, Currency } from '@/generated/prisma/enums';
+import { ContributionStatus } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 
 const campaignPageSelect = {
@@ -120,6 +120,9 @@ export const findFallbackCampaign = async () =>
 		select: campaignReferenceSelect,
 	});
 
+export const findCampaignIdsByProgram = async (programId: string) =>
+	prisma.campaign.findMany({ where: { programId }, select: { id: true } });
+
 export const findDefaultCampaignForProgram = async (programId: string) =>
 	prisma.campaign.findFirst({
 		where: { programId, isDefault: true },
@@ -131,60 +134,6 @@ export const findCampaignIdBySlug = async (slug: string) =>
 		where: { slug },
 		select: { id: true },
 	});
-
-export const createCampaign = async (data: {
-	goal: number | null;
-	currency: Currency;
-	endDate: Date;
-	slug: string;
-	programId: string;
-	contributorId?: string | null;
-}): Promise<{ kind: 'created'; id: string; slug: string } | { kind: 'slug-exists' }> => {
-	try {
-		const campaign = await prisma.campaign.create({
-			data: {
-				goal: data.goal,
-				currency: data.currency,
-				endDate: data.endDate,
-				slug: data.slug,
-				program: { connect: { id: data.programId } },
-				...(data.contributorId ? { contributor: { connect: { id: data.contributorId } } } : {}),
-			},
-			select: { id: true, slug: true },
-		});
-
-		return { kind: 'created', id: campaign.id, slug: campaign.slug ?? data.slug };
-	} catch (error) {
-		if (isUniqueConstraintError(error)) {
-			return { kind: 'slug-exists' };
-		}
-
-		throw error;
-	}
-};
-
-export const createCampaignPending = async (
-	campaignId: string,
-	claimId: string,
-): Promise<{ kind: 'created' } | { kind: 'claim-id-exists' }> => {
-	try {
-		await prisma.campaignPending.create({
-			data: { claimId, campaignId },
-		});
-
-		return { kind: 'created' };
-	} catch (error) {
-		if (isUniqueConstraintError(error)) {
-			return { kind: 'claim-id-exists' };
-		}
-
-		throw error;
-	}
-};
-
-export const deleteCampaign = async (campaignId: string) => {
-	await prisma.campaign.delete({ where: { id: campaignId } });
-};
 
 export const findCampaignPendingByClaimId = async (claimId: string) =>
 	prisma.campaignPending.findUnique({
@@ -201,25 +150,3 @@ export const findCampaignPendingByClaimId = async (claimId: string) =>
 			},
 		},
 	});
-
-export const updateCampaignContributorForClaim = async (campaignId: string, claimId: string, contributorId: string) => {
-	await prisma.$transaction([
-		prisma.campaign.update({
-			where: { id: campaignId },
-			data: { contributor: { connect: { id: contributorId } } },
-		}),
-		prisma.campaignPending.delete({ where: { claimId } }),
-	]);
-};
-
-export const deleteCampaignPending = async (claimId: string) => {
-	await prisma.campaignPending.delete({ where: { claimId } });
-};
-
-const isUniqueConstraintError = (error: unknown): boolean => {
-	if (typeof error !== 'object' || error === null || !('code' in error)) {
-		return false;
-	}
-
-	return error.code === 'P2002';
-};

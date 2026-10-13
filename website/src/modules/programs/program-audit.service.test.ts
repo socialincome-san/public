@@ -4,6 +4,9 @@ const mockAssignRandomCandidatesToProgram = jest.fn();
 const mockRemoveRecipientsFromProgram = jest.fn();
 const mockDeleteProgram = jest.fn();
 
+const mockCreateDefaultCampaign = jest.fn();
+const mockDeleteProgramCampaigns = jest.fn();
+
 jest.mock('@/modules/program-access/program-access.service', () => ({
 	createInitialAccessesForProgram: () => Promise.resolve({ success: true, data: undefined }),
 	getAccessiblePrograms: () =>
@@ -14,6 +17,10 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 }));
 jest.mock('@/modules/candidates/candidate.service', () => ({
 	assignRandomCandidatesToProgram: mockAssignRandomCandidatesToProgram,
+}));
+jest.mock('@/modules/campaigns/campaign.service', () => ({
+	createDefaultCampaign: mockCreateDefaultCampaign,
+	deleteProgramCampaigns: mockDeleteProgramCampaigns,
 }));
 jest.mock('@/modules/recipients/recipient.service', () => ({
 	removeRecipientsFromProgram: mockRemoveRecipientsFromProgram,
@@ -33,7 +40,6 @@ jest.mock('@/modules/users/user.service', () => ({
 jest.mock('./program-stats.service', () => ({}));
 jest.mock('./program.repository', () => ({
 	createProgram: () => Promise.resolve({ id: 'program-1' }),
-	createDefaultCampaign: () => Promise.resolve(),
 	findProgramNameById: () => Promise.resolve({ name: 'Program 1' }),
 	findProgramDeletionBlockers: () => Promise.resolve({ hasPayouts: false, hasContributions: false }),
 	deleteProgram: mockDeleteProgram,
@@ -70,12 +76,17 @@ describe('program recipient write attribution', () => {
 		jest.clearAllMocks();
 		mockAssignRandomCandidatesToProgram.mockResolvedValue({ success: true, data: { assigned: 2 } });
 		mockRemoveRecipientsFromProgram.mockResolvedValue({ success: true, data: undefined });
+		mockCreateDefaultCampaign.mockResolvedValue({ success: true, data: { id: 'campaign-1' } });
+		mockDeleteProgramCampaigns.mockResolvedValue({ success: true, data: undefined });
 	});
 
-	test('attributes candidate assignment to the portal user or the new website user', async () => {
+	test('attributes candidate assignment and the default campaign to the portal user or the new website user', async () => {
 		await createProgram(input, operator);
 		await createProgram(input, { email: 'ada@example.org', firstName: 'Ada', lastName: 'Lovelace' });
 
+		expect(mockCreateDefaultCampaign.mock.calls.map(([audit]: unknown[]) => audit)).toEqual(
+			mockAssignRandomCandidatesToProgram.mock.calls.map(([audit]: unknown[]) => audit),
+		);
 		expect(mockAssignRandomCandidatesToProgram.mock.calls.map(([audit]: unknown[]) => audit)).toEqual([
 			{
 				actor: { type: 'user', id: 'user-1', name: 'Max Operator' },
@@ -90,8 +101,16 @@ describe('program recipient write attribution', () => {
 		]);
 	});
 
-	test('unassigns recipients through the recipients module before deleting', async () => {
+	test('removes recipients and campaigns through their modules before deleting', async () => {
 		await expect(deleteProgram(operator, 'program-1')).resolves.toMatchObject({ success: true });
+
+		expect(mockDeleteProgramCampaigns).toHaveBeenCalledWith(
+			expect.objectContaining({ metadata: { operation: 'program-deletion', programId: 'program-1' } }),
+			'program-1',
+		);
+		expect(mockDeleteProgramCampaigns.mock.invocationCallOrder[0]).toBeLessThan(
+			mockDeleteProgram.mock.invocationCallOrder[0] ?? 0,
+		);
 
 		expect(mockRemoveRecipientsFromProgram).toHaveBeenCalledWith(
 			{

@@ -15,12 +15,19 @@ const mockValidateOrganizationIds = jest.fn();
 const mockIsAdmin = jest.fn();
 const mockFindPaginatedPrograms = jest.fn();
 
+const mockCreateDefaultCampaign = jest.fn();
+const mockDeleteProgramCampaigns = jest.fn();
+
 jest.mock('@/modules/program-access/program-access.service', () => ({
 	createInitialAccessesForProgram: jest.fn(),
 	getAccessiblePrograms: mockGetAccessiblePrograms,
 }));
 jest.mock('@/modules/candidates/candidate.service', () => ({
 	assignRandomCandidatesToProgram: jest.fn(),
+}));
+jest.mock('@/modules/campaigns/campaign.service', () => ({
+	createDefaultCampaign: mockCreateDefaultCampaign,
+	deleteProgramCampaigns: mockDeleteProgramCampaigns,
 }));
 jest.mock('@/modules/recipients/recipient.service', () => ({
 	removeRecipientsFromProgram: jest.fn(),

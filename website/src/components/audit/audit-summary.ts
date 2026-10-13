@@ -155,6 +155,23 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			'contact.address.country': 'Country',
 		},
 	},
+	campaign: {
+		label: 'Campaign',
+		namePaths: ['slug'],
+		fieldLabels: {
+			legacyFirestoreId: 'Legacy ID',
+			goal: 'Goal',
+			currency: 'Currency',
+			additionalAmountChf: 'Additional amount (CHF)',
+			endDate: 'End date',
+			isDefault: 'Default campaign',
+			isFallback: 'Fallback campaign',
+			slug: 'Slug',
+			programId: 'Program',
+			contributorId: 'Contributor',
+			campaignPendings: 'Pending claims',
+		},
+	},
 };
 
 export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));

@@ -1,5 +1,7 @@
 'use server';
 
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
+import type { AuditContext } from '@/lib/audit/audit-types';
 import { defaultLanguage, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getOptionalContributor, getSessionByType } from '@/modules/auth/session.service';
@@ -165,6 +167,9 @@ const resolveOptionalImages = async (
 	};
 };
 
+// Guests submit campaigns without a session.
+const campaignSubmissionAudit: AuditContext = { actor: { type: 'system', id: 'campaign-submission' }, source: 'system' };
+
 export const submitCampaignAction = async (
 	formData: FormData,
 ): Promise<Result<CampaignSubmissionResult, CampaignSubmissionActionFailure>> => {
@@ -186,6 +191,7 @@ export const submitCampaignAction = async (
 	const contributorResult = await getOptionalContributor();
 	const contributor = contributorResult.success ? contributorResult.data : null;
 	const submissionResult = await submitCampaign(
+		contributor ? getSessionAuditContext(contributor) : campaignSubmissionAudit,
 		fieldsResult.data,
 		imageSourceResult.data,
 		optionalImagesResult.data,
@@ -209,10 +215,7 @@ export const submitCampaignAction = async (
 			email: formData.get('email'),
 		});
 		if (personalParsed.success) {
-			const accountResult = await getOrCreateContributorFromEmailAndName(
-				{ actor: { type: 'system', id: 'campaign-submission' }, source: 'system' },
-				personalParsed.data,
-			);
+			const accountResult = await getOrCreateContributorFromEmailAndName(campaignSubmissionAudit, personalParsed.data);
 			if (!accountResult.success) {
 				console.error(accountResult.error);
 			}
@@ -236,7 +239,11 @@ export const claimPendingCampaignsAction = async (claimIds: unknown): Promise<Re
 		return resultOk(emptyClaimResult);
 	}
 
-	const result = await claimPendingCampaigns(contributorSession.data.id, pendingClaimIds);
+	const result = await claimPendingCampaigns(
+		getSessionAuditContext(contributorSession.data),
+		contributorSession.data.id,
+		pendingClaimIds,
+	);
 	if (!result.success) {
 		console.error(result.error);
 

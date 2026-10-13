@@ -5,6 +5,7 @@ import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
 import { slugify } from '@/lib/utils/string-utils';
+import { createDefaultCampaign, deleteProgramCampaigns } from '@/modules/campaigns/campaign.service';
 import { assignRandomCandidatesToProgram } from '@/modules/candidates/candidate.service';
 import { getCountryIsoCode } from '@/modules/countries/country.service';
 import {
@@ -392,7 +393,14 @@ export const createProgram = async (
 		const program = await programRepository.createProgram(input, programName, slugify(programName));
 		const campaignEndDate = now();
 		campaignEndDate.setFullYear(campaignEndDate.getFullYear() + 10);
-		await programRepository.createDefaultCampaign(program.id, campaignEndDate);
+		const campaignResult = await createDefaultCampaign(
+			{ ...audit, metadata: { operation: 'program-creation', programId: program.id } },
+			program.id,
+			campaignEndDate,
+		);
+		if (!campaignResult.success) {
+			return resultFail(campaignResult.error);
+		}
 		const accessResult = await createInitialAccessesForProgram({
 			programId: program.id,
 			ownerOrganizationId: activeOrganizationResult.data,
@@ -501,14 +509,20 @@ export const deleteProgram = async (session: UserSession, programId: string): Pr
 			return resultFail('Program cannot be deleted because related campaigns already have contributions.');
 		}
 
-		// Two steps instead of one transaction: unassigning first keeps a
-		// failed deletion safe to retry.
-		const removalResult = await removeRecipientsFromProgram(
-			{ ...getSessionAuditContext(session), metadata: { operation: 'program-deletion', programId } },
-			programId,
-		);
+		// Recipients and campaigns belong to other modules, so they are removed
+		// in separate steps before the program. Each step is safe to retry
+		// after a failed deletion.
+		const deletionAudit: AuditContext = {
+			...getSessionAuditContext(session),
+			metadata: { operation: 'program-deletion', programId },
+		};
+		const removalResult = await removeRecipientsFromProgram(deletionAudit, programId);
 		if (!removalResult.success) {
 			return resultFail(removalResult.error);
+		}
+		const campaignsResult = await deleteProgramCampaigns(deletionAudit, programId);
+		if (!campaignsResult.success) {
+			return resultFail(campaignsResult.error);
 		}
 		await programRepository.deleteProgram(programId);
 
