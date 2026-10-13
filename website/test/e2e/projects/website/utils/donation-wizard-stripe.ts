@@ -21,7 +21,7 @@ const fillStripeHostedCheckoutForm = async (scope: Page | FrameLocator, donor: D
 	if (await zipField.count()) {
 		// Stripe form is rendered IP-dependently; CI may require ZIP (and would require phone if Link is enabled).
 		await zipField.fill('12345');
-		await scope.getByRole('checkbox', { name: 'Save my information for' }).uncheck();
+		await scope.getByRole('checkbox', { name: /^Save my information/ }).uncheck();
 	}
 };
 
