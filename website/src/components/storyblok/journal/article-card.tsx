@@ -33,9 +33,10 @@ type Props = {
 	currency: WebsiteCurrency;
 	variant?: Variant;
 	videoLabel: string;
+	preload?: boolean;
 };
 
-export const JournalArticleCard = ({ article, lang, currency, variant = 'grid', videoLabel }: Props) => {
+export const JournalArticleCard = ({ article, lang, currency, variant = 'grid', videoLabel, preload = false }: Props) => {
 	const isMobile = useIsMobile();
 	const effectiveVariant = isMobile ? 'featured' : variant;
 	const { content } = article;
@@ -64,6 +65,7 @@ export const JournalArticleCard = ({ article, lang, currency, variant = 'grid', 
 							width={FEATURED_IMAGE_WIDTH}
 							height={FEATURED_IMAGE_HEIGHT}
 							sizes="(min-width: 1280px) 596px, 100vw"
+							preload={preload}
 							className="aspect-[658/380] w-full rounded-xl object-cover"
 						/>
 						{content.videoLabel && (
@@ -108,6 +110,7 @@ export const JournalArticleCard = ({ article, lang, currency, variant = 'grid', 
 							width={SECONDARY_IMAGE_WIDTH}
 							height={SECONDARY_IMAGE_HEIGHT}
 							sizes="281px"
+							preload={preload}
 							className="h-auto w-full rounded-xl object-cover"
 						/>
 						{content.videoLabel && (
@@ -134,6 +137,7 @@ export const JournalArticleCard = ({ article, lang, currency, variant = 'grid', 
 						width={GRID_IMAGE_WIDTH}
 						height={GRID_IMAGE_HEIGHT}
 						sizes="(min-width: 1024px) 33vw, 100vw"
+						preload={preload}
 						className="aspect-[658/380] w-full object-cover"
 					/>
 					{content.videoLabel && (

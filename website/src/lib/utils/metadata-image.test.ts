@@ -6,7 +6,7 @@ describe('metadata image utils', () => {
 
 		it('resolves relative metadata paths against the production origin', () => {
 			expect(toProductionMetadataUrl('/assets/metadata/og/default.jpg', fallback)).toBe(
-				'https://socialincome.org/assets/metadata/og/default.jpg',
+				'https://www.socialincome.org/assets/metadata/og/default.jpg',
 			);
 		});
 
@@ -74,7 +74,7 @@ describe('metadata image utils', () => {
 					fallback,
 				),
 			).toEqual({
-				url: 'https://socialincome.org/assets/metadata/og/custom.jpg',
+				url: 'https://www.socialincome.org/assets/metadata/og/custom.jpg',
 				width: 1200,
 				height: 630,
 				alt: 'Social Income',

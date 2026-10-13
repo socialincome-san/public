@@ -15,7 +15,7 @@ type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
 
 export default function FinancesPageProgramScoped({ params, searchParams }: Props) {
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+		<BlockWrapper marginTop="none" marginBottom="none">
 			<Card>
 				<Suspense fallback={<AppLoadingSkeleton />}>
 					<FinancesProgramScopedDataLoader params={params} searchParams={searchParams} />

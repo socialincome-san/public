@@ -51,19 +51,13 @@ export const listFirebaseStorageFiles = async (
 ): Promise<Result<FirebaseStorageFile[]>> => {
 	try {
 		const [files] = await getFirebaseAdminStorage().bucket(bucketName).getFiles();
-		const storageFiles = await Promise.all(
-			files
-				.filter((file) => !fileNamePattern || fileNamePattern.test(file.name))
-				.map(async (file) => {
-					const [metadata] = await file.getMetadata();
-
-					return {
-						name: file.name,
-						updated: metadata.updated,
-						timeCreated: metadata.timeCreated,
-					};
-				}),
-		);
+		const storageFiles = files
+			.filter((file) => !fileNamePattern || fileNamePattern.test(file.name))
+			.map((file) => ({
+				name: file.name,
+				updated: file.metadata.updated,
+				timeCreated: file.metadata.timeCreated,
+			}));
 
 		return resultOk(storageFiles);
 	} catch (error) {

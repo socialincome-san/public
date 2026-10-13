@@ -38,10 +38,9 @@ export const getLocalPartnerOverviewStats = async (
 export const getLocalPartnerProgramSummaries = async (
 	lang: WebsiteLanguage,
 	localPartnerPortalSlug: string,
-	countryIsoCode: string,
 ): Promise<Result<LocalPartnerPrograms>> => {
 	'use cache';
 	cacheTag(LOCAL_PARTNER_CACHE_TAG);
 
-	return cacheResult(publicService.getLocalPartnerProgramSummaries(lang, localPartnerPortalSlug, countryIsoCode));
+	return cacheResult(publicService.getLocalPartnerProgramSummaries(lang, localPartnerPortalSlug));
 };

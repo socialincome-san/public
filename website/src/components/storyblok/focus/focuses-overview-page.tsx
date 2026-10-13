@@ -35,7 +35,7 @@ export const FocusesOverviewPage = async ({ overview, lang, currency, searchPara
 	return (
 		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} layout="section" />
-			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<BlockWrapper marginTop="none" marginBottom="none">
 				<div className="flex w-full flex-col gap-8">
 					<PageIntro title={title} description={text} />
 					<Suspense fallback={<AppLoadingSkeleton />}>

@@ -47,15 +47,7 @@ describe('Storyblok presentation utilities', () => {
 });
 
 describe('Storyblok date utilities', () => {
-	beforeAll(() => {
-		jest.useFakeTimers().setSystemTime(new Date(2026, 6, 26, 12));
-	});
-
-	afterAll(() => {
-		jest.useRealTimers();
-	});
-
-	const parts = (date: string) => getVolunteerDurationParts(date, 'en');
+	const parts = (date: string) => getVolunteerDurationParts(date, 'en', new Date(2026, 6, 26, 12).getTime());
 
 	it.each([
 		['2026-06-28', { unit: 'days', days: 28 }],

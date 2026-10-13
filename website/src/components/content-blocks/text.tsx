@@ -1,3 +1,4 @@
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import { RichTextRenderer } from '@/components/storyblok/rich-text-renderer';
 import { Text } from '@/generated/storyblok/types/109655/storyblok-components';
 import { cn } from '@socialincome/design-system/cn';
@@ -20,7 +21,7 @@ const widthClassesByRatio = {
 };
 
 export const TextBlock = ({ blok }: Props) => {
-	const { content, disableMarginBottom, disableMarginTop, widthRatio } = blok;
+	const { content, widthRatio } = blok;
 
 	if (!content) {
 		return null;
@@ -29,7 +30,7 @@ export const TextBlock = ({ blok }: Props) => {
 	const widthClass = widthClassesByRatio[widthRatio ?? defaultWidthRatio];
 
 	return (
-		<BlockWrapper disableMarginBottom={disableMarginBottom} disableMarginTop={disableMarginTop} {...storyblokEditable(blok)}>
+		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
 			<div className={cn('text-foreground text-lg', widthClass)}>
 				<RichTextRenderer richTextDocument={content} />
 			</div>

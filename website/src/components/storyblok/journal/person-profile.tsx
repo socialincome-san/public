@@ -30,6 +30,7 @@ type Props = {
 	circleLabels: Record<string, string>;
 	workStyleLabels: Record<string, string>;
 	timeCommitmentLabels: Record<string, string>;
+	todayMs: number;
 };
 
 export const PersonProfile = ({
@@ -47,6 +48,7 @@ export const PersonProfile = ({
 	circleLabels,
 	workStyleLabels,
 	timeCommitmentLabels,
+	todayMs,
 }: Props) => {
 	const avatar = person.content.avatar;
 	const portraitSrc = avatar?.filename
@@ -64,6 +66,7 @@ export const PersonProfile = ({
 				circleLabels={circleLabels}
 				workStyleLabels={workStyleLabels}
 				timeCommitmentLabels={timeCommitmentLabels}
+				todayMs={todayMs}
 			/>
 
 			{articles.length > 0 && (

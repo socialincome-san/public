@@ -1,3 +1,4 @@
+import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import { ArticleDetail } from '@/components/storyblok/journal/article-detail';
 import { toWebsiteCurrency, type WebsiteLanguage } from '@/lib/i18n/utils';
 import { createWebsiteJournalArticleCanonicalUrl, generateMetaDataForArticle } from '@/lib/storyblok/storyblok-utils';
@@ -9,6 +10,8 @@ import { notFound } from 'next/navigation';
 type JournalArticlePageProps = {
 	params: Promise<{ slug: string; lang: WebsiteLanguage; currency: string }>;
 };
+
+export const generateStaticParams = () => getPublishedSlugParams('journal');
 
 export const generateMetadata = async (props: JournalArticlePageProps) => {
 	const { slug, lang } = await props.params;

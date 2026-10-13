@@ -30,7 +30,7 @@ type Props = {
 	currency: WebsiteCurrency;
 	smallCards: boolean;
 	linkToPersonPage: boolean;
-	showVolunteerDuration?: boolean;
+	volunteerDurationUntil?: number;
 	roleLabels?: Record<string, string>;
 	showSearch: boolean;
 	showSort: boolean;
@@ -124,7 +124,7 @@ export const PersonGridInteractive = ({
 	currency,
 	smallCards,
 	linkToPersonPage,
-	showVolunteerDuration = false,
+	volunteerDurationUntil,
 	roleLabels,
 	showSearch,
 	showSort,
@@ -354,7 +354,7 @@ export const PersonGridInteractive = ({
 					currency={currency}
 					smallCards={smallCards}
 					linkToPersonPage={linkToPersonPage}
-					showVolunteerDuration={showVolunteerDuration}
+					volunteerDurationUntil={volunteerDurationUntil}
 					roleLabels={roleLabels}
 				/>
 			)}

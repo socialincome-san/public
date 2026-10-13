@@ -239,6 +239,8 @@ export interface DonationsTotal {
   button?: Button[];
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "donationsTotal";
   _uid: string;
   _editable?: string | undefined;
@@ -283,6 +285,8 @@ export interface ExplainerVideoHeader {
   explainerVideoThumbnail?: StoryblokAsset;
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "explainerVideoHeader";
   _uid: string;
   _editable?: string | undefined;
@@ -304,6 +308,8 @@ export interface FaqSelection {
   button?: Button[];
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "faqSelection";
   _uid: string;
   _editable?: string | undefined;
@@ -356,6 +362,8 @@ export interface ImageText {
   imageToTextRatio?: "" | "1/3" | "1/2" | "2/3";
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "imageText";
   _uid: string;
   _editable?: string | undefined;
@@ -396,6 +404,8 @@ export interface JournalTeasers {
   selectedArticles?: (ISbStoryData<Article> | string)[];
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "journalTeasers";
   _uid: string;
   _editable?: string | undefined;
@@ -508,6 +518,8 @@ export interface ModalCards {
   cards?: ModalCard[];
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "modalCards";
   _uid: string;
   _editable?: string | undefined;
@@ -685,6 +697,8 @@ export interface PersonGrid {
   button?: Button[];
   disableMarginBottom?: boolean;
   disableMarginTop?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "personGrid";
   _uid: string;
   _editable?: string | undefined;
@@ -718,6 +732,8 @@ export interface ProgramGrid {
   button?: Button[];
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "programGrid";
   _uid: string;
   _editable?: string | undefined;
@@ -778,6 +794,8 @@ export interface RichtextButtonHeader {
   button?: Button[];
   disableMarginBottom?: boolean;
   disableMarginTop?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "richtextButtonHeader";
   _uid: string;
   _editable?: string | undefined;
@@ -850,6 +868,8 @@ export interface TestimonialCarousel {
   autoplay?: boolean;
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "testimonialCarousel";
   _uid: string;
   _editable?: string | undefined;
@@ -861,6 +881,8 @@ export interface Text {
   widthRatio?: "" | "full" | "fourFifths" | "twoThirds" | "half" | "third";
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "text";
   _uid: string;
   _editable?: string | undefined;
@@ -954,6 +976,8 @@ export interface TwoColumn {
   columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "twoColumn";
   _uid: string;
   _editable?: string | undefined;
@@ -966,6 +990,8 @@ export interface TwoColumnText {
   columnRatio?: "" | "oneThirdTwoThirds" | "halfHalf" | "twoThirdsOneThird";
   disableMarginTop?: boolean;
   disableMarginBottom?: boolean;
+  marginTop?: "" | "none" | "sm" | "md" | "lg" | "xl";
+  marginBottom?: "" | "none" | "sm" | "md" | "lg" | "xl";
   component: "twoColumnText";
   _uid: string;
   _editable?: string | undefined;

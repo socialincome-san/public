@@ -76,18 +76,37 @@ export const getRunwayMonths = async (): Promise<Result<number>> => {
 	try {
 		const latestReservesResult = await getLatestReserves();
 		if (!latestReservesResult.success) {
+			console.error('Could not calculate runway months: reserves unavailable', {
+				error: latestReservesResult.error,
+			});
+
 			return resultFail(latestReservesResult.error);
 		}
 
 		const referenceDate = getLatestReserveRecordedAt(latestReservesResult.data.accounts) ?? new Date();
-		const monthlyPaymentsResult = await getPaidOrConfirmedPayoutTotal({
+		const paymentPeriod = {
 			gte: startOfMonth(subMonths(referenceDate, 1)),
 			lt: startOfMonth(referenceDate),
-		});
+		};
+		const monthlyPaymentsResult = await getPaidOrConfirmedPayoutTotal(paymentPeriod);
 		if (!monthlyPaymentsResult.success) {
+			console.error('Could not calculate runway months: recipient payments unavailable', {
+				error: monthlyPaymentsResult.error,
+				referenceDate,
+				paymentPeriod,
+				reservesChf: latestReservesResult.data.total,
+			});
+
 			return resultFail(monthlyPaymentsResult.error);
 		}
 		if (monthlyPaymentsResult.data <= 0) {
+			console.error('Could not calculate runway months: no recipient payments in the last completed month', {
+				referenceDate,
+				paymentPeriod,
+				reservesChf: latestReservesResult.data.total,
+				monthlyPaymentsChf: monthlyPaymentsResult.data,
+			});
+
 			return resultFail('No recipient payments in the last completed month');
 		}
 

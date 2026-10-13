@@ -10,6 +10,7 @@ import { MediaHero, MediaHeroIntro } from '@socialincome/design-system/layout/me
 import { storyblokEditable } from '@storyblok/react';
 import { Maximize2, MessageSquareText, Minimize2, Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { useRef, useState, type ReactNode } from 'react';
+import { preload } from 'react-dom';
 import Markdown from 'react-markdown';
 
 type Props = {
@@ -20,6 +21,9 @@ type Props = {
 	donationForm: ReactNode;
 	disableAutoplay?: boolean;
 };
+
+// hls.js keeps buffering up to 600s while under 60MB, so the whole looping video would load upfront.
+const HLS_CONFIG = { maxBufferLength: 10, maxMaxBufferLength: 10 };
 
 type HeroVideoTranslations = {
 	playVideo: string;
@@ -41,6 +45,9 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 	const [isPlaying, setIsPlaying] = useState(!disableAutoplay);
 	const [isMuted, setIsMuted] = useState(true);
 	const [showCaptions, setShowCaptions] = useState(true);
+	const posterUrl = `https://image.mux.com/${muxPlaybackId}/thumbnail.webp?time=2&width=1600`;
+	// The poster is the LCP element and <video> has no fetchpriority attribute.
+	preload(posterUrl, { as: 'image', fetchPriority: 'high' });
 
 	const toggleExpanded = () => {
 		const nextExpanded = !isExpanded;
@@ -78,7 +85,9 @@ export const HeroVideoBlock = ({ blok, lang, subtitleUrl, translations, donation
 					ref={videoRef}
 					className={cn('z-10 size-full', isExpanded ? 'object-contain' : 'object-cover')}
 					playbackId={muxPlaybackId}
-					poster={`https://image.mux.com/${muxPlaybackId}/thumbnail.jpg?time=2`}
+					poster={posterUrl}
+					capRenditionToPlayerSize
+					_hlsConfig={HLS_CONFIG}
 					preload="metadata"
 					loop
 					muted={isMuted}

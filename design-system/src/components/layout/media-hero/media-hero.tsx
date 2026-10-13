@@ -101,7 +101,7 @@ export const MediaHero = ({
 
 		{mobileAside && !expanded ? (
 			<div className="lg:hidden">
-				<BlockWrapper disableMarginTop disableMarginBottom>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					{mobileAside}
 				</BlockWrapper>
 			</div>

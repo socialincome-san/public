@@ -1,4 +1,5 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[currency]';
+import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import { loadProgramDetailData, type ProgramDetailData } from '@/components/storyblok/program/load-program-detail-data';
 import { ProgramDetail } from '@/components/storyblok/program/program-detail';
 import { toWebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
@@ -32,6 +33,8 @@ const getProgramMetadataImage = ({ heroImage, title }: ProgramDetailData) =>
 			: undefined,
 		DEFAULT_OPEN_GRAPH_IMAGE_URL,
 	);
+
+export const generateStaticParams = () => getPublishedSlugParams('programs');
 
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug): Promise<Metadata> => {
 	const { lang, slug } = await params;

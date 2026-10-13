@@ -13,16 +13,15 @@ const DEFAULT_LANGUAGE = 'en';
 const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
 
-const getLanguage = (slug: string | null) => {
-	if (slug) {
-		for (const lang of ALLOWED_LANGUAGES) {
-			if (slug.toLowerCase().startsWith(lang.toLowerCase())) {
-				return lang;
-			}
-		}
+// The visual editor passes the selected language as `_storyblok_lang` and does not always prefix the slug with it.
+const getLanguage = (slug: string | null, storyblokLanguage: string | null) => {
+	if (storyblokLanguage && ALLOWED_LANGUAGES.includes(storyblokLanguage)) {
+		return storyblokLanguage;
 	}
 
-	return DEFAULT_LANGUAGE;
+	const prefix = slug?.toLowerCase().split('/')[0];
+
+	return ALLOWED_LANGUAGES.find((lang) => lang === prefix) ?? DEFAULT_LANGUAGE;
 };
 
 const validateSecret = (secret: string | null) => {
@@ -82,7 +81,7 @@ const enableDraftModeAndAdaptCookie = async () => {
 export const GET = async (request: Request) => {
 	const { searchParams } = new URL(request.url);
 	const secret = searchParams.get('secret');
-	const lang = getLanguage(searchParams.get('slug'));
+	const lang = getLanguage(searchParams.get('slug'), searchParams.get('_storyblok_lang'));
 	const slug = removeLanguagePrefix(searchParams.get('slug'), lang);
 
 	if (!slug || !isAllowedStoryblokPreviewSlug(slug)) {

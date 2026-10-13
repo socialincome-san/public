@@ -31,7 +31,7 @@ export const ProgramsOverviewPage = async ({ overview, lang, currency, searchPar
 	return (
 		<div className="flex flex-col gap-8 py-8">
 			<Breadcrumb links={breadcrumbLinks} layout="section" />
-			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<BlockWrapper marginTop="none" marginBottom="none">
 				<PageIntro title={title} description={text} />
 				<section className="mt-8 flex flex-col gap-6">
 					<Suspense fallback={<AppLoadingSkeleton />}>

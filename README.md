@@ -57,8 +57,9 @@ forms, badges, and other primitives built with Radix and Tailwind. It also
 holds the global styles and fonts. The website imports the package, but the
 package never imports the website, so other Next.js apps can reuse it.
 
-The components are documented in Storybook. Storybook is deployed as its own
-Vercel project with `design-system` as the root directory. See
+The components are documented in [Storybook](https://design.socialincome.org).
+Storybook is deployed as its own Vercel project with `design-system` as the
+root directory. See
 `design-system/AGENTS.md` for the conventions.
 
 ### `recipients_app/`

@@ -13,8 +13,8 @@ type Props = {
 	smallCards?: boolean;
 	// Turns each card into a link to the person's page; cards stay unlinked otherwise.
 	linkToPersonPage?: boolean;
-	// Enables the "volunteering since" pill on the cards.
-	showVolunteerDuration?: boolean;
+	// Shows the "volunteering since" pill on the cards, counted up to this day.
+	volunteerDurationUntil?: number;
 	roleLabels?: Record<string, string>;
 };
 
@@ -39,7 +39,7 @@ export const PersonCardGrid = ({
 	currency,
 	smallCards = false,
 	linkToPersonPage = false,
-	showVolunteerDuration = false,
+	volunteerDurationUntil,
 	roleLabels,
 }: Props) => {
 	const { personCardSize, gridCols } = smallCards ? SMALL_CARDS : MEDIUM_CARDS;
@@ -54,7 +54,7 @@ export const PersonCardGrid = ({
 						person={person}
 						href={getHref(person)}
 						size={personCardSize}
-						showVolunteerDuration={showVolunteerDuration}
+						volunteerDurationUntil={volunteerDurationUntil}
 						roleLabels={roleLabels}
 					/>
 				</li>

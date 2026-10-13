@@ -2,7 +2,7 @@ import type { Result } from '@/lib/result';
 import type { ContributionCountryRow, ContributionDateRange } from '@/modules/contributions/contribution.types';
 import type { PayoutDateRange } from '@/modules/payouts/payout.types';
 import type { LatestReserves } from '@/modules/reserves/reserve.types';
-import { format } from 'date-fns';
+import { format, startOfMonth, subMonths } from 'date-fns';
 
 const mockGetSucceededContributionTotal = jest.fn<Promise<Result<number>>, [dateRange?: ContributionDateRange]>();
 const mockGetSucceededContributionsByContributorCountry = jest.fn<
@@ -181,9 +181,40 @@ describe('reserves and runway', () => {
 	});
 
 	test('fails when the last completed month has no recipient payments', async () => {
+		const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+		const referenceDate = new Date('2026-10-12T00:00:00.000Z');
+		mockGetLatestReserves.mockResolvedValue({
+			success: true,
+			data: {
+				accounts: [
+					{
+						bankAccountId: 'account-1',
+						bankAccountNumber: null,
+						description: null,
+						amountChf: 0,
+						recordedAt: referenceDate,
+					},
+				],
+				total: 0,
+			},
+		});
+
 		expect(await getRunwayMonths()).toEqual({
 			success: false,
 			error: 'No recipient payments in the last completed month',
 		});
+		expect(consoleError).toHaveBeenCalledWith(
+			'Could not calculate runway months: no recipient payments in the last completed month',
+			{
+				referenceDate,
+				paymentPeriod: {
+					gte: startOfMonth(subMonths(referenceDate, 1)),
+					lt: startOfMonth(referenceDate),
+				},
+				reservesChf: 0,
+				monthlyPaymentsChf: 0,
+			},
+		);
+		consoleError.mockRestore();
 	});
 });

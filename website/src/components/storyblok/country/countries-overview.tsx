@@ -22,7 +22,7 @@ export const CountriesOverview = async ({ countries, statsByIsoCode, lang, curre
 	const t = await getTranslations('website-common');
 
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+		<BlockWrapper marginTop="none" marginBottom="none">
 			<div className="flex w-full flex-col gap-8">
 				<PageIntro title={title} description={text} />
 				<CardGrid emptyMessage={t('countries-page.empty')}>
