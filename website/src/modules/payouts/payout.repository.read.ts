@@ -2,12 +2,10 @@ import type { Prisma } from '@/generated/prisma/client';
 import { type CountryCode, PayoutStatus } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
-import type { CreatePayoutInput, UpdatePayoutInput } from './payout.schemas';
 import type {
 	OngoingPayoutTableQuery,
 	PayoutConfirmationTableQuery,
 	PayoutDateRange,
-	PayoutProcessCreateInput,
 	PayoutTableQuery,
 } from './payout.types';
 
@@ -204,76 +202,7 @@ export const findExistingPayoutProcessRecipientIds = async (recipientIds: string
 		select: { recipientId: true },
 	});
 
-export const createPayoutProcessPayouts = async (inputs: PayoutProcessCreateInput[]) =>
-	prisma.payout.createMany({
-		data: inputs.map(({ recipientId, amount, amountChf, currency, status, paymentAt, phoneNumber }) => ({
-			recipientId,
-			amount,
-			amountChf,
-			currency,
-			status,
-			paymentAt,
-			phoneNumber,
-			comments: null,
-		})),
-	});
-
-export const createPayout = async (input: CreatePayoutInput) =>
-	prisma.payout.create({
-		data: {
-			recipientId: input.recipientId,
-			amount: input.amount,
-			amountChf: input.amountChf,
-			currency: input.currency,
-			status: input.status,
-			paymentAt: input.paymentAt,
-			phoneNumber: input.phoneNumber,
-			comments: input.comments,
-		},
-		select: payoutPayloadSelect,
-	});
-
-export const updatePayout = async (input: UpdatePayoutInput) =>
-	prisma.payout.update({
-		where: { id: input.id },
-		data: {
-			recipientId: input.recipientId,
-			amount: input.amount,
-			amountChf: input.amountChf,
-			currency: input.currency,
-			status: input.status,
-			paymentAt: input.paymentAt,
-			phoneNumber: input.phoneNumber,
-			comments: input.comments,
-		},
-		select: payoutPayloadSelect,
-	});
-
-export const updatePayoutStatus = async (payoutId: string, status: PayoutStatus) =>
-	prisma.payout.update({
-		where: { id: payoutId },
-		data: { status },
-		select: { id: true },
-	});
-
-export const updatePayoutStatusByRecipient = async (
-	payoutId: string,
-	status: PayoutStatus,
-	comments: string | null | undefined,
-) =>
-	prisma.payout.update({
-		where: { id: payoutId },
-		data: { status, comments },
-		select: payoutRecordSelect,
-	});
-
-export const deletePayout = async (payoutId: string) =>
-	prisma.payout.delete({
-		where: { id: payoutId },
-		select: { id: true },
-	});
-
-const payoutRecordSelect = {
+export const payoutRecordSelect = {
 	id: true,
 	legacyFirestoreId: true,
 	amount: true,
@@ -288,7 +217,7 @@ const payoutRecordSelect = {
 	updatedAt: true,
 } satisfies Prisma.PayoutSelect;
 
-const payoutPayloadSelect = {
+export const payoutPayloadSelect = {
 	id: true,
 	amount: true,
 	amountChf: true,

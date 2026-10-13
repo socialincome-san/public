@@ -42,6 +42,21 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			'paymentInformation.phone.number': 'Payment phone',
 		},
 	},
+	payout: {
+		label: 'Payout',
+		namePaths: ['currency', 'amount', 'paymentAt'],
+		fieldLabels: {
+			legacyFirestoreId: 'Legacy ID',
+			recipientId: 'Recipient',
+			amount: 'Amount',
+			amountChf: 'Amount (CHF)',
+			currency: 'Currency',
+			paymentAt: 'Payment date',
+			status: 'Status',
+			phoneNumber: 'Phone',
+			comments: 'Comments',
+		},
+	},
 };
 
 export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));
@@ -51,8 +66,8 @@ export const getAuditEntityTypeLabel = ({ entityType }: AuditTableViewRow): stri
 
 export const getAuditEntityName = ({ entityType, entityId, latestSnapshot }: AuditTableViewRow): string =>
 	(auditEntityTypes[entityType]?.namePaths ?? [])
-		.map((path) => readPath(latestSnapshot, path))
-		.filter((part): part is string => typeof part === 'string' && part !== '')
+		.map((path) => formatValue(readPath(latestSnapshot, path)))
+		.filter((part) => part !== null)
 		.join(' ') || entityId;
 
 /** Self-updates from the app store no actor name; they are made by the entity itself. */

@@ -1,4 +1,5 @@
 import { PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
+import { getSessionAuditContext } from '@/lib/audit/audit-context';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { isValidCountryCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
@@ -12,9 +13,11 @@ import {
 	getRecipientProgramAssignment,
 	recipientStatusService,
 } from '@/modules/recipients/recipient.service';
+import type { UserSession } from '@/modules/users/user.types';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { canReadPayout, canWritePayout } from './payout.permissions';
-import * as payoutRepository from './payout.repository';
+import * as payoutRepository from './payout.repository.read';
+import * as payoutWriteRepository from './payout.repository.write';
 import { payoutCreateSchema, payoutUpdateSchema, type CreatePayoutInput, type UpdatePayoutInput } from './payout.schemas';
 import type {
 	CountryPayoutTotals,
@@ -427,7 +430,7 @@ export const getPayoutByRecipientAndId = async (
 };
 
 export const createPayoutProcessPayouts = async (
-	userId: string,
+	session: UserSession,
 	inputs: PayoutProcessCreateInput[],
 	selectedDate: Date,
 ): Promise<Result<PayoutProcessCreateSummary>> => {
@@ -436,7 +439,7 @@ export const createPayoutProcessPayouts = async (
 	}
 
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -456,7 +459,10 @@ export const createPayoutProcessPayouts = async (
 		const existingRecipientIds = new Set(existingPayouts.map(({ recipientId }) => recipientId));
 		const toCreate = inputs.filter(({ recipientId }) => !existingRecipientIds.has(recipientId));
 		if (toCreate.length > 0) {
-			await payoutRepository.createPayoutProcessPayouts(toCreate);
+			await payoutWriteRepository.createPayoutProcessPayouts(
+				{ ...getSessionAuditContext(session), metadata: { operation: 'payout-process' } },
+				toCreate,
+			);
 		}
 
 		return resultOk({
@@ -464,19 +470,19 @@ export const createPayoutProcessPayouts = async (
 			skippedCount: inputs.length - toCreate.length,
 		});
 	} catch (error) {
-		console.error('Could not generate payouts', { userId, error });
+		console.error('Could not generate payouts', { userId: session.id, error });
 
 		return resultFail('Could not generate payouts');
 	}
 };
 
 export const updatePayoutStatus = async (
-	userId: string,
+	session: UserSession,
 	payoutId: string,
 	newStatus: PayoutStatus,
 ): Promise<Result<string>> => {
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -495,17 +501,17 @@ export const updatePayoutStatus = async (
 			return resultFail('Only payouts with status "paid" can be updated');
 		}
 
-		await payoutRepository.updatePayoutStatus(payoutId, newStatus);
+		await payoutWriteRepository.updatePayoutStatus(getSessionAuditContext(session), payoutId, newStatus);
 
 		return resultOk(`Payout updated to "${newStatus}"`);
 	} catch (error) {
-		console.error('Could not update payout status', { userId, payoutId, newStatus, error });
+		console.error('Could not update payout status', { userId: session.id, payoutId, newStatus, error });
 
 		return resultFail('Could not update payout');
 	}
 };
 
-export const createPayout = async (userId: string, input: CreatePayoutInput): Promise<Result<PayoutPayload>> => {
+export const createPayout = async (session: UserSession, input: CreatePayoutInput): Promise<Result<PayoutPayload>> => {
 	const inputResult = payoutCreateSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -523,7 +529,7 @@ export const createPayout = async (userId: string, input: CreatePayoutInput): Pr
 			return resultFail('Recipient is not assigned to a program');
 		}
 
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -531,15 +537,17 @@ export const createPayout = async (userId: string, input: CreatePayoutInput): Pr
 			return resultFail('No edit access for this program');
 		}
 
-		return resultOk(toPayoutPayload(await payoutRepository.createPayout(inputResult.data)));
+		return resultOk(
+			toPayoutPayload(await payoutWriteRepository.createPayout(getSessionAuditContext(session), inputResult.data)),
+		);
 	} catch (error) {
-		console.error('Could not create payout', { userId, error });
+		console.error('Could not create payout', { userId: session.id, error });
 
 		return resultFail('Could not create payout');
 	}
 };
 
-export const updatePayout = async (userId: string, input: UpdatePayoutInput): Promise<Result<PayoutPayload>> => {
+export const updatePayout = async (session: UserSession, input: UpdatePayoutInput): Promise<Result<PayoutPayload>> => {
 	const inputResult = payoutUpdateSchema.safeParse(input);
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
@@ -554,7 +562,7 @@ export const updatePayout = async (userId: string, input: UpdatePayoutInput): Pr
 			return resultFail('Recipient is not assigned to a program');
 		}
 
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -576,17 +584,19 @@ export const updatePayout = async (userId: string, input: UpdatePayoutInput): Pr
 			return resultFail('No edit access for selected recipient');
 		}
 
-		return resultOk(toPayoutPayload(await payoutRepository.updatePayout(inputResult.data)));
+		return resultOk(
+			toPayoutPayload(await payoutWriteRepository.updatePayout(getSessionAuditContext(session), inputResult.data)),
+		);
 	} catch (error) {
-		console.error('Could not update payout', { userId, payoutId: input.id, error });
+		console.error('Could not update payout', { userId: session.id, payoutId: input.id, error });
 
 		return resultFail('Could not update payout');
 	}
 };
 
-export const deletePayout = async (userId: string, payoutId: string): Promise<Result<{ id: string }>> => {
+export const deletePayout = async (session: UserSession, payoutId: string): Promise<Result<{ id: string }>> => {
 	try {
-		const accessResult = await getAccessiblePrograms(userId);
+		const accessResult = await getAccessiblePrograms(session.id);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
@@ -605,9 +615,9 @@ export const deletePayout = async (userId: string, payoutId: string): Promise<Re
 			return resultFail('Only payouts with status "failed" can be deleted');
 		}
 
-		return resultOk(await payoutRepository.deletePayout(payoutId));
+		return resultOk(await payoutWriteRepository.deletePayout(getSessionAuditContext(session), payoutId));
 	} catch (error) {
-		console.error('Could not delete payout', { userId, payoutId, error });
+		console.error('Could not delete payout', { userId: session.id, payoutId, error });
 
 		return resultFail('Could not delete payout');
 	}
@@ -627,7 +637,12 @@ export const updatePayoutStatusByRecipient = async (
 			return resultFail('Payout not found for recipient');
 		}
 
-		const updated = await payoutRepository.updatePayoutStatusByRecipient(payout.id, status, comments);
+		const updated = await payoutWriteRepository.updatePayoutStatusByRecipient(
+			{ actor: { type: 'recipient', id: recipientId }, source: 'mobile-app' },
+			payout.id,
+			status,
+			comments,
+		);
 
 		return resultOk(toPayoutRecord(updated));
 	} catch (error) {

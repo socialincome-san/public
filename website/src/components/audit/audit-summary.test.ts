@@ -19,6 +19,16 @@ describe('getAuditEntityName', () => {
 		expect(getAuditEntityName(row)).toBe('Ada Lovelace');
 	});
 
+	test('formats dates in names', () => {
+		expect(
+			getAuditEntityName({
+				...row,
+				entityType: 'payout',
+				latestSnapshot: { currency: 'SLE', amount: '250', paymentAt: '2026-09-01T00:00:00.000Z' },
+			}),
+		).toBe('SLE 250 01.09.26');
+	});
+
 	test('falls back to the entity id', () => {
 		expect(getAuditEntityName({ ...row, latestSnapshot: null })).toBe('recipient-1');
 		expect(getAuditEntityName({ ...row, entityType: 'unknown' })).toBe('recipient-1');
