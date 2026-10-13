@@ -445,8 +445,7 @@
 		"home-link": "Zur Startseite"
 	},
 	"cookie-consent": {
-		"title": "Cookies für Statistik und Marketing",
-		"description": "Mit deiner Zustimmung nutzen wir Google Analytics und Google Ads, um zu verstehen, wie die Website genutzt wird, und die Wirkung unserer Kampagnen zu messen. Mehr in unserer <link>Datenschutzerklärung</link>. Du kannst deine Wahl jederzeit in der Fusszeile ändern.",
+		"message": "Wir verwenden <link>Cookies</link>, um dein Erlebnis zu verbessern.",
 		"accept": "Akzeptieren",
 		"decline": "Ablehnen",
 		"settings": "Cookie-Einstellungen"
