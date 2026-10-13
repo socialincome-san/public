@@ -1,4 +1,4 @@
-import { sendGAEvent } from '@next/third-parties/google';
+import { sendGTMEvent } from '@next/third-parties/google';
 import { track } from '@vercel/analytics';
 import { useSyncExternalStore } from 'react';
 
@@ -6,7 +6,17 @@ export type AnalyticsConsent = 'granted' | 'denied' | 'undecided';
 
 type EventProperties = Record<string, string | number | boolean | null>;
 
-export const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
+export const googleTagManagerId = process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID;
+
+/** Google Consent Mode v2 signals. One choice covers both statistics (Analytics) and marketing (Ads). */
+export const getConsentModeSignals = (state: 'granted' | 'denied') => ({
+	ad_storage: state,
+	ad_user_data: state,
+	ad_personalization: state,
+	analytics_storage: state,
+});
+
+const isGtag = (value: unknown): value is (...args: unknown[]) => void => typeof value === 'function';
 
 const CONSENT_STORAGE_KEY = 'analytics-consent';
 
@@ -43,9 +53,11 @@ export const setAnalyticsConsent = (consent: 'granted' | 'denied') => {
 	} catch {
 		// The choice still applies until the page is reloaded.
 	}
-	if (googleAnalyticsId) {
-		// Google's opt-out flag: once gtag.js is loaded it can't be unloaded, so revoking consent must disable it.
-		Reflect.set(window, `ga-disable-${googleAnalyticsId}`, consent !== 'granted');
+	// Once loaded, Tag Manager can't be unloaded, so its Google tags must be told about the new choice. `gtag` is
+	// defined by the consent mode script that runs before Tag Manager loads.
+	const gtag: unknown = Reflect.get(window, 'gtag');
+	if (isGtag(gtag)) {
+		gtag('consent', 'update', getConsentModeSignals(consent));
 	}
 	consentSettingsOpen = false;
 	notify();
@@ -67,13 +79,14 @@ export const useConsentSettingsOpen = () =>
 	);
 
 /**
- * Sends a custom event to Vercel Analytics and, if the visitor consented, Google Analytics. Client only.
+ * Sends a custom event to Vercel Analytics and, if the visitor consented, to the Google Tag Manager data layer,
+ * where its triggers forward it to Google Analytics and Google Ads. Client only.
  * Vercel Analytics is cookieless and needs no consent.
  * @public Not called yet; the entry point for custom events.
  */
 export const trackEvent = (name: string, properties?: EventProperties) => {
 	track(name, properties);
-	if (googleAnalyticsId && readConsent() === 'granted') {
-		sendGAEvent('event', name, properties ?? {});
+	if (googleTagManagerId && readConsent() === 'granted') {
+		sendGTMEvent({ event: name, ...properties });
 	}
 };

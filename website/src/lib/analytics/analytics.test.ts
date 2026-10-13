@@ -1,11 +1,11 @@
 /** @jest-environment jsdom */
-import { sendGAEvent } from '@next/third-parties/google';
+import { sendGTMEvent } from '@next/third-parties/google';
 import { track } from '@vercel/analytics';
 
 jest.mock('@vercel/analytics', () => ({ track: jest.fn() }));
-jest.mock('@next/third-parties/google', () => ({ sendGAEvent: jest.fn() }));
+jest.mock('@next/third-parties/google', () => ({ sendGTMEvent: jest.fn() }));
 
-process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID = 'G-TEST';
+process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID = 'GTM-TEST';
 
 // Required after setting the env variable, which the module reads on load.
 const { setAnalyticsConsent, trackEvent } = jest.requireActual<typeof import('./analytics')>('./analytics');
@@ -17,27 +17,34 @@ describe('trackEvent', () => {
 	});
 
 	it('sends only to Vercel while consent is undecided', () => {
-		trackEvent('donate', { amount: 50 });
+		trackEvent('donation_amount_confirmed', { value: 50 });
 
-		expect(track).toHaveBeenCalledWith('donate', { amount: 50 });
-		expect(sendGAEvent).not.toHaveBeenCalled();
+		expect(track).toHaveBeenCalledWith('donation_amount_confirmed', { value: 50 });
+		expect(sendGTMEvent).not.toHaveBeenCalled();
 	});
 
-	it('also sends to Google Analytics after consent', () => {
+	it('also pushes to the Tag Manager data layer after consent', () => {
 		setAnalyticsConsent('granted');
-		trackEvent('donate', { amount: 50 });
+		trackEvent('donation_amount_confirmed', { value: 50, currency: 'CHF' });
 
-		expect(track).toHaveBeenCalledWith('donate', { amount: 50 });
-		expect(sendGAEvent).toHaveBeenCalledWith('event', 'donate', { amount: 50 });
+		expect(track).toHaveBeenCalledWith('donation_amount_confirmed', { value: 50, currency: 'CHF' });
+		expect(sendGTMEvent).toHaveBeenCalledWith({ event: 'donation_amount_confirmed', value: 50, currency: 'CHF' });
 	});
 
-	it('stops sending to Google Analytics and disables it when consent is revoked', () => {
+	it('stops pushing and updates Google consent mode when consent is revoked', () => {
+		const gtag = jest.fn();
+		Reflect.set(window, 'gtag', gtag);
 		setAnalyticsConsent('granted');
 		setAnalyticsConsent('denied');
-		trackEvent('donate');
+		trackEvent('donate_nav_click');
 
-		expect(track).toHaveBeenCalledWith('donate', undefined);
-		expect(sendGAEvent).not.toHaveBeenCalled();
-		expect(Reflect.get(window, 'ga-disable-G-TEST')).toBe(true);
+		expect(track).toHaveBeenCalledWith('donate_nav_click', undefined);
+		expect(sendGTMEvent).not.toHaveBeenCalled();
+		expect(gtag).toHaveBeenLastCalledWith('consent', 'update', {
+			ad_storage: 'denied',
+			ad_user_data: 'denied',
+			ad_personalization: 'denied',
+			analytics_storage: 'denied',
+		});
 	});
 });

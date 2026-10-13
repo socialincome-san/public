@@ -14,7 +14,6 @@ const PRODUCTION_SCRIPT_SRC = [
 	'https://app.storyblok.com',
 	'https://static.cloudflareinsights.com',
 	'https://challenges.cloudflare.com',
-	'https://www.googletagmanager.com',
 ] as const;
 
 const DEVELOPMENT_SCRIPT_SRC_EXTRA = [
@@ -33,8 +32,6 @@ const IMG_SRC = [
 	'https://avatars.githubusercontent.com',
 	'https://image.mux.com',
 	'https://*.stripe.com',
-	'https://*.google-analytics.com',
-	'https://*.googletagmanager.com',
 ] as const;
 
 const FONT_SRC = ["'self'"] as const;
@@ -61,10 +58,6 @@ const PRODUCTION_CONNECT_SRC = [
 	// The dotLottie renderer fetches its WASM binary from jsDelivr, falling back to unpkg.
 	'https://cdn.jsdelivr.net',
 	'https://unpkg.com',
-	// Google Analytics 4: https://developers.google.com/tag-platform/security/guides/csp
-	'https://*.google-analytics.com',
-	'https://*.analytics.google.com',
-	'https://*.googletagmanager.com',
 ] as const;
 
 const LOCALHOST_CONNECT_SRC = ['http://localhost:*', 'ws://localhost:*'] as const;
@@ -102,6 +95,51 @@ const VERCEL_TOOLBAR_SRC = {
 	frame: ['https://vercel.live'],
 } as const;
 
+// Google Tag Manager with its Google Analytics 4 and Google Ads tags, plus Tag Manager's preview mode. Hosts from
+// https://developers.google.com/tag-platform/security/guides/csp
+// Ads audience pixels use the visitor's local Google domain, so the main markets are listed.
+const GOOGLE_COUNTRY_DOMAINS = [
+	'https://www.google.ch',
+	'https://www.google.de',
+	'https://www.google.at',
+	'https://www.google.fr',
+	'https://www.google.it',
+] as const;
+
+const GOOGLE_TAG_SRC = {
+	script: [
+		'https://www.googletagmanager.com',
+		'https://tagmanager.google.com',
+		'https://www.googleadservices.com',
+		'https://*.doubleclick.net',
+		'https://www.google.com',
+	],
+	style: ['https://tagmanager.google.com', 'https://fonts.googleapis.com'],
+	img: [
+		'https://*.google-analytics.com',
+		'https://*.googletagmanager.com',
+		'https://*.doubleclick.net',
+		'https://www.googleadservices.com',
+		'https://www.google.com',
+		...GOOGLE_COUNTRY_DOMAINS,
+		'https://ssl.gstatic.com',
+		'https://www.gstatic.com',
+	],
+	font: ['https://fonts.gstatic.com'],
+	connect: [
+		'https://*.google-analytics.com',
+		'https://*.analytics.google.com',
+		'https://*.googletagmanager.com',
+		'https://*.doubleclick.net',
+		'https://www.googleadservices.com',
+		'https://pagead2.googlesyndication.com',
+		'https://www.google.com',
+		'https://google.com',
+		...GOOGLE_COUNTRY_DOMAINS,
+	],
+	frame: ['https://www.googletagmanager.com', 'https://*.doubleclick.net'],
+} as const;
+
 const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== 'production' }: CspOptions = {}) => {
 	const isUsingFirebaseEmulators = Boolean(process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL);
 	const isVercelPreview = process.env.VERCEL_ENV === 'preview';
@@ -116,12 +154,12 @@ const buildContentSecurityPolicy = ({ isDevelopment = process.env.NODE_ENV !== '
 
 	const directives = [
 		`default-src 'self'`,
-		`script-src ${joinSources([...scriptSrc, ...toolbarSrc('script')])}`,
-		`style-src ${joinSources([...STYLE_SRC, ...toolbarSrc('style')])}`,
-		`img-src ${joinSources([...IMG_SRC, ...toolbarSrc('img')])}`,
-		`font-src ${joinSources([...FONT_SRC, ...toolbarSrc('font')])}`,
-		`connect-src ${joinSources([...connectSrc, ...toolbarSrc('connect')])}`,
-		`frame-src ${joinSources([...FRAME_SRC, ...toolbarSrc('frame')])}`,
+		`script-src ${joinSources([...scriptSrc, ...GOOGLE_TAG_SRC.script, ...toolbarSrc('script')])}`,
+		`style-src ${joinSources([...STYLE_SRC, ...GOOGLE_TAG_SRC.style, ...toolbarSrc('style')])}`,
+		`img-src ${joinSources([...IMG_SRC, ...GOOGLE_TAG_SRC.img, ...toolbarSrc('img')])}`,
+		`font-src ${joinSources([...FONT_SRC, ...GOOGLE_TAG_SRC.font, ...toolbarSrc('font')])}`,
+		`connect-src ${joinSources([...connectSrc, ...GOOGLE_TAG_SRC.connect, ...toolbarSrc('connect')])}`,
+		`frame-src ${joinSources([...FRAME_SRC, ...GOOGLE_TAG_SRC.frame, ...toolbarSrc('frame')])}`,
 		`media-src ${joinSources(MEDIA_SRC)}`,
 		`worker-src ${joinSources(WORKER_SRC)}`,
 		`form-action ${joinSources(FORM_ACTION)}`,

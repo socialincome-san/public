@@ -445,8 +445,8 @@
 		"home-link": "Aller à la page d'accueil"
 	},
 	"cookie-consent": {
-		"title": "Cookies pour les statistiques",
-		"description": "Avec votre accord, nous utilisons Google Analytics pour comprendre comment le site est utilisé et l’améliorer. Plus d’informations dans notre <link>politique de confidentialité</link>. Vous pouvez modifier votre choix à tout moment dans le pied de page.",
+		"title": "Cookies de statistiques et de marketing",
+		"description": "Avec votre accord, nous utilisons Google Analytics et Google Ads pour comprendre comment le site est utilisé et mesurer l’impact de nos campagnes. Plus d’informations dans notre <link>politique de confidentialité</link>. Vous pouvez modifier votre choix à tout moment dans le pied de page.",
 		"accept": "Accepter",
 		"decline": "Refuser",
 		"settings": "Paramètres des cookies"
