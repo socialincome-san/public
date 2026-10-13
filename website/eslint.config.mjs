@@ -3,6 +3,7 @@ import designTokensPlugin from '@socialincome/design-system/eslint-rules/no-arbi
 import classNamePlugin from '@socialincome/design-system/eslint-rules/no-class-name-prop';
 import reactPlugin from 'eslint-plugin-react';
 import tseslint from 'typescript-eslint';
+import { auditedModels, unauditedLegacyRepositories } from './eslint-rules/audited-writes-baseline.mjs';
 import backendArchitecturePlugin from './eslint-rules/backend-architecture.mjs';
 
 const smartiveNextConfig = config('nextjs');
@@ -499,6 +500,22 @@ export default [
 		ignores: ['src/generated/**', 'src/lib/database/migrations/**'],
 		rules: {
 			'backend-architecture/kebab-case-paths': 'error',
+		},
+	},
+	{
+		files: ['src/**/*.{ts,tsx}'],
+		// lib/database and lib/audit implement the audited transaction; seeds
+		// and tests write fixtures.
+		ignores: ['src/generated/**', 'src/lib/database/**', 'src/lib/audit/**', 'src/**/*.test.{ts,tsx}'],
+		rules: {
+			'backend-architecture/audited-writes': ['error', { auditedModels }],
+		},
+	},
+	{
+		files: ['src/modules/**/*.repository.ts'],
+		ignores: unauditedLegacyRepositories,
+		rules: {
+			'backend-architecture/audited-writes': ['error', { auditedModels, requireAuditedWrites: true }],
 		},
 	},
 	{

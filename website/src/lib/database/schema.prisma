@@ -1243,3 +1243,23 @@ model SourceLink {
 
   @@map("source_link")
 }
+
+// Append-only audit trail, written only by withAudit (src/lib/audit). No
+// foreign keys: events must outlive deleted entities and actors.
+model AuditEvent {
+  id         String   @id @default(cuid()) @map("id")
+  occurredAt DateTime @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  actorType  String   @map("actor_type")
+  actorId    String   @map("actor_id")
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  action     String   @map("action")
+  source     String   @map("source")
+  changes    Json     @map("changes")
+  metadata   Json?    @map("metadata")
+
+  @@index([entityType, entityId, occurredAt(sort: Desc)])
+  @@index([actorType, actorId, occurredAt(sort: Desc)])
+  @@index([occurredAt(sort: Desc)])
+  @@map("audit_event")
+}

@@ -1,4 +1,5 @@
 import { ProgramPermission } from '@/generated/prisma/enums';
+import { withAudit } from '@/lib/audit/with-audit';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { getCountryNameByCode } from '@/lib/types/country';
 import { now } from '@/lib/utils/now';
@@ -12,6 +13,7 @@ import {
 	validateOrganizationIds,
 } from '@/modules/organizations/organization.service';
 import { createInitialAccessesForProgram, getAccessiblePrograms } from '@/modules/program-access/program-access.service';
+import { getRecipientIdsByProgram, recipientAuditEntity } from '@/modules/recipients/recipient.service';
 import { createPublicOnboardingUser, getActiveOrganizationId, isUserEmailAvailable } from '@/modules/users/user.service';
 import { isReadyForFirstPayoutInterval } from './program-stats.service';
 import * as programRepository from './program.repository';
@@ -348,6 +350,7 @@ export const createProgram = async (
 		}
 		if (input.amountOfRecipientsForStart > 0) {
 			const assignmentResult = await assignRandomCandidatesToProgram(
+				{ actor: { type: 'user', id: userId }, source: 'userId' in actor ? 'portal' : 'website' },
 				program.id,
 				input.amountOfRecipientsForStart,
 				countryResult.data,
@@ -444,9 +447,28 @@ export const deleteProgram = async (userId: string, programId: string): Promise<
 			return resultFail('Program cannot be deleted because related campaigns already have contributions.');
 		}
 
-		await programRepository.deleteProgram(programId);
+		const recipientIdsResult = await getRecipientIdsByProgram(programId);
+		if (!recipientIdsResult.success) {
+			return resultFail(recipientIdsResult.error);
+		}
 
-		return resultOk(undefined);
+		// Program deletion itself is not audited yet; this records that its
+		// recipients lost their program.
+		return await withAudit(
+			{
+				entity: recipientAuditEntity,
+				action: 'update',
+				entityId: recipientIdsResult.data,
+				actor: { type: 'user', id: userId },
+				source: 'portal',
+				metadata: { operation: 'program-deletion' },
+			},
+			async (transaction) => {
+				await programRepository.deleteProgram(transaction, programId, recipientIdsResult.data);
+
+				return resultOk(undefined);
+			},
+		);
 	} catch (error) {
 		console.error('Could not delete program', { programId, error });
 

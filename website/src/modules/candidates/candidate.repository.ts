@@ -1,6 +1,8 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { Gender, Profile, type CountryCode } from '@/generated/prisma/enums';
+import { getTransactionClient, type AuditedTransaction } from '@/lib/database/audited-transaction';
 import { prisma } from '@/lib/database/prisma';
+import { unauditedWrite } from '@/lib/database/unaudited-write';
 import { now } from '@/lib/utils/now';
 import { toSortKey } from '@/lib/utils/to-sort-key';
 import type { CandidateCreateInput, CandidateUpdateInput } from './candidate.schemas';
@@ -108,35 +110,46 @@ export const findPhoneByNumber = async (number: string) =>
 export const findPaymentInformationByCode = async (code: string) =>
 	prisma.paymentInformation.findUnique({ where: { code }, select: { id: true } });
 
-export const createCandidate = async (input: CandidateCreateInput, localPartnerId: string) =>
-	prisma.recipient.create({
+export const createCandidate = async (
+	transaction: AuditedTransaction,
+	input: CandidateCreateInput,
+	localPartnerId: string,
+) =>
+	getTransactionClient(transaction).recipient.create({
 		data: buildCandidateCreateData(input, localPartnerId),
 		select: candidatePayloadSelect,
 	});
 
-export const updateCandidate = async (input: CandidateUpdateInput, context: CandidateUpdatePersistenceContext) =>
-	prisma.recipient.update({
+export const updateCandidate = async (
+	transaction: AuditedTransaction,
+	input: CandidateUpdateInput,
+	context: CandidateUpdatePersistenceContext,
+) =>
+	getTransactionClient(transaction).recipient.update({
 		where: { id: input.id },
 		data: buildCandidateUpdateData(input, context),
 		select: candidatePayloadSelect,
 	});
 
-export const deleteCandidateData = async ({
-	candidateId,
-	contactId,
-	paymentInformationId,
-}: {
-	candidateId: string;
-	contactId: string;
-	paymentInformationId: string | null;
-}) =>
-	prisma.$transaction(async (transaction) => {
-		await transaction.recipient.delete({ where: { id: candidateId } });
-		if (paymentInformationId) {
-			await transaction.paymentInformation.delete({ where: { id: paymentInformationId } });
-		}
-		await transaction.contact.delete({ where: { id: contactId } });
-	});
+export const deleteCandidateData = async (
+	transaction: AuditedTransaction,
+	{
+		candidateId,
+		contactId,
+		paymentInformationId,
+	}: {
+		candidateId: string;
+		contactId: string;
+		paymentInformationId: string | null;
+	},
+) => {
+	const client = getTransactionClient(transaction);
+	await client.recipient.delete({ where: { id: candidateId } });
+	if (paymentInformationId) {
+		await client.paymentInformation.delete({ where: { id: paymentInformationId } });
+	}
+	await client.contact.delete({ where: { id: contactId } });
+};
 
 export const deletePhoneIfOrphaned = async (phoneId: string) => {
 	const phone = await prisma.phone.findUnique({
@@ -147,7 +160,7 @@ export const deletePhoneIfOrphaned = async (phoneId: string) => {
 		return false;
 	}
 
-	await prisma.phone.delete({ where: { id: phoneId } });
+	await unauditedWrite('orphan-cleanup', () => prisma.phone.delete({ where: { id: phoneId } }));
 
 	return true;
 };
@@ -161,7 +174,7 @@ export const deleteAddressIfOrphaned = async (addressId: string) => {
 		return false;
 	}
 
-	await prisma.address.delete({ where: { id: addressId } });
+	await unauditedWrite('orphan-cleanup', () => prisma.address.delete({ where: { id: addressId } }));
 
 	return true;
 };
@@ -179,8 +192,12 @@ export const findCandidateIdsForAssignment = async (
 		select: { id: true },
 	});
 
-export const updateCandidateProgramAssignments = async (candidateIds: string[], programId: string) =>
-	prisma.recipient.updateMany({
+export const updateCandidateProgramAssignments = async (
+	transaction: AuditedTransaction,
+	candidateIds: string[],
+	programId: string,
+) =>
+	getTransactionClient(transaction).recipient.updateMany({
 		where: { id: { in: candidateIds } },
 		data: { programId },
 	});

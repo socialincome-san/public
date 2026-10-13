@@ -764,6 +764,205 @@ const typesFileNoRuntimeFunctions = {
 	},
 };
 
+const prismaWriteMethods = new Set([
+	'create',
+	'createMany',
+	'createManyAndReturn',
+	'update',
+	'updateMany',
+	'updateManyAndReturn',
+	'upsert',
+	'delete',
+	'deleteMany',
+]);
+
+const rawWriteMethods = new Set(['$executeRaw', '$executeRawUnsafe']);
+
+const auditInternals = new Set(['runAuditedTransaction', 'insertAuditEvents']);
+
+const auditedWrites = {
+	meta: {
+		type: 'problem',
+		docs: {
+			description: 'Require database writes to go through withAudit.',
+		},
+		schema: [
+			{
+				type: 'object',
+				properties: {
+					auditedModels: { type: 'array', items: { type: 'string' } },
+					requireAuditedWrites: { type: 'boolean' },
+				},
+				additionalProperties: false,
+			},
+		],
+		messages: {
+			auditedModelWrite:
+				"Writes to '{{model}}' must run inside withAudit: take an AuditedTransaction and write through getTransactionClient(transaction).",
+			unauditedWrite:
+				'Repository writes must run inside withAudit and use getTransactionClient(transaction). Technical writes that change no business entity may use unauditedWrite(reason, ...).',
+			rawTransaction: 'Start write transactions with withAudit instead of $transaction.',
+			auditEventWrite: 'Audit events are append-only and written by withAudit only.',
+			auditInternalImport: '{{name}} is internal to src/lib/audit. Use withAudit.',
+			transactionClientImport: 'Only repositories may unwrap an AuditedTransaction.',
+		},
+	},
+	create(context) {
+		const { auditedModels = [], requireAuditedWrites = false } = context.options[0] ?? {};
+		const filename = normalizePath(context.filename);
+		const isRepository = /\.repository\.tsx?$/.test(filename);
+		const sourceCode = context.sourceCode;
+		const prismaNames = new Set();
+		const transactionClientNames = new Set();
+		const unauditedWriteNames = new Set();
+
+		const importedName = (specifier) =>
+			specifier.type === 'ImportSpecifier' && specifier.imported.type === 'Identifier' ? specifier.imported.name : null;
+
+		// 'audited': a getTransactionClient(...) client. 'unaudited': the shared
+		// Prisma client or a $transaction callback client. 'unknown': anything
+		// else, which this rule cannot judge and leaves alone.
+		const classifyClient = (node, seen = new Set()) => {
+			if (node?.type === 'CallExpression') {
+				return node.callee.type === 'Identifier' && transactionClientNames.has(node.callee.name) ? 'audited' : 'unknown';
+			}
+			if (node?.type !== 'Identifier') {
+				return 'unknown';
+			}
+
+			const variable = findVariable(sourceCode.getScope(node), node.name);
+			const definition = variable?.defs.length === 1 ? variable.defs[0] : null;
+			if (!variable || !definition || seen.has(variable)) {
+				return 'unknown';
+			}
+			seen.add(variable);
+
+			if (definition.type === 'ImportBinding') {
+				return prismaNames.has(node.name) ? 'unaudited' : 'unknown';
+			}
+			if (definition.type === 'Variable' && definition.node.init) {
+				return classifyClient(definition.node.init, seen);
+			}
+			if (definition.type === 'Parameter') {
+				const call = definition.node.parent;
+				const isTransactionCallback =
+					call?.type === 'CallExpression' &&
+					call.arguments.includes(definition.node) &&
+					call.callee.type === 'MemberExpression' &&
+					call.callee.property.type === 'Identifier' &&
+					call.callee.property.name === '$transaction';
+
+				return isTransactionCallback ? 'unaudited' : 'unknown';
+			}
+
+			return 'unknown';
+		};
+
+		const isInsideUnauditedWrite = (node) =>
+			sourceCode
+				.getAncestors(node)
+				.some(
+					(ancestor) =>
+						ancestor.type === 'CallExpression' &&
+						ancestor.callee.type === 'Identifier' &&
+						unauditedWriteNames.has(ancestor.callee.name),
+				);
+
+		const checkRawWrite = (node, receiver) => {
+			if (requireAuditedWrites && classifyClient(receiver) === 'unaudited' && !isInsideUnauditedWrite(node)) {
+				context.report({ node, messageId: 'unauditedWrite' });
+			}
+		};
+
+		return {
+			ImportDeclaration(node) {
+				const source = node.source.value;
+				for (const specifier of node.specifiers) {
+					const name = importedName(specifier);
+					if (source === '@/lib/database/prisma' && name === 'prisma') {
+						prismaNames.add(specifier.local.name);
+					}
+					if (source === '@/lib/database/unaudited-write' && name === 'unauditedWrite') {
+						unauditedWriteNames.add(specifier.local.name);
+					}
+					if (source !== '@/lib/database/audited-transaction' || !name || specifier.importKind === 'type') {
+						continue;
+					}
+					if (auditInternals.has(name)) {
+						context.report({ node: specifier, messageId: 'auditInternalImport', data: { name } });
+					}
+					if (name === 'getTransactionClient') {
+						if (isRepository) {
+							transactionClientNames.add(specifier.local.name);
+						} else {
+							context.report({ node: specifier, messageId: 'transactionClientImport' });
+						}
+					}
+				}
+			},
+			TaggedTemplateExpression(node) {
+				const { tag } = node;
+				if (
+					tag.type === 'MemberExpression' &&
+					tag.property.type === 'Identifier' &&
+					rawWriteMethods.has(tag.property.name)
+				) {
+					checkRawWrite(node, tag.object);
+				}
+			},
+			CallExpression(node) {
+				const { callee } = node;
+				if (callee.type !== 'MemberExpression' || callee.property.type !== 'Identifier') {
+					return;
+				}
+
+				const method = callee.property.name;
+				if (method === '$transaction') {
+					if (requireAuditedWrites && classifyClient(callee.object) === 'unaudited' && !isInsideUnauditedWrite(node)) {
+						context.report({ node, messageId: 'rawTransaction' });
+					}
+
+					return;
+				}
+				if (rawWriteMethods.has(method)) {
+					checkRawWrite(node, callee.object);
+
+					return;
+				}
+				if (
+					!prismaWriteMethods.has(method) ||
+					callee.object.type !== 'MemberExpression' ||
+					callee.object.property.type !== 'Identifier'
+				) {
+					return;
+				}
+
+				const model = callee.object.property.name;
+				const client = classifyClient(callee.object.object);
+				if (client === 'unknown') {
+					return;
+				}
+				if (model === 'auditEvent') {
+					context.report({ node, messageId: 'auditEventWrite' });
+
+					return;
+				}
+				if (client === 'audited') {
+					return;
+				}
+				if (auditedModels.includes(model)) {
+					context.report({ node, messageId: 'auditedModelWrite', data: { model } });
+
+					return;
+				}
+				if (requireAuditedWrites && !isInsideUnauditedWrite(node)) {
+					context.report({ node, messageId: 'unauditedWrite' });
+				}
+			},
+		};
+	},
+};
+
 const backendArchitecturePlugin = {
 	meta: {
 		name: 'backend-architecture',
@@ -780,6 +979,7 @@ const backendArchitecturePlugin = {
 		'action-unknown-params': actionUnknownParams,
 		'no-service-throw': noServiceThrow,
 		'types-file-no-runtime-functions': typesFileNoRuntimeFunctions,
+		'audited-writes': auditedWrites,
 	},
 };
 

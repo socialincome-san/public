@@ -16,6 +16,10 @@ jest.mock('./recipient.repository', () => ({
 }));
 
 jest.mock('@/modules/auth/auth.service', () => ({}));
+jest.mock('@/lib/database/audited-transaction', () => jest.requireActual<object>('@/lib/audit/audited-transaction.fake'));
+jest.mock('@/modules/users/user.service', () => ({
+	isAdmin: jest.fn(),
+}));
 jest.mock('@/modules/local-partners/local-partner.service', () => ({
 	getLocalPartnerOptions: jest.fn(),
 }));

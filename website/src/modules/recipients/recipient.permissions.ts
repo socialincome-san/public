@@ -35,6 +35,21 @@ export const canReadRecipient = (
 	return recipient.programId !== null && hasOperatorAccess(accessiblePrograms, recipient.programId);
 };
 
+// Deleted recipients have no ownership left to check, so only admins may read
+// their trail. Pool candidates (no program) are managed by admins as well.
+export const canReadRecipientAuditTrail = (
+	actor: RecipientActor,
+	recipient: RecipientOwnership | null,
+	accessiblePrograms: AccessibleProgram[],
+	isAdminUser: boolean,
+): boolean => {
+	if (!recipient || (recipient.programId === null && actor.type === 'user')) {
+		return actor.type === 'user' && isAdminUser;
+	}
+
+	return canReadRecipient(actor, recipient, accessiblePrograms);
+};
+
 export const canUpdateRecipient = (
 	actor: RecipientActor,
 	recipient: RecipientOwnership,

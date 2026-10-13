@@ -1,4 +1,6 @@
 import { CountryCode, Gender, type Profile } from '@/generated/prisma/enums';
+import type { AuditActor, AuditMetadata, AuditSource } from '@/lib/audit/audit-types';
+import { getSessionAuditContext, withAudit } from '@/lib/audit/with-audit';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import {
@@ -8,6 +10,7 @@ import {
 } from '@/modules/auth/auth.service';
 import type { Session } from '@/modules/auth/auth.types';
 import { getCountryIsoCode } from '@/modules/countries/country.service';
+import { recipientAuditEntity } from '@/modules/recipients/recipient.service';
 import { isAdmin } from '@/modules/users/user.service';
 import * as candidateRepository from './candidate.repository';
 import { candidateCreateSchema, type CandidateCreateInput, type CandidateUpdateInput } from './candidate.schemas';
@@ -143,7 +146,11 @@ export const exportCandidatesCsv = async (session: Session): Promise<Result<stri
 	}
 };
 
-export const createCandidate = async (session: Session, input: CandidateCreateInput): Promise<Result<CandidatePayload>> => {
+export const createCandidate = async (
+	session: Session,
+	input: CandidateCreateInput,
+	auditMetadata?: AuditMetadata,
+): Promise<Result<CandidatePayload>> => {
 	if (session.type === 'contributor') {
 		return resultFail('Permission denied');
 	}
@@ -176,7 +183,15 @@ export const createCandidate = async (session: Session, input: CandidateCreateIn
 		}
 
 		try {
-			return resultOk(await candidateRepository.createCandidate(input, localPartnerId));
+			return await withAudit(
+				{
+					entity: recipientAuditEntity,
+					action: 'create',
+					...getSessionAuditContext(session),
+					metadata: auditMetadata,
+				},
+				async (transaction) => resultOk(await candidateRepository.createCandidate(transaction, input, localPartnerId)),
+			);
 		} catch (error) {
 			if (paymentPhone) {
 				await deleteFirebaseUserByPhoneNumberIfExists(paymentPhone);
@@ -244,18 +259,29 @@ export const updateCandidate = async (session: Session, input: CandidateUpdateIn
 			firebaseChange = 'changed';
 		}
 
-		const updated = await candidateRepository.updateCandidate(effectiveInput, {
-			contactId: existing.contact.id,
-			contactPhoneId: existing.contact.phone?.id,
-			contactPhoneNumber: existing.contact.phone?.number,
-			contactAddressId: existing.contact.address?.id,
-			paymentInformationId: existing.paymentInformation?.id,
-			paymentPhoneId: existing.paymentInformation?.phone?.id,
-			paymentPhoneNumber: existing.paymentInformation?.phone?.number,
-		});
+		const updateResult = await withAudit(
+			{ entity: recipientAuditEntity, action: 'update', entityId: input.id, ...getSessionAuditContext(session) },
+			async (transaction) =>
+				resultOk(
+					await candidateRepository.updateCandidate(transaction, effectiveInput, {
+						contactId: existing.contact.id,
+						contactPhoneId: existing.contact.phone?.id,
+						contactPhoneNumber: existing.contact.phone?.number,
+						contactAddressId: existing.contact.address?.id,
+						paymentInformationId: existing.paymentInformation?.id,
+						paymentPhoneId: existing.paymentInformation?.phone?.id,
+						paymentPhoneNumber: existing.paymentInformation?.phone?.number,
+					}),
+				),
+		);
+		if (!updateResult.success) {
+			await compensateFirebaseChange(firebaseChange, previousPaymentPhone, nextPaymentPhone);
+
+			return updateResult;
+		}
 		await cleanupCandidateRelations(existing, effectiveInput);
 
-		return resultOk(updated);
+		return updateResult;
 	} catch (error) {
 		console.error('Could not update candidate', { candidateId: input.id, error });
 		await compensateFirebaseChange(firebaseChange, previousPaymentPhone, nextPaymentPhone);
@@ -279,11 +305,21 @@ export const deleteCandidate = async (session: Session, candidateId: string): Pr
 			return accessResult;
 		}
 
-		await candidateRepository.deleteCandidateData({
-			candidateId,
-			contactId: existing.contactId,
-			paymentInformationId: existing.paymentInformationId,
-		});
+		const deleteResult = await withAudit(
+			{ entity: recipientAuditEntity, action: 'delete', entityId: candidateId, ...getSessionAuditContext(session) },
+			async (transaction) => {
+				await candidateRepository.deleteCandidateData(transaction, {
+					candidateId,
+					contactId: existing.contactId,
+					paymentInformationId: existing.paymentInformationId,
+				});
+
+				return resultOk(undefined);
+			},
+		);
+		if (!deleteResult.success) {
+			return resultFail(deleteResult.error);
+		}
 		await cleanupDeletedCandidateRelations(candidateId, existing);
 
 		const paymentPhone = existing.paymentInformation?.phone?.number;
@@ -336,8 +372,9 @@ export const importCandidatesCsv = async (session: Session, file: File): Promise
 			return resultFail('CSV contains invalid candidate data');
 		}
 
+		const importId = crypto.randomUUID();
 		for (const candidate of candidates) {
-			const result = await createCandidate(session, candidate);
+			const result = await createCandidate(session, candidate, { operation: 'csv-import', importId });
 			if (!result.success) {
 				console.error('Could not create candidate from CSV', { error: result.error });
 
@@ -354,6 +391,7 @@ export const importCandidatesCsv = async (session: Session, file: File): Promise
 };
 
 export const assignRandomCandidatesToProgram = async (
+	auditContext: { actor: AuditActor; source: AuditSource },
 	programId: string,
 	amount: number,
 	countryCode: CountryCode,
@@ -374,9 +412,21 @@ export const assignRandomCandidatesToProgram = async (
 			.sort(() => Math.random() - 0.5)
 			.slice(0, amount)
 			.map(({ id }) => id);
-		await candidateRepository.updateCandidateProgramAssignments(selectedIds, programId);
 
-		return resultOk({ assigned: selectedIds.length });
+		return await withAudit(
+			{
+				entity: recipientAuditEntity,
+				action: 'update',
+				entityId: selectedIds,
+				...auditContext,
+				metadata: { operation: 'random-candidate-assignment' },
+			},
+			async (transaction) => {
+				await candidateRepository.updateCandidateProgramAssignments(transaction, selectedIds, programId);
+
+				return resultOk({ assigned: selectedIds.length });
+			},
+		);
 	} catch (error) {
 		console.error('Could not assign candidates', { programId, error });
 

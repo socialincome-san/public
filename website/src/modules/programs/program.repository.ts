@@ -1,5 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { ContributionStatus, Currency, PayoutStatus, ProgramPermission, SurveyStatus } from '@/generated/prisma/enums';
+import { getTransactionClient, type AuditedTransaction } from '@/lib/database/audited-transaction';
 import { prisma } from '@/lib/database/prisma';
 import type { ProgramCreateInput, ProgramSettingsUpdateInput } from './program.schemas';
 
@@ -330,21 +331,25 @@ export const findProgramDeletionBlockers = async (programId: string) => {
 	return { hasPayouts: Boolean(payout), hasContributions: Boolean(contribution) };
 };
 
-export const deleteProgram = async (programId: string) => {
-	await prisma.$transaction(async (transaction) => {
-		await transaction.recipient.updateMany({
-			where: { programId },
-			data: { programId: null },
-		});
-		await transaction.survey.updateMany({
-			where: { surveySchedule: { programId } },
-			data: { surveyScheduleId: null },
-		});
-		await transaction.campaign.deleteMany({ where: { programId } });
-		await transaction.surveySchedule.deleteMany({ where: { programId } });
-		await transaction.programAccess.deleteMany({ where: { programId } });
-		await transaction.program.delete({ where: { id: programId } });
+export const deleteProgram = async (transaction: AuditedTransaction, programId: string, recipientIds: string[]) => {
+	const client = getTransactionClient(transaction);
+	await client.recipient.updateMany({
+		where: { programId, id: { in: recipientIds } },
+		data: { programId: null },
 	});
+	// The foreign key would silently unassign a recipient added since the ids
+	// were read, without an audit event.
+	if ((await client.recipient.count({ where: { programId } })) > 0) {
+		throw new Error('Program recipients changed during deletion.');
+	}
+	await client.survey.updateMany({
+		where: { surveySchedule: { programId } },
+		data: { surveyScheduleId: null },
+	});
+	await client.campaign.deleteMany({ where: { programId } });
+	await client.surveySchedule.deleteMany({ where: { programId } });
+	await client.programAccess.deleteMany({ where: { programId } });
+	await client.program.delete({ where: { id: programId } });
 };
 
 export const findEligiblePublicSubmissionPrograms = async (slugs: string[]) =>

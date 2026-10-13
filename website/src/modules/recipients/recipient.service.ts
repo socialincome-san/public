@@ -1,7 +1,10 @@
 import { Currency, Gender, PayoutInterval, PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
+import type { AuditActor, AuditedEntity, AuditMetadata, AuditSource } from '@/lib/audit/audit-types';
+import { getSessionAuditContext, withAudit } from '@/lib/audit/with-audit';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
 import { now } from '@/lib/utils/now';
+import type { AuditedEntityType } from '@/modules/audit/audit.types';
 import {
 	createFirebaseUserByPhoneNumber,
 	decodeFirebaseTokenFromRequest,
@@ -14,11 +17,13 @@ import { getLocalPartnerOptions } from '@/modules/local-partners/local-partner.s
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
 import { getProgramNameById } from '@/modules/programs/program-reference.service';
+import { isAdmin } from '@/modules/users/user.service';
 import { differenceInCalendarDays, startOfDay } from 'date-fns';
 import {
 	canCreateRecipient,
 	canExportRecipients,
 	canReadRecipient,
+	canReadRecipientAuditTrail,
 	canRemoveRecipientFromProgram,
 	canUpdateRecipient,
 	hasOperatorAccess,
@@ -58,6 +63,43 @@ import {
 	UpcomingOnboardingTableViewRow,
 	type PayoutProcessRecipient,
 } from './recipient.types';
+
+/**
+ * A recipient with its contact, phones, address and payment information is
+ * audited as one entity, so a payment phone change shows up as
+ * `paymentInformation.phone.number` on the recipient.
+ */
+export const recipientAuditEntity: AuditedEntity<RecipientAuditSnapshot> = {
+	type: 'recipient' satisfies AuditedEntityType,
+	findSnapshots: recipientRepository.findRecipientAuditSnapshots,
+	fields: {
+		programId: 'plain',
+		localPartnerId: 'plain',
+		startDate: 'plain',
+		suspendedAt: 'plain',
+		suspensionReason: 'personal',
+		successorName: 'personal',
+		termsAccepted: 'plain',
+		'contact.firstName': 'personal',
+		'contact.lastName': 'personal',
+		'contact.callingName': 'personal',
+		'contact.email': 'personal',
+		'contact.gender': 'personal',
+		'contact.language': 'plain',
+		'contact.dateOfBirth': 'personal',
+		'contact.profession': 'personal',
+		'contact.phone.number': 'personal',
+		'contact.phone.hasWhatsApp': 'plain',
+		'contact.address.street': 'personal',
+		'contact.address.number': 'personal',
+		'contact.address.city': 'personal',
+		'contact.address.zip': 'personal',
+		'contact.address.country': 'plain',
+		'paymentInformation.code': 'personal',
+		'paymentInformation.mobileMoneyProviderId': 'plain',
+		'paymentInformation.phone.number': 'personal',
+	},
+};
 
 export const getRecipientMonthlySummarySource = async (
 	from: Date,
@@ -155,6 +197,7 @@ const validateRecipientUpdateUniqueness = async (
 export const createRecipient = async (
 	session: Session,
 	input: CreateRecipientInput,
+	auditMetadata?: AuditMetadata,
 ): Promise<Result<RecipientWriteResult>> => {
 	try {
 		const inputResult = validateRecipientCreateInput(input);
@@ -197,7 +240,16 @@ export const createRecipient = async (
 			return resultFail(uniquenessResult.error);
 		}
 
-		const createdRecipient = await recipientRepository.createRecipient(recipientInput);
+		const auditContext = getSessionAuditContext(session);
+		const createResult = await withAudit(
+			{ entity: recipientAuditEntity, action: 'create', ...auditContext, metadata: auditMetadata },
+			async (transaction) => resultOk(await recipientRepository.createRecipient(transaction, recipientInput)),
+		);
+		if (!createResult.success) {
+			return createResult;
+		}
+
+		const createdRecipient = createResult.data;
 		const paymentPhone = recipientInput.paymentInformation.phone;
 		if (!paymentPhone) {
 			return resultOk(createdRecipient);
@@ -208,7 +260,7 @@ export const createRecipient = async (
 			return resultOk(createdRecipient);
 		}
 
-		await compensateFailedRecipientCreation(createdRecipient.id);
+		await compensateFailedRecipientCreation(createdRecipient.id, auditContext);
 
 		return resultFail('Could not create recipient. Please try again later.');
 	} catch (error) {
@@ -276,15 +328,36 @@ export const updateRecipient = async (
 		}
 		firebaseCompensation = firebaseResult.data;
 
-		const updatedRecipient = await recipientRepository.updateRecipient(recipientInput, {
-			contactId: existing.contact.id,
-			contactPhoneId: existing.contact.phone?.id,
-			contactPhoneNumber: existing.contact.phone?.number,
-			contactAddressId: existing.contact.address?.id,
-			paymentInformationId: existing.paymentInformation?.id,
-			paymentPhoneId: existing.paymentInformation?.phone?.id,
-			paymentPhoneNumber: existing.paymentInformation?.phone?.number,
-		});
+		const updateResult = await withAudit(
+			{ entity: recipientAuditEntity, action: 'update', entityId: recipientInput.id, ...getSessionAuditContext(session) },
+			async (transaction) => {
+				// Firebase was synchronized from the unlocked read above. Re-read under
+				// the audit lock and give up if a concurrent write moved the payment phone.
+				const current = await recipientRepository.findRecipientForUpdate(recipientInput.id, transaction);
+				if (!current || (current.paymentInformation?.phone?.number ?? null) !== previousPaymentPhone) {
+					return resultFail(CONCURRENT_CHANGE_ERROR);
+				}
+
+				return resultOk(
+					await recipientRepository.updateRecipient(transaction, recipientInput, {
+						contactId: current.contact.id,
+						contactPhoneId: current.contact.phone?.id,
+						contactPhoneNumber: current.contact.phone?.number,
+						contactAddressId: current.contact.address?.id,
+						paymentInformationId: current.paymentInformation?.id,
+						paymentPhoneId: current.paymentInformation?.phone?.id,
+						paymentPhoneNumber: current.paymentInformation?.phone?.number,
+					}),
+				);
+			},
+		);
+		if (!updateResult.success) {
+			if (firebaseCompensation) {
+				await compensateFirebaseChange(firebaseCompensation);
+			}
+
+			return updateResult;
+		}
 
 		await cleanupRecipientRelations({
 			contactPhoneId: existing.contact.phone?.id,
@@ -292,7 +365,7 @@ export const updateRecipient = async (
 			addressId: hasAddressInput(recipientInput.contact) ? undefined : existing.contact.address?.id,
 		});
 
-		return resultOk(updatedRecipient);
+		return resultOk(updateResult.data);
 	} catch (error) {
 		console.error(error);
 		if (firebaseCompensation) {
@@ -341,18 +414,45 @@ export const updateRecipientSelf = async (
 			};
 		}
 
-		const updatedRecipient = await recipientRepository.updateRecipientSelf(
-			recipientIdResult.data,
-			inputResult.data,
-			existing.paymentInformation?.code ?? null,
+		const id = recipientIdResult.data;
+		const updateResult = await withAudit(
+			{
+				entity: recipientAuditEntity,
+				action: 'update',
+				entityId: id,
+				actor: { type: 'recipient', id },
+				source: 'mobile-app',
+			},
+			async (transaction) => {
+				const current = await recipientRepository.findRecipientForSelfUpdate(id, transaction);
+				if (!current || (current.paymentInformation?.phone?.number ?? null) !== previousPaymentPhone) {
+					return resultFail(CONCURRENT_CHANGE_ERROR);
+				}
+
+				return resultOk(
+					await recipientRepository.updateRecipientSelf(
+						transaction,
+						id,
+						inputResult.data,
+						current.paymentInformation?.code ?? null,
+					),
+				);
+			},
 		);
+		if (!updateResult.success) {
+			if (firebaseCompensation) {
+				await compensateFirebaseChange(firebaseCompensation);
+			}
+
+			return updateResult;
+		}
 
 		await cleanupRecipientRelations({
 			contactPhoneId: existing.contact.phone?.id,
 			paymentPhoneId: existing.paymentInformation?.phone?.id,
 		});
 
-		return resultOk(updatedRecipient);
+		return resultOk(updateResult.data);
 	} catch (error) {
 		console.error(error);
 		if (firebaseCompensation) {
@@ -389,14 +489,22 @@ export const removeRecipientFromProgram = async (session: Session, recipientId: 
 			return resultFail('Recipient has payouts and cannot be removed from the program.');
 		}
 
-		const removal = await recipientRepository.removeRecipientFromProgram(idResult.data, existing.programId);
-		if (removal.count === 0) {
-			return resultFail(
-				'Either the recipient has payouts and cannot be removed from the program, or the program was changed.',
-			);
-		}
+		const id = idResult.data;
+		const programId = existing.programId;
 
-		return resultOk({ id: idResult.data });
+		return await withAudit(
+			{ entity: recipientAuditEntity, action: 'update', entityId: id, ...getSessionAuditContext(session) },
+			async (transaction) => {
+				const removal = await recipientRepository.removeRecipientFromProgram(transaction, id, programId);
+				if (removal.count === 0) {
+					return resultFail(
+						'Either the recipient has payouts and cannot be removed from the program, or the program was changed.',
+					);
+				}
+
+				return resultOk({ id });
+			},
+		);
 	} catch (error) {
 		console.error(error);
 
@@ -424,19 +532,12 @@ export const deleteRecipient = async (session: Session, recipientId: string): Pr
 			return resultFail('Permission denied');
 		}
 
-		await recipientRepository.deleteRecipient({
-			recipientId: existing.id,
-			contactId: existing.contactId,
-			paymentInformationId: existing.paymentInformationId,
-		});
+		const deleteResult = await deleteRecipientWithRelations(existing.id, getSessionAuditContext(session));
+		if (!deleteResult.success) {
+			return resultFail(deleteResult.error);
+		}
 
-		await cleanupRecipientRelations({
-			contactPhoneId: existing.contact.phoneId ?? undefined,
-			paymentPhoneId: existing.paymentInformation?.phone?.id,
-			addressId: existing.contact.addressId ?? undefined,
-		});
-
-		const paymentPhone = existing.paymentInformation?.phone?.number;
+		const paymentPhone = deleteResult.data.paymentInformation?.phone?.number;
 		if (paymentPhone) {
 			const firebaseResult = await deleteFirebaseUserByPhoneNumberIfExists(paymentPhone);
 			if (!firebaseResult.success) {
@@ -453,6 +554,38 @@ export const deleteRecipient = async (session: Session, recipientId: string): Pr
 		console.error(error);
 
 		return resultFail('Could not delete recipient. Please try again later.');
+	}
+};
+
+export const authorizeRecipientAuditTrail = async (session: Session, recipientId: string): Promise<Result<void>> => {
+	try {
+		const recipient = await recipientRepository.findRecipientOwnership(recipientId);
+		const accessResult = await getActorAccessiblePrograms(session);
+		if (!accessResult.success) {
+			return resultFail(accessResult.error);
+		}
+
+		const isAdminUser = session.type === 'user' && (await isAdmin(session.id)).success;
+
+		return canReadRecipientAuditTrail(session, recipient, accessResult.data, isAdminUser)
+			? resultOk(undefined)
+			: resultFail('Permission denied');
+	} catch (error) {
+		console.error('Could not authorize recipient audit trail', { error });
+
+		return resultFail('Could not authorize recipient audit trail');
+	}
+};
+
+export const getRecipientIdsByProgram = async (programId: string): Promise<Result<string[]>> => {
+	try {
+		const recipients = await recipientRepository.findRecipientIdsByProgram(programId);
+
+		return resultOk(recipients.map(({ id }) => id));
+	} catch (error) {
+		console.error('Could not fetch program recipient ids', { programId, error });
+
+		return resultFail('Could not fetch program recipients');
 	}
 };
 
@@ -940,8 +1073,9 @@ export const importRecipientsCsv = async (session: Session, file: File): Promise
 			return resultFail('CSV contains invalid recipient data');
 		}
 
+		const importId = crypto.randomUUID();
 		for (const recipient of recipients) {
-			const createResult = await createRecipient(session, recipient);
+			const createResult = await createRecipient(session, recipient, { operation: 'csv-import', importId });
 			if (!createResult.success) {
 				console.error('Could not create recipient from CSV', { error: createResult.error });
 
@@ -1094,6 +1228,42 @@ export const recipientStatusService = {
 const getActorAccessiblePrograms = async (session: Session): Promise<Result<AccessibleProgram[]>> =>
 	session.type === 'user' ? getAccessiblePrograms(session.id) : resultOk([]);
 
+const deleteRecipientWithRelations = async (
+	recipientId: string,
+	auditContext: RecipientAuditContext,
+	auditMetadata?: AuditMetadata,
+): Promise<Result<DeletedRecipient>> => {
+	const deleteResult = await withAudit(
+		{ entity: recipientAuditEntity, action: 'delete', entityId: recipientId, ...auditContext, metadata: auditMetadata },
+		async (transaction) => {
+			const recipient = await recipientRepository.findRecipientForDeletion(recipientId, transaction);
+			if (!recipient) {
+				return resultFail('Recipient not found');
+			}
+
+			await recipientRepository.deleteRecipient(transaction, {
+				recipientId,
+				contactId: recipient.contactId,
+				paymentInformationId: recipient.paymentInformationId,
+			});
+
+			return resultOk(recipient);
+		},
+	);
+	if (!deleteResult.success) {
+		return deleteResult;
+	}
+
+	const recipient = deleteResult.data;
+	await cleanupRecipientRelations({
+		contactPhoneId: recipient.contact.phoneId ?? undefined,
+		paymentPhoneId: recipient.paymentInformation?.phone?.id,
+		addressId: recipient.contact.addressId ?? undefined,
+	});
+
+	return deleteResult;
+};
+
 const synchronizeFirebasePaymentPhone = async (
 	previousPhone: string | null,
 	nextPhone: string | null,
@@ -1147,23 +1317,12 @@ const compensateFirebaseChange = async (compensation: FirebaseCompensation): Pro
 	}
 };
 
-const compensateFailedRecipientCreation = async (recipientId: string): Promise<void> => {
+const compensateFailedRecipientCreation = async (
+	recipientId: string,
+	auditContext: RecipientAuditContext,
+): Promise<void> => {
 	try {
-		const recipient = await recipientRepository.findRecipientForDeletion(recipientId);
-		if (!recipient) {
-			return;
-		}
-
-		await recipientRepository.deleteRecipient({
-			recipientId,
-			contactId: recipient.contactId,
-			paymentInformationId: recipient.paymentInformationId,
-		});
-		await cleanupRecipientRelations({
-			contactPhoneId: recipient.contact.phoneId ?? undefined,
-			paymentPhoneId: recipient.paymentInformation?.phone?.id,
-			addressId: recipient.contact.addressId ?? undefined,
-		});
+		await deleteRecipientWithRelations(recipientId, auditContext, { reason: 'authentication-user-creation-failed' });
 	} catch (error) {
 		console.error('Failed to compensate recipient creation', { recipientId, error });
 	}
@@ -1559,6 +1718,8 @@ const isDefined = (value: string | undefined): value is string => value !== unde
 
 const PUBLIC_RECIPIENTS_MAX_ROWS = 1000;
 
+const CONCURRENT_CHANGE_ERROR = 'Recipient was changed in the meantime. Please try again.';
+
 const CSV_HEADERS = [
 	'id',
 	'createdAt',
@@ -1595,6 +1756,15 @@ const CSV_HEADERS = [
 ];
 
 export type RecipientWriteResult = Awaited<ReturnType<typeof recipientRepository.updateRecipient>>;
+
+type RecipientAuditSnapshot = Awaited<ReturnType<typeof recipientRepository.findRecipientAuditSnapshots>>[number];
+
+type RecipientAuditContext = {
+	actor: AuditActor;
+	source: AuditSource;
+};
+
+type DeletedRecipient = NonNullable<Awaited<ReturnType<typeof recipientRepository.findRecipientForDeletion>>>;
 
 type RecipientTableSource = Awaited<ReturnType<typeof recipientRepository.findRecipientTableSource>>['recipients'];
 

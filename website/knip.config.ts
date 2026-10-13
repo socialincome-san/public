@@ -5,6 +5,8 @@ const config: KnipConfig = {
 	entry: ['src/lib/i18n/request.ts'],
 	ignoreIssues: {
 		'src/app/api/v1/models.ts': ['exports'],
+		// Loaded by name through jest.requireActual in jest.mock factories.
+		'src/lib/audit/audited-transaction.fake.ts': ['exports'],
 	},
 	ignoreDependencies: ['@prisma/client', 'storyblok', '@typescript-eslint/parser'],
 };

@@ -1,5 +1,7 @@
-import type { Prisma } from '@/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
+import { getTransactionClient, type AuditedTransaction } from '@/lib/database/audited-transaction';
 import { prisma } from '@/lib/database/prisma';
+import { unauditedWrite } from '@/lib/database/unaudited-write';
 import type { CreateRecipientInput, UpdateRecipientInput, UpdateRecipientSelfInput } from './recipient.schemas';
 import type { RecipientTableQuery } from './recipient.types';
 
@@ -91,14 +93,14 @@ export const findRecipient = async (recipientId: string) =>
 		select: recipientDetailSelect,
 	});
 
-export const findRecipientForUpdate = async (recipientId: string) =>
-	prisma.recipient.findUnique({
+export const findRecipientForUpdate = async (recipientId: string, transaction?: AuditedTransaction) =>
+	getClient(transaction).recipient.findUnique({
 		where: { id: recipientId },
 		select: recipientUpdateContextSelect,
 	});
 
-export const findRecipientForSelfUpdate = async (recipientId: string) =>
-	prisma.recipient.findUnique({
+export const findRecipientForSelfUpdate = async (recipientId: string, transaction?: AuditedTransaction) =>
+	getClient(transaction).recipient.findUnique({
 		where: { id: recipientId },
 		select: {
 			contact: {
@@ -125,8 +127,8 @@ export const findRecipientForProgramRemoval = async (recipientId: string) =>
 		},
 	});
 
-export const findRecipientForDeletion = async (recipientId: string) =>
-	prisma.recipient.findUnique({
+export const findRecipientForDeletion = async (recipientId: string, transaction?: AuditedTransaction) =>
+	getClient(transaction).recipient.findUnique({
 		where: { id: recipientId },
 		select: {
 			id: true,
@@ -401,31 +403,57 @@ export const findLocalPartnerRecipientProgramFilterSource = async (localPartnerI
 		},
 	});
 
-export const createRecipient = async (input: CreateRecipientInput) => {
-	const data = buildRecipientCreateData(input);
+// Locks the recipient rows (FOR UPDATE): every audited recipient write takes
+// this lock first, so concurrent writes serialize and before/after values
+// stay exact. Contact and payment rows belong to one recipient and are only
+// written through it, so the recipient lock covers them.
+export const findRecipientAuditSnapshots = async (transaction: AuditedTransaction, recipientIds: string[]) => {
+	const client = getTransactionClient(transaction);
+	await client.$queryRaw`SELECT id FROM recipient WHERE id IN (${Prisma.join(recipientIds)}) ORDER BY id FOR UPDATE`;
 
-	return prisma.$transaction((transaction) => transaction.recipient.create({ data }));
+	return client.recipient.findMany({
+		where: { id: { in: recipientIds } },
+		select: recipientAuditSnapshotSelect,
+	});
 };
 
-export const updateRecipient = async (input: UpdateRecipientInput, context: RecipientUpdatePersistenceContext) =>
-	prisma.recipient.update({
+export const findRecipientIdsByProgram = async (programId: string) =>
+	prisma.recipient.findMany({
+		where: { programId },
+		select: { id: true },
+	});
+
+export const createRecipient = async (transaction: AuditedTransaction, input: CreateRecipientInput) =>
+	getTransactionClient(transaction).recipient.create({ data: buildRecipientCreateData(input) });
+
+export const updateRecipient = async (
+	transaction: AuditedTransaction,
+	input: UpdateRecipientInput,
+	context: RecipientUpdatePersistenceContext,
+) =>
+	getTransactionClient(transaction).recipient.update({
 		where: { id: input.id },
 		data: buildRecipientUpdateData(input, context),
 	});
 
 export const updateRecipientSelf = async (
+	transaction: AuditedTransaction,
 	recipientId: string,
 	input: UpdateRecipientSelfInput,
 	currentPaymentCode: string | null,
 ) =>
-	prisma.recipient.update({
+	getTransactionClient(transaction).recipient.update({
 		where: { id: recipientId },
 		data: buildRecipientSelfUpdateData(input, currentPaymentCode),
 		select: recipientWithPaymentInformationSelect,
 	});
 
-export const removeRecipientFromProgram = async (recipientId: string, expectedProgramId: string) =>
-	prisma.recipient.updateMany({
+export const removeRecipientFromProgram = async (
+	transaction: AuditedTransaction,
+	recipientId: string,
+	expectedProgramId: string,
+) =>
+	getTransactionClient(transaction).recipient.updateMany({
 		where: {
 			id: recipientId,
 			programId: expectedProgramId,
@@ -437,32 +465,35 @@ export const removeRecipientFromProgram = async (recipientId: string, expectedPr
 		},
 	});
 
-export const deleteRecipient = async ({
-	recipientId,
-	contactId,
-	paymentInformationId,
-}: {
-	recipientId: string;
-	contactId: string;
-	paymentInformationId: string | null;
-}) =>
-	prisma.$transaction(async (transaction) => {
-		await transaction.recipient.delete({
-			where: { id: recipientId },
-		});
-
-		if (paymentInformationId) {
-			await transaction.paymentInformation.delete({
-				where: { id: paymentInformationId },
-			});
-		}
-
-		await transaction.contact.delete({
-			where: { id: contactId },
-		});
-
-		return { id: recipientId };
+export const deleteRecipient = async (
+	transaction: AuditedTransaction,
+	{
+		recipientId,
+		contactId,
+		paymentInformationId,
+	}: {
+		recipientId: string;
+		contactId: string;
+		paymentInformationId: string | null;
+	},
+) => {
+	const client = getTransactionClient(transaction);
+	await client.recipient.delete({
+		where: { id: recipientId },
 	});
+
+	if (paymentInformationId) {
+		await client.paymentInformation.delete({
+			where: { id: paymentInformationId },
+		});
+	}
+
+	await client.contact.delete({
+		where: { id: contactId },
+	});
+
+	return { id: recipientId };
+};
 
 export const deletePhoneIfOrphaned = async (phoneId: string) => {
 	const phone = await prisma.phone.findUnique({
@@ -481,9 +512,11 @@ export const deletePhoneIfOrphaned = async (phoneId: string) => {
 		return false;
 	}
 
-	await prisma.phone.delete({
-		where: { id: phoneId },
-	});
+	await unauditedWrite('orphan-cleanup', () =>
+		prisma.phone.delete({
+			where: { id: phoneId },
+		}),
+	);
 
 	return true;
 };
@@ -504,9 +537,11 @@ export const deleteAddressIfOrphaned = async (addressId: string) => {
 		return false;
 	}
 
-	await prisma.address.delete({
-		where: { id: addressId },
-	});
+	await unauditedWrite('orphan-cleanup', () =>
+		prisma.address.delete({
+			where: { id: addressId },
+		}),
+	);
 
 	return true;
 };
@@ -556,6 +591,9 @@ export const countCandidatesForLocalPartners = async (localPartnerIds: string[])
 		},
 	});
 
+const getClient = (transaction: AuditedTransaction | undefined): Prisma.TransactionClient =>
+	transaction ? getTransactionClient(transaction) : prisma;
+
 type RecipientUpdatePersistenceContext = {
 	contactId: string;
 	contactPhoneId: string | undefined;
@@ -565,6 +603,38 @@ type RecipientUpdatePersistenceContext = {
 	paymentPhoneId: string | undefined;
 	paymentPhoneNumber: string | undefined;
 };
+
+const recipientAuditSnapshotSelect = {
+	id: true,
+	programId: true,
+	localPartnerId: true,
+	startDate: true,
+	suspendedAt: true,
+	suspensionReason: true,
+	successorName: true,
+	termsAccepted: true,
+	contact: {
+		select: {
+			firstName: true,
+			lastName: true,
+			callingName: true,
+			email: true,
+			gender: true,
+			language: true,
+			dateOfBirth: true,
+			profession: true,
+			phone: { select: { number: true, hasWhatsApp: true } },
+			address: { select: { street: true, number: true, city: true, zip: true, country: true } },
+		},
+	},
+	paymentInformation: {
+		select: {
+			code: true,
+			mobileMoneyProviderId: true,
+			phone: { select: { number: true } },
+		},
+	},
+} satisfies Prisma.RecipientSelect;
 
 const recipientDetailSelect = {
 	id: true,
