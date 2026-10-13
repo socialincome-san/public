@@ -59,8 +59,8 @@ export const getCampaignTableView = (
 
 		return {
 			...entry,
-			title: getStoryblokCampaignTitleForSlug(campaignStories, entry.slug),
-			link: `${getWebsiteBasePath(defaultLanguage, defaultCurrency)}/campaigns/${entry.slug}`,
+			title: entry.slug ? getStoryblokCampaignTitleForSlug(campaignStories, entry.slug) : `Campaign ${entry.id}`,
+			link: entry.slug ? `${getWebsiteBasePath(defaultLanguage, defaultCurrency)}/campaigns/${entry.slug}` : null,
 			programName: programStory ? getProgramTitle(programStory.content) : entry.programName,
 		};
 	});
