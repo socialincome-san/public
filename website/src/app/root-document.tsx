@@ -2,6 +2,7 @@ import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
 import { pickClientMessages } from '@/lib/i18n/messages';
 import { AppLoadingSkeleton } from '@socialincome/design-system/feedback/app-loading-skeleton/app-loading-skeleton';
 import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -41,6 +42,7 @@ export const RootDocument = ({ lang, children }: PropsWithChildren<{ lang: strin
 					<IntlProvider>{children}</IntlProvider>
 				</Suspense>
 				<Analytics />
+				<SpeedInsights />
 			</body>
 		</FirebaseAppProvider>
 	</html>
