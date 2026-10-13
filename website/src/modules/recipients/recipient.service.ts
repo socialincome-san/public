@@ -1,6 +1,5 @@
 import { Currency, Gender, PayoutInterval, PayoutStatus, ProgramPermission } from '@/generated/prisma/enums';
 import { getSessionAuditContext } from '@/lib/audit/audit-context';
-import { diffVersions } from '@/lib/audit/audit-diff';
 import type { AuditContext } from '@/lib/audit/audit-types';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import { parseCsvOptionalFields, parseCsvText, stringifyCsv } from '@/lib/utils/csv';
@@ -13,6 +12,7 @@ import {
 	updateFirebaseUserByPhoneNumber,
 } from '@/modules/auth/auth.service';
 import type { Session } from '@/modules/auth/auth.types';
+import type { ChangeLogEntity } from '@/modules/changes/change.types';
 import { getLocalPartnerFilterOption, getLocalPartnerOptions } from '@/modules/local-partners/local-partner.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import type { ProgramAccess as AccessibleProgram } from '@/modules/program-access/program-access.types';
@@ -41,9 +41,6 @@ import {
 	OBFUSCATED_SENTINEL,
 	PublicRecipientTableView,
 	PublicRecipientTableViewRow,
-	RecipientChangeTableQuery,
-	RecipientChangeTableView,
-	RecipientChangeTableViewRow,
 	RecipientFilterOption,
 	RecipientFormOptions,
 	RecipientLifecycleStatus,
@@ -455,78 +452,34 @@ export const deleteRecipient = async (session: Session, recipientId: string): Pr
 };
 
 /** Newest audit events of a recipient, for whoever may read its trail. */
-/** Recipient changes in programs the user operates, newest first, computed from stored versions. */
-export const getRecipientChangeTableView = async (
-	userId: string,
-	query: RecipientChangeTableQuery,
-): Promise<Result<RecipientChangeTableView>> => {
+/** Recipients whose changes the user may see: those in programs they operate. */
+export const getRecipientsForChangeLog = async (userId: string): Promise<Result<ChangeLogEntity[]>> => {
 	try {
 		const accessResult = await getAccessiblePrograms(userId);
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
 
-		const programs = accessResult.data.filter(({ permission }) => permission === ProgramPermission.operator);
-		const programFilterOptions = getProgramFilterOptions(programs);
-		const sources =
-			programs.length > 0
-				? await recipientRepository.findRecipientsForChanges(programs.map(({ programId }) => programId))
-				: [];
-		const search = query.search.trim().toLowerCase();
-		const recipients = sources
-			.map((recipient) => ({
-				id: recipient.id,
-				name: `${recipient.contact.firstName} ${recipient.contact.lastName}`,
-				programId: recipient.program?.id,
-				programName: recipient.program?.name ?? '',
-			}))
-			.filter(
-				(recipient) =>
-					(!query.programId || recipient.programId === query.programId) &&
-					(!query.recipientId || recipient.id === query.recipientId) &&
-					(!search || recipient.id.toLowerCase().includes(search) || recipient.name.toLowerCase().includes(search)),
-			);
-		const recipientFilterOptions = query.recipientId
-			? recipients.filter(({ id }) => id === query.recipientId).map(({ id, name }) => ({ id, name }))
-			: [];
-		if (recipients.length === 0) {
-			return resultOk({ tableRows: [], totalCount: 0, programFilterOptions, recipientFilterOptions });
+		const programIds = accessResult.data
+			.filter(({ permission }) => permission === ProgramPermission.operator)
+			.map(({ programId }) => programId);
+		if (programIds.length === 0) {
+			return resultOk([]);
 		}
 
-		const { versions, totalCount } = await recipientRepository.findRecipientChangePage({
-			recipientIds: recipients.map(({ id }) => id),
-			skip: (query.page - 1) * query.pageSize,
-			take: query.pageSize,
-		});
-		// The previous version of a row can be on another page, so load the
-		// full history of the recipients on this one.
-		const history = await recipientRepository.findRecipientVersions([...new Set(versions.map(({ entityId }) => entityId))]);
-		const recipientsById = new Map(recipients.map((recipient) => [recipient.id, recipient]));
-		const tableRows = versions.map((version): RecipientChangeTableViewRow => {
-			const recipient = recipientsById.get(version.entityId);
-			const recipientHistory = history.filter(({ entityId }) => entityId === version.entityId);
-			const previous = recipientHistory[recipientHistory.findIndex(({ id }) => id === version.id) - 1];
+		const recipients = await recipientRepository.findRecipientsForChanges(programIds);
 
-			return {
-				id: version.id,
-				createdAt: version.createdAt,
-				recipientId: version.entityId,
-				recipientName: recipient?.name ?? '',
-				programName: recipient?.programName ?? '',
-				action: version.action,
-				actorName: version.actorName ?? (version.actorType === 'recipient' ? (recipient?.name ?? '') : version.actorType),
-				source: version.source,
-				// Recipients created before versioning have no previous version; their
-				// first one would list every field, so it shows no changes instead.
-				changes: previous || version.action !== 'update' ? diffVersions(previous?.snapshot ?? null, version.snapshot) : [],
-			};
-		});
-
-		return resultOk({ tableRows, totalCount, programFilterOptions, recipientFilterOptions });
+		return resultOk(
+			recipients.map((recipient) => ({
+				id: recipient.id,
+				name: `${recipient.contact.firstName} ${recipient.contact.lastName}`,
+				context: recipient.program?.name ?? '',
+			})),
+		);
 	} catch (error) {
-		console.error('Could not fetch recipient changes', { userId, error });
+		console.error('Could not fetch recipients for the change log', { userId, error });
 
-		return resultFail('Could not fetch recipient changes');
+		return resultFail('Could not fetch recipients for the change log');
 	}
 };
 

@@ -34,11 +34,14 @@ app. `metadata` is flat context such as
 
 ## Reading
 
-`getRecipientChangeTableView(userId, query)` lists versions of
-recipients in programs the user operates, newest first, each diffed
-against the recipient's previous version (`diffVersions`, paths like
-`paymentInformation.phone.number`). It backs the portal home teaser and
-`/portal/monitoring/recipient-changes`.
+`/portal/monitoring/changes` lists every change the user may see, newest
+first, each diffed against the entity's previous version
+(`diffVersions`, paths like `paymentInformation.phone.number`).
+`getChangeTableView` (`modules/changes`) asks each versioned entity type
+which entities the user may see; recipients answer with
+`getRecipientsForChangeLog` (recipients in programs they operate). To
+show a new entity type, add its loader to `changeLogSources` and its
+field labels to `src/components/changes/change-summary.ts`.
 
 ## Notes
 

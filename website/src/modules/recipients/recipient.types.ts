@@ -6,7 +6,6 @@ import type {
 	PayoutStatus,
 	ProgramPermission,
 } from '@/generated/prisma/enums';
-import type { AuditChange } from '@/lib/audit/audit-types';
 export const OBFUSCATED_SENTINEL = 'OBFUSCATED';
 
 export type UnassignedRecipientCountry = {
@@ -334,31 +333,4 @@ type RecipientLocalPartnerRecord = {
 	createdAt: Date;
 	updatedAt: Date | null;
 	contact: RecipientContactRecord;
-};
-
-export type RecipientChangeTableQuery = {
-	page: number;
-	pageSize: number;
-	search: string;
-	programId?: string;
-	recipientId?: string;
-};
-
-export type RecipientChangeTableViewRow = {
-	id: string;
-	createdAt: Date;
-	recipientId: string;
-	recipientName: string;
-	programName: string;
-	action: string;
-	actorName: string;
-	source: string;
-	changes: AuditChange[];
-};
-
-export type RecipientChangeTableView = {
-	tableRows: RecipientChangeTableViewRow[];
-	totalCount: number;
-	programFilterOptions: RecipientProgramFilterOption[];
-	recipientFilterOptions: RecipientProgramFilterOption[];
 };

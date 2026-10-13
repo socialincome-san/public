@@ -32,6 +32,7 @@ export type TableQueryState = {
 	subscriptionPaymentMethod?: string;
 	recipientId?: string;
 	contributorId?: string;
+	entityType?: string;
 };
 
 type QueryValue = string | string[] | number | null | undefined;
@@ -60,6 +61,7 @@ type TableQueryInput = {
 	subscriptionPaymentMethod?: QueryValue;
 	recipientId?: QueryValue;
 	contributorId?: QueryValue;
+	entityType?: QueryValue;
 };
 
 const takeFirst = (value: QueryValue): string | undefined => {
@@ -130,6 +132,7 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 	const subscriptionPaymentMethod = normalizeToken(input.subscriptionPaymentMethod, MAX_QUERY_TOKEN_LENGTH);
 	const recipientId = normalizeToken(input.recipientId, MAX_QUERY_TOKEN_LENGTH);
 	const contributorId = normalizeToken(input.contributorId, MAX_QUERY_TOKEN_LENGTH);
+	const entityType = normalizeToken(input.entityType, MAX_QUERY_TOKEN_LENGTH);
 
 	return {
 		page,
@@ -155,6 +158,7 @@ const normalizeTableQuery = (input: TableQueryInput): TableQueryState => {
 		subscriptionPaymentMethod: subscriptionPaymentMethod || undefined,
 		recipientId: recipientId || undefined,
 		contributorId: contributorId || undefined,
+		entityType: entityType || undefined,
 	};
 };
 
@@ -183,6 +187,7 @@ export const tableQueryFromSearchParams = (searchParams: Record<string, string |
 		subscriptionPaymentMethod: searchParams.subscriptionPaymentMethod,
 		recipientId: searchParams.recipientId,
 		contributorId: searchParams.contributorId,
+		entityType: searchParams.entityType,
 	});
 };
 
@@ -222,6 +227,7 @@ export const applyTableQueryPatch = (
 			: currentSearchParams.get('subscriptionPaymentMethod'),
 		recipientId: hasPatchKey('recipientId') ? patch.recipientId : currentSearchParams.get('recipientId'),
 		contributorId: hasPatchKey('contributorId') ? patch.contributorId : currentSearchParams.get('contributorId'),
+		entityType: hasPatchKey('entityType') ? patch.entityType : currentSearchParams.get('entityType'),
 	});
 
 	const nextParams = new URLSearchParams(currentSearchParams.toString());
@@ -329,6 +335,11 @@ export const applyTableQueryPatch = (
 		nextParams.set('contributorId', nextQuery.contributorId);
 	} else {
 		nextParams.delete('contributorId');
+	}
+	if (nextQuery.entityType) {
+		nextParams.set('entityType', nextQuery.entityType);
+	} else {
+		nextParams.delete('entityType');
 	}
 
 	return nextParams;

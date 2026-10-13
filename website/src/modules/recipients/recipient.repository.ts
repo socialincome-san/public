@@ -100,48 +100,6 @@ export const findRecipientsForChanges = async (programIds: string[]) =>
 		},
 	});
 
-export const findRecipientChangePage = async ({
-	recipientIds,
-	skip,
-	take,
-}: {
-	recipientIds: string[];
-	skip: number;
-	take: number;
-}) => {
-	const where = { entityType: 'recipient', entityId: { in: recipientIds } };
-	const [versions, totalCount] = await Promise.all([
-		prisma.entityVersion.findMany({
-			where,
-			orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
-			skip,
-			take,
-			select: recipientVersionSelect,
-		}),
-		prisma.entityVersion.count({ where }),
-	]);
-
-	return { versions, totalCount };
-};
-
-export const findRecipientVersions = async (recipientIds: string[]) =>
-	prisma.entityVersion.findMany({
-		where: { entityType: 'recipient', entityId: { in: recipientIds } },
-		orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
-		select: recipientVersionSelect,
-	});
-
-const recipientVersionSelect = {
-	id: true,
-	entityId: true,
-	action: true,
-	actorType: true,
-	actorName: true,
-	source: true,
-	snapshot: true,
-	createdAt: true,
-} satisfies Prisma.EntityVersionSelect;
-
 export const findRecipientForUpdate = async (recipientId: string) =>
 	prisma.recipient.findUnique({
 		where: { id: recipientId },

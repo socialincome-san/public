@@ -7,9 +7,7 @@ const mockWriteRepository = {
 	removeRecipientFromProgram: jest.fn(),
 	deleteRecipient: jest.fn(),
 };
-const mockFindRecipientVersions = jest.fn();
 const mockFindRecipientsForChanges = jest.fn();
-const mockFindRecipientChangePage = jest.fn();
 const mockGetAccessiblePrograms = jest.fn();
 const mockCreateFirebaseUser = jest.fn();
 const mockDeleteFirebaseUser = jest.fn();
@@ -38,8 +36,6 @@ jest.mock('./recipient.repository', () => ({
 			paymentInformation: { phone: { id: 'phone-1', number: '+23270000001' } },
 		}),
 	findRecipientsForChanges: mockFindRecipientsForChanges,
-	findRecipientChangePage: mockFindRecipientChangePage,
-	findRecipientVersions: mockFindRecipientVersions,
 	findContactByEmail: () => Promise.resolve(null),
 	findPhoneByNumber: () => Promise.resolve(null),
 	findPaymentInformationByCode: () => Promise.resolve(null),
@@ -61,7 +57,7 @@ import type { UpdateRecipientInput } from './recipient.schemas';
 import {
 	createRecipient,
 	deleteRecipient,
-	getRecipientChangeTableView,
+	getRecipientsForChangeLog,
 	importRecipientsCsv,
 	removeRecipientFromProgram,
 	updateRecipient,
@@ -199,21 +195,19 @@ describe('recipient write attribution', () => {
 	});
 });
 
-describe('getRecipientChangeTableView', () => {
-	const version = (id: string, entityId: string, action: string, snapshot: object | null, actorName: string | null) => ({
-		id,
-		entityId,
-		action,
-		actorType: actorName ? 'user' : 'recipient',
-		actorName,
-		source: actorName ? 'portal' : 'mobile-app',
-		snapshot,
-		createdAt: new Date('2026-10-01T00:00:00.000Z'),
-	});
-	const query = { page: 1, pageSize: 10, search: '' };
-
+describe('getRecipientsForChangeLog', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
+		mockFindRecipientsForChanges.mockResolvedValue([
+			{
+				id: 'recipient-1',
+				contact: { firstName: 'Ada', lastName: 'Lovelace' },
+				program: { id: 'program-1', name: 'Program 1' },
+			},
+		]);
+	});
+
+	test('lists recipients of operated programs only', async () => {
 		mockGetAccessiblePrograms.mockResolvedValue({
 			success: true,
 			data: [
@@ -221,69 +215,22 @@ describe('getRecipientChangeTableView', () => {
 				{ programId: 'program-2', programName: 'Program 2', permission: ProgramPermission.owner },
 			],
 		});
-		mockFindRecipientsForChanges.mockResolvedValue([
-			{
-				id: 'recipient-1',
-				contact: { firstName: 'Ada', lastName: 'Lovelace' },
-				program: { id: 'program-1', name: 'Program 1' },
-			},
-			{
-				id: 'recipient-2',
-				contact: { firstName: 'Grace', lastName: 'Hopper' },
-				program: { id: 'program-1', name: 'Program 1' },
-			},
-		]);
-		const history = [
-			version('v1', 'recipient-1', 'create', { paymentInformation: { phone: { number: '+232111' } } }, 'Max Operator'),
-			version('v2', 'recipient-1', 'update', { paymentInformation: { phone: { number: '+232222' } } }, null),
-		];
-		mockFindRecipientChangePage.mockResolvedValue({ versions: [history[1]], totalCount: 2 });
-		mockFindRecipientVersions.mockResolvedValue(history);
-	});
 
-	test('only covers recipients in programs the user operates', async () => {
-		await getRecipientChangeTableView('user-1', query);
-
+		await expect(getRecipientsForChangeLog('user-1')).resolves.toEqual({
+			success: true,
+			data: [{ id: 'recipient-1', name: 'Ada Lovelace', context: 'Program 1' }],
+			status: undefined,
+		});
 		expect(mockFindRecipientsForChanges).toHaveBeenCalledWith(['program-1']);
 	});
 
-	test('returns nothing without operated programs', async () => {
+	test('lists nothing without operated programs', async () => {
 		mockGetAccessiblePrograms.mockResolvedValue({
 			success: true,
 			data: [{ programId: 'program-2', programName: 'Program 2', permission: ProgramPermission.owner }],
 		});
 
-		await expect(getRecipientChangeTableView('user-1', query)).resolves.toMatchObject({
-			success: true,
-			data: { tableRows: [], totalCount: 0 },
-		});
-		expect(mockFindRecipientChangePage).not.toHaveBeenCalled();
-	});
-
-	test('diffs each row against the previous version, also from an earlier page', async () => {
-		const result = await getRecipientChangeTableView('user-1', query);
-
-		expect(result).toMatchObject({
-			success: true,
-			data: {
-				totalCount: 2,
-				tableRows: [
-					{
-						id: 'v2',
-						recipientName: 'Ada Lovelace',
-						programName: 'Program 1',
-						actorName: 'Ada Lovelace',
-						source: 'mobile-app',
-						changes: [{ path: 'paymentInformation.phone.number', old: '+232111', new: '+232222' }],
-					},
-				],
-			},
-		});
-	});
-
-	test('narrows to searched and filtered recipients before paging', async () => {
-		await getRecipientChangeTableView('user-1', { ...query, page: 2, search: 'grace' });
-
-		expect(mockFindRecipientChangePage).toHaveBeenCalledWith({ recipientIds: ['recipient-2'], skip: 10, take: 10 });
+		await expect(getRecipientsForChangeLog('user-1')).resolves.toMatchObject({ success: true, data: [] });
+		expect(mockFindRecipientsForChanges).not.toHaveBeenCalled();
 	});
 });
