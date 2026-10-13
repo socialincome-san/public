@@ -121,20 +121,22 @@ export const selectOptionByTestId = async (page: Page, fieldName: string, option
 
 export const clickDataTableActionItem = async (page: Page, actionItemTestId: string) => {
 	const actionButton = page.getByTestId('data-table-actions-button');
+	const actionItem = page.getByTestId(actionItemTestId);
 
-	// If there's only one action, we render a primary button directly instead of the dropdown
-	if ((await actionButton.count()) === 0) {
-		await page.getByTestId(actionItemTestId).click();
+	// If there's only one action, we render a primary button directly instead of the dropdown.
+	// The dropdown also stays open after a dialog opened from it closes, blocking clicks on its trigger.
+	if ((await actionButton.count()) === 0 || (await actionItem.isVisible())) {
+		await actionItem.click();
 
 		return;
 	}
 
 	await actionButton.click();
 	try {
-		await page.getByTestId(actionItemTestId).click({ timeout: 3000 });
+		await actionItem.click({ timeout: 3000 });
 	} catch {
 		await actionButton.click({ force: true });
-		await page.getByTestId(actionItemTestId).click();
+		await actionItem.click();
 	}
 };
 
