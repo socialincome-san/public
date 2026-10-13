@@ -14,14 +14,22 @@ const mockGetCountryIsoCode = jest.fn();
 const mockValidateOrganizationIds = jest.fn();
 const mockIsAdmin = jest.fn();
 const mockFindPaginatedPrograms = jest.fn();
+const mockAssignRandomCandidatesToProgram = jest.fn();
+const mockCountAvailableCandidatesInCountry = jest.fn();
+const mockGetAvailableCandidateLocalPartners = jest.fn();
+const mockGetFocusOptions = jest.fn();
+const mockCalculateProgramBudget = jest.fn();
 
 jest.mock('@/modules/program-access/program-access.service', () => ({
 	createInitialAccessesForProgram: jest.fn(),
 	getAccessiblePrograms: mockGetAccessiblePrograms,
 }));
 jest.mock('@/modules/candidates/candidate.service', () => ({
-	assignRandomCandidatesToProgram: jest.fn(),
+	assignRandomCandidatesToProgram: mockAssignRandomCandidatesToProgram,
+	countAvailableCandidatesInCountry: mockCountAvailableCandidatesInCountry,
+	getAvailableCandidateLocalPartners: mockGetAvailableCandidateLocalPartners,
 }));
+jest.mock('@/modules/focuses/focus.service', () => ({ getFocusOptions: mockGetFocusOptions }));
 jest.mock('@/modules/countries/country.service', () => ({
 	getCountryIsoCode: mockGetCountryIsoCode,
 }));
@@ -39,6 +47,7 @@ jest.mock('@/modules/users/user.service', () => ({
 }));
 jest.mock('./program-stats.service', () => ({
 	isReadyForFirstPayoutInterval: mockIsReadyForFirstPayoutInterval,
+	calculateProgramBudget: mockCalculateProgramBudget,
 }));
 jest.mock('./program.repository', () => ({
 	findProgramWallets: mockFindProgramWallets,
@@ -52,6 +61,9 @@ jest.mock('./program.repository', () => ({
 }));
 
 import {
+	assignProgramRecipientsFromPool,
+	getProgramCandidatePoolSetup,
+	previewProgramRecipientAssignment,
 	getPaginatedProgramTableView,
 	getProgramWallets,
 	getPublicProgramStatsByProgramPortalSlugs,
@@ -216,5 +228,33 @@ describe('program service', () => {
 
 		expect(result).toEqual({ success: false, error: 'Permission denied' });
 		expect(mockUpdateProgramSettings).not.toHaveBeenCalled();
+	});
+
+	it('denies read-only owners access to the candidate pool', async () => {
+		mockGetAccessiblePrograms.mockResolvedValue(resultOk([{ programId: 'program-1', permission: ProgramPermission.owner }]));
+		await expect(getProgramCandidatePoolSetup('user-1', 'program-1')).resolves.toEqual({ success: false, error: 'Permission denied', status: undefined });
+		await expect(assignProgramRecipientsFromPool('user-1', { programId: 'program-1', amountOfRecipients: 1, focuses: [], profiles: [], localPartnerIds: [] })).resolves.toEqual({ success: false, error: 'Permission denied', status: undefined });
+		expect(mockAssignRandomCandidatesToProgram).not.toHaveBeenCalled();
+	});
+
+	it('uses locked program country and payout settings for assignment and preview', async () => {
+		mockGetAccessiblePrograms.mockResolvedValue(resultOk([{ programId: 'program-1', permission: ProgramPermission.operator }]));
+		mockFindProgramSettings.mockResolvedValue({
+			country: { isoCode: CountryCode.SL, currency: Currency.SLE },
+			programDurationInMonths: 36,
+			payoutPerInterval: 700,
+			payoutInterval: 'monthly',
+		});
+		mockCountAvailableCandidatesInCountry.mockResolvedValue(resultOk({ count: 8 }));
+		mockGetAvailableCandidateLocalPartners.mockResolvedValue(resultOk([]));
+		mockGetFocusOptions.mockResolvedValue(resultOk([]));
+		mockCalculateProgramBudget.mockResolvedValue(resultOk({ calculatedTotalBudget: 25200 }));
+		mockAssignRandomCandidatesToProgram.mockResolvedValue(resultOk({ assigned: 1 }));
+		const input = { programId: 'program-1', amountOfRecipients: 1, focuses: [], profiles: [], localPartnerIds: [] };
+		await expect(getProgramCandidatePoolSetup('user-1', 'program-1')).resolves.toMatchObject({ success: true, data: { countryCode: CountryCode.SL, totalAvailable: 8 } });
+		await expect(previewProgramRecipientAssignment('user-1', input)).resolves.toMatchObject({ success: true, data: { matchingAvailable: 8 } });
+		expect(mockCalculateProgramBudget).toHaveBeenCalledWith(expect.objectContaining({ payoutCurrency: Currency.SLE, payoutPerInterval: 700, programDuration: 36 }));
+		await expect(assignProgramRecipientsFromPool('user-1', input)).resolves.toEqual(resultOk({ assigned: 1 }));
+		expect(mockAssignRandomCandidatesToProgram).toHaveBeenCalledWith('program-1', 1, CountryCode.SL, [], [], []);
 	});
 });

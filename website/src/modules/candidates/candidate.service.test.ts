@@ -3,8 +3,7 @@ import { CountryCode } from '@/generated/prisma/enums';
 const mockIsAdmin = jest.fn();
 const mockFindCandidateById = jest.fn();
 const mockCountCandidates = jest.fn();
-const mockFindCandidateIdsForAssignment = jest.fn();
-const mockUpdateCandidateProgramAssignments = jest.fn();
+const mockUpdateCandidateProgramAssignmentsAtomically = jest.fn();
 
 jest.mock('@/modules/users/user.service', () => ({
 	isAdmin: mockIsAdmin,
@@ -19,8 +18,7 @@ jest.mock('@/modules/auth/auth.service', () => ({}));
 jest.mock('./candidate.repository', () => ({
 	findCandidateById: mockFindCandidateById,
 	countCandidates: mockCountCandidates,
-	findCandidateIdsForAssignment: mockFindCandidateIdsForAssignment,
-	updateCandidateProgramAssignments: mockUpdateCandidateProgramAssignments,
+	updateCandidateProgramAssignmentsAtomically: mockUpdateCandidateProgramAssignmentsAtomically,
 }));
 
 import { assignRandomCandidatesToProgram, getCandidate, getCandidateCount } from './candidate.service';
@@ -87,14 +85,32 @@ describe('candidate service', () => {
 	});
 
 	test('assigns random candidates only from selected local partners', async () => {
-		mockFindCandidateIdsForAssignment.mockResolvedValue([{ id: 'candidate-1' }]);
-		mockUpdateCandidateProgramAssignments.mockResolvedValue({ count: 1 });
+		mockUpdateCandidateProgramAssignmentsAtomically.mockResolvedValue(1);
 
 		await expect(assignRandomCandidatesToProgram('program-1', 1, CountryCode.SL, [], [], ['partner-1'])).resolves.toEqual({
 			success: true,
 			data: { assigned: 1 },
 			status: undefined,
 		});
-		expect(mockFindCandidateIdsForAssignment).toHaveBeenCalledWith([], [], CountryCode.SL, ['partner-1']);
+		expect(mockUpdateCandidateProgramAssignmentsAtomically).toHaveBeenCalledWith('program-1', 1, CountryCode.SL, { focuses: [], profiles: [], localPartnerIds: ['partner-1'] });
+	});
+
+	test('returns a fixed error if another request exhausted the pool', async () => {
+		mockUpdateCandidateProgramAssignmentsAtomically.mockRejectedValue(new Error('CANDIDATE_POOL_EXHAUSTED'));
+		await expect(assignRandomCandidatesToProgram('program-1', 2, CountryCode.SL)).resolves.toEqual({
+			success: false,
+			error: 'Not enough candidates available',
+			status: undefined,
+		});
+	});
+
+	test('passes the country and filters to the atomic assignment', async () => {
+		mockUpdateCandidateProgramAssignmentsAtomically.mockResolvedValue(2);
+		await expect(assignRandomCandidatesToProgram('program-1', 2, CountryCode.GH, ['focus-1'], [], ['partner-1']))
+			.resolves.toEqual({ success: true, data: { assigned: 2 }, status: undefined });
+		expect(mockUpdateCandidateProgramAssignmentsAtomically).toHaveBeenCalledWith(
+			'program-1', 2, CountryCode.GH,
+			{ focuses: ['focus-1'], profiles: [], localPartnerIds: ['partner-1'] },
+		);
 	});
 });
