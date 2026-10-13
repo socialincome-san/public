@@ -1,10 +1,9 @@
 import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
-import type { FocusCreateInput, FocusUpdateInput } from './focus.schemas';
 import type { FocusTableQuery } from './focus.types';
 
-const focusPayloadSelect = {
+export const focusPayloadSelect = {
 	id: true,
 	name: true,
 	slug: true,
@@ -90,22 +89,6 @@ export const findFocusBySlug = async (slug: string) =>
 		select: { id: true },
 	});
 
-export const createFocus = async (input: FocusCreateInput) =>
-	prisma.focus.create({
-		data: input,
-		select: focusPayloadSelect,
-	});
-
-export const updateFocus = async (input: FocusUpdateInput) =>
-	prisma.focus.update({
-		where: { id: input.id },
-		data: {
-			name: input.name,
-			slug: input.slug,
-		},
-		select: focusPayloadSelect,
-	});
-
 export const findFocusForDeletion = async (focusId: string) =>
 	prisma.focus.findUnique({
 		where: { id: focusId },
@@ -118,12 +101,6 @@ export const findFocusForDeletion = async (focusId: string) =>
 				},
 			},
 		},
-	});
-
-export const deleteFocus = async (focusId: string) =>
-	prisma.focus.delete({
-		where: { id: focusId },
-		select: { id: true },
 	});
 
 const buildFocusOrderBy = (query: FocusTableQuery): Prisma.FocusOrderByWithRelationInput[] => {

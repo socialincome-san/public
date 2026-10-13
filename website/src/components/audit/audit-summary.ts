@@ -223,6 +223,14 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			sanctions: 'Sanctions',
 		},
 	},
+	focus: {
+		label: 'Focus',
+		namePaths: ['name'],
+		fieldLabels: {
+			name: 'Name',
+			slug: 'Slug',
+		},
+	},
 };
 
 export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));
