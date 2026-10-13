@@ -7,11 +7,10 @@ consecutive versions. Only recipients are audited so far.
 
 ## Writing
 
-An audited module splits its repository:
-
-- `recipient.repository.ts` only reads (lint rejects writes).
-- `recipient.write.repository.ts` only writes, each write through
-  `auditedWrite` (lint rejects the shared Prisma client there).
+An audited model is written only in its module's
+`*.write.repository.ts`, each write through `auditedWrite`. Lint rejects
+writes to it in every other repository and the shared Prisma client in
+write repositories.
 
 ```ts
 export const updateRecipient = async (audit: AuditContext, input, context) =>
@@ -40,8 +39,7 @@ first, each diffed against the entity's previous version
 `getChangeTableView` (`modules/changes`) asks each versioned entity type
 which entities the user may see; recipients answer with
 `getRecipientsForChangeLog` (recipients in programs they operate). To
-show a new entity type, add its loader to `changeLogSources` and its
-field labels to `src/components/changes/change-summary.ts`.
+show a new entity type, see below.
 
 ## Notes
 
@@ -49,4 +47,14 @@ field labels to `src/components/changes/change-summary.ts`.
   write and revert it if the write throws, as before.
 - `entity_version` is append-only (database triggers).
 - Candidates and program deletion also write recipient rows and are not
-  versioned yet.
+  versioned yet (`unauditedWriteRepositories` in `eslint.config.mjs`).
+
+## Auditing another model
+
+1. Add the model to `auditedModels` in `eslint.config.mjs`; lint lists
+   every write to move.
+2. Move them into `<module>.write.repository.ts`, with a
+   `VersionedEntity` whose `findSnapshot` selects the fields to keep.
+3. Pass an `AuditContext` from the service.
+4. To show its changes, add a loader to `changeLogSources` and field
+   labels to `src/components/changes/change-summary.ts`.

@@ -1,6 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
-import type { AuditContext } from '@/lib/audit/audit-types';
-import { prisma } from './prisma';
+import { prisma } from '@/lib/database/prisma';
+import type { AuditContext } from './audit-types';
 
 export type VersionedEntity = {
 	type: string;

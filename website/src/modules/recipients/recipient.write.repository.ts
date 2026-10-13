@@ -1,6 +1,6 @@
 import type { Prisma } from '@/generated/prisma/client';
 import type { AuditContext } from '@/lib/audit/audit-types';
-import { auditedWrite, type VersionedEntity } from '@/lib/database/audited-write';
+import { auditedWrite, type VersionedEntity } from '@/lib/audit/audited-write';
 import { recipientWithPaymentInformationSelect } from './recipient.repository';
 import type { CreateRecipientInput, UpdateRecipientInput, UpdateRecipientSelfInput } from './recipient.schemas';
 

@@ -5,7 +5,7 @@ const mockTransactionRows = new WeakMap<object, Map<string, string>>();
 
 // Buffers writes and versions per transaction and applies them only on
 // commit, like a database transaction.
-jest.mock('./prisma', () => ({
+jest.mock('@/lib/database/prisma', () => ({
 	prisma: {
 		$transaction: async (work: (transaction: unknown) => Promise<unknown>) => {
 			const rows = new Map(mockCommitted.rows);
@@ -34,7 +34,7 @@ jest.mock('./prisma', () => ({
 	},
 }));
 
-import type { AuditContext } from '@/lib/audit/audit-types';
+import type { AuditContext } from './audit-types';
 import { auditedWrite, type VersionedEntity } from './audited-write';
 
 const rowsOf = (transaction: object): Map<string, string> => {

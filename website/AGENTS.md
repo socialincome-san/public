@@ -41,7 +41,7 @@ Module files (`src/modules/recipients` is the reference):
   `include`), return raw data.
 - `*.write.repository.ts`: in audited modules (recipients), the only
   writes. Each export takes an `AuditContext` first and writes through
-  `auditedWrite`; the plain repository then only reads. See
+  `auditedWrite`; lint rejects writes to audited models elsewhere. See
   `src/lib/audit/README.md`.
 - `*.permissions.ts`: pure predicates `can…|has…|is…|assert…`.
 - `*.schemas.ts`: Zod schemas named `…Schema` and their inferred types.

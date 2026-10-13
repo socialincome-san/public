@@ -451,7 +451,6 @@ export const deleteRecipient = async (session: Session, recipientId: string): Pr
 	}
 };
 
-/** Newest audit events of a recipient, for whoever may read its trail. */
 /** Recipients whose changes the user may see: those in programs they operate. */
 export const getRecipientsForChangeLog = async (userId: string): Promise<Result<ChangeLogEntity[]>> => {
 	try {
@@ -1197,7 +1196,7 @@ const compensateFirebaseChange = async (compensation: FirebaseCompensation): Pro
 const compensateFailedRecipientCreation = async (audit: AuditContext, recipientId: string): Promise<void> => {
 	try {
 		await recipientWriteRepository.deleteRecipient(
-			{ ...audit, metadata: { reason: 'authentication-user-creation-failed' } },
+			{ ...audit, metadata: { ...audit.metadata, reason: 'authentication-user-creation-failed' } },
 			recipientId,
 		);
 	} catch (error) {
