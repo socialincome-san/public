@@ -17,6 +17,7 @@ test('create new program', async ({ page }) => {
 	await page.getByTestId('pill-multi-select-focus-poverty').click();
 	await page.getByTestId('pill-multi-select-focus-health').click();
 	await page.getByTestId('pill-multi-select-female').click();
+	await page.getByTestId('pill-multi-select-local-partner-sl-1').click();
 	await expect(page.getByText('2 of 7 recipients match the selected country and filters')).toBeVisible();
 	await page.getByRole('button', { name: 'Continue' }).click();
 

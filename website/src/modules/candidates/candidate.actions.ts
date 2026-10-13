@@ -143,13 +143,19 @@ export const getCandidateCountAction = async (
 	focuses: unknown,
 	profiles: unknown,
 	countryId: unknown,
+	localPartnerIds: unknown,
 ): Promise<Result<{ count: number }>> => {
-	const inputResult = candidateCountSchema.safeParse({ focuses, profiles, countryId });
+	const inputResult = candidateCountSchema.safeParse({ focuses, profiles, countryId, localPartnerIds });
 	if (!inputResult.success) {
 		return resultFail('Invalid input.');
 	}
 
-	return getCandidateCount(inputResult.data.focuses, inputResult.data.profiles, inputResult.data.countryId);
+	return getCandidateCount(
+		inputResult.data.focuses,
+		inputResult.data.profiles,
+		inputResult.data.countryId,
+		inputResult.data.localPartnerIds,
+	);
 };
 
 export const importCandidatesCsvAction = async (

@@ -43,19 +43,21 @@ export const CreateProgramSteps = ({ state, send, onGoToLogin }: Props) => {
 	if (state.matches('programSetup')) {
 		return (
 			<ProgramSetupStep
-				programManagement={state.context.programManagement}
 				recipientApproach={state.context.recipientApproach}
 				targetFocuses={state.context.targetFocuses}
 				focusOptions={state.context.focusOptions}
 				focusOptionsError={state.context.focusOptionsError}
 				targetProfiles={state.context.targetProfiles}
+				targetLocalPartnerIds={state.context.targetLocalPartnerIds}
+				localPartnerOptions={state.context.localPartnerOptions}
+				localPartnerOptionsError={state.context.localPartnerOptionsError}
 				totalRecipients={state.context.totalRecipients}
 				filteredRecipients={state.context.filteredRecipients}
 				isCountingRecipients={state.context.isCountingRecipients}
-				onSelectProgramManagement={(value) => send({ type: 'SELECT_PROGRAM_MANAGEMENT', value })}
 				onSelectRecipientApproach={(value) => send({ type: 'SELECT_RECIPIENT_APPROACH', value })}
 				onToggleFocus={(focus) => send({ type: 'TOGGLE_TARGET_FOCUS', focus })}
 				onToggleProfile={(profile) => send({ type: 'TOGGLE_TARGET_PROFILE', profile })}
+				onToggleLocalPartner={(localPartnerId) => send({ type: 'TOGGLE_TARGET_LOCAL_PARTNER', localPartnerId })}
 			/>
 		);
 	}

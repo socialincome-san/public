@@ -398,6 +398,7 @@ export const createProgram = async (
 				countryResult.data,
 				input.targetFocuses,
 				input.targetProfiles,
+				input.targetLocalPartnerIds,
 			);
 			if (!assignmentResult.success) {
 				return resultFail(assignmentResult.error);
