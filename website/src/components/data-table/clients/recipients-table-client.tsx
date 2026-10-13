@@ -11,6 +11,8 @@ import { downloadRecipientsCsvAction, importRecipientsCsvAction } from '@/module
 import type { RecipientProgramFilterOption, RecipientTableViewRow } from '@/modules/recipients/recipient.types';
 import { DownloadIcon, PlusIcon, UploadIcon } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { AddRecipientsFromPoolDialog } from './add-recipients-from-pool-dialog';
 import type { ActionMenuItem } from '../elements/action-menu';
 import { CsvUploadDialog } from './csv-upload-dialog';
 import { RecipientDialog } from './recipient-dialog';
@@ -41,6 +43,7 @@ export const RecipientsTableClient = ({
 	showProgramFilter = true,
 	hideProgramName = false,
 }: Props) => {
+	const t = useTranslations('recipient-pool');
 	const canManageRecipients = sessionType === 'user';
 	const isReadOnly = readOnly ?? false;
 	const canDownloadCsv = sessionType === 'local-partner' || !isReadOnly;
@@ -52,6 +55,8 @@ export const RecipientsTableClient = ({
 	};
 	const recipientDialog = useRecordDialog('recipientId');
 	const [recipientError, setRecipientError] = useState<string | null>(null);
+	const [isPoolOpen, setIsPoolOpen] = useState(false);
+	const [poolSuccess, setPoolSuccess] = useState<number | null>(null);
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
 
@@ -104,11 +109,16 @@ export const RecipientsTableClient = ({
 		...(canManageRecipients
 			? [
 					{
-						label: 'Add new recipient',
+						label: t('manual'),
 						icon: <PlusIcon />,
 						disabled: isReadOnly,
 						onSelect: openCreateRecipientDialog,
 					},
+					...(programId && !isReadOnly ? [{
+						label: t('pool'),
+						icon: <PlusIcon />,
+						onSelect: () => setIsPoolOpen(true),
+					}] : []),
 					{
 						label: 'Upload CSV',
 						icon: <UploadIcon />,
@@ -121,6 +131,7 @@ export const RecipientsTableClient = ({
 
 	return (
 		<>
+			{poolSuccess !== null ? <p role="status">{t('success', { count: poolSuccess })}</p> : null}
 			<ConfiguredDataTableClient
 				config={tableConfig}
 				titleInfoTooltip="Shows recipients in programs you can access."
@@ -152,6 +163,9 @@ export const RecipientsTableClient = ({
 				/>
 			)}
 
+			{programId && !isReadOnly && canManageRecipients ? (
+				<AddRecipientsFromPoolDialog programId={programId} open={isPoolOpen} onOpenChange={setIsPoolOpen} onSuccess={setPoolSuccess} />
+			) : null}
 			<CsvUploadDialog
 				open={isCsvUploadDialogOpen}
 				onOpenChange={setIsCsvUploadDialogOpen}
