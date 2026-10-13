@@ -19,8 +19,8 @@ type Props = {
 	// 'small' and 'compact' are this component's own visual tiers (also used by the person carousel);
 	// the person grid's medium/small cards map onto them — see PersonCardGrid's MEDIUM_CARDS/SMALL_CARDS.
 	size?: 'default' | 'small' | 'compact';
-	// Enables the "volunteering since" pill (on active volunteers with a start date).
-	showVolunteerDuration?: boolean;
+	// Shows the "volunteering since" pill (on active volunteers with a start date), counted up to this day.
+	volunteerDurationUntil?: number;
 	roleLabels?: Record<string, string>;
 };
 
@@ -64,8 +64,13 @@ const formatDuration = (parts: VolunteerDurationParts, t: PersonCardTranslator) 
 	return count === 1 ? t('person-grid.duration-year-singular', { count }) : t('person-grid.duration-year-plural', { count });
 };
 
-const getDurationLabels = (volunteerSince: string | undefined, lang: string, t: PersonCardTranslator) => {
-	const parts = getVolunteerDurationParts(volunteerSince, lang);
+export const getDurationLabels = (
+	volunteerSince: string | undefined,
+	lang: string,
+	todayMs: number,
+	t: PersonCardTranslator,
+) => {
+	const parts = getVolunteerDurationParts(volunteerSince, lang, todayMs);
 
 	return parts
 		? {
@@ -75,7 +80,7 @@ const getDurationLabels = (volunteerSince: string | undefined, lang: string, t: 
 		: null;
 };
 
-export const PersonCard = ({ person, href, size = 'default', showVolunteerDuration = false, roleLabels }: Props) => {
+export const PersonCard = ({ person, href, size = 'default', volunteerDurationUntil, roleLabels }: Props) => {
 	const t = useTranslations('website-common');
 	const lang = useLocale();
 	const { avatar, firstName, fullName, lastName, primaryRole, volunteerStatus, volunteerSince } = person.content;
@@ -96,8 +101,8 @@ export const PersonCard = ({ person, href, size = 'default', showVolunteerDurati
 			href={href}
 			size={size}
 			duration={
-				showVolunteerDuration && size !== 'compact' && volunteerStatus === 'active'
-					? getDurationLabels(volunteerSince, lang, t)
+				volunteerDurationUntil !== undefined && size !== 'compact' && volunteerStatus === 'active'
+					? getDurationLabels(volunteerSince, lang, volunteerDurationUntil, t)
 					: null
 			}
 		/>

@@ -79,11 +79,11 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 			<div className="flex flex-col gap-8 py-8">
 				<Breadcrumb links={breadcrumbLinks} layout="section" aside={community ? <Community data={community} /> : null} />
 				<div className="lg:hidden">
-					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+					<BlockWrapper marginTop="none" marginBottom="none">
 						<DonationForm campaignId={programDetailData.campaignId} />
 					</BlockWrapper>
 				</div>
-				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					<div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
 						<div className="flex flex-col gap-7">
 							{programDetailData.dashboardStats && programDetailData.programId ? (
@@ -123,7 +123,7 @@ export const ProgramDetail = async ({ programDetailData, lang, currency, communi
 				<CampaignJournalTeaser lang={lang} currency={currency} />
 				<ProgramDetailRelatedGrid currentProgramFullSlug={programDetailData.fullSlug} lang={lang} currency={currency} />
 				{faqItems.length > 0 && (
-					<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+					<BlockWrapper marginTop="none" marginBottom="none">
 						<FaqSelectionContent heading={tFaq('title')} items={faqItems} />
 					</BlockWrapper>
 				)}

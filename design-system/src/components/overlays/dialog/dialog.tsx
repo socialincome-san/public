@@ -10,6 +10,10 @@ import { type WithoutClassName } from '../../../without-class-name';
 
 const Dialog = DialogPrimitive.Root;
 
+const DialogTrigger = (props: WithoutClassName<React.ComponentPropsWithoutRef<typeof DialogPrimitive.Trigger>>) => (
+	<DialogPrimitive.Trigger {...props} />
+);
+
 const DialogPortal = DialogPrimitive.Portal;
 
 // z-[110] keeps dialogs above the navigation (including the mobile menu overlay at z-100)
@@ -202,4 +206,4 @@ const DialogDescription = React.forwardRef<
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
-export { Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle };
+export { Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger };

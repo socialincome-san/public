@@ -6,17 +6,16 @@ import {
 	isRoutableWebsiteStoryblokSlug,
 	WEBSITE_JOURNAL_PATH_SEGMENT,
 } from '@/lib/storyblok/storyblok-paths';
+import { WEBSITE_ORIGIN } from '@/lib/utils/metadata-image';
 import { getCampaigns, getPublishedPageLinks } from '@/modules/storyblok-content/storyblok-content.cache';
 import type { StoryblokPublishedLink } from '@/modules/storyblok-content/storyblok-content.types';
 import type { MetadataRoute } from 'next';
-
-const SITE_URL = 'https://socialincome.org';
 
 type PathTailByLanguage = Map<WebsiteLanguage, string>;
 
 // Only the canonical currency: the other currencies show the same content with converted amounts.
 const absoluteUrl = (lang: WebsiteLanguage, pathTail: string) =>
-	`${SITE_URL}${getWebsitePublicPath(lang, defaultCurrency, pathTail)}`;
+	`${WEBSITE_ORIGIN}${getWebsitePublicPath(lang, defaultCurrency, pathTail)}`;
 
 const isInvalidPathTail = (pathTail: string) =>
 	mainWebsiteLanguages.some((websiteLang) => pathTail === websiteLang || pathTail.startsWith(`${websiteLang}/`));

@@ -32,7 +32,7 @@ export const ImpactMeasurementView = ({
 	return (
 		<div className="space-y-3 pb-16">
 			{variant === 'standalone' ? (
-				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					<div className="space-y-5 pb-6">
 						<div className="flex w-full justify-end">
 							<div className="w-full sm:w-auto">
@@ -47,7 +47,7 @@ export const ImpactMeasurementView = ({
 				</BlockWrapper>
 			) : null}
 			{variant === 'embedded' && showStudyDetails ? (
-				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					<div className="pb-6">
 						<Suspense key={`summary-${suspenseKey}`} fallback={<ImpactMeasurementStudyDetailsSkeleton />}>
 							<ImpactMeasurementStudyDetails lang={lang} searchParams={normalizedSearchParams} />

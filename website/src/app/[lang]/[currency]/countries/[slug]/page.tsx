@@ -1,4 +1,5 @@
 import { DefaultLayoutPropsWithSlug } from '@/app/[lang]/[currency]';
+import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import { pickCommunityPage } from '@/components/community/pick-community-page';
 import { CountryDetail } from '@/components/storyblok/country/country-detail';
 import { toWebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
@@ -7,6 +8,8 @@ import { getCommunityPanelData } from '@/modules/community/community.cache';
 import { getCountryPageStats } from '@/modules/countries/country.cache';
 import { getCountryBySlug } from '@/modules/storyblok-content/storyblok-content.cache';
 import { notFound } from 'next/navigation';
+
+export const generateStaticParams = () => getPublishedSlugParams('countries');
 
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { lang, slug } = await params;

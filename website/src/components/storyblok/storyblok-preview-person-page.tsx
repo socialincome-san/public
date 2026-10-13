@@ -1,6 +1,7 @@
 import { PersonProfile } from '@/components/storyblok/journal/person-profile';
 import { StoryblokPreviewStory } from '@/components/storyblok/storyblok-preview-story';
 import type { WebsiteCurrency, WebsiteLanguage } from '@/lib/i18n/utils';
+import { getTodayMs } from '@/lib/utils/today';
 import { getJournalPersonAction, getJournalPersonPageDataAction } from '@/modules/journal/journal.actions';
 import type { JournalPerson } from '@/modules/journal/journal.types';
 import type { ISbStoryData } from '@storyblok/js';
@@ -24,7 +25,11 @@ export const StoryblokPreviewPersonPage = async ({
 	previewRoutePath,
 	searchParams,
 }: Props) => {
-	const [t, tCommon] = await Promise.all([getTranslations('website-journal'), getTranslations('website-common')]);
+	const [t, tCommon, todayMs] = await Promise.all([
+		getTranslations('website-journal'),
+		getTranslations('website-common'),
+		getTodayMs(),
+	]);
 
 	return await StoryblokPreviewStory<ISbStoryData<JournalPerson>>({
 		storyPath,
@@ -44,7 +49,7 @@ export const StoryblokPreviewPersonPage = async ({
 				lang,
 				currency,
 				slug,
-				journalLabel: t('overview.title'),
+				parentLabel: t('person.breadcrumb'),
 				homeLabel: tCommon('breadcrumb.home'),
 			});
 
@@ -60,6 +65,7 @@ export const StoryblokPreviewPersonPage = async ({
 					currency={currency}
 					moreArticlesLabel={t('overview.more-articles')}
 					videoLabel={t('badge.video')}
+					todayMs={todayMs}
 				/>
 			);
 		},

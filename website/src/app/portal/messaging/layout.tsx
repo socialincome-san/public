@@ -27,7 +27,7 @@ export default async function MessagingLayout({ children }: MessagingLayoutProps
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<BlockWrapper marginTop="none" marginBottom="none">
 				<h1 className="py-8 text-5xl">Messaging</h1>
 
 				<TabNavigation sections={sections} />

@@ -7,7 +7,7 @@ type CommunityRowProps = {
 };
 
 export const CommunityRow = ({ data }: CommunityRowProps) => (
-	<BlockWrapper disableMarginTop disableMarginBottom>
+	<BlockWrapper marginTop="none" marginBottom="none">
 		<div className="flex justify-end pt-9">
 			<Community data={data} />
 		</div>

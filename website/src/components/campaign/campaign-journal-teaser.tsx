@@ -19,7 +19,7 @@ export const CampaignJournalTeaser = async ({ lang, currency }: Props) => {
 	}
 
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+		<BlockWrapper marginTop="none" marginBottom="none">
 			<JournalTeasersSection
 				heading={
 					<>

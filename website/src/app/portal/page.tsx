@@ -23,7 +23,7 @@ const PortalDataLoader = async () => {
 	return (
 		<>
 			<Breadcrumb links={breadcrumbLinks} />
-			<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+			<BlockWrapper marginTop="none" marginBottom="none">
 				<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
 					<h1 data-testid="welcome-message-portal" className="py-8 text-5xl">
 						Welcome back {user.firstName} 👋

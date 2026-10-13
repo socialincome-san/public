@@ -3,6 +3,9 @@ import { defaultLanguage } from '@/lib/i18n/utils';
 const mockGetOverviewAuthors = jest.fn();
 const mockGetOverviewArticleTypes = jest.fn();
 const mockGetPrimaryRoleLabels = jest.fn();
+const mockGetCircleLabels = jest.fn();
+const mockGetWorkStyleLabels = jest.fn();
+const mockGetTimeCommitmentLabels = jest.fn();
 const mockGetTag = jest.fn();
 const mockGetArticleType = jest.fn();
 const mockGetArticlesByTag = jest.fn();
@@ -23,6 +26,9 @@ jest.mock('@/modules/storyblok-content/storyblok-content.cache', () => ({
 	getOverviewAuthors: mockGetOverviewAuthors,
 	getOverviewArticleTypes: mockGetOverviewArticleTypes,
 	getPrimaryRoleLabels: mockGetPrimaryRoleLabels,
+	getCircleLabels: mockGetCircleLabels,
+	getWorkStyleLabels: mockGetWorkStyleLabels,
+	getTimeCommitmentLabels: mockGetTimeCommitmentLabels,
 	getTag: mockGetTag,
 	getArticleType: mockGetArticleType,
 	getArticlesByTag: mockGetArticlesByTag,
@@ -87,6 +93,9 @@ beforeEach(() => {
 	mockGetOverviewAuthors.mockResolvedValue({ success: true, data: [author] });
 	mockGetOverviewArticleTypes.mockResolvedValue({ success: true, data: [articleType] });
 	mockGetPrimaryRoleLabels.mockResolvedValue({ success: true, data: { editor: 'Editor' } });
+	mockGetCircleLabels.mockResolvedValue({ success: true, data: { 'tech-circle': 'tech-circle' } });
+	mockGetWorkStyleLabels.mockResolvedValue({ success: true, data: { Async: 'Asynchron' } });
+	mockGetTimeCommitmentLabels.mockResolvedValue({ success: true, data: { 'On a break': 'Pause' } });
 	mockGetArticlesByTag.mockResolvedValue({ success: true, data: [article] });
 	mockGetArticlesByArticleType.mockResolvedValue({ success: true, data: [article] });
 	mockGetArticlesByAuthor.mockResolvedValue({ success: true, data: [article] });
@@ -167,7 +176,7 @@ describe('getJournalArticlePageData', () => {
 			lang: 'de',
 			currency: 'CHF',
 			slug: 'a-story',
-			journalLabel: 'Journal',
+			parentLabel: 'Journal',
 			homeLabel: 'Home',
 		});
 
@@ -189,12 +198,12 @@ describe('getJournalArticlePageData', () => {
 });
 
 describe('getJournalPersonPageData', () => {
-	test('resolves articles, role labels, pagination, and person breadcrumbs', async () => {
+	test('resolves articles, option labels, pagination, and person breadcrumbs', async () => {
 		const result = await getJournalPersonPageData({
 			lang: 'de',
 			currency: 'CHF',
 			slug: 'ada',
-			journalLabel: 'Journal',
+			parentLabel: 'People',
 			homeLabel: 'Home',
 		});
 
@@ -206,11 +215,14 @@ describe('getJournalPersonPageData', () => {
 			person: author,
 			articles: [article],
 			roleLabels: { editor: 'Editor' },
+			circleLabels: { 'tech-circle': 'tech-circle' },
+			workStyleLabels: { Async: 'Asynchron' },
+			timeCommitmentLabels: { 'On a break': 'Pause' },
 			showMoreArticlesLink: true,
 			pathname: '/de/chf/person/ada',
 			breadcrumbs: [
 				{ label: 'Home', href: '/de/chf' },
-				{ label: 'Journal', href: '/de/chf/journal' },
+				{ label: 'People', href: '/de/chf/people' },
 				{ label: 'Ada Lovelace', href: '/de/chf/person/ada' },
 			],
 		});

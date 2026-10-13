@@ -86,8 +86,15 @@ export const JournalOverview = ({
 		</section>
 
 		<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{articles.map((article) => (
-				<JournalArticleCard key={article.uuid} lang={lang} currency={currency} article={article} videoLabel={videoLabel} />
+			{articles.map((article, index) => (
+				<JournalArticleCard
+					key={article.uuid}
+					lang={lang}
+					currency={currency}
+					article={article}
+					videoLabel={videoLabel}
+					preload={index === 0}
+				/>
 			))}
 		</div>
 

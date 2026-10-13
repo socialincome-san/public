@@ -4,6 +4,13 @@ type Redirects = Awaited<ReturnType<NonNullable<NextConfig['redirects']>>>;
 
 const redirects: Redirects = [
 	{
+		// The apex domain serves the API directly: Stripe, Twilio and the mobile app POST to it and don't follow redirects
+		source: '/:path((?!api(?:/|$)).*)',
+		has: [{ type: 'host', value: 'socialincome.org' }],
+		destination: 'https://www.socialincome.org/:path',
+		permanent: true,
+	},
+	{
 		source: '/:lang(en|de|fr|it)/:currency(chf|eur|usd)/about-us',
 		destination: '/:lang/:currency/mission',
 		permanent: true,

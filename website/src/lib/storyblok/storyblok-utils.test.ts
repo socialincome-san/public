@@ -3,6 +3,7 @@ import {
 	formatStoryblokDateMedium,
 	formatStoryblokResizeUrl,
 	formatStoryblokUrl,
+	getPersonCircles,
 	getScaledAssetDimensions,
 	getVolunteerDurationParts,
 	isResolvedArticle,
@@ -46,15 +47,7 @@ describe('Storyblok presentation utilities', () => {
 });
 
 describe('Storyblok date utilities', () => {
-	beforeAll(() => {
-		jest.useFakeTimers().setSystemTime(new Date(2026, 6, 26, 12));
-	});
-
-	afterAll(() => {
-		jest.useRealTimers();
-	});
-
-	const parts = (date: string) => getVolunteerDurationParts(date, 'en');
+	const parts = (date: string) => getVolunteerDurationParts(date, 'en', new Date(2026, 6, 26, 12).getTime());
 
 	it.each([
 		['2026-06-28', { unit: 'days', days: 28 }],
@@ -102,5 +95,25 @@ describe('isResolvedArticle', () => {
 		expect(isResolvedArticle(article('person-id', type))).toBe(false);
 		expect(isResolvedArticle(article(person, 'type-id'))).toBe(false);
 		expect(isResolvedArticle(article(person, type, [tag, 'tag-id']))).toBe(false);
+	});
+});
+
+describe('getPersonCircles', () => {
+	it('lists active circles first and keeps a circle that is both active and interested once', () => {
+		expect(
+			getPersonCircles(
+				{ activeCircleMember: ['tech-circle'], interestedCircleMember: ['tech-circle', 'partnership-circle'] },
+				{ 'tech-circle': 'tech-circle' },
+			),
+		).toEqual([
+			{ code: 'tech-circle', label: 'Tech Circle', status: 'active' },
+			{ code: 'partnership-circle', label: 'Partnership Circle', status: 'interested' },
+		]);
+	});
+
+	it('keeps translated labels as they are', () => {
+		expect(getPersonCircles({ activeCircleMember: ['lead-team'] }, { 'lead-team': 'Lead-Team' })).toEqual([
+			{ code: 'lead-team', label: 'Lead-Team', status: 'active' },
+		]);
 	});
 });

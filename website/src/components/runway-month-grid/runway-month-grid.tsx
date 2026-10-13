@@ -3,11 +3,12 @@ import type { WebsiteLanguage } from '@/lib/i18n/utils';
 
 type Props = {
 	numberOfMonths: number;
+	startMs: number;
 	language?: Exclude<WebsiteLanguage, 'kri'>;
 };
 
-export const RunwayMonthGrid = ({ numberOfMonths, language = 'en' }: Props) => {
-	const startDate = new Date();
+export const RunwayMonthGrid = ({ numberOfMonths, startMs, language = 'en' }: Props) => {
+	const startDate = new Date(startMs);
 	const months = Array.from({ length: numberOfMonths }, (_, index) => {
 		const date = new Date(startDate.getFullYear(), startDate.getMonth() + index, 1);
 

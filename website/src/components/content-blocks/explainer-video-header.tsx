@@ -1,3 +1,4 @@
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import { ExplainerVideoTrigger } from '@/components/explainer-video/explainer-video-trigger';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import type { ExplainerVideoHeader } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -16,14 +17,7 @@ type Props = {
 const vimeoMatcher = new VimeoVideoMatchAndExtract();
 
 export const ExplainerVideoHeaderBlock = ({ blok, lang, currency }: Props) => {
-	const {
-		disableMarginBottom,
-		disableMarginTop,
-		explainerVideoThumbnail,
-		heading,
-		labelForExplainerVideo,
-		linkToExplainerVideo,
-	} = blok;
+	const { explainerVideoThumbnail, heading, labelForExplainerVideo, linkToExplainerVideo } = blok;
 	const headingText = heading?.trim();
 	const explainerVideoLabel = labelForExplainerVideo?.trim();
 	const resolvedExplainerVideoUrl = linkToExplainerVideo ? resolveStoryblokLink(linkToExplainerVideo, lang, currency) : null;
@@ -36,7 +30,7 @@ export const ExplainerVideoHeaderBlock = ({ blok, lang, currency }: Props) => {
 	}
 
 	return (
-		<BlockWrapper disableMarginBottom={disableMarginBottom} disableMarginTop={disableMarginTop} {...storyblokEditable(blok)}>
+		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
 			<div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
 				{headingText && (
 					<div className="text-primary text-4xl whitespace-pre-line md:text-5xl [&_strong]:font-bold">

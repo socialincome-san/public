@@ -4,7 +4,7 @@ import { useWebsiteCurrency } from '@/lib/i18n/website-currency';
 import { Button } from '@socialincome/design-system/actions/button/button';
 import { cn } from '@socialincome/design-system/cn';
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe } from '@stripe/stripe-js/pure';
 import { useTranslations } from 'next-intl';
 import { getDonationWizardCardClass } from '../../utils/donation-wizard-layout';
 import type { DonationWizardStepProps } from '../../wizard/types';

@@ -8,6 +8,7 @@ import { isSafeHref } from '@/lib/utils/string-utils';
 import { cn } from '@socialincome/design-system/cn';
 import { Badge } from '@socialincome/design-system/data-display/badge/badge';
 import { ArrowUpRight } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 type ExternalLink = {
@@ -52,7 +53,7 @@ type AboutMetaCardProps = {
 	externalLinks: ExternalLink[];
 };
 
-export const LocalPartnerAboutMetaCard = ({
+export const LocalPartnerAboutMetaCard = async ({
 	lang,
 	currency,
 	mission,
@@ -61,6 +62,7 @@ export const LocalPartnerAboutMetaCard = ({
 	location,
 	externalLinks,
 }: AboutMetaCardProps) => {
+	const t = await getTranslations('website-common');
 	const resolvedExternalLinks = externalLinks
 		.map(({ label, link }) => {
 			const resolvedHref = resolveStoryblokLink(link, lang, currency);
@@ -70,9 +72,9 @@ export const LocalPartnerAboutMetaCard = ({
 		.filter((value): value is { label: string; href: string } => value !== null);
 
 	const facts = [
-		{ label: 'Partner since', value: partnerSince },
-		{ label: 'Founded', value: foundingYear },
-		{ label: 'Location', value: location },
+		{ label: t('local-partners-page.partner-since'), value: partnerSince },
+		{ label: t('local-partners-page.founded'), value: foundingYear },
+		{ label: t('local-partners-page.location'), value: location },
 	].filter((fact): fact is { label: string; value: string } => Boolean(fact.value));
 
 	const hasMeta =
@@ -90,7 +92,7 @@ export const LocalPartnerAboutMetaCard = ({
 			<div className="space-y-6">
 				{mission ? (
 					<div>
-						<p className="text-muted-foreground text-sm">Mission</p>
+						<p className="text-muted-foreground text-sm">{t('local-partners-page.mission')}</p>
 						<p className="text-foreground mt-2 text-lg">{mission}</p>
 					</div>
 				) : null}
@@ -113,7 +115,7 @@ export const LocalPartnerAboutMetaCard = ({
 								facts.length > 0 && 'border-border mt-6 border-t pt-6',
 							)}
 						>
-							<p className="text-muted-foreground shrink-0 text-sm">Learn more</p>
+							<p className="text-muted-foreground shrink-0 text-sm">{t('local-partners-page.learn-more')}</p>
 							<div className="flex min-w-0 flex-wrap justify-end gap-2">
 								{resolvedExternalLinks.map(({ label, href }) => (
 									<Link
@@ -125,7 +127,7 @@ export const LocalPartnerAboutMetaCard = ({
 									>
 										{label}
 										<ArrowUpRight className="size-3" aria-hidden="true" />
-										<span className="sr-only"> (opens in a new tab)</span>
+										<span className="sr-only"> {t('local-partners-page.opens-in-new-tab')}</span>
 									</Link>
 								))}
 							</div>

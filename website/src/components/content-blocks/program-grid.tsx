@@ -1,3 +1,4 @@
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import { resolveSelectedStories } from '@/components/content-blocks/overview-grid.utils';
 import { ProgramGridView } from '@/components/content-blocks/program-grid-view';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
@@ -20,11 +21,7 @@ export const ProgramGridBlock = async ({ blok, lang, currency }: Props) => {
 	const programs = blok.showAllPrograms ? allPrograms : resolveSelectedStories(blok.programs, allPrograms);
 
 	return (
-		<BlockWrapper
-			disableMarginTop={blok.disableMarginTop}
-			disableMarginBottom={blok.disableMarginBottom}
-			{...storyblokEditable(blok)}
-		>
+		<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
 			{blok.heading && (
 				<div className="mb-8 md:mb-10">
 					<SectionHeading size={3}>

@@ -1,5 +1,6 @@
 'use client';
 
+import { blockMargins } from '@/components/content-blocks/block-margins';
 import { StoryblokMarkdown } from '@/components/storyblok-markdown';
 import { Testimonial } from '@/components/testimonial';
 import type { TestimonialCarousel } from '@/generated/storyblok/types/109655/storyblok-components';
@@ -23,7 +24,6 @@ type Props = {
 const AUTOPLAY_DELAY_MS = 14000;
 
 export const TestimonialCarouselBlock = ({ blok }: Props) => {
-	const { disableMarginBottom, disableMarginTop } = blok;
 	const entries = blok.testimonials;
 	const autoplayEnabled = Boolean(blok.autoplay);
 
@@ -119,11 +119,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 
 	if (entries.length === 1) {
 		return (
-			<BlockWrapper
-				disableMarginBottom={disableMarginBottom}
-				disableMarginTop={disableMarginTop}
-				{...storyblokEditable(blok)}
-			>
+			<BlockWrapper {...blockMargins(blok)} {...storyblokEditable(blok)}>
 				{blok.heading && (
 					<div className="mb-8 md:mb-10">
 						<SectionHeading>
@@ -139,12 +135,7 @@ export const TestimonialCarouselBlock = ({ blok }: Props) => {
 	}
 
 	return (
-		<BlockWrapper
-			width="bleed"
-			disableMarginBottom={disableMarginBottom}
-			disableMarginTop={disableMarginTop}
-			{...storyblokEditable(blok)}
-		>
+		<BlockWrapper width="bleed" {...blockMargins(blok)} {...storyblokEditable(blok)}>
 			{blok.heading && (
 				<div className="mb-8 md:mb-10">
 					<SectionHeading>

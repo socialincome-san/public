@@ -12,7 +12,7 @@ import NextLink from 'next/link';
 import { BuildOwnProgramLink } from './build-own-program-link';
 import { LocalPartnerProgramRow } from './local-partner-program-row';
 
-/** Static classes so Tailwind can see them; the rows divide the fixed list height between them. */
+/** Static classes so Tailwind can see them; the visible rows stay equally sized. */
 const rowsClassBySlotCount: Record<number, string> = {
 	1: 'grid-rows-1',
 	2: 'grid-rows-2',
@@ -50,7 +50,7 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, currency
 				donationHeroCardSizeClass,
 			)}
 		>
-			{/* The recipient total is only the partner's own on the partner-scoped path; the fallback just counts programs. */}
+			{/* Without linked recipients there is no partner total, so only the (empty) program count is shown. */}
 			<div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
 				<p className="text-xl leading-none font-bold sm:text-2xl">
 					{isPartnerScoped
@@ -70,7 +70,12 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, currency
 				{isPartnerScoped ? <p className="text-muted-foreground text-xs leading-4">{programCountLabel}</p> : null}
 			</div>
 
-			<ul className={cn('grid min-h-0 flex-1 gap-2', rowsClassBySlotCount[slotCount])}>
+			<ul
+				className={cn(
+					'grid min-h-0 gap-2',
+					hasOverflow ? 'grid-rows-[repeat(3,1fr)_auto]' : rowsClassBySlotCount[slotCount],
+				)}
+			>
 				{visiblePrograms.map((program) => (
 					<LocalPartnerProgramRow
 						key={program.programId}
@@ -93,7 +98,7 @@ export const LocalPartnerProgramsCard = async ({ partnerPrograms, lang, currency
 							data-testid="local-partner-programs-more"
 							className={cn(
 								'border-input/60 hover:bg-muted/50 focus-visible:ring-ring text-muted-foreground hover:text-foreground',
-								'flex h-full items-center rounded-xl border px-5 text-sm leading-5 font-medium transition-colors',
+								'flex h-full items-center rounded-xl border px-5 py-3 text-sm leading-5 font-medium transition-colors',
 								'focus-visible:ring-1 focus-visible:outline-hidden',
 							)}
 						>

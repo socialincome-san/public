@@ -1,4 +1,5 @@
 import { DefaultLayoutPropsWithSlug, DefaultPageProps } from '@/app/[lang]/[currency]';
+import { getPublishedSlugParams } from '@/app/[lang]/[currency]/published-slug-params';
 import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { buildBreadcrumbLinks } from '@/components/breadcrumb/build-breadcrumb-links';
 import { Community } from '@/components/community/community';
@@ -14,6 +15,8 @@ import { BlockWrapper } from '@socialincome/design-system/layout/block-wrapper/b
 import { getWebsiteAlternates } from '@/lib/utils/metadata';
 import type { ISbStoryData } from '@storyblok/js';
 import { notFound } from 'next/navigation';
+
+export const generateStaticParams = () => getPublishedSlugParams();
 
 export const generateMetadata = async ({ params }: DefaultLayoutPropsWithSlug) => {
 	const { lang, slug } = await params;
@@ -50,7 +53,7 @@ export default async function ContentPage({ params, searchParams }: DefaultLayou
 			currency={toWebsiteCurrency(currency)}
 			searchParams={searchParams}
 			afterHero={
-				<BlockWrapper disableMarginTop disableMarginBottom>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					<div className="pt-9">
 						<Breadcrumb links={breadcrumbLinks} layout="inline" aside={community ? <Community data={community} /> : null} />
 					</div>

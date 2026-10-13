@@ -44,7 +44,6 @@ export const LocalPartnerDetail = async ({
 		getLocalPartnerProgramSummariesAction({
 			lang,
 			localPartnerPortalSlug: localPartner.content.portalSlug?.trim() ?? '',
-			countryIsoCode: isoCode ?? '',
 		}),
 	]);
 	const partnerPrograms = partnerProgramsResult.success
@@ -89,7 +88,7 @@ export const LocalPartnerDetail = async ({
 			/>
 			<Breadcrumb links={breadcrumbLinks} aside={community ? <Community data={community} /> : null} />
 			<div className="lg:hidden">
-				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					{heroCard}
 				</BlockWrapper>
 			</div>
@@ -108,7 +107,7 @@ export const LocalPartnerDetail = async ({
 						foundingYear={foundingYear}
 						location={location}
 						externalLinks={[
-							{ label: 'Website', link: website },
+							{ label: t('local-partners-page.website'), link: website },
 							{ label: 'LinkedIn', link: linkedin },
 							{ label: 'Instagram', link: instagram },
 							{ label: 'Facebook', link: facebook },

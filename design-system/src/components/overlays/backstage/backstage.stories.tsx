@@ -142,12 +142,12 @@ const DemoPage = ({ initialOpen }: { initialOpen: boolean }) => {
 					<SocialIncomeLogo />
 					<Button size="md">Donate now</Button>
 				</header>
-				<BlockWrapper disableMarginTop disableMarginBottom>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					<div className="bg-muted flex aspect-[21/9] items-end rounded-3xl p-10">
 						<h1 className="text-5xl font-bold md:text-6xl">Sierra Leone Unconditional</h1>
 					</div>
 				</BlockWrapper>
-				<BlockWrapper disableMarginTop disableMarginBottom>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					<div className="flex flex-wrap items-center justify-between gap-4">
 						<Breadcrumb
 							links={[
@@ -165,7 +165,7 @@ const DemoPage = ({ initialOpen }: { initialOpen: boolean }) => {
 						/>
 					</div>
 				</BlockWrapper>
-				<BlockWrapper disableMarginTop disableMarginBottom>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					<div className="grid gap-8 lg:grid-cols-2">
 						{['About the program', 'How the money is spent', 'Recipients', 'Partners'].map((title) => (
 							<Card key={title}>

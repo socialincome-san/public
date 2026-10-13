@@ -79,7 +79,7 @@ export const CountryDetail = async ({
 
 			<Breadcrumb links={breadcrumbLinks} aside={community ? <Community data={community} /> : null} />
 			<div className="lg:hidden">
-				<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+				<BlockWrapper marginTop="none" marginBottom="none">
 					<DonationForm />
 				</BlockWrapper>
 			</div>

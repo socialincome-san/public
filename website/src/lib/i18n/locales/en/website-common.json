@@ -81,7 +81,14 @@
 		"programs-more": "+{count} more programs",
 		"programs-build-own": "Build your own program",
 		"programs-count-singular": "{count} program",
-		"programs-count-plural": "{count} programs"
+		"programs-count-plural": "{count} programs",
+		"mission": "Mission",
+		"partner-since": "Partner since",
+		"founded": "Founded",
+		"location": "Location",
+		"learn-more": "Learn more",
+		"opens-in-new-tab": "(opens in a new tab)",
+		"website": "Website"
 	},
 	"focuses-page": {
 		"empty": "No focuses found.",
@@ -433,5 +440,10 @@
 		"duration-year-anniversary-plural": "{count} years today 🎉",
 		"duration-since": "Since {date}",
 		"no-results": "No people match your search."
+	},
+	"not-found": {
+		"title": "We could not find that page",
+		"description": "The page may have moved, or the link may no longer be valid.",
+		"home-link": "Go to homepage"
 	}
 }

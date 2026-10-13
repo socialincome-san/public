@@ -14,7 +14,7 @@ type Props = SearchParamsPageProps & { params: Promise<{ programId: string }> };
 
 const RecipientsPageProgramScoped = ({ params, searchParams }: Props) => {
 	return (
-		<BlockWrapper disableMarginTop={true} disableMarginBottom={true}>
+		<BlockWrapper marginTop="none" marginBottom="none">
 			<Card>
 				<Suspense fallback={<AppLoadingSkeleton />}>
 					<RecipientsProgramScopedDataLoader params={params} searchParams={searchParams} />
