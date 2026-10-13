@@ -4,6 +4,7 @@ import {
 	updateStripeSubscription,
 } from '@/integrations/stripe/stripe.integration';
 import { SLACK_ALERT } from '@/lib/utils/slack-alert';
+import { syncStripeSubscription } from '@/modules/subscriptions/subscription.service';
 import * as stripePaymentRepository from './stripe-payment.repository';
 import { updateContributorSubscriptionAmount } from './stripe-payment.service';
 
@@ -67,7 +68,11 @@ jest.mock('@/integrations/stripe/stripe.integration', () => ({
 
 jest.mock('./stripe-payment.repository', () => ({
 	findOwnedActiveStripeSubscription: jest.fn(),
-	updateStripeSubscriptionFromStripe: jest.fn(),
+}));
+
+jest.mock('@/modules/subscriptions/subscription.service', () => ({
+	syncStripeSubscription: jest.fn(),
+	updateSubscriptionLifecycle: jest.fn(),
 }));
 
 jest.mock('@/modules/campaigns/campaign.service', () => ({
@@ -97,11 +102,15 @@ jest.mock('@/modules/users/user.service', () => ({
 	getUserStripeCheckoutContext: jest.fn(),
 }));
 
+const mockSyncStripeSubscription = jest.mocked(syncStripeSubscription);
 const mockRetrieveStripeSubscription = retrieveStripeSubscription as jest.Mock;
 const mockCreateStripePrice = createStripePrice as jest.Mock;
 const mockUpdateStripeSubscription = updateStripeSubscription as jest.Mock;
 const mockFindOwnedActiveStripeSubscription = stripePaymentRepository.findOwnedActiveStripeSubscription as jest.Mock;
-const mockUpsertStripeSubscription = stripePaymentRepository.updateStripeSubscriptionFromStripe as jest.Mock;
+const audit = {
+	actor: { type: 'contributor' as const, id: 'contributor_1', name: 'Ada Lovelace' },
+	source: 'website' as const,
+};
 
 const monthlyPrice = {
 	id: 'price_old',
@@ -143,12 +152,7 @@ describe('updateContributorSubscriptionAmount', () => {
 				metadata: {},
 			},
 		});
-		mockUpsertStripeSubscription.mockResolvedValue({
-			id: 'sub_db_1',
-			stripeSubscriptionId: 'sub_stripe_1',
-			campaignId: 'campaign_1',
-			status: 'active',
-		});
+		mockSyncStripeSubscription.mockResolvedValue({ success: true, data: { id: 'sub_db_1' } });
 	});
 
 	afterAll(() => {
@@ -156,7 +160,7 @@ describe('updateContributorSubscriptionAmount', () => {
 	});
 
 	test('creates a monthly price in cents and updates the subscription item', async () => {
-		const result = await updateContributorSubscriptionAmount({
+		const result = await updateContributorSubscriptionAmount(audit, {
 			contributorId: 'contributor_1',
 			subscriptionId: 'sub_db_1',
 			amount: 50,
@@ -173,7 +177,8 @@ describe('updateContributorSubscriptionAmount', () => {
 			items: [{ id: 'si_1', price: 'price_new' }],
 			prorationBehavior: 'none',
 		});
-		expect(mockUpsertStripeSubscription).toHaveBeenCalledWith(
+		expect(mockSyncStripeSubscription).toHaveBeenCalledWith(
+			audit,
 			expect.objectContaining({
 				stripeSubscriptionId: 'sub_stripe_1',
 				contributorId: 'contributor_1',
@@ -201,7 +206,7 @@ describe('updateContributorSubscriptionAmount', () => {
 			},
 		});
 
-		const result = await updateContributorSubscriptionAmount({
+		const result = await updateContributorSubscriptionAmount(audit, {
 			contributorId: 'contributor_1',
 			subscriptionId: 'sub_db_1',
 			amount: 50,
@@ -224,7 +229,7 @@ describe('updateContributorSubscriptionAmount', () => {
 			},
 		});
 
-		const result = await updateContributorSubscriptionAmount({
+		const result = await updateContributorSubscriptionAmount(audit, {
 			contributorId: 'contributor_1',
 			subscriptionId: 'sub_db_1',
 			amount: 50,
@@ -235,9 +240,9 @@ describe('updateContributorSubscriptionAmount', () => {
 	});
 
 	test('alerts when Stripe update succeeds but database sync fails', async () => {
-		mockUpsertStripeSubscription.mockRejectedValueOnce(new Error('sync failed'));
+		mockSyncStripeSubscription.mockResolvedValueOnce({ success: false, error: 'Could not sync Stripe subscription' });
 
-		const result = await updateContributorSubscriptionAmount({
+		const result = await updateContributorSubscriptionAmount(audit, {
 			contributorId: 'contributor_1',
 			subscriptionId: 'sub_db_1',
 			amount: 50,
@@ -266,7 +271,7 @@ describe('updateContributorSubscriptionAmount', () => {
 			},
 		});
 
-		const result = await updateContributorSubscriptionAmount({
+		const result = await updateContributorSubscriptionAmount(audit, {
 			contributorId: 'contributor_1',
 			subscriptionId: 'sub_db_1',
 			amount: 50,
@@ -275,7 +280,8 @@ describe('updateContributorSubscriptionAmount', () => {
 		expect(result).toEqual({ success: true, data: { amount: 50, currency: 'CHF' } });
 		expect(mockCreateStripePrice).not.toHaveBeenCalled();
 		expect(mockUpdateStripeSubscription).not.toHaveBeenCalled();
-		expect(mockUpsertStripeSubscription).toHaveBeenCalledWith(
+		expect(mockSyncStripeSubscription).toHaveBeenCalledWith(
+			audit,
 			expect.objectContaining({
 				stripeSubscriptionId: 'sub_stripe_1',
 				contributorId: 'contributor_1',
@@ -295,9 +301,9 @@ describe('updateContributorSubscriptionAmount', () => {
 				metadata: {},
 			},
 		});
-		mockUpsertStripeSubscription.mockRejectedValueOnce(new Error('sync failed'));
+		mockSyncStripeSubscription.mockResolvedValueOnce({ success: false, error: 'Could not sync Stripe subscription' });
 
-		const result = await updateContributorSubscriptionAmount({
+		const result = await updateContributorSubscriptionAmount(audit, {
 			contributorId: 'contributor_1',
 			subscriptionId: 'sub_db_1',
 			amount: 50,

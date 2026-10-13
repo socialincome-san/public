@@ -333,6 +333,7 @@ describe('QR bill service', () => {
 		});
 		expect(pendingResult).toEqual({ success: true, data: 'Contribution created' });
 		expect(mockUpsertFromBankStandingOrder).toHaveBeenCalledWith(
+			{ actor: { type: 'system', id: 'qr-bill' }, source: 'system' },
 			expect.objectContaining({
 				bankStandingOrderReference: '1731700000',
 				contributorId: 'contributor-new',

@@ -1,13 +1,8 @@
 import type { Prisma } from '@/generated/prisma/client';
-import {
-	DonationInterval,
-	SubscriptionPaymentMethod,
-	SubscriptionStatus,
-	type SubscriptionCancellationReason,
-} from '@/generated/prisma/enums';
+import { SubscriptionPaymentMethod, SubscriptionStatus } from '@/generated/prisma/enums';
 import { prisma } from '@/lib/database/prisma';
 import { toSortKey } from '@/lib/utils/to-sort-key';
-import type { SubscriptionTableQuery, UpsertBankStandingOrderInput } from './subscription.types';
+import type { SubscriptionTableQuery } from './subscription.types';
 
 export const findSubscriptionTableSource = async ({
 	accessibleProgramIds,
@@ -90,58 +85,16 @@ export const findOwnedBankTransferSubscription = async (contributorId: string, s
 		select: { id: true, status: true },
 	});
 
+export const findSubscriptionIdByStripeId = async (stripeSubscriptionId: string) =>
+	prisma.subscription.findUnique({
+		where: { stripeSubscriptionId },
+		select: { id: true },
+	});
+
 export const findBankStandingOrderByReference = async (bankStandingOrderReference: string) =>
 	prisma.subscription.findUnique({
 		where: { bankStandingOrderReference },
 		select: { id: true, contributorId: true },
-	});
-
-export const updateBankStandingOrder = async (input: UpsertBankStandingOrderInput) => {
-	const status = input.status ?? SubscriptionStatus.active;
-	const canceledAt = input.canceledAt ?? null;
-	const sharedFields = {
-		campaignId: input.campaignId,
-		amount: input.amount,
-		currency: input.currency,
-		interval: DonationInterval.monthly,
-		status,
-		paymentMethod: SubscriptionPaymentMethod.bank_transfer,
-		canceledAt,
-		coverTransactionCosts: false,
-	};
-
-	return prisma.subscription.upsert({
-		where: { bankStandingOrderReference: input.bankStandingOrderReference },
-		create: {
-			bankStandingOrderReference: input.bankStandingOrderReference,
-			contributorId: input.contributorId,
-			...sharedFields,
-		},
-		update: sharedFields,
-		select: subscriptionUpsertSelect,
-	});
-};
-
-export const updateBankTransferSubscriptionAmount = async (subscriptionId: string, amount: number) =>
-	prisma.subscription.update({
-		where: { id: subscriptionId },
-		data: { amount },
-		select: { id: true },
-	});
-
-export const updateBankTransferSubscriptionCancellation = async (input: {
-	subscriptionId: string;
-	reason: SubscriptionCancellationReason;
-	canceledAt: Date;
-}) =>
-	prisma.subscription.update({
-		where: { id: input.subscriptionId },
-		data: {
-			status: SubscriptionStatus.ended,
-			canceledAt: input.canceledAt,
-			cancellationReason: input.reason,
-		},
-		select: { id: true },
 	});
 
 const buildSubscriptionTableWhere = ({
@@ -257,7 +210,7 @@ const dashboardSubscriptionSelect = {
 	},
 } satisfies Prisma.SubscriptionSelect;
 
-const subscriptionUpsertSelect = {
+export const subscriptionUpsertSelect = {
 	id: true,
 	stripeSubscriptionId: true,
 	bankStandingOrderReference: true,

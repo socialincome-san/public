@@ -357,7 +357,7 @@ const createPendingContribution = async (
 		}
 
 		if (payment.interval === 1) {
-			const subscriptionResult = await upsertFromBankStandingOrder({
+			const subscriptionResult = await upsertFromBankStandingOrder(qrBillAudit, {
 				bankStandingOrderReference: payment.referenceId,
 				contributorId: contributorResult.data.id,
 				campaignId: campaignIdResult.data,

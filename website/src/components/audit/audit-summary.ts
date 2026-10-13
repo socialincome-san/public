@@ -99,6 +99,24 @@ const auditEntityTypes: Record<string, AuditEntityType> = {
 			campaignId: 'Campaign',
 		},
 	},
+	subscription: {
+		label: 'Subscription',
+		namePaths: ['currency', 'amount', 'interval'],
+		fieldLabels: {
+			contributorId: 'Contributor',
+			campaignId: 'Campaign',
+			amount: 'Amount',
+			currency: 'Currency',
+			interval: 'Interval',
+			status: 'Status',
+			paymentMethod: 'Payment method',
+			stripeSubscriptionId: 'Stripe subscription',
+			bankStandingOrderReference: 'Standing order reference',
+			canceledAt: 'Canceled at',
+			cancellationReason: 'Cancellation reason',
+			coverTransactionCosts: 'Covers transaction costs',
+		},
+	},
 };
 
 export const auditEntityTypeOptions = Object.entries(auditEntityTypes).map(([value, { label }]) => ({ value, label }));
