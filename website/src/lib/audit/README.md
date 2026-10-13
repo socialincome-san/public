@@ -26,11 +26,17 @@ payment information) and stores it in the same transaction. If storing
 the audit event fails, the write rolls back. Updates that change nothing
 store no event; a delete stores an event without snapshot.
 
+A write that changes several rows in one statement stores one event per
+row: pass `entityId` as a list for `updateMany`/`deleteMany`, and
+`create` takes the ids from the returned rows of `createManyAndReturn`.
+
 Services pass who is acting: `getSessionAuditContext(session)` for
 portal and partner space,
 `{ actor: { type: 'recipient', id }, source: 'mobile-app' }` for the
-app. `metadata` is flat context such as
-`{ operation: 'csv-import', importId }`.
+app,
+`{ actor: { type: 'system', id: '<job-or-route-name>' }, source: 'system' }`
+for writes without a session (cron jobs, webhooks). `metadata` is flat
+context such as `{ operation: 'csv-import', importId }`.
 
 ## Reading
 
@@ -47,8 +53,6 @@ from `auditEntityTypes` in `src/components/audit/audit-summary.ts`.
 - Firebase cannot join the transaction; services update it before the
   write and revert it if the write throws, as before.
 - `audit_event` is append-only (database triggers).
-- Candidates and program deletion also write recipient rows and are not
-  audited yet (`unauditedWriteRepositories` in `eslint.config.mjs`).
 
 ## Auditing another model
 

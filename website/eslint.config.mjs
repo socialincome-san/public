@@ -87,13 +87,6 @@ const moduleSyntaxSelectors = [
 // them, each write through auditedWrite (src/lib/audit/README.md).
 const auditedModels = ['recipient'];
 
-// Repositories that still write audited models without an audit event. Move
-// these writes into a write repository; never add to this list.
-const unauditedWriteRepositories = [
-	'src/modules/candidates/candidate.repository.ts',
-	'src/modules/programs/program.repository.ts',
-];
-
 const auditedModelWriteSelector = {
 	selector: `CallExpression[callee.object.property.name=/^(${auditedModels.join('|')})$/][callee.property.name=/^(create|createMany|createManyAndReturn|update|updateMany|updateManyAndReturn|upsert|delete|deleteMany)$/]`,
 	message: 'This model is audited. Write it in a *.repository.write.ts through auditedWrite.',
@@ -339,12 +332,6 @@ export default [
 					],
 				},
 			],
-		},
-	},
-	{
-		files: unauditedWriteRepositories,
-		rules: {
-			'no-restricted-syntax': ['error', ...moduleSyntaxSelectors, repositoryIncludeSelector],
 		},
 	},
 	{

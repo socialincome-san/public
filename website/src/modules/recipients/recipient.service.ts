@@ -450,6 +450,24 @@ export const deleteRecipient = async (session: Session, recipientId: string): Pr
 	}
 };
 
+/** Moves every recipient of a program back to the pool, e.g. before the program is deleted. The caller authorizes. */
+export const removeRecipientsFromProgram = async (audit: AuditContext, programId: string): Promise<Result<void>> => {
+	try {
+		const recipients = await recipientRepository.findRecipientIdsByProgram(programId);
+		await recipientWriteRepository.removeRecipientsFromProgram(
+			audit,
+			recipients.map(({ id }) => id),
+			programId,
+		);
+
+		return resultOk(undefined);
+	} catch (error) {
+		console.error('Could not unassign recipients from program', { programId, error });
+
+		return resultFail('Could not unassign recipients from program');
+	}
+};
+
 export const getRecipientById = async (session: Session, recipientId: string): Promise<Result<RecipientPayload>> => {
 	try {
 		const idResult = recipientIdSchema.safeParse(recipientId);

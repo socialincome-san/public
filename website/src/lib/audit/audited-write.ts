@@ -10,13 +10,13 @@ export type AuditedEntity = {
 type AuditedWriteOptions = {
 	entity: AuditedEntity;
 	context: AuditContext;
-} & ({ action: 'create' } | { action: 'update' | 'delete'; entityId: string });
+} & ({ action: 'create' } | { action: 'update' | 'delete'; entityId: string | string[] });
 
 /**
- * Runs `write` and stores an audit event with the entity's state afterwards in
- * the same transaction, so the write rolls back if the event cannot be
- * stored. Updates that change nothing store no event. `create` takes the
- * id from the returned row.
+ * Runs `write` and stores an audit event per entity with its state afterwards
+ * in the same transaction, so the write rolls back if an event cannot be
+ * stored. Updates that change nothing store no event. `create` takes the ids
+ * from the returned row or rows (`createManyAndReturn`).
  */
 export const auditedWrite = async <T>(
 	options: AuditedWriteOptions,
@@ -24,25 +24,27 @@ export const auditedWrite = async <T>(
 ): Promise<T> =>
 	prisma.$transaction(async (transaction) => {
 		const result = await write(transaction);
-		const entityId = 'entityId' in options ? options.entityId : getCreatedId(result);
-		const snapshot = options.action === 'delete' ? null : await options.entity.findSnapshot(transaction, entityId);
-		if (options.action === 'update' && !(await hasChanged(transaction, options.entity.type, entityId, snapshot))) {
-			return result;
-		}
+		const entityIds = 'entityId' in options ? [options.entityId].flat() : getCreatedIds(result);
+		for (const entityId of entityIds) {
+			const snapshot = options.action === 'delete' ? null : await options.entity.findSnapshot(transaction, entityId);
+			if (options.action === 'update' && !(await hasChanged(transaction, options.entity.type, entityId, snapshot))) {
+				continue;
+			}
 
-		await transaction.auditEvent.create({
-			data: {
-				entityType: options.entity.type,
-				entityId,
-				action: options.action,
-				actorType: options.context.actor.type,
-				actorId: options.context.actor.id,
-				actorName: options.context.actor.name,
-				source: options.context.source,
-				snapshot: snapshot ?? undefined,
-				metadata: options.context.metadata,
-			},
-		});
+			await transaction.auditEvent.create({
+				data: {
+					entityType: options.entity.type,
+					entityId,
+					action: options.action,
+					actorType: options.context.actor.type,
+					actorId: options.context.actor.id,
+					actorName: options.context.actor.name,
+					source: options.context.source,
+					snapshot: snapshot ?? undefined,
+					metadata: options.context.metadata,
+				},
+			});
+		}
 
 		return result;
 	});
@@ -71,10 +73,11 @@ const toStableJson = (value: unknown): string =>
 			: item,
 	);
 
-const getCreatedId = (data: unknown): string => {
-	if (typeof data === 'object' && data !== null && 'id' in data && typeof data.id === 'string') {
-		return data.id;
-	}
+const getCreatedIds = (data: unknown): string[] =>
+	(Array.isArray(data) ? data : [data]).map((row: unknown) => {
+		if (typeof row === 'object' && row !== null && 'id' in row && typeof row.id === 'string') {
+			return row.id;
+		}
 
-	throw new Error('Audited create must return the created row with its id.');
-};
+		throw new Error('Audited create must return the created rows with their ids.');
+	});

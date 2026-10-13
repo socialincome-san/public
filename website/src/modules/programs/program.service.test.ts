@@ -22,6 +22,9 @@ jest.mock('@/modules/program-access/program-access.service', () => ({
 jest.mock('@/modules/candidates/candidate.service', () => ({
 	assignRandomCandidatesToProgram: jest.fn(),
 }));
+jest.mock('@/modules/recipients/recipient.service', () => ({
+	removeRecipientsFromProgram: jest.fn(),
+}));
 jest.mock('@/modules/countries/country.service', () => ({
 	getCountryIsoCode: mockGetCountryIsoCode,
 }));

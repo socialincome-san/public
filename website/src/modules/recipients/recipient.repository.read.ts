@@ -90,6 +90,9 @@ export const findRecipient = async (recipientId: string) =>
 		select: recipientDetailSelect,
 	});
 
+export const findRecipientIdsByProgram = async (programId: string) =>
+	prisma.recipient.findMany({ where: { programId }, select: { id: true } });
+
 export const findRecipientForUpdate = async (recipientId: string) =>
 	prisma.recipient.findUnique({
 		where: { id: recipientId },

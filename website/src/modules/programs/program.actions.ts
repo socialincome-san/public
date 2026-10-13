@@ -72,7 +72,7 @@ export const createProgramAction = async (input: unknown, userDetails?: unknown)
 
 	const sessionResult = await getSessionByType('user');
 	if (sessionResult.success) {
-		return createProgram(parsedInput.data, { userId: sessionResult.data.id });
+		return createProgram(parsedInput.data, sessionResult.data);
 	}
 	const parsedUserDetails = publicOnboardingUserDetailsSchema.safeParse(userDetails);
 	if (!parsedUserDetails.success) {
@@ -142,7 +142,7 @@ export const deleteProgramAction = async (programId: unknown): Promise<Result<vo
 		return resultFail('Invalid program id.');
 	}
 
-	const result = await deleteProgram(sessionResult.data.id, parsedProgramId.data);
+	const result = await deleteProgram(sessionResult.data, parsedProgramId.data);
 	if (result.success) {
 		revalidatePath('/portal');
 		revalidatePath('/portal/programs/[programId]', 'layout');

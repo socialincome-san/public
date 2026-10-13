@@ -101,6 +101,41 @@ describe('auditedWrite', () => {
 		expect(mockCommitted.events).toMatchObject([{ entityId: 'b', action: 'create', snapshot: { name: 'Bob' } }]);
 	});
 
+	test('takes the ids of several created rows from the result', async () => {
+		await auditedWrite({ entity, context: portal, action: 'create' }, (transaction) => {
+			rowsOf(transaction).set('b', 'Bob');
+			rowsOf(transaction).set('c', 'Cleo');
+
+			return Promise.resolve([{ id: 'b' }, { id: 'c' }]);
+		});
+
+		expect(mockCommitted.events).toMatchObject([
+			{ entityId: 'b', snapshot: { name: 'Bob' } },
+			{ entityId: 'c', snapshot: { name: 'Cleo' } },
+		]);
+	});
+
+	test('stores an event per changed entity when one write updates several', async () => {
+		mockCommitted.rows.set('b', 'Bob');
+		await auditedWrite({ entity, context: portal, action: 'update', entityId: ['a', 'b'] }, (transaction) => {
+			rowsOf(transaction).set('a', 'Grace');
+			rowsOf(transaction).set('b', 'Bea');
+
+			return Promise.resolve({ count: 2 });
+		});
+		await auditedWrite({ entity, context: portal, action: 'update', entityId: ['a', 'b'] }, (transaction) => {
+			rowsOf(transaction).set('b', 'Bob');
+
+			return Promise.resolve({ count: 2 });
+		});
+
+		expect(mockCommitted.events).toMatchObject([
+			{ entityId: 'a', snapshot: { name: 'Grace' } },
+			{ entityId: 'b', snapshot: { name: 'Bea' } },
+			{ entityId: 'b', snapshot: { name: 'Bob' } },
+		]);
+	});
+
 	test('stores no snapshot for a delete', async () => {
 		await auditedWrite({ entity, context: portal, action: 'delete', entityId: 'a' }, (transaction) => {
 			rowsOf(transaction).delete('a');

@@ -61,6 +61,14 @@ export const removeRecipientFromProgram = async (audit: AuditContext, recipientI
 		}),
 	);
 
+export const removeRecipientsFromProgram = async (audit: AuditContext, recipientIds: string[], programId: string) =>
+	auditedWrite({ entity: recipientEntity, context: audit, action: 'update', entityId: recipientIds }, (transaction) =>
+		transaction.recipient.updateMany({
+			where: { id: { in: recipientIds }, programId },
+			data: { programId: null },
+		}),
+	);
+
 export const deleteRecipient = async (audit: AuditContext, recipientId: string) =>
 	auditedWrite({ entity: recipientEntity, context: audit, action: 'delete', entityId: recipientId }, async (transaction) => {
 		const relations = await findRelationIds(transaction, recipientId);

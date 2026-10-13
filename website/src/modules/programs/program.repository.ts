@@ -389,10 +389,6 @@ export const findProgramDeletionBlockers = async (programId: string) => {
 
 export const deleteProgram = async (programId: string) => {
 	await prisma.$transaction(async (transaction) => {
-		await transaction.recipient.updateMany({
-			where: { programId },
-			data: { programId: null },
-		});
 		await transaction.survey.updateMany({
 			where: { surveySchedule: { programId } },
 			data: { surveyScheduleId: null },

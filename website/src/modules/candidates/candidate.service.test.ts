@@ -16,10 +16,12 @@ jest.mock('@/modules/countries/country.service', () => ({
 
 jest.mock('@/modules/auth/auth.service', () => ({}));
 
-jest.mock('./candidate.repository', () => ({
+jest.mock('./candidate.repository.read', () => ({
 	findCandidateById: mockFindCandidateById,
 	countCandidates: mockCountCandidates,
 	findCandidateIdsForAssignment: mockFindCandidateIdsForAssignment,
+}));
+jest.mock('./candidate.repository.write', () => ({
 	updateCandidateProgramAssignments: mockUpdateCandidateProgramAssignments,
 }));
 
@@ -90,11 +92,16 @@ describe('candidate service', () => {
 		mockFindCandidateIdsForAssignment.mockResolvedValue([{ id: 'candidate-1' }]);
 		mockUpdateCandidateProgramAssignments.mockResolvedValue({ count: 1 });
 
-		await expect(assignRandomCandidatesToProgram('program-1', 1, CountryCode.SL, [], [], ['partner-1'])).resolves.toEqual({
+		const audit = { actor: { type: 'user' as const, id: 'user-1' }, source: 'portal' as const };
+
+		await expect(
+			assignRandomCandidatesToProgram(audit, 'program-1', 1, CountryCode.SL, [], [], ['partner-1']),
+		).resolves.toEqual({
 			success: true,
 			data: { assigned: 1 },
 			status: undefined,
 		});
 		expect(mockFindCandidateIdsForAssignment).toHaveBeenCalledWith([], [], CountryCode.SL, ['partner-1']);
+		expect(mockUpdateCandidateProgramAssignments).toHaveBeenCalledWith(audit, ['candidate-1'], 'program-1');
 	});
 });
