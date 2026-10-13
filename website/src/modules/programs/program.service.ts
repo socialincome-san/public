@@ -19,6 +19,7 @@ import {
 	isUserEmailAvailable,
 } from '@/modules/users/user.service';
 import { isReadyForFirstPayoutInterval } from './program-stats.service';
+import { hasOperatorAccess } from './program.permissions';
 import * as programRepository from './program.repository';
 import type { ProgramCreateInput, ProgramSettingsUpdateInput, PublicOnboardingUserDetailsInput } from './program.schemas';
 import type {
@@ -420,9 +421,7 @@ export const updateProgramSettings = async (
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
-		if (
-			!accessResult.data.some((access) => access.programId === input.id && access.permission === ProgramPermission.operator)
-		) {
+		if (!hasOperatorAccess(accessResult.data, input.id)) {
 			return resultFail('Permission denied');
 		}
 
@@ -471,9 +470,7 @@ export const deleteProgram = async (userId: string, programId: string): Promise<
 		if (!accessResult.success) {
 			return resultFail(accessResult.error);
 		}
-		if (
-			!accessResult.data.some((access) => access.programId === programId && access.permission === ProgramPermission.operator)
-		) {
+		if (!hasOperatorAccess(accessResult.data, programId)) {
 			return resultFail('Permission denied');
 		}
 		if (!(await programRepository.findProgramNameById(programId))) {

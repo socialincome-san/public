@@ -90,27 +90,21 @@ export const getCandidateCount = async (
 	countryId?: string | null,
 	localPartnerIds?: string[],
 ): Promise<Result<{ count: number }>> => {
-	try {
-		let countryCode: CountryCode | null = null;
-		if (countryId) {
-			const countryResult = await getCountryIsoCode(countryId);
-			if (!countryResult.success) {
-				return resultFail(countryResult.error);
-			}
-			countryCode = countryResult.data;
+	let countryCode: CountryCode | null = null;
+	if (countryId) {
+		const countryResult = await getCountryIsoCode(countryId);
+		if (!countryResult.success) {
+			return resultFail(countryResult.error);
 		}
-
-		return countUnassignedCandidates({
-			countryCode,
-			focusIds: focuses ?? [],
-			profiles: profiles ?? [],
-			localPartnerIds: localPartnerIds ?? [],
-		});
-	} catch (error) {
-		console.error('Could not count candidates', { error });
-
-		return resultFail('Could not count candidates');
+		countryCode = countryResult.data;
 	}
+
+	return countUnassignedCandidates({
+		countryCode,
+		focusIds: focuses ?? [],
+		profiles: profiles ?? [],
+		localPartnerIds: localPartnerIds ?? [],
+	});
 };
 
 export const exportCandidatesCsv = async (session: Session): Promise<Result<string>> => {

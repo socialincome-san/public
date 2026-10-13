@@ -62,6 +62,7 @@ export const RecipientsTableClient = ({
 	const [isCsvUploadDialogOpen, setIsCsvUploadDialogOpen] = useState(false);
 	const [isCsvDownloading, setIsCsvDownloading] = useState(false);
 	const [isPoolDialogOpen, setIsPoolDialogOpen] = useState(false);
+	const [poolDialogKey, setPoolDialogKey] = useState(0);
 	const [poolSuccessCount, setPoolSuccessCount] = useState<number | null>(null);
 
 	const openCreateRecipientDialog = () => {
@@ -125,6 +126,7 @@ export const RecipientsTableClient = ({
 									icon: <UsersIcon />,
 									onSelect: () => {
 										setPoolSuccessCount(null);
+										setPoolDialogKey((key) => key + 1);
 										setIsPoolDialogOpen(true);
 									},
 								},
@@ -176,6 +178,7 @@ export const RecipientsTableClient = ({
 
 			{canAddFromPool && programId && (
 				<AddRecipientsFromPoolDialog
+					key={poolDialogKey}
 					open={isPoolDialogOpen}
 					programId={programId}
 					onOpenChange={setIsPoolDialogOpen}

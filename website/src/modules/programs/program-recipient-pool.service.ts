@@ -1,4 +1,3 @@
-import { ProgramPermission } from '@/generated/prisma/enums';
 import { resultFail, resultOk, type Result } from '@/lib/result';
 import {
 	assignRandomCandidatesToProgram,
@@ -9,6 +8,7 @@ import type { UnassignedCandidateFilter } from '@/modules/candidates/candidate.t
 import { getFocusOptions } from '@/modules/focuses/focus.service';
 import { getAccessiblePrograms } from '@/modules/program-access/program-access.service';
 import { calculateProgramBudget } from './program-stats.service';
+import { hasOperatorAccess } from './program.permissions';
 import * as programRepository from './program.repository';
 import type { ProgramRecipientPoolAssignInput, ProgramRecipientPoolPreviewInput } from './program.schemas';
 import type { ProgramRecipientPoolPreview, ProgramRecipientPoolSetup } from './program.types';
@@ -38,18 +38,11 @@ export const getProgramRecipientPoolSetup = async (
 		return resultFail(totalCountResult.error);
 	}
 
-	const payoutPerInterval = Number(program.payoutPerInterval);
-	if (!Number.isFinite(payoutPerInterval)) {
-		console.error('Program payout amount is not a finite number', { programId });
-
-		return resultFail('Could not load recipient pool');
-	}
-
 	return resultOk({
 		programId: program.id,
 		countryCode: program.country.isoCode,
 		programDurationInMonths: program.programDurationInMonths,
-		payoutPerInterval,
+		payoutPerInterval: program.payoutPerInterval,
 		payoutCurrency: program.country.currency,
 		payoutInterval: program.payoutInterval,
 		focusOptions: focusOptionsResult.data,
@@ -88,18 +81,11 @@ export const previewProgramRecipientPool = async (
 		});
 	}
 
-	const payoutPerInterval = Number(program.payoutPerInterval);
-	if (!Number.isFinite(payoutPerInterval)) {
-		console.error('Program payout amount is not a finite number', { programId: input.programId });
-
-		return resultFail('Could not calculate recipient pool cost');
-	}
-
 	const budgetResult = await calculateProgramBudget({
 		amountOfRecipients: input.recipientCount,
 		programDuration: program.programDurationInMonths,
-		defaultPayoutPerInterval: payoutPerInterval,
-		payoutPerInterval,
+		defaultPayoutPerInterval: program.payoutPerInterval,
+		payoutPerInterval: program.payoutPerInterval,
 		payoutInterval: program.payoutInterval,
 		payoutCurrency: program.country.currency,
 		displayCurrency: input.displayCurrency,
@@ -137,9 +123,7 @@ const requireOperatorProgram = async (userId: string, programId: string) => {
 		if (!accessResult.success) {
 			return accessResult;
 		}
-		if (
-			!accessResult.data.some((access) => access.programId === programId && access.permission === ProgramPermission.operator)
-		) {
+		if (!hasOperatorAccess(accessResult.data, programId)) {
 			return resultFail('Permission denied');
 		}
 
@@ -148,7 +132,14 @@ const requireOperatorProgram = async (userId: string, programId: string) => {
 			return resultFail('Program not found');
 		}
 
-		return resultOk(program);
+		const payoutPerInterval = Number(program.payoutPerInterval);
+		if (!Number.isFinite(payoutPerInterval)) {
+			console.error('Program payout amount is not a finite number', { programId });
+
+			return resultFail('Could not load recipient pool');
+		}
+
+		return resultOk({ ...program, payoutPerInterval });
 	} catch (error) {
 		console.error('Could not load program for recipient pool assignment', { userId, programId, error });
 

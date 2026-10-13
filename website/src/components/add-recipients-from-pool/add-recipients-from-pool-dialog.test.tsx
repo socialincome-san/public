@@ -229,4 +229,33 @@ describe('AddRecipientsFromPoolDialog', () => {
 		);
 		expect(document.body.querySelector('[data-testid="pool-country"]')).not.toBeNull();
 	});
+
+	test('leaves the saving state when the assignment request rejects', async () => {
+		mockAssign.mockRejectedValue(new Error('Network error'));
+		await renderDialog();
+		await click(document.body.querySelector('[data-testid="radio-card-universal"]') ?? undefined);
+		await click(buttonByText('Continue'));
+		await click(buttonByText('Add 1 recipient'));
+
+		expect(document.body.querySelector('[data-testid="pool-error"]')?.textContent).toBe(
+			'Recipients could not be added. Please try again.',
+		);
+		expect(buttonByText('Add 1 recipient')?.disabled).toBe(false);
+	});
+
+	test('recounts the pool after not enough candidates were available', async () => {
+		mockAssign.mockResolvedValue({ success: false, error: 'Not enough candidates available' });
+		await renderDialog();
+		await click(document.body.querySelector('[data-testid="radio-card-universal"]') ?? undefined);
+		await click(buttonByText('Continue'));
+		const previewCalls = mockPreview.mock.calls.length;
+		await click(buttonByText('Add 1 recipient'));
+
+		expect(
+			mockPreview.mock.calls
+				.slice(previewCalls)
+				.some(([input]) => isPreviewInput(input) && input.recipientCount === undefined),
+		).toBe(true);
+		expect(document.body.querySelector('[data-testid="pool-error"]')?.textContent).toBe('error.not_enough');
+	});
 });

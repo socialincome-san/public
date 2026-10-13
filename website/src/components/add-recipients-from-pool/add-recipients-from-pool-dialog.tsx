@@ -16,6 +16,7 @@ import {
 	previewProgramRecipientPoolAction,
 } from '@/modules/programs/program.actions';
 import { Button } from '@socialincome/design-system/actions/button/button';
+import { TermList } from '@socialincome/design-system/data-display/term-list/term-list';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/design-system/feedback/alert/alert';
 import { QuantitySelector } from '@socialincome/design-system/forms/quantity-selector/quantity-selector';
 import {
@@ -67,25 +68,29 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 
 	useEffect(() => {
 		if (!open) {
-			dispatch({ type: 'reset' });
-
 			return;
 		}
 
 		let cancelled = false;
-		dispatch({ type: 'loadStarted' });
-		void getProgramRecipientPoolSetupAction(programId).then((result) => {
-			if (cancelled) {
-				return;
-			}
-			if (!result.success) {
-				console.error(result.error);
-				dispatch({ type: 'setupFailed', error: 'load' });
+		getProgramRecipientPoolSetupAction(programId)
+			.then((result) => {
+				if (cancelled) {
+					return;
+				}
+				if (!result.success) {
+					console.error(result.error);
+					dispatch({ type: 'setupFailed', error: 'load' });
 
-				return;
-			}
-			dispatch({ type: 'setupLoaded', setup: result.data });
-		});
+					return;
+				}
+				dispatch({ type: 'setupLoaded', setup: result.data });
+			})
+			.catch((error: unknown) => {
+				console.error(error);
+				if (!cancelled) {
+					dispatch({ type: 'setupFailed', error: 'load' });
+				}
+			});
 
 		return () => {
 			cancelled = true;
@@ -93,33 +98,40 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 	}, [open, programId, retryToken]);
 
 	useEffect(() => {
-		if (!open || setup === null || approach === null) {
+		if (!open || !state.isCounting || setup === null || approach === null) {
 			return;
 		}
 
 		let cancelled = false;
 		const selection = activeCandidateFilters(approach, { focusIds, profiles, localPartnerIds });
-		void previewProgramRecipientPoolAction({ programId, ...selection }).then((result) => {
-			if (cancelled) {
-				return;
-			}
-			if (!result.success) {
-				console.error(result.error);
-				dispatch({ type: 'countsFailed', error: poolErrorCode(result.error) });
+		previewProgramRecipientPoolAction({ programId, ...selection })
+			.then((result) => {
+				if (cancelled) {
+					return;
+				}
+				if (!result.success) {
+					console.error(result.error);
+					dispatch({ type: 'countsFailed', error: poolErrorCode(result.error) });
 
-				return;
-			}
-			dispatch({
-				type: 'countsLoaded',
-				totalCount: result.data.totalCount,
-				matchingCount: result.data.matchingCount,
+					return;
+				}
+				dispatch({
+					type: 'countsLoaded',
+					totalCount: result.data.totalCount,
+					matchingCount: result.data.matchingCount,
+				});
+			})
+			.catch((error: unknown) => {
+				console.error(error);
+				if (!cancelled) {
+					dispatch({ type: 'countsFailed', error: 'generic' });
+				}
 			});
-		});
 
 		return () => {
 			cancelled = true;
 		};
-	}, [open, programId, setup, approach, focusIds, profiles, localPartnerIds]);
+	}, [open, state.isCounting, programId, setup, approach, focusIds, profiles, localPartnerIds]);
 
 	useEffect(() => {
 		if (!state.isCalculatingBudget || displayCurrency === null || quantity < 1 || setup === null) {
@@ -128,25 +140,32 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 
 		let cancelled = false;
 		const selection = activeCandidateFilters(approach, { focusIds, profiles, localPartnerIds });
-		void previewProgramRecipientPoolAction({
+		previewProgramRecipientPoolAction({
 			programId,
 			...selection,
 			recipientCount: quantity,
 			displayCurrency,
-		}).then((result) => {
-			if (cancelled) {
-				return;
-			}
-			if (!result.success) {
-				console.error(result.error);
-				dispatch({ type: 'budgetFailed', error: poolErrorCode(result.error) });
+		})
+			.then((result) => {
+				if (cancelled) {
+					return;
+				}
+				if (!result.success) {
+					console.error(result.error);
+					dispatch({ type: 'budgetFailed', error: poolErrorCode(result.error) });
 
-				return;
-			}
-			if (result.data.budget) {
-				dispatch({ type: 'budgetLoaded', budget: result.data.budget });
-			}
-		});
+					return;
+				}
+				if (result.data.budget) {
+					dispatch({ type: 'budgetLoaded', budget: result.data.budget });
+				}
+			})
+			.catch((error: unknown) => {
+				console.error(error);
+				if (!cancelled) {
+					dispatch({ type: 'budgetFailed', error: 'generic' });
+				}
+			});
 
 		return () => {
 			cancelled = true;
@@ -168,18 +187,22 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 			return;
 		}
 		dispatch({ type: 'submit' });
-		void assignProgramRecipientsFromPoolAction({ programId, ...filters, recipientCount: state.quantity }).then((result) => {
-			if (!result.success) {
-				console.error(result.error);
-				dispatch({ type: 'submitFailed', error: poolErrorCode(result.error) });
+		assignProgramRecipientsFromPoolAction({ programId, ...filters, recipientCount: state.quantity })
+			.then((result) => {
+				if (!result.success) {
+					console.error(result.error);
+					dispatch({ type: 'submitFailed', error: poolErrorCode(result.error) });
 
-				return;
-			}
-			onAssigned(result.data.assigned);
-		});
+					return;
+				}
+				onAssigned(result.data.assigned);
+			})
+			.catch((error: unknown) => {
+				console.error(error);
+				dispatch({ type: 'submitFailed', error: 'generic' });
+			});
 	};
 
-	const intervalLabel = setup ? t(`terms.interval.${setup.payoutInterval}`) : '';
 	const displayCurrencies = setup
 		? [setup.payoutCurrency, ...websiteCurrencies.filter((currency) => currency !== setup.payoutCurrency)]
 		: [];
@@ -216,7 +239,14 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 						{state.status === 'loading' ? <p className="text-muted-foreground text-sm">{t('loading')}</p> : null}
 
 						{state.status === 'error' ? (
-							<Button type="button" variant="outline" onClick={() => setRetryToken((token) => token + 1)}>
+							<Button
+								type="button"
+								variant="outline"
+								onClick={() => {
+									dispatch({ type: 'loadStarted' });
+									setRetryToken((token) => token + 1);
+								}}
+							>
 								{t('actions.retry')}
 							</Button>
 						) : null}
@@ -310,21 +340,32 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 											sliderTestId="pool-quantity-slider"
 										/>
 
-										<div data-testid="pool-terms" className="divide-y text-sm">
-											<p className="pb-3 font-medium">{t('terms.title')}</p>
-											<TermRow label={t('terms.duration')} testId="pool-program-duration">
-												{t('terms.months', { count: setup.programDurationInMonths })}
-											</TermRow>
-											<TermRow label={t('terms.payout_amount')} testId="pool-payout-amount">
-												{setup.payoutPerInterval.toLocaleString('de-CH')}
-											</TermRow>
-											<TermRow label={t('terms.payout_currency')} testId="pool-payout-currency">
-												{setup.payoutCurrency}
-											</TermRow>
-											<TermRow label={t('terms.payout_interval')} testId="pool-payout-interval">
-												{intervalLabel}
-											</TermRow>
-										</div>
+										<TermList
+											title={t('terms.title')}
+											testId="pool-terms"
+											items={[
+												{
+													label: t('terms.duration'),
+													value: t('terms.months', { count: setup.programDurationInMonths }),
+													testId: 'pool-program-duration',
+												},
+												{
+													label: t('terms.payout_amount'),
+													value: setup.payoutPerInterval.toLocaleString('de-CH'),
+													testId: 'pool-payout-amount',
+												},
+												{
+													label: t('terms.payout_currency'),
+													value: setup.payoutCurrency,
+													testId: 'pool-payout-currency',
+												},
+												{
+													label: t('terms.payout_interval'),
+													value: t(`terms.interval.${setup.payoutInterval}`),
+													testId: 'pool-payout-interval',
+												},
+											]}
+										/>
 
 										<div className="space-y-2">
 											<div className="flex items-end justify-between gap-4">
@@ -404,11 +445,7 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 										{t('actions.continue')}
 									</Button>
 								) : (
-									<Button
-										type="button"
-										disabled={saving || state.isCalculatingBudget || state.quantity < 1}
-										onClick={submit}
-									>
+									<Button type="button" disabled={saving || state.isCounting || state.quantity < 1} onClick={submit}>
 										{saving ? t('actions.adding') : t('actions.add', { count: state.quantity })}
 									</Button>
 								)
@@ -420,12 +457,3 @@ export const AddRecipientsFromPoolDialog = ({ open, programId, onOpenChange, onA
 		</Dialog>
 	);
 };
-
-const TermRow = ({ label, testId, children }: { label: string; testId: string; children: string }) => (
-	<div className="flex justify-between gap-4 py-3">
-		<span>{label}</span>
-		<span className="font-medium" data-testid={testId}>
-			{children}
-		</span>
-	</div>
-);

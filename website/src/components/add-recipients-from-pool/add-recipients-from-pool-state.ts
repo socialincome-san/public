@@ -29,7 +29,6 @@ export type AddRecipientsFromPoolState = {
 };
 
 export type AddRecipientsFromPoolAction =
-	| { type: 'reset' }
 	| { type: 'loadStarted' }
 	| { type: 'setupLoaded'; setup: ProgramRecipientPoolSetup }
 	| { type: 'setupFailed'; error: PoolErrorCode }
@@ -68,6 +67,9 @@ export const initialAddRecipientsFromPoolState: AddRecipientsFromPoolState = {
 const toggleValue = <T extends string>(values: T[], value: T): T[] =>
 	values.includes(value) ? values.filter((item) => item !== value) : [...values, value];
 
+// A failed assignment stays visible while the recount and budget refresh behind it.
+const keepNotEnoughError = (error: PoolErrorCode | null) => (error === 'not_enough' ? error : null);
+
 const withCounting = (
 	state: AddRecipientsFromPoolState,
 	next: Partial<AddRecipientsFromPoolState>,
@@ -84,8 +86,6 @@ export const addRecipientsFromPoolReducer = (
 	action: AddRecipientsFromPoolAction,
 ): AddRecipientsFromPoolState => {
 	switch (action.type) {
-		case 'reset':
-			return initialAddRecipientsFromPoolState;
 		case 'loadStarted':
 			return { ...initialAddRecipientsFromPoolState, status: 'loading' };
 		case 'setupFailed':
@@ -117,10 +117,11 @@ export const addRecipientsFromPoolReducer = (
 			return {
 				...state,
 				isCounting: false,
-				error: null,
+				error: keepNotEnoughError(state.error),
 				totalCount: action.totalCount,
 				matchingCount: action.matchingCount,
 				quantity: clampCandidateQuantity(state.quantity, action.matchingCount),
+				...(state.status === 'preview' ? { isCalculatingBudget: true, budget: null } : {}),
 			};
 		case 'countsFailed':
 			return { ...state, isCounting: false, error: action.error };
@@ -158,7 +159,7 @@ export const addRecipientsFromPoolReducer = (
 		case 'setDisplayCurrency':
 			return { ...state, displayCurrency: action.currency, isCalculatingBudget: true, budget: null };
 		case 'budgetLoaded':
-			return { ...state, budget: action.budget, isCalculatingBudget: false, error: null };
+			return { ...state, budget: action.budget, isCalculatingBudget: false, error: keepNotEnoughError(state.error) };
 		case 'budgetFailed':
 			return { ...state, isCalculatingBudget: false, error: action.error };
 		case 'submit':
@@ -168,7 +169,14 @@ export const addRecipientsFromPoolReducer = (
 
 			return { ...state, status: 'saving', error: null };
 		case 'submitFailed':
-			return { ...state, status: 'preview', isCalculatingBudget: false, error: action.error };
+			// The pool shrank since the last count, so recount to lower the quantity limit.
+			return {
+				...state,
+				status: 'preview',
+				isCalculatingBudget: false,
+				isCounting: action.error === 'not_enough',
+				error: action.error,
+			};
 	}
 };
 

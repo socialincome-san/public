@@ -8,14 +8,9 @@ type CountQuery = {
 	};
 };
 
-type UpdateQuery = {
-	where: { id: { in: string[] }; programId: null };
-	data: { programId: string };
-};
-
 const mockCount = jest.fn<Promise<number>, [CountQuery]>();
 const mockFindMany = jest.fn<Promise<{ id: string }[]>, [unknown]>();
-const mockUpdateMany = jest.fn<Promise<{ count: number }>, [UpdateQuery]>();
+const mockExecuteRaw = jest.fn<Promise<number>, [TemplateStringsArray, ...unknown[]]>();
 const mockPartnerFindMany = jest.fn<Promise<{ id: string; name: string }[]>, [unknown]>();
 
 jest.mock('@/lib/database/prisma', () => ({
@@ -30,8 +25,8 @@ jest.mock('@/lib/database/prisma', () => ({
 			callback({
 				recipient: {
 					findMany: mockFindMany,
-					updateMany: mockUpdateMany,
 				},
+				$executeRaw: mockExecuteRaw,
 			}),
 	},
 }));
@@ -163,34 +158,31 @@ describe('updateUnassignedCandidateAssignments', () => {
 		await expect(updateUnassignedCandidateAssignments(countryFilter, 'program-1', 2)).resolves.toEqual({
 			outcome: 'insufficient',
 		});
-		expect(mockUpdateMany).not.toHaveBeenCalled();
+		expect(mockExecuteRaw).not.toHaveBeenCalled();
 	});
 
 	test('does not keep an assignment when a concurrent request already claimed a selected candidate', async () => {
 		mockFindMany.mockResolvedValue([{ id: 'candidate-1' }, { id: 'candidate-2' }]);
-		mockUpdateMany.mockResolvedValue({ count: 1 });
+		mockExecuteRaw.mockResolvedValue(1);
 
 		await expect(updateUnassignedCandidateAssignments(countryFilter, 'program-1', 2)).resolves.toEqual({
 			outcome: 'insufficient',
 		});
-		const update = mockUpdateMany.mock.calls[0]?.[0];
-		expect(update?.where.id.in).toHaveLength(2);
-		expect(update?.where.id.in).toEqual(expect.arrayContaining(['candidate-1', 'candidate-2']));
-		expect(update?.where.programId).toBeNull();
-		expect(update?.data).toEqual({ programId: 'program-1' });
 	});
 
-	test('returns the number of candidates whose program was set while leaving startDate unset', async () => {
-		mockFindMany.mockResolvedValue([{ id: 'candidate-1' }]);
-		mockUpdateMany.mockResolvedValue({ count: 1 });
+	test('assigns a random subset of unclaimed candidates while leaving startDate unset', async () => {
+		mockFindMany.mockResolvedValue([{ id: 'candidate-1' }, { id: 'candidate-2' }]);
+		mockExecuteRaw.mockResolvedValue(1);
 
 		await expect(updateUnassignedCandidateAssignments(countryFilter, 'program-1', 1)).resolves.toEqual({
 			outcome: 'assigned',
 			assigned: 1,
 		});
-		expect(mockUpdateMany).toHaveBeenCalledWith({
-			where: { id: { in: ['candidate-1'] }, programId: null },
-			data: { programId: 'program-1' },
-		});
+		const [strings, ...values] = mockExecuteRaw.mock.calls[0] ?? [];
+		const sql = strings?.join('?') ?? '';
+		expect(sql).toContain('program_id IS NULL');
+		expect(sql).toContain('FOR UPDATE SKIP LOCKED');
+		expect(sql).not.toContain('start_date');
+		expect(values).toEqual(['program-1', ['candidate-1', 'candidate-2'], 1]);
 	});
 });

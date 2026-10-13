@@ -175,12 +175,7 @@ export const findLocalPartnersWithUnassignedCandidates = async (countryCode: Cou
 	prisma.localPartner.findMany({
 		where: {
 			recipients: {
-				some: buildCandidateWhere({
-					countryCode,
-					focusIds: [],
-					profiles: [],
-					localPartnerIds: [],
-				}),
+				some: buildCandidateWhere({ countryCode, focusIds: [], profiles: [], localPartnerIds: [] }),
 			},
 		},
 		select: { id: true, name: true },
@@ -202,16 +197,21 @@ export const updateUnassignedCandidateAssignments = async (
 				throw new Error(INSUFFICIENT_CANDIDATES);
 			}
 
-			const selectedIds = shuffleIds(candidates.map(({ id }) => id)).slice(0, amount);
-			const updated = await transaction.recipient.updateMany({
-				where: { id: { in: selectedIds }, programId: null },
-				data: { programId },
-			});
-			if (updated.count !== amount) {
+			// SKIP LOCKED lets concurrent assignments pick disjoint candidates instead of colliding on the same rows.
+			const assigned = await transaction.$executeRaw`
+				UPDATE recipient SET program_id = ${programId}, updated_at = now()
+				WHERE id IN (
+					SELECT id FROM recipient
+					WHERE id = ANY(${candidates.map(({ id }) => id)}) AND program_id IS NULL
+					ORDER BY random()
+					LIMIT ${amount}
+					FOR UPDATE SKIP LOCKED
+				)`;
+			if (assigned !== amount) {
 				throw new Error(INSUFFICIENT_CANDIDATES);
 			}
 
-			return { outcome: 'assigned' as const, assigned: updated.count };
+			return { outcome: 'assigned' as const, assigned };
 		});
 	} catch (error) {
 		if (error instanceof Error && error.message === INSUFFICIENT_CANDIDATES) {
@@ -220,22 +220,6 @@ export const updateUnassignedCandidateAssignments = async (
 
 		throw error;
 	}
-};
-
-const shuffleIds = (ids: string[]): string[] => {
-	const shuffled = [...ids];
-	for (let index = shuffled.length - 1; index > 0; index -= 1) {
-		const swapIndex = Math.floor(Math.random() * (index + 1));
-		const current = shuffled[index];
-		const swap = shuffled[swapIndex];
-		if (current === undefined || swap === undefined) {
-			continue;
-		}
-		shuffled[index] = swap;
-		shuffled[swapIndex] = current;
-	}
-
-	return shuffled;
 };
 
 type CandidateUpdatePersistenceContext = {

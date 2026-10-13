@@ -196,7 +196,7 @@ export const assignProgramRecipientsFromPoolAction = async (input: unknown): Pro
 
 	const result = await assignProgramRecipientsFromPool(sessionResult.data.id, parsedInput.data);
 	if (result.success) {
-		revalidatePath(`/portal/programs/${parsedInput.data.programId}/recipients`);
+		revalidatePath('/portal/programs/[programId]', 'layout');
 	}
 
 	return result;
