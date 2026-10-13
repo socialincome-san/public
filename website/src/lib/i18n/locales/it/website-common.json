@@ -443,5 +443,12 @@
 		"title": "Non abbiamo trovato questa pagina",
 		"description": "La pagina potrebbe essere stata spostata o il link potrebbe non essere più valido.",
 		"home-link": "Vai alla homepage"
+	},
+	"cookie-consent": {
+		"title": "Cookie per le statistiche",
+		"description": "Con il tuo consenso utilizziamo Google Analytics per capire come viene usato il sito e migliorarlo. Maggiori informazioni nella nostra <link>informativa sulla privacy</link>. Puoi modificare la tua scelta in qualsiasi momento nel piè di pagina.",
+		"accept": "Accetta",
+		"decline": "Rifiuta",
+		"settings": "Impostazioni dei cookie"
 	}
 }

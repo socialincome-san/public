@@ -14,6 +14,7 @@ const PRODUCTION_SCRIPT_SRC = [
 	'https://app.storyblok.com',
 	'https://static.cloudflareinsights.com',
 	'https://challenges.cloudflare.com',
+	'https://www.googletagmanager.com',
 ] as const;
 
 const DEVELOPMENT_SCRIPT_SRC_EXTRA = [
@@ -32,6 +33,8 @@ const IMG_SRC = [
 	'https://avatars.githubusercontent.com',
 	'https://image.mux.com',
 	'https://*.stripe.com',
+	'https://*.google-analytics.com',
+	'https://*.googletagmanager.com',
 ] as const;
 
 const FONT_SRC = ["'self'"] as const;
@@ -58,6 +61,10 @@ const PRODUCTION_CONNECT_SRC = [
 	// The dotLottie renderer fetches its WASM binary from jsDelivr, falling back to unpkg.
 	'https://cdn.jsdelivr.net',
 	'https://unpkg.com',
+	// Google Analytics 4: https://developers.google.com/tag-platform/security/guides/csp
+	'https://*.google-analytics.com',
+	'https://*.analytics.google.com',
+	'https://*.googletagmanager.com',
 ] as const;
 
 const LOCALHOST_CONNECT_SRC = ['http://localhost:*', 'ws://localhost:*'] as const;
